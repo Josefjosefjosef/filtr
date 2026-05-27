@@ -38656,6 +38656,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bzitra\b/.test(x) ||
       /\bpatecn/.test(x) ||
       /\bna\s+\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(x) ||
+      /\bna\s+\d{1,2}\s+hodin\w*\b/.test(x) ||
+      /\bv\s+\d{1,2}\s+hodin\w*\b/.test(x) ||
       /\bna\s+(desat|jedenact|dvanact|trinact|ctrnact|patnact|sestnact|sedmnact|osmnact|devatenact|dvacet)/.test(x) ||
       /\b(desat|jedenact|patnact|dvanact|trinact|ctrnact)\s+hodin/.test(x) ||
       /\bze\s+zitr/.test(x) ||
@@ -38954,6 +38956,99 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       assistantLead: ap.assistantLead,
       clarificationText: ap.clarification,
       draft: draft
+    };
+  }
+
+  /** Silver Update Resolution V1 — jednoznačný match existující události → calendar.update (ne zbytečná clarification). */
+  function iuSilverTryUniqueCalendarUpdateResolutionV1(raw, folded, now, ctx) {
+    const f = String(folded || "");
+    const move =
+      iuSilverExplicitCalendarUpdateMoveIntentFolded(f) ||
+      iuSilverIsCalendarUpdateIntentV1(f) ||
+      (/\b(?:presun|posun)\w*\b/.test(f) && /\bschuz/.test(f) && /\bdnes/.test(f));
+    if (!move) return null;
+    const snap = ctx && typeof ctx.getEventsSnapshot === "function" ? ctx.getEventsSnapshot() : [];
+    const events = Array.isArray(snap) ? snap : [];
+    if (!events.length) return null;
+    const todayStr = toDateOnly(now);
+    let targetDate = todayStr;
+    if (/\bdnesn\w*\b/.test(folded) || /\bdnes\b/.test(folded) || /\bdnesek\b/.test(folded) || /\bdneska\b/.test(folded)) {
+      targetDate = todayStr;
+    } else if (/\bzitrej\w*\b/.test(folded) || /\bzitra\b/.test(folded)) {
+      targetDate = addDays(todayStr, 1);
+    } else if (/\bvcerej\w*\b/.test(folded) || /\bvcera\b/.test(folded)) {
+      targetDate = addDays(todayStr, -1);
+    }
+    let candidates = events.filter(function (e) {
+      return String(e.date || "").slice(0, 10) === targetDate;
+    });
+    if (/\bschuz/.test(folded)) {
+      candidates = candidates.filter(function (e) {
+        return /\bschuz/.test(foldCs(String(e.title || "")));
+      });
+    }
+    if (/\bnovak\w*\b/.test(folded)) {
+      candidates = candidates.filter(function (e) {
+        const blob = foldCs(String(e.title || "") + " " + String(e.note || ""));
+        return blob.indexOf("novak") >= 0;
+      });
+    }
+    const mPers = folded.match(/\b(?:s\s+panem|s\s+pani|s\s+)(\w{3,})/);
+    if (mPers && mPers[1] && !/\bnovak\b/.test(mPers[1])) {
+      const pf = foldCs(mPers[1]);
+      const aliasGroups = iuSilverPersonAliasGroupsForFoldedTextV1(pf);
+      candidates = candidates.filter(function (e) {
+        const blob = foldCs(String(e.title || "") + " " + String(e.note || ""));
+        if (blob.indexOf(pf) >= 0) return true;
+        for (let gi = 0; gi < aliasGroups.length; gi++) {
+          const grp = IU_SILVER_CZECH_PERSON_ALIAS_GROUPS_V1[aliasGroups[gi]] || [];
+          for (let ai = 0; ai < grp.length; ai++) {
+            if (blob.indexOf(grp[ai]) >= 0) return true;
+          }
+        }
+        return false;
+      });
+    }
+    if (candidates.length !== 1) return null;
+    const ev = candidates[0];
+    const draft = cloneDraft(createEmptyDraft());
+    draft.targetContainer = "calendar";
+    draft.activeCalendarSession = true;
+    draft.title = String(ev.title || "").trim();
+    draft.date = String(ev.date || "").slice(0, 10);
+    draft.time = String(ev.time || "00:00").slice(0, 5);
+    draft.meta = { date: "certain", time: "certain", title: "certain" };
+    draft.silverUpdateTargetEventId = String(ev.id || "");
+    const tmMatch = folded.match(/\bna\s+(\d{1,2})\s*(?:hodin\w*|h\b|:)/);
+    if (tmMatch && tmMatch[1]) {
+      const hh = String(Number(tmMatch[1])).padStart(2, "0");
+      draft.time = hh + ":00";
+    } else {
+      const tmMatch2 = folded.match(/\bna\s+(\d{1,2})\s*[:.]\s*(\d{1,2})\b/);
+      if (tmMatch2) {
+        draft.time = String(Number(tmMatch2[1])).padStart(2, "0") + ":" + String(Number(tmMatch2[2])).padStart(2, "0");
+      }
+    }
+    iuSilverCap55EnsureCalendarDateFromRawV1(draft, raw, now);
+    const ps = processingStateFromDraft(draft);
+    const ap = buildAssistantParts(draft, ps);
+    return {
+      normalizedIntent: "calendar.update",
+      targetContainer: "calendar",
+      processingState: ps,
+      clarificationReason: null,
+      futureIntentCandidate: "calendar.update",
+      readQuery: null,
+      readAnswer: null,
+      extractedFields: {},
+      missingFields: computeMissing(draft),
+      ambiguousFields: [],
+      userFacingSummary: "",
+      assistantLead: ap.assistantLead,
+      clarificationText: ap.clarification,
+      draft: draft,
+      silverConversationAction: "update",
+      silverUpdateResolutionV1: "unique_match"
     };
   }
 
@@ -42501,6 +42596,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         }
       }
     }
+    const aliasHits = iuSilverPersonAliasGroupsForFoldedTextV1(fq);
+    for (let gi = 0; gi < aliasHits.length; gi++) {
+      const grp = IU_SILVER_CZECH_PERSON_ALIAS_GROUPS_V1[aliasHits[gi]] || [];
+      for (let ai = 0; ai < grp.length; ai++) {
+        if (ft.indexOf(grp[ai]) >= 0) return true;
+      }
+    }
     return false;
   }
 
@@ -43748,7 +43850,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bkdy\s+m[aá]m\s+dal[sš][ií]\s+sch[uů]z/i.test(f)) {
       return { intent: "next_event", filter: null };
     }
-    if (/\bm[aá]m\s+dnes\s+n[eě]co/i.test(f)) {
+    if (/\bco\s+m(am|ame)\s+(?:na\s+)?(?:dnes|dnesek|dneska|dnesni)\b/i.test(f) && /\bkalend/i.test(f)) {
+      return { intent: "agenda_for_day", dateRange: "today", filter: null };
+    }
+    if (/\bm[aá]m\s+(?:dnes|dnesek|dneska|dnesni)\s+n[eě]co/i.test(f)) {
       return { intent: "agenda_for_day", dateRange: "today", filter: null };
     }
     if (/\bm[aá]m\s+dnes\s+n[eě]jak/i.test(f)) {
@@ -44342,6 +44447,36 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return [];
   }
 
+  /** Silver Temporal Retrieval Trust V1 — vrácené události musí odpovídat požadovanému dni/týdnu. */
+  function iuSilverTemporalRetrievalTrustV1Filter(spec, matched, now) {
+    if (!spec || !Array.isArray(matched)) return matched || [];
+    const todayStr = toDateOnly(now);
+    const events = matched.slice();
+    if (spec.intent === "agenda_for_day") {
+      let dr = todayStr;
+      if (spec.dateRange === "tomorrow") dr = addDays(todayStr, 1);
+      else if (spec.dateRange === "yesterday") dr = addDays(todayStr, -1);
+      return events.filter(function (e) {
+        return String(e.date || "").slice(0, 10) === dr;
+      });
+    }
+    if (spec.intent === "count_events" && spec.dateRange) {
+      let dr = todayStr;
+      if (spec.dateRange === "tomorrow") dr = addDays(todayStr, 1);
+      else if (spec.dateRange === "yesterday") dr = addDays(todayStr, -1);
+      return events.filter(function (e) {
+        return String(e.date || "").slice(0, 10) === dr;
+      });
+    }
+    if (spec.intent === "agenda_for_iso" && spec.dateIso) {
+      const dr = String(spec.dateIso || "").slice(0, 10);
+      return events.filter(function (e) {
+        return String(e.date || "").slice(0, 10) === dr;
+      });
+    }
+    return events;
+  }
+
   function iuSilverFormatEventLine(ev) {
     const d = iuSilverFormatDateCs(String(ev.date || ""));
     return (d ? d + " " : "") + String(ev.time || "") + " — " + String(ev.title || "");
@@ -44349,7 +44484,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverBuildReadAnswer(spec, matched, now) {
     const type = spec.intent;
-    const evs = iuSilverSortEventsChrono(matched);
+    const trusted = iuSilverTemporalRetrievalTrustV1Filter(spec, matched, now);
+    const evs = iuSilverSortEventsChrono(trusted);
     const count = evs.length;
     let ambiguity = false;
     let message = "";
@@ -44661,6 +44797,154 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     contact: ["kontakt", "telefon", "cislo", "email", "servis"]
   };
 
+  /** Silver Czech Person Alias Layer V1 — rozšíření retrieval matching (bez slepého přepisu textu). */
+  const IU_SILVER_CZECH_PERSON_ALIAS_GROUPS_V1 = {
+    josef: ["josef", "pepa", "pepik", "pepicek", "jozka", "joska"],
+    jan: ["jan", "honza", "honzik", "jenda", "jenik", "jenicek"],
+    petr: ["petr", "peta", "petrik", "peca"],
+    tomas: ["tomas", "tom", "tomik", "tomasek"],
+    jiri: ["jiri", "jirka", "jirko", "jira", "jirik"],
+    martin: ["martin", "martas", "martinek"],
+    michal: ["michal", "misa", "michalek", "miki"],
+    lukas: ["lukas", "luky", "lukasek", "lukesh"],
+    jakub: ["jakub", "kuba", "kubik", "kubicek"],
+    david: ["david", "davca", "davidek"],
+    ondrej: ["ondrej", "ondra", "ondras", "ondrasek"],
+    marek: ["marek", "maro", "marecek"],
+    pavel: ["pavel", "pavlik", "paja"],
+    vaclav: ["vaclav", "vasek", "vasik", "venda"],
+    karel: ["karel", "kaja", "karlik"],
+    roman: ["roman", "romca"],
+    milan: ["milan", "milanek"],
+    radek: ["radek", "rada", "radim"],
+    ales: ["ales", "alik"],
+    filip: ["filip", "fila", "filipek"],
+    dominik: ["dominik", "domca", "dominicek"],
+    daniel: ["daniel", "dan", "danik", "danicek"],
+    adam: ["adam", "adamek"],
+    matej: ["matej", "mates", "matysek"],
+    matyas: ["matyas", "maty", "matysek"],
+    vojtech: ["vojtech", "vojta", "vojtisek"],
+    stanislav: ["stanislav", "standa", "stanik"],
+    jaroslav: ["jaroslav", "jarda", "jarousek"],
+    miroslav: ["miroslav", "mirek", "mira", "mirda"],
+    zdenek: ["zdenek", "zdena", "zdenda"],
+    frantisek: ["frantisek", "franta", "fanda", "fanous"],
+    ladislav: ["ladislav", "lada", "ladik"],
+    libor: ["libor", "liborek"],
+    robert: ["robert", "rob", "robik"],
+    patrik: ["patrik", "pata"],
+    erik: ["erik", "ericek"],
+    tadeas: ["tadeas", "tadeasek", "tady"],
+    richard: ["richard", "risa"],
+    bohumil: ["bohumil", "bohous", "bohus"],
+    antonin: ["antonin", "tonda", "tonik"],
+    jaromir: ["jaromir"],
+    rudolf: ["rudolf", "ruda", "rudik"],
+    vladimir: ["vladimir", "vlada", "vladik"],
+    lubos: ["lubos", "lubosek"],
+    milos: ["milos", "milosek"],
+    viktor: ["viktor", "viky"],
+    nikolas: ["nikolas", "nicolas", "niko", "niky", "nik"],
+    katerina: ["katerina", "katka", "kata", "kacka", "kacenka", "katynka"],
+    veronika: ["veronika", "verca", "verunka", "veru", "nika"],
+    jana_z: ["jana", "jani", "janka", "janca", "janicka"],
+    petra: ["petra", "peta", "petruska", "peca"],
+    tereza: ["tereza", "terka", "terezka", "terinka"],
+    lucie: ["lucie", "lucka", "lucinka", "luca"],
+    michaela: ["michaela", "misa", "misina", "misenka", "miska"],
+    marie: ["marie", "maruska", "maja", "majka", "marus"],
+    eva: ["eva", "evicka", "evca", "evka"],
+    anna: ["anna", "anicka", "anka", "anca"],
+    barbora: ["barbora", "bara", "barca", "barunka"],
+    monika: ["monika", "monca", "moni"],
+    lenka: ["lenka", "lenca", "lenicka"],
+    andrea: ["andrea", "andy", "andrejka"],
+    nikola: ["nikola", "niki", "nikca"],
+    natalie: ["natalie", "natka", "naty", "natalka"],
+    kristyna: ["kristyna", "kiki", "kristynka", "tyna"],
+    simona: ["simona", "simca", "simi"],
+    martina: ["martina", "marta", "martinka"],
+    alena: ["alena", "ala", "alenka"],
+    helena: ["helena", "hela", "helenka"],
+    iva: ["iva", "ivuska", "ivca"],
+    ivana: ["ivana", "ivanka", "ivca"],
+    zuzana: ["zuzana", "zuzka", "zuza", "zuzanka"],
+    denisa: ["denisa", "denca", "denda"],
+    karolina: ["karolina", "karolinka"],
+    adela: ["adela", "ada", "adelka"],
+    eliska: ["eliska", "eli", "elis"],
+    klara: ["klara", "klarka", "klari"],
+    gabriela: ["gabriela", "gabina", "gabi"],
+    marketa: ["marketa", "market", "maky", "marketka"],
+    sarka: ["sarka", "sari", "sarenka"],
+    pavla: ["pavla", "pavli", "pata"],
+    pavlina: ["pavlina", "pavli", "pavlinka"],
+    hana: ["hana", "hanka", "hanicka"],
+    jitka: ["jitka", "jitus", "jitunka"],
+    renata: ["renata", "renca", "reni"],
+    romana: ["romana", "romca"],
+    vendula: ["vendula", "vendy", "vendulka"],
+    miroslava: ["miroslava", "mirka"],
+    stanislava: ["stanislava", "stana"],
+    jaroslava: ["jaroslava", "jarka", "jaruska"],
+    vera: ["vera", "verka", "veruska"],
+    blanka: ["blanka", "blani", "blanicka"],
+    dana: ["dana", "danka", "danuska"],
+    jarmila: ["jarmila", "jarmilka"],
+    milada: ["milada", "miladka", "mila"],
+    bozena: ["bozena", "bozenka", "bozka"],
+    ruzena: ["ruzena", "ruza", "ruzenka"],
+    libuse: ["libuse", "libuska"],
+    ludmila: ["ludmila", "lida", "lidka", "liduska"]
+  };
+
+  function iuSilverPersonAliasExpandTokensV1(tokens) {
+    const bag = {};
+    const add = function (w) {
+      const x = String(w || "").trim();
+      if (x.length >= 2) bag[x] = 1;
+    };
+    for (let i = 0; i < tokens.length; i++) add(tokens[i]);
+    const gkeys = Object.keys(IU_SILVER_CZECH_PERSON_ALIAS_GROUPS_V1);
+    for (let gi = 0; gi < gkeys.length; gi++) {
+      const canon = gkeys[gi];
+      const group = IU_SILVER_CZECH_PERSON_ALIAS_GROUPS_V1[canon] || [];
+      let hit = false;
+      for (let ai = 0; ai < group.length; ai++) {
+        if (bag[group[ai]]) {
+          hit = true;
+          break;
+        }
+      }
+      if (bag[canon]) hit = true;
+      if (hit) {
+        add(canon);
+        for (let ai = 0; ai < group.length; ai++) add(group[ai]);
+      }
+    }
+    return Object.keys(bag);
+  }
+
+  function iuSilverPersonAliasGroupsForFoldedTextV1(foldedText) {
+    const f = String(foldedText || "");
+    const hits = [];
+    const gkeys = Object.keys(IU_SILVER_CZECH_PERSON_ALIAS_GROUPS_V1);
+    for (let gi = 0; gi < gkeys.length; gi++) {
+      const group = IU_SILVER_CZECH_PERSON_ALIAS_GROUPS_V1[gkeys[gi]] || [];
+      for (let ai = 0; ai < group.length; ai++) {
+        const alias = String(group[ai] || "").trim();
+        if (alias.length < 2) continue;
+        const esc = alias.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        if (new RegExp("\\b" + esc + "\\b").test(f)) {
+          hits.push(gkeys[gi]);
+          break;
+        }
+      }
+    }
+    return hits;
+  }
+
   /** Silver Retrieval Normalization Registry V1 — lokální české tvary / aliasy (query + stored records). */
   const IU_SILVER_RETRIEVAL_NORM_REGISTRY_V1 = {
     pepa: ["pepovi", "pepu", "pepove", "pepa"],
@@ -44953,6 +45237,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         for (let ai = 0; ai < all.length; ai++) add(all[ai]);
       }
     }
+    const aliasExpanded = iuSilverPersonAliasExpandTokensV1(Object.keys(bag));
+    for (let pi = 0; pi < aliasExpanded.length; pi++) add(aliasExpanded[pi]);
     return Object.keys(bag);
   }
 
@@ -56936,38 +57222,44 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   const IU_SILVER_LINE_O_COPY_V1 = {
     general:
-      "Silver je lokální asistent infoUzlu: pomoc s kalendářem, úkoly, poznámkami, připomínkami a vyhledáváním. Bez internetu a cloud AI — jen v prohlížeči.",
+      "Silver běží lokálně v prohlížeči — bez internetu a cloud AI. Umí kalendář, úkoly, poznámky, připomínky a vyhledávání.\n\nÚkol: Připomeň mi zavolat doktorovi v pátek.\nKalendář: Zítra v 10 schůzka s Kubou v Praze.\nPoznámka: Ulož poznámku: heslo wifi je abc.\nHledání: Co mám dnes v kalendáři? nebo Najdi poznámku o tričku Kateřiny.",
     silver:
       "Silver rozumí českým hlasovým příkazům, navazuje v relaci a vede tě krok za krokem. Není to chatbot — lokální produktový mozek.",
     calendar:
-      "Kalendář: schůzky a události s datem, časem, místem a poznámkou. Příklad: „Zítra v 10 schůzka s Kubou v Praze.“",
+      "Kalendář: schůzky a události s datem, časem, místem a poznámkou. Příklad: Zítra v 10 schůzka s Kubou v Praze. Hledání: Co mám dnes v kalendáři? nebo Kdy mám doktora?",
     tasks:
-      "Úkoly a připomínky s termínem. Příklad: „Připomeň mi zítra koupit mléko.“ nebo „Úkol zaplatit nájem v pátek.“",
+      "Úkoly a připomínky s termínem. Příklad: Připomeň mi zítra koupit mléko. nebo Úkol zaplatit nájem v pátek. Dotaz: Co mám koupit?",
     notes:
-      "Poznámky ukládáš přímo: „Ulož do poznámek PIN 1234.“ Hledání: „Najdi poznámku o televizi.“",
+      "Poznámky ukládáš přímo: Ulož do poznámek PIN 1234. Hledání: Najdi poznámku o televizi. nebo Najdi velikost trička Kateřiny.",
     reminders:
-      "Připomínky: „Připomeň mi…“ je úkol nebo kalendář podle kontextu — krátká činnost → úkol, schůzka s časem → kalendář.",
+      "Připomínky: Připomeň mi… je úkol nebo kalendář podle kontextu — krátká činnost → úkol, schůzka s časem → kalendář.",
     continuation:
-      "Navazování: po uložení řekni „Přidej tam adresu“ nebo „K tomu napiš…“ — vícekrokově drží aktivní draft v relaci.",
+      "Navazování: po uložení řekni Přidej tam adresu nebo K tomu napiš… — vícekrokově drží aktivní draft v relaci.",
     memory:
       "Paměť konverzace a navazování na předchozí zprávy je v rámci relace (drafty, poslední dotaz). Není věčná — po zavření stránky začínáš znovu.",
     agenda:
-      "Agenda: „Co mám zítra?“ nebo „Co mám tento týden?“ — přehled kalendáře bez vytváření nových záznamů.",
+      "Agenda: Co mám zítra? nebo Co mám tento týden? — přehled kalendáře bez vytváření nových záznamů.",
     search:
-      "Vyhledávání v kalendáři, úkolech i poznámkách — lokálně, bez sítě. Příklad: „Najdi schůzku s doktorem.“",
+      "Vyhledávání v kalendáři, úkolech i poznámkách — lokálně, bez sítě. Příklad: Najdi schůzku s doktorem.",
     drafts:
-      "Draft = koncept před uložením. Více draftů v jedné relaci — přepínání přes „k tomu“, „ta schůzka“, „servis“.",
+      "Draft = koncept před uložením. Více draftů v jedné relaci — přepínání přes k tomu, ta schůzka, servis.",
     edits:
-      "Úpravy: „Změň čas na 15“, „Přesuň na pátek“, „Změň lokaci/místo“, „Smaž to“ — u aktivního draftu nebo poslední události.",
+      "Úpravy: Změň čas na 15, Přesuň na pátek, Dnešní schůzku s Novákem přesuň na 22 hodinu — u jednoznačné události navrhnu update.",
     save:
-      "Uložit umím: schůzku (kalendář), úkol/připomínku, poznámku. Řekni cíl jasně: „Ulož schůzku…“, „Připomeň mi…“.",
+      "Uložit umím: schůzku (kalendář), úkol/připomínku, poznámku. Řekni cíl jasně: Ulož schůzku…, Připomeň mi…. Dotaz umíš ukládat? je nápověda — neukládám dokud neřekneš konkrétní větu.",
     event_notes:
-      "K události přidáš poznámku v jedné větě: „Schůzka s Kubou a napiš tam adresu.“ nebo follow-up „K tomu techničák“.",
-    notes_search: "Hledání v poznámkách: „Najdi poznámku o…“, „Co mám v poznámkách o PIN?“ — jen čtení.",
-    calendar_search: "Hledání v kalendáři: „Kdy mám doktora?“, „Najdi schůzku s Kubou.“ — bez vytváření události.",
-    tasks_search: "Hledání v úkolech: „Co mám koupit?“, „Úkol zaplatit nájem.“ — termíny a titulky.",
+      "K události přidáš poznámku v jedné větě: Schůzka s Kubou a napiš tam adresu. nebo follow-up K tomu techničák.",
+    notes_search: "Hledání v poznámkách: Najdi poznámku o…, Co mám v poznámkách o PIN? — jen čtení.",
+    calendar_search: "Hledání v kalendáři: Kdy mám doktora?, Najdi schůzku s Kubou. — bez vytváření události.",
+    tasks_search: "Hledání v úkolech: Co mám koupit?, Úkol zaplatit nájem. — termíny a titulky.",
     commands:
       "Mluv jasně: co + kdy + kde. Typy příkazů chápu — ulož, připomeň, najdi, uprav. Krátké věty fungují nejlépe.",
+    how_to_prompt:
+      "Piš přirozeně — akce + modul + datum/čas. Úkol: Připomeň mi zavolat doktorovi v pátek. Kalendář: Zítra v 10 schůzka s Kubou. Poznámka: Ulož poznámku: heslo wifi je abc. Hledání: Co mám dnes? nebo Najdi poznámku o tričku Katky.",
+    onboarding:
+      "Začni jednoduše: Co umíš? pro přehled, Co mám dnes? pro kalendář, Připomeň mi… pro úkol. Silver běží lokálně — bez internetu.",
+    prompt_guidance:
+      "Co napsat: akce + obsah + kdy/kde. Příklady: Připomeň mi zavolat v pátek, Zítra v 9 schůzka s Petrem, Najdi poznámku o narozeninách. Kombinace v jedné větě držím v relaci postupně.",
     corrections:
       "Chyba? Řekni opravu nebo smaž: „Ne, až ve čtvrtek“, „Změň titul“, „Smaž to“, „Nic neukládej.“ Silver přepíše draft.",
     historical:
@@ -57100,6 +57392,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!x) return false;
     if (/\bco\s+(?:muzu|mohu|umis|dokazes)\s+(?:ulozit|ukladat)\b/.test(x)) return true;
     if (/\bco\s+(?:se\s+da|lze)\s+(?:ulozit|ukladat)\b/.test(x) && !/^\s*uloz\b/.test(x)) return true;
+    if (/\b(?:dokazes|umis|muzes|mohu|muzu)\s+(?:mi\s+)?(?:ulozit|ukladat)\b/.test(x)) return true;
+    if (/\b(?:muzu|mohu|muzeme)\s+(?:neco|co)\s+ulozit\s+do\s+kalendar/.test(x)) return true;
+    if (/\bumis\s+ukladat\s+udalost/.test(x) && /\?/.test(x)) return true;
+    if (/\bjak\s+se\s+uklada\s+schuz/.test(x)) return true;
     if (/\bs\s+cim\s+(?:mi\s+)?(?:muzes|umis|pomuzes|pomoct|pomoci)\b/.test(x)) return true;
     if (/\bco\s+vsechno\s+dokazes\b/.test(x) || /\bco\s+dokazes\b/.test(x)) return true;
     if (/\bjak\s+(?:nekde|neco|mi)\s+.*\buloz\w*\b/.test(x) && !/^\s*uloz\b/.test(x)) return true;
@@ -57126,6 +57422,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bco\s+mam\s+napsat\b/.test(x)) return true;
     if (/\bco\s+se\s+da\s+ulozit\b/.test(x)) return true;
     if (/\bco\s+se\s+da\s+ukladat\b/.test(x)) return true;
+    if (/\bjak\s+(?:ti\s+)?(?:mam|muzu|mohu)\s+(?:zadavat|psat|formulovat)\b/.test(x)) return true;
+    if (/\bjak\s+funguj(?:i|e)\s+(?:ukol|ukoly|kalendar|kalend|poznam)/.test(x)) return true;
     if (/\bna\s+co\s+(?:jsou|je)\b/.test(x)) return true;
     if (/\bk\s+cemu\s+(?:jsou|je|slouzi)\b/.test(x)) return true;
     if (/\bjak\s+(?:muzu|mohu|se\s+da)\s+.*\b(?:vyhled|hledat|hledani|najit|najdu)\b/.test(x)) return true;
@@ -57210,6 +57508,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bcontinuation\b/.test(f)) return "continuation";
     if (/\bfollow[\s-]?up|jak\s+napsat\s+follow|jak\s+pokracovat\s+v\s+konverzac/.test(f)) return "continuation";
     if (/\bpriklad\s+prikaz|spravne\s+formulovat|ukaz\s+priklad/.test(f)) return "guidance_commands";
+    if (/\bco\s+mam\s+napsat|jak\s+(?:ti\s+)?(?:mam|muzu|mohu)\s+(?:zadavat|psat|formulovat)/.test(f)) return "how_to_prompt";
+    if (/\bjak\s+(?:zacit|to\s+pouzivat|pouzivat)\b/.test(f)) return "onboarding";
     if (/\bjak\s+s\s+tebou\s+mam\s+mluvit|jake\s+typy\s+prikaz/.test(f)) return "commands";
     if (/\bjak\s+neco\s+oprav|jak\s+neco\s+smaz|co\s+kdyz\s+udelam\s+chybu/.test(f)) return "corrections";
     if (/\bhledani\s+v\s+poznam|poznamk.*hled/.test(f)) return "notes_search";
@@ -57228,7 +57528,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bdraft|koncept/.test(f)) return "drafts";
     if (/\boprav|smaz|chybu|co\s+kdyz\s+udelam\s+chybu/.test(f)) return "corrections";
     if (/\buprav|zmena\s+casu|zmeny\s+casu|presun|lokac|misto/.test(f)) return "edits";
-    if (/\bco\s+umis\s+ulozit|ulozit\s+umis/.test(f)) return "save";
+    if (/\b(?:jde|lze|umis|dokazes|muzes|mohu|muzu)\b.*\buloz\w*\b.*\b(?:kalendar|ukol|poznam)/.test(f)) return "save";
     if (/\bco\s+umis\s+upravit/.test(f)) return "edits";
     if (/\bpoznamk.*udalost|udalost.*poznam/.test(f)) return "event_notes";
     if (/\bpripomink|pripomen|reminder/.test(f)) return "reminders";
@@ -58949,6 +59249,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (calUpdateTurn) {
         const calUpEng = String(calUpdateTurn.normalizedIntent || "");
         if (calUpEng === "unknown" || calUpEng === "clarification") {
+          const uniqueUpEarly = iuSilverTryUniqueCalendarUpdateResolutionV1(raw, folded, now, ctx || {});
+          if (uniqueUpEarly) return uniqueUpEarly;
           calUpdateTurn = Object.assign({}, calUpdateTurn, {
             normalizedIntent: "calendar.update",
             targetContainer: "calendar",
@@ -58957,6 +59259,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         }
         return calUpdateTurn;
       }
+    }
+
+    {
+      const uniqueUpPivot = iuSilverTryUniqueCalendarUpdateResolutionV1(raw, folded, now, ctx || {});
+      if (uniqueUpPivot) return uniqueUpPivot;
     }
 
     if (
@@ -59483,6 +59790,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     {
       const prevEarly = prevDraft || createEmptyDraft();
       if (iuSilverIsCalendarUpdateIntentV1(folded) && !iuSilverCalendarUpdateRiskAllowCreateDespiteExplicitMoveP1(prevEarly) && !iuSilverCalendarSaveConfidenceOverrideV1(folded, raw0)) {
+        const uniqueUp = iuSilverTryUniqueCalendarUpdateResolutionV1(raw, folded, now, ctx || {});
+        if (uniqueUp) return uniqueUp;
         const leadSel = iuSilverClarificationCopy("needs_existing_event_selection");
         return {
           normalizedIntent: "unknown",
