@@ -35435,7 +35435,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       !/\bkalend\w*\s+ohled/.test(x)
     )
       return true;
-    if (/\bmam\s+na\s+zitr\w*\s+nejak\w*\s+ukol/.test(x)) return true;
+    if (/\bmam\s+(?:\w+\s+){0,8}(?:na\s+)?zitr\w*\s+(?:\w+\s+){0,4}nejak\w*\s+ukol/.test(x)) return true;
     if (
       /\bmam\s+na\s+zitr\w*\s+(nejak\w*\s+)?ukol\w*/.test(x) &&
       !/\b(uloz|pridej|vytvor|zapis|nahod)\w*\s+ukol/.test(x)
@@ -35490,6 +35490,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     /** P0 20k task_query: „podivej jen do ukolu co mam na dnes“ — tasks.read, ne calendar agenda. */
     if (/\b(podivej|zjist)\w*\s+jen\s+do\s+ukol/.test(x) && /\bco\s+m(am|ame)\s+(?:na\s+)?dnes/.test(x)) return true;
     if (/\b(podivej|zjist)\w*\s+jen\s+do\s+ukol/.test(x)) return true;
+    /** P0 search-read v2: mobilní šum mezi „mám“ a „zítra … úkoly“. */
+    if (/\bmam\s+(?:\w+\s+){0,8}(?:na\s+)?zitr\w*\s+(?:\w+\s+){0,4}nejak\w*\s+ukol/.test(x)) return true;
+    if (/\bmam\s+(?:\w+\s+){0,8}zavolat\s+\w+\s+v\s+ukol/.test(x)) return true;
     return false;
   }
 
@@ -36186,6 +36189,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverCalendarReadWinsOverTaskReadFolded(f)) return false;
     if (iuSilverTaskQueryHardSignalFolded(f)) return true;
     if (iuSilverP1ReadOnlyTaskQueryUnderNegationP1Folded(f)) return true;
+    /** P0 search-read v2: „mám zavolat Pavlovi v úkolech“ (mobilní šum) = tasks.read. */
+    if (/\bmam\s+(?:\w+\s+){0,8}zavolat\s+\w+\s+v\s+ukol/.test(f) && !iuSilverHasWriteVerb(f)) return true;
     return iuSilverTaskReadNegativeWriteWithScopeFolded(f, rawOpt);
   }
 
@@ -36195,6 +36200,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverTaskStatusReadQuerySignalFolded(x)) return true;
     if (iuSilverRealisticMobileTaskQueryListCueFolded(x)) return true;
     if (
+      /\bco\s+(?:\w+\s+){0,5}mam\s+udelat\b/.test(x) ||
       /\bco\s+mam\s+udelat\b/.test(x) ||
       /\bco\s+mam\s+splnit\b/.test(x) ||
       /\bco\s+mam\s+dokoncit\b/.test(x) ||
@@ -36880,6 +36886,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bjakou\s+(barvu|adresu)\b/.test(x) ||
       /\bjakou\s+mam\b/.test(x) ||
       /\bco\s+m(am|ame)\b/.test(x) ||
+      (/\bco\s+(?:\w+\s+){0,5}m(?:am|ame)\b/.test(x) && /\b(kalend|schuz|udalost|pondel|uterk|stred|ctvr|patek|sobot|nedel|zitra|dnes)\b/.test(x)) ||
       /\bco\s+tam\s+m(am|ame)\b/.test(x) ||
       /\bmam\s+neco\b/.test(x) ||
       (/\bmam\b.*\bneco\b/.test(x) && /\b(kalend|schuz)/.test(x)) ||
@@ -36913,6 +36920,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverFoldedHasBlockingTaskModuleWordForCalendarRouteFolded(x) && !/\b(kalend|schuz)\b/.test(x)) return false;
     const calQ =
       /\bco\s+m(am|ame)\b/.test(x) ||
+      (/\bco\s+(?:\w+\s+){0,5}m(?:am|ame)\b/.test(x) && /\b(kalend|schuz|v\s+kalend)/.test(x)) ||
       /\bco\s+tam\s+m(am|ame)\b/.test(x) ||
       /\bco\s+me\b/.test(x) ||
       /\bjak[eé]\s+m(am|ame)\b/.test(x) ||
@@ -42516,6 +42524,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const b0 = iuSilverNoteCreateFinalizeBody(tail);
       if (b0) return { kind: "body", body: b0 };
     }
+    /** P0 search-read v2: „poznámka o tričku“ / „poznámka fakt o tričku“ = recall/read, ne create. */
+    if (
+      (/\bpoznamk\w*(?:\s+\w+){0,4}\s+o\s+\w{2,}/i.test(fEarly) || /^pozn[aá]mk\w*(?:\s+\w+){0,4}\s+o\s+\w{2,}/i.test(s)) &&
+      !iuSilverHasWriteVerb(fEarly)
+    )
+      return null;
     if (
       /^pozn[aá]mk[ay]\s+(?!m[aá]m\s+)/i.test(s) &&
       !/^pozn[aá]mk[ay]\s*:/i.test(s) &&
@@ -46729,6 +46743,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (/^\s*(?:uloz|ulozit|pridej|pripomen|zapis|vytvor|naplanuj)\b/.test(x)) return false;
     if (/\b(tu|to)\s+(?:\w+\s+){0,4}poznam/.test(x)) return true;
+    /** P0 search-read v2: „poznámka o tričku“ / mobilní filler před „o“ = note recall, ne notes.create. */
+    if (/\bpoznamk\w*(?:\s+\w+){0,4}\s+o\s+\w{2,}/.test(x)) return true;
     if (/\bto\s+co\s+mam\s+o\s+/.test(x)) return true;
     if (/\bjak\s+sem\s+(?:\w+\s+){0,4}psal\s+o\s+/.test(x)) return true;
     if (/\bjak\s+(?:\w+\s+){0,6}sem\s+(?:\w+\s+){0,4}psal\b/.test(x)) return true;
@@ -55198,6 +55214,29 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ) {
       return null;
     }
+    if (
+      (/\bco\s+m(am|ame)\b/.test(f) || /\bco\s+(?:\w+\s+){0,5}m(?:am|ame)\b/.test(f)) &&
+      /\bpristi\s+pondel/.test(f) &&
+      /\b(kalend|v\s+kalend)/.test(f) &&
+      /\bohledne\b/.test(f) &&
+      !iuSilverHasWriteVerb(f)
+    ) {
+      const mDocPondSr = f.match(/\b(doktor|zubar|pravnik|advokat|kuryr|petr|pavel)\b/);
+      const qDocPondSr = mDocPondSr && mDocPondSr[1] ? mDocPondSr[1] : "doktor";
+      return iuSilverBuildCalendarReadFromSpecTurnV1(
+        {
+          intent: "find_by_title",
+          query: qDocPondSr,
+          normalizedQuery: qDocPondSr,
+          diacriticInsensitive: true,
+          queryFolded: foldCs(qDocPondSr),
+          preferFuture: true
+        },
+        ctx || {},
+        empty,
+        now
+      );
+    }
     if (iuSilverNotesListQuerySignalV1(f)) {
       return iuSilverBuildNotesListReadTurnV1(ctx || {}, empty, now);
     }
@@ -55258,7 +55297,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         if (/\bco\s+m(am|ame)\s+zitra/.test(f)) {
           return iuSilverBuildCalendarReadFromSpecTurnV1({ intent: "agenda_for_day", dateRange: "tomorrow", filter: null }, ctx || {}, empty, now);
         }
-        if (/\bco\s+m(am|ame)\b/.test(f) && /\bpristi\s+pondel/.test(f) && /\b(kalend|v\s+kalend)/.test(f) && /\bohledne\b/.test(f)) {
+        if (
+          (/\bco\s+m(am|ame)\b/.test(f) || /\bco\s+(?:\w+\s+){0,5}m(?:am|ame)\b/.test(f)) &&
+          /\bpristi\s+pondel/.test(f) &&
+          /\b(kalend|v\s+kalend)/.test(f) &&
+          /\bohledne\b/.test(f)
+        ) {
           const mDocPondE = f.match(/\b(doktor|zubar|pravnik|advokat|kuryr|petr|pavel)\b/);
           const qDocPondE = mDocPondE && mDocPondE[1] ? mDocPondE[1] : "doktor";
           return iuSilverBuildCalendarReadFromSpecTurnV1(
@@ -56392,6 +56436,42 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     gov.continuationDepth = 0;
     gov.continuationChain = 0;
     gov.lastContinuationAt = 0;
+  }
+
+  const IU_SILVER_CONVERSATIONAL_CONTEXT_ISOLATION_V1 = true;
+
+  /**
+   * SILVER_CONVERSATIONAL_CONTEXT_ISOLATION_V1 — reset stale SAVE/SEARCH/HELP ownership on explicit intent switch.
+   */
+  function iuSilverConversationalContextIsolationV1Tick(rawFolded) {
+    if (!IU_SILVER_CONVERSATIONAL_CONTEXT_ISOLATION_V1) return;
+    iuSilverLongSessionIsolationTickV1(rawFolded);
+    const f = String(rawFolded || "");
+    const c = IU_SILVER_CONVERSATION_V12;
+    const isHelp =
+      iuSilverHelpGuidanceFirewallV2Folded(f) ||
+      iuSilverHelpTierBChaosUtteranceV1Folded(f) ||
+      (iuSilverLineOIsCapabilityUtteranceV1 && iuSilverLineOIsCapabilityUtteranceV1(f));
+    const isRead =
+      !isHelp &&
+      (iuSilverReadSearchSignalFolded(f) ||
+        iuSilverImplicitConversationalReadIntentV1Folded(f) ||
+        iuSilverConversationalNoteRecallAnchorV1Folded(f) ||
+        /\b(jen\s+search|jen\s+hled|jen\s+cti|neukladej\s+nic|nic\s+neukladej)\b/.test(f));
+    const isSave = /^\s*(?:uloz|ulozit|pridej|pripomen|zapis|vytvor|naplanuj)\b/.test(f);
+    if (isRead || isHelp) {
+      c.lastDraft = null;
+      c.lastDraftType = null;
+      if (isRead) c.activeDraftKey = null;
+    }
+    if (isHelp) {
+      c.lastDraft = null;
+      c.lastDraftType = null;
+      c.activeDraftKey = null;
+    }
+    if (isRead && isSave) {
+      void isSave;
+    }
   }
 
   /** Long Session Isolation V1 — cross-turn stale payload/clarification/retrieval ownership guard. */
@@ -59822,7 +59902,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (noteFactualTurnEarly0) return noteFactualTurnEarly0;
     }
     if (IU_SILVER_STATE_GOVERNANCE_V1 && raw0) {
-      iuSilverLongSessionIsolationTickV1(foldCs(raw0));
+      if (IU_SILVER_CONVERSATIONAL_CONTEXT_ISOLATION_V1) {
+        iuSilverConversationalContextIsolationV1Tick(foldCs(raw0));
+      } else {
+        iuSilverLongSessionIsolationTickV1(foldCs(raw0));
+      }
     }
     {
       const salConvFirst = iuSilverBuildSalutationPreferenceTurn(raw0);
