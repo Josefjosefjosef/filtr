@@ -30,6 +30,11 @@ const TITLE_REAL_UX_PACK = [
     titleNeed: ["porad", "klient"],
     titleLacks: ["hele", "prosím tě", "ulož mi"],
   },
+  { id: "T16", input: "hele prosím tě zítra schůzka s Kubou jo díky", group: "calendar_write", titleNeed: ["kub", "schůz"], titleLacks: ["hele", "prosím", "díky"] },
+  { id: "T17", input: "no tak přidej schůzku s Petrem", group: "calendar_write", titleNeed: ["petr", "schůz"], titleLacks: ["no tak", "přidej"] },
+  { id: "T18", input: "ehm zavolat účetní jo", group: "task_write", intent: "tasks.create", titleNeed: ["účet", "zavol"], titleLacks: ["ehm", "jo"] },
+  { id: "T19", input: "prosím tě mohl bys uložit úkol zavolat doktorovi díky", group: "task_write", intent: "tasks.create", titleNeed: ["doktor", "zavol"], titleLacks: ["prosím", "mohl", "díky"] },
+  { id: "T20", input: "zítra v 10 schůzka s Kubou v Praze", group: "calendar_write", titleNeed: ["kub", "schůz"], titleLacks: ["zítra", "praha", "10"] },
 ];
 
 const FIELD_ISOLATION_REAL_UX = [
