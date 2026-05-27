@@ -298,17 +298,13 @@ function auditSilverTaskWriteReadOnlyLeadBeforeExplicitDoUkolFolded(fx) {
   return readIdx < doIdx;
 }
 
-/** task_write_06012: nákupní řádek + „jako jeden úkol do pátku“ bez slovesa zápisu — engine zůstává unknown. */
+/**
+ * task_write_06012 (deprecated unknown gate): „Nákup: … jako jeden úkol do pátku“ → task.create
+ * (explicit nákupní list + jeden úkol + deadline; replay governance task_write_hardening_v1).
+ */
 function auditSilverTaskWriteNakupJedenUkolDeadlineFolded(fx) {
-  const x = String(fx || "");
-  if (!/\bnakup\s*:/.test(x)) return false;
-  if (!/\bjako\s+jeden\s+ukol\w*\b/.test(x)) return false;
-  return (
-    /\bdo\s+patk\w*\b/.test(x) ||
-    /\bdo\s+zitr\w*\b/.test(x) ||
-    /\bdo\s+deset\w*\b/.test(x) ||
-    /\bdo\s+\d+\s+dn\w*\b/.test(x)
-  );
+  void fx;
+  return false;
 }
 
 /** task_write_06013: NEGS fragment „ne do úkolů“ + pracovní úkol řádek — konflikt signálů, zápis neprovedu. */
@@ -1837,7 +1833,7 @@ function buildCases() {
     const twc3 = cases[twx];
     if (twc3.group !== "task_write") continue;
     const f3 = foldCs(twc3.input);
-    if (auditSilverTaskWriteNakupJedenUkolDeadlineFolded(f3) || auditSilverTaskWriteNeDoUkolLeadWorkLineFolded(f3)) {
+    if (auditSilverTaskWriteNeDoUkolLeadWorkLineFolded(f3)) {
       twc3.expectedIntent = "unknown";
       twc3.meta = Object.assign({}, twc3.meta || {}, { readWritePriorityGate: true });
     }
