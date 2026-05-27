@@ -43,8 +43,75 @@ const TASK_WRITE_NO_CALENDAR_LEAK_REPLAY = [
 const TASK_WRITE_CLEAN_PAYLOAD_REPLAY = [
   { id: "TWCP_001", input: "Do úkolů napiš servis auta", expect: "tasks.create", titleNeed: ["servis"], titleLacks: ["napiš", "úkolů"] },
   { id: "TWCP_002", input: "Udělej úkol zavolat doktorovi", expect: "tasks.create", titleNeed: ["doktor", "zavol"], titleLacks: ["udělej", "úkol"] },
-  { id: "TWCP_003", input: "Přidej task zaplatit nájem", expect: "tasks.create", titleNeed: ["nájem", "zaplat"], titleLacks: ["přidej", "task"] }
+  { id: "TWCP_003", input: "Přidej task zaplatit nájem", expect: "tasks.create", titleNeed: ["nájem", "zaplat"], titleLacks: ["přidej", "task"] },
+  { id: "TWCP_004", input: "neptej se na čas uložení Nákup: 10 rohlíků, 5 mlék, 3 kečupy jako jeden úkol do pátku.", expect: "tasks.create", titleNeed: ["rohlík", "mlék"], titleLacks: ["neptej", "nakup:"] },
+  { id: "TWCP_005", input: "nevracej advokáta Nákup: 10 rohlíků, 5 mlék, 3 kečupy jako jeden úkol do pátku.", expect: "tasks.create", titleNeed: ["kečup"], titleLacks: ["nevracej", "advokát"] },
+  { id: "TWCP_006", input: "nepleť to s úkolem Nákup: 10 rohlíků, 5 mlék, 3 kečupy jako jeden úkol do pátku.", expect: "tasks.create", titleNeed: ["rohlík"], titleLacks: ["nepleť", "úkolem"] },
+  { id: "TWCP_007", input: "nevytvářej poznámku Nákup: 10 rohlíků, 5 mlék, 3 kečupy jako jeden úkol do pátku.", expect: "tasks.create", titleNeed: ["mlék"], titleLacks: ["nevytvářej", "poznámku"] }
 ];
+
+/** P0 task_write_20k: meta-neg lead + nákupní šablona → tasks.create (replay z 100× intent_fail). */
+const TASK_WRITE_NAKUP_META_NEG_REPLAY = (function buildNakupMetaNegReplay() {
+  const bodies = [
+    "Nákup: 10 rohlíků, 5 mlék, 3 kečupy jako jeden úkol do pátku.",
+    "Nakup: 10 rohliku, 5 mlek, 3 kecupy jako jeden ukol do patku.",
+    "Nakup: 10 rohliku, 5 mlek, 3 kecupy jako jeden ukol do patku. (příloha)",
+    "Nákup: 10 rohlíků, 5 mlék, 3 kečupy jako jeden úkol do patku."
+  ];
+  const leads = [
+    "neptej se na čas uložení",
+    "neptej se na cas ulozeni",
+    "nevracej advokáta",
+    "nevracej advokata",
+    "nepleť to s úkolem",
+    "neplet to s ukolem",
+    "nevytvářej poznámku",
+    "nevytvarej poznamku",
+    "neptej se kam uložit",
+    "nevracej právníka",
+    "nepleť to s kalendářem",
+    "nevracej schůzku",
+    "nevracej úkol",
+    "nevracej poznámku"
+  ];
+  const out = [];
+  let n = 0;
+  for (let li = 0; li < leads.length; li++) {
+    for (let bi = 0; bi < bodies.length; bi++) {
+      n++;
+      out.push({
+        id: "TWN_" + String(n).padStart(3, "0"),
+        input: leads[li] + " " + bodies[bi],
+        expect: "tasks.create"
+      });
+      if (n >= 56) return out;
+    }
+  }
+  return out;
+})();
+
+TASK_WRITE_CHAOS_REPLAY.push.apply(
+  TASK_WRITE_CHAOS_REPLAY,
+  TASK_WRITE_NAKUP_META_NEG_REPLAY.slice(0, 20)
+);
+TASK_WRITE_MOBILE_REPLAY.push.apply(
+  TASK_WRITE_MOBILE_REPLAY,
+  TASK_WRITE_NAKUP_META_NEG_REPLAY.slice(20, 35)
+);
+TASK_WRITE_NEGATED_CAL_REPLAY.push.apply(
+  TASK_WRITE_NEGATED_CAL_REPLAY,
+  TASK_WRITE_NAKUP_META_NEG_REPLAY.slice(35, 45)
+);
+TASK_WRITE_NO_CALENDAR_LEAK_REPLAY.push.apply(
+  TASK_WRITE_NO_CALENDAR_LEAK_REPLAY,
+  TASK_WRITE_NAKUP_META_NEG_REPLAY.slice(45, 50).map(function (c) {
+    return Object.assign({}, c, { forbidCalendar: true });
+  })
+);
+TASK_WRITE_CLEAN_PAYLOAD_REPLAY.push.apply(
+  TASK_WRITE_CLEAN_PAYLOAD_REPLAY,
+  TASK_WRITE_NAKUP_META_NEG_REPLAY.slice(50, 56)
+);
 
 function defaultCtx() {
   return {
@@ -133,6 +200,7 @@ module.exports = {
   TASK_WRITE_NEGATED_CAL_REPLAY,
   TASK_WRITE_NO_CALENDAR_LEAK_REPLAY,
   TASK_WRITE_CLEAN_PAYLOAD_REPLAY,
+  TASK_WRITE_NAKUP_META_NEG_REPLAY,
   runReplayCases,
   evaluateTaskWrite,
   printGuardHeader
