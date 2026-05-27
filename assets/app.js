@@ -43959,10 +43959,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       restQ = restQ
         .replace(/\s*,\s*a\s+nesmis\b.*$/i, "")
+        .replace(/\s*nic\s+neuklad\w*.*$/i, "")
+        .replace(/\s*nic\s+neprid\w*.*$/i, "")
+        .replace(/\s*nic\s+neukladej\b.*$/i, "")
         .replace(/\s*prosim\s+bez\s+ukol.*$/i, "")
         .replace(/\s*jen\s+kalendar\b.*$/i, "")
         .replace(/\s*jde\s+jen\s+o\s+cten[ií].*$/i, "")
         .trim();
+      if (/^(?:z[ií]tra|dnes(?:ka|ek)?)\s*(?:v\s+kalend\w*)?$/i.test(restQ)) {
+        if (/\bz[ií]tra\b/i.test(f)) {
+          return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
+        }
+        return { intent: "agenda_for_day", dateRange: "today", filter: null };
+      }
       if (!restQ || restQ.length < 2) {
         if (/\bz[ií]tra\b/i.test(f)) {
           return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
@@ -46497,6 +46506,35 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverTryReadSearchTurn(raw, now, folded, ctx, empty) {
     if (!iuSilverReadSearchShouldRun(raw, folded, now)) return null;
+    if (
+      iuSilverCalendarQuerySignalFolded(folded) &&
+      iuSilverCalendarEntityContextFolded(folded) &&
+      /\bco\s+m(?:am|ame)\s+(?:zitra|dnes(?:ka|ek)?)/.test(folded) &&
+      /\b(?:v\s+kalend|kalend)/.test(folded)
+    ) {
+      const readSpecAgenda = tryParseCalendarRead(raw, now);
+      if (readSpecAgenda) {
+        const snapAg = ctx && typeof ctx.getEventsSnapshot === "function" ? ctx.getEventsSnapshot() : [];
+        const matchedAg = iuSilverRetrieveReadQuery(readSpecAgenda, snapAg, now);
+        const answerAg = iuSilverBuildReadAnswer(readSpecAgenda, matchedAg, now);
+        return {
+          normalizedIntent: "calendar.read",
+          targetContainer: "none",
+          processingState: "READ_OK",
+          clarificationReason: null,
+          futureIntentCandidate: null,
+          readQuery: readSpecAgenda,
+          readAnswer: answerAg,
+          extractedFields: {},
+          missingFields: [],
+          ambiguousFields: [],
+          userFacingSummary: answerAg.message,
+          assistantLead: answerAg.message,
+          clarificationText: "",
+          draft: empty
+        };
+      }
+    }
     if (iuSilverCalendarScopedDetailReadMatchFolded(folded)) {
       const readSpecDetail = tryParseCalendarRead(raw, now);
       if (readSpecDetail) {
@@ -54963,6 +55001,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!x) return false;
     if (/^\s*(?:uloz|ulozit|pridej|pripomen|zapis|vytvor|naplanuj|dej\s+mi\s+(?:do|na)|vloz)\b/.test(x)) return false;
     if (/\bco\s+m(?:am|ame)\b/.test(x)) return false;
+    if (/\bco\s+(?:jsem|sem|jsme)\s+(?:resil|resila|resili|mel|mela|meli|delal|delala|delali|pracoval|pracovala|pracovali)\b/.test(x)) {
+      return false;
+    }
+    if (/\bkdy\s+(?:jsem|sem|jsme)\s+m(?:el|ela|eli)\b/.test(x)) return false;
     if (/\b(najdi|hledej|vyhled|ukaz|vypis)\b/.test(x)) return false;
     if (/\b(kdy|kolik)\s+m(?:am|ame)\b/.test(x)) return false;
     if (/^\s*(?:jak|co|na\s+co|k\s+cemu|proc|umis|silver|silvr|co\s+umis)\b/.test(x)) return true;
@@ -57006,6 +57048,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const rawTrim = String(raw || "").trim();
     const f = foldCs(rawTrim).replace(/[?!.,;:]+$/g, "");
     if (!IU_SILVER_LINE_O_V1) return null;
+    if (iuSilverIsPastRecallReadQueryV1(rawTrim, f)) return null;
+    if (
+      /\bco\s+(?:jsem|sem)\s+m(?:el|ela|eli)\b/.test(f) &&
+      (/\bpred\s+mesic\w*\b/.test(f) || /\bminul\w*\s+tyden\b/.test(f) || /\bnaposledy\b/.test(f))
+    ) {
+      return null;
+    }
+    if (/\bco\s+(?:jsem|sem)\s+r(?:esil|esila|esili)\b/.test(f)) return null;
     if (iuSilverScreenshotGovernanceHelpFirewallV1(f)) {
       const topicGov = iuSilverLineOResolveTopicV1(f);
       const copyGov = IU_SILVER_LINE_O_COPY_V1[topicGov] || IU_SILVER_LINE_O_COPY_V1.general;
