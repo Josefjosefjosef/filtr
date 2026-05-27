@@ -23,6 +23,13 @@ const TITLE_REAL_UX_PACK = [
   { id: "T12", input: "Jo a připomeň mi zavolat Petrovi", group: "task_write", intent: "tasks.create", titleNeed: ["petr", "zavol"], titleLacks: ["připomeň", "jo"] },
   { id: "T13", input: "Ještě přidej schůzku s Martinem", group: "calendar_write", titleNeed: ["martin"], titleLacks: ["ještě", "přidej"] },
   { id: "T14", input: "Jenom mi vytvoř úkol koupit chleba", group: "task_write", intent: "tasks.create", titleNeed: ["chleb", "koupit"], titleLacks: ["jenom", "vytvoř mi"] },
+  {
+    id: "T15",
+    input: "Hele prosím tě ulož mi poradu s klientem zítra",
+    group: "calendar_write",
+    titleNeed: ["porad", "klient"],
+    titleLacks: ["hele", "prosím tě", "ulož mi"],
+  },
 ];
 
 const FIELD_ISOLATION_REAL_UX = [
