@@ -115,11 +115,15 @@ function buildCapCorpusV1(targetCount) {
     const sfx = TAILS[(n >> 2) % TAILS.length];
     let input = tpl.replace("{q}", seeds.q[n % seeds.q.length]).replace("{w}", seeds.w[n % seeds.w.length]);
     input = pfx + input + sfx;
-    out.push({
+    const entry = {
       id: "CAP_GEN_" + String(n).padStart(4, "0"),
       family: family,
       input: input
-    });
+    };
+    if (family === "followup_ownership") {
+      entry.chain = ["Co mam zitra?", input];
+    }
+    out.push(entry);
     n++;
   }
   return out.slice(0, targetCount);

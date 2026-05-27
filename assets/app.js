@@ -35455,6 +35455,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!x) return false;
     if (iuSilverTaskStatusReadQuerySignalFolded(x)) return true;
     if (/\bco\s+musim\s+zaplatit\b/.test(x)) return true;
+    if (/\bco\s+(?:\w+\s+){0,5}(?:mam|musim)\s+(?:zaplatit|koupit|zavolat|jeste\s+zaridit)\b/.test(x)) return true;
+    if (/\bmam\s+neco\s+(?:\w+\s+){0,3}(?:ohledne|kolem)\b/.test(x)) return true;
     if (/\bjake\s+mam\s+rest\b/i.test(x)) return true;
     if (/\bco\s+m(am|ame)\s+jeste\s+zaridit\b/.test(x)) return true;
     if (
@@ -46701,7 +46703,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bneukladej\b/.test(x) && /\bdej\s+do\s+kalend/.test(x)) return false;
     if (/\bneple\w*\s+(?:to\s+)?s\s+poznam/.test(x) && /\b(kalend|ukol|deadlin|doktor|tyden|kolik)\b/.test(x)) return false;
     if (/\bnaplanuj\b/.test(x) || /\bpripomen\w*\b/.test(x)) return false;
-    if (/\bco\s+mam\s+(udelat|koupit|zaplatit|vyridit|poslat|objednat|zavolat)\b/.test(x)) return false;
+    if (/\bco\s+(?:mam|musim|mel\s+bych)\s+(udelat|koupit|zaplatit|vyridit|poslat|objednat|zavolat|splnit)\b/.test(x)) return false;
+    if (/\b(?:mam|musim)\s+(?:zavolat|zaplatit|koupit|poslat|objednat)\b/.test(x) && /\?/.test(x)) return false;
     if (
       /\bco\s+(jsem|sem|jsme)\s+(?:\w+\s+){0,3}(resil|resi|mel|mela|meli)\b/.test(x) &&
       (/\bvcere\b|\bvcera\b|\bminul\w*\s+tyden\b|\bminule\b/.test(x) || /\bdnes\b/.test(x))
@@ -55635,6 +55638,201 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
   /** IU_SILVER_SEARCH_READ_HARDENING_V1_END */
 
+  /** SILVER_TEMPORAL_TASK_QUERY_ROUTING_V1 — narrow mobile/future/past task read before capability leak */
+  const IU_SILVER_TEMPORAL_TASK_QUERY_ROUTING_V1 = true;
+
+  function iuSilverTemporalTaskQueryRoutingV1StripPrefixFolded(f) {
+    return String(f || "")
+      .replace(/^(?:(?:no|jo|ee|hele|prosim|pls|silver|kratce|vlastne|urgentne|fakt|promin|proste|diky)\s+)+/gi, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function iuSilverTemporalModuleSwitchFollowupReadV1Folded(f) {
+    const x = iuSilverTemporalTaskQueryRoutingV1StripPrefixFolded(f);
+    if (!x) return false;
+    return (
+      /^\s*a\s+(?:ted\s+)?v\s+kalend/.test(x) ||
+      /^\s*a\s+(?:to\s+)?same\s+v\s+poznam/.test(x) ||
+      /^\s*a\s+jen\s+v\s+ukol/.test(x)
+    );
+  }
+
+  function iuSilverTemporalTaskQueryRoutingV1Folded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (iuSilverTemporalModuleSwitchFollowupReadV1Folded(x)) return true;
+    if (iuSilverTaskQueryHardSignalFolded(x)) return true;
+    if (/\bco\s+(?:mam|musim|mel\s+bych)\s+(?:zaplatit|koupit|zavolat|poslat|objednat|vyridit|udelat|splnit)\b/.test(x)) return true;
+    if (/\bco\s+(?:\w+\s+){0,5}(?:mam|musim)\s+(?:zaplatit|koupit|zavolat|poslat|objednat|vyridit|udelat|splnit|jeste\s+zaridit)\b/.test(x)) return true;
+    if (/\b(?:mam|musim)\s+(?:zavolat|zaplatit|koupit|poslat|objednat)\b/.test(x) && /\?/.test(x)) return true;
+    if (/\bmam\s+neco\s+(?:\w+\s+){0,3}(?:ohledne|kolem)\b/.test(x)) return true;
+    if (/\bco\s+jsem\s+(?:mel|mela|meli|resil|resi|resila)\b/.test(x) && !/\b(kalend|schuz|udalost)\b/.test(x)) return true;
+    if (/\bco\s+(?:\w+\s+){0,5}jsem\s+(?:mel|mela|meli|resil|resi|resila)\b/.test(x) && !/\b(kalend|schuz|udalost)\b/.test(x)) return true;
+    if (/\bco\s+mam\s+(?:kolem|ohledne)\b/.test(x) && !/\b(kalend|schuz|poznam)\b/.test(x)) return true;
+    if (/\bco\s+mam\s+s\s+\w+/.test(x) && !iuSilverRelationshipCoMamSExplicitCalendarCueFolded(x)) return true;
+    if (/\bmam\s+neco\s+(?:na|v)\s+(?:pondel|utery|stred|ctvrtek|patek|sobot|nedel)/.test(x)) return true;
+    if (/\bco\s+mam\s+(?:na|v)\s+(?:dnes|zitra|zittra)\b/.test(x) && /\bukol/.test(x)) return true;
+    if (/\bco\s+(?:\w+\s+){0,4}mam\s+na\s+(?:dnes|zitra|zittra)\b/.test(x)) return true;
+    if (/\bco\s+mam\s+(?:udelat|splnit)\s+(?:pristi|zitra|dnes|vcera|minul)/.test(x)) return true;
+    if (/\b(?:mam|musim)\s+(?:zavolat|zaplatit|koupit|poslat|objednat)\b/.test(x) && !/\b(uloz|pridej|zapis|vytvor|dej\s+do)\b/.test(x)) return true;
+    if (/\bjen\s+(?:mi\s+)?(?:to\s+)?ukaz\b/.test(x) || /\bnic\s+neukladej\b/.test(x) || /\bjen\s+hledam\b/.test(x)) return true;
+    if (/\bneptam\s+se\s+na\s+vytvoreni\b/.test(x)) return true;
+    return false;
+  }
+
+  function iuSilverTryTemporalModuleSwitchFollowupReadV1Turn(raw, now, folded, ctx, empty) {
+    const f = iuSilverTemporalTaskQueryRoutingV1StripPrefixFolded(folded);
+    if (!IU_SILVER_TEMPORAL_TASK_QUERY_ROUTING_V1 || !f || !iuSilverTemporalModuleSwitchFollowupReadV1Folded(folded)) return null;
+    if (/^\s*a\s+(?:ted\s+)?v\s+kalend/.test(f)) {
+      const c = IU_SILVER_CONVERSATION_V12;
+      if (c.agendaContext && c.agendaContext.dateISO) {
+        return iuSilverBuildCalendarReadFromSpecTurnV1(
+          { intent: "agenda_for_day", dateISO: c.agendaContext.dateISO, filter: null },
+          ctx || {},
+          empty,
+          now
+        );
+      }
+      return iuSilverBuildCalendarReadFromSpecTurnV1(
+        { intent: "agenda_for_day", dateRange: "tomorrow", filter: null },
+        ctx || {},
+        empty,
+        now
+      );
+    }
+    if (/^\s*a\s+(?:to\s+)?same\s+v\s+poznam/.test(f)) {
+      return iuSilverBuildNotesListReadTurnV1(ctx || {}, empty, now);
+    }
+    if (/^\s*a\s+jen\s+v\s+ukol/.test(f)) {
+      return iuSilverBuildTasksReadListTurn(ctx || {}, empty, f, now);
+    }
+    return null;
+  }
+
+  function iuSilverTryTemporalTaskQueryRoutingV1ReadTurn(raw, now, folded, ctx, empty) {
+    const f = String(folded || "");
+    const r0 = String(raw || "").trim();
+    if (!IU_SILVER_TEMPORAL_TASK_QUERY_ROUTING_V1 || !r0 || !f) return null;
+    if (iuSilverTryParseExplicitNoteCreate(r0)) return null;
+    if (iuSilverHasStrongWriteCreateCueV1(f, r0)) return null;
+    if (iuSilverHasWriteVerb(f) && !iuSilverNegativeQueryReadGuardP0Folded(f, r0) && !/\?/.test(r0)) return null;
+    const modSw = iuSilverTryTemporalModuleSwitchFollowupReadV1Turn(raw, now, f, ctx, empty);
+    if (modSw) return modSw;
+    if (!iuSilverTemporalTaskQueryRoutingV1Folded(f)) return null;
+    if (iuSilverExplicitCalendarReadScopeFolded(f) && !/\bukol/.test(f) && !iuSilverTemporalModuleSwitchFollowupReadV1Folded(f)) return null;
+    const taskEarly = iuSilverTryTaskReadListQueryEarly(raw, now, f, ctx, empty);
+    if (taskEarly) return taskEarly;
+    const taskDeadline = iuSilverTryTaskDeadlineAnswerReadTurnV2(raw, now, f, ctx, empty);
+    if (taskDeadline) return taskDeadline;
+    if (/\bco\s+(?:\w+\s+){0,5}mam\s+na\s+(?:dnes|zitra|zittra)\b/.test(f)) {
+      return iuSilverBuildCalendarReadFromSpecTurnV1(
+        { intent: "agenda_for_day", dateRange: /\bdnes\b/.test(f) ? "today" : "tomorrow", filter: null },
+        ctx || {},
+        empty,
+        now
+      );
+    }
+    if (/\b(?:mam|musim)\s+(?:zavolat|zaplatit|koupit|poslat|objednat)\b/.test(f) && !/\b(uloz|pridej|zapis|vytvor|dej\s+do)\b/.test(f)) {
+      return iuSilverBuildTasksReadListTurn(ctx || {}, empty, f, now);
+    }
+    if (/\bmam\s+neco\s+(?:\w+\s+){0,3}(?:ohledne|kolem)\b/.test(f)) {
+      const qMatchNeco = f.match(/\b(?:ohledne|kolem)\s+(\w[\w\s]{1,30})/);
+      const qNeco = qMatchNeco && qMatchNeco[1] ? qMatchNeco[1].trim().split(/\s+/).slice(0, 3).join(" ") : r0;
+      const srNeco = iuSilverSearchLocalData(qNeco, {
+        target: "tasks",
+        now: now,
+        preferFuture: true,
+        getEventsSnapshot: ctx && ctx.getEventsSnapshot,
+        getTasksSnapshot: ctx && ctx.getTasksSnapshot,
+        getNotesSnapshot: ctx && ctx.getNotesSnapshot,
+        rawFoldedHint: f
+      });
+      const ansNeco = iuSilverBuildAnswerFromSearch(srNeco);
+      return {
+        normalizedIntent: "tasks.read",
+        targetContainer: "none",
+        processingState: "READ_OK",
+        clarificationReason: null,
+        futureIntentCandidate: null,
+        readQuery: { silverReadSearch: true, target: "tasks", query: qNeco },
+        readAnswer: { message: ansNeco.message, silverSearch: srNeco },
+        extractedFields: {},
+        missingFields: [],
+        ambiguousFields: [],
+        userFacingSummary: ansNeco.message,
+        assistantLead: ansNeco.message,
+        clarificationText: "",
+        draft: empty,
+        silverSearchResult: srNeco
+      };
+    }
+    if (/\bco\s+(?:\w+\s+){0,5}(?:mam|musim)\s+(?:zaplatit|koupit|zavolat|poslat|objednat|vyridit|udelat|splnit|jeste\s+zaridit)\b/.test(f)) {
+      const qMatch = f.match(/\b(?:zaplatit|koupit|zavolat|poslat|objednat|vyridit|udelat|splnit)\b(?:\s+(\w[\w\s]{0,24}))?/);
+      const q = qMatch && qMatch[1] ? qMatch[1].trim().split(/\s+/).slice(0, 3).join(" ") : qMatch && qMatch[0] ? qMatch[0] : r0;
+      const srPay = iuSilverSearchLocalData(q, {
+        target: "tasks",
+        now: now,
+        preferFuture: true,
+        getEventsSnapshot: ctx && ctx.getEventsSnapshot,
+        getTasksSnapshot: ctx && ctx.getTasksSnapshot,
+        getNotesSnapshot: ctx && ctx.getNotesSnapshot,
+        rawFoldedHint: f
+      });
+      const ansPay = iuSilverBuildAnswerFromSearch(srPay);
+      return {
+        normalizedIntent: "tasks.read",
+        targetContainer: "none",
+        processingState: "READ_OK",
+        clarificationReason: null,
+        futureIntentCandidate: null,
+        readQuery: { silverReadSearch: true, target: "tasks", query: q },
+        readAnswer: { message: ansPay.message, silverSearch: srPay },
+        extractedFields: {},
+        missingFields: [],
+        ambiguousFields: [],
+        userFacingSummary: ansPay.message,
+        assistantLead: ansPay.message,
+        clarificationText: "",
+        draft: empty,
+        silverSearchResult: srPay
+      };
+    }
+    if (/\bco\s+mam\s+(?:kolem|ohledne|s)\s+/.test(f)) {
+      const qMatch = f.match(/\b(?:kolem|ohledne|s)\s+(\w[\w\s]{1,30})/);
+      const q = qMatch && qMatch[1] ? qMatch[1].trim().split(/\s+/).slice(0, 3).join(" ") : r0;
+      const srScope = iuSilverSearchLocalData(q, {
+        target: "tasks",
+        now: now,
+        preferFuture: /\bzitr|pristi\b/.test(f),
+        preferPast: /\bvcera|minul\w*\s+tyden|jsem\s+(?:mel|resil)\b/.test(f),
+        getEventsSnapshot: ctx && ctx.getEventsSnapshot,
+        getTasksSnapshot: ctx && ctx.getTasksSnapshot,
+        getNotesSnapshot: ctx && ctx.getNotesSnapshot,
+        rawFoldedHint: f
+      });
+      const ansScope = iuSilverBuildAnswerFromSearch(srScope);
+      return {
+        normalizedIntent: "tasks.read",
+        targetContainer: "none",
+        processingState: "READ_OK",
+        clarificationReason: null,
+        futureIntentCandidate: null,
+        readQuery: { silverReadSearch: true, target: "tasks", query: q },
+        readAnswer: { message: ansScope.message, silverSearch: srScope },
+        extractedFields: {},
+        missingFields: [],
+        ambiguousFields: [],
+        userFacingSummary: ansScope.message,
+        assistantLead: ansScope.message,
+        clarificationText: "",
+        draft: empty,
+        silverSearchResult: srScope
+      };
+    }
+    return iuSilverBuildTasksReadListTurn(ctx || {}, empty, f, now);
+  }
+
   /** IU_SILVER_ACTION_MODE_V1 — SAVE vs SEARCH hard product layer */
   function iuSilverIsCreateIntentV1(intent) {
     const ni = String(intent || "");
@@ -59911,6 +60109,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     {
       const salConvFirst = iuSilverBuildSalutationPreferenceTurn(raw0);
       if (salConvFirst) return salConvFirst;
+    }
+    {
+      const foldTemporalPreCap = foldCs(raw0);
+      if (IU_SILVER_TEMPORAL_TASK_QUERY_ROUTING_V1) {
+        const temporalTaskPreCap = iuSilverTryTemporalTaskQueryRoutingV1ReadTurn(
+          raw0,
+          now,
+          foldTemporalPreCap,
+          ctx,
+          createEmptyDraft()
+        );
+        if (temporalTaskPreCap) return temporalTaskPreCap;
+      }
     }
     {
       const lineOCapEarly = IU_SILVER_LINE_O_V1 && iuSilverLineOCapabilityHelpEngineV1(raw0, now, ctx);
