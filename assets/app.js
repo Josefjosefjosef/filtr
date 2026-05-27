@@ -36760,17 +36760,39 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   const IU_SILVER_CROSS_MODULE_NEGATION_TARGET_ROUTING_V1 = true;
 
   function iuSilverCrossModuleNegationStripTailFromBody(body) {
-    let b = String(body || "");
-    b = b
-      .replace(/\s*,\s*ne\s+do\s+kalend[\s\S]*$/iu, "")
-      .replace(/\s*,\s*ne\s+jako\s+ukol[\s\S]*$/iu, "")
-      .replace(/\s*,\s*ne\s+jako\s+udalost[\s\S]*$/iu, "")
-      .replace(/\s*,\s*ne\s+do\s+ukol[\s\S]*$/iu, "")
-      .replace(/\s*,\s*ne\s+do\s+poznam[\s\S]*$/iu, "")
-      .replace(/\s+ne\s+ukol\b[\s\S]*$/iu, "")
-      .replace(/\s+ne\s+kalend[\s\S]*$/iu, "")
-      .trim();
-    return b;
+    const raw = String(body || "").trim();
+    if (!raw) return raw;
+    const f = foldCs(raw);
+    const tailRes = [
+      /,\s*ne\s+do\s+k[\s\S]*?alend[\s\S]*$/,
+      /,\s*ne\s+jako\s+u[\s\S]*?kol[\s\S]*$/,
+      /,\s*ne\s+jako\s+u[\s\S]*?dalost[\s\S]*$/,
+      /,\s*ne\s+do\s+u[\s\S]*?kol[\s\S]*$/,
+      /,\s*ne\s+do\s+poznam[\s\S]*$/,
+      /\s+ne\s+u[\s\S]*?kol\b[\s\S]*$/,
+      /\s+ne\s+k[\s\S]*?alend[\s\S]*$/
+    ];
+    for (let i = 0; i < tailRes.length; i++) {
+      const m = f.match(tailRes[i]);
+      if (m && m.index != null) return raw.slice(0, m.index).trim();
+    }
+    return raw;
+  }
+
+  function iuSilverCrossModuleNegationStripTailFromRawIfNeeded(rawIn) {
+    const r = String(rawIn || "").trim();
+    if (!r) return r;
+    const f = foldCs(r);
+    if (!/,\s*ne\s+(jako|do)\s+/.test(f) && !/\s+ne\s+(jako|do)\s+/.test(f)) return r;
+    return iuSilverCrossModuleNegationStripTailFromBody(r) || r;
+  }
+
+  function iuSilverCrossModuleNegationStripPollutedTitleV1(title) {
+    const t = String(title || "").trim();
+    if (!t) return t;
+    const f = foldCs(t);
+    if (!/,\s*ne\s+(jako|do)\s+/.test(f) && !/\s+ne\s+(jako|do)\s+/.test(f)) return t;
+    return iuSilverCrossModuleNegationStripTailFromBody(t) || t;
   }
 
   function iuSilverCrossModuleNegationPositiveTargetV1Folded(f) {
@@ -36838,8 +36860,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverTryCrossModuleNegationTargetRoutingV1Turn(raw, now, foldedOpt) {
     const f = String(foldedOpt || foldCs(String(raw || "")));
-    const r = String(raw || "").trim();
-    if (!iuSilverCrossModuleNegationTargetRoutingV1Folded(f, r)) return null;
+    const r0 = String(raw || "").trim();
+    if (!iuSilverCrossModuleNegationTargetRoutingV1Folded(f, r0)) return null;
+    const r = iuSilverCrossModuleNegationStripTailFromBody(r0) || r0;
     const target = iuSilverCrossModuleNegationPositiveTargetV1Folded(f);
 
     if (target === "notes") {
@@ -39302,9 +39325,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     draft.targetContainer = "calendar";
     draft.activeCalendarSession = true;
     /* P1: extractFromUtterance musí vidět celou větu vč. „do kalendáře“ — jinak title pipeline zůstane na „Hoď mi že…“ a sanitize znehodnotí název. */
-    const parseRawFull = iuSilverStripAssistantInvocationV1(String(raw || "").trim());
-    const cleanupRawFull = iuSilverStripAssistantInvocationV1(
-      String(rawFullForFieldCleanupOpt != null ? rawFullForFieldCleanupOpt : raw || "").trim()
+    const parseRawFull = iuSilverCrossModuleNegationStripTailFromRawIfNeeded(
+      iuSilverStripAssistantInvocationV1(String(raw || "").trim())
+    );
+    const cleanupRawFull = iuSilverCrossModuleNegationStripTailFromRawIfNeeded(
+      iuSilverStripAssistantInvocationV1(
+        String(rawFullForFieldCleanupOpt != null ? rawFullForFieldCleanupOpt : raw || "").trim()
+      )
     );
     const extracted = extractFromUtterance(parseRawFull, now);
     draft = mergeIntoDraft(draft, extracted);
@@ -39331,6 +39358,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverCap55EnsureCalendarDateFromRawV1(draft, cleanupRawFull, now);
     iuSilverCap55InferCalendarTitleFromRawV1(draft, cleanupRawFull);
     iuSilverInstructionPrefixTitleCleanerV3ApplyToDraftV1(draft, cleanupRawFull);
+    {
+      const tNeg = iuSilverCrossModuleNegationStripPollutedTitleV1(String(draft.title || ""));
+      if (tNeg !== String(draft.title || "")) {
+        draft.title = tNeg;
+        draft.meta.title = String(tNeg || "").trim() ? "certain" : "missing";
+      }
+    }
   {
     const tftBad = foldCs(String(draft.title || ""));
     if (tftBad && /\b(trochu|oprava|az\s+v|nejak\s+osm|tam\s+prosim|ze\s+mam)\b/.test(tftBad)) {
@@ -42021,7 +42055,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverBuildTaskCreateTurn(rawIn, now, opts) {
     opts = opts || {};
     if (opts.calendarOverridesTask) return null;
-    let work = String(rawIn || "").trim();
+    const rawInNegClean = iuSilverCrossModuleNegationStripTailFromRawIfNeeded(String(rawIn || "").trim());
+    let work = rawInNegClean;
     if (!work) return null;
     if (!opts.skipTargetStrip) {
       work = iuSilverStripTaskTargetPhrases(work);
@@ -42146,9 +42181,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       );
       taskTitleFinal = taskTitleFinal.charAt(0).toLocaleUpperCase("cs-CZ") + taskTitleFinal.slice(1);
     }
-    draft.title = taskTitleFinal;
+    draft.title = iuSilverCrossModuleNegationStripPollutedTitleV1(taskTitleFinal);
     draft.meta.title = String(draft.title || "").trim() ? "certain" : draft.meta.title;
-    iuSilverSemanticPayloadFinalizerV1(draft, String(rawIn || ""), "tasks.create");
+    iuSilverSemanticPayloadFinalizerV1(draft, rawInNegClean, "tasks.create");
 
     const vagueTaskTimeNekdyP1 = iuSilverVagueNekdyDayPartBlocksCertainTimeFolded(foldedFull);
     const processingState = vagueTaskTimeNekdyP1 ? "NEEDS_CLARIFICATION" : "READY_TO_SAVE";

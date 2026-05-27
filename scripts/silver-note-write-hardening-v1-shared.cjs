@@ -2,6 +2,11 @@
 "use strict";
 
 const { loadEngine } = require("./silver-20k-regression-guard-shared.cjs");
+const aliasData = require("./silver-czech-person-alias-registry-v1-data.cjs");
+
+function foldCs(s) {
+  return aliasData.foldCs(s);
+}
 
 const FIXED_NOW = new Date("2026-05-04T12:00:00");
 const WRITE_INTENTS = new Set(["calendar.create", "tasks.create", "notes.create", "create.storage_disambiguation"]);
@@ -201,15 +206,15 @@ function evaluateNoteWrite(c, turn) {
   if (c.forbidTask && intent === "tasks.create") issues.push("task_leak");
   if (WRITE_INTENTS.has(intent) && c.expect !== intent && intent !== "notes.create") issues.push("wrong_write:" + intent);
   if (turn.processingState === "STORAGE_DISAMBIGUATION") issues.push("storage_picker");
-  const body = String((turn.draft && turn.draft.silverNoteText) || "").toLowerCase();
+  const body = foldCs((turn.draft && turn.draft.silverNoteText) || "");
   if (c.bodyNeed) {
     for (let i = 0; i < c.bodyNeed.length; i++) {
-      if (body.indexOf(String(c.bodyNeed[i]).toLowerCase()) < 0) issues.push("body_miss:" + c.bodyNeed[i]);
+      if (body.indexOf(foldCs(c.bodyNeed[i])) < 0) issues.push("body_miss:" + c.bodyNeed[i]);
     }
   }
   if (c.bodyLacks) {
     for (let j = 0; j < c.bodyLacks.length; j++) {
-      if (body.indexOf(String(c.bodyLacks[j]).toLowerCase()) >= 0) issues.push("body_pollution:" + c.bodyLacks[j]);
+      if (body.indexOf(foldCs(c.bodyLacks[j])) >= 0) issues.push("body_pollution:" + c.bodyLacks[j]);
     }
   }
   return issues;

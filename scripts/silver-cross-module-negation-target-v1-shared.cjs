@@ -161,7 +161,7 @@ const NEGATION_TAIL_CLEAN_PAYLOAD_REPLAY = [
     id: "CMNP_001",
     input: "Ulož fakt o záruce na televizi do poznámek, ne do kalendáře",
     expect: "notes.create",
-    bodyNeed: ["televiz", "zaruk"],
+    bodyNeed: ["televiz", "zaruc"],
     bodyLacks: ["ne do kalend", "uloz fakt"]
   },
   {
@@ -192,6 +192,7 @@ function evaluateCrossModuleCase(c, turn) {
 }
 
 module.exports = {
+  foldCs,
   buildCorpusV1,
   CROSS_MODULE_NEGATION_TARGET_REPLAY,
   NOTE_WRITE_NEG_TRAIL_WRONG_COLLECTION_REPLAY,
