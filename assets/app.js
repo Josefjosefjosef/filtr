@@ -36096,6 +36096,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     const gap = x.slice(pick.end, wi);
     if (/\.\s+/.test(gap) || /[!?]\s+/.test(gap)) return false;
+    if (iuSilverExplicitCalendarWriteBeatsReadQueryFolded(x)) return false;
     return true;
   }
 
