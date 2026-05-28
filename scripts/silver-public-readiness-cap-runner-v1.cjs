@@ -50,6 +50,9 @@ function main() {
     long_session: runGate("node scripts/silver-long-session-firewall-v1.cjs", "long_session"),
     timestamp: runGate("node scripts/silver-note-query-timestamp-display-guard-v1.cjs", "timestamp"),
     task_write_hardening: runGate("node scripts/silver-task-write-hardening-v1.cjs", "task_write_hardening"),
+    conversational_ownership: runGate("node scripts/silver-conversational-ownership-guard-v1.cjs", "conversational_ownership"),
+    mobile_voice: runGate("node scripts/silver-mobile-voice-chaos-guard-v1.cjs", "mobile_voice"),
+    p0_real_user_basics: runGate("node scripts/silver-p0-real-user-basics-guard-v1.cjs", "p0_real_user_basics"),
     prod_proof: runGate("node scripts/silver-prod-proof.mjs", "prod_proof")
   };
 
@@ -81,16 +84,18 @@ function main() {
     (publicRep.counters.write_when_negated_count || 0) === 0;
 
   const publicScore = parseFloat(publicRep.overall_accuracy);
+  const p0LaneOk = publicRep.p0_real_user_basics_lane_pass !== false;
   const report = {
     main_commit: mainCommitHash,
     pr_pending: "none",
-    merged_prs: ["4690"],
+    merged_prs: ["4693"],
     post_merge_proof: coreOk ? "PASS" : "FAIL",
     total_cases_run: publicRep.total_cases + totalChaos,
     lanes_run: lanes.length + Object.keys(prShared.LANE_TARGETS).length,
     overall_accuracy: publicRep.overall_accuracy,
     public_ready_score: publicScore,
-    public_ready_candidate: coreOk && safetyOk && publicScore >= 99 ? "YES" : "NO",
+    public_ready_candidate: coreOk && safetyOk && publicScore >= 99 && p0LaneOk ? "YES" : "NO",
+    p0_real_user_basics_lane_pass: p0LaneOk ? "YES" : "NO",
     safety: publicRep.counters,
     core_gates: {},
     chaos_lanes: {},
@@ -137,7 +142,11 @@ function main() {
   console.log("firewall_v1=" + report.core_gates.firewall_v1);
   console.log("long_session=" + report.core_gates.long_session);
   console.log("timestamp=" + report.core_gates.timestamp);
+  console.log("conversational_ownership=" + report.core_gates.conversational_ownership);
+  console.log("mobile_voice=" + report.core_gates.mobile_voice);
+  console.log("p0_real_user_basics=" + report.core_gates.p0_real_user_basics);
   console.log("prod_proof=" + report.core_gates.prod_proof);
+  console.log("p0_real_user_basics_lane_pass=" + report.p0_real_user_basics_lane_pass);
   console.log("top_fail_family=" + report.top_fail_family);
   console.log("true_engine_fail_count=" + report.true_engine_fail_count);
   console.log("next_action=" + report.next_action);
@@ -145,7 +154,7 @@ function main() {
   console.log("stop_reason=" + report.stop_reason);
   console.log("=== END_SILVER_PUBLIC_READINESS_CAP_RUNNER_V1 ===");
 
-  process.exit(coreOk && safetyOk ? 0 : 1);
+  process.exit(coreOk && safetyOk && p0LaneOk ? 0 : 1);
 }
 
 if (require.main === module) main();
