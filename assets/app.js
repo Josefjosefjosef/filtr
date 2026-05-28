@@ -36972,6 +36972,146 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return null;
   }
 
+  /** SILVER_CALENDAR_QUERY_INTENT_ROUTING_V1 — temporal/person/fragment calendar read ownership (narrow early hook). */
+  const IU_SILVER_CALENDAR_QUERY_INTENT_ROUTING_V1 = true;
+
+  function iuSilverCalendarQueryIntentRoutingV1Folded(f, rawOpt) {
+    const x = String(f || "");
+    const r = String(rawOpt || "").trim();
+    if (!x) return false;
+    if (iuSilverExplicitTaskReadScopeFolded(x, r) || /\b(podivej|zjist)\w*\s+jen\s+do\s+ukol/.test(x)) return false;
+    if (/\bne\s+do\s+kalend/.test(x) && /\b(do\s+ukol|v\s+ukol)/.test(x) && !/\b(kalend|schuz)\b/.test(x)) return false;
+    const readOnlyLead =
+      /\b(neukladej|nic\s+neukladej|nic\s+nevytvarej|jen\s+(search|hledam|mi\s+ukaz|cti)|neptam\s+se\s+na\s+vytvoreni|jen\s+cteni)\b/.test(x) ||
+      iuSilverNegativeReadOnlyTaskPhrasesFolded(x) ||
+      iuSilverCalendarQuerySignalFolded(x);
+    if ((iuSilverHasWriteVerb(x) || /\buloz\b/.test(x) || /\bdej\s+to\b/.test(x)) && !readOnlyLead) return false;
+    if (iuSilverIsPastRecallReadQueryV1(r, x)) return true;
+    if (/\b(co\s+jsem\s+mel\w*|co\s+jsem\s+meli)\b/.test(x) && /\bminulou\s+stred/.test(x)) return true;
+    if (/\bs\s+kym\s+jsem\s+(byl\w*|byla\w*|byli\w*|mel\w*|mela\w*|resil\w*|resila\w*)\b/.test(x)) return true;
+    if (/\bco\s+(bylo|mel\w*|mela\w*|meli\w*)\s+(pred|minule)\s+(tydnem|mesicem|rokem)\b/.test(x)) return true;
+    if (/\bco\s+jsem\s+resil\w*\s+(s\s+|kolem\s+|ohledne\s+)/.test(x) && !/\b(v\s+ukol|do\s+ukol)/.test(x)) return true;
+    if (/\b(kdy|co|v\s+kolik)\s+jsem\s+(mel\w*|mela\w*|meli\w*|resil\w*|resila\w*|resili\w*|byl\w*|byla\w*|byli\w*)\b/.test(x)) {
+      if (/\b(vcera|dopoledne|odpoledne|minuly\s+mesic|minule|pred\s+tydnem|pristi\s+tyden|zitra|dnes|rano|vecer|naposledy|letos|schuz|doktor|zubar|pravnik|servis|auto|kalend)\b/.test(x)) {
+        return true;
+      }
+    }
+    if (/\b(jen\s+mi\s+ukaz|jen\s+search|nic\s+nevytvarej|neukladej\s+nic)\b/.test(x) && /\b(kalend|schuz|zitra|tyden|vcera|pristi|pravnik|servis)\b/.test(x)) {
+      return true;
+    }
+    if (/\bco\s+mam\s+v\s+kalend\w*\s+o\s+/.test(x)) return true;
+    if (/\bco\s+mam\s+v\s+(pondeli|utery|stredu|ctvrtek|patek|sobotu|nedeli)\b/.test(x)) return true;
+    if (/\ba\s+jeste\b/.test(x) && /\b(ukaz|najdi|hledej)\b/.test(x) && /\b(co\s+mam|patek|zitra|tyden|kalend|schuz)\b/.test(x)) {
+      return true;
+    }
+    if (/\b(kolem|ohledne)\s+\w{3,}/.test(x) && /\b(co\s+jsem|co\s+mam|najdi|ukaz|hledej)\b/.test(x) && !/\b(v\s+ukol|ukoly)\b/.test(x)) {
+      return true;
+    }
+    return false;
+  }
+
+  function iuSilverTryCalendarQueryIntentRoutingV1ReadSpec(raw, now, folded) {
+    const r = String(raw || "").trim();
+    const f = String(folded || foldCs(r));
+    if (!r || !f) return null;
+    let spec = tryParseCalendarRead(r, now);
+    if (spec) return spec;
+    if (/\bs\s+kym\s+jsem\s+(byl\w*|byla\w*|byli\w*|mel\w*|mela\w*)\b/.test(f)) {
+      if (/\bminul\w*\s+tyden\b/.test(f) || /\bminuly\s+tyden\b/.test(f)) {
+        return { intent: "agenda_for_range", range: "last_week", filter: null };
+      }
+      if (/\bminuly\s+mesic\b/.test(f) || /\bminule\b/.test(f)) {
+        return { intent: "agenda_for_day", dateRange: "yesterday", filter: null, preferPast: true };
+      }
+    }
+    if (/\bco\s+(bylo|mel\w*|mela\w*)\s+pred\s+tydnem\b/.test(f)) {
+      return { intent: "agenda_for_range", range: "last_week", filter: null };
+    }
+    if (/\b(co\s+jsem\s+mel\w*|co\s+jsem\s+meli)\b/.test(f) && /\bminulou\s+stred/.test(f)) {
+      const todayS = toDateOnly(now);
+      const d0 = now instanceof Date ? new Date(now.getTime()) : new Date(now);
+      const dow = d0.getDay();
+      let back = (dow + 7 - 3) % 7;
+      if (back === 0) back = 7;
+      return { intent: "agenda_for_iso", dateIso: addDays(todayS, -back), dayPart: null, timeHHMM: null, filter: null, preferPast: true };
+    }
+    if (/\bco\s+mam\s+v\s+(pondeli|utery|stredu|ctvrtek|patek|sobotu|nedeli)\b/.test(f)) {
+      const dayMap = { pondeli: 1, utery: 2, stredu: 3, ctvrtek: 4, patek: 5, sobotu: 6, nedeli: 0 };
+      let iso = toDateOnly(now);
+      for (const key in dayMap) {
+        if (new RegExp("\\b" + key + "\\b").test(f)) {
+          const targetDow = dayMap[key];
+          const d = now instanceof Date ? new Date(now.getTime()) : new Date(now);
+          const cur = d.getDay();
+          let add = targetDow - cur;
+          if (add <= 0) add += 7;
+          iso = addDays(iso, add);
+          break;
+        }
+      }
+      return { intent: "agenda_for_iso", dateIso: iso, dayPart: null, timeHHMM: null, filter: null };
+    }
+    if (/\bco\s+jsem\s+resil\w*\s+s\s+/.test(f)) {
+      const mPers = f.match(/\bco\s+jsem\s+resil\w*\s+s\s+([a-z0-9]+)/);
+      if (mPers && mPers[1]) {
+        let pers = String(mPers[1]).trim();
+        pers = pers.replace(/(em|ou|ovi|e)$/i, "").trim() || pers;
+        const can = iuSilverCanonicalCalendarEntityTitleFromPersonFragment(pers);
+        if (can && can.query) {
+          return {
+            intent: "find_by_title",
+            query: can.query,
+            normalizedQuery: can.query,
+            diacriticInsensitive: true,
+            queryFolded: can.queryFolded || foldCs(String(can.query || "")),
+            preferPast: /\bminul|vcera|pred\b/.test(f)
+          };
+        }
+        if (pers.length >= 3) {
+          return {
+            intent: "find_by_title",
+            query: pers,
+            normalizedQuery: pers,
+            diacriticInsensitive: true,
+            queryFolded: pers,
+            preferPast: /\bminul|vcera|pred\b/.test(f)
+          };
+        }
+      }
+    }
+    return null;
+  }
+
+  function iuSilverTryCalendarQueryIntentRoutingV1Turn(raw, now, ctx) {
+    if (!IU_SILVER_CALENDAR_QUERY_INTENT_ROUTING_V1) return null;
+    const r = String(raw || "").trim();
+    if (!r) return null;
+    const f = foldCs(r);
+    if (!iuSilverCalendarQueryIntentRoutingV1Folded(f, r)) return null;
+    const readSpec = iuSilverTryCalendarQueryIntentRoutingV1ReadSpec(r, now, f);
+    if (!readSpec) return null;
+    const empty = createEmptyDraft();
+    const snap = ctx && typeof ctx.getEventsSnapshot === "function" ? ctx.getEventsSnapshot() : [];
+    const matched = iuSilverRetrieveReadQuery(readSpec, snap, now);
+    const answer = iuSilverBuildReadAnswer(readSpec, matched, now);
+    return {
+      normalizedIntent: "calendar.read",
+      targetContainer: "none",
+      processingState: "READ_OK",
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: readSpec,
+      readAnswer: answer,
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: answer.message,
+      assistantLead: answer.message,
+      clarificationText: "",
+      draft: empty
+    };
+  }
+
   /** SILVER_REAL_UX_MULTI_INTENT_ROUTING_V1 — chaos prefix, save/search/help collisions, wrong_collection under noise. */
   const IU_SILVER_REAL_UX_MULTI_INTENT_ROUTING_V1 = true;
 
@@ -60594,6 +60734,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         const uxEarly = iuSilverTryRealUxMultiIntentRoutingV1Turn(raw0, now, ctx, prevDraft || createEmptyDraft());
         if (uxEarly) return uxEarly;
       }
+    }
+    if (raw0 && IU_SILVER_CALENDAR_QUERY_INTENT_ROUTING_V1) {
+      const calQEarly = iuSilverTryCalendarQueryIntentRoutingV1Turn(raw0, now, ctx);
+      if (calQEarly) return calQEarly;
     }
     if (raw0) {
       const foldNoteWriteEarly0 = foldCs(raw0);
