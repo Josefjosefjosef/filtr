@@ -64,6 +64,53 @@ const STATIC_REPLAY = [
     family: "negated_read",
     input: "Jen čti, co mám v poznámkách.",
     expectRead: true
+  },
+  {
+    id: "RCF_026",
+    family: "read_after_clarification",
+    input: "Mám dnes nějaké schůzky?",
+    chain: ["Kam to uložit?", "Mám dnes nějaké schůzky?"],
+    expect: "calendar.read"
+  },
+  {
+    id: "RCF_027",
+    family: "read_after_partial_save",
+    input: "Co mám zítra v kalendáři?",
+    chain: ["Ulož schůzku zítra v 10", "Co mám zítra v kalendáři?"],
+    expect: "calendar.read"
+  },
+  {
+    id: "RCF_028",
+    family: "read_after_note_retrieval",
+    input: "Jaké mám schůzky dnes?",
+    chain: ["Mám poznámku o Frantovi?", "Jaké mám schůzky dnes?"],
+    expect: "calendar.read"
+  },
+  {
+    id: "RCF_029",
+    family: "read_after_failed_draft",
+    input: "Ukaž mi dnešní schůzky.",
+    chain: ["Ulož to", "Ukaž mi dnešní schůzky."],
+    expectRead: true
+  },
+  {
+    id: "RCF_030",
+    family: "conversational_continuation",
+    input: "A co mám zítra?",
+    chain: ["Co mám dnes v kalendáři?", "A co mám zítra?"],
+    expect: "calendar.read"
+  },
+  {
+    id: "RCF_031",
+    family: "calendar_read_no_create",
+    input: "Nic neukládej, nepleť to s poznámkou, co mám zítra v kalendáři?",
+    expect: "calendar.read"
+  },
+  {
+    id: "RCF_032",
+    family: "task_read_no_create",
+    input: "Najdi mi úkol kolem auta.",
+    expect: "tasks.read"
   }
 ];
 
@@ -124,7 +171,35 @@ const TEMPLATE_BANK = {
   negated_read: [
     "Neukladej nic, jen mi ukaz {q}",
     "Nic nevytvarej, jen mi najdi {q}",
-    "Jen cti, co mam v poznamkach o {topic}"
+    "Jen cti, co mam v poznamkach o {topic}",
+    "Nic neukladej, neplet to s poznamkou, co mam {day} v kalendari?",
+    "Jen cti kalendář, nic nevytvářej.",
+    "Pouze zobraz dnesni schuzky."
+  ],
+  read_after_clarification: [
+    "Mám {day} nějaké schůzky?",
+    "Co mám {day} v kalendáři?",
+    "Jaké mám {day} schůzky?"
+  ],
+  read_after_partial_save: [
+    "Co mám {day} v kalendáři?",
+    "Mám {day} něco v kalendáři?",
+    "Ukaž mi schůzky na {day}."
+  ],
+  read_after_note_retrieval: [
+    "Jaké mám {day} schůzky?",
+    "Co mám {day} za schůzky?",
+    "Mám {day} nějakou schůzku?"
+  ],
+  read_after_failed_draft: [
+    "Ukaž mi {dayLabel} schůzky.",
+    "Co mám {day} v kalendáři?",
+    "Jen mi ukaž kalendář na {day}."
+  ],
+  conversational_continuation: [
+    "A co mám {day}?",
+    "A ještě mi ukaž co mám {day}.",
+    "A teď co mám {day} v kalendáři?"
   ]
 };
 
@@ -139,6 +214,9 @@ const SAVE_CHAIN = [
   "Dej do kalendáře zítra zubař v 11"
 ];
 const HELP_CHAIN = ["Co umíš?", "Co všechno umíš?", "Jak to funguje?"];
+const CLARIFY_CHAIN = ["Kam to uložit?", "Do kalendáře nebo úkolů?", "Kam to mám dát?"];
+const NOTE_READ_CHAIN = ["Mám poznámku o Frantovi?", "Co mám v poznámkách o záloze?", "Najdi poznámku o pojištění."];
+const FAILED_DRAFT_CHAIN = ["Ulož to", "Ulož mi to prosím", "Dej to tam"];
 
 function fillTemplate(tpl, n) {
   return tpl
@@ -159,11 +237,24 @@ function buildCorpusV1(targetCount) {
     const tpl = tpls[n % tpls.length];
     const input = fillTemplate(tpl, n);
     const entry = { id: "RCF_GEN_" + String(n).padStart(4, "0"), family: family, input: input, tier: "B" };
-    if (family === "read_after_save") {
+    if (family === "read_after_save" || family === "read_after_partial_save") {
       entry.chain = [SAVE_CHAIN[n % SAVE_CHAIN.length], input];
       entry.expectRead = true;
+      if (family === "read_after_partial_save") entry.expect = "calendar.read";
     } else if (family === "read_after_help") {
       entry.chain = [HELP_CHAIN[n % HELP_CHAIN.length], input];
+      entry.expect = "calendar.read";
+    } else if (family === "read_after_clarification") {
+      entry.chain = [CLARIFY_CHAIN[n % CLARIFY_CHAIN.length], input];
+      entry.expect = "calendar.read";
+    } else if (family === "read_after_note_retrieval") {
+      entry.chain = [NOTE_READ_CHAIN[n % NOTE_READ_CHAIN.length], input];
+      entry.expect = "calendar.read";
+    } else if (family === "read_after_failed_draft") {
+      entry.chain = [FAILED_DRAFT_CHAIN[n % FAILED_DRAFT_CHAIN.length], input];
+      entry.expectRead = true;
+    } else if (family === "conversational_continuation") {
+      entry.chain = ["Co mám dnes v kalendáři?", input];
       entry.expect = "calendar.read";
     } else if (family === "negated_read" || family === "mobile_read_no_create" || family === "noisy_czech_read_no_create") {
       entry.expectRead = true;
