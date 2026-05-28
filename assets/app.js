@@ -36645,6 +36645,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   /** SILVER_NOTE_QUERY_TIMESTAMP_DISPLAY_V1 — READ/QUERY poznámek zobrazí uloženo/upraveno (bez SAVE/routing změn). */
   const IU_SILVER_NOTE_QUERY_TIMESTAMP_DISPLAY_V1 = true;
 
+  /** SILVER_NOTE_SEARCH_READ_HARDENING_V1 — úzké note search/read: fragmenty, person/money, modulová izolace. */
+  const IU_SILVER_NOTE_SEARCH_READ_HARDENING_V1 = true;
+
   function iuSilverNoteWriteWarrantyObjectCueFolded(f) {
     const x = String(f || "");
     return (
@@ -46315,7 +46318,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       [/\btrezoru\b|\btrezorem\b|\bsejfu\b|\bsejf\b|\btrezor\b/g, "trezor"],
       [/\bpojisteni\b|\bpojistku\b|\bpojistka\b/g, "pojisteni"],
       [/\bnajmu\b|\bnajemne\b|\bnajem\b/g, "najem"],
-      [/\bfaktury\b|\bfakturu\b|\bfaktura\b/g, "faktura"],
+      [/\bfaktury\b|\bfakturu\b|\bfakturi\b|\bfakture\b|\bfaktura\b/g, "faktura"],
       [/\breklamaci\b|\breklamace\b|\bzaruku\b|\bzaruka\b/g, "zaruka"],
       [/\btelevizi\b|\btelevize\b|\btelevizor\b|\btv\b/g, "televize"]
     ];
@@ -47503,8 +47506,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bco\s+jsem\s+si\s+poznamenal\s+o\s+\w/.test(x)) return true;
     if (/\bco\s+jsem\s+si\s+ulozil\w*\s+o\s+\w/.test(x)) return true;
     if (/\bukaz\w*\s+poznam\w*\s+o\s+\w/.test(x) || /\buka[zž]\s+poznam\w*\s+o\s+\w/.test(x)) return true;
+    if (/\bukaz\w*\s+poznam\w*\s+(?:k|ke)\s+\w/.test(x) || /\buka[zž]\s+poznam\w*\s+(?:k|ke)\s+\w/.test(x)) return true;
     if (/\bnajdi\s+poznam\w*\s+o\s+\w/.test(x)) return true;
+    if (/\bco\s+mam\s+k\s+\w+/.test(x) && /\b(zaruk\w*|zaruc\w*|reklamac\w*|pojist\w*|smlouv\w*|faktur\w*|servis\w*)\b/.test(x)) return true;
     return false;
+  }
+
+  /** SILVER_NOTE_SEARCH_READ_HARDENING_V1 — mobilní fragment bez slovesa „najdi“ (frant zaloha, pojisteni auto). */
+  function iuSilverNoteFragmentSearchReadSignalFolded(f) {
+    if (!IU_SILVER_NOTE_SEARCH_READ_HARDENING_V1) return false;
+    const x = String(f || "").trim();
+    if (!x || x.length > 96) return false;
+    if (iuSilverHasWriteVerb(x)) return false;
+    if (/\b(dej|naplanuj|uloz|vytvor|pridej|prepis|spatne|vlastne|pockej|oprav\s+to|predtim\s+jsem)\b/.test(x)) return false;
+    if (/\b(najdi|vyhledej|hledej|ukaz|uka[zž]|zobraz|vypis|co\s+mam|kdy\s+jsem|kolik|zjisti|podivej|cti|ctete)\b/.test(x)) return false;
+    if (/\b(pravnik\w*|exekuc\w*)\b/.test(x) && /\b(vecer|zitra|dnes|tyden|schuz|kalend|udalost)\b/.test(x)) return false;
+    if (/\b(jen\s+kalendar|jen\s+kalend|ne\s+poznam|neni\s+to\s+poznam|obchodn\w*\s+vec)\b/.test(x)) return false;
+    if (/\b(zitra|dnes|dneska|pozitri|vecer|rano)\b/.test(x) && /\b(v\s+\d|ve\s+\d|\d{1,2}\s*[:.]\s*\d{2}|na\s+praha|na\s+brn)\b/.test(x)) return false;
+    if (/\b(kalend|schuz|ukol\w*|udalost)\b/.test(x) && !/\bpoznam/.test(x)) return false;
+    if (!/\b(zaloh\w*|pujc\w*|platb\w*|pojist\w*|servis\w*|smlouv\w*|faktur\w*|zaruk\w*|zaruc\w*|reklamac\w*|oprav\w*|aut\w*|frant\w*|pep\w*|martin\w*|ucetni\w*|pravnik\w*|exekuc\w*|dohod\w*|elektrin\w*|notebook\w*|telefon\w*|lednic\w*)\b/.test(x)) {
+      return false;
+    }
+    const toks = x.split(/\s+/).filter(function (w) {
+      return w && w.length >= 3;
+    });
+    return toks.length >= 2;
   }
 
   /**
@@ -48026,6 +48052,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverExplicitQueryScopeRouterV1(f) {
     const x = String(f || "");
     if (!x) return "";
+    if (/\bco\s+mam\s+k\s+\w+/.test(x) && /\b(zaruk\w*|zaruc\w*|reklamac\w*|pojist\w*|smlouv\w*|faktur\w*|servis\w*|oprav\w*)\b/.test(x)) return "notes";
     if (iuSilverFoldedHasExplicitNotesReadScopeFolded(x)) return "notes";
     if (/\b(v\s+ukol\w*|do\s+ukol\w*|v\s+ukolech)\b/.test(x) && !/\b(kalend|schuz|udalost)\b/.test(x)) return "tasks";
     if (/\bnajdi\s+ukol\w*/.test(x) && !iuSilverFoldedHasNegatedCalendarEntityScopeFolded(x)) return "tasks";
@@ -48180,6 +48207,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^\s*kolik\s+jsem\s+dal\s+/i,
       /^\s*kolik\s+m[aá]m\s+u\s+pep[aou]\s+v\s+zalohach\s*/i,
       /^\s*najdi\s+pozn[aá]mk[^\s]*\s+o\s+/i,
+      /^\s*uka[zž]\s+pozn[aá]mk[^\s]*\s+(?:k|ke)\s+/i,
+      /^\s*ukaz\s+pozn[aá]mk[^\s]*\s+(?:k|ke)\s+/i,
       /^\s*uka[zž]\s+pozn[aá]mk[^\s]*\s+/i,
       /^\s*ukaz\s+pozn[aá]mk[^\s]*\s+/i,
       /^\s*co\s+je\s+v\s+pozn[aá]mk[^\s]*\s*(o\s+)?/i,
@@ -48633,6 +48662,44 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     };
   }
 
+  /** SILVER_NOTE_SEARCH_READ_HARDENING_V1 — fragment note search bez globálního read-search signálu (nekrade calendar.write). */
+  function iuSilverTryNoteFragmentSearchReadTurnV1(raw, now, folded, ctx, empty) {
+    if (!IU_SILVER_NOTE_SEARCH_READ_HARDENING_V1) return null;
+    if (!iuSilverNoteFragmentSearchReadSignalFolded(folded)) return null;
+    if (iuSilverHasWriteVerb(folded)) return null;
+    if (iuSilverTryParseExplicitNoteCreate(raw)) return null;
+    if (iuSilverReadSearchGateCalendarCreate(raw, folded, now)) return null;
+    if (iuSilverCalendarReadSuppressedForWriteIntent(folded)) return null;
+    const f = folded;
+    const q = iuSilverReadSearchExtractQuery(raw, folded, "notes");
+    const sr = iuSilverSearchLocalData(q, {
+      target: "notes",
+      now: now,
+      getEventsSnapshot: ctx && ctx.getEventsSnapshot,
+      getTasksSnapshot: ctx && ctx.getTasksSnapshot,
+      getNotesSnapshot: ctx && ctx.getNotesSnapshot,
+      rawFoldedHint: f
+    });
+    const ans = iuSilverBuildAnswerFromSearch(sr);
+    return {
+      normalizedIntent: "notes.read",
+      targetContainer: "none",
+      processingState: "READ_OK",
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: { silverReadSearch: true, target: "notes", query: q, noteFragmentSearch: true },
+      readAnswer: { message: ans.message, silverSearch: sr },
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: ans.message,
+      assistantLead: ans.message,
+      clarificationText: "",
+      draft: empty,
+      silverSearchResult: sr
+    };
+  }
+
   function iuSilverTryReadSearchTurn(raw, now, folded, ctx, empty) {
     if (!iuSilverReadSearchShouldRun(raw, folded, now)) return null;
     if (
@@ -48688,8 +48755,25 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         };
       }
     }
-    const target = iuSilverReadSearchPickTarget(folded);
+    let target = iuSilverReadSearchPickTarget(folded);
     const f = folded;
+    if (
+      IU_SILVER_NOTE_SEARCH_READ_HARDENING_V1 &&
+      target === "all" &&
+      !/\b(kalend|schuz|ukol)\b/.test(f)
+    ) {
+      if (iuSilverNoteArchiveQueryCueFolded(f) && !iuSilverCalendarQueryWithNoteNegationSignalFolded(f)) {
+        target = "notes";
+      } else if (iuSilverNoteFragmentSearchReadSignalFolded(f)) {
+        target = "notes";
+      } else if (
+        /\bnajdi\b/.test(f) &&
+        /\b(zaloh\w*|platb\w*|pujc\w*|pojist\w*|servis\w*|smlouv\w*|faktur\w*|ucetni\w*|frant\w*|pep\w*|martin\w*)\b/.test(f) &&
+        !/\b(kalend|schuz|ukol)\b/.test(f)
+      ) {
+        target = "notes";
+      }
+    }
     const listTasks =
       /\b(jake|jaky)\s+mam\s+ukol/.test(f) ||
       /\bco\s+mam\s+udelat\b/.test(f) ||
@@ -48703,6 +48787,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const listNotes =
       !iuSilverNotesAmountAggregateCueFolded(f) &&
       !/\bco\s+mam\s+v\s+poznamk\w*\s+o\s+\w/.test(f) &&
+      !/\bpoznam\w*\s+(?:k|ke|o)\s+\w/.test(f) &&
       (iuSilverP1KolikCountReadQuerySafeFolded(f) && /\bpoznam/.test(f) ||
       /\bco\s+m[aá]m\s+v\s+pozn[aá]mk/.test(f) ||
       /\bco\s+m(am|eme)\s+vsechno\s+v\s+poznam/.test(f) ||
@@ -62373,6 +62458,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         draft: empty
       };
     }
+
+    const noteFragmentRead = iuSilverTryNoteFragmentSearchReadTurnV1(raw, now, folded, ctx || {}, empty);
+    if (noteFragmentRead) return noteFragmentRead;
 
     const readSearchTurn = iuSilverTryReadSearchTurn(raw, now, folded, ctx || {}, empty);
     if (readSearchTurn) return readSearchTurn;
