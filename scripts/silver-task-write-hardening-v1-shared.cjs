@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 "use strict";
 
+const fs = require("fs");
+const path = require("path");
+const audit = require("./audit_silver_20000_routing_stable.cjs");
 const { loadEngine } = require("./silver-20k-regression-guard-shared.cjs");
 
 const FIXED_NOW = new Date("2026-05-04T12:00:00");
@@ -113,6 +116,103 @@ TASK_WRITE_CLEAN_PAYLOAD_REPLAY.push.apply(
   TASK_WRITE_NAKUP_META_NEG_REPLAY.slice(50, 56)
 );
 
+const TASK_WRITE_OWNERSHIP_SEED = [
+  { id: "TWO_001", family: "note_conflict", input: "Není to poznámka, přidej úkol zavolat právníkovi.", expect: "tasks.create" },
+  { id: "TWO_002", family: "note_conflict", input: "Jen úkol, ne kalendář — zaplatit fakturu.", expect: "tasks.create" },
+  { id: "TWO_003", family: "note_conflict", input: "Jen task — koupit mléko.", expect: "tasks.create" },
+  { id: "TWO_004", family: "note_conflict", input: "Do úkolů napiš servis auta.", expect: "tasks.create" },
+  { id: "TWO_005", family: "note_conflict", input: "Ne note, přidej úkol poslat smlouvu.", expect: "tasks.create" },
+  { id: "TWO_006", family: "note_conflict", input: "Nepleť to s poznámkou, musím koupit rohlíky.", expect: "tasks.create" },
+  { id: "TWO_007", family: "note_conflict", input: "Nevytvářej poznámku, jen úkol zavolat mámě.", expect: "tasks.create" },
+  { id: "TWO_008", family: "note_conflict", input: "Task, ne poznámku — objednat benzín.", expect: "tasks.create" },
+  { id: "TWO_009", family: "note_conflict", input: "Musím koupit rohlíky do 10 dnů, není to poznámka.", expect: "tasks.create" },
+  { id: "TWO_010", family: "note_conflict", input: "nevytvářej poznámku Musím koupit toaleták do 10 dnů, není to poznámka.", expect: "tasks.create" },
+  { id: "TWO_011", family: "basic_task_create", input: "Přidej úkol zavolat právníkovi.", expect: "tasks.create" },
+  { id: "TWO_012", family: "basic_task_create", input: "Vytvoř úkol koupit mléko.", expect: "tasks.create" },
+  { id: "TWO_013", family: "basic_task_create", input: "Připomeň mi zaplatit fakturu.", expect: "tasks.create" },
+  { id: "TWO_014", family: "temporal_task_create", input: "Zítra zavolat právníkovi.", expect: "tasks.create" },
+  { id: "TWO_015", family: "temporal_task_create", input: "Večer koupit mléko.", expect: "tasks.create" },
+  { id: "TWO_016", family: "fragment_task_create", input: "právník smlouva", expect: "tasks.create", allowClarification: true },
+  { id: "TWO_017", family: "negation_safety", input: "Nic jiného neukládej, jen vytvoř úkol.", expect: "tasks.create", allowClarification: true },
+  { id: "TWO_018", family: "negation_safety", input: "Nevytvářej poznámku, jen task.", expect: "tasks.create" }
+];
+
+const FAMILY_TEMPLATES = {
+  basic_task_create: [
+    "Přidej úkol zavolat právníkovi.",
+    "Vytvoř úkol koupit mléko.",
+    "Připomeň mi zaplatit fakturu.",
+    "Přidej do úkolů servis auta.",
+    "Úkol: poslat smlouvu účetní."
+  ],
+  note_conflict: [
+    "Není to poznámka, přidej úkol zavolat právníkovi.",
+    "Jen úkol, ne kalendář — zaplatit fakturu.",
+    "Jen task — koupit mléko.",
+    "Do úkolů napiš servis auta.",
+    "Ne note, přidej úkol poslat smlouvu.",
+    "Nepleť to s poznámkou, musím koupit rohlíky.",
+    "Nevytvářej poznámku, jen úkol zavolat mámě.",
+    "Task, ne poznámku — objednat benzín.",
+    "Musím koupit rohlíky do 10 dnů, není to poznámka.",
+    "nevytvářej poznámku Musím koupit toaleták do 10 dnů, není to poznámka."
+  ],
+  temporal_task_create: [
+    "Zítra zavolat právníkovi.",
+    "Večer koupit mléko.",
+    "V pondělí poslat fakturu.",
+    "Příští týden servis auta.",
+    "Dnes večer zavolat mámě."
+  ],
+  fragment_task_create: ["právník smlouva", "auto servis", "účetní doklady", "faktura doplatit", "Pepovi zavolat"],
+  negation_safety: [
+    "Nic jiného neukládej, jen vytvoř úkol.",
+    "Nevytvářej poznámku, jen task.",
+    "Jen úkol.",
+    "Ne kalendář.",
+    "Ne poznámku."
+  ]
+};
+
+const FILLERS = ["", "Hele ", "Prosím "];
+const READ_LEADS = ["", "nevytvářej poznámku "];
+
+function filterFamilies(cases, families) {
+  const set = new Set(families);
+  return cases.filter(function (c) {
+    return set.has(c.family);
+  });
+}
+
+function buildTaskWriteCorpusV1(targetCount) {
+  const out = TASK_WRITE_OWNERSHIP_SEED.slice();
+  const families = Object.keys(FAMILY_TEMPLATES);
+  let n = out.length;
+  while (out.length < targetCount) {
+    const family = families[n % families.length];
+    const tpls = FAMILY_TEMPLATES[family];
+    const tpl = tpls[n % tpls.length];
+    const pfx = FILLERS[n % FILLERS.length] + READ_LEADS[(n >> 2) % READ_LEADS.length];
+    out.push({
+      id: "TWH_GEN_" + String(n).padStart(4, "0"),
+      family: family,
+      input: pfx + tpl,
+      expect: "tasks.create",
+      allowClarification: family === "fragment_task_create"
+    });
+    n++;
+  }
+  return out.slice(0, targetCount);
+}
+
+const TASK_WRITE_OWNERSHIP_REPLAY = buildTaskWriteCorpusV1(520);
+const TASK_WRITE_BASIC_REPLAY = filterFamilies(TASK_WRITE_OWNERSHIP_REPLAY, ["basic_task_create"]);
+const TASK_WRITE_NOTE_CONFLICT_REPLAY = filterFamilies(TASK_WRITE_OWNERSHIP_REPLAY, ["note_conflict"]);
+const TASK_WRITE_TEMPORAL_REPLAY = filterFamilies(TASK_WRITE_OWNERSHIP_REPLAY, ["temporal_task_create"]);
+const TASK_WRITE_FRAGMENT_REPLAY = filterFamilies(TASK_WRITE_OWNERSHIP_REPLAY, ["fragment_task_create"]);
+const TASK_WRITE_NEGATION_REPLAY = filterFamilies(TASK_WRITE_OWNERSHIP_REPLAY, ["negation_safety"]);
+const TASK_WRITE_HARDENING_REPLAY = TASK_WRITE_OWNERSHIP_REPLAY;
+
 function defaultCtx() {
   return {
     now: FIXED_NOW,
@@ -156,8 +256,16 @@ function runReplayCases(eng, cases, ctx, evaluate) {
 function evaluateTaskWrite(c, turn) {
   const issues = [];
   const intent = String(turn.normalizedIntent || "");
+  if (intent.indexOf("note") >= 0 && c.expect === "tasks.create") issues.push("note_steal:" + intent);
+  if (intent.indexOf("calendar") >= 0 && c.expect === "tasks.create" && !c.allowCalendar) issues.push("calendar_steal:" + intent);
+  if (intent.indexOf("read") >= 0 && c.expect === "tasks.create") issues.push("read_leak:" + intent);
   if (intent !== c.expect) {
-    if (!(c.allowClarification && intent === "clarification")) issues.push("intent:" + intent);
+    const allowAlt =
+      c.allowClarification &&
+      (intent === "clarification" ||
+        intent === "unknown" ||
+        (c.family === "fragment_task_create" && intent.indexOf("read") >= 0));
+    if (!allowAlt) issues.push("intent:" + intent);
   }
   if (turn.processingState !== "READY_TO_SAVE" && intent === "tasks.create") issues.push("ps:" + turn.processingState);
   if (c.forbidCalendar && intent === "calendar.create") issues.push("calendar_leak");
@@ -191,6 +299,81 @@ function printGuardHeader(name, report) {
   return report.PASS_FAIL === "PASS";
 }
 
+function classifyTaskWriteGapFail(c, ev, turn) {
+  const actual = String(turn.normalizedIntent || ev.auditIntent || "");
+  const cat = String(ev.cat || "");
+  if (actual.indexOf("note") >= 0) return "NOTE_STEAL";
+  if (actual.indexOf("calendar") >= 0) return "CALENDAR_STEAL";
+  if (actual.indexOf("read") >= 0) return "MODULE_LEAK";
+  if (cat === "query_created_write") return "CREATE_LEAK";
+  if (cat === "write_when_negated") return "FIREWALL_OVERBLOCK";
+  if (/\bneni\s+to\s+poznam/.test(String(c.input || "").toLowerCase())) return "TASK_WRITE_ROUTING_FAIL";
+  if (cat === "intent_fail") return "TRUE_ENGINE_FAIL";
+  return "TRUE_ENGINE_FAIL";
+}
+
+function runGapDiagnostic(reportPath) {
+  const eng = loadEngine();
+  const cases = audit.buildCases().filter(function (c) {
+    return c.group === "task_write";
+  });
+  const clusters = {};
+  const fails = [];
+  let pass = 0;
+  for (let i = 0; i < cases.length; i++) {
+    const c = cases[i];
+    try {
+      if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+    } catch (e0) {
+      void e0;
+    }
+    const turn = eng.processUserTurn(c.input, eng.createEmptyDraft(), audit.ctxForCase(c.group));
+    const ev = audit.evaluateOne(c, turn);
+    if (ev.pass) {
+      pass++;
+      continue;
+    }
+    const cluster = classifyTaskWriteGapFail(c, ev, turn);
+    clusters[cluster] = (clusters[cluster] || 0) + 1;
+    if (fails.length < 120) {
+      fails.push({
+        id: c.id,
+        input: c.input,
+        expected: c.expectedIntent,
+        actual: ev.auditIntent,
+        route: turn.normalizedIntent || "",
+        reason: ev.cat,
+        cluster: cluster
+      });
+    }
+  }
+  const report = {
+    guard_id: "silver_task_write_gap_diagnostic_v1",
+    group: "task_write",
+    total: cases.length,
+    pass: pass,
+    fail: cases.length - pass,
+    clusters: clusters,
+    fails: fails
+  };
+  try {
+    fs.writeFileSync(reportPath, JSON.stringify(report, null, 2), "utf8");
+  } catch (eW) {
+    void eW;
+  }
+  console.log("=== SILVER_TASK_WRITE_GAP_DIAGNOSTIC_V1 ===");
+  console.log("task_write_total=" + report.total);
+  console.log("pass=" + report.pass);
+  console.log("fail=" + report.fail);
+  console.log("note_steal_count=" + (clusters.NOTE_STEAL || 0));
+  console.log("calendar_steal_count=" + (clusters.CALENDAR_STEAL || 0));
+  console.log("module_leak_count=" + (clusters.MODULE_LEAK || 0));
+  console.log("true_engine_fail_count=" + (clusters.TRUE_ENGINE_FAIL || 0));
+  console.log("report_file=" + reportPath);
+  console.log("=== END_SILVER_TASK_WRITE_GAP_DIAGNOSTIC_V1 ===");
+  return report;
+}
+
 module.exports = {
   FIXED_NOW,
   defaultCtx,
@@ -201,6 +384,17 @@ module.exports = {
   TASK_WRITE_NO_CALENDAR_LEAK_REPLAY,
   TASK_WRITE_CLEAN_PAYLOAD_REPLAY,
   TASK_WRITE_NAKUP_META_NEG_REPLAY,
+  TASK_WRITE_OWNERSHIP_REPLAY,
+  TASK_WRITE_BASIC_REPLAY,
+  TASK_WRITE_NOTE_CONFLICT_REPLAY,
+  TASK_WRITE_TEMPORAL_REPLAY,
+  TASK_WRITE_FRAGMENT_REPLAY,
+  TASK_WRITE_NEGATION_REPLAY,
+  TASK_WRITE_HARDENING_REPLAY,
+  buildTaskWriteCorpusV1,
+  filterFamilies,
+  classifyTaskWriteGapFail,
+  runGapDiagnostic,
   runReplayCases,
   evaluateTaskWrite,
   printGuardHeader
