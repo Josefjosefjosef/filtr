@@ -36642,6 +36642,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   /** SILVER_NOTE_WRITE_WARRANTY_OBJECT_ROUTING_V1 — záruka / účtenka / doklad / faktura → notes.create */
   const IU_SILVER_NOTE_WRITE_WARRANTY_OBJECT_ROUTING_V1 = true;
 
+  /** SILVER_NOTE_QUERY_TIMESTAMP_DISPLAY_V1 — READ/QUERY poznámek zobrazí uloženo/upraveno (bez SAVE/routing změn). */
+  const IU_SILVER_NOTE_QUERY_TIMESTAMP_DISPLAY_V1 = true;
+
   function iuSilverNoteWriteWarrantyObjectCueFolded(f) {
     const x = String(f || "");
     return (
@@ -41236,6 +41239,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bnajdi\s+poznam/i.test(x)) return true;
     if (/\bukaz\s+poznam/i.test(x) || /uka[zž]\s+poznam/i.test(x)) return true;
     if (/\bco\s+mam\s+v\s+poznam/i.test(x) || /\bco\s+mame\s+v\s+poznam/i.test(x)) return true;
+    if (/\bco\s+jsem\s+si\s+ulozil\w*\s+o\s+\w/.test(x)) return true;
+    if (/\bukaz\w*\s+poznam\w*\s+o\s+\w/.test(x) || /\buka[zž]\s+poznam\w*\s+o\s+\w/.test(x)) return true;
     if (/\bvypis\s+(?:mi\s+)?vsechny\s+poznam/i.test(x) || /\buka[zž]\s+(?:mi\s+)?vsechny\s+poznam/i.test(x)) return true;
     if (/\bjen\s+cti\b/.test(x) && /\bpoznamk/.test(x) && !iuSilverExplicitNoteWriteBeatsReadOnlyTailFolded(x)) return true;
     if (/\bpodivej\b/.test(x) && /\b(do\s+poznamk|v\s+poznamkach)\b/i.test(x)) return true;
@@ -46802,8 +46807,61 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return true;
     }
     if (/\b(dal|dala|daval|dával)\s+jsem\b/.test(x) && /\b(zaloh|pep\w*|frant\w*|josef)/.test(x)) return true;
+    if (
+      IU_SILVER_NOTE_QUERY_TIMESTAMP_DISPLAY_V1 &&
+      /\bkdy\s+jsem\s+(dal|dala|daval|platil|platila)\b/.test(x) &&
+      /\b(zaloh|pep\w*|frant\w*|josef|servis|platb|pujc|pojist|auto)/.test(x)
+    ) {
+      return true;
+    }
     if (/\b(jestli|nekde|nejakou|nějakou)\b/.test(x) && /\b(zaloh|pep\w*|frant\w*)/.test(x)) return true;
     return false;
+  }
+
+  /** SILVER_NOTE_QUERY_TIMESTAMP_DISPLAY_V1 — „kdy jsem dal/platil …" u finančních / servisních poznámek → notes.read. */
+  function iuSilverNoteQueryTimestampTemporalCueFolded(f) {
+    const x = String(f || "");
+    if (!IU_SILVER_NOTE_QUERY_TIMESTAMP_DISPLAY_V1 || !x) return false;
+    if (!/\bkdy\s+jsem\b/.test(x)) return false;
+    if (iuSilverExplicitCalendarReadScopeFolded(x) || iuSilverCalendarQueryWithNoteNegationSignalFolded(x)) return false;
+    if (/\b(kalend|schuz)\b/.test(x) && !/\bpoznam/.test(x)) return false;
+    return /\b(zaloh|platil|platb|servis|pujc|pojist|smlouv|doktor|zubar|oprav|auto)/.test(x);
+  }
+
+  function iuSilverTryNoteQueryTimestampTemporalReadTurnV1(raw, now, folded, ctx, empty) {
+    const r0 = String(raw || "").trim();
+    const f = String(folded || "");
+    if (!r0 || !f || !iuSilverNoteQueryTimestampTemporalCueFolded(f)) return null;
+    const agg = iuSilverTryNotesAmountAggregateReadTurnV1(raw, now, folded, ctx, empty);
+    if (agg) return agg;
+    const q = iuSilverReadSearchExtractQuery(r0, f, "notes");
+    const sr = iuSilverSearchLocalData(q, {
+      target: "notes",
+      now: now,
+      getEventsSnapshot: ctx && ctx.getEventsSnapshot,
+      getTasksSnapshot: ctx && ctx.getTasksSnapshot,
+      getNotesSnapshot: ctx && ctx.getNotesSnapshot,
+      rawFoldedHint: f
+    });
+    const ans = iuSilverBuildAnswerFromSearch(sr);
+    if (!ans || !String(ans.message || "").trim() || ans.answerType === "none") return null;
+    return {
+      normalizedIntent: "notes.read",
+      targetContainer: "none",
+      processingState: "READ_OK",
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: { silverReadSearch: true, target: "notes", query: q, timestampTemporalQuery: true },
+      readAnswer: { message: ans.message, silverSearch: sr, answerType: ans.answerType },
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: ans.message,
+      assistantLead: ans.message,
+      clarificationText: "",
+      draft: empty,
+      silverSearchResult: sr
+    };
   }
 
   /** Silver Aggregate Retrieval Engine V1 — úzký notes.read turn pro součty / kolik v poznámkách. */
@@ -46896,10 +46954,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const personGroups = iuSilverPersonAliasGroupsForFoldedTextV1(rhNorm);
     const multiPerson = personGroups.length >= 2 || (/\ba\s+/.test(rhNorm) && personGroups.length >= 1 && /\b(frant|josef|jan|petr)\b/.test(rhNorm));
     const parts = [];
+    const winNotes = [];
     const seenNote = {};
     const seenContent = {};
     let sum = 0;
     const perPerson = {};
+    const evalNowAgg = sr.evalNow instanceof Date ? sr.evalNow : new Date();
     for (let j = 0; j < noteRows.length; j++) {
       const nn = noteRows[j];
       const noteKey = String(nn.id || "") + ":" + String(nn.title || "").slice(0, 40);
@@ -46949,6 +47009,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       seenContent[contentKey] = 1;
       sum += a0;
       parts.push(String(a0) + " Kč");
+      winNotes.push(nn);
       if (personKey) {
         if (!perPerson[personKey]) perPerson[personKey] = [];
         perPerson[personKey].push(a0);
@@ -46981,12 +47042,36 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         };
       }
     }
+    const whenQ = /\bkdy\s+jsem\b/.test(rhNorm);
+    if (whenQ && winNotes.length) {
+      let bestWhen = winNotes[0];
+      for (let wi = 1; wi < winNotes.length; wi++) {
+        const cand = winNotes[wi];
+        if (iuSilverNoteTimestampMsV1(cand) > iuSilverNoteTimestampMsV1(bestWhen)) bestWhen = cand;
+      }
+      const blobWhen = iuSilverNoteResultBlobV1(bestWhen);
+      let msgWhen = "Našel jsem poznámku:\n" + blobWhen;
+      if (IU_SILVER_NOTE_QUERY_TIMESTAMP_DISPLAY_V1) {
+        msgWhen = iuSilverAppendNoteQueryTimestampV1(msgWhen, bestWhen, evalNowAgg);
+      }
+      return { message: msgWhen, answerType: "aggregate" };
+    }
     if (parts.length === 1) {
       const boolQ = /\b(jestli|daval|dával|nekde|nejakou|nějakou|dal jsem)\b/.test(rhNorm);
-      if (boolQ) {
-        return { message: "Ano, našel jsem zálohu " + parts[0] + ".", answerType: "aggregate" };
+      const win0 = winNotes[0] || null;
+      const blobWin0 = win0 ? iuSilverNoteResultBlobV1(win0) : parts[0];
+      let msgOne =
+        whenQ || (!boolQ && IU_SILVER_NOTE_QUERY_TIMESTAMP_DISPLAY_V1)
+          ? "Našel jsem poznámku:\n" + blobWin0
+          : boolQ
+            ? "Ano, našel jsem zálohu " + parts[0] + "."
+            : "Našel jsem poznámku:\n" + blobWin0;
+      if (IU_SILVER_NOTE_QUERY_TIMESTAMP_DISPLAY_V1 && win0) {
+        msgOne = iuSilverAppendNoteQueryTimestampV1(msgOne, win0, evalNowAgg);
+      } else if (!boolQ) {
+        msgOne = "Našel jsem poznámku: " + parts[0] + ".";
       }
-      return { message: "Našel jsem poznámku: " + parts[0] + ".", answerType: "aggregate" };
+      return { message: msgOne, answerType: "aggregate" };
     }
     const boolMulti = /\b(jestli|daval|dával|nekde|nejakou|nějakou)\b/.test(rhNorm);
     if (boolMulti) {
@@ -46999,6 +47084,77 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       message: "Našel jsem " + parts.length + " poznámky: " + parts.join(" a ") + ". Celkem " + sum + " Kč.",
       answerType: "aggregate"
     };
+  }
+
+  function iuSilverNoteTimestampMsV1(note) {
+    const c = Number(note && note.createdAt);
+    return Number.isFinite(c) && c > 0 ? c : 0;
+  }
+
+  function iuSilverNoteUpdatedTimestampMsV1(note) {
+    const u = Number(note && note.updatedAt);
+    const c = iuSilverNoteTimestampMsV1(note);
+    return Number.isFinite(u) && u > 0 ? u : c;
+  }
+
+  function iuSilverFormatNoteTimestampRelativeCs(ts, evalNow) {
+    const t = Number(ts) || 0;
+    if (!t) return "";
+    const now = evalNow instanceof Date ? evalNow : new Date();
+    const d = new Date(t);
+    if (!Number.isFinite(d.getTime())) return "";
+    const pad2 = function (n) {
+      return String(n).padStart(2, "0");
+    };
+    const hhmm = pad2(d.getHours()) + ":" + pad2(d.getMinutes());
+    const dayStart = function (dt) {
+      return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime();
+    };
+    const diffDays = Math.floor((dayStart(now) - dayStart(d)) / 86400000);
+    if (diffDays === 0) return "dnes v " + hhmm;
+    if (diffDays === 1) return "včera v " + hhmm;
+    if (diffDays >= 2 && diffDays <= 6) return "před " + diffDays + " dny";
+    return iuSilverFormatNoteCreatedCs(t);
+  }
+
+  function iuSilverNoteQueryTimestampBlockV1(note, evalNow) {
+    if (!IU_SILVER_NOTE_QUERY_TIMESTAMP_DISPLAY_V1) return "";
+    const createdMs = iuSilverNoteTimestampMsV1(note);
+    if (!createdMs) return "Datum uložení není dostupné.";
+    const lines = [];
+    const createdLabel = iuSilverFormatNoteTimestampRelativeCs(createdMs, evalNow) || iuSilverFormatNoteCreatedCs(createdMs);
+    lines.push("Uloženo: " + createdLabel);
+    const updatedMs = iuSilverNoteUpdatedTimestampMsV1(note);
+    if (updatedMs && Math.abs(updatedMs - createdMs) > 60000) {
+      const updatedLabel = iuSilverFormatNoteTimestampRelativeCs(updatedMs, evalNow) || iuSilverFormatNoteCreatedCs(updatedMs);
+      lines.push("Upraveno: " + updatedLabel);
+    }
+    return lines.join("\n");
+  }
+
+  function iuSilverAppendNoteQueryTimestampV1(message, note, evalNow) {
+    if (!IU_SILVER_NOTE_QUERY_TIMESTAMP_DISPLAY_V1 || !note) return String(message || "");
+    const base = String(message || "").trim();
+    const block = iuSilverNoteQueryTimestampBlockV1(note, evalNow);
+    if (!block) return base;
+    return base + "\n" + block;
+  }
+
+  function iuSilverNoteResultBlobV1(note) {
+    const n = note || {};
+    const tit0 = String(n.title || "").trim();
+    const ct0 = String(n.content || "").trim();
+    if (tit0 && ct0 && foldCs(ct0).indexOf(foldCs(tit0)) === 0) return ct0.replace(/\s+/g, " ").trim();
+    if (tit0 && ct0) return (tit0 + " — " + ct0).replace(/\s+/g, " ").trim();
+    return (ct0 || tit0).replace(/\s+/g, " ").trim();
+  }
+
+  function iuSilverFormatNoteQueryListEntryV1(note, evalNow, indexOneBased) {
+    const blob = iuSilverNoteResultBlobV1(note).slice(0, 220);
+    const head = String(indexOneBased) + ". " + blob;
+    if (!IU_SILVER_NOTE_QUERY_TIMESTAMP_DISPLAY_V1) return head;
+    const ts = iuSilverNoteQueryTimestampBlockV1(note, evalNow);
+    return ts ? head + "\n" + ts : head;
   }
 
   function iuSilverBuildAnswerFromSearch(searchResult) {
@@ -47038,8 +47194,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           const key = "n" + String(n.id || "");
           if (seen[key]) continue;
           seen[key] = 1;
-          const blob = (String(n.title || "").trim() + " — " + String(n.content || "").trim()).replace(/\s+/g, " ").trim();
-          lines.push("Poznámka: " + blob.slice(0, 240));
+          const blob = iuSilverNoteResultBlobV1(n).slice(0, 240);
+          let lineN = "Poznámka: " + blob;
+          if (IU_SILVER_NOTE_QUERY_TIMESTAMP_DISPLAY_V1) {
+            const tsN = iuSilverNoteQueryTimestampBlockV1(n, evalNow);
+            if (tsN) lineN = lineN + "\n" + tsN;
+          }
+          lines.push(lineN);
         }
       }
       if (lines.length) return { message: lines.join("\n"), answerType: "list" };
@@ -47066,8 +47227,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       for (let ni = 0; ni < res.length && noteLines.length < 12; ni++) {
         const nn = res[ni].payload && res[ni].payload.note ? res[ni].payload.note : null;
         if (!nn) continue;
-        const blobN = (String(nn.title || "").trim() + " — " + String(nn.content || "").trim()).replace(/\s+/g, " ").trim();
-        noteLines.push(String(noteLines.length + 1) + ". " + blobN.slice(0, 220));
+        noteLines.push(iuSilverFormatNoteQueryListEntryV1(nn, evalNow, noteLines.length + 1));
       }
       if (!noteLines.length) return { message: "Nic jsem k tomu nenašel.", answerType: "none" };
       return {
@@ -47113,11 +47273,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         for (let i = 0; i < show; i++) {
           const nn = res[i].payload && res[i].payload.note ? res[i].payload.note : null;
           if (!nn) continue;
-          const t = (String(nn.title || "").trim() + " — " + String(nn.content || "").trim()).replace(/\s+/g, " ").trim();
-          lines.push(String(lines.length + 1) + ". " + t.slice(0, 220));
+          lines.push(iuSilverFormatNoteQueryListEntryV1(nn, evalNow, lines.length + 1));
         }
         return {
           message: "V poznámkách — našel jsem " + res.length + " záznamů:\n" + lines.join("\n"),
+          answerType: "note"
+        };
+      }
+      if (IU_SILVER_NOTE_QUERY_TIMESTAMP_DISPLAY_V1) {
+        const msgNote =
+          "Našel jsem poznámku:\n" + blobTrim.slice(0, 500);
+        return {
+          message: iuSilverAppendNoteQueryTimestampV1(msgNote, n, evalNow),
           answerType: "note"
         };
       }
@@ -47134,11 +47301,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const x = String(f || "");
     if (!x) return false;
     if (/\bco\s+jsem\s+si\s+psal\w*\b/.test(x)) return true;
+    if (/\bco\s+jsem\s+psal\w*\s+o\s+\w/.test(x)) return true;
     if (/\bco\s+jsem\s+si\s+zapsal\w*\b/.test(x)) return true;
     if (/\bco\s+mam\s+(zapsane|psane)\s+o\s+\w/.test(x)) return true;
     if (/\bnajdi\s+mi\s+poznam\w*\s+(k|ke)\s+/.test(x)) return true;
     if (/\bco\s+mam\s+ulozene\s+o\s+\w/.test(x)) return true;
     if (/\bco\s+jsem\s+si\s+poznamenal\s+o\s+\w/.test(x)) return true;
+    if (/\bco\s+jsem\s+si\s+ulozil\w*\s+o\s+\w/.test(x)) return true;
+    if (/\bukaz\w*\s+poznam\w*\s+o\s+\w/.test(x) || /\buka[zž]\s+poznam\w*\s+o\s+\w/.test(x)) return true;
+    if (/\bnajdi\s+poznam\w*\s+o\s+\w/.test(x)) return true;
     return false;
   }
 
@@ -55883,6 +56054,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         now
       );
     }
+    const noteTsTemporalEarly = iuSilverTryNoteQueryTimestampTemporalReadTurnV1(raw, now, folded, ctx || {}, empty);
+    if (noteTsTemporalEarly) return noteTsTemporalEarly;
     const aggNotesEarly = iuSilverTryNotesAmountAggregateReadTurnV1(raw, now, folded, ctx || {}, empty);
     if (aggNotesEarly) return aggNotesEarly;
     if (iuSilverCalendarQueryWithNoteNegationSignalFolded(f)) {
@@ -59201,6 +59374,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverLineOIsCapabilityUtteranceV1(f) {
     if (!f) return false;
     if (iuSilverImplicitConversationalReadIntentV1Folded(f)) return false;
+    if (iuSilverNoteArchiveQueryCueFolded(f)) return false;
+    if (iuSilverNoteQueryTimestampTemporalCueFolded(f)) return false;
+    if (iuSilverNoteFactReadQuerySignalFolded(f)) return false;
+    if (iuSilverExplicitNoteQueryAnchorP1Folded(f)) return false;
     if (iuSilverHelpGuidanceFirewallV2Folded(f)) return true;
     if (/\bco\s+mam\s+(?:zitra|dnes|tento|v\s+pond)/.test(f)) return false;
     if (/^\s*(?:najdi|uklad|uloz|pripomen|zapis|zapis)\b/.test(f)) return false;
@@ -59336,7 +59513,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const staticIntentGov = iuSilverLineOResolveAssistantStaticIntentV1(f);
       return iuSilverLineOBuildCapabilityTurnV1(copyGov, topicGov, staticIntentGov);
     }
-    if (/\?/.test(rawTrim) && iuSilverHelpGuidanceQuestionSemanticsFoldedV1(f) && !iuSilverHelpGuidanceFirewallV2Folded(f)) {
+    if (
+      /\?/.test(rawTrim) &&
+      iuSilverHelpGuidanceQuestionSemanticsFoldedV1(f) &&
+      !iuSilverHelpGuidanceFirewallV2Folded(f) &&
+      !iuSilverNoteArchiveQueryCueFolded(f) &&
+      !iuSilverNoteQueryTimestampTemporalCueFolded(f) &&
+      !iuSilverExplicitNoteQueryAnchorP1Folded(f)
+    ) {
       if (!/^\s*(?:uloz|pridej|pripomen|zapis|vytvor)\b/.test(f)) {
         const topicQ = iuSilverLineOResolveTopicV1(f);
         const copyQ = IU_SILVER_LINE_O_COPY_V1[topicQ] || IU_SILVER_LINE_O_COPY_V1.general;
@@ -60841,6 +61025,25 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         );
         if (temporalTaskPreCap) return temporalTaskPreCap;
       }
+    }
+    {
+      const foldPreLineO = foldCs(raw0);
+      const noteTsPreLineO = iuSilverTryNoteQueryTimestampTemporalReadTurnV1(
+        raw0,
+        now,
+        foldPreLineO,
+        ctx,
+        createEmptyDraft()
+      );
+      if (noteTsPreLineO) return noteTsPreLineO;
+      const noteArchivePreLineO = iuSilverTryExplicitNoteQueryAnchorP1ReadTurn(
+        raw0,
+        now,
+        foldPreLineO,
+        ctx,
+        createEmptyDraft()
+      );
+      if (noteArchivePreLineO) return noteArchivePreLineO;
     }
     {
       const lineOCapEarly = IU_SILVER_LINE_O_V1 && iuSilverLineOCapabilityHelpEngineV1(raw0, now, ctx);
