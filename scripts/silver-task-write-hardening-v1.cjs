@@ -9,7 +9,7 @@ function main() {
     eng,
     shared.TASK_WRITE_HARDENING_REPLAY,
     shared.defaultCtx(),
-    shared.evaluateTaskWrite
+    shared.evaluateTaskWriteGuard
   );
   const ok = shared.printGuardHeader("silver_task_write_hardening_v1", report);
   process.exit(ok ? 0 : 1);

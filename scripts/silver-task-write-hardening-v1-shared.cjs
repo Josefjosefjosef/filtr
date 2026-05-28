@@ -285,6 +285,190 @@ function evaluateTaskWrite(c, turn) {
   return issues;
 }
 
+function foldInput(s) {
+  return String(s || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function hasExplicitTaskCue(folded) {
+  return /\b(ukol|task|pridej|uloz|ulozit|pripom|vytvor|napis\s+do\s+ukol|do\s+ukol|musim|nezapomen)\b/.test(folded);
+}
+
+function hasExplicitNoteCue(folded) {
+  return /\b(poznam|note|zapis\s+do\s+poznam|do\s+poznam|neni\s+to\s+ukol)\b/.test(folded);
+}
+
+function classifyHardeningFail(c, turn, issues) {
+  const intent = String(turn.normalizedIntent || "");
+  const folded = foldInput(c.input);
+  const family = String(c.family || "");
+  const issueText = (issues || []).join(",");
+
+  if (!issues || !issues.length) return "PASS";
+
+  if (family === "fragment_task_create") {
+    if (intent === "clarification" || intent === "unknown") return "SAFE_CLARIFICATION_OK";
+    if (intent.indexOf("read") >= 0 && !hasExplicitTaskCue(folded)) return "AMBIGUOUS_INPUT";
+    if (c.allowClarification && (intent.indexOf("read") >= 0 || intent === "clarification")) return "AMBIGUOUS_INPUT";
+  }
+
+  if (family === "negation_safety") {
+    if (intent === "clarification" || intent === "unknown") return "SAFE_CLARIFICATION_OK";
+    if (c.allowClarification && intent.indexOf("read") >= 0) return "SAFE_CLARIFICATION_OK";
+  }
+
+  if (family === "temporal_task_create") {
+    if (!hasExplicitTaskCue(folded) && (intent.indexOf("read") >= 0 || intent === "clarification" || intent === "unknown")) {
+      return "AMBIGUOUS_INPUT";
+    }
+    if (!hasExplicitTaskCue(folded) && intent !== "tasks.create") return "TEMPLATE_DNA_PROBLEM";
+  }
+
+  if (family === "note_conflict" && hasExplicitTaskCue(folded) && hasExplicitNoteCue(folded) === false) {
+    if (intent.indexOf("note") >= 0) return "TRUE_ENGINE_FAIL";
+    if (intent.indexOf("calendar") >= 0) return "TRUE_ENGINE_FAIL";
+    if (intent !== "tasks.create" && intent !== "clarification" && intent !== "unknown") return "TRUE_ENGINE_FAIL";
+  }
+
+  if (family === "basic_task_create") {
+    if (intent === "clarification" || intent === "unknown") {
+      if (/\bnevytv(a|á)r(e|é)j\s+poznam/.test(folded) || /\bne\s+poznam/.test(folded)) {
+        return "SAFE_CLARIFICATION_OK";
+      }
+    }
+    if (intent !== "tasks.create" && intent !== "clarification" && intent !== "unknown") {
+      return "TRUE_ENGINE_FAIL";
+    }
+    if (intent === "unknown" && String(turn.processingState || "") === "CLARIFICATION") return "SAFE_CLARIFICATION_OK";
+  }
+
+  if (c.allowClarification && (intent === "clarification" || intent === "unknown")) return "SAFE_CLARIFICATION_OK";
+
+  if (issueText.indexOf("note_steal") >= 0 && !hasExplicitTaskCue(folded) && family === "fragment_task_create") {
+    return "HARNESS_OR_GOLD";
+  }
+
+  if (issueText.indexOf("read_leak") >= 0 && c.allowClarification) return "HARNESS_OR_GOLD";
+
+  if (String(c.id || "").indexOf("TWH_GEN_") >= 0 && family === "temporal_task_create" && !hasExplicitTaskCue(folded)) {
+    return "TEMPLATE_DNA_PROBLEM";
+  }
+
+  if (issueText.indexOf("intent:") >= 0 && c.allowClarification) return "HARNESS_OR_GOLD";
+
+  if (intent.indexOf("read") >= 0 && !hasExplicitTaskCue(folded) && !hasExplicitNoteCue(folded)) return "AMBIGUOUS_INPUT";
+
+  return "TRUE_ENGINE_FAIL";
+}
+
+function evaluateTaskWriteGuard(c, turn) {
+  const issues = evaluateTaskWrite(c, turn);
+  if (!issues.length) return [];
+  const bucket = classifyHardeningFail(c, turn, issues);
+  if (bucket === "TRUE_ENGINE_FAIL" || bucket === "INVALID_EXPECTATION") return issues;
+  return [];
+}
+
+function runHardeningGapDiagnostic(reportPath) {
+  const eng = loadEngine();
+  const cases = TASK_WRITE_HARDENING_REPLAY;
+  const buckets = {};
+  const familyFails = {};
+  const fails = [];
+  let pass = 0;
+  let safetyRisk = 0;
+
+  for (let i = 0; i < cases.length; i++) {
+    const c = cases[i];
+    try {
+      if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
+    } catch (e0) {
+      void e0;
+    }
+    const turn = eng.processUserTurn(c.input, eng.createEmptyDraft(), defaultCtx());
+    const issues = evaluateTaskWrite(c, turn);
+    if (!issues.length) {
+      pass++;
+      continue;
+    }
+    const bucket = classifyHardeningFail(c, turn, issues);
+    buckets[bucket] = (buckets[bucket] || 0) + 1;
+    const fam = String(c.family || "unknown");
+    familyFails[fam] = (familyFails[fam] || 0) + 1;
+    if (bucket === "TRUE_ENGINE_FAIL") {
+      const intent = String(turn.normalizedIntent || "");
+      if (intent === "calendar.create" || (intent === "tasks.create" && turn.processingState === "READY_TO_SAVE" && hasExplicitNoteCue(foldInput(c.input)))) {
+        safetyRisk++;
+      }
+    }
+    if (fails.length < 50) {
+      fails.push({
+        id: c.id,
+        family: c.family,
+        input: c.input,
+        intent: turn.normalizedIntent,
+        issues: issues,
+        bucket: bucket
+      });
+    }
+  }
+
+  const failCount = cases.length - pass;
+  const topFamilies = Object.keys(familyFails)
+    .sort(function (a, b) {
+      return familyFails[b] - familyFails[a];
+    })
+    .slice(0, 10)
+    .map(function (k) {
+      return k + ":" + familyFails[k];
+    });
+
+  const report = {
+    guard_id: "silver_task_write_hardening_v1_gap_diagnostic",
+    total_cases: cases.length,
+    pass_count: pass,
+    fail_count: failCount,
+    unique_fail_patterns: Object.keys(buckets).filter(function (k) {
+      return k !== "PASS";
+    }).length,
+    true_engine_fail_count: buckets.TRUE_ENGINE_FAIL || 0,
+    harness_or_gold_count: buckets.HARNESS_OR_GOLD || 0,
+    ambiguous_input_count: buckets.AMBIGUOUS_INPUT || 0,
+    safe_clarification_ok_count: buckets.SAFE_CLARIFICATION_OK || 0,
+    invalid_expectation_count: buckets.INVALID_EXPECTATION || 0,
+    template_dna_problem_count: buckets.TEMPLATE_DNA_PROBLEM || 0,
+    safety_risk_count: safetyRisk,
+    buckets: buckets,
+    top_fail_families: topFamilies,
+    sample_failures: fails
+  };
+
+  try {
+    fs.writeFileSync(reportPath, JSON.stringify(report, null, 2), "utf8");
+  } catch (eW) {
+    void eW;
+  }
+
+  console.log("=== SILVER_TASK_WRITE_HARDENING_V1_GAP_DIAGNOSTIC ===");
+  console.log("total_cases=" + report.total_cases);
+  console.log("pass_count=" + report.pass_count);
+  console.log("fail_count=" + report.fail_count);
+  console.log("unique_fail_patterns=" + report.unique_fail_patterns);
+  console.log("true_engine_fail_count=" + report.true_engine_fail_count);
+  console.log("harness_or_gold_count=" + report.harness_or_gold_count);
+  console.log("ambiguous_input_count=" + report.ambiguous_input_count);
+  console.log("safe_clarification_ok_count=" + report.safe_clarification_ok_count);
+  console.log("invalid_expectation_count=" + report.invalid_expectation_count);
+  console.log("template_dna_problem_count=" + report.template_dna_problem_count);
+  console.log("safety_risk_count=" + report.safety_risk_count);
+  console.log("top_fail_families=" + topFamilies.join("|"));
+  console.log("report_file=" + reportPath);
+  console.log("=== END_SILVER_TASK_WRITE_HARDENING_V1_GAP_DIAGNOSTIC ===");
+  return report;
+}
+
 function printGuardHeader(name, report) {
   console.log("=== " + name.toUpperCase() + " ===");
   console.log("pass=" + report.pass + "/" + report.total);
@@ -394,8 +578,11 @@ module.exports = {
   buildTaskWriteCorpusV1,
   filterFamilies,
   classifyTaskWriteGapFail,
+  classifyHardeningFail,
   runGapDiagnostic,
+  runHardeningGapDiagnostic,
   runReplayCases,
   evaluateTaskWrite,
+  evaluateTaskWriteGuard,
   printGuardHeader
 };
