@@ -57750,6 +57750,47 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
   }
 
+  /** SILVER_LONG_SESSION_FIREWALL_V1 — long-session clarification/draft/ownership reset on read/query transitions. */
+  const IU_SILVER_LONG_SESSION_FIREWALL_V1 = true;
+
+  function iuSilverLongSessionFirewallV1Tick(rawFolded) {
+    if (!IU_SILVER_LONG_SESSION_FIREWALL_V1 || !IU_SILVER_STATE_GOVERNANCE_V1) return;
+    const f = String(rawFolded || "");
+    const c = IU_SILVER_CONVERSATION_V12;
+    const gov = iuSilverGovEnsureMetaV1();
+    const isRead =
+      IU_SILVER_READ_CREATE_FIREWALL_V1 &&
+      iuSilverReadCreateFirewallV1ReadIntentFolded(f) &&
+      !iuSilverReadCreateFirewallV1ExplicitWriteFolded(f, f);
+    const isNegationReset =
+      /\b(nic\s+neukladej|nic\s+nevytvor|jen\s+to\s+neukladej|ne,\s+to\s+druhe\s+neukladej|to\s+posledni\s+smaz)\b/.test(f);
+    if (isRead) {
+      c.awaitingField = null;
+      c.lastDraft = null;
+      c.lastDraftType = null;
+      c.activeDraftKey = null;
+      c.lastWasReadQuery = true;
+      if (Array.isArray(c._govSlots)) {
+        const kept = [];
+        for (let si = 0; si < c._govSlots.length; si++) {
+          const slot = c._govSlots[si];
+          if (slot && slot.kind !== "clarification" && slot.kind !== "save") kept.push(slot);
+        }
+        c._govSlots = kept;
+      }
+      iuSilverGovContinuationResetV1();
+      gov.longSessionReadReset = (gov.longSessionReadReset || 0) + 1;
+    } else if (isNegationReset) {
+      c.awaitingField = null;
+      c.lastDraft = null;
+      c.lastDraftType = null;
+      c.activeDraftKey = null;
+      gov.longSessionNegationReset = (gov.longSessionNegationReset || 0) + 1;
+    } else if (!c.awaitingField) {
+      c.lastWasReadQuery = false;
+    }
+  }
+
   /** Long Session Isolation V1 — cross-turn stale payload/clarification/retrieval ownership guard. */
   function iuSilverLongSessionIsolationTickV1(rawFolded) {
     if (!IU_SILVER_STATE_GOVERNANCE_V1) return;
@@ -57762,7 +57803,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       (iuSilverLineOIsCapabilityUtteranceV1 && iuSilverLineOIsCapabilityUtteranceV1(f));
     const isRead =
       !isHelp &&
-      (/\b(najdi|hledej|vyhled|co\s+mam\s+(?:zitra|dnes|dneska)|kdy\s+mam)\b/.test(f) ||
+      ((IU_SILVER_READ_CREATE_FIREWALL_V1 && iuSilverReadCreateFirewallV1ReadIntentFolded(f)) ||
+        /\b(najdi|hledej|vyhled|co\s+mam\s+(?:zitra|dnes|dneska)|kdy\s+mam)\b/.test(f) ||
         /\bco\s+(?:jsem|sem)\s+r(?:esil|esila)\b/.test(f));
     const isSave = /^\s*(?:uloz|ulozit|pridej|pripomen|zapis|vytvor|naplanuj)\b/.test(f);
     const prevDom = String(gov.intentDominance || "");
@@ -57780,6 +57822,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       gov.intentDominance = "help";
       gov.stalePayloadBlocked = (gov.stalePayloadBlocked || 0) + (prevDom === "save" || prevDom === "read" ? 1 : 0);
     } else if (isRead) {
+      c.lastDraft = null;
+      c.lastDraftType = null;
+      c.activeDraftKey = null;
       if (prevDom === "help" || prevDom === "save") {
         c.awaitingField = null;
         iuSilverGovContinuationResetV1();
@@ -57791,6 +57836,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       gov.intentDominance = "save";
     }
+    iuSilverLongSessionFirewallV1Tick(f);
     iuSilverSessionStateGovernanceTickV1({ isolationTick: true });
   }
 
