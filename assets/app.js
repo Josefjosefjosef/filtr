@@ -40427,8 +40427,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const x = String(f || "");
     if (!x) return true;
     if (/\b(najdi|hledej|vyhledej|ukaz|uka[zž]|zobraz|vypis|cti|ctete|podivej|koukni|mrkni|zjist\w*)\b/.test(x)) return true;
-    if (/\b(co\s+mam|co\s+mame|kde\s+mam|kde\s+mame|co\s+jsem\s+resil|co\s+je\s+v\s+kalend)\b/.test(x)) return true;
-    if (/\b(jake\s+mam|jaky\s+mam|kolik\s+mam|mam\s+dnes|mam\s+zitra|mam\s+nejak\w*\s+schuz|nejak\w*\s+schuz|schuzky|schuzku)\b/.test(x)) return true;
+    if (/\bco\b/.test(x) && /\bmam\s+udelat\b/.test(x) && !/\b(uloz|dej|pridej|zapis|napis|pripom|nezapom)\b/.test(x)) return true;
+    if (/\b(co\s+(?:no\s+|jako\s+)?mam|co\s+mame|kde\s+mam|kde\s+mame|co\s+jsem\s+resil|co\s+je\s+v\s+kalend)\b/.test(x)) return true;
+    if (/\b(jake\s+mam|jaky\s+mam|kolik\s+mam|mam\s+dnes|mam\s+zitra|mam\s+nejak\w*\s+schuz|nejak\w*\s+schuz|schuzky|schuzku|schuzk\w*)\b/.test(x)) return true;
+    if (/\bkde\s+je\b/.test(x) && /\b(schuzk|kalend|udalost|porad)\w*\b/.test(x)) return true;
     if (/\bkdy\s+mam\b/.test(x) && !/\b(pripom|nezapom|zavolat|koupit|zaplatit|poslat|objednat)\b/.test(x)) return true;
     if (/\b(jen\s+zjist|jen\s+cti|jen\s+hled|nic\s+neukladej|neukladej|nevytv\w*)\b/.test(x)) return true;
     if (/\buloz\s+poznam/.test(x)) return true;
@@ -40437,6 +40439,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bdo\s+kalend/.test(x)) return true;
     if (/\b(v|ve)\s+\d{1,2}(\s+hod|\s*[:.]|\b)/.test(x)) return true;
     if (/\b\d{1,2}\s+hod\b/.test(x)) return true;
+    if (/\bdej\s+na\s+(dnes|dneska|zitra|zittra|pondeli|utery|stredu|ctvrtek|patek|sobotu|nedeli)\b/.test(x)) return true;
+    if (/\bvlastne\s+to\s+dej\b/.test(x)) return true;
+    if (/\bvecer\s+mam\s+(ucetni|pravnik|advokat|doktor|zubar|lekar)\b/.test(x) && !/\b(zavolat|pripom|nezapom)\b/.test(x)) return true;
+    if (
+      /\bmam\s+(?:nejak\w*\s+)?(zavolat|koupit|zaplatit|doplatit|poslat|objednat|vyridit|udelat|vyresit)\b/.test(x) &&
+      /\b(v\s+)?ukol\w*\b/.test(x) &&
+      !/\b(do\s+ukol|pridej\s+ukol|uloz\s+do\s+ukol|hod\s+do\s+ukol)\b/.test(x)
+    ) {
+      return true;
+    }
+    if (/\bneple\w*\s+(?:to\s+)?s\s+ukol/.test(x) && !/\b(do\s+ukol|pridej\s+ukol|uloz\s+do\s+ukol)\b/.test(x)) return true;
+    if (/\b(prosim|hele|fakt|teda)\b/.test(x) && !/\b(uloz|dej|pridej|zapis|napis|pripom|nezapom)\b/.test(x)) return true;
     if (/\bco\s+mam\s+v\s+poznam/.test(x)) return true;
     return false;
   }
@@ -40481,6 +40495,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (/\b(zitra|zittra|dnes|dneska|vecer|pondeli|utery|stredu|ctvrtek|patek|sobotu|nedeli)\b/.test(x)) {
       return false;
+    }
+    if (
+      IU_SILVER_MOBILE_VOICE_FRAGMENT_TASK_LIKE_ENTITY_RE_V1.test(x) &&
+      !/\b(najdi|hledej|vyhledej|ukaz|uka[zž]|zobraz|co\s+mam|kde\s+mam|zjist\w*|cti|podivej|koukni|mrkni)\b/.test(x)
+    ) {
+      const wCount = x.split(/\s+/).filter(function (w) {
+        return w && w.length >= 2;
+      }).length;
+      if (wCount <= 5) return false;
     }
     const toks = x.split(/\s+/).filter(function (w) {
       return w && w.length >= 3;
