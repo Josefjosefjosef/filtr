@@ -40433,7 +40433,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\b(jen\s+zjist|jen\s+cti|jen\s+hled|nic\s+neukladej|neukladej|nevytv\w*)\b/.test(x)) return true;
     if (/\buloz\s+poznam/.test(x)) return true;
     if (/\bdo\s+poznam/.test(x) && !/\bne\s+do\s+poznam/.test(x) && !/\buloz\s+ne\s+do\s+poznamek\s+ale\s+ukol/.test(x)) return true;
-    if (/\bdej\s+do\s+kalend/.test(x)) return true;
+    if (/\b(dej|uloz|ulozit|zapis|zapi[sš]|pridej)\s+do\s+kalend/.test(x)) return true;
+    if (/\bdo\s+kalend/.test(x)) return true;
+    if (/\b(v|ve)\s+\d{1,2}(\s+hod|\s*[:.]|\b)/.test(x)) return true;
+    if (/\b\d{1,2}\s+hod\b/.test(x)) return true;
     if (/\bco\s+mam\s+v\s+poznam/.test(x)) return true;
     return false;
   }
@@ -40445,7 +40448,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ) {
       return false;
     }
-    if (/\b(v\s+\d|ve\s+\d|\d{1,2}\s*[:.]\s*\d{2}|schuz|kalend|udalost|porad|na\s+praha|na\s+brn)\b/.test(x)) return false;
+    if (/\b(v\s+\d|ve\s+\d|\d{1,2}\s*[:.]\s*\d{2}|\d{1,2}\s+hod\b|schuz|kalend|udalost|porad|na\s+praha|na\s+brn)\b/.test(x)) return false;
+    if (/\b(zubar|doktor|lekar|pravnik|advokat)\b/.test(x) && !/\b(zavolat|pripom|nezapom|koupit|zaplatit|poslat|objednat)\b/.test(x)) {
+      return false;
+    }
     if (/\b(co\s+mam|jake\s+mam|mam\s+nejak\w*|nejak\w*\s+schuz)\b/.test(x)) return false;
     return IU_SILVER_MOBILE_VOICE_FRAGMENT_TASK_LIKE_ENTITY_RE_V1.test(x);
   }
