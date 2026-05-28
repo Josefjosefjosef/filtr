@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 const { loadEngine } = require("./silver-20k-regression-guard-shared.cjs");
+const p0Shared = require("./silver-p0-real-user-basics-shared-v1.cjs");
 
 const REPO = path.resolve(__dirname, "..");
 const WRITE_INTENTS = new Set(["calendar.create", "tasks.create", "notes.create", "create.storage_disambiguation"]);
@@ -40,7 +41,8 @@ const LANE_TARGETS = {
   ux_edge_cases: 4000,
   help_guidance: 2000,
   module_switch: 2000,
-  multi_intent: 2000
+  multi_intent: 2000,
+  p0_real_user_basics: 50000
 };
 
 const PERSONS = ["právník", "účetní", "Pepa", "zubař", "doktor", "servis auta", "banka", "pojistka"];
@@ -254,7 +256,22 @@ function expectedForLane(lane, input) {
   return "read";
 }
 
+function buildP0LaneCorpus(count) {
+  const all = p0Shared.buildP0Corpus(count);
+  return all.map(function (c) {
+    return Object.assign({}, c, {
+      lane: "p0_real_user_basics",
+      family: c.family || c.lane || "p0_real_user_basics",
+      safetyLabel: c.forbidWrite || c.expectBehavior === "read" ? "no_write" : "write_ok",
+      p0Case: true
+    });
+  });
+}
+
 function buildLaneCorpus(lane, count) {
+  if (lane === "p0_real_user_basics") {
+    return buildP0LaneCorpus(count);
+  }
   const tpls = laneTemplates(lane);
   const out = [];
   for (let i = 0; i < count; i++) {
@@ -396,6 +413,30 @@ function evaluatePublicCase(eng, c, ctx, counters) {
   return { pass: harnessOk, bucket: bucket, intent: intent, issues: issues };
 }
 
+function evaluateP0PublicCase(eng, c, counters) {
+  const turn = p0Shared.runTurn(eng, c);
+  const issues = p0Shared.evaluateCase(c, turn);
+  const bucket = issues.length ? p0Shared.classifyFail(c, turn, issues) : "PASS";
+  const intent = String(turn.normalizedIntent || "");
+  if (issues.some(function (x) {
+    return String(x).indexOf("dangerous_write") >= 0;
+  })) {
+    counters.dangerous_write_count++;
+    if (c.forbidWrite || c.expectBehavior === "read") counters.query_created_write_count++;
+  }
+  if (issues.some(function (x) {
+    return String(x).indexOf("ready_to_save") >= 0 || String(x).indexOf("draft_leak") >= 0;
+  })) {
+    counters.dangerous_write_count++;
+  }
+  if (bucket === "TASK_STEAL") counters.task_steal_count++;
+  if (bucket === "NOTE_STEAL") counters.note_steal_count++;
+  if (bucket === "CALENDAR_STEAL") counters.calendar_steal_count++;
+  if (bucket === "READ_CREATE_LEAK") counters.read_created_write_count++;
+  const harnessOk = bucket === "PASS" || bucket === "SAFE_CLARIFICATION_OK" || bucket === "AMBIGUOUS_INPUT";
+  return { pass: harnessOk, bucket: bucket, intent: intent, issues: issues };
+}
+
 function runPublicReadinessAudit(cases, reportPath) {
   const eng = loadEngine();
   const ctx = defaultCtx();
@@ -429,7 +470,10 @@ function runPublicReadinessAudit(cases, reportPath) {
 
   for (let i = 0; i < cases.length; i++) {
     const c = cases[i];
-    const ev = evaluatePublicCase(eng, c, ctx, counters);
+    const ev =
+      c.lane === "p0_real_user_basics" || c.p0Case
+        ? evaluateP0PublicCase(eng, c, counters)
+        : evaluatePublicCase(eng, c, ctx, counters);
     if (!laneStats[c.lane]) laneStats[c.lane] = { pass: 0, total: 0 };
     laneStats[c.lane].total++;
     if (ev.pass) {
@@ -479,7 +523,16 @@ function runPublicReadinessAudit(cases, reportPath) {
       template_dna_problem_count: templateDna
     },
     top_fail_families: topFail,
-    public_ready_candidate: safetyOk && parseFloat(overall) >= 99.0 ? "YES" : "NO",
+    public_ready_candidate:
+      safetyOk &&
+      parseFloat(overall) >= 99.0 &&
+      (!laneStats.p0_real_user_basics || laneStats.p0_real_user_basics.pass === laneStats.p0_real_user_basics.total)
+        ? "YES"
+        : "NO",
+    p0_real_user_basics_lane_pass:
+      laneStats.p0_real_user_basics && laneStats.p0_real_user_basics.total
+        ? laneStats.p0_real_user_basics.pass === laneStats.p0_real_user_basics.total
+        : true,
     safe_to_fix_next_family: topFail[0] || "none",
     recommended_next_family: topFail[0] || "none"
   };
@@ -629,6 +682,8 @@ function printPublicReport(report) {
   console.log("ux_edge_case_accuracy=" + (la.ux_edge_cases || "n/a"));
   console.log("help_guidance_accuracy=" + (la.help_guidance || "n/a"));
   console.log("multi_intent_accuracy=" + (la.multi_intent || "n/a"));
+  console.log("p0_real_user_basics_accuracy=" + (la.p0_real_user_basics || "n/a"));
+  console.log("p0_real_user_basics_lane_pass=" + (report.p0_real_user_basics_lane_pass ? "YES" : "NO"));
   const c = report.counters || {};
   console.log("dangerous_write_count=" + (c.dangerous_write_count || 0));
   console.log("false_write_count=" + (c.false_write_count || 0));

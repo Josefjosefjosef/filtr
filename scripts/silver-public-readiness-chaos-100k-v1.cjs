@@ -12,11 +12,13 @@ function main() {
   const report = shared.runPublicReadinessAudit(cases, REPORT);
   shared.printPublicReport(report);
   const c = report.counters || {};
+  const p0Ok = report.p0_real_user_basics_lane_pass !== false;
   const ok =
     c.dangerous_write_count === 0 &&
     c.query_created_write_count === 0 &&
     c.write_when_negated_count === 0 &&
-    parseFloat(report.overall_accuracy) >= 95;
+    parseFloat(report.overall_accuracy) >= 95 &&
+    p0Ok;
   process.exit(ok ? 0 : 1);
 }
 
