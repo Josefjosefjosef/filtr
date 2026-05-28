@@ -40357,6 +40357,67 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return iuSilverHasTaskActionVerb(x) || iuSilverCzechMobileTaskWriteBasicCueFolded(x);
   }
 
+  /** SILVER_CONVERSATIONAL_OWNERSHIP_HARDENING_V1 — stale module/temporal/entity carry-over cleanup mezi turny. */
+  const IU_SILVER_CONVERSATIONAL_OWNERSHIP_HARDENING_V1 = true;
+
+  function iuSilverConversationalOwnershipHardeningV1PreTurnCleanup(raw, folded) {
+    if (!IU_SILVER_CONVERSATIONAL_OWNERSHIP_HARDENING_V1) return;
+    const c = IU_SILVER_CONVERSATION_V12;
+    const f = String(folded || "");
+    const r = String(raw || "").trim();
+    if (!f) return;
+
+    if (iuSilverHelpGuidanceQuestionSemanticsFoldedV1(f)) {
+      c.lastDraft = null;
+      c.activeDraftKey = null;
+      c.pendingInterrupt = null;
+      c.lastWasReadQuery = false;
+      return;
+    }
+
+    const explicitReadQuery =
+      (/\b(co\s+mam|najdi|ukaz|zjist|hledej|jen\s+cti|jen\s+vypis|mrkni|koukni)\b/.test(f) ||
+        (r && iuSilverLineLAgendaReadQueryEligible(r))) &&
+      !iuSilverHasWriteVerb(f) &&
+      !/\b(uloz|zapis|pridej|dej\s+do|nahod)\b/.test(f);
+
+    if (explicitReadQuery) {
+      if (/\b(v\s+ukol|v\s+ukolech|ukoly)\b/.test(f) && !/\b(kalend|schuz|poznam)/.test(f)) {
+        c.agendaContext = null;
+        c.lastWasReadQuery = false;
+        c.activeDraftKey = null;
+        c.pendingInterrupt = null;
+      } else if (/\b(v\s+poznam|poznamk)/.test(f) && !/\b(kalend|schuz|v\s+ukol)/.test(f)) {
+        c.agendaContext = null;
+        c.lastWasReadQuery = false;
+        c.activeDraftKey = null;
+        c.pendingInterrupt = null;
+      } else if (/\b(kalend|schuz)\b/.test(f) && !/\b(v\s+ukol|v\s+poznam|poznamk)/.test(f)) {
+        c.activeDraftKey = null;
+        c.pendingInterrupt = null;
+      }
+    }
+
+    if (/\b(nic\s+neuklad|nic\s+nevytvor|nevytvor\s+nic|jen\s+cti|jen\s+hledam|pouze\s+ukaz)\b/.test(f)) {
+      c.activeDraftKey = null;
+      c.pendingInterrupt = null;
+      c.lastWasReadQuery = true;
+      if (/\bnic\s+neuklad/.test(f)) c.lastDraft = null;
+    }
+
+    if (/\b(ne\s+do\s+kalend|ne\s+do\s+ukol|jen\s+do\s+poznam|jen\s+v\s+poznam|ne\s+v\s+kalend)/.test(f)) {
+      c.agendaContext = null;
+      c.activeDraftKey = null;
+    }
+
+    if (/\b(pravnik|ucetni|auto\b|pepa\b|servis)\b/.test(f) && explicitReadQuery) {
+      const se = c.sessionEntities;
+      if (se && se.lastTitle && foldCs(se.lastTitle).indexOf(f.slice(0, 12)) < 0) {
+        se.lastTitle = null;
+      }
+    }
+  }
+
   /** SILVER_TASK_WRITE_OWNERSHIP_HARDENING_V1 — task.create nesmí být ukraden note routing vrstvou. */
   const IU_SILVER_TASK_WRITE_OWNERSHIP_HARDENING_V1 = true;
 
@@ -61499,6 +61560,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverProcessUserTurnCore(text, prevDraft, ctx) {
     const now = ctx && ctx.now ? ctx.now : new Date();
     let raw0 = String(text || "").trim();
+    if (raw0 && IU_SILVER_CONVERSATIONAL_OWNERSHIP_HARDENING_V1) {
+      iuSilverConversationalOwnershipHardeningV1PreTurnCleanup(raw0, foldCs(raw0));
+    }
     if (raw0 && IU_SILVER_TASK_WRITE_OWNERSHIP_HARDENING_V1) {
       const foldOwn0 = foldCs(raw0);
       const own0 = iuSilverTryTaskWriteOwnershipHardeningV1EarlyTurn(
