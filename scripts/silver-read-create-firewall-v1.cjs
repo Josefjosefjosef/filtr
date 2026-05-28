@@ -3,7 +3,7 @@
 const path = require("path");
 const shared = require("./silver-read-create-firewall-v1-shared.cjs");
 const REPORT = path.join(__dirname, "silver-read-create-firewall-v1-report.json");
-const TARGET = parseInt(process.env.SILVER_READ_CREATE_FIREWALL_CASES || "220", 10);
+const TARGET = parseInt(process.env.SILVER_READ_CREATE_FIREWALL_CASES || "470", 10);
 function main() {
   const cases = shared.buildCorpusV1(TARGET);
   const res = shared.runAudit("silver_read_create_firewall_v1", cases, REPORT, {
