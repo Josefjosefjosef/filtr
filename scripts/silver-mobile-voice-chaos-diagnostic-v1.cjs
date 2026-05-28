@@ -8,7 +8,7 @@ const REPORT = path.join(__dirname, "silver-mobile-voice-chaos-diagnostic-v1-rep
 const SAMPLE = parseInt(process.env.SILVER_MOBILE_VOICE_DIAG_SAMPLE || "500", 10);
 
 function main() {
-  const cases = shared.buildLaneCorpus("mobile_voice", SAMPLE);
+  const cases = shared.buildMobileVoiceExtendedCorpus(Math.min(SAMPLE, 20000));
   const report = shared.runPublicReadinessAudit(cases, REPORT);
   console.log("=== SILVER_MOBILE_VOICE_CHAOS_DIAGNOSTIC_V1 ===");
   console.log("sample_cases=" + report.total_cases);

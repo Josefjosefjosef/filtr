@@ -148,7 +148,31 @@ function laneTemplates(lane) {
       { tpl: () => "neukladej jen najdi", behavior: "read", module: "read" },
       { tpl: () => "co mam s autem", behavior: "read", module: "read" },
       { tpl: () => "uloz ne do poznamek ale ukol " + t[1], behavior: "create", module: "tasks" },
-      { tpl: () => "hele jen koukni co mam " + d[1], behavior: "read", module: "calendar" }
+      { tpl: () => "hele jen koukni co mam " + d[1], behavior: "read", module: "calendar" },
+      { tpl: () => "zavolat pravnik", behavior: "create", module: "tasks", family: "fragment_task_create" },
+      { tpl: () => "zejtra ucetni doklady", behavior: "create", module: "tasks", family: "fragment_task_create" },
+      { tpl: () => "servis auto pondeli", behavior: "create", module: "tasks", family: "fragment_task_create" },
+      { tpl: () => "zaplatit faktura", behavior: "create", module: "tasks", family: "fragment_task_create" },
+      { tpl: () => "poslat smlouvu pepovi", behavior: "create", module: "tasks", family: "fragment_task_create" },
+      { tpl: () => "koupit mleko vecer", behavior: "create", module: "tasks", family: "fragment_task_create" },
+      { tpl: () => "objednat zubar", behavior: "create", module: "tasks", family: "fragment_task_create" },
+      { tpl: () => "doktor recept", behavior: "create", module: "tasks", family: "fragment_task_create" },
+      { tpl: () => "doplatit pojistka", behavior: "create", module: "tasks", family: "fragment_task_create" },
+      { tpl: () => "vyresit banka", behavior: "create", module: "tasks", family: "fragment_task_create" },
+      { tpl: () => "kde mam fakturu", behavior: "read", module: "notes", family: "read_query_counter" },
+      { tpl: () => "kdy mam zubare", behavior: "read", module: "calendar", family: "read_query_counter" },
+      { tpl: () => "co jsem resil s pravnikem", behavior: "read", module: "read", family: "read_query_counter" },
+      { tpl: () => "ukaz ukoly kolem auta", behavior: "read", module: "tasks", family: "read_query_counter" },
+      { tpl: () => "najdi poznamku pravnik", behavior: "read", module: "notes", family: "note_counter" },
+      { tpl: () => "co mam v poznamkach pojistka", behavior: "read", module: "notes", family: "note_counter" },
+      { tpl: () => "dej do kalendare zubar zitra", behavior: "create", module: "calendar", family: "calendar_counter" },
+      { tpl: () => "co mam zitra v kalendari", behavior: "read", module: "calendar", family: "calendar_counter" },
+      { tpl: () => "schuzka ucetni pondeli", behavior: "create", module: "calendar", family: "calendar_counter" },
+      { tpl: () => "neukladej zavolat pravnik jen zjisti", behavior: "read", module: "read", family: "negated_counter" },
+      { tpl: () => "nic nevytvarej jen najdi smlouvu", behavior: "read", module: "notes", family: "negated_counter" },
+      { tpl: () => "jen koukni co mam s autem", behavior: "read", module: "read", family: "negated_counter" },
+      { tpl: () => "ne do ukolu", behavior: "read", module: "read", family: "negated_counter" },
+      { tpl: () => "neukladej", behavior: "read", module: "read", family: "negated_counter" }
     ],
     negation_safety: [
       () => "Nic neukládej, jen ukaž " + d[0],
@@ -239,7 +263,7 @@ function buildLaneCorpus(lane, count) {
     const resolved =
       typeof tplEntry === "function"
         ? { input: tplEntry(), behavior: null, module: null }
-        : { input: tplEntry.tpl(), behavior: tplEntry.behavior, module: tplEntry.module };
+        : { input: tplEntry.tpl(), behavior: tplEntry.behavior, module: tplEntry.module, family: tplEntry.family };
     let input = resolved.input;
     if (input.indexOf("LONG_") === 0 && chain) input = chain[chain.length - 1];
     if (lane === "mobile_voice") input = mutateMobile(input, i, true);
@@ -247,6 +271,7 @@ function buildLaneCorpus(lane, count) {
     const entry = {
       id: "PRC100K_" + lane.toUpperCase() + "_" + String(i + 1).padStart(5, "0"),
       lane: lane,
+      family: resolved.family || lane,
       input: input,
       chain: chain,
       expectBehavior: behavior,
@@ -327,6 +352,9 @@ function evaluatePublicCase(eng, c, ctx, counters) {
 
   if (c.safetyLabel === "no_write" || c.expectBehavior === "read") {
     if (WRITE_INTENTS.has(intent) && turn.processingState === "READY_TO_SAVE") {
+      if (c.family === "note_counter" && c.expectModule === "notes" && intent.indexOf("note") >= 0) {
+        /* note counterexample: notes.create is acceptable (anti task-steal lane) */
+      } else {
       counters.dangerous_write_count++;
       if (intent.indexOf("read") >= 0 || folded.indexOf("najdi") >= 0 || folded.indexOf("ukaz") >= 0) counters.query_created_write_count++;
       if (/\bneukladej\b|\bnic\s+neukladej\b|\bnevytvarej\b/.test(folded)) counters.write_when_negated_count++;
@@ -335,6 +363,7 @@ function evaluatePublicCase(eng, c, ctx, counters) {
       issues.push("dangerous_write");
       pass = false;
       bucket = "TRUE_ENGINE_FAIL";
+      }
     }
   }
 
@@ -465,6 +494,120 @@ function runPublicReadinessAudit(cases, reportPath) {
   return report;
 }
 
+const MOBILE_VOICE_EXTENDED_FAMILIES = {
+  fragment_task_create: {
+    count: 5000,
+    behavior: "create",
+    module: "tasks",
+    templates: [
+      "zavolat pravnik",
+      "zejtra ucetni doklady",
+      "servis auto pondeli",
+      "zaplatit faktura",
+      "poslat smlouvu pepovi",
+      "koupit mleko vecer",
+      "objednat zubar",
+      "doktor recept",
+      "doplatit pojistka",
+      "vyresit banka",
+      "pripomen mi ucetni",
+      "pripomen mi zavolat doktor",
+      "nezapomen faktura",
+      "zavolat mam",
+      "opravit auto"
+    ]
+  },
+  read_query_counter: {
+    count: 5000,
+    behavior: "read",
+    module: "read",
+    templates: [
+      "co mam s autem",
+      "najdi smlouvu",
+      "kde mam fakturu",
+      "kdy mam zubare",
+      "co jsem resil s pravnikem",
+      "ukaz ukoly kolem auta",
+      "najdi poznamku pravnik",
+      "co je v kalendari zitra"
+    ]
+  },
+  negated_counter: {
+    count: 3000,
+    behavior: "read",
+    module: "read",
+    templates: [
+      "neukladej zavolat pravnik jen zjisti",
+      "nic nevytvarej jen najdi smlouvu",
+      "jen koukni co mam s autem",
+      "ne do ukolu",
+      "ne task",
+      "neukladej",
+      "jen cti"
+    ]
+  },
+  note_counter: {
+    count: 3000,
+    behavior: "read",
+    module: "notes",
+    templates: [
+      { input: "poznamka pravnik smlouva", behavior: "read", module: "notes" },
+      { input: "uloz poznamku servis auta", behavior: "create", module: "notes" },
+      { input: "najdi poznamku banka", behavior: "read", module: "notes" },
+      { input: "co mam v poznamkach pojistka", behavior: "read", module: "notes" }
+    ]
+  },
+  calendar_counter: {
+    count: 3000,
+    behavior: "read",
+    module: "calendar",
+    templates: [
+      { input: "dej do kalendare zubar zitra", behavior: "create", module: "calendar" },
+      { input: "kdy mam doktora", behavior: "read", module: "calendar" },
+      { input: "co mam zitra v kalendari", behavior: "read", module: "calendar" },
+      { input: "schuzka ucetni pondeli", behavior: "create", module: "calendar" }
+    ]
+  }
+};
+
+function resolveMobileVoiceTemplateEntry(tpl, spec) {
+  if (typeof tpl === "string") {
+    return { input: tpl, behavior: spec.behavior, module: spec.module };
+  }
+  return {
+    input: tpl.input,
+    behavior: tpl.behavior || spec.behavior,
+    module: tpl.module || spec.module
+  };
+}
+
+function buildMobileVoiceExtendedCorpus(baseCount) {
+  const base = buildLaneCorpus("mobile_voice", baseCount || 20000);
+  const extra = [];
+  const famKeys = Object.keys(MOBILE_VOICE_EXTENDED_FAMILIES);
+  let seq = 0;
+  for (let fi = 0; fi < famKeys.length; fi++) {
+    const fam = famKeys[fi];
+    const spec = MOBILE_VOICE_EXTENDED_FAMILIES[fam];
+    for (let i = 0; i < spec.count; i++) {
+      seq++;
+      const resolved = resolveMobileVoiceTemplateEntry(spec.templates[i % spec.templates.length], spec);
+      const input = mutateMobile(resolved.input, i + baseCount, true);
+      extra.push({
+        id: "MV_EXT_" + fam.toUpperCase() + "_" + String(seq).padStart(5, "0"),
+        lane: "mobile_voice",
+        family: fam,
+        input: input,
+        chain: null,
+        expectBehavior: resolved.behavior,
+        expectModule: resolved.module,
+        safetyLabel: resolved.behavior === "read" ? "no_write" : "write_ok"
+      });
+    }
+  }
+  return base.concat(extra);
+}
+
 function printPublicReport(report) {
   console.log("=== SILVER_PUBLIC_READINESS_CHAOS_100K_V1 ===");
   console.log("total_cases=" + report.total_cases);
@@ -519,7 +662,9 @@ function printPublicReport(report) {
 
 module.exports = {
   LANE_TARGETS,
+  MOBILE_VOICE_EXTENDED_FAMILIES,
   buildLaneCorpus,
+  buildMobileVoiceExtendedCorpus,
   buildFullCorpus,
   runPublicReadinessAudit,
   printPublicReport,
