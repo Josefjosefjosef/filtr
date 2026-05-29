@@ -64365,9 +64365,70 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   </div>`;
   }
 
+  function renderQuickTemplateEmptyDraftShell(kind, turn) {
+    var d = turn.draft || createEmptyDraft();
+    var cardAccentClass = "iuSilverDraftCard--quickTemplateCalendar";
+    var cardTitle = "📅 Nová událost";
+    var grid = "";
+    var showSave = false;
+    if (kind === "calendar") {
+      cardAccentClass = "iuSilverDraftCard--quickTemplateCalendar";
+      cardTitle = "📅 Nová událost";
+      grid = renderDraftCardEditGrid(d);
+      showSave = isDraftSaveable(d);
+    } else if (kind === "reminder") {
+      cardAccentClass = "iuSilverDraftCard--quickTemplateTask";
+      cardTitle = "🔔 Nová připomínka";
+      grid =
+        '<div class="iuSilverDraftGrid iuSilverDraftGrid--edit iuSilverDraftGrid--task">' +
+        '<div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-task-field="due" value="' +
+        esc(String(d.taskDueAt || "").slice(0, 10)) +
+        '" />' +
+        '<div class="iuSilverDraftK">Název</div><input type="text" maxlength="200" class="iuSilverDraftInput" data-iu-silver-task-field="title" value="" autocomplete="off" />' +
+        '<div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="2" maxlength="5000" data-iu-silver-task-field="note"></textarea>' +
+        "</div>";
+      showSave = isTaskDraftSaveable(d);
+    } else {
+      cardAccentClass = "iuSilverDraftCard--quickTemplateNote";
+      cardTitle = "📝 Nová poznámka";
+      grid =
+        '<div class="iuSilverDraftGrid iuSilverDraftGrid--edit iuSilverDraftGrid--note">' +
+        '<div class="iuSilverDraftK">Text</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="5" maxlength="5000" data-iu-silver-note-field="text"></textarea>' +
+        "</div>";
+      showSave = isNoteDraftSaveable(d);
+    }
+    var actions =
+      '<button type="button" class="iuSilverDraftBtn iuSilverDraftBtn--primary" data-iu-silver-action="save" ' +
+      (showSave ? "" : "disabled") +
+      '>Uložit</button>' +
+      '<button type="button" class="iuSilverDraftBtn" data-iu-silver-action="quick-template-close">Zavřít</button>';
+    var card =
+      '<div class="iuSilverDraftCard iuSilverDraftCard--quickTemplateEmpty ' +
+      cardAccentClass +
+      '" data-iu-silver-draft-card="1" data-iu-silver-quick-template-empty="1" data-iu-silver-edit-mode="1">' +
+      '<div class="iuSilverDraftCardTitle iuSilverDraftCardTitle--quickTemplate">' +
+      esc(cardTitle) +
+      "</div>" +
+      grid +
+      '<div class="iuSilverDraftActions" data-iu-silver-actions="1">' +
+      actions +
+      "</div></div>";
+    return (
+      '<div class="iuSilverMsg iuSilverMsg--assistant iuSilverMsg--quickTemplateEmpty" data-iu-silver-msg="assistant" data-iu-silver-quick-template-kind="' +
+      esc(kind) +
+      '">' +
+      card +
+      "</div>"
+    );
+  }
+
   function renderDraftCard(turn, opts) {
     opts = opts || {};
     const editMode = !!opts.editMode;
+    const qtKind = opts.quickTemplateEmptySubmit || turn.quickTemplateEmptySubmit;
+    if (qtKind) {
+      return renderQuickTemplateEmptyDraftShell(qtKind, turn);
+    }
     if (iuSilverIsHelpGuidanceRenderModeV1(turn)) {
       const lead = String(turn.assistantLead || turn.userFacingSummary || "").trim();
       return `<div class="iuSilverMsg iuSilverMsg--assistant iuSilverMsg--help" data-iu-silver-msg="assistant" data-iu-silver-help-only="1">
@@ -64643,7 +64704,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     saveBusy: false,
     trapOn: false,
     opened: false,
-    pendingStorageAction: null
+    pendingStorageAction: null,
+    quickTemplateEmptySubmit: null,
+    quickTemplatePrevSubtitle: null
   };
 
   function clearPendingStorageDisambiguation() {
@@ -64871,7 +64934,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     };
     chatState.lastDraftTurn = turnOut;
     const wrap = document.createElement("div");
-    wrap.innerHTML = renderDraftCard(turnOut, { editMode: chatState.cardEditMode }).trim();
+    wrap.innerHTML = renderDraftCard(turnOut, {
+      editMode: chatState.quickTemplateEmptySubmit ? true : chatState.cardEditMode,
+      quickTemplateEmptySubmit: chatState.quickTemplateEmptySubmit || turn.quickTemplateEmptySubmit
+    }).trim();
     const newNode = wrap.firstElementChild;
     if (newNode) msg.replaceWith(newNode);
     scrollMessagesToEnd();
@@ -64913,14 +64979,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     document.body.classList.add("iuSilverChatOpen");
     chatState.opened = true;
     attachTrap();
-    const inp = document.getElementById("iuSilverChatInput");
-    if (inp) {
-      try {
-        inp.focus({ preventScroll: true });
-      } catch {
+    if (!chatState.quickTemplateEmptySubmit) {
+      const inp = document.getElementById("iuSilverChatInput");
+      if (inp) {
         try {
-          inp.focus();
-        } catch {}
+          inp.focus({ preventScroll: true });
+        } catch {
+          try {
+            inp.focus();
+          } catch {}
+        }
       }
     }
   }
@@ -64938,6 +65006,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         window.iuSilverCalendarEngine.iuSilverConversationReset();
       }
     } catch (_) {}
+    clearQuickTemplateEmptyOverlayMode();
     ov.hidden = true;
     ov.setAttribute("aria-hidden", "true");
     document.body.classList.remove("iuSilverChatOpen");
@@ -65087,6 +65156,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       chatState.cardEditMode = false;
       chatState.draft = createEmptyDraft();
       clearPendingStorageDisambiguation();
+    } else if (turn.quickTemplateEmptySubmit) {
+      chatState.cardEditMode = true;
+      chatState.quickTemplateEmptySubmit = turn.quickTemplateEmptySubmit;
+      clearPendingStorageDisambiguation();
+      chatState.silverCompanionNoteDraft = null;
+      chatState.lastDraftTurn = { ...turn, draft: cloneDraft(turn.draft) };
+      chatState.draft = cloneDraft(turn.draft);
     } else if (turn.normalizedIntent === "notes.create" || (turn.draft && turn.draft.targetContainer === "notes")) {
       chatState.cardEditMode = false;
       clearPendingStorageDisambiguation();
@@ -65104,7 +65180,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       chatState.lastDraftTurn = { ...turn, draft: cloneDraft(turn.draft) };
     }
     const wrap = document.createElement("div");
-    wrap.innerHTML = renderDraftCard(turn, { editMode: chatState.cardEditMode }).trim();
+    wrap.innerHTML = renderDraftCard(turn, {
+      editMode: chatState.cardEditMode,
+      quickTemplateEmptySubmit: turn.quickTemplateEmptySubmit || chatState.quickTemplateEmptySubmit
+    }).trim();
     const node = wrap.firstElementChild;
     if (node) host.appendChild(node);
     if (turn.silverCompanionNoteTurn) {
@@ -65147,6 +65226,126 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     };
   }
 
+  var IU_SILVER_QUICK_TEMPLATE_EMPTY_TEXTS = {
+    calendar: "Do kalendáře",
+    reminder: "Připomeň mi",
+    notes: "Do poznámek"
+  };
+
+  function iuSilverIsNarrowSilverComposerV1() {
+    try {
+      return window.matchMedia("(max-width: 1024px)").matches;
+    } catch (_) {
+      return (window.innerWidth || 0) <= 1024;
+    }
+  }
+
+  function iuSilverDetectQuickTemplateEmptySubmit(text) {
+    var t = String(text || "").trim();
+    if (t === IU_SILVER_QUICK_TEMPLATE_EMPTY_TEXTS.calendar) return "calendar";
+    if (t === IU_SILVER_QUICK_TEMPLATE_EMPTY_TEXTS.reminder) return "reminder";
+    if (t === IU_SILVER_QUICK_TEMPLATE_EMPTY_TEXTS.notes) return "notes";
+    return null;
+  }
+
+  function iuSilverBuildQuickTemplateEmptyTurn(kind) {
+    var d = createEmptyDraft();
+    if (kind === "calendar") {
+      d.targetContainer = "calendar";
+      d.activeCalendarSession = true;
+      return {
+        normalizedIntent: "calendar.create",
+        targetContainer: "calendar",
+        processingState: "NEEDS_CLARIFICATION",
+        clarificationReason: null,
+        assistantLead: "",
+        clarificationText: "",
+        draft: d,
+        quickTemplateEmptySubmit: "calendar"
+      };
+    }
+    if (kind === "reminder") {
+      d.targetContainer = "tasks";
+      return {
+        normalizedIntent: "tasks.create",
+        targetContainer: "tasks",
+        processingState: "NEEDS_CLARIFICATION",
+        clarificationReason: null,
+        assistantLead: "",
+        clarificationText: "",
+        draft: d,
+        quickTemplateEmptySubmit: "reminder"
+      };
+    }
+    d.targetContainer = "notes";
+    d.silverNoteCreatedTs = Date.now();
+    return {
+      normalizedIntent: "notes.create",
+      targetContainer: "notes",
+      processingState: "NEEDS_CLARIFICATION",
+      clarificationReason: null,
+      assistantLead: "",
+      clarificationText: "",
+      draft: d,
+      quickTemplateEmptySubmit: "notes"
+    };
+  }
+
+  function applyQuickTemplateEmptyOverlayMode(kind) {
+    var ov = document.getElementById("iuSilverChatOverlay");
+    if (!ov) return;
+    ov.classList.add("iuSilverChatOverlay--quickTemplateEmpty");
+    if (kind === "calendar") ov.classList.add("iuSilverChatOverlay--quickTemplateCalendar");
+    else if (kind === "reminder") ov.classList.add("iuSilverChatOverlay--quickTemplateTask");
+    else if (kind === "notes") ov.classList.add("iuSilverChatOverlay--quickTemplateNote");
+    var sub = document.querySelector(".iuSilverChatSubtitle");
+    if (sub) {
+      chatState.quickTemplatePrevSubtitle = String(sub.textContent || "");
+      if (kind === "calendar") sub.textContent = "Nová událost";
+      else if (kind === "reminder") sub.textContent = "Nová připomínka";
+      else if (kind === "notes") sub.textContent = "Nová poznámka";
+    }
+  }
+
+  function clearQuickTemplateEmptyOverlayMode() {
+    var ov = document.getElementById("iuSilverChatOverlay");
+    if (ov) {
+      ov.classList.remove(
+        "iuSilverChatOverlay--quickTemplateEmpty",
+        "iuSilverChatOverlay--quickTemplateCalendar",
+        "iuSilverChatOverlay--quickTemplateTask",
+        "iuSilverChatOverlay--quickTemplateNote"
+      );
+    }
+    var sub = document.querySelector(".iuSilverChatSubtitle");
+    if (sub && chatState.quickTemplatePrevSubtitle != null) {
+      sub.textContent = chatState.quickTemplatePrevSubtitle;
+    }
+    chatState.quickTemplateEmptySubmit = null;
+    chatState.quickTemplatePrevSubtitle = null;
+  }
+
+  function iuSilverFocusQuickTemplateEmptyField(kind) {
+    requestAnimationFrame(function () {
+      var sel =
+        kind === "calendar"
+          ? '[data-iu-silver-field="title"]'
+          : kind === "reminder"
+            ? '[data-iu-silver-task-field="title"]'
+            : '[data-iu-silver-note-field="text"]';
+      var el = document.querySelector(".iuSilverDraftCard--quickTemplateEmpty " + sel);
+      if (el && typeof el.focus === "function") {
+        try {
+          el.focus({ preventScroll: true });
+        } catch (_) {
+          try {
+            el.focus();
+          } catch (_) {}
+        }
+      }
+    });
+  }
+
   function handleHomeSubmit() {
     const input = document.getElementById("iuSilverHomeInput") || document.querySelector("#silver-slot .silver-input");
     if (!input) return;
@@ -65179,8 +65378,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         window.iuSilverCalendarEngine.iuSilverConversationReset();
       }
     } catch (_) {}
-    openChatOverlay(input);
     const first = drainPendingFirstMessage();
+    var quickKind = first && iuSilverIsNarrowSilverComposerV1() ? iuSilverDetectQuickTemplateEmptySubmit(first) : null;
+    if (quickKind) {
+      chatState.quickTemplateEmptySubmit = quickKind;
+      openChatOverlay(input);
+      applyQuickTemplateEmptyOverlayMode(quickKind);
+      const qtTurn = iuSilverBuildQuickTemplateEmptyTurn(quickKind);
+      chatState.draft = cloneDraft(qtTurn.draft);
+      appendAssistantTurn(qtTurn);
+      iuSilverFocusQuickTemplateEmptyField(quickKind);
+      return;
+    }
+    openChatOverlay(input);
     if (first) {
       appendUserMessage(first);
       const eng = window.iuSilverCalendarEngine;
@@ -65613,8 +65823,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       void handleSaveClick(draftCard || null);
     } else if (a === "edit") {
       e.preventDefault();
+      if (chatState.quickTemplateEmptySubmit) return;
       chatState.cardEditMode = !chatState.cardEditMode;
       refreshLastDraftCard();
+    } else if (a === "quick-template-close") {
+      e.preventDefault();
+      closeChatOverlay();
     }
   }
 
@@ -66102,6 +66316,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       overlay.addEventListener("input", onOverlayDraftInput, true);
       overlay.addEventListener("change", onOverlayDraftInput, true);
     }
+    try {
+      window.__iuSilverDetectQuickTemplateEmptySubmit = iuSilverDetectQuickTemplateEmptySubmit;
+      window.__iuSilverQuickTemplateEmptyActive = function () {
+        return !!chatState.quickTemplateEmptySubmit;
+      };
+    } catch (_) {}
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
