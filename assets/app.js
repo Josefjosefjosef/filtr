@@ -64986,22 +64986,50 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
 
+    function sendRow() {
+      return document.querySelector(".iuSilverHomeInputSendRow");
+    }
+
+    function homeSend() {
+      return document.getElementById("iuSilverHomeSend");
+    }
+
     function syncHomeUxEmptyState() {
       var inp = homeInput();
       var wrap = fieldWrap();
       if (!inp || !wrap) return;
       var empty = !String(inp.value || "").length;
       var narrow = narrowComposer();
+      var focused = false;
+      try {
+        focused = document.activeElement === inp;
+      } catch (_) {}
+      var templateMode = narrow && empty && !focused;
       try {
         inp.setAttribute("placeholder", narrow ? "" : String(inp.getAttribute("data-iu-silver-home-placeholder-desktop") || "Napiš Silverovi…"));
       } catch (_) {}
       try {
         wrap.classList.toggle("iuSilverHomeInputFieldWrap--empty", empty);
+        wrap.classList.toggle("iuSilverHomeInputFieldWrap--template", templateMode);
+        wrap.classList.toggle("iuSilverHomeInputFieldWrap--compose", narrow && !templateMode);
       } catch (_) {}
+      var row = sendRow();
+      if (row) {
+        try {
+          row.classList.toggle("iuSilverHomeInputSendRow--templateMode", templateMode);
+          row.classList.toggle("iuSilverHomeInputSendRow--composeMode", narrow && !templateMode);
+        } catch (_) {}
+      }
+      var send = homeSend();
+      if (send) {
+        try {
+          send.setAttribute("aria-hidden", templateMode ? "true" : "false");
+        } catch (_) {}
+      }
       var ux = document.getElementById("iuSilverHomeInputUx");
       if (ux) {
         try {
-          ux.setAttribute("aria-hidden", empty && narrowComposer() ? "true" : "true");
+          ux.setAttribute("aria-hidden", templateMode ? "false" : "true");
         } catch (_) {}
       }
       var ticker = document.getElementById("iuSilverHomeQueryTicker");
@@ -65013,8 +65041,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       var stack = gateStack();
       if (stack) {
         try {
-          stack.classList.toggle("iu-mobileSilverGateStack--uxEmptyHero", empty && narrowComposer() && inHeroHost());
-          stack.classList.toggle("iu-mobileSilverGateStack--uxEmptySlot", empty && narrowComposer() && !inHeroHost());
+          stack.classList.toggle("iu-mobileSilverGateStack--uxEmptyHero", templateMode && inHeroHost());
+          stack.classList.toggle("iu-mobileSilverGateStack--uxEmptySlot", templateMode && !inHeroHost());
+          stack.classList.toggle("iu-mobileSilverGateStack--uxComposeHero", narrow && !templateMode && inHeroHost());
+          stack.classList.toggle("iu-mobileSilverGateStack--uxComposeSlot", narrow && !templateMode && !inHeroHost());
         } catch (_) {}
       }
     }

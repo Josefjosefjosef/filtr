@@ -4,7 +4,7 @@
  *
  * Rules (viewport 390×844 and 768×1024):
  * - image_to_input_gap = inputTop - imageBottom  → 0..2 px
- * - gap_input_to_buttons = buttonsTop - inputBottom
+ * - gap_input_to_buttons = buttonsTop - composerBottom (mobile home composer incl. ticker)
  * - gap_buttons_to_card_bottom = cardBottom - buttonsBottom
  * - button_gap_delta = |gap_input_to_buttons - gap_buttons_to_card_bottom| ≤ 8
  * - Calendar / Úkoly / Poznámky smoke; no mic; submit shows arrow only
@@ -84,6 +84,7 @@ async function runViewport(page, w, h) {
     const img = document.querySelector("#iuSilverHeroPremium .iu-hero-figureImg");
     const inp = document.getElementById("iuSilverHomeInput");
     const sendBtn = document.getElementById("iuSilverHomeSend");
+    const composer = document.querySelector(".iuSilverHomeMobileComposerMain[data-iu-silver-home-composer-main]");
     const quick = document.querySelector("#iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions");
     const docEl = document.documentElement;
     const body = document.body;
@@ -94,6 +95,7 @@ async function runViewport(page, w, h) {
     let imageBottom = null;
     let inputTop = null;
     let inputBottom = null;
+    let composerBottom = null;
     let buttonsTop = null;
     let buttonsBottom = null;
     let cardBottom = null;
@@ -102,6 +104,9 @@ async function runViewport(page, w, h) {
       const r = inp.getBoundingClientRect();
       inputTop = r.top;
       inputBottom = r.bottom;
+    }
+    if (composer) {
+      composerBottom = composer.getBoundingClientRect().bottom;
     }
     if (quick) {
       const r = quick.getBoundingClientRect();
@@ -112,8 +117,9 @@ async function runViewport(page, w, h) {
 
     const imageToInputGap =
       imageBottom != null && inputTop != null ? Math.round(inputTop - imageBottom) : null;
+    const blockBottom = composerBottom != null ? composerBottom : inputBottom;
     const gapInputToButtons =
-      inputBottom != null && buttonsTop != null ? Math.max(0, Math.round(buttonsTop - inputBottom)) : null;
+      blockBottom != null && buttonsTop != null ? Math.max(0, Math.round(buttonsTop - blockBottom)) : null;
     const gapButtonsToCardBottom =
       cardBottom != null && buttonsBottom != null ? Math.max(0, Math.round(cardBottom - buttonsBottom)) : null;
     const buttonGapDelta =
