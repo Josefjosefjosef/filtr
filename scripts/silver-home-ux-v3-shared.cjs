@@ -16,15 +16,14 @@ const PREFIX_NO_COLON = {
   notes: "Do poznámek",
 };
 const MIN_LINE_GAP_PX = 2;
-const BASE_ACTION_GAP_PX = 9;
 const TARGET_ACTION_GAP_PX = 10;
 const MIN_ACTION_GAP_PX = 9.5;
-const MAX_LEAD_GAP_PX = 2;
-const BASE_BOX_HEIGHT_PX = { 390: 86, 430: 86, 768: 80 };
-const BASE_UX_PADDING_TOP_PX = { 390: 5, 430: 5, 768: 6 };
-const BASE_UX_PADDING_BOTTOM_PX = { 390: 5, 430: 5, 768: 6 };
-const MIN_SIZE_GROWTH = 0.15;
-const MAX_SIZE_GROWTH = 0.22;
+const TARGET_LEAD_GAP_PX = 5;
+const MIN_LEAD_GAP_PX = 4.5;
+const BASE_BOX_HEIGHT_V33_PX = { 390: 101, 430: 101, 768: 94 };
+const BOX_HEIGHT_ADD_PX = 5;
+const EXPECTED_UX_PADDING_TOP_PX = { 390: 6, 430: 6, 768: 7 };
+const EXPECTED_UX_PADDING_BOTTOM_PX = { 390: 6, 430: 6, 768: 7 };
 
 async function runNoColonInsert(page) {
   const results = {};
@@ -59,15 +58,16 @@ async function runNoColonInsert(page) {
 
 async function runTouchSpacing(page, viewportW) {
   const w = viewportW || 390;
+  const baseBox = BASE_BOX_HEIGHT_V33_PX[w] || BASE_BOX_HEIGHT_V33_PX[390];
   const cfg = {
-    target: TARGET_ACTION_GAP_PX,
+    actionTarget: TARGET_ACTION_GAP_PX,
     minAction: MIN_ACTION_GAP_PX,
-    maxLead: MAX_LEAD_GAP_PX,
-    baseBoxH: BASE_BOX_HEIGHT_PX[w] || BASE_BOX_HEIGHT_PX[390],
-    basePadTop: BASE_UX_PADDING_TOP_PX[w] || BASE_UX_PADDING_TOP_PX[390],
-    basePadBottom: BASE_UX_PADDING_BOTTOM_PX[w] || BASE_UX_PADDING_BOTTOM_PX[390],
-    minGrowth: MIN_SIZE_GROWTH,
-    maxGrowth: MAX_SIZE_GROWTH,
+    leadTarget: TARGET_LEAD_GAP_PX,
+    minLead: MIN_LEAD_GAP_PX,
+    baseBoxH: baseBox,
+    minBoxH: baseBox + BOX_HEIGHT_ADD_PX - 0.5,
+    expectedPadTop: EXPECTED_UX_PADDING_TOP_PX[w] || EXPECTED_UX_PADDING_TOP_PX[390],
+    expectedPadBottom: EXPECTED_UX_PADDING_BOTTOM_PX[w] || EXPECTED_UX_PADDING_BOTTOM_PX[390],
   };
   return page.evaluate((c) => {
     const ux = document.getElementById("iuSilverHomeInputUx");
@@ -77,7 +77,7 @@ async function runTouchSpacing(page, viewportW) {
         touch_spacing_ok: false,
         line_gaps_px: [],
         lead_gap_px: null,
-        action_gap_target_px: c.target,
+        action_gap_target_px: c.actionTarget,
       };
     }
     const uxSt = getComputedStyle(ux);
@@ -98,31 +98,24 @@ async function runTouchSpacing(page, viewportW) {
     const padTop = parseFloat(uxSt.paddingTop) || 0;
     const padBottom = parseFloat(uxSt.paddingBottom) || 0;
     const boxH = Math.round(inp.getBoundingClientRect().height);
-    const boxDelta = c.baseBoxH > 0 ? (boxH - c.baseBoxH) / c.baseBoxH : 0;
-    const topPadDelta = c.basePadTop > 0 ? (padTop - c.basePadTop) / c.basePadTop : 0;
-    const bottomPadDelta = c.basePadBottom > 0 ? (padBottom - c.basePadBottom) / c.basePadBottom : 0;
-    const inGrowth = (delta) => delta >= c.minGrowth && delta <= c.maxGrowth + 0.03;
+    const boxAddPx = Math.round((boxH - c.baseBoxH) * 100) / 100;
     const actionOk = gaps.length >= 2 && gaps.every((g) => g >= c.minAction);
-    const leadOk = leadGap === null || leadGap <= c.maxLead;
-    const boxOk = inGrowth(boxDelta);
-    const padTopOk = inGrowth(topPadDelta);
-    const padBottomOk = inGrowth(bottomPadDelta);
+    const leadOk = leadGap !== null && leadGap >= c.minLead;
+    const boxOk = boxH >= c.minBoxH;
+    const padStable = Math.abs(padTop - c.expectedPadTop) < 0.6 && Math.abs(padBottom - c.expectedPadBottom) < 0.6;
     return {
-      touch_spacing_ok: actionOk && leadOk && boxOk && padTopOk && padBottomOk,
+      touch_spacing_ok: actionOk && leadOk && boxOk && padStable,
       line_gaps_px: gaps,
       lead_gap_px: leadGap,
-      action_gap_target_px: c.target,
+      action_gap_target_px: c.actionTarget,
       action_gap_min_px: c.minAction,
-      lead_gap_max_px: c.maxLead,
+      lead_gap_target_px: c.leadTarget,
+      lead_gap_min_px: c.minLead,
       box_height_px: boxH,
       box_height_base_px: c.baseBoxH,
-      box_height_delta: Math.round(boxDelta * 1000) / 1000,
+      box_height_add_px: boxAddPx,
       top_padding_px: padTop,
       bottom_padding_px: padBottom,
-      top_padding_base_px: c.basePadTop,
-      bottom_padding_base_px: c.basePadBottom,
-      top_padding_delta: Math.round(topPadDelta * 1000) / 1000,
-      bottom_padding_delta: Math.round(bottomPadDelta * 1000) / 1000,
     };
   }, cfg);
 }
@@ -334,13 +327,10 @@ module.exports = {
   emitV3Banner,
   PREFIX_NO_COLON,
   MIN_LINE_GAP_PX,
-  BASE_ACTION_GAP_PX,
   TARGET_ACTION_GAP_PX,
   MIN_ACTION_GAP_PX,
-  MAX_LEAD_GAP_PX,
-  BASE_BOX_HEIGHT_PX,
-  BASE_UX_PADDING_TOP_PX,
-  BASE_UX_PADDING_BOTTOM_PX,
-  MIN_SIZE_GROWTH,
-  MAX_SIZE_GROWTH,
+  TARGET_LEAD_GAP_PX,
+  MIN_LEAD_GAP_PX,
+  BASE_BOX_HEIGHT_V33_PX,
+  BOX_HEIGHT_ADD_PX,
 };
