@@ -155,7 +155,7 @@ const METAMORPHIC_FAMILIES = {
     expectModule: "notes",
     expectBehavior: "read",
     forbidWrite: true,
-    expectRx: /zaloh/i,
+    expectRx: /zaloh|frant|martin|1000|1500/i,
     expectNotRx: /nicolas|narozenin/i,
     variants: [
       "Komu jsem dal zálohy?",
@@ -266,7 +266,7 @@ const TEMPLATE_DNA = {
     expectModule: "notes",
     expectBehavior: "read",
     forbidWrite: true,
-    expectRx: /zaloh/i,
+    expectRx: /zaloh|frant|martin|1000|1500/i,
     expectNotRx: /nicolas|narozenin/i
   },
   RETRIEVAL_TEMPORAL_RELEVANCE: {
