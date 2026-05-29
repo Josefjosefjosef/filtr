@@ -36623,6 +36623,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bpoznamenej\s+si\b/.test(x) ||
       /\bzapamatuj\s+si\b/.test(x) ||
       /\bzapis\w*\s+si\b/.test(x) ||
+      (/\buloz\w*\s+si\b/.test(x) && (/\b(jeste\s+)?(?:ze|z\s)/.test(x) || /\buloz\s+si\s+informac/.test(x))) ||
       (/\bneni\s+to\s+ukol\b/.test(x) && /\bjen\s+informac/.test(x)) ||
       (/\bneni\s+to\s+udalost\b/.test(x) && /\bjen\s+poznam/.test(x));
     if (!noteTarget) return false;
@@ -36645,7 +36646,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const r = String(raw || "").trim();
     if (!iuSilverNoteWriteFactualMemoryRoutingV1Folded(f, r)) return null;
     if (
-      !/\b(poznamenej\s+si|zapamatuj\s+si|zapis\w*\s+si)\b/.test(f) &&
+      !/\b(poznamenej\s+si|zapamatuj\s+si|zapis\w*\s+si|uloz\w*\s+si)\b/.test(f) &&
       /\b(schuz|doktor|termin|servis|holic|porad)\b/.test(f) &&
       !iuSilverCap54NegatedCalendarEventCueFolded(f) &&
       !iuSilverExplicitNoteWriteDominatesCalendarCompositeFolded(f) &&
@@ -36661,6 +36662,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const bodyRes = [
       /\bul[oó][zž]\w*\s+(?:fakt|info(?:rmac\w*)?)\s+o\s+(.+?)\s+do\s+pozn[aá]m\w*/iu,
       /\bul[oó][zž]\w*\s+poznamku\s+(?:ze|že)\s+(.+)/iu,
+      /\bul[oó][zž]\w*\s+si\s+(?:je[sš]t[eě]\s+)?(?:ze|že)\s+(.+)/iu,
       /\bpoznamenej\s+si\s+(?:fakt\s+)?(?:ze|že)\s+(.+)/iu,
       /\bzapamatuj\s+si\s+(?:ze|že)\s+(.+)/iu,
       /\bzapis\w*\s+si\s+(?:ze|že)\s+(.+)/iu,
@@ -40435,6 +40437,77 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return iuSilverHasTaskActionVerb(x) || iuSilverCzechMobileTaskWriteBasicCueFolded(x);
   }
 
+  /** SILVER_CONTINUATION_OWNERSHIP_GOVERNOR_V1 — continuation save nesmí driftovat do tasks.create bez explicit task cue. */
+  const IU_SILVER_CONTINUATION_OWNERSHIP_GOVERNOR_V1 = true;
+
+  function iuSilverContinuationOwnershipMemoryNoteContinuationFolded(f) {
+    const x = String(f || "");
+    if (!/\buloz\w*\s+si\b/.test(x)) {
+      if (/\ba\s+jeste\s+ze\b/.test(x)) return true;
+      return false;
+    }
+    if (/\buloz\s+poznam|\bdo\s+poznam|\bdo\s+kalend|\buloz\s+ukol|\bdo\s+ukol|\bpridej\s+ukol/.test(x)) return false;
+    if (/\b(poznamenej\s+si|zapamatuj\s+si|zapis\w*\s+si)\b/.test(x)) return true;
+    if (/\buloz\w*\s+si\b/.test(x) && (/\b(jeste\s+)?(?:ze|z\s)/.test(x) || /\buloz\s+si\s+informac/.test(x))) return true;
+    return false;
+  }
+
+  function iuSilverContinuationOwnershipExplicitTaskCueFolded(f) {
+    const x = String(f || "");
+    if (/\b(ukol\w*|pridej\s+ukol|uloz\s+ukol|uloz\s+do\s+ukol|dej\s+do\s+ukol|hod\s+do\s+ukol)\b/.test(x)) return true;
+    if (/\bpridej\s+jeste\b/.test(x) && iuSilverHasTaskActionVerb(x)) return true;
+    if (/\bpripom\w*\s+mi\b/.test(x) || /\bnezapom\w*\b/.test(x)) return true;
+    return false;
+  }
+
+  function iuSilverContinuationOwnershipGovernorV1Folded(f, rawOpt) {
+    if (!IU_SILVER_CONTINUATION_OWNERSHIP_GOVERNOR_V1) return false;
+    const x = String(f || "");
+    if (!x) return false;
+    if (iuSilverNegativeCreateGuardFolded(x) || iuSilverP0TrailingGlobalNicNeukladejBlocksWriteFolded(x)) return false;
+    if (iuSilverContinuationOwnershipExplicitTaskCueFolded(x)) return false;
+    return iuSilverContinuationOwnershipMemoryNoteContinuationFolded(x);
+  }
+
+  function iuSilverTryContinuationOwnershipGovernorV1EarlyTurn(raw, now, folded) {
+    if (!IU_SILVER_CONTINUATION_OWNERSHIP_GOVERNOR_V1) return null;
+    const f = String(folded || "");
+    const r = String(raw || "").trim();
+    if (!r || !iuSilverContinuationOwnershipGovernorV1Folded(f, r)) return null;
+    const mem = iuSilverTryNoteWriteFactualMemoryRoutingV1Turn(r, now, f);
+    if (mem) {
+      mem.silverContinuationOwnershipGovernorV1 = true;
+      return mem;
+    }
+    const m = r.match(/\bul[oó][zž]\w*\s+si\s+(?:je[sš]t[eě]\s+)?(?:ze|že)\s+(.+)/iu);
+    if (m && m[1]) {
+      let body = String(m[1]).trim();
+      body = iuSilverNoteCreateFinalizeBody(body) || body;
+      if (body) {
+        const built = iuSilverBuildNoteCreateTurn(body, now);
+        if (built) {
+          built.silverContinuationOwnershipGovernorV1 = true;
+          return built;
+        }
+      }
+    }
+    const mZe = r.match(/^\s*a\s+(?:je[sš]t[eě]\s+)?(?:ze|že)\s+(.+)/iu);
+    if (mZe && mZe[1]) {
+      let body = String(mZe[1]).trim();
+      body = iuSilverNoteCreateFinalizeBody(body) || body;
+      if (body) {
+        const built = iuSilverBuildNoteCreateTurn(body, now);
+        if (built) {
+          built.silverContinuationOwnershipGovernorV1 = true;
+          return built;
+        }
+      }
+    }
+    const fallback = iuSilverBuildNoteCreateTurn("informace k uložení", now);
+    if (fallback) fallback.silverContinuationOwnershipGovernorV1 = true;
+    return fallback;
+  }
+
   /** SILVER_CONVERSATIONAL_OWNERSHIP_HARDENING_V1 — stale module/temporal/entity carry-over cleanup mezi turny. */
   const IU_SILVER_CONVERSATIONAL_OWNERSHIP_HARDENING_V1 = true;
 
@@ -40512,6 +40585,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bkdy\s+mam\b/.test(x) && !/\b(pripom|nezapom|zavolat|koupit|zaplatit|poslat|objednat)\b/.test(x)) return true;
     if (/\b(jen\s+zjist|jen\s+cti|jen\s+hled|nic\s+neukladej|neukladej|nevytv\w*)\b/.test(x)) return true;
     if (/\buloz\s+poznam/.test(x)) return true;
+    if (/\buloz\w*\s+si\b/.test(x) && /\b(jeste\s+)?(?:ze|z\s)/.test(x) && !/\b(ukol|pridej\s+ukol|uloz\s+do\s+ukol)\b/.test(x)) return true;
+    if (/\ba\s+jeste\s+ze\b/.test(x)) return true;
     if (/\bdo\s+poznam/.test(x) && !/\bne\s+do\s+poznam/.test(x) && !/\buloz\s+ne\s+do\s+poznamek\s+ale\s+ukol/.test(x)) return true;
     if (/\b(dej|uloz|ulozit|zapis|zapi[sš]|pridej)\s+do\s+kalend/.test(x)) return true;
     if (/\bdo\s+kalend/.test(x)) return true;
@@ -61869,6 +61944,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     let raw0 = String(text || "").trim();
     if (raw0 && IU_SILVER_CONVERSATIONAL_OWNERSHIP_HARDENING_V1) {
       iuSilverConversationalOwnershipHardeningV1PreTurnCleanup(raw0, foldCs(raw0));
+    }
+    if (raw0 && IU_SILVER_CONTINUATION_OWNERSHIP_GOVERNOR_V1) {
+      const covGov0 = iuSilverTryContinuationOwnershipGovernorV1EarlyTurn(raw0, now, foldCs(raw0));
+      if (covGov0) return covGov0;
     }
     if (raw0 && IU_SILVER_MOBILE_VOICE_FRAGMENT_TASK_CREATE_HARDENING_V1) {
       const mvFrag0 = iuSilverTryMobileVoiceFragmentTaskCreateHardeningV1EarlyTurn(
