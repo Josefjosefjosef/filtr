@@ -169,7 +169,13 @@ async function runViewport(page, w, h, opts) {
       inp.value = "";
       inp.dispatchEvent(new Event("input", { bubbles: true }));
       if (typeof window.__iuSilverSyncHomeUxEmptyState === "function") window.__iuSilverSyncHomeUxEmptyState();
-      return field.classList.contains("iuSilverHomeInputFieldWrap--empty") && getComputedStyle(ux).display !== "none";
+      try {
+        inp.blur();
+      } catch (_) {}
+      if (typeof window.__iuSilverSyncHomeUxEmptyState === "function") window.__iuSilverSyncHomeUxEmptyState();
+      const uxVisible = getComputedStyle(ux).display !== "none";
+      const templated = field.classList.contains("iuSilverHomeInputFieldWrap--template");
+      return field.classList.contains("iuSilverHomeInputFieldWrap--empty") && (templated || uxVisible);
     });
   }
 
@@ -300,7 +306,9 @@ function emitGuardBanner(title, reportPath, out) {
 
 module.exports = {
   runGuard,
+  runViewport,
   emitGuardBanner,
   envUrl,
   CLS_CAP,
+  installClsObserver,
 };
