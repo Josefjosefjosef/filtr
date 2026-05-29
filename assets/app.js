@@ -64944,7 +64944,161 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
   }
 
+  function iuSilverHomeMobileUxInit() {
+    try {
+      if (window.__iuSilverHomeMobileUxInit) return;
+      window.__iuSilverHomeMobileUxInit = 1;
+    } catch (_) {}
+
+    var PREFIX_TEXT = {
+      calendar: "Do kalendáře:",
+      reminder: "Připomeň mi:",
+      notes: "Do poznámek:",
+    };
+
+    function narrowComposer() {
+      try {
+        return window.matchMedia("(max-width: 1024px)").matches;
+      } catch (_) {
+        return (window.innerWidth || 0) <= 1024;
+      }
+    }
+
+    function fieldWrap() {
+      return document.querySelector(".iuSilverHomeInputFieldWrap[data-iu-silver-home-input-field]");
+    }
+
+    function homeInput() {
+      return document.getElementById("iuSilverHomeInput");
+    }
+
+    function gateStack() {
+      return document.querySelector(".iu-mobileSilverGateStack--floatingSilver");
+    }
+
+    function inHeroHost() {
+      try {
+        var host = document.getElementById("iuSilverHeroInputHost");
+        var wrap = document.querySelector(".iuSilverHomeInputWrap");
+        return !!(host && wrap && host.contains(wrap));
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function syncHomeUxEmptyState() {
+      var inp = homeInput();
+      var wrap = fieldWrap();
+      if (!inp || !wrap) return;
+      var empty = !String(inp.value || "").length;
+      var narrow = narrowComposer();
+      try {
+        inp.setAttribute("placeholder", narrow ? "" : String(inp.getAttribute("data-iu-silver-home-placeholder-desktop") || "Napiš Silverovi…"));
+      } catch (_) {}
+      try {
+        wrap.classList.toggle("iuSilverHomeInputFieldWrap--empty", empty);
+      } catch (_) {}
+      var ux = document.getElementById("iuSilverHomeInputUx");
+      if (ux) {
+        try {
+          ux.setAttribute("aria-hidden", empty && narrowComposer() ? "true" : "true");
+        } catch (_) {}
+      }
+      var ticker = document.getElementById("iuSilverHomeQueryTicker");
+      if (ticker) {
+        try {
+          ticker.setAttribute("aria-hidden", narrowComposer() ? "true" : "true");
+        } catch (_) {}
+      }
+      var stack = gateStack();
+      if (stack) {
+        try {
+          stack.classList.toggle("iu-mobileSilverGateStack--uxEmptyHero", empty && narrowComposer() && inHeroHost());
+          stack.classList.toggle("iu-mobileSilverGateStack--uxEmptySlot", empty && narrowComposer() && !inHeroHost());
+        } catch (_) {}
+      }
+    }
+
+    function insertHomeUxPrefix(key) {
+      var inp = homeInput();
+      var text = PREFIX_TEXT[key];
+      if (!inp || !text) return;
+      inp.value = text;
+      syncHomeUxEmptyState();
+      try {
+        inp.focus();
+      } catch (_) {}
+      try {
+        var pos = text.length;
+        inp.setSelectionRange(pos, pos);
+      } catch (_) {}
+      try {
+        if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
+      } catch (_) {}
+    }
+
+    function bindPrefixButtons(root) {
+      if (!root) return;
+      var btns = root.querySelectorAll("[data-iu-silver-home-prefix]");
+      for (var i = 0; i < btns.length; i++) {
+        (function (btn) {
+          if (btn.__iuSilverHomeUxBound) return;
+          btn.__iuSilverHomeUxBound = 1;
+          btn.addEventListener("click", function (e) {
+            try {
+              e.preventDefault();
+              e.stopPropagation();
+            } catch (_) {}
+            insertHomeUxPrefix(String(btn.getAttribute("data-iu-silver-home-prefix") || ""));
+          });
+        })(btns[i]);
+      }
+    }
+
+    function bindInput(inp) {
+      if (!inp || inp.__iuSilverHomeUxInputBound) return;
+      inp.__iuSilverHomeUxInputBound = 1;
+      inp.addEventListener("input", syncHomeUxEmptyState);
+      inp.addEventListener("focus", syncHomeUxEmptyState);
+      inp.addEventListener("blur", syncHomeUxEmptyState);
+    }
+
+    function bootHomeUx() {
+      bindPrefixButtons(document.getElementById("iuSilverHomeInputUx"));
+      bindInput(homeInput());
+      syncHomeUxEmptyState();
+    }
+
+    try {
+      window.__iuSilverSyncHomeUxEmptyState = syncHomeUxEmptyState;
+    } catch (_) {}
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bootHomeUx);
+    } else {
+      bootHomeUx();
+    }
+
+    try {
+      window.addEventListener("resize", function () {
+        syncHomeUxEmptyState();
+      });
+    } catch (_) {}
+
+    try {
+      var mq = window.matchMedia("(max-width: 1024px)");
+      if (mq && typeof mq.addEventListener === "function") {
+        mq.addEventListener("change", syncHomeUxEmptyState);
+      } else if (mq && typeof mq.addListener === "function") {
+        mq.addListener(syncHomeUxEmptyState);
+      }
+    } catch (_) {}
+  }
+
   function boot() {
+    try {
+      iuSilverHomeMobileUxInit();
+    } catch (_) {}
     try {
       if (typeof window.iuSilverCalendarGuidedFlowInit === "function") window.iuSilverCalendarGuidedFlowInit();
     } catch (_) {}
@@ -65182,6 +65336,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         clampSilverHomeInput(homeIn);
         try {
           if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
+        } catch (_) {}
+        try {
+          if (typeof window.__iuSilverSyncHomeUxEmptyState === "function") window.__iuSilverSyncHomeUxEmptyState();
         } catch (_) {}
       });
       homeIn.addEventListener("paste", function () {
