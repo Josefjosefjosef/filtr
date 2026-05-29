@@ -16,12 +16,12 @@ const PREFIX_NO_COLON = {
   notes: "Do poznámek",
 };
 const MIN_LINE_GAP_PX = 2;
-const TARGET_ACTION_GAP_PX = 10;
-const MIN_ACTION_GAP_PX = 9.5;
-const TARGET_LEAD_GAP_PX = 5;
-const MIN_LEAD_GAP_PX = 4.5;
+const TARGET_ACTION_GAP_PX = 14;
+const MIN_ACTION_GAP_PX = 13.5;
+const TARGET_LEAD_GAP_PX = 9;
+const MIN_LEAD_GAP_PX = 8.5;
 const BASE_BOX_HEIGHT_V33_PX = { 390: 101, 430: 101, 768: 94 };
-const BOX_HEIGHT_ADD_PX = 5;
+const BOX_HEIGHT_ADD_PX = 17;
 const EXPECTED_UX_PADDING_TOP_PX = { 390: 6, 430: 6, 768: 7 };
 const EXPECTED_UX_PADDING_BOTTOM_PX = { 390: 6, 430: 6, 768: 7 };
 
@@ -99,12 +99,19 @@ async function runTouchSpacing(page, viewportW) {
     const padBottom = parseFloat(uxSt.paddingBottom) || 0;
     const boxH = Math.round(inp.getBoundingClientRect().height);
     const boxAddPx = Math.round((boxH - c.baseBoxH) * 100) / 100;
+    const reminderSample = ux.querySelector('[data-iu-silver-home-prefix="reminder"]');
+    const reminderLine = reminderSample ? reminderSample.closest(".iuSilverHomeInputUxLine") : null;
+    const reminderSampleEl = reminderLine ? reminderLine.querySelector(".iuSilverHomeInputUxSample") : null;
+    const reminderText = reminderSampleEl ? String(reminderSampleEl.textContent || "").trim() : "";
+    const reminderSampleOk = reminderText.indexOf("Zaplatit nájem v pátek") >= 0 && reminderText.indexOf("do pátku") < 0;
     const actionOk = gaps.length >= 2 && gaps.every((g) => g >= c.minAction);
     const leadOk = leadGap !== null && leadGap >= c.minLead;
     const boxOk = boxH >= c.minBoxH;
     const padStable = Math.abs(padTop - c.expectedPadTop) < 0.6 && Math.abs(padBottom - c.expectedPadBottom) < 0.6;
     return {
-      touch_spacing_ok: actionOk && leadOk && boxOk && padStable,
+      touch_spacing_ok: actionOk && leadOk && boxOk && padStable && reminderSampleOk,
+      reminder_sample_ok: reminderSampleOk,
+      reminder_sample_text: reminderText,
       line_gaps_px: gaps,
       lead_gap_px: leadGap,
       action_gap_target_px: c.actionTarget,
