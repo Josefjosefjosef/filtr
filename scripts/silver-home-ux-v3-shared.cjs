@@ -16,10 +16,10 @@ const PREFIX_NO_COLON = {
   notes: "Do poznámek",
 };
 const MIN_LINE_GAP_PX = 2;
-const BASE_ACTION_GAP_PX = 3;
-const TARGET_ACTION_GAP_PX = 5;
-const MIN_ACTION_GAP_PX = 4.5;
-const MAX_LEAD_GAP_PX = 2.5;
+const BASE_ACTION_GAP_PX = 5;
+const TARGET_ACTION_GAP_PX = 9;
+const MIN_ACTION_GAP_PX = 8.5;
+const MAX_LEAD_GAP_PX = 2;
 
 async function runNoColonInsert(page) {
   const results = {};
