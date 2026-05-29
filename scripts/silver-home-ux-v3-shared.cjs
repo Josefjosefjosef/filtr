@@ -16,6 +16,10 @@ const PREFIX_NO_COLON = {
   notes: "Do poznámek",
 };
 const MIN_LINE_GAP_PX = 2;
+const BASE_ACTION_GAP_PX = 3;
+const TARGET_ACTION_GAP_PX = 5;
+const MIN_ACTION_GAP_PX = 4.5;
+const MAX_LEAD_GAP_PX = 2.5;
 
 async function runNoColonInsert(page) {
   const results = {};
@@ -49,9 +53,17 @@ async function runNoColonInsert(page) {
 }
 
 async function runTouchSpacing(page) {
-  return page.evaluate((minGap) => {
+  return page.evaluate((cfg) => {
     const ux = document.getElementById("iuSilverHomeInputUx");
-    if (!ux) return { touch_spacing_ok: false, line_gaps_px: [] };
+    if (!ux) {
+      return {
+        touch_spacing_ok: false,
+        line_gaps_px: [],
+        lead_gap_px: null,
+        action_gap_target_px: cfg.target,
+      };
+    }
+    const lead = ux.querySelector(".iuSilverHomeInputUxLead");
     const lines = Array.from(ux.querySelectorAll(".iuSilverHomeInputUxLine"));
     const gaps = [];
     for (let i = 0; i < lines.length - 1; i++) {
@@ -59,9 +71,27 @@ async function runTouchSpacing(page) {
       const bottom = lines[i + 1].getBoundingClientRect();
       gaps.push(Math.round((bottom.top - top.bottom) * 100) / 100);
     }
-    const ok = gaps.length >= 2 && gaps.every((g) => g >= minGap);
-    return { touch_spacing_ok: ok, line_gaps_px: gaps };
-  }, MIN_LINE_GAP_PX);
+    let leadGap = null;
+    if (lead && lines[0]) {
+      const leadRect = lead.getBoundingClientRect();
+      const firstRect = lines[0].getBoundingClientRect();
+      leadGap = Math.round((firstRect.top - leadRect.bottom) * 100) / 100;
+    }
+    const actionOk = gaps.length >= 2 && gaps.every((g) => g >= cfg.minAction);
+    const leadOk = leadGap === null || leadGap <= cfg.maxLead;
+    return {
+      touch_spacing_ok: actionOk && leadOk,
+      line_gaps_px: gaps,
+      lead_gap_px: leadGap,
+      action_gap_target_px: cfg.target,
+      action_gap_min_px: cfg.minAction,
+      lead_gap_max_px: cfg.maxLead,
+    };
+  }, {
+    target: TARGET_ACTION_GAP_PX,
+    minAction: MIN_ACTION_GAP_PX,
+    maxLead: MAX_LEAD_GAP_PX,
+  });
 }
 
 async function runTemplateReset(page) {
@@ -271,4 +301,8 @@ module.exports = {
   emitV3Banner,
   PREFIX_NO_COLON,
   MIN_LINE_GAP_PX,
+  BASE_ACTION_GAP_PX,
+  TARGET_ACTION_GAP_PX,
+  MIN_ACTION_GAP_PX,
+  MAX_LEAD_GAP_PX,
 };
