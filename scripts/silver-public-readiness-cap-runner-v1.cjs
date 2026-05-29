@@ -58,6 +58,7 @@ function main() {
     tasks_search_read: runGate("node scripts/silver-task-search-read-firewall-guard-v1.cjs", "tasks_search_read"),
     calendar_metamorphic: runGate("node scripts/silver-calendar-query-metamorphic-guard-v1.cjs", "calendar_metamorphic"),
     calendar_no_diacritics: runGate("node scripts/silver-calendar-no-diacritics-query-guard-v1.cjs", "calendar_no_diacritics"),
+    task_query_hardening: runGate("node scripts/silver-task-query-hardening-guard-v1.cjs", "task_query_hardening"),
     structured_extraction: runGate("node scripts/silver-structured-notes-extraction-guard-v1.cjs", "structured_extraction"),
     prod_proof: runGate("node scripts/silver-prod-proof.mjs", "prod_proof")
   };
