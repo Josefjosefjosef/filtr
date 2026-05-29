@@ -17419,6 +17419,119 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   outline-offset: 1px;
 }
 
+.iuSilverChatOverlay--quickTemplateEmpty .iuSilverChatComposer{
+  display: none !important;
+}
+.iuSilverChatOverlay--quickTemplateEmpty .iuSilverChatBackdrop{
+  background: rgba(10, 16, 24, 0.55);
+}
+.iuSilverChatOverlay--quickTemplateEmpty .iuSilverChatShell{
+  background: #f4f6f9;
+}
+.iuSilverChatOverlay--quickTemplateEmpty .iuSilverChatMessages{
+  padding: 0;
+  gap: 0;
+}
+.iuSilverMsg--quickTemplateEmpty{
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin: 0;
+}
+.iuSilverDraftCard--quickTemplateEmpty{
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: none;
+  position: relative;
+  overflow: hidden;
+}
+.iuSilverDraftCard--quickTemplateEmpty::before{
+  content: "";
+  display: block;
+  height: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+}
+.iuSilverDraftCard--quickTemplateCalendar::before{
+  background: linear-gradient(90deg, #178a4a, #1fa85a);
+}
+.iuSilverDraftCard--quickTemplateTask::before{
+  background: linear-gradient(90deg, #5b3fd4, #7c4dff);
+}
+.iuSilverDraftCard--quickTemplateNote::before{
+  background: linear-gradient(90deg, #0d9488, #14b8a6);
+}
+.iuSilverDraftCardTitle--quickTemplate{
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+  padding: 16px 16px 4px;
+  margin: 0;
+  color: #1f3a5f;
+}
+.iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftGrid{
+  padding: 8px 16px 0;
+  gap: 10px 12px;
+}
+.iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftInput,
+.iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftInput--note{
+  min-height: 48px;
+  font-size: max(16px, 1em);
+  border-radius: 12px;
+  border: 1px solid #d0dae8;
+  padding: 10px 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftActions{
+  margin-top: auto;
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  gap: 10px;
+  border-top: 1px solid #e8edf5;
+  background: #fff;
+}
+.iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftBtn{
+  flex: 1 1 auto;
+  min-height: 48px;
+  border-radius: 14px;
+}
+.iuSilverDraftCard--quickTemplateCalendar .iuSilverDraftBtn--primary{
+  background: linear-gradient(145deg, #1fa85a, #178a4a);
+  border-color: #178a4a;
+  color: #fff;
+}
+.iuSilverChatOverlay--quickTemplateCalendar .iuSilverChatClose{
+  border-color: rgba(31, 168, 90, 0.35);
+  color: #178a4a;
+}
+.iuSilverDraftCard--quickTemplateTask .iuSilverDraftBtn--primary{
+  background: linear-gradient(145deg, #7c4dff, #5b3fd4);
+  border-color: #5b3fd4;
+  color: #fff;
+}
+.iuSilverChatOverlay--quickTemplateTask .iuSilverChatClose{
+  border-color: rgba(124, 77, 255, 0.35);
+  color: #5b3fd4;
+}
+.iuSilverDraftCard--quickTemplateNote .iuSilverDraftBtn--primary{
+  background: linear-gradient(145deg, #14b8a6, #0d9488);
+  border-color: #0d9488;
+  color: #fff;
+}
+.iuSilverChatOverlay--quickTemplateNote .iuSilverChatClose{
+  border-color: rgba(20, 184, 166, 0.35);
+  color: #0d9488;
+}
+
 .iuSilverDisambiguationCard{
   margin-top: 10px;
   padding: 12px 12px 14px;
