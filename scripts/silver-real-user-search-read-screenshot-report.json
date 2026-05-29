@@ -1,0 +1,179 @@
+{
+  "total_cases": 50025,
+  "pass": 38596,
+  "fail": 11429,
+  "overall_accuracy": "77.15",
+  "screenshot_seeds_total": 24,
+  "screenshot_seeds_pass": 24,
+  "screenshot_seed_family_pass": "100.00",
+  "counters": {
+    "task_search_to_create_leak_count": 0,
+    "note_query_wrong_module_count": 0,
+    "calendar_metamorphic_fail_count": 0,
+    "direct_fact_disambiguation_count": 0,
+    "retrieval_miss_count": 0,
+    "notes_overbroad_fallback_count": 0,
+    "tasks_overbroad_fallback_count": 0,
+    "structured_extraction_fail_count": 0,
+    "person_entity_filter_fail_count": 0,
+    "object_property_filter_fail_count": 0,
+    "ranking_order_fail_count": 0,
+    "notes_read_pass": 21254,
+    "notes_read_fail": 10262,
+    "tasks_read_pass": 8837,
+    "tasks_read_fail": 1167,
+    "calendar_read_pass": 8503,
+    "calendar_read_fail": 0,
+    "true_engine_fail_count": 0,
+    "harness_or_gold_count": 0,
+    "safe_clarification_ok_count": 0,
+    "template_dna_problem_count": 11429,
+    "safety_risk_count": 0
+  },
+  "top_fail_families": [
+    "NOTES_SEARCH_READ=2857",
+    "STRUCTURED_EXTRACTION=2500",
+    "NEGATIVE_NO_RESULT=2000",
+    "CROSS_MODULE=1905",
+    "TASKS_SEARCH_READ=1167"
+  ],
+  "metamorphic_families_fail": [],
+  "first_fails": [
+    {
+      "id": "SRU_G_NOTES_SEARCH_READ_00027",
+      "family": "NOTES_SEARCH_READ",
+      "input": "Kde je Botanická zahrada?",
+      "intent": "global.search",
+      "issues": [
+        "module_leak:other"
+      ],
+      "msg": "Poznámka: auto má SPZ 42\nUloženo: dnes v 11:00\nPoznámka: záruka na TV končí 1.1.2027\nUloženo: dnes v 10:00\nPoznámka: Nicolas má narozeniny 13. října\nUloženo: dn"
+    },
+    {
+      "id": "SRU_G_NOTES_SEARCH_READ_00032",
+      "family": "NOTES_SEARCH_READ",
+      "input": "Jakou má šířku umyvadlo?",
+      "intent": "clarification",
+      "issues": [
+        "module_leak:other",
+        "clarification_instead_of_read"
+      ],
+      "msg": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
+    },
+    {
+      "id": "SRU_G_NOTES_SEARCH_READ_00037",
+      "family": "NOTES_SEARCH_READ",
+      "input": "Kde je Botanická zahrada?",
+      "intent": "global.search",
+      "issues": [
+        "module_leak:other"
+      ],
+      "msg": "Poznámka: auto má SPZ 42\nUloženo: dnes v 11:00\nPoznámka: záruka na TV končí 1.1.2027\nUloženo: dnes v 10:00\nPoznámka: Nicolas má narozeniny 13. října\nUloženo: dn"
+    },
+    {
+      "id": "SRU_G_NOTES_SEARCH_READ_00040",
+      "family": "NOTES_SEARCH_READ",
+      "input": "Jakou barvu má TV?",
+      "intent": "global.search",
+      "issues": [
+        "module_leak:other"
+      ],
+      "msg": "Poznámka: záruka na TV končí 1.1.2027\nUloženo: dnes v 10:00\nPoznámka: TV má záruku do listopadu 2026\nUloženo: dnes v 00:00\nPoznámka: auto má SPZ 42\nUloženo: dne"
+    },
+    {
+      "id": "SRU_G_NOTES_SEARCH_READ_00041",
+      "family": "NOTES_SEARCH_READ",
+      "input": "Kolik váží televize?",
+      "intent": "clarification",
+      "issues": [
+        "module_leak:other",
+        "clarification_instead_of_read"
+      ],
+      "msg": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
+    },
+    {
+      "id": "SRU_G_NOTES_SEARCH_READ_00042",
+      "family": "NOTES_SEARCH_READ",
+      "input": "Jakou má šířku taška?",
+      "intent": "clarification",
+      "issues": [
+        "module_leak:other",
+        "clarification_instead_of_read"
+      ],
+      "msg": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
+    },
+    {
+      "id": "SRU_G_NOTES_SEARCH_READ_00047",
+      "family": "NOTES_SEARCH_READ",
+      "input": "Kde je Botanická zahrada?",
+      "intent": "global.search",
+      "issues": [
+        "module_leak:other"
+      ],
+      "msg": "Poznámka: auto má SPZ 42\nUloženo: dnes v 11:00\nPoznámka: záruka na TV končí 1.1.2027\nUloženo: dnes v 10:00\nPoznámka: Nicolas má narozeniny 13. října\nUloženo: dn"
+    },
+    {
+      "id": "SRU_G_NOTES_SEARCH_READ_00051",
+      "family": "NOTES_SEARCH_READ",
+      "input": "Kolik váží stůl?",
+      "intent": "clarification",
+      "issues": [
+        "module_leak:other",
+        "clarification_instead_of_read"
+      ],
+      "msg": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
+    },
+    {
+      "id": "SRU_G_NOTES_SEARCH_READ_00052",
+      "family": "NOTES_SEARCH_READ",
+      "input": "Jakou má šířku chleba?",
+      "intent": "clarification",
+      "issues": [
+        "module_leak:other",
+        "clarification_instead_of_read"
+      ],
+      "msg": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
+    },
+    {
+      "id": "SRU_G_NOTES_SEARCH_READ_00057",
+      "family": "NOTES_SEARCH_READ",
+      "input": "Kde je Botanická zahrada?",
+      "intent": "global.search",
+      "issues": [
+        "module_leak:other"
+      ],
+      "msg": "Poznámka: auto má SPZ 42\nUloženo: dnes v 11:00\nPoznámka: záruka na TV končí 1.1.2027\nUloženo: dnes v 10:00\nPoznámka: Nicolas má narozeniny 13. října\nUloženo: dn"
+    },
+    {
+      "id": "SRU_G_NOTES_SEARCH_READ_00061",
+      "family": "NOTES_SEARCH_READ",
+      "input": "Kolik váží TV?",
+      "intent": "clarification",
+      "issues": [
+        "module_leak:other",
+        "clarification_instead_of_read"
+      ],
+      "msg": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
+    },
+    {
+      "id": "SRU_G_NOTES_SEARCH_READ_00062",
+      "family": "NOTES_SEARCH_READ",
+      "input": "Jakou má šířku televize?",
+      "intent": "clarification",
+      "issues": [
+        "module_leak:other",
+        "clarification_instead_of_read"
+      ],
+      "msg": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
+    }
+  ],
+  "recommended_fix_order": [
+    "NOTES_SEARCH_READ",
+    "STRUCTURED_EXTRACTION",
+    "NEGATIVE_NO_RESULT",
+    "CROSS_MODULE",
+    "TASKS_SEARCH_READ"
+  ],
+  "safe_to_fix": "YES",
+  "stop_reason": ""
+}

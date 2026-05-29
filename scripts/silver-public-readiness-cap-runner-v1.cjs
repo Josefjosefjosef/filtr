@@ -53,6 +53,11 @@ function main() {
     conversational_ownership: runGate("node scripts/silver-conversational-ownership-guard-v1.cjs", "conversational_ownership"),
     mobile_voice: runGate("node scripts/silver-mobile-voice-chaos-guard-v1.cjs", "mobile_voice"),
     p0_real_user_basics: runGate("node scripts/silver-p0-real-user-basics-guard-v1.cjs", "p0_real_user_basics"),
+    real_user_search_read: runGate("node scripts/silver-real-user-search-read-screenshot-v1.cjs", "real_user_search_read"),
+    notes_relevance: runGate("node scripts/silver-notes-relevance-filtering-guard-v1.cjs", "notes_relevance"),
+    tasks_search_read: runGate("node scripts/silver-task-search-read-firewall-guard-v1.cjs", "tasks_search_read"),
+    calendar_metamorphic: runGate("node scripts/silver-calendar-query-metamorphic-guard-v1.cjs", "calendar_metamorphic"),
+    structured_extraction: runGate("node scripts/silver-structured-notes-extraction-guard-v1.cjs", "structured_extraction"),
     prod_proof: runGate("node scripts/silver-prod-proof.mjs", "prod_proof")
   };
 
