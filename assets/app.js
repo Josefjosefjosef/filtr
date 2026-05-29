@@ -64283,14 +64283,28 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     document.body.classList.remove("iuSilverChatOpen");
     chatState.opened = false;
     detachTrap();
+    try {
+      if (typeof window.__iuSilverResetHomeTemplateMode === "function") window.__iuSilverResetHomeTemplateMode();
+    } catch (_) {}
     const rf = chatState.returnFocus;
+    const homeInRef = document.getElementById("iuSilverHomeInput");
+    let narrowHome = false;
+    try {
+      narrowHome = window.matchMedia("(max-width: 1024px)").matches;
+    } catch (_) {}
     if (rf && typeof rf.focus === "function") {
-      try {
-        rf.focus({ preventScroll: true });
-      } catch {
+      if (narrowHome && homeInRef && rf === homeInRef) {
         try {
-          rf.focus();
-        } catch {}
+          homeInRef.blur();
+        } catch (_) {}
+      } else {
+        try {
+          rf.focus({ preventScroll: true });
+        } catch {
+          try {
+            rf.focus();
+          } catch {}
+        }
       }
     }
   }
@@ -64951,9 +64965,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     } catch (_) {}
 
     var PREFIX_TEXT = {
-      calendar: "Do kalendáře:",
-      reminder: "Připomeň mi:",
-      notes: "Do poznámek:",
+      calendar: "Do kalendáře",
+      reminder: "Připomeň mi",
+      notes: "Do poznámek",
     };
 
     function narrowComposer() {
@@ -64992,6 +65006,25 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     function homeSend() {
       return document.getElementById("iuSilverHomeSend");
+    }
+
+    function resetHomeTemplateMode() {
+      if (!narrowComposer()) return;
+      var inp = homeInput();
+      if (!inp) return;
+      try {
+        inp.value = "";
+      } catch (_) {}
+      try {
+        inp.blur();
+      } catch (_) {}
+      try {
+        inp.dispatchEvent(new Event("input", { bubbles: true }));
+      } catch (_) {}
+      syncHomeUxEmptyState();
+      try {
+        if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
+      } catch (_) {}
     }
 
     function syncHomeUxEmptyState() {
@@ -65101,6 +65134,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     try {
       window.__iuSilverSyncHomeUxEmptyState = syncHomeUxEmptyState;
+      window.__iuSilverResetHomeTemplateMode = resetHomeTemplateMode;
     } catch (_) {}
 
     if (document.readyState === "loading") {

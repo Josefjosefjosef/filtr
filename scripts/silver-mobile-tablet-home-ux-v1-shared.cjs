@@ -15,9 +15,9 @@ const CLS_CAP = 0.02;
 
 const PREFIX_KEYS = ["calendar", "reminder", "notes"];
 const PREFIX_EXPECTED = {
-  calendar: "Do kalendáře:",
-  reminder: "Připomeň mi:",
-  notes: "Do poznámek:",
+  calendar: "Do kalendáře",
+  reminder: "Připomeň mi",
+  notes: "Do poznámek",
 };
 
 function envUrl() {
