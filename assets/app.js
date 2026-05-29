@@ -37275,6 +37275,93 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   /** SILVER_CALENDAR_QUERY_INTENT_ROUTING_V1 — temporal/person/fragment calendar read ownership (narrow early hook). */
   const IU_SILVER_CALENDAR_QUERY_INTENT_ROUTING_V1 = true;
 
+  /**
+   * SILVER_CALENDAR_NO_DIACRITICS_QUERY_GOVERNOR_V1 — rozporný kalendářní read (co mám zítra + ne v kalendáři)
+   * musí skončit jako unknown dřív než search-relevance contract nebo calendar query routing.
+   */
+  const IU_SILVER_CALENDAR_NO_DIACRITICS_QUERY_GOVERNOR_V1 = true;
+
+  function iuSilverCalendarNoDiacriticsQueryGovernorV1RawIsAsciiCzech(raw) {
+    const r = String(raw || "");
+    if (!r) return false;
+    return !/[áäčďéěíňóöřšťúůüýžÁÄČĎÉĚÍŇÓÖŘŠŤÚŮÜÝŽ]/.test(r);
+  }
+
+  function iuSilverCalendarNoDiacriticsQueryGovernorV1PositiveReadFolded(f, rawOpt) {
+    const x = String(f || "");
+    const raw = String(rawOpt || "");
+    if (!x || !iuSilverCalendarNoDiacriticsQueryGovernorV1RawIsAsciiCzech(raw)) return false;
+    if (!x || iuSilverHasWriteVerb(x)) return false;
+    if (iuSilverCalendarQueryHardNoCalendarConflictFolded(x)) return false;
+    if (!/\b(kalend\w*|schuz\w*|udalost\w*)\b/.test(x)) return false;
+    if (
+      !/\b(zitra|zittra|dnes|dneska|pondel\w*|uterk\w*|stred\w*|ctvr\w*|patek\w*|sobot\w*|nedel\w*|vcera|tyden|pristi|za\s+tyden)\b/.test(
+        x
+      )
+    ) {
+      return false;
+    }
+    if (/\b(podivej\s+se\s+do\s+kalend|mrkni\s+do\s+kalend|koukni\s+do\s+kalend)\b/.test(x)) return true;
+    if (/\b(co\s+mam|co\s+mame)\b/.test(x)) return true;
+    if (/\b(mam\s+neco|mam\s+nejak\w*\s+schuz\w*)\b/.test(x)) return true;
+    if (/\b(ukaz|zobraz|otevri)\b/.test(x) && /\bkalend/.test(x)) return true;
+    return false;
+  }
+
+  function iuSilverTryCalendarNoDiacriticsQueryGovernorV1EarlyTurn(raw, now, folded, ctx, empty) {
+    if (!IU_SILVER_CALENDAR_NO_DIACRITICS_QUERY_GOVERNOR_V1) return null;
+    const f = String(folded || "");
+    if (!f || iuSilverHasWriteVerb(f)) return null;
+    if (iuSilverCalendarNoDiacriticsQueryGovernorV1PositiveReadFolded(f, raw)) {
+      const d = empty || createEmptyDraft();
+      let spec = tryParseCalendarRead(raw, now);
+      if (!spec && /\b(zitra|zittra)\b/.test(f)) {
+        spec = { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
+      } else if (!spec && /\b(dnes|dneska|dnesek)\b/.test(f)) {
+        spec = { intent: "agenda_for_day", dateRange: "today", filter: null };
+      } else if (!spec && /\bvcera\b/.test(f)) {
+        spec = { intent: "agenda_for_day", dateRange: "yesterday", filter: null, preferPast: true };
+      } else if (!spec && /\b(pristi\s+tyden|za\s+tyden)\b/.test(f)) {
+        spec = { intent: "agenda_for_range", range: "week", filter: null };
+      } else if (!spec && /\b(v\s+)?(pondeli|utery|stredu|ctvrtek|patek|sobotu|nedeli)\b/.test(f)) {
+        const dayMap = { pondeli: 1, utery: 2, stredu: 3, ctvrtek: 4, patek: 5, sobotu: 6, nedeli: 0 };
+        let iso = toDateOnly(now);
+        for (const key in dayMap) {
+          if (new RegExp("\\b" + key + "\\b").test(f)) {
+            const targetDow = dayMap[key];
+            const d0 = now instanceof Date ? new Date(now.getTime()) : new Date(now);
+            const cur = d0.getDay();
+            let add = targetDow - cur;
+            if (add <= 0) add += 7;
+            iso = addDays(iso, add);
+            break;
+          }
+        }
+        spec = { intent: "agenda_for_iso", dateIso: iso, dayPart: null, timeHHMM: null, filter: null };
+      }
+      if (spec) return iuSilverBuildCalendarReadFromSpecTurnV1(spec, ctx || {}, d, now);
+    }
+    if (!iuSilverCalendarQueryHardNoCalendarConflictFolded(f)) return null;
+    if (iuSilverImplicitConversationalReadIntentV1Folded(f)) return null;
+    const d = empty || createEmptyDraft();
+    return {
+      normalizedIntent: "clarification",
+      targetContainer: "none",
+      processingState: "CLARIFICATION",
+      clarificationReason: "ambiguous_request",
+      futureIntentCandidate: null,
+      readQuery: null,
+      readAnswer: null,
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: "",
+      assistantLead: iuSilverClarificationCopy("ambiguous_request"),
+      clarificationText: "",
+      draft: d
+    };
+  }
+
   function iuSilverCalendarQueryIntentRoutingV1Folded(f, rawOpt) {
     const x = String(f || "");
     const r = String(rawOpt || "").trim();
@@ -37439,6 +37526,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const r = String(raw || "").trim();
     if (!r) return null;
     const f = foldCs(r);
+    if (iuSilverCalendarQueryHardNoCalendarConflictFolded(f)) return null;
     if (!iuSilverCalendarQueryIntentRoutingV1Folded(f, r)) return null;
     const readSpec = iuSilverTryCalendarQueryIntentRoutingV1ReadSpec(r, now, f);
     if (!readSpec) return null;
@@ -49451,6 +49539,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverTryReadSearchTurn(raw, now, folded, ctx, empty) {
     if (!iuSilverReadSearchShouldRun(raw, folded, now)) return null;
+    if (iuSilverCalendarQueryHardNoCalendarConflictFolded(folded)) return null;
     if (
       iuSilverCalendarQuerySignalFolded(folded) &&
       iuSilverCalendarEntityContextFolded(folded) &&
@@ -57570,6 +57659,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverSearchRelevanceContractCalendarTomorrowAgendaFolded(f) {
     const x = String(f || "");
     if (!x || iuSilverHasWriteVerb(x)) return false;
+    if (iuSilverCalendarQueryHardNoCalendarConflictFolded(x)) return false;
     if (/\b(v\s+ukol|do\s+ukol|jen\s+ukol)\b/.test(x) && !/\b(kalend\w*|schuz\w*|udalost\w*)\b/.test(x)) return false;
     if (
       /\b(co\s+mam|co\s+mame|mam\s+neco|mam\s+nejak|mam\s+nejaky)\b/.test(x) &&
@@ -62359,6 +62449,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     let raw0 = String(text || "").trim();
     if (raw0 && IU_SILVER_CONVERSATIONAL_OWNERSHIP_HARDENING_V1) {
       iuSilverConversationalOwnershipHardeningV1PreTurnCleanup(raw0, foldCs(raw0));
+    }
+    if (raw0 && IU_SILVER_CALENDAR_NO_DIACRITICS_QUERY_GOVERNOR_V1) {
+      const fGov0 = foldCs(raw0);
+      const gov0 = iuSilverTryCalendarNoDiacriticsQueryGovernorV1EarlyTurn(
+        raw0,
+        now,
+        fGov0,
+        ctx,
+        createEmptyDraft()
+      );
+      if (gov0) return gov0;
     }
     if (raw0 && IU_SILVER_SEARCH_RELEVANCE_CONTRACT_V1) {
       const fRel0 = foldCs(raw0);
