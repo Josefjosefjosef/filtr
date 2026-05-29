@@ -10,7 +10,7 @@ const {
 } = require("./proofs/open_meteo_guard_stub.cjs");
 
 const TICKER_INTRO = "Zeptej se Silvera:";
-const TEMPLATE_MAX_H = { 390: 92, 430: 94, 768: 88 };
+const TEMPLATE_MAX_H = { 390: 102, 430: 102, 768: 96 };
 
 function parseRgb(color) {
   const s = String(color || "").trim();

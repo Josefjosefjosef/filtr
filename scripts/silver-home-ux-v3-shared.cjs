@@ -16,10 +16,15 @@ const PREFIX_NO_COLON = {
   notes: "Do poznámek",
 };
 const MIN_LINE_GAP_PX = 2;
-const BASE_ACTION_GAP_PX = 5;
-const TARGET_ACTION_GAP_PX = 9;
-const MIN_ACTION_GAP_PX = 8.5;
+const BASE_ACTION_GAP_PX = 9;
+const TARGET_ACTION_GAP_PX = 10;
+const MIN_ACTION_GAP_PX = 9.5;
 const MAX_LEAD_GAP_PX = 2;
+const BASE_BOX_HEIGHT_PX = { 390: 86, 430: 86, 768: 80 };
+const BASE_UX_PADDING_TOP_PX = { 390: 5, 430: 5, 768: 6 };
+const BASE_UX_PADDING_BOTTOM_PX = { 390: 5, 430: 5, 768: 6 };
+const MIN_SIZE_GROWTH = 0.15;
+const MAX_SIZE_GROWTH = 0.22;
 
 async function runNoColonInsert(page) {
   const results = {};
@@ -52,17 +57,30 @@ async function runNoColonInsert(page) {
   return { no_colon_insert_ok: pass, prefix_no_colon_results: results };
 }
 
-async function runTouchSpacing(page) {
-  return page.evaluate((cfg) => {
+async function runTouchSpacing(page, viewportW) {
+  const w = viewportW || 390;
+  const cfg = {
+    target: TARGET_ACTION_GAP_PX,
+    minAction: MIN_ACTION_GAP_PX,
+    maxLead: MAX_LEAD_GAP_PX,
+    baseBoxH: BASE_BOX_HEIGHT_PX[w] || BASE_BOX_HEIGHT_PX[390],
+    basePadTop: BASE_UX_PADDING_TOP_PX[w] || BASE_UX_PADDING_TOP_PX[390],
+    basePadBottom: BASE_UX_PADDING_BOTTOM_PX[w] || BASE_UX_PADDING_BOTTOM_PX[390],
+    minGrowth: MIN_SIZE_GROWTH,
+    maxGrowth: MAX_SIZE_GROWTH,
+  };
+  return page.evaluate((c) => {
     const ux = document.getElementById("iuSilverHomeInputUx");
-    if (!ux) {
+    const inp = document.getElementById("iuSilverHomeInput");
+    if (!ux || !inp) {
       return {
         touch_spacing_ok: false,
         line_gaps_px: [],
         lead_gap_px: null,
-        action_gap_target_px: cfg.target,
+        action_gap_target_px: c.target,
       };
     }
+    const uxSt = getComputedStyle(ux);
     const lead = ux.querySelector(".iuSilverHomeInputUxLead");
     const lines = Array.from(ux.querySelectorAll(".iuSilverHomeInputUxLine"));
     const gaps = [];
@@ -77,21 +95,36 @@ async function runTouchSpacing(page) {
       const firstRect = lines[0].getBoundingClientRect();
       leadGap = Math.round((firstRect.top - leadRect.bottom) * 100) / 100;
     }
-    const actionOk = gaps.length >= 2 && gaps.every((g) => g >= cfg.minAction);
-    const leadOk = leadGap === null || leadGap <= cfg.maxLead;
+    const padTop = parseFloat(uxSt.paddingTop) || 0;
+    const padBottom = parseFloat(uxSt.paddingBottom) || 0;
+    const boxH = Math.round(inp.getBoundingClientRect().height);
+    const boxDelta = c.baseBoxH > 0 ? (boxH - c.baseBoxH) / c.baseBoxH : 0;
+    const topPadDelta = c.basePadTop > 0 ? (padTop - c.basePadTop) / c.basePadTop : 0;
+    const bottomPadDelta = c.basePadBottom > 0 ? (padBottom - c.basePadBottom) / c.basePadBottom : 0;
+    const inGrowth = (delta) => delta >= c.minGrowth && delta <= c.maxGrowth + 0.03;
+    const actionOk = gaps.length >= 2 && gaps.every((g) => g >= c.minAction);
+    const leadOk = leadGap === null || leadGap <= c.maxLead;
+    const boxOk = inGrowth(boxDelta);
+    const padTopOk = inGrowth(topPadDelta);
+    const padBottomOk = inGrowth(bottomPadDelta);
     return {
-      touch_spacing_ok: actionOk && leadOk,
+      touch_spacing_ok: actionOk && leadOk && boxOk && padTopOk && padBottomOk,
       line_gaps_px: gaps,
       lead_gap_px: leadGap,
-      action_gap_target_px: cfg.target,
-      action_gap_min_px: cfg.minAction,
-      lead_gap_max_px: cfg.maxLead,
+      action_gap_target_px: c.target,
+      action_gap_min_px: c.minAction,
+      lead_gap_max_px: c.maxLead,
+      box_height_px: boxH,
+      box_height_base_px: c.baseBoxH,
+      box_height_delta: Math.round(boxDelta * 1000) / 1000,
+      top_padding_px: padTop,
+      bottom_padding_px: padBottom,
+      top_padding_base_px: c.basePadTop,
+      bottom_padding_base_px: c.basePadBottom,
+      top_padding_delta: Math.round(topPadDelta * 1000) / 1000,
+      bottom_padding_delta: Math.round(bottomPadDelta * 1000) / 1000,
     };
-  }, {
-    target: TARGET_ACTION_GAP_PX,
-    minAction: MIN_ACTION_GAP_PX,
-    maxLead: MAX_LEAD_GAP_PX,
-  });
+  }, cfg);
 }
 
 async function runTemplateReset(page) {
@@ -243,7 +276,7 @@ async function runViewportV3(page, w, h, replayMode) {
     checks = Object.assign(checks, await runNoColonInsert(page));
     checks._pass = checks.no_colon_insert_ok && !checks.overflow_x && checks.cls_ok && checks.app_errors === 0;
   } else if (replayMode === "touch-spacing-replay") {
-    checks = Object.assign(checks, await runTouchSpacing(page));
+    checks = Object.assign(checks, await runTouchSpacing(page, w));
     checks._pass = checks.touch_spacing_ok && !checks.overflow_x && checks.cls_ok && checks.app_errors === 0;
   } else if (replayMode === "template-reset-replay") {
     checks = Object.assign(checks, await runTemplateReset(page));
@@ -305,4 +338,9 @@ module.exports = {
   TARGET_ACTION_GAP_PX,
   MIN_ACTION_GAP_PX,
   MAX_LEAD_GAP_PX,
+  BASE_BOX_HEIGHT_PX,
+  BASE_UX_PADDING_TOP_PX,
+  BASE_UX_PADDING_BOTTOM_PX,
+  MIN_SIZE_GROWTH,
+  MAX_SIZE_GROWTH,
 };
