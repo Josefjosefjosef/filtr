@@ -3,9 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <meta name="iu-build" content="cls-p0-silver-tasks-20260503" />
+    <meta name="iu-build" content="pwa-stale-shell-fix-20260531" />
     <meta name="iu-data-ver" content="iu-data-ver-placeholder" />
-    <!-- iu-build: cls-p0-silver-tasks-20260503 — on prod, Pages rewrites CSS to /assets/app.HASH.css; compare that hash to git short hash for deploy forensics -->
+    <!-- iu-build: pwa-stale-shell-fix-20260531 — on prod, Pages rewrites CSS to /assets/app.HASH.css; compare that hash to git short hash for deploy forensics -->
+    <!-- P0 PWA: sync version checker in head — stale home-screen shells may lack deferred scripts; SW deploy reload via IU_SW_DEPLOY_RELOAD. -->
+    <script src="/assets/iu-pwa-version-check.js?v=pwa-ver-check-v2"></script>
     <title>infoUzel.cz</title>
     <meta name="description" content="infoUzel.cz — přehled zpráv, počasí, kalendáře a nástrojů na jednom místě. Veřejná sekce /projects/ s rychlými odkazy a přehledem obsahu." />
     <link rel="canonical" href="https://infouzel.cz/projects/" />
@@ -1402,8 +1404,6 @@ style-src 'self' 'unsafe-inline' https:;
       }
     </style>
     <link rel="manifest" href="/projects/manifest.json" />
-    <!-- PWA/home-screen: detect newer deploy via /projects/version.json (no-store fetch + reload guard). -->
-    <script defer src="/assets/iu-pwa-version-check.js?v=pwa-ver-check-v1"></script>
     <script>
     (function(){ try { window.__iuBipEvent = null; window.addEventListener("beforeinstallprompt", function(e) { e.preventDefault(); window.__iuBipEvent = e; }, { passive: false }); } catch(err) {} })();
     </script>
