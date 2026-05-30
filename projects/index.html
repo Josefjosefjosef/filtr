@@ -1182,6 +1182,7 @@ style-src 'self' 'unsafe-inline' https:;
       .iuSilverWelcomeMeta{display:flex;flex-wrap:nowrap;align-items:baseline;column-gap:0}
       .iuSilverWelcomeMetaDateCluster,.iuSilverWelcomeMetaSvatekCluster{min-width:0}
       .iuSilverWelcomeMetaSvatekCluster{display:inline-flex;flex-wrap:nowrap;align-items:center;white-space:nowrap;max-width:100%}
+      #svatekOverlay.iuSvatekOverlayRoot{--iuSvatekPremiumBlue1:#5B6CFF;--iuSvatekPremiumBlue2:#7B5FFF;--iuSvatekPremiumTeal1:#2DD4BF;--iuSvatekPremiumTeal2:#059669}
       #svatekOverlay.iuSvatekOverlayRoot{z-index:99988;background:rgba(15,30,45,.52);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:16px;box-sizing:border-box}
       #svatekOverlay .iuSvatekOverlayCard{width:100%;max-width:340px;height:auto!important;max-height:none!important;min-height:min-content;overflow:visible!important;padding:0;position:relative;contain:none!important;border-radius:20px;border:1px solid rgba(123,95,255,.22);background:linear-gradient(165deg,#fff 0%,#f8f9ff 55%,#f3f0ff 100%);box-shadow:0 20px 48px rgba(35,45,120,.22),0 0 0 1px rgba(255,255,255,.65) inset,0 0 32px rgba(91,108,255,.12)}
       #svatekOverlay .iuSvatekOverlayCard::before{content:"";display:block;height:4px;border-radius:20px 20px 0 0;background:linear-gradient(90deg,var(--iuSvatekPremiumBlue1),var(--iuSvatekPremiumBlue2));margin:0}
@@ -1218,7 +1219,7 @@ style-src 'self' 'unsafe-inline' https:;
     <style id="iuNamedayWishPremiumCss">
       /* P0: přání overlay premium — projects/index.html (mimo app.css css_debt_guard). */
       #iuNamedayWishOverlay.iuModal{z-index:99990;background:rgba(15,30,45,.52);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:16px;box-sizing:border-box;contain:none!important}
-      #iuNamedayWishCard{width:100%;max-width:420px;height:auto!important;max-height:none!important;min-height:min-content;overflow:hidden!important;padding:0;contain:none!important;border-radius:20px;border:1px solid rgba(123,95,255,.2);background:linear-gradient(165deg,#fff 0%,#f8f9ff 55%,#f3f0ff 100%);box-shadow:0 20px 48px rgba(35,45,120,.22),0 0 0 1px rgba(255,255,255,.65) inset,0 0 32px rgba(91,108,255,.1);position:relative}
+      #iuNamedayWishCard{width:100%;max-width:420px;height:auto!important;max-height:none!important;min-height:min-content;overflow:hidden!important;padding:0;contain:none!important;border-radius:20px;border:1px solid rgba(123,95,255,.2);background:linear-gradient(165deg,#fff 0%,#f8f9ff 55%,#f3f0ff 100%);box-shadow:0 20px 48px rgba(35,45,120,.22),0 0 0 1px rgba(255,255,255,.65) inset,0 0 32px rgba(91,108,255,.1);position:relative;--iuSvatekPremiumBlue1:#5B6CFF}
       #iuNamedayWishCard::before{content:"";display:block;height:4px;background:linear-gradient(90deg,#5B6CFF,#7B5FFF)}
       #iuNamedayWishCard .iuNamedayWishCardInner{padding:18px 18px 16px;box-sizing:border-box}
       #iuNamedayWishCard h2{margin:0 0 14px;font-size:18px;font-weight:700;line-height:1.25;display:flex;align-items:center;gap:8px;color:rgba(15,30,45,.96);padding-right:46px;box-sizing:border-box}
