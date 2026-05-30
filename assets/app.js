@@ -6412,7 +6412,7 @@ function buildVideoAsArticleCard(it) {
       guard++;
       const n = iuNormalizeIntentParsingText(s);
       let changed = false;
-      const lead = [/^hele\s+/, /^prosim\s+te\s+/, /^prosim\s+/, /^odted\s+/, /^ted\s+/];
+      const lead = [/^hele\s+/, /^prosim\s+te\s+/, /^prosim\s+/, /^ted\s+/];
       for (let i = 0; i < lead.length; i++) {
         const m = n.match(lead[i]);
         if (m) {
@@ -59270,7 +59270,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bprestan\s+me\s+oslovov/.test(f)) return true;
     if (/\buz\s+me\s+neoslovuj/.test(f)) return true;
     if (/\bosloveni\s+vypni\b/.test(f)) return true;
-    if (/\bne(?:rij|rik)\s+mi\s+jmenem\b/.test(f)) return true;
+    if (/nerikej\s+mi\s+jmenem/.test(f) || /\bne\s+.*\s+jmenem\b/.test(f)) return true;
     if (/\bnechci\s+byt\s+oslovov/.test(f)) return true;
     if (/\bnechci\s+zadne\s+osloveni\b/.test(f)) return true;
     if (/\bnechci\b/.test(f) && /\bosloven/.test(f)) return true;
@@ -63497,6 +63497,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       } else {
         iuSilverLongSessionIsolationTickV1(foldCs(raw0));
       }
+    }
+    {
+      const addrConvFirst = iuSilverTryConsumeUserAddressConfirmationTurn(raw0);
+      if (addrConvFirst) return addrConvFirst;
     }
     {
       const salConvFirst = iuSilverBuildSalutationPreferenceTurn(raw0);

@@ -142,7 +142,7 @@ function iuSilverIsSalutationIntent(f, raw) {
   if (/\bprestan\s+me\s+oslovov/.test(f) || /\buz\s+me\s+neoslovuj/.test(f) || /\bosloveni\s+vypni/.test(f)) {
     return true;
   }
-  if (/\bne(?:rij|rik)\s+mi\s+jmenem\b/.test(f) || /\bnechci\s+zadne\s+osloveni\b/.test(f)) {
+  if (/nerikej\s+mi\s+jmenem/.test(f) || /\bne\s+.*\s+jmenem\b/.test(f) || /\bnechci\s+zadne\s+osloveni\b/.test(f)) {
     return true;
   }
   if (/\b(mluv|mluvej)\s+na\s+m(e|ě)\s+neformal/.test(f) || /\bneformal(in|ni|nej)?\b/.test(f) || /\binformal\b/.test(f)) {
@@ -202,7 +202,8 @@ function simulateSalutationStorageMutation(raw) {
     /\bprestan\s+me\s+oslovov/.test(f) ||
     /\buz\s+me\s+neoslovuj/.test(f) ||
     /\bosloveni\s+vypni/.test(f) ||
-    /\bne(?:rij|rik)\s+mi\s+jmenem\b/.test(f)
+    /nerikej\s+mi\s+jmenem/.test(f) ||
+    /\bne\s+.*\s+jmenem\b/.test(f)
   ) {
     mockLocal.setItem(PREF_KEY, JSON.stringify({ mode: "none", at: 1 }));
     mockLocal.removeItem(ADDR_KEY);
