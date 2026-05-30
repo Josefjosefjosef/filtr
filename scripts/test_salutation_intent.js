@@ -9,7 +9,7 @@ const path = require("path");
 const ROOT = path.join(__dirname, "..");
 const APP = fs.readFileSync(path.join(ROOT, "assets", "app.js"), "utf8");
 
-const SYNC = "IU_SILVER_SALUTATION_SYNC_V1=2026-04-12c";
+const SYNC = "IU_SILVER_SALUTATION_SYNC_V1=2026-05-30a";
 const PREF_KEY = "iuSilver.salutationPreference.v1";
 const ADDR_KEY = "iu_user_address";
 
@@ -23,6 +23,12 @@ if (!APP.includes(SYNC)) {
 }
 if (!APP.includes(PREF_KEY)) {
   fail("FAIL: preference key not found in app.js");
+}
+if (!APP.includes("iu_user_address_explicit.v1")) {
+  fail("FAIL: explicit address flag key not found in app.js");
+}
+if (!APP.includes("iuSilverIsSalutationDisableRequest")) {
+  fail("FAIL: salutation disable helper not found");
 }
 if (!APP.includes("iuSilverTryConsumeUserAddressConfirmationTurn")) {
   fail("FAIL: user address confirmation turn not found");
@@ -133,6 +139,12 @@ function iuSilverIsSalutationIntent(f, raw) {
   if (/\bneoslovuj\b/.test(f) || (/\bnechci\b/.test(f) && /\bosloven/.test(f)) || /\bnepouzivej\s+osloven/.test(f)) {
     return true;
   }
+  if (/\bprestan\s+me\s+oslovov/.test(f) || /\buz\s+me\s+neoslovuj/.test(f) || /\bosloveni\s+vypni/.test(f)) {
+    return true;
+  }
+  if (/\bne(?:rij|rik)\s+mi\s+jmenem\b/.test(f) || /\bnechci\s+zadne\s+osloveni\b/.test(f)) {
+    return true;
+  }
   if (/\b(mluv|mluvej)\s+na\s+m(e|ě)\s+neformal/.test(f) || /\bneformal(in|ni|nej)?\b/.test(f) || /\binformal\b/.test(f)) {
     return true;
   }
@@ -184,9 +196,17 @@ const mockLocal = {
 
 function simulateSalutationStorageMutation(raw) {
   const f = fold(raw);
-  if (/\bneoslovuj\b/.test(f) || (/\bnechci\b/.test(f) && /\bosloven/.test(f))) {
+  if (
+    /\bneoslovuj\b/.test(f) ||
+    (/\bnechci\b/.test(f) && /\bosloven/.test(f)) ||
+    /\bprestan\s+me\s+oslovov/.test(f) ||
+    /\buz\s+me\s+neoslovuj/.test(f) ||
+    /\bosloveni\s+vypni/.test(f) ||
+    /\bne(?:rij|rik)\s+mi\s+jmenem\b/.test(f)
+  ) {
     mockLocal.setItem(PREF_KEY, JSON.stringify({ mode: "none", at: 1 }));
     mockLocal.removeItem(ADDR_KEY);
+    mockLocal.removeItem("iu_user_address_explicit.v1");
     return "none";
   }
   if (/\b(mluv|mluvej)\s+na\s+m(e|ě)\s+neformal\b/.test(f) || /\bneformal(in|ni|nej)?\b/.test(f) || /\binformal\b/.test(f)) {
