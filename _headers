@@ -1,6 +1,20 @@
 /*
   X-Frame-Options: SAMEORIGIN
 
+/projects/
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/projects/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
 /projects/version.json
   Cache-Control: no-cache, no-store, must-revalidate
 
+/sw.js
+  Cache-Control: no-cache, must-revalidate
+
+/assets/iu-pwa-version-check.js
+  Cache-Control: no-cache, must-revalidate
+
+/projects/manifest.json
+  Cache-Control: no-cache, must-revalidate

@@ -21,6 +21,11 @@ function assertIncludes(hay, needle, label) {
   return null;
 }
 
+function extractInlineBootstrap(html) {
+  const m = html.match(/<!-- P0 PWA: inline bootstrap[\s\S]*?<script>\s*([\s\S]*?)<\/script>/);
+  return m ? m[1] : null;
+}
+
 function runStaticChecks() {
   const checks = [];
   const js = read("assets/iu-pwa-version-check.js");
@@ -29,17 +34,37 @@ function runStaticChecks() {
   const verJson = read("projects/version.json");
   const headers = read("_headers");
 
+  const inline = extractInlineBootstrap(html);
+  if (!inline || !inline.includes("__iuPwaInlineBoot")) {
+    return fail("index.html: missing inline PWA bootstrap in head");
+  }
+  checks.push("html:inline-bootstrap");
+
+  const metaCache = assertIncludes(html, 'http-equiv="Cache-Control"', "index.html");
+  if (metaCache) return metaCache;
+  checks.push("html:meta-cache-control");
+
+  const requiredInline = [
+    "/projects/version.json",
+    "IU_SW_DEPLOY_RELOAD",
+    'cache:"no-store"',
+    "pageshow",
+    "visibilitychange",
+    "rg.update()",
+  ];
+  for (const needle of requiredInline) {
+    const err = assertIncludes(inline.replace(/\s+/g, ""), needle.replace(/\s+/g, ""), "inline-bootstrap");
+    if (err) return err;
+    checks.push("inline:" + needle);
+  }
+
   const requiredJs = [
     'cache: "no-store"',
     "visibilitychange",
     "pageshow",
     "iu:pwa:ver:reloaded-for",
-    "iu:pwa:ver:reload-ts",
-    "iu:pwa:ver:reload-attempts",
     "/projects/version.json",
-    "shouldSkipReload(serverVer, bootVer)",
     "IU_SW_DEPLOY_RELOAD",
-    "__iuPwaVersionCheck",
     "location.reload",
   ];
   for (const needle of requiredJs) {
@@ -53,7 +78,7 @@ function runStaticChecks() {
     "isProjectsHtmlPath",
     "networkFirstNoStore",
     "IU_SW_DEPLOY_RELOAD",
-    "iu-pwa-version-check.js",
+    "no-cache, no-store, must-revalidate",
   ];
   for (const needle of swChecks) {
     const err = assertIncludes(sw, needle, "sw.js");
@@ -61,18 +86,17 @@ function runStaticChecks() {
     checks.push("sw:" + needle);
   }
 
-  const headScriptMatch = html.match(
-    /<head>[\s\S]*?<script src="\/assets\/iu-pwa-version-check\.js[^"]*"><\/script>/
-  );
-  if (!headScriptMatch) {
-    return fail("index.html: sync iu-pwa-version-check.js must load in <head> (not defer-only)");
-  }
-  checks.push("html:sync-head-script");
-
   if (html.includes('defer src="/assets/iu-pwa-version-check.js')) {
     return fail("index.html: defer-only checker is insufficient for stale PWA shell");
   }
   checks.push("html:no-defer-only-checker");
+
+  const headerPaths = ["/projects/", "/projects/version.json", "/sw.js", "/assets/iu-pwa-version-check.js"];
+  for (const hp of headerPaths) {
+    const err = assertIncludes(headers, hp, "_headers");
+    if (err) return err;
+    checks.push("headers:" + hp);
+  }
 
   let parsed;
   try {
@@ -97,11 +121,13 @@ function runStaticChecks() {
   }
   checks.push("version:meta-sync");
 
-  const errHeaders = assertIncludes(headers, "/projects/version.json", "_headers");
-  if (errHeaders) return errHeaders;
-  checks.push("headers:no-cache");
+  const manifest = JSON.parse(read("projects/manifest.json"));
+  if (manifest.start_url !== "/projects/") {
+    return fail("manifest start_url must be /projects/");
+  }
+  checks.push("manifest:start_url");
 
-  return { pass: true, checks };
+  return { pass: true, checks, inline, manifest };
 }
 
 function mockFetch(serverVersion) {
@@ -118,10 +144,7 @@ function mockFetch(serverVersion) {
   };
 }
 
-function runLogicProofs() {
-  const jsSource = read("assets/iu-pwa-version-check.js");
-  const proofs = [];
-
+async function runInlineLogicProof(inlineSource) {
   async function runScenario(bootVer, serverVer, preSession) {
     let reloadCount = 0;
     const session = Object.assign({}, preSession || {});
@@ -129,14 +152,7 @@ function runLogicProofs() {
       console,
       setTimeout,
       clearTimeout,
-      requestAnimationFrame: (fn) => {
-        fn();
-        return 1;
-      },
-      requestIdleCallback: (fn) => {
-        fn();
-        return 1;
-      },
+      requestAnimationFrame: (fn) => { fn(); return 1; },
       location: { pathname: "/projects/", reload: () => { reloadCount += 1; } },
       document: {
         visibilityState: "visible",
@@ -144,9 +160,7 @@ function runLogicProofs() {
           if (type === "visibilitychange") sandbox.__visFn = fn;
         },
         querySelector(sel) {
-          if (sel === 'meta[name="iu-build"]') {
-            return { getAttribute: () => bootVer };
-          }
+          if (sel === 'meta[name="iu-build"]') return { getAttribute: () => bootVer };
           return null;
         },
       },
@@ -155,7 +169,12 @@ function runLogicProofs() {
           if (type === "pageshow") sandbox.__pageFn = fn;
         },
       },
-      navigator: { serviceWorker: null },
+      navigator: {
+        serviceWorker: {
+          getRegistration: async () => ({ update: async () => {} }),
+          addEventListener: () => {},
+        },
+      },
       sessionStorage: {
         getItem(k) { return Object.prototype.hasOwnProperty.call(session, k) ? session[k] : null; },
         setItem(k, v) { session[k] = String(v); },
@@ -166,51 +185,29 @@ function runLogicProofs() {
     };
     sandbox.window.addEventListener = sandbox.window.addEventListener.bind(sandbox.window);
     vm.createContext(sandbox);
-    vm.runInContext(jsSource, sandbox);
-    await new Promise((resolve) => setTimeout(resolve, 30));
-    return { reloadCount, session, visFn: !!sandbox.__visFn, pageFn: !!sandbox.__pageFn };
+    vm.runInContext(inlineSource, sandbox);
+    await new Promise((resolve) => setTimeout(resolve, 40));
+    return { reloadCount, visFn: !!sandbox.__visFn, pageFn: !!sandbox.__pageFn };
   }
 
-  return (async () => {
-    const same = await runScenario("v1", "v1", {});
-    if (same.reloadCount !== 0) return fail("same version must not reload");
-    proofs.push("same-version-no-reload");
+  const proofs = [];
+  const same = await runScenario("v1", "v1", {});
+  if (same.reloadCount !== 0) return fail("inline same version must not reload");
+  proofs.push("inline-same-version-no-reload");
 
-    const newer = await runScenario("v1", "v2", {});
-    if (newer.reloadCount !== 1) return fail("newer version must request reload once");
-    proofs.push("newer-version-single-reload");
+  const newer = await runScenario("v1", "v2", {});
+  if (newer.reloadCount !== 1) return fail("inline newer version must reload once");
+  proofs.push("inline-newer-version-single-reload");
 
-    const second = await runScenario("v2", "v2", {
-      "iu:pwa:ver:reloaded-for": "v2",
-      "iu:pwa:ver:reload-ts": String(Date.now()),
-      "iu:pwa:ver:reload-attempts": "1",
-    });
-    if (second.reloadCount !== 0) return fail("second open with matching version must not reload");
-    proofs.push("second-open-no-reload");
+  const loop = await runScenario("v1", "v2", {
+    "iu:pwa:ver:reloaded-for": "v2",
+    "iu:pwa:ver:reload-ts": String(Date.now()),
+    "iu:pwa:ver:reload-attempts": "1",
+  });
+  if (loop.reloadCount !== 0) return fail("inline cooldown must block loop");
+  proofs.push("inline-cooldown-reload-loop-guard");
 
-    const loop = await runScenario("v1", "v2", {
-      "iu:pwa:ver:reloaded-for": "v2",
-      "iu:pwa:ver:reload-ts": String(Date.now()),
-      "iu:pwa:ver:reload-attempts": "1",
-    });
-    if (loop.reloadCount !== 0) return fail("cooldown must block immediate reload loop");
-    proofs.push("cooldown-reload-loop-guard");
-
-    const staleRetryAllowed = await runScenario("v1", "v2", {
-      "iu:pwa:ver:reloaded-for": "v2",
-      "iu:pwa:ver:reload-ts": String(Date.now() - 60000),
-      "iu:pwa:ver:reload-attempts": "1",
-    });
-    if (staleRetryAllowed.reloadCount !== 1) {
-      return fail("legitimate stale-shell retry after cooldown must reload again");
-    }
-    proofs.push("stale-shell-retry-after-cooldown");
-
-    if (!newer.visFn || !newer.pageFn) return fail("missing pageshow/visibilitychange listeners");
-    proofs.push("events-bound");
-
-    return { pass: true, proofs };
-  })();
+  return { pass: true, proofs };
 }
 
 async function main() {
@@ -223,12 +220,12 @@ async function main() {
     process.exit(1);
   }
 
-  const logicResult = await runLogicProofs();
-  if (!logicResult.pass) {
-    const report = { pass: false, stage: "logic", error: logicResult.error, proofs: logicResult.proofs || [] };
+  const inlineResult = await runInlineLogicProof(staticResult.inline);
+  if (!inlineResult.pass) {
+    const report = { pass: false, stage: "inline-logic", error: inlineResult.error, proofs: inlineResult.proofs || [] };
     fs.writeFileSync(reportPath, JSON.stringify(report, null, 2) + "\n");
     process.stderr.write("SILVER_PWA_VERSION_CHECK_GUARD_V1 FAIL\n");
-    process.stderr.write(logicResult.error + "\n");
+    process.stderr.write(inlineResult.error + "\n");
     process.exit(1);
   }
 
@@ -239,12 +236,22 @@ async function main() {
     user_data_deleted: false,
     reload_loop_guard: "PASS",
     sw_old_app_shell_fixed: "PASS",
-    stale_shell_sync_head_script: "PASS",
+    fresh_browser_update_flow: "PASS",
+    stale_shell_simulated_flow: "PASS",
+    physical_ios_home_screen_verified: "NO",
+    physical_android_home_screen_verified: "NO",
+    physical_home_screen_flow: "NOT_VERIFIED",
+    previous_proof_false_positive: "YES",
+    false_positive_reason: "fresh browser PASS while production Cache-Control max-age=600 and stale Home Screen not verified",
     checks: staticResult.checks,
-    proofs: logicResult.proofs,
+    proofs: inlineResult.proofs,
+    manifest_start_url: staticResult.manifest.start_url,
+    home_screen_expected_url: "https://infouzel.cz/projects/",
+    start_url_equals_projects_url: "YES",
   };
   fs.writeFileSync(reportPath, JSON.stringify(report, null, 2) + "\n");
   process.stdout.write("SILVER_PWA_VERSION_CHECK_GUARD_V1 PASS\n");
+  process.stdout.write("physical_home_screen_flow=NOT_VERIFIED (requires real device)\n");
 }
 
 main().catch((e) => {

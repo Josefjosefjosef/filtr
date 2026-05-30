@@ -9,7 +9,7 @@
 // 2026-03-22: bump — app.js silent SW activation (SKIP_WAITING + jeden reload, bez spodního CTA)
 // 2026-03-22: HTML document = network-first (žádný preferovaný starý shell)
 // 2026-03-29: PR #1488 — nový SW + vyprázdnění APP_SHELL_CACHE po deployi (staré app.*.css v cache)
-const CACHE_VERSION = "2026-05-31-pwa-stale-shell-fix";
+const CACHE_VERSION = "2026-05-31-pwa-http-nocache-bootstrap";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
@@ -164,7 +164,16 @@ function isProjectsHtmlPath(pathname) {
 async function networkFirstNoStore(request, offlineFallback) {
   try {
     const res = await fetch(request, { cache: "no-store" });
-    if (res && res.ok) return res;
+    if (res && res.ok) {
+      const hdrs = new Headers(res.headers);
+      hdrs.set("Cache-Control", "no-cache, no-store, must-revalidate");
+      hdrs.set("Pragma", "no-cache");
+      return new Response(res.body, {
+        status: res.status,
+        statusText: res.statusText,
+        headers: hdrs,
+      });
+    }
   } catch (_) {}
   if (offlineFallback) {
     const cached = await caches.match(request);
