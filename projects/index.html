@@ -1402,6 +1402,8 @@ style-src 'self' 'unsafe-inline' https:;
       }
     </style>
     <link rel="manifest" href="/projects/manifest.json" />
+    <!-- PWA/home-screen: detect newer deploy via /projects/version.json (no-store fetch + reload guard). -->
+    <script defer src="/assets/iu-pwa-version-check.js?v=pwa-ver-check-v1"></script>
     <script>
     (function(){ try { window.__iuBipEvent = null; window.addEventListener("beforeinstallprompt", function(e) { e.preventDefault(); window.__iuBipEvent = e; }, { passive: false }); } catch(err) {} })();
     </script>
