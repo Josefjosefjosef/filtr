@@ -12433,7 +12433,6 @@ function buildVideoAsArticleCard(it) {
     }catch{}
 
     window.iuSilverWeatherRefresh = iuSilverWeatherRefresh;
-    try{ iuSilverWeatherEnsureGeoOverlayMounted(); }catch{}
     iuSilverWeatherSyncPrivacyText();
     iuSilverWeatherRefresh();
     try{ iuSilverWeatherTryAutoGpsOnLoad(); }catch{}
