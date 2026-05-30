@@ -11927,12 +11927,23 @@ function buildVideoAsArticleCard(it) {
       }catch{}
     }
 
-    function iuSilverWeatherOpenGeoOverlay(){
-      if (!geoOverlay) return;
+    function iuSilverWeatherEnsureGeoOverlayMounted(){
+      if (!geoOverlay) return null;
       try{
-        geoOverlay.hidden = false;
-        geoOverlay.removeAttribute("hidden");
-        geoOverlay.setAttribute("aria-hidden", "false");
+        if (geoOverlay.parentElement !== document.body) {
+          document.body.appendChild(geoOverlay);
+        }
+      }catch{}
+      return geoOverlay;
+    }
+
+    function iuSilverWeatherOpenGeoOverlay(){
+      const overlayEl = iuSilverWeatherEnsureGeoOverlayMounted();
+      if (!overlayEl) return;
+      try{
+        overlayEl.hidden = false;
+        overlayEl.removeAttribute("hidden");
+        overlayEl.setAttribute("aria-hidden", "false");
       }catch{}
       try{
         if (geoOverlayAllow && typeof geoOverlayAllow.focus === "function") geoOverlayAllow.focus();
