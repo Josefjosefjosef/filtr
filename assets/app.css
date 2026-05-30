@@ -16674,14 +16674,17 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 .iu-nameday-cta .silver-weather-btn{flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#iuNamedayWishOverlay.iuModal{z-index:99990;background:rgba(15,30,45,.45);padding:16px;box-sizing:border-box;contain:none!important}
-#iuNamedayWishCard{width:100%;max-width:420px;height:auto!important;max-height:none!important;min-height:min-content;overflow:visible!important;padding:18px 18px 16px;contain:none!important}
-#iuNamedayWishCard h2{margin:0 0 14px;font-size:18px;font-weight:700;line-height:1.2}
-#iuNamedayWishCard .iu-nameday-wish-mode-row{display:flex;gap:10px;margin:0 0 12px}
-#iuNamedayWishCard .iu-nameday-wish-mode-row .silver-weather-btn{flex:1 1 0;min-height:36px}
-#iuNamedayWishCard .silver-weather-btn[aria-pressed="true"]{border-color:rgba(90,140,220,.85);background:rgba(90,140,220,.12)}
-#iuNamedayWishTextarea{width:100%;min-height:120px;box-sizing:border-box;margin:0 0 12px;padding:10px 12px;font-size:14px;line-height:1.45;border-radius:10px;border:1px solid rgba(15,35,55,.16);resize:none;font-family:inherit;color:rgba(15,30,45,.95);background:rgba(248,250,252,.95)}
-#iuNamedayWishCopy{width:100%}
+#iuNamedayWishOverlay.iuModal{z-index:99990;background:rgba(15,30,45,.52);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:16px;box-sizing:border-box;contain:none!important}
+#iuNamedayWishCard{width:100%;max-width:420px;height:auto!important;max-height:none!important;min-height:min-content;overflow:hidden!important;padding:0;contain:none!important;border-radius:20px;border:1px solid rgba(123,95,255,.2);background:linear-gradient(165deg,#fff 0%,#f8f9ff 55%,#f3f0ff 100%);box-shadow:0 20px 48px rgba(35,45,120,.22),0 0 0 1px rgba(255,255,255,.65) inset,0 0 32px rgba(91,108,255,.1);position:relative}
+#iuNamedayWishCard::before{content:"";display:block;height:4px;background:linear-gradient(90deg,#5B6CFF,#7B5FFF)}
+#iuNamedayWishCard .iuNamedayWishCardInner{padding:18px 18px 16px;box-sizing:border-box}
+#iuNamedayWishCard h2{margin:0 0 14px;font-size:18px;font-weight:700;line-height:1.25;display:flex;align-items:center;gap:8px;color:rgba(15,30,45,.96)}
+#iuNamedayWishCard .iu-nameday-wish-mode-row{display:flex;gap:8px;margin:0 0 14px;padding:4px;border-radius:14px;background:rgba(241,245,249,.85);border:1px solid rgba(15,35,55,.08)}
+#iuNamedayWishCard .iu-nameday-wish-mode-row .silver-weather-btn{flex:1 1 0;min-height:40px;border-radius:10px;border:1px solid transparent;background:transparent;font-weight:600;color:rgba(71,85,105,.9);box-shadow:none}
+#iuNamedayWishCard .silver-weather-btn[aria-pressed="true"]{border-color:rgba(91,108,255,.45);background:linear-gradient(135deg,rgba(91,108,255,.14),rgba(123,95,255,.12));color:rgba(15,30,45,.96);box-shadow:0 0 0 1px rgba(123,95,255,.18),0 4px 12px rgba(91,108,255,.14)}
+#iuNamedayWishTextarea{width:100%;min-height:132px;box-sizing:border-box;margin:0 0 14px;padding:14px 16px;font-size:15px;line-height:1.5;border-radius:16px;border:1px solid rgba(123,95,255,.16);resize:none;font-family:inherit;color:rgba(15,30,45,.95);background:linear-gradient(155deg,rgba(255,255,255,.98) 0%,rgba(248,250,255,.96) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 4px 16px rgba(35,45,120,.06)}
+#iuNamedayWishCopy{width:100%;border-radius:14px;min-height:48px;background:linear-gradient(135deg,#22c55e 0%,#16a34a 55%,#059669 100%);color:#fff;border:none;font-weight:600;font-size:15px;box-shadow:0 6px 20px rgba(34,197,94,.38),inset 0 1px 0 rgba(255,255,255,.18)}
+#iuNamedayWishCopy:active{transform:translateY(1px);box-shadow:0 3px 10px rgba(34,197,94,.3),inset 0 1px 0 rgba(255,255,255,.1)}
 
 .iuSilverWelcomeSticky{
   position: sticky;

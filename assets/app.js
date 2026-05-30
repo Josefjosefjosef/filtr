@@ -6127,6 +6127,99 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  /** Jedno křestní jméno → bezpečný 3. pád pro „Popřej …“ (jen spolehlivé mapy/vzory); jinak "". */
+  function iuSafeDativeSingleFirstName(raw, namedayGender){
+    const tail0 = String(raw || "").trim();
+    if (!tail0 || tail0 === "—") return "";
+    if (/[;,]/.test(tail0)) return "";
+    if (/\s+a\s+/i.test(tail0)) return "";
+    if (/\s{2,}/.test(tail0)) return "";
+    const parts = tail0.split(/\s+/).filter(Boolean);
+    if (parts.length !== 1) return "";
+    let w = parts[0].replace(/[.,;:]+$/g, "");
+    if (w.indexOf("-") >= 0) return "";
+    if (!/^[\p{L}]{2,40}$/u.test(w)) return "";
+    const low = w.normalize("NFC").toLowerCase();
+    if (/načítám|svátek|dnes|nikdo|—/.test(low)) return "";
+    const capFrom = function (form){
+      if (!form) return "";
+      if (w.charAt(0) === w.charAt(0).toUpperCase()) {
+        return form.charAt(0).toUpperCase() + form.slice(1);
+      }
+      return form;
+    };
+    const hardDat = {
+      ferdinand: "ferdinandovi",
+      josef: "josefovi",
+      pavel: "pavlovi",
+      petr: "petrovi",
+      martin: "martinovi",
+      karel: "karlovi",
+      františek: "františkovi",
+      frantisek: "františkovi",
+      jan: "janovi",
+      jakub: "jakubovi",
+      tomáš: "tomášovi",
+      tomas: "tomášovi",
+      lukáš: "lukášovi",
+      lukas: "lukášovi",
+      david: "davidovi",
+      michal: "michalovi",
+      roman: "romanovi",
+      filip: "filipovi",
+      adam: "adamovi",
+      daniel: "danielovi",
+      ondřej: "ondřeji",
+      ondrej: "ondřeji",
+      marek: "markovi",
+      václav: "václavovi",
+      vaclav: "václavovi",
+      zdeněk: "zdeňkovi",
+      zdenek: "zdeňkovi",
+      ladislav: "ladislavovi",
+      bohumil: "bohumilovi",
+      antonín: "antonínovi",
+      antonin: "antonínovi",
+      vladimír: "vladimírovi",
+      vladimir: "vladimírovi",
+      richard: "richardovi",
+      patrik: "patrikovi",
+      dominik: "dominikovi",
+      radek: "radkovi",
+      aleš: "alešovi",
+      ales: "alešovi",
+      stanislav: "stanislavovi",
+      jaroslav: "jaroslavovi",
+      bohuslav: "bohuslavovi",
+      vojtěch: "vojtěchovi",
+      vojtech: "vojtěchovi",
+      kryštof: "kryštofovi",
+      krystof: "kryštofovi",
+      matěj: "matěji",
+      matej: "matěji",
+      honza: "honzovi",
+      anna: "anně",
+      marie: "marii",
+      jana: "janě",
+      lenka: "lence",
+      petra: "petře",
+      eva: "evě",
+      hana: "haně",
+      vera: "věře",
+      věra: "věře"
+    };
+    if (hardDat[low]) return capFrom(hardDat[low]);
+    if (namedayGender === "female") {
+      if (/ie$/i.test(w) && w.length >= 4) return capFrom(w.slice(0, -2) + "ii");
+      if (/a$/i.test(w) && w.length >= 3) return capFrom(w.slice(0, -1) + "ě");
+      return "";
+    }
+    if (/ek$/i.test(w) && w.length >= 4) return capFrom(w.slice(0, -1) + "kovi");
+    if (/el$/i.test(w) && w.length >= 4) return capFrom(w + "ovi");
+    if (/[bcdfghjklmnpqrstvwxzřšťžčň]/i.test(w.slice(-1))) return capFrom(w + "ovi");
+    return "";
+  }
+
   /** Jedno křestní jméno → bezpečné oslovení (jen spolehlivá -a → -o); jinak "". */
   function iuSafeVocativeSingleFirstName(tail){
     const tail0 = String(tail || "").trim();
@@ -6148,24 +6241,40 @@ function buildVideoAsArticleCard(it) {
     return "";
   }
 
-  /** P0 svátek overlay: stejná „Popřej …“ logika jako dříve spodní karta (bez DOM závislosti na meta). */
+  /** P0 svátek overlay: 3. pád oslavence pro „Popřej …“ (bez DOM závislosti na meta). */
   function iuSvatekBuildPoprejLineFromRaw(raw, namedayGender){
-    let line = "Popřej oslavence";
+    let line = "Popřej oslavenci";
     try{
       const r = String(raw || "").trim();
-      const voc = iuSafeVocativeSingleFirstName(r);
-      const v = voc ? String(voc) : "";
-      if (v) {
-        line = "Popřej " + v;
+      const dat = iuSafeDativeSingleFirstName(r, namedayGender);
+      if (dat) {
+        line = "Popřej " + dat;
       } else if (r && r !== "—" && !/[;,]/.test(r)) {
         if (namedayGender === "female" && /ie$/i.test(r)) {
           line = "Popřej " + r.slice(0, -2) + "ii";
-        } else {
-          line = "Popřej " + r;
+        } else if (namedayGender === "female" && /a$/i.test(r)) {
+          line = "Popřej " + r.slice(0, -1) + "ě";
         }
       }
     }catch(_){}
     return line;
+  }
+
+  /** P0 svátek overlay: dvouřádkový lead (Popřej Xovi / Dnes má svátek). */
+  function iuSvatekSyncOverlayLead(namePart, namedayGender){
+    try{
+      const leadEl = document.getElementById("svatekOverlayLead");
+      if (!leadEl) return;
+      const poprejLine = iuSvatekBuildPoprejLineFromRaw(namePart, namedayGender);
+      const mainEl = leadEl.querySelector(".iuSvatekOverlayLeadMain");
+      const subEl = leadEl.querySelector(".iuSvatekOverlayLeadSub");
+      if (mainEl && subEl) {
+        mainEl.textContent = poprejLine;
+        subEl.textContent = "Dnes m\u00E1 sv\u00E1tek";
+      } else {
+        leadEl.textContent = poprejLine + " \u2013 Dnes m\u00E1 sv\u00E1tek";
+      }
+    }catch(_){}
   }
 
   window.getNamedayPersonFromWelcomeBox = function(){
@@ -6329,6 +6438,98 @@ function buildVideoAsArticleCard(it) {
 
     const capOne = baseOne.charAt(0).toUpperCase() + baseOne.slice(1).toLowerCase();
     return { base: capOne, vocative: capOne };
+  }
+
+  /** Vokativ → nominativ pro podpis v přání (úzký deterministický helper). */
+  function iuUserAddressDeriveSignatureFromCallForm(callFormRaw){
+    const s = iuUserAddressCollapseSpaces(String(callFormRaw || ""));
+    if (!s) return "";
+    if (/\s/.test(s)) {
+      if (/^pane\s+/i.test(s)) {
+        const rest = s.replace(/^pane\s+/i, "pan ").replace(/u$/i, "");
+        return rest.charAt(0).toUpperCase() + rest.slice(1);
+      }
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+    const low = s.normalize("NFC").toLowerCase();
+    const vocToNom = {
+      josefe: "Josef",
+      petře: "Petr",
+      pavle: "Pavel",
+      jane: "Jan",
+      honzo: "Honza",
+      martine: "Martin",
+      lukáši: "Lukáš",
+      lukasi: "Lukáš",
+      tomáši: "Tomáš",
+      tomasi: "Tomáš",
+      davide: "David",
+      jakube: "Jakub",
+      matěji: "Matěj",
+      mateji: "Matěj",
+      vojtěchu: "Vojtěch",
+      vojtechu: "Vojtěch",
+      kryštofe: "Kryštof",
+      krystofe: "Kryštof",
+      michale: "Michal",
+      romane: "Roman",
+      filipe: "Filip",
+      adame: "Adam",
+      daniele: "Daniel",
+      ondřeji: "Ondřej",
+      ondreji: "Ondřej",
+      marku: "Marek",
+      františku: "František",
+      frantisku: "František",
+      václave: "Václav",
+      vaclave: "Václav",
+      karle: "Karel",
+      stanislave: "Stanislav",
+      jaroslave: "Jaroslav",
+      zdeňku: "Zdeněk",
+      zdenku: "Zdeněk",
+      ladislave: "Ladislav",
+      bohumile: "Bohumil",
+      antoníne: "Antonín",
+      antonine: "Antonín",
+      vladimíre: "Vladimír",
+      vladimire: "Vladimír",
+      richarde: "Richard",
+      patriku: "Patrik",
+      dominiku: "Dominik",
+      radku: "Radek",
+      aleši: "Aleš",
+      alesi: "Aleš",
+      šéfe: "Šéf",
+      sefe: "Šéf"
+    };
+    if (vocToNom[low]) return vocToNom[low];
+    if (/o$/i.test(s) && s.length >= 3) {
+      const nom = s.slice(0, -1) + "a";
+      return nom.charAt(0).toUpperCase() + nom.slice(1);
+    }
+    if (/e$/i.test(s) && s.length >= 4) return s.slice(0, -1);
+    if (/u$/i.test(s) && s.length >= 4) {
+      const stem = s.slice(0, -1);
+      if (/k$/i.test(stem)) return stem + "ek";
+      return stem + "ek";
+    }
+    if (/i$/i.test(s) && s.length >= 4) return s.slice(0, -1);
+    return s;
+  }
+
+  /** Podpis uživatele v generovaném přání — oddělený od oslovení Silvera. */
+  function iuUserAddressReadSignatureForWish(){
+    const stored = iuUserAddressReadStoredBase();
+    if (!stored) return "";
+    try{
+      if (window.localStorage.getItem(IU_USER_ADDRESS_EXPLICIT_FLAG_KEY) === "1") {
+        return iuUserAddressDeriveSignatureFromCallForm(stored);
+      }
+    }catch{}
+    const forms = iuDeriveUserAddressForms(stored);
+    const base = forms.base || stored;
+    return base.charAt(0).toUpperCase() + base.slice(1);
   }
 
   /** Jednotná ASCII normalizace pro intent matching (diakritika pryč, lower, mezery). */
@@ -6701,6 +6902,16 @@ function buildVideoAsArticleCard(it) {
     try{
       window.iuGetUserAddress = function (){
         return iuUserAddressReadStoredBase();
+      };
+    }catch{}
+
+    try{
+      window.iuGetUserSignatureForWish = function (){
+        try{
+          return iuUserAddressReadSignatureForWish();
+        }catch{
+          return "";
+        }
       };
     }catch{}
 
@@ -7191,11 +7402,7 @@ function buildVideoAsArticleCard(it) {
           metaEl.replaceChildren(dateCluster, ndCluster);
         }catch{}
         try{
-          const leadEl = document.getElementById("svatekOverlayLead");
-          if (leadEl) {
-            const poprejLine = iuSvatekBuildPoprejLineFromRaw(namePart, namedayGender);
-            leadEl.textContent = poprejLine + " \u2013 Dnes m\u00E1 sv\u00E1tek";
-          }
+          iuSvatekSyncOverlayLead(namePart, namedayGender);
         }catch(_){}
         if (silverWelcomeUseJsMetaFit()) {
           try{ fitMetaFont(); }catch{}
@@ -11477,6 +11684,12 @@ function buildVideoAsArticleCard(it) {
     let mode = "tykat";
 
     function readSilverSignatureForWish(){
+      try{
+        if (typeof window.iuGetUserSignatureForWish === "function"){
+          const s = String(window.iuGetUserSignatureForWish() || "").replace(/\s+/g, " ").trim();
+          if (s) return s;
+        }
+      }catch{}
       try{
         if (typeof window.iuGetUserAddress === "function"){
           const s = String(window.iuGetUserAddress() || "").replace(/\s+/g, " ").trim();
