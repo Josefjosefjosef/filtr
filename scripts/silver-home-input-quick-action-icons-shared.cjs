@@ -268,6 +268,8 @@ async function runViewport(page, w, h, replayMode) {
   await page.setViewportSize({ width: w, height: h });
   await page.goto(base.envUrl(), { waitUntil: "domcontentloaded", timeout: 90000 });
   await page.waitForTimeout(2600);
+  await base.resetHomeUxClsAfterIdle(page);
+  await page.waitForTimeout(350);
 
   const overflowX = await page.evaluate(() => {
     const docEl = document.documentElement;
