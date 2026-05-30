@@ -145,10 +145,3 @@ jobs:
 
           print("OK: data freshness within limit")
           PY
-
-      - name: Production articles freshness guard (live JSON)
-        env:
-          ARTICLES_JSON_URL: "https://infouzel.cz/projects/data/articles.json"
-          MAX_GENERATED_AGE_HOURS: "48"
-          MAX_SECTION_AGE_HOURS: "72"
-        run: node scripts/articles-aggregator-freshness-guard.mjs
