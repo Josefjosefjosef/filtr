@@ -11679,6 +11679,8 @@ function buildVideoAsArticleCard(it) {
     const btnVykat = document.querySelector(".iu-nameday-wish-mode--vykat");
     const ta = document.getElementById("iuNamedayWishTextarea");
     const btnCopy = document.getElementById("iuNamedayWishCopy");
+    const sigEl = document.getElementById("iuNamedayWishSignature");
+    const sigWrap = document.getElementById("iuNamedayWishSignatureWrap");
     if (!overlay || !btnWishEls.length || !btnTykat || !btnVykat || !ta || !btnCopy) return;
 
     let mode = "tykat";
@@ -11724,7 +11726,7 @@ function buildVideoAsArticleCard(it) {
       return "Dobrý večer";
     }
 
-    function buildFinalText(m){
+    function buildBodyText(m){
       const greeting = greetingFromWelcomeBox();
       const name =
         typeof window.getNamedayPersonFromWelcomeBox === "function"
@@ -11735,16 +11737,37 @@ function buildVideoAsArticleCard(it) {
         m === "tykat"
           ? "přeju ti krásný svátek, hodně radosti, pohody a ať se ti dneska všechno daří. 🎉"
           : "přeji Vám krásný sváteční den, hodně zdraví, pohody a spokojenosti.";
+      return `${greetingLine}\n${baseText}`;
+    }
+
+    function buildFinalText(m){
+      const body = buildBodyText(m);
       const signature = readSilverSignatureForWish();
       if (signature) {
-        return `${greetingLine}\n${baseText}\n\n${signature}`;
+        return `${body}\n\n${signature}`;
       }
-      return `${greetingLine}\n${baseText}`;
+      return body;
+    }
+
+    function syncSignaturePreview(){
+      try{
+        const signature = readSilverSignatureForWish();
+        if (sigEl && sigWrap) {
+          if (signature) {
+            sigEl.textContent = signature;
+            sigWrap.removeAttribute("hidden");
+          } else {
+            sigEl.textContent = "";
+            sigWrap.setAttribute("hidden", "");
+          }
+        }
+      }catch{}
     }
 
     function syncTextarea(){
       try{
-        ta.value = buildFinalText(mode);
+        ta.value = buildBodyText(mode);
+        syncSignaturePreview();
       }catch{}
     }
 
@@ -11821,12 +11844,14 @@ function buildVideoAsArticleCard(it) {
 
     btnCopy.addEventListener("click", async () => {
       try{
-        const text = String(ta.value || "");
+        const text = String(buildFinalText(mode) || "");
         if (navigator.clipboard && navigator.clipboard.writeText) {
           await navigator.clipboard.writeText(text);
         } else {
+          ta.value = text;
           ta.select();
           document.execCommand("copy");
+          ta.value = buildBodyText(mode);
         }
       }catch{}
     });
