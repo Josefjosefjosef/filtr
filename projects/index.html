@@ -55,6 +55,8 @@ style-src 'self' 'unsafe-inline' https:;
         #iuNamedayWishOverlay .iu-overlay-close{display:none!important}
         #iuSilverHeroPremium .iu-hero-silverSub,
         #iuSilverHeroPremium .iu-silver-trust{display:none!important}
+        #iuSilverHeroPremium .silver-speech-row,
+        #iuSilverHeroPremium .silver-privacy-line{display:none!important}
       }
       /* pointer-events: diag overlays must not steal clicks */
       body::before, body::after, html::before, html::after { pointer-events: none !important; }
@@ -141,6 +143,15 @@ style-src 'self' 'unsafe-inline' https:;
         .iu-hero-silver-premiumMain{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:0!important;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0}
         .iu-hero-topRow{display:grid;grid-template-columns:minmax(112px,42%) 1fr;align-items:stretch;gap:12px;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0;padding:0}
         #iuSilverHeroPremium .iu-hero-copy{min-width:0;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start!important;gap:6px;box-sizing:border-box;margin:0;padding:6px 0 0!important;align-self:start!important}
+        #iuSilverHeroPremium .iu-hero-silverTitle--static,#iuSilverHeroPremium .iu-hero-silverSub--static{display:none!important}
+        #iuSilverHeroPremium .silver-speech-row{display:flex;flex-direction:column;align-items:stretch;min-width:0;max-width:100%;width:100%;box-sizing:border-box;margin:10px 0 0;padding:0;min-height:44px}
+        #iuSilverHeroPremium .silver-speech-bubble{position:relative;display:inline-block;align-self:flex-start;min-width:0;max-width:100%;width:max-content;box-sizing:border-box;margin:0;padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.52);background:linear-gradient(165deg,rgba(255,255,255,.97) 0%,rgba(248,250,252,.94) 100%);box-shadow:0 2px 14px rgba(15,23,42,.14),0 1px 3px rgba(15,23,42,.08),inset 0 1px 0 rgba(255,255,255,.85)}
+        #iuSilverHeroPremium .silver-speech-tail{position:absolute;left:-7px;top:38%;transform:translateY(-50%);width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-right:8px solid rgba(252,252,253,.96);filter:drop-shadow(-1px 1px 1px rgba(15,23,42,.06));pointer-events:none}
+        #iuSilverHeroPremium .silver-speech-text{margin:0;padding:0;font-size:clamp(13px,3.15vw,15px)!important;line-height:1.36!important;font-weight:500!important;letter-spacing:-.01em!important;color:rgba(15,23,42,.88)!important;overflow-wrap:anywhere!important;word-break:break-word!important;transition:opacity .42s ease;opacity:1}
+        #iuSilverHeroPremium .silver-speech-text.silver-speech-text--fading{opacity:0}
+        @media (prefers-reduced-motion:reduce){#iuSilverHeroPremium .silver-speech-text{transition:none!important}}
+        #iuSilverHeroPremium .iu-silver-trust__line--legacy{display:none!important}
+        #iuSilverHeroPremium .silver-privacy-line{display:block!important;margin:4px 0 0!important;padding:0!important;font-size:clamp(10.5px,3vw,12px)!important;line-height:1.18!important;font-weight:400!important;letter-spacing:0!important;color:rgba(226,232,240,.78)!important;overflow-wrap:anywhere!important;word-break:break-word!important;white-space:normal!important}
         .iu-hero-figure{min-width:0;min-height:140px;margin:0!important;padding:0;width:100%;max-width:100%;display:flex;align-items:flex-end!important;justify-content:flex-start;box-sizing:border-box;height:auto;max-height:none;position:relative;align-self:stretch!important}
         #iuSilverHeroPremium .iu-hero-figure picture{display:block;max-width:100%;line-height:0}
         .iu-hero-figure::after{content:none!important;display:none!important}
@@ -199,13 +210,12 @@ style-src 'self' 'unsafe-inline' https:;
         #iuNamedayWishCard .iu-overlay-close:active{transform:scale(.96)}
       }
       @media(max-width:430px){
-        #iuSilverHeroPremium .iu-silver-trust__line--1,#iuSilverHeroPremium .iu-silver-trust-line1{white-space:normal!important}
+        #iuSilverHeroPremium .silver-privacy-line{white-space:normal!important}
+        #iuSilverHeroPremium .silver-speech-row{margin-top:8px!important}
       }
       @media(max-width:360px){
-        #iuSilverHeroPremium .iu-hero-silverSub{font-size:clamp(16px,4vw,20px)!important;line-height:1.1!important}
-        #iuSilverHeroPremium .iu-silver-trust{margin-top:2px!important}
-        #iuSilverHeroPremium .iu-silver-trust__line,#iuSilverHeroPremium .iu-silver-trust-line1,#iuSilverHeroPremium .iu-silver-trust-line2{font-size:10px!important;line-height:1.12!important}
-        #iuSilverHeroPremium .iu-silver-trust__line--1,#iuSilverHeroPremium .iu-silver-trust-line1{white-space:normal!important}
+        #iuSilverHeroPremium .silver-speech-text{font-size:12.5px!important;line-height:1.32!important}
+        #iuSilverHeroPremium .silver-privacy-line{font-size:10px!important;line-height:1.12!important;margin-top:3px!important}
         #iuSilverHeroPremium #iuSilverHeroInputHost.iu-hero-silverInputHost{margin-top:0!important}
       }
       /* P0: Kalendář+Úkoly 2 karty ≤1023 (počasí mimo wrapper); desktop ≥1024 display:contents beze změny. */
@@ -1676,11 +1686,18 @@ style-src 'self' 'unsafe-inline' https:;
                                   </picture>
                                 </div>
                                 <div class="iu-hero-copy">
-                                  <h2 class="iu-hero-silverTitle iu-hero-line--1">Jsem Silver.</h2>
-                                  <p class="iu-hero-silverSub" data-iu-silver-hero-sub>Tvůj soukromý asistent.</p>
+                                  <h2 class="iu-hero-silverTitle iu-hero-line--1 iu-hero-silverTitle--static">Jsem Silver.</h2>
+                                  <p class="iu-hero-silverSub iu-hero-silverSub--static" data-iu-silver-hero-sub>Tvůj soukromý asistent.</p>
+                                  <div class="silver-speech-row" data-iu-silver-speech-row aria-live="polite">
+                                    <div class="silver-speech-bubble" data-iu-silver-speech-bubble>
+                                      <span class="silver-speech-tail" aria-hidden="true"></span>
+                                      <p class="silver-speech-text" data-iu-silver-speech-text>Jsem Silver, tvůj soukromý asistent.</p>
+                                    </div>
+                                  </div>
                                   <div class="iu-silver-trust" data-iu-silver-trust>
-                                    <p class="iu-silver-trust__line iu-silver-trust__line--1 iu-silver-trust-line1">🔒 Co napíšeš, zůstává jen u tebe</p>
-                                    <p class="iu-silver-trust__line iu-silver-trust__line--2 iu-silver-trust-line2">Nic neopouští tvoje zařízení</p>
+                                    <p class="iu-silver-trust__line iu-silver-trust__line--1 iu-silver-trust-line1 iu-silver-trust__line--legacy">🔒 Co napíšeš, zůstává jen u tebe</p>
+                                    <p class="iu-silver-trust__line iu-silver-trust__line--2 iu-silver-trust-line2 iu-silver-trust__line--legacy">Nic neopouští tvoje zařízení</p>
+                                    <p class="silver-privacy-line" data-iu-silver-privacy-line>🔒 Co napíšeš nebo si uložíš, nikdy neopouští tvoje zařízení.</p>
                                   </div>
                                   <p class="iu-hero-silverLines iu-hero-silverLines--desktop" aria-label="Pomůžu ti se vším na infoUzel.cz">
                                     <span class="iu-hero-line iu-hero-line--2">Pomůžu ti se vším</span>
