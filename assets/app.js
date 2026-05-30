@@ -57922,6 +57922,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/^\s*nakup\s*:/.test(x) || /\b(jako\s+jeden\s+ukol|do\s+patku)\b/.test(x)) {
       return { mode: "unknown", attribute: null, personGroups: [], entityTokens: [] };
     }
+    if (/\b(zapomenout|nezapomen|nesmim\s+zapomenout)\b/.test(x) && /\b(napsat|zavolat|koupit|udelat|zaplatit)\b/.test(x)) {
+      return { mode: "unknown", attribute: null, personGroups: [], entityTokens: [] };
+    }
     if (iuSilverNotesListQuerySignalV1(x)) {
       return { mode: "list_all", attribute: null, personGroups: [], entityTokens: [] };
     }
@@ -58290,12 +58293,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!x || iuSilverHasWriteVerb(x)) return false;
     if (iuSilverTryParseExplicitNoteCreate(String(x))) return false;
     if (iuSilverExplicitCalendarReadScopeFolded(x) && !/\bpoznam/.test(x)) return false;
-    if (/\b(v\s+kalend|do\s+kalend|kalendari|kalendare|schuz|udalost)\b/.test(x) && !/\bpoznam/.test(x)) return false;
-    if (/\bco\s+m(am|ame)\b/.test(x) && /\b(kalend|schuz|pondel|utery|stred|ctvr|patek|sobot|nedel)\b/.test(x) && !/\bpoznam/.test(x)) {
+    if (/\b(v\s+kalend|do\s+kalend|kalendari|kalendare|schuz\w*|udalost\w*)\b/.test(x) && !/\bpoznam/.test(x)) return false;
+    if (/\bco\s+m(am|ame)\b/.test(x) && /\b(kalend\w*|schuz\w*|pondel|utery|stred|ctvr|patek|sobot|nedel)\b/.test(x) && !/\bpoznam/.test(x)) {
       return false;
     }
     if (IU_SILVER_NOTE_RETRIEVAL_PLATFORM_V1) {
-      if (/\b(v\s+kalend|do\s+kalend|kalendari|kalendare|schuz|udalost)\b/.test(x) && !/\bpoznam/.test(x)) return false;
+      if (/\b(v\s+kalend|do\s+kalend|kalendari|kalendare|schuz\w*|udalost\w*)\b/.test(x) && !/\bpoznam/.test(x)) return false;
       if (/\bco\s+m(am|ame)\b/.test(x) && /\b(kalend|schuz|pondel|utery|stred|ctvr|patek)\b/.test(x) && !/\bpoznam/.test(x)) {
         return false;
       }
@@ -58314,6 +58317,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (attr && factQ) return true;
     if (/\b(jako\s+jeden\s+ukol|do\s+patku|do\s+ukol|v\s+ukol)\b/.test(x)) return false;
     if (/^\s*nakup\s*:/.test(x)) return false;
+    if (/\b(zapomenout|nezapomen|nesmim\s+zapomenout)\b/.test(x) && /\b(napsat|zavolat|koupit|udelat|zaplatit)\b/.test(x)) return false;
     return false;
   }
 
@@ -58394,8 +58398,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const r0 = String(raw || "").trim();
     const f = String(folded || "");
     if (!r0 || !f) return null;
-    if (/\b(v\s+kalend|do\s+kalend|kalendari|kalendare|schuz|udalost)\b/.test(f) && !/\bpoznam/.test(f)) return null;
-    if (/\bco\s+m(am|ame)\b/.test(f) && /\b(kalend|schuz|pondel|utery|stred|ctvr|patek)\b/.test(f) && !/\bpoznam/.test(f)) {
+    if (/\b(v\s+kalend|do\s+kalend|kalendari|kalendare|schuz\w*|udalost\w*)\b/.test(f) && !/\bpoznam/.test(f)) return null;
+    if (/\bco\s+m(am|ame)\b/.test(f) && /\b(kalend\w*|schuz\w*|pondel|utery|stred|ctvr|patek)\b/.test(f) && !/\bpoznam/.test(f)) {
+      return null;
+    }
+    if (/\b(zapomenout|nezapomen|nesmim\s+zapomenout)\b/.test(f) && /\b(napsat|zavolat|koupit|udelat|zaplatit)\b/.test(f)) {
       return null;
     }
     if (!iuSilverSearchRelevanceContractDirectFactNoteReadFolded(f)) return null;
