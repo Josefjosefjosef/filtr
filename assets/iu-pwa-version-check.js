@@ -131,6 +131,7 @@
 
   function boot() {
     if (!isProjectsRoute()) return;
+    if (window.__iuPwaInlineBoot) return;
     bindSwDeployReload();
     scheduleCheck();
     if (window.__iuPwaVersionEventsBound) return;
@@ -139,7 +140,16 @@
       scheduleCheck();
     });
     document.addEventListener("visibilitychange", function () {
-      if (document.visibilityState === "visible") scheduleCheck();
+      if (document.visibilityState === "visible") {
+        scheduleCheck();
+        try {
+          if (navigator.serviceWorker) {
+            navigator.serviceWorker.getRegistration().then(function (reg) {
+              if (reg) reg.update();
+            });
+          }
+        } catch (_) {}
+      }
     });
   }
 
