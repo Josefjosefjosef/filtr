@@ -58033,7 +58033,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\b(co\s+mam|co\s+jsem\s+si\s+poznamenal|co\s+mam\s+poznamenane|co\s+mam\s+ulozene)\b/.test(x) && entityTokens.length) {
       return { mode: "topic_list", attribute: null, personGroups: personGroups, entityTokens: entityTokens };
     }
-    return { mode: "topic_list", attribute: attribute, personGroups: personGroups, entityTokens: entityTokens };
+    return { mode: "unknown", attribute: attribute, personGroups: personGroups, entityTokens: entityTokens };
   }
 
   function iuSilverNoteRetrievalPlatformV1NoteAttributeRelevant(blobF, attr) {
@@ -58342,6 +58342,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return false;
     }
     if (iuSilverNoteRetrievalPlatformV1CalendarEmbeddedWriteBlocksNoteReadFolded(x)) return false;
+    if (
+      iuSilverLooksLikeSchedulingFragment(x, x) &&
+      !/\b(co\s+mam|mam\s+neco|najdi|hledej|ukaz|zjist|cti|podivej|mrkni|koukni|jaky|jake|jaka|jakou|kolik|kde|kdy|dokdy|co\s+jsem)\b/.test(x)
+    ) {
+      return false;
+    }
     if (IU_SILVER_NOTE_RETRIEVAL_PLATFORM_V1) {
       if (/\b(v\s+kalend|do\s+kalend|kalendari|kalendare|schuz\w*|udalost\w*)\b/.test(x) && !/\bpoznam/.test(x)) return false;
       if (/\bco\s+m(am|ame)\b/.test(x) && /\b(kalend|schuz|pondel|utery|stred|ctvr|patek)\b/.test(x) && !/\bpoznam/.test(x)) {
