@@ -57918,6 +57918,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverNoteRetrievalPlatformV1ClassifyQueryFolded(f) {
     const x = String(f || "");
     if (!x) return { mode: "unknown", attribute: null, personGroups: [], entityTokens: [] };
+    if (iuSilverHasWriteVerb(x)) return { mode: "unknown", attribute: null, personGroups: [], entityTokens: [] };
+    if (/^\s*nakup\s*:/.test(x) || /\b(jako\s+jeden\s+ukol|do\s+patku)\b/.test(x)) {
+      return { mode: "unknown", attribute: null, personGroups: [], entityTokens: [] };
+    }
     if (iuSilverNotesListQuerySignalV1(x)) {
       return { mode: "list_all", attribute: null, personGroups: [], entityTokens: [] };
     }
@@ -58305,16 +58309,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\b(jaky|jake|jaka|jakou|kde|kdy|dokdy|do\s+kdy|kolik|komu|kdo|co\s+mam|mam\s+v\s+poznam|mam\s+nekde|najdi|hledej|vyhledej|ukaz|uka[zž])\b/.test(x);
     if (!factQ) return false;
     if (/\b(zaloh\w*)\b/.test(x) && /\b(komu|kdo|vypis|vyplacen|jmena|jména|castk|částk|celkem)\b/.test(x)) return true;
-    if (iuSilverPersonAliasGroupsForFoldedTextV1(x).length) return true;
+    if (iuSilverPersonAliasGroupsForFoldedTextV1(x).length && factQ) return true;
     const attr = iuSilverNoteRetrievalPlatformV1DetectAttributeFolded(x);
-    if (attr) return true;
-    const stripped = iuSilverRetrievalNormalizationRegistryV1Apply(
-      x.replace(/\b(jaky|jake|jaka|jakou|kolik|kde|kdy|co\s+mam|najdi|hledej|vyhledej|ukaz)\b/g, " ")
-    );
-    const toks = stripped.split(/\s+/).filter(function (w) {
-      return w && w.length >= 3 && !IU_SILVER_NOTE_RETRIEVAL_PLATFORM_V1_STOP.has(w);
-    });
-    return toks.length >= 1;
+    if (attr && factQ) return true;
+    if (/\b(jako\s+jeden\s+ukol|do\s+patku|do\s+ukol|v\s+ukol)\b/.test(x)) return false;
+    if (/^\s*nakup\s*:/.test(x)) return false;
+    return false;
   }
 
   function iuSilverSearchRelevanceContractTaskDueReadCueFolded(f) {
