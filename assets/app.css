@@ -17431,19 +17431,20 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
 .iuSilverChatOverlay--quickTemplateEmpty .iuSilverChatMessages{
   padding: 0;
   gap: 0;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 .iuSilverMsg--quickTemplateEmpty{
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
+  flex: 0 0 auto;
+  display: block;
+  width: 100%;
   margin: 0;
 }
 .iuSilverDraftCard--quickTemplateEmpty{
-  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  flex: 0 0 auto;
+  width: 100%;
   margin: 0;
   padding: 0;
   border: none;
@@ -17469,63 +17470,127 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
 .iuSilverDraftCard--quickTemplateNote::before{
   background: linear-gradient(90deg, #0d9488, #14b8a6);
 }
+.iuSilverDraftCardHead--quickTemplate{
+  flex: 0 0 auto;
+  padding: 14px 16px 12px;
+}
+.iuSilverDraftCard--quickTemplateCalendar .iuSilverDraftCardHead--quickTemplate{
+  background: linear-gradient(180deg, rgba(31, 168, 90, 0.15) 0%, rgba(31, 168, 90, 0.04) 72%, rgba(255, 255, 255, 0) 100%);
+}
+.iuSilverDraftCard--quickTemplateTask .iuSilverDraftCardHead--quickTemplate{
+  background: linear-gradient(180deg, rgba(124, 77, 255, 0.15) 0%, rgba(124, 77, 255, 0.04) 72%, rgba(255, 255, 255, 0) 100%);
+}
+.iuSilverDraftCard--quickTemplateNote .iuSilverDraftCardHead--quickTemplate{
+  background: linear-gradient(180deg, rgba(20, 184, 166, 0.18) 0%, rgba(20, 184, 166, 0.05) 72%, rgba(255, 255, 255, 0) 100%);
+}
 .iuSilverDraftCardTitle--quickTemplate{
   font-size: 1.15rem;
   font-weight: 700;
   text-transform: none;
   letter-spacing: 0;
-  padding: 16px 16px 4px;
+  padding: 0;
   margin: 0;
   color: #1f3a5f;
+  line-height: 1.25;
+}
+.iuSilverDraftCardSubtitle--quickTemplate{
+  margin: 6px 0 0;
+  padding: 0;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  font-weight: 500;
+  color: #6b7f9d;
 }
 .iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftGrid{
-  padding: 8px 16px 0;
-  gap: 10px 12px;
+  flex: 0 0 auto;
+  padding: 4px 16px 0;
+  gap: 11px 12px;
+}
+.iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftK{
+  color: #4a6591;
+  font-size: 0.9rem;
 }
 .iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftInput,
 .iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftInput--note{
   min-height: 48px;
   font-size: max(16px, 1em);
   border-radius: 12px;
-  border: 1px solid #d0dae8;
-  padding: 10px 12px;
+  border: 1px solid #ccd8ea;
+  padding: 11px 13px;
   width: 100%;
   box-sizing: border-box;
+  background: #fff;
 }
-.iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftActions{
-  margin-top: auto;
-  padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+.iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftInput--note{
+  min-height: 96px;
+  line-height: 1.45;
+}
+.iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftGrid--note .iuSilverDraftInput--note{
+  min-height: 120px;
+}
+.iuSilverDraftActions--quickTemplate{
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-  border-top: 1px solid #e8edf5;
+  margin-top: 22px;
+  padding: 0 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  border-top: none;
   background: #fff;
 }
 .iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftBtn{
   flex: 1 1 auto;
-  min-height: 48px;
+  min-height: 50px;
   border-radius: 14px;
+  font-weight: 600;
+}
+.iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftBtn--secondary{
+  background: #fff;
+  border: 1px solid #c6d2e5;
+  color: #203a59;
+}
+.iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftBtn--primary:disabled{
+  opacity: 0.62;
+  box-shadow: none;
+  filter: saturate(0.85);
 }
 .iuSilverDraftCard--quickTemplateCalendar .iuSilverDraftBtn--primary{
-  background: linear-gradient(145deg, #1fa85a, #178a4a);
+  background: linear-gradient(145deg, #24bd63 0%, #1fa85a 45%, #178a4a 100%);
   border-color: #178a4a;
   color: #fff;
+  box-shadow: 0 4px 14px rgba(31, 168, 90, 0.32);
+  font-weight: 700;
+}
+.iuSilverDraftCard--quickTemplateCalendar .iuSilverDraftBtn--primary:not(:disabled):active{
+  box-shadow: 0 2px 8px rgba(31, 168, 90, 0.28);
 }
 .iuSilverChatOverlay--quickTemplateCalendar .iuSilverChatClose{
   border-color: rgba(31, 168, 90, 0.35);
   color: #178a4a;
 }
 .iuSilverDraftCard--quickTemplateTask .iuSilverDraftBtn--primary{
-  background: linear-gradient(145deg, #7c4dff, #5b3fd4);
+  background: linear-gradient(145deg, #8b62ff 0%, #7c4dff 45%, #5b3fd4 100%);
   border-color: #5b3fd4;
   color: #fff;
+  box-shadow: 0 4px 14px rgba(124, 77, 255, 0.3);
+  font-weight: 700;
+}
+.iuSilverDraftCard--quickTemplateTask .iuSilverDraftBtn--primary:not(:disabled):active{
+  box-shadow: 0 2px 8px rgba(124, 77, 255, 0.26);
 }
 .iuSilverChatOverlay--quickTemplateTask .iuSilverChatClose{
   border-color: rgba(124, 77, 255, 0.35);
   color: #5b3fd4;
 }
 .iuSilverDraftCard--quickTemplateNote .iuSilverDraftBtn--primary{
-  background: linear-gradient(145deg, #14b8a6, #0d9488);
+  background: linear-gradient(145deg, #1ecfb8 0%, #14b8a6 45%, #0d9488 100%);
   border-color: #0d9488;
   color: #fff;
+  box-shadow: 0 4px 14px rgba(20, 184, 166, 0.3);
+  font-weight: 700;
+}
+.iuSilverDraftCard--quickTemplateNote .iuSilverDraftBtn--primary:not(:disabled):active{
+  box-shadow: 0 2px 8px rgba(20, 184, 166, 0.26);
 }
 .iuSilverChatOverlay--quickTemplateNote .iuSilverChatClose{
   border-color: rgba(20, 184, 166, 0.35);

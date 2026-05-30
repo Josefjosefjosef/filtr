@@ -64369,28 +64369,32 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     var d = turn.draft || createEmptyDraft();
     var cardAccentClass = "iuSilverDraftCard--quickTemplateCalendar";
     var cardTitle = "📅 Nová událost";
+    var cardSubtitle = "Vyplň údaje události.";
     var grid = "";
     var showSave = false;
     if (kind === "calendar") {
       cardAccentClass = "iuSilverDraftCard--quickTemplateCalendar";
       cardTitle = "📅 Nová událost";
+      cardSubtitle = "Vyplň údaje události.";
       grid = renderDraftCardEditGrid(d);
       showSave = isDraftSaveable(d);
     } else if (kind === "reminder") {
       cardAccentClass = "iuSilverDraftCard--quickTemplateTask";
       cardTitle = "🔔 Nová připomínka";
+      cardSubtitle = "Vyplň údaje připomínky.";
       grid =
         '<div class="iuSilverDraftGrid iuSilverDraftGrid--edit iuSilverDraftGrid--task">' +
         '<div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-task-field="due" value="' +
         esc(String(d.taskDueAt || "").slice(0, 10)) +
         '" />' +
         '<div class="iuSilverDraftK">Název</div><input type="text" maxlength="200" class="iuSilverDraftInput" data-iu-silver-task-field="title" value="" autocomplete="off" />' +
-        '<div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="2" maxlength="5000" data-iu-silver-task-field="note"></textarea>' +
+        '<div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="3" maxlength="5000" data-iu-silver-task-field="note"></textarea>' +
         "</div>";
       showSave = isTaskDraftSaveable(d);
     } else {
       cardAccentClass = "iuSilverDraftCard--quickTemplateNote";
       cardTitle = "📝 Nová poznámka";
+      cardSubtitle = "Napiš svou poznámku.";
       grid =
         '<div class="iuSilverDraftGrid iuSilverDraftGrid--edit iuSilverDraftGrid--note">' +
         '<div class="iuSilverDraftK">Text</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="5" maxlength="5000" data-iu-silver-note-field="text"></textarea>' +
@@ -64401,16 +64405,22 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       '<button type="button" class="iuSilverDraftBtn iuSilverDraftBtn--primary" data-iu-silver-action="save" ' +
       (showSave ? "" : "disabled") +
       '>Uložit</button>' +
-      '<button type="button" class="iuSilverDraftBtn" data-iu-silver-action="quick-template-close">Zavřít</button>';
+      '<button type="button" class="iuSilverDraftBtn iuSilverDraftBtn--secondary" data-iu-silver-action="quick-template-close">Zavřít</button>';
+    var head =
+      '<div class="iuSilverDraftCardHead iuSilverDraftCardHead--quickTemplate">' +
+      '<div class="iuSilverDraftCardTitle iuSilverDraftCardTitle--quickTemplate">' +
+      esc(cardTitle) +
+      "</div>" +
+      '<p class="iuSilverDraftCardSubtitle iuSilverDraftCardSubtitle--quickTemplate">' +
+      esc(cardSubtitle) +
+      "</p></div>";
     var card =
       '<div class="iuSilverDraftCard iuSilverDraftCard--quickTemplateEmpty ' +
       cardAccentClass +
       '" data-iu-silver-draft-card="1" data-iu-silver-quick-template-empty="1" data-iu-silver-edit-mode="1">' +
-      '<div class="iuSilverDraftCardTitle iuSilverDraftCardTitle--quickTemplate">' +
-      esc(cardTitle) +
-      "</div>" +
+      head +
       grid +
-      '<div class="iuSilverDraftActions" data-iu-silver-actions="1">' +
+      '<div class="iuSilverDraftActions iuSilverDraftActions--quickTemplate" data-iu-silver-actions="1">' +
       actions +
       "</div></div>";
     return (

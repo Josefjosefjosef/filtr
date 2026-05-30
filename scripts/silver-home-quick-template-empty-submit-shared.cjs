@@ -157,6 +157,70 @@ async function assertNoChatInput(page, key) {
   };
 }
 
+const SUBTITLE_EXPECTED = {
+  calendar: "Vyplň údaje události.",
+  reminder: "Vyplň údaje připomínky.",
+  notes: "Napiš svou poznámku.",
+};
+const ACTION_GAP_MIN_PX = 18;
+const ACTION_GAP_MAX_PX = 30;
+
+async function assertFormPolish(page, key) {
+  await submitEmptyPrefix(page, key);
+  const st = await page.evaluate(({ k, subtitles, gapMin, gapMax }) => {
+    const card = document.querySelector("[data-iu-silver-quick-template-empty]");
+    const actions = document.querySelector(".iuSilverDraftActions--quickTemplate");
+    const subtitle = document.querySelector(".iuSilverDraftCardSubtitle--quickTemplate");
+    const head = document.querySelector(".iuSilverDraftCardHead--quickTemplate");
+    const saveBtn = document.querySelector(".iuSilverDraftBtn--primary");
+    const saveSt = saveBtn ? getComputedStyle(saveBtn) : null;
+    const headSt = head ? getComputedStyle(head) : null;
+    const fields = card
+      ? Array.from(
+          card.querySelectorAll(
+            '[data-iu-silver-field="title"], [data-iu-silver-field="note"], [data-iu-silver-field="location"], [data-iu-silver-task-field="note"], [data-iu-silver-note-field="text"]'
+          )
+        )
+      : [];
+    const lastField = fields.length ? fields[fields.length - 1] : null;
+    let actionGapPx = null;
+    if (lastField && actions) {
+      const fieldRect = lastField.getBoundingClientRect();
+      const actionsRect = actions.getBoundingClientRect();
+      actionGapPx = Math.round((actionsRect.top - fieldRect.bottom) * 100) / 100;
+    }
+    const subtitleText = subtitle ? String(subtitle.textContent || "").trim() : "";
+    const headBg = headSt ? String(headSt.backgroundImage || headSt.background || "") : "";
+    const saveShadow = saveSt ? String(saveSt.boxShadow || "") : "";
+    const saveBg = saveSt ? String(saveSt.backgroundImage || saveSt.background || "") : "";
+    const cardClass = card ? String(card.className || "") : "";
+    const savePrimaryOk =
+      (saveShadow !== "none" && saveShadow.length > 0) ||
+      saveBg.indexOf("gradient") >= 0 ||
+      (saveBtn && !saveBtn.disabled && saveShadow !== "none");
+    return {
+      subtitleFound: !!subtitle,
+      subtitleText,
+      subtitleOk: subtitleText === subtitles[k],
+      headFound: !!head,
+      headTintOk: headBg.indexOf("gradient") >= 0 || headBg.indexOf("rgba") >= 0,
+      actionGapPx,
+      actionGapOk: actionGapPx !== null && actionGapPx >= gapMin && actionGapPx <= gapMax,
+      savePrimaryOk,
+      saveShadow,
+      saveBg,
+      cardClass,
+    };
+  }, { k: key, subtitles: SUBTITLE_EXPECTED, gapMin: ACTION_GAP_MIN_PX, gapMax: ACTION_GAP_MAX_PX });
+  const pass =
+    st.subtitleOk &&
+    st.headFound &&
+    st.headTintOk &&
+    st.actionGapOk &&
+    st.savePrimaryOk;
+  return Object.assign({ pass, key }, st);
+}
+
 async function assertPremiumAccent(page, key) {
   await submitEmptyPrefix(page, key);
   const st = await page.evaluate((k) => {
@@ -360,6 +424,22 @@ async function runViewport(page, w, h, replayMode) {
       calendar_close_reset_ok: cal.pass,
       task_close_reset_ok: task.pass,
       note_close_reset_ok: note.pass,
+      pass: cal.pass && task.pass && note.pass,
+    });
+    checks._pass = checks.pass && !checks.overflow_x && checks.cls_ok && checks.app_errors === 0;
+  } else if (replayMode === "form-polish") {
+    const cal = await assertFormPolish(page, "calendar");
+    await resetHomeTemplate(page);
+    const task = await assertFormPolish(page, "reminder");
+    await resetHomeTemplate(page);
+    const note = await assertFormPolish(page, "notes");
+    checks = Object.assign(checks, {
+      calendar_polish_ok: cal.pass,
+      task_polish_ok: task.pass,
+      note_polish_ok: note.pass,
+      calendar_action_gap_px: cal.actionGapPx,
+      task_action_gap_px: task.actionGapPx,
+      note_action_gap_px: note.actionGapPx,
       pass: cal.pass && task.pass && note.pass,
     });
     checks._pass = checks.pass && !checks.overflow_x && checks.cls_ok && checks.app_errors === 0;
