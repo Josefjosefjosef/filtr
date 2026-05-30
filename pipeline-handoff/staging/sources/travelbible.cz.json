@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "travelbible.cz",
-  "ingestedAt": "2026-05-23T06:20:00.463005Z",
+  "ingestedAt": "2026-05-30T23:40:31.765407Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Polsko: podrobný praktický průvodce pro každou dovolenou",
+      "url": "https://travelbible.cz/polsko/",
+      "dt": "2026-05-26T07:17:51Z",
+      "media_raw": "TravelBible",
+      "media_norm": "TravelBible",
+      "tokens": [
+        "dovolenou",
+        "každou",
+        "podrobný",
+        "polsko",
+        "praktický",
+        "průvodce"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_travelbible",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "travelbible.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -198,7 +221,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "cestovani",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Průvodce Karlovy Vary: co vidět, zažít a ochutnat + praktické tipy",
       "url": "https://travelbible.cz/karlovy-vary-pamatky-vylet/",
@@ -221,31 +244,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "travelbible.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Průvodce Jelení Hora: co vidět, zažít a ochutnat + praktické tipy",
-      "url": "https://travelbible.cz/pruvodce-jeleni-hora-polsko/",
-      "dt": "2026-04-26T06:26:58Z",
-      "media_raw": "TravelBible",
-      "media_norm": "TravelBible",
-      "tokens": [
-        "hora",
-        "jelení",
-        "ochutnat",
-        "praktické",
-        "průvodce",
-        "tipy",
-        "vidět",
-        "zažít"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_travelbible",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "travelbible.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -256,7 +254,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://travelbible.cz/feed/",
-      "bytes": 13531,
+      "bytes": 13429,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -293,10 +291,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-21T16:41:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-26T07:17:51Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "cestovani": 10
+          "cestovani": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -308,6 +307,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Polsko: podrobný praktický průvodce pro každou dovolenou",
+            "publishedAt": "2026-05-26T07:17:51Z"
+          },
           {
             "title": "Průvodce Coimbra (Portugalsko): co vidět, zažít a ochutnat",
             "publishedAt": "2026-05-21T16:41:56Z"
@@ -335,10 +338,6 @@
           {
             "title": "Pojištění pro Working Holiday 2026: Kompletní průvodce, jak krýt práci i zdraví bez rizika",
             "publishedAt": "2026-05-07T13:34:10Z"
-          },
-          {
-            "title": "Kutná Hora: průvodce městem v UNESCO – památky, co vidět, kde se najíst a ubytovat",
-            "publishedAt": "2026-05-07T12:09:47Z"
           }
         ]
       }
