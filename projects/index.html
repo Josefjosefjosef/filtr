@@ -1178,7 +1178,7 @@ style-src 'self' 'unsafe-inline' https:;
     </style>
     <style id="iuSvatekPillOverlayCss">
       /* P0: svátek pill + premium overlay — projects/index.html (mimo app.css css_debt_guard). */
-      #iuSilverWelcomeCard{--male-color:var(--iuNamedayMaleAccent);--female-color:var(--iuNamedayFemaleAccent);--iuSvatekPremiumBlue1:#5B6CFF;--iuSvatekPremiumBlue2:#7B5FFF;--iuSvatekPremiumRose1:#FF6AA2;--iuSvatekPremiumRose2:#FF8A65}
+      #iuSilverWelcomeCard{--male-color:var(--iuNamedayMaleAccent);--female-color:var(--iuNamedayFemaleAccent);--iuSvatekPremiumBlue1:#5B6CFF;--iuSvatekPremiumBlue2:#7B5FFF;--iuSvatekPremiumTeal1:#2DD4BF;--iuSvatekPremiumTeal2:#059669}
       .iuSilverWelcomeMeta{display:flex;flex-wrap:nowrap;align-items:baseline;column-gap:0}
       .iuSilverWelcomeMetaDateCluster,.iuSilverWelcomeMetaSvatekCluster{min-width:0}
       .iuSilverWelcomeMetaSvatekCluster{display:inline-flex;flex-wrap:nowrap;align-items:center;white-space:nowrap;max-width:100%}
@@ -1192,14 +1192,15 @@ style-src 'self' 'unsafe-inline' https:;
       #svatekOverlay .iuSvatekOverlayLeadMain{margin:0;font-size:18px;font-weight:700;line-height:1.25;color:rgba(15,30,45,.96);letter-spacing:-.01em}
       #svatekOverlay .iuSvatekOverlayLeadSub{margin:0;font-size:14px;font-weight:500;line-height:1.35;color:rgba(71,85,105,.88)}
       #svatekOverlay .iuSvatekOverlayActions{display:flex;flex-direction:column;gap:10px;align-items:stretch}
-      #svatekOverlay .iuSvatekOverlayActions .silver-weather-btn{width:100%;min-height:48px;flex:none;border:none;border-radius:14px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;-webkit-tap-highlight-color:transparent;transition:transform .12s ease,box-shadow .12s ease,filter .12s ease}
-      #svatekOverlay #svatekOverlayWishBtn{color:#fff;background:linear-gradient(135deg,var(--iuSvatekPremiumBlue1),var(--iuSvatekPremiumBlue2));box-shadow:0 6px 18px rgba(91,108,255,.38),inset 0 1px 0 rgba(255,255,255,.18)}
+      #svatekOverlay .iuSvatekOverlayActions .silver-weather-btn{width:100%;min-height:48px;flex:none;border:none;border-radius:14px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;-webkit-tap-highlight-color:transparent;transition:transform .12s ease,box-shadow .12s ease,filter .12s ease;color:#fff;-webkit-text-fill-color:#fff}
+      #svatekOverlay #svatekOverlayWishBtn,#svatekOverlay #svatekOverlayWishBtn .iuSvatekOverlayBtnLabel,#svatekOverlay #svatekOverlayWishBtn .iuSvatekWishPenIcon{color:#fff;-webkit-text-fill-color:#fff;background:linear-gradient(135deg,var(--iuSvatekPremiumBlue1),var(--iuSvatekPremiumBlue2));box-shadow:0 6px 18px rgba(91,108,255,.38),inset 0 1px 0 rgba(255,255,255,.18)}
       #svatekOverlay #svatekOverlayWishBtn:hover{filter:brightness(1.04)}
       #svatekOverlay #svatekOverlayWishBtn:active{transform:translateY(1px);box-shadow:0 3px 10px rgba(91,108,255,.32),inset 0 1px 0 rgba(255,255,255,.12)}
-      #svatekOverlay #svatekOverlayFlowersBtn{color:#fff;background:linear-gradient(135deg,var(--iuSvatekPremiumRose1),var(--iuSvatekPremiumRose2));box-shadow:0 6px 18px rgba(255,106,162,.32),inset 0 1px 0 rgba(255,255,255,.16)}
+      #svatekOverlay #svatekOverlayFlowersBtn,#svatekOverlay #svatekOverlayFlowersBtn .iuSvatekOverlayBtnLabel,#svatekOverlay #svatekOverlayFlowersBtn .iuSvatekOverlayBtnIcon{color:#fff;-webkit-text-fill-color:#fff;background:linear-gradient(135deg,var(--iuSvatekPremiumTeal1),var(--iuSvatekPremiumTeal2));box-shadow:0 6px 18px rgba(45,212,191,.32),inset 0 1px 0 rgba(255,255,255,.16)}
       #svatekOverlay #svatekOverlayFlowersBtn:hover{filter:brightness(1.04)}
-      #svatekOverlay #svatekOverlayFlowersBtn:active{transform:translateY(1px);box-shadow:0 3px 10px rgba(255,106,162,.28),inset 0 1px 0 rgba(255,255,255,.1)}
+      #svatekOverlay #svatekOverlayFlowersBtn:active{transform:translateY(1px);box-shadow:0 3px 10px rgba(45,212,191,.28),inset 0 1px 0 rgba(255,255,255,.1)}
       #svatekOverlay .iuSvatekOverlayBtnIcon{font-size:17px;line-height:1;flex:0 0 auto}
+      #svatekOverlay .iuSvatekWishPenIcon{width:18px;height:18px;flex:0 0 auto;display:block}
       .svatek-pill{appearance:none;-webkit-appearance:none;margin:0 0 0 4px;padding:4px 12px;border:1px solid rgba(15,35,55,.16);border-radius:999px;background:rgba(248,250,252,.92);box-shadow:0 1px 2px rgba(15,23,42,.06);font:inherit;font-weight:600;letter-spacing:inherit;line-height:1.2;cursor:pointer;-webkit-tap-highlight-color:transparent;display:inline-flex;flex-direction:row;flex-wrap:nowrap;align-items:center;gap:6px;min-height:36px;white-space:nowrap;color:inherit;vertical-align:baseline;box-sizing:border-box;max-width:100%}
       .svatek-pill:hover{background:rgba(241,245,249,.98)}
       .svatek-pill:active{transform:scale(.99)}
@@ -1219,12 +1220,18 @@ style-src 'self' 'unsafe-inline' https:;
       #iuNamedayWishCard::before{content:"";display:block;height:4px;background:linear-gradient(90deg,#5B6CFF,#7B5FFF)}
       #iuNamedayWishCard .iuNamedayWishCardInner{padding:18px 18px 16px;box-sizing:border-box}
       #iuNamedayWishCard h2{margin:0 0 14px;font-size:18px;font-weight:700;line-height:1.25;display:flex;align-items:center;gap:8px;color:rgba(15,30,45,.96);padding-right:46px;box-sizing:border-box}
+      #iuNamedayWishCard h2 .iuSvatekWishPenIcon{width:20px;height:20px;flex:0 0 auto;color:#6B5FFF}
+      #iuNamedayWishCard .iuNamedayWishPreview{margin:0 0 14px;border-radius:16px;border:1px solid rgba(123,95,255,.16);background:linear-gradient(155deg,rgba(255,255,255,.98) 0%,rgba(248,250,255,.96) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 4px 16px rgba(35,45,120,.06);overflow:hidden}
+      #iuNamedayWishTextarea{width:100%;min-height:132px;box-sizing:border-box;margin:0;padding:14px 16px;font-size:15px;line-height:1.5;border:none;border-radius:0;resize:none;font-family:inherit;color:rgba(15,30,45,.95);background:transparent;box-shadow:none;display:block}
+      #iuNamedayWishSignatureWrap{padding:0 16px 14px}
+      #iuNamedayWishSignatureWrap[hidden]{display:none!important}
+      .iuNamedayWishSignatureRule{height:1px;margin:0 0 10px;background:linear-gradient(90deg,transparent,rgba(123,95,255,.24),transparent)}
+      #iuNamedayWishSignature{margin:0;padding:0;font-size:15px;font-weight:600;font-style:italic;line-height:1.35;color:rgba(91,108,255,.92);text-align:right;letter-spacing:.01em}
       #iuNamedayWishCard .iu-overlay-close{position:absolute;top:12px;right:12px;width:38px;height:38px;background:rgba(238,242,247,.92);color:#0f172a;border:none;border-radius:12px;font-size:24px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;box-shadow:0 1px 3px rgba(15,23,42,.08)}
       #iuNamedayWishCard .iu-overlay-close:active{transform:scale(.96)}
       #iuNamedayWishCard .iu-nameday-wish-mode-row{display:flex;gap:8px;margin:0 0 14px;padding:4px;border-radius:14px;background:rgba(241,245,249,.85);border:1px solid rgba(15,35,55,.08)}
       #iuNamedayWishCard .iu-nameday-wish-mode-row .silver-weather-btn{flex:1 1 0;min-height:40px;border-radius:10px;border:1px solid transparent;background:transparent;font-weight:600;color:rgba(71,85,105,.9);box-shadow:none}
       #iuNamedayWishCard .silver-weather-btn[aria-pressed="true"]{border-color:rgba(91,108,255,.45);background:linear-gradient(135deg,rgba(91,108,255,.14),rgba(123,95,255,.12));color:rgba(15,30,45,.96);box-shadow:0 0 0 1px rgba(123,95,255,.18),0 4px 12px rgba(91,108,255,.14)}
-      #iuNamedayWishTextarea{width:100%;min-height:132px;box-sizing:border-box;margin:0 0 14px;padding:14px 16px;font-size:15px;line-height:1.5;border-radius:16px;border:1px solid rgba(123,95,255,.16);resize:none;font-family:inherit;color:rgba(15,30,45,.95);background:linear-gradient(155deg,rgba(255,255,255,.98) 0%,rgba(248,250,255,.96) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 4px 16px rgba(35,45,120,.06)}
       #iuNamedayWishCopy{width:100%;border-radius:14px;min-height:48px;background:linear-gradient(135deg,#22c55e 0%,#16a34a 55%,#059669 100%);color:#fff;border:none;font-weight:600;font-size:15px;box-shadow:0 6px 20px rgba(34,197,94,.38),inset 0 1px 0 rgba(255,255,255,.18)}
       #iuNamedayWishCopy:active{transform:translateY(1px);box-shadow:0 3px 10px rgba(34,197,94,.3),inset 0 1px 0 rgba(255,255,255,.1)}
     </style>
@@ -5115,8 +5122,8 @@ style-src 'self' 'unsafe-inline' https:;
             <p class="iuSvatekOverlayLeadSub" id="svatekOverlayLeadSub">Dnes má svátek</p>
           </div>
           <div class="iuSvatekOverlayActions">
-            <button type="button" class="silver-weather-btn" id="svatekOverlayWishBtn"><span class="iuSvatekOverlayBtnIcon" aria-hidden="true">💌</span> Vytvořit přání</button>
-            <button type="button" class="silver-weather-btn iu-nameday-flowers" id="svatekOverlayFlowersBtn"><span class="iuSvatekOverlayBtnIcon" aria-hidden="true">💐</span> Poslat květiny</button>
+            <button type="button" class="silver-weather-btn" id="svatekOverlayWishBtn"><svg class="iuSvatekWishPenIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M4 20.25V21h2.25l9.94-9.94-2.25-2.25L4 20.25zM18.71 6.04a1 1 0 0 0 0-1.41l-1.34-1.34a1 1 0 0 0-1.41 0l-1.83 1.83 2.75 2.75 1.83-1.83z"/></svg><span class="iuSvatekOverlayBtnLabel">Vytvořit přání</span></button>
+            <button type="button" class="silver-weather-btn iu-nameday-flowers" id="svatekOverlayFlowersBtn"><span class="iuSvatekOverlayBtnIcon" aria-hidden="true">💐</span><span class="iuSvatekOverlayBtnLabel">Poslat květiny</span></button>
           </div>
         </div>
       </div>
@@ -5125,12 +5132,18 @@ style-src 'self' 'unsafe-inline' https:;
       <div class="iuModalCard" id="iuNamedayWishCard" role="dialog" aria-modal="true" aria-labelledby="iuNamedayWishTitle">
         <button type="button" class="iu-overlay-close" aria-label="Zavřít">×</button>
         <div class="iuNamedayWishCardInner">
-          <h2 id="iuNamedayWishTitle"><span aria-hidden="true">💌</span> Vyber styl přání</h2>
+          <h2 id="iuNamedayWishTitle"><svg class="iuSvatekWishPenIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M4 20.25V21h2.25l9.94-9.94-2.25-2.25L4 20.25zM18.71 6.04a1 1 0 0 0 0-1.41l-1.34-1.34a1 1 0 0 0-1.41 0l-1.83 1.83 2.75 2.75 1.83-1.83z"/></svg> Vyber styl přání</h2>
           <div class="iu-nameday-wish-mode-row">
             <button type="button" class="silver-weather-btn iu-nameday-wish-mode--tykat" data-iu-nameday-mode="tykat" aria-pressed="true">Tykat</button>
             <button type="button" class="silver-weather-btn iu-nameday-wish-mode--vykat" data-iu-nameday-mode="vykat" aria-pressed="false">Vykat</button>
           </div>
-          <textarea id="iuNamedayWishTextarea" readonly rows="5" autocomplete="off" aria-label="Text přání"></textarea>
+          <div class="iuNamedayWishPreview">
+            <textarea id="iuNamedayWishTextarea" readonly rows="5" autocomplete="off" aria-label="Text přání"></textarea>
+            <div class="iuNamedayWishSignatureWrap" id="iuNamedayWishSignatureWrap" hidden>
+              <div class="iuNamedayWishSignatureRule" aria-hidden="true"></div>
+              <p class="iuNamedayWishSignature" id="iuNamedayWishSignature"></p>
+            </div>
+          </div>
           <button type="button" id="iuNamedayWishCopy" class="silver-weather-btn">Kopírovat přání</button>
         </div>
       </div>
