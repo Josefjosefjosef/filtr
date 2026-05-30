@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   ageMinutes,
   decideWatchdog,
+  hasBlockingRuns,
   hasRunningOrQueued,
+  isBlockingRun,
   parseIsoToMs,
 } from "./decision";
 
@@ -99,6 +101,27 @@ describe("decideWatchdog", () => {
       runs: [{ status: "in_progress" }],
     });
     expect(d.action).toBe("skip_busy");
+  });
+
+  it("dispatch when stale and queued run is a concurrency zombie (> queuedStaleMinutes)", () => {
+    const gen = new Date(base - 20 * 60_000).toISOString();
+    const zombieCreated = new Date(base - 200 * 60_000).toISOString();
+    const d = decideWatchdog({
+      generatedAtIso: gen,
+      staleAfterMinutes: 10,
+      nowMs: base,
+      queuedStaleMinutes: 120,
+      runs: [{ status: "queued", created_at: zombieCreated }],
+    });
+    expect(d.action).toBe("dispatch");
+    if (d.action === "dispatch") expect(d.reason).toBe("stale_data");
+  });
+
+  it("isBlockingRun ignores ancient queued", () => {
+    const now = Date.parse("2026-04-06T12:00:00.000Z");
+    const created = "2026-04-05T08:00:00.000Z";
+    expect(isBlockingRun({ status: "queued", created_at: created }, now, 120)).toBe(false);
+    expect(hasBlockingRuns([{ status: "queued", created_at: created }], now, 120)).toBe(false);
   });
 });
 

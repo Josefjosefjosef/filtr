@@ -15,8 +15,9 @@ name: Update articles data
 # Serial runs only: do NOT cancel an in-progress ingest. With cancel-in-progress: true, each new
 # scheduled tick (*/5) could cancel the previous run if it was still building/waiting on PR merge,
 # producing long gaps and missing schedule records. Queued runs wait instead (safe cadence).
+# Group bumped 2026-05-31: zombie run stuck in queued since 2026-05-23 blocked entire pipeline.
 concurrency:
-  group: update-articles-data
+  group: update-articles-data-v2
   cancel-in-progress: false
 
 permissions:
@@ -47,6 +48,26 @@ jobs:
         with:
           ref: main
           fetch-depth: 1
+
+      - name: Cancel zombie queued runs (unblock concurrency group)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          WF="update-articles.yml"
+          REPO="${{ github.repository }}"
+          CUTOFF_EPOCH=$(date -u -d '120 minutes ago' +%s)
+          mapfile -t ROWS < <(gh run list --workflow "$WF" --repo "$REPO" --status queued --json databaseId,createdAt --jq '.[] | "\(.databaseId)\t\(.createdAt)"' 2>/dev/null || true)
+          for row in "${ROWS[@]}"; do
+            [ -z "$row" ] && continue
+            RID="${row%%$'\t'*}"
+            CREATED="${row#*$'\t'}"
+            CREATED_EPOCH=$(date -u -d "$CREATED" +%s 2>/dev/null || echo "0")
+            if [ "$CREATED_EPOCH" -gt 0 ] && [ "$CREATED_EPOCH" -lt "$CUTOFF_EPOCH" ]; then
+              echo "[ZOMBIE] cancelling queued run $RID created_at=$CREATED"
+              gh run cancel "$RID" --repo "$REPO" || true
+            fi
+          done
 
       - name: Sync main ref (avoid stale checkout on schedule)
         run: |
@@ -101,7 +122,7 @@ jobs:
   article_pipeline_aggregate:
     needs: article_pipeline_ingest
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     env:
       RETENTION_DAYS: "45"
     steps:
@@ -282,6 +303,11 @@ jobs:
           node scripts/cz-vertical-flow-guard.mjs
           T1=$(date +%s)
           echo "[TIME] cz_vertical_flow_guard_seconds=$((T1-T0))"
+
+      - name: Articles aggregator freshness guard (bundle + main sections)
+        run: |
+          set -euo pipefail
+          node scripts/articles-aggregator-freshness-guard.mjs
 
       - name: Section purity guard (finance/zdravi vs URL)
         run: |
