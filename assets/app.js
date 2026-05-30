@@ -6181,24 +6181,11 @@ function buildVideoAsArticleCard(it) {
     }
   };
 
-  /** P0 Silver: jedna vrstva pro oslovení uživatele (localStorage base + lokální 5. pád pro header). */
+  /* IU_USER_ADDRESS_V2_START */
+  /** P0 Silver: oslovení uživatele — localStorage call-form + explicit flag; vocativ jen u „jsem/jmenuji se“. */
   const IU_USER_ADDRESS_STORAGE_KEY = "iu_user_address";
+  const IU_USER_ADDRESS_EXPLICIT_FLAG_KEY = "iu_user_address_explicit.v1";
   const IU_USER_ADDRESS_PLACEHOLDER = "Jak ti mám říkat? Ja jsem Silver";
-
-  const IU_USER_ADDRESS_VOC_TO_BASE = {
-    petře: "Petr",
-    pavle: "Pavel",
-    martine: "Martin",
-    jane: "Jan",
-    honzo: "Honza",
-    tomeši: "Tomáš",
-    lukáši: "Lukáš",
-    davide: "David",
-    jakube: "Jakub",
-    matěji: "Matěj",
-    vojtěchu: "Vojtěch",
-    kryštofe: "Kryštof"
-  };
 
   const IU_USER_ADDRESS_INTENT_DENY = {
     zvědavý: 1,
@@ -6237,6 +6224,39 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function iuUserAddressWriteExplicitFlag(explicit){
+    try{
+      if (explicit) {
+        window.localStorage.setItem(IU_USER_ADDRESS_EXPLICIT_FLAG_KEY, "1");
+      } else {
+        window.localStorage.setItem(IU_USER_ADDRESS_EXPLICIT_FLAG_KEY, "0");
+      }
+      return true;
+    }catch{
+      return false;
+    }
+  }
+
+  function iuUserAddressClearStored(){
+    try{
+      window.localStorage.removeItem(IU_USER_ADDRESS_STORAGE_KEY);
+      window.localStorage.removeItem(IU_USER_ADDRESS_EXPLICIT_FLAG_KEY);
+      return true;
+    }catch{
+      return false;
+    }
+  }
+
+  function iuUserAddressReadCallFormForWelcome(){
+    const stored = iuUserAddressReadStoredBase();
+    if (!stored) return "";
+    try{
+      if (window.localStorage.getItem(IU_USER_ADDRESS_EXPLICIT_FLAG_KEY) === "1") return stored;
+    }catch{}
+    const forms = iuDeriveUserAddressForms(stored);
+    return forms.vocative || stored;
+  }
+
   function iuDeriveUserAddressForms(baseRaw){
     const baseTrim = iuUserAddressCollapseSpaces(String(baseRaw || ""));
     if (!baseTrim) return { base: "", vocative: "" };
@@ -6247,18 +6267,53 @@ function buildVideoAsArticleCard(it) {
     const low = baseOne.normalize("NFC").toLowerCase();
 
     const hardVoc = {
+      josef: "Josefe",
       petr: "Petře",
       pavel: "Pavle",
       jan: "Jane",
       honza: "Honzo",
       martin: "Martine",
       lukáš: "Lukáši",
-      tomáš: "Tomeši",
+      lukas: "Lukáši",
+      tomáš: "Tomáši",
+      tomas: "Tomáši",
       david: "Davide",
       jakub: "Jakube",
       matěj: "Matěji",
+      matej: "Matěji",
       vojtěch: "Vojtěchu",
-      kryštof: "Kryštofe"
+      vojtech: "Vojtěchu",
+      kryštof: "Kryštofe",
+      krystof: "Kryštofe",
+      michal: "Michale",
+      roman: "Romane",
+      filip: "Filipe",
+      adam: "Adame",
+      daniel: "Daniele",
+      ondřej: "Ondřeji",
+      ondrej: "Ondřeji",
+      marek: "Marku",
+      františek: "Františku",
+      frantisek: "Františku",
+      václav: "Václave",
+      vaclav: "Václave",
+      karel: "Karle",
+      stanislav: "Stanislave",
+      jaroslav: "Jaroslave",
+      zdeněk: "Zdeňku",
+      zdenek: "Zdeňku",
+      ladislav: "Ladislave",
+      bohumil: "Bohumile",
+      antonín: "Antoníne",
+      antonin: "Antoníne",
+      vladimír: "Vladimíre",
+      vladimir: "Vladimíre",
+      richard: "Richarde",
+      patrik: "Patriku",
+      dominik: "Dominiku",
+      radek: "Radku",
+      aleš: "Aleši",
+      ales: "Aleši"
     };
     if (hardVoc[low]){
       const cap = baseOne.charAt(0).toUpperCase() + baseOne.slice(1).toLowerCase();
@@ -6285,6 +6340,22 @@ function buildVideoAsArticleCard(it) {
     return iuUserAddressCollapseSpaces(t.replace(/\s+/g, " "));
   }
 
+  /** Prefix head: bez trimu konce — zachová mezeru za prefixem pro mapování do originálu. */
+  function iuNormalizeIntentParsingHead(raw){
+    let t = iuUserAddressCollapseSpaces(String(raw || ""));
+    if (!t) return "";
+    t = t.replace(/^[\s.,!?;:]+/g, "");
+    t = iuFoldCsShared(t);
+    return t;
+  }
+
+  function iuUserAddressNormHasPrefix(n, pr){
+    if (!n || !pr) return false;
+    if (!n.startsWith(pr)) return false;
+    if (n.length === pr.length) return true;
+    return n.charAt(pr.length) === " ";
+  }
+
   function iuUserAddressIntentDenyLookup(lk){
     if (IU_USER_ADDRESS_INTENT_DENY[lk]) return true;
     const nt = iuNormalizeIntentParsingText(lk);
@@ -6296,86 +6367,124 @@ function buildVideoAsArticleCard(it) {
     return false;
   }
 
-  function iuUserAddressVocToBaseResolve(lk){
-    if (IU_USER_ADDRESS_VOC_TO_BASE[lk]) return IU_USER_ADDRESS_VOC_TO_BASE[lk];
-    const nt = iuNormalizeIntentParsingText(lk);
-    let k;
-    for (k in IU_USER_ADDRESS_VOC_TO_BASE){
-      if (!Object.prototype.hasOwnProperty.call(IU_USER_ADDRESS_VOC_TO_BASE, k)) continue;
-      if (iuNormalizeIntentParsingText(k) === nt) return IU_USER_ADDRESS_VOC_TO_BASE[k];
-    }
-    return null;
-  }
-
-  /** Společné prefixy po iuNormalizeIntentParsingText — jen ASCII, nejdelší první (řadí se podle délky). */
-  function iuUserAddressIntentPrefixesOrdered(){
+  function iuUserAddressExplicitPrefixesOrdered(){
     const p = [
-      "zmen moje osloveni na ",
-      "nastav osloveni na ",
-      "zmen osloveni na ",
-      "zmen oslveni na ",
-      "odted me oslovuj ",
-      "odted mi rikej ",
-      "rikej mi prosim ",
-      "pouzivej jmeno ",
-      "muzes mi rikat ",
-      "jmenuji se ",
-      "oslovuj me ",
-      "rikej mi ",
-      "jsem "
+      "chci abys mi rikal",
+      "chci at mi rikas",
+      "chci aby sis me pamatoval jako",
+      "chci abych sis me pamatoval jako",
+      "pamatuj si me jako",
+      "napriste mi rikej",
+      "odted mi rikej",
+      "odted rikej mi",
+      "odted me oslovuj",
+      "muzes mi rikat",
+      "pouzivej jmeno",
+      "oslovuj me",
+      "rikej mi prosim",
+      "rikej mi",
+      "zmen moje osloveni na",
+      "nastav osloveni na",
+      "zmen osloveni na",
+      "zmen oslveni na"
     ];
     return p.slice().sort(function (a, b){
       return b.length - a.length;
     });
   }
 
-  /** Najde konec prefixu v původním řetězci (stejná normalizace jako u prefixů). */
+  function iuUserAddressNameOnlyPrefixesOrdered(){
+    const p = ["ja jsem", "jmenuju se", "jmenuji se", "me jmeno je", "jsem"];
+    return p.slice().sort(function (a, b){
+      return b.length - a.length;
+    });
+  }
+
+  function iuUserAddressIntentPrefixesOrdered(){
+    return iuUserAddressExplicitPrefixesOrdered().concat(iuUserAddressNameOnlyPrefixesOrdered());
+  }
+
+  function iuUserAddressStripChaosNoise(collapsed){
+    let s = iuUserAddressCollapseSpaces(String(collapsed || ""));
+    if (!s) return "";
+    let guard = 0;
+    while (guard < 8) {
+      guard++;
+      const n = iuNormalizeIntentParsingText(s);
+      let changed = false;
+      const lead = [/^hele\s+/, /^prosim\s+te\s+/, /^prosim\s+/, /^ted\s+/];
+      for (let i = 0; i < lead.length; i++) {
+        const m = n.match(lead[i]);
+        if (m) {
+          s = iuUserAddressCollapseSpaces(s.slice(m[0].length));
+          changed = true;
+          break;
+        }
+      }
+      if (!changed) break;
+    }
+    s = s.replace(/[?!.]+$/g, "").replace(/\s+(jo|prosim|prosím|dekuji|díky)\s*$/i, "").trim();
+    return iuUserAddressCollapseSpaces(s);
+  }
+
+  /** Najde konec prefixu v původním řetězci — zachová casing a diakritiku zbytku. */
   function iuUserAddressSliceRestAfterIntentPrefix(collapsed, prefixNorm){
+    const pr = String(prefixNorm || "").replace(/\s+$/, "");
     const n = iuNormalizeIntentParsingText(collapsed);
-    if (!n.startsWith(prefixNorm)) return null;
+    if (!iuUserAddressNormHasPrefix(n, pr)) return null;
     for (let cut = 0; cut <= collapsed.length; cut++){
       const head = collapsed.slice(0, cut);
-      if (iuNormalizeIntentParsingText(head) === prefixNorm) return collapsed.slice(cut).trim();
+      if (iuNormalizeIntentParsingHead(head) === pr) return collapsed.slice(cut).trim();
     }
-    return iuUserAddressCollapseSpaces(n.slice(prefixNorm.length));
+    return null;
   }
 
-  /** Odstraní nejvýše jeden intent prefix; jinak vrátí celý řetězec. */
-  function iuUserAddressStripIntentPrefix(collapsed){
+  function iuUserAddressMatchIntentPrefix(collapsed){
     const n = iuNormalizeIntentParsingText(collapsed);
-    if (!n) return collapsed;
-    const prefs = iuUserAddressIntentPrefixesOrdered();
-    for (let i = 0; i < prefs.length; i++){
-      const pr = prefs[i];
-      if (n.startsWith(pr)){
+    if (!n) return null;
+    const explicit = iuUserAddressExplicitPrefixesOrdered();
+    let i;
+    for (i = 0; i < explicit.length; i++){
+      const pr = explicit[i];
+      if (iuUserAddressNormHasPrefix(n, pr)){
         const rest = iuUserAddressSliceRestAfterIntentPrefix(collapsed, pr);
-        if (rest !== null && rest !== undefined) return rest;
+        if (rest !== null && rest !== undefined) return { explicit: true, rest: rest };
       }
     }
-    return collapsed;
+    const nameOnly = iuUserAddressNameOnlyPrefixesOrdered();
+    for (i = 0; i < nameOnly.length; i++){
+      const pr = nameOnly[i];
+      if (iuUserAddressNormHasPrefix(n, pr)){
+        const rest = iuUserAddressSliceRestAfterIntentPrefix(collapsed, pr);
+        if (rest !== null && rest !== undefined) return { explicit: false, rest: rest };
+      }
+    }
+    return null;
   }
 
-  function iuNormalizeUserAddressValue(rest){
+  function iuUserAddressPreserveExplicitValue(rest){
+    let t = iuUserAddressCollapseSpaces(String(rest || ""));
+    if (!t) return "";
+    t = t.replace(/^[\s.,!?;:]+|[\s.,!?;:?!]+$/g, "");
+    if (!t) return "";
+    const parts = t.split(/\s+/);
+    if (parts.length > 1) {
+      if (!/^pane\b/i.test(parts[0])) return "";
+      return t;
+    }
+    const token = parts[0];
+    if (!/^[\p{L}\-]{1,64}$/u.test(token)) return "";
+    return token;
+  }
+
+  function iuUserAddressNormalizeNameNominative(rest){
     const rest0 = iuUserAddressCollapseSpaces(String(rest || ""));
     if (!rest0) return "";
-
     const parts = rest0.split(/\s+/);
-    if (parts.length > 1){
-      if (!/^pane\b/i.test(parts[0])) return "";
-      return parts
-        .map(function (p, idx){
-          if (idx === 0) return p.charAt(0).toLowerCase() + p.slice(1);
-          return p.charAt(0).toLowerCase() + p.slice(1);
-        })
-        .join(" ");
-    }
-
-    let token = parts[0];
+    if (parts.length !== 1) return "";
+    const token = parts[0];
     const lk = token.normalize("NFC").toLowerCase();
     if (iuUserAddressIntentDenyLookup(lk)) return "";
-    const rev = iuUserAddressVocToBaseResolve(lk);
-    if (rev) return rev;
-
     if (!/^[\p{L}\-]{2,48}$/u.test(token)) return "";
     if (token.indexOf("-") >= 0){
       return token
@@ -6388,12 +6497,22 @@ function buildVideoAsArticleCard(it) {
     return token.charAt(0).toUpperCase() + token.slice(1).toLowerCase();
   }
 
-  function iuNormalizeUserAddressInput(raw){
-    const s0 = iuUserAddressCollapseSpaces(String(raw || ""));
-    if (!s0) return "";
+  function iuUserAddressDeriveCallFormFromNameOnly(rest){
+    const nom = iuUserAddressNormalizeNameNominative(rest);
+    if (!nom) return "";
+    const forms = iuDeriveUserAddressForms(nom);
+    return forms.vocative || nom;
+  }
 
-    const rest = iuUserAddressStripIntentPrefix(s0);
-    return iuNormalizeUserAddressValue(rest);
+  function iuNormalizeUserAddressInput(raw){
+    const s0 = iuUserAddressStripChaosNoise(String(raw || ""));
+    if (!s0) return "";
+    const matched = iuUserAddressMatchIntentPrefix(s0);
+    if (matched) {
+      if (matched.explicit) return iuUserAddressPreserveExplicitValue(matched.rest);
+      return iuUserAddressDeriveCallFormFromNameOnly(matched.rest);
+    }
+    return iuUserAddressPreserveExplicitValue(s0);
   }
 
   function iuUserAddressLineMatchesIntentPrefix(t){
@@ -6402,18 +6521,34 @@ function buildVideoAsArticleCard(it) {
     const n = iuNormalizeIntentParsingText(s);
     const prefs = iuUserAddressIntentPrefixesOrdered();
     for (let i = 0; i < prefs.length; i++){
-      if (n.startsWith(prefs[i])) return true;
+      if (iuUserAddressNormHasPrefix(n, prefs[i])) return true;
     }
     return false;
   }
 
+  function iuUserAddressTryAleCorrectionIntent(collapsed){
+    const nAle = iuNormalizeIntentParsingText(collapsed);
+    if (!/^ne/.test(nAle) || !/\bale\s+/.test(nAle)) return null;
+    const aleRaw = collapsed.match(/\bale\s+(.+)$/i);
+    if (!aleRaw) return null;
+    const callForm = iuUserAddressPreserveExplicitValue(aleRaw[1]);
+    if (!callForm) return null;
+    return { callForm: callForm, explicit: true };
+  }
+
   function iuUserAddressMaybeIntentFromSilverLine(raw){
-    const t = iuUserAddressCollapseSpaces(String(raw || ""));
+    const t = iuUserAddressStripChaosNoise(String(raw || ""));
     if (!t) return null;
+    const aleIntent = iuUserAddressTryAleCorrectionIntent(t);
+    if (aleIntent) return aleIntent;
     if (!iuUserAddressLineMatchesIntentPrefix(t)) return null;
-    const base = iuNormalizeUserAddressInput(t);
-    if (!base) return null;
-    return base;
+    const matched = iuUserAddressMatchIntentPrefix(t);
+    if (!matched) return null;
+    let callForm = "";
+    if (matched.explicit) callForm = iuUserAddressPreserveExplicitValue(matched.rest);
+    else callForm = iuUserAddressDeriveCallFormFromNameOnly(matched.rest);
+    if (!callForm) return null;
+    return { callForm: callForm, explicit: matched.explicit };
   }
 
   function iuUserAddressClearCaptureSlot(){
@@ -6502,7 +6637,7 @@ function buildVideoAsArticleCard(it) {
         try{
           const v = iuNormalizeUserAddressInput(String(inp.value || ""));
           if (!v) return;
-          iuUserAddressSetCore(v);
+          iuUserAddressSetCore(v, { explicit: true });
         }catch{}
       }
 
@@ -6525,12 +6660,12 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
-  function iuUserAddressSetCore(base){
-    const b = iuUserAddressCollapseSpaces(String(base || ""));
+  function iuUserAddressSetCore(callForm, opts){
+    const explicit = !!(opts && opts.explicit);
+    const b = iuUserAddressCollapseSpaces(String(callForm || ""));
     if (!b) return false;
-    const forms = iuDeriveUserAddressForms(b);
-    if (!forms.base) return false;
-    if (!iuUserAddressWriteStoredBase(forms.base)) return false;
+    if (!iuUserAddressWriteStoredBase(b)) return false;
+    iuUserAddressWriteExplicitFlag(explicit);
     iuUserAddressClearCaptureSlot();
     try{
       if (typeof window.iuSilverWelcomeRefresh === "function") window.iuSilverWelcomeRefresh();
@@ -6542,9 +6677,9 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuUserAddressTryConsumeSilverLine(text){
-    const intentBase = iuUserAddressMaybeIntentFromSilverLine(text);
-    if (!intentBase) return false;
-    return iuUserAddressSetCore(intentBase);
+    const intent = iuUserAddressMaybeIntentFromSilverLine(text);
+    if (!intent) return false;
+    return iuUserAddressSetCore(intent.callForm, { explicit: intent.explicit });
   }
 
   function iuUserAddressInit(){
@@ -6556,9 +6691,7 @@ function buildVideoAsArticleCard(it) {
     try{
       window.iuGetUserAddressVocativeForWelcome = function (){
         try{
-          const b = iuUserAddressReadStoredBase();
-          if (!b) return "";
-          return iuDeriveUserAddressForms(b).vocative || "";
+          return iuUserAddressReadCallFormForWelcome();
         }catch{
           return "";
         }
@@ -6574,9 +6707,21 @@ function buildVideoAsArticleCard(it) {
     try{
       window.iuSetUserAddress = function (raw){
         try{
-          const base = iuNormalizeUserAddressInput(String(raw || ""));
-          if (!base) return false;
-          return iuUserAddressSetCore(base);
+          const s0 = iuUserAddressStripChaosNoise(String(raw || ""));
+          if (!s0) return false;
+          const matched = iuUserAddressMatchIntentPrefix(s0);
+          let callForm = "";
+          let explicit = true;
+          if (matched) {
+            explicit = matched.explicit;
+            callForm = matched.explicit
+              ? iuUserAddressPreserveExplicitValue(matched.rest)
+              : iuUserAddressDeriveCallFormFromNameOnly(matched.rest);
+          } else {
+            callForm = iuUserAddressPreserveExplicitValue(s0);
+          }
+          if (!callForm) return false;
+          return iuUserAddressSetCore(callForm, { explicit: explicit });
         }catch{
           return false;
         }
@@ -6598,6 +6743,7 @@ function buildVideoAsArticleCard(it) {
     }catch{}
     /* Capture input se vkládá jen z iuSilverWelcomeRefresh — až po doplnění pozdravu; předčasný build v init způsoboval prázdný greet + layout skok. */
   }
+  /* IU_USER_ADDRESS_V2_END */
 
   /** P0 poprej: ≤1024px layout/CSS žije v projects/index.html @media (max-width:1024px) — first paint = post-JS (žádný pozdní <style> injekt → CLS). */
   function iuPoprejEnsureMobileCssInjected(){
@@ -34322,7 +34468,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   const PENDING_KEY = "iuSilver.pendingFirstMessage.v1";
   const SILVER_HOME_INPUT_MAX = 450;
   /** Musí odpovídat scripts/test_salutation_intent.js (grep guard). */
-  const IU_SILVER_SALUTATION_SYNC_TAG = "IU_SILVER_SALUTATION_SYNC_V1=2026-04-12c";
+  const IU_SILVER_SALUTATION_SYNC_TAG = "IU_SILVER_SALUTATION_SYNC_V1=2026-05-30a";
   /** JSON: { mode: "none"|"formal"|"informal"|"name", at?: number } — doplnění k iu_user_address pro tón. */
   const IU_SILVER_SALUTATION_PREF_KEY = "iuSilver.salutationPreference.v1";
   /** Kompatibilní klíč s modulem iu_user_address (IU_USER_ADDRESS_STORAGE_KEY). */
@@ -59119,6 +59265,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     );
   }
 
+  function iuSilverIsSalutationDisableRequest(f) {
+    if (/\bneoslovuj\b/.test(f)) return true;
+    if (/\bprestan\s+me\s+oslovov/.test(f)) return true;
+    if (/\buz\s+me\s+neoslovuj/.test(f)) return true;
+    if (/\bosloveni\s+vypni\b/.test(f)) return true;
+    if (/nerikej\s+mi\s+jmenem/.test(f) || /\bne\s+.*\s+jmenem\b/.test(f)) return true;
+    if (/\bnechci\s+byt\s+oslovov/.test(f)) return true;
+    if (/\bnechci\s+zadne\s+osloveni\b/.test(f)) return true;
+    if (/\bnechci\b/.test(f) && /\bosloven/.test(f)) return true;
+    if (/\bnepouzivej\s+osloven/.test(f)) return true;
+    return false;
+  }
+
   function iuSilverIsSalutationIntent(f, raw) {
     if (!f || f.length < 4) {
       return false;
@@ -59138,7 +59297,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\b(?:muzes|umis|chces)\s+me\s+oslovovat\b/.test(f) || /\boslovovat\s+jmenem\b/.test(f)) {
       return true;
     }
-    if (/\bneoslovuj\b/.test(f) || (/\bnechci\b/.test(f) && /\bosloven/.test(f)) || /\bnepouzivej\s+osloven/.test(f)) {
+    if (iuSilverIsSalutationDisableRequest(f)) {
       return true;
     }
     if (/\b(mluv|mluvej)\s+na\s+m(e|ě)\s+neformal/.test(f) || /\bneformal(in|ni|nej)?\b/.test(f) || /\binformal/.test(f)) {
@@ -59187,13 +59346,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return null;
     }
     iuSilverSalutationPrefWrite({ mode: "name" });
-    let voc = "";
+    let callForm = "";
     try {
       if (typeof window.iuGetUserAddressVocativeForWelcome === "function") {
-        voc = String(window.iuGetUserAddressVocativeForWelcome() || "").trim();
+        callForm = String(window.iuGetUserAddressVocativeForWelcome() || "").trim();
       }
     } catch {}
-    const msg = voc ? "Hotovo 👍 Budu ti říkat " + voc + "." : "Hotovo 👍 Oslovení jsem si uložil.";
+    const msg = callForm ? "Hotovo 👍 Budu ti říkat " + callForm + "." : "Hotovo 👍 Oslovení jsem si uložil.";
     return {
       normalizedIntent: "silver.user_address_set",
       targetContainer: "none",
@@ -59225,10 +59384,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         "Jasně 👍 Stačí mi napsat, jak tě mám oslovovat — třeba „říkej mi Pepo“, „oslovuj mě pane Nováku“ nebo „nechci oslovení“. Hned si to zapamatuju."
       );
     }
-    if (/\bneoslovuj\b/.test(f) || (/\bnechci\b/.test(f) && /\bosloven/.test(f))) {
+    if (iuSilverIsSalutationDisableRequest(f)) {
       iuSilverSalutationPrefWrite({ mode: "none" });
       try {
         window.localStorage.removeItem(IU_SILVER_USER_ADDR_STORAGE_COMPAT);
+        window.localStorage.removeItem("iu_user_address_explicit.v1");
       } catch {}
       return iuSilverSalutationReadOkTurn("Rozumím. Nebudu používat oslovení 👍");
     }
@@ -59249,7 +59409,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     let s = String(text == null ? "" : text);
     try {
       const pref = iuSilverSalutationPrefRead();
-      if (!pref || pref.mode !== "name") {
+      if (!pref || pref.mode === "none" || pref.mode !== "name") {
         return s;
       }
       if (typeof window.iuGetUserAddressVocativeForWelcome !== "function") {
@@ -63337,6 +63497,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       } else {
         iuSilverLongSessionIsolationTickV1(foldCs(raw0));
       }
+    }
+    {
+      const addrConvFirst = iuSilverTryConsumeUserAddressConfirmationTurn(raw0);
+      if (addrConvFirst) return addrConvFirst;
     }
     {
       const salConvFirst = iuSilverBuildSalutationPreferenceTurn(raw0);
