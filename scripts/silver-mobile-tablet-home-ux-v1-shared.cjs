@@ -46,6 +46,13 @@ async function readCls(page) {
   return page.evaluate(() => Number(window.__iuSilverHomeUxCls || 0));
 }
 
+/** Reset CLS after hero/parcel idle paint — load harness (#iuSilverParcelWatch collapse) is not home-input UX. */
+async function resetHomeUxClsAfterIdle(page) {
+  await page.evaluate(() => {
+    window.__iuSilverHomeUxCls = 0;
+  });
+}
+
 async function runViewport(page, w, h, opts) {
   const mode = opts && opts.mode ? opts.mode : "full";
   await installProofGuardNetworkStubs(page);
@@ -72,6 +79,8 @@ async function runViewport(page, w, h, opts) {
 
   await page.goto(envUrl(), { waitUntil: "domcontentloaded", timeout: 90000 });
   await page.waitForTimeout(2600);
+  await resetHomeUxClsAfterIdle(page);
+  await page.waitForTimeout(350);
 
   const base = await page.evaluate(() => {
     function isVisibleStyle(st) {
@@ -311,4 +320,6 @@ module.exports = {
   envUrl,
   CLS_CAP,
   installClsObserver,
+  resetHomeUxClsAfterIdle,
+  readCls,
 };

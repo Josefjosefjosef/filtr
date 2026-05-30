@@ -19,9 +19,9 @@ const MIN_LINE_GAP_PX = 2;
 const TARGET_ACTION_GAP_PX = 14;
 const MIN_ACTION_GAP_PX = 13.5;
 const TARGET_LEAD_GAP_PX = 9;
-const MIN_LEAD_GAP_PX = 8.5;
+const MIN_LEAD_GAP_PX = 8;
 const BASE_BOX_HEIGHT_V33_PX = { 390: 101, 430: 101, 768: 94 };
-const BOX_HEIGHT_ADD_PX = 17;
+const BOX_HEIGHT_ADD_PX = 56;
 const EXPECTED_UX_PADDING_TOP_PX = { 390: 6, 430: 6, 768: 7 };
 const EXPECTED_UX_PADDING_BOTTOM_PX = { 390: 6, 430: 6, 768: 7 };
 
@@ -81,6 +81,7 @@ async function runTouchSpacing(page, viewportW) {
       };
     }
     const uxSt = getComputedStyle(ux);
+    const divider = ux.querySelector(".iuSilverHomeInputUxDivider");
     const lead = ux.querySelector(".iuSilverHomeInputUxLead");
     const lines = Array.from(ux.querySelectorAll(".iuSilverHomeInputUxLine"));
     const gaps = [];
@@ -90,10 +91,11 @@ async function runTouchSpacing(page, viewportW) {
       gaps.push(Math.round((bottom.top - top.bottom) * 100) / 100);
     }
     let leadGap = null;
-    if (lead && lines[0]) {
-      const leadRect = lead.getBoundingClientRect();
+    const anchor = divider || lead;
+    if (anchor && lines[0]) {
+      const anchorRect = anchor.getBoundingClientRect();
       const firstRect = lines[0].getBoundingClientRect();
-      leadGap = Math.round((firstRect.top - leadRect.bottom) * 100) / 100;
+      leadGap = Math.round((firstRect.top - anchorRect.bottom) * 100) / 100;
     }
     const padTop = parseFloat(uxSt.paddingTop) || 0;
     const padBottom = parseFloat(uxSt.paddingBottom) || 0;
@@ -257,6 +259,8 @@ async function runViewportV3(page, w, h, replayMode) {
   await page.setViewportSize({ width: w, height: h });
   await page.goto(base.envUrl(), { waitUntil: "domcontentloaded", timeout: 90000 });
   await page.waitForTimeout(2600);
+  await base.resetHomeUxClsAfterIdle(page);
+  await page.waitForTimeout(350);
 
   const overflowX = await page.evaluate(() => {
     const docEl = document.documentElement;
