@@ -15587,6 +15587,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuMobileSilverSlot #silver-slot #iuSilverWeatherCard{
     min-height: 120px !important;
   }
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard[data-iu-silver-wx-phase="firstVisit"],
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard[data-iu-silver-wx-phase="setup"]{
+    min-height: 0 !important;
+  }
   #silver-slot #iuSilverHeroPremium,
   #iuMobileSilverSlot #silver-slot #iuSilverHeroPremium{
     padding-bottom: 10px !important;
@@ -21355,6 +21359,10 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     padding-top: 5px !important;
     padding-bottom: 5px !important;
     box-sizing: border-box;
+  }
+  #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-phase="firstVisit"],
+  #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-phase="setup"]{
+    min-height: 0 !important;
   }
   #silver-slot .silver-weather-line1,
   #silver-slot .silver-weather-line2{
