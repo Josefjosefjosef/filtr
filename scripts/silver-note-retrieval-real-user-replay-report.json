@@ -1,0 +1,105 @@
+{
+  "guard_id": "note_retrieval_real_user_replay_v1",
+  "real_user_cases": 10,
+  "replay_cases": 191,
+  "total": 191,
+  "pass": 187,
+  "fail": 4,
+  "replay_pass_rate": "97.91",
+  "family_pass": {
+    "A": "PASS",
+    "B": "FAIL",
+    "C": "PASS",
+    "D": "PASS",
+    "E": "PASS",
+    "F": "PASS",
+    "G": "PASS",
+    "H": "PASS",
+    "I": "PASS",
+    "J": "PASS"
+  },
+  "all_fail_families_pass": "NO",
+  "real_user_replay_pass": "NO",
+  "query_created_write_count": 0,
+  "false_write_count": 0,
+  "dangerous_write_count": 0,
+  "write_when_negated_count": 0,
+  "PASS_FAIL": "FAIL",
+  "first_fail": {
+    "id": "NRUR_B_metamorphic_co_vim_o_katce_",
+    "replayFamily": "B",
+    "family": "PERSON_RETRIEVAL_KATKA",
+    "variant": "metamorphic",
+    "input": "Co vím o Katce?",
+    "issues": [
+      "not_read:assistant.capability",
+      "content_miss",
+      "pollution"
+    ],
+    "pass": false,
+    "intent": "assistant.capability",
+    "message": "Silver běží lokálně v prohlížeči — bez internetu a cloud AI. Umí kalendář, úkoly, poznámky, připomínky a vyhledávání.\n\nÚkol: Připomeň mi zavolat doktorovi v pátek.\nKalendář: Zítra v 10 schůzka s Kubou v Praze.\nPoznámka: "
+  },
+  "first_fails": [
+    {
+      "id": "NRUR_B_metamorphic_co_vim_o_katce_",
+      "replayFamily": "B",
+      "family": "PERSON_RETRIEVAL_KATKA",
+      "variant": "metamorphic",
+      "input": "Co vím o Katce?",
+      "issues": [
+        "not_read:assistant.capability",
+        "content_miss",
+        "pollution"
+      ],
+      "pass": false,
+      "intent": "assistant.capability",
+      "message": "Silver běží lokálně v prohlížeči — bez internetu a cloud AI. Umí kalendář, úkoly, poznámky, připomínky a vyhledávání.\n\nÚkol: Připomeň mi zavolat doktorovi v pátek.\nKalendář: Zítra v 10 schůzka s Kubou v Praze.\nPoznámka: "
+    },
+    {
+      "id": "NRUR_B_no_diacritics_co_vim_o_katce_",
+      "replayFamily": "B",
+      "family": "PERSON_RETRIEVAL_KATKA",
+      "variant": "no_diacritics",
+      "input": "co vim o katce?",
+      "issues": [
+        "not_read:assistant.capability",
+        "content_miss",
+        "pollution"
+      ],
+      "pass": false,
+      "intent": "assistant.capability",
+      "message": "Silver běží lokálně v prohlížeči — bez internetu a cloud AI. Umí kalendář, úkoly, poznámky, připomínky a vyhledávání.\n\nÚkol: Připomeň mi zavolat doktorovi v pátek.\nKalendář: Zítra v 10 schůzka s Kubou v Praze.\nPoznámka: "
+    },
+    {
+      "id": "NRUR_B_mobile_voice_co_vim_o_katce",
+      "replayFamily": "B",
+      "family": "PERSON_RETRIEVAL_KATKA",
+      "variant": "mobile_voice",
+      "input": "co vim o katce",
+      "issues": [
+        "content_miss"
+      ],
+      "pass": false,
+      "intent": "clarification",
+      "message": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
+    },
+    {
+      "id": "NRUR_B_turn_by_turn_a_co_presne_o_katce_",
+      "replayFamily": "B",
+      "family": "PERSON_RETRIEVAL_KATKA",
+      "variant": "turn_by_turn",
+      "input": "Mám něco o Katce? -> A co přesně o Katce?",
+      "issues": [
+        "content_miss"
+      ],
+      "pass": false,
+      "intent": "clarification",
+      "message": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
+    }
+  ],
+  "engine_gap_families": {
+    "B": "person_dative_inflection_katce_missing_from_alias_registry",
+    "H": "PASS"
+  }
+}
