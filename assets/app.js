@@ -58286,7 +58286,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!x || iuSilverHasWriteVerb(x)) return false;
     if (iuSilverTryParseExplicitNoteCreate(String(x))) return false;
     if (iuSilverExplicitCalendarReadScopeFolded(x) && !/\bpoznam/.test(x)) return false;
+    if (/\b(v\s+kalend|do\s+kalend|kalendari|kalendare|schuz|udalost)\b/.test(x) && !/\bpoznam/.test(x)) return false;
+    if (/\bco\s+m(am|ame)\b/.test(x) && /\b(kalend|schuz|pondel|utery|stred|ctvr|patek|sobot|nedel)\b/.test(x) && !/\bpoznam/.test(x)) {
+      return false;
+    }
     if (IU_SILVER_NOTE_RETRIEVAL_PLATFORM_V1) {
+      if (/\b(v\s+kalend|do\s+kalend|kalendari|kalendare|schuz|udalost)\b/.test(x) && !/\bpoznam/.test(x)) return false;
+      if (/\bco\s+m(am|ame)\b/.test(x) && /\b(kalend|schuz|pondel|utery|stred|ctvr|patek)\b/.test(x) && !/\bpoznam/.test(x)) {
+        return false;
+      }
       const classif = iuSilverNoteRetrievalPlatformV1ClassifyQueryFolded(x);
       if (classif.mode === "list_all") return false;
       if (classif.mode === "exact_answer" || classif.mode === "topic_list" || classif.mode === "existence") return true;
@@ -58386,6 +58394,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const r0 = String(raw || "").trim();
     const f = String(folded || "");
     if (!r0 || !f) return null;
+    if (/\b(v\s+kalend|do\s+kalend|kalendari|kalendare|schuz|udalost)\b/.test(f) && !/\bpoznam/.test(f)) return null;
+    if (/\bco\s+m(am|ame)\b/.test(f) && /\b(kalend|schuz|pondel|utery|stred|ctvr|patek)\b/.test(f) && !/\bpoznam/.test(f)) {
+      return null;
+    }
     if (!iuSilverSearchRelevanceContractDirectFactNoteReadFolded(f)) return null;
     if (iuSilverNotesListQuerySignalV1(f)) return iuSilverBuildNotesListReadTurnV1(ctx || {}, empty, now);
     const agg = iuSilverTryNotesAmountAggregateReadTurnV1(raw, now, folded, ctx, empty);
