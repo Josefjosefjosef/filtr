@@ -36199,6 +36199,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bhledej\s+(?:mi\s+)?v\s+ukol/.test(x)) return true;
     if (/\bco\s+mam\s+v\s+ukol/.test(x)) return true;
     if (/\bco\s+mam\s+splnit/.test(x)) return true;
+    if (/\bjake\w*\s+mam\s+ukol/.test(x)) return true;
+    if (/\bco\s+mam\s+rozdelan/.test(x)) return true;
     if (/\b(podivej|zjist)\w*\s+jen\s+do\s+ukol/.test(x)) return true;
     if (/\bco\s+cekaj?\w*/.test(x) && /\b(ukol|v\s+ukol)/.test(x)) return true;
     if (/\bmam\s+neco\s+do\s+patku\b/.test(x) && /\b(ukol|v\s+ukol)/.test(x)) return true;
@@ -36525,6 +36527,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bmam\s+neco[^.]{0,120}\bv\s+ukolech/.test(x) ||
       /\bmam\s+neco\s+do\s+patku\s+v\s+ukolech/.test(x) ||
       /\bco\s+mam\s+splnit\s+do\s+patku/.test(x) ||
+      /\bco\s+mam\s+rozdelan/.test(x) ||
       /\bukaz\s+(mi\s+)?(nesplnen|otevren|aktivni)\w*\s+ukol/.test(x)
     ) {
       return true;
@@ -38428,6 +38431,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!q0 || q0.length < 2) return null;
     const qFold = foldCs(q0);
     if (/^zubar|^zubare/.test(qFold)) return { query: "Zubař", queryFolded: foldCs("Zubař") };
+    if (/^pediatr/.test(qFold)) return { query: "Pediatr", queryFolded: foldCs("Pediatr") };
     if (/^pravnik|^pravnika|^pravnici|^prawnik/.test(qFold)) return { query: "Právník", queryFolded: foldCs("Právník") };
     if (/^advokat/.test(qFold)) return { query: "Advokát", queryFolded: foldCs("Advokát") };
     if (/^doktor|^lekaf|^lekari/.test(qFold)) return { query: "Doktor", queryFolded: foldCs("Doktor") };
@@ -48708,6 +48712,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!r0) return false;
     const f = foldCs(r0);
     if (!f) return false;
+    if (iuSilverProductionRealityTaskQueryFamilyFolded(f) || iuSilverProductionRealityCalendarQueryFamilyFolded(f)) {
+      return false;
+    }
+    if (iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(f)) return false;
     if (/\bnajdi\s+(?:mi\s+)?ukol\w*/.test(f) && !/\bpoznam/.test(f)) return false;
     if (iuSilverExplicitTaskReadScopeFolded(f) && /\bneple\w*\s+(?:to\s+)?s\s+poznam/.test(f)) return false;
     if (iuSilverCalendarQueryNegatesNotesEarlyFolded(f)) return false;
@@ -49736,12 +49744,157 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0 production reality: task query family — must not lose to note retrieval early steal.
+   */
+  function iuSilverProductionRealityTaskQueryFamilyFolded(f) {
+    const x = String(f || "");
+    if (!x || iuSilverHasWriteVerb(x)) return false;
+    if (iuSilverExplicitCalendarReadScopeFolded(x) && !/\bukol/.test(x)) return false;
+    if (/\b(kalend|schuz|udalost)\b/.test(x) && !/\b(ukol|ukoly|ukolech|splnit|rozdelan|povinnost)\b/.test(x)) return false;
+    if (/\b(co\s+mam|jake\s+mam|jaky\s+mam|vypi[sš]|moje)\b/.test(x) && /\b(ukol|ukoly|ukolech|splnit|rozdelan|povinnost)\w*/.test(x)) {
+      return true;
+    }
+    if (/\bco\s+mam\s+splnit\b/.test(x)) return true;
+    if (/\bco\s+mam\s+v\s+ukolech\b/.test(x)) return true;
+    if (/\bv\s+ukolech\b/.test(x) && /\bco\s+mam\b/.test(x)) return true;
+    if (/\bjake\w*\s+mam\s+ukol/.test(x)) return true;
+    if (/\bco\s+mam\s+rozdelan/.test(x)) return true;
+    return false;
+  }
+
+  /**
+   * P0 production reality: calendar query family — „kdy mám zubaře/pediatra/…“ před note retrieval.
+   */
+  function iuSilverProductionRealityCalendarQueryFamilyFolded(f) {
+    const x = String(f || "");
+    if (!x || iuSilverHasWriteVerb(x)) return false;
+    if (iuSilverExplicitTaskReadScopeFolded(x) && !/\b(kalend|schuz|zubar|pediatr|pravnik|advokat|doktor)\b/.test(x)) {
+      return false;
+    }
+    if (/\bkdy\s+m(?:am|ame|as)\b/.test(x) && /\b(zubar|pediatr|pravnik|advokat|schuz|schuzk|doktor|lekaf|udalost)\w*/.test(x)) {
+      return true;
+    }
+    if (/\b(kdy\s+je|termin)\b/.test(x) && /\b(zubar|pediatr|pravnik|advokat|schuz|schuzk)\w*/.test(x)) return true;
+    return false;
+  }
+
+  function iuSilverOriginalSurfaceWordFromNoteBlobV1(blobRaw, foldedNeedle) {
+    const blob = String(blobRaw || "");
+    const needle = String(foldedNeedle || "").trim();
+    if (!blob || !needle || needle.length < 2) return "";
+    const parts = blob.split(/\s+/);
+    for (let wi = 0; wi < parts.length; wi++) {
+      const w = String(parts[wi] || "").replace(/[?.!,;:]+$/g, "");
+      const wf = foldCs(w);
+      if (!wf) continue;
+      if (wf === needle || wf.indexOf(needle) === 0 || needle.indexOf(wf) === 0) return w;
+    }
+    return "";
+  }
+
+  function iuSilverNoteRetrievalPlatformV1OriginalEntityLabelFromNote(note, classif) {
+    const note0 = note || {};
+    const blob = iuSilverNoteResultBlobV1(note0);
+    const pg = classif && classif.personGroups ? classif.personGroups : [];
+    if (pg.length) {
+      const blobF = foldCs(blob);
+      for (let pi = 0; pi < pg.length; pi++) {
+        const canon = String(pg[pi] || "");
+        if (!canon) continue;
+        const parts = blob.split(/\s+/);
+        for (let wi = 0; wi < parts.length; wi++) {
+          const w = String(parts[wi] || "").replace(/[?.!,;:]+$/g, "");
+          if (!w || w.length < 2) continue;
+          const groups = iuSilverPersonAliasGroupsForFoldedTextV1(foldCs(w));
+          if (groups.indexOf(canon) >= 0) return w;
+        }
+        if (blobF.indexOf(canon) >= 0) {
+          const fromCanon = iuSilverOriginalSurfaceWordFromNoteBlobV1(blob, canon);
+          if (fromCanon) return fromCanon;
+        }
+      }
+    }
+    const toks = classif && classif.entityTokens ? classif.entityTokens : [];
+    if (toks.length) {
+      const fromTok = iuSilverOriginalSurfaceWordFromNoteBlobV1(blob, toks[0]);
+      if (fromTok) return fromTok;
+    }
+    const title = String(note0.title || "").trim();
+    if (title) {
+      const head = title.split(/\s+/)[0];
+      if (head && head.length >= 2) return head;
+    }
+    return "";
+  }
+
+  function iuSilverTryProductionRealityCalendarQueryReadTurn(raw, now, folded, ctx, empty) {
+    const r0 = String(raw || "").trim();
+    const f = String(folded || "");
+    if (!r0 || !f || !iuSilverProductionRealityCalendarQueryFamilyFolded(f)) return null;
+    const calNegRead = iuSilverTryCalendarQueryNoteNegationReadTurn(raw, now, folded, ctx, empty);
+    if (calNegRead) return calNegRead;
+    const qp = iuSilverTryParseCalendarReadQueryPriority(r0, now, r0, f);
+    if (qp) return iuSilverBuildCalendarReadFromSpecTurnV1(qp, ctx || {}, empty, now);
+    if (iuSilverCalendarScopedDetailReadMatchFolded(f)) {
+      const readSpec = tryParseCalendarRead(r0, now);
+      if (readSpec) return iuSilverBuildCalendarReadFromSpecTurnV1(readSpec, ctx || {}, empty, now);
+      const detailPick = iuSilverExtractCalendarDetailTitleQueryForRead(r0, f, now);
+      if (detailPick && detailPick.query) {
+        return iuSilverBuildCalendarReadFromSpecTurnV1(
+          {
+            intent: "find_by_title",
+            query: detailPick.query,
+            normalizedQuery: detailPick.query,
+            diacriticInsensitive: true,
+            queryFolded: foldCs(detailPick.query),
+            dateIso: detailPick.dateIso || null,
+            preferFuture: true
+          },
+          ctx || {},
+          empty,
+          now
+        );
+      }
+    }
+    const mEnt = f.match(/\b(zubar\w*|pediatr\w*|pravnik\w*|advokat\w*|doktor\w*|lekaf\w*|schuz\w*)\b/);
+    const qEnt = mEnt && mEnt[1] ? mEnt[1] : "";
+    if (qEnt) {
+      const can = iuSilverCanonicalCalendarEntityTitleFromPersonFragment(qEnt) || { query: qEnt, queryFolded: foldCs(qEnt) };
+      return iuSilverBuildCalendarReadFromSpecTurnV1(
+        {
+          intent: "find_by_title",
+          query: can.query,
+          normalizedQuery: can.query,
+          diacriticInsensitive: true,
+          queryFolded: can.queryFolded || foldCs(can.query),
+          preferFuture: true
+        },
+        ctx || {},
+        empty,
+        now
+      );
+    }
+    return null;
+  }
+
+  function iuSilverTryProductionRealityTaskQueryReadTurn(raw, now, folded, ctx, empty) {
+    const f = String(folded || "");
+    if (!iuSilverProductionRealityTaskQueryFamilyFolded(f)) return null;
+    return (
+      iuSilverTryTaskReadListQueryEarly(raw, now, folded, ctx, empty) ||
+      iuSilverTryTaskQueryReadPriorityTurn(raw, now, folded, ctx, empty) ||
+      iuSilverTryTaskQueryHardeningV1ReadTurn(raw, now, folded, ctx, empty)
+    );
+  }
+
+  /**
    * P0: úzký note retrieval guard — před tryParseCalendarRead / clarification / storage disambiguation.
    */
   function iuSilverTryNoteRetrievalReadTurn(raw, now, folded, ctx, empty) {
     const r0 = String(raw || "").trim();
     const f = String(folded || "");
     if (!r0 || !f) return null;
+    if (iuSilverProductionRealityTaskQueryFamilyFolded(f) || iuSilverProductionRealityCalendarQueryFamilyFolded(f)) return null;
     if (/\bnajdi\s+(?:mi\s+)?ukol\w*/.test(f) && !/\bpoznam/.test(f)) return null;
     if (iuSilverExplicitTaskReadScopeFolded(f) && /\bneple\w*\s+(?:to\s+)?s\s+poznam/.test(f)) return null;
     const aggNoteRetrieval = iuSilverTryNotesAmountAggregateReadTurnV1(raw, now, folded, ctx, empty);
@@ -57671,6 +57824,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const noteCalCtxEarly = iuSilverTryNoteQueryWithCalendarContextReadTurn(raw, now, folded, ctx || {}, empty);
       if (noteCalCtxEarly) return noteCalCtxEarly;
     }
+    const prodCalEarly = iuSilverTryProductionRealityCalendarQueryReadTurn(raw, now, folded, ctx || {}, empty);
+    if (prodCalEarly) return prodCalEarly;
+    const prodTaskEarly = iuSilverTryProductionRealityTaskQueryReadTurn(raw, now, folded, ctx || {}, empty);
+    if (prodTaskEarly) return prodTaskEarly;
+    if (iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(f)) {
+      const taskPravnikEarly = iuSilverTryTaskQueryReadPriorityTurn(raw, now, folded, ctx || {}, empty);
+      if (taskPravnikEarly) return taskPravnikEarly;
+    }
     const calQueryNegatesNotesEarly =
       /\bneple\w*\s+(?:to\s+)?s\s+poznam/.test(f) &&
       /\b(kalend|doktor|kdy\s+mam|tyden|kolik|ukol|deadlin|schuz)\b/.test(f);
@@ -57679,6 +57840,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       !iuSilverExplicitTaskReadScopeFolded(f) &&
       !iuSilverExplicitCalendarReadScopeFolded(f) &&
       !iuSilverCalendarQueryWithNoteNegationSignalFolded(f) &&
+      !iuSilverProductionRealityTaskQueryFamilyFolded(f) &&
+      !iuSilverProductionRealityCalendarQueryFamilyFolded(f) &&
       !(IU_SILVER_TASK_WRITE_OWNERSHIP_HARDENING_V1 && iuSilverTaskWriteOwnershipHardeningV1Folded(f, r0)) &&
       !/\b(podivej|zjist)\w*\s+(?:se\s+)?do\s+kalend/.test(f) &&
       !/\bnajdi\s+adresu\s+udalost/.test(f) &&
@@ -58311,8 +58474,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         return (label ? label + " má narozeniny " : "Narozeniny: ") + String(m[0]).trim() + ".";
       }
       if (/\b(brezen|brezna|rijen|rijna|kveten|kvetna|cerven|cervna)\b/.test(blobF)) {
-        const mo = blobF.match(/\b(brezen|brezna|rijen|rijna|kveten|kvetna|cerven|cervna)\b/);
-        if (mo && mo[0]) return (label ? label + " má narozeniny v " : "Narozeniny: ") + mo[0] + ".";
+        const moRaw =
+          blob.match(
+            /\b(leden|ledna|únor|února|unor|unora|březen|března|brezen|brezna|duben|dubna|květen|května|kveten|kvetna|červen|června|cerven|cervna|červenec|července|cervenec|cervence|srpen|srpna|září|zari|říjen|října|rijen|rijna|listopad|listopadu|prosinec|prosince)\b/i
+          ) ||
+          blobF.match(/\b(brezen|brezna|rijen|rijna|kveten|kvetna|cerven|cervna)\b/);
+        if (moRaw && moRaw[0]) return (label ? label + " má narozeniny v " : "Narozeniny: ") + String(moRaw[0]).trim() + ".";
       }
     }
     if (attr === "color") {
@@ -58404,6 +58571,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return { message: "Nic jsem k tomu nenašel.", answerType: "none" };
     }
     const entityLabel =
+      iuSilverNoteRetrievalPlatformV1OriginalEntityLabelFromNote(note0, classif) ||
       (classif.entityTokens && classif.entityTokens[0]) ||
       (classif.personGroups && classif.personGroups[0]) ||
       "";
@@ -58482,6 +58650,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverSearchRelevanceContractDirectFactNoteReadFolded(f) {
     const x = String(f || "");
     if (!x || iuSilverHasWriteVerb(x)) return false;
+    if (iuSilverProductionRealityTaskQueryFamilyFolded(x) || iuSilverProductionRealityCalendarQueryFamilyFolded(x)) {
+      return false;
+    }
+    if (iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(x)) return false;
     if (iuSilverTryParseExplicitNoteCreate(String(x))) return false;
     if (iuSilverExplicitCalendarReadScopeFolded(x) && !/\bpoznam/.test(x)) return false;
     if (/\b(v\s+kalend|do\s+kalend|kalendari|kalendare|schuz\w*|udalost\w*)\b/.test(x) && !/\bpoznam/.test(x)) return false;
@@ -64497,6 +64669,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (noteCalCtxRead) {
       return noteCalCtxRead;
     }
+
+    const prodCalRead = iuSilverTryProductionRealityCalendarQueryReadTurn(raw, now, folded, ctx || {}, empty);
+    if (prodCalRead) return prodCalRead;
+
+    const prodTaskRead = iuSilverTryProductionRealityTaskQueryReadTurn(raw, now, folded, ctx || {}, empty);
+    if (prodTaskRead) return prodTaskRead;
 
     const noteRetrievalRead = iuSilverTryNoteRetrievalReadTurn(raw, now, folded, ctx || {}, empty);
     if (noteRetrievalRead) {
