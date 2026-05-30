@@ -16580,10 +16580,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   color: rgba(30, 40, 55, 0.78);
 }
 
-.silver-weather-card[data-iu-silver-wx-layout="setup"] .iu-weather-compact-stack{
-  gap: 2px;
-}
-
 .silver-welcome-stack--evening .silver-weather-privacy{
   color: rgba(230, 238, 248, 0.82);
 }
@@ -18944,21 +18940,6 @@ body #iuLeftRail .iu-leftNav .iu-leftNavItem:hover{
 .iuPwaIosOverlay__title{ margin: 0 0 .75rem; font-size: 1.1rem; font-weight: 600; color: #1B2A4A; }
 .iuPwaIosOverlay__body{ margin: 0 0 1rem; font-size: 0.9rem; line-height: 1.4; color: #333; }
 .iuPwaIosOverlay__close{ display: block; width: 100%; padding: .5rem 1rem; font-size: 0.95rem; font-weight: 500; color: #1F3B6D; background: #E7EDF7; border: none; border-radius: 8px; cursor: pointer; }
-
-.iuSilverWeatherGeoOverlay{ position: fixed; inset: 0; z-index: 10001; display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box; }
-.iuSilverWeatherGeoOverlay[hidden]{ display: none !important; }
-.iuSilverWeatherGeoOverlay__backdrop{ position: absolute; inset: 0; background: rgba(15, 23, 42, 0.42); }
-.iuSilverWeatherGeoOverlay__sheet{ position: relative; width: min(100%, 360px); max-height: calc(100vh - 32px); overflow: auto; background: #fff; border-radius: 16px; padding: 1.25rem 1.35rem 1.1rem; box-shadow: 0 16px 48px rgba(15, 23, 42, 0.22); box-sizing: border-box; }
-.iuSilverWeatherGeoOverlay__title{ margin: 0 0 0.65rem; font-size: 1.05rem; font-weight: 700; line-height: 1.35; color: #0f172a; }
-.iuSilverWeatherGeoOverlay__lead{ margin: 0 0 0.75rem; font-size: 0.92rem; line-height: 1.45; color: #334155; }
-.iuSilverWeatherGeoOverlay__list{ margin: 0 0 1rem; padding: 0 0 0 1.1rem; font-size: 0.88rem; line-height: 1.4; color: #334155; }
-.iuSilverWeatherGeoOverlay__list li{ margin: 0 0 0.45rem; }
-.iuSilverWeatherGeoOverlay__list li:last-child{ margin-bottom: 0; }
-.iuSilverWeatherGeoOverlay__actions{ display: flex; flex-direction: column; gap: 8px; }
-.iuSilverWeatherGeoOverlay__btn{ appearance: none; width: 100%; border: 1px solid rgba(15, 35, 55, 0.18); background: rgba(255, 255, 255, 0.92); color: rgba(15, 30, 45, 0.95); border-radius: 10px; padding: 10px 12px; font-size: 0.92rem; font-weight: 600; line-height: 1.2; cursor: pointer; box-sizing: border-box; min-height: 40px; }
-.iuSilverWeatherGeoOverlay__btn--primary{ background: linear-gradient(135deg, rgba(56, 189, 248, 0.95) 0%, rgba(37, 99, 235, 0.92) 100%); border-color: rgba(37, 99, 235, 0.35); color: #fff; }
-.iuSilverWeatherGeoOverlay__btn--ghost{ background: transparent; font-weight: 500; color: rgba(15, 30, 45, 0.78); }
-.iuSilverWeatherGeoOverlay__btn:focus-visible{ outline: 2px solid rgba(90, 140, 220, 0.85); outline-offset: 2px; }
 
 .iu-pwa-cta-short{ display: none; }
 @media (max-width: 480px) {

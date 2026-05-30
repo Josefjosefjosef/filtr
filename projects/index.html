@@ -232,6 +232,20 @@ style-src 'self' 'unsafe-inline' https:;
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard[data-iu-silver-wx-layout=setup] .silver-weather-privacy{
           margin:2px 0 0 0;
         }
+        .iuSilverWeatherGeoOverlay{position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
+        .iuSilverWeatherGeoOverlay[hidden]{display:none!important}
+        .iuSilverWeatherGeoOverlay__backdrop{position:absolute;inset:0;background:rgba(15,23,42,.42)}
+        .iuSilverWeatherGeoOverlay__sheet{position:relative;width:min(100%,360px);max-height:calc(100vh - 32px);overflow:auto;background:#fff;border-radius:16px;padding:1.25rem 1.35rem 1.1rem;box-shadow:0 16px 48px rgba(15,23,42,.22);box-sizing:border-box}
+        .iuSilverWeatherGeoOverlay__title{margin:0 0 .65rem;font-size:1.05rem;font-weight:700;line-height:1.35;color:#0f172a}
+        .iuSilverWeatherGeoOverlay__lead{margin:0 0 .75rem;font-size:.92rem;line-height:1.45;color:#334155}
+        .iuSilverWeatherGeoOverlay__list{margin:0 0 1rem;padding:0 0 0 1.1rem;font-size:.88rem;line-height:1.4;color:#334155}
+        .iuSilverWeatherGeoOverlay__list li{margin:0 0 .45rem}
+        .iuSilverWeatherGeoOverlay__list li:last-child{margin-bottom:0}
+        .iuSilverWeatherGeoOverlay__actions{display:flex;flex-direction:column;gap:8px}
+        .iuSilverWeatherGeoOverlay__btn{appearance:none;width:100%;border:1px solid rgba(15,35,55,.18);background:rgba(255,255,255,.92);color:rgba(15,30,45,.95);border-radius:10px;padding:10px 12px;font-size:.92rem;font-weight:600;line-height:1.2;cursor:pointer;box-sizing:border-box;min-height:40px}
+        .iuSilverWeatherGeoOverlay__btn--primary{background:linear-gradient(135deg,rgba(56,189,248,.95) 0%,rgba(37,99,235,.92) 100%);border-color:rgba(37,99,235,.35);color:#fff}
+        .iuSilverWeatherGeoOverlay__btn--ghost{background:transparent;font-weight:500;color:rgba(15,30,45,.78)}
+        .iuSilverWeatherGeoOverlay__btn:focus-visible{outline:2px solid rgba(90,140,220,.85);outline-offset:2px}
         #silver-slot .iu-info-cards-mobile-tablet{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(118px,auto);gap:8px;padding:0 10px;box-sizing:border-box;margin-top:12px;margin-bottom:0;min-width:0;width:100%;max-width:100%}
         #silver-slot .iu-info-cards-mobile-tablet>.silver-welcome-stack__separator{display:none!important}
         #silver-slot .iu-info-cards-mobile-tablet .iu-info-card{min-width:0;min-height:0;border-radius:16px!important;font-size:13px;line-height:1.3;padding:5px 8px!important;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;margin:0!important;align-self:stretch}

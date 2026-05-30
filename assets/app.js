@@ -11963,6 +11963,17 @@ function buildVideoAsArticleCard(it) {
       try{
         if (typeof window.iuWeatherActivateGpsViaGeolocation === "function") {
           window.iuWeatherActivateGpsViaGeolocation();
+          try{
+            let ticks = 0;
+            const poll = setInterval(() => {
+              ticks++;
+              if (!overlayGeoPending || ticks > 48) {
+                clearInterval(poll);
+                return;
+              }
+              try{ iuSilverWeatherHandleOverlayGeoPendingAfterLoad(); }catch{}
+            }, 250);
+          }catch{}
           return;
         }
       }catch{}
@@ -12302,6 +12313,7 @@ function buildVideoAsArticleCard(it) {
           else iuSilverWeatherRenderLoading();
         }
       }catch{}
+      try{ iuSilverWeatherHandleOverlayGeoPendingAfterLoad(); }catch{}
     }
 
     try{
@@ -12382,9 +12394,13 @@ function buildVideoAsArticleCard(it) {
       if (typeof orig === "function" && !window.__iuSilverWeatherHookedLoadRender) {
         window.__iuSilverWeatherHookedLoadRender = 1;
         window.iuWeatherLoadAndRender = async function(){
-          const r = await orig.apply(this, arguments);
-          try{ iuSilverWeatherHandleOverlayGeoPendingAfterLoad(); }catch{}
-          try{ iuSilverWeatherRefresh(); }catch{}
+          let r;
+          try{
+            r = await orig.apply(this, arguments);
+          }finally{
+            try{ iuSilverWeatherHandleOverlayGeoPendingAfterLoad(); }catch{}
+            try{ iuSilverWeatherRefresh(); }catch{}
+          }
           return r;
         };
       }
