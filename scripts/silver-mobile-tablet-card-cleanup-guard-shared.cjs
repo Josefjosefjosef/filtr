@@ -62,6 +62,20 @@ async function collectCardChecks(page) {
       }
       const bf = bubbleSt ? bubbleSt.backdropFilter || bubbleSt.webkitBackdropFilter || "" : "";
       const boxShadow = bubbleSt ? bubbleSt.boxShadow || "" : "";
+      const bg = bubbleSt ? bubbleSt.background || bubbleSt.backgroundColor || "" : "";
+      const borderW = bubbleSt ? parseFloat(bubbleSt.borderTopWidth || "0") : 0;
+      const speechSt = speech ? getComputedStyle(speech) : null;
+      const speechColor = speechSt ? speechSt.color || "" : "";
+      let speechLum = 0;
+      const lumM = String(speechColor).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+      if (lumM) {
+        speechLum = (0.299 * Number(lumM[1]) + 0.587 * Number(lumM[2]) + 0.114 * Number(lumM[3])) / 255;
+      }
+      const bubble_neon_ok =
+        borderW >= 1.5 &&
+        boxShadow.indexOf("139") >= 0 &&
+        bg.indexOf("255,255,255,.94") < 0 &&
+        speechLum >= 0.82;
       const speechText = speech ? String(speech.textContent || "").trim() : "";
       const p1 = hero.querySelector("[data-iu-silver-privacy-line]");
       const p2 = hero.querySelector("[data-iu-silver-privacy-line-2]");
@@ -75,6 +89,7 @@ async function collectCardChecks(page) {
         bubble_visible: isVisible(bubble),
         bubble_text_ok: speechText === bubbleText,
         bubble_glass_ok: bf.indexOf("blur") >= 0 || boxShadow.split(",").length >= 2,
+        bubble_neon_ok: bubble_neon_ok,
         tail_lower_ok: tailTopNum >= tailMin || (String(tailTopRaw).indexOf("%") >= 0 && parseFloat(tailTopRaw) >= tailMin),
         privacy_line1_ok: !!(p1 && String(p1.textContent || "").trim() === privacy1),
         privacy_line2_ok: !!(p2 && String(p2.textContent || "").trim() === privacy2),
@@ -142,7 +157,7 @@ function applyReplayMode(card, ux, replayMode) {
       card.static_sub_hidden &&
       !card.overflow_x;
   } else if (replayMode === "bubble-style") {
-    pass = card.bubble_visible && card.bubble_text_ok && card.bubble_glass_ok && !card.overflow_x;
+    pass = card.bubble_visible && card.bubble_text_ok && card.bubble_neon_ok && !card.overflow_x;
   } else if (replayMode === "bubble-tail") {
     pass = card.bubble_visible && card.tail_lower_ok && card.bubble_text_ok && !card.overflow_x;
   } else if (replayMode === "no-duplicate-privacy") {
