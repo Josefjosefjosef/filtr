@@ -147,6 +147,11 @@ function isProjectsFeedDataPath(pathname) {
   );
 }
 
+/** PWA deploy probe — always network, never SW cache (home-screen stale shell recovery). */
+function isProjectsVersionProbePath(pathname) {
+  return pathname === "/projects/version.json";
+}
+
 async function handleProjectsFeedDataPassthrough(event, pathname) {
   const doFetch = () =>
     fetch(event.request, { cache: "no-store" });
@@ -295,6 +300,11 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   const path = url.pathname;
+
+  if (url.origin === self.location.origin && isProjectsVersionProbePath(path)) {
+    event.respondWith(fetch(event.request, { cache: "no-store" }));
+    return;
+  }
 
   if (url.origin === self.location.origin && isProjectsFeedDataPath(path)) {
     event.respondWith(handleProjectsFeedDataPassthrough(event, path));
