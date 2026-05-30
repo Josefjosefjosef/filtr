@@ -9,7 +9,7 @@
 // 2026-03-22: bump — app.js silent SW activation (SKIP_WAITING + jeden reload, bez spodního CTA)
 // 2026-03-22: HTML document = network-first (žádný preferovaný starý shell)
 // 2026-03-29: PR #1488 — nový SW + vyprázdnění APP_SHELL_CACHE po deployi (staré app.*.css v cache)
-const CACHE_VERSION = "2026-04-22-invoice-overlay-v2";
+const CACHE_VERSION = "2026-05-31-pwa-stale-shell-fix";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
@@ -152,6 +152,31 @@ function isProjectsVersionProbePath(pathname) {
   return pathname === "/projects/version.json";
 }
 
+/** /projects/ HTML — network-first for all GET (iOS/Android home-screen may skip navigate mode). */
+function isProjectsHtmlPath(pathname) {
+  return (
+    pathname === "/projects/" ||
+    pathname === "/projects" ||
+    pathname === "/projects/index.html"
+  );
+}
+
+async function networkFirstNoStore(request, offlineFallback) {
+  try {
+    const res = await fetch(request, { cache: "no-store" });
+    if (res && res.ok) return res;
+  } catch (_) {}
+  if (offlineFallback) {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+  }
+  return new Response("", {
+    status: 503,
+    statusText: "Offline",
+    headers: { "Cache-Control": "no-store" },
+  });
+}
+
 async function handleProjectsFeedDataPassthrough(event, pathname) {
   const doFetch = () =>
     fetch(event.request, { cache: "no-store" });
@@ -287,12 +312,18 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
-// Activate: hard reset caches
+// Activate: hard reset caches + one safe client reload signal for stale PWA shells
 self.addEventListener("activate", (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
     await Promise.all(keys.map((key) => caches.delete(key)));
     await self.clients.claim();
+    try {
+      const clients = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+      for (const client of clients) {
+        client.postMessage({ type: "IU_SW_DEPLOY_RELOAD", cacheVersion: CACHE_VERSION });
+      }
+    } catch (_) {}
   })());
 });
 
@@ -303,6 +334,15 @@ self.addEventListener("fetch", (event) => {
 
   if (url.origin === self.location.origin && isProjectsVersionProbePath(path)) {
     event.respondWith(fetch(event.request, { cache: "no-store" }));
+    return;
+  }
+
+  if (
+    url.origin === self.location.origin &&
+    isProjectsHtmlPath(path) &&
+    event.request.method === "GET"
+  ) {
+    event.respondWith(networkFirstNoStore(event.request, true));
     return;
   }
 
@@ -387,6 +427,11 @@ self.addEventListener("fetch", (event) => {
         return fetch(event.request);
       })()
     );
+    return;
+  }
+
+  if (path.includes("/assets/iu-pwa-version-check.js")) {
+    event.respondWith(fetch(event.request, { cache: "no-store" }));
     return;
   }
 

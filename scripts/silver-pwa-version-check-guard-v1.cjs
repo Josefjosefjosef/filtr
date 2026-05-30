@@ -35,8 +35,11 @@ function runStaticChecks() {
     "pageshow",
     "iu:pwa:ver:reloaded-for",
     "iu:pwa:ver:reload-ts",
+    "iu:pwa:ver:reload-attempts",
     "/projects/version.json",
-    "serverVer === bootVer",
+    "shouldSkipReload(serverVer, bootVer)",
+    "IU_SW_DEPLOY_RELOAD",
+    "__iuPwaVersionCheck",
     "location.reload",
   ];
   for (const needle of requiredJs) {
@@ -45,13 +48,31 @@ function runStaticChecks() {
     checks.push("js:" + needle);
   }
 
-  const errSw = assertIncludes(sw, "isProjectsVersionProbePath", "sw.js");
-  if (errSw) return errSw;
-  checks.push("sw:version-probe-network-only");
+  const swChecks = [
+    "isProjectsVersionProbePath",
+    "isProjectsHtmlPath",
+    "networkFirstNoStore",
+    "IU_SW_DEPLOY_RELOAD",
+    "iu-pwa-version-check.js",
+  ];
+  for (const needle of swChecks) {
+    const err = assertIncludes(sw, needle, "sw.js");
+    if (err) return err;
+    checks.push("sw:" + needle);
+  }
 
-  const errHtml = assertIncludes(html, "iu-pwa-version-check.js", "index.html");
-  if (errHtml) return errHtml;
-  checks.push("html:script-linked");
+  const headScriptMatch = html.match(
+    /<head>[\s\S]*?<script src="\/assets\/iu-pwa-version-check\.js[^"]*"><\/script>/
+  );
+  if (!headScriptMatch) {
+    return fail("index.html: sync iu-pwa-version-check.js must load in <head> (not defer-only)");
+  }
+  checks.push("html:sync-head-script");
+
+  if (html.includes('defer src="/assets/iu-pwa-version-check.js')) {
+    return fail("index.html: defer-only checker is insufficient for stale PWA shell");
+  }
+  checks.push("html:no-defer-only-checker");
 
   let parsed;
   try {
@@ -101,8 +122,8 @@ function runLogicProofs() {
   const jsSource = read("assets/iu-pwa-version-check.js");
   const proofs = [];
 
-  async function runScenario(name, bootVer, serverVer, preSession) {
-    let reloaded = false;
+  async function runScenario(bootVer, serverVer, preSession) {
+    let reloadCount = 0;
     const session = Object.assign({}, preSession || {});
     const sandbox = {
       console,
@@ -116,7 +137,7 @@ function runLogicProofs() {
         fn();
         return 1;
       },
-      location: { pathname: "/projects/", reload: () => { reloaded = true; } },
+      location: { pathname: "/projects/", reload: () => { reloadCount += 1; } },
       document: {
         visibilityState: "visible",
         addEventListener(type, fn) {
@@ -134,6 +155,7 @@ function runLogicProofs() {
           if (type === "pageshow") sandbox.__pageFn = fn;
         },
       },
+      navigator: { serviceWorker: null },
       sessionStorage: {
         getItem(k) { return Object.prototype.hasOwnProperty.call(session, k) ? session[k] : null; },
         setItem(k, v) { session[k] = String(v); },
@@ -142,31 +164,47 @@ function runLogicProofs() {
       __visFn: null,
       __pageFn: null,
     };
-    sandbox.window = sandbox.window;
     sandbox.window.addEventListener = sandbox.window.addEventListener.bind(sandbox.window);
     vm.createContext(sandbox);
     vm.runInContext(jsSource, sandbox);
-    await new Promise((resolve) => setTimeout(resolve, 20));
-    return { name, reloaded, visFn: !!sandbox.__visFn, pageFn: !!sandbox.__pageFn };
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    return { reloadCount, session, visFn: !!sandbox.__visFn, pageFn: !!sandbox.__pageFn };
   }
 
   return (async () => {
-    const same = await runScenario("same-version-no-reload", "v1", "v1", {});
-    if (same.reloaded !== false) return fail("same version must not reload");
+    const same = await runScenario("v1", "v1", {});
+    if (same.reloadCount !== 0) return fail("same version must not reload");
     proofs.push("same-version-no-reload");
 
-    const newer = await runScenario("newer-version-reloads", "v1", "v2", {});
-    if (newer.reloaded !== true) return fail("newer version must request reload");
-    proofs.push("newer-version-reload");
+    const newer = await runScenario("v1", "v2", {});
+    if (newer.reloadCount !== 1) return fail("newer version must request reload once");
+    proofs.push("newer-version-single-reload");
 
-    const loop = await runScenario(
-      "reload-guard-blocks-loop",
-      "v1",
-      "v2",
-      { "iu:pwa:ver:reloaded-for": "v2", "iu:pwa:ver:reload-ts": String(Date.now()) }
-    );
-    if (loop.reloaded !== false) return fail("reload guard must block loop");
-    proofs.push("reload-loop-guard");
+    const second = await runScenario("v2", "v2", {
+      "iu:pwa:ver:reloaded-for": "v2",
+      "iu:pwa:ver:reload-ts": String(Date.now()),
+      "iu:pwa:ver:reload-attempts": "1",
+    });
+    if (second.reloadCount !== 0) return fail("second open with matching version must not reload");
+    proofs.push("second-open-no-reload");
+
+    const loop = await runScenario("v1", "v2", {
+      "iu:pwa:ver:reloaded-for": "v2",
+      "iu:pwa:ver:reload-ts": String(Date.now()),
+      "iu:pwa:ver:reload-attempts": "1",
+    });
+    if (loop.reloadCount !== 0) return fail("cooldown must block immediate reload loop");
+    proofs.push("cooldown-reload-loop-guard");
+
+    const staleRetryAllowed = await runScenario("v1", "v2", {
+      "iu:pwa:ver:reloaded-for": "v2",
+      "iu:pwa:ver:reload-ts": String(Date.now() - 60000),
+      "iu:pwa:ver:reload-attempts": "1",
+    });
+    if (staleRetryAllowed.reloadCount !== 1) {
+      return fail("legitimate stale-shell retry after cooldown must reload again");
+    }
+    proofs.push("stale-shell-retry-after-cooldown");
 
     if (!newer.visFn || !newer.pageFn) return fail("missing pageshow/visibilitychange listeners");
     proofs.push("events-bound");
@@ -200,6 +238,8 @@ async function main() {
     service_worker_changed: true,
     user_data_deleted: false,
     reload_loop_guard: "PASS",
+    sw_old_app_shell_fixed: "PASS",
+    stale_shell_sync_head_script: "PASS",
     checks: staticResult.checks,
     proofs: logicResult.proofs,
   };
