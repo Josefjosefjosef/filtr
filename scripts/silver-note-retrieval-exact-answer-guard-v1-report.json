@@ -1,0 +1,25 @@
+{
+  "guard_id": "note_retrieval_exact_answer_guard",
+  "total": 23,
+  "pass": 23,
+  "fail": 0,
+  "tier_a_accuracy_percent": "100.00",
+  "fail_families": {
+    "entity_match_fail": 0,
+    "attribute_extraction_fail": 0,
+    "topic_pollution_fail": 0,
+    "truthful_count_fail": 0,
+    "answer_vs_list_fail": 0,
+    "alias_resolution_fail": 0,
+    "relevance_cutoff_fail": 0,
+    "hallucination_fail": 0,
+    "ranking_fail": 0,
+    "multi_result_fail": 0
+  },
+  "query_created_write_count": 0,
+  "false_write_count": 0,
+  "dangerous_write_count": 0,
+  "write_when_negated_count": 0,
+  "PASS_FAIL": "PASS",
+  "first_fail": null
+}

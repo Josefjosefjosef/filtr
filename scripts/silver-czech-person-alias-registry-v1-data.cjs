@@ -50,7 +50,7 @@ const IU_SILVER_CZECH_PERSON_ALIAS_GROUPS_V1 = {
   milos: ["milos", "milosek"],
   viktor: ["viktor", "viky"],
   nikolas: ["nikolas", "nicolas", "niko", "niky", "nik"],
-  katerina: ["katerina", "katka", "kata", "kacka", "kacenka", "katynka"],
+  katerina: ["katerina", "katka", "kata", "kacka", "kacenka", "katynka", "kaca", "kacena"],
   veronika: ["veronika", "verca", "verunka", "veru", "nika"],
   jana_f: ["jana", "jani", "janka", "janca", "janicka"],
   petra: ["petra", "peta", "petruska", "peca"],
