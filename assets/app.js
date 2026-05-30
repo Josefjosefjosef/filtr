@@ -35683,6 +35683,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bco\s+musim\s+dodelat/.test(x)) return true;
     if (/\bco\s+zbyva\s+udelat/.test(x)) return true;
     if (/\bco\s+zbyva\b/.test(x) && /\bukol/.test(x)) return true;
+    /** P0 production_gap_fix_v1: in-progress task list cues without explicit „úkol“ token. */
+    if (/\bco\s+m(am|ame)\s+(rozdelan\w*|rozpracovan\w*|nedodelan\w*)\b/.test(x)) return true;
+    if (/\bco\s+(mam|mi)\s+zbyva\s+udelat\b/.test(x)) return true;
+    if (/\bco\s+jeste\s+nemam\s+hotov\w*\b/.test(x)) return true;
+    if (/\bco\s+m(am|ame)\s+dokoncit\b/.test(x)) return true;
+    if (/\bco\s+m(am|ame)\s+splnit\b/.test(x) && !/\b(kalend|schuz|udalost)\b/.test(x)) return true;
     if (
       !/\bne\s+do\s+ukol/.test(x) &&
       /\bco\s+m(am|ame)\b/.test(x) &&
@@ -36526,7 +36532,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bmam\s+neco[^.]{0,120}\bv\s+ukolech/.test(x) ||
       /\bmam\s+neco\s+do\s+patku\s+v\s+ukolech/.test(x) ||
       /\bco\s+mam\s+splnit\s+do\s+patku/.test(x) ||
-      /\bukaz\s+(mi\s+)?(nesplnen|otevren|aktivni)\w*\s+ukol/.test(x)
+      /\bukaz\s+(mi\s+)?(nesplnen|otevren|aktivni)\w*\s+ukol/.test(x) ||
+      /\bco\s+m(am|ame)\s+(rozdelan\w*|rozpracovan\w*|nedodelan\w*)\b/.test(x) ||
+      /\bco\s+(mam|mi)\s+zbyva\s+udelat\b/.test(x) ||
+      /\bco\s+jeste\s+nemam\s+hotov\w*\b/.test(x) ||
+      /\bco\s+m(am|ame)\s+dokoncit\b/.test(x)
     ) {
       return true;
     }
@@ -47149,6 +47159,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     karta: ["karta", "platebni karta", "zelena karta"],
     pravnik: ["pravnik", "advokat"],
     auto: ["auto", "vuz", "automobil", "auta", "autu", "autem", "aute"],
+    taska: ["taska", "tasky", "tasku", "taskou", "taskou"],
     umyvadlo: ["umyvadlo", "umyvadla", "umyvadle", "umyvadlu", "umyvadlem"],
     pojisteni: ["pojistka", "pojisteni"],
     zaruka: ["zaruka", "reklamace"],
@@ -49362,6 +49373,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /^\s*ukaz\s+pozn[aá]mk[^\s]*\s+/i,
       /^\s*co\s+je\s+v\s+pozn[aá]mk[^\s]*\s*(o\s+)?/i,
       /^\s*co\s+m[aá]m\s+poznamenan[eé]\s+o\s+/i,
+      /^\s*informace\s+o\s+/i,
       /^\s*co\s+jsem\s+si\s+ulo[zž]il\s+(ke|k)\s+/i,
       /^\s*pod[ií]vej\s+(?:se\s+)?(?:do\s+)?pozn[aá]mk[^\s]*\s+/i,
       /^\s*najdi\s+adresu\s+udalost\w*\s+/i,
@@ -49779,6 +49791,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\b(co\s+mam|co\s+jsem\s+si\s+poznamenal|mam\s+neco|co\s+vim)\s+o\s+/.test(x) && !/\b(kalend|schuz|udalost)\b/.test(x)) {
       return true;
     }
+    if (/^\s*(?:k|ke|ohledne)\s+aut\w+\s*$/i.test(x)) return true;
+    if (/^\s*informace\s+o\s+aut\w+\s*$/i.test(x)) return true;
     if (
       /\b(zaruk\w*|garanc\w*|wifi|heslo|televiz|\btv\b|velikost\w*\s+bot|barv\w*)\b/.test(x) &&
       !/\b(kalend|schuz|udalost|zubar|pediatr|pravnik)\b/.test(x)
@@ -58179,6 +58193,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "ulozene",
     "ulozeny",
     "poznamenane",
+    "poznamenal",
+    "poznamenala",
+    "ulozil",
+    "ulozila",
+    "ulozene",
+    "ulozeny",
+    "vim",
+    "vis",
+    "vite",
+    "ohledne",
+    "informace",
     "najdi",
     "hledej",
     "vyhledej",
@@ -58249,13 +58274,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverNotesListQuerySignalV1(x)) {
       return { mode: "list_all", attribute: null, personGroups: [], entityTokens: [] };
     }
+    if (iuSilverTaskStatusReadQuerySignalFolded(x)) {
+      return { mode: "unknown", attribute: null, personGroups: [], entityTokens: [] };
+    }
     const personGroups = iuSilverPersonAliasGroupsForFoldedTextV1(x);
     let work = " " + x.replace(/-/g, " ") + " ";
     work = work.replace(/^(?:\s*(?:hele|prosim|silver|kratce|no|jo|ee|fakt|urgentne)\s+)+/, " ");
     const attribute = iuSilverNoteRetrievalPlatformV1DetectAttributeFolded(x);
     const topicCue =
       /\b(co\s+mam\s+o|co\s+jsem\s+(?:si\s+)?(?:psal|zapsal|poznamenal|ulozil)\s+o|mam\s+neco\s+o|mam\s+v\s+poznam\w*\s+neco\s+o|co\s+mam\s+poznamenane\s+o|co\s+mam\s+ulozene\s+o|najdi\s+\w+\s+v\s+poznam)\b/.test(x) ||
-      /\b(co\s+mam\s+o\s+\w|mam\s+neco\s+o\s+\w|co\s+jsem\s+si\s+poznamenal\s+o\s+\w)\b/.test(x);
+      /\b(co\s+mam\s+o\s+\w|mam\s+neco\s+o\s+\w|co\s+jsem\s+si\s+poznamenal\s+o\s+\w)\b/.test(x) ||
+      /\b(co\s+vim|co\s+vis|co\s+vite|mam\s+neco\s+k\s+\w+|ohledne\s+\w+|informace\s+o\s+\w+|(?:k|ke)\s+aut\w+)\b/.test(x);
     const existenceCue =
       /\b(mam\s+neco\s+o|mam\s+v\s+poznam\w*\s+neco\s+o|mam\s+tam\s+nekde|mam\s+nekde)\b/.test(x) && !attribute;
     const factCue =
@@ -58425,11 +58454,45 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     });
   }
 
-  function iuSilverNoteRetrievalPlatformV1ExtractAnswerFromBlob(blobRaw, classif, entityLabel) {
+  function iuSilverNoteRetrievalPlatformV1OriginalEntityLabel(note, foldedHint) {
+    const hint = String(foldedHint || "").trim();
+    if (!note || !hint || hint.length < 2) return "";
+    const title = String(note.title || "").trim();
+    const titleF = foldCs(title);
+    if (title && (titleF === hint || titleF.indexOf(hint) >= 0 || hint.indexOf(titleF) >= 0)) return title;
+    const blob = String(iuSilverNoteResultBlobV1(note) || "");
+    if (!blob) return title || "";
+    const words = blob.split(/\s+/);
+    for (let wi = 0; wi < words.length; wi++) {
+      const w = String(words[wi] || "").replace(/[?.!,;:]+$/g, "");
+      if (!w || w.length < 2) continue;
+      const wf = foldCs(w);
+      if (wf === hint || wf.indexOf(hint) === 0 || hint.indexOf(wf) === 0) return w;
+    }
+    return title || "";
+  }
+
+  function iuSilverNoteRetrievalPlatformV1TopicEntitySearchQuery(classif, extractedQ) {
+    const recallCue = /^(poznamenal\w*|ulozil\w*|ulozene\w*|ulozeny\w*|vim\w*|vis\w*|vite\w*|ohledne\w*|informace\w*)$/;
+    const toks = (classif && classif.entityTokens) || [];
+    const filtered = [];
+    for (let ti = 0; ti < toks.length; ti++) {
+      const tok = String(toks[ti] || "").trim();
+      if (!tok || recallCue.test(tok)) continue;
+      filtered.push(tok);
+    }
+    if (filtered.length) return filtered.slice(0, 2).join(" ");
+    return String(extractedQ || "").trim();
+  }
+
+  function iuSilverNoteRetrievalPlatformV1ExtractAnswerFromBlob(blobRaw, classif, entityLabel, noteOpt) {
     const blob = String(blobRaw || "").replace(/\s+/g, " ").trim();
     const blobF = iuSilverNormalizeForSearch(blob);
     const attr = classif.attribute;
-    const label = String(entityLabel || "").trim();
+    const foldedLabel = String(entityLabel || "").trim();
+    const label =
+      (noteOpt && iuSilverNoteRetrievalPlatformV1OriginalEntityLabel(noteOpt, foldedLabel)) ||
+      foldedLabel;
     if (attr === "birthday") {
       const m =
         blob.match(/\b(\d{1,2}\.\s*\d{1,2}(?:\.\s*\d{2,4})?)\b/) ||
@@ -58441,7 +58504,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         return (label ? label + " má narozeniny " : "Narozeniny: ") + String(m[0]).trim() + ".";
       }
       if (/\b(brezen|brezna|rijen|rijna|kveten|kvetna|cerven|cervna)\b/.test(blobF)) {
-        const mo = blobF.match(/\b(brezen|brezna|rijen|rijna|kveten|kvetna|cerven|cervna)\b/);
+        const mo =
+          blob.match(
+            /\b(březen|března|únor|února|duben|dubna|květen|května|červen|června|červenec|července|srpen|srpna|září|říjen|října|listopad|listopadu|prosinec|prosince|leden|ledna)\b/i
+          ) || blobF.match(/\b(brezen|brezna|rijen|rijna|kveten|kvetna|cerven|cervna)\b/);
         if (mo && mo[0]) return (label ? label + " má narozeniny v " : "Narozeniny: ") + mo[0] + ".";
       }
     }
@@ -58533,13 +58599,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!note0) {
       return { message: "Nic jsem k tomu nenašel.", answerType: "none" };
     }
-    const entityLabel =
+    const entityLabelFolded =
       (classif.entityTokens && classif.entityTokens[0]) ||
       (classif.personGroups && classif.personGroups[0]) ||
       "";
+    const entityLabel = iuSilverNoteRetrievalPlatformV1OriginalEntityLabel(note0, entityLabelFolded) || entityLabelFolded;
     if (classif.mode === "exact_answer") {
       const blob = iuSilverNoteResultBlobV1(note0);
-      const extracted = iuSilverNoteRetrievalPlatformV1ExtractAnswerFromBlob(blob, classif, entityLabel);
+      const extracted = iuSilverNoteRetrievalPlatformV1ExtractAnswerFromBlob(blob, classif, entityLabelFolded, note0);
       if (extracted) {
         return { message: extracted, answerType: "note_exact" };
       }
@@ -58748,10 +58815,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (agg) return agg;
     const q = iuSilverReadSearchExtractQuery(r0, f, "notes");
     const classifPre = iuSilverNoteRetrievalPlatformV1ClassifyQueryFolded(f);
-    const qSearch =
-      classifPre.entityTokens && classifPre.entityTokens.length
-        ? classifPre.entityTokens.slice(0, 2).join(" ")
-        : q;
+    const qSearch = iuSilverNoteRetrievalPlatformV1TopicEntitySearchQuery(classifPre, q);
     const sr0 = iuSilverSearchLocalData(qSearch, {
       target: "notes",
       now: now,
