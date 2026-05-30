@@ -6520,16 +6520,9 @@ function buildVideoAsArticleCard(it) {
 
   /** Podpis uživatele v generovaném přání — oddělený od oslovení Silvera. */
   function iuUserAddressReadSignatureForWish(){
-    const stored = iuUserAddressReadStoredBase();
-    if (!stored) return "";
-    try{
-      if (window.localStorage.getItem(IU_USER_ADDRESS_EXPLICIT_FLAG_KEY) === "1") {
-        return iuUserAddressDeriveSignatureFromCallForm(stored);
-      }
-    }catch{}
-    const forms = iuDeriveUserAddressForms(stored);
-    const base = forms.base || stored;
-    return base.charAt(0).toUpperCase() + base.slice(1);
+    const callForm = iuUserAddressReadCallFormForWelcome();
+    if (!callForm) return "";
+    return iuUserAddressDeriveSignatureFromCallForm(callForm);
   }
 
   /** Jednotná ASCII normalizace pro intent matching (diakritika pryč, lower, mezery). */
@@ -11692,20 +11685,7 @@ function buildVideoAsArticleCard(it) {
           if (s) return s;
         }
       }catch{}
-      try{
-        if (typeof window.iuGetUserAddress === "function"){
-          const s = String(window.iuGetUserAddress() || "").replace(/\s+/g, " ").trim();
-          if (s) return s;
-        }
-      }catch{}
-      try{
-        const el = document.getElementById("iuSilverWelcomeUser");
-        if (!el || el.hidden) return "";
-        const s = String(el.textContent || "").replace(/\s+/g, " ").trim();
-        return s || "";
-      }catch{
-        return "";
-      }
+      return "";
     }
 
     function greetingFromWelcomeBox(){
