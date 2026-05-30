@@ -1,0 +1,39 @@
+{
+  "generated_at": "2026-05-30T18:29:04.134Z",
+  "stable_commit": "97e4515f73",
+  "regression_commit": "07255931b5402009b4e827a5e470ea8d2d0d42fd",
+  "root_cause": "Primary regression: bfb393619c (Silver note retrieval platform v1) — note/search relevance early paths stole calendar+task 20k reads before module routing. Harness-specific misses on this branch: (1) iuSilverFoldedHasExplicitNotesReadScopeFolded treated 'ne do poznamek' as positive notes scope → notes.read; (2) iuSilverExplicitNotesPositiveReadScopeFolded treated 'ne v poznamkach' as positive notes scope → note steal for 'pravnik' calendar address queries; (3) iuSilverCalendarQueryWithNoteNegationSignalFolded suppressed by write-intent gate without 'ne do poznam' wide negation; (4) iuSilverCalendarQueryNegatesNotesEarlyFolded only accepted 'neple s poznam' not 'ne do/v poznam'. query_created_write_count=67 on full 20k is multi_intent-only baseline (not task/calendar slice).",
+  "stable_baseline": null,
+  "current": {
+    "commit": "07255931b5402009b4e827a5e470ea8d2d0d42fd",
+    "byGroup": {
+      "calendar_query": {
+        "pass": 3000,
+        "fail": 0
+      },
+      "task_query": {
+        "pass": 3000,
+        "fail": 0
+      }
+    },
+    "catCount": {},
+    "families": {},
+    "query_created_write_count": 0,
+    "write_when_negated_count": 0,
+    "calendar_query": "3000/3000",
+    "task_query": "3000/3000",
+    "total_fails": 0
+  },
+  "regression_diff": {
+    "calendar_loss": 0,
+    "task_loss": 0,
+    "query_created_write_gain": 0,
+    "families_affected": []
+  },
+  "note_retrieval_replay": "188/188 PASS (silver-note-retrieval-real-user-replay-guard-v1)",
+  "safety_counters": {
+    "query_created_write_count": 0,
+    "write_when_negated_count": 0
+  },
+  "PASS_FAIL": "PASS"
+}
