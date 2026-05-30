@@ -12032,6 +12032,89 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
+  /** P0 Mobile/tablet hero speech bubble: UI-only rotating copy (≤1024). No Silver routing/logic. */
+  function iuSilverSpeechBubbleInit() {
+    try {
+      if (window.__iuSilverSpeechBubbleInit) return;
+      window.__iuSilverSpeechBubbleInit = 1;
+    } catch (_) {}
+    var LINES = [
+      "Jsem Silver, tvůj soukromý asistent.",
+      "Jak ti mám říkat?",
+      "Stačí napsat: Říkej mi...",
+      "Pomohu ti s kalendářem, úkoly i poznámkami.",
+      "Co pro tebe mohu udělat?",
+      "Chceš vyhledat uloženou poznámku?",
+      "Hledáš něco v kalendáři?",
+      "Potřebuješ najít konkrétní poznámku?",
+      "Potřebuješ si něco poznamenat?",
+      "Mohu ti připomenout důležité věci?",
+      "Všechno důležité si mohu zapamatovat za tebe.",
+      "Pomohu ti najít, co hledáš.",
+      "Na co se dnes podíváme?",
+      "Máš dnes nějaké plány?",
+      "Co je dnes důležité?",
+      "Jak ti mohu usnadnit den?",
+      "Potřebuješ s něčím pomoci?",
+      "Chceš si něco uložit?",
+      "Rád ti pomohu s organizací dne.",
+      "Jsem tady pro tebe 24 hodin denně.",
+      "Máš uloženou informaci, kterou nemůžeš najít?"
+    ];
+    var INTERVAL_MS = 5200;
+    var FADE_MS = 420;
+    function narrowHero() {
+      try {
+        return window.matchMedia("(max-width: 1024px)").matches;
+      } catch (_) {
+        return (window.innerWidth || 0) <= 1024;
+      }
+    }
+    function reducedMotion() {
+      try {
+        return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      } catch (_) {
+        return false;
+      }
+    }
+    function start() {
+      var el = document.querySelector("[data-iu-silver-speech-text]");
+      if (!el || !narrowHero()) return;
+      var idx = 0;
+      el.textContent = LINES[0];
+      if (reducedMotion()) return;
+      var fading = false;
+      var timer = setInterval(function () {
+        try {
+          if (!narrowHero()) {
+            clearInterval(timer);
+            return;
+          }
+          if (fading) return;
+          fading = true;
+          el.classList.add("silver-speech-text--fading");
+          setTimeout(function () {
+            try {
+              idx = (idx + 1) % LINES.length;
+              el.textContent = LINES[idx];
+              el.classList.remove("silver-speech-text--fading");
+            } catch (_) {}
+            fading = false;
+          }, FADE_MS);
+        } catch (_) {
+          fading = false;
+        }
+      }, INTERVAL_MS);
+    }
+    try {
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", start);
+      } else {
+        start();
+      }
+    } catch (_) {}
+  }
+
   /** P0 Hero quick actions (≤1024): stejné cíle jako MindMenu dlaždice Kalendář / Úkoly / Poznámky. */
   function iuSilverHeroQuickActionsInit() {
     try {
@@ -20241,6 +20324,7 @@ function buildVideoAsArticleCard(it) {
     try{ iuNamedayWishInit(); }catch{}
     try{ iuSvatekOverlayInit(); }catch{}
     try{ iuSilverHeroQuickActionsInit(); }catch{}
+    try{ iuSilverSpeechBubbleInit(); }catch{}
 
     if (btnToggleDebug) {
       btnToggleDebug.addEventListener("click", () => {
