@@ -11910,7 +11910,112 @@ function buildVideoAsArticleCard(it) {
     const actionsFirst = document.getElementById("iuSilverWeatherActions");
     const btnGeo = document.getElementById("iuSilverWeatherBtnGeo");
     const btnCity = document.getElementById("iuSilverWeatherBtnCity");
+    const geoOverlay = document.getElementById("iuSilverWeatherGeoOverlay");
+    const geoOverlayAllow = document.getElementById("iuSilverWeatherGeoOverlayAllow");
+    const geoOverlayDeny = document.getElementById("iuSilverWeatherGeoOverlayDeny");
     if (!card || !line1 || !line2) return;
+
+    let overlayGeoPending = false;
+
+    function iuSilverWeatherPrivacyText(){
+      return "🔒 Poloha slouží pouze pro zobrazení počasí.";
+    }
+
+    function iuSilverWeatherSyncPrivacyText(){
+      try{
+        if (privacyEl) privacyEl.textContent = iuSilverWeatherPrivacyText();
+      }catch{}
+    }
+
+    function iuSilverWeatherOpenGeoOverlay(){
+      if (!geoOverlay) return;
+      try{
+        geoOverlay.hidden = false;
+        geoOverlay.removeAttribute("hidden");
+        geoOverlay.setAttribute("aria-hidden", "false");
+      }catch{}
+      try{
+        if (geoOverlayAllow && typeof geoOverlayAllow.focus === "function") geoOverlayAllow.focus();
+      }catch{}
+    }
+
+    function iuSilverWeatherCloseGeoOverlay(){
+      if (!geoOverlay) return;
+      try{
+        geoOverlay.hidden = true;
+        geoOverlay.setAttribute("hidden", "");
+        geoOverlay.setAttribute("aria-hidden", "true");
+      }catch{}
+    }
+
+    function iuSilverWeatherShouldOfferGeoOverlay(){
+      try{
+        const phase = card.getAttribute("data-iu-silver-wx-phase") || "";
+        return phase === "firstVisit" || phase === "denied" || card.getAttribute("data-iu-silver-wx-layout") === "setup";
+      }catch{
+        return false;
+      }
+    }
+
+    function iuSilverWeatherActivateGpsFromOverlay(){
+      overlayGeoPending = true;
+      iuSilverWeatherCloseGeoOverlay();
+      try{
+        if (typeof window.iuWeatherActivateGpsViaGeolocation === "function") {
+          window.iuWeatherActivateGpsViaGeolocation();
+          try{
+            let ticks = 0;
+            const poll = setInterval(() => {
+              ticks++;
+              if (!overlayGeoPending || ticks > 48) {
+                clearInterval(poll);
+                return;
+              }
+              try{ iuSilverWeatherHandleOverlayGeoPendingAfterLoad(); }catch{}
+            }, 250);
+          }catch{}
+          return;
+        }
+      }catch{}
+      overlayGeoPending = false;
+      iuSilverWeatherNavigateToWeather();
+    }
+
+    function iuSilverWeatherHandleOverlayGeoPendingAfterLoad(){
+      if (!overlayGeoPending) return;
+      try{
+        if (iuSilverWeatherHasPersonalizedLocation()) {
+          overlayGeoPending = false;
+          return;
+        }
+        if (iuSilverWeatherGeoDeniedVisible()) {
+          overlayGeoPending = false;
+          iuSilverWeatherNavigateToWeather();
+        }
+      }catch{
+        overlayGeoPending = false;
+      }
+    }
+
+    async function iuSilverWeatherTryAutoGpsOnLoad(){
+      try{
+        if (typeof window.iuWeatherActivateGpsViaGeolocation !== "function") return;
+        if (typeof iuWeatherReadLocationMode === "function" && iuWeatherReadLocationMode() !== IU_WEATHER_MODE_GPS) return;
+        if (navigator.permissions && typeof navigator.permissions.query === "function") {
+          try{
+            const perm = await navigator.permissions.query({ name: "geolocation" });
+            if (perm && perm.state === "granted") {
+              window.iuWeatherActivateGpsViaGeolocation();
+              return;
+            }
+            if (perm && perm.state === "denied") return;
+          }catch{}
+        }
+        if (typeof iuWeatherReadGpsSelected === "function" && iuWeatherReadGpsSelected()) {
+          window.iuWeatherActivateGpsViaGeolocation();
+        }
+      }catch{}
+    }
 
     function iuSilverWeatherSyncLayoutAttr(phase){
       try{
@@ -12138,8 +12243,11 @@ function buildVideoAsArticleCard(it) {
       line2.innerHTML = `<span>💡📍 Povolit polohu a ukážeme ti počasí hned tady.</span>`;
       try{
         card.setAttribute("data-iu-silver-wx-phase", "firstVisit");
-        if (privacyEl) privacyEl.hidden = false;
-        if (actionsFirst) actionsFirst.hidden = false;
+        if (privacyEl) {
+          privacyEl.hidden = false;
+          privacyEl.textContent = iuSilverWeatherPrivacyText();
+        }
+        if (actionsFirst) actionsFirst.hidden = true;
         if (btnGeo) btnGeo.hidden = false;
         if (btnCity) btnCity.hidden = false;
         iuSilverWeatherSyncLayoutAttr("firstVisit");
@@ -12205,16 +12313,46 @@ function buildVideoAsArticleCard(it) {
           else iuSilverWeatherRenderLoading();
         }
       }catch{}
+      try{ iuSilverWeatherHandleOverlayGeoPendingAfterLoad(); }catch{}
     }
 
     try{
       card.addEventListener("click", (ev) => {
         try{
           if (ev.target && ev.target.closest && ev.target.closest("button, a")) return;
+          if (iuSilverWeatherShouldOfferGeoOverlay()) {
+            iuSilverWeatherOpenGeoOverlay();
+            return;
+          }
           iuSilverWeatherNavigateToWeather();
         }catch{}
       });
     }catch{}
+
+    if (geoOverlay) {
+      geoOverlay.addEventListener("click", (ev) => {
+        try{
+          const closeBtn = ev.target && ev.target.closest ? ev.target.closest("[data-iu-silver-wx-geo-overlay-close]") : null;
+          if (closeBtn) {
+            ev.preventDefault();
+            iuSilverWeatherCloseGeoOverlay();
+            return;
+          }
+          const denyBtn = ev.target && ev.target.closest ? ev.target.closest("[data-iu-silver-wx-geo-overlay-deny]") : null;
+          if (denyBtn) {
+            ev.preventDefault();
+            iuSilverWeatherCloseGeoOverlay();
+            iuSilverWeatherNavigateToWeather();
+            return;
+          }
+          const allowBtn = ev.target && ev.target.closest ? ev.target.closest("[data-iu-silver-wx-geo-overlay-allow]") : null;
+          if (allowBtn) {
+            ev.preventDefault();
+            iuSilverWeatherActivateGpsFromOverlay();
+          }
+        }catch{}
+      });
+    }
 
     function wireBtn(el, fn){
       if (!el) return;
@@ -12228,6 +12366,10 @@ function buildVideoAsArticleCard(it) {
     }
     wireBtn(btnGeo, () => {
       try{
+        if (iuSilverWeatherShouldOfferGeoOverlay()) {
+          iuSilverWeatherOpenGeoOverlay();
+          return;
+        }
         iuSilverWeatherNavigateToWeather();
         setTimeout(() => {
           try{
@@ -12252,8 +12394,13 @@ function buildVideoAsArticleCard(it) {
       if (typeof orig === "function" && !window.__iuSilverWeatherHookedLoadRender) {
         window.__iuSilverWeatherHookedLoadRender = 1;
         window.iuWeatherLoadAndRender = async function(){
-          const r = await orig.apply(this, arguments);
-          try{ iuSilverWeatherRefresh(); }catch{}
+          let r;
+          try{
+            r = await orig.apply(this, arguments);
+          }finally{
+            try{ iuSilverWeatherHandleOverlayGeoPendingAfterLoad(); }catch{}
+            try{ iuSilverWeatherRefresh(); }catch{}
+          }
           return r;
         };
       }
@@ -12275,7 +12422,9 @@ function buildVideoAsArticleCard(it) {
     }catch{}
 
     window.iuSilverWeatherRefresh = iuSilverWeatherRefresh;
+    iuSilverWeatherSyncPrivacyText();
     iuSilverWeatherRefresh();
+    try{ iuSilverWeatherTryAutoGpsOnLoad(); }catch{}
     try{ setInterval(() => { try{ iuSilverWeatherRefresh(); }catch{} }, 45000); }catch{}
   }
 
