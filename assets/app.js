@@ -40910,6 +40910,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bneple\w*\s+(?:to\s+)?s\s+ukol/.test(x) && !/\b(do\s+ukol|pridej\s+ukol|uloz\s+do\s+ukol)\b/.test(x)) return true;
     if (/\b(prosim|hele|fakt|teda)\b/.test(x) && !/\b(uloz|dej|pridej|zapis|napis|pripom|nezapom)\b/.test(x)) return true;
     if (/\bco\s+mam\s+v\s+poznam/.test(x)) return true;
+    if (
+      /\b(?:zitra|zittra|dnes|pozitri|pondel\w*|utery|stred\w*|ctvr\w*|patek|sobot\w*|nedel\w*)\b/.test(x) &&
+      (/\b\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(x) || /\b(?:dopoledne|odpoledne|rano|vecer)\b/.test(x)) &&
+      /\b(?:nezapomen\w*|nesmim\s+zapomenout|at\s+si\s+(?:vezmu|vemu|vzit))\b/.test(x)
+    ) {
+      return true;
+    }
+    if (/\b(schuz\w*|udalost\w*)\b/.test(x) && /\bpoznam\w*\b/.test(x) && /\b(?:dej|napis|pridej|uloz|mi\s+dej|k\s+tomu)\b/.test(x)) {
+      return true;
+    }
     return false;
   }
 
@@ -40990,6 +41000,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverIsNegatedWriteIntentNarrow(x, r || x)) return false;
     if (iuSilverP0ReadOnlyLeadBlocksWriteIntentFolded(x)) return false;
     if (/\b(kalend|schuz|udalost)\b/.test(x) && !/\b(zavolat|pripom|nezapom)\b/.test(x)) return false;
+    if (
+      /\b(?:zitra|zittra|dnes|pozitri|pondel\w*|utery|stred\w*|ctvr\w*|patek|sobot\w*|nedel\w*)\b/.test(x) &&
+      (/\b\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(x) || /\b(?:dopoledne|odpoledne|rano|vecer)\b/.test(x)) &&
+      /\b(?:investor\w*|kontrol\w*|schuz\w*|porad\w*|navstev\w*|doktor\w*|meeting|tenis)\b/.test(x)
+    ) {
+      return false;
+    }
     if (iuSilverMobileVoiceFragmentTaskCreateMobileCueV1Folded(x)) {
       if (IU_SILVER_MOBILE_VOICE_FRAGMENT_TASK_LIKE_ENTITY_RE_V1.test(x)) return true;
       const mPrip = x.match(/\bpripom\w*\s+mi\s+(.+)$/);
@@ -57915,14 +57932,41 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return null;
   }
 
+  function iuSilverNoteRetrievalPlatformV1CalendarEmbeddedWriteBlocksNoteReadFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (/\bdo\s+poznam\w*\b/.test(x) && /\b(dej|napis|pridej|uloz|vloz|zapis|mi\s+dej)\b/.test(x)) return true;
+    if (/\b(schuz\w*|udalost\w*)\b/.test(x) && /\bpoznam\w*\b/.test(x) && /\b(dej|napis|pridej|uloz|mi\s+dej|k\s+tomu)\b/.test(x)) {
+      return true;
+    }
+    const hasCalTime =
+      /\b\d{1,2}[.:]\d{2}\b/.test(x) ||
+      /\b(zitra|zittra|dnes|pozitri|pondel\w*|utery|stred\w*|ctvr\w*|patek|sobot\w*|nedel\w*)\b/.test(x);
+    if (
+      hasCalTime &&
+      /\b(nezapomen\w*|nesmim\s+zapomenout|at\s+si\s+(?:vezmu|vemu|vzit)|a\s+si\s+vez\w*)\b/.test(x) &&
+      !/\b(jen\s+(?:se\s+)?podivej|nic\s+neukladej|nic\s+neuklad|jen\s+zjist\w*|jen\s+cti)\b/.test(x)
+    ) {
+      return true;
+    }
+    if (/\b(dej|uloz|napis|pridej)\s+do\s+kalend/.test(x)) return true;
+    if (/\b(dej|uloz|napis|pridej)\b/.test(x) && /\b(kalend\w*|schuz\w*)\b/.test(x) && !/\b(co\s+mam|mam\s+neco\s+o|jaky|jaka|jakou)\b/.test(x)) {
+      return true;
+    }
+    return false;
+  }
+
   function iuSilverNoteRetrievalPlatformV1ClassifyQueryFolded(f) {
     const x = String(f || "");
     if (!x) return { mode: "unknown", attribute: null, personGroups: [], entityTokens: [] };
     if (iuSilverHasWriteVerb(x)) return { mode: "unknown", attribute: null, personGroups: [], entityTokens: [] };
+    if (iuSilverNoteRetrievalPlatformV1CalendarEmbeddedWriteBlocksNoteReadFolded(x)) {
+      return { mode: "unknown", attribute: null, personGroups: [], entityTokens: [] };
+    }
     if (/^\s*nakup\s*:/.test(x) || /\b(jako\s+jeden\s+ukol|do\s+patku)\b/.test(x)) {
       return { mode: "unknown", attribute: null, personGroups: [], entityTokens: [] };
     }
-    if (/\b(zapomenout|nezapomen|nesmim\s+zapomenout)\b/.test(x) && /\b(napsat|zavolat|koupit|udelat|zaplatit)\b/.test(x)) {
+    if (/\b(zapomenout|nezapomen|nesmim\s+zapomenout)\b/.test(x) && /\b(napsat|zavolat|koupit|udelat|zaplatit|vzit|vz\w*)\b/.test(x)) {
       return { mode: "unknown", attribute: null, personGroups: [], entityTokens: [] };
     }
     if (iuSilverNotesListQuerySignalV1(x)) {
@@ -58297,6 +58341,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bco\s+m(am|ame)\b/.test(x) && /\b(kalend\w*|schuz\w*|pondel|utery|stred|ctvr|patek|sobot|nedel)\b/.test(x) && !/\bpoznam/.test(x)) {
       return false;
     }
+    if (iuSilverNoteRetrievalPlatformV1CalendarEmbeddedWriteBlocksNoteReadFolded(x)) return false;
     if (IU_SILVER_NOTE_RETRIEVAL_PLATFORM_V1) {
       if (/\b(v\s+kalend|do\s+kalend|kalendari|kalendare|schuz\w*|udalost\w*)\b/.test(x) && !/\bpoznam/.test(x)) return false;
       if (/\bco\s+m(am|ame)\b/.test(x) && /\b(kalend|schuz|pondel|utery|stred|ctvr|patek)\b/.test(x) && !/\bpoznam/.test(x)) {
@@ -58317,7 +58362,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (attr && factQ) return true;
     if (/\b(jako\s+jeden\s+ukol|do\s+patku|do\s+ukol|v\s+ukol)\b/.test(x)) return false;
     if (/^\s*nakup\s*:/.test(x)) return false;
-    if (/\b(zapomenout|nezapomen|nesmim\s+zapomenout)\b/.test(x) && /\b(napsat|zavolat|koupit|udelat|zaplatit)\b/.test(x)) return false;
+    if (/\b(zapomenout|nezapomen|nesmim\s+zapomenout)\b/.test(x) && /\b(napsat|zavolat|koupit|udelat|zaplatit|vzit|vz\w*)\b/.test(x)) return false;
     return false;
   }
 
@@ -58398,11 +58443,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const r0 = String(raw || "").trim();
     const f = String(folded || "");
     if (!r0 || !f) return null;
+    if (iuSilverNoteRetrievalPlatformV1CalendarEmbeddedWriteBlocksNoteReadFolded(f)) return null;
     if (/\b(v\s+kalend|do\s+kalend|kalendari|kalendare|schuz\w*|udalost\w*)\b/.test(f) && !/\bpoznam/.test(f)) return null;
     if (/\bco\s+m(am|ame)\b/.test(f) && /\b(kalend\w*|schuz\w*|pondel|utery|stred|ctvr|patek)\b/.test(f) && !/\bpoznam/.test(f)) {
       return null;
     }
-    if (/\b(zapomenout|nezapomen|nesmim\s+zapomenout)\b/.test(f) && /\b(napsat|zavolat|koupit|udelat|zaplatit)\b/.test(f)) {
+    if (/\b(zapomenout|nezapomen|nesmim\s+zapomenout)\b/.test(f) && /\b(napsat|zavolat|koupit|udelat|zaplatit|vzit|vz\w*)\b/.test(f)) {
       return null;
     }
     if (!iuSilverSearchRelevanceContractDirectFactNoteReadFolded(f)) return null;
