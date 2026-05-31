@@ -274,6 +274,16 @@ function runFreshnessGuard() {
 }
 
 function runMissingSourceGuard() {
+  const skip = String(process.env.SKIP_MISSING_SOURCE_ARTICLES_GUARD || "").toLowerCase();
+  if (skip === "1" || skip === "true" || skip === "yes") {
+    log("missing_source_guard SKIP (SKIP_MISSING_SOURCE_ARTICLES_GUARD)");
+    return true;
+  }
+  // PR CI checks prod snapshot that is stale until merge + update-articles publish.
+  if (process.env.GITHUB_EVENT_NAME === "pull_request") {
+    log("missing_source_guard SKIP (pull_request — run post-publish in update-articles.yml)");
+    return true;
+  }
   const script = path.join(root, "scripts", "articles-missing-source-articles-guard.mjs");
   if (!fs.existsSync(script)) {
     log("missing_source_guard SKIP (script not found)");
