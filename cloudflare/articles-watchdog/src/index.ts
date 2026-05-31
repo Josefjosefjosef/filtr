@@ -12,7 +12,7 @@ export interface Env {
   WORKFLOW_FILE: string;
   /** Public JSON with generatedAt (articles index) */
   FRESHNESS_URL: string;
-  /** Minutes; default 10 in wrangler.toml */
+  /** Minutes; default 15 in wrangler.toml */
   STALE_AFTER_MINUTES: string;
   /** Optional: Bearer secret for POST /run only */
   MANUAL_TRIGGER_SECRET?: string;

@@ -1,6 +1,6 @@
 # infouzel-articles-watchdog
 
-Cloudflare Worker + Cron (every 5 minutes) that **optionally** dispatches the GitHub Actions workflow **Update articles data** via `workflow_dispatch`.
+Cloudflare Worker + Cron (every **15 minutes**) that **optionally** dispatches the GitHub Actions workflow **Update articles data** via `workflow_dispatch`.
 
 ## Why this exists
 
@@ -8,9 +8,9 @@ GitHub `schedule` triggers for article autorun proved unreliable in this reposit
 
 ## Architecture
 
-1. **Cron** fires every 5 minutes (`*/5 * * * *` UTC).
+1. **Cron** fires every **15 minutes** (`*/15 * * * *` UTC).
 2. Worker fetches public **`generatedAt`** from `FRESHNESS_URL` (default: `articles/index.json` on production).
-3. If age **&lt; STALE_AFTER_MINUTES** (default **10**) → **no API call** to GitHub (freshness guard).
+3. If age **&lt; STALE_AFTER_MINUTES** (default **15**) → **no API call** to GitHub (freshness guard).
 4. Worker lists recent runs for **`update-articles.yml`** via GitHub REST API. If any run is **`queued`** or **`in_progress`** → **no dispatch** (running guard / duplicate protection).
 5. If data are **stale or timestamp missing** and pipeline is **idle** → `POST .../actions/workflows/update-articles.yml/dispatches` with `ref: main`.
 
@@ -42,11 +42,32 @@ Do **not** embed the token in `wrangler.toml` or the repo.
 
 ## Freshness policy
 
-- **Fresh:** `generatedAt` is **newer than** `STALE_AFTER_MINUTES` (default **10** minutes). No dispatch.
-- **Stale:** age **≥ 10** minutes → eligible for dispatch if idle.
+- **Fresh:** `generatedAt` is **newer than** `STALE_AFTER_MINUTES` (default **15** minutes). No dispatch.
+- **Stale:** age **≥ 15** minutes → eligible for dispatch if idle.
 - **Missing / invalid `generatedAt`:** treated as **stale** (dispatch allowed if idle) so production can self-heal.
 
-Rationale: the article pipeline targets roughly **5**-minute cadence when healthy; **10** minutes avoids thrashing while still catching outages quickly.
+Rationale: check every **15** minutes; pipeline run ~50 minutes so only one run at a time (`skip_busy`). Stale threshold matches check interval.
+
+## Deploy / verify (manual checklist)
+
+Worker URL (health): `https://infouzel-articles-watchdog.josef-zmrhal.workers.dev/health`
+
+```bash
+cd cloudflare/articles-watchdog
+npm ci
+npx wrangler secret put GITHUB_TOKEN   # PAT with Actions: Read and write
+npx wrangler deploy
+curl -sS "https://infouzel-articles-watchdog.josef-zmrhal.workers.dev/health"
+```
+
+Optional GitHub repo variable (CI guards):
+
+```bash
+gh variable set ARTICLES_WATCHDOG_HEALTH_URL --body "https://infouzel-articles-watchdog.josef-zmrhal.workers.dev/health"
+# gh variable set REQUIRE_ARTICLES_WATCHDOG --body "true"   # after GITHUB_TOKEN secret verified on worker
+```
+
+After deploy, confirm Cloudflare dashboard → Worker → Triggers shows cron `*/15 * * * *` and scheduled invocations succeed (no `GitHub dispatch failed` in logs).
 
 ## Manual smoke test (optional)
 
