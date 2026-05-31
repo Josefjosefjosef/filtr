@@ -5020,6 +5020,49 @@ try {
       }
     })();
     let sectionSwitchFirstBatchReleased = false;
+    function iuFeedSectionSwitchScrollToStartIfArmed() {
+      try {
+        if (typeof window === "undefined" || !window.__iuSectionSwitchScrollArm) return;
+        window.__iuSectionSwitchScrollArm = false;
+        if (typeof window.iuScrollToActiveSectionStartInstant === "function") {
+          window.iuScrollToActiveSectionStartInstant();
+        } else {
+          const feed = document.getElementById("feed");
+          const header =
+            (feed && feed.querySelector("picture.iu-feed-section-header-picture")) ||
+            (feed && feed.querySelector("img.iu-feed-section-header-img")) ||
+            (feed && feed.querySelector(".iu-feed-section-header-img"));
+          const sticky =
+            parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--topbarStackH")) || 68;
+          let scrollEl = document.scrollingElement || document.documentElement;
+          try {
+            if (window.matchMedia && window.matchMedia("(min-width: 1025px)").matches && document.body) {
+              scrollEl = document.body;
+            }
+          } catch (_) {}
+          const current = scrollEl ? scrollEl.scrollTop : window.scrollY || 0;
+          const anchor = header || feed;
+          if (!anchor) {
+            window.scrollTo(0, 0);
+            if (scrollEl) scrollEl.scrollTop = 0;
+          } else {
+            const rect = anchor.getBoundingClientRect();
+            const target = Math.max(0, Math.round(rect.top + current - sticky));
+            window.scrollTo(0, target);
+            if (scrollEl) scrollEl.scrollTop = target;
+          }
+        }
+        try {
+          requestAnimationFrame(function () {
+            try {
+              if (typeof window.iuScrollToActiveSectionStartInstant === "function") {
+                window.iuScrollToActiveSectionStartInstant();
+              }
+            } catch (_) {}
+          });
+        } catch (_) {}
+      } catch (_) {}
+    }
     function iuRenderFeedReleaseSectionSwitchIfReady() {
       if (sectionSwitchFirstBatchReleased) return;
       if (!switchSeqAtStart) return;
@@ -5030,6 +5073,7 @@ try {
         fel.removeAttribute("data-feed-switching");
         fel.style.minHeight = "";
         sectionSwitchFirstBatchReleased = true;
+        iuFeedSectionSwitchScrollToStartIfArmed();
       } catch (_) {}
     }
     function iuRenderFeedStaleP() {
@@ -5575,6 +5619,7 @@ try {
       if (!sectionSwitchFirstBatchReleased) {
         feedEl.removeAttribute("data-feed-switching");
         feedEl.style.minHeight = "";
+        iuFeedSectionSwitchScrollToStartIfArmed();
       }
       const vkDone = iuFeedSectionHeaderResolveVisualKey();
       if (vkDone) feedEl.setAttribute("data-feed-visual-key", vkDone);
@@ -5588,6 +5633,7 @@ try {
           if (switchSeqAtStart && finSeq === switchSeqAtStart) {
             felFin.removeAttribute("data-feed-switching");
             felFin.style.minHeight = "";
+            iuFeedSectionSwitchScrollToStartIfArmed();
           }
         }
       } catch (_) {}
@@ -21893,7 +21939,11 @@ function buildVideoAsArticleCard(it) {
         await applyFilter();
       } catch (_) {}
       try {
-        if (typeof window.iuScrollMainToTopInstant === "function") window.iuScrollMainToTopInstant();
+        if (typeof window.iuScrollToActiveSectionStartInstant === "function") {
+          window.iuScrollToActiveSectionStartInstant();
+        } else if (typeof window.iuScrollMainToTopInstant === "function") {
+          window.iuScrollMainToTopInstant();
+        }
       } catch (_) {}
     })();
   });
@@ -27677,41 +27727,104 @@ function buildVideoAsArticleCard(it) {
     return null;
   }
 
-  function iuScrollMainToTopInstant(){
+  function iuGetMainScrollElement(){
+    try{
+      if (window.matchMedia && window.matchMedia("(min-width: 1025px)").matches) {
+        const b = document.body;
+        if (b) return b;
+      }
+    }catch(_){}
+    return document.scrollingElement || document.documentElement || document.body;
+  }
+
+  function iuGetMainScrollTop(){
+    try{
+      const el = iuGetMainScrollElement();
+      if (el && typeof el.scrollTop === "number") return el.scrollTop;
+    }catch(_){}
+    return window.scrollY || 0;
+  }
+
+  function iuSetMainScrollTop(y){
+    const yv = Math.max(0, Math.round(Number(y) || 0));
+    try{ window.scrollTo(0, yv); }catch(_){}
+    try{
+      const el = iuGetMainScrollElement();
+      if (el) el.scrollTop = yv;
+    }catch(_){}
+    try{
+      const b = document.body;
+      const root = iuGetMainScrollElement();
+      if (b && b !== root) b.scrollTop = yv;
+    }catch(_){}
+    try{
+      const d = document.documentElement;
+      const root = iuGetMainScrollElement();
+      if (d && d !== root) d.scrollTop = yv;
+    }catch(_){}
     try{
       const feed = document.getElementById("newsList") || document.getElementById("feed");
-      if (feed) {
-        try {
-          feed.scrollTop = 0;
-        } catch (_) {}
-      }
-    } catch (_) {}
-    try {
-      window.scrollTo(0, 0);
-    } catch (_) {}
+      if (feed) feed.scrollTop = 0;
+    }catch(_){}
+  }
+
+  function iuGetTopbarStackOffsetPx(){
+    try{
+      const cs = getComputedStyle(document.documentElement);
+      const v = parseFloat(cs.getPropertyValue("--topbarStackH"));
+      if (Number.isFinite(v) && v > 0) return v;
+    }catch(_){}
+    return 68;
+  }
+
+  function iuResolveSectionScrollAnchor(){
+    const feed = document.getElementById("feed");
+    if (!feed) return document.getElementById("iuCenterStage") || document.getElementById("newsList");
+    return (
+      feed.querySelector("picture.iu-feed-section-header-picture") ||
+      feed.querySelector("img.iu-feed-section-header-img") ||
+      feed.querySelector(".iu-feed-section-header-img") ||
+      feed
+    );
+  }
+
+  function iuScrollToActiveSectionStartInstant(){
+    const anchor = iuResolveSectionScrollAnchor();
+    if (!anchor) {
+      iuSetMainScrollTop(0);
+      return;
+    }
+    const sticky = iuGetTopbarStackOffsetPx();
+    const rect = anchor.getBoundingClientRect();
+    const current = iuGetMainScrollTop();
+    const target = Math.max(0, Math.round(rect.top + current - sticky));
+    iuSetMainScrollTop(target);
+  }
+
+  function iuScrollMainSectionSwitchToTop(){
+    try{ window.__iuSectionSwitchScrollArm = true; }catch(_){}
+    try{
+      if (iuGetMainScrollTop() > 400) iuSetMainScrollTop(0);
+    }catch(_){}
+  }
+
+  function iuScrollMainToTopInstant(){
+    iuSetMainScrollTop(0);
   }
 
   function iuScrollMainToTopSmooth(){
     try{
-      // Prefer: scroll within the main feed container if it exists and scrolls.
       const feed = document.getElementById("newsList") || document.getElementById("feed");
-      if (feed && feed.scrollHeight > feed.clientHeight){
+      if (feed) {
         try{
           if (typeof feed.scrollTo === "function") feed.scrollTo({ top: 0, behavior: "auto" });
           else feed.scrollTop = 0;
         }catch{
           try{ feed.scrollTop = 0; }catch{}
         }
-        return;
       }
-    }catch{}
-
-    try{
-      // Fallback: window scroll (auto: menu sekce + filtry bez „dvojitého“ smooth skoku)
-      window.scrollTo({ top: 0, behavior: "auto" });
-    }catch{
-      try{ window.scrollTo(0, 0); }catch{}
-    }
+    }catch(_){}
+    iuSetMainScrollTop(0);
   }
 
   // ============================================================
@@ -29266,6 +29379,7 @@ function buildVideoAsArticleCard(it) {
 
     /* P0 section switch stability: eager feed filter+render — idle deferral kept stale articles/header visible up to ~500ms. */
     if (usesFeed) {
+      try{ window.__iuSectionSwitchScrollArm = true; }catch(_){}
       try {
         state.__iuFeedSwitchSeq = (state.__iuFeedSwitchSeq || 0) + 1;
         state.__iuRenderFeedGeneration = (state.__iuRenderFeedGeneration | 0) + 1;
@@ -29433,6 +29547,8 @@ function buildVideoAsArticleCard(it) {
   try { window.iuNavRailHideOverlaysFast = iuNavRailHideOverlaysFast; } catch (e) {}
   try { window.iuScrollMainToTopSmooth = iuScrollMainToTopSmooth; } catch (e) {}
   try { window.iuScrollMainToTopInstant = iuScrollMainToTopInstant; } catch (e) {}
+  try { window.iuScrollToActiveSectionStartInstant = iuScrollToActiveSectionStartInstant; } catch (e) {}
+  try { window.iuScrollMainSectionSwitchToTop = iuScrollMainSectionSwitchToTop; } catch (e) {}
 
   function initNavRouter(){
     iuStripProjectsNavParamsForHomeLanding();
@@ -29535,6 +29651,7 @@ function buildVideoAsArticleCard(it) {
       try {
         if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = !!fromWebNavGateNav;
       } catch (_) {}
+      try{ iuScrollMainSectionSwitchToTop(); }catch(_){}
       applySectionFromURL();
       applyPanelFromUrl();
       try {
@@ -29554,15 +29671,6 @@ function buildVideoAsArticleCard(it) {
           } catch (_) {}
         }
       } catch (_) {}
-      try{
-        requestAnimationFrame(function () {
-          try {
-            iuScrollMainToTopSmooth();
-          } catch (_) {}
-        });
-      }catch{
-        try{ iuScrollMainToTopSmooth(); }catch{}
-      }
     });
     // Hex grid (home quick links + „Navigace po webu“ tiles): persist + apply — must mirror left-rail path so
     // mobile back-stack + iu-webnavDetailFromGate match; hex previously cleared latch and skipped post-apply
@@ -29598,6 +29706,7 @@ function buildVideoAsArticleCard(it) {
       persistNavStateFromHexKey(rawHexKey);
       /* P0 webnav back-stack: same as left-rail — panel clear must replaceState, else duplicate Back entry. */
       try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("", { replace: true }); } catch (_) {}
+      try{ iuScrollMainSectionSwitchToTop(); }catch(_){}
       applySectionFromURL();
       applyPanelFromUrl();
       try {
@@ -29617,15 +29726,6 @@ function buildVideoAsArticleCard(it) {
           } catch (_) {}
         }
       } catch (_) {}
-      try{
-        requestAnimationFrame(function () {
-          try {
-            iuScrollMainToTopSmooth();
-          } catch (_) {}
-        });
-      }catch{
-        try{ iuScrollMainToTopSmooth(); }catch{}
-      }
     }, true);
     /** P0 mobile/tablet: keep browser history aligned with „Navigace po webu“ overlay (popstate → reopen overlay, no skip-to-external). */
     function iuMobileWebNavApplyRestoredOverlay(wrapH){
