@@ -562,21 +562,36 @@ def apply_staggered_section_release(articles: list, generated_at: str) -> list:
         released_set = {u for u in released_set if u in pending}
 
         unreleased_urls = [u for u in pending.keys() if u not in released_set]
-        newly = _pick_stagger_release_urls(unreleased_urls, pending, MAX_SECTION_RELEASE_PER_RUN)
+        today_prague = _prague_today_iso(base_dt)
+        auto_today: list[str] = []
+        for u in unreleased_urls:
+            art0 = pending.get(u) or {}
+            if _prague_day_from_iso(str(art0.get("publishedAt") or "")) == today_prague:
+                auto_today.append(u)
+                released_set.add(u)
+        still_unreleased = [u for u in unreleased_urls if u not in auto_today]
+        newly = _pick_stagger_release_urls(still_unreleased, pending, MAX_SECTION_RELEASE_PER_RUN)
         for u in newly:
             released_set.add(u)
 
         new_idx = {u: i for i, u in enumerate(newly)}
         sec_out = []
-        for u in sorted(released_set, key=lambda x: str(pending.get(x, {}).get("publishedAt") or ""), reverse=True):
+        # Všechny pending URL patří do articles.json; iuReleaseAt řídí jen UI viditelnost.
+        # Dříve unreleased v JSON vůbec nebyly → guardy a sekce viděly 0 dnešních položek.
+        unreleased_gate = base_dt + timedelta(days=30)
+        for u in sorted(pending.keys(), key=lambda x: str(pending.get(x, {}).get("publishedAt") or ""), reverse=True):
             if u not in pending:
                 continue
             art = dict(pending[u])
             if u in new_idx:
                 rel_dt = base_dt + timedelta(seconds=new_idx[u])
                 art["iuReleaseAt"] = rel_dt.isoformat().replace("+00:00", "Z")
-            elif not art.get("iuReleaseAt"):
-                art["iuReleaseAt"] = generated_at
+            elif u in released_set:
+                if not art.get("iuReleaseAt"):
+                    art["iuReleaseAt"] = generated_at
+            else:
+                if not art.get("iuReleaseAt"):
+                    art["iuReleaseAt"] = unreleased_gate.isoformat().replace("+00:00", "Z")
             sec_out.append(art)
 
         out_vertical.extend(sec_out)
@@ -975,11 +990,116 @@ def _emit_bootstrap_json(final: list, generated_at: str) -> None:
 
 
 def normalize_media_name(name: str) -> str:
-    # sjednotit "iDNES.cz – Krimi" -> "iDNES.cz"
-    for sep in [" – ", " — ", " - "]:
+    # sjednotit "iDNES.cz – Krimi" / "Novinky / Cestování" -> čistý název média (bez rubriky)
+    for sep in [" – ", " — ", " - ", " / "]:
         if sep in name:
             return name.split(sep, 1)[0].strip()
     return name.strip()
+
+
+# Kanonické zobrazované názvy médií (sourceLabel) — podle domény URL, ne rubriky feedu.
+DOMAIN_MEDIA_DISPLAY: dict[str, str] = {
+    "seznamzpravy.cz": "Seznam Zprávy",
+    "novinky.cz": "Novinky",
+    "idnes.cz": "iDNES.cz",
+    "servis.idnes.cz": "iDNES.cz",
+    "ct24.ceskatelevize.cz": "ČT24",
+    "ceskatelevize.cz": "ČT24",
+    "sport.ceskatelevize.cz": "ČT sport",
+    "aktualne.cz": "Aktuálně",
+    "zpravy.aktualne.cz": "Aktuálně",
+    "sport.aktualne.cz": "Aktuálně",
+    "magazin.aktualne.cz": "Aktuálně",
+    "denik.cz": "Deník",
+    "sport.cz": "Sport.cz",
+    "isport.blesk.cz": "iSport",
+    "prozeny.cz": "ProŽeny",
+    "forbes.cz": "Forbes",
+    "hn.cz": "HN",
+    "archiv.hn.cz": "HN",
+    "ekonom.cz": "Ekonom (HN)",
+}
+
+
+def _host_from_article_url(url: str) -> str:
+    try:
+        h = (urlparse(str(url or "").strip()).netloc or "").lower()
+        if h.startswith("www."):
+            h = h[4:]
+        return h
+    except Exception:
+        return ""
+
+
+def media_source_display(raw_label: str, url: str = "") -> str:
+    """
+    Čistý název média pro UI (sourceLabel). Interní rubrika feedu se nepromítá.
+    section/topic určuje zařazení článku — ne sourceLabel.
+    """
+    host = _host_from_article_url(url)
+    if host in DOMAIN_MEDIA_DISPLAY:
+        return DOMAIN_MEDIA_DISPLAY[host]
+    for dom, disp in DOMAIN_MEDIA_DISPLAY.items():
+        if host.endswith("." + dom) or host == dom:
+            return disp
+    norm = normalize_media_name(fix_cz_mojibake(str(raw_label or "")).strip())
+    return norm or str(raw_label or "").strip()
+
+
+def _apply_source_display_to_article(article: dict) -> dict:
+    if not isinstance(article, dict):
+        return article
+    url = str(article.get("url") or "").strip()
+    if not url:
+        src0 = (article.get("sources") or [{}])[0]
+        if isinstance(src0, dict):
+            url = str(src0.get("url") or "").strip()
+    raw = str(article.get("sourceLabel") or "").strip()
+    if not raw:
+        src0 = (article.get("sources") or [{}])[0]
+        if isinstance(src0, dict):
+            raw = str(src0.get("name") or "").strip()
+    disp = media_source_display(raw, url)
+    if disp:
+        article["sourceLabel"] = disp
+    srcs = article.get("sources")
+    if isinstance(srcs, list):
+        for s in srcs:
+            if not isinstance(s, dict):
+                continue
+            s["name"] = media_source_display(str(s.get("name") or raw), str(s.get("url") or url))
+    return article
+
+
+def _apply_source_display_to_articles(articles: list) -> list:
+    return [_apply_source_display_to_article(dict(a) if isinstance(a, dict) else a) for a in (articles or [])]
+
+
+def _prague_tz():
+    try:
+        from zoneinfo import ZoneInfo
+        return ZoneInfo("Europe/Prague")
+    except Exception:
+        return timezone.utc
+
+
+def _prague_today_iso(now: datetime | None = None) -> str:
+    now = now or datetime.now(timezone.utc)
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=timezone.utc)
+    return now.astimezone(_prague_tz()).strftime("%Y-%m-%d")
+
+
+def _prague_day_from_iso(iso: str) -> str | None:
+    if not iso:
+        return None
+    try:
+        dt = datetime.fromisoformat(str(iso).replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(_prague_tz()).strftime("%Y-%m-%d")
+    except Exception:
+        return None
 
 
 def _cz_score(txt: str) -> int:
@@ -2721,14 +2841,21 @@ def _aggregate_pipeline(
         thash = topic_hash_from_title(title_out)
 
         primary_item = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]
-        _sl = fix_cz_mojibake(str(primary_item.get("media_raw") or "")).strip()
+        src0 = (sources or [{}])[0]
+        candidate = (src0.get("url", "") or "").strip()
+        article_url = candidate if candidate.lower().startswith(("http://", "https://")) else ""
+        _sl = media_source_display(str(primary_item.get("media_raw") or ""), article_url)
+        sources_out = [
+            {"name": media_source_display(str(s.get("name") or ""), str(s.get("url") or article_url)), "url": s.get("url")}
+            for s in sources
+        ]
         article_out = {
             "topic": c.section,
             "section": c.section,
             "contentType": c.content_type,
             "title": fix_cz_mojibake(title_out),
             "publishedAt": published,
-            "sources": sources,
+            "sources": sources_out,
             "primaryCategory": pcat,
             "topicHash": thash,
             "feedType": ftype,
@@ -2739,12 +2866,7 @@ def _aggregate_pipeline(
         _fid = str(primary_item.get("feedId") or "").strip()
         if _fid:
             article_out["feedId"] = _fid
-        src0 = (sources or [{}])[0]
-        candidate = (src0.get("url", "") or "").strip()
-        if candidate.lower().startswith("http://") or candidate.lower().startswith("https://"):
-            article_out["url"] = candidate
-        else:
-            article_out["url"] = ""
+        article_out["url"] = article_url
 
         new_articles.append(article_out)
 
@@ -2766,9 +2888,11 @@ def _aggregate_pipeline(
     merged_articles.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
     merged_articles = apply_staggered_section_release(merged_articles, generated_at)
     merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
+    merged_articles = _apply_source_display_to_articles(merged_articles)
 
     out_articles = apply_per_section_limits_then_cap(merged_articles)
     out_articles = apply_per_section_published_retention(prev_list, out_articles)
+    out_articles = _apply_source_display_to_articles(out_articles)
     final = out_articles
 
     tel_detail, tel_summary = build_telemetry_payload(
@@ -3653,14 +3777,21 @@ def _legacy_main_removed_placeholder():
         thash = topic_hash_from_title(title_out)
 
         primary_item = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]
-        _sl = fix_cz_mojibake(str(primary_item.get("media_raw") or "")).strip()
+        src0 = (sources or [{}])[0]
+        candidate = (src0.get("url", "") or "").strip()
+        article_url = candidate if candidate.lower().startswith(("http://", "https://")) else ""
+        _sl = media_source_display(str(primary_item.get("media_raw") or ""), article_url)
+        sources_out = [
+            {"name": media_source_display(str(s.get("name") or ""), str(s.get("url") or article_url)), "url": s.get("url")}
+            for s in sources
+        ]
         article_out = {
             "topic": c.section,
             "section": c.section,
             "contentType": c.content_type,
             "title": fix_cz_mojibake(title_out),
             "publishedAt": published,
-            "sources": sources,
+            "sources": sources_out,
             "primaryCategory": pcat,
             "topicHash": thash,
             "feedType": ftype,
@@ -3671,12 +3802,7 @@ def _legacy_main_removed_placeholder():
         _fid = str(primary_item.get("feedId") or "").strip()
         if _fid:
             article_out["feedId"] = _fid
-        src0 = (sources or [{}])[0]
-        candidate = (src0.get("url", "") or "").strip()
-        if candidate.lower().startswith("http://") or candidate.lower().startswith("https://"):
-            article_out["url"] = candidate
-        else:
-            article_out["url"] = ""
+        article_out["url"] = article_url
 
         out_articles.append(article_out)
 
@@ -3699,9 +3825,11 @@ def _legacy_main_removed_placeholder():
     merged_articles.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
     merged_articles = apply_staggered_section_release(merged_articles, generated_at)
     merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
+    merged_articles = _apply_source_display_to_articles(merged_articles)
 
     out_articles = apply_per_section_limits_then_cap(merged_articles)
     out_articles = apply_per_section_published_retention(prev_list, out_articles)
+    out_articles = _apply_source_display_to_articles(out_articles)
     # Drip (releaseAt v budoucnu) schová většinu článků v UI — nesmí blokovat čerstvý feed; čas publikace zůstává v publishedAt.
     out_articles = enrich_article_list(out_articles)
 

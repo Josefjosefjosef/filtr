@@ -16,6 +16,11 @@ on:
       - "scripts/articles-aggregator-infra-guard.mjs"
       - "scripts/articles-aggregator-freshness-guard.mjs"
       - "scripts/articles-missing-source-articles-guard.mjs"
+      - "scripts/source-display-clean-guard.mjs"
+      - "scripts/source-url-consistency-guard.mjs"
+      - "scripts/section-coverage-guard.mjs"
+      - "scripts/dedupe-loss-guard.mjs"
+      - "scripts/iu-source-display.mjs"
       - "cloudflare/articles-watchdog/**"
   pull_request:
     paths:
@@ -26,6 +31,11 @@ on:
       - "scripts/articles-aggregator-infra-guard.mjs"
       - "scripts/articles-aggregator-freshness-guard.mjs"
       - "scripts/articles-missing-source-articles-guard.mjs"
+      - "scripts/source-display-clean-guard.mjs"
+      - "scripts/source-url-consistency-guard.mjs"
+      - "scripts/section-coverage-guard.mjs"
+      - "scripts/dedupe-loss-guard.mjs"
+      - "scripts/iu-source-display.mjs"
       - "cloudflare/articles-watchdog/**"
 
 permissions:

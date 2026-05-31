@@ -25,12 +25,14 @@ const health = JSON.parse(fs.readFileSync(healthPath, "utf8"));
 const feeds = health.feeds && typeof health.feeds === "object" ? health.feeds : {};
 
 function normSource(name) {
-  const s = String(name || "")
-    .trim()
-    .split(/\s*[–—-]\s*/)[0]
-    .trim()
-    .toLowerCase();
-  return s || "unknown";
+  let s = String(name || "").trim();
+  for (const sep of [" – ", " — ", " - ", " / "]) {
+    if (s.includes(sep)) {
+      s = s.split(sep, 1)[0].trim();
+      break;
+    }
+  }
+  return s.toLowerCase() || "unknown";
 }
 
 const ingestedByTopic = {};
