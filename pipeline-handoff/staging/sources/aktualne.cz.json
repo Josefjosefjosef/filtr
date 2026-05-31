@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-31T21:50:21.466397Z",
+  "ingestedAt": "2026-05-31T22:50:23.515664Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pro zlato si došli Finové, Švýcaři smutní. Projděte si výsledky a pavouka MS",
+      "url": "https://sport.aktualne.cz/hokej/ms-v-hokeji-2026/r~aaa29b7b064aa54eb4625d00ab1c5111/",
+      "dt": "2026-05-15T11:37:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "došli",
+        "finové",
+        "pavouka",
+        "projděte",
+        "smutní",
+        "výsledky",
+        "zlato",
+        "švýcaři"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -488,34 +513,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Škoda tyhle fotky minout: pozdvižení s Luce, smrtící virus nebo Ice Ice Baby",
-      "url": "https://zpravy.aktualne.cz/galerie-a-videa/skoda-tyhle-fotky-minout-pozdvizeni-s-luce-smrtici-virus-nebo-ice-ice-baby/r~aaa29e0ac8627dae8b2e7d64a3d5bab6/",
-      "dt": "2026-05-31T15:18:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "baby",
-        "fotky",
-        "ice",
-        "luce",
-        "minout",
-        "nebo",
-        "pozdvižení",
-        "smrtící",
-        "tyhle",
-        "virus",
-        "škoda"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -526,7 +523,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 20575,
+      "bytes": 20227,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -566,8 +563,8 @@
         "raw_feed_latest_publishedAt": "2026-05-31T21:24:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 7,
-          "zpravy": 11,
+          "sport": 8,
+          "zpravy": 10,
           "other": 1,
           "finance": 1
         },
@@ -581,6 +578,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pro zlato si došli Finové, Švýcaři smutní. Projděte si výsledky a pavouka MS",
+            "publishedAt": "2026-05-15T11:37:00Z"
+          },
           {
             "title": "Menšík - Rubljov 3:2. Český tenista to dokázal, přetlačil Rusa a je ve čtvrtfinále",
             "publishedAt": "2026-05-31T17:05:00Z"
@@ -608,10 +609,6 @@
           {
             "title": "Dal gól, ale nejede. Koubek vyřadil z kádru před MS Ladru, Buchu a Kabonga",
             "publishedAt": "2026-05-31T17:09:00Z"
-          },
-          {
-            "title": "Putinův muž varuje: Klidný spánek Evropanům skončil",
-            "publishedAt": "2026-05-31T16:39:00Z"
           }
         ]
       }

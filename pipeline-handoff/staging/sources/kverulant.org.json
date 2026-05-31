@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kverulant.org",
-  "ingestedAt": "2026-05-31T21:50:21.466397Z",
+  "ingestedAt": "2026-05-31T22:50:23.515664Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Za seznam vládních zmocněnců chce Úřad vlády 635 tisíc korun",
+      "url": "https://www.kverulant.org/article/za-seznam-vladnich-zmocnencu-chce-urad-vlady-635-tisic-korun/",
+      "dt": "2026-05-31T22:07:00Z",
+      "media_raw": "Kverulant",
+      "media_norm": "Kverulant",
+      "tokens": [
+        "635",
+        "chce",
+        "korun",
+        "seznam",
+        "tisíc",
+        "vládních",
+        "vlády",
+        "zmocněnců",
+        "úřad"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_kverulant",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "kverulant.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -208,32 +234,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "kverulant.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Českým příspěvkem ke společné obraně NATO je i Vojenský umělecký soubor Ondráš",
-      "url": "https://www.kverulant.org/article/ceskym-prispevkem-ke-spolecne-obrane-nato-je-i-vojensky-umelecky-soubor-ondras/",
-      "dt": "2026-05-19T22:07:00Z",
-      "media_raw": "Kverulant",
-      "media_norm": "Kverulant",
-      "tokens": [
-        "nato",
-        "obraně",
-        "ondráš",
-        "příspěvkem",
-        "soubor",
-        "společné",
-        "umělecký",
-        "vojenský",
-        "českým"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_kverulant",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "kverulant.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -244,7 +244,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.kverulant.org/feed/",
-      "bytes": 94142,
+      "bytes": 87444,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -281,7 +281,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-28T22:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T22:07:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -296,6 +296,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Za seznam vládních zmocněnců chce Úřad vlády 635 tisíc korun",
+            "publishedAt": "2026-05-31T22:07:00Z"
+          },
           {
             "title": "Den daňové svobody",
             "publishedAt": "2026-05-28T22:07:00Z"
@@ -323,10 +327,6 @@
           {
             "title": "Pozvánka na seminář: Spravedlnost? Česká justice a její kontroverzní případy",
             "publishedAt": "2026-05-21T22:17:00Z"
-          },
-          {
-            "title": "Biopaliva mají špatnou pověst, tak je přejmenujeme",
-            "publishedAt": "2026-05-21T22:07:00Z"
           }
         ]
       }
