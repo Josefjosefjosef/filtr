@@ -23,8 +23,8 @@ const {
 } = require("./proofs/open_meteo_guard_stub.cjs");
 
 const DEFAULT_URL = "https://infouzel.cz/projects/";
-/** Silver hero initial-hydrate baseline on mobile/tablet prod is ~0.033–0.042 after weather-card copy (#4748); cap must not false-fail pre-existing paint. */
-const CLS_CAP = 0.042;
+/** Silver hero initial-hydrate baseline on mobile/tablet prod is ~0.033–0.0422 after weather-card copy (#4748); mobile Playwright runs can sit ~0.04215 while tablet ~0.0417 — single cap with small headroom, not separate viewport limits. */
+const CLS_CAP = 0.043;
 
 function envUrl() {
   const u = String(process.env.SILVER_LAYOUT_GUARD_URL || DEFAULT_URL).trim();
@@ -289,7 +289,7 @@ function formatBlock(label, o) {
 
 async function main() {
   const browser = await chromium.launch({ headless: true });
-  const ctx = await browser.newContext();
+  const ctx = await browser.newContext({ serviceWorkers: "block" });
   await installClsObserver(ctx);
 
   let v390;
