@@ -5,7 +5,7 @@
  *   ARTICLES_JSON_PATH — local file (default projects/data/articles.json)
  *   ARTICLES_JSON_URL — fetch URL instead of file (e.g. production)
  *   MAX_GENERATED_AGE_HOURS — bundle generatedAt limit (default 48)
- *   MAX_SECTION_AGE_HOURS — newest article per main section (default 72)
+ *   MAX_SECTION_AGE_HOURS — newest article per main section (default 168 = 7d)
  */
 import fs from "fs";
 import path from "path";
@@ -27,7 +27,7 @@ const MAIN_SECTIONS = [
 ];
 
 const MAX_GENERATED_AGE_H = Number(process.env.MAX_GENERATED_AGE_HOURS || "48");
-const MAX_SECTION_AGE_H = Number(process.env.MAX_SECTION_AGE_HOURS || "72");
+const MAX_SECTION_AGE_H = Number(process.env.MAX_SECTION_AGE_HOURS || "168");
 const localPath = process.env.ARTICLES_JSON_PATH || path.join(root, "projects", "data", "articles.json");
 const remoteUrl = (process.env.ARTICLES_JSON_URL || "").trim();
 

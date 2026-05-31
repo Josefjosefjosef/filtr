@@ -318,6 +318,9 @@ jobs:
           test -s scripts/articles-aggregator-freshness-guard.mjs
 
       - name: Articles aggregator freshness guard (bundle + main sections)
+        env:
+          MAX_GENERATED_AGE_HOURS: "48"
+          MAX_SECTION_AGE_HOURS: "168"
         run: |
           set -euo pipefail
           node scripts/articles-aggregator-freshness-guard.mjs
