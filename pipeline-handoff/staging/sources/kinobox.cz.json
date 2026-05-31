@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-31T09:17:36.552720Z",
+  "ingestedAt": "2026-05-31T11:24:19.173111Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Cillian Murphy jako Gabčík. Podívejte se na syrový film o atentátu na Heydricha",
+      "url": "https://www.kinobox.cz/clanky/daily/54287-kinobox-daily-cillian-murphy-jako-gabcik-podivejte-se-na-syrovy-film-o-atentatu-na-heydricha-ktery-sokoval-i-zahranicni-divaky",
+      "dt": "2026-05-31T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "atentátu",
+        "cillian",
+        "daily",
+        "film",
+        "gabčík",
+        "heydricha",
+        "jako",
+        "kinobox",
+        "murphy",
+        "podívejte",
+        "syrový"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -523,34 +551,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Kinovýhled: Svěrák uvádí do kin svých Pět švestek. Fanoušci hororu zažijí žně",
-      "url": "https://www.kinobox.cz/clanky/filmy/54186-kinovyhled-sverak-uvadi-do-kin-svych-pet-svestek-zbystrit-by-meli-tez-priznivci-hororu",
-      "dt": "2026-05-28T13:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "fanoušci",
-        "hororu",
-        "kin",
-        "kinovýhled",
-        "pět",
-        "svých",
-        "svěrák",
-        "uvádí",
-        "zažijí",
-        "švestek",
-        "žně"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -561,7 +561,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 29446,
+      "bytes": 29629,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -598,7 +598,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-31T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -613,6 +613,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Cillian Murphy jako Gabčík. Podívejte se na syrový film o atentátu na Heydricha",
+            "publishedAt": "2026-05-31T10:00:00Z"
+          },
           {
             "title": "Nejradikálnější hororová autorka předvádí sexuální krvavou revoluci. Odvážný slasher vám zamotá hlavu",
             "publishedAt": "2026-05-31T09:00:00Z"
@@ -640,10 +644,6 @@
           {
             "title": "Filmové Backrooms jsou úplně jiné než webový hit. Žlutý labyrint děsí mnohem symboličtěji",
             "publishedAt": "2026-05-30T09:00:00Z"
-          },
-          {
-            "title": "Peter Jackson se vrací k režii. Místo Pána prstenů ale chystá nečekané pokračování",
-            "publishedAt": "2026-05-30T07:00:00Z"
           }
         ]
       }

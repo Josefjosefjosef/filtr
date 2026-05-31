@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-31T09:17:36.552720Z",
+  "ingestedAt": "2026-05-31T11:24:19.173111Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Soutěž prvosledových hlídek na Rallye Rejvíz vyhráli policisté ze Středočeského kraje",
+      "url": "https://tydenikpolicie.cz/soutez-prvosledovych-hlidek-na-rallye-rejviz-vyhrali-policiste-ze-stredoceskeho-kraje/",
+      "dt": "2026-05-31T09:56:25Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "hlídek",
+        "kraje",
+        "policisté",
+        "prvosledových",
+        "rallye",
+        "rejvíz",
+        "soutěž",
+        "středočeského",
+        "vyhráli"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -227,30 +253,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Řidičky pod vlivem alkoholu usedly na jižní Moravě za volant",
-      "url": "https://tydenikpolicie.cz/ridicky-pod-vlivem-alkoholu-usedly-na-jizni-morave-za-volant/",
-      "dt": "2026-05-29T19:48:42Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "alkoholu",
-        "jižní",
-        "moravě",
-        "usedly",
-        "vlivem",
-        "volant",
-        "řidičky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -261,7 +263,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15853,
+      "bytes": 16441,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -298,7 +300,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-31T08:28:19Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T09:56:25Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -313,6 +315,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soutěž prvosledových hlídek na Rallye Rejvíz vyhráli policisté ze Středočeského kraje",
+            "publishedAt": "2026-05-31T09:56:25Z"
+          },
           {
             "title": "Vlivem silného větru došlo na Domažlicku k vyvrácení několika stromů, jeden spadl na kolemjdoucí ženu",
             "publishedAt": "2026-05-31T08:28:19Z"
@@ -340,10 +346,6 @@
           {
             "title": "Muž měl na Chebsku ukrást fiat. Policisté podezřelého rychle vypátrali",
             "publishedAt": "2026-05-30T04:30:35Z"
-          },
-          {
-            "title": "Podnapilý řidič volkswagenu zavinil na Uherskohradišťsku nehodu",
-            "publishedAt": "2026-05-30T02:02:16Z"
           }
         ]
       }
