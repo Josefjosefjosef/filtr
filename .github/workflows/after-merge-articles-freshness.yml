@@ -1,6 +1,6 @@
 # After-merge production freshness proof for articles/videos data.
 # Runs only on push to main that touches projects/data (e.g. merge of automation data PR).
-# Verifies: merge commit on main, Pages deploy, live JSON matches repo (SHA-256).
+# Verifies: merge commit on main, Pages deploy (auxiliary), live generatedAt + freshness guard (primary).
 
 name: After-merge articles freshness (prod)
 
@@ -46,21 +46,30 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 1
 
-      - name: Repo hashes
-        id: repo_hashes
+      - name: Repo metadata
+        id: repo_meta
         shell: bash
         run: |
           set -euo pipefail
-          REPO_ARTICLES=$(sha256sum < projects/data/articles.json | awk '{print $1}')
-          echo "repo_articles_hash=$REPO_ARTICLES" >> "$GITHUB_OUTPUT"
-          if [ -f projects/data/videos.json ]; then
-            REPO_VIDEOS=$(sha256sum < projects/data/videos.json | awk '{print $1}')
-          else
-            REPO_VIDEOS=""
+          REPO_ARTICLES_AT=$(jq -r '.generatedAt // empty' projects/data/articles.json)
+          if [ -z "$REPO_ARTICLES_AT" ]; then
+            echo "FAIL: repo articles.json missing generatedAt"
+            exit 1
           fi
-          echo "repo_videos_hash=$REPO_VIDEOS" >> "$GITHUB_OUTPUT"
-          echo "[REPO] articles sha256=$REPO_ARTICLES"
-          echo "[REPO] videos sha256=${REPO_VIDEOS:-none}"
+          REPO_ARTICLES_HASH=$(sha256sum < projects/data/articles.json | awk '{print $1}')
+          echo "repo_articles_generatedAt=$REPO_ARTICLES_AT" >> "$GITHUB_OUTPUT"
+          echo "repo_articles_hash=$REPO_ARTICLES_HASH" >> "$GITHUB_OUTPUT"
+          if [ -f projects/data/videos.json ]; then
+            REPO_VIDEOS_AT=$(jq -r '.generatedAt // empty' projects/data/videos.json)
+            REPO_VIDEOS_HASH=$(sha256sum < projects/data/videos.json | awk '{print $1}')
+          else
+            REPO_VIDEOS_AT=""
+            REPO_VIDEOS_HASH=""
+          fi
+          echo "repo_videos_generatedAt=$REPO_VIDEOS_AT" >> "$GITHUB_OUTPUT"
+          echo "repo_videos_hash=$REPO_VIDEOS_HASH" >> "$GITHUB_OUTPUT"
+          echo "[REPO] articles generatedAt=$REPO_ARTICLES_AT sha256=$REPO_ARTICLES_HASH"
+          echo "[REPO] videos generatedAt=${REPO_VIDEOS_AT:-none} sha256=${REPO_VIDEOS_HASH:-none}"
 
       - name: Wait for Pages deploy (same SHA, tolerate concurrency cancel)
         id: wait_pages
@@ -146,13 +155,16 @@ jobs:
             echo "[PAGES] WARN: no successful Pages deploy confirmed for merge_sha (will rely on live JSON proof)"
           fi
 
-      - name: Poll live JSON until match or timeout
+      - name: Poll live JSON until generatedAt match + freshness guard
         id: live_match
+        env:
+          LIVE_ARTICLES_URL: "${{ env.LIVE_BASE }}/articles.json"
         run: |
           set -euo pipefail
-          REPO_ARTICLES="${{ steps.repo_hashes.outputs.repo_articles_hash }}"
-          REPO_VIDEOS="${{ steps.repo_hashes.outputs.repo_videos_hash }}"
-          LIVE_ARTICLES_URL="${{ env.LIVE_BASE }}/articles.json"
+          REPO_ARTICLES_AT="${{ steps.repo_meta.outputs.repo_articles_generatedAt }}"
+          REPO_VIDEOS_AT="${{ steps.repo_meta.outputs.repo_videos_generatedAt }}"
+          REPO_ARTICLES_HASH="${{ steps.repo_meta.outputs.repo_articles_hash }}"
+          REPO_VIDEOS_HASH="${{ steps.repo_meta.outputs.repo_videos_hash }}"
           LIVE_VIDEOS_URL="${{ env.LIVE_BASE }}/videos.json"
           MAX=${{ env.PROPAGATION_ATTEMPTS_MAX }}
           SLEEP=${{ env.PROPAGATION_SLEEP_SEC }}
@@ -161,8 +173,11 @@ jobs:
           live_videos_reachable="false"
           live_articles_match="false"
           live_videos_match="false"
+          live_articles_generatedAt=""
+          live_videos_generatedAt=""
           live_articles_hash=""
           live_videos_hash=""
+          freshness_guard_pass="false"
           propagation_attempts=0
           stale_after_deploy="false"
 
@@ -170,56 +185,67 @@ jobs:
             propagation_attempts=$attempt
             echo "--- attempt $attempt/$MAX ---"
 
-            # Fetch live articles
             LIVE_ARTICLES=$(curl -fsSL -H "Cache-Control: no-cache" -H "Pragma: no-cache" "${LIVE_ARTICLES_URL}?v=${GITHUB_SHA::7}-${attempt}" 2>/dev/null || true)
             if [ -n "$LIVE_ARTICLES" ]; then
               live_articles_reachable="true"
+              live_articles_generatedAt=$(printf '%s' "$LIVE_ARTICLES" | jq -r '.generatedAt // empty' 2>/dev/null || true)
               live_articles_hash=$(printf '%s' "$LIVE_ARTICLES" | sha256sum | awk '{print $1}')
-              if [ "$live_articles_hash" = "$REPO_ARTICLES" ]; then live_articles_match="true"; fi
+              if [ -n "$live_articles_generatedAt" ] && [ "$live_articles_generatedAt" = "$REPO_ARTICLES_AT" ]; then
+                live_articles_match="true"
+              fi
             fi
 
-            # Fetch live videos (optional)
             LIVE_VIDEOS=$(curl -fsSL -H "Cache-Control: no-cache" -H "Pragma: no-cache" "${LIVE_VIDEOS_URL}?v=${GITHUB_SHA::7}-${attempt}" 2>/dev/null || true)
             if [ -n "$LIVE_VIDEOS" ]; then
               live_videos_reachable="true"
+              live_videos_generatedAt=$(printf '%s' "$LIVE_VIDEOS" | jq -r '.generatedAt // empty' 2>/dev/null || true)
               live_videos_hash=$(printf '%s' "$LIVE_VIDEOS" | sha256sum | awk '{print $1}')
-              if [ -z "$REPO_VIDEOS" ]; then
+              if [ -z "$REPO_VIDEOS_AT" ]; then
                 live_videos_match="true"
-              else
-                if [ "$live_videos_hash" = "$REPO_VIDEOS" ]; then live_videos_match="true"; fi
+              elif [ -n "$live_videos_generatedAt" ] && [ "$live_videos_generatedAt" = "$REPO_VIDEOS_AT" ]; then
+                live_videos_match="true"
               fi
-            elif [ -z "$REPO_VIDEOS" ]; then
+            elif [ -z "$REPO_VIDEOS_AT" ]; then
               live_videos_match="true"
             fi
 
-            echo "live_articles_reachable=$live_articles_reachable live_articles_match=$live_articles_match repo_hash=$REPO_ARTICLES live_hash=$live_articles_hash"
-            echo "live_videos_reachable=$live_videos_reachable live_videos_match=$live_videos_match"
+            echo "live_articles_reachable=$live_articles_reachable live_articles_match=$live_articles_match repo_generatedAt=$REPO_ARTICLES_AT live_generatedAt=$live_articles_generatedAt"
+            echo "live_videos_reachable=$live_videos_reachable live_videos_match=$live_videos_match repo_videos_generatedAt=${REPO_VIDEOS_AT:-none} live_videos_generatedAt=${live_videos_generatedAt:-none}"
+            echo "telemetry repo_articles_hash=$REPO_ARTICLES_HASH live_articles_hash=$live_articles_hash"
 
-            if [ "$live_articles_reachable" = "true" ] && [ "$live_articles_match" = "true" ]; then
-              if [ -n "$REPO_VIDEOS" ]; then
-                if [ "$live_videos_reachable" = "true" ] && [ "$live_videos_match" = "true" ]; then
-                  echo "PASS: articles and videos match live"
-                  break
-                fi
-              else
-                echo "PASS: articles match live (videos not in repo)"
+            metadata_match="false"
+            if [ "$live_articles_match" = "true" ] && [ "$live_videos_match" = "true" ]; then
+              metadata_match="true"
+            fi
+
+            if [ "$metadata_match" = "true" ]; then
+              echo "[GUARD] live generatedAt matches repo; running articles-aggregator-freshness-guard on production"
+              if ARTICLES_JSON_URL="$LIVE_ARTICLES_URL" node scripts/articles-aggregator-freshness-guard.mjs; then
+                freshness_guard_pass="true"
+                echo "PASS: live generatedAt matches repo and freshness guard OK"
                 break
               fi
+              echo "[GUARD] FAIL: generatedAt matched but freshness guard rejected live bundle"
             fi
 
             if [ "$attempt" -eq "$MAX" ]; then
               if [ "$live_articles_reachable" = "true" ] && [ "$live_articles_match" = "false" ]; then
                 stale_after_deploy="true"
               fi
-              echo "FAIL: timeout; live did not match repo"
+              echo "FAIL: timeout; live generatedAt did not match repo or freshness guard failed"
               {
                 echo "merged_commit_sha=${{ github.sha }}"
-                echo "repo_articles_hash=$REPO_ARTICLES"
+                echo "repo_articles_generatedAt=$REPO_ARTICLES_AT"
+                echo "live_articles_generatedAt=$live_articles_generatedAt"
+                echo "repo_videos_generatedAt=$REPO_VIDEOS_AT"
+                echo "live_videos_generatedAt=$live_videos_generatedAt"
+                echo "repo_articles_hash=$REPO_ARTICLES_HASH"
                 echo "live_articles_hash=$live_articles_hash"
-                echo "repo_videos_hash=$REPO_VIDEOS"
+                echo "repo_videos_hash=$REPO_VIDEOS_HASH"
                 echo "live_videos_hash=$live_videos_hash"
                 echo "live_articles_match_repo=$live_articles_match"
                 echo "live_videos_match_repo=$live_videos_match"
+                echo "freshness_guard_pass=$freshness_guard_pass"
                 echo "live_articles_reachable=$live_articles_reachable"
                 echo "live_videos_reachable=$live_videos_reachable"
                 echo "propagation_attempts=$propagation_attempts"
@@ -237,12 +263,17 @@ jobs:
 
           {
             echo "merged_commit_sha=${{ github.sha }}"
-            echo "repo_articles_hash=$REPO_ARTICLES"
+            echo "repo_articles_generatedAt=$REPO_ARTICLES_AT"
+            echo "live_articles_generatedAt=$live_articles_generatedAt"
+            echo "repo_videos_generatedAt=$REPO_VIDEOS_AT"
+            echo "live_videos_generatedAt=$live_videos_generatedAt"
+            echo "repo_articles_hash=$REPO_ARTICLES_HASH"
             echo "live_articles_hash=$live_articles_hash"
-            echo "repo_videos_hash=$REPO_VIDEOS"
+            echo "repo_videos_hash=$REPO_VIDEOS_HASH"
             echo "live_videos_hash=$live_videos_hash"
             echo "live_articles_match_repo=$live_articles_match"
             echo "live_videos_match_repo=$live_videos_match"
+            echo "freshness_guard_pass=$freshness_guard_pass"
             echo "live_articles_reachable=$live_articles_reachable"
             echo "live_videos_reachable=$live_videos_reachable"
             echo "propagation_attempts=$propagation_attempts"
@@ -261,12 +292,17 @@ jobs:
           echo "pagesDeployUrl=${{ steps.wait_pages.outputs.pages_deploy_url }}"
           echo "pagesDeployConclusion=${{ steps.wait_pages.outputs.pages_deploy_conclusion }}"
           echo "pagesSupersededBySuccess=${{ steps.wait_pages.outputs.superseded_by_success }}"
-          echo "repoArticlesHash=${{ steps.repo_hashes.outputs.repo_articles_hash }}"
+          echo "repoArticlesGeneratedAt=${{ steps.repo_meta.outputs.repo_articles_generatedAt }}"
+          echo "liveArticlesGeneratedAt=${{ steps.live_match.outputs.live_articles_generatedAt }}"
+          echo "repoVideosGeneratedAt=${{ steps.repo_meta.outputs.repo_videos_generatedAt }}"
+          echo "liveVideosGeneratedAt=${{ steps.live_match.outputs.live_videos_generatedAt }}"
+          echo "repoArticlesHash=${{ steps.repo_meta.outputs.repo_articles_hash }}"
           echo "liveArticlesHash=${{ steps.live_match.outputs.live_articles_hash }}"
-          echo "repoVideosHash=${{ steps.repo_hashes.outputs.repo_videos_hash }}"
+          echo "repoVideosHash=${{ steps.repo_meta.outputs.repo_videos_hash }}"
           echo "liveVideosHash=${{ steps.live_match.outputs.live_videos_hash }}"
           echo "liveArticlesMatchRepo=${{ steps.live_match.outputs.live_articles_match_repo }}"
           echo "liveVideosMatchRepo=${{ steps.live_match.outputs.live_videos_match_repo }}"
+          echo "freshnessGuardPass=${{ steps.live_match.outputs.freshness_guard_pass }}"
           echo "liveArticlesReachable=${{ steps.live_match.outputs.live_articles_reachable }}"
           echo "liveVideosReachable=${{ steps.live_match.outputs.live_videos_reachable }}"
           echo "propagationWaitUsed=${{ steps.live_match.outputs.propagation_wait_used }}"
@@ -291,14 +327,16 @@ jobs:
             echo "| --- | --- |"
             echo "| merge_commit_sha | ${{ github.sha }} |"
             echo "| repo_articles_generatedAt | ${GEN_AT} |"
+            echo "| live_articles_generatedAt | ${{ steps.live_match.outputs.live_articles_generatedAt }} |"
             echo "| pages_run_id | ${{ steps.wait_pages.outputs.pages_run_id }} |"
             echo "| pages_deploy_url | ${{ steps.wait_pages.outputs.pages_deploy_url }} |"
             echo "| pages_deploy_conclusion | ${{ steps.wait_pages.outputs.pages_deploy_conclusion }} |"
             echo "| pages_superseded_by_success | ${{ steps.wait_pages.outputs.superseded_by_success }} |"
+            echo "| freshness_guard_pass | ${{ steps.live_match.outputs.freshness_guard_pass }} |"
             echo "| freshness_prod_pass | ${{ steps.live_match.outputs.freshness_prod_pass }} |"
             echo "| propagation_attempts | ${{ steps.live_match.outputs.propagation_attempts }} |"
             echo ""
-            echo "Deltas: use log timestamps above for merge → Pages finished → prod visible; this job polls prod until JSON hash matches repo."
+            echo "Deltas: use log timestamps above for merge → Pages finished → prod visible; PASS requires live generatedAt match + articles-aggregator-freshness-guard on production."
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Notify completion (beep)
