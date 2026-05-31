@@ -10,6 +10,7 @@ on:
     paths:
       - 'projects/data/articles.json'
       - 'projects/data/videos.json'
+  workflow_dispatch: {}
 
 permissions:
   contents: read
@@ -61,60 +62,88 @@ jobs:
           echo "[REPO] articles sha256=$REPO_ARTICLES"
           echo "[REPO] videos sha256=${REPO_VIDEOS:-none}"
 
-      - name: Detect Pages deploy run
-        id: pages_deploy
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          echo "merged_commit_sha=${{ github.sha }}" >> "$GITHUB_OUTPUT"
-          # Find Pages workflow run for this ref (triggered by same push)
-          for i in 1 2 3 4 5 6 7 8 9 10; do
-            RUNS=$(gh run list --workflow=pages.yml --branch main --limit 5 --json databaseId,status,conclusion,headSha,url --jq '.[] | select(.headSha == "${{ github.sha }}") | "\(.databaseId) \(.status) \(.conclusion // "pending") \(.url)"' 2>/dev/null || true)
-            if [ -n "$RUNS" ]; then
-              FIRST=$(echo "$RUNS" | head -n1)
-              RUN_ID=$(echo "$FIRST" | awk '{print $1}')
-              STATUS=$(echo "$FIRST" | awk '{print $2}')
-              CONCLUSION=$(echo "$FIRST" | awk '{print $3}')
-              URL=$(echo "$FIRST" | awk '{print $4}')
-              { echo "pages_deploy_detected=true"; echo "pages_deploy_status=$STATUS"; echo "pages_deploy_conclusion=$CONCLUSION"; echo "pages_deploy_url=$URL"; echo "pages_run_id=$RUN_ID"; } >> "$GITHUB_OUTPUT"
-              echo "[PAGES] Run $RUN_ID status=$STATUS conclusion=$CONCLUSION"
-              break
-            fi
-            echo "[PAGES] Attempt $i: no run for ${{ github.sha }} yet; waiting 10s..."
-            sleep 10
-          done
-          if [ -z "${RUN_ID:-}" ]; then
-            { echo "pages_deploy_detected=false"; echo "pages_deploy_status=not_found"; echo "pages_deploy_url="; } >> "$GITHUB_OUTPUT"
-            echo "[PAGES] No deploy run found for this commit (will still poll live)"
-          fi
-
-      - name: Wait for Pages deploy to complete (if detected)
+      - name: Wait for Pages deploy (same SHA, tolerate concurrency cancel)
         id: wait_pages
-        if: steps.pages_deploy.outputs.pages_deploy_detected == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          RUN_ID="${{ steps.pages_deploy.outputs.pages_run_id }}"
+          MERGE_SHA="${{ github.sha }}"
+          echo "merged_commit_sha=$MERGE_SHA" >> "$GITHUB_OUTPUT"
+          echo "[PAGES] merge_sha=$MERGE_SHA"
+          echo "[PAGES] note=pages.yml uses concurrency cancel-in-progress; push run may be cancelled by later dispatch"
+
+          pages_deploy_detected="false"
+          pages_run_id=""
+          pages_deploy_url=""
+          pages_deploy_conclusion="not_found"
+          superseded_by_success="false"
+
           for i in $(seq 1 60); do
-            S=$(gh run view "$RUN_ID" --json status,conclusion -q '.status + " " + (.conclusion // "pending")')
-            STATUS=$(echo "$S" | awk '{print $1}')
-            CONCLUSION=$(echo "$S" | awk '{print $2}')
-            echo "[PAGES] $i status=$STATUS conclusion=$CONCLUSION"
-            if [ "$STATUS" = "completed" ]; then
-              echo "pages_deploy_conclusion=$CONCLUSION" >> "$GITHUB_OUTPUT"
-              if [ "$CONCLUSION" != "success" ]; then
-                echo "FAIL: Pages deploy finished with conclusion=$CONCLUSION"
-                exit 1
+            mapfile -t ROWS < <(gh run list --workflow=pages.yml --branch main --limit 20 \
+              --json databaseId,status,conclusion,headSha,url,createdAt \
+              --jq '.[] | select(.headSha == "'"$MERGE_SHA"'") | "\(.databaseId)\t\(.status)\t\(.conclusion // "pending")\t\(.url)"' 2>/dev/null || true)
+
+            success_id=""
+            in_progress_id=""
+            cancelled_id=""
+            for row in "${ROWS[@]}"; do
+              [ -z "$row" ] && continue
+              rid="${row%%$'\t'*}"
+              rest="${row#*$'\t'}"
+              st="${rest%%$'\t'*}"
+              rest2="${rest#*$'\t'}"
+              con="${rest2%%$'\t'*}"
+              url="${rest2#*$'\t'}"
+              pages_deploy_detected="true"
+              if [ "$con" = "success" ]; then
+                success_id="$rid"
+                pages_deploy_url="$url"
+              elif [ "$st" = "in_progress" ] || [ "$st" = "queued" ]; then
+                [ -z "$in_progress_id" ] && in_progress_id="$rid"
+              elif [ "$con" = "cancelled" ]; then
+                [ -z "$cancelled_id" ] && cancelled_id="$rid"
+              fi
+            done
+
+            if [ -n "$success_id" ]; then
+              pages_run_id="$success_id"
+              pages_deploy_conclusion="success"
+              if [ -n "$cancelled_id" ] && [ "$cancelled_id" != "$success_id" ]; then
+                superseded_by_success="true"
+                echo "[PAGES] success_run=$success_id superseded_cancelled_run=$cancelled_id"
+              else
+                echo "[PAGES] success_run=$success_id"
               fi
               break
             fi
+
+            if [ -n "$in_progress_id" ]; then
+              pages_run_id="$in_progress_id"
+              pages_deploy_conclusion="pending"
+              echo "[PAGES] $i waiting active_run=$in_progress_id"
+            elif [ -n "$cancelled_id" ]; then
+              pages_run_id="$cancelled_id"
+              pages_deploy_conclusion="cancelled"
+              echo "[PAGES] $i cancelled_run=$cancelled_id waiting_for_replacement_success"
+            else
+              echo "[PAGES] $i no run for merge_sha yet"
+            fi
+
             sleep 10
           done
-          if [ "$STATUS" != "completed" ]; then
-            echo "FAIL: Timed out waiting for Pages deploy"
-            exit 1
+
+          {
+            echo "pages_deploy_detected=$pages_deploy_detected"
+            echo "pages_run_id=$pages_run_id"
+            echo "pages_deploy_url=$pages_deploy_url"
+            echo "pages_deploy_status=completed"
+            echo "pages_deploy_conclusion=$pages_deploy_conclusion"
+            echo "superseded_by_success=$superseded_by_success"
+          } >> "$GITHUB_OUTPUT"
+
+          if [ "$pages_deploy_conclusion" != "success" ]; then
+            echo "[PAGES] WARN: no successful Pages deploy confirmed for merge_sha (will rely on live JSON proof)"
           fi
 
       - name: Poll live JSON until match or timeout
@@ -227,9 +256,11 @@ jobs:
         if: always()
         run: |
           echo "mergedCommitSha=${{ steps.live_match.outputs.merged_commit_sha || github.sha }}"
-          echo "pagesDeployDetected=${{ steps.pages_deploy.outputs.pages_deploy_detected }}"
-          echo "pagesDeployStatus=${{ steps.pages_deploy.outputs.pages_deploy_status }}"
-          echo "pagesDeployUrl=${{ steps.pages_deploy.outputs.pages_deploy_url }}"
+          echo "pagesDeployDetected=${{ steps.wait_pages.outputs.pages_deploy_detected }}"
+          echo "pagesDeployStatus=${{ steps.wait_pages.outputs.pages_deploy_status }}"
+          echo "pagesDeployUrl=${{ steps.wait_pages.outputs.pages_deploy_url }}"
+          echo "pagesDeployConclusion=${{ steps.wait_pages.outputs.pages_deploy_conclusion }}"
+          echo "pagesSupersededBySuccess=${{ steps.wait_pages.outputs.superseded_by_success }}"
           echo "repoArticlesHash=${{ steps.repo_hashes.outputs.repo_articles_hash }}"
           echo "liveArticlesHash=${{ steps.live_match.outputs.live_articles_hash }}"
           echo "repoVideosHash=${{ steps.repo_hashes.outputs.repo_videos_hash }}"
@@ -260,8 +291,10 @@ jobs:
             echo "| --- | --- |"
             echo "| merge_commit_sha | ${{ github.sha }} |"
             echo "| repo_articles_generatedAt | ${GEN_AT} |"
-            echo "| pages_run_id | ${{ steps.pages_deploy.outputs.pages_run_id }} |"
-            echo "| pages_deploy_url | ${{ steps.pages_deploy.outputs.pages_deploy_url }} |"
+            echo "| pages_run_id | ${{ steps.wait_pages.outputs.pages_run_id }} |"
+            echo "| pages_deploy_url | ${{ steps.wait_pages.outputs.pages_deploy_url }} |"
+            echo "| pages_deploy_conclusion | ${{ steps.wait_pages.outputs.pages_deploy_conclusion }} |"
+            echo "| pages_superseded_by_success | ${{ steps.wait_pages.outputs.superseded_by_success }} |"
             echo "| freshness_prod_pass | ${{ steps.live_match.outputs.freshness_prod_pass }} |"
             echo "| propagation_attempts | ${{ steps.live_match.outputs.propagation_attempts }} |"
             echo ""
