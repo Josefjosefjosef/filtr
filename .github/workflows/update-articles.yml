@@ -15,9 +15,9 @@ name: Update articles data
 # Serial runs only: do NOT cancel an in-progress ingest. With cancel-in-progress: true, each new
 # scheduled tick (*/5) could cancel the previous run if it was still building/waiting on PR merge,
 # producing long gaps and missing schedule records. Queued runs wait instead (safe cadence).
-# Group bumped 2026-05-31: zombie run stuck in queued since 2026-05-23 blocked entire pipeline.
+# Group bumped 2026-05-31: zombie run 26326283872 stuck queued since 2026-05-23 — v3 bypasses dead lock.
 concurrency:
-  group: update-articles-data-v2
+  group: update-articles-data-v3
   cancel-in-progress: false
 
 permissions:
