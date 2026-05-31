@@ -1,6 +1,6 @@
 {
   "date": "2026-05-30",
-  "generatedAt": "2026-05-31T01:50:11.590153Z",
+  "generatedAt": "2026-05-31T09:20:45.899196Z",
   "items": [
     {
       "topic": "aktualne",
@@ -120,7 +120,7 @@
       "feedId": "zpr_idnes_zpravy",
       "url": "https://www.idnes.cz/ekonomika/domaci/eu-evropska-komise-trh.A260529_135112_ekonomika_hyk",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.6341865852843052,
+      "displayScore": 0.36760306633132817,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -151,7 +151,7 @@
       "feedId": "fin_idnes_ekonomika",
       "url": "https://www.idnes.cz/ekonomika/domaci/prodeje-traficon-ai-vek-hlidani.A260525_141954_ekonomika_vebe",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.6053599222845211,
+      "displayScore": 0.3508938360326828,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -442,7 +442,7 @@
       "feedId": "zpr_aktualne",
       "url": "https://sport.aktualne.cz/hokej/ms-v-hokeji/semifinale-gigantu-zvladlo-lepe-finsko-a-postupuje-do-finale-svetoveho-sampionatu/r~aaa29c35d2f57247d81d30ba8440d3e3/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.4787087210513513,
+      "displayScore": 0.29299663414216615,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -597,7 +597,7 @@
       "feedId": "fin_sz_byznys",
       "url": "https://www.seznamzpravy.cz/clanek/zahranicni-trump-je-ve-vybornem-zdravotnim-stavu-jen-by-mel-zhubnout-uvedl-jeho-lekar-307441",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.5414086655960305,
+      "displayScore": 0.3400413738130081,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -740,6 +740,38 @@
       }
     },
     {
+      "topic": "vzdelavani",
+      "section": "vzdelavani",
+      "contentType": "article",
+      "title": "Cyklista na Vysočině po střetu s osobákem zemřel. Silnici uzavřeli",
+      "publishedAt": "2026-05-30T17:08:00Z",
+      "sources": [
+        {
+          "name": "Novinky / Škola",
+          "url": "https://www.novinky.cz/clanek/domaci-zpravy-kraj-vysocina-cyklista-na-vysocine-po-stretu-s-osobakem-zemrel-silnici-uzavreli-40580733"
+        }
+      ],
+      "primaryCategory": "vzdelavani",
+      "topicHash": "57195e394d8a22fe",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.0,
+      "sectionPrimary": "vzdelavani",
+      "sourceLabel": "Novinky / Škola",
+      "feedId": "vzd_novinky_skola",
+      "url": "https://www.novinky.cz/clanek/domaci-zpravy-kraj-vysocina-cyklista-na-vysocine-po-stretu-s-osobakem-zemrel-silnici-uzavreli-40580733",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.2629178657675783,
+      "iuReleaseAt": "2026-05-31T09:20:58.899196Z",
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "vzdelavani",
+        "reason": "topic_field",
+        "confidence": 0.95,
+        "railSectionKey": "vzdelavani",
+        "guardFlags": []
+      }
+    },
+    {
       "topic": "krimi",
       "section": "krimi",
       "contentType": "article",
@@ -760,13 +792,113 @@
       "feedId": "zpr_denik",
       "url": "https://www.denik.cz/krimi/vezeni-pro-vrahy-uz-od-13-let-tejc-ukazal-na-brutalitu-deti-a-problemy-pastaku-2.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.3699609394385553,
+      "displayScore": 0.24832112666586362,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
         "reason": "general_news_bucket",
         "confidence": 0.85,
         "railSectionKey": "krimi",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "vzdelavani",
+      "section": "vzdelavani",
+      "contentType": "article",
+      "title": "Ropa už přes Hormuz nikdy nebude putovat tak snadno jako dříve, říká analýza",
+      "publishedAt": "2026-05-30T16:54:16Z",
+      "sources": [
+        {
+          "name": "Seznam Zprávy / Vzdělávání",
+          "url": "https://www.seznamzpravy.cz/clanek/ekonomika-finance-byznys-komodity-dluhopisy-ropa-uz-pres-hormuz-nikdy-nebude-putovat-tak-snadno-jako-drive-rika-analyza-307437"
+        }
+      ],
+      "primaryCategory": "vzdelavani",
+      "topicHash": "f7356f2d1f44d929",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.05,
+      "sectionPrimary": "vzdelavani",
+      "sourceLabel": "Seznam Zprávy / Vzdělávání",
+      "feedId": "vzd_seznam",
+      "url": "https://www.seznamzpravy.cz/clanek/ekonomika-finance-byznys-komodity-dluhopisy-ropa-uz-pres-hormuz-nikdy-nebude-putovat-tak-snadno-jako-drive-rika-analyza-307437",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.27332238207226467,
+      "iuReleaseAt": "2026-05-31T09:20:59.899196Z",
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "finance",
+        "reason": "url_strong_overrides_topic",
+        "confidence": 0.92,
+        "railSectionKey": "vzdelavani",
+        "guardFlags": [
+          "topic_url_conflict"
+        ]
+      }
+    },
+    {
+      "topic": "vzdelavani",
+      "section": "vzdelavani",
+      "contentType": "article",
+      "title": "Hokejisté Švýcarska jsou prvním finalistou. Přehráli Nory 6:0",
+      "publishedAt": "2026-05-30T16:50:54Z",
+      "sources": [
+        {
+          "name": "Seznam Zprávy / Vzdělávání",
+          "url": "https://www.seznamzpravy.cz/clanek/sport-hokejiste-svycarska-jsou-prvnim-finalistou-prehrali-nory-6-0-307438"
+        }
+      ],
+      "primaryCategory": "vzdelavani",
+      "topicHash": "f358aa6e0514db66",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.05,
+      "sectionPrimary": "vzdelavani",
+      "sourceLabel": "Seznam Zprávy / Vzdělávání",
+      "feedId": "vzd_seznam",
+      "url": "https://www.seznamzpravy.cz/clanek/sport-hokejiste-svycarska-jsou-prvnim-finalistou-prehrali-nory-6-0-307438",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.272658634758636,
+      "iuReleaseAt": "2026-05-31T09:20:57.899196Z",
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "sport",
+        "reason": "url_strong_overrides_topic",
+        "confidence": 0.92,
+        "railSectionKey": "vzdelavani",
+        "guardFlags": [
+          "topic_url_conflict"
+        ]
+      }
+    },
+    {
+      "topic": "vzdelavani",
+      "section": "vzdelavani",
+      "contentType": "article",
+      "title": "Policisté vyšetřují smrt ženy v bytovém domě v Havířově, zaútočil na ni soused",
+      "publishedAt": "2026-05-30T16:34:41Z",
+      "sources": [
+        {
+          "name": "Novinky / Škola",
+          "url": "https://www.novinky.cz/clanek/krimi-policiste-vysetruji-smrt-zeny-v-bytovem-dome-v-havirove-zautocil-na-ni-soused-40580738"
+        }
+      ],
+      "primaryCategory": "vzdelavani",
+      "topicHash": "3bb652a7b02abeb1",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.0,
+      "sectionPrimary": "vzdelavani",
+      "sourceLabel": "Novinky / Škola",
+      "feedId": "vzd_novinky_skola",
+      "url": "https://www.novinky.cz/clanek/krimi-policiste-vysetruji-smrt-zeny-v-bytovem-dome-v-havirove-zautocil-na-ni-soused-40580738",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.2566724913973451,
+      "iuReleaseAt": "2026-05-31T09:20:56.899196Z",
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "vzdelavani",
+        "reason": "topic_field",
+        "confidence": 0.95,
+        "railSectionKey": "vzdelavani",
         "guardFlags": []
       }
     },
@@ -791,7 +923,7 @@
       "feedId": "kul_vtelce",
       "url": "https://www.vtelce.cz/tenkrat-v-hollywoodu-sperky-zavrazdene-hvezdy-scenar-v-trezoru-a-tajemstvi-ktere-si-pitt-vezme-do-hrobu/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.2823563126166499,
+      "displayScore": 0.19161634854709259,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -822,13 +954,45 @@
       "feedId": "zdr_betterlife",
       "url": "https://www.betterlife.cz/ulice-ostra-slova-poradna-facka-a-drsny-pad-adriana-vraci-uder-muzi-ktery-ji-delsi-dobu-nicil-zivot/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.24445742019400848,
+      "displayScore": 0.16595169068584706,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
         "reason": "topic_field",
         "confidence": 0.95,
         "railSectionKey": "zdravi",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "veda",
+      "section": "veda",
+      "contentType": "article",
+      "title": "Klíčový svědek v případu Kuciakovy vraždy poprvé zmínil Gašpara a Kováčika. Mlčel jsem ze strachu o život, tvrdí",
+      "publishedAt": "2026-05-30T16:26:04Z",
+      "sources": [
+        {
+          "name": "Novinky / Věda a škola",
+          "url": "https://www.novinky.cz/clanek/zahranicni-evropa-klicovy-svedek-v-pripadu-kuciakovy-vrazdy-poprve-zminil-gaspara-a-kovacika-mlcel-jsem-ze-strachu-o-zivot-tvrdi-40579815"
+        }
+      ],
+      "primaryCategory": "veda",
+      "topicHash": "0529db10fa60fa3b",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.05,
+      "sectionPrimary": "veda",
+      "sourceLabel": "Novinky / Věda a škola",
+      "feedId": "ved_novinky",
+      "url": "https://www.novinky.cz/clanek/zahranicni-evropa-klicovy-svedek-v-pripadu-kuciakovy-vrazdy-poprve-zminil-gaspara-a-kovacika-mlcel-jsem-ze-strachu-o-zivot-tvrdi-40579815",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.26786051389398463,
+      "iuReleaseAt": "2026-05-31T09:20:58.899196Z",
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "veda",
+        "reason": "topic_field",
+        "confidence": 0.95,
+        "railSectionKey": "veda",
         "guardFlags": []
       }
     },
@@ -946,7 +1110,7 @@
       "feedId": "zdr_zdravotnickydenik",
       "url": "https://www.zdravotnickydenik.cz/2026/05/desitky-novych-kontroloru-prodej-az-od-21-let-babis-chce-tvrde-zakrocit-proti-kratomu/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.3824664756682848,
+      "displayScore": 0.26229073080613047,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -1008,7 +1172,7 @@
       "feedId": "fin_faei",
       "url": "https://profitonline.cz/goldman-sachs-mistrovstvi-sveta-ve-fotbale-nejspise-vyhraji-spanele/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.28410625288653424,
+      "displayScore": 0.19638163556176796,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -1039,7 +1203,7 @@
       "feedId": "zpr_idnes_zpravy",
       "url": "https://www.idnes.cz/ekonomika/podniky/rodinny-byznys-z-ceska-dnes-zasobuje-dalnice-i-letiste-po-evrope.A260519_085324_ekoakcie_rts",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.3795204927524585,
+      "displayScore": 0.2646618473834448,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -1070,7 +1234,7 @@
       "feedId": "zpr_denik",
       "url": "https://www.denik.cz/pocasi/bourky-zasahly-plzensky-kraj-strom-primackl-zena-domazlicko.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.3249647261364593,
+      "displayScore": 0.22720494815733755,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -1101,7 +1265,7 @@
       "feedId": "fin_sz_byznys",
       "url": "https://www.seznamzpravy.cz/clanek/zahranicni-zapasy-ufc-pred-bilym-domem-jak-trump-meni-tvar-washingtonu-307425",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.3914812481499136,
+      "displayScore": 0.2741088485692099,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -1132,7 +1296,7 @@
       "feedId": "zpr_denik",
       "url": "https://www.denik.cz/doprava/pozor-na-pokuty-u-more-cesi-riskuji-tisice-kvuli-nosicum-kol-na-aute.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.32281756164574416,
+      "displayScore": 0.22615324651248062,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -1163,7 +1327,7 @@
       "feedId": "kul_vtelce",
       "url": "https://www.vtelce.cz/mamma-mia-here-we-go-again-bizarni-vekovy-rozdil-cher-zarlivost-manzela-a-tajne-nataceni-v-chorvatsku/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.25469569632886807,
+      "displayScore": 0.17846336211853803,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -1225,8 +1389,8 @@
       "feedId": "ved_novinky",
       "url": "https://www.novinky.cz/clanek/zahranicni-pet-vesnicanu-bylo-zachraneno-ze-zatopene-jeskyne-v-laosu-dva-muzi-jsou-stale-nezvestni-40580724",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.3439526173429425,
-      "iuReleaseAt": "2026-05-31T01:50:23.590153Z",
+      "displayScore": 0.24358564650268758,
+      "iuReleaseAt": "2026-05-31T09:20:54.899196Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "veda",
@@ -1257,7 +1421,7 @@
       "feedId": "zpr_denik",
       "url": "https://www.denik.cz/krimi/havirov-nasilna-smrt-vrazda-policie-podezrely-muz-zadrzen-zlocin-20260530.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.3088253848572785,
+      "displayScore": 0.2191957951154808,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -1271,7 +1435,7 @@
       "topic": "cestovani",
       "section": "cestovani",
       "contentType": "article",
-      "title": "Pařížské ulice připomínají po fotbalovém finále válečnou zónu",
+      "title": "Pařížské ulice připomínaly po fotbalovém finále válečnou zónu, zadrženo bylo 280 lidí",
       "publishedAt": "2026-05-30T13:30:24Z",
       "sources": [
         {
@@ -1280,7 +1444,7 @@
         }
       ],
       "primaryCategory": "cestovani",
-      "topicHash": "b6dfd9f96cb83814",
+      "topicHash": "9b97a574655c3e67",
       "feedType": "rubric",
       "sourceDisplayWeight": 1.0,
       "sectionPrimary": "cestovani",
@@ -1288,8 +1452,8 @@
       "feedId": "ces_novinky_cestovani",
       "url": "https://www.novinky.cz/clanek/zahranicni-pariz-napjate-ceka-na-finale-fotbalove-ligy-mistru-40580732",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.31745418161780675,
-      "iuReleaseAt": "2026-05-31T01:50:22.590153Z",
+      "displayScore": 0.22686469903068895,
+      "iuReleaseAt": "2026-05-31T09:20:56.899196Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "cestovani",
@@ -1449,7 +1613,7 @@
       "feedId": "zpr_denik",
       "url": "https://www.denik.cz/zdravotnictvi/alzheimer-rychly-test-u-praktickeho-lekare-muze-prodlouzit-sobestacnost.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.29396042348837625,
+      "displayScore": 0.2116010709417904,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -1573,7 +1737,7 @@
       "feedId": "fin_sz_byznys",
       "url": "https://www.seznamzpravy.cz/clanek/zahranicni-tyrani-vedci-odsoudili-celou-zachrannou-akci-velryby-timmyho-307426",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.3439856475690967,
+      "displayScore": 0.24994482257993308,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -1604,7 +1768,7 @@
       "feedId": "zpr_ceskajustice",
       "url": "https://www.ceska-justice.cz/2026/05/tejc-soudci-informace-vrazda/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.22124100714175537,
+      "displayScore": 0.16136593746042266,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -1761,7 +1925,7 @@
       "feedId": "fin_epenize",
       "url": "https://www.epenize.eu/ztrata-casu-rajchl-se-chlubi-vysetrovaci-komisi-k-dozimetru/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.21665452608153576,
+      "displayScore": 0.1616041688426209,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -1885,7 +2049,7 @@
       "feedId": "fin_hn",
       "url": "https://tech.hn.cz/c1-67884150-hackeri-nabizi-k-prodeji-udajna-zakaznicka-data-alzy-nejvetsi-cesky-obchod-jejich-pravost-odmita",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.25380318387788464,
+      "displayScore": 0.19238488151898814,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -1916,7 +2080,7 @@
       "feedId": "fin_ekonomickydenik",
       "url": "https://ekonomickydenik.cz/podvody-poslankyne-varuje-pred-financnimi-influencery/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.20476145008102192,
+      "displayScore": 0.15714477909699137,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -1947,7 +2111,7 @@
       "feedId": "fin_hn",
       "url": "https://byznys.hn.cz/c1-67884130-rakousko-italsky-brennersky-prusmyk-bude-dnes-uzavren-kvuli-protestni-akci-mistnim-vadi-hluk-a-znecisteni",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.23913561671712572,
+      "displayScore": 0.18383771231979845,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -1978,7 +2142,7 @@
       "feedId": "fin_epenize",
       "url": "https://www.epenize.eu/valka-s-iranem-potapi-trumpovy-ekonomicke-sliby/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.18901500077653777,
+      "displayScore": 0.1457109689386493,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -2009,7 +2173,7 @@
       "feedId": "zdr_plnezdravi",
       "url": "https://www.plnezdravi.cz/osteoporoza-tichy-zlodej-kostni-hmoty-jak-se-branit/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.20079549268891023,
+      "displayScore": 0.1547983247912263,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -2040,7 +2204,7 @@
       "feedId": "fin_penize",
       "url": "https://www.penize.cz/kryptomeny/490571-nasel-jsem-39-069-penezenek-muz-chce-biliony-v-bitcoinech-ke-kterym-nema-klice",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.2007318284390494,
+      "displayScore": 0.15476048473581533,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -2060,6 +2224,10 @@
         {
           "name": "ČT24 / Domácí",
           "url": "https://ct24.ceskatelevize.cz/clanek/veda/na-mostecku-vedci-vysazuji-travu-s-vyhrevnosti-uhli-374005"
+        },
+        {
+          "name": "ČT24 / Věda",
+          "url": "https://ct24.ceskatelevize.cz/clanek/veda/na-mostecku-vedci-vysazuji-travu-s-vyhrevnosti-uhli-374005"
         }
       ],
       "primaryCategory": "zpravy",
@@ -2071,8 +2239,8 @@
       "feedId": "zpr_ct24_domaci",
       "url": "https://ct24.ceskatelevize.cz/clanek/veda/na-mostecku-vedci-vysazuji-travu-s-vyhrevnosti-uhli-374005",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.2833861107281866,
-      "iuReleaseAt": "2026-05-31T01:50:13.590153Z",
+      "displayScore": 0.21848539020790206,
+      "iuReleaseAt": "2026-05-31T09:20:48.899196Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "veda",
@@ -2092,6 +2260,10 @@
         {
           "name": "ČT24 / Domácí",
           "url": "https://ct24.ceskatelevize.cz/clanek/kultura/cenu-evropske-unie-za-literaturu-dostala-kapralova-za-roman-mariborska-hypnoza-374043"
+        },
+        {
+          "name": "ČT art",
+          "url": "https://ct24.ceskatelevize.cz/clanek/kultura/cenu-evropske-unie-za-literaturu-dostala-kapralova-za-roman-mariborska-hypnoza-374043"
         }
       ],
       "primaryCategory": "zpravy",
@@ -2103,8 +2275,8 @@
       "feedId": "zpr_ct24_domaci",
       "url": "https://ct24.ceskatelevize.cz/clanek/kultura/cenu-evropske-unie-za-literaturu-dostala-kapralova-za-roman-mariborska-hypnoza-374043",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.28321271261581377,
-      "iuReleaseAt": "2026-05-31T01:50:15.590153Z",
+      "displayScore": 0.2183823058187041,
+      "iuReleaseAt": "2026-05-31T09:20:50.899196Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "kultura",
@@ -2166,7 +2338,7 @@
       "feedId": "fin_ekonomickydenik",
       "url": "https://ekonomickydenik.cz/sdileni-elektrina-obce-vlada/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.19460425688054953,
+      "displayScore": 0.15109253889333107,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -2197,7 +2369,7 @@
       "feedId": "zpr_hlidacipes",
       "url": "https://hlidacipes.org/jarmila-kovarcikova-otce-jsme-po-navratu-z-koncentraku-nepoznali/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.181863503339861,
+      "displayScore": 0.14142380658883377,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -2321,8 +2493,8 @@
       "feedId": "kul_vipzivot",
       "url": "https://vipzivot.cz/p/byt-sandry-pogodove-je-mensi-nez-jeji-terasa/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.15049970155518996,
-      "iuReleaseAt": "2026-05-31T01:50:23.590153Z",
+      "displayScore": 0.11846286463871115,
+      "iuReleaseAt": "2026-05-31T09:20:56.899196Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "kultura",
@@ -2353,8 +2525,8 @@
       "feedId": "kul_vipzivot",
       "url": "https://vipzivot.cz/p/oslava-leose-marese-capi-hnizdo-budi-odpor-kritici/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.15023053903535513,
-      "iuReleaseAt": "2026-05-31T01:50:19.590153Z",
+      "displayScore": 0.11829603502566408,
+      "iuReleaseAt": "2026-05-31T09:20:49.899196Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "kultura",
