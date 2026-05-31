@@ -304,6 +304,19 @@ jobs:
           T1=$(date +%s)
           echo "[TIME] cz_vertical_flow_guard_seconds=$((T1-T0))"
 
+      - name: Ensure aggregator freshness guard script (workflow ref may be ahead of main)
+        run: |
+          set -euo pipefail
+          if [ -f scripts/articles-aggregator-freshness-guard.mjs ]; then
+            echo "[GUARD] script present on checkout"
+            exit 0
+          fi
+          REF="${{ github.ref_name }}"
+          echo "[GUARD] fetching scripts/articles-aggregator-freshness-guard.mjs from origin/${REF}"
+          git fetch origin "${REF}"
+          git checkout "origin/${REF}" -- scripts/articles-aggregator-freshness-guard.mjs
+          test -s scripts/articles-aggregator-freshness-guard.mjs
+
       - name: Articles aggregator freshness guard (bundle + main sections)
         run: |
           set -euo pipefail
