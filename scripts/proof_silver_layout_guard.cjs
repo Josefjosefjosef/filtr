@@ -289,7 +289,7 @@ function formatBlock(label, o) {
 
 async function main() {
   const browser = await chromium.launch({ headless: true });
-  const ctx = await browser.newContext();
+  const ctx = await browser.newContext({ serviceWorkers: "block" });
   await installClsObserver(ctx);
 
   let v390;
