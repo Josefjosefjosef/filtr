@@ -967,6 +967,8 @@ try {
   const IU_FEED_VIDEO_MAX_PER_PAGE = 25;
   /** P0 UI: first DOM append batch ≈ first viewport; follow-up batches keep main-thread slices small. */
   const IU_FEED_FIRST_DOM_BATCH = 12;
+  /** P0 section switch: show first viewport of correct articles before full hub render completes. */
+  const IU_FEED_SECTION_SWITCH_FIRST_BATCH = 30;
   const IU_FEED_DOM_APPEND_CHUNK = 18;
   /** P0 reload-only: smaller batches so each frame does less innerHTML+layout work (cold path unchanged). */
   const IU_FEED_RELOAD_FIRST_DOM_BATCH = 8;
@@ -4938,6 +4940,33 @@ try {
     } catch (_) {}
   }
 
+  function iuFeedSectionSwitchActiveP() {
+    try {
+      const fel = document.getElementById("feed");
+      return !!(fel && String(fel.getAttribute("data-feed-switching") || "") === "1");
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /** P0 section switch: drop stale articles/header synchronously on click (before applyFilter/renderFeed). */
+  function iuFeedSectionSwitchInstantClear(feedEl) {
+    if (!feedEl || feedEl.id !== "feed") return;
+    try {
+      const sectionsBar = document.getElementById("sectionsBar");
+      if (sectionsBar) {
+        feedEl.replaceChildren(sectionsBar);
+      } else {
+        feedEl.replaceChildren();
+      }
+      const headerEl = iuBuildFeedSectionHeaderElement();
+      iuFeedSectionHeaderEnsureAppended(feedEl, headerEl);
+      const vk = iuFeedSectionHeaderResolveVisualKey();
+      if (vk) feedEl.setAttribute("data-feed-visual-key", vk);
+      else feedEl.removeAttribute("data-feed-visual-key");
+    } catch (_) {}
+  }
+
   // === LOCKED PIPELINE ===
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
@@ -4983,6 +5012,26 @@ try {
     }
     state.__iuRenderFeedGeneration = (state.__iuRenderFeedGeneration | 0) + 1;
     const iuRenderFeedToken = state.__iuRenderFeedGeneration;
+    const switchSeqAtStart = (() => {
+      try {
+        return feedEl ? String(feedEl.getAttribute("data-feed-switch-seq") || "") : "";
+      } catch (_) {
+        return "";
+      }
+    })();
+    let sectionSwitchFirstBatchReleased = false;
+    function iuRenderFeedReleaseSectionSwitchIfReady() {
+      if (sectionSwitchFirstBatchReleased) return;
+      if (!switchSeqAtStart) return;
+      try {
+        const fel = document.getElementById("feed");
+        if (!fel || String(fel.getAttribute("data-feed-switching") || "") !== "1") return;
+        if (String(fel.getAttribute("data-feed-switch-seq") || "") !== switchSeqAtStart) return;
+        fel.removeAttribute("data-feed-switching");
+        fel.style.minHeight = "";
+        sectionSwitchFirstBatchReleased = true;
+      } catch (_) {}
+    }
     function iuRenderFeedStaleP() {
       try {
         return state.__iuRenderFeedGeneration !== iuRenderFeedToken;
@@ -5203,6 +5252,7 @@ try {
     let firstDomBatch = true;
     let firstFeedBatchMarked = false;
     const reloadDomTight = iuFeedReloadDomTightenP();
+    const sectionSwitchActive = iuFeedSectionSwitchActiveP();
     const iuFeedMicroDomYieldOffP = () => {
       try {
         return typeof location !== "undefined" && /(?:^|[?&])iuFeedMicro=0(?:&|$)/.test(String(location.search || ""));
@@ -5216,7 +5266,9 @@ try {
         return;
       }
       const batchMax = firstDomBatch
-        ? reloadDomTight
+        ? sectionSwitchActive
+          ? IU_FEED_SECTION_SWITCH_FIRST_BATCH
+          : reloadDomTight
           ? IU_FEED_RELOAD_FIRST_DOM_BATCH
           : IU_FEED_FIRST_DOM_BATCH
         : reloadDomTight
@@ -5302,11 +5354,33 @@ try {
           if (!firstFeedBatchMarked) {
             firstFeedBatchMarked = true;
             iuBootTracePhase("renderFeed_first_batch_committed");
+            try {
+              window.__iuFeedSwitchMetrics = {
+                initialBatchCount: renderedCount,
+                sectionSwitch: sectionSwitchActive,
+                atMs: typeof performance !== "undefined" && performance.now ? performance.now() : Date.now(),
+              };
+            } catch (_) {}
+            iuRenderFeedReleaseSectionSwitchIfReady();
           }
         }
       }
       if (pos < visibleItems.length) {
-        await iuYieldForFeedDomChunk();
+        if (sectionSwitchFirstBatchReleased) {
+          await new Promise((resolve) => {
+            try {
+              if (typeof requestIdleCallback === "function") {
+                requestIdleCallback(() => resolve(), { timeout: 160 });
+              } else {
+                setTimeout(resolve, 48);
+              }
+            } catch (_) {
+              setTimeout(resolve, 48);
+            }
+          });
+        } else {
+          await iuYieldForFeedDomChunk();
+        }
         if (iuRenderFeedStaleP()) {
           return;
         }
@@ -5487,8 +5561,11 @@ try {
     }
     feedEl.setAttribute("data-feed-ready", "true");
     try {
-      feedEl.removeAttribute("data-feed-switching");
-      feedEl.style.minHeight = "";
+      iuRenderFeedReleaseSectionSwitchIfReady();
+      if (!sectionSwitchFirstBatchReleased) {
+        feedEl.removeAttribute("data-feed-switching");
+        feedEl.style.minHeight = "";
+      }
       const vkDone = iuFeedSectionHeaderResolveVisualKey();
       if (vkDone) feedEl.setAttribute("data-feed-visual-key", vkDone);
       else feedEl.removeAttribute("data-feed-visual-key");
@@ -5496,9 +5573,12 @@ try {
     } finally {
       try {
         const felFin = document.getElementById("feed");
-        if (felFin) {
-          felFin.removeAttribute("data-feed-switching");
-          felFin.style.minHeight = "";
+        if (felFin && String(felFin.getAttribute("data-feed-switching") || "") === "1") {
+          const finSeq = String(felFin.getAttribute("data-feed-switch-seq") || "");
+          if (switchSeqAtStart && finSeq === switchSeqAtStart) {
+            felFin.removeAttribute("data-feed-switching");
+            felFin.style.minHeight = "";
+          }
         }
       } catch (_) {}
       try {
@@ -14491,6 +14571,7 @@ function buildVideoAsArticleCard(it) {
     const options = opts && typeof opts === "object" ? opts : {};
     const resetPage = options.resetPage !== false; // default: reset
     const doRender = options.render !== false;     // default: render
+    const instantSectionSwitch = options.instantSectionSwitch === true;
     let auditRun = null;
     let afPass = 0;
     let afProbe = false;
@@ -14511,15 +14592,27 @@ function buildVideoAsArticleCard(it) {
       if (!state.hasLoadedData) return;
       if (state.__iuApplyFilterBusy) {
         try {
-          queueMicrotask(function () {
-            try {
-              void applyFilter(opts);
-            } catch (_) {}
-          });
+          state.__iuApplyFilterPendingOpts = options;
+        } catch (_) {}
+        try {
+          if (!state.__iuApplyFilterRetryScheduled) {
+            state.__iuApplyFilterRetryScheduled = true;
+            queueMicrotask(function () {
+              try {
+                state.__iuApplyFilterRetryScheduled = false;
+                const pending = state.__iuApplyFilterPendingOpts;
+                state.__iuApplyFilterPendingOpts = null;
+                void applyFilter(pending || options);
+              } catch (_) {}
+            });
+          }
         } catch (_) {
           setTimeout(function () {
             try {
-              void applyFilter(opts);
+              state.__iuApplyFilterRetryScheduled = false;
+              const pending = state.__iuApplyFilterPendingOpts;
+              state.__iuApplyFilterPendingOpts = null;
+              void applyFilter(pending || options);
             } catch (_) {}
           }, 0);
         }
@@ -14595,8 +14688,9 @@ function buildVideoAsArticleCard(it) {
           auditRun && typeof performance !== "undefined" && performance.now ? performance.now() : 0;
         if (doRender) {
           const needPreRenderYield =
-            afPass >= 2 ||
-            (afPass === 1 && state.__iuYieldBeforeNextApplyFilterRender === true);
+            !instantSectionSwitch &&
+            (afPass >= 2 ||
+              (afPass === 1 && state.__iuYieldBeforeNextApplyFilterRender === true));
           if (needPreRenderYield) {
             iuBootTracePhase("applyFilter_yield_before_renderItems_pass_" + afPass);
             await iuYieldOneRaf();
@@ -14680,17 +14774,20 @@ function buildVideoAsArticleCard(it) {
     }
     state.filteredItems = filtered;
 
-    if (iuArticlesBootstrapOptIn() && !query) {
-      const pageCap = Math.max(
-        200,
-        Number(state.pageSize) > 0 ? Number(state.pageSize) : 100,
-      );
-      const narrow = !!(
-        (state.mediaTopicKey &&
-          String(state.mediaTopicKey).trim() !== "" &&
-          state.mediaTopicKey !== "all") ||
-        (Array.isArray(activeSections) && activeSections.length > 0 && !activeSections.includes("vse"))
-      );
+    const pageCapNav = Math.max(
+      200,
+      Number(state.pageSize) > 0 ? Number(state.pageSize) : 100,
+    );
+    const narrowTopicNav = !!(
+      (state.mediaTopicKey &&
+        String(state.mediaTopicKey).trim() !== "" &&
+        state.mediaTopicKey !== "all") ||
+      (Array.isArray(activeSections) && activeSections.length > 0 && !activeSections.includes("vse"))
+    );
+
+    if (iuArticlesBootstrapOptIn() && !query && !instantSectionSwitch) {
+      const pageCap = pageCapNav;
+      const narrow = narrowTopicNav;
       if (narrow && filtered.length > 0 && filtered.length < pageCap) {
         const nBefore = state.cachedItems.length;
         state.__iuApplyFilterBusy = false;
@@ -14766,7 +14863,8 @@ function buildVideoAsArticleCard(it) {
     if (doRender) {
       hideSearchModal();
       const needPreRenderYield2 =
-        afPass >= 2 || (afPass === 1 && state.__iuYieldBeforeNextApplyFilterRender === true);
+        !instantSectionSwitch &&
+        (afPass >= 2 || (afPass === 1 && state.__iuYieldBeforeNextApplyFilterRender === true));
       if (needPreRenderYield2) {
         iuBootTracePhase("applyFilter_yield_before_renderItems_pass_" + afPass);
         await iuYieldOneRaf();
@@ -14774,6 +14872,23 @@ function buildVideoAsArticleCard(it) {
       }
       await renderItems(filtered);
       setStatus(`Stav dat: OK (zobrazeno: ${filtered.length} / celkem: ${state.cachedItems.length})`);
+      if (instantSectionSwitch && narrowTopicNav && filtered.length > 0 && filtered.length < pageCapNav) {
+        void (async function iuSectionSwitchRetentionDeferred() {
+          try {
+            const nBefore = state.cachedItems.length;
+            await initRetentionIndex();
+            const hasRetention =
+              Array.isArray(state.retentionDays) &&
+              state.retentionDays.length > 0 &&
+              state.retentionCursor < state.retentionDays.length;
+            if (!hasRetention) return;
+            await loadRetentionUntilVisibleCount(pageCapNav);
+            if (state.cachedItems.length > nBefore) {
+              await applyFilter({ resetPage: false, render: true });
+            }
+          } catch (_) {}
+        })();
+      }
     }
     if (isDebugOn()) {
       writeDebug({
@@ -29114,12 +29229,22 @@ function buildVideoAsArticleCard(it) {
     /* P0 section switch stability: eager feed filter+render — idle deferral kept stale articles/header visible up to ~500ms. */
     if (usesFeed) {
       try {
+        state.__iuFeedSwitchSeq = (state.__iuFeedSwitchSeq || 0) + 1;
+        state.__iuRenderFeedGeneration = (state.__iuRenderFeedGeneration | 0) + 1;
+      } catch (_) {}
+      try {
         const feedSw = document.getElementById("feed");
         if (feedSw) {
           const prevH = feedSw.offsetHeight;
           if (prevH > 120) feedSw.style.minHeight = prevH + "px";
           feedSw.setAttribute("data-feed-ready", "false");
           feedSw.setAttribute("data-feed-switching", "1");
+          try {
+            feedSw.setAttribute("data-feed-switch-seq", String(state.__iuFeedSwitchSeq || 0));
+          } catch (_) {}
+          try {
+            iuFeedSectionSwitchInstantClear(feedSw);
+          } catch (_) {}
           try {
             const vkFn =
               typeof window.__iuFeedSectionHeaderResolveVisualKey === "function"
@@ -29133,7 +29258,7 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
       try {
         if (typeof window.__iuApplyFeedFilter === "function") {
-          void window.__iuApplyFeedFilter({ resetPage: true });
+          void window.__iuApplyFeedFilter({ resetPage: true, instantSectionSwitch: true });
         }
       } catch (_) {}
     }

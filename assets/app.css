@@ -4050,8 +4050,10 @@ select.iuCtrl{
   object-fit: contain;
 }
 
-/* P0 section switch: hide stale feed body until new topic render completes (visibility keeps layout box). */
-#feed[data-feed-switching="1"] > :not(#sectionsBar){
+/* P0 section switch: hide stale article cards only — header swaps synchronously on click. */
+#feed[data-feed-switching="1"] > article.news-card,
+#feed[data-feed-switching="1"] > .iuLoadMoreWrap,
+#feed[data-feed-switching="1"] > .iuVideoCard{
   visibility: hidden;
 }
 

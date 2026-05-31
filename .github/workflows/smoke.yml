@@ -67,6 +67,9 @@ jobs:
       - name: Reload / section switch / scroll stability guard
         run: npm run iu-reload-section-scroll-stability-guard
 
+      - name: Section switch instant response guard
+        run: npm run iu-section-switch-instant-response-guard
+
       - name: Set required status context (smoke)
         if: always()
         env:

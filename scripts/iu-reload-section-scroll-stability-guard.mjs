@@ -18,11 +18,13 @@ const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const CLS_CAP = 0.043;
 const SECTION_SWITCH_MAX_MS = 1200;
 const STALE_HEADER_MAX_MS = 80;
+const STALE_ARTICLES_MAX_MS = 150;
 
 const SECTIONS = [
   { accent: "zpravy", visualKey: "zpravy", headerFile: "section-zpravy.jpg" },
   { accent: "sport", visualKey: "sport", headerFile: "section-sport.jpg" },
   { accent: "finance", visualKey: "finance", headerFile: "section-finance.jpg" },
+  { accent: "zdravi", visualKey: "zdravi", headerFile: "section-zdravi.jpg" },
 ];
 
 function waitForPort(host, port, timeoutMs) {
@@ -73,7 +75,12 @@ function readFeedHeaderFile(page) {
     const switching = feed ? String(feed.getAttribute("data-feed-switching") || "") : "";
     const pic = feed && feed.querySelector("picture.iu-feed-section-header-picture");
     const picKey = pic ? String(pic.getAttribute("data-feed-visual-key") || "") : "";
-    return { file, visualKey, picKey, ready, switching };
+    const topic =
+      (window.__iuFeedPipelineState && String(window.__iuFeedPipelineState.mediaTopicKey || "")) || "";
+    const cards = feed
+      ? feed.querySelectorAll("article.news-card[data-feed-type='article']").length
+      : 0;
+    return { file, visualKey, picKey, ready, switching, topic, cards };
   });
 }
 
@@ -128,6 +135,7 @@ async function runSectionSwitchGuard(page) {
     const tClick = Date.now();
     await clickRail(page, sec.accent);
     let staleMs = 0;
+    let staleArticlesMs = 0;
     if (prev) {
       const staleDeadline = Date.now() + STALE_HEADER_MAX_MS;
       while (Date.now() < staleDeadline) {
@@ -138,6 +146,20 @@ async function runSectionSwitchGuard(page) {
         if (snap.file === sec.headerFile && snap.ready === "true") break;
         await page.waitForTimeout(8);
       }
+      const artDeadline = Date.now() + STALE_ARTICLES_MAX_MS;
+      while (Date.now() < artDeadline) {
+        const snap = await readFeedHeaderFile(page);
+        const staleTopic = snap.topic && snap.topic !== sec.accent;
+        const staleHeader = snap.file === prev.headerFile;
+        if (staleTopic && snap.switching !== "1" && snap.cards > 0) {
+          staleArticlesMs = Math.max(staleArticlesMs, Date.now() - tClick);
+        }
+        if (staleHeader && snap.switching !== "1" && snap.cards > 0) {
+          staleArticlesMs = Math.max(staleArticlesMs, Date.now() - tClick);
+        }
+        if (snap.topic === sec.accent && snap.file === sec.headerFile && snap.ready === "true") break;
+        await page.waitForTimeout(8);
+      }
     }
     const settled = await waitFeedSettled(page, sec, SECTION_SWITCH_MAX_MS);
     results.push({
@@ -145,12 +167,13 @@ async function runSectionSwitchGuard(page) {
       settledMs: settled.ms,
       ok: settled.ok,
       staleWrongHeaderMs: staleMs,
+      staleWrongArticlesMs: staleArticlesMs,
       row: settled.row,
     });
     if (!settled.ok) break;
     prev = sec;
   }
-  const pass = results.every((r) => r.ok && r.staleWrongHeaderMs === 0);
+  const pass = results.every((r) => r.ok && r.staleWrongHeaderMs === 0 && r.staleWrongArticlesMs === 0);
   return { pass, results };
 }
 
