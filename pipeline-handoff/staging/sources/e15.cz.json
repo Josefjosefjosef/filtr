@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-31T08:26:11.330943Z",
+  "ingestedAt": "2026-05-31T09:17:36.552720Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "IBM nalije deset miliard dolarů do vývoje kvantových počítačů. Technologickou revoluci podpoří i vláda",
+      "url": "https://www.e15.cz/byznys/ibm-nalije-deset-miliard-dolaru-do-vyvoje-kvantovych-pocitacu-technologickou-revoluci-podpori-i-vlada-1433189",
+      "dt": "2026-05-31T08:10:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "deset",
+        "dolarů",
+        "ibm",
+        "kvantových",
+        "miliard",
+        "nalije",
+        "podpoří",
+        "počítačů",
+        "revoluci",
+        "technologickou",
+        "vláda",
+        "vývoje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1081,34 +1110,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Rohlík hlásí provozní zisk za poslední čtvrtletí. Pomohly investice i rychlý růst v Německu",
-      "url": "https://www.e15.cz/byznys/rohlik-hlasi-provozni-zisk-za-posledni-ctvrtleti-pomohly-investice-i-rychly-rust-v-nemecku-1433149",
-      "dt": "2026-05-28T09:44:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "hlásí",
-        "investice",
-        "německu",
-        "pomohly",
-        "poslední",
-        "provozní",
-        "rohlík",
-        "rychlý",
-        "růst",
-        "zisk",
-        "čtvrtletí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1119,7 +1120,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 54894,
+      "bytes": 54979,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1156,7 +1157,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-31T07:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T08:10:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 37,
@@ -1173,6 +1174,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "IBM nalije deset miliard dolarů do vývoje kvantových počítačů. Technologickou revoluci podpoří i vláda",
+            "publishedAt": "2026-05-31T08:10:00Z"
+          },
           {
             "title": "Dvě procenta na obranu nedáme, u Trumpa máme ale výhodu, řekl Babiš a označil se za trumpistu",
             "publishedAt": "2026-05-31T07:30:00Z"
@@ -1200,10 +1205,6 @@
           {
             "title": "Slovenská politika východu tlačí tamní IT byznys k přesunu do Česka",
             "publishedAt": "2026-05-31T03:00:00Z"
-          },
-          {
-            "title": "Nejlepší místo k životu: Obec lesů vod a strání",
-            "publishedAt": "2026-05-30T13:00:00Z"
           }
         ]
       }

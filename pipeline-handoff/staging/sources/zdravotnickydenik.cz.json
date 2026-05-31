@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-31T08:26:11.330943Z",
+  "ingestedAt": "2026-05-31T09:17:36.552720Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Smrtící ebola se šíří. Podezření hlásí už i největší země Jižní Ameriky",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/ebola-epidemie-podezreni-v-brazilii/",
+      "dt": "2026-05-31T08:42:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ameriky",
+        "ebola",
+        "hlásí",
+        "jižní",
+        "největší",
+        "podezření",
+        "smrtící",
+        "země",
+        "šíří"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -245,34 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Uzavřete hranice před ebolou, žádá italská premiérka. V Římě skončila v izolaci další lékařka",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/ebola-italie-lekarka-rim/",
-      "dt": "2026-05-29T10:19:32Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "další",
-        "ebolou",
-        "hranice",
-        "italská",
-        "izolaci",
-        "lékařka",
-        "premiérka",
-        "skončila",
-        "uzavřete",
-        "římě",
-        "žádá"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 84141,
+      "bytes": 81554,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,11 +318,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-31T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T08:42:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "sport": 1,
           "zdravi": 8,
+          "sport": 1,
           "zpravy": 1
         },
         "drop_counts": {
@@ -337,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Smrtící ebola se šíří. Podezření hlásí už i největší země Jižní Ameriky",
+            "publishedAt": "2026-05-31T08:42:00Z"
+          },
           {
             "title": "Mexické peklo pro české fotbalisty: Řídký vzduch, únava a rychlejší míč",
             "publishedAt": "2026-05-31T05:00:00Z"
@@ -364,10 +366,6 @@
           {
             "title": "Policie hledá duševně nemocného z Moravy. Dvoumetrový muž se nevrátil z nemocnice",
             "publishedAt": "2026-05-29T13:26:42Z"
-          },
-          {
-            "title": "IKEM mění vedení. Důležitou nemocnici přebírá manažerka z KPMG a Kaprainu",
-            "publishedAt": "2026-05-29T13:12:26Z"
           }
         ]
       }

@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-31T08:26:11.330943Z",
+  "ingestedAt": "2026-05-31T09:17:36.552720Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vlivem silného větru došlo na Domažlicku k vyvrácení několika stromů, jeden spadl na kolemjdoucí ženu",
+      "url": "https://tydenikpolicie.cz/vlivem-silneho-vetru-doslo-na-domazlicku-k-vyvraceni-nekolika-stromu-jeden-spadl-na-kolemjdouci-zenu/",
+      "dt": "2026-05-31T08:28:19Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "domažlicku",
+        "došlo",
+        "jeden",
+        "kolemjdoucí",
+        "několika",
+        "silného",
+        "spadl",
+        "stromů",
+        "vlivem",
+        "vyvrácení",
+        "větru",
+        "ženu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -222,33 +251,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Podezřelý měl během dvou týdnů spáchat v Plzeňském kraji jedenáct skutků",
-      "url": "https://tydenikpolicie.cz/podezrely-mel-behem-dvou-tydnu-spachat-v-plzenskem-kraji-jedenact-skutku/",
-      "dt": "2026-05-29T02:02:29Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "během",
-        "dvou",
-        "jedenáct",
-        "kraji",
-        "měl",
-        "plzeňském",
-        "podezřelý",
-        "skutků",
-        "spáchat",
-        "týdnů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -259,7 +261,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15774,
+      "bytes": 15853,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -296,7 +298,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-31T08:17:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T08:28:19Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -311,6 +313,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vlivem silného větru došlo na Domažlicku k vyvrácení několika stromů, jeden spadl na kolemjdoucí ženu",
+            "publishedAt": "2026-05-31T08:28:19Z"
+          },
           {
             "title": "Při seskoku na Aviatické pouti v Hradci Králové byli zraněni dva parašutisté",
             "publishedAt": "2026-05-31T08:17:41Z"
@@ -338,10 +344,6 @@
           {
             "title": "Podnapilý řidič volkswagenu zavinil na Uherskohradišťsku nehodu",
             "publishedAt": "2026-05-30T02:02:16Z"
-          },
-          {
-            "title": "Policisté vypátrali pohřešovaného muže z Hazlova. Byl v bezvědomí, ale živý",
-            "publishedAt": "2026-05-29T20:31:40Z"
           }
         ]
       }

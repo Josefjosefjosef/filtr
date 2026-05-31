@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-31T08:26:11.330943Z",
+  "ingestedAt": "2026-05-31T09:17:36.552720Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Trump po prohře u soudu vzdává boj o Kennedyho centrum",
+      "url": "https://www.epenize.eu/trump-po-prohre-u-soudu-vzdava-boj-o-kennedyho-centrum/",
+      "dt": "2026-05-31T08:15:27Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "boj",
+        "centrum",
+        "kennedyho",
+        "prohře",
+        "soudu",
+        "trump",
+        "vzdává"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -478,31 +502,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Peníze na benzín, prosím: Pokrytectví aljašského senátora v plné kráse",
-      "url": "https://www.epenize.eu/penize-na-benzin-prosim-pokrytectvi-aljasskeho-senatora-v-plne-krase/",
-      "dt": "2026-05-21T23:00:30Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "aljašského",
-        "benzín",
-        "kráse",
-        "peníze",
-        "plné",
-        "pokrytectví",
-        "prosím",
-        "senátora"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -513,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 114067,
+      "bytes": 114606,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -550,11 +549,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-30T10:15:07Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T08:15:27Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 19,
-          "zpravy": 1
+          "zpravy": 2,
+          "finance": 18
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -566,6 +565,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump po prohře u soudu vzdává boj o Kennedyho centrum",
+            "publishedAt": "2026-05-31T08:15:27Z"
+          },
           {
             "title": "Ztráta času? Rajchl se chlubí vyšetřovací komisí k Dozimetru",
             "publishedAt": "2026-05-30T10:15:07Z"
@@ -593,10 +596,6 @@
           {
             "title": "Vegan, šest pohlaví a rouška: Trump vykreslil texaského demokrata jako noční můru",
             "publishedAt": "2026-05-27T23:00:54Z"
-          },
-          {
-            "title": "Schillerová brání Babiše do roztrhání těla. Dle Kupky je ekonomický parazit",
-            "publishedAt": "2026-05-27T09:01:07Z"
           }
         ]
       }
