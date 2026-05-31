@@ -273,6 +273,30 @@ function runFreshnessGuard() {
   return res.status === 0;
 }
 
+function runMissingSourceGuard() {
+  const skip = String(process.env.SKIP_MISSING_SOURCE_ARTICLES_GUARD || "").toLowerCase();
+  if (skip === "1" || skip === "true" || skip === "yes") {
+    log("missing_source_guard SKIP (SKIP_MISSING_SOURCE_ARTICLES_GUARD)");
+    return true;
+  }
+  // PR CI checks prod snapshot that is stale until merge + update-articles publish.
+  if (process.env.GITHUB_EVENT_NAME === "pull_request") {
+    log("missing_source_guard SKIP (pull_request — run post-publish in update-articles.yml)");
+    return true;
+  }
+  const script = path.join(root, "scripts", "articles-missing-source-articles-guard.mjs");
+  if (!fs.existsSync(script)) {
+    log("missing_source_guard SKIP (script not found)");
+    return true;
+  }
+  log("missing_source_guard delegating to articles-missing-source-articles-guard.mjs");
+  const res = spawnSync(process.execPath, [script], {
+    env: { ...process.env, ARTICLES_JSON_URL },
+    stdio: "inherit",
+  });
+  return res.status === 0;
+}
+
 async function main() {
   const nowMs = Date.now();
   let failed = false;
@@ -285,6 +309,11 @@ async function main() {
 
   if (!runFreshnessGuard()) {
     fail("freshness_guard RESULT=FAIL");
+    failed = true;
+  }
+
+  if (!runMissingSourceGuard()) {
+    fail("missing_source_articles_guard RESULT=FAIL");
     failed = true;
   }
 

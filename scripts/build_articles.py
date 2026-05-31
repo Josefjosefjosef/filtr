@@ -3587,7 +3587,29 @@ def main() -> int:
         return 0
 
     loaded = load_staging_for_aggregate(OUTPUT_DIR)
-    bundle = _aggregate_pipeline(all_items, per_feed_report, yt_videos, registry)
+    staged_items = list(loaded.get("all_items") or [])
+    # Prefer in-memory items from this run (same URL wins over older shard).
+    by_url_staged: dict[str, dict] = {}
+    for it in staged_items:
+        if isinstance(it, dict):
+            u = str(it.get("url") or "").strip()
+            if u:
+                by_url_staged[u] = it
+    for it in all_items:
+        if isinstance(it, dict):
+            u = str(it.get("url") or "").strip()
+            if u:
+                by_url_staged[u] = it
+    aggregate_items = list(by_url_staged.values())
+    aggregate_reports = list(loaded.get("per_feed_report") or [])
+    seen_rep = {str(r.get("feed") or "") for r in aggregate_reports if isinstance(r, dict)}
+    for r in per_feed_report or []:
+        if isinstance(r, dict):
+            fk = str(r.get("feed") or "")
+            if fk and fk not in seen_rep:
+                aggregate_reports.append(r)
+                seen_rep.add(fk)
+    bundle = _aggregate_pipeline(aggregate_items, aggregate_reports, yt_videos, registry)
     hm = _handoff_meta_from_staging_manifest(loaded)
     write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle, hm))
     return _publish_article_outputs(bundle)

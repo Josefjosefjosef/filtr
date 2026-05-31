@@ -131,9 +131,14 @@ ENTRIES.append(
 )
 
 # 5.1 ZPRÁVY
-ENTRIES.append(base("zpr_ctk", "ČTK / ČeskéNoviny", "ceskenoviny.cz", "rss", "zpravy", [], 15, 1.30, "https://www.ceskenoviny.cz/rss/"))
-ENTRIES.append(base("zpr_ct24_domaci", "ČT24 / Domácí", "ct24.ceskatelevize.cz", "rubric", "zpravy", [], 25, 1.20, "https://www.ceskatelevize.cz/ct24/rss"))
-ENTRIES.append(base("zpr_ct24_svet", "ČT24 / Svět", "ct24.ceskatelevize.cz", "rubric", "zpravy", [], 25, 1.20, "https://www.ceskatelevize.cz/ct24/rss", slot=22))
+# ČTK: www.ceskenoviny.cz/rss/ vrací HTML místo RSS (2026-05) — zdroj deaktivován, ne parser bug.
+_zpr_ctk = base("zpr_ctk", "ČTK / ČeskéNoviny", "ceskenoviny.cz", "rss", "zpravy", [], 15, 1.30, "https://www.ceskenoviny.cz/rss/")
+_zpr_ctk["active"] = False
+_zpr_ctk["fetch_mode"] = "feed_unavailable"
+_zpr_ctk["reason"] = "feed_returns_html_not_rss"
+ENTRIES.append(_zpr_ctk)
+ENTRIES.append(base("zpr_ct24_domaci", "ČT24 / Domácí", "ct24.ceskatelevize.cz", "rubric", "zpravy", [], 25, 1.20, "https://ct24.ceskatelevize.cz/rss"))
+ENTRIES.append(base("zpr_ct24_svet", "ČT24 / Svět", "ct24.ceskatelevize.cz", "rubric", "zpravy", [], 25, 1.20, "https://ct24.ceskatelevize.cz/rss", slot=22))
 ENTRIES.append(base("zpr_seznam_domaci", "Seznam Zprávy / Domácí", "seznamzpravy.cz", "rubric", "zpravy", [], 25, 1.15, "https://www.seznamzpravy.cz/rss/domaci"))
 ENTRIES.append(base("zpr_novinky_domaci", "Novinky / Domácí", "novinky.cz", "rubric", "zpravy", [], 25, 1.15, "https://www.novinky.cz/rss/domaci", slot=4))
 ENTRIES.append(base("zpr_novinky_zahranicni", "Novinky / Zahraniční", "novinky.cz", "rubric", "zpravy", [], 25, 1.15, "https://www.novinky.cz/rss/zahranicni", slot=18))
@@ -170,7 +175,7 @@ ENTRIES.append(base("fin_faei", "FAEI", "faei.cz", "rss", "finance", [], 90, 0.8
 ENTRIES.append(base("zdr_zdravezpravy", "ZdravéZprávy", "zdravezpravy.cz", "rss", "zdravi", [], 40, 1.05, "https://www.zdravezpravy.cz/feed/"))
 ENTRIES.append(base("zdr_zdravotnickydenik", "Zdravotnický deník", "zdravotnickydenik.cz", "rss", "zdravi", [], 40, 1.05, "https://www.zdravotnickydenik.cz/feed/"))
 ENTRIES.append(base("zdr_plnezdravi", "Plné zdraví", "plnezdravi.cz", "rss", "zdravi", [], 90, 0.85, "https://www.plnezdravi.cz/feed/"))
-ENTRIES.append(base("zdr_zdrave", "Zdravě.cz", "zdrave.cz", "rss", "zdravi", [], 180, 0.75, "https://www.zdrave.cz/feed/"))
+ENTRIES.append(base("zdr_zdrave", "Zdravě.cz", "zdrave.cz", "rss", "zdravi", [], 180, 0.75, "https://www.zdrave.cz/rss/"))
 ENTRIES.append(base("zdr_prozeny_zdravi", "ProŽeny / Zdraví", "prozeny.cz", "rubric", "zdravi", [], 180, 0.70, "https://www.prozeny.cz/rss/zdravi"))
 ENTRIES.append(base("zdr_betterlife", "BetterLife", "betterlife.cz", "rss", "zdravi", [], 180, 0.65, "https://www.betterlife.cz/feed/"))
 
@@ -190,14 +195,14 @@ ENTRIES.append(base("hry_sector", "Sector", "sector.sk", "rss", "hry", [], 180, 
 ENTRIES.append(base("hry_nedd", "Nedd", "nedd.cz", "rss", "hry", [], 180, 0.70, "https://www.nedd.cz/feed/"))
 
 # 5.7 KULTURA
-ENTRIES.append(base("kul_ctart", "ČT art", "ceskatelevize.cz", "rss", "kultura", [], 40, 1.05, "https://www.ceskatelevize.cz/art/rss", cooldown=20))
+ENTRIES.append(base("kul_ctart", "ČT art", "ct24.ceskatelevize.cz", "rubric", "kultura", [], 40, 1.05, "https://ct24.ceskatelevize.cz/rss/kultura", cooldown=20))
 ENTRIES.append(base("kul_kinobox", "Kinobox", "kinobox.cz", "rss", "kultura", [], 90, 0.95, "https://www.kinobox.cz/api/rss"))
 ENTRIES.append(base("kul_vtelce", "vTelce", "vtelce.cz", "rss", "kultura", [], 180, 0.75, "https://www.vtelce.cz/feed/"))
 ENTRIES.append(base("kul_vipzivot", "VIPživot", "vipzivot.cz", "rss", "kultura", [], 180, 0.70, "https://www.vipzivot.cz/feed/"))
 ENTRIES.append(base("kul_vlasta", "Vlasta", "vlasta.cz", "rss", "kultura", [], 180, 0.70, "https://www.vlasta.cz/feed/"))
 
 # 5.8 VĚDA
-ENTRIES.append(base("ved_ct24_veda", "ČT24 / Věda", "ct24.ceskatelevize.cz", "rubric", "veda", [], 25, 1.10, "https://www.ceskatelevize.cz/rss/veda/", slot=10))
+ENTRIES.append(base("ved_ct24_veda", "ČT24 / Věda", "ct24.ceskatelevize.cz", "rubric", "veda", [], 25, 1.10, "https://ct24.ceskatelevize.cz/rss/veda", slot=10))
 ENTRIES.append(base("ved_novinky", "Novinky / Věda a škola", "novinky.cz", "rubric", "veda", [], 25, 1.05, "https://www.novinky.cz/rss/veda", slot=18))
 ENTRIES.append(base("ved_technet", "iDNES / Technet", "idnes.cz", "rubric", "veda", [], 40, 1.00, "https://servis.idnes.cz/rss.aspx?c=technet", cooldown=20))
 ENTRIES.append(base("ved_vtm", "VTM", "vtm.zive.cz", "rss", "veda", [], 40, 0.95, "https://vtm.zive.cz/rss"))

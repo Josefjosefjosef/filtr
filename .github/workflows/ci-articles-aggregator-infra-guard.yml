@@ -15,6 +15,7 @@ on:
       - ".github/workflows/ci-articles-aggregator-infra-guard.yml"
       - "scripts/articles-aggregator-infra-guard.mjs"
       - "scripts/articles-aggregator-freshness-guard.mjs"
+      - "scripts/articles-missing-source-articles-guard.mjs"
       - "cloudflare/articles-watchdog/**"
   pull_request:
     paths:
@@ -24,6 +25,7 @@ on:
       - ".github/workflows/ci-articles-aggregator-infra-guard.yml"
       - "scripts/articles-aggregator-infra-guard.mjs"
       - "scripts/articles-aggregator-freshness-guard.mjs"
+      - "scripts/articles-missing-source-articles-guard.mjs"
       - "cloudflare/articles-watchdog/**"
 
 permissions:
@@ -50,6 +52,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
           ARTICLES_JSON_URL: https://infouzel.cz/projects/data/articles.json
           WATCHDOG_HEALTH_URL: ${{ vars.ARTICLES_WATCHDOG_HEALTH_URL }}
           REQUIRE_WATCHDOG: ${{ vars.REQUIRE_ARTICLES_WATCHDOG }}

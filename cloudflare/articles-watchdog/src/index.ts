@@ -2,7 +2,7 @@
  * Cloudflare Worker: cron + optional manual /run (secret).
  * Triggers GitHub workflow_dispatch only when public data is stale and pipeline is idle.
  */
-import { decideWatchdog } from "./decision";
+import { decideWatchdog, DEFAULT_QUEUED_STALE_MINUTES, parseIsoToMs } from "./decision";
 
 export interface Env {
   GITHUB_TOKEN: string;
@@ -69,6 +69,28 @@ async function fetchWorkflowRuns(env: Env): Promise<GhRun[]> {
   return data.workflow_runs ?? [];
 }
 
+async function cancelStaleQueuedRuns(env: Env, queuedStaleMinutes: number): Promise<number> {
+  const [owner, repo] = env.GITHUB_REPOSITORY.split("/");
+  const wf = encodeURIComponent(env.WORKFLOW_FILE);
+  const url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${wf}/runs?per_page=20&status=queued`;
+  const res = await fetch(url, { headers: ghHeaders(env.GITHUB_TOKEN) });
+  if (!res.ok) return 0;
+  const data = (await res.json()) as { workflow_runs?: Array<GhRun & { id?: number }> };
+  const nowMs = Date.now();
+  let cancelled = 0;
+  for (const run of data.workflow_runs ?? []) {
+    const createdMs = parseIsoToMs(run.created_at);
+    if (createdMs === null) continue;
+    const ageMin = (nowMs - createdMs) / 60_000;
+    if (ageMin < queuedStaleMinutes) continue;
+    if (!run.id) continue;
+    const cancelUrl = `https://api.github.com/repos/${owner}/${repo}/actions/runs/${run.id}/cancel`;
+    const cr = await fetch(cancelUrl, { method: "POST", headers: ghHeaders(env.GITHUB_TOKEN) });
+    if (cr.ok || cr.status === 409) cancelled += 1;
+  }
+  return cancelled;
+}
+
 async function dispatchWorkflow(env: Env): Promise<Response> {
   const [owner, repo] = env.GITHUB_REPOSITORY.split("/");
   const wf = encodeURIComponent(env.WORKFLOW_FILE);
@@ -121,6 +143,10 @@ export async function runWatchdog(env: Env): Promise<Response> {
       JSON.stringify({ ok: true, action: "skip_busy", decision }),
       { status: 200, headers: { "content-type": "application/json; charset=utf-8" } }
     );
+  }
+  const cancelled = await cancelStaleQueuedRuns(env, DEFAULT_QUEUED_STALE_MINUTES);
+  if (cancelled > 0) {
+    console.log(`[watchdog] cancelled stale queued runs=${cancelled}`);
   }
   return dispatchWorkflow(env);
 }
