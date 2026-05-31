@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-31T12:30:57.469999Z",
+  "ingestedAt": "2026-05-31T13:22:52.589826Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "WHO: Pět lidí se zotavilo z nového druhu eboly, proti němuž neexistuje léčba",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/who-pet-lidi-se-zotavilo-z-noveho-druhu-eboly-proti-nemuz-neexistuje-lecba-374074",
+      "dt": "2026-05-31T13:10:26Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "druhu",
+        "eboly",
+        "lidí",
+        "léčba",
+        "neexistuje",
+        "nového",
+        "němuž",
+        "proti",
+        "pět",
+        "who",
+        "zotavilo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -57,19 +85,18 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Meteorologové zpřísnili výstrahu. Čekají silnější bouřky i vítr",
+      "title": "V Čechách místy bouří, meteorologové zpřísnili výstrahu",
       "url": "https://ct24.ceskatelevize.cz/clanek/regiony/meteorologove-zprisnili-vystrahu-cekaji-silnejsi-bourky-i-vitr-374070",
       "dt": "2026-05-31T10:07:05Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24",
       "tokens": [
-        "bouřky",
+        "bouří",
         "meteorologové",
-        "silnější",
-        "vítr",
+        "místy",
         "výstrahu",
         "zpřísnili",
-        "čekají"
+        "čechách"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -744,25 +771,20 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Rakousko-italský Brennerský průsmyk uzavřela protestní akce",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/rakousko-italsky-brennersky-prusmyk-je-uzavren-kvuli-protestni-akci-374045",
-      "dt": "2026-05-30T09:44:07Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
+      "title": "Kanada – Norsko",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/kanada-norsko-157122",
+      "dt": "2026-05-31T13:10:16Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "akce",
-        "brennerský",
-        "italský",
-        "protestní",
-        "průsmyk",
-        "rakousko",
-        "uzavřela"
+        "kanada",
+        "norsko"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1488,30 +1510,6 @@
         "vyzve",
         "znovu",
         "říčany"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Perušič a Sedlák v Ostravě uspěli i ve čtvrtfinále a zabojují o medaile",
-      "url": "https://sport.ceskatelevize.cz/clanek/plazovy-volejbal/neuschaeferova-s-maixnerovou-nestacily-v-ostrave-na-vicemistryne-sveta-157093",
-      "dt": "2026-05-30T09:30:46Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "medaile",
-        "ostravě",
-        "perušič",
-        "sedlák",
-        "uspěli",
-        "zabojují",
-        "čtvrtfinále"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -3025,7 +3023,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44266,
+      "bytes": 44505,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -3085,11 +3083,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-31T11:35:22Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T13:10:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 1,
           "zpravy": 28,
+          "finance": 1,
           "other": 1
         },
         "drop_counts": {
@@ -3103,6 +3101,10 @@
         },
         "sample_titles": [
           {
+            "title": "WHO: Pět lidí se zotavilo z nového druhu eboly, proti němuž neexistuje léčba",
+            "publishedAt": "2026-05-31T13:10:26Z"
+          },
+          {
             "title": "Hosté Událostí, komentářů z ekonomiky probrali financování obcí",
             "publishedAt": "2026-05-31T11:35:22Z"
           },
@@ -3111,7 +3113,7 @@
             "publishedAt": "2026-05-31T11:31:30Z"
           },
           {
-            "title": "Meteorologové zpřísnili výstrahu. Čekají silnější bouřky i vítr",
+            "title": "V Čechách místy bouří, meteorologové zpřísnili výstrahu",
             "publishedAt": "2026-05-31T10:07:05Z"
           },
           {
@@ -3129,10 +3131,6 @@
           {
             "title": "Babiš: Česko závazek dát dvě procenta HDP na obranu asi nesplní, u Trumpa má ale výhodu",
             "publishedAt": "2026-05-31T07:23:00Z"
-          },
-          {
-            "title": "Arktida má za sebou bod zlomu. Na staletí se tam mění životní podmínky",
-            "publishedAt": "2026-05-31T07:00:00Z"
           }
         ]
       }
@@ -3144,7 +3142,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38563,
+      "bytes": 38352,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -3181,7 +3179,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-31T11:57:01Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T13:10:16Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -3196,6 +3194,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kanada – Norsko",
+            "publishedAt": "2026-05-31T13:10:16Z"
+          },
           {
             "title": "Salač po startu z druhého místa skončil v Mugellu pátý, nejlépe v sezoně",
             "publishedAt": "2026-05-31T11:57:01Z"
@@ -3223,10 +3225,6 @@
           {
             "title": "Evans vyhrál potřetí Japonskou rallye a zvýšil vedení v MS",
             "publishedAt": "2026-05-31T07:59:12Z"
-          },
-          {
-            "title": "Tohle vítězství je ještě větší než to loňské, přiznal Enrique",
-            "publishedAt": "2026-05-31T07:42:24Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-31T12:30:57.469999Z",
+  "ingestedAt": "2026-05-31T13:22:52.589826Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Retrokvíz ke Dni dětí. Pamatujete, s čím jsme si hráli my?",
+      "url": "https://www.penize.cz/spotrebitel/490514-retrokviz-ke-dni-deti-pamatujete-s-cim-jsme-si-hrali-my",
+      "dt": "2026-05-31T15:10:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "dni",
+        "dětí",
+        "hráli",
+        "jsme",
+        "pamatujete",
+        "retrokvíz",
+        "čím"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -480,30 +504,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Problémové nemovitosti: Jak kupovat byty se slevou v desítkách procent",
-      "url": "https://www.penize.cz/nakup-a-prodej-nemovitosti/490312-problemove-nemovitosti-jak-kupovat-byty-se-slevou-v-desitkach-procent",
-      "dt": "2026-05-26T11:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "byty",
-        "desítkách",
-        "kupovat",
-        "nemovitosti",
-        "problémové",
-        "procent",
-        "slevou"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -514,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 19295,
+      "bytes": 19255,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -551,11 +551,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-31T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T15:10:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 6,
           "finance": 11,
+          "zpravy": 6,
           "sport": 1,
           "zdravi": 2
         },
@@ -569,6 +569,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Retrokvíz ke Dni dětí. Pamatujete, s čím jsme si hráli my?",
+            "publishedAt": "2026-05-31T15:10:00Z"
+          },
           {
             "title": "Sushi v plastu versus telecí na porcelánu. Jak funguje občerstvení na české železnici",
             "publishedAt": "2026-05-31T08:00:00Z"
@@ -596,10 +600,6 @@
           {
             "title": "Ještě novější Nová zelená úsporám. Ministerstvo představilo podmínky",
             "publishedAt": "2026-05-28T16:00:00Z"
-          },
-          {
-            "title": "Nafta nejníž. Maximální ceny benzinu a nafty na pátek 29. května",
-            "publishedAt": "2026-05-28T14:00:00Z"
           }
         ]
       }

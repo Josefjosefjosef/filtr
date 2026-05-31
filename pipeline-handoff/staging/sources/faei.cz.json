@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-31T12:30:57.469999Z",
+  "ingestedAt": "2026-05-31T13:22:52.589826Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nikým nevolená úřednice rozhoduje o osudu Česka. Nikoli z Bruselu, ale z Prahy",
+      "url": "https://profitonline.cz/nikym-nevolena-urednice-rozhoduje-o-osudu-ceska-nikoli-z-bruselu-ale-z-prahy/",
+      "dt": "2026-05-31T13:00:06Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "ale",
+        "bruselu",
+        "nevolená",
+        "nikoli",
+        "nikým",
+        "osudu",
+        "prahy",
+        "rozhoduje",
+        "úřednice",
+        "česka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -271,32 +298,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nové státní dluhopisy? Drahý a zbytečně rizikový způsob financování státu",
-      "url": "https://profitonline.cz/nove-statni-dluhopisy-drahy-a-zbytecne-rizikovy-zpusob-financovani-statu/",
-      "dt": "2026-05-29T12:00:33Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "dluhopisy",
-        "drahý",
-        "financování",
-        "nové",
-        "rizikový",
-        "státní",
-        "státu",
-        "zbytečně",
-        "způsob"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -307,7 +308,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19464,
+      "bytes": 19593,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -344,7 +345,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-31T07:00:54Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T13:00:06Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -360,6 +361,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nikým nevolená úřednice rozhoduje o osudu Česka. Nikoli z Bruselu, ale z Prahy",
+            "publishedAt": "2026-05-31T13:00:06Z"
+          },
           {
             "title": "Cenové stropy až tolik nepomáhají. Největším problémem je pro firmy nejistota",
             "publishedAt": "2026-05-31T07:00:54Z"
@@ -387,10 +392,6 @@
           {
             "title": "Regulace Uberu, Woltu a Boltu zpřísňuje i pohled na švarcsystém",
             "publishedAt": "2026-05-30T07:00:44Z"
-          },
-          {
-            "title": "Prázdninový rébus pro rodiče: Jak se přes léto postarat o své děti",
-            "publishedAt": "2026-05-30T04:00:46Z"
           }
         ]
       }
