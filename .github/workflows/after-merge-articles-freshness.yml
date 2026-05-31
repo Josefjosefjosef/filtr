@@ -41,7 +41,7 @@ jobs:
           echo "[CLOSEOUT] pages.yml dispatched (covers cases where push-to-main does not trigger Deploy to GitHub Pages)"
 
       - name: Checkout (merge commit)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ github.sha }}
           fetch-depth: 1
