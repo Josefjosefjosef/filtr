@@ -1,0 +1,75 @@
+{
+  "measuredAt": "2026-05-31T18:14:29.047Z",
+  "transitions": [
+    {
+      "transition": "zpravy->sport",
+      "clickToFirstVisualChangeMs": 32.4,
+      "clickToCorrectHeaderMs": 32.4,
+      "clickToFirstCorrectArticlesMs": 123.5,
+      "staleOldSectionVisibleMs": 0,
+      "initialRenderCount": 100,
+      "cardsWhenSwitchingCleared": null,
+      "initialBatchCount": 30,
+      "fullRenderDurationMs": 123.5,
+      "finalCards": 100,
+      "finalReady": "true",
+      "finalSwitching": ""
+    },
+    {
+      "transition": "sport->finance",
+      "clickToFirstVisualChangeMs": 13.3,
+      "clickToCorrectHeaderMs": 91.1,
+      "clickToFirstCorrectArticlesMs": 292.3,
+      "staleOldSectionVisibleMs": 0,
+      "initialRenderCount": 100,
+      "cardsWhenSwitchingCleared": null,
+      "initialBatchCount": 30,
+      "fullRenderDurationMs": 292.3,
+      "finalCards": 100,
+      "finalReady": "true",
+      "finalSwitching": ""
+    },
+    {
+      "transition": "finance->zdravi",
+      "clickToFirstVisualChangeMs": 9.2,
+      "clickToCorrectHeaderMs": 88.9,
+      "clickToFirstCorrectArticlesMs": 308.9,
+      "staleOldSectionVisibleMs": 0,
+      "initialRenderCount": 100,
+      "cardsWhenSwitchingCleared": null,
+      "initialBatchCount": 30,
+      "fullRenderDurationMs": 308.9,
+      "finalCards": 100,
+      "finalReady": "true",
+      "finalSwitching": ""
+    },
+    {
+      "transition": "zdravi->zpravy",
+      "clickToFirstVisualChangeMs": 11.3,
+      "clickToCorrectHeaderMs": 119.7,
+      "clickToFirstCorrectArticlesMs": 325.7,
+      "staleOldSectionVisibleMs": 0,
+      "initialRenderCount": 100,
+      "cardsWhenSwitchingCleared": null,
+      "initialBatchCount": 30,
+      "fullRenderDurationMs": 325.7,
+      "finalCards": 100,
+      "finalReady": "true",
+      "finalSwitching": ""
+    }
+  ],
+  "summary": {
+    "avgClickToFirstVisualChangeMs": 16.6,
+    "avgClickToCorrectHeaderMs": 83,
+    "avgClickToFirstCorrectArticlesMs": 262.6,
+    "maxStaleOldSectionVisibleMs": 0,
+    "avgInitialRenderCount": 100,
+    "avgInitialBatchCount": 30,
+    "avgFullRenderDurationMs": 262.6,
+    "longTaskCount": 3,
+    "consoleErrorsCount": 0,
+    "appErrorsCount": 0,
+    "overflowX": false,
+    "cls": 0.0004
+  }
+}

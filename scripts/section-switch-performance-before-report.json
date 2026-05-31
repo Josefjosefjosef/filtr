@@ -1,0 +1,66 @@
+{
+  "measuredAt": "2026-05-31T18:09:07.339Z",
+  "transitions": [
+    {
+      "transition": "zpravy->sport",
+      "clickToFirstVisualChangeMs": 46,
+      "clickToCorrectHeaderMs": 387.1,
+      "clickToFirstCorrectArticlesMs": 568,
+      "staleOldSectionVisibleMs": 0,
+      "initialRenderCount": 100,
+      "fullRenderDurationMs": 568,
+      "finalCards": 100,
+      "finalReady": "true",
+      "finalSwitching": ""
+    },
+    {
+      "transition": "sport->finance",
+      "clickToFirstVisualChangeMs": 13.2,
+      "clickToCorrectHeaderMs": 78.6,
+      "clickToFirstCorrectArticlesMs": 78.6,
+      "staleOldSectionVisibleMs": 71.1,
+      "initialRenderCount": 12,
+      "fullRenderDurationMs": 340.4,
+      "finalCards": 100,
+      "finalReady": "true",
+      "finalSwitching": ""
+    },
+    {
+      "transition": "finance->zdravi",
+      "clickToFirstVisualChangeMs": 33.4,
+      "clickToCorrectHeaderMs": 93.2,
+      "clickToFirstCorrectArticlesMs": 192.2,
+      "staleOldSectionVisibleMs": 0,
+      "initialRenderCount": 30,
+      "fullRenderDurationMs": 471.8,
+      "finalCards": 100,
+      "finalReady": "true",
+      "finalSwitching": ""
+    },
+    {
+      "transition": "zdravi->zpravy",
+      "clickToFirstVisualChangeMs": 14.6,
+      "clickToCorrectHeaderMs": 122.5,
+      "clickToFirstCorrectArticlesMs": 122.5,
+      "staleOldSectionVisibleMs": 106.5,
+      "initialRenderCount": 12,
+      "fullRenderDurationMs": 369.1,
+      "finalCards": 100,
+      "finalReady": "true",
+      "finalSwitching": ""
+    }
+  ],
+  "summary": {
+    "avgClickToFirstVisualChangeMs": 26.8,
+    "avgClickToCorrectHeaderMs": 170.4,
+    "avgClickToFirstCorrectArticlesMs": 240.3,
+    "maxStaleOldSectionVisibleMs": 106.5,
+    "avgInitialRenderCount": 38.5,
+    "avgFullRenderDurationMs": 437.3,
+    "longTaskCount": 3,
+    "consoleErrorsCount": 0,
+    "appErrorsCount": 0,
+    "overflowX": false,
+    "cls": 0.0004
+  }
+}

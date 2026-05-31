@@ -3630,7 +3630,7 @@ body[data-iu-fc="1"] #feed{
   }
 }
 
-/* P0: telefon má větší buffer (častěji document scroll); tablet ≤900 menší buffer (#leftContent scroll, jinak příliš velká díra). Bez +168px. */
+/* P0: phone doc-scroll buffer; tablet ≤900 smaller (#leftContent, no +168px). */
 @media (max-width: 767px) {
   :root{
     --iu-mobile-bottom-nav-safe-space: calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 12px + 40px);
@@ -4048,11 +4048,6 @@ select.iuCtrl{
   height: auto;
   aspect-ratio: 1200 / 575;
   object-fit: contain;
-}
-
-/* P0 section switch: hide stale feed body until new topic render completes (visibility keeps layout box). */
-#feed[data-feed-switching="1"] > :not(#sectionsBar){
-  visibility: hidden;
 }
 
 #feed > article.news-card .iu-meta-line{
@@ -4571,7 +4566,7 @@ body[data-section="home"] .iuHomeCanvas{
 .iuHomeHex434 .iuHex--travel{    background: var(--iuNavAccent-travel, #0284C7); }
 .iuHomeHex434 .iuHex--jr{        background: var(--iuNavAccent-jr); }
 .iuHomeHex434 .iuHex--tvprogram{ background: var(--iuNavAccent-tvprogram, #334155); }
-/* P0 Menu hex / home grid: TV program — pouze ikonka. Desktop výchozí #FACC15; mobil/tablet ≤1024px přepis #B8860B. */
+/* P0 Menu hex TV program icon; desktop #FACC15; mobil ≤1024 #B8860B. */
 .iuHomeHex434 .iuHex--tvprogram .iuHex__icon,
 .iuHomeHex434 .iuHex--tvprogram .iuHex__icon svg{
   color: #FACC15 !important;
