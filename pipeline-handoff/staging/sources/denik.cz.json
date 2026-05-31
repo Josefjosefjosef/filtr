@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-31T15:39:05.871611Z",
+  "ingestedAt": "2026-05-31T19:44:02.584194Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nová zelená úsporám: Na obnovu domu stát půjčí až dva miliony",
+      "url": "https://www.denik.cz/ekonomika/energetika-uspory-dotace-zivotni-prostredi-pujcky-vlada.html",
+      "dt": "2026-05-31T17:50:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "domu",
+        "dva",
+        "miliony",
+        "nová",
+        "obnovu",
+        "půjčí",
+        "stát",
+        "zelená",
+        "úsporám"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -84,18 +110,19 @@
     {
       "section": "doprava",
       "contentType": "article",
-      "title": "Na Jižní tangentě u Budějovic havaroval autobus, zranilo se třináct lidí",
+      "title": "Na Budějovicku se srazil autobus s autem. Při nehodě se zranilo třináct lidí",
       "url": "https://www.denik.cz/nehody/nehoda-jizni-tangenta-budejovice-bus-auto-policie.html",
       "dt": "2026-05-31T13:24:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
+        "autem",
         "autobus",
-        "budějovic",
-        "havaroval",
-        "jižní",
+        "budějovicku",
         "lidí",
-        "tangentě",
+        "nehodě",
+        "při",
+        "srazil",
         "třináct",
         "zranilo"
       ],
@@ -235,19 +262,21 @@
     {
       "section": "pocasi",
       "contentType": "article",
-      "title": "MAPA: Českem postupují silné bouřky. Výstraha varuje i před záplavami",
+      "title": "MAPA: Českem postupují silné bouřky. Na jihu Čech se zřejmě prohnalo tornádo",
       "url": "https://www.denik.cz/pocasi/cesko-cekaji-silne-bourky-meteorologove-zprisnili-vystrahu-hrozi-i-kroupy.html",
       "dt": "2026-05-31T09:59:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
         "bouřky",
+        "jihu",
         "mapa",
         "postupují",
+        "prohnalo",
         "silné",
-        "varuje",
-        "výstraha",
-        "záplavami",
+        "tornádo",
+        "zřejmě",
+        "čech",
         "českem"
       ],
       "feedCategory": "zpravy",
@@ -621,30 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Manévry u Olomouce. Policisté a hasiči pátrali u jezera po seniorovi",
-      "url": "https://olomoucky.denik.cz/zpravy_region/olomoucko-patraci-akce-chomoutovska-jezera-pohresovany-senior.html",
-      "dt": "2026-05-30T15:58:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hasiči",
-        "jezera",
-        "manévry",
-        "olomouce",
-        "policisté",
-        "pátrali",
-        "seniorovi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30792,
+      "bytes": 30841,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,11 +697,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-31T14:39:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T17:50:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 1,
+          "finance": 2,
+          "zpravy": 22,
           "zdravi": 1
         },
         "drop_counts": {
@@ -710,6 +715,10 @@
         },
         "sample_titles": [
           {
+            "title": "Nová zelená úsporám: Na obnovu domu stát půjčí až dva miliony",
+            "publishedAt": "2026-05-31T17:50:00Z"
+          },
+          {
             "title": "Viry trápí experty. Zachycení nákazy ebolou či hantavirem komplikují nové druhy",
             "publishedAt": "2026-05-31T14:39:00Z"
           },
@@ -722,7 +731,7 @@
             "publishedAt": "2026-05-31T14:11:00Z"
           },
           {
-            "title": "Na Jižní tangentě u Budějovic havaroval autobus, zranilo se třináct lidí",
+            "title": "Na Budějovicku se srazil autobus s autem. Při nehodě se zranilo třináct lidí",
             "publishedAt": "2026-05-31T13:24:00Z"
           },
           {
@@ -736,10 +745,6 @@
           {
             "title": "Tepelná kopule se rozpadla. Evropa si může od veder na čas oddychnout",
             "publishedAt": "2026-05-31T11:55:00Z"
-          },
-          {
-            "title": "Eiffelova věž v horku roste. Pařížská dominanta uhýbá před sluncem",
-            "publishedAt": "2026-05-31T11:46:00Z"
           }
         ]
       }

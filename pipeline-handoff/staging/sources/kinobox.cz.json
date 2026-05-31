@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-31T15:39:05.871611Z",
+  "ingestedAt": "2026-05-31T19:44:02.584194Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Červen na Netflixu: Romantika s Jennifer Lopez, fotbal i seriálové legendy",
+      "url": "https://www.kinobox.cz/clanky/vod/53918-cerven-na-netflixu-ve-znameni-romantiky-zlocinu-a-fotbalu",
+      "dt": "2026-05-31T17:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "fotbal",
+        "jennifer",
+        "legendy",
+        "lopez",
+        "netflixu",
+        "romantika",
+        "seriálové",
+        "červen"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -522,33 +547,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Posedlost je energickou hororovou peckou. Děsivým scénám pomáhá energie youtuberských videí",
-      "url": "https://www.kinobox.cz/clanky/recenze/54191-mezi-kratasem-a-celovecernim-hororem-posedlost-je-energickou-hororovou-peckou",
-      "dt": "2026-05-28T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "děsivým",
-        "energickou",
-        "energie",
-        "hororovou",
-        "peckou",
-        "pomáhá",
-        "posedlost",
-        "scénám",
-        "videí",
-        "youtuberských"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -559,8 +557,8 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 29849,
-      "reason": "",
+      "bytes": 29537,
+      "reason": "http_502",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 20,
@@ -596,7 +594,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-31T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T17:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -611,6 +609,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Červen na Netflixu: Romantika s Jennifer Lopez, fotbal i seriálové legendy",
+            "publishedAt": "2026-05-31T17:00:00Z"
+          },
           {
             "title": "Herecká jistota i magnet na propadáky. Colin Farrell slaví 50 a je na vrcholu sil",
             "publishedAt": "2026-05-31T14:00:00Z"
@@ -638,10 +640,6 @@
           {
             "title": "Nekrvavější pohádka slaví 20 let. Faunův labyrint přepsal rekord i režisérovu kariéru",
             "publishedAt": "2026-05-30T14:00:00Z"
-          },
-          {
-            "title": "Kvíz: Máte rádi české komedie ze 70. let? Poznejte tuzemské klasiky podle fotky",
-            "publishedAt": "2026-05-30T12:00:00Z"
           }
         ]
       }

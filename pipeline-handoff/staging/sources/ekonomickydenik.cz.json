@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-31T15:39:05.871611Z",
+  "ingestedAt": "2026-05-31T19:44:02.584194Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Paradox brexitu: Britové chtějí zpět do Evropy, voliči ne. Vede protibruselský Farage",
+      "url": "https://ekonomickydenik.cz/paradox-brexitu-britove-chteji-zpet-do-evropy-volici-ne/",
+      "dt": "2026-05-31T15:55:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "brexitu",
+        "britové",
+        "chtějí",
+        "evropy",
+        "farage",
+        "paradox",
+        "protibruselský",
+        "vede",
+        "voliči",
+        "zpět"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -758,34 +785,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ruský dron v Rumunsku zranil civilisty: Brusel chystá sankce, k incidentu se vyjádřil i Babiš",
-      "url": "https://ekonomickydenik.cz/rusky-dron-v-rumunsku-zranil-civilisty-brusel-chysta-sankce-k-incidentu-se-vyjadril-i-babis/",
-      "dt": "2026-05-29T08:01:45Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiš",
-        "brusel",
-        "chystá",
-        "civilisty",
-        "dron",
-        "incidentu",
-        "rumunsku",
-        "ruský",
-        "sankce",
-        "vyjádřil",
-        "zranil"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73977,
+      "bytes": 73346,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-31T13:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T15:55:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 22,
@@ -851,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Paradox brexitu: Britové chtějí zpět do Evropy, voliči ne. Vede protibruselský Farage",
+            "publishedAt": "2026-05-31T15:55:00Z"
+          },
           {
             "title": "Z Afriky ukrajinskou frontu? Rusko lanaří žoldáky falešnými pracovními nabídkami",
             "publishedAt": "2026-05-31T13:20:00Z"
@@ -878,10 +881,6 @@
           {
             "title": "Ukrajina může získat přes 30 Gripenů. Stejné stíhačky používá česká armáda",
             "publishedAt": "2026-05-31T06:30:00Z"
-          },
-          {
-            "title": "ČEZ čeká zásadní rozhodování. Jak má vypadat přestavba celé skupiny",
-            "publishedAt": "2026-05-31T05:23:48Z"
           }
         ]
       }
