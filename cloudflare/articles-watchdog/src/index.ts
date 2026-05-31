@@ -25,6 +25,10 @@ type GhRun = {
   created_at: string;
 };
 
+function toRunLite(run: GhRun) {
+  return { status: run.status, event: run.event, created_at: run.created_at };
+}
+
 type FreshnessDoc = {
   generatedAt?: string;
 };
@@ -101,7 +105,7 @@ export async function runWatchdog(env: Env): Promise<Response> {
     generatedAtIso,
     staleAfterMinutes: staleAfter,
     nowMs,
-    runs,
+    runs: runs.map(toRunLite),
   });
 
   console.log("[watchdog] decision", JSON.stringify(decision));

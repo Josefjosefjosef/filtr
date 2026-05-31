@@ -171,6 +171,9 @@ function isIgnorableGuardConsoleError(text, opts) {
       if (opts.hadRecentIgnorableFailure()) return true;
     }
   }
+  if (/serviceWorker|ServiceWorker/i.test(s) && /invalid state|Failed to update a ServiceWorker/i.test(s)) {
+    return true;
+  }
   return false;
 }
 
