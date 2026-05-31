@@ -88,24 +88,30 @@ function isNativeVerticalItem(topic, link, feedDomain) {
 }
 
 async function fetchFeed(url) {
-  const res = await fetch(url, {
-    headers: {
-      "User-Agent": "infoUzelBot/1.0 (+https://infouzel.cz/projects/bot/)",
-      Accept: "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.1",
-    },
-    signal: AbortSignal.timeout(25000),
-  });
-  return { status: res.status, text: await res.text() };
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "User-Agent": "infoUzelBot/1.0 (+https://infouzel.cz/projects/bot/)",
+        Accept: "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.1",
+      },
+      signal: AbortSignal.timeout(25000),
+    });
+    return { status: res.status, text: await res.text(), error: null };
+  } catch (err) {
+    return { status: 0, text: "", error: String(err?.message || err) };
+  }
 }
 
 async function loadArticlesDoc() {
+  if (fs.existsSync(localArticles)) {
+    return JSON.parse(fs.readFileSync(localArticles, "utf8"));
+  }
   if (remoteArticles) {
     const res = await fetch(remoteArticles, { headers: { Accept: "application/json", "Cache-Control": "no-cache" } });
     if (!res.ok) throw new Error(`fetch failed ${res.status}`);
     return res.json();
   }
-  if (!fs.existsSync(localArticles)) throw new Error(`missing ${localArticles}`);
-  return JSON.parse(fs.readFileSync(localArticles, "utf8"));
+  throw new Error(`missing ${localArticles} (set ARTICLES_JSON_URL for prod check)`);
 }
 
 async function main() {
@@ -135,6 +141,10 @@ async function main() {
     const feedUrl = String(entry.feed_url || "").trim();
     if (!feedUrl) continue;
     const fetched = await fetchFeed(feedUrl);
+    if (fetched.error) {
+      console.warn(`[section-coverage-guard] feed_fetch_error topic=${topic} url=${feedUrl} err=${fetched.error}`);
+      continue;
+    }
     if (fetched.status !== 200) continue;
     const items = extractItems(fetched.text);
     for (const it of items) {
