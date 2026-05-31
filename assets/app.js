@@ -5274,11 +5274,15 @@ try {
         : reloadDomTight
           ? IU_FEED_RELOAD_APPEND_CHUNK
           : IU_FEED_DOM_APPEND_CHUNK;
+      const isSectionSwitchFirstBatch = sectionSwitchActive && firstDomBatch;
       firstDomBatch = false;
       const frag = document.createDocumentFragment();
       const batchEnd = Math.min(pos + batchMax, visibleItems.length);
       let microSinceYield = 0;
-      const microStride = reloadDomTight || iuFeedMicroDomYieldOffP() ? 9999 : iuFeedDomMicroYieldStride();
+      const microStride =
+        isSectionSwitchFirstBatch || reloadDomTight || iuFeedMicroDomYieldOffP()
+          ? 9999
+          : iuFeedDomMicroYieldStride();
       for (; pos < batchEnd; pos++) {
         if (iuRenderFeedStaleP()) {
           return;
@@ -5355,8 +5359,14 @@ try {
             firstFeedBatchMarked = true;
             iuBootTracePhase("renderFeed_first_batch_committed");
             try {
+              var iuArtBatchN = 0;
+              try {
+                iuArtBatchN = safeTarget.querySelectorAll(
+                  "article.news-card[data-feed-type='article']"
+                ).length;
+              } catch (_) {}
               window.__iuFeedSwitchMetrics = {
-                initialBatchCount: renderedCount,
+                initialBatchCount: iuArtBatchN > 0 ? iuArtBatchN : renderedCount,
                 sectionSwitch: sectionSwitchActive,
                 atMs: typeof performance !== "undefined" && performance.now ? performance.now() : Date.now(),
               };
@@ -14761,15 +14771,21 @@ function buildVideoAsArticleCard(it) {
     } else {
       const homeHub2 = iuDomBodyIsHomeHub();
       const nArt2 = iuCountArticlesInList(filtered);
-      const usePubClusterCap2 =
-        homeHub2 &&
-        !state.__iuFullPublicationClusterPass &&
-        nArt2 > IU_HOME_PUB_CLUSTER_MIN_ARTICLES_FOR_CAP;
-      const pubOpts2 = usePubClusterCap2 ? { clusterArticleCap: IU_HOME_PUB_CLUSTER_INPUT_CAP } : undefined;
-      filtered = iuApplyPublicationFeedFilterMixed(filtered, pubOpts2);
-      if (usePubClusterCap2 && !state.__iuHomeFullPubClusterIdleScheduled) {
-        state.__iuHomeFullPubClusterIdleScheduled = true;
-        iuScheduleHomeFullPublicationCluster();
+      if (!instantSectionSwitch) {
+        let pubOpts2;
+        const usePubClusterCap2 =
+          homeHub2 &&
+          !state.__iuFullPublicationClusterPass &&
+          nArt2 > IU_HOME_PUB_CLUSTER_MIN_ARTICLES_FOR_CAP;
+        pubOpts2 = usePubClusterCap2 ? { clusterArticleCap: IU_HOME_PUB_CLUSTER_INPUT_CAP } : undefined;
+        filtered = iuApplyPublicationFeedFilterMixed(filtered, pubOpts2);
+        if (
+          usePubClusterCap2 &&
+          !state.__iuHomeFullPubClusterIdleScheduled
+        ) {
+          state.__iuHomeFullPubClusterIdleScheduled = true;
+          iuScheduleHomeFullPublicationCluster();
+        }
       }
     }
     state.filteredItems = filtered;
@@ -14870,7 +14886,13 @@ function buildVideoAsArticleCard(it) {
         await iuYieldOneRaf();
         await iuYieldOneRaf();
       }
-      await renderItems(filtered);
+      if (instantSectionSwitch && filtered.length > IU_FEED_SECTION_SWITCH_FIRST_BATCH) {
+        const fastItems = filtered.slice(0, IU_FEED_SECTION_SWITCH_FIRST_BATCH);
+        state.filteredItems = filtered;
+        await renderItems(fastItems);
+      } else {
+        await renderItems(filtered);
+      }
       setStatus(`Stav dat: OK (zobrazeno: ${filtered.length} / celkem: ${state.cachedItems.length})`);
       if (instantSectionSwitch && narrowTopicNav && filtered.length > 0 && filtered.length < pageCapNav) {
         void (async function iuSectionSwitchRetentionDeferred() {
@@ -14886,6 +14908,22 @@ function buildVideoAsArticleCard(it) {
             if (state.cachedItems.length > nBefore) {
               await applyFilter({ resetPage: false, render: true });
             }
+          } catch (_) {}
+        })();
+      }
+      if (instantSectionSwitch && !normalizedQuery) {
+        void (async function iuSectionSwitchFullClusterDeferred() {
+          try {
+            const ric =
+              typeof requestIdleCallback !== "undefined"
+                ? requestIdleCallback
+                : function (cb) {
+                    return setTimeout(cb, 64);
+                  };
+            await new Promise(function (resolve) {
+              ric(resolve, { timeout: 2400 });
+            });
+            await applyFilter({ resetPage: false, render: true });
           } catch (_) {}
         })();
       }

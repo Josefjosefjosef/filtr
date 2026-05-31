@@ -15,7 +15,10 @@ const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8894", 10);
-const BASE = `http://127.0.0.1:${PORT}/projects/`;
+const BASE = process.env.IU_GUARD_BASE_URL
+  ? String(process.env.IU_GUARD_BASE_URL).replace(/\/?$/, "/")
+  : `http://127.0.0.1:${PORT}/projects/`;
+const USE_LOCAL_SERVER = !process.env.IU_GUARD_BASE_URL;
 
 const SECTION_HEADERS = {
   zpravy: "section-zpravy.jpg",
@@ -247,12 +250,15 @@ async function main() {
     ? path.resolve(outArg.slice("--out=".length))
     : path.join(REPO, "scripts", "section-switch-performance-before-report.json");
 
-  const server = spawn(process.execPath, [path.join(REPO, "server", "projects-static-and-vin.mjs")], {
-    cwd: REPO,
-    env: { ...process.env, PORT: String(PORT) },
-    stdio: "ignore",
-  });
-  await waitForPort("127.0.0.1", PORT, 30000);
+  let server = null;
+  if (USE_LOCAL_SERVER) {
+    server = spawn(process.execPath, [path.join(REPO, "server", "projects-static-and-vin.mjs")], {
+      cwd: REPO,
+      env: { ...process.env, PORT: String(PORT) },
+      stdio: "ignore",
+    });
+    await waitForPort("127.0.0.1", PORT, 30000);
+  }
 
   const consoleErrors = [];
   const appErrors = [];
@@ -285,7 +291,7 @@ async function main() {
     await page.close();
     await context.close();
     await browser.close();
-    server.kill("SIGTERM");
+    if (server) server.kill("SIGTERM");
   }
 
   const report = {
