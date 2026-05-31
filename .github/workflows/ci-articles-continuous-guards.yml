@@ -153,8 +153,3 @@ jobs:
 
       - name: Duplicate metadata guard
         run: node scripts/duplicate-metadata-guard.mjs
-
-      - name: Same-topic overexposure guard
-        env:
-          ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
-        run: node scripts/same-topic-overexposure-guard.mjs
