@@ -1,0 +1,52 @@
+# Nightly full registry rebuild (recovery / maintenance — not default autorun path).
+name: Articles nightly full rebuild
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: articles-nightly-full-rebuild
+  cancel-in-progress: false
+
+jobs:
+  full_rebuild_ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      RETENTION_DAYS: "45"
+      IU_FULL_REBUILD: "1"
+      IU_ARTICLE_PIPELINE_PHASE: ingest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+
+      - name: Full rebuild ingest (all registry feeds)
+        run: |
+          set -euo pipefail
+          python scripts/source_rotation_inventory.py
+          python scripts/build_articles.py
+          test -f projects/data/staging/ingest_manifest.json
+
+      - name: Proof
+        run: |
+          echo "FULL_REBUILD_MODE=IU_FULL_REBUILD"
+          echo "EXPECTED_RUNTIME_MINUTES=30-90"
+          echo "FREQUENCY=daily_02_00_UTC"

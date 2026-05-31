@@ -53,11 +53,45 @@ def _prague_tz():
 # Hard floor: same source (scheduler_cooldown_key) must not fetch more often than this between runs.
 HARD_DOMAIN_COOLDOWN_MIN = 15
 
+# Product limit: max scheduler visits per source per hour (exception keys capped at 5).
+MAX_SOURCE_FETCHES_PER_HOUR = 4
+MAX_SOURCE_FETCHES_PER_HOUR_EXCEPTION = 5
+MAX_SOURCE_FETCHES_EXCEPTION_KEYS: frozenset[str] = frozenset()
+
 # Default small gap between HTTP fetches inside one source batch (build_articles); override via IU_SOURCE_BATCH_INTERNAL_GAP_MS.
 SOURCE_BATCH_INTERNAL_GAP_MS_DEFAULT = 400
 
+# Priority tiers (source-level rotation; sections assigned after fetch).
+SOURCE_PRIORITY_BY_KEY: dict[str, str] = {
+    "seznamzpravy.cz": "P0",
+    "novinky.cz": "P0",
+    "idnes.cz": "P0",
+    "idnes.cz/sport": "P0",
+    "aktualne.cz": "P0",
+    "denik.cz": "P0",
+    "ceskatelevize.cz": "P0",
+    "sport.ceskatelevize.cz": "P0",
+    "sport.cz": "P0",
+    "isport.cz": "P0",
+    "e15.cz": "P1",
+    "penize.cz": "P1",
+    "hn.cz": "P1",
+    "ekonom.cz": "P1",
+    "ekonomickydenik.cz": "P1",
+    "zdravezpravy.cz": "P1",
+    "zdravotnickydenik.cz": "P1",
+    "cestujlevne.cz": "P1",
+    "zing.cz": "P1",
+    "vortex.cz": "P1",
+    "kinobox.cz": "P1",
+    "technet.cz": "P1",
+    "hlidacipes.org": "P1",
+    "tydenikpolicie.cz": "P1",
+    "crzpravy.cz": "P1",
+}
+
 # Fixed minute-of-hour slots (0–59) per scheduler key; keys match host or logical source id (e.g. idnes.cz/sport).
-# Unmapped keys: interval-only eligibility (all minutes); ordering still by score within that pool.
+# Every active registry source must map to a key here (no section-based rotation).
 FIXED_MINUTE_SLOTS_BY_KEY: dict[str, frozenset[int]] = {
     # Zprávy / main
     "seznamzpravy.cz": frozenset({0, 15, 30, 45}),
@@ -73,6 +107,7 @@ FIXED_MINUTE_SLOTS_BY_KEY: dict[str, frozenset[int]] = {
     # Sport
     "sport.cz": frozenset({0, 15, 30, 45}),
     "isport.cz": frozenset({5, 20, 35, 50}),
+    "sport.ceskatelevize.cz": frozenset({5, 20, 35, 50}),
     "idnes.cz/sport": frozenset({10, 25, 40, 55}),
     # Finance
     "penize.cz": frozenset({0, 15, 30, 45}),
@@ -102,6 +137,37 @@ FIXED_MINUTE_SLOTS_BY_KEY: dict[str, frozenset[int]] = {
     "flowee.cz": frozenset({30}),
     "scio.cz": frozenset({45}),
     "seduo.cz": frozenset({50}),
+    # P1 — previously interval-only (2×/h)
+    "hn.cz": frozenset({8, 38}),
+    "ekonom.cz": frozenset({12, 42}),
+    "zdravotnickydenik.cz": frozenset({3, 33}),
+    "crzpravy.cz": frozenset({6, 36}),
+    "epenize.eu": frozenset({14, 44}),
+    "faei.cz": frozenset({16, 46}),
+    # P2 — specialized / slower (1×/h, staggered minutes)
+    "betterlife.cz": frozenset({7}),
+    "ceska-justice.cz": frozenset({17}),
+    "indian-tv.cz": frozenset({9}),
+    "kverulant.org": frozenset({19}),
+    "mmamag.cz": frozenset({21}),
+    "nedd.cz": frozenset({23}),
+    "nespechej.cz": frozenset({27}),
+    "plnezdravi.cz": frozenset({29}),
+    "prozeny.cz": frozenset({31}),
+    "sector.sk": frozenset({37}),
+    "svetcestovatele.cz": frozenset({39}),
+    "tenisportal.cz": frozenset({41}),
+    "vipzivot.cz": frozenset({43}),
+    "vlasta.cz": frozenset({47}),
+    "vtelce.cz": frozenset({51}),
+    "zdrave.cz": frozenset({53}),
+    "poznatsvet.cz": frozenset({55}),
+    "osel.cz": frozenset({57}),
+    "100plus1.cz": frozenset({59}),
+    "games.cz": frozenset({58}),
+    "idnes.cz/hry": frozenset({11}),
+    "mesec.cz": frozenset({13}),
+    "patria.cz": frozenset({18}),
 }
 
 # Host / domain aliases → canonical scheduler key in FIXED_MINUTE_SLOTS_BY_KEY
@@ -204,7 +270,7 @@ def entry_fixed_slot_key(e: dict) -> str | None:
 
     # ČT: ct24.ceskatelevize.cz RSS + legacy www path /ct24/rss share the same fixed grid.
     if host == "sport.ceskatelevize.cz":
-        return None
+        return "sport.ceskatelevize.cz"
     if host == "ct24.ceskatelevize.cz":
         return "ceskatelevize.cz"
     if host == "ceskatelevize.cz":
@@ -227,7 +293,63 @@ def minute_eligible_for_fixed_slots(e: dict, minute: int) -> bool:
 
 
 def is_fixed_slot_mapped(e: dict) -> bool:
-    return entry_fixed_slot_key(e) is not None
+    sk = entry_fixed_slot_key(e)
+    if sk is None:
+        return False
+    return sk in FIXED_MINUTE_SLOTS_BY_KEY
+
+
+def source_priority_for_key(scheduler_key: str) -> str:
+    """P0 = news/sport hubs; P1 = medium; P2 = niche/slow."""
+    k = (scheduler_key or "").strip().lower()
+    if k in SOURCE_PRIORITY_BY_KEY:
+        return SOURCE_PRIORITY_BY_KEY[k]
+    return "P2"
+
+
+def fetches_per_hour_for_key(scheduler_key: str) -> int:
+    mins = FIXED_MINUTE_SLOTS_BY_KEY.get((scheduler_key or "").strip().lower())
+    return len(mins) if mins else 0
+
+
+def rotation_plan_for_registry(registry: dict) -> dict:
+    """Deterministic rotation summary from registry + slot table (for guards / inventory)."""
+    keys: dict[str, dict] = {}
+    for e in registry_active_entries(registry):
+        ck = scheduler_cooldown_key(e) or cooldown_domain_key(e)
+        if not ck or ck in keys:
+            continue
+        sk = entry_fixed_slot_key(e)
+        fph = fetches_per_hour_for_key(ck)
+        pri = source_priority_for_key(ck)
+        keys[ck] = {
+            "source": ck,
+            "priority": pri,
+            "fetches_per_hour": fph,
+            "slot_minutes": sorted(FIXED_MINUTE_SLOTS_BY_KEY.get(sk or ck) or ()),
+            "recommended_frequency": f"{fph}/hour" if fph else "unslotted",
+        }
+    rows = sorted(keys.values(), key=lambda x: x["source"])
+    return {
+        "total_sources": len(rows),
+        "max_fetches_per_source_per_hour": MAX_SOURCE_FETCHES_PER_HOUR,
+        "sources": rows,
+    }
+
+
+def assert_rotation_frequency_limits() -> list[str]:
+    """Return human-readable violations (empty = OK)."""
+    issues: list[str] = []
+    for key, mins in FIXED_MINUTE_SLOTS_BY_KEY.items():
+        n = len(mins)
+        cap = (
+            MAX_SOURCE_FETCHES_PER_HOUR_EXCEPTION
+            if key in MAX_SOURCE_FETCHES_EXCEPTION_KEYS
+            else MAX_SOURCE_FETCHES_PER_HOUR
+        )
+        if n > cap:
+            issues.append(f"{key}: {n} slots/h > cap {cap}")
+    return issues
 
 
 def is_hard_blocked_url(url: str) -> bool:

@@ -64,9 +64,8 @@ jobs:
     timeout-minutes: 30
     env:
       RETENTION_DAYS: "45"
-      # Full registry fetch every run (scripts/build_articles.py). Without this, select_feeds_for_tick
-      # only hits a few sources per tick — multi-hour gaps before major feeds refresh → stale publishedAt on web.
-      IU_BUILD_ALL_FEEDS: "1"
+      # Source-level rotation: only feeds due this Prague minute (iu_registry fixed slots).
+      IU_INCREMENTAL_PUBLISH: "1"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -114,9 +113,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r scripts/requirements.txt
 
+      - name: Regenerate source rotation inventory
+        run: |
+          set -euo pipefail
+          python scripts/source_rotation_inventory.py
+          test -s projects/data/source_rotation_inventory.json
+
       - name: Article pipeline — ingest (RSS → staging)
         env:
           IU_ARTICLE_PIPELINE_PHASE: ingest
+          IU_INCREMENTAL_PUBLISH: "1"
         run: |
           set -euo pipefail
           T0=$(date +%s)
@@ -386,6 +392,38 @@ jobs:
           SOURCE_REGISTRY_PATH: ${{ github.workspace }}/projects/data/source_registry.json
           SECTION_COVERAGE_BUNDLE_GRACE_HOURS: "0"
         run: node scripts/section-coverage-guard.mjs
+
+      - name: Source rotation guard
+        run: node scripts/source-rotation-guard.mjs
+
+      - name: Source frequency guard
+        run: node scripts/source-frequency-guard.mjs
+
+      - name: Incremental publish guard
+        env:
+          ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
+          REQUIRE_INCREMENTAL_PUBLISH_ENV: "1"
+        run: node scripts/incremental-publish-guard.mjs
+
+      - name: Priority source freshness guard
+        env:
+          ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
+        run: node scripts/priority-source-freshness-guard.mjs
+
+      - name: Crawler identity guard
+        run: node scripts/crawler-identity-guard.mjs
+
+      - name: Robots compliance guard
+        run: node scripts/robots-compliance-guard.mjs
+
+      - name: Backpressure guard
+        run: node scripts/backpressure-guard.mjs
+
+      - name: Publish continuity guard
+        env:
+          ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
+          REQUIRE_PROD_FRESHNESS: "0"
+        run: node scripts/publish-continuity-guard.mjs
 
       - name: Dedupe loss guard
         env:
