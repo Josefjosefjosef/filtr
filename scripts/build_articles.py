@@ -712,6 +712,47 @@ def _pick_url_collision_winner(a: dict, b: dict) -> dict:
     return a if ta >= tb else b
 
 
+def _ingest_item_for_priority(it: dict) -> dict:
+    """Map staging ingest item to article-shaped dict for vertical URL priority."""
+    if not isinstance(it, dict):
+        return {}
+    dt = it.get("dt")
+    pub = dt.isoformat().replace("+00:00", "Z") if hasattr(dt, "isoformat") else ""
+    return {
+        "topic": it.get("section"),
+        "section": it.get("section"),
+        "publishedAt": pub,
+        "feedId": it.get("feedId"),
+        "url": it.get("url"),
+    }
+
+
+def _pick_ingest_item_collision_winner(a: dict, b: dict) -> dict:
+    pa = _vertical_section_priority(_ingest_item_for_priority(a))
+    pb = _vertical_section_priority(_ingest_item_for_priority(b))
+    if pa != pb:
+        return a if pa > pb else b
+    return a if a.get("dt") >= b.get("dt") else b
+
+
+def _dedupe_ingest_items_by_url_priority(items: list) -> list:
+    """Pre-cluster dedupe: same URL from aktualne + vertical rubric feed → keep vertical assignment."""
+    by_url: dict[str, dict] = {}
+    orphans: list = []
+    for it in items or []:
+        if not isinstance(it, dict):
+            continue
+        u = canonicalize_url((it.get("url") or "").strip())
+        if not u:
+            orphans.append(it)
+            continue
+        prev = by_url.get(u)
+        by_url[u] = it if prev is None else _pick_ingest_item_collision_winner(prev, it)
+    out = list(by_url.values()) + orphans
+    out.sort(key=lambda x: x["dt"], reverse=True)
+    return out
+
+
 def _dedupe_articles_by_url_global(articles: list) -> list:
     by_url: dict[str, dict] = {}
     for r in articles or []:
@@ -2843,14 +2884,7 @@ def _aggregate_pipeline(
     """
     Staging / in-memory raw items → merged + limited article lists (no RSS fetch).
     """
-    seen_pre = set()
-    deduped_items = []
-    for it in sorted(all_items, key=lambda x: x["dt"], reverse=True):
-        key = (it["media_norm"], it["url"])
-        if key in seen_pre:
-            continue
-        seen_pre.add(key)
-        deduped_items.append(it)
+    deduped_items = _dedupe_ingest_items_by_url_priority(all_items)
 
     clusters = cluster_items(deduped_items)
 
