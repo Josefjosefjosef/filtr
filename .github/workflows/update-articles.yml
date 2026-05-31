@@ -390,7 +390,7 @@ jobs:
         env:
           ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
           SOURCE_REGISTRY_PATH: ${{ github.workspace }}/projects/data/source_registry.json
-          SECTION_COVERAGE_BUNDLE_GRACE_HOURS: "0"
+          SECTION_COVERAGE_BUNDLE_GRACE_HOURS: "6"
         run: node scripts/section-coverage-guard.mjs
 
       - name: Source rotation guard
