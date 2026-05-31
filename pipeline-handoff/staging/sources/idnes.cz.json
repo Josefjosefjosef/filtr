@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-31T20:49:50.830460Z",
+  "ingestedAt": "2026-05-31T21:50:21.466397Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pavel věří ve společnou účast prezidenta i premiéra na červencovém summitu NATO",
+      "url": "https://www.idnes.cz/zpravy/domaci/pavel-veri-ve-spolecnou-ucast-prezidenta-i-premiera-na-summitu-nato.A260531_221641_domaci_idh",
+      "dt": "2026-05-31T20:16:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "nato",
+        "pavel",
+        "premiéra",
+        "prezidenta",
+        "společnou",
+        "summitu",
+        "věří",
+        "účast",
+        "červencovém"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -768,31 +794,6 @@
         "stovky",
         "výhře",
         "zadržela"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Když to bude nezákonné, peníze se vymůžou, říká Tejc o dotacích pro Agrofert",
-      "url": "https://www.idnes.cz/zpravy/domaci/debata-hadka-tejc-ano-babis-opozice-richterova-lipavsky.A260531_101944_domaci_sahu",
-      "dt": "2026-05-31T11:42:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "agrofert",
-        "dotacích",
-        "když",
-        "nezákonné",
-        "peníze",
-        "tejc",
-        "vymůžou",
-        "říká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1600,7 +1601,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49215,
+      "bytes": 49039,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1637,7 +1638,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-31T19:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T20:16:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 29,
@@ -1653,6 +1654,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pavel věří ve společnou účast prezidenta i premiéra na červencovém summitu NATO",
+            "publishedAt": "2026-05-31T20:16:00Z"
+          },
           {
             "title": "V Rakousku u českých hranic blesk zapálil věž zámku, jinde silný vítr vyvracel stromy",
             "publishedAt": "2026-05-31T19:00:00Z"
@@ -1680,10 +1685,6 @@
           {
             "title": "Skalpovaná krasavice namíchla Ameriku. Její mýtus ospravedlnil masakry indiánů",
             "publishedAt": "2026-05-31T18:00:00Z"
-          },
-          {
-            "title": "„Naše vztahy přinášejí dobré výsledky.“ Vystrčil odletěl na Tchaj-wan a Peking zuří",
-            "publishedAt": "2026-05-31T17:42:44Z"
           }
         ]
       }
