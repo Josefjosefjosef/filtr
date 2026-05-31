@@ -307,15 +307,17 @@ jobs:
       - name: Ensure aggregator freshness guard script (workflow ref may be ahead of main)
         run: |
           set -euo pipefail
+          GUARD="${RUNNER_TEMP}/articles-aggregator-freshness-guard.mjs"
           if [ -f scripts/articles-aggregator-freshness-guard.mjs ]; then
-            echo "[GUARD] script present on checkout"
-            exit 0
+            cp scripts/articles-aggregator-freshness-guard.mjs "$GUARD"
+          else
+            REF="${{ github.ref_name }}"
+            echo "[GUARD] fetching scripts/articles-aggregator-freshness-guard.mjs from origin/${REF}"
+            git fetch origin "${REF}"
+            git show "origin/${REF}:scripts/articles-aggregator-freshness-guard.mjs" > "$GUARD"
           fi
-          REF="${{ github.ref_name }}"
-          echo "[GUARD] fetching scripts/articles-aggregator-freshness-guard.mjs from origin/${REF}"
-          git fetch origin "${REF}"
-          git checkout "origin/${REF}" -- scripts/articles-aggregator-freshness-guard.mjs
-          test -s scripts/articles-aggregator-freshness-guard.mjs
+          test -s "$GUARD"
+          echo "GUARD_SCRIPT=$GUARD" >> "$GITHUB_ENV"
 
       - name: Articles aggregator freshness guard (bundle + main sections)
         env:
@@ -323,7 +325,7 @@ jobs:
           MAX_SECTION_AGE_HOURS: "168"
         run: |
           set -euo pipefail
-          node scripts/articles-aggregator-freshness-guard.mjs
+          node "$GUARD_SCRIPT"
 
       - name: Section purity guard (finance/zdravi vs URL)
         run: |
