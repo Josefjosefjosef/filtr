@@ -52,6 +52,7 @@ from iu_registry import (
     save_scheduler_state,
     scheduler_cooldown_key,
     select_feeds_for_tick,
+    rotation_plan_for_registry,
 )
 from iu_staging import (
     deserialize_youtube_row,
@@ -66,6 +67,22 @@ from iu_staging import (
 )
 from ingest_telemetry import build_telemetry_payload, print_compact_audit, section_bucket
 from iu_feed_classification import classification_coverage_stats, enrich_article_list
+from iu_crawler import (
+    GLOBAL_MIN_REQUEST_INTERVAL_SEC as _CRAWLER_MIN_INTERVAL,
+    IU_BOT_FROM_HEADER,
+    IU_USER_AGENT,
+    REQUEST_TIMEOUT_SEC as _CRAWLER_TIMEOUT,
+    crawler_request_headers,
+    is_rate_limit_response,
+    rate_limit_backoff_sec,
+    robots_allowed_for_url,
+)
+from iu_backpressure import (
+    PublishTimeBudget,
+    queue_depth,
+    split_publish_batch,
+)
+from iu_topic_dedupe import apply_topic_event_dedupe
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # repo root
 FEEDS_PATH = os.path.join(ROOT_DIR, "scripts", "feeds.json")
@@ -87,6 +104,7 @@ HEALTH_PATH = os.path.join(OUTPUT_DIR, "feed_health.json")
 BRIEF_PATH = os.path.join(OUTPUT_DIR, "brief.json")
 META_PATH = os.path.join(OUTPUT_DIR, "meta.json")
 INGEST_TELEMETRY_PATH = os.path.join(OUTPUT_DIR, "ingest_telemetry", "latest.json")
+TOPIC_DEDUPE_SUPPRESSED_PATH = os.path.join(OUTPUT_DIR, "topic_dedupe_suppressed.json")
 
 # ✅ Retention storage (sharded by day; append-only with dedup)
 ARTICLES_SHARD_DIR = os.path.join(OUTPUT_DIR, "articles")
@@ -98,14 +116,14 @@ BOOTSTRAP_HARD_CAP = 1100
 # ✅ NOVĚ: výstup videí (pro assets/app.js)
 VIDEOS_OUT_PATH = os.path.join(OUTPUT_DIR, "videos.json")
 
-USER_AGENT = "infoUzelBot/1.0 (+https://infouzel.cz/projects/bot/)"
-BOT_FROM_HEADER = "admin@infouzel.cz"
-REQUEST_TIMEOUT_SEC = 20
+USER_AGENT = IU_USER_AGENT
+BOT_FROM_HEADER = IU_BOT_FROM_HEADER
+REQUEST_TIMEOUT_SEC = _CRAWLER_TIMEOUT
 
 MAX_ITEMS_PER_FEED = 40
 
-# Anti-block + výstupní limity
-GLOBAL_MIN_REQUEST_INTERVAL_SEC = 2.0
+# Anti-block + výstupní limity (see iu_crawler.py)
+GLOBAL_MIN_REQUEST_INTERVAL_SEC = _CRAWLER_MIN_INTERVAL
 MAX_TOPIC_DEDUPE_PER_KEY = 2
 MAX_ARTICLES_PER_SOURCE_DISPLAY = 2
 NICHE_MAX_FRACTION = 0.38
@@ -351,13 +369,7 @@ def http_fetch_rss_body(url: str, transport: dict, last_req_ts: list) -> tuple:
     last_mod = (entry.get("last_modified") or "").strip()
 
     def _do_get(use_conditional: bool):
-        headers = {
-            "User-Agent": USER_AGENT,
-            "From": BOT_FROM_HEADER,
-            "Accept": "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.1",
-            "Accept-Language": "cs-CZ,cs;q=0.9,en;q=0.3",
-            "Cache-Control": "no-cache",
-        }
+        headers = dict(crawler_request_headers())
         if use_conditional:
             if etag:
                 headers["If-None-Match"] = etag
@@ -376,6 +388,12 @@ def http_fetch_rss_body(url: str, transport: dict, last_req_ts: list) -> tuple:
     new_etag = etag
     new_lm = last_mod
     backoff = 1.0
+
+    allowed, robots_reason = robots_allowed_for_url(url, OUTPUT_DIR, last_req_ts)
+    if not allowed:
+        diag["reason"] = robots_reason
+        diag["httpStatus"] = 0
+        return "", diag, new_etag, new_lm
 
     for attempt in range(4):
         try:
@@ -406,6 +424,12 @@ def http_fetch_rss_body(url: str, transport: dict, last_req_ts: list) -> tuple:
 
             if status_code >= 400:
                 diag["reason"] = f"http_{status_code}"
+                if is_rate_limit_response(status_code) and attempt < 3:
+                    time.sleep(
+                        rate_limit_backoff_sec(attempt, status_code)
+                        + random.uniform(0, 0.5)
+                    )
+                    continue
                 if attempt < 3:
                     time.sleep(backoff + random.uniform(0, 0.45))
                     backoff *= 2
@@ -414,6 +438,12 @@ def http_fetch_rss_body(url: str, transport: dict, last_req_ts: list) -> tuple:
 
             if status_code != 200:
                 diag["reason"] = f"http_{status_code}"
+                if is_rate_limit_response(status_code) and attempt < 3:
+                    time.sleep(
+                        rate_limit_backoff_sec(attempt, status_code)
+                        + random.uniform(0, 0.5)
+                    )
+                    continue
                 if attempt < 3:
                     time.sleep(backoff + random.uniform(0, 0.45))
                     backoff *= 2
@@ -1973,59 +2003,50 @@ def _pick_story_cluster_winner(group: list) -> dict:
     return max(group, key=sort_key)
 
 
+_TOPIC_DEDUPE_LAST_STATS: dict = {}
+
+
 def _apply_conservative_topic_clustering(articles: list) -> list:
     """
-    MODEL_3: same section only, different URLs, high-confidence title match → one winner.
-    Does not change sections (CLUSTERING_MUST_NOT_OVERRIDE_SECTION_TRUTH).
+    Topic/event dedupe V1: same section, different URLs, conservative title match + time window.
+    Suppressed duplicates recorded in topic_dedupe_suppressed.json (not in public feed).
     """
+    global _TOPIC_DEDUPE_LAST_STATS
     if not articles:
+        _TOPIC_DEDUPE_LAST_STATS = {"suppressed_count": 0, "clusters_merged": 0}
         return articles
-    clean = [a for a in articles if isinstance(a, dict)]
-    if len(clean) <= 1:
-        return clean
 
-    by_sec: dict[str, list] = defaultdict(list)
-    for a in clean:
-        sec = stable_section(str(a.get("topic") or a.get("section") or "aktualne"))
-        by_sec[sec].append(a)
+    def _score(ad: dict) -> tuple:
+        ds = float(compute_display_score(ad))
+        pa = str(ad.get("publishedAt") or "")
+        sw = float(ad.get("sourceDisplayWeight") or 1.0)
+        title = str(ad.get("title") or "").strip()
+        tq = min(200, max(0, len(title)))
+        u = _article_url_canonical(ad)
+        return (ds, pa, sw, tq, u)
 
-    winners = []
-    for _sec, arts in by_sec.items():
-        n = len(arts)
-        if n == 1:
-            winners.append(arts[0])
-            continue
-        uf = list(range(n))
-
-        def uf_find(x: int) -> int:
-            r = x
-            while uf[r] != r:
-                r = uf[r]
-            return r
-
-        def uf_union(x: int, y: int) -> None:
-            rx, ry = uf_find(x), uf_find(y)
-            if rx != ry:
-                uf[rx] = ry
-
-        for i in range(n):
-            for j in range(i + 1, n):
-                if _article_url_canonical(arts[i]) == _article_url_canonical(arts[j]):
-                    continue
-                t1 = str(arts[i].get("title") or "")
-                t2 = str(arts[j].get("title") or "")
-                if _story_pair_high_confidence_topic(t1, t2):
-                    uf_union(i, j)
-
-        clusters: dict[int, list] = defaultdict(list)
-        for i in range(n):
-            clusters[uf_find(i)].append(arts[i])
-
-        for _r, grp in clusters.items():
-            winners.append(_pick_story_cluster_winner(grp))
-
-    winners.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
-    return winners
+    visible, suppressed, stats = apply_topic_event_dedupe(
+        articles,
+        stable_section_fn=stable_section,
+        story_match_fn=_story_pair_high_confidence_topic,
+        tokenize_fn=_tokenize_story_cluster_title,
+        score_fn=_score,
+        url_fn=_article_url_canonical,
+    )
+    _TOPIC_DEDUPE_LAST_STATS = dict(stats)
+    try:
+        os.makedirs(os.path.dirname(TOPIC_DEDUPE_SUPPRESSED_PATH), exist_ok=True)
+        _atomic_write_json(
+            TOPIC_DEDUPE_SUPPRESSED_PATH,
+            {
+                "generatedAt": iso_now_z(),
+                "stats": stats,
+                "suppressed": suppressed[-500:],
+            },
+        )
+    except Exception as e:
+        print("WARN: topic_dedupe_suppressed write failed:", str(e), flush=True)
+    return visible
 
 
 def _parse_day_yyyy_mm_dd(day: str):
@@ -2488,14 +2509,8 @@ def robust_fetch(url: str) -> tuple:
     Robustní fetch RSS feedu s hlavičkami, timeoutem, redirecty, encoding fallback.
     Vrací: (status_code, final_url, content_type, text)
     """
-    headers = {
-        "User-Agent": USER_AGENT,
-        "From": BOT_FROM_HEADER,
-        "Accept": "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.1",
-        "Accept-Language": "cs-CZ,cs;q=0.9,en;q=0.3",
-        "Cache-Control": "no-cache",
-    }
-    
+    headers = crawler_request_headers()
+
     try:
         response = requests.get(
             url,
@@ -2975,6 +2990,10 @@ def _aggregate_pipeline(
         registry=registry,
         generated_at=generated_at,
     )
+    topic_stats = dict(_TOPIC_DEDUPE_LAST_STATS or {})
+    if topic_stats:
+        tel_summary = dict(tel_summary) if isinstance(tel_summary, dict) else {}
+        tel_summary["topic_dedupe"] = topic_stats
 
     return {
         "generated_at": generated_at,
@@ -2985,6 +3004,7 @@ def _aggregate_pipeline(
         "registry": registry,
         "ingest_telemetry": tel_detail,
         "ingest_telemetry_summary": tel_summary,
+        "topic_dedupe": topic_stats,
     }
 
 
@@ -3365,6 +3385,60 @@ def _feed_report_attach_registry(rep: dict, meta: dict) -> None:
         rep["registryGroup"] = rg
 
 
+def _incremental_publish_with_backpressure(
+    fresh_items: list,
+    per_feed_report: list,
+    yt_videos: list,
+    registry: dict,
+) -> tuple[int, dict]:
+    """
+    Bounded publish: drain queue + merge staging, cap items/time, defer remainder safely.
+    """
+    budget = PublishTimeBudget()
+    loaded = load_staging_for_aggregate(OUTPUT_DIR)
+    staged = list(loaded.get("all_items") or [])
+    aggregate_items, bp_meta = split_publish_batch(OUTPUT_DIR, fresh_items, staged)
+    bp_meta["queue_depth_after"] = queue_depth(OUTPUT_DIR)
+    bp_meta["publish_elapsed_sec"] = 0.0
+
+    print(
+        "[iu-backpressure] "
+        f"publish_now={bp_meta.get('published_now_count')} "
+        f"enqueued={bp_meta.get('enqueued_this_tick')} "
+        f"queue={bp_meta.get('queue_depth_after')} "
+        f"drained={bp_meta.get('drained_from_queue')}",
+        flush=True,
+    )
+
+    if budget.exceeded():
+        bp_meta["skipped_reason"] = "time_budget_before_aggregate"
+        return 0, bp_meta
+
+    aggregate_reports = list(loaded.get("per_feed_report") or [])
+    seen_rep = {str(r.get("feed") or "") for r in aggregate_reports if isinstance(r, dict)}
+    for r in per_feed_report or []:
+        if isinstance(r, dict):
+            fk = str(r.get("feed") or "")
+            if fk and fk not in seen_rep:
+                aggregate_reports.append(r)
+                seen_rep.add(fk)
+
+    bundle = _aggregate_pipeline(
+        aggregate_items, aggregate_reports, yt_videos, registry
+    )
+    bundle["backpressure"] = bp_meta
+    hm = _handoff_meta_from_staging_manifest(loaded)
+    write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle, hm))
+
+    if budget.exceeded():
+        bp_meta["skipped_reason"] = "time_budget_before_publish"
+        return 0, bp_meta
+
+    rc = _publish_article_outputs(bundle)
+    bp_meta["publish_elapsed_sec"] = round(budget.elapsed_sec(), 2)
+    return rc, bp_meta
+
+
 # =========================
 # Main
 # =========================
@@ -3392,12 +3466,21 @@ def main() -> int:
     if phase == "aggregate":
         print("[iu-pipeline] phase=aggregate reads staging only; no RSS fetch", flush=True)
         loaded = load_staging_for_aggregate(OUTPUT_DIR)
+        agg_items, bp_meta = split_publish_batch(
+            OUTPUT_DIR, [], list(loaded.get("all_items") or [])
+        )
+        print(
+            f"[iu-backpressure] aggregate batch size={len(agg_items)} "
+            f"queue={bp_meta.get('queue_depth_after', queue_depth(OUTPUT_DIR))}",
+            flush=True,
+        )
         bundle = _aggregate_pipeline(
-            loaded["all_items"],
+            agg_items,
             loaded["per_feed_report"],
             loaded["youtube_rows"],
             registry,
         )
+        bundle["backpressure"] = bp_meta
         hm = _handoff_meta_from_staging_manifest(loaded)
         write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle, hm))
         return 0
@@ -3406,14 +3489,27 @@ def main() -> int:
         print(f"ERROR: unknown IU_ARTICLE_PIPELINE_PHASE={phase!r}", file=sys.stderr)
         return 2
 
-    print(f"[iu-pipeline] phase={phase} RSS fetch → staging (scheduler unchanged)", flush=True)
+    print(f"[iu-pipeline] phase={phase} RSS fetch → staging (source rotation)", flush=True)
     sched_state = load_scheduler_state(SCHEDULER_STATE_PATH)
-    # IU_BUILD_ALL_FEEDS=1: jeden běh přes všechny aktivní registry feedy (ne 2–3/tick).
-    _full_feed = os.getenv("IU_BUILD_ALL_FEEDS", "").strip().lower() in ("1", "true", "yes")
+    # Full rebuild: all active feeds (nightly / recovery / manual only — not default prod).
+    _full_rebuild = os.getenv("IU_FULL_REBUILD", "").strip().lower() in ("1", "true", "yes")
+    _full_feed = _full_rebuild or os.getenv("IU_BUILD_ALL_FEEDS", "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+    )
     if _full_feed:
         picked = registry_active_entries(registry)
+        if _full_rebuild:
+            print("[iu-pipeline] IU_FULL_REBUILD: fetching all active registry feeds", flush=True)
+        else:
+            print("[iu-pipeline] IU_BUILD_ALL_FEEDS: full registry fetch (legacy env)", flush=True)
     else:
         picked, sched_state = select_feeds_for_tick(registry, sched_state)
+        print(
+            f"[iu-pipeline] rotation tick: {len(picked)} feeds due this Prague minute",
+            flush=True,
+        )
     grouped = collapse_feeds_by_url(picked)
     feed_items = []
     for _url, entry_group in grouped:
@@ -3461,6 +3557,29 @@ def main() -> int:
         staging_batch_key = batch_ck
         if not staging_batch_key:
             staging_batch_key = "unbatched_" + hashlib.sha256(feed_url.encode("utf-8")).hexdigest()[:24]
+
+        robots_ok, robots_reason = robots_allowed_for_url(
+            feed_url, OUTPUT_DIR, last_req_ts
+        )
+        if not robots_ok:
+            rep = {
+                "feed": feed_url,
+                "source": "",
+                "topic": "aktualne",
+                "status": "SKIPPED_ROBOTS",
+                "reason": robots_reason,
+                "httpStatus": 0,
+                "contentType": "",
+                "finalUrl": feed_url,
+                "bytes": 0,
+                "itemsParsed": 0,
+                "itemsKept": 0,
+                "accepted": 0,
+            }
+            _feed_report_attach_registry(rep, meta)
+            per_feed_report.append(rep)
+            reports_by_batch[staging_batch_key].append(rep)
+            continue
 
         if is_hard_blocked_url(feed_url):
             rep = {
@@ -3785,6 +3904,35 @@ def main() -> int:
         print("WARN: scheduler_state write failed:", str(e))
 
     if phase == "ingest":
+        _incr_pub = os.getenv("IU_INCREMENTAL_PUBLISH", "").strip().lower() in (
+            "1",
+            "true",
+            "yes",
+        )
+        if _incr_pub and all_items:
+            print(
+                f"[iu-pipeline] incremental publish: {len(all_items)} new ingest items",
+                flush=True,
+            )
+            rc, bp_meta = _incremental_publish_with_backpressure(
+                all_items, per_feed_report, yt_videos, registry
+            )
+            print(
+                f"[iu-pipeline] incremental publish done rc={rc} "
+                f"elapsed_sec={bp_meta.get('publish_elapsed_sec')}",
+                flush=True,
+            )
+            return rc
+        if _incr_pub and queue_depth(OUTPUT_DIR) > 0:
+            print(
+                f"[iu-pipeline] incremental publish: drain queue only "
+                f"depth={queue_depth(OUTPUT_DIR)}",
+                flush=True,
+            )
+            rc, _ = _incremental_publish_with_backpressure(
+                [], per_feed_report, yt_videos, registry
+            )
+            return rc
         return 0
 
     loaded = load_staging_for_aggregate(OUTPUT_DIR)

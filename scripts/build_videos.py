@@ -47,9 +47,9 @@ ALLOWLIST_PATH = os.path.join(ROOT_DIR, "projects", "data", "videos_allowlist.js
 OUTPUT_DIR = os.getenv("OUTPUT_DIR", os.path.join(ROOT_DIR, "projects", "data"))
 OUT_PATH = os.path.join(OUTPUT_DIR, "videos.json")
 
-USER_AGENT = "infoUzelBot/1.0 (+https://infouzel.cz/projects/bot/)"
-BOT_FROM_HEADER = "admin@infouzel.cz"
-REQUEST_TIMEOUT_SEC = 20
+from iu_crawler import IU_BOT_FROM_HEADER as BOT_FROM_HEADER  # noqa: E402
+from iu_crawler import IU_USER_AGENT as USER_AGENT  # noqa: E402
+from iu_crawler import REQUEST_TIMEOUT_SEC  # noqa: E402
 
 def _bot_headers():
     return {"User-Agent": USER_AGENT, "From": BOT_FROM_HEADER}
