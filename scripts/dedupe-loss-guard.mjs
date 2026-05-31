@@ -46,16 +46,26 @@ async function main() {
 
   if (fs.existsSync(telemetryPath)) {
     const tel = JSON.parse(fs.readFileSync(telemetryPath, "utf8"));
-    const perSource = tel.per_source || tel.sources || [];
-    if (Array.isArray(perSource)) {
-      for (const row of perSource) {
-        const topic = String(row.topic || row.section || "").trim().toLowerCase();
-        if (!VERTICALS.includes(topic)) continue;
-        const kept = Number(row.written_to_articles_json_count || row.itemsKept || row.accepted || 0);
-        if (kept > 0) ingestedByTopic[topic] += kept;
+    const telGen = tel.generatedAt || tel.generated_at || "";
+    const artGen = articlesDoc.generatedAt || "";
+    const sameRun =
+      telGen &&
+      artGen &&
+      Math.abs(Date.parse(String(telGen)) - Date.parse(String(artGen))) < 3_600_000;
+    if (!sameRun && remoteArticles) {
+      console.log("[dedupe-loss-guard] SKIP ingest comparison (telemetry not from same run as remote articles)");
+    } else {
+      const perSource = tel.per_source || tel.sources || [];
+      if (Array.isArray(perSource)) {
+        for (const row of perSource) {
+          const topic = String(row.topic || row.section || "").trim().toLowerCase();
+          if (!VERTICALS.includes(topic)) continue;
+          const kept = Number(row.written_to_articles_json_count || row.itemsKept || row.accepted || 0);
+          if (kept > 0) ingestedByTopic[topic] += kept;
+        }
       }
     }
-  } else if (fs.existsSync(healthPath)) {
+  } else if (fs.existsSync(healthPath) && !remoteArticles) {
     const health = JSON.parse(fs.readFileSync(healthPath, "utf8"));
     const feeds = health.feeds && typeof health.feeds === "object" ? health.feeds : {};
     for (const url of Object.keys(feeds)) {
@@ -72,7 +82,7 @@ async function main() {
     console.log(
       `[dedupe-loss-guard] topic=${k} ingest_kept=${ingestedByTopic[k]} json_today=${todayBySection[k]}`,
     );
-    if (ingestedByTopic[k] >= 3 && todayBySection[k] === 0) {
+    if (ingestedByTopic[k] >= 3 && todayBySection[k] === 0 && ingestedByTopic[k] > 0) {
       console.error(
         `[dedupe-loss-guard] FAIL: topic=${k} ingest kept ${ingestedByTopic[k]} but json_today=0 (possible dedupe/limit/stagger wipeout)`,
       );

@@ -1414,6 +1414,10 @@ def _vzdelavani_edu_positive(hay: str) -> bool:
             "student",
             "učitel",
             "ucitel",
+            "učit",
+            "ucit",
+            "učení",
+            "uceni",
             "školstv",
             "skolst",
             "vzdelav",
@@ -1430,10 +1434,12 @@ def vertical_purity_final_section(
     url: str,
     dt: datetime,
     now: datetime | None = None,
+    trust_forced_feed: bool = False,
 ) -> str | None:
     """
     MODEL_2: vertikální kandidát (forced nebo infer) projde deterministickým guardem.
     Vrací finální sekci, nebo None = položku neappendovat (extrémní archiv ve vertikále).
+    trust_forced_feed: položka z dedikovaného vertikálního RSS (registry topic) — nepadat do aktualne kvůli rubrikové syndikaci.
     """
     sec = stable_section(candidate_section)
     if sec not in VERTICAL_PURITY_SECTIONS:
@@ -1446,6 +1452,9 @@ def vertical_purity_final_section(
     age_sec = (now - dt).total_seconds()
     if age_sec > EXTREME_ARCHIVE_DAYS_VERTICAL * 86400:
         return None
+
+    if trust_forced_feed and sec in FORCED_FEED_TOPICS:
+        return sec
 
     hay = _purity_haystack(title, url)
 
@@ -1665,7 +1674,13 @@ def _apply_output_vertical_purity(article: dict) -> dict | None:
         dt = datetime.fromisoformat(str(article.get("publishedAt") or "").replace("Z", "+00:00"))
     except Exception:
         dt = datetime.now(timezone.utc)
-    fin = vertical_purity_final_section(sec, title, url, dt)
+    fin = vertical_purity_final_section(
+        sec,
+        title,
+        url,
+        dt,
+        trust_forced_feed=bool(str(article.get("feedId") or "").strip() and stable_section(sec) in FORCED_FEED_TOPICS),
+    )
     if fin is None:
         return None
     fin = stable_section(fin)
@@ -3615,7 +3630,13 @@ def main() -> int:
                 section = enforce_news_source_section_truth(link, title, fallback_topic=fallback_topic)
             section = stable_section(section)
 
-            purity_sec = vertical_purity_final_section(section, title, link, dt)
+            purity_sec = vertical_purity_final_section(
+                section,
+                title,
+                link,
+                dt,
+                trust_forced_feed=(fallback_topic in FORCED_FEED_TOPICS),
+            )
             if purity_sec is None:
                 iu_tel["drop_counts"]["section_remap"] += 1
                 continue
