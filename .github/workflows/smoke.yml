@@ -70,6 +70,9 @@ jobs:
       - name: Section switch instant response guard
         run: npm run iu-section-switch-instant-response-guard
 
+      - name: Section switch scroll position guard
+        run: npm run iu-section-switch-scroll-position-guard
+
       - name: Set required status context (smoke)
         if: always()
         env:
