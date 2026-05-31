@@ -26,7 +26,9 @@ const root = path.join(__dirname, "..");
 const ARTICLES_JSON_URL =
   (process.env.ARTICLES_JSON_URL || "").trim() ||
   "https://infouzel.cz/projects/data/articles.json";
-const WATCHDOG_HEALTH_URL = (process.env.WATCHDOG_HEALTH_URL || "").trim();
+const WATCHDOG_HEALTH_URL =
+  (process.env.WATCHDOG_HEALTH_URL || "").trim() ||
+  "https://infouzel-articles-watchdog.josef-zmrhal.workers.dev/health";
 const REQUIRE_WATCHDOG = String(process.env.REQUIRE_WATCHDOG || "").toLowerCase() === "true";
 const GITHUB_REPOSITORY = (process.env.GITHUB_REPOSITORY || "Josefjosefjosef/filtr").trim();
 const GITHUB_TOKEN = (process.env.GITHUB_TOKEN || process.env.GH_TOKEN || "").trim();
@@ -110,6 +112,7 @@ async function checkWatchdogHealth() {
     log("watchdog_health SKIP (WATCHDOG_HEALTH_URL unset)");
     return { ok: !REQUIRE_WATCHDOG, deployed: false, reachable: false, reason: "url_unset" };
   }
+  log(`watchdog_health default_url=${WATCHDOG_HEALTH_URL.includes("workers.dev") ? "yes" : "custom"}`);
   log(`watchdog_health url=${WATCHDOG_HEALTH_URL}`);
   try {
     const res = await fetch(WATCHDOG_HEALTH_URL, {

@@ -1,0 +1,74 @@
+# Continuous articles aggregation guards: schedule model, watchdog, prod liveness.
+name: CI - Articles continuous guards
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "25 */4 * * *"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-articles.yml"
+      - ".github/workflows/ci-articles-continuous-guards.yml"
+      - "scripts/articles-continuous-update-guard.mjs"
+      - "scripts/articles-schedule-guard.mjs"
+      - "scripts/articles-watchdog-guard.mjs"
+      - "cloudflare/articles-watchdog/**"
+  pull_request:
+    paths:
+      - ".github/workflows/update-articles.yml"
+      - ".github/workflows/ci-articles-continuous-guards.yml"
+      - "scripts/articles-continuous-update-guard.mjs"
+      - "scripts/articles-schedule-guard.mjs"
+      - "scripts/articles-watchdog-guard.mjs"
+      - "cloudflare/articles-watchdog/**"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: ci-articles-continuous-guards
+  cancel-in-progress: false
+
+jobs:
+  schedule-guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+      - name: Articles schedule guard
+        run: node scripts/articles-schedule-guard.mjs
+
+  watchdog-guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+      - name: Articles watchdog guard
+        env:
+          WATCHDOG_HEALTH_URL: ${{ vars.ARTICLES_WATCHDOG_HEALTH_URL }}
+          REQUIRE_ARTICLES_WATCHDOG: ${{ vars.REQUIRE_ARTICLES_WATCHDOG }}
+        run: node scripts/articles-watchdog-guard.mjs
+
+  continuous-update-guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+      - name: Articles continuous update guard
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          WATCHDOG_HEALTH_URL: ${{ vars.ARTICLES_WATCHDOG_HEALTH_URL }}
+          REQUIRE_AUTOMATIC_TRIGGER: ${{ vars.REQUIRE_ARTICLES_WATCHDOG }}
+        run: node scripts/articles-continuous-update-guard.mjs

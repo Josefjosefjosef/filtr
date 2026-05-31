@@ -7,12 +7,13 @@ main = "src/index.ts"
 compatibility_date = "2024-11-01"
 
 [triggers]
-crons = ["*/5 * * * *"]
+# Check every 15 minutes; dispatch only when prod generatedAt is stale (see STALE_AFTER_MINUTES).
+crons = ["*/15 * * * *"]
 
 [vars]
 GITHUB_REPOSITORY = "Josefjosefjosef/filtr"
 WORKFLOW_FILE = "update-articles.yml"
 FRESHNESS_URL = "https://infouzel.cz/projects/data/articles/index.json"
-STALE_AFTER_MINUTES = "10"
+STALE_AFTER_MINUTES = "15"
 
 # Optional: wrangler secret put MANUAL_TRIGGER_SECRET — then POST /run works for smoke tests.
