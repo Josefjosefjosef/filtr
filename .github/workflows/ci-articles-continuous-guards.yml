@@ -21,6 +21,11 @@ on:
       - "scripts/robots-compliance-guard.mjs"
       - "scripts/backpressure-guard.mjs"
       - "scripts/publish-continuity-guard.mjs"
+      - "scripts/same-topic-overexposure-guard.mjs"
+      - "scripts/topic-dedupe-false-positive-guard.mjs"
+      - "scripts/duplicate-metadata-guard.mjs"
+      - "scripts/iu_topic_dedupe.py"
+      - "scripts/test_iu_topic_dedupe.py"
       - "scripts/iu_crawler.py"
       - "scripts/iu_backpressure.py"
       - "scripts/iu_registry.py"
@@ -42,6 +47,11 @@ on:
       - "scripts/robots-compliance-guard.mjs"
       - "scripts/backpressure-guard.mjs"
       - "scripts/publish-continuity-guard.mjs"
+      - "scripts/same-topic-overexposure-guard.mjs"
+      - "scripts/topic-dedupe-false-positive-guard.mjs"
+      - "scripts/duplicate-metadata-guard.mjs"
+      - "scripts/iu_topic_dedupe.py"
+      - "scripts/test_iu_topic_dedupe.py"
       - "scripts/iu_crawler.py"
       - "scripts/iu_backpressure.py"
       - "scripts/iu_registry.py"
@@ -95,6 +105,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
           WATCHDOG_HEALTH_URL: ${{ vars.ARTICLES_WATCHDOG_HEALTH_URL }}
           REQUIRE_AUTOMATIC_TRIGGER: ${{ vars.REQUIRE_ARTICLES_WATCHDOG }}
         run: node scripts/articles-continuous-update-guard.mjs
@@ -136,3 +147,14 @@ jobs:
 
       - name: Publish continuity guard
         run: node scripts/publish-continuity-guard.mjs
+
+      - name: Topic dedupe false-positive guard
+        run: node scripts/topic-dedupe-false-positive-guard.mjs
+
+      - name: Duplicate metadata guard
+        run: node scripts/duplicate-metadata-guard.mjs
+
+      - name: Same-topic overexposure guard
+        env:
+          ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
+        run: node scripts/same-topic-overexposure-guard.mjs

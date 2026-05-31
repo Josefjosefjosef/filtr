@@ -82,6 +82,7 @@ from iu_backpressure import (
     queue_depth,
     split_publish_batch,
 )
+from iu_topic_dedupe import apply_topic_event_dedupe
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # repo root
 FEEDS_PATH = os.path.join(ROOT_DIR, "scripts", "feeds.json")
@@ -103,6 +104,7 @@ HEALTH_PATH = os.path.join(OUTPUT_DIR, "feed_health.json")
 BRIEF_PATH = os.path.join(OUTPUT_DIR, "brief.json")
 META_PATH = os.path.join(OUTPUT_DIR, "meta.json")
 INGEST_TELEMETRY_PATH = os.path.join(OUTPUT_DIR, "ingest_telemetry", "latest.json")
+TOPIC_DEDUPE_SUPPRESSED_PATH = os.path.join(OUTPUT_DIR, "topic_dedupe_suppressed.json")
 
 # ✅ Retention storage (sharded by day; append-only with dedup)
 ARTICLES_SHARD_DIR = os.path.join(OUTPUT_DIR, "articles")
@@ -2001,59 +2003,50 @@ def _pick_story_cluster_winner(group: list) -> dict:
     return max(group, key=sort_key)
 
 
+_TOPIC_DEDUPE_LAST_STATS: dict = {}
+
+
 def _apply_conservative_topic_clustering(articles: list) -> list:
     """
-    MODEL_3: same section only, different URLs, high-confidence title match → one winner.
-    Does not change sections (CLUSTERING_MUST_NOT_OVERRIDE_SECTION_TRUTH).
+    Topic/event dedupe V1: same section, different URLs, conservative title match + time window.
+    Suppressed duplicates recorded in topic_dedupe_suppressed.json (not in public feed).
     """
+    global _TOPIC_DEDUPE_LAST_STATS
     if not articles:
+        _TOPIC_DEDUPE_LAST_STATS = {"suppressed_count": 0, "clusters_merged": 0}
         return articles
-    clean = [a for a in articles if isinstance(a, dict)]
-    if len(clean) <= 1:
-        return clean
 
-    by_sec: dict[str, list] = defaultdict(list)
-    for a in clean:
-        sec = stable_section(str(a.get("topic") or a.get("section") or "aktualne"))
-        by_sec[sec].append(a)
+    def _score(ad: dict) -> tuple:
+        ds = float(compute_display_score(ad))
+        pa = str(ad.get("publishedAt") or "")
+        sw = float(ad.get("sourceDisplayWeight") or 1.0)
+        title = str(ad.get("title") or "").strip()
+        tq = min(200, max(0, len(title)))
+        u = _article_url_canonical(ad)
+        return (ds, pa, sw, tq, u)
 
-    winners = []
-    for _sec, arts in by_sec.items():
-        n = len(arts)
-        if n == 1:
-            winners.append(arts[0])
-            continue
-        uf = list(range(n))
-
-        def uf_find(x: int) -> int:
-            r = x
-            while uf[r] != r:
-                r = uf[r]
-            return r
-
-        def uf_union(x: int, y: int) -> None:
-            rx, ry = uf_find(x), uf_find(y)
-            if rx != ry:
-                uf[rx] = ry
-
-        for i in range(n):
-            for j in range(i + 1, n):
-                if _article_url_canonical(arts[i]) == _article_url_canonical(arts[j]):
-                    continue
-                t1 = str(arts[i].get("title") or "")
-                t2 = str(arts[j].get("title") or "")
-                if _story_pair_high_confidence_topic(t1, t2):
-                    uf_union(i, j)
-
-        clusters: dict[int, list] = defaultdict(list)
-        for i in range(n):
-            clusters[uf_find(i)].append(arts[i])
-
-        for _r, grp in clusters.items():
-            winners.append(_pick_story_cluster_winner(grp))
-
-    winners.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
-    return winners
+    visible, suppressed, stats = apply_topic_event_dedupe(
+        articles,
+        stable_section_fn=stable_section,
+        story_match_fn=_story_pair_high_confidence_topic,
+        tokenize_fn=_tokenize_story_cluster_title,
+        score_fn=_score,
+        url_fn=_article_url_canonical,
+    )
+    _TOPIC_DEDUPE_LAST_STATS = dict(stats)
+    try:
+        os.makedirs(os.path.dirname(TOPIC_DEDUPE_SUPPRESSED_PATH), exist_ok=True)
+        _atomic_write_json(
+            TOPIC_DEDUPE_SUPPRESSED_PATH,
+            {
+                "generatedAt": iso_now_z(),
+                "stats": stats,
+                "suppressed": suppressed[-500:],
+            },
+        )
+    except Exception as e:
+        print("WARN: topic_dedupe_suppressed write failed:", str(e), flush=True)
+    return visible
 
 
 def _parse_day_yyyy_mm_dd(day: str):
@@ -2997,6 +2990,10 @@ def _aggregate_pipeline(
         registry=registry,
         generated_at=generated_at,
     )
+    topic_stats = dict(_TOPIC_DEDUPE_LAST_STATS or {})
+    if topic_stats:
+        tel_summary = dict(tel_summary) if isinstance(tel_summary, dict) else {}
+        tel_summary["topic_dedupe"] = topic_stats
 
     return {
         "generated_at": generated_at,
@@ -3007,6 +3004,7 @@ def _aggregate_pipeline(
         "registry": registry,
         "ingest_telemetry": tel_detail,
         "ingest_telemetry_summary": tel_summary,
+        "topic_dedupe": topic_stats,
     }
 
 

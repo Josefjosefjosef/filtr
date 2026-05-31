@@ -425,6 +425,20 @@ jobs:
           REQUIRE_PROD_FRESHNESS: "0"
         run: node scripts/publish-continuity-guard.mjs
 
+      - name: Topic dedupe false-positive guard
+        run: node scripts/topic-dedupe-false-positive-guard.mjs
+
+      - name: Duplicate metadata guard
+        env:
+          TOPIC_DEDUPE_SUPPRESSED_PATH: ${{ github.workspace }}/projects/data/topic_dedupe_suppressed.json
+          ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
+        run: node scripts/duplicate-metadata-guard.mjs
+
+      - name: Same-topic overexposure guard
+        env:
+          ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
+        run: node scripts/same-topic-overexposure-guard.mjs
+
       - name: Dedupe loss guard
         env:
           ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json

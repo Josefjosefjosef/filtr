@@ -40,6 +40,9 @@ const WATCHDOG_HEALTH_URL =
   (process.env.WATCHDOG_HEALTH_URL || "").trim() ||
   "https://infouzel-articles-watchdog.josef-zmrhal.workers.dev/health";
 const REQUIRE_AUTO = String(process.env.REQUIRE_AUTOMATIC_TRIGGER || "").toLowerCase() === "true";
+const GITHUB_EVENT = (process.env.GITHUB_EVENT_NAME || "").trim();
+const SKIP_PROD_FRESHNESS_ON_PR =
+  String(process.env.SKIP_PROD_FRESHNESS_ON_PULL_REQUEST || "1").toLowerCase() !== "0";
 
 const UPDATE_WORKFLOW = "update-articles.yml";
 const WORKFLOW_PATH = path.join(root, ".github", "workflows", "update-articles.yml");
@@ -270,8 +273,12 @@ async function main() {
   const nowMs = Date.now();
   let failed = false;
 
-  const prod = await checkProductionFreshness(nowMs);
-  if (!prod.ok) failed = true;
+  if (GITHUB_EVENT === "pull_request" && SKIP_PROD_FRESHNESS_ON_PR) {
+    log("prod_freshness SKIP on pull_request (post-merge proof required)");
+  } else {
+    const prod = await checkProductionFreshness(nowMs);
+    if (!prod.ok) failed = true;
+  }
 
   const auto = await checkAutomaticTrigger();
   if (!auto.ok) failed = true;
