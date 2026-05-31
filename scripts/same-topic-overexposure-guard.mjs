@@ -49,8 +49,18 @@ function tokens(title) {
 
 function cleanTitle(t) {
   return String(t || "")
-    .replace(/^\s*(video|foto|online)\s*:\s*/i, "")
+    .replace(/^\s*(video|foto|online|souhrn|analýza|analýza)\s*:\s*/i, "")
     .trim();
+}
+
+function isDigestTitle(title) {
+  const t = fold(String(title || ""));
+  return (
+    t.startsWith("souhrn") ||
+    t.includes("zasadni udalosti") ||
+    t.includes("prehled dne") ||
+    t.length < 12
+  );
 }
 
 function jaccard(a, b) {
@@ -75,6 +85,8 @@ function main() {
   const doc = JSON.parse(fs.readFileSync(articlesPath, "utf8"));
   const arts = Array.isArray(doc.articles) ? doc.articles : [];
   const winMs = windowHours * 3_600_000;
+  const now = Date.now();
+  const lookbackMs = windowHours * 3_600_000;
 
   for (const sec of STRICT_SECTIONS) {
     const sectionArts = arts.filter(
@@ -87,16 +99,28 @@ function main() {
         tok: tokens(a.title),
         url: String(a.url || "").trim(),
       }))
-      .filter((x) => x.ts && x.tok.size >= 3);
+      .filter(
+        (x) =>
+          x.ts &&
+          x.tok.size >= 3 &&
+          now - x.ts <= lookbackMs &&
+          !isDigestTitle(x.a.title),
+      );
+    log(`section=${sec} recent_window_h=${windowHours} candidates=${recent.length}`);
 
+    const used = new Set();
     let violations = 0;
     for (let i = 0; i < recent.length; i++) {
+      if (used.has(i)) continue;
       const cluster = [recent[i]];
+      used.add(i);
       for (let j = i + 1; j < recent.length; j++) {
+        if (used.has(j)) continue;
         if (recent[i].url === recent[j].url) continue;
         if (Math.abs(recent[i].ts - recent[j].ts) > winMs) continue;
         if (jaccard(recent[i].tok, recent[j].tok) >= jaccardMin) {
           cluster.push(recent[j]);
+          used.add(j);
         }
       }
       if (cluster.length > maxSameEvent) {
