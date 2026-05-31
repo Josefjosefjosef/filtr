@@ -9,7 +9,7 @@
 // 2026-03-22: bump — app.js silent SW activation (SKIP_WAITING + jeden reload, bez spodního CTA)
 // 2026-03-22: HTML document = network-first (žádný preferovaný starý shell)
 // 2026-03-29: PR #1488 — nový SW + vyprázdnění APP_SHELL_CACHE po deployi (staré app.*.css v cache)
-const CACHE_VERSION = "2026-05-31-pwa-http-nocache-bootstrap";
+const CACHE_VERSION = "2026-05-31-pwa-articles-singleflight-fix";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
@@ -140,11 +140,12 @@ function seedResponse(pathname) {
 function isProjectsFeedDataPath(pathname) {
   if (!pathname.startsWith("/projects/data/")) return false;
   const name = pathname.slice("/projects/data/".length);
-  return (
-    name === "articles.json" ||
-    name === "videos.json" ||
-    name === "_probe.txt"
-  );
+  if (name === "articles.json" || name === "videos.json" || name === "_probe.txt") {
+    return true;
+  }
+  if (name === "articles/bootstrap.json") return true;
+  if (name.startsWith("articles/") && name.endsWith(".json")) return true;
+  return false;
 }
 
 /** PWA deploy probe — always network, never SW cache (home-screen stale shell recovery). */

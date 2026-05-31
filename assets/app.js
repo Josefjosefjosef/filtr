@@ -2221,6 +2221,14 @@ try {
 
   function __iuInvalidateFeedPrimaryJsonCache() {
     __iuFeedPrimaryPairLast = null;
+    try {
+      if (typeof window.__iuInvalidateArticlesJsonSingleFlight === "function") {
+        window.__iuInvalidateArticlesJsonSingleFlight();
+      }
+      if (typeof window.__iuInvalidateVideosJsonSingleFlight === "function") {
+        window.__iuInvalidateVideosJsonSingleFlight();
+      }
+    } catch (_) {}
   }
 
   async function __iuFetchArticlesVideosPrimaryPair() {
@@ -21681,6 +21689,22 @@ function buildVideoAsArticleCard(it) {
     } else if (iuRefreshTimer) {
       clearInterval(iuRefreshTimer);
       iuRefreshTimer = null;
+    }
+  });
+
+  /* P0 Safari/PWA bfcache: restored tabs keep JS heap — invalidate single-flight before refetch. */
+  window.addEventListener("pageshow", (ev) => {
+    if (!ev || !ev.persisted) return;
+    try {
+      __iuInvalidateFeedPrimaryJsonCache();
+    } catch (_) {}
+    if (!(document.body && document.body.classList && document.body.classList.contains("iu-home"))) {
+      try {
+        loadData();
+      } catch (_) {}
+      try {
+        startAutoRefresh();
+      } catch (_) {}
     }
   });
 
