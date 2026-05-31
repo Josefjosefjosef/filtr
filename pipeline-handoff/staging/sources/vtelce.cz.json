@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-31T11:24:19.173111Z",
+  "ingestedAt": "2026-05-31T12:30:57.469999Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Pane, vy jste vdova: Tvrdý zásah cenzury, vyhrocené emoce, bolestivé pokousání a střelba ze skutečné zbraně",
+      "url": "https://www.vtelce.cz/pane-vy-jste-vdova-tvrdy-zasah-cenzury-vyhrocene-emoce-bolestive-pokousani-a-strelba-ze-skutecne-zbrane/",
+      "dt": "2026-05-31T12:14:14Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "bolestivé",
+        "cenzury",
+        "emoce",
+        "jste",
+        "pane",
+        "pokousání",
+        "skutečné",
+        "střelba",
+        "tvrdý",
+        "vdova",
+        "vyhrocené",
+        "zbraně",
+        "zásah"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -91,7 +121,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "kultura",
       "contentType": "article",
       "title": "Tenkrát v Hollywoodu: Šperky zavražděné hvězdy, scénář v trezoru a tajemství, které si Pitt vezme do hrobu",
       "url": "https://www.vtelce.cz/tenkrat-v-hollywoodu-sperky-zavrazdene-hvezdy-scenar-v-trezoru-a-tajemstvi-ktere-si-pitt-vezme-do-hrobu/",
@@ -119,7 +149,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "kultura",
       "contentType": "article",
       "title": "Mamma Mia! Here we go Again: Bizarní věkový rozdíl Cher, žárlivost manžela a tajné natáčení v Chorvatsku",
       "url": "https://www.vtelce.cz/mamma-mia-here-we-go-again-bizarni-vekovy-rozdil-cher-zarlivost-manzela-a-tajne-nataceni-v-chorvatsku/",
@@ -261,35 +291,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Příští týden v Ulici: Vztah nad propastí, Blanka na vedlejší koleji, pozdní lítost a návrat Kokeše",
-      "url": "https://www.vtelce.cz/pristi-tyden-v-ulici-vztah-nad-propasti-blanka-na-vedlejsi-koleji-pozdni-litost-a-navrat-kokese/",
-      "dt": "2026-05-29T16:44:34Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "blanka",
-        "kokeše",
-        "koleji",
-        "lítost",
-        "návrat",
-        "pozdní",
-        "propastí",
-        "příští",
-        "týden",
-        "ulici",
-        "vedlejší",
-        "vztah"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -300,7 +301,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 94038,
+      "bytes": 96291,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -337,11 +338,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-31T08:28:07Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T12:14:14Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "other": 8,
-          "zpravy": 2
+          "other": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -353,6 +353,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pane, vy jste vdova: Tvrdý zásah cenzury, vyhrocené emoce, bolestivé pokousání a střelba ze skutečné zbraně",
+            "publishedAt": "2026-05-31T12:14:14Z"
+          },
           {
             "title": "Dynastie Nováků: Autentické prostředí, hudební nadání, přehlídka dobových vozů a předabování kvůli zákeřné nemoci",
             "publishedAt": "2026-05-31T08:28:07Z"
@@ -380,10 +384,6 @@
           {
             "title": "Comeback: Tajemství Ozzákova kulhání, potíže s obsazením do hlavních rolí a vtípky na place",
             "publishedAt": "2026-05-30T10:57:50Z"
-          },
-          {
-            "title": "Eliška a její rod: Živé natáčení, ztracené díly a tajemství o rádiovce i jménu. Sovák obojí využil i v dalších rolích",
-            "publishedAt": "2026-05-30T05:44:33Z"
           }
         ]
       }

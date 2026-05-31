@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-31T11:24:19.173111Z",
+  "ingestedAt": "2026-05-31T12:30:57.469999Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Bývalý šéf Volkswagenu Herbert Diess chystá elektrický traktor",
+      "url": "https://www.e15.cz/byznys/byvaly-sef-volkswagenu-herbert-diess-chysta-elektricky-traktor-1433192",
+      "dt": "2026-05-31T12:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "bývalý",
+        "chystá",
+        "diess",
+        "elektrický",
+        "herbert",
+        "traktor",
+        "volkswagenu",
+        "šéf"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Dron zasáhl Záporožskou elektrárnu. Zahráváte si s ohněm, varuje šéf MAAE",
+      "url": "https://www.e15.cz/valka-na-ukrajine/dron-zasahl-zaporozskou-elektrarnu-zahravate-si-s-ohnem-varuje-sef-maae-1433221",
+      "dt": "2026-05-31T12:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "dron",
+        "elektrárnu",
+        "maae",
+        "ohněm",
+        "varuje",
+        "zahráváte",
+        "zasáhl",
+        "záporožskou",
+        "šéf"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1056,60 +1107,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Stavba Galerie Pernerka se po 13 měsících dostává nad zem, práce pokračují podle harmonogramu",
-      "url": "https://www.e15.cz/tiskove-zpravy/stavba-galerie-pernerka-se-po-13-mesicich-dostava-nad-zem-prace-pokracuji-podle-harmonogramu-1433164",
-      "dt": "2026-05-28T12:01:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "dostává",
-        "galerie",
-        "harmonogramu",
-        "měsících",
-        "pernerka",
-        "podle",
-        "pokračují",
-        "práce",
-        "stavba",
-        "zem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Čína se na íránské krizi rychle učí z chyb USA. Staré pojistky už neplatí",
-      "url": "https://www.e15.cz/zahranicni/geopolitika/cina-se-na-iranske-krizi-rychle-uci-z-chyb-usa-stare-pojistky-uz-neplati-1433139",
-      "dt": "2026-05-28T10:28:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "chyb",
-        "krizi",
-        "neplatí",
-        "pojistky",
-        "rychle",
-        "staré",
-        "usa",
-        "učí",
-        "íránské",
-        "čína"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1120,7 +1117,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 54979,
+      "bytes": 54875,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1157,12 +1154,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-31T08:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
-          "zpravy": 1,
-          "zdravi": 2
+          "finance": 36,
+          "zdravi": 3,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1174,6 +1171,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bývalý šéf Volkswagenu Herbert Diess chystá elektrický traktor",
+            "publishedAt": "2026-05-31T12:00:00Z"
+          },
+          {
+            "title": "Dron zasáhl Záporožskou elektrárnu. Zahráváte si s ohněm, varuje šéf MAAE",
+            "publishedAt": "2026-05-31T12:00:00Z"
+          },
           {
             "title": "IBM nalije deset miliard dolarů do vývoje kvantových počítačů. Technologickou revoluci podpoří i vláda",
             "publishedAt": "2026-05-31T08:10:00Z"
@@ -1197,14 +1202,6 @@
           {
             "title": "Výlučnost Ameriky? Wall Street ji nikdy neztratila. Vítězi se stanou současní poražení",
             "publishedAt": "2026-05-31T04:00:00Z"
-          },
-          {
-            "title": "Konec skládání několika jízdenek. Cestování vlakem po Evropě čeká revoluce známá z letadel",
-            "publishedAt": "2026-05-31T03:30:00Z"
-          },
-          {
-            "title": "Slovenská politika východu tlačí tamní IT byznys k přesunu do Česka",
-            "publishedAt": "2026-05-31T03:00:00Z"
           }
         ]
       }

@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-31T11:24:19.173111Z",
+  "ingestedAt": "2026-05-31T12:30:57.469999Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Konečné to stačilo. Noví komunističtí bojovníci sice vstali, rudý prapor ale naštěstí nezavlaje",
+      "url": "https://nazory.hn.cz/c1-67884350-konecne-to-stacilo-novi-komunisticti-bojovnici-sice-vstali-rudy-prapor-ale-nastesti-nezavlaje",
+      "dt": "2026-05-31T10:41:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN",
+      "tokens": [
+        "ale",
+        "bojovníci",
+        "komunističtí",
+        "konečné",
+        "naštěstí",
+        "nezavlaje",
+        "noví",
+        "prapor",
+        "rudý",
+        "sice",
+        "stačilo",
+        "vstali"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -1136,35 +1165,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Rusko zuří a hrozí (zatím jen) obchodní válkou Arménii, která se snaží zpřetrhat závislost na Kremlu",
-      "url": "https://zahranicni.hn.cz/c1-67883380-rusko-zuri-a-hrozi-zatim-jen-obchodni-valkou-armenii-ktera-se-snazi-zpretrhat-zavislost-na-kremlu",
-      "dt": "2026-05-28T14:34:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN",
-      "tokens": [
-        "arménii",
-        "hrozí",
-        "jen",
-        "kremlu",
-        "obchodní",
-        "rusko",
-        "snaží",
-        "válkou",
-        "zatím",
-        "zpřetrhat",
-        "zuří",
-        "závislost"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1175,7 +1175,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184503,
+      "bytes": 184480,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1212,11 +1212,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-30T08:46:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T10:41:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 6,
           "finance": 31,
+          "zpravy": 6,
           "zdravi": 3
         },
         "drop_counts": {
@@ -1229,6 +1229,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konečné to stačilo. Noví komunističtí bojovníci sice vstali, rudý prapor ale naštěstí nezavlaje",
+            "publishedAt": "2026-05-31T10:41:00Z"
+          },
           {
             "title": "Hackeři nabízí k prodeji údajná zákaznická data Alzy, největší český obchod jejich pravost odmítá",
             "publishedAt": "2026-05-30T08:46:00Z"
@@ -1256,10 +1260,6 @@
           {
             "title": "Radovan Vítek prodává &bdquo;svatý grál&ldquo; pražského developmentu. O rozsáhlé území v Bubnech se podělí česko-slovenští miliardáři",
             "publishedAt": "2026-05-29T14:32:00Z"
-          },
-          {
-            "title": "Šedá ekonomika, mantra, která rozpočet nezachrání. Pokud chce vláda udržet deficit pod třemi procenty, bude muset změnit daně a snížit výdaje",
-            "publishedAt": "2026-05-29T14:05:00Z"
           }
         ]
       }

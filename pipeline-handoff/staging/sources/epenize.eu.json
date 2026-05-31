@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-31T11:24:19.173111Z",
+  "ingestedAt": "2026-05-31T12:30:57.469999Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vondráčka zradila paměť, když se vozil po prezidentovi",
+      "url": "https://www.epenize.eu/vondracka-zradila-pamet-kdyz-se-vozil-po-prezidentovi/",
+      "dt": "2026-05-31T11:44:28Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "když",
+        "paměť",
+        "prezidentovi",
+        "vondráčka",
+        "vozil",
+        "zradila"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -479,29 +502,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Vítejte drogy! Odvolání Béma nedává logiku",
-      "url": "https://www.epenize.eu/vitejte-drogy-odvolani-bema-nedava-logiku/",
-      "dt": "2026-05-22T06:15:38Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "béma",
-        "drogy",
-        "logiku",
-        "nedává",
-        "odvolání",
-        "vítejte"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 114606,
+      "bytes": 115001,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,11 +549,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-31T08:15:27Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T11:44:28Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 2,
-          "finance": 18
+          "finance": 19,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -565,6 +565,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vondráčka zradila paměť, když se vozil po prezidentovi",
+            "publishedAt": "2026-05-31T11:44:28Z"
+          },
           {
             "title": "Trump po prohře u soudu vzdává boj o Kennedyho centrum",
             "publishedAt": "2026-05-31T08:15:27Z"
@@ -592,10 +596,6 @@
           {
             "title": "Udání na počkání? Nechápu, jak může Klempířovi někdo věřit",
             "publishedAt": "2026-05-28T07:02:55Z"
-          },
-          {
-            "title": "Vegan, šest pohlaví a rouška: Trump vykreslil texaského demokrata jako noční můru",
-            "publishedAt": "2026-05-27T23:00:54Z"
           }
         ]
       }

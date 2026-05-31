@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-31T11:24:19.173111Z",
+  "ingestedAt": "2026-05-31T12:30:57.469999Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Diablo 4 slaví 3. výročí, čekají nás dárky a eventy",
+      "url": "https://zing.cz/article/diablo-4-slavi-3-vyroci-cekaji-nas-darky-a-eventy",
+      "dt": "2026-05-31T12:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "diablo",
+        "dárky",
+        "eventy",
+        "nás",
+        "slaví",
+        "výročí",
+        "čekají"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -784,7 +808,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "hry",
       "contentType": "article",
       "title": "Česko vs. Finsko v bitvě o vše! Využijte 1 500 Kč sázku zdarma od Betana a vsaďte si na hokej",
       "url": "https://zing.cz/article/cesko-vs-finsko-v-bitve-o-vse-vyuzijte-1-500-kc-sazku-zdarma-od-betana-a-vsadte-si-na-hokej",
@@ -949,29 +973,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "CD Projekt oznámil nové příběhové rozšíření pro Zaklínače 3",
-      "url": "https://zing.cz/article/cd-projekt-oznamil-nove-pribehove-rozsireni-pro-zaklinace-3",
-      "dt": "2026-05-27T13:50:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "nové",
-        "oznámil",
-        "projekt",
-        "příběhové",
-        "rozšíření",
-        "zaklínače"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -982,7 +983,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 127042,
+      "bytes": 127044,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1019,11 +1020,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-31T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 39,
-          "zpravy": 1
+          "other": 40
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1035,6 +1035,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Diablo 4 slaví 3. výročí, čekají nás dárky a eventy",
+            "publishedAt": "2026-05-31T12:00:00Z"
+          },
           {
             "title": "Nejlepší cozy hry vycházející v červnu 2026",
             "publishedAt": "2026-05-31T10:00:00Z"
@@ -1062,10 +1066,6 @@
           {
             "title": "Brian Blessed: Gotrek z Warhammeru byla velká výzva",
             "publishedAt": "2026-05-30T14:00:00Z"
-          },
-          {
-            "title": "Nintendo navyšuje produkci konzole Switch 2",
-            "publishedAt": "2026-05-30T12:00:00Z"
           }
         ]
       }
