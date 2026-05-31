@@ -242,6 +242,8 @@ async function runBrowserSuite(browserType, name) {
   return { name, fails, reload, sections, scroll };
 }
 
+const BROWSERS_ALL = process.env.IU_STABILITY_GUARD_BROWSERS === "all";
+
 async function main() {
   const server = spawn(process.execPath, [path.join(REPO, "server", "projects-static-and-vin.mjs")], {
     cwd: REPO,
@@ -252,22 +254,25 @@ async function main() {
 
   const suites = [];
   const allFails = [];
+  const skipped = [];
   try {
     suites.push(await runBrowserSuite(chromium, "chromium"));
-    try {
-      suites.push(await runBrowserSuite(webkit, "webkit"));
-    } catch (e) {
-      allFails.push("webkit skipped: " + (e && e.message ? e.message : e));
-    }
-    try {
-      suites.push(await runBrowserSuite(firefox, "firefox"));
-    } catch (e) {
-      allFails.push("firefox skipped: " + (e && e.message ? e.message : e));
+    if (BROWSERS_ALL) {
+      try {
+        suites.push(await runBrowserSuite(webkit, "webkit"));
+      } catch (e) {
+        skipped.push("webkit: " + (e && e.message ? e.message : e));
+      }
+      try {
+        suites.push(await runBrowserSuite(firefox, "firefox"));
+      } catch (e) {
+        skipped.push("firefox: " + (e && e.message ? e.message : e));
+      }
     }
     for (const s of suites) {
       allFails.push(...s.fails);
     }
-    console.log(JSON.stringify({ suites }, null, 2));
+    console.log(JSON.stringify({ suites, skipped }, null, 2));
     if (allFails.length) {
       console.error("FAIL");
       for (const f of allFails) console.error(f);
