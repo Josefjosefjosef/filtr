@@ -34,7 +34,32 @@ env:
   PIPELINE_HANDOFF_BRANCH: automation/pipeline-handoff
 
 jobs:
+  cancel_concurrency_zombies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Cancel stale queued runs (unblock concurrency group)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          WF="update-articles.yml"
+          REPO="${{ github.repository }}"
+          CUTOFF_EPOCH=$(date -u -d '120 minutes ago' +%s)
+          mapfile -t ROWS < <(gh run list --workflow "$WF" --repo "$REPO" --status queued --json databaseId,createdAt --jq '.[] | "\(.databaseId)\t\(.createdAt)"' 2>/dev/null || true)
+          for row in "${ROWS[@]}"; do
+            [ -z "$row" ] && continue
+            RID="${row%%$'\t'*}"
+            CREATED="${row#*$'\t'}"
+            CREATED_EPOCH=$(date -u -d "$CREATED" +%s 2>/dev/null || echo "0")
+            if [ "$CREATED_EPOCH" -gt 0 ] && [ "$CREATED_EPOCH" -lt "$CUTOFF_EPOCH" ]; then
+              echo "[ZOMBIE-PRECANCEL] cancelling queued run $RID created_at=$CREATED"
+              gh run cancel "$RID" --repo "$REPO" || true
+            fi
+          done
+
   article_pipeline_ingest:
+    needs: cancel_concurrency_zombies
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -326,6 +351,20 @@ jobs:
         run: |
           set -euo pipefail
           node "$GUARD_SCRIPT"
+
+      - name: Missing source articles guard (today RSS vs articles.json)
+        run: |
+          set -euo pipefail
+          GUARD="${RUNNER_TEMP}/articles-missing-source-articles-guard.mjs"
+          if [ -f scripts/articles-missing-source-articles-guard.mjs ]; then
+            cp scripts/articles-missing-source-articles-guard.mjs "$GUARD"
+          else
+            REF="${{ github.ref_name }}"
+            git fetch origin "${REF}"
+            git show "origin/${REF}:scripts/articles-missing-source-articles-guard.mjs" > "$GUARD"
+          fi
+          test -s "$GUARD"
+          node "$GUARD"
 
       - name: Section purity guard (finance/zdravi vs URL)
         run: |
