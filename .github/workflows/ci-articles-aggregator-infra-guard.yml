@@ -1,0 +1,56 @@
+# Aggregator infrastructure guard: stale prod, watchdog health, pipeline deadlock,
+# aggregate timeout regression, cancelled Pages deploy without replacement success.
+name: CI - Articles aggregator infra guard
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "15 */6 * * *"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-articles.yml"
+      - ".github/workflows/pages.yml"
+      - ".github/workflows/after-merge-articles-freshness.yml"
+      - ".github/workflows/ci-articles-aggregator-infra-guard.yml"
+      - "scripts/articles-aggregator-infra-guard.mjs"
+      - "scripts/articles-aggregator-freshness-guard.mjs"
+      - "cloudflare/articles-watchdog/**"
+  pull_request:
+    paths:
+      - ".github/workflows/update-articles.yml"
+      - ".github/workflows/pages.yml"
+      - ".github/workflows/after-merge-articles-freshness.yml"
+      - ".github/workflows/ci-articles-aggregator-infra-guard.yml"
+      - "scripts/articles-aggregator-infra-guard.mjs"
+      - "scripts/articles-aggregator-freshness-guard.mjs"
+      - "cloudflare/articles-watchdog/**"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: ci-articles-aggregator-infra-guard
+  cancel-in-progress: false
+
+jobs:
+  infra-guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Articles aggregator infra guard
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          ARTICLES_JSON_URL: https://infouzel.cz/projects/data/articles.json
+          WATCHDOG_HEALTH_URL: ${{ vars.ARTICLES_WATCHDOG_HEALTH_URL }}
+          REQUIRE_WATCHDOG: ${{ vars.REQUIRE_ARTICLES_WATCHDOG }}
+        run: node scripts/articles-aggregator-infra-guard.mjs

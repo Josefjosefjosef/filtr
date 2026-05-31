@@ -42,6 +42,7 @@
     "deploy:vin-worker": "npx wrangler deploy --config cloudflare/vin-worker/wrangler.toml",
     "deploy:articles-watchdog": "npx wrangler deploy --config cloudflare/articles-watchdog/wrangler.toml",
     "articles-aggregator-freshness-guard": "node scripts/articles-aggregator-freshness-guard.mjs",
+    "articles-aggregator-infra-guard": "node scripts/articles-aggregator-infra-guard.mjs",
     "feed-publication-dedupe-unit": "node scripts/feed-publication-dedupe-unit.mjs",
     "feed-publication-dedupe-guard": "node scripts/feed-publication-dedupe-guard.mjs",
     "webnav-detail-backbar-guard": "node scripts/proofs/webnav_detail_backbar_guard.mjs",
