@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-31T13:22:52.589826Z",
+  "ingestedAt": "2026-05-31T14:21:01.636336Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Quetoo: milostný dopis hře Quake po 19 letech vývoje",
+      "url": "https://zing.cz/article/quetoo-milostny-dopis-hre-quake-po-19-letech-vyvoje",
+      "dt": "2026-05-31T14:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "dopis",
+        "hře",
+        "letech",
+        "milostný",
+        "quake",
+        "quetoo",
+        "vývoje"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -948,31 +972,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Na internet unikl obrázek z údajného remaku série Rayman od Ubisoftu",
-      "url": "https://zing.cz/article/na-internet-unikl-obrazek-z-udajneho-remaku-serie-rayman-od-ubisoftu",
-      "dt": "2026-05-27T16:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "internet",
-        "obrázek",
-        "rayman",
-        "remaku",
-        "série",
-        "ubisoftu",
-        "unikl",
-        "údajného"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -983,7 +982,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 127044,
+      "bytes": 126999,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1020,7 +1019,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-31T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T14:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1035,6 +1034,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Quetoo: milostný dopis hře Quake po 19 letech vývoje",
+            "publishedAt": "2026-05-31T14:00:00Z"
+          },
           {
             "title": "Diablo 4 slaví 3. výročí, čekají nás dárky a eventy",
             "publishedAt": "2026-05-31T12:00:00Z"
@@ -1062,10 +1065,6 @@
           {
             "title": "Romestead: survival po pádu Říma k dispozici v Early Accessu",
             "publishedAt": "2026-05-30T16:00:00Z"
-          },
-          {
-            "title": "Brian Blessed: Gotrek z Warhammeru byla velká výzva",
-            "publishedAt": "2026-05-30T14:00:00Z"
           }
         ]
       }

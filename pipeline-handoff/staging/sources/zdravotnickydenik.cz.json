@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-31T13:22:52.589826Z",
+  "ingestedAt": "2026-05-31T14:21:01.636336Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Naděje uprostřed smrtící epidemie: Pět lidí se zotavilo z eboly, na kterou není lék",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/nadeje-uprostred-smrtici-epidemie-pet-lidi-se-zotavilo-z-eboly-na-kterou-neni-lek/",
+      "dt": "2026-05-31T14:15:47Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "eboly",
+        "epidemie",
+        "lidí",
+        "lék",
+        "naděje",
+        "pět",
+        "smrtící",
+        "uprostřed",
+        "zotavilo"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "IKEM mění vedení. Důležitou nemocnici přebírá manažerka z KPMG a Kaprainu",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/ikem-praha-nova-reditelka/",
-      "dt": "2026-05-29T13:12:26Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "důležitou",
-        "ikem",
-        "kaprainu",
-        "kpmg",
-        "manažerka",
-        "mění",
-        "nemocnici",
-        "přebírá",
-        "vedení"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 82335,
+      "bytes": 82746,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-31T11:40:40Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T14:15:47Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 8,
@@ -334,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Naděje uprostřed smrtící epidemie: Pět lidí se zotavilo z eboly, na kterou není lék",
+            "publishedAt": "2026-05-31T14:15:47Z"
+          },
           {
             "title": "Konec liberální protidrogové politiky, u kratomu přitvrdíme hned, říká Babiš",
             "publishedAt": "2026-05-31T11:40:40Z"
@@ -361,10 +365,6 @@
           {
             "title": "Napětí na pražské Bulovce. Americký lékař po kontaktu s ebolou končí první týden izolace",
             "publishedAt": "2026-05-29T14:58:12Z"
-          },
-          {
-            "title": "Nemáte zubaře či praktika? Pojišťovny vám mají platit odškodné za dojíždění, navrhuje Jurečka",
-            "publishedAt": "2026-05-29T14:39:43Z"
           }
         ]
       }

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-31T13:22:52.589826Z",
+  "ingestedAt": "2026-05-31T14:21:01.636336Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Euro vůči dolaru zůstává relativně stabilní",
+      "url": "https://profitonline.cz/euro-vuci-dolaru-zustava-relativne-stabilni/",
+      "dt": "2026-05-31T14:00:14Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dolaru",
+        "euro",
+        "relativně",
+        "stabilní",
+        "vůči",
+        "zůstává"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -273,31 +296,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Týden na akciových trzích: S&P500 stále roste, PX mírně oslabil",
-      "url": "https://profitonline.cz/tyden-na-akciovych-trzich-sp500-stale-roste-px-mirne-oslabil/",
-      "dt": "2026-05-29T16:30:25Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "akciových",
-        "mírně",
-        "oslabil",
-        "p500",
-        "roste",
-        "stále",
-        "trzích",
-        "týden"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -308,7 +306,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19593,
+      "bytes": 19614,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -345,7 +343,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-31T13:00:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T14:00:14Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -361,6 +359,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Euro vůči dolaru zůstává relativně stabilní",
+            "publishedAt": "2026-05-31T14:00:14Z"
+          },
           {
             "title": "Nikým nevolená úřednice rozhoduje o osudu Česka. Nikoli z Bruselu, ale z Prahy",
             "publishedAt": "2026-05-31T13:00:06Z"
@@ -388,10 +390,6 @@
           {
             "title": "Okamžiky dějin: Den, kdy se střetli oceloví titáni. Bitva u Jutska (1.)",
             "publishedAt": "2026-05-30T10:00:30Z"
-          },
-          {
-            "title": "Regulace Uberu, Woltu a Boltu zpřísňuje i pohled na švarcsystém",
-            "publishedAt": "2026-05-30T07:00:44Z"
           }
         ]
       }

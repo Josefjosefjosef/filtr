@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-31T13:22:52.589826Z",
+  "ingestedAt": "2026-05-31T14:21:01.636336Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Česko - Kosovo 0:0. Koubek před odletem na MS zkouší nováčky",
+      "url": "https://sport.aktualne.cz/fotbal/cesko-kosovo-pred-odletem-do-ameriky-odehraji-cesi-pripravny-zapas-na-letne/r~aaa2934c8e4c530b439b8fe711f52f52/",
+      "dt": "2026-05-31T13:48:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "kosovo",
+        "koubek",
+        "nováčky",
+        "odletem",
+        "zkouší",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ukrajinci zaútočili na ropnou rafinerii v Saratovské oblasti, na místě vypukl požár",
+      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
+      "dt": "2026-01-21T06:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "místě",
+        "oblasti",
+        "požár",
+        "rafinerii",
+        "ropnou",
+        "saratovské",
+        "ukrajinci",
+        "vypukl",
+        "zaútočili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -474,62 +523,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Anime nebo manga jako lék na depresi. Japonsko zkouší novou metodu",
-      "url": "https://zpravy.aktualne.cz/zahranici/anime-nebo-manga-jako-lek-na-depresi-japonsko-zkousi-novou-metodu/r~aaa292d5e2d124cf978912b6f81fe89b/",
-      "dt": "2026-05-31T07:22:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "anime",
-        "depresi",
-        "jako",
-        "japonsko",
-        "lék",
-        "manga",
-        "metodu",
-        "nebo",
-        "novou",
-        "zkouší"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Děda Josef, táta Aleš a syn Matyáš. Jak se změnila česká jména za tři čtvrtě století",
-      "url": "https://zpravy.aktualne.cz/domaci/ded-josef-otec-ales-a-syn-matyas-jak-se-promenila-jmena-deti-v-poslednich-75-letech/r~aaa29de416403c083fe1e3f1272f0ea8/",
-      "dt": "2026-05-31T07:07:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "aleš",
-        "děda",
-        "jména",
-        "josef",
-        "matyáš",
-        "století",
-        "syn",
-        "táta",
-        "tři",
-        "změnila",
-        "česká",
-        "čtvrtě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -540,7 +533,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21337,
+      "bytes": 21197,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -577,11 +570,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-31T13:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T13:48:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 15,
-          "sport": 4,
+          "sport": 5,
+          "zpravy": 14,
           "finance": 1
         },
         "drop_counts": {
@@ -594,6 +587,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko - Kosovo 0:0. Koubek před odletem na MS zkouší nováčky",
+            "publishedAt": "2026-05-31T13:48:00Z"
+          },
+          {
+            "title": "Ukrajinci zaútočili na ropnou rafinerii v Saratovské oblasti, na místě vypukl požár",
+            "publishedAt": "2026-01-21T06:45:00Z"
+          },
           {
             "title": "Ve Varšavě začne v pondělí platit noční zákaz prodeje alkoholu v obchodech",
             "publishedAt": "2026-05-31T13:14:00Z"
@@ -617,14 +618,6 @@
           {
             "title": "Komentář: Vrtěti mladými. Knihovně Václava Havla hrozí, že z dětí udělá marketingový fastfood",
             "publishedAt": "2026-05-31T10:18:00Z"
-          },
-          {
-            "title": "Češi po Rusku už třetí rok vymáhají velký dluh. Kreml reaguje, ale po svém",
-            "publishedAt": "2026-05-31T10:18:00Z"
-          },
-          {
-            "title": "Meteorologové zpřísnili výstrahu před bouřkami, čekají přívalový déšť i prudký vítr",
-            "publishedAt": "2026-05-31T10:17:00Z"
           }
         ]
       }
