@@ -348,11 +348,15 @@ jobs:
         env:
           MAX_GENERATED_AGE_HOURS: "48"
           MAX_SECTION_AGE_HOURS: "168"
+          ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
         run: |
           set -euo pipefail
           node "$GUARD_SCRIPT"
 
       - name: Missing source articles guard (today RSS vs articles.json)
+        env:
+          ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
+          SOURCE_REGISTRY_PATH: ${{ github.workspace }}/projects/data/source_registry.json
         run: |
           set -euo pipefail
           GUARD="${RUNNER_TEMP}/articles-missing-source-articles-guard.mjs"
