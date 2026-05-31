@@ -124,7 +124,18 @@ style-src 'self' 'unsafe-inline' https:;
           display: none !important;
         }
       }
-      /* MindMenu top tiles (Kalendář / Poznámky / Úkoly): image contain; inline = app.css size guard */
+      /* P0 CLS feed section header: reserve aspect ratio before app.css / image decode (1200×575). */
+      #feed > picture.iu-feed-section-header-picture,
+      #feed > img.iu-feed-section-header-img {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        aspect-ratio: 1200 / 575;
+        overflow: hidden;
+      }
+      #feed[data-feed-switching="1"] > :not(#sectionsBar) {
+        visibility: hidden;
+      }
       .mindMenu .iu-mmTopTool.iu-mmTopTool--imageTile{gap:0;overflow:hidden;background:transparent!important;color:inherit!important}
       .accordionCol .mindMenu .iu-mmTopTool--notes.iu-mmTopTool--imageTile{background:transparent!important;color:inherit!important}
       .mindMenu .iu-mmTopTool--cal.iuMindMenuButton.iu-mmTopTool--imageTile,
@@ -374,7 +385,7 @@ style-src 'self' 'unsafe-inline' https:;
       }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
-    <link rel="stylesheet" href="/assets/app.css?v=fix-mapy-navigace-cls-tool-cold-url-20260428" />
+    <link rel="stylesheet" href="/assets/app.css?v=fix-section-switch-scroll-cls-20260531" />
     <link rel="stylesheet" href="/assets/iu-tasks-premium.css?v=tasks-premium-scope-20260503" />
     <link rel="stylesheet" href="/assets/iu-notes-premium.css?v=notes-premium-teal-20260503" />
     <style id="iuSilverGuidedComposerCssGuard">

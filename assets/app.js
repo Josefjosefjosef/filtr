@@ -4922,6 +4922,11 @@ try {
       { once: true }
     );
     picture.appendChild(img);
+    try {
+      const vk = iuFeedSectionHeaderResolveVisualKey();
+      if (vk) picture.setAttribute("data-feed-visual-key", vk);
+      picture.setAttribute("data-feed-header-file", file);
+    } catch (_) {}
     return picture;
   }
 
@@ -5481,7 +5486,21 @@ try {
       }
     }
     feedEl.setAttribute("data-feed-ready", "true");
+    try {
+      feedEl.removeAttribute("data-feed-switching");
+      feedEl.style.minHeight = "";
+      const vkDone = iuFeedSectionHeaderResolveVisualKey();
+      if (vkDone) feedEl.setAttribute("data-feed-visual-key", vkDone);
+      else feedEl.removeAttribute("data-feed-visual-key");
+    } catch (_) {}
     } finally {
+      try {
+        const felFin = document.getElementById("feed");
+        if (felFin) {
+          felFin.removeAttribute("data-feed-switching");
+          felFin.style.minHeight = "";
+        }
+      } catch (_) {}
       try {
         if (rfProbe && rfMarkS && rfMarkE && iuPerfProbeIsActive() && rfPassForTrace > 0) {
           iuPerfProbeMark(rfMarkE);
@@ -14886,6 +14905,9 @@ function buildVideoAsArticleCard(it) {
 
   try {
     window.__iuApplyFeedFilter = applyFilter;
+  } catch (_) {}
+  try {
+    window.__iuFeedSectionHeaderResolveVisualKey = iuFeedSectionHeaderResolveVisualKey;
   } catch (_) {}
 
   let firstLoadQuiet = false;
@@ -29089,6 +29111,33 @@ function buildVideoAsArticleCard(it) {
       setLeftNavForUrlState(nav);
     } catch (_) {}
 
+    /* P0 section switch stability: eager feed filter+render — idle deferral kept stale articles/header visible up to ~500ms. */
+    if (usesFeed) {
+      try {
+        const feedSw = document.getElementById("feed");
+        if (feedSw) {
+          const prevH = feedSw.offsetHeight;
+          if (prevH > 120) feedSw.style.minHeight = prevH + "px";
+          feedSw.setAttribute("data-feed-ready", "false");
+          feedSw.setAttribute("data-feed-switching", "1");
+          try {
+            const vkFn =
+              typeof window.__iuFeedSectionHeaderResolveVisualKey === "function"
+                ? window.__iuFeedSectionHeaderResolveVisualKey
+                : null;
+            const vk = vkFn ? String(vkFn() || "") : "";
+            if (vk) feedSw.setAttribute("data-feed-visual-key", vk);
+            else feedSw.removeAttribute("data-feed-visual-key");
+          } catch (_) {}
+        }
+      } catch (_) {}
+      try {
+        if (typeof window.__iuApplyFeedFilter === "function") {
+          void window.__iuApplyFeedFilter({ resetPage: true });
+        }
+      } catch (_) {}
+    }
+
     try {
       requestAnimationFrame(function iuApplySectionPostPaint() {
         try {
@@ -29149,7 +29198,7 @@ function buildVideoAsArticleCard(it) {
       }
     }catch{}
 
-    // P0 perf: chip contrast + feed pipeline in idle — skip feed filter/bootstrap/refresh when section is not feed pipeline.
+    // P0 perf: chip contrast + feed bootstrap in idle — applyFilter runs synchronously on feed nav (see usesFeed block above).
     try {
       var ricFeed =
         typeof requestIdleCallback !== "undefined"
@@ -29168,11 +29217,6 @@ function buildVideoAsArticleCard(it) {
             if (contrastRoot) iuApplySolidChipTextContrastInView(contrastRoot);
           } catch (_) {}
           if (!usesFeed) return;
-          try {
-            if (typeof window !== "undefined" && typeof window.__iuApplyFeedFilter === "function") {
-              window.__iuApplyFeedFilter();
-            }
-          } catch (_) {}
           try {
             var pl = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
             if (pl) {

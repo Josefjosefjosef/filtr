@@ -64,6 +64,9 @@ jobs:
       - name: Perf regression guards (flicker phases + 16 nav latency + calendar/Silver surface)
         run: npm run iu-perf-regression-guards
 
+      - name: Reload / section switch / scroll stability guard
+        run: npm run iu-reload-section-scroll-stability-guard
+
       - name: Set required status context (smoke)
         if: always()
         env:
