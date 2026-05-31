@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-05-31T01:47:21.850817Z",
+  "ingestedAt": "2026-05-31T08:22:16.793961Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Spánek ve stáří: Proč se v noci budíme a jak to změnit",
+      "url": "https://www.plnezdravi.cz/spanek-ve-stari-proc-se-v-noci-budime-a-jak-to-zmenit/",
+      "dt": "2026-05-31T08:15:24Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "budíme",
+        "noci",
+        "proč",
+        "spánek",
+        "stáří",
+        "změnit"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -456,27 +479,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zvětšená prostata: Kdy je třeba zpozornět?",
-      "url": "https://www.plnezdravi.cz/zvetsena-prostata-kdy-je-treba-zpozornet/",
-      "dt": "2026-05-17T07:00:37Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "prostata",
-        "třeba",
-        "zpozornět",
-        "zvětšená"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -487,7 +489,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 159524,
+      "bytes": 159397,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -512,7 +514,7 @@
           "official_only": true,
           "fetch_mode": "rss_or_official_rubric_only",
           "per_domain_cooldown_min": 12,
-          "slot_offset_min": 38,
+          "slot_offset_min": 6,
           "max_items_per_fetch": 40,
           "last_fetch_at": null,
           "last_success_at": null,
@@ -524,7 +526,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-30T07:00:29Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T08:15:24Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -539,6 +541,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Spánek ve stáří: Proč se v noci budíme a jak to změnit",
+            "publishedAt": "2026-05-31T08:15:24Z"
+          },
           {
             "title": "Osteoporóza: Tichý zloděj kostní hmoty. Jak se bránit",
             "publishedAt": "2026-05-30T07:00:29Z"
@@ -566,10 +572,6 @@
           {
             "title": "Zdraví žil a křečové žíly: Unavené nohy v pozoru",
             "publishedAt": "2026-05-26T07:00:02Z"
-          },
-          {
-            "title": "Dětské sluneční brýle: Optometristka vysvětluje, kdy jsou nutností a kdy mohou spíše uškodit",
-            "publishedAt": "2026-05-25T17:49:22Z"
           }
         ]
       }

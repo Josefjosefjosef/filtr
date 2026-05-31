@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hlidacipes.org",
-  "ingestedAt": "2026-05-31T01:47:21.850817Z",
+  "ingestedAt": "2026-05-31T08:22:16.793961Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Robert Břešťan: Proč je v pořádku říkat, že Okamura a Rajchl jsou komerční fašisté",
+      "url": "https://hlidacipes.org/robert-brestan-proc-je-v-poradku-rikat-ze-okamura-a-rajchl-jsou-komercni-fasiste/",
+      "dt": "2026-05-31T05:30:01Z",
+      "media_raw": "HlídacíPes",
+      "media_norm": "HlídacíPes",
+      "tokens": [
+        "břešťan",
+        "fašisté",
+        "komerční",
+        "okamura",
+        "pořádku",
+        "proč",
+        "rajchl",
+        "robert",
+        "říkat"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_hlidacipes",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "hlidacipes.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -225,33 +251,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "hlidacipes.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kruh kolem Explosie. Babiš podnikatel ji státu vrátil, Babiš premiér ji chce prodat",
-      "url": "https://hlidacipes.org/kruh-kolem-explosie-babis-podnikatel-ji-statu-vratil-babis-premier-ji-chce-prodat/",
-      "dt": "2026-05-27T04:30:23Z",
-      "media_raw": "HlídacíPes",
-      "media_norm": "HlídacíPes",
-      "tokens": [
-        "babiš",
-        "chce",
-        "explosie",
-        "kolem",
-        "kruh",
-        "podnikatel",
-        "premiér",
-        "prodat",
-        "státu",
-        "vrátil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_hlidacipes",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "hlidacipes.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -262,7 +261,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://hlidacipes.org/feed/",
-      "bytes": 17345,
+      "bytes": 17235,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -287,7 +286,7 @@
           "official_only": true,
           "fetch_mode": "rss_or_official_rubric_only",
           "per_domain_cooldown_min": 12,
-          "slot_offset_min": 2,
+          "slot_offset_min": 24,
           "max_items_per_fetch": 40,
           "last_fetch_at": null,
           "last_success_at": null,
@@ -299,7 +298,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-30T06:00:49Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T05:30:01Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -314,6 +313,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Robert Břešťan: Proč je v pořádku říkat, že Okamura a Rajchl jsou komerční fašisté",
+            "publishedAt": "2026-05-31T05:30:01Z"
+          },
           {
             "title": "Jarmila Kovařčíková: Otce jsme po návratu z koncentráku nepoznali",
             "publishedAt": "2026-05-30T06:00:49Z"
@@ -341,10 +344,6 @@
           {
             "title": "Komunikace státu je povinnost vůči občanům. Bez ohledu na to, kdo zrovna vládne",
             "publishedAt": "2026-05-28T04:30:21Z"
-          },
-          {
-            "title": "Média v éře rostoucí nerovnosti. Jak datový kolonialismus vytěžuje lidi",
-            "publishedAt": "2026-05-27T13:30:18Z"
           }
         ]
       }

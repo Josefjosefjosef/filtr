@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-31T01:47:21.850817Z",
+  "ingestedAt": "2026-05-31T08:22:16.793961Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Cesta k diagnóze éreska vedla u paní Ruženy přes oční lékaře",
+      "url": "https://www.zdravezpravy.cz/2026/05/31/cesta-k-diagnoze-ereska-vedla-u-pani-ruzeny-pres-ocni-lekare/",
+      "dt": "2026-05-31T07:19:37Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "cesta",
+        "diagnóze",
+        "lékaře",
+        "oční",
+        "paní",
+        "ruženy",
+        "vedla",
+        "éreska"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -477,30 +502,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Komentář: Když stát přestane rozumět politice závislostí",
-      "url": "https://www.zdravezpravy.cz/2026/05/22/komentar-kdyz-stat-prestane-rozumet-politice-zavislosti-ohrozi-nas-vsechny/",
-      "dt": "2026-05-22T13:15:08Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "když",
-        "komentář",
-        "politice",
-        "přestane",
-        "rozumět",
-        "stát",
-        "závislostí"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -511,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 203500,
+      "bytes": 198180,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -536,7 +537,7 @@
           "official_only": true,
           "fetch_mode": "rss_or_official_rubric_only",
           "per_domain_cooldown_min": 12,
-          "slot_offset_min": 12,
+          "slot_offset_min": 20,
           "max_items_per_fetch": 40,
           "last_fetch_at": null,
           "last_success_at": null,
@@ -548,7 +549,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-29T13:59:40Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T07:19:37Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -563,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cesta k diagnóze éreska vedla u paní Ruženy přes oční lékaře",
+            "publishedAt": "2026-05-31T07:19:37Z"
+          },
           {
             "title": "IKEM povede Romana Benešová, Rögnerová se vrací na MZd ČR",
             "publishedAt": "2026-05-29T13:59:40Z"
@@ -590,10 +595,6 @@
           {
             "title": "V USA se obávají eboly. V Keni staví zařízení pro Američany v riziku",
             "publishedAt": "2026-05-28T09:38:22Z"
-          },
-          {
-            "title": "Ani při čtvrté volbě do vedení VZP ČR Válek neuspěl, zkusí to znovu",
-            "publishedAt": "2026-05-28T05:59:00Z"
           }
         ]
       }

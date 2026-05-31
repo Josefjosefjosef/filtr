@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-31T01:47:21.850817Z",
+  "ingestedAt": "2026-05-31T08:22:16.793961Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Robert Pattinson jako lovec úchylů. Mrazivý Primetime podchytí vznik slavné reality show",
+      "url": "https://www.kinobox.cz/clanky/filmy/54188-robert-pattinson-jako-lovec-uchylu-primetime-podchyti-vznik-slavne-reality-show",
+      "dt": "2026-05-31T07:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "jako",
+        "lovec",
+        "mrazivý",
+        "pattinson",
+        "podchytí",
+        "primetime",
+        "reality",
+        "robert",
+        "show",
+        "slavné",
+        "vznik",
+        "úchylů"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -521,35 +550,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Kinobox Daily: Vstupte do Dómu hromů. Zavzpomínejte na dobu, kdy poušti vládl původní Šílený Max",
-      "url": "https://www.kinobox.cz/clanky/daily/54192-kinobox-daily-vstupte-do-domu-hromu-zavzpominejte-na-dobu-kdy-pousti-vladl-puvodni-max-rockatansky",
-      "dt": "2026-05-28T10:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "daily",
-        "dobu",
-        "dómu",
-        "hromů",
-        "kinobox",
-        "max",
-        "poušti",
-        "původní",
-        "vládl",
-        "vstupte",
-        "zavzpomínejte",
-        "šílený"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -560,7 +560,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 29445,
+      "bytes": 29016,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -585,7 +585,7 @@
           "official_only": true,
           "fetch_mode": "rss_or_official_rubric_only",
           "per_domain_cooldown_min": 12,
-          "slot_offset_min": 14,
+          "slot_offset_min": 16,
           "max_items_per_fetch": 40,
           "last_fetch_at": null,
           "last_success_at": null,
@@ -597,7 +597,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-30T17:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T07:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -612,6 +612,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Robert Pattinson jako lovec úchylů. Mrazivý Primetime podchytí vznik slavné reality show",
+            "publishedAt": "2026-05-31T07:00:00Z"
+          },
           {
             "title": "Generace YouTube ovládla horory. Rodí se noví Spielbergové z internetové tvorby?",
             "publishedAt": "2026-05-30T17:00:00Z"
@@ -639,10 +643,6 @@
           {
             "title": "VOD tipy: Komiksový Spider-Noir, hororový Černý telefon 2 i český animák",
             "publishedAt": "2026-05-29T17:00:00Z"
-          },
-          {
-            "title": "Pět švestek nabízí zhulený důchodcovský trip. Svěrák se v něm naprosto ztrácí",
-            "publishedAt": "2026-05-29T16:00:00Z"
           }
         ]
       }

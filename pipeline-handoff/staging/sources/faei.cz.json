@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-31T01:47:21.850817Z",
+  "ingestedAt": "2026-05-31T08:22:16.793961Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Cenové stropy až tolik nepomáhají. Největším problémem je pro firmy nejistota",
+      "url": "https://profitonline.cz/cenove-stropy-az-tolik-nepomahaji-nejvetsim-problemem-je-pro-firmy-nejistota/",
+      "dt": "2026-05-31T07:00:54Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "cenové",
+        "firmy",
+        "nejistota",
+        "největším",
+        "nepomáhají",
+        "problémem",
+        "stropy",
+        "tolik"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Okamžiky dějin: Den, kdy se střetli oceloví titáni. Bitva u Jutska (2.)",
+      "url": "https://profitonline.cz/okamziky-dejin-den-kdy-se-stretli-ocelovi-titani-bitva-u-jutska-2/",
+      "dt": "2026-05-31T04:00:53Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "bitva",
+        "den",
+        "dějin",
+        "jutska",
+        "oceloví",
+        "okamžiky",
+        "střetli",
+        "titáni"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -247,51 +297,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nevyléčitelná nemoc „ujídá mozek“. Přihlásila se nenápadně",
-      "url": "https://profitonline.cz/nevylecitelna-nemoc-ujida-mozek-prihlasila-se-nenapadne/",
-      "dt": "2026-05-29T10:00:47Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "mozek",
-        "nemoc",
-        "nenápadně",
-        "nevyléčitelná",
-        "přihlásila",
-        "ujídá"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zvýší ECB v červnu úrokové sazby?",
-      "url": "https://profitonline.cz/zvysi-ecb-v-cervnu-urokove-sazby/",
-      "dt": "2026-05-29T08:00:00Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ecb",
-        "sazby",
-        "zvýší",
-        "úrokové",
-        "červnu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -302,7 +307,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19348,
+      "bytes": 19464,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -327,7 +332,7 @@
           "official_only": true,
           "fetch_mode": "rss_or_official_rubric_only",
           "per_domain_cooldown_min": 12,
-          "slot_offset_min": 14,
+          "slot_offset_min": 8,
           "max_items_per_fetch": 40,
           "last_fetch_at": null,
           "last_success_at": null,
@@ -339,12 +344,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-30T16:00:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-31T07:00:54Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 10,
-          "sport": 1,
-          "zdravi": 1
+          "finance": 11,
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -356,6 +360,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cenové stropy až tolik nepomáhají. Největším problémem je pro firmy nejistota",
+            "publishedAt": "2026-05-31T07:00:54Z"
+          },
+          {
+            "title": "Okamžiky dějin: Den, kdy se střetli oceloví titáni. Bitva u Jutska (2.)",
+            "publishedAt": "2026-05-31T04:00:53Z"
+          },
           {
             "title": "Válka v Íránu nahrává českým hotelům, penzionům i restauracím",
             "publishedAt": "2026-05-30T16:00:53Z"
@@ -379,14 +391,6 @@
           {
             "title": "Prázdninový rébus pro rodiče: Jak se přes léto postarat o své děti",
             "publishedAt": "2026-05-30T04:00:46Z"
-          },
-          {
-            "title": "Proč odbyt modelu Ferrari Luce neříká nic o jeho oblíbenosti?",
-            "publishedAt": "2026-05-29T17:30:42Z"
-          },
-          {
-            "title": "Koruna zůstává relativně silná",
-            "publishedAt": "2026-05-29T17:00:42Z"
           }
         ]
       }
