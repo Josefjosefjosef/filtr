@@ -689,6 +689,44 @@ def _apply_niche_fraction_if_mixed_feedtypes(rows: list) -> list:
     return apply_niche_fraction_limit(rows)
 
 
+def _vertical_section_priority(article: dict) -> int:
+    """Při kolizi stejné URL preferovat vertikální zařazení před aktualne (syndikované rubriky)."""
+    if not isinstance(article, dict):
+        return 0
+    sec = stable_section(str(article.get("topic") or article.get("section") or "aktualne"))
+    if sec in FORCED_FEED_TOPICS and str(article.get("feedId") or "").strip():
+        return 3
+    if sec in FORCED_FEED_TOPICS:
+        return 2
+    if sec == "aktualne":
+        return 0
+    return 1
+
+
+def _pick_url_collision_winner(a: dict, b: dict) -> dict:
+    pa, pb = _vertical_section_priority(a), _vertical_section_priority(b)
+    if pa != pb:
+        return a if pa > pb else b
+    ta = str(a.get("publishedAt") or "")
+    tb = str(b.get("publishedAt") or "")
+    return a if ta >= tb else b
+
+
+def _dedupe_articles_by_url_global(articles: list) -> list:
+    by_url: dict[str, dict] = {}
+    for r in articles or []:
+        if not isinstance(r, dict):
+            continue
+        u = canonicalize_url((r.get("url") or "").strip())
+        if not u:
+            continue
+        prev = by_url.get(u)
+        by_url[u] = r if prev is None else _pick_url_collision_winner(prev, r)
+    out = list(by_url.values())
+    out.sort(key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
+    return out
+
+
 def apply_per_section_limits_then_cap(articles: list) -> list:
     """
     Výstup pro articles.json: limity zvlášť v každé kanonické sekci — niche fraction
@@ -745,15 +783,7 @@ def apply_per_section_limits_then_cap(articles: list) -> list:
             deduped.append(r)
         out.extend(deduped[:cap])
 
-    url_global: set[str] = set()
-    merged: list = []
-    for r in sorted(out, key=lambda x: str(x.get("publishedAt") or ""), reverse=True):
-        u = canonicalize_url((r.get("url") or "").strip())
-        if not u or u in url_global:
-            continue
-        url_global.add(u)
-        merged.append(r)
-    return merged
+    return _dedupe_articles_by_url_global(out)
 
 
 def apply_per_section_published_retention(prev_public: list, capped_feed: list) -> list:
@@ -782,7 +812,8 @@ def apply_per_section_published_retention(prev_public: list, capped_feed: list) 
         u = canonicalize_url((a.get("url") or "").strip())
         if not u or is_hard_blocked_url(u):
             continue
-        by_url[u] = dict(a)
+        prev = by_url.get(u)
+        by_url[u] = dict(a) if prev is None else _pick_url_collision_winner(prev, dict(a))
 
     by_sec: dict[str, list] = defaultdict(list)
     for _u, a in by_url.items():
@@ -812,16 +843,7 @@ def apply_per_section_published_retention(prev_public: list, capped_feed: list) 
             rows = rows[:cap]
         flat.extend(rows)
 
-    flat.sort(key=lambda x: str(x.get("publishedAt") or ""), reverse=True)
-    seen_g: set[str] = set()
-    out: list = []
-    for r in flat:
-        u = canonicalize_url((r.get("url") or "").strip())
-        if not u or u in seen_g:
-            continue
-        seen_g.add(u)
-        out.append(r)
-    return out
+    return _dedupe_articles_by_url_global(flat)
 
 
 def _retention_key(it: dict) -> str:
