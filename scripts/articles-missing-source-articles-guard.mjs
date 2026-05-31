@@ -175,8 +175,8 @@ async function main() {
 
   for (const a of articles) {
     const sec = String(a.topic || a.section || "").trim().toLowerCase();
-    const pub = String(a.publishedAt || "").slice(0, 10);
-    if (pub === todayPrague && report.sectionTodayInJson[sec] !== undefined) {
+    const pubDay = a.publishedAt ? pragueDayFromTs(parseRssDate(a.publishedAt) || Date.parse(a.publishedAt)) : null;
+    if (pubDay === todayPrague && report.sectionTodayInJson[sec] !== undefined) {
       report.sectionTodayInJson[sec] += 1;
     }
   }

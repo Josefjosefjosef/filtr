@@ -297,6 +297,21 @@ function runMissingSourceGuard() {
   return res.status === 0;
 }
 
+function runSourceDisplayGuard() {
+  if (process.env.GITHUB_EVENT_NAME === "pull_request") {
+    log("source_display_guard SKIP (pull_request — validated in update-articles.yml on fresh build)");
+    return true;
+  }
+  const script = path.join(root, "scripts", "source-display-clean-guard.mjs");
+  if (!fs.existsSync(script)) return true;
+  log("source_display_guard delegating to source-display-clean-guard.mjs");
+  const res = spawnSync(process.execPath, [script], {
+    env: { ...process.env, ARTICLES_JSON_URL },
+    stdio: "inherit",
+  });
+  return res.status === 0;
+}
+
 async function main() {
   const nowMs = Date.now();
   let failed = false;
@@ -314,6 +329,11 @@ async function main() {
 
   if (!runMissingSourceGuard()) {
     fail("missing_source_articles_guard RESULT=FAIL");
+    failed = true;
+  }
+
+  if (!runSourceDisplayGuard()) {
+    fail("source_display_clean_guard RESULT=FAIL");
     failed = true;
   }
 

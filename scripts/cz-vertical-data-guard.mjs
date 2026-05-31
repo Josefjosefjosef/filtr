@@ -8,7 +8,7 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
-const VERT = ["hry", "kultura", "veda", "vzdelavani"];
+const VERT = ["hry", "kultura", "veda", "vzdelavani", "cestovani"];
 
 const articlesPath = path.join(root, "projects", "data", "articles.json");
 const healthPath = path.join(root, "projects", "data", "feed_health.json");
