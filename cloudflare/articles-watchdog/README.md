@@ -50,14 +50,28 @@ Rationale: check every **15** minutes; pipeline run ~50 minutes so only one run 
 
 ## Deploy / verify (manual checklist)
 
-Worker URL (health): `https://infouzel-articles-watchdog.josef-zmrhal.workers.dev/health`
+Worker URL (health): `https://infouzel-articles-watchdog.josef-zmrhal.workers.dev/health`  
+Probe (after deploy): `https://infouzel-articles-watchdog.josef-zmrhal.workers.dev/probe`
+
+### GitHub Actions deploy (preferred)
+
+Repo secrets required:
+
+| Secret | Purpose |
+|--------|---------|
+| `CLOUDFLARE_API_TOKEN` | Cloudflare API token (Workers Scripts Edit) |
+| `ARTICLES_WATCHDOG_GITHUB_TOKEN` | PAT with **Actions Read and write** on `Josefjosefjosef/filtr` |
+
+Then run workflow **Deploy articles watchdog** (`deploy-articles-watchdog.yml`) on `main`.
+
+### Manual wrangler deploy
 
 ```bash
 cd cloudflare/articles-watchdog
 npm ci
 npx wrangler secret put GITHUB_TOKEN   # PAT with Actions: Read and write
 npx wrangler deploy
-curl -sS "https://infouzel-articles-watchdog.josef-zmrhal.workers.dev/health"
+curl -sS "https://infouzel-articles-watchdog.josef-zmrhal.workers.dev/probe"
 ```
 
 Optional GitHub repo variable (CI guards):

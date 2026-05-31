@@ -111,6 +111,25 @@ async function checkHealth() {
       return { ok: !REQUIRE, deployed: true, reachable: true };
     }
     log("health PASS (watchdog_deployed=true reachable=true)");
+    const probeUrl = HEALTH_URL.replace(/\/health\/?$/, "/probe");
+    try {
+      const probeRes = await fetch(probeUrl, {
+        headers: { Accept: "application/json", "Cache-Control": "no-cache" },
+      });
+      if (probeRes.ok) {
+        const probe = await probeRes.json();
+        log(
+          `probe github_token_present=${probe.github_token_present} github_list_runs_status=${probe.github_list_runs_status} decision=${probe.decision?.action ?? "n/a"}`,
+        );
+        if (probe.github_token_present === false) {
+          warn("probe github_token_present=false — worker cannot dispatch until GITHUB_TOKEN secret is set");
+        }
+      } else {
+        log(`probe SKIP HTTP ${probeRes.status} (redeploy worker for /probe endpoint)`);
+      }
+    } catch (e) {
+      log(`probe SKIP ${e instanceof Error ? e.message : e}`);
+    }
     return { ok: true, deployed: true, reachable: true };
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
