@@ -576,15 +576,22 @@ def apply_staggered_section_release(articles: list, generated_at: str) -> list:
 
         new_idx = {u: i for i, u in enumerate(newly)}
         sec_out = []
-        for u in sorted(released_set, key=lambda x: str(pending.get(x, {}).get("publishedAt") or ""), reverse=True):
+        # Všechny pending URL patří do articles.json; iuReleaseAt řídí jen UI viditelnost.
+        # Dříve unreleased v JSON vůbec nebyly → guardy a sekce viděly 0 dnešních položek.
+        unreleased_gate = base_dt + timedelta(days=30)
+        for u in sorted(pending.keys(), key=lambda x: str(pending.get(x, {}).get("publishedAt") or ""), reverse=True):
             if u not in pending:
                 continue
             art = dict(pending[u])
             if u in new_idx:
                 rel_dt = base_dt + timedelta(seconds=new_idx[u])
                 art["iuReleaseAt"] = rel_dt.isoformat().replace("+00:00", "Z")
-            elif not art.get("iuReleaseAt"):
-                art["iuReleaseAt"] = generated_at
+            elif u in released_set:
+                if not art.get("iuReleaseAt"):
+                    art["iuReleaseAt"] = generated_at
+            else:
+                if not art.get("iuReleaseAt"):
+                    art["iuReleaseAt"] = unreleased_gate.isoformat().replace("+00:00", "Z")
             sec_out.append(art)
 
         out_vertical.extend(sec_out)
@@ -1002,9 +1009,12 @@ DOMAIN_MEDIA_DISPLAY: dict[str, str] = {
     "aktualne.cz": "Aktuálně",
     "zpravy.aktualne.cz": "Aktuálně",
     "sport.aktualne.cz": "Aktuálně",
+    "magazin.aktualne.cz": "Aktuálně",
     "denik.cz": "Deník",
     "sport.cz": "Sport.cz",
     "isport.blesk.cz": "iSport",
+    "prozeny.cz": "ProŽeny",
+    "forbes.cz": "Forbes",
     "hn.cz": "HN",
     "archiv.hn.cz": "HN",
     "ekonom.cz": "Ekonom (HN)",
