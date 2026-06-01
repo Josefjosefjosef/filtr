@@ -17602,6 +17602,22 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   color: #0d9488;
 }
 
+@media (max-width: 1024px){
+  .iuSilverChatOverlay--quickTemplateEmpty .iuSilverChatHeader{
+    display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;column-gap:8px;
+  }
+  .iuSilverChatOverlay--quickTemplateEmpty .iuSilverChatHeaderText{grid-column:1;grid-row:1;justify-self:start;min-width:0}
+  .iuSilverChatOverlay--quickTemplateEmpty .iuSilverChatClose{grid-column:3;grid-row:1;justify-self:end;flex-shrink:0}
+  .iuSilverChatOverlay--quickTemplateEmpty .iuSilverChatHeader::after{
+    grid-column:2;grid-row:1;justify-self:center;align-self:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;
+    font-size:1.05rem;font-weight:700;color:#1f3a5f;line-height:1.2;white-space:nowrap;pointer-events:none;
+  }
+  .iuSilverChatOverlay--quickTemplateCalendar .iuSilverChatHeader::after{content:"Kalendář"}
+  .iuSilverChatOverlay--quickTemplateTask .iuSilverChatHeader::after{content:"Úkoly"}
+  .iuSilverChatOverlay--quickTemplateNote .iuSilverChatHeader::after{content:"Poznámky"}
+  .iuSilverDraftCard--quickTemplateNote .iuSilverDraftGrid--note{padding:4px 16px 0 8px;gap:11px 5px;grid-template-columns:max-content minmax(0,1fr)}
+}
+
 .iuSilverDisambiguationCard{
   margin-top: 10px;
   padding: 12px 12px 14px;
