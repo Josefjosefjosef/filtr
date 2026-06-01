@@ -10855,6 +10855,31 @@ function buildVideoAsArticleCard(it) {
   }
 
   /** Silver dashboard box 3: dnešní kalendář (summary z calendarGetTodayEvents, ne chat router). */
+  function iuCzechTaskCountWord(n){
+    const x = Number(n);
+    if (!Number.isFinite(x) || x < 0) return "úkolů";
+    if (x === 0) return "úkolů";
+    if (x === 1) return "úkol";
+    if (x >= 2 && x <= 4) return "úkoly";
+    return "úkolů";
+  }
+  function iuInfoCardEmphHtml(text){
+    const s = String(text == null ? "" : text);
+    if (!s) return "";
+    return s.replace(
+      /(\d+)\s+(záznam(?:y|ů)?|úkol(?:y|ů)?)/gi,
+      '<strong class="iu-info-card__emph">$1 $2</strong>'
+    );
+  }
+  function setInfoCardLineHtml(el, text){
+    if (!el) return;
+    const t = String(text == null ? "" : text);
+    try{
+      el.innerHTML = iuInfoCardEmphHtml(t);
+    }catch{
+      el.textContent = t;
+    }
+  }
   function iuSilverCalendarSummaryInit(){
     try{
       if (window.__iuSilverCalendarSummaryInit) return;
@@ -10873,13 +10898,13 @@ function buildVideoAsArticleCard(it) {
     function setSilverCalendarSummaryLine1(fullText){
       const t = typeof fullText === "string" ? fullText : "";
       if (!line1Rest){
-        line1.textContent = t;
+        setInfoCardLineHtml(line1, t);
         return;
       }
       if (t.indexOf(IU_CAL_SUMMARY_LINE1_PREFIX) === 0){
-        line1Rest.textContent = t.slice(IU_CAL_SUMMARY_LINE1_PREFIX.length);
+        setInfoCardLineHtml(line1Rest, t.slice(IU_CAL_SUMMARY_LINE1_PREFIX.length));
       } else {
-        line1Rest.textContent = t;
+        setInfoCardLineHtml(line1Rest, t);
       }
     }
 
@@ -10956,7 +10981,7 @@ function buildVideoAsArticleCard(it) {
       const nowForSummary = getNowForSilverCalendarSummary();
       const st = getTodayCalendarSummaryState(nowForSummary, evs);
       setSilverCalendarSummaryLine1(st.primaryText || "");
-      line2.textContent = st.secondaryText || "";
+      setInfoCardLineHtml(line2, st.secondaryText || "");
       try{
         if (line2block){
           if (st.hideSecondaryLine){
@@ -11113,13 +11138,13 @@ function buildVideoAsArticleCard(it) {
           todayN = 0;
         }
       }
-      const line1Full = "Úkoly: máte celkem " + total + " úkolů k vyřešení";
+      const line1RestText = "Máte celkem " + total + " " + iuCzechTaskCountWord(total) + " k vyřešení";
       if (line1Rest){
-        line1Rest.textContent = line1Full.indexOf("Úkoly: ") === 0 ? line1Full.slice("Úkoly: ".length) : line1Full;
+        setInfoCardLineHtml(line1Rest, line1RestText);
       } else if (line1){
-        line1.textContent = line1Full;
+        setInfoCardLineHtml(line1, "Úkoly: " + line1RestText);
       }
-      line2.textContent = "Dnes máte k řešení " + todayN + " úkolů";
+      setInfoCardLineHtml(line2, "Dnes máte k řešení " + todayN + " " + iuCzechTaskCountWord(todayN));
       try{
         card.setAttribute("data-iu-tasks-summary-ts", String(Date.now()));
       }catch{}
