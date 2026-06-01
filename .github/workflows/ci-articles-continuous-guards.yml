@@ -24,6 +24,7 @@ on:
       - "scripts/same-topic-overexposure-guard.mjs"
       - "scripts/topic-dedupe-false-positive-guard.mjs"
       - "scripts/duplicate-metadata-guard.mjs"
+      - "scripts/aggregator-legacy-cleanup-guard.mjs"
       - "scripts/iu_topic_dedupe.py"
       - "scripts/test_iu_topic_dedupe.py"
       - "scripts/iu_crawler.py"
@@ -50,6 +51,7 @@ on:
       - "scripts/same-topic-overexposure-guard.mjs"
       - "scripts/topic-dedupe-false-positive-guard.mjs"
       - "scripts/duplicate-metadata-guard.mjs"
+      - "scripts/aggregator-legacy-cleanup-guard.mjs"
       - "scripts/iu_topic_dedupe.py"
       - "scripts/test_iu_topic_dedupe.py"
       - "scripts/iu_crawler.py"
@@ -153,3 +155,6 @@ jobs:
 
       - name: Duplicate metadata guard
         run: node scripts/duplicate-metadata-guard.mjs
+
+      - name: Aggregator legacy cleanup guard
+        run: node scripts/aggregator-legacy-cleanup-guard.mjs
