@@ -41941,6 +41941,107 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     };
   }
 
+  /** SILVER_EXPLICIT_SAVE_PREFIX_ROUTING_V1 — mobilní/tablet quick-template prefixy (Do kalendáře / Připomeň mi / Do poznámek). */
+  const IU_SILVER_EXPLICIT_SAVE_PREFIX_ROUTING_V1 = true;
+
+  function iuSilverExplicitSavePrefixHardNegBlocksWriteV1(folded) {
+    const f = String(folded || "");
+    if (!f) return false;
+    return (
+      /\bnic\s+neukladej\b/.test(f) ||
+      /\bnic\s+nevytvarej\b/.test(f) ||
+      /\bneukladej\b/.test(f) ||
+      /\bpouze\s+cti\b/.test(f) ||
+      /\bjen\s+cti\b/.test(f) ||
+      /\bjen\s+se\s+podivej\b/.test(f)
+    );
+  }
+
+  function iuSilverStripExplicitSavePrefixBridgeWordsV1(text) {
+    let t = String(text || "").trim();
+    if (!t) return t;
+    for (let i = 0; i < 4; i++) {
+      const prev = t;
+      t = t.replace(/^(?:ze|že|at|a[tť])\s+/iu, "").trim();
+      if (t === prev) break;
+    }
+    return t;
+  }
+
+  /**
+   * P0: anchored explicit save prefix at start of input (mobile/tablet quick templates).
+   * Prefix is routing-only — never part of saved card title/body/note.
+   */
+  function iuSilverDetectExplicitSavePrefixV1(rawIn) {
+    if (!IU_SILVER_EXPLICIT_SAVE_PREFIX_ROUTING_V1) return null;
+    const raw = String(rawIn || "").trim();
+    if (!raw) return null;
+    const f = foldCs(raw);
+    if (iuSilverExplicitSavePrefixHardNegBlocksWriteV1(f)) return null;
+    const specs = [
+      {
+        foldedTest: /^do\s+kalendare\s*:?\s*/,
+        rawHead: /^do\s+kalend[aá]?[rř]?e?\s*:?\s*/iu,
+        forcedModule: "calendar.create"
+      },
+      {
+        foldedTest: /^pripomen\s+mi\s+/,
+        rawHead: /^p[rř][ií]pom[eě][nň]?\s+mi\s+/iu,
+        forcedModule: "tasks.create"
+      },
+      {
+        foldedTest: /^pripomen\s+(?!mi\b)/,
+        rawHead: /^p[rř][ií]pom[eě][nň]?\s+(?!mi\b)/iu,
+        forcedModule: "tasks.create"
+      },
+      {
+        foldedTest: /^do\s+poznam(?:ek|ky)\s*:?\s*/,
+        rawHead: /^do\s+pozn[aá]m\w*\s*:?\s*/iu,
+        forcedModule: "notes.create"
+      }
+    ];
+    for (let si = 0; si < specs.length; si++) {
+      const spec = specs[si];
+      if (!spec.foldedTest.test(f)) continue;
+      const m = raw.match(new RegExp(spec.rawHead.source + "(.*)$", "isu"));
+      if (!m) continue;
+      const cleanedInput = iuSilverStripExplicitSavePrefixBridgeWordsV1(String(m[1] || "").trim());
+      return {
+        forcedModule: spec.forcedModule,
+        cleanedInput: cleanedInput,
+        rawInput: raw
+      };
+    }
+    return null;
+  }
+
+  function iuSilverTryExplicitSavePrefixRoutingV1Turn(rawIn, now, prevDraft) {
+    const det = iuSilverDetectExplicitSavePrefixV1(rawIn);
+    if (!det) return null;
+    const prev = prevDraft || createEmptyDraft();
+    const cleaned = String(det.cleanedInput || "").trim();
+    if (det.forcedModule === "calendar.create") {
+      const calTurn = iuSilverBuildCalendarCreateTurn(cleaned || "událost", now, prev, cleaned || "událost");
+      if (calTurn) return calTurn;
+      return null;
+    }
+    if (det.forcedModule === "tasks.create") {
+      const taskTurn = iuSilverBuildTaskCreateTurn(cleaned || "úkol", now, {
+        skipTargetStrip: true,
+        calendarOverridesTask: false,
+        fromExplicitTarget: true,
+        titleCleanupFullRawGate: cleaned || "úkol"
+      });
+      if (taskTurn) return taskTurn;
+      return null;
+    }
+    if (det.forcedModule === "notes.create") {
+      const body = iuSilverNoteCreateFinalizeBody(cleaned) || cleaned || "poznámka";
+      return iuSilverBuildNoteCreateTurn(body, now);
+    }
+    return null;
+  }
+
   /** SILVER_TASK_WRITE_OWNERSHIP_HARDENING_V1 — task.create nesmí být ukraden note routing vrstvou. */
   const IU_SILVER_TASK_WRITE_OWNERSHIP_HARDENING_V1 = true;
 
@@ -64175,6 +64276,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverProcessUserTurnCore(text, prevDraft, ctx) {
     const now = ctx && ctx.now ? ctx.now : new Date();
     let raw0 = String(text || "").trim();
+    if (raw0 && IU_SILVER_EXPLICIT_SAVE_PREFIX_ROUTING_V1) {
+      const espTurn0 = iuSilverTryExplicitSavePrefixRoutingV1Turn(raw0, now, prevDraft || createEmptyDraft());
+      if (espTurn0) return espTurn0;
+    }
     if (raw0 && IU_SILVER_CONVERSATIONAL_OWNERSHIP_HARDENING_V1) {
       iuSilverConversationalOwnershipHardeningV1PreTurnCleanup(raw0, foldCs(raw0));
     }
@@ -65864,6 +65969,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverCap55ExplicitCalendarSchedulingWriteP1: iuSilverCap55ExplicitCalendarSchedulingWriteP1,
     iuSilverCalendarSaveConfidenceOverrideV1: iuSilverCalendarSaveConfidenceOverrideV1,
     iuSilverInstructionPrefixTitleCleanerV3: iuSilverInstructionPrefixTitleCleanerV3,
+    iuSilverDetectExplicitSavePrefixV1: iuSilverDetectExplicitSavePrefixV1,
+    iuSilverTryExplicitSavePrefixRoutingV1Turn: iuSilverTryExplicitSavePrefixRoutingV1Turn,
     iuSilverInstructionPrefixNoteCleanerV2: iuSilverInstructionPrefixNoteCleanerV2,
     iuSilverInstructionPrefixNoteCleanerV2ApplyToDraftV1: iuSilverInstructionPrefixNoteCleanerV2ApplyToDraftV1,
     iuSilverCap55CommandResolutionOrderCreatedV1: IU_SILVER_CAP55_COMMAND_RESOLUTION_ORDER_CREATED_V1,
