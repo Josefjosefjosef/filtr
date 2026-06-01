@@ -11,6 +11,10 @@ import {
   dedupeCanonicalUrl,
   pickPublicationKeptUrlKeys,
 } from "./cluster_engine.js";
+import {
+  iuSafeDativeSingleFirstName,
+  iuSvatekBuildPoprejLineFromRaw,
+} from "./iu-nameday-dative.js";
 /* P0.5: financial / legal / invoice tool overlays load via dynamic import (see iuBootDeferredToolOverlays) — reduces initial parse + main-thread work. */
 /* SEV1: iuIsProjectsRoute — global + window for safe scope (module/global) */
 var iuIsProjectsRoute = function iuIsProjectsRoute(){
@@ -6290,99 +6294,6 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
-  /** Jedno křestní jméno → bezpečný 3. pád pro „Popřej …“ (jen spolehlivé mapy/vzory); jinak "". */
-  function iuSafeDativeSingleFirstName(raw, namedayGender){
-    const tail0 = String(raw || "").trim();
-    if (!tail0 || tail0 === "—") return "";
-    if (/[;,]/.test(tail0)) return "";
-    if (/\s+a\s+/i.test(tail0)) return "";
-    if (/\s{2,}/.test(tail0)) return "";
-    const parts = tail0.split(/\s+/).filter(Boolean);
-    if (parts.length !== 1) return "";
-    let w = parts[0].replace(/[.,;:]+$/g, "");
-    if (w.indexOf("-") >= 0) return "";
-    if (!/^[\p{L}]{2,40}$/u.test(w)) return "";
-    const low = w.normalize("NFC").toLowerCase();
-    if (/načítám|svátek|dnes|nikdo|—/.test(low)) return "";
-    const capFrom = function (form){
-      if (!form) return "";
-      if (w.charAt(0) === w.charAt(0).toUpperCase()) {
-        return form.charAt(0).toUpperCase() + form.slice(1);
-      }
-      return form;
-    };
-    const hardDat = {
-      ferdinand: "ferdinandovi",
-      josef: "josefovi",
-      pavel: "pavlovi",
-      petr: "petrovi",
-      martin: "martinovi",
-      karel: "karlovi",
-      františek: "františkovi",
-      frantisek: "františkovi",
-      jan: "janovi",
-      jakub: "jakubovi",
-      tomáš: "tomášovi",
-      tomas: "tomášovi",
-      lukáš: "lukášovi",
-      lukas: "lukášovi",
-      david: "davidovi",
-      michal: "michalovi",
-      roman: "romanovi",
-      filip: "filipovi",
-      adam: "adamovi",
-      daniel: "danielovi",
-      ondřej: "ondřeji",
-      ondrej: "ondřeji",
-      marek: "markovi",
-      václav: "václavovi",
-      vaclav: "václavovi",
-      zdeněk: "zdeňkovi",
-      zdenek: "zdeňkovi",
-      ladislav: "ladislavovi",
-      bohumil: "bohumilovi",
-      antonín: "antonínovi",
-      antonin: "antonínovi",
-      vladimír: "vladimírovi",
-      vladimir: "vladimírovi",
-      richard: "richardovi",
-      patrik: "patrikovi",
-      dominik: "dominikovi",
-      radek: "radkovi",
-      aleš: "alešovi",
-      ales: "alešovi",
-      stanislav: "stanislavovi",
-      jaroslav: "jaroslavovi",
-      bohuslav: "bohuslavovi",
-      vojtěch: "vojtěchovi",
-      vojtech: "vojtěchovi",
-      kryštof: "kryštofovi",
-      krystof: "kryštofovi",
-      matěj: "matěji",
-      matej: "matěji",
-      honza: "honzovi",
-      anna: "anně",
-      marie: "marii",
-      jana: "janě",
-      lenka: "lence",
-      petra: "petře",
-      eva: "evě",
-      hana: "haně",
-      vera: "věře",
-      věra: "věře"
-    };
-    if (hardDat[low]) return capFrom(hardDat[low]);
-    if (namedayGender === "female") {
-      if (/ie$/i.test(w) && w.length >= 4) return capFrom(w.slice(0, -2) + "ii");
-      if (/a$/i.test(w) && w.length >= 3) return capFrom(w.slice(0, -1) + "ě");
-      return "";
-    }
-    if (/ek$/i.test(w) && w.length >= 4) return capFrom(w.slice(0, -1) + "kovi");
-    if (/el$/i.test(w) && w.length >= 4) return capFrom(w + "ovi");
-    if (/[bcdfghjklmnpqrstvwxzřšťžčň]/i.test(w.slice(-1))) return capFrom(w + "ovi");
-    return "";
-  }
-
   /** Jedno křestní jméno → bezpečné oslovení (jen spolehlivá -a → -o); jinak "". */
   function iuSafeVocativeSingleFirstName(tail){
     const tail0 = String(tail || "").trim();
@@ -6402,25 +6313,6 @@ function buildVideoAsArticleCard(it) {
       return w.slice(0, -1) + "o";
     }
     return "";
-  }
-
-  /** P0 svátek overlay: 3. pád oslavence pro „Popřej …“ (bez DOM závislosti na meta). */
-  function iuSvatekBuildPoprejLineFromRaw(raw, namedayGender){
-    let line = "Popřej oslavenci";
-    try{
-      const r = String(raw || "").trim();
-      const dat = iuSafeDativeSingleFirstName(r, namedayGender);
-      if (dat) {
-        line = "Popřej " + dat;
-      } else if (r && r !== "—" && !/[;,]/.test(r)) {
-        if (namedayGender === "female" && /ie$/i.test(r)) {
-          line = "Popřej " + r.slice(0, -2) + "ii";
-        } else if (namedayGender === "female" && /a$/i.test(r)) {
-          line = "Popřej " + r.slice(0, -1) + "ě";
-        }
-      }
-    }catch(_){}
-    return line;
   }
 
   /** P0 svátek overlay: dvouřádkový lead (Popřej Xovi / Dnes má svátek). */
