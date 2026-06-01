@@ -290,11 +290,12 @@ style-src 'self' 'unsafe-inline' https:;
         }
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch{
           box-sizing:border-box;
-          contain:layout;
-          overflow:hidden;
-          height:168px;
-          min-height:168px;
-          max-height:168px;
+          contain:layout style;
+          overflow-x:hidden;
+          overflow-y:visible;
+          height:176px;
+          min-height:176px;
+          max-height:none;
         }
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverHeroInputHost{
           min-height:190px;
@@ -336,9 +337,9 @@ style-src 'self' 'unsafe-inline' https:;
         }
         @media(min-width:480px){
           :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch{
-            height:200px;
-            min-height:200px;
-            max-height:200px;
+            height:178px;
+            min-height:178px;
+            max-height:none;
           }
           :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch .iuSilverParcelWatch__content{
             max-width:calc(100% - 124px);
@@ -1530,18 +1531,19 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
-    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=15" />
+    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=16" />
     <style id="iuParcelWatchFirstPaintClsGuard">
-      /* P0 CLS: post parcel-dashboard.css — lock first paint = hydrated compact height (259→168 collapse guard). */
+      /* P0 CLS: post parcel-dashboard.css — lock first paint = hydrated compact height; no vertical clip on mainShell. */
       @media (max-width: 1023px) {
         #silver-slot #iuSilverParcelWatch,
         #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
-          height: 168px !important;
-          min-height: 168px !important;
-          max-height: 168px !important;
-          overflow: hidden !important;
+          height: 176px !important;
+          min-height: 176px !important;
+          max-height: none !important;
+          overflow-x: hidden !important;
+          overflow-y: visible !important;
           box-sizing: border-box !important;
-          contain: layout !important;
+          contain: layout style !important;
         }
         #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__hero,
         #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__hero {
@@ -1551,8 +1553,7 @@ style-src 'self' 'unsafe-inline' https:;
           align-items: stretch !important;
           gap: 10px !important;
           min-width: 0 !important;
-          max-height: 134px !important;
-          overflow: hidden !important;
+          overflow: visible !important;
         }
         #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus,
         #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus {
@@ -1577,9 +1578,9 @@ style-src 'self' 'unsafe-inline' https:;
       @media (min-width: 480px) and (max-width: 1023px) {
         #silver-slot #iuSilverParcelWatch,
         #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
-          height: 200px !important;
-          min-height: 200px !important;
-          max-height: 200px !important;
+          height: 178px !important;
+          min-height: 178px !important;
+          max-height: none !important;
         }
         #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus,
         #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus {
