@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "sourceBatchKey": "idnes.cz/sport",
+  "ingestedAt": "2026-06-01T08:11:59.514282Z",
+  "items": [],
+  "feedReports": [
+    {
+      "feed": "https://servis.idnes.cz/rss.aspx?c=sport",
+      "source": "",
+      "topic": "aktualne",
+      "status": "SKIPPED_ROBOTS",
+      "reason": "disallowed_by_robots",
+      "httpStatus": 0,
+      "contentType": "",
+      "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
+      "bytes": 0,
+      "itemsParsed": 0,
+      "itemsKept": 0,
+      "accepted": 0,
+      "registryId": "spt_idnes",
+      "registryGroup": [
+        {
+          "id": "spt_idnes",
+          "label": "iDNES / Sport",
+          "domain": "idnes.cz",
+          "entry_type": "rubric",
+          "section_primary": "sport",
+          "section_secondary": [],
+          "interval_min": 40,
+          "display_weight": 1.0,
+          "active": true,
+          "blocked": false,
+          "official_only": true,
+          "fetch_mode": "rss_or_official_rubric_only",
+          "per_domain_cooldown_min": 20,
+          "slot_offset_min": 12,
+          "max_items_per_fetch": 40,
+          "last_fetch_at": null,
+          "last_success_at": null,
+          "error_streak": 0,
+          "backoff_multiplier": 1.0,
+          "feed_url": "https://servis.idnes.cz/rss.aspx?c=sport",
+          "topic": "sport"
+        }
+      ]
+    }
+  ]
+}

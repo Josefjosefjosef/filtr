@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-01T07:36:08.627126Z",
+  "ingestedAt": "2026-06-01T08:11:59.514282Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dal zlatý gól a jeho máma omdlela na tribuně. Pro Finy je Helenius hokejový virtuóz a umělec",
+      "url": "https://www.sport.cz/clanek/hokej-ms-dal-zlaty-gol-a-jeho-mama-omdlela-na-tribune-pro-finy-je-helenius-hokejovy-virtuoz-a-umelec-5473659",
+      "dt": "2026-06-01T07:40:38Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dal",
+        "finy",
+        "gól",
+        "helenius",
+        "hokejový",
+        "jeho",
+        "máma",
+        "omdlela",
+        "tribuně",
+        "umělec",
+        "virtuóz",
+        "zlatý"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -749,32 +778,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bronz s příchutí zlata. Norové sami žasnou: Jsme v šoku, je to šílenost",
-      "url": "https://www.sport.cz/clanek/hokej-ms-bronz-s-prichuti-zlata-norove-sami-zasnou-jsme-v-soku-je-to-silenost-5472937",
-      "dt": "2026-05-31T17:18:07Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bronz",
-        "jsme",
-        "norové",
-        "příchutí",
-        "sami",
-        "zlata",
-        "šoku",
-        "šílenost",
-        "žasnou"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44535,
+      "bytes": 45029,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-01T07:27:52Z",
+        "raw_feed_latest_publishedAt": "2026-06-01T07:40:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -837,6 +840,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dal zlatý gól a jeho máma omdlela na tribuně. Pro Finy je Helenius hokejový virtuóz a umělec",
+            "publishedAt": "2026-06-01T07:40:38Z"
+          },
           {
             "title": "Velká změna pro fotbalové MS. Polehávání brankáře už nepomůže",
             "publishedAt": "2026-06-01T07:27:52Z"
@@ -864,10 +871,6 @@
           {
             "title": "Soupeř českých fotbalistů sází v nominaci pro MS na gólmanského rekordmana i sedmnáctiletý talent",
             "publishedAt": "2026-06-01T04:35:33Z"
-          },
-          {
-            "title": "Udatný Menšík si na antuce věří: Pevně doufám, že nezůstanu jen u čtvrtfinále",
-            "publishedAt": "2026-06-01T04:14:17Z"
           }
         ]
       }
