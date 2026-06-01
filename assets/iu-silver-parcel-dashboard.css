@@ -4,32 +4,49 @@
  */
 
 /* ── Shared hero layout (text left, illustration right — single row, no wrap) ── */
+#silver-slot #iuSilverParcelWatch,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
+  --iuParcelIllusW: 108px;
+  --iuParcelIllusGap: 10px;
+}
+@media (min-width: 480px) {
+  #silver-slot #iuSilverParcelWatch,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
+    --iuParcelIllusW: 128px;
+  }
+}
+@media (min-width: 1025px) {
+  #silver-slot #iuSilverParcelWatch,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
+    --iuParcelIllusW: 180px;
+  }
+}
 #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__hero,
 #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__hero {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: flex-start;
-  gap: 8px;
+  gap: var(--iuParcelIllusGap);
   min-width: 0;
 }
 #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__content,
 #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__content {
   flex: 1 1 auto;
   min-width: 0;
-  max-width: calc(100% - 84px);
+  max-width: calc(100% - var(--iuParcelIllusW) - var(--iuParcelIllusGap));
 }
 #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus,
 #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus {
-  flex: 0 0 76px;
-  width: 76px;
-  min-width: 76px;
-  max-width: 76px;
+  flex: 0 0 var(--iuParcelIllusW);
+  width: var(--iuParcelIllusW);
+  min-width: var(--iuParcelIllusW);
+  max-width: var(--iuParcelIllusW);
   align-self: flex-start;
   color: #64748b;
   pointer-events: none;
   user-select: none;
-  margin-top: 2px;
+  margin-top: 0;
 }
 #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusSvg,
 #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusSvg {
@@ -38,32 +55,7 @@
   height: auto;
   aspect-ratio: 160 / 120;
   overflow: visible;
-}
-@media (min-width: 480px) {
-  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__content,
-  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__content {
-    max-width: calc(100% - 92px);
-  }
-  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus,
-  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus {
-    flex-basis: 88px;
-    width: 88px;
-    min-width: 88px;
-    max-width: 88px;
-  }
-}
-@media (min-width: 768px) {
-  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__content,
-  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__content {
-    max-width: calc(100% - 100px);
-  }
-  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus,
-  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus {
-    flex-basis: 96px;
-    width: 96px;
-    min-width: 96px;
-    max-width: 96px;
-  }
+  filter: drop-shadow(0 4px 10px rgba(99, 102, 241, 0.12));
 }
 @media (min-width: 1025px) {
   #silver-slot #iuSilverParcelWatch {
@@ -414,19 +406,27 @@
   #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__row,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__row {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: column;
+    flex-wrap: nowrap;
     gap: 6px;
-    align-items: center;
+    align-items: stretch;
     min-width: 0;
     box-sizing: border-box;
     padding: 0;
     margin: 0;
   }
+  @media (min-width: 560px) {
+    #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__row,
+    #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__row {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+  }
   #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input {
-    flex: 1 1 100px;
-    width: auto;
+    flex: 1 1 auto;
+    width: 100%;
     min-width: 0;
     max-width: 100%;
     box-sizing: border-box;
@@ -441,6 +441,14 @@
     outline: none;
     -webkit-text-size-adjust: 100%;
   }
+  @media (min-width: 560px) {
+    #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input,
+    #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input {
+      flex: 1 1 120px;
+      width: auto;
+      max-width: 240px;
+    }
+  }
   #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input::placeholder,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input::placeholder {
     color: #94a3b8;
@@ -452,19 +460,25 @@
   }
   #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__save,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__save {
-    flex: 1 1 auto;
-    width: auto;
+    flex: 0 0 auto;
+    width: 100%;
     min-width: 0;
-    padding: 8px 10px;
+    padding: 9px 12px;
     border-radius: 9px;
     border: 1px solid rgba(148, 163, 184, 0.35);
     cursor: pointer;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 13px;
     color: #64748b;
     background: #f1f5f9;
     box-shadow: none;
     white-space: nowrap;
+  }
+  @media (min-width: 560px) {
+    #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__save,
+    #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__save {
+      width: auto;
+    }
   }
   #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__save:active,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__save:active {
