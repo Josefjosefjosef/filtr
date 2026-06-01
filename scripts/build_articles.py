@@ -759,12 +759,23 @@ def _ingest_item_for_priority(it: dict) -> dict:
     }
 
 
+def _coerce_ingest_dt(val) -> datetime:
+    if isinstance(val, datetime):
+        return val
+    if val:
+        try:
+            return datetime.fromisoformat(str(val).replace("Z", "+00:00"))
+        except Exception:
+            pass
+    return datetime.min.replace(tzinfo=timezone.utc)
+
+
 def _pick_ingest_item_collision_winner(a: dict, b: dict) -> dict:
     pa = _vertical_section_priority(_ingest_item_for_priority(a))
     pb = _vertical_section_priority(_ingest_item_for_priority(b))
     if pa != pb:
         return a if pa > pb else b
-    return a if a.get("dt") >= b.get("dt") else b
+    return a if _coerce_ingest_dt(a.get("dt")) >= _coerce_ingest_dt(b.get("dt")) else b
 
 
 def _dedupe_ingest_items_by_url_priority(items: list) -> list:
@@ -781,7 +792,7 @@ def _dedupe_ingest_items_by_url_priority(items: list) -> list:
         prev = by_url.get(u)
         by_url[u] = it if prev is None else _pick_ingest_item_collision_winner(prev, it)
     out = list(by_url.values()) + orphans
-    out.sort(key=lambda x: x["dt"], reverse=True)
+    out.sort(key=lambda x: _coerce_ingest_dt(x.get("dt")), reverse=True)
     return out
 
 
