@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-01T19:47:02.874718Z",
+  "ingestedAt": "2026-06-01T20:01:52.243591Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hrozný absťák, přiznával český rekordman po operaci a dlouhé pauze",
+      "url": "https://www.sport.cz/clanek/atletika-hrozny-abstak-priznaval-cesky-rekordman-po-operaci-a-dlouhe-pauze-5473732",
+      "dt": "2026-06-01T19:58:52Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "absťák",
+        "dlouhé",
+        "hrozný",
+        "operaci",
+        "pauze",
+        "přiznával",
+        "rekordman",
+        "český"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "České basketbalistky podlehly na MS Nizozemkám, pak porazily Polky",
+      "url": "https://www.sport.cz/clanek/basketbal-ceske-basketbalistky-podlehly-na-ms-nizozemkam-pak-porazily-polky-5473736",
+      "dt": "2026-06-01T19:51:37Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "basketbalistky",
+        "nizozemkám",
+        "pak",
+        "podlehly",
+        "polky",
+        "porazily",
+        "české"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -706,54 +755,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fotbalisty Lille povede Ancelottiho syn Davide",
-      "url": "https://www.sport.cz/clanek/fotbal-ligue-1-fotbalisty-lille-povede-ancelottiho-syn-davide-5473704",
-      "dt": "2026-06-01T13:00:40Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ancelottiho",
-        "davide",
-        "fotbalisty",
-        "lille",
-        "povede",
-        "syn"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Trest za pomalé střídání. Islanďané doplatili na novinku, která bude v praxi i během MS",
-      "url": "https://www.sport.cz/clanek/fotbal-trest-za-pomale-stridani-islandane-doplatili-na-novinku-ktera-bude-v-praxi-i-behem-ms-5473663",
-      "dt": "2026-06-01T12:29:19Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "během",
-        "doplatili",
-        "islanďané",
-        "novinku",
-        "pomalé",
-        "praxi",
-        "střídání",
-        "trest"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -764,7 +765,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44067,
+      "bytes": 44384,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -801,10 +802,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-01T19:33:53Z",
+        "raw_feed_latest_publishedAt": "2026-06-01T19:58:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 30
+          "zdravi": 1,
+          "sport": 29
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -816,6 +818,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hrozný absťák, přiznával český rekordman po operaci a dlouhé pauze",
+            "publishedAt": "2026-06-01T19:58:52Z"
+          },
+          {
+            "title": "České basketbalistky podlehly na MS Nizozemkám, pak porazily Polky",
+            "publishedAt": "2026-06-01T19:51:37Z"
+          },
           {
             "title": "Vítězný návrat. Trenér Weiss dovedl Slováky k triumfu",
             "publishedAt": "2026-06-01T18:27:26Z"
@@ -839,14 +849,6 @@
           {
             "title": "V Německu se zlobí. Obhájkyně titulu nedostala divokou kartu",
             "publishedAt": "2026-06-01T18:37:19Z"
-          },
-          {
-            "title": "Finové bodali do už tak bolavého srdce Švýcarů",
-            "publishedAt": "2026-06-01T17:58:04Z"
-          },
-          {
-            "title": "Návrat ve velkém stylu. Ogrodníková vyhrála oštěp na Odložilově memoriálu",
-            "publishedAt": "2026-06-01T16:44:39Z"
           }
         ]
       }
