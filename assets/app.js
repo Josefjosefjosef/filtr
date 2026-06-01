@@ -10727,15 +10727,15 @@ function buildVideoAsArticleCard(it) {
     return x.getTime();
   }
   function line1CalendarTodayPresent(count){
-    if (count === 0) return "Kalendář: Na dnešek nemáte uložený žádný záznam.";
-    if (count === 1) return "Kalendář: Na dnešek máte uložený 1 záznam.";
-    if (count >= 2 && count <= 4) return "Kalendář: Na dnešek máte uložené " + count + " záznamy.";
-    return "Kalendář: Na dnešek máte uložených " + count + " záznamů.";
+    if (count === 0) return "Kalendář: Dnes nemáte uložený žádný záznam.";
+    if (count === 1) return "Kalendář: Dnes máte uložený 1 záznam.";
+    if (count >= 2 && count <= 4) return "Kalendář: Dnes máte uložené " + count + " záznamy.";
+    return "Kalendář: Dnes máte uložených " + count + " záznamů.";
   }
   function line1CalendarTodayPast(count){
-    if (count === 1) return "Kalendář: Na dnešek jste měli uložený 1 záznam.";
-    if (count >= 2 && count <= 4) return "Kalendář: Na dnešek jste měli uložené " + count + " záznamy.";
-    return "Kalendář: Na dnešek jste měli uložených " + count + " záznamů.";
+    if (count === 1) return "Kalendář: Dnes jste měli uložený 1 záznam.";
+    if (count >= 2 && count <= 4) return "Kalendář: Dnes jste měli uložené " + count + " záznamy.";
+    return "Kalendář: Dnes jste měli uložených " + count + " záznamů.";
   }
   function getTodayCalendarSummaryState(now, items){
     const out = {

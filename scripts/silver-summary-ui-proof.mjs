@@ -390,7 +390,7 @@ async function main() {
         DAY + "T08:00:00",
         ev4,
         {
-          primaryText: "Kalendář: Na dnešek máte uložené 4 záznamy.",
+          primaryText: "Kalendář: Dnes máte uložené 4 záznamy.",
           secondaryText: "První dnešní záznam v 09:00 hod.",
           secondaryMustNotInclude: "Další záznam"
         }
@@ -400,7 +400,7 @@ async function main() {
         DAY + "T09:30:00",
         ev4,
         {
-          primaryText: "Kalendář: Na dnešek máte uložené 4 záznamy.",
+          primaryText: "Kalendář: Dnes máte uložené 4 záznamy.",
           secondaryText: "Další záznam v 10:00 hod."
         }
       );
@@ -409,7 +409,7 @@ async function main() {
         DAY + "T14:00:00",
         ev4,
         {
-          primaryText: "Kalendář: Na dnešek jste měli uložené 4 záznamy.",
+          primaryText: "Kalendář: Dnes jste měli uložené 4 záznamy.",
           secondaryText: "Dnešní záznamy už proběhly."
         }
       );
@@ -418,7 +418,7 @@ async function main() {
         DAY + "T08:00:00",
         [{ date: DAY, time: "09:00", title: "x" }],
         {
-          primaryText: "Kalendář: Na dnešek máte uložený 1 záznam.",
+          primaryText: "Kalendář: Dnes máte uložený 1 záznam.",
           secondaryText: "Dnešní záznam v 09:00 hod.",
           secondaryMustNotInclude: "Další záznam"
         }
@@ -428,7 +428,7 @@ async function main() {
         DAY + "T12:00:00",
         [],
         {
-          primaryText: "Kalendář: Na dnešek nemáte uložený žádný záznam.",
+          primaryText: "Kalendář: Dnes nemáte uložený žádný záznam.",
           secondaryText: "",
           hideSecondaryLine: true
         }
