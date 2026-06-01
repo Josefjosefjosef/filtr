@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-01T12:47:02.401875Z",
+  "ingestedAt": "2026-06-01T13:02:01.925463Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fotbalisty Lille povede Ancelottiho syn Davide",
+      "url": "https://www.sport.cz/clanek/fotbal-ligue-1-fotbalisty-lille-povede-ancelottiho-syn-davide-5473704",
+      "dt": "2026-06-01T13:00:40Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ancelottiho",
+        "davide",
+        "fotbalisty",
+        "lille",
+        "povede",
+        "syn"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -757,29 +780,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Velká změna pro fotbalové MS. Polehávání brankáře už nepomůže",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-velka-zmena-pro-fotbalove-ms-polehavani-brankare-uz-nepomuze-5473656",
-      "dt": "2026-06-01T07:27:52Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "brankáře",
-        "fotbalové",
-        "nepomůže",
-        "polehávání",
-        "velká",
-        "změna"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46094,
+      "bytes": 46149,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-01T12:33:56Z",
+        "raw_feed_latest_publishedAt": "2026-06-01T13:00:40Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fotbalisty Lille povede Ancelottiho syn Davide",
+            "publishedAt": "2026-06-01T13:00:40Z"
+          },
           {
             "title": "Kalinská si po tvrdě vydřené výhře zahraje na grandslamu v Paříži poprvé čtvrtfinále",
             "publishedAt": "2026-06-01T12:33:56Z"
@@ -869,10 +873,6 @@
           {
             "title": "Nové detaily ze Schumacherovy nehody. Pilot promluvil o zvláštních okolnostech",
             "publishedAt": "2026-06-01T11:04:59Z"
-          },
-          {
-            "title": "Návrat po devíti letech. Rozehrávač Vyoral po konci v Ústí nad Labem odešel do Děčína",
-            "publishedAt": "2026-06-01T11:21:24Z"
           }
         ]
       }

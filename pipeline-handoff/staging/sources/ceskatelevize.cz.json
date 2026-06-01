@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-01T12:47:02.401875Z",
+  "ingestedAt": "2026-06-01T13:02:01.925463Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rusko v květnu poslalo proti Ukrajině rekordních více než osm tisíc dronů",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusko-v-kvetnu-poslalo-proti-ukrajine-rekordnich-vice-nez-osm-tisic-dronu-374105",
+      "dt": "2026-06-01T12:50:56Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "dronů",
+        "květnu",
+        "než",
+        "osm",
+        "poslalo",
+        "proti",
+        "rekordních",
+        "rusko",
+        "tisíc",
+        "ukrajině"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -714,31 +741,6 @@
         "potvrdila",
         "rumunsku",
         "ruský"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Obraz Josefa Čapka Piják se vydražil za rekordních 34 milionů korun",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/obraz-josefa-capka-pijak-se-vydrazil-za-rekordnich-34-milionu-374080",
-      "dt": "2026-05-31T14:55:07Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "josefa",
-        "korun",
-        "milionů",
-        "obraz",
-        "piják",
-        "rekordních",
-        "vydražil",
-        "čapka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2254,7 +2256,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44965,
+      "bytes": 45018,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2291,12 +2293,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-01T12:28:44Z",
+        "raw_feed_latest_publishedAt": "2026-06-01T12:50:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "zpravy": 25,
           "finance": 4,
-          "other": 2
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2308,6 +2310,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rusko v květnu poslalo proti Ukrajině rekordních více než osm tisíc dronů",
+            "publishedAt": "2026-06-01T12:50:56Z"
+          },
           {
             "title": "Policie zadržela muže za poškození stožárů. Hrozil výpadek elektřiny v Plzni",
             "publishedAt": "2026-06-01T12:28:44Z"
@@ -2335,10 +2341,6 @@
           {
             "title": "Maďarská vláda podnikne kroky k odvolání prezidenta, oznámil Magyar",
             "publishedAt": "2026-06-01T08:40:53Z"
-          },
-          {
-            "title": "Bém a Frydrych probrali otázku přesunu protidrogové agendy na resort zdravotnictví",
-            "publishedAt": "2026-06-01T08:26:40Z"
           }
         ]
       }
