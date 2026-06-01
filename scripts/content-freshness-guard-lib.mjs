@@ -156,6 +156,12 @@ export async function fetchFeedXml(url) {
 }
 
 export function articleMatchesP0Source(article, def) {
+  const url = String(article.url || (article.sources && article.sources[0] && article.sources[0].url) || "").trim();
+  if (def.id === "ct24" && /ct24\.ceskatelevize\.cz/i.test(url)) return true;
+  if (def.id === "idnes" && /(^|\/)idnes\.cz\//i.test(url) && !/isport\.idnes/i.test(url)) return true;
+  if (def.id === "novinky" && /novinky\.cz/i.test(url)) return true;
+  if (def.id === "seznam" && /seznamzpravy\.cz/i.test(url)) return true;
+  if (def.id === "sportcz" && /(^|\/)sport\.cz\//i.test(url) && !/isport\.cz/i.test(url)) return true;
   const src0 = (article.sources || [])[0];
   const name = String((src0 && src0.name) || article.sourceLabel || "").trim();
   if (!name) return false;
