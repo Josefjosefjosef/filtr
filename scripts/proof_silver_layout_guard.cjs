@@ -196,6 +196,30 @@ async function runViewport(page, w, h) {
     const micPresent = micDisplay !== "none" && micDisplay !== "";
     const submitArrowOnly = !micPresent && sendDisplay !== "none";
 
+    const parcelWatch = document.getElementById("iuSilverParcelWatch");
+    const parcelShell = document.querySelector(".iuSilverParcelWatch__mainShell");
+    const parcelInp = document.getElementById("iuSilverParcelWatchInput");
+    const parcelBtn = document.getElementById("iuSilverParcelWatchSave");
+    function parcelVis(el) {
+      if (!el) return false;
+      const st = getComputedStyle(el);
+      if (st.display === "none" || st.visibility === "hidden") return false;
+      const r = el.getBoundingClientRect();
+      return r.width > 2 && r.height > 2;
+    }
+    let parcelShellNotClipped = false;
+    if (parcelWatch && parcelShell && parcelInp && parcelBtn) {
+      const sh = parcelShell.getBoundingClientRect();
+      const wh = parcelWatch.getBoundingClientRect();
+      const ir = parcelInp.getBoundingClientRect();
+      const br = parcelBtn.getBoundingClientRect();
+      parcelShellNotClipped =
+        sh.bottom <= wh.bottom + 3 &&
+        sh.top >= wh.top - 3 &&
+        ir.bottom <= sh.bottom + 2 &&
+        br.bottom <= sh.bottom + 2;
+    }
+
     return {
       heroFound: !!hero,
       imgFound: !!img,
@@ -208,6 +232,10 @@ async function runViewport(page, w, h) {
       mic_present: micPresent,
       submit_arrow_only: submitArrowOnly,
       overflowX,
+      parcel_card_visible: parcelVis(parcelWatch),
+      parcel_input_visible: parcelVis(parcelInp),
+      parcel_button_visible: parcelVis(parcelBtn),
+      parcel_shell_not_clipped: parcelShellNotClipped,
     };
   });
 
@@ -301,6 +329,10 @@ async function runViewport(page, w, h) {
     !g.mic_present &&
     g.submit_arrow_only &&
     !g.overflowX &&
+    g.parcel_card_visible &&
+    g.parcel_input_visible &&
+    g.parcel_button_visible &&
+    g.parcel_shell_not_clipped &&
     consoleErrors.length === 0 &&
     appErrors === 0 &&
     clsPass &&
@@ -319,6 +351,10 @@ async function runViewport(page, w, h) {
     mic_present: g.mic_present,
     submit_arrow_only: g.submit_arrow_only,
     overflowX: g.overflowX,
+    parcel_card_visible: g.parcel_card_visible,
+    parcel_input_visible: g.parcel_input_visible,
+    parcel_button_visible: g.parcel_button_visible,
+    parcel_shell_not_clipped: g.parcel_shell_not_clipped,
     consoleErrorsCount: consoleErrors.length,
     appErrorsCount: appErrors,
     cls,
@@ -350,6 +386,10 @@ function formatBlock(label, o) {
     "  mic_present: " + o.mic_present,
     "  submit_arrow_only: " + o.submit_arrow_only,
     "  overflowX: " + o.overflowX,
+    "  parcel_card_visible: " + o.parcel_card_visible,
+    "  parcel_input_visible: " + o.parcel_input_visible,
+    "  parcel_button_visible: " + o.parcel_button_visible,
+    "  parcel_shell_not_clipped: " + o.parcel_shell_not_clipped,
     "  consoleErrorsCount: " + o.consoleErrorsCount,
     "  appErrorsCount: " + o.appErrorsCount,
     "  cls: " + o.cls,

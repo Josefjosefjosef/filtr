@@ -578,14 +578,19 @@ async function runSmoke() {
     if (mainSaveHasText.disabled || !mainSaveHasText.active) {
       fail(`Silver parcel main save: must be active with text (390): ${JSON.stringify(mainSaveHasText)}`);
     }
-    const mainGreen = await page.locator("#iuSilverParcelWatchSave").evaluate((el) => {
+    const mainBlue = await page.locator("#iuSilverParcelWatchSave").evaluate((el) => {
       const s = getComputedStyle(el);
       const bi = String(s.backgroundImage || "");
       const bc = String(s.backgroundColor || "");
-      return bi.indexOf("gradient") >= 0 || bc.indexOf("128, 61") >= 0 || bc.indexOf("163, 74") >= 0;
+      return (
+        bi.indexOf("gradient") >= 0 ||
+        bc.indexOf("30, 64, 175") >= 0 ||
+        bc.indexOf("30,64,175") >= 0 ||
+        bc.indexOf("37, 99, 235") >= 0
+      );
     });
-    if (!mainGreen) {
-      fail("Silver parcel main save: expected green success style when active (390)");
+    if (!mainBlue) {
+      fail("Silver parcel main save: expected dark blue CTA style when active (390)");
     }
     await page.fill("#iuSilverParcelWatchInput", "bad@@@");
     await page.click("#iuSilverParcelWatchSave");
@@ -765,8 +770,16 @@ async function runSmoke() {
       const sh = shell.getBoundingClientRect();
       const wh = watch.getBoundingClientRect();
       if (sh.left < wh.left - 2 || sh.right > wh.right + 2) return { ok: false, reason: "bounds" };
+      if (sh.bottom > wh.bottom + 3 || sh.top < wh.top - 3) return { ok: false, reason: "clip" };
+      const inpR = inp.getBoundingClientRect();
+      const savR = sav.getBoundingClientRect();
+      if (inpR.bottom > sh.bottom + 2 || savR.bottom > sh.bottom + 2) return { ok: false, reason: "shell_clip" };
       const bg = getComputedStyle(shell).backgroundColor || "";
-      const hasShellBg = bg.indexOf("241, 245, 249") >= 0 || bg.indexOf("241,245,249") >= 0;
+      const hasShellBg =
+        bg.indexOf("88, 100, 116") >= 0 ||
+        bg.indexOf("88,100,116") >= 0 ||
+        bg.indexOf("74, 85, 104") >= 0 ||
+        bg.indexOf("74,85,104") >= 0;
       if (!hasShellBg) return { ok: false, reason: "bg", bg };
       inp.focus();
       return { ok: true };
@@ -791,6 +804,84 @@ async function runSmoke() {
     });
     if (!silverMainShellGlow390) {
       fail("Silver parcel main shell: expected focus-within glow on input focus (390)");
+    }
+    const mainSaveDisabledBlue = await page.locator("#iuSilverParcelWatchSave").evaluate((el) => {
+      const s = getComputedStyle(el);
+      const bi = String(s.backgroundImage || "");
+      const bc = String(s.backgroundColor || "");
+      return (
+        bi.indexOf("gradient") >= 0 ||
+        bc.indexOf("30, 64, 175") >= 0 ||
+        bc.indexOf("30,64,175") >= 0
+      );
+    });
+    if (!mainSaveDisabledBlue) {
+      fail("Silver parcel main save: expected dark blue CTA even when disabled (390)");
+    }
+    await page.evaluate(() => {
+      try {
+        window.__iuParcelSmokeCls = 0;
+        if (window.__iuParcelSmokeClsPO) window.__iuParcelSmokeClsPO.disconnect();
+        window.__iuParcelSmokeClsPO = new PerformanceObserver(function (list) {
+          const entries = list.getEntries();
+          for (let i = 0; i < entries.length; i++) {
+            const e = entries[i];
+            if (!e.hadRecentInput && e.value) {
+              window.__iuParcelSmokeCls = (window.__iuParcelSmokeCls || 0) + e.value;
+            }
+          }
+        });
+        window.__iuParcelSmokeClsPO.observe({ type: "layout-shift", buffered: false });
+      } catch (_) {}
+    });
+    await page.reload({ waitUntil: "domcontentloaded", timeout: GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS });
+    await gotoProjectsMediaForSmoke(page);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(400);
+    await page.waitForSelector("#iuSilverParcelWatchInput", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
+    const parcelReloadLayout390 = await page.evaluate(() => {
+      const watch = document.getElementById("iuSilverParcelWatch");
+      const shell = document.querySelector(".iuSilverParcelWatch__mainShell");
+      const inp = document.getElementById("iuSilverParcelWatchInput");
+      const sav = document.getElementById("iuSilverParcelWatchSave");
+      const docEl = document.documentElement;
+      const overflowX = docEl.scrollWidth > docEl.clientWidth + 1;
+      function vis(el) {
+        if (!el) return false;
+        const st = getComputedStyle(el);
+        if (st.display === "none" || st.visibility === "hidden") return false;
+        const r = el.getBoundingClientRect();
+        return r.width > 2 && r.height > 2;
+      }
+      let shellNotClipped = false;
+      if (watch && shell && inp && sav) {
+        const sh = shell.getBoundingClientRect();
+        const wh = watch.getBoundingClientRect();
+        const ir = inp.getBoundingClientRect();
+        const br = sav.getBoundingClientRect();
+        shellNotClipped =
+          sh.bottom <= wh.bottom + 3 &&
+          ir.bottom <= sh.bottom + 2 &&
+          br.bottom <= sh.bottom + 2;
+      }
+      return {
+        overflowX,
+        parcelCardVisible: vis(watch),
+        inputVisible: vis(inp),
+        buttonVisible: vis(sav),
+        shellNotClipped,
+        cls: Number(window.__iuParcelSmokeCls || 0),
+      };
+    });
+    if (
+      parcelReloadLayout390.overflowX ||
+      !parcelReloadLayout390.parcelCardVisible ||
+      !parcelReloadLayout390.inputVisible ||
+      !parcelReloadLayout390.buttonVisible ||
+      !parcelReloadLayout390.shellNotClipped ||
+      parcelReloadLayout390.cls > 0.001
+    ) {
+      fail(`Silver parcel reload layout guard (390): ${JSON.stringify(parcelReloadLayout390)}`);
     }
     await assertDetailSaveMicroUx("390x844");
 
