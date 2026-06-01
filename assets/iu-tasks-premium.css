@@ -79,7 +79,9 @@
   overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:12px 14px 16px;
   background:linear-gradient(180deg,rgba(240,253,250,.65) 0%,rgba(238,242,255,.45) 55%,rgba(248,250,252,.9) 100%)
 }
-#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__list{
+  list-style:none;margin:0;padding:0;padding-bottom:var(--iu-mobile-bottom-nav-safe-space,calc(56px + env(safe-area-inset-bottom,0px) + 20px));display:grid;gap:10px
+}
 #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow{
   position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);gap:0;align-items:stretch;border:1px solid rgba(109,94,189,.14);
   border-radius:13px;background:linear-gradient(135deg,rgba(255,255,255,.96) 0%,rgba(248,250,252,.92) 100%);overflow:hidden;min-height:48px;
@@ -96,7 +98,12 @@
 #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__check:hover{background:rgba(204,251,241,.65)}
 #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__check:focus-visible{outline:none;box-shadow:var(--iu-tasks-focus);z-index:1}
 #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__body{
-  text-align:left;border:0;background:transparent;padding:10px 12px;display:grid;gap:4px;cursor:pointer;width:100%;min-height:48px;touch-action:manipulation
+  text-align:left;border:0;background:transparent;padding:10px 12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;cursor:pointer;width:100%;min-height:48px;touch-action:manipulation
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__content{display:grid;gap:4px;min-width:0;text-align:left}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__time{
+  font-size:15px;font-weight:800;line-height:1.1;color:#0f766e;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+  padding-left:4px;flex-shrink:0;text-align:right;align-self:center
 }
 #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__body:hover{background:rgba(13,148,136,.04)}
 #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__body:active{background:rgba(99,102,241,.06)}
@@ -140,7 +147,8 @@
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__select{
   width:100%;border:1px solid rgba(15,118,110,.2);border-radius:10px;padding:10px 12px;font-size:14px;box-sizing:border-box;background:rgba(255,255,255,.95)
 }
-#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__textarea{min-height:120px;resize:vertical;line-height:1.4;white-space:pre-wrap}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__textarea{min-height:60px;max-height:120px;resize:vertical;overflow-y:auto;line-height:1.4;white-space:pre-wrap}
+.iuSilverDraftGrid--task .iuSilverDraftInput--note{min-height:36px;max-height:120px;overflow-y:auto;resize:vertical}
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__formActions{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;align-items:stretch}
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__formActions button{flex:1 1 auto;min-height:44px;touch-action:manipulation}
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__formRow2{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-start}
@@ -156,10 +164,12 @@ body.iu-tasksOverlay-open{overflow:hidden!important}
 .dark #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow{background:rgba(15,23,42,.88);border-color:rgba(99,102,241,.22)}
 .dark #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__check{background:rgba(17,24,39,.9);border-right-color:rgba(99,102,241,.2)}
 .dark #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__title{color:#f1f5f9}
+.dark #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__time{color:#5eead4}
 .dark #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__search{background:rgba(17,24,39,.95);border-color:rgba(99,102,241,.3);color:#f1f5f9}
 .dark #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dateIcon{color:#94a3b8}
 .dark #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__scroll{background:linear-gradient(180deg,rgba(15,23,42,.5),rgba(30,27,75,.25))}
 @media (max-width:900px){
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__time{font-size:16px;font-weight:800}
   #iuTasksOverlay.iu-tasksPremiumScope{align-items:stretch;justify-content:stretch;background:linear-gradient(180deg,var(--iu-tasks-bg) 0%,var(--iu-tasks-bg2) 100%)}
   #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dialog{
     width:100%;min-height:100dvh;height:100dvh;max-height:100dvh;border-radius:0;overflow-x:hidden;overflow-y:auto;display:flex;flex-direction:column;box-shadow:none;border-left:0;border-right:0
