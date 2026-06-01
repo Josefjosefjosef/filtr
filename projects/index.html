@@ -270,7 +270,7 @@ style-src 'self' 'unsafe-inline' https:;
           margin:2px 0 0 0;
         }
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch{
-          min-height:152px;
+          min-height:118px;
           box-sizing:border-box;
           contain:layout;
         }
@@ -1395,7 +1395,7 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
-    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=10" />
+    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=11" />
     <style id="iuSilverEventTitleOrangeLastWinGuard">
       /* P0: až za všemi linkovanými CSS v <head>. Kotva: otevřený sheet s labelem #iuSilverGuidedTextLab (text „Název události“ / pozn. / adresa) — ne jen holý #id bez stavu. */
       @media (max-width: 1024px) {
@@ -1858,29 +1858,66 @@ style-src 'self' 'unsafe-inline' https:;
                               </div>
                             </div>
                             <div class="iuSilverParcelWatch__illus" aria-hidden="true">
-                              <svg class="iuSilverParcelWatch__illusSvg" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                              <svg class="iuSilverParcelWatch__illusSvg" viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg" focusable="false">
                                 <defs>
-                                  <radialGradient id="iuParcelIllusGlow" cx="50%" cy="50%" r="50%">
-                                    <stop offset="0%" stop-color="currentColor" stop-opacity="0.18"/>
-                                    <stop offset="100%" stop-color="currentColor" stop-opacity="0"/>
-                                  </radialGradient>
-                                  <linearGradient id="iuParcelBoxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#818cf8"/>
-                                    <stop offset="100%" stop-color="#6366f1"/>
+                                  <linearGradient id="iuParcelMapFill" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#e8f0ff"/>
+                                    <stop offset="100%" stop-color="#dbeafe"/>
                                   </linearGradient>
+                                  <linearGradient id="iuParcelRouteLine" x1="0%" y1="100%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#6366f1"/>
+                                    <stop offset="100%" stop-color="#818cf8"/>
+                                  </linearGradient>
+                                  <linearGradient id="iuParcelBoxTop" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#fde68a"/>
+                                    <stop offset="100%" stop-color="#fbbf24"/>
+                                  </linearGradient>
+                                  <linearGradient id="iuParcelBoxLeft" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#d97706"/>
+                                    <stop offset="100%" stop-color="#b45309"/>
+                                  </linearGradient>
+                                  <linearGradient id="iuParcelBoxRight" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#f59e0b"/>
+                                    <stop offset="100%" stop-color="#d97706"/>
+                                  </linearGradient>
+                                  <radialGradient id="iuParcelGlow" cx="50%" cy="55%" r="45%">
+                                    <stop offset="0%" stop-color="#6366f1" stop-opacity="0.22"/>
+                                    <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+                                  </radialGradient>
                                 </defs>
-                                <ellipse cx="60" cy="52" rx="48" ry="38" fill="url(#iuParcelIllusGlow)"/>
-                                <path class="iuSilverParcelWatch__illusRoute" d="M18 72 Q38 48 58 58 T98 38" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3" stroke-linecap="round" opacity="0.45"/>
-                                <circle cx="18" cy="72" r="4" fill="currentColor" opacity="0.5"/>
-                                <circle cx="98" cy="38" r="4" fill="#6366f1" opacity="0.85"/>
-                                <g transform="translate(42, 44)">
-                                  <rect x="0" y="8" width="28" height="22" rx="3" fill="url(#iuParcelBoxGrad)" opacity="0.92"/>
-                                  <path d="M0 8 L14 0 L28 8" fill="none" stroke="#a5b4fc" stroke-width="1.5" stroke-linejoin="round"/>
-                                  <line x1="14" y1="0" x2="14" y2="30" stroke="#c7d2fe" stroke-width="1" opacity="0.6"/>
+                                <ellipse cx="80" cy="62" rx="58" ry="42" fill="url(#iuParcelGlow)"/>
+                                <rect class="iuSilverParcelWatch__illusMap" x="10" y="18" width="140" height="88" rx="10" fill="url(#iuParcelMapFill)" stroke="currentColor" stroke-width="0.6" opacity="0.95"/>
+                                <g class="iuSilverParcelWatch__illusBlocks" opacity="0.42">
+                                  <rect x="18" y="26" width="22" height="14" rx="2" fill="currentColor"/>
+                                  <rect x="44" y="26" width="18" height="14" rx="2" fill="currentColor"/>
+                                  <rect x="66" y="26" width="26" height="14" rx="2" fill="currentColor"/>
+                                  <rect x="96" y="26" width="20" height="14" rx="2" fill="currentColor"/>
+                                  <rect x="18" y="44" width="16" height="18" rx="2" fill="currentColor"/>
+                                  <rect x="38" y="44" width="28" height="18" rx="2" fill="currentColor"/>
+                                  <rect x="70" y="44" width="22" height="18" rx="2" fill="currentColor"/>
+                                  <rect x="96" y="44" width="24" height="18" rx="2" fill="currentColor"/>
+                                  <rect x="18" y="66" width="30" height="16" rx="2" fill="currentColor"/>
+                                  <rect x="52" y="66" width="20" height="16" rx="2" fill="currentColor"/>
+                                  <rect x="76" y="66" width="24" height="16" rx="2" fill="currentColor"/>
+                                  <rect x="104" y="66" width="16" height="16" rx="2" fill="currentColor"/>
                                 </g>
-                                <g transform="translate(78, 22)">
-                                  <path d="M8 0 C4 0 1 3 1 7 C1 12 8 18 8 18 C8 18 15 12 15 7 C15 3 12 0 8 0 Z" fill="#6366f1" opacity="0.9"/>
-                                  <circle cx="8" cy="7" r="2.5" fill="#eef2ff"/>
+                                <g class="iuSilverParcelWatch__illusStreets" stroke="currentColor" stroke-width="0.8" opacity="0.28" fill="none">
+                                  <path d="M10 52 H150 M10 68 H150 M38 18 V106 M68 18 V106 M98 18 V106"/>
+                                </g>
+                                <circle class="iuSilverParcelWatch__illusStart" cx="28" cy="88" r="3.5" fill="#6366f1" opacity="0.85"/>
+                                <path class="iuSilverParcelWatch__illusRoute" d="M28 88 C46 78, 58 72, 72 58 S 98 42, 118 34" fill="none" stroke="url(#iuParcelRouteLine)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 4"/>
+                                <g class="iuSilverParcelWatch__illusPackage" transform="translate(54, 50)">
+                                  <path d="M0 22 L16 32 L32 22 L16 12 Z" fill="url(#iuParcelBoxTop)" stroke="#b45309" stroke-width="0.6" stroke-linejoin="round"/>
+                                  <path d="M0 22 L0 38 L16 48 L16 32 Z" fill="url(#iuParcelBoxLeft)" stroke="#92400e" stroke-width="0.5" stroke-linejoin="round"/>
+                                  <path d="M32 22 L32 38 L16 48 L16 32 Z" fill="url(#iuParcelBoxRight)" stroke="#92400e" stroke-width="0.5" stroke-linejoin="round"/>
+                                  <path d="M0 22 L16 12 L32 22" fill="none" stroke="#fef3c7" stroke-width="1.2" stroke-linejoin="round"/>
+                                  <line x1="16" y1="12" x2="16" y2="48" stroke="#fef3c7" stroke-width="0.8" opacity="0.65"/>
+                                  <line x1="6" y1="27" x2="26" y2="27" stroke="#92400e" stroke-width="0.7" opacity="0.45"/>
+                                </g>
+                                <g class="iuSilverParcelWatch__illusPin" transform="translate(110, 22)">
+                                  <path d="M8 0 C4.5 0 2 2.8 2 6.5 C2 11.5 8 19 8 19 C8 19 14 11.5 14 6.5 C14 2.8 11.5 0 8 0 Z" fill="#6366f1"/>
+                                  <circle cx="8" cy="6.5" r="2.8" fill="#eef2ff"/>
+                                  <ellipse cx="8" cy="20" rx="5" ry="1.6" fill="#6366f1" opacity="0.25"/>
                                 </g>
                               </svg>
                             </div>
