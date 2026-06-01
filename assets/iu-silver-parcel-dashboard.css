@@ -345,6 +345,11 @@
 @media (max-width: 1024px) {
   #silver-slot #iuSilverParcelWatch,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
+    --iuParcelShellBg: #586474;
+    --iuParcelInputBg: #eef1f5;
+    --iuParcelBtnBlue: linear-gradient(135deg, #1e40af 0%, #1e3a8a 55%, #172554 100%);
+    --iuParcelBtnBlueActive: linear-gradient(135deg, #2563eb 0%, #1d4ed8 55%, #1e40af 100%);
+    --iuParcelCardH: 176px;
     width: calc(100% - 20px) !important;
     max-width: calc(100% - 20px) !important;
     margin: 10px 10px 0 10px;
@@ -352,13 +357,23 @@
     padding: 10px var(--iuSilverStackPadX, 12px) 12px;
     border-radius: 14px;
     overflow-x: hidden;
+    overflow-y: visible;
     flex: 0 0 auto !important;
     flex-shrink: 0 !important;
     align-self: stretch !important;
     min-width: 0 !important;
-    contain: layout;
+    min-height: var(--iuParcelCardH);
+    height: var(--iuParcelCardH);
+    max-height: none;
+    contain: layout style;
     position: relative;
     isolation: isolate;
+  }
+  @media (min-width: 480px) {
+    #silver-slot #iuSilverParcelWatch,
+    #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
+      --iuParcelCardH: 178px;
+    }
   }
   /* Day mode (default mobile/tablet) */
   #silver-slot #iuSilverParcelWatch,
@@ -390,12 +405,14 @@
     box-sizing: border-box;
     min-width: 0;
     width: 100%;
+    min-height: 96px;
     padding: 6px 8px;
     border-radius: 10px;
-    background: #f1f5f9;
-    border: 1px solid rgba(148, 163, 184, 0.28);
-    box-shadow: none;
+    background: var(--iuParcelShellBg, #586474);
+    border: 1px solid rgba(71, 85, 105, 0.42);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
     transition: box-shadow 0.18s ease;
+    overflow: visible;
   }
   #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__mainShell:focus-within,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__mainShell:focus-within {
@@ -431,8 +448,8 @@
     min-height: 40px;
     padding: 8px 10px;
     border-radius: 9px;
-    border: 1px solid rgba(148, 163, 184, 0.45);
-    background: #ffffff;
+    border: 1px solid rgba(148, 163, 184, 0.38);
+    background: var(--iuParcelInputBg, #eef1f5);
     color: #0f172a;
     font-size: 16px !important;
     line-height: 1.35;
@@ -463,13 +480,13 @@
     min-width: 0;
     padding: 9px 12px;
     border-radius: 9px;
-    border: 1px solid rgba(148, 163, 184, 0.35);
+    border: 1px solid rgba(30, 64, 175, 0.45);
     cursor: pointer;
     font-weight: 600;
     font-size: 13px;
-    color: #64748b;
-    background: #f1f5f9;
-    box-shadow: none;
+    color: #ffffff;
+    background: var(--iuParcelBtnBlue, linear-gradient(135deg, #1e40af 0%, #1e3a8a 55%, #172554 100%));
+    box-shadow: 0 2px 10px rgba(30, 58, 138, 0.32);
     white-space: nowrap;
   }
   @media (min-width: 560px) {
@@ -494,21 +511,21 @@
   }
   #silver-slot #iuSilverParcelWatch #iuSilverParcelWatchSave.iuSilverParcelWatch__mainSave:disabled,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch #iuSilverParcelWatchSave.iuSilverParcelWatch__mainSave:disabled {
-    opacity: 0.55;
+    opacity: 0.58;
     cursor: not-allowed;
-    box-shadow: none;
-    background: #e2e8f0;
-    border-color: #cbd5e1;
-    color: #64748b;
+    box-shadow: 0 1px 4px rgba(30, 58, 138, 0.18);
+    background: var(--iuParcelBtnBlue, linear-gradient(135deg, #1e40af 0%, #1e3a8a 55%, #172554 100%));
+    border-color: rgba(30, 64, 175, 0.35);
+    color: rgba(255, 255, 255, 0.92);
     transform: none;
   }
   #silver-slot #iuSilverParcelWatch #iuSilverParcelWatchSave.iuSilverParcelWatch__mainSave--active:enabled,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch #iuSilverParcelWatchSave.iuSilverParcelWatch__mainSave--active:enabled {
-    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 55%, #4338ca 100%);
-    border-color: rgba(129, 140, 248, 0.55);
+    background: var(--iuParcelBtnBlueActive, linear-gradient(135deg, #2563eb 0%, #1d4ed8 55%, #1e40af 100%));
+    border-color: rgba(96, 165, 250, 0.55);
     color: #ffffff;
     box-shadow:
-      0 4px 14px rgba(79, 70, 229, 0.32),
+      0 4px 14px rgba(37, 99, 235, 0.38),
       inset 0 1px 0 rgba(255, 255, 255, 0.18);
     transform: scale(1.01);
     opacity: 1;
@@ -1028,8 +1045,8 @@
   }
   html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input,
   html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input {
-    border-color: rgba(148, 163, 184, 0.45);
-    background: #ffffff;
+    border-color: rgba(148, 163, 184, 0.38);
+    background: #eef1f5;
     color: #0f172a;
   }
   html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input::placeholder,
@@ -1038,9 +1055,9 @@
   }
   html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__save,
   html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__save {
-    color: #64748b;
-    background: #f1f5f9;
-    border-color: rgba(148, 163, 184, 0.35);
+    color: #ffffff;
+    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 55%, #172554 100%);
+    border-color: rgba(30, 64, 175, 0.45);
   }
   html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__card,
   html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__card {
@@ -1063,6 +1080,8 @@
   html.iu-time-evening #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch,
   #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch,
   #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch {
+    --iuParcelShellBg: #4a5568;
+    --iuParcelInputBg: #eef1f5;
     background: linear-gradient(145deg, #182235 0%, #111827 55%, #1a1f3a 100%);
     border: 1px solid rgba(99, 102, 241, 0.22);
     box-shadow:
@@ -1085,9 +1104,9 @@
   html.iu-time-evening #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input,
   #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__input,
   #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__input {
-    border-color: rgba(99, 102, 241, 0.3);
-    background: rgba(15, 23, 42, 0.65);
-    color: #f1f5f9;
+    border-color: rgba(148, 163, 184, 0.38);
+    background: var(--iuParcelInputBg, #eef1f5);
+    color: #0f172a;
   }
   html.iu-time-evening #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input::placeholder,
   html.iu-time-evening #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input::placeholder,
@@ -1106,9 +1125,10 @@
   html.iu-time-evening #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__save,
   #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__save,
   #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__save {
-    color: rgba(203, 213, 225, 0.75);
-    background: rgba(30, 41, 59, 0.8);
-    border-color: rgba(99, 102, 241, 0.2);
+    color: #ffffff;
+    background: var(--iuParcelBtnBlue, linear-gradient(135deg, #1e40af 0%, #1e3a8a 55%, #172554 100%));
+    border-color: rgba(30, 64, 175, 0.45);
+    box-shadow: 0 2px 10px rgba(30, 58, 138, 0.32);
   }
   html.iu-time-evening #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__err,
   html.iu-time-evening #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__err,
