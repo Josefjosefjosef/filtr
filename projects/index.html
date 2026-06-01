@@ -1390,7 +1390,7 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
-    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=8" />
+    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=9" />
     <style id="iuSilverEventTitleOrangeLastWinGuard">
       /* P0: až za všemi linkovanými CSS v <head>. Kotva: otevřený sheet s labelem #iuSilverGuidedTextLab (text „Název události“ / pozn. / adresa) — ne jen holý #id bez stavu. */
       @media (max-width: 1024px) {
@@ -1840,13 +1840,44 @@ style-src 'self' 'unsafe-inline' https:;
                           </div>
                         </div>
                         </div>
-                        <section id="iuSilverParcelWatch" class="iuSilverParcelWatch" aria-label="Hlídej mi zásilku" data-iu-silver-parcel-watch="1">
-                          <h3 class="iuSilverParcelWatch__title">📦 Hlídej mi zásilku</h3>
-                          <p class="iuSilverParcelWatch__lead">Zadej číslo zásilky a Silver ji bude hlídat.</p>
-                          <div class="iuSilverParcelWatch__mainShell">
-                            <div class="iuSilverParcelWatch__row">
-                              <input id="iuSilverParcelWatchInput" class="iuSilverParcelWatch__input" type="text" inputmode="text" autocomplete="off" maxlength="80" placeholder="Zadej číslo zásilky" aria-label="Zadej číslo zásilky" />
-                              <button type="button" id="iuSilverParcelWatchSave" class="iuSilverParcelWatch__save">Uložit</button>
+                        <section id="iuSilverParcelWatch" class="iuSilverParcelWatch" aria-label="Vyhledej mi zásilku" data-iu-silver-parcel-watch="1">
+                          <div class="iuSilverParcelWatch__hero">
+                            <div class="iuSilverParcelWatch__content">
+                              <h3 class="iuSilverParcelWatch__title">📦 Vyhledej mi zásilku</h3>
+                              <p class="iuSilverParcelWatch__lead">Zadej číslo zásilky a sleduj její pohyb.</p>
+                              <div class="iuSilverParcelWatch__mainShell">
+                                <div class="iuSilverParcelWatch__row">
+                                  <input id="iuSilverParcelWatchInput" class="iuSilverParcelWatch__input" type="text" inputmode="text" autocomplete="off" maxlength="80" placeholder="Zadej číslo zásilky" aria-label="Zadej číslo zásilky" />
+                                  <button type="button" id="iuSilverParcelWatchSave" class="iuSilverParcelWatch__save">Vyhledat zásilku</button>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="iuSilverParcelWatch__illus" aria-hidden="true">
+                              <svg class="iuSilverParcelWatch__illusSvg" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                                <defs>
+                                  <radialGradient id="iuParcelIllusGlow" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stop-color="currentColor" stop-opacity="0.18"/>
+                                    <stop offset="100%" stop-color="currentColor" stop-opacity="0"/>
+                                  </radialGradient>
+                                  <linearGradient id="iuParcelBoxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#818cf8"/>
+                                    <stop offset="100%" stop-color="#6366f1"/>
+                                  </linearGradient>
+                                </defs>
+                                <ellipse cx="60" cy="52" rx="48" ry="38" fill="url(#iuParcelIllusGlow)"/>
+                                <path class="iuSilverParcelWatch__illusRoute" d="M18 72 Q38 48 58 58 T98 38" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3" stroke-linecap="round" opacity="0.45"/>
+                                <circle cx="18" cy="72" r="4" fill="currentColor" opacity="0.5"/>
+                                <circle cx="98" cy="38" r="4" fill="#6366f1" opacity="0.85"/>
+                                <g transform="translate(42, 44)">
+                                  <rect x="0" y="8" width="28" height="22" rx="3" fill="url(#iuParcelBoxGrad)" opacity="0.92"/>
+                                  <path d="M0 8 L14 0 L28 8" fill="none" stroke="#a5b4fc" stroke-width="1.5" stroke-linejoin="round"/>
+                                  <line x1="14" y1="0" x2="14" y2="30" stroke="#c7d2fe" stroke-width="1" opacity="0.6"/>
+                                </g>
+                                <g transform="translate(78, 22)">
+                                  <path d="M8 0 C4 0 1 3 1 7 C1 12 8 18 8 18 C8 18 15 12 15 7 C15 3 12 0 8 0 Z" fill="#6366f1" opacity="0.9"/>
+                                  <circle cx="8" cy="7" r="2.5" fill="#eef2ff"/>
+                                </g>
+                              </svg>
                             </div>
                           </div>
                           <p id="iuSilverParcelWatchErr" class="iuSilverParcelWatch__err" hidden role="alert"></p>
