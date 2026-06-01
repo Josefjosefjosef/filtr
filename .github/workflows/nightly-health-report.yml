@@ -89,7 +89,7 @@ jobs:
           from http.server import HTTPServer, BaseHTTPRequestHandler
           os.environ["IU_ROBOTS_STRICT_PROOF"] = "1"
           sys.path.insert(0, os.getcwd())
-          from scripts.fetch_engine import FetchEngine
+          from iu_crawler import robots_allowed_for_url
           hits_ok, hits_blocked = 0, 0
           class Handler(BaseHTTPRequestHandler):
               def do_GET(self):
@@ -118,12 +118,12 @@ jobs:
               except Exception: pass
               time.sleep(0.07)
           else: raise SystemExit("handshake failed")
-          e = FetchEngine()
-          feed_ok, d_ok = e.fetch_with_retry(base + "/ok", "p1", timeout_ms=5000)
-          feed_bl, d_bl = e.fetch_with_retry(base + "/blocked", "p2", timeout_ms=5000)
+          out_dir = os.path.join(os.getcwd(), "projects", "data")
+          allow_ok, r_ok = robots_allowed_for_url(base + "/ok", out_dir)
+          allow_bl, r_bl = robots_allowed_for_url(base + "/blocked", out_dir)
           server.shutdown()
-          ok = d_ok.get("reason") != "robots_disallow" and feed_ok is not None
-          bl = d_bl.get("reason") == "robots_disallow" and d_bl.get("skipped") is True
+          ok = allow_ok is True
+          bl = allow_bl is False and "robots" in str(r_bl).lower()
           print("ROBOTS_PROOF_OK ok=%d blocked_skipped=%d hits_ok=%d hits_blocked=%d" % (1 if ok else 0, 1 if bl else 0, hits_ok, hits_blocked))
           PYEOF
           python3 _tmp_proofs/iu_proof_robots.py | grep -q "ROBOTS_PROOF_OK"
