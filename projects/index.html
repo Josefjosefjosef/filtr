@@ -500,6 +500,7 @@ style-src 'self' 'unsafe-inline' https:;
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
     <link rel="stylesheet" href="/assets/app.css?v=fix-section-switch-scroll-cls-20260531" />
+    <link rel="stylesheet" href="/assets/iu-silver-premium-draft.css?v=silver-premium-draft-cards-20260602" />
     <link rel="stylesheet" href="/assets/iu-tasks-premium.css?v=tasks-premium-scope-20260503" />
     <link rel="stylesheet" href="/assets/iu-notes-premium.css?v=notes-premium-teal-20260503" />
     <style id="iuInfoCardsMobileTabletPostAppCss">
@@ -5505,9 +5506,19 @@ style-src 'self' 'unsafe-inline' https:;
       <div class="iuSilverChatBackdrop" data-iu-silver-chat-close="1"></div>
       <div class="iuSilverChatShell" role="dialog" aria-modal="true" aria-labelledby="iuSilverChatTitle">
         <header class="iuSilverChatHeader">
-          <div class="iuSilverChatHeaderText">
-            <h2 class="iuSilverChatTitle" id="iuSilverChatTitle">Silver</h2>
-            <p class="iuSilverChatSubtitle">Kalendářový asistent</p>
+          <div class="iuSilverChatHeaderBrand">
+            <span class="iuSilverChatHeaderLogo" aria-hidden="true">
+              <span class="iuSilverChatHeaderLogoRing">
+                <picture>
+                  <source type="image/webp" srcset="/assets/images/iu-silver-button.webp" />
+                  <img class="iuSilverChatHeaderLogoImg" src="/assets/images/iu-silver-button.png" alt="" width="36" height="36" decoding="async" />
+                </picture>
+              </span>
+            </span>
+            <div class="iuSilverChatHeaderText">
+              <h2 class="iuSilverChatTitle" id="iuSilverChatTitle">Silver</h2>
+              <p class="iuSilverChatSubtitle">Osobní asistent</p>
+            </div>
           </div>
           <button type="button" class="iuSilverChatClose" id="iuSilverChatClose" data-iu-silver-chat-close="1" aria-label="Zavřít chat Silver">×</button>
         </header>
