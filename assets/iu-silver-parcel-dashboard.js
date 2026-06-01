@@ -102,6 +102,128 @@ try {
     } catch (_) {}
   }
 
+  function removeParcelFromList(itemId) {
+    var list = readList().filter(function (x) {
+      return x.id !== itemId;
+    });
+    writeList(list);
+    render();
+  }
+
+  var removeConfirmEl = null;
+  var removeConfirmEscHandler = null;
+  var removeConfirmLastFocus = null;
+  var removeConfirmPendingId = null;
+
+  function closeRemoveConfirmDialog() {
+    if (!removeConfirmEl) return;
+    removeConfirmEl.hidden = true;
+    removeConfirmEl.setAttribute("aria-hidden", "true");
+    removeConfirmPendingId = null;
+    if (removeConfirmEscHandler) {
+      document.removeEventListener("keydown", removeConfirmEscHandler);
+      removeConfirmEscHandler = null;
+    }
+    try {
+      if (removeConfirmLastFocus && typeof removeConfirmLastFocus.focus === "function") {
+        removeConfirmLastFocus.focus();
+      }
+    } catch (_) {}
+    removeConfirmLastFocus = null;
+  }
+
+  function ensureRemoveConfirmDialog() {
+    if (removeConfirmEl) return removeConfirmEl;
+
+    var overlay = document.createElement("div");
+    overlay.id = "iuSilverParcelWatchRemoveConfirm";
+    overlay.className = "iuSilverParcelWatch__confirmModal";
+    overlay.hidden = true;
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.setAttribute("aria-labelledby", "iuSilverParcelWatchRemoveConfirmTitle");
+    overlay.setAttribute("aria-describedby", "iuSilverParcelWatchRemoveConfirmDesc");
+    overlay.setAttribute("aria-hidden", "true");
+
+    var card = document.createElement("div");
+    card.className = "iuSilverParcelWatch__confirmCard";
+
+    var title = document.createElement("h4");
+    title.id = "iuSilverParcelWatchRemoveConfirmTitle";
+    title.className = "iuSilverParcelWatch__confirmTitle";
+    title.textContent = "Odstranit sledovanou zásilku?";
+
+    var desc = document.createElement("p");
+    desc.id = "iuSilverParcelWatchRemoveConfirmDesc";
+    desc.className = "iuSilverParcelWatch__confirmDesc";
+    desc.textContent =
+      "Opravdu chcete odstranit tuto zásilku ze sledování?";
+
+    var actions = document.createElement("div");
+    actions.className = "iuSilverParcelWatch__confirmActions";
+
+    var cancelB = document.createElement("button");
+    cancelB.type = "button";
+    cancelB.id = "iuSilverParcelWatchRemoveConfirmCancel";
+    cancelB.className =
+      "iuSilverParcelWatch__btnSecondary iuSilverParcelWatch__confirmCancel";
+    cancelB.textContent = "Zrušit";
+    cancelB.addEventListener("click", function () {
+      closeRemoveConfirmDialog();
+    });
+
+    var okB = document.createElement("button");
+    okB.type = "button";
+    okB.id = "iuSilverParcelWatchRemoveConfirmOk";
+    okB.className =
+      "iuSilverParcelWatch__btnGhost iuSilverParcelWatch__btnRemoveParcel iuSilverParcelWatch__confirmOk";
+    okB.textContent = "Odstranit";
+    okB.addEventListener("click", function () {
+      var id = removeConfirmPendingId;
+      closeRemoveConfirmDialog();
+      if (id) removeParcelFromList(id);
+    });
+
+    actions.appendChild(cancelB);
+    actions.appendChild(okB);
+    card.appendChild(title);
+    card.appendChild(desc);
+    card.appendChild(actions);
+    overlay.appendChild(card);
+
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) closeRemoveConfirmDialog();
+    });
+    card.addEventListener("click", function (e) {
+      e.stopPropagation();
+    });
+
+    document.body.appendChild(overlay);
+    removeConfirmEl = overlay;
+    return overlay;
+  }
+
+  function openRemoveConfirmDialog(item, triggerEl) {
+    var dlg = ensureRemoveConfirmDialog();
+    removeConfirmPendingId = item.id;
+    removeConfirmLastFocus = triggerEl || document.activeElement;
+    dlg.hidden = false;
+    dlg.setAttribute("aria-hidden", "false");
+    if (removeConfirmEscHandler) {
+      document.removeEventListener("keydown", removeConfirmEscHandler);
+    }
+    removeConfirmEscHandler = function (e) {
+      if (e.key !== "Escape") return;
+      e.preventDefault();
+      closeRemoveConfirmDialog();
+    };
+    document.addEventListener("keydown", removeConfirmEscHandler);
+    var cancelBtn = document.getElementById("iuSilverParcelWatchRemoveConfirmCancel");
+    if (cancelBtn && typeof cancelBtn.focus === "function") {
+      cancelBtn.focus();
+    }
+  }
+
   function clearErr() {
     if (!errEl) return;
     errEl.textContent = "";
@@ -558,11 +680,7 @@ try {
     hideB.setAttribute("aria-label", "Odstranit zásilku ze seznamu");
     hideB.textContent = "Odstranit";
     hideB.addEventListener("click", function () {
-      var list = readList().filter(function (x) {
-        return x.id !== item.id;
-      });
-      writeList(list);
-      render();
+      openRemoveConfirmDialog(item, hideB);
     });
     actions.appendChild(hideB);
 

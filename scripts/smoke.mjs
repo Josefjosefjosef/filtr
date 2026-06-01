@@ -934,16 +934,76 @@ async function runSmoke() {
     }
 
     await page.locator(".iuSilverParcelWatch__btnRemoveParcel").first().click();
-    await page.waitForTimeout(450);
-    const silverParcelManualRemove = await page.evaluate(() => {
+    await page.waitForTimeout(250);
+    const silverParcelRemoveConfirmOpen = await page.evaluate(() => {
+      const dlg = document.getElementById("iuSilverParcelWatchRemoveConfirm");
       var ls = "";
       try {
         ls = localStorage.getItem("iu_silver_parcel_watch_v1") || "";
       } catch (_) {}
       const list = document.getElementById("iuSilverParcelWatchList");
       const t = list ? String(list.textContent || "") : "";
-      return { lsHasZ: ls.indexOf("Z9876543210") >= 0, listHasZ: t.indexOf("Z9876543210") >= 0 };
+      return {
+        dialogOpen: !!(dlg && !dlg.hidden),
+        lsHasZ: ls.indexOf("Z9876543210") >= 0,
+        listHasZ: t.indexOf("Z9876543210") >= 0,
+      };
     });
+    if (!silverParcelRemoveConfirmOpen.dialogOpen) {
+      fail(
+        `Silver parcel: Odstranit must open confirm dialog: ${JSON.stringify(silverParcelRemoveConfirmOpen)}`,
+      );
+    }
+    if (!silverParcelRemoveConfirmOpen.lsHasZ || !silverParcelRemoveConfirmOpen.listHasZ) {
+      fail(
+        `Silver parcel: must not delete before confirm: ${JSON.stringify(silverParcelRemoveConfirmOpen)}`,
+      );
+    }
+
+    await page.locator("#iuSilverParcelWatchRemoveConfirmCancel").click();
+    await page.waitForTimeout(250);
+    const silverParcelRemoveCancel = await page.evaluate(() => {
+      const dlg = document.getElementById("iuSilverParcelWatchRemoveConfirm");
+      var ls = "";
+      try {
+        ls = localStorage.getItem("iu_silver_parcel_watch_v1") || "";
+      } catch (_) {}
+      const list = document.getElementById("iuSilverParcelWatchList");
+      const t = list ? String(list.textContent || "") : "";
+      return {
+        dialogOpen: !!(dlg && !dlg.hidden),
+        lsHasZ: ls.indexOf("Z9876543210") >= 0,
+        listHasZ: t.indexOf("Z9876543210") >= 0,
+      };
+    });
+    if (silverParcelRemoveCancel.dialogOpen) {
+      fail(`Silver parcel: Zrušit must close confirm dialog: ${JSON.stringify(silverParcelRemoveCancel)}`);
+    }
+    if (!silverParcelRemoveCancel.lsHasZ || !silverParcelRemoveCancel.listHasZ) {
+      fail(`Silver parcel: Zrušit must keep item: ${JSON.stringify(silverParcelRemoveCancel)}`);
+    }
+
+    await page.locator(".iuSilverParcelWatch__btnRemoveParcel").first().click();
+    await page.waitForTimeout(250);
+    await page.locator("#iuSilverParcelWatchRemoveConfirmOk").click();
+    await page.waitForTimeout(450);
+    const silverParcelManualRemove = await page.evaluate(() => {
+      const dlg = document.getElementById("iuSilverParcelWatchRemoveConfirm");
+      var ls = "";
+      try {
+        ls = localStorage.getItem("iu_silver_parcel_watch_v1") || "";
+      } catch (_) {}
+      const list = document.getElementById("iuSilverParcelWatchList");
+      const t = list ? String(list.textContent || "") : "";
+      return {
+        dialogOpen: !!(dlg && !dlg.hidden),
+        lsHasZ: ls.indexOf("Z9876543210") >= 0,
+        listHasZ: t.indexOf("Z9876543210") >= 0,
+      };
+    });
+    if (silverParcelManualRemove.dialogOpen) {
+      fail(`Silver parcel: confirm Odstranit must close dialog: ${JSON.stringify(silverParcelManualRemove)}`);
+    }
     if (silverParcelManualRemove.lsHasZ || silverParcelManualRemove.listHasZ) {
       fail(`Silver parcel: manual Odstranit must clear item: ${JSON.stringify(silverParcelManualRemove)}`);
     }
