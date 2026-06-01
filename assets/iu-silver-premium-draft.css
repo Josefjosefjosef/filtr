@@ -1,0 +1,204 @@
+/**
+ * Silver chat — premium návrhové karty (kalendář / úkol / poznámka).
+ * Odděleno z assets/app.css — css_debt_guard audituje pouze app.css.
+ */
+.iuSilverChatHeader{
+  align-items:center;
+  padding:12px 14px 11px;
+  min-width:0;
+  box-sizing:border-box;
+}
+.iuSilverChatHeaderBrand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+  flex:1 1 auto;
+}
+.iuSilverChatHeaderLogo{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.iuSilverChatHeaderLogoRing{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  height:40px;
+  border-radius:999px;
+  background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(226,232,240,.88) 100%);
+  box-shadow:0 2px 8px rgba(15,23,42,.12),inset 0 1px 0 rgba(255,255,255,.9);
+  padding:2px;
+  box-sizing:border-box;
+}
+.iuSilverChatHeaderLogoImg{
+  display:block;
+  width:36px;
+  height:36px;
+  border-radius:999px;
+  object-fit:cover;
+}
+.iuSilverDraftActions{
+  justify-content:flex-end;
+  align-items:center;
+  margin-top:10px;
+  width:100%;
+  box-sizing:border-box;
+}
+.iuSilverDraftActions .iuSilverDraftBtn{flex:0 0 auto}
+.iuSilverDraftActions [data-iu-silver-action="edit"],
+.iuSilverDraftActions [data-iu-silver-action="quick-template-close"]{order:1}
+.iuSilverDraftActions [data-iu-silver-action="save"]{order:2}
+.iuSilverDraftCard[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty){
+  position:relative;
+  overflow:hidden;
+  margin-top:6px;
+  padding:10px 13px 11px;
+  border-radius:16px;
+  box-sizing:border-box;
+}
+.iuSilverDraftCard[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty)::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:3px;
+  pointer-events:none;
+}
+.iuSilverDraftCard[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--task):not(.iuSilverDraftCard--note):not(.iuSilverDraftCard--quickTemplateEmpty){
+  background:linear-gradient(165deg,rgba(31,168,90,.1) 0%,rgba(255,255,255,.98) 38%,rgba(248,252,249,.96) 100%);
+  border:1px solid rgba(31,168,90,.32);
+  box-shadow:0 0 0 1px rgba(31,168,90,.06) inset,0 10px 28px rgba(31,168,90,.14),0 2px 8px rgba(15,23,42,.06);
+}
+.iuSilverDraftCard[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--task):not(.iuSilverDraftCard--note):not(.iuSilverDraftCard--quickTemplateEmpty)::before{
+  background:linear-gradient(90deg,#178a4a,#1fa85a,#24bd63);
+}
+.iuSilverDraftCard[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--task):not(.iuSilverDraftCard--note):not(.iuSilverDraftCard--quickTemplateEmpty) .iuSilverDraftCardTitle{color:#157a42}
+.iuSilverDraftCard[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--task):not(.iuSilverDraftCard--note):not(.iuSilverDraftCard--quickTemplateEmpty) .iuSilverDraftV{color:#0f5132;font-weight:600}
+.iuSilverDraftCard[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--task):not(.iuSilverDraftCard--note):not(.iuSilverDraftCard--quickTemplateEmpty) .iuSilverDraftK{color:#2d7a52}
+.iuSilverDraftCard[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--task):not(.iuSilverDraftCard--note):not(.iuSilverDraftCard--quickTemplateEmpty) .iuSilverDraftBtn--primary{
+  background:linear-gradient(145deg,#24bd63 0%,#1fa85a 45%,#178a4a 100%);
+  border-color:#178a4a;
+  box-shadow:0 4px 14px rgba(31,168,90,.28);
+}
+.iuSilverDraftCard--task[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty){
+  background:linear-gradient(165deg,rgba(124,77,255,.11) 0%,rgba(255,255,255,.98) 38%,rgba(251,248,255,.96) 100%);
+  border:1px solid rgba(124,77,255,.3);
+  box-shadow:0 0 0 1px rgba(124,77,255,.06) inset,0 10px 28px rgba(124,77,255,.13),0 2px 8px rgba(15,23,42,.06);
+}
+.iuSilverDraftCard--task[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty)::before{background:linear-gradient(90deg,#5b3fd4,#7c4dff,#8b62ff)}
+.iuSilverDraftCard--task[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty) .iuSilverDraftCardTitle{color:#5b3fd4}
+.iuSilverDraftCard--task[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty) .iuSilverDraftV{color:#4527a0;font-weight:600}
+.iuSilverDraftCard--task[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty) .iuSilverDraftK{color:#6b4fc9}
+.iuSilverDraftCard--task[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty) .iuSilverDraftBtn--primary{
+  background:linear-gradient(145deg,#8b62ff 0%,#7c4dff 45%,#5b3fd4 100%);
+  border-color:#5b3fd4;
+  box-shadow:0 4px 14px rgba(124,77,255,.26);
+}
+.iuSilverDraftCard--note[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty){
+  background:linear-gradient(165deg,rgba(20,184,166,.12) 0%,rgba(255,255,255,.98) 38%,rgba(248,253,252,.96) 100%);
+  border:1px solid rgba(20,184,166,.32);
+  box-shadow:0 0 0 1px rgba(20,184,166,.06) inset,0 10px 28px rgba(20,184,166,.13),0 2px 8px rgba(15,23,42,.06);
+}
+.iuSilverDraftCard--note[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty)::before{background:linear-gradient(90deg,#0d9488,#14b8a6,#1ecfb8)}
+.iuSilverDraftCard--note[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty) .iuSilverDraftCardTitle{color:#0d9488}
+.iuSilverDraftCard--note[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty) .iuSilverDraftV{color:#0f766e;font-weight:600}
+.iuSilverDraftCard--note[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty) .iuSilverDraftK{color:#14857a}
+.iuSilverDraftCard--note[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty) .iuSilverDraftBtn--primary{
+  background:linear-gradient(145deg,#1ecfb8 0%,#14b8a6 45%,#0d9488 100%);
+  border-color:#0d9488;
+  box-shadow:0 4px 14px rgba(20,184,166,.26);
+}
+.iuSilverDraftCard[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty) .iuSilverDraftCardTitle{margin:0 0 8px;font-size:.78rem;letter-spacing:.04em}
+.iuSilverDraftCard[data-iu-silver-draft-card="1"]:not(.iuSilverDraftCard--quickTemplateEmpty) .iuSilverDraftGrid{gap:6px 10px;font-size:.88rem;line-height:1.32}
+.iuSilverChatMessages:has([data-iu-silver-draft-card="1"]:not([data-iu-silver-quick-template-empty="1"])){
+  align-items:center;
+  padding-left:max(12px,env(safe-area-inset-left,0px));
+  padding-right:max(12px,env(safe-area-inset-right,0px));
+}
+.iuSilverMsg--assistant:has([data-iu-silver-draft-card="1"]:not([data-iu-silver-quick-template-empty="1"])){
+  align-self:center;
+  width:min(100%,440px);
+  max-width:calc(100% - 8px);
+  margin-left:auto;
+  margin-right:auto;
+  background:transparent;
+  border:none;
+  padding:0;
+  box-shadow:none;
+}
+.iuSilverMsg--assistant:has([data-iu-silver-draft-card="1"]:not([data-iu-silver-quick-template-empty="1"])) .iuSilverMsgLead,
+.iuSilverMsg--assistant:has([data-iu-silver-draft-card="1"]:not([data-iu-silver-quick-template-empty="1"])) .iuSilverMsgClarification{
+  padding:0 2px 8px;
+  margin-left:auto;
+  margin-right:auto;
+  max-width:min(100%,440px);
+  width:100%;
+  box-sizing:border-box;
+}
+.iuSilverMsg--user:has(+ .iuSilverMsg--assistant [data-iu-silver-draft-card="1"]:not([data-iu-silver-quick-template-empty="1"])),
+.iuSilverChatMessages:has([data-iu-silver-draft-card="1"]:not([data-iu-silver-quick-template-empty="1"])) .iuSilverMsg--user{
+  align-self:center;
+  max-width:min(100%,440px);
+}
+.iuSilverMsg--assistant:has([data-iu-silver-draft-card="1"]:not([data-iu-silver-quick-template-empty="1"]))::after{
+  content:"🔒 Uložená data zůstávají pouze ve vašem zařízení.";
+  display:block;
+  margin:8px auto 0;
+  padding:0 4px;
+  max-width:min(100%,440px);
+  font-size:.72rem;
+  line-height:1.35;
+  font-weight:500;
+  letter-spacing:.01em;
+  color:#6b7f9d;
+  text-align:center;
+  opacity:.88;
+}
+.iuSilverChatOverlay--quickTemplateEmpty .iuSilverChatMessages{
+  padding:12px max(12px,env(safe-area-inset-right,0px)) 16px max(12px,env(safe-area-inset-left,0px));
+  align-items:center;
+}
+.iuSilverMsg--quickTemplateEmpty{
+  max-width:min(440px,calc(100% - 8px));
+  margin:0 auto;
+}
+.iuSilverDraftCard--quickTemplateEmpty{
+  max-width:min(440px,calc(100% - 24px));
+  margin:0 auto;
+  border-radius:16px;
+  box-shadow:0 12px 32px rgba(15,23,42,.1),0 2px 8px rgba(15,23,42,.05);
+}
+.iuSilverDraftCard--quickTemplateCalendar.iuSilverDraftCard--quickTemplateEmpty{
+  border:1px solid rgba(31,168,90,.32);
+  box-shadow:0 0 0 1px rgba(31,168,90,.06) inset,0 12px 32px rgba(31,168,90,.14),0 2px 8px rgba(15,23,42,.05);
+}
+.iuSilverDraftCard--quickTemplateTask.iuSilverDraftCard--quickTemplateEmpty{
+  border:1px solid rgba(124,77,255,.3);
+  box-shadow:0 0 0 1px rgba(124,77,255,.06) inset,0 12px 32px rgba(124,77,255,.13),0 2px 8px rgba(15,23,42,.05);
+}
+.iuSilverDraftCard--quickTemplateNote.iuSilverDraftCard--quickTemplateEmpty{
+  border:1px solid rgba(20,184,166,.32);
+  box-shadow:0 0 0 1px rgba(20,184,166,.06) inset,0 12px 32px rgba(20,184,166,.13),0 2px 8px rgba(15,23,42,.05);
+}
+.iuSilverDraftActions--quickTemplate{
+  justify-content:flex-end;
+  align-items:center;
+  margin-top:18px;
+  padding:0 16px calc(14px + env(safe-area-inset-bottom,0px));
+  width:100%;
+  box-sizing:border-box;
+}
+.iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftBtn{
+  flex:0 0 auto;
+  min-height:48px;
+  min-width:120px;
+}
+.iuSilverDraftActions--quickTemplate [data-iu-silver-action="quick-template-close"]{order:1}
+.iuSilverDraftActions--quickTemplate [data-iu-silver-action="save"]{order:2}
+@media (max-width:1024px){
+  .iuSilverChatOverlay--quickTemplateEmpty .iuSilverChatHeaderBrand{grid-column:1;grid-row:1;justify-self:start;min-width:0}
+}
