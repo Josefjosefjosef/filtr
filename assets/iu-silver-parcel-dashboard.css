@@ -6,19 +6,22 @@
 /* ── Shared hero layout (text left, illustration right — single row, no wrap) ── */
 #silver-slot #iuSilverParcelWatch,
 #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
-  --iuParcelIllusW: 108px;
+  --iuParcelIllusH: 132px;
+  --iuParcelIllusW: 99px;
   --iuParcelIllusGap: 10px;
 }
 @media (min-width: 480px) {
   #silver-slot #iuSilverParcelWatch,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
-    --iuParcelIllusW: 128px;
+    --iuParcelIllusH: 152px;
+    --iuParcelIllusW: 114px;
   }
 }
 @media (min-width: 1025px) {
   #silver-slot #iuSilverParcelWatch,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
-    --iuParcelIllusW: 180px;
+    --iuParcelIllusH: 175px;
+    --iuParcelIllusW: 131px;
   }
 }
 #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__hero,
@@ -26,7 +29,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  align-items: flex-start;
+  align-items: stretch;
   gap: var(--iuParcelIllusGap);
   min-width: 0;
 }
@@ -40,22 +43,21 @@
 #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus {
   flex: 0 0 var(--iuParcelIllusW);
   width: var(--iuParcelIllusW);
-  min-width: var(--iuParcelIllusW);
+  min-width: 0;
   max-width: var(--iuParcelIllusW);
-  align-self: flex-start;
-  color: #64748b;
+  align-self: flex-end;
+  margin-top: auto;
   pointer-events: none;
   user-select: none;
-  margin-top: 0;
 }
-#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusSvg,
-#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusSvg {
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusImg,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusImg {
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 160 / 120;
-  overflow: visible;
-  filter: drop-shadow(0 4px 10px rgba(99, 102, 241, 0.12));
+  height: var(--iuParcelIllusH);
+  max-width: 100%;
+  object-fit: contain;
+  object-position: right bottom;
 }
 @media (min-width: 1025px) {
   #silver-slot #iuSilverParcelWatch {
@@ -101,10 +103,6 @@
     box-shadow:
       0 8px 24px rgba(0, 0, 0, 0.28),
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  }
-  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus,
-  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus {
-    color: #818cf8;
   }
   #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__title,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__title {
@@ -366,10 +364,6 @@
     box-shadow:
       0 4px 16px rgba(15, 23, 42, 0.06),
       inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  }
-  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus,
-  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus {
-    color: #6366f1;
   }
   #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__title,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__title {
@@ -1028,10 +1022,6 @@
   html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__lead {
     color: #475569;
   }
-  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus,
-  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus {
-    color: #6366f1;
-  }
   html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input,
   html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input {
     border-color: rgba(148, 163, 184, 0.45);
@@ -1086,12 +1076,6 @@
   #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__lead,
   #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__lead {
     color: rgba(203, 213, 225, 0.85);
-  }
-  html.iu-time-evening #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus,
-  html.iu-time-evening #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus,
-  #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__illus,
-  #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__illus {
-    color: #818cf8;
   }
   html.iu-time-evening #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input,
   html.iu-time-evening #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input,
@@ -1155,25 +1139,4 @@
     border-color: rgba(99, 102, 241, 0.25);
     color: rgba(230, 242, 255, 0.92);
   }
-}
-
-/* ── Illustration: dark map panel (evening) ── */
-html.iu-time-evening #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusMap,
-html.iu-time-evening #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusMap,
-#silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__illusMap,
-#iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__illusMap {
-  fill: #1e293b;
-  stroke: rgba(129, 140, 248, 0.35);
-}
-html.iu-time-evening #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusBlocks,
-html.iu-time-evening #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusBlocks,
-#silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__illusBlocks,
-#iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__illusBlocks {
-  opacity: 0.55;
-}
-html.iu-time-evening #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusStreets,
-html.iu-time-evening #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusStreets,
-#silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__illusStreets,
-#iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__illusStreets {
-  opacity: 0.38;
 }
