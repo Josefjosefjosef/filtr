@@ -28,6 +28,11 @@ on:
       - "scripts/content-freshness-guard-lib.mjs"
       - "scripts/active-article-trace-guard.mjs"
       - "scripts/production-liveness-guard.mjs"
+      - "scripts/release-freshness-gate.mjs"
+      - "scripts/p0-source-starvation-guard.mjs"
+      - "scripts/p0-source-coverage-guard.mjs"
+      - "scripts/pipeline-runtime-guard.mjs"
+      - "scripts/test_iu_registry_p0_freshness.py"
       - "scripts/aggregator-legacy-cleanup-guard.mjs"
       - "scripts/archive/deprecated/aggregator-v2/**"
       - "scripts/iu_topic_dedupe.py"
@@ -60,6 +65,11 @@ on:
       - "scripts/content-freshness-guard-lib.mjs"
       - "scripts/active-article-trace-guard.mjs"
       - "scripts/production-liveness-guard.mjs"
+      - "scripts/release-freshness-gate.mjs"
+      - "scripts/p0-source-starvation-guard.mjs"
+      - "scripts/p0-source-coverage-guard.mjs"
+      - "scripts/pipeline-runtime-guard.mjs"
+      - "scripts/test_iu_registry_p0_freshness.py"
       - "scripts/aggregator-legacy-cleanup-guard.mjs"
       - "scripts/archive/deprecated/aggregator-v2/**"
       - "scripts/iu_topic_dedupe.py"
@@ -217,9 +227,3 @@ jobs:
           P0_STARVATION_WARN_MINUTES: "60"
           P0_STARVATION_FAIL_MINUTES: "120"
         run: node scripts/p0-source-starvation-guard.mjs
-
-      - name: Release freshness gate wiring (local articles.json)
-        env:
-          ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
-          RELEASE_FRESHNESS_FAIL_MINUTES: "999999"
-        run: node scripts/release-freshness-guard.mjs
