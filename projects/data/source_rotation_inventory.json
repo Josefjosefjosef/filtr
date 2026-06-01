@@ -1,0 +1,1873 @@
+{
+  "generatedAt": "2026-06-01T01:42:40.850482Z",
+  "total_sources": 46,
+  "total_active_feeds": 59,
+  "max_fetches_per_source_per_hour": 4,
+  "max_fetches_per_source_per_hour_exception": 5,
+  "exception_keys": [],
+  "hard_cooldown_floor_min": 15,
+  "rotation_limit_issues": [],
+  "priority_groups": {
+    "P0": [
+      "aktualne.cz",
+      "ceskatelevize.cz",
+      "denik.cz",
+      "idnes.cz",
+      "idnes.cz/sport",
+      "isport.cz",
+      "novinky.cz",
+      "seznamzpravy.cz",
+      "sport.ceskatelevize.cz",
+      "sport.cz"
+    ],
+    "P1": [
+      "cestujlevne.cz",
+      "crzpravy.cz",
+      "e15.cz",
+      "ekonom.cz",
+      "ekonomickydenik.cz",
+      "hlidacipes.org",
+      "hn.cz",
+      "kinobox.cz",
+      "penize.cz",
+      "technet.cz",
+      "tydenikpolicie.cz",
+      "vortex.cz",
+      "zdravezpravy.cz",
+      "zdravotnickydenik.cz",
+      "zing.cz"
+    ],
+    "P2": [
+      "betterlife.cz",
+      "ceska-justice.cz",
+      "epenize.eu",
+      "faei.cz",
+      "indian-tv.cz",
+      "kverulant.org",
+      "mmamag.cz",
+      "nedd.cz",
+      "nespechej.cz",
+      "pelipecky.cz",
+      "plnezdravi.cz",
+      "prozeny.cz",
+      "sector.sk",
+      "svetcestovatele.cz",
+      "tenisportal.cz",
+      "travelbible.cz",
+      "vipzivot.cz",
+      "vlasta.cz",
+      "vtelce.cz",
+      "vtm.cz",
+      "zdrave.cz"
+    ]
+  },
+  "sources": [
+    {
+      "source": "aktualne.cz",
+      "scheduler_key": "aktualne.cz",
+      "slot_key": "aktualne.cz",
+      "feeds": [
+        {
+          "id": "zpr_aktualne",
+          "label": "Aktuálně",
+          "feed_url": "https://www.aktualne.cz/rss/",
+          "section_primary": "zpravy"
+        }
+      ],
+      "sections": [
+        "zpravy"
+      ],
+      "display_weight_max": 0.95,
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        5,
+        20,
+        35,
+        50
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P0",
+      "recommended_frequency": "4/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "betterlife.cz",
+      "scheduler_key": "betterlife.cz",
+      "slot_key": "betterlife.cz",
+      "feeds": [
+        {
+          "id": "zdr_betterlife",
+          "label": "BetterLife",
+          "feed_url": "https://www.betterlife.cz/feed/",
+          "section_primary": "zdravi"
+        },
+        {
+          "id": "vzd_betterlife",
+          "label": "BetterLife (edu)",
+          "feed_url": "https://www.betterlife.cz/feed/",
+          "section_primary": "vzdelavani"
+        }
+      ],
+      "sections": [
+        "vzdelavani",
+        "zdravi"
+      ],
+      "display_weight_max": 0.65,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        7
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 3,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 3
+    },
+    {
+      "source": "ceska-justice.cz",
+      "scheduler_key": "ceska-justice.cz",
+      "slot_key": "ceska-justice.cz",
+      "feeds": [
+        {
+          "id": "zpr_ceskajustice",
+          "label": "Česká justice",
+          "feed_url": "https://www.ceska-justice.cz/feed/",
+          "section_primary": "zpravy"
+        }
+      ],
+      "sections": [
+        "zpravy"
+      ],
+      "display_weight_max": 0.75,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        17
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 1,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 1
+    },
+    {
+      "source": "ceskatelevize.cz",
+      "scheduler_key": "ceskatelevize.cz",
+      "slot_key": "ceskatelevize.cz",
+      "feeds": [
+        {
+          "id": "zpr_ct24_domaci",
+          "label": "ČT24 / Domácí",
+          "feed_url": "https://ct24.ceskatelevize.cz/rss",
+          "section_primary": "zpravy"
+        },
+        {
+          "id": "zpr_ct24_svet",
+          "label": "ČT24 / Svět",
+          "feed_url": "https://ct24.ceskatelevize.cz/rss",
+          "section_primary": "zpravy"
+        },
+        {
+          "id": "kul_ctart",
+          "label": "ČT art",
+          "feed_url": "https://ct24.ceskatelevize.cz/rss/kultura",
+          "section_primary": "kultura"
+        },
+        {
+          "id": "ved_ct24_veda",
+          "label": "ČT24 / Věda",
+          "feed_url": "https://ct24.ceskatelevize.cz/rss/veda",
+          "section_primary": "veda"
+        }
+      ],
+      "sections": [
+        "kultura",
+        "veda",
+        "zpravy"
+      ],
+      "display_weight_max": 1.2,
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        5,
+        20,
+        35,
+        50
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 13,
+      "priority": "P0",
+      "recommended_frequency": "4/hour",
+      "estimated_articles_per_day": 13
+    },
+    {
+      "source": "cestujlevne.cz",
+      "scheduler_key": "cestujlevne.cz",
+      "slot_key": "cestujlevne.cz",
+      "feeds": [
+        {
+          "id": "ces_cestujlevne",
+          "label": "Cestujlevně",
+          "feed_url": "https://www.cestujlevne.com/feed/",
+          "section_primary": "cestovani"
+        }
+      ],
+      "sections": [
+        "cestovani"
+      ],
+      "display_weight_max": 0.9,
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        15,
+        45
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 1,
+      "priority": "P1",
+      "recommended_frequency": "2/hour",
+      "estimated_articles_per_day": 1
+    },
+    {
+      "source": "crzpravy.cz",
+      "scheduler_key": "crzpravy.cz",
+      "slot_key": "crzpravy.cz",
+      "feeds": [
+        {
+          "id": "spt_crzpravy_sport",
+          "label": "ČR Zprávy / Sport",
+          "feed_url": "https://www.crzpravy.cz/rss/sport/",
+          "section_primary": "sport"
+        }
+      ],
+      "sections": [
+        "sport"
+      ],
+      "display_weight_max": 0.75,
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        6,
+        36
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P1",
+      "recommended_frequency": "2/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "denik.cz",
+      "scheduler_key": "denik.cz",
+      "slot_key": "denik.cz",
+      "feeds": [
+        {
+          "id": "zpr_denik",
+          "label": "Deník",
+          "feed_url": "https://www.denik.cz/rss/zpravy.html",
+          "section_primary": "zpravy"
+        }
+      ],
+      "sections": [
+        "zpravy"
+      ],
+      "display_weight_max": 0.95,
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        10,
+        25,
+        40,
+        55
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 14,
+      "priority": "P0",
+      "recommended_frequency": "4/hour",
+      "estimated_articles_per_day": 14
+    },
+    {
+      "source": "e15.cz",
+      "scheduler_key": "e15.cz",
+      "slot_key": "e15.cz",
+      "feeds": [
+        {
+          "id": "fin_e15",
+          "label": "E15",
+          "feed_url": "https://www.e15.cz/rss",
+          "section_primary": "finance"
+        }
+      ],
+      "sections": [
+        "finance"
+      ],
+      "display_weight_max": 1.0,
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        10,
+        25,
+        40,
+        55
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 6,
+      "priority": "P1",
+      "recommended_frequency": "4/hour",
+      "estimated_articles_per_day": 6
+    },
+    {
+      "source": "ekonom.cz",
+      "scheduler_key": "ekonom.cz",
+      "slot_key": "ekonom.cz",
+      "feeds": [
+        {
+          "id": "fin_ekonom",
+          "label": "Ekonom (HN)",
+          "feed_url": "https://ekonom.cz/?p=400000_rss",
+          "section_primary": "finance"
+        }
+      ],
+      "sections": [
+        "finance"
+      ],
+      "display_weight_max": 0.95,
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        12,
+        42
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P1",
+      "recommended_frequency": "2/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "ekonomickydenik.cz",
+      "scheduler_key": "ekonomickydenik.cz",
+      "slot_key": "ekonomickydenik.cz",
+      "feeds": [
+        {
+          "id": "fin_ekonomickydenik",
+          "label": "Ekonomický deník",
+          "feed_url": "https://www.ekonomickydenik.cz/feed/",
+          "section_primary": "finance"
+        }
+      ],
+      "sections": [
+        "finance"
+      ],
+      "display_weight_max": 0.85,
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        25,
+        55
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 8,
+      "priority": "P1",
+      "recommended_frequency": "2/hour",
+      "estimated_articles_per_day": 8
+    },
+    {
+      "source": "epenize.eu",
+      "scheduler_key": "epenize.eu",
+      "slot_key": "epenize.eu",
+      "feeds": [
+        {
+          "id": "fin_epenize",
+          "label": "ePeníze",
+          "feed_url": "https://www.epenize.eu/rss",
+          "section_primary": "finance"
+        }
+      ],
+      "sections": [
+        "finance"
+      ],
+      "display_weight_max": 0.8,
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        14,
+        44
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 2,
+      "priority": "P2",
+      "recommended_frequency": "2/hour",
+      "estimated_articles_per_day": 2
+    },
+    {
+      "source": "faei.cz",
+      "scheduler_key": "faei.cz",
+      "slot_key": "faei.cz",
+      "feeds": [
+        {
+          "id": "fin_faei",
+          "label": "FAEI",
+          "feed_url": "https://www.faei.cz/feed/",
+          "section_primary": "finance"
+        }
+      ],
+      "sections": [
+        "finance"
+      ],
+      "display_weight_max": 0.8,
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        16,
+        46
+      ],
+      "accepted_last_snapshot": 12,
+      "articles_in_bundle_24h": 0,
+      "priority": "P2",
+      "recommended_frequency": "2/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "hlidacipes.org",
+      "scheduler_key": "hlidacipes.org",
+      "slot_key": "hlidacipes.org",
+      "feeds": [
+        {
+          "id": "zpr_hlidacipes",
+          "label": "HlídacíPes",
+          "feed_url": "https://hlidacipes.org/feed/",
+          "section_primary": "zpravy"
+        }
+      ],
+      "sections": [
+        "zpravy"
+      ],
+      "display_weight_max": 0.8,
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        20,
+        50
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 1,
+      "priority": "P1",
+      "recommended_frequency": "2/hour",
+      "estimated_articles_per_day": 1
+    },
+    {
+      "source": "hn.cz",
+      "scheduler_key": "hn.cz",
+      "slot_key": "hn.cz",
+      "feeds": [
+        {
+          "id": "fin_hn",
+          "label": "HN / Ekonomika",
+          "feed_url": "https://hn.cz/?m=rss",
+          "section_primary": "finance"
+        }
+      ],
+      "sections": [
+        "finance"
+      ],
+      "display_weight_max": 1.0,
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        8,
+        38
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P1",
+      "recommended_frequency": "2/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "idnes.cz",
+      "scheduler_key": "idnes.cz",
+      "slot_key": "idnes.cz",
+      "feeds": [
+        {
+          "id": "zpr_idnes_zpravy",
+          "label": "iDNES / Zprávy",
+          "feed_url": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
+          "section_primary": "zpravy"
+        },
+        {
+          "id": "fin_idnes_ekonomika",
+          "label": "iDNES / Ekonomika",
+          "feed_url": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
+          "section_primary": "finance"
+        }
+      ],
+      "sections": [
+        "finance",
+        "zpravy"
+      ],
+      "display_weight_max": 1.1,
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        5,
+        20,
+        35,
+        50
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P0",
+      "recommended_frequency": "4/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "idnes.cz/sport",
+      "scheduler_key": "idnes.cz/sport",
+      "slot_key": "idnes.cz/sport",
+      "feeds": [
+        {
+          "id": "spt_idnes",
+          "label": "iDNES / Sport",
+          "feed_url": "https://servis.idnes.cz/rss.aspx?c=sport",
+          "section_primary": "sport"
+        }
+      ],
+      "sections": [
+        "sport"
+      ],
+      "display_weight_max": 1.0,
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        10,
+        25,
+        40,
+        55
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P0",
+      "recommended_frequency": "4/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "indian-tv.cz",
+      "scheduler_key": "indian-tv.cz",
+      "slot_key": "indian-tv.cz",
+      "feeds": [
+        {
+          "id": "hry_indian",
+          "label": "Indian",
+          "feed_url": "https://indian-tv.cz/feed/",
+          "section_primary": "hry"
+        }
+      ],
+      "sections": [
+        "hry"
+      ],
+      "display_weight_max": 0.9,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        9
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 4,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 4
+    },
+    {
+      "source": "isport.cz",
+      "scheduler_key": "isport.cz",
+      "slot_key": "isport.cz",
+      "feeds": [
+        {
+          "id": "spt_isport",
+          "label": "iSport",
+          "feed_url": "https://isport.blesk.cz/rss",
+          "section_primary": "sport"
+        }
+      ],
+      "sections": [
+        "sport"
+      ],
+      "display_weight_max": 1.05,
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        5,
+        20,
+        35,
+        50
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 9,
+      "priority": "P0",
+      "recommended_frequency": "4/hour",
+      "estimated_articles_per_day": 9
+    },
+    {
+      "source": "kinobox.cz",
+      "scheduler_key": "kinobox.cz",
+      "slot_key": "kinobox.cz",
+      "feeds": [
+        {
+          "id": "kul_kinobox",
+          "label": "Kinobox",
+          "feed_url": "https://www.kinobox.cz/api/rss",
+          "section_primary": "kultura"
+        }
+      ],
+      "sections": [
+        "kultura"
+      ],
+      "display_weight_max": 0.95,
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        20,
+        50
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 5,
+      "priority": "P1",
+      "recommended_frequency": "2/hour",
+      "estimated_articles_per_day": 5
+    },
+    {
+      "source": "kverulant.org",
+      "scheduler_key": "kverulant.org",
+      "slot_key": "kverulant.org",
+      "feeds": [
+        {
+          "id": "zpr_kverulant",
+          "label": "Kverulant",
+          "feed_url": "https://www.kverulant.org/feed/",
+          "section_primary": "zpravy"
+        }
+      ],
+      "sections": [
+        "zpravy"
+      ],
+      "display_weight_max": 0.75,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        19
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "mmamag.cz",
+      "scheduler_key": "mmamag.cz",
+      "slot_key": "mmamag.cz",
+      "feeds": [
+        {
+          "id": "spt_mmamag",
+          "label": "MMAMAG",
+          "feed_url": "https://www.mmamag.cz/feed/",
+          "section_primary": "sport"
+        }
+      ],
+      "sections": [
+        "sport"
+      ],
+      "display_weight_max": 0.8,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        21
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 6,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 6
+    },
+    {
+      "source": "nedd.cz",
+      "scheduler_key": "nedd.cz",
+      "slot_key": "nedd.cz",
+      "feeds": [
+        {
+          "id": "hry_nedd",
+          "label": "Nedd",
+          "feed_url": "https://www.nedd.cz/feed/",
+          "section_primary": "hry"
+        }
+      ],
+      "sections": [
+        "hry"
+      ],
+      "display_weight_max": 0.7,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        23
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "nespechej.cz",
+      "scheduler_key": "nespechej.cz",
+      "slot_key": "nespechej.cz",
+      "feeds": [
+        {
+          "id": "vzd_nespechej",
+          "label": "Nespěchej",
+          "feed_url": "https://www.nespechej.cz/feed/",
+          "section_primary": "vzdelavani"
+        }
+      ],
+      "sections": [
+        "vzdelavani"
+      ],
+      "display_weight_max": 0.75,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        27
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "novinky.cz",
+      "scheduler_key": "novinky.cz",
+      "slot_key": "novinky.cz",
+      "feeds": [
+        {
+          "id": "zpr_novinky_domaci",
+          "label": "Novinky / Domácí",
+          "feed_url": "https://www.novinky.cz/rss/domaci",
+          "section_primary": "zpravy"
+        },
+        {
+          "id": "zpr_novinky_zahranicni",
+          "label": "Novinky / Zahraniční",
+          "feed_url": "https://www.novinky.cz/rss/zahranicni",
+          "section_primary": "zpravy"
+        },
+        {
+          "id": "fin_novinky_ekonomika",
+          "label": "Novinky / Ekonomika",
+          "feed_url": "https://www.novinky.cz/rss/ekonomika",
+          "section_primary": "finance"
+        },
+        {
+          "id": "ces_novinky_cestovani",
+          "label": "Novinky / Cestování",
+          "feed_url": "https://www.novinky.cz/rss/cestovani",
+          "section_primary": "cestovani"
+        },
+        {
+          "id": "hry_novinky",
+          "label": "Novinky / Hry",
+          "feed_url": "https://www.novinky.cz/rss/hry",
+          "section_primary": "hry"
+        },
+        {
+          "id": "ved_novinky",
+          "label": "Novinky / Věda a škola",
+          "feed_url": "https://www.novinky.cz/rss/veda",
+          "section_primary": "veda"
+        },
+        {
+          "id": "vzd_novinky_skola",
+          "label": "Novinky / Škola",
+          "feed_url": "https://www.novinky.cz/rss/skola",
+          "section_primary": "vzdelavani"
+        }
+      ],
+      "sections": [
+        "cestovani",
+        "finance",
+        "hry",
+        "veda",
+        "vzdelavani",
+        "zpravy"
+      ],
+      "display_weight_max": 1.15,
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        0,
+        15,
+        30,
+        45
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 10,
+      "priority": "P0",
+      "recommended_frequency": "4/hour",
+      "estimated_articles_per_day": 10
+    },
+    {
+      "source": "pelipecky.cz",
+      "scheduler_key": "pelipecky.cz",
+      "slot_key": "pelipecky.cz",
+      "feeds": [
+        {
+          "id": "ces_pelipecky",
+          "label": "Pelipecky",
+          "feed_url": "https://www.pelipecky.cz/feed/",
+          "section_primary": "cestovani"
+        }
+      ],
+      "sections": [
+        "cestovani"
+      ],
+      "display_weight_max": 0.75,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        30
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "penize.cz",
+      "scheduler_key": "penize.cz",
+      "slot_key": "penize.cz",
+      "feeds": [
+        {
+          "id": "fin_penize",
+          "label": "Peníze.cz",
+          "feed_url": "https://www.penize.cz/rss",
+          "section_primary": "finance"
+        }
+      ],
+      "sections": [
+        "finance"
+      ],
+      "display_weight_max": 0.85,
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        0,
+        15,
+        30,
+        45
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 2,
+      "priority": "P1",
+      "recommended_frequency": "4/hour",
+      "estimated_articles_per_day": 2
+    },
+    {
+      "source": "plnezdravi.cz",
+      "scheduler_key": "plnezdravi.cz",
+      "slot_key": "plnezdravi.cz",
+      "feeds": [
+        {
+          "id": "zdr_plnezdravi",
+          "label": "Plné zdraví",
+          "feed_url": "https://www.plnezdravi.cz/feed/",
+          "section_primary": "zdravi"
+        }
+      ],
+      "sections": [
+        "zdravi"
+      ],
+      "display_weight_max": 0.85,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        29
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 1,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 1
+    },
+    {
+      "source": "prozeny.cz",
+      "scheduler_key": "prozeny.cz",
+      "slot_key": "prozeny.cz",
+      "feeds": [
+        {
+          "id": "zdr_prozeny_zdravi",
+          "label": "ProŽeny / Zdraví",
+          "feed_url": "https://www.prozeny.cz/rss/zdravi",
+          "section_primary": "zdravi"
+        }
+      ],
+      "sections": [
+        "zdravi"
+      ],
+      "display_weight_max": 0.7,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        31
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 6,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 6
+    },
+    {
+      "source": "sector.sk",
+      "scheduler_key": "sector.sk",
+      "slot_key": "sector.sk",
+      "feeds": [
+        {
+          "id": "hry_sector",
+          "label": "Sector",
+          "feed_url": "https://sector.sk/feed/",
+          "section_primary": "hry"
+        }
+      ],
+      "sections": [
+        "hry"
+      ],
+      "display_weight_max": 0.75,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        37
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "seznamzpravy.cz",
+      "scheduler_key": "seznamzpravy.cz",
+      "slot_key": "seznamzpravy.cz",
+      "feeds": [
+        {
+          "id": "zpr_seznam_domaci",
+          "label": "Seznam Zprávy / Domácí",
+          "feed_url": "https://www.seznamzpravy.cz/rss/domaci",
+          "section_primary": "zpravy"
+        },
+        {
+          "id": "fin_sz_byznys",
+          "label": "Seznam Zprávy / Byznys",
+          "feed_url": "https://www.seznamzpravy.cz/rss/byznys",
+          "section_primary": "finance"
+        },
+        {
+          "id": "vzd_seznam",
+          "label": "Seznam Zprávy / Vzdělávání",
+          "feed_url": "https://www.seznamzpravy.cz/rss/vzdelavani",
+          "section_primary": "vzdelavani"
+        }
+      ],
+      "sections": [
+        "finance",
+        "vzdelavani",
+        "zpravy"
+      ],
+      "display_weight_max": 1.15,
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        0,
+        15,
+        30,
+        45
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 12,
+      "priority": "P0",
+      "recommended_frequency": "4/hour",
+      "estimated_articles_per_day": 12
+    },
+    {
+      "source": "sport.ceskatelevize.cz",
+      "scheduler_key": "sport.ceskatelevize.cz",
+      "slot_key": "sport.ceskatelevize.cz",
+      "feeds": [
+        {
+          "id": "spt_ctsport",
+          "label": "ČT sport",
+          "feed_url": "https://sport.ceskatelevize.cz/rss",
+          "section_primary": "sport"
+        }
+      ],
+      "sections": [
+        "sport"
+      ],
+      "display_weight_max": 1.2,
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        5,
+        20,
+        35,
+        50
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 9,
+      "priority": "P0",
+      "recommended_frequency": "4/hour",
+      "estimated_articles_per_day": 9
+    },
+    {
+      "source": "sport.cz",
+      "scheduler_key": "sport.cz",
+      "slot_key": "sport.cz",
+      "feeds": [
+        {
+          "id": "spt_sportcz",
+          "label": "Sport.cz",
+          "feed_url": "https://www.sport.cz/rss",
+          "section_primary": "sport"
+        }
+      ],
+      "sections": [
+        "sport"
+      ],
+      "display_weight_max": 1.15,
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        0,
+        15,
+        30,
+        45
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 9,
+      "priority": "P0",
+      "recommended_frequency": "4/hour",
+      "estimated_articles_per_day": 9
+    },
+    {
+      "source": "svetcestovatele.cz",
+      "scheduler_key": "svetcestovatele.cz",
+      "slot_key": "svetcestovatele.cz",
+      "feeds": [
+        {
+          "id": "ces_svetcestovatele",
+          "label": "SvětCestovatele",
+          "feed_url": "https://www.svetcestovatele.cz/feed/",
+          "section_primary": "cestovani"
+        }
+      ],
+      "sections": [
+        "cestovani"
+      ],
+      "display_weight_max": 0.9,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        39
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "technet.cz",
+      "scheduler_key": "technet.cz",
+      "slot_key": "technet.cz",
+      "feeds": [
+        {
+          "id": "ved_technet",
+          "label": "iDNES / Technet",
+          "feed_url": "https://servis.idnes.cz/rss.aspx?c=technet",
+          "section_primary": "veda"
+        }
+      ],
+      "sections": [
+        "veda"
+      ],
+      "display_weight_max": 1.0,
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        20,
+        50
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P1",
+      "recommended_frequency": "2/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "tenisportal.cz",
+      "scheduler_key": "tenisportal.cz",
+      "slot_key": "tenisportal.cz",
+      "feeds": [
+        {
+          "id": "spt_tenisportal",
+          "label": "TenisPortal",
+          "feed_url": "https://www.tenisportal.cz/rss",
+          "section_primary": "sport"
+        }
+      ],
+      "sections": [
+        "sport"
+      ],
+      "display_weight_max": 0.7,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        41
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "travelbible.cz",
+      "scheduler_key": "travelbible.cz",
+      "slot_key": "travelbible.cz",
+      "feeds": [
+        {
+          "id": "ces_travelbible",
+          "label": "TravelBible",
+          "feed_url": "https://travelbible.cz/feed/",
+          "section_primary": "cestovani"
+        }
+      ],
+      "sections": [
+        "cestovani"
+      ],
+      "display_weight_max": 0.75,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        30
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "tydenikpolicie.cz",
+      "scheduler_key": "tydenikpolicie.cz",
+      "slot_key": "tydenikpolicie.cz",
+      "feeds": [
+        {
+          "id": "zpr_tydenikpolicie",
+          "label": "Týdeník Policie",
+          "feed_url": "https://www.tydenikpolicie.cz/feed/",
+          "section_primary": "zpravy"
+        }
+      ],
+      "sections": [
+        "zpravy"
+      ],
+      "display_weight_max": 0.75,
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        25,
+        55
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 8,
+      "priority": "P1",
+      "recommended_frequency": "2/hour",
+      "estimated_articles_per_day": 8
+    },
+    {
+      "source": "vipzivot.cz",
+      "scheduler_key": "vipzivot.cz",
+      "slot_key": "vipzivot.cz",
+      "feeds": [
+        {
+          "id": "kul_vipzivot",
+          "label": "VIPživot",
+          "feed_url": "https://www.vipzivot.cz/feed/",
+          "section_primary": "kultura"
+        }
+      ],
+      "sections": [
+        "kultura"
+      ],
+      "display_weight_max": 0.7,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        43
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 6,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 6
+    },
+    {
+      "source": "vlasta.cz",
+      "scheduler_key": "vlasta.cz",
+      "slot_key": "vlasta.cz",
+      "feeds": [
+        {
+          "id": "kul_vlasta",
+          "label": "Vlasta",
+          "feed_url": "https://www.vlasta.cz/feed/",
+          "section_primary": "kultura"
+        }
+      ],
+      "sections": [
+        "kultura"
+      ],
+      "display_weight_max": 0.7,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        47
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 2,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 2
+    },
+    {
+      "source": "vortex.cz",
+      "scheduler_key": "vortex.cz",
+      "slot_key": "vortex.cz",
+      "feeds": [
+        {
+          "id": "hry_vortex",
+          "label": "Vortex",
+          "feed_url": "https://www.vortex.cz/feed/",
+          "section_primary": "hry"
+        }
+      ],
+      "sections": [
+        "hry"
+      ],
+      "display_weight_max": 0.9,
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        25,
+        55
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P1",
+      "recommended_frequency": "2/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "vtelce.cz",
+      "scheduler_key": "vtelce.cz",
+      "slot_key": "vtelce.cz",
+      "feeds": [
+        {
+          "id": "kul_vtelce",
+          "label": "vTelce",
+          "feed_url": "https://www.vtelce.cz/feed/",
+          "section_primary": "kultura"
+        }
+      ],
+      "sections": [
+        "kultura"
+      ],
+      "display_weight_max": 0.75,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        51
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 5,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 5
+    },
+    {
+      "source": "vtm.cz",
+      "scheduler_key": "vtm.cz",
+      "slot_key": "vtm.cz",
+      "feeds": [
+        {
+          "id": "ved_vtm",
+          "label": "VTM",
+          "feed_url": "https://vtm.zive.cz/rss",
+          "section_primary": "veda"
+        }
+      ],
+      "sections": [
+        "veda"
+      ],
+      "display_weight_max": 0.95,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        40
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "zdrave.cz",
+      "scheduler_key": "zdrave.cz",
+      "slot_key": "zdrave.cz",
+      "feeds": [
+        {
+          "id": "zdr_zdrave",
+          "label": "Zdravě.cz",
+          "feed_url": "https://www.zdrave.cz/rss/",
+          "section_primary": "zdravi"
+        }
+      ],
+      "sections": [
+        "zdravi"
+      ],
+      "display_weight_max": 0.75,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        53
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
+      "source": "zdravezpravy.cz",
+      "scheduler_key": "zdravezpravy.cz",
+      "slot_key": "zdravezpravy.cz",
+      "feeds": [
+        {
+          "id": "zdr_zdravezpravy",
+          "label": "ZdravéZprávy",
+          "feed_url": "https://www.zdravezpravy.cz/feed/",
+          "section_primary": "zdravi"
+        }
+      ],
+      "sections": [
+        "zdravi"
+      ],
+      "display_weight_max": 1.05,
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        0,
+        15,
+        30,
+        45
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 1,
+      "priority": "P1",
+      "recommended_frequency": "4/hour",
+      "estimated_articles_per_day": 1
+    },
+    {
+      "source": "zdravotnickydenik.cz",
+      "scheduler_key": "zdravotnickydenik.cz",
+      "slot_key": "zdravotnickydenik.cz",
+      "feeds": [
+        {
+          "id": "zdr_zdravotnickydenik",
+          "label": "Zdravotnický deník",
+          "feed_url": "https://www.zdravotnickydenik.cz/feed/",
+          "section_primary": "zdravi"
+        }
+      ],
+      "sections": [
+        "zdravi"
+      ],
+      "display_weight_max": 1.05,
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        3,
+        33
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 4,
+      "priority": "P1",
+      "recommended_frequency": "2/hour",
+      "estimated_articles_per_day": 4
+    },
+    {
+      "source": "zing.cz",
+      "scheduler_key": "zing.cz",
+      "slot_key": "zing.cz",
+      "feeds": [
+        {
+          "id": "hry_zing",
+          "label": "Zing",
+          "feed_url": "https://zing.cz/rss/all",
+          "section_primary": "hry"
+        }
+      ],
+      "sections": [
+        "hry"
+      ],
+      "display_weight_max": 0.85,
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        10,
+        40
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 6,
+      "priority": "P1",
+      "recommended_frequency": "2/hour",
+      "estimated_articles_per_day": 6
+    }
+  ],
+  "frequency_plan": [
+    {
+      "source": "aktualne.cz",
+      "priority": "P0",
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        5,
+        20,
+        35,
+        50
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "betterlife.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        7
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "ceska-justice.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        17
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "ceskatelevize.cz",
+      "priority": "P0",
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        5,
+        20,
+        35,
+        50
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "cestujlevne.cz",
+      "priority": "P1",
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        15,
+        45
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "crzpravy.cz",
+      "priority": "P1",
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        6,
+        36
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "denik.cz",
+      "priority": "P0",
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        10,
+        25,
+        40,
+        55
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "e15.cz",
+      "priority": "P1",
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        10,
+        25,
+        40,
+        55
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "ekonom.cz",
+      "priority": "P1",
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        12,
+        42
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "ekonomickydenik.cz",
+      "priority": "P1",
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        25,
+        55
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "epenize.eu",
+      "priority": "P2",
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        14,
+        44
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "faei.cz",
+      "priority": "P2",
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        16,
+        46
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "hlidacipes.org",
+      "priority": "P1",
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        20,
+        50
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "hn.cz",
+      "priority": "P1",
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        8,
+        38
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "idnes.cz",
+      "priority": "P0",
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        5,
+        20,
+        35,
+        50
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "idnes.cz/sport",
+      "priority": "P0",
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        10,
+        25,
+        40,
+        55
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "indian-tv.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        9
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "isport.cz",
+      "priority": "P0",
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        5,
+        20,
+        35,
+        50
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "kinobox.cz",
+      "priority": "P1",
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        20,
+        50
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "kverulant.org",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        19
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "mmamag.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        21
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "nedd.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        23
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "nespechej.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        27
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "novinky.cz",
+      "priority": "P0",
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        0,
+        15,
+        30,
+        45
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "pelipecky.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        30
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "penize.cz",
+      "priority": "P1",
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        0,
+        15,
+        30,
+        45
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "plnezdravi.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        29
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "prozeny.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        31
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "sector.sk",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        37
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "seznamzpravy.cz",
+      "priority": "P0",
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        0,
+        15,
+        30,
+        45
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "sport.ceskatelevize.cz",
+      "priority": "P0",
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        5,
+        20,
+        35,
+        50
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "sport.cz",
+      "priority": "P0",
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        0,
+        15,
+        30,
+        45
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "svetcestovatele.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        39
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "technet.cz",
+      "priority": "P1",
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        20,
+        50
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "tenisportal.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        41
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "travelbible.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        30
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "tydenikpolicie.cz",
+      "priority": "P1",
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        25,
+        55
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "vipzivot.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        43
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "vlasta.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        47
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "vortex.cz",
+      "priority": "P1",
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        25,
+        55
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "vtelce.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        51
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "vtm.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        40
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "zdrave.cz",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        53
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "zdravezpravy.cz",
+      "priority": "P1",
+      "fetches_per_hour": 4,
+      "slot_minutes": [
+        0,
+        15,
+        30,
+        45
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "zdravotnickydenik.cz",
+      "priority": "P1",
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        3,
+        33
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "zing.cz",
+      "priority": "P1",
+      "fetches_per_hour": 2,
+      "slot_minutes": [
+        10,
+        40
+      ],
+      "within_limit": true
+    }
+  ]
+}
