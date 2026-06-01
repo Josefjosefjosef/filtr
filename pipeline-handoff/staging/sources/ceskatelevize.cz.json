@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-01T09:32:08.539134Z",
+  "ingestedAt": "2026-06-01T10:02:47.043797Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Valná hromada ČEZ projedná možné rozdělení podniku",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/valna-hromada-cez-projedna-mozne-rozdeleni-podniku-374099",
+      "dt": "2026-06-01T09:56:21Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "hromada",
+        "možné",
+        "podniku",
+        "projedná",
+        "rozdělení",
+        "valná",
+        "čez"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kreml zastavil vývoz leteckého paliva, poprvé od začátku invaze na Ukrajinu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/kreml-zastavil-vyvoz-leteckeho-paliva-poprve-od-zacatku-invaze-na-ukrajinu-374098",
+      "dt": "2026-06-01T09:41:44Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "invaze",
+        "kreml",
+        "leteckého",
+        "paliva",
+        "poprvé",
+        "ukrajinu",
+        "vývoz",
+        "zastavil",
+        "začátku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -695,58 +745,6 @@
         "signál",
         "vlády",
         "šedivý"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "WHO: Pět lidí se zotavilo z nového druhu eboly, proti němuž neexistuje léčba",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/who-pet-lidi-se-zotavilo-z-noveho-druhu-eboly-proti-nemuz-neexistuje-lecba-374074",
-      "dt": "2026-05-31T13:10:26Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "druhu",
-        "eboly",
-        "lidí",
-        "léčba",
-        "neexistuje",
-        "nového",
-        "němuž",
-        "proti",
-        "pět",
-        "who",
-        "zotavilo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hosté Událostí, komentářů z ekonomiky probrali financování obcí",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/hoste-udalosti-komentaru-z-ekonomiky-probrali-financovani-obci-374062",
-      "dt": "2026-05-31T11:35:22Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "ekonomiky",
-        "financování",
-        "hosté",
-        "komentářů",
-        "obcí",
-        "probrali",
-        "událostí"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2262,7 +2260,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44870,
+      "bytes": 44607,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2299,11 +2297,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-01T08:40:53Z",
+        "raw_feed_latest_publishedAt": "2026-06-01T09:56:21Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
           "finance": 3,
+          "zpravy": 24,
           "other": 3
         },
         "drop_counts": {
@@ -2316,6 +2314,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Valná hromada ČEZ projedná možné rozdělení podniku",
+            "publishedAt": "2026-06-01T09:56:21Z"
+          },
+          {
+            "title": "Kreml zastavil vývoz leteckého paliva, poprvé od začátku invaze na Ukrajinu",
+            "publishedAt": "2026-06-01T09:41:44Z"
+          },
           {
             "title": "Maďarská vláda podnikne kroky k odvolání prezidenta, oznámil Magyar",
             "publishedAt": "2026-06-01T08:40:53Z"
@@ -2339,14 +2345,6 @@
           {
             "title": "Francouzské námořnictvo zadrželo tanker plující z Ruska",
             "publishedAt": "2026-06-01T07:17:17Z"
-          },
-          {
-            "title": "V úterý se vyjasní, ve středu bude ale opět pršet",
-            "publishedAt": "2026-06-01T06:02:15Z"
-          },
-          {
-            "title": "Afrika, Asie i Jižní Amerika. Tuzemští exportéři hledají nové trhy",
-            "publishedAt": "2026-06-01T06:00:00Z"
           }
         ]
       }
