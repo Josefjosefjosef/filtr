@@ -393,6 +393,12 @@ jobs:
           SECTION_COVERAGE_BUNDLE_GRACE_HOURS: "6"
         run: node scripts/section-coverage-guard.mjs
 
+      - name: Regenerate source rotation inventory (release guards)
+        run: |
+          set -euo pipefail
+          python scripts/source_rotation_inventory.py
+          test -s projects/data/source_rotation_inventory.json
+
       - name: Source rotation guard
         run: node scripts/source-rotation-guard.mjs
 
