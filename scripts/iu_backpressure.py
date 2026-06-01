@@ -14,9 +14,21 @@ from __future__ import annotations
 import json
 import os
 import time
+from datetime import datetime
 from typing import Any
 
 from iu_staging import staging_root
+
+
+def _json_safe(value: Any) -> Any:
+    """Recursively convert non-JSON types (e.g. datetime) for queue persistence."""
+    if isinstance(value, datetime):
+        return value.isoformat().replace("+00:00", "Z")
+    if isinstance(value, dict):
+        return {k: _json_safe(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_json_safe(v) for v in value]
+    return value
 
 SCHEMA_PUBLISH_QUEUE = 1
 QUEUE_NAME = "publish_queue.json"
@@ -96,7 +108,7 @@ def enqueue_items(output_dir: str, items: list[dict]) -> int:
             continue
         if u not in by_url:
             added += 1
-        by_url[u] = it
+        by_url[u] = _json_safe(it)
     q["items"] = list(by_url.values())
     stats = q.setdefault("stats", {})
     stats["last_enqueue_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
