@@ -1,31 +1,31 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-06-01T04:43:44.962708Z",
-  "run_time_utc": "2026-06-01T04:43:44.962708Z",
+  "generatedAt": "2026-06-01T05:28:19.623786Z",
+  "run_time_utc": "2026-06-01T05:28:19.623786Z",
   "summary": {
     "schemaVersion": 2,
-    "generatedAt": "2026-06-01T04:43:44.962708Z",
-    "run_time_utc": "2026-06-01T04:43:44.962708Z",
+    "generatedAt": "2026-06-01T05:28:19.623786Z",
+    "run_time_utc": "2026-06-01T05:28:19.623786Z",
     "sources_checked": 3,
     "sources_with_new_items": 1,
-    "total_raw_items": 30,
-    "total_parsed_items": 30,
-    "total_normalized_items": 30,
-    "total_after_dedupe_items": 30,
-    "total_written_articles_feed_attributed": 241,
+    "total_raw_items": 12,
+    "total_parsed_items": 12,
+    "total_normalized_items": 12,
+    "total_after_dedupe_items": 12,
+    "total_written_articles_feed_attributed": 214,
     "written_by_section": {
       "zpravy": 6338,
       "sport": 4339,
-      "finance": 2596,
+      "finance": 2597,
       "zdravi": 1023,
       "cestovani": 37
     },
-    "newest_written_publishedAt": "2026-06-01T03:00:00Z",
+    "newest_written_publishedAt": "2026-06-01T04:00:39Z",
     "top_sources_by_new_items": [
       {
-        "source_id": "zdr_prozeny_zdravi",
-        "feed_url": "https://www.prozeny.cz/rss/zdravi",
-        "raw_feed_new_item_count": 30
+        "source_id": "fin_faei",
+        "feed_url": "https://www.faei.cz/feed/",
+        "raw_feed_new_item_count": 12
       },
       {
         "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -40,9 +40,9 @@
     ],
     "top_sources_by_written_items": [
       {
-        "source_id": "zdr_prozeny_zdravi",
-        "feed_url": "https://www.prozeny.cz/rss/zdravi",
-        "written_to_articles_json_count": 241
+        "source_id": "fin_faei",
+        "feed_url": "https://www.faei.cz/feed/",
+        "written_to_articles_json_count": 214
       },
       {
         "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -67,13 +67,84 @@
         "raw_minus_written": 0
       },
       {
-        "source_id": "zdr_prozeny_zdravi",
-        "feed_url": "https://www.prozeny.cz/rss/zdravi",
-        "raw_minus_written": -211
+        "source_id": "fin_faei",
+        "feed_url": "https://www.faei.cz/feed/",
+        "raw_minus_written": -202
       }
     ]
   },
   "sources": [
+    {
+      "source_id": "fin_faei",
+      "registry_id": "fin_faei",
+      "source_label": "FAEI",
+      "feed_url": "https://www.faei.cz/feed/",
+      "topic": "finance",
+      "section_primary": "finance",
+      "generatedAt": "2026-06-01T05:28:19.623786Z",
+      "run_time_utc": "2026-06-01T05:28:19.623786Z",
+      "raw_feed_item_count": 12,
+      "raw_feed_new_item_count": 12,
+      "raw_feed_latest_publishedAt": "2026-06-01T04:00:39Z",
+      "ingested_item_count": 12,
+      "parsed_item_count": 12,
+      "normalized_item_count": 12,
+      "valid_publishedAt_count": 12,
+      "mapped_to_section_count": {
+        "zpravy": 0,
+        "sport": 1,
+        "finance": 11,
+        "zdravi": 0,
+        "cestovani": 0,
+        "other": 0
+      },
+      "release_eligible_count": 214,
+      "written_to_articles_json_count": 214,
+      "newest_written_publishedAt": "2026-06-01T04:00:39Z",
+      "drop_counts": {
+        "missing_publishedAt": 0,
+        "invalid_publishedAt": 0,
+        "parser_drop": 0,
+        "section_remap": 0,
+        "release_gate": 0,
+        "dedupe": 0,
+        "other": 0
+      },
+      "sample_titles": [
+        {
+          "title": "The Economist: Pomalu a nenápadně. Británie se zase přibližuje Evropské unii",
+          "publishedAt": "2026-06-01T04:00:39Z"
+        },
+        {
+          "title": "Euro vůči dolaru zůstává relativně stabilní",
+          "publishedAt": "2026-05-31T14:00:14Z"
+        },
+        {
+          "title": "Nikým nevolená úřednice rozhoduje o osudu Česka. Nikoli z Bruselu, ale z Prahy",
+          "publishedAt": "2026-05-31T13:00:06Z"
+        },
+        {
+          "title": "Cenové stropy až tolik nepomáhají. Největším problémem je pro firmy nejistota",
+          "publishedAt": "2026-05-31T07:00:54Z"
+        },
+        {
+          "title": "Okamžiky dějin: Den, kdy se střetli oceloví titáni. Bitva u Jutska (2.)",
+          "publishedAt": "2026-05-31T04:00:53Z"
+        },
+        {
+          "title": "Válka v Íránu nahrává českým hotelům, penzionům i restauracím",
+          "publishedAt": "2026-05-30T16:00:53Z"
+        },
+        {
+          "title": "Goldman Sachs: Mistrovství světa ve fotbale nejspíše vyhrají Španělé",
+          "publishedAt": "2026-05-30T15:30:43Z"
+        },
+        {
+          "title": "Počítače a umělá inteligence tlačí vzhůru jádrovou inflaci v USA",
+          "publishedAt": "2026-05-30T12:00:23Z"
+        }
+      ]
+    },
     {
       "source_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "registry_id": "yt_playlist_PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
@@ -81,8 +152,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-06-01T04:43:44.962708Z",
-      "run_time_utc": "2026-06-01T04:43:44.962708Z",
+      "generatedAt": "2026-06-01T05:28:19.623786Z",
+      "run_time_utc": "2026-06-01T05:28:19.623786Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -119,8 +190,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-06-01T04:43:44.962708Z",
-      "run_time_utc": "2026-06-01T04:43:44.962708Z",
+      "generatedAt": "2026-06-01T05:28:19.623786Z",
+      "run_time_utc": "2026-06-01T05:28:19.623786Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -149,77 +220,6 @@
         "other": 0
       },
       "sample_titles": []
-    },
-    {
-      "source_id": "zdr_prozeny_zdravi",
-      "registry_id": "zdr_prozeny_zdravi",
-      "source_label": "ProŽeny / Zdraví",
-      "feed_url": "https://www.prozeny.cz/rss/zdravi",
-      "topic": "zdravi",
-      "section_primary": "zdravi",
-      "generatedAt": "2026-06-01T04:43:44.962708Z",
-      "run_time_utc": "2026-06-01T04:43:44.962708Z",
-      "raw_feed_item_count": 30,
-      "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-06-01T03:00:00Z",
-      "ingested_item_count": 30,
-      "parsed_item_count": 30,
-      "normalized_item_count": 30,
-      "valid_publishedAt_count": 30,
-      "mapped_to_section_count": {
-        "zpravy": 1,
-        "sport": 0,
-        "finance": 1,
-        "zdravi": 28,
-        "cestovani": 0,
-        "other": 0
-      },
-      "release_eligible_count": 241,
-      "written_to_articles_json_count": 241,
-      "newest_written_publishedAt": "2026-06-01T03:00:00Z",
-      "drop_counts": {
-        "missing_publishedAt": 0,
-        "invalid_publishedAt": 0,
-        "parser_drop": 0,
-        "section_remap": 0,
-        "release_gate": 0,
-        "dedupe": 0,
-        "other": 0
-      },
-      "sample_titles": [
-        {
-          "title": "Nevěsta s dioptrickými brýlemi? Není důvod měnit je za čočky. Jak vypadat skvěle i na svatebních fotkách",
-          "publishedAt": "2026-06-01T03:00:00Z"
-        },
-        {
-          "title": "Slavné „Spajsky“ po 30 letech: Z bývalých hvězd Spice Girls jsou dnes hlavně oddané maminky",
-          "publishedAt": "2026-06-01T03:00:00Z"
-        },
-        {
-          "title": "Umělé květiny jsou zpět v kurzu: Zapomeňte na kýč z 90. let, letos vládne luxusní design",
-          "publishedAt": "2026-06-01T03:00:00Z"
-        },
-        {
-          "title": "„MasterChef mě naučil se nepodceňovat,“ říká Besky. Po rozvodu našla štěstí po boku Adama Vaculy",
-          "publishedAt": "2026-06-01T03:00:00Z"
-        },
-        {
-          "title": "Boho šaty jsou zpět v nejlepší formě. Lehké a vzdušné modely unosíte celé léto",
-          "publishedAt": "2026-06-01T03:00:00Z"
-        },
-        {
-          "title": "Máte majetek správně pojištěný? Zkontrolujte smlouvu! Můžete přijít o statisíce, nebo i o miliony",
-          "publishedAt": "2026-06-01T03:00:00Z"
-        },
-        {
-          "title": "Genitální mykoplazmata jsou sexuálně přenosná infekce, která může vést k neplodnosti",
-          "publishedAt": "2026-06-01T03:00:00Z"
-        },
-        {
-          "title": "Rozchod není jen drama, je to i mrazivý chlad. Šest signálů, že váš vztah vyhořel a je konec",
-          "publishedAt": "2026-06-01T03:00:00Z"
-        }
-      ]
     }
   ]
 }
