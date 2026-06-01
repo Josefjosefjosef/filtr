@@ -13,6 +13,22 @@
     <script>
     (function(){if(window.__iuPwaInlineBoot)return;window.__iuPwaInlineBoot=1;try{var p=String(location.pathname||"");if(p!=="/projects/"&&p!=="/projects"&&p.indexOf("/projects/")!==0)return;var V="/projects/version.json",RF="iu:pwa:ver:reloaded-for",RT="iu:pwa:ver:reload-ts",RA="iu:pwa:ver:reload-attempts",SD="iu:pwa:sw-deploy-reload",CD=3e4,MX=3,ck=0;function b(){try{return(document.querySelector('meta[name="iu-build"]')||{}).getAttribute("content")||""}catch(_){return""}}function sk(sv,bv){if(!sv||sv===bv)return 1;try{var n=Date.now(),lt=parseInt(sessionStorage.getItem(RT)||"0",10),rf=sessionStorage.getItem(RF)||"",at=parseInt(sessionStorage.getItem(RA)||"0",10);if(rf===sv){if(at>=MX)return 1;if(!isNaN(lt)&&n-lt<CD)return 1}else if(!isNaN(lt)&&n-lt<3e3)return 1}catch(_){}return 0}function mk(sv){try{var pr=sessionStorage.getItem(RF)||"",at=parseInt(sessionStorage.getItem(RA)||"0",10);if(pr!==sv)at=0;sessionStorage.setItem(RF,sv);sessionStorage.setItem(RT,String(Date.now()));sessionStorage.setItem(RA,String(at+1))}catch(_){}}function rl(){try{requestAnimationFrame(function(){location.reload()})}catch(_){location.reload()}}async function go(){if(ck)return;ck=1;try{var bv=b();if(!bv)return;var r=await fetch(V+"?t="+Date.now(),{cache:"no-store",credentials:"same-origin",headers:{"cache-control":"no-cache"}});if(!r.ok)return;var d=await r.json();var sv=d&&d.version?String(d.version).trim():"";if(sk(sv,bv))return;mk(sv);rl()}catch(_){}finally{ck=0}}function sc(){setTimeout(go,0)}function swUp(){try{if(!navigator.serviceWorker)return;navigator.serviceWorker.getRegistration().then(function(rg){if(rg)rg.update()});navigator.serviceWorker.addEventListener("message",function(ev){if(!ev||!ev.data||ev.data.type!=="IU_SW_DEPLOY_RELOAD")return;try{if(sessionStorage.getItem(SD)==="1")return;sessionStorage.setItem(SD,"1")}catch(_){}rl()})}catch(_){}}sc();swUp();window.addEventListener("pageshow",function(ev){sc();swUp();if(ev&&ev.persisted)sc()});document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"){sc();swUp()}})}catch(_){}})();
     </script>
+    <script>
+    (function(){
+      if(window.__iuSilverWxEarlyBoot)return;
+      window.__iuSilverWxEarlyBoot=1;
+      try{
+        var p=String(location.pathname||"");
+        if(p!=="/projects/"&&p!=="/projects"&&p.indexOf("/projects/")!==0)return;
+        var gps=localStorage.getItem("iuWeatherGpsSelectedV1");
+        var man=localStorage.getItem("iu_manual_location");
+        var has=!!(gps||man);
+        document.documentElement.setAttribute("data-iu-silver-wx-boot",has?"ready":"firstVisit");
+      }catch(_){
+        try{document.documentElement.setAttribute("data-iu-silver-wx-boot","firstVisit");}catch(_e){}
+      }
+    })();
+    </script>
     <script src="/assets/iu-pwa-version-check.js?v=pwa-ver-check-v3"></script>
     <title>infoUzel.cz</title>
     <meta name="description" content="infoUzel.cz — přehled zpráv, počasí, kalendáře a nástrojů na jednom místě. Veřejná sekce /projects/ s rychlými odkazy a přehledem obsahu." />
@@ -1936,6 +1952,24 @@ style-src 'self' 'unsafe-inline' https:;
                             <button type="button" class="silver-weather-btn" id="iuSilverWeatherBtnCity" data-iu-silver-wx-action="manual-city">Nastavit moje město</button>
                           </div>
                         </div>
+                        <script>
+                        (function(){
+                          try{
+                            var boot=document.documentElement.getAttribute("data-iu-silver-wx-boot")||"firstVisit";
+                            if(boot!=="ready")return;
+                            var c=document.getElementById("iuSilverWeatherCard");
+                            if(!c)return;
+                            c.setAttribute("data-iu-silver-wx-phase","loading");
+                            c.setAttribute("data-iu-silver-wx-layout","ready");
+                            var l1=document.getElementById("iuSilverWeatherLine1");
+                            var l2=document.getElementById("iuSilverWeatherLine2");
+                            var pr=document.getElementById("iuSilverWeatherPrivacy");
+                            if(l1)l1.innerHTML='<span class="silver-weather-dpart" aria-hidden="true">🌤️</span> <span data-iu-silver-weather-hook="summary">Počasí se načítá…</span>';
+                            if(l2)l2.innerHTML='<span data-iu-silver-weather-hook="tip">💡 Za chvíli ho ukážeme tady.</span>';
+                            if(pr){pr.hidden=true;pr.setAttribute("hidden","");}
+                          }catch(_){}
+                        })();
+                        </script>
                         <section id="iuSilverHeroPremium" class="iu-hero-silver-premium iu-silver-hero-card--p0-mobile iu-silver-hero-vertical-gap-p0" aria-label="Silver" data-iu-silver-hero-premium>
                           <div class="iu-hero-silver-premiumInner">
                             <div class="iu-hero-silver-premiumMain">

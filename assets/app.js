@@ -12157,22 +12157,12 @@ function buildVideoAsArticleCard(it) {
     }
 
     function iuSilverWeatherActivateGpsFromOverlay(){
+      try{ iuSilverWeatherRenderLoading(); }catch{}
       overlayGeoPending = true;
       iuSilverWeatherCloseGeoOverlay();
       try{
         if (typeof window.iuWeatherActivateGpsViaGeolocation === "function") {
           window.iuWeatherActivateGpsViaGeolocation();
-          try{
-            let ticks = 0;
-            const poll = setInterval(() => {
-              ticks++;
-              if (!overlayGeoPending || ticks > 48) {
-                clearInterval(poll);
-                return;
-              }
-              try{ iuSilverWeatherHandleOverlayGeoPendingAfterLoad(); }catch{}
-            }, 250);
-          }catch{}
           return;
         }
       }catch{}
@@ -12623,6 +12613,11 @@ function buildVideoAsArticleCard(it) {
     window.iuSilverWeatherRefresh = iuSilverWeatherRefresh;
     iuSilverWeatherSyncPrivacyText();
     iuSilverWeatherRefresh();
+    try{
+      if (iuSilverWeatherHasPersonalizedLocation() && typeof iuLoadPickerLocalities === "function") {
+        void iuLoadPickerLocalities();
+      }
+    }catch{}
     try{ iuSilverWeatherTryAutoGpsOnLoad(); }catch{}
     try{ setInterval(() => { try{ iuSilverWeatherRefresh(); }catch{} }, 45000); }catch{}
   }
@@ -13529,6 +13524,13 @@ function buildVideoAsArticleCard(it) {
             } catch (_) {}
             setTab("nav");
           } else {
+            try {
+              var uMainBack = new URL(window.location.href);
+              if (uMainBack.searchParams.get("section") && typeof window.iuProjectsHubNavigateHardResetFromHomeOrBack === "function") {
+                window.iuProjectsHubNavigateHardResetFromHomeOrBack();
+                return;
+              }
+            } catch (_) {}
             setTab("");
           }
           try {
@@ -14013,14 +14015,29 @@ function buildVideoAsArticleCard(it) {
                 return;
               }
               try {
-                if (document.body.classList.contains("iu-mobileMainVisible") && mainBack && typeof mainBack.click === "function") {
-                  mainBack.click();
-                  return;
+                if (document.body.classList.contains("iu-mobileMainVisible")) {
+                  var fromWebNavDetail = false;
+                  try {
+                    fromWebNavDetail = document.body.classList.contains("iu-webnavDetailFromGate");
+                  } catch (_) {}
+                  if (!fromWebNavDetail) {
+                    var uBack = new URL(window.location.href);
+                    if (uBack.searchParams.get("section") && typeof window.iuProjectsHubNavigateHardResetFromHomeOrBack === "function") {
+                      window.iuProjectsHubNavigateHardResetFromHomeOrBack();
+                      return;
+                    }
+                  }
+                  if (mainBack && typeof mainBack.click === "function") {
+                    mainBack.click();
+                    return;
+                  }
                 }
               } catch (_) {}
               try {
                 if (window.history && typeof window.history.length === "number" && window.history.length > 1) {
                   window.history.back();
+                } else if (typeof window.iuProjectsHubNavigateHardResetFromHomeOrBack === "function") {
+                  window.iuProjectsHubNavigateHardResetFromHomeOrBack();
                 }
               } catch (_) {}
               return;
@@ -20250,28 +20267,46 @@ function buildVideoAsArticleCard(it) {
       // P0 mobile Chrome: error callback must set visible feedback — manual mode hides the geo line unless we force-show it via iuWeatherSyncCityLabels + __iuWeatherGeoFlowFeedback.
       navigator.geolocation.getCurrentPosition(
         (pos) => {
+          let lat = NaN;
+          let lon = NaN;
+          try{
+            iuWeatherSetGeoFlowFeedback("", "clear");
+            lat = Number(pos && pos.coords && pos.coords.latitude);
+            lon = Number(pos && pos.coords && pos.coords.longitude);
+            if (!isFinite(lat) || !isFinite(lon)) throw new Error("bad coords");
+            const tempCity = { name: "Poloha", lat, lon };
+            iuWeatherWriteLocationMode(IU_WEATHER_MODE_GPS);
+            iuWeatherClearRuntimeCity();
+            iuWeatherWriteGpsSelected(tempCity);
+            iuWeatherClearOpenMeteoCache();
+            try{ window.__iuWeatherState = null; }catch{}
+            iuWeatherSyncCityLabels(tempCity);
+            try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
+          }catch{
+            iuWeatherClearRuntimeCity();
+            iuWeatherSetGeoFlowFeedback("Nelze získat polohu", "error");
+            try{
+              const c = iuWeatherGetActiveCity();
+              iuWeatherSyncCityLabels(c);
+            }catch{}
+            iuWeatherLoadAndRender();
+            return;
+          }
           void (async () => {
             try{
+              const labelP = iuWeatherGpsNearestLocalityLabel(lat, lon);
+              const wxP = typeof window.iuWeatherEnsureState === "function"
+                ? window.iuWeatherEnsureState()
+                : Promise.resolve(null);
+              const label = await labelP;
+              const city = { name: (label && String(label).trim()) || "Poloha", lat, lon };
+              if (city.name !== "Poloha") {
+                iuWeatherWriteGpsSelected(city);
+                iuWeatherSyncCityLabels(city);
+              }
+              await wxP;
               iuWeatherSetGeoFlowFeedback("", "clear");
-              const lat = Number(pos && pos.coords && pos.coords.latitude);
-              const lon = Number(pos && pos.coords && pos.coords.longitude);
-              if (!isFinite(lat) || !isFinite(lon)) throw new Error("bad coords");
-
-              iuWeatherSetGeoFlowFeedback("Hledám lokalitu…", "loading");
-              try{
-                const cMid = iuWeatherGetActiveCity();
-                iuWeatherSyncCityLabels(cMid);
-              }catch{}
-
-              const label = await iuWeatherGpsNearestLocalityLabel(lat, lon);
-              const city = { name: label || "Poloha", lat, lon };
-              iuWeatherSetGeoFlowFeedback("", "clear");
-              iuWeatherWriteLocationMode(IU_WEATHER_MODE_GPS);
-              iuWeatherClearRuntimeCity();
-              iuWeatherWriteGpsSelected(city);
-              iuWeatherClearOpenMeteoCache();
-              try{ window.__iuWeatherState = null; }catch{}
-              iuWeatherSyncCityLabels(city);
+              try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
               iuWeatherLoadAndRender();
             }catch{
               iuWeatherClearRuntimeCity();
@@ -20280,6 +20315,7 @@ function buildVideoAsArticleCard(it) {
                 const c = iuWeatherGetActiveCity();
                 iuWeatherSyncCityLabels(c);
               }catch{}
+              try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
               iuWeatherLoadAndRender();
             }
           })();
