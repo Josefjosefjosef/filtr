@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-01T16:02:25.957042Z",
+  "ingestedAt": "2026-06-01T16:32:10.829948Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události pondělí 1. června",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-pondeli-1-cervna-374108",
+      "dt": "2026-06-01T16:28:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "pondělí",
+        "souhrn",
+        "události",
+        "zásadní",
+        "června"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -727,30 +749,6 @@
         "peněz",
         "víc",
         "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Češi na dovolenou častěji létají, letos si za cestu připlatí",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/cesi-na-dovolenou-casteji-letaji-letos-si-za-cestu-priplati-374082",
-      "dt": "2026-05-31T18:16:02Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "cestu",
-        "dovolenou",
-        "letos",
-        "létají",
-        "připlatí",
-        "častěji",
-        "češi"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2265,7 +2263,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 45027,
+      "bytes": 44867,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2302,7 +2300,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-01T14:15:46Z",
+        "raw_feed_latest_publishedAt": "2026-06-01T16:28:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -2319,6 +2317,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události pondělí 1. června",
+            "publishedAt": "2026-06-01T16:28:00Z"
+          },
           {
             "title": "Nový zákon může otevřít cestu k návratu parthenónských mramorů z Louvru",
             "publishedAt": "2026-06-01T14:15:46Z"
@@ -2346,10 +2348,6 @@
           {
             "title": "Schodek státního rozpočtu v květnu vzrostl na 170,2 miliardy",
             "publishedAt": "2026-06-01T12:05:28Z"
-          },
-          {
-            "title": "Státní zástupkyně Lastovecká rezignovala na funkci",
-            "publishedAt": "2026-06-01T10:18:04Z"
           }
         ]
       }
