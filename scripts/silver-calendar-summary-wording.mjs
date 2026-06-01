@@ -41,15 +41,15 @@ function iuTomorrowMidnightLocalMs(now) {
   return x.getTime();
 }
 function line1CalendarTodayPresent(count) {
-  if (count === 0) return "Kalendář: Na dnešek nemáte uložený žádný záznam.";
-  if (count === 1) return "Kalendář: Na dnešek máte uložený 1 záznam.";
-  if (count >= 2 && count <= 4) return "Kalendář: Na dnešek máte uložené " + count + " záznamy.";
-  return "Kalendář: Na dnešek máte uložených " + count + " záznamů.";
+  if (count === 0) return "Kalendář: Dnes nemáte uložený žádný záznam.";
+  if (count === 1) return "Kalendář: Dnes máte uložený 1 záznam.";
+  if (count >= 2 && count <= 4) return "Kalendář: Dnes máte uložené " + count + " záznamy.";
+  return "Kalendář: Dnes máte uložených " + count + " záznamů.";
 }
 function line1CalendarTodayPast(count) {
-  if (count === 1) return "Kalendář: Na dnešek jste měli uložený 1 záznam.";
-  if (count >= 2 && count <= 4) return "Kalendář: Na dnešek jste měli uložené " + count + " záznamy.";
-  return "Kalendář: Na dnešek jste měli uložených " + count + " záznamů.";
+  if (count === 1) return "Kalendář: Dnes jste měli uložený 1 záznam.";
+  if (count >= 2 && count <= 4) return "Kalendář: Dnes jste měli uložené " + count + " záznamy.";
+  return "Kalendář: Dnes jste měli uložených " + count + " záznamů.";
 }
 function getTodayCalendarSummaryState(now, items) {
   const out = {
@@ -172,7 +172,7 @@ const cases = [
     now: new Date(DAY + "T12:00:00"),
     items: [],
     expect: {
-      primaryText: "Kalendář: Na dnešek nemáte uložený žádný záznam.",
+      primaryText: "Kalendář: Dnes nemáte uložený žádný záznam.",
       secondaryText: "",
       hideSecondaryLine: true
     }
@@ -182,7 +182,7 @@ const cases = [
     now: new Date(DAY + "T08:00:00"),
     items: ev4,
     expect: {
-      primaryText: "Kalendář: Na dnešek máte uložené 4 záznamy.",
+      primaryText: "Kalendář: Dnes máte uložené 4 záznamy.",
       secondaryText: "První dnešní záznam v 09:00 hod.",
       hideSecondaryLine: false
     }
@@ -192,7 +192,7 @@ const cases = [
     now: new Date(DAY + "T09:30:00"),
     items: ev4,
     expect: {
-      primaryText: "Kalendář: Na dnešek máte uložené 4 záznamy.",
+      primaryText: "Kalendář: Dnes máte uložené 4 záznamy.",
       secondaryText: "Další záznam v 10:00 hod.",
       hideSecondaryLine: false
     }
@@ -202,7 +202,7 @@ const cases = [
     now: new Date(DAY + "T14:00:00"),
     items: ev4,
     expect: {
-      primaryText: "Kalendář: Na dnešek jste měli uložené 4 záznamy.",
+      primaryText: "Kalendář: Dnes jste měli uložené 4 záznamy.",
       secondaryText: "Dnešní záznamy už proběhly.",
       hideSecondaryLine: false
     }
@@ -212,7 +212,7 @@ const cases = [
     now: new Date(DAY + "T08:00:00"),
     items: [{ date: DAY, time: "09:00", title: "x" }],
     expect: {
-      primaryText: "Kalendář: Na dnešek máte uložený 1 záznam.",
+      primaryText: "Kalendář: Dnes máte uložený 1 záznam.",
       secondaryText: "Dnešní záznam v 09:00 hod.",
       hideSecondaryLine: false
     }
@@ -222,7 +222,7 @@ const cases = [
     now: new Date(DAY + "T10:00:00"),
     items: [{ date: DAY, time: "09:00", title: "x" }],
     expect: {
-      primaryText: "Kalendář: Na dnešek jste měli uložený 1 záznam.",
+      primaryText: "Kalendář: Dnes jste měli uložený 1 záznam.",
       secondaryText: "Dnešní záznamy už proběhly.",
       hideSecondaryLine: false
     }
@@ -238,7 +238,7 @@ const cases = [
       { date: DAY, time: "13:00", title: "e" }
     ],
     expect: {
-      primaryText: "Kalendář: Na dnešek máte uložených 5 záznamů.",
+      primaryText: "Kalendář: Dnes máte uložených 5 záznamů.",
       secondaryText: "První dnešní záznam v 09:00 hod.",
       hideSecondaryLine: false
     }
