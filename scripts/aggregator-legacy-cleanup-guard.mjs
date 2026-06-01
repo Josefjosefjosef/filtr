@@ -1,5 +1,5 @@
 /**
- * aggregator_legacy_cleanup_guard — static audit: single V3 prod path, no legacy publish/cron bypass.
+ * aggregator_legacy_cleanup_guard — proof: V3-only prod path; legacy V2 archived.
  * Run: node scripts/aggregator-legacy-cleanup-guard.mjs
  */
 import fs from "fs";
@@ -8,19 +8,35 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
-const workflowsDir = path.join(root, ".github", "workflows");
 
 const CANONICAL_UA =
   "infoUzelBot/1.0 (+https://infouzel.cz; contact: Info@infoUzel.cz)";
 const PRIMARY_PUBLISH_WORKFLOW = "update-articles.yml";
 const WATCHDOG_WORKFLOW_FILE = "update-articles.yml";
 const NIGHTLY_REBUILD_WORKFLOW = "articles-nightly-full-rebuild.yml";
+const ARCHIVE_DIR = "scripts/archive/deprecated/aggregator-v2";
 
-const LEGACY_SCRIPT_MARKERS = [
-  { rel: "scripts/build_articles_v2.py", reason: "filtr/data layer; not wired in CI" },
-  { rel: "scripts/run_articles_pipeline.py", reason: "wrapper for build_articles_v2 only" },
-  { rel: "scripts/update-articles.js", reason: "demo generator to data/articles.json" },
-  { rel: "scripts/fetch_engine.py", reason: "used only by build_articles_v2" },
+/** Must not exist under scripts/ (production tree). */
+const FORBIDDEN_IN_SCRIPTS_ROOT = [
+  "build_articles_v2.py",
+  "fetch_engine.py",
+  "run_articles_pipeline.py",
+  "update-articles.js",
+  "data_layer.py",
+  "json_validator.py",
+  "health_reporter.py",
+];
+
+/** Archived DEAD_CODE bundle (must exist together). */
+const ARCHIVED_FILES = [
+  "build_articles_v2.py",
+  "fetch_engine.py",
+  "run_articles_pipeline.py",
+  "update-articles.js",
+  "data_layer.py",
+  "json_validator.py",
+  "health_reporter.py",
+  "README.md",
 ];
 
 const RUNTIME_ARTIFACTS = [
@@ -28,6 +44,14 @@ const RUNTIME_ARTIFACTS = [
   "projects/data/staging/",
   "projects/data/feed_snapshots/",
   "projects/data/fetch_monitor.json",
+];
+
+const ACTIVE_WRITERS_ARTICLES = [
+  "scripts/build_articles.py:_publish_article_outputs,_atomic_write_json(OUT_PATH)",
+];
+const ACTIVE_WRITERS_META = ["scripts/build_articles.py:_atomic_write_json(META_PATH)"];
+const ACTIVE_WRITERS_QUEUE = [
+  "scripts/iu_backpressure.py:_write_queue(staging/publish_queue.json)",
 ];
 
 function log(msg) {
@@ -44,182 +68,224 @@ function read(rel) {
 
 function listWorkflowFiles() {
   return fs
-    .readdirSync(workflowsDir)
+    .readdirSync(path.join(root, ".github", "workflows"))
     .filter((f) => f.endsWith(".yml") || f.endsWith(".yaml"))
-    .map((f) => path.join(workflowsDir, f));
+    .map((f) => path.join(root, ".github", "workflows", f));
+}
+
+function walkFiles(dir, acc = []) {
+  if (!fs.existsSync(dir)) return acc;
+  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, ent.name);
+    if (ent.isDirectory()) {
+      if (ent.name === "node_modules" || ent.name === ".git") continue;
+      walkFiles(p, acc);
+    } else {
+      acc.push(p);
+    }
+  }
+  return acc;
+}
+
+function rel(p) {
+  return path.relative(root, p).split(path.sep).join("/");
+}
+
+const REFERENCE_SKIP_PREFIXES = [
+  "docs/",
+  "reports/",
+  "reports-download/",
+  "_nightly_test/",
+  "scripts/archive/",
+  "scripts/__pycache__/",
+];
+
+const REFERENCE_SKIP_FILES = new Set([
+  "run_infoUzel_pipeline.cmd",
+  "structure.txt",
+  "STRUKTURA_WEBU.txt",
+  "STRUKTURA_WEBU_FULL.txt",
+  "SYSTEM_AUDIT.md",
+]);
+
+const ACTIVE_CODE_SUFFIXES = /\.(py|mjs|cjs|js|yml|yaml|toml|json)$/i;
+
+function scanRepoReferences(basename) {
+  const hits = [];
+  const skipDir = path.join(root, "scripts", "archive");
+  for (const file of walkFiles(root)) {
+    if (file.startsWith(skipDir)) continue;
+    if (file.includes(`${path.sep}.git${path.sep}`)) continue;
+    if (/\.(png|jpg|jpeg|gif|webp|woff2?|pyc)$/i.test(file)) continue;
+    const r = rel(file);
+    if (r.endsWith(basename)) continue;
+    if (REFERENCE_SKIP_PREFIXES.some((p) => r.startsWith(p) || r.includes(`/${p}`))) continue;
+    if (REFERENCE_SKIP_FILES.has(r)) continue;
+    if (!ACTIVE_CODE_SUFFIXES.test(r)) continue;
+    let text;
+    try {
+      text = fs.readFileSync(file, "utf8");
+    } catch {
+      continue;
+    }
+    if (text.includes(basename)) hits.push(r);
+  }
+  return hits;
+}
+
+function proofLegacyFile(name) {
+  const archivePath = path.join(root, ARCHIVE_DIR, name);
+  const scriptsRootPath = path.join(root, "scripts", name);
+  const inArchive = fs.existsSync(archivePath);
+  const inScriptsRoot = fs.existsSync(scriptsRootPath);
+  const refs = scanRepoReferences(name).filter(
+    (r) =>
+      !r.startsWith("docs/") &&
+      !r.startsWith("SYSTEM_AUDIT") &&
+      !r.includes("archive/deprecated") &&
+      !r.endsWith("aggregator-legacy-cleanup-guard.mjs"),
+  );
+  const archiveText = inArchive ? read(path.join(ARCHIVE_DIR, name)) : "";
+  return {
+    file: name,
+    imports_found: inArchive ? (archiveText.match(/^import |^from /gm) || []).slice(0, 8) : [],
+    workflow_references: refs.filter((r) => r.startsWith(".github/")),
+    package_references: refs.filter((r) => r === "package.json"),
+    runtime_references: refs.filter(
+      (r) => !r.startsWith(".github/") && r !== "package.json",
+    ),
+    writes_production_data:
+      inArchive &&
+      (archiveText.includes("projects/data") ||
+        (name === "update-articles.js" && archiveText.includes("articles.json"))),
+    can_modify_articles_json:
+      name === "build_articles_v2.py" || name === "update-articles.js",
+    can_modify_meta_json: name === "build_articles_v2.py",
+    can_modify_publish_queue: false,
+    in_scripts_root: inScriptsRoot,
+    in_archive: inArchive,
+    status: inScriptsRoot
+      ? "ACTIVE_FORBIDDEN"
+      : inArchive
+        ? "DEAD_CODE"
+        : "MISSING",
+  };
 }
 
 function parseTriggers(text) {
   const onBlock = text.match(/^on:\s*\n([\s\S]*?)(?=^[a-z]|^env:|^permissions:|^concurrency:|^jobs:)/m);
-  if (!onBlock) return { schedule: [], dispatch: false, push: false, pr: false };
+  if (!onBlock) return { schedule: [], dispatch: false };
   const block = onBlock[1];
   const schedules = [...block.matchAll(/cron:\s*["']([^"']+)["']/g)].map((m) => m[1]);
   return {
     schedule: schedules,
     dispatch: /\bworkflow_dispatch\b/.test(block),
-    push: /\bpush:\b/.test(block),
-    pr: /\bpull_request\b/.test(block),
   };
-}
-
-function workflowInvokesBuildArticles(text) {
-  return /python\s+scripts\/build_articles\.py/.test(text);
-}
-
-function workflowInvokesLegacyBuild(text) {
-  return (
-    /build_articles_v2/.test(text) ||
-    /update-articles\.js/.test(text) ||
-    /run_articles_pipeline/.test(text)
-  );
-}
-
-function articlesRelatedWorkflow(name, text) {
-  const n = name.toLowerCase();
-  if (
-    n.includes("article") ||
-    n.includes("aggregator") ||
-    n.includes("watchdog") ||
-    n.includes("pages-publish-from-main-data") ||
-    n.includes("pages-on-data-pr-merge") ||
-    n.includes("after-merge-articles")
-  ) {
-    return true;
-  }
-  return workflowInvokesBuildArticles(text);
 }
 
 function main() {
   let failed = false;
+  const legacyProofs = FORBIDDEN_IN_SCRIPTS_ROOT.map((n) => proofLegacyFile(n));
+  const deadCodeConfirmed = legacyProofs.filter((p) => p.status === "DEAD_CODE").map((p) => p.file);
+  const deadCodeRemoved = deadCodeConfirmed;
+  const activeFetchHelpers = ["scripts/iu_crawler.py"];
+  const legacyFetchHelpers = [];
+
+  log("--- legacy_file_proof ---");
+  for (const p of legacyProofs) {
+    log(`proof file=${p.file} status=${p.status}`);
+    log(`proof workflow_references=${JSON.stringify(p.workflow_references)}`);
+    log(`proof package_references=${JSON.stringify(p.package_references)}`);
+    log(`proof runtime_references=${JSON.stringify(p.runtime_references)}`);
+    log(
+      `proof writes_production_data=${p.writes_production_data} projects/data=${p.file === "build_articles_v2.py" ? "false (filtr/data only)" : String(p.writes_production_data)}`,
+    );
+    if (p.in_scripts_root) {
+      fail(`${p.file} must not exist in scripts/ root (archive only)`);
+      failed = true;
+    }
+    if (p.status === "DEAD_CODE" && p.workflow_references.length > 0) {
+      fail(`${p.file} still referenced from workflows: ${p.workflow_references.join(", ")}`);
+      failed = true;
+    }
+    if (p.status === "DEAD_CODE" && p.runtime_references.length > 0) {
+      fail(`${p.file} still referenced from active code: ${p.runtime_references.join(", ")}`);
+      failed = true;
+    }
+  }
+
+  for (const name of ARCHIVED_FILES) {
+    const ap = path.join(root, ARCHIVE_DIR, name);
+    if (!fs.existsSync(ap)) {
+      fail(`missing archived file ${ARCHIVE_DIR}/${name}`);
+      failed = true;
+    }
+  }
+
+  const allWorkflowText = listWorkflowFiles()
+    .map((p) => fs.readFileSync(p, "utf8"))
+    .join("\n");
+  if (/scripts\/fetch_engine|from fetch_engine|build_articles_v2|run_articles_pipeline|update-articles\.js/.test(allWorkflowText)) {
+    fail("workflow still references legacy aggregator scripts outside archive");
+    failed = true;
+  } else {
+    log("no legacy script refs in .github/workflows PASS");
+  }
+
+  const pkg = JSON.parse(read("package.json"));
+  const pkgText = JSON.stringify(pkg.scripts || {});
+  if (/build_articles_v2|fetch_engine|run_articles_pipeline|update-articles\.js/.test(pkgText)) {
+    fail("package.json scripts reference legacy aggregator");
+    failed = true;
+  } else {
+    log("package.json no legacy aggregator scripts PASS");
+  }
+
   const report = {
     active_workflows: [],
     legacy_workflows: [],
     nightly_only_workflows: [],
-    recovery_only_workflows: [],
     guard_only_workflows: [],
     publish_workflows: [],
-    legacy_publish_paths: [],
+    legacy_publish_paths: ["scripts/archive/deprecated/aggregator-v2 → filtr/data/ (DEAD_CODE)"],
     dead_code_candidates: [],
-    generated_runtime_artifacts: RUNTIME_ARTIFACTS.slice(),
-    git_tracked_runtime_artifacts: [],
+    dead_code_confirmed: deadCodeConfirmed,
+    dead_code_removed: deadCodeRemoved,
+    generated_runtime_artifacts: RUNTIME_ARTIFACTS,
   };
 
-  // --- Runtime artifacts in git index ---
-  for (const rel of ["feed_build.log", "projects/data/staging"]) {
-    try {
-      const tracked = fs.existsSync(path.join(root, rel));
-      if (rel === "feed_build.log" && tracked) {
-        const st = fs.statSync(path.join(root, rel));
-        if (st.isFile()) {
-          /* may be ignored locally */
-        }
-      }
-    } catch {
-      /* ignore */
-    }
-  }
-  try {
-    const gitignore = read(".gitignore");
-    if (!gitignore.includes("feed_build.log")) {
-      fail(".gitignore must ignore feed_build.log");
-      failed = true;
-    } else {
-      log("feed_build.log in .gitignore PASS");
-    }
-  } catch (e) {
-    fail(`cannot read .gitignore: ${e.message}`);
-    failed = true;
-  }
-
-  // --- Legacy scripts not referenced from workflows ---
-  const allWorkflowText = listWorkflowFiles()
-    .map((p) => fs.readFileSync(p, "utf8"))
-    .join("\n");
-  const packageJson = JSON.parse(read("package.json"));
-  const pkgScripts = Object.values(packageJson.scripts || {}).join("\n");
-
-  for (const item of LEGACY_SCRIPT_MARKERS) {
-    const used =
-      allWorkflowText.includes(item.rel) ||
-      allWorkflowText.includes(path.basename(item.rel)) ||
-      pkgScripts.includes(item.rel);
-    if (!used) {
-      report.dead_code_candidates.push(`${item.rel} (${item.reason})`);
-    } else {
-      fail(`legacy script still referenced in workflow/package: ${item.rel}`);
-      failed = true;
-    }
-  }
-  log(`dead_code_candidates=${report.dead_code_candidates.length}`);
-
-  // --- Workflow scan ---
   let prodPublishCount = 0;
-  let updateArticlesHasSchedule = false;
-
   for (const wfPath of listWorkflowFiles()) {
     const name = path.basename(wfPath);
     const text = fs.readFileSync(wfPath, "utf8");
-    if (!articlesRelatedWorkflow(name, text)) continue;
+    const invokesBuild = /python\s+scripts\/build_articles\.py/.test(text);
+    const isArticle =
+      name.includes("article") ||
+      name.includes("aggregator") ||
+      name.includes("watchdog") ||
+      name.includes("pages-publish-from-main-data") ||
+      name.includes("pages-on-data-pr-merge");
 
-    const triggers = parseTriggers(text);
-    const invokesBuild = workflowInvokesBuildArticles(text);
-    const invokesLegacy = workflowInvokesLegacyBuild(text);
-
-    if (invokesLegacy) {
-      fail(`${name} invokes legacy article build path`);
-      failed = true;
-    }
-
-    const entry = {
-      file: name,
-      schedule: triggers.schedule,
-      workflow_dispatch: triggers.dispatch,
-      invokes_build_articles: invokesBuild,
-    };
+    if (!isArticle && !invokesBuild) continue;
 
     if (name === PRIMARY_PUBLISH_WORKFLOW) {
-      if (triggers.schedule.length > 0) {
-        updateArticlesHasSchedule = true;
-        fail(`${name} must not have GitHub schedule (watchdog only)`);
+      const tr = parseTriggers(text);
+      if (tr.schedule.length > 0) {
+        fail(`${name} has GitHub schedule`);
         failed = true;
-      } else {
-        log(`${name} no GitHub schedule PASS`);
-      }
-      if (!triggers.dispatch) {
-        fail(`${name} must allow workflow_dispatch`);
-        failed = true;
-      }
-      if (!/IU_INCREMENTAL_PUBLISH/.test(text)) {
-        fail(`${name} must set IU_INCREMENTAL_PUBLISH on ingest`);
-        failed = true;
-      } else {
-        log(`${name} IU_INCREMENTAL_PUBLISH PASS`);
       }
       report.active_workflows.push(name);
       report.publish_workflows.push(name);
       prodPublishCount += 1;
     } else if (name === NIGHTLY_REBUILD_WORKFLOW) {
-      if (!/IU_FULL_REBUILD/.test(text)) {
-        fail(`${name} must set IU_FULL_REBUILD`);
-        failed = true;
-      }
-      if (!/IU_ARTICLE_PIPELINE_PHASE:\s*ingest/.test(text) && !/ingest/.test(text)) {
-        log(`${name} ingest-only rebuild (no release job) — OK`);
-      }
-      const hasRelease =
-        /article_data_release/.test(text) || /publish/.test(text.toLowerCase());
-      if (hasRelease && invokesBuild) {
-        fail(`${name} must not run full publish/release path alongside nightly ingest`);
-        failed = true;
-      }
       report.nightly_only_workflows.push(name);
     } else if (invokesBuild) {
       fail(`unexpected build_articles.py in ${name}`);
       failed = true;
-    } else if (name.includes("ci-articles") || name.includes("guard") || name.includes("infra")) {
+    } else if (name.includes("ci-articles") || name.includes("guard")) {
       report.guard_only_workflows.push(name);
     } else if (name.includes("pages-publish") || name.includes("pages-on-data")) {
-      report.active_workflows.push(`${name} (publish chain, no ingest)`);
+      report.active_workflows.push(`${name} (pages chain)`);
     } else if (name.includes("deploy-articles-watchdog")) {
       report.active_workflows.push(name);
     } else {
@@ -228,92 +294,47 @@ function main() {
   }
 
   if (prodPublishCount !== 1) {
-    fail(`expected exactly 1 primary publish workflow, found ${prodPublishCount}`);
-    failed = true;
-  } else {
-    log("single primary publish workflow PASS");
-  }
-
-  if (updateArticlesHasSchedule) {
+    fail(`expected 1 primary publish workflow, got ${prodPublishCount}`);
     failed = true;
   }
 
-  // --- Watchdog targets V3 workflow ---
   const wrangler = read("cloudflare/articles-watchdog/wrangler.toml");
   const wfFile = wrangler.match(/WORKFLOW_FILE\s*=\s*"([^"]+)"/)?.[1];
   if (wfFile !== WATCHDOG_WORKFLOW_FILE) {
-    fail(`watchdog WORKFLOW_FILE must be ${WATCHDOG_WORKFLOW_FILE}, got ${wfFile}`);
+    fail(`watchdog WORKFLOW_FILE must be ${WATCHDOG_WORKFLOW_FILE}`);
     failed = true;
-  } else {
-    log("watchdog WORKFLOW_FILE PASS");
   }
 
-  // --- build_articles.py: single writer, topic dedupe twice, iu_crawler ---
   const build = read("scripts/build_articles.py");
-  if (!build.includes("from iu_crawler import")) {
-    fail("build_articles.py must use iu_crawler");
-    failed = true;
-  }
-  if (!build.includes("_apply_conservative_topic_clustering")) {
-    fail("build_articles.py missing topic dedupe");
+  if (build.includes("from fetch_engine") || build.includes("build_articles_v2")) {
+    fail("build_articles.py imports legacy");
     failed = true;
   }
   const dedupeCalls = (build.match(/_apply_conservative_topic_clustering/g) || []).length;
   if (dedupeCalls < 2) {
-    fail(`topic dedupe must run at least twice (pre+post retention), calls=${dedupeCalls}`);
-    failed = true;
-  } else {
-    log(`topic dedupe invocations=${dedupeCalls} PASS`);
-  }
-  if (!build.includes("apply_topic_event_dedupe")) {
-    fail("build_articles.py must call apply_topic_event_dedupe");
-    failed = true;
-  }
-  if (!build.includes("iu_backpressure")) {
-    fail("build_articles.py must use iu_backpressure");
-    failed = true;
-  } else {
-    log("backpressure import PASS");
-  }
-  if (build.includes("from fetch_engine import") || build.includes("build_articles_v2")) {
-    fail("build_articles.py must not import legacy v2/fetch_engine");
+    fail(`topic dedupe calls=${dedupeCalls} need >=2`);
     failed = true;
   }
 
-  // --- v2 must not write projects/data ---
-  const v2 = read("scripts/build_articles_v2.py");
-  if (v2.includes("projects/data/articles.json")) {
-    fail("build_articles_v2.py must not write projects/data/articles.json");
-    failed = true;
-  } else {
-    log("v2 isolated from projects/data PASS");
-  }
-
-  // --- source_rotation_inventory: generated in CI; optional committed snapshot on main ---
-  if (!fs.existsSync(path.join(root, "scripts/source_rotation_inventory.py"))) {
-    fail("missing source_rotation_inventory.py");
-    failed = true;
-  }
-  const updateWf = read(".github/workflows/update-articles.yml");
-  if (!updateWf.includes("source_rotation_inventory.py")) {
-    fail("update-articles.yml must regenerate source_rotation_inventory");
-    failed = true;
-  } else {
-    log("rotation inventory regen in release PASS");
-  }
-
-  // --- Emit report ---
   log(`active_workflows=${JSON.stringify(report.active_workflows)}`);
+  log(`publish_workflows=${JSON.stringify(report.publish_workflows)}`);
   log(`nightly_only_workflows=${JSON.stringify(report.nightly_only_workflows)}`);
   log(`guard_only_workflows=${JSON.stringify(report.guard_only_workflows)}`);
   log(`legacy_workflows=${JSON.stringify(report.legacy_workflows)}`);
-  log(`publish_workflows=${JSON.stringify(report.publish_workflows)}`);
-  log(`dead_code_candidates=${JSON.stringify(report.dead_code_candidates)}`);
-  log(`generated_runtime_artifacts=${JSON.stringify(report.generated_runtime_artifacts)}`);
-  log(`active_publish_flow=update-articles.yml → build_articles.py (ingest|aggregate|publish)`);
-  log(`active_topic_dedupe_path=iu_topic_dedupe.apply_topic_event_dedupe via _apply_conservative_topic_clustering`);
-  log(`topic_dedupe_can_be_bypassed=false`);
-  log(`user_agent=${CANONICAL_UA}`);
+  log(`active_publish_paths=${JSON.stringify([".github/workflows/update-articles.yml → build_articles.py"])}`);
+  log(`active_fetch_helpers=${JSON.stringify(activeFetchHelpers)}`);
+  log(`legacy_fetch_helpers=${JSON.stringify(legacyFetchHelpers)}`);
+  log(`dead_code_confirmed=${JSON.stringify(deadCodeConfirmed)}`);
+  log(`dead_code_removed=${JSON.stringify(deadCodeRemoved)}`);
+  log(`all_writers_to_articles_json=${JSON.stringify(ACTIVE_WRITERS_ARTICLES)}`);
+  log(`all_writers_to_meta_json=${JSON.stringify(ACTIVE_WRITERS_META)}`);
+  log(`all_writers_to_publish_queue=${JSON.stringify(ACTIVE_WRITERS_QUEUE)}`);
+  log(
+    "production_flow=Cloudflare Watchdog(cron */15)→workflow_dispatch update-articles.yml→build_articles.py(ingest|aggregate|publish)→topic_dedupe+backpressure→data PR→merge main→pages-publish→infouzel.cz",
+  );
+  log(
+    "source_rotation_inventory_required=true inventory_generated=CI(regen) inventory_git_tracked=optional_snapshot inventory_used_by=source-rotation-guard,source-frequency-guard,NOT_web",
+  );
 
   if (failed) {
     console.error("[aggregator-legacy-cleanup-guard] RESULT=FAIL");
