@@ -1,12 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-01T10:02:47.043797Z",
+  "ingestedAt": "2026-06-01T10:47:04.683313Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Státní zástupkyně Lastovecká rezignovala na funkci",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/statni-zastupkyne-lastovecka-rezignovala-na-funkci-374100",
+      "dt": "2026-06-01T10:18:04Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "funkci",
+        "lastovecká",
+        "rezignovala",
+        "státní",
+        "zástupkyně"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Valná hromada ČEZ projedná možné rozdělení podniku",
+      "title": "Valná hromada ČEZu projedná možné rozdělení podniku",
       "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/valna-hromada-cez-projedna-mozne-rozdeleni-podniku-374099",
       "dt": "2026-06-01T09:56:21Z",
       "media_raw": "ČT24 / Domácí",
@@ -18,7 +40,7 @@
         "projedná",
         "rozdělení",
         "valná",
-        "čez"
+        "čezu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -718,33 +740,6 @@
         "mluví",
         "opozice",
         "sněmovnu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Přístup vlády k muniční iniciativě nevysílá dobrý signál, míní Šedivý a Kühnl",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pristup-vlady-k-municni-iniciative-nevysila-dobry-signal-mini-sedivy-a-kuhnl-374072",
-      "dt": "2026-05-31T13:17:14Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "dobrý",
-        "iniciativě",
-        "kühnl",
-        "muniční",
-        "míní",
-        "nevysílá",
-        "přístup",
-        "signál",
-        "vlády",
-        "šedivý"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2260,7 +2255,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44607,
+      "bytes": 44281,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2297,11 +2292,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-01T09:56:21Z",
+        "raw_feed_latest_publishedAt": "2026-06-01T10:18:04Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 3,
           "zpravy": 24,
+          "finance": 3,
           "other": 3
         },
         "drop_counts": {
@@ -2315,7 +2310,11 @@
         },
         "sample_titles": [
           {
-            "title": "Valná hromada ČEZ projedná možné rozdělení podniku",
+            "title": "Státní zástupkyně Lastovecká rezignovala na funkci",
+            "publishedAt": "2026-06-01T10:18:04Z"
+          },
+          {
+            "title": "Valná hromada ČEZu projedná možné rozdělení podniku",
             "publishedAt": "2026-06-01T09:56:21Z"
           },
           {
@@ -2341,10 +2340,6 @@
           {
             "title": "Hosté Událostí, komentářů týdne diskutovali o jednacím řádu sněmovny",
             "publishedAt": "2026-06-01T07:30:31Z"
-          },
-          {
-            "title": "Francouzské námořnictvo zadrželo tanker plující z Ruska",
-            "publishedAt": "2026-06-01T07:17:17Z"
           }
         ]
       }
