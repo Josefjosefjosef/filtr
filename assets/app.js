@@ -41960,12 +41960,50 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverStripExplicitSavePrefixBridgeWordsV1(text) {
     let t = String(text || "").trim();
     if (!t) return t;
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 6; i++) {
       const prev = t;
-      t = t.replace(/^(?:ze|že|at|a[tť])\s+/iu, "").trim();
+      t = t.replace(/^(?:abys|abych|ze|že|at|a[tť])\s+/iu, "").trim();
       if (t === prev) break;
     }
     return t;
+  }
+
+  /**
+   * P0: explicit „Připomeň mi / Připomeň“ prefix — title builder preserving day/time phrases in task title.
+   * Used only for fromExplicitTarget routing; due metadata is extracted separately.
+   */
+  function iuSilverBuildExplicitTaskReminderTitleV1(cleanedInput) {
+    let s = iuSilverNormalizeWs(String(cleanedInput || ""));
+    if (!s) return "";
+    for (let i = 0; i < 6; i++) {
+      const prev = s;
+      s = s.replace(/^(?:abys|abych|ze|že|at|a[tť])\s+/iu, "").trim();
+      if (s === prev) break;
+    }
+    s = s.replace(/^(?:m[aá]m|mam)\s+/iu, "").trim();
+    s = s.replace(/\bnezapom(?:ě|e)?n(?:out|u|el|ěl)\w*\s+/iu, "").trim();
+    const verbRe =
+      /\b(koupit|zavolat|vyzvednout|vz[ií]t|zaplatit|poslat|objednat|vyřídit|vyridit|udělat|udelat|napsat|přečíst|precist|připravit|pripravit|odeslat|dokončit|dokoncit|nastudovat|domluvit|zkontrolovat|zařídit|zariadit|připomenout|pripomenout)\b/iu;
+    const verbM = s.match(verbRe);
+    if (verbM && typeof verbM.index === "number") {
+      const vf = foldCs(String(verbM[1] || ""));
+      const verbCanon = IU_SILVER_TASK_VERB_CANON[vf] || String(verbM[1] || "").toLowerCase();
+      if (verbM.index > 0) {
+        const before = iuSilverNormalizeWs(s.slice(0, verbM.index)).trim();
+        const rest = iuSilverNormalizeWs(s.slice(verbM.index + verbM[0].length)).trim();
+        const actionPart = rest ? verbCanon + " " + rest : verbCanon;
+        s = before ? before + " " + actionPart : actionPart;
+      } else {
+        const rest = iuSilverNormalizeWs(s.slice(verbM.index + verbM[0].length)).trim();
+        s = rest ? verbCanon + " " + rest : verbCanon;
+      }
+      s = iuSilverNormalizeWs(s);
+    }
+    let out = iuSilverFinalizeTaskTitle(s);
+    if (!out || out.length < 2) {
+      out = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
+    }
+    return out.slice(0, 200);
   }
 
   /**
@@ -44192,15 +44230,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       for (li = 0; li < leadDateNoise.length; li++) {
         s = s.replace(leadDateNoise[li], "").trim();
       }
-      if (hasDue) {
+      if (hasDue && !opts.preserveReminderTimeInTitle) {
         s = s.replace(/\bna\s+z[ií]t\w*\b/gi, " ").trim();
         s = s.replace(/\b(?:ráno|dopoledne|odpoledne|večer|vecer)\b/gi, " ").trim();
       }
-      s = s.replace(/\s+(?:na\s+)?(?:dnesek|dneska|dne[sš](?:ek|ěk)|zitrek|zittra|zitrejsi|z[ií]t(?:ek|řek|reku))\s*$/gi, " ").trim();
-      s = s.replace(/\b(z[iíe]tra|zejtra|zitra)\s+r[aá]no\b/gi, " ").trim();
-      s = s.replace(/\b(z[iíe]tra|zejtra|zitra)\s*$/gi, "").trim();
-      s = s.replace(/\b(?:na\s+)?(?:dnesek|dneska)\s*$/gi, "").trim();
-      s = s.replace(/\br[aá]no\s*$/gi, "").trim();
+      if (!opts.preserveReminderTimeInTitle) {
+        s = s.replace(/\s+(?:na\s+)?(?:dnesek|dneska|dne[sš](?:ek|ěk)|zitrek|zittra|zitrejsi|z[ií]t(?:ek|řek|reku))\s*$/gi, " ").trim();
+        s = s.replace(/\b(z[iíe]tra|zejtra|zitra)\s+r[aá]no\b/gi, " ").trim();
+        s = s.replace(/\b(z[iíe]tra|zejtra|zitra)\s*$/gi, "").trim();
+        s = s.replace(/\b(?:na\s+)?(?:dnesek|dneska)\s*$/gi, "").trim();
+        s = s.replace(/\br[aá]no\s*$/gi, "").trim();
+      }
       s = s.replace(/^\s*[,:;]+\s*/u, "").trim();
       s = iuSilverNormalizeWs(s);
       if (s === prev) break;
@@ -44436,58 +44476,99 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!iuSilverHasTaskActionVerb(foldedWork) && !opts.fromExplicitTarget) return null;
 
     let w = work;
-    const tHit = findTime(w, now, String(rawIn || ""));
-    if (tHit.time) w = tHit.work;
-
     let dueYmd = "";
     const foldedRawIn = foldedFull;
+    const preserveReminderTimeInTitle = !!opts.fromExplicitTarget;
 
-    if (
-      /\bza\s+hodinu\b/.test(foldedRawIn) ||
-      /\bza\s+\d+\s*hodin/.test(foldedRawIn) ||
-      /\bza\s+\d+\s*minut/.test(foldedRawIn)
-    ) {
-      dueYmd = toDateOnly(now);
-    }
-    const rel = findRelativeDay(w, now, false, null);
-    if (rel) {
-      dueYmd = rel.date;
-      w = rel.work;
-    }
-    const abs = findAbsoluteDate(w, now);
-    if (abs) {
-      dueYmd = abs.date;
-      w = abs.work;
+    if (preserveReminderTimeInTitle) {
+      let wMeta = work;
+      const tHitMeta = findTime(wMeta, now, String(rawIn || ""));
+      if (tHitMeta.time) wMeta = tHitMeta.work;
+      if (
+        /\bza\s+hodinu\b/.test(foldedRawIn) ||
+        /\bza\s+\d+\s*hodin/.test(foldedRawIn) ||
+        /\bza\s+\d+\s*minut/.test(foldedRawIn)
+      ) {
+        dueYmd = toDateOnly(now);
+      }
+      const relMeta = findRelativeDay(wMeta, now, false, null);
+      if (relMeta) {
+        dueYmd = relMeta.date;
+        wMeta = relMeta.work;
+      }
+      const absMeta = findAbsoluteDate(wMeta, now);
+      if (absMeta) {
+        dueYmd = absMeta.date;
+        wMeta = absMeta.work;
+      }
+      const entMeta = iuSilverExtractEntities(String(rawIn || "").trim(), now);
+      if (!dueYmd && entMeta.dateISO) {
+        dueYmd = entMeta.dateISO;
+      }
+    } else {
+      const tHit = findTime(w, now, String(rawIn || ""));
+      if (tHit.time) w = tHit.work;
+      if (
+        /\bza\s+hodinu\b/.test(foldedRawIn) ||
+        /\bza\s+\d+\s*hodin/.test(foldedRawIn) ||
+        /\bza\s+\d+\s*minut/.test(foldedRawIn)
+      ) {
+        dueYmd = toDateOnly(now);
+      }
+      const rel = findRelativeDay(w, now, false, null);
+      if (rel) {
+        dueYmd = rel.date;
+        w = rel.work;
+      }
+      const abs = findAbsoluteDate(w, now);
+      if (abs) {
+        dueYmd = abs.date;
+        w = abs.work;
+      }
+      const ent = iuSilverExtractEntities(String(rawIn || "").trim(), now);
+      if (!dueYmd && ent.dateISO) {
+        dueYmd = ent.dateISO;
+      }
+      w = iuSilverConditionalPayloadIsolationV1(w, { fromReminder: iuSilverRawHasReminderTaskLexemeP1(rawIn) });
+      w = iuSilverNormalizeWs(w);
     }
 
-    const ent = iuSilverExtractEntities(String(rawIn || "").trim(), now);
-    if (!dueYmd && ent.dateISO) {
-      dueYmd = ent.dateISO;
-    }
-
-    w = iuSilverConditionalPayloadIsolationV1(w, { fromReminder: iuSilverRawHasReminderTaskLexemeP1(rawIn) });
-    w = iuSilverNormalizeWs(w);
-    let title = iuSilverFinalizeTaskTitle(w);
+    let title = preserveReminderTimeInTitle
+      ? iuSilverBuildExplicitTaskReminderTitleV1(work)
+      : iuSilverFinalizeTaskTitle(w);
     if (!title || title.length < 2) {
       const slotFb = iuSilverExtractSemanticSlotsV1("tasks.create", String(rawIn || ""));
       const stFb = String(slotFb["task.title"] || "").trim();
       if (stFb && stFb.length >= 2) title = stFb;
     }
     if (!title || title.length < 2) return null;
-    const titleNorm = normalizeSilverTitleV1(title, { kind: "task" }).slice(0, 200);
-    const titleForDraft0 = iuSilverCleanTaskCreateTitleV1(titleNorm, titleNorm);
-    let titleForDraft1 = iuSilverCleanTaskReminderTitleV1(titleForDraft0, titleForDraft0);
-    if (iuSilverRawHasReminderTaskLexemeP1(rawIn) && !iuSilverIsBirthdayReminderIntentV1(rawIn)) {
-      titleForDraft1 = iuSilverCleanReminderTaskTitleV1(titleForDraft1, rawIn, titleForDraft0);
-    }
-    const titleForDraft2 = iuSilverCleanTaskCreateTitleV2(titleForDraft1, titleForDraft1, { taskDueYmd: dueYmd || "" });
-    let titleForDraft = iuSilverCleanCrossIntentTaskTitleV1(titleForDraft2, String(rawIn || "").trim(), {
-      taskDueYmd: dueYmd || ""
-    });
-    const gateRawForScaffold = String((opts && opts.titleCleanupFullRawGate) || rawIn || "").trim();
-    titleForDraft = iuSilverCleanTaskCommandScaffoldingTitleP1(titleForDraft, gateRawForScaffold);
 
-    if (opts.birthdayReminderIntentGuardV1) {
+    let titleForDraft;
+    if (preserveReminderTimeInTitle) {
+      titleForDraft = iuSilverBuildExplicitTaskReminderTitleV1(work);
+      titleForDraft = iuSilverNormalizeWs(String(titleForDraft || "").replace(/^\s*p[rř]ipome[nň]\s+mi\s+/iu, "").trim());
+      if (titleForDraft) {
+        titleForDraft = titleForDraft.charAt(0).toLocaleUpperCase("cs-CZ") + titleForDraft.slice(1);
+      }
+    } else {
+      const titleNorm = normalizeSilverTitleV1(title, { kind: "task" }).slice(0, 200);
+      const titleForDraft0 = iuSilverCleanTaskCreateTitleV1(titleNorm, titleNorm);
+      let titleForDraft1 = iuSilverCleanTaskReminderTitleV1(titleForDraft0, titleForDraft0);
+      if (iuSilverRawHasReminderTaskLexemeP1(rawIn) && !iuSilverIsBirthdayReminderIntentV1(rawIn)) {
+        titleForDraft1 = iuSilverCleanReminderTaskTitleV1(titleForDraft1, rawIn, titleForDraft0);
+      }
+      const titleForDraft2 = iuSilverCleanTaskCreateTitleV2(titleForDraft1, titleForDraft1, {
+        taskDueYmd: dueYmd || "",
+        preserveReminderTimeInTitle: false
+      });
+      titleForDraft = iuSilverCleanCrossIntentTaskTitleV1(titleForDraft2, String(rawIn || "").trim(), {
+        taskDueYmd: dueYmd || ""
+      });
+      const gateRawForScaffold = String((opts && opts.titleCleanupFullRawGate) || rawIn || "").trim();
+      titleForDraft = iuSilverCleanTaskCommandScaffoldingTitleP1(titleForDraft, gateRawForScaffold);
+    }
+
+    if (!preserveReminderTimeInTitle && opts.birthdayReminderIntentGuardV1) {
       const foldT = foldCs(String(titleForDraft || ""));
       if (/\bnarozeniny\b/.test(foldT) && !/\bpoprat\b/.test(foldT)) {
         const rawStr = String(rawIn || "");
@@ -44522,10 +44603,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     draft.meta.time = "missing";
     draft.note = "";
     draft.meta.note = "optional";
-    let taskTitleFinal = iuSilverCleanTaskCreateTitleV2(String(draft.title || ""), String(draft.title || ""), {
-      taskDueYmd: dueYmd || ""
-    });
-    if (/\b(z[iíe]tra|zejtra|zitra)(\s+r[aá]no)?\b/i.test(foldedFull)) {
+    let taskTitleFinal = preserveReminderTimeInTitle
+      ? String(titleForDraft || "")
+      : iuSilverCleanTaskCreateTitleV2(String(draft.title || ""), String(draft.title || ""), {
+          taskDueYmd: dueYmd || "",
+          preserveReminderTimeInTitle: false
+        });
+    if (!preserveReminderTimeInTitle && /\b(z[iíe]tra|zejtra|zitra)(\s+r[aá]no)?\b/i.test(foldedFull)) {
       taskTitleFinal = iuSilverNormalizeWs(
         String(taskTitleFinal || "")
           .replace(/\b(z[iíe]tra|zejtra|zitra)(\s+r[aá]no)?\b/gi, " ")
@@ -44535,7 +44619,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     draft.title = iuSilverCrossModuleNegationStripPollutedTitleV1(taskTitleFinal);
     draft.meta.title = String(draft.title || "").trim() ? "certain" : draft.meta.title;
-    iuSilverSemanticPayloadFinalizerV1(draft, rawInNegClean, "tasks.create");
+    if (preserveReminderTimeInTitle) draft.meta.preserveExplicitReminderTimeV1 = true;
+    const explicitTaskReminderTitleSnapshot = preserveReminderTimeInTitle ? String(titleForDraft || "").trim() : "";
+    iuSilverSemanticPayloadFinalizerV1(draft, rawInNegClean, "tasks.create", {
+      preserveExplicitReminderTimeV1: preserveReminderTimeInTitle
+    });
+    if (preserveReminderTimeInTitle && explicitTaskReminderTitleSnapshot) {
+      draft.title = explicitTaskReminderTitleSnapshot;
+      draft.meta.title = "certain";
+    }
 
     const vagueTaskTimeNekdyP1 = iuSilverVagueNekdyDayPartBlocksCertainTimeFolded(foldedFull);
     const processingState = vagueTaskTimeNekdyP1 ? "NEEDS_CLARIFICATION" : "READY_TO_SAVE";
@@ -55639,6 +55731,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverApplySemanticSlotsToTaskDraftV1(draft, slots) {
     if (!draft || draft.targetContainer !== "tasks" || !slots) return;
+    if (draft.meta && draft.meta.preserveExplicitReminderTimeV1) return;
     const title0 = String(draft.title || "").trim();
     const slotTitle = String(slots["task.title"] || "").trim();
     const tf0 = foldCs(title0);
@@ -56707,6 +56800,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
    */
   function iuSilverSaveUnderstandingValidatorRepairPassV1(draft, rawFull, intentNorm) {
     if (!draft || String(intentNorm || "").indexOf(".create") < 0) return { issues: [], confidence: "high" };
+    const preserveExplicitTime = !!(draft.meta && draft.meta.preserveExplicitReminderTimeV1);
     const raw = String(rawFull || "").trim();
     const ni = String(intentNorm || "");
     const issues = [];
@@ -56716,7 +56810,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (tc === "calendar" || tc === "tasks") {
       let title0 = String(draft.title || "").trim();
       const titleFold = foldCs(title0);
-      if (title0) {
+      if (preserveExplicitTime && tc === "tasks") {
+        /* explicit „Připomeň mi“ — title already finalized; skip validator title repairs */
+      } else if (title0) {
         if (iuSilverSemanticHasAssistantNameLeakageV1(title0)) {
           issues.push("title_contains_assistant_name");
           const slots = iuSilverExtractSemanticSlotsV1(ni, raw);
@@ -56749,7 +56845,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           confidence = "medium";
         }
         const tf2 = foldCs(title0);
-        if (iuSilverSaveTitleHasTemporalLeakWhenSlotsFilledV1(tf2, draft)) {
+        if (!preserveExplicitTime && iuSilverSaveTitleHasTemporalLeakWhenSlotsFilledV1(tf2, draft)) {
           issues.push("title_contains_date_time");
           const slots = iuSilverExtractSemanticSlotsV1(ni, raw);
           const st = String((tc === "calendar" ? slots["event.title"] : slots["task.title"]) || "").trim();
@@ -57822,6 +57918,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
    */
   function iuSilverCap46PolishSavePayloadV1(draft, rawFull, intentNorm) {
     if (!draft || String(intentNorm || "").indexOf(".create") < 0) return;
+    if (draft.meta && draft.meta.preserveExplicitReminderTimeV1) return;
     const raw = String(rawFull || "").trim();
     const rf = foldCs(raw);
     const tc = String(draft.targetContainer || "");
