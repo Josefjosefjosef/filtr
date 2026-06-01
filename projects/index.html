@@ -422,6 +422,31 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/app.css?v=fix-section-switch-scroll-cls-20260531" />
     <link rel="stylesheet" href="/assets/iu-tasks-premium.css?v=tasks-premium-scope-20260503" />
     <link rel="stylesheet" href="/assets/iu-notes-premium.css?v=notes-premium-teal-20260503" />
+    <style id="iuInfoCardsMobileTabletPostAppCss">
+      /* P0 info cards Kalendář+Úkoly ≤1023: post app.css — beats #iuInfoCardsMobileTablet min-height:160px (assets/app.css CLS reserve). */
+      @media (max-width: 1023px) {
+        #silver-slot #iuInfoCardsMobileTablet,
+        #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet {
+          min-height: 0 !important;
+          height: auto !important;
+          grid-auto-rows: auto !important;
+        }
+        #silver-slot #iuInfoCardsMobileTablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
+        #silver-slot #iuInfoCardsMobileTablet #iuSilverTasksSummaryCard.silver-calendar-summary-card,
+        #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
+        #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet #iuSilverTasksSummaryCard.silver-calendar-summary-card {
+          min-height: 0 !important;
+          height: auto !important;
+          padding: 2px 6px 1px !important;
+        }
+        #silver-slot #iuInfoCardsMobileTablet #iuSilverCalendarSummaryCard .silver-calendar-summary-row--1 .silver-calendar-summary-text,
+        #silver-slot #iuInfoCardsMobileTablet #iuSilverTasksSummaryCard .silver-calendar-summary-row--1 .silver-calendar-summary-text,
+        #silver-slot #iuInfoCardsMobileTablet #iuSilverCalendarSummaryCard .silver-calendar-summary-line2block,
+        #silver-slot #iuInfoCardsMobileTablet #iuSilverTasksSummaryCard .silver-calendar-summary-line2block {
+          min-height: 0 !important;
+        }
+      }
+    </style>
     <style id="iuSilverGuidedComposerCssGuard">
       /* P0 Silver mobile/tablet: input builder + single primary button — post app.css (css_debt_guard). */
       .iuSilverHomeDatePick{
