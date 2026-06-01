@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-01T08:47:03.379037Z",
+  "ingestedAt": "2026-06-01T09:00:21.143254Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nominace Česka na MS ve fotbale 2026: Finální kádr pro světový šampionát",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-2026-nominace-soupiska-cesko-5468407",
+      "dt": "2026-05-27T11:06:02Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "2026",
+        "finální",
+        "fotbale",
+        "kádr",
+        "nominace",
+        "světový",
+        "česka",
+        "šampionát"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nejsem ten pravý člověk. Šéf švýcarského hokeje den po bolestivém finále rezignoval",
+      "url": "https://www.sport.cz/clanek/hokej-ms-nejsem-ten-pravy-clovek-sef-svycarskeho-hokeje-den-po-bolestivem-finale-rezignoval-5473672",
+      "dt": "2026-06-01T08:55:09Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bolestivém",
+        "den",
+        "finále",
+        "hokeje",
+        "nejsem",
+        "pravý",
+        "rezignoval",
+        "ten",
+        "člověk",
+        "švýcarského",
+        "šéf"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -727,57 +780,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Satoranský se vrátil po pěti týdnech, Barcelona jasně podlehla Valencii",
-      "url": "https://www.sport.cz/clanek/basketbal-satoransky-se-vratil-po-peti-tydnech-barcelona-jasne-podlehla-valencii-5473219",
-      "dt": "2026-05-31T19:11:05Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "barcelona",
-        "jasně",
-        "podlehla",
-        "pěti",
-        "satoranský",
-        "týdnech",
-        "valencii",
-        "vrátil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Za mě je to jasné. Dokud Rusko vede válku, nemůže se vrátit, říká Hadamczik",
-      "url": "https://www.sport.cz/clanek/hokej-ms-za-me-je-to-jasne-dokud-rusko-vede-valku-nemuze-se-vratit-rika-hadamczik-5473050",
-      "dt": "2026-05-31T18:25:58Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dokud",
-        "hadamczik",
-        "jasné",
-        "nemůže",
-        "rusko",
-        "vede",
-        "vrátit",
-        "válku",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44130,
+      "bytes": 44039,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-01T08:35:48Z",
+        "raw_feed_latest_publishedAt": "2026-06-01T08:55:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -840,6 +842,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nominace Česka na MS ve fotbale 2026: Finální kádr pro světový šampionát",
+            "publishedAt": "2026-05-27T11:06:02Z"
+          },
+          {
+            "title": "Nejsem ten pravý člověk. Šéf švýcarského hokeje den po bolestivém finále rezignoval",
+            "publishedAt": "2026-06-01T08:55:09Z"
+          },
           {
             "title": "Kayondo do Ruska? Výnos z prodeje bych věnoval ukrajinské ambasádě, slíbil Kania",
             "publishedAt": "2026-06-01T08:35:48Z"
@@ -863,14 +873,6 @@
           {
             "title": "Ztráta pro Kanadu před MS. Záložník Flores si vážně poranil koleno",
             "publishedAt": "2026-06-01T06:51:44Z"
-          },
-          {
-            "title": "Americký golfista Henley si došel pro šestý titul",
-            "publishedAt": "2026-06-01T05:34:22Z"
-          },
-          {
-            "title": "Kuriózní momenty z MS: Tajný gól, chyby rozhodčích i nepovedený zápis do historie",
-            "publishedAt": "2026-06-01T05:30:33Z"
           }
         ]
       }
