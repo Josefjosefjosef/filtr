@@ -17,7 +17,7 @@ import time
 from datetime import datetime
 from typing import Any
 
-from iu_staging import staging_root
+from iu_staging import deserialize_feed_item, staging_root
 
 
 def _json_safe(value: Any) -> Any:
@@ -127,7 +127,7 @@ def drain_items(output_dir: str, max_items: int) -> tuple[list[dict], int]:
     items = [x for x in (q.get("items") or []) if isinstance(x, dict)]
     if not items:
         return [], 0
-    take = items[:max_items]
+    take = [deserialize_feed_item(x) for x in items[:max_items]]
     rest = items[max_items:]
     q["items"] = rest
     stats = q.setdefault("stats", {})

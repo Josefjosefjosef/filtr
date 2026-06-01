@@ -1263,11 +1263,27 @@ def tokenize_title(title: str) -> set:
     return tokens
 
 
-def jaccard(a: set, b: set) -> float:
-    if not a or not b:
+def _token_set(value) -> set:
+    """Normalize ingest/cluster tokens (set, list, tuple from JSON queue) for Jaccard."""
+    if value is None:
+        return set()
+    if isinstance(value, set):
+        return value
+    if isinstance(value, (list, tuple)):
+        return set(value)
+    try:
+        return set(value)
+    except TypeError:
+        return set()
+
+
+def jaccard(a, b) -> float:
+    sa = _token_set(a)
+    sb = _token_set(b)
+    if not sa or not sb:
         return 0.0
-    inter = len(a & b)
-    uni = len(a | b)
+    inter = len(sa & sb)
+    uni = len(sa | sb)
     return inter / uni if uni else 0.0
 
 
@@ -2715,7 +2731,7 @@ class Cluster:
     def add(self, item: dict):
         self.items.append(item)
         if self.content_type == "article":
-            self.token_union |= item["tokens"]
+            self.token_union |= _token_set(item.get("tokens"))
 
     def published_at(self) -> datetime:
         return max((it["dt"] for it in self.items), default=datetime.now(timezone.utc))
