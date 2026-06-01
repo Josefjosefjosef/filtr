@@ -32508,9 +32508,19 @@ function buildVideoAsArticleCard(it) {
     const pr = String(t.priority || "medium");
     const priority = pr === "low" || pr === "medium" || pr === "high" ? pr : "medium";
     const status = t.status === "done" ? "done" : "todo";
+    let dueTime = t.dueTime;
+    if (dueTime == null || dueTime === "") dueTime = null;
+    else {
+      dueTime = String(dueTime).trim().slice(0, 5);
+      if (!/^\d{1,2}:\d{2}$/.test(dueTime)) dueTime = null;
+      else {
+        const tp = dueTime.split(":");
+        dueTime = String(Number(tp[0])).padStart(2, "0") + ":" + tp[1];
+      }
+    }
     const createdAt = Number.isFinite(Number(t.createdAt)) ? Number(t.createdAt) : Date.now();
     const updatedAt = Number.isFinite(Number(t.updatedAt)) ? Number(t.updatedAt) : createdAt;
-    return { id, title, note, dueAt, priority, status, createdAt, updatedAt };
+    return { id, title, note, dueAt, dueTime, priority, status, createdAt, updatedAt };
   }
 
   function loadRaw(){
@@ -32742,6 +32752,7 @@ function buildVideoAsArticleCard(it) {
     const title = t ? t.title : "";
     const note = t ? t.note : "";
     const due = t && t.dueAt ? t.dueAt : "";
+    const dueTime = t && t.dueTime ? t.dueTime : "";
     const pr = t ? t.priority : "medium";
     const st = t ? t.status : "todo";
 
@@ -32760,6 +32771,7 @@ function buildVideoAsArticleCard(it) {
             '<span class="iu-tasksOverlay__dateIcon" aria-hidden="true">' + dateIconSvg + "</span>" +
           "</span>" +
         "</label>" +
+        '<label class="iu-tasksOverlay__label">Čas<input class="iu-tasksOverlay__input" id="iuTaskDueTime" type="time" step="60" value="' + esc(dueTime) + '" /></label>' +
         '<label class="iu-tasksOverlay__label">Priorita' +
           '<select class="iu-tasksOverlay__select" id="iuTaskPriority">' +
             '<option value="low"' + (pr === "low" ? " selected" : "") + '>Nízká</option>' +
@@ -32815,16 +32827,19 @@ function buildVideoAsArticleCard(it) {
     const titleEl = document.getElementById("iuTaskTitle");
     const noteEl = document.getElementById("iuTaskNote");
     const dueEl = document.getElementById("iuTaskDue");
+    const dueTimeEl = document.getElementById("iuTaskDueTime");
     const prEl = document.getElementById("iuTaskPriority");
     const stEl = document.getElementById("iuTaskStatus");
     const title = titleEl ? String(titleEl.value || "").trim().slice(0, 200) : "";
     const note = noteEl ? String(noteEl.value || "").slice(0, 5000) : "";
     let dueAt = dueEl ? String(dueEl.value || "").trim() : "";
     if (!isYmd(dueAt)) dueAt = null;
+    let dueTime = dueTimeEl ? String(dueTimeEl.value || "").trim().slice(0, 5) : "";
+    if (!/^\d{2}:\d{2}$/.test(dueTime)) dueTime = null;
     let priority = "medium";
     if (prEl && (prEl.value === "low" || prEl.value === "medium" || prEl.value === "high")) priority = prEl.value;
     const status = stEl && stEl.value === "done" ? "done" : "todo";
-    return { title: title, note: note, dueAt: dueAt, priority: priority, status: status };
+    return { title: title, note: note, dueAt: dueAt, dueTime: dueTime, priority: priority, status: status };
   }
 
   function saveForm(){
@@ -32841,6 +32856,7 @@ function buildVideoAsArticleCard(it) {
         title: r.title,
         note: r.note,
         dueAt: r.dueAt,
+        dueTime: r.dueTime,
         priority: r.priority,
         status: r.status,
         createdAt: prev.createdAt,
@@ -32852,6 +32868,7 @@ function buildVideoAsArticleCard(it) {
         title: r.title,
         note: r.note,
         dueAt: r.dueAt,
+        dueTime: r.dueTime,
         priority: r.priority,
         status: r.status,
         createdAt: now,
@@ -33083,8 +33100,15 @@ function buildVideoAsArticleCard(it) {
       const d = String(o.date).trim();
       if (isYmd(d)) dueAt = d;
     }
+    let dueTime = null;
+    if (o.time) {
+      const tv = String(o.time).trim().slice(0, 5);
+      if (/^\d{1,2}:\d{2}$/.test(tv)) {
+        const tp = tv.split(":");
+        dueTime = String(Number(tp[0])).padStart(2, "0") + ":" + tp[1];
+      }
+    }
     const lines = [];
-    if (o.time) lines.push("Čas: " + String(o.time));
     if (o.note) lines.push(String(o.note));
     if (o.location) lines.push("Místo: " + String(o.location));
     const note = lines.join("\n").trim().slice(0, 5000);
@@ -33095,6 +33119,7 @@ function buildVideoAsArticleCard(it) {
       title: title,
       note: note,
       dueAt: dueAt,
+      dueTime: dueTime,
       priority: "medium",
       status: "todo",
       createdAt: now,
@@ -41952,7 +41977,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bnic\s+nevytvarej\b/.test(f) ||
       /\bneukladej\b/.test(f) ||
       /\bpouze\s+cti\b/.test(f) ||
+      /\bpouze\s+precti\b/.test(f) ||
       /\bjen\s+cti\b/.test(f) ||
+      /\bjen\s+precti\b/.test(f) ||
       /\bjen\s+se\s+podivej\b/.test(f)
     );
   }
@@ -44181,6 +44208,45 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   /**
+   * P0 task/reminder: when date/time live in taskDueAt/taskDueTime, strip planning phrases from title.
+   */
+  function iuSilverStripExtractedTaskTimeFromTitleV1(titleIn, opts) {
+    opts = opts || {};
+    const hasTime = String(opts.taskDueTime || "").trim().length > 0;
+    const hasDue = String(opts.taskDueYmd || "").trim().length > 0;
+    if (!hasTime && !hasDue) return String(titleIn || "").trim();
+    let s = iuSilverNormalizeWs(String(titleIn || ""));
+    if (!s) return s;
+    for (let round = 0; round < 8; round++) {
+      const prev = s;
+      if (hasTime) {
+        s = s
+          .replace(/^\s*(?:v|ve)\s+\d{1,2}\s*(?::\d{2})?\s*(?:hod(?:\.|in(?:y|a|u)?)?|hod\.)?\s*/iu, "")
+          .replace(/^\s*(?:ráno|rano|dopoledne|odpoledne|večer|vecer|po\s+obědě|po\s+obede|poledne|noc)\s+/iu, "")
+          .trim();
+      }
+      if (hasDue) {
+        s = s
+          .replace(
+            /^\s*(?:z[ií]tra|dnes(?:ka)?|pozítř[íi]?|v\s+p[aá]tku|v\s+ponděl[íi]|v\s+úter[ýy]|ve\s+středu|ve\s+čtvrtek)\s+/iu,
+            ""
+          )
+          .trim();
+      }
+      s = s
+        .replace(/^\s*(?:v|ve)\s+\d{1,2}\b\s*/iu, hasTime ? "" : "$&")
+        .replace(/^\s*(?:že|ze|musím|musim|m[aá]m)\s+/iu, "")
+        .replace(/^\s*(?:abys|abych)\s+/iu, "")
+        .replace(/^\s*nezapom(?:ě|e)?n(?:out|u|el|ěl)\w*\s+/iu, "")
+        .trim();
+      s = iuSilverNormalizeWs(s);
+      if (s === prev) break;
+    }
+    if (s.length >= 2) s = s.charAt(0).toLocaleUpperCase("cs-CZ") + s.slice(1);
+    return s.slice(0, 200);
+  }
+
+  /**
    * P0 Silver v2: post-routing strip modulových / příkazových / redundantních datumových zbytků
    * jen u tasks.create draft.title (po V1 + reminder V1). Nemění routing ani parsování data.
    */
@@ -44475,67 +44541,51 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (!iuSilverHasTaskActionVerb(foldedWork) && !opts.fromExplicitTarget) return null;
 
-    let w = work;
-    let dueYmd = "";
-    const foldedRawIn = foldedFull;
-    const preserveReminderTimeInTitle = !!opts.fromExplicitTarget;
-
-    if (preserveReminderTimeInTitle) {
-      let wMeta = work;
-      const tHitMeta = findTime(wMeta, now, String(rawIn || ""));
-      if (tHitMeta.time) wMeta = tHitMeta.work;
-      if (
-        /\bza\s+hodinu\b/.test(foldedRawIn) ||
-        /\bza\s+\d+\s*hodin/.test(foldedRawIn) ||
-        /\bza\s+\d+\s*minut/.test(foldedRawIn)
-      ) {
-        dueYmd = toDateOnly(now);
-      }
-      const relMeta = findRelativeDay(wMeta, now, false, null);
-      if (relMeta) {
-        dueYmd = relMeta.date;
-        wMeta = relMeta.work;
-      }
-      const absMeta = findAbsoluteDate(wMeta, now);
-      if (absMeta) {
-        dueYmd = absMeta.date;
-        wMeta = absMeta.work;
-      }
-      const entMeta = iuSilverExtractEntities(String(rawIn || "").trim(), now);
-      if (!dueYmd && entMeta.dateISO) {
-        dueYmd = entMeta.dateISO;
-      }
-    } else {
-      const tHit = findTime(w, now, String(rawIn || ""));
-      if (tHit.time) w = tHit.work;
-      if (
-        /\bza\s+hodinu\b/.test(foldedRawIn) ||
-        /\bza\s+\d+\s*hodin/.test(foldedRawIn) ||
-        /\bza\s+\d+\s*minut/.test(foldedRawIn)
-      ) {
-        dueYmd = toDateOnly(now);
-      }
-      const rel = findRelativeDay(w, now, false, null);
-      if (rel) {
-        dueYmd = rel.date;
-        w = rel.work;
-      }
-      const abs = findAbsoluteDate(w, now);
-      if (abs) {
-        dueYmd = abs.date;
-        w = abs.work;
-      }
-      const ent = iuSilverExtractEntities(String(rawIn || "").trim(), now);
-      if (!dueYmd && ent.dateISO) {
-        dueYmd = ent.dateISO;
-      }
-      w = iuSilverConditionalPayloadIsolationV1(w, { fromReminder: iuSilverRawHasReminderTaskLexemeP1(rawIn) });
-      w = iuSilverNormalizeWs(w);
+    if (
+      iuSilverExplicitSavePrefixHardNegBlocksWriteV1(foldedFull) &&
+      /\b(jen\s+(?:se\s+podivej|cti|precti|preci)|pouze\s+(?:cti|precti|preci))\b/.test(foldedFull)
+    ) {
+      return null;
     }
 
-    let title = preserveReminderTimeInTitle
-      ? iuSilverBuildExplicitTaskReminderTitleV1(work)
-      : iuSilverFinalizeTaskTitle(w);
+    let w = work;
+    let dueYmd = "";
+    let dueTime = "";
+    let dueTimeLabel = "";
+    const foldedRawIn = foldedFull;
+
+    const tHit = findTime(w, now, String(rawIn || ""));
+    if (tHit.time) {
+      dueTime = tHit.time;
+      dueTimeLabel = tHit.timeLabel || "";
+      w = tHit.work;
+      if (tHit.dateISOHint && !dueYmd) dueYmd = tHit.dateISOHint;
+    }
+    if (
+      /\bza\s+hodinu\b/.test(foldedRawIn) ||
+      /\bza\s+\d+\s*hodin/.test(foldedRawIn) ||
+      /\bza\s+\d+\s*minut/.test(foldedRawIn)
+    ) {
+      dueYmd = toDateOnly(now);
+    }
+    const rel = findRelativeDay(w, now, false, null);
+    if (rel) {
+      dueYmd = rel.date;
+      w = rel.work;
+    }
+    const abs = findAbsoluteDate(w, now);
+    if (abs) {
+      dueYmd = abs.date;
+      w = abs.work;
+    }
+    const ent = iuSilverExtractEntities(String(rawIn || "").trim(), now);
+    if (!dueYmd && ent.dateISO) {
+      dueYmd = ent.dateISO;
+    }
+    w = iuSilverConditionalPayloadIsolationV1(w, { fromReminder: iuSilverRawHasReminderTaskLexemeP1(rawIn) });
+    w = iuSilverNormalizeWs(w);
+
+    let title = iuSilverFinalizeTaskTitle(w);
     if (!title || title.length < 2) {
       const slotFb = iuSilverExtractSemanticSlotsV1("tasks.create", String(rawIn || ""));
       const stFb = String(slotFb["task.title"] || "").trim();
@@ -44543,32 +44593,23 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (!title || title.length < 2) return null;
 
-    let titleForDraft;
-    if (preserveReminderTimeInTitle) {
-      titleForDraft = iuSilverBuildExplicitTaskReminderTitleV1(work);
-      titleForDraft = iuSilverNormalizeWs(String(titleForDraft || "").replace(/^\s*p[rř]ipome[nň]\s+mi\s+/iu, "").trim());
-      if (titleForDraft) {
-        titleForDraft = titleForDraft.charAt(0).toLocaleUpperCase("cs-CZ") + titleForDraft.slice(1);
-      }
-    } else {
-      const titleNorm = normalizeSilverTitleV1(title, { kind: "task" }).slice(0, 200);
-      const titleForDraft0 = iuSilverCleanTaskCreateTitleV1(titleNorm, titleNorm);
-      let titleForDraft1 = iuSilverCleanTaskReminderTitleV1(titleForDraft0, titleForDraft0);
-      if (iuSilverRawHasReminderTaskLexemeP1(rawIn) && !iuSilverIsBirthdayReminderIntentV1(rawIn)) {
-        titleForDraft1 = iuSilverCleanReminderTaskTitleV1(titleForDraft1, rawIn, titleForDraft0);
-      }
-      const titleForDraft2 = iuSilverCleanTaskCreateTitleV2(titleForDraft1, titleForDraft1, {
-        taskDueYmd: dueYmd || "",
-        preserveReminderTimeInTitle: false
-      });
-      titleForDraft = iuSilverCleanCrossIntentTaskTitleV1(titleForDraft2, String(rawIn || "").trim(), {
-        taskDueYmd: dueYmd || ""
-      });
-      const gateRawForScaffold = String((opts && opts.titleCleanupFullRawGate) || rawIn || "").trim();
-      titleForDraft = iuSilverCleanTaskCommandScaffoldingTitleP1(titleForDraft, gateRawForScaffold);
+    const titleNorm = normalizeSilverTitleV1(title, { kind: "task" }).slice(0, 200);
+    const titleForDraft0 = iuSilverCleanTaskCreateTitleV1(titleNorm, titleNorm);
+    let titleForDraft1 = iuSilverCleanTaskReminderTitleV1(titleForDraft0, titleForDraft0);
+    if (iuSilverRawHasReminderTaskLexemeP1(rawIn) && !iuSilverIsBirthdayReminderIntentV1(rawIn)) {
+      titleForDraft1 = iuSilverCleanReminderTaskTitleV1(titleForDraft1, rawIn, titleForDraft0);
     }
+    const titleForDraft2 = iuSilverCleanTaskCreateTitleV2(titleForDraft1, titleForDraft1, {
+      taskDueYmd: dueYmd || "",
+      preserveReminderTimeInTitle: false
+    });
+    let titleForDraft = iuSilverCleanCrossIntentTaskTitleV1(titleForDraft2, String(rawIn || "").trim(), {
+      taskDueYmd: dueYmd || ""
+    });
+    const gateRawForScaffold = String((opts && opts.titleCleanupFullRawGate) || rawIn || "").trim();
+    titleForDraft = iuSilverCleanTaskCommandScaffoldingTitleP1(titleForDraft, gateRawForScaffold);
 
-    if (!preserveReminderTimeInTitle && opts.birthdayReminderIntentGuardV1) {
+    if (opts.birthdayReminderIntentGuardV1) {
       const foldT = foldCs(String(titleForDraft || ""));
       if (/\bnarozeniny\b/.test(foldT) && !/\bpoprat\b/.test(foldT)) {
         const rawStr = String(rawIn || "");
@@ -44594,22 +44635,27 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const draft = createEmptyDraft();
     draft.targetContainer = "tasks";
     draft.taskDueAt = dueYmd || "";
+    draft.taskDueTime = dueTime || "";
     draft.taskNote = "";
     draft.title = titleForDraft;
     draft.meta.title = "certain";
+    if (dueTime) {
+      draft.meta.taskDueTime = "certain";
+      if (dueTimeLabel) draft.meta.taskDueTimeLabel = dueTimeLabel;
+    } else {
+      draft.meta.taskDueTime = "missing";
+    }
     draft.date = "";
     draft.meta.date = "missing";
     draft.time = "";
     draft.meta.time = "missing";
     draft.note = "";
     draft.meta.note = "optional";
-    let taskTitleFinal = preserveReminderTimeInTitle
-      ? String(titleForDraft || "")
-      : iuSilverCleanTaskCreateTitleV2(String(draft.title || ""), String(draft.title || ""), {
-          taskDueYmd: dueYmd || "",
-          preserveReminderTimeInTitle: false
-        });
-    if (!preserveReminderTimeInTitle && /\b(z[iíe]tra|zejtra|zitra)(\s+r[aá]no)?\b/i.test(foldedFull)) {
+    let taskTitleFinal = iuSilverCleanTaskCreateTitleV2(String(draft.title || ""), String(draft.title || ""), {
+      taskDueYmd: dueYmd || "",
+      preserveReminderTimeInTitle: false
+    });
+    if (/\b(z[iíe]tra|zejtra|zitra)(\s+r[aá]no)?\b/i.test(foldedFull)) {
       taskTitleFinal = iuSilverNormalizeWs(
         String(taskTitleFinal || "")
           .replace(/\b(z[iíe]tra|zejtra|zitra)(\s+r[aá]no)?\b/gi, " ")
@@ -44619,14 +44665,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     draft.title = iuSilverCrossModuleNegationStripPollutedTitleV1(taskTitleFinal);
     draft.meta.title = String(draft.title || "").trim() ? "certain" : draft.meta.title;
-    if (preserveReminderTimeInTitle) draft.meta.preserveExplicitReminderTimeV1 = true;
-    const explicitTaskReminderTitleSnapshot = preserveReminderTimeInTitle ? String(titleForDraft || "").trim() : "";
-    iuSilverSemanticPayloadFinalizerV1(draft, rawInNegClean, "tasks.create", {
-      preserveExplicitReminderTimeV1: preserveReminderTimeInTitle
-    });
-    if (preserveReminderTimeInTitle && explicitTaskReminderTitleSnapshot) {
-      draft.title = explicitTaskReminderTitleSnapshot;
-      draft.meta.title = "certain";
+    iuSilverSemanticPayloadFinalizerV1(draft, rawInNegClean, "tasks.create", {});
+    if (draft.taskDueTime || draft.taskDueAt) {
+      draft.title = iuSilverStripExtractedTaskTimeFromTitleV1(draft.title, {
+        taskDueYmd: draft.taskDueAt,
+        taskDueTime: draft.taskDueTime
+      });
+      draft.meta.title = String(draft.title || "").trim() ? "certain" : draft.meta.title;
     }
 
     const vagueTaskTimeNekdyP1 = iuSilverVagueNekdyDayPartBlocksCertainTimeFolded(foldedFull);
@@ -51115,6 +51160,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       activeCalendarSession: !!d.activeCalendarSession,
       targetContainer: d.targetContainer == null ? null : d.targetContainer,
       taskDueAt: d.taskDueAt != null ? String(d.taskDueAt).slice(0, 10) : "",
+      taskDueTime: d.taskDueTime != null ? String(d.taskDueTime).slice(0, 5) : "",
       taskNote: d.taskNote != null ? String(d.taskNote) : "",
       silverNoteText: d.silverNoteText != null ? String(d.silverNoteText) : "",
       silverNoteCreatedTs: d.silverNoteCreatedTs != null ? Number(d.silverNoteCreatedTs) || 0 : 0
@@ -51137,11 +51183,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         title: "missing",
         note: "optional",
         location: "optional",
-        duration: "optional"
+        duration: "optional",
+        taskDueTime: "missing"
       },
       activeCalendarSession: false,
       targetContainer: null,
       taskDueAt: "",
+      taskDueTime: "",
       taskNote: "",
       silverNoteText: "",
       silverNoteCreatedTs: 0
@@ -58138,6 +58186,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       iuSilverFieldOwnershipAddressBleedFinalGuardV1(draft, raw);
       iuSilverCrossFieldValidationContractV1(draft, raw, ni);
       iuSilverInstructionPrefixNoteCleanerV2ApplyToDraftV1(draft, raw);
+      if (String(draft.taskDueTime || "").trim() || String(draft.taskDueAt || "").trim()) {
+        draft.title = iuSilverStripExtractedTaskTimeFromTitleV1(draft.title, {
+          taskDueYmd: draft.taskDueAt,
+          taskDueTime: draft.taskDueTime
+        });
+        if (String(draft.title || "").trim()) draft.meta.title = "certain";
+      }
       return;
     }
 
@@ -66166,6 +66221,48 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return processingStateFromDraft(d);
   }
 
+  function iuSilverFormatTaskDueTimeDisplayV1(d) {
+    const t = d && d.taskDueTime ? String(d.taskDueTime).trim() : "";
+    if (/^\d{1,2}:\d{2}$/.test(t)) {
+      const tp = t.split(":");
+      return String(Number(tp[0])).padStart(2, "0") + ":" + tp[1];
+    }
+    if (d && d.meta && d.meta.taskDueTimeLabel) return String(d.meta.taskDueTimeLabel);
+    return "";
+  }
+
+  function renderTaskDraftGridView(d, statusDisp) {
+    const dateHuman =
+      d.taskDueAt && typeof d.taskDueAt === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d.taskDueAt)
+        ? iuSilverFormatDateCs(d.taskDueAt)
+        : "";
+    const timeHuman = iuSilverFormatTaskDueTimeDisplayV1(d);
+    const titleDisp = String(d.title || "").trim();
+    const noteDisp = String(d.taskNote || "").trim();
+    return `<div class="iuSilverDraftGrid iuSilverDraftGrid--task">
+    ${formatDraftRow("Datum", dateHuman, !dateHuman, {})}
+    ${formatDraftRow("Čas", timeHuman, !timeHuman, {})}
+    ${formatDraftRow("Název", titleDisp, false, {})}
+    ${formatDraftRow("Stav", statusDisp, false, {})}
+    ${formatDraftRow("Poznámka", noteDisp, false, {})}
+  </div>`;
+  }
+
+  function renderTaskDraftGridEdit(d) {
+    const titleDisp = String(d.title || "").trim();
+    const noteDisp = String(d.taskNote || "").trim();
+    const timeVal =
+      d.taskDueTime && /^\d{1,2}:\d{2}$/.test(String(d.taskDueTime))
+        ? iuSilverFormatTaskDueTimeDisplayV1(d)
+        : "";
+    return `<div class="iuSilverDraftGrid iuSilverDraftGrid--edit iuSilverDraftGrid--task">
+    <div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-task-field="due" value="${esc(String(d.taskDueAt || "").slice(0, 10))}" />
+    <div class="iuSilverDraftK">Čas</div><input type="time" step="60" class="iuSilverDraftInput" data-iu-silver-task-field="time" value="${esc(timeVal)}" />
+    <div class="iuSilverDraftK">Název</div><input type="text" maxlength="200" class="iuSilverDraftInput" data-iu-silver-task-field="title" value="${esc(titleDisp)}" autocomplete="off" />
+    <div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="2" maxlength="5000" data-iu-silver-task-field="note">${esc(noteDisp)}</textarea>
+  </div>`;
+  }
+
   function formatDraftRow(label, val, muted, rowOpts) {
     rowOpts = rowOpts || {};
     const v = val == null || String(val).trim() === "";
@@ -66261,6 +66358,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         '<div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-task-field="due" value="' +
         esc(String(d.taskDueAt || "").slice(0, 10)) +
         '" />' +
+        '<div class="iuSilverDraftK">Čas</div><input type="time" step="60" class="iuSilverDraftInput" data-iu-silver-task-field="time" value="' +
+        esc(iuSilverFormatTaskDueTimeDisplayV1(d)) +
+        '" />' +
         '<div class="iuSilverDraftK">Název</div><input type="text" maxlength="200" class="iuSilverDraftInput" data-iu-silver-task-field="title" value="" autocomplete="off" />' +
         '<div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="3" maxlength="5000" data-iu-silver-task-field="note"></textarea>' +
         "</div>";
@@ -66339,18 +66439,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       let actions = "";
       actions += `<button type="button" class="iuSilverDraftBtn iuSilverDraftBtn--primary" data-iu-silver-action="save" ${showSave ? "" : "disabled"}>Uložit</button>`;
       actions += `<button type="button" class="iuSilverDraftBtn" data-iu-silver-action="edit" aria-pressed="${editMode ? "true" : "false"}">Upravit</button>`;
-      const grid = editMode
-        ? `<div class="iuSilverDraftGrid iuSilverDraftGrid--edit iuSilverDraftGrid--task">
-    <div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-task-field="due" value="${esc(String(d.taskDueAt || "").slice(0, 10))}" />
-    <div class="iuSilverDraftK">Název</div><input type="text" maxlength="200" class="iuSilverDraftInput" data-iu-silver-task-field="title" value="${esc(titleDisp)}" autocomplete="off" />
-    <div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="2" maxlength="5000" data-iu-silver-task-field="note">${esc(noteDisp)}</textarea>
-  </div>`
-        : `<div class="iuSilverDraftGrid iuSilverDraftGrid--task">
-    ${formatDraftRow("Datum", dateHuman, !dateHuman, {})}
-    ${formatDraftRow("Název", titleDisp, false, {})}
-    ${formatDraftRow("Stav", statusDisp, false, {})}
-    ${formatDraftRow("Poznámka", noteDisp, false, {})}
-  </div>`;
+      const grid = editMode ? renderTaskDraftGridEdit(d) : renderTaskDraftGridView(d, statusDisp);
       let clar = "";
       if (st === "NEEDS_CLARIFICATION" && turn.clarificationText) {
         clar = `<p class="iuSilverMsgClarification iuSilverMsgClarification--warning" data-iu-silver-clarification="1">${esc(turn.clarificationText)}</p>`;
@@ -66508,18 +66597,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       let actions = "";
       actions += `<button type="button" class="iuSilverDraftBtn iuSilverDraftBtn--primary" data-iu-silver-action="save" ${showSave ? "" : "disabled"}>Uložit</button>`;
       actions += `<button type="button" class="iuSilverDraftBtn" data-iu-silver-action="edit" aria-pressed="${editMode ? "true" : "false"}">Upravit</button>`;
-      const grid = editMode
-        ? `<div class="iuSilverDraftGrid iuSilverDraftGrid--edit iuSilverDraftGrid--task">
-    <div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-task-field="due" value="${esc(String(d.taskDueAt || "").slice(0, 10))}" />
-    <div class="iuSilverDraftK">Název</div><input type="text" maxlength="200" class="iuSilverDraftInput" data-iu-silver-task-field="title" value="${esc(titleDisp)}" autocomplete="off" />
-    <div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="2" maxlength="5000" data-iu-silver-task-field="note">${esc(noteDisp)}</textarea>
-  </div>`
-        : `<div class="iuSilverDraftGrid iuSilverDraftGrid--task">
-    ${formatDraftRow("Datum", dateHuman, !dateHuman, {})}
-    ${formatDraftRow("Název", titleDisp, false, {})}
-    ${formatDraftRow("Stav", statusDisp, false, {})}
-    ${formatDraftRow("Poznámka", noteDisp, false, {})}
-  </div>`;
+      const grid = editMode ? renderTaskDraftGridEdit(d) : renderTaskDraftGridView(d, statusDisp);
       let clar = "";
       if (st === "NEEDS_CLARIFICATION" && turn.clarificationText) {
         clar = `<p class="iuSilverMsgClarification iuSilverMsgClarification--warning" data-iu-silver-clarification="1">${esc(turn.clarificationText)}</p>`;
@@ -66711,6 +66789,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           d.taskDueAt = dv;
         } else {
           d.taskDueAt = "";
+        }
+      }
+      const timeIn = cardEl.querySelector('[data-iu-silver-task-field="time"]');
+      if (timeIn) {
+        const tv = String(timeIn.value || "").trim().slice(0, 5);
+        if (/^\d{2}:\d{2}$/.test(tv)) {
+          d.taskDueTime = tv;
+          d.meta.taskDueTime = "certain";
+        } else {
+          d.taskDueTime = "";
+          d.meta.taskDueTime = "missing";
         }
       }
       const noteIn = cardEl.querySelector('[data-iu-silver-task-field="note"]');
@@ -67518,7 +67607,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const res = svc.tasksCreateFromSilver({
         title: String(d.title || "").trim(),
         date: d.taskDueAt && /^\d{4}-\d{2}-\d{2}$/.test(d.taskDueAt) ? d.taskDueAt : "",
-        time: "",
+        time: iuSilverFormatTaskDueTimeDisplayV1(d),
         note: String(d.taskNote || "").trim(),
         location: ""
       });
