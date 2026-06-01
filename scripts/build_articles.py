@@ -39,8 +39,10 @@ if _SCRIPTS_DIR not in sys.path:
 from iu_blocked_sources import iu_is_blocked_pocasicko_source
 from iu_registry import (
     SOURCE_BATCH_INTERNAL_GAP_MS_DEFAULT,
+    P0_FRESHNESS_SLOT_KEYS,
     collapse_feeds_by_url,
     compute_display_score,
+    entry_fixed_slot_key,
     is_hard_blocked_url,
     load_registry,
     load_scheduler_state,
@@ -3511,8 +3513,14 @@ def main() -> int:
             print("[iu-pipeline] IU_BUILD_ALL_FEEDS: full registry fetch (legacy env)", flush=True)
     else:
         picked, sched_state = select_feeds_for_tick(registry, sched_state)
+        n_p0 = sum(
+            1
+            for fe in picked
+            if entry_fixed_slot_key(fe) in P0_FRESHNESS_SLOT_KEYS
+        )
         print(
-            f"[iu-pipeline] rotation tick: {len(picked)} feeds due this Prague minute",
+            f"[iu-pipeline] rotation tick: {len(picked)} feeds "
+            f"(p0_freshness={n_p0}, slot+overdue+unmapped)",
             flush=True,
         )
     grouped = collapse_feeds_by_url(picked)
