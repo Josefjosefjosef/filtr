@@ -21,12 +21,12 @@ from iu_staging import staging_root
 
 
 def _json_safe(value: Any) -> Any:
-    """Recursively convert non-JSON types (e.g. datetime) for queue persistence."""
+    """Recursively convert non-JSON types (e.g. datetime, set) for queue persistence."""
     if isinstance(value, datetime):
         return value.isoformat().replace("+00:00", "Z")
     if isinstance(value, dict):
         return {k: _json_safe(v) for k, v in value.items()}
-    if isinstance(value, list):
+    if isinstance(value, (list, tuple, set)):
         return [_json_safe(v) for v in value]
     return value
 
@@ -58,8 +58,9 @@ def _write_queue(output_dir: str, data: dict) -> None:
     path = _queue_path(output_dir)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     tmp = path + ".tmp"
+    safe = _json_safe(data)
     with open(tmp, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+        json.dump(safe, f, ensure_ascii=False, indent=2)
         f.write("\n")
     os.replace(tmp, path)
 
