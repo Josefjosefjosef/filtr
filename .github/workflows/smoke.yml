@@ -49,8 +49,8 @@ jobs:
 
       - run: npm run smoke
 
-      - name: Silver mobile layout guard (prod Playwright)
-        run: node scripts/proof_silver_layout_guard.cjs
+      - name: Silver mobile layout guard (checkout localhost)
+        run: node scripts/run_silver_layout_guard_against_checkout.cjs
 
       - name: Weather outside-temp emphasis guard
         run: npm run weather-emphasis-guard
