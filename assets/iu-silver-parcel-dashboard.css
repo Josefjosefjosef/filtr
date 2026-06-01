@@ -45,6 +45,7 @@
   width: var(--iuParcelIllusW);
   min-width: 0;
   max-width: var(--iuParcelIllusW);
+  min-height: var(--iuParcelIllusH);
   align-self: flex-end;
   margin-top: auto;
   pointer-events: none;
@@ -355,7 +356,7 @@
     flex-shrink: 0 !important;
     align-self: stretch !important;
     min-width: 0 !important;
-    min-height: 118px;
+    min-height: 187px;
     contain: layout;
     position: relative;
     isolation: isolate;
