@@ -1,0 +1,134 @@
+{
+  "generatedAt": "2026-06-01T16:05:33.367Z",
+  "pass": true,
+  "timeCardFamily": [
+    {
+      "label": "task with time",
+      "expectedTimeOnCard": "15:00",
+      "pass": true
+    },
+    {
+      "label": "task without time",
+      "expectedTimeOnCard": null,
+      "pass": true
+    }
+  ],
+  "noteFieldFamily": {
+    "heightReduced": true,
+    "scrollWorks": true,
+    "at500Pass": true,
+    "at501Blocked": true,
+    "pass": true
+  },
+  "scrollFamily": {
+    "lastCardFullyVisible": true,
+    "bottomNavOverlap": "NO",
+    "mobilePass": true,
+    "tabletPass": true,
+    "pass": true
+  },
+  "regressionFamily": [
+    {
+      "input": "Připomeň mi zítra v 15 hod. zavolat mámě",
+      "expectedRoute": "tasks.create",
+      "observedRoute": "tasks.create",
+      "pass": true
+    },
+    {
+      "input": "Do úkolů dnes v 16:30 vyzvednout Eli ve škole",
+      "expectedRoute": "tasks.create",
+      "observedRoute": "tasks.create",
+      "pass": true
+    },
+    {
+      "input": "Do kalendáře dnes v 16:30 vyzvednout Eli ve škole",
+      "expectedRoute": "calendar.create",
+      "observedRoute": "calendar.create",
+      "pass": true
+    },
+    {
+      "input": "Kdy mám zubaře",
+      "expectedRoute": "calendar.read",
+      "observedRoute": "calendar.read",
+      "pass": true
+    },
+    {
+      "input": "Jaké mám úkoly",
+      "expectedRoute": "tasks.read",
+      "observedRoute": "tasks.read",
+      "pass": true
+    },
+    {
+      "input": "Co mám rozdělané",
+      "expectedRoute": "tasks.read",
+      "observedRoute": "tasks.read",
+      "pass": true
+    },
+    {
+      "input": "Co mám o autě",
+      "expectedRoute": "notes.read",
+      "observedRoute": "notes.read",
+      "pass": true
+    },
+    {
+      "input": "Co jsem si poznamenal o autě",
+      "expectedRoute": "notes.read",
+      "observedRoute": "notes.read",
+      "pass": true
+    }
+  ],
+  "calendarSeparationFamily": [
+    {
+      "input": "Do kalendáře dnes v 16:30 vyzvednout Eli ve škole",
+      "expectedRoute": "calendar.create",
+      "observedRoute": "calendar.create",
+      "pass": true
+    },
+    {
+      "input": "Do kalendáře zítra v 15 schůzka s Tomášem",
+      "expectedRoute": "calendar.create",
+      "observedRoute": "calendar.create",
+      "pass": true
+    },
+    {
+      "input": "Kdy mám zubaře",
+      "expectedRoute": "calendar.read",
+      "observedRoute": "calendar.read",
+      "pass": true
+    }
+  ],
+  "taskNotCalendarFamily": [
+    {
+      "input": "Připomeň mi dnes v 16:30 vyzvednout Eli ve škole",
+      "expectedRoute": "tasks.create",
+      "observedRoute": "tasks.create",
+      "pass": true
+    },
+    {
+      "input": "Ulož do úkolů že v pátek v 15 hod. musím zavolat advokátovi",
+      "expectedRoute": "tasks.create",
+      "observedRoute": "tasks.create",
+      "pass": true
+    },
+    {
+      "input": "Do úkolů zítra v 8 koupit mléko",
+      "expectedRoute": "tasks.create",
+      "observedRoute": "tasks.create",
+      "pass": true
+    }
+  ],
+  "manualFormFamily": {
+    "hasDateField": true,
+    "hasTimeField": true,
+    "hasTitleField": true,
+    "hasNoteField": true,
+    "manualReminderFormHasTime": true,
+    "pass": true
+  },
+  "safetyCounters": {
+    "dangerous_write_count": 0,
+    "false_write_count": 0,
+    "write_when_negated_count": 0,
+    "query_created_write_count": 0
+  }
+}

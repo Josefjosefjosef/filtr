@@ -32498,7 +32498,7 @@ function buildVideoAsArticleCard(it) {
     if (!t || typeof t !== "object") return null;
     const id = String(t.id || "").trim() || uid("tsk");
     const title = String(t.title || "").trim().slice(0, 200);
-    const note = String(t.note != null ? t.note : "").slice(0, 5000);
+    const note = String(t.note != null ? t.note : "").slice(0, 500);
     let dueAt = t.dueAt;
     if (dueAt == null || dueAt === "") dueAt = null;
     else {
@@ -32546,7 +32546,7 @@ function buildVideoAsArticleCard(it) {
         const it = p.items[i];
         if (!it || typeof it !== "object") continue;
         const title = String(it.title || "Úkol").trim().slice(0, 200);
-        const note = String(it.detail || "").slice(0, 5000);
+        const note = String(it.detail || "").slice(0, 500);
         const createdAt = Number.isFinite(Number(it.createdAt)) ? Number(it.createdAt) : Date.now();
         out.push(sanitizeTask({
           id: String(it.id || "").trim() || uid("tsk"),
@@ -32724,15 +32724,21 @@ function buildVideoAsArticleCard(it) {
       const prc = priorityClass(t.priority);
       const doneCls = t.status === "done" ? " iu-taskRow--done" : "";
       const ariaCheck = t.status === "done" ? "true" : "false";
+      const timeHtml = t.dueTime
+        ? '<span class="iu-taskRow__time" aria-label="Čas">' + esc(t.dueTime) + "</span>"
+        : "";
       parts.push(
         '<li class="iu-taskRow' + doneCls + " " + prc + '" data-iu-task-id="' + esc(t.id) + '">' +
           '<button type="button" class="iu-taskRow__check" data-iu-task-checkbox="' + esc(t.id) + '" aria-label="Označit jako hotovo" aria-checked="' + ariaCheck + '" role="checkbox">' + (t.status === "done" ? "✓" : "") + "</button>" +
           '<button type="button" class="iu-taskRow__body" data-iu-task-open="' + esc(t.id) + '">' +
-            '<span class="iu-taskRow__title">' + esc(t.title || "Bez názvu") + "</span>" +
-            '<span class="iu-taskRow__meta">' +
-              '<span class="iu-taskChip ' + dm.cls + '">' + esc(dm.label) + "</span>" +
-              '<span class="iu-taskChip iu-taskChip--none">' + esc(priorityLabel(t.priority)) + "</span>" +
+            '<span class="iu-taskRow__content">' +
+              '<span class="iu-taskRow__title">' + esc(t.title || "Bez názvu") + "</span>" +
+              '<span class="iu-taskRow__meta">' +
+                '<span class="iu-taskChip ' + dm.cls + '">' + esc(dm.label) + "</span>" +
+                '<span class="iu-taskChip iu-taskChip--none">' + esc(priorityLabel(t.priority)) + "</span>" +
+              "</span>" +
             "</span>" +
+            timeHtml +
           "</button>" +
         "</li>"
       );
@@ -32764,7 +32770,7 @@ function buildVideoAsArticleCard(it) {
     root.innerHTML =
       '<form class="iu-tasksOverlay__form" id="iuTasksForm" autocomplete="off">' +
         '<label class="iu-tasksOverlay__label">Název<input class="iu-tasksOverlay__input" id="iuTaskTitle" type="text" maxlength="200" value="' + esc(title) + '" required /></label>' +
-        '<label class="iu-tasksOverlay__label">Poznámka<textarea class="iu-tasksOverlay__textarea" id="iuTaskNote" maxlength="5000">' + esc(note) + "</textarea></label>" +
+        '<label class="iu-tasksOverlay__label">Poznámka<textarea class="iu-tasksOverlay__textarea" id="iuTaskNote" maxlength="500">' + esc(note) + "</textarea></label>" +
         '<label class="iu-tasksOverlay__label">Termín' +
           '<span class="iu-tasksOverlay__dateWrap">' +
             '<input class="iu-tasksOverlay__input iu-tasksOverlay__input--date" id="iuTaskDue" type="date" value="' + esc(due) + '" />' +
@@ -32831,7 +32837,7 @@ function buildVideoAsArticleCard(it) {
     const prEl = document.getElementById("iuTaskPriority");
     const stEl = document.getElementById("iuTaskStatus");
     const title = titleEl ? String(titleEl.value || "").trim().slice(0, 200) : "";
-    const note = noteEl ? String(noteEl.value || "").slice(0, 5000) : "";
+    const note = noteEl ? String(noteEl.value || "").slice(0, 500) : "";
     let dueAt = dueEl ? String(dueEl.value || "").trim() : "";
     if (!isYmd(dueAt)) dueAt = null;
     let dueTime = dueTimeEl ? String(dueTimeEl.value || "").trim().slice(0, 5) : "";
@@ -33111,7 +33117,7 @@ function buildVideoAsArticleCard(it) {
     const lines = [];
     if (o.note) lines.push(String(o.note));
     if (o.location) lines.push("Místo: " + String(o.location));
-    const note = lines.join("\n").trim().slice(0, 5000);
+    const note = lines.join("\n").trim().slice(0, 500);
     loadTasks();
     const now = Date.now();
     const item = sanitizeTask({
@@ -66259,7 +66265,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     <div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-task-field="due" value="${esc(String(d.taskDueAt || "").slice(0, 10))}" />
     <div class="iuSilverDraftK">Čas</div><input type="time" step="60" class="iuSilverDraftInput" data-iu-silver-task-field="time" value="${esc(timeVal)}" />
     <div class="iuSilverDraftK">Název</div><input type="text" maxlength="200" class="iuSilverDraftInput" data-iu-silver-task-field="title" value="${esc(titleDisp)}" autocomplete="off" />
-    <div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="2" maxlength="5000" data-iu-silver-task-field="note">${esc(noteDisp)}</textarea>
+    <div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="2" maxlength="500" data-iu-silver-task-field="note">${esc(noteDisp)}</textarea>
   </div>`;
   }
 
@@ -66362,7 +66368,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         esc(iuSilverFormatTaskDueTimeDisplayV1(d)) +
         '" />' +
         '<div class="iuSilverDraftK">Název</div><input type="text" maxlength="200" class="iuSilverDraftInput" data-iu-silver-task-field="title" value="" autocomplete="off" />' +
-        '<div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="3" maxlength="5000" data-iu-silver-task-field="note"></textarea>' +
+        '<div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="2" maxlength="500" data-iu-silver-task-field="note"></textarea>' +
         "</div>";
       showSave = isTaskDraftSaveable(d);
     } else {
@@ -66804,7 +66810,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       const noteIn = cardEl.querySelector('[data-iu-silver-task-field="note"]');
       if (noteIn) {
-        d.taskNote = String(noteIn.value || "").trim().slice(0, 5000);
+        d.taskNote = String(noteIn.value || "").trim().slice(0, 500);
       }
       chatState.draft = d;
       const ps = silverProcessingStateFromDraft(d);

@@ -1,0 +1,146 @@
+{
+  "generatedAt": "2026-06-01T16:05:32.744Z",
+  "pass": true,
+  "TIME_ON_CARD": {
+    "taskWithoutTime": {
+      "expected": "no empty placeholder",
+      "pass": true
+    },
+    "taskWithTime": {
+      "expected": "time visible on card = 15:00",
+      "pass": true,
+      "rendersTimeClass": true,
+      "conditionalRender": true,
+      "noEmptyPlaceholder": true
+    },
+    "pass": true
+  },
+  "NOTE_FIELD": {
+    "shortNote": {
+      "pass": true
+    },
+    "longNote": {
+      "pass": true,
+      "scroll": true
+    },
+    "at500": {
+      "pass": true,
+      "limit": 500
+    },
+    "at501": {
+      "pass": true,
+      "blocked": true
+    },
+    "minHeightPx": 60,
+    "originalMinHeightPx": 120,
+    "reduced": true,
+    "pass": true
+  },
+  "SCROLL": {
+    "oneTask": {
+      "taskCount": 1,
+      "listHeightPx": 58,
+      "bottomPaddingPx": 76,
+      "lastCardFullyVisibleWhenScrolled": true,
+      "bottomNavOverlap": false
+    },
+    "fiveTasks": {
+      "taskCount": 5,
+      "listHeightPx": 330,
+      "bottomPaddingPx": 76,
+      "lastCardFullyVisibleWhenScrolled": true,
+      "bottomNavOverlap": false
+    },
+    "twentyTasks": {
+      "taskCount": 20,
+      "listHeightPx": 1350,
+      "bottomPaddingPx": 76,
+      "lastCardFullyVisibleWhenScrolled": true,
+      "bottomNavOverlap": false
+    },
+    "fiftyTasks": {
+      "taskCount": 50,
+      "listHeightPx": 3390,
+      "bottomPaddingPx": 76,
+      "lastCardFullyVisibleWhenScrolled": true,
+      "bottomNavOverlap": false
+    },
+    "hasListBottomPadding": true,
+    "lastCardFullyVisible": true,
+    "bottomNavOverlap": "NO",
+    "mobilePass": true,
+    "tabletPass": true,
+    "pass": true
+  },
+  "REGRESSION_FAMILY": [
+    {
+      "input": "Připomeň mi zítra v 15 hod. zavolat mámě",
+      "expectedRoute": "tasks.create",
+      "observedRoute": "tasks.create",
+      "pass": true
+    },
+    {
+      "input": "Do úkolů dnes v 16:30 vyzvednout Eli ve škole",
+      "expectedRoute": "tasks.create",
+      "observedRoute": "tasks.create",
+      "pass": true
+    },
+    {
+      "input": "Do kalendáře dnes v 16:30 vyzvednout Eli ve škole",
+      "expectedRoute": "calendar.create",
+      "observedRoute": "calendar.create",
+      "pass": true
+    },
+    {
+      "input": "Kdy mám zubaře",
+      "expectedRoute": "calendar.read",
+      "observedRoute": "calendar.read",
+      "pass": true
+    },
+    {
+      "input": "Jaké mám úkoly",
+      "expectedRoute": "tasks.read",
+      "observedRoute": "tasks.read",
+      "pass": true
+    },
+    {
+      "input": "Co mám rozdělané",
+      "expectedRoute": "tasks.read",
+      "observedRoute": "tasks.read",
+      "pass": true
+    },
+    {
+      "input": "Co mám o autě",
+      "expectedRoute": "notes.read",
+      "observedRoute": "notes.read",
+      "pass": true
+    },
+    {
+      "input": "Co jsem si poznamenal o autě",
+      "expectedRoute": "notes.read",
+      "observedRoute": "notes.read",
+      "pass": true
+    }
+  ],
+  "CALENDAR_SEPARATION": [
+    {
+      "input": "Do kalendáře dnes v 16:30 vyzvednout Eli ve škole",
+      "expectedRoute": "calendar.create",
+      "observedRoute": "calendar.create",
+      "pass": true
+    },
+    {
+      "input": "Do kalendáře zítra v 15 schůzka s Tomášem",
+      "expectedRoute": "calendar.create",
+      "observedRoute": "calendar.create",
+      "pass": true
+    },
+    {
+      "input": "Kdy mám zubaře",
+      "expectedRoute": "calendar.read",
+      "observedRoute": "calendar.read",
+      "pass": true
+    }
+  ],
+  "rootCauseSummary": "task card shows dueTime; note field reduced with 500 char cap; list has bottom nav safe padding"
+}
