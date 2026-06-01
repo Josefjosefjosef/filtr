@@ -273,11 +273,74 @@ style-src 'self' 'unsafe-inline' https:;
           margin:2px 0 0 0;
         }
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch{
-          min-height:118px;
+          box-sizing:border-box;
+          contain:layout;
+          overflow:hidden;
+          height:168px;
+          min-height:168px;
+          max-height:168px;
+        }
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverHeroInputHost{
+          min-height:190px;
           box-sizing:border-box;
           contain:layout;
         }
-        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:auto!important;align-items:stretch!important;gap:8px!important;padding:0 10px!important;box-sizing:border-box!important;margin-top:12px!important;margin-bottom:0!important;min-width:0!important;width:100%!important;max-width:100%!important;min-height:0!important;height:auto!important}
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch .iuSilverParcelWatch__hero{
+          display:flex;
+          flex-direction:row;
+          flex-wrap:nowrap;
+          align-items:stretch;
+          gap:10px;
+          min-width:0;
+        }
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch .iuSilverParcelWatch__content{
+          flex:1 1 auto;
+          min-width:0;
+          max-width:calc(100% - 109px);
+        }
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch .iuSilverParcelWatch__illus{
+          flex:0 0 99px;
+          width:99px;
+          max-width:99px;
+          min-width:0;
+          height:132px;
+          min-height:132px;
+          max-height:132px;
+          overflow:hidden;
+          align-self:flex-end;
+          margin-top:auto;
+        }
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch .iuSilverParcelWatch__illusImg{
+          display:block;
+          width:100%;
+          height:132px;
+          max-height:132px;
+          object-fit:contain;
+          object-position:right bottom;
+        }
+        @media(min-width:480px){
+          :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch{
+            height:200px;
+            min-height:200px;
+            max-height:200px;
+          }
+          :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch .iuSilverParcelWatch__content{
+            max-width:calc(100% - 124px);
+          }
+          :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch .iuSilverParcelWatch__illus{
+            flex-basis:114px;
+            width:114px;
+            max-width:114px;
+            height:152px;
+            min-height:152px;
+            max-height:152px;
+          }
+          :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch .iuSilverParcelWatch__illusImg{
+            height:152px;
+            max-height:152px;
+          }
+        }
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:auto!important;align-items:stretch!important;gap:8px!important;padding:0 10px!important;box-sizing:border-box!important;margin-top:12px!important;margin-bottom:0!important;min-width:0!important;width:100%!important;max-width:100%!important;min-height:70px!important;height:70px!important;max-height:70px!important;overflow:hidden!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet>.silver-welcome-stack__separator{display:none!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .iu-info-card,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard.silver-calendar-summary-card{min-width:0!important;min-height:0!important;max-height:none!important;height:auto!important;border-radius:16px!important;line-height:1.2!important;padding:2px 6px 1px!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;box-sizing:border-box!important;margin:0!important;align-self:stretch!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard .silver-calendar-summary-row--1 .silver-calendar-summary-text,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard .silver-calendar-summary-row--1 .silver-calendar-summary-text,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard .silver-calendar-summary-line2block,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard .silver-calendar-summary-line2block{min-height:0!important}
@@ -427,8 +490,10 @@ style-src 'self' 'unsafe-inline' https:;
       @media (max-width: 1023px) {
         #silver-slot #iuInfoCardsMobileTablet,
         #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet {
-          min-height: 0 !important;
-          height: auto !important;
+          min-height: 70px !important;
+          height: 70px !important;
+          max-height: 70px !important;
+          overflow: hidden !important;
           grid-auto-rows: auto !important;
         }
         #silver-slot #iuInfoCardsMobileTablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
@@ -1449,7 +1514,73 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
-    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=14" />
+    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=15" />
+    <style id="iuParcelWatchFirstPaintClsGuard">
+      /* P0 CLS: post parcel-dashboard.css — lock first paint = hydrated compact height (259→168 collapse guard). */
+      @media (max-width: 1023px) {
+        #silver-slot #iuSilverParcelWatch,
+        #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
+          height: 168px !important;
+          min-height: 168px !important;
+          max-height: 168px !important;
+          overflow: hidden !important;
+          box-sizing: border-box !important;
+          contain: layout !important;
+        }
+        #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__hero,
+        #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__hero {
+          display: flex !important;
+          flex-direction: row !important;
+          flex-wrap: nowrap !important;
+          align-items: stretch !important;
+          gap: 10px !important;
+          min-width: 0 !important;
+          max-height: 134px !important;
+          overflow: hidden !important;
+        }
+        #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus,
+        #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus {
+          flex: 0 0 99px !important;
+          width: 99px !important;
+          max-width: 99px !important;
+          height: 132px !important;
+          min-height: 132px !important;
+          max-height: 132px !important;
+          overflow: hidden !important;
+        }
+        #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusImg,
+        #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusImg {
+          display: block !important;
+          width: 100% !important;
+          height: 132px !important;
+          max-height: 132px !important;
+          object-fit: contain !important;
+          object-position: right bottom !important;
+        }
+      }
+      @media (min-width: 480px) and (max-width: 1023px) {
+        #silver-slot #iuSilverParcelWatch,
+        #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
+          height: 200px !important;
+          min-height: 200px !important;
+          max-height: 200px !important;
+        }
+        #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus,
+        #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus {
+          flex-basis: 114px !important;
+          width: 114px !important;
+          max-width: 114px !important;
+          height: 152px !important;
+          min-height: 152px !important;
+          max-height: 152px !important;
+        }
+        #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusImg,
+        #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusImg {
+          height: 152px !important;
+          max-height: 152px !important;
+        }
+      }
+    </style>
     <style id="iuSilverEventTitleOrangeLastWinGuard">
       /* P0: až za všemi linkovanými CSS v <head>. Kotva: otevřený sheet s labelem #iuSilverGuidedTextLab (text „Název události“ / pozn. / adresa) — ne jen holý #id bez stavu. */
       @media (max-width: 1024px) {
@@ -1921,7 +2052,7 @@ style-src 'self' 'unsafe-inline' https:;
                               </div>
                             </div>
                             <div class="iuSilverParcelWatch__illus" aria-hidden="true">
-                              <img class="iuSilverParcelWatch__illusImg" src="/assets/images/parcel-tracking-illustration.webp" alt="" width="480" height="640" decoding="async" loading="lazy" />
+                              <img class="iuSilverParcelWatch__illusImg" src="/assets/images/parcel-tracking-illustration.webp" alt="" width="480" height="640" decoding="sync" loading="eager" fetchpriority="low" />
                             </div>
                           </div>
                           <p id="iuSilverParcelWatchErr" class="iuSilverParcelWatch__err" hidden role="alert"></p>

@@ -9,6 +9,7 @@
  * - button_gap_delta = |gap_input_to_buttons - gap_buttons_to_card_bottom| ≤ 8
  * - Calendar / Úkoly / Poznámky smoke; no mic; submit shows arrow only
  * - overflowX false; no console errors; no page errors; CLS cap after idle paint
+ * - #iuSilverParcelWatch first-paint vs hydrated height delta ≤ 8 px (mobile/tablet)
  * - Open-Meteo fetch stubbed in proof (see proofs/open_meteo_guard_stub.cjs) — external API CORS is not layout signal
  *
  * Env: SILVER_LAYOUT_GUARD_URL (default https://infouzel.cz/projects/)
@@ -25,10 +26,70 @@ const {
 const DEFAULT_URL = "https://infouzel.cz/projects/";
 /** Silver hero initial-hydrate baseline on mobile/tablet prod is ~0.033–0.0432 after weather-card copy (#4748); mobile Playwright runs can sit ~0.04314 while tablet ~0.0417 — single cap with small headroom, not separate viewport limits. */
 const CLS_CAP = 0.044;
+const PARCEL_HEIGHT_DELTA_CAP = 8;
 
 function envUrl() {
   const u = String(process.env.SILVER_LAYOUT_GUARD_URL || DEFAULT_URL).trim();
   return u || DEFAULT_URL;
+}
+
+async function installParcelHeightTracker(context) {
+  await context.addInitScript(() => {
+    window.__iuParcelHeightTrack = { min: null, max: null, first: null, last: null, shiftDelta: 0 };
+    function trackParcelHeight() {
+      try {
+        const el = document.getElementById("iuSilverParcelWatch");
+        if (!el) return;
+        const h = el.getBoundingClientRect().height;
+        const t = window.__iuParcelHeightTrack;
+        if (t.first == null) t.first = h;
+        t.last = h;
+        if (t.min == null || h < t.min) t.min = h;
+        if (t.max == null || h > t.max) t.max = h;
+      } catch (_) {}
+    }
+    try {
+      new PerformanceObserver(function (list) {
+        for (let i = 0; i < list.getEntries().length; i++) {
+          const e = list.getEntries()[i];
+          if (!e.sources) continue;
+          for (let j = 0; j < e.sources.length; j++) {
+            const s = e.sources[j];
+            try {
+              const n = s.node;
+              if (!n || n.id !== "iuSilverParcelWatch") continue;
+              const prev = s.previousRect ? s.previousRect.height : 0;
+              const curr = s.currentRect ? s.currentRect.height : 0;
+              const d = Math.abs(curr - prev);
+              if (d > window.__iuParcelHeightTrack.shiftDelta) {
+                window.__iuParcelHeightTrack.shiftDelta = d;
+              }
+            } catch (_) {}
+          }
+        }
+        trackParcelHeight();
+      }).observe({ type: "layout-shift", buffered: true });
+    } catch (_) {}
+    (function rafLoop() {
+      trackParcelHeight();
+      if (performance.now() < 3200) requestAnimationFrame(rafLoop);
+    })();
+  });
+}
+
+async function readParcelHeightTrack(page) {
+  return page.evaluate(() => {
+    const t = window.__iuParcelHeightTrack || {};
+    const min = t.min == null ? null : Number(t.min);
+    const max = t.max == null ? null : Number(t.max);
+    const first = t.first == null ? null : Number(t.first);
+    const last = t.last == null ? null : Number(t.last);
+    const delta = min != null && max != null ? Math.abs(max - min) : null;
+    const shiftDelta = t.shiftDelta == null ? null : Number(t.shiftDelta);
+    const effectiveDelta =
+      shiftDelta != null && delta != null ? Math.max(shiftDelta, delta) : shiftDelta != null ? shiftDelta : delta;
+    return { min, max, first, last, delta, shiftDelta, effectiveDelta };
+  });
 }
 
 async function installClsObserver(context) {
@@ -151,6 +212,7 @@ async function runViewport(page, w, h) {
   });
 
   const cls = await readCls(page);
+  const parcelTrack = await readParcelHeightTrack(page);
 
   let calendarFlowOk = false;
   let tasksOk = false;
@@ -218,6 +280,13 @@ async function runViewport(page, w, h) {
     g.image_to_input_gap_px != null && g.image_to_input_gap_px >= 0 && g.image_to_input_gap_px <= 2;
   const buttonGapPass = g.button_gap_delta_px != null && g.button_gap_delta_px <= 8;
   const clsPass = cls <= CLS_CAP;
+  const parcelStable =
+    parcelTrack.first != null &&
+    parcelTrack.last != null &&
+    Math.abs(parcelTrack.last - parcelTrack.first) <= PARCEL_HEIGHT_DELTA_CAP;
+  const parcelHeightDeltaPass =
+    parcelStable ||
+    (parcelTrack.effectiveDelta != null && parcelTrack.effectiveDelta <= PARCEL_HEIGHT_DELTA_CAP);
 
   const pass =
     g.heroFound &&
@@ -234,7 +303,8 @@ async function runViewport(page, w, h) {
     !g.overflowX &&
     consoleErrors.length === 0 &&
     appErrors === 0 &&
-    clsPass;
+    clsPass &&
+    parcelHeightDeltaPass;
 
   return {
     image_to_input_gap_px: g.image_to_input_gap_px,
@@ -253,6 +323,13 @@ async function runViewport(page, w, h) {
     appErrorsCount: appErrors,
     cls,
     cls_pass: clsPass,
+    parcel_height_first_px: parcelTrack.first,
+    parcel_height_last_px: parcelTrack.last,
+    parcel_height_min_px: parcelTrack.min,
+    parcel_height_max_px: parcelTrack.max,
+    parcel_height_delta_px: parcelTrack.effectiveDelta,
+    parcel_height_shift_delta_px: parcelTrack.shiftDelta,
+    parcel_height_delta_pass: parcelHeightDeltaPass,
     consoleErrorsText: consoleErrors.slice(),
     _pass: pass,
   };
@@ -277,6 +354,11 @@ function formatBlock(label, o) {
     "  appErrorsCount: " + o.appErrorsCount,
     "  cls: " + o.cls,
     "  cls_pass: " + o.cls_pass,
+    "  parcel_height_first_px: " + o.parcel_height_first_px,
+    "  parcel_height_last_px: " + o.parcel_height_last_px,
+    "  parcel_height_delta_px: " + o.parcel_height_delta_px,
+    "  parcel_height_stable: " + (o.parcel_height_first_px != null && o.parcel_height_last_px != null && Math.abs(o.parcel_height_last_px - o.parcel_height_first_px) <= 8),
+    "  parcel_height_delta_pass: " + o.parcel_height_delta_pass,
   ];
   if (Array.isArray(o.consoleErrorsText) && o.consoleErrorsText.length) {
     lines.push("  console_errors_text:");
@@ -291,6 +373,7 @@ async function main() {
   const browser = await chromium.launch({ headless: true });
   const ctx = await browser.newContext({ serviceWorkers: "block" });
   await installClsObserver(ctx);
+  await installParcelHeightTracker(ctx);
 
   let v390;
   let v768;
