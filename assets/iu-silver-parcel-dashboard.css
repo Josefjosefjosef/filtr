@@ -49,6 +49,8 @@
   margin-top: auto;
   pointer-events: none;
   user-select: none;
+  border-radius: 18px;
+  overflow: hidden;
 }
 #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusImg,
 #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illusImg {
@@ -58,6 +60,8 @@
   max-width: 100%;
   object-fit: contain;
   object-position: right bottom;
+  border-radius: 18px;
+  overflow: hidden;
 }
 @media (min-width: 1025px) {
   #silver-slot #iuSilverParcelWatch {
