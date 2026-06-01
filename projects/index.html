@@ -269,6 +269,11 @@ style-src 'self' 'unsafe-inline' https:;
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard[data-iu-silver-wx-layout=setup] .silver-weather-privacy{
           margin:2px 0 0 0;
         }
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch{
+          min-height:152px;
+          box-sizing:border-box;
+          contain:layout;
+        }
         #silver-slot .iu-info-cards-mobile-tablet{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(118px,auto);gap:8px;padding:0 10px;box-sizing:border-box;margin-top:12px;margin-bottom:0;min-width:0;width:100%;max-width:100%}
         #silver-slot .iu-info-cards-mobile-tablet>.silver-welcome-stack__separator{display:none!important}
         #silver-slot .iu-info-cards-mobile-tablet .iu-info-card{min-width:0;min-height:0;border-radius:16px!important;font-size:13px;line-height:1.3;padding:5px 8px!important;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;margin:0!important;align-self:stretch}
@@ -1390,7 +1395,7 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
-    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=9" />
+    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=10" />
     <style id="iuSilverEventTitleOrangeLastWinGuard">
       /* P0: až za všemi linkovanými CSS v <head>. Kotva: otevřený sheet s labelem #iuSilverGuidedTextLab (text „Název události“ / pozn. / adresa) — ne jen holý #id bez stavu. */
       @media (max-width: 1024px) {
