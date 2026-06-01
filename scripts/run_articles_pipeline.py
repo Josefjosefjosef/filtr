@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Entrypoint pro spuštění articles pipeline
-Jednoduchý wrapper kolem build_articles_v2.py
+LEGACY — not used in production CI. V3: scripts/build_articles.py via update-articles.yml.
+Entrypoint pro spuštění articles pipeline (wrapper kolem build_articles_v2.py).
 """
 
 import sys

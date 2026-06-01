@@ -445,6 +445,9 @@ jobs:
           ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
         run: node scripts/same-topic-overexposure-guard.mjs
 
+      - name: Aggregator legacy cleanup guard
+        run: node scripts/aggregator-legacy-cleanup-guard.mjs
+
       - name: Dedupe loss guard
         env:
           ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
