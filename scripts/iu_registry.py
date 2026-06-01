@@ -53,6 +53,18 @@ def _prague_tz():
 # Hard floor: same source (scheduler_cooldown_key) must not fetch more often than this between runs.
 HARD_DOMAIN_COOLDOWN_MIN = 15
 
+# P0 headline sources: must be fetched every pipeline tick when cooldown allows,
+# even if Prague minute ≠ fixed slot (watchdog cadence ~30–45 min misses slot minutes).
+P0_FRESHNESS_SLOT_KEYS: frozenset[str] = frozenset(
+    {
+        "novinky.cz",
+        "seznamzpravy.cz",
+        "idnes.cz",
+        "ceskatelevize.cz",
+        "sport.cz",
+    }
+)
+
 # Product limit: max scheduler visits per source per hour (exception keys capped at 5).
 MAX_SOURCE_FETCHES_PER_HOUR = 4
 MAX_SOURCE_FETCHES_PER_HOUR_EXCEPTION = 5
@@ -521,6 +533,28 @@ def select_feeds_for_tick(
                 fixed_picks.append(w)
                 seen_urls.add(u)
 
+    # --- 1b) P0 freshness: slot minute mismatch must not skip headline sources (pipeline ≠ wall clock slots) ---
+    p0_overdue_picks: list[dict] = []
+    for e in entries:
+        if not is_fixed_slot_mapped(e):
+            continue
+        sk = entry_fixed_slot_key(e)
+        if sk not in P0_FRESHNESS_SLOT_KEYS:
+            continue
+        u = (e.get("feed_url") or "").strip()
+        if not u or u in seen_urls:
+            continue
+        ck = scheduler_cooldown_key(e)
+        if not ck:
+            continue
+        eff = _effective_cooldown_min(e)
+        if not _cooldown_ok(ck, eff):
+            continue
+        if not _interval_due(e):
+            continue
+        p0_overdue_picks.append(e)
+        seen_urls.add(u)
+
     # --- 2) Unmapped: cooldown per source; source runs if any feed is interval-due; cap = max unmapped *sources* ---
     by_um: dict[str, list[dict]] = defaultdict(list)
     for e in entries:
@@ -551,7 +585,7 @@ def select_feeds_for_tick(
                 unmapped_picks.append(w)
                 seen_urls.add(u)
 
-    picked = fixed_picks + unmapped_picks
+    picked = fixed_picks + p0_overdue_picks + unmapped_picks
     return picked, state
 
 

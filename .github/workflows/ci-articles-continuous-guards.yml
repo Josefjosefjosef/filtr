@@ -24,6 +24,15 @@ on:
       - "scripts/same-topic-overexposure-guard.mjs"
       - "scripts/topic-dedupe-false-positive-guard.mjs"
       - "scripts/duplicate-metadata-guard.mjs"
+      - "scripts/content-freshness-guard.mjs"
+      - "scripts/content-freshness-guard-lib.mjs"
+      - "scripts/active-article-trace-guard.mjs"
+      - "scripts/production-liveness-guard.mjs"
+      - "scripts/release-freshness-gate.mjs"
+      - "scripts/p0-source-starvation-guard.mjs"
+      - "scripts/p0-source-coverage-guard.mjs"
+      - "scripts/pipeline-runtime-guard.mjs"
+      - "scripts/test_iu_registry_p0_freshness.py"
       - "scripts/aggregator-legacy-cleanup-guard.mjs"
       - "scripts/archive/deprecated/aggregator-v2/**"
       - "scripts/iu_topic_dedupe.py"
@@ -52,6 +61,15 @@ on:
       - "scripts/same-topic-overexposure-guard.mjs"
       - "scripts/topic-dedupe-false-positive-guard.mjs"
       - "scripts/duplicate-metadata-guard.mjs"
+      - "scripts/content-freshness-guard.mjs"
+      - "scripts/content-freshness-guard-lib.mjs"
+      - "scripts/active-article-trace-guard.mjs"
+      - "scripts/production-liveness-guard.mjs"
+      - "scripts/release-freshness-gate.mjs"
+      - "scripts/p0-source-starvation-guard.mjs"
+      - "scripts/p0-source-coverage-guard.mjs"
+      - "scripts/pipeline-runtime-guard.mjs"
+      - "scripts/test_iu_registry_p0_freshness.py"
       - "scripts/aggregator-legacy-cleanup-guard.mjs"
       - "scripts/archive/deprecated/aggregator-v2/**"
       - "scripts/iu_topic_dedupe.py"
@@ -160,3 +178,52 @@ jobs:
 
       - name: Aggregator legacy cleanup guard
         run: node scripts/aggregator-legacy-cleanup-guard.mjs
+
+      - name: Content freshness guard (prod articles.json)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          ARTICLES_JSON_URL: https://infouzel.cz/projects/data/articles.json
+          CONTENT_FRESHNESS_WARN_MINUTES: "60"
+          CONTENT_FRESHNESS_FAIL_MINUTES: "120"
+        run: node scripts/content-freshness-guard.mjs
+
+      - name: Active article trace guard (prod)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          ARTICLES_JSON_URL: https://infouzel.cz/projects/data/articles.json
+          TRACE_SAMPLE_COUNT: "5"
+          TRACE_MAX_AGE_HOURS: "6"
+        run: node scripts/active-article-trace-guard.mjs
+
+      - name: Production liveness guard (prod)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          ARTICLES_JSON_URL: https://infouzel.cz/projects/data/articles.json
+          LIVENESS_WINDOWS_HOURS: "1,2,4"
+          LIVENESS_MIN_PER_SECTION_2H: "1"
+        run: node scripts/production-liveness-guard.mjs
+
+      - name: P0 source coverage guard (prod)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          ARTICLES_JSON_URL: https://infouzel.cz/projects/data/articles.json
+          P0_COVERAGE_MAX_AGE_HOURS: "4"
+          P0_COVERAGE_MIN_ARTICLES: "1"
+        run: node scripts/p0-source-coverage-guard.mjs
+
+      - name: Pipeline runtime guard
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PIPELINE_RUNTIME_WARN_MINUTES: "45"
+          PIPELINE_RUNTIME_FAIL_MINUTES: "60"
+        run: node scripts/pipeline-runtime-guard.mjs
+
+      - name: P0 source starvation guard (local scheduler when present)
+        env:
+          SCHEDULER_STATE_PATH: ${{ github.workspace }}/projects/data/scheduler_state.json
+          FEED_HEALTH_PATH: ${{ github.workspace }}/projects/data/feed_health.json
+          P0_STARVATION_ALLOW_MISSING_STATE: "1"
+          P0_STARVATION_WARN_MINUTES: "60"
+          P0_STARVATION_FAIL_MINUTES: "120"
+        run: node scripts/p0-source-starvation-guard.mjs
