@@ -235,7 +235,8 @@ style-src 'self' 'unsafe-inline' https:;
       /* P0: Kalendář+Úkoly 2 karty ≤1023 (počasí mimo wrapper); desktop ≥1024 display:contents beze změny. */
       @media(min-width:1024px){#silver-slot .iu-info-cards-mobile-tablet{display:contents}}
       #iuSilverCalendarSummaryCard .silver-calendar-summary-line2main>.iu-info-card-line2-icon--mobileTabletOnly{display:none}
-      @media(min-width:1024px){#iuSilverCalendarSummaryCard .silver-calendar-summary-iconPoint--desktopOnly{display:inline!important}#iuSilverCalendarSummaryCard .silver-calendar-summary-line2main>.iu-info-card-line2-icon--mobileTabletOnly{display:none!important}}
+      @media(min-width:1024px){#iuSilverCalendarSummaryCard .silver-calendar-summary-iconPoint--desktopOnly{display:inline!important}#iuSilverCalendarSummaryCard .silver-calendar-summary-line2main>.iu-info-card-line2-icon--mobileTabletOnly{display:none!important}#iuSilverHeroPremium .iu-hero-quickBtnIcon--mobileTabletOnly{display:none!important}}
+      @media(max-width:1023px){#iuSilverHeroPremium .iu-hero-quickBtnIcon--desktopOnly{display:none!important}#iuSilverHeroPremium .iu-hero-quickBtnIcon--mobileTabletOnly{display:inline-flex!important}}
       .iuSilverWeatherGeoOverlay{position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
       .iuSilverWeatherGeoOverlay[hidden]{display:none!important}
       .iuSilverWeatherGeoOverlay__backdrop{position:absolute;inset:0;background:rgba(15,23,42,.42)}
@@ -276,28 +277,37 @@ style-src 'self' 'unsafe-inline' https:;
           box-sizing:border-box;
           contain:layout;
         }
-        #silver-slot .iu-info-cards-mobile-tablet{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(118px,auto);gap:8px;padding:0 10px;box-sizing:border-box;margin-top:12px;margin-bottom:0;min-width:0;width:100%;max-width:100%}
+        #silver-slot .iu-info-cards-mobile-tablet{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(94px,auto);gap:8px;padding:0 10px;box-sizing:border-box;margin-top:12px;margin-bottom:0;min-width:0;width:100%;max-width:100%}
         #silver-slot .iu-info-cards-mobile-tablet>.silver-welcome-stack__separator{display:none!important}
-        #silver-slot .iu-info-cards-mobile-tablet .iu-info-card{min-width:0;min-height:0;border-radius:16px!important;font-size:13px;line-height:1.3;padding:5px 8px!important;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;margin:0!important;align-self:stretch}
-        #silver-slot .iu-info-cards-mobile-tablet .iu-info-card strong{font-size:14px}
+        #silver-slot .iu-info-cards-mobile-tablet .iu-info-card{min-width:0;min-height:0;border-radius:16px!important;font-size:12.5px;line-height:1.22;padding:4px 6px!important;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;box-sizing:border-box;margin:0!important;align-self:stretch}
+        #silver-slot .iu-info-cards-mobile-tablet .iu-info-card .iu-info-card__emph{font-weight:750!important;font-size:inherit;line-height:inherit}
+        #silver-slot .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard .iu-info-card__emph{color:var(--iu-calendar-accent,#1c8748)!important}
+        #silver-slot .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard .iu-info-card__emph{color:var(--iuTasksAccent,#8b5cf6)!important}
+        #silver-slot .iu-info-cards-mobile-tablet .iu-info-card strong:not(.iu-info-card__emph){font-size:inherit;font-weight:inherit}
         #silver-slot .iu-info-cards-mobile-tablet .iu-info-card *{min-width:0;overflow-wrap:anywhere}
         #silver-slot .iu-info-cards-mobile-tablet~#iuSilverWelcomeStackSeparatorTallBefore{margin-top:12px}
         #silver-slot #iuSilverTallScrollSection{width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;margin:12px 10px 0 10px!important}
         #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-text{white-space:normal!important;overflow-wrap:anywhere;overflow-x:visible;text-overflow:unset;min-width:0}
         #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-line2main{white-space:normal!important;min-width:0}
         #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-row--1{min-width:0}
-        #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-card{gap:3px!important}
-        #silver-slot .iu-info-cards-mobile-tablet .iu-info-card{justify-content:flex-start!important;gap:4px!important}
-        #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-row--1{display:grid!important;grid-template-columns:22px minmax(0,1fr)!important;grid-template-rows:auto auto!important;column-gap:8px!important;row-gap:2px!important;align-items:start!important}
-        #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-row--1>.silver-calendar-summary-iconCal{grid-column:1!important;grid-row:1!important;margin-top:0!important;width:22px!important;height:22px!important}
+        #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-card{gap:2px!important}
+        #silver-slot .iu-info-cards-mobile-tablet .iu-info-card{justify-content:flex-start!important;gap:2px!important}
+        #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-row--1{display:grid!important;grid-template-columns:26px minmax(0,1fr)!important;grid-template-rows:auto auto!important;column-gap:7px!important;row-gap:1px!important;align-items:start!important}
+        #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-row--1>.silver-calendar-summary-iconCal{grid-column:1!important;grid-row:1!important;margin-top:0!important;width:26px!important;height:26px!important}
+        #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-row--1 .silver-calendar-summary-svg{width:24px!important;height:24px!important}
         #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-row--1>.silver-calendar-summary-text{display:contents!important}
         #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-row--1 .iuCalendarSummary__label,#silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-row--1 .iuTasksLabel{grid-column:2!important;grid-row:1!important;display:block!important;line-height:1.25!important}
         #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-row--1 #iuSilverCalendarSummaryLine1Rest,#silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-row--1 #iuSilverTasksSummaryLine1Rest{grid-column:1 / -1!important;grid-row:2!important;display:block!important;line-height:1.3!important;font-weight:500!important}
         #silver-slot .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard .silver-calendar-summary-row--1 .silver-calendar-summary-text,#silver-slot .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard .silver-calendar-summary-row--1 .silver-calendar-summary-text{min-height:0!important}
-        #silver-slot .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard .silver-calendar-summary-line2block,#silver-slot .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard .silver-calendar-summary-line2block{min-height:0!important;margin-top:0!important;padding-top:5px!important;border-top:1px solid rgba(15,23,42,.09)!important;gap:6px!important}
-        #silver-slot .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverCalendarSummaryCard .silver-calendar-summary-line2block,#silver-slot .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverTasksSummaryCard .silver-calendar-summary-line2block{border-top-color:rgba(255,255,255,.14)!important}
-        #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-line2main{gap:6px!important;align-items:center!important}
-        #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-line2main .silver-calendar-summary-iconCal{width:18px!important;height:18px!important;margin-top:0!important;opacity:.88}
+        #silver-slot .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard .silver-calendar-summary-line2block,#silver-slot .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard .silver-calendar-summary-line2block{min-height:0!important;margin-top:1px!important;padding-top:4px!important;border-top:1px solid rgba(15,23,42,.16)!important;gap:4px!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.05)!important}
+        #silver-slot .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverCalendarSummaryCard .silver-calendar-summary-line2block,#silver-slot .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverTasksSummaryCard .silver-calendar-summary-line2block{border-top-color:rgba(255,255,255,.2)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important}
+        #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-line2main{gap:5px!important;align-items:center!important;padding-right:0!important}
+        #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-line2main .silver-calendar-summary-iconCal{width:20px!important;height:20px!important;margin-top:0!important;opacity:.92}
+        #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-line2main .silver-calendar-summary-svg{width:20px!important;height:20px!important}
+        #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-card .iu-silver-actionRow[data-iu-action-indicator=chevron]::after{display:none!important}
+        #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-card .iu-silver-actionRow[data-iu-action-indicator=chevron]{padding-right:0!important}
+        #iuSilverHeroPremium .iu-hero-quickBtnIcon--mobileTabletOnly{display:none}
+        #iuSilverHeroPremium .iu-hero-quickBtnIcon--mobileTabletOnly svg{display:block;width:18px;height:18px}
         #iuSilverCalendarSummaryCard .silver-calendar-summary-iconPoint--desktopOnly{display:none!important}
         #iuSilverCalendarSummaryCard .silver-calendar-summary-line2main>.iu-info-card-line2-icon--mobileTabletOnly{display:flex!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard .silver-weather-line1,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard .silver-weather-line2{white-space:normal!important;min-width:0!important;overflow:visible!important;overflow-wrap:anywhere;text-overflow:unset!important}
@@ -351,8 +361,8 @@ style-src 'self' 'unsafe-inline' https:;
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard[data-iu-silver-wx-phase=data] .iu-weather-compact-stack{grid-template-columns:42px max-content 1px minmax(0,1fr);column-gap:8px;padding-right:20px}
       }
       @media(max-width:480px){
-        #silver-slot .iu-info-cards-mobile-tablet{grid-auto-rows:minmax(112px,auto)}
-        #silver-slot .iu-info-cards-mobile-tablet .iu-info-card{font-size:12px;padding:10px 8px!important}
+        #silver-slot .iu-info-cards-mobile-tablet{grid-auto-rows:minmax(90px,auto)}
+        #silver-slot .iu-info-cards-mobile-tablet .iu-info-card{font-size:12px;padding:4px 6px!important}
       }
       @media(min-width:768px) and (max-width:1024px){
         #iuSilverHeroPremium .iu-hero-figureImg{height:140px!important;width:auto!important;max-height:none!important}
@@ -1801,11 +1811,13 @@ style-src 'self' 'unsafe-inline' https:;
                               <div class="iu-silver-actions" data-iu-silver-hero-actions>
                               <div class="iu-hero-quickActions iu-hero-actions" role="group" aria-label="Rychlé nástroje">
                                 <button type="button" class="iu-hero-quickBtn iu-hero-quickBtn--cal" id="iuHeroQuickCal" data-iu-hero-quick="cal">
-                                  <svg class="iu-hero-quickBtnIcon iu-hero-quickBtnIcon--cal" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M7 2a1 1 0 011 1v1h8V3a1 1 0 112 0v1h1a2 2 0 012 2v2H4V6a2 2 0 012-2h1V3a1 1 0 011-1zm12 7v11a2 2 0 01-2 2H7a2 2 0 01-2-2V9h14zM9 13a1 1 0 100 2 1 1 0 000-2zm4 0a1 1 0 100 2 1 1 0 000-2zm4 0a1 1 0 100 2 1 1 0 000-2z"/></svg>
+                                  <svg class="iu-hero-quickBtnIcon iu-hero-quickBtnIcon--cal iu-hero-quickBtnIcon--desktopOnly" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M7 2a1 1 0 011 1v1h8V3a1 1 0 112 0v1h1a2 2 0 012 2v2H4V6a2 2 0 012-2h1V3a1 1 0 011-1zm12 7v11a2 2 0 01-2 2H7a2 2 0 01-2-2V9h14zM9 13a1 1 0 100 2 1 1 0 000-2zm4 0a1 1 0 100 2 1 1 0 000-2zm4 0a1 1 0 100 2 1 1 0 000-2z"/></svg>
+                                  <svg class="iu-hero-quickBtnIcon iu-hero-quickBtnIcon--cal iu-hero-quickBtnIcon--mobileTabletOnly" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><rect x="3.5" y="4.5" width="17" height="16" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 9.25h17" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 2.75v4.25M16 2.75v4.25" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
                                   <span class="iu-hero-quickBtnLabel">Kalendář</span>
                                 </button>
                                 <button type="button" class="iu-hero-quickBtn iu-hero-quickBtn--tasks" id="iuHeroQuickTasks" data-iu-hero-quick="tasks">
-                                  <svg class="iu-hero-quickBtnIcon iu-hero-quickBtnIcon--tasks" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M5 5h11v2H5V5zm0 6h11v2H5v-2zm0 6h7v2H5v-2z"/><path fill="currentColor" d="M17.2 8.3l3.5 3.5-1.4 1.4-2.1-2.1-3.5 3.5-1.4-1.4 4.9-4.9z"/></svg>
+                                  <svg class="iu-hero-quickBtnIcon iu-hero-quickBtnIcon--tasks iu-hero-quickBtnIcon--desktopOnly" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M5 5h11v2H5V5zm0 6h11v2H5v-2zm0 6h7v2H5v-2z"/><path fill="currentColor" d="M17.2 8.3l3.5 3.5-1.4 1.4-2.1-2.1-3.5 3.5-1.4-1.4 4.9-4.9z"/></svg>
+                                  <svg class="iu-hero-quickBtnIcon iu-hero-quickBtnIcon--tasks iu-hero-quickBtnIcon--mobileTabletOnly" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="5" width="5" height="5" rx="1.25" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 9.75L12.25 11.5L19.5 5.25" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 14.5h9.5M10.5 18.5h9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
                                   <span class="iu-hero-quickBtnLabel">Úkoly</span>
                                 </button>
                                 <button type="button" class="iu-hero-quickBtn iu-hero-quickBtn--notes" id="iuHeroQuickNotes" data-iu-hero-quick="notes">
@@ -1822,7 +1834,7 @@ style-src 'self' 'unsafe-inline' https:;
                         <div class="silver-calendar-summary-card iu-mini-overview-card iu-mini-overview-card--calendar iu-info-card" id="iuSilverCalendarSummaryCard" data-iu-silver-calendar-summary>
                           <div class="silver-calendar-summary-row silver-calendar-summary-row--1">
                             <span class="silver-calendar-summary-iconCal iuCalendarSummary__icon" aria-hidden="true">
-                              <svg class="silver-calendar-summary-svg" viewBox="0 0 24 24" width="20" height="20" focusable="false" aria-hidden="true">
+                              <svg class="silver-calendar-summary-svg" viewBox="0 0 24 24" width="24" height="24" focusable="false" aria-hidden="true">
                                 <rect x="3.5" y="4.5" width="17" height="16" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.6"/>
                                 <path d="M3.5 9.25h17" fill="none" stroke="currentColor" stroke-width="1.6"/>
                                 <path d="M8 2.75v4.25M16 2.75v4.25" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
@@ -1834,7 +1846,7 @@ style-src 'self' 'unsafe-inline' https:;
                             <div class="silver-calendar-summary-line2main iu-silver-actionRow" data-iu-action-indicator="chevron">
                               <span class="silver-calendar-summary-iconPoint silver-calendar-summary-iconPoint--desktopOnly" aria-hidden="true">👉</span>
                               <span class="silver-calendar-summary-iconCal iu-info-card-line2-icon--mobileTabletOnly" aria-hidden="true">
-                                <svg class="silver-calendar-summary-svg" viewBox="0 0 24 24" width="18" height="18" focusable="false" aria-hidden="true">
+                                <svg class="silver-calendar-summary-svg" viewBox="0 0 24 24" width="20" height="20" focusable="false" aria-hidden="true">
                                   <circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
                                   <path d="M12 8.25v4l2.5 1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
                                 </svg>
@@ -1847,7 +1859,7 @@ style-src 'self' 'unsafe-inline' https:;
                         <div class="silver-calendar-summary-card iu-mini-overview-card iu-mini-overview-card--tasks iu-info-card" id="iuSilverTasksSummaryCard" data-iu-tasks-summary>
                           <div class="silver-calendar-summary-row silver-calendar-summary-row--1">
                             <span class="silver-calendar-summary-iconCal iuTasksIcon" aria-hidden="true">
-                              <svg class="silver-calendar-summary-svg" viewBox="0 0 24 24" width="20" height="20" focusable="false" aria-hidden="true">
+                              <svg class="silver-calendar-summary-svg" viewBox="0 0 24 24" width="24" height="24" focusable="false" aria-hidden="true">
                                 <rect x="4" y="5" width="5" height="5" rx="1.25" fill="none" stroke="currentColor" stroke-width="1.6"/>
                                 <path d="M10.5 9.75L12.25 11.5L19.5 5.25" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M10.5 14.5h9.5M10.5 18.5h9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
