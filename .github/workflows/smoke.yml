@@ -52,6 +52,9 @@ jobs:
       - name: CZ vertical sections guard (hry/kultura/veda/vzdelavani)
         run: npm run section-cz-guard
 
+      - name: Nameday overlay dative guard (Laura → Lauře)
+        run: npm run iu-nameday-dative-guard
+
       - name: Perf regression guards (flicker phases + 16 nav latency + calendar/Silver surface)
         run: npm run iu-perf-regression-guards
 
