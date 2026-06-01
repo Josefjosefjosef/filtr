@@ -65,6 +65,18 @@ P0_FRESHNESS_SLOT_KEYS: frozenset[str] = frozenset(
     }
 )
 
+# Primary headline rubrics — must ride P0 overdue tick even when interval_min not elapsed.
+P0_HEADLINE_REGISTRY_IDS: frozenset[str] = frozenset(
+    {
+        "zpr_novinky_domaci",
+        "zpr_novinky_zahranicni",
+        "zpr_seznam_domaci",
+        "zpr_idnes_zpravy",
+        "zpr_ct24_domaci",
+        "spt_sportcz",
+    }
+)
+
 # Product limit: max scheduler visits per source per hour (exception keys capped at 5).
 MAX_SOURCE_FETCHES_PER_HOUR = 4
 MAX_SOURCE_FETCHES_PER_HOUR_EXCEPTION = 5
@@ -537,6 +549,30 @@ def select_feeds_for_tick(
     p0_overdue_picks: list[dict] = []
     for e in entries:
         if not is_fixed_slot_mapped(e):
+            continue
+        eid = str(e.get("id") or "")
+        if eid not in P0_HEADLINE_REGISTRY_IDS:
+            continue
+        sk = entry_fixed_slot_key(e)
+        if sk not in P0_FRESHNESS_SLOT_KEYS:
+            continue
+        u = (e.get("feed_url") or "").strip()
+        if not u or u in seen_urls:
+            continue
+        ck = scheduler_cooldown_key(e)
+        if not ck:
+            continue
+        eff = _effective_cooldown_min(e)
+        if not _cooldown_ok(ck, eff):
+            continue
+        p0_overdue_picks.append(e)
+        seen_urls.add(u)
+
+    for e in entries:
+        if not is_fixed_slot_mapped(e):
+            continue
+        eid = str(e.get("id") or "")
+        if eid in P0_HEADLINE_REGISTRY_IDS:
             continue
         sk = entry_fixed_slot_key(e)
         if sk not in P0_FRESHNESS_SLOT_KEYS:
