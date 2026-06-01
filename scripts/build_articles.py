@@ -2978,6 +2978,11 @@ def _aggregate_pipeline(
 
     out_articles = apply_per_section_limits_then_cap(merged_articles)
     out_articles = apply_per_section_published_retention(prev_list, out_articles)
+    # Retention can re-introduce older same-event URLs from prev public bundle.
+    out_articles = _apply_conservative_topic_clustering(out_articles)
+    for a in out_articles:
+        a["duplicatePenalty"] = float(a.get("duplicatePenalty") or 1.0)
+        a["displayScore"] = compute_display_score(a)
     out_articles = _apply_source_display_to_articles(out_articles)
     final = out_articles
 
@@ -4054,6 +4059,10 @@ def _legacy_main_removed_placeholder():
 
     out_articles = apply_per_section_limits_then_cap(merged_articles)
     out_articles = apply_per_section_published_retention(prev_list, out_articles)
+    out_articles = _apply_conservative_topic_clustering(out_articles)
+    for a in out_articles:
+        a["duplicatePenalty"] = float(a.get("duplicatePenalty") or 1.0)
+        a["displayScore"] = compute_display_score(a)
     out_articles = _apply_source_display_to_articles(out_articles)
     # Drip (releaseAt v budoucnu) schová většinu článků v UI — nesmí blokovat čerstvý feed; čas publikace zůstává v publishedAt.
     out_articles = enrich_article_list(out_articles)
