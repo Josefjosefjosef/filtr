@@ -40,6 +40,7 @@ from iu_blocked_sources import iu_is_blocked_pocasicko_source
 from iu_registry import (
     SOURCE_BATCH_INTERNAL_GAP_MS_DEFAULT,
     P0_FRESHNESS_SLOT_KEYS,
+    P0_HEADLINE_REGISTRY_IDS,
     collapse_feeds_by_url,
     compute_display_score,
     entry_fixed_slot_key,
@@ -770,7 +771,17 @@ def _coerce_ingest_dt(val) -> datetime:
     return datetime.min.replace(tzinfo=timezone.utc)
 
 
+def _p0_headline_ingest_priority(it: dict) -> int:
+    """P0 headline rubric wins URL dedupe vs same-URL vertical syndication from one publisher."""
+    if not isinstance(it, dict):
+        return 0
+    return 1 if str(it.get("feedId") or "").strip() in P0_HEADLINE_REGISTRY_IDS else 0
+
+
 def _pick_ingest_item_collision_winner(a: dict, b: dict) -> dict:
+    pha, phb = _p0_headline_ingest_priority(a), _p0_headline_ingest_priority(b)
+    if pha != phb:
+        return a if pha > phb else b
     pa = _vertical_section_priority(_ingest_item_for_priority(a))
     pb = _vertical_section_priority(_ingest_item_for_priority(b))
     if pa != pb:
@@ -779,7 +790,7 @@ def _pick_ingest_item_collision_winner(a: dict, b: dict) -> dict:
 
 
 def _dedupe_ingest_items_by_url_priority(items: list) -> list:
-    """Pre-cluster dedupe: same URL from aktualne + vertical rubric feed → keep vertical assignment."""
+    """Pre-cluster dedupe: same URL from headline + vertical rubric → P0 headline feedId wins."""
     by_url: dict[str, dict] = {}
     orphans: list = []
     for it in items or []:

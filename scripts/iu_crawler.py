@@ -9,7 +9,6 @@ import os
 import re
 import time
 from urllib.parse import urlparse
-from urllib.robotparser import RobotFileParser
 
 import requests
 
@@ -75,6 +74,100 @@ def _host_from_url(url: str) -> str:
         return ""
 
 
+def _robots_request_path(url: str) -> str:
+    p = urlparse(url or "").path or "/"
+    if not p.startswith("/"):
+        p = "/" + p
+    return p
+
+
+def _user_agent_matches(rule: str, agent: str) -> bool:
+    r = (rule or "").strip().lower()
+    a = (agent or "").strip().lower()
+    if not r:
+        return False
+    if r == "*":
+        return True
+    return a.startswith(r) or r in a
+
+
+def _robots_pattern_matches(pattern: str, path: str) -> bool:
+    pat = (pattern or "").strip()
+    if not pat:
+        return False
+    end_anchor = pat.endswith("$")
+    if end_anchor:
+        pat = pat[:-1]
+    if pat == "/":
+        return True
+    if end_anchor:
+        return path == pat
+    return path.startswith(pat)
+
+
+def _robots_rules_for_agent(body: str, user_agent: str) -> list[tuple[str, str]]:
+    """Collect Allow/Disallow rules for the best-matching User-agent group."""
+    rules: list[tuple[str, str]] = []
+    active: list[str] = []
+    matched_group = False
+    for raw in body.splitlines():
+        line = raw.split("#", 1)[0].strip()
+        if not line or line.startswith("#"):
+            continue
+        low = line.lower()
+        if low.startswith("user-agent:"):
+            ua = line.split(":", 1)[1].strip()
+            if not active:
+                active = [ua]
+            elif _user_agent_matches(ua, user_agent) or ua == "*":
+                active.append(ua)
+            elif matched_group:
+                break
+            continue
+        if not active:
+            continue
+        if not any(_user_agent_matches(u, user_agent) or u == "*" for u in active):
+            continue
+        matched_group = True
+        if low.startswith("allow:"):
+            rules.append(("allow", line.split(":", 1)[1].strip()))
+        elif low.startswith("disallow:"):
+            rules.append(("disallow", line.split(":", 1)[1].strip()))
+    return rules
+
+
+def _robots_can_fetch(body: str, user_agent: str, url: str) -> bool:
+    """
+    Google-order robots evaluation: longest matching Allow/Disallow wins; Allow wins ties.
+    Fixes stdlib RobotFileParser missing Allow override (e.g. servis.idnes.cz RSS).
+    """
+    path = _robots_request_path(url)
+    rules = _robots_rules_for_agent(body, user_agent)
+    if not rules:
+        return True
+    best_allow = -1
+    best_disallow = -1
+    for typ, pattern in rules:
+        if not _robots_pattern_matches(pattern, path):
+            continue
+        plen = len(pattern.rstrip("$") or "/")
+        if typ == "allow":
+            best_allow = max(best_allow, plen)
+        else:
+            best_disallow = max(best_disallow, plen)
+    if best_allow < 0 and best_disallow < 0:
+        return True
+    if best_allow >= 0 and best_disallow < 0:
+        return True
+    if best_disallow >= 0 and best_allow < 0:
+        return False
+    if best_allow > best_disallow:
+        return True
+    if best_disallow > best_allow:
+        return False
+    return True
+
+
 def _fetch_robots_txt(host: str, last_req_ts: list | None) -> str | None:
     if not host:
         return None
@@ -136,14 +229,7 @@ def robots_allowed_for_url(
     if body is None or body == "":
         return True, "robots_unavailable_fail_open"
 
-    rp = RobotFileParser()
-    rp.set_url(f"https://{host}/robots.txt")
-    try:
-        rp.parse(body.splitlines())
-    except Exception:
-        return True, "robots_parse_fail_open"
-
-    if not rp.can_fetch(IU_USER_AGENT, url):
+    if not _robots_can_fetch(body, IU_USER_AGENT, url):
         return False, "disallowed_by_robots"
     return True, "allowed"
 
