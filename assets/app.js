@@ -33575,7 +33575,56 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   const CAL_MOBILE_BOTTOM_CLEAR_ID = "iu-calendar-overlay-mobile-bottom-clearance";
   const CAL_MONTH_FAB_STYLE_ID = "iu-calendar-month-fab-p0";
   const CAL_MONTH_FAB_CSS =
-    "#iuCalendarOverlay .iu-calendarOverlay__toolbar{flex:0 0 auto}#iuCalendarOverlay .iu-calendarOverlay__viewRoot{flex:1 1 auto;min-height:0;min-width:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box}#iuCalendarOverlay .iu-calendarOverlay__viewRoot.iu-calendarOverlay__viewRoot--monthFabPad{padding-bottom:56px}#iuCalMonthQuickAddBtn.iu-calMonthFab{flex:0 0 auto;align-self:flex-end;margin:0 14px calc(10px + env(safe-area-inset-bottom,0px)) 0;padding:10px 16px;max-width:calc(100% - 28px);box-sizing:border-box;border-radius:999px;border:1px solid #15803d;background:linear-gradient(180deg,#16a34a,#15803d);color:#fff;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer;box-shadow:0 2px 10px rgba(22,163,74,.28);z-index:3;white-space:nowrap;-webkit-tap-highlight-color:transparent;touch-action:manipulation}#iuCalMonthQuickAddBtn.iu-calMonthFab:hover{filter:brightness(1.03)}#iuCalMonthQuickAddBtn.iu-calMonthFab:focus-visible{outline:2px solid #15803d;outline-offset:2px}@media(max-width:380px){#iuCalMonthQuickAddBtn.iu-calMonthFab .iu-calMonthFab__text{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}#iuCalMonthQuickAddBtn.iu-calMonthFab{min-width:48px;padding:10px 14px}}#iuCalendarOverlay .iu-calMonthStack{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;min-width:0}#iuCalendarOverlay .iu-calMonthInline{flex:0 0 auto;padding:12px 14px 16px;border-top:1px solid #d6dfec;background:#fff;box-sizing:border-box}#iuCalendarOverlay .iu-calInline__dateRow{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:0 0 10px;max-width:100%;box-sizing:border-box}#iuCalendarOverlay .iu-calInline__dateRow .iu-calInline__dateInput{flex:0 1 auto;min-width:0;max-width:100%}#iuCalendarOverlay .iu-calInline__weekday{font-weight:600;font-size:15px;color:#1e293b;flex:1 1 auto;min-width:0}@media(max-width:1024px){#iuCalendarOverlay.iu-calendarOverlay--premiumMob .iu-calendarOverlay__main{overflow:hidden!important;display:flex!important;flex-direction:column!important}}#iuCalendarOverlay .iu-calendarOverlay__main{position:relative;min-height:0;overflow:hidden;box-sizing:border-box}";
+    "#iuCalendarOverlay .iu-calendarOverlay__toolbar{flex:0 0 auto}#iuCalendarOverlay .iu-calendarOverlay__viewRoot{flex:1 1 auto;min-height:0;min-width:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box}#iuCalendarOverlay .iu-calendarOverlay__viewRoot.iu-calendarOverlay__viewRoot--monthFabPad{padding-bottom:72px}#iuCalMonthActionBar.iu-calMonthActionBar{display:flex;flex:0 0 auto;align-self:stretch;gap:10px;margin:0 12px calc(10px + env(safe-area-inset-bottom,0px)) 12px;max-width:calc(100% - 24px);box-sizing:border-box;z-index:3}#iuCalMonthActionBar.iu-calMonthActionBar--yearOnly{justify-content:flex-end}#iuCalMonthActionBar .iu-calMonthFab,#iuCalMonthActionBar .iu-calSearchFab{flex:1 1 0;min-width:0;margin:0;padding:11px 14px;max-width:none;box-sizing:border-box;border-radius:999px;font-weight:700;font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:44px;line-height:1.2}#iuCalMonthActionBar .iu-calSearchFab{border:1px solid rgba(30,58,92,.22);background:linear-gradient(180deg,#f8fafc,#eef2f7);color:#1e3a5c;box-shadow:0 2px 10px rgba(15,23,42,.08)}#iuCalMonthActionBar .iu-calSearchFab:hover{filter:brightness(1.02)}#iuCalMonthActionBar .iu-calMonthFab{border:1px solid #15803d;background:linear-gradient(180deg,#16a34a,#15803d);color:#fff;box-shadow:0 2px 10px rgba(22,163,74,.28)}#iuCalMonthActionBar .iu-calMonthFab:hover{filter:brightness(1.03)}#iuCalMonthQuickAddBtn.iu-calMonthFab{flex:0 0 auto;align-self:flex-end;margin:0 14px calc(10px + env(safe-area-inset-bottom,0px)) 0;padding:10px 16px;max-width:calc(100% - 28px);box-sizing:border-box;border-radius:999px;border:1px solid #15803d;background:linear-gradient(180deg,#16a34a,#15803d);color:#fff;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer;box-shadow:0 2px 10px rgba(22,163,74,.28);z-index:3;white-space:nowrap;-webkit-tap-highlight-color:transparent;touch-action:manipulation}#iuCalMonthQuickAddBtn.iu-calMonthFab:hover{filter:brightness(1.03)}#iuCalMonthQuickAddBtn.iu-calMonthFab:focus-visible{outline:2px solid #15803d;outline-offset:2px}@media(max-width:380px){#iuCalMonthActionBar .iu-calMonthFab .iu-calMonthFab__text,#iuCalMonthActionBar .iu-calSearchFab .iu-calSearchFab__text{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}#iuCalMonthQuickAddBtn.iu-calMonthFab .iu-calMonthFab__text{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}#iuCalMonthQuickAddBtn.iu-calMonthFab{min-width:48px;padding:10px 14px}}#iuCalendarOverlay .iu-calMonthStack{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;min-width:0}#iuCalendarOverlay .iu-calMonthInline{flex:0 0 auto;padding:12px 14px 16px;border-top:1px solid #d6dfec;background:#fff;box-sizing:border-box}#iuCalendarOverlay .iu-calInline__dateRow{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:0 0 10px;max-width:100%;box-sizing:border-box}#iuCalendarOverlay .iu-calInline__dateRow .iu-calInline__dateInput{flex:0 1 auto;min-width:0;max-width:100%}#iuCalendarOverlay .iu-calInline__weekday{font-weight:600;font-size:15px;color:#1e293b;flex:1 1 auto;min-width:0}@media(max-width:1024px){#iuCalendarOverlay.iu-calendarOverlay--premiumMob .iu-calendarOverlay__main{overflow:hidden!important;display:flex!important;flex-direction:column!important}}#iuCalendarOverlay .iu-calendarOverlay__main{position:relative;min-height:0;overflow:hidden;box-sizing:border-box}";
+  const CAL_PREMIUM_UPDATE_STYLE_ID = "iu-calendar-premium-update-v1";
+  const CAL_PREMIUM_UPDATE_CSS =
+    ".iu-calAllDayToggleRow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 10px;padding:10px 12px;border-radius:12px;background:rgba(236,253,245,.65);border:1px solid rgba(21,128,61,.18);box-sizing:border-box}" +
+    ".iu-calAllDayToggleRow__label{font-size:14px;font-weight:600;color:#14532d;flex:1 1 auto;min-width:0}" +
+    ".iu-calAllDaySwitch{position:relative;width:48px;height:28px;flex:0 0 auto;border:none;padding:0;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}" +
+    ".iu-calAllDaySwitch__track{display:block;width:48px;height:28px;border-radius:999px;background:#cbd5e1;transition:background .22s ease,box-shadow .22s ease;box-shadow:inset 0 1px 2px rgba(15,23,42,.12)}" +
+    ".iu-calAllDaySwitch__thumb{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(15,23,42,.18);transition:transform .22s ease}" +
+    ".iu-calAllDaySwitch.is-on .iu-calAllDaySwitch__track{background:linear-gradient(180deg,#22c55e,#16a34a);box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}" +
+    ".iu-calAllDaySwitch.is-on .iu-calAllDaySwitch__thumb{transform:translateX(20px)}" +
+    ".iu-calAllDaySwitch:focus-visible{outline:2px solid #16a34a;outline-offset:2px;border-radius:999px}" +
+    ".iu-calAllDaySection{margin:0 0 10px;padding:0;box-sizing:border-box}" +
+    ".iu-calAllDaySection__head{font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:rgba(20,83,45,.72);margin:0 0 6px;padding:0 4px}" +
+    ".iu-calAllDaySection__list{display:grid;gap:6px}" +
+    ".iu-calAllDayChip{display:flex;align-items:flex-start;gap:8px;width:100%;margin:0;padding:10px 12px;border-radius:12px;border:1px solid rgba(21,128,61,.2);background:linear-gradient(180deg,rgba(236,253,245,.95),#fff);color:#0f172a;text-align:left;cursor:pointer;box-sizing:border-box;box-shadow:0 2px 8px rgba(21,128,61,.08);-webkit-tap-highlight-color:transparent;touch-action:manipulation}" +
+    ".iu-calAllDayChip__title{font-size:14px;font-weight:700;line-height:1.3;word-break:break-word}" +
+    ".iu-calAllDayChip:active{transform:translateY(1px)}" +
+    ".iu-calBottomSheet{position:fixed;inset:0;z-index:10150;display:flex;flex-direction:column;justify-content:flex-end;pointer-events:none}" +
+    ".iu-calBottomSheet:not([hidden]){pointer-events:auto}" +
+    ".iu-calBottomSheet__scrim{position:absolute;inset:0;background:rgba(8,14,22,.42);opacity:0;transition:opacity .24s ease}" +
+    ".iu-calBottomSheet:not([hidden]) .iu-calBottomSheet__scrim{opacity:1}" +
+    ".iu-calBottomSheet__panel{position:relative;z-index:1;width:100%;max-height:min(88vh,720px);max-height:min(88dvh,720px);margin:0;padding:0 0 calc(12px + env(safe-area-inset-bottom,0px));border-radius:18px 18px 0 0;background:linear-gradient(180deg,#f8fafc 0%,#fff 28%);box-shadow:0 -8px 32px rgba(15,23,42,.18);transform:translateY(105%);transition:transform .28s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;min-height:0;box-sizing:border-box}" +
+    ".iu-calBottomSheet:not([hidden]) .iu-calBottomSheet__panel{transform:translateY(0)}" +
+    ".iu-calBottomSheet__handle{width:40px;height:4px;border-radius:999px;background:rgba(15,23,42,.16);margin:8px auto 4px;flex:0 0 auto}" +
+    ".iu-calBottomSheet__head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 14px 8px;flex:0 0 auto}" +
+    ".iu-calBottomSheet__title{margin:0;font-size:16px;font-weight:800;color:#0f172a;letter-spacing:-.02em}" +
+    ".iu-calBottomSheet__close{width:38px;height:38px;border:0;border-radius:10px;background:#eef2f7;color:#0f172a;font-size:24px;line-height:1;cursor:pointer;flex:0 0 auto;touch-action:manipulation}" +
+    ".iu-calBottomSheet__scroll{flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 14px 8px;box-sizing:border-box}" +
+    ".iu-calSearchOverlay{position:fixed;inset:0;z-index:10160;display:flex;align-items:stretch;justify-content:center;background:rgba(248,250,252,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}" +
+    ".iu-calSearchOverlay[hidden]{display:none!important}" +
+    ".iu-calSearchOverlay__panel{width:100%;max-width:960px;height:100%;display:flex;flex-direction:column;min-height:0;box-sizing:border-box;padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px))}" +
+    ".iu-calSearchOverlay__head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:0 0 auto;margin-bottom:10px}" +
+    ".iu-calSearchOverlay__title{margin:0;font-size:18px;font-weight:800;color:#0f172a;letter-spacing:-.02em}" +
+    ".iu-calSearchOverlay__form{display:flex;gap:8px;flex:0 0 auto;margin-bottom:8px;flex-wrap:wrap}" +
+    ".iu-calSearchOverlay__input{flex:1 1 180px;min-width:0;border:1px solid #cbd5e1;border-radius:12px;padding:12px 14px;font-size:16px;background:#fff;box-sizing:border-box}" +
+    ".iu-calSearchOverlay__submit{flex:0 0 auto;border:0;border-radius:12px;padding:12px 18px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(180deg,#15803d,#166534);cursor:pointer;touch-action:manipulation;min-height:48px}" +
+    ".iu-calSearchOverlay__count{flex:0 0 auto;font-size:13px;font-weight:600;color:rgba(15,23,42,.65);margin:0 0 8px}" +
+    ".iu-calSearchOverlay__empty{margin:12px 0;padding:16px;border-radius:12px;background:#fff;border:1px dashed #cbd5e1;color:rgba(15,23,42,.55);text-align:center;font-size:14px}" +
+    ".iu-calSearchOverlay__resultsWrap{flex:1 1 auto;min-height:0;overflow:hidden;border:1px solid #e2e8f0;border-radius:14px;background:#fff;box-shadow:0 8px 24px rgba(15,23,42,.06);display:flex;flex-direction:column}" +
+    ".iu-calSearchOverlay__tableScroll{flex:1 1 auto;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch}" +
+    ".iu-calSearchTable{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}" +
+    ".iu-calSearchTable thead th{position:sticky;top:0;z-index:2;background:linear-gradient(180deg,#f1f5f9,#e2e8f0);color:#1e293b;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:10px 8px;border-bottom:1px solid #cbd5e1;text-align:left}" +
+    ".iu-calSearchTable tbody td{padding:10px 8px;border-bottom:1px solid #eef2f7;vertical-align:top;word-break:break-word;overflow-wrap:anywhere;line-height:1.35;color:#0f172a}" +
+    ".iu-calSearchTable tbody tr{cursor:pointer;transition:background .12s ease}" +
+    ".iu-calSearchTable tbody tr:hover,.iu-calSearchTable tbody tr:active{background:rgba(236,253,245,.75)}" +
+    ".iu-calSearchTable .col-num{width:36px;text-align:center;font-weight:700;color:rgba(15,23,42,.55)}" +
+    ".iu-calSearchTable .col-date{width:88px}.iu-calSearchTable .col-day{width:36px}.iu-calSearchTable .col-time{width:72px}.iu-calSearchTable .col-event{width:auto}" +
+    "#iuCalendarOverlay .iu-calendarOverlay__viewRoot[data-view=year],#iuCalendarDayOverlay .iu-calendar-day-content{overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;min-height:0!important}" +
+    "#iuCalendarOverlay .iu-calendarOverlay__viewRoot[data-view=year] .iu-calYear{min-height:min(100%,720px);padding-bottom:16px}" +
+    ".iu-calInline__timeBtn.is-hidden{display:none!important}";
   const CAL_STYLE_TEXT = ".iu-calendarOverlay{position:fixed;inset:0;z-index:10035;display:none;align-items:center;justify-content:center}.iu-calendarOverlay:not([hidden]){display:flex}.iu-calendarOverlay__backdrop{position:absolute;inset:0;background:rgba(8,14,22,.78)}.iu-calendarOverlay__dialog{position:relative;z-index:1;width:calc(100vw - 28px);max-width:none;height:min(88vh,860px);overflow:hidden;border-radius:12px;background:#f7f9fc;box-shadow:0 20px 52px rgba(7,12,19,.35);display:grid;grid-template-rows:auto 1fr}.iu-calendarOverlay__header{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid #d7dfeb;background:#fff;min-width:0}.iu-calendarOverlay__headerRight{display:flex;align-items:center;gap:8px;min-width:0;flex:0 1 auto}.iu-calendarOverlay__controls{display:flex;align-items:center;gap:8px;min-width:0}.iu-calendarOverlay__toolbar,.iu-calendarOverlay__formActions{display:flex;align-items:center;gap:8px}.iu-calendarOverlay__viewBtn,.iu-calendarOverlay__close,.iu-calendarOverlay__eventBtn{border:1px solid #c6d2e5;border-radius:8px;background:#eef3fb;color:#203a59;padding:8px 10px;font-size:13px}.iu-calendarOverlay__close{width:38px;height:38px;border:0;font-size:24px;line-height:1;background:#e8eef7;padding:0;touch-action:manipulation;flex-shrink:0}.iu-calendarOverlay__viewBtn.is-active{background:#203a59;color:#fff;border-color:#203a59}.iu-calendarOverlay__body{display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:0;height:100%}.iu-calendarOverlay__main,.iu-calendarOverlay__side{min-height:0;padding:12px}.iu-calendarOverlay__main{display:flex;flex-direction:column;gap:10px}.iu-calendarOverlay__side{border-left:1px solid #d7dfeb;background:#fff;overflow:auto}.iu-calendarOverlay__toolbar{margin-bottom:0;flex-wrap:wrap}.iu-calendarOverlay__toolbar strong{flex:1}.iu-calendarOverlay__viewRoot{border:1px solid #d2dcea;border-radius:10px;background:#fff;min-height:320px;height:calc(100% - 42px);overflow:auto}.iu-calendarOverlay__form{display:grid;gap:10px}.iu-calendarOverlay__form label{display:grid;gap:4px;font-size:13px;color:#234064}.iu-calendarOverlay__form input,.iu-calendarOverlay__form textarea,.iu-calendarOverlay__form select{width:100%;border:1px solid #c9d7ea;border-radius:8px;padding:10px;font-size:14px}.iu-calendarOverlay__formActions{flex-wrap:wrap}.iu-calendarOverlay__formActions button{flex:1 1 0;min-height:44px;touch-action:manipulation}.iu-calendarOverlay__msg{min-height:16px;font-size:12px;color:#2a4568}.iu-calendarOverlay__eventList{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}.iu-calendarOverlay__eventBtn{width:100%;text-align:left;background:#f4f7fc;border-color:#d0daea;padding:10px}.iu-calGrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;padding:8px}.iu-calDayCell{border:1px solid #d6dfec;border-radius:8px;min-height:88px;padding:6px;background:#fff;font-size:12px;display:block;text-align:left}.iu-calDayCell.is-out{opacity:.45}.iu-calDayCell.is-weekend{background:#f7fbff}.iu-calDayCell.is-today{border-color:#2f9cf4;box-shadow:0 0 0 1px #2f9cf4 inset}.iu-calDayCell.is-selected{border-color:#1f3a5f;box-shadow:0 0 0 2px rgba(31,58,95,.26) inset;background:#eef4ff}.iu-calDayCell.is-holiday{background:#fff8f0}.iu-calDayCell__events{margin-top:6px;display:grid;gap:3px}.iu-calEventDot{border-radius:6px;background:#e7eef9;padding:2px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iu-calYear{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:8px}.iu-calYearMonth,.iu-calTimelineItem{border:1px solid #d6dfec;border-radius:8px;padding:10px;background:#fff}.iu-calTimeline{padding:8px;display:grid;gap:8px}.iu-calTimelineItem{display:grid;gap:8px}@media (min-width:1024px){.iu-calendarOverlay__dialog{width:calc(100vw - 28px);max-width:none}.iu-calendarOverlay__main{min-width:0}.iu-calendarOverlay__viewRoot{width:100%}.iu-calGrid{width:100%;box-sizing:border-box}}body.iu-calendarOverlay-open{overflow:hidden!important}@media (max-width:900px){.iu-calendarOverlay{align-items:stretch;justify-content:stretch;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#f7f9fc}.iu-calendarOverlay__backdrop{position:fixed;inset:0;background:rgba(8,14,22,.85)}.iu-calendarOverlay__dialog{width:100vw;min-height:100dvh;height:auto;max-height:none;border-radius:0;overflow:visible;display:flex;flex-direction:column;box-shadow:none;background:#f7f9fc}.iu-calendarOverlay__header{position:relative;top:auto;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:4px;flex-wrap:nowrap}.iu-calendarOverlay__header h2{margin:0;font-size:15px;line-height:1;white-space:nowrap;flex:0 0 auto;display:flex;align-items:center;min-height:34px}.iu-calendarOverlay__headerRight{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:4px}.iu-calendarOverlay__controls{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:4px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.iu-calendarOverlay__controls::-webkit-scrollbar{display:none}.iu-calendarOverlay__viewBtn{min-height:34px;padding:6px 6px;font-size:11px;line-height:1;white-space:nowrap;flex:0 0 auto}.iu-calendarOverlay__close{flex-shrink:0;min-width:34px;min-height:34px;width:34px;height:34px;flex:0 0 auto}.iu-calendarOverlay__body{display:flex;flex-direction:column;height:auto;min-height:0;overflow:visible!important;flex:1 1 auto;background:#fff}.iu-calendarOverlay__main,.iu-calendarOverlay__side,.iu-calendarOverlay__viewRoot{height:auto!important;max-height:none!important;overflow:visible!important}.iu-calendarOverlay__main{padding:10px 10px 8px;flex:0 0 auto!important;background:#fff;display:flex;flex-direction:column}.iu-calendarOverlay__side{border-left:0;border-top:1px solid #d7dfeb;padding:12px 10px 16px;flex:0 0 auto!important;background:#fff}.iu-calendarOverlay__viewRoot{display:block;width:100%;min-height:320px!important}.iu-calendarOverlay__viewRoot[data-view='week'],.iu-calendarOverlay__viewRoot[data-view='year']{min-height:auto!important;height:auto!important;max-height:none!important;overflow:visible!important}.iu-calendarOverlay__viewRoot[data-view='week'] .iu-calTimeline,.iu-calendarOverlay__viewRoot[data-view='year'] .iu-calYear{margin-bottom:0;padding-bottom:0}.iu-calendarOverlay__form{order:1}.iu-calendarOverlay__formActions{gap:10px;position:relative}.iu-calendarOverlay__formActions button{min-height:48px;font-size:15px;position:relative}.iu-calendarOverlay__listWrap{order:2}.iu-calTimeline{padding:6px}.iu-calGrid{padding:6px;gap:6px}.iu-calDayCell{min-height:84px}.iu-calYear{grid-template-columns:repeat(2,minmax(0,1fr));padding:6px}}@media (max-width:640px){.iu-calendarOverlay__header h2{font-size:14px;min-height:32px}.iu-calendarOverlay__viewBtn{min-height:32px;padding:6px 5px;font-size:10px}.iu-calendarOverlay__close{min-width:32px;min-height:32px;width:32px;height:32px}.iu-calendarOverlay__toolbar button{min-height:42px}.iu-calendarOverlay__formActions button{flex:1 1 100%}.iu-calYear{grid-template-columns:1fr}.iu-calDayCell{min-height:72px;font-size:11px}}";
   const CAL_VISUAL_STYLE_ID = "iu-calendar-visual-state-layer";
   const CAL_VISUAL_LAYER_TEXT = "#iuCalendarOverlay{--iu-cal-accent:var(--iu-calendar-accent);--iu-cal-accent-soft:rgba(21,128,61,.12);--iu-cal-muted:rgba(15,23,42,.45);--iu-cal-surface:#ffffff;--iu-cal-border:#d6dfec}#iuCalendarOverlay .iu-calendarOverlay__viewBtn.is-active{background:linear-gradient(180deg,#1e3a5c 0%,#152a42 100%);color:#fff;border-color:#152a42;box-shadow:0 1px 0 rgba(255,255,255,.12) inset}#iuCalendarOverlay .iu-calendarOverlay__viewBtn:not(.is-active){background:#f8fafc;color:#334155;border-color:#cbd5e1}#iuCalendarOverlay .iu-calendarOverlay__viewBtn:not(.is-active):hover{background:#f1f5f9}#iuCalendarOverlay .iu-calendarOverlay__viewBtn:focus-visible{outline:2px solid var(--iu-cal-accent);outline-offset:2px}#iuCalendarOverlay .iu-calendarOverlay__toolbar>button{background:#f8fafc;border:1px solid #cbd5e1;color:#1e293b}#iuCalendarOverlay .iu-calendarOverlay__toolbar>button:hover{background:#f1f5f9}#iuCalendarOverlay .iu-calendarOverlay__toolbar>button:focus-visible{outline:2px solid var(--iu-cal-accent);outline-offset:2px}#iuCalendarOverlay .iu-calendarOverlay__close{background:#eef2f7;color:#0f172a}#iuCalendarOverlay .iu-calendarOverlay__close:hover{background:#e2e8f0}#iuCalendarOverlay .iu-calendarOverlay__close:focus-visible{outline:2px solid var(--iu-cal-accent);outline-offset:2px}#iuCalendarOverlay .iu-calTimelineItem.is-past{opacity:.72;background:#f8fafc;border-color:#e2e8f0}#iuCalendarOverlay .iu-calTimelineItem.is-future{background:#fff}#iuCalendarOverlay .iu-calTimelineItem.is-today{background:rgba(236,253,245,.85);border-color:rgba(21,128,61,.35);box-shadow:0 0 0 1px rgba(21,128,61,.2) inset}#iuCalendarOverlay .iu-calTimelineItem.is-empty:not(.is-today){color:var(--iu-cal-muted)}#iuCalendarOverlay .iu-calTimelineItem.has-events:not(.is-today){border-color:#cbd5e1}#iuCalendarOverlay .iu-calendarOverlay__eventBtn.is-past-event{opacity:.68;background:#f1f5f9;border-color:#e2e8f0;color:#475569}#iuCalendarOverlay .iu-calendarOverlay__eventBtn.is-nearest-upcoming{background:linear-gradient(180deg,rgba(236,253,245,.95),#ecfdf5);border-color:rgba(21,128,61,.45);color:#0f172a;box-shadow:0 0 0 1px rgba(21,128,61,.2) inset;font-weight:600}#iuCalendarOverlay .iu-calDayCell.is-past:not(.is-today){opacity:.68;background:#f8fafc}#iuCalendarOverlay .iu-calDayCell.is-future:not(.is-today){background:#fff}#iuCalendarOverlay .iu-calDayCell.is-today{border-color:rgba(21,128,61,.5);box-shadow:0 0 0 1px rgba(21,128,61,.35) inset;background:rgba(236,253,245,.75)}#iuCalendarOverlay .iu-calDayCell.is-selected:not(.is-today){border-color:#1e3a5c;box-shadow:0 0 0 2px rgba(30,58,92,.22) inset;background:#eef4ff}#iuCalendarOverlay .iu-calDayCell.is-today.is-selected{border-color:#1e3a5c;box-shadow:0 0 0 2px rgba(30,58,92,.25) inset,0 0 0 1px rgba(21,128,61,.25) inset;background:linear-gradient(145deg,rgba(236,253,245,.9),rgba(238,244,255,.95))}#iuCalendarOverlay .iu-calDayCell.has-events:not(.is-today):not(.is-selected){border-color:rgba(21,128,61,.28)}#iuCalendarOverlay .iu-calDayCell.has-events .iu-calEventDot{background:rgba(236,253,245,.9);border:1px solid rgba(21,128,61,.15)}#iuCalendarOverlay .iu-calYearMonth.is-current-month{border-color:rgba(21,128,61,.35);background:rgba(236,253,245,.5)}#iuCalendarOverlay .iu-calYearMonth.has-events:not(.is-current-month){border-color:#cbd5e1}#iuCalendarOverlay .iu-calYearMonth.is-empty:not(.is-current-month){opacity:.78;background:#fafafa}#iuCalendarOverlay .iu-calendarOverlay__form input:focus-visible,#iuCalendarOverlay .iu-calendarOverlay__form select:focus-visible,#iuCalendarOverlay .iu-calendarOverlay__form textarea:focus-visible{outline:2px solid var(--iu-cal-accent);outline-offset:0;border-color:rgba(21,128,61,.45)}#iuCalendarOverlay .iu-calendarOverlay__formActions button[type=submit]{background:linear-gradient(180deg,#1e3a5c,#152a42);color:#fff;border-color:#152a42;font-weight:600}#iuCalendarOverlay .iu-calendarOverlay__formActions button[type=submit]:hover{filter:brightness(1.03)}#iuCalendarOverlay .iu-calendarOverlay__formActions button[data-iu-cal-delete],#iuCalendarOverlay .iu-calendarOverlay__formActions button[data-iu-cal-reset]{background:#f8fafc;color:#334155;border-color:#cbd5e1}#iuCalendarOverlay .iu-calendarOverlay__listWrap{margin-top:4px;padding-top:10px;border-top:1px solid #e2e8f0}#iuCalendarOverlay .iu-calendarOverlay__listWrap h3{font-size:14px;color:#1e293b;margin:0 0 8px}";
@@ -33605,7 +33654,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     prevBodyPadRight: "",
     dayOpen: false,
     mobileDayOverlayOpen: false,
-    inline: null
+    inline: null,
+    bottomSheetOpen: false,
+    searchOpen: false,
+    searchScope: "month",
+    searchQuery: "",
+    searchResults: [],
+    premiumUiBound: false
   };
 
   function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
@@ -33646,14 +33701,81 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         st4.textContent = CAL_MONTH_FAB_CSS;
         document.head.appendChild(st4);
       }
+      if (!document.getElementById(CAL_PREMIUM_UPDATE_STYLE_ID)){
+        const st5 = document.createElement("style");
+        st5.id = CAL_PREMIUM_UPDATE_STYLE_ID;
+        st5.textContent = CAL_PREMIUM_UPDATE_CSS;
+        document.head.appendChild(st5);
+      }
+      ensureCalPremiumDom();
     }catch{}
+  }
+
+  function ensureCalPremiumDom(){
+    if (!document.getElementById("iuCalEventBottomSheet")){
+      const bs = document.createElement("div");
+      bs.id = "iuCalEventBottomSheet";
+      bs.className = "iu-calBottomSheet";
+      bs.hidden = true;
+      bs.setAttribute("aria-hidden", "true");
+      bs.innerHTML =
+        '<div class="iu-calBottomSheet__scrim" data-iu-cal-bs-close="1" aria-hidden="true"></div>' +
+        '<div class="iu-calBottomSheet__panel" role="dialog" aria-modal="true" aria-labelledby="iuCalBottomSheetTitle">' +
+        '<div class="iu-calBottomSheet__handle" aria-hidden="true"></div>' +
+        '<div class="iu-calBottomSheet__head">' +
+        '<h3 class="iu-calBottomSheet__title" id="iuCalBottomSheetTitle">Událost</h3>' +
+        '<button type="button" class="iu-calBottomSheet__close" data-iu-cal-bs-close="1" aria-label="Zavřít">×</button>' +
+        "</div>" +
+        '<div class="iu-calBottomSheet__scroll" data-iu-cal-bs-scroll="1"></div>' +
+        "</div>";
+      document.body.appendChild(bs);
+    }
+    if (!document.getElementById("iuCalEventSearchOverlay")){
+      const so = document.createElement("div");
+      so.id = "iuCalEventSearchOverlay";
+      so.className = "iu-calSearchOverlay";
+      so.hidden = true;
+      so.setAttribute("aria-hidden", "true");
+      so.innerHTML =
+        '<div class="iu-calSearchOverlay__panel" role="dialog" aria-modal="true" aria-labelledby="iuCalSearchTitle">' +
+        '<div class="iu-calSearchOverlay__head">' +
+        '<h2 class="iu-calSearchOverlay__title" id="iuCalSearchTitle">Vyhledat událost</h2>' +
+        '<button type="button" class="iu-calBottomSheet__close iu-calSearchOverlay__close" data-iu-cal-search-close="1" aria-label="Zavřít">×</button>' +
+        "</div>" +
+        '<form class="iu-calSearchOverlay__form" data-iu-cal-search-form="1">' +
+        '<input type="search" class="iu-calSearchOverlay__input" data-iu-cal-search-input="1" placeholder="Název nebo obsah události…" autocomplete="off" maxlength="120" />' +
+        '<button type="submit" class="iu-calSearchOverlay__submit">Hledat</button>' +
+        "</form>" +
+        '<p class="iu-calSearchOverlay__count" data-iu-cal-search-count="1">Nalezeno: 0 událostí</p>' +
+        '<div class="iu-calSearchOverlay__resultsWrap">' +
+        '<div class="iu-calSearchOverlay__tableScroll" data-iu-cal-search-results="1"></div>' +
+        "</div></div>";
+      document.body.appendChild(so);
+    }
+    if (!document.getElementById("iuCalMonthActionBar")){
+      const main = document.querySelector("#iuCalendarOverlay .iu-calendarOverlay__main");
+      if (main){
+        const bar = document.createElement("div");
+        bar.id = "iuCalMonthActionBar";
+        bar.className = "iu-calMonthActionBar";
+        bar.hidden = true;
+        main.appendChild(bar);
+      }
+    }
   }
   function pad(n){ return String(n).padStart(2, "0"); }
   function toDateOnly(d){ const x = new Date(d); return x.getFullYear() + "-" + pad(x.getMonth()+1) + "-" + pad(x.getDate()); }
   function toTimeOnly(d){ const x = new Date(d); return pad(x.getHours()) + ":" + pad(x.getMinutes()); }
   function parseDateTime(date, time){ return new Date(date + "T" + (time || "00:00") + ":00"); }
   function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, (m)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
-  function compareEvents(a, b){ return (a.date + "T" + a.time).localeCompare(b.date + "T" + b.time); }
+  function compareEvents(a, b){
+    if (a.date !== b.date) return a.date.localeCompare(b.date);
+    const aAll = isEventAllDay(a);
+    const bAll = isEventAllDay(b);
+    if (aAll && !bAll) return -1;
+    if (!aAll && bAll) return 1;
+    return (a.date + "T" + (a.time || "00:00")).localeCompare(b.date + "T" + (b.time || "00:00"));
+  }
   function addDays(dateStr, days){ const d = new Date(dateStr + "T00:00:00"); d.setDate(d.getDate() + days); return toDateOnly(d); }
   function startOfWeek(dateStr){ const d = new Date(dateStr + "T00:00:00"); const day = (d.getDay() + 6) % 7; d.setDate(d.getDate() - day); return toDateOnly(d); }
   function sameYMD(a, b){ return String(a) === String(b); }
@@ -33664,6 +33786,68 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     } catch (_) {
       return (window.innerWidth || 0) <= 1024;
     }
+  }
+
+  function shouldUseCalBottomSheet(){
+    return isCalMobileLayout() && !!state.inline;
+  }
+
+  function isEventAllDay(ev){
+    return !!(ev && ev.allDay);
+  }
+
+  function calWeekdayAbbrev(dow){
+    const names = ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"];
+    return names[dow] || "";
+  }
+
+  function formatEventTimeLabel(ev){
+    if (isEventAllDay(ev)) return "Celý den";
+    const t = String(ev && ev.time || "").trim();
+    return t || "—";
+  }
+
+  function formatEventDateCs(dateStr){
+    const p = String(dateStr || "").split("-");
+    if (p.length < 3) return String(dateStr || "");
+    return pad(Number(p[2])) + "." + pad(Number(p[1])) + "." + p[0];
+  }
+
+  function getAllDayEventsForDate(date){
+    return getEventsForDate(date).filter(isEventAllDay).sort(compareEvents);
+  }
+
+  function syncCalendarScrollLocks(){
+    const dayOv = document.getElementById("iuCalendarDayOverlay");
+    const dayOvOpen = !!(dayOv && !dayOv.hidden && isCalMobileLayout() && state.mobileDayOverlayOpen);
+    const bs = document.getElementById("iuCalEventBottomSheet");
+    const bsOpen = !!(bs && !bs.hidden && state.bottomSheetOpen);
+    const searchOv = document.getElementById("iuCalEventSearchOverlay");
+    const searchOpen = !!(searchOv && !searchOv.hidden && state.searchOpen);
+    const calOv = getOverlay();
+    const calOpen = !!(calOv && !calOv.hidden);
+    const hardLock = dayOvOpen || bsOpen || searchOpen;
+    try{
+      if (hardLock) document.body.style.overflow = "hidden";
+      else if (calOpen) document.body.style.overflow = "";
+      else document.body.style.overflow = "";
+    }catch{}
+  }
+
+  function buildAllDayToggleHtml(checked){
+    const on = !!checked;
+    return (
+      '<div class="iu-calAllDayToggleRow">' +
+      '<span class="iu-calAllDayToggleRow__label">Celodenní událost</span>' +
+      '<button type="button" class="iu-calAllDaySwitch' +
+      (on ? " is-on" : "") +
+      '" data-iu-cal-inline-all-day="1" role="switch" aria-checked="' +
+      (on ? "true" : "false") +
+      '" aria-label="Celodenní událost">' +
+      '<span class="iu-calAllDaySwitch__track" aria-hidden="true"></span>' +
+      '<span class="iu-calAllDaySwitch__thumb" aria-hidden="true"></span>' +
+      "</button></div>"
+    );
   }
 
   function calMonthGenitiveCs(m0){
@@ -33754,6 +33938,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       id: String(evt.id || uid("evt")),
       date: /^\d{4}-\d{2}-\d{2}$/.test(String(evt.date || "")) ? String(evt.date) : toDateOnly(new Date()),
       time: /^\d{2}:\d{2}$/.test(String(evt.time || "")) ? String(evt.time) : "09:00",
+      allDay: !!evt.allDay,
       title: String(evt.title || "").trim().slice(0, 120),
       note: String(evt.note || "").trim().slice(0, 1000),
       address: addr,
@@ -33764,6 +33949,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       updatedAt: Number.isFinite(Number(evt.updatedAt)) ? Number(evt.updatedAt) : Date.now()
     };
     if (!safe.title) return null;
+    if (safe.allDay) safe.time = "00:00";
     return safe;
   }
 
@@ -33885,7 +34071,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     state.dayOpen = false;
     state.mobileDayOverlayOpen = false;
     state.inline = null;
+    state.bottomSheetOpen = false;
     closeTimeWheel();
+    closeEventSearch();
     try{
       if (typeof window.__iuSilverCalOverlayClosed === "function"){
         window.__iuSilverCalOverlayClosed();
@@ -33930,6 +34118,20 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const daySurfaceOpen = !!(dayOv && !dayOv.hidden && isCalMobileLayout());
     const ov = getOverlay();
     if (e.key === "Escape"){
+      const searchOv = document.getElementById("iuCalEventSearchOverlay");
+      if (searchOv && !searchOv.hidden && state.searchOpen){
+        e.preventDefault();
+        closeEventSearch();
+        return;
+      }
+      const bs = document.getElementById("iuCalEventBottomSheet");
+      if (bs && !bs.hidden && state.bottomSheetOpen){
+        e.preventDefault();
+        const tw = document.getElementById("iuCalTimeWheelHost");
+        if (tw && !tw.hidden){ closeTimeWheel(); return; }
+        cancelInlineEditor();
+        return;
+      }
       if (daySurfaceOpen){
         e.preventDefault();
         const tw = document.getElementById("iuCalTimeWheelHost");
@@ -33972,7 +34174,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     syncBridgeFormFields();
     syncMobileCalendarChrome();
     syncMobileDayOverlayDom();
-    syncMonthQuickAddFab();
+    syncMonthYearActionBar();
+    syncCalBottomSheet();
+    syncCalendarScrollLocks();
   }
 
   function renderViewButtons(){
@@ -33997,6 +34201,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function eventSlotHour(ev){
+    if (isEventAllDay(ev)) return -1;
     const parts = String(ev.time || "09:00").split(":");
     let h = parseInt(parts[0], 10);
     if (!Number.isFinite(h)) h = 9;
@@ -34006,7 +34211,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function getEventsInHourSlot(iso, slotH){
-    return getEventsForDate(iso).filter((ev)=> eventSlotHour(ev) === slotH).sort(compareEvents);
+    return getEventsForDate(iso).filter((ev)=> !isEventAllDay(ev) && eventSlotHour(ev) === slotH).sort(compareEvents);
   }
 
   function nearestFutureEventIdOnDate(iso){
@@ -34023,7 +34228,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function buildTimelineEventHtml(ev, nearestId){
     const addr = String(ev.address || "").trim();
     const note = String(ev.note || "").trim();
-    const timeStr = String(ev.time || "").trim() || "—";
+    const timeStr = formatEventTimeLabel(ev);
     const navBtn = addr
       ? '<button type="button" class="iu-calNavBtn" data-iu-cal-pin="' +
         esc(addr) +
@@ -34089,9 +34294,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       title: "",
       address: "",
       note: "",
+      allDay: false,
       showDatePicker,
       formSource: source
     };
+    if (isCalMobileLayout()) state.bottomSheetOpen = true;
     if (source === "month"){
       state.dayOpen = false;
       state.mobileDayOverlayOpen = false;
@@ -34103,6 +34310,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const inl = state.inline;
     if (!inl) return "";
     const delBtn = inl.mode === "edit" ? '<button type="button" data-iu-cal-inline-delete="1">Odstranit</button>' : "";
+    const allDay = !!inl.allDay;
     const dateRow =
       inl.showDatePicker && inl.mode === "new"
         ? '<div class="iu-calInline__dateRow">' +
@@ -34113,9 +34321,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           esc(formatCalMobileDayHeading(String(inl.date || "").slice(0, 10)).line1) +
           "</span></div>"
         : "";
+    const timeBtnCls = "iu-calInline__timeBtn" + (allDay ? " is-hidden" : "");
     return (
       dateRow +
       '<div class="iu-calInline" data-iu-cal-inline-root="1" tabindex="-1">' +
+      buildAllDayToggleHtml(allDay) +
       '<input class="iu-calInline__inp" data-iu-cal-inline-field="title" placeholder="Název události" maxlength="120" value="' +
       esc(inl.title) +
       '" />' +
@@ -34125,7 +34335,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       '<textarea class="iu-calInline__txt" data-iu-cal-inline-field="note" placeholder="Poznámka" maxlength="1000">' +
       esc(inl.note) +
       "</textarea>" +
-      '<button type="button" class="iu-calInline__timeBtn" data-iu-cal-inline-time-open="1">' +
+      '<button type="button" class="' +
+      timeBtnCls +
+      '" data-iu-cal-inline-time-open="1"' +
+      (allDay ? ' hidden aria-hidden="true"' : "") +
+      ">" +
       esc(inl.time) +
       "</button>" +
       '<div class="iu-calInline__actions">' +
@@ -34133,6 +34347,30 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       '<button type="button" data-iu-cal-inline-cancel="1">Zrušit</button>' +
       delBtn +
       "</div></div>"
+    );
+  }
+
+  function renderAllDaySectionHTML(iso){
+    const items = getAllDayEventsForDate(iso);
+    if (!items.length) return "";
+    let list = "";
+    for (let i = 0; i < items.length; i++){
+      const ev = items[i];
+      list +=
+        '<button type="button" class="iu-calAllDayChip" data-iu-cal-open-event="' +
+        esc(ev.id) +
+        '" aria-label="' +
+        esc("Celý den · " + String(ev.title || "")) +
+        '"><span class="iu-calAllDayChip__title">' +
+        esc(ev.title) +
+        "</span></button>";
+    }
+    return (
+      '<section class="iu-calAllDaySection" data-iu-cal-all-day-section="1">' +
+      '<h3 class="iu-calAllDaySection__head">Celodenní události</h3>' +
+      '<div class="iu-calAllDaySection__list">' +
+      list +
+      "</div></section>"
     );
   }
 
@@ -34145,7 +34383,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function renderDayHourlyTimelineHTML(iso){
     const nearestId = nearestFutureEventIdOnDate(iso);
     const skipBannerInsideHours = isCalMobileLayout() && state.dayOpen;
-    let html = (skipBannerInsideHours ? "" : renderDayHolidayBannerHTML(iso)) + '<div class="iu-calDayHoursRoot">';
+    const allDayHtml = renderAllDaySectionHTML(iso);
+    let html = (skipBannerInsideHours ? "" : renderDayHolidayBannerHTML(iso)) + allDayHtml + '<div class="iu-calDayHoursRoot">';
     for (let slotH = 1; slotH <= 23; slotH++){
       const label = pad(slotH) + ":00";
       const evsAll = getEventsInHourSlot(iso, slotH);
@@ -34153,7 +34392,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const editingId = inl && inl.mode === "edit" ? String(inl.id || "") : "";
       const evs = evsAll.filter((ev)=> !editingId || ev.id !== editingId);
       const eventCount = evs.length;
-      const showInline = inl && inl.slotHour === slotH;
+      const showInline = inl && inl.slotHour === slotH && !shouldUseCalBottomSheet();
       const showHourLabel = eventCount === 0 && !showInline;
       const evHtml = evs.map((ev)=> buildTimelineEventHtml(ev, nearestId)).join("");
       const inlineHtml = showInline ? buildInlineEditorHtml() : "";
@@ -34334,8 +34573,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!state.inline) return;
     state.inline = null;
     state.currentEditId = "";
+    state.bottomSheetOpen = false;
     setMessage("");
     render();
+    syncCalendarScrollLocks();
   }
 
   async function saveInlineEditor(){
@@ -34345,10 +34586,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!title){ setMessage("Vyplňte název."); return; }
     const id = inl.mode === "edit" ? String(inl.id || "") : "";
     const prevEv = id ? state.data.events.find((e)=>e.id === id) : null;
+    const allDay = !!inl.allDay;
+    const timeVal = allDay ? "00:00" : String(inl.time || "09:00");
     const base = sanitizeEvent({
       id: id || uid("evt"),
       date: String(inl.date || state.selectedDate || "").slice(0, 10),
-      time: inl.time,
+      time: timeVal,
+      allDay,
       title,
       note: String(inl.note || "").trim(),
       address: String(inl.address || "").trim(),
@@ -34364,12 +34608,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     else state.data.events.push(base);
     state.data.events.sort(compareEvents);
     state.inline = null;
+    state.bottomSheetOpen = false;
     state.currentEditId = base.id;
     state.selectedDate = base.date;
     state.cursorDate = base.date;
     await writeStore();
     setMessage("");
     render();
+    syncCalendarScrollLocks();
   }
 
   async function deleteInlineEditor(){
@@ -34377,10 +34623,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!inl || inl.mode !== "edit" || !inl.id) return;
     state.data.events = state.data.events.filter((e)=>e.id !== inl.id);
     state.inline = null;
+    state.bottomSheetOpen = false;
     state.currentEditId = "";
     await writeStore();
     setMessage("");
     render();
+    syncCalendarScrollLocks();
   }
 
   function focusNewInlineTitleAfterRender(){
@@ -34394,6 +34642,203 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         });
       });
     }catch{}
+  }
+
+  function syncCalBottomSheet(){
+    const bs = document.getElementById("iuCalEventBottomSheet");
+    if (!bs) return;
+    const open = shouldUseCalBottomSheet();
+    if (!open){
+      bs.hidden = true;
+      bs.setAttribute("aria-hidden", "true");
+      state.bottomSheetOpen = false;
+      syncCalendarScrollLocks();
+      return;
+    }
+    state.bottomSheetOpen = true;
+    const titleEl = bs.querySelector("#iuCalBottomSheetTitle");
+    if (titleEl){
+      titleEl.textContent = state.inline && state.inline.mode === "edit" ? "Upravit událost" : "Nová událost";
+    }
+    const scroll = bs.querySelector("[data-iu-cal-bs-scroll]");
+    if (scroll){
+      scroll.innerHTML = buildInlineEditorHtml();
+      bindCalendarInlineEditorRoot(scroll, String(state.inline && state.inline.date || state.selectedDate || "").slice(0, 10));
+    }
+    bs.hidden = false;
+    bs.setAttribute("aria-hidden", "false");
+    syncCalendarScrollLocks();
+    try{
+      requestAnimationFrame(()=>{
+        const ti = bs.querySelector("[data-iu-cal-inline-field=\"title\"]");
+        if (ti && ti.focus) ti.focus({ preventScroll: true });
+      });
+    }catch{}
+  }
+
+  function closeCalBottomSheet(){
+    state.bottomSheetOpen = false;
+    state.inline = null;
+    state.currentEditId = "";
+    const bs = document.getElementById("iuCalEventBottomSheet");
+    if (bs){
+      bs.hidden = true;
+      bs.setAttribute("aria-hidden", "true");
+    }
+    render();
+    syncCalendarScrollLocks();
+  }
+
+  function eventsInSearchScope(scope){
+    const cur = new Date(state.cursorDate + "T12:00:00");
+    const year = cur.getFullYear();
+    const month = cur.getMonth();
+    return state.data.events.filter((ev)=>{
+      const d = new Date(ev.date + "T00:00:00");
+      if (!Number.isFinite(d.getTime())) return false;
+      if (scope === "year") return d.getFullYear() === year;
+      return d.getFullYear() === year && d.getMonth() === month;
+    });
+  }
+
+  function searchCalendarEvents(query, scope){
+    const q = String(query || "").trim().toLowerCase();
+    const pool = eventsInSearchScope(scope);
+    if (!q) return [];
+    return pool
+      .filter((ev)=>{
+        const hay = [ev.title, ev.note, ev.address].map((x)=>String(x || "").toLowerCase()).join(" ");
+        return hay.indexOf(q) >= 0;
+      })
+      .sort(compareEvents);
+  }
+
+  function renderSearchResultsTable(results){
+    if (!results.length){
+      return '<div class="iu-calSearchOverlay__empty">Žádná událost nebyla nalezena.</div>';
+    }
+    let rows = "";
+    for (let i = 0; i < results.length; i++){
+      const ev = results[i];
+      const d = new Date(ev.date + "T12:00:00");
+      rows +=
+        "<tr data-iu-cal-search-row=\"" +
+        esc(ev.id) +
+        "\"><td class=\"col-num\">" +
+        (i + 1) +
+        "</td><td class=\"col-date\">" +
+        esc(formatEventDateCs(ev.date)) +
+        "</td><td class=\"col-day\">" +
+        esc(calWeekdayAbbrev(d.getDay())) +
+        "</td><td class=\"col-time\">" +
+        esc(formatEventTimeLabel(ev)) +
+        "</td><td class=\"col-event\">" +
+        esc(ev.title) +
+        "</td></tr>";
+    }
+    return (
+      '<table class="iu-calSearchTable" aria-label="Výsledky hledání">' +
+      "<thead><tr><th class=\"col-num\">#</th><th class=\"col-date\">Datum</th><th class=\"col-day\">Den</th><th class=\"col-time\">Čas</th><th class=\"col-event\">Událost</th></tr></thead>" +
+      "<tbody>" +
+      rows +
+      "</tbody></table>"
+    );
+  }
+
+  function resetEventSearchState(){
+    state.searchQuery = "";
+    state.searchResults = [];
+  }
+
+  function openEventSearch(scope){
+    state.searchScope = scope === "year" ? "year" : "month";
+    resetEventSearchState();
+    state.searchOpen = true;
+    const ov = document.getElementById("iuCalEventSearchOverlay");
+    if (!ov) return;
+    const inp = ov.querySelector("[data-iu-cal-search-input]");
+    const countEl = ov.querySelector("[data-iu-cal-search-count]");
+    const resultsEl = ov.querySelector("[data-iu-cal-search-results]");
+    if (inp) inp.value = "";
+    if (countEl) countEl.textContent = "Nalezeno: 0 událostí";
+    if (resultsEl) resultsEl.innerHTML = "";
+    ov.hidden = false;
+    ov.setAttribute("aria-hidden", "false");
+    syncCalendarScrollLocks();
+    try{
+      if (inp && inp.focus) inp.focus({ preventScroll: true });
+    }catch{}
+  }
+
+  function closeEventSearch(){
+    state.searchOpen = false;
+    resetEventSearchState();
+    const ov = document.getElementById("iuCalEventSearchOverlay");
+    if (ov){
+      ov.hidden = true;
+      ov.setAttribute("aria-hidden", "true");
+      const inp = ov.querySelector("[data-iu-cal-search-input]");
+      const countEl = ov.querySelector("[data-iu-cal-search-count]");
+      const resultsEl = ov.querySelector("[data-iu-cal-search-results]");
+      if (inp) inp.value = "";
+      if (countEl) countEl.textContent = "Nalezeno: 0 událostí";
+      if (resultsEl) resultsEl.innerHTML = "";
+    }
+    syncCalendarScrollLocks();
+  }
+
+  function runEventSearch(){
+    const ov = document.getElementById("iuCalEventSearchOverlay");
+    if (!ov) return;
+    const inp = ov.querySelector("[data-iu-cal-search-input]");
+    const countEl = ov.querySelector("[data-iu-cal-search-count]");
+    const resultsEl = ov.querySelector("[data-iu-cal-search-results]");
+    const q = inp ? String(inp.value || "") : "";
+    state.searchQuery = q;
+    state.searchResults = searchCalendarEvents(q, state.searchScope);
+    const n = state.searchResults.length;
+    if (countEl) countEl.textContent = "Nalezeno: " + n + " událostí";
+    if (resultsEl) resultsEl.innerHTML = renderSearchResultsTable(state.searchResults);
+    resultsEl.querySelectorAll("[data-iu-cal-search-row]").forEach((row)=>{
+      row.addEventListener("click", ()=>{
+        const id = row.getAttribute("data-iu-cal-search-row") || "";
+        closeEventSearch();
+        loadEventForEdit(id);
+      });
+    });
+  }
+
+  function bindCalPremiumUiOnce(){
+    if (state.premiumUiBound) return;
+    state.premiumUiBound = true;
+    const bs = document.getElementById("iuCalEventBottomSheet");
+    if (bs){
+      bs.addEventListener("click", (ev)=>{
+        const close = ev.target && ev.target.closest ? ev.target.closest("[data-iu-cal-bs-close]") : null;
+        if (close){
+          ev.preventDefault();
+          if (state.inline && state.inline.mode === "edit") cancelInlineEditor();
+          else closeCalBottomSheet();
+        }
+      });
+    }
+    const so = document.getElementById("iuCalEventSearchOverlay");
+    if (so){
+      so.addEventListener("click", (ev)=>{
+        const close = ev.target && ev.target.closest ? ev.target.closest("[data-iu-cal-search-close]") : null;
+        if (close){
+          ev.preventDefault();
+          closeEventSearch();
+        }
+      });
+      const form = so.querySelector("[data-iu-cal-search-form]");
+      if (form){
+        form.addEventListener("submit", (ev)=>{
+          ev.preventDefault();
+          runEventSearch();
+        });
+      }
+    }
   }
 
   function bindCalendarInlineEditorRoot(root, iso){
@@ -34424,6 +34869,21 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         else if (f === "note") state.inline.note = v;
       });
     });
+    const allDayBtn = inlineRoot.querySelector("[data-iu-cal-inline-all-day]");
+    if (allDayBtn){
+      allDayBtn.addEventListener("click", (ev)=>{
+        ev.preventDefault();
+        if (!state.inline) return;
+        state.inline.allDay = !state.inline.allDay;
+        if (state.inline.allDay){
+          state.inline.slotHour = -1;
+        } else if (state.inline.slotHour < 1){
+          state.inline.slotHour = eventSlotHour({ time: state.inline.time, date: state.inline.date });
+        }
+        if (shouldUseCalBottomSheet()) syncCalBottomSheet();
+        else render();
+      });
+    }
     const tbtn = inlineRoot.querySelector("[data-iu-cal-inline-time-open]");
     if (tbtn) tbtn.addEventListener("click", (ev)=>{
       ev.preventDefault();
@@ -34562,7 +35022,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (state.view === "month"){
       let inner = renderMonthGrid(state.cursorDate);
       const inlMo = state.inline;
-      if (inlMo && inlMo.showDatePicker && inlMo.mode === "new"){
+      if (inlMo && inlMo.showDatePicker && inlMo.mode === "new" && !isCalMobileLayout()){
         inner = '<div class="iu-calMonthStack">' + inner + '<div class="iu-calMonthInline">' + buildInlineEditorHtml() + "</div></div>";
       }
       root.innerHTML = inner;
@@ -34593,7 +35053,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       render();
     }));
     root.querySelectorAll("[data-iu-cal-open-event]").forEach((el)=>el.addEventListener("click", ()=>loadEventForEdit(el.getAttribute("data-iu-cal-open-event") || "")));
-    if (state.view === "month" && state.inline && state.inline.showDatePicker && state.inline.mode === "new"){
+    if (state.view === "month" && state.inline && state.inline.showDatePicker && state.inline.mode === "new" && !isCalMobileLayout()){
       bindCalendarInlineEditorRoot(root, state.inline.date);
       focusNewInlineTitleAfterRender();
     }
@@ -34707,6 +35167,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     closeTimeWheel();
     state.mobileDayOverlayOpen = false;
     state.inline = null;
+    state.bottomSheetOpen = false;
     state.currentEditId = "";
     const overlay = document.getElementById("iuCalendarDayOverlay");
     if (overlay){
@@ -34714,6 +35175,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       overlay.setAttribute("aria-hidden", "true");
     }
     try{ document.body.style.overflow = ""; }catch{}
+    syncCalendarScrollLocks();
     render();
   }
 
@@ -34727,7 +35189,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       overlay.hidden = true;
       overlay.setAttribute("aria-hidden", "true");
       try{
-        if (!state.mobileDayOverlayOpen) document.body.style.overflow = "";
+        if (!state.mobileDayOverlayOpen) syncCalendarScrollLocks();
       }catch{}
       return;
     }
@@ -34737,7 +35199,47 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     renderDayContent(d);
     overlay.hidden = false;
     overlay.setAttribute("aria-hidden", "false");
-    try{ document.body.style.overflow = "hidden"; }catch{}
+    syncCalendarScrollLocks();
+  }
+
+  function syncMonthYearActionBar(){
+    const bar = document.getElementById("iuCalMonthActionBar");
+    const legacyFab = document.getElementById("iuCalMonthQuickAddBtn");
+    const ov = getOverlay();
+    if (legacyFab) legacyFab.hidden = true;
+    if (!bar) return;
+    if (!ov || ov.hidden){
+      bar.hidden = true;
+      const vr0 = document.getElementById("iuCalendarViewRoot");
+      if (vr0) vr0.classList.remove("iu-calendarOverlay__viewRoot--monthFabPad");
+      return;
+    }
+    const month = state.view === "month";
+    const year = state.view === "year";
+    const editing = !!(state.inline && state.inline.showDatePicker);
+    const show = (month || year) && !state.dayOpen && !state.mobileDayOverlayOpen && !editing && !state.searchOpen;
+    bar.hidden = !show;
+    bar.classList.toggle("iu-calMonthActionBar--yearOnly", year && !month);
+    const vr = document.getElementById("iuCalendarViewRoot");
+    if (vr) vr.classList.toggle("iu-calendarOverlay__viewRoot--monthFabPad", show);
+    if (!show){
+      bar.innerHTML = "";
+      return;
+    }
+    let html = "";
+    html +=
+      '<button type="button" class="iu-calSearchFab" data-iu-cal-search-open="' +
+      (year ? "year" : "month") +
+      '" aria-label="Vyhledat událost"><span class="iu-calSearchFab__icon" aria-hidden="true">🔍</span><span class="iu-calSearchFab__text"> Vyhledat událost</span></button>';
+    if (month){
+      html +=
+        '<button type="button" class="iu-calMonthFab" data-iu-cal-month-fab="1" aria-label="Přidat událost"><span class="iu-calMonthFab__icon" aria-hidden="true">+</span><span class="iu-calMonthFab__text"> Přidat událost</span></button>';
+    }
+    bar.innerHTML = html;
+  }
+
+  function syncMonthQuickAddFab(){
+    syncMonthYearActionBar();
   }
 
   function syncMobileCalendarChrome(){
@@ -34753,22 +35255,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       side.setAttribute("hidden", "");
       side.setAttribute("aria-hidden", "true");
     }
-  }
-
-  function syncMonthQuickAddFab(){
-    const btn = document.getElementById("iuCalMonthQuickAddBtn");
-    const ov = getOverlay();
-    if (!btn) return;
-    if (!ov || ov.hidden){
-      btn.hidden = true;
-      return;
-    }
-    const month = state.view === "month";
-    const editingMonth = !!(state.inline && state.inline.showDatePicker);
-    const show = month && !state.dayOpen && !state.mobileDayOverlayOpen && !editingMonth;
-    btn.hidden = !show;
-    const vr = document.getElementById("iuCalendarViewRoot");
-    if (vr) vr.classList.toggle("iu-calendarOverlay__viewRoot--monthFabPad", show);
   }
 
   function syncBridgeFormFields(){
@@ -34803,12 +35289,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       mode: "edit",
       id: ev.id,
       date: ev.date,
-      slotHour: eventSlotHour(ev),
+      slotHour: isEventAllDay(ev) ? -1 : eventSlotHour(ev),
       time: ev.time,
       title: ev.title,
       address: String(ev.address || ""),
-      note: String(ev.note || "")
+      note: String(ev.note || ""),
+      allDay: isEventAllDay(ev)
     };
+    if (isCalMobileLayout()) state.bottomSheetOpen = true;
     setMessage("");
     render();
   }
@@ -34971,6 +35459,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         openCalendarEventForm({ source: "month", date: def, time: "09:00", showDatePicker: true });
         return;
       }
+      const searchBtn = t && t.closest ? t.closest("[data-iu-cal-search-open]") : null;
+      if (searchBtn){
+        e.preventDefault();
+        const scope = String(searchBtn.getAttribute("data-iu-cal-search-open") || "month");
+        openEventSearch(scope);
+        return;
+      }
       const viewBtn = t && t.closest ? t.closest("[data-iu-cal-view]") : null;
       if (viewBtn){
         const v = String(viewBtn.getAttribute("data-iu-cal-view") || "");
@@ -35021,6 +35516,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     await initStorage();
     await readStore();
     bindUi();
+    bindCalPremiumUiOnce();
     try{
       if (!window.__iuCalVvInlineScroll && window.visualViewport){
         window.__iuCalVvInlineScroll = 1;
@@ -66359,9 +66855,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function isDraftSaveable(d) {
+    const allDay = !!d.allDay;
     return (
       d.meta.date === "certain" &&
-      d.meta.time === "certain" &&
+      (allDay || d.meta.time === "certain") &&
       d.meta.title === "certain" &&
       String(d.title || "").trim().length > 0
     );
@@ -66454,7 +66951,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const st = processingStateFromDraft(d);
     const warnCritical = st === "NEEDS_CLARIFICATION";
     const dateDisp = d.meta.date === "certain" && d.date ? iuSilverFormatDateCs(String(d.date)) : "";
-    const timeDisp = d.meta.time === "certain" && d.time ? d.time : "";
+    const timeDisp = d.allDay ? "Celý den" : d.meta.time === "certain" && d.time ? d.time : "";
     const titleDisp = d.meta.title === "certain" ? d.title : "";
     const addrDisp =
       d.meta.location === "certain" ? String(d.location || "").trim() || String(d.address || "").trim() : String(d.address || "").trim();
@@ -66492,6 +66989,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
   }
 
+  function iuSilverCalendarAllDayToggleHtml(on){
+    return (
+      '<button type="button" class="iu-calAllDaySwitch' +
+      (on ? " is-on" : "") +
+      '" data-iu-silver-field-all-day="1" role="switch" aria-checked="' +
+      (on ? "true" : "false") +
+      '" aria-label="Celodenní událost">' +
+      '<span class="iu-calAllDaySwitch__track" aria-hidden="true"></span>' +
+      '<span class="iu-calAllDaySwitch__thumb" aria-hidden="true"></span>' +
+      "</button>"
+    );
+  }
+
   function renderDraftCardEditGrid(d) {
     const dateVal = d.meta.date === "certain" && d.date ? String(d.date).slice(0, 10) : "";
     const timeVal = d.meta.time === "certain" && d.time ? String(d.time).slice(0, 5) : "";
@@ -66503,7 +67013,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         : String(d.address || "").trim();
     return `<div class="iuSilverDraftGrid iuSilverDraftGrid--edit">
     <div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-field="date" value="${esc(dateVal)}" />
-    <div class="iuSilverDraftK">Čas</div><input type="time" step="60" class="iuSilverDraftInput" data-iu-silver-field="time" value="${esc(timeVal)}" />
+    <div class="iuSilverDraftK iuSilverDraftK--allDayRow" data-iu-silver-all-day-row="1">Celodenní událost</div><div class="iuSilverDraftV iuSilverDraftV--allDaySwitch" data-iu-silver-all-day-cell="1">${iuSilverCalendarAllDayToggleHtml(!!d.allDay)}</div>
+    <div class="iuSilverDraftK" data-iu-silver-time-label="1">Čas</div><input type="time" step="60" class="iuSilverDraftInput" data-iu-silver-field="time" value="${esc(timeVal)}" ${d.allDay ? "disabled" : ""} />
     <div class="iuSilverDraftK">Název</div><input type="text" maxlength="160" class="iuSilverDraftInput" data-iu-silver-field="title" value="${esc(titleVal)}" autocomplete="off" />
     <div class="iuSilverDraftK">Adresa</div><input type="text" maxlength="200" class="iuSilverDraftInput" data-iu-silver-field="location" value="${esc(locVal)}" autocomplete="off" />
     <div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="2" maxlength="1000" data-iu-silver-field="note">${esc(noteVal)}</textarea>
@@ -67006,14 +67517,24 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
     const timeIn = cardEl.querySelector('[data-iu-silver-field="time"]');
+    const allDayBtn = cardEl.querySelector("[data-iu-silver-field-all-day]");
+    if (allDayBtn) {
+      d.allDay = allDayBtn.classList.contains("is-on");
+    }
     if (timeIn) {
-      if (timeIn.value) {
+      if (d.allDay) {
+        d.time = "00:00";
+        d.meta.time = "certain";
+      } else if (timeIn.value) {
         d.time = timeIn.value;
         d.meta.time = "certain";
       } else {
         d.time = "";
         d.meta.time = "missing";
       }
+    } else if (d.allDay) {
+      d.time = "00:00";
+      d.meta.time = "certain";
     }
     const titleIn = cardEl.querySelector('[data-iu-silver-field="title"]');
     if (titleIn) {
@@ -67914,7 +68435,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return;
     }
     const d = chatState.draft;
-    if (d.meta.date !== "certain" || d.meta.time !== "certain" || d.meta.title !== "certain" || !String(d.title || "").trim()) {
+    if (!isDraftSaveable(d)) {
       return;
     }
     chatState.saveBusy = true;
@@ -67924,10 +68445,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const remDraft = String(d.reminder || "").trim();
     if (remDraft) noteParts.push("Připomenutí: " + remDraft);
     const noteJoined = noteParts.join("\n\n").slice(0, 1000);
+    const allDaySave = !!d.allDay;
     try {
       const res = await svc.calendarCreateEvent({
         date: d.date,
-        time: d.time,
+        time: allDaySave ? "00:00" : d.time,
+        allDay: allDaySave,
         title: d.title,
         note: noteJoined,
         address: addrDraft,
@@ -67941,6 +68464,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           window.__iuSilverLastSaveResult = { ok: true, eventId: ev.id };
         } catch {}
         const dateHuman = iuSilverFormatDateCs(String(ev.date || "")) || String(ev.date || "");
+        const timeHuman = ev.allDay ? "Celý den" : String(ev.time || "");
         let noteAlso = "";
         const compD = chatState.silverCompanionNoteDraft;
         if (compD && isNoteDraftSaveable(compD)) {
@@ -67960,7 +68484,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         appendAssistantTurn({
           confirmOnly: true,
           processingState: "READY_TO_SAVE",
-          assistantLead: "Uloženo do kalendáře: " + dateHuman + " v " + ev.time + " — " + ev.title + "." + noteAlso,
+          assistantLead: "Uloženo do kalendáře: " + dateHuman + " v " + timeHuman + " — " + ev.title + "." + noteAlso,
           clarificationText: "",
           draft: createEmptyDraft()
         });
@@ -67986,6 +68510,22 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function onOverlayClick(e) {
     const t = e.target;
+    const allDayToggle = t && t.closest ? t.closest("[data-iu-silver-field-all-day]") : null;
+    if (allDayToggle) {
+      e.preventDefault();
+      allDayToggle.classList.toggle("is-on");
+      const on = allDayToggle.classList.contains("is-on");
+      allDayToggle.setAttribute("aria-checked", on ? "true" : "false");
+      const card = allDayToggle.closest("[data-iu-silver-draft-card]");
+      if (card) {
+        const timeIn = card.querySelector('[data-iu-silver-field="time"]');
+        if (timeIn) timeIn.disabled = on;
+        syncDraftFromCardInputs(card);
+        const saveBtn = card.querySelector('[data-iu-silver-action="save"]');
+        if (saveBtn) saveBtn.disabled = !isSilverDraftSaveable(chatState.draft);
+      }
+      return;
+    }
     const close = t && t.closest ? t.closest("[data-iu-silver-chat-close]") : null;
     if (close) {
       e.preventDefault();
