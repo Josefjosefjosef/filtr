@@ -1081,6 +1081,12 @@ style-src 'self' 'unsafe-inline' https:;
           color: #14b8a6;
           border-color: rgba(20, 184, 166, 0.28);
         }
+        /* Width align: calendar/reminder match notes reference width (notes unchanged) */
+        .iuSilverHomeInputUxPrefixBtn[data-iu-silver-home-prefix="calendar"],
+        .iuSilverHomeInputUxPrefixBtn[data-iu-silver-home-prefix="reminder"]{
+          min-width: 140.92px;
+          justify-content: flex-start;
+        }
         .iuSilverHomeInputUxPrefixBtn:active{
           opacity: 0.82;
         }
@@ -1196,6 +1202,10 @@ style-src 'self' 'unsafe-inline' https:;
         }
         .iuSilverHomeInputUxSample{
           font-size: 0.96em;
+        }
+        .iuSilverHomeInputUxPrefixBtn[data-iu-silver-home-prefix="calendar"],
+        .iuSilverHomeInputUxPrefixBtn[data-iu-silver-home-prefix="reminder"]{
+          min-width: 136.98px;
         }
       }
       @media (min-width: 1025px){
