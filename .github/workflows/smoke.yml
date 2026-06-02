@@ -40,6 +40,9 @@ jobs:
 
       - run: npm run smoke
 
+      - name: Silver Notes V2 UX guard (checkout localhost)
+        run: npm run silver-notes-v2-ux-guard-checkout
+
       - name: Silver mobile layout guard (checkout localhost)
         run: node scripts/run_silver_layout_guard_against_checkout.cjs
 

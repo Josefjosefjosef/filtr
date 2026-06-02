@@ -80,7 +80,7 @@ function seedNotesPayload(count) {
 async function clickNotesTrashTab(page) {
   await page.evaluate(() => {
     const ov = document.getElementById("iuNotesOverlay");
-    const btn = ov ? ov.querySelector('[data-iu-notes-view="trash"]') : null;
+    const btn = ov ? ov.querySelector(".iu-notesOverlay__listHeaderRight [data-iu-notes-view=\"trash\"]") : null;
     if (btn && typeof btn.click === "function") btn.click();
   });
   await page.waitForFunction(() => {
@@ -212,7 +212,7 @@ async function runViewport(page, vp) {
       headerOrderOk = sameRow && nr.left < cr.left && nr.width > 0 && cr.width > 0;
     }
 
-    const quickDeleteBtn = ov ? ov.querySelector("[data-iu-note-quick-delete]") : null;
+    const quickDeleteBtn = ov ? ov.querySelector(".iu-notesOverlay__itemTrash[data-iu-note-quick-delete]") : null;
 
     return {
       overlayOpen: !!(ov && !ov.hidden),
@@ -228,18 +228,24 @@ async function runViewport(page, vp) {
     };
   });
 
-  await page.click("[data-iu-note-quick-delete]", { timeout: 8000 }).catch(() => {});
-  await page.waitForTimeout(250);
+  await page.locator(".iu-notesOverlay__itemTrash[data-iu-note-quick-delete]").first().click({ timeout: 8000 }).catch(() => {});
+  await page.waitForFunction(() => {
+    const box = document.getElementById("iuNotesConfirm");
+    return !!(box && !box.hidden);
+  }, null, { timeout: 5000 }).catch(() => {});
+  await page.waitForTimeout(200);
 
   const confirm = await page.evaluate(() => {
     const box = document.getElementById("iuNotesConfirm");
     const textEl = document.getElementById("iuNotesConfirmText");
-    const yesBtn = document.querySelector("[data-iu-notes-confirm-yes]");
-    const noBtn = document.querySelector("[data-iu-notes-confirm-no]");
+    const yesBtn = document.querySelector(".iu-notesOverlay__confirmActions [data-iu-notes-confirm-yes]");
+    const noBtn = document.querySelector(".iu-notesOverlay__confirmActions [data-iu-notes-confirm-no]");
     return {
       confirmVisible: !!(box && !box.hidden),
       confirmText: textEl ? String(textEl.textContent || "") : "",
       hasYesNo: !!(yesBtn && noBtn),
+      okLabel: yesBtn ? String(yesBtn.textContent || "").trim() : "",
+      cancelLabel: noBtn ? String(noBtn.textContent || "").trim() : "",
     };
   });
 
@@ -291,7 +297,7 @@ async function runViewport(page, vp) {
     quick_delete_found: base.quickDeleteFound,
     delete_confirm_visible: confirm.confirmVisible,
     delete_confirm_text_ok: /přesunout do koše/i.test(confirm.confirmText),
-    delete_confirm_yes_no: confirm.hasYesNo,
+    delete_confirm_yes_no: confirm.hasYesNo && confirm.okLabel === "OK" && confirm.cancelLabel === "Zrušit",
     trash_access_ok: base.trashBtnFound && trash.trashViewActive,
     trash_item_found: trash.trashItemFound,
     empty_trash_visible: trash.emptyTrashVisible,

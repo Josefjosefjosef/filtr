@@ -31798,11 +31798,15 @@ function buildVideoAsArticleCard(it) {
         '<div class="iu-notesOverlay__body">' +
           '<aside class="iu-notesOverlay__list" aria-label="Seznam poznámek">' +
             '<div class="iu-notesOverlay__listHeader">' +
-              '<div class="iu-notesOverlay__listTabs">' +
-                '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-view="main">Poznámky</button>' +
-                '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-view="trash">Koš</button>' +
+              '<div class="iu-notesOverlay__listHeaderRow">' +
+                '<div class="iu-notesOverlay__listHeaderLeft">' +
+                  '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-view="main">Poznámky</button>' +
+                "</div>" +
+                '<div class="iu-notesOverlay__listHeaderRight">' +
+                  '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-view="trash">Koš</button>' +
+                  '<button type="button" class="iu-notesOverlay__btn iu-notesOverlay__btn--danger" data-iu-notes-empty-trash="1" hidden>Vysypat koš</button>' +
+                "</div>" +
               "</div>" +
-              '<button type="button" class="iu-notesOverlay__btn iu-notesOverlay__btn--danger" data-iu-notes-empty-trash="1" hidden>Vysypat koš</button>' +
               '<input class="iu-notesOverlay__search" id="iuNotesSearch" type="search" autocomplete="off" placeholder="Hledat v poznámkách…" aria-label="Hledat v poznámkách" />' +
             "</div>" +
             '<div class="iu-notesOverlay__listScroll">' +
@@ -31818,8 +31822,8 @@ function buildVideoAsArticleCard(it) {
           '<div class="iu-notesOverlay__confirmBox">' +
             '<p class="iu-notesOverlay__confirmText" id="iuNotesConfirmText"></p>' +
             '<div class="iu-notesOverlay__confirmActions">' +
-              '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-confirm-yes="1">Ano</button>' +
-              '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-confirm-no="1">Ne</button>' +
+              '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-confirm-yes="1">OK</button>' +
+              '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-confirm-no="1">Zrušit</button>' +
             "</div>" +
           "</div>" +
         "</div>" +
@@ -31968,8 +31972,10 @@ function buildVideoAsArticleCard(it) {
     state.autosaveTimer = setTimeout(() => {
       state.autosaveTimer = null;
       try{
+        sortNotesInPlace(state.data.notes);
         saveNotes(state.data);
         renderStatus("Uloženo " + fmtDate(state.lastSavedAt));
+        renderList();
       }catch{}
     }, 450);
     renderStatus("Ukládám…");
@@ -32045,7 +32051,7 @@ function buildVideoAsArticleCard(it) {
   function requestPurgeTrash(){
     const hasTrash = (state.data && Array.isArray(state.data.notes) ? state.data.notes : []).some((n)=>!!n.deleted);
     if (!hasTrash) return;
-    showNotesConfirm("Opravdu chcete trvale vysypat koš?", function(){
+    showNotesConfirm("Opravdu chcete trvale odstranit všechny poznámky v koši?", function(){
       purgeTrashNotes();
     });
   }
@@ -32055,6 +32061,36 @@ function buildVideoAsArticleCard(it) {
     if (!emptyTrashBtn) return;
     const hasTrash = (state.data && Array.isArray(state.data.notes) ? state.data.notes : []).some((n)=>!!n.deleted);
     emptyTrashBtn.hidden = !(state.listView === "trash" && hasTrash);
+  }
+
+  function patchActiveListItemInDom(){
+    const id = String(state.selectedId || "").trim();
+    if (!id) return;
+    const note = getNoteById(id);
+    if (!note) return;
+    const listEl = document.getElementById("iuNotesList");
+    if (!listEl) return;
+    const btn = listEl.querySelector('[data-iu-note-id="' + id + '"]');
+    if (!btn) return;
+    const title = String(note.title || "").trim() || "Bez názvu";
+    const content = String(note.content || "");
+    const prevLine = content.split(/\r?\n/).map((x)=>String(x || "").trim()).filter(Boolean)[0] || "";
+    const titleEl = btn.querySelector(".iu-notesOverlay__itemTitle");
+    if (titleEl) titleEl.textContent = title;
+    let previewEl = btn.querySelector("[data-iu-note-preview]");
+    if (prevLine){
+      if (!previewEl){
+        previewEl = document.createElement("div");
+        previewEl.className = "iu-notesOverlay__itemPreview";
+        previewEl.setAttribute("data-iu-note-preview", "1");
+        const metaEl = btn.querySelector(".iu-notesOverlay__itemMeta");
+        if (metaEl) btn.insertBefore(previewEl, metaEl);
+        else btn.appendChild(previewEl);
+      }
+      previewEl.textContent = prevLine;
+    } else if (previewEl){
+      try{ previewEl.remove(); }catch{}
+    }
   }
 
   function renderList(){
@@ -32086,10 +32122,12 @@ function buildVideoAsArticleCard(it) {
               (prevLine ? ('<div class="iu-notesOverlay__itemPreview" data-iu-note-preview="1">' + esc(prevLine) + "</div>") : "") +
               '<div class="iu-notesOverlay__itemMeta">' + esc(meta) + "</div>" +
             "</button>" +
-            '<button type="button" class="iu-notesOverlay__pin' + (pinned ? " is-on" : "") + '" data-iu-note-pin="' + esc(n.id) + '" aria-label="' + (pinned ? "Odepnout" : "Připnout") + '">' + (pinned ? "★" : "☆") + "</button>" +
-            (state.listView === "main"
-              ? ('<button type="button" class="iu-notesOverlay__itemDelete" data-iu-note-quick-delete="' + esc(n.id) + '" aria-label="Odstranit">Odstranit</button>')
-              : "") +
+            '<div class="iu-notesOverlay__itemActions">' +
+              '<button type="button" class="iu-notesOverlay__pin' + (pinned ? " is-on" : "") + '" data-iu-note-pin="' + esc(n.id) + '" aria-label="' + (pinned ? "Odepnout" : "Připnout") + '">' + (pinned ? "★" : "☆") + "</button>" +
+              (state.listView === "main"
+                ? ('<button type="button" class="iu-notesOverlay__itemTrash" data-iu-note-quick-delete="' + esc(n.id) + '" aria-label="Přesunout do koše">🗑️</button>')
+                : "") +
+            "</div>" +
           "</div>" +
         "</li>"
       );
@@ -32165,9 +32203,8 @@ function buildVideoAsArticleCard(it) {
     note.title = nextTitle;
     note.content = nextContent;
     note.updatedAt = Date.now();
-    sortNotesInPlace(state.data.notes);
     scheduleAutosave();
-    renderList();
+    patchActiveListItemInDom();
   }
 
   /** Flush title/content from DOM into store immediately (avoids losing last keystrokes when leaving detail on narrow). */
