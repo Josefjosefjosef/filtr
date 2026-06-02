@@ -1,0 +1,149 @@
+{
+  "pass": true,
+  "mobile": {
+    "label": "mobile",
+    "viewport": "390x844",
+    "pass": true,
+    "cls": 0.0015392621950877112,
+    "appErrors": 0,
+    "calendar": {
+      "cardFound": true,
+      "gridFound": true,
+      "gridTemplateColumns": "67.5312px 175.469px",
+      "columnGap": "12px",
+      "inputCount": 5,
+      "inputLefts": [
+        139.53,
+        139.53,
+        139.53,
+        139.53,
+        139.53
+      ],
+      "labelRights": [
+        127.53,
+        127.53,
+        127.53,
+        127.53,
+        127.53
+      ],
+      "labelGapPx": 12,
+      "inputAlignSpread": 0,
+      "overflowX": false
+    },
+    "task": {
+      "cardFound": true,
+      "gridFound": true,
+      "gridTemplateColumns": "67.5312px 175.469px",
+      "columnGap": "12px",
+      "inputCount": 4,
+      "inputLefts": [
+        139.53,
+        139.53,
+        139.53,
+        139.53
+      ],
+      "labelRights": [
+        127.53,
+        127.53,
+        127.53,
+        127.53
+      ],
+      "labelGapPx": 12,
+      "inputAlignSpread": 0,
+      "overflowX": false
+    },
+    "notes": {
+      "cardFound": true,
+      "gridFound": true,
+      "gridTemplateColumns": "68px 175px",
+      "columnGap": "12px",
+      "inputCount": 1,
+      "inputLefts": [
+        140
+      ],
+      "labelRights": [
+        128
+      ],
+      "labelGapPx": 12,
+      "inputAlignSpread": 0,
+      "overflowX": false
+    }
+  },
+  "tablet": {
+    "label": "tablet",
+    "viewport": "768x1024",
+    "pass": true,
+    "cls": 0,
+    "appErrors": 0,
+    "calendar": {
+      "cardFound": true,
+      "gridFound": true,
+      "gridTemplateColumns": "67.5312px 272.469px",
+      "columnGap": "12px",
+      "inputCount": 5,
+      "inputLefts": [
+        280.03,
+        280.03,
+        280.03,
+        280.03,
+        280.03
+      ],
+      "labelRights": [
+        268.03,
+        268.03,
+        268.03,
+        268.03,
+        268.03
+      ],
+      "labelGapPx": 12,
+      "inputAlignSpread": 0,
+      "overflowX": false
+    },
+    "task": {
+      "cardFound": true,
+      "gridFound": true,
+      "gridTemplateColumns": "67.5312px 272.469px",
+      "columnGap": "12px",
+      "inputCount": 4,
+      "inputLefts": [
+        280.03,
+        280.03,
+        280.03,
+        280.03
+      ],
+      "labelRights": [
+        268.03,
+        268.03,
+        268.03,
+        268.03
+      ],
+      "labelGapPx": 12,
+      "inputAlignSpread": 0,
+      "overflowX": false
+    },
+    "notes": {
+      "cardFound": true,
+      "gridFound": true,
+      "gridTemplateColumns": "68px 272px",
+      "columnGap": "12px",
+      "inputCount": 1,
+      "inputLefts": [
+        280.5
+      ],
+      "labelRights": [
+        268.5
+      ],
+      "labelGapPx": 12,
+      "inputAlignSpread": 0,
+      "overflowX": false
+    }
+  },
+  "desktop": {
+    "pass": true,
+    "gridTemplateColumns": "120px 0px",
+    "quickGridTemplateColumns": "120px 274px"
+  },
+  "overflow_x": false,
+  "cls_max": 0.0015392621950877112,
+  "root_cause": ".iuSilverDraftGrid--edit used minmax(0,120px) label column on all viewports; notes mobile override used gap:11px 5px and asymmetric padding 4px 16px 0 8px"
+}
