@@ -13,6 +13,15 @@ export const IU_USER_AGENT =
   process.env.IU_USER_AGENT ||
   "infoUzelBot/1.0 (+https://infouzel.cz; contact: Info@infoUzel.cz)";
 
+/** Registry feedIds that explicitly bind an article to a P0 source (cluster merge safe). */
+export const P0_SOURCE_FEED_IDS = {
+  novinky: ["zpr_novinky_domaci", "zpr_novinky_zahranicni"],
+  ct24: ["zpr_ct24_domaci", "zpr_ct24_svet", "kul_ctart", "ved_ct24_veda"],
+  seznam: ["zpr_seznam_domaci"],
+  idnes: ["zpr_idnes_zpravy"],
+  sportcz: ["spt_sportcz"],
+};
+
 /** P0 sources required for content freshness proof. */
 export const P0_CONTENT_SOURCES = [
   {
@@ -20,13 +29,15 @@ export const P0_CONTENT_SOURCES = [
     label: "Novinky.cz",
     slotKey: "novinky.cz",
     namePatterns: [/novinky/i],
+    feedIds: P0_SOURCE_FEED_IDS.novinky,
     fallbackUrl: "https://www.novinky.cz/rss",
   },
   {
     id: "ct24",
     label: "ČT24",
     slotKey: "ceskatelevize.cz",
-    namePatterns: [/\bčt24\b/i, /\bct24\b/i, /česká televize.*ct24/i],
+    namePatterns: [/\bčt24\b/i, /\bct24\b/i, /česká televize.*ct24/i, /^čt art$/i, /^ct art$/i],
+    feedIds: P0_SOURCE_FEED_IDS.ct24,
     fallbackUrl: "https://ct24.ceskatelevize.cz/rss",
   },
   {
@@ -34,6 +45,7 @@ export const P0_CONTENT_SOURCES = [
     label: "Seznam Zprávy",
     slotKey: "seznamzpravy.cz",
     namePatterns: [/seznam\s*zpr/i, /seznamzpravy/i],
+    feedIds: P0_SOURCE_FEED_IDS.seznam,
     fallbackUrl: "https://www.seznamzpravy.cz/rss",
   },
   {
@@ -41,6 +53,7 @@ export const P0_CONTENT_SOURCES = [
     label: "iDNES",
     slotKey: "idnes.cz",
     namePatterns: [/idnes/i],
+    feedIds: P0_SOURCE_FEED_IDS.idnes,
     fallbackUrl: "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
   },
   {
@@ -48,9 +61,36 @@ export const P0_CONTENT_SOURCES = [
     label: "Sport.cz",
     slotKey: "sport.cz",
     namePatterns: [/^sport\.cz/i, /\bsport\.cz\b/i],
+    feedIds: P0_SOURCE_FEED_IDS.sportcz,
     fallbackUrl: "https://www.sport.cz/rss/",
   },
 ];
+
+function p0FeedIdSet(def) {
+  return new Set(def.feedIds || P0_SOURCE_FEED_IDS[def.id] || []);
+}
+
+export function p0UrlHostMatches(url, defId) {
+  const u = String(url || "").trim();
+  if (!u) return false;
+  if (defId === "ct24") return /ct24\.ceskatelevize\.cz/i.test(u);
+  if (defId === "idnes") return /(^|\/)idnes\.cz\//i.test(u) && !/isport\.idnes/i.test(u);
+  if (defId === "novinky") return /novinky\.cz/i.test(u);
+  if (defId === "seznam") return /seznamzpravy\.cz/i.test(u);
+  if (defId === "sportcz") return /(^|\/)sport\.cz\//i.test(u) && !/isport\.cz/i.test(u);
+  return false;
+}
+
+function sourceMetadataMatchesP0(entry, def, feedIds) {
+  if (!entry || typeof entry !== "object") return false;
+  const feedId = String(entry.feedId || entry.id || entry.sourceId || "").trim();
+  if (feedId && feedIds.has(feedId)) return true;
+  const name = String(entry.name || "").trim();
+  if (name && def.namePatterns.some((re) => re.test(name))) return true;
+  const url = String(entry.url || "").trim();
+  if (p0UrlHostMatches(url, def.id)) return true;
+  return false;
+}
 
 export function canonicalUrl(u) {
   if (!u) return "";
@@ -176,16 +216,27 @@ export async function fetchFeedXml(url) {
 }
 
 export function articleMatchesP0Source(article, def) {
-  const url = String(article.url || (article.sources && article.sources[0] && article.sources[0].url) || "").trim();
-  if (def.id === "ct24" && /ct24\.ceskatelevize\.cz/i.test(url)) return true;
-  if (def.id === "idnes" && /(^|\/)idnes\.cz\//i.test(url) && !/isport\.idnes/i.test(url)) return true;
-  if (def.id === "novinky" && /novinky\.cz/i.test(url)) return true;
-  if (def.id === "seznam" && /seznamzpravy\.cz/i.test(url)) return true;
-  if (def.id === "sportcz" && /(^|\/)sport\.cz\//i.test(url) && !/isport\.cz/i.test(url)) return true;
-  const src0 = (article.sources || [])[0];
-  const name = String((src0 && src0.name) || article.sourceLabel || "").trim();
-  if (!name) return false;
-  return def.namePatterns.some((re) => re.test(name));
+  const feedIds = p0FeedIdSet(def);
+  const rootUrl = String(
+    article.url || (article.sources && article.sources[0] && article.sources[0].url) || "",
+  ).trim();
+  if (p0UrlHostMatches(rootUrl, def.id)) return true;
+
+  const rootFeedId = String(article.feedId || article.sourceId || "").trim();
+  if (rootFeedId && feedIds.has(rootFeedId)) return true;
+
+  for (const s of article.sources || []) {
+    if (sourceMetadataMatchesP0(s, def, feedIds)) return true;
+  }
+
+  for (const c of article.contributors || article.sourceContributors || []) {
+    const entry = typeof c === "string" ? { name: c } : c;
+    if (sourceMetadataMatchesP0(entry, def, feedIds)) return true;
+  }
+
+  const label = String(article.sourceLabel || "").trim();
+  if (label && def.namePatterns.some((re) => re.test(label))) return true;
+  return false;
 }
 
 export function effectivePublishedMs(article) {
