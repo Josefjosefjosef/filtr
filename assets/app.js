@@ -31545,6 +31545,7 @@ function buildVideoAsArticleCard(it) {
   const FOCUSABLE_SELECTOR = 'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])';
   const MAX_TITLE = 140;
   const MAX_CONTENT = 50000;
+  const NOTES_OVERLAY_DOM_VERSION = "4";
 
   const state = {
     inited: false,
@@ -31563,7 +31564,8 @@ function buildVideoAsArticleCard(it) {
     mobileDetailOpen: false,
     confirmOpen: false,
     confirmMessage: "",
-    confirmAction: null
+    confirmAction: null,
+    overlayEventsBound: false
   };
 
   function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
@@ -31774,14 +31776,159 @@ function buildVideoAsArticleCard(it) {
 
   function getOverlay(){ return document.getElementById("iuNotesOverlay"); }
 
+  function ensureOverlayDomFresh(){
+    const ov = getOverlay();
+    if (!ov) return;
+    if (String(ov.getAttribute("data-iu-notes-dom-version") || "") === NOTES_OVERLAY_DOM_VERSION) return;
+    try{ ov.remove(); }catch{}
+    state.overlayMounted = false;
+    state.overlayEventsBound = false;
+    mountOverlay();
+  }
+
+  function attachOverlayEventHandlers(ov){
+    if (!ov || state.overlayEventsBound) return;
+    state.overlayEventsBound = true;
+    ov.addEventListener("click", onNotesOverlayClick, true);
+    ov.addEventListener("pointerdown", onNotesOverlayPointerDown, true);
+  }
+
+  function onNotesOverlayPointerDown(e){
+    const ov = getOverlay();
+    if (!ov || ov.hidden) return;
+    const t = e.target;
+    const quickDel = t && t.closest ? t.closest("[data-iu-note-quick-delete]") : null;
+    if (quickDel){
+      e.preventDefault();
+      e.stopPropagation();
+      const idQuick = String(quickDel.getAttribute("data-iu-note-quick-delete") || "");
+      requestMoveNoteToTrash(idQuick);
+      return;
+    }
+    const emptyTrash = t && t.closest ? t.closest("[data-iu-notes-empty-trash]") : null;
+    if (emptyTrash && !emptyTrash.hidden){
+      e.preventDefault();
+      e.stopPropagation();
+      requestPurgeTrash();
+    }
+  }
+
+  function onNotesOverlayClick(e){
+    const ov = getOverlay();
+    if (!ov || ov.hidden) return;
+    const t = e.target;
+
+    const close = t && t.closest ? t.closest("[data-iu-notes-close]") : null;
+    if (close){ e.preventDefault(); closeOverlay(); return; }
+
+    const confirmBackdrop = t && t.closest ? t.closest("[data-iu-notes-confirm-backdrop]") : null;
+    if (confirmBackdrop){ e.preventDefault(); hideNotesConfirm(); return; }
+
+    const confirmNo = t && t.closest ? t.closest(".iu-notesOverlay__confirmActions [data-iu-notes-confirm-no]") : null;
+    if (confirmNo){ e.preventDefault(); hideNotesConfirm(); return; }
+
+    const confirmYes = t && t.closest ? t.closest("[data-iu-notes-confirm-yes]") : null;
+    if (confirmYes){ e.preventDefault(); runNotesConfirmYes(); return; }
+
+    const emptyTrash = t && t.closest ? t.closest("[data-iu-notes-empty-trash]") : null;
+    if (emptyTrash && !emptyTrash.hidden){ e.preventDefault(); requestPurgeTrash(); return; }
+
+    const quickDel = t && t.closest ? t.closest("[data-iu-note-quick-delete]") : null;
+    if (quickDel){
+      e.preventDefault();
+      e.stopPropagation();
+      const idQuick = String(quickDel.getAttribute("data-iu-note-quick-delete") || "");
+      requestMoveNoteToTrash(idQuick);
+      return;
+    }
+
+    const back = t && t.closest ? t.closest("[data-iu-notes-back]") : null;
+    if (back){
+      e.preventDefault();
+      if (isNotesNarrowViewport() && state.mobileDetailOpen) flushNotesDetailToStoreSync();
+      setMobileMode("list");
+      if (isNotesNarrowViewport()) state.selectedId = "";
+      render();
+      if (!isNotesNarrowViewport()){
+        const searchEl = document.getElementById("iuNotesSearch");
+        if (searchEl) try{ searchEl.focus({ preventScroll: true }); }catch{}
+      }
+      return;
+    }
+
+    const newBtn = t && t.closest ? t.closest("[data-iu-notes-new]") : null;
+    if (newBtn){ e.preventDefault(); createNewAndSelect(); return; }
+
+    const viewBtn = t && t.closest ? t.closest("[data-iu-notes-view]") : null;
+    if (viewBtn){
+      e.preventDefault();
+      state.listView = String(viewBtn.getAttribute("data-iu-notes-view") || "main");
+      const first = searchNotes(state.searchQuery)[0];
+      if (isNotesNarrowViewport()){
+        state.selectedId = "";
+        setMobileMode("list");
+      } else {
+        state.selectedId = first ? first.id : "";
+      }
+      render();
+      return;
+    }
+
+    const pin = t && t.closest ? t.closest("[data-iu-note-pin]") : null;
+    if (pin){
+      e.preventDefault();
+      e.stopPropagation();
+      const idPin = String(pin.getAttribute("data-iu-note-pin") || "");
+      togglePin(idPin);
+      return;
+    }
+
+    const pick = t && t.closest ? t.closest("[data-iu-note-id]") : null;
+    if (pick){
+      e.preventDefault();
+      const id = String(pick.getAttribute("data-iu-note-id") || "");
+      state.selectedId = id;
+      setMobileMode("detail");
+      render();
+      return;
+    }
+
+    const del = t && t.closest ? t.closest("[data-iu-note-delete]") : null;
+    if (del){
+      e.preventDefault();
+      const id = String(del.getAttribute("data-iu-note-delete") || "");
+      requestMoveNoteToTrash(id);
+      return;
+    }
+
+    const restore = t && t.closest ? t.closest("[data-iu-note-restore]") : null;
+    if (restore){
+      e.preventDefault();
+      const id = String(restore.getAttribute("data-iu-note-restore") || "");
+      const note = getNoteById(id);
+      if (!note) return;
+      note.deleted = false;
+      note.updatedAt = Date.now();
+      saveNotes(state.data);
+      const first = searchNotes(state.searchQuery)[0];
+      state.selectedId = first ? first.id : "";
+      if (isNotesNarrowViewport()) setMobileMode("list");
+      render();
+    }
+  }
+
   function mountOverlay(){
-    if (state.overlayMounted) return;
+    if (state.overlayMounted){
+      ensureOverlayDomFresh();
+      return;
+    }
     state.overlayMounted = true;
     const ov = document.createElement("div");
     ov.id = "iuNotesOverlay";
     ov.className = "iu-notesOverlay iuNotesRoot iu-notesPremiumScope iu-tools-overlay-fullscreen-desktop";
     ov.hidden = true;
     ov.setAttribute("aria-hidden", "true");
+    ov.setAttribute("data-iu-notes-dom-version", NOTES_OVERLAY_DOM_VERSION);
     ov.innerHTML =
       '<div class="iu-notesOverlay__backdrop" data-iu-notes-close="1" aria-hidden="true"></div>' +
       '<div class="iu-notesOverlay__dialog" role="dialog" aria-modal="true" aria-labelledby="iuNotesTitle">' +
@@ -31817,21 +31964,23 @@ function buildVideoAsArticleCard(it) {
             '<div class="iu-notesOverlay__detailScroll" id="iuNotesDetail"></div>' +
           "</section>" +
         "</div>" +
-        '<div class="iu-notesOverlay__confirm" id="iuNotesConfirm" hidden role="alertdialog" aria-modal="true" aria-labelledby="iuNotesConfirmText">' +
-          '<div class="iu-notesOverlay__confirmBackdrop" data-iu-notes-confirm-no="1" aria-hidden="true"></div>' +
-          '<div class="iu-notesOverlay__confirmBox">' +
-            '<p class="iu-notesOverlay__confirmText" id="iuNotesConfirmText"></p>' +
-            '<div class="iu-notesOverlay__confirmActions">' +
-              '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-confirm-yes="1">OK</button>' +
-              '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-confirm-no="1">Zrušit</button>' +
-            "</div>" +
+      "</div>" +
+      '<div class="iu-notesOverlay__confirm" id="iuNotesConfirm" hidden role="alertdialog" aria-modal="true" aria-labelledby="iuNotesConfirmText">' +
+        '<div class="iu-notesOverlay__confirmBackdrop" data-iu-notes-confirm-backdrop="1" aria-hidden="true"></div>' +
+        '<div class="iu-notesOverlay__confirmBox">' +
+          '<p class="iu-notesOverlay__confirmText" id="iuNotesConfirmText"></p>' +
+          '<div class="iu-notesOverlay__confirmActions">' +
+            '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-confirm-yes="1">OK</button>' +
+            '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-confirm-no="1">Zrušit</button>' +
           "</div>" +
         "</div>" +
       "</div>";
     document.body.appendChild(ov);
+    attachOverlayEventHandlers(ov);
   }
 
   function openOverlay(originEl){
+    ensureOverlayDomFresh();
     const ov = getOverlay();
     if (!ov) return;
     state.returnFocusEl = originEl || document.activeElement;
@@ -32057,7 +32206,8 @@ function buildVideoAsArticleCard(it) {
   }
 
   function renderListHeaderChrome(){
-    const emptyTrashBtn = document.querySelector("[data-iu-notes-empty-trash]");
+    const ov = getOverlay();
+    const emptyTrashBtn = ov ? ov.querySelector("[data-iu-notes-empty-trash]") : null;
     if (!emptyTrashBtn) return;
     const hasTrash = (state.data && Array.isArray(state.data.notes) ? state.data.notes : []).some((n)=>!!n.deleted);
     emptyTrashBtn.hidden = !(state.listView === "trash" && hasTrash);
@@ -32123,9 +32273,9 @@ function buildVideoAsArticleCard(it) {
               '<div class="iu-notesOverlay__itemMeta">' + esc(meta) + "</div>" +
             "</button>" +
             '<div class="iu-notesOverlay__itemActions">' +
-              '<button type="button" class="iu-notesOverlay__pin' + (pinned ? " is-on" : "") + '" data-iu-note-pin="' + esc(n.id) + '" aria-label="' + (pinned ? "Odepnout" : "Připnout") + '">' + (pinned ? "★" : "☆") + "</button>" +
+              '<button type="button" class="iu-notesOverlay__actionBtn iu-notesOverlay__pin' + (pinned ? " is-on" : "") + '" data-iu-note-pin="' + esc(n.id) + '" aria-label="' + (pinned ? "Odepnout" : "Připnout") + '">' + (pinned ? "★" : "☆") + "</button>" +
               (state.listView === "main"
-                ? ('<button type="button" class="iu-notesOverlay__itemTrash" data-iu-note-quick-delete="' + esc(n.id) + '" aria-label="Přesunout do koše">🗑️</button>')
+                ? ('<button type="button" class="iu-notesOverlay__actionBtn iu-notesOverlay__itemTrash" data-iu-note-quick-delete="' + esc(n.id) + '" aria-label="Přesunout do koše"><span class="iu-notesOverlay__itemTrashIcon" aria-hidden="true">🗑️</span></button>')
                 : "") +
             "</div>" +
           "</div>" +
@@ -32270,103 +32420,6 @@ function buildVideoAsArticleCard(it) {
       if (mmNotesTrigger || trigger){
         e.preventDefault();
         openOverlay(mmNotesTrigger || trigger);
-        return;
-      }
-
-      const close = t && t.closest ? t.closest("[data-iu-notes-close]") : null;
-      if (close){ e.preventDefault(); closeOverlay(); return; }
-
-      const confirmNo = t && t.closest ? t.closest("[data-iu-notes-confirm-no]") : null;
-      if (confirmNo){ e.preventDefault(); hideNotesConfirm(); return; }
-
-      const confirmYes = t && t.closest ? t.closest("[data-iu-notes-confirm-yes]") : null;
-      if (confirmYes){ e.preventDefault(); runNotesConfirmYes(); return; }
-
-      const emptyTrash = t && t.closest ? t.closest("[data-iu-notes-empty-trash]") : null;
-      if (emptyTrash){ e.preventDefault(); requestPurgeTrash(); return; }
-
-      const quickDel = t && t.closest ? t.closest("[data-iu-note-quick-delete]") : null;
-      if (quickDel){
-        e.preventDefault();
-        e.stopPropagation();
-        const idQuick = String(quickDel.getAttribute("data-iu-note-quick-delete") || "");
-        requestMoveNoteToTrash(idQuick);
-        return;
-      }
-
-      const back = t && t.closest ? t.closest("[data-iu-notes-back]") : null;
-      if (back){
-        e.preventDefault();
-        if (isNotesNarrowViewport() && state.mobileDetailOpen) flushNotesDetailToStoreSync();
-        setMobileMode("list");
-        if (isNotesNarrowViewport()) state.selectedId = "";
-        render();
-        if (!isNotesNarrowViewport()){
-          const searchEl = document.getElementById("iuNotesSearch");
-          if (searchEl) try{ searchEl.focus({ preventScroll: true }); }catch{}
-        }
-        return;
-      }
-
-      const newBtn = t && t.closest ? t.closest("[data-iu-notes-new]") : null;
-      if (newBtn){ e.preventDefault(); createNewAndSelect(); return; }
-
-      const viewBtn = t && t.closest ? t.closest("[data-iu-notes-view]") : null;
-      if (viewBtn){
-        e.preventDefault();
-        state.listView = String(viewBtn.getAttribute("data-iu-notes-view") || "main");
-        const first = searchNotes(state.searchQuery)[0];
-        if (isNotesNarrowViewport()){
-          state.selectedId = "";
-          setMobileMode("list");
-        } else {
-          state.selectedId = first ? first.id : "";
-        }
-        render();
-        return;
-      }
-
-      const pin = t && t.closest ? t.closest("[data-iu-note-pin]") : null;
-      if (pin){
-        e.preventDefault();
-        e.stopPropagation();
-        const idPin = String(pin.getAttribute("data-iu-note-pin") || "");
-        togglePin(idPin);
-        return;
-      }
-
-      const pick = t && t.closest ? t.closest("[data-iu-note-id]") : null;
-      if (pick){
-        e.preventDefault();
-        const id = String(pick.getAttribute("data-iu-note-id") || "");
-        state.selectedId = id;
-        setMobileMode("detail");
-        render();
-        return;
-      }
-
-      const del = t && t.closest ? t.closest("[data-iu-note-delete]") : null;
-      if (del){
-        e.preventDefault();
-        const id = String(del.getAttribute("data-iu-note-delete") || "");
-        requestMoveNoteToTrash(id);
-        return;
-      }
-
-      const restore = t && t.closest ? t.closest("[data-iu-note-restore]") : null;
-      if (restore){
-        e.preventDefault();
-        const id = String(restore.getAttribute("data-iu-note-restore") || "");
-        const note = getNoteById(id);
-        if (!note) return;
-        note.deleted = false;
-        note.updatedAt = Date.now();
-        saveNotes(state.data);
-        const first = searchNotes(state.searchQuery)[0];
-        state.selectedId = first ? first.id : "";
-        if (isNotesNarrowViewport()) setMobileMode("list");
-        render();
-        return;
       }
     });
 
@@ -32418,6 +32471,7 @@ function buildVideoAsArticleCard(it) {
     state.inited = true;
     ensureStyles();
     mountOverlay();
+    ensureOverlayDomFresh();
     loadNotes();
     sortNotesInPlace(state.data.notes);
     if (!state.selectedId){
