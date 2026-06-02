@@ -919,6 +919,7 @@ style-src 'self' 'unsafe-inline' https:;
           padding: 0;
           flex: 1 1 auto;
           min-width: 0;
+          font-size: 16px;
           font-weight: 600;
           color: rgba(15, 35, 55, 0.88);
           white-space: nowrap;
@@ -1007,6 +1008,7 @@ style-src 'self' 'unsafe-inline' https:;
           border: 0;
           background: transparent;
           font: inherit;
+          font-size: 16px;
           font-weight: 700;
           cursor: pointer;
           pointer-events: auto;
@@ -1080,42 +1082,44 @@ style-src 'self' 'unsafe-inline' https:;
           0%{ transform: translateX(0); }
           100%{ transform: translateX(-50%); }
         }
-        #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInputFieldWrap--template .iuSilverHomeInput.iuSilverHomeInput{
-          min-height: 156px !important;
-        }
         #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInputFieldWrap--compose .iuSilverHomeInput.iuSilverHomeInput,
         #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInputFieldWrap:not(.iuSilverHomeInputFieldWrap--empty) .iuSilverHomeInput.iuSilverHomeInput{
           min-height: 97px !important;
         }
-        #silver-slot .iuSilverHomeInputFieldWrap--template .iuSilverHomeInput.iuSilverHomeInput,
-        #iuMobileSilverSlot #silver-slot .iuSilverHomeInputFieldWrap--template .iuSilverHomeInput.iuSilverHomeInput{
-          min-height: 153px !important;
-        }
-        #iuSilverHeroPremium .iu-mobileSilverGateStack--floatingSilver.iu-mobileSilverGateStack--uxEmptyHero{
-          --iu-mobile-cta-h: 156px !important;
-        }
         #iuSilverHeroPremium .iu-mobileSilverGateStack--floatingSilver.iu-mobileSilverGateStack--uxComposeHero{
           --iu-mobile-cta-h: 97px !important;
         }
+      }
+      @media (min-width: 431px) and (max-width: 1024px){
+        #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInputFieldWrap--template .iuSilverHomeInput.iuSilverHomeInput{
+          min-height: 164px !important;
+        }
+        #silver-slot .iuSilverHomeInputFieldWrap--template .iuSilverHomeInput.iuSilverHomeInput,
+        #iuMobileSilverSlot #silver-slot .iuSilverHomeInputFieldWrap--template .iuSilverHomeInput.iuSilverHomeInput{
+          min-height: 161px !important;
+        }
+        #iuSilverHeroPremium .iu-mobileSilverGateStack--floatingSilver.iu-mobileSilverGateStack--uxEmptyHero{
+          --iu-mobile-cta-h: 164px !important;
+        }
         #silver-slot .iu-mobileSilverGateStack--floatingSilver.iu-mobileSilverGateStack--uxEmptySlot,
         #iuMobileSilverSlot #silver-slot .iu-mobileSilverGateStack--floatingSilver.iu-mobileSilverGateStack--uxEmptySlot{
-          --iu-mobile-cta-h: 153px !important;
+          --iu-mobile-cta-h: 161px !important;
         }
       }
       @media (max-width: 430px){
         #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInputFieldWrap--template .iuSilverHomeInput.iuSilverHomeInput{
-          min-height: 160px !important;
+          min-height: 168px !important;
         }
         #silver-slot .iuSilverHomeInputFieldWrap--template .iuSilverHomeInput.iuSilverHomeInput,
         #iuMobileSilverSlot #silver-slot .iuSilverHomeInputFieldWrap--template .iuSilverHomeInput.iuSilverHomeInput{
-          min-height: 157px !important;
+          min-height: 165px !important;
         }
         #iuSilverHeroPremium .iu-mobileSilverGateStack--floatingSilver.iu-mobileSilverGateStack--uxEmptyHero{
-          --iu-mobile-cta-h: 160px !important;
+          --iu-mobile-cta-h: 168px !important;
         }
         #silver-slot .iu-mobileSilverGateStack--floatingSilver.iu-mobileSilverGateStack--uxEmptySlot,
         #iuMobileSilverSlot #silver-slot .iu-mobileSilverGateStack--floatingSilver.iu-mobileSilverGateStack--uxEmptySlot{
-          --iu-mobile-cta-h: 157px !important;
+          --iu-mobile-cta-h: 165px !important;
         }
         .iuSilverHomeInputUx{
           font-size: 13.5px;
@@ -1125,6 +1129,12 @@ style-src 'self' 'unsafe-inline' https:;
         .iuSilverHomeInputUxLead,
         .iuSilverHomeInputUxLine{
           line-height: 1.16;
+        }
+        .iuSilverHomeInputUxLead{
+          font-size: 15.5px;
+        }
+        .iuSilverHomeInputUxPrefix{
+          font-size: 15.5px;
         }
         .iuSilverHomeInputUxSample{
           font-size: 0.96em;
