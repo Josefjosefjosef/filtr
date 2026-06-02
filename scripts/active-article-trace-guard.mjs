@@ -17,9 +17,11 @@ import path from "path";
 import { fileURLToPath } from "url";
 import {
   P0_CONTENT_SOURCES,
+  articleMatchesP0Source,
   buildArticleUrlIndex,
   bundleGeneratedAtMs,
   canonicalUrl,
+  effectivePublishedMs,
   extractItems,
   fetchFeedXml,
   filterRssCandidatesForBundleSnapshot,
@@ -33,6 +35,9 @@ const maxAgeH = Number(process.env.TRACE_MAX_AGE_HOURS || "6");
 const maxAgeMs = maxAgeH * 3_600_000;
 const bundleSlackMin = Math.max(0, Number(process.env.TRACE_BUNDLE_SLACK_MINUTES || "3"));
 const bundleSlackMs = bundleSlackMin * 60_000;
+const freshnessFailMin = Number(process.env.CONTENT_FRESHNESS_FAIL_MINUTES || "120");
+const freshnessFailMs = freshnessFailMin * 60_000;
+const maxFutureMs = 3_600_000;
 
 function log(msg) {
   console.log(`[active-article-trace-guard] ${msg}`);
@@ -100,6 +105,61 @@ export function pickSample(candidates) {
   return picked.slice(0, sampleCount);
 }
 
+export function p0DefForSourceId(sourceId) {
+  return P0_CONTENT_SOURCES.find((d) => d.id === sourceId) || null;
+}
+
+/** Newest bundle article for a P0 source (optional freshness floor). */
+export function newestArticleForP0Source(articles, def, referenceMs, minPublishedMs = null) {
+  let best = null;
+  const now = Date.now();
+  for (const a of articles) {
+    if (!articleMatchesP0Source(a, def)) continue;
+    const t = effectivePublishedMs(a);
+    if (t === null || t > now + maxFutureMs) continue;
+    if (referenceMs - t > maxAgeMs) continue;
+    if (minPublishedMs !== null && t < minPublishedMs) continue;
+    if (!best || t > best.ts) best = { article: a, ts: t };
+  }
+  return best;
+}
+
+/**
+ * Trace one sampled RSS item: exact URL OR fresh P0 source presence in bundle.
+ * Returns { pass, matchMode, article?, productionTs? }.
+ */
+export function evaluateTraceSampleItem(item, articles, def, byUrl, referenceMs) {
+  if (!def) return { pass: false, matchMode: "unknown_source" };
+
+  const urlHit = byUrl.get(canonicalUrl(item.url));
+  if (urlHit) {
+    return { pass: true, matchMode: "url", article: urlHit };
+  }
+
+  const minFreshMs = referenceMs - freshnessFailMs;
+  const fresh = newestArticleForP0Source(articles, def, referenceMs, minFreshMs);
+  if (fresh) {
+    return {
+      pass: true,
+      matchMode: "source_fresh",
+      article: fresh.article,
+      productionTs: fresh.ts,
+    };
+  }
+
+  const any = newestArticleForP0Source(articles, def, referenceMs);
+  if (any) {
+    return {
+      pass: false,
+      matchMode: "stale_source",
+      article: any.article,
+      productionTs: any.ts,
+    };
+  }
+
+  return { pass: false, matchMode: "missing_source" };
+}
+
 export async function runActiveArticleTraceGuard() {
   let failed = false;
   const doc = await loadArticlesDoc();
@@ -131,8 +191,9 @@ export async function runActiveArticleTraceGuard() {
 
   const traces = [];
   for (const item of sample) {
-    const key = canonicalUrl(item.url);
-    const hit = byUrl.get(key);
+    const def = p0DefForSourceId(item.sourceId);
+    const result = evaluateTraceSampleItem(item, articles, def, byUrl, generatedMs);
+    const hit = result.article || null;
     const trace = {
       source: item.source,
       title: item.title,
@@ -140,17 +201,26 @@ export async function runActiveArticleTraceGuard() {
       rss_found: true,
       crawler_found: Boolean(hit),
       normalized: Boolean(hit && hit.title),
-      dedupe_result: hit ? "accepted" : "missing",
-      published: Boolean(hit),
-      in_articles_json: Boolean(hit),
+      dedupe_result: result.pass ? "accepted" : result.matchMode,
+      published: result.pass,
+      in_articles_json: result.pass,
+      match_mode: result.matchMode,
+      production_url: hit?.url || null,
+      production_ts: result.productionTs ? new Date(result.productionTs).toISOString() : null,
       url: item.url,
     };
     traces.push(trace);
     log(
-      `trace source=${item.source} in_json=${trace.in_articles_json ? "yes" : "no"} title=${item.title.slice(0, 70)}`,
+      `trace source=${item.source} in_json=${trace.in_articles_json ? "yes" : "no"} match=${result.matchMode} title=${item.title.slice(0, 70)}`,
     );
-    if (!hit) {
-      fail(`missing in articles.json: [${item.source}] ${item.title.slice(0, 80)}`);
+    if (!result.pass) {
+      if (result.matchMode === "stale_source") {
+        fail(
+          `stale P0 source in articles.json: [${item.source}] production=${trace.production_ts || "none"} older than ${freshnessFailMin}m`,
+        );
+      } else {
+        fail(`missing P0 source in articles.json: [${item.source}] ${item.title.slice(0, 80)}`);
+      }
       failed = true;
     }
   }

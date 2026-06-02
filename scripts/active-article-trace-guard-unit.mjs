@@ -7,7 +7,8 @@ import {
   filterRssCandidatesForBundleSnapshot,
   isRssPublishTraceableAtBundle,
 } from "./content-freshness-guard-lib.mjs";
-import { filterCandidatesForBundleSnapshot, pickSample } from "./active-article-trace-guard.mjs";
+import { filterCandidatesForBundleSnapshot, pickSample, evaluateTraceSampleItem, p0DefForSourceId } from "./active-article-trace-guard.mjs";
+import { buildArticleUrlIndex } from "./content-freshness-guard-lib.mjs";
 
 const bundleMs = Date.parse("2026-06-02T06:09:00.000Z");
 const slackMs = 0;
@@ -75,5 +76,63 @@ assert(
 // bundleGeneratedAtMs from doc
 const docMs = bundleGeneratedAtMs({ generatedAt: "2026-06-02T06:09:45.839936Z" });
 assert(docMs === Date.parse("2026-06-02T06:09:45.839936Z"), "bundleGeneratedAtMs parses doc.generatedAt");
+
+// Source-level trace alignment (freshness-style matching)
+const refMs = Date.parse("2026-06-02T11:16:27.208Z");
+const ct24Def = p0DefForSourceId("ct24");
+const byUrl = buildArticleUrlIndex([]);
+
+const rssHeadline = {
+  source: "ČT24",
+  sourceId: "ct24",
+  title: "Tanec Praha přiváží do Česka umělce z dvanácti zemí",
+  url: "https://ct24.ceskatelevize.cz/clanek/kultura/tanec-praha-374126",
+  publishedAt: "2026-06-02T11:16:02.000Z",
+  ts: Date.parse("2026-06-02T11:16:02.000Z"),
+};
+
+// 1) RSS URL missing, fresh same-source article in bundle → PASS
+const freshIdnesWinner = [
+  {
+    title: "Jiný příběh",
+    url: "https://www.idnes.cz/zpravy/domaci/example.A260516_domaci",
+    publishedAt: "2026-06-02T11:10:00.000Z",
+    sources: [
+      { name: "iDNES.cz", url: "https://www.idnes.cz/zpravy/domaci/example.A260516_domaci" },
+      { name: "ČT24", url: "https://ct24.ceskatelevize.cz/clanek/domaci/other-373502" },
+    ],
+  },
+];
+const r1 = evaluateTraceSampleItem(rssHeadline, freshIdnesWinner, ct24Def, byUrl, refMs);
+assert(r1.pass && r1.matchMode === "source_fresh", "fresh P0 contributor/source metadata → PASS");
+
+// 2) Source absent from bundle → FAIL
+const r2 = evaluateTraceSampleItem(rssHeadline, [], ct24Def, byUrl, refMs);
+assert(!r2.pass && r2.matchMode === "missing_source", "missing P0 source → FAIL");
+
+// 3) Source present but stale → FAIL
+const staleCt24 = [
+  {
+    title: "Starý ČT24",
+    url: "https://ct24.ceskatelevize.cz/clanek/domaci/old-373000",
+    publishedAt: "2026-06-02T07:00:00.000Z",
+    sources: [{ name: "ČT24", url: "https://ct24.ceskatelevize.cz/clanek/domaci/old-373000" }],
+  },
+];
+const r3 = evaluateTraceSampleItem(rssHeadline, staleCt24, ct24Def, byUrl, refMs);
+assert(!r3.pass && r3.matchMode === "stale_source", "stale P0 source → FAIL");
+
+// 4) Original URL-based positive → PASS
+const urlArticles = [
+  {
+    title: rssHeadline.title,
+    url: rssHeadline.url,
+    publishedAt: rssHeadline.publishedAt,
+    sources: [{ name: "ČT24", url: rssHeadline.url }],
+  },
+];
+const byUrlHit = buildArticleUrlIndex(urlArticles);
+const r4 = evaluateTraceSampleItem(rssHeadline, urlArticles, ct24Def, byUrlHit, refMs);
+assert(r4.pass && r4.matchMode === "url", "exact RSS URL in bundle → PASS");
 
 console.log("PASS active-article-trace-guard-unit");
