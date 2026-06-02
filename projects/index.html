@@ -293,7 +293,7 @@ style-src 'self' 'unsafe-inline' https:;
           contain:layout style;
           overflow-x:hidden;
           overflow-y:visible;
-          height:176px;
+          height:auto;
           min-height:176px;
           max-height:none;
         }
@@ -337,7 +337,7 @@ style-src 'self' 'unsafe-inline' https:;
         }
         @media(min-width:480px){
           :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch{
-            height:178px;
+            height:auto;
             min-height:178px;
             max-height:none;
           }
@@ -388,6 +388,12 @@ style-src 'self' 'unsafe-inline' https:;
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-calendar-summary-line2main .silver-calendar-summary-svg{width:20px!important;height:20px!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-calendar-summary-card .iu-silver-actionRow[data-iu-action-indicator=chevron]::after{display:none!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-calendar-summary-card .iu-silver-actionRow[data-iu-action-indicator=chevron]{padding-right:0!important}
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard.silver-calendar-summary-card{box-shadow:none!important;filter:none!important}
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button],:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]{transition:none!important;-webkit-tap-highlight-color:transparent!important}
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button]:hover,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button]:active,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button]:focus-visible{background:linear-gradient(155deg,rgba(55,48,120,.55) 0%,rgba(24,28,52,.78) 100%)!important;transform:none!important;opacity:1!important;box-shadow:none!important;border-color:rgba(167,139,250,.28)!important;outline:none!important}
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]:hover,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]:active,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]:focus-visible{background:linear-gradient(155deg,rgba(22,78,99,.55) 0%,rgba(15,40,52,.78) 100%)!important;transform:none!important;opacity:1!important;box-shadow:none!important;border-color:rgba(45,212,191,.25)!important;outline:none!important}
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button]:hover,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button]:active,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button]:focus-visible{background:rgba(8,15,32,.72)!important;border-color:rgba(100,200,190,.14)!important}
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]:hover,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]:active,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]:focus-visible{background:rgba(8,15,32,.72)!important;border-color:rgba(150,140,210,.16)!important}
         #iuSilverHeroPremium .iu-hero-quickBtnIcon--mobileTabletOnly{display:none}
         #iuSilverHeroPremium .iu-hero-quickBtnIcon--mobileTabletOnly svg{display:block;width:18px;height:18px}
         #iuSilverCalendarSummaryCard .silver-calendar-summary-iconPoint--desktopOnly{display:none!important}
@@ -527,6 +533,31 @@ style-src 'self' 'unsafe-inline' https:;
         #silver-slot #iuInfoCardsMobileTablet #iuSilverCalendarSummaryCard .silver-calendar-summary-line2block,
         #silver-slot #iuInfoCardsMobileTablet #iuSilverTasksSummaryCard .silver-calendar-summary-line2block {
           min-height: 0 !important;
+        }
+        #silver-slot #iuInfoCardsMobileTablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
+        #silver-slot #iuInfoCardsMobileTablet #iuSilverTasksSummaryCard.silver-calendar-summary-card,
+        #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
+        #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet #iuSilverTasksSummaryCard.silver-calendar-summary-card {
+          box-shadow: none !important;
+          filter: none !important;
+        }
+        #silver-slot #iuInfoCardsMobileTablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role="button"],
+        #silver-slot #iuInfoCardsMobileTablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role="button"],
+        #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role="button"],
+        #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role="button"] {
+          transition: none !important;
+        }
+        #silver-slot #iuInfoCardsMobileTablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role="button"]:hover,
+        #silver-slot #iuInfoCardsMobileTablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role="button"]:active,
+        #silver-slot #iuInfoCardsMobileTablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role="button"]:hover,
+        #silver-slot #iuInfoCardsMobileTablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role="button"]:active,
+        #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role="button"]:hover,
+        #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role="button"]:active,
+        #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role="button"]:hover,
+        #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role="button"]:active {
+          transform: none !important;
+          opacity: 1 !important;
+          box-shadow: none !important;
         }
       }
     </style>
@@ -1532,13 +1563,13 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
-    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=16" />
+    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=17" />
     <style id="iuParcelWatchFirstPaintClsGuard">
       /* P0 CLS: post parcel-dashboard.css — lock first paint = hydrated compact height; no vertical clip on mainShell. */
       @media (max-width: 1023px) {
         #silver-slot #iuSilverParcelWatch,
         #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
-          height: 176px !important;
+          height: auto !important;
           min-height: 176px !important;
           max-height: none !important;
           overflow-x: hidden !important;
@@ -1579,7 +1610,7 @@ style-src 'self' 'unsafe-inline' https:;
       @media (min-width: 480px) and (max-width: 1023px) {
         #silver-slot #iuSilverParcelWatch,
         #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
-          height: 178px !important;
+          height: auto !important;
           min-height: 178px !important;
           max-height: none !important;
         }
