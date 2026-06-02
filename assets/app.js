@@ -67842,9 +67842,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     } catch (_) {}
 
     var PREFIX_TEXT = {
-      calendar: "Do kalendáře",
-      reminder: "Připomeň mi",
-      notes: "Do poznámek",
+      calendar: "Do kalendáře ",
+      reminder: "Připomeň mi ",
+      notes: "Do poznámek ",
     };
 
     function narrowComposer() {

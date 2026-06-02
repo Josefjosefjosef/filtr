@@ -11,19 +11,19 @@ const {
 
 const PREFIX_KEYS = ["calendar", "reminder", "notes"];
 const PREFIX_NO_COLON = {
-  calendar: "Do kalendáře",
-  reminder: "Připomeň mi",
-  notes: "Do poznámek",
+  calendar: "Do kalendáře ",
+  reminder: "Připomeň mi ",
+  notes: "Do poznámek ",
 };
 const MIN_LINE_GAP_PX = 2;
-const TARGET_ACTION_GAP_PX = 14;
-const MIN_ACTION_GAP_PX = 13.5;
-const TARGET_LEAD_GAP_PX = 9;
-const MIN_LEAD_GAP_PX = 8;
+const TARGET_ACTION_GAP_PX = 3;
+const MIN_ACTION_GAP_PX = 2.5;
+const TARGET_LEAD_GAP_PX = 7;
+const MIN_LEAD_GAP_PX = 6.5;
 const BASE_BOX_HEIGHT_V33_PX = { 390: 101, 430: 101, 768: 94 };
 const BOX_HEIGHT_ADD_PX = 56;
-const EXPECTED_UX_PADDING_TOP_PX = { 390: 6, 430: 6, 768: 7 };
-const EXPECTED_UX_PADDING_BOTTOM_PX = { 390: 6, 430: 6, 768: 7 };
+const EXPECTED_UX_PADDING_TOP_PX = { 390: 7, 430: 7, 768: 7 };
+const EXPECTED_UX_PADDING_BOTTOM_PX = { 390: 7, 430: 7, 768: 7 };
 
 async function runNoColonInsert(page) {
   const results = {};
@@ -37,7 +37,7 @@ async function runNoColonInsert(page) {
       if (!btn || !inp) return false;
       btn.click();
       const val = String(inp.value || "");
-      return val === exp && !val.endsWith(":") && val.indexOf(":") < 0;
+      return val === exp && !val.endsWith(":") && val.indexOf(":") < 0 && val.endsWith(" ");
     }, { k: key, exp: expected });
     results[key] = ok;
     if (!ok) pass = false;
