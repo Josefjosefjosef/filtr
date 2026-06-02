@@ -206,7 +206,7 @@ async function assertNoColonInsert(page) {
       if (!btn || !inp) return false;
       btn.click();
       const val = String(inp.value || "");
-      return val === exp && !val.endsWith(":") && val.indexOf(":") < 0;
+      return val === exp && !val.endsWith(":") && val.indexOf(":") < 0 && val.endsWith(" ");
     }, { k: key, exp: expected });
     results[key] = ok;
     if (!ok) pass = false;

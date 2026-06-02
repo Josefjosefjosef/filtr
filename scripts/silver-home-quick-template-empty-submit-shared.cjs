@@ -11,9 +11,9 @@ const {
 
 const PREFIX_KEYS = ["calendar", "reminder", "notes"];
 const PREFIX_NO_COLON = {
-  calendar: "Do kalendáře",
-  reminder: "Připomeň mi",
-  notes: "Do poznámek",
+  calendar: "Do kalendáře ",
+  reminder: "Připomeň mi ",
+  notes: "Do poznámek ",
 };
 const REGRESSION_INPUTS = {
   calendar: "Do kalendáře zítra v 15 schůzka s mámou",

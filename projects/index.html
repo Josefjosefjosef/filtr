@@ -982,12 +982,12 @@ style-src 'self' 'unsafe-inline' https:;
         .iuSilverHomeInputUxDivider{
           display: block;
           height: 1px;
-          margin: 0 0 8px;
+          margin: 0 0 7px;
           background: rgba(15, 35, 55, 0.1);
           pointer-events: none;
         }
         .iuSilverHomeInputUxLine{
-          margin: 0 0 14px;
+          margin: 0 0 3px;
           padding: 0;
           white-space: nowrap;
           overflow: visible;
@@ -996,36 +996,47 @@ style-src 'self' 'unsafe-inline' https:;
         .iuSilverHomeInputUxLine:last-child{
           margin-bottom: 0;
         }
-        .iuSilverHomeInputUxEmoji{
-          display: inline;
-          font-size: 12.9px;
-          vertical-align: -0.05em;
-        }
-        .iuSilverHomeInputUxPrefix{
-          display: inline;
+        .iuSilverHomeInputUxPrefixBtn{
+          display: inline-flex;
+          align-items: center;
+          gap: 3px;
           margin: 0;
-          padding: 0;
-          border: 0;
+          padding: 2px 6px;
+          border: 1px solid transparent;
+          border-radius: 8px;
           background: transparent;
           font: inherit;
-          font-size: 17px;
-          font-weight: 700;
+          line-height: 1.18;
           cursor: pointer;
           pointer-events: auto;
           -webkit-tap-highlight-color: transparent;
           touch-action: manipulation;
           vertical-align: baseline;
+          box-sizing: border-box;
         }
-        .iuSilverHomeInputUxPrefix[data-iu-silver-home-prefix="calendar"]{
+        .iuSilverHomeInputUxEmoji{
+          display: inline;
+          font-size: 15.9px;
+          line-height: 1;
+          vertical-align: 0;
+        }
+        .iuSilverHomeInputUxPrefixLabel{
+          font-size: 15px;
+          font-weight: 700;
+        }
+        .iuSilverHomeInputUxPrefixBtn[data-iu-silver-home-prefix="calendar"]{
           color: #1fa85a;
+          border-color: rgba(31, 168, 90, 0.28);
         }
-        .iuSilverHomeInputUxPrefix[data-iu-silver-home-prefix="reminder"]{
+        .iuSilverHomeInputUxPrefixBtn[data-iu-silver-home-prefix="reminder"]{
           color: #7c4dff;
+          border-color: rgba(124, 77, 255, 0.28);
         }
-        .iuSilverHomeInputUxPrefix[data-iu-silver-home-prefix="notes"]{
+        .iuSilverHomeInputUxPrefixBtn[data-iu-silver-home-prefix="notes"]{
           color: #14b8a6;
+          border-color: rgba(20, 184, 166, 0.28);
         }
-        .iuSilverHomeInputUxPrefix:active{
+        .iuSilverHomeInputUxPrefixBtn:active{
           opacity: 0.82;
         }
         .iuSilverHomeInputUxSample{
@@ -1126,7 +1137,7 @@ style-src 'self' 'unsafe-inline' https:;
         }
         .iuSilverHomeInputUx{
           font-size: 13.5px;
-          padding: 6px 8px;
+          padding: 7px 8px;
           line-height: 1.16;
         }
         .iuSilverHomeInputUxLead,
@@ -1136,11 +1147,11 @@ style-src 'self' 'unsafe-inline' https:;
         .iuSilverHomeInputUxLead{
           font-size: 15.5px;
         }
-        .iuSilverHomeInputUxPrefix{
-          font-size: 16.5px;
+        .iuSilverHomeInputUxPrefixLabel{
+          font-size: 14.5px;
         }
         .iuSilverHomeInputUxEmoji{
-          font-size: 12.5px;
+          font-size: 15.5px;
         }
         .iuSilverHomeInputUxSample{
           font-size: 0.96em;
@@ -2213,16 +2224,13 @@ style-src 'self' 'unsafe-inline' https:;
                                             </div>
                                             <div class="iuSilverHomeInputUxDivider" aria-hidden="true"></div>
                                             <div class="iuSilverHomeInputUxLine">
-                                              <span class="iuSilverHomeInputUxEmoji" aria-hidden="true">📅</span>
-                                              <button type="button" class="iuSilverHomeInputUxPrefix" data-iu-silver-home-prefix="calendar">Do kalendáře:</button><span class="iuSilverHomeInputUxSample"> Schůzka zítra v 15:00 s Petrem</span>
+                                              <button type="button" class="iuSilverHomeInputUxPrefixBtn" data-iu-silver-home-prefix="calendar" aria-label="Do kalendáře"><span class="iuSilverHomeInputUxEmoji" aria-hidden="true">📅</span><span class="iuSilverHomeInputUxPrefixLabel">Do kalendáře:</span></button><span class="iuSilverHomeInputUxSample"> Schůzka zítra v 15:00 s Petrem</span>
                                             </div>
                                             <div class="iuSilverHomeInputUxLine">
-                                              <span class="iuSilverHomeInputUxEmoji" aria-hidden="true">🔔</span>
-                                              <button type="button" class="iuSilverHomeInputUxPrefix" data-iu-silver-home-prefix="reminder">Připomeň mi:</button><span class="iuSilverHomeInputUxSample"> Zaplatit nájem v pátek</span>
+                                              <button type="button" class="iuSilverHomeInputUxPrefixBtn" data-iu-silver-home-prefix="reminder" aria-label="Připomeň mi"><span class="iuSilverHomeInputUxEmoji" aria-hidden="true">🔔</span><span class="iuSilverHomeInputUxPrefixLabel">Připomeň mi:</span></button><span class="iuSilverHomeInputUxSample"> Zaplatit nájem v pátek</span>
                                             </div>
                                             <div class="iuSilverHomeInputUxLine">
-                                              <span class="iuSilverHomeInputUxEmoji" aria-hidden="true">📝</span>
-                                              <button type="button" class="iuSilverHomeInputUxPrefix" data-iu-silver-home-prefix="notes">Do poznámek:</button><span class="iuSilverHomeInputUxSample"> Heslo k Wi-Fi je 1234</span>
+                                              <button type="button" class="iuSilverHomeInputUxPrefixBtn" data-iu-silver-home-prefix="notes" aria-label="Do poznámek"><span class="iuSilverHomeInputUxEmoji" aria-hidden="true">📝</span><span class="iuSilverHomeInputUxPrefixLabel">Do poznámek:</span></button><span class="iuSilverHomeInputUxSample"> Heslo k Wi-Fi je 1234</span>
                                             </div>
                                           </div>
                                           <textarea id="iuSilverHomeInput" class="silver-input iuSilverHomeInput" rows="1" inputmode="text" autocomplete="off" maxlength="450" placeholder="" aria-label="Dej mi pokyn" data-iu-silver-home-input="1" data-iu-silver-home-placeholder-desktop="Napiš Silverovi…"></textarea>

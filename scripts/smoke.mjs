@@ -118,7 +118,8 @@ async function runSmoke() {
   try {
     const browser = await chromium.launch({ headless: true });
     const context = await browser.newContext({
-      viewport: { width: 1366, height: 768 }
+      viewport: { width: 1366, height: 768 },
+      serviceWorkers: "block",
     });
     const page = await context.newPage();
 
