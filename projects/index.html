@@ -902,8 +902,57 @@ style-src 'self' 'unsafe-inline' https:;
           overflow: hidden;
           user-select: none;
         }
-        .iuSilverHomeInputFieldWrap:not(.iuSilverHomeInputFieldWrap--template) .iuSilverHomeInputUx{
+        .iuSilverHomeInputFieldWrap--compose .iuSilverHomeInputUx,
+        .iuSilverHomeInputFieldWrap:not(.iuSilverHomeInputFieldWrap--empty):not(.iuSilverHomeInputFieldWrap--template) .iuSilverHomeInputUx{
           display: none;
+        }
+        /* P0 CLS: reserve empty-template layout on first paint before JS adds --template */
+        .iuSilverHomeInputSendRow:has(.iuSilverHomeInputFieldWrap--empty:not(.iuSilverHomeInputFieldWrap--compose)) .iuSilverHomeSend{
+          display: none !important;
+          width: 0 !important;
+          min-width: 0 !important;
+          height: 0 !important;
+          min-height: 0 !important;
+          overflow: hidden !important;
+          pointer-events: none !important;
+        }
+        .iuSilverHomeInputSendRow:has(.iuSilverHomeInputFieldWrap--empty:not(.iuSilverHomeInputFieldWrap--compose)){
+          display: flex !important;
+          flex-direction: row !important;
+          gap: 0 !important;
+        }
+        #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInputSendRow:has(.iuSilverHomeInputFieldWrap--empty:not(.iuSilverHomeInputFieldWrap--compose)){
+          display: grid !important;
+          grid-template-columns: minmax(0, 1fr) !important;
+        }
+        .iuSilverHomeInputFieldWrap--empty:not(.iuSilverHomeInputFieldWrap--compose) .iuSilverHomeInput.iuSilverHomeInput,
+        .iuSilverHomeInputFieldWrap--template .iuSilverHomeInput.iuSilverHomeInput{
+          color: transparent !important;
+          caret-color: transparent;
+        }
+        .iuSilverHomeInputFieldWrap--empty:not(.iuSilverHomeInputFieldWrap--compose) .iuSilverHomeInput.iuSilverHomeInput::placeholder,
+        .iuSilverHomeInputFieldWrap--template .iuSilverHomeInput.iuSilverHomeInput::placeholder{
+          color: transparent !important;
+          opacity: 0 !important;
+        }
+        #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInputSendRow:has(.iuSilverHomeInputFieldWrap--empty:not(.iuSilverHomeInputFieldWrap--compose)) .iuSilverHomeInput.iuSilverHomeInput,
+        .iuSilverHomeInputSendRow--templateMode .iuSilverHomeInput.iuSilverHomeInput{
+          border-top-right-radius: 14px !important;
+          border-bottom-right-radius: 14px !important;
+        }
+        #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInputFieldWrap--empty:not(.iuSilverHomeInputFieldWrap--compose) .iuSilverHomeInput.iuSilverHomeInput{
+          min-height: 184px !important;
+        }
+        #silver-slot .iuSilverHomeInputFieldWrap--empty:not(.iuSilverHomeInputFieldWrap--compose) .iuSilverHomeInput.iuSilverHomeInput,
+        #iuMobileSilverSlot #silver-slot .iuSilverHomeInputFieldWrap--empty:not(.iuSilverHomeInputFieldWrap--compose) .iuSilverHomeInput.iuSilverHomeInput{
+          min-height: 181px !important;
+        }
+        #iuSilverHeroPremium .iu-mobileSilverGateStack--floatingSilver:has(.iuSilverHomeInputFieldWrap--empty:not(.iuSilverHomeInputFieldWrap--compose)){
+          --iu-mobile-cta-h: 184px !important;
+        }
+        #silver-slot .iu-mobileSilverGateStack--floatingSilver:has(.iuSilverHomeInputFieldWrap--empty:not(.iuSilverHomeInputFieldWrap--compose)),
+        #iuMobileSilverSlot #silver-slot .iu-mobileSilverGateStack--floatingSilver:has(.iuSilverHomeInputFieldWrap--empty:not(.iuSilverHomeInputFieldWrap--compose)){
+          --iu-mobile-cta-h: 181px !important;
         }
         .iuSilverHomeInputUxTop{
           display: flex;
