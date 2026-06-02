@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-02T05:01:54.264192Z",
+  "ingestedAt": "2026-06-02T05:32:01.431345Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Roland Garros zná všechny čtvrtfinalisty",
+      "url": "https://www.sport.cz/clanek/tenis-french-open-roland-garros-zna-vsechny-ctvrtfinalisty-5473741",
+      "dt": "2026-06-02T05:19:32Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "garros",
+        "roland",
+        "všechny",
+        "zná",
+        "čtvrtfinalisty"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -734,33 +756,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Experti o šancích českého týmu na MS: Vítězí optimismus, po postupu ze skupiny se může stát cokoliv",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-experti-o-sancich-ceskeho-tymu-na-ms-vitezi-optimismus-po-postupu-ze-skupiny-se-muze-stat-cokoliv-5473711",
-      "dt": "2026-06-01T14:51:47Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "cokoliv",
-        "experti",
-        "optimismus",
-        "postupu",
-        "skupiny",
-        "stát",
-        "týmu",
-        "vítězí",
-        "českého",
-        "šancích"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -771,7 +766,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43507,
+      "bytes": 42321,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -808,7 +803,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-02T04:28:54Z",
+        "raw_feed_latest_publishedAt": "2026-06-02T05:19:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -824,6 +819,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Roland Garros zná všechny čtvrtfinalisty",
+            "publishedAt": "2026-06-02T05:19:32Z"
+          },
           {
             "title": "Oslavy jsou tady. Šéf Oktagonu přiznal chybu, chystá velký závěr roku",
             "publishedAt": "2026-06-02T04:28:54Z"
@@ -851,10 +850,6 @@
           {
             "title": "Po zpackané baráži první vyhazov. Artis odvolal sportovního ředitele",
             "publishedAt": "2026-06-01T20:13:19Z"
-          },
-          {
-            "title": "Hrozný absťák, přiznával český rekordman po operaci a dlouhé pauze",
-            "publishedAt": "2026-06-01T19:58:52Z"
           }
         ]
       }
