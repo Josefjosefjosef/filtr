@@ -42019,6 +42019,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         forcedModule: "tasks.create"
       },
       {
+        foldedTest: /^uloz\s+do\s+ukol\w*\s*:?\s*/,
+        rawHead: /^ulo[zž]\s+do\s+[uú]kol[uů]?\s*:?\s*/iu,
+        forcedModule: "tasks.create"
+      },
+      {
+        foldedTest: /^do\s+ukol\w*\s*:?\s*/,
+        rawHead: /^do\s+[uú]kol[uů]?\s*:?\s*/iu,
+        forcedModule: "tasks.create"
+      },
+      {
         foldedTest: /^do\s+poznam(?:ek|ky)\s*:?\s*/,
         rawHead: /^do\s+pozn[aá]m\w*\s*:?\s*/iu,
         forcedModule: "notes.create"
@@ -42039,6 +42049,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return null;
   }
 
+  function iuSilverMarkExplicitSavePrefixTurnV1(turn) {
+    if (!turn || typeof turn !== "object") return turn;
+    turn.silverExplicitSavePrefixRoutingV1 = true;
+    return turn;
+  }
+
   function iuSilverTryExplicitSavePrefixRoutingV1Turn(rawIn, now, prevDraft) {
     const det = iuSilverDetectExplicitSavePrefixV1(rawIn);
     if (!det) return null;
@@ -42046,7 +42062,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const cleaned = String(det.cleanedInput || "").trim();
     if (det.forcedModule === "calendar.create") {
       const calTurn = iuSilverBuildCalendarCreateTurn(cleaned || "událost", now, prev, cleaned || "událost");
-      if (calTurn) return calTurn;
+      if (calTurn) return iuSilverMarkExplicitSavePrefixTurnV1(calTurn);
       return null;
     }
     if (det.forcedModule === "tasks.create") {
@@ -42056,12 +42072,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         fromExplicitTarget: true,
         titleCleanupFullRawGate: cleaned || "úkol"
       });
-      if (taskTurn) return taskTurn;
+      if (taskTurn) return iuSilverMarkExplicitSavePrefixTurnV1(taskTurn);
       return null;
     }
     if (det.forcedModule === "notes.create") {
       const body = iuSilverNoteCreateFinalizeBody(cleaned) || cleaned || "poznámka";
-      return iuSilverBuildNoteCreateTurn(body, now);
+      return iuSilverMarkExplicitSavePrefixTurnV1(iuSilverBuildNoteCreateTurn(body, now));
     }
     return null;
   }
@@ -59041,6 +59057,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverQuerySafetyGateV1BlocksCreate(f, rawOpt) {
     const x = String(f || "");
     const raw = String(rawOpt || "");
+    if (iuSilverDetectExplicitSavePrefixV1(raw)) return false;
     if (/^\s*do\s+pozn[aá]m[^\s:]*\s*:/iu.test(raw)) return false;
     if (iuSilverCalendarWriteNegatedTaskTargetGuardV1Folded(x)) return false;
     if (iuSilverNoteWriteWarrantyObjectRoutingV1Folded(x, raw)) return false;
@@ -60109,6 +60126,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     if (iuSilverIsHelpGuidanceRenderModeV1(turn)) return "help";
 
+    if (turn.silverExplicitSavePrefixRoutingV1 || iuSilverDetectExplicitSavePrefixV1(rawText)) return "save";
+
     if (ni.indexOf(".update") > 0 || ni === "calendar.update" || ni === "tasks.update" || ni === "notes.update") {
       return "update";
     }
@@ -60183,6 +60202,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     turn.iuSilverActionModeV1 = mode;
 
     if (mode === "search" && !turn.silverMultiIntentComposite && !turn.silverMobileVoiceFragmentTaskCreateV1) {
+      if (turn.silverExplicitSavePrefixRoutingV1 || iuSilverDetectExplicitSavePrefixV1(rawText)) {
+        turn.actionMode = "save";
+        turn.silverSaveModeRequiresCard = true;
+        turn.silverSearchModeDirectAnswer = false;
+        turn.silverStructuredDraftCardRequired = true;
+        turn.confirmOnly = false;
+        if (!turn.silverMultiIntentComposite) {
+          turn.readAnswer = null;
+          turn.readQuery = null;
+        }
+        return turn;
+      }
       const explicitDoPozCreate =
         /^\s*do\s+pozn[aá]m[^\s:]*\s*:/iu.test(String(rawText || "")) &&
         iuSilverIsCreateIntentV1(turn.normalizedIntent) &&
