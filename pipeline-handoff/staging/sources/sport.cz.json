@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-02T10:32:15.651135Z",
+  "ingestedAt": "2026-06-02T11:03:46.719483Z",
   "items": [
     {
       "section": "sport",
@@ -30,7 +30,30 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Mladičká Ruska je podruhé v semifinále Roland Garros",
+      "title": "Velká ztráta. Rakousko přišlo před MS o ofenzivní hvězdu",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-velka-ztrata-rakousko-prislo-pred-ms-o-ofenzivni-hvezdu-5473763",
+      "dt": "2026-06-02T10:52:38Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hvězdu",
+        "ofenzivní",
+        "přišlo",
+        "rakousko",
+        "velká",
+        "ztráta"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Mladičká Ruska smetla soupeřku a je podruhé v semifinále Roland Garros",
       "url": "https://www.sport.cz/clanek/tenis-french-open-mladicka-ruska-je-podruhe-v-semifinale-roland-garros-5473761",
       "dt": "2026-06-02T10:21:39Z",
       "media_raw": "Sport.cz",
@@ -41,7 +64,9 @@
         "podruhé",
         "roland",
         "ruska",
-        "semifinále"
+        "semifinále",
+        "smetla",
+        "soupeřku"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -727,29 +752,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Finové bodali do už tak bolavého srdce Švýcarů",
-      "url": "https://www.sport.cz/clanek/hokej-ms-finove-se-vysmivali-svycarum-po-rozhlasovych-vlnach-5473715",
-      "dt": "2026-06-01T17:58:04Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bodali",
-        "bolavého",
-        "finové",
-        "srdce",
-        "tak",
-        "švýcarů"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -760,7 +762,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43804,
+      "bytes": 43993,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -797,7 +799,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-02T10:28:11Z",
+        "raw_feed_latest_publishedAt": "2026-06-02T10:52:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -818,7 +820,11 @@
             "publishedAt": "2026-06-02T10:28:11Z"
           },
           {
-            "title": "Mladičká Ruska je podruhé v semifinále Roland Garros",
+            "title": "Velká ztráta. Rakousko přišlo před MS o ofenzivní hvězdu",
+            "publishedAt": "2026-06-02T10:52:38Z"
+          },
+          {
+            "title": "Mladičká Ruska smetla soupeřku a je podruhé v semifinále Roland Garros",
             "publishedAt": "2026-06-02T10:21:39Z"
           },
           {
@@ -840,10 +846,6 @@
           {
             "title": "Southampton po špionážní aféře podrží ve funkci trenéra",
             "publishedAt": "2026-06-02T09:14:39Z"
-          },
-          {
-            "title": "Hronek už má nového kouče",
-            "publishedAt": "2026-06-02T09:07:47Z"
           }
         ]
       }
