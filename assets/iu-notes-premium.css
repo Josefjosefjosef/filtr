@@ -181,6 +181,8 @@
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__listHeaderRow{
   display:flex;
+  flex-direction:row;
+  flex-wrap:nowrap;
   align-items:center;
   justify-content:space-between;
   gap:10px;
@@ -192,6 +194,7 @@
   display:flex;
   align-items:center;
   flex:0 0 auto;
+  min-width:0;
 }
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__listHeaderRight{
@@ -201,6 +204,7 @@
   gap:15px;
   flex:0 0 auto;
   margin-left:auto;
+  min-width:0;
 }
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__listTabs{display:none}
@@ -220,12 +224,17 @@
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__confirm{
   position:absolute;
   inset:0;
-  z-index:20;
+  z-index:30;
   display:flex;
   align-items:center;
   justify-content:center;
   padding:16px;
   box-sizing:border-box;
+  pointer-events:none;
+}
+
+#iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__confirm:not([hidden]){
+  pointer-events:auto;
 }
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__confirm[hidden]{display:none!important}
@@ -307,51 +316,69 @@
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__items>li{
   content-visibility:auto;
-  contain-intrinsic-size:auto 92px;
-  contain:layout style paint;
+  contain-intrinsic-size:auto 96px;
+  contain:layout style;
+  overflow:visible;
 }
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemRow{
   display:grid;
-  grid-template-columns:minmax(0,1fr) 42px;
+  grid-template-columns:minmax(0,1fr) 44px;
   gap:8px;
   align-items:stretch;
   min-height:72px;
+  overflow:visible;
 }
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemActions{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
+  display:grid;
+  grid-template-rows:1fr 1fr;
+  gap:6px;
   align-self:stretch;
-  min-height:100%;
   height:100%;
+  min-height:72px;
+  overflow:visible;
 }
 
-#iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemTrash{
-  flex:1 1 0;
-  min-height:0;
+#iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__actionBtn{
   width:100%;
-  border:1px solid rgba(190,18,60,.22);
-  border-radius:10px;
-  background:rgba(255,255,255,.95);
-  color:#9f1239;
+  height:100%;
+  min-height:0;
+  margin:0;
   padding:0;
-  font-size:16px;
-  line-height:1;
+  border-radius:10px;
+  border:1px solid var(--iu-notes-border);
+  background:var(--iu-notes-surface);
   display:flex;
   align-items:center;
   justify-content:center;
+  line-height:1;
+  font-size:17px;
   touch-action:manipulation;
-  transition:background .12s ease,border-color .12s ease;
+  box-sizing:border-box;
+  cursor:pointer;
+  transition:background .12s ease,border-color .12s ease,transform .12s ease;
+}
+
+#iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__actionBtn:active{transform:scale(.98)}
+
+#iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemTrash{
+  color:#dc2626;
+  border-color:rgba(220,38,38,.32);
+  background:rgba(255,255,255,.98);
 }
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemTrash:hover{
-  background:#fff1f2;
-  border-color:rgba(251,113,133,.45);
+  background:#fef2f2;
+  border-color:rgba(220,38,38,.5);
 }
 
-#iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemTrash:active{transform:scale(.98)}
+#iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemTrashIcon{
+  display:block;
+  font-size:16px;
+  line-height:1;
+  pointer-events:none;
+}
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemBtn{
   width:100%;
@@ -361,12 +388,14 @@
   background:var(--iu-notes-surface);
   padding:12px 12px 12px 14px;
   min-height:72px;
+  height:100%;
+  align-self:stretch;
   display:grid;
   gap:5px;
   align-content:center;
   box-sizing:border-box;
   box-shadow:inset 3px 0 0 0 var(--iu-notes-primary);
-  transition:background-color .12s ease,border-color .12s ease,opacity .12s ease;
+  transition:background-color .12s ease,border-color .12s ease;
 }
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemBtn.is-active{
@@ -391,7 +420,7 @@
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemPreview{
   font-size:13px;
-  color:#334155;
+  color:#1e293b;
   display:-webkit-box;
   -webkit-line-clamp:2;
   line-clamp:2;
@@ -402,28 +431,14 @@
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemMeta{
   font-size:11px;
-  color:#64748b;
+  color:#475569;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
 }
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__pin{
-  flex:1 1 0;
-  min-height:0;
-  width:100%;
-  border:1px solid var(--iu-notes-border);
-  border-radius:10px;
-  background:var(--iu-notes-surface);
   color:#0e7490;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  line-height:1;
-  font-size:17px;
-  touch-action:manipulation;
-  transition:background .12s ease,border-color .12s ease;
-  padding:0;
 }
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__pin.is-on{
@@ -435,11 +450,12 @@
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__pin:hover{background:rgba(240,253,250,.92)}
 
 #iuNotesOverlay.iu-notesPremiumScope[data-iu-notes-list-tab="trash"] .iu-notesOverlay__itemRow{
-  grid-template-columns:minmax(0,1fr) 42px;
+  grid-template-columns:minmax(0,1fr) 44px;
 }
 
 #iuNotesOverlay.iu-notesPremiumScope[data-iu-notes-list-tab="trash"] .iu-notesOverlay__itemActions{
-  justify-content:center;
+  grid-template-rows:1fr;
+  align-content:stretch;
 }
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__detail{
@@ -516,28 +532,32 @@ body.iu-notesOverlay-open{overflow:hidden!important}
 
 /* Stavy karet (dříve app.css + zelená kalendářová — sjednoceno na tyrkysovou identitu poznámek) */
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemBtn.iuNotesState--recent:not(.is-active){
-  background:rgba(240,253,250,.65);
+  background:rgba(240,253,250,.82);
   border-color:rgba(14,165,164,.32);
   box-shadow:inset 3px 0 0 0 var(--iu-notes-primary);
 }
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemBtn.iuNotesState--active:not(.is-active){
-  background:linear-gradient(180deg,rgba(224,242,254,.55),rgba(255,255,255,.96));
+  background:linear-gradient(180deg,rgba(224,242,254,.72),rgba(255,255,255,.98));
   border-color:rgba(2,132,199,.28);
   box-shadow:inset 3px 0 0 0 var(--iu-notes-primary-strong);
 }
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemBtn.iuNotesState--active.iuNotesState--recent:not(.is-active){
-  background:linear-gradient(145deg,rgba(240,253,250,.7),rgba(224,242,254,.5));
+  background:linear-gradient(145deg,rgba(240,253,250,.85),rgba(224,242,254,.62));
   border-color:rgba(2,132,199,.3);
   box-shadow:inset 3px 0 0 0 var(--iu-notes-primary);
 }
 
-#iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemBtn.iuNotesState--older:not(.is-active){opacity:.9}
+#iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemBtn.iuNotesState--older:not(.is-active){opacity:1}
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemBtn.iuNotesState--older:not(.is-active) .iu-notesOverlay__itemTitle,
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemBtn.iuNotesState--older:not(.is-active) .iu-notesOverlay__itemMeta{
-  color:rgba(15,23,42,.72);
+  color:#0f172a;
+}
+
+#iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemBtn.iuNotesState--older:not(.is-active) .iu-notesOverlay__itemPreview{
+  color:#1e293b;
 }
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemBtn.is-active.iuNotesState--selected{
@@ -710,5 +730,7 @@ body.iu-notesOverlay-open{overflow:hidden!important}
   #iuNotesOverlay.iu-notesPremiumScope[data-iu-notes-mode="detail"] .iu-notesOverlay__back{display:inline-flex}
 
   #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__pin,
-  #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemTrash{min-height:34px}
+  #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemTrash{
+    min-height:0;
+  }
 }

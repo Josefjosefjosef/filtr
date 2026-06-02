@@ -169,21 +169,40 @@ async function runViewportChecks(page, vp, noteCount) {
       headerGap = Math.round((closeBtn.getBoundingClientRect().left - newBtn.getBoundingClientRect().right) * 100) / 100;
     }
     let actionColumnOk = false;
+    let trashFullyVisible = false;
+    let equalActionButtons = false;
+    let trashClickable = false;
     if (pin && trashIcon && actions && card) {
       const pr = pin.getBoundingClientRect();
       const tr = trashIcon.getBoundingClientRect();
       const cr = card.getBoundingClientRect();
       const ar = actions.getBoundingClientRect();
       actionColumnOk =
-        Math.abs(pr.top - cr.top) <= 3 &&
-        Math.abs(tr.bottom - cr.bottom) <= 3 &&
-        Math.abs(ar.top - cr.top) <= 3 &&
-        Math.abs(ar.bottom - cr.bottom) <= 3 &&
-        pr.bottom <= tr.top + 2;
+        Math.abs(pr.top - cr.top) <= 2 &&
+        Math.abs(tr.bottom - cr.bottom) <= 2 &&
+        Math.abs(ar.top - cr.top) <= 2 &&
+        Math.abs(ar.bottom - cr.bottom) <= 2 &&
+        pr.bottom <= tr.top + 1;
+      trashFullyVisible =
+        tr.width >= 28 &&
+        tr.height >= 28 &&
+        tr.top >= ar.top - 1 &&
+        tr.bottom <= ar.bottom + 1 &&
+        tr.left >= ar.left - 1 &&
+        tr.right <= ar.right + 1;
+      equalActionButtons =
+        Math.abs(pr.width - tr.width) <= 1 &&
+        Math.abs(pr.height - tr.height) <= 1;
+      const cx = tr.left + tr.width / 2;
+      const cy = tr.top + tr.height / 2;
+      const hit = document.elementFromPoint(cx, cy);
+      trashClickable = !!(hit && (hit === trashIcon || trashIcon.contains(hit)));
     }
     let listHeaderOk = false;
     if (leftBtn && trashTab) {
-      listHeaderOk = leftBtn.getBoundingClientRect().left < trashTab.getBoundingClientRect().left;
+      const lr = leftBtn.getBoundingClientRect();
+      const trr = trashTab.getBoundingClientRect();
+      listHeaderOk = lr.left < trr.left && trr.right > lr.right + 40;
     }
     const cardHeight = card ? Math.round(card.getBoundingClientRect().height * 100) / 100 : 0;
     return {
@@ -193,6 +212,9 @@ async function runViewportChecks(page, vp, noteCount) {
       actionColumnOk,
       listHeaderOk,
       cardHeight,
+      trashFullyVisible,
+      equalActionButtons,
+      trashClickable,
     };
   });
 
@@ -252,6 +274,9 @@ async function runViewportChecks(page, vp, noteCount) {
     deleteTextRemoved: !layout.deleteTextBtn,
     trashIcon: !!layout.trashIcon,
     actionColumnOk: !!layout.actionColumnOk,
+    trashFullyVisible: !!layout.trashFullyVisible,
+    equalActionButtons: !!layout.equalActionButtons,
+    trashClickable: !!layout.trashClickable,
     listHeaderOk: !!layout.listHeaderOk,
     headerGapOk: layout.headerGap !== null && layout.headerGap >= MIN_HEADER_GAP_PX,
     cardHeightOk: layout.cardHeight >= 68,
@@ -275,6 +300,9 @@ async function runViewportChecks(page, vp, noteCount) {
     headerGapPx: layout.headerGap,
     cardHeightPx: layout.cardHeight,
     actionColumnOk: layout.actionColumnOk,
+    trashFullyVisible: layout.trashFullyVisible,
+    equalActionButtons: layout.equalActionButtons,
+    trashClickable: layout.trashClickable,
     listHeaderOk: layout.listHeaderOk,
     deleteTextRemoved: !layout.deleteTextBtn,
     trashIconPresent: layout.trashIcon,
