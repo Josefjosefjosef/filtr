@@ -71,6 +71,26 @@ export function parseRssDate(s) {
   return Number.isFinite(t) ? t : null;
 }
 
+/** articles.json generatedAt as epoch ms (bundle snapshot time for trace guard). */
+export function bundleGeneratedAtMs(doc) {
+  if (!doc || !doc.generatedAt) return null;
+  return parseRssDate(String(doc.generatedAt));
+}
+
+/**
+ * RSS item may be traced only if published at or before bundle generation (+ slack).
+ */
+export function isRssPublishTraceableAtBundle(publishTs, bundleGeneratedAtMs, slackMs = 0) {
+  if (publishTs === null || bundleGeneratedAtMs === null) return false;
+  return publishTs <= bundleGeneratedAtMs + slackMs;
+}
+
+export function filterRssCandidatesForBundleSnapshot(candidates, bundleGeneratedAtMs, slackMs = 0) {
+  if (bundleGeneratedAtMs === null) return [];
+  const cutoff = bundleGeneratedAtMs + slackMs;
+  return candidates.filter((c) => typeof c.ts === "number" && c.ts <= cutoff);
+}
+
 export function extractItems(xml) {
   const items = [];
   const blocks = xml.split(/<item[\s>]/i).slice(1);
