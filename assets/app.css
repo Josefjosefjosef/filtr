@@ -17615,7 +17615,19 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   .iuSilverChatOverlay--quickTemplateCalendar .iuSilverChatHeader::after{content:"Kalendář"}
   .iuSilverChatOverlay--quickTemplateTask .iuSilverChatHeader::after{content:"Úkoly"}
   .iuSilverChatOverlay--quickTemplateNote .iuSilverChatHeader::after{content:"Poznámky"}
-  .iuSilverDraftCard--quickTemplateNote .iuSilverDraftGrid--note{padding:4px 16px 0 8px;gap:11px 5px;grid-template-columns:max-content minmax(0,1fr)}
+  /* Quick-template forms: label column sized to content (not 120px cap); shared input left edge per form. */
+  .iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftGrid--edit{
+    grid-template-columns:max-content minmax(0,1fr);
+    column-gap:12px;
+    row-gap:11px;
+  }
+  /* Notes: min label track + standard gap — avoids textarea hugging short "Text" label. */
+  .iuSilverDraftCard--quickTemplateNote .iuSilverDraftGrid--note{
+    padding:4px 16px 0;
+    gap:11px 12px;
+    grid-template-columns:minmax(4.25rem,max-content) minmax(0,1fr);
+    column-gap:12px;
+  }
 }
 
 .iuSilverDisambiguationCard{
