@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-02T06:32:10.814993Z",
+  "ingestedAt": "2026-06-02T07:02:55.343422Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "USA uvažují o rozmístění jaderných zbraní v dalších evropských zemích, tvrdí FT",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/usa-uvazuji-o-rozmisteni-jadernych-zbrani-v-dalsich-evropskych-zemich-tvrdi-ft-374123",
+      "dt": "2026-06-02T06:33:17Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "dalších",
+        "evropských",
+        "jaderných",
+        "rozmístění",
+        "tvrdí",
+        "usa",
+        "uvažují",
+        "zbraní",
+        "zemích"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -710,32 +736,6 @@
         "středu",
         "vyjasní",
         "úterý"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Afrika, Asie i Jižní Amerika. Tuzemští exportéři hledají nové trhy",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/afrika-asie-i-jizni-amerika-tuzemsti-exporteri-hledaji-nove-trhy-374078",
-      "dt": "2026-06-01T06:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "afrika",
-        "amerika",
-        "asie",
-        "exportéři",
-        "hledají",
-        "jižní",
-        "nové",
-        "trhy",
-        "tuzemští"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2250,7 +2250,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44793,
+      "bytes": 44565,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2287,11 +2287,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-02T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-02T06:33:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "finance": 3
+          "zpravy": 28,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2303,6 +2303,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA uvažují o rozmístění jaderných zbraní v dalších evropských zemích, tvrdí FT",
+            "publishedAt": "2026-06-02T06:33:17Z"
+          },
           {
             "title": "Reportéři ČT přibližují podnikání Fialy z SPD v zaměstnávání osob s postižením",
             "publishedAt": "2026-06-02T05:00:00Z"
@@ -2330,10 +2334,6 @@
           {
             "title": "Frederiksenová zůstane dánskou premiérkou, dohodla se na menšinové vládě",
             "publishedAt": "2026-06-01T20:20:12Z"
-          },
-          {
-            "title": "Platí přísnější pravidla pro vjezd do historického centra Brna",
-            "publishedAt": "2026-06-01T19:03:01Z"
           }
         ]
       }
