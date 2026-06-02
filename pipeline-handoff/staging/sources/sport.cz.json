@@ -1,31 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-02T18:47:10.169508Z",
+  "ingestedAt": "2026-06-02T19:32:09.075004Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "TENIS ONLINE: Menšík hraje zápas kariéry. V souboji o semifinále Roland Garros stojí proti Djokovičovu přemožiteli",
+      "title": "Belgičtí fotbalisté v přípravě na MS zvítězili v Chorvatsku",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-belgicti-fotbaliste-v-priprave-na-ms-zvitezili-v-chorvatsku-5473849",
+      "dt": "2026-06-02T18:56:56Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "belgičtí",
+        "chorvatsku",
+        "fotbalisté",
+        "přípravě",
+        "zvítězili"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "TENIS ONLINE: Menšík bojuje v životním zápase o semifinále Roland Garros. První set ukořistil pro sebe!",
       "url": "https://www.sport.cz/clanek/tenis-french-open-2026-ctvrtfinale-mensik-fonseca-online-5473739",
       "dt": "2026-06-02T06:34:46Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "djokovičovu",
+        "bojuje",
         "garros",
-        "hraje",
-        "kariéry",
         "menšík",
         "online",
-        "proti",
-        "přemožiteli",
+        "první",
         "roland",
+        "sebe",
         "semifinále",
-        "souboji",
-        "stojí",
+        "set",
         "tenis",
-        "zápas"
+        "ukořistil",
+        "zápase",
+        "životním"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -741,32 +762,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kdy a kde hraje Česko na MS ve fotbale 2026. Program národního týmu na světovém šampionátu",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-2026-kdy-hraji-cesi-program-vysledky-tabulka-5437028",
-      "dt": "2026-06-02T06:03:00Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "2026",
-        "fotbale",
-        "hraje",
-        "národního",
-        "program",
-        "světovém",
-        "týmu",
-        "česko",
-        "šampionátu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +772,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40485,
+      "bytes": 40472,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,7 +809,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-02T18:43:52Z",
+        "raw_feed_latest_publishedAt": "2026-06-02T18:56:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -830,7 +825,11 @@
         },
         "sample_titles": [
           {
-            "title": "TENIS ONLINE: Menšík hraje zápas kariéry. V souboji o semifinále Roland Garros stojí proti Djokovičovu přemožiteli",
+            "title": "Belgičtí fotbalisté v přípravě na MS zvítězili v Chorvatsku",
+            "publishedAt": "2026-06-02T18:56:56Z"
+          },
+          {
+            "title": "TENIS ONLINE: Menšík bojuje v životním zápase o semifinále Roland Garros. První set ukořistil pro sebe!",
             "publishedAt": "2026-06-02T06:34:46Z"
           },
           {
@@ -856,10 +855,6 @@
           {
             "title": "První trénink v dějišti MS. Národní tým střeží jako Trumpa, na novináře povolali psy",
             "publishedAt": "2026-06-02T17:20:34Z"
-          },
-          {
-            "title": "Kouč Sweeney se po finále NBA přesune od Spurs na lavičku Orlanda",
-            "publishedAt": "2026-06-02T17:28:24Z"
           }
         ]
       }

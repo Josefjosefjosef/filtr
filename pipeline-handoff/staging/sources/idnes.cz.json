@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-02T18:47:10.169508Z",
+  "ingestedAt": "2026-06-02T19:32:09.075004Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Nehoda kamionů zavřela Pražský okruh. Pro řidiče letěl vrtulník",
+      "url": "https://www.idnes.cz/praha/zpravy/nehoda-kamionu-uzavrela-prazsky-okruh-u-dobrejovic.A260602_153304_praha-zpravy_ichuc",
+      "dt": "2026-06-02T18:55:25Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "kamionů",
+        "letěl",
+        "nehoda",
+        "okruh",
+        "pražský",
+        "vrtulník",
+        "zavřela",
+        "řidiče"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -214,17 +239,18 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Část linky metra B zastavila technická závada, provoz je již obnoven",
+      "title": "Část linky metra B zastavila technická závada, hodinu jezdily jen autobusy",
       "url": "https://www.idnes.cz/praha/zpravy/praha-metro-linka-b-preruseni-technicka-zavada-provoz-doprava.A260602_171646_praha-zpravy_meli",
       "dt": "2026-06-02T16:31:15Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES",
       "tokens": [
-        "již",
+        "autobusy",
+        "hodinu",
+        "jen",
+        "jezdily",
         "linky",
         "metra",
-        "obnoven",
-        "provoz",
         "technická",
         "zastavila",
         "závada",
@@ -358,31 +384,6 @@
         "spadlo",
         "točná",
         "ultralehké"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Nehoda kamionů zavřela Pražský okruh. Pro řidiče letěl vrtulník",
-      "url": "https://www.idnes.cz/praha/zpravy/nehoda-kamionu-uzavrela-prazsky-okruh-u-dobrejovic.A260602_153304_praha-zpravy_ichuc",
-      "dt": "2026-06-02T15:15:16Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "kamionů",
-        "letěl",
-        "nehoda",
-        "okruh",
-        "pražský",
-        "vrtulník",
-        "zavřela",
-        "řidiče"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1574,7 +1575,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 46997,
+      "bytes": 46983,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1611,7 +1612,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-02T18:10:36Z",
+        "raw_feed_latest_publishedAt": "2026-06-02T18:55:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1628,6 +1629,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nehoda kamionů zavřela Pražský okruh. Pro řidiče letěl vrtulník",
+            "publishedAt": "2026-06-02T18:55:25Z"
+          },
           {
             "title": "Noční můra, líčí Ukrajinci ruský úder. V metru se tísnily desetitisíce lidí",
             "publishedAt": "2026-06-02T18:10:36Z"
@@ -1655,10 +1660,6 @@
           {
             "title": "Valné shromáždění OSN má nového předsedu, stal se jím Bangladéšan",
             "publishedAt": "2026-06-02T17:04:00Z"
-          },
-          {
-            "title": "Armáda letos nabrala většinu požadovaných vojáků, řekl Zůna po jednání s Babišem",
-            "publishedAt": "2026-06-02T16:53:00Z"
           }
         ]
       }
