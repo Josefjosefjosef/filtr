@@ -419,8 +419,8 @@ async function main() {
         [{ date: DAY, time: "09:00", title: "x" }],
         {
           primaryText: "Kalendář: Dnes máte uložený 1 záznam.",
-          secondaryText: "Dnešní záznam v 09:00 hod.",
-          secondaryMustNotInclude: "Další záznam"
+          secondaryText: "Další záznam v 09:00 hod.",
+          secondaryMustNotInclude: "Dnešní záznam"
         }
       );
       const E = await runScenario(

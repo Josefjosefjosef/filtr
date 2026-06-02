@@ -10692,7 +10692,7 @@ function buildVideoAsArticleCard(it) {
       const hm = iuNormalizeHm(best.time);
       if (!hasPast){
         if (out.totalTodayCount === 1){
-          out.secondaryText = "Dnešní záznam v " + hm + " hod.";
+          out.secondaryText = "Další záznam v " + hm + " hod.";
         } else {
           out.secondaryText = "První dnešní záznam v " + hm + " hod.";
         }

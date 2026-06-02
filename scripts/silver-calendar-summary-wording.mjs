@@ -118,7 +118,7 @@ function getTodayCalendarSummaryState(now, items) {
     const hm = iuNormalizeHm(best.time);
     if (!hasPast) {
       if (out.totalTodayCount === 1) {
-        out.secondaryText = "Dnešní záznam v " + hm + " hod.";
+        out.secondaryText = "Další záznam v " + hm + " hod.";
       } else {
         out.secondaryText = "První dnešní záznam v " + hm + " hod.";
       }
@@ -213,7 +213,7 @@ const cases = [
     items: [{ date: DAY, time: "09:00", title: "x" }],
     expect: {
       primaryText: "Kalendář: Dnes máte uložený 1 záznam.",
-      secondaryText: "Dnešní záznam v 09:00 hod.",
+      secondaryText: "Další záznam v 09:00 hod.",
       hideSecondaryLine: false
     }
   },
