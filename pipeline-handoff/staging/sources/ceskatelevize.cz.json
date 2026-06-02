@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-02T16:01:56.396846Z",
+  "ingestedAt": "2026-06-02T16:34:02.820224Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události úterý 2. června",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-utery-2-cervna-374153",
+      "dt": "2026-06-02T16:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "souhrn",
+        "události",
+        "zásadní",
+        "úterý",
+        "června"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump jako nového šéfa tajných služeb vybral hypotečního specialistu Pulteho",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/trump-jako-noveho-sefa-tajnych-sluzeb-vybral-hypotecniho-specialistu-pulteho-374157",
+      "dt": "2026-06-02T16:08:53Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "hypotečního",
+        "jako",
+        "nového",
+        "pulteho",
+        "služeb",
+        "specialistu",
+        "tajných",
+        "trump",
+        "vybral",
+        "šéfa"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -702,59 +751,6 @@
         "policie",
         "stíhá",
         "čtyři"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nepřijetí eura má Niedermayer za „jedno z nejhorších rozhodnutí“. Podle Staňka není vhodná situace",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/neprijeti-eura-ma-niedermayer-za-jedno-z-nejhorsich-rozhodnuti-podle-stanka-neni-vhodna-situace-374118",
-      "dt": "2026-06-02T07:25:47Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "eura",
-        "jedno",
-        "nejhorších",
-        "nepřijetí",
-        "niedermayer",
-        "podle",
-        "rozhodnutí",
-        "situace",
-        "staňka",
-        "vhodná"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policie chce kvůli požáru v Mostě poslat dva lidi před soud",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/ustecky-kraj/policie-chce-kvuli-pozaru-v-moste-poslat-dva-lidi-pred-soud-374124",
-      "dt": "2026-06-02T07:07:15Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "chce",
-        "dva",
-        "kvůli",
-        "lidi",
-        "mostě",
-        "policie",
-        "poslat",
-        "požáru",
-        "soud"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2259,7 +2255,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42147,
+      "bytes": 41446,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2296,12 +2292,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-02T15:36:08Z",
+        "raw_feed_latest_publishedAt": "2026-06-02T16:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 19,
-          "other": 10,
-          "finance": 1
+          "zpravy": 20,
+          "other": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2313,6 +2308,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události úterý 2. června",
+            "publishedAt": "2026-06-02T16:30:00Z"
+          },
+          {
+            "title": "Trump jako nového šéfa tajných služeb vybral hypotečního specialistu Pulteho",
+            "publishedAt": "2026-06-02T16:08:53Z"
+          },
           {
             "title": "Semtex v igelitce i zbraně z druhé světové. Za měsíc končí zbraňová amnestie",
             "publishedAt": "2026-06-02T15:36:08Z"
@@ -2336,14 +2339,6 @@
           {
             "title": "Firmy mají potíže s náborem kvalifikovaných pracovníků ze zemí mimo EU, ukázal průzkum",
             "publishedAt": "2026-06-02T14:15:24Z"
-          },
-          {
-            "title": "Obrazem: Milostný dopis Bajkalu zachycuje krásu i ohrožení jezera",
-            "publishedAt": "2026-06-02T13:50:47Z"
-          },
-          {
-            "title": "Francouzi jsou z Evropanů nejvíce vystaveni kadmiu. Problém souvisí s hnojivy z Maroka",
-            "publishedAt": "2026-06-02T13:45:21Z"
           }
         ]
       }
