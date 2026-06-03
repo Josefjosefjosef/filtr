@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-02T23:02:00.847634Z",
+  "ingestedAt": "2026-06-03T00:32:19.416016Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "USA hlásí odražené íránské útoky a provedení úderů na íránském ostrově Kešm",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/usa-hlasi-odrazene-iranske-utoky-a-provedeni-uderu-na-iranskem-ostrove-kesm-374165",
+      "dt": "2026-06-03T00:05:30Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "hlásí",
+        "kešm",
+        "odražené",
+        "ostrově",
+        "provedení",
+        "usa",
+        "íránské",
+        "íránském",
+        "úderů",
+        "útoky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -726,31 +753,6 @@
         "umělce",
         "zemí",
         "česka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Supermasivní černé díry by mohly být otesánci i porodnice v jednom",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/supermasivni-cerne-diry-by-mohly-byt-otesanci-i-porodnice-v-jednom-374128",
-      "dt": "2026-06-02T11:13:28Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "být",
-        "díry",
-        "jednom",
-        "mohly",
-        "otesánci",
-        "porodnice",
-        "supermasivní",
-        "černé"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2255,7 +2257,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43216,
+      "bytes": 43667,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2292,11 +2294,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-02T20:40:20Z",
+        "raw_feed_latest_publishedAt": "2026-06-03T00:05:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 21,
-          "other": 9
+          "zpravy": 22,
+          "other": 8
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2308,6 +2310,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA hlásí odražené íránské útoky a provedení úderů na íránském ostrově Kešm",
+            "publishedAt": "2026-06-03T00:05:30Z"
+          },
           {
             "title": "Macron v Paříži odhalil památník obětem rwandské genocidy",
             "publishedAt": "2026-06-02T20:40:20Z"
@@ -2335,10 +2341,6 @@
           {
             "title": "Trump jako nového šéfa tajných služeb vybral hypotečního specialistu Pulteho",
             "publishedAt": "2026-06-02T16:08:53Z"
-          },
-          {
-            "title": "Semtex v igelitce i zbraně z druhé světové. Za měsíc končí zbraňová amnestie",
-            "publishedAt": "2026-06-02T15:36:08Z"
           }
         ]
       }

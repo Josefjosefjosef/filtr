@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-02T23:02:00.847634Z",
+  "ingestedAt": "2026-06-03T00:32:19.416016Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "USA odrazily íránské rakety a drony, udeřily na ostrov Kešm",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/usa-odrazily-iranske-rakety-a-drony-uderily-na-ostrov-kesm.A260603_015437_zahranicni_air",
+      "dt": "2026-06-03T00:19:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "drony",
+        "kešm",
+        "odrazily",
+        "ostrov",
+        "rakety",
+        "udeřily",
+        "usa",
+        "íránské"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -747,32 +772,6 @@
         "stává",
         "zbraň",
         "íránu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Válka zchladila optimismus firem, jsou ale připravené na nestabilitu, říká průzkum",
-      "url": "https://www.idnes.cz/ekonomika/domaci/pruzkum-ocekavani-ceskych-firem.A260602_141448_ekonomika_base",
-      "dt": "2026-06-02T14:08:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "ale",
-        "firem",
-        "nestabilitu",
-        "optimismus",
-        "průzkum",
-        "připravené",
-        "válka",
-        "zchladila",
-        "říká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1576,7 +1575,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48128,
+      "bytes": 48011,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1613,11 +1612,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-02T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-03T00:19:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 4,
-          "zpravy": 25,
+          "zpravy": 26,
+          "finance": 3,
           "other": 1
         },
         "drop_counts": {
@@ -1630,6 +1629,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA odrazily íránské rakety a drony, udeřily na ostrov Kešm",
+            "publishedAt": "2026-06-03T00:19:00Z"
+          },
           {
             "title": "ČEZ má zelenou pro rozdělení firmy. Analytici předpovídají, co to udělá s akciemi",
             "publishedAt": "2026-06-02T22:00:00Z"
@@ -1657,10 +1660,6 @@
           {
             "title": "Tramvaj srazila ve Vršovicích dva chodce, na místě zasahovali záchranáři",
             "publishedAt": "2026-06-02T20:10:00Z"
-          },
-          {
-            "title": "Ministerstvo prověří propuštění Janouška. Pochybuje o jeho stavu i postupu soudů",
-            "publishedAt": "2026-06-02T19:31:00Z"
           }
         ]
       }
