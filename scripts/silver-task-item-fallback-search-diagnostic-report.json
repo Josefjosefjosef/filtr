@@ -1,0 +1,238 @@
+{
+  "generatedAt": "2026-06-03T13:23:24.693Z",
+  "mainCommit": "a92b1ac5298341fc7ee6c43a3f951b68775600fc",
+  "engineChanged": false,
+  "cases": [
+    {
+      "id": "DL_01",
+      "bucket": "DEADLINE_ITEM",
+      "INPUT": "Kdy mám zaplatit nájem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "RESPONSE": "Našel jsem úkol: Zaplatit nájem. Termín splnění: 5. 6. 2026.",
+      "ISSUES": [],
+      "PASS": true,
+      "CLASSIFICATION": "OK",
+      "ROOT_CAUSE": "item_ok"
+    },
+    {
+      "id": "DL_02",
+      "bucket": "DEADLINE_ITEM",
+      "INPUT": "Kdy mám koupit dárek",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "RESPONSE": "Našel jsem úkol: Koupit dárek mámě. Bez termínu.",
+      "ISSUES": [
+        "retrieval_fail:value_miss"
+      ],
+      "PASS": false,
+      "CLASSIFICATION": "RETRIEVAL_FAIL",
+      "ROOT_CAUSE": "retrieval_fail"
+    },
+    {
+      "id": "DL_03",
+      "bucket": "DEADLINE_ITEM",
+      "INPUT": "Kdy mám zavolat doktorovi",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "RESPONSE": "Našel jsem úkol: Zavolat doktorovi. Termín splnění: 6. 6. 2026.",
+      "ISSUES": [],
+      "PASS": true,
+      "CLASSIFICATION": "OK",
+      "ROOT_CAUSE": "item_ok"
+    },
+    {
+      "id": "DL_04",
+      "bucket": "DEADLINE_ITEM",
+      "INPUT": "Kdy mám vyzvednout Eli",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "RESPONSE": "Našel jsem úkol: Vyzvednout Eli ze školy. Termín splnění: 4. 6. 2026.",
+      "ISSUES": [],
+      "PASS": true,
+      "CLASSIFICATION": "OK",
+      "ROOT_CAUSE": "item_ok"
+    },
+    {
+      "id": "EA_01",
+      "bucket": "ENTITY_ACTION",
+      "INPUT": "Co mám koupit mámě",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "RESPONSE": "Máš 7 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k narozeninám",
+      "ISSUES": [
+        "retrieval_fail:bulk_list",
+        "retrieval_fail:value_miss"
+      ],
+      "PASS": false,
+      "CLASSIFICATION": "RETRIEVAL_FAIL",
+      "ROOT_CAUSE": "ranking_fail"
+    },
+    {
+      "id": "EA_02",
+      "bucket": "ENTITY_ACTION",
+      "INPUT": "Co mám udělat s právníkem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "RESPONSE": "Máš 7 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k narozeninám",
+      "ISSUES": [],
+      "PASS": true,
+      "CLASSIFICATION": "OK",
+      "ROOT_CAUSE": "item_ok"
+    },
+    {
+      "id": "EA_03",
+      "bucket": "ENTITY_ACTION",
+      "INPUT": "Co mám zařídit kolem auta",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "RESPONSE": "Našel jsem úkol: Zařídit STK a pojištění auta. Bez termínu.",
+      "ISSUES": [],
+      "PASS": true,
+      "CLASSIFICATION": "OK",
+      "ROOT_CAUSE": "item_ok"
+    },
+    {
+      "id": "EA_04",
+      "bucket": "ENTITY_ACTION",
+      "INPUT": "Co mám vyřešit s doktorem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "RESPONSE": "Našel jsem úkol: Zavolat doktorovi. Termín splnění: 6. 6. 2026.",
+      "ISSUES": [],
+      "PASS": true,
+      "CLASSIFICATION": "OK",
+      "ROOT_CAUSE": "item_ok"
+    },
+    {
+      "id": "EA_05",
+      "bucket": "ENTITY_ACTION",
+      "INPUT": "Co mám vyřešit s pojišťovnou",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "RESPONSE": "Našel jsem úkol: Zařídit STK a pojištění auta. Bez termínu.",
+      "ISSUES": [
+        "retrieval_fail:entity_miss",
+        "retrieval_fail:value_miss"
+      ],
+      "PASS": false,
+      "CLASSIFICATION": "RETRIEVAL_FAIL",
+      "ROOT_CAUSE": "retrieval_fail"
+    },
+    {
+      "id": "SY_01",
+      "bucket": "SYNONYM_ACTION",
+      "INPUT": "Kdy mám uhradit nájem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "calendar.read",
+      "RESPONSE": "Nic jsem k tomu nenašel.",
+      "ISSUES": [
+        "task_vs_calendar_steal",
+        "routing_fail:calendar.read",
+        "retrieval_fail:empty"
+      ],
+      "PASS": false,
+      "CLASSIFICATION": "TRUE_ENGINE_FAIL",
+      "ROOT_CAUSE": "task_vs_calendar_steal"
+    },
+    {
+      "id": "SY_02",
+      "bucket": "SYNONYM_ACTION",
+      "INPUT": "Kdy mám kontaktovat doktora",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "calendar.read",
+      "RESPONSE": "Nic jsem k tomu nenašel.",
+      "ISSUES": [
+        "task_vs_calendar_steal",
+        "routing_fail:calendar.read",
+        "retrieval_fail:empty"
+      ],
+      "PASS": false,
+      "CLASSIFICATION": "TRUE_ENGINE_FAIL",
+      "ROOT_CAUSE": "task_vs_calendar_steal"
+    },
+    {
+      "id": "SY_03",
+      "bucket": "SYNONYM_ACTION",
+      "INPUT": "Kdy mám vyzvednout Eli ze školy",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "RESPONSE": "Našel jsem úkol: Vyzvednout Eli ze školy. Termín splnění: 4. 6. 2026.",
+      "ISSUES": [],
+      "PASS": true,
+      "CLASSIFICATION": "OK",
+      "ROOT_CAUSE": "item_ok"
+    },
+    {
+      "id": "SY_04",
+      "bucket": "SYNONYM_ACTION",
+      "INPUT": "Co mám pořídit mámě",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "notes.read",
+      "RESPONSE": "Nic jsem k tomu nenašel.",
+      "ISSUES": [
+        "task_vs_notes_steal",
+        "routing_fail:notes.read",
+        "retrieval_fail:empty"
+      ],
+      "PASS": false,
+      "CLASSIFICATION": "TRUE_ENGINE_FAIL",
+      "ROOT_CAUSE": "task_vs_notes_steal"
+    },
+    {
+      "id": "CM_01",
+      "bucket": "CROSS_MODULE_STEAL",
+      "INPUT": "Kdy mám zubaře",
+      "EXPECTED": "calendar.read",
+      "ACTUAL": "calendar.read",
+      "RESPONSE": "Nic jsem k tomu nenašel.",
+      "ISSUES": [],
+      "PASS": true,
+      "CLASSIFICATION": "OK",
+      "ROOT_CAUSE": "item_ok"
+    },
+    {
+      "id": "CM_02",
+      "bucket": "CROSS_MODULE_STEAL",
+      "INPUT": "Jakou má Volvo SPZ",
+      "EXPECTED": "notes.read",
+      "ACTUAL": "notes.read",
+      "RESPONSE": "Nic jsem k tomu nenašel.",
+      "ISSUES": [],
+      "PASS": true,
+      "CLASSIFICATION": "OK",
+      "ROOT_CAUSE": "item_ok"
+    },
+    {
+      "id": "CM_03",
+      "bucket": "CROSS_MODULE_STEAL",
+      "INPUT": "Co mám za úkoly",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "RESPONSE": "Máš 7 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k narozeninám",
+      "ISSUES": [],
+      "PASS": true,
+      "CLASSIFICATION": "OK",
+      "ROOT_CAUSE": "item_ok"
+    }
+  ],
+  "summary": {
+    "TOTAL_CASES": 16,
+    "PASS": 10,
+    "FAIL": 6,
+    "DEADLINE_ITEM_PASS": "3/4",
+    "ENTITY_ACTION_PASS": "3/5",
+    "SYNONYM_ACTION_PASS": "1/4",
+    "CROSS_MODULE_STEAL_PASS": "3/3",
+    "TRUE_ENGINE_FAILS": 3,
+    "HARNESS_FAILS": 0,
+    "AMBIGUOUS_CASES": 0,
+    "TOP_TRUE_ENGINE_CLUSTER": "retrieval_fail"
+  },
+  "rootCauseBreakdown": {
+    "retrieval_fail": 2,
+    "ranking_fail": 1,
+    "task_vs_calendar_steal": 2,
+    "task_vs_notes_steal": 1
+  }
+}
