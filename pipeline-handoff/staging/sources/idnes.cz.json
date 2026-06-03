@@ -1,25 +1,50 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-03T19:02:03.698122Z",
+  "ingestedAt": "2026-06-03T19:46:56.725475Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Novou  EET bez povinných účtenek doprovodí osvobození spropitného od zdanění",
+      "title": "Poslanci podpořili  EET bez povinných účtenek a s výjimkou pro malé živnostníky",
       "url": "https://www.idnes.cz/zpravy/domaci/elektronicka-evidence-trzeb-snemovna-prvni-cteni.A260603_053935_domaci_kop",
-      "dt": "2026-06-03T18:58:46Z",
+      "dt": "2026-06-03T19:30:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES",
       "tokens": [
-        "doprovodí",
         "eet",
-        "novou",
-        "osvobození",
+        "malé",
+        "podpořili",
+        "poslanci",
         "povinných",
-        "spropitného",
-        "zdanění",
-        "účtenek"
+        "výjimkou",
+        "účtenek",
+        "živnostníky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Muž se zabarikádoval s rukojmími v budově banky. Zastřelili ho agenti FBI",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/kalifornie-rukojmi-banka-fbi-bakersfield-policie-bomba-usa.A260603_181057_zahranicni_hock",
+      "dt": "2026-06-03T19:17:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "agenti",
+        "banky",
+        "budově",
+        "fbi",
+        "muž",
+        "rukojmími",
+        "zabarikádoval",
+        "zastřelili"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -175,31 +200,6 @@
         "nezletilou",
         "půlstoletí",
         "zmizí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Muž se zabarikádoval s rukojmími v budově banky. Zastřelili ho agenti FBI",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/kalifornie-rukojmi-banka-fbi-bakersfield-policie-bomba-usa.A260603_181057_zahranicni_hock",
-      "dt": "2026-06-03T16:18:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "agenti",
-        "banky",
-        "budově",
-        "fbi",
-        "muž",
-        "rukojmími",
-        "zabarikádoval",
-        "zastřelili"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1562,7 +1562,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47523,
+      "bytes": 47665,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1599,7 +1599,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-03T18:58:46Z",
+        "raw_feed_latest_publishedAt": "2026-06-03T19:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1617,8 +1617,12 @@
         },
         "sample_titles": [
           {
-            "title": "Novou  EET bez povinných účtenek doprovodí osvobození spropitného od zdanění",
-            "publishedAt": "2026-06-03T18:58:46Z"
+            "title": "Poslanci podpořili  EET bez povinných účtenek a s výjimkou pro malé živnostníky",
+            "publishedAt": "2026-06-03T19:30:00Z"
+          },
+          {
+            "title": "Muž se zabarikádoval s rukojmími v budově banky. Zastřelili ho agenti FBI",
+            "publishedAt": "2026-06-03T19:17:00Z"
           },
           {
             "title": "Nejmocnější armáda a AfD v čele? Vojenský vzestup Německa straší nejen Francii",
@@ -1643,10 +1647,6 @@
           {
             "title": "Film s nahou nezletilou Nastassjou Kinskou zmizí po půlstoletí z distribuce",
             "publishedAt": "2026-06-03T17:00:00Z"
-          },
-          {
-            "title": "Muž se zabarikádoval s rukojmími v budově banky. Zastřelili ho agenti FBI",
-            "publishedAt": "2026-06-03T16:18:00Z"
           }
         ]
       }
