@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-06-03T03:02:04.034817Z",
+  "ingestedAt": "2026-06-03T04:16:53.995807Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Co a jak se dá s bankou usmlouvat. Refixace hypotéky očima expertů",
+      "url": "https://www.penize.cz/hypoteky/490589-co-a-jak-se-da-s-bankou-usmlouvat-refixace-hypoteky-ocima-expertu",
+      "dt": "2026-06-03T05:05:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "bankou",
+        "expertů",
+        "hypotéky",
+        "očima",
+        "refixace",
+        "usmlouvat"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -478,30 +501,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Češi už nechtějí auta jen vlastnit. Stačí je používat",
-      "url": "https://www.penize.cz/leasing/490023-cesi-uz-nechteji-auta-jen-vlastnit-staci-je-pouzivat",
-      "dt": "2026-05-29T02:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "auta",
-        "jen",
-        "nechtějí",
-        "používat",
-        "stačí",
-        "vlastnit",
-        "češi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18256,
+      "bytes": 18300,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,7 +548,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-02T16:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-03T05:05:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 14,
@@ -566,6 +565,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Co a jak se dá s bankou usmlouvat. Refixace hypotéky očima expertů",
+            "publishedAt": "2026-06-03T05:05:00Z"
+          },
           {
             "title": "ČSOB nabízí přednostní prodej vstupenek na koncerty. Stačí karta Mastercard",
             "publishedAt": "2026-06-02T16:30:00Z"
@@ -593,10 +596,6 @@
           {
             "title": "Ženy investují líp než muži. Paradoxně proto, že si míň věří",
             "publishedAt": "2026-06-02T02:00:00Z"
-          },
-          {
-            "title": "Dividenda ČEZ klesá, potvrdila valná hromada. Začíná štěpení",
-            "publishedAt": "2026-06-01T16:50:00Z"
           }
         ]
       }

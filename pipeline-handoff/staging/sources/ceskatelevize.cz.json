@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-03T03:02:04.034817Z",
+  "ingestedAt": "2026-06-03T04:16:53.995807Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Evropská kauza dárce spermatu s rakovinnou mutací se rozrůstá",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/evropska-kauza-darce-spermatu-s-rakovinnou-mutaci-se-rozrusta-374159",
+      "dt": "2026-06-03T04:01:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "dárce",
+        "evropská",
+        "kauza",
+        "mutací",
+        "rakovinnou",
+        "rozrůstá",
+        "spermatu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -729,31 +753,6 @@
         "mccartney",
         "novém",
         "vzpomíná"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Spinosauři ronili extra slané slzy, naznačuje nová studie",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/spinosauri-ronili-extra-slane-slzy-naznacuje-nova-studie-374097",
-      "dt": "2026-06-02T11:52:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "extra",
-        "naznačuje",
-        "nová",
-        "ronili",
-        "slané",
-        "slzy",
-        "spinosauři",
-        "studie"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2258,7 +2257,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43780,
+      "bytes": 44458,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2295,11 +2294,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-03T01:35:16Z",
+        "raw_feed_latest_publishedAt": "2026-06-03T04:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "other": 7
+          "zpravy": 24,
+          "other": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2311,6 +2310,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropská kauza dárce spermatu s rakovinnou mutací se rozrůstá",
+            "publishedAt": "2026-06-03T04:01:00Z"
+          },
           {
             "title": "Sněmovna bude pokračovat ve schvalování změn v pomoci lidem v bytové nouzi",
             "publishedAt": "2026-06-03T01:35:16Z"
@@ -2338,10 +2341,6 @@
           {
             "title": "Babišův střet zájmů není téma pro debatu ve sněmovně, míní Vondráček",
             "publishedAt": "2026-06-02T18:10:57Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události úterý 2. června",
-            "publishedAt": "2026-06-02T16:30:00Z"
           }
         ]
       }

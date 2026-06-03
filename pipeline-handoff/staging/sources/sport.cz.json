@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-03T03:02:04.034817Z",
+  "ingestedAt": "2026-06-03T04:16:53.995807Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hertl parádní střelou rozhodl první finále NHL",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-hertl-paradni-strelou-rozhodl-prvni-finale-nhl-5474057",
+      "dt": "2026-06-03T04:01:10Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "finále",
+        "hertl",
+        "nhl",
+        "parádní",
+        "první",
+        "rozhodl",
+        "střelou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -727,37 +751,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hertl přešel na temnou stranu, ale díky tomu sní o Stanley Cupu: Chci pohár přivézt do Česka",
-      "url": "https://www.sport.cz/clanek/hokej-nhl-hertl-presel-na-temnou-stranu-ale-diky-tomu-sni-o-stanley-cupu-chci-pohar-privezt-do-ceska-5473754",
-      "dt": "2026-06-02T12:47:37Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ale",
-        "chci",
-        "cupu",
-        "díky",
-        "hertl",
-        "pohár",
-        "přešel",
-        "přivézt",
-        "sní",
-        "stanley",
-        "stranu",
-        "temnou",
-        "tomu",
-        "česka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -768,7 +761,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40630,
+      "bytes": 39824,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -805,7 +798,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-02T20:24:27Z",
+        "raw_feed_latest_publishedAt": "2026-06-03T04:01:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -820,6 +813,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hertl parádní střelou rozhodl první finále NHL",
+            "publishedAt": "2026-06-03T04:01:10Z"
+          },
           {
             "title": "Úžasný Menšík ve třech setech vyprovodil zázračného Brazilce. V Paříži si zahraje semifinále!",
             "publishedAt": "2026-06-02T06:34:46Z"
@@ -847,10 +844,6 @@
           {
             "title": "Siniaková slaví na Roland Garros postup do semifinále čtyřhry. Nouza neuspěl",
             "publishedAt": "2026-06-02T10:28:11Z"
-          },
-          {
-            "title": "Chyba sudí a dva mečboly. Pořád si to v hlavě přehrávám, litoval český deblista",
-            "publishedAt": "2026-06-02T18:01:48Z"
           }
         ]
       }
