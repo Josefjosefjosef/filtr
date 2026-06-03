@@ -51746,23 +51746,23 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (IU_SILVER_TASK_WRITE_OWNERSHIP_HARDENING_V1 && iuSilverTaskWriteOwnershipHardeningV1Folded(f, r0)) return null;
     const target = "notes";
-    const q = iuSilverReadSearchExtractQuery(r0, f, target);
-    const sr = iuSilverSearchLocalData(q, {
-      target: target,
-      now: now,
-      getEventsSnapshot: ctx && ctx.getEventsSnapshot,
-      getTasksSnapshot: ctx && ctx.getTasksSnapshot,
-      getNotesSnapshot: ctx && ctx.getNotesSnapshot,
-      rawFoldedHint: f
-    });
-    const ans = iuSilverBuildAnswerFromSearch(sr);
+    const pack = iuSilverNoteReadSearchWithQualityV1(r0, f, ctx, now);
+    const sr = pack.sr;
+    const ans = pack.ans;
     return {
       normalizedIntent: "notes.read",
       targetContainer: "none",
       processingState: "READ_OK",
       clarificationReason: null,
       futureIntentCandidate: null,
-      readQuery: { silverReadSearch: true, target: target, query: q },
+      readQuery: {
+        silverReadSearch: true,
+        target: target,
+        query: pack.q,
+        noteAnswerQualityV1: true,
+        noteReadFallbackV1: !!pack.usedFallback,
+        fallbackRuntimeMs: pack.fallbackMs || 0
+      },
       readAnswer: { message: ans.message, silverSearch: sr },
       extractedFields: {},
       missingFields: [],
@@ -60005,6 +60005,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
   /** CAP NOTE RETRIEVAL PLATFORM V1 — generic entity/attribute retrieval, relevance cutoff, exact answers, truthful counts */
   const IU_SILVER_NOTE_RETRIEVAL_PLATFORM_V1 = true;
+  /** SILVER_NOTE_ANSWER_QUALITY_FALLBACK_V1 — plné věty z poznámek + read-only fallback fulltext (ne AI, ne DOM search). */
+  const IU_SILVER_NOTE_ANSWER_QUALITY_FALLBACK_V1 = true;
 
   const IU_SILVER_NOTE_RETRIEVAL_PLATFORM_V1_STOP = new Set([
     "a",
@@ -60089,6 +60091,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\b(sirk\w*|sirku)\b/.test(x)) return "width";
     if (/\b(vah\w*|vaz\w*|vazi)\b/.test(x)) return "weight";
     if (/\b(zaruk\w*|garanc\w*)\b/.test(x)) return "warranty";
+    if (/\bspz\b/.test(x)) return "license_plate";
     if (/\b(cen\w*|stoji|stala)\b/.test(x)) return "price";
     if (/\b(rozmer\w*)\b/.test(x)) return "dimension";
     return null;
@@ -60214,6 +60217,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (attr === "address") return /\badres|\b\d+\s+praha|\bul\.\s*\w+/.test(b);
     if (attr === "password") return /\bheslo|\bpin\w*|\bkod\w*|\b\d{4,}/.test(b);
     if (attr === "warranty") return /\bzaruk|\bgaranc/.test(b);
+    if (attr === "license_plate") return /\bspz\b|\b[a-z]{1,3}\s?\d{3,}/.test(b);
     if (attr === "price") return /\b\d+\s*k[cč]|\bcen\w*/.test(b);
     return true;
   }
@@ -60345,6 +60349,327 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return String(extractedQ || "").trim();
   }
 
+  const IU_SILVER_NOTE_ANSWER_QUALITY_STOP_V1 = new Set([
+    "a",
+    "ale",
+    "at",
+    "co",
+    "do",
+    "hele",
+    "jak",
+    "jaka",
+    "jake",
+    "jaky",
+    "jakou",
+    "je",
+    "jsem",
+    "jsou",
+    "k",
+    "ke",
+    "kde",
+    "kdo",
+    "kdy",
+    "kolik",
+    "komu",
+    "ma",
+    "mam",
+    "mas",
+    "mate",
+    "mi",
+    "na",
+    "ne",
+    "o",
+    "od",
+    "po",
+    "pro",
+    "prosim",
+    "se",
+    "si",
+    "ta",
+    "ten",
+    "to",
+    "tu",
+    "ty",
+    "v",
+    "ve",
+    "vsak",
+    "ze"
+  ]);
+
+  const IU_SILVER_NOTE_ANSWER_QUALITY_FORBIDDEN_FRAGMENTS_V1 = [
+    /^od\s+vstupn\w*\s+dver\w*\s+je\.?$/i,
+    /^k\s+trezor\w*\s+je\s+\d/i,
+    /^je\s+\d+\.?$/,
+    /^m[aá]m\s+[A-Z]{2,3}\s+\d/i,
+    /^kon[cč]i\s+v\.?$/i
+  ];
+
+  function iuSilverNoteAnswerQualityBlobPreferContentV1(note) {
+    const ct = String((note && note.content) || "").replace(/\s+/g, " ").trim();
+    if (ct && ct.length >= 6) return ct;
+    return iuSilverNoteResultBlobV1(note);
+  }
+
+  function iuSilverNoteAnswerQualityUserGreetingV1() {
+    if (!IU_SILVER_NOTE_ANSWER_QUALITY_FALLBACK_V1) return "";
+    try {
+      const ls = typeof localStorage !== "undefined" ? localStorage : null;
+      if (!ls) return "";
+      const stored = String(ls.getItem("iu_user_address") || "").trim();
+      if (!stored || stored.length < 2) return "";
+      if (String(ls.getItem("iu_user_address_explicit.v1") || "") !== "1") return "";
+      return stored;
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function iuSilverNoteAnswerQualityTimestampBlockV1(note, evalNow) {
+    if (!IU_SILVER_NOTE_ANSWER_QUALITY_FALLBACK_V1 || !note) return "";
+    const createdMs = iuSilverNoteTimestampMsV1(note);
+    if (!createdMs) return "";
+    const pad2 = function (n) {
+      return String(n).padStart(2, "0");
+    };
+    const dc = new Date(createdMs);
+    if (!Number.isFinite(dc.getTime())) return "";
+    const createdLine =
+      "Poznámka vytvořená dne " +
+      pad2(dc.getDate()) +
+      "." +
+      pad2(dc.getMonth() + 1) +
+      "." +
+      dc.getFullYear() +
+      " v " +
+      pad2(dc.getHours()) +
+      ":" +
+      pad2(dc.getMinutes()) +
+      ".";
+    const lines = [createdLine];
+    const updatedMs = iuSilverNoteUpdatedTimestampMsV1(note);
+    if (updatedMs && Math.abs(updatedMs - createdMs) > 60000) {
+      const du = new Date(updatedMs);
+      if (Number.isFinite(du.getTime())) {
+        lines.push(
+          "Poznámka upravená dne " +
+            pad2(du.getDate()) +
+            "." +
+            pad2(du.getMonth() + 1) +
+            "." +
+            du.getFullYear() +
+            " v " +
+            pad2(du.getHours()) +
+            ":" +
+            pad2(du.getMinutes()) +
+            "."
+        );
+      }
+    }
+    return lines.join("\n");
+  }
+
+  function iuSilverNoteAnswerQualityIsHelpCapabilityQueryV1(folded) {
+    const x = String(folded || "");
+    if (!x) return false;
+    if (/\bkolik\s+(?:si\s+m(?:u|e)zu\s+ulozit|poznamek|mam\s+poznamek|poznamek\s+muzu)\b/.test(x)) return true;
+    if (/\bkam\s+se\s+uklad(?:aji|a)\s+poznam/.test(x)) return true;
+    if (/\bvyma[zž]e\s+se\s+to\s+z\s+telefonu\b/.test(x)) return true;
+    if (/\bjak\s+funguj(?:i|ou)\s+poznam/.test(x)) return true;
+    if (/\bkolik\s+poznamek\s+m(?:u|e)zu\s+mit\b/.test(x)) return true;
+    return false;
+  }
+
+  function iuSilverNoteAnswerQualityIsFragmentV1(message, queryFolded, noteBlobOpt) {
+    const first = String(message || "")
+      .split("\n")[0]
+      .replace(/\s+/g, " ")
+      .trim();
+    if (!first) return true;
+    let fi;
+    for (fi = 0; fi < IU_SILVER_NOTE_ANSWER_QUALITY_FORBIDDEN_FRAGMENTS_V1.length; fi++) {
+      if (IU_SILVER_NOTE_ANSWER_QUALITY_FORBIDDEN_FRAGMENTS_V1[fi].test(first)) return true;
+    }
+    if (/^(k|ke|od|na|v|ve|do|o|pro)\s+\w/i.test(first) && first.length < 48 && !/\b(pin|kod|heslo|spz|zaruk)\b/i.test(first)) {
+      return true;
+    }
+    if (/\sje\.?\s*$/i.test(first) && !/\d/.test(first) && !/[A-Z]{2,}\s*\d/.test(first)) return true;
+    const qf = iuSilverNormalizeForSearch(String(queryFolded || ""));
+    const blob = String(noteBlobOpt || "");
+    if (/\b(pin|kod|heslo|spz)\b/.test(qf) && blob && !/\d/.test(first) && !/[A-Z]{2,}/.test(first)) return true;
+    if (/\bspz\b/.test(qf) && blob && !/[A-Z]{2,}\s*\d|\d{3,}/.test(first)) return true;
+    if (/\bzaruk\w*\b/.test(qf) && blob && first.length < 16) return true;
+    return false;
+  }
+
+  function iuSilverNoteAnswerQualityExtractSearchTermsV1(folded) {
+    const f = iuSilverNormalizeForSearch(String(folded || ""));
+    if (!f) return [];
+    const rawWords = f.split(/\s+/).filter(function (w) {
+      return w && w.length >= 2;
+    });
+    const terms = [];
+    const seen = {};
+    function pushTerm(t) {
+      const tok = String(t || "").trim();
+      if (!tok || tok.length < 2 || seen[tok]) return;
+      seen[tok] = 1;
+      terms.push(tok);
+    }
+    for (let wi = 0; wi < rawWords.length; wi++) {
+      const w = rawWords[wi];
+      if (IU_SILVER_NOTE_ANSWER_QUALITY_STOP_V1.has(w)) continue;
+      if (w.length === 2 && !/^\d+$/.test(w) && !/^(tv|spz|pin|kod|wifi)$/.test(w)) continue;
+      pushTerm(w);
+      if (wi + 1 < rawWords.length) {
+        const w2 = rawWords[wi + 1];
+        if (!IU_SILVER_NOTE_ANSWER_QUALITY_STOP_V1.has(w2) && w2.length >= 3) pushTerm(w + " " + w2);
+      }
+      if (w.length >= 4) {
+        pushTerm(w.slice(0, 4));
+        if (w.length >= 5) pushTerm(w.slice(0, 3));
+      }
+    }
+    return terms.slice(0, 10);
+  }
+
+  function iuSilverNoteAnswerQualityComposeSentenceV1(blobRaw, classif, queryFolded) {
+    const blob = String(blobRaw || "").replace(/\s+/g, " ").trim();
+    if (!blob) return "";
+    const attr = classif && classif.attribute;
+    const blobF = iuSilverNormalizeForSearch(blob);
+    if (attr === "password") {
+      const kw = blob.match(/\b(?:heslo|pin\w*|k[oó]d\w*)\b/i);
+      if (kw && kw.index != null) {
+        const clause = blob.slice(kw.index).replace(/[?.!]+$/g, "").trim();
+        if (clause.length >= 8) return clause + (clause.endsWith(".") ? "" : ".");
+      }
+    }
+    if (attr === "warranty") {
+      const kw = blob.match(/\bz[aá]ruk\w*/i);
+      if (kw && kw.index != null) {
+        const clause = blob.slice(kw.index).replace(/[?.!]+$/g, "").trim();
+        if (clause.length >= 10) return clause + (clause.endsWith(".") ? "" : ".");
+      }
+    }
+    if (attr === "license_plate" || /\bspz\b/i.test(blob) || /\bspz\b/.test(iuSilverNormalizeForSearch(String(queryFolded || "")))) {
+      const spz = blob.match(/\b(?:spz\s+)?(?:[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]{1,3}\s?\d{3,5}|\d{3,5}\s?[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]{1,3})\b/i);
+      if (spz) {
+        const idx = blob.toLowerCase().indexOf("spz");
+        const start = idx >= 0 ? idx : Math.max(0, blob.indexOf(spz[0]) - 24);
+        const clause = blob.slice(start).replace(/[?.!]+$/g, "").trim();
+        if (clause.length >= 8) return clause + (clause.endsWith(".") ? "" : ".");
+      }
+    }
+    const jeClause = blob.match(/(.{6,180}?\s+je\s+[^\n,.!?]{1,80})/i);
+    if (jeClause && jeClause[1]) {
+      const c = String(jeClause[1]).trim();
+      if (c.length >= 10) return c + (c.endsWith(".") ? "" : ".");
+    }
+    const konci = blob.match(/(.{6,180}?\s+kon[cč]i\s+[^\n,.!?]{3,80})/i);
+    if (konci && konci[1]) {
+      const c = String(konci[1]).trim();
+      if (c.length >= 12) return c + (c.endsWith(".") ? "" : ".");
+    }
+    if (blob.length <= 220) return blob + (blob.endsWith(".") ? "" : ".");
+    if (/\d/.test(blobF)) {
+      const numClause = blob.match(/(.{4,160}?\d[\d\sA-Za-zÁ-ž.-]{1,40})/);
+      if (numClause && numClause[1] && numClause[1].length >= 10) {
+        const c = String(numClause[1]).trim();
+        return c + (c.endsWith(".") ? "" : ".");
+      }
+    }
+    return "";
+  }
+
+  function iuSilverNoteAnswerQualityFinalizeV1(sentenceRaw, note, classif, queryFolded, evalNow) {
+    const blob = iuSilverNoteAnswerQualityBlobPreferContentV1(note);
+    let sentence = String(sentenceRaw || "").replace(/\s+/g, " ").trim();
+    if (!sentence || iuSilverNoteAnswerQualityIsFragmentV1(sentence, queryFolded, blob)) {
+      sentence = iuSilverNoteAnswerQualityComposeSentenceV1(blob, classif, queryFolded);
+    }
+    if (!sentence) sentence = blob.slice(0, 500);
+    if (sentence && !/[.!?]$/.test(sentence)) sentence += ".";
+    const greet = iuSilverNoteAnswerQualityUserGreetingV1();
+    let body = sentence;
+    if (greet) {
+      const lowerLead = sentence.charAt(0).toLowerCase() + sentence.slice(1);
+      body = greet + ", " + lowerLead;
+    }
+    const ts = iuSilverNoteAnswerQualityTimestampBlockV1(note, evalNow);
+    return ts ? body + "\n\n" + ts : body;
+  }
+
+  function iuSilverNoteReadFallbackSearchV1(raw, folded, ctx, now) {
+    const t0 = Date.now();
+    const empty = { note: null, score: 0, runtimeMs: 0, searchResult: null, answer: null, minScore: 36 };
+    if (!IU_SILVER_NOTE_ANSWER_QUALITY_FALLBACK_V1) return empty;
+    if (iuSilverNoteAnswerQualityIsHelpCapabilityQueryV1(folded)) return Object.assign({}, empty, { runtimeMs: Date.now() - t0 });
+    if (iuSilverTryParseExplicitNoteCreate(String(raw || ""))) return Object.assign({}, empty, { runtimeMs: Date.now() - t0 });
+    const terms = iuSilverNoteAnswerQualityExtractSearchTermsV1(folded);
+    if (!terms.length) return Object.assign({}, empty, { runtimeMs: Date.now() - t0 });
+    const query = terms.slice(0, 4).join(" ");
+    const sr0 = iuSilverSearchLocalData(query, {
+      target: "notes",
+      now: now,
+      getEventsSnapshot: ctx && ctx.getEventsSnapshot,
+      getTasksSnapshot: ctx && ctx.getTasksSnapshot,
+      getNotesSnapshot: ctx && ctx.getNotesSnapshot,
+      rawFoldedHint: folded
+    });
+    const sr = iuSilverSearchRelevanceContractFilterSearchResultsV1(sr0, folded);
+    const runtimeMs = Date.now() - t0;
+    const br = sr.bestResult;
+    const score = br ? Number(br.score) || 0 : 0;
+    const minScore = 36;
+    const note = br && br.payload && br.payload.note ? br.payload.note : null;
+    if (!note || score < minScore) {
+      return { note: null, score: score, runtimeMs: runtimeMs, searchResult: sr, answer: null, minScore: minScore };
+    }
+    const srUse = Object.assign({}, sr, { rawFoldedHint: folded, noteReadFallbackV1: true, fallbackRuntimeMs: runtimeMs });
+    const ans = iuSilverBuildAnswerFromSearch(srUse);
+    return { note: note, score: score, runtimeMs: runtimeMs, searchResult: srUse, answer: ans, minScore: minScore };
+  }
+
+  function iuSilverNoteReadSearchWithQualityV1(raw, folded, ctx, now) {
+    const r0 = String(raw || "").trim();
+    const f = String(folded || "");
+    const q = iuSilverReadSearchExtractQuery(r0, f, "notes");
+    const classifPre = iuSilverNoteRetrievalPlatformV1ClassifyQueryFolded(f);
+    const qSearch = iuSilverNoteRetrievalPlatformV1TopicEntitySearchQuery(classifPre, q);
+    const sr0 = iuSilverSearchLocalData(qSearch, {
+      target: "notes",
+      now: now,
+      getEventsSnapshot: ctx && ctx.getEventsSnapshot,
+      getTasksSnapshot: ctx && ctx.getTasksSnapshot,
+      getNotesSnapshot: ctx && ctx.getNotesSnapshot,
+      rawFoldedHint: f
+    });
+    let sr = iuSilverSearchRelevanceContractFilterSearchResultsV1(sr0, f);
+    let ans = iuSilverBuildAnswerFromSearch(sr);
+    let fallbackMs = 0;
+    let usedFallback = false;
+    const miss =
+      !ans ||
+      ans.answerType === "none" ||
+      /Nic jsem k tomu nena[sš]el/i.test(String(ans.message || ""));
+    const frag =
+      !miss &&
+      IU_SILVER_NOTE_ANSWER_QUALITY_FALLBACK_V1 &&
+      iuSilverNoteAnswerQualityIsFragmentV1(ans.message, f, sr.bestResult && sr.bestResult.payload && sr.bestResult.payload.note ? iuSilverNoteResultBlobV1(sr.bestResult.payload.note) : "");
+    if (IU_SILVER_NOTE_ANSWER_QUALITY_FALLBACK_V1 && (miss || frag) && !iuSilverNoteAnswerQualityIsHelpCapabilityQueryV1(f)) {
+      const fb = iuSilverNoteReadFallbackSearchV1(r0, f, ctx, now);
+      fallbackMs = fb.runtimeMs || 0;
+      if (fb.answer && fb.answer.message && !/Nic jsem k tomu nena[sš]el/i.test(String(fb.answer.message || ""))) {
+        if (miss || !iuSilverNoteAnswerQualityIsFragmentV1(fb.answer.message, f)) {
+          sr = fb.searchResult || sr;
+          ans = fb.answer;
+          usedFallback = true;
+        }
+      }
+    }
+    return { sr: sr, ans: ans, q: qSearch || q, fallbackMs: fallbackMs, usedFallback: usedFallback };
+  }
+
   function iuSilverNoteRetrievalPlatformV1ExtractAnswerFromBlob(blobRaw, classif, entityLabel, noteOpt) {
     const blob = String(blobRaw || "").replace(/\s+/g, " ").trim();
     const blobF = iuSilverNormalizeForSearch(blob);
@@ -60417,21 +60742,30 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
     if (attr === "password") {
+      const composed = iuSilverNoteAnswerQualityComposeSentenceV1(blob, classif, "");
+      if (composed) return composed.replace(/\n\n[\s\S]*$/, "").split("\n")[0];
       const m =
-        blob.match(/\b(?:heslo|pin\w*|kod\w*)\s+(?:je\s+|na\s+\w+\s+je\s+)?(\S+(?:\s+\S+){0,3})/i) ||
-        blobF.match(/\b(?:heslo|pin\w*|kod\w*)\s+(?:je\s+|na\s+\w+\s+je\s+)?(\S+(?:\s+\S+){0,3})/) ||
+        blob.match(/\b(?:heslo|pin\w*|k[oó]d\w*)\s+(?:je\s+|na\s+\w+\s+je\s+)?(\S+(?:\s+\S+){0,5})/i) ||
         blob.match(/\b(\d{4,12})\b/);
-      if (m && m[1]) {
-        return String(m[1]).trim().replace(/[?.!]+$/g, "") + ".";
+      if (m && (m[0] || m[1])) {
+        const clause = m[0] && m[0].length >= 8 ? m[0] : m[1];
+        return String(clause || "").trim().replace(/[?.!]+$/g, "") + ".";
       }
     }
     if (attr === "warranty") {
+      const composed = iuSilverNoteAnswerQualityComposeSentenceV1(blob, classif, "");
+      if (composed) return composed.replace(/\n\n[\s\S]*$/, "").split("\n")[0];
       const m =
-        blob.match(/\b(?:zaruk\w*|garanc\w*)\s*(?:do|konci|vyprsi)?\s*([^.,\n]{4,80})/i) ||
+        blob.match(/\b(?:zaruk\w*|garanc\w*)\s*(?:na\s+[^.,\n]{2,40})?\s*(?:kon[cč]i|do|vypr[sš]i)?\s*([^.,\n]{4,80})/i) ||
         blob.match(/\b(\d{1,2}\.\s*\d{1,2}(?:\.\s*\d{2,4})?)\b/);
-      if (m && (m[1] || m[0])) {
-        return "Záruka: " + String(m[1] || m[0]).trim() + ".";
+      if (m && (m[0] || m[1])) {
+        const clause = m[0] && m[0].length >= 10 ? m[0] : "Záruka: " + String(m[1] || m[0]).trim();
+        return String(clause).trim().replace(/[?.!]+$/g, "") + ".";
       }
+    }
+    if (attr === "license_plate") {
+      const composed = iuSilverNoteAnswerQualityComposeSentenceV1(blob, classif, "");
+      if (composed) return composed.replace(/\n\n[\s\S]*$/, "").split("\n")[0];
     }
     if (attr === "price") {
       const m = blob.match(/\b(\d{1,7}(?:\s*(?:tisic|tisíc))?\s*(?:k[cč]|K[cč]))\b/i);
@@ -60465,13 +60799,24 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       "";
     const entityLabel = iuSilverNoteRetrievalPlatformV1OriginalEntityLabel(note0, entityLabelFolded) || entityLabelFolded;
     if (classif.mode === "exact_answer") {
-      const blob = iuSilverNoteResultBlobV1(note0);
-      const extracted = iuSilverNoteRetrievalPlatformV1ExtractAnswerFromBlob(blob, classif, entityLabelFolded, note0);
+      const blob = iuSilverNoteAnswerQualityBlobPreferContentV1(note0);
+      let extracted = iuSilverNoteRetrievalPlatformV1ExtractAnswerFromBlob(blob, classif, entityLabelFolded, note0);
+      if (!extracted || iuSilverNoteAnswerQualityIsFragmentV1(extracted, rh, blob)) {
+        extracted = iuSilverNoteAnswerQualityComposeSentenceV1(blob, classif, rh);
+      }
       if (extracted) {
-        return { message: extracted, answerType: "note_exact" };
+        const msg =
+          IU_SILVER_NOTE_ANSWER_QUALITY_FALLBACK_V1
+            ? iuSilverNoteAnswerQualityFinalizeV1(extracted, note0, classif, rh, evalNow)
+            : extracted;
+        return { message: msg, answerType: "note_exact" };
       }
       const blobTrim = blob.slice(0, 500);
-      return { message: blobTrim + (blobTrim.endsWith(".") ? "" : "."), answerType: "note" };
+      const msgFull =
+        IU_SILVER_NOTE_ANSWER_QUALITY_FALLBACK_V1
+          ? iuSilverNoteAnswerQualityFinalizeV1(blobTrim, note0, classif, rh, evalNow)
+          : blobTrim + (blobTrim.endsWith(".") ? "" : ".");
+      return { message: msgFull, answerType: "note" };
     }
     if (classif.mode === "existence") {
       const blobE = iuSilverNoteResultBlobV1(note0).slice(0, 280);
@@ -60673,19 +61018,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverNotesListQuerySignalV1(f)) return iuSilverBuildNotesListReadTurnV1(ctx || {}, empty, now);
     const agg = iuSilverTryNotesAmountAggregateReadTurnV1(raw, now, folded, ctx, empty);
     if (agg) return agg;
-    const q = iuSilverReadSearchExtractQuery(r0, f, "notes");
-    const classifPre = iuSilverNoteRetrievalPlatformV1ClassifyQueryFolded(f);
-    const qSearch = iuSilverNoteRetrievalPlatformV1TopicEntitySearchQuery(classifPre, q);
-    const sr0 = iuSilverSearchLocalData(qSearch, {
-      target: "notes",
-      now: now,
-      getEventsSnapshot: ctx && ctx.getEventsSnapshot,
-      getTasksSnapshot: ctx && ctx.getTasksSnapshot,
-      getNotesSnapshot: ctx && ctx.getNotesSnapshot,
-      rawFoldedHint: f
-    });
-    const sr = iuSilverSearchRelevanceContractFilterSearchResultsV1(sr0, f);
-    const ans = iuSilverBuildAnswerFromSearch(sr);
+    const pack = iuSilverNoteReadSearchWithQualityV1(r0, f, ctx, now);
+    const sr = pack.sr;
+    const ans = pack.ans;
     if (!ans || ans.answerType === "none" || /Nic jsem k tomu nena[sš]el/i.test(String(ans.message || ""))) {
       if (/\b(narozenin|nicolas|tomas|tata|tatka)\b/.test(f)) {
         return {
@@ -60694,7 +61029,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           processingState: "READ_OK",
           clarificationReason: null,
           futureIntentCandidate: null,
-          readQuery: { silverReadSearch: true, target: "notes", query: q, relevanceContract: true },
+          readQuery: { silverReadSearch: true, target: "notes", query: pack.q, relevanceContract: true, noteReadFallbackV1: !!pack.usedFallback, fallbackRuntimeMs: pack.fallbackMs || 0 },
           readAnswer: { message: "V poznámkách jsem nenašel relevantní záznam k tomu dotazu.", silverSearch: sr },
           extractedFields: {},
           missingFields: [],
@@ -60714,7 +61049,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           processingState: "READ_OK",
           clarificationReason: null,
           futureIntentCandidate: null,
-          readQuery: { silverReadSearch: true, target: "notes", query: qSearch || q, relevanceContract: true },
+          readQuery: { silverReadSearch: true, target: "notes", query: pack.q, relevanceContract: true, noteReadFallbackV1: !!pack.usedFallback, fallbackRuntimeMs: pack.fallbackMs || 0 },
           readAnswer: { message: "Nic jsem k tomu nenašel.", silverSearch: sr },
           extractedFields: {},
           missingFields: [],
@@ -60734,7 +61069,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       processingState: "READ_OK",
       clarificationReason: null,
       futureIntentCandidate: null,
-      readQuery: { silverReadSearch: true, target: "notes", query: q, relevanceContract: true },
+      readQuery: {
+        silverReadSearch: true,
+        target: "notes",
+        query: pack.q,
+        relevanceContract: true,
+        noteAnswerQualityV1: true,
+        noteReadFallbackV1: !!pack.usedFallback,
+        fallbackRuntimeMs: pack.fallbackMs || 0
+      },
       readAnswer: { message: ans.message, silverSearch: sr },
       extractedFields: {},
       missingFields: [],
@@ -66991,6 +67334,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverNormalizeForSearchMatch: iuSilverNormalizeForSearch,
     iuSilverSearchLocalData: iuSilverSearchLocalData,
     iuSilverBuildAnswerFromSearch: iuSilverBuildAnswerFromSearch,
+    iuSilverNoteAnswerQualityIsFragmentV1: iuSilverNoteAnswerQualityIsFragmentV1,
+    iuSilverNoteAnswerQualityIsHelpCapabilityQueryV1: iuSilverNoteAnswerQualityIsHelpCapabilityQueryV1,
+    iuSilverNoteAnswerQualityExtractSearchTermsV1: iuSilverNoteAnswerQualityExtractSearchTermsV1,
+    iuSilverNoteReadFallbackSearchV1: iuSilverNoteReadFallbackSearchV1,
+    iuSilverNoteReadSearchWithQualityV1: iuSilverNoteReadSearchWithQualityV1,
+    iuSilverNoteAnswerQualityComposeSentenceV1: iuSilverNoteAnswerQualityComposeSentenceV1,
+    iuSilverNoteAnswerQualityFinalizeV1: iuSilverNoteAnswerQualityFinalizeV1,
     hasSilverStorageDisambiguationPayload,
     iuSilverBrainRoute: iuSilverBrainRoute,
     iuSilverExplicitCalendarCreateAnchorP1Folded: iuSilverExplicitCalendarCreateAnchorP1Folded,
