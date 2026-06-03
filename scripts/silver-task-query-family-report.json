@@ -1,0 +1,339 @@
+{
+  "generatedAt": "2026-06-03T09:00:14.759Z",
+  "mainCommit": "165012ac7bc50a386381e72b6c4ae41a6632c7ee",
+  "engineChanged": false,
+  "filesCreated": [
+    "scripts/silver-task-query-family-diagnostic.cjs",
+    "scripts/silver-task-query-family-report.json"
+  ],
+  "overview_family": [
+    {
+      "id": "OV_01",
+      "family": "overview",
+      "INPUT": "Jaké mám úkoly",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "MODULE": "tasks.read",
+      "NORMALIZED_INTENT": "tasks.read",
+      "RESPONSE": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k narozeninám\n8. Dokončit prezentaci",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [],
+      "PASS": true,
+      "ROOT_CAUSE": "overview_ok",
+      "CLASSIFICATION": "SAFE_CLARIFICATION_OK"
+    },
+    {
+      "id": "OV_02",
+      "family": "overview",
+      "INPUT": "Co mám za úkoly",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "notes.read",
+      "MODULE": "notes.read",
+      "NORMALIZED_INTENT": "notes.read",
+      "RESPONSE": "Nic jsem k tomu nenašel.",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [
+        "wrong_module:notes.read",
+        "empty_response"
+      ],
+      "PASS": false,
+      "ROOT_CAUSE": "overview_phrase_missing_task_module_cue",
+      "CLASSIFICATION": "SYNONYM_GAP"
+    },
+    {
+      "id": "OV_03",
+      "family": "overview",
+      "INPUT": "Co mám v úkolech",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "MODULE": "tasks.read",
+      "NORMALIZED_INTENT": "tasks.read",
+      "RESPONSE": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k narozeninám\n8. Dokončit prezentaci",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [],
+      "PASS": true,
+      "ROOT_CAUSE": "overview_ok",
+      "CLASSIFICATION": "SAFE_CLARIFICATION_OK"
+    },
+    {
+      "id": "OV_04",
+      "family": "overview",
+      "INPUT": "Jaké mám aktivní úkoly",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "notes.read",
+      "MODULE": "notes.read",
+      "NORMALIZED_INTENT": "notes.read",
+      "RESPONSE": "Nic jsem k tomu nenašel.",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [
+        "wrong_module:notes.read",
+        "empty_response"
+      ],
+      "PASS": false,
+      "ROOT_CAUSE": "overview_phrase_missing_task_module_cue",
+      "CLASSIFICATION": "SYNONYM_GAP"
+    },
+    {
+      "id": "OV_05",
+      "family": "overview",
+      "INPUT": "Co mám ještě udělat",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "MODULE": "tasks.read",
+      "NORMALIZED_INTENT": "tasks.read",
+      "RESPONSE": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k narozeninám\n8. Dokončit prezentaci",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [],
+      "PASS": true,
+      "ROOT_CAUSE": "overview_ok",
+      "CLASSIFICATION": "SAFE_CLARIFICATION_OK"
+    },
+    {
+      "id": "OV_06",
+      "family": "overview",
+      "INPUT": "Co mě čeká",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "global.search",
+      "MODULE": "global.search",
+      "NORMALIZED_INTENT": "global.search",
+      "RESPONSE": "Nic jsem k tomu nenašel.",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [
+        "empty_response"
+      ],
+      "PASS": false,
+      "ROOT_CAUSE": "overview_empty_read_answer",
+      "CLASSIFICATION": "SYNONYM_GAP"
+    },
+    {
+      "id": "OV_07",
+      "family": "overview",
+      "INPUT": "Jaké mám hotové úkoly",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "MODULE": "tasks.read",
+      "NORMALIZED_INTENT": "tasks.read",
+      "RESPONSE": "Našel jsem úkol: Objednat toner.",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [],
+      "PASS": true,
+      "ROOT_CAUSE": "overview_ok",
+      "CLASSIFICATION": "SAFE_CLARIFICATION_OK"
+    },
+    {
+      "id": "OV_08",
+      "family": "overview",
+      "INPUT": "Co mám rozdělané",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "MODULE": "tasks.read",
+      "NORMALIZED_INTENT": "tasks.read",
+      "RESPONSE": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k narozeninám\n8. Dokončit prezentaci",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [
+        "status_in_progress_miss"
+      ],
+      "PASS": false,
+      "ROOT_CAUSE": "task_status_filter_not_applied",
+      "CLASSIFICATION": "RETRIEVAL_FAIL"
+    },
+    {
+      "id": "OV_09",
+      "family": "overview",
+      "INPUT": "Jaké mám nesplněné úkoly",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "MODULE": "tasks.read",
+      "NORMALIZED_INTENT": "tasks.read",
+      "RESPONSE": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k narozeninám\n8. Dokončit prezentaci",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [
+        "status_todo_miss"
+      ],
+      "PASS": false,
+      "ROOT_CAUSE": "task_status_filter_not_applied",
+      "CLASSIFICATION": "RETRIEVAL_FAIL"
+    }
+  ],
+  "item_search_family": [
+    {
+      "id": "IS_01",
+      "family": "item_search",
+      "INPUT": "Kdy mám zaplatit nájem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "MODULE": "tasks.read",
+      "NORMALIZED_INTENT": "tasks.read",
+      "RESPONSE": "Našel jsem úkol: Zaplatit nájem. Termín splnění: 5. 6. 2026.",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [],
+      "PASS": true,
+      "ROOT_CAUSE": "item_search_ok",
+      "CLASSIFICATION": "SAFE_CLARIFICATION_OK"
+    },
+    {
+      "id": "IS_02",
+      "family": "item_search",
+      "INPUT": "Co mám koupit mámě",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "MODULE": "tasks.read",
+      "NORMALIZED_INTENT": "tasks.read",
+      "RESPONSE": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k narozeninám\n8. Dokončit prezentaci",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [
+        "bulk_list_not_entity",
+        "value_miss"
+      ],
+      "PASS": false,
+      "ROOT_CAUSE": "entity_query_returns_full_task_list",
+      "CLASSIFICATION": "RETRIEVAL_FAIL"
+    },
+    {
+      "id": "IS_03",
+      "family": "item_search",
+      "INPUT": "Kdy mám vyzvednout Eli",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "MODULE": "tasks.read",
+      "NORMALIZED_INTENT": "tasks.read",
+      "RESPONSE": "Našel jsem úkol: Vyzvednout Eli ze školy. Termín splnění: 4. 6. 2026.",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [],
+      "PASS": true,
+      "ROOT_CAUSE": "item_search_ok",
+      "CLASSIFICATION": "SAFE_CLARIFICATION_OK"
+    },
+    {
+      "id": "IS_04",
+      "family": "item_search",
+      "INPUT": "Co mám udělat s právníkem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "MODULE": "tasks.read",
+      "NORMALIZED_INTENT": "tasks.read",
+      "RESPONSE": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k narozeninám\n8. Dokončit prezentaci",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [],
+      "PASS": true,
+      "ROOT_CAUSE": "item_search_ok",
+      "CLASSIFICATION": "SAFE_CLARIFICATION_OK"
+    },
+    {
+      "id": "IS_05",
+      "family": "item_search",
+      "INPUT": "Kdy mám zavolat doktorovi",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "MODULE": "tasks.read",
+      "NORMALIZED_INTENT": "tasks.read",
+      "RESPONSE": "Našel jsem úkol: Zavolat doktorovi. Termín splnění: 6. 6. 2026.",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [],
+      "PASS": true,
+      "ROOT_CAUSE": "item_search_ok",
+      "CLASSIFICATION": "SAFE_CLARIFICATION_OK"
+    },
+    {
+      "id": "IS_06",
+      "family": "item_search",
+      "INPUT": "Co mám zařídit kolem auta",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "MODULE": "tasks.read",
+      "NORMALIZED_INTENT": "tasks.read",
+      "RESPONSE": "Našel jsem úkol: Zařídit STK a pojištění auta. Bez termínu.",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [],
+      "PASS": true,
+      "ROOT_CAUSE": "item_search_ok",
+      "CLASSIFICATION": "SAFE_CLARIFICATION_OK"
+    },
+    {
+      "id": "IS_07",
+      "family": "item_search",
+      "INPUT": "Kdy mám koupit dárek",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.read",
+      "MODULE": "tasks.read",
+      "NORMALIZED_INTENT": "tasks.read",
+      "RESPONSE": "Našel jsem úkol: Koupit dárek mámě. Bez termínu.",
+      "PROCESSING_STATE": "READ_OK",
+      "ISSUES": [
+        "value_miss"
+      ],
+      "PASS": false,
+      "ROOT_CAUSE": "task_entity_not_surfaced_in_answer",
+      "CLASSIFICATION": "RETRIEVAL_FAIL"
+    }
+  ],
+  "classification_counts": {
+    "SAFE_CLARIFICATION_OK": 9,
+    "SYNONYM_GAP": 3,
+    "RETRIEVAL_FAIL": 4
+  },
+  "top_clusters": [
+    {
+      "ROOT_CAUSE": "item_search_ok",
+      "COUNT": 5,
+      "SEVERITY": "LOW",
+      "TRUE_PRODUCT_FAIL_COUNT": 0,
+      "CLASSIFICATIONS": {
+        "SAFE_CLARIFICATION_OK": 5
+      }
+    },
+    {
+      "ROOT_CAUSE": "overview_ok",
+      "COUNT": 4,
+      "SEVERITY": "LOW",
+      "TRUE_PRODUCT_FAIL_COUNT": 0,
+      "CLASSIFICATIONS": {
+        "SAFE_CLARIFICATION_OK": 4
+      }
+    },
+    {
+      "ROOT_CAUSE": "overview_phrase_missing_task_module_cue",
+      "COUNT": 2,
+      "SEVERITY": "LOW",
+      "TRUE_PRODUCT_FAIL_COUNT": 0,
+      "CLASSIFICATIONS": {
+        "SYNONYM_GAP": 2
+      }
+    },
+    {
+      "ROOT_CAUSE": "task_status_filter_not_applied",
+      "COUNT": 2,
+      "SEVERITY": "MEDIUM",
+      "TRUE_PRODUCT_FAIL_COUNT": 2,
+      "CLASSIFICATIONS": {
+        "RETRIEVAL_FAIL": 2
+      }
+    },
+    {
+      "ROOT_CAUSE": "overview_empty_read_answer",
+      "COUNT": 1,
+      "SEVERITY": "LOW",
+      "TRUE_PRODUCT_FAIL_COUNT": 0,
+      "CLASSIFICATIONS": {
+        "SYNONYM_GAP": 1
+      }
+    }
+  ],
+  "summary": {
+    "overview_pass": "4/9",
+    "item_search_pass": "5/7",
+    "TRUE_ENGINE_FAIL_COUNT": 0,
+    "RETRIEVAL_FAIL_COUNT": 4,
+    "SYNONYM_GAP_COUNT": 3,
+    "AMBIGUITY_COUNT": 0,
+    "HARNESS_GAP_COUNT": 0,
+    "GOLD_LABEL_PROBLEM_COUNT": 0,
+    "SAFE_CLARIFICATION_OK_COUNT": 9
+  },
+  "recommendations": {
+    "A_synonyms_sufficient": "PARTIAL — overview phrases bez explicitního „úkol“ potřebují synonym mapu",
+    "B_task_fallback_search_needed": "YES — entity dotazy vrací bulk list nebo špatný kandidát; fallback search by pomohl",
+    "C_task_overview_normalization_needed": "YES — status filtry (rozdělané/nesplněné) a vague queue (co mě čeká)",
+    "D_gold_harness_only": "NO — produkční routing/retrieval fail dominuje"
+  }
+}

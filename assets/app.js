@@ -37398,10 +37398,88 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return false;
   }
 
+  /**
+   * P1 task_query: „kdy/dokdy/na kdy mám zaplatit|koupit|zavolat…" → tasks.read (ne calendar.find_by_title).
+   * foldCs; bez úkolového slovesa zůstává kalendář (zubař, schůzka, právník jako termín).
+   */
+  function iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (!/\b(kdy\s+mam|dokdy\s+mam|na\s+kdy\s+mam|do\s+kdy\s+mam)\b/.test(x)) return false;
+    return /\b(zaplatit|koupit|vyzvednout|zavolat|zaridit|vyridit|dokoncit|odevzdat|poslat|vyplnit|objednat|udelat|splnit|resit|nakoupit|kupovat)\b/.test(
+      x
+    );
+  }
+
+  /**
+   * P2 task_query: „co mám udělat/zařídit s právníkem / kolem auta" → tasks.read (ne notes.read steal).
+   * foldCs; nezasahuje do note-fact („co mám o autě", PIN, záruka).
+   */
+  function iuSilverTaskEntityActionQueryCarveOutFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (!/\bco\s+mam\b/.test(x)) return false;
+    if (!/\b(udelat|zaridit|vyridit|dokoncit|splnit|vyresit)\b/.test(x)) return false;
+    if (/\bco\s+vis\b/.test(x)) return false;
+    if (/\bco\s+mam\s+o\s+/.test(x) && !/\b(udelat|zaridit|vyridit|dokoncit|splnit|vyresit)\s+(s|kolem)\b/.test(x)) return false;
+    if (/\bjak(o|ou|y|e)\s+mam\b/.test(x) && /\b(spz|volvo|heslo|wifi|pin|kod|zaruk)\b/.test(x)) return false;
+    if (/\bjaky\s+je\s+(kod|pin)\b/.test(x)) return false;
+    if (/\bkdy\s+konci\s+zaruk/.test(x)) return false;
+    return (
+      /\b(pravnik|advokat|auto|eli|doktor|lekari|najem|najmu|smlouv|pojist|faktur)\b/.test(x) || /\bkolem\s+aut/.test(x)
+    );
+  }
+
+  /** P1+P2: jednotný early tasks.read turn pro carve-out routing. */
+  function iuSilverTryTaskQueryCarveOutReadTurnV1(raw, now, folded, ctx, empty) {
+    const f = String(folded || "");
+    const r0 = String(raw || "").trim();
+    if (!iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(f) && !iuSilverTaskEntityActionQueryCarveOutFolded(f)) {
+      return null;
+    }
+    const hit =
+      iuSilverTryTaskDeadlineAnswerReadTurnV2(raw, now, folded, ctx || {}, empty) ||
+      iuSilverTryTaskQueryReadPriorityTurn(raw, now, folded, ctx || {}, empty) ||
+      iuSilverTryTemporalTaskQueryRoutingV1ReadTurn(raw, now, folded, ctx || {}, empty);
+    if (hit) return hit;
+    let q = iuSilverExtractTaskQuerySearchSubject(r0, f) || "";
+    if (iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(f)) q = "pravnik";
+    if (!String(q || "").trim() && /\bkolem\s+aut/.test(f)) q = "auto";
+    if (!String(q || "").trim()) return null;
+    const sr = iuSilverSearchLocalData(q, {
+      target: "tasks",
+      now: now,
+      preferFuture: true,
+      getEventsSnapshot: ctx && ctx.getEventsSnapshot,
+      getTasksSnapshot: ctx && ctx.getTasksSnapshot,
+      getNotesSnapshot: ctx && ctx.getNotesSnapshot,
+      rawFoldedHint: f
+    });
+    const ans = iuSilverBuildAnswerFromSearch(sr);
+    return {
+      normalizedIntent: "tasks.read",
+      targetContainer: "none",
+      processingState: "READ_OK",
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: { silverReadSearch: true, target: "tasks", query: q, taskQueryCarveOut: true },
+      readAnswer: { message: ans.message, silverSearch: sr },
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: ans.message,
+      assistantLead: ans.message,
+      clarificationText: "",
+      draft: empty,
+      silverSearchResult: sr
+    };
+  }
+
   /** Task Deadline Retrieval V2 — broader deadline/read cues (foldCs). */
   function iuSilverTaskDeadlineReadCueFoldedV2(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(x)) return true;
     if (iuSilverTaskQueryPurchaseDeadlineCueFolded(x)) return true;
     if (/\b(deadline|termin)\b/.test(x) && /\bukol/.test(x)) return true;
     if (/\bdeadline\s+u\b/.test(x)) return true;
@@ -37438,7 +37516,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\b(kter[eé]\s+ukol\w*\s+maj\w*\s+(deadline|termin)|ukol\w*\s+maj\w*\s+deadline)/.test(x)) return true;
     if (/\b(termin|deadline)\s+u\s+ukol/.test(x)) return true;
     if (/\b(ukol\w*\s+(bez|po)\s+termin|ukol\w*\s+s\s+termin)/.test(x)) return true;
-    if (/\b(kdy\s+m[aá]m|dokdy|do\s+kdy)\b/.test(x) && /\b(zaplatit|zavolat|poslat|koupit|vyzvednout|posekat|pripravit|připravit|dokončit|dokoncit|splnit|nakoupit|kupovat|najem|faktur|smlouv|balik|balík)\b/.test(x)) {
+    if (
+      /\b(kdy\s+m[aá]m|dokdy|do\s+kdy|na\s+kdy\s+m[aá]m)\b/.test(x) &&
+      /\b(zaplatit|zavolat|poslat|koupit|vyzvednout|posekat|pripravit|připravit|dokončit|dokoncit|splnit|nakoupit|kupovat|zaridit|vyridit|odevzdat|vyplnit|objednat|udelat|resit|najem|faktur|smlouv|balik|balík)\b/.test(
+        x
+      )
+    ) {
       return true;
     }
     if (/\b(termin|deadline)\s+u\s+ukol/.test(x)) return true;
@@ -38078,6 +38161,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverConflictingReadSameModuleConstraintFolded(f)) return false;
     if (iuSilverNakupJedenUkolTaskWriteFolded(f, rawOpt)) return false;
     if (iuSilverCalendarWriteNegatedTaskTargetGuardV1Folded(f)) return false;
+    if (iuSilverTaskEntityActionQueryCarveOutFolded(f) || iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(f)) return true;
     if (iuSilverTaskDeadlineReadCueFoldedV2(f)) return true;
     if (iuSilverExplicitNotesPositiveReadScopeFolded(f) && !iuSilverExplicitTaskReadScopeFolded(f, rawOpt)) return false;
     if (iuSilverExplicitTaskReadScopeFolded(f, rawOpt)) return true;
@@ -39115,6 +39199,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverReadCreateFirewallV1ModuleHintFolded(f) {
     const x = String(f || "");
     if (iuSilverTaskQueryNegatedNoteAntiStealFolded(x)) return "tasks";
+    if (iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(x) || iuSilverTaskEntityActionQueryCarveOutFolded(x)) return "tasks";
     if (/\b(ukol|ukoly|deadlin)\b/.test(x) && !/\b(schuz|kalend|udalost)\b/.test(x)) return "tasks";
     if (/\b(poznam|poznamk)\b/.test(x) && !/\b(schuz|kalend|udalost)\b/.test(x)) return "notes";
     if (/\b(schuz|kalend|udalost|zubar|doktor|pravnik)\b/.test(x)) return "calendar";
@@ -40262,8 +40347,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(f) {
     const x = String(f || "");
     if (!x) return false;
-    if (!/\bco\s+mam\s+s\s+/.test(x)) return false;
     if (!/\bpravnik/.test(x)) return false;
+    const rel =
+      /\bco\s+mam\s+s\s+/.test(x) ||
+      /\bco\s+mam\s+(?:udelat|zaridit|vyridit|dokoncit|splnit|vyresit)\s+s\s+/.test(x);
+    if (!rel) return false;
     if (iuSilverRelationshipCoMamSExplicitCalendarCueFolded(x)) return false;
     return true;
   }
@@ -47461,6 +47549,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const r = iuSilverNormalizeUtteranceForReadParse(rawIn);
     const f = foldCs(r);
     if (!r) return null;
+    if (iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(f)) return null;
     if (iuSilverImplicitCalendarOnlyWriteSignalFolded(f, String(rawIn || "").trim())) return null;
     if (iuSilverExplicitCalendarCreateAnchorP1Folded(f)) return null;
     if (iuSilverIsNoteRetrievalIntentV1(String(rawIn || "").trim())) return null;
@@ -50568,6 +50657,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!r0) return false;
     const f = foldCs(r0);
     if (!f) return false;
+    if (iuSilverTaskEntityActionQueryCarveOutFolded(f)) return false;
     if (iuSilverNoteRetrievalEarlyStealBlockedFolded(f, r0)) return false;
     if (/\bnajdi\s+(?:mi\s+)?ukol\w*/.test(f) && !/\bpoznam/.test(f)) return false;
     if (iuSilverExplicitTaskReadScopeFolded(f) && /\bneple\w*\s+(?:to\s+)?s\s+poznam/.test(f)) return false;
@@ -51054,6 +51144,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverExplicitQueryScopeRouterV1(f) {
     const x = String(f || "");
     if (!x) return "";
+    if (iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(x) || iuSilverTaskEntityActionQueryCarveOutFolded(x)) return "tasks";
     if (/\bco\s+mam\s+k\s+\w+/.test(x) && /\b(zaruk\w*|zaruc\w*|reklamac\w*|pojist\w*|smlouv\w*|faktur\w*|servis\w*|oprav\w*)\b/.test(x)) return "notes";
     if (iuSilverFoldedHasExplicitNotesReadScopeFolded(x)) return "notes";
     if (/\b(v\s+ukol\w*|do\s+ukol\w*|v\s+ukolech)\b/.test(x) && !/\b(kalend|schuz|udalost)\b/.test(x)) return "tasks";
@@ -59402,6 +59493,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const scoped = iuSilverExplicitQueryScopeRouterV1(f);
     if (scoped) return scoped;
     const x = String(f || "");
+    if (iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(x) || iuSilverTaskEntityActionQueryCarveOutFolded(x)) return "tasks";
     if (iuSilverCalendarQueryWithNoteNegationSignalFolded(x)) return "calendar";
     if (/\b(kolik|najdi|vyhledej)\b/.test(x) && /\b(zaloh|pep\w*)\b/.test(x) && !/\b(kalend|schuz|ukol)\b/.test(x)) return "notes";
     if (
@@ -59673,6 +59765,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     const taskCalBeforeNoteSteal = iuSilverTryTaskCalendarBeforeNoteRetrievalEarlyStealTurn(raw, now, folded, ctx || {}, empty);
     if (taskCalBeforeNoteSteal) return taskCalBeforeNoteSteal;
+    const taskQueryCarveOutEarly = iuSilverTryTaskQueryCarveOutReadTurnV1(raw, now, folded, ctx || {}, empty);
+    if (taskQueryCarveOutEarly) return taskQueryCarveOutEarly;
     const calQueryNegatesNotesEarly =
       /\bneple\w*\s+(?:to\s+)?s\s+poznam/.test(f) &&
       /\b(kalend|doktor|kdy\s+mam|tyden|kolik|ukol|deadlin|schuz)\b/.test(f);
@@ -60884,6 +60978,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverSearchRelevanceContractDirectFactNoteReadFolded(f) {
     const x = String(f || "");
     if (!x || iuSilverHasWriteVerb(x)) return false;
+    if (iuSilverTaskEntityActionQueryCarveOutFolded(x)) return false;
     if (iuSilverNoteRetrievalEarlyStealBlockedFolded(x, x)) return false;
     if (iuSilverTryParseExplicitNoteCreate(String(x))) return false;
     if (iuSilverExplicitCalendarReadScopeFolded(x) && !/\bpoznam/.test(x)) return false;
@@ -60999,6 +61094,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const r0 = String(raw || "").trim();
     const f = String(folded || "");
     if (!r0 || !f) return null;
+    if (iuSilverTaskEntityActionQueryCarveOutFolded(f)) return null;
     if (iuSilverNoteRetrievalEarlyStealBlockedFolded(f, r0)) return null;
     if (/\bne\s+(?:do|v)\s+poznam/.test(f) && /\b(kalend|schuz|udalost|pondel|utery|stred|ctvr|patek)\b/.test(f)) return null;
     if (/\bnajdi\s+adresu\s+udalost\w*/.test(f) && /\b(jen\s+kalendar|jen\s+kalend)/.test(f)) return null;
@@ -65754,6 +65850,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         createEmptyDraft()
       );
       if (relTask0) return relTask0;
+      const relTaskCarve0 = iuSilverTryTaskQueryCarveOutReadTurnV1(raw0, now, fRel0, ctx || {}, createEmptyDraft());
+      if (relTaskCarve0) return relTaskCarve0;
       if (!iuSilverTryParseExplicitNoteCreate(raw0) && !iuSilverNoteRetrievalEarlyStealBlockedFolded(fRel0, raw0)) {
         const relNote0 = iuSilverTrySearchRelevanceContractNoteFactReadTurnV1(
           raw0,
@@ -66951,6 +67049,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (noteQueryAnchorP1Read) {
       return noteQueryAnchorP1Read;
     }
+
+    const taskQueryCarveOutPreCalendar = iuSilverTryTaskQueryCarveOutReadTurnV1(raw, now, folded, ctx || {}, empty);
+    if (taskQueryCarveOutPreCalendar) return taskQueryCarveOutPreCalendar;
 
     const readSpec = tryParseCalendarRead(raw, now);
     if (readSpec) {
