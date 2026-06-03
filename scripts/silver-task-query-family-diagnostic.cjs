@@ -52,7 +52,7 @@ const ITEM_SEARCH_FAMILY = [
     expected: "tasks.read",
     taskId: "t_mama",
     entityRx: /m[aá]m[eě]|darek/i,
-    valueRx: /Koupit darek mame|mame/i,
+    valueRx: /Koupit d[aá]rek m[aá]m[eě]|m[aá]m[eě]/i,
     forbidBulkList: true
   },
   {
