@@ -1,25 +1,51 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-03T05:46:56.708322Z",
+  "ingestedAt": "2026-06-03T06:32:01.403884Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Rusové sestřelili 50 dronů nedaleko Petrohradu, kde vystoupí Putin na fóru",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-sestrelilo-50-dronu-v-sousedstvi-petrohradu-kde-na-foru-promluvi-putin.A260603_062632_zahranicni_iluj",
-      "dt": "2026-06-03T05:39:00Z",
+      "title": "Muž v Dortmundu postřelil policistu, následně se zabarikádoval s dětmi v bytě",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/muz-dortmund-nemecko-strelba-policista-deti.A260603_073204_zahranicni_mikp",
+      "dt": "2026-06-03T06:00:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES",
       "tokens": [
-        "dronů",
-        "fóru",
-        "nedaleko",
+        "bytě",
+        "dortmundu",
+        "dětmi",
+        "muž",
+        "následně",
+        "policistu",
+        "postřelil",
+        "zabarikádoval"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ukrajinský úder v Petrohradu. Dým stoupá nad město, kam má dorazit Putin",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-sestrelilo-50-dronu-v-sousedstvi-petrohradu-kde-na-foru-promluvi-putin.A260603_062632_zahranicni_iluj",
+      "dt": "2026-06-03T05:49:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "dorazit",
+        "dým",
+        "kam",
+        "město",
         "petrohradu",
         "putin",
-        "rusové",
-        "sestřelili",
-        "vystoupí"
+        "stoupá",
+        "ukrajinský",
+        "úder"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -749,32 +775,6 @@
         "zastavila",
         "závada",
         "část"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Monstrum na hoře ožívá. Dobytý Beaufort je pro Izrael symbolem marné války",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/izrael-libanon-pevnost-beaufort-dobyti.A260602_115832_zahranicni_rtn",
-      "dt": "2026-06-02T16:30:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "beaufort",
-        "dobytý",
-        "hoře",
-        "izrael",
-        "marné",
-        "monstrum",
-        "ožívá",
-        "symbolem",
-        "války"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1578,7 +1578,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49038,
+      "bytes": 48936,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1615,7 +1615,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-03T05:39:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-03T06:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1633,8 +1633,12 @@
         },
         "sample_titles": [
           {
-            "title": "Rusové sestřelili 50 dronů nedaleko Petrohradu, kde vystoupí Putin na fóru",
-            "publishedAt": "2026-06-03T05:39:00Z"
+            "title": "Muž v Dortmundu postřelil policistu, následně se zabarikádoval s dětmi v bytě",
+            "publishedAt": "2026-06-03T06:00:00Z"
+          },
+          {
+            "title": "Ukrajinský úder v Petrohradu. Dým stoupá nad město, kam má dorazit Putin",
+            "publishedAt": "2026-06-03T05:49:00Z"
           },
           {
             "title": "Ukrajinci zabili sedm civilistů, tvrdí Kreml. Dron měl zasáhnout autobus",
@@ -1659,10 +1663,6 @@
           {
             "title": "USA odrazily íránské raketové i dronové útoky. Následně udeřily na ostrov Kešm",
             "publishedAt": "2026-06-03T04:20:00Z"
-          },
-          {
-            "title": "Nová EET nebude nutit tisknout účtenky a stačit bude jen chytrý telefon",
-            "publishedAt": "2026-06-03T04:07:00Z"
           }
         ]
       }

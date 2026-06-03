@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-03T05:46:56.708322Z",
+  "ingestedAt": "2026-06-03T06:32:01.403884Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Manchester United získal z Bergama brazilského záložníka Édersona",
+      "url": "https://www.sport.cz/clanek/fotbal-premier-league-manchester-united-ziskal-z-bergama-brazilskeho-zaloznika-edersona-5474060",
+      "dt": "2026-06-03T06:07:03Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bergama",
+        "brazilského",
+        "manchester",
+        "united",
+        "záložníka",
+        "získal",
+        "édersona"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -726,35 +750,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Komplikace v týmu českého soupeře vyřešena. Asistent fotbalistů JAR dostal povolení k cestě do Mexika",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-komplikace-v-tymu-ceskeho-soupere-vyresena-asistent-fotbalistu-jar-dostal-povoleni-k-ceste-do-mexika-5473785",
-      "dt": "2026-06-02T13:59:48Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "asistent",
-        "cestě",
-        "dostal",
-        "fotbalistů",
-        "jar",
-        "komplikace",
-        "mexika",
-        "povolení",
-        "soupeře",
-        "týmu",
-        "vyřešena",
-        "českého"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -765,7 +760,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41433,
+      "bytes": 41348,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -802,7 +797,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-03T05:03:18Z",
+        "raw_feed_latest_publishedAt": "2026-06-03T06:07:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -817,6 +812,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Manchester United získal z Bergama brazilského záložníka Édersona",
+            "publishedAt": "2026-06-03T06:07:03Z"
+          },
           {
             "title": "Hertl parádní střelou rozhodl první finále NHL",
             "publishedAt": "2026-06-03T04:01:10Z"
@@ -844,10 +843,6 @@
           {
             "title": "Šok na MS, Češi udolali silné Američany! Po prvním dni jsou stoprocentní",
             "publishedAt": "2026-06-02T20:24:27Z"
-          },
-          {
-            "title": "Nymburk vyhrál první finále rozdílem osmi bodů",
-            "publishedAt": "2026-06-02T18:31:26Z"
           }
         ]
       }
