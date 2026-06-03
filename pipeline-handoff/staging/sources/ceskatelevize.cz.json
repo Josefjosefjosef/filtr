@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-03T01:17:04.001754Z",
+  "ingestedAt": "2026-06-03T02:01:52.950737Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sněmovna bude pokračovat ve schvalování změn v pomoci lidem v bytové nouzi",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/snemovna-bude-pokracovat-ve-schvalovani-zmen-v-pomoci-lidem-v-bytove-nouzi-374164",
+      "dt": "2026-06-03T01:35:16Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "bytové",
+        "lidem",
+        "nouzi",
+        "pokračovat",
+        "pomoci",
+        "schvalování",
+        "sněmovna",
+        "změn"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -729,30 +754,6 @@
         "slzy",
         "spinosauři",
         "studie"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Tanec Praha přiváží do Česka umělce z dvanácti zemí",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/tanec-praha-privazi-do-ceska-umelce-z-dvanacti-zemi-374126",
-      "dt": "2026-06-02T11:16:02Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "dvanácti",
-        "praha",
-        "přiváží",
-        "tanec",
-        "umělce",
-        "zemí",
-        "česka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2257,7 +2258,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43667,
+      "bytes": 43780,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2294,11 +2295,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-03T00:05:30Z",
+        "raw_feed_latest_publishedAt": "2026-06-03T01:35:16Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "other": 8
+          "zpravy": 23,
+          "other": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2310,6 +2311,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sněmovna bude pokračovat ve schvalování změn v pomoci lidem v bytové nouzi",
+            "publishedAt": "2026-06-03T01:35:16Z"
+          },
           {
             "title": "USA hlásí odražené íránské útoky a provedení úderů na íránském ostrově Kešm",
             "publishedAt": "2026-06-03T00:05:30Z"
@@ -2337,10 +2342,6 @@
           {
             "title": "SOUHRN: Zásadní události úterý 2. června",
             "publishedAt": "2026-06-02T16:30:00Z"
-          },
-          {
-            "title": "Trump jako nového šéfa tajných služeb vybral hypotečního specialistu Pulteho",
-            "publishedAt": "2026-06-02T16:08:53Z"
           }
         ]
       }
