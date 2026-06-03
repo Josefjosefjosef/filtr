@@ -37295,6 +37295,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\b(co\s+mam|jake\s+mam|jaky\s+mam)\s+v\s+ukol/.test(x)) return true;
     if (/\baktivn\w*\s+ukol/.test(x) && /\b(jake|jaky|co)\s+mam\b/.test(x)) return true;
     if (/\b(co\s+me\s+ceka|co\s+me\s+zbyva)\b/.test(x) && !/\b(kalend|schuz|udalost|kalendar)\b/.test(x)) return true;
+    /** P0: „Jaké mám rozdělané/zbývající úkoly“ — status adj. mezi „mám“ a „úkol“ (ne jen „jaké mám úkoly“). */
+    if (
+      /\b(jake|jaky)\s+mam\s+(rozdelan\w*|zbyvajic\w*|dokoncen\w*|hotov\w*|nesplnen\w*|nedokoncen\w*|otevren\w*|aktivn\w*)\s+ukol/.test(x) &&
+      !/\b(s\s+|k\s+|ohledne|kolem|vyresit)\s+\w{3,}/.test(x)
+    ) {
+      return true;
+    }
     if (/\b(jake|jaky)\s+mam\s+ukol/.test(x) && !/\b(s\s+|k\s+|ohledne|kolem|vyresit)\s+\w{3,}/.test(x)) return true;
     if (/\bco\s+mam\s+jeste\s+(udelat|zaridit|splnit)\b/.test(x) && !/\b(kalend|schuz|udalost)\b/.test(x)) return true;
     if (/\bco\s+mi\s+(zbyva|jeste\s+zbyva)\b/.test(x) && !/\b(kalend|schuz|udalost|kalendar)\b/.test(x)) return true;
@@ -37311,10 +37318,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (
       /\b(rozdelan\w*|rozpracovan\w*|nedodelan\w*)\b/.test(x) &&
-      (/\bco\s+m(am|ame)\b/.test(x) || /\bukaz\b/.test(x) || /\bukol/.test(x))
+      (/\bco\s+m(am|ame)\b/.test(x) || /\b(jake|jaky)\s+mam\b/.test(x) || /\bukaz\b/.test(x) || /\bukol/.test(x))
     ) {
       return "tasks_in_progress";
     }
+    if (/\bzbyvajic\w*\s+ukol/.test(x) && /\b(jake|jaky|co)\s+mam\b/.test(x)) return "tasks_active";
     return "tasks_active";
   }
 

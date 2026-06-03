@@ -33,7 +33,10 @@ const CASES = [
   { id: "D_01", bucket: "SYNONYM", input: "Jaké mám hotové úkoly", expected: "tasks.read", expectKind: "status_done" },
   { id: "D_02", bucket: "SYNONYM", input: "Co mám rozdělané", expected: "tasks.read", expectKind: "status_in_progress" },
   { id: "D_03", bucket: "SYNONYM", input: "Jaké mám nesplněné úkoly", expected: "tasks.read", expectKind: "status_todo" },
-  { id: "D_04", bucket: "SYNONYM", input: "Jaké mám otevřené úkoly", expected: "tasks.read", expectKind: "status_todo" }
+  { id: "D_04", bucket: "SYNONYM", input: "Jaké mám otevřené úkoly", expected: "tasks.read", expectKind: "status_todo" },
+  { id: "D_05", bucket: "SYNONYM", input: "Jaké mám rozdělané úkoly", expected: "tasks.read", expectKind: "status_in_progress" },
+  { id: "D_06", bucket: "SYNONYM", input: "Jaké mám zbývající úkoly", expected: "tasks.read", expectKind: "active_list" },
+  { id: "D_07", bucket: "SYNONYM", input: "Jaké mám dokončené úkoly", expected: "tasks.read", expectKind: "status_done" }
 ];
 
 function seedTasks() {
