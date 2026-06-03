@@ -33735,9 +33735,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (!document.getElementById(CAL_MOBILE_BOTTOM_CLEAR_ID)){
         const st3 = document.createElement("style");
         st3.id = CAL_MOBILE_BOTTOM_CLEAR_ID;
+        /* iu-calendar-bottom-nav-restore-v1: same stacking as Úkoly/Poznámky (#iuMobileBottomNav z-index 10025). */
         st3.textContent =
-          "@media(max-width:900px){" +
-          "#iuCalendarOverlay.iu-calendarOverlay:not([hidden]){align-items:stretch!important;justify-content:flex-start!important;padding:0!important}" +
+          "@media(max-width:1024px){" +
+          "#iuCalendarOverlay.iu-calendarOverlay:not([hidden]){z-index:10024!important;align-items:stretch!important;justify-content:flex-start!important;padding:0!important}" +
           "#iuCalendarOverlay .iu-calendarOverlay__backdrop{position:fixed!important;inset:0!important}" +
           "#iuCalendarOverlay .iu-calendarOverlay__dialog{position:fixed!important;left:0!important;right:0!important;top:0!important;" +
           "bottom:var(--bottom-nav-height,calc(56px + env(safe-area-inset-bottom,0px) + 32px))!important;" +
