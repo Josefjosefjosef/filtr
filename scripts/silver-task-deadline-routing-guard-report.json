@@ -1,0 +1,173 @@
+{
+  "generatedAt": "2026-06-03T09:00:22.537Z",
+  "task_deadline_must": [
+    {
+      "id": "TD_01",
+      "input": "Kdy mám zaplatit nájem",
+      "expected": "tasks.read",
+      "observed": "tasks.read",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "id": "TD_02",
+      "input": "Kdy mám koupit dárek",
+      "expected": "tasks.read",
+      "observed": "tasks.read",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "id": "TD_03",
+      "input": "Kdy mám zavolat doktorovi",
+      "expected": "tasks.read",
+      "observed": "tasks.read",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "id": "TD_04",
+      "input": "Kdy mám vyzvednout Eli",
+      "expected": "tasks.read",
+      "observed": "tasks.read",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "id": "TD_05",
+      "input": "Co mám udělat s právníkem",
+      "expected": "tasks.read",
+      "observed": "tasks.read",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "id": "TD_06",
+      "input": "Co mám zařídit kolem auta",
+      "expected": "tasks.read",
+      "observed": "tasks.read",
+      "pass": true,
+      "issues": []
+    }
+  ],
+  "calendar_protection": [
+    {
+      "id": "CP_01",
+      "input": "Kdy mám zubaře",
+      "expected": "calendar.read",
+      "observed": "calendar.read",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "id": "CP_02",
+      "input": "Kdy mám právníka",
+      "expected": "calendar.read",
+      "observed": "calendar.read",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "id": "CP_03",
+      "input": "Kdy mám schůzku s Tomášem",
+      "expected": "calendar.read",
+      "observed": "calendar.read",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "id": "CP_04",
+      "input": "Kdy mám poradu",
+      "expected": "calendar.read",
+      "observed": "calendar.read",
+      "pass": true,
+      "issues": []
+    }
+  ],
+  "note_protection": [
+    {
+      "id": "NP_01",
+      "input": "Co víš o autě",
+      "expected": "notes.read",
+      "observed": "notes.read",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "id": "NP_02",
+      "input": "Co mám o autě",
+      "expected": "notes.read",
+      "observed": "notes.read",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "id": "NP_03",
+      "input": "Jakou má Volvo SPZ",
+      "expected": "notes.read",
+      "observed": "notes.read",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "id": "NP_04",
+      "input": "Jaké je heslo k wifi",
+      "expected": "notes.read",
+      "observed": "notes.read",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "id": "NP_05",
+      "input": "Jaký je kód k trezoru",
+      "expected": "notes.read",
+      "observed": "notes.read",
+      "pass": true,
+      "issues": []
+    }
+  ],
+  "save_prefix": [
+    {
+      "input": "Do poznámek záruka na televizi mi končí v lednu 2027",
+      "expected": "notes.create",
+      "observed": "notes.create",
+      "pass": true
+    },
+    {
+      "input": "Do poznámek SPZ Volva je ABC 4243",
+      "expected": "notes.create",
+      "observed": "notes.create",
+      "pass": true
+    },
+    {
+      "input": "Do kalendáře zítra v 15 schůzka s Tomášem",
+      "expected": "calendar.create",
+      "observed": "calendar.create",
+      "pass": true
+    },
+    {
+      "input": "Připomeň mi zítra v 15 zavolat mámě",
+      "expected": "tasks.create",
+      "observed": "tasks.create",
+      "pass": true
+    }
+  ],
+  "safety_counters": {
+    "dangerous_write_count": 0,
+    "false_write_count": 0,
+    "write_when_negated_count": 0,
+    "query_created_write_count": 0
+  },
+  "task_diagnostic_summary": {
+    "overview_pass": "4/9",
+    "item_search_pass": "5/7",
+    "TRUE_ENGINE_FAIL_COUNT": 0,
+    "RETRIEVAL_FAIL_COUNT": 4,
+    "SYNONYM_GAP_COUNT": 3,
+    "AMBIGUITY_COUNT": 0,
+    "HARNESS_GAP_COUNT": 0,
+    "GOLD_LABEL_PROBLEM_COUNT": 0,
+    "SAFE_CLARIFICATION_OK_COUNT": 9
+  },
+  "pass": true
+}
