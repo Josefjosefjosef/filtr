@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-03T21:32:07.532146Z",
+  "ingestedAt": "2026-06-03T22:17:09.234142Z",
   "items": [
     {
       "section": "aktualne",
@@ -774,6 +774,32 @@
     {
       "section": "finance",
       "contentType": "article",
+      "title": "Chytré trafiky? Umělá inteligence pohlídá, aby mladiství neviděli reklamy na tabák",
+      "url": "https://www.idnes.cz/ekonomika/domaci/traficon-trafiky-kde-ai-skryje-pred-mladymi-reklamu-na-tabak.A260603_084006_ekonomika_vok",
+      "dt": "2026-06-03T22:01:00Z",
+      "media_raw": "iDNES / Ekonomika",
+      "media_norm": "iDNES",
+      "tokens": [
+        "chytré",
+        "inteligence",
+        "mladiství",
+        "neviděli",
+        "pohlídá",
+        "reklamy",
+        "tabák",
+        "trafiky",
+        "umělá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rubric",
+      "feedId": "fin_idnes_ekonomika",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
       "title": "Snížení poplatků, lákadla pro mladé. Vláda představila změny v penzijku",
       "url": "https://www.idnes.cz/ekonomika/domaci/penzijko-duchod-sporeni.A260603_094554_ekonomika_base",
       "dt": "2026-06-03T14:46:19Z",
@@ -1524,35 +1550,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Češi už vydělávají sami na sebe. Stát je letos „stál“ téměř sto padesát dní práce",
-      "url": "https://www.idnes.cz/ekonomika/domaci/cesi-uz-vydelavaji-sami-na-sebe-stat-je-letos-stal-temer-sto-padesat-dni-prace.A260528_105737_ekonomika_idh",
-      "dt": "2026-05-28T11:56:00Z",
-      "media_raw": "iDNES / Ekonomika",
-      "media_norm": "iDNES",
-      "tokens": [
-        "dní",
-        "letos",
-        "padesát",
-        "práce",
-        "sami",
-        "sebe",
-        "sto",
-        "stál",
-        "stát",
-        "téměř",
-        "vydělávají",
-        "češi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rubric",
-      "feedId": "fin_idnes_ekonomika",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1659,7 +1656,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
-      "bytes": 46356,
+      "bytes": 46425,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1696,7 +1693,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-03T14:46:19Z",
+        "raw_feed_latest_publishedAt": "2026-06-03T22:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 30
@@ -1711,6 +1708,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chytré trafiky? Umělá inteligence pohlídá, aby mladiství neviděli reklamy na tabák",
+            "publishedAt": "2026-06-03T22:01:00Z"
+          },
           {
             "title": "Snížení poplatků, lákadla pro mladé. Vláda představila změny v penzijku",
             "publishedAt": "2026-06-03T14:46:19Z"
@@ -1738,10 +1739,6 @@
           {
             "title": "Válka zchladila optimismus firem, jsou ale připravené na nestabilitu, říká průzkum",
             "publishedAt": "2026-06-02T14:08:00Z"
-          },
-          {
-            "title": "Kytky od Pepy jsou v potížích. Skupina Twist přišla o důležitého investora",
-            "publishedAt": "2026-06-02T12:58:00Z"
           }
         ]
       }

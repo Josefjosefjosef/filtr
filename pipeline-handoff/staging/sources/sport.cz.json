@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-03T21:32:07.532146Z",
+  "ingestedAt": "2026-06-03T22:17:09.234142Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Centrkurt v Paříži oněměl. Konec, který si nikdo nepřál. Přišla další zrada, hvězdě se leskly oči",
+      "url": "https://www.sport.cz/clanek/tenis-french-open-centrkurt-v-parizi-onemel-konec-ktery-si-nikdo-nepral-prisla-dalsi-zrada-hvezde-se-leskly-oci-5474276",
+      "dt": "2026-06-03T21:52:17Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "centrkurt",
+        "další",
+        "hvězdě",
+        "konec",
+        "leskly",
+        "nepřál",
+        "nikdo",
+        "oněměl",
+        "oči",
+        "paříži",
+        "přišla",
+        "zrada"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -743,32 +772,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "KVÍZ: Druhý grandslam sezony. Ověřte si své znalosti o French Open!",
-      "url": "https://www.sport.cz/clanek/tenis-french-open-kviz-startuje-druhy-grandslam-sezony-overte-si-sve-znalosti-o-french-open-5237159",
-      "dt": "2025-05-24T06:38:57Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "druhý",
-        "french",
-        "grandslam",
-        "kvíz",
-        "open",
-        "ověřte",
-        "sezony",
-        "své",
-        "znalosti"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +782,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45208,
+      "bytes": 45517,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,7 +819,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-03T21:31:09Z",
+        "raw_feed_latest_publishedAt": "2026-06-03T21:52:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -831,6 +834,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Centrkurt v Paříži oněměl. Konec, který si nikdo nepřál. Přišla další zrada, hvězdě se leskly oči",
+            "publishedAt": "2026-06-03T21:52:17Z"
+          },
           {
             "title": "Nizozemsko v přípravě na MS padlo s Alžírskem. Kongo v generálce remizovalo",
             "publishedAt": "2026-06-03T21:31:09Z"
@@ -858,10 +865,6 @@
           {
             "title": "O oporu Baníku je zájem v Belgii. Vloží se do hry i klub z bundesligy?",
             "publishedAt": "2026-06-03T16:50:34Z"
-          },
-          {
-            "title": "Češky slaví postup do osmifinále MS! Nepovedený zápas je nabudil",
-            "publishedAt": "2026-06-03T19:10:04Z"
           }
         ]
       }
