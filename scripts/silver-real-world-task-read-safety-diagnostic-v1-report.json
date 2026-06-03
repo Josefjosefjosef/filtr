@@ -1,0 +1,816 @@
+{
+  "generatedAt": "2026-06-03T22:23:23.032Z",
+  "audit": "REAL_WORLD_TASK_READ_SAFETY_DIAGNOSTIC_V1",
+  "corpus_source": "silver-real-world-task-read-corpus-v1.cjs",
+  "corpus_total_cases": 4329,
+  "phase_engine_changed": "NO",
+  "assets_app_changed": "NO",
+  "app_js_sha256": "e6e345c342ed9e049f5edb67f5085b7cde3386116c32219a7634fd06d53a06a9",
+  "dangerous_total": 156,
+  "false_write_total": 264,
+  "false_write_unique_cases": 156,
+  "query_created_total": 108,
+  "overlap_dangerous_and_query_created": 108,
+  "root_cause_breakdown": {
+    "TRUE_ENGINE_DANGEROUS_WRITE": 40,
+    "AMBIGUOUS_INPUT": 109,
+    "QUERY_INTERPRETATION_FAIL": 7
+  },
+  "true_engine_dangerous_write_count": 40,
+  "true_engine_dangerous_write_cases": [
+    {
+      "id": "RW_t_najem_00051",
+      "input": "Nevíš náhodou kdy že mám zaplatit najem",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_najem_00091",
+      "input": "Nevíš náhodou kdy musím zaplatit tu nájemnou",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_najem_00165",
+      "input": "Nevíš náhodou kdy je termín abych zaplatit nájem",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_najem_00365",
+      "input": "Nevíš náhodou hele kdy že mám zaplatit ten nájem",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_darek_00543",
+      "input": "Nevíš náhodou kdy že mám koupit darek",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_darek_00583",
+      "input": "Nevíš náhodou kdy musím koupit dárek k narozeninám",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_darek_00657",
+      "input": "Nevíš náhodou kdy je termín abych koupit dárek",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_darek_00857",
+      "input": "Nevíš náhodou hele kdy že mám koupit ten dárek",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_darek_01046",
+      "input": "Nevíš náhodou co mám ještě koupit k narozeninám",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_darek_01101",
+      "input": "Nevíš náhodou co mám vlastně koupit k narozeninám",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_darek_01197",
+      "input": "Nevíš náhodou co mám udělat k narozeninám",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_darek_01206",
+      "input": "Nevíš náhodou co mám udělat ten dárek",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_darek_01233",
+      "input": "Nevíš náhodou co mám zařídit k narozeninám",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_doktor_01402",
+      "input": "Nevíš náhodou kdy že mám zavolat doktorem",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_doktor_01457",
+      "input": "Nevíš náhodou kdy musím zavolat doktor",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_doktor_01567",
+      "input": "Nevíš náhodou kdy je termín abych zavolat doktorovi",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_doktor_01859",
+      "input": "Nevíš náhodou hele kdy že mám zavolat ten doktorovi",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_eli_02689",
+      "input": "Nevíš náhodou kdy že mám vyzvednout Eličku",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_eli_02705",
+      "input": "Nevíš náhodou kdy musím vyzvednout Eli ze skoly",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_eli_02743",
+      "input": "Nevíš náhodou kdy je termín abych vyzvednout Eli",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_eli_02838",
+      "input": "Nevíš náhodou hele kdy že mám vyzvednout ten Eli",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_mama_02991",
+      "input": "Nevíš náhodou co mám ještě koupit mámě",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_mama_03075",
+      "input": "Nevíš náhodou co mám vlastně koupit mámě",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_mama_03171",
+      "input": "Nevíš náhodou hele co mám koupit pro mámu",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_mama_03207",
+      "input": "Nevíš náhodou co mám udělat mámě",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_mama_03245",
+      "input": "Nevíš náhodou co mám zařídit mámě",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_mama_03263",
+      "input": "Nevíš náhodou co mám zařídit pro mámu",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_mama_03320",
+      "input": "Nevíš náhodou nevíš co mám koupit pro mámu",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_auto_03375",
+      "input": "Nevíš náhodou co mám zařídit s autem",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_auto_03391",
+      "input": "Nevíš náhodou co mám udělat s autem",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_auto_03609",
+      "input": "Nevíš náhodou co mám vlastně udělat s autem",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_auto_03645",
+      "input": "Nevíš náhodou potřebuju vědět co mám zařídit s autem",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_auto_03661",
+      "input": "Nevíš náhodou potřebuju vědět co mám udělat s autem",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_auto_03696",
+      "input": "Nevíš náhodou hele co mám zařídit s autem",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_auto_03709",
+      "input": "Nevíš náhodou hele co mám udělat ohledně auta",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_auto_03741",
+      "input": "Nevíš náhodou co mám udělat ohledně auta",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_auto_03829",
+      "input": "Nevíš náhodou můžeš mi říct co mám zařídit s autem",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_auto_03845",
+      "input": "Nevíš náhodou můžeš mi říct co mám udělat s autem",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_auto_03881",
+      "input": "Nevíš náhodou nevíš co mám zařídit s autem",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_auto_03895",
+      "input": "Nevíš náhodou nevíš co mám udělat ohledně auta",
+      "actual": "tasks.create",
+      "lane": "long",
+      "message": "Připravil jsem návrh úkolu."
+    }
+  ],
+  "category_definitions": {
+    "TRUE_ENGINE_DANGEROUS_WRITE": "Clear read cue, no write cue — engine produced write path",
+    "QUERY_INTERPRETATION_FAIL": "Engine misread phrasing but not clear-cut true dangerous write",
+    "WRITE_CUE_LEAK": "Input contains write imperative / save surface",
+    "SAVE_PREFIX_LEAK": "Explicit save prefix present in input",
+    "TASK_NOTE_CONFUSION": "Task read phrasing routed to notes.create",
+    "TASK_CALENDAR_CONFUSION": "Task read phrasing routed to calendar.create",
+    "HARNESS_PROBLEM": "Corpus gold label expects read where write is defensible",
+    "AMBIGUOUS_INPUT": "Bare synonym, past tense, or disambiguation — not actionable engine bug"
+  },
+  "top_50": [
+    {
+      "INPUT": "Nevíš náhodou co mám zařídit s autem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_auto_03375",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou co mám udělat s autem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_auto_03391",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou co mám vlastně udělat s autem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_auto_03609",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou potřebuju vědět co mám zařídit s autem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_auto_03645",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou potřebuju vědět co mám udělat s autem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_auto_03661",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou hele co mám zařídit s autem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_auto_03696",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou hele co mám udělat ohledně auta",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_auto_03709",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou co mám udělat ohledně auta",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_auto_03741",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou můžeš mi říct co mám zařídit s autem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_auto_03829",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou můžeš mi říct co mám udělat s autem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_auto_03845",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou nevíš co mám zařídit s autem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_auto_03881",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou nevíš co mám udělat ohledně auta",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_auto_03895",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou kdy že mám koupit darek",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_darek_00543",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou kdy musím koupit dárek k narozeninám",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_darek_00583",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou kdy je termín abych koupit dárek",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_darek_00657",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou hele kdy že mám koupit ten dárek",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_darek_00857",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou co mám ještě koupit k narozeninám",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_darek_01046",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou co mám vlastně koupit k narozeninám",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_darek_01101",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou co mám udělat k narozeninám",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_darek_01197",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou co mám udělat ten dárek",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_darek_01206",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou co mám zařídit k narozeninám",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_darek_01233",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou kdy že mám zavolat doktorem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_doktor_01402",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou kdy musím zavolat doktor",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_doktor_01457",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou kdy je termín abych zavolat doktorovi",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_doktor_01567",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou hele kdy že mám zavolat ten doktorovi",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_doktor_01859",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou kdy že mám vyzvednout Eličku",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_eli_02689",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou kdy musím vyzvednout Eli ze skoly",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_eli_02705",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou kdy je termín abych vyzvednout Eli",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_eli_02743",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou hele kdy že mám vyzvednout ten Eli",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_eli_02838",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou co mám ještě koupit mámě",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_mama_02991",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou co mám vlastně koupit mámě",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_mama_03075",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou hele co mám koupit pro mámu",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_mama_03171",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou co mám udělat mámě",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_mama_03207",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou co mám zařídit mámě",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_mama_03245",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou co mám zařídit pro mámu",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_mama_03263",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou nevíš co mám koupit pro mámu",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_mama_03320",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou kdy že mám zaplatit najem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_najem_00051",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou kdy musím zaplatit tu nájemnou",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_najem_00091",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou kdy je termín abych zaplatit nájem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_najem_00165",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou hele kdy že mám zaplatit ten nájem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "TRUE_ENGINE_DANGEROUS_WRITE",
+      "id": "RW_t_najem_00365",
+      "lane": "long",
+      "rationale": "clear_read_cue_produced_tasks_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "no tak zaridit stk",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "QUERY_INTERPRETATION_FAIL",
+      "id": "RW_t_auto_03925",
+      "lane": "colloquial",
+      "rationale": "tasks_create_on_corpus_read_template",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "no tak zaridit stk prosim",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "QUERY_INTERPRETATION_FAIL",
+      "id": "RW_t_auto_03926",
+      "lane": "mixed",
+      "rationale": "tasks_create_on_corpus_read_template",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "no tak zavolat doktorovi",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "QUERY_INTERPRETATION_FAIL",
+      "id": "RW_t_doktor_02655",
+      "lane": "colloquial",
+      "rationale": "tasks_create_on_corpus_read_template",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "zavolat docktorovi",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "QUERY_INTERPRETATION_FAIL",
+      "id": "RW_t_doktor_02656",
+      "lane": "typo",
+      "rationale": "tasks_create_on_corpus_read_template",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "no tak zavolat doktorovi prosim",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "QUERY_INTERPRETATION_FAIL",
+      "id": "RW_t_doktor_02657",
+      "lane": "mixed",
+      "rationale": "tasks_create_on_corpus_read_template",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "hele zavolat pravnikovi",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "QUERY_INTERPRETATION_FAIL",
+      "id": "RW_t_pravnik_04295",
+      "lane": "colloquial",
+      "rationale": "tasks_create_on_corpus_read_template",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "hele zavolat pravnikovi prosim",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "QUERY_INTERPRETATION_FAIL",
+      "id": "RW_t_pravnik_04296",
+      "lane": "mixed",
+      "rationale": "tasks_create_on_corpus_read_template",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Nevíš náhodou co jsem měl zařídit s autem",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "AMBIGUOUS_INPUT",
+      "id": "RW_t_auto_03427",
+      "lane": "long",
+      "rationale": "past_tense_co_jsem_mel_borderline_read_vs_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Co jsem měl udělat kolem auta",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "AMBIGUOUS_INPUT",
+      "id": "RW_t_auto_03431",
+      "lane": "entity",
+      "rationale": "past_tense_co_jsem_mel_borderline_read_vs_create",
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "INPUT": "Co jsem měl udělat auto",
+      "EXPECTED": "tasks.read",
+      "ACTUAL": "tasks.create (READY_TO_SAVE)",
+      "CATEGORY": "AMBIGUOUS_INPUT",
+      "id": "RW_t_auto_03435",
+      "lane": "entity",
+      "rationale": "past_tense_co_jsem_mel_borderline_read_vs_create",
+      "message": "Připravil jsem návrh úkolu."
+    }
+  ],
+  "recommended_next_step": "P0: narrow read-before-write guard for clear kdy-mám/co-mám task read queries",
+  "verdict": "A — safety fix required before retrieval/ranking fixes"
+}
