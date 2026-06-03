@@ -37514,60 +37514,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!r0 || !f || !iuSilverReadBeforeWriteSafetyGuardV1Folded(f, r0)) return null;
     const rCore = iuSilverReadBeforeWriteSafetyGuardV1StripWrappersRaw(r0);
     const fCore = foldCs(rCore);
-    const hit =
-      iuSilverTryTaskQueryCarveOutReadTurnV1(rCore, now, fCore, ctx || {}, empty) ||
-      iuSilverTryTaskDeadlineAnswerReadTurnV2(rCore, now, fCore, ctx || {}, empty) ||
-      iuSilverTryTaskQueryReadPriorityTurn(rCore, now, fCore, ctx || {}, empty) ||
-      iuSilverTryTaskQueryCarveOutReadTurnV1(r0, now, f, ctx || {}, empty) ||
-      iuSilverTryTaskDeadlineAnswerReadTurnV2(r0, now, f, ctx || {}, empty) ||
-      iuSilverTryTaskQueryReadPriorityTurn(r0, now, f, ctx || {}, empty);
-    if (hit) return hit;
-    let q = iuSilverExtractTaskQuerySearchSubject(rCore, fCore) || "";
-    if (!String(q || "").trim() && /\bkdy\b/.test(fCore)) {
-      const mWhen =
-        fCore.match(/\bkdy\s+(?:ze\s+|musim\s+|mus[ií]m\s+|je\s+termin\s+abych\s+)?(?:mam\s+)?(.+)$/) ||
-        fCore.match(/\bkdy\s+(?:musim|mus[ií]m)\s+(.+)$/);
-      if (mWhen && mWhen[1]) q = String(mWhen[1]).trim();
-    }
-    if (!String(q || "").trim() && /\bco\s+mam\b/.test(fCore)) {
-      const mWhat = fCore.match(/\bco\s+mam(?:\s+(?:jeste|vlastne|dokonce))?\s+(.+)$/);
-      if (mWhat && mWhat[1]) q = String(mWhat[1]).trim();
-    }
-    if (!String(q || "").trim() && iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(fCore)) q = "pravnik";
-    if (!String(q || "").trim() && /\bkolem\s+aut/.test(fCore)) q = "auto";
-    if (!String(q || "").trim()) {
-      const vyLemma = iuSilverTaskEntityVyresitQueryLemmaFolded(fCore);
-      if (vyLemma) q = vyLemma;
-    }
-    if (!String(q || "").trim()) return null;
-    const preferFuture = /\bkdy\b/.test(fCore);
-    const resolved = iuSilverTaskReadResolveSearchWithItemFallbackV1(r0, f, ctx, now, q, { preferFuture: preferFuture });
-    const sr = resolved.sr;
-    const ans = resolved.ans;
-    if (!ans || !ans.message || /Nic jsem k tomu nena[sš]el/i.test(String(ans.message || ""))) return null;
-    return {
-      normalizedIntent: "tasks.read",
-      targetContainer: "none",
-      processingState: "READ_OK",
-      clarificationReason: null,
-      futureIntentCandidate: null,
-      readQuery: {
-        silverReadSearch: true,
-        target: "tasks",
-        query: resolved.q,
-        readBeforeWriteSafetyGuardV1: true,
-        taskReadFallbackV1: resolved.usedFallback || undefined
-      },
-      readAnswer: { message: ans.message, silverSearch: sr },
-      extractedFields: {},
-      missingFields: [],
-      ambiguousFields: [],
-      userFacingSummary: ans.message,
-      assistantLead: ans.message,
-      clarificationText: "",
-      draft: empty,
-      silverSearchResult: sr
-    };
+    const deadlineHit = iuSilverTryTaskDeadlineAnswerReadTurnV2(rCore, now, fCore, ctx || {}, empty);
+    if (deadlineHit) return deadlineHit;
+    const relDueHit = iuSilverTrySearchRelevanceContractTaskDueReadTurnV1(rCore, now, fCore, ctx, empty);
+    if (relDueHit) return relDueHit;
+    return null;
   }
 
   /**
@@ -66511,8 +66462,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     if (raw0 && IU_SILVER_READ_BEFORE_WRITE_SAFETY_GUARD_V1) {
       const fRbW0 = foldCs(raw0);
-      const rbW0 = iuSilverTryReadBeforeWriteSafetyGuardV1ReadTurn(raw0, now, fRbW0, ctx, createEmptyDraft());
-      if (rbW0) return rbW0;
+      if (iuSilverReadBeforeWriteSafetyGuardV1Folded(fRbW0, raw0)) {
+        const rRbWStrip = iuSilverReadBeforeWriteSafetyGuardV1StripWrappersRaw(raw0);
+        if (rRbWStrip && rRbWStrip !== raw0) raw0 = rRbWStrip;
+      }
     }
     if (raw0 && IU_SILVER_TASK_QUERY_GOVERNOR_V1) {
       const fTaskGov0 = foldCs(raw0);
