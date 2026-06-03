@@ -37278,12 +37278,50 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bodskrtl/.test(x) && /\b(tento|tenhle)\s+tyden\b/.test(x)) return true;
     if (/\bvypi[sš]\s+mi\s+hotov\w*\s+ukol/.test(x)) return true;
     if (/\bnajdi\s+hotov\w*\s+ukol/.test(x)) return true;
+    if (/\bco\s+jsem\s+(dokoncil|splnil|udelal)\b/.test(x) && !/\b(kalend|schuz|udalost)\b/.test(x)) return true;
     return false;
+  }
+
+  /**
+   * P0 task_overview_query_variants: listové dotazy na stav úkolů (active / unfinished / completed).
+   * Úzké signály — bez entity tail („s doktorem“, „kolem auta“) a bez deadline „kdy mám“.
+   */
+  function iuSilverTaskOverviewReadQuerySignalFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (iuSilverTaskEntityActionQueryCarveOutFolded(x)) return false;
+    if (iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(x)) return false;
+    if (/\b(co\s+mam|jake\s+mam|jaky\s+mam|co\s+mi)\s+za\s+ukol/.test(x)) return true;
+    if (/\b(co\s+mam|jake\s+mam|jaky\s+mam)\s+v\s+ukol/.test(x)) return true;
+    if (/\baktivn\w*\s+ukol/.test(x) && /\b(jake|jaky|co)\s+mam\b/.test(x)) return true;
+    if (/\b(co\s+me\s+ceka|co\s+me\s+zbyva)\b/.test(x) && !/\b(kalend|schuz|udalost|kalendar)\b/.test(x)) return true;
+    if (/\b(jake|jaky)\s+mam\s+ukol/.test(x) && !/\b(s\s+|k\s+|ohledne|kolem|vyresit)\s+\w{3,}/.test(x)) return true;
+    if (/\bco\s+mam\s+jeste\s+(udelat|zaridit|splnit)\b/.test(x) && !/\b(kalend|schuz|udalost)\b/.test(x)) return true;
+    if (/\bco\s+mi\s+(zbyva|jeste\s+zbyva)\b/.test(x) && !/\b(kalend|schuz|udalost|kalendar)\b/.test(x)) return true;
+    if (/\bco\s+jsem\s+(dokoncil|splnil|udelal)\b/.test(x) && !/\b(kalend|schuz|udalost)\b/.test(x)) return true;
+    if (/\bco\s+jeste\s+nemam\s+hotov\w*\b/.test(x)) return true;
+    return false;
+  }
+
+  function iuSilverTaskOverviewListModeFolded(f) {
+    const x = String(f || "");
+    if (iuSilverTaskCompletedOnlyListCueFolded(x)) return "tasks_done";
+    if (/\bnesplnen\w*\s+ukol/.test(x) || /\bnedokoncen\w*\s+ukol/.test(x) || /\botevren\w*\s+ukol/.test(x)) {
+      return "tasks_todo";
+    }
+    if (
+      /\b(rozdelan\w*|rozpracovan\w*|nedodelan\w*)\b/.test(x) &&
+      (/\bco\s+m(am|ame)\b/.test(x) || /\bukaz\b/.test(x) || /\bukol/.test(x))
+    ) {
+      return "tasks_in_progress";
+    }
+    return "tasks_active";
   }
 
   function iuSilverTaskStatusReadQuerySignalFolded(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverTaskOverviewReadQuerySignalFolded(x)) return true;
     if (iuSilverTaskCompletedOnlyListCueFolded(x)) return true;
     if (/\bnesplnen\w*\s+ukol/.test(x)) return true;
     if (/\bvypi[sš]\s+mi\s+nesplnen\w*\s+ukol/.test(x)) return true;
@@ -49856,6 +49894,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         query: rawQ,
         normalizedQuery: normalizedQuery,
         target: target,
+        listMode: listMode,
         results: results,
         bestResult: results.length ? results[0] : null,
         confidence: results.length ? 0.9 : 0,
@@ -49882,6 +49921,61 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         query: rawQ,
         normalizedQuery: normalizedQuery,
         target: target,
+        listMode: listMode,
+        results: results,
+        bestResult: results.length ? results[0] : null,
+        confidence: results.length ? 0.9 : 0,
+        answerType: results.length ? "list" : "none",
+        source: "local_browser_only"
+      };
+    }
+
+    if (listMode === "tasks_in_progress" && (target === "tasks" || target === "all")) {
+      const arrP = Array.isArray(tasks) ? tasks : [];
+      const prog = [];
+      for (let ip = 0; ip < arrP.length; ip++) {
+        const tkP = arrP[ip];
+        if (!tkP || tkP.status !== "in_progress") continue;
+        prog.push(tkP);
+      }
+      prog.sort(function (a, b) {
+        return (Number(b.updatedAt || 0) || 0) - (Number(a.updatedAt || 0) || 0);
+      });
+      for (let jp = 0; jp < prog.length; jp++) {
+        pushRes("task", 50 - jp * 0.1, { task: prog[jp] });
+      }
+      return {
+        query: rawQ,
+        normalizedQuery: normalizedQuery,
+        target: target,
+        listMode: listMode,
+        results: results,
+        bestResult: results.length ? results[0] : null,
+        confidence: results.length ? 0.9 : 0,
+        answerType: results.length ? "list" : "none",
+        source: "local_browser_only"
+      };
+    }
+
+    if (listMode === "tasks_todo" && (target === "tasks" || target === "all")) {
+      const arrT = Array.isArray(tasks) ? tasks : [];
+      const todo = [];
+      for (let it = 0; it < arrT.length; it++) {
+        const tkT = arrT[it];
+        if (!tkT || tkT.status !== "todo") continue;
+        todo.push(tkT);
+      }
+      todo.sort(function (a, b) {
+        return (Number(b.updatedAt || 0) || 0) - (Number(a.updatedAt || 0) || 0);
+      });
+      for (let jt = 0; jt < todo.length; jt++) {
+        pushRes("task", 50 - jt * 0.1, { task: todo[jt] });
+      }
+      return {
+        query: rawQ,
+        normalizedQuery: normalizedQuery,
+        target: target,
+        listMode: listMode,
         results: results,
         bestResult: results.length ? results[0] : null,
         confidence: results.length ? 0.9 : 0,
@@ -50477,7 +50571,30 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         lines.push(String(i + 1) + ". " + String(p.title || "").trim());
       }
       if (!lines.length) return { message: "Nic jsem k tomu nenašel.", answerType: "none" };
-      if (lines.length === 1) return { message: "Našel jsem úkol: " + lines[0].replace(/^\d+\.\s*/, "") + ".", answerType: "list" };
+      const titles = [];
+      for (let ti = 0; ti < lines.length; ti++) {
+        titles.push(lines[ti].replace(/^\d+\.\s*/, ""));
+      }
+      if (lines.length === 1) return { message: "Našel jsem úkol: " + titles[0] + ".", answerType: "list" };
+      const lmList = String(sr.listMode || "");
+      if (lmList === "tasks_in_progress") {
+        return {
+          message: "Máš " + titles.length + " rozpracované úkoly — " + titles.join("; ") + ".",
+          answerType: "list"
+        };
+      }
+      if (lmList === "tasks_todo") {
+        return {
+          message: "Máš " + titles.length + " nesplněné úkoly — " + titles.join("; ") + ".",
+          answerType: "list"
+        };
+      }
+      if (lmList === "tasks_done") {
+        return {
+          message: "Máš " + titles.length + " hotové úkoly — " + titles.join("; ") + ".",
+          answerType: "list"
+        };
+      }
       return { message: "Máš " + lines.length + " aktivní úkoly:\n" + lines.join("\n"), answerType: "list" };
     }
     if (at === "note" && sr.listMode === "notes_all") {
@@ -51463,7 +51580,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         };
       }
     }
-    const listMode = iuSilverTaskCompletedOnlyListCueFolded(f) ? "tasks_done" : "tasks_active";
+    const listMode = iuSilverTaskOverviewListModeFolded(f);
     const sr = iuSilverSearchLocalData("", {
       target: "tasks",
       now: now,
@@ -51764,6 +51881,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const x = String(f || "");
     const r0 = String(rawOpt || "");
     if (!x) return false;
+    if (iuSilverTaskOverviewReadQuerySignalFolded(x)) return true;
     if (iuSilverNoteRetrievalTopicQueryFolded(x)) return false;
     const cross = iuSilverCrossModuleQueryRouterV1(x);
     if (cross === "calendar" || cross === "tasks") return true;
@@ -51818,7 +51936,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (readSpec) return iuSilverBuildCalendarReadFromSpecTurnV1(readSpec, ctx || {}, empty, now);
     }
     if (
-      (cross === "tasks" || iuSilverTaskReadContextFolded(f, r0)) &&
+      (cross === "tasks" ||
+        iuSilverTaskReadContextFolded(f, r0) ||
+        iuSilverTaskOverviewReadQuerySignalFolded(f)) &&
       !iuSilverCalendarReadWinsOverTaskReadFolded(f) &&
       !calHarnessEarly
     ) {
@@ -59517,6 +59637,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (scoped) return scoped;
     const x = String(f || "");
     if (iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(x) || iuSilverTaskEntityActionQueryCarveOutFolded(x)) return "tasks";
+    if (iuSilverTaskOverviewReadQuerySignalFolded(x)) return "tasks";
     if (iuSilverCalendarQueryWithNoteNegationSignalFolded(x)) return "calendar";
     if (/\b(kolik|najdi|vyhledej)\b/.test(x) && /\b(zaloh|pep\w*)\b/.test(x) && !/\b(kalend|schuz|ukol)\b/.test(x)) return "notes";
     if (
