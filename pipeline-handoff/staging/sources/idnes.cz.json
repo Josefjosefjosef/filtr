@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-03T23:01:52.851356Z",
+  "ingestedAt": "2026-06-03T23:46:58.462684Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Státy EU schválily první krok v přístupových jednáních s Ukrajinou a Moldavskem",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/staty-eu-schvalily-prvni-krok-v-pristupovych-jednanich-s-ukrajinou-a-moldavskem.A260604_005844_zahranicni_air",
+      "dt": "2026-06-03T23:11:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "jednáních",
+        "krok",
+        "moldavskem",
+        "první",
+        "přístupových",
+        "schválily",
+        "státy",
+        "ukrajinou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -741,31 +766,6 @@
         "udeřil",
         "zraněných",
         "írán"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pavel k soudu o SPD: Podněcování nenávisti do slušné společnosti nepatří",
-      "url": "https://www.idnes.cz/zpravy/domaci/pavel-prezident-spd-nenavist-rasismus-pokuta-soud-trest.A260603_153153_domaci_sahu",
-      "dt": "2026-06-03T13:52:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "nenávisti",
-        "nepatří",
-        "pavel",
-        "podněcování",
-        "slušné",
-        "soudu",
-        "spd",
-        "společnosti"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1563,7 +1563,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49099,
+      "bytes": 48642,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1600,11 +1600,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-03T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-03T23:11:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 5,
           "zpravy": 24,
+          "finance": 5,
           "other": 1
         },
         "drop_counts": {
@@ -1617,6 +1617,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Státy EU schválily první krok v přístupových jednáních s Ukrajinou a Moldavskem",
+            "publishedAt": "2026-06-03T23:11:00Z"
+          },
           {
             "title": "V Rusku se rozjela mašinerie proti oligarchům. Stát zabavuje majetky ve velkém",
             "publishedAt": "2026-06-03T22:00:00Z"
@@ -1644,10 +1648,6 @@
           {
             "title": "Muž se zabarikádoval s rukojmími v budově banky. Zastřelili ho agenti FBI",
             "publishedAt": "2026-06-03T19:17:00Z"
-          },
-          {
-            "title": "Nejmocnější armáda a AfD v čele? Vojenský vzestup Německa straší nejen Francii",
-            "publishedAt": "2026-06-03T18:00:00Z"
           }
         ]
       }
