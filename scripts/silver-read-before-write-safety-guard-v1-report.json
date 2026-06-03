@@ -1,0 +1,591 @@
+{
+  "generatedAt": "2026-06-03T22:35:20.024Z",
+  "guard": "READ_BEFORE_WRITE_SAFETY_GUARD_V1",
+  "pass": true,
+  "true_engine_cases": [
+    {
+      "input": "Nevíš náhodou kdy že mám zaplatit najem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zaplatit nájem. Termín splnění: 5. 6. 2026.",
+      "id": "SG_01"
+    },
+    {
+      "input": "Nevíš náhodou kdy musím zaplatit tu nájemnou",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zaplatit nájem. Termín splnění: 5. 6. 2026.",
+      "id": "SG_02"
+    },
+    {
+      "input": "Nevíš náhodou kdy je termín abych zaplatit nájem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zaplatit nájem. Termín splnění: 5. 6. 2026.",
+      "id": "SG_03"
+    },
+    {
+      "input": "Nevíš náhodou hele kdy že mám zaplatit ten nájem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zaplatit nájem. Termín splnění: 5. 6. 2026.",
+      "id": "SG_04"
+    },
+    {
+      "input": "Nevíš náhodou kdy že mám koupit darek",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Koupit dárek mámě. Bez termínu.",
+      "id": "SG_05"
+    },
+    {
+      "input": "Nevíš náhodou kdy musím koupit dárek k narozeninám",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Koupit dárek k narozeninám. Termín splnění: 10. 6. 2026.",
+      "id": "SG_06"
+    },
+    {
+      "input": "Nevíš náhodou kdy je termín abych koupit dárek",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Koupit dárek mámě. Bez termínu.",
+      "id": "SG_07"
+    },
+    {
+      "input": "Nevíš náhodou hele kdy že mám koupit ten dárek",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Koupit dárek mámě. Bez termínu.",
+      "id": "SG_08"
+    },
+    {
+      "input": "Nevíš náhodou co mám ještě koupit k narozeninám",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Koupit dárek k narozeninám. Termín splnění: 10. 6. 2026.",
+      "id": "SG_09"
+    },
+    {
+      "input": "Nevíš náhodou co mám vlastně koupit k narozeninám",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Koupit dárek k narozeninám. Termín splnění: 10. 6. 2026.",
+      "id": "SG_10"
+    },
+    {
+      "input": "Nevíš náhodou co mám udělat k narozeninám",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k naro",
+      "id": "SG_11"
+    },
+    {
+      "input": "Nevíš náhodou co mám udělat ten dárek",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k naro",
+      "id": "SG_12"
+    },
+    {
+      "input": "Nevíš náhodou co mám zařídit k narozeninám",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Koupit dárek k narozeninám. Termín splnění: 10. 6. 2026.",
+      "id": "SG_13"
+    },
+    {
+      "input": "Nevíš náhodou kdy že mám zavolat doktorem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zavolat doktorovi. Termín splnění: 6. 6. 2026.",
+      "id": "SG_14"
+    },
+    {
+      "input": "Nevíš náhodou kdy musím zavolat doktor",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zavolat doktorovi. Termín splnění: 6. 6. 2026.",
+      "id": "SG_15"
+    },
+    {
+      "input": "Nevíš náhodou kdy je termín abych zavolat doktorovi",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zavolat doktorovi. Termín splnění: 6. 6. 2026.",
+      "id": "SG_16"
+    },
+    {
+      "input": "Nevíš náhodou hele kdy že mám zavolat ten doktorovi",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zavolat doktorovi. Termín splnění: 6. 6. 2026.",
+      "id": "SG_17"
+    },
+    {
+      "input": "Nevíš náhodou kdy že mám vyzvednout Eličku",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Vyzvednout Eli ze školy. Termín splnění: 4. 6. 2026.",
+      "id": "SG_18"
+    },
+    {
+      "input": "Nevíš náhodou kdy musím vyzvednout Eli ze skoly",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Vyzvednout Eli ze školy. Termín splnění: 4. 6. 2026.",
+      "id": "SG_19"
+    },
+    {
+      "input": "Nevíš náhodou kdy je termín abych vyzvednout Eli",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Vyzvednout Eli ze školy. Termín splnění: 4. 6. 2026.",
+      "id": "SG_20"
+    },
+    {
+      "input": "Nevíš náhodou hele kdy že mám vyzvednout ten Eli",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Vyzvednout Eli ze školy. Termín splnění: 4. 6. 2026.",
+      "id": "SG_21"
+    },
+    {
+      "input": "Nevíš náhodou co mám ještě koupit mámě",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Koupit dárek mámě. Bez termínu.",
+      "id": "SG_22"
+    },
+    {
+      "input": "Nevíš náhodou co mám vlastně koupit mámě",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Koupit dárek mámě. Bez termínu.",
+      "id": "SG_23"
+    },
+    {
+      "input": "Nevíš náhodou hele co mám koupit pro mámu",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k naro",
+      "id": "SG_24"
+    },
+    {
+      "input": "Nevíš náhodou co mám udělat mámě",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k naro",
+      "id": "SG_25"
+    },
+    {
+      "input": "Nevíš náhodou co mám zařídit mámě",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Koupit dárek mámě. Bez termínu.",
+      "id": "SG_26"
+    },
+    {
+      "input": "Nevíš náhodou co mám zařídit pro mámu",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zaplatit nájem. Termín splnění: 5. 6. 2026.",
+      "id": "SG_27"
+    },
+    {
+      "input": "Nevíš náhodou nevíš co mám koupit pro mámu",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k naro",
+      "id": "SG_28"
+    },
+    {
+      "input": "Nevíš náhodou co mám zařídit s autem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zařídit STK a pojištění auta. Bez termínu.",
+      "id": "SG_29"
+    },
+    {
+      "input": "Nevíš náhodou co mám udělat s autem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k naro",
+      "id": "SG_30"
+    },
+    {
+      "input": "Nevíš náhodou co mám vlastně udělat s autem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zařídit STK a pojištění auta. Bez termínu.",
+      "id": "SG_31"
+    },
+    {
+      "input": "Nevíš náhodou potřebuju vědět co mám zařídit s autem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zařídit STK a pojištění auta. Bez termínu.",
+      "id": "SG_32"
+    },
+    {
+      "input": "Nevíš náhodou potřebuju vědět co mám udělat s autem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k naro",
+      "id": "SG_33"
+    },
+    {
+      "input": "Nevíš náhodou hele co mám zařídit s autem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zařídit STK a pojištění auta. Bez termínu.",
+      "id": "SG_34"
+    },
+    {
+      "input": "Nevíš náhodou hele co mám udělat ohledně auta",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k naro",
+      "id": "SG_35"
+    },
+    {
+      "input": "Nevíš náhodou co mám udělat ohledně auta",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k naro",
+      "id": "SG_36"
+    },
+    {
+      "input": "Nevíš náhodou můžeš mi říct co mám zařídit s autem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zařídit STK a pojištění auta. Bez termínu.",
+      "id": "SG_37"
+    },
+    {
+      "input": "Nevíš náhodou můžeš mi říct co mám udělat s autem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k naro",
+      "id": "SG_38"
+    },
+    {
+      "input": "Nevíš náhodou nevíš co mám zařídit s autem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zařídit STK a pojištění auta. Bez termínu.",
+      "id": "SG_39"
+    },
+    {
+      "input": "Nevíš náhodou nevíš co mám udělat ohledně auta",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Máš 8 aktivní úkoly:\n1. Zaplatit nájem\n2. Koupit dárek mámě\n3. Vyzvednout Eli ze školy\n4. Zavolat právníkovi ohledně smlouvy\n5. Zavolat doktorovi\n6. Zařídit STK a pojištění auta\n7. Koupit dárek k naro",
+      "id": "SG_40"
+    }
+  ],
+  "true_engine_pass": "40/40",
+  "live_proof": [
+    {
+      "input": "Nevíš náhodou kdy mám zaplatit nájem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zaplatit nájem. Termín splnění: 5. 6. 2026.",
+      "id": "LIVE_01"
+    },
+    {
+      "input": "Nevíš náhodou co mám zařídit s autem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zařídit STK a pojištění auta. Bez termínu.",
+      "id": "LIVE_02"
+    },
+    {
+      "input": "Můžeš mi říct kdy mám koupit dárek",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Koupit dárek mámě. Bez termínu.",
+      "id": "LIVE_03"
+    },
+    {
+      "input": "Potřebuju vědět co mám zařídit kolem auta",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zařídit STK a pojištění auta. Bez termínu.",
+      "id": "LIVE_04"
+    }
+  ],
+  "live_proof_pass": "4/4",
+  "deadline_family": [
+    {
+      "input": "Kdy mám zaplatit nájem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zaplatit nájem. Termín splnění: 5. 6. 2026."
+    },
+    {
+      "input": "Kdy mám koupit dárek",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Koupit dárek k narozeninám. Termín splnění: 10. 6. 2026."
+    },
+    {
+      "input": "Kdy mám zavolat doktorovi",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zavolat doktorovi. Termín splnění: 6. 6. 2026."
+    },
+    {
+      "input": "Kdy mám vyzvednout Eli",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Vyzvednout Eli ze školy. Termín splnění: 4. 6. 2026."
+    }
+  ],
+  "entity_family": [
+    {
+      "input": "Co mám koupit mámě",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Koupit dárek mámě. Bez termínu."
+    },
+    {
+      "input": "Co mám vyřešit s doktorem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zavolat doktorovi. Termín splnění: 6. 6. 2026."
+    },
+    {
+      "input": "Co mám zařídit kolem auta",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zařídit STK a pojištění auta. Bez termínu."
+    },
+    {
+      "input": "Co mám udělat s právníkem",
+      "intent": "tasks.read",
+      "processingState": "READ_OK",
+      "pass": true,
+      "issues": [],
+      "message": "Našel jsem úkol: Zavolat právníkovi ohledně smlouvy. Bez termínu."
+    }
+  ],
+  "overview_family": [
+    {
+      "id": "OV_01",
+      "input": "Co mám za úkoly",
+      "pass": true,
+      "issues": [],
+      "intent": "tasks.read"
+    },
+    {
+      "id": "OV_02",
+      "input": "Jaké mám úkoly",
+      "pass": true,
+      "issues": [],
+      "intent": "tasks.read"
+    },
+    {
+      "id": "OV_03",
+      "input": "Jaké mám aktivní úkoly",
+      "pass": true,
+      "issues": [],
+      "intent": "tasks.read"
+    },
+    {
+      "id": "OV_04",
+      "input": "Co mi zbývá",
+      "pass": true,
+      "issues": [],
+      "intent": "tasks.read"
+    },
+    {
+      "id": "OV_05",
+      "input": "Jaké mám rozdělané úkoly",
+      "pass": true,
+      "issues": [],
+      "intent": "tasks.read"
+    },
+    {
+      "id": "OV_06",
+      "input": "Jaké mám zbývající úkoly",
+      "pass": true,
+      "issues": [],
+      "intent": "tasks.read"
+    }
+  ],
+  "note_protection": [
+    {
+      "id": "NP_01",
+      "input": "Jakou má Volvo SPZ",
+      "pass": true,
+      "issues": [],
+      "intent": "notes.read"
+    },
+    {
+      "id": "NP_02",
+      "input": "Jaké je heslo k wifi",
+      "pass": true,
+      "issues": [],
+      "intent": "notes.read"
+    },
+    {
+      "id": "NP_03",
+      "input": "Jaký je kód k trezoru",
+      "pass": true,
+      "issues": [],
+      "intent": "notes.read"
+    }
+  ],
+  "calendar_protection": [
+    {
+      "id": "CP_01",
+      "input": "Kdy mám zubaře",
+      "pass": true,
+      "issues": [],
+      "intent": "calendar.read"
+    },
+    {
+      "id": "CP_02",
+      "input": "Kdy mám právníka",
+      "pass": true,
+      "issues": [],
+      "intent": "calendar.read"
+    },
+    {
+      "id": "CP_03",
+      "input": "Kdy mám schůzku s Tomášem",
+      "pass": true,
+      "issues": [],
+      "intent": "calendar.read"
+    }
+  ],
+  "save_prefix": [
+    {
+      "input": "Do poznámek SPZ Volva je ABC 4243",
+      "expected": "notes.create",
+      "observed": "notes.create",
+      "pass": true
+    },
+    {
+      "input": "Připomeň mi zítra v 15 zavolat mámě",
+      "expected": "tasks.create",
+      "observed": "tasks.create",
+      "pass": true
+    },
+    {
+      "input": "Do kalendáře zítra v 15 schůzka s Tomášem",
+      "expected": "calendar.create",
+      "observed": "calendar.create",
+      "pass": true
+    }
+  ],
+  "safety": {
+    "dangerous_write_count": 0,
+    "false_write_count": 0,
+    "write_when_negated_count": 0,
+    "query_created_write_count": 0
+  }
+}

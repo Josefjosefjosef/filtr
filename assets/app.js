@@ -37444,6 +37444,132 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return false;
   }
 
+  /** SILVER_READ_BEFORE_WRITE_SAFETY_GUARD_V1 — read wrapper + read cue → tasks.read (never create). */
+  const IU_SILVER_READ_BEFORE_WRITE_SAFETY_GUARD_V1 = true;
+
+  function iuSilverReadBeforeWriteSafetyGuardV1WrapperFolded(f) {
+    const x = String(f || "");
+    return (
+      /\bnevis\s+nahodou\b/.test(x) ||
+      /\bnevis\s+kdy\b/.test(x) ||
+      /\bvis\s+kdy\b/.test(x) ||
+      /\bmuzes\s+mi\s+rict\b/.test(x) ||
+      /\bpotrebuju\s+vedet\b/.test(x)
+    );
+  }
+
+  function iuSilverReadBeforeWriteSafetyGuardV1CueFolded(f) {
+    const x = String(f || "");
+    return (
+      /\bkdy\s+(?:ze\s+|musim\s+|mus[ií]m\s+|bych\s+m[eě]l\s+)?mam\b/.test(x) ||
+      /\bkdy\s+(?:musim|mus[ií]m)\b/.test(x) ||
+      /\bkdy\s+jsem\s+m[eě]l\b/.test(x) ||
+      /\bco\s+jsem\s+m[eě]l\b/.test(x) ||
+      /\bco\s+mi\s+zbyva\b/.test(x) ||
+      /\bco\s+mam\b/.test(x) ||
+      /\bkdy\s+je\s+termin\s+abych\b/.test(x)
+    );
+  }
+
+  function iuSilverReadBeforeWriteSafetyGuardV1Folded(f, rawOpt) {
+    if (!IU_SILVER_READ_BEFORE_WRITE_SAFETY_GUARD_V1) return false;
+    const x = String(f || "");
+    const raw = String(rawOpt || "");
+    if (!x) return false;
+    if (iuSilverDetectExplicitSavePrefixV1(raw)) return false;
+    const wrapper = iuSilverReadBeforeWriteSafetyGuardV1WrapperFolded(x);
+    const cue = iuSilverReadBeforeWriteSafetyGuardV1CueFolded(x);
+    if (wrapper && cue) return true;
+    if (iuSilverHasStrongWriteCreateCueV1(x, raw)) return false;
+    return false;
+  }
+
+  function iuSilverReadBeforeWriteSafetyGuardV1CarveOutFolded(f) {
+    const x = String(f || "");
+    if (!iuSilverReadBeforeWriteSafetyGuardV1Folded(x, "")) return false;
+    if (/\bkdy\b/.test(x)) {
+      return /\b(zaplatit|koupit|vyzvednout|zavolat|zaridit|vyridit|dokoncit|odevzdat|poslat|vyplnit|objednat|udelat|splnit|resit|nakoupit|kupovat|kontaktovat|volat)\b/.test(
+        x
+      );
+    }
+    if (/\bco\s+mam\b/.test(x)) {
+      return /\b(udelat|zaridit|vyridit|dokoncit|splnit|vyresit|koupit|pořídit|poridit|sehnat)\b/.test(x) || /\b(s\s+aut|kolem\s+aut|mam[eě]|mame|pravnik|doktor|narozenin|darek)\b/.test(x);
+    }
+    return false;
+  }
+
+  function iuSilverReadBeforeWriteSafetyGuardV1StripWrappersRaw(rawIn) {
+    let t = String(rawIn || "").trim();
+    if (!t) return t;
+    t = t.replace(/^\s*(?:nevi[sš]\s+n[aá]hodou\s+)+/giu, "");
+    t = t.replace(/^\s*hele\s+/giu, "");
+    t = t.replace(/^\s*(?:m[uů][žz]e[sš]\s+mi\s+[řr][ií]ct|pot[řr]ebuju\s+v[eě]d[eě]t)\s+/giu, "");
+    return t.replace(/\s+/g, " ").trim();
+  }
+
+  function iuSilverTryReadBeforeWriteSafetyGuardV1ReadTurn(raw, now, folded, ctx, empty) {
+    if (!IU_SILVER_READ_BEFORE_WRITE_SAFETY_GUARD_V1) return null;
+    const r0 = String(raw || "").trim();
+    const f = String(folded || "");
+    if (!r0 || !f || !iuSilverReadBeforeWriteSafetyGuardV1Folded(f, r0)) return null;
+    const rCore = iuSilverReadBeforeWriteSafetyGuardV1StripWrappersRaw(r0);
+    const fCore = foldCs(rCore);
+    const hit =
+      iuSilverTryTaskQueryCarveOutReadTurnV1(rCore, now, fCore, ctx || {}, empty) ||
+      iuSilverTryTaskDeadlineAnswerReadTurnV2(rCore, now, fCore, ctx || {}, empty) ||
+      iuSilverTryTaskQueryReadPriorityTurn(rCore, now, fCore, ctx || {}, empty) ||
+      iuSilverTryTaskQueryCarveOutReadTurnV1(r0, now, f, ctx || {}, empty) ||
+      iuSilverTryTaskDeadlineAnswerReadTurnV2(r0, now, f, ctx || {}, empty) ||
+      iuSilverTryTaskQueryReadPriorityTurn(r0, now, f, ctx || {}, empty);
+    if (hit) return hit;
+    let q = iuSilverExtractTaskQuerySearchSubject(rCore, fCore) || "";
+    if (!String(q || "").trim() && /\bkdy\b/.test(fCore)) {
+      const mWhen =
+        fCore.match(/\bkdy\s+(?:ze\s+|musim\s+|mus[ií]m\s+|je\s+termin\s+abych\s+)?(?:mam\s+)?(.+)$/) ||
+        fCore.match(/\bkdy\s+(?:musim|mus[ií]m)\s+(.+)$/);
+      if (mWhen && mWhen[1]) q = String(mWhen[1]).trim();
+    }
+    if (!String(q || "").trim() && /\bco\s+mam\b/.test(fCore)) {
+      const mWhat = fCore.match(/\bco\s+mam(?:\s+(?:jeste|vlastne|dokonce))?\s+(.+)$/);
+      if (mWhat && mWhat[1]) q = String(mWhat[1]).trim();
+    }
+    if (!String(q || "").trim() && iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(fCore)) q = "pravnik";
+    if (!String(q || "").trim() && /\bkolem\s+aut/.test(fCore)) q = "auto";
+    if (!String(q || "").trim()) {
+      const vyLemma = iuSilverTaskEntityVyresitQueryLemmaFolded(fCore);
+      if (vyLemma) q = vyLemma;
+    }
+    if (!String(q || "").trim()) return null;
+    const preferFuture = /\bkdy\b/.test(fCore);
+    const resolved = iuSilverTaskReadResolveSearchWithItemFallbackV1(r0, f, ctx, now, q, { preferFuture: preferFuture });
+    const sr = resolved.sr;
+    const ans = resolved.ans;
+    if (!ans || !ans.message || /Nic jsem k tomu nena[sš]el/i.test(String(ans.message || ""))) return null;
+    return {
+      normalizedIntent: "tasks.read",
+      targetContainer: "none",
+      processingState: "READ_OK",
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: {
+        silverReadSearch: true,
+        target: "tasks",
+        query: resolved.q,
+        readBeforeWriteSafetyGuardV1: true,
+        taskReadFallbackV1: resolved.usedFallback || undefined
+      },
+      readAnswer: { message: ans.message, silverSearch: sr },
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: ans.message,
+      assistantLead: ans.message,
+      clarificationText: "",
+      draft: empty,
+      silverSearchResult: sr
+    };
+  }
+
   /**
    * P1 task_query: „kdy/dokdy/na kdy mám zaplatit|koupit|zavolat…" → tasks.read (ne calendar.find_by_title).
    * foldCs; bez úkolového slovesa zůstává kalendář (zubař, schůzka, právník jako termín).
@@ -37499,7 +37625,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverTryTaskQueryCarveOutReadTurnV1(raw, now, folded, ctx, empty) {
     const f = String(folded || "");
     const r0 = String(raw || "").trim();
-    if (!iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(f) && !iuSilverTaskEntityActionQueryCarveOutFolded(f)) {
+    if (!iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(f) && !iuSilverTaskEntityActionQueryCarveOutFolded(f) && !iuSilverReadBeforeWriteSafetyGuardV1CarveOutFolded(f)) {
       return null;
     }
     const hit =
@@ -37547,6 +37673,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverTaskDeadlineReadCueFoldedV2(f) {
     const x = String(f || "");
     if (!x) return false;
+    if (iuSilverReadBeforeWriteSafetyGuardV1CarveOutFolded(x) && /\bkdy\b/.test(x)) return true;
     if (iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(x)) return true;
     if (iuSilverTaskQueryPurchaseDeadlineCueFolded(x)) return true;
     if (/\b(deadline|termin)\b/.test(x) && /\bukol/.test(x)) return true;
@@ -38226,6 +38353,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function iuSilverTaskReadContextFolded(f, rawOpt) {
+    if (IU_SILVER_READ_BEFORE_WRITE_SAFETY_GUARD_V1 && iuSilverReadBeforeWriteSafetyGuardV1Folded(f, rawOpt)) return true;
     if (iuSilverConflictingReadSameModuleConstraintFolded(f)) return false;
     if (iuSilverNakupJedenUkolTaskWriteFolded(f, rawOpt)) return false;
     if (iuSilverCalendarWriteNegatedTaskTargetGuardV1Folded(f)) return false;
@@ -42989,6 +43117,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!IU_SILVER_MOBILE_VOICE_FRAGMENT_TASK_CREATE_HARDENING_V1) return null;
     const f = String(folded || "");
     const r0 = String(raw || "").trim();
+    if (IU_SILVER_READ_BEFORE_WRITE_SAFETY_GUARD_V1 && iuSilverReadBeforeWriteSafetyGuardV1Folded(f, r0)) return null;
     if (!r0 || !f || !iuSilverMobileVoiceFragmentTaskCreateHardeningV1Folded(f, r0)) return null;
     if (iuSilverIsNegatedWriteIntentNarrow(f, r0)) return null;
     if (iuSilverP0ReadOnlyLeadBlocksWriteIntentFolded(f)) return null;
@@ -44722,7 +44851,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       (iuSilverHasTaskActionVerb(folded) || IU_SILVER_REMINDER_TASK_DOMINANCE_RE_V1.test(folded)) &&
       !calendarOverridesTask &&
       !iuSilverHasExplicitCalendarTarget(folded) &&
-      !cap55ScheduledShoppingCalEarly
+      !cap55ScheduledShoppingCalEarly &&
+      !(IU_SILVER_READ_BEFORE_WRITE_SAFETY_GUARD_V1 && iuSilverReadBeforeWriteSafetyGuardV1Folded(folded, raw))
     ) {
       return {
         intent: "task.create",
@@ -45593,7 +45723,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverBuildTaskCreateTurn(rawIn, now, opts) {
     opts = opts || {};
     if (opts.calendarOverridesTask) return null;
-    const rawInNegClean = iuSilverCrossModuleNegationStripTailFromRawIfNeeded(String(rawIn || "").trim());
+    const rawInGuard = String(rawIn || "").trim();
+    const foldGuardBlock = foldCs(rawInGuard);
+    if (IU_SILVER_READ_BEFORE_WRITE_SAFETY_GUARD_V1 && iuSilverReadBeforeWriteSafetyGuardV1Folded(foldGuardBlock, rawInGuard)) {
+      return null;
+    }
+    const rawInNegClean = iuSilverCrossModuleNegationStripTailFromRawIfNeeded(rawInGuard);
     let work = rawInNegClean;
     if (!work) return null;
     if (!opts.skipTargetStrip) {
@@ -59727,6 +59862,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const x = String(f || "");
     const raw = String(rawOpt || "");
     if (!x) return false;
+    if (IU_SILVER_READ_BEFORE_WRITE_SAFETY_GUARD_V1 && iuSilverReadBeforeWriteSafetyGuardV1Folded(x, raw)) return true;
     if (iuSilverCalendarQueryWithNoteNegationSignalFolded(x)) return true;
     const calQueryNegatesNotes =
       /\bneple\w*\s+(?:to\s+)?s\s+poznam/.test(x) &&
@@ -60280,6 +60416,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const x = String(f || "");
     const raw = String(rawOpt || "");
     if (iuSilverDetectExplicitSavePrefixV1(raw)) return false;
+    if (IU_SILVER_READ_BEFORE_WRITE_SAFETY_GUARD_V1 && iuSilverReadBeforeWriteSafetyGuardV1Folded(x, raw)) return true;
     if (/^\s*do\s+pozn[aá]m[^\s:]*\s*:/iu.test(raw)) return false;
     if (iuSilverCalendarWriteNegatedTaskTargetGuardV1Folded(x)) return false;
     if (iuSilverNoteWriteWarrantyObjectRoutingV1Folded(x, raw)) return false;
@@ -62061,6 +62198,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const ps = String(turn.processingState || "");
     const fold = foldCs(rawText);
 
+    if (IU_SILVER_READ_BEFORE_WRITE_SAFETY_GUARD_V1 && iuSilverReadBeforeWriteSafetyGuardV1Folded(fold, rawText)) {
+      return "search";
+    }
+
     if (iuSilverIsHelpGuidanceRenderModeV1(turn)) return "help";
 
     if (turn.silverExplicitSavePrefixRoutingV1 || iuSilverDetectExplicitSavePrefixV1(rawText)) return "save";
@@ -62181,6 +62322,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           const emptyRescue = createEmptyDraft();
           const ctxRescue = ctxOpt && typeof ctxOpt === "object" ? ctxOpt : {};
           rescuedRead =
+            iuSilverTryReadBeforeWriteSafetyGuardV1ReadTurn(rawText, nowRescue, foldRescue, ctxRescue, emptyRescue) ||
             iuSilverTryCalendarQueryNoteNegationReadTurn(rawText, nowRescue, foldRescue, ctxRescue, emptyRescue) ||
             iuSilverTryQueryUnderstandingEngineV1EarlyReadTurn(rawText, nowRescue, foldRescue, ctxRescue, emptyRescue) ||
             iuSilverTryReadSearchTurn(rawText, nowRescue, foldRescue, ctxRescue, emptyRescue);
@@ -66367,6 +66509,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const synEarly0 = iuSilverTryTaskItemSynonymReadTurnV1(raw0, now, fSynEarly0, ctx, createEmptyDraft());
       if (synEarly0) return synEarly0;
     }
+    if (raw0 && IU_SILVER_READ_BEFORE_WRITE_SAFETY_GUARD_V1) {
+      const fRbW0 = foldCs(raw0);
+      const rbW0 = iuSilverTryReadBeforeWriteSafetyGuardV1ReadTurn(raw0, now, fRbW0, ctx, createEmptyDraft());
+      if (rbW0) return rbW0;
+    }
     if (raw0 && IU_SILVER_TASK_QUERY_GOVERNOR_V1) {
       const fTaskGov0 = foldCs(raw0);
       const taskGov0 = iuSilverTryTaskQueryGovernorV1EarlyTurn(
@@ -67840,6 +67987,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return baseClarification("future_target_not_supported_yet", "clarification");
     }
     if (route.kind === "TASK_TRY") {
+      if (IU_SILVER_READ_BEFORE_WRITE_SAFETY_GUARD_V1 && iuSilverReadBeforeWriteSafetyGuardV1Folded(folded, raw0)) {
+        const rbWTaskTry = iuSilverTryReadBeforeWriteSafetyGuardV1ReadTurn(raw0, now, folded, ctx, prev);
+        if (rbWTaskTry) return rbWTaskTry;
+      }
       const remTaskRouteV1 = iuSilverReminderSemanticResolverV1Folded(raw);
       const remBlocksCalOverrideV1 = remTaskRouteV1 && remTaskRouteV1.module === "task";
       if (
