@@ -37515,23 +37515,22 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (vyLemma) q = vyLemma;
     }
     if (!String(q || "").trim()) return null;
-    const sr = iuSilverSearchLocalData(q, {
-      target: "tasks",
-      now: now,
-      preferFuture: true,
-      getEventsSnapshot: ctx && ctx.getEventsSnapshot,
-      getTasksSnapshot: ctx && ctx.getTasksSnapshot,
-      getNotesSnapshot: ctx && ctx.getNotesSnapshot,
-      rawFoldedHint: f
-    });
-    const ans = iuSilverBuildAnswerFromSearch(sr);
+    const resolvedCarve = iuSilverTaskReadResolveSearchWithItemFallbackV1(r0, f, ctx, now, q, { preferFuture: true });
+    const sr = resolvedCarve.sr;
+    const ans = resolvedCarve.ans;
     return {
       normalizedIntent: "tasks.read",
       targetContainer: "none",
       processingState: "READ_OK",
       clarificationReason: null,
       futureIntentCandidate: null,
-      readQuery: { silverReadSearch: true, target: "tasks", query: q, taskQueryCarveOut: true },
+      readQuery: {
+        silverReadSearch: true,
+        target: "tasks",
+        query: resolvedCarve.q,
+        taskQueryCarveOut: true,
+        taskReadFallbackV1: resolvedCarve.usedFallback || undefined
+      },
       readAnswer: { message: ans.message, silverSearch: sr },
       extractedFields: {},
       missingFields: [],
@@ -38420,28 +38419,55 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       q = "pravnik";
     }
     if (!String(q || "").trim()) {
+      if (IU_SILVER_TASK_ITEM_FALLBACK_SEARCH_V1 && iuSilverTaskItemFallbackEligibleFolded(f, r0)) {
+        const fbEmpty = iuSilverTaskReadFallbackSearchV1(r0, f, ctx, now);
+        if (
+          fbEmpty.answer &&
+          fbEmpty.answer.message &&
+          fbEmpty.answer.answerType !== "none" &&
+          !/Nic jsem k tomu nena[sš]el/i.test(String(fbEmpty.answer.message || ""))
+        ) {
+          return {
+            normalizedIntent: "tasks.read",
+            targetContainer: "none",
+            processingState: "READ_OK",
+            clarificationReason: null,
+            futureIntentCandidate: null,
+            readQuery: { silverReadSearch: true, target: "tasks", query: "", taskReadFallbackV1: true },
+            readAnswer: { message: fbEmpty.answer.message, silverSearch: fbEmpty.searchResult },
+            extractedFields: {},
+            missingFields: [],
+            ambiguousFields: [],
+            userFacingSummary: fbEmpty.answer.message,
+            assistantLead: fbEmpty.answer.message,
+            clarificationText: "",
+            draft: empty,
+            silverSearchResult: fbEmpty.searchResult
+          };
+        }
+      }
       return iuSilverBuildTasksReadListTurn(ctx || {}, empty, f, now);
     }
     const preferFuture = /\bkdy\b/.test(f) || /\bdo\s+10\s+dnu\b/.test(f);
     const dateHint = /\bzitra\b|\bzittra\b/.test(f) ? "tomorrow" : /\bdnes\b|\bdneska\b/.test(f) ? "today" : "";
-    const sr = iuSilverSearchLocalData(q, {
-      target: "tasks",
-      now: now,
+    const resolved = iuSilverTaskReadResolveSearchWithItemFallbackV1(r0, f, ctx, now, q, {
       preferFuture: preferFuture,
-      dateHint: dateHint,
-      getEventsSnapshot: ctx && ctx.getEventsSnapshot,
-      getTasksSnapshot: ctx && ctx.getTasksSnapshot,
-      getNotesSnapshot: ctx && ctx.getNotesSnapshot,
-      rawFoldedHint: f
+      dateHint: dateHint
     });
-    const ans = iuSilverBuildAnswerFromSearch(sr);
+    const sr = resolved.sr;
+    const ans = resolved.ans;
     return {
       normalizedIntent: "tasks.read",
       targetContainer: "none",
       processingState: "READ_OK",
       clarificationReason: null,
       futureIntentCandidate: null,
-      readQuery: { silverReadSearch: true, target: "tasks", query: q },
+      readQuery: {
+        silverReadSearch: true,
+        target: "tasks",
+        query: resolved.q,
+        taskReadFallbackV1: resolved.usedFallback || undefined
+      },
       readAnswer: { message: ans.message, silverSearch: sr },
       extractedFields: {},
       missingFields: [],
@@ -51555,8 +51581,36 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return t;
   }
 
-  function iuSilverBuildTasksReadListTurn(ctx, empty, foldedHint, now) {
+  function iuSilverBuildTasksReadListTurn(ctx, empty, foldedHint, now, rawOpt) {
     const f = String(foldedHint || "");
+    const r0 = String(rawOpt || "").trim();
+    if (IU_SILVER_TASK_ITEM_FALLBACK_SEARCH_V1 && iuSilverTaskItemFallbackEligibleFolded(f, r0 || f)) {
+      const fbList = iuSilverTaskReadFallbackSearchV1(r0 || f, f, ctx, now);
+      if (
+        fbList.answer &&
+        fbList.answer.message &&
+        fbList.answer.answerType !== "none" &&
+        !/Nic jsem k tomu nena[sš]el/i.test(String(fbList.answer.message || ""))
+      ) {
+        return {
+          normalizedIntent: "tasks.read",
+          targetContainer: "none",
+          processingState: "READ_OK",
+          clarificationReason: null,
+          futureIntentCandidate: null,
+          readQuery: { silverReadSearch: true, target: "tasks", query: "", taskReadFallbackV1: true },
+          readAnswer: { message: fbList.answer.message, silverSearch: fbList.searchResult },
+          extractedFields: {},
+          missingFields: [],
+          ambiguousFields: [],
+          userFacingSummary: fbList.answer.message,
+          assistantLead: fbList.answer.message,
+          clarificationText: "",
+          draft: empty,
+          silverSearchResult: fbList.searchResult
+        };
+      }
+    }
     const topicRel = IU_SILVER_SEARCH_RELEVANCE_CONTRACT_V1 ? iuSilverSearchRelevanceContractTaskTopicFolded(f) : "";
     if (topicRel) {
       const srTopic = iuSilverSearchLocalData(topicRel, {
@@ -60253,6 +60307,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   const IU_SILVER_NOTE_RETRIEVAL_PLATFORM_V1 = true;
   /** SILVER_NOTE_ANSWER_QUALITY_FALLBACK_V1 — plné věty z poznámek + read-only fallback fulltext (ne AI, ne DOM search). */
   const IU_SILVER_NOTE_ANSWER_QUALITY_FALLBACK_V1 = true;
+  /** SILVER_TASK_ITEM_FALLBACK_SEARCH_V1 — read-only task item retrieval fallback (ne create/save, ne overview). */
+  const IU_SILVER_TASK_ITEM_FALLBACK_SEARCH_V1 = true;
 
   const IU_SILVER_NOTE_RETRIEVAL_PLATFORM_V1_STOP = new Set([
     "a",
@@ -60914,6 +60970,374 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
     return { sr: sr, ans: ans, q: qSearch || q, fallbackMs: fallbackMs, usedFallback: usedFallback };
+  }
+
+  const IU_SILVER_TASK_ITEM_FALLBACK_STOP_V1 = new Set([
+    "a",
+    "ale",
+    "at",
+    "co",
+    "do",
+    "hele",
+    "jak",
+    "jaka",
+    "jake",
+    "jaky",
+    "jakou",
+    "je",
+    "jsem",
+    "jsou",
+    "k",
+    "ke",
+    "kde",
+    "kdo",
+    "kdy",
+    "kolik",
+    "komu",
+    "ma",
+    "mam",
+    "mas",
+    "mate",
+    "me",
+    "mi",
+    "na",
+    "ne",
+    "o",
+    "od",
+    "po",
+    "pro",
+    "prosim",
+    "se",
+    "si",
+    "s",
+    "ta",
+    "ten",
+    "to",
+    "tu",
+    "ty",
+    "v",
+    "ve",
+    "vsak",
+    "ze",
+    "za",
+    "ukol",
+    "ukoly",
+    "ukolu",
+    "jen",
+    "pouze",
+    "ohledne",
+    "jeste",
+    "drive",
+    "nejdrive",
+    "kolem",
+    "s",
+    "tim",
+    "tom",
+    "tomu"
+  ]);
+
+  function iuSilverTaskItemQueryFolded(f) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(x)) return true;
+    if (iuSilverTaskEntityActionQueryCarveOutFolded(x)) return true;
+    if (/\bco\s+mam\s+koupit\b/.test(x)) return true;
+    if (/\bco\s+mam\s+kupovat\b/.test(x)) return true;
+    if (/\buhrad\w*\b/.test(x) && /\bnajem\b/.test(x)) return true;
+    if (/\bkontaktov\w*\b/.test(x) && /\bdoktor/.test(x)) return true;
+    if (/\bporid\w*\b/.test(x)) return true;
+    if (/\bzarid\w*\b/.test(x) && /\baut/.test(x)) return true;
+    if (/\b(co\s+mam|kdy\s+mam|dokdy\s+mam)\s+\w+\s+(mam\w*|eli|aut\w*|pravn\w*|doktor\w*|darek\w*|najem\w*)\b/.test(x)) return true;
+    return false;
+  }
+
+  function iuSilverTryTaskItemSynonymReadTurnV1(raw, now, folded, ctx, empty) {
+    const f = String(folded || "");
+    const r0 = String(raw || "").trim();
+    if (!IU_SILVER_TASK_ITEM_FALLBACK_SEARCH_V1) return null;
+    if (iuSilverDetectExplicitSavePrefixV1(r0)) return null;
+    if (iuSilverTaskOverviewReadQuerySignalFolded(f)) return null;
+    if (!/\b(uhrad\w*\s+najem\w*|kontaktov\w*\s+doktor\w*|porid\w*\s+darek\w*|zarid\w*\s+auto\w*)\b/.test(f)) return null;
+    const fb = iuSilverTaskReadFallbackSearchV1(r0, f, ctx, now);
+    if (
+      !fb.answer ||
+      fb.answer.answerType === "none" ||
+      /Nic jsem k tomu nena[sš]el/i.test(String(fb.answer.message || ""))
+    ) {
+      return null;
+    }
+    return {
+      normalizedIntent: "tasks.read",
+      targetContainer: "none",
+      processingState: "READ_OK",
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: { silverReadSearch: true, target: "tasks", query: "", taskReadFallbackV1: true, taskItemSynonymReadV1: true },
+      readAnswer: { message: fb.answer.message, silverSearch: fb.searchResult },
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: fb.answer.message,
+      assistantLead: fb.answer.message,
+      clarificationText: "",
+      draft: empty,
+      silverSearchResult: fb.searchResult
+    };
+  }
+
+  function iuSilverTaskItemFallbackEntityAnchoredFolded(f) {
+    const x = String(f || "");
+    if (!iuSilverTaskItemQueryFolded(x)) return false;
+    return (
+      /\bmam[ae]\w*\b/.test(x) ||
+      /\beli\b/.test(x) ||
+      /\bdarek\w*\b/.test(x) ||
+      /\bnajem\w*\b/.test(x) ||
+      /\bpravn\w*\b/.test(x) ||
+      /\bdoktor\w*\b/.test(x) ||
+      /\blekar\w*\b/.test(x) ||
+      /\baut\w*\b/.test(x) ||
+      /\bkolem\s+aut/.test(x) ||
+      /\bs\s+pravn/.test(x) ||
+      /\buhrad\w*\b/.test(x) ||
+      /\bkontaktov\w*\b/.test(x) ||
+      /\bporid\w*\b/.test(x) ||
+      /^\s*uhrad\w*\s+najem/.test(x) ||
+      /^\s*kontaktov\w*\s+doktor/.test(x) ||
+      /^\s*porid\w*\s+darek/.test(x) ||
+      /^\s*zarid\w*\s+auto/.test(x)
+    );
+  }
+
+  function iuSilverTaskItemFallbackEligibleFolded(f, rawOpt) {
+    if (!IU_SILVER_TASK_ITEM_FALLBACK_SEARCH_V1) return false;
+    const x = String(f || "");
+    const r0 = String(rawOpt || "");
+    if (!x || iuSilverHasWriteVerb(x)) return false;
+    if (iuSilverDetectExplicitSavePrefixV1(r0)) return false;
+    if (iuSilverTryParseExplicitNoteCreate(r0)) return false;
+    if (iuSilverTaskOverviewReadQuerySignalFolded(x)) return false;
+    const entityAnchored = iuSilverTaskItemFallbackEntityAnchoredFolded(x);
+    if (!entityAnchored && iuSilverWantsTaskListOnlyFolded(x)) return false;
+    if (!iuSilverTaskReadContextFolded(x, r0) && !iuSilverTaskItemQueryFolded(x)) return false;
+    return iuSilverTaskItemQueryFolded(x) || entityAnchored;
+  }
+
+  function iuSilverTaskItemFallbackMamaEntityInQueryFolded(qf) {
+    const x = String(qf || "");
+    if (/\bmam[ae]\w*\b/.test(x)) return true;
+    if (/\b(koupit|kupovat)\s+mam\w*\b/.test(x)) return true;
+    return false;
+  }
+
+  function iuSilverTaskItemFallbackExtractSearchTermsV1(folded) {
+    const f = iuSilverNormalizeForSearch(String(folded || ""));
+    if (!f) return [];
+    const rawWords = f.split(/\s+/).filter(function (w) {
+      return w && w.length >= 2;
+    });
+    const terms = [];
+    const seen = {};
+    function pushTerm(t) {
+      const tok = String(t || "").trim();
+      if (!tok || tok.length < 2 || seen[tok]) return;
+      seen[tok] = 1;
+      terms.push(tok);
+    }
+    for (let wi = 0; wi < rawWords.length; wi++) {
+      const w = rawWords[wi];
+      if (IU_SILVER_TASK_ITEM_FALLBACK_STOP_V1.has(w)) continue;
+      if (w.length === 2 && !/^\d+$/.test(w) && !/^(tv|eli|stk)$/.test(w)) continue;
+      pushTerm(w);
+      if (wi + 1 < rawWords.length) {
+        const w2 = rawWords[wi + 1];
+        if (!IU_SILVER_TASK_ITEM_FALLBACK_STOP_V1.has(w2) && w2.length >= 3) pushTerm(w + " " + w2);
+      }
+      if (w.length >= 4) {
+        pushTerm(w.slice(0, 4));
+        if (w.length >= 5) pushTerm(w.slice(0, 3));
+      }
+    }
+    const bag = {};
+    for (let ti = 0; ti < terms.length; ti++) bag[terms[ti]] = 1;
+    if (/\buhrad\w*\b/.test(f)) {
+      bag.zaplatit = 1;
+      bag.najem = 1;
+    }
+    if (/\bkontaktov\w*\b/.test(f)) {
+      bag.zavolat = 1;
+      bag.doktor = 1;
+    }
+    if (/\bporid\w*\b/.test(f)) {
+      bag.koupit = 1;
+      bag.darek = 1;
+    }
+    if (/\bzarid\w*\b/.test(f) && /\baut/.test(f)) {
+      bag.stk = 1;
+      bag.pojist = 1;
+      bag.auto = 1;
+    }
+    if (/\bkoupit\b/.test(f) && /\bdarek\b/.test(f) && !iuSilverTaskItemFallbackMamaEntityInQueryFolded(f)) {
+      bag.narozenin = 1;
+    }
+    const expanded = iuSilverSearchExpandSynonymTokens(Object.keys(bag));
+    return expanded.slice(0, 12);
+  }
+
+  function iuSilverTaskItemFallbackScoreTaskV1(task, terms, queryFolded) {
+    const hay = iuSilverNormalizeForSearch(String((task && task.title) || "") + " " + String((task && task.note) || ""));
+    if (!hay || !terms.length) return 0;
+    let score = 0;
+    let matched = 0;
+    for (let i = 0; i < terms.length; i++) {
+      const t = terms[i];
+      if (t.indexOf(" ") >= 0) {
+        if (hay.indexOf(t) >= 0) {
+          score += 14;
+          matched++;
+        }
+        continue;
+      }
+      const wordRe = new RegExp("\\b" + t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\w*\\b");
+      if (wordRe.test(hay)) {
+        score += 10;
+        matched++;
+      } else if (t.length >= 3 && hay.indexOf(t.slice(0, 3)) >= 0) {
+        score += 5;
+        matched++;
+      } else if (hay.indexOf(t) >= 0) {
+        score += 4;
+        matched++;
+      }
+    }
+    if (matched >= 2) score += 8;
+    if (matched >= 3) score += 6;
+    const qf = String(queryFolded || "");
+    const qMamaEntity = iuSilverTaskItemFallbackMamaEntityInQueryFolded(qf);
+    if (/\bdarek\b/.test(qf) && !qMamaEntity) {
+      if (/\bmam\w*\b/.test(hay)) score -= 40;
+      if (/\bnarozenin\w*\b/.test(hay)) score += 22;
+    }
+    if (qMamaEntity && /\bkoupit\b/.test(qf)) {
+      if (/\bmam\w*\b/.test(hay)) score += 16;
+    }
+    if (/\bnajem\b/.test(qf) && /\bnajem\b/.test(hay)) score += 10;
+    if (/\beli\b/.test(qf) && /\beli\b/.test(hay)) score += 10;
+    if (/\bpravn\w*\b/.test(qf) && /\bpravn\w*\b/.test(hay)) score += 10;
+    if (/\bdoktor\w*\b/.test(qf) && /\bdoktor\w*\b/.test(hay)) score += 10;
+    if (/\baut\w*\b/.test(qf) && /\baut\w*\b/.test(hay)) score += 8;
+    return score;
+  }
+
+  function iuSilverTaskReadPrimaryWeakV1(ans, sr, folded) {
+    if (!ans || ans.answerType === "none") return true;
+    if (/Nic jsem k tomu nena[sš]el/i.test(String(ans.message || ""))) return true;
+    const f = String(folded || "");
+    if (iuSilverTaskOverviewReadQuerySignalFolded(f) || iuSilverWantsTaskListOnlyFolded(f)) return false;
+    if (ans.answerType === "list") {
+      const res = sr && Array.isArray(sr.results) ? sr.results : [];
+      if (res.length > 1) return true;
+    }
+    const br = sr && sr.bestResult;
+    const score = br ? Number(br.score) || 0 : 0;
+    if (score > 0 && score < 32) return true;
+    if (/\bdarek\b/.test(f) && !iuSilverTaskItemFallbackMamaEntityInQueryFolded(f)) {
+      const tk = br && br.payload && br.payload.task;
+      const titF = tk ? iuSilverNormalizeForSearch(String(tk.title || "")) : "";
+      if (/\bmam\w*\b/.test(titF) && !/\bnarozenin\w*\b/.test(titF)) return true;
+    }
+    return false;
+  }
+
+  function iuSilverTaskReadFallbackSearchV1(raw, folded, ctx, now) {
+    const t0 = Date.now();
+    const empty = { task: null, score: 0, runtimeMs: 0, searchResult: null, answer: null, minScore: 28 };
+    if (!IU_SILVER_TASK_ITEM_FALLBACK_SEARCH_V1) return Object.assign({}, empty, { runtimeMs: Date.now() - t0 });
+    if (!iuSilverTaskItemFallbackEligibleFolded(folded, raw)) return Object.assign({}, empty, { runtimeMs: Date.now() - t0 });
+    const terms = iuSilverTaskItemFallbackExtractSearchTermsV1(folded);
+    if (!terms.length) return Object.assign({}, empty, { runtimeMs: Date.now() - t0 });
+    const tasks = typeof (ctx && ctx.getTasksSnapshot) === "function" ? ctx.getTasksSnapshot() : [];
+    const wantDone = iuSilverTaskCompletedOnlyListCueFolded(String(folded || ""));
+    let bestTask = null;
+    let bestScore = 0;
+    for (let ti = 0; ti < tasks.length; ti++) {
+      const tk = tasks[ti];
+      if (!tk) continue;
+      const st = String(tk.status || "").toLowerCase();
+      if (!wantDone && st === "done") continue;
+      const sc = iuSilverTaskItemFallbackScoreTaskV1(tk, terms, folded);
+      if (sc > bestScore) {
+        bestScore = sc;
+        bestTask = tk;
+      }
+    }
+    const runtimeMs = Date.now() - t0;
+    const minScore = 28;
+    if (!bestTask || bestScore < minScore) {
+      return { task: null, score: bestScore, runtimeMs: runtimeMs, searchResult: null, answer: null, minScore: minScore };
+    }
+    const srUse = {
+      target: "tasks",
+      answerType: "task",
+      evalNow: now instanceof Date ? now : new Date(),
+      results: [{ kind: "task", score: bestScore, payload: { task: bestTask } }],
+      bestResult: { kind: "task", score: bestScore, payload: { task: bestTask } },
+      rawFoldedHint: String(folded || ""),
+      taskReadFallbackV1: true,
+      fallbackRuntimeMs: runtimeMs
+    };
+    const ans = iuSilverBuildAnswerFromSearch(srUse);
+    return { task: bestTask, score: bestScore, runtimeMs: runtimeMs, searchResult: srUse, answer: ans, minScore: minScore };
+  }
+
+  function iuSilverTaskReadResolveSearchWithItemFallbackV1(raw, folded, ctx, now, q, searchOpts) {
+    searchOpts = searchOpts || {};
+    const f = String(folded || "");
+    const r0 = String(raw || "").trim();
+    const preferFuture =
+      searchOpts.preferFuture != null ? searchOpts.preferFuture : /\bkdy\b/.test(f) || /\bdo\s+10\s+dnu\b/.test(f);
+    const dateHint =
+      searchOpts.dateHint != null
+        ? searchOpts.dateHint
+        : /\bzitra\b|\bzittra\b/.test(f)
+          ? "tomorrow"
+          : /\bdnes\b|\bdneska\b/.test(f)
+            ? "today"
+            : "";
+    let sr = null;
+    let ans = null;
+    let usedFallback = false;
+    let fallbackMs = 0;
+    const qStr = String(q || "").trim();
+    if (qStr) {
+      sr = iuSilverSearchLocalData(qStr, {
+        target: "tasks",
+        now: now,
+        preferFuture: preferFuture,
+        dateHint: dateHint,
+        getEventsSnapshot: ctx && ctx.getEventsSnapshot,
+        getTasksSnapshot: ctx && ctx.getTasksSnapshot,
+        getNotesSnapshot: ctx && ctx.getNotesSnapshot,
+        rawFoldedHint: f
+      });
+      ans = iuSilverBuildAnswerFromSearch(sr);
+    }
+    const weak = !qStr || iuSilverTaskReadPrimaryWeakV1(ans, sr, f);
+    if (IU_SILVER_TASK_ITEM_FALLBACK_SEARCH_V1 && iuSilverTaskItemFallbackEligibleFolded(f, r0) && weak) {
+      const fb = iuSilverTaskReadFallbackSearchV1(r0, f, ctx, now);
+      fallbackMs = fb.runtimeMs || 0;
+      if (
+        fb.answer &&
+        fb.answer.message &&
+        fb.answer.answerType !== "none" &&
+        !/Nic jsem k tomu nena[sš]el/i.test(String(fb.answer.message || ""))
+      ) {
+        sr = fb.searchResult || sr;
+        ans = fb.answer;
+        usedFallback = true;
+      }
+    }
+    return { sr: sr, ans: ans, usedFallback: usedFallback, fallbackMs: fallbackMs, q: qStr };
   }
 
   function iuSilverNoteRetrievalPlatformV1ExtractAnswerFromBlob(blobRaw, classif, entityLabel, noteOpt) {
@@ -65938,6 +66362,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (raw0 && IU_SILVER_CONVERSATIONAL_OWNERSHIP_HARDENING_V1) {
       iuSilverConversationalOwnershipHardeningV1PreTurnCleanup(raw0, foldCs(raw0));
     }
+    if (raw0 && IU_SILVER_TASK_ITEM_FALLBACK_SEARCH_V1) {
+      const fSynEarly0 = foldCs(raw0);
+      const synEarly0 = iuSilverTryTaskItemSynonymReadTurnV1(raw0, now, fSynEarly0, ctx, createEmptyDraft());
+      if (synEarly0) return synEarly0;
+    }
     if (raw0 && IU_SILVER_TASK_QUERY_GOVERNOR_V1) {
       const fTaskGov0 = foldCs(raw0);
       const taskGov0 = iuSilverTryTaskQueryGovernorV1EarlyTurn(
@@ -67592,6 +68021,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverNoteAnswerQualityExtractSearchTermsV1: iuSilverNoteAnswerQualityExtractSearchTermsV1,
     iuSilverNoteReadFallbackSearchV1: iuSilverNoteReadFallbackSearchV1,
     iuSilverNoteReadSearchWithQualityV1: iuSilverNoteReadSearchWithQualityV1,
+    iuSilverTaskItemFallbackExtractSearchTermsV1: iuSilverTaskItemFallbackExtractSearchTermsV1,
+    iuSilverTaskItemFallbackScoreTaskV1: iuSilverTaskItemFallbackScoreTaskV1,
+    iuSilverTaskReadFallbackSearchV1: iuSilverTaskReadFallbackSearchV1,
+    iuSilverTaskReadResolveSearchWithItemFallbackV1: iuSilverTaskReadResolveSearchWithItemFallbackV1,
     iuSilverNoteAnswerQualityComposeSentenceV1: iuSilverNoteAnswerQualityComposeSentenceV1,
     iuSilverNoteAnswerQualityFinalizeV1: iuSilverNoteAnswerQualityFinalizeV1,
     hasSilverStorageDisambiguationPayload,
