@@ -33657,6 +33657,21 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "#iuCalEventBottomSheet .iu-calBottomSheet__scroll{padding:0 16px 12px}" +
     "#iuCalendarOverlay .iu-calendarOverlay__form input,#iuCalendarOverlay .iu-calendarOverlay__form textarea,#iuCalendarOverlay .iu-calendarOverlay__form select{font-size:16px!important;min-height:44px}" +
     ".iuSilverDraftAllDayLine{display:block;line-height:1.25;font-size:14px;font-weight:700;color:#1f3a5f}";
+  const CAL_PREMIUM_FIX_V4_STYLE_ID = "iu-calendar-premium-fix-v4";
+  const CAL_PREMIUM_FIX_V4_CSS =
+    "#iuCalEventBottomSheet .iu-calBottomSheet__handle{margin:6px auto 2px}" +
+    "#iuCalEventBottomSheet .iu-calBottomSheet__head{padding:2px 12px 4px}" +
+    "#iuCalEventBottomSheet .iu-calBottomSheet__scroll{padding:0 12px 6px;overflow-y:auto}" +
+    "#iuCalEventBottomSheet .iu-calInline.iu-calInline--premiumV2{display:flex;flex-direction:column;gap:7px;padding:8px 10px 10px;border-radius:14px;box-shadow:0 2px 12px rgba(15,23,42,.05)}" +
+    "#iuCalEventBottomSheet .iu-calInline--premiumV2 .iu-calInline__field{gap:3px}" +
+    "#iuCalEventBottomSheet .iu-calInline--premiumV2 .iu-calInline__label{font-size:11px;line-height:1.2;letter-spacing:.03em}" +
+    "#iuCalEventBottomSheet .iu-calInline--premiumV2 .iu-calInline__inp,#iuCalEventBottomSheet .iu-calInline--premiumV2 .iu-calInline__dateInput{min-height:44px;padding:10px 12px;border-radius:12px}" +
+    "#iuCalEventBottomSheet .iu-calInline--premiumV2 .iu-calInline__txt{min-height:56px;padding:10px 12px;border-radius:12px;line-height:1.35}" +
+    "#iuCalEventBottomSheet .iu-calInline--premiumV2 .iu-calInline__timeBtn{min-height:44px;padding:10px 12px;border-radius:12px}" +
+    "#iuCalEventBottomSheet .iu-calInline--premiumV2 .iu-calAllDayToggleRow{padding:8px 10px;border-radius:12px;margin:0}" +
+    "#iuCalEventBottomSheet .iu-calAllDayToggleRow__line{font-size:13px;line-height:1.15}" +
+    "#iuCalEventBottomSheet .iu-calInline--premiumV2 .iu-calInline__actions{gap:6px;margin-top:0}" +
+    "#iuCalEventBottomSheet .iu-calInline--premiumV2 .iu-calInline__btn{min-height:44px;padding:11px 14px;border-radius:12px;font-size:15px}";
   const calScrollLock = {
     saved: false,
     bodyOverflow: "",
@@ -33751,6 +33766,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         st6.id = CAL_PREMIUM_FIX_V2_STYLE_ID;
         st6.textContent = CAL_PREMIUM_FIX_V2_CSS;
         document.head.appendChild(st6);
+      }
+      if (!document.getElementById(CAL_PREMIUM_FIX_V4_STYLE_ID)){
+        const st7 = document.createElement("style");
+        st7.id = CAL_PREMIUM_FIX_V4_STYLE_ID;
+        st7.textContent = CAL_PREMIUM_FIX_V4_CSS;
+        document.head.appendChild(st7);
       }
       ensureCalPremiumDom();
     }catch{}
@@ -34874,14 +34895,39 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     });
   }
 
+  function calEventSearchNormalize(text){
+    let s = String(text || "").toLowerCase();
+    try{
+      s = s.normalize("NFD").replace(/\p{M}/gu, "");
+    }catch{
+      s = s
+        .replace(/[áàäâå]/g, "a")
+        .replace(/[čć]/g, "c")
+        .replace(/[ďđ]/g, "d")
+        .replace(/[éèěëê]/g, "e")
+        .replace(/[íìïî]/g, "i")
+        .replace(/[ľĺ]/g, "l")
+        .replace(/[ňń]/g, "n")
+        .replace(/[óòöôő]/g, "o")
+        .replace(/[řŕ]/g, "r")
+        .replace(/[šś]/g, "s")
+        .replace(/[ťţ]/g, "t")
+        .replace(/[úùüûű]/g, "u")
+        .replace(/[ýÿ]/g, "y")
+        .replace(/[žź]/g, "z");
+    }
+    s = s.replace(/y/g, "i");
+    return s.trim();
+  }
+
   function searchCalendarEvents(query, scope){
-    const q = String(query || "").trim().toLowerCase();
+    const qNorm = calEventSearchNormalize(query);
     const pool = eventsInSearchScope(scope);
-    if (!q) return [];
+    if (!qNorm) return [];
     return pool
       .filter((ev)=>{
-        const hay = [ev.title, ev.note, ev.address].map((x)=>String(x || "").toLowerCase()).join(" ");
-        return hay.indexOf(q) >= 0;
+        const hay = calEventSearchNormalize([ev.title, ev.note, ev.address].join(" "));
+        return hay.indexOf(qNorm) >= 0;
       })
       .sort(compareEvents);
   }
