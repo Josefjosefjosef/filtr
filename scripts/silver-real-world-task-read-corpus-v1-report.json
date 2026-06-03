@@ -1,0 +1,324 @@
+{
+  "generatedAt": "2026-06-03T22:15:51.929Z",
+  "audit": "REAL_WORLD_TASK_READ_CORPUS_V1",
+  "phase_engine_changed": "NO",
+  "assets_app_changed": "NO",
+  "app_js_sha256": "e6e345c342ed9e049f5edb67f5085b7cde3386116c32219a7634fd06d53a06a9",
+  "total_cases": 4329,
+  "pass": 1931,
+  "fail": 2398,
+  "real_world_task_read_accuracy": "44.61%",
+  "lane_breakdown": {
+    "deadline": 383,
+    "colloquial": 978,
+    "typo": 374,
+    "long": 1174,
+    "mixed": 1017,
+    "synonym": 18,
+    "noisy": 61,
+    "entity": 318,
+    "multi_entity": 6
+  },
+  "lane_pass_rates": {
+    "deadline": {
+      "pass": 173,
+      "fail": 210
+    },
+    "colloquial": {
+      "pass": 546,
+      "fail": 432
+    },
+    "typo": {
+      "pass": 42,
+      "fail": 332
+    },
+    "long": {
+      "pass": 507,
+      "fail": 667
+    },
+    "mixed": {
+      "pass": 436,
+      "fail": 581
+    },
+    "synonym": {
+      "pass": 5,
+      "fail": 13
+    },
+    "noisy": {
+      "pass": 29,
+      "fail": 32
+    },
+    "entity": {
+      "pass": 190,
+      "fail": 128
+    },
+    "multi_entity": {
+      "pass": 3,
+      "fail": 3
+    }
+  },
+  "true_engine_fails": 1941,
+  "harness_fails": 156,
+  "ambiguous_cases": 301,
+  "root_cause_breakdown": {
+    "task_vs_calendar_steal": 140,
+    "retrieval_fail": 247,
+    "ambiguity": 301,
+    "task_vs_notes_steal": 1469,
+    "harness_problem": 156,
+    "ranking_fail": 45,
+    "summary_fail": 8,
+    "typo_fail": 32
+  },
+  "top_true_engine_cluster": "task_vs_notes_steal:1469",
+  "top_10_fail_examples": [
+    {
+      "id": "RW_t_najem_00036",
+      "lane": "deadline",
+      "input": "Kdy že mám zaplatit nájem",
+      "intent": "notes.read",
+      "rootCause": "task_vs_notes_steal",
+      "issues": [
+        "note_steal",
+        "wrong_module:notes.read",
+        "empty_response"
+      ],
+      "message": "Nic jsem k tomu nenašel."
+    },
+    {
+      "id": "RW_t_najem_00024",
+      "lane": "long",
+      "input": "Můžeš se na to mrknout a říct mi kdy mám uhradit tu nájemnou",
+      "intent": "clarification",
+      "rootCause": "ambiguity",
+      "issues": [
+        "wrong_module:clarification"
+      ],
+      "message": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
+    },
+    {
+      "id": "RW_t_najem_00018",
+      "lane": "long",
+      "input": "Hele prosím tě já bych potřeboval vědět jestli mi můžeš říct kdy mám uhradit nájem",
+      "intent": "tasks.read",
+      "rootCause": "retrieval_fail",
+      "issues": [
+        "entity_miss"
+      ],
+      "message": "Našel jsem úkol: Vyzvednout Eli ze školy. Termín splnění: 4. 6. 2026."
+    },
+    {
+      "id": "RW_t_najem_00051",
+      "lane": "long",
+      "input": "Nevíš náhodou kdy že mám zaplatit najem",
+      "intent": "tasks.create",
+      "rootCause": "harness_problem",
+      "issues": [
+        "write_leak",
+        "wrong_module:tasks.create"
+      ],
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_najem_00002",
+      "lane": "typo",
+      "input": "Kdy mam zplatit najem",
+      "intent": "calendar.read",
+      "rootCause": "task_vs_calendar_steal",
+      "issues": [
+        "calendar_steal",
+        "wrong_module:calendar.read",
+        "empty_response"
+      ],
+      "message": "Nic jsem k tomu nenašel."
+    },
+    {
+      "id": "RW_t_darek_00500",
+      "lane": "long",
+      "input": "Jestli mi to nevadí tak bych se chtěl zeptat kdy mám koupit ten dárek",
+      "intent": "tasks.read",
+      "rootCause": "ranking_fail",
+      "issues": [
+        "wrong_ranked_task"
+      ],
+      "message": "Našel jsem úkol: Koupit dárek mámě. Bez termínu."
+    },
+    {
+      "id": "RW_t_doktor_01326",
+      "lane": "typo",
+      "input": "Kdy mam zavolat docktorovi",
+      "intent": "tasks.read",
+      "rootCause": "typo_fail",
+      "issues": [
+        "entity_miss"
+      ],
+      "message": "Našel jsem úkol: Zavolat právníkovi ohledně smlouvy. Bez termínu."
+    },
+    {
+      "id": "RW_t_darek_01003",
+      "lane": "long",
+      "input": "Nevíš náhodou co mám pořídit darek",
+      "intent": "global.search",
+      "rootCause": "summary_fail",
+      "issues": [
+        "summary_miss"
+      ],
+      "message": "Úkol: Koupit dárek mámě\nÚkol: Koupit dárek k narozeninám"
+    },
+    {
+      "id": "RW_t_najem_00004",
+      "lane": "mixed",
+      "input": "hele Kdy mam zplatit najem",
+      "intent": "calendar.read",
+      "rootCause": "task_vs_calendar_steal",
+      "issues": [
+        "calendar_steal",
+        "wrong_module:calendar.read",
+        "empty_response"
+      ],
+      "message": "Nic jsem k tomu nenašel."
+    },
+    {
+      "id": "RW_t_najem_00007",
+      "lane": "typo",
+      "input": "Kdy mam zplatit ten najem",
+      "intent": "calendar.read",
+      "rootCause": "task_vs_calendar_steal",
+      "issues": [
+        "calendar_steal",
+        "wrong_module:calendar.read",
+        "empty_response"
+      ],
+      "message": "Nic jsem k tomu nenašel."
+    }
+  ],
+  "recommended_next_fix": "Narrow fix: entity task query protection vs notes.read",
+  "safety": {
+    "dangerous_write_count": 156,
+    "false_write_count": 264,
+    "write_when_negated_count": 0,
+    "query_created_write_count": 108
+  },
+  "failure_count": 2398,
+  "failures_sample": [
+    {
+      "id": "RW_t_najem_00036",
+      "lane": "deadline",
+      "input": "Kdy že mám zaplatit nájem",
+      "intent": "notes.read",
+      "rootCause": "task_vs_notes_steal",
+      "issues": [
+        "note_steal",
+        "wrong_module:notes.read",
+        "empty_response"
+      ],
+      "message": "Nic jsem k tomu nenašel."
+    },
+    {
+      "id": "RW_t_najem_00024",
+      "lane": "long",
+      "input": "Můžeš se na to mrknout a říct mi kdy mám uhradit tu nájemnou",
+      "intent": "clarification",
+      "rootCause": "ambiguity",
+      "issues": [
+        "wrong_module:clarification"
+      ],
+      "message": "Upřesni prosím požadavek — zda chceš číst z kalendáře, nebo něco uložit s uvedením cíle."
+    },
+    {
+      "id": "RW_t_najem_00018",
+      "lane": "long",
+      "input": "Hele prosím tě já bych potřeboval vědět jestli mi můžeš říct kdy mám uhradit nájem",
+      "intent": "tasks.read",
+      "rootCause": "retrieval_fail",
+      "issues": [
+        "entity_miss"
+      ],
+      "message": "Našel jsem úkol: Vyzvednout Eli ze školy. Termín splnění: 4. 6. 2026."
+    },
+    {
+      "id": "RW_t_najem_00051",
+      "lane": "long",
+      "input": "Nevíš náhodou kdy že mám zaplatit najem",
+      "intent": "tasks.create",
+      "rootCause": "harness_problem",
+      "issues": [
+        "write_leak",
+        "wrong_module:tasks.create"
+      ],
+      "message": "Připravil jsem návrh úkolu."
+    },
+    {
+      "id": "RW_t_najem_00002",
+      "lane": "typo",
+      "input": "Kdy mam zplatit najem",
+      "intent": "calendar.read",
+      "rootCause": "task_vs_calendar_steal",
+      "issues": [
+        "calendar_steal",
+        "wrong_module:calendar.read",
+        "empty_response"
+      ],
+      "message": "Nic jsem k tomu nenašel."
+    },
+    {
+      "id": "RW_t_darek_00500",
+      "lane": "long",
+      "input": "Jestli mi to nevadí tak bych se chtěl zeptat kdy mám koupit ten dárek",
+      "intent": "tasks.read",
+      "rootCause": "ranking_fail",
+      "issues": [
+        "wrong_ranked_task"
+      ],
+      "message": "Našel jsem úkol: Koupit dárek mámě. Bez termínu."
+    },
+    {
+      "id": "RW_t_doktor_01326",
+      "lane": "typo",
+      "input": "Kdy mam zavolat docktorovi",
+      "intent": "tasks.read",
+      "rootCause": "typo_fail",
+      "issues": [
+        "entity_miss"
+      ],
+      "message": "Našel jsem úkol: Zavolat právníkovi ohledně smlouvy. Bez termínu."
+    },
+    {
+      "id": "RW_t_darek_01003",
+      "lane": "long",
+      "input": "Nevíš náhodou co mám pořídit darek",
+      "intent": "global.search",
+      "rootCause": "summary_fail",
+      "issues": [
+        "summary_miss"
+      ],
+      "message": "Úkol: Koupit dárek mámě\nÚkol: Koupit dárek k narozeninám"
+    },
+    {
+      "id": "RW_t_najem_00004",
+      "lane": "mixed",
+      "input": "hele Kdy mam zplatit najem",
+      "intent": "calendar.read",
+      "rootCause": "task_vs_calendar_steal",
+      "issues": [
+        "calendar_steal",
+        "wrong_module:calendar.read",
+        "empty_response"
+      ],
+      "message": "Nic jsem k tomu nenašel."
+    },
+    {
+      "id": "RW_t_najem_00007",
+      "lane": "typo",
+      "input": "Kdy mam zplatit ten najem",
+      "intent": "calendar.read",
+      "rootCause": "task_vs_calendar_steal",
+      "issues": [
+        "calendar_steal",
+        "wrong_module:calendar.read",
+        "empty_response"
+      ],
+      "message": "Nic jsem k tomu nenašel."
+    }
+  ]
+}
