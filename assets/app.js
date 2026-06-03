@@ -37528,8 +37528,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(f) {
     const x = String(f || "");
     if (!x) return false;
-    if (!/\b(kdy\s+mam|dokdy\s+mam|na\s+kdy\s+mam|do\s+kdy\s+mam)\b/.test(x)) return false;
-    return /\b(zaplatit|koupit|vyzvednout|zavolat|zaridit|vyridit|dokoncit|odevzdat|poslat|vyplnit|objednat|udelat|splnit|resit|nakoupit|kupovat)\b/.test(
+    if (
+      !/\b(kdy\s+(?:ze\s+|musim\s+|bych\s+mel\s+)?mam|dokdy\s+mam|na\s+kdy\s+mam|do\s+kdy\s+mam|kdy\s+je\s+termin\s+abych)\b/.test(
+        x
+      )
+    ) {
+      return false;
+    }
+    return /\b(zaplatit|koupit|vyzvednout|zavolat|zaridit|vyridit|dokoncit|odevzdat|poslat|vyplnit|objednat|udelat|splnit|resit|nakoupit|kupovat|uhradit|splatit|kontaktovat|volat|poridit|sehnat)\b/.test(
       x
     );
   }
@@ -37541,17 +37547,60 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverTaskEntityActionQueryCarveOutFolded(f) {
     const x = String(f || "");
     if (!x) return false;
-    if (!/\bco\s+mam\b/.test(x)) return false;
-    if (!/\b(udelat|zaridit|vyridit|dokoncit|splnit|vyresit)\b/.test(x)) return false;
+    if (!/\bco\s+mam\b/.test(x) && !/\bco\s+mi\s+zbyva\b/.test(x)) return false;
+    if (
+      !/\b(udelat|zaridit|vyridit|dokoncit|splnit|vyresit|koupit|poridit|sehnat|kontaktovat|volat|zaplatit|uhradit|vyzvednout|nakoupit|kupovat)\b/.test(
+        x
+      )
+    ) {
+      return false;
+    }
     if (/\bco\s+vis\b/.test(x)) return false;
-    if (/\bco\s+mam\s+o\s+/.test(x) && !/\b(udelat|zaridit|vyridit|dokoncit|splnit|vyresit)\s+(s|kolem)\b/.test(x)) return false;
+    if (
+      /\bco\s+mam\s+o\s+/.test(x) &&
+      !/\b(udelat|zaridit|vyridit|dokoncit|splnit|vyresit|koupit|poridit|sehnat)\s+(s|kolem)\b/.test(x)
+    ) {
+      return false;
+    }
     if (/\bjak(o|ou|y|e)\s+mam\b/.test(x) && /\b(spz|volvo|heslo|wifi|pin|kod|zaruk)\b/.test(x)) return false;
     if (/\bjaky\s+je\s+(kod|pin)\b/.test(x)) return false;
     if (/\bkdy\s+konci\s+zaruk/.test(x)) return false;
     return (
-      /\b(pravnik|advokat|auto|eli|doktor|lekar|lekari|najem|najmu|smlouv|pojist|pojistovn|faktur|uctni|vozid)/.test(x) ||
-      /\bkolem\s+aut/.test(x)
+      /\b(pravnik|advokat|aut\w*|eli|doktor|lekar|lekari|najem|najmu|smlouv|pojist|pojistovn|faktur|uctni|vozid|mam[eě]|mame|darek|narozenin)/.test(
+        x
+      ) ||
+      /\bkolem\s+aut/.test(x) ||
+      /\bs\s+aut\w*\b/.test(x)
     );
+  }
+
+  /** P2: „co mám s autem / s doktorem" — task item read, ne notes.read (≠ „co mám o autě"). */
+  function iuSilverTaskCoMamSRelationshipQueryCarveOutFolded(f) {
+    const x = String(f || "");
+    if (!/\bco\s+mam\s+s\s+/.test(x)) return false;
+    if (/\bco\s+mam\s+o\s+/.test(x)) return false;
+    if (/\b(co\s+vis|jak(o|ou|y|e)\s+mam\s+(spz|heslo|wifi|pin|kod))\b/.test(x)) return false;
+    return /\b(aut\w*|doktor\w*|lekar\w*|pravnik\w*|advokat\w*|eli\w*|pojist\w*|uct\w*|smlouv\w*)/.test(x);
+  }
+
+  /** P0 task_vs_notes_steal: clear task-read cue must not lose to notes.read (foldCs). */
+  function iuSilverTaskVsNotesStealDominanceGuardFolded(f, rawOpt) {
+    const x = String(f || "");
+    if (!x) return false;
+    if (iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(x)) return true;
+    if (iuSilverTaskEntityActionQueryCarveOutFolded(x)) return true;
+    if (iuSilverTaskCoMamSRelationshipQueryCarveOutFolded(x)) return true;
+    if (/\bco\s+mam\s+o\s+/.test(x) && !/\b(udelat|zaridit|vyridit|koupit|poridit|sehnat)\s+(s|kolem)\b/.test(x)) {
+      return false;
+    }
+    if (/\b(co\s+vis|jak(o|ou|y|e)\s+mam\s+(spz|heslo|wifi|pin|kod))\b/.test(x)) return false;
+    if (/\bkdy\s+konci\s+zaruk/.test(x)) return false;
+    if (/\bpoznamk/.test(x) && !/\bneple\w*\s+s\s+poznam/.test(x)) return false;
+    if (iuSilverExplicitNotesPositiveReadScopeFolded(x) && !iuSilverTaskEntityActionQueryCarveOutFolded(x)) {
+      return false;
+    }
+    void rawOpt;
+    return false;
   }
 
   /**
@@ -37576,7 +37625,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function iuSilverTryTaskQueryCarveOutReadTurnV1(raw, now, folded, ctx, empty) {
     const f = String(folded || "");
     const r0 = String(raw || "").trim();
-    if (!iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(f) && !iuSilverTaskEntityActionQueryCarveOutFolded(f) && !iuSilverReadBeforeWriteSafetyGuardV1CarveOutFolded(f)) {
+    if (!iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(f) && !iuSilverTaskEntityActionQueryCarveOutFolded(f) && !iuSilverTaskCoMamSRelationshipQueryCarveOutFolded(f) && !iuSilverReadBeforeWriteSafetyGuardV1CarveOutFolded(f)) {
       return null;
     }
     const hit =
@@ -37586,10 +37635,33 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (hit) return hit;
     let q = iuSilverExtractTaskQuerySearchSubject(r0, f) || "";
     if (iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(f)) q = "pravnik";
+    if (!String(q || "").trim() && iuSilverTaskCoMamSRelationshipQueryCarveOutFolded(f)) {
+      if (/\baut\w*/.test(f)) q = "auto";
+      else if (/\bdoktor\w*/.test(f)) q = "doktor";
+      else if (/\blekar\w*/.test(f)) q = "lekar";
+      else if (/\beli\w*/.test(f)) q = "eli";
+      else if (/\bpravnik\w*/.test(f) || /\badvokat\w*/.test(f)) q = "pravnik";
+    }
     if (!String(q || "").trim() && /\bkolem\s+aut/.test(f)) q = "auto";
     if (!String(q || "").trim()) {
       const vyLemma = iuSilverTaskEntityVyresitQueryLemmaFolded(f);
       if (vyLemma) q = vyLemma;
+    }
+    if (!String(q || "").trim() && /\b(zaplatit|uhradit|splatit)\b/.test(f) && /\bnajem|najmu\b/.test(f)) {
+      q = "najem";
+    }
+    if (!String(q || "").trim() && /\bkoupit\b/.test(f) && /\bdarek|narozenin\b/.test(f)) {
+      q = "darek";
+    }
+    if (!String(q || "").trim() && /\bkoupit\b/.test(f) && /\bmam[eě]|mame\b/.test(f)) {
+      q = "mama";
+    }
+    if (
+      !String(q || "").trim() &&
+      (/\baut\w*\b/.test(f) || /\bs\s+aut\w*\b/.test(f) || /\bkolem\s+aut/.test(f)) &&
+      /\b(zaridit|vyridit|udelat|vyresit|resit)\b/.test(f)
+    ) {
+      q = "auto";
     }
     if (!String(q || "").trim()) return null;
     const resolvedCarve = iuSilverTaskReadResolveSearchWithItemFallbackV1(r0, f, ctx, now, q, { preferFuture: true });
@@ -38308,7 +38380,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (iuSilverConflictingReadSameModuleConstraintFolded(f)) return false;
     if (iuSilverNakupJedenUkolTaskWriteFolded(f, rawOpt)) return false;
     if (iuSilverCalendarWriteNegatedTaskTargetGuardV1Folded(f)) return false;
-    if (iuSilverTaskEntityActionQueryCarveOutFolded(f) || iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(f)) return true;
+    if (iuSilverTaskEntityActionQueryCarveOutFolded(f) || iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(f) || iuSilverTaskCoMamSRelationshipQueryCarveOutFolded(f)) return true;
     if (iuSilverTaskDeadlineReadCueFoldedV2(f)) return true;
     if (iuSilverExplicitNotesPositiveReadScopeFolded(f) && !iuSilverExplicitTaskReadScopeFolded(f, rawOpt)) return false;
     if (iuSilverExplicitTaskReadScopeFolded(f, rawOpt)) return true;
@@ -50918,6 +50990,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const f = foldCs(r0);
     if (!f) return false;
     if (iuSilverTaskEntityActionQueryCarveOutFolded(f)) return false;
+    if (iuSilverTaskCoMamSRelationshipQueryCarveOutFolded(f)) return false;
+    if (iuSilverTaskVsNotesStealDominanceGuardFolded(f, r0)) return false;
     if (iuSilverNoteRetrievalEarlyStealBlockedFolded(f, r0)) return false;
     if (/\bnajdi\s+(?:mi\s+)?ukol\w*/.test(f) && !/\bpoznam/.test(f)) return false;
     if (iuSilverExplicitTaskReadScopeFolded(f) && /\bneple\w*\s+(?:to\s+)?s\s+poznam/.test(f)) return false;
@@ -52030,6 +52104,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const r0 = String(rawOpt || "");
     if (!x) return false;
     if (iuSilverTaskOverviewReadQuerySignalFolded(x)) return true;
+    if (iuSilverTaskVsNotesStealDominanceGuardFolded(x, r0)) return true;
     if (iuSilverNoteRetrievalTopicQueryFolded(x)) return false;
     const cross = iuSilverCrossModuleQueryRouterV1(x);
     if (cross === "calendar" || cross === "tasks") return true;
@@ -61759,6 +61834,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const f = String(folded || "");
     if (!r0 || !f) return null;
     if (iuSilverTaskEntityActionQueryCarveOutFolded(f)) return null;
+    if (iuSilverTaskCoMamSRelationshipQueryCarveOutFolded(f)) return null;
+    if (iuSilverTaskVsNotesStealDominanceGuardFolded(f, r0)) return null;
     if (iuSilverNoteRetrievalEarlyStealBlockedFolded(f, r0)) return null;
     if (/\bne\s+(?:do|v)\s+poznam/.test(f) && /\b(kalend|schuz|udalost|pondel|utery|stred|ctvr|patek)\b/.test(f)) return null;
     if (/\bnajdi\s+adresu\s+udalost\w*/.test(f) && /\b(jen\s+kalendar|jen\s+kalend)/.test(f)) return null;
