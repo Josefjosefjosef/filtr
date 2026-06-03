@@ -37426,8 +37426,27 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\bjaky\s+je\s+(kod|pin)\b/.test(x)) return false;
     if (/\bkdy\s+konci\s+zaruk/.test(x)) return false;
     return (
-      /\b(pravnik|advokat|auto|eli|doktor|lekari|najem|najmu|smlouv|pojist|faktur)\b/.test(x) || /\bkolem\s+aut/.test(x)
+      /\b(pravnik|advokat|auto|eli|doktor|lekar|lekari|najem|najmu|smlouv|pojist|pojistovn|faktur|uctni|vozid)/.test(x) ||
+      /\bkolem\s+aut/.test(x)
     );
+  }
+
+  /**
+   * P2 hotfix: „co mám vyřešit s doktorem / s pojišťovnou“ — search lemma když extract subject selže (PersonAlias jinak → notes.read).
+   */
+  function iuSilverTaskEntityVyresitQueryLemmaFolded(f) {
+    const x = String(f || "");
+    if (!/\bco\s+mam\s+vyresit\b/.test(x)) return "";
+    if (/\bdoktor/.test(x)) return "doktor";
+    if (/\blekar/.test(x)) return "lekar";
+    if (/\bpravnik/.test(x)) return "pravnik";
+    if (/\buctni/.test(x)) return "uctni";
+    if (/\bpojist/.test(x)) return "pojist";
+    if (/\bnajem/.test(x)) return "najem";
+    if (/\bsmlouv/.test(x)) return "smlouv";
+    if (/\bfaktur/.test(x)) return "faktur";
+    if (/\bkolem\s+aut/.test(x) || /\bvozid/.test(x)) return "auto";
+    return "";
   }
 
   /** P1+P2: jednotný early tasks.read turn pro carve-out routing. */
@@ -37445,6 +37464,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     let q = iuSilverExtractTaskQuerySearchSubject(r0, f) || "";
     if (iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(f)) q = "pravnik";
     if (!String(q || "").trim() && /\bkolem\s+aut/.test(f)) q = "auto";
+    if (!String(q || "").trim()) {
+      const vyLemma = iuSilverTaskEntityVyresitQueryLemmaFolded(f);
+      if (vyLemma) q = vyLemma;
+    }
     if (!String(q || "").trim()) return null;
     const sr = iuSilverSearchLocalData(q, {
       target: "tasks",

@@ -30,6 +30,14 @@ const TASK_DEADLINE_MUST = [
   { id: "TD_06", input: "Co mám zařídit kolem auta", expected: "tasks.read" }
 ];
 
+const TASK_ENTITY_VYRESIT_MUST = [
+  { id: "TEV_01", input: "Co mám vyřešit s doktorem", expected: "tasks.read" },
+  { id: "TEV_02", input: "Co mám vyřešit s lékařem", expected: "tasks.read" },
+  { id: "TEV_03", input: "Co mám vyřešit s právníkem", expected: "tasks.read" },
+  { id: "TEV_04", input: "Co mám vyřešit s pojišťovnou", expected: "tasks.read" },
+  { id: "TEV_05", input: "Co mám vyřešit kolem auta", expected: "tasks.read" }
+];
+
 const CALENDAR_PROTECTION = [
   { id: "CP_01", input: "Kdy mám zubaře", expected: "calendar.read" },
   { id: "CP_02", input: "Kdy mám právníka", expected: "calendar.read" },
@@ -77,7 +85,7 @@ function evaluateSafetyCounters(eng, ctx) {
   let false_write_count = 0;
   let write_when_negated_count = 0;
   let query_created_write_count = 0;
-  const probes = TASK_DEADLINE_MUST.concat(CALENDAR_PROTECTION).concat(NOTE_PROTECTION);
+  const probes = TASK_DEADLINE_MUST.concat(TASK_ENTITY_VYRESIT_MUST).concat(CALENDAR_PROTECTION).concat(NOTE_PROTECTION);
   for (let i = 0; i < probes.length; i++) {
     try {
       if (eng.iuSilverConversationReset) eng.iuSilverConversationReset();
@@ -136,6 +144,9 @@ function main() {
   const taskMust = TASK_DEADLINE_MUST.map(function (c) {
     return runIntentCase(eng, ctx, c);
   });
+  const taskVyresit = TASK_ENTITY_VYRESIT_MUST.map(function (c) {
+    return runIntentCase(eng, ctx, c);
+  });
   const calProt = CALENDAR_PROTECTION.map(function (c) {
     return runIntentCase(eng, ctx, c);
   });
@@ -174,6 +185,9 @@ function main() {
     taskMust.every(function (r) {
       return r.pass;
     }) &&
+    taskVyresit.every(function (r) {
+      return r.pass;
+    }) &&
     calProt.every(function (r) {
       return r.pass;
     }) &&
@@ -191,6 +205,7 @@ function main() {
   const report = {
     generatedAt: new Date().toISOString(),
     task_deadline_must: taskMust,
+    task_entity_vyresit_must: taskVyresit,
     calendar_protection: calProt,
     note_protection: noteProt,
     save_prefix: saveRows,
@@ -216,6 +231,7 @@ function main() {
   console.log("=== SILVER_TASK_DEADLINE_ROUTING_GUARD ===");
   console.log("PASS=" + (gatesPass ? "true" : "false"));
   console.log("TASK_DEADLINE_MUST=" + taskMust.filter(function (r) { return r.pass; }).length + "/" + taskMust.length);
+  console.log("TASK_ENTITY_VYRESIT_MUST=" + taskVyresit.filter(function (r) { return r.pass; }).length + "/" + taskVyresit.length);
   console.log("CALENDAR_PROTECTION=" + calProt.filter(function (r) { return r.pass; }).length + "/" + calProt.length);
   console.log("NOTE_PROTECTION=" + noteProt.filter(function (r) { return r.pass; }).length + "/" + noteProt.length);
   console.log("SAVE_PREFIX=" + (saveRows.every(function (r) { return r.pass; }) ? "true" : "false"));
