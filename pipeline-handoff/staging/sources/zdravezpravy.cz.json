@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-06-03T14:47:03.743749Z",
+  "ingestedAt": "2026-06-03T15:32:08.570229Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zdravotnictví je příliš resortní na to, aby zvládlo závislostní politiku",
+      "url": "https://www.zdravezpravy.cz/2026/06/03/ministerstvo-zdravotnictvi-je-prilis-resortni-na-to-aby-zvladlo-zavislostni-politiku/",
+      "dt": "2026-06-03T14:07:57Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "politiku",
+        "příliš",
+        "resortní",
+        "zdravotnictví",
+        "zvládlo",
+        "závislostní"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -474,32 +497,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Eli Lilly kupuje společnosti vyvíjející vakcíny proti infekčním nemocem",
-      "url": "https://www.zdravezpravy.cz/2026/05/27/eli-lilly-kupuje-spolecnosti-vyvijejici-vakciny-proti-infekcnim-nemocem/",
-      "dt": "2026-05-27T07:30:08Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "eli",
-        "infekčním",
-        "kupuje",
-        "lilly",
-        "nemocem",
-        "proti",
-        "společnosti",
-        "vakcíny",
-        "vyvíjející"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -510,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 206023,
+      "bytes": 208662,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -547,7 +544,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-03T08:00:39Z",
+        "raw_feed_latest_publishedAt": "2026-06-03T14:07:57Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -562,6 +559,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zdravotnictví je příliš resortní na to, aby zvládlo závislostní politiku",
+            "publishedAt": "2026-06-03T14:07:57Z"
+          },
           {
             "title": "Sebraná data nově mapují počty a okolnosti pooperačních sepsí",
             "publishedAt": "2026-06-03T08:00:39Z"
@@ -589,10 +590,6 @@
           {
             "title": "Kratom si brzy koupí jen lidé starší 21 let. A zpřísní se i kontroly prodeje",
             "publishedAt": "2026-06-01T09:42:08Z"
-          },
-          {
-            "title": "Mladí lidé v Česku kouří dál. Jen už ne tolik standardní cigarety",
-            "publishedAt": "2026-06-01T06:26:18Z"
           }
         ]
       }
