@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-03T05:02:03.580092Z",
+  "ingestedAt": "2026-06-03T05:46:56.708322Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Páka na emigranty. Pokud půjdou „proti zájmům Ruska“, sebere jim Moskva majetek",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/paka-na-emigranty-pokud-pujdou-proti-zajmum-ruska-sebere-jim-moskva-majetek-374010",
+      "dt": "2026-06-03T05:02:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "emigranty",
+        "jim",
+        "majetek",
+        "moskva",
+        "pokud",
+        "proti",
+        "páka",
+        "půjdou",
+        "ruska",
+        "sebere",
+        "zájmům"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -730,29 +758,6 @@
         "rodičovského",
         "růst",
         "čtení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "McCartney na novém albu vzpomíná na dětství v Liverpoolu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/mccartney-na-novem-albu-vzpomina-na-detstvi-v-liverpoolu-374131",
-      "dt": "2026-06-02T12:01:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "albu",
-        "dětství",
-        "liverpoolu",
-        "mccartney",
-        "novém",
-        "vzpomíná"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2257,7 +2262,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44458,
+      "bytes": 44951,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2294,11 +2299,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-03T04:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-03T05:02:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "other": 6
+          "zpravy": 25,
+          "other": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2310,6 +2315,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Páka na emigranty. Pokud půjdou „proti zájmům Ruska“, sebere jim Moskva majetek",
+            "publishedAt": "2026-06-03T05:02:00Z"
+          },
           {
             "title": "Evropská kauza dárce spermatu s rakovinnou mutací se rozrůstá",
             "publishedAt": "2026-06-03T04:01:00Z"
@@ -2337,10 +2346,6 @@
           {
             "title": "Rejstřík vyloučených hazardních hráčů se rozšiřuje, někteří se zapisují dobrovolně",
             "publishedAt": "2026-06-02T18:16:12Z"
-          },
-          {
-            "title": "Babišův střet zájmů není téma pro debatu ve sněmovně, míní Vondráček",
-            "publishedAt": "2026-06-02T18:10:57Z"
           }
         ]
       }
