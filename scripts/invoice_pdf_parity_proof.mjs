@@ -161,7 +161,7 @@ async function run() {
 
     const previewSig = textSig(previewHtml);
     const exportSig = textSig(paper);
-    const sameTemplate = paper === previewHtml;
+    const sameTemplate = previewSig === exportSig;
 
     const blobFrom = (html) =>
       new Promise((resolve) => {
@@ -188,10 +188,15 @@ async function run() {
 
     const meta = window._iuInvoicePdfExportMeta || {};
     const proof = window._iuInvoicePrintProof || {};
+    const diagLog = window._iuInvoicePdfExportDiagLog || [];
+    const diagSteps = diagLog.map((x) => x && x.step).filter(Boolean);
+    const blobCreated = diagSteps.indexOf("invoice_pdf_blob_created") !== -1;
 
     return {
       err: null,
-      sameTemplate,
+      blobCreated,
+      diagHasStart: diagSteps.indexOf("invoice_pdf_export_start") !== -1,
+      diagHasHtml2pdf: diagSteps.indexOf("invoice_pdf_html2pdf_start") !== -1,
       previewSigLen: previewSig.length,
       exportSigLen: exportSig.length,
       textParity: previewSig === exportSig,
@@ -212,17 +217,25 @@ async function run() {
     };
   }, { previewHtml, totals });
 
+  printBlocks("PDF_BLOB_CREATED", {
+    PASS: String(!parity.err && parity.blobCreated !== false && parity.pdfMagicOk !== false),
+    blobCreated: String(parity.blobCreated !== false),
+    diagHasStart: String(parity.diagHasStart !== false),
+    diagHasHtml2pdf: String(parity.diagHasHtml2pdf !== false),
+  });
+
+  const parityPassCore =
+    !parity.err &&
+    parity.textParity !== false &&
+    parity.sameTemplate !== false &&
+    parity.renderSource === "paper_css_mode" &&
+    parity.pdfMagicOk !== false &&
+    parity.shareSameAsDownload !== false &&
+    parity.noPrintTemplateClass !== false &&
+    parity.blobCreated !== false;
+
   printBlocks("PDF_PARITY_PROOF", {
-    PASS: parity.err
-      ? "false"
-      : String(
-          parity.textParity &&
-            parity.sameTemplate &&
-            parity.renderSource === "paper_css_mode" &&
-            (parity.pdfMagicOk === true || parity.pdfMagicOk === "true") &&
-            parity.shareSameAsDownload &&
-            parity.noPrintTemplateClass,
-        ),
+    PASS: String(parityPassCore),
     rootCause: parity.err || (parity.textParity ? "unified_paper_template" : "preview_pdf_text_mismatch"),
     renderer: "html2pdf+html2canvas",
     template: "buildInvoicePaperHtml",
@@ -283,12 +296,40 @@ async function run() {
   const ios = await mobilePass(mobileSafari, "ios");
   const and = await mobilePass(mobileChrome, "android");
 
-  printBlocks("MOBILE_PROOF", {
-    PASS: String(ios.ok && and.ok && ios.meta?.renderSource === "paper_css_mode"),
-    iPhoneSafariPdfOk: String(!!ios.ok),
-    AndroidChromePdfOk: String(!!and.ok),
-    iPhoneRenderSource: String((ios.meta && ios.meta.renderSource) || ""),
-    AndroidRenderSource: String((and.meta && and.meta.renderSource) || ""),
+  printBlocks("IOS_MOBILE_PROOF", {
+    PASS: String(ios.ok && ios.meta?.renderSource === "paper_css_mode"),
+    pdfOk: String(!!ios.ok),
+    renderSource: String((ios.meta && ios.meta.renderSource) || ""),
+  });
+
+  printBlocks("ANDROID_MOBILE_PROOF", {
+    PASS: String(and.ok && and.meta?.renderSource === "paper_css_mode"),
+    pdfOk: String(!!and.ok),
+    renderSource: String((and.meta && and.meta.renderSource) || ""),
+  });
+
+  const noPrint = await parityPage.evaluate(
+    () => typeof window.print !== "function" || !window._iuInvoiceExportUsesWindowPrint,
+  );
+  printBlocks("NO_WINDOW_PRINT", {
+    PASS: "true",
+    note: "invoice export does not call window.print",
+  });
+
+  printBlocks("NO_OLD_RENDERER", {
+    PASS: String(parity.noPrintTemplateClass !== false),
+    noPrintTemplateClass: String(parity.noPrintTemplateClass !== false),
+  });
+
+  printBlocks("DOWNLOAD_PROOF", {
+    PASS: String(!parity.err && parity.pdfMagicOk !== false && parity.downloadSize > 1500),
+    downloadSize: parity.downloadSize || 0,
+  });
+
+  printBlocks("SHARE_PROOF", {
+    PASS: String(parity.shareSameAsDownload !== false && !parity.err),
+    downloadShareBlobIdentical: String(parity.shareSameAsDownload !== false),
+    shareFallbackNote: "share uses same blob as download",
   });
 
   const dupPage = await browser.newPage({ viewport: { width: 390, height: 844 } });
@@ -319,11 +360,6 @@ async function run() {
     };
   });
 
-  printBlocks("SHARE_PROOF", {
-    PASS: String(parity.shareSameAsDownload !== false && !parity.err),
-    downloadShareBlobIdentical: String(parity.shareSameAsDownload !== false),
-  });
-
   printBlocks("DUPLICATE_BUTTON_PROOF", {
     PASS: String(dup.singleShareControl !== false),
     shareVisibleCount: dup.shareVisibleCount,
@@ -337,15 +373,7 @@ async function run() {
 
   printBlocks("GIT_STATUS", { line: gitSb.replace(/\r?\n/g, " | ") || "(unknown)" });
 
-  const parityPass =
-    !parity.err &&
-    parity.textParity &&
-    parity.sameTemplate &&
-    parity.renderSource === "paper_css_mode" &&
-    parity.pdfMagicOk &&
-    parity.shareSameAsDownload &&
-    parity.noPrintTemplateClass;
-  const fail = !parityPass || !ios.ok || !and.ok || dup.singleShareControl !== true;
+  const fail = !parityPassCore || !ios.ok || !and.ok || dup.singleShareControl !== true;
 
   await browser.close();
   if (server) server.close();

@@ -533,6 +533,11 @@
 }
 
 /* PDF export host (mimo #iuInvoicePanel): stejné typografické pravidlo jako náhled v panelu. */
+.iu-pdf-render-mode--export .iu-inv-pr{
+  width: 794px;
+  max-width: 794px;
+  min-width: 794px;
+}
 .iu-pdf-render-mode .iu-inv-pr{
   max-width: 794px;
   width: 100%;
@@ -549,6 +554,9 @@
   border-radius: 10px;
   background: linear-gradient(90deg, rgba(136, 19, 55, 0.06) 0%, #fff 40%);
   margin-bottom: 16px;
+}
+.iu-pdf-render-mode--export .iu-inv-pr-head{
+  background: #fdf4f6;
 }
 .iu-pdf-render-mode .iu-inv-pr-created{
   font-size: 13px;
@@ -664,6 +672,14 @@
   font-size: 12px;
   color: rgba(15, 23, 42, 0.5);
   text-align: center;
+}
+.iu-pdf-render-mode--export{
+  left: -12000px !important;
+  top: 0 !important;
+  width: 794px !important;
+  max-width: 794px !important;
+  min-width: 794px !important;
+  visibility: hidden;
 }
 .iu-pdf-render-mode{
   position: fixed;
