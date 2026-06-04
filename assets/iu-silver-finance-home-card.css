@@ -5,8 +5,8 @@
 
 #silver-slot #iuSilverFinanceHomeCard,
 #iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard {
-  --iuFinHomeIllusH: 120px;
-  --iuFinHomeIllusW: 96px;
+  --iuFinHomeIllusH: 150px;
+  --iuFinHomeIllusW: 120px;
   --iuFinHomeIllusGap: 10px;
   appearance: none;
   -webkit-appearance: none;
@@ -36,16 +36,16 @@
 @media (min-width: 480px) {
   #silver-slot #iuSilverFinanceHomeCard,
   #iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard {
-    --iuFinHomeIllusH: 128px;
-    --iuFinHomeIllusW: 104px;
+    --iuFinHomeIllusH: 160px;
+    --iuFinHomeIllusW: 130px;
   }
 }
 
 @media (min-width: 1025px) {
   #silver-slot #iuSilverFinanceHomeCard,
   #iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard {
-    --iuFinHomeIllusH: 140px;
-    --iuFinHomeIllusW: 112px;
+    --iuFinHomeIllusH: 175px;
+    --iuFinHomeIllusW: 140px;
     width: 100%;
     max-width: 100%;
     margin: 10px 0 0;
@@ -142,8 +142,8 @@
   min-width: 0;
   max-width: var(--iuFinHomeIllusW);
   min-height: var(--iuFinHomeIllusH);
-  align-self: flex-end;
-  margin-top: auto;
+  align-self: center;
+  margin-top: 0;
   pointer-events: none;
   user-select: none;
   opacity: 0.88;
@@ -156,7 +156,7 @@
   width: 100%;
   height: var(--iuFinHomeIllusH);
   object-fit: contain;
-  object-position: right bottom;
+  object-position: center center;
 }
 
 /* Evening / night — mirror parcel card (html.iu-time-evening) */
