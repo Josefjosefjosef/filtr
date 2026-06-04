@@ -155,6 +155,33 @@ if (!/id="iuSilverFinanceHomeCard"[\s\S]*?data-iuq="fincalc"/.test(html)) {
   fail("❌ Silver finance home card must include #iuSilverFinanceHomeCard with data-iuq=\"fincalc\"");
 }
 
+const finCssPath = path.join(ROOT, "assets", "iu-silver-finance-home-card.css");
+const finCss = fs.readFileSync(finCssPath, "utf8");
+if (!/#iuSilverFinanceHomeCard[\s\S]*?border:\s*1px\s+solid/.test(finCss)) {
+  fail("❌ Finance home card must have visible border (premium card separation)");
+}
+if (!/#iuSilverFinanceHomeCard[\s\S]*?border-radius:\s*14px/.test(finCss)) {
+  fail("❌ Finance home card must use border-radius 14px (mobile/tablet card)");
+}
+if (!/white-space:\s*nowrap/.test(finCss)) {
+  fail("❌ Finance home card title must stay on one line (white-space: nowrap)");
+}
+if (!/fffdf8|faf6ee|f3ebe0/.test(finCss)) {
+  fail("❌ Finance home card day mode must use champagne/warm gold background tokens");
+}
+if (!/html\.iu-time-evening[\s\S]*#iuSilverFinanceHomeCard[\s\S]*#182235/.test(finCss)) {
+  fail("❌ Finance home card evening mode must share parcel evening background (#182235)");
+}
+
+const appJsPath = path.join(ROOT, "assets", "app.js");
+const appJsGuard = fs.readFileSync(appJsPath, "utf8");
+if (!/function\s+iuOpenMeteoPayloadIsValid/.test(appJsGuard)) {
+  fail("❌ assets/app.js must define iuOpenMeteoPayloadIsValid (weather loaded guard)");
+}
+if (!/function\s+iuWeatherDomShowsPlaceholder/.test(appJsGuard)) {
+  fail("❌ assets/app.js must define iuWeatherDomShowsPlaceholder (anti-placeholder regression)");
+}
+
 if (!/iu-silver-parcel-dashboard\.js/.test(html)) {
   fail("❌ projects/index.html must load iu-silver-parcel-dashboard.js after app.js");
 }

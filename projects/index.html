@@ -1642,7 +1642,7 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=17" />
-    <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=1" />
+    <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=2" />
     <style id="iuParcelWatchFirstPaintClsGuard">
       /* P0 CLS: post parcel-dashboard.css — lock first paint = hydrated compact height; no vertical clip on mainShell. */
       @media (max-width: 1023px) {
@@ -2219,20 +2219,24 @@ style-src 'self' 'unsafe-inline' https:;
                             </span>
                             <span class="iuSilverFinanceHomeCard__illus" aria-hidden="true">
                               <svg class="iuSilverFinanceHomeCard__illusSvg" viewBox="0 0 128 148" role="img" focusable="false">
-                                <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                  <path d="M18 92V58l22-18 22 14v38"/>
-                                  <path d="M40 40v52"/>
-                                  <path d="M62 54v38"/>
-                                  <path d="M18 92h44"/>
-                                  <path d="M28 92V72h10v20"/>
-                                  <path d="M48 92V76h10v16"/>
-                                  <path d="M78 108c0-10 8-18 18-18h8c6 0 10 4 10 10v8H78z"/>
-                                  <path d="M86 100v8"/>
-                                  <circle cx="88" cy="116" r="4"/>
-                                  <circle cx="108" cy="116" r="4"/>
-                                  <path d="M72 92h6l4-8h16l4 8h6"/>
-                                  <path d="M96 62c4 0 8 3 8 8v6H88v-6c0-5 4-8 8-8z"/>
-                                  <path d="M92 76h8"/>
+                                <defs>
+                                  <linearGradient id="iuFinHomeGold" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stop-color="currentColor" stop-opacity="0.95"/>
+                                    <stop offset="100%" stop-color="currentColor" stop-opacity="0.55"/>
+                                  </linearGradient>
+                                </defs>
+                                <g fill="none" stroke="url(#iuFinHomeGold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <path d="M22 108V72l20-16 20 10v42"/>
+                                  <path d="M42 56v52"/>
+                                  <path d="M62 66v42"/>
+                                  <path d="M30 108h32"/>
+                                  <path d="M36 108V88h8v20"/>
+                                  <path d="M50 108V92h8v16"/>
+                                  <rect x="78" y="44" width="36" height="52" rx="8"/>
+                                  <path d="M84 92h24"/>
+                                  <path d="M88 80l6-10 6 6 8-14"/>
+                                  <circle cx="98" cy="58" r="5"/>
+                                  <path d="M90 104h16"/>
                                 </g>
                               </svg>
                             </span>
