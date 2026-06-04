@@ -720,6 +720,7 @@
   width: 794px !important;
   max-width: 794px !important;
   min-width: 794px !important;
+  transform: none !important;
   visibility: visible !important;
   opacity: 1 !important;
   z-index: -1 !important;
@@ -748,6 +749,22 @@
 }
 .iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-grid{
   grid-template-columns: 1fr 1fr !important;
+}
+.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-grid{
+  grid-template-columns: 1fr 1fr !important;
+}
+.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-invoice-paper{
+  width: 794px !important;
+  min-width: 794px !important;
+  max-width: 794px !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-meta,
+.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-table{
+  width: 100% !important;
+  max-width: 100% !important;
+  table-layout: fixed !important;
 }
 .iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-head{
   position: relative !important;
