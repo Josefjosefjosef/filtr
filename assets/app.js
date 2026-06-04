@@ -24613,6 +24613,70 @@ function buildVideoAsArticleCard(it) {
     window.iuInvoicePdfExportDiag = iuInvoicePdfExportDiag;
   } catch (_) {}
 
+  function iuInvoicePdfApplyCanvasSafeStyles(pageEl) {
+    if (!pageEl || !pageEl.querySelector) return;
+    try {
+      var head = pageEl.querySelector(".iu-inv-pr-head");
+      if (head) {
+        head.style.setProperty("position", "relative", "important");
+        head.style.setProperty("overflow", "hidden", "important");
+        head.style.setProperty("background-image", "none", "important");
+        head.style.setProperty("background-color", "#ffffff", "important");
+      }
+      var tables = pageEl.querySelectorAll(".iu-inv-pr-table, .iu-inv-pr-meta");
+      for (var ti = 0; ti < tables.length; ti++) {
+        tables[ti].style.setProperty("border-collapse", "collapse", "important");
+        tables[ti].style.setProperty("border-spacing", "0", "important");
+      }
+      var cells = pageEl.querySelectorAll(
+        ".iu-inv-pr-table th, .iu-inv-pr-table td, .iu-inv-pr-meta th, .iu-inv-pr-meta td",
+      );
+      for (var ci = 0; ci < cells.length; ci++) {
+        cells[ci].style.setProperty("border", "1px solid #dbe1e8", "important");
+      }
+      var lineTh = pageEl.querySelectorAll(".iu-inv-pr-table th");
+      for (var hi = 0; hi < lineTh.length; hi++) {
+        lineTh[hi].style.setProperty("background-image", "none", "important");
+        lineTh[hi].style.setProperty("background-color", "rgba(136, 19, 55, 0.07)", "important");
+      }
+      var metaTh = pageEl.querySelectorAll(".iu-inv-pr-meta th");
+      for (var mi = 0; mi < metaTh.length; mi++) {
+        metaTh[mi].style.setProperty("background-image", "none", "important");
+        metaTh[mi].style.setProperty("background-color", "rgba(15, 23, 42, 0.03)", "important");
+      }
+      var bank = pageEl.querySelector(".iu-inv-pr-bank");
+      if (bank) {
+        bank.style.setProperty("background-image", "none", "important");
+        bank.style.setProperty("background-color", "rgba(15, 23, 42, 0.03)", "important");
+      }
+      var due = pageEl.querySelector(".iu-inv-pr-due");
+      if (due) {
+        due.style.setProperty("color", "#881337", "important");
+        due.style.setProperty("font-weight", "800", "important");
+        due.style.setProperty("font-size", "18px", "important");
+      }
+      var totals = pageEl.querySelector(".iu-inv-pr-totals");
+      if (totals) {
+        totals.style.setProperty("text-align", "right", "important");
+      }
+      pageEl.style.setProperty("border", "1px solid #e2e8f0", "important");
+      var grid = pageEl.querySelector(".iu-inv-pr-grid");
+      if (grid) {
+        grid.style.setProperty("grid-template-columns", "1fr 1fr", "important");
+      }
+    } catch (eStyle) {}
+  }
+
+  function iuInvoicePdfHardenCloneForCanvas(clonedDoc) {
+    try {
+      if (!clonedDoc || !clonedDoc.querySelectorAll) return;
+      var pages = clonedDoc.querySelectorAll(".iu-inv-pr");
+      for (var pi = 0; pi < pages.length; pi++) {
+        iuInvoicePdfApplyCanvasSafeStyles(pages[pi]);
+      }
+    } catch (eCloneStyle) {}
+  }
+
   function iuPdfExportHtmlStringToBlobForInvoice(htmlString, fileName, done) {
     iuInvoicePdfExportDiag("invoice_pdf_export_start", { narrow: iuInvoicePdfIsNarrowViewport(), ios: iuInvoicePdfIsIOSDevice() });
     var vendorBase = "/assets/vendor";
@@ -24676,7 +24740,7 @@ function buildVideoAsArticleCard(it) {
         };
       } catch (eMeta) {}
       var narrowExport = iuInvoicePdfIsNarrowViewport();
-      var canvasScale = narrowExport || iuInvoicePdfIsIOSDevice() ? 1 : 2;
+      var canvasScale = 2;
       var opts = {
         filename: fileName || "faktura.pdf",
         margin: [10, 10, 10, 10],
@@ -24706,6 +24770,7 @@ function buildVideoAsArticleCard(it) {
                 root.style.setProperty("position", "fixed", "important");
                 root.style.setProperty("pointer-events", "none", "important");
               }
+              iuInvoicePdfHardenCloneForCanvas(clonedDoc);
             } catch (eClone) {}
           },
         },
@@ -24723,6 +24788,7 @@ function buildVideoAsArticleCard(it) {
           if (typeof done === "function") done(new Error("invoice_paper_root_missing"));
           return;
         }
+        iuInvoicePdfApplyCanvasSafeStyles(pageEl);
         var hostRect = exportRoot.getBoundingClientRect();
         var rect = pageEl.getBoundingClientRect();
         var paperW = pageEl.offsetWidth || rect.width || 0;

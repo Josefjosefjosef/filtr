@@ -499,8 +499,8 @@ export function initIuInvoiceOverlay(deps) {
 
   try {
     const cssLink = document.querySelector('link[href*="iu-invoice-overlay.css"]');
-    if (cssLink && String(cssLink.href || "").indexOf("iu-invoice-pdf-capture-v16") === -1) {
-      cssLink.href = "/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-capture-v16";
+    if (cssLink && String(cssLink.href || "").indexOf("iu-invoice-pdf-capture-v17") === -1) {
+      cssLink.href = "/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-capture-v17";
     }
   } catch (_) {}
 
