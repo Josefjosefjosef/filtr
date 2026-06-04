@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-04T12:17:05.522557Z",
+  "ingestedAt": "2026-06-04T13:01:59.588926Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nemyslel, že se fotbalem uživí. Ze druhé ligy se ale český záložník vykopal až na mistrovství světa",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-nemyslel-ze-se-fotbalem-uzivi-ze-druhe-ligy-se-ale-cesky-zaloznik-vykopal-az-na-mistrovstvi-sveta-5474085",
+      "dt": "2026-06-04T13:00:47Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ale",
+        "druhé",
+        "fotbalem",
+        "ligy",
+        "mistrovství",
+        "nemyslel",
+        "světa",
+        "uživí",
+        "vykopal",
+        "záložník",
+        "český"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -126,7 +154,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Češky chtějí nepovedený zápas s Polskem rychle hodit za hlavu, motivací je olympijský sen",
+      "title": "Češky chtějí zápas s Polskem rychle hodit za hlavu, motivací je olympijský sen",
       "url": "https://www.sport.cz/clanek/volejbal-cesky-chteji-nepovedeny-zapas-s-polskem-rychle-hodit-za-hlavu-motivaci-je-olympijsky-sen-5474452",
       "dt": "2026-06-04T11:18:40Z",
       "media_raw": "Sport.cz",
@@ -136,7 +164,6 @@
         "hlavu",
         "hodit",
         "motivací",
-        "nepovedený",
         "olympijský",
         "polskem",
         "rychle",
@@ -754,28 +781,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Souček promluvil o možném návratu do Slavie",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-soucek-promluvil-o-moznem-navratu-do-slavie-5474269",
-      "dt": "2026-06-03T18:59:03Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "možném",
-        "návratu",
-        "promluvil",
-        "slavie",
-        "souček"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43234,
+      "bytes": 43624,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-04T12:11:52Z",
+        "raw_feed_latest_publishedAt": "2026-06-04T13:00:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -838,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nemyslel, že se fotbalem uživí. Ze druhé ligy se ale český záložník vykopal až na mistrovství světa",
+            "publishedAt": "2026-06-04T13:00:47Z"
+          },
           {
             "title": "Trunda s Tvrdíkem podávají trestní oznámení na Fouska",
             "publishedAt": "2026-06-04T12:11:52Z"
@@ -859,16 +868,12 @@
             "publishedAt": "2026-06-04T10:43:04Z"
           },
           {
-            "title": "Češky chtějí nepovedený zápas s Polskem rychle hodit za hlavu, motivací je olympijský sen",
+            "title": "Češky chtějí zápas s Polskem rychle hodit za hlavu, motivací je olympijský sen",
             "publishedAt": "2026-06-04T11:18:40Z"
           },
           {
             "title": "Fotbalová asociace loni popáté za sebou hospodařila se ziskem",
             "publishedAt": "2026-06-04T11:13:57Z"
-          },
-          {
-            "title": "Třetí v historii! Český mladík ohromil, Ondra je z něj nadšený",
-            "publishedAt": "2026-06-04T11:00:11Z"
           }
         ]
       }
