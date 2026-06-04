@@ -30,10 +30,15 @@ export const IU_INVOICE_PDF_LAYOUT = {
   fontItemNamePt: 10,
   fontItemDescPt: 9,
   fontTableCellPt: 9.5,
+  fontTableNumericPt: 8.5,
+  fontTableNumericMinPt: 7.5,
   fontTotalsPt: 9.5,
   fontDuePt: 10.5,
   fontFootPt: 8,
-  summaryLabelValueGapMm: 14,
+  summaryBlockWidthMm: 96,
+  summaryLabelWidthMm: 56,
+  summaryValueWidthMm: 36,
+  summaryGapMm: 4,
   tableHeaderHeightMm: 8,
   tableRowPadTopMm: 3.5,
   tableRowPadBottomMm: 3.5,
@@ -196,18 +201,64 @@ function setPdfFont(doc, style) {
   applyNormalTracking(doc);
 }
 
+function measureTextWidthMm(doc, text, pt) {
+  doc.setFontSize(pt);
+  applyNormalTracking(doc);
+  return doc.getTextWidth(String(text || ""));
+}
+
+function fitFontSizeForColumn(doc, text, maxW, startPt, minPt) {
+  let pt = startPt;
+  const t = String(text || "");
+  while (pt >= minPt) {
+    if (measureTextWidthMm(doc, t, pt) <= maxW) return pt;
+    pt -= 0.5;
+  }
+  return minPt;
+}
+
+/** @returns {{ overflow: boolean, fontPt: number, twoLine: boolean }} */
+function drawTableCellText(doc, col, text, y, opts) {
+  const L = IU_INVOICE_PDF_LAYOUT;
+  const pad = 1.2;
+  const maxW = Math.max(4, col.w - pad * 2);
+  const align = opts.align || "right";
+  const style = opts.style || "normal";
+  const startPt = opts.fontPt || L.fontTableNumericPt;
+  const minPt = opts.minPt || L.fontTableNumericMinPt;
+  const raw = String(text || "");
+  setPdfFont(doc, style);
+  let pt = fitFontSizeForColumn(doc, raw, maxW, startPt, minPt);
+  doc.setFontSize(pt);
+  let overflow = measureTextWidthMm(doc, raw, pt) > maxW + 0.25;
+  const x = align === "center" ? col.x + col.w / 2 : col.x + col.w - pad;
+  if (overflow && raw.indexOf(" Kč") > 0) {
+    const amt = raw.replace(/ Kč$/, "").trim();
+    pt = fitFontSizeForColumn(doc, amt, maxW, startPt, minPt);
+    doc.setFontSize(pt);
+    const lh = lineHeightMm(pt, 1.12);
+    pdfText(doc, amt, x, y - lh * 0.22, { align, style });
+    pdfText(doc, "Kč", x, y + lh * 0.48, { align, style });
+    overflow = measureTextWidthMm(doc, amt, pt) > maxW + 0.25;
+    return { overflow, fontPt: pt, twoLine: true };
+  }
+  pdfText(doc, raw, x, y, { align, style });
+  overflow = measureTextWidthMm(doc, raw, pt) > maxW + 0.25;
+  return { overflow, fontPt: pt, twoLine: false };
+}
+
 function columnLayout(hasVat) {
   const L = IU_INVOICE_PDF_LAYOUT;
   const x0 = L.marginLeftMm;
   const xEnd = MM_PAGE_W - L.marginRightMm;
   const inner = xEnd - x0;
   if (hasVat) {
-    const wNum = 7;
-    const wQty = 12;
-    const wUnit = 12;
-    const wPrice = 18;
-    const wVat = 10;
-    const wTotal = 18;
+    const wNum = 6;
+    const wQty = 10;
+    const wUnit = 10;
+    const wPrice = 26;
+    const wVat = 11;
+    const wTotal = 26;
     const wItem = inner - (wNum + wQty + wUnit + wPrice + wVat + wTotal);
     let x = x0;
     const cols = [
@@ -221,11 +272,11 @@ function columnLayout(hasVat) {
     ];
     return { cols, x0, xEnd, inner };
   }
-  const wNum = 7;
-  const wQty = 14;
-  const wUnit = 14;
-  const wPrice = 22;
-  const wTotal = 22;
+  const wNum = 6;
+  const wQty = 12;
+  const wUnit = 12;
+  const wPrice = 28;
+  const wTotal = 28;
   const wItem = inner - (wNum + wQty + wUnit + wPrice + wTotal);
   let x = x0;
   const cols = [
@@ -239,6 +290,95 @@ function columnLayout(hasVat) {
   return { cols, x0, xEnd, inner };
 }
 
+function summaryBlockLayout() {
+  const L = IU_INVOICE_PDF_LAYOUT;
+  const blockW = L.summaryBlockWidthMm;
+  const blockX = MM_PAGE_W - L.marginRightMm - blockW;
+  const labelX = blockX;
+  const valueX = blockX + L.summaryLabelWidthMm + L.summaryGapMm;
+  const valueW = L.summaryValueWidthMm;
+  return {
+    blockX,
+    blockW,
+    labelX,
+    labelW: L.summaryLabelWidthMm,
+    valueX,
+    valueW,
+    gap: L.summaryGapMm,
+    valueRight: blockX + blockW,
+  };
+}
+
+/** Stress-test column widths without rendering a page (font must be registered on doc). */
+export function auditInvoicePdfLayout(doc, hasVat) {
+  const L = IU_INVOICE_PDF_LAYOUT;
+  const layout = columnLayout(hasVat);
+  const priceCol = layout.cols.find((c) => c.key === "price");
+  const vatCol = layout.cols.find((c) => c.key === "vat");
+  const totalCol = layout.cols.find((c) => c.key === "total");
+  const samples = {
+    price: ["50 000,00 Kč", "5 007 679,00 Kč", "99 999 999,99 Kč"],
+    vat: ["21 %", "0 %", "12 %"],
+    total: ["60 500,00 Kč", "6 059 291,59 Kč", "120 999 999,99 Kč"],
+  };
+  const pad = 1.2;
+  const auditCell = (col, texts, startPt) => {
+    if (!col) return { overflow: false, maxTextW: 0 };
+    const maxW = col.w - pad * 2;
+    let overflow = false;
+    let maxTextW = 0;
+    for (let i = 0; i < texts.length; i++) {
+      const t = texts[i];
+      const pt = fitFontSizeForColumn(doc, t, maxW, startPt, L.fontTableNumericMinPt);
+      const tw = measureTextWidthMm(doc, t, pt);
+      if (tw > maxTextW) maxTextW = tw;
+      if (tw > maxW + 0.25) overflow = true;
+    }
+    return { overflow, maxTextW };
+  };
+  const priceA = auditCell(priceCol, samples.price, L.fontTableNumericPt);
+  const vatA = auditCell(vatCol, samples.vat, L.fontTableCellPt);
+  const totalA = auditCell(totalCol, samples.total, L.fontTableNumericPt);
+  const sum = summaryBlockLayout();
+  const sumSamples = samples.total;
+  let summaryLabelOverflow = false;
+  let summaryValueOverflow = false;
+  let summaryOverlap = false;
+  for (let i = 0; i < sumSamples.length; i++) {
+    const lbl = i === 0 ? "Mezisoučet bez DPH:" : i === 1 ? "DPH:" : "Celkem k úhradě:";
+    const amt = sumSamples[i];
+    const lblPt = fitFontSizeForColumn(doc, lbl, sum.labelW, L.fontTotalsPt, L.fontTableNumericMinPt);
+    const valPt = fitFontSizeForColumn(doc, amt, sum.valueW, L.fontTotalsPt, L.fontTableNumericMinPt);
+    const lw = measureTextWidthMm(doc, lbl, lblPt);
+    const vw = measureTextWidthMm(doc, amt, valPt);
+    if (lw > sum.labelW + 0.25) summaryLabelOverflow = true;
+    if (vw > sum.valueW + 0.25) summaryValueOverflow = true;
+    if (lw + sum.gap + vw > sum.blockW + 0.25) summaryOverlap = true;
+  }
+  return {
+    PRICE_COLUMN_WIDTH: priceCol ? priceCol.w : 0,
+    VAT_COLUMN_WIDTH: vatCol ? vatCol.w : 0,
+    TOTAL_COLUMN_WIDTH: totalCol ? totalCol.w : 0,
+    PRICE_TEXT_WIDTH: priceA.maxTextW,
+    VAT_TEXT_WIDTH: vatA.maxTextW,
+    TOTAL_TEXT_WIDTH: totalA.maxTextW,
+    PRICE_OVERFLOW: priceA.overflow,
+    VAT_OVERFLOW: vatA.overflow,
+    TOTAL_OVERFLOW: totalA.overflow,
+    TABLE_OVERFLOW_FIXED: !priceA.overflow && !vatA.overflow && !totalA.overflow,
+    SUMMARY_BLOCK_X: sum.blockX,
+    SUMMARY_BLOCK_WIDTH: sum.blockW,
+    SUMMARY_LABEL_WIDTH: sum.labelW,
+    SUMMARY_VALUE_WIDTH: sum.valueW,
+    SUMMARY_GAP: sum.gap,
+    SUMMARY_LABEL_OVERFLOW: summaryLabelOverflow,
+    SUMMARY_VALUE_OVERFLOW: summaryValueOverflow,
+    SUMMARY_OVERLAP: summaryOverlap,
+    SUMMARY_OVERFLOW_FIXED: !summaryLabelOverflow && !summaryValueOverflow && !summaryOverlap,
+    PDF_FONT_USED: IU_INV_PDF_FONT,
+  };
+}
+
 function publishRendererProof(extra) {
   const L = IU_INVOICE_PDF_LAYOUT;
   const typo = {
@@ -247,6 +387,7 @@ function publishRendererProof(extra) {
     PDF_LETTER_SPACING: L.letterSpacingPt,
     PDF_TEXT_RENDER_MODE: "fill",
     PDF_FONT_ENGINE: "noto-utf8-vfs-identity-h",
+    PDF_FONT_USED: IU_INV_PDF_FONT,
     PDF_FONT_LOAD_OK: pdfFontLoadOk,
     TEXT_SPACING_FIXED: true,
     HEADER_FONT_SIZE: L.fontTitlePt + "pt",
@@ -448,33 +589,51 @@ function drawTableRow(doc, layout, y, row) {
     doc.setTextColor(30, 41, 59);
   }
   setPdfFont(doc, "normal");
-  doc.setFontSize(L.fontTableCellPt);
   const midY = yTop + rowH / 2;
+  const overflowFlags = { price: false, vat: false, total: false };
   for (let i = 0; i < layout.cols.length; i++) {
     const c = layout.cols[i];
     if (c.key === "item") continue;
     const val = row.cells[c.key] != null ? String(row.cells[c.key]) : "";
     if (c.key === "num") {
+      doc.setFontSize(L.fontTableCellPt);
       pdfText(doc, val, c.x + c.w / 2, midY, { align: "center" });
-    } else {
-      pdfText(doc, val, c.x + c.w - 1.5, midY, { align: "right" });
+      continue;
     }
+    if (c.key === "qty" || c.key === "unit") {
+      doc.setFontSize(L.fontTableCellPt);
+      pdfText(doc, val, c.x + c.w - 1.2, midY, { align: "right" });
+      continue;
+    }
+    const isMoney = c.key === "price" || c.key === "total";
+    const res = drawTableCellText(doc, c, val, midY, {
+      fontPt: isMoney ? L.fontTableNumericPt : L.fontTableCellPt,
+      align: "right",
+      style: "normal",
+    });
+    if (c.key === "price" && res.overflow) overflowFlags.price = true;
+    if (c.key === "vat" && res.overflow) overflowFlags.vat = true;
+    if (c.key === "total" && res.overflow) overflowFlags.total = true;
   }
-  return yTop + rowH;
+  return { y: yTop + rowH, overflowFlags };
 }
 
 function drawTotals(doc, totals, y) {
   const L = IU_INVOICE_PDF_LAYOUT;
-  const valueX = MM_PAGE_W - L.marginRightMm;
-  const labelX = valueX - L.summaryLabelValueGapMm;
+  const sum = summaryBlockLayout();
   let cy = y + L.summaryBlockPadMm;
   const yStart = cy;
-  doc.setFontSize(L.fontTotalsPt);
   doc.setTextColor(30, 41, 59);
   const drawRow = (label, amount, bold) => {
-    doc.setFontSize(bold ? L.fontDuePt : L.fontTotalsPt);
-    pdfText(doc, label, labelX, cy, { align: "right", style: bold ? "bold" : "normal" });
-    pdfText(doc, amount, valueX, cy, { align: "right", style: bold ? "bold" : "normal" });
+    const labelPt = bold ? L.fontDuePt : L.fontTotalsPt;
+    const valPt = bold ? L.fontDuePt : L.fontTotalsPt;
+    setPdfFont(doc, bold ? "bold" : "normal");
+    const labelFit = fitFontSizeForColumn(doc, label, sum.labelW, labelPt, L.fontTableNumericMinPt);
+    const valFit = fitFontSizeForColumn(doc, amount, sum.valueW, valPt, L.fontTableNumericMinPt);
+    doc.setFontSize(labelFit);
+    pdfText(doc, label, sum.labelX, cy, { maxWidth: sum.labelW, align: "left", style: bold ? "bold" : "normal" });
+    doc.setFontSize(valFit);
+    pdfText(doc, amount, sum.valueRight, cy, { maxWidth: sum.valueW, align: "right", style: bold ? "bold" : "normal" });
     cy += L.summaryLineMm;
   };
   if (totals.payer) {
@@ -488,6 +647,7 @@ function drawTotals(doc, totals, y) {
   return {
     yAfter: y + blockH + 2,
     summaryBlockHeightMm: blockH,
+    summaryLayout: sum,
   };
 }
 
@@ -510,6 +670,13 @@ function drawFooter(doc, yAfterSummary) {
  * @param {string} [fileName]
  * @returns {Promise<{ blob: Blob, fileName: string, proof: object }>}
  */
+export async function auditInvoicePdfLayoutPrepared(hasVat) {
+  const JsPDF = await ensureJsPDF();
+  const doc = new JsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
+  await ensureInvoicePdfUtf8Font(doc);
+  return auditInvoicePdfLayout(doc, !!hasVat);
+}
+
 export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
   const JsPDF = await ensureJsPDF();
   const L = IU_INVOICE_PDF_LAYOUT;
@@ -541,9 +708,8 @@ export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
   doc.setFontSize(L.fontInvoiceNumberPt);
   doc.setTextColor(30, 41, 59);
   const invNum = String(inv.number || "").trim();
-  pdfText(doc, "číslo faktury", L.marginLeftMm + 4, y + 16);
   setPdfFont(doc, "bold");
-  pdfText(doc, invNum, L.marginLeftMm + 4 + doc.getTextWidth("číslo faktury ") + 0.5, y + 16, { style: "bold" });
+  pdfText(doc, "číslo faktury " + invNum, L.marginLeftMm + 4, y + 16, { style: "bold" });
   y += 22;
 
   y = drawPartyColumns(doc, state, y);
@@ -576,7 +742,8 @@ export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
       y = L.marginTopMm;
       y = drawTableHeader(doc, layout, y);
     }
-    y = drawTableRow(doc, layout, y, row);
+    const rowOut = drawTableRow(doc, layout, y, row);
+    y = rowOut.y;
   }
 
   if (y + 20 > bottom) {
@@ -585,13 +752,19 @@ export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
   }
   const totalsOut = drawTotals(doc, totals, y + 3);
   const footerOut = drawFooter(doc, totalsOut.yAfter);
+  const layoutAudit = auditInvoicePdfLayout(doc, hasVat);
 
   const blob = doc.output("blob");
   const outName = fileName || "faktura.pdf";
   const itemCol = layout.cols.find((c) => c.key === "item");
+  const priceCol = layout.cols.find((c) => c.key === "price");
+  const vatCol = layout.cols.find((c) => c.key === "vat");
+  const totalCol = layout.cols.find((c) => c.key === "total");
   const proof = publishRendererProof({
     PDF_TABLE_COLUMN_WIDTHS_MM: layout.cols.map((c) => c.w).join(","),
     ITEM_DESCRIPTION_WIDTH_MM: itemCol ? itemCol.w : 0,
+    ITEM_TITLE_FONT_SIZE: L.fontItemNamePt + "pt",
+    ITEM_DESCRIPTION_FONT_SIZE: L.fontItemDescPt + "pt",
     lineCount: lines.length,
     pageCount: doc.internal.getNumberOfPages(),
     SUMMARY_BLOCK_HEIGHT: totalsOut.summaryBlockHeightMm + "mm",
@@ -599,6 +772,13 @@ export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
     ROOT_CAUSE: "helvetica_standard_font_missing_czech_glyphs",
     TYPOGRAPHY_FIX: "v1_utf8_noto_font",
     PDF_LAYOUT_SCORE: "typography_v1",
+    PRICE_COLUMN_WIDTH: priceCol ? priceCol.w : 0,
+    VAT_COLUMN_WIDTH: vatCol ? vatCol.w : 0,
+    TOTAL_COLUMN_WIDTH: totalCol ? totalCol.w : 0,
+    TABLE_OVERFLOW_FIXED: layoutAudit.TABLE_OVERFLOW_FIXED,
+    SUMMARY_OVERLAP: layoutAudit.SUMMARY_OVERLAP,
+    SUMMARY_OVERFLOW_FIXED: layoutAudit.SUMMARY_OVERFLOW_FIXED,
+    ...layoutAudit,
   });
   return { blob, fileName: outName, proof };
 }
@@ -607,6 +787,8 @@ try {
   if (typeof window !== "undefined") {
     window.iuInvoiceRenderPdfBlobFromData = buildInvoicePdfBlobFromData;
     window.iuInvoicePreloadPdfFont = preloadInvoicePdfFont;
+    window.iuInvoiceAuditPdfLayout = auditInvoicePdfLayout;
+    window.iuInvoiceAuditPdfLayoutPrepared = auditInvoicePdfLayoutPrepared;
     window.IU_INVOICE_PDF_LAYOUT = IU_INVOICE_PDF_LAYOUT;
   }
 } catch (_) {}
