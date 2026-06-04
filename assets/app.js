@@ -24671,6 +24671,68 @@ function buildVideoAsArticleCard(it) {
     };
   }
 
+  function iuInvoicePdfMirrorPreviewTableWidths(pageEl) {
+    if (!pageEl) return;
+    try {
+      var panel = document.getElementById("iuInvoicePanel");
+      var previewRoot =
+        (panel && panel.querySelector("[data-inv-preview-layer]:not([hidden]) .iu-inv-pr")) ||
+        (panel && panel.querySelector(".iu-inv-previewScroll .iu-inv-pr"));
+      var exportTable = pageEl.querySelector(".iu-inv-pr-table");
+      var previewTable = previewRoot && previewRoot.querySelector(".iu-inv-pr-table");
+      if (!previewTable || !exportTable) return;
+      var pHead = previewTable.querySelector("thead tr");
+      var eHead = exportTable.querySelector("thead tr");
+      if (!pHead || !eHead) return;
+      exportTable.style.setProperty("table-layout", "fixed", "important");
+      exportTable.style.setProperty("width", "100%", "important");
+      for (var i = 0; i < pHead.cells.length && i < eHead.cells.length; i++) {
+        var w = pHead.cells[i].offsetWidth;
+        if (w > 0) {
+          eHead.cells[i].style.setProperty("width", w + "px", "important");
+          eHead.cells[i].style.setProperty("min-width", w + "px", "important");
+          eHead.cells[i].style.setProperty("max-width", w + "px", "important");
+        }
+      }
+    } catch (eTbl) {}
+  }
+
+  function iuInvoicePdfCollectDomSnapshot(rootEl) {
+    var snap = { blocks: {}, tableColumnWidths: [], fontMetrics: {} };
+    if (!rootEl) return snap;
+    snap.blocks = iuInvoicePdfMeasureBlockRects(rootEl);
+    try {
+      var table = rootEl.querySelector(".iu-inv-pr-table thead tr");
+      if (table) {
+        for (var ti = 0; ti < table.cells.length; ti++) {
+          snap.tableColumnWidths.push(table.cells[ti].offsetWidth || 0);
+        }
+      }
+      var title = rootEl.querySelector(".iu-inv-pr-title");
+      if (title) {
+        var cs = window.getComputedStyle(title);
+        snap.fontMetrics.title = {
+          fontSize: cs.fontSize,
+          fontWeight: cs.fontWeight,
+          lineHeight: cs.lineHeight,
+        };
+      }
+      snap.computedWidth = rootEl.offsetWidth || Math.round(rootEl.getBoundingClientRect().width);
+      snap.scrollWidth = rootEl.scrollWidth || 0;
+      snap.scrollHeight = rootEl.scrollHeight || 0;
+      var totalsEl = rootEl.querySelector(".iu-inv-pr-totals");
+      if (totalsEl) {
+        snap.summaryBox = {
+          x: totalsEl.offsetLeft,
+          y: totalsEl.offsetTop,
+          width: totalsEl.offsetWidth,
+          height: totalsEl.offsetHeight,
+        };
+      }
+    } catch (eSnap) {}
+    return snap;
+  }
+
   function iuInvoicePdfApplyLayoutLock(exportRoot, paperEl, pageEl) {
     var W = 794;
     try {
@@ -24954,6 +25016,7 @@ function buildVideoAsArticleCard(it) {
         }
         iuInvoicePdfApplyLayoutLock(exportRoot, paperEl, pageEl);
         iuInvoicePdfApplyCanvasSafeStyles(pageEl);
+        iuInvoicePdfMirrorPreviewTableWidths(pageEl);
         var hostRect = exportRoot.getBoundingClientRect();
         var rect = pageEl.getBoundingClientRect();
         var paperRect = paperEl.getBoundingClientRect();
@@ -25117,6 +25180,17 @@ function buildVideoAsArticleCard(it) {
         var previewBlocks = iuInvoicePdfMeasureBlockRects(pageEl);
         try {
           window._iuInvoicePdfPreviewBlocks = previewBlocks;
+          var panel = document.getElementById("iuInvoicePanel");
+          var previewPage =
+            panel && panel.querySelector("[data-inv-preview-layer]:not([hidden]) .iu-inv-pr");
+          window._iuInvoicePdfDomParity = {
+            preview: iuInvoicePdfCollectDomSnapshot(previewPage),
+            capture: iuInvoicePdfCollectDomSnapshot(pageEl),
+            previewHostHtmlLen: previewPage ? previewPage.outerHTML.length : 0,
+            captureHostHtmlLen: pageEl ? pageEl.outerHTML.length : 0,
+            previewHostHtml: previewPage ? String(previewPage.outerHTML).slice(0, 4000) : "",
+            captureHostHtml: pageEl ? String(pageEl.outerHTML).slice(0, 4000) : "",
+          };
         } catch (_) {}
         var layoutMetrics = iuInvoicePdfCollectLayoutMetrics(exportRoot, paperEl, pageEl, opts.html2canvas.scale);
         try {
