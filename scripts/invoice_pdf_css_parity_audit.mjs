@@ -138,6 +138,10 @@ async function run() {
     if (ok) break;
     await page.waitForTimeout(400);
   }
+  await page.evaluate(async () => {
+    if (typeof window.iuEnsureInvoiceOverlayBoot === "function") await window.iuEnsureInvoiceOverlayBoot();
+  });
+  await page.waitForTimeout(400);
 
   const audit = await page.evaluate(
     async ({ html, regions, styleKeys }) => {
