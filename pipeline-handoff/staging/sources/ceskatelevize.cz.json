@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-04T02:31:57.764418Z",
+  "ingestedAt": "2026-06-04T04:01:46.506883Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poslanci budou hlasovat o sněmovních nominantech na státní vyznamenání",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/poslanci-budou-hlasovat-o-snemovnich-nominantech-na-statni-vyznamenani-374203",
+      "dt": "2026-06-04T03:27:17Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "hlasovat",
+        "nominantech",
+        "poslanci",
+        "sněmovních",
+        "státní",
+        "vyznamenání"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -734,32 +757,6 @@
         "vlády",
         "vyhlásily",
         "úřadu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Při přepočtu na superdávku se snížila podpora 57 procentům příjemců, uvádí MPSV",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pri-prepoctu-na-superdavku-se-snizila-podpora-57-procentum-prijemcu-uvadi-mpsv-374170",
-      "dt": "2026-06-03T08:17:22Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "mpsv",
-        "podpora",
-        "procentům",
-        "přepočtu",
-        "při",
-        "příjemců",
-        "snížila",
-        "superdávku",
-        "uvádí"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2267,7 +2264,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43891,
+      "bytes": 43760,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2304,7 +2301,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-04T00:31:59Z",
+        "raw_feed_latest_publishedAt": "2026-06-04T03:27:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -2321,6 +2318,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poslanci budou hlasovat o sněmovních nominantech na státní vyznamenání",
+            "publishedAt": "2026-06-04T03:27:17Z"
+          },
           {
             "title": "Izrael a Libanon se dohodly na obnovení příměří, v Libanonu budou bezpečné zóny",
             "publishedAt": "2026-06-04T00:31:59Z"
@@ -2348,10 +2349,6 @@
           {
             "title": "Explosia nemusí být prodána ze sta procent, řekl Havlíček",
             "publishedAt": "2026-06-03T18:43:30Z"
-          },
-          {
-            "title": "Zoo Olomouc slaví 70 let. Z provizorního koutku se stala nejnavštěvovanější atrakcí kraje",
-            "publishedAt": "2026-06-03T17:28:44Z"
           }
         ]
       }
