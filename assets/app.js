@@ -37578,14 +37578,66 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   /** V2 wave1: task-vs-notes wrapper strip (NOT read-before-write guard). */
   function iuSilverTaskVsNotesStealV2StripWrappersFolded(f) {
+    return iuSilverTaskVsNotesStealV3StripWrappersFolded(f);
+  }
+
+  /** V2 wave3: iterative task-read wrapper strip — task query / cue / item-fallback paths only. */
+  function iuSilverTaskVsNotesStealV3StripWrappersFolded(f) {
     let x = String(f || "").trim();
     if (!x) return x;
-    x = x.replace(/^\s*(?:nevis\s+nahodou\s+)+/, "");
-    x = x.replace(/^\s*(?:nevis\s+kdy\s+|vis\s+kdy\s+)/, "");
-    x = x.replace(/^\s*(?:muzes\s+mi\s+rict\s+|muzes\s+se\s+na\s+to\s+mrknout\s+)/, "");
-    x = x.replace(/^\s*(?:potrebuju\s+(?:rychle\s+)?zjistit\s+|potrebuju\s+vedet\s+)/, "");
-    x = x.replace(/^\s*(?:prosim\s+te\s+|prosim\s+)/, "");
-    x = x.replace(/^\s*(?:hele\s+prosim\s+|hele\s+)/, "");
+    if (/\b(uloz|ulozit|pridej|vytvor|zapis|pripomn|do\s+kalend)\b/.test(x)) return x;
+    const patterns = [
+      /^\s*(?:hele\s+prosim\s+(?:te\s+)?nevis\s+nahodou\s+)/,
+      /^\s*(?:prosim\s+te\s+nevis\s+nahodou\s+|prosim\s+nevis\s+nahodou\s+)/,
+      /^\s*(?:hele\s+prosim\s+(?:te\s+)?)/,
+      /^\s*(?:nevis\s+nahodou\s+)+/,
+      /^\s*(?:nevis\s+kdy\s+|vis\s+kdy\s+)/,
+      /^\s*(?:muzes\s+mi\s+rict\s+|muzes\s+se\s+na\s+to\s+mrknout\s+|muzete\s+mi\s+rict\s+|mohli\s+by\s+ste\s+mi\s+rict\s+)/,
+      /^\s*(?:potrebuju\s+(?:rychle\s+)?zjistit\s+|potrebuju\s+vedet\s+|ja\s+bych\s+potreboval\s+(?:vedet\s+)?)/,
+      /^\s*(?:jestli\s+mi\s+to\s+nevad[ií]\s+)/,
+      /^\s*(?:chtel\s+bych\s+(?:se\s+)?(?:zeptat|spytat)\s+)/,
+      /^\s*(?:prosim\s+te\s+|prosimte\s+|prosim\s+)/,
+      /^\s*(?:hele\s+)/
+    ];
+    let prev = "";
+    for (let pass = 0; pass < 8 && x !== prev; pass++) {
+      prev = x;
+      for (let pi = 0; pi < patterns.length; pi++) {
+        x = x.replace(patterns[pi], "");
+      }
+      x = x.replace(/\s+/g, " ").trim();
+    }
+    return x;
+  }
+
+  /** V2 wave3: raw wrapper strip for task-read routing (NOT read-before-write guard). */
+  function iuSilverTaskVsNotesStealV3StripWrappersRaw(rawIn) {
+    let t = String(rawIn || "").trim();
+    if (!t) return t;
+    if (iuSilverDetectExplicitSavePrefixV1(t)) return t;
+    const tf = foldCs(t);
+    if (/\b(uloz|ulozit|pridej|vytvor|zapis|pripomn|do\s+kalend)\b/.test(tf)) return t;
+    t = t.replace(/^\s*(?:hele\s+pros[ií]m\s+(?:t[eě]\s+)?nevi[sš]\s+n[aá]hodou\s+)+/giu, "");
+    t = t.replace(/^\s*(?:pros[ií]m\s+t[eě]\s+nevi[sš]\s+n[aá]hodou\s+|pros[ií]m\s+nevi[sš]\s+n[aá]hodou\s+)/giu, "");
+    t = t.replace(/^\s*(?:hele\s+pros[ií]m\s+(?:t[eě]\s+)?)+/giu, "");
+    t = t.replace(/^\s*(?:nevi[sš]\s+n[aá]hodou\s+)+/giu, "");
+    t = t.replace(/^\s*(?:nevi[sš]\s+kdy\s+|vi[sš]\s+kdy\s+)/giu, "");
+    t = t.replace(/^\s*(?:m[uů][žz]e[sš]\s+mi\s+[řr][ií]ct\s+|m[uů][žz]e[sš]\s+se\s+na\s+to\s+mrknout\s+|m[uů][žz]ete\s+mi\s+[řr][ií]ct\s+|mohli\s+by\s+ste\s+mi\s+[řr][ií]ct\s+)/giu, "");
+    t = t.replace(/^\s*(?:pot[řr]ebuju\s+(?:rychle\s+)?zjistit\s+|pot[řr]ebuju\s+v[eě]d[eě]t\s+|j[aá]\s+bych\s+pot[řr]eboval\s+(?:v[eě]d[eě]t\s+)?)/giu, "");
+    t = t.replace(/^\s*(?:jestli\s+mi\s+to\s+nevad[ií]\s+)/giu, "");
+    t = t.replace(/^\s*(?:cht[eě]l\s+bych\s+(?:se\s+)?(?:zeptat|spytat)\s+)/giu, "");
+    t = t.replace(/^\s*(?:pros[ií]m\s+t[eě]\s+|pros[ií]m\s+)/giu, "");
+    t = t.replace(/^\s*hele\s+/giu, "");
+    t = t.replace(/^\s*kdy\s+bych\s+m[eě]l[a]?\s+/giu, "kdy mám ");
+    t = t.replace(/^\s*kdy\s+bych\s+m[eě]la\s+/giu, "kdy mám ");
+    return t.replace(/\s+/g, " ").trim();
+  }
+
+  /** V2 wave3: conditional deadline phrasing → canonical task-read cue (foldCs, task paths only). */
+  function iuSilverTaskVsNotesStealV3NormalizeTaskReadCueFolded(f) {
+    let x = String(f || "");
+    x = x.replace(/\bkdy\s+bych\s+m[eě]l[a]?\b/g, "kdy mam");
+    x = x.replace(/\bkdy\s+by\s+ch\s+m[eě]l[a]?\b/g, "kdy mam");
     return x.replace(/\s+/g, " ").trim();
   }
 
@@ -37637,7 +37689,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverTaskVsNotesStealV2TaskCueCoreFolded(f) {
     return iuSilverTaskQueryTypoNormalizeFolded(
-      iuSilverTaskVsNotesStealV2NormalizeCoMamCueFolded(iuSilverTaskVsNotesStealV2StripWrappersFolded(f))
+      iuSilverTaskVsNotesStealV3NormalizeTaskReadCueFolded(
+        iuSilverTaskVsNotesStealV2NormalizeCoMamCueFolded(iuSilverTaskVsNotesStealV3StripWrappersFolded(f))
+      )
     );
   }
 
@@ -37733,6 +37787,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const f = String(folded || "");
     const fEval = iuSilverTaskVsNotesStealV2TaskCueCoreFolded(f) || f;
     const r0 = String(raw || "").trim();
+    const rEval = iuSilverTaskVsNotesStealV3StripWrappersRaw(r0) || r0;
     if (
       !iuSilverTaskVsNotesStealV2CarveOutHitFolded(f) &&
       !iuSilverReadBeforeWriteSafetyGuardV1CarveOutFolded(fEval) &&
@@ -37741,11 +37796,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return null;
     }
     const hit =
-      iuSilverTryTaskDeadlineAnswerReadTurnV2(raw, now, fEval, ctx || {}, empty) ||
-      iuSilverTryTaskQueryReadPriorityTurn(raw, now, fEval, ctx || {}, empty) ||
-      iuSilverTryTemporalTaskQueryRoutingV1ReadTurn(raw, now, fEval, ctx || {}, empty);
+      iuSilverTryTaskDeadlineAnswerReadTurnV2(rEval, now, fEval, ctx || {}, empty) ||
+      iuSilverTryTaskQueryReadPriorityTurn(rEval, now, fEval, ctx || {}, empty) ||
+      iuSilverTryTemporalTaskQueryRoutingV1ReadTurn(rEval, now, fEval, ctx || {}, empty);
     if (hit) return hit;
-    let q = iuSilverExtractTaskQuerySearchSubject(r0, fEval) || iuSilverExtractTaskQuerySearchSubject(r0, f) || "";
+    let q = iuSilverExtractTaskQuerySearchSubject(rEval, fEval) || iuSilverExtractTaskQuerySearchSubject(r0, f) || "";
     if (iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(fEval) || iuSilverRelationshipCoMamSPravnikTaskQueryTieBreakFolded(f)) {
       q = "pravnik";
     }
@@ -60332,7 +60387,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         if (globalEarly) return globalEarly;
       }
       const taskDeadlineV2Early = iuSilverTryTaskDeadlineAnswerReadTurnV2(
-        raw,
+        iuSilverTaskVsNotesStealV3StripWrappersRaw(raw) || raw,
         now,
         iuSilverTaskVsNotesStealV2TaskCueCoreFolded(f) || f,
         ctx || {},
@@ -61370,7 +61425,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   ]);
 
   function iuSilverTaskItemQueryFolded(f) {
-    const x = iuSilverTaskQueryTypoNormalizeFolded(String(f || ""));
+    const x = iuSilverTaskVsNotesStealV2TaskCueCoreFolded(String(f || ""));
     if (!x) return false;
     if (iuSilverTaskDeadlineWhenActionQueryCarveOutFolded(x)) return true;
     if (iuSilverTaskEntityActionQueryCarveOutFolded(x)) return true;
@@ -61465,7 +61520,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function iuSilverTaskItemFallbackExtractSearchTermsV1(folded) {
-    const f = iuSilverNormalizeForSearch(iuSilverTaskQueryTypoNormalizeFolded(String(folded || "")));
+    const f = iuSilverNormalizeForSearch(iuSilverTaskVsNotesStealV2TaskCueCoreFolded(String(folded || "")));
     if (!f) return [];
     const rawWords = f.split(/\s+/).filter(function (w) {
       return w && w.length >= 2;
@@ -67793,7 +67848,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         if (noteWhere) return noteWhere;
       }
       const taskDeadlineV2Pre = iuSilverTryTaskDeadlineAnswerReadTurnV2(
-        raw,
+        iuSilverTaskVsNotesStealV3StripWrappersRaw(raw) || raw,
         now,
         iuSilverTaskVsNotesStealV2TaskCueCoreFolded(folded) || folded,
         ctx || {},
