@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-06-04T11:32:02.209350Z",
+  "ingestedAt": "2026-06-04T12:17:05.522557Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Maximální cena benzinu a nafty na pátek 5. června",
+      "url": "https://www.penize.cz/doprava/491161-maximalni-cena-benzinu-a-nafty-na-patek-5-cervna",
+      "dt": "2026-06-04T13:59:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "cena",
+        "maximální",
+        "nafty",
+        "pátek",
+        "června"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -481,31 +504,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Exekuce a insolvence nestačí. Co skutečné prověření nájemníka odhalí navíc",
-      "url": "https://www.penize.cz/pronajem-bytu/490631-exekuce-a-insolvence-nestaci-co-skutecne-provereni-najemnika-odhali-navic",
-      "dt": "2026-06-02T04:55:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "exekuce",
-        "insolvence",
-        "navíc",
-        "nestačí",
-        "nájemníka",
-        "odhalí",
-        "prověření",
-        "skutečné"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -516,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18756,
+      "bytes": 18778,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -553,12 +551,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-04T12:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-04T13:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 15,
-          "sport": 1,
-          "zpravy": 4
+          "zpravy": 5,
+          "finance": 14,
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -570,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maximální cena benzinu a nafty na pátek 5. června",
+            "publishedAt": "2026-06-04T13:59:00Z"
+          },
           {
             "title": "První supermarket v Česku. Takhle jsme nakupovali před 35 lety",
             "publishedAt": "2026-06-04T12:30:00Z"
@@ -597,10 +599,6 @@
           {
             "title": "Levnější a výnosnější, nebo zabité? Změny v penzijku očima expertů",
             "publishedAt": "2026-06-04T05:05:00Z"
-          },
-          {
-            "title": "Panika je pryč. Akcie znovu rostou, dluhopisy se opatrně zvedají",
-            "publishedAt": "2026-06-04T05:00:00Z"
           }
         ]
       }
