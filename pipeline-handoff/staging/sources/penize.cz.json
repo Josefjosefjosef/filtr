@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-06-04T09:17:05.766526Z",
+  "ingestedAt": "2026-06-04T10:01:54.301705Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ČSOB rozdává dresy fotbalové reprezentace. Stačí platit kartou a vyhrát",
+      "url": "https://www.penize.cz/osobni-ucty/491118-csob-rozdava-dresy-fotbalove-reprezentace-staci-platit-kartou-a-vyhrat",
+      "dt": "2026-06-04T11:30:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "dresy",
+        "fotbalové",
+        "kartou",
+        "platit",
+        "reprezentace",
+        "rozdává",
+        "stačí",
+        "vyhrát",
+        "čsob"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Levnější bydlení v nedohlednu. Geopolitika dál zdražuje stavby, shodly se firmy",
+      "url": "https://www.penize.cz/bydleni/491113-levnejsi-bydleni-v-nedohlednu-geopolitika-dal-zdrazuje-stavby-shodly-se-firmy",
+      "dt": "2026-06-04T11:28:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "bydlení",
+        "firmy",
+        "geopolitika",
+        "levnější",
+        "nedohlednu",
+        "shodly",
+        "stavby",
+        "zdražuje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -457,54 +508,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dividenda ČEZ klesá, potvrdila valná hromada. Začíná štěpení",
-      "url": "https://www.penize.cz/burza-cennych-papiru-praha/490645-dividenda-cez-klesa-potvrdila-valna-hromada-zacina-stepeni",
-      "dt": "2026-06-01T16:50:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "dividenda",
-        "hromada",
-        "klesá",
-        "potvrdila",
-        "valná",
-        "začíná",
-        "čez",
-        "štěpení"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Maximální ceny benzinu a nafty na úterý 2. června",
-      "url": "https://www.penize.cz/doprava/490626-maximalni-ceny-benzinu-a-nafty-na-utery-2-cervna",
-      "dt": "2026-06-01T13:57:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "ceny",
-        "maximální",
-        "nafty",
-        "úterý",
-        "června"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +518,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18744,
+      "bytes": 18840,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,11 +555,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-04T10:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-04T11:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 1,
           "finance": 15,
-          "zpravy": 5
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -568,6 +572,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "ČSOB rozdává dresy fotbalové reprezentace. Stačí platit kartou a vyhrát",
+            "publishedAt": "2026-06-04T11:30:00Z"
+          },
+          {
+            "title": "Levnější bydlení v nedohlednu. Geopolitika dál zdražuje stavby, shodly se firmy",
+            "publishedAt": "2026-06-04T11:28:00Z"
+          },
           {
             "title": "Reálné mzdy rostly nejrychleji za několik let. Průměrná mzda je přes 50 tisíc",
             "publishedAt": "2026-06-04T10:40:00Z"
@@ -591,14 +603,6 @@
           {
             "title": "Pojištění za stovky místo tisíců? Simplea mění pravidla hry a útočí na investiční životko",
             "publishedAt": "2026-06-04T02:00:00Z"
-          },
-          {
-            "title": "Letiště Praha může opět používat rozpoznávání tváří. Pomáhá hledat rizikové osoby",
-            "publishedAt": "2026-06-03T14:26:00Z"
-          },
-          {
-            "title": "Češi strávili na neschopence 78 milionů dnů. Nejčastěji kvůli nosu a krku",
-            "publishedAt": "2026-06-03T14:05:00Z"
           }
         ]
       }
