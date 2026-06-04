@@ -498,6 +498,13 @@ export function initIuInvoiceOverlay(deps) {
   if (!backdrop || !panel || !scrollHost || !mount) return null;
 
   try {
+    const cssLink = document.querySelector('link[href*="iu-invoice-overlay.css"]');
+    if (cssLink && String(cssLink.href || "").indexOf("iu-invoice-pdf-capture-v16") === -1) {
+      cssLink.href = "/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-capture-v16";
+    }
+  } catch (_) {}
+
+  try {
     if (typeof window !== "undefined") window.__iuInvoiceOverlayInitialized = true;
   } catch (_) {}
 

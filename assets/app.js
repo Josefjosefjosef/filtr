@@ -24659,7 +24659,7 @@ function buildVideoAsArticleCard(it) {
       var exportRoot = document.createElement("div");
       exportRoot.setAttribute("data-iu", "pdf-invoice-export-root");
       exportRoot.className = "iu-pdf-render-mode iu-pdf-render-mode--export";
-      exportRoot.innerHTML = html;
+      exportRoot.innerHTML = '<div class="iu-invoice-paper">' + html + "</div>";
       document.body.appendChild(exportRoot);
       iuInvoicePdfExportDiag("invoice_pdf_host_attached", {
         narrow: iuInvoicePdfIsNarrowViewport(),
@@ -24693,6 +24693,21 @@ function buildVideoAsArticleCard(it) {
           useCORS: false,
           backgroundColor: "#ffffff",
           logging: false,
+          onclone: function (clonedDoc) {
+            try {
+              var roots = clonedDoc.querySelectorAll(".iu-pdf-render-mode--export, [data-iu=\"pdf-invoice-export-root\"]");
+              for (var ci = 0; ci < roots.length; ci++) {
+                var root = roots[ci];
+                root.style.setProperty("left", "0", "important");
+                root.style.setProperty("top", "0", "important");
+                root.style.setProperty("visibility", "visible", "important");
+                root.style.setProperty("opacity", "1", "important");
+                root.style.setProperty("z-index", "2147483647", "important");
+                root.style.setProperty("position", "fixed", "important");
+                root.style.setProperty("pointer-events", "none", "important");
+              }
+            } catch (eClone) {}
+          },
         },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
         pagebreak: { mode: ["css", "legacy"] },
@@ -24847,12 +24862,15 @@ function buildVideoAsArticleCard(it) {
           opts.html2canvas.scale = retryPass ? 1 : canvasScale;
         } catch (eSh) {}
         var exportHostHidden = false;
+        var exportHostCaptureReady = false;
         var brandColorBordo = false;
         var tableHeaderBordo = false;
         try {
           var hs = window.getComputedStyle(exportRoot);
-          exportHostHidden =
-            hs.visibility === "hidden" || parseFloat(hs.opacity || "1") < 0.05 || parseFloat(hs.zIndex || "0") < 0;
+          var hostLeft = parseFloat(hs.left || "0");
+          exportHostCaptureReady =
+            hs.visibility !== "hidden" && parseFloat(hs.opacity || "1") >= 0.95 && hostLeft <= -5000;
+          exportHostHidden = exportHostCaptureReady || hostLeft <= -5000;
           var createdEl = pageEl.querySelector(".iu-inv-pr-created");
           if (createdEl) {
             var cc = String(window.getComputedStyle(createdEl).color || "");
@@ -24869,6 +24887,7 @@ function buildVideoAsArticleCard(it) {
             paperHostExists: true,
             paperRootExists: true,
             exportHostHidden: exportHostHidden,
+            exportHostCaptureReady: exportHostCaptureReady,
             brandColorBordo: brandColorBordo,
             tableHeaderBordo: tableHeaderBordo,
             renderSource: "paper_css_mode",
