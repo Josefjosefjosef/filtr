@@ -48,6 +48,65 @@ function fmtBudgetBadge(badge) {
   return { text: "V pořádku", cls: "iu-financial-overlay-badge--ok" };
 }
 
+const IU_FIN_BUDGET_PIE_SERIES = [
+  { outKey: "pHousing", label: "Bydlení", color: "#2563eb" },
+  { outKey: "pEnergy", label: "Energie", color: "#059669" },
+  { outKey: "pFood", label: "Jídlo", color: "#d97706" },
+  { outKey: "pTransport", label: "Doprava", color: "#7c3aed" },
+  { outKey: "pLoans", label: "Úvěry", color: "#dc2626" },
+  { outKey: "pOther", label: "Ostatní", color: "#64748b" },
+];
+
+function budgetPieSlicesFromOutputs(outputs) {
+  const byKey = Object.fromEntries((outputs || []).map((o) => [o.key, o]));
+  return IU_FIN_BUDGET_PIE_SERIES.map((s) => {
+    const raw = byKey[s.outKey];
+    const pct = raw && typeof raw.value === "number" && Number.isFinite(raw.value) ? raw.value : 0;
+    return { ...s, pct };
+  }).filter((s) => s.pct > 0);
+}
+
+function fmtBudgetOutRow(row) {
+  if (!row) return "";
+  if (row.key === "balance") {
+    const suf = row.suffix != null ? esc(row.suffix) : "";
+    let v;
+    if (typeof row.value === "number" && Number.isFinite(row.value)) v = moneyFmt.format(row.value);
+    else if (typeof row.value === "number") v = "—";
+    else v = esc(String(row.value));
+    const valCls =
+      typeof row.value === "number" && Number.isFinite(row.value) && row.value < 0
+        ? "iu-financial-overlay-resultValue--balance-negative"
+        : "iu-financial-overlay-resultValue--balance-positive";
+    return `<div class="iu-financial-overlay-resultRow iu-financial-overlay-resultRow--balance" data-iu-fin-res="balance"><span class="iu-financial-overlay-resultLabel">${esc(row.label)}<span class="iu-financial-overlay-resultSub">Možné finanční prostředky ke zhodnocení</span></span><span class="iu-financial-overlay-resultValue ${valCls}">${v}${suf}</span></div>`;
+  }
+  return fmtOutRow(row);
+}
+
+function renderBudgetPieChart(outputs) {
+  const slices = budgetPieSlicesFromOutputs(outputs);
+  if (!slices.length) return "";
+  const total = slices.reduce((acc, s) => acc + s.pct, 0);
+  if (!(total > 0)) return "";
+  let acc = 0;
+  const stops = slices.map((s) => {
+    const start = acc;
+    acc += (s.pct / total) * 100;
+    return `${s.color} ${start.toFixed(4)}% ${acc.toFixed(4)}%`;
+  });
+  const pctFmt = new Intl.NumberFormat("cs-CZ", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  const legend = slices
+    .map(
+      (s) =>
+        `<li class="iu-fin-budget-pieLegendItem"><span class="iu-fin-budget-pieSwatch" style="background:${esc(s.color)}"></span><span class="iu-fin-budget-pieLegendText">${esc(s.label)} — ${esc(pctFmt.format(s.pct))} %</span></li>`
+    )
+    .join("");
+  return `<div class="iu-fin-budget-pieWrap" data-iu-fin-budget-pie="1">
+    <div class="iu-fin-budget-pie" style="background:conic-gradient(from -90deg, ${stops.join(", ")})" role="img" aria-label="Rozdělení výdajů"></div>
+    <ul class="iu-fin-budget-pieLegend">${legend}</ul>
+  </div>`;
+}
+
 const DISCLAIMER_SHORT =
   "Výsledek je orientační. U úvěrových produktů vždy porovnávejte i další podmínky a poplatky.";
 const DISCLAIMER_RPSN =
@@ -934,6 +993,13 @@ const IU_FIN_CALC_REGISTRY = [
 /** Skupiny v přehledu (4 pilíře) — pořadí karet v rámci sekce. */
 export const IU_FIN_HUB_SECTIONS = [
   {
+    id: "everyday",
+    title: "Běžné finance",
+    subtitle: "Denní rozhodnutí a rozpočet",
+    pillar: "everyday",
+    calculatorIds: ["budget", "vat", "discount"],
+  },
+  {
     id: "housing_loans",
     title: "Bydlení a úvěry",
     subtitle: "Finance, bydlení, úvěry",
@@ -953,13 +1019,6 @@ export const IU_FIN_HUB_SECTIONS = [
     subtitle: "Příjem, penze, rizika",
     pillar: "protection",
     calculatorIds: ["income-loss-sick", "disability-income", "life-coverage", "inflation"],
-  },
-  {
-    id: "everyday",
-    title: "Běžné finance",
-    subtitle: "Denní rozhodnutí a rozpočet",
-    pillar: "everyday",
-    calculatorIds: ["vat", "discount", "budget"],
   },
 ];
 
@@ -1166,12 +1225,21 @@ export function initIuFinancialCalculatorsOverlay(deps) {
       container.innerHTML = `<div class="iu-financial-overlay-results iu-financial-overlay-results--empty"><p class="iu-financial-overlay-muted">Vyplňte platné hodnoty pro výpočet.</p></div>`;
       return;
     }
-    let rows = (result.outputs || []).map(fmtOutRow).join("");
+    let rows;
     if (def.id === "budget" && result.meta && result.meta.badge) {
       const b = fmtBudgetBadge(result.meta.badge);
+      const pie = renderBudgetPieChart(result.outputs);
+      const outputs = result.outputs || [];
+      const summaryKeys = new Set(["expenses", "balance"]);
+      const summaryRows = outputs.filter((o) => summaryKeys.has(o.key)).map(fmtBudgetOutRow).join("");
+      const shareRows = outputs.filter((o) => !summaryKeys.has(o.key)).map(fmtOutRow).join("");
       rows =
         `<div class="iu-financial-overlay-badgeRow"><span class="iu-financial-overlay-badge ${esc(b.cls)}">${esc(b.text)}</span></div>` +
-        rows;
+        summaryRows +
+        pie +
+        shareRows;
+    } else {
+      rows = (result.outputs || []).map(fmtOutRow).join("");
     }
     const interp =
       result.meta && result.meta.interpretation
