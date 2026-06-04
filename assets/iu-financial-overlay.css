@@ -214,6 +214,14 @@
   line-height: 1.55;
   color: rgba(15, 23, 42, 0.88);
 }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-fin-calc-detail--infoOnly .iu-financial-overlay-detailInner{
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-fin-calc-detail--infoOnly .iu-financial-overlay-ctaHost{
+  margin-top: 0;
+}
 #iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-form{
   display: flex;
   flex-direction: column;
