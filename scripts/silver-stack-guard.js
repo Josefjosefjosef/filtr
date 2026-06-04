@@ -147,6 +147,14 @@ if (!/iu-silver-parcel-dashboard\.css/.test(html)) {
   fail("❌ projects/index.html must link iu-silver-parcel-dashboard.css");
 }
 
+if (!/iu-silver-finance-home-card\.css/.test(html)) {
+  fail("❌ projects/index.html must link iu-silver-finance-home-card.css");
+}
+
+if (!/id="iuSilverFinanceHomeCard"[\s\S]*?data-iuq="fincalc"/.test(html)) {
+  fail("❌ Silver finance home card must include #iuSilverFinanceHomeCard with data-iuq=\"fincalc\"");
+}
+
 if (!/iu-silver-parcel-dashboard\.js/.test(html)) {
   fail("❌ projects/index.html must load iu-silver-parcel-dashboard.js after app.js");
 }

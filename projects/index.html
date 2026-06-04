@@ -1642,6 +1642,7 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=17" />
+    <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=1" />
     <style id="iuParcelWatchFirstPaintClsGuard">
       /* P0 CLS: post parcel-dashboard.css — lock first paint = hydrated compact height; no vertical clip on mainShell. */
       @media (max-width: 1023px) {
@@ -2205,6 +2206,38 @@ style-src 'self' 'unsafe-inline' https:;
                           <button type="button" id="iuSilverParcelWatchShowAll" class="iuSilverParcelWatch__showall" hidden>Zobrazit všechny zásilky</button>
                           <div id="iuSilverParcelWatchCompleted" class="iuSilverParcelWatch__completed"></div>
                         </section>
+                        <button type="button" id="iuSilverFinanceHomeCard" class="iuSilverFinanceHomeCard" data-iuq="fincalc" data-iu-silver-finance-home-card="1" aria-label="Osobní finance a kalkulačky">
+                          <span class="iuSilverFinanceHomeCard__hero">
+                            <span class="iuSilverFinanceHomeCard__content">
+                              <span class="iuSilverFinanceHomeCard__titleRow">
+                                <span class="iuSilverFinanceHomeCard__title">💰 Osobní finance a kalkulačky</span>
+                                <svg class="iuSilverFinanceHomeCard__chevron" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                                  <path d="M7.5 4.5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                              </span>
+                              <span class="iuSilverFinanceHomeCard__lead">Máte své finance pod kontrolou? Získejte rychlý přehled o rozpočtu domácnosti, hypotéce a možnostech refinancování, investicích i spoření.</span>
+                            </span>
+                            <span class="iuSilverFinanceHomeCard__illus" aria-hidden="true">
+                              <svg class="iuSilverFinanceHomeCard__illusSvg" viewBox="0 0 128 148" role="img" focusable="false">
+                                <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                  <path d="M18 92V58l22-18 22 14v38"/>
+                                  <path d="M40 40v52"/>
+                                  <path d="M62 54v38"/>
+                                  <path d="M18 92h44"/>
+                                  <path d="M28 92V72h10v20"/>
+                                  <path d="M48 92V76h10v16"/>
+                                  <path d="M78 108c0-10 8-18 18-18h8c6 0 10 4 10 10v8H78z"/>
+                                  <path d="M86 100v8"/>
+                                  <circle cx="88" cy="116" r="4"/>
+                                  <circle cx="108" cy="116" r="4"/>
+                                  <path d="M72 92h6l4-8h16l4 8h6"/>
+                                  <path d="M96 62c4 0 8 3 8 8v6H88v-6c0-5 4-8 8-8z"/>
+                                  <path d="M92 76h8"/>
+                                </g>
+                              </svg>
+                            </span>
+                          </span>
+                        </button>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHolidayWeather" aria-hidden="true"></div>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorTallBefore" aria-hidden="true"></div>
                         <section class="iuSilverTallScrollSection" id="iuSilverTallScrollSection" aria-label="Infouzel náhled" data-iu-silver-tall-scroll>
