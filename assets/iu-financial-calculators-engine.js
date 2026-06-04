@@ -633,86 +633,6 @@ export function computeDps(values) {
   };
 }
 
-/** Propad příjmu při nemoci. */
-export function computeIncomeLossSick(values) {
-  const netIncome = iuFinParseNonNeg(values.netIncome);
-  const replacementPercent = values.replacementPercent;
-  const months = iuFinParsePositiveInt(values.monthsOut);
-  if (netIncome == null || months == null) return { ok: false, outputs: [], meta: {} };
-  const rep = iuFinParseNumber(replacementPercent);
-  const r = rep == null ? 60 : iuFinClampPercent(rep);
-  const paidPart = r / 100;
-  const monthlyGap = iuFinRoundMoney(netIncome * (1 - paidPart));
-  const totalGap = iuFinRoundMoney(monthlyGap * months);
-  return {
-    ok: true,
-    outputs: [
-      { key: "monthlyGap", label: "Orientační měsíční propad", value: monthlyGap },
-      { key: "totalGap", label: "Celkový propad za období", value: totalGap },
-      { key: "paidShare", label: "Předpokládaný poměr náhrady", value: paidPart * 100, suffix: " %" },
-    ],
-    meta: {
-      interpretation:
-        "Nemocenská a náhrady mají složitá pravidla — jde o orientační odhad dopadu na rozpočet domácnosti.",
-      chartSeries: null,
-    },
-  };
-}
-
-/** Invalidita / dlouhodobý výpadek — deficit měsíčně. */
-export function computeDisabilityIncome(values) {
-  const netIncome = iuFinParseNonNeg(values.netIncome);
-  const months = iuFinParsePositiveInt(values.monthsOut);
-  const stateSupport = iuFinParseNonNeg(values.stateSupport) ?? 0;
-  const familyExpenses = iuFinParseNonNeg(values.familyExpenses);
-  const incomeReplacement = values.incomeReplacementPercent;
-  if (netIncome == null || months == null || familyExpenses == null) return { ok: false, outputs: [], meta: {} };
-  const ir = iuFinParseNumber(incomeReplacement);
-  const irClamped = ir == null ? 0 : iuFinClampPercent(ir) / 100;
-  const reducedIncome = iuFinRoundMoney(netIncome * irClamped);
-  const monthlyDeficit = iuFinRoundMoney(Math.max(0, familyExpenses - stateSupport - reducedIncome));
-  const totalDeficit = iuFinRoundMoney(monthlyDeficit * months);
-  return {
-    ok: true,
-    outputs: [
-      { key: "monthlyDeficit", label: "Měsíční mezera (výdaje − podpora − příjem)", value: monthlyDeficit },
-      { key: "totalDeficit", label: "Odhad celkového deficitu za období", value: totalDeficit },
-    ],
-    meta: {
-      interpretation:
-        "Scénář je zjednodušený; zohledněte rezervy, pojistné plnění a další zdroje v rodině.",
-      chartSeries: null,
-    },
-  };
-}
-
-/** Potřeba životního krytí — součet závazků a náhrada příjmu. */
-export function computeLifeCoverage(values) {
-  const netIncome = iuFinParseNonNeg(values.netIncome);
-  const liabilities = iuFinParseNonNeg(values.liabilities) ?? 0;
-  const children = iuFinParseNonNeg(values.children) ?? 0;
-  const reserve = iuFinParseNonNeg(values.reserve) ?? 0;
-  const annualExpenses = iuFinParseNonNeg(values.annualExpenses);
-  const incomeYears = iuFinParsePositiveInt(values.incomeReplaceYears);
-  if (netIncome == null || annualExpenses == null) return { ok: false, outputs: [], meta: {} };
-  const yearsMul = incomeYears == null ? 5 : Math.min(40, incomeYears);
-  const childFactor = children * 150000;
-  const incomeCover = netIncome * 12 * yearsMul;
-  const recommended = iuFinRoundMoney(liabilities + reserve + childFactor + incomeCover + annualExpenses * 0.5);
-  return {
-    ok: true,
-    outputs: [
-      { key: "recommended", label: "Orientační doporučené krytí", value: recommended },
-      { key: "incomeCover", label: "Část za náhradu příjmu (model)", value: iuFinRoundMoney(incomeCover) },
-    ],
-    meta: {
-      interpretation:
-        "Orientační částka pro diskusi s poradcem; nezahrnuje všechny životní situace ani daňové souvislosti.",
-      chartSeries: null,
-    },
-  };
-}
-
 const COMPUTERS = {
   vat: computeVat,
   loan: computeLoan,
@@ -729,9 +649,6 @@ const COMPUTERS = {
   "investment-goal": computeInvestmentGoal,
   dip: computeDip,
   dps: computeDps,
-  "income-loss-sick": computeIncomeLossSick,
-  "disability-income": computeDisabilityIncome,
-  "life-coverage": computeLifeCoverage,
 };
 
 export function computeFinancialCalculator(id, values) {
