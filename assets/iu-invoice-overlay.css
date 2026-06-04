@@ -381,6 +381,15 @@
   background: #fafafa;
   box-sizing: border-box;
 }
+#iuInvoicePanel .iu-inv-pdfReadyRow{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 12px 10px;
+}
+#iuInvoicePanel .iu-inv-pdfReadyRow[hidden]{
+  display: none !important;
+}
 #iuInvoicePanel .iu-inv-previewToolbar{
   flex: 0 0 auto;
   display: flex;
@@ -555,9 +564,6 @@
   background: linear-gradient(90deg, rgba(136, 19, 55, 0.06) 0%, #fff 40%);
   margin-bottom: 16px;
 }
-.iu-pdf-render-mode--export .iu-inv-pr-head{
-  background: #fdf4f6;
-}
 .iu-pdf-render-mode .iu-inv-pr-created{
   font-size: 13px;
   font-weight: 700;
@@ -673,14 +679,6 @@
   color: rgba(15, 23, 42, 0.5);
   text-align: center;
 }
-.iu-pdf-render-mode--export{
-  left: -12000px !important;
-  top: 0 !important;
-  width: 794px !important;
-  max-width: 794px !important;
-  min-width: 794px !important;
-  visibility: hidden;
-}
 .iu-pdf-render-mode{
   position: fixed;
   left: 0;
@@ -700,6 +698,17 @@
   margin: 0;
   transform: none !important;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.iu-pdf-render-mode.iu-pdf-render-mode--export{
+  left: -12000px !important;
+  top: 0 !important;
+  width: 794px !important;
+  max-width: 794px !important;
+  min-width: 794px !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
 }
 .iu-pdf-render-mode .iu-inv-pr-head,
 .iu-pdf-render-mode .iu-inv-pr-meta,
