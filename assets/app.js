@@ -24846,10 +24846,31 @@ function buildVideoAsArticleCard(it) {
           opts.html2canvas.windowHeight = Math.min(Math.max(shCanvas, 900), capH);
           opts.html2canvas.scale = retryPass ? 1 : canvasScale;
         } catch (eSh) {}
+        var exportHostHidden = false;
+        var brandColorBordo = false;
+        var tableHeaderBordo = false;
+        try {
+          var hs = window.getComputedStyle(exportRoot);
+          exportHostHidden =
+            hs.visibility === "hidden" || parseFloat(hs.opacity || "1") < 0.05 || parseFloat(hs.zIndex || "0") < 0;
+          var createdEl = pageEl.querySelector(".iu-inv-pr-created");
+          if (createdEl) {
+            var cc = String(window.getComputedStyle(createdEl).color || "");
+            brandColorBordo = cc.indexOf("136, 19, 55") !== -1 || cc.indexOf("881337") !== -1;
+          }
+          var thEl = pageEl.querySelector(".iu-inv-pr-table th");
+          if (thEl) {
+            var bg = String(window.getComputedStyle(thEl).backgroundColor || "");
+            tableHeaderBordo = bg.indexOf("136, 19, 55") !== -1 || bg.indexOf("881337") !== -1;
+          }
+        } catch (eVis) {}
         try {
           window._iuInvoicePrintProof = {
             paperHostExists: true,
             paperRootExists: true,
+            exportHostHidden: exportHostHidden,
+            brandColorBordo: brandColorBordo,
+            tableHeaderBordo: tableHeaderBordo,
             renderSource: "paper_css_mode",
             generatedFromPreview: true,
             generatedFromScaledPreview: false,
