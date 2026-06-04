@@ -17573,9 +17573,388 @@ function buildVideoAsArticleCard(it) {
     window.iuWeatherIsValidGeoCoords = iuWeatherIsValidGeoCoords;
   }catch{}
 
-  const __iuOpenMeteoCache = new Map(); // key -> { t, data, p }
+  const IU_WEATHER_PERSIST_STORAGE_KEY = "iuWeatherPersistedStateV1";
+  const IU_WEATHER_LIVE_BACKOFF_STORAGE_KEY = "iuWeatherLiveBackoffUntilV1";
+  const IU_WEATHER_LIVE_BACKOFF_DEFAULT_MS = 5 * 60 * 1000;
+  const IU_WEATHER_LIVE_REFRESH_IDLE_MS = 45000;
+  const IU_WEATHER_SNAPSHOT_PRAGUE = { lat: 50.0755, lon: 14.4378 };
+  const IU_WEATHER_INMEM_TTL_MS = 5 * 60 * 1000;
+  const IU_WEATHER_SNAPSHOT_COORD_EPS = 0.2;
+
+  const __iuOpenMeteoCache = new Map(); // key -> { t, data, p, failed, failedAt }
   function iuWeatherClearOpenMeteoCache(){
     try{ __iuOpenMeteoCache.clear(); }catch{}
+    try{ window.__iuWeatherSnapshotCache = null; }catch{}
+    try{ window.__iuWeatherSnapshotPromise = null; }catch{}
+  }
+
+  function iuWeatherDescToWeatherCode(desc){
+    try{
+      const s = String(desc || "").toLowerCase();
+      if (!s || s === "—") return 3;
+      if (s.includes("jasn") || s.includes("slun")) return 0;
+      if (s.includes("polojas") || s.includes("skoro jas")) return 2;
+      if (s.includes("obla") || s.includes("zamra")) return 3;
+      if (s.includes("mlha") || s.includes("kouř")) return 45;
+      if (s.includes("mrhol") || s.includes("déšť") || s.includes("dest")) return 61;
+      if (s.includes("sníh") || s.includes("snih")) return 71;
+      if (s.includes("bouř")) return 95;
+      return 3;
+    }catch{
+      return 3;
+    }
+  }
+
+  function iuWeatherSnapshotPayloadIsValid(d){
+    try{
+      if (!d || typeof d !== "object" || Array.isArray(d)) return false;
+      const temp = d.current && d.current.temp;
+      if (typeof temp !== "number" || !isFinite(temp)) return false;
+      if (!String(d.place || "").trim()) return false;
+      return true;
+    }catch{
+      return false;
+    }
+  }
+
+  function iuWeatherSnapshotAppliesToCity(city){
+    try{
+      if (!city || typeof city.lat !== "number" || typeof city.lon !== "number") return false;
+      return (
+        Math.abs(city.lat - IU_WEATHER_SNAPSHOT_PRAGUE.lat) <= IU_WEATHER_SNAPSHOT_COORD_EPS &&
+        Math.abs(city.lon - IU_WEATHER_SNAPSHOT_PRAGUE.lon) <= IU_WEATHER_SNAPSHOT_COORD_EPS
+      );
+    }catch{
+      return false;
+    }
+  }
+
+  function iuWeatherSnapshotToOpenMeteoShape(snapshot){
+    const code = iuWeatherDescToWeatherCode(snapshot && snapshot.current ? snapshot.current.desc : null);
+    const temp = snapshot.current.temp;
+    const feels = temp;
+    const hours = Array.isArray(snapshot.hours) ? snapshot.hours : [];
+    const hourly = {
+      time: [],
+      temperature_2m: [],
+      apparent_temperature: [],
+      weather_code: [],
+      is_day: [],
+      precipitation_probability: [],
+      precipitation: [],
+      wind_speed_10m: [],
+      wind_gusts_10m: [],
+      wind_direction_10m: [],
+      pressure_msl: [],
+      relative_humidity_2m: [],
+      visibility: [],
+      uv_index: [],
+    };
+    const pushHour = (timeStr, hTemp, hCode) => {
+      hourly.time.push(String(timeStr));
+      hourly.temperature_2m.push(typeof hTemp === "number" && isFinite(hTemp) ? hTemp : temp);
+      hourly.apparent_temperature.push(typeof hTemp === "number" && isFinite(hTemp) ? hTemp : feels);
+      hourly.weather_code.push(typeof hCode === "number" ? hCode : code);
+      hourly.is_day.push(1);
+      hourly.precipitation_probability.push(0);
+      hourly.precipitation.push(0);
+      hourly.wind_speed_10m.push(0);
+      hourly.wind_gusts_10m.push(0);
+      hourly.wind_direction_10m.push(0);
+      hourly.pressure_msl.push(1013);
+      hourly.relative_humidity_2m.push(70);
+      hourly.visibility.push(10000);
+      hourly.uv_index.push(1);
+    };
+    for (let i = 0; i < hours.length; i++){
+      const h = hours[i];
+      if (!h || !h.time) continue;
+      pushHour(h.time, h.temp, iuWeatherDescToWeatherCode(h.desc));
+    }
+    let seed = new Date();
+    try{
+      if (hourly.time.length){
+        const last = new Date(hourly.time[hourly.time.length - 1]);
+        if (!isNaN(last.getTime()) && last.getTime() > seed.getTime()) seed = last;
+      }
+    }catch{}
+    while (hourly.time.length < 12){
+      if (seed.getTime() <= Date.now()) seed = new Date(Date.now() + 3600000);
+      else seed = new Date(seed.getTime() + 3600000);
+      pushHour(seed.toISOString(), temp, code);
+    }
+    const todayMax = snapshot.today && typeof snapshot.today.max === "number" ? snapshot.today.max : temp;
+    const todayMin = snapshot.today && typeof snapshot.today.min === "number" ? snapshot.today.min : temp;
+    const daily = {
+      time: [],
+      temperature_2m_max: [],
+      temperature_2m_min: [],
+      weather_code: [],
+      uv_index_max: [],
+      sunrise: [],
+      sunset: [],
+    };
+    const now = new Date();
+    for (let d = 0; d < 7; d++){
+      const dt = new Date(now.getFullYear(), now.getMonth(), now.getDate() + d);
+      const y = dt.getFullYear();
+      const m = String(dt.getMonth() + 1).padStart(2, "0");
+      const day = String(dt.getDate()).padStart(2, "0");
+      const ds = `${y}-${m}-${day}`;
+      daily.time.push(ds);
+      daily.temperature_2m_max.push(todayMax);
+      daily.temperature_2m_min.push(todayMin);
+      daily.weather_code.push(code);
+      daily.uv_index_max.push(2);
+      daily.sunrise.push(`${ds}T05:00`);
+      daily.sunset.push(`${ds}T20:00`);
+    }
+    return {
+      current: {
+        time: new Date().toISOString(),
+        temperature_2m: temp,
+        apparent_temperature: feels,
+        weather_code: code,
+        is_day: iuWxFallbackIsDayFromTsPrague(new Date()) ? 1 : 0,
+        wind_speed_10m: 0,
+        wind_gusts_10m: 0,
+        wind_direction_10m: 0,
+        pressure_msl: 1013,
+        relative_humidity_2m: 70,
+        visibility: 10000,
+      },
+      hourly,
+      daily,
+    };
+  }
+
+  async function iuWeatherFetchSnapshotJson(){
+    try{
+      const cache = window.__iuWeatherSnapshotCache;
+      if (cache && cache.data && iuWeatherSnapshotPayloadIsValid(cache.data) && (Date.now() - cache.t) < 60000) return cache.data;
+      if (window.__iuWeatherSnapshotPromise) return window.__iuWeatherSnapshotPromise;
+      window.__iuWeatherSnapshotPromise = (async () => {
+        try{
+          const url = iuDataUrl("weather.json");
+          const res = await fetch(url, { cache: "default" });
+          if (!res || !res.ok) return null;
+          const d = await res.json();
+          if (!iuWeatherSnapshotPayloadIsValid(d)) return null;
+          window.__iuWeatherSnapshotCache = { t: Date.now(), data: d };
+          return d;
+        }catch{
+          return null;
+        }finally{
+          window.__iuWeatherSnapshotPromise = null;
+        }
+      })();
+      return window.__iuWeatherSnapshotPromise;
+    }catch{
+      return null;
+    }
+  }
+
+  function iuWeatherGetLiveBackoffUntil(){
+    try{
+      const mem = window.__iuWeatherLiveBackoffUntil;
+      if (typeof mem === "number" && isFinite(mem) && mem > Date.now()) return mem;
+      const raw = localStorage.getItem(IU_WEATHER_LIVE_BACKOFF_STORAGE_KEY);
+      const n = raw ? Number(raw) : 0;
+      if (isFinite(n) && n > Date.now()){
+        window.__iuWeatherLiveBackoffUntil = n;
+        return n;
+      }
+    }catch{}
+    return 0;
+  }
+
+  function iuWeatherLiveBackoffActive(){
+    return iuWeatherGetLiveBackoffUntil() > Date.now();
+  }
+
+  function iuWeatherSetLiveBackoff(retryAfterHeader, status){
+    let ms = IU_WEATHER_LIVE_BACKOFF_DEFAULT_MS;
+    try{
+      if (retryAfterHeader != null && String(retryAfterHeader).trim() !== ""){
+        const sec = Number(retryAfterHeader);
+        if (isFinite(sec) && sec > 0) ms = Math.max(ms, sec * 1000);
+      }
+    }catch{}
+    if (status === 502) ms = Math.max(ms, 2 * 60 * 1000);
+    const until = Date.now() + ms;
+    try{ window.__iuWeatherLiveBackoffUntil = until; }catch{}
+    try{ localStorage.setItem(IU_WEATHER_LIVE_BACKOFF_STORAGE_KEY, String(until)); }catch{}
+  }
+
+  function iuWeatherClearLiveBackoffOnSuccess(){
+    try{ window.__iuWeatherLiveBackoffUntil = 0; }catch{}
+    try{ localStorage.removeItem(IU_WEATHER_LIVE_BACKOFF_STORAGE_KEY); }catch{}
+  }
+
+  function iuWeatherFormatUpdatedAt(iso){
+    try{
+      const d = new Date(String(iso || ""));
+      if (isNaN(d.getTime())) return "—";
+      return new Intl.DateTimeFormat("cs-CZ", {
+        day: "numeric",
+        month: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Europe/Prague",
+      }).format(d);
+    }catch{
+      return "—";
+    }
+  }
+
+  function iuWeatherSyncFreshnessLabel(state){
+    try{
+      let el = document.getElementById("iuWxDataFreshness");
+      if (!el){
+        const anchor = document.getElementById("iuWxPlace") || document.getElementById("iuDailyWeather");
+        if (!anchor || !anchor.parentElement) return;
+        el = document.createElement("div");
+        el.id = "iuWxDataFreshness";
+        el.className = "iuWxDataFreshness";
+        el.setAttribute("aria-live", "polite");
+        anchor.parentElement.insertBefore(el, anchor.nextSibling);
+      }
+      if (!state || !state.updatedAt){
+        el.hidden = true;
+        el.textContent = "";
+        return;
+      }
+      const src = String(state.dataSource || "live");
+      const srcTxt = src === "snapshot" ? "snapshot" : src === "stale_cache" ? "cache" : "live";
+      const when = iuWeatherFormatUpdatedAt(state.updatedAt);
+      if (src === "live"){
+        el.textContent = "Poslední aktualizace: " + when;
+      }else{
+        el.textContent = "Poslední aktualizace: " + when + " (" + srcTxt + ")";
+      }
+      el.hidden = false;
+    }catch{}
+  }
+
+  function iuWeatherPersistState(state, openMeteoPayload){
+    try{
+      if (!state || !iuWeatherStateHasRealData(state)) return;
+      if (!openMeteoPayload || !iuOpenMeteoPayloadIsValid(openMeteoPayload)) return;
+      const rec = {
+        v: 1,
+        savedAt: Date.now(),
+        lat: state.lat,
+        lon: state.lon,
+        mode: state.mode,
+        dataSource: state.dataSource || "live",
+        updatedAt: state.updatedAt || new Date().toISOString(),
+        openMeteo: openMeteoPayload,
+      };
+      localStorage.setItem(IU_WEATHER_PERSIST_STORAGE_KEY, JSON.stringify(rec));
+    }catch{}
+  }
+
+  function iuWeatherReadPersistedState(city, locationMode){
+    try{
+      const raw = localStorage.getItem(IU_WEATHER_PERSIST_STORAGE_KEY);
+      if (!raw) return null;
+      const rec = JSON.parse(raw);
+      if (!rec || rec.v !== 1 || !rec.openMeteo) return null;
+      if (!iuOpenMeteoPayloadIsValid(rec.openMeteo)) return null;
+      if (Math.abs(Number(rec.lat) - Number(city.lat)) > 0.0001) return null;
+      if (Math.abs(Number(rec.lon) - Number(city.lon)) > 0.0001) return null;
+      if (String(rec.mode || "") !== String(locationMode || "")) return null;
+      const keepActiveLayer = iuWxSanitizeMapLayerKey(iuWxReadPersistedMapLayer());
+      const st = iuWxBuildWeatherState(city, rec.openMeteo, locationMode, keepActiveLayer);
+      st.dataSource = "stale_cache";
+      st.updatedAt = rec.updatedAt || new Date(rec.savedAt).toISOString();
+      return iuWeatherStateHasRealData(st) ? st : null;
+    }catch{
+      return null;
+    }
+  }
+
+  async function iuWeatherBuildStateFromSnapshot(city, locationMode){
+    if (!iuWeatherSnapshotAppliesToCity(city)) return null;
+    const snap = await iuWeatherFetchSnapshotJson();
+    if (!snap) return null;
+    const om = iuWeatherSnapshotToOpenMeteoShape(snap);
+    if (!iuOpenMeteoPayloadIsValid(om)) return null;
+    const keepActiveLayer = iuWxSanitizeMapLayerKey(iuWxReadPersistedMapLayer());
+    const st = iuWxBuildWeatherState(city, om, locationMode, keepActiveLayer);
+    st.dataSource = "snapshot";
+    st.updatedAt = new Date().toISOString();
+    return iuWeatherStateHasRealData(st) ? st : null;
+  }
+
+  function iuWeatherCommitState(state, key, activeKeyNowFn){
+    try{
+      if (!state) return;
+      const nowKey = activeKeyNowFn ? activeKeyNowFn() : key;
+      if (nowKey === key){
+        window.__iuWeatherState = state;
+        iuWxPersistMapLayer(state.map && state.map.activeLayer ? state.map.activeLayer : "precip");
+        iuWeatherApplySharedStateMeta(state);
+      }
+    }catch{}
+  }
+
+  function iuWeatherScheduleLiveRefresh(city, locationMode){
+    try{
+      if (window.__iuWeatherDisableLiveRefresh) return;
+      if (iuWeatherLiveBackoffActive()) return;
+      if (window.__iuWeatherLiveRefreshScheduled) return;
+      window.__iuWeatherLiveRefreshScheduled = 1;
+      const ric =
+        typeof requestIdleCallback !== "undefined"
+          ? requestIdleCallback
+          : function (cb, opt) {
+              return setTimeout(function () {
+                try{ cb({ didTimeout: true, timeRemaining: function () { return 5; } }); }catch{}
+              }, opt && opt.timeout ? Math.min(opt.timeout, 1500) : 1200);
+            };
+      ric(function () {
+        window.__iuWeatherLiveRefreshScheduled = 0;
+        void iuWeatherLiveRefresh(city, locationMode);
+      }, { timeout: IU_WEATHER_LIVE_REFRESH_IDLE_MS });
+    }catch{}
+  }
+
+  async function iuWeatherLiveRefresh(city, locationMode){
+    try{
+      if (iuWeatherLiveBackoffActive()) return;
+      const d = await iuFetchOpenMeteoLive(city.lat, city.lon);
+      if (!iuOpenMeteoPayloadIsValid(d)) return;
+      const keepActiveLayer = (function(){
+        try{
+          if (window.__iuWeatherState && window.__iuWeatherState.map && typeof window.__iuWeatherState.map.activeLayer === "string"){
+            return iuWxSanitizeMapLayerKey(window.__iuWeatherState.map.activeLayer);
+          }
+        }catch{}
+        return iuWxSanitizeMapLayerKey(iuWxReadPersistedMapLayer());
+      })();
+      const state = iuWxBuildWeatherState(city, d, locationMode, keepActiveLayer);
+      state.dataSource = "live";
+      state.updatedAt = new Date().toISOString();
+      if (!iuWeatherStateHasRealData(state)) return;
+      const key = `${city.lat},${city.lon},${locationMode}`;
+      iuWeatherCommitState(state, key, function(){
+        try{
+          const c = iuWeatherGetActiveCity();
+          const m = iuWeatherReadLocationMode();
+          if (!c) return "";
+          return `${c.lat},${c.lon},${m}`;
+        }catch{ return ""; }
+      });
+      iuWeatherPersistState(state, d);
+      try{ iuWeatherSyncFreshnessLabel(state); }catch{}
+      try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
+      try{
+        if (String((document.body && document.body.dataset && document.body.dataset.section) || "") === "pocasi"){
+          if (typeof window.iuWeatherLoadAndRender === "function") void window.iuWeatherLoadAndRender();
+        }
+      }catch{}
+    }catch{}
   }
   function iuOpenMeteoPayloadIsValid(d){
     try{
@@ -17629,63 +18008,86 @@ function buildVideoAsArticleCard(it) {
   async function iuOpenMeteoFetchOnce(url){
     try{
       const res = await fetch(url, { cache: "no-store" });
-      if (!res || !res.ok) return null;
+      if (!res){
+        iuWeatherSetLiveBackoff(null, 0);
+        return { data: null, status: 0 };
+      }
+      if (res.status === 429 || res.status === 502){
+        iuWeatherSetLiveBackoff(res.headers.get("retry-after"), res.status);
+        return { data: null, status: res.status };
+      }
+      if (!res.ok) return { data: null, status: res.status };
       let text = "";
       try{
         text = await res.text();
       }catch{
-        return null;
+        iuWeatherSetLiveBackoff(null, 0);
+        return { data: null, status: -1 };
       }
       const trimmed = String(text || "").trim();
-      if (!trimmed) return null;
+      if (!trimmed) return { data: null, status: res.status };
       let d = null;
       try{
         d = JSON.parse(trimmed);
       }catch{
-        return null;
+        return { data: null, status: res.status };
       }
-      if (!d || typeof d !== "object" || Array.isArray(d)) return null;
-      return iuOpenMeteoPayloadIsValid(d) ? d : null;
+      if (!d || typeof d !== "object" || Array.isArray(d)) return { data: null, status: res.status };
+      if (!iuOpenMeteoPayloadIsValid(d)) return { data: null, status: res.status };
+      return { data: d, status: res.status };
     }catch{
-      return null;
+      iuWeatherSetLiveBackoff(null, 0);
+      return { data: null, status: -1 };
     }
   }
 
-  async function iuFetchOpenMeteo(lat, lon){
+  async function iuFetchOpenMeteoLive(lat, lon){
     if (!iuWeatherIsValidGeoCoords(lat, lon)) throw new Error("bad coords");
+    if (iuWeatherLiveBackoffActive()) return null;
     const key = `${Number(lat)},${Number(lon)}`;
     const now = Date.now();
     const cached = __iuOpenMeteoCache.get(key);
-    if (cached && cached.data != null && iuOpenMeteoPayloadIsValid(cached.data) && (now - cached.t) < 5 * 60 * 1000) return cached.data;
-    if (cached && cached.p) {
+    if (cached && cached.data != null && iuOpenMeteoPayloadIsValid(cached.data) && (now - cached.t) < IU_WEATHER_INMEM_TTL_MS) return cached.data;
+    if (cached && cached.failed && typeof cached.failedAt === "number" && (now - cached.failedAt) < IU_WEATHER_LIVE_BACKOFF_DEFAULT_MS) return null;
+    if (cached && cached.p){
       const awaited = await cached.p;
-      if (iuOpenMeteoPayloadIsValid(awaited)) return awaited;
+      if (iuOpenMeteoPayloadIsValid(awaited)){
+        iuWeatherClearLiveBackoffOnSuccess();
+        return awaited;
+      }
+      if (iuWeatherLiveBackoffActive()) return null;
     }
     const p = (async () => {
       const urls = [iuOpenMeteoUrl(lat, lon), iuOpenMeteoUrl(lat, lon, { noModels: true })];
       for (let u = 0; u < urls.length; u++){
-        const d = await iuOpenMeteoFetchOnce(urls[u]);
-        if (iuOpenMeteoPayloadIsValid(d)) return d;
+        const r = await iuOpenMeteoFetchOnce(urls[u]);
+        if (iuOpenMeteoPayloadIsValid(r.data)){
+          iuWeatherClearLiveBackoffOnSuccess();
+          return r.data;
+        }
+        if (r.status === 429) break;
+        if (r.status === 502 && u === 0) continue;
+        if (r.status === 502) break;
       }
       return null;
     })();
     __iuOpenMeteoCache.set(key, { t: now, p });
     try{
       const d = await p;
-      if (iuOpenMeteoPayloadIsValid(d)) {
+      if (iuOpenMeteoPayloadIsValid(d)){
         __iuOpenMeteoCache.set(key, { t: Date.now(), data: d });
         return d;
       }
-      __iuOpenMeteoCache.delete(key);
+      __iuOpenMeteoCache.set(key, { t: now, failed: true, failedAt: Date.now(), p: null });
       return null;
-    }finally{
-      const cur = __iuOpenMeteoCache.get(key);
-      if (cur && cur.p) {
-        const data = cur.data !== undefined ? cur.data : null;
-        if (iuOpenMeteoPayloadIsValid(data)) __iuOpenMeteoCache.set(key, { t: cur.t || now, data });
-        else __iuOpenMeteoCache.delete(key);
-      }
+    }catch{
+      __iuOpenMeteoCache.set(key, { t: now, failed: true, failedAt: Date.now(), p: null });
+      return null;
     }
+  }
+
+  async function iuFetchOpenMeteo(lat, lon){
+    return iuFetchOpenMeteoLive(lat, lon);
   }
 
   function iuWeatherStateHasRealData(state){
@@ -18791,7 +19193,10 @@ function buildVideoAsArticleCard(it) {
     try{
       const st0 = window.__iuWeatherState;
       if (st0 && typeof st0.lat === "number" && typeof st0.lon === "number" && st0.mode === locationMode && st0.hourly && st0.rawDaily) {
-        if (Math.abs(st0.lat - city.lat) < 0.00001 && Math.abs(st0.lon - city.lon) < 0.00001) return st0;
+        if (Math.abs(st0.lat - city.lat) < 0.00001 && Math.abs(st0.lon - city.lon) < 0.00001 && iuWeatherStateHasRealData(st0)) {
+          iuWeatherScheduleLiveRefresh(city, locationMode);
+          return st0;
+        }
       }
     }catch{}
 
@@ -18809,37 +19214,62 @@ function buildVideoAsArticleCard(it) {
       try{
         const st1 = window.__iuWeatherState;
         if (st1 && typeof st1.lat === "number" && typeof st1.lon === "number" && st1.mode === locationMode && st1.hourly && st1.rawDaily) {
-          if (Math.abs(st1.lat - city.lat) < 0.00001 && Math.abs(st1.lon - city.lon) < 0.00001) return st1;
+          if (Math.abs(st1.lat - city.lat) < 0.00001 && Math.abs(st1.lon - city.lon) < 0.00001 && iuWeatherStateHasRealData(st1)) {
+            iuWeatherScheduleLiveRefresh(city, locationMode);
+            return st1;
+          }
         }
       }catch{}
 
-      const d = await iuFetchOpenMeteo(city.lat, city.lon);
-      if (!iuOpenMeteoPayloadIsValid(d)) return null;
-      const keepActiveLayer = (function(){
-        try{
-          if (window.__iuWeatherState && window.__iuWeatherState.map && typeof window.__iuWeatherState.map.activeLayer === "string"){
-            return iuWxSanitizeMapLayerKey(window.__iuWeatherState.map.activeLayer);
-          }
-        }catch{}
-        return iuWxSanitizeMapLayerKey(iuWxReadPersistedMapLayer());
-      })();
-      const state = iuWxBuildWeatherState(city, d, locationMode, keepActiveLayer);
-      if (!state.map || typeof state.map !== "object") state.map = { activeLayer: "precip", supportedLayers: [], disabledLayers: [] };
-      if (!state.map.activeLayer) state.map.activeLayer = "precip";
-
-      // Avoid outdated requests overwriting the latest global state.
-      try{
-        const nowKey = activeKeyNow();
-        if (nowKey === key) {
-          window.__iuWeatherState = state;
-          iuWxPersistMapLayer(state.map.activeLayer);
-          iuWeatherApplySharedStateMeta(state);
-        }
-      }catch{
-        // If key computation fails, be conservative and do not overwrite.
+      const persisted = iuWeatherReadPersistedState(city, locationMode);
+      if (persisted){
+        iuWeatherCommitState(persisted, key, activeKeyNow);
+        iuWeatherScheduleLiveRefresh(city, locationMode);
+        return persisted;
       }
 
-      return state;
+      const snapState = await iuWeatherBuildStateFromSnapshot(city, locationMode);
+      if (snapState){
+        iuWeatherCommitState(snapState, key, activeKeyNow);
+        iuWeatherScheduleLiveRefresh(city, locationMode);
+        return snapState;
+      }
+
+      if (!iuWeatherLiveBackoffActive()){
+        const d = await iuFetchOpenMeteoLive(city.lat, city.lon);
+        if (iuOpenMeteoPayloadIsValid(d)){
+          const keepActiveLayer = (function(){
+            try{
+              if (window.__iuWeatherState && window.__iuWeatherState.map && typeof window.__iuWeatherState.map.activeLayer === "string"){
+                return iuWxSanitizeMapLayerKey(window.__iuWeatherState.map.activeLayer);
+              }
+            }catch{}
+            return iuWxSanitizeMapLayerKey(iuWxReadPersistedMapLayer());
+          })();
+          const state = iuWxBuildWeatherState(city, d, locationMode, keepActiveLayer);
+          state.dataSource = "live";
+          state.updatedAt = new Date().toISOString();
+          if (!state.map || typeof state.map !== "object") state.map = { activeLayer: "precip", supportedLayers: [], disabledLayers: [] };
+          if (!state.map.activeLayer) state.map.activeLayer = "precip";
+          if (iuWeatherStateHasRealData(state)){
+            iuWeatherPersistState(state, d);
+            iuWeatherCommitState(state, key, activeKeyNow);
+            return state;
+          }
+        }
+      }
+
+      const persisted2 = iuWeatherReadPersistedState(city, locationMode);
+      if (persisted2){
+        iuWeatherCommitState(persisted2, key, activeKeyNow);
+        return persisted2;
+      }
+      const snapState2 = await iuWeatherBuildStateFromSnapshot(city, locationMode);
+      if (snapState2){
+        iuWeatherCommitState(snapState2, key, activeKeyNow);
+        return snapState2;
+      }
+      return null;
     };
 
     const prevLock = window.__iuWeatherEnsureLockPromise || Promise.resolve();
@@ -18859,6 +19289,17 @@ function buildVideoAsArticleCard(it) {
   try{
     window.iuWeatherEnsureState = iuWeatherEnsureState;
     window.iuWeatherRenderMapLayer = iuWeatherRenderMapLayer;
+    window.iuWeatherGetDataSource = function iuWeatherGetDataSource(){
+      try{
+        const st = window.__iuWeatherState;
+        return st && st.dataSource ? String(st.dataSource) : null;
+      }catch{
+        return null;
+      }
+    };
+    window.iuWeatherLiveBackoffActive = iuWeatherLiveBackoffActive;
+    window.iuWeatherBuildStateFromSnapshot = iuWeatherBuildStateFromSnapshot;
+    window.iuWeatherFetchSnapshotJson = iuWeatherFetchSnapshotJson;
   }catch{}
 
   const IU_PICKER_VB_W = 800;
@@ -19796,29 +20237,7 @@ function buildVideoAsArticleCard(it) {
       iuWxSetMinus(elHumidityPct);
       iuWxSetMinus(elPrecipTodayMm);
 
-      const state = await (typeof window.iuWeatherEnsureState === "function"
-        ? window.iuWeatherEnsureState()
-        : (async () => {
-            const d = await iuFetchOpenMeteo(city.lat, city.lon);
-            if (!iuOpenMeteoPayloadIsValid(d)) return null;
-            const cur = d && d.current;
-            const hourly = d && d.hourly;
-            const daily = d && d.daily;
-            if (!cur || typeof cur.temperature_2m !== "number") throw new Error("bad current");
-            const existingState = window.__iuWeatherState;
-            const keepActiveLayer = (function(){
-              try{
-                if (existingState && existingState.map && typeof existingState.map.activeLayer === "string"){
-                  return iuWxSanitizeMapLayerKey(existingState.map.activeLayer);
-                }
-              }catch{}
-              return iuWxSanitizeMapLayerKey(iuWxReadPersistedMapLayer());
-            })();
-            const state = iuWxBuildWeatherState(city, d, locationMode, keepActiveLayer);
-            window.__iuWeatherState = state;
-            iuWxPersistMapLayer(state.map.activeLayer);
-            return state;
-          })());
+      const state = await (typeof window.iuWeatherEnsureState === "function" ? window.iuWeatherEnsureState() : null);
 
       if (window.__iuWeatherRenderToken !== myToken) return;
       if (!state || !iuWeatherStateHasRealData(state)) throw new Error("open_meteo_unusable");
@@ -19872,6 +20291,7 @@ function buildVideoAsArticleCard(it) {
       if (elWeather) elWeather.hidden = false;
       if (elErr) elErr.hidden = true;
 
+      try{ iuWeatherSyncFreshnessLabel(state); }catch{}
       try{ iuWeatherHideEmptyNameday(); }catch{}
     }catch{
       try{
@@ -20605,6 +21025,7 @@ function buildVideoAsArticleCard(it) {
         try{ iuWeatherRender7Day(st.rawDaily); }catch{}
         if (elWeather) elWeather.hidden = false;
         if (elErr) elErr.hidden = true;
+        try{ iuWeatherSyncFreshnessLabel(st); }catch{}
         try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
         return;
       }
@@ -20626,6 +21047,7 @@ function buildVideoAsArticleCard(it) {
             try{ iuWeatherRender7Day(st.rawDaily); }catch{}
             if (elWeather) elWeather.hidden = false;
             if (elErr) elErr.hidden = true;
+            try{ iuWeatherSyncFreshnessLabel(st); }catch{}
             try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
           })
           .catch(() => {

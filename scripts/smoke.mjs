@@ -9,6 +9,10 @@ import http from "http";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+const { installProofGuardNetworkStubs } = require("./proofs/open_meteo_guard_stub.cjs");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -122,6 +126,7 @@ async function runSmoke() {
       serviceWorkers: "block",
     });
     const page = await context.newPage();
+    await installProofGuardNetworkStubs(page);
 
     page.on("pageerror", (err) => {
       fail(`pageerror: ${err.message}`);

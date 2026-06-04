@@ -8,10 +8,14 @@ import http from "http";
 import path from "path";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
-import { chromium } from "playwright";
 
 const require = createRequire(import.meta.url);
-const { installProofGuardNetworkStubs, isIgnorableGuardConsoleError } = require("./proofs/open_meteo_guard_stub.cjs");
+const { chromium } = require("playwright");
+const {
+  installProofGuardNetworkStubs,
+  installOpenMeteoRejectRoute,
+  isIgnorableGuardConsoleError,
+} = require("./proofs/open_meteo_guard_stub.cjs");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -21,10 +25,16 @@ const staticChecks = [
   ["iuOpenMeteoPayloadIsValid", /function\s+iuOpenMeteoPayloadIsValid\s*\(/],
   ["iuWeatherStateHasRealData", /function\s+iuWeatherStateHasRealData\s*\(/],
   ["iuWeatherDomShowsPlaceholder", /function\s+iuWeatherDomShowsPlaceholder\s*\(/],
+  ["iuWeatherSnapshotPayloadIsValid", /function\s+iuWeatherSnapshotPayloadIsValid\s*\(/],
+  ["iuWeatherLiveBackoffActive", /function\s+iuWeatherLiveBackoffActive\s*\(/],
+  ["iuWeatherPersistState", /function\s+iuWeatherPersistState\s*\(/],
+  ["iuWeatherReadPersistedState", /function\s+iuWeatherReadPersistedState\s*\(/],
   ["open_meteo_unusable", /open_meteo_unusable/],
   ["weather_dom_placeholder", /weather_dom_placeholder/],
   ["fallback noModels", /noModels:\s*true/],
   ["do not cache invalid", /iuOpenMeteoPayloadIsValid\(cached\.data\)/],
+  ["snapshot before live refresh", /iuWeatherBuildStateFromSnapshot/],
+  ["backoff failed marker", /failed:\s*true/],
 ];
 
 let staticFail = 0;
@@ -212,9 +222,68 @@ async function runBrowserProof(base) {
   console.log("BROWSER_PASS:daily_rows=" + sample.dayTemps.length);
 }
 
+async function runSnapshotFallbackProof(base) {
+  const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    serviceWorkers: "block",
+  });
+  const page = await context.newPage();
+  await installOpenMeteoRejectRoute(page, 429);
+  await page.addInitScript(() => {
+    try {
+      localStorage.removeItem("iuWeatherPersistedStateV1");
+      localStorage.removeItem("iuWeatherLiveBackoffUntilV1");
+      localStorage.setItem("iu_location_mode", "manual");
+      localStorage.setItem(
+        "iu_manual_location",
+        JSON.stringify({ lat: 50.0755, lon: 14.4378, label: "Praha" })
+      );
+      window.__iuWeatherDisableLiveRefresh = 1;
+    } catch {}
+  });
+  await page.goto(base + "/projects/index.html?section=pocasi", { waitUntil: "load", timeout: 120000 });
+  await page.waitForFunction(() => typeof window.iuWeatherLoadAndRender === "function", { timeout: 120000 });
+  const loadErr = await page.evaluate(async () => {
+    try {
+      await window.iuWeatherLoadAndRender();
+      return "";
+    } catch (e) {
+      return String(e && e.message ? e.message : e);
+    }
+  });
+  if (loadErr) {
+    console.error("SNAPSHOT_FALLBACK_LOAD_ERR:" + loadErr);
+    process.exit(1);
+  }
+  const diag = await page.evaluate(() => {
+    return {
+      source: typeof window.iuWeatherGetDataSource === "function" ? window.iuWeatherGetDataSource() : null,
+      temp: document.getElementById("iuWxTemp") ? String(document.getElementById("iuWxTemp").textContent || "").trim() : "",
+      feels: document.getElementById("iuWxFeelsLike")
+        ? String(document.getElementById("iuWxFeelsLike").textContent || "").trim()
+        : "",
+      placeholder:
+        typeof window.iuWeatherDomShowsPlaceholder === "function" ? window.iuWeatherDomShowsPlaceholder() : true,
+    };
+  });
+  await context.close();
+  await browser.close();
+  if (diag.placeholder || diag.temp === "—°C" || !diag.temp) {
+    console.error("SNAPSHOT_FALLBACK_FAIL:" + JSON.stringify(diag));
+    process.exit(1);
+  }
+  if (diag.source !== "snapshot" && diag.source !== "stale_cache") {
+    console.error("SNAPSHOT_FALLBACK_SOURCE_FAIL:" + JSON.stringify(diag));
+    process.exit(1);
+  }
+  console.log("SNAPSHOT_FALLBACK_PASS:source=" + diag.source + " temp=" + diag.temp);
+}
+
 const srv = await startStaticServer();
 try {
   await runBrowserProof(srv.base);
+  await runSnapshotFallbackProof(srv.base);
   console.log("WEATHER_LOADED_GUARD=PASS");
 } catch (e) {
   console.error("WEATHER_LOADED_GUARD=FAIL:" + (e && e.message ? e.message : String(e)));
