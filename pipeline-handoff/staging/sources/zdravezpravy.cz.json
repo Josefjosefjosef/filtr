@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-06-04T07:47:00.924820Z",
+  "ingestedAt": "2026-06-04T09:17:05.766526Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Na boj s ebolou v Kongu potřebuje WHO 115 mil. USD",
+      "url": "https://www.zdravezpravy.cz/2026/06/04/na-boj-s-ebolou-v-kongu-potrebuje-who-115-mil-usd/",
+      "dt": "2026-06-04T08:30:37Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "115",
+        "boj",
+        "ebolou",
+        "kongu",
+        "mil",
+        "potřebuje",
+        "usd",
+        "who"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -473,31 +498,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Kratom se rovná heroinu, namístě je zákaz, říká dětská psychiatrička",
-      "url": "https://www.zdravezpravy.cz/2026/05/27/detska-psychiatricka-kratom-je-srovnatelny-s-heroinem-namiste-je-zakaz/",
-      "dt": "2026-05-27T15:41:16Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "dětská",
-        "heroinu",
-        "kratom",
-        "namístě",
-        "psychiatrička",
-        "rovná",
-        "zákaz",
-        "říká"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -508,7 +508,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 209748,
+      "bytes": 206140,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -545,7 +545,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-04T04:30:24Z",
+        "raw_feed_latest_publishedAt": "2026-06-04T08:30:37Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -560,6 +560,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na boj s ebolou v Kongu potřebuje WHO 115 mil. USD",
+            "publishedAt": "2026-06-04T08:30:37Z"
+          },
           {
             "title": "Stát přidá v roce 2027 na státní pojištěnce mimořádně 24 mld. Kč",
             "publishedAt": "2026-06-04T04:30:24Z"
@@ -587,10 +591,6 @@
           {
             "title": "Ti, kdo nosí tepláky jinam než do tělocvičny, jsou ti, kteří už vše vzdali!",
             "publishedAt": "2026-06-02T04:20:16Z"
-          },
-          {
-            "title": "VZP ČR nově nabídne příspěvek na hubnutí 8 000 korun",
-            "publishedAt": "2026-06-01T13:38:29Z"
           }
         ]
       }
