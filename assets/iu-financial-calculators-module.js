@@ -729,8 +729,7 @@ const IU_FIN_CALC_REGISTRY = [
       monthlyEmployee: "1000",
       employerMonthly: "500",
       years: "20",
-      annualReturnPercent: "4",
-      stateSupportMonthly: "230",
+      annualReturnPercent: "8",
     },
     build(root) {
       root.innerHTML = `
@@ -740,8 +739,6 @@ const IU_FIN_CALC_REGISTRY = [
             <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="monthlyEmployee" autocomplete="off" /></label>
           <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Měsíční příspěvek zaměstnavatele (Kč)</span>
             <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="employerMonthly" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Orientační státní podpora měsíčně (Kč)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="stateSupportMonthly" autocomplete="off" /></label>
           <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Horizont (roky)</span>
             <input type="text" inputmode="numeric" class="iu-financial-overlay-input" data-iu-fin-f="years" autocomplete="off" /></label>
           <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Očekávané zhodnocení p.a. (%)</span>
@@ -753,7 +750,6 @@ const IU_FIN_CALC_REGISTRY = [
       return {
         monthlyEmployee: g("monthlyEmployee"),
         employerMonthly: g("employerMonthly"),
-        stateSupportMonthly: g("stateSupportMonthly"),
         years: g("years"),
         annualReturnPercent: g("annualReturnPercent"),
       };

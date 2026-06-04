@@ -485,15 +485,23 @@ export function computeInvestmentGrowth(values) {
   };
 }
 
+/** Měsíční státní podpora DPS podle výše příspěvku účastníka (Kč). */
+export function computeDpsStateSupportMonthly(monthlyContribution) {
+  const prispevek = iuFinParseNonNeg(monthlyContribution);
+  if (prispevek == null) return null;
+  if (prispevek < 500) return 0;
+  if (prispevek <= 1700) return iuFinRoundMoney(prispevek * 0.2);
+  return 340;
+}
+
 /** DPS — státní příspěvky a budoucí hodnota (zjednodušený model). */
 export function computeDps(values) {
   const monthly = iuFinParseNonNeg(values.monthlyEmployee);
   const employer = iuFinParseNonNeg(values.employerMonthly) ?? 0;
   const years = iuFinParsePositiveInt(values.years);
   const annualReturnPercent = values.annualReturnPercent;
-  const statePerMonth = iuFinParseNonNeg(values.stateSupportMonthly);
-  const st = statePerMonth == null ? 230 : Math.min(5000, statePerMonth);
   if (monthly == null || years == null) return { ok: false, outputs: [], meta: {} };
+  const st = computeDpsStateSupportMonthly(monthly) ?? 0;
   const totalMonthly = monthly + employer + st;
   const ownTotal = iuFinRoundMoney(monthly * 12 * years);
   const stateTotal = iuFinRoundMoney(st * 12 * years);
@@ -506,13 +514,15 @@ export function computeDps(values) {
     capitalization: "monthly",
   });
   const futureVal = sav.ok ? sav.outputs.find((o) => o.key === "final")?.value ?? 0 : 0;
+  const gainTotal = iuFinRoundMoney(futureVal - ownTotal - empTotal - stateTotal);
   return {
     ok: true,
     outputs: [
-      { key: "own", label: "Vlastní vklady (součet za období)", value: ownTotal },
-      { key: "state", label: "Orientační státní příspěvky (součet)", value: stateTotal },
-      { key: "employer", label: "Příspěvky zaměstnavatele (součet)", value: empTotal },
-      { key: "future", label: "Orientační budoucí hodnota", value: futureVal },
+      { key: "own", label: "Vlastní vklady", value: ownTotal },
+      { key: "employer", label: "Příspěvky zaměstnavatele", value: empTotal },
+      { key: "state", label: "Státní podpora", value: stateTotal },
+      { key: "gain", label: "Zhodnocení celkem", value: gainTotal },
+      { key: "future", label: "Konečná hodnota", value: futureVal },
     ],
     meta: {
       interpretation:
