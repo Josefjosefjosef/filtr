@@ -625,7 +625,7 @@ const IU_FIN_CALC_REGISTRY = [
     resultSummaryMode: "default",
     accentClass: "iu-financial-accent--investgrowth",
     disclaimers: [DISCLAIMER_SHORT],
-    defaults: { initial: "20000", monthly: "4000", annualReturnPercent: "5", years: "15", capitalization: "monthly" },
+    defaults: { initial: "20000", monthly: "4000", annualReturnPercent: "9", years: "15", capitalization: "monthly" },
     build(root) {
       root.innerHTML = `
         <p class="iu-financial-overlay-desc">${esc(this.description)}</p>
