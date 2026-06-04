@@ -64,6 +64,18 @@ function resolveInvoicePdfFontUrl() {
 
 let pdfFontLoadPromise = null;
 let pdfFontLoadOk = false;
+let pdfFontHttpStatus = 0;
+let pdfFontGuardPass = false;
+
+const pdfFontRuntime = {
+  FONT_HTTP_STATUS: 0,
+  FONT_LOADED: false,
+  FONT_REGISTERED: false,
+  FONT_USED_FOR_RENDER: false,
+  FONT_FALLBACK_USED: false,
+  PDF_FONT_GUARD_PASS: false,
+  PDF_FONT_ENGINE: "noto-utf8-vfs-identity-h-required",
+};
 
 function fmtMoney(n) {
   if (!Number.isFinite(n)) return "—";
@@ -139,6 +151,8 @@ async function ensureJsPDF() {
 async function loadInvoicePdfFontBase64() {
   const url = resolveInvoicePdfFontUrl();
   const res = await fetch(url, { cache: "force-cache" });
+  pdfFontHttpStatus = res.status;
+  pdfFontRuntime.FONT_HTTP_STATUS = res.status;
   if (!res.ok) throw new Error("invoice_pdf_font_fetch_failed:" + res.status);
   const buf = await res.arrayBuffer();
   if (!buf || buf.byteLength < 10000) throw new Error("invoice_pdf_font_empty");
@@ -147,6 +161,7 @@ async function loadInvoicePdfFontBase64() {
   for (let i = 0; i < bytes.length; i += 8192) {
     binary += String.fromCharCode.apply(null, bytes.subarray(i, Math.min(i + 8192, bytes.length)));
   }
+  pdfFontRuntime.FONT_LOADED = true;
   return btoa(binary);
 }
 
@@ -169,21 +184,47 @@ export function preloadInvoicePdfFont() {
 function registerInvoicePdfFontOnDoc(doc, b64) {
   if (!doc.existsFileInVFS(IU_INV_PDF_FONT_FILE)) {
     doc.addFileToVFS(IU_INV_PDF_FONT_FILE, b64);
-    try {
-      doc.addFont(IU_INV_PDF_FONT_FILE, IU_INV_PDF_FONT, "normal", "Identity-H");
-      doc.addFont(IU_INV_PDF_FONT_FILE, IU_INV_PDF_FONT, "bold", "Identity-H");
-    } catch (_) {
-      doc.addFont(IU_INV_PDF_FONT_FILE, IU_INV_PDF_FONT, "normal");
-      doc.addFont(IU_INV_PDF_FONT_FILE, IU_INV_PDF_FONT, "bold");
-    }
+    doc.addFont(IU_INV_PDF_FONT_FILE, IU_INV_PDF_FONT, "normal", "Identity-H");
+    doc.addFont(IU_INV_PDF_FONT_FILE, IU_INV_PDF_FONT, "bold", "Identity-H");
   }
+  pdfFontRuntime.FONT_REGISTERED = true;
+}
+
+function readActivePdfFontName(doc) {
+  try {
+    if (typeof doc.getFont === "function") {
+      const f = doc.getFont();
+      if (f && f.fontName) return String(f.fontName);
+    }
+  } catch (_) {}
+  try {
+    if (doc.internal && doc.internal.getFont) {
+      const f = doc.internal.getFont();
+      if (f && f.fontName) return String(f.fontName);
+    }
+  } catch (_) {}
+  return "";
+}
+
+function assertPdfFontActive(doc, style) {
+  const styleKey = style === "bold" ? "bold" : "normal";
+  doc.setFont(IU_INV_PDF_FONT, styleKey);
+  applyNormalTracking(doc);
+  const active = readActivePdfFontName(doc);
+  const helveticaLike = /helvetica|times|courier/i.test(active);
+  if (!active || active !== IU_INV_PDF_FONT || helveticaLike) {
+    pdfFontRuntime.FONT_FALLBACK_USED = true;
+    pdfFontRuntime.FONT_USED_FOR_RENDER = false;
+    throw new Error("invoice_pdf_font_fallback_detected:" + (active || "none"));
+  }
+  pdfFontRuntime.FONT_USED_FOR_RENDER = true;
+  pdfFontRuntime.FONT_FALLBACK_USED = false;
 }
 
 function assertUtf8FontMetrics(doc) {
-  setPdfFont(doc, "normal");
+  assertPdfFontActive(doc, "normal");
   doc.setFontSize(10);
   const wWord = doc.getTextWidth("číslo");
-  const wAscii = doc.getTextWidth("cislo");
   if (!Number.isFinite(wWord) || wWord < 6) throw new Error("invoice_pdf_utf8_metrics_fail");
   const perChar = wWord / 5;
   if (perChar > 8) throw new Error("invoice_pdf_utf8_spacing_fail");
@@ -192,13 +233,13 @@ function assertUtf8FontMetrics(doc) {
 async function ensureInvoicePdfUtf8Font(doc) {
   const b64 = await preloadInvoicePdfFont();
   registerInvoicePdfFontOnDoc(doc, b64);
-  setPdfFont(doc, "normal");
   assertUtf8FontMetrics(doc);
+  pdfFontGuardPass = true;
+  pdfFontRuntime.PDF_FONT_GUARD_PASS = true;
 }
 
 function setPdfFont(doc, style) {
-  doc.setFont(IU_INV_PDF_FONT, style === "bold" ? "bold" : "normal");
-  applyNormalTracking(doc);
+  assertPdfFontActive(doc, style);
 }
 
 function measureTextWidthMm(doc, text, pt) {
@@ -217,34 +258,78 @@ function fitFontSizeForColumn(doc, text, maxW, startPt, minPt) {
   return minPt;
 }
 
-/** @returns {{ overflow: boolean, fontPt: number, twoLine: boolean }} */
-function drawTableCellText(doc, col, text, y, opts) {
-  const L = IU_INVOICE_PDF_LAYOUT;
+function withColumnClip(doc, col, yTop, h, drawFn) {
+  doc.saveGraphicsState();
+  doc.rect(col.x + 0.25, yTop + 0.15, Math.max(2, col.w - 0.5), Math.max(2, h - 0.3));
+  doc.clip();
+  try {
+    drawFn();
+  } finally {
+    doc.restoreGraphicsState();
+  }
+}
+
+function planTableCellDraw(doc, col, text, startPt, minPt) {
   const pad = 1.2;
   const maxW = Math.max(4, col.w - pad * 2);
+  const raw = String(text || "");
+  setPdfFont(doc, "normal");
+  let pt = fitFontSizeForColumn(doc, raw, maxW, startPt, minPt);
+  if (measureTextWidthMm(doc, raw, pt) <= maxW + 0.2) {
+    const lineH = lineHeightMm(pt, 1.12);
+    return { overflow: false, fontPt: pt, twoLine: false, lines: [raw], lineH, cellH: lineH };
+  }
+  if (raw.indexOf(" Kč") > 0) {
+    const amt = raw.replace(/ Kč$/, "").trim();
+    pt = fitFontSizeForColumn(doc, amt, maxW, startPt, minPt);
+    const lh = lineHeightMm(pt, 1.1);
+    if (measureTextWidthMm(doc, amt, pt) <= maxW + 0.2) {
+      return { overflow: false, fontPt: pt, twoLine: true, lines: [amt, "Kč"], lineH: lh, cellH: lh * 2.2 };
+    }
+  }
+  pt = minPt;
+  const tw = measureTextWidthMm(doc, raw, pt);
+  const lineH = lineHeightMm(pt, 1.1);
+  return {
+    overflow: tw > maxW + 0.2,
+    fontPt: pt,
+    twoLine: false,
+    lines: tw <= maxW + 0.2 ? [raw] : [],
+    lineH,
+    cellH: lineH,
+  };
+}
+
+/** @returns {{ overflow: boolean, fontPt: number, twoLine: boolean, cellH: number }} */
+function drawTableCellText(doc, col, text, yTop, rowH, opts) {
+  const L = IU_INVOICE_PDF_LAYOUT;
   const align = opts.align || "right";
   const style = opts.style || "normal";
   const startPt = opts.fontPt || L.fontTableNumericPt;
   const minPt = opts.minPt || L.fontTableNumericMinPt;
-  const raw = String(text || "");
-  setPdfFont(doc, style);
-  let pt = fitFontSizeForColumn(doc, raw, maxW, startPt, minPt);
-  doc.setFontSize(pt);
-  let overflow = measureTextWidthMm(doc, raw, pt) > maxW + 0.25;
+  const pad = 1.2;
   const x = align === "center" ? col.x + col.w / 2 : col.x + col.w - pad;
-  if (overflow && raw.indexOf(" Kč") > 0) {
-    const amt = raw.replace(/ Kč$/, "").trim();
-    pt = fitFontSizeForColumn(doc, amt, maxW, startPt, minPt);
-    doc.setFontSize(pt);
-    const lh = lineHeightMm(pt, 1.12);
-    pdfText(doc, amt, x, y - lh * 0.22, { align, style });
-    pdfText(doc, "Kč", x, y + lh * 0.48, { align, style });
-    overflow = measureTextWidthMm(doc, amt, pt) > maxW + 0.25;
-    return { overflow, fontPt: pt, twoLine: true };
+  setPdfFont(doc, style);
+  const plan = planTableCellDraw(doc, col, text, startPt, minPt);
+  if (!plan.lines.length) {
+    return { overflow: true, fontPt: plan.fontPt, twoLine: plan.twoLine, cellH: plan.lineH };
   }
-  pdfText(doc, raw, x, y, { align, style });
-  overflow = measureTextWidthMm(doc, raw, pt) > maxW + 0.25;
-  return { overflow, fontPt: pt, twoLine: false };
+  withColumnClip(doc, col, yTop, rowH, () => {
+    doc.setFontSize(plan.fontPt);
+    if (plan.twoLine && plan.lines.length === 2) {
+      const mid = yTop + rowH / 2;
+      pdfText(doc, plan.lines[0], x, mid - plan.lineH * 0.45, { align, style });
+      pdfText(doc, plan.lines[1], x, mid + plan.lineH * 0.35, { align, style });
+    } else {
+      pdfText(doc, plan.lines[0], x, yTop + rowH / 2, { align, style });
+    }
+  });
+  return {
+    overflow: plan.overflow,
+    fontPt: plan.fontPt,
+    twoLine: plan.twoLine,
+    cellH: plan.twoLine ? plan.lineH * 2.2 : plan.lineH,
+  };
 }
 
 function columnLayout(hasVat) {
@@ -324,15 +409,14 @@ export function auditInvoicePdfLayout(doc, hasVat) {
   const pad = 1.2;
   const auditCell = (col, texts, startPt) => {
     if (!col) return { overflow: false, maxTextW: 0 };
-    const maxW = col.w - pad * 2;
     let overflow = false;
     let maxTextW = 0;
     for (let i = 0; i < texts.length; i++) {
-      const t = texts[i];
-      const pt = fitFontSizeForColumn(doc, t, maxW, startPt, L.fontTableNumericMinPt);
-      const tw = measureTextWidthMm(doc, t, pt);
+      const plan = planTableCellDraw(doc, col, texts[i], startPt, L.fontTableNumericMinPt);
+      if (plan.overflow) overflow = true;
+      if (!plan.lines.length) overflow = true;
+      const tw = plan.lines.length ? measureTextWidthMm(doc, plan.lines[0], plan.fontPt) : maxTextW;
       if (tw > maxTextW) maxTextW = tw;
-      if (tw > maxW + 0.25) overflow = true;
     }
     return { overflow, maxTextW };
   };
@@ -344,16 +428,23 @@ export function auditInvoicePdfLayout(doc, hasVat) {
   let summaryLabelOverflow = false;
   let summaryValueOverflow = false;
   let summaryOverlap = false;
-  for (let i = 0; i < sumSamples.length; i++) {
-    const lbl = i === 0 ? "Mezisoučet bez DPH:" : i === 1 ? "DPH:" : "Celkem k úhradě:";
-    const amt = sumSamples[i];
+  const sumRows = [
+    ["Mezisoučet bez DPH:", "60 500,00 Kč"],
+    ["DPH:", "6 059 291,59 Kč"],
+    ["Celkem k úhradě:", "120 999 999,99 Kč"],
+  ];
+  for (let i = 0; i < sumRows.length; i++) {
+    const lbl = sumRows[i][0];
+    const amt = sumRows[i][1];
     const lblPt = fitFontSizeForColumn(doc, lbl, sum.labelW, L.fontTotalsPt, L.fontTableNumericMinPt);
     const valPt = fitFontSizeForColumn(doc, amt, sum.valueW, L.fontTotalsPt, L.fontTableNumericMinPt);
     const lw = measureTextWidthMm(doc, lbl, lblPt);
     const vw = measureTextWidthMm(doc, amt, valPt);
+    const labelRight = sum.labelX + lw;
+    const valueLeft = sum.valueRight - vw;
     if (lw > sum.labelW + 0.25) summaryLabelOverflow = true;
     if (vw > sum.valueW + 0.25) summaryValueOverflow = true;
-    if (lw + sum.gap + vw > sum.blockW + 0.25) summaryOverlap = true;
+    if (labelRight + sum.gap > valueLeft + 0.25) summaryOverlap = true;
   }
   return {
     PRICE_COLUMN_WIDTH: priceCol ? priceCol.w : 0,
@@ -389,7 +480,13 @@ function publishRendererProof(extra) {
     PDF_FONT_ENGINE: "noto-utf8-vfs-identity-h",
     PDF_FONT_USED: IU_INV_PDF_FONT,
     PDF_FONT_LOAD_OK: pdfFontLoadOk,
-    TEXT_SPACING_FIXED: true,
+    FONT_HTTP_STATUS: pdfFontRuntime.FONT_HTTP_STATUS,
+    FONT_LOADED: pdfFontRuntime.FONT_LOADED,
+    FONT_REGISTERED: pdfFontRuntime.FONT_REGISTERED,
+    FONT_USED_FOR_RENDER: pdfFontRuntime.FONT_USED_FOR_RENDER,
+    FONT_FALLBACK_USED: pdfFontRuntime.FONT_FALLBACK_USED,
+    PDF_FONT_GUARD_PASS: pdfFontRuntime.PDF_FONT_GUARD_PASS,
+    TEXT_SPACING_FIXED: pdfFontRuntime.PDF_FONT_GUARD_PASS && !pdfFontRuntime.FONT_FALLBACK_USED,
     HEADER_FONT_SIZE: L.fontTitlePt + "pt",
     HEADER_LETTER_SPACING: L.letterSpacingPt + "pt",
     INVOICE_NUMBER_FONT_SIZE: L.fontInvoiceNumberPt + "pt",
@@ -531,18 +628,19 @@ function drawTableHeader(doc, layout, y) {
   doc.setFillColor(L.brandRgb[0], L.brandRgb[1], L.brandRgb[2]);
   doc.rect(layout.x0, yTop, layout.inner, h, "F");
   setPdfFont(doc, "bold");
-  doc.setFontSize(L.fontTableHeadPt);
   doc.setTextColor(255, 255, 255);
   const midY = yTop + h / 2 + ptToMm(L.fontTableHeadPt) * 0.35;
   for (let i = 0; i < layout.cols.length; i++) {
     const c = layout.cols[i];
-    if (c.key === "item") {
-      pdfText(doc, c.label, c.x + 1.5, midY);
-    } else if (c.key === "num") {
-      pdfText(doc, c.label, c.x + c.w / 2, midY, { align: "center" });
-    } else {
-      pdfText(doc, c.label, c.x + c.w - 1.5, midY, { align: "right" });
-    }
+    const align = c.key === "num" ? "center" : c.key === "item" ? "left" : "right";
+    const plan = planTableCellDraw(doc, c, c.label, L.fontTableHeadPt, 7);
+    withColumnClip(doc, c, yTop, h, () => {
+      if (!plan.lines.length) return;
+      doc.setFontSize(plan.fontPt);
+      const x =
+        align === "center" ? c.x + c.w / 2 : align === "left" ? c.x + 1.5 : c.x + c.w - 1.5;
+      pdfText(doc, plan.lines[0], x, midY, { align, style: "bold" });
+    });
   }
   doc.setTextColor(30, 41, 59);
   return yTop + h;
@@ -561,7 +659,17 @@ function measureTableRow(doc, layout, row) {
   const lhName = lineHeightMm(L.fontItemNamePt, 1.22);
   const lhDesc = lineHeightMm(L.fontItemDescPt, 1.18);
   const bodyH = nameLines.length * lhName + descLines.length * lhDesc;
-  return Math.max(L.tableRowMinMm, bodyH + L.tableRowPadTopMm + L.tableRowPadBottomMm);
+  let numericH = 0;
+  for (let i = 0; i < layout.cols.length; i++) {
+    const c = layout.cols[i];
+    if (c.key === "item" || c.key === "num") continue;
+    const val = row.cells[c.key] != null ? String(row.cells[c.key]) : "";
+    const startPt = c.key === "price" || c.key === "total" ? L.fontTableNumericPt : L.fontTableCellPt;
+    const plan = planTableCellDraw(doc, c, val, startPt, L.fontTableNumericMinPt);
+    if (plan.cellH > numericH) numericH = plan.cellH;
+    if (plan.twoLine) numericH = Math.max(numericH, plan.lineH * 2.2);
+  }
+  return Math.max(L.tableRowMinMm, bodyH + L.tableRowPadTopMm + L.tableRowPadBottomMm, numericH + 1.5);
 }
 
 function drawTableRow(doc, layout, y, row) {
@@ -589,24 +697,29 @@ function drawTableRow(doc, layout, y, row) {
     doc.setTextColor(30, 41, 59);
   }
   setPdfFont(doc, "normal");
-  const midY = yTop + rowH / 2;
   const overflowFlags = { price: false, vat: false, total: false };
   for (let i = 0; i < layout.cols.length; i++) {
     const c = layout.cols[i];
     if (c.key === "item") continue;
     const val = row.cells[c.key] != null ? String(row.cells[c.key]) : "";
     if (c.key === "num") {
-      doc.setFontSize(L.fontTableCellPt);
-      pdfText(doc, val, c.x + c.w / 2, midY, { align: "center" });
+      const res = drawTableCellText(doc, c, val, yTop, rowH, {
+        fontPt: L.fontTableCellPt,
+        align: "center",
+        style: "normal",
+      });
       continue;
     }
     if (c.key === "qty" || c.key === "unit") {
-      doc.setFontSize(L.fontTableCellPt);
-      pdfText(doc, val, c.x + c.w - 1.2, midY, { align: "right" });
+      const res = drawTableCellText(doc, c, val, yTop, rowH, {
+        fontPt: L.fontTableCellPt,
+        align: "right",
+        style: "normal",
+      });
       continue;
     }
     const isMoney = c.key === "price" || c.key === "total";
-    const res = drawTableCellText(doc, c, val, midY, {
+    const res = drawTableCellText(doc, c, val, yTop, rowH, {
       fontPt: isMoney ? L.fontTableNumericPt : L.fontTableCellPt,
       align: "right",
       style: "normal",
@@ -631,9 +744,9 @@ function drawTotals(doc, totals, y) {
     const labelFit = fitFontSizeForColumn(doc, label, sum.labelW, labelPt, L.fontTableNumericMinPt);
     const valFit = fitFontSizeForColumn(doc, amount, sum.valueW, valPt, L.fontTableNumericMinPt);
     doc.setFontSize(labelFit);
-    pdfText(doc, label, sum.labelX, cy, { maxWidth: sum.labelW, align: "left", style: bold ? "bold" : "normal" });
+    pdfText(doc, label, sum.labelX, cy, { align: "left", style: bold ? "bold" : "normal" });
     doc.setFontSize(valFit);
-    pdfText(doc, amount, sum.valueRight, cy, { maxWidth: sum.valueW, align: "right", style: bold ? "bold" : "normal" });
+    pdfText(doc, amount, sum.valueRight, cy, { align: "right", style: bold ? "bold" : "normal" });
     cy += L.summaryLineMm;
   };
   if (totals.payer) {
@@ -718,6 +831,7 @@ export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
   y = drawTableHeader(doc, layout, y);
 
   const lines = state.lines || [];
+  let rowOverflowHit = false;
   for (let i = 0; i < lines.length; i++) {
     const ln = lines[i];
     const qty = parseNum(ln.qty);
@@ -743,6 +857,9 @@ export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
       y = drawTableHeader(doc, layout, y);
     }
     const rowOut = drawTableRow(doc, layout, y, row);
+    if (rowOut.overflowFlags) {
+      if (rowOut.overflowFlags.price || rowOut.overflowFlags.vat || rowOut.overflowFlags.total) rowOverflowHit = true;
+    }
     y = rowOut.y;
   }
 
@@ -775,10 +892,11 @@ export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
     PRICE_COLUMN_WIDTH: priceCol ? priceCol.w : 0,
     VAT_COLUMN_WIDTH: vatCol ? vatCol.w : 0,
     TOTAL_COLUMN_WIDTH: totalCol ? totalCol.w : 0,
-    TABLE_OVERFLOW_FIXED: layoutAudit.TABLE_OVERFLOW_FIXED,
+    TABLE_OVERFLOW_FIXED: layoutAudit.TABLE_OVERFLOW_FIXED && !rowOverflowHit,
     SUMMARY_OVERLAP: layoutAudit.SUMMARY_OVERLAP,
     SUMMARY_OVERFLOW_FIXED: layoutAudit.SUMMARY_OVERFLOW_FIXED,
     ...layoutAudit,
+    ...pdfFontRuntime,
   });
   return { blob, fileName: outName, proof };
 }
@@ -790,5 +908,10 @@ try {
     window.iuInvoiceAuditPdfLayout = auditInvoicePdfLayout;
     window.iuInvoiceAuditPdfLayoutPrepared = auditInvoicePdfLayoutPrepared;
     window.IU_INVOICE_PDF_LAYOUT = IU_INVOICE_PDF_LAYOUT;
+    window._iuInvoicePdfFontRuntime = pdfFontRuntime;
   }
 } catch (_) {}
+
+export function getInvoicePdfFontRuntime() {
+  return Object.assign({}, pdfFontRuntime, { FONT_HTTP_STATUS: pdfFontHttpStatus });
+}
