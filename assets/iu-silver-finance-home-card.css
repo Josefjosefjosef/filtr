@@ -1,0 +1,184 @@
+/**
+ * Silver homepage — Osobní finance a kalkulačky (entry card → Mind Menu fincalc overlay).
+ * Uses silver-welcome-stack design tokens only — no card-level background gradients.
+ */
+
+#silver-slot #iuSilverFinanceHomeCard,
+#iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard {
+  --iuFinHomeIllusH: 120px;
+  --iuFinHomeIllusW: 108px;
+  --iuFinHomeIllusGap: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  display: block;
+  width: calc(100% - 20px);
+  max-width: calc(100% - 20px);
+  margin: 8px 10px 0;
+  box-sizing: border-box;
+  padding: 10px var(--iuSilverStackPadX, 12px) 12px;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  background-image: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-width: 0;
+  transition: background 120ms ease;
+}
+
+@media (min-width: 480px) {
+  #silver-slot #iuSilverFinanceHomeCard,
+  #iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard {
+    --iuFinHomeIllusH: 132px;
+    --iuFinHomeIllusW: 118px;
+  }
+}
+
+@media (min-width: 1025px) {
+  #silver-slot #iuSilverFinanceHomeCard,
+  #iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard {
+    --iuFinHomeIllusH: 148px;
+    --iuFinHomeIllusW: 128px;
+    width: 100%;
+    max-width: 100%;
+    margin: 8px 0 0;
+    padding: 10px 12px 12px;
+    border-radius: 16px;
+  }
+}
+
+#silver-slot #iuSilverFinanceHomeCard:hover,
+#iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard:hover {
+  background: var(--iuSilverCardActionHoverBg);
+}
+
+#silver-slot #iuSilverFinanceHomeCard:active,
+#iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard:active {
+  background: var(--iuSilverCardActionActiveBg);
+}
+
+#silver-slot #iuSilverFinanceHomeCard:focus-visible,
+#iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard:focus-visible {
+  outline: 2px solid var(--iuSilverCardActionFocusOutline);
+  outline-offset: -2px;
+}
+
+#silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__hero,
+#iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__hero {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: var(--iuFinHomeIllusGap);
+  min-width: 0;
+}
+
+#silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__content,
+#iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__content {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: calc(100% - var(--iuFinHomeIllusW) - var(--iuFinHomeIllusGap));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+#silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__titleRow,
+#iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__titleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+
+#silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__title,
+#iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: #0f172a;
+}
+
+#silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__chevron,
+#iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__chevron {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  opacity: 0.55;
+  color: currentColor;
+}
+
+#silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__lead,
+#iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__lead {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #475569;
+}
+
+#silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__illus,
+#iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__illus {
+  flex: 0 0 var(--iuFinHomeIllusW);
+  width: var(--iuFinHomeIllusW);
+  min-width: 0;
+  max-width: var(--iuFinHomeIllusW);
+  min-height: var(--iuFinHomeIllusH);
+  align-self: flex-end;
+  margin-top: auto;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.42;
+  color: #334155;
+}
+
+#silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__illusSvg,
+#iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__illusSvg {
+  display: block;
+  width: 100%;
+  height: var(--iuFinHomeIllusH);
+  object-fit: contain;
+  object-position: right bottom;
+}
+
+.silver-welcome-stack--evening #silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__title,
+.silver-welcome-stack--evening #iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__title {
+  color: rgba(248, 250, 255, 0.96);
+}
+
+.silver-welcome-stack--evening #silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__lead,
+.silver-welcome-stack--evening #iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__lead {
+  color: rgba(203, 213, 225, 0.85);
+}
+
+.silver-welcome-stack--evening #silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__illus,
+.silver-welcome-stack--evening #iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__illus {
+  opacity: 0.36;
+  color: rgba(186, 210, 236, 0.92);
+}
+
+@media (min-width: 1025px) {
+  #silver-slot #iuSilverFinanceHomeCard {
+    grid-column: 1 / -1;
+    grid-row: 9;
+    min-width: 0;
+    align-self: stretch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #silver-slot #iuSilverFinanceHomeCard,
+  #iuMobileSilverSlot #silver-slot #iuSilverFinanceHomeCard {
+    transition: none !important;
+  }
+}

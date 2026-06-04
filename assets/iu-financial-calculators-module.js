@@ -994,7 +994,7 @@ export function initIuFinancialCalculatorsOverlay(deps) {
       <div class="iu-financial-overlay-hubGrid" role="list">${cards}</div>
     </section>`;
     }).join("");
-    views.innerHTML = `<div class="iu-fin-hub-wrap iu-financial-calculators-list" data-iu-fin-hub="1">${sections}</div>`;
+    views.innerHTML = `<div class="iu-fin-hub-wrap iu-financial-calculators-list" data-iu-fin-hub="1"><p class="iu-financial-overlay-info iu-fin-hub-privacy" role="note">🔒 Veškeré výpočty probíhají pouze ve vašem zařízení. Zadané údaje se nikam neodesílají ani neukládají.</p>${sections}</div>`;
     views.querySelectorAll("[data-iu-fin-pick]").forEach((btn) => {
       btn.addEventListener("click", () => openCalculator(btn.getAttribute("data-iu-fin-pick"), null));
     });
