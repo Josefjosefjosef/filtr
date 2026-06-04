@@ -218,6 +218,7 @@ async function run() {
     const layerRect = layer && !layer.hidden ? layer.getBoundingClientRect() : null;
     const layerVisible =
       layerRect && layerRect.width > 50 && layerRect.height > 50 && layerRect.top >= -2;
+    const previewDiag = window._iuInvoicePreviewDiag || {};
 
     const previewPage =
       (layer && layer.querySelector(".iu-inv-pr")) ||
@@ -321,6 +322,7 @@ async function run() {
       PREVIEW_OPEN: layerOpen && layerVisible,
       PREVIEW_OPEN_UI: previewOpenUi,
       FORCED_PREVIEW_DOM: forcedPreviewDom,
+      PREVIEW_DIAG: JSON.stringify(previewDiag),
       layerHidden: layer ? layer.hidden : true,
       layerParent: layer && layer.parentElement ? layer.parentElement.id || layer.parentElement.className.slice(0, 60) : "",
       layerRect: layerRect
