@@ -829,8 +829,16 @@ async function run() {
   const pdfMagicOk = pdfOut.pdfHeader === "%PDF";
   const meta = pdfOut.meta || {};
   const proof = pdfOut.proof || {};
-  const renderOk = meta.renderSource === "print_css_mode" || proof.renderSource === "print_css_mode";
-  const printModeUsed = meta.printModeUsed === true || proof.printHostExists === true;
+  const renderOk =
+    meta.renderSource === "paper_css_mode" ||
+    proof.renderSource === "paper_css_mode" ||
+    meta.renderSource === "print_css_mode" ||
+    proof.renderSource === "print_css_mode";
+  const printModeUsed =
+    meta.paperModeUsed === true ||
+    proof.paperHostExists === true ||
+    meta.printModeUsed === true ||
+    proof.printHostExists === true;
   const plainTextOnly = !pdfMagicOk || pdfOut.size < 500;
   const contentClipped = proof.contentClipped === true;
 
