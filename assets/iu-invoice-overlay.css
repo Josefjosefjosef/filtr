@@ -377,8 +377,9 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
 }
 @media (max-width: 1024px){
   body.iu-invoice-preview-open #iuInvoicePanel .iu-invoice-overlay-cardShell{
-    visibility: hidden;
-    pointer-events: none;
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
 }
 
@@ -402,6 +403,11 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   display: none !important;
 }
 
+#iuInvoicePanel .iu-inv-previewLayer[hidden],
+#iuInvoicePanel .iu-inv-previewLayer.iu-inv-guard-hidden{
+  display: none !important;
+}
+#iuInvoicePreviewPortal.iu-inv-previewLayer,
 #iuInvoicePanel .iu-inv-previewLayer,
 .iu-inv-previewLayer.iu-invoice-preview-portal{
   position: absolute;
@@ -413,6 +419,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   box-sizing: border-box;
 }
 @media (max-width: 1024px){
+  #iuInvoicePreviewPortal:not([hidden]),
   #iuInvoicePanel .iu-inv-previewLayer:not([hidden]),
   #iuInvoicePanel > .iu-inv-previewLayer:not([hidden]),
   .iu-inv-previewLayer.iu-invoice-preview-portal:not([hidden]){
@@ -450,7 +457,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   }
 }
 
-:is(#iuInvoicePanel, .iu-inv-previewLayer.iu-invoice-preview-portal) .iu-inv-previewToolbar{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-inv-previewLayer.iu-invoice-preview-portal) .iu-inv-previewToolbar{
   flex: 0 0 auto;
   display: flex;
   flex-wrap: wrap;
@@ -460,7 +467,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   border-bottom: 1px solid rgba(15, 23, 42, 0.08);
   background: #fff;
 }
-:is(#iuInvoicePanel, .iu-inv-previewLayer.iu-invoice-preview-portal) .iu-inv-previewScroll{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-inv-previewLayer.iu-invoice-preview-portal) .iu-inv-previewScroll{
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
@@ -480,7 +487,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
 }
 
 /* HTML invoice preview */
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr{
   max-width: 720px;
   margin: 0 auto;
   background: #fff;
@@ -490,41 +497,41 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   box-sizing: border-box;
   color: #0f172a;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-head{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-head{
   padding: 12px 14px;
   border-radius: 10px;
   background: linear-gradient(90deg, rgba(136, 19, 55, 0.06) 0%, #fff 40%);
   margin-bottom: 16px;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-created{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-created{
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.02em;
   color: #881337;
   margin-bottom: 4px;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-title{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-title{
   font-size: 22px;
   font-weight: 800;
   margin-top: 6px;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-no{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-no{
   font-size: 15px;
   margin-top: 4px;
   color: rgba(15, 23, 42, 0.65);
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-grid{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-grid{
   display: grid;
   grid-template-columns: 1fr;
   gap: 14px;
   margin-bottom: 14px;
 }
 @media (min-width: 640px){
-  :is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-grid{
+  :is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-grid{
     grid-template-columns: 1fr 1fr;
   }
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-h{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-h{
   font-size: 12px;
   font-weight: 750;
   text-transform: uppercase;
@@ -532,7 +539,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   color: #881337;
   margin-bottom: 6px;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-pre{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-pre{
   margin: 0;
   white-space: pre-wrap;
   font-family: inherit;
@@ -540,70 +547,70 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   line-height: 1.45;
   color: #0f172a;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-meta{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-meta{
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
   margin-bottom: 10px;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-meta th,
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-meta td{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-meta th,
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-meta td{
   border: 1px solid rgba(15, 23, 42, 0.08);
   padding: 8px 10px;
   text-align: left;
   vertical-align: top;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-meta th{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-meta th{
   width: 22%;
   background: rgba(15, 23, 42, 0.03);
   font-weight: 650;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-bank{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-bank{
   font-size: 13px;
   margin-bottom: 12px;
   padding: 10px 12px;
   border-radius: 10px;
   background: rgba(15, 23, 42, 0.03);
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-table{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-table{
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
   margin-bottom: 12px;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-table th,
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-table td{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-table th,
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-table td{
   border: 1px solid rgba(15, 23, 42, 0.1);
   padding: 8px;
   text-align: left;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-table th{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-table th{
   background: rgba(136, 19, 55, 0.07);
   font-weight: 700;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-num{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-num{
   text-align: right;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-strong{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-strong{
   font-weight: 800;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-desc{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-desc{
   font-size: 12px;
   color: rgba(15, 23, 42, 0.62);
   margin-top: 4px;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-totals{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-totals{
   font-size: 14px;
   text-align: right;
   margin-top: 8px;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-due{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-due{
   margin-top: 10px;
   font-size: 18px;
   font-weight: 800;
   color: #881337;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-pr-foot{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-foot{
   margin-top: 16px;
   padding-top: 12px;
   border-top: 1px solid rgba(15, 23, 42, 0.08);
@@ -1241,7 +1248,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
 }
 
 /* PC náhled — bez transformu, pouze centrovaný papír v overlayi */
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-previewScroll .iu-invoice-preview-viewport--desktop{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-previewScroll .iu-invoice-preview-viewport--desktop{
   width: 100%;
   overflow-x: hidden;
   display: flex;
@@ -1250,7 +1257,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   box-sizing: border-box;
   padding: 0 12px;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-previewScroll .iu-invoice-preview-desktop{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-previewScroll .iu-invoice-preview-desktop{
   width: 100%;
   max-width: 100%;
   display: flex;
@@ -1258,7 +1265,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   overflow-x: hidden;
   box-sizing: border-box;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-previewScroll .iu-invoice-preview-desktop .iu-invoice-paper{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-previewScroll .iu-invoice-preview-desktop .iu-invoice-paper{
   width: 794px;
   max-width: 100%;
   flex-shrink: 0;
@@ -1267,7 +1274,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
 }
 
 /* Mobil / tablet náhled — samostatný wrapper + scale z JS podle šířky hostu */
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-previewScroll .iu-invoice-preview-viewport--mobile{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-previewScroll .iu-invoice-preview-viewport--mobile{
   width: 100%;
   overflow-x: hidden;
   display: flex;
@@ -1276,7 +1283,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   box-sizing: border-box;
   padding: 0 10px;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-previewScroll .iu-invoice-preview-mobile{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-previewScroll .iu-invoice-preview-mobile{
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
@@ -1284,7 +1291,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   justify-content: center;
   box-sizing: border-box;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-previewScroll .iu-invoice-preview-mobile .iu-invoice-preview-scale{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-previewScroll .iu-invoice-preview-mobile .iu-invoice-preview-scale{
   width: 794px;
   max-width: 794px;
   transform-origin: top center;
@@ -1292,19 +1299,19 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   flex-shrink: 0;
   box-sizing: border-box;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-inv-previewScroll .iu-invoice-preview-mobile .iu-invoice-paper{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-previewScroll .iu-invoice-preview-mobile .iu-invoice-paper{
   width: 794px;
   max-width: none;
   background: #fff;
   box-sizing: border-box;
 }
 
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-invoice-paper .iu-inv-pr{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-invoice-paper .iu-inv-pr{
   max-width: none;
   width: 100%;
   margin: 0;
 }
-:is(#iuInvoicePanel, .iu-invoice-preview-portal) .iu-invoice-paper .iu-inv-pr-grid{
+:is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-invoice-paper .iu-inv-pr-grid{
   grid-template-columns: 1fr 1fr;
 }
 
