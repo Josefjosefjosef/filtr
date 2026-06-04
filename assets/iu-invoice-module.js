@@ -1,6 +1,8 @@
 /**
  * infoUzel.cz — overlay „Vytvořit fakturu“ (UI vrstva).
  */
+export const IU_INVOICE_MODULE_BUILD = "invoice-real-root-cause-v1-20260605";
+
 import {
   applyBuyerSnapshot,
   applySupplierSnapshot,
@@ -502,8 +504,8 @@ export function initIuInvoiceOverlay(deps) {
 
   try {
     const cssLink = document.querySelector('link[href*="iu-invoice-overlay.css"]');
-    if (cssLink && String(cssLink.href || "").indexOf("iu-invoice-preview-portal-v26") === -1) {
-      cssLink.href = "/assets/iu-invoice-overlay.css?v=iu-invoice-preview-portal-v26";
+    if (cssLink && String(cssLink.href || "").indexOf("iu-invoice-root-cause-v1") === -1) {
+      cssLink.href = "/assets/iu-invoice-overlay.css?v=iu-invoice-root-cause-v1";
     }
   } catch (_) {}
 
@@ -631,38 +633,60 @@ export function initIuInvoiceOverlay(deps) {
           PREVIEW_LAYER_PORTAL: !!(layer && layer.classList.contains("iu-invoice-preview-portal")),
           PREVIEW_USES_NATIVE_DIALOG: false,
           PREVIEW_PORTAL_MODE: "body-fixed-div",
+          PREVIEW_EXCEPTION: extra && extra.PREVIEW_EXCEPTION ? extra.PREVIEW_EXCEPTION : "",
         },
         extra || {},
       );
     } catch (err) {
       try {
-        window._iuInvoicePreviewDiag = { ERROR_THROWN: String(err) };
+        window._iuInvoicePreviewDiag = { ERROR_THROWN: String(err), PREVIEW_EXCEPTION: String(err) };
       } catch (_) {}
     }
   }
 
-  function scrollToFirstValidationError(root) {
+  function clearValidationHighlights(root) {
     if (!root) return;
+    root.querySelectorAll(".iu-inv-input--invalid, .iu-inv-select--invalid, .iu-inv-textarea--invalid").forEach((el) => {
+      el.classList.remove("iu-inv-input--invalid", "iu-inv-select--invalid", "iu-inv-textarea--invalid");
+      el.removeAttribute("aria-invalid");
+    });
+  }
+
+  function highlightValidationField(el) {
+    if (!el) return;
+    if (el.classList.contains("iu-inv-select")) el.classList.add("iu-inv-select--invalid");
+    else if (el.classList.contains("iu-inv-textarea")) el.classList.add("iu-inv-textarea--invalid");
+    else el.classList.add("iu-inv-input--invalid");
+    el.setAttribute("aria-invalid", "true");
+  }
+
+  function scrollToFirstValidationError(root) {
+    if (!root) return null;
+    clearValidationHighlights(root);
     const required = root.querySelectorAll("input[required], textarea[required], select[required]");
     for (let i = 0; i < required.length; i++) {
       const el = required[i];
       if (el.disabled || el.hidden) continue;
       const val = String(el.value || "").trim();
       if (!val) {
+        highlightValidationField(el);
         try {
           el.scrollIntoView({ block: "center", behavior: "smooth" });
           el.focus();
         } catch (_) {}
-        return;
+        return el;
       }
     }
-    const lineName = root.querySelector("[data-inv-line-field=\"name\"]");
+    const lineName = root.querySelector('[data-inv-line-field="name"]');
     if (lineName && !String(lineName.value || "").trim()) {
+      highlightValidationField(lineName);
       try {
         lineName.scrollIntoView({ block: "center", behavior: "smooth" });
         lineName.focus();
       } catch (_) {}
+      return lineName;
     }
+    return null;
   }
 
   function installPreviewDelegation() {
@@ -1419,6 +1443,7 @@ export function initIuInvoiceOverlay(deps) {
     }
 
     function openPreview() {
+      let previewException = "";
       try {
         previewEventTrace.handlerEntered += 1;
         readStateFromDom(root, state);
@@ -1433,15 +1458,17 @@ export function initIuInvoiceOverlay(deps) {
             PREVIEW_OPEN: false,
             PREVIEW_VALIDATION_BLOCKED: true,
             PREVIEW_VALIDATION_RESULT: "fail",
+            PREVIEW_EXCEPTION: "",
             reason: "validation",
             errors: v.errors,
           });
           return;
         }
+        clearValidationHighlights(root);
         clearReadyPdfUi();
         const totals = computeTotals(state);
         const layer = ensurePreviewPortalHost();
-        const host = layer.querySelector("[data-inv-preview-host]");
+        const host = layer ? layer.querySelector("[data-inv-preview-host]") : null;
         const formLayer = root.querySelector("[data-inv-preview-layer]");
         if (formLayer && formLayer !== layer) {
           formLayer.hidden = true;
@@ -1449,7 +1476,13 @@ export function initIuInvoiceOverlay(deps) {
           formLayer.classList.add("iu-inv-guard-hidden");
         }
         if (!host || !layer) {
-          publishPreviewDiag(layer, { PREVIEW_OPEN: false, reason: "missing_host_or_layer" });
+          const msg = "Náhled faktury: chybí portál náhledu.";
+          showPreviewValidationErrors([msg]);
+          publishPreviewDiag(layer, {
+            PREVIEW_OPEN: false,
+            PREVIEW_EXCEPTION: "missing_host_or_layer",
+            reason: "missing_host_or_layer",
+          });
           return;
         }
         const inner = buildInvoicePaperHtml(state, totals);
@@ -1460,10 +1493,24 @@ export function initIuInvoiceOverlay(deps) {
         try {
           document.body.classList.add("iu-invoice-preview-open");
         } catch (_) {}
+        const opened = isPreviewLayerOpen(layer);
+        if (!opened) {
+          const msg = "Náhled faktury se nepodařilo zobrazit. Obnovte stránku (tvrdý reload).";
+          showPreviewValidationErrors([msg]);
+          publishPreviewDiag(layer, {
+            PREVIEW_OPEN: false,
+            PREVIEW_VALIDATION_RESULT: "pass",
+            PREVIEW_VALIDATION_BLOCKED: false,
+            PREVIEW_EXCEPTION: "layer_not_visible",
+            reason: "layer_not_visible",
+          });
+          return;
+        }
         publishPreviewDiag(layer, {
-          PREVIEW_OPEN: isPreviewLayerOpen(layer),
+          PREVIEW_OPEN: true,
           PREVIEW_VALIDATION_RESULT: "pass",
           PREVIEW_VALIDATION_BLOCKED: false,
+          PREVIEW_EXCEPTION: "",
           previewLayoutMode: mode,
         });
         try {
@@ -1478,13 +1525,24 @@ export function initIuInvoiceOverlay(deps) {
                 PREVIEW_OPEN: isPreviewLayerOpen(layer),
                 PREVIEW_VALIDATION_RESULT: "pass",
                 PREVIEW_VALIDATION_BLOCKED: false,
+                PREVIEW_EXCEPTION: "",
                 previewLayoutMode: mode,
               });
-            } catch (_) {}
+            } catch (rafErr) {
+              previewException = String(rafErr);
+            }
           });
-        } catch (_) {}
+        } catch (scrollErr) {
+          previewException = String(scrollErr);
+        }
       } catch (err) {
-        publishPreviewDiag(null, { PREVIEW_OPEN: false, ERROR_THROWN: String(err) });
+        previewException = String(err);
+        showPreviewValidationErrors(["Náhled faktury: " + previewException]);
+        publishPreviewDiag(null, {
+          PREVIEW_OPEN: false,
+          ERROR_THROWN: previewException,
+          PREVIEW_EXCEPTION: previewException,
+        });
       }
     }
 
@@ -1756,6 +1814,7 @@ export function initIuInvoiceOverlay(deps) {
     window.iuInvoiceOpenSurface = openSurface;
     window.iuInvoiceCloseSurface = closeSurface;
     window.ensureInvoiceModalInBody = ensureInBody;
+    window.IU_INVOICE_MODULE_BUILD = IU_INVOICE_MODULE_BUILD;
   } catch (_) {}
 
   return { open: openSurface, close: closeSurface };

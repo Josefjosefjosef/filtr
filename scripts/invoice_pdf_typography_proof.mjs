@@ -173,6 +173,9 @@ async function run() {
     TYPOGRAPHY_FIX: p.TYPOGRAPHY_FIX === "v1_utf8_noto_font",
     TEXT_SPACING_FIXED:
       p.TEXT_SPACING_FIXED === true &&
+      p.PDF_FONT_GUARD_PASS === true &&
+      p.FONT_FALLBACK_USED === false &&
+      p.FONT_USED_FOR_RENDER === true &&
       String(p.PDF_FONT_ENGINE || "").indexOf("noto-utf8") === 0 &&
       p.PDF_FONT_LOAD_OK === true,
     PDF_CHAR_SPACING: Number(p.PDF_CHAR_SPACING) === 0,

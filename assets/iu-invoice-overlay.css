@@ -403,6 +403,13 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   display: none !important;
 }
 
+.iu-inv-input--invalid,
+.iu-inv-select--invalid,
+.iu-inv-textarea--invalid{
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+}
+
 #iuInvoicePanel .iu-inv-previewLayer[hidden],
 #iuInvoicePanel .iu-inv-previewLayer.iu-inv-guard-hidden{
   display: none !important;
