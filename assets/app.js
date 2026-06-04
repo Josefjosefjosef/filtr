@@ -37688,6 +37688,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const x = iuSilverTaskQueryTypoNormalizeFolded(String(f || ""));
     if (!x) return false;
     if (/\b(kdy|co\s+mam|dokdy|do\s+kdy|co\s+jsem\s+mel|co\s+mi\s+zbyva)\b/.test(x)) return false;
+    if (/\b(nesmim|nemuzu|nechci)\s+zapomenout\b/.test(x) || /\bzapomenout\b/.test(x) || /\bpripomn\w*\s+mi\b/.test(x)) {
+      return false;
+    }
     if (
       !/\b(uhradit|zaplatit|resit|vyresit|zaridit|vyridit|splatit|sehnat|poridit|volat|koupit|vyzvednout)\b/.test(
         x
