@@ -49,9 +49,16 @@ const MM_PAGE_W = 210;
 const MM_PAGE_H = 297;
 const IU_INV_PDF_FONT = "IUInvNoto";
 const IU_INV_PDF_FONT_FILE = "IUInvNoto-normal.ttf";
-const IU_INV_PDF_FONT_URL = "/assets/fonts/noto-sans-latin-ext-400-normal.ttf";
+function resolveInvoicePdfFontUrl() {
+  try {
+    const origin = typeof window !== "undefined" && window.location && window.location.origin ? window.location.origin : "";
+    if (origin && origin !== "null") return origin + "/assets/fonts/noto-sans-latin-ext-400-normal.ttf";
+  } catch (_) {}
+  return "/assets/fonts/noto-sans-latin-ext-400-normal.ttf";
+}
 
 let pdfFontLoadPromise = null;
+let pdfFontLoadOk = false;
 
 function fmtMoney(n) {
   if (!Number.isFinite(n)) return "—";
@@ -76,7 +83,20 @@ function ptToMm(pt) {
 function applyNormalTracking(doc) {
   try {
     if (typeof doc.setCharSpace === "function") doc.setCharSpace(0);
+    if (typeof doc.setWordSpacing === "function") doc.setWordSpacing(0);
   } catch (_) {}
+}
+
+function pdfText(doc, text, x, y, opts) {
+  applyNormalTracking(doc);
+  setPdfFont(doc, (opts && opts.style) || "normal");
+  const o = opts || {};
+  if (o.maxWidth) {
+    doc.text(String(text || ""), x, y, { maxWidth: o.maxWidth, align: o.align || "left" });
+    return;
+  }
+  if (o.align) doc.text(String(text || ""), x, y, { align: o.align });
+  else doc.text(String(text || ""), x, y);
 }
 
 function lineHeightMm(pt, mult) {
@@ -111,29 +131,64 @@ async function ensureJsPDF() {
   return loadScriptOnce("/assets/vendor/jspdf.umd.min.js");
 }
 
-async function ensureInvoicePdfUtf8Font(doc) {
+async function loadInvoicePdfFontBase64() {
+  const url = resolveInvoicePdfFontUrl();
+  const res = await fetch(url, { cache: "force-cache" });
+  if (!res.ok) throw new Error("invoice_pdf_font_fetch_failed:" + res.status);
+  const buf = await res.arrayBuffer();
+  if (!buf || buf.byteLength < 10000) throw new Error("invoice_pdf_font_empty");
+  const bytes = new Uint8Array(buf);
+  let binary = "";
+  for (let i = 0; i < bytes.length; i += 8192) {
+    binary += String.fromCharCode.apply(null, bytes.subarray(i, Math.min(i + 8192, bytes.length)));
+  }
+  return btoa(binary);
+}
+
+export function preloadInvoicePdfFont() {
   if (!pdfFontLoadPromise) {
-    pdfFontLoadPromise = fetch(IU_INV_PDF_FONT_URL)
-      .then((res) => {
-        if (!res.ok) throw new Error("invoice_pdf_font_fetch_failed");
-        return res.arrayBuffer();
+    pdfFontLoadPromise = loadInvoicePdfFontBase64()
+      .then((b64) => {
+        pdfFontLoadOk = true;
+        return b64;
       })
-      .then((buf) => {
-        const bytes = new Uint8Array(buf);
-        let binary = "";
-        for (let i = 0; i < bytes.length; i += 8192) {
-          binary += String.fromCharCode.apply(null, bytes.subarray(i, Math.min(i + 8192, bytes.length)));
-        }
-        return btoa(binary);
+      .catch((err) => {
+        pdfFontLoadPromise = null;
+        pdfFontLoadOk = false;
+        throw err;
       });
   }
-  const b64 = await pdfFontLoadPromise;
+  return pdfFontLoadPromise;
+}
+
+function registerInvoicePdfFontOnDoc(doc, b64) {
   if (!doc.existsFileInVFS(IU_INV_PDF_FONT_FILE)) {
     doc.addFileToVFS(IU_INV_PDF_FONT_FILE, b64);
-    doc.addFont(IU_INV_PDF_FONT_FILE, IU_INV_PDF_FONT, "normal");
-    doc.addFont(IU_INV_PDF_FONT_FILE, IU_INV_PDF_FONT, "bold");
+    try {
+      doc.addFont(IU_INV_PDF_FONT_FILE, IU_INV_PDF_FONT, "normal", "Identity-H");
+      doc.addFont(IU_INV_PDF_FONT_FILE, IU_INV_PDF_FONT, "bold", "Identity-H");
+    } catch (_) {
+      doc.addFont(IU_INV_PDF_FONT_FILE, IU_INV_PDF_FONT, "normal");
+      doc.addFont(IU_INV_PDF_FONT_FILE, IU_INV_PDF_FONT, "bold");
+    }
   }
-  applyNormalTracking(doc);
+}
+
+function assertUtf8FontMetrics(doc) {
+  setPdfFont(doc, "normal");
+  doc.setFontSize(10);
+  const wWord = doc.getTextWidth("číslo");
+  const wAscii = doc.getTextWidth("cislo");
+  if (!Number.isFinite(wWord) || wWord < 6) throw new Error("invoice_pdf_utf8_metrics_fail");
+  const perChar = wWord / 5;
+  if (perChar > 8) throw new Error("invoice_pdf_utf8_spacing_fail");
+}
+
+async function ensureInvoicePdfUtf8Font(doc) {
+  const b64 = await preloadInvoicePdfFont();
+  registerInvoicePdfFontOnDoc(doc, b64);
+  setPdfFont(doc, "normal");
+  assertUtf8FontMetrics(doc);
 }
 
 function setPdfFont(doc, style) {
@@ -191,7 +246,8 @@ function publishRendererProof(extra) {
     PDF_CHAR_SPACING: 0,
     PDF_LETTER_SPACING: L.letterSpacingPt,
     PDF_TEXT_RENDER_MODE: "fill",
-    PDF_FONT_ENGINE: "noto-utf8-vfs",
+    PDF_FONT_ENGINE: "noto-utf8-vfs-identity-h",
+    PDF_FONT_LOAD_OK: pdfFontLoadOk,
     TEXT_SPACING_FIXED: true,
     HEADER_FONT_SIZE: L.fontTitlePt + "pt",
     HEADER_LETTER_SPACING: L.letterSpacingPt + "pt",
@@ -244,11 +300,10 @@ function publishRendererProof(extra) {
   return proof;
 }
 
-function drawMultiline(doc, lines, x, y, lineH) {
-  applyNormalTracking(doc);
+function drawMultiline(doc, lines, x, y, lineH, style) {
   let cy = y;
   for (let i = 0; i < lines.length; i++) {
-    doc.text(lines[i], x, cy, { baseline: "top" });
+    pdfText(doc, lines[i], x, cy, { style: style || "normal" });
     cy += lineH;
   }
   return cy;
@@ -263,8 +318,8 @@ function drawPartyColumns(doc, state, y) {
   setPdfFont(doc, "bold");
   doc.setFontSize(L.fontPartyLabelPt);
   doc.setTextColor(L.brandRgb[0], L.brandRgb[1], L.brandRgb[2]);
-  doc.text("Dodavatel", xL, y, { baseline: "top" });
-  doc.text("Odběratel", xR, y, { baseline: "top" });
+  pdfText(doc, "Dodavatel", xL, y, { style: "bold" });
+  pdfText(doc, "Odběratel", xR, y, { style: "bold" });
   setPdfFont(doc, "normal");
   doc.setFontSize(L.fontPartyBodyPt);
   doc.setTextColor(30, 41, 59);
@@ -301,14 +356,11 @@ function drawMetaBlock(doc, state, y) {
   for (let ri = 0; ri < rows.length; ri++) {
     const row = rows[ri];
     setPdfFont(doc, "bold");
-    doc.text(String(row[0] || ""), x0, cy, { baseline: "top" });
-    setPdfFont(doc, "normal");
-    doc.text(String(row[1] || ""), x0 + labelW, cy, { baseline: "top", maxWidth: valW });
+    pdfText(doc, String(row[0] || ""), x0, cy, { style: "bold" });
+    pdfText(doc, String(row[1] || ""), x0 + labelW, cy, { maxWidth: valW });
     if (row[2]) {
-      setPdfFont(doc, "bold");
-      doc.text(String(row[2]), col2, cy, { baseline: "top" });
-      setPdfFont(doc, "normal");
-      doc.text(String(row[3] || ""), col2 + labelW, cy, { baseline: "top", maxWidth: valW });
+      pdfText(doc, String(row[2]), col2, cy, { style: "bold" });
+      pdfText(doc, String(row[3] || ""), col2 + labelW, cy, { maxWidth: valW });
     }
     cy += lh;
   }
@@ -324,7 +376,7 @@ function drawMetaBlock(doc, state, y) {
     if (inv.bankCode) bank += " / " + String(inv.bankCode).trim();
     if (inv.iban) bank += " · IBAN: " + String(inv.iban).trim();
     if (inv.swift) bank += " · SWIFT: " + String(inv.swift).trim();
-    doc.text(bank, x0 + 2, cy + 2.5, { baseline: "top", maxWidth: inner - 4 });
+    pdfText(doc, bank, x0 + 2, cy + 2.5, { maxWidth: inner - 4 });
     cy += bankH + 1.5;
   }
   return cy + 1;
@@ -344,11 +396,11 @@ function drawTableHeader(doc, layout, y) {
   for (let i = 0; i < layout.cols.length; i++) {
     const c = layout.cols[i];
     if (c.key === "item") {
-      doc.text(c.label, c.x + 1.5, midY, { baseline: "middle" });
+      pdfText(doc, c.label, c.x + 1.5, midY);
     } else if (c.key === "num") {
-      doc.text(c.label, c.x + c.w / 2, midY, { align: "center", baseline: "middle" });
+      pdfText(doc, c.label, c.x + c.w / 2, midY, { align: "center" });
     } else {
-      doc.text(c.label, c.x + c.w - 1.5, midY, { align: "right", baseline: "middle" });
+      pdfText(doc, c.label, c.x + c.w - 1.5, midY, { align: "right" });
     }
   }
   doc.setTextColor(30, 41, 59);
@@ -403,9 +455,9 @@ function drawTableRow(doc, layout, y, row) {
     if (c.key === "item") continue;
     const val = row.cells[c.key] != null ? String(row.cells[c.key]) : "";
     if (c.key === "num") {
-      doc.text(val, c.x + c.w / 2, midY, { align: "center", baseline: "middle" });
+      pdfText(doc, val, c.x + c.w / 2, midY, { align: "center" });
     } else {
-      doc.text(val, c.x + c.w - 1.5, midY, { align: "right", baseline: "middle" });
+      pdfText(doc, val, c.x + c.w - 1.5, midY, { align: "right" });
     }
   }
   return yTop + rowH;
@@ -414,26 +466,23 @@ function drawTableRow(doc, layout, y, row) {
 function drawTotals(doc, totals, y) {
   const L = IU_INVOICE_PDF_LAYOUT;
   const valueX = MM_PAGE_W - L.marginRightMm;
-  const labelRight = valueX - L.summaryLabelValueGapMm;
+  const labelX = valueX - L.summaryLabelValueGapMm;
   let cy = y + L.summaryBlockPadMm;
   const yStart = cy;
-  applyNormalTracking(doc);
   doc.setFontSize(L.fontTotalsPt);
-  setPdfFont(doc, "normal");
   doc.setTextColor(30, 41, 59);
+  const drawRow = (label, amount, bold) => {
+    doc.setFontSize(bold ? L.fontDuePt : L.fontTotalsPt);
+    pdfText(doc, label, labelX, cy, { align: "right", style: bold ? "bold" : "normal" });
+    pdfText(doc, amount, valueX, cy, { align: "right", style: bold ? "bold" : "normal" });
+    cy += L.summaryLineMm;
+  };
   if (totals.payer) {
-    doc.text("Mezisoučet bez DPH:", labelRight, cy, { align: "right", baseline: "top" });
-    doc.text(fmtMoney(totals.sumBase), valueX, cy, { align: "right", baseline: "top" });
-    cy += L.summaryLineMm;
-    doc.text("DPH:", labelRight, cy, { align: "right", baseline: "top" });
-    doc.text(fmtMoney(totals.sumVat), valueX, cy, { align: "right", baseline: "top" });
-    cy += L.summaryLineMm;
+    drawRow("Mezisoučet bez DPH:", fmtMoney(totals.sumBase), false);
+    drawRow("DPH:", fmtMoney(totals.sumVat), false);
   }
-  setPdfFont(doc, "bold");
-  doc.setFontSize(L.fontDuePt);
   doc.setTextColor(L.brandRgb[0], L.brandRgb[1], L.brandRgb[2]);
-  doc.text("Celkem k úhradě:", labelRight, cy, { align: "right", baseline: "top" });
-  doc.text(fmtMoney(totals.sumGross), valueX, cy, { align: "right", baseline: "top" });
+  drawRow("Celkem k úhradě:", fmtMoney(totals.sumGross), true);
   doc.setTextColor(30, 41, 59);
   const blockH = cy - yStart + ptToMm(L.fontDuePt) + L.summaryBlockPadMm;
   return {
@@ -451,7 +500,7 @@ function drawFooter(doc, yAfterSummary) {
   setPdfFont(doc, "normal");
   doc.setFontSize(L.fontFootPt);
   doc.setTextColor(100, 116, 139);
-  doc.text("www.infoUzel.cz · Vytvořeno pomocí infoUzel.cz", L.marginLeftMm, footerY, { baseline: "top" });
+  pdfText(doc, "www.infoUzel.cz · Vytvořeno pomocí infoUzel.cz", L.marginLeftMm, footerY);
   return { footerY, footerTopGapMm: footerY - yAfterSummary };
 }
 
@@ -484,18 +533,17 @@ export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
   setPdfFont(doc, "normal");
   doc.setFontSize(L.fontFootPt);
   doc.setTextColor(100, 116, 139);
-  doc.text("Vytvořeno pomocí infoUzel.cz", L.marginLeftMm + 4, y + 3, { baseline: "top" });
-  setPdfFont(doc, "bold");
+  doc.setFontSize(L.fontFootPt);
+  pdfText(doc, "Vytvořeno pomocí infoUzel.cz", L.marginLeftMm + 4, y + 3);
   doc.setFontSize(L.fontTitlePt);
   doc.setTextColor(L.brandRgb[0], L.brandRgb[1], L.brandRgb[2]);
-  doc.text("FAKTURA", L.marginLeftMm + 4, y + 9, { baseline: "top" });
-  setPdfFont(doc, "normal");
+  pdfText(doc, "FAKTURA", L.marginLeftMm + 4, y + 9, { style: "bold" });
   doc.setFontSize(L.fontInvoiceNumberPt);
   doc.setTextColor(30, 41, 59);
   const invNum = String(inv.number || "").trim();
-  doc.text("číslo faktury", L.marginLeftMm + 4, y + 16, { baseline: "top" });
+  pdfText(doc, "číslo faktury", L.marginLeftMm + 4, y + 16);
   setPdfFont(doc, "bold");
-  doc.text(invNum, L.marginLeftMm + 4 + doc.getTextWidth("číslo faktury ") + 0.5, y + 16, { baseline: "top" });
+  pdfText(doc, invNum, L.marginLeftMm + 4 + doc.getTextWidth("číslo faktury ") + 0.5, y + 16, { style: "bold" });
   y += 22;
 
   y = drawPartyColumns(doc, state, y);
@@ -558,6 +606,7 @@ export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
 try {
   if (typeof window !== "undefined") {
     window.iuInvoiceRenderPdfBlobFromData = buildInvoicePdfBlobFromData;
+    window.iuInvoicePreloadPdfFont = preloadInvoicePdfFont;
     window.IU_INVOICE_PDF_LAYOUT = IU_INVOICE_PDF_LAYOUT;
   }
 } catch (_) {}

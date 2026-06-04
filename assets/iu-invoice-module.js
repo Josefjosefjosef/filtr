@@ -21,7 +21,7 @@ import {
   validateForm,
   validateSupplierProfile,
 } from "./iu-invoice-engine.js";
-import { buildInvoicePdfBlobFromData } from "./iu-invoice-pdf-renderer.js";
+import { buildInvoicePdfBlobFromData, preloadInvoicePdfFont } from "./iu-invoice-pdf-renderer.js";
 
 function esc(s) {
   return String(s || "")
@@ -538,14 +538,17 @@ export function initIuInvoiceOverlay(deps) {
     if (previewPortalHost && previewPortalHost.isConnected) return previewPortalHost;
     let el = document.getElementById("iuInvoicePreviewPortal");
     if (!el) {
-      el = document.createElement("div");
+      const useDialog = typeof HTMLDialogElement !== "undefined";
+      el = document.createElement(useDialog ? "dialog" : "div");
       el.id = "iuInvoicePreviewPortal";
       el.className = "iu-inv-previewLayer iu-invoice-preview-portal";
       el.setAttribute("data-inv-preview-layer", "");
-      el.setAttribute("role", "dialog");
-      el.setAttribute("aria-modal", "true");
       el.setAttribute("aria-label", "Náhled faktury");
-      el.hidden = true;
+      if (!useDialog) {
+        el.setAttribute("role", "dialog");
+        el.setAttribute("aria-modal", "true");
+        el.hidden = true;
+      }
       el.innerHTML = PREVIEW_PORTAL_HTML;
       document.body.appendChild(el);
     }
@@ -593,7 +596,7 @@ export function initIuInvoiceOverlay(deps) {
           PREVIEW_LAYER_CREATED: !!layer,
           PREVIEW_LAYER_EXISTS: !!layer,
           PREVIEW_LAYER_PARENT: layer && layer.parentElement ? layer.parentElement.tagName + (layer.parentElement.id ? "#" + layer.parentElement.id : "") : "",
-          PREVIEW_LAYER_VISIBLE: !!(layer && !layer.hidden && rect && rect.width > 50 && rect.height > 50),
+          PREVIEW_LAYER_VISIBLE: !!(layer && isPreviewLayerOpen(layer) && rect && rect.width > 50 && rect.height > 50),
           PREVIEW_LAYER_TOP: rect ? Math.round(rect.top) : null,
           PREVIEW_LAYER_LEFT: rect ? Math.round(rect.left) : null,
           PREVIEW_LAYER_WIDTH: rect ? Math.round(rect.width) : null,
@@ -608,6 +611,7 @@ export function initIuInvoiceOverlay(deps) {
           PREVIEW_SCROLL_HOST_HIDDEN: scrollHostEl ? window.getComputedStyle(scrollHostEl).overflow === "hidden" : null,
           ACTIVE_ELEMENT_AFTER_CLICK: document.activeElement ? document.activeElement.tagName + (document.activeElement.getAttribute("data-inv") ? "[data-inv]" : "") : "",
           PREVIEW_LAYER_PORTAL: !!(layer && layer.classList.contains("iu-invoice-preview-portal")),
+          PREVIEW_USES_NATIVE_DIALOG: !!(layer && layer.tagName === "DIALOG"),
         },
         extra || {},
       );
@@ -702,8 +706,23 @@ export function initIuInvoiceOverlay(deps) {
     } catch (_) {}
   }
 
+  function isPreviewLayerOpen(layer) {
+    if (!layer) return false;
+    if (layer.tagName === "DIALOG") return !!layer.open;
+    return !layer.hidden;
+  }
+
   function applyPreviewPortalOpenStyles(layer) {
     if (!layer) return;
+    if (layer.tagName === "DIALOG" && typeof layer.showModal === "function") {
+      try {
+        if (!layer.open) layer.showModal();
+      } catch (err) {
+        try {
+          if (!layer.open) layer.showModal();
+        } catch (_) {}
+      }
+    }
     layer.hidden = false;
     layer.removeAttribute("hidden");
     layer.classList.remove("iu-inv-guard-hidden");
@@ -725,6 +744,11 @@ export function initIuInvoiceOverlay(deps) {
 
   function applyPreviewPortalCloseStyles(layer) {
     if (!layer) return;
+    if (layer.tagName === "DIALOG" && layer.open && typeof layer.close === "function") {
+      try {
+        layer.close();
+      } catch (_) {}
+    }
     layer.hidden = true;
     layer.setAttribute("hidden", "");
     layer.classList.add("iu-inv-guard-hidden");
@@ -1464,7 +1488,7 @@ export function initIuInvoiceOverlay(deps) {
     function repaintPreviewShellIfNeeded() {
       const layer = getPreviewLayerEl();
       const host = getPreviewHostEl();
-      if (!layer || layer.hidden || !host || !host.querySelector(".iu-inv-pr")) return;
+      if (!isPreviewLayerOpen(layer) || !host || !host.querySelector(".iu-inv-pr")) return;
       const nextMode = isDesktopPreviewBreakpoint() ? "desktop" : "mobile";
       if (nextMode === previewLayoutMode) {
         syncInvoicePreviewLayout();
@@ -1626,6 +1650,9 @@ export function initIuInvoiceOverlay(deps) {
     fillRecipientSelect(rootEl, loadRecipients());
     fillSupplierSelect(rootEl, loadSuppliers());
     wire(rootEl);
+    try {
+      void preloadInvoicePdfFont();
+    } catch (_) {}
 
     try {
       if (closeBtn) closeBtn.focus();
@@ -1680,7 +1707,7 @@ export function initIuInvoiceOverlay(deps) {
     if (panel.hasAttribute("hidden")) return;
     if (rootEl) {
       const layer = findPreviewLayerEl(rootEl);
-      if (layer && !layer.hidden) {
+      if (layer && isPreviewLayerOpen(layer)) {
         if (typeof closePreviewFn === "function") closePreviewFn();
         else {
           layer.hidden = true;
@@ -1698,6 +1725,9 @@ export function initIuInvoiceOverlay(deps) {
   });
 
   installPreviewDelegation();
+  try {
+    ensurePreviewPortalHost();
+  } catch (_) {}
 
   try {
     window.iuInvoiceOpenSurface = openSurface;
