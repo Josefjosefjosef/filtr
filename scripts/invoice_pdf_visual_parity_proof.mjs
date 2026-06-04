@@ -60,39 +60,52 @@ async function run() {
   const appUrl = process.argv[2] || `${LOCAL}/projects/index.html?nosw=1`;
   fs.mkdirSync(OUT_DIR, { recursive: true });
   const engineHref = pathToFileURL(path.join(ROOT, "assets", "iu-invoice-engine.js")).href;
-  const { buildInvoicePaperHtml, computeTotals } = await import(engineHref);
-  const st = {
+  const { buildInvoicePaperHtml, computeTotals, defaultFormState } = await import(engineHref);
+  const st = defaultFormState();
+  Object.assign(st, {
     supplierVatPayer: true,
-    supplierKind: "fo",
-    buyerKind: "fo",
     supplierFo: {
       firstName: "Jan",
       lastName: "Dodavatel",
       ico: "12345679",
-      address: "Praha",
+      address: "Testovací 1, Praha",
       accountNumber: "123456789/0100",
     },
-    buyerFo: { firstName: "Eva", lastName: "Kup", address: "Brno" },
+    buyerFo: { firstName: "Eva", lastName: "Odběratel", address: "Kupní 2, Brno" },
     invoice: {
-      number: "VIS-01",
+      number: "2026-VIS-PARITY-01",
       issueDate: "2026-06-01",
       dueDate: "2026-06-15",
       taxableDate: "2026-06-01",
       payment: "transfer",
-      accountNumber: "123456789/0100",
+      accountNumber: "987654321/0800",
+      variableSymbol: "202601",
     },
     lines: [
-      { name: "Konzultace", qty: "10", unit: "hod", unitPrice: "1200", vatRate: "21" },
-      { name: "Licence", qty: "1", unit: "ks", unitPrice: "5000", vatRate: "21" },
+      { name: "Konzultace", description: "Analýza", qty: "10", unit: "hod", unitPrice: "1200", vatRate: "21" },
+      { name: "Licence", description: "", qty: "1", unit: "ks", unitPrice: "5000", vatRate: "21" },
     ],
-  };
+  });
   const html = buildInvoicePaperHtml(st, computeTotals(st));
 
   const server = appUrl.includes("127.0.0.1") || appUrl.includes("localhost") ? await startServer() : null;
   const { chromium } = await import("playwright");
   const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  const page = await browser.newPage({ viewport: { width: 1280, height: 1400 } });
   await page.goto(appUrl, { waitUntil: "load", timeout: 120000 });
+  await page.evaluate(async () => {
+    try {
+      const cssLink = document.querySelector('link[href*="iu-invoice-overlay.css"]');
+      if (cssLink) {
+        cssLink.href = "/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-capture-v17";
+        await new Promise((res) => {
+          cssLink.onload = () => res();
+          cssLink.onerror = () => res();
+        });
+      }
+    } catch (_) {}
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+  });
   for (let i = 0; i < 100; i++) {
     const ok = await page.evaluate(() => typeof window.iuPdfExportHtmlStringToBlobForInvoice === "function");
     if (ok) break;
@@ -105,11 +118,10 @@ async function run() {
       panel.id = "iuInvoicePanel";
       panel.style.cssText = "position:fixed;left:0;top:0;z-index:1;background:#fafafa;padding:12px;";
       panel.innerHTML =
-        '<div class="iu-inv-previewScroll"><div class="iu-invoice-preview-viewport iu-invoice-preview-viewport--mobile">' +
-        '<div class="iu-invoice-preview-mobile"><div class="iu-invoice-preview-scale" style="width:794px;transform:scale(0.45);transform-origin:top center;">' +
-        '<div class="iu-invoice-paper">' +
+        '<div class="iu-inv-previewScroll"><div class="iu-invoice-preview-viewport iu-invoice-preview-viewport--desktop">' +
+        '<div class="iu-invoice-preview-desktop"><div class="iu-invoice-paper">' +
         html +
-        "</div></div></div></div></div>";
+        "</div></div></div></div>";
       document.body.appendChild(panel);
       const paper = panel.querySelector(".iu-inv-pr");
       await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
@@ -161,13 +173,23 @@ async function run() {
 
   const page2 = await browser.newPage({ viewport: { width: 1280, height: 1400 } });
   await page2.goto(appUrl, { waitUntil: "load", timeout: 120000 });
-  await page2.evaluate((html) => {
+  await page2.evaluate(async (html) => {
+    try {
+      const cssLink = document.querySelector('link[href*="iu-invoice-overlay.css"]');
+      if (cssLink) {
+        cssLink.href = "/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-capture-v17";
+        await new Promise((res) => {
+          cssLink.onload = () => res();
+          cssLink.onerror = () => res();
+        });
+      }
+    } catch (_) {}
     const panel = document.createElement("div");
     panel.id = "iuInvoicePanel";
     panel.style.cssText = "padding:20px;background:#fafafa;";
     panel.innerHTML =
-      '<div class="iu-inv-previewScroll"><div class="iu-invoice-preview-mobile"><div class="iu-invoice-preview-scale" style="width:794px">' +
-      '<div class="iu-invoice-paper">' +
+      '<div class="iu-inv-previewScroll"><div class="iu-invoice-preview-viewport iu-invoice-preview-viewport--desktop">' +
+      '<div class="iu-invoice-preview-desktop"><div class="iu-invoice-paper">' +
       html +
       "</div></div></div></div>";
     document.body.appendChild(panel);
