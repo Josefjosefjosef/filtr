@@ -77,6 +77,11 @@ P0_HEADLINE_REGISTRY_IDS: frozenset[str] = frozenset(
     }
 )
 
+# Native finance RSS feeds — production-liveness guard (Finance min 1 / 2h).
+# Rubric mirrors (Novinky/iDNES/Seznam ekonomika) are excluded: they often map outside finance.
+NATIVE_FINANCE_LIVENESS_FEED_IDS: frozenset[str] = frozenset({"fin_hn", "fin_e15"})
+NATIVE_FINANCE_LIVENESS_FEED_ORDER: tuple[str, ...] = ("fin_hn", "fin_e15")
+
 # Product limit: max scheduler visits per source per hour (exception keys capped at 5).
 MAX_SOURCE_FETCHES_PER_HOUR = 4
 MAX_SOURCE_FETCHES_PER_HOUR_EXCEPTION = 5
@@ -454,6 +459,20 @@ def _parse_iso(ts: str | None) -> datetime | None:
         return None
 
 
+def is_native_finance_liveness_feed(e: dict) -> bool:
+    """True for allowlisted native finance RSS feeds (not rubric mirrors on news sites)."""
+    eid = str(e.get("id") or "")
+    if eid in NATIVE_FINANCE_LIVENESS_FEED_IDS:
+        return True
+    if str(e.get("topic") or "").lower() != "finance":
+        return False
+    if str(e.get("entry_type") or "").lower() == "rubric":
+        return False
+    if e.get("native") is True and e.get("reliable") is True:
+        return True
+    return False
+
+
 def sources_per_tick(tick_index: int, three_frac: float = 0.62) -> int:
     """Legacy helper (unused by fixed-slot scheduler); kept for tooling compatibility."""
     mod = tick_index % 100
@@ -613,6 +632,33 @@ def select_feeds_for_tick(
         for ck in sorted(by_um.keys())
         if any(_interval_due(e) for e in by_um[ck])
     ]
+    # --- 1c) Finance liveness: ≥1 native finance feed per tick (production-liveness contract) ---
+    pre_finance = fixed_picks + p0_overdue_picks
+    finance_liveness_picks: list[dict] = []
+    if not any(is_native_finance_liveness_feed(e) for e in pre_finance):
+        by_id = {str(e.get("id") or ""): e for e in entries}
+        finance_candidates: list[dict] = []
+        for fid in NATIVE_FINANCE_LIVENESS_FEED_ORDER:
+            e = by_id.get(fid)
+            if e is not None:
+                finance_candidates.append(e)
+        for e in sorted(entries, key=lambda x: str(x.get("id") or "")):
+            if is_native_finance_liveness_feed(e) and e not in finance_candidates:
+                finance_candidates.append(e)
+        for e in finance_candidates:
+            u = (e.get("feed_url") or "").strip()
+            if not u or u in seen_urls:
+                continue
+            ck = scheduler_cooldown_key(e)
+            if not ck:
+                continue
+            eff = _effective_cooldown_min(e)
+            if not _cooldown_ok(ck, eff):
+                continue
+            finance_liveness_picks.append(e)
+            seen_urls.add(u)
+            break
+
     for ck in due_um_keys[: max(0, max_unmapped)]:
         group = sorted(by_um[ck], key=lambda x: str(x.get("id") or ""))
         for w in group:
@@ -621,7 +667,7 @@ def select_feeds_for_tick(
                 unmapped_picks.append(w)
                 seen_urls.add(u)
 
-    picked = fixed_picks + p0_overdue_picks + unmapped_picks
+    picked = pre_finance + finance_liveness_picks + unmapped_picks
     return picked, state
 
 
