@@ -21,6 +21,7 @@ import {
   validateForm,
   validateSupplierProfile,
 } from "./iu-invoice-engine.js";
+import { buildInvoicePdfBlobFromData } from "./iu-invoice-pdf-renderer.js";
 
 function esc(s) {
   return String(s || "")
@@ -996,6 +997,7 @@ export function initIuInvoiceOverlay(deps) {
 
     function exportInvoicePdfBlob(cb) {
       readStateFromDom(root, state);
+      copySupplierBankToInvoiceIfEmpty(state);
       const v = validateForm(state);
       if (!v.ok) {
         setStatus(root, v.errors.join(" · "));
@@ -1003,33 +1005,34 @@ export function initIuInvoiceOverlay(deps) {
         return;
       }
       const totals = computeTotals(state);
-      const html = buildInvoicePaperHtml(state, totals);
-      const fn =
-        typeof window !== "undefined" && typeof window.iuPdfExportHtmlStringToBlobForInvoice === "function"
-          ? window.iuPdfExportHtmlStringToBlobForInvoice
-          : null;
-      if (!fn) {
-        setStatus(root, "PDF export není k dispozici — obnovte stránku.");
-        cb(new Error("no exporter"));
-        return;
-      }
       const num = String((state.invoice && state.invoice.number) || "faktura").replace(/[^\w.\-]+/g, "_");
       const fileName = "Faktura_" + num + ".pdf";
       try {
         window._iuInvoiceExportMode = "pdf_only";
-        window._iuInvoiceWordPdfStackUsed = true;
+        window._iuInvoiceWordPdfStackUsed = false;
       } catch (_) {}
-      invoicePdfDiag("invoice_pdf_export_start", { via: "invoice_module" });
-      fn(html, fileName, (err, out) => {
-        if (err || !out || !out.blob) {
-          invoicePdfDiag("invoice_pdf_error", { via: "invoice_module_callback" }, err || new Error("pdf"));
+      invoicePdfDiag("invoice_pdf_export_start", { via: "invoice_module", renderer: "jspdf_v1" });
+      buildInvoicePdfBlobFromData(state, totals, fileName)
+        .then((out) => {
+          if (!out || !out.blob) {
+            const err = new Error("pdf_blob_empty");
+            invoicePdfDiag("invoice_pdf_error", { via: "invoice_module_renderer" }, err);
+            setStatus(root, pdfExportFailStatus(err));
+            cb(err);
+            return;
+          }
+          invoicePdfDiag("invoice_pdf_blob_created", {
+            size: out.blob.size,
+            via: "invoice_module",
+            renderer: "jspdf_v1",
+          });
+          cb(null, out.blob, out.fileName || fileName);
+        })
+        .catch((err) => {
+          invoicePdfDiag("invoice_pdf_error", { via: "invoice_module_renderer" }, err);
           setStatus(root, pdfExportFailStatus(err));
           cb(err || new Error("pdf"));
-          return;
-        }
-        invoicePdfDiag("invoice_pdf_blob_created", { size: out.blob.size, via: "invoice_module" });
-        cb(null, out.blob, out.fileName || fileName);
-      });
+        });
     }
 
     function needsGesturePdfDelivery() {
