@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-04T22:01:58.821157Z",
+  "ingestedAt": "2026-06-04T22:46:51.014527Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "USA uvalily sankce na kubánského prezidenta Díaze-Canela i na syna Raúla Castra",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/usa-uvalily-sankce-na-kubanskeho-prezidenta-diaze-canela-i-na-syna-raula-castra-374246",
+      "dt": "2026-06-04T22:14:09Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "canela",
+        "castra",
+        "díaze",
+        "kubánského",
+        "prezidenta",
+        "raúla",
+        "sankce",
+        "syna",
+        "usa",
+        "uvalily"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -730,29 +757,6 @@
         "středozemě",
         "veletrh",
         "vědy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Průměrná mzda v prvním čtvrtletí překročila 50 tisíc",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/prumerna-mzda-v-prvnim-ctvrtleti-prekrocila-50-tisic-374210",
-      "dt": "2026-06-04T07:26:46Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "mzda",
-        "prvním",
-        "průměrná",
-        "překročila",
-        "tisíc",
-        "čtvrtletí"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2256,7 +2260,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42592,
+      "bytes": 42498,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2293,13 +2297,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-04T20:56:30Z",
+        "raw_feed_latest_publishedAt": "2026-06-04T22:14:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
+          "zpravy": 23,
           "sport": 1,
-          "other": 6,
-          "finance": 1
+          "other": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2311,6 +2314,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA uvalily sankce na kubánského prezidenta Díaze-Canela i na syna Raúla Castra",
+            "publishedAt": "2026-06-04T22:14:09Z"
+          },
           {
             "title": "Trump vyčlení 700 milionů dolarů na obnovu uhelného průmyslu v USA",
             "publishedAt": "2026-06-04T20:56:30Z"
@@ -2338,10 +2345,6 @@
           {
             "title": "Za nás je imunita přežitá, míní Šebelová",
             "publishedAt": "2026-06-04T18:21:55Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události čtvrtka 4. června",
-            "publishedAt": "2026-06-04T16:28:01Z"
           }
         ]
       }
