@@ -499,8 +499,8 @@ export function initIuInvoiceOverlay(deps) {
 
   try {
     const cssLink = document.querySelector('link[href*="iu-invoice-overlay.css"]');
-    if (cssLink && String(cssLink.href || "").indexOf("iu-invoice-pdf-capture-v19") === -1) {
-      cssLink.href = "/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-capture-v19";
+    if (cssLink && String(cssLink.href || "").indexOf("iu-invoice-pdf-capture-v21") === -1) {
+      cssLink.href = "/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-capture-v21";
     }
   } catch (_) {}
 
@@ -513,6 +513,39 @@ export function initIuInvoiceOverlay(deps) {
   let rootEl = null;
   let readyPdfBundle = null;
   let iosPdfPopup = null;
+  let previewLayerAnchor = null;
+
+  function attachPreviewLayerToPanel(layer) {
+    if (!layer || !panel) return;
+    try {
+      if (layer.parentElement === panel) return;
+      previewLayerAnchor = {
+        parent: layer.parentElement,
+        next: layer.nextSibling,
+      };
+      panel.appendChild(layer);
+    } catch (_) {}
+  }
+
+  function restorePreviewLayerHome(layer) {
+    if (!layer || !previewLayerAnchor || !previewLayerAnchor.parent) {
+      previewLayerAnchor = null;
+      return;
+    }
+    try {
+      const home = previewLayerAnchor.parent;
+      if (!home.isConnected) {
+        previewLayerAnchor = null;
+        return;
+      }
+      if (previewLayerAnchor.next && previewLayerAnchor.next.parentElement === home) {
+        home.insertBefore(layer, previewLayerAnchor.next);
+      } else {
+        home.appendChild(layer);
+      }
+    } catch (_) {}
+    previewLayerAnchor = null;
+  }
 
   function closeIosPdfPopup() {
     try {
@@ -602,8 +635,23 @@ export function initIuInvoiceOverlay(deps) {
   function wire(root) {
     let previewLayoutMode = "";
 
-    function getPreviewScrollEl() {
+    function getPreviewLayerEl() {
+      const inRoot = root.querySelector("[data-inv-preview-layer]");
+      if (inRoot) return inRoot;
+      return panel.querySelector("[data-inv-preview-layer]");
+    }
+
+    function getPreviewHostEl() {
+      const layer = getPreviewLayerEl();
+      if (layer) {
+        const host = layer.querySelector("[data-inv-preview-host]");
+        if (host) return host;
+      }
       return root.querySelector(".iu-inv-previewScroll") || root.querySelector("[data-inv-preview-host]");
+    }
+
+    function getPreviewScrollEl() {
+      return getPreviewHostEl();
     }
 
     function getPreviewAvailWidth() {
@@ -1056,7 +1104,7 @@ export function initIuInvoiceOverlay(deps) {
     }
 
     function syncInvoicePreviewLayout() {
-      const host = root.querySelector("[data-inv-preview-host]");
+      const host = getPreviewHostEl();
       if (!host) return;
       const paper = host.querySelector(".iu-invoice-paper");
       if (!paper) return;
@@ -1082,12 +1130,18 @@ export function initIuInvoiceOverlay(deps) {
       const v = validateForm(state);
       if (!v.ok) {
         setStatus(root, v.errors.join(" · "));
+        const stEl = root.querySelector("[data-inv-status]");
+        if (stEl) {
+          try {
+            stEl.scrollIntoView({ block: "center", behavior: "smooth" });
+          } catch (_) {}
+        }
         return;
       }
       resetPreparedShareUi();
       const totals = computeTotals(state);
-      const host = root.querySelector("[data-inv-preview-host]");
-      const layer = root.querySelector("[data-inv-preview-layer]");
+      const layer = getPreviewLayerEl();
+      const host = getPreviewHostEl();
       if (!host || !layer) return;
       const inner = buildInvoicePaperHtml(state, totals);
       const mode = isDesktopPreviewBreakpoint() ? "desktop" : "mobile";
@@ -1095,11 +1149,18 @@ export function initIuInvoiceOverlay(deps) {
       previewLayoutMode = mode;
       layer.hidden = false;
       layer.classList.remove("iu-inv-guard-hidden");
+      attachPreviewLayerToPanel(layer);
       try {
+        document.body.classList.add("iu-invoice-preview-open");
+      } catch (_) {}
+      try {
+        scrollHost.scrollTop = 0;
         window.requestAnimationFrame(() => {
           window.requestAnimationFrame(() => {
             try {
               syncInvoicePreviewLayout();
+              scrollHost.scrollTop = 0;
+              layer.scrollIntoView({ block: "start" });
             } catch (_) {}
           });
         });
@@ -1110,17 +1171,20 @@ export function initIuInvoiceOverlay(deps) {
     }
 
     function closePreview() {
-      const layer = root.querySelector("[data-inv-preview-layer]");
+      const layer = getPreviewLayerEl();
       if (layer) {
         layer.hidden = true;
         layer.classList.add("iu-inv-guard-hidden");
       }
       previewLayoutMode = "";
+      try {
+        document.body.classList.remove("iu-invoice-preview-open");
+      } catch (_) {}
     }
 
     function repaintPreviewShellIfNeeded() {
-      const layer = root.querySelector("[data-inv-preview-layer]");
-      const host = root.querySelector("[data-inv-preview-host]");
+      const layer = getPreviewLayerEl();
+      const host = getPreviewHostEl();
       if (!layer || layer.hidden || !host || !host.querySelector(".iu-inv-pr")) return;
       const nextMode = isDesktopPreviewBreakpoint() ? "desktop" : "mobile";
       if (nextMode === previewLayoutMode) {
@@ -1291,6 +1355,19 @@ export function initIuInvoiceOverlay(deps) {
         readyPdfBundle = null;
         closeIosPdfPopup();
       } catch (_) {}
+      try {
+        const layer = panel.querySelector("[data-inv-preview-layer]") || rootEl.querySelector("[data-inv-preview-layer]");
+        if (layer) {
+          layer.hidden = true;
+          layer.classList.add("iu-inv-guard-hidden");
+          if (layer.parentElement === panel) {
+            layer.remove();
+          } else {
+            restorePreviewLayerHome(layer);
+          }
+        }
+        document.body.classList.remove("iu-invoice-preview-open");
+      } catch (_) {}
       readStateFromDom(rootEl, state);
       persistFormState(state);
     }
@@ -1320,10 +1397,13 @@ export function initIuInvoiceOverlay(deps) {
     if (e.key !== "Escape") return;
     if (panel.hasAttribute("hidden")) return;
     if (rootEl) {
-      const layer = rootEl.querySelector("[data-inv-preview-layer]");
+      const layer = panel.querySelector("[data-inv-preview-layer]") || rootEl.querySelector("[data-inv-preview-layer]");
       if (layer && !layer.hidden) {
         layer.hidden = true;
         layer.classList.add("iu-inv-guard-hidden");
+        try {
+          document.body.classList.remove("iu-invoice-preview-open");
+        } catch (_) {}
         e.preventDefault();
         return;
       }
