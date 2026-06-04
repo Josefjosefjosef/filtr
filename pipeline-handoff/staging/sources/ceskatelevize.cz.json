@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-04T16:01:59.581070Z",
+  "ingestedAt": "2026-06-04T16:46:58.206437Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události čtvrtka 4. června",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-ctvrtka-4-cervna-374234",
+      "dt": "2026-06-04T16:28:01Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "souhrn",
+        "události",
+        "zásadní",
+        "června",
+        "čtvrtka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -721,29 +743,6 @@
         "přítomnost",
         "svou",
         "vojáci"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Sněmovna navrhla vyznamenat mimo jiné Zemana",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/poslanci-budou-hlasovat-o-snemovnich-nominantech-na-statni-vyznamenani-374203",
-      "dt": "2026-06-04T03:27:17Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "jiné",
-        "mimo",
-        "navrhla",
-        "sněmovna",
-        "vyznamenat",
-        "zemana"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2247,7 +2246,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43981,
+      "bytes": 43489,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2284,7 +2283,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-04T15:26:04Z",
+        "raw_feed_latest_publishedAt": "2026-06-04T16:28:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -2302,6 +2301,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události čtvrtka 4. června",
+            "publishedAt": "2026-06-04T16:28:01Z"
+          },
           {
             "title": "Dagmar Havlová odstupuje od dohody o spolupráci na projektu Knihovny Václava Havla",
             "publishedAt": "2026-06-04T15:26:04Z"
@@ -2329,10 +2332,6 @@
           {
             "title": "Ötziho mumie obsahuje stále živé mikroorganismy",
             "publishedAt": "2026-06-04T13:21:00Z"
-          },
-          {
-            "title": "EU potvrdila fondu, že postupuje správně při obnovení nárokových dotací pro Agrofert",
-            "publishedAt": "2026-06-04T12:39:20Z"
           }
         ]
       }
