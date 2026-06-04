@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-06-04T10:47:05.338966Z",
+  "ingestedAt": "2026-06-04T11:32:02.209350Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "První supermarket v Česku. Takhle jsme nakupovali před 35 lety",
+      "url": "https://www.penize.cz/nakupy/491144-prvni-supermarket-v-cesku-takhle-jsme-nakupovali-pred-35-lety",
+      "dt": "2026-06-04T12:30:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "jsme",
+        "lety",
+        "nakupovali",
+        "první",
+        "supermarket",
+        "takhle",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -482,32 +506,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ženy investují líp než muži. Paradoxně proto, že si míň věří",
-      "url": "https://www.penize.cz/investice/490251-zeny-investuji-lip-nez-muzi-paradoxne-proto-ze-si-min-veri",
-      "dt": "2026-06-02T02:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "investují",
-        "líp",
-        "muži",
-        "míň",
-        "než",
-        "paradoxně",
-        "proto",
-        "věří",
-        "ženy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -518,7 +516,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18840,
+      "bytes": 18756,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -555,11 +553,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-04T11:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-04T12:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 1,
           "finance": 15,
+          "sport": 1,
           "zpravy": 4
         },
         "drop_counts": {
@@ -572,6 +570,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "První supermarket v Česku. Takhle jsme nakupovali před 35 lety",
+            "publishedAt": "2026-06-04T12:30:00Z"
+          },
           {
             "title": "ČSOB rozdává dresy fotbalové reprezentace. Stačí platit kartou a vyhrát",
             "publishedAt": "2026-06-04T11:30:00Z"
@@ -599,10 +601,6 @@
           {
             "title": "Panika je pryč. Akcie znovu rostou, dluhopisy se opatrně zvedají",
             "publishedAt": "2026-06-04T05:00:00Z"
-          },
-          {
-            "title": "Pojištění za stovky místo tisíců? Simplea mění pravidla hry a útočí na investiční životko",
-            "publishedAt": "2026-06-04T02:00:00Z"
           }
         ]
       }
