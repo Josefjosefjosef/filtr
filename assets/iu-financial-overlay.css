@@ -351,6 +351,69 @@
   background: rgba(220, 38, 38, 0.12);
   color: #991b1b;
 }
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-resultRow--balance{
+  align-items: flex-start;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-resultSub{
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: rgba(15, 23, 42, 0.52);
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-resultValue--balance-positive{
+  color: #166534;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-resultValue--balance-negative{
+  color: #991b1b;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-fin-budget-pieWrap{
+  margin: 12px 0 4px;
+  padding: 12px 0 0;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-fin-budget-pie{
+  width: min(220px, 100%);
+  aspect-ratio: 1;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  max-width: 100%;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-fin-budget-pieLegend{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px 12px;
+  min-width: 0;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-fin-budget-pieLegendItem{
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.35;
+  color: rgba(15, 23, 42, 0.82);
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-fin-budget-pieSwatch{
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+  margin-top: 2px;
+  border-radius: 2px;
+}
+#iuFinancialCalcPanel.iu-financial-overlay-panel .iu-fin-budget-pieLegendText{
+  min-width: 0;
+  word-break: break-word;
+}
 @media (max-width: 1023px){
   #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-overlay-panel--mobile{
     padding: 0;
