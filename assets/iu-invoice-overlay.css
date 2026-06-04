@@ -720,6 +720,8 @@
   width: 794px !important;
   max-width: 794px !important;
   min-width: 794px !important;
+  min-height: 0 !important;
+  height: auto !important;
   transform: none !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -764,7 +766,11 @@
 .iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-table{
   width: 100% !important;
   max-width: 100% !important;
-  table-layout: fixed !important;
+  table-layout: auto !important;
+}
+.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-table th:nth-child(2),
+.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-table td:nth-child(2){
+  width: 32% !important;
 }
 .iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-head{
   position: relative !important;

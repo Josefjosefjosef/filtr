@@ -24613,6 +24613,64 @@ function buildVideoAsArticleCard(it) {
     window.iuInvoicePdfExportDiag = iuInvoicePdfExportDiag;
   } catch (_) {}
 
+  function iuInvoicePdfMeasureBlockRects(rootEl) {
+    var blocks = {};
+    if (!rootEl || !rootEl.querySelector) return blocks;
+    var baseEl = rootEl.classList && rootEl.classList.contains("iu-inv-pr") ? rootEl : rootEl.querySelector(".iu-inv-pr");
+    if (!baseEl) return blocks;
+    var baseRect = baseEl.getBoundingClientRect();
+    function put(key, sel) {
+      var el = baseEl.querySelector(sel);
+      if (!el) return;
+      var r = el.getBoundingClientRect();
+      blocks[key] = {
+        x: Math.round(r.left - baseRect.left),
+        y: Math.round(r.top - baseRect.top),
+        width: Math.round(r.width),
+        height: Math.round(r.height),
+      };
+    }
+    put("header", ".iu-inv-pr-head");
+    put("supplier", ".iu-inv-pr-grid > div:first-child");
+    put("customer", ".iu-inv-pr-grid > div:last-child");
+    put("bank", ".iu-inv-pr-bank");
+    put("table", ".iu-inv-pr-table");
+    put("summary", ".iu-inv-pr-totals");
+    put("footer", ".iu-inv-pr-foot");
+    return blocks;
+  }
+
+  function iuInvoicePdfCollectCompositionMetrics(exportRoot, paperEl, pageEl, canvasScale, pdfPageW, pdfPageH, contentBox) {
+    var paperW = paperEl ? Math.round(paperEl.getBoundingClientRect().width) : 0;
+    var paperH = paperEl ? Math.round(Math.max(paperEl.scrollHeight || 0, paperEl.offsetHeight || 0)) : 0;
+    var exportH = exportRoot ? Math.round(Math.max(exportRoot.scrollHeight || 0, exportRoot.offsetHeight || 0)) : 0;
+    var scale = canvasScale || 2;
+    var contentW = contentBox && contentBox.width ? contentBox.width : paperW;
+    var contentH = contentBox && contentBox.height ? contentBox.height : paperH;
+    var effectiveScale = paperW > 0 && contentW > 0 ? Math.round((contentW / paperW) * 1000) / 1000 : 1;
+    return {
+      previewDocumentWidth: paperW,
+      previewDocumentHeight: paperH,
+      exportDocumentWidth: paperW,
+      exportDocumentHeight: exportH,
+      canvasWidth: Math.round(paperW * scale),
+      canvasHeight: Math.round(paperH * scale),
+      pdfPageWidth: pdfPageW || 0,
+      pdfPageHeight: pdfPageH || 0,
+      contentBoxWidth: contentW,
+      contentBoxHeight: contentH,
+      leftMargin: contentBox && typeof contentBox.left === "number" ? contentBox.left : 0,
+      rightMargin: contentBox && typeof contentBox.right === "number" ? contentBox.right : 0,
+      topMargin: contentBox && typeof contentBox.top === "number" ? contentBox.top : 0,
+      bottomMargin: contentBox && typeof contentBox.bottom === "number" ? contentBox.bottom : 0,
+      effectiveScale: effectiveScale,
+      html2canvasScale: scale,
+      exportBlocks: iuInvoicePdfMeasureBlockRects(pageEl),
+      fitToPageActive: effectiveScale < 0.98,
+      shrinkToFitActive: effectiveScale < 0.98,
+    };
+  }
+
   function iuInvoicePdfApplyLayoutLock(exportRoot, paperEl, pageEl) {
     var W = 794;
     try {
@@ -24620,12 +24678,16 @@ function buildVideoAsArticleCard(it) {
         exportRoot.style.setProperty("width", W + "px", "important");
         exportRoot.style.setProperty("min-width", W + "px", "important");
         exportRoot.style.setProperty("max-width", W + "px", "important");
+        exportRoot.style.setProperty("min-height", "0", "important");
+        exportRoot.style.setProperty("height", "auto", "important");
         exportRoot.style.setProperty("transform", "none", "important");
       }
       if (paperEl) {
         paperEl.style.setProperty("width", W + "px", "important");
         paperEl.style.setProperty("min-width", W + "px", "important");
         paperEl.style.setProperty("max-width", W + "px", "important");
+        paperEl.style.setProperty("min-height", "0", "important");
+        paperEl.style.setProperty("height", "auto", "important");
         paperEl.style.setProperty("margin", "0", "important");
         paperEl.style.setProperty("transform", "none", "important");
       }
@@ -24648,7 +24710,7 @@ function buildVideoAsArticleCard(it) {
       for (var ti = 0; ti < tables.length; ti++) {
         tables[ti].style.setProperty("width", "100%", "important");
         tables[ti].style.setProperty("max-width", "100%", "important");
-        tables[ti].style.setProperty("table-layout", "fixed", "important");
+        tables[ti].style.setProperty("table-layout", "auto", "important");
       }
     } catch (eLayout) {}
   }
@@ -24851,9 +24913,9 @@ function buildVideoAsArticleCard(it) {
           x: 0,
           y: 0,
           width: 794,
-          height: 1200,
+          height: 400,
           windowWidth: 794,
-          windowHeight: 1200,
+          windowHeight: 400,
           useCORS: false,
           backgroundColor: "#ffffff",
           logging: false,
@@ -25027,19 +25089,49 @@ function buildVideoAsArticleCard(it) {
             totalDueBold = dw === "bold" || dw === "bolder" || (!isNaN(dn) && dn >= 700);
           }
         } catch (eTw) {}
+        var captureH = 900;
         try {
-          var shCanvas = Math.max(paperEl.scrollHeight || 0, pageEl.scrollHeight || 0, exportRoot.scrollHeight || 0, 900);
+          captureH = Math.ceil(
+            Math.max(pageEl.scrollHeight || 0, pageEl.offsetHeight || 0, paperEl.scrollHeight || 0, paperEl.offsetHeight || 0) + 2,
+          );
           var capH = narrowExport ? 7200 : 14000;
-          var capHeight = Math.min(Math.max(shCanvas, 900), capH);
-          opts.html2canvas.windowHeight = capHeight;
-          opts.html2canvas.height = capHeight;
+          captureH = Math.min(Math.max(captureH, 200), capH);
+          opts.html2canvas.windowHeight = captureH;
+          opts.html2canvas.height = captureH;
           opts.html2canvas.width = 794;
           opts.html2canvas.windowWidth = 794;
           opts.html2canvas.scale = retryPass ? 1 : canvasScale;
+          var contentHmm = Math.ceil((captureH / 794) * 210);
+          if (contentHmm >= 80 && contentHmm <= 297) {
+            opts.jsPDF.format = [210, contentHmm];
+          } else {
+            opts.jsPDF.format = "a4";
+          }
+          try {
+            exportRoot.style.setProperty("min-height", "0", "important");
+            exportRoot.style.setProperty("height", captureH + "px", "important");
+            paperEl.style.setProperty("min-height", "0", "important");
+            paperEl.style.setProperty("height", "auto", "important");
+          } catch (eHostH) {}
         } catch (eSh) {}
+        var previewBlocks = iuInvoicePdfMeasureBlockRects(pageEl);
+        try {
+          window._iuInvoicePdfPreviewBlocks = previewBlocks;
+        } catch (_) {}
         var layoutMetrics = iuInvoicePdfCollectLayoutMetrics(exportRoot, paperEl, pageEl, opts.html2canvas.scale);
         try {
           window._iuInvoicePdfLayoutProof = layoutMetrics;
+          window._iuInvoicePdfCompositionProof = iuInvoicePdfCollectCompositionMetrics(
+            exportRoot,
+            paperEl,
+            pageEl,
+            opts.html2canvas.scale,
+            0,
+            0,
+            { width: 794, height: captureH, left: 0, top: 0, right: 0, bottom: 0 },
+          );
+          window._iuInvoicePdfCompositionProof.captureHeight = captureH;
+          window._iuInvoicePdfCompositionProof.jsPdfFormat = opts.jsPDF.format;
         } catch (eLay) {}
         var exportHostHidden = false;
         var exportHostCaptureReady = false;
@@ -25125,6 +25217,14 @@ function buildVideoAsArticleCard(it) {
                 window._iuInvoicePdfExportMeta.paperModeUsed = true;
                 window._iuInvoicePdfExportMeta.paperCaptureWidth = layoutMetrics.paperWidth;
                 window._iuInvoicePdfExportMeta.canvasWidth = layoutMetrics.canvasWidth;
+                if (window._iuInvoicePdfCompositionProof) {
+                  window._iuInvoicePdfCompositionProof.pdfPageWidth = 210;
+                  window._iuInvoicePdfCompositionProof.pdfPageHeight =
+                    typeof opts.jsPDF.format === "object" && opts.jsPDF.format[1] ? opts.jsPDF.format[1] : 297;
+                  window._iuInvoicePdfCompositionProof.fitToPageActive = false;
+                  window._iuInvoicePdfCompositionProof.shrinkToFitActive = false;
+                  window._iuInvoicePdfCompositionProof.effectiveScale = 1;
+                }
               } catch (_) {}
               try {
                 window._iuPdfLastEngine = "invoice-html2pdf-paper";
