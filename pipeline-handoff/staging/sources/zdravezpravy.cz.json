@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-06-04T13:01:59.588926Z",
+  "ingestedAt": "2026-06-04T13:47:02.854382Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Po konci financování z EU zůstane NCEZ pod MZd ČR. Část půjde do Ostravy",
+      "url": "https://www.zdravezpravy.cz/2026/06/04/po-konci-financovani-z-eu-zustane-ncez-pod-mzd-cr-cast-pujde-do-ostravy/",
+      "dt": "2026-06-04T12:48:13Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "financování",
+        "konci",
+        "mzd",
+        "ncez",
+        "ostravy",
+        "půjde",
+        "zůstane",
+        "část"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -472,32 +497,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ani při čtvrté volbě do vedení VZP ČR Válek neuspěl, zkusí to znovu",
-      "url": "https://www.zdravezpravy.cz/2026/05/28/ani-pri-ctvrte-volbe-do-vedeni-vzp-cr-valek-neuspel-zkusi-to-znovu/",
-      "dt": "2026-05-28T05:59:00Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "neuspěl",
-        "při",
-        "vedení",
-        "volbě",
-        "vzp",
-        "válek",
-        "zkusí",
-        "znovu",
-        "čtvrté"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -508,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 206140,
+      "bytes": 207135,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -545,7 +544,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-04T08:30:37Z",
+        "raw_feed_latest_publishedAt": "2026-06-04T12:48:13Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -560,6 +559,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Po konci financování z EU zůstane NCEZ pod MZd ČR. Část půjde do Ostravy",
+            "publishedAt": "2026-06-04T12:48:13Z"
+          },
           {
             "title": "Na boj s ebolou v Kongu potřebuje WHO 115 mil. USD",
             "publishedAt": "2026-06-04T08:30:37Z"
@@ -587,10 +590,6 @@
           {
             "title": "Do stávky adiktologů se zapojilo 40 center. Jiná se ale i distancovala",
             "publishedAt": "2026-06-02T07:28:40Z"
-          },
-          {
-            "title": "Ti, kdo nosí tepláky jinam než do tělocvičny, jsou ti, kteří už vše vzdali!",
-            "publishedAt": "2026-06-02T04:20:16Z"
           }
         ]
       }
