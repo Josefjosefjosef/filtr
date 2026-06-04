@@ -535,7 +535,7 @@ const IU_FIN_CALC_REGISTRY = [
         <p class="iu-financial-overlay-desc">${esc(this.description)}</p>
         <div class="iu-financial-overlay-info">${esc(DISCLAIMER_RPSN)}</div>
         <div class="iu-financial-overlay-form">
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Zbývající jistina (Kč)</span>
+          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Zbývá doplatit (Kč)</span>
             <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="principal" autocomplete="off" /></label>
           <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Současná úroková sazba p.a. (%)</span>
             <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="currentRatePercent" autocomplete="off" /></label>
@@ -543,8 +543,6 @@ const IU_FIN_CALC_REGISTRY = [
             <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="newRatePercent" autocomplete="off" /></label>
           <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Zbývající doba splatnosti (roky)</span>
             <input type="text" inputmode="numeric" class="iu-financial-overlay-input" data-iu-fin-f="years" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Jednorázové poplatky refinancování (Kč)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="fee" autocomplete="off" /></label>
         </div>`;
     },
     readValues(root) {
