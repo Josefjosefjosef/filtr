@@ -9,6 +9,11 @@ import path from "path";
 import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
+import {
+  installProofGuardNetworkStubs,
+  createIgnorableResourceTracker,
+  isIgnorableGuardConsoleError,
+} from "./proofs/open_meteo_guard_stub.cjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -370,13 +375,29 @@ async function main() {
   const consoleErrors = [];
   const appErrors = [];
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const context = await browser.newContext({
+    viewport: { width: 1440, height: 900 },
+    serviceWorkers: "block",
+  });
   await installClsObserver(context);
   const page = await context.newPage();
+  await installProofGuardNetworkStubs(page);
+  const ignorableTracker = createIgnorableResourceTracker();
+  ignorableTracker.attachToPage(page);
+  const ignorableOpts = {
+    hadRecentIgnorableFailure: () => ignorableTracker.hadRecentIgnorableFailure(),
+  };
   page.on("console", (msg) => {
-    if (msg.type() === "error") consoleErrors.push(String(msg.text()));
+    if (msg.type() !== "error") return;
+    const t = String(msg.text());
+    if (isIgnorableGuardConsoleError(t, ignorableOpts)) return;
+    consoleErrors.push(t);
   });
-  page.on("pageerror", () => appErrors.push("pageerror"));
+  page.on("pageerror", (err) => {
+    const t = String(err && err.message ? err.message : err);
+    if (isIgnorableGuardConsoleError(t, ignorableOpts)) return;
+    appErrors.push("pageerror");
+  });
 
   const fails = [];
   try {
