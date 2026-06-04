@@ -588,7 +588,7 @@ const IU_FIN_CALC_REGISTRY = [
             <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="rent" autocomplete="off" /></label>
           <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Cena nemovitosti / úvěru (Kč)</span>
             <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="propertyPrice" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Akontace / vlastní zdroje (Kč)</span>
+          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Vlastní zdroje (Kč)</span>
             <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="downPayment" autocomplete="off" /></label>
           <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Úrok hypotéky p.a. (%)</span>
             <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="mortgageRatePercent" autocomplete="off" /></label>
