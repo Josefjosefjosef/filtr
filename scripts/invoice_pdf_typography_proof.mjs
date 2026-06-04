@@ -178,7 +178,7 @@ async function run() {
     PDF_CHAR_SPACING: Number(p.PDF_CHAR_SPACING) === 0,
     PDF_FONT_ENGINE: String(p.PDF_FONT_ENGINE || "").indexOf("noto-utf8") === 0,
     PDF_FONT_LOAD_OK: p.PDF_FONT_LOAD_OK === true,
-    ITEM_COL_WIDTH_GE_95: Number(p.ITEM_DESCRIPTION_WIDTH_MM) >= 95,
+    ITEM_COL_WIDTH_GE_85: Number(p.ITEM_DESCRIPTION_WIDTH_MM) >= 85,
   };
 
   let score = 0;
