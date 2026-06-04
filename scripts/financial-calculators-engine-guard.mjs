@@ -10,7 +10,6 @@ import {
   computeDiscount,
   computeDps,
   computeFinancialCalculator,
-  computeIncomeLossSick,
   computeInflation,
   computeInvestmentGoal,
   computeInvestmentGrowth,
@@ -247,12 +246,7 @@ const dps = computeDps({
 });
 assert.equal(dps.ok, true);
 
-const sick = computeIncomeLossSick({
-  netIncome: "40000",
-  replacementPercent: "60",
-  monthsOut: "2",
-});
-assert.equal(sick.ok, true);
+assert.equal(computeFinancialCalculator("income-loss-sick", { netIncome: "40000" }).ok, false);
 
 assert.equal(computeFinancialCalculator("affordability", { netIncome: "50000", otherDebts: "0", children: "0", annualRatePercent: "4", years: "20" }).ok, true);
 assert.equal(computeFinancialCalculator("investment-growth", { initial: "0", monthly: "100", annualReturnPercent: "0", years: "3", capitalization: "monthly" }).ok, true);

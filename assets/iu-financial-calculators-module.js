@@ -9,13 +9,10 @@ import {
   computeDip,
   computeDiscount,
   computeDps,
-  computeDisabilityIncome,
   computeFinancialCalculator,
-  computeIncomeLossSick,
   computeInflation,
   computeInvestmentGoal,
   computeInvestmentGrowth,
-  computeLifeCoverage,
   computeLoan,
   computeMortgage,
   computeRefinance,
@@ -117,6 +114,17 @@ const DISCLAIMER_INFLATION =
 
 /** Data-only CTA cíl — rozšíří se později přes window.__iuFinCtaRoutes nebo event iu-fin-cta. */
 const IU_FIN_CTA_DELEGATE = Object.freeze({ kind: "delegate" });
+
+const IU_FIN_INFO_SICK =
+  "Pracovní neschopnost a její finanční dopady závisí na mnoha individuálních faktorech. Výši případného výpadku příjmu ovlivňuje například výše příjmů, zaměstnání, podnikání, finanční rezervy, závazky nebo stávající pojištění. Proto nelze doporučené řešení spolehlivě určit pomocí jednoduchého výpočtu.";
+const IU_FIN_INFO_DISABILITY =
+  "Zajištění pro případ invalidity nebo dlouhodobého výpadku příjmu je individuální záležitost. Správné nastavení závisí na životní situaci, rodině, závazcích, příjmech i dalších okolnostech. Z tohoto důvodu zde nenabízíme zjednodušený výpočet, který by mohl vést k nepřesným závěrům.";
+const IU_FIN_INFO_LIFE =
+  "Potřebná výše životního krytí se u každého člověka výrazně liší. Záleží například na rodinné situaci, počtu vyživovaných osob, příjmech domácnosti, hypotékách, úvěrech, majetku i dlouhodobých finančních cílech. Proto není možné stanovit doporučené krytí jedním univerzálním výpočtem.";
+
+function buildFinInfoOnlyCard(root, text) {
+  root.innerHTML = `<div class="iu-financial-overlay-infoCard" data-iu-fin-info-card="1"><p class="iu-financial-overlay-infoCardText">${esc(text)}</p></div>`;
+}
 
 /** Registry: id, title, description, accentClass, disclaimers[], build(root, api), readValues(root), defaults */
 const IU_FIN_CALC_REGISTRY = [
@@ -856,35 +864,11 @@ const IU_FIN_CALC_REGISTRY = [
     category: "protection",
     pillar: "protection",
     enabled: true,
-    ctaMode: "contact",
-    ctaLabel: "Řešit ochranu příjmu",
-    ctaTarget: IU_FIN_CTA_DELEGATE,
-    ctaServiceKey: "income-loss",
-    resultSummaryMode: "default",
+    infoOnly: true,
     accentClass: "iu-financial-accent--sick",
-    disclaimers: [DISCLAIMER_SHORT],
-    defaults: { netIncome: "42000", replacementPercent: "60", monthsOut: "3" },
     build(root) {
-      root.innerHTML = `
-        <p class="iu-financial-overlay-desc">${esc(this.description)}</p>
-        <div class="iu-financial-overlay-form">
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Čistý měsíční příjem (Kč)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="netIncome" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Odhad náhrady příjmu (% mzdy)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="replacementPercent" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Doba výpadku (měsíce)</span>
-            <input type="text" inputmode="numeric" class="iu-financial-overlay-input" data-iu-fin-f="monthsOut" autocomplete="off" /></label>
-        </div>`;
+      buildFinInfoOnlyCard(root, IU_FIN_INFO_SICK);
     },
-    readValues(root) {
-      const g = (k) => (root.querySelector(`[data-iu-fin-f="${k}"]`) || {}).value;
-      return {
-        netIncome: g("netIncome"),
-        replacementPercent: g("replacementPercent"),
-        monthsOut: g("monthsOut"),
-      };
-    },
-    compute: computeIncomeLossSick,
   },
   {
     id: "disability-income",
@@ -893,47 +877,11 @@ const IU_FIN_CALC_REGISTRY = [
     category: "protection",
     pillar: "protection",
     enabled: true,
-    ctaMode: "contact",
-    ctaLabel: "Řešit zajištění",
-    ctaTarget: IU_FIN_CTA_DELEGATE,
-    ctaServiceKey: "disability-income",
-    resultSummaryMode: "default",
+    infoOnly: true,
     accentClass: "iu-financial-accent--disability",
-    disclaimers: [DISCLAIMER_SHORT],
-    defaults: {
-      netIncome: "40000",
-      stateSupport: "12000",
-      familyExpenses: "28000",
-      monthsOut: "12",
-      incomeReplacementPercent: "30",
-    },
     build(root) {
-      root.innerHTML = `
-        <p class="iu-financial-overlay-desc">${esc(this.description)}</p>
-        <div class="iu-financial-overlay-form">
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Čistý měsíční příjem před výpadkem (Kč)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="netIncome" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Orientační měsíční státní podpora (Kč)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="stateSupport" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Základní měsíční výdaje domácnosti (Kč)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="familyExpenses" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Délka výpadku (měsíce)</span>
-            <input type="text" inputmode="numeric" class="iu-financial-overlay-input" data-iu-fin-f="monthsOut" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Odhad náhrady z příjmu / jiných zdrojů (%)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="incomeReplacementPercent" autocomplete="off" /></label>
-        </div>`;
+      buildFinInfoOnlyCard(root, IU_FIN_INFO_DISABILITY);
     },
-    readValues(root) {
-      const g = (k) => (root.querySelector(`[data-iu-fin-f="${k}"]`) || {}).value;
-      return {
-        netIncome: g("netIncome"),
-        stateSupport: g("stateSupport"),
-        familyExpenses: g("familyExpenses"),
-        monthsOut: g("monthsOut"),
-        incomeReplacementPercent: g("incomeReplacementPercent"),
-      };
-    },
-    compute: computeDisabilityIncome,
   },
   {
     id: "life-coverage",
@@ -942,51 +890,11 @@ const IU_FIN_CALC_REGISTRY = [
     category: "protection",
     pillar: "protection",
     enabled: true,
-    ctaMode: "contact",
-    ctaLabel: "Spočítat krytí na míru",
-    ctaTarget: IU_FIN_CTA_DELEGATE,
-    ctaServiceKey: "life-coverage",
-    resultSummaryMode: "default",
+    infoOnly: true,
     accentClass: "iu-financial-accent--life",
-    disclaimers: [DISCLAIMER_SHORT],
-    defaults: {
-      netIncome: "45000",
-      liabilities: "1500000",
-      children: "2",
-      reserve: "150000",
-      annualExpenses: "480000",
-      incomeReplaceYears: "8",
-    },
     build(root) {
-      root.innerHTML = `
-        <p class="iu-financial-overlay-desc">${esc(this.description)}</p>
-        <div class="iu-financial-overlay-form">
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Čistý měsíční příjem (Kč)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="netIncome" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Splátky a závazky (Kč, součet)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="liabilities" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Počet vyživovaných dětí</span>
-            <input type="text" inputmode="numeric" class="iu-financial-overlay-input" data-iu-fin-f="children" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Cílová finanční rezerva (Kč)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="reserve" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Roční výdaje domácnosti (Kč)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="annualExpenses" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Horizont náhrady příjmu (roky, model)</span>
-            <input type="text" inputmode="numeric" class="iu-financial-overlay-input" data-iu-fin-f="incomeReplaceYears" autocomplete="off" /></label>
-        </div>`;
+      buildFinInfoOnlyCard(root, IU_FIN_INFO_LIFE);
     },
-    readValues(root) {
-      const g = (k) => (root.querySelector(`[data-iu-fin-f="${k}"]`) || {}).value;
-      return {
-        netIncome: g("netIncome"),
-        liabilities: g("liabilities"),
-        children: g("children"),
-        reserve: g("reserve"),
-        annualExpenses: g("annualExpenses"),
-        incomeReplaceYears: g("incomeReplaceYears"),
-      };
-    },
-    compute: computeLifeCoverage,
   },
 ];
 
@@ -1291,30 +1199,41 @@ export function initIuFinancialCalculatorsOverlay(deps) {
     panel.classList.add("iu-financial-overlay-panel--detail");
     panel.classList.remove("iu-financial-overlay-panel--hub");
     /** Detail wrapper: no iu-financial-accent--* — left strip is hub-card-only (see iu-financial-overlay.css). */
-    views.innerHTML = `<div class="iu-financial-overlay-detail iu-fin-calc-detail" data-iu-fin-calc-detail="1">
+    if (def.infoOnly) {
+      views.innerHTML = `<div class="iu-financial-overlay-detail iu-fin-calc-detail iu-fin-calc-detail--infoOnly" data-iu-fin-calc-detail="1">
+      <div class="iu-financial-overlay-detailInner" data-iu-fin-active="${esc(id)}"></div>
+    </div>`;
+      const inner = views.querySelector(".iu-financial-overlay-detailInner");
+      def.build(inner);
+      try {
+        inner.__iuFinLastResult = { id: def.id, values: {}, result: { ok: true, infoOnly: true } };
+      } catch (_) {}
+    } else {
+      views.innerHTML = `<div class="iu-financial-overlay-detail iu-fin-calc-detail" data-iu-fin-calc-detail="1">
       <div class="iu-financial-overlay-detailInner" data-iu-fin-active="${esc(id)}"></div>
       <div class="iu-financial-overlay-actions">
         <button type="button" class="iu-financial-overlay-reset" data-iu-fin-reset>Reset</button>
       </div>
       <div class="iu-financial-overlay-resultsHost" data-iu-fin-results></div>
     </div>`;
-    const inner = views.querySelector(".iu-financial-overlay-detailInner");
-    const resultsHost = views.querySelector("[data-iu-fin-results]");
-    def.build(inner);
-    applyDefaults(def, inner);
-    if (preset && typeof preset === "object") {
-      Object.keys(preset).forEach((k) => {
-        const inp = inner.querySelector(`[data-iu-fin-f="${k}"]`);
-        if (inp) inp.value = preset[k] != null ? String(preset[k]) : "";
-      });
-    }
-    const runFn = wireCalculator(def, inner, resultsHost);
-    const resetBtn = views.querySelector("[data-iu-fin-reset]");
-    if (resetBtn) {
-      resetBtn.addEventListener("click", () => {
-        applyDefaults(def, inner);
-        if (typeof runFn === "function") runFn();
-      });
+      const inner = views.querySelector(".iu-financial-overlay-detailInner");
+      const resultsHost = views.querySelector("[data-iu-fin-results]");
+      def.build(inner);
+      applyDefaults(def, inner);
+      if (preset && typeof preset === "object") {
+        Object.keys(preset).forEach((k) => {
+          const inp = inner.querySelector(`[data-iu-fin-f="${k}"]`);
+          if (inp) inp.value = preset[k] != null ? String(preset[k]) : "";
+        });
+      }
+      const runFn = wireCalculator(def, inner, resultsHost);
+      const resetBtn = views.querySelector("[data-iu-fin-reset]");
+      if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+          applyDefaults(def, inner);
+          if (typeof runFn === "function") runFn();
+        });
+      }
     }
     try {
       scrollHost.scrollTop = 0;
