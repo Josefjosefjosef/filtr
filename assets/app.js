@@ -24798,10 +24798,42 @@ function buildVideoAsArticleCard(it) {
       summaryWidth: 0,
     };
     try {
-      var panel = document.getElementById("iuInvoicePanel");
-      var previewPaper = panel && panel.querySelector(".iu-invoice-paper");
+      var portalEl = document.getElementById("iuInvoicePreviewPortal");
+      var previewPaper =
+        portalEl && !portalEl.hidden
+          ? portalEl.querySelector(".iu-invoice-paper")
+          : null;
+      if (!previewPaper) {
+        var panel = document.getElementById("iuInvoicePanel");
+        previewPaper = panel && panel.querySelector(".iu-invoice-paper");
+      }
       if (previewPaper) {
         out.previewWidth = Math.round(previewPaper.getBoundingClientRect().width);
+        var prCs = window.getComputedStyle(previewPaper);
+        out.PDF_LEFT_MARGIN = Math.round(parseFloat(prCs.paddingLeft) || 0);
+        out.PDF_RIGHT_MARGIN = Math.round(parseFloat(prCs.paddingRight) || 0);
+        out.PDF_TOP_MARGIN = Math.round(parseFloat(prCs.paddingTop) || 0);
+        out.PDF_BOTTOM_MARGIN = Math.round(parseFloat(prCs.paddingBottom) || 0);
+        var descCell = previewPaper.querySelector(".iu-inv-pr-desc");
+        if (descCell) {
+          var descCs = window.getComputedStyle(descCell);
+          out.PDF_ITEM_DESCRIPTION_FONT_SIZE = descCs.fontSize || "";
+        }
+        var lineCell = previewPaper.querySelector(".iu-inv-pr-table tbody td");
+        if (lineCell) {
+          out.PDF_ITEM_FONT_SIZE = window.getComputedStyle(lineCell).fontSize || "";
+        }
+        var lineTable = previewPaper.querySelector(".iu-inv-pr-table");
+        if (lineTable) {
+          var ths = lineTable.querySelectorAll("th");
+          var colW = [];
+          for (var cwi = 0; cwi < ths.length; cwi++) {
+            colW.push(Math.round(ths[cwi].getBoundingClientRect().width));
+          }
+          out.PDF_TABLE_COLUMN_WIDTHS = colW.join(",");
+          var firstRow = lineTable.querySelector("tbody tr");
+          if (firstRow) out.PDF_TABLE_ROW_HEIGHT = Math.round(firstRow.getBoundingClientRect().height);
+        }
       }
     } catch (ePrev) {}
     try {
@@ -25180,9 +25212,16 @@ function buildVideoAsArticleCard(it) {
         var previewBlocks = iuInvoicePdfMeasureBlockRects(pageEl);
         try {
           window._iuInvoicePdfPreviewBlocks = previewBlocks;
-          var panel = document.getElementById("iuInvoicePanel");
+          var portal = document.getElementById("iuInvoicePreviewPortal");
           var previewPage =
-            panel && panel.querySelector("[data-inv-preview-layer]:not([hidden]) .iu-inv-pr");
+            portal && !portal.hidden
+              ? portal.querySelector(".iu-inv-pr")
+              : null;
+          if (!previewPage) {
+            var panel = document.getElementById("iuInvoicePanel");
+            previewPage =
+              panel && panel.querySelector("[data-inv-preview-layer]:not([hidden]) .iu-inv-pr");
+          }
           window._iuInvoicePdfDomParity = {
             preview: iuInvoicePdfCollectDomSnapshot(previewPage),
             capture: iuInvoicePdfCollectDomSnapshot(pageEl),
@@ -25194,7 +25233,11 @@ function buildVideoAsArticleCard(it) {
         } catch (_) {}
         var layoutMetrics = iuInvoicePdfCollectLayoutMetrics(exportRoot, paperEl, pageEl, opts.html2canvas.scale);
         try {
+          layoutMetrics.PDF_PAGE_WIDTH = layoutMetrics.pageWidth || 794;
+          layoutMetrics.PDF_PAGE_HEIGHT = captureH;
+          layoutMetrics.PDF_CONTENT_SCALE = opts.html2canvas.scale;
           window._iuInvoicePdfLayoutProof = layoutMetrics;
+          window._iuInvoicePdfLayoutDiag = layoutMetrics;
           window._iuInvoicePdfCompositionProof = iuInvoicePdfCollectCompositionMetrics(
             exportRoot,
             paperEl,
