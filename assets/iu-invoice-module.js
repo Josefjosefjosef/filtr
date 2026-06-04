@@ -769,6 +769,34 @@ export function initIuInvoiceOverlay(deps) {
       }
     }
 
+    function invoicePdfDiag(step, detail, err) {
+      try {
+        if (typeof window.iuInvoicePdfExportDiag === "function") {
+          window.iuInvoicePdfExportDiag(step, detail, err);
+        }
+      } catch (_) {}
+    }
+
+    function isIosDevice() {
+      try {
+        const ua = String((typeof navigator !== "undefined" && navigator.userAgent) || "");
+        return /iPad|iPhone|iPod/i.test(ua);
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function pdfExportFailStatus(err) {
+      const d =
+        typeof window !== "undefined" && window._iuInvoicePdfExportDiag && window._iuInvoicePdfExportDiag.step
+          ? String(window._iuInvoicePdfExportDiag.step)
+          : "";
+      const msg = err && err.message ? String(err.message) : "";
+      if (d) return "PDF se nepodařilo vygenerovat (" + d + ").";
+      if (msg) return "PDF se nepodařilo vygenerovat (" + msg + ").";
+      return "PDF se nepodařilo vygenerovat.";
+    }
+
     function exportInvoicePdfBlob(cb) {
       readStateFromDom(root, state);
       const v = validateForm(state);
@@ -794,9 +822,11 @@ export function initIuInvoiceOverlay(deps) {
         window._iuInvoiceExportMode = "pdf_only";
         window._iuInvoiceWordPdfStackUsed = true;
       } catch (_) {}
+      invoicePdfDiag("invoice_pdf_export_start", { via: "invoice_module" });
       fn(html, fileName, (err, out) => {
         if (err || !out || !out.blob) {
-          setStatus(root, "PDF se nepodařilo vygenerovat.");
+          invoicePdfDiag("invoice_pdf_error", { via: "invoice_module_callback" }, err || new Error("pdf"));
+          setStatus(root, pdfExportFailStatus(err));
           cb(err || new Error("pdf"));
           return;
         }
@@ -809,18 +839,34 @@ export function initIuInvoiceOverlay(deps) {
     }
 
     function runPdfDownloadFallback(blob, name) {
+      invoicePdfDiag("invoice_pdf_download_start", { ios: isIosDevice() });
       try {
         const url = URL.createObjectURL(blob);
+        const safeName = name || "faktura.pdf";
+        if (isIosDevice()) {
+          const opened = window.open(url, "_blank");
+          if (!opened) {
+            window.location.href = url;
+          }
+          window.setTimeout(() => {
+            try {
+              URL.revokeObjectURL(url);
+            } catch (_) {}
+          }, 60000);
+          setStatus(root, "PDF otevřeno — uložte přes ikonu sdílení v prohlížeči.");
+          return;
+        }
         const a = document.createElement("a");
         a.href = url;
-        a.download = name;
+        a.download = safeName;
         a.rel = "noopener";
         document.body.appendChild(a);
         a.click();
         a.remove();
         window.setTimeout(() => URL.revokeObjectURL(url), 2000);
-      } catch (_) {
-        setStatus(root, "Stažení PDF se nezdařilo.");
+      } catch (eDl) {
+        invoicePdfDiag("invoice_pdf_error", { phase: "download" }, eDl);
+        setStatus(root, "Stažení PDF se nezdařilo — zkuste Sdílet PDF.");
       }
     }
 
@@ -841,7 +887,7 @@ export function initIuInvoiceOverlay(deps) {
       setStatus(root, "Připravuji PDF…");
       exportInvoicePdfBlob((err, blob, fileName) => {
         if (err || !blob) {
-          setStatus(root, "PDF se nepodařilo vygenerovat.");
+          setStatus(root, pdfExportFailStatus(err));
           return;
         }
         const name = fileName || "faktura.pdf";
@@ -850,13 +896,13 @@ export function initIuInvoiceOverlay(deps) {
         const canShareFn = nav && typeof nav.canShare === "function" ? nav.canShare.bind(nav) : null;
         const file = new File([blob], name, { type: "application/pdf" });
         const canShareFiles = !!(shareFn && canShareFn && canShareFn({ files: [file] }));
+        invoicePdfDiag("invoice_pdf_share_start", { canShareFiles: canShareFiles });
         if (shareFn && canShareFiles) {
           preparedPdfBundle = { blob, fileName: name };
           setStatus(root, "PDF připravené. Klepněte znovu na „Sdílet PDF“.");
           return;
         }
         runPdfDownloadFallback(blob, name);
-        setStatus(root, "PDF staženo.");
       });
     }
 
@@ -872,10 +918,10 @@ export function initIuInvoiceOverlay(deps) {
       const shareFn = nav && typeof nav.share === "function" ? nav.share : null;
       const canShareFn = nav && typeof nav.canShare === "function" ? nav.canShare.bind(nav) : null;
       const canShareFiles = !!(shareFn && canShareFn && canShareFn({ files: [file] }));
+      invoicePdfDiag("invoice_pdf_share_start", { prepared: true });
       if (!shareFn || !canShareFiles) {
         runPdfDownloadFallback(prep.blob, name);
         resetPreparedShareUi();
-        setStatus(root, "PDF staženo.");
         return;
       }
       try {
@@ -887,7 +933,8 @@ export function initIuInvoiceOverlay(deps) {
           setStatus(root, "Sdílení zrušeno.");
           return;
         }
-        setStatus(root, "Sdílení PDF se nezdařilo.");
+        invoicePdfDiag("invoice_pdf_error", { phase: "share" }, e);
+        runPdfDownloadFallback(prep.blob, name);
         return;
       }
       resetPreparedShareUi();
@@ -919,13 +966,17 @@ export function initIuInvoiceOverlay(deps) {
         return;
       }
       exportInvoicePdfBlob(async (err, blob, fileName) => {
-        if (err || !blob) return;
+        if (err || !blob) {
+          if (err) setStatus(root, pdfExportFailStatus(err));
+          return;
+        }
         const name = fileName || "faktura.pdf";
         const file = new File([blob], name, { type: "application/pdf" });
         const nav = typeof navigator !== "undefined" ? navigator : null;
         const shareFn = nav && typeof nav.share === "function" ? nav.share : null;
         const canShareFn = nav && typeof nav.canShare === "function" ? nav.canShare.bind(nav) : null;
         const canShareFiles = !!(shareFn && canShareFn && canShareFn({ files: [file] }));
+        invoicePdfDiag("invoice_pdf_share_start", { canShareFiles: canShareFiles });
         if (shareFn && canShareFiles) {
           try {
             await shareFn.call(nav, { files: [file], title: "Faktura" });
@@ -937,12 +988,12 @@ export function initIuInvoiceOverlay(deps) {
               setStatus(root, "Sdílení zrušeno.");
               return;
             }
-            setStatus(root, "Sdílení PDF se nezdařilo.");
+            invoicePdfDiag("invoice_pdf_error", { phase: "share" }, e);
+            runPdfDownloadFallback(blob, name);
             return;
           }
         }
         runPdfDownloadFallback(blob, name);
-        setStatus(root, "PDF staženo.");
       });
     }
 

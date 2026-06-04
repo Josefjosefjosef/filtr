@@ -24538,7 +24538,83 @@ function buildVideoAsArticleCard(it) {
   }
 
   /** Stejný html2pdf stack jako Word → PDF (po převodu na HTML) — pro fakturační modul bez otevírání quick feedu. */
+  function iuInvoicePdfExportDiag(step, detail, err) {
+    try {
+      var nav = typeof navigator !== "undefined" ? navigator : null;
+      var entry = {
+        t: Date.now(),
+        step: String(step || ""),
+        detail: detail && typeof detail === "object" ? detail : {},
+        errorName: err && err.name ? String(err.name) : "",
+        errorMessage: err && err.message ? String(err.message) : err ? String(err) : "",
+        userAgent: nav ? String(nav.userAgent || "").slice(0, 160) : "",
+      };
+      if (!window._iuInvoicePdfExportDiagLog) window._iuInvoicePdfExportDiagLog = [];
+      window._iuInvoicePdfExportDiagLog.push(entry);
+      if (window._iuInvoicePdfExportDiagLog.length > 40) window._iuInvoicePdfExportDiagLog.shift();
+      window._iuInvoicePdfExportDiag = entry;
+    } catch (eDiag) {}
+  }
+  function iuInvoicePdfIsNarrowViewport() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(max-width: 1024px)").matches);
+    } catch (eNv) {
+      return false;
+    }
+  }
+  function iuInvoicePdfIsIOSDevice() {
+    try {
+      var ua = String((navigator && navigator.userAgent) || "");
+      return /iPad|iPhone|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    } catch (eIos) {
+      return false;
+    }
+  }
+  function iuInvoicePdfNormalizeBlob(blob, cb) {
+    if (!blob || typeof blob.size !== "number" || blob.size < 1500) {
+      if (typeof cb === "function") cb(null);
+      return;
+    }
+    if (blob.type === "application/pdf") {
+      if (typeof cb === "function") cb(blob);
+      return;
+    }
+    try {
+      var slice = blob.slice ? blob.slice(0, 8) : blob;
+      var reader = slice.arrayBuffer ? slice.arrayBuffer() : Promise.reject(new Error("no_array_buffer"));
+      Promise.resolve(reader)
+        .then(function (ab) {
+          var u = new Uint8Array(ab);
+          var magic = u.length >= 4 && u[0] === 37 && u[1] === 80 && u[2] === 68 && u[3] === 70;
+          if (!magic) {
+            if (typeof cb === "function") cb(null);
+            return;
+          }
+          if (blob.type === "application/pdf") {
+            if (typeof cb === "function") cb(blob);
+          } else {
+            try {
+              if (typeof cb === "function") cb(new Blob([blob], { type: "application/pdf" }));
+            } catch (eWrap) {
+              if (typeof cb === "function") cb(blob);
+            }
+          }
+        })
+        .catch(function () {
+          if (blob.type === "" || blob.type === "application/octet-stream") {
+            if (typeof cb === "function") cb(blob);
+          } else if (typeof cb === "function") cb(null);
+        });
+    } catch (eNorm) {
+      if (typeof cb === "function") cb(null);
+    }
+  }
+  try {
+    window.iuInvoicePdfExportDiag = iuInvoicePdfExportDiag;
+  } catch (_) {}
+
   function iuPdfExportHtmlStringToBlobForInvoice(htmlString, fileName, done) {
+    iuInvoicePdfExportDiag("invoice_pdf_export_start", { narrow: iuInvoicePdfIsNarrowViewport(), ios: iuInvoicePdfIsIOSDevice() });
     var vendorBase = "/assets/vendor";
     function loadScript(src, cb) {
       var s = document.createElement("script");
@@ -24564,23 +24640,31 @@ function buildVideoAsArticleCard(it) {
     }
     var html = String(htmlString || "");
     if (!html.trim()) {
+      iuInvoicePdfExportDiag("invoice_pdf_error", { phase: "empty_html" }, new Error("empty html"));
       if (typeof done === "function") done(new Error("empty html"));
       return;
     }
     if (!/<table[\s>]/i.test(html) || !/<[a-z]/i.test(html)) {
+      iuInvoicePdfExportDiag("invoice_pdf_error", { phase: "plain_text_only" }, new Error("invoice_pdf_plain_text_only"));
       if (typeof done === "function") done(new Error("invoice_pdf_plain_text_only"));
       return;
     }
+    iuInvoicePdfExportDiag("invoice_pdf_html_ready", { htmlLen: html.length });
     loadHtml2Pdf(function (e0) {
       if (e0 || typeof window.html2pdf === "undefined") {
+        iuInvoicePdfExportDiag("invoice_pdf_error", { phase: "html2pdf_load" }, e0 || new Error("html2pdf"));
         if (typeof done === "function") done(e0 || new Error("html2pdf"));
         return;
       }
       var exportRoot = document.createElement("div");
       exportRoot.setAttribute("data-iu", "pdf-invoice-export-root");
-      exportRoot.className = "iu-pdf-render-mode";
+      exportRoot.className = "iu-pdf-render-mode iu-pdf-render-mode--export";
       exportRoot.innerHTML = html;
       document.body.appendChild(exportRoot);
+      iuInvoicePdfExportDiag("invoice_pdf_host_attached", {
+        narrow: iuInvoicePdfIsNarrowViewport(),
+        innerWidth: typeof window.innerWidth === "number" ? window.innerWidth : 0,
+      });
       try {
         window._iuInvoicePdfExportMeta = {
           renderSource: "paper_css_mode",
@@ -24591,49 +24675,65 @@ function buildVideoAsArticleCard(it) {
           paperModeUsed: true,
         };
       } catch (eMeta) {}
+      var narrowExport = iuInvoicePdfIsNarrowViewport();
+      var canvasScale = narrowExport || iuInvoicePdfIsIOSDevice() ? 1 : 2;
       var opts = {
         filename: fileName || "faktura.pdf",
         margin: [10, 10, 10, 10],
-        image: { type: "jpeg", quality: 0.98 },
+        image: { type: "jpeg", quality: narrowExport ? 0.92 : 0.98 },
         html2canvas: {
-          scale: 2,
+          scale: canvasScale,
           scrollX: 0,
           scrollY: 0,
           x: 0,
           y: 0,
           width: 794,
-          windowWidth: 1000,
-          windowHeight: Math.max(exportRoot.scrollHeight || 0, 1400),
+          windowWidth: 794,
+          windowHeight: Math.min(Math.max(exportRoot.scrollHeight || 0, 900), narrowExport ? 7200 : 14000),
           useCORS: false,
           backgroundColor: "#ffffff",
+          logging: false,
         },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
         pagebreak: { mode: ["css", "legacy"] },
       };
-      function runHtml2Pdf() {
+      function runHtml2Pdf(retryPass) {
+        iuInvoicePdfExportDiag("invoice_pdf_html2pdf_start", { scale: canvasScale, retry: !!retryPass });
         var paperHostExists = !!exportRoot && exportRoot.classList.contains("iu-pdf-render-mode");
         var pageEl = exportRoot.querySelector(".iu-inv-pr");
         var paperRootExists = !!pageEl;
         if (!paperHostExists || !paperRootExists) {
           if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          iuInvoicePdfExportDiag("invoice_pdf_error", { phase: "paper_root_missing" }, new Error("invoice_paper_root_missing"));
           if (typeof done === "function") done(new Error("invoice_paper_root_missing"));
           return;
         }
         var hostRect = exportRoot.getBoundingClientRect();
         var rect = pageEl.getBoundingClientRect();
+        var paperW = pageEl.offsetWidth || rect.width || 0;
+        var paperH = pageEl.offsetHeight || rect.height || 0;
         var textBody = pageEl.textContent || "";
-        if (rect.left < hostRect.left - 0.5) {
-          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
-          if (typeof done === "function") done(new Error("invoice_print_page_negative_left"));
-          return;
+        if (!narrowExport) {
+          if (rect.left < hostRect.left - 0.5) {
+            if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+            iuInvoicePdfExportDiag("invoice_pdf_error", { phase: "negative_left" }, new Error("invoice_print_page_negative_left"));
+            if (typeof done === "function") done(new Error("invoice_print_page_negative_left"));
+            return;
+          }
+          if (rect.right > hostRect.right + 0.5) {
+            if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+            iuInvoicePdfExportDiag("invoice_pdf_error", { phase: "overflow_host" }, new Error("invoice_print_page_overflow_host"));
+            if (typeof done === "function") done(new Error("invoice_print_page_overflow_host"));
+            return;
+          }
         }
-        if (rect.right > hostRect.right + 0.5) {
+        if (paperW < 560 || paperH < 200) {
           if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
-          if (typeof done === "function") done(new Error("invoice_print_page_overflow_host"));
-          return;
-        }
-        if (rect.width < 620 || rect.height < 400) {
-          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          iuInvoicePdfExportDiag(
+            "invoice_pdf_error",
+            { phase: "layout_invalid", paperW: paperW, paperH: paperH, rectW: rect.width },
+            new Error("invoice_paper_layout_invalid"),
+          );
           if (typeof done === "function") done(new Error("invoice_paper_layout_invalid"));
           return;
         }
@@ -24742,7 +24842,9 @@ function buildVideoAsArticleCard(it) {
         } catch (eTw) {}
         try {
           var shCanvas = pageEl.scrollHeight || exportRoot.scrollHeight || 1400;
-          opts.html2canvas.windowHeight = Math.max(shCanvas, 1400);
+          var capH = narrowExport ? 7200 : 14000;
+          opts.html2canvas.windowHeight = Math.min(Math.max(shCanvas, 900), capH);
+          opts.html2canvas.scale = retryPass ? 1 : canvasScale;
         } catch (eSh) {}
         try {
           window._iuInvoicePrintProof = {
@@ -24792,24 +24894,32 @@ function buildVideoAsArticleCard(it) {
           .outputPdf("blob")
           .then(function (blob) {
             if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
-            if (!blob || blob.type !== "application/pdf") {
-              if (typeof done === "function") done(new Error("invoice_pdf_blob_invalid_type"));
-              return;
-            }
-            if (!blob || blob.size < 1500) {
-              if (typeof done === "function") done(new Error("invoice_pdf_blob_too_small"));
-              return;
-            }
-            try {
-              window._iuInvoicePdfExportMeta.paperModeUsed = true;
-            } catch (_) {}
-            try {
-              window._iuPdfLastEngine = "invoice-html2pdf-paper";
-              window._iuPdfLastSource = "invoice-paper-html";
-            } catch (_) {}
-            if (typeof done === "function") done(null, { blob: blob, fileName: fileName || "faktura.pdf" });
+            iuInvoicePdfNormalizeBlob(blob, function (norm) {
+              if (!norm) {
+                iuInvoicePdfExportDiag("invoice_pdf_error", { phase: "blob_invalid" }, new Error("invoice_pdf_blob_invalid_type"));
+                if (typeof done === "function") done(new Error("invoice_pdf_blob_invalid_type"));
+                return;
+              }
+              iuInvoicePdfExportDiag("invoice_pdf_blob_created", { size: norm.size, type: norm.type || "" });
+              try {
+                window._iuInvoicePdfExportMeta.paperModeUsed = true;
+              } catch (_) {}
+              try {
+                window._iuPdfLastEngine = "invoice-html2pdf-paper";
+                window._iuPdfLastSource = "invoice-paper-html";
+              } catch (_) {}
+              if (typeof done === "function") done(null, { blob: norm, fileName: fileName || "faktura.pdf" });
+            });
           })
           .catch(function (e) {
+            if (!retryPass && exportRoot.parentNode) {
+              iuInvoicePdfExportDiag("invoice_pdf_error", { phase: "html2pdf_retry", retry: true }, e);
+              try {
+                opts.html2canvas.scale = 1;
+              } catch (_) {}
+              runHtml2Pdf(true);
+              return;
+            }
             try {
               window._iuInvoicePdfPositionProof = null;
             } catch (_) {}
@@ -24817,14 +24927,25 @@ function buildVideoAsArticleCard(it) {
               window._iuInvoicePrintProof = null;
             } catch (_) {}
             if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+            iuInvoicePdfExportDiag("invoice_pdf_error", { phase: "html2pdf_fail" }, e);
             if (typeof done === "function") done(e);
           });
       }
-      requestAnimationFrame(function () {
+      function scheduleHtml2PdfRun() {
+        var delayMs = narrowExport ? 150 : 0;
         requestAnimationFrame(function () {
-          runHtml2Pdf();
+          requestAnimationFrame(function () {
+            if (delayMs) {
+              window.setTimeout(function () {
+                runHtml2Pdf(false);
+              }, delayMs);
+            } else {
+              runHtml2Pdf(false);
+            }
+          });
         });
-      });
+      }
+      scheduleHtml2PdfRun();
     });
   }
 
