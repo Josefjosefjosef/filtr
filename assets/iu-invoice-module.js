@@ -520,8 +520,11 @@ export function initIuInvoiceOverlay(deps) {
     clickEvents: 0,
     touchEvents: 0,
     handlerCalls: 0,
+    handlerEntered: 0,
     validationBlocked: 0,
+    lastValidationResult: "",
   };
+  let previewOpenCoreFn = null;
 
   const PREVIEW_PORTAL_HTML =
     '<div class="iu-inv-previewToolbar">' +
@@ -572,13 +575,21 @@ export function initIuInvoiceOverlay(deps) {
       if (layer && rect) {
         clipped = rect.width < 50 || rect.height < 50 || rect.bottom < 0 || rect.right < 0;
       }
+      const disp = cs ? cs.display : "";
+      const fullscreen =
+        !!(cs && cs.position === "fixed" && rect && rect.width >= (window.innerWidth || 0) * 0.92 && rect.height >= (window.innerHeight || 0) * 0.92);
       window._iuInvoicePreviewDiag = Object.assign(
         {
           PREVIEW_BUTTON_FOUND: !!btn,
+          PREVIEW_BUTTON_CLICK: previewEventTrace.clickEvents > 0 || previewEventTrace.touchEvents > 0,
           PREVIEW_CLICK_EVENT_FIRED: previewEventTrace.clickEvents,
           PREVIEW_TOUCH_EVENT_FIRED: previewEventTrace.touchEvents,
           PREVIEW_HANDLER_CALLED: previewEventTrace.handlerCalls,
+          PREVIEW_HANDLER_ENTERED: previewEventTrace.handlerEntered > 0,
+          PREVIEW_VALIDATION_RESULT: previewEventTrace.lastValidationResult,
           PREVIEW_VALIDATION_BLOCKED: previewEventTrace.validationBlocked,
+          PREVIEW_LAYER_DISPLAY: disp,
+          PREVIEW_FULLSCREEN: fullscreen,
           PREVIEW_LAYER_CREATED: !!layer,
           PREVIEW_LAYER_EXISTS: !!layer,
           PREVIEW_LAYER_PARENT: layer && layer.parentElement ? layer.parentElement.tagName + (layer.parentElement.id ? "#" + layer.parentElement.id : "") : "",
@@ -650,14 +661,18 @@ export function initIuInvoiceOverlay(deps) {
           const shBtn = e.target && e.target.closest ? e.target.closest("[data-inv-preview-share-pdf]") : null;
           if (dlBtn || shBtn) return;
           const btn = e.target && e.target.closest ? e.target.closest("button[data-inv-preview]") : null;
-          if (!btn || !rootEl || !rootEl.contains(btn)) return;
+          const invRoot = document.querySelector("[data-iu-invoice-root]");
+          if (!btn || !invRoot || !invRoot.contains(btn)) return;
           if (kind === "touch") previewEventTrace.touchEvents += 1;
           else previewEventTrace.clickEvents += 1;
           e.preventDefault();
           e.stopPropagation();
-          if (typeof window.iuInvoiceOpenPreview === "function") {
+          const openFn =
+            previewOpenCoreFn ||
+            (typeof window.iuInvoiceOpenPreview === "function" ? window.iuInvoiceOpenPreview : null);
+          if (typeof openFn === "function") {
             previewEventTrace.handlerCalls += 1;
-            window.iuInvoiceOpenPreview();
+            openFn();
           }
         } catch (err) {
           publishPreviewDiag(null, { ERROR_THROWN: String(err) });
@@ -677,6 +692,44 @@ export function initIuInvoiceOverlay(deps) {
         },
         { capture: true, passive: false },
       );
+      document.addEventListener(
+        "pointerup",
+        (e) => {
+          onDocPreview(e, "pointer");
+        },
+        { capture: true, passive: false },
+      );
+    } catch (_) {}
+  }
+
+  function applyPreviewPortalOpenStyles(layer) {
+    if (!layer) return;
+    layer.hidden = false;
+    layer.removeAttribute("hidden");
+    layer.classList.remove("iu-inv-guard-hidden");
+    try {
+      layer.style.setProperty("position", "fixed", "important");
+      layer.style.setProperty("inset", "0", "important");
+      layer.style.setProperty("z-index", "10050", "important");
+      layer.style.setProperty("display", "flex", "important");
+      layer.style.setProperty("flex-direction", "column", "important");
+      layer.style.setProperty("visibility", "visible", "important");
+      layer.style.setProperty("opacity", "1", "important");
+      layer.style.setProperty("pointer-events", "auto", "important");
+      layer.style.setProperty("width", "100%", "important");
+      layer.style.setProperty("height", "100%", "important");
+      layer.style.setProperty("max-height", "100dvh", "important");
+      layer.style.setProperty("background", "#fafafa", "important");
+    } catch (_) {}
+  }
+
+  function applyPreviewPortalCloseStyles(layer) {
+    if (!layer) return;
+    layer.hidden = true;
+    layer.setAttribute("hidden", "");
+    layer.classList.add("iu-inv-guard-hidden");
+    try {
+      layer.style.setProperty("display", "none", "important");
     } catch (_) {}
   }
 
@@ -1324,9 +1377,11 @@ export function initIuInvoiceOverlay(deps) {
 
     function openPreview() {
       try {
+        previewEventTrace.handlerEntered += 1;
         readStateFromDom(root, state);
         copySupplierBankToInvoiceIfEmpty(state);
         const v = validateForm(state);
+        previewEventTrace.lastValidationResult = v.ok ? "pass" : "fail";
         if (!v.ok) {
           previewEventTrace.validationBlocked += 1;
           showPreviewValidationErrors(v.errors);
@@ -1334,6 +1389,7 @@ export function initIuInvoiceOverlay(deps) {
           publishPreviewDiag(null, {
             PREVIEW_OPEN: false,
             PREVIEW_VALIDATION_BLOCKED: true,
+            PREVIEW_VALIDATION_RESULT: "fail",
             reason: "validation",
             errors: v.errors,
           });
@@ -1357,12 +1413,7 @@ export function initIuInvoiceOverlay(deps) {
         const mode = isDesktopPreviewBreakpoint() ? "desktop" : "mobile";
         host.innerHTML = buildPreviewHostInner(inner, mode);
         previewLayoutMode = mode;
-        layer.hidden = false;
-        layer.removeAttribute("hidden");
-        layer.classList.remove("iu-inv-guard-hidden");
-        try {
-          if (window.iuSetElOpenVisible) window.iuSetElOpenVisible(layer, true);
-        } catch (_) {}
+        applyPreviewPortalOpenStyles(layer);
         try {
           document.body.classList.add("iu-invoice-preview-open");
         } catch (_) {}
@@ -1375,11 +1426,17 @@ export function initIuInvoiceOverlay(deps) {
                 scrollHost.scrollTop = 0;
                 const backBtn = layer.querySelector("[data-inv-preview-back]");
                 if (backBtn) backBtn.focus();
+                publishPreviewDiag(layer, {
+                  PREVIEW_OPEN: true,
+                  PREVIEW_VALIDATION_RESULT: "pass",
+                  previewLayoutMode: mode,
+                });
               } catch (_) {}
             });
           });
-        } catch (_) {}
-        publishPreviewDiag(layer, { PREVIEW_OPEN: true, previewLayoutMode: mode });
+        } catch (_) {
+          publishPreviewDiag(layer, { PREVIEW_OPEN: true, PREVIEW_VALIDATION_RESULT: "pass", previewLayoutMode: mode });
+        }
       } catch (err) {
         publishPreviewDiag(null, { PREVIEW_OPEN: false, ERROR_THROWN: String(err) });
       }
@@ -1388,9 +1445,7 @@ export function initIuInvoiceOverlay(deps) {
     function closePreview() {
       const layer = ensurePreviewPortalHost();
       if (layer) {
-        layer.hidden = true;
-        layer.setAttribute("hidden", "");
-        layer.classList.add("iu-inv-guard-hidden");
+        applyPreviewPortalCloseStyles(layer);
       }
       previewLayoutMode = "";
       try {
@@ -1403,6 +1458,7 @@ export function initIuInvoiceOverlay(deps) {
       publishPreviewDiag(layer, { PREVIEW_OPEN: false, reason: "closed" });
     }
     closePreviewFn = closePreview;
+    previewOpenCoreFn = openPreview;
     wirePreviewPortalToolbar();
 
     function repaintPreviewShellIfNeeded() {
@@ -1471,6 +1527,7 @@ export function initIuInvoiceOverlay(deps) {
     bindPreviewOpen(root.querySelector("[data-inv-preview]"));
     try {
       window.iuInvoiceOpenPreview = openPreview;
+      window.__iuInvoicePreviewOpenCore = openPreview;
     } catch (_) {}
     root.querySelector("[data-inv-download]")?.addEventListener("click", () => {
       doDownloadPdf();
@@ -1587,9 +1644,7 @@ export function initIuInvoiceOverlay(deps) {
       try {
         const layer = document.getElementById("iuInvoicePreviewPortal");
         if (layer) {
-          layer.hidden = true;
-          layer.setAttribute("hidden", "");
-          layer.classList.add("iu-inv-guard-hidden");
+          applyPreviewPortalCloseStyles(layer);
         }
         document.body.classList.remove("iu-invoice-preview-open");
         const toast = document.body.querySelector("[data-inv-preview-error-toast]");

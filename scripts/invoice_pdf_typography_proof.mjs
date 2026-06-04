@@ -165,12 +165,16 @@ async function run() {
     MARGINS_16: marginLeft === 16 && marginRight === 16,
     HEADER_18_20: headerPt >= 18 && headerPt <= 20,
     ITEM_10: itemPt >= 9.8 && itemPt <= 10.2,
-    DESC_8_5_9: descPt >= 8.4 && descPt <= 9.1,
+    DESC_8_5_9: descPt >= 8.8 && descPt <= 9.2,
     SUMMARY_COMPACT: summaryPt >= 9 && summaryPt <= 11,
     TABLE_ROW_AIRY: rowHmm >= 8.5,
     LETTER_SPACING_NORMAL: letterSp === 0,
     FOOTER_GAP_REASONABLE: footerGap >= 8 && footerGap <= 16,
-    TYPOGRAPHY_FIX: p.TYPOGRAPHY_FIX === "v1_typography_tuning",
+    TYPOGRAPHY_FIX: p.TYPOGRAPHY_FIX === "v1_utf8_noto_font",
+    TEXT_SPACING_FIXED: p.TEXT_SPACING_FIXED === true && p.PDF_FONT_ENGINE === "noto-utf8-vfs",
+    PDF_CHAR_SPACING: Number(p.PDF_CHAR_SPACING) === 0,
+    PDF_FONT_ENGINE: p.PDF_FONT_ENGINE === "noto-utf8-vfs",
+    ITEM_COL_WIDTH_GE_95: Number(p.ITEM_DESCRIPTION_WIDTH_MM) >= 95,
   };
 
   let score = 0;
@@ -180,8 +184,13 @@ async function run() {
   const layoutScore = score >= 8 ? "PASS" : "FAIL";
 
   const report = {
-    ROOT_CAUSE: p.ROOT_CAUSE || "wide_meta_columns_centered_cells",
+    ROOT_CAUSE: p.ROOT_CAUSE || "helvetica_missing_czech_glyphs",
     TYPOGRAPHY_FIX: p.TYPOGRAPHY_FIX || "",
+    PDF_CHAR_SPACING: p.PDF_CHAR_SPACING,
+    PDF_LETTER_SPACING: p.PDF_LETTER_SPACING,
+    PDF_TEXT_RENDER_MODE: p.PDF_TEXT_RENDER_MODE || "fill",
+    PDF_FONT_ENGINE: p.PDF_FONT_ENGINE || "",
+    TEXT_SPACING_FIXED: checks.TEXT_SPACING_FIXED ? "PASS" : "FAIL",
     HEADER_FONT_SIZE: p.HEADER_FONT_SIZE,
     ITEM_FONT_SIZE: p.ITEM_FONT_SIZE || p.ITEM_NAME_FONT_SIZE,
     DESCRIPTION_FONT_SIZE: p.DESCRIPTION_FONT_SIZE || p.ITEM_DESCRIPTION_FONT_SIZE,
