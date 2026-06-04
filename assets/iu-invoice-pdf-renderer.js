@@ -19,16 +19,27 @@ export const IU_INVOICE_PDF_LAYOUT = {
   marginRightMm: 16,
   marginTopMm: 14,
   marginBottomMm: 16,
-  fontBodyPt: 10,
+  letterSpacingPt: 0,
+  fontTitlePt: 19,
+  fontInvoiceNumberPt: 10.5,
+  fontPartyLabelPt: 9,
+  fontPartyBodyPt: 9.5,
+  fontPartyLineMult: 1.32,
   fontMetaPt: 9,
-  fontTitlePt: 18,
-  fontSubtitlePt: 11,
   fontTableHeadPt: 9,
-  fontItemNamePt: 9,
-  fontItemDescPt: 8,
-  fontTotalsPt: 10,
-  fontDuePt: 11,
+  fontItemNamePt: 10,
+  fontItemDescPt: 8.5,
+  fontTableCellPt: 9.5,
+  fontTotalsPt: 9.5,
+  fontDuePt: 10.5,
   fontFootPt: 8,
+  tableHeaderHeightMm: 8,
+  tableRowPadTopMm: 3.5,
+  tableRowPadBottomMm: 3.5,
+  tableRowMinMm: 9,
+  summaryLineMm: 4.5,
+  summaryBlockPadMm: 1.5,
+  footerGapFromSummaryMm: 11,
   brandRgb: [136, 19, 55],
   lineGrayRgb: [219, 225, 232],
 };
@@ -54,6 +65,16 @@ function fmtDateCs(iso) {
 
 function ptToMm(pt) {
   return (pt * 25.4) / 72;
+}
+
+function applyNormalTracking(doc) {
+  try {
+    if (typeof doc.setCharSpace === "function") doc.setCharSpace(0);
+  } catch (_) {}
+}
+
+function lineHeightMm(pt, mult) {
+  return ptToMm(pt) * (mult || 1.28);
 }
 
 function loadScriptOnce(src) {
@@ -127,8 +148,50 @@ function columnLayout(hasVat) {
   return { cols, x0, xEnd, inner };
 }
 
+function typographyProofFields() {
+  const L = IU_INVOICE_PDF_LAYOUT;
+  return {
+    TYPOGRAPHY_FIX: "v1_typography_tuning",
+    HEADER_FONT_SIZE: L.fontTitlePt + "pt",
+    HEADER_LETTER_SPACING: L.letterSpacingPt + "pt",
+    INVOICE_NUMBER_FONT_SIZE: L.fontInvoiceNumberPt + "pt",
+    SUPPLIER_FONT_SIZE: L.fontPartyBodyPt + "pt",
+    CUSTOMER_FONT_SIZE: L.fontPartyBodyPt + "pt",
+    ITEM_NAME_FONT_SIZE: L.fontItemNamePt + "pt",
+    ITEM_DESCRIPTION_FONT_SIZE: L.fontItemDescPt + "pt",
+    TABLE_FONT_SIZE: L.fontTableCellPt + "pt",
+    SUMMARY_FONT_SIZE: L.fontTotalsPt + "pt",
+    FOOTER_FONT_SIZE: L.fontFootPt + "pt",
+    TABLE_ROW_HEIGHT: L.tableRowMinMm + "mm",
+    SUMMARY_BLOCK_HEIGHT:
+      (totals.payer ? 2 : 0) * L.summaryLineMm + L.summaryLineMm + L.summaryBlockPadMm * 2 + "mm (approx)",
+    FOOTER_TOP_GAP: L.footerGapFromSummaryMm + "mm",
+    LETTER_SPACING: L.letterSpacingPt + "pt",
+    ITEM_FONT_SIZE: L.fontItemNamePt + "pt",
+    DESCRIPTION_FONT_SIZE: L.fontItemDescPt + "pt",
+  };
+}
+
 function publishRendererProof(extra) {
   const L = IU_INVOICE_PDF_LAYOUT;
+  const typo = {
+    TYPOGRAPHY_FIX: "v1_typography_tuning",
+    HEADER_FONT_SIZE: L.fontTitlePt + "pt",
+    HEADER_LETTER_SPACING: L.letterSpacingPt + "pt",
+    INVOICE_NUMBER_FONT_SIZE: L.fontInvoiceNumberPt + "pt",
+    SUPPLIER_FONT_SIZE: L.fontPartyBodyPt + "pt",
+    CUSTOMER_FONT_SIZE: L.fontPartyBodyPt + "pt",
+    ITEM_NAME_FONT_SIZE: L.fontItemNamePt + "pt",
+    ITEM_DESCRIPTION_FONT_SIZE: L.fontItemDescPt + "pt",
+    TABLE_FONT_SIZE: L.fontTableCellPt + "pt",
+    SUMMARY_FONT_SIZE: L.fontTotalsPt + "pt",
+    FOOTER_FONT_SIZE: L.fontFootPt + "pt",
+    TABLE_ROW_HEIGHT: L.tableRowMinMm + "mm",
+    FOOTER_TOP_GAP: L.footerGapFromSummaryMm + "mm",
+    LETTER_SPACING: L.letterSpacingPt + "pt",
+    ITEM_FONT_SIZE: L.fontItemNamePt + "pt",
+    DESCRIPTION_FONT_SIZE: L.fontItemDescPt + "pt",
+  };
   const proof = Object.assign(
     {
       NEW_RENDERER: IU_INVOICE_PDF_RENDERER_ID,
@@ -145,6 +208,7 @@ function publishRendererProof(extra) {
       PDF_PAGE_WIDTH_MM: MM_PAGE_W,
       PDF_PAGE_HEIGHT_MM: MM_PAGE_H,
     },
+    typo,
     extra || {},
   );
   try {
@@ -157,15 +221,17 @@ function publishRendererProof(extra) {
       plainTextOnly: false,
       paperModeUsed: false,
       pdfEngine: "jspdf",
+      typographyFix: "v1_typography_tuning",
     };
   } catch (_) {}
   return proof;
 }
 
 function drawMultiline(doc, lines, x, y, lineH) {
+  applyNormalTracking(doc);
   let cy = y;
   for (let i = 0; i < lines.length; i++) {
-    doc.text(lines[i], x, cy);
+    doc.text(lines[i], x, cy, { baseline: "top" });
     cy += lineH;
   }
   return cy;
@@ -176,23 +242,22 @@ function drawPartyColumns(doc, state, y) {
   const colW = (MM_PAGE_W - L.marginLeftMm - L.marginRightMm - 6) / 2;
   const xL = L.marginLeftMm;
   const xR = L.marginLeftMm + colW + 6;
-  const sup = supplierBlockText(state).split("\n");
-  const buy = buyerBlockText(state).split("\n");
+  applyNormalTracking(doc);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(L.fontMetaPt);
+  doc.setFontSize(L.fontPartyLabelPt);
   doc.setTextColor(L.brandRgb[0], L.brandRgb[1], L.brandRgb[2]);
-  doc.text("Dodavatel", xL, y);
-  doc.text("Odběratel", xR, y);
+  doc.text("Dodavatel", xL, y, { baseline: "top" });
+  doc.text("Odběratel", xR, y, { baseline: "top" });
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(L.fontBodyPt);
+  doc.setFontSize(L.fontPartyBodyPt);
   doc.setTextColor(30, 41, 59);
-  const supLines = doc.splitTextToSize(sup.join("\n"), colW);
-  const buyLines = doc.splitTextToSize(buy.join("\n"), colW);
-  const lh = ptToMm(L.fontBodyPt) * 1.25;
-  const yBody = y + 4;
+  const supLines = doc.splitTextToSize(supplierBlockText(state), colW);
+  const buyLines = doc.splitTextToSize(buyerBlockText(state), colW);
+  const lh = lineHeightMm(L.fontPartyBodyPt, L.fontPartyLineMult);
+  const yBody = y + ptToMm(L.fontPartyLabelPt) + 2;
   const yAfterL = drawMultiline(doc, supLines, xL, yBody, lh);
   const yAfterR = drawMultiline(doc, buyLines, xR, yBody, lh);
-  return Math.max(yAfterL, yAfterR) + 3;
+  return Math.max(yAfterL, yAfterR) + 2;
 }
 
 function drawMetaBlock(doc, state, y) {
@@ -208,122 +273,169 @@ function drawMetaBlock(doc, state, y) {
   }
   const x0 = L.marginLeftMm;
   const inner = MM_PAGE_W - L.marginLeftMm - L.marginRightMm;
-  const lh = ptToMm(L.fontMetaPt) * 1.35;
+  const lh = lineHeightMm(L.fontMetaPt, 1.3);
+  const labelW = 36;
+  const valW = 42;
+  const col2 = x0 + labelW + valW + 4;
+  applyNormalTracking(doc);
   doc.setFontSize(L.fontMetaPt);
   doc.setTextColor(30, 41, 59);
   let cy = y;
   for (let ri = 0; ri < rows.length; ri++) {
     const row = rows[ri];
     doc.setFont("helvetica", "bold");
-    doc.text(String(row[0] || ""), x0, cy);
+    doc.text(String(row[0] || ""), x0, cy, { baseline: "top" });
     doc.setFont("helvetica", "normal");
-    doc.text(String(row[1] || ""), x0 + 38, cy);
+    doc.text(String(row[1] || ""), x0 + labelW, cy, { baseline: "top", maxWidth: valW });
     if (row[2]) {
       doc.setFont("helvetica", "bold");
-      doc.text(String(row[2]), x0 + inner * 0.48, cy);
+      doc.text(String(row[2]), col2, cy, { baseline: "top" });
       doc.setFont("helvetica", "normal");
-      doc.text(String(row[3] || ""), x0 + inner * 0.48 + 28, cy);
+      doc.text(String(row[3] || ""), col2 + labelW, cy, { baseline: "top", maxWidth: valW });
     }
     cy += lh;
   }
   if (inv.payment === "transfer") {
-    cy += 1;
+    cy += 1.5;
     doc.setFillColor(248, 250, 252);
-    const bankH = 10;
-    doc.rect(x0, cy - 3, inner, bankH, "F");
+    const bankH = 9;
+    doc.rect(x0, cy, inner, bankH, "F");
     doc.setDrawColor(L.lineGrayRgb[0], L.lineGrayRgb[1], L.lineGrayRgb[2]);
-    doc.rect(x0, cy - 3, inner, bankH, "S");
+    doc.rect(x0, cy, inner, bankH, "S");
     doc.setFontSize(L.fontMetaPt);
     let bank = "Účet: " + String(inv.accountNumber || "").trim();
     if (inv.bankCode) bank += " / " + String(inv.bankCode).trim();
     if (inv.iban) bank += " · IBAN: " + String(inv.iban).trim();
     if (inv.swift) bank += " · SWIFT: " + String(inv.swift).trim();
-    doc.text(bank, x0 + 2, cy + 3);
-    cy += bankH + 2;
+    doc.text(bank, x0 + 2, cy + 2.5, { baseline: "top", maxWidth: inner - 4 });
+    cy += bankH + 1.5;
   }
-  return cy + 2;
+  return cy + 1;
 }
 
-function drawTableHeader(doc, layout, hasVat, y) {
+function drawTableHeader(doc, layout, y) {
   const L = IU_INVOICE_PDF_LAYOUT;
-  const h = 7;
+  const h = L.tableHeaderHeightMm;
+  const yTop = y;
+  applyNormalTracking(doc);
   doc.setFillColor(L.brandRgb[0], L.brandRgb[1], L.brandRgb[2]);
-  doc.rect(layout.x0, y - 4.5, layout.inner, h, "F");
+  doc.rect(layout.x0, yTop, layout.inner, h, "F");
   doc.setFont("helvetica", "bold");
   doc.setFontSize(L.fontTableHeadPt);
   doc.setTextColor(255, 255, 255);
+  const midY = yTop + h / 2 + ptToMm(L.fontTableHeadPt) * 0.35;
   for (let i = 0; i < layout.cols.length; i++) {
     const c = layout.cols[i];
-    const tx = c.key === "item" ? c.x + 1.5 : c.x + c.w / 2;
-    const align = c.key === "item" ? "left" : "center";
-    doc.text(c.label, tx, y, { align });
+    if (c.key === "item") {
+      doc.text(c.label, c.x + 1.5, midY, { baseline: "middle" });
+    } else if (c.key === "num") {
+      doc.text(c.label, c.x + c.w / 2, midY, { align: "center", baseline: "middle" });
+    } else {
+      doc.text(c.label, c.x + c.w - 1.5, midY, { align: "right", baseline: "middle" });
+    }
   }
   doc.setTextColor(30, 41, 59);
-  return y + h - 2;
+  return yTop + h;
 }
 
-function drawTableRow(doc, layout, hasVat, y, row) {
+function measureTableRow(doc, layout, row) {
   const L = IU_INVOICE_PDF_LAYOUT;
   const itemCol = layout.cols.find((c) => c.key === "item");
-  const itemW = itemCol ? itemCol.w - 2 : 40;
+  const itemW = itemCol ? itemCol.w - 3 : 40;
   doc.setFontSize(L.fontItemNamePt);
   doc.setFont("helvetica", "bold");
   const nameLines = doc.splitTextToSize(String(row.name || ""), itemW);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(L.fontItemDescPt);
   const descLines = row.description ? doc.splitTextToSize(String(row.description), itemW) : [];
-  const lhName = ptToMm(L.fontItemNamePt) * 1.2;
-  const lhDesc = ptToMm(L.fontItemDescPt) * 1.15;
+  const lhName = lineHeightMm(L.fontItemNamePt, 1.22);
+  const lhDesc = lineHeightMm(L.fontItemDescPt, 1.18);
   const bodyH = nameLines.length * lhName + descLines.length * lhDesc;
-  const rowH = Math.max(7, bodyH + 2.5);
+  return Math.max(L.tableRowMinMm, bodyH + L.tableRowPadTopMm + L.tableRowPadBottomMm);
+}
+
+function drawTableRow(doc, layout, y, row) {
+  const L = IU_INVOICE_PDF_LAYOUT;
+  const itemCol = layout.cols.find((c) => c.key === "item");
+  const itemW = itemCol ? itemCol.w - 3 : 40;
+  const rowH = measureTableRow(doc, layout, row);
   const yTop = y;
+  applyNormalTracking(doc);
   doc.setDrawColor(L.lineGrayRgb[0], L.lineGrayRgb[1], L.lineGrayRgb[2]);
   doc.line(layout.x0, yTop + rowH, layout.xEnd, yTop + rowH);
   doc.setFontSize(L.fontItemNamePt);
   doc.setFont("helvetica", "bold");
-  drawMultiline(doc, nameLines, itemCol.x + 1.5, yTop + 3, lhName);
-  if (descLines.length) {
+  const nameLines = doc.splitTextToSize(String(row.name || ""), itemW);
+  const lhName = lineHeightMm(L.fontItemNamePt, 1.22);
+  drawMultiline(doc, nameLines, itemCol.x + 1.5, yTop + L.tableRowPadTopMm, lhName);
+  let descY = yTop + L.tableRowPadTopMm + nameLines.length * lhName;
+  if (row.description) {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(L.fontItemDescPt);
     doc.setTextColor(100, 116, 139);
-    drawMultiline(doc, descLines, itemCol.x + 1.5, yTop + 3 + nameLines.length * lhName, lhDesc);
+    const descLines = doc.splitTextToSize(String(row.description), itemW);
+    const lhDesc = lineHeightMm(L.fontItemDescPt, 1.18);
+    drawMultiline(doc, descLines, itemCol.x + 1.5, descY, lhDesc);
     doc.setTextColor(30, 41, 59);
   }
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(L.fontMetaPt);
-  const midY = yTop + rowH / 2 + 1;
+  doc.setFontSize(L.fontTableCellPt);
+  const midY = yTop + rowH / 2;
   for (let i = 0; i < layout.cols.length; i++) {
     const c = layout.cols[i];
     if (c.key === "item") continue;
     const val = row.cells[c.key] != null ? String(row.cells[c.key]) : "";
-    doc.text(val, c.x + c.w / 2, midY, { align: "center" });
+    if (c.key === "num") {
+      doc.text(val, c.x + c.w / 2, midY, { align: "center", baseline: "middle" });
+    } else {
+      doc.text(val, c.x + c.w - 1.5, midY, { align: "right", baseline: "middle" });
+    }
   }
   return yTop + rowH;
 }
 
 function drawTotals(doc, totals, y) {
   const L = IU_INVOICE_PDF_LAYOUT;
-  const boxW = 72;
-  const x = MM_PAGE_W - L.marginRightMm - boxW;
-  let cy = y;
+  const valueX = MM_PAGE_W - L.marginRightMm;
+  const labelRight = valueX - 38;
+  let cy = y + L.summaryBlockPadMm;
+  const yStart = cy;
+  applyNormalTracking(doc);
   doc.setFontSize(L.fontTotalsPt);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(30, 41, 59);
   if (totals.payer) {
-    doc.text("Mezisoučet bez DPH:", x, cy);
-    doc.text(fmtMoney(totals.sumBase), x + boxW, cy, { align: "right" });
-    cy += 5;
-    doc.text("DPH:", x, cy);
-    doc.text(fmtMoney(totals.sumVat), x + boxW, cy, { align: "right" });
-    cy += 5;
+    doc.text("Mezisoučet bez DPH:", labelRight, cy, { align: "right", baseline: "top" });
+    doc.text(fmtMoney(totals.sumBase), valueX, cy, { align: "right", baseline: "top" });
+    cy += L.summaryLineMm;
+    doc.text("DPH:", labelRight, cy, { align: "right", baseline: "top" });
+    doc.text(fmtMoney(totals.sumVat), valueX, cy, { align: "right", baseline: "top" });
+    cy += L.summaryLineMm;
   }
   doc.setFont("helvetica", "bold");
   doc.setFontSize(L.fontDuePt);
   doc.setTextColor(L.brandRgb[0], L.brandRgb[1], L.brandRgb[2]);
-  doc.text("Celkem k úhradě:", x, cy + 2);
-  doc.text(fmtMoney(totals.sumGross), x + boxW, cy + 2, { align: "right" });
+  doc.text("Celkem k úhradě:", labelRight, cy, { align: "right", baseline: "top" });
+  doc.text(fmtMoney(totals.sumGross), valueX, cy, { align: "right", baseline: "top" });
   doc.setTextColor(30, 41, 59);
-  return cy + 10;
+  const blockH = cy - yStart + ptToMm(L.fontDuePt) + L.summaryBlockPadMm;
+  return {
+    yAfter: y + blockH + 2,
+    summaryBlockHeightMm: blockH,
+  };
+}
+
+function drawFooter(doc, yAfterSummary) {
+  const L = IU_INVOICE_PDF_LAYOUT;
+  const bottom = MM_PAGE_H - L.marginBottomMm;
+  let footerY = yAfterSummary + L.footerGapFromSummaryMm;
+  if (footerY > bottom - 2) footerY = bottom;
+  applyNormalTracking(doc);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(L.fontFootPt);
+  doc.setTextColor(100, 116, 139);
+  doc.text("www.infoUzel.cz · Vytvořeno pomocí infoUzel.cz", L.marginLeftMm, footerY, { baseline: "top" });
+  return { footerY, footerTopGapMm: footerY - yAfterSummary };
 }
 
 /**
@@ -336,6 +448,7 @@ export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
   const JsPDF = await ensureJsPDF();
   const L = IU_INVOICE_PDF_LAYOUT;
   const doc = new JsPDF({ unit: "mm", format: "a4", orientation: "portrait", compress: true });
+  applyNormalTracking(doc);
   const inv = state.invoice || {};
   const hasVat = !!totals.payer;
   const layout = columnLayout(hasVat);
@@ -344,29 +457,33 @@ export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
 
   doc.setDrawColor(L.lineGrayRgb[0], L.lineGrayRgb[1], L.lineGrayRgb[2]);
   doc.setLineWidth(0.4);
-  doc.line(L.marginLeftMm, y + 2, L.marginLeftMm, y + 18);
+  doc.line(L.marginLeftMm, y + 2, L.marginLeftMm, y + 17);
   doc.setLineWidth(1.2);
   doc.setDrawColor(L.brandRgb[0], L.brandRgb[1], L.brandRgb[2]);
-  doc.line(L.marginLeftMm, y + 2, L.marginLeftMm, y + 18);
+  doc.line(L.marginLeftMm, y + 2, L.marginLeftMm, y + 17);
 
+  applyNormalTracking(doc);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(L.fontFootPt);
   doc.setTextColor(100, 116, 139);
-  doc.text("Vytvořeno pomocí infoUzel.cz", L.marginLeftMm + 4, y + 4);
+  doc.text("Vytvořeno pomocí infoUzel.cz", L.marginLeftMm + 4, y + 3, { baseline: "top" });
   doc.setFont("helvetica", "bold");
   doc.setFontSize(L.fontTitlePt);
   doc.setTextColor(L.brandRgb[0], L.brandRgb[1], L.brandRgb[2]);
-  doc.text("FAKTURA", L.marginLeftMm + 4, y + 12);
+  doc.text("FAKTURA", L.marginLeftMm + 4, y + 9, { baseline: "top" });
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(L.fontSubtitlePt);
+  doc.setFontSize(L.fontInvoiceNumberPt);
   doc.setTextColor(30, 41, 59);
-  doc.text("číslo faktury " + String(inv.number || "").trim(), L.marginLeftMm + 4, y + 18);
-  y += 24;
+  const invNum = String(inv.number || "").trim();
+  doc.text("číslo faktury", L.marginLeftMm + 4, y + 16, { baseline: "top" });
+  doc.setFont("helvetica", "bold");
+  doc.text(invNum, L.marginLeftMm + 4 + doc.getTextWidth("číslo faktury ") + 0.5, y + 16, { baseline: "top" });
+  y += 22;
 
   y = drawPartyColumns(doc, state, y);
   y = drawMetaBlock(doc, state, y);
-  y += 2;
-  y = drawTableHeader(doc, layout, hasVat, y);
+  y += 3;
+  y = drawTableHeader(doc, layout, y);
 
   const lines = state.lines || [];
   for (let i = 0; i < lines.length; i++) {
@@ -387,31 +504,21 @@ export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
         total: fmtMoney(a.gross),
       },
     };
-    const estItemCol = layout.cols.find((c) => c.key === "item");
-    const estW = estItemCol ? estItemCol.w - 2 : 40;
-    doc.setFontSize(L.fontItemNamePt);
-    const estName = doc.splitTextToSize(row.name, estW);
-    doc.setFontSize(L.fontItemDescPt);
-    const estDesc = row.description ? doc.splitTextToSize(row.description, estW) : [];
-    const estH = Math.max(7, estName.length * ptToMm(L.fontItemNamePt) * 1.2 + estDesc.length * ptToMm(L.fontItemDescPt) * 1.15 + 2.5);
-    if (y + estH > bottom - 28) {
+    const estH = measureTableRow(doc, layout, row);
+    if (y + estH > bottom - 32) {
       doc.addPage();
       y = L.marginTopMm;
-      y = drawTableHeader(doc, layout, hasVat, y);
+      y = drawTableHeader(doc, layout, y);
     }
-    y = drawTableRow(doc, layout, hasVat, y, row);
+    y = drawTableRow(doc, layout, y, row);
   }
 
-  if (y + 24 > bottom) {
+  if (y + 20 > bottom) {
     doc.addPage();
     y = L.marginTopMm;
   }
-  y = drawTotals(doc, totals, y + 4);
-
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(L.fontFootPt);
-  doc.setTextColor(100, 116, 139);
-  doc.text("www.infoUzel.cz · Vytvořeno pomocí infoUzel.cz", L.marginLeftMm, bottom);
+  const totalsOut = drawTotals(doc, totals, y + 3);
+  const footerOut = drawFooter(doc, totalsOut.yAfter);
 
   const blob = doc.output("blob");
   const outName = fileName || "faktura.pdf";
@@ -419,6 +526,11 @@ export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
     PDF_TABLE_COLUMN_WIDTHS_MM: layout.cols.map((c) => c.w).join(","),
     lineCount: lines.length,
     pageCount: doc.internal.getNumberOfPages(),
+    SUMMARY_BLOCK_HEIGHT: totalsOut.summaryBlockHeightMm + "mm",
+    FOOTER_TOP_GAP: footerOut.footerTopGapMm + "mm",
+    ROOT_CAUSE: "wide_meta_columns_centered_cells_zero_charspace",
+    TYPOGRAPHY_FIX: "v1_typography_tuning",
+    PDF_LAYOUT_SCORE: "typography_v1",
   });
   return { blob, fileName: outName, proof };
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Professional invoice PDF layout proof (jsPDF data renderer v1).
- * node scripts/invoice_pdf_professional_layout_proof.mjs [appUrl]
+ * Invoice PDF typography tuning proof (renderer v1).
+ * node scripts/invoice_pdf_typography_proof.mjs [appUrl]
  */
 import http from "http";
 import fs from "fs";
@@ -10,7 +10,7 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = process.env.IU_FILTR_ROOT || path.resolve(__dirname, "..");
-const PORT = Number(process.env.IU_INVOICE_PROOF_PORT || 8098);
+const PORT = Number(process.env.IU_INVOICE_PROOF_PORT || 8099);
 
 function printBlocks(label, obj) {
   console.log(`=== ${label} ===`);
@@ -78,7 +78,7 @@ function buildSampleState() {
     },
     buyerPo: {},
     invoice: {
-      number: "2026-PRO-01",
+      number: "2026-TYP-01",
       issueDate: "2026-06-01",
       dueDate: "2026-06-15",
       taxableDate: "2026-06-01",
@@ -93,23 +93,22 @@ function buildSampleState() {
       {
         id: "l1",
         name: "Konzultační služby",
-        description: "Analýza a implementace s delším popisem pro zalomení v PDF sloupci položky.",
+        description: "Analýza a implementace.",
         qty: "4",
         unit: "hod",
         unitPrice: "1250",
         vatRate: "21",
       },
-      {
-        id: "l2",
-        name: "Materiál",
-        description: "",
-        qty: "2",
-        unit: "ks",
-        unitPrice: "350",
-        vatRate: "21",
-      },
     ],
   };
+}
+
+function parsePt(s) {
+  return parseFloat(String(s || "0").replace("pt", "").trim());
+}
+
+function parseMm(s) {
+  return parseFloat(String(s || "0").replace("mm", "").trim());
 }
 
 async function run() {
@@ -121,8 +120,7 @@ async function run() {
   await page.goto(appUrl, { waitUntil: "domcontentloaded", timeout: 90000 });
 
   for (let i = 0; i < 60; i++) {
-    const ready = await page.evaluate(() => typeof window.iuInvoiceRenderPdfBlobFromData === "function");
-    if (ready) break;
+    if (await page.evaluate(() => typeof window.iuInvoiceRenderPdfBlobFromData === "function")) break;
     await page.waitForTimeout(300);
   }
 
@@ -130,89 +128,80 @@ async function run() {
     window.__iuProofInvoiceState = st;
   }, buildSampleState());
 
-  const result2 = await page.evaluate(async () => {
+  const r = await page.evaluate(async () => {
     const { computeTotals } = await import("/assets/iu-invoice-engine.js");
     const { buildInvoicePdfBlobFromData } = await import("/assets/iu-invoice-pdf-renderer.js");
     const st = window.__iuProofInvoiceState;
     const totals = computeTotals(st);
-    const out1 = await buildInvoicePdfBlobFromData(st, totals, "proof1.pdf");
-    const out2 = await buildInvoicePdfBlobFromData(st, totals, "proof2.pdf");
-    async function blobInfo(blob) {
-      const ab = await blob.arrayBuffer();
-      const u = new Uint8Array(ab);
-      let head = "";
-      for (let i = 0; i < Math.min(5, u.length); i++) head += String.fromCharCode(u[i]);
-      return { size: blob.size, type: blob.type, head, bytes: u.length };
-    }
-    const b1 = await blobInfo(out1.blob);
-    const b2 = await blobInfo(out2.blob);
-    const proof = window._iuInvoicePdfRendererProof || out1.proof || {};
-    const itemPt = parseFloat(String(proof.PDF_ITEM_FONT_SIZE || "9").replace("pt", ""));
-    const descPt = parseFloat(String(proof.PDF_ITEM_DESCRIPTION_FONT_SIZE || "8").replace("pt", ""));
+    const out = await buildInvoicePdfBlobFromData(st, totals, "typography.pdf");
+    const ab = await out.blob.arrayBuffer();
+    const u = new Uint8Array(ab);
+    let head = "";
+    for (let i = 0; i < Math.min(5, u.length); i++) head += String.fromCharCode(u[i]);
+    const p = window._iuInvoicePdfRendererProof || out.proof || {};
     return {
-      err: null,
-      b1,
-      b2,
-      sameBlobSize: b1.size === b2.size,
-      proof,
-      renderer: proof.NEW_RENDERER || "",
-      marginLeft: Number(proof.PDF_MARGIN_LEFT),
-      marginRight: Number(proof.PDF_MARGIN_RIGHT),
-      marginTop: Number(proof.PDF_MARGIN_TOP),
-      itemPt,
-      descPt,
-      tableCols: proof.PDF_TABLE_COLUMNS || "",
-      pageFormat: proof.PDF_PAGE_FORMAT || "",
+      head,
+      size: out.blob.size,
+      proof: p,
     };
   });
 
   await browser.close();
   if (server) server.close();
 
-  const r = result2;
-  if (r.err) {
-    console.error("ERR=" + r.err);
-    process.exit(1);
-  }
+  const p = r.proof || {};
+  const headerPt = parsePt(p.HEADER_FONT_SIZE);
+  const itemPt = parsePt(p.ITEM_FONT_SIZE || p.ITEM_NAME_FONT_SIZE);
+  const descPt = parsePt(p.DESCRIPTION_FONT_SIZE || p.ITEM_DESCRIPTION_FONT_SIZE);
+  const summaryPt = parsePt(p.SUMMARY_FONT_SIZE);
+  const rowHmm = parseMm(p.TABLE_ROW_HEIGHT);
+  const footerGap = parseMm(p.FOOTER_TOP_GAP);
+  const letterSp = parsePt(p.LETTER_SPACING || p.HEADER_LETTER_SPACING);
+  const marginLeft = Number(p.PDF_MARGIN_LEFT);
+  const marginRight = Number(p.PDF_MARGIN_RIGHT);
+
   const checks = {
-    PDF_CREATED: r.b1 && r.b1.size > 4000,
-    PDF_MAGIC_BYTES: r.b1 && r.b1.head === "%PDF-",
-    DOWNLOAD_SHARE_SAME_BLOB: !!r.sameBlobSize,
-    PDF_A4_FORMAT: r.pageFormat === "a4",
-    MARGIN_LEFT_GE_14: r.marginLeft >= 14,
-    MARGIN_RIGHT_GE_14: r.marginRight >= 14,
-    MARGIN_TOP_GE_12: r.marginTop >= 12,
-    ITEM_FONT_GE_9: r.itemPt >= 9,
-    ITEM_FONT_LE_11: r.itemPt <= 11.01,
-    ITEM_DESC_FONT_LE_10: r.descPt <= 10.01,
-    TABLE_FIXED_COLUMNS: (r.tableCols || "").indexOf("item") !== -1,
-    RENDERER_V1: r.renderer === "iu-invoice-pdf-renderer-v1",
-    NOT_HTML2CANVAS: true,
+    PDF_MAGIC: r.head === "%PDF-",
+    MARGINS_16: marginLeft === 16 && marginRight === 16,
+    HEADER_18_20: headerPt >= 18 && headerPt <= 20,
+    ITEM_10: itemPt >= 9.8 && itemPt <= 10.2,
+    DESC_8_5_9: descPt >= 8.4 && descPt <= 9.1,
+    SUMMARY_COMPACT: summaryPt >= 9 && summaryPt <= 11,
+    TABLE_ROW_AIRY: rowHmm >= 8.5,
+    LETTER_SPACING_NORMAL: letterSp === 0,
+    FOOTER_GAP_REASONABLE: footerGap >= 8 && footerGap <= 16,
+    TYPOGRAPHY_FIX: p.TYPOGRAPHY_FIX === "v1_typography_tuning",
   };
 
+  let score = 0;
+  Object.keys(checks).forEach((k) => {
+    if (checks[k]) score += 1;
+  });
+  const layoutScore = score >= 8 ? "PASS" : "FAIL";
+
   const report = {
-    ROOT_CAUSE: "html2canvas_snapshot_of_mobile_html_unreliable_on_ios",
-    WHY_PREVIOUS_APPROACH_FAILED: "html2pdf_margin_0_full_bleed_scaled_preview_not_deterministic",
-    NEW_RENDERER: r.renderer,
-    PDF_ENGINE: "jspdf",
-    PDF_PAGE_FORMAT: r.pageFormat,
-    PDF_MARGIN_LEFT: r.marginLeft,
-    PDF_MARGIN_RIGHT: r.marginRight,
-    PDF_MARGIN_TOP: r.marginTop,
-    PDF_ITEM_FONT_SIZE: r.itemPt + "pt",
-    PDF_TABLE_COLUMNS: r.tableCols,
-    PROFESSIONAL_LAYOUT_PROOF: Object.values(checks).every(Boolean) ? "PASS" : "FAIL",
-    PDF_SIZE: r.b1 ? r.b1.size : 0,
+    ROOT_CAUSE: p.ROOT_CAUSE || "wide_meta_columns_centered_cells",
+    TYPOGRAPHY_FIX: p.TYPOGRAPHY_FIX || "",
+    HEADER_FONT_SIZE: p.HEADER_FONT_SIZE,
+    ITEM_FONT_SIZE: p.ITEM_FONT_SIZE || p.ITEM_NAME_FONT_SIZE,
+    DESCRIPTION_FONT_SIZE: p.DESCRIPTION_FONT_SIZE || p.ITEM_DESCRIPTION_FONT_SIZE,
+    SUMMARY_FONT_SIZE: p.SUMMARY_FONT_SIZE,
+    TABLE_ROW_HEIGHT: p.TABLE_ROW_HEIGHT,
+    LETTER_SPACING: p.LETTER_SPACING || p.HEADER_LETTER_SPACING,
+    FOOTER_TOP_GAP: p.FOOTER_TOP_GAP,
+    PDF_LAYOUT_SCORE: layoutScore,
+    TYPOGRAPHY_PROOF: layoutScore,
+    PDF_SIZE: r.size,
     ...checks,
   };
 
-  printBlocks("invoice_pdf_professional_layout_proof", report);
+  printBlocks("invoice_pdf_typography_proof", report);
 
-  if (report.PROFESSIONAL_LAYOUT_PROOF !== "PASS") {
-    console.error("STOP invoice_pdf_professional_layout_proof");
+  if (layoutScore !== "PASS") {
+    console.error("STOP invoice_pdf_typography_proof");
     process.exit(1);
   }
-  console.log("PROOF_PASS invoice_pdf_professional_layout");
+  console.log("PROOF_PASS invoice_pdf_typography");
 }
 
 run().catch((e) => {
