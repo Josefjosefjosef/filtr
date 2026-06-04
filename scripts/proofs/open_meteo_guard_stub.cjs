@@ -177,9 +177,22 @@ function isIgnorableGuardConsoleError(text, opts) {
   return false;
 }
 
+async function installOpenMeteoRejectRoute(page, status) {
+  const st = Number(status) || 429;
+  await page.route(/^https:\/\/api\.open-meteo\.com\/v1\/forecast/, async (route) => {
+    await route.fulfill({
+      status: st,
+      contentType: "text/plain; charset=utf-8",
+      body: "guard reject",
+      headers: st === 429 ? { "retry-after": "300" } : {},
+    });
+  });
+}
+
 module.exports = {
   buildGuardOpenMeteoMockBody,
   installOpenMeteoStubRoute,
+  installOpenMeteoRejectRoute,
   installYtimgThumbnailStubRoute,
   installProofGuardNetworkStubs,
   isIgnorableGuardResourceUrl,
