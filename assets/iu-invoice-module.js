@@ -5,7 +5,6 @@ import {
   applyBuyerSnapshot,
   applySupplierSnapshot,
   buildInvoicePaperHtml,
-  buildInvoicePrintHtml,
   buildPlainText,
   computeTotals,
   defaultFormState,
@@ -140,7 +139,6 @@ function renderFormShell() {
       <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-preview>Náhled faktury</button>
       <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-download>Stáhnout</button>
       <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-share-pdf>Sdílet PDF</button>
-      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-share-prepared hidden>Sdílet PDF</button>
     </div>
   </section>
 
@@ -151,7 +149,6 @@ function renderFormShell() {
       <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-preview-back>Zpět do formuláře</button>
       <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-preview-download>Stáhnout fakturu</button>
       <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-preview-share-pdf>Sdílet PDF</button>
-      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-share-prepared hidden>Sdílet PDF</button>
     </div>
     <div class="iu-inv-previewScroll" data-inv-preview-host></div>
   </div>
@@ -781,7 +778,7 @@ export function initIuInvoiceOverlay(deps) {
         return;
       }
       const totals = computeTotals(state);
-      const html = buildInvoicePrintHtml(state, totals);
+      const html = buildInvoicePaperHtml(state, totals);
       const fn =
         typeof window !== "undefined" && typeof window.iuPdfExportHtmlStringToBlobForInvoice === "function"
           ? window.iuPdfExportHtmlStringToBlobForInvoice
@@ -809,11 +806,6 @@ export function initIuInvoiceOverlay(deps) {
 
     function resetPreparedShareUi() {
       preparedPdfBundle = null;
-      try {
-        root.querySelectorAll("[data-inv-share-prepared]").forEach((b) => {
-          b.hidden = true;
-        });
-      } catch (_) {}
     }
 
     function runPdfDownloadFallback(blob, name) {
@@ -860,10 +852,7 @@ export function initIuInvoiceOverlay(deps) {
         const canShareFiles = !!(shareFn && canShareFn && canShareFn({ files: [file] }));
         if (shareFn && canShareFiles) {
           preparedPdfBundle = { blob, fileName: name };
-          root.querySelectorAll("[data-inv-share-prepared]").forEach((b) => {
-            b.hidden = false;
-          });
-          setStatus(root, "PDF připravené ke sdílení. Klepněte na „Sdílet PDF“.");
+          setStatus(root, "PDF připravené. Klepněte znovu na „Sdílet PDF“.");
           return;
         }
         runPdfDownloadFallback(blob, name);
@@ -922,6 +911,10 @@ export function initIuInvoiceOverlay(deps) {
 
     async function doSharePdf() {
       if (isNarrowShareTwoStep()) {
+        if (preparedPdfBundle && preparedPdfBundle.blob) {
+          await sharePreparedPdfNow();
+          return;
+        }
         prepareSharePdfFlow();
         return;
       }
@@ -1083,12 +1076,6 @@ export function initIuInvoiceOverlay(deps) {
     root.querySelector("[data-inv-preview-share-pdf]")?.addEventListener("click", () => {
       void doSharePdf();
     });
-    root.querySelectorAll("[data-inv-share-prepared]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        void sharePreparedPdfNow();
-      });
-    });
-
     root.querySelector("[data-inv-supplier-load]")?.addEventListener("click", () => {
       const sel = root.querySelector("[data-inv-supplier-select]");
       const id = sel && sel.value;
@@ -1188,9 +1175,6 @@ export function initIuInvoiceOverlay(deps) {
     if (rootEl) {
       try {
         preparedPdfBundle = null;
-        rootEl.querySelectorAll("[data-inv-share-prepared]").forEach((b) => {
-          b.hidden = true;
-        });
       } catch (_) {}
       readStateFromDom(rootEl, state);
       persistFormState(state);

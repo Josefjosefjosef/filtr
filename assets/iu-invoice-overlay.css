@@ -665,6 +665,37 @@
   color: rgba(15, 23, 42, 0.5);
   text-align: center;
 }
+.iu-pdf-render-mode{
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 794px;
+  max-width: 794px;
+  min-height: 1123px;
+  background: #fff;
+  color: #0f172a;
+  z-index: 2147483647;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: none;
+  overflow: visible;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  transform: none !important;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.iu-pdf-render-mode .iu-inv-pr-head,
+.iu-pdf-render-mode .iu-inv-pr-meta,
+.iu-pdf-render-mode .iu-inv-pr-table thead,
+.iu-pdf-render-mode .iu-inv-pr-totals{
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.iu-pdf-render-mode .iu-inv-pr-table tbody tr{
+  break-inside: auto;
+  page-break-inside: auto;
+}
 #iuInvoicePanel .iu-invoice-overlay-cardShell{
   position: relative;
 }
