@@ -485,117 +485,6 @@ export function computeInvestmentGrowth(values) {
   };
 }
 
-/** Potřebný kapitál k pasivnímu příjmu + měsíční investice (zjednodušený bezpečný výběr). */
-export function computeAnnuityRenta(values) {
-  const targetMonthly = iuFinParseNonNeg(values.targetMonthly);
-  const years = iuFinParsePositiveInt(values.years);
-  const annualReturnPercent = values.annualReturnPercent;
-  const withdrawalPercent = values.withdrawalPercent;
-  const wRaw = iuFinParseNumber(withdrawalPercent);
-  const w = wRaw == null ? 4 : iuFinClampPercent(wRaw);
-  const annualNeed = targetMonthly != null ? targetMonthly * 12 : null;
-  if (annualNeed == null || years == null) return { ok: false, outputs: [], meta: {} };
-  const wr = Math.max(0.1, w) / 100;
-  const requiredCapital = iuFinRoundMoney(annualNeed / wr);
-  const apr = iuFinParseNumber(annualReturnPercent);
-  const ret = apr == null ? 0 : Math.max(0, apr) / 100;
-  const n = years;
-  const fv = requiredCapital;
-  let monthlyNeed = 0;
-  if (n > 0 && ret > 0) {
-    const rm = ret / 12;
-    const totalM = n * 12;
-    const factor = (Math.pow(1 + rm, totalM) - 1) / rm;
-    monthlyNeed = factor > 0 ? fv / factor : 0;
-  } else if (n > 0) {
-    monthlyNeed = fv / (n * 12);
-  }
-  monthlyNeed = iuFinRoundMoney(monthlyNeed);
-  return {
-    ok: true,
-    outputs: [
-      { key: "capital", label: "Potřebný cílový kapitál (orient.)", value: requiredCapital },
-      { key: "monthlyInvest", label: "Orientační nutná měsíční investice", value: monthlyNeed },
-      { key: "annualDraw", label: "Cílový roční pasivní příjem", value: iuFinRoundMoney(annualNeed) },
-    ],
-    meta: {
-      interpretation:
-        "Model používá zjednodušené bezpečné čerpání z kapitálu; reálná renta závisí na daních, struktuře portfolia a inflaci.",
-      chartSeries: null,
-    },
-  };
-}
-
-/** Investiční plán k cílové částce — měsíční vklad. */
-export function computeInvestmentGoal(values) {
-  const target = iuFinParseNonNeg(values.targetAmount);
-  const initial = iuFinParseNonNeg(values.initial) ?? 0;
-  const years = iuFinParsePositiveInt(values.years);
-  const annualReturnPercent = values.annualReturnPercent;
-  if (target == null || years == null) return { ok: false, outputs: [], meta: {} };
-  const apr = iuFinParseNumber(annualReturnPercent);
-  const ret = apr == null ? 0 : Math.max(0, apr) / 100;
-  const totalM = years * 12;
-  const rm = ret / 12;
-  const fvInit = initial * Math.pow(1 + rm, totalM);
-  const gap = Math.max(0, target - fvInit);
-  let monthly = 0;
-  if (gap > 0 && totalM > 0) {
-    if (rm <= 0) monthly = gap / totalM;
-    else {
-      const factor = (Math.pow(1 + rm, totalM) - 1) / rm;
-      monthly = factor > 0 ? gap / factor : 0;
-    }
-  }
-  monthly = iuFinRoundMoney(monthly);
-  return {
-    ok: true,
-    outputs: [
-      { key: "target", label: "Cílová částka", value: target },
-      { key: "monthly", label: "Nutný měsíční vklad (orient.)", value: monthly },
-      { key: "fvInit", label: "Hodnota počátečního vkladu v cíli", value: iuFinRoundMoney(fvInit) },
-    ],
-    meta: {
-      interpretation: "Výpočet je zjednodušený; nezahrnuje poplatky, daně ani změnu výnosu v čase.",
-      chartSeries: null,
-    },
-  };
-}
-
-/** DIP — orientační daňový benefit a budoucí hodnota (zjednodušený model). */
-export function computeDip(values) {
-  const monthlyContrib = iuFinParseNonNeg(values.monthlyContrib);
-  const marginalTax = values.marginalTaxPercent;
-  const years = iuFinParsePositiveInt(values.years);
-  const annualReturnPercent = values.annualReturnPercent;
-  if (monthlyContrib == null || years == null) return { ok: false, outputs: [], meta: {} };
-  const tax = iuFinParseNumber(marginalTax);
-  const tr = tax == null ? 0.15 : iuFinClampPercent(tax) / 100;
-  const annualContrib = monthlyContrib * 12;
-  const orientTaxSave = iuFinRoundMoney(annualContrib * tr * 0.5);
-  const sav = computeSavings({
-    initial: "0",
-    monthly: String(monthlyContrib),
-    annualReturnPercent: annualReturnPercent || "0",
-    years: String(years),
-    capitalization: "monthly",
-  });
-  const futureVal = sav.ok ? sav.outputs.find((o) => o.key === "final")?.value ?? 0 : 0;
-  return {
-    ok: true,
-    outputs: [
-      { key: "taxSave", label: "Orientační roční daňová úspora (model)", value: orientTaxSave },
-      { key: "future", label: "Orientační budoucí hodnota vkladů", value: futureVal },
-      { key: "contribY", label: "Roční vklady (hrubé)", value: iuFinRoundMoney(annualContrib) },
-    ],
-    meta: {
-      interpretation:
-        "Orientační výpočet bez závaznosti; limit odpočtu a podmínky produktu se řídí aktuální legislativou.",
-      chartSeries: null,
-    },
-  };
-}
-
 /** DPS — státní příspěvky a budoucí hodnota (zjednodušený model). */
 export function computeDps(values) {
   const monthly = iuFinParseNonNeg(values.monthlyEmployee);
@@ -637,7 +526,6 @@ const COMPUTERS = {
   vat: computeVat,
   loan: computeLoan,
   mortgage: computeMortgage,
-  savings: computeSavings,
   inflation: computeInflation,
   discount: computeDiscount,
   budget: computeBudget,
@@ -645,9 +533,6 @@ const COMPUTERS = {
   refinance: computeRefinance,
   "rent-vs-mortgage": computeRentVsMortgage,
   "investment-growth": computeInvestmentGrowth,
-  "annuity-rent": computeAnnuityRenta,
-  "investment-goal": computeInvestmentGoal,
-  dip: computeDip,
   dps: computeDps,
 };
 

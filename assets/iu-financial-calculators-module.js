@@ -4,20 +4,16 @@
 import {
   IU_FIN_VAT_RATES,
   computeAffordability,
-  computeAnnuityRenta,
   computeBudget,
-  computeDip,
   computeDiscount,
   computeDps,
   computeFinancialCalculator,
   computeInflation,
-  computeInvestmentGoal,
   computeInvestmentGrowth,
   computeLoan,
   computeMortgage,
   computeRefinance,
   computeRentVsMortgage,
-  computeSavings,
   computeVat,
   listFinancialCalculatorIds,
 } from "./iu-financial-calculators-engine.js";
@@ -121,6 +117,14 @@ const IU_FIN_INFO_DISABILITY =
   "Zajištění pro případ invalidity nebo dlouhodobého výpadku příjmu je individuální záležitost. Správné nastavení závisí na životní situaci, rodině, závazcích, příjmech i dalších okolnostech. Z tohoto důvodu zde nenabízíme zjednodušený výpočet, který by mohl vést k nepřesným závěrům.";
 const IU_FIN_INFO_LIFE =
   "Potřebná výše životního krytí se u každého člověka výrazně liší. Záleží například na rodinné situaci, počtu vyživovaných osob, příjmech domácnosti, hypotékách, úvěrech, majetku i dlouhodobých finančních cílech. Proto není možné stanovit doporučené krytí jedním univerzálním výpočtem.";
+const IU_FIN_INFO_SAVINGS =
+  "Výpočet budoucí hodnoty investice závisí na investičním horizontu, očekávaném výnosu, inflaci, poplatcích, daňových dopadech a dalších individuálních parametrech. Zjednodušený online výpočet nemusí odpovídat skutečnému výsledku. Pro přesnější návrh doporučujeme konzultaci s finančním poradcem.";
+const IU_FIN_INFO_ANNUITY_RENT =
+  "Výpočet investiční renty je individuální a závisí na řadě důležitých faktorů. Zohledňuje například výši majetku, investiční horizont, očekávané výnosy, inflaci, daňové dopady i způsob čerpání prostředků. Pro správné nastavení doporučujeme konzultaci s finančním poradcem.";
+const IU_FIN_INFO_INVESTMENT_GOAL =
+  "Návrh investičního plánu je vždy individuální. Záleží na cílové částce, časovém horizontu, výši pravidelných vkladů, rizikovém profilu investora i dalších parametrech. Pro vytvoření vhodného investičního plánu doporučujeme konzultaci s finančním poradcem.";
+const IU_FIN_INFO_DIP =
+  "Daňové výhody DIP a budoucí hodnota investice závisí na individuální situaci klienta, výši příspěvků, investiční strategii, legislativě a dalších faktorech. Pro správné nastavení produktu doporučujeme konzultaci s finančním poradcem.";
 
 function buildFinInfoOnlyCard(root, text) {
   root.innerHTML = `<div class="iu-financial-overlay-infoCard" data-iu-fin-info-card="1"><p class="iu-financial-overlay-infoCardText">${esc(text)}</p></div>`;
@@ -292,48 +296,20 @@ const IU_FIN_CALC_REGISTRY = [
   {
     id: "savings",
     title: "Spoření / zhodnocení",
-    description: "Odhad konečného stavu při pravidelných vkladech a složeném úročení.",
+    description: "Individuální návrh spoření a zhodnocení s finančním poradcem.",
     category: "investments",
     pillar: "investment",
     enabled: true,
+    infoOnly: true,
     ctaMode: "contact",
-    ctaLabel: "Nastavit spořicí plán",
+    ctaLabel: "Navrhnout spoření s poradcem",
     ctaTarget: IU_FIN_CTA_DELEGATE,
     ctaServiceKey: "savings",
     resultSummaryMode: "default",
     accentClass: "iu-financial-accent--savings",
-    disclaimers: [DISCLAIMER_SHORT],
-    defaults: { initial: "50000", monthly: "3000", annualReturnPercent: "4", years: "10", capitalization: "monthly" },
     build(root) {
-      root.innerHTML = `
-        <p class="iu-financial-overlay-desc">${esc(this.description)}</p>
-        <div class="iu-financial-overlay-form">
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Počáteční vklad (Kč)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="initial" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Měsíční vklad (Kč)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="monthly" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Roční zhodnocení (%)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="annualReturnPercent" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Délka (roky)</span>
-            <input type="text" inputmode="numeric" class="iu-financial-overlay-input" data-iu-fin-f="years" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Kapitalizace úroku</span>
-            <select class="iu-financial-overlay-input" data-iu-fin-f="capitalization">
-              <option value="monthly">Měsíční</option>
-              <option value="annual">Roční</option>
-            </select></label>
-        </div>`;
+      buildFinInfoOnlyCard(root, IU_FIN_INFO_SAVINGS);
     },
-    readValues(root) {
-      const g = (k) => (root.querySelector(`[data-iu-fin-f="${k}"]`) || {}).value;
-      return {
-        initial: g("initial"),
-        monthly: g("monthly"),
-        annualReturnPercent: g("annualReturnPercent"),
-        years: g("years"),
-        capitalization: g("capitalization"),
-      };
-    },
-    compute: computeSavings,
   },
   {
     id: "inflation",
@@ -686,127 +662,56 @@ const IU_FIN_CALC_REGISTRY = [
   {
     id: "annuity-rent",
     title: "Kalkulačka renty",
-    description: "Orientační kapitál pro pasivní příjem a nutná měsíční investice (zjednodušený model výběru).",
+    description: "Individuální návrh investiční renty s finančním poradcem.",
     category: "investments",
     pillar: "investment",
     enabled: true,
+    infoOnly: true,
     ctaMode: "contact",
     ctaLabel: "Navrhnout rentu s poradcem",
     ctaTarget: IU_FIN_CTA_DELEGATE,
     ctaServiceKey: "annuity-rent",
     resultSummaryMode: "default",
     accentClass: "iu-financial-accent--annuity",
-    disclaimers: [DISCLAIMER_SHORT],
-    defaults: {
-      targetMonthly: "25000",
-      years: "20",
-      annualReturnPercent: "5",
-      withdrawalPercent: "4",
-    },
     build(root) {
-      root.innerHTML = `
-        <p class="iu-financial-overlay-desc">${esc(this.description)}</p>
-        <div class="iu-financial-overlay-form">
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Cílový měsíční pasivní příjem (Kč)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="targetMonthly" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Horizont do cíle (roky)</span>
-            <input type="text" inputmode="numeric" class="iu-financial-overlay-input" data-iu-fin-f="years" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Očekávané zhodnocení p.a. (%)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="annualReturnPercent" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Bezpečná roční míra výběru (%)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="withdrawalPercent" autocomplete="off" /></label>
-        </div>`;
+      buildFinInfoOnlyCard(root, IU_FIN_INFO_ANNUITY_RENT);
     },
-    readValues(root) {
-      const g = (k) => (root.querySelector(`[data-iu-fin-f="${k}"]`) || {}).value;
-      return {
-        targetMonthly: g("targetMonthly"),
-        years: g("years"),
-        annualReturnPercent: g("annualReturnPercent"),
-        withdrawalPercent: g("withdrawalPercent"),
-      };
-    },
-    compute: computeAnnuityRenta,
   },
   {
     id: "investment-goal",
     title: "Investiční plán cíle",
-    description: "Jaký měsíční vklad potřebujete k dosažení cílové částky (zjednodušený model).",
+    description: "Individuální investiční plán k cíli s finančním poradcem.",
     category: "investments",
     pillar: "investment",
     enabled: true,
+    infoOnly: true,
     ctaMode: "contact",
-    ctaLabel: "Sladit plán s poradcem",
+    ctaLabel: "Navrhnout investiční plán s poradcem",
     ctaTarget: IU_FIN_CTA_DELEGATE,
     ctaServiceKey: "investment-goal",
     resultSummaryMode: "default",
     accentClass: "iu-financial-accent--goal",
-    disclaimers: [DISCLAIMER_SHORT],
-    defaults: { targetAmount: "2000000", initial: "100000", annualReturnPercent: "5", years: "12" },
     build(root) {
-      root.innerHTML = `
-        <p class="iu-financial-overlay-desc">${esc(this.description)}</p>
-        <div class="iu-financial-overlay-form">
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Cílová částka (Kč)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="targetAmount" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Počáteční vklad (Kč)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="initial" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Očekávané zhodnocení p.a. (%)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="annualReturnPercent" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Horizont (roky)</span>
-            <input type="text" inputmode="numeric" class="iu-financial-overlay-input" data-iu-fin-f="years" autocomplete="off" /></label>
-        </div>`;
+      buildFinInfoOnlyCard(root, IU_FIN_INFO_INVESTMENT_GOAL);
     },
-    readValues(root) {
-      const g = (k) => (root.querySelector(`[data-iu-fin-f="${k}"]`) || {}).value;
-      return {
-        targetAmount: g("targetAmount"),
-        initial: g("initial"),
-        annualReturnPercent: g("annualReturnPercent"),
-        years: g("years"),
-      };
-    },
-    compute: computeInvestmentGoal,
   },
   {
     id: "dip",
     title: "DIP kalkulačka",
-    description: "Orientační daňový benefit a budoucí hodnota příspěvků (zjednodušený model).",
+    description: "Individuální nastavení DIP s finančním poradcem.",
     category: "investments",
     pillar: "investment",
     enabled: true,
+    infoOnly: true,
     ctaMode: "contact",
-    ctaLabel: "Porovnat DIP",
+    ctaLabel: "Navrhnout DIP s poradcem",
     ctaTarget: IU_FIN_CTA_DELEGATE,
     ctaServiceKey: "pension-dip",
     resultSummaryMode: "default",
     accentClass: "iu-financial-accent--dip",
-    disclaimers: [DISCLAIMER_SHORT],
-    defaults: { monthlyContrib: "3000", marginalTaxPercent: "15", years: "25", annualReturnPercent: "4" },
     build(root) {
-      root.innerHTML = `
-        <p class="iu-financial-overlay-desc">${esc(this.description)}</p>
-        <div class="iu-financial-overlay-form">
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Měsíční vklad (Kč)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="monthlyContrib" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Orientační hraniční sazba daně (%)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="marginalTaxPercent" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Horizont (roky)</span>
-            <input type="text" inputmode="numeric" class="iu-financial-overlay-input" data-iu-fin-f="years" autocomplete="off" /></label>
-          <label class="iu-financial-overlay-field"><span class="iu-financial-overlay-label">Očekávané zhodnocení p.a. (%)</span>
-            <input type="text" inputmode="decimal" class="iu-financial-overlay-input" data-iu-fin-f="annualReturnPercent" autocomplete="off" /></label>
-        </div>`;
+      buildFinInfoOnlyCard(root, IU_FIN_INFO_DIP);
     },
-    readValues(root) {
-      const g = (k) => (root.querySelector(`[data-iu-fin-f="${k}"]`) || {}).value;
-      return {
-        monthlyContrib: g("monthlyContrib"),
-        marginalTaxPercent: g("marginalTaxPercent"),
-        years: g("years"),
-        annualReturnPercent: g("annualReturnPercent"),
-      };
-    },
-    compute: computeDip,
   },
   {
     id: "dps",
@@ -1205,6 +1110,13 @@ export function initIuFinancialCalculatorsOverlay(deps) {
     </div>`;
       const inner = views.querySelector(".iu-financial-overlay-detailInner");
       def.build(inner);
+      if (iuFinCtaConfigIsRenderable(def)) {
+        const ctaWrap = document.createElement("div");
+        ctaWrap.className = "iu-financial-overlay-ctaHost";
+        ctaWrap.setAttribute("data-iu-fin-cta-wrap", "");
+        inner.appendChild(ctaWrap);
+        mountResultCta(def, { ok: true }, ctaWrap);
+      }
       try {
         inner.__iuFinLastResult = { id: def.id, values: {}, result: { ok: true, infoOnly: true } };
       } catch (_) {}

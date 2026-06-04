@@ -4,14 +4,11 @@
 import assert from "node:assert/strict";
 import {
   computeAffordability,
-  computeAnnuityRenta,
   computeBudget,
-  computeDip,
   computeDiscount,
   computeDps,
   computeFinancialCalculator,
   computeInflation,
-  computeInvestmentGoal,
   computeInvestmentGrowth,
   computeLoan,
   computeMortgage,
@@ -212,30 +209,6 @@ const ig = computeInvestmentGrowth({
   capitalization: "monthly",
 });
 assert.equal(ig.ok, true);
-
-const renta = computeAnnuityRenta({
-  targetMonthly: "20000",
-  years: "15",
-  annualReturnPercent: "5",
-  withdrawalPercent: "4",
-});
-assert.equal(renta.ok, true);
-
-const goal = computeInvestmentGoal({
-  targetAmount: "1000000",
-  initial: "0",
-  annualReturnPercent: "5",
-  years: "10",
-});
-assert.equal(goal.ok, true);
-
-const dip = computeDip({
-  monthlyContrib: "2000",
-  marginalTaxPercent: "15",
-  years: "10",
-  annualReturnPercent: "3",
-});
-assert.equal(dip.ok, true);
 
 const dps = computeDps({
   monthlyEmployee: "1000",
