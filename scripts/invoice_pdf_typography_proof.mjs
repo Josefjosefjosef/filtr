@@ -171,9 +171,13 @@ async function run() {
     LETTER_SPACING_NORMAL: letterSp === 0,
     FOOTER_GAP_REASONABLE: footerGap >= 8 && footerGap <= 16,
     TYPOGRAPHY_FIX: p.TYPOGRAPHY_FIX === "v1_utf8_noto_font",
-    TEXT_SPACING_FIXED: p.TEXT_SPACING_FIXED === true && p.PDF_FONT_ENGINE === "noto-utf8-vfs",
+    TEXT_SPACING_FIXED:
+      p.TEXT_SPACING_FIXED === true &&
+      String(p.PDF_FONT_ENGINE || "").indexOf("noto-utf8") === 0 &&
+      p.PDF_FONT_LOAD_OK === true,
     PDF_CHAR_SPACING: Number(p.PDF_CHAR_SPACING) === 0,
-    PDF_FONT_ENGINE: p.PDF_FONT_ENGINE === "noto-utf8-vfs",
+    PDF_FONT_ENGINE: String(p.PDF_FONT_ENGINE || "").indexOf("noto-utf8") === 0,
+    PDF_FONT_LOAD_OK: p.PDF_FONT_LOAD_OK === true,
     ITEM_COL_WIDTH_GE_95: Number(p.ITEM_DESCRIPTION_WIDTH_MM) >= 95,
   };
 
