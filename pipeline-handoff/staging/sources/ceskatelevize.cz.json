@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-04T10:01:54.301705Z",
+  "ingestedAt": "2026-06-04T10:47:05.338966Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Soud pravomocně rehabilitoval disidenta a exministra Rumla",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/soud-pravomocne-rehabilitoval-disidenta-a-exministra-rumla-374219",
+      "dt": "2026-06-04T10:21:01Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "disidenta",
+        "exministra",
+        "pravomocně",
+        "rehabilitoval",
+        "rumla",
+        "soud"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -406,17 +429,18 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Poslanci projednávají nominanty na státní vyznamenání",
+      "title": "Sněmovna navrhla na vyznamenání Zemana nebo Kunderu",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/poslanci-budou-hlasovat-o-snemovnich-nominantech-na-statni-vyznamenani-374203",
       "dt": "2026-06-04T03:27:17Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24",
       "tokens": [
-        "nominanty",
-        "poslanci",
-        "projednávají",
-        "státní",
-        "vyznamenání"
+        "kunderu",
+        "navrhla",
+        "nebo",
+        "sněmovna",
+        "vyznamenání",
+        "zemana"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -728,31 +752,6 @@
         "southamptonu",
         "spoutaného",
         "vyvolala"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zadržený ruský duchovní měl v autě kokain, uvedla policie",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/zadrzeny-rusky-duchovni-mel-v-aute-kokain-uvedla-policie-374191",
-      "dt": "2026-06-03T15:18:36Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "autě",
-        "duchovní",
-        "kokain",
-        "měl",
-        "policie",
-        "ruský",
-        "uvedla",
-        "zadržený"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2259,7 +2258,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44966,
+      "bytes": 44991,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2296,7 +2295,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-04T09:54:37Z",
+        "raw_feed_latest_publishedAt": "2026-06-04T10:21:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -2313,6 +2312,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soud pravomocně rehabilitoval disidenta a exministra Rumla",
+            "publishedAt": "2026-06-04T10:21:01Z"
+          },
           {
             "title": "Albánci zuří kvůli stavbě luxusního resortu Trumpových. Ostrov jsme objevili, tvrdí Ivanka",
             "publishedAt": "2026-06-04T09:54:37Z"
@@ -2340,10 +2343,6 @@
           {
             "title": "Filmové premiéry: Scary Movie, Tourettův syndrom i losí odysea",
             "publishedAt": "2026-06-04T08:10:01Z"
-          },
-          {
-            "title": "Veletrh vědy láká na jaderné reaktory i astronomii Středozemě",
-            "publishedAt": "2026-06-04T07:33:28Z"
           }
         ]
       }

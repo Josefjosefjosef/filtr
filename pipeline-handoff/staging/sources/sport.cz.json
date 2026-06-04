@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-04T10:01:54.301705Z",
+  "ingestedAt": "2026-06-04T10:47:05.338966Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Schick bude mít nového trenéra",
+      "url": "https://www.sport.cz/clanek/fotbal-bundesliga-schick-bude-mit-noveho-trenera-5474449",
+      "dt": "2026-06-04T10:43:04Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "mít",
+        "nového",
+        "schick",
+        "trenéra"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Přišla si jako by pro ni skončil svět. Teď Češka vede Světový pohár, smekla i největší hvězda",
+      "url": "https://www.sport.cz/clanek/vodni-sporty-prisla-si-jako-by-pro-ni-skoncil-svet-ted-ceska-vede-svetovy-pohar-smekla-i-nejvetsi-hvezda-5474447",
+      "dt": "2026-06-04T10:07:48Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hvězda",
+        "jako",
+        "největší",
+        "pohár",
+        "přišla",
+        "skončil",
+        "smekla",
+        "svět",
+        "světový",
+        "vede",
+        "češka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -735,53 +784,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Extraliga přichází o rozhodcovské eso",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-rozhodcovske-eso-mizi-z-extraligy-miri-do-ciziny-5473800",
-      "dt": "2026-06-03T17:18:59Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "eso",
-        "extraliga",
-        "přichází",
-        "rozhodcovské"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Abnormální vydřidušství. Zápas na monumentálním stadionu dál budí emoce, zasahují úřady",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-ploty-a-zakazy-tady-bude-velkolepe-finale-ms-kontroverze-ale-sili-5474262",
-      "dt": "2026-06-03T17:33:58Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "abnormální",
-        "budí",
-        "emoce",
-        "monumentálním",
-        "stadionu",
-        "vydřidušství",
-        "zasahují",
-        "zápas",
-        "úřady"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43952,
+      "bytes": 43380,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-04T09:34:03Z",
+        "raw_feed_latest_publishedAt": "2026-06-04T10:43:04Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -844,6 +846,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Schick bude mít nového trenéra",
+            "publishedAt": "2026-06-04T10:43:04Z"
+          },
+          {
+            "title": "Přišla si jako by pro ni skončil svět. Teď Češka vede Světový pohár, smekla i největší hvězda",
+            "publishedAt": "2026-06-04T10:07:48Z"
+          },
           {
             "title": "Fotbalová liga se bude v příští sezoně hrát s pestrobarevnými míči",
             "publishedAt": "2026-06-04T09:34:03Z"
@@ -867,14 +877,6 @@
           {
             "title": "Vztek a hořký pláč fandů. Slavný klub šedesát let od titulu nezískal licenci ani pro třetí ligu",
             "publishedAt": "2026-06-04T08:09:44Z"
-          },
-          {
-            "title": "Máma posílá energii, táta si užívá. Nikoho a ničeho se neboj, opakovali rodiče Menšíkovi",
-            "publishedAt": "2026-06-04T06:00:04Z"
-          },
-          {
-            "title": "Legendy o strašáku fotbalistů v Mexiku: Realita byla horší, než jsme si představovali",
-            "publishedAt": "2026-06-04T07:30:05Z"
           }
         ]
       }
