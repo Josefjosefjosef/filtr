@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-06-05T09:47:01.144154Z",
+  "ingestedAt": "2026-06-05T10:32:05.980097Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Jihočeské nemocnice uzavřely rok tradičně v černých číslech",
+      "url": "https://www.zdravezpravy.cz/2026/06/05/jihoceske-nemocnice-uzavrely-rok-tradicne-v-cernych-cislech/",
+      "dt": "2026-06-05T09:21:56Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "jihočeské",
+        "nemocnice",
+        "rok",
+        "tradičně",
+        "uzavřely",
+        "černých",
+        "číslech"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -474,30 +498,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Rakousko izoluje osobu s příznaky eboly. Přijela z Ugandy",
-      "url": "https://www.zdravezpravy.cz/2026/05/28/rakousko-izoluje-osobu-s-priznaky-eboly-prijela-z-ugandy/",
-      "dt": "2026-05-28T11:30:34Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "eboly",
-        "izoluje",
-        "osobu",
-        "přijela",
-        "příznaky",
-        "rakousko",
-        "ugandy"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -508,7 +508,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 207088,
+      "bytes": 206198,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -545,7 +545,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-05T08:16:10Z",
+        "raw_feed_latest_publishedAt": "2026-06-05T09:21:56Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -560,6 +560,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jihočeské nemocnice uzavřely rok tradičně v černých číslech",
+            "publishedAt": "2026-06-05T09:21:56Z"
+          },
           {
             "title": "Už teď bilance úmrtí na motorce děsí. Ale nejhorší období teprve přijde",
             "publishedAt": "2026-06-05T08:16:10Z"
@@ -587,10 +591,6 @@
           {
             "title": "Křečové žíly se dají odstranit třemi metodami. Výběr je na pacientovi",
             "publishedAt": "2026-06-03T04:23:50Z"
-          },
-          {
-            "title": "Filipínci jsou pracovití a empatičtí. Proto o ně mají české nemocnice zájem",
-            "publishedAt": "2026-06-02T16:05:11Z"
           }
         ]
       }

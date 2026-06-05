@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-05T09:47:01.144154Z",
+  "ingestedAt": "2026-06-05T10:32:05.980097Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Babiš posunul termín, kdy rozhodne o složení delegace na summit NATO",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/babis-posunul-termin-kdy-rozhodne-o-slozeni-delegace-na-summit-nato-374262",
+      "dt": "2026-06-05T10:08:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "babiš",
+        "delegace",
+        "nato",
+        "posunul",
+        "rozhodne",
+        "složení",
+        "summit",
+        "termín"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -200,19 +225,22 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Odboráři Úřadu vlády vyzvali k přehodnocení přesunu agend",
+      "title": "Vláda by měla vysvětlit, proč nevedla sociální dialog, řekli na stávce odboráři",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/odbory-strakovy-akademie-zahajuji-stavku-kvuli-presunu-agend-374251",
       "dt": "2026-06-05T08:00:29Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24",
       "tokens": [
-        "agend",
+        "dialog",
+        "měla",
+        "nevedla",
         "odboráři",
-        "přehodnocení",
-        "přesunu",
-        "vlády",
-        "vyzvali",
-        "úřadu"
+        "proč",
+        "sociální",
+        "stávce",
+        "vláda",
+        "vysvětlit",
+        "řekli"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -248,20 +276,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Sněmovna vrátila zákaz lovu lišek norováním do druhého čtení",
+      "title": "Poslanci vybírali členy Rady ČT. Matochu a Bradáče nezvolili",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/poslanci-budou-volit-mistopredsedkyni-snemovny-i-radni-ct-374250",
       "dt": "2026-06-05T07:00:45Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24",
       "tokens": [
-        "druhého",
-        "lišek",
-        "lovu",
-        "norováním",
-        "sněmovna",
-        "vrátila",
-        "zákaz",
-        "čtení"
+        "bradáče",
+        "matochu",
+        "nezvolili",
+        "poslanci",
+        "rady",
+        "vybírali",
+        "členy"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -721,32 +748,6 @@
         "projektu",
         "spolupráci",
         "václava"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fotbal, ale nikoli americký. Poločasová show na mistrovství ne všechny baví",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/fotbal-ale-nikoli-americky-polocasova-show-na-mistrovstvi-ne-vsechny-bavi-374229",
-      "dt": "2026-06-04T15:13:41Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "ale",
-        "americký",
-        "baví",
-        "fotbal",
-        "mistrovství",
-        "nikoli",
-        "poločasová",
-        "show",
-        "všechny"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2252,7 +2253,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42486,
+      "bytes": 42500,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2289,13 +2290,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-05T09:40:37Z",
+        "raw_feed_latest_publishedAt": "2026-06-05T10:08:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
+          "zpravy": 26,
           "other": 3,
-          "finance": 1,
-          "sport": 1
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2307,6 +2307,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš posunul termín, kdy rozhodne o složení delegace na summit NATO",
+            "publishedAt": "2026-06-05T10:08:00Z"
+          },
           {
             "title": "Ukrajinská firma hlásí úspěšný test protibalistické střely",
             "publishedAt": "2026-06-05T09:40:37Z"
@@ -2334,10 +2338,6 @@
           {
             "title": "V rumunském přístavu explodoval námořní dron",
             "publishedAt": "2026-06-05T08:21:06Z"
-          },
-          {
-            "title": "Maďarsko sousedí samo se sebou, popudil Magyar Slováky",
-            "publishedAt": "2026-06-05T08:03:35Z"
           }
         ]
       }
