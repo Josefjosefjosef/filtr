@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-05T07:04:20.019516Z",
+  "ingestedAt": "2026-06-05T07:47:05.571625Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Maloobchodní tržby v dubnu zpomalily meziroční růst na 1,6 procenta",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/maloobchodni-trzby-v-dubnu-zpomalily-mezirocni-rust-na-16-procenta-374252",
+      "dt": "2026-06-05T07:27:52Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "dubnu",
+        "maloobchodní",
+        "meziroční",
+        "procenta",
+        "růst",
+        "tržby",
+        "zpomalily"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -733,32 +757,6 @@
         "uvázlé",
         "zálivu",
         "část"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "AI může pomáhat při řízení jaderné elektrárny do deseti let, míní Kochánek",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/ai-muze-ridit-jadernou-elektrarnu-do-deseti-let-mini-kochanek-374220",
-      "dt": "2026-06-04T11:24:17Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "deseti",
-        "elektrárny",
-        "jaderné",
-        "kochánek",
-        "let",
-        "míní",
-        "pomáhat",
-        "při",
-        "řízení"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2267,7 +2265,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43079,
+      "bytes": 42631,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2304,10 +2302,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-05T07:00:45Z",
+        "raw_feed_latest_publishedAt": "2026-06-05T07:27:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
+          "finance": 1,
+          "zpravy": 24,
           "other": 4,
           "sport": 1
         },
@@ -2321,6 +2320,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maloobchodní tržby v dubnu zpomalily meziroční růst na 1,6 procenta",
+            "publishedAt": "2026-06-05T07:27:52Z"
+          },
           {
             "title": "Poslanci budou volit místopředsedkyni sněmovny i radní ČT",
             "publishedAt": "2026-06-05T07:00:45Z"
@@ -2348,10 +2351,6 @@
           {
             "title": "Začalo Archeologické léto. Vědci nabízejí veřejnosti nahlédnout do života předků",
             "publishedAt": "2026-06-05T04:30:00Z"
-          },
-          {
-            "title": "Řidiče čeká v létě řada uzavírek. Podívejte se na ty nejvýznamnější",
-            "publishedAt": "2026-06-05T04:00:00Z"
           }
         ]
       }

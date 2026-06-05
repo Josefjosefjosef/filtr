@@ -1,28 +1,51 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-05T07:04:20.019516Z",
+  "ingestedAt": "2026-06-05T07:47:05.571625Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "VOLEJBAL ONLINE: Češky třetí zápas v Lize národů hrají proti Belgii, začaly výborně",
+      "title": "Smutný Hertl z trestné lavice sledoval obrat, který NHL nezažila už 82 let",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-smutny-hertl-z-trestne-lavice-sledoval-obrat-ktery-nhl-nezazila-uz-82-let-5474661",
+      "dt": "2026-06-05T07:38:51Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hertl",
+        "lavice",
+        "let",
+        "nezažila",
+        "nhl",
+        "obrat",
+        "sledoval",
+        "smutný",
+        "trestné"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "VOLEJBAL ONLINE: Češky mají proti Belgii navrch i ve druhém setu",
       "url": "https://www.sport.cz/clanek/volejbal-cesky-treti-zapas-v-lize-narodu-sehraji-proti-belgii-5474478",
       "dt": "2026-06-05T04:28:31Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "belgii",
-        "hrají",
-        "lize",
-        "národů",
+        "druhém",
+        "mají",
+        "navrch",
         "online",
         "proti",
-        "třetí",
+        "setu",
         "volejbal",
-        "výborně",
-        "začaly",
-        "zápas",
         "češky"
       ],
       "feedCategory": "sport",
@@ -759,30 +782,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Letní změny ve Zlíně. Přichází Grygera i stoper z Lyonu",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-letni-zmeny-ve-zline-prichazi-grygera-i-stoper-z-lyonu-5474473",
-      "dt": "2026-06-04T15:28:12Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "grygera",
-        "letní",
-        "lyonu",
-        "přichází",
-        "stoper",
-        "zlíně",
-        "změny"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44775,
+      "bytes": 45286,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-05T06:37:08Z",
+        "raw_feed_latest_publishedAt": "2026-06-05T07:38:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,7 +845,11 @@
         },
         "sample_titles": [
           {
-            "title": "VOLEJBAL ONLINE: Češky třetí zápas v Lize národů hrají proti Belgii, začaly výborně",
+            "title": "Smutný Hertl z trestné lavice sledoval obrat, který NHL nezažila už 82 let",
+            "publishedAt": "2026-06-05T07:38:51Z"
+          },
+          {
+            "title": "VOLEJBAL ONLINE: Češky mají proti Belgii navrch i ve druhém setu",
             "publishedAt": "2026-06-05T04:28:31Z"
           },
           {
@@ -872,10 +875,6 @@
           {
             "title": "Hertlova asistence nestačila. Carolina vyrovnala finále NHL",
             "publishedAt": "2026-06-05T03:56:35Z"
-          },
-          {
-            "title": "Golfistka Kedroňová zahájila US Open šesti ranami nad par",
-            "publishedAt": "2026-06-05T05:56:22Z"
           }
         ]
       }
