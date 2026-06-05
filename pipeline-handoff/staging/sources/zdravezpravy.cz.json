@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-06-05T13:17:09.143987Z",
+  "ingestedAt": "2026-06-05T14:02:08.969982Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Exministr Válek se na pátý pokus volby dostal do rady VZP ČR",
+      "url": "https://www.zdravezpravy.cz/2026/06/05/exministr-valek-se-na-paty-pokus-volby-dostal-do-rady-vzp-cr/",
+      "dt": "2026-06-05T13:02:53Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "dostal",
+        "exministr",
+        "pokus",
+        "pátý",
+        "rady",
+        "volby",
+        "vzp",
+        "válek"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -475,29 +500,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Adiktologické asociace hrozí stávkou. Nechtějí přesun z ÚV ČR",
-      "url": "https://www.zdravezpravy.cz/2026/05/28/adiktologicke-asociace-hrozi-stavkou-zadaji-stopnout-vladni-presuny/",
-      "dt": "2026-05-28T15:07:02Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "adiktologické",
-        "asociace",
-        "hrozí",
-        "nechtějí",
-        "přesun",
-        "stávkou"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -508,7 +510,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 206198,
+      "bytes": 204716,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -545,7 +547,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-05T09:21:56Z",
+        "raw_feed_latest_publishedAt": "2026-06-05T13:02:53Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -560,6 +562,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Exministr Válek se na pátý pokus volby dostal do rady VZP ČR",
+            "publishedAt": "2026-06-05T13:02:53Z"
+          },
           {
             "title": "Jihočeské nemocnice uzavřely rok tradičně v černých číslech",
             "publishedAt": "2026-06-05T09:21:56Z"
@@ -587,10 +593,6 @@
           {
             "title": "Sebraná data nově mapují počty a okolnosti pooperačních sepsí",
             "publishedAt": "2026-06-03T08:00:39Z"
-          },
-          {
-            "title": "Křečové žíly se dají odstranit třemi metodami. Výběr je na pacientovi",
-            "publishedAt": "2026-06-03T04:23:50Z"
           }
         ]
       }
