@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-05T16:01:59.554914Z",
+  "ingestedAt": "2026-06-05T16:39:28.308419Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na severu Slovenska lokomotiva narazila zezadu do osobního vlaku, dva zranění",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/na-severu-slovenska-lokomotiva-narazila-do-osobniho-vlaku-dva-zraneni.A260605_180945_zahranicni_ijan",
+      "dt": "2026-06-05T16:12:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "dva",
+        "lokomotiva",
+        "narazila",
+        "osobního",
+        "severu",
+        "slovenska",
+        "vlaku",
+        "zezadu",
+        "zranění"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -752,32 +778,6 @@
         "projevu",
         "svobodě",
         "vystoupí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Neničte, co funguje, varuje Vobořil Babiše. Kritizuje změny na Úřadu vlády",
-      "url": "https://www.idnes.cz/zpravy/domaci/protidrogovy-koordinator-jindrich-voboril-varovani-umrti-drogy-urad-vlady-zmeny-presun-ministerstva.A260605_124600_domaci_linh",
-      "dt": "2026-06-05T12:47:54Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "babiše",
-        "funguje",
-        "kritizuje",
-        "neničte",
-        "varuje",
-        "vlády",
-        "vobořil",
-        "změny",
-        "úřadu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1580,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50313,
+      "bytes": 49814,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,7 +1617,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-05T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-05T16:12:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 29,
@@ -1633,6 +1633,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na severu Slovenska lokomotiva narazila zezadu do osobního vlaku, dva zranění",
+            "publishedAt": "2026-06-05T16:12:00Z"
+          },
           {
             "title": "Kompromis se v pivu nedělá, říkával. Před sto lety se narodil legendární pivovarník",
             "publishedAt": "2026-06-05T16:00:00Z"
@@ -1660,10 +1664,6 @@
           {
             "title": "Tak kosí Rusy. Vojáci na frontě už dostávají data ze satelitů v reálném čase na mobil",
             "publishedAt": "2026-06-05T15:22:00Z"
-          },
-          {
-            "title": "Kellnerova smrt u soudu: rodina viní firmu TML z několika chyb před tragickou havárií",
-            "publishedAt": "2026-06-05T15:12:00Z"
           }
         ]
       }
