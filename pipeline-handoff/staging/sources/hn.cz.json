@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-06-05T06:32:07.486015Z",
+  "ingestedAt": "2026-06-05T07:04:20.019516Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Doněckou oblast neovládnete, napsal Zelenskyj Putinovi. V otevřeném dopise šéfa Kremlu vyzval, aby se spolu sešli",
+      "url": "https://zahranicni.hn.cz/c1-67886500-doneckou-oblast-neovladnete-napsal-zelenskyj-putinovi-v-otevrenem-dopise-sefa-kremlu-vyzval-aby-se-spolu-sesli",
+      "dt": "2026-06-05T06:41:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN",
+      "tokens": [
+        "doněckou",
+        "dopise",
+        "kremlu",
+        "napsal",
+        "neovládnete",
+        "oblast",
+        "otevřeném",
+        "putinovi",
+        "sešli",
+        "spolu",
+        "vyzval",
+        "zelenskyj",
+        "šéfa"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -114,7 +144,7 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Před 15 lety se vezli na vlně solárního boomu. Jak se nyní chystají na dobu, kdy jim skončí jistota garantovaných výdělků?",
+      "title": "Před více než 15 lety se vezli na vlně solárního boomu. Jak se nyní chystají na dobu, kdy jim skončí jistota garantovaných výdělků?",
       "url": "https://archiv.hn.cz/c1-67885570-pred-15-lety-se-vezli-na-vlne-solarniho-boomu-jak-se-nyni-chystaji-na-dobu-kdy-jim-skonci-jistota-garantovanych-vydelku",
       "dt": "2026-06-04T22:00:00Z",
       "media_raw": "HN / Ekonomika",
@@ -127,6 +157,7 @@
         "jim",
         "jistota",
         "lety",
+        "než",
         "nyní",
         "skončí",
         "solárního",
@@ -1133,40 +1164,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ebola v Ituri varuje svět. Honba po kobaltu, lithiu a dalších strategických surovinách žene tisíce lidí do šachet a vytváří ohniska nemocí",
-      "url": "https://archiv.hn.cz/c1-67883370-ebola-v-ituri-varuje-svet-honba-po-kobaltu-lithiu-a-dalsich-strategickych-surovinach-zene-tisice-lidi-do-sachet-a-vytvari-ohniska-nemoci",
-      "dt": "2026-06-04T06:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN",
-      "tokens": [
-        "dalších",
-        "ebola",
-        "honba",
-        "ituri",
-        "kobaltu",
-        "lidí",
-        "lithiu",
-        "nemocí",
-        "ohniska",
-        "strategických",
-        "surovinách",
-        "svět",
-        "tisíce",
-        "varuje",
-        "vytváří",
-        "šachet",
-        "žene"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1177,7 +1174,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185093,
+      "bytes": 185709,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1214,11 +1211,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-05T04:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-05T06:41:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zdravi": 3,
-          "finance": 34,
+          "finance": 35,
+          "zdravi": 2,
           "sport": 1,
           "zpravy": 2
         },
@@ -1232,6 +1229,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Doněckou oblast neovládnete, napsal Zelenskyj Putinovi. V otevřeném dopise šéfa Kremlu vyzval, aby se spolu sešli",
+            "publishedAt": "2026-06-05T06:41:00Z"
+          },
           {
             "title": "Sodíkové baterie mohou výrazně zlevnit elektromobily. Česko má díky jedné firmě šanci být u toho",
             "publishedAt": "2026-06-05T04:08:00Z"
@@ -1249,7 +1250,7 @@
             "publishedAt": "2026-06-04T22:00:00Z"
           },
           {
-            "title": "Před 15 lety se vezli na vlně solárního boomu. Jak se nyní chystají na dobu, kdy jim skončí jistota garantovaných výdělků?",
+            "title": "Před více než 15 lety se vezli na vlně solárního boomu. Jak se nyní chystají na dobu, kdy jim skončí jistota garantovaných výdělků?",
             "publishedAt": "2026-06-04T22:00:00Z"
           },
           {
@@ -1259,10 +1260,6 @@
           {
             "title": "Fotbaloví chuligáni v buřinkách aneb Soudce je mrkev! Jak si před sto lety fanoušci v mnohém nezadali s těmi dnešními",
             "publishedAt": "2026-06-04T22:00:00Z"
-          },
-          {
-            "title": "Dostupné bydlení, zpracování kalu i fotovoltaika na střechách. Zelenými obcemi roku jsou Prosetín, Bělotín a Rožnov pod Radhoštěm",
-            "publishedAt": "2026-06-04T17:30:00Z"
           }
         ]
       }
