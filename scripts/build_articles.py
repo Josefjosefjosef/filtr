@@ -736,7 +736,17 @@ def _vertical_section_priority(article: dict) -> int:
     return 1
 
 
+def _p0_headline_article_priority(article: dict) -> int:
+    """P0 headline rubric wins retention URL dedupe vs same-URL vertical syndication."""
+    if not isinstance(article, dict):
+        return 0
+    return 1 if str(article.get("feedId") or "").strip() in P0_HEADLINE_REGISTRY_IDS else 0
+
+
 def _pick_url_collision_winner(a: dict, b: dict) -> dict:
+    pha, phb = _p0_headline_article_priority(a), _p0_headline_article_priority(b)
+    if pha != phb:
+        return a if pha > phb else b
     pa, pb = _vertical_section_priority(a), _vertical_section_priority(b)
     if pa != pb:
         return a if pa > pb else b
