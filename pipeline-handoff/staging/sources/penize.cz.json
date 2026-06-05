@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-06-05T02:47:08.671678Z",
+  "ingestedAt": "2026-06-05T03:32:00.942742Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Čtyři sta tisíc pro důchodce a zranitelné. Kdo pořád dostane dotaci ze Zelené úsporám",
+      "url": "https://www.penize.cz/vlastnictvi-nemovitosti/491174-ctyri-sta-tisic-pro-duchodce-a-zranitelne-kdo-porad-dostane-dotaci-ze-zelene-usporam",
+      "dt": "2026-06-05T05:05:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "dostane",
+        "dotaci",
+        "důchodce",
+        "pořád",
+        "sta",
+        "tisíc",
+        "zelené",
+        "zranitelné",
+        "úsporám",
+        "čtyři"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Investor po 35 letech v nemovitostech: do investičních bytů bych teď nešel",
+      "url": "https://www.penize.cz/investice/490397-investor-po-35-letech-v-nemovitostech-do-investicnich-bytu-bych-ted-nesel",
+      "dt": "2026-06-05T05:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "bych",
+        "bytů",
+        "investičních",
+        "investor",
+        "letech",
+        "nemovitostech",
+        "nešel"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -452,58 +503,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Stavební spořitelna láká na bonus pro mladé. Vyplatí se, ale pozor na podmínky",
-      "url": "https://www.penize.cz/stavebni-sporeni/486368-stavebni-sporitelna-laka-na-bonus-pro-mlade-vyplati-se-ale-pozor-na-podminky",
-      "dt": "2026-06-02T09:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "ale",
-        "bonus",
-        "láká",
-        "mladé",
-        "podmínky",
-        "pozor",
-        "spořitelna",
-        "stavební",
-        "vyplatí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Banky budou muset líp ukázat, komu jste platili. Zatlačí na obchodníky",
-      "url": "https://www.penize.cz/osobni-ucty/486676-banky-budou-muset-lip-ukazat-komu-jste-platili-zatlaci-na-obchodniky",
-      "dt": "2026-06-02T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "banky",
-        "jste",
-        "komu",
-        "líp",
-        "muset",
-        "obchodníky",
-        "platili",
-        "ukázat",
-        "zatlačí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -514,7 +513,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18778,
+      "bytes": 19160,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -551,11 +550,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-04T13:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-05T05:05:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 5,
           "finance": 14,
+          "zpravy": 5,
           "sport": 1
         },
         "drop_counts": {
@@ -568,6 +567,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čtyři sta tisíc pro důchodce a zranitelné. Kdo pořád dostane dotaci ze Zelené úsporám",
+            "publishedAt": "2026-06-05T05:05:00Z"
+          },
+          {
+            "title": "Investor po 35 letech v nemovitostech: do investičních bytů bych teď nešel",
+            "publishedAt": "2026-06-05T05:00:00Z"
+          },
           {
             "title": "Maximální cena benzinu a nafty na pátek 5. června",
             "publishedAt": "2026-06-04T13:59:00Z"
@@ -591,14 +598,6 @@
           {
             "title": "RegioJet zdražil jízdenky na autobus. Nově rozhoduje i čas nákupu",
             "publishedAt": "2026-06-04T10:07:00Z"
-          },
-          {
-            "title": "Alza útočí na trh s kosmetikou. Otevře svou první prémiovou prodejnu",
-            "publishedAt": "2026-06-04T10:00:00Z"
-          },
-          {
-            "title": "Levnější a výnosnější, nebo zabité? Změny v penzijku očima expertů",
-            "publishedAt": "2026-06-04T05:05:00Z"
           }
         ]
       }
