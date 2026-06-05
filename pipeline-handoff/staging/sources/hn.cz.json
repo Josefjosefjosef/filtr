@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-06-05T14:02:08.969982Z",
+  "ingestedAt": "2026-06-05T14:47:09.396014Z",
   "items": [
     {
       "section": "zdravi",
@@ -258,6 +258,37 @@
         "tato",
         "trh",
         "tři"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sluchátka za 3500 i 14 tisíc v přímém souboji. Nejlepší volba záleží víc na tvaru hlavy a uší než na značce",
+      "url": "https://tech.hn.cz/c1-67886510-sluchatka-za-3500-i-14-tisic-v-primem-souboji-nejlepsi-volba-zalezi-vic-na-tvaru-hlavy-a-usi-nez-na-znacce",
+      "dt": "2026-06-05T06:57:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN",
+      "tokens": [
+        "3500",
+        "hlavy",
+        "nejlepší",
+        "než",
+        "přímém",
+        "sluchátka",
+        "souboji",
+        "tisíc",
+        "tvaru",
+        "uší",
+        "volba",
+        "víc",
+        "značce",
+        "záleží"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1147,33 +1178,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Brusel dal za pravdu zemědělskému fondu. Nárokové dotace pro Agrofert se mají dál proplácet",
-      "url": "https://archiv.hn.cz/c1-67886270-brusel-dal-za-pravdu-zemedelskemu-fondu-narokove-dotace-pro-agrofert-se-maji-dal-vykazovat",
-      "dt": "2026-06-04T10:14:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN",
-      "tokens": [
-        "agrofert",
-        "brusel",
-        "dal",
-        "dotace",
-        "fondu",
-        "mají",
-        "nárokové",
-        "pravdu",
-        "proplácet",
-        "zemědělskému"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1184,7 +1188,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185850,
+      "bytes": 185780,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1225,8 +1229,8 @@
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "zdravi": 3,
-          "zpravy": 3,
-          "finance": 33,
+          "zpravy": 4,
+          "finance": 32,
           "sport": 1
         },
         "drop_counts": {
