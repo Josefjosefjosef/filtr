@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-05T19:18:11.401957Z",
+  "ingestedAt": "2026-06-05T20:01:38.037116Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "U Kolína se srazila dvě auta. Zranilo se několik lidí včetně dětí",
+      "url": "https://www.idnes.cz/praha/zpravy/nehoda-kolin-tezce-zraneni-silnice-125-stredocesky-kraj.A260605_210512_praha-zpravy_tmps",
+      "dt": "2026-06-05T19:58:37Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "auta",
+        "dvě",
+        "dětí",
+        "kolína",
+        "lidí",
+        "několik",
+        "srazila",
+        "včetně",
+        "zranilo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -760,28 +786,6 @@
         "vybuchla",
         "vážně",
         "člověka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jednadevadesátiletý Čech se zřítil na rakouském Grossglockneru",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/rakousko-grossglockner-cech-hora.A260605_103547_zahranicni_kurl",
-      "dt": "2026-06-05T13:12:31Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "grossglockneru",
-        "jednadevadesátiletý",
-        "rakouském",
-        "zřítil",
-        "čech"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1584,7 +1588,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49359,
+      "bytes": 49747,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1621,7 +1625,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-05T19:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-05T19:58:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1638,6 +1642,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "U Kolína se srazila dvě auta. Zranilo se několik lidí včetně dětí",
+            "publishedAt": "2026-06-05T19:58:37Z"
+          },
           {
             "title": "Nehoda uzavřela dálnici D3 ve směru na Prahu. Podle policie jel řidič příliš rychle",
             "publishedAt": "2026-06-05T19:03:00Z"
@@ -1665,10 +1673,6 @@
           {
             "title": "Kellnerova smrt u soudu: rodina viní firmu TML z několika chyb před tragickou havárií",
             "publishedAt": "2026-06-05T16:45:00Z"
-          },
-          {
-            "title": "Na severu Slovenska lokomotiva narazila zezadu do osobního vlaku, dva zranění",
-            "publishedAt": "2026-06-05T16:12:00Z"
           }
         ]
       }

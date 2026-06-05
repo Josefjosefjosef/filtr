@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-05T19:18:11.401957Z",
+  "ingestedAt": "2026-06-05T20:01:38.037116Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Bouldering v Praze vyhrál Japonec Anraku",
+      "url": "https://www.sport.cz/clanek/lezeni-bouldering-v-praze-vyhral-japonec-anraku-5475160",
+      "dt": "2026-06-05T19:38:03Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "anraku",
+        "bouldering",
+        "japonec",
+        "praze",
+        "vyhrál"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -743,35 +765,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Obrovskou energii přetavily Češky v cenné vítězství. Ke skalpu Belgie pomohla i matka dvou dětí",
-      "url": "https://www.sport.cz/clanek/volejbal-obrovskou-energii-pretavily-cesky-v-cenne-vitezstvi-ke-skalpu-belgie-pomohla-i-matka-dvou-deti-5474781",
-      "dt": "2026-06-05T10:47:25Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "belgie",
-        "cenné",
-        "dvou",
-        "dětí",
-        "energii",
-        "matka",
-        "obrovskou",
-        "pomohla",
-        "přetavily",
-        "skalpu",
-        "vítězství",
-        "češky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -782,7 +775,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42457,
+      "bytes": 42342,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -819,7 +812,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-05T19:15:56Z",
+        "raw_feed_latest_publishedAt": "2026-06-05T19:38:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -834,6 +827,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bouldering v Praze vyhrál Japonec Anraku",
+            "publishedAt": "2026-06-05T19:38:03Z"
+          },
           {
             "title": "Češi nestačili na olympijské vítěze, jejich cesta na MS končí v osmifinále. Loučí se i ženy",
             "publishedAt": "2026-06-05T17:31:29Z"
@@ -861,10 +858,6 @@
           {
             "title": "V prvním tréninku F1 v Monaku ošklivě boural Hadjar. Nejrychlejší byli piloti Ferrari",
             "publishedAt": "2026-06-05T12:47:19Z"
-          },
-          {
-            "title": "Lapálie po životním triumfu. Český vítěz čekal na zlato v trenkách, trenér sháněl kalhoty",
-            "publishedAt": "2026-06-05T17:23:41Z"
           }
         ]
       }
