@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-05T20:01:38.037116Z",
+  "ingestedAt": "2026-06-05T20:33:17.773728Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rusko přidalo hnutí Memorial i s českou pobočkou na seznam extremistických organizací",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-zaradilo-na-seznam-extremistickych-organizaci-hnuti-memorial-na-ochranu-lidskych-prav.A260605_213505_zahranicni_jira",
+      "dt": "2026-06-05T20:01:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "extremistických",
+        "hnutí",
+        "memorial",
+        "organizací",
+        "pobočkou",
+        "přidalo",
+        "rusko",
+        "seznam",
+        "českou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -761,31 +787,6 @@
         "smějí",
         "trans",
         "ženy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V bytě vybuchla tlaková láhev. Exploze vážně popálila člověka",
-      "url": "https://www.idnes.cz/pardubice/zpravy/vybuch-tlakove-lahve-vysoke-myto-zraneni.A260605_144245_pardubice-zpravy_epkbn",
-      "dt": "2026-06-05T13:14:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "bytě",
-        "exploze",
-        "láhev",
-        "popálila",
-        "tlaková",
-        "vybuchla",
-        "vážně",
-        "člověka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1588,7 +1589,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49747,
+      "bytes": 50311,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1625,7 +1626,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-05T19:58:37Z",
+        "raw_feed_latest_publishedAt": "2026-06-05T20:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1642,6 +1643,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rusko přidalo hnutí Memorial i s českou pobočkou na seznam extremistických organizací",
+            "publishedAt": "2026-06-05T20:01:00Z"
+          },
           {
             "title": "U Kolína se srazila dvě auta. Zranilo se několik lidí včetně dětí",
             "publishedAt": "2026-06-05T19:58:37Z"
@@ -1669,10 +1674,6 @@
           {
             "title": "Zemřel herec Anthony Head. Proslavil se v seriálu Buffy, přemožitelka upírů",
             "publishedAt": "2026-06-05T17:10:00Z"
-          },
-          {
-            "title": "Kellnerova smrt u soudu: rodina viní firmu TML z několika chyb před tragickou havárií",
-            "publishedAt": "2026-06-05T16:45:00Z"
           }
         ]
       }
