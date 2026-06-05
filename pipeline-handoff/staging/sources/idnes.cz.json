@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-05T18:46:53.057616Z",
+  "ingestedAt": "2026-06-05T19:18:11.401957Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Nehoda uzavřela dálnici D3 ve směru na Prahu. Podle policie jel řidič příliš rychle",
+      "url": "https://www.idnes.cz/ceske-budejovice/zpravy/nehoda-dalnice-d3-ridic-jel-prilis-rychle.A260605_200705_budejovice-zpravy_jira",
+      "dt": "2026-06-05T19:03:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "dálnici",
+        "jel",
+        "nehoda",
+        "podle",
+        "policie",
+        "prahu",
+        "příliš",
+        "rychle",
+        "směru",
+        "uzavřela",
+        "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -58,25 +86,24 @@
       "_dt_serialized": true
     },
     {
-      "section": "doprava",
+      "section": "aktualne",
       "contentType": "article",
-      "title": "Nehoda uzavřela dálnici D3 ve směru na Prahu. Podle policie jel řidič příliš rychle",
-      "url": "https://www.idnes.cz/ceske-budejovice/zpravy/nehoda-dalnice-d3-ridic-jel-prilis-rychle.A260605_200705_budejovice-zpravy_jira",
-      "dt": "2026-06-05T18:17:00Z",
+      "title": "Poslední ruská základna na Jižním Kavkazu brzy zmizí, říká arménský novinář",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/armenie-volby-2026-rozhovor-arsen-charatjan-azerbajdzan-turecko-karabach-ruben-vardanjan.A260604_134159_zahranicni_aha",
+      "dt": "2026-06-05T18:00:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES",
       "tokens": [
-        "dálnici",
-        "jel",
-        "nehoda",
-        "podle",
-        "policie",
-        "prahu",
-        "příliš",
-        "rychle",
-        "směru",
-        "uzavřela",
-        "řidič"
+        "arménský",
+        "brzy",
+        "jižním",
+        "kavkazu",
+        "novinář",
+        "poslední",
+        "ruská",
+        "zmizí",
+        "základna",
+        "říká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -104,33 +131,6 @@
         "zahraničí",
         "ztíží",
         "čína"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Poslední ruská základna na Jižním Kavkazu brzy zmizí, říká arménský novinář",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/armenie-volby-2026-rozhovor-arsen-charatjan-azerbajdzan-turecko-karabach-ruben-vardanjan.A260604_134159_zahranicni_aha",
-      "dt": "2026-06-05T18:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "arménský",
-        "brzy",
-        "jižním",
-        "kavkazu",
-        "novinář",
-        "poslední",
-        "ruská",
-        "zmizí",
-        "základna",
-        "říká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1584,7 +1584,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49271,
+      "bytes": 49359,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1621,7 +1621,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-05T18:39:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-05T19:03:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1639,6 +1639,10 @@
         },
         "sample_titles": [
           {
+            "title": "Nehoda uzavřela dálnici D3 ve směru na Prahu. Podle policie jel řidič příliš rychle",
+            "publishedAt": "2026-06-05T19:03:00Z"
+          },
+          {
             "title": "Španělská policie zadržela muže kvůli dovozu zakázaných zbraní, nakupoval je v Česku",
             "publishedAt": "2026-06-05T18:39:00Z"
           },
@@ -1647,15 +1651,11 @@
             "publishedAt": "2026-06-05T18:23:41Z"
           },
           {
-            "title": "Nehoda uzavřela dálnici D3 ve směru na Prahu. Podle policie jel řidič příliš rychle",
-            "publishedAt": "2026-06-05T18:17:00Z"
-          },
-          {
-            "title": "Čína buduje vlastní ekonomickou pevnost. Svým firmám ztíží cestu do zahraničí",
+            "title": "Poslední ruská základna na Jižním Kavkazu brzy zmizí, říká arménský novinář",
             "publishedAt": "2026-06-05T18:00:00Z"
           },
           {
-            "title": "Poslední ruská základna na Jižním Kavkazu brzy zmizí, říká arménský novinář",
+            "title": "Čína buduje vlastní ekonomickou pevnost. Svým firmám ztíží cestu do zahraničí",
             "publishedAt": "2026-06-05T18:00:00Z"
           },
           {
