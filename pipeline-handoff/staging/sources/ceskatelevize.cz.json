@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-05T02:17:02.871932Z",
+  "ingestedAt": "2026-06-05T02:47:08.671678Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Po poruše kamionu v poušti v Nigeru zemřelo žízní 49 cestujících",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/po-poruse-kamionu-v-pousti-v-nigeru-zemrelo-zizni-49-cestujicich-374247",
+      "dt": "2026-06-05T02:19:31Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "cestujících",
+        "kamionu",
+        "nigeru",
+        "poruše",
+        "poušti",
+        "zemřelo",
+        "žízní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -733,30 +757,6 @@
         "scary",
         "syndrom",
         "tourettův"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Veletrh vědy láká na jaderné reaktory i astronomii Středozemě",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/veletrh-vedy-laka-na-jaderne-reaktory-i-astronomii-stredozeme-374208",
-      "dt": "2026-06-04T07:33:28Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "astronomii",
-        "jaderné",
-        "láká",
-        "reaktory",
-        "středozemě",
-        "veletrh",
-        "vědy"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2260,7 +2260,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42498,
+      "bytes": 42625,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2297,12 +2297,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-04T22:14:09Z",
+        "raw_feed_latest_publishedAt": "2026-06-05T02:19:31Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
+          "zpravy": 24,
           "sport": 1,
-          "other": 6
+          "other": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2314,6 +2314,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Po poruše kamionu v poušti v Nigeru zemřelo žízní 49 cestujících",
+            "publishedAt": "2026-06-05T02:19:31Z"
+          },
           {
             "title": "USA uvalily sankce na kubánského prezidenta Díaze-Canela i na syna Raúla Castra",
             "publishedAt": "2026-06-04T22:14:09Z"
@@ -2341,10 +2345,6 @@
           {
             "title": "Francouzský soud definitivně rozhodl: magnát Vítek musí zbourat vilu v Provence",
             "publishedAt": "2026-06-04T18:33:53Z"
-          },
-          {
-            "title": "Za nás je imunita přežitá, míní Šebelová",
-            "publishedAt": "2026-06-04T18:21:55Z"
           }
         ]
       }
