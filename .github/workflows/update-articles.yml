@@ -469,7 +469,7 @@ jobs:
           SOURCE_REGISTRY_PATH: ${{ github.workspace }}/projects/data/source_registry.json
           RELEASE_FRESHNESS_WARN_MINUTES: "60"
           RELEASE_FRESHNESS_FAIL_MINUTES: "120"
-        run: node scripts/release-freshness-guard.mjs
+        run: node scripts/release-freshness-gate.mjs
 
       - name: P0 source starvation guard (scheduler / feed_health)
         env:
