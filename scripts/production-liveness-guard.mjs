@@ -10,15 +10,14 @@
  */
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 import { effectivePublishedMs, loadArticlesDoc } from "./content-freshness-guard-lib.mjs";
 
-const windows = (process.env.LIVENESS_WINDOWS_HOURS || "1,2,4")
-  .split(",")
-  .map((x) => Number(x.trim()))
-  .filter((n) => Number.isFinite(n) && n > 0);
-const min2h = Number(process.env.LIVENESS_MIN_PER_SECTION_2H || "1");
+export const DEFAULT_WINDOWS_HOURS = [1, 2, 4];
+export const DEFAULT_MIN_2H = 1;
+export const ZDRAVI_BLOCKING_WINDOW_HOURS = 4;
 
-const SECTIONS = [
+export const SECTIONS = [
   { key: "hub", label: "Přehled dne", match: () => true },
   { key: "aktualne", label: "Zprávy", match: (a) => (a.section || a.topic) === "aktualne" },
   { key: "sport", label: "Sport", match: (a) => (a.section || a.topic) === "sport" },
@@ -27,7 +26,7 @@ const SECTIONS = [
   { key: "cestovani", label: "Cestování", match: (a) => (a.section || a.topic) === "cestovani" },
 ];
 
-const PRIORITY_SECTION_KEYS = new Set(["aktualne", "sport", "finance", "zdravi", "cestovani"]);
+export const PRIORITY_SECTION_KEYS = new Set(["aktualne", "sport", "finance", "zdravi", "cestovani"]);
 
 function log(msg) {
   console.log(`[production-liveness-guard] ${msg}`);
@@ -37,8 +36,8 @@ function fail(msg) {
   console.error(`[production-liveness-guard] FAIL: ${msg}`);
 }
 
-function countInWindow(articles, matchFn, hours) {
-  const cutoff = Date.now() - hours * 3_600_000;
+export function countInWindow(articles, matchFn, hours, nowMs = Date.now()) {
+  const cutoff = nowMs - hours * 3_600_000;
   let n = 0;
   for (const a of articles) {
     if (!matchFn(a)) continue;
@@ -48,7 +47,7 @@ function countInWindow(articles, matchFn, hours) {
   return n;
 }
 
-function newestInSection(articles, matchFn) {
+export function newestInSection(articles, matchFn) {
   let best = null;
   for (const a of articles) {
     if (!matchFn(a)) continue;
@@ -59,34 +58,117 @@ function newestInSection(articles, matchFn) {
   return best;
 }
 
-async function main() {
+/**
+ * Evaluate blocking/warn contract for one priority section.
+ * Zdraví: 2h miss is warning when 4h has content; 4h empty is blocking fail.
+ * Other priority sections: 2h blocking only.
+ */
+export function evaluatePrioritySectionLiveness(sectionKey, counts, min2h = DEFAULT_MIN_2H) {
+  const c2 = Number(counts?.last_2h ?? 0);
+  const c4 = Number(counts?.last_4h ?? 0);
+
+  if (sectionKey === "zdravi") {
+    if (c2 >= min2h) {
+      return { ok: true, warn: false, result: "PASS" };
+    }
+    if (c4 >= min2h) {
+      return {
+        ok: true,
+        warn: true,
+        result: "PASS_WITH_WARN",
+        message: `Zdraví: 2h=${c2} but 4h=${c4} (PASS_WITH_WARN)`,
+      };
+    }
+    return {
+      ok: false,
+      warn: false,
+      result: "FAIL",
+      message: `Zdraví: only ${c4} articles in last ${ZDRAVI_BLOCKING_WINDOW_HOURS}h (min ${min2h})`,
+    };
+  }
+
+  if (c2 < min2h) {
+    const label =
+      SECTIONS.find((s) => s.key === sectionKey)?.label ||
+      sectionKey;
+    return {
+      ok: false,
+      warn: false,
+      result: "FAIL",
+      message: `${label}: only ${c2} articles in last 2h (min ${min2h})`,
+    };
+  }
+  return { ok: true, warn: false, result: "PASS" };
+}
+
+export function evaluateProductionLiveness(articles, options = {}) {
+  const nowMs = options.nowMs ?? Date.now();
+  const windows = options.windowsHours ?? DEFAULT_WINDOWS_HOURS;
+  const min2h = options.min2h ?? DEFAULT_MIN_2H;
+
   let failed = false;
-  const doc = await loadArticlesDoc();
-  const articles = Array.isArray(doc.articles) ? doc.articles : [];
-  const now = Date.now();
-  const report = { generatedAt: doc.generatedAt, sections: {} };
+  let warned = false;
+  const report = { generatedAt: options.generatedAt ?? null, sections: {} };
 
   for (const sec of SECTIONS) {
     const counts = {};
     for (const h of windows) {
-      counts[`last_${h}h`] = countInWindow(articles, sec.match, h);
+      counts[`last_${h}h`] = countInWindow(articles, sec.match, h, nowMs);
     }
     const newest = newestInSection(articles, sec.match);
-    const newestAgeMin = newest ? (now - newest) / 60_000 : null;
+    const newestAgeMin = newest ? (nowMs - newest) / 60_000 : null;
     report.sections[sec.key] = {
       label: sec.label,
       counts,
       newestIso: newest ? new Date(newest).toISOString() : null,
       newestAgeMin,
     };
-    const parts = windows.map((h) => `${h}h=${counts[`last_${h}h`]}`).join(" ");
-    log(`section=${sec.label} ${parts} newest_age_min=${newestAgeMin !== null ? newestAgeMin.toFixed(1) : "n/a"}`);
 
     if (PRIORITY_SECTION_KEYS.has(sec.key)) {
-      const c2 = counts.last_2h ?? countInWindow(articles, sec.match, 2);
-      if (c2 < min2h) {
-        fail(`${sec.label}: only ${c2} articles in last 2h (min ${min2h})`);
+      const verdict = evaluatePrioritySectionLiveness(sec.key, counts, min2h);
+      report.sections[sec.key].livenessResult = verdict.result;
+      if (!verdict.ok) {
         failed = true;
+      } else if (verdict.warn) {
+        warned = true;
+      }
+    }
+  }
+
+  const result = failed ? "FAIL" : warned ? "PASS_WITH_WARN" : "PASS";
+  return { failed, warned, result, report };
+}
+
+async function main() {
+  const windows = (process.env.LIVENESS_WINDOWS_HOURS || "1,2,4")
+    .split(",")
+    .map((x) => Number(x.trim()))
+    .filter((n) => Number.isFinite(n) && n > 0);
+  const min2h = Number(process.env.LIVENESS_MIN_PER_SECTION_2H || String(DEFAULT_MIN_2H));
+
+  const doc = await loadArticlesDoc();
+  const articles = Array.isArray(doc.articles) ? doc.articles : [];
+  const nowMs = Date.now();
+  const { failed, warned, result, report } = evaluateProductionLiveness(articles, {
+    nowMs,
+    windowsHours: windows,
+    min2h,
+    generatedAt: doc.generatedAt,
+  });
+
+  for (const sec of SECTIONS) {
+    const row = report.sections[sec.key];
+    const counts = row.counts;
+    const parts = windows.map((h) => `${h}h=${counts[`last_${h}h`]}`).join(" ");
+    log(
+      `section=${sec.label} ${parts} newest_age_min=${row.newestAgeMin !== null ? row.newestAgeMin.toFixed(1) : "n/a"}`,
+    );
+    if (PRIORITY_SECTION_KEYS.has(sec.key)) {
+      const verdict = evaluatePrioritySectionLiveness(sec.key, counts, min2h);
+      if (!verdict.ok) {
+        fail(verdict.message);
+      } else if (verdict.warn) {
+        log(`WARN: ${verdict.message}`);
       }
     }
   }
@@ -99,10 +181,13 @@ async function main() {
     console.error("[production-liveness-guard] RESULT=FAIL");
     process.exit(1);
   }
-  log("RESULT=PASS");
+  log(`RESULT=${result}`);
 }
 
-main().catch((e) => {
-  console.error("[production-liveness-guard] ERROR:", e.message || e);
-  process.exit(1);
-});
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isMain) {
+  main().catch((e) => {
+    console.error("[production-liveness-guard] ERROR:", e.message || e);
+    process.exit(1);
+  });
+}
