@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-06-05T11:47:13.775538Z",
+  "ingestedAt": "2026-06-05T12:32:01.016627Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Maximální ceny benzinu a nafty na víkend a pondělí",
+      "url": "https://www.penize.cz/doprava/491248-maximalni-ceny-benzinu-a-nafty-na-vikend-a-pondeli",
+      "dt": "2026-06-05T14:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "maximální",
+        "nafty",
+        "pondělí",
+        "víkend"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -479,30 +502,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Životní pojištění pro mladé bude dostupnější. Simplea mění platby",
-      "url": "https://www.penize.cz/rizikove-zivotni-pojisteni/484523-zivotni-pojisteni-pro-mlade-bude-dostupnejsi-simplea-meni-platby",
-      "dt": "2026-06-02T12:30:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "dostupnější",
-        "mladé",
-        "mění",
-        "platby",
-        "pojištění",
-        "simplea",
-        "životní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -513,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 19160,
+      "bytes": 19377,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -550,11 +549,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-05T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-05T14:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 14,
-          "zpravy": 5,
+          "zpravy": 6,
+          "finance": 13,
           "sport": 1
         },
         "drop_counts": {
@@ -567,6 +566,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maximální ceny benzinu a nafty na víkend a pondělí",
+            "publishedAt": "2026-06-05T14:00:00Z"
+          },
           {
             "title": "Čtyři sta tisíc pro důchodce a zranitelné. Kdo pořád dostane dotaci ze Zelené úsporám",
             "publishedAt": "2026-06-05T05:05:00Z"
@@ -594,10 +597,6 @@
           {
             "title": "Reálné mzdy rostly nejrychleji za několik let. Průměrná mzda je přes 50 tisíc",
             "publishedAt": "2026-06-04T10:40:00Z"
-          },
-          {
-            "title": "RegioJet zdražil jízdenky na autobus. Nově rozhoduje i čas nákupu",
-            "publishedAt": "2026-06-04T10:07:00Z"
           }
         ]
       }
