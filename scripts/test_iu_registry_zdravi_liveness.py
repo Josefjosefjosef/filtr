@@ -71,7 +71,7 @@ def _p0_headline_entries() -> list[dict]:
 
 
 class ZdraviNativeFeedLivenessTest(unittest.TestCase):
-    def test_no_duplicate_when_zdr_zdravezpravy_already_selected(self):
+    def test_no_duplicate_when_both_native_zdravi_already_selected(self):
         registry = {
             "entries": [
                 _entry(
@@ -81,15 +81,23 @@ class ZdraviNativeFeedLivenessTest(unittest.TestCase):
                     "ZdravéZprávy",
                     topic="zdravi",
                 ),
+                _entry(
+                    "zdr_zdravotnickydenik",
+                    "https://www.zdravotnickydenik.cz/feed/",
+                    "zdravotnickydenik.cz",
+                    "Zdravotnický deník",
+                    topic="zdravi",
+                ),
             ],
             "sources_per_tick": {"max_unmapped_per_tick": 0},
         }
         state = {"tick_index": 0, "domain_last_fetch": {}, "entry_state": {}}
-        # Prague minute 0 → zdravezpravy.cz slot {0, 15, 30, 45}
-        now = datetime(2026, 6, 5, 8, 0, tzinfo=timezone.utc)
+        # Prague minute 33 → both zdravezpravy {0,15,30,45} off-slot but zdravotnickydenik {3,33} on-slot
+        now = datetime(2026, 6, 5, 8, 33, tzinfo=timezone.utc)
         picked, _ = select_feeds_for_tick(registry, state, now=now)
         ids = [e.get("id") for e in picked]
         self.assertEqual(ids.count("zdr_zdravezpravy"), 1)
+        self.assertEqual(ids.count("zdr_zdravotnickydenik"), 1)
 
     def test_adds_native_zdravi_when_no_zdravi_feed_and_minute_off_slot(self):
         registry = {
@@ -117,7 +125,7 @@ class ZdraviNativeFeedLivenessTest(unittest.TestCase):
         picked, _ = select_feeds_for_tick(registry, state, now=now)
         ids = {e.get("id") for e in picked}
         self.assertTrue(ids & NATIVE_ZDRAVI_LIVENESS_FEED_IDS)
-        self.assertIn("zdr_zdravezpravy", ids)
+        self.assertEqual(ids & NATIVE_ZDRAVI_LIVENESS_FEED_IDS, NATIVE_ZDRAVI_LIVENESS_FEED_IDS)
 
     def test_zdr_zdravotnickydenik_when_zdr_zdravezpravy_on_cooldown(self):
         registry = {
@@ -208,7 +216,7 @@ class ZdraviNativeFeedLivenessTest(unittest.TestCase):
         keys = {entry_fixed_slot_key(e) for e in picked if e.get("id") in P0_HEADLINE_REGISTRY_IDS}
         self.assertTrue(keys & P0_FRESHNESS_SLOT_KEYS)
 
-    def test_zdravi_liveness_slot_adds_at_most_one_native_feed(self):
+    def test_zdravi_liveness_slot_adds_both_native_feeds_when_missing(self):
         registry = {
             "entries": [
                 _entry(
@@ -231,8 +239,36 @@ class ZdraviNativeFeedLivenessTest(unittest.TestCase):
         state = {"tick_index": 0, "domain_last_fetch": {}, "entry_state": {}}
         now = datetime(2026, 6, 5, 8, 17, tzinfo=timezone.utc)
         picked, _ = select_feeds_for_tick(registry, state, now=now)
-        native_count = sum(1 for e in picked if is_native_zdravi_liveness_feed(e))
-        self.assertEqual(native_count, 1)
+        ids = {e.get("id") for e in picked}
+        self.assertEqual(ids & NATIVE_ZDRAVI_LIVENESS_FEED_IDS, NATIVE_ZDRAVI_LIVENESS_FEED_IDS)
+
+    def test_single_native_zdravi_feed_completion_adds_missing_second(self):
+        registry = {
+            "entries": [
+                _entry(
+                    "zdr_zdravezpravy",
+                    "https://www.zdravezpravy.cz/feed/",
+                    "zdravezpravy.cz",
+                    "ZdravéZprávy",
+                    topic="zdravi",
+                ),
+                _entry(
+                    "zdr_zdravotnickydenik",
+                    "https://www.zdravotnickydenik.cz/feed/",
+                    "zdravotnickydenik.cz",
+                    "Zdravotnický deník",
+                    topic="zdravi",
+                ),
+            ],
+            "sources_per_tick": {"max_unmapped_per_tick": 0},
+        }
+        state = {"tick_index": 0, "domain_last_fetch": {}, "entry_state": {}}
+        # Prague minute 0 → zdravezpravy on fixed slot; zdravotnickydenik off-slot
+        now = datetime(2026, 6, 5, 8, 0, tzinfo=timezone.utc)
+        picked, _ = select_feeds_for_tick(registry, state, now=now)
+        ids = {e.get("id") for e in picked}
+        self.assertIn("zdr_zdravezpravy", ids)
+        self.assertIn("zdr_zdravotnickydenik", ids)
 
     def test_deterministic_selection_for_same_tick(self):
         registry = {
@@ -266,4 +302,16 @@ class ZdraviNativeFeedLivenessTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    import sys
+
+    loader = unittest.TestLoader()
+    suite = loader.loadTestsFromModule(sys.modules[__name__])
+    result = unittest.TextTestRunner(verbosity=0).run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)
+    print("dual_zdravi_selection_test: PASS")
+    print("single_feed_completion_test: PASS")
+    print("no_duplicate_test: PASS")
+    print("p0_preserved_test: PASS")
+    print("determinism_test: PASS")
+    print("PASS test_iu_registry_zdravi_liveness")

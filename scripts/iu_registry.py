@@ -679,32 +679,36 @@ def select_feeds_for_tick(
             seen_urls.add(u)
             break
 
-    # --- 1d) Zdraví liveness: ≥1 native Zdraví feed per tick (production-liveness contract) ---
+    # --- 1d) Zdraví liveness: both native Zdraví feeds per tick when missing (production-liveness contract) ---
     pre_zdravi = pre_finance + finance_liveness_picks
     zdravi_liveness_picks: list[dict] = []
-    if not any(is_native_zdravi_liveness_feed(e) for e in pre_zdravi):
-        by_id = {str(e.get("id") or ""): e for e in entries}
-        zdravi_candidates: list[dict] = []
-        for fid in NATIVE_ZDRAVI_LIVENESS_FEED_ORDER:
-            e = by_id.get(fid)
-            if e is not None:
-                zdravi_candidates.append(e)
-        for e in sorted(entries, key=lambda x: str(x.get("id") or "")):
-            if is_native_zdravi_liveness_feed(e) and e not in zdravi_candidates:
-                zdravi_candidates.append(e)
-        for e in zdravi_candidates:
-            u = (e.get("feed_url") or "").strip()
-            if not u or u in seen_urls:
-                continue
-            ck = scheduler_cooldown_key(e)
-            if not ck:
-                continue
-            eff = _effective_cooldown_min(e)
-            if not _cooldown_ok(ck, eff):
-                continue
-            zdravi_liveness_picks.append(e)
-            seen_urls.add(u)
-            break
+    pre_zdravi_native_ids = {
+        str(e.get("id") or "") for e in pre_zdravi if is_native_zdravi_liveness_feed(e)
+    }
+    by_id = {str(e.get("id") or ""): e for e in entries}
+    zdravi_candidates: list[dict] = []
+    for fid in NATIVE_ZDRAVI_LIVENESS_FEED_ORDER:
+        e = by_id.get(fid)
+        if e is not None:
+            zdravi_candidates.append(e)
+    for e in sorted(entries, key=lambda x: str(x.get("id") or "")):
+        if is_native_zdravi_liveness_feed(e) and e not in zdravi_candidates:
+            zdravi_candidates.append(e)
+    for e in zdravi_candidates:
+        eid = str(e.get("id") or "")
+        if eid in pre_zdravi_native_ids:
+            continue
+        u = (e.get("feed_url") or "").strip()
+        if not u or u in seen_urls:
+            continue
+        ck = scheduler_cooldown_key(e)
+        if not ck:
+            continue
+        eff = _effective_cooldown_min(e)
+        if not _cooldown_ok(ck, eff):
+            continue
+        zdravi_liveness_picks.append(e)
+        seen_urls.add(u)
 
     for ck in due_um_keys[: max(0, max_unmapped)]:
         group = sorted(by_um[ck], key=lambda x: str(x.get("id") or ""))
