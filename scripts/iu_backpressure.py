@@ -14,12 +14,19 @@ from __future__ import annotations
 import json
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from typing import Any
 from urllib.parse import urlparse
 
-from iu_registry import P0_FRESHNESS_SLOT_KEYS
+from iu_registry import (
+    NATIVE_ZDRAVI_LIVENESS_FEED_IDS,
+    NATIVE_ZDRAVI_LIVENESS_FEED_ORDER,
+    P0_FRESHNESS_SLOT_KEYS,
+)
 from iu_staging import deserialize_feed_item, staging_root
+
+# Max fresh native Zdraví items reserved per publish batch (production-liveness 2h contract).
+NATIVE_ZDRAVI_LIVENESS_RESERVE = 1
 
 
 def _json_safe(value: Any) -> Any:
@@ -112,13 +119,104 @@ def _p0_reserve_per_slot() -> int:
         return 15
 
 
-def _cap_batch_with_p0_reserves(merged: list[dict], cap: int) -> tuple[list[dict], list[dict], int]:
+def _liveness_fresh_hours() -> float:
+    try:
+        return max(1.0, float(os.getenv("IU_LIVENESS_FRESH_HOURS", "2") or "2"))
+    except ValueError:
+        return 2.0
+
+
+def _item_published_dt(item: dict) -> datetime | None:
+    raw = _item_sort_dt(item)
+    if not raw:
+        return None
+    try:
+        dt = datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(timezone.utc)
+    except Exception:
+        return None
+
+
+def _is_fresh_liveness_item(item: dict) -> bool:
+    dt = _item_published_dt(item)
+    if dt is None:
+        return False
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=_liveness_fresh_hours())
+    return dt >= cutoff
+
+
+def _native_zdravi_feed_id_from_item(item: dict) -> str | None:
+    fid = str(item.get("feedId") or "").strip()
+    if fid in NATIVE_ZDRAVI_LIVENESS_FEED_IDS:
+        return fid
+    url = (_canon_url(item) or "").lower()
+    if not url:
+        return None
+    try:
+        host = (urlparse(url).netloc or "").lower()
+    except Exception:
+        host = ""
+    if host.startswith("www."):
+        host = host[4:]
+    if "zdravezpravy.cz" in host:
+        return "zdr_zdravezpravy"
+    if "zdravotnickydenik.cz" in host:
+        return "zdr_zdravotnickydenik"
+    return None
+
+
+def _is_native_zdravi_liveness_item(item: dict) -> bool:
+    return _native_zdravi_feed_id_from_item(item) is not None
+
+
+def _native_zdravi_feed_rank(feed_id: str | None) -> int:
+    if not feed_id:
+        return len(NATIVE_ZDRAVI_LIVENESS_FEED_ORDER)
+    try:
+        return NATIVE_ZDRAVI_LIVENESS_FEED_ORDER.index(feed_id)
+    except ValueError:
+        return len(NATIVE_ZDRAVI_LIVENESS_FEED_ORDER)
+
+
+def _pick_native_zdravi_liveness_reserve(merged: list[dict]) -> dict | None:
+    """Newest fresh native Zdraví item for liveness reserve (max 1)."""
+    candidates: list[dict] = []
+    for it in merged:
+        if not _is_native_zdravi_liveness_item(it):
+            continue
+        if not _is_fresh_liveness_item(it):
+            continue
+        candidates.append(it)
+    if not candidates:
+        return None
+    candidates.sort(
+        key=lambda it: (
+            _item_sort_dt(it),
+            -_native_zdravi_feed_rank(_native_zdravi_feed_id_from_item(it)),
+        ),
+        reverse=True,
+    )
+    return candidates[0]
+
+
+def _batch_has_fresh_native_zdravi(batch: list[dict]) -> bool:
+    return any(
+        _is_native_zdravi_liveness_item(it) and _is_fresh_liveness_item(it) for it in batch
+    )
+
+
+def _cap_batch_with_p0_reserves(
+    merged: list[dict], cap: int
+) -> tuple[list[dict], list[dict], int, int]:
     """
     Guarantee newest items per P0 headline slot survive global cap trimming.
-    Returns (now_batch, defer, p0_reserved_count).
+    Reserve one fresh native Zdraví item when eligible (production-liveness contract).
+    Returns (now_batch, defer, p0_reserved_count, zdravi_reserved_count).
     """
     if len(merged) <= cap:
-        return merged, [], 0
+        return merged, [], 0, 0
 
     reserve_n = _p0_reserve_per_slot()
     by_slot: dict[str, list[dict]] = {}
@@ -132,6 +230,7 @@ def _cap_batch_with_p0_reserves(merged: list[dict], cap: int) -> tuple[list[dict
 
     reserved: list[dict] = []
     reserved_urls: set[str] = set()
+    p0_reserved_count = 0
     for sk in sorted(by_slot.keys()):
         rows = sorted(by_slot[sk], key=_item_sort_dt, reverse=True)
         for it in rows[:reserve_n]:
@@ -141,6 +240,16 @@ def _cap_batch_with_p0_reserves(merged: list[dict], cap: int) -> tuple[list[dict
             if u:
                 reserved_urls.add(u)
             reserved.append(it)
+            p0_reserved_count += 1
+
+    zdravi_reserved_count = 0
+    zdravi_pick = _pick_native_zdravi_liveness_reserve(merged)
+    if zdravi_pick is not None and not _batch_has_fresh_native_zdravi(reserved):
+        u = _canon_url(zdravi_pick)
+        if u and u not in reserved_urls:
+            reserved.append(zdravi_pick)
+            reserved_urls.add(u)
+            zdravi_reserved_count = NATIVE_ZDRAVI_LIVENESS_RESERVE
 
     non_p0.sort(key=_item_sort_dt, reverse=True)
     now_batch: list[dict] = []
@@ -182,7 +291,7 @@ def _cap_batch_with_p0_reserves(merged: list[dict], cap: int) -> tuple[list[dict
             continue
         defer.append(it)
 
-    return now_batch, defer, len(reserved)
+    return now_batch, defer, p0_reserved_count, zdravi_reserved_count
 
 
 def tick_max_publish_items() -> int:
@@ -300,10 +409,12 @@ def split_publish_batch(
     if len(merged) <= cap:
         meta["published_now_count"] = len(merged)
         meta["p0_reserved"] = 0
+        meta["zdravi_reserved"] = 0
         return merged, meta
 
-    now_batch, defer, p0_reserved = _cap_batch_with_p0_reserves(merged, cap)
+    now_batch, defer, p0_reserved, zdravi_reserved = _cap_batch_with_p0_reserves(merged, cap)
     meta["p0_reserved"] = p0_reserved
+    meta["zdravi_reserved"] = zdravi_reserved
     meta["enqueued_this_tick"] = enqueue_items(output_dir, defer)
     meta["published_now_count"] = len(now_batch)
     meta["queue_depth"] = queue_depth(output_dir)
