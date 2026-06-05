@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-05T20:33:17.773728Z",
+  "ingestedAt": "2026-06-05T21:16:46.463063Z",
   "items": [
     {
       "section": "aktualne",
@@ -156,6 +156,32 @@
         "zmizí",
         "základna",
         "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Tajná zbraň hub, kvasinek a obilovin. Vědkyně o léčivé síle betaglukanů",
+      "url": "https://www.idnes.cz/onadnes/zdravi/betaglukany-glukoza-lucie-cahlikova-houby-lecba.A260603_937729_zdravi_jans",
+      "dt": "2026-06-05T18:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "betaglukanů",
+        "hub",
+        "kvasinek",
+        "léčivé",
+        "obilovin",
+        "síle",
+        "tajná",
+        "vědkyně",
+        "zbraň"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -763,30 +789,6 @@
         "spory",
         "veřejnosti",
         "zrekonstruovaný"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Do dámského rybníku smějí i trans ženy, rozhodli v Londýně",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/damsky-rybnik-londyn-transgender-lide-muzi-zeny-pristup.A260605_134335_zahranicni_herp",
-      "dt": "2026-06-05T13:24:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "dámského",
-        "londýně",
-        "rozhodli",
-        "rybníku",
-        "smějí",
-        "trans",
-        "ženy"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1589,7 +1591,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50311,
+      "bytes": 50948,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1629,7 +1631,8 @@
         "raw_feed_latest_publishedAt": "2026-06-05T20:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
+          "zpravy": 26,
+          "zdravi": 1,
           "finance": 2,
           "other": 1
         },
@@ -1668,12 +1671,12 @@
             "publishedAt": "2026-06-05T18:00:00Z"
           },
           {
-            "title": "Čína buduje vlastní ekonomickou pevnost. Svým firmám ztíží cestu do zahraničí",
+            "title": "Tajná zbraň hub, kvasinek a obilovin. Vědkyně o léčivé síle betaglukanů",
             "publishedAt": "2026-06-05T18:00:00Z"
           },
           {
-            "title": "Zemřel herec Anthony Head. Proslavil se v seriálu Buffy, přemožitelka upírů",
-            "publishedAt": "2026-06-05T17:10:00Z"
+            "title": "Čína buduje vlastní ekonomickou pevnost. Svým firmám ztíží cestu do zahraničí",
+            "publishedAt": "2026-06-05T18:00:00Z"
           }
         ]
       }
