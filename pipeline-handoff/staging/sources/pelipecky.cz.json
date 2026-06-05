@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "sourceBatchKey": "pelipecky.cz",
+  "ingestedAt": "2026-06-05T06:32:07.486015Z",
+  "items": [],
+  "feedReports": [
+    {
+      "feed": "https://www.pelipecky.cz/feed/",
+      "source": "",
+      "topic": "aktualne",
+      "status": "SKIPPED_ROBOTS",
+      "reason": "disallowed_by_robots",
+      "httpStatus": 0,
+      "contentType": "",
+      "finalUrl": "https://www.pelipecky.cz/feed/",
+      "bytes": 0,
+      "itemsParsed": 0,
+      "itemsKept": 0,
+      "accepted": 0,
+      "registryId": "ces_pelipecky",
+      "registryGroup": [
+        {
+          "id": "ces_pelipecky",
+          "label": "Pelipecky",
+          "domain": "pelipecky.cz",
+          "entry_type": "rss",
+          "section_primary": "cestovani",
+          "section_secondary": [],
+          "interval_min": 180,
+          "display_weight": 0.75,
+          "active": true,
+          "blocked": false,
+          "official_only": true,
+          "fetch_mode": "rss_or_official_rubric_only",
+          "per_domain_cooldown_min": 12,
+          "slot_offset_min": 4,
+          "max_items_per_fetch": 40,
+          "last_fetch_at": null,
+          "last_success_at": null,
+          "error_streak": 0,
+          "backoff_multiplier": 1.0,
+          "feed_url": "https://www.pelipecky.cz/feed/",
+          "topic": "cestovani"
+        }
+      ]
+    }
+  ]
+}
