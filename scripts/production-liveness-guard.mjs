@@ -15,7 +15,12 @@ import { effectivePublishedMs, loadArticlesDoc } from "./content-freshness-guard
 
 export const DEFAULT_WINDOWS_HOURS = [1, 2, 4];
 export const DEFAULT_MIN_2H = 1;
-export const ZDRAVI_BLOCKING_WINDOW_HOURS = 4;
+export const FLEX_4H_BLOCKING_WINDOW_HOURS = 4;
+/** @deprecated use FLEX_4H_BLOCKING_WINDOW_HOURS */
+export const ZDRAVI_BLOCKING_WINDOW_HOURS = FLEX_4H_BLOCKING_WINDOW_HOURS;
+
+/** Priority sections with 2h warn / 4h blocking (native verticals with slower publish cadence). */
+export const FLEX_4H_LIVENESS_SECTION_KEYS = new Set(["finance", "zdravi"]);
 
 export const SECTIONS = [
   { key: "hub", label: "Přehled dne", match: () => true },
@@ -58,33 +63,38 @@ export function newestInSection(articles, matchFn) {
   return best;
 }
 
+function flex4hSectionVerdict(sectionKey, c2, c4, min2h) {
+  const label = SECTIONS.find((s) => s.key === sectionKey)?.label || sectionKey;
+  if (c2 >= min2h) {
+    return { ok: true, warn: false, result: "PASS" };
+  }
+  if (c4 >= min2h) {
+    return {
+      ok: true,
+      warn: true,
+      result: "PASS_WITH_WARN",
+      message: `${label}: 2h=${c2} but 4h=${c4} (PASS_WITH_WARN)`,
+    };
+  }
+  return {
+    ok: false,
+    warn: false,
+    result: "FAIL",
+    message: `${label}: only ${c4} articles in last ${FLEX_4H_BLOCKING_WINDOW_HOURS}h (min ${min2h})`,
+  };
+}
+
 /**
  * Evaluate blocking/warn contract for one priority section.
- * Zdraví: 2h miss is warning when 4h has content; 4h empty is blocking fail.
+ * Finance / Zdraví: 2h miss is warning when 4h has content; 4h empty is blocking fail.
  * Other priority sections: 2h blocking only.
  */
 export function evaluatePrioritySectionLiveness(sectionKey, counts, min2h = DEFAULT_MIN_2H) {
   const c2 = Number(counts?.last_2h ?? 0);
   const c4 = Number(counts?.last_4h ?? 0);
 
-  if (sectionKey === "zdravi") {
-    if (c2 >= min2h) {
-      return { ok: true, warn: false, result: "PASS" };
-    }
-    if (c4 >= min2h) {
-      return {
-        ok: true,
-        warn: true,
-        result: "PASS_WITH_WARN",
-        message: `Zdraví: 2h=${c2} but 4h=${c4} (PASS_WITH_WARN)`,
-      };
-    }
-    return {
-      ok: false,
-      warn: false,
-      result: "FAIL",
-      message: `Zdraví: only ${c4} articles in last ${ZDRAVI_BLOCKING_WINDOW_HOURS}h (min ${min2h})`,
-    };
+  if (FLEX_4H_LIVENESS_SECTION_KEYS.has(sectionKey)) {
+    return flex4hSectionVerdict(sectionKey, c2, c4, min2h);
   }
 
   if (c2 < min2h) {
