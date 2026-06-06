@@ -29,6 +29,7 @@ on:
       - "scripts/content-freshness-guard-policy-unit.mjs"
       - "scripts/active-article-trace-guard.mjs"
       - "scripts/production-liveness-guard.mjs"
+      - "scripts/production-liveness-guard-zdravi-policy-unit.mjs"
       - "scripts/release-freshness-gate.mjs"
       - "scripts/p0-source-starvation-guard.mjs"
       - "scripts/p0-source-coverage-guard.mjs"
@@ -67,6 +68,7 @@ on:
       - "scripts/content-freshness-guard-policy-unit.mjs"
       - "scripts/active-article-trace-guard.mjs"
       - "scripts/production-liveness-guard.mjs"
+      - "scripts/production-liveness-guard-zdravi-policy-unit.mjs"
       - "scripts/release-freshness-gate.mjs"
       - "scripts/p0-source-starvation-guard.mjs"
       - "scripts/p0-source-coverage-guard.mjs"
@@ -177,6 +179,9 @@ jobs:
 
       - name: Content freshness policy unit tests
         run: node scripts/content-freshness-guard-policy-unit.mjs
+
+      - name: Production liveness Zdraví policy unit tests
+        run: node scripts/production-liveness-guard-zdravi-policy-unit.mjs
 
       - name: Duplicate metadata guard
         run: node scripts/duplicate-metadata-guard.mjs

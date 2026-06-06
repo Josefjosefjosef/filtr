@@ -92,11 +92,26 @@ function freshPriority(except = {}) {
   console.log("zdravi_soft_newest_test: PASS");
 }
 
-// Scenario 7 — Zdraví 4h=0 and newest stale → FAIL
+// Scenario 7 — Zdraví 4h=0 and newest stale alone → PASS_WITH_WARN when pipeline alive
 {
   const articles = freshPriority({ zdravi: "2026-06-05T08:00:00.000Z" });
   const r = evaluateProductionLiveness(articles, { nowMs: NOW });
-  assert(r.result === "FAIL", "zdravi_stale_newest_fail_test: expected FAIL");
+  assert(r.result === "PASS_WITH_WARN", "zdravi_isolated_stale_pipeline_alive: expected PASS_WITH_WARN");
+  assert(r.report.zdravi_isolated_stale_soft_fail, "zdravi isolated soft fail flag");
+  console.log("zdravi_isolated_stale_pipeline_alive: PASS");
+}
+
+// Scenario 7b — site dead when headline sections stale too
+{
+  const articles = freshPriority({
+    aktualne: "2026-06-05T08:00:00.000Z",
+    sport: "2026-06-05T08:00:00.000Z",
+    finance: "2026-06-05T08:00:00.000Z",
+    zdravi: "2026-06-05T08:00:00.000Z",
+    cestovani: "2026-06-05T08:00:00.000Z",
+  });
+  const r = evaluateProductionLiveness(articles, { nowMs: NOW });
+  assert(r.result === "FAIL", "zdravi_stale_newest_fail_test: expected FAIL when site dead");
   console.log("zdravi_stale_newest_fail_test: PASS");
 }
 
