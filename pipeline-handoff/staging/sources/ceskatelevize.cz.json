@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-06T21:31:23.705081Z",
+  "ingestedAt": "2026-06-06T22:48:55.830718Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Reuters: USA dají spojencům v Perském zálivu íránská aktiva na poválečnou obnovu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/reuters-usa-daji-spojencum-v-perskem-zalivu-iranska-aktiva-na-povalecnou-obnovu-374302",
+      "dt": "2026-06-06T22:08:32Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "aktiva",
+        "dají",
+        "obnovu",
+        "perském",
+        "poválečnou",
+        "reuters",
+        "spojencům",
+        "usa",
+        "zálivu",
+        "íránská"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -720,32 +747,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pět občanů Ázerbájdžánu zemřelo při dronovém útoku v Azovském moři",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/pet-obcanu-azerbajdzanu-zemrelo-pri-dronovem-utoku-v-azovskem-mori-374269",
-      "dt": "2026-06-05T12:37:16Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "azovském",
-        "dronovém",
-        "moři",
-        "občanů",
-        "pět",
-        "při",
-        "zemřelo",
-        "ázerbájdžánu",
-        "útoku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -756,7 +757,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41456,
+      "bytes": 41626,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -793,7 +794,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-06T18:17:37Z",
+        "raw_feed_latest_publishedAt": "2026-06-06T22:08:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 29,
@@ -809,6 +810,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Reuters: USA dají spojencům v Perském zálivu íránská aktiva na poválečnou obnovu",
+            "publishedAt": "2026-06-06T22:08:32Z"
+          },
           {
             "title": "Endoprotéz rychle přibývá. Někde se ale čeká roky",
             "publishedAt": "2026-06-06T18:17:37Z"
@@ -836,10 +841,6 @@
           {
             "title": "Ukrajina udeřila v Petrohradu a ničila ropné sklady",
             "publishedAt": "2026-06-06T11:57:32Z"
-          },
-          {
-            "title": "Justice poslala kandidáta na prezidenta Peru těsně před druhým kolem k soudu",
-            "publishedAt": "2026-06-06T09:24:07Z"
           }
         ]
       }
