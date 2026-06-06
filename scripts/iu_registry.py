@@ -664,19 +664,34 @@ def _apply_scheduler_tick_caps(
             continue
         filtered.append(e)
     filtered.sort(key=lambda x: _sla_sort_key(x, compute_entry_sla(state, x, now)))
+    mandatory: list[dict] = []
+    optional: list[dict] = []
+    for e in filtered:
+        eid = str(e.get("id") or "")
+        if eid in P0_HEADLINE_REGISTRY_IDS:
+            mandatory.append(e)
+        else:
+            optional.append(e)
+
     capped: list[dict] = []
     domain_counts: dict[str, int] = defaultdict(int)
-    for e in filtered:
-        if len(capped) >= MAX_SOURCES_PER_SCHEDULER_TICK:
-            skipped.append({"source_id": str(e.get("id") or ""), "reason": "SKIPPED_TICK_CAP"})
-            continue
-        dom = normalize_registry_domain(str(e.get("domain") or host_from_url(e.get("feed_url") or "")))
+
+    def _try_add(entry: dict, *, respect_tick_cap: bool) -> None:
+        if respect_tick_cap and len(capped) >= MAX_SOURCES_PER_SCHEDULER_TICK:
+            skipped.append({"source_id": str(entry.get("id") or ""), "reason": "SKIPPED_TICK_CAP"})
+            return
+        dom = normalize_registry_domain(str(entry.get("domain") or host_from_url(entry.get("feed_url") or "")))
         if dom and domain_counts.get(dom, 0) >= MAX_SAME_DOMAIN_PER_TICK:
-            skipped.append({"source_id": str(e.get("id") or ""), "reason": "SKIPPED_DOMAIN_STAGGER"})
-            continue
-        capped.append(e)
+            skipped.append({"source_id": str(entry.get("id") or ""), "reason": "SKIPPED_DOMAIN_STAGGER"})
+            return
+        capped.append(entry)
         if dom:
             domain_counts[dom] = domain_counts.get(dom, 0) + 1
+
+    for e in mandatory:
+        _try_add(e, respect_tick_cap=False)
+    for e in optional:
+        _try_add(e, respect_tick_cap=True)
     meta = {
         "selected_source_ids": [str(e.get("id") or "") for e in capped],
         "skipped_sources": skipped,
