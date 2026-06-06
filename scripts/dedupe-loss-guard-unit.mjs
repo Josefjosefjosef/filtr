@@ -89,7 +89,23 @@ function telemetryRow(sourceId, topic, extra = {}) {
   console.log("real_wipeout_test: PASS");
 }
 
-// Scenario 3b — syndicated section reassignment (feedId preserved) → PASS
+// Scenario 3b — RSS sample titles alone must not inflate today_written
+{
+  const articles = [
+    art("zpr_novinky_domaci", "aktualne", `${TODAY}T10:00:00.000Z`),
+  ];
+  const telemetryRows = [
+    telemetryRow("ved_ct24_veda", "veda", {
+      sample_titles: [{ title: "Fresh veda", publishedAt: `${TODAY}T08:00:00.000Z` }],
+    }),
+  ];
+  const r = evaluateDedupeLossGuard({ today: TODAY, articles, telemetryRows });
+  assert(!r.failed, "sample_titles_only_test: RSS samples without json writes must PASS");
+  assert(r.todayWritten.veda === 0, "sample_titles_only_test: today_written stays 0");
+  console.log("sample_titles_only_test: PASS");
+}
+
+// Scenario 3c — syndicated section reassignment (feedId preserved) → PASS
 {
   const articles = [
     art("hry_zing", "aktualne", `${TODAY}T10:00:00.000Z`),
