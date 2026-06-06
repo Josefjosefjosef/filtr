@@ -22,7 +22,18 @@ export const FLEX_4H_SOFT_NEWEST_HOURS = 8;
 export const ZDRAVI_BLOCKING_WINDOW_HOURS = FLEX_4H_BLOCKING_WINDOW_HOURS;
 
 /** Priority sections with 2h warn / 4h blocking (native verticals with slower publish cadence). */
-export const FLEX_4H_LIVENESS_SECTION_KEYS = new Set(["finance", "zdravi"]);
+export const FLEX_4H_LIVENESS_SECTION_KEYS = new Set([
+  "finance",
+  "zdravi",
+  "cestovani",
+  "hry",
+  "kultura",
+  "veda",
+  "vzdelavani",
+]);
+
+/** Sections that must never soft-fail alone — keep hard 2h contract. */
+export const HARD_FAIL_SECTION_KEYS = new Set(["aktualne", "sport"]);
 
 export const SECTIONS = [
   { key: "hub", label: "Přehled dne", match: () => true },
@@ -131,6 +142,7 @@ export function evaluateProductionLiveness(articles, options = {}) {
 
   let failed = false;
   let warned = false;
+  const failedSections = [];
   const report = { generatedAt: options.generatedAt ?? null, sections: {} };
 
   for (const sec of SECTIONS) {
@@ -151,10 +163,30 @@ export function evaluateProductionLiveness(articles, options = {}) {
       const verdict = evaluatePrioritySectionLiveness(sec.key, counts, min2h, newestAgeMin);
       report.sections[sec.key].livenessResult = verdict.result;
       if (!verdict.ok) {
+        failedSections.push(sec.key);
         failed = true;
       } else if (verdict.warn) {
         warned = true;
       }
+    }
+  }
+
+  if (
+    failed &&
+    failedSections.length === 1 &&
+    FLEX_4H_LIVENESS_SECTION_KEYS.has(failedSections[0])
+  ) {
+    const sk = failedSections[0];
+    const row = report.sections[sk];
+    const c4 = Number(row?.counts?.last_4h ?? 0);
+    const newestAgeMin = row?.newestAgeMin;
+    const softOnly =
+      c4 >= min2h ||
+      (newestAgeMin !== null && newestAgeMin <= FLEX_4H_SOFT_NEWEST_HOURS * 60);
+    if (softOnly) {
+      failed = false;
+      warned = true;
+      report.single_section_soft_fail = sk;
     }
   }
 

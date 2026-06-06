@@ -34,7 +34,36 @@ env:
   PIPELINE_HANDOFF_BRANCH: automation/pipeline-handoff
 
 jobs:
+  pipeline_gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      proceed: ${{ steps.gate.outputs.proceed }}
+    steps:
+      - name: Skip duplicate run when pipeline already active
+        id: gate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          REPO="${{ github.repository }}"
+          RUN_ID="${{ github.run_id }}"
+          OTHER=$(gh run list --workflow update-articles.yml --repo "$REPO" --status in_progress --json databaseId --jq ".[] | select(.databaseId != ${RUN_ID}) | .databaseId" 2>/dev/null | head -n1 || true)
+          if [ -n "$OTHER" ]; then
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+            echo "duplicate_run_detected=true"
+            echo "skipped_duplicate=true"
+            echo "final_status=SKIPPED_DUPLICATE"
+            echo "[pipeline-gate] SKIPPED_DUPLICATE active_run=$OTHER"
+            exit 0
+          fi
+          echo "proceed=true" >> "$GITHUB_OUTPUT"
+          echo "duplicate_run_detected=false"
+          echo "[pipeline-gate] proceed=true"
+
   cancel_concurrency_zombies:
+    needs: pipeline_gate
+    if: needs.pipeline_gate.outputs.proceed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -59,7 +88,10 @@ jobs:
           done
 
   article_pipeline_ingest:
-    needs: cancel_concurrency_zombies
+    needs:
+      - pipeline_gate
+      - cancel_concurrency_zombies
+    if: needs.pipeline_gate.outputs.proceed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -123,6 +155,7 @@ jobs:
         env:
           IU_ARTICLE_PIPELINE_PHASE: ingest
           IU_INCREMENTAL_PUBLISH: "1"
+          IU_TRIGGER_SOURCE: cloudflare_watchdog
         run: |
           set -euo pipefail
           T0=$(date +%s)
@@ -151,7 +184,10 @@ jobs:
           echo "ATOMIC_POINTER_UPDATE_SAFE=YES"
 
   article_pipeline_aggregate:
-    needs: article_pipeline_ingest
+    needs:
+      - pipeline_gate
+      - article_pipeline_ingest
+    if: needs.pipeline_gate.outputs.proceed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -223,8 +259,10 @@ jobs:
 
   article_data_release:
     needs:
+      - pipeline_gate
       - article_pipeline_ingest
       - article_pipeline_aggregate
+    if: needs.pipeline_gate.outputs.proceed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:

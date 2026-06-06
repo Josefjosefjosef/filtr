@@ -56,7 +56,17 @@ from iu_registry import (
     scheduler_cooldown_key,
     select_feeds_for_tick,
     rotation_plan_for_registry,
+    set_entries_in_flight,
+    clear_entries_in_flight,
 )
+from iu_article_scheduler import (
+    build_pipeline_report,
+    build_scheduler_report,
+    build_topic_diversity_report,
+    emit_reports,
+    write_latest_valid_snapshot,
+)
+from iu_source_diversity import apply_section_display_diversity
 from iu_staging import (
     deserialize_youtube_row,
     ensure_staging_dirs,
@@ -888,7 +898,11 @@ def apply_per_section_limits_then_cap(articles: list) -> list:
             deduped.append(r)
         out.extend(deduped[:cap])
 
-    return _dedupe_articles_by_url_global(out)
+    merged = _dedupe_articles_by_url_global(out)
+    global _TOPIC_DIVERSITY_LAST_STATS
+    merged, div_stats = apply_section_display_diversity(merged, _retention_section_key)
+    _TOPIC_DIVERSITY_LAST_STATS = div_stats
+    return merged
 
 
 def apply_per_section_published_retention(prev_public: list, capped_feed: list) -> list:
@@ -2012,6 +2026,7 @@ def _pick_story_cluster_winner(group: list) -> dict:
 
 
 _TOPIC_DEDUPE_LAST_STATS: dict = {}
+_TOPIC_DIVERSITY_LAST_STATS: dict = {}
 
 
 def _apply_conservative_topic_clustering(articles: list) -> list:
@@ -3325,6 +3340,33 @@ def _publish_article_outputs(bundle: dict) -> int:
     print(f"=== OUTPUT === wrote {len(final)} items to {OUT_PATH}")
     print(f"=== OUTPUT === wrote {len(out_vid)} videos to {VIDEOS_OUT_PATH}")
 
+    try:
+        run_id = str(os.getenv("GITHUB_RUN_ID") or "")
+        write_latest_valid_snapshot(OUTPUT_DIR, OUT_PATH, run_id=run_id, status="PASS")
+        sched_state = load_scheduler_state(SCHEDULER_STATE_PATH)
+        reports = [
+            build_scheduler_report(
+                registry if isinstance(registry, dict) else {},
+                sched_state,
+                run_id=run_id,
+                main_commit=str(os.getenv("GITHUB_SHA") or "")[:12],
+                trigger_source=str(os.getenv("IU_TRIGGER_SOURCE") or "workflow_dispatch"),
+            ),
+            build_pipeline_report(
+                {
+                    "run_id": run_id,
+                    "publish_completed": True,
+                    "publish_status": "PASS",
+                    "new_articles_count": len(final),
+                    "final_status": "PASS",
+                }
+            ),
+            build_topic_diversity_report(_TOPIC_DIVERSITY_LAST_STATS),
+        ]
+        emit_reports(OUTPUT_DIR, reports)
+    except Exception as e:
+        print("WARN: pipeline reports / snapshot failed:", str(e), flush=True)
+
     return 0
 
 
@@ -3519,6 +3561,12 @@ def main() -> int:
             print("[iu-pipeline] IU_BUILD_ALL_FEEDS: full registry fetch (legacy env)", flush=True)
     else:
         picked, sched_state = select_feeds_for_tick(registry, sched_state)
+        run_id = str(os.getenv("GITHUB_RUN_ID") or "local")
+        set_entries_in_flight(sched_state, picked, run_id)
+        try:
+            save_scheduler_state(SCHEDULER_STATE_PATH, sched_state)
+        except Exception:
+            pass
         n_p0 = sum(
             1
             for fe in picked
@@ -3918,7 +3966,16 @@ def main() -> int:
         pass
 
     try:
+        if not _full_feed:
+            clear_entries_in_flight(sched_state, picked)
         save_scheduler_state(SCHEDULER_STATE_PATH, sched_state)
+        rep = build_scheduler_report(
+            registry,
+            sched_state,
+            run_id=str(os.getenv("GITHUB_RUN_ID") or ""),
+            main_commit=str(os.getenv("GITHUB_SHA") or "")[:12],
+        )
+        emit_reports(OUTPUT_DIR, [rep])
     except Exception as e:
         print("WARN: scheduler_state write failed:", str(e))
 
