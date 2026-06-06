@@ -76,7 +76,7 @@ def test_cap_helper_prefers_newest_fresh_native_finance():
         feed_id="fin_e15",
     )
     merged = _other_items(250) + [older, newer]
-    batch, _, p0_n, zdr_n, fin_n = _cap_batch_with_p0_reserves(merged, 180)
+    batch, _, p0_n, zdr_n, fin_n = _cap_batch_with_p0_reserves(merged, 180)[:5]
     urls = {str(x.get("url") or "") for x in batch}
     assert fin_n == 1
     assert newer["url"] in urls

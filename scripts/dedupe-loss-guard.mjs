@@ -40,11 +40,18 @@ export function isVerticalRubricMirror(row) {
   return false;
 }
 
-export function countJsonTodayBySection(articles, today) {
+export function countJsonTodayBySection(articles, today, feedMetaById = new Map()) {
   const out = Object.fromEntries(VERTICALS.map((k) => [k, 0]));
   for (const a of articles) {
+    if (pragueDayFromIso(a.publishedAt) !== today) continue;
+    const feedId = String(a.feedId || "").trim();
+    const meta = feedMetaById.get(feedId);
+    if (meta && !meta.skip && VERTICALS.includes(meta.topic)) {
+      out[meta.topic] += 1;
+      continue;
+    }
     const sec = String(a.topic || a.section || "").trim().toLowerCase();
-    if (VERTICALS.includes(sec) && pragueDayFromIso(a.publishedAt) === today) {
+    if (VERTICALS.includes(sec)) {
       out[sec] += 1;
     }
   }
@@ -127,8 +134,8 @@ export function evaluateDedupeLossGuard({
   telemetryRows = [],
   minTodayWritten = MIN_TODAY_WRITTEN_FOR_FAIL,
 }) {
-  const jsonToday = countJsonTodayBySection(articles, today);
   const feedMetaById = feedMetaFromTelemetryRows(telemetryRows);
+  const jsonToday = countJsonTodayBySection(articles, today, feedMetaById);
   const fromArticles = countTodayWrittenFromArticles(articles, feedMetaById, today);
   const fromTelemetry = countTodayWrittenFromTelemetryRows(telemetryRows, today);
   const todayWritten = mergeTodayWrittenCounts(fromArticles, fromTelemetry);

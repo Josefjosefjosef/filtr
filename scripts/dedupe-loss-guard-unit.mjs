@@ -73,7 +73,23 @@ function telemetryRow(sourceId, topic, extra = {}) {
   console.log("today_vs_today_test: PASS (scenario 2)");
 }
 
-// Scenario 3 — today ingest exists, json_today=0 → FAIL
+// Scenario 3 — today ingest exists, articles absent from json → FAIL
+{
+  const articles = [
+    art("zpr_novinky_domaci", "aktualne", `${TODAY}T10:00:00.000Z`),
+  ];
+  const telemetryRows = [
+    telemetryRow("hry_zing", "hry", { today_written_to_articles_json_count: 1 }),
+    telemetryRow("hry_vortex", "hry", { today_written_to_articles_json_count: 1 }),
+    telemetryRow("hry_sector", "hry", { today_written_to_articles_json_count: 1 }),
+  ];
+  const r = evaluateDedupeLossGuard({ today: TODAY, articles, telemetryRows });
+  assert(r.failed, "real_wipeout_test: today_written>=3 with json_today=0 must FAIL");
+  assert(r.failures.includes("hry"), "real_wipeout_test: hry section must fail");
+  console.log("real_wipeout_test: PASS");
+}
+
+// Scenario 3b — syndicated section reassignment (feedId preserved) → PASS
 {
   const articles = [
     art("hry_zing", "aktualne", `${TODAY}T10:00:00.000Z`),
@@ -86,9 +102,9 @@ function telemetryRow(sourceId, topic, extra = {}) {
     telemetryRow("hry_sector", "hry", { today_written_to_articles_json_count: 1 }),
   ];
   const r = evaluateDedupeLossGuard({ today: TODAY, articles, telemetryRows });
-  assert(r.failed, "real_wipeout_test: today_written>=3 with json_today=0 must FAIL");
-  assert(r.failures.includes("hry"), "real_wipeout_test: hry section must fail");
-  console.log("real_wipeout_test: PASS");
+  assert(!r.failed, "feedId_attribution_test: present in json by feedId must PASS");
+  assert(r.jsonToday.hry === 3, "feedId_attribution_test: json_today via feedId");
+  console.log("feedId_attribution_test: PASS");
 }
 
 // Scenario 4 — cestovani mirror RSS → no false positive

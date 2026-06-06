@@ -33,6 +33,12 @@ NATIVE_ZDRAVI_LIVENESS_RESERVE = 1
 # Max fresh native Finance items reserved per publish batch (production-liveness 4h contract).
 NATIVE_FINANCE_LIVENESS_RESERVE = 1
 
+# Staggered vertical sections — dedupe-loss guard expects today's native ingest in JSON.
+FORCED_VERTICAL_RESERVE_TOPICS: frozenset[str] = frozenset(
+    {"cestovani", "hry", "kultura", "veda", "vzdelavani"}
+)
+FORCED_VERTICAL_RESERVE_PER_TOPIC = 1
+
 
 def _json_safe(value: Any) -> Any:
     """Recursively convert non-JSON types (e.g. datetime, set) for queue persistence."""
@@ -290,16 +296,49 @@ def _batch_has_fresh_native_zdravi(batch: list[dict]) -> bool:
     return any(_is_zdravi_liveness_item(it) and _is_fresh_liveness_item(it) for it in batch)
 
 
+def _forced_vertical_topic_from_item(item: dict) -> str | None:
+    sec = str(item.get("topic") or item.get("section") or "").strip().lower()
+    if sec in FORCED_VERTICAL_RESERVE_TOPICS:
+        return sec
+    return None
+
+
+def _pick_forced_vertical_reserves(merged: list[dict], reserved_urls: set[str]) -> list[dict]:
+    """Up to one fresh item per forced vertical topic (dedupe-loss contract)."""
+    picks: list[dict] = []
+    for topic in sorted(FORCED_VERTICAL_RESERVE_TOPICS):
+        candidates: list[dict] = []
+        for it in merged:
+            if _forced_vertical_topic_from_item(it) != topic:
+                continue
+            if not _is_fresh_liveness_item(it):
+                continue
+            u = _canon_url(it)
+            if u and u in reserved_urls:
+                continue
+            candidates.append(it)
+        if not candidates:
+            continue
+        candidates.sort(key=_item_sort_dt, reverse=True)
+        pick = candidates[0]
+        u = _canon_url(pick)
+        if u:
+            reserved_urls.add(u)
+        picks.append(pick)
+    return picks
+
+
 def _cap_batch_with_p0_reserves(
     merged: list[dict], cap: int
-) -> tuple[list[dict], list[dict], int, int, int]:
+) -> tuple[list[dict], list[dict], int, int, int, int]:
     """
     Guarantee newest items per P0 headline slot survive global cap trimming.
     Reserve fresh native Finance / Zdraví items when eligible (production-liveness contract).
-    Returns (now_batch, defer, p0_reserved_count, zdravi_reserved_count, finance_reserved_count).
+    Reserve fresh forced-vertical topics when eligible (dedupe-loss contract).
+    Returns (now_batch, defer, p0_reserved_count, zdravi_reserved_count, finance_reserved_count, forced_vertical_reserved_count).
     """
     if len(merged) <= cap:
-        return merged, [], 0, 0, 0
+        return merged, [], 0, 0, 0, 0
 
     reserve_n = _p0_reserve_per_slot()
     by_slot: dict[str, list[dict]] = {}
@@ -343,6 +382,11 @@ def _cap_batch_with_p0_reserves(
             reserved_urls.add(u)
             finance_reserved_count = NATIVE_FINANCE_LIVENESS_RESERVE
 
+    forced_vertical_reserved_count = 0
+    for it in _pick_forced_vertical_reserves(merged, reserved_urls):
+        reserved.append(it)
+        forced_vertical_reserved_count += 1
+
     non_p0.sort(key=_item_sort_dt, reverse=True)
     now_batch: list[dict] = []
     seen: set[str] = set()
@@ -383,7 +427,7 @@ def _cap_batch_with_p0_reserves(
             continue
         defer.append(it)
 
-    return now_batch, defer, p0_reserved_count, zdravi_reserved_count, finance_reserved_count
+    return now_batch, defer, p0_reserved_count, zdravi_reserved_count, finance_reserved_count, forced_vertical_reserved_count
 
 
 def tick_max_publish_items() -> int:
@@ -520,14 +564,16 @@ def split_publish_batch(
         meta["p0_reserved"] = 0
         meta["zdravi_reserved"] = 0
         meta["finance_reserved"] = 0
+        meta["forced_vertical_reserved"] = 0
         return merged, meta
 
-    now_batch, defer, p0_reserved, zdravi_reserved, finance_reserved = _cap_batch_with_p0_reserves(
-        merged, cap
+    now_batch, defer, p0_reserved, zdravi_reserved, finance_reserved, forced_vertical_reserved = (
+        _cap_batch_with_p0_reserves(merged, cap)
     )
     meta["p0_reserved"] = p0_reserved
     meta["zdravi_reserved"] = zdravi_reserved
     meta["finance_reserved"] = finance_reserved
+    meta["forced_vertical_reserved"] = forced_vertical_reserved
     meta["enqueued_this_tick"] = enqueue_items(output_dir, defer)
     meta["published_now_count"] = len(now_batch)
     meta["queue_depth"] = queue_depth(output_dir)
