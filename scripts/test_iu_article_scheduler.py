@@ -16,6 +16,7 @@ if _SCRIPTS not in sys.path:
 from iu_registry import (
     MAX_FETCH_INTERVAL_MIN,
     MIN_FETCH_INTERVAL_MIN,
+    P0_HEADLINE_REGISTRY_IDS,
     compute_entry_sla,
     clear_entries_in_flight,
     select_feeds_for_tick,
@@ -303,6 +304,46 @@ class InFlightLockTests(unittest.TestCase):
         self.assertTrue(state["source_schedule"]["a"]["in_flight"])
         clear_entries_in_flight(state, [e])
         self.assertFalse(state["source_schedule"]["a"]["in_flight"])
+
+
+class P0HeadlineTickCapTests(unittest.TestCase):
+    def test_p0_headline_feeds_exempt_from_tick_cap(self):
+        """P0 headline registry feeds must not be SKIPPED_TICK_CAP (content freshness)."""
+        now = _now()
+        entries = []
+        for i, eid in enumerate(sorted(P0_HEADLINE_REGISTRY_IDS)):
+            entries.append(
+                _entry(
+                    eid,
+                    f"https://example-{i}.cz/rss/{eid}",
+                    f"domain{i}.cz",
+                )
+            )
+        for i in range(4):
+            entries.append(_entry(f"extra_{i}", f"https://extra{i}.cz/rss", f"extra{i}.cz"))
+        state = {
+            "tick_index": 0,
+            "domain_last_fetch": {},
+            "entry_state": {
+                str(e["id"]): {
+                    "last_fetch_at": (now - timedelta(minutes=30)).strftime("%Y-%m-%dT%H:%M:%SZ")
+                }
+                for e in entries
+            },
+            "source_schedule": {},
+        }
+        registry = {"entries": entries, "sources_per_tick": {"max_unmapped_per_tick": 8}}
+        picked, meta = select_feeds_for_tick(registry, dict(state), now=now)
+        picked_ids = {str(e.get("id") or "") for e in picked}
+        skipped_caps = [
+            s for s in meta.get("skipped_sources", []) if s.get("reason") == "SKIPPED_TICK_CAP"
+        ]
+        for eid in P0_HEADLINE_REGISTRY_IDS:
+            self.assertIn(eid, picked_ids, f"{eid} must be picked for ingest freshness")
+        self.assertFalse(
+            any(s.get("source_id") in P0_HEADLINE_REGISTRY_IDS for s in skipped_caps),
+            f"P0 headline must not hit tick cap: {skipped_caps}",
+        )
 
 
 if __name__ == "__main__":

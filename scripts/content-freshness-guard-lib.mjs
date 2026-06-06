@@ -353,3 +353,118 @@ export async function measureP0ContentGaps() {
     rows,
   };
 }
+
+/**
+ * Decide PASS / PASS_WITH_WARN / FAIL for content freshness.
+ * Per-source gap > failMin downgrades to WARN when pipeline content is alive (ingest+aggregate handoff OK).
+ */
+export function evaluateContentFreshnessPolicy(report, options = {}) {
+  const warnMin = options.warnMin ?? 60;
+  const failMin = options.failMin ?? 120;
+  const failOnGeneratedOnly = options.failOnGeneratedOnly ?? true;
+  const nowMs = options.nowMs ?? Date.now();
+
+  const hardFailReasons = [];
+  const softWarnReasons = [];
+  let hardFail = false;
+  let warned = false;
+
+  const rows = Array.isArray(report?.rows) ? report.rows : [];
+  const totalSources = rows.length || P0_CONTENT_SOURCES.length;
+
+  if (!report || report.articleCount <= 0) {
+    hardFail = true;
+    hardFailReasons.push("articles_empty");
+  }
+
+  const genAgeMin = report?.generatedAtTs ? (nowMs - report.generatedAtTs) / 60_000 : null;
+  const pipelineAlive = (report?.articleCount ?? 0) > 0 && (report?.contentNewerThanGenerated ?? 0) > 0;
+
+  if (
+    failOnGeneratedOnly &&
+    genAgeMin !== null &&
+    genAgeMin < 180 &&
+    (report?.contentNewerThanGenerated ?? 0) === 0
+  ) {
+    hardFail = true;
+    hardFailReasons.push("generatedAt_without_content");
+  }
+
+  const sourcesWithProduction = rows.filter((r) => r.productionLatest && !r.fetchError);
+  const majorityWithProduction = sourcesWithProduction.length >= Math.ceil(totalSources / 2);
+  const infinityGapRows = rows.filter((r) => !r.fetchError && r.gapMinutes === Infinity);
+  const failGapRows = rows.filter(
+    (r) => !r.fetchError && r.gapMinutes !== null && r.gapMinutes !== Infinity && r.gapMinutes > failMin,
+  );
+
+  if (infinityGapRows.length >= Math.ceil(totalSources * 0.6) && totalSources > 0) {
+    hardFail = true;
+    for (const row of infinityGapRows) {
+      hardFailReasons.push(`${row.source}: RSS has items but none matched in production`);
+    }
+  }
+
+  if (!pipelineAlive && !majorityWithProduction && totalSources > 0) {
+    hardFail = true;
+    hardFailReasons.push("majority_p0_sources_without_production");
+  }
+
+  if (!pipelineAlive && failGapRows.length + infinityGapRows.length >= totalSources && totalSources > 0) {
+    hardFail = true;
+    hardFailReasons.push("all_p0_sources_stale");
+  }
+
+  for (const row of rows) {
+    if (row.fetchError) {
+      softWarnReasons.push(`${row.source}: rss_fetch_error=${row.fetchError}`);
+      warned = true;
+      continue;
+    }
+    if (row.gapMinutes === Infinity) {
+      if (infinityGapRows.length >= Math.ceil(totalSources * 0.6)) {
+        continue;
+      }
+      const isolatedWarn =
+        !hardFail && pipelineAlive && majorityWithProduction && infinityGapRows.length <= 2;
+      if (isolatedWarn) {
+        warned = true;
+        softWarnReasons.push(`${row.source}: RSS has items but none matched in production (pipeline_alive)`);
+      } else {
+        hardFail = true;
+        hardFailReasons.push(`${row.source}: RSS has items but none matched in production`);
+      }
+      continue;
+    }
+    if (row.gapMinutes === null) continue;
+
+    if (row.gapMinutes > failMin) {
+      const canDowngrade = !hardFail && pipelineAlive && majorityWithProduction;
+      if (canDowngrade) {
+        warned = true;
+        softWarnReasons.push(
+          `${row.source}: freshness gap ${row.gapMinutes.toFixed(1)}m > ${failMin}m (pipeline_alive)`,
+        );
+      } else {
+        hardFail = true;
+        hardFailReasons.push(`${row.source}: freshness gap ${row.gapMinutes.toFixed(1)}m > ${failMin}m`);
+      }
+    } else if (row.gapMinutes > warnMin) {
+      warned = true;
+      softWarnReasons.push(`${row.source}: freshness gap ${row.gapMinutes.toFixed(1)}m > ${warnMin}m`);
+    }
+  }
+
+  let result = "PASS";
+  if (hardFail) result = "FAIL";
+  else if (warned) result = "PASS_WITH_WARN";
+
+  return {
+    failed: hardFail,
+    warned,
+    result,
+    hardFailReasons,
+    softWarnReasons,
+    pipelineAlive,
+    sourcesWithProduction: sourcesWithProduction.length,
+  };
+}

@@ -10,7 +10,7 @@
  */
 import fs from "fs";
 import path from "path";
-import { measureP0ContentGaps } from "./content-freshness-guard-lib.mjs";
+import { evaluateContentFreshnessPolicy, measureP0ContentGaps } from "./content-freshness-guard-lib.mjs";
 
 const warnMin = Number(process.env.CONTENT_FRESHNESS_WARN_MINUTES || "60");
 const failMin = Number(process.env.CONTENT_FRESHNESS_FAIL_MINUTES || "120");
@@ -26,22 +26,10 @@ function fail(msg) {
 }
 
 async function main() {
-  let failed = false;
-  let warned = false;
   const report = await measureP0ContentGaps();
 
   log(`generatedAt=${report.generatedAt} articles=${report.articleCount}`);
   log(`content_newer_than_generatedAt=${report.contentNewerThanGenerated}`);
-
-  if (failOnGeneratedOnly && report.generatedAtTs) {
-    const genAgeMin = (Date.now() - report.generatedAtTs) / 60_000;
-    if (genAgeMin < 180 && report.contentNewerThanGenerated === 0) {
-      fail(
-        `generatedAt fresh (${genAgeMin.toFixed(1)}m) but zero articles with publishedAt newer than generatedAt — content stale`,
-      );
-      failed = true;
-    }
-  }
 
   for (const row of report.rows) {
     if (row.fetchError) {
@@ -57,37 +45,30 @@ async function main() {
     log(
       `source=${row.source} rss_latest=${row.rssLatest?.iso || "none"} production_latest=${row.productionLatest?.iso || "none"} gap_minutes=${gap}`,
     );
+  }
 
-    if (row.gapMinutes === Infinity) {
-      fail(`${row.source}: RSS has items but none matched in production`);
-      failed = true;
-      continue;
-    }
-    if (row.gapMinutes !== null && row.gapMinutes > failMin) {
-      fail(`${row.source}: freshness gap ${row.gapMinutes.toFixed(1)}m > ${failMin}m`);
-      failed = true;
-    } else if (row.gapMinutes !== null && row.gapMinutes > warnMin) {
-      log(`WARN: ${row.source} freshness gap ${row.gapMinutes.toFixed(1)}m > ${warnMin}m`);
-      warned = true;
-    }
+  const verdict = evaluateContentFreshnessPolicy(report, { warnMin, failMin, failOnGeneratedOnly });
+  log(`pipeline_alive=${verdict.pipelineAlive ? "YES" : "NO"} sources_with_production=${verdict.sourcesWithProduction}`);
+
+  for (const msg of verdict.hardFailReasons) {
+    fail(msg);
+  }
+  for (const msg of verdict.softWarnReasons) {
+    log(`WARN: ${msg}`);
   }
 
   const outPath = path.join(
     process.env.TEMP || process.env.TMP || ".",
     "iu_content_freshness_guard_report.json",
   );
-  fs.writeFileSync(outPath, JSON.stringify(report, null, 2));
+  fs.writeFileSync(outPath, JSON.stringify({ ...report, verdict }, null, 2));
   log(`report=${outPath}`);
 
-  if (failed) {
+  if (verdict.failed) {
     console.error("[content-freshness-guard] RESULT=FAIL");
     process.exit(1);
   }
-  if (warned) {
-    log("RESULT=PASS_WITH_WARN");
-  } else {
-    log("RESULT=PASS");
-  }
+  log(`RESULT=${verdict.result}`);
 }
 
 main().catch((e) => {
