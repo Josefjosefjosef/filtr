@@ -82,4 +82,22 @@ function freshPriority(except = {}) {
   console.log("headline_regression_test: PASS");
 }
 
+// Scenario 6 — Zdraví 4h=0 but newest within soft window → PASS_WITH_WARN (release not blocked)
+{
+  const articles = freshPriority({ zdravi: "2026-06-05T13:00:00.000Z" });
+  const r = evaluateProductionLiveness(articles, { nowMs: NOW });
+  assert(r.result === "PASS_WITH_WARN", "zdravi_soft_newest_test: expected PASS_WITH_WARN");
+  assert(r.report.sections.zdravi.counts.last_4h === 0, "zdravi 4h=0");
+  assert(r.report.sections.zdravi.newestAgeMin <= 8 * 60, "zdravi newest within 8h");
+  console.log("zdravi_soft_newest_test: PASS");
+}
+
+// Scenario 7 — Zdraví 4h=0 and newest stale → FAIL
+{
+  const articles = freshPriority({ zdravi: "2026-06-05T08:00:00.000Z" });
+  const r = evaluateProductionLiveness(articles, { nowMs: NOW });
+  assert(r.result === "FAIL", "zdravi_stale_newest_fail_test: expected FAIL");
+  console.log("zdravi_stale_newest_fail_test: PASS");
+}
+
 console.log("PASS production-liveness-guard-unit");
