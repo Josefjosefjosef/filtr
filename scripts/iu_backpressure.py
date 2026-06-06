@@ -19,14 +19,19 @@ from typing import Any
 from urllib.parse import urlparse
 
 from iu_registry import (
+    NATIVE_FINANCE_LIVENESS_FEED_IDS,
+    NATIVE_FINANCE_LIVENESS_FEED_ORDER,
     NATIVE_ZDRAVI_LIVENESS_FEED_IDS,
     NATIVE_ZDRAVI_LIVENESS_FEED_ORDER,
     P0_FRESHNESS_SLOT_KEYS,
+    P0_HEADLINE_REGISTRY_IDS,
 )
 from iu_staging import deserialize_feed_item, staging_root
 
 # Max fresh native Zdraví items reserved per publish batch (production-liveness 2h contract).
 NATIVE_ZDRAVI_LIVENESS_RESERVE = 1
+# Max fresh native Finance items reserved per publish batch (production-liveness 4h contract).
+NATIVE_FINANCE_LIVENESS_RESERVE = 1
 
 
 def _json_safe(value: Any) -> Any:
@@ -139,11 +144,19 @@ def _item_published_dt(item: dict) -> datetime | None:
         return None
 
 
+def _liveness_reserve_fresh_hours() -> float:
+    """Match production-liveness flex 4h blocking window for native vertical reserves."""
+    try:
+        return max(1.0, float(os.getenv("IU_LIVENESS_RESERVE_FRESH_HOURS", "4") or "4"))
+    except ValueError:
+        return 4.0
+
+
 def _is_fresh_liveness_item(item: dict) -> bool:
     dt = _item_published_dt(item)
     if dt is None:
         return False
-    cutoff = datetime.now(timezone.utc) - timedelta(hours=_liveness_fresh_hours())
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=_liveness_reserve_fresh_hours())
     return dt >= cutoff
 
 
@@ -180,43 +193,113 @@ def _native_zdravi_feed_rank(feed_id: str | None) -> int:
         return len(NATIVE_ZDRAVI_LIVENESS_FEED_ORDER)
 
 
-def _pick_native_zdravi_liveness_reserve(merged: list[dict]) -> dict | None:
-    """Newest fresh native Zdraví item for liveness reserve (max 1)."""
+def _native_finance_feed_id_from_item(item: dict) -> str | None:
+    fid = str(item.get("feedId") or "").strip()
+    if fid in NATIVE_FINANCE_LIVENESS_FEED_IDS:
+        return fid
+    url = (_canon_url(item) or "").lower()
+    if not url:
+        return None
+    try:
+        host = (urlparse(url).netloc or "").lower()
+    except Exception:
+        host = ""
+    if host.startswith("www."):
+        host = host[4:]
+    if "hn.cz" in host or "ihned.cz" in host:
+        return "fin_hn"
+    if "e15.cz" in host:
+        return "fin_e15"
+    return None
+
+
+def _is_native_finance_liveness_item(item: dict) -> bool:
+    return _native_finance_feed_id_from_item(item) is not None
+
+
+def _native_finance_feed_rank(feed_id: str | None) -> int:
+    if not feed_id:
+        return len(NATIVE_FINANCE_LIVENESS_FEED_ORDER)
+    try:
+        return NATIVE_FINANCE_LIVENESS_FEED_ORDER.index(feed_id)
+    except ValueError:
+        return len(NATIVE_FINANCE_LIVENESS_FEED_ORDER)
+
+
+def _is_finance_liveness_item(item: dict) -> bool:
+    if _is_native_finance_liveness_item(item):
+        return True
+    sec = str(item.get("topic") or item.get("section") or "").strip().lower()
+    return sec == "finance"
+
+
+def _finance_liveness_rank(item: dict) -> tuple:
+    native = 0 if _is_native_finance_liveness_item(item) else 1
+    feed_rank = _native_finance_feed_rank(_native_finance_feed_id_from_item(item))
+    return (native, feed_rank, _item_sort_dt(item))
+
+
+def _pick_native_finance_liveness_reserve(merged: list[dict]) -> dict | None:
+    """Newest fresh Finance item for liveness reserve (max 1; prefers native feeds)."""
     candidates: list[dict] = []
     for it in merged:
-        if not _is_native_zdravi_liveness_item(it):
+        if not _is_finance_liveness_item(it):
             continue
         if not _is_fresh_liveness_item(it):
             continue
         candidates.append(it)
     if not candidates:
         return None
-    candidates.sort(
-        key=lambda it: (
-            _item_sort_dt(it),
-            -_native_zdravi_feed_rank(_native_zdravi_feed_id_from_item(it)),
-        ),
-        reverse=True,
-    )
+    candidates.sort(key=_finance_liveness_rank, reverse=True)
+    return candidates[0]
+
+
+def _batch_has_fresh_native_finance(batch: list[dict]) -> bool:
+    return any(_is_finance_liveness_item(it) and _is_fresh_liveness_item(it) for it in batch)
+
+
+def _is_zdravi_liveness_item(item: dict) -> bool:
+    if _is_native_zdravi_liveness_item(item):
+        return True
+    sec = str(item.get("topic") or item.get("section") or "").strip().lower()
+    return sec == "zdravi"
+
+
+def _zdravi_liveness_rank(item: dict) -> tuple:
+    native = 0 if _is_native_zdravi_liveness_item(item) else 1
+    feed_rank = _native_zdravi_feed_rank(_native_zdravi_feed_id_from_item(item))
+    return (native, feed_rank, _item_sort_dt(item))
+
+
+def _pick_native_zdravi_liveness_reserve(merged: list[dict]) -> dict | None:
+    """Newest fresh Zdraví item for liveness reserve (max 1; prefers native feeds)."""
+    candidates: list[dict] = []
+    for it in merged:
+        if not _is_zdravi_liveness_item(it):
+            continue
+        if not _is_fresh_liveness_item(it):
+            continue
+        candidates.append(it)
+    if not candidates:
+        return None
+    candidates.sort(key=_zdravi_liveness_rank, reverse=True)
     return candidates[0]
 
 
 def _batch_has_fresh_native_zdravi(batch: list[dict]) -> bool:
-    return any(
-        _is_native_zdravi_liveness_item(it) and _is_fresh_liveness_item(it) for it in batch
-    )
+    return any(_is_zdravi_liveness_item(it) and _is_fresh_liveness_item(it) for it in batch)
 
 
 def _cap_batch_with_p0_reserves(
     merged: list[dict], cap: int
-) -> tuple[list[dict], list[dict], int, int]:
+) -> tuple[list[dict], list[dict], int, int, int]:
     """
     Guarantee newest items per P0 headline slot survive global cap trimming.
-    Reserve one fresh native Zdraví item when eligible (production-liveness contract).
-    Returns (now_batch, defer, p0_reserved_count, zdravi_reserved_count).
+    Reserve fresh native Finance / Zdraví items when eligible (production-liveness contract).
+    Returns (now_batch, defer, p0_reserved_count, zdravi_reserved_count, finance_reserved_count).
     """
     if len(merged) <= cap:
-        return merged, [], 0, 0
+        return merged, [], 0, 0, 0
 
     reserve_n = _p0_reserve_per_slot()
     by_slot: dict[str, list[dict]] = {}
@@ -250,6 +333,15 @@ def _cap_batch_with_p0_reserves(
             reserved.append(zdravi_pick)
             reserved_urls.add(u)
             zdravi_reserved_count = NATIVE_ZDRAVI_LIVENESS_RESERVE
+
+    finance_reserved_count = 0
+    finance_pick = _pick_native_finance_liveness_reserve(merged)
+    if finance_pick is not None and not _batch_has_fresh_native_finance(reserved):
+        u = _canon_url(finance_pick)
+        if u and u not in reserved_urls:
+            reserved.append(finance_pick)
+            reserved_urls.add(u)
+            finance_reserved_count = NATIVE_FINANCE_LIVENESS_RESERVE
 
     non_p0.sort(key=_item_sort_dt, reverse=True)
     now_batch: list[dict] = []
@@ -291,7 +383,7 @@ def _cap_batch_with_p0_reserves(
             continue
         defer.append(it)
 
-    return now_batch, defer, p0_reserved_count, zdravi_reserved_count
+    return now_batch, defer, p0_reserved_count, zdravi_reserved_count, finance_reserved_count
 
 
 def tick_max_publish_items() -> int:
@@ -345,13 +437,30 @@ def enqueue_items(output_dir: str, items: list[dict]) -> int:
 
 
 def drain_items(output_dir: str, max_items: int) -> tuple[list[dict], int]:
-    """Pop up to max_items from queue (FIFO by enqueued order in list). Returns (items, remaining)."""
+    """Pop up to max_items from queue (liveness-critical items first). Returns (items, remaining)."""
     if max_items <= 0:
         return [], queue_depth(output_dir)
     q = _read_queue(output_dir)
     items = [x for x in (q.get("items") or []) if isinstance(x, dict)]
     if not items:
         return [], 0
+
+    def _drain_rank(it: dict) -> tuple:
+        fid = str(it.get("feedId") or "").strip()
+        p0 = 0 if fid in P0_HEADLINE_REGISTRY_IDS else 1
+        fin = (
+            0
+            if _is_finance_liveness_item(it) and _is_fresh_liveness_item(it)
+            else 1
+        )
+        zdr = (
+            0
+            if _is_zdravi_liveness_item(it) and _is_fresh_liveness_item(it)
+            else 1
+        )
+        return (p0, fin, zdr, _item_sort_dt(it))
+
+    items.sort(key=_drain_rank)
     take = [deserialize_feed_item(x) for x in items[:max_items]]
     rest = items[max_items:]
     q["items"] = rest
@@ -410,11 +519,15 @@ def split_publish_batch(
         meta["published_now_count"] = len(merged)
         meta["p0_reserved"] = 0
         meta["zdravi_reserved"] = 0
+        meta["finance_reserved"] = 0
         return merged, meta
 
-    now_batch, defer, p0_reserved, zdravi_reserved = _cap_batch_with_p0_reserves(merged, cap)
+    now_batch, defer, p0_reserved, zdravi_reserved, finance_reserved = _cap_batch_with_p0_reserves(
+        merged, cap
+    )
     meta["p0_reserved"] = p0_reserved
     meta["zdravi_reserved"] = zdravi_reserved
+    meta["finance_reserved"] = finance_reserved
     meta["enqueued_this_tick"] = enqueue_items(output_dir, defer)
     meta["published_now_count"] = len(now_batch)
     meta["queue_depth"] = queue_depth(output_dir)
