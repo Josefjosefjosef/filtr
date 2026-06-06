@@ -190,7 +190,7 @@ def infer_strong_media_vertical_from_url(url: str) -> Optional[str]:
         return "veda"
     if "/kultura/" in pl or pl.rstrip("/").endswith("/kultura"):
         return "kultura"
-    if "/vzdelavani/" in pl or pl.rstrip("/").endswith("/vzdelavani") or "/skola/" in pl:
+    if "/skola/" in pl or pl.rstrip("/").endswith("/skola"):
         return "vzdelavani"
     if "/hry/" in pl or pl.rstrip("/").endswith("/hry"):
         return "hry"
@@ -271,6 +271,17 @@ def apply_vertical_quality_guards(
     Does not override url_strong_* or dedicated source/url truth layers.
     """
     fl = list(flags)
+    title = _title_str(item)
+    url = str(item.get("url") or "")
+    h, path = _host_path(url)
+
+    if mk == "vzdelavani":
+        from iu_vzdelavani_relevance import vzdelavani_content_relevant
+
+        if not vzdelavani_content_relevant(title, url):
+            fl.append("guard_vzdelavani_not_relevant")
+            return "zpravy", "guard_vzdelavani_precision", 0.88, fl
+
     if reason in (
         "url_strong_vertical",
         "url_strong_overrides_topic",
@@ -280,10 +291,6 @@ def apply_vertical_quality_guards(
         "cestovani_url_hay",
     ):
         return mk, reason, conf, fl
-
-    title = _title_str(item)
-    url = str(item.get("url") or "")
-    h, path = _host_path(url)
 
     # Ekonomický deník: business domain — RSS "sport" is often wrong; require sport-like URL path
     if mk == "sport" and _RE_EKONOMICKY_DENIK.search(url):
