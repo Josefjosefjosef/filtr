@@ -100,4 +100,15 @@ function freshPriority(except = {}) {
   console.log("zdravi_stale_newest_fail_test: PASS");
 }
 
+// Scenario 8 — single flex section soft fail does not block whole release
+{
+  const articles = freshPriority({
+    zdravi: "2026-06-05T16:10:27.000Z",
+    finance: "2026-06-05T19:30:00.000Z",
+  });
+  const r = evaluateProductionLiveness(articles, { nowMs: NOW });
+  assert(r.result === "PASS_WITH_WARN", "single_section_warn_test: expected PASS_WITH_WARN");
+  console.log("single_section_warn_test: PASS");
+}
+
 console.log("PASS production-liveness-guard-unit");

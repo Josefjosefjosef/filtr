@@ -52,6 +52,11 @@ def _prague_tz():
 
 # Hard floor: same source (scheduler_cooldown_key) must not fetch more often than this between runs.
 HARD_DOMAIN_COOLDOWN_MIN = 15
+MIN_FETCH_INTERVAL_MIN = HARD_DOMAIN_COOLDOWN_MIN
+MAX_FETCH_INTERVAL_MIN = 25
+MAX_SOURCES_PER_SCHEDULER_TICK = 5
+MAX_SAME_DOMAIN_PER_TICK = 2
+URGENT_SAFETY_MARGIN_MIN = 3
 
 # P0 headline sources: must be fetched every pipeline tick when cooldown allows,
 # even if Prague minute ≠ fixed slot (watchdog cadence ~30–45 min misses slot minutes).
@@ -433,18 +438,19 @@ def registry_active_entries(registry: dict) -> list:
 
 def load_scheduler_state(path: str) -> dict:
     if not path or not os.path.exists(path):
-        return {"tick_index": 0, "domain_last_fetch": {}, "entry_state": {}}
+        return {"tick_index": 0, "domain_last_fetch": {}, "entry_state": {}, "source_schedule": {}}
     try:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
         if not isinstance(data, dict):
-            return {"tick_index": 0, "domain_last_fetch": {}, "entry_state": {}}
+            return {"tick_index": 0, "domain_last_fetch": {}, "entry_state": {}, "source_schedule": {}}
         data.setdefault("tick_index", 0)
         data.setdefault("domain_last_fetch", {})
         data.setdefault("entry_state", {})
+        data.setdefault("source_schedule", {})
         return data
     except Exception:
-        return {"tick_index": 0, "domain_last_fetch": {}, "entry_state": {}}
+        return {"tick_index": 0, "domain_last_fetch": {}, "entry_state": {}, "source_schedule": {}}
 
 
 def save_scheduler_state(path: str, state: dict) -> None:
@@ -498,6 +504,184 @@ def sources_per_tick(tick_index: int, three_frac: float = 0.62) -> int:
     mod = tick_index % 100
     threshold = int(three_frac * 100 + 0.5)
     return 3 if mod < threshold else 2
+
+
+def _entry_schedule_bucket(state: dict, entry_id: str) -> dict:
+    sched = state.setdefault("source_schedule", {})
+    row = sched.get(entry_id)
+    if not isinstance(row, dict):
+        row = {}
+        sched[entry_id] = row
+    return row
+
+
+def _entry_last_checked_at(state: dict, entry: dict) -> datetime | None:
+    eid = str(entry.get("id") or "")
+    es = state.get("entry_state") or {}
+    st = es.get(eid) if isinstance(es.get(eid), dict) else {}
+    last = _parse_iso(st.get("last_fetch_at") if isinstance(st, dict) else None)
+    if last is not None:
+        return last
+    ck = scheduler_cooldown_key(entry)
+    if ck:
+        return _parse_iso((state.get("domain_last_fetch") or {}).get(ck))
+    return None
+
+
+def compute_entry_sla(state: dict, entry: dict, now: datetime | None = None) -> dict:
+    """Per-feed SLA: 15min min interval, 25min max without check."""
+    now = now or datetime.now(timezone.utc)
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=timezone.utc)
+    eid = str(entry.get("id") or "")
+    row = _entry_schedule_bucket(state, eid)
+    last = _entry_last_checked_at(state, entry)
+    last_iso = last.isoformat().replace("+00:00", "Z") if last else None
+    if last is None:
+        next_allowed = now
+        must_before = now + timedelta(minutes=MAX_FETCH_INTERVAL_MIN)
+        overdue = False
+        urgent = True
+        eligible = True
+        priority_boost = True
+    else:
+        next_allowed = last + timedelta(minutes=MIN_FETCH_INTERVAL_MIN)
+        must_before = last + timedelta(minutes=MAX_FETCH_INTERVAL_MIN)
+        overdue = now > must_before
+        urgent = now >= (must_before - timedelta(minutes=URGENT_SAFETY_MARGIN_MIN))
+        eligible = now >= next_allowed
+        priority_boost = overdue or urgent
+    in_flight = bool(row.get("in_flight"))
+    row.update(
+        {
+            "source_id": eid,
+            "source_group": scheduler_cooldown_key(entry) or cooldown_domain_key(entry),
+            "domain": normalize_registry_domain(str(entry.get("domain") or host_from_url(entry.get("feed_url") or ""))),
+            "feed_url": str(entry.get("feed_url") or ""),
+            "last_checked_at": last_iso,
+            "next_allowed_at": next_allowed.isoformat().replace("+00:00", "Z"),
+            "must_check_before": must_before.isoformat().replace("+00:00", "Z"),
+            "priority_boost": priority_boost,
+            "in_flight": in_flight,
+        }
+    )
+    return {
+        "source_id": eid,
+        "eligible": eligible or overdue,
+        "overdue": overdue,
+        "urgent": urgent,
+        "priority_boost": priority_boost,
+        "in_flight": in_flight,
+        "next_allowed_at": row["next_allowed_at"],
+        "must_check_before": row["must_check_before"],
+        "last_checked_at": last_iso,
+    }
+
+
+def set_entries_in_flight(state: dict, entries: list[dict], run_id: str) -> None:
+    for e in entries or []:
+        eid = str(e.get("id") or "")
+        if not eid:
+            continue
+        row = _entry_schedule_bucket(state, eid)
+        row["in_flight"] = True
+        row["in_flight_run_id"] = str(run_id or "")
+        row["last_status"] = "IN_FLIGHT"
+
+
+def clear_entries_in_flight(state: dict, entries: list[dict]) -> None:
+    for e in entries or []:
+        eid = str(e.get("id") or "")
+        if not eid:
+            continue
+        row = _entry_schedule_bucket(state, eid)
+        row["in_flight"] = False
+        row.pop("in_flight_run_id", None)
+
+
+def _sla_sort_key(entry: dict, sla: dict) -> tuple:
+    pri = SOURCE_PRIORITY_BY_KEY.get(entry_fixed_slot_key(entry) or cooldown_domain_key(entry) or "", "P2")
+    pri_rank = {"P0": 0, "P1": 1, "P2": 2}.get(pri, 3)
+    return (
+        0 if sla.get("overdue") else 1 if sla.get("urgent") else 2,
+        0 if sla.get("priority_boost") else 1,
+        pri_rank,
+        str(entry.get("id") or ""),
+    )
+
+
+def _merge_sla_overdue_picks(
+    picked: list[dict],
+    entries: list[dict],
+    state: dict,
+    now: datetime,
+    seen_urls: set[str],
+) -> list[dict]:
+    """Ensure feeds past must_check_before are included even when minute slot missed."""
+    have_ids = {str(e.get("id") or "") for e in picked}
+    overdue: list[tuple[dict, dict]] = []
+    for e in entries:
+        eid = str(e.get("id") or "")
+        if not eid or eid in have_ids:
+            continue
+        u = (e.get("feed_url") or "").strip()
+        if not u or u in seen_urls:
+            continue
+        sla = compute_entry_sla(state, e, now)
+        if not sla.get("overdue") and not sla.get("urgent"):
+            continue
+        if sla.get("in_flight"):
+            continue
+        if not sla.get("eligible") and not sla.get("overdue"):
+            continue
+        overdue.append((e, sla))
+    overdue.sort(key=lambda pair: _sla_sort_key(pair[0], pair[1]))
+    out = list(picked)
+    for e, _sla in overdue:
+        u = (e.get("feed_url") or "").strip()
+        if u and u not in seen_urls:
+            out.append(e)
+            seen_urls.add(u)
+            have_ids.add(str(e.get("id") or ""))
+    return out
+
+
+def _apply_scheduler_tick_caps(
+    picked: list[dict],
+    state: dict,
+    now: datetime,
+) -> tuple[list[dict], dict]:
+    """Respect in_flight, 15min floor, max feeds/tick, domain stagger."""
+    skipped: list[dict] = []
+    filtered: list[dict] = []
+    for e in picked:
+        sla = compute_entry_sla(state, e, now)
+        if sla.get("in_flight"):
+            skipped.append({"source_id": sla["source_id"], "reason": "SKIPPED_IN_FLIGHT"})
+            continue
+        if not sla.get("eligible") and not sla.get("overdue"):
+            skipped.append({"source_id": sla["source_id"], "reason": "SKIPPED_RATE_LIMIT_15MIN"})
+            continue
+        filtered.append(e)
+    filtered.sort(key=lambda x: _sla_sort_key(x, compute_entry_sla(state, x, now)))
+    capped: list[dict] = []
+    domain_counts: dict[str, int] = defaultdict(int)
+    for e in filtered:
+        if len(capped) >= MAX_SOURCES_PER_SCHEDULER_TICK:
+            skipped.append({"source_id": str(e.get("id") or ""), "reason": "SKIPPED_TICK_CAP"})
+            continue
+        dom = normalize_registry_domain(str(e.get("domain") or host_from_url(e.get("feed_url") or "")))
+        if dom and domain_counts.get(dom, 0) >= MAX_SAME_DOMAIN_PER_TICK:
+            skipped.append({"source_id": str(e.get("id") or ""), "reason": "SKIPPED_DOMAIN_STAGGER"})
+            continue
+        capped.append(e)
+        if dom:
+            domain_counts[dom] = domain_counts.get(dom, 0) + 1
+    meta = {
+        "selected_source_ids": [str(e.get("id") or "") for e in capped],
+        "skipped_sources": skipped,
+    }
+    return capped, meta
 
 
 def select_feeds_for_tick(
@@ -733,6 +917,14 @@ def select_feeds_for_tick(
                 seen_urls.add(u)
 
     picked = pre_finance + finance_liveness_picks + zdravi_liveness_picks + unmapped_picks
+    picked = _merge_sla_overdue_picks(picked, entries, state, now, seen_urls)
+    picked, tick_meta = _apply_scheduler_tick_caps(picked, state, now)
+    state["last_scheduler_tick"] = {
+        "tick_index": tick_index,
+        "minute_prague": minute,
+        "selected_count": len(picked),
+        **tick_meta,
+    }
     return picked, state
 
 
@@ -758,6 +950,12 @@ def mark_feeds_fetched(state: dict, entries: list[dict], now: datetime | None = 
         prev["last_success_at"] = ts
         prev["error_streak"] = 0
         entry_state[eid] = prev
+        sched = _entry_schedule_bucket(state, eid)
+        sched["last_checked_at"] = ts
+        sched["last_success_at"] = ts
+        sched["last_status"] = "OK"
+        sched["in_flight"] = False
+        sched.pop("in_flight_run_id", None)
 
 
 def mark_feed_error(state: dict, entry_id: str) -> None:
