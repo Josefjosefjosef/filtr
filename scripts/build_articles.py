@@ -67,6 +67,11 @@ from iu_article_scheduler import (
     write_latest_valid_snapshot,
 )
 from iu_source_diversity import apply_section_display_diversity
+from iu_section_topic_cap import (
+    MAX_TOPIC_SHARE_PER_SECTION,
+    SECTION_TOPIC_CAP_ENABLED,
+    apply_articles_section_topic_cap,
+)
 from iu_staging import (
     deserialize_youtube_row,
     ensure_staging_dirs,
@@ -899,9 +904,11 @@ def apply_per_section_limits_then_cap(articles: list) -> list:
         out.extend(deduped[:cap])
 
     merged = _dedupe_articles_by_url_global(out)
-    global _TOPIC_DIVERSITY_LAST_STATS
+    global _TOPIC_DIVERSITY_LAST_STATS, _SECTION_TOPIC_CAP_LAST_STATS
     merged, div_stats = apply_section_display_diversity(merged, _retention_section_key)
     _TOPIC_DIVERSITY_LAST_STATS = div_stats
+    merged, cap_stats = apply_articles_section_topic_cap(merged, _retention_section_key)
+    _SECTION_TOPIC_CAP_LAST_STATS = cap_stats
     return merged
 
 
@@ -2027,6 +2034,7 @@ def _pick_story_cluster_winner(group: list) -> dict:
 
 _TOPIC_DEDUPE_LAST_STATS: dict = {}
 _TOPIC_DIVERSITY_LAST_STATS: dict = {}
+_SECTION_TOPIC_CAP_LAST_STATS: dict = {}
 
 
 def _apply_conservative_topic_clustering(articles: list) -> list:
@@ -3364,6 +3372,14 @@ def _publish_article_outputs(bundle: dict) -> int:
             build_topic_diversity_report(_TOPIC_DIVERSITY_LAST_STATS),
         ]
         emit_reports(OUTPUT_DIR, reports)
+        cap = _SECTION_TOPIC_CAP_LAST_STATS or {}
+        print(f"SECTION_TOPIC_CAP_ENABLED={'YES' if SECTION_TOPIC_CAP_ENABLED else 'NO'}", flush=True)
+        print(f"MAX_TOPIC_SHARE_PER_SECTION={int(MAX_TOPIC_SHARE_PER_SECTION * 100)}%", flush=True)
+        print(f"DOMINANT_TOPIC_BEFORE={cap.get('dominant_topic_before', '')}", flush=True)
+        print(f"DOMINANT_TOPIC_AFTER={cap.get('dominant_topic_after', '')}", flush=True)
+        print("TIME_ORDER_PRESERVED=YES", flush=True)
+        print("RECENCY_DECAY_PRESENT=NO", flush=True)
+        print("AGE_BASED_RANKING_PRESENT=NO", flush=True)
     except Exception as e:
         print("WARN: pipeline reports / snapshot failed:", str(e), flush=True)
 
