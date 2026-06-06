@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-06-06T07:54:51.548028Z",
+  "ingestedAt": "2026-06-06T09:16:49.173976Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Digitalizace další dávky se odkládá. Tentokrát předporodní rodičovská",
+      "url": "https://www.zdravezpravy.cz/2026/06/06/digitalizace-dalsi-davky-se-odklada-tentokrat-predporodni-rodicovska/",
+      "dt": "2026-06-06T05:40:00Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "další",
+        "digitalizace",
+        "dávky",
+        "odkládá",
+        "předporodní",
+        "rodičovská",
+        "tentokrát"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -474,32 +498,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Komentář: Zle se smějeme Trumpovi, ale sami máme ruce v klíně",
-      "url": "https://www.zdravezpravy.cz/2026/05/29/komentar-zle-se-smejeme-trumpovi-ale-sami-mame-ruce-v-kline/",
-      "dt": "2026-05-29T05:30:04Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "ale",
-        "klíně",
-        "komentář",
-        "máme",
-        "ruce",
-        "sami",
-        "smějeme",
-        "trumpovi",
-        "zle"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -510,7 +508,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 204716,
+      "bytes": 198089,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -547,7 +545,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-05T13:02:53Z",
+        "raw_feed_latest_publishedAt": "2026-06-06T05:40:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -562,6 +560,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Digitalizace další dávky se odkládá. Tentokrát předporodní rodičovská",
+            "publishedAt": "2026-06-06T05:40:00Z"
+          },
           {
             "title": "Exministr Válek se na pátý pokus volby dostal do rady VZP ČR",
             "publishedAt": "2026-06-05T13:02:53Z"
@@ -589,10 +591,6 @@
           {
             "title": "Zdravotnictví je příliš resortní na to, aby zvládlo závislostní politiku",
             "publishedAt": "2026-06-03T14:07:57Z"
-          },
-          {
-            "title": "Sebraná data nově mapují počty a okolnosti pooperačních sepsí",
-            "publishedAt": "2026-06-03T08:00:39Z"
           }
         ]
       }
