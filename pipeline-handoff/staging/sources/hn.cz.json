@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-06-06T04:19:10.500112Z",
+  "ingestedAt": "2026-06-06T05:01:43.040793Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vytáhněte si hlavu z... Hobitína, vzkazuje byznysmen Čechům. Ve světě jedou změny na steroidech",
+      "url": "https://byznys.hn.cz/c1-67886760-vytahnete-si-hlavu-z-hobitina-vzkazuje-byznysmen-cechum-ve-svete-jedou-zmeny-na-steroidech",
+      "dt": "2026-06-06T05:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN",
+      "tokens": [
+        "byznysmen",
+        "hlavu",
+        "hobitína",
+        "jedou",
+        "steroidech",
+        "světě",
+        "vytáhněte",
+        "vzkazuje",
+        "změny",
+        "čechům"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1149,33 +1176,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Europo, rozpadni se! aneb Proč je jednota dobrá pro všechny velmoci světa, ale ne pro EU?",
-      "url": "https://archiv.hn.cz/c1-67886440-europo-rozpadni-se-aneb-proc-je-jednota-dobra-pro-vsechny-velmoci-sveta-ale-ne-pro-eu",
-      "dt": "2026-06-04T14:35:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN",
-      "tokens": [
-        "ale",
-        "aneb",
-        "dobrá",
-        "europo",
-        "jednota",
-        "proč",
-        "rozpadni",
-        "světa",
-        "velmoci",
-        "všechny"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1186,7 +1186,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185805,
+      "bytes": 185812,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1223,7 +1223,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-05T18:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-06T05:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 31,
@@ -1241,6 +1241,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vytáhněte si hlavu z... Hobitína, vzkazuje byznysmen Čechům. Ve světě jedou změny na steroidech",
+            "publishedAt": "2026-06-06T05:00:00Z"
+          },
           {
             "title": "Bednárikova klíčová mise. Podporu pro nákladní železniční dopravu má zatím od osmi států, problémem je milion polských kamioňáků",
             "publishedAt": "2026-06-05T18:15:00Z"
@@ -1268,10 +1272,6 @@
           {
             "title": "Houstone, máme problém. ISS se potýká s únikem vzduchu, Rusové zahájili speciální opravárenskou operaci",
             "publishedAt": "2026-06-05T14:59:00Z"
-          },
-          {
-            "title": "Obchodníky s oblečením připravuje o zisky nový trend. Proč vráceného zboží skokem přibylo a proč jsou malé velikosti výjimkou?",
-            "publishedAt": "2026-06-05T13:55:00Z"
           }
         ]
       }

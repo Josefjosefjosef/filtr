@@ -1,24 +1,27 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-06T04:19:10.500112Z",
+  "ingestedAt": "2026-06-06T05:01:43.040793Z",
   "items": [
     {
-      "section": "finance",
+      "section": "aktualne",
       "contentType": "article",
-      "title": "Žena u těžkých strojů: příběh z výroby, který bourá stereotypy",
-      "url": "https://www.idnes.cz/finance/prace-a-podnikani/strojnik-stroj-vyroba-prumysl.A260527_115525_podnikani_daja",
-      "dt": "2026-06-05T22:00:00Z",
+      "title": "Horské svahy kolem Pradědu zachraňuje stovka ovcí, doplní je koně a skot",
+      "url": "https://www.idnes.cz/ostrava/zpravy/ovce-aopk-cr-chko-jeseniky-ochrana-prirody-praded-petrovy-kameny.A260604_939773_ostrava-zpravy_dmk",
+      "dt": "2026-06-06T04:32:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES",
       "tokens": [
-        "bourá",
-        "příběh",
-        "stereotypy",
-        "strojů",
-        "těžkých",
-        "výroby",
-        "žena"
+        "doplní",
+        "horské",
+        "kolem",
+        "koně",
+        "ovcí",
+        "pradědu",
+        "skot",
+        "stovka",
+        "svahy",
+        "zachraňuje"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -54,23 +57,21 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "finance",
       "contentType": "article",
-      "title": "Rok a půl od tragédie a napětí je stále patrné. Bělehrad rozdělují protesty",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/rok-a-pul-od-tragedie-a-napeti-je-stale-patrne-belehrad-rozdeluji-protesty.A260604_171519_zahranicni_tvrk",
+      "title": "Žena u těžkých strojů: příběh z výroby, který bourá stereotypy",
+      "url": "https://www.idnes.cz/finance/prace-a-podnikani/strojnik-stroj-vyroba-prumysl.A260527_115525_podnikani_daja",
       "dt": "2026-06-05T22:00:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES",
       "tokens": [
-        "bělehrad",
-        "napětí",
-        "patrné",
-        "protesty",
-        "půl",
-        "rok",
-        "rozdělují",
-        "stále",
-        "tragédie"
+        "bourá",
+        "příběh",
+        "stereotypy",
+        "strojů",
+        "těžkých",
+        "výroby",
+        "žena"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -99,6 +100,32 @@
         "rychlost",
         "vybrala",
         "víc"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rok a půl od tragédie a napětí je stále patrné. Bělehrad rozdělují protesty",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/rok-a-pul-od-tragedie-a-napeti-je-stale-patrne-belehrad-rozdeluji-protesty.A260604_171519_zahranicni_tvrk",
+      "dt": "2026-06-05T22:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "bělehrad",
+        "napětí",
+        "patrné",
+        "protesty",
+        "půl",
+        "rok",
+        "rozdělují",
+        "stále",
+        "tragédie"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -758,33 +785,6 @@
         "tváří",
         "věří",
         "změní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "České úřady mohly obnovit dotace firmám z Agrofertu, EU zatím nic neproplácí",
-      "url": "https://www.idnes.cz/zpravy/domaci/ceske-urady-agrofert-dotace-evropska-unie-komise-firma-louise-bogeyova.A260605_134337_domaci_linh",
-      "dt": "2026-06-05T14:00:10Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "agrofertu",
-        "dotace",
-        "firmám",
-        "mohly",
-        "neproplácí",
-        "nic",
-        "obnovit",
-        "zatím",
-        "úřady",
-        "české"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1586,7 +1586,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49987,
+      "bytes": 50829,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1623,11 +1623,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-05T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-06T04:32:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 3,
           "zpravy": 25,
+          "finance": 3,
           "zdravi": 1,
           "other": 1
         },
@@ -1642,19 +1642,23 @@
         },
         "sample_titles": [
           {
-            "title": "Žena u těžkých strojů: příběh z výroby, který bourá stereotypy",
-            "publishedAt": "2026-06-05T22:00:00Z"
+            "title": "Horské svahy kolem Pradědu zachraňuje stovka ovcí, doplní je koně a skot",
+            "publishedAt": "2026-06-06T04:32:00Z"
           },
           {
             "title": "Stát stopl dotace na podporu turistiky, kraje se bojí odlivu návštěvníků",
             "publishedAt": "2026-06-05T22:00:00Z"
           },
           {
-            "title": "Rok a půl od tragédie a napětí je stále patrné. Bělehrad rozdělují protesty",
+            "title": "Žena u těžkých strojů: příběh z výroby, který bourá stereotypy",
             "publishedAt": "2026-06-05T22:00:00Z"
           },
           {
             "title": "PŘEHLEDNĚ: Pětkrát víc než před pěti lety. Policie vybrala za rychlost 286 milionů",
+            "publishedAt": "2026-06-05T22:00:00Z"
+          },
+          {
+            "title": "Rok a půl od tragédie a napětí je stále patrné. Bělehrad rozdělují protesty",
             "publishedAt": "2026-06-05T22:00:00Z"
           },
           {
@@ -1668,10 +1672,6 @@
           {
             "title": "U Kolína se srazila dvě auta. Zranilo se několik lidí včetně dětí",
             "publishedAt": "2026-06-05T19:58:37Z"
-          },
-          {
-            "title": "Nehoda uzavřela dálnici D3 ve směru na Prahu. Podle policie jel řidič příliš rychle",
-            "publishedAt": "2026-06-05T19:03:00Z"
           }
         ]
       }
