@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-06T12:02:00.303072Z",
+  "ingestedAt": "2026-06-06T13:23:47.443945Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Chci být víc vidět a pomáhat řešit problémy, říká nová ombudsmanka",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/chci-byt-vic-videt-a-pomahat-resit-problemy-rika-nova-ombudsmanka-374295",
+      "dt": "2026-06-06T12:07:26Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "být",
+        "chci",
+        "nová",
+        "ombudsmanka",
+        "pomáhat",
+        "problémy",
+        "vidět",
+        "víc",
+        "řešit",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -180,20 +207,18 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Blahořečení kněží Buly a Drboly vyvrcholí slavnostní mší v Brně",
+      "title": "Kněží Bula a Drbola byli prohlášeni za blahoslavené",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/blahoreceni-knezi-buly-a-drboly-vyvrcholi-slavnostni-msi-v-brne-374288",
       "dt": "2026-06-06T05:21:29Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24",
       "tokens": [
-        "blahořečení",
-        "brně",
-        "buly",
-        "drboly",
+        "blahoslavené",
+        "bula",
+        "byli",
+        "drbola",
         "kněží",
-        "mší",
-        "slavnostní",
-        "vyvrcholí"
+        "prohlášeni"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -719,31 +744,6 @@
         "pohraničníci",
         "převozu",
         "zadrželi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vláda odkládá termín rozhodnutí o složení delegace na summit NATO",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/babis-posunul-termin-kdy-rozhodne-o-slozeni-delegace-na-summit-nato-374262",
-      "dt": "2026-06-05T10:08:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "delegace",
-        "nato",
-        "odkládá",
-        "rozhodnutí",
-        "složení",
-        "summit",
-        "termín",
-        "vláda"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2250,7 +2250,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41911,
+      "bytes": 42008,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2287,7 +2287,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-06T11:57:32Z",
+        "raw_feed_latest_publishedAt": "2026-06-06T12:07:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 29,
@@ -2303,6 +2303,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chci být víc vidět a pomáhat řešit problémy, říká nová ombudsmanka",
+            "publishedAt": "2026-06-06T12:07:26Z"
+          },
           {
             "title": "Ukrajina udeřila v Petrohradu a ničila ropné sklady",
             "publishedAt": "2026-06-06T11:57:32Z"
@@ -2330,10 +2334,6 @@
           {
             "title": "Do Kodaně, Bruselu i k Jadranu. Přímých vlakových spojů přibývá",
             "publishedAt": "2026-06-06T06:00:00Z"
-          },
-          {
-            "title": "Blahořečení kněží Buly a Drboly vyvrcholí slavnostní mší v Brně",
-            "publishedAt": "2026-06-06T05:21:29Z"
           }
         ]
       }
