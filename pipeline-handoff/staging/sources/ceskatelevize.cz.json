@@ -1,23 +1,47 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-06T09:16:49.173976Z",
+  "ingestedAt": "2026-06-06T10:01:50.748057Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Při izraelském útoku zemřelo několik libanonských vojáků",
+      "title": "Prezidentský kandidát v Peru musí k soudu kvůli financování kampaně",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/prezidentsky-kandidat-v-peru-musi-k-soudu-kvuli-financovani-kampane-374292",
+      "dt": "2026-06-06T09:24:07Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "financování",
+        "kampaně",
+        "kandidát",
+        "kvůli",
+        "musí",
+        "peru",
+        "prezidentský",
+        "soudu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Při izraelském útoku zemřeli libanonští důstojníci",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/pri-izraelskem-utoku-zemrelo-nekolik-libanonskych-vojaku-374291",
       "dt": "2026-06-06T08:04:52Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24",
       "tokens": [
+        "důstojníci",
         "izraelském",
-        "libanonských",
-        "několik",
+        "libanonští",
         "při",
-        "vojáků",
-        "zemřelo",
+        "zemřeli",
         "útoku"
       ],
       "feedCategory": "zpravy",
@@ -181,7 +205,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Den pozemního vojska Bahna u Strašic předvede armádní techniku i výcvik",
+      "title": "Den pozemního vojska Bahna u Strašic nabízí pohled na armádní techniku i výcvik",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/den-pozemniho-vojska-bahna-u-strasic-predvede-armadni-techniku-i-vycvik-374287",
       "dt": "2026-06-06T01:25:15Z",
       "media_raw": "ČT24 / Domácí",
@@ -190,8 +214,9 @@
         "armádní",
         "bahna",
         "den",
+        "nabízí",
+        "pohled",
         "pozemního",
-        "předvede",
         "strašic",
         "techniku",
         "vojska",
@@ -721,30 +746,6 @@
         "test",
         "ukrajinská",
         "úspěšný"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Při Soudném dni v Ostravě rozhoduje veřejné mínění",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/pri-soudnem-dni-v-ostrave-rozhoduje-verejne-mineni-374256",
-      "dt": "2026-06-05T09:27:46Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "dni",
-        "mínění",
-        "ostravě",
-        "při",
-        "rozhoduje",
-        "soudném",
-        "veřejné"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2251,7 +2252,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41810,
+      "bytes": 41795,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2288,12 +2289,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-06T08:04:52Z",
+        "raw_feed_latest_publishedAt": "2026-06-06T09:24:07Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
-          "finance": 1,
-          "other": 1
+          "zpravy": 29,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2306,7 +2306,11 @@
         },
         "sample_titles": [
           {
-            "title": "Při izraelském útoku zemřelo několik libanonských vojáků",
+            "title": "Prezidentský kandidát v Peru musí k soudu kvůli financování kampaně",
+            "publishedAt": "2026-06-06T09:24:07Z"
+          },
+          {
+            "title": "Při izraelském útoku zemřeli libanonští důstojníci",
             "publishedAt": "2026-06-06T08:04:52Z"
           },
           {
@@ -2332,10 +2336,6 @@
           {
             "title": "Kvůli krizi Hormuzu přivolává pozornost Malacký průliv",
             "publishedAt": "2026-06-06T04:01:00Z"
-          },
-          {
-            "title": "Den pozemního vojska Bahna u Strašic předvede armádní techniku i výcvik",
-            "publishedAt": "2026-06-06T01:25:15Z"
           }
         ]
       }
