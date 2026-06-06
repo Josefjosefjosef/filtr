@@ -81,13 +81,17 @@ function countTodayWrittenFromArticles(articles, feedMetaById, today) {
     if (pragueDayFromIso(a.publishedAt) !== today) continue;
     const feedId = String(a.feedId || "").trim();
     const meta = feedMetaById.get(feedId);
-    if (!meta || meta.skip || !VERTICALS.includes(meta.topic)) continue;
-    out[meta.topic] += 1;
+    if (meta && !meta.skip && VERTICALS.includes(meta.topic)) {
+      out[meta.topic] += 1;
+      continue;
+    }
+    const sec = String(a.topic || a.section || "").trim().toLowerCase();
+    if (VERTICALS.includes(sec)) out[sec] += 1;
   }
   return out;
 }
 
-function countTodayWrittenFromTelemetryRows(rows, today) {
+function countTodayWrittenFromTelemetryRows(rows) {
   const out = Object.fromEntries(VERTICALS.map((k) => [k, 0]));
   for (const row of rows) {
     if (!row || typeof row !== "object") continue;
@@ -105,12 +109,6 @@ function countTodayWrittenFromTelemetryRows(rows, today) {
     );
     if (explicit > 0) {
       out[topic] += explicit;
-      continue;
-    }
-
-    const samples = Array.isArray(row.sample_titles) ? row.sample_titles : [];
-    for (const sample of samples) {
-      if (pragueDayFromIso(sample?.publishedAt) === today) out[topic] += 1;
     }
   }
   return out;
@@ -137,7 +135,7 @@ export function evaluateDedupeLossGuard({
   const feedMetaById = feedMetaFromTelemetryRows(telemetryRows);
   const jsonToday = countJsonTodayBySection(articles, today, feedMetaById);
   const fromArticles = countTodayWrittenFromArticles(articles, feedMetaById, today);
-  const fromTelemetry = countTodayWrittenFromTelemetryRows(telemetryRows, today);
+  const fromTelemetry = countTodayWrittenFromTelemetryRows(telemetryRows);
   const todayWritten = mergeTodayWrittenCounts(fromArticles, fromTelemetry);
 
   const failures = [];

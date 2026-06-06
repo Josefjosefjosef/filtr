@@ -8,6 +8,9 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from typing import Any
+from zoneinfo import ZoneInfo
+
+PRAGUE_TZ = ZoneInfo("Europe/Prague")
 
 
 TELEMETRY_SCHEMA_VERSION = 2
@@ -62,6 +65,30 @@ def _eligible_release(a: dict) -> bool:
         return datetime.fromisoformat(str(raw).replace("Z", "+00:00")) <= datetime.now(timezone.utc)
     except Exception:
         return True
+
+
+def _prague_day_from_iso(iso: str) -> str | None:
+    if not iso or len(str(iso).strip()) < 10:
+        return None
+    try:
+        dt = datetime.fromisoformat(str(iso).replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(PRAGUE_TZ).strftime("%Y-%m-%d")
+    except Exception:
+        return None
+
+
+def _prague_today_iso(run_time: str | None) -> str:
+    if run_time:
+        try:
+            dt = datetime.fromisoformat(str(run_time).replace("Z", "+00:00"))
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt.astimezone(PRAGUE_TZ).strftime("%Y-%m-%d")
+        except Exception:
+            pass
+    return datetime.now(timezone.utc).astimezone(PRAGUE_TZ).strftime("%Y-%m-%d")
 
 
 def _empty_mapped() -> dict[str, int]:
@@ -133,6 +160,7 @@ def build_telemetry_payload(
     """Build per-source telemetry + summary. Deterministic ordering."""
     rt = run_time_utc or generated_at
     reg = _registry_by_id(registry)
+    today_prague = _prague_today_iso(rt)
 
     c_ded = Counter(_fid(it) for it in deduped_items)
 
@@ -212,6 +240,7 @@ def build_telemetry_payload(
                 "mapped_to_section_count": _empty_mapped(),
                 "release_eligible_count": 0,
                 "written_to_articles_json_count": 0,
+                "today_written_to_articles_json_count": 0,
                 "newest_written_publishedAt": "",
                 "drop_counts": _empty_drops(),
                 "sample_titles": [],
@@ -249,6 +278,13 @@ def build_telemetry_payload(
         written = int(c_fin.get(sid, 0) or 0)
         elig = int(eligible_fin.get(sid, 0) or 0)
         row["written_to_articles_json_count"] = written
+        today_written = 0
+        for art in final_articles:
+            if str(art.get("feedId") or "").strip() != sid:
+                continue
+            if _prague_day_from_iso(str(art.get("publishedAt") or "")) == today_prague:
+                today_written += 1
+        row["today_written_to_articles_json_count"] = today_written
         row["release_eligible_count"] = elig
         row["drop_counts"]["release_gate"] = int(release_blocked_fin.get(sid, 0) or 0)
 
