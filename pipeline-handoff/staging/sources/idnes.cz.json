@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-06T11:24:51.296067Z",
+  "ingestedAt": "2026-06-06T12:02:00.303072Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Spáč Don? Trumpovi se vrací přezdívka, kterou roky častoval Bidena",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/donald-trump-usa-spanek-demokrati-ovalna-pracovna.A260606_123029_zahranicni_dvou",
+      "dt": "2026-06-06T11:51:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "bidena",
+        "don",
+        "přezdívka",
+        "roky",
+        "spáč",
+        "trumpovi",
+        "vrací",
+        "častoval"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -756,32 +781,6 @@
         "zahraničí",
         "ztíží",
         "čína"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Zemřel herec Anthony Head. Proslavil se v seriálu Buffy, přemožitelka upírů",
-      "url": "https://www.idnes.cz/kultura/film-televize/zemrel-herec-anthony-head-proslavil-se-v-serialu-buffy-premozitelka-upiru.A260605_190755_filmvideo_ijan",
-      "dt": "2026-06-05T17:10:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "anthony",
-        "buffy",
-        "head",
-        "herec",
-        "proslavil",
-        "přemožitelka",
-        "seriálu",
-        "upírů",
-        "zemřel"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1583,7 +1582,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48940,
+      "bytes": 48880,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,13 +1619,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-06T10:24:59Z",
+        "raw_feed_latest_publishedAt": "2026-06-06T11:51:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
+          "zpravy": 24,
           "finance": 5,
-          "zdravi": 1,
-          "other": 1
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1638,6 +1636,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Spáč Don? Trumpovi se vrací přezdívka, kterou roky častoval Bidena",
+            "publishedAt": "2026-06-06T11:51:00Z"
+          },
           {
             "title": "Ukrajinci opět silně udeřili v okolí Petrohradu. Čekali, až Putin odjede z města?",
             "publishedAt": "2026-06-06T10:24:59Z"
@@ -1665,10 +1667,6 @@
           {
             "title": "Po nárazu do stromu zemřela na Kutnohorsku mladá žena, tři lidé se zranili",
             "publishedAt": "2026-06-06T07:30:00Z"
-          },
-          {
-            "title": "„Identifikuji se jako trolejbus!“ Dopravce sloganem rozzlobil lidskoprávní aktivisty",
-            "publishedAt": "2026-06-06T07:20:00Z"
           }
         ]
       }
