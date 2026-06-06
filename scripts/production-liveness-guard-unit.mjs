@@ -97,7 +97,7 @@ function freshPriority(except = {}) {
   const articles = freshPriority({ zdravi: "2026-06-05T08:00:00.000Z" });
   const r = evaluateProductionLiveness(articles, { nowMs: NOW });
   assert(r.result === "PASS_WITH_WARN", "zdravi_isolated_stale_pipeline_alive: expected PASS_WITH_WARN");
-  assert(r.report.zdravi_isolated_stale_soft_fail, "zdravi isolated soft fail flag");
+  assert(r.report.pipeline_alive_soft_fail_sections?.includes("zdravi"), "zdravi soft fail flag");
   console.log("zdravi_isolated_stale_pipeline_alive: PASS");
 }
 
