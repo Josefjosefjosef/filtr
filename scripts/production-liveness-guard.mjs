@@ -16,6 +16,8 @@ import { effectivePublishedMs, loadArticlesDoc } from "./content-freshness-guard
 export const DEFAULT_WINDOWS_HOURS = [1, 2, 4];
 export const DEFAULT_MIN_2H = 1;
 export const FLEX_4H_BLOCKING_WINDOW_HOURS = 4;
+/** When 4h window is empty but newest section article is within this age, warn only (do not block release). */
+export const FLEX_4H_SOFT_NEWEST_HOURS = 8;
 /** @deprecated use FLEX_4H_BLOCKING_WINDOW_HOURS */
 export const ZDRAVI_BLOCKING_WINDOW_HOURS = FLEX_4H_BLOCKING_WINDOW_HOURS;
 
@@ -63,7 +65,7 @@ export function newestInSection(articles, matchFn) {
   return best;
 }
 
-function flex4hSectionVerdict(sectionKey, c2, c4, min2h) {
+function flex4hSectionVerdict(sectionKey, c2, c4, min2h, newestAgeMin = null) {
   const label = SECTIONS.find((s) => s.key === sectionKey)?.label || sectionKey;
   if (c2 >= min2h) {
     return { ok: true, warn: false, result: "PASS" };
@@ -74,6 +76,17 @@ function flex4hSectionVerdict(sectionKey, c2, c4, min2h) {
       warn: true,
       result: "PASS_WITH_WARN",
       message: `${label}: 2h=${c2} but 4h=${c4} (PASS_WITH_WARN)`,
+    };
+  }
+  if (
+    newestAgeMin !== null &&
+    newestAgeMin <= FLEX_4H_SOFT_NEWEST_HOURS * 60
+  ) {
+    return {
+      ok: true,
+      warn: true,
+      result: "PASS_WITH_WARN",
+      message: `${label}: 4h=${c4} but newest within ${FLEX_4H_SOFT_NEWEST_HOURS}h (PASS_WITH_WARN)`,
     };
   }
   return {
@@ -89,12 +102,12 @@ function flex4hSectionVerdict(sectionKey, c2, c4, min2h) {
  * Finance / Zdraví: 2h miss is warning when 4h has content; 4h empty is blocking fail.
  * Other priority sections: 2h blocking only.
  */
-export function evaluatePrioritySectionLiveness(sectionKey, counts, min2h = DEFAULT_MIN_2H) {
+export function evaluatePrioritySectionLiveness(sectionKey, counts, min2h = DEFAULT_MIN_2H, newestAgeMin = null) {
   const c2 = Number(counts?.last_2h ?? 0);
   const c4 = Number(counts?.last_4h ?? 0);
 
   if (FLEX_4H_LIVENESS_SECTION_KEYS.has(sectionKey)) {
-    return flex4hSectionVerdict(sectionKey, c2, c4, min2h);
+    return flex4hSectionVerdict(sectionKey, c2, c4, min2h, newestAgeMin);
   }
 
   if (c2 < min2h) {
@@ -135,7 +148,7 @@ export function evaluateProductionLiveness(articles, options = {}) {
     };
 
     if (PRIORITY_SECTION_KEYS.has(sec.key)) {
-      const verdict = evaluatePrioritySectionLiveness(sec.key, counts, min2h);
+      const verdict = evaluatePrioritySectionLiveness(sec.key, counts, min2h, newestAgeMin);
       report.sections[sec.key].livenessResult = verdict.result;
       if (!verdict.ok) {
         failed = true;
@@ -174,7 +187,7 @@ async function main() {
       `section=${sec.label} ${parts} newest_age_min=${row.newestAgeMin !== null ? row.newestAgeMin.toFixed(1) : "n/a"}`,
     );
     if (PRIORITY_SECTION_KEYS.has(sec.key)) {
-      const verdict = evaluatePrioritySectionLiveness(sec.key, counts, min2h);
+      const verdict = evaluatePrioritySectionLiveness(sec.key, counts, min2h, row.newestAgeMin);
       if (!verdict.ok) {
         fail(verdict.message);
       } else if (verdict.warn) {
