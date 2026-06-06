@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-06T00:46:45.360207Z",
+  "ingestedAt": "2026-06-06T01:31:48.045585Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Den pozemního vojska Bahna u Strašic předvede armádní techniku i výcvik",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/den-pozemniho-vojska-bahna-u-strasic-predvede-armadni-techniku-i-vycvik-374287",
+      "dt": "2026-06-06T01:25:15Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "armádní",
+        "bahna",
+        "den",
+        "pozemního",
+        "předvede",
+        "strašic",
+        "techniku",
+        "vojska",
+        "výcvik"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -719,30 +745,6 @@
         "vedoucí",
         "vlády",
         "úřadu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Maloobchodní tržby v dubnu zpomalily meziroční růst na 1,6 procenta",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/maloobchodni-trzby-v-dubnu-zpomalily-mezirocni-rust-na-16-procenta-374252",
-      "dt": "2026-06-05T07:27:52Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "dubnu",
-        "maloobchodní",
-        "meziroční",
-        "procenta",
-        "růst",
-        "tržby",
-        "zpomalily"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2249,7 +2251,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41563,
+      "bytes": 41669,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2286,11 +2288,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-05T23:46:38Z",
+        "raw_feed_latest_publishedAt": "2026-06-06T01:25:15Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "finance": 2,
+          "zpravy": 27,
+          "finance": 1,
           "other": 2
         },
         "drop_counts": {
@@ -2303,6 +2305,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Den pozemního vojska Bahna u Strašic předvede armádní techniku i výcvik",
+            "publishedAt": "2026-06-06T01:25:15Z"
+          },
           {
             "title": "Armáda USA sestřelila íránské drony a zaútočila na íránská radarová stanoviště",
             "publishedAt": "2026-06-05T23:46:38Z"
@@ -2330,10 +2336,6 @@
           {
             "title": "Rusko likviduje ukrajinská města do základů, říká zpravodajka Stomatová",
             "publishedAt": "2026-06-05T17:18:05Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události pátku 5. června",
-            "publishedAt": "2026-06-05T16:30:00Z"
           }
         ]
       }
