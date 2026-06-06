@@ -131,6 +131,32 @@ def test_url_strong_not_overridden_by_quality_guard():
     _assert(k == "veda", k)
 
 
+def test_vzdelavani_rubric_false_positive_to_zpravy():
+    a = {
+        "topic": "vzdelavani",
+        "section": "vzdelavani",
+        "url": "https://www.seznamzpravy.cz/clanek/obec-podvod-vzdelavani-789",
+        "title": "Obec přišla o čtyři miliony. Podvodníci se vydávali za policisty a bankéře",
+        "sources": [{"name": "Seznam Zprávy"}],
+    }
+    k, r, _, fl = classify_media_topic_key(a)
+    _assert(k == "zpravy", (k, r))
+    _assert("guard_vzdelavani_not_relevant" in fl, str(fl))
+
+
+def test_vzdelavani_maturity_stays():
+    a = {
+        "topic": "vzdelavani",
+        "section": "vzdelavani",
+        "url": "https://www.novinky.cz/clanek/skola-maturity-123",
+        "title": "Studenti čekají na výsledky maturity",
+        "sources": [{"name": "Novinky"}],
+    }
+    k, _, c, _ = classify_media_topic_key(a)
+    _assert(k == "vzdelavani", k)
+    _assert(c >= 0.5, str(c))
+
+
 def run():
     test_sport_topic()
     test_zpravy_general()
@@ -144,6 +170,8 @@ def run():
     test_ekonomicky_denik_sport_topic_business_to_finance()
     test_byznys_title_overrides_sport_topic()
     test_url_strong_not_overridden_by_quality_guard()
+    test_vzdelavani_rubric_false_positive_to_zpravy()
+    test_vzdelavani_maturity_stays()
     print("PASS iu_feed_classification tests")
 
 

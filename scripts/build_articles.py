@@ -1498,7 +1498,7 @@ def _infer_section_strong_explicit_url_signals(url: str) -> str | None:
     if "/kultura/" in pl or pl.rstrip("/").endswith("/kultura"):
         return "kultura"
 
-    if "/vzdelavani/" in pl or pl.rstrip("/").endswith("/vzdelavani") or "/skola/" in pl or pl.rstrip("/").endswith("/skola"):
+    if "/skola/" in pl or pl.rstrip("/").endswith("/skola"):
         return "vzdelavani"
 
     if "/hry/" in pl or pl.rstrip("/").endswith("/hry"):
@@ -1540,35 +1540,11 @@ def _purity_has_any(hay: str, needles: tuple[str, ...]) -> bool:
     return any(n in hay for n in needles)
 
 
-def _vzdelavani_edu_positive(hay: str) -> bool:
-    """Pozitivní signál školy / vzdělávání — při něm nestřílíme stale downgrade (RSS může mít týdny staré edu články)."""
-    return _purity_has_any(
-        hay,
-        (
-            "/skola",
-            "/vzdelavani",
-            "skola",
-            "škol",
-            "skol",
-            "matur",
-            "přijíma",
-            "prijima",
-            "univerzit",
-            "student",
-            "učitel",
-            "ucitel",
-            "učit",
-            "ucit",
-            "učení",
-            "uceni",
-            "školstv",
-            "skolst",
-            "vzdelav",
-            "vzděl",
-            "metodick",
-            "desegreg",
-        ),
-    )
+def _vzdelavani_edu_positive(title: str, url: str = "") -> bool:
+    """Pozitivní signál školy / vzdělávání — rubrika /vzdelavani/ sama o sobě nestačí."""
+    from iu_vzdelavani_relevance import vzdelavani_edu_positive
+
+    return vzdelavani_edu_positive(title, url)
 
 
 def vertical_purity_final_section(
@@ -1596,7 +1572,7 @@ def vertical_purity_final_section(
     if age_sec > EXTREME_ARCHIVE_DAYS_VERTICAL * 86400:
         return None
 
-    if trust_forced_feed and sec in FORCED_FEED_TOPICS:
+    if trust_forced_feed and sec in FORCED_FEED_TOPICS and sec != "vzdelavani":
         return sec
 
     hay = _purity_haystack(title, url)
@@ -1607,32 +1583,14 @@ def vertical_purity_final_section(
         else VERTICAL_STALE_MAX_AGE_HOURS
     )
     # vzdelavani: u jasných edu signálů neřežeme jen stářím (jinak sekce spadne na 0 při zdravém obsahu).
-    skip_stale_for_edu = sec == "vzdelavani" and _vzdelavani_edu_positive(hay)
+    skip_stale_for_edu = sec == "vzdelavani" and _vzdelavani_edu_positive(title, url)
     if not skip_stale_for_edu and age_sec > stale_limit_h * 3600:
         return "aktualne"
 
     if sec == "vzdelavani":
-        edu_ok = _vzdelavani_edu_positive(hay)
-        geo_bad = _purity_has_any(
-            hay,
-            (
-                "/zahranicni",
-                "zahranicni",
-                "válk",
-                "valk",
-                "armád",
-                "armad",
-                "tanker",
-                "írán",
-                "iran",
-                "rusko",
-                "ukrajin",
-                "nato",
-                "konflikt",
-                "sankc",
-            ),
-        )
-        if geo_bad and not edu_ok:
+        from iu_vzdelavani_relevance import vzdelavani_content_relevant
+
+        if not vzdelavani_content_relevant(title, url):
             return "aktualne"
         return sec
 
