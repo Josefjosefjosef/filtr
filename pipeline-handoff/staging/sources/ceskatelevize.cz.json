@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-06T13:23:47.443945Z",
+  "ingestedAt": "2026-06-06T15:32:07.297352Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Hegseth v Normandii kritizoval evropskou obranu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/hegseth-v-normandii-kritizoval-evropskou-obranu-374300",
+      "dt": "2026-06-06T15:25:37Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "evropskou",
+        "hegseth",
+        "kritizoval",
+        "normandii",
+        "obranu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -720,30 +742,6 @@
         "wanu",
         "zájem",
         "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Lotyšští pohraničníci zadrželi Francouze kvůli převozu migrantů",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/lotyssti-pohranicnici-zadrzeli-francouze-kvuli-prevozu-migrantu-374261",
-      "dt": "2026-06-05T10:32:15Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "francouze",
-        "kvůli",
-        "lotyšští",
-        "migrantů",
-        "pohraničníci",
-        "převozu",
-        "zadrželi"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2250,7 +2248,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42008,
+      "bytes": 42029,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2287,7 +2285,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-06T12:07:26Z",
+        "raw_feed_latest_publishedAt": "2026-06-06T15:25:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 29,
@@ -2303,6 +2301,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hegseth v Normandii kritizoval evropskou obranu",
+            "publishedAt": "2026-06-06T15:25:37Z"
+          },
           {
             "title": "Chci být víc vidět a pomáhat řešit problémy, říká nová ombudsmanka",
             "publishedAt": "2026-06-06T12:07:26Z"
@@ -2330,10 +2332,6 @@
           {
             "title": "Izraelská armáda při střelbě na Západním břehu zabila kojence",
             "publishedAt": "2026-06-06T06:22:15Z"
-          },
-          {
-            "title": "Do Kodaně, Bruselu i k Jadranu. Přímých vlakových spojů přibývá",
-            "publishedAt": "2026-06-06T06:00:00Z"
           }
         ]
       }
