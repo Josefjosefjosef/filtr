@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-06-06T20:16:46.825780Z",
+  "ingestedAt": "2026-06-06T20:52:11.871881Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ruská armáda zaútočila na dvě ukrajinské záchranné lodě v Černém moři",
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-ruska-armada-zautocila-na-dve-ukrajinske-zachranne-lode-v-cernem-mori-307994",
+      "dt": "2026-06-06T20:17:43Z",
+      "media_raw": "Seznam Zprávy / Domácí",
+      "media_norm": "Seznam Zprávy",
+      "tokens": [
+        "armáda",
+        "dvě",
+        "lodě",
+        "moři",
+        "ruská",
+        "ukrajinské",
+        "zaútočila",
+        "záchranné",
+        "černém"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_seznam_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -727,31 +753,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "seznamzpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pentagon zvýšil hodnocení hrozby izraelské špionáže, tvrdí server",
-      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-pentagon-zvysil-hodnoceni-hrozby-izraelske-spionaze-tvrdi-server-307972",
-      "dt": "2026-06-06T10:59:51Z",
-      "media_raw": "Seznam Zprávy / Domácí",
-      "media_norm": "Seznam Zprávy",
-      "tokens": [
-        "hodnocení",
-        "hrozby",
-        "izraelské",
-        "pentagon",
-        "server",
-        "tvrdí",
-        "zvýšil",
-        "špionáže"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_seznam_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -762,7 +763,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/domaci",
-      "bytes": 43987,
+      "bytes": 43941,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -799,7 +800,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-06T19:34:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-06T20:17:43Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -816,6 +817,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ruská armáda zaútočila na dvě ukrajinské záchranné lodě v Černém moři",
+            "publishedAt": "2026-06-06T20:17:43Z"
+          },
           {
             "title": "To nejsou ukrajinské vlajky! Zámek musí odrážet kuriózní stížnosti",
             "publishedAt": "2026-06-06T19:34:00Z"
@@ -843,10 +848,6 @@
           {
             "title": "Tyto volby Rusko bedlivě sleduje. Jeho výhrůžky můžou pomoci premiérovi, kterého v Kremlu nechtějí, říká expert",
             "publishedAt": "2026-06-06T16:38:00Z"
-          },
-          {
-            "title": "Kanoistka Martina Satková získala v Troji stříbro",
-            "publishedAt": "2026-06-06T16:05:07Z"
           }
         ]
       }

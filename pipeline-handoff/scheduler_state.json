@@ -2,10 +2,10 @@
   "tick_index": 568,
   "domain_last_fetch": {
     "ct24.ceskatelevize.cz": "2026-04-04T21:01:22.241441Z",
-    "seznamzpravy.cz": "2026-06-06T20:16:45.244641Z",
-    "novinky.cz": "2026-06-06T20:16:40.171391Z",
-    "sport.cz": "2026-06-06T20:16:21.877880Z",
-    "idnes.cz": "2026-06-06T20:16:31.578322Z",
+    "seznamzpravy.cz": "2026-06-06T20:52:10.154454Z",
+    "novinky.cz": "2026-06-06T20:52:05.206128Z",
+    "sport.cz": "2026-06-06T20:51:46.392382Z",
+    "idnes.cz": "2026-06-06T20:51:56.230965Z",
     "zdravotnickydenik.cz": "2026-06-06T13:23:46.433539Z",
     "isport.blesk.cz": "2026-04-04T21:56:48.877403Z",
     "zdravezpravy.cz": "2026-06-06T13:23:42.444603Z",
@@ -35,7 +35,7 @@
     "kverulant.org": "2026-05-31T20:46:22.017702Z",
     "prozeny.cz": "2026-06-01T04:31:29.752750Z",
     "betterlife.cz": "2026-05-31T20:47:40.680825Z",
-    "ceskatelevize.cz": "2026-06-06T20:16:27.169486Z",
+    "ceskatelevize.cz": "2026-06-06T20:51:50.568831Z",
     "kinobox.cz": "2026-05-31T20:49:06.988376Z",
     "e15.cz": "2026-05-31T20:47:14.667022Z",
     "ekonom.cz": "2026-05-31T20:47:16.906708Z",
@@ -56,8 +56,8 @@
       "last_success_at": "2026-04-07T03:36:05.376087Z"
     },
     "zpr_ct24_domaci": {
-      "last_fetch_at": "2026-06-06T20:16:27.169486Z",
-      "last_success_at": "2026-06-06T20:16:27.169486Z",
+      "last_fetch_at": "2026-06-06T20:51:50.568831Z",
+      "last_success_at": "2026-06-06T20:51:50.568831Z",
       "error_streak": 0
     },
     "spt_ctsport": {
@@ -71,13 +71,13 @@
       "error_streak": 0
     },
     "zpr_seznam_domaci": {
-      "last_fetch_at": "2026-06-06T20:16:45.244641Z",
-      "last_success_at": "2026-06-06T20:16:45.244641Z",
+      "last_fetch_at": "2026-06-06T20:52:10.154454Z",
+      "last_success_at": "2026-06-06T20:52:10.154454Z",
       "error_streak": 0
     },
     "zpr_novinky_zahranicni": {
-      "last_fetch_at": "2026-06-06T20:16:40.171391Z",
-      "last_success_at": "2026-06-06T20:16:40.171391Z",
+      "last_fetch_at": "2026-06-06T20:52:05.206128Z",
+      "last_success_at": "2026-06-06T20:52:05.206128Z",
       "error_streak": 0
     },
     "fin_sz_byznys": {
@@ -86,13 +86,13 @@
       "error_streak": 0
     },
     "spt_sportcz": {
-      "last_fetch_at": "2026-06-06T20:16:21.877880Z",
-      "last_success_at": "2026-06-06T20:16:21.877880Z",
+      "last_fetch_at": "2026-06-06T20:51:46.392382Z",
+      "last_success_at": "2026-06-06T20:51:46.392382Z",
       "error_streak": 0
     },
     "zpr_novinky_domaci": {
-      "last_fetch_at": "2026-06-06T20:16:37.262256Z",
-      "last_success_at": "2026-06-06T20:16:37.262256Z",
+      "last_fetch_at": "2026-06-06T20:52:01.848382Z",
+      "last_success_at": "2026-06-06T20:52:01.848382Z",
       "error_streak": 0
     },
     "fin_novinky_ekonomika": {
@@ -106,8 +106,8 @@
       "last_success_at": "2026-06-06T13:23:24.584674Z"
     },
     "zpr_idnes_zpravy": {
-      "last_fetch_at": "2026-06-06T20:16:31.578322Z",
-      "last_success_at": "2026-06-06T20:16:31.578322Z",
+      "last_fetch_at": "2026-06-06T20:51:56.230965Z",
+      "last_success_at": "2026-06-06T20:51:56.230965Z",
       "error_streak": 0
     },
     "zdr_zdravotnickydenik": {
@@ -480,7 +480,7 @@
       "last_fetch_at": "2026-05-19T06:15:07.105442Z"
     }
   },
-  "last_tick_at": "2026-06-06T20:16:17.107163Z",
+  "last_tick_at": "2026-06-06T20:51:42.182128Z",
   "source_schedule": {
     "zpr_denik": {
       "source_id": "zpr_denik",
@@ -669,6 +669,17 @@
       "priority_boost": true,
       "in_flight": false
     },
+    "fin_faei": {
+      "source_id": "fin_faei",
+      "source_group": "faei.cz",
+      "domain": "faei.cz",
+      "feed_url": "https://www.faei.cz/feed/",
+      "last_checked_at": "2026-06-01T05:16:06.911851Z",
+      "next_allowed_at": "2026-06-01T05:31:06.911851Z",
+      "must_check_before": "2026-06-01T05:41:06.911851Z",
+      "priority_boost": true,
+      "in_flight": false
+    },
     "zdr_plnezdravi": {
       "source_id": "zdr_plnezdravi",
       "source_group": "plnezdravi.cz",
@@ -823,17 +834,6 @@
       "priority_boost": true,
       "in_flight": false
     },
-    "kul_vtelce": {
-      "source_id": "kul_vtelce",
-      "source_group": "vtelce.cz",
-      "domain": "vtelce.cz",
-      "feed_url": "https://www.vtelce.cz/feed/",
-      "last_checked_at": "2026-05-31T20:49:10.341828Z",
-      "next_allowed_at": "2026-05-31T21:04:10.341828Z",
-      "must_check_before": "2026-05-31T21:14:10.341828Z",
-      "priority_boost": true,
-      "in_flight": false
-    },
     "kul_vipzivot": {
       "source_id": "kul_vipzivot",
       "source_group": "vipzivot.cz",
@@ -900,14 +900,14 @@
       "priority_boost": true,
       "in_flight": false
     },
-    "fin_faei": {
-      "source_id": "fin_faei",
-      "source_group": "faei.cz",
-      "domain": "faei.cz",
-      "feed_url": "https://www.faei.cz/feed/",
-      "last_checked_at": "2026-06-01T05:16:06.911851Z",
-      "next_allowed_at": "2026-06-01T05:31:06.911851Z",
-      "must_check_before": "2026-06-01T05:41:06.911851Z",
+    "kul_vtelce": {
+      "source_id": "kul_vtelce",
+      "source_group": "vtelce.cz",
+      "domain": "vtelce.cz",
+      "feed_url": "https://www.vtelce.cz/feed/",
+      "last_checked_at": "2026-05-31T20:49:10.341828Z",
+      "next_allowed_at": "2026-05-31T21:04:10.341828Z",
+      "must_check_before": "2026-05-31T21:14:10.341828Z",
       "priority_boost": true,
       "in_flight": false
     },
@@ -916,78 +916,78 @@
       "source_group": "ceskatelevize.cz",
       "domain": "ct24.ceskatelevize.cz",
       "feed_url": "https://ct24.ceskatelevize.cz/rss",
-      "last_checked_at": "2026-06-06T20:16:27.169486Z",
+      "last_checked_at": "2026-06-06T20:51:50.568831Z",
       "next_allowed_at": "2026-06-06T13:37:43.388179Z",
       "must_check_before": "2026-06-06T13:47:43.388179Z",
       "priority_boost": true,
       "in_flight": false,
       "last_status": "OK",
-      "last_success_at": "2026-06-06T20:16:27.169486Z"
+      "last_success_at": "2026-06-06T20:51:50.568831Z"
     },
     "zpr_seznam_domaci": {
       "source_id": "zpr_seznam_domaci",
       "source_group": "seznamzpravy.cz",
       "domain": "seznamzpravy.cz",
       "feed_url": "https://www.seznamzpravy.cz/rss/domaci",
-      "last_checked_at": "2026-06-06T20:16:45.244641Z",
+      "last_checked_at": "2026-06-06T20:52:10.154454Z",
       "next_allowed_at": "2026-06-06T13:37:49.084928Z",
       "must_check_before": "2026-06-06T13:47:49.084928Z",
       "priority_boost": true,
       "in_flight": false,
       "last_status": "OK",
-      "last_success_at": "2026-06-06T20:16:45.244641Z"
+      "last_success_at": "2026-06-06T20:52:10.154454Z"
     },
     "zpr_novinky_domaci": {
       "source_id": "zpr_novinky_domaci",
       "source_group": "novinky.cz",
       "domain": "novinky.cz",
       "feed_url": "https://www.novinky.cz/rss/domaci",
-      "last_checked_at": "2026-06-06T20:16:37.262256Z",
+      "last_checked_at": "2026-06-06T20:52:01.848382Z",
       "next_allowed_at": "2026-06-06T13:37:53.839479Z",
       "must_check_before": "2026-06-06T13:47:53.839479Z",
       "priority_boost": true,
       "in_flight": false,
       "last_status": "OK",
-      "last_success_at": "2026-06-06T20:16:37.262256Z"
+      "last_success_at": "2026-06-06T20:52:01.848382Z"
     },
     "zpr_novinky_zahranicni": {
       "source_id": "zpr_novinky_zahranicni",
       "source_group": "novinky.cz",
       "domain": "novinky.cz",
       "feed_url": "https://www.novinky.cz/rss/zahranicni",
-      "last_checked_at": "2026-06-06T20:16:40.171391Z",
+      "last_checked_at": "2026-06-06T20:52:05.206128Z",
       "next_allowed_at": "2026-06-06T13:37:56.945758Z",
       "must_check_before": "2026-06-06T13:47:56.945758Z",
       "priority_boost": true,
       "in_flight": false,
       "last_status": "OK",
-      "last_success_at": "2026-06-06T20:16:40.171391Z"
+      "last_success_at": "2026-06-06T20:52:05.206128Z"
     },
     "zpr_idnes_zpravy": {
       "source_id": "zpr_idnes_zpravy",
       "source_group": "idnes.cz",
       "domain": "idnes.cz",
       "feed_url": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "last_checked_at": "2026-06-06T20:16:31.578322Z",
+      "last_checked_at": "2026-06-06T20:51:56.230965Z",
       "next_allowed_at": "2026-06-06T13:38:01.459615Z",
       "must_check_before": "2026-06-06T13:48:01.459615Z",
       "priority_boost": true,
       "in_flight": false,
       "last_status": "OK",
-      "last_success_at": "2026-06-06T20:16:31.578322Z"
+      "last_success_at": "2026-06-06T20:51:56.230965Z"
     },
     "spt_sportcz": {
       "source_id": "spt_sportcz",
       "source_group": "sport.cz",
       "domain": "sport.cz",
       "feed_url": "https://www.sport.cz/rss",
-      "last_checked_at": "2026-06-06T20:16:21.877880Z",
+      "last_checked_at": "2026-06-06T20:51:46.392382Z",
       "next_allowed_at": "2026-06-06T13:38:07.337110Z",
       "must_check_before": "2026-06-06T13:48:07.337110Z",
       "priority_boost": true,
       "in_flight": false,
       "last_status": "OK",
-      "last_success_at": "2026-06-06T20:16:21.877880Z"
+      "last_success_at": "2026-06-06T20:51:46.392382Z"
     },
     "fin_sz_byznys": {
       "source_id": "fin_sz_byznys",
@@ -1135,7 +1135,7 @@
   },
   "last_scheduler_tick": {
     "tick_index": 568,
-    "minute_prague": 16,
+    "minute_prague": 51,
     "selected_count": 6,
     "selected_source_ids": [
       "spt_sportcz",
