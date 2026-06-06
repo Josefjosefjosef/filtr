@@ -46,6 +46,9 @@ export const SECTIONS = [
 
 export const PRIORITY_SECTION_KEYS = new Set(["aktualne", "sport", "finance", "zdravi", "cestovani"]);
 
+/** Isolated Zdraví staleness may WARN when headline sections and pipeline content are alive. */
+export const ZDRAVI_ISOLATED_SOFT_FAIL_SECTION = "zdravi";
+
 function log(msg) {
   console.log(`[production-liveness-guard] ${msg}`);
 }
@@ -74,6 +77,49 @@ export function newestInSection(articles, matchFn) {
     if (!best || t > best) best = t;
   }
   return best;
+}
+
+export function countContentNewerThanGenerated(articles, generatedAtTs) {
+  if (!generatedAtTs) return 0;
+  return articles.filter((a) => {
+    const t = effectivePublishedMs(a);
+    return t !== null && t > generatedAtTs;
+  }).length;
+}
+
+/**
+ * Pipeline is alive when bundle is non-empty, headline sections have recent content,
+ * and generatedAt is not moving without real articles.
+ */
+export function isPipelineLivenessAlive(report, options = {}) {
+  const articles = options.articles ?? [];
+  const generatedAtTs = options.generatedAtTs ?? null;
+  const nowMs = options.nowMs ?? Date.now();
+  const min2h = options.min2h ?? DEFAULT_MIN_2H;
+
+  if (articles.length === 0) return false;
+
+  if (generatedAtTs) {
+    const genAgeMin = (nowMs - generatedAtTs) / 60_000;
+    const contentNewer = countContentNewerThanGenerated(articles, generatedAtTs);
+    if (genAgeMin < 180 && contentNewer === 0) return false;
+  }
+
+  for (const key of HARD_FAIL_SECTION_KEYS) {
+    const row = report.sections[key];
+    if (!row) return false;
+    const c2 = Number(row.counts?.last_2h ?? 0);
+    const c4 = Number(row.counts?.last_4h ?? 0);
+    if (c2 < min2h && c4 < min2h) return false;
+  }
+
+  const supportingAlive = ["finance", "cestovani"].filter((key) => {
+    const row = report.sections[key];
+    const c4 = Number(row?.counts?.last_4h ?? 0);
+    return c4 >= min2h;
+  }).length;
+
+  return supportingAlive >= 1;
 }
 
 function flex4hSectionVerdict(sectionKey, c2, c4, min2h, newestAgeMin = null) {
@@ -139,11 +185,22 @@ export function evaluateProductionLiveness(articles, options = {}) {
   const nowMs = options.nowMs ?? Date.now();
   const windows = options.windowsHours ?? DEFAULT_WINDOWS_HOURS;
   const min2h = options.min2h ?? DEFAULT_MIN_2H;
+  const generatedAtTs =
+    options.generatedAtTs ??
+    (options.generatedAt ? Date.parse(String(options.generatedAt)) : null);
 
   let failed = false;
   let warned = false;
   const failedSections = [];
-  const report = { generatedAt: options.generatedAt ?? null, sections: {} };
+  const report = {
+    generatedAt: options.generatedAt ?? null,
+    generatedAtTs: Number.isFinite(generatedAtTs) ? generatedAtTs : null,
+    sections: {},
+  };
+
+  if (articles.length === 0) {
+    return { failed: true, warned: false, result: "FAIL", report: { ...report, articles_empty: true } };
+  }
 
   for (const sec of SECTIONS) {
     const counts = {};
@@ -190,8 +247,21 @@ export function evaluateProductionLiveness(articles, options = {}) {
     }
   }
 
+  if (
+    failed &&
+    failedSections.length === 1 &&
+    failedSections[0] === ZDRAVI_ISOLATED_SOFT_FAIL_SECTION &&
+    isPipelineLivenessAlive(report, { articles, generatedAtTs, nowMs, min2h })
+  ) {
+    failed = false;
+    warned = true;
+    report.zdravi_isolated_stale_soft_fail = true;
+    report.pipeline_alive = true;
+    report.sections.zdravi.livenessResult = "PASS_WITH_WARN";
+  }
+
   const result = failed ? "FAIL" : warned ? "PASS_WITH_WARN" : "PASS";
-  return { failed, warned, result, report };
+  return { failed, warned, result, report, pipelineAlive: Boolean(report.pipeline_alive) };
 }
 
 async function main() {
@@ -204,12 +274,19 @@ async function main() {
   const doc = await loadArticlesDoc();
   const articles = Array.isArray(doc.articles) ? doc.articles : [];
   const nowMs = Date.now();
+  const generatedAtTs = doc.generatedAt ? Date.parse(String(doc.generatedAt)) : null;
   const { failed, warned, result, report } = evaluateProductionLiveness(articles, {
     nowMs,
     windowsHours: windows,
     min2h,
     generatedAt: doc.generatedAt,
+    generatedAtTs: Number.isFinite(generatedAtTs) ? generatedAtTs : null,
   });
+
+  log(`articles=${articles.length} content_newer_than_generatedAt=${countContentNewerThanGenerated(articles, report.generatedAtTs)}`);
+  if (report.pipeline_alive) {
+    log("pipeline_alive=YES");
+  }
 
   for (const sec of SECTIONS) {
     const row = report.sections[sec.key];
@@ -220,7 +297,11 @@ async function main() {
     );
     if (PRIORITY_SECTION_KEYS.has(sec.key)) {
       const verdict = evaluatePrioritySectionLiveness(sec.key, counts, min2h, row.newestAgeMin);
-      if (!verdict.ok) {
+      const softened =
+        report.zdravi_isolated_stale_soft_fail && sec.key === ZDRAVI_ISOLATED_SOFT_FAIL_SECTION;
+      if (!verdict.ok && softened) {
+        log(`WARN: ${verdict.message} (pipeline_alive)`);
+      } else if (!verdict.ok) {
         fail(verdict.message);
       } else if (verdict.warn) {
         log(`WARN: ${verdict.message}`);
