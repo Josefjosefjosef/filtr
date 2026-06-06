@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-06T05:33:47.545547Z",
+  "ingestedAt": "2026-06-06T06:01:46.612067Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fotbalový Liberec chystá obchod za stovky milionů korun",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-fotbalovy-liberec-chysta-obchod-za-stovky-milionu-korun-5474774",
+      "dt": "2026-06-06T05:41:51Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chystá",
+        "fotbalový",
+        "korun",
+        "liberec",
+        "milionů",
+        "obchod",
+        "stovky"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -747,32 +771,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Salač zajel v tréninku na Velkou cenu Maďarska třetí nejlepší čas",
-      "url": "https://www.sport.cz/clanek/moto-motocykly-salac-zajel-v-treninku-na-velkou-cenu-madarska-treti-nejlepsi-cas-5474912",
-      "dt": "2026-06-05T13:14:31Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "cenu",
-        "maďarska",
-        "nejlepší",
-        "salač",
-        "tréninku",
-        "třetí",
-        "velkou",
-        "zajel",
-        "čas"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -783,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44084,
+      "bytes": 44116,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -820,7 +818,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-06T04:17:18Z",
+        "raw_feed_latest_publishedAt": "2026-06-06T05:41:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -835,6 +833,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fotbalový Liberec chystá obchod za stovky milionů korun",
+            "publishedAt": "2026-06-06T05:41:51Z"
+          },
           {
             "title": "Slavia trumfne velkokluby, hráč z české ligy přepisuje historii. Zajímavá čísla před MS",
             "publishedAt": "2026-06-06T04:17:18Z"
@@ -862,10 +864,6 @@
           {
             "title": "Pekarík se loučil se slovenskou reprezentací, hymnu mu zazpívala manželka. Surovčík si odbyl debut",
             "publishedAt": "2026-06-05T19:13:28Z"
-          },
-          {
-            "title": "Bouldering v Praze vyhrál Japonec Anraku",
-            "publishedAt": "2026-06-05T19:38:03Z"
           }
         ]
       }
