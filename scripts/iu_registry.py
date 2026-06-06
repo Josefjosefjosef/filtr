@@ -542,6 +542,20 @@ def select_feeds_for_tick(
             return True
         return (now - last).total_seconds() >= eff_min * 60
 
+    def _p0_headline_entry_cooldown_ok(e: dict, eff_min: int) -> bool:
+        """
+        P0 headline registry feeds use per-entry last_fetch_at, not shared domain bucket.
+        Prevents finance/vertical rubric fetches on the same domain (e.g. fin_sz_byznys)
+        from blocking zpr_seznam_domaci headline ingest.
+        """
+        eid = str(e.get("id") or "")
+        st = entry_state.get(eid) if isinstance(entry_state.get(eid), dict) else {}
+        last = _parse_iso(st.get("last_fetch_at") if isinstance(st, dict) else None)
+        if last is None:
+            return True
+        floor_min = max(HARD_DOMAIN_COOLDOWN_MIN, eff_min)
+        return (now - last).total_seconds() >= floor_min * 60
+
     def _interval_due(e: dict) -> bool:
         eid = str(e.get("id") or "")
         interval = max(5, int(e.get("interval_min") or 30))
@@ -602,7 +616,7 @@ def select_feeds_for_tick(
         if not ck:
             continue
         eff = _effective_cooldown_min(e)
-        if not _cooldown_ok(ck, eff):
+        if not _p0_headline_entry_cooldown_ok(e, eff):
             continue
         p0_overdue_picks.append(e)
         seen_urls.add(u)

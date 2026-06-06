@@ -63,16 +63,17 @@ class P0FreshnessOverdueTest(unittest.TestCase):
             ],
             "sources_per_tick": {"max_unmapped_per_tick": 0},
         }
-        recent = (datetime.now(timezone.utc) - timedelta(minutes=5)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        now = datetime(2026, 6, 1, 6, 17, tzinfo=timezone.utc)
+        recent = (now - timedelta(minutes=5)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        stale = (now - timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
         state = {
             "tick_index": 0,
             "domain_last_fetch": {},
             "entry_state": {
-                "zpr_novinky_domaci": {"last_fetch_at": recent},
+                "zpr_novinky_domaci": {"last_fetch_at": stale},
                 "ved_novinky": {"last_fetch_at": recent},
             },
         }
-        now = datetime(2026, 6, 1, 6, 17, tzinfo=timezone.utc)
         picked, _ = select_feeds_for_tick(registry, state, now=now)
         urls = [e.get("feed_url") for e in picked]
         self.assertIn("https://www.novinky.cz/rss/domaci", urls)
@@ -86,16 +87,76 @@ class P0FreshnessOverdueTest(unittest.TestCase):
             ],
             "sources_per_tick": {"max_unmapped_per_tick": 0},
         }
-        recent = (datetime.now(timezone.utc) - timedelta(minutes=5)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        now = datetime(2026, 6, 1, 6, 17, tzinfo=timezone.utc)
+        recent = (now - timedelta(minutes=5)).strftime("%Y-%m-%dT%H:%M:%SZ")
         state = {
             "tick_index": 0,
             "domain_last_fetch": {"novinky.cz": recent},
             "entry_state": {"nov_main": {"last_fetch_at": recent}},
         }
-        now = datetime(2026, 6, 1, 6, 17, tzinfo=timezone.utc)
         picked, _ = select_feeds_for_tick(registry, state, now=now)
         urls = [e.get("feed_url") for e in picked]
         self.assertNotIn("https://www.novinky.cz/rss", urls)
+
+    def test_p0_seznam_domaci_not_blocked_by_sibling_domain_fetch(self):
+        """fin_sz_byznys on seznamzpravy.cz must not block zpr_seznam_domaci P0 headline pick."""
+        registry = {
+            "entries": [
+                _entry(
+                    "zpr_seznam_domaci",
+                    "https://www.seznamzpravy.cz/rss/domaci",
+                    "seznamzpravy.cz",
+                    "Seznam Zprávy / Domácí",
+                ),
+                _entry(
+                    "fin_sz_byznys",
+                    "https://www.seznamzpravy.cz/rss/byznys",
+                    "seznamzpravy.cz",
+                    "Seznam Zprávy / Byznys",
+                ),
+            ],
+            "sources_per_tick": {"max_unmapped_per_tick": 0},
+        }
+        now = datetime(2026, 6, 1, 6, 17, tzinfo=timezone.utc)
+        recent = (now - timedelta(minutes=5)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        stale = (now - timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        state = {
+            "tick_index": 0,
+            "domain_last_fetch": {"seznamzpravy.cz": recent},
+            "entry_state": {
+                "fin_sz_byznys": {"last_fetch_at": recent},
+                "zpr_seznam_domaci": {"last_fetch_at": stale},
+            },
+        }
+        picked, _ = select_feeds_for_tick(registry, state, now=now)
+        urls = [e.get("feed_url") for e in picked]
+        ids = [e.get("id") for e in picked]
+        self.assertIn("https://www.seznamzpravy.cz/rss/domaci", urls)
+        self.assertIn("zpr_seznam_domaci", ids)
+        self.assertNotIn("https://www.seznamzpravy.cz/rss/byznys", urls)
+
+    def test_p0_seznam_domaci_skipped_when_entry_recently_fetched(self):
+        registry = {
+            "entries": [
+                _entry(
+                    "zpr_seznam_domaci",
+                    "https://www.seznamzpravy.cz/rss/domaci",
+                    "seznamzpravy.cz",
+                    "Seznam Zprávy / Domácí",
+                ),
+            ],
+            "sources_per_tick": {"max_unmapped_per_tick": 0},
+        }
+        now = datetime(2026, 6, 1, 6, 17, tzinfo=timezone.utc)
+        recent = (now - timedelta(minutes=5)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        state = {
+            "tick_index": 0,
+            "domain_last_fetch": {"seznamzpravy.cz": recent},
+            "entry_state": {"zpr_seznam_domaci": {"last_fetch_at": recent}},
+        }
+        picked, _ = select_feeds_for_tick(registry, state, now=now)
+        urls = [e.get("feed_url") for e in picked]
+        self.assertNotIn("https://www.seznamzpravy.cz/rss/domaci", urls)
 
 
 if __name__ == "__main__":
