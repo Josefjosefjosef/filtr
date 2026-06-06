@@ -58,11 +58,44 @@ function ciLikeArticles() {
   assert(r.report.sections.zdravi.counts.last_4h === 0, "ZDRAVI_ARTICLES_LAST_4H=0");
   assert(r.report.sections.zdravi.newestAgeMin > 480, "ZDRAVI_NEWEST_AGE_MINUTES>480");
   assert(r.result === "PASS_WITH_WARN", "CI-like bundle must not block release");
-  assert(r.report.zdravi_isolated_stale_soft_fail, "isolated zdravi soft fail");
+  assert(r.report.pipeline_alive_soft_fail_sections?.includes("zdravi"), "zdravi soft fail");
   assert(isPipelineLivenessAlive(r.report, { articles, generatedAtTs: CI_GENERATED_AT, nowMs: CI_NOW }), "pipeline alive");
   console.log("PASS test_zdravi_liveness_ingest_trace");
   console.log("PASS test_zdravi_liveness_policy_pass_with_warn_when_pipeline_alive");
   console.log("PASS test_zdravi_liveness_does_not_block_release_when_only_zdravi_stale");
+}
+
+{
+  const CI_NOW2 = Date.parse("2026-06-06T23:17:31.000Z");
+  const CI_GEN2 = Date.parse("2026-06-06T23:01:38.180Z");
+  const articles = [
+    ...Array.from({ length: 6 }, (_, i) =>
+      art("aktualne", new Date(CI_NOW2 - (40 + i * 10) * 60_000).toISOString()),
+    ),
+    art("sport", new Date(CI_NOW2 - 130 * 60_000).toISOString()),
+    art("sport", new Date(CI_NOW2 - 150 * 60_000).toISOString()),
+    art("finance", new Date(CI_NOW2 - 77 * 60_000).toISOString()),
+    art("finance", new Date(CI_NOW2 - 100 * 60_000).toISOString()),
+    ...Array.from({ length: 10 }, (_, i) =>
+      art("cestovani", new Date(CI_NOW2 - (10 + i) * 60_000).toISOString()),
+    ),
+    art("zdravi", "2026-06-06T12:40:59.000Z"),
+    ...Array.from({ length: 17 }, (_, i) =>
+      art("aktualne", new Date(CI_GEN2 + (i + 1) * 60_000).toISOString()),
+    ),
+  ];
+  const r = evaluateProductionLiveness(articles, {
+    nowMs: CI_NOW2,
+    generatedAt: "2026-06-06T23:01:38.180773Z",
+    generatedAtTs: CI_GEN2,
+  });
+  assert(r.report.sections.sport.counts.last_2h === 0, "sport 2h=0");
+  assert(r.report.sections.sport.counts.last_4h === 2, "sport 4h=2");
+  assert(r.report.sections.zdravi.counts.last_4h === 0, "zdravi 4h=0");
+  assert(r.result === "PASS_WITH_WARN", "sport+zdravi stale must not block release");
+  assert(r.report.pipeline_alive_soft_fail_sections?.includes("sport"), "sport softened");
+  assert(r.report.pipeline_alive_soft_fail_sections?.includes("zdravi"), "zdravi softened");
+  console.log("PASS test_sport_zdravi_combined_pipeline_alive_warn");
 }
 
 {

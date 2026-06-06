@@ -122,6 +122,17 @@ export function isPipelineLivenessAlive(report, options = {}) {
   return supportingAlive >= 1;
 }
 
+/** Sections that may WARN instead of FAIL when pipeline content is alive. */
+export function canSectionSoftFailWhenPipelineAlive(sectionKey, row, min2h = DEFAULT_MIN_2H) {
+  if (!row) return false;
+  const c2 = Number(row.counts?.last_2h ?? 0);
+  const c4 = Number(row.counts?.last_4h ?? 0);
+  if (sectionKey === "aktualne") return false;
+  if (sectionKey === ZDRAVI_ISOLATED_SOFT_FAIL_SECTION) return c4 < min2h;
+  if (sectionKey === "sport") return c2 < min2h && c4 >= min2h;
+  return false;
+}
+
 function flex4hSectionVerdict(sectionKey, c2, c4, min2h, newestAgeMin = null) {
   const label = SECTIONS.find((s) => s.key === sectionKey)?.label || sectionKey;
   if (c2 >= min2h) {
@@ -247,17 +258,20 @@ export function evaluateProductionLiveness(articles, options = {}) {
     }
   }
 
-  if (
-    failed &&
-    failedSections.length === 1 &&
-    failedSections[0] === ZDRAVI_ISOLATED_SOFT_FAIL_SECTION &&
-    isPipelineLivenessAlive(report, { articles, generatedAtTs, nowMs, min2h })
-  ) {
-    failed = false;
-    warned = true;
-    report.zdravi_isolated_stale_soft_fail = true;
-    report.pipeline_alive = true;
-    report.sections.zdravi.livenessResult = "PASS_WITH_WARN";
+  const pipelineAlive = isPipelineLivenessAlive(report, { articles, generatedAtTs, nowMs, min2h });
+  if (failed && pipelineAlive && failedSections.length > 0 && !failedSections.includes("aktualne")) {
+    const allSoft = failedSections.every((sk) =>
+      canSectionSoftFailWhenPipelineAlive(sk, report.sections[sk], min2h),
+    );
+    if (allSoft) {
+      failed = false;
+      warned = true;
+      report.pipeline_alive = true;
+      report.pipeline_alive_soft_fail_sections = [...failedSections];
+      for (const sk of failedSections) {
+        report.sections[sk].livenessResult = "PASS_WITH_WARN";
+      }
+    }
   }
 
   const result = failed ? "FAIL" : warned ? "PASS_WITH_WARN" : "PASS";
@@ -297,8 +311,7 @@ async function main() {
     );
     if (PRIORITY_SECTION_KEYS.has(sec.key)) {
       const verdict = evaluatePrioritySectionLiveness(sec.key, counts, min2h, row.newestAgeMin);
-      const softened =
-        report.zdravi_isolated_stale_soft_fail && sec.key === ZDRAVI_ISOLATED_SOFT_FAIL_SECTION;
+      const softened = report.pipeline_alive_soft_fail_sections?.includes(sec.key);
       if (!verdict.ok && softened) {
         log(`WARN: ${verdict.message} (pipeline_alive)`);
       } else if (!verdict.ok) {
