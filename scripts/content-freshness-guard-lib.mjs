@@ -187,8 +187,16 @@ export async function loadArticlesDoc() {
 }
 
 export function resolveFeedUrlForP0(def) {
+  const feedIds = p0FeedIdSet(def);
   try {
     const registry = loadRegistry();
+    for (const e of activeRegistryEntries(registry)) {
+      const eid = String(e.id || "").trim();
+      if (eid && feedIds.has(eid)) {
+        const url = String(e.feed_url || "").trim();
+        if (url) return url;
+      }
+    }
     for (const e of activeRegistryEntries(registry)) {
       const url = String(e.feed_url || "").trim();
       if (!url) continue;
