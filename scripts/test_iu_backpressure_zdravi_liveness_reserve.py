@@ -123,12 +123,13 @@ def test_cap_helper_prefers_newest_fresh_native_zdravi():
         feed_id="zdr_zdravotnickydenik",
     )
     merged = _other_items(250) + [older, newer]
-    batch, _, p0_n, zdr_n, fin_n = _cap_batch_with_p0_reserves(merged, 180)
+    batch, _, p0_n, zdr_n, fin_n, fv_n = _cap_batch_with_p0_reserves(merged, 180)
     urls = {str(x.get("url") or "") for x in batch}
     assert zdr_n == 1
     assert newer["url"] in urls
     assert p0_n == 0
     assert fin_n == 0
+    assert fv_n == 0
 
 
 def _run_split(items: list[dict]) -> tuple[list, dict]:
