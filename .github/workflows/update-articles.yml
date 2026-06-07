@@ -603,6 +603,10 @@ jobs:
           set -euo pipefail
           python scripts/pipeline_handoff_git.py verify-publish-latest
 
+      - name: Release conflict marker guard (pre-commit)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.publish_final_verify.outputs.stale_publish == 'false'
+        run: node scripts/articles-release-conflict-marker-guard.mjs
+
       - name: Commit to automation branch and push
         if: steps.no_diff.outputs.data_changed == 'true' && steps.publish_final_verify.outputs.stale_publish == 'false'
         id: commit_push
@@ -612,24 +616,36 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add projects/data
-          git diff --cached --quiet && { echo "[DATA] Nothing to commit after add"; exit 0; }
-
-          git stash push -m "data" -- projects/data
           git fetch origin main
-          git fetch origin "${{ env.AUTOMATION_BRANCH }}" 2>/dev/null || true
+          CHANGED=$(git diff --name-only origin/main -- projects/data || true)
+          if [ -z "$CHANGED" ]; then
+            echo "[DATA] Nothing to commit vs origin/main"
+            exit 0
+          fi
+
+          RELEASE_OVERLAY="${RUNNER_TEMP}/iu_release_overlay"
+          rm -rf "$RELEASE_OVERLAY"
+          mkdir -p "$RELEASE_OVERLAY"
+          while IFS= read -r _f; do
+            [ -n "$_f" ] || continue
+            mkdir -p "$RELEASE_OVERLAY/$(dirname "$_f")"
+            cp -a "$_f" "$RELEASE_OVERLAY/$_f"
+          done <<< "$CHANGED"
+          echo "[DATA] Overlay saved for $(echo "$CHANGED" | wc -l | tr -d ' ') path(s)"
+
           git checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
-          git stash pop
-          for _f in projects/data/articles.json projects/data/videos.json; do
-            [ -f "$_f" ] || continue
-            if grep -qE '^(<<<<<<<|=======|>>>>>>>)' "$_f"; then
-              echo "ERROR: conflict markers in $_f (stash/merge) — aborting without commit"
-              exit 1
-            fi
-          done
+          while IFS= read -r _f; do
+            [ -n "$_f" ] || continue
+            mkdir -p "$(dirname "$_f")"
+            cp -a "$RELEASE_OVERLAY/$_f" "$_f"
+          done <<< "$CHANGED"
+
+          node scripts/articles-release-conflict-marker-guard.mjs
+          git diff --check
           python -c "import json,pathlib; json.load(open('projects/data/articles.json',encoding='utf-8')); p=pathlib.Path('projects/data/videos.json'); json.load(p.open(encoding='utf-8')) if p.is_file() else None"
+
           git add projects/data
-          git diff --cached --quiet && { echo "[DATA] Nothing to commit after stash pop"; exit 0; }
+          git diff --cached --quiet && { echo "[DATA] Nothing to commit after overlay"; exit 0; }
 
           git commit -m "${{ env.PR_TITLE }}"
           # Force push: automation branch is bot-owned; --force-with-lease can block when remote diverged after main-only merges (PR stuck BEHIND).

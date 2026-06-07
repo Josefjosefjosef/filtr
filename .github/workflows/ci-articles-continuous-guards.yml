@@ -34,6 +34,8 @@ on:
       - "scripts/p0-source-starvation-guard.mjs"
       - "scripts/p0-source-coverage-guard.mjs"
       - "scripts/p0-source-coverage-guard-policy-unit.mjs"
+      - "scripts/articles-release-conflict-marker-guard.mjs"
+      - "scripts/articles-release-conflict-marker-guard-unit.mjs"
       - "scripts/pipeline-runtime-guard.mjs"
       - "scripts/test_iu_registry_p0_freshness.py"
       - "scripts/aggregator-legacy-cleanup-guard.mjs"
@@ -74,6 +76,8 @@ on:
       - "scripts/p0-source-starvation-guard.mjs"
       - "scripts/p0-source-coverage-guard.mjs"
       - "scripts/p0-source-coverage-guard-policy-unit.mjs"
+      - "scripts/articles-release-conflict-marker-guard.mjs"
+      - "scripts/articles-release-conflict-marker-guard-unit.mjs"
       - "scripts/pipeline-runtime-guard.mjs"
       - "scripts/test_iu_registry_p0_freshness.py"
       - "scripts/aggregator-legacy-cleanup-guard.mjs"
@@ -184,6 +188,9 @@ jobs:
 
       - name: P0 source coverage policy unit tests
         run: node scripts/p0-source-coverage-guard-policy-unit.mjs
+
+      - name: Articles release conflict marker guard unit tests
+        run: node scripts/articles-release-conflict-marker-guard-unit.mjs
 
       - name: Production liveness Zdraví policy unit tests
         run: node scripts/production-liveness-guard-zdravi-policy-unit.mjs
