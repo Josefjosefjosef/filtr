@@ -65,23 +65,26 @@ jobs:
           PROD_BOOT_AT=$(echo "$PROD_BOOT_JSON" | jq -r '.generatedAt // empty' 2>/dev/null || true)
           PROD_IDX_JSON=$(curl -sS -m 20 -H 'Cache-Control: no-cache' "https://infouzel.cz/projects/data/articles/index.json" || true)
           PROD_IDX_AT=$(echo "$PROD_IDX_JSON" | jq -r '.generatedAt // empty' 2>/dev/null || true)
-          echo "main_generatedAt=$MAIN_AT" >> "$GITHUB_OUTPUT"
-          echo "prod_generatedAt=$PROD_AT" >> "$GITHUB_OUTPUT"
-          echo "main_bootstrap_generatedAt=$MAIN_BOOT_AT" >> "$GITHUB_OUTPUT"
-          echo "prod_bootstrap_generatedAt=$PROD_BOOT_AT" >> "$GITHUB_OUTPUT"
-          echo "main_index_generatedAt=$MAIN_IDX_AT" >> "$GITHUB_OUTPUT"
-          echo "prod_index_generatedAt=$PROD_IDX_AT" >> "$GITHUB_OUTPUT"
           echo "[MAIN] generatedAt=$MAIN_AT bootstrap=$MAIN_BOOT_AT index=$MAIN_IDX_AT"
           echo "[PROD] generatedAt=$PROD_AT bootstrap=$PROD_BOOT_AT index=$PROD_IDX_AT"
           if [ -n "$PROD_AT" ] && [ "$PROD_AT" = "$MAIN_AT" ] \
             && { [ -z "$MAIN_BOOT_AT" ] || { [ -n "$PROD_BOOT_AT" ] && [ "$PROD_BOOT_AT" = "$MAIN_BOOT_AT" ]; }; } \
             && { [ -z "$MAIN_IDX_AT" ] || { [ -n "$PROD_IDX_AT" ] && [ "$PROD_IDX_AT" = "$MAIN_IDX_AT" ]; }; }; then
-            echo "needs_publish=false" >> "$GITHUB_OUTPUT"
+            NEEDS_PUBLISH=false
             echo "[PUBLISH] Up-to-date (articles + homepage bootstrap/index), no dispatch"
           else
-            echo "needs_publish=true" >> "$GITHUB_OUTPUT"
+            NEEDS_PUBLISH=true
             echo "[PUBLISH] Stale prod (articles and/or homepage bootstrap/index), will dispatch pages.yml"
           fi
+          {
+            echo "main_generatedAt=$MAIN_AT"
+            echo "prod_generatedAt=$PROD_AT"
+            echo "main_bootstrap_generatedAt=$MAIN_BOOT_AT"
+            echo "prod_bootstrap_generatedAt=$PROD_BOOT_AT"
+            echo "main_index_generatedAt=$MAIN_IDX_AT"
+            echo "prod_index_generatedAt=$PROD_IDX_AT"
+            echo "needs_publish=$NEEDS_PUBLISH"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Dispatch pages.yml (main)
         if: steps.cmp.outputs.needs_publish == 'true'
