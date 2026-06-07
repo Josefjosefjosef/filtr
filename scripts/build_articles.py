@@ -3413,8 +3413,37 @@ def _emit_article_pool_manifest(
         )
         path = write_article_pool_manifest(OUTPUT_DIR, manifest)
         print(f"[ARTICLE_POOL_MANIFEST] written {path}", flush=True)
+        return manifest
     except Exception as e:
         print("WARN: article_pool_manifest write failed:", str(e), flush=True)
+        return None
+
+
+def _emit_article_pipeline_phase_status(
+    *,
+    phase: str,
+    bundle: dict | None = None,
+    pool_manifest: dict | None = None,
+    ingest_ok: bool = True,
+    publish_attempted: bool = False,
+    publish_success: bool = True,
+) -> None:
+    """Phase 3B: additive phase status telemetry; does not change publish or guards."""
+    try:
+        from iu_article_pipeline_phase_status import (
+            record_aggregate_ok,
+            record_ingest_ok,
+            record_publish_attempted,
+        )
+
+        if phase == "ingest" and ingest_ok:
+            record_ingest_ok(OUTPUT_DIR)
+        elif phase == "aggregate" and bundle is not None:
+            record_aggregate_ok(OUTPUT_DIR, bundle, pool_manifest=pool_manifest)
+        elif phase == "publish" and publish_attempted:
+            record_publish_attempted(OUTPUT_DIR, success=publish_success)
+    except Exception as e:
+        print("WARN: article_pipeline_phase_status write failed:", str(e), flush=True)
 
 
 def _handoff_meta_from_staging_manifest(loaded: dict) -> dict:
@@ -3530,9 +3559,10 @@ def _incremental_publish_with_backpressure(
     )
     bundle["backpressure"] = bp_meta
     hm = _handoff_meta_from_staging_manifest(loaded)
-    _emit_article_pool_manifest(
+    pool_manifest = _emit_article_pool_manifest(
         bundle, hm, loaded=loaded, aggregate_input_count=len(aggregate_items), pipeline_phase="ingest_incremental"
     )
+    _emit_article_pipeline_phase_status(phase="aggregate", bundle=bundle, pool_manifest=pool_manifest)
     write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle, hm))
 
     if budget.exceeded():
@@ -3566,7 +3596,11 @@ def main() -> int:
         bundle = _bundle_from_checkpoint(cp_clean)
         if bundle is None:
             return 2
-        return _publish_article_outputs(bundle)
+        rc = _publish_article_outputs(bundle)
+        _emit_article_pipeline_phase_status(
+            phase="publish", publish_attempted=True, publish_success=(rc == 0)
+        )
+        return rc
 
     if phase == "aggregate":
         print("[iu-pipeline] phase=aggregate reads staging only; no RSS fetch", flush=True)
@@ -3587,9 +3621,10 @@ def main() -> int:
         )
         bundle["backpressure"] = bp_meta
         hm = _handoff_meta_from_staging_manifest(loaded)
-        _emit_article_pool_manifest(
+        pool_manifest = _emit_article_pool_manifest(
             bundle, hm, loaded=loaded, aggregate_input_count=len(agg_items), pipeline_phase="aggregate"
         )
+        _emit_article_pipeline_phase_status(phase="aggregate", bundle=bundle, pool_manifest=pool_manifest)
         write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle, hm))
         return 0
 
@@ -4012,6 +4047,7 @@ def main() -> int:
         )
     write_youtube_staging(OUTPUT_DIR, yt_videos, ingested_at)
     write_ingest_manifest(OUTPUT_DIR, all_batch_keys, ingested_at)
+    _emit_article_pipeline_phase_status(phase="ingest", ingest_ok=True)
 
     try:
         save_transport_state(transport_state)

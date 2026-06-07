@@ -36,6 +36,22 @@ MANIFEST_NAME = "manifest.json"
 DEFAULT_BRANCH = "automation/pipeline-handoff"
 MANIFEST_SCHEMA = 3
 MAX_PUSH_ATTEMPTS = 8
+STAGING_TELEMETRY_FILES = (
+    "article_pipeline_phase_status.json",
+    "article_pool_manifest.json",
+)
+
+
+def _merge_local_staging_telemetry(data_dir: str, handoff_staging_dest: str) -> None:
+    """Overlay local staging telemetry (phase status, pool manifest) onto handoff staging tree."""
+    local = os.path.join(data_dir, "staging")
+    if not os.path.isdir(local):
+        return
+    os.makedirs(handoff_staging_dest, exist_ok=True)
+    for name in STAGING_TELEMETRY_FILES:
+        src = os.path.join(local, name)
+        if os.path.isfile(src):
+            shutil.copy2(src, os.path.join(handoff_staging_dest, name))
 
 
 def _repo_root() -> str:
@@ -458,6 +474,7 @@ def cmd_push_aggregate(args: argparse.Namespace) -> int:
             raise RuntimeError("missing remote manifest")
         if not remote_m.get("stagingReady"):
             raise RuntimeError("manifest stagingReady false")
+        _merge_local_staging_telemetry(data_dir, os.path.join(dest, STAGING_REL))
         rw = _winning_ingest_from_manifest(remote_m)
         ra = _winning_aggregate_from_manifest(remote_m)
         snap_s = str(snap).strip()
@@ -582,6 +599,12 @@ def cmd_pull_for_publish(args: argparse.Namespace) -> int:
             return 2
         os.makedirs(os.path.join(data_dir, "staging"), exist_ok=True)
         shutil.copy2(ck, os.path.join(data_dir, "staging", "aggregated_checkpoint.json"))
+        handoff_staging = os.path.join(handoff, STAGING_REL)
+        if os.path.isdir(handoff_staging):
+            for name in STAGING_TELEMETRY_FILES:
+                tel = os.path.join(handoff_staging, name)
+                if os.path.isfile(tel):
+                    shutil.copy2(tel, os.path.join(data_dir, "staging", name))
         sched = os.path.join(handoff, "scheduler_state.json")
         if os.path.isfile(sched):
             shutil.copy2(sched, os.path.join(data_dir, "scheduler_state.json"))

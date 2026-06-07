@@ -862,3 +862,14 @@ jobs:
       - name: Notify completion (beep)
         if: always()
         run: printf '\a'
+
+      - name: Record pipeline phase status (release outcome)
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          python scripts/iu_article_pipeline_phase_status.py finalize-release \
+            --job-status "$JOB_STATUS" \
+            --data-changed "${{ steps.no_diff.outputs.data_changed }}" \
+            --pr-number "${{ steps.pr.outputs.pr_number }}"
