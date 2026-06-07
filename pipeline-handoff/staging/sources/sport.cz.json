@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-07T16:16:08.562477Z",
+  "ingestedAt": "2026-06-07T17:01:06.197600Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tyčkařská senzace. Hvězdný Duplantis utrpěl doma ve Stockholmu první porážku po třech letech",
+      "url": "https://www.sport.cz/clanek/atletika-tyckarska-senzace-hvezdny-duplantis-utrpel-doma-ve-stockholmu-prvni-porazku-po-trech-letech-5475778",
+      "dt": "2026-06-07T16:31:05Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "doma",
+        "duplantis",
+        "hvězdný",
+        "letech",
+        "porážku",
+        "první",
+        "senzace",
+        "stockholmu",
+        "tyčkařská",
+        "třech",
+        "utrpěl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -749,31 +777,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hokejová psychedelie. Vegas ustálo nevídanou divočinu, která vejde do dějin",
-      "url": "https://www.sport.cz/clanek/hokej-nhl-hokejova-psychedelie-vegas-ustalo-nevidanou-divocinu-ktera-vejde-do-dejin-5475429",
-      "dt": "2026-06-07T08:11:06Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "divočinu",
-        "dějin",
-        "hokejová",
-        "nevídanou",
-        "psychedelie",
-        "ustálo",
-        "vegas",
-        "vejde"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43994,
+      "bytes": 44071,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T16:13:26Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T16:31:05Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -837,6 +840,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tyčkařská senzace. Hvězdný Duplantis utrpěl doma ve Stockholmu první porážku po třech letech",
+            "publishedAt": "2026-06-07T16:31:05Z"
+          },
           {
             "title": "Konečně to Dědkovi vyšlo! Český mistr světa navštívil fotbalisty a hlásí: Pardubice mají zase jméno",
             "publishedAt": "2026-06-07T16:13:26Z"
@@ -864,10 +871,6 @@
           {
             "title": "McDavid získal popáté Cenu Teda Lindsayho a vyrovnal se největší hokejové legendě všech dob",
             "publishedAt": "2026-06-07T15:39:15Z"
-          },
-          {
-            "title": "Pastrňákův bývalý kolega ukončil kariéru",
-            "publishedAt": "2026-06-07T15:16:40Z"
           }
         ]
       }
