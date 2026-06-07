@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-07T02:31:24.388712Z",
+  "ingestedAt": "2026-06-07T03:16:22.891836Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nejméně dvanáct lidí bylo zraněno při střelbě poblíž festivalu v americkém Toledu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/nejmene-dvanact-lidi-bylo-zraneno-pri-strelbe-pobliz-festivalu-v-americkem-toledu-374304",
+      "dt": "2026-06-07T02:40:07Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "americkém",
+        "dvanáct",
+        "festivalu",
+        "lidí",
+        "nejméně",
+        "poblíž",
+        "při",
+        "střelbě",
+        "toledu",
+        "zraněno"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -721,32 +748,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Výbuch tlakové lahve ve Vysokém Mýtě vážně zranil jednoho člověka",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/pardubicky-kraj/po-vybuchu-tlakove-lahve-v-byte-ve-vysokem-myte-jsou-ctyri-vazne-zraneni-374270",
-      "dt": "2026-06-05T12:41:48Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "jednoho",
-        "lahve",
-        "mýtě",
-        "tlakové",
-        "vysokém",
-        "vážně",
-        "výbuch",
-        "zranil",
-        "člověka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -757,7 +758,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41610,
+      "bytes": 41585,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -794,7 +795,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-06T22:08:32Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T02:40:07Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 29,
@@ -810,6 +811,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejméně dvanáct lidí bylo zraněno při střelbě poblíž festivalu v americkém Toledu",
+            "publishedAt": "2026-06-07T02:40:07Z"
+          },
           {
             "title": "Reuters: USA dají spojencům v Perském zálivu íránská aktiva na poválečnou obnovu",
             "publishedAt": "2026-06-06T22:08:32Z"
@@ -837,10 +842,6 @@
           {
             "title": "Chci být víc vidět a pomáhat řešit problémy, říká nová ombudsmanka",
             "publishedAt": "2026-06-06T12:07:26Z"
-          },
-          {
-            "title": "Ukrajina udeřila v Petrohradu a ničila ropné sklady",
-            "publishedAt": "2026-06-06T11:57:32Z"
           }
         ]
       }

@@ -1,9 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-06-07T02:31:24.388712Z",
+  "ingestedAt": "2026-06-07T03:16:22.891836Z",
   "items": [
     {
+      "section": "finance",
+      "contentType": "article",
+      "title": "PŘEHLEDNĚ: Ve kterých zemích si proti loňsku připlatíte a kde bude levněji",
+      "url": "https://www.novinky.cz/clanek/ekonomika-prehledne-ve-kterych-zemich-si-proti-lonsku-priplatite-a-kde-bude-levneji-40581410",
+      "dt": "2026-06-07T03:12:00Z",
+      "media_raw": "Novinky / Domácí",
+      "media_norm": "Novinky",
+      "tokens": [
+        "kterých",
+        "levněji",
+        "loňsku",
+        "proti",
+        "přehledně",
+        "připlatíte",
+        "zemích"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_novinky_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "krimi",
       "contentType": "article",
       "title": "Dvěma noži ubodal bratra a těžce zranil otce. K soudu půjde muž z Plzně jen za opilství",
@@ -747,27 +771,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "finance",
       "contentType": "article",
-      "title": "Kněží Bula a Drbola, popravení komunisty, prohlášeni coby mučedníci za blahoslavené",
-      "url": "https://www.novinky.cz/clanek/domaci-na-blahoreceni-buly-a-drboly-na-brnenskem-vystavisti-ceka-skoro-dvanact-tisic-vericich-40581941",
-      "dt": "2026-06-06T11:46:33Z",
-      "media_raw": "Novinky / Domácí",
+      "title": "PŘEHLEDNĚ: Ve kterých zemích si proti loňsku připlatíte a kde bude levněji",
+      "url": "https://www.novinky.cz/clanek/ekonomika-prehledne-ve-kterych-zemich-si-proti-lonsku-priplatite-a-kde-bude-levneji-40581410",
+      "dt": "2026-06-07T03:12:00Z",
+      "media_raw": "Novinky / Zahraniční",
       "media_norm": "Novinky",
       "tokens": [
-        "blahoslavené",
-        "bula",
-        "coby",
-        "drbola",
-        "kněží",
-        "komunisty",
-        "mučedníci",
-        "popravení",
-        "prohlášeni"
+        "kterých",
+        "levněji",
+        "loňsku",
+        "proti",
+        "přehledně",
+        "připlatíte",
+        "zemích"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
-      "feedId": "zpr_novinky_domaci",
+      "feedId": "zpr_novinky_zahranicni",
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "novinky.cz",
       "_dt_serialized": true
@@ -1507,32 +1529,6 @@
         "soud",
         "umělec",
         "vysvětluje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_novinky_zahranicni",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kněží Bula a Drbola, popravení komunisty, prohlášeni coby mučedníci za blahoslavené",
-      "url": "https://www.novinky.cz/clanek/domaci-na-blahoreceni-buly-a-drboly-na-brnenskem-vystavisti-ceka-skoro-dvanact-tisic-vericich-40581941",
-      "dt": "2026-06-06T11:46:33Z",
-      "media_raw": "Novinky / Zahraniční",
-      "media_norm": "Novinky",
-      "tokens": [
-        "blahoslavené",
-        "bula",
-        "coby",
-        "drbola",
-        "kněží",
-        "komunisty",
-        "mučedníci",
-        "popravení",
-        "prohlášeni"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1550,7 +1546,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/domaci",
-      "bytes": 50464,
+      "bytes": 49835,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1587,11 +1583,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T02:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T03:12:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
-          "finance": 2
+          "finance": 3,
+          "zpravy": 27
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1603,6 +1599,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "PŘEHLEDNĚ: Ve kterých zemích si proti loňsku připlatíte a kde bude levněji",
+            "publishedAt": "2026-06-07T03:12:00Z"
+          },
           {
             "title": "Dvěma noži ubodal bratra a těžce zranil otce. K soudu půjde muž z Plzně jen za opilství",
             "publishedAt": "2026-06-07T02:15:00Z"
@@ -1630,10 +1630,6 @@
           {
             "title": "V Otrokovicích srazil autobus na přechodu dva chodce. Jeden zemřel",
             "publishedAt": "2026-06-06T18:29:39Z"
-          },
-          {
-            "title": "V paneláku v Toužimi vybuchla neznámá látka, na místě jsou dva zranění",
-            "publishedAt": "2026-06-06T18:06:49Z"
           }
         ]
       }
@@ -1645,7 +1641,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/zahranicni",
-      "bytes": 50464,
+      "bytes": 49835,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1682,11 +1678,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T02:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T03:12:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
-          "finance": 2
+          "finance": 3,
+          "zpravy": 27
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1698,6 +1694,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "PŘEHLEDNĚ: Ve kterých zemích si proti loňsku připlatíte a kde bude levněji",
+            "publishedAt": "2026-06-07T03:12:00Z"
+          },
           {
             "title": "Dvěma noži ubodal bratra a těžce zranil otce. K soudu půjde muž z Plzně jen za opilství",
             "publishedAt": "2026-06-07T02:15:00Z"
@@ -1725,10 +1725,6 @@
           {
             "title": "V Otrokovicích srazil autobus na přechodu dva chodce. Jeden zemřel",
             "publishedAt": "2026-06-06T18:29:39Z"
-          },
-          {
-            "title": "V paneláku v Toužimi vybuchla neznámá látka, na místě jsou dva zranění",
-            "publishedAt": "2026-06-06T18:06:49Z"
           }
         ]
       }
