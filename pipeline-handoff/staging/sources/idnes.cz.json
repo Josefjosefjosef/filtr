@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-07T09:11:34.971750Z",
+  "ingestedAt": "2026-06-07T09:48:44.096853Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Arménci rozhodují o novém parlamentu. Hraje se o kurz k Západu i vztahy s Moskvou",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/obyvatele-armenie-od-rana-vybiraji-pristi-slozeni-sveho-parlamentu.A260607_111103_zahranicni_ijan",
+      "dt": "2026-06-07T09:21:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "arménci",
+        "hraje",
+        "kurz",
+        "moskvou",
+        "novém",
+        "parlamentu",
+        "rozhodují",
+        "vztahy",
+        "západu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -763,34 +789,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Druhé kolo přijímaček se blíží. Nebuďte zbrklí a získejte zpět kontrolu, radí lektor",
-      "url": "https://www.idnes.cz/zpravy/domaci/prijimaci-zkousky-druhe-kolo-stredni-skoly-lektor.A260602_125753_domaci_dyn",
-      "dt": "2026-06-06T12:09:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "blíží",
-        "druhé",
-        "kolo",
-        "kontrolu",
-        "lektor",
-        "nebuďte",
-        "přijímaček",
-        "radí",
-        "zbrklí",
-        "zpět",
-        "získejte"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49568,
+      "bytes": 49335,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,11 +836,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T09:21:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 5,
-          "zpravy": 25
+          "zpravy": 25,
+          "finance": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -854,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Arménci rozhodují o novém parlamentu. Hraje se o kurz k Západu i vztahy s Moskvou",
+            "publishedAt": "2026-06-07T09:21:00Z"
+          },
           {
             "title": "Čtyřhodinová pauza jako nutnost. Vedra v Indii mění režim milionů lidí",
             "publishedAt": "2026-06-07T09:00:00Z"
@@ -880,10 +882,6 @@
           },
           {
             "title": "Rozevlátý Poborský a bouřící Staromák. Jak se zrodila slavná fotka stříbrného Eura",
-            "publishedAt": "2026-06-06T22:00:00Z"
-          },
-          {
-            "title": "Před 35 lety opustily naše území sovětské okupační jednotky. Za pět minut dvanáct",
             "publishedAt": "2026-06-06T22:00:00Z"
           }
         ]
