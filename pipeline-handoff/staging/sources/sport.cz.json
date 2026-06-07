@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-07T17:46:19.912151Z",
+  "ingestedAt": "2026-06-07T18:16:07.227664Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ondra skončil v Praze pátý, Širůčková devátá",
+      "url": "https://www.sport.cz/clanek/ostatni-americanka-sandersova-ma-v-praze-druhe-zlato-siruckova-skoncila-devata-5475788",
+      "dt": "2026-06-07T18:04:09Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "devátá",
+        "ondra",
+        "praze",
+        "pátý",
+        "skončil",
+        "širůčková"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dominantní výkon s infarktovým závěrem. Antonelli vyhrál v Monaku popáté v řadě",
+      "url": "https://www.sport.cz/clanek/moto-formule-1-antonelli-si-v-monaku-z-pole-position-pojede-pro-patou-vyhru-v-rade-5475433",
+      "dt": "2026-06-07T08:50:51Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "antonelli",
+        "dominantní",
+        "infarktovým",
+        "monaku",
+        "popáté",
+        "vyhrál",
+        "výkon",
+        "závěrem",
+        "řadě"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -101,32 +150,6 @@
         "vyšlo",
         "zase",
         "český"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dominantní výkon s infarktovým závěrem. Antonelli vyhrál v Monaku popáté v řadě",
-      "url": "https://www.sport.cz/clanek/moto-formule-1-antonelli-si-v-monaku-z-pole-position-pojede-pro-patou-vyhru-v-rade-5475433",
-      "dt": "2026-06-07T08:50:51Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "antonelli",
-        "dominantní",
-        "infarktovým",
-        "monaku",
-        "popáté",
-        "vyhrál",
-        "výkon",
-        "závěrem",
-        "řadě"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -749,33 +772,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Český cykloklub v Belgii oslavil první rok jízdou v Bruselu, připojil se Štybar",
-      "url": "https://www.sport.cz/clanek/cyklistika-cesky-cykloklub-v-belgii-oslavil-prvni-rok-jizdou-v-bruselu-pripojil-se-stybar-5475447",
-      "dt": "2026-06-07T09:15:27Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "belgii",
-        "bruselu",
-        "cykloklub",
-        "jízdou",
-        "oslavil",
-        "první",
-        "připojil",
-        "rok",
-        "český",
-        "štybar"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +782,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44156,
+      "bytes": 43897,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,11 +819,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T17:45:34Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T18:04:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 29,
-          "finance": 1
+          "sport": 30
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -839,6 +834,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ondra skončil v Praze pátý, Širůčková devátá",
+            "publishedAt": "2026-06-07T18:04:09Z"
+          },
+          {
+            "title": "Dominantní výkon s infarktovým závěrem. Antonelli vyhrál v Monaku popáté v řadě",
+            "publishedAt": "2026-06-07T08:50:51Z"
+          },
           {
             "title": "Zverev se na French Open dočkal vytouženého grandslamového titulu!",
             "publishedAt": "2026-06-07T17:45:34Z"
@@ -856,20 +859,12 @@
             "publishedAt": "2026-06-07T16:13:26Z"
           },
           {
-            "title": "Dominantní výkon s infarktovým závěrem. Antonelli vyhrál v Monaku popáté v řadě",
-            "publishedAt": "2026-06-07T08:50:51Z"
-          },
-          {
             "title": "Soupeři se prali, Češi dominovali! Praha viděla snový double i působivý návrat veterána",
             "publishedAt": "2026-06-07T15:17:49Z"
           },
           {
             "title": "Fotbalistům Demokratické republiky Kongo vyšli vstříc ve Francii",
             "publishedAt": "2026-06-07T16:01:51Z"
-          },
-          {
-            "title": "Volleringová po triumfech na Tour a Vueltě vyhrála poprvé i Giro d'Italia",
-            "publishedAt": "2026-06-07T15:49:27Z"
           }
         ]
       }
