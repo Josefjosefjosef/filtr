@@ -263,7 +263,7 @@ jobs:
       - article_pipeline_aggregate
     if: needs.pipeline_gate.outputs.proceed == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 25
     env:
       RETENTION_DAYS: "45"
     steps:
@@ -749,7 +749,7 @@ jobs:
           NUM="${{ steps.pr.outputs.pr_number }}"
           REPO="${{ github.repository }}"
           echo "[CLOSEOUT] poll_merge_publish_pr=$NUM"
-          for attempt in $(seq 1 24); do
+          for attempt in $(seq 1 40); do
             MERGED_AT=$(gh pr view "$NUM" --json mergedAt --jq '.mergedAt // empty' 2>/dev/null || echo "")
             if [ -n "$MERGED_AT" ]; then
               echo "[CLOSEOUT] merged_at=$MERGED_AT"
@@ -762,15 +762,27 @@ jobs:
               echo "[CLOSEOUT] pages_workflow_run_id=${PAGES_RUN:-pending}"
               exit 0
             fi
-            STATE=$(gh pr view "$NUM" --json state --jq '.state // empty' 2>/dev/null || echo "")
+            PR_JSON=$(gh pr view "$NUM" --json state,mergeStateStatus,autoMergeRequest 2>/dev/null || echo "{}")
+            STATE=$(echo "$PR_JSON" | jq -r '.state // empty')
+            MSS=$(echo "$PR_JSON" | jq -r '.mergeStateStatus // empty')
+            AUTO=$(echo "$PR_JSON" | jq -r 'if (.autoMergeRequest != null) then "true" else "false" end')
             if [ "$STATE" = "CLOSED" ]; then
               echo "[CLOSEOUT] PR #$NUM closed without merge record — skip Pages dispatch"
               exit 0
             fi
-            echo "[CLOSEOUT] poll_attempt=$attempt state=${STATE:-unknown} waiting_for_merge"
-            sleep 15
+            if [ "$MSS" = "BEHIND" ]; then
+              echo "[CLOSEOUT] poll_attempt=$attempt state=${STATE:-unknown} merge_state=BEHIND — sync branch"
+              gh api --method PUT "repos/${REPO}/pulls/${NUM}/update-branch" || echo "[CLOSEOUT] update-branch failed (will retry)"
+              if [ "$AUTO" != "true" ]; then
+                gh pr merge "$NUM" --auto --squash || echo "[CLOSEOUT] auto-merge re-enable failed (will retry)"
+              fi
+              sleep 30
+              continue
+            fi
+            echo "[CLOSEOUT] poll_attempt=$attempt state=${STATE:-unknown} merge_state=${MSS:-unknown} auto_merge=${AUTO:-unknown} waiting_for_merge"
+            sleep 20
           done
-          echo "[CLOSEOUT] WARN: timeout waiting for merge (6m); Pages publish from main data (cron) will catch up"
+          echo "[CLOSEOUT] WARN: timeout waiting for merge (~13m); Pages publish from main data (cron) will catch up"
           exit 0
 
       - name: Closeout telemetry (build + PR state + chain facts)
