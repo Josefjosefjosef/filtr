@@ -3041,6 +3041,12 @@ def _aggregate_pipeline(
         "ingest_telemetry": tel_detail,
         "ingest_telemetry_summary": tel_summary,
         "topic_dedupe": topic_stats,
+        "_pool_stage": {
+            "aggregate_input_items": len(all_items),
+            "after_url_dedupe_items": len(deduped_items),
+            "cluster_count": len(clusters),
+            "new_articles_built": len(new_articles),
+        },
     }
 
 
@@ -3386,6 +3392,31 @@ def _publish_article_outputs(bundle: dict) -> int:
     return 0
 
 
+def _emit_article_pool_manifest(
+    bundle: dict,
+    handoff_meta: dict | None,
+    loaded: dict | None = None,
+    aggregate_input_count: int | None = None,
+    pipeline_phase: str = "aggregate",
+) -> None:
+    """Phase 3A: write read-only pool manifest; does not change publish outputs."""
+    try:
+        from iu_article_pool import build_article_pool_manifest, write_article_pool_manifest
+
+        ingest_man = loaded.get("manifest") if isinstance(loaded, dict) else None
+        manifest = build_article_pool_manifest(
+            bundle,
+            handoff_meta=handoff_meta,
+            ingest_manifest=ingest_man if isinstance(ingest_man, dict) else None,
+            aggregate_input_count=aggregate_input_count,
+            pipeline_phase=pipeline_phase,
+        )
+        path = write_article_pool_manifest(OUTPUT_DIR, manifest)
+        print(f"[ARTICLE_POOL_MANIFEST] written {path}", flush=True)
+    except Exception as e:
+        print("WARN: article_pool_manifest write failed:", str(e), flush=True)
+
+
 def _handoff_meta_from_staging_manifest(loaded: dict) -> dict:
     """Race-safe linkage: checkpoint ties to ingest snapshot (pipelineRunId) + this workflow run."""
     man = loaded.get("manifest") if isinstance(loaded.get("manifest"), dict) else {}
@@ -3499,6 +3530,9 @@ def _incremental_publish_with_backpressure(
     )
     bundle["backpressure"] = bp_meta
     hm = _handoff_meta_from_staging_manifest(loaded)
+    _emit_article_pool_manifest(
+        bundle, hm, loaded=loaded, aggregate_input_count=len(aggregate_items), pipeline_phase="ingest_incremental"
+    )
     write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle, hm))
 
     if budget.exceeded():
@@ -3553,6 +3587,9 @@ def main() -> int:
         )
         bundle["backpressure"] = bp_meta
         hm = _handoff_meta_from_staging_manifest(loaded)
+        _emit_article_pool_manifest(
+            bundle, hm, loaded=loaded, aggregate_input_count=len(agg_items), pipeline_phase="aggregate"
+        )
         write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle, hm))
         return 0
 
@@ -4052,6 +4089,9 @@ def main() -> int:
                 seen_rep.add(fk)
     bundle = _aggregate_pipeline(aggregate_items, aggregate_reports, yt_videos, registry)
     hm = _handoff_meta_from_staging_manifest(loaded)
+    _emit_article_pool_manifest(
+        bundle, hm, loaded=loaded, aggregate_input_count=len(aggregate_items), pipeline_phase="all"
+    )
     write_aggregated_checkpoint(OUTPUT_DIR, _checkpoint_bundle_for_disk(bundle, hm))
     return _publish_article_outputs(bundle)
 

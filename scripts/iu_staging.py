@@ -5,6 +5,9 @@ infoUzel: per-source staging I/O for article pipeline (ingest → aggregate → 
 
 Staging lives under OUTPUT_DIR/staging/ (gitignored). Not a second public dataset;
 aggregation + publish are the only paths to projects/data/articles.json.
+
+Phase 3A: article_pool_manifest.json (read-only pool telemetry) is written alongside
+staging during aggregate; it does not change publish output.
 """
 
 from __future__ import annotations
