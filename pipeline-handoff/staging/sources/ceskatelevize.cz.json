@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-07T08:31:14.270647Z",
+  "ingestedAt": "2026-06-07T09:11:34.971750Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sobotní výbuch v Toužimi vyšetřuje policie jako nedovolené ozbrojování",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/sobotni-vybuch-v-touzimi-vysetruje-policie-jako-nedovolene-ozbrojovani-374306",
+      "dt": "2026-06-07T08:29:27Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "jako",
+        "nedovolené",
+        "ozbrojování",
+        "policie",
+        "sobotní",
+        "toužimi",
+        "vyšetřuje",
+        "výbuch"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -725,31 +750,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rusko likviduje ukrajinská města do základů, říká zpravodajka Stomatová",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusko-likviduje-ukrajinska-mesta-do-zakladu-rika-zpravodajka-stomatova-374277",
-      "dt": "2026-06-05T17:18:05Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "likviduje",
-        "města",
-        "rusko",
-        "stomatová",
-        "ukrajinská",
-        "zpravodajka",
-        "základů",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -760,7 +760,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41404,
+      "bytes": 41115,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -797,11 +797,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T07:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T08:29:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 1,
           "zpravy": 28,
+          "other": 1,
           "finance": 1
         },
         "drop_counts": {
@@ -814,6 +814,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sobotní výbuch v Toužimi vyšetřuje policie jako nedovolené ozbrojování",
+            "publishedAt": "2026-06-07T08:29:27Z"
+          },
           {
             "title": "Včelí královny se rodí do purpuru. Vědci popsali, jak se vybírá vládkyně roje",
             "publishedAt": "2026-06-07T07:02:00Z"
@@ -841,10 +845,6 @@
           {
             "title": "Reuters: USA dají spojencům v Perském zálivu íránská aktiva na poválečnou obnovu",
             "publishedAt": "2026-06-06T22:08:32Z"
-          },
-          {
-            "title": "Endoprotéz rychle přibývá. Někde se ale čeká roky",
-            "publishedAt": "2026-06-06T18:17:37Z"
           }
         ]
       }
