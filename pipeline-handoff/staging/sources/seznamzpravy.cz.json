@@ -1,24 +1,25 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-06-07T18:16:07.227664Z",
+  "ingestedAt": "2026-06-07T18:46:05.768625Z",
   "items": [
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Ruská obrana před novým nebezpečím: Maskovací nátěr na náklaďácích",
-      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-zmast-oko-dronu-rusove-davaji-na-nakladaky-maskovaci-nater-307849",
-      "dt": "2026-06-07T17:30:00Z",
+      "title": "Zverev triumfoval na Roland Garros a získal první grandslamový titul",
+      "url": "https://www.seznamzpravy.cz/clanek/sport-tenis-zverev-triumfoval-na-roland-garros-a-ziskal-prvni-grandslamovy-titul-308023",
+      "dt": "2026-06-07T18:29:30Z",
       "media_raw": "Seznam Zprávy / Domácí",
       "media_norm": "Seznam Zprávy",
       "tokens": [
-        "maskovací",
-        "nebezpečím",
-        "novým",
-        "náklaďácích",
-        "nátěr",
-        "obrana",
-        "ruská"
+        "garros",
+        "grandslamový",
+        "první",
+        "roland",
+        "titul",
+        "triumfoval",
+        "zverev",
+        "získal"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -68,6 +69,30 @@
         "trump",
         "zvažuje",
         "území"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_seznam_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ruská obrana před novým nebezpečím: Maskovací nátěr na náklaďácích",
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-zmast-oko-dronu-rusove-davaji-na-nakladaky-maskovaci-nater-307849",
+      "dt": "2026-06-07T17:30:00Z",
+      "media_raw": "Seznam Zprávy / Domácí",
+      "media_norm": "Seznam Zprávy",
+      "tokens": [
+        "maskovací",
+        "nebezpečím",
+        "novým",
+        "náklaďácích",
+        "nátěr",
+        "obrana",
+        "ruská"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -731,31 +756,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "seznamzpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Mají přesný plán, jak dlouho na trávu svítit. Jak se řeší hřiště na MS",
-      "url": "https://www.seznamzpravy.cz/clanek/sport-pro-kazdy-stadion-sampionatu-hledali-tu-nejlepsi-travu-zacali-pred-sesti-lety-307993",
-      "dt": "2026-06-07T09:25:09Z",
-      "media_raw": "Seznam Zprávy / Domácí",
-      "media_norm": "Seznam Zprávy",
-      "tokens": [
-        "dlouho",
-        "hřiště",
-        "mají",
-        "plán",
-        "přesný",
-        "svítit",
-        "trávu",
-        "řeší"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_seznam_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -766,7 +766,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/domaci",
-      "bytes": 43742,
+      "bytes": 43644,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -803,12 +803,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T17:39:15Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T18:29:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "sport": 6,
           "zpravy": 19,
-          "finance": 5,
-          "sport": 6
+          "finance": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -821,8 +821,8 @@
         },
         "sample_titles": [
           {
-            "title": "Ruská obrana před novým nebezpečím: Maskovací nátěr na náklaďácích",
-            "publishedAt": "2026-06-07T17:30:00Z"
+            "title": "Zverev triumfoval na Roland Garros a získal první grandslamový titul",
+            "publishedAt": "2026-06-07T18:29:30Z"
           },
           {
             "title": "„Na takovou vesnici to bylo něco.“ Pamětníci vzpomínají na mučedníky Bulu a Drbolu",
@@ -831,6 +831,10 @@
           {
             "title": "Trump zvažuje nákup dalšího území, tentokrát britského",
             "publishedAt": "2026-06-07T17:39:15Z"
+          },
+          {
+            "title": "Ruská obrana před novým nebezpečím: Maskovací nátěr na náklaďácích",
+            "publishedAt": "2026-06-07T17:30:00Z"
           },
           {
             "title": "Železniční zakázky výrazně zlevňují. Může za to tvrdá konkurence",
@@ -847,10 +851,6 @@
           {
             "title": "Kimi Antonelli je nejmladším vítězem Velké ceny Monaka formule 1",
             "publishedAt": "2026-06-07T15:45:15Z"
-          },
-          {
-            "title": "„Krachujeme a Trump si staví pomníky.“ Prezidentovi hrozí revolta venkova",
-            "publishedAt": "2026-06-07T15:45:00Z"
           }
         ]
       }
