@@ -159,12 +159,16 @@ jobs:
         id: live_match
         env:
           LIVE_ARTICLES_URL: "${{ env.LIVE_BASE }}/articles.json"
+          LIVE_BOOTSTRAP_URL: "${{ env.LIVE_BASE }}/articles/bootstrap.json"
+          LIVE_INDEX_URL: "${{ env.LIVE_BASE }}/articles/index.json"
         run: |
           set -euo pipefail
           REPO_ARTICLES_AT="${{ steps.repo_meta.outputs.repo_articles_generatedAt }}"
           REPO_VIDEOS_AT="${{ steps.repo_meta.outputs.repo_videos_generatedAt }}"
           REPO_ARTICLES_HASH="${{ steps.repo_meta.outputs.repo_articles_hash }}"
           REPO_VIDEOS_HASH="${{ steps.repo_meta.outputs.repo_videos_hash }}"
+          REPO_BOOT_AT=$(jq -r '.generatedAt // empty' projects/data/articles/bootstrap.json)
+          REPO_IDX_AT=$(jq -r '.generatedAt // empty' projects/data/articles/index.json)
           LIVE_VIDEOS_URL="${{ env.LIVE_BASE }}/videos.json"
           MAX=${{ env.PROPAGATION_ATTEMPTS_MAX }}
           SLEEP=${{ env.PROPAGATION_SLEEP_SEC }}
@@ -177,6 +181,10 @@ jobs:
           live_videos_generatedAt=""
           live_articles_hash=""
           live_videos_hash=""
+          live_bootstrap_match="false"
+          live_index_match="false"
+          live_bootstrap_generatedAt=""
+          live_index_generatedAt=""
           freshness_guard_pass="false"
           propagation_attempts=0
           stale_after_deploy="false"
@@ -209,12 +217,39 @@ jobs:
               live_videos_match="true"
             fi
 
+            LIVE_BOOTSTRAP=$(curl -fsSL -H "Cache-Control: no-cache" -H "Pragma: no-cache" "${LIVE_BOOTSTRAP_URL}?v=${GITHUB_SHA::7}-${attempt}" 2>/dev/null || true)
+            if [ -n "$LIVE_BOOTSTRAP" ]; then
+              live_bootstrap_generatedAt=$(printf '%s' "$LIVE_BOOTSTRAP" | jq -r '.generatedAt // empty' 2>/dev/null || true)
+              if [ -z "$REPO_BOOT_AT" ] || { [ -n "$live_bootstrap_generatedAt" ] && [ "$live_bootstrap_generatedAt" = "$REPO_BOOT_AT" ]; }; then
+                live_bootstrap_match="true"
+              else
+                live_bootstrap_match="false"
+              fi
+            else
+              live_bootstrap_match="false"
+            fi
+
+            LIVE_INDEX=$(curl -fsSL -H "Cache-Control: no-cache" -H "Pragma: no-cache" "${LIVE_INDEX_URL}?v=${GITHUB_SHA::7}-${attempt}" 2>/dev/null || true)
+            if [ -n "$LIVE_INDEX" ]; then
+              live_index_generatedAt=$(printf '%s' "$LIVE_INDEX" | jq -r '.generatedAt // empty' 2>/dev/null || true)
+              if [ -z "$REPO_IDX_AT" ] || { [ -n "$live_index_generatedAt" ] && [ "$live_index_generatedAt" = "$REPO_IDX_AT" ]; }; then
+                live_index_match="true"
+              else
+                live_index_match="false"
+              fi
+            else
+              live_index_match="false"
+            fi
+
             echo "live_articles_reachable=$live_articles_reachable live_articles_match=$live_articles_match repo_generatedAt=$REPO_ARTICLES_AT live_generatedAt=$live_articles_generatedAt"
+            echo "live_bootstrap_match=$live_bootstrap_match repo_bootstrap_generatedAt=$REPO_BOOT_AT live_bootstrap_generatedAt=$live_bootstrap_generatedAt"
+            echo "live_index_match=$live_index_match repo_index_generatedAt=$REPO_IDX_AT live_index_generatedAt=$live_index_generatedAt"
             echo "live_videos_reachable=$live_videos_reachable live_videos_match=$live_videos_match repo_videos_generatedAt=${REPO_VIDEOS_AT:-none} live_videos_generatedAt=${live_videos_generatedAt:-none}"
             echo "telemetry repo_articles_hash=$REPO_ARTICLES_HASH live_articles_hash=$live_articles_hash"
 
             metadata_match="false"
-            if [ "$live_articles_match" = "true" ] && [ "$live_videos_match" = "true" ]; then
+            if [ "$live_articles_match" = "true" ] && [ "$live_videos_match" = "true" ] \
+              && [ "$live_bootstrap_match" = "true" ] && [ "$live_index_match" = "true" ]; then
               metadata_match="true"
             fi
 
