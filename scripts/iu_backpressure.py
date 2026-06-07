@@ -353,9 +353,14 @@ def _cap_batch_with_p0_reserves(
     reserved: list[dict] = []
     reserved_urls: set[str] = set()
     p0_reserved_count = 0
+    p0_fresh_coverage_count = 0
     for sk in sorted(by_slot.keys()):
         rows = sorted(by_slot[sk], key=_item_sort_dt, reverse=True)
-        for it in rows[:reserve_n]:
+        fresh_rows = [it for it in rows if _is_fresh_liveness_item(it)]
+        stale_rows = [it for it in rows if not _is_fresh_liveness_item(it)]
+        ordered = fresh_rows + stale_rows
+        picked_fresh = False
+        for it in ordered[:reserve_n]:
             u = _canon_url(it)
             if u and u in reserved_urls:
                 continue
@@ -363,6 +368,37 @@ def _cap_batch_with_p0_reserves(
                 reserved_urls.add(u)
             reserved.append(it)
             p0_reserved_count += 1
+            if _is_fresh_liveness_item(it):
+                picked_fresh = True
+        if picked_fresh:
+            p0_fresh_coverage_count += 1
+
+    # Guarantee one fresh item per P0 slot when staging has it (coverage guard contract).
+    for sk in sorted(P0_FRESHNESS_SLOT_KEYS):
+        if any(
+            _p0_slot_key_from_item(it) == sk and _is_fresh_liveness_item(it) for it in reserved
+        ):
+            continue
+        candidates: list[dict] = []
+        for it in merged:
+            if _p0_slot_key_from_item(it) != sk:
+                continue
+            if not _is_fresh_liveness_item(it):
+                continue
+            u = _canon_url(it)
+            if u and u in reserved_urls:
+                continue
+            candidates.append(it)
+        if not candidates:
+            continue
+        candidates.sort(key=_item_sort_dt, reverse=True)
+        pick = candidates[0]
+        u = _canon_url(pick)
+        if u:
+            reserved_urls.add(u)
+        reserved.append(pick)
+        p0_reserved_count += 1
+        p0_fresh_coverage_count += 1
 
     zdravi_reserved_count = 0
     zdravi_pick = _pick_native_zdravi_liveness_reserve(merged)

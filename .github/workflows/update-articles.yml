@@ -522,6 +522,8 @@ jobs:
           ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
           P0_COVERAGE_MAX_AGE_HOURS: "4"
           P0_COVERAGE_MIN_ARTICLES: "1"
+          P0_COVERAGE_BATCH_MODE: "1"
+          LIVENESS_BATCH_MODE: "1"
         run: node scripts/p0-source-coverage-guard.mjs
 
       - name: Same-topic overexposure guard

@@ -33,6 +33,7 @@ on:
       - "scripts/release-freshness-gate.mjs"
       - "scripts/p0-source-starvation-guard.mjs"
       - "scripts/p0-source-coverage-guard.mjs"
+      - "scripts/p0-source-coverage-guard-policy-unit.mjs"
       - "scripts/pipeline-runtime-guard.mjs"
       - "scripts/test_iu_registry_p0_freshness.py"
       - "scripts/aggregator-legacy-cleanup-guard.mjs"
@@ -72,6 +73,7 @@ on:
       - "scripts/release-freshness-gate.mjs"
       - "scripts/p0-source-starvation-guard.mjs"
       - "scripts/p0-source-coverage-guard.mjs"
+      - "scripts/p0-source-coverage-guard-policy-unit.mjs"
       - "scripts/pipeline-runtime-guard.mjs"
       - "scripts/test_iu_registry_p0_freshness.py"
       - "scripts/aggregator-legacy-cleanup-guard.mjs"
@@ -180,6 +182,9 @@ jobs:
       - name: Content freshness policy unit tests
         run: node scripts/content-freshness-guard-policy-unit.mjs
 
+      - name: P0 source coverage policy unit tests
+        run: node scripts/p0-source-coverage-guard-policy-unit.mjs
+
       - name: Production liveness Zdraví policy unit tests
         run: node scripts/production-liveness-guard-zdravi-policy-unit.mjs
 
@@ -219,6 +224,8 @@ jobs:
           ARTICLES_JSON_URL: https://infouzel.cz/projects/data/articles.json
           P0_COVERAGE_MAX_AGE_HOURS: "4"
           P0_COVERAGE_MIN_ARTICLES: "1"
+          P0_COVERAGE_BATCH_MODE: "1"
+          LIVENESS_BATCH_MODE: "1"
         run: node scripts/p0-source-coverage-guard.mjs
 
       - name: Pipeline runtime guard
