@@ -16957,13 +16957,6 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
     min-height: 542px;
   }
   
-  #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-layout="ready"]{
-    min-height: 132px;
-    max-height: 132px;
-    box-sizing: border-box;
-    overflow: hidden;
-  }
-  
   #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
   #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     min-height: 168px;
@@ -16974,9 +16967,17 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
     box-sizing: border-box;
   }
 
-  #silver-slot #iuSilverWelcomeStack #iuSilverWelcomeCard.iuSilverWelcomeCard{
-    min-height: 240px;
-    box-sizing: border-box;
+  @media (max-width: 1024px){
+    #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-layout="ready"]{
+      min-height: 132px;
+      max-height: 132px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    #silver-slot #iuSilverWelcomeStack #iuSilverWelcomeCard.iuSilverWelcomeCard{
+      min-height: 240px;
+      box-sizing: border-box;
+    }
   }
   
   #silver-slot #iuSilverWelcomeStackSeparatorTallBefore.silver-welcome-stack__separator{
@@ -17002,7 +17003,7 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
     overflow-x: visible;
     overflow-y: visible;
   }
-  /* P0 desktop header: cap artificial card reserves at 120px (was 240px welcome / 132–172px weather). */
+  /* P0 desktop header: 120px floor (CLS reserve) — tablet 240px reserve scoped to ≤1024 only. */
   #silver-slot #iuSilverWelcomeStack #iuSilverWelcomeCard.iuSilverWelcomeCard{
     min-height: 120px;
     max-height: none;
