@@ -1,0 +1,825 @@
+{
+  "generated_at": "2026-06-07T21:59:37Z",
+  "phase": "2A",
+  "dry_run_only": true,
+  "registry_validation": {
+    "valid": true,
+    "errors": [],
+    "batch_counts": {
+      "A": 15,
+      "B": 15,
+      "C": 14,
+      "D": 15
+    },
+    "total_mapped": 59,
+    "total_active": 59,
+    "duplicates": false
+  },
+  "simulation": {
+    "simulation_hours": 24,
+    "tick_interval_min": 5,
+    "total_ticks": 288,
+    "full_rotations": 72,
+    "per_source": {
+      "ces_cestujlevne": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "ces_novinky_cestovani": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "ces_pelipecky": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "ces_svetcestovatele": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "ces_travelbible": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "fin_e15": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "fin_ekonom": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "fin_ekonomickydenik": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "fin_epenize": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "fin_faei": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "fin_hn": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "fin_idnes_ekonomika": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "fin_novinky_ekonomika": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "fin_penize": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "fin_sz_byznys": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "hry_indian": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "hry_nedd": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "hry_novinky": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "hry_sector": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "hry_vortex": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "hry_zing": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "kul_ctart": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "kul_kinobox": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "kul_vipzivot": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "kul_vlasta": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "kul_vtelce": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "spt_crzpravy_sport": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "spt_ctsport": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "spt_idnes": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "spt_isport": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "spt_mmamag": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "spt_sportcz": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "spt_tenisportal": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "ved_ct24_veda": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "ved_novinky": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "ved_technet": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "ved_vtm": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "vzd_betterlife": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "vzd_nespechej": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "vzd_novinky_skola": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "vzd_seznam": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zdr_betterlife": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zdr_plnezdravi": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zdr_prozeny_zdravi": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zdr_zdrave": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zdr_zdravezpravy": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zdr_zdravotnickydenik": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zpr_aktualne": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zpr_ceskajustice": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zpr_ct24_domaci": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zpr_ct24_svet": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zpr_denik": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zpr_hlidacipes": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zpr_idnes_zpravy": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zpr_kverulant": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zpr_novinky_domaci": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zpr_novinky_zahranicni": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zpr_seznam_domaci": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      },
+      "zpr_tydenikpolicie": {
+        "check_count": 72,
+        "min_interval_min": 20,
+        "max_interval_min": 20,
+        "avg_interval_min": 20.0,
+        "lost_from_rotation": false
+      }
+    },
+    "interval_violations": [],
+    "duplicate_in_cycle": [],
+    "missing_in_cycles": [],
+    "sample_tick_log": [
+      {
+        "tick": 0,
+        "sim_minute": 0,
+        "clock": "00:00",
+        "batch_id": "A",
+        "source_count": 15
+      },
+      {
+        "tick": 1,
+        "sim_minute": 5,
+        "clock": "00:05",
+        "batch_id": "B",
+        "source_count": 15
+      },
+      {
+        "tick": 2,
+        "sim_minute": 10,
+        "clock": "00:10",
+        "batch_id": "C",
+        "source_count": 14
+      },
+      {
+        "tick": 3,
+        "sim_minute": 15,
+        "clock": "00:15",
+        "batch_id": "D",
+        "source_count": 15
+      },
+      {
+        "tick": 4,
+        "sim_minute": 20,
+        "clock": "00:20",
+        "batch_id": "A",
+        "source_count": 15
+      },
+      {
+        "tick": 5,
+        "sim_minute": 25,
+        "clock": "00:25",
+        "batch_id": "B",
+        "source_count": 15
+      },
+      {
+        "tick": 6,
+        "sim_minute": 30,
+        "clock": "00:30",
+        "batch_id": "C",
+        "source_count": 14
+      },
+      {
+        "tick": 7,
+        "sim_minute": 35,
+        "clock": "00:35",
+        "batch_id": "D",
+        "source_count": 15
+      },
+      {
+        "tick": 284,
+        "sim_minute": 1420,
+        "clock": "23:40",
+        "batch_id": "A",
+        "source_count": 15
+      },
+      {
+        "tick": 285,
+        "sim_minute": 1425,
+        "clock": "23:45",
+        "batch_id": "B",
+        "source_count": 15
+      },
+      {
+        "tick": 286,
+        "sim_minute": 1430,
+        "clock": "23:50",
+        "batch_id": "C",
+        "source_count": 14
+      },
+      {
+        "tick": 287,
+        "sim_minute": 1435,
+        "clock": "23:55",
+        "batch_id": "D",
+        "source_count": 15
+      }
+    ],
+    "summary": {
+      "sources_simulated": 59,
+      "expected_checks_per_source": 72,
+      "min_interval_violations": 0,
+      "duplicate_in_cycle_count": 0,
+      "cycles_with_missing_sources": 0,
+      "global_min_interval_min": 20,
+      "global_max_interval_min": 20,
+      "global_avg_interval_min": 20.0
+    }
+  },
+  "load_analysis": {
+    "batches": {
+      "A": {
+        "source_count": 15,
+        "strong_count": 5,
+        "medium_count": 5,
+        "weak_count": 5,
+        "priority_counts": {
+          "P0": 5,
+          "P1": 4,
+          "P2": 6
+        },
+        "estimated_rss_load": 250,
+        "source_weight_sum": 13.9,
+        "expected_run_sec": 108,
+        "load_score": 253.8,
+        "overload_risk": "medium",
+        "p0_headline_ids": [
+          "zpr_seznam_domaci"
+        ],
+        "strong_source_ids": [
+          "zpr_seznam_domaci",
+          "zpr_ct24_svet",
+          "fin_novinky_ekonomika",
+          "hry_novinky",
+          "vzd_novinky_skola"
+        ]
+      },
+      "B": {
+        "source_count": 15,
+        "strong_count": 5,
+        "medium_count": 6,
+        "weak_count": 4,
+        "priority_counts": {
+          "P0": 5,
+          "P1": 5,
+          "P2": 5
+        },
+        "estimated_rss_load": 255,
+        "source_weight_sum": 13.75,
+        "expected_run_sec": 108,
+        "load_score": 256.2,
+        "overload_risk": "medium",
+        "p0_headline_ids": [
+          "zpr_novinky_domaci",
+          "zpr_novinky_zahranicni"
+        ],
+        "strong_source_ids": [
+          "zpr_novinky_domaci",
+          "zpr_novinky_zahranicni",
+          "fin_sz_byznys",
+          "ved_novinky",
+          "zpr_denik"
+        ]
+      },
+      "C": {
+        "source_count": 14,
+        "strong_count": 5,
+        "medium_count": 5,
+        "weak_count": 4,
+        "priority_counts": {
+          "P0": 4,
+          "P1": 2,
+          "P2": 8
+        },
+        "estimated_rss_load": 255,
+        "source_weight_sum": 12.9,
+        "expected_run_sec": 100,
+        "load_score": 256.5,
+        "overload_risk": "medium",
+        "p0_headline_ids": [
+          "zpr_idnes_zpravy"
+        ],
+        "strong_source_ids": [
+          "zpr_idnes_zpravy",
+          "spt_isport",
+          "spt_ctsport",
+          "fin_idnes_ekonomika",
+          "spt_idnes"
+        ]
+      },
+      "D": {
+        "source_count": 15,
+        "strong_count": 5,
+        "medium_count": 5,
+        "weak_count": 5,
+        "priority_counts": {
+          "P0": 6,
+          "P1": 3,
+          "P2": 6
+        },
+        "estimated_rss_load": 255,
+        "source_weight_sum": 13.75,
+        "expected_run_sec": 108,
+        "load_score": 256.5,
+        "overload_risk": "medium",
+        "p0_headline_ids": [
+          "zpr_ct24_domaci",
+          "spt_sportcz"
+        ],
+        "strong_source_ids": [
+          "zpr_ct24_domaci",
+          "spt_sportcz",
+          "ved_ct24_veda",
+          "vzd_seznam",
+          "zpr_aktualne"
+        ]
+      }
+    },
+    "p0_distribution": {
+      "A": [
+        "zpr_seznam_domaci"
+      ],
+      "B": [
+        "zpr_novinky_domaci",
+        "zpr_novinky_zahranicni"
+      ],
+      "C": [
+        "zpr_idnes_zpravy"
+      ],
+      "D": [
+        "zpr_ct24_domaci",
+        "spt_sportcz"
+      ]
+    },
+    "strong_distribution": {
+      "A": [
+        "zpr_seznam_domaci",
+        "zpr_ct24_svet",
+        "fin_novinky_ekonomika",
+        "hry_novinky",
+        "vzd_novinky_skola"
+      ],
+      "B": [
+        "zpr_novinky_domaci",
+        "zpr_novinky_zahranicni",
+        "fin_sz_byznys",
+        "ved_novinky",
+        "zpr_denik"
+      ],
+      "C": [
+        "zpr_idnes_zpravy",
+        "spt_isport",
+        "spt_ctsport",
+        "fin_idnes_ekonomika",
+        "spt_idnes"
+      ],
+      "D": [
+        "zpr_ct24_domaci",
+        "spt_sportcz",
+        "ved_ct24_veda",
+        "vzd_seznam",
+        "zpr_aktualne"
+      ]
+    },
+    "balancing": {
+      "load_spread_pct": 2.0,
+      "strong_count_range": [
+        5,
+        5
+      ],
+      "source_count_range": [
+        14,
+        15
+      ],
+      "issues": []
+    }
+  },
+  "model_comparison": {
+    "current": {
+      "watchdog": "*/15",
+      "tick_cap": 5,
+      "effective_selected_per_tick": 6,
+      "skipped_tick_cap_last_run": 51,
+      "full_rotation_min": 148,
+      "not_fetched_24h_count": 52,
+      "estimated_checks_per_source_24h": 9.73,
+      "estimated_coverage_per_hour": 24.0
+    },
+    "dry_run": {
+      "tick_interval_min": 5,
+      "sources_per_tick_avg": 14.8,
+      "full_rotation_min": 20,
+      "skipped_tick_cap": 0,
+      "checks_per_source_24h": 72,
+      "coverage_per_hour": 177.0
+    },
+    "delta": {
+      "full_rotation_improvement_factor": 7.4,
+      "full_rotation_time_saved_min": 128,
+      "skipped_sources_eliminated_per_tick": 51,
+      "coverage_per_hour_improvement_factor": 7.38,
+      "checks_per_source_24h_improvement_factor": 7.4,
+      "not_fetched_24h_eliminated": 52
+    }
+  },
+  "build_risk": {
+    "per_batch": [
+      {
+        "batch_id": "A",
+        "source_count": 15,
+        "estimated_rss_items": 250,
+        "expected_run_sec": 108,
+        "overload_risk": "medium",
+        "vs_current_cap": {
+          "current_max_per_tick": 5,
+          "dry_run_sources": 15,
+          "multiplier": 3.0
+        }
+      },
+      {
+        "batch_id": "B",
+        "source_count": 15,
+        "estimated_rss_items": 255,
+        "expected_run_sec": 108,
+        "overload_risk": "medium",
+        "vs_current_cap": {
+          "current_max_per_tick": 5,
+          "dry_run_sources": 15,
+          "multiplier": 3.0
+        }
+      },
+      {
+        "batch_id": "C",
+        "source_count": 14,
+        "estimated_rss_items": 255,
+        "expected_run_sec": 100,
+        "overload_risk": "medium",
+        "vs_current_cap": {
+          "current_max_per_tick": 5,
+          "dry_run_sources": 14,
+          "multiplier": 2.8
+        }
+      },
+      {
+        "batch_id": "D",
+        "source_count": 15,
+        "estimated_rss_items": 255,
+        "expected_run_sec": 108,
+        "overload_risk": "medium",
+        "vs_current_cap": {
+          "current_max_per_tick": 5,
+          "dry_run_sources": 15,
+          "multiplier": 3.0
+        }
+      }
+    ],
+    "peak_expected_run_sec": 108,
+    "peak_estimated_rss_items": 255,
+    "heavy_batches": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "blockers": [],
+    "warnings": [
+      "dry-run fetches 3×+ more sources per tick than current cap=5 — requires cap/workflow change in Phase 2B",
+      "batches with medium/high overload risk: A, B, C, D"
+    ],
+    "requires_cap_increase": true,
+    "requires_watchdog_cadence_change": true,
+    "requires_workflow_change": true
+  },
+  "verdict": {
+    "RSS_ROTATION_PHASE2A_DRY_RUN": "PASS",
+    "DRY_RUN_ONLY": "YES",
+    "BEHAVIOR_CHANGE": "NO",
+    "SCHEDULER_RUNTIME_CHANGE": "NO",
+    "MAX_SOURCES_PER_SCHEDULER_TICK": 5,
+    "WATCHDOG": "*/15",
+    "FETCH_LOGIC_CHANGE": "NO",
+    "PUBLISH_LOGIC_CHANGE": "NO",
+    "WORKFLOW_CHANGE": "NO",
+    "CLOUDFLARE_CHANGE": "NO",
+    "ARTICLES_JSON_CHANGE": "NO",
+    "BOOTSTRAP_CHANGE": "NO",
+    "INDEX_CHANGE": "NO",
+    "PRODUCTION_DATA_CHANGE": "NO",
+    "SAFE_FOR_PHASE2B": "YES",
+    "simulation_pass": true,
+    "build_blockers": [],
+    "build_warnings": [
+      "dry-run fetches 3×+ more sources per tick than current cap=5 — requires cap/workflow change in Phase 2B",
+      "batches with medium/high overload risk: A, B, C, D"
+    ]
+  }
+}
