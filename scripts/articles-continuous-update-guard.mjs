@@ -284,12 +284,16 @@ async function main() {
   if (!auto.ok) failed = true;
 
   if (GITHUB_TOKEN) {
-    try {
-      const last = await checkLastSuccessfulRun(nowMs);
-      if (!last.ok) failed = true;
-    } catch (e) {
-      fail(`last_success ${e instanceof Error ? e.message : e}`);
-      failed = true;
+    if (GITHUB_EVENT === "pull_request") {
+      log("last_success SKIP on pull_request (post-merge proof required)");
+    } else {
+      try {
+        const last = await checkLastSuccessfulRun(nowMs);
+        if (!last.ok) failed = true;
+      } catch (e) {
+        fail(`last_success ${e instanceof Error ? e.message : e}`);
+        failed = true;
+      }
     }
     try {
       const z = await checkZombies(nowMs);
