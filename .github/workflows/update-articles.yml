@@ -12,10 +12,9 @@
 
 name: Update articles data
 
-# Small-batch publishing loop: one run ≈ 8–12 min (ingest cap + bounded publish batch + release guards).
-# Serial runs only — do NOT cancel in-progress release (partial articles.json write risk).
-# Ingest/aggregate may be superseded by pipeline_gate skip when another run is active.
-# Cloudflare watchdog (*/5) dispatches workflow_dispatch; GH schedule intentionally absent.
+# Serial runs only: do NOT cancel an in-progress release (partial articles.json write risk).
+# pipeline_gate skips duplicate dispatch; zombie queued runs cancelled after 120m.
+# Cloudflare watchdog (*/15) dispatches workflow_dispatch when prod data stale — not GH schedule.
 concurrency:
   group: update-articles-data-v4
   cancel-in-progress: false
@@ -32,12 +31,6 @@ env:
   AUTOMATION_BRANCH: automation/update-articles-data
   PR_TITLE: "chore(data): update articles data"
   PIPELINE_HANDOFF_BRANCH: automation/pipeline-handoff
-  # Small-batch publishing loop (one tick ≈ 8–12 min wall clock)
-  IU_BATCH_SIZE: "10"
-  IU_MAX_RUNTIME_MIN: "8"
-  IU_TICK_MAX_PUBLISH_ITEMS: "10"
-  IU_TICK_MAX_PUBLISH_SEC: "480"
-  LIVENESS_BATCH_MODE: "1"
 
 jobs:
   pipeline_gate:
@@ -99,7 +92,7 @@ jobs:
       - cancel_concurrency_zombies
     if: needs.pipeline_gate.outputs.proceed == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     env:
       RETENTION_DAYS: "45"
       # Source-level rotation: only feeds due this Prague minute (iu_registry fixed slots).
@@ -195,7 +188,7 @@ jobs:
       - article_pipeline_ingest
     if: needs.pipeline_gate.outputs.proceed == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 60
     env:
       RETENTION_DAYS: "45"
     steps:

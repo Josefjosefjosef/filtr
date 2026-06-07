@@ -5,14 +5,14 @@
  *
  * Env:
  *   GITHUB_TOKEN, GITHUB_REPOSITORY
- *   PIPELINE_RUNTIME_WARN_MINUTES — default 10
- *   PIPELINE_RUNTIME_FAIL_MINUTES — default 12
+ *   PIPELINE_RUNTIME_WARN_MINUTES — default 45
+ *   PIPELINE_RUNTIME_FAIL_MINUTES — default 60
  *   PIPELINE_RUNTIME_SKIP — 1 to skip when no token
  */
 import { execSync } from "child_process";
 
-const warnMin = Number(process.env.PIPELINE_RUNTIME_WARN_MINUTES || "10");
-const failMin = Number(process.env.PIPELINE_RUNTIME_FAIL_MINUTES || "12");
+const warnMin = Number(process.env.PIPELINE_RUNTIME_WARN_MINUTES || "45");
+const failMin = Number(process.env.PIPELINE_RUNTIME_FAIL_MINUTES || "60");
 const skip = String(process.env.PIPELINE_RUNTIME_SKIP || "0") === "1";
 const skipOnPr = String(process.env.PIPELINE_RUNTIME_SKIP_ON_PULL_REQUEST || "1") !== "0";
 const githubEvent = (process.env.GITHUB_EVENT_NAME || "").trim();

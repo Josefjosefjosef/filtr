@@ -8,7 +8,7 @@
  *   WATCHDOG_README — default cloudflare/articles-watchdog/README.md
  *   WATCHDOG_HEALTH_URL — GET /health (default prod workers.dev URL)
  *   REQUIRE_ARTICLES_WATCHDOG — "true" → unreachable worker is FAIL (else WARN)
- *   EXPECTED_CHECK_CRON — default every 5 minutes (star-slash-5 cron)
+ *   EXPECTED_CHECK_CRON — default every 15 minutes (star-slash-15 cron)
  */
 import fs from "fs";
 import path from "path";
@@ -23,7 +23,7 @@ const HEALTH_URL =
   (process.env.WATCHDOG_HEALTH_URL || "").trim() ||
   "https://infouzel-articles-watchdog.josef-zmrhal.workers.dev/health";
 const REQUIRE = String(process.env.REQUIRE_ARTICLES_WATCHDOG || "").toLowerCase() === "true";
-const EXPECTED_CRON = (process.env.EXPECTED_CHECK_CRON || "*/5 * * * *").trim();
+const EXPECTED_CRON = (process.env.EXPECTED_CHECK_CRON || "*/15 * * * *").trim();
 
 const REQUIRED_SECRET_DOCS = ["GITHUB_TOKEN"];
 const OPTIONAL_SECRET_DOCS = ["MANUAL_TRIGGER_SECRET"];

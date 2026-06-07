@@ -9,10 +9,10 @@
  * Env:
  *   UPDATE_ARTICLES_WORKFLOW — path relative to repo root (default .github/workflows/update-articles.yml)
  *   WRANGLER_TOML — watchdog config (default cloudflare/articles-watchdog/wrangler.toml)
- *   EXPECTED_CHECK_CRON — Cloudflare cron (default every 5 min: star-slash-5)
- *   MIN_AGGREGATE_TIMEOUT_MIN — minimum aggregate job timeout (default 10)
+ *   EXPECTED_CHECK_CRON — Cloudflare cron (default every 15 min: star-slash-15)
+ *   MIN_AGGREGATE_TIMEOUT_MIN — minimum aggregate job timeout (default 60)
  *   MIN_RELEASE_TIMEOUT_MIN — minimum release job timeout (default 12)
- *   OBSERVED_RUN_DURATION_MIN — p95-ish run length for timeout sanity (default 10)
+ *   OBSERVED_RUN_DURATION_MIN — p95-ish run length for timeout sanity (default 55)
  */
 import fs from "fs";
 import path from "path";
@@ -29,10 +29,10 @@ const WRANGLER_PATH = path.join(
   root,
   process.env.WRANGLER_TOML || "cloudflare/articles-watchdog/wrangler.toml",
 );
-const EXPECTED_CHECK_CRON = (process.env.EXPECTED_CHECK_CRON || "*/5 * * * *").trim();
-const MIN_AGG_TIMEOUT = Number(process.env.MIN_AGGREGATE_TIMEOUT_MIN || "10");
+const EXPECTED_CHECK_CRON = (process.env.EXPECTED_CHECK_CRON || "*/15 * * * *").trim();
+const MIN_AGG_TIMEOUT = Number(process.env.MIN_AGGREGATE_TIMEOUT_MIN || "60");
 const MIN_REL_TIMEOUT = Number(process.env.MIN_RELEASE_TIMEOUT_MIN || "12");
-const OBSERVED_RUN_MIN = Number(process.env.OBSERVED_RUN_DURATION_MIN || "10");
+const OBSERVED_RUN_MIN = Number(process.env.OBSERVED_RUN_DURATION_MIN || "55");
 
 function log(msg) {
   console.log(`[articles-schedule-guard] ${msg}`);
@@ -128,12 +128,9 @@ function main() {
     log("release timeout PASS");
   }
 
-  const minJobTimeout = Math.min(
-    Number.isFinite(aggTimeout) ? aggTimeout : 0,
-    Number.isFinite(relTimeout) ? relTimeout : 0,
-  );
-  if (minJobTimeout > 0 && minJobTimeout < OBSERVED_RUN_MIN) {
-    fail(`job timeout ${minJobTimeout}m < observed run duration ~${OBSERVED_RUN_MIN}m`);
+  // Release job is shorter than full ingest+aggregate; compare aggregate only to observed run.
+  if (Number.isFinite(aggTimeout) && aggTimeout > 0 && aggTimeout < OBSERVED_RUN_MIN) {
+    fail(`aggregate timeout ${aggTimeout}m < observed run duration ~${OBSERVED_RUN_MIN}m`);
     failed = true;
   } else {
     log(`timeout vs observed run (~${OBSERVED_RUN_MIN}m) PASS`);
