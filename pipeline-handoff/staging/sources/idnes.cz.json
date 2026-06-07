@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-07T14:46:07.161770Z",
+  "ingestedAt": "2026-06-07T15:31:03.457209Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kdysi tu vyráběli spitfiry. Britské město povstává jako centrum výroby dronů",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/kdysi-tu-vyrabeli-spitfiry-britske-mesto-povstava-jako-centrum-vyroby-dronu.A260602_171203_zahranicni_ichuc",
+      "dt": "2026-06-07T14:52:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "britské",
+        "centrum",
+        "dronů",
+        "jako",
+        "kdysi",
+        "město",
+        "povstává",
+        "spitfiry",
+        "vyráběli",
+        "výroby"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -756,32 +783,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Polsko neuplatní migrační pakt EU v plném rozsahu,  aby neohrozilo svou bezpečnost",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/polsko-neuplatni-migracni-pakt-eu-v-plnem-rozsahu-rekl-namestek-ministra-vnitra.A260606_171948_zahranicni_jan",
-      "dt": "2026-06-06T15:25:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "bezpečnost",
-        "migrační",
-        "neohrozilo",
-        "neuplatní",
-        "pakt",
-        "plném",
-        "polsko",
-        "rozsahu",
-        "svou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47919,
+      "bytes": 48117,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T13:39:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T14:52:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -845,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdysi tu vyráběli spitfiry. Britské město povstává jako centrum výroby dronů",
+            "publishedAt": "2026-06-07T14:52:00Z"
+          },
           {
             "title": "VIDEA TÝDNE: Virál s Farnou, hazard na D1 a hořící Petrohrad",
             "publishedAt": "2026-06-07T13:39:00Z"
@@ -872,10 +877,6 @@
           {
             "title": "Turek: Za válku na Ukrajině mohou liberální politiky, Pavla na summitu nechci",
             "publishedAt": "2026-06-07T10:31:00Z"
-          },
-          {
-            "title": "Šelma z jihu je na postupu. Šakal může osídlit až tři čtvrtiny Evropy",
-            "publishedAt": "2026-06-07T10:28:00Z"
           }
         ]
       }
