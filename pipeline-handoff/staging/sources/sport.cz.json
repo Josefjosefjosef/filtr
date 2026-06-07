@@ -1,29 +1,55 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-07T13:01:13.337482Z",
+  "ingestedAt": "2026-06-07T13:46:09.644103Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FORMULE 1 ONLINE: Start v Monaku se blíží. Antonelli si z pole position pojede pro pátou výhru v řadě",
+      "title": "FORMULE 1 ONLINE: Druhý jezdec mimo závod je Bottas. Antonelli v Monaku navyšuje náskok",
       "url": "https://www.sport.cz/clanek/moto-formule-1-antonelli-si-v-monaku-z-pole-position-pojede-pro-patou-vyhru-v-rade-5475433",
       "dt": "2026-06-07T08:50:51Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "antonelli",
-        "blíží",
+        "bottas",
+        "druhý",
         "formule",
+        "jezdec",
+        "mimo",
         "monaku",
+        "navyšuje",
+        "náskok",
         "online",
-        "pojede",
-        "pole",
-        "position",
-        "pátou",
-        "start",
-        "výhru",
-        "řadě"
+        "závod"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Texaský masakr. Češi marně unikají žáru, mají speciální nápoje i vychytávky",
+      "url": "https://www.sport.cz/clanek/podcasty-bodlo-texasky-masakr-cesi-marne-unikaji-zaru-maji-specialni-napoje-i-vychytavky-5475613",
+      "dt": "2026-06-07T13:18:47Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "mají",
+        "marně",
+        "masakr",
+        "nápoje",
+        "speciální",
+        "texaský",
+        "unikají",
+        "vychytávky",
+        "češi",
+        "žáru"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -316,7 +342,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Beková vyhrála v Troji časovku kayakcrossu, do vyřazovacích jízd postoupily i muži",
+      "title": "Beková vyhrála v Troji časovku kayakcrossu, do vyřazovacích jízd postoupili i muži",
       "url": "https://www.sport.cz/clanek/vodni-sporty-bekova-vyhrala-v-troji-casovku-kayakcrossu-5475432",
       "dt": "2026-06-07T08:45:57Z",
       "media_raw": "Sport.cz",
@@ -326,7 +352,7 @@
         "jízd",
         "kayakcrossu",
         "muži",
-        "postoupily",
+        "postoupili",
         "troji",
         "vyhrála",
         "vyřazovacích",
@@ -753,30 +779,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ženský bouldering v Praze vyhrála osmnáctiletá Američanka Sandersová",
-      "url": "https://www.sport.cz/clanek/ostatni-zensky-bouldering-v-praze-vyhrala-osmnactileta-americanka-sandersova-5475278",
-      "dt": "2026-06-06T19:25:25Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "američanka",
-        "bouldering",
-        "osmnáctiletá",
-        "praze",
-        "sandersová",
-        "vyhrála",
-        "ženský"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45249,
+      "bytes": 45294,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T12:36:17Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T13:18:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -842,8 +844,12 @@
         },
         "sample_titles": [
           {
-            "title": "FORMULE 1 ONLINE: Start v Monaku se blíží. Antonelli si z pole position pojede pro pátou výhru v řadě",
+            "title": "FORMULE 1 ONLINE: Druhý jezdec mimo závod je Bottas. Antonelli v Monaku navyšuje náskok",
             "publishedAt": "2026-06-07T08:50:51Z"
+          },
+          {
+            "title": "Texaský masakr. Češi marně unikají žáru, mají speciální nápoje i vychytávky",
+            "publishedAt": "2026-06-07T13:18:47Z"
           },
           {
             "title": "Paráda v Maďarsku. Salač přetavil skvělou formu ve stupně vítězů",
@@ -868,10 +874,6 @@
           {
             "title": "Úžasná Siniaková získává počtvrté v Paříži deblový titul",
             "publishedAt": "2026-06-07T06:13:28Z"
-          },
-          {
-            "title": "Ondra je ve finále! Na Štvanici překvapil i sám sebe",
-            "publishedAt": "2026-06-07T11:09:09Z"
           }
         ]
       }
