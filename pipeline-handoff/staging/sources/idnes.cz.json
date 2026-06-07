@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-07T11:31:17.055206Z",
+  "ingestedAt": "2026-06-07T12:16:07.621021Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Plakát s chirurgy nebyl rasistický, tvrdí Okamura. Odporné, opáčila Urbanová",
+      "url": "https://www.idnes.cz/zpravy/domaci/debata-ct-vztahy-snemovna-obstrukce-okamura-plakat-rasismus.A260607_112655_domaci_herp",
+      "dt": "2026-06-07T11:35:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "chirurgy",
+        "nebyl",
+        "odporné",
+        "okamura",
+        "opáčila",
+        "plakát",
+        "rasistický",
+        "tvrdí",
+        "urbanová"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -57,7 +83,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Za válku na Ukrajině mohou liberální politiky, Pavla na summitu nechci, říká Turek",
+      "title": "Turek: Za válku na Ukrajině mohou liberální politiky, Pavla na summitu nechci",
       "url": "https://www.idnes.cz/zpravy/domaci/turek-pavek-summit-ukrajina-hrib-nato-ankara.A260607_110224_domaci_tty",
       "dt": "2026-06-07T10:31:00Z",
       "media_raw": "iDNES / Zprávy",
@@ -70,8 +96,7 @@
         "summitu",
         "turek",
         "ukrajině",
-        "válku",
-        "říká"
+        "válku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -761,32 +786,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Tomáš Baťa byl podprůměrný žák s velmi špatnou docházkou, odhalují archivy",
-      "url": "https://www.idnes.cz/zlin/zpravy/den-otevrenych-dveri-statni-okresni-archiv-zlin-zamek-klecuvka-tomas-bata-matrika.A260605_141935_zlin-zpravy_stoj",
-      "dt": "2026-06-06T14:26:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "archivy",
-        "baťa",
-        "docházkou",
-        "odhalují",
-        "podprůměrný",
-        "tomáš",
-        "velmi",
-        "špatnou",
-        "žák"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48915,
+      "bytes": 48978,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T10:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T11:35:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -851,6 +850,10 @@
         },
         "sample_titles": [
           {
+            "title": "Plakát s chirurgy nebyl rasistický, tvrdí Okamura. Odporné, opáčila Urbanová",
+            "publishedAt": "2026-06-07T11:35:00Z"
+          },
+          {
             "title": "Dvě dopravní nehody uzavřely na Lounsku dálnici D7. Na místě byli záchranáři",
             "publishedAt": "2026-06-07T10:58:00Z"
           },
@@ -859,7 +862,7 @@
             "publishedAt": "2026-06-07T10:48:00Z"
           },
           {
-            "title": "Za válku na Ukrajině mohou liberální politiky, Pavla na summitu nechci, říká Turek",
+            "title": "Turek: Za válku na Ukrajině mohou liberální politiky, Pavla na summitu nechci",
             "publishedAt": "2026-06-07T10:31:00Z"
           },
           {
@@ -877,10 +880,6 @@
           {
             "title": "Arménci rozhodují o novém parlamentu. Hraje se o kurz k Západu i vztahy s Moskvou",
             "publishedAt": "2026-06-07T09:21:00Z"
-          },
-          {
-            "title": "Čtyřhodinová pauza jako nutnost. Vedra v Indii mění režim milionů lidí",
-            "publishedAt": "2026-06-07T09:00:00Z"
           }
         ]
       }
