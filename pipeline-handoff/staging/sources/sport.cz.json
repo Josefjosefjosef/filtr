@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-07T06:55:28.506785Z",
+  "ingestedAt": "2026-06-07T07:46:11.978265Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Máte nádor, slyšela před rokem. Teď se slalomové královně znovu klaněla Praha",
+      "url": "https://www.sport.cz/clanek/vodni-sporty-mate-nador-slysela-pred-rokem-ted-se-slalomove-kralovne-znovu-klanela-praha-5475282",
+      "dt": "2026-06-07T07:28:25Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "klaněla",
+        "královně",
+        "máte",
+        "nádor",
+        "praha",
+        "rokem",
+        "slalomové",
+        "slyšela",
+        "znovu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Manželka se rozbrečela. Vicemistr Evropy je zpět a plní si svůj další sen",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-manzelka-se-rozbrecela-vicemistr-evropy-je-zpet-a-plni-si-svuj-dalsi-sen-5475287",
+      "dt": "2026-06-07T07:10:11Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "další",
+        "evropy",
+        "manželka",
+        "plní",
+        "rozbrečela",
+        "sen",
+        "svůj",
+        "vicemistr",
+        "zpět"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -727,58 +779,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Matematik trefil poslední tři mistry světa. Teď tipuje překvapivého šampiona",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-matematik-trefil-posledni-tri-mistry-sveta-ted-tipuje-prekvapiveho-sampiona-5474768",
-      "dt": "2026-06-06T13:49:42Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "matematik",
-        "mistry",
-        "poslední",
-        "překvapivého",
-        "světa",
-        "tipuje",
-        "trefil",
-        "tři",
-        "šampiona"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "První soupeř Čechů rozradostnil Mexiko. Fanoušci si připomínají pomoc z Ruska",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-prvni-souper-cechu-rozradostnil-mexiko-fanousci-nezapominaji-na-pomoc-z-ruska-5475181",
-      "dt": "2026-06-06T11:59:54Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "fanoušci",
-        "mexiko",
-        "pomoc",
-        "první",
-        "připomínají",
-        "rozradostnil",
-        "ruska",
-        "soupeř",
-        "čechů"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42997,
+      "bytes": 42570,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,10 +826,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T06:13:28Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T07:28:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 30
+          "zdravi": 1,
+          "sport": 29
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -841,6 +842,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Máte nádor, slyšela před rokem. Teď se slalomové královně znovu klaněla Praha",
+            "publishedAt": "2026-06-07T07:28:25Z"
+          },
+          {
+            "title": "Manželka se rozbrečela. Vicemistr Evropy je zpět a plní si svůj další sen",
+            "publishedAt": "2026-06-07T07:10:11Z"
+          },
           {
             "title": "Siniaková s americkou parťačkou se pokusí získat další grandslamový titul",
             "publishedAt": "2026-06-07T06:13:28Z"
@@ -864,14 +873,6 @@
           {
             "title": "Tvrdá rána! Obránce Slavie Ogbu se při tréninku s reprezentací vážně zranil",
             "publishedAt": "2026-06-06T21:07:10Z"
-          },
-          {
-            "title": "Nový miláček! Ledecká našla další vášeň",
-            "publishedAt": "2026-06-06T20:55:17Z"
-          },
-          {
-            "title": "Jsem na tebe tak pyšná! České oslavy odstartovalo dojemné setkání za cílem",
-            "publishedAt": "2026-06-06T15:58:23Z"
           }
         ]
       }

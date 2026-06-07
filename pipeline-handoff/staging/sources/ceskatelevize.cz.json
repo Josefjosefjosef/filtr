@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-07T06:55:28.506785Z",
+  "ingestedAt": "2026-06-07T07:46:11.978265Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Včelí královny se rodí do purpuru. Vědci popsali, jak se vybírá vládkyně roje",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/vceli-kralovny-se-rodi-do-purpuru-vedci-popsali-jak-se-vybira-vladkyne-roje-374263",
+      "dt": "2026-06-07T07:02:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "královny",
+        "popsali",
+        "purpuru",
+        "rodí",
+        "roje",
+        "vládkyně",
+        "vybírá",
+        "včelí",
+        "vědci"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Albánií hýbe „revoluce plameňáků“ kvůli projektu Trumpova zetě",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/albanii-hybe-revoluce-plamenaku-kvuli-projektu-trumpova-zete-374305",
+      "dt": "2026-06-07T06:57:41Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "albánií",
+        "hýbe",
+        "kvůli",
+        "plameňáků",
+        "projektu",
+        "revoluce",
+        "trumpova",
+        "zetě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -699,55 +750,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "SOUHRN: Zásadní události pátku 5. června",
-      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-patku-5-cervna-374275",
-      "dt": "2026-06-05T16:30:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "pátku",
-        "souhrn",
-        "události",
-        "zásadní",
-        "června"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Za krádež vzácné rumunské přilby poslal nizozemský soud do vězení tři muže",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/za-kradez-vzacne-rumunske-prilby-poslal-nizozemsky-soud-do-vezeni-tri-muze-374279",
-      "dt": "2026-06-05T15:21:19Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "krádež",
-        "muže",
-        "nizozemský",
-        "poslal",
-        "přilby",
-        "rumunské",
-        "soud",
-        "tři",
-        "vzácné",
-        "vězení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -758,7 +760,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41394,
+      "bytes": 41404,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -795,10 +797,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T07:02:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 29,
+          "other": 1,
+          "zpravy": 28,
           "finance": 1
         },
         "drop_counts": {
@@ -811,6 +814,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Včelí královny se rodí do purpuru. Vědci popsali, jak se vybírá vládkyně roje",
+            "publishedAt": "2026-06-07T07:02:00Z"
+          },
+          {
+            "title": "Albánií hýbe „revoluce plameňáků“ kvůli projektu Trumpova zetě",
+            "publishedAt": "2026-06-07T06:57:41Z"
+          },
           {
             "title": "Triumf v jednání s Čínou? Trump zdržuje prodej zbraní Tchaj-wanu",
             "publishedAt": "2026-06-07T06:00:00Z"
@@ -834,14 +845,6 @@
           {
             "title": "Endoprotéz rychle přibývá. Někde se ale čeká roky",
             "publishedAt": "2026-06-06T18:17:37Z"
-          },
-          {
-            "title": "V Toužimi na Karlovarsku výbuch neznámé látky zranil dva lidi",
-            "publishedAt": "2026-06-06T18:15:20Z"
-          },
-          {
-            "title": "Moskva před volbami zvýšila ekonomický tlak na Arménii",
-            "publishedAt": "2026-06-06T18:03:01Z"
           }
         ]
       }
