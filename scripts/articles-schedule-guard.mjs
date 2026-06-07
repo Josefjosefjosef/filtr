@@ -9,10 +9,10 @@
  * Env:
  *   UPDATE_ARTICLES_WORKFLOW — path relative to repo root (default .github/workflows/update-articles.yml)
  *   WRANGLER_TOML — watchdog config (default cloudflare/articles-watchdog/wrangler.toml)
- *   EXPECTED_CHECK_CRON — Cloudflare cron (default every 15 min: star-slash-15)
- *   MIN_AGGREGATE_TIMEOUT_MIN — minimum aggregate job timeout (default 60)
- *   MIN_RELEASE_TIMEOUT_MIN — minimum release job timeout (default 60)
- *   OBSERVED_RUN_DURATION_MIN — p95-ish run length for timeout sanity (default 55)
+ *   EXPECTED_CHECK_CRON — Cloudflare cron (default every 5 min: star-slash-5)
+ *   MIN_AGGREGATE_TIMEOUT_MIN — minimum aggregate job timeout (default 10)
+ *   MIN_RELEASE_TIMEOUT_MIN — minimum release job timeout (default 12)
+ *   OBSERVED_RUN_DURATION_MIN — p95-ish run length for timeout sanity (default 10)
  */
 import fs from "fs";
 import path from "path";
@@ -29,10 +29,10 @@ const WRANGLER_PATH = path.join(
   root,
   process.env.WRANGLER_TOML || "cloudflare/articles-watchdog/wrangler.toml",
 );
-const EXPECTED_CHECK_CRON = (process.env.EXPECTED_CHECK_CRON || "*/15 * * * *").trim();
-const MIN_AGG_TIMEOUT = Number(process.env.MIN_AGGREGATE_TIMEOUT_MIN || "60");
-const MIN_REL_TIMEOUT = Number(process.env.MIN_RELEASE_TIMEOUT_MIN || "60");
-const OBSERVED_RUN_MIN = Number(process.env.OBSERVED_RUN_DURATION_MIN || "55");
+const EXPECTED_CHECK_CRON = (process.env.EXPECTED_CHECK_CRON || "*/5 * * * *").trim();
+const MIN_AGG_TIMEOUT = Number(process.env.MIN_AGGREGATE_TIMEOUT_MIN || "10");
+const MIN_REL_TIMEOUT = Number(process.env.MIN_RELEASE_TIMEOUT_MIN || "12");
+const OBSERVED_RUN_MIN = Number(process.env.OBSERVED_RUN_DURATION_MIN || "10");
 
 function log(msg) {
   console.log(`[articles-schedule-guard] ${msg}`);
@@ -100,7 +100,7 @@ function main() {
   const conc = parseConcurrency(wf);
   log(`concurrency group=${conc.group ?? "n/a"} cancel-in-progress=${conc.cancelInProgress}`);
   if (conc.cancelInProgress === true) {
-    fail("cancel-in-progress:true unsafe for ~50m pipeline — must queue instead");
+    fail("cancel-in-progress:true unsafe for release — must queue instead");
     failed = true;
   } else if (conc.cancelInProgress === false) {
     log("concurrency cancel-in-progress=false PASS");

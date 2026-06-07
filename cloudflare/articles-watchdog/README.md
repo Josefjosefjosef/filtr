@@ -1,6 +1,6 @@
 # infouzel-articles-watchdog
 
-Cloudflare Worker + Cron (every **15 minutes**) that **optionally** dispatches the GitHub Actions workflow **Update articles data** via `workflow_dispatch`.
+Cloudflare Worker + Cron (every **5 minutes**) that **optionally** dispatches the GitHub Actions workflow **Update articles data** via `workflow_dispatch`.
 
 ## Why this exists
 
@@ -8,9 +8,9 @@ GitHub `schedule` triggers for article autorun proved unreliable in this reposit
 
 ## Architecture
 
-1. **Cron** fires every **15 minutes** (`*/15 * * * *` UTC).
+1. **Cron** fires every **5 minutes** (`*/5 * * * *` UTC).
 2. Worker fetches public **`generatedAt`** from `FRESHNESS_URL` (default: `articles/index.json` on production).
-3. If age **&lt; STALE_AFTER_MINUTES** (default **15**) → **no API call** to GitHub (freshness guard).
+3. If age **&lt; STALE_AFTER_MINUTES** (default **10**) → **no API call** to GitHub (freshness guard).
 4. Worker lists recent runs for **`update-articles.yml`** via GitHub REST API. If any run is **`queued`** or **`in_progress`** → **no dispatch** (running guard / duplicate protection).
 5. If data are **stale or timestamp missing** and pipeline is **idle** → `POST .../actions/workflows/update-articles.yml/dispatches` with `ref: main`.
 
@@ -81,7 +81,7 @@ gh variable set ARTICLES_WATCHDOG_HEALTH_URL --body "https://infouzel-articles-w
 # gh variable set REQUIRE_ARTICLES_WATCHDOG --body "true"   # after GITHUB_TOKEN secret verified on worker
 ```
 
-After deploy, confirm Cloudflare dashboard → Worker → Triggers shows cron `*/15 * * * *` and scheduled invocations succeed (no `GitHub dispatch failed` in logs).
+After deploy, confirm Cloudflare dashboard → Worker → Triggers shows cron `*/5 * * * *` and scheduled invocations succeed (no `GitHub dispatch failed` in logs).
 
 ## Manual smoke test (optional)
 

@@ -12,12 +12,12 @@
 
 name: Update articles data
 
-# Serial runs only: do NOT cancel an in-progress ingest. With cancel-in-progress: true, each new
-# scheduled tick (*/5) could cancel the previous run if it was still building/waiting on PR merge,
-# producing long gaps and missing schedule records. Queued runs wait instead (safe cadence).
-# Group bumped 2026-05-31: zombie run 26326283872 stuck queued since 2026-05-23 — v3 bypasses dead lock.
+# Small-batch publishing loop: one run ≈ 8–12 min (ingest cap + bounded publish batch + release guards).
+# Serial runs only — do NOT cancel in-progress release (partial articles.json write risk).
+# Ingest/aggregate may be superseded by pipeline_gate skip when another run is active.
+# Cloudflare watchdog (*/5) dispatches workflow_dispatch; GH schedule intentionally absent.
 concurrency:
-  group: update-articles-data-v3
+  group: update-articles-data-v4
   cancel-in-progress: false
 
 permissions:
@@ -32,6 +32,12 @@ env:
   AUTOMATION_BRANCH: automation/update-articles-data
   PR_TITLE: "chore(data): update articles data"
   PIPELINE_HANDOFF_BRANCH: automation/pipeline-handoff
+  # Small-batch publishing loop (one tick ≈ 8–12 min wall clock)
+  IU_BATCH_SIZE: "10"
+  IU_MAX_RUNTIME_MIN: "8"
+  IU_TICK_MAX_PUBLISH_ITEMS: "10"
+  IU_TICK_MAX_PUBLISH_SEC: "480"
+  LIVENESS_BATCH_MODE: "1"
 
 jobs:
   pipeline_gate:
@@ -93,7 +99,7 @@ jobs:
       - cancel_concurrency_zombies
     if: needs.pipeline_gate.outputs.proceed == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     env:
       RETENTION_DAYS: "45"
       # Source-level rotation: only feeds due this Prague minute (iu_registry fixed slots).
@@ -189,7 +195,7 @@ jobs:
       - article_pipeline_ingest
     if: needs.pipeline_gate.outputs.proceed == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 10
     env:
       RETENTION_DAYS: "45"
     steps:
@@ -264,7 +270,7 @@ jobs:
       - article_pipeline_aggregate
     if: needs.pipeline_gate.outputs.proceed == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 12
     env:
       RETENTION_DAYS: "45"
     steps:
@@ -499,6 +505,7 @@ jobs:
           ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
           LIVENESS_WINDOWS_HOURS: "1,2,4"
           LIVENESS_MIN_PER_SECTION_2H: "1"
+          LIVENESS_BATCH_MODE: "1"
         run: node scripts/production-liveness-guard.mjs
 
       - name: Release freshness gate (block generatedAt-only publish)
@@ -731,7 +738,7 @@ jobs:
           NUM="${{ steps.pr.outputs.pr_number }}"
           REPO="${{ github.repository }}"
           echo "[CLOSEOUT] poll_merge_publish_pr=$NUM"
-          for attempt in $(seq 1 90); do
+          for attempt in $(seq 1 24); do
             MERGED_AT=$(gh pr view "$NUM" --json mergedAt --jq '.mergedAt // empty' 2>/dev/null || echo "")
             if [ -n "$MERGED_AT" ]; then
               echo "[CLOSEOUT] merged_at=$MERGED_AT"
@@ -750,9 +757,9 @@ jobs:
               exit 0
             fi
             echo "[CLOSEOUT] poll_attempt=$attempt state=${STATE:-unknown} waiting_for_merge"
-            sleep 30
+            sleep 15
           done
-          echo "[CLOSEOUT] WARN: timeout waiting for merge (45m); Pages publish from main data (cron) will catch up"
+          echo "[CLOSEOUT] WARN: timeout waiting for merge (6m); Pages publish from main data (cron) will catch up"
           exit 0
 
       - name: Closeout telemetry (build + PR state + chain facts)
