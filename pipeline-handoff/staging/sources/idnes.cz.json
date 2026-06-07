@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-07T20:01:18.603384Z",
+  "ingestedAt": "2026-06-07T20:46:07.042576Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Írán vypálil na Izrael asi deset balistických střel, Izrael chystá odvetu",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/iran-vypalil-na-izrael-asi-deset-balistickych-strel-izrael-chysta-odvetu.A260607_221539_zahranicni_air",
+      "dt": "2026-06-07T20:36:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "asi",
+        "balistických",
+        "chystá",
+        "deset",
+        "izrael",
+        "odvetu",
+        "střel",
+        "vypálil",
+        "írán"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V kosovských parlamentních volbách vyhrála vládnoucí strana premiéra Kurtiho",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/kosovo-parlament-volby-premier-hlas-predcasne-hlas-kurti.A260607_200126_zahranicni_hock",
+      "dt": "2026-06-07T20:36:05Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "kosovských",
+        "kurtiho",
+        "parlamentních",
+        "premiéra",
+        "strana",
+        "vládnoucí",
+        "volbách",
+        "vyhrála"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -47,33 +98,6 @@
         "zasáhl",
         "zůstává",
         "černobylu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Kosovu skončily předčasné volby. Podle odhadů vyhrála strana premiéra Kurtiho",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/kosovo-parlament-volby-premier-hlas-predcasne-hlas-kurti.A260607_200126_zahranicni_hock",
-      "dt": "2026-06-07T19:11:09Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "kosovu",
-        "kurtiho",
-        "odhadů",
-        "podle",
-        "premiéra",
-        "předčasné",
-        "skončily",
-        "strana",
-        "volby",
-        "vyhrála"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -759,32 +783,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vývojářka Manufaktury: Kosmetika z Asie? Má obří uhlíkovou stopu i strašlivé dopady",
-      "url": "https://www.idnes.cz/ekonomika/domaci/manufaktura-kosmetika.A260602_935799_ekonomika_tvrk",
-      "dt": "2026-06-06T22:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "asie",
-        "dopady",
-        "kosmetika",
-        "manufaktury",
-        "obří",
-        "stopu",
-        "strašlivé",
-        "uhlíkovou",
-        "vývojářka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48607,
+      "bytes": 48879,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,11 +830,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T19:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T20:36:05Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "finance": 4
+          "zpravy": 27,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -849,16 +847,20 @@
         },
         "sample_titles": [
           {
+            "title": "Írán vypálil na Izrael asi deset balistických střel, Izrael chystá odvetu",
+            "publishedAt": "2026-06-07T20:36:00Z"
+          },
+          {
+            "title": "V kosovských parlamentních volbách vyhrála vládnoucí strana premiéra Kurtiho",
+            "publishedAt": "2026-06-07T20:36:05Z"
+          },
+          {
             "title": "Taxikář se v Poleradech u Prahy pohádal se zákazníky, jednoho z nich postřelil",
             "publishedAt": "2026-06-07T19:35:00Z"
           },
           {
             "title": "Ruský dron zasáhl sklad jaderného paliva u Černobylu. Radiace zůstává stabilní",
             "publishedAt": "2026-06-07T19:18:00Z"
-          },
-          {
-            "title": "V Kosovu skončily předčasné volby. Podle odhadů vyhrála strana premiéra Kurtiho",
-            "publishedAt": "2026-06-07T19:11:09Z"
           },
           {
             "title": "V Děčíně se objevilo slabé tornádo. Vyvrátilo strom a způsobilo menší škody",
@@ -875,10 +877,6 @@
           {
             "title": "Rusko přepisuje náboženskou mapu Ukrajiny. Duchovní mluví o genocidě víry",
             "publishedAt": "2026-06-07T17:18:00Z"
-          },
-          {
-            "title": "V Arménii se uzavřely volební místnosti. Výsledky rozhodnou o dalším směřování země",
-            "publishedAt": "2026-06-07T17:07:18Z"
           }
         ]
       }
