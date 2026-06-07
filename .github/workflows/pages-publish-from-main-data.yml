@@ -53,22 +53,34 @@ jobs:
           echo "parent_workflow_name=${PARENT_RUN_NAME:-}"
           echo "parent_workflow_conclusion=${PARENT_CONCLUSION:-}"
           MAIN_AT=$(jq -r '.generatedAt // empty' projects/data/articles.json)
+          MAIN_BOOT_AT=$(jq -r '.generatedAt // empty' projects/data/articles/bootstrap.json)
+          MAIN_IDX_AT=$(jq -r '.generatedAt // empty' projects/data/articles/index.json)
           if [ -z "$MAIN_AT" ]; then
             echo "ERROR: main articles.json missing generatedAt"
             exit 1
           fi
           PROD_JSON=$(curl -sS -m 20 -H 'Cache-Control: no-cache' "https://infouzel.cz/projects/data/articles.json" || true)
           PROD_AT=$(echo "$PROD_JSON" | jq -r '.generatedAt // empty' 2>/dev/null || true)
+          PROD_BOOT_JSON=$(curl -sS -m 20 -H 'Cache-Control: no-cache' "https://infouzel.cz/projects/data/articles/bootstrap.json" || true)
+          PROD_BOOT_AT=$(echo "$PROD_BOOT_JSON" | jq -r '.generatedAt // empty' 2>/dev/null || true)
+          PROD_IDX_JSON=$(curl -sS -m 20 -H 'Cache-Control: no-cache' "https://infouzel.cz/projects/data/articles/index.json" || true)
+          PROD_IDX_AT=$(echo "$PROD_IDX_JSON" | jq -r '.generatedAt // empty' 2>/dev/null || true)
           echo "main_generatedAt=$MAIN_AT" >> "$GITHUB_OUTPUT"
           echo "prod_generatedAt=$PROD_AT" >> "$GITHUB_OUTPUT"
-          echo "[MAIN] generatedAt=$MAIN_AT"
-          echo "[PROD] generatedAt=$PROD_AT"
-          if [ -n "$PROD_AT" ] && [ "$PROD_AT" = "$MAIN_AT" ]; then
+          echo "main_bootstrap_generatedAt=$MAIN_BOOT_AT" >> "$GITHUB_OUTPUT"
+          echo "prod_bootstrap_generatedAt=$PROD_BOOT_AT" >> "$GITHUB_OUTPUT"
+          echo "main_index_generatedAt=$MAIN_IDX_AT" >> "$GITHUB_OUTPUT"
+          echo "prod_index_generatedAt=$PROD_IDX_AT" >> "$GITHUB_OUTPUT"
+          echo "[MAIN] generatedAt=$MAIN_AT bootstrap=$MAIN_BOOT_AT index=$MAIN_IDX_AT"
+          echo "[PROD] generatedAt=$PROD_AT bootstrap=$PROD_BOOT_AT index=$PROD_IDX_AT"
+          if [ -n "$PROD_AT" ] && [ "$PROD_AT" = "$MAIN_AT" ] \
+            && { [ -z "$MAIN_BOOT_AT" ] || { [ -n "$PROD_BOOT_AT" ] && [ "$PROD_BOOT_AT" = "$MAIN_BOOT_AT" ]; }; } \
+            && { [ -z "$MAIN_IDX_AT" ] || { [ -n "$PROD_IDX_AT" ] && [ "$PROD_IDX_AT" = "$MAIN_IDX_AT" ]; }; }; then
             echo "needs_publish=false" >> "$GITHUB_OUTPUT"
-            echo "[PUBLISH] Up-to-date, no dispatch"
+            echo "[PUBLISH] Up-to-date (articles + homepage bootstrap/index), no dispatch"
           else
             echo "needs_publish=true" >> "$GITHUB_OUTPUT"
-            echo "[PUBLISH] Stale prod, will dispatch pages.yml"
+            echo "[PUBLISH] Stale prod (articles and/or homepage bootstrap/index), will dispatch pages.yml"
           fi
 
       - name: Dispatch pages.yml (main)
@@ -105,6 +117,10 @@ jobs:
             echo "| parent_workflow_url | ${PARENT_URL:-n/a} |"
             echo "| main_generatedAt | ${{ steps.cmp.outputs.main_generatedAt }} |"
             echo "| prod_generatedAt | ${{ steps.cmp.outputs.prod_generatedAt }} |"
+            echo "| main_bootstrap_generatedAt | ${{ steps.cmp.outputs.main_bootstrap_generatedAt }} |"
+            echo "| prod_bootstrap_generatedAt | ${{ steps.cmp.outputs.prod_bootstrap_generatedAt }} |"
+            echo "| main_index_generatedAt | ${{ steps.cmp.outputs.main_index_generatedAt }} |"
+            echo "| prod_index_generatedAt | ${{ steps.cmp.outputs.prod_index_generatedAt }} |"
             echo "| needs_publish | ${{ steps.cmp.outputs.needs_publish }} |"
             echo ""
             echo "ROOT_CAUSE_NOTE: scheduled + workflow_run re-check closes gap when push-triggered Pages is suppressed after bot merge."

@@ -4212,6 +4212,11 @@ try {
 
   function iuApplyFeedClassificationBranch(cf, key) {
     const t = String(cf.mediaTopicKey).toLowerCase();
+    const rail = String(cf.railSectionKey || "").toLowerCase();
+    const k = String(key || "").toLowerCase();
+    // Published vertical rail (section/topic) must win for hub section nav when precision guards
+    // demote mediaTopicKey (e.g. vzdelavani articles classified as zpravy for global feed purity).
+    if (rail && k && k !== "zpravy" && rail === k) return true;
     switch (key) {
       case "zpravy": {
         const verticals = new Set([
