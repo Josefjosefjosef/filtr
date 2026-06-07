@@ -14360,7 +14360,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   grid-column: 2 / 4 !important;
 }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > *{
-  min-height: 110px !important;
+  min-height: var(--iu-mm-quick-tile-min-h, 110px) !important;
 }
 
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid {
