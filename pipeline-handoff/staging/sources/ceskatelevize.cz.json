@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-07T20:46:07.042576Z",
+  "ingestedAt": "2026-06-07T21:31:16.141314Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Velká Británie, Francie a Německo podpořily Zelenského návrh na dialog s Ruskem",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/velka-britanie-francie-a-nemecko-podporily-zelenskeho-navrh-na-dialog-s-ruskem-374325",
+      "dt": "2026-06-07T21:22:51Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "británie",
+        "dialog",
+        "francie",
+        "návrh",
+        "německo",
+        "podpořily",
+        "ruskem",
+        "velká",
+        "zelenského"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -31,19 +57,22 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Izrael se brání íránským raketám. Má jít o odvetu za Bejrút",
+      "title": "Izrael zasáhl proti íránskému raketovému útoku. Mělo jít o odvetu za Bejrút",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/izrael-se-brani-iranskym-raketam-ma-jit-o-odvetu-za-bejrut-374324",
       "dt": "2026-06-07T19:12:47Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24",
       "tokens": [
         "bejrút",
-        "brání",
         "izrael",
         "jít",
+        "mělo",
         "odvetu",
-        "raketám",
-        "íránským"
+        "proti",
+        "raketovému",
+        "zasáhl",
+        "íránskému",
+        "útoku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -719,28 +748,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hegseth v Normandii kritizoval evropskou obranu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/hegseth-v-normandii-kritizoval-evropskou-obranu-374300",
-      "dt": "2026-06-06T15:25:37Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "evropskou",
-        "hegseth",
-        "kritizoval",
-        "normandii",
-        "obranu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -751,7 +758,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 40952,
+      "bytes": 41326,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -788,7 +795,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T19:31:19Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T21:22:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -806,11 +813,15 @@
         },
         "sample_titles": [
           {
+            "title": "Velká Británie, Francie a Německo podpořily Zelenského návrh na dialog s Ruskem",
+            "publishedAt": "2026-06-07T21:22:51Z"
+          },
+          {
             "title": "V Berlíně zapojili do čištění řek i turisty. Za práci dostanou odměnu",
             "publishedAt": "2026-06-07T19:31:19Z"
           },
           {
-            "title": "Izrael se brání íránským raketám. Má jít o odvetu za Bejrút",
+            "title": "Izrael zasáhl proti íránskému raketovému útoku. Mělo jít o odvetu za Bejrút",
             "publishedAt": "2026-06-07T19:12:47Z"
           },
           {
@@ -832,10 +843,6 @@
           {
             "title": "SOUHRN: Zásadní události neděle 7. června",
             "publishedAt": "2026-06-07T16:28:00Z"
-          },
-          {
-            "title": "V Arménii začalo sčítání hlasů, účast dosáhla bezmála 59 procent",
-            "publishedAt": "2026-06-07T13:46:04Z"
           }
         ]
       }
