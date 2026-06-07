@@ -1,28 +1,55 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-07T04:16:06.703026Z",
+  "ingestedAt": "2026-06-07T04:47:40.531041Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "VOLEJBAL ONLINE: Češky bleskově získaly první set, ve druhém se s Thajskem perou o každý míč",
+      "title": "Neuvěřitelný třetí zápas finále. Carolina dotáhla obří ztrátu, vedení ve finálové sérii ale bere Vegas",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-neuveritelny-treti-zapas-finale-carolina-dotahla-obri-ztratu-vedeni-ve-finalove-serii-ale-bere-vegas-5475393",
+      "dt": "2026-06-07T04:29:50Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ale",
+        "bere",
+        "carolina",
+        "dotáhla",
+        "finále",
+        "finálové",
+        "neuvěřitelný",
+        "obří",
+        "sérii",
+        "třetí",
+        "vedení",
+        "vegas",
+        "ztrátu",
+        "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Volejbalová paráda. Češky přidaly třetí výhru v Lize národů",
       "url": "https://www.sport.cz/clanek/volejbal-cinsky-dil-ligy-narodu-zakonci-ceske-volejbalistky-proti-thajkam-5475276",
       "dt": "2026-06-06T21:03:43Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "bleskově",
-        "druhém",
-        "každý",
-        "míč",
-        "online",
-        "perou",
-        "první",
-        "set",
-        "thajskem",
-        "volejbal",
-        "získaly",
+        "lize",
+        "národů",
+        "paráda",
+        "přidaly",
+        "třetí",
+        "volejbalová",
+        "výhru",
         "češky"
       ],
       "feedCategory": "sport",
@@ -752,31 +779,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Martina Satková získala v Troji stříbro, porazila ji jen Foxová",
-      "url": "https://www.sport.cz/clanek/vodni-sporty-martina-satkova-ziskala-v-troji-stribro-porazila-ji-jen-foxova-5475194",
-      "dt": "2026-06-06T13:20:54Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "foxová",
-        "jen",
-        "martina",
-        "porazila",
-        "satková",
-        "stříbro",
-        "troji",
-        "získala"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41931,
+      "bytes": 42254,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-06T21:07:10Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T04:29:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -840,7 +842,11 @@
         },
         "sample_titles": [
           {
-            "title": "VOLEJBAL ONLINE: Češky bleskově získaly první set, ve druhém se s Thajskem perou o každý míč",
+            "title": "Neuvěřitelný třetí zápas finále. Carolina dotáhla obří ztrátu, vedení ve finálové sérii ale bere Vegas",
+            "publishedAt": "2026-06-07T04:29:50Z"
+          },
+          {
+            "title": "Volejbalová paráda. Češky přidaly třetí výhru v Lize národů",
             "publishedAt": "2026-06-06T21:03:43Z"
           },
           {
@@ -866,10 +872,6 @@
           {
             "title": "Vzácná návštěva u českých fotbalistů. Stálice NHL jim splní i jedno velké přání",
             "publishedAt": "2026-06-06T19:45:21Z"
-          },
-          {
-            "title": "Ženský bouldering v Praze vyhrála osmnáctiletá Američanka Sandersová",
-            "publishedAt": "2026-06-06T19:25:25Z"
           }
         ]
       }

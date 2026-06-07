@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-06-07T04:16:06.703026Z",
+  "ingestedAt": "2026-06-07T04:47:40.531041Z",
   "items": [
     {
       "section": "aktualne",
@@ -18,6 +18,33 @@
         "středoškoláci",
         "vyhýbají",
         "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_seznam_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Přežil pět let bojů proti Islámskému státu, zabil ho ruský dron",
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-prezil-pet-let-boju-proti-islamskemu-statu-zabil-ho-rusky-dron-307736",
+      "dt": "2026-06-07T04:30:00Z",
+      "media_raw": "Seznam Zprávy / Domácí",
+      "media_norm": "Seznam Zprávy",
+      "tokens": [
+        "bojů",
+        "dron",
+        "islámskému",
+        "let",
+        "proti",
+        "pět",
+        "přežil",
+        "ruský",
+        "státu",
+        "zabil"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -726,32 +753,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "seznamzpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Soud poslal do vazby ženu, kterou po nálezu těla v Kynšperku obvinili z vraždy",
-      "url": "https://www.seznamzpravy.cz/clanek/domaci-zivot-v-cesku-soud-poslal-do-vazby-zenu-kterou-po-nalezu-tela-v-kynsperku-obvinili-z-vrazdy-307974",
-      "dt": "2026-06-06T11:35:15Z",
-      "media_raw": "Seznam Zprávy / Domácí",
-      "media_norm": "Seznam Zprávy",
-      "tokens": [
-        "kynšperku",
-        "nálezu",
-        "obvinili",
-        "poslal",
-        "soud",
-        "těla",
-        "vazby",
-        "vraždy",
-        "ženu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_seznam_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -762,7 +763,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/domaci",
-      "bytes": 43959,
+      "bytes": 43778,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -799,7 +800,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -819,6 +820,10 @@
           {
             "title": "Česko může mít problém. Středoškoláci se vyhýbají matematice",
             "publishedAt": "2026-06-07T04:00:00Z"
+          },
+          {
+            "title": "Přežil pět let bojů proti Islámskému státu, zabil ho ruský dron",
+            "publishedAt": "2026-06-07T04:30:00Z"
           },
           {
             "title": "Ruská armáda zaútočila na dvě ukrajinské záchranné lodě v Černém moři",
@@ -843,10 +848,6 @@
           {
             "title": "Tým Havlovy knihovny poslal dopis Havlové s nabídkou nového vedení",
             "publishedAt": "2026-06-06T17:57:00Z"
-          },
-          {
-            "title": "Malý dalekohled by mohl vědcům pomoci odhalit tajemství Měsíce",
-            "publishedAt": "2026-06-06T17:53:00Z"
           }
         ]
       }
