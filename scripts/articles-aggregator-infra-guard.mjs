@@ -12,7 +12,7 @@
  *   GITHUB_TOKEN — GitHub API token (Actions: secrets.GITHUB_TOKEN)
  *   MAX_GENERATED_AGE_HOURS — stale bundle limit (default 48)
  *   QUEUED_STALE_MINUTES — queued zombie threshold (default 120, matches worker)
- *   AGGREGATE_TIMEOUT_MIN — minimum safe aggregate job timeout (default 10)
+ *   AGGREGATE_TIMEOUT_MIN — minimum safe aggregate job timeout (default 60)
  *   PAGES_LOOKBACK_HOURS — cancelled deploy scan window (default 48)
  */
 import fs from "fs";
@@ -34,7 +34,7 @@ const GITHUB_REPOSITORY = (process.env.GITHUB_REPOSITORY || "Josefjosefjosef/fil
 const GITHUB_TOKEN = (process.env.GITHUB_TOKEN || process.env.GH_TOKEN || "").trim();
 const MAX_GENERATED_AGE_H = Number(process.env.MAX_GENERATED_AGE_HOURS || "48");
 const QUEUED_STALE_MIN = Number(process.env.QUEUED_STALE_MINUTES || "120");
-const AGGREGATE_TIMEOUT_MIN = Number(process.env.AGGREGATE_TIMEOUT_MIN || "10");
+const AGGREGATE_TIMEOUT_MIN = Number(process.env.AGGREGATE_TIMEOUT_MIN || "60");
 const PAGES_LOOKBACK_H = Number(process.env.PAGES_LOOKBACK_HOURS || "48");
 
 const UPDATE_WORKFLOW = "update-articles.yml";

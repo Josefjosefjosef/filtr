@@ -431,20 +431,20 @@ def _cap_batch_with_p0_reserves(
 
 
 def tick_max_publish_items() -> int:
-    """Max articles per pipeline tick (small-batch publishing loop)."""
+    """Max staged items published per aggregate/publish tick (optional env override only)."""
     raw = (
         os.getenv("IU_BATCH_SIZE", "").strip()
         or os.getenv("IU_TICK_MAX_PUBLISH_ITEMS", "").strip()
-        or "10"
+        or "180"
     )
     try:
-        return max(1, int(raw))
+        return max(10, int(raw))
     except Exception:
-        return 10
+        return 180
 
 
 def tick_max_publish_seconds() -> float:
-    """Wall-clock budget for aggregate/publish within one tick."""
+    """Wall-clock budget for aggregate/publish within one tick (optional env override only)."""
     sec_raw = os.getenv("IU_TICK_MAX_PUBLISH_SEC", "").strip()
     if sec_raw:
         try:
@@ -457,7 +457,7 @@ def tick_max_publish_seconds() -> float:
             return max(0.5, float(min_raw)) * 60.0
         except Exception:
             pass
-    return 480.0
+    return 240.0
 
 
 def queue_depth(output_dir: str) -> int:

@@ -225,8 +225,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          PIPELINE_RUNTIME_WARN_MINUTES: "10"
-          PIPELINE_RUNTIME_FAIL_MINUTES: "12"
+          PIPELINE_RUNTIME_WARN_MINUTES: "45"
+          PIPELINE_RUNTIME_FAIL_MINUTES: "60"
         run: node scripts/pipeline-runtime-guard.mjs
 
       - name: P0 source starvation guard (main scheduler state)
