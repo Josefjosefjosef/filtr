@@ -66,22 +66,22 @@
 }
 @media (min-width: 1025px) {
   #silver-slot #iuSilverParcelWatch {
-    grid-column: 1 / -1;
+    grid-column: 1;
     grid-row: 8;
     min-width: 0;
     align-self: stretch;
   }
   #silver-slot #iuSilverWelcomeStackSeparatorBeforeSilver {
     grid-column: 1 / -1;
-    grid-row: 10;
+    grid-row: 9;
   }
   #silver-slot #iuSilverHomeShellMountPoint.iuSilverHomeShellMountPoint {
     grid-column: 1 / -1;
-    grid-row: 11;
+    grid-row: 10;
   }
   #silver-slot #iuSilverWelcomeStack > .silver-shell.silver-shell--stackConnected {
     grid-column: 1 / -1;
-    grid-row: 11;
+    grid-row: 10;
   }
 }
 
