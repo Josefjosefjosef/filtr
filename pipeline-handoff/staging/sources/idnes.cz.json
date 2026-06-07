@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-07T19:16:12.828072Z",
+  "ingestedAt": "2026-06-07T20:01:18.603384Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Taxikář se v Poleradech u Prahy pohádal se zákazníky, jednoho z nich postřelil",
+      "url": "https://www.idnes.cz/praha/zpravy/strelba-polerady-brandys-policie-zbran-taxi-zraneni.A260607_211729_praha-zpravy_hock",
+      "dt": "2026-06-07T19:35:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "jednoho",
+        "nich",
+        "pohádal",
+        "poleradech",
+        "postřelil",
+        "prahy",
+        "taxikář",
+        "zákazníky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ruský dron zasáhl sklad jaderného paliva u Černobylu. Radiace zůstává stabilní",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-dron-cernobyl-radiace-ukrajina-utok.A260607_113918_zahranicni_dvou",
+      "dt": "2026-06-07T19:18:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "dron",
+        "jaderného",
+        "paliva",
+        "radiace",
+        "ruský",
+        "sklad",
+        "stabilní",
+        "zasáhl",
+        "zůstává",
+        "černobylu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -499,33 +551,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ruský dron zasáhl sklad jaderného paliva u Černobylu. Radiace zůstává v normě",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-dron-cernobyl-radiace-ukrajina-utok.A260607_113918_zahranicni_dvou",
-      "dt": "2026-06-07T09:58:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "dron",
-        "jaderného",
-        "normě",
-        "paliva",
-        "radiace",
-        "ruský",
-        "sklad",
-        "zasáhl",
-        "zůstává",
-        "černobylu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "finance",
       "contentType": "article",
       "title": "Čtyřhodinová pauza jako nutnost. Vedra v Indii mění režim milionů lidí",
@@ -760,32 +785,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Německo roky dotovalo islamisty. Na účtech extremistů přistálo 15 milionů eur",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/nemecko-auditni-zprava-angele-merkelova-irg-islam-terorismus.A260603_184938_zahranicni_jans",
-      "dt": "2026-06-06T22:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "dotovalo",
-        "eur",
-        "extremistů",
-        "islamisty",
-        "milionů",
-        "německo",
-        "přistálo",
-        "roky",
-        "účtech"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48593,
+      "bytes": 48607,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T19:11:09Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T19:35:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -849,6 +848,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Taxikář se v Poleradech u Prahy pohádal se zákazníky, jednoho z nich postřelil",
+            "publishedAt": "2026-06-07T19:35:00Z"
+          },
+          {
+            "title": "Ruský dron zasáhl sklad jaderného paliva u Černobylu. Radiace zůstává stabilní",
+            "publishedAt": "2026-06-07T19:18:00Z"
+          },
           {
             "title": "V Kosovu skončily předčasné volby. Podle odhadů vyhrála strana premiéra Kurtiho",
             "publishedAt": "2026-06-07T19:11:09Z"
@@ -872,14 +879,6 @@
           {
             "title": "V Arménii se uzavřely volební místnosti. Výsledky rozhodnou o dalším směřování země",
             "publishedAt": "2026-06-07T17:07:18Z"
-          },
-          {
-            "title": "Moucha bzučivka dorazila do USA. Její masožravé larvy ohrožují miliony kusů dobytka",
-            "publishedAt": "2026-06-07T17:00:00Z"
-          },
-          {
-            "title": "Dětem ubíráme prostor pro spontánní pohyb. Velký efekt má hra, říká lékařka",
-            "publishedAt": "2026-06-07T16:15:00Z"
           }
         ]
       }
