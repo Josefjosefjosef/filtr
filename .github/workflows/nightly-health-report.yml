@@ -88,7 +88,7 @@ jobs:
           import os, sys, time, threading, urllib.request
           from http.server import HTTPServer, BaseHTTPRequestHandler
           os.environ["IU_ROBOTS_STRICT_PROOF"] = "1"
-          sys.path.insert(0, os.getcwd())
+          sys.path.insert(0, os.path.join(os.getcwd(), "scripts"))
           from iu_crawler import robots_allowed_for_url
           hits_ok, hits_blocked = 0, 0
           class Handler(BaseHTTPRequestHandler):
