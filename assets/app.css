@@ -17002,9 +17002,9 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
     overflow-x: visible;
     overflow-y: visible;
   }
-  /* P0 desktop header: drop 901px artificial card reserves (240px welcome / 132–172px weather). */
+  /* P0 desktop header: cap artificial card reserves at 120px (was 240px welcome / 132–172px weather). */
   #silver-slot #iuSilverWelcomeStack #iuSilverWelcomeCard.iuSilverWelcomeCard{
-    min-height: 0;
+    min-height: 120px;
     max-height: none;
     height: auto;
     align-self: start;
@@ -17012,7 +17012,7 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   }
   #silver-slot #iuSilverWeatherCard.silver-weather-card,
   #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-layout="ready"]{
-    min-height: 0;
+    min-height: 120px;
     max-height: none;
     height: auto;
     align-self: start;
