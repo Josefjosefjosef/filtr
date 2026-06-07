@@ -58,6 +58,10 @@ MAX_SOURCES_PER_SCHEDULER_TICK = 5
 MAX_SAME_DOMAIN_PER_TICK = 2
 URGENT_SAFETY_MARGIN_MIN = 3
 
+# Phase 1 RSS rotation foundation — metadata only; not used by select_feeds_for_tick.
+ROTATION_BATCH_IDS: tuple[str, ...] = ("A", "B", "C", "D")
+ROTATION_BATCH_REGISTRY_REL = os.path.join("projects", "data", "rotation_batch_registry.json")
+
 # P0 headline sources: must be fetched every pipeline tick when cooldown allows,
 # even if Prague minute ≠ fixed slot (watchdog cadence ~30–45 min misses slot minutes).
 P0_FRESHNESS_SLOT_KEYS: frozenset[str] = frozenset(
@@ -437,20 +441,30 @@ def registry_active_entries(registry: dict) -> list:
 
 
 def load_scheduler_state(path: str) -> dict:
+    empty = {"tick_index": 0, "domain_last_fetch": {}, "entry_state": {}, "source_schedule": {}}
+
+    def _with_rotation_schema(state: dict) -> dict:
+        try:
+            from iu_rotation_foundation import normalize_scheduler_rotation_schema
+
+            return normalize_scheduler_rotation_schema(state)
+        except Exception:
+            return state
+
     if not path or not os.path.exists(path):
-        return {"tick_index": 0, "domain_last_fetch": {}, "entry_state": {}, "source_schedule": {}}
+        return _with_rotation_schema(dict(empty))
     try:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
         if not isinstance(data, dict):
-            return {"tick_index": 0, "domain_last_fetch": {}, "entry_state": {}, "source_schedule": {}}
+            return _with_rotation_schema(dict(empty))
         data.setdefault("tick_index", 0)
         data.setdefault("domain_last_fetch", {})
         data.setdefault("entry_state", {})
         data.setdefault("source_schedule", {})
-        return data
+        return _with_rotation_schema(data)
     except Exception:
-        return {"tick_index": 0, "domain_last_fetch": {}, "entry_state": {}, "source_schedule": {}}
+        return _with_rotation_schema(dict(empty))
 
 
 def save_scheduler_state(path: str, state: dict) -> None:
