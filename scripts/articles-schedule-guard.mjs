@@ -9,7 +9,7 @@
  * Env:
  *   UPDATE_ARTICLES_WORKFLOW — path relative to repo root (default .github/workflows/update-articles.yml)
  *   WRANGLER_TOML — watchdog config (default cloudflare/articles-watchdog/wrangler.toml)
- *   EXPECTED_CHECK_CRON — Cloudflare cron (default every 15 min: star-slash-15)
+ *   EXPECTED_CHECK_CRON — Cloudflare cron (default every 5 minutes: star-slash-5)
  *   MIN_AGGREGATE_TIMEOUT_MIN — minimum aggregate job timeout (default 60)
  *   MIN_RELEASE_TIMEOUT_MIN — minimum release job timeout (default 12)
  *   OBSERVED_RUN_DURATION_MIN — p95-ish run length for timeout sanity (default 55)
@@ -29,7 +29,8 @@ const WRANGLER_PATH = path.join(
   root,
   process.env.WRANGLER_TOML || "cloudflare/articles-watchdog/wrangler.toml",
 );
-const EXPECTED_CHECK_CRON = (process.env.EXPECTED_CHECK_CRON || "*/15 * * * *").trim();
+const EXPECTED_CHECK_CRON = (process.env.EXPECTED_CHECK_CRON || "*/5 * * * *").trim();
+const MIN_STALE_AFTER_MINUTES = Number(process.env.MIN_STALE_AFTER_MINUTES || "5");
 const MIN_AGG_TIMEOUT = Number(process.env.MIN_AGGREGATE_TIMEOUT_MIN || "60");
 const MIN_REL_TIMEOUT = Number(process.env.MIN_RELEASE_TIMEOUT_MIN || "12");
 const OBSERVED_RUN_MIN = Number(process.env.OBSERVED_RUN_DURATION_MIN || "55");
@@ -150,8 +151,8 @@ function main() {
     } else {
       log("watchdog check interval PASS");
     }
-    if (!Number.isFinite(staleAfter) || staleAfter < 10) {
-      fail("STALE_AFTER_MINUTES missing or too low");
+    if (!Number.isFinite(staleAfter) || staleAfter < MIN_STALE_AFTER_MINUTES) {
+      fail(`STALE_AFTER_MINUTES missing or below minimum ${MIN_STALE_AFTER_MINUTES}`);
       failed = true;
     } else {
       log("STALE_AFTER_MINUTES PASS");

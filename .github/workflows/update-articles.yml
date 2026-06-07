@@ -14,7 +14,7 @@ name: Update articles data
 
 # Serial runs only: do NOT cancel an in-progress release (partial articles.json write risk).
 # pipeline_gate skips duplicate dispatch; zombie queued runs cancelled after 120m.
-# Cloudflare watchdog (*/15) dispatches workflow_dispatch when prod data stale — not GH schedule.
+# Cloudflare watchdog (*/5) dispatches workflow_dispatch when prod data stale — not GH schedule.
 concurrency:
   group: update-articles-data-v4
   cancel-in-progress: false
@@ -95,7 +95,8 @@ jobs:
     timeout-minutes: 30
     env:
       RETENTION_DAYS: "45"
-      # Source-level rotation: only feeds due this Prague minute (iu_registry fixed slots).
+      # Phase 2B: A/B/C/D batch rotation when RSS_ROTATION_BATCH_RUNTIME=1 (ingest only).
+      RSS_ROTATION_BATCH_RUNTIME: "1"
       IU_INCREMENTAL_PUBLISH: "1"
     steps:
       - name: Checkout repository
@@ -155,6 +156,7 @@ jobs:
           IU_ARTICLE_PIPELINE_PHASE: ingest
           IU_INCREMENTAL_PUBLISH: "1"
           IU_TRIGGER_SOURCE: cloudflare_watchdog
+          RSS_ROTATION_BATCH_RUNTIME: "1"
         run: |
           set -euo pipefail
           T0=$(date +%s)

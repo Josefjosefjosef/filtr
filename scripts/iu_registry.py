@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-infoUzel: source registry loader, hard domain block, fixed-slot source-batch scheduler.
+infoUzel: source registry loader, hard domain block, fixed-slot / batch source scheduler.
 
-Single scheduler path:
+Single scheduler path (legacy, default):
   • FIXED_MINUTE_SLOTS_BY_KEY + entry_fixed_slot_key (Europe/Prague minute) = timing source of truth;
-  • slot-first: which scheduler_cooldown_key sources are due this minute (Prague wall clock);
-  • when a mapped source is due, ALL its registry feeds in that slot run (deterministic order by entry id);
-  • scheduler_cooldown_key(e): slot key when mapped (isolates idnes.cz vs idnes.cz/sport), else registry domain;
-  • hard source cooldown floor 15 min on scheduler_cooldown_key (max with per_domain_cooldown_min);
-  • mapped entries: no per-feed interval gate — slot + source cooldown only;
-  • unmapped: per-source batch when any feed in the source is interval-due; cap how many unmapped
-    *sources* run per tick via max_unmapped_per_tick (default 2), deterministic key order;
-  • HTTP pacing between feeds of the same source is handled in build_articles (small fixed gap);
-  • no random score pick, no weighted partial selection, no one-feed-per-source truncation.
+  • MAX_SOURCES_PER_SCHEDULER_TICK=5 with P0 headline exempt.
+
+Phase 2B batch path (RSS_ROTATION_BATCH_RUNTIME=1 + valid rotation_batch_registry.json):
+  • batch_id = floor(minute/5) % 4 → A/B/C/D;
+  • full batch per tick with 15min SKIPPED_MIN_INTERVAL_FLOOR;
+  • invalid/missing registry → legacy fallback.
 """
 from __future__ import annotations
 
@@ -58,9 +55,11 @@ MAX_SOURCES_PER_SCHEDULER_TICK = 5
 MAX_SAME_DOMAIN_PER_TICK = 2
 URGENT_SAFETY_MARGIN_MIN = 3
 
-# Phase 1 RSS rotation foundation — metadata only; not used by select_feeds_for_tick.
+# Phase 2B RSS rotation — batch registry used when RSS_ROTATION_BATCH_RUNTIME=1.
 ROTATION_BATCH_IDS: tuple[str, ...] = ("A", "B", "C", "D")
 ROTATION_BATCH_REGISTRY_REL = os.path.join("projects", "data", "rotation_batch_registry.json")
+ROTATION_TICK_INTERVAL_MIN = 5
+RSS_ROTATION_BATCH_RUNTIME_ENV = "RSS_ROTATION_BATCH_RUNTIME"
 
 # P0 headline sources: must be fetched every pipeline tick when cooldown allows,
 # even if Prague minute ≠ fixed slot (watchdog cadence ~30–45 min misses slot minutes).
@@ -713,17 +712,133 @@ def _apply_scheduler_tick_caps(
     return capped, meta
 
 
+def _repo_root() -> str:
+    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def is_batch_runtime_enabled() -> bool:
+    """Kill switch: RSS_ROTATION_BATCH_RUNTIME=1 activates A/B/C/D batch selection."""
+    val = os.environ.get(RSS_ROTATION_BATCH_RUNTIME_ENV, "").strip().lower()
+    return val in ("1", "true", "yes", "on")
+
+
+def batch_id_for_minute(minute_of_hour: int) -> str:
+    """Map Prague wall-clock minute to batch A/B/C/D (5-min cadence, 20-min cycle)."""
+    idx = (int(minute_of_hour) // ROTATION_TICK_INTERVAL_MIN) % len(ROTATION_BATCH_IDS)
+    return ROTATION_BATCH_IDS[idx]
+
+
+def _batch_registry_path() -> str:
+    return os.path.join(_repo_root(), ROTATION_BATCH_REGISTRY_REL.replace("/", os.sep))
+
+
+def _load_batch_registry_for_runtime() -> dict | None:
+    """
+    Load and validate batch registry for runtime selection.
+    Returns None on missing/invalid registry → caller falls back to legacy scheduler.
+    """
+    path = _batch_registry_path()
+    if not os.path.isfile(path):
+        return None
+    try:
+        from iu_rotation_foundation import (
+            load_source_registry,
+            registry_active_entries as _rf_active_entries,
+            validate_rotation_batch_registry,
+        )
+
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+        if not isinstance(data, dict) or not isinstance(data.get("batches"), dict):
+            return None
+        source_reg = load_source_registry()
+        active_ids = {str(e.get("id") or "") for e in _rf_active_entries(source_reg)}
+        errors = validate_rotation_batch_registry(data, active_ids)
+        if errors:
+            return None
+        return data
+    except Exception:
+        return None
+
+
+def _source_passes_min_interval_floor(state: dict, entry: dict, now: datetime) -> bool:
+    """True when last check was at least HARD_DOMAIN_COOLDOWN_MIN ago (or never checked)."""
+    last = _entry_last_checked_at(state, entry)
+    if last is None:
+        return True
+    return (now - last).total_seconds() >= HARD_DOMAIN_COOLDOWN_MIN * 60
+
+
+def _select_feeds_for_tick_batch(
+    registry: dict,
+    state: dict,
+    now: datetime,
+    minute: int,
+    batch_reg: dict,
+) -> tuple[list[dict], dict]:
+    """Phase 2B: process full A/B/C/D batch for this tick with 15min per-source floor."""
+    from iu_rotation_foundation import normalize_scheduler_rotation_schema
+
+    batch_id = batch_id_for_minute(minute)
+    batch_idx = ROTATION_BATCH_IDS.index(batch_id)
+
+    tick_index = int(state.get("tick_index") or 0) + 1
+    state["tick_index"] = tick_index
+    state["last_tick_at"] = _iso_now()
+    normalize_scheduler_rotation_schema(state)
+    rf = state.setdefault("rotation_foundation", {})
+    rf["current_batch_index"] = batch_idx
+    rf["current_batch_id"] = batch_id
+
+    batches = batch_reg.get("batches") or {}
+    batch_obj = batches.get(batch_id) or {}
+    source_ids = list((batch_obj.get("source_ids") or []))
+    by_id = {str(e.get("id") or ""): e for e in registry_active_entries(registry)}
+
+    picked: list[dict] = []
+    skipped: list[dict] = []
+
+    for sid in sorted(str(s) for s in source_ids):
+        e = by_id.get(sid)
+        if e is None:
+            skipped.append({"source_id": sid, "reason": "SKIPPED_UNKNOWN_SOURCE"})
+            continue
+        sla = compute_entry_sla(state, e, now)
+        if sla.get("in_flight"):
+            skipped.append({"source_id": sid, "reason": "SKIPPED_IN_FLIGHT"})
+            continue
+        if not _source_passes_min_interval_floor(state, e, now):
+            skipped.append({"source_id": sid, "reason": "SKIPPED_MIN_INTERVAL_FLOOR"})
+            continue
+        picked.append(e)
+
+    tick_meta = {
+        "selected_source_ids": [str(e.get("id") or "") for e in picked],
+        "skipped_sources": skipped,
+        "rotation_mode": "batch",
+        "batch_id": batch_id,
+        "batch_index": batch_idx,
+    }
+    state["last_scheduler_tick"] = {
+        "tick_index": tick_index,
+        "minute_prague": minute,
+        "selected_count": len(picked),
+        **tick_meta,
+    }
+    return picked, state
+
+
 def select_feeds_for_tick(
     registry: dict,
     state: dict,
     now: datetime | None = None,
 ) -> tuple[list[dict], dict]:
     """
-    Source-level slot scheduler (Prague minute):
-    • Mapped: collect due scheduler_cooldown_key groups (minute in FIXED slots, cooldown ok);
-      return every feed in each due group, sorted by registry entry id.
-    • Unmapped: groups whose cooldown is ok and at least one feed is interval-due; take up to
-      max_unmapped_per_tick *sources* (sorted keys), each source contributes all its feeds.
+    Source-level scheduler (Prague minute).
+
+    Legacy (default): fixed-slot mapped groups + unmapped cap MAX_SOURCES_PER_SCHEDULER_TICK=5.
+    Batch (RSS_ROTATION_BATCH_RUNTIME=1): full A/B/C/D batch from rotation_batch_registry.json
+    with 15min per-source floor; invalid/missing registry → legacy fallback.
     """
     now = now or datetime.now(timezone.utc)
     if now.tzinfo is None:
@@ -731,6 +846,11 @@ def select_feeds_for_tick(
 
     local = _scheduler_now_local(now)
     minute = int(local.minute)
+
+    if is_batch_runtime_enabled():
+        batch_reg = _load_batch_registry_for_runtime()
+        if batch_reg is not None:
+            return _select_feeds_for_tick_batch(registry, state, now, minute, batch_reg)
 
     tick_index = int(state.get("tick_index") or 0) + 1
     state["tick_index"] = tick_index
