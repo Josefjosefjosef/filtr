@@ -21306,7 +21306,14 @@ function buildVideoAsArticleCard(it) {
   };
 
   const IU_QUICKTOOLS_STORAGE_KEY = "infouzel_quicktools";
-  const IU_QUICKTOOLS_CONFIG_VERSION = 1;
+  const IU_QUICKTOOLS_CONFIG_VERSION = 2;
+  const IU_CUSTOM_BUTTONS_MAX = 20;
+  const IU_CUSTOM_BUTTON_COLORS = [
+    "#1D4ED8", "#047857", "#7C3AED", "#0EA5A4", "#EA580C",
+    "#2563EB", "#0284C7", "#4B5563", "#CA8A04", "#9F1239",
+    "#0F766E", "#4D7C0F", "#DC2626", "#E11D48", "#9333EA",
+    "#0891B2", "#BE185D", "#65A30D", "#C2410C", "#4338CA"
+  ];
   const IU_QUICKTOOLS_REGISTRY = [
     { id: "datovka", label: "Datová schránka", accent: "#1F4B99" },
     { id: "bankovnictvi", label: "Internetové bankovnictví", accent: "#0066cc" },
@@ -21319,16 +21326,72 @@ function buildVideoAsArticleCard(it) {
     { id: "financni_kalkulacky", label: "Finanční kalkulačky", accent: "#4285f4" },
     { id: "vzory_smluv", label: "Vzory smluv a plné moci", accent: "#ff0000" },
     { id: "vytvorit_fakturu", label: "Vytvořit fakturu", accent: "#0f766e" },
-    { id: "zivnostensky_rejstrik", label: "Živnostenský rejstřík", accent: "#455a64" },
+    { id: "pridat_tlacitko", label: "Přidat tlačítko", accent: "#455a64" },
     { id: "naceneni_nakupu_domu", label: "Nákup potravin online", accent: "#2e7d32" }
   ];
+
+  function iuQuickToolsMigrateId(id) {
+    if (id === "katastr_nemovitosti") return "vytvorit_fakturu";
+    if (id === "zivnostensky_rejstrik") return "pridat_tlacitko";
+    return id;
+  }
+
+  function iuQuickToolsKnownIds(cfg) {
+    const ids = new Set(IU_QUICKTOOLS_REGISTRY.map(function(r){ return r.id; }));
+    (cfg.customButtons || []).forEach(function(b){ if (b && b.id) ids.add(b.id); });
+    return ids;
+  }
+
+  function iuQuickToolsGetItemMeta(id, cfg) {
+    const reg = IU_QUICKTOOLS_REGISTRY.find(function(r){ return r.id === id; });
+    if (reg) return reg;
+    const custom = (cfg.customButtons || []).find(function(b){ return b.id === id; });
+    if (custom) return { id: custom.id, label: custom.label, accent: custom.color || "#2563EB" };
+    return null;
+  }
+
+  function iuQuickToolsPickColor(cfg) {
+    const used = new Set((cfg.customButtons || []).map(function(b){ return b.color; }).filter(Boolean));
+    for (var i = 0; i < IU_CUSTOM_BUTTON_COLORS.length; i++) {
+      if (!used.has(IU_CUSTOM_BUTTON_COLORS[i])) return IU_CUSTOM_BUTTON_COLORS[i];
+    }
+    return IU_CUSTOM_BUTTON_COLORS[(cfg.customButtons || []).length % IU_CUSTOM_BUTTON_COLORS.length];
+  }
+
+  function iuQuickToolsValidateUrl(raw) {
+    const val = String(raw || "").trim();
+    if (!val) return { ok: false, message: "Zadejte platnou URL adresu." };
+    try {
+      const u = new URL(val.indexOf("://") === -1 ? "https://" + val : val);
+      if (u.protocol !== "http:" && u.protocol !== "https:") {
+        return { ok: false, message: "Povoleny jsou pouze odkazy http:// nebo https://." };
+      }
+      return { ok: true, url: u.href };
+    } catch (_) {
+      return { ok: false, message: "Zadejte platnou URL adresu." };
+    }
+  }
+
+  function iuQuickToolsValidateName(raw) {
+    const val = String(raw || "").trim();
+    if (!val) return { ok: false, message: "Zadejte název tlačítka." };
+    if (val.length > 80) return { ok: false, message: "Název může mít maximálně 80 znaků." };
+    return { ok: true, name: val };
+  }
+
+  function iuQuickToolsNewCustomId() {
+    return "custom_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8);
+  }
 
   function loadQuickToolsConfig() {
     try {
       const raw = typeof localStorage !== "undefined" ? localStorage.getItem(IU_QUICKTOOLS_STORAGE_KEY) : null;
       if (!raw) return null;
       const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed.version === "number" && Array.isArray(parsed.order) && Array.isArray(parsed.visible)) return parsed;
+      if (parsed && typeof parsed.version === "number" && Array.isArray(parsed.order) && Array.isArray(parsed.visible)) {
+        if (!Array.isArray(parsed.customButtons)) parsed.customButtons = [];
+        return parsed;
+      }
       return null;
     } catch (e) {
       return null;
@@ -21349,21 +21412,79 @@ function buildVideoAsArticleCard(it) {
 
   function getDefaultQuickToolsConfig() {
     const order = IU_QUICKTOOLS_REGISTRY.map(function(r){ return r.id; });
-    return { version: IU_QUICKTOOLS_CONFIG_VERSION, order: order.slice(), visible: order.slice() };
+    return { version: IU_QUICKTOOLS_CONFIG_VERSION, order: order.slice(), visible: order.slice(), customButtons: [] };
   }
 
   function sanitizeQuickToolsConfig(stored) {
     const defaultCfg = getDefaultQuickToolsConfig();
-    const knownIds = new Set(IU_QUICKTOOLS_REGISTRY.map(function(r){ return r.id; }));
-    function migrateQuickToolId(id) {
-      return id === "katastr_nemovitosti" ? "vytvorit_fakturu" : id;
-    }
-    let order = Array.isArray(stored.order) ? stored.order.map(migrateQuickToolId).filter(function(id){ return knownIds.has(id); }) : [];
+    const customButtons = Array.isArray(stored.customButtons) ? stored.customButtons.map(function(b){
+      if (!b || typeof b !== "object") return null;
+      const id = typeof b.id === "string" ? b.id : "";
+      const label = typeof b.label === "string" ? b.label.trim() : "";
+      const urlCheck = iuQuickToolsValidateUrl(b.url);
+      if (!id || !label || !urlCheck.ok) return null;
+      return { id: id, label: label, url: urlCheck.url, color: typeof b.color === "string" ? b.color : IU_CUSTOM_BUTTON_COLORS[0] };
+    }).filter(Boolean).slice(0, IU_CUSTOM_BUTTONS_MAX) : [];
+    const cfgDraft = { version: IU_QUICKTOOLS_CONFIG_VERSION, order: stored.order, visible: stored.visible, customButtons: customButtons };
+    const knownIds = iuQuickToolsKnownIds(cfgDraft);
+    let order = Array.isArray(stored.order) ? stored.order.map(iuQuickToolsMigrateId).filter(function(id){ return knownIds.has(id); }) : [];
     const missingOrder = defaultCfg.order.filter(function(id){ return order.indexOf(id) === -1; });
     order = order.concat(missingOrder);
-    let visible = Array.isArray(stored.visible) ? stored.visible.map(migrateQuickToolId).filter(function(id){ return knownIds.has(id); }) : [];
+    customButtons.forEach(function(b){
+      if (order.indexOf(b.id) === -1) {
+        const addIdx = order.indexOf("pridat_tlacitko");
+        if (addIdx === -1) order.push(b.id); else order.splice(addIdx, 0, b.id);
+      }
+    });
+    let visible = Array.isArray(stored.visible) ? stored.visible.map(iuQuickToolsMigrateId).filter(function(id){ return knownIds.has(id); }) : [];
     visible = order.filter(function(id){ return visible.indexOf(id) !== -1; });
-    return { version: IU_QUICKTOOLS_CONFIG_VERSION, order: order, visible: visible };
+    return { version: IU_QUICKTOOLS_CONFIG_VERSION, order: order, visible: visible, customButtons: customButtons };
+  }
+
+  function iuQuickToolsGetGrid() {
+    const panelEl = document.getElementById("iuQuickToolsSettingsPanel");
+    let grid = null;
+    if (panelEl && panelEl.nextElementSibling && panelEl.nextElementSibling.classList.contains("iu-mmQuickGrid")) {
+      grid = panelEl.nextElementSibling;
+    }
+    if (!grid) {
+      const section = (panelEl && panelEl.closest("section.iu-mmQuickLinks")) || document.querySelector(".mindMenu section.iu-mmQuickLinks") || document.querySelector("aside.accordionCol section.iu-mmQuickLinks");
+      grid = section ? section.querySelector(".iu-mmQuickGrid") : null;
+    }
+    return grid;
+  }
+
+  function iuQuickToolsRenderCustomTiles(grid, cfg) {
+    if (!grid) return;
+    grid.querySelectorAll(".iuTile[data-quicktool-custom='1']").forEach(function(el){ el.remove(); });
+    (cfg.customButtons || []).forEach(function(btn){
+      let tile = grid.querySelector('.iuTile[data-quicktool-id="' + btn.id + '"]');
+      if (!tile) {
+        tile = document.createElement("div");
+        tile.className = "iuTile iuTile--custom";
+        tile.setAttribute("role", "listitem");
+        tile.setAttribute("data-quicktool-id", btn.id);
+        tile.setAttribute("data-quicktool-custom", "1");
+        tile.setAttribute("data-iu-ql-custom", "1");
+        const link = document.createElement("a");
+        link.className = "iuTileLink";
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        const text = document.createElement("span");
+        text.className = "iuTileText";
+        link.appendChild(text);
+        tile.appendChild(link);
+        grid.appendChild(tile);
+      }
+      tile.style.setProperty("--iu-ql-accent", btn.color || "#2563EB");
+      const linkEl = tile.querySelector(".iuTileLink");
+      const textEl = tile.querySelector(".iuTileText");
+      if (linkEl) {
+        linkEl.href = btn.url;
+        linkEl.setAttribute("aria-label", btn.label);
+      }
+      if (textEl) textEl.textContent = btn.label;
+    });
   }
 
   function iuQuickToolsUseMobileModalLayer() {
@@ -21391,18 +21512,11 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuQuickToolsApplyConfig() {
-    const panelEl = document.getElementById("iuQuickToolsSettingsPanel");
-    let grid = null;
-    if (panelEl && panelEl.nextElementSibling && panelEl.nextElementSibling.classList.contains("iu-mmQuickGrid")) {
-      grid = panelEl.nextElementSibling;
-    }
-    if (!grid) {
-      const section = (panelEl && panelEl.closest("section.iu-mmQuickLinks")) || document.querySelector(".mindMenu section.iu-mmQuickLinks") || document.querySelector("aside.accordionCol section.iu-mmQuickLinks");
-      grid = section ? section.querySelector(".iu-mmQuickGrid") : null;
-    }
+    const grid = iuQuickToolsGetGrid();
     if (!grid) return;
     const stored = loadQuickToolsConfig();
     const cfg = stored ? sanitizeQuickToolsConfig(stored) : getDefaultQuickToolsConfig();
+    iuQuickToolsRenderCustomTiles(grid, cfg);
     const orderMap = {};
     cfg.order.forEach(function(id, i){ orderMap[id] = i; });
     const tiles = Array.from(grid.querySelectorAll(".iuTile[data-quicktool-id]"));
@@ -21419,6 +21533,7 @@ function buildVideoAsArticleCard(it) {
       const hide = cfg.visible.indexOf(id) === -1;
       el.hidden = hide;
       el.style.display = hide ? "none" : "";
+      el.setAttribute("aria-hidden", hide ? "true" : "false");
     });
   }
 
@@ -21499,7 +21614,7 @@ function buildVideoAsArticleCard(it) {
     list.className = "iu-quicktools-settings-list";
     list.setAttribute("role", "list");
     cfg.order.forEach(function(id){
-      const item = IU_QUICKTOOLS_REGISTRY.find(function(r){ return r.id === id; });
+      const item = iuQuickToolsGetItemMeta(id, cfg);
       if (!item) return;
       const row = document.createElement("div");
       row.className = "iu-quicktools-settings-row";
@@ -21544,6 +21659,314 @@ function buildVideoAsArticleCard(it) {
     iuQuickToolsSettingsRender(cfg);
   }
 
+  function iuCustomButtonsOverlayUseFullscreen() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuCustomButtonsOverlayClose() {
+    const panel = document.getElementById("iuCustomButtonsPanel");
+    const backdrop = document.getElementById("iuCustomButtonsBackdrop");
+    if (panel) {
+      panel.hidden = true;
+      panel.setAttribute("aria-hidden", "true");
+      panel.dataset.open = "0";
+      panel.classList.remove("iu-custom-buttons-overlay-panel--fullscreen");
+    }
+    if (backdrop) {
+      backdrop.hidden = true;
+      backdrop.setAttribute("aria-hidden", "true");
+    }
+    document.body.classList.remove("iu-custom-buttons-overlay-open");
+    iuCustomButtonsHideDeleteConfirm();
+    iuCustomButtonsResetForm();
+  }
+  try { window.iuCustomButtonsOverlayClose = iuCustomButtonsOverlayClose; } catch (_) {}
+  try { window.iuCustomButtonsOverlayOpen = iuCustomButtonsOverlayOpen; } catch (_) {}
+
+  function iuCustomButtonsOverlayOpen() {
+    const panel = document.getElementById("iuCustomButtonsPanel");
+    const backdrop = document.getElementById("iuCustomButtonsBackdrop");
+    if (!panel || !backdrop) return;
+    if (typeof window.iuForceCloseAllOverlays === "function") {
+      try { window.iuForceCloseAllOverlays(); } catch (_) {}
+    }
+    iuQuickToolsSettingsClose();
+    backdrop.hidden = false;
+    backdrop.removeAttribute("aria-hidden");
+    panel.hidden = false;
+    panel.setAttribute("aria-hidden", "false");
+    panel.dataset.open = "1";
+    if (iuCustomButtonsOverlayUseFullscreen()) {
+      panel.classList.add("iu-custom-buttons-overlay-panel--fullscreen");
+    } else {
+      panel.classList.remove("iu-custom-buttons-overlay-panel--fullscreen");
+    }
+    document.body.classList.add("iu-custom-buttons-overlay-open");
+    iuCustomButtonsRefreshList();
+    iuCustomButtonsUpdateFormState();
+    const nameInput = document.getElementById("iuCustomButtonsName");
+    if (nameInput) nameInput.focus();
+  }
+
+  function iuCustomButtonsResetForm() {
+    const form = document.getElementById("iuCustomButtonsForm");
+    const editId = document.getElementById("iuCustomButtonsEditId");
+    const err = document.getElementById("iuCustomButtonsFormError");
+    if (form) form.reset();
+    if (editId) editId.value = "";
+    if (err) { err.hidden = true; err.textContent = ""; }
+    iuCustomButtonsUpdateFormState();
+  }
+
+  function iuCustomButtonsUpdateFormState() {
+    let cfg = loadQuickToolsConfig();
+    if (!cfg) cfg = getDefaultQuickToolsConfig();
+    cfg = sanitizeQuickToolsConfig(cfg);
+    const count = (cfg.customButtons || []).length;
+    const atLimit = count >= IU_CUSTOM_BUTTONS_MAX;
+    const editIdEl = document.getElementById("iuCustomButtonsEditId");
+    const editing = editIdEl && editIdEl.value;
+    const limitMsg = document.getElementById("iuCustomButtonsLimitMsg");
+    const saveBtn = document.getElementById("iuCustomButtonsSave");
+    const nameInput = document.getElementById("iuCustomButtonsName");
+    const urlInput = document.getElementById("iuCustomButtonsUrl");
+    const blocked = atLimit && !editing;
+    if (limitMsg) limitMsg.hidden = !blocked;
+    if (saveBtn) saveBtn.disabled = !!blocked;
+    if (nameInput) nameInput.disabled = !!blocked;
+    if (urlInput) urlInput.disabled = !!blocked;
+  }
+
+  function iuCustomButtonsShowFormError(msg) {
+    const err = document.getElementById("iuCustomButtonsFormError");
+    if (!err) return;
+    err.textContent = msg;
+    err.hidden = !msg;
+  }
+
+  function iuCustomButtonsRefreshList() {
+    const list = document.getElementById("iuCustomButtonsList");
+    if (!list) return;
+    let cfg = loadQuickToolsConfig();
+    if (!cfg) cfg = getDefaultQuickToolsConfig();
+    cfg = sanitizeQuickToolsConfig(cfg);
+    list.innerHTML = "";
+    if (!(cfg.customButtons || []).length) {
+      const empty = document.createElement("p");
+      empty.className = "iu-custom-buttons-empty";
+      empty.textContent = "Zatím nemáte žádná vlastní tlačítka.";
+      list.appendChild(empty);
+      return;
+    }
+    (cfg.customButtons || []).forEach(function(btn){
+      const row = document.createElement("div");
+      row.className = "iu-custom-buttons-item";
+      row.setAttribute("data-custom-button-id", btn.id);
+      const head = document.createElement("div");
+      head.className = "iu-custom-buttons-item-head";
+      const marker = document.createElement("span");
+      marker.className = "iu-custom-buttons-item-marker";
+      marker.style.backgroundColor = btn.color || "#2563EB";
+      const title = document.createElement("span");
+      title.className = "iu-custom-buttons-item-title";
+      title.textContent = btn.label;
+      head.appendChild(marker);
+      head.appendChild(title);
+      const url = document.createElement("a");
+      url.className = "iu-custom-buttons-item-url";
+      url.href = btn.url;
+      url.target = "_blank";
+      url.rel = "noopener noreferrer";
+      url.textContent = btn.url;
+      const actions = document.createElement("div");
+      actions.className = "iu-custom-buttons-item-actions";
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.className = "iu-custom-buttons-item-edit";
+      editBtn.textContent = "Upravit";
+      editBtn.setAttribute("data-custom-btn-edit", btn.id);
+      const delBtn = document.createElement("button");
+      delBtn.type = "button";
+      delBtn.className = "iu-custom-buttons-item-delete";
+      delBtn.textContent = "Odstranit";
+      delBtn.setAttribute("data-custom-btn-delete", btn.id);
+      actions.appendChild(editBtn);
+      actions.appendChild(delBtn);
+      row.appendChild(head);
+      row.appendChild(url);
+      row.appendChild(actions);
+      list.appendChild(row);
+    });
+  }
+
+  var iuCustomButtonsPendingDeleteId = null;
+
+  function iuCustomButtonsHideDeleteConfirm() {
+    const dlg = document.getElementById("iuCustomButtonsDeleteConfirm");
+    if (dlg) {
+      dlg.hidden = true;
+      dlg.setAttribute("aria-hidden", "true");
+    }
+    iuCustomButtonsPendingDeleteId = null;
+  }
+
+  function iuCustomButtonsShowDeleteConfirm(id) {
+    const dlg = document.getElementById("iuCustomButtonsDeleteConfirm");
+    if (!dlg) return;
+    iuCustomButtonsPendingDeleteId = id;
+    dlg.hidden = false;
+    dlg.removeAttribute("aria-hidden");
+  }
+
+  function iuCustomButtonsSaveFromForm() {
+    const nameEl = document.getElementById("iuCustomButtonsName");
+    const urlEl = document.getElementById("iuCustomButtonsUrl");
+    const editIdEl = document.getElementById("iuCustomButtonsEditId");
+    if (!nameEl || !urlEl) return;
+    iuCustomButtonsShowFormError("");
+    const nameCheck = iuQuickToolsValidateName(nameEl.value);
+    if (!nameCheck.ok) { iuCustomButtonsShowFormError(nameCheck.message); return; }
+    const urlCheck = iuQuickToolsValidateUrl(urlEl.value);
+    if (!urlCheck.ok) { iuCustomButtonsShowFormError(urlCheck.message); return; }
+    let cfg = loadQuickToolsConfig();
+    if (!cfg) cfg = getDefaultQuickToolsConfig();
+    cfg = sanitizeQuickToolsConfig(cfg);
+    cfg.customButtons = cfg.customButtons || [];
+    const editId = editIdEl ? String(editIdEl.value || "").trim() : "";
+    if (editId) {
+      const idx = cfg.customButtons.findIndex(function(b){ return b.id === editId; });
+      if (idx === -1) return;
+      cfg.customButtons[idx] = Object.assign({}, cfg.customButtons[idx], { label: nameCheck.name, url: urlCheck.url });
+    } else {
+      if (cfg.customButtons.length >= IU_CUSTOM_BUTTONS_MAX) {
+        iuCustomButtonsShowFormError("Dosáhli jste maxima 20 vlastních tlačítek.");
+        iuCustomButtonsUpdateFormState();
+        return;
+      }
+      const newId = iuQuickToolsNewCustomId();
+      const color = iuQuickToolsPickColor(cfg);
+      cfg.customButtons.push({ id: newId, label: nameCheck.name, url: urlCheck.url, color: color });
+      const addIdx = cfg.order.indexOf("pridat_tlacitko");
+      if (addIdx === -1) cfg.order.push(newId); else cfg.order.splice(addIdx, 0, newId);
+      if (cfg.visible.indexOf(newId) === -1) cfg.visible.push(newId);
+    }
+    iuQuickToolsSaveAndApply(cfg);
+    iuCustomButtonsResetForm();
+    iuCustomButtonsRefreshList();
+    iuQuickToolsSettingsRender(cfg);
+  }
+
+  function iuCustomButtonsDeleteById(id) {
+    if (!id) return;
+    let cfg = loadQuickToolsConfig();
+    if (!cfg) cfg = getDefaultQuickToolsConfig();
+    cfg = sanitizeQuickToolsConfig(cfg);
+    cfg.customButtons = (cfg.customButtons || []).filter(function(b){ return b.id !== id; });
+    cfg.order = cfg.order.filter(function(x){ return x !== id; });
+    cfg.visible = cfg.visible.filter(function(x){ return x !== id; });
+    const grid = iuQuickToolsGetGrid();
+    if (grid) {
+      const tile = grid.querySelector('.iuTile[data-quicktool-id="' + id + '"]');
+      if (tile) tile.remove();
+    }
+    iuQuickToolsSaveAndApply(cfg);
+    iuCustomButtonsRefreshList();
+    iuQuickToolsSettingsRender(cfg);
+    iuCustomButtonsUpdateFormState();
+  }
+
+  function iuCustomButtonsInit() {
+    if (window.__iuCustomButtonsInitDone) return;
+    window.__iuCustomButtonsInitDone = 1;
+    const panel = document.getElementById("iuCustomButtonsPanel");
+    const backdrop = document.getElementById("iuCustomButtonsBackdrop");
+    const closeBtn = document.getElementById("iuCustomButtonsClose");
+    const form = document.getElementById("iuCustomButtonsForm");
+    const list = document.getElementById("iuCustomButtonsList");
+    const deleteDlg = document.getElementById("iuCustomButtonsDeleteConfirm");
+    if (!panel || !form) return;
+
+    document.addEventListener("click", function(e){
+      const t = e.target;
+      if (!t || !t.closest) return;
+      const openBtn = t.closest('[data-iu-action="custom-buttons"]');
+      if (openBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        iuCustomButtonsOverlayOpen();
+        return;
+      }
+    }, false);
+
+    if (closeBtn) closeBtn.addEventListener("click", function(){ iuCustomButtonsOverlayClose(); });
+    if (backdrop) backdrop.addEventListener("click", function(){ iuCustomButtonsOverlayClose(); });
+    panel.addEventListener("click", function(e){
+      if (e.target === panel) iuCustomButtonsOverlayClose();
+    });
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      iuCustomButtonsSaveFromForm();
+    });
+    if (list) {
+      list.addEventListener("click", function(e){
+        const t = e.target;
+        if (!t || !t.closest) return;
+        const editBtn = t.closest("[data-custom-btn-edit]");
+        if (editBtn) {
+          const id = editBtn.getAttribute("data-custom-btn-edit");
+          let cfg = loadQuickToolsConfig();
+          if (!cfg) cfg = getDefaultQuickToolsConfig();
+          cfg = sanitizeQuickToolsConfig(cfg);
+          const btn = (cfg.customButtons || []).find(function(b){ return b.id === id; });
+          if (!btn) return;
+          const editIdEl = document.getElementById("iuCustomButtonsEditId");
+          const nameEl = document.getElementById("iuCustomButtonsName");
+          const urlEl = document.getElementById("iuCustomButtonsUrl");
+          if (editIdEl) editIdEl.value = btn.id;
+          if (nameEl) nameEl.value = btn.label;
+          if (urlEl) urlEl.value = btn.url;
+          iuCustomButtonsShowFormError("");
+          iuCustomButtonsUpdateFormState();
+          if (nameEl) nameEl.focus();
+          return;
+        }
+        const delBtn = t.closest("[data-custom-btn-delete]");
+        if (delBtn) {
+          iuCustomButtonsShowDeleteConfirm(delBtn.getAttribute("data-custom-btn-delete"));
+        }
+      });
+    }
+    if (deleteDlg) {
+      deleteDlg.addEventListener("click", function(e){
+        const t = e.target;
+        if (!t || !t.closest) return;
+        if (t.closest("[data-custom-btn-cancel]")) {
+          iuCustomButtonsHideDeleteConfirm();
+          return;
+        }
+        if (t.closest("[data-custom-btn-confirm-delete]")) {
+          const id = iuCustomButtonsPendingDeleteId;
+          iuCustomButtonsHideDeleteConfirm();
+          iuCustomButtonsDeleteById(id);
+        }
+      });
+    }
+    document.addEventListener("keydown", function(e){
+      if (e.key !== "Escape") return;
+      const dlg = document.getElementById("iuCustomButtonsDeleteConfirm");
+      if (dlg && !dlg.hidden) {
+        iuCustomButtonsHideDeleteConfirm();
+        return;
+      }
+      const p = document.getElementById("iuCustomButtonsPanel");
+      if (p && !p.hidden) iuCustomButtonsOverlayClose();
+    });
+  }
+
   function iuQuickToolsInit() {
     if (window.__iuQuickToolsInitDone) return;
     window.__iuQuickToolsInitDone = 1;
@@ -21576,20 +21999,12 @@ function buildVideoAsArticleCard(it) {
     }
     function onQuickToolsVisibilityChange(e) {
       const t = e.target;
-      if (!t || t.getAttribute("data-iu-quicktools-visible-toggle") == null) return;
+      if (!t || t.type !== "checkbox") return;
+      if (t.getAttribute("data-iu-quicktools-visible-toggle") == null) return;
+      if (!panel.contains(t)) return;
       applyQuickToolsVisibilityFromCheckbox(t);
     }
-    panel.addEventListener("change", onQuickToolsVisibilityChange, true);
-    panel.addEventListener("input", onQuickToolsVisibilityChange, true);
-    document.addEventListener("change", onQuickToolsVisibilityChange, true);
-    function onPanelCheckboxClick(e) {
-      const t = e.target;
-      if (t && t.type === "checkbox" && t.getAttribute("data-iu-quicktools-visible-toggle") != null && panel.contains(t)) {
-        applyQuickToolsVisibilityFromCheckbox(t);
-      }
-    }
-    panel.addEventListener("click", onPanelCheckboxClick, true);
-    document.addEventListener("click", onPanelCheckboxClick, true);
+    panel.addEventListener("change", onQuickToolsVisibilityChange);
     function syncQuickToolsVisibilityFromPanel() {
       if (!panel) return;
       var listEl = panel.querySelector(".iu-quicktools-settings-list");
@@ -21722,6 +22137,7 @@ function buildVideoAsArticleCard(it) {
     iuWeatherInit();
     iuMailboxesInit();
     iuQuickToolsInit();
+    iuCustomButtonsInit();
     initAccordion();
   }
 

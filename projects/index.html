@@ -3656,12 +3656,51 @@ style-src 'self' 'unsafe-inline' https:;
                         <div class="iuTile" role="listitem" data-quicktool-id="financni_kalkulacky" data-iu-ql="financni-kalkulacky"><button type="button" class="iuTileLink" data-iuq="fincalc" aria-label="Finanční kalkulačky"><span class="iuTileText">Finanční kalkulačky</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="vzory_smluv" data-iu-ql="vzory-smluv-plne-moci"><button type="button" class="iuTileLink" role="listitem" data-iuq="legaldocs" aria-label="Vzory smluv a plné moci"><span class="iuTileText">Vzory smluv a plné moci</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="vytvorit_fakturu" data-iu-ql="vytvorit-fakturu"><button type="button" class="iuTileLink" data-iuq="faktura" aria-label="Vytvořit fakturu"><span class="iuTileText">Vytvořit fakturu</span></button></div>
-                        <div class="iuTile" role="listitem" data-quicktool-id="zivnostensky_rejstrik" data-iu-ql="zivnostensky-rejstrik"><span class="iuTileLink" role="listitem" data-ql="zivnost" aria-label="Živnostenský rejstřík"><span class="iuTileText">Živnostenský rejstřík</span></span></div>
+                        <div class="iuTile" role="listitem" data-quicktool-id="pridat_tlacitko" data-iu-ql="pridat-tlacitko"><button type="button" class="iuTileLink" data-iu-action="custom-buttons" aria-label="Přidat tlačítko"><span class="iuTileText">Přidat tlačítko</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="naceneni_nakupu_domu" data-iu-ql="naceneni-nakupu"><button type="button" class="iuTileLink" role="listitem" data-iuq="naceneni" data-ql="naceneni" aria-label="Nákup potravin online"><span class="iuTileText">Nákup potravin online</span></button></div>
                       </div>
                     </section>
                     <!-- AI Panel (Modal) -->
                     <div id="iu-aiOverlay" class="iu-aiOverlay" hidden></div>
+
+                    <div id="iuCustomButtonsBackdrop" class="iu-custom-buttons-overlay iu-custom-buttons-overlay-backdrop" hidden aria-hidden="true"></div>
+                    <div id="iuCustomButtonsPanel" class="iu-custom-buttons-overlay iu-custom-buttons-overlay-panel" role="dialog" aria-modal="true" aria-labelledby="iuCustomButtonsTitle" hidden data-open="0" aria-hidden="true">
+                      <div class="iu-custom-buttons-overlay-cardShell">
+                        <div class="iu-custom-buttons-overlay-inner">
+                          <header class="iu-custom-buttons-overlay-header">
+                            <h2 id="iuCustomButtonsTitle" class="iu-custom-buttons-overlay-h2">Vlastní tlačítka</h2>
+                            <button type="button" id="iuCustomButtonsClose" class="iu-overlayCloseBtn38 iu-close-btn-38" aria-label="Zavřít">×</button>
+                          </header>
+                          <div id="iuCustomButtonsScrollHost" class="iu-custom-buttons-overlay-scrollHost">
+                            <form id="iuCustomButtonsForm" class="iu-custom-buttons-form" novalidate>
+                              <input type="hidden" id="iuCustomButtonsEditId" value="">
+                              <div class="iu-custom-buttons-field">
+                                <label for="iuCustomButtonsName">Název tlačítka</label>
+                                <input type="text" id="iuCustomButtonsName" name="name" autocomplete="off" maxlength="80" required>
+                              </div>
+                              <div class="iu-custom-buttons-field">
+                                <label for="iuCustomButtonsUrl">Odkaz (URL)</label>
+                                <input type="url" id="iuCustomButtonsUrl" name="url" autocomplete="off" inputmode="url" placeholder="https://" required>
+                              </div>
+                              <p id="iuCustomButtonsFormError" class="iu-custom-buttons-formError" hidden role="alert"></p>
+                              <p id="iuCustomButtonsLimitMsg" class="iu-custom-buttons-limitMsg" hidden role="status">Dosáhli jste maxima 20 vlastních tlačítek. Pro přidání dalšího nejdříve některé odstraňte.</p>
+                              <button type="submit" id="iuCustomButtonsSave" class="iu-custom-buttons-saveBtn">Uložit</button>
+                            </form>
+                            <div id="iuCustomButtonsList" class="iu-custom-buttons-list" aria-label="Uložená tlačítka"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="iuCustomButtonsDeleteConfirm" class="iu-custom-buttons-deleteConfirm" hidden aria-hidden="true">
+                        <div class="iu-custom-buttons-deleteConfirm-backdrop" data-custom-btn-cancel tabindex="-1"></div>
+                        <div class="iu-custom-buttons-deleteConfirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="iuCustomButtonsDeleteConfirmText">
+                          <p id="iuCustomButtonsDeleteConfirmText">Opravdu chcete odstranit toto tlačítko?</p>
+                          <div class="iu-custom-buttons-deleteConfirm-actions">
+                            <button type="button" class="iu-custom-buttons-deleteCancel" data-custom-btn-cancel>Zrušit</button>
+                            <button type="button" class="iu-custom-buttons-deleteConfirmBtn" data-custom-btn-confirm-delete>Odstranit</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
                     <div id="iuFinancialCalcBackdrop" class="iu-financial-overlay iu-financial-overlay-backdrop" hidden aria-hidden="true"></div>
                     <div id="iuFinancialCalcPanel" class="iu-financial-overlay iu-financial-overlay-panel" role="dialog" aria-modal="true" aria-labelledby="iuFinancialCalcTitle" hidden data-open="0" aria-hidden="true">
