@@ -14451,6 +14451,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   column-gap: 14px !important;
   row-gap: 14px !important;
 }
+@media (min-width: 1025px) {
+  body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid {
+    gap: 6px !important;
+    column-gap: 10px !important;
+    row-gap: 4px !important;
+  }
+}
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > *:nth-child(9) {
   grid-column: auto !important;
 }
@@ -16332,11 +16339,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
   #silver-slot #iuSilverWelcomeStackSeparatorBeforeSilver{
     grid-column: 1 / -1;
-    grid-row: 8;
+    grid-row: 9;
   }
   #silver-slot #iuSilverHomeShellMountPoint.iuSilverHomeShellMountPoint{
     grid-column: 1 / -1;
-    grid-row: 9;
+    grid-row: 10;
     min-height: 0;
     height: 0;
     margin: 0;
@@ -16347,20 +16354,45 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
   #silver-slot #iuSilverWelcomeStack > .silver-shell.silver-shell--stackConnected{
     grid-column: 1 / -1;
-    grid-row: 9;
+    grid-row: 10;
   }
 
   
   #iuSilverWelcomeCard .iu-nameday-wish{
     display: none !important;
   }
-  #iuSilverWelcomeCard #iuNamedayCta.iu-nameday-cta{
-    justify-content: flex-start;
-    min-height: 72px;
-    box-sizing: border-box;
-  }
   #iuSilverWelcomeCard #iuNamedayCta .iu-nameday-flowers{
-    flex: 0 1 auto;
+    display: none !important;
+  }
+  #iuSilverWelcomeCard #iuNamedayCta.iu-nameday-cta{
+    display: none !important;
+    min-height: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border: 0 !important;
+  }
+  #silver-slot #iuSilverWelcomeStack #iuSilverWelcomeCard.iuSilverWelcomeCard{
+    min-height: 0;
+  }
+  #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection{
+    margin-top: 0;
+  }
+  .accordionCol .mindMenu .iu-mmQuickLinks:not(.iu-mojeSluzby){
+    --iu-rr-rowGap: 4px;
+    --iu-mm-gap: 10px;
+    --iu-rr-gapY: 3px;
+    --iu-rr-py: 4px;
+  }
+  body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby){
+    --iu-mm-first-gap: 12px;
+  }
+  body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmSectionHead + .iu-mmQuickGrid{
+    margin-top: var(--iu-mm-first-gap) !important;
+  }
+  .accordionCol .mindMenu .iu-mmSectionHead + .iu-mmQuickGrid{
+    margin-top: 8px !important;
   }
 
   
@@ -16477,7 +16509,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuTopbarInfoBtn {
     display: none !important;
   }
-  #iuSilverWelcomeCard{--iuWiH:40px;--iuWiR:8px;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto auto;column-gap:var(--iuWiR);align-items:start}
+  #iuSilverWelcomeCard{--iuWiH:40px;--iuWiR:8px;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;column-gap:var(--iuWiR);align-items:start}
   #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn {
     position: relative;
     grid-column:2;
@@ -16510,7 +16542,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     outline: 2px solid rgba(37, 99, 235, 0.85);
     outline-offset: 2px;
   }
-  #iuSilverWelcomeCard #iuNamedayCta{grid-column:1 / -1;grid-row:3;margin-top:14px;width:100%}
+  #iuSilverWelcomeCard #iuNamedayCta{display:none!important;grid-column:1 / -1;grid-row:auto;margin:0!important;width:100%;min-height:0!important;height:0!important;overflow:hidden!important}
   .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg > circle:nth-child(1) {
     fill: rgba(255, 255, 255, 0.12);
     stroke: rgba(255, 255, 255, 0.42);
