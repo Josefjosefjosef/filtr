@@ -1,8 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-07T07:46:11.978265Z",
+  "ingestedAt": "2026-06-07T08:31:14.270647Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fotbalisté Argentiny bez Messiho v přípravě na MS porazili Honduras",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-fotbaliste-argentiny-bez-messiho-v-priprave-na-ms-porazili-honduras-5475430",
+      "dt": "2026-06-07T08:19:15Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "argentiny",
+        "fotbalisté",
+        "honduras",
+        "messiho",
+        "porazili",
+        "přípravě"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hokejová psychedelie. Vegas ustálo nevídanou divočinu, která vejde do dějin",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-hokejova-psychedelie-vegas-ustalo-nevidanou-divocinu-ktera-vejde-do-dejin-5475429",
+      "dt": "2026-06-07T08:11:06Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "divočinu",
+        "dějin",
+        "hokejová",
+        "nevídanou",
+        "psychedelie",
+        "ustálo",
+        "vegas",
+        "vejde"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -730,55 +778,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zemětřesení v klubu Součka. Spolumajitel odstoupil z vedoucích funkcí",
-      "url": "https://www.sport.cz/clanek/fotbal-premier-league-zemetreseni-v-klubu-soucka-spolumajitel-odstoupil-z-vedoucich-funkci-v-klubu-5475197",
-      "dt": "2026-06-06T14:01:20Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "funkcí",
-        "klubu",
-        "odstoupil",
-        "součka",
-        "spolumajitel",
-        "vedoucích",
-        "zemětřesení"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Černého bude v Besiktasi nově trénovat Italiano, naposledy působil v Boloni",
-      "url": "https://www.sport.cz/clanek/fotbal-cerneho-bude-v-besiktasi-nove-trenovat-italiano-naposledy-pusobil-v-boloni-5475208",
-      "dt": "2026-06-06T14:13:58Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "besiktasi",
-        "boloni",
-        "italiano",
-        "naposledy",
-        "nově",
-        "působil",
-        "trénovat",
-        "černého"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42570,
+      "bytes": 42565,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,11 +825,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T07:28:25Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T08:19:15Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 1,
-          "sport": 29
+          "sport": 29,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -842,6 +841,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fotbalisté Argentiny bez Messiho v přípravě na MS porazili Honduras",
+            "publishedAt": "2026-06-07T08:19:15Z"
+          },
+          {
+            "title": "Hokejová psychedelie. Vegas ustálo nevídanou divočinu, která vejde do dějin",
+            "publishedAt": "2026-06-07T08:11:06Z"
+          },
           {
             "title": "Máte nádor, slyšela před rokem. Teď se slalomové královně znovu klaněla Praha",
             "publishedAt": "2026-06-07T07:28:25Z"
@@ -865,14 +872,6 @@
           {
             "title": "Volejbalová paráda. Češky přidaly třetí výhru v Lize národů",
             "publishedAt": "2026-06-06T21:03:43Z"
-          },
-          {
-            "title": "Fotbalisté Portugalska porazili v přípravě Chile, Němci zdolali Američany",
-            "publishedAt": "2026-06-06T16:07:55Z"
-          },
-          {
-            "title": "Tvrdá rána! Obránce Slavie Ogbu se při tréninku s reprezentací vážně zranil",
-            "publishedAt": "2026-06-06T21:07:10Z"
           }
         ]
       }
