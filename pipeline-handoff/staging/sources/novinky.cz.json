@@ -1,11 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-06-07T18:46:05.768625Z",
+  "ingestedAt": "2026-06-07T19:16:12.828072Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "Arméni ve volbách rozhodovali o směřování země",
+      "url": "https://www.novinky.cz/clanek/volby-armeni-ve-volbach-rozhodovali-o-smerovani-zeme-40582014",
+      "dt": "2026-06-07T18:58:38Z",
+      "media_raw": "Novinky / Domácí",
+      "media_norm": "Novinky",
+      "tokens": [
+        "arméni",
+        "rozhodovali",
+        "směřování",
+        "volbách",
+        "země"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_novinky_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "Mělník připravuje sportovní halu bez oken, stát by měla 140 milionů korun",
       "url": "https://www.novinky.cz/clanek/domaci-melnik-pripravuje-sportovni-halu-bez-oken-stat-by-mela-140-milionu-korun-40581520",
       "dt": "2026-06-07T18:27:16Z",
@@ -742,24 +764,23 @@
       "_dt_serialized": true
     },
     {
-      "section": "krimi",
+      "section": "aktualne",
       "contentType": "article",
-      "title": "Zloděj z Prahy loupil s pomocí jateční pistole",
-      "url": "https://www.novinky.cz/clanek/krimi-v-hlavni-roli-jatecni-pistole-zlodej-ji-pouzival-ke-vloupackam-40581995",
-      "dt": "2026-06-07T12:08:11Z",
-      "media_raw": "Novinky / Domácí",
+      "title": "Arméni ve volbách rozhodovali o směřování země",
+      "url": "https://www.novinky.cz/clanek/volby-armeni-ve-volbach-rozhodovali-o-smerovani-zeme-40582014",
+      "dt": "2026-06-07T18:58:38Z",
+      "media_raw": "Novinky / Zahraniční",
       "media_norm": "Novinky",
       "tokens": [
-        "jateční",
-        "loupil",
-        "pistole",
-        "pomocí",
-        "prahy",
-        "zloděj"
+        "arméni",
+        "rozhodovali",
+        "směřování",
+        "volbách",
+        "země"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
-      "feedId": "zpr_novinky_domaci",
+      "feedId": "zpr_novinky_zahranicni",
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "novinky.cz",
       "_dt_serialized": true
@@ -1494,29 +1515,6 @@
         "snažíte",
         "strany",
         "tvůrce"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_novinky_zahranicni",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Zloděj z Prahy loupil s pomocí jateční pistole",
-      "url": "https://www.novinky.cz/clanek/krimi-v-hlavni-roli-jatecni-pistole-zlodej-ji-pouzival-ke-vloupackam-40581995",
-      "dt": "2026-06-07T12:08:11Z",
-      "media_raw": "Novinky / Zahraniční",
-      "media_norm": "Novinky",
-      "tokens": [
-        "jateční",
-        "loupil",
-        "pistole",
-        "pomocí",
-        "prahy",
-        "zloděj"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1534,7 +1532,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/domaci",
-      "bytes": 48658,
+      "bytes": 48004,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1571,7 +1569,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T18:27:16Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T18:58:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1588,6 +1586,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Arméni ve volbách rozhodovali o směřování země",
+            "publishedAt": "2026-06-07T18:58:38Z"
+          },
           {
             "title": "Mělník připravuje sportovní halu bez oken, stát by měla 140 milionů korun",
             "publishedAt": "2026-06-07T18:27:16Z"
@@ -1615,10 +1617,6 @@
           {
             "title": "Převedením veřejnoprávních médií pod státní rozpočet si může vláda zavařit, míní politolog",
             "publishedAt": "2026-06-07T17:11:13Z"
-          },
-          {
-            "title": "Bílému žralokovi se natáčení nelíbilo, zakousl se do kamery",
-            "publishedAt": "2026-06-07T17:03:18Z"
           }
         ]
       }
@@ -1630,7 +1628,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/zahranicni",
-      "bytes": 48658,
+      "bytes": 48004,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1667,7 +1665,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T18:27:16Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T18:58:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1684,6 +1682,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Arméni ve volbách rozhodovali o směřování země",
+            "publishedAt": "2026-06-07T18:58:38Z"
+          },
           {
             "title": "Mělník připravuje sportovní halu bez oken, stát by měla 140 milionů korun",
             "publishedAt": "2026-06-07T18:27:16Z"
@@ -1711,10 +1713,6 @@
           {
             "title": "Převedením veřejnoprávních médií pod státní rozpočet si může vláda zavařit, míní politolog",
             "publishedAt": "2026-06-07T17:11:13Z"
-          },
-          {
-            "title": "Bílému žralokovi se natáčení nelíbilo, zakousl se do kamery",
-            "publishedAt": "2026-06-07T17:03:18Z"
           }
         ]
       }
