@@ -1,25 +1,24 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-06-07T09:48:44.096853Z",
+  "ingestedAt": "2026-06-07T10:31:17.685109Z",
   "items": [
     {
-      "section": "aktualne",
+      "section": "finance",
       "contentType": "article",
-      "title": "Stavba nejmodernější haly v Česku finišuje. Slibuje občerstvení bez front",
-      "url": "https://www.seznamzpravy.cz/clanek/domaci-zivot-v-cesku-stavba-nejmodernejsi-haly-v-cesku-finisuje-slibuje-obcerstveni-bez-front-307965",
-      "dt": "2026-06-07T08:08:18Z",
+      "title": "Je čas řešit ceny energií na zimu. Dodávky jsou pod tlakem",
+      "url": "https://www.seznamzpravy.cz/clanek/ekonomika-ocima-byznysu-ocima-byznysu-je-cas-resit-ceny-energii-na-zimu-svet-je-pod-tlakem-307808",
+      "dt": "2026-06-07T10:00:00Z",
       "media_raw": "Seznam Zprávy / Domácí",
       "media_norm": "Seznam Zprávy",
       "tokens": [
-        "finišuje",
-        "front",
-        "haly",
-        "nejmodernější",
-        "občerstvení",
-        "slibuje",
-        "stavba",
-        "česku"
+        "ceny",
+        "dodávky",
+        "energií",
+        "tlakem",
+        "zimu",
+        "čas",
+        "řešit"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -57,21 +56,22 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Znovu velké povodně? Prostě bychom nefungovali, říká o škrtech šéf meteorologů",
+      "title": "Výrok o zelené krvi je odpudivý, ale v něčem má vláda pravdu, říká šéf meteorologů",
       "url": "https://www.seznamzpravy.cz/clanek/domaci-zivot-v-cesku-znovu-velke-povodne-proste-bychom-nefungovali-rika-o-skrtech-sef-meteorologu-307836",
       "dt": "2026-06-07T09:40:00Z",
       "media_raw": "Seznam Zprávy / Domácí",
       "media_norm": "Seznam Zprávy",
       "tokens": [
-        "bychom",
+        "ale",
+        "krvi",
         "meteorologů",
-        "nefungovali",
-        "povodně",
-        "prostě",
-        "velké",
-        "znovu",
+        "něčem",
+        "odpudivý",
+        "pravdu",
+        "vláda",
+        "výrok",
+        "zelené",
         "říká",
-        "škrtech",
         "šéf"
       ],
       "feedCategory": "zpravy",
@@ -124,6 +124,31 @@
         "ukončení",
         "výuky",
         "žalobu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_seznam_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Stavba nejmodernější haly v Česku finišuje. Slibuje občerstvení bez front",
+      "url": "https://www.seznamzpravy.cz/clanek/domaci-zivot-v-cesku-stavba-nejmodernejsi-haly-v-cesku-finisuje-slibuje-obcerstveni-bez-front-307965",
+      "dt": "2026-06-07T08:08:18Z",
+      "media_raw": "Seznam Zprávy / Domácí",
+      "media_norm": "Seznam Zprávy",
+      "tokens": [
+        "finišuje",
+        "front",
+        "haly",
+        "nejmodernější",
+        "občerstvení",
+        "slibuje",
+        "stavba",
+        "česku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -731,30 +756,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "seznamzpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Tenistka Andrejevová získala v Paříži premiérový grandslamový titul",
-      "url": "https://www.seznamzpravy.cz/clanek/sport-tenis-tenistka-andrejevova-ziskala-v-parizi-premierovy-grandslamovy-titul-307984",
-      "dt": "2026-06-06T15:41:06Z",
-      "media_raw": "Seznam Zprávy / Domácí",
-      "media_norm": "Seznam Zprávy",
-      "tokens": [
-        "andrejevová",
-        "grandslamový",
-        "paříži",
-        "premiérový",
-        "tenistka",
-        "titul",
-        "získala"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_seznam_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -765,7 +766,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/domaci",
-      "bytes": 44125,
+      "bytes": 44241,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -802,12 +803,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T09:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T10:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 4,
+          "sport": 3,
           "zpravy": 22,
-          "sport": 4,
-          "finance": 3,
           "zdravi": 1
         },
         "drop_counts": {
@@ -821,15 +822,15 @@
         },
         "sample_titles": [
           {
-            "title": "Stavba nejmodernější haly v Česku finišuje. Slibuje občerstvení bez front",
-            "publishedAt": "2026-06-07T08:08:18Z"
+            "title": "Je čas řešit ceny energií na zimu. Dodávky jsou pod tlakem",
+            "publishedAt": "2026-06-07T10:00:00Z"
           },
           {
             "title": "Zdravotník Áda z přeboru si už fotbal nezahraje. Smrděl jsem jak mrtvola, líčí",
             "publishedAt": "2026-06-07T09:00:00Z"
           },
           {
-            "title": "Znovu velké povodně? Prostě bychom nefungovali, říká o škrtech šéf meteorologů",
+            "title": "Výrok o zelené krvi je odpudivý, ale v něčem má vláda pravdu, říká šéf meteorologů",
             "publishedAt": "2026-06-07T09:40:00Z"
           },
           {
@@ -841,16 +842,16 @@
             "publishedAt": "2026-06-07T09:05:50Z"
           },
           {
+            "title": "Stavba nejmodernější haly v Česku finišuje. Slibuje občerstvení bez front",
+            "publishedAt": "2026-06-07T08:08:18Z"
+          },
+          {
             "title": "Toxický popílek ze spaloven končí v zemědělské půdě, varuje ministerstvo",
             "publishedAt": "2026-06-07T07:58:30Z"
           },
           {
             "title": "Šuplík: Velká jazyková reforma z dílny Motoristů, máme podrobnosti",
             "publishedAt": "2026-06-07T07:45:00Z"
-          },
-          {
-            "title": "Slovenský Hollywood: V Malé Fatře dostanete reklamu na Jánošíka i nádherné výhledy",
-            "publishedAt": "2026-06-07T07:30:00Z"
           }
         ]
       }
