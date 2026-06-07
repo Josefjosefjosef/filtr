@@ -1,12 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-07T04:47:40.531041Z",
+  "ingestedAt": "2026-06-07T05:31:12.452180Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Neuvěřitelný třetí zápas finále. Carolina dotáhla obří ztrátu, vedení ve finálové sérii ale bere Vegas",
+      "title": "Šok v Bratislavě. Dělovka do rozkroku ukončila zápas, padli i Slováci",
+      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-sok-v-bratislave-delovka-do-rozkroku-ukoncila-zapas-padli-i-slovaci-5475289",
+      "dt": "2026-06-07T05:16:16Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bratislavě",
+        "dělovka",
+        "padli",
+        "rozkroku",
+        "slováci",
+        "ukončila",
+        "zápas",
+        "šok"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Neuvěřitelný třetí zápas. Carolina dotáhla obří ztrátu, vedení ve finálové sérii ale bere Vegas",
       "url": "https://www.sport.cz/clanek/hokej-nhl-neuveritelny-treti-zapas-finale-carolina-dotahla-obri-ztratu-vedeni-ve-finalove-serii-ale-bere-vegas-5475393",
       "dt": "2026-06-07T04:29:50Z",
       "media_raw": "Sport.cz",
@@ -16,7 +41,6 @@
         "bere",
         "carolina",
         "dotáhla",
-        "finále",
         "finálové",
         "neuvěřitelný",
         "obří",
@@ -754,31 +778,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bez kyslíku, šest dní ztracen! Z příběhu ztraceného horolezce mrazí",
-      "url": "https://www.sport.cz/clanek/ostatni-uz-mu-pomalu-vystavovali-parte-horolezec-s-prezdivkou-hillary-ale-zazracne-prezil-5475191",
-      "dt": "2026-06-06T12:48:26Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dní",
-        "horolezce",
-        "kyslíku",
-        "mrazí",
-        "příběhu",
-        "ztracen",
-        "ztraceného",
-        "šest"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42254,
+      "bytes": 42213,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T04:29:50Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T05:16:16Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,7 +841,11 @@
         },
         "sample_titles": [
           {
-            "title": "Neuvěřitelný třetí zápas finále. Carolina dotáhla obří ztrátu, vedení ve finálové sérii ale bere Vegas",
+            "title": "Šok v Bratislavě. Dělovka do rozkroku ukončila zápas, padli i Slováci",
+            "publishedAt": "2026-06-07T05:16:16Z"
+          },
+          {
+            "title": "Neuvěřitelný třetí zápas. Carolina dotáhla obří ztrátu, vedení ve finálové sérii ale bere Vegas",
             "publishedAt": "2026-06-07T04:29:50Z"
           },
           {
@@ -868,10 +871,6 @@
           {
             "title": "Český náhradník senzačně porážel i favority, finále GP mu ale uniklo",
             "publishedAt": "2026-06-06T18:42:57Z"
-          },
-          {
-            "title": "Vzácná návštěva u českých fotbalistů. Stálice NHL jim splní i jedno velké přání",
-            "publishedAt": "2026-06-06T19:45:21Z"
           }
         ]
       }

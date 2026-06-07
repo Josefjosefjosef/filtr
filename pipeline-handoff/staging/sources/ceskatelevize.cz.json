@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-07T04:47:40.531041Z",
+  "ingestedAt": "2026-06-07T05:31:12.452180Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nejisté zavedení celostátního referenda. Vládě chybí hlasy opozice",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/nejiste-zavedeni-celostatniho-referenda-vlade-chybi-hlasy-opozice-374296",
+      "dt": "2026-06-07T05:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "celostátního",
+        "chybí",
+        "hlasy",
+        "nejisté",
+        "opozice",
+        "referenda",
+        "vládě",
+        "zavedení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -721,30 +746,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Izrael tajně poslal komanda do Ázerbájdžánu, píše CNN",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/izrael-tajne-poslal-komanda-do-azerbajdzanu-pise-cnn-374271",
-      "dt": "2026-06-05T13:26:57Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "cnn",
-        "izrael",
-        "komanda",
-        "poslal",
-        "píše",
-        "tajně",
-        "ázerbájdžánu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -755,7 +756,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41330,
+      "bytes": 41647,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -792,7 +793,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 29,
@@ -808,6 +809,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejisté zavedení celostátního referenda. Vládě chybí hlasy opozice",
+            "publishedAt": "2026-06-07T05:00:00Z"
+          },
           {
             "title": "Zaměstnavatelé řeší chyby jednotného měsíčního hlášení",
             "publishedAt": "2026-06-07T04:00:00Z"
@@ -835,10 +840,6 @@
           {
             "title": "SOUHRN: Zásadní události soboty 6. června",
             "publishedAt": "2026-06-06T16:28:00Z"
-          },
-          {
-            "title": "Hegseth v Normandii kritizoval evropskou obranu",
-            "publishedAt": "2026-06-06T15:25:37Z"
           }
         ]
       }
