@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-07T05:31:12.452180Z",
+  "ingestedAt": "2026-06-07T06:16:13.720860Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Triumf v jednání s Čínou? Trump zdržuje prodej zbraní Tchaj-wanu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/triumf-v-jednani-s-cinou-trump-zdrzuje-prodej-zbrani-tchaj-wanu-374297",
+      "dt": "2026-06-07T06:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "jednání",
+        "prodej",
+        "tchaj",
+        "triumf",
+        "trump",
+        "wanu",
+        "zbraní",
+        "zdržuje",
+        "čínou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -722,30 +748,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "NASA ukončila poplach na ISS. Posádka se vrátila z úkrytu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/posadka-iss-dostala-podle-nasa-pokyn-ukryt-se-v-lodich-a-pripravit-se-na-moznou-evakuaci-374276",
-      "dt": "2026-06-05T14:11:32Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "iss",
-        "nasa",
-        "poplach",
-        "posádka",
-        "ukončila",
-        "vrátila",
-        "úkrytu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -756,7 +758,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41647,
+      "bytes": 41394,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -793,7 +795,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T06:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 29,
@@ -809,6 +811,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Triumf v jednání s Čínou? Trump zdržuje prodej zbraní Tchaj-wanu",
+            "publishedAt": "2026-06-07T06:00:00Z"
+          },
           {
             "title": "Nejisté zavedení celostátního referenda. Vládě chybí hlasy opozice",
             "publishedAt": "2026-06-07T05:00:00Z"
@@ -836,10 +842,6 @@
           {
             "title": "Moskva před volbami zvýšila ekonomický tlak na Arménii",
             "publishedAt": "2026-06-06T18:03:01Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události soboty 6. června",
-            "publishedAt": "2026-06-06T16:28:00Z"
           }
         ]
       }

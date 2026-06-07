@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-07T05:31:12.452180Z",
+  "ingestedAt": "2026-06-07T06:16:13.720860Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Siniaková s americkou parťačkou se pokusí získat další grandslamový titul",
+      "url": "https://www.sport.cz/clanek/tenis-siniakova-s-americkou-partackou-se-pokusi-ziskat-dalsi-grandslamovy-titul-5475424",
+      "dt": "2026-06-07T06:13:28Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "americkou",
+        "další",
+        "grandslamový",
+        "parťačkou",
+        "pokusí",
+        "siniaková",
+        "titul",
+        "získat"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -754,30 +779,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Salač zopakoval v kvalifikaci v Maďarsku druhé místo z Itálie",
-      "url": "https://www.sport.cz/clanek/moto-motocykly-salac-zopakoval-v-kvalifikaci-v-madarsku-druhe-misto-z-italie-5475193",
-      "dt": "2026-06-06T13:02:13Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "druhé",
-        "itálie",
-        "kvalifikaci",
-        "maďarsku",
-        "místo",
-        "salač",
-        "zopakoval"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42213,
+      "bytes": 42434,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T05:16:16Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T06:13:28Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -840,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Siniaková s americkou parťačkou se pokusí získat další grandslamový titul",
+            "publishedAt": "2026-06-07T06:13:28Z"
+          },
           {
             "title": "Šok v Bratislavě. Dělovka do rozkroku ukončila zápas, padli i Slováci",
             "publishedAt": "2026-06-07T05:16:16Z"
@@ -867,10 +872,6 @@
           {
             "title": "Jsem na tebe tak pyšná! České oslavy odstartovalo dojemné setkání za cílem",
             "publishedAt": "2026-06-06T15:58:23Z"
-          },
-          {
-            "title": "Český náhradník senzačně porážel i favority, finále GP mu ale uniklo",
-            "publishedAt": "2026-06-06T18:42:57Z"
           }
         ]
       }
