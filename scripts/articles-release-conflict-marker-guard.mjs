@@ -13,6 +13,18 @@ import { fileURLToPath } from "url";
 
 const MARKER_LINE_RE = /^(<<<<<<<|=======|>>>>>>>)/;
 
+/** JSON files that article_data_release may commit — not unrelated data like weather.json. */
+export const CORE_RELEASE_JSON_REL = [
+  "projects/data/articles.json",
+  "projects/data/videos.json",
+  "projects/data/feed_health.json",
+  "projects/data/brief.json",
+  "projects/data/meta.json",
+  "projects/data/release_manifest.json",
+  "projects/data/scheduler_state.json",
+  "projects/data/source_rotation_inventory.json",
+];
+
 function log(msg) {
   console.log(`[articles-release-conflict-marker-guard] ${msg}`);
 }
@@ -62,6 +74,15 @@ function shouldScanFile(relPath) {
   return true;
 }
 
+export function isReleaseJsonPath(relPath) {
+  const rel = String(relPath || "").replace(/\\/g, "/");
+  if (CORE_RELEASE_JSON_REL.includes(rel)) return true;
+  if (rel.startsWith("projects/data/articles/") && rel.endsWith(".json")) return true;
+  if (rel.startsWith("projects/data/pipeline_reports/") && rel.endsWith(".json")) return true;
+  if (rel.startsWith("projects/data/ingest_telemetry/") && rel.endsWith(".json")) return true;
+  return false;
+}
+
 export function scanProjectsData(rootDir = "projects/data", options = {}) {
   const absRoot = path.resolve(rootDir);
   const onlyPaths = options.onlyPaths ?? null;
@@ -79,11 +100,13 @@ export function scanProjectsData(rootDir = "projects/data", options = {}) {
     try {
       text = fs.readFileSync(filePath, "utf8");
     } catch (e) {
-      jsonErrors.push({ file: rel, error: e.message || String(e) });
+      if (isReleaseJsonPath(rel)) {
+        jsonErrors.push({ file: rel, error: e.message || String(e) });
+      }
       continue;
     }
     markerHits.push(...scanTextForConflictMarkers(text, rel));
-    if (rel.endsWith(".json")) {
+    if (rel.endsWith(".json") && isReleaseJsonPath(rel)) {
       try {
         JSON.parse(text);
       } catch (e) {
