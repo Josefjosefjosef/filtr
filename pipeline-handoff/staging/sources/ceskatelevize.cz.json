@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-07T13:46:09.644103Z",
+  "ingestedAt": "2026-06-07T14:46:07.161770Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Arméni volí, strany se obviňují ze zásahů do hlasování",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/armeni-voli-strany-se-obvinuji-ze-zasahu-do-hlasovani-374315",
+      "dt": "2026-06-07T13:46:04Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "arméni",
+        "hlasování",
+        "obviňují",
+        "strany",
+        "volí",
+        "zásahů"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -157,7 +180,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "ScioŠkola podala žalobu kvůli ukončení kombinované výuky",
+      "title": "Školy podaly žalobu kvůli ukončení kombinované výuky",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/scioskola-podala-zalobu-kvuli-ukonceni-kombinovane-vyuky-374308",
       "dt": "2026-06-07T09:42:35Z",
       "media_raw": "ČT24 / Domácí",
@@ -165,10 +188,10 @@
       "tokens": [
         "kombinované",
         "kvůli",
-        "podala",
-        "scioškola",
+        "podaly",
         "ukončení",
         "výuky",
+        "školy",
         "žalobu"
       ],
       "feedCategory": "zpravy",
@@ -722,30 +745,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Do Kodaně, Bruselu i k Jadranu. Přímých vlakových spojů přibývá",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/do-kodane-bruselu-i-k-jadranu-primych-vlakovych-spoju-pribyva-374230",
-      "dt": "2026-06-06T06:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "bruselu",
-        "jadranu",
-        "kodaně",
-        "přibývá",
-        "přímých",
-        "spojů",
-        "vlakových"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -756,7 +755,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 40539,
+      "bytes": 40668,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -793,11 +792,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-07T13:26:12Z",
+        "raw_feed_latest_publishedAt": "2026-06-07T13:46:04Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 2,
           "zpravy": 27,
+          "other": 2,
           "finance": 1
         },
         "drop_counts": {
@@ -810,6 +809,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Arméni volí, strany se obviňují ze zásahů do hlasování",
+            "publishedAt": "2026-06-07T13:46:04Z"
+          },
           {
             "title": "Archeologové našli na Bahamách vraky „pirátů z Karibiku“",
             "publishedAt": "2026-06-07T13:26:12Z"
@@ -835,12 +838,8 @@
             "publishedAt": "2026-06-07T11:08:26Z"
           },
           {
-            "title": "ScioŠkola podala žalobu kvůli ukončení kombinované výuky",
+            "title": "Školy podaly žalobu kvůli ukončení kombinované výuky",
             "publishedAt": "2026-06-07T09:42:35Z"
-          },
-          {
-            "title": "Střelba v Izraeli u Západního břehu si vyžádala nejméně jednoho mrtvého",
-            "publishedAt": "2026-06-07T09:22:58Z"
           }
         ]
       }
