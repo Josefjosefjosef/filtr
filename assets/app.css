@@ -248,7 +248,7 @@ img, svg, video, iframe{
   white-space: nowrap !important;
 }
 .accordionCol .mindMenu .iu-mailboxes{
-  min-height: 255px;
+  min-height: 0;
 }
 .iu-mmQuickLinks .iuIconTile > svg{
   display: inline-block;
@@ -797,6 +797,7 @@ aside.accordionCol{
   min-height: 0;
 }
 .mindMenu{
+  --iu-mm-pill-w: 252px;
   background: var(--iu-page-bg);
   color: #2A2E33;
   padding-left: 16px;
@@ -9426,8 +9427,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     gap: 0 !important;
   }
   #iuMobileGatePanelTools .mindMenu .iu-mailbox-pill{
-    width: 220px !important;
-    flex: 0 0 220px !important;
+    width: min(var(--iu-mm-pill-w, 252px), calc(100% - 82px)) !important;
+    flex: 0 1 min(var(--iu-mm-pill-w, 252px), calc(100% - 82px)) !important;
     min-width: 0 !important;
     line-height: 35px !important;
     border: 1px solid rgba(20, 40, 70, 0.18) !important;
@@ -11313,8 +11314,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy
 }
 
 .accordionCol .mindMenu .iu-mailbox-pill{
-  width: 220px;
-  flex: 0 0 220px;
+  width: var(--iu-mm-pill-w, 252px);
+  flex: 0 0 var(--iu-mm-pill-w, 252px);
   height: 35px;
   border-radius: 999px;
   border: 1px solid rgba(20,40,70,0.18);
@@ -11328,6 +11329,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy
   align-items: center;
   justify-content: flex-start;
   box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .accordionCol .mindMenu .iu-mailbox-gear{
@@ -12502,8 +12506,8 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 }
 
 .layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
-  width: 220px;
-  flex: 0 0 220px;
+  width: var(--iu-mm-pill-w, 252px);
+  flex: 0 0 var(--iu-mm-pill-w, 252px);
   min-width: 0;
   line-height: 35px;
   border: 1px solid rgba(20, 40, 70, 0.18);
@@ -12514,6 +12518,9 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   text-shadow: 0 1px 2px rgba(0,0,0,0.18);
   text-align: center !important;
   justify-content: center !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .layout > aside.accordionCol .mindMenu .iu-mailbox-gear{
@@ -17772,7 +17779,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks.iu-mojeSluzby {
 }
 
 body .accordionCol .mindMenu section.iu-mailboxes {
-  min-height: 310px;
+  min-height: 0;
 }
 
 body .accordionCol .mindMenu .iuIconTile > i {

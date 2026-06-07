@@ -12846,9 +12846,9 @@ function buildVideoAsArticleCard(it) {
             topTools.style.removeProperty("height");
           }
           var mailboxList = mindMenu ? mindMenu.querySelector("#iuMailboxList") : null;
-          if (mailboxList) mailboxList.style.minHeight = "262px";
+          if (mailboxList) mailboxList.style.minHeight = "";
           var mailboxesSection = mindMenu ? mindMenu.querySelector("section.iu-mailboxes") : null;
-          if (mailboxesSection) mailboxesSection.style.minHeight = "340px";
+          if (mailboxesSection) mailboxesSection.style.minHeight = "";
           var staleWrapper = mindMenuFlow.querySelector(".mindMenu-scroll-wrapper");
           if (staleWrapper && !staleWrapper.querySelector(".mindMenu")) {
             staleWrapper.remove();
@@ -20326,7 +20326,7 @@ function buildVideoAsArticleCard(it) {
   const MAILBOX_PLACEHOLDERS = ["Např.: e-mail 1", "Např.: e-mail 2", "Např.: pracovní web", "Např.: oblíbený web"];
   const IU_MAILBOX_MIN = 1;
   const IU_MAILBOX_MAX = 6;
-  const IU_MAILBOX_LABEL_MAX = 17;
+  const IU_MAILBOX_LABEL_MAX = 25;
   const IU_MAILBOX_SOCIAL_OPTIONS = ["facebook", "instagram", "youtube", "x", "linkedin", "tiktok", "messenger"];
   const IU_MAILBOX_SOCIAL_URLS = {
     facebook: "https://facebook.com",
@@ -20465,11 +20465,9 @@ function buildVideoAsArticleCard(it) {
     if (controls && controls.parentNode) controls.remove();
     let items = iuMailboxLoad();
     items = items.slice().sort((a, b) => (a.slot || 0) - (b.slot || 0));
-    const visibleCount = items.filter((it) => !it.hidden).length;
     const mailboxesEl = list.closest(".iu-mailboxes");
     if (mailboxesEl) {
-      if (visibleCount < 4) mailboxesEl.classList.add("iu-mailboxes-can-shrink");
-      else mailboxesEl.classList.remove("iu-mailboxes-can-shrink");
+      mailboxesEl.classList.add("iu-mailboxes-can-shrink");
     }
     const frag = document.createDocumentFragment();
     items.forEach((it, i) => {
@@ -20567,10 +20565,10 @@ function buildVideoAsArticleCard(it) {
       overlay.setAttribute("id", "iu-mailbox-edit-overlay");
       overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;z-index:10025;";
       const form = document.createElement("form");
-      form.style.cssText = "background:#fff;padding:20px;border-radius:12px;min-width:280px;box-shadow:0 10px 40px rgba(0,0,0,0.2);";
+      form.style.cssText = "background:#fff;padding:20px;border-radius:12px;min-width:320px;box-shadow:0 10px 40px rgba(0,0,0,0.2);";
       form.innerHTML = `
-        <p style="margin:0 0 12px 0;font-weight:600;">Název tlačítka (max 17 znaků)</p>
-        <input type="text" id="iu-mailbox-edit-label" maxlength="17" autocomplete="off" value="${escapeHtml(it.label || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
+        <p style="margin:0 0 12px 0;font-weight:600;">Název tlačítka (max ${MAX} znaků)</p>
+        <input type="text" id="iu-mailbox-edit-label" maxlength="${MAX}" autocomplete="off" value="${escapeHtml(it.label || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
         <p style="margin:0 0 12px 0;font-weight:600;">URL (www)</p>
         <input type="text" id="iu-mailbox-edit-url" autocomplete="off" value="${escapeHtml(it.url || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
         <div class="iu-mailbox-edit-social-row" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0;">
