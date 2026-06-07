@@ -431,17 +431,33 @@ def _cap_batch_with_p0_reserves(
 
 
 def tick_max_publish_items() -> int:
+    """Max articles per pipeline tick (small-batch publishing loop)."""
+    raw = (
+        os.getenv("IU_BATCH_SIZE", "").strip()
+        or os.getenv("IU_TICK_MAX_PUBLISH_ITEMS", "").strip()
+        or "10"
+    )
     try:
-        return max(10, int(os.getenv("IU_TICK_MAX_PUBLISH_ITEMS", "180") or "180"))
+        return max(1, int(raw))
     except Exception:
-        return 180
+        return 10
 
 
 def tick_max_publish_seconds() -> float:
-    try:
-        return max(30.0, float(os.getenv("IU_TICK_MAX_PUBLISH_SEC", "240") or "240"))
-    except Exception:
-        return 240.0
+    """Wall-clock budget for aggregate/publish within one tick."""
+    sec_raw = os.getenv("IU_TICK_MAX_PUBLISH_SEC", "").strip()
+    if sec_raw:
+        try:
+            return max(30.0, float(sec_raw))
+        except Exception:
+            pass
+    min_raw = os.getenv("IU_MAX_RUNTIME_MIN", "").strip()
+    if min_raw:
+        try:
+            return max(0.5, float(min_raw)) * 60.0
+        except Exception:
+            pass
+    return 480.0
 
 
 def queue_depth(output_dir: str) -> int:

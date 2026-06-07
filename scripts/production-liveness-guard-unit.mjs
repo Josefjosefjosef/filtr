@@ -126,4 +126,53 @@ function freshPriority(except = {}) {
   console.log("single_section_warn_test: PASS");
 }
 
+// Scenario 9 — batch mode: priority sections empty this tick but new content published → WARN not FAIL
+{
+  const genTs = Date.parse("2026-06-07T10:00:00.000Z");
+  const articles = [
+    art("aktualne", "2026-06-07T06:00:00.000Z", { iuReleaseAt: "2026-06-07T10:05:00.000Z" }),
+    art("finance", "2026-06-07T10:04:00.000Z", { iuReleaseAt: "2026-06-07T10:04:00.000Z" }),
+    art("cestovani", "2026-06-07T10:03:00.000Z"),
+  ];
+  const r = evaluateProductionLiveness(articles, {
+    nowMs: Date.parse("2026-06-07T10:10:00.000Z"),
+    generatedAt: "2026-06-07T10:00:00.000Z",
+    generatedAtTs: genTs,
+    batchMode: true,
+  });
+  assert(r.result === "PASS_WITH_WARN", "batch_publish_soft_fail: expected PASS_WITH_WARN");
+  assert(r.report.content_newer_than_generated >= 1, "batch_publish_soft_fail: content newer");
+  console.log("batch_publish_soft_fail_test: PASS");
+}
+
+// Scenario 10 — batch mode: site dead (no recent hub content, no new publish) → FAIL
+{
+  const articles = freshPriority({
+    aktualne: "2026-06-05T08:00:00.000Z",
+    sport: "2026-06-05T08:00:00.000Z",
+    finance: "2026-06-05T08:00:00.000Z",
+    zdravi: "2026-06-05T08:00:00.000Z",
+    cestovani: "2026-06-05T08:00:00.000Z",
+  });
+  const r = evaluateProductionLiveness(articles, {
+    nowMs: NOW,
+    batchMode: true,
+  });
+  assert(r.result === "FAIL", "batch_site_dead_test: expected FAIL");
+  console.log("batch_site_dead_test: PASS");
+}
+
+// Scenario 11 — batch mode: Zprávy/Sport 2h miss with pipeline alive → PASS_WITH_WARN
+{
+  const articles = freshPriority({
+    aktualne: "2026-06-05T16:00:00.000Z",
+    sport: "2026-06-05T16:30:00.000Z",
+    finance: "2026-06-05T19:30:00.000Z",
+    zdravi: "2026-06-05T19:00:00.000Z",
+  });
+  const r = evaluateProductionLiveness(articles, { nowMs: NOW, batchMode: true });
+  assert(r.result === "PASS_WITH_WARN", "batch_headline_soft_test: expected PASS_WITH_WARN");
+  console.log("batch_headline_soft_test: PASS");
+}
+
 console.log("PASS production-liveness-guard-unit");

@@ -16,6 +16,7 @@ if _SCRIPTS not in sys.path:
 from iu_backpressure import (  # noqa: E402
     _cap_batch_with_p0_reserves,
     split_publish_batch,
+    tick_max_publish_items,
 )
 
 
@@ -62,7 +63,7 @@ def test_zdravi_reserve_when_batch_would_omit_fresh_zdravi():
     assert fresh["url"] in urls, f"fresh zdravi missing from batch meta={meta}"
     assert meta.get("zdravi_reserved") == 1
     assert urls.count(fresh["url"]) == 1
-    assert len(batch) == 180
+    assert len(batch) == tick_max_publish_items()
 
 
 def test_no_duplicate_when_fresh_zdravi_already_in_small_batch():

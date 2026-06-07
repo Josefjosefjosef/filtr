@@ -16,6 +16,7 @@ if _SCRIPTS not in sys.path:
 from iu_backpressure import (  # noqa: E402
     _cap_batch_with_p0_reserves,
     split_publish_batch,
+    tick_max_publish_items,
 )
 
 
@@ -61,7 +62,7 @@ def test_finance_reserve_when_batch_would_omit_fresh_finance():
     urls = [str(x.get("url") or "") for x in batch]
     assert fresh["url"] in urls, f"fresh finance missing from batch meta={meta}"
     assert meta.get("finance_reserved") == 1
-    assert len(batch) == 180
+    assert len(batch) == tick_max_publish_items()
 
 
 def test_cap_helper_prefers_newest_fresh_native_finance():

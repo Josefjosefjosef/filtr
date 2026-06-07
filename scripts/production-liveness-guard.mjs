@@ -32,8 +32,11 @@ export const FLEX_4H_LIVENESS_SECTION_KEYS = new Set([
   "vzdelavani",
 ]);
 
-/** Sections that must never soft-fail alone — keep hard 2h contract. */
+/** Sections with hard 2h contract when not in batch publishing mode. */
 export const HARD_FAIL_SECTION_KEYS = new Set(["aktualne", "sport"]);
+
+/** Priority sections for small-batch cadence (Zprávy, Sport, Zdraví, Finance). */
+export const BATCH_PRIORITY_SECTION_KEYS = new Set(["aktualne", "sport", "zdravi", "finance"]);
 
 export const SECTIONS = [
   { key: "hub", label: "Přehled dne", match: () => true },
@@ -96,13 +99,30 @@ export function isPipelineLivenessAlive(report, options = {}) {
   const generatedAtTs = options.generatedAtTs ?? null;
   const nowMs = options.nowMs ?? Date.now();
   const min2h = options.min2h ?? DEFAULT_MIN_2H;
+  const batchMode = Boolean(options.batchMode);
 
   if (articles.length === 0) return false;
 
+  const contentNewer = countContentNewerThanGenerated(articles, generatedAtTs);
+  const hub4h = Number(report.sections?.hub?.counts?.last_4h ?? 0);
+
   if (generatedAtTs) {
     const genAgeMin = (nowMs - generatedAtTs) / 60_000;
-    const contentNewer = countContentNewerThanGenerated(articles, generatedAtTs);
     if (genAgeMin < 180 && contentNewer === 0) return false;
+  }
+
+  if (batchMode) {
+    if (contentNewer > 0 || hub4h >= min2h) return true;
+    const anyPriority4h = [...BATCH_PRIORITY_SECTION_KEYS].some((key) => {
+      const row = report.sections[key];
+      return Number(row?.counts?.last_4h ?? 0) >= min2h;
+    });
+    if (anyPriority4h) return true;
+    const anyNewestSoft = [...PRIORITY_SECTION_KEYS].some((key) => {
+      const age = report.sections[key]?.newestAgeMin;
+      return age !== null && age !== undefined && age <= FLEX_4H_SOFT_NEWEST_HOURS * 60;
+    });
+    return anyNewestSoft;
   }
 
   for (const key of HARD_FAIL_SECTION_KEYS) {
@@ -123,13 +143,27 @@ export function isPipelineLivenessAlive(report, options = {}) {
 }
 
 /** Sections that may WARN instead of FAIL when pipeline content is alive. */
-export function canSectionSoftFailWhenPipelineAlive(sectionKey, row, min2h = DEFAULT_MIN_2H) {
+export function canSectionSoftFailWhenPipelineAlive(
+  sectionKey,
+  row,
+  min2h = DEFAULT_MIN_2H,
+  batchMode = false,
+) {
   if (!row) return false;
   const c2 = Number(row.counts?.last_2h ?? 0);
   const c4 = Number(row.counts?.last_4h ?? 0);
+  const newestAgeMin = row.newestAgeMin;
+  const newestSoft =
+    newestAgeMin !== null &&
+    newestAgeMin !== undefined &&
+    newestAgeMin <= FLEX_4H_SOFT_NEWEST_HOURS * 60;
+
+  if (batchMode && BATCH_PRIORITY_SECTION_KEYS.has(sectionKey)) {
+    return c2 < min2h && (c4 >= min2h || newestSoft);
+  }
   if (sectionKey === "aktualne") return false;
   if (sectionKey === ZDRAVI_ISOLATED_SOFT_FAIL_SECTION) return c4 < min2h;
-  if (sectionKey === "sport") return c2 < min2h && c4 >= min2h;
+  if (sectionKey === "sport") return c2 < min2h && (c4 >= min2h || newestSoft);
   return false;
 }
 
@@ -170,11 +204,21 @@ function flex4hSectionVerdict(sectionKey, c2, c4, min2h, newestAgeMin = null) {
  * Finance / Zdraví: 2h miss is warning when 4h has content; 4h empty is blocking fail.
  * Other priority sections: 2h blocking only.
  */
-export function evaluatePrioritySectionLiveness(sectionKey, counts, min2h = DEFAULT_MIN_2H, newestAgeMin = null) {
+export function evaluatePrioritySectionLiveness(
+  sectionKey,
+  counts,
+  min2h = DEFAULT_MIN_2H,
+  newestAgeMin = null,
+  batchMode = false,
+) {
   const c2 = Number(counts?.last_2h ?? 0);
   const c4 = Number(counts?.last_4h ?? 0);
 
   if (FLEX_4H_LIVENESS_SECTION_KEYS.has(sectionKey)) {
+    return flex4hSectionVerdict(sectionKey, c2, c4, min2h, newestAgeMin);
+  }
+
+  if (batchMode && BATCH_PRIORITY_SECTION_KEYS.has(sectionKey)) {
     return flex4hSectionVerdict(sectionKey, c2, c4, min2h, newestAgeMin);
   }
 
@@ -196,6 +240,7 @@ export function evaluateProductionLiveness(articles, options = {}) {
   const nowMs = options.nowMs ?? Date.now();
   const windows = options.windowsHours ?? DEFAULT_WINDOWS_HOURS;
   const min2h = options.min2h ?? DEFAULT_MIN_2H;
+  const batchMode = Boolean(options.batchMode);
   const generatedAtTs =
     options.generatedAtTs ??
     (options.generatedAt ? Date.parse(String(options.generatedAt)) : null);
@@ -206,6 +251,7 @@ export function evaluateProductionLiveness(articles, options = {}) {
   const report = {
     generatedAt: options.generatedAt ?? null,
     generatedAtTs: Number.isFinite(generatedAtTs) ? generatedAtTs : null,
+    batchMode,
     sections: {},
   };
 
@@ -228,7 +274,7 @@ export function evaluateProductionLiveness(articles, options = {}) {
     };
 
     if (PRIORITY_SECTION_KEYS.has(sec.key)) {
-      const verdict = evaluatePrioritySectionLiveness(sec.key, counts, min2h, newestAgeMin);
+      const verdict = evaluatePrioritySectionLiveness(sec.key, counts, min2h, newestAgeMin, batchMode);
       report.sections[sec.key].livenessResult = verdict.result;
       if (!verdict.ok) {
         failedSections.push(sec.key);
@@ -258,16 +304,53 @@ export function evaluateProductionLiveness(articles, options = {}) {
     }
   }
 
-  const pipelineAlive = isPipelineLivenessAlive(report, { articles, generatedAtTs, nowMs, min2h });
-  if (failed && pipelineAlive && failedSections.length > 0 && !failedSections.includes("aktualne")) {
-    const allSoft = failedSections.every((sk) =>
-      canSectionSoftFailWhenPipelineAlive(sk, report.sections[sk], min2h),
-    );
-    if (allSoft) {
+  const contentNewerThanGenerated = countContentNewerThanGenerated(articles, report.generatedAtTs);
+  report.content_newer_than_generated = contentNewerThanGenerated;
+
+  const pipelineAlive = isPipelineLivenessAlive(report, {
+    articles,
+    generatedAtTs,
+    nowMs,
+    min2h,
+    batchMode,
+  });
+
+  if (failed && pipelineAlive && failedSections.length > 0) {
+    const allowAktualneSoft = batchMode || !failedSections.includes("aktualne");
+    if (allowAktualneSoft) {
+      const allSoft = failedSections.every((sk) =>
+        canSectionSoftFailWhenPipelineAlive(sk, report.sections[sk], min2h, batchMode),
+      );
+      if (allSoft) {
+        failed = false;
+        warned = true;
+        report.pipeline_alive = true;
+        report.pipeline_alive_soft_fail_sections = [...failedSections];
+        for (const sk of failedSections) {
+          report.sections[sk].livenessResult = "PASS_WITH_WARN";
+        }
+      }
+    }
+  }
+
+  if (batchMode && failed && contentNewerThanGenerated > 0) {
+    failed = false;
+    warned = true;
+    report.batch_publish_soft_fail = true;
+    report.batch_publish_soft_fail_sections = [...failedSections];
+    for (const sk of failedSections) {
+      report.sections[sk].livenessResult = "PASS_WITH_WARN";
+    }
+  }
+
+  if (batchMode && failed) {
+    const hub4h = Number(report.sections?.hub?.counts?.last_4h ?? 0);
+    const siteDead = hub4h < min2h && contentNewerThanGenerated === 0;
+    if (!siteDead && failedSections.length < PRIORITY_SECTION_KEYS.size) {
       failed = false;
       warned = true;
-      report.pipeline_alive = true;
-      report.pipeline_alive_soft_fail_sections = [...failedSections];
+      report.partial_section_soft_fail = true;
+      report.partial_section_soft_fail_sections = [...failedSections];
       for (const sk of failedSections) {
         report.sections[sk].livenessResult = "PASS_WITH_WARN";
       }
@@ -275,7 +358,13 @@ export function evaluateProductionLiveness(articles, options = {}) {
   }
 
   const result = failed ? "FAIL" : warned ? "PASS_WITH_WARN" : "PASS";
-  return { failed, warned, result, report, pipelineAlive: Boolean(report.pipeline_alive) };
+  return {
+    failed,
+    warned,
+    result,
+    report,
+    pipelineAlive: Boolean(report.pipeline_alive) || pipelineAlive,
+  };
 }
 
 async function main() {
@@ -284,6 +373,7 @@ async function main() {
     .map((x) => Number(x.trim()))
     .filter((n) => Number.isFinite(n) && n > 0);
   const min2h = Number(process.env.LIVENESS_MIN_PER_SECTION_2H || String(DEFAULT_MIN_2H));
+  const batchMode = String(process.env.LIVENESS_BATCH_MODE || "1").toLowerCase() !== "0";
 
   const doc = await loadArticlesDoc();
   const articles = Array.isArray(doc.articles) ? doc.articles : [];
@@ -293,13 +383,18 @@ async function main() {
     nowMs,
     windowsHours: windows,
     min2h,
+    batchMode,
     generatedAt: doc.generatedAt,
     generatedAtTs: Number.isFinite(generatedAtTs) ? generatedAtTs : null,
   });
 
+  log(`batch_mode=${batchMode ? "YES" : "NO"}`);
   log(`articles=${articles.length} content_newer_than_generatedAt=${countContentNewerThanGenerated(articles, report.generatedAtTs)}`);
   if (report.pipeline_alive) {
     log("pipeline_alive=YES");
+  }
+  if (report.batch_publish_soft_fail) {
+    log(`batch_publish_soft_fail_sections=${(report.batch_publish_soft_fail_sections || []).join(",")}`);
   }
 
   for (const sec of SECTIONS) {
@@ -310,8 +405,11 @@ async function main() {
       `section=${sec.label} ${parts} newest_age_min=${row.newestAgeMin !== null ? row.newestAgeMin.toFixed(1) : "n/a"}`,
     );
     if (PRIORITY_SECTION_KEYS.has(sec.key)) {
-      const verdict = evaluatePrioritySectionLiveness(sec.key, counts, min2h, row.newestAgeMin);
-      const softened = report.pipeline_alive_soft_fail_sections?.includes(sec.key);
+      const verdict = evaluatePrioritySectionLiveness(sec.key, counts, min2h, row.newestAgeMin, batchMode);
+      const softened =
+        report.pipeline_alive_soft_fail_sections?.includes(sec.key) ||
+        report.batch_publish_soft_fail_sections?.includes(sec.key) ||
+        report.partial_section_soft_fail_sections?.includes(sec.key);
       if (!verdict.ok && softened) {
         log(`WARN: ${verdict.message} (pipeline_alive)`);
       } else if (!verdict.ok) {
