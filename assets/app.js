@@ -21306,7 +21306,14 @@ function buildVideoAsArticleCard(it) {
   };
 
   const IU_QUICKTOOLS_STORAGE_KEY = "infouzel_quicktools";
-  const IU_QUICKTOOLS_CONFIG_VERSION = 1;
+  const IU_QUICKTOOLS_CONFIG_VERSION = 2;
+  const IU_CUSTOM_BUTTONS_MAX = 20;
+  const IU_CUSTOM_BUTTON_COLORS = [
+    "#1D4ED8", "#047857", "#7C3AED", "#0EA5A4", "#EA580C",
+    "#2563EB", "#0284C7", "#4B5563", "#CA8A04", "#9F1239",
+    "#0F766E", "#4D7C0F", "#DC2626", "#E11D48", "#9333EA",
+    "#0891B2", "#BE185D", "#65A30D", "#C2410C", "#4338CA"
+  ];
   const IU_QUICKTOOLS_REGISTRY = [
     { id: "datovka", label: "Datová schránka", accent: "#1F4B99" },
     { id: "bankovnictvi", label: "Internetové bankovnictví", accent: "#0066cc" },
@@ -21319,16 +21326,72 @@ function buildVideoAsArticleCard(it) {
     { id: "financni_kalkulacky", label: "Finanční kalkulačky", accent: "#4285f4" },
     { id: "vzory_smluv", label: "Vzory smluv a plné moci", accent: "#ff0000" },
     { id: "vytvorit_fakturu", label: "Vytvořit fakturu", accent: "#0f766e" },
-    { id: "zivnostensky_rejstrik", label: "Živnostenský rejstřík", accent: "#455a64" },
+    { id: "pridat_tlacitko", label: "Přidat tlačítko", accent: "#455a64" },
     { id: "naceneni_nakupu_domu", label: "Nákup potravin online", accent: "#2e7d32" }
   ];
+
+  function iuQuickToolsMigrateId(id) {
+    if (id === "katastr_nemovitosti") return "vytvorit_fakturu";
+    if (id === "zivnostensky_rejstrik") return "pridat_tlacitko";
+    return id;
+  }
+
+  function iuQuickToolsKnownIds(cfg) {
+    const ids = new Set(IU_QUICKTOOLS_REGISTRY.map(function(r){ return r.id; }));
+    (cfg.customButtons || []).forEach(function(b){ if (b && b.id) ids.add(b.id); });
+    return ids;
+  }
+
+  function iuQuickToolsGetItemMeta(id, cfg) {
+    const reg = IU_QUICKTOOLS_REGISTRY.find(function(r){ return r.id === id; });
+    if (reg) return reg;
+    const custom = (cfg.customButtons || []).find(function(b){ return b.id === id; });
+    if (custom) return { id: custom.id, label: custom.label, accent: custom.color || "#2563EB" };
+    return null;
+  }
+
+  function iuQuickToolsPickColor(cfg) {
+    const used = new Set((cfg.customButtons || []).map(function(b){ return b.color; }).filter(Boolean));
+    for (var i = 0; i < IU_CUSTOM_BUTTON_COLORS.length; i++) {
+      if (!used.has(IU_CUSTOM_BUTTON_COLORS[i])) return IU_CUSTOM_BUTTON_COLORS[i];
+    }
+    return IU_CUSTOM_BUTTON_COLORS[(cfg.customButtons || []).length % IU_CUSTOM_BUTTON_COLORS.length];
+  }
+
+  function iuQuickToolsValidateUrl(raw) {
+    const val = String(raw || "").trim();
+    if (!val) return { ok: false, message: "Zadejte platnou URL adresu." };
+    try {
+      const u = new URL(val.indexOf("://") === -1 ? "https://" + val : val);
+      if (u.protocol !== "http:" && u.protocol !== "https:") {
+        return { ok: false, message: "Povoleny jsou pouze odkazy http:// nebo https://." };
+      }
+      return { ok: true, url: u.href };
+    } catch (_) {
+      return { ok: false, message: "Zadejte platnou URL adresu." };
+    }
+  }
+
+  function iuQuickToolsValidateName(raw) {
+    const val = String(raw || "").trim();
+    if (!val) return { ok: false, message: "Zadejte název tlačítka." };
+    if (val.length > 80) return { ok: false, message: "Název může mít maximálně 80 znaků." };
+    return { ok: true, name: val };
+  }
+
+  function iuQuickToolsNewCustomId() {
+    return "custom_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8);
+  }
 
   function loadQuickToolsConfig() {
     try {
       const raw = typeof localStorage !== "undefined" ? localStorage.getItem(IU_QUICKTOOLS_STORAGE_KEY) : null;
       if (!raw) return null;
       const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed.version === "number" && Array.isArray(parsed.order) && Array.isArray(parsed.visible)) return parsed;
+      if (parsed && typeof parsed.version === "number" && Array.isArray(parsed.order) && Array.isArray(parsed.visible)) {
+        if (!Array.isArray(parsed.customButtons)) parsed.customButtons = [];
+        return parsed;
+      }
       return null;
     } catch (e) {
       return null;
@@ -21349,21 +21412,79 @@ function buildVideoAsArticleCard(it) {
 
   function getDefaultQuickToolsConfig() {
     const order = IU_QUICKTOOLS_REGISTRY.map(function(r){ return r.id; });
-    return { version: IU_QUICKTOOLS_CONFIG_VERSION, order: order.slice(), visible: order.slice() };
+    return { version: IU_QUICKTOOLS_CONFIG_VERSION, order: order.slice(), visible: order.slice(), customButtons: [] };
   }
 
   function sanitizeQuickToolsConfig(stored) {
     const defaultCfg = getDefaultQuickToolsConfig();
-    const knownIds = new Set(IU_QUICKTOOLS_REGISTRY.map(function(r){ return r.id; }));
-    function migrateQuickToolId(id) {
-      return id === "katastr_nemovitosti" ? "vytvorit_fakturu" : id;
-    }
-    let order = Array.isArray(stored.order) ? stored.order.map(migrateQuickToolId).filter(function(id){ return knownIds.has(id); }) : [];
+    const customButtons = Array.isArray(stored.customButtons) ? stored.customButtons.map(function(b){
+      if (!b || typeof b !== "object") return null;
+      const id = typeof b.id === "string" ? b.id : "";
+      const label = typeof b.label === "string" ? b.label.trim() : "";
+      const urlCheck = iuQuickToolsValidateUrl(b.url);
+      if (!id || !label || !urlCheck.ok) return null;
+      return { id: id, label: label, url: urlCheck.url, color: typeof b.color === "string" ? b.color : IU_CUSTOM_BUTTON_COLORS[0] };
+    }).filter(Boolean).slice(0, IU_CUSTOM_BUTTONS_MAX) : [];
+    const cfgDraft = { version: IU_QUICKTOOLS_CONFIG_VERSION, order: stored.order, visible: stored.visible, customButtons: customButtons };
+    const knownIds = iuQuickToolsKnownIds(cfgDraft);
+    let order = Array.isArray(stored.order) ? stored.order.map(iuQuickToolsMigrateId).filter(function(id){ return knownIds.has(id); }) : [];
     const missingOrder = defaultCfg.order.filter(function(id){ return order.indexOf(id) === -1; });
     order = order.concat(missingOrder);
-    let visible = Array.isArray(stored.visible) ? stored.visible.map(migrateQuickToolId).filter(function(id){ return knownIds.has(id); }) : [];
+    customButtons.forEach(function(b){
+      if (order.indexOf(b.id) === -1) {
+        const addIdx = order.indexOf("pridat_tlacitko");
+        if (addIdx === -1) order.push(b.id); else order.splice(addIdx, 0, b.id);
+      }
+    });
+    let visible = Array.isArray(stored.visible) ? stored.visible.map(iuQuickToolsMigrateId).filter(function(id){ return knownIds.has(id); }) : [];
     visible = order.filter(function(id){ return visible.indexOf(id) !== -1; });
-    return { version: IU_QUICKTOOLS_CONFIG_VERSION, order: order, visible: visible };
+    return { version: IU_QUICKTOOLS_CONFIG_VERSION, order: order, visible: visible, customButtons: customButtons };
+  }
+
+  function iuQuickToolsGetGrid() {
+    const panelEl = document.getElementById("iuQuickToolsSettingsPanel");
+    let grid = null;
+    if (panelEl && panelEl.nextElementSibling && panelEl.nextElementSibling.classList.contains("iu-mmQuickGrid")) {
+      grid = panelEl.nextElementSibling;
+    }
+    if (!grid) {
+      const section = (panelEl && panelEl.closest("section.iu-mmQuickLinks")) || document.querySelector(".mindMenu section.iu-mmQuickLinks") || document.querySelector("aside.accordionCol section.iu-mmQuickLinks");
+      grid = section ? section.querySelector(".iu-mmQuickGrid") : null;
+    }
+    return grid;
+  }
+
+  function iuQuickToolsRenderCustomTiles(grid, cfg) {
+    if (!grid) return;
+    grid.querySelectorAll(".iuTile[data-quicktool-custom='1']").forEach(function(el){ el.remove(); });
+    (cfg.customButtons || []).forEach(function(btn){
+      let tile = grid.querySelector('.iuTile[data-quicktool-id="' + btn.id + '"]');
+      if (!tile) {
+        tile = document.createElement("div");
+        tile.className = "iuTile iuTile--custom";
+        tile.setAttribute("role", "listitem");
+        tile.setAttribute("data-quicktool-id", btn.id);
+        tile.setAttribute("data-quicktool-custom", "1");
+        tile.setAttribute("data-iu-ql-custom", "1");
+        const link = document.createElement("a");
+        link.className = "iuTileLink";
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        const text = document.createElement("span");
+        text.className = "iuTileText";
+        link.appendChild(text);
+        tile.appendChild(link);
+        grid.appendChild(tile);
+      }
+      tile.style.setProperty("--iu-ql-accent", btn.color || "#2563EB");
+      const linkEl = tile.querySelector(".iuTileLink");
+      const textEl = tile.querySelector(".iuTileText");
+      if (linkEl) {
+        linkEl.href = btn.url;
+        linkEl.setAttribute("aria-label", btn.label);
+      }
+      if (textEl) textEl.textContent = btn.label;
+    });
   }
 
   function iuQuickToolsUseMobileModalLayer() {
@@ -21391,18 +21512,11 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuQuickToolsApplyConfig() {
-    const panelEl = document.getElementById("iuQuickToolsSettingsPanel");
-    let grid = null;
-    if (panelEl && panelEl.nextElementSibling && panelEl.nextElementSibling.classList.contains("iu-mmQuickGrid")) {
-      grid = panelEl.nextElementSibling;
-    }
-    if (!grid) {
-      const section = (panelEl && panelEl.closest("section.iu-mmQuickLinks")) || document.querySelector(".mindMenu section.iu-mmQuickLinks") || document.querySelector("aside.accordionCol section.iu-mmQuickLinks");
-      grid = section ? section.querySelector(".iu-mmQuickGrid") : null;
-    }
+    const grid = iuQuickToolsGetGrid();
     if (!grid) return;
     const stored = loadQuickToolsConfig();
     const cfg = stored ? sanitizeQuickToolsConfig(stored) : getDefaultQuickToolsConfig();
+    iuQuickToolsRenderCustomTiles(grid, cfg);
     const orderMap = {};
     cfg.order.forEach(function(id, i){ orderMap[id] = i; });
     const tiles = Array.from(grid.querySelectorAll(".iuTile[data-quicktool-id]"));
@@ -21419,6 +21533,7 @@ function buildVideoAsArticleCard(it) {
       const hide = cfg.visible.indexOf(id) === -1;
       el.hidden = hide;
       el.style.display = hide ? "none" : "";
+      el.setAttribute("aria-hidden", hide ? "true" : "false");
     });
   }
 
@@ -21499,7 +21614,7 @@ function buildVideoAsArticleCard(it) {
     list.className = "iu-quicktools-settings-list";
     list.setAttribute("role", "list");
     cfg.order.forEach(function(id){
-      const item = IU_QUICKTOOLS_REGISTRY.find(function(r){ return r.id === id; });
+      const item = iuQuickToolsGetItemMeta(id, cfg);
       if (!item) return;
       const row = document.createElement("div");
       row.className = "iu-quicktools-settings-row";
@@ -21544,6 +21659,314 @@ function buildVideoAsArticleCard(it) {
     iuQuickToolsSettingsRender(cfg);
   }
 
+  function iuCustomButtonsOverlayUseFullscreen() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuCustomButtonsOverlayClose() {
+    const panel = document.getElementById("iuCustomButtonsPanel");
+    const backdrop = document.getElementById("iuCustomButtonsBackdrop");
+    if (panel) {
+      panel.hidden = true;
+      panel.setAttribute("aria-hidden", "true");
+      panel.dataset.open = "0";
+      panel.classList.remove("iu-custom-buttons-overlay-panel--fullscreen");
+    }
+    if (backdrop) {
+      backdrop.hidden = true;
+      backdrop.setAttribute("aria-hidden", "true");
+    }
+    document.body.classList.remove("iu-custom-buttons-overlay-open");
+    iuCustomButtonsHideDeleteConfirm();
+    iuCustomButtonsResetForm();
+  }
+  try { window.iuCustomButtonsOverlayClose = iuCustomButtonsOverlayClose; } catch (_) {}
+  try { window.iuCustomButtonsOverlayOpen = iuCustomButtonsOverlayOpen; } catch (_) {}
+
+  function iuCustomButtonsOverlayOpen() {
+    const panel = document.getElementById("iuCustomButtonsPanel");
+    const backdrop = document.getElementById("iuCustomButtonsBackdrop");
+    if (!panel || !backdrop) return;
+    if (typeof window.iuForceCloseAllOverlays === "function") {
+      try { window.iuForceCloseAllOverlays(); } catch (_) {}
+    }
+    iuQuickToolsSettingsClose();
+    backdrop.hidden = false;
+    backdrop.removeAttribute("aria-hidden");
+    panel.hidden = false;
+    panel.setAttribute("aria-hidden", "false");
+    panel.dataset.open = "1";
+    if (iuCustomButtonsOverlayUseFullscreen()) {
+      panel.classList.add("iu-custom-buttons-overlay-panel--fullscreen");
+    } else {
+      panel.classList.remove("iu-custom-buttons-overlay-panel--fullscreen");
+    }
+    document.body.classList.add("iu-custom-buttons-overlay-open");
+    iuCustomButtonsRefreshList();
+    iuCustomButtonsUpdateFormState();
+    const nameInput = document.getElementById("iuCustomButtonsName");
+    if (nameInput) nameInput.focus();
+  }
+
+  function iuCustomButtonsResetForm() {
+    const form = document.getElementById("iuCustomButtonsForm");
+    const editId = document.getElementById("iuCustomButtonsEditId");
+    const err = document.getElementById("iuCustomButtonsFormError");
+    if (form) form.reset();
+    if (editId) editId.value = "";
+    if (err) { err.hidden = true; err.textContent = ""; }
+    iuCustomButtonsUpdateFormState();
+  }
+
+  function iuCustomButtonsUpdateFormState() {
+    let cfg = loadQuickToolsConfig();
+    if (!cfg) cfg = getDefaultQuickToolsConfig();
+    cfg = sanitizeQuickToolsConfig(cfg);
+    const count = (cfg.customButtons || []).length;
+    const atLimit = count >= IU_CUSTOM_BUTTONS_MAX;
+    const editIdEl = document.getElementById("iuCustomButtonsEditId");
+    const editing = editIdEl && editIdEl.value;
+    const limitMsg = document.getElementById("iuCustomButtonsLimitMsg");
+    const saveBtn = document.getElementById("iuCustomButtonsSave");
+    const nameInput = document.getElementById("iuCustomButtonsName");
+    const urlInput = document.getElementById("iuCustomButtonsUrl");
+    const blocked = atLimit && !editing;
+    if (limitMsg) limitMsg.hidden = !blocked;
+    if (saveBtn) saveBtn.disabled = !!blocked;
+    if (nameInput) nameInput.disabled = !!blocked;
+    if (urlInput) urlInput.disabled = !!blocked;
+  }
+
+  function iuCustomButtonsShowFormError(msg) {
+    const err = document.getElementById("iuCustomButtonsFormError");
+    if (!err) return;
+    err.textContent = msg;
+    err.hidden = !msg;
+  }
+
+  function iuCustomButtonsRefreshList() {
+    const list = document.getElementById("iuCustomButtonsList");
+    if (!list) return;
+    let cfg = loadQuickToolsConfig();
+    if (!cfg) cfg = getDefaultQuickToolsConfig();
+    cfg = sanitizeQuickToolsConfig(cfg);
+    list.innerHTML = "";
+    if (!(cfg.customButtons || []).length) {
+      const empty = document.createElement("p");
+      empty.className = "iu-custom-buttons-empty";
+      empty.textContent = "Zatím nemáte žádná vlastní tlačítka.";
+      list.appendChild(empty);
+      return;
+    }
+    (cfg.customButtons || []).forEach(function(btn){
+      const row = document.createElement("div");
+      row.className = "iu-custom-buttons-item";
+      row.setAttribute("data-custom-button-id", btn.id);
+      const head = document.createElement("div");
+      head.className = "iu-custom-buttons-item-head";
+      const marker = document.createElement("span");
+      marker.className = "iu-custom-buttons-item-marker";
+      marker.style.backgroundColor = btn.color || "#2563EB";
+      const title = document.createElement("span");
+      title.className = "iu-custom-buttons-item-title";
+      title.textContent = btn.label;
+      head.appendChild(marker);
+      head.appendChild(title);
+      const url = document.createElement("a");
+      url.className = "iu-custom-buttons-item-url";
+      url.href = btn.url;
+      url.target = "_blank";
+      url.rel = "noopener noreferrer";
+      url.textContent = btn.url;
+      const actions = document.createElement("div");
+      actions.className = "iu-custom-buttons-item-actions";
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.className = "iu-custom-buttons-item-edit";
+      editBtn.textContent = "Upravit";
+      editBtn.setAttribute("data-custom-btn-edit", btn.id);
+      const delBtn = document.createElement("button");
+      delBtn.type = "button";
+      delBtn.className = "iu-custom-buttons-item-delete";
+      delBtn.textContent = "Odstranit";
+      delBtn.setAttribute("data-custom-btn-delete", btn.id);
+      actions.appendChild(editBtn);
+      actions.appendChild(delBtn);
+      row.appendChild(head);
+      row.appendChild(url);
+      row.appendChild(actions);
+      list.appendChild(row);
+    });
+  }
+
+  var iuCustomButtonsPendingDeleteId = null;
+
+  function iuCustomButtonsHideDeleteConfirm() {
+    const dlg = document.getElementById("iuCustomButtonsDeleteConfirm");
+    if (dlg) {
+      dlg.hidden = true;
+      dlg.setAttribute("aria-hidden", "true");
+    }
+    iuCustomButtonsPendingDeleteId = null;
+  }
+
+  function iuCustomButtonsShowDeleteConfirm(id) {
+    const dlg = document.getElementById("iuCustomButtonsDeleteConfirm");
+    if (!dlg) return;
+    iuCustomButtonsPendingDeleteId = id;
+    dlg.hidden = false;
+    dlg.removeAttribute("aria-hidden");
+  }
+
+  function iuCustomButtonsSaveFromForm() {
+    const nameEl = document.getElementById("iuCustomButtonsName");
+    const urlEl = document.getElementById("iuCustomButtonsUrl");
+    const editIdEl = document.getElementById("iuCustomButtonsEditId");
+    if (!nameEl || !urlEl) return;
+    iuCustomButtonsShowFormError("");
+    const nameCheck = iuQuickToolsValidateName(nameEl.value);
+    if (!nameCheck.ok) { iuCustomButtonsShowFormError(nameCheck.message); return; }
+    const urlCheck = iuQuickToolsValidateUrl(urlEl.value);
+    if (!urlCheck.ok) { iuCustomButtonsShowFormError(urlCheck.message); return; }
+    let cfg = loadQuickToolsConfig();
+    if (!cfg) cfg = getDefaultQuickToolsConfig();
+    cfg = sanitizeQuickToolsConfig(cfg);
+    cfg.customButtons = cfg.customButtons || [];
+    const editId = editIdEl ? String(editIdEl.value || "").trim() : "";
+    if (editId) {
+      const idx = cfg.customButtons.findIndex(function(b){ return b.id === editId; });
+      if (idx === -1) return;
+      cfg.customButtons[idx] = Object.assign({}, cfg.customButtons[idx], { label: nameCheck.name, url: urlCheck.url });
+    } else {
+      if (cfg.customButtons.length >= IU_CUSTOM_BUTTONS_MAX) {
+        iuCustomButtonsShowFormError("Dosáhli jste maxima 20 vlastních tlačítek.");
+        iuCustomButtonsUpdateFormState();
+        return;
+      }
+      const newId = iuQuickToolsNewCustomId();
+      const color = iuQuickToolsPickColor(cfg);
+      cfg.customButtons.push({ id: newId, label: nameCheck.name, url: urlCheck.url, color: color });
+      const addIdx = cfg.order.indexOf("pridat_tlacitko");
+      if (addIdx === -1) cfg.order.push(newId); else cfg.order.splice(addIdx, 0, newId);
+      if (cfg.visible.indexOf(newId) === -1) cfg.visible.push(newId);
+    }
+    iuQuickToolsSaveAndApply(cfg);
+    iuCustomButtonsResetForm();
+    iuCustomButtonsRefreshList();
+    iuQuickToolsSettingsRender(cfg);
+  }
+
+  function iuCustomButtonsDeleteById(id) {
+    if (!id) return;
+    let cfg = loadQuickToolsConfig();
+    if (!cfg) cfg = getDefaultQuickToolsConfig();
+    cfg = sanitizeQuickToolsConfig(cfg);
+    cfg.customButtons = (cfg.customButtons || []).filter(function(b){ return b.id !== id; });
+    cfg.order = cfg.order.filter(function(x){ return x !== id; });
+    cfg.visible = cfg.visible.filter(function(x){ return x !== id; });
+    const grid = iuQuickToolsGetGrid();
+    if (grid) {
+      const tile = grid.querySelector('.iuTile[data-quicktool-id="' + id + '"]');
+      if (tile) tile.remove();
+    }
+    iuQuickToolsSaveAndApply(cfg);
+    iuCustomButtonsRefreshList();
+    iuQuickToolsSettingsRender(cfg);
+    iuCustomButtonsUpdateFormState();
+  }
+
+  function iuCustomButtonsInit() {
+    if (window.__iuCustomButtonsInitDone) return;
+    window.__iuCustomButtonsInitDone = 1;
+    const panel = document.getElementById("iuCustomButtonsPanel");
+    const backdrop = document.getElementById("iuCustomButtonsBackdrop");
+    const closeBtn = document.getElementById("iuCustomButtonsClose");
+    const form = document.getElementById("iuCustomButtonsForm");
+    const list = document.getElementById("iuCustomButtonsList");
+    const deleteDlg = document.getElementById("iuCustomButtonsDeleteConfirm");
+    if (!panel || !form) return;
+
+    document.addEventListener("click", function(e){
+      const t = e.target;
+      if (!t || !t.closest) return;
+      const openBtn = t.closest('[data-iu-action="custom-buttons"]');
+      if (openBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        iuCustomButtonsOverlayOpen();
+        return;
+      }
+    }, false);
+
+    if (closeBtn) closeBtn.addEventListener("click", function(){ iuCustomButtonsOverlayClose(); });
+    if (backdrop) backdrop.addEventListener("click", function(){ iuCustomButtonsOverlayClose(); });
+    panel.addEventListener("click", function(e){
+      if (e.target === panel) iuCustomButtonsOverlayClose();
+    });
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      iuCustomButtonsSaveFromForm();
+    });
+    if (list) {
+      list.addEventListener("click", function(e){
+        const t = e.target;
+        if (!t || !t.closest) return;
+        const editBtn = t.closest("[data-custom-btn-edit]");
+        if (editBtn) {
+          const id = editBtn.getAttribute("data-custom-btn-edit");
+          let cfg = loadQuickToolsConfig();
+          if (!cfg) cfg = getDefaultQuickToolsConfig();
+          cfg = sanitizeQuickToolsConfig(cfg);
+          const btn = (cfg.customButtons || []).find(function(b){ return b.id === id; });
+          if (!btn) return;
+          const editIdEl = document.getElementById("iuCustomButtonsEditId");
+          const nameEl = document.getElementById("iuCustomButtonsName");
+          const urlEl = document.getElementById("iuCustomButtonsUrl");
+          if (editIdEl) editIdEl.value = btn.id;
+          if (nameEl) nameEl.value = btn.label;
+          if (urlEl) urlEl.value = btn.url;
+          iuCustomButtonsShowFormError("");
+          iuCustomButtonsUpdateFormState();
+          if (nameEl) nameEl.focus();
+          return;
+        }
+        const delBtn = t.closest("[data-custom-btn-delete]");
+        if (delBtn) {
+          iuCustomButtonsShowDeleteConfirm(delBtn.getAttribute("data-custom-btn-delete"));
+        }
+      });
+    }
+    if (deleteDlg) {
+      deleteDlg.addEventListener("click", function(e){
+        const t = e.target;
+        if (!t || !t.closest) return;
+        if (t.closest("[data-custom-btn-cancel]")) {
+          iuCustomButtonsHideDeleteConfirm();
+          return;
+        }
+        if (t.closest("[data-custom-btn-confirm-delete]")) {
+          const id = iuCustomButtonsPendingDeleteId;
+          iuCustomButtonsHideDeleteConfirm();
+          iuCustomButtonsDeleteById(id);
+        }
+      });
+    }
+    document.addEventListener("keydown", function(e){
+      if (e.key !== "Escape") return;
+      const dlg = document.getElementById("iuCustomButtonsDeleteConfirm");
+      if (dlg && !dlg.hidden) {
+        iuCustomButtonsHideDeleteConfirm();
+        return;
+      }
+      const p = document.getElementById("iuCustomButtonsPanel");
+      if (p && !p.hidden) iuCustomButtonsOverlayClose();
+    });
+  }
+
   function iuQuickToolsInit() {
     if (window.__iuQuickToolsInitDone) return;
     window.__iuQuickToolsInitDone = 1;
@@ -21576,20 +21999,12 @@ function buildVideoAsArticleCard(it) {
     }
     function onQuickToolsVisibilityChange(e) {
       const t = e.target;
-      if (!t || t.getAttribute("data-iu-quicktools-visible-toggle") == null) return;
+      if (!t || t.type !== "checkbox") return;
+      if (t.getAttribute("data-iu-quicktools-visible-toggle") == null) return;
+      if (!panel.contains(t)) return;
       applyQuickToolsVisibilityFromCheckbox(t);
     }
-    panel.addEventListener("change", onQuickToolsVisibilityChange, true);
-    panel.addEventListener("input", onQuickToolsVisibilityChange, true);
-    document.addEventListener("change", onQuickToolsVisibilityChange, true);
-    function onPanelCheckboxClick(e) {
-      const t = e.target;
-      if (t && t.type === "checkbox" && t.getAttribute("data-iu-quicktools-visible-toggle") != null && panel.contains(t)) {
-        applyQuickToolsVisibilityFromCheckbox(t);
-      }
-    }
-    panel.addEventListener("click", onPanelCheckboxClick, true);
-    document.addEventListener("click", onPanelCheckboxClick, true);
+    panel.addEventListener("change", onQuickToolsVisibilityChange);
     function syncQuickToolsVisibilityFromPanel() {
       if (!panel) return;
       var listEl = panel.querySelector(".iu-quicktools-settings-list");
@@ -21722,6 +22137,7 @@ function buildVideoAsArticleCard(it) {
     iuWeatherInit();
     iuMailboxesInit();
     iuQuickToolsInit();
+    iuCustomButtonsInit();
     initAccordion();
   }
 
@@ -34863,6 +35279,76 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "body #iuMindMenuView .iu-mmTopTool:not(.iu-mmTopTool--imageTile):active{" +
     "transform:translateY(1px)!important;" +
     "box-shadow:0 3px 10px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.06)!important}" +
+    "}";
+  try{
+    if (document.getElementById(ID)) return;
+    var st = document.createElement("style");
+    st.id = ID;
+    st.textContent = CSS;
+    (document.head || document.documentElement).appendChild(st);
+  }catch(e){}
+})();
+
+// MindMenu custom buttons + desktop quicktools gear — injected (not app.css) for css_debt_guard byte budget.
+(function iuMindMenuCustomButtonsInject(){
+  "use strict";
+  var ID = "iu-mindmenu-custom-buttons";
+  var CSS =
+    "body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql=\"pridat-tlacitko\"]{--iu-ql-accent:#455a64}" +
+    "body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql-custom=\"1\"]>.iuTileLink{border-color:var(--iu-ql-accent,#2563EB)!important}" +
+    "#iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql=\"pridat-tlacitko\"]{--iu-ql-accent:#455a64}" +
+    ".iu-custom-buttons-overlay-backdrop[hidden],.iu-custom-buttons-overlay-panel[hidden]{display:none!important}" +
+    ".iu-custom-buttons-overlay-backdrop:not([hidden]){position:fixed;inset:0;z-index:10025;background:rgba(15,23,42,.42);-webkit-tap-highlight-color:transparent}" +
+    ".iu-custom-buttons-overlay-panel:not([hidden]){position:fixed;inset:0;z-index:10026;display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box;pointer-events:auto;overflow:hidden}" +
+    ".iu-custom-buttons-overlay-panel:not([hidden]) .iu-custom-buttons-overlay-cardShell{pointer-events:auto;width:min(720px,calc(100vw - 24px));max-height:min(88dvh,820px);display:flex;flex-direction:column;min-height:0;box-sizing:border-box;overflow:hidden}" +
+    ".iu-custom-buttons-overlay-panel--fullscreen:not([hidden]){padding:0;align-items:stretch;justify-content:stretch}" +
+    ".iu-custom-buttons-overlay-panel--fullscreen:not([hidden]) .iu-custom-buttons-overlay-cardShell{width:100%;max-width:none;max-height:none;height:100dvh;border-radius:0}" +
+    ".iu-custom-buttons-overlay-inner{display:flex;flex-direction:column;min-height:0;height:100%;background:rgba(255,255,255,.98);border:1px solid rgba(20,40,70,.12);border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.12),0 2px 10px rgba(0,0,0,.08);overflow:hidden}" +
+    ".iu-custom-buttons-overlay-panel--fullscreen .iu-custom-buttons-overlay-inner{border-radius:0;border-left:0;border-right:0;box-shadow:none}" +
+    ".iu-custom-buttons-overlay-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(20,40,70,.1);flex:0 0 auto}" +
+    ".iu-custom-buttons-overlay-h2{margin:0;font-size:18px;font-weight:700;color:#0b1f33;min-width:0}" +
+    ".iu-custom-buttons-overlay-scrollHost{flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:14px 16px 18px;box-sizing:border-box}" +
+    ".iu-custom-buttons-form{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}" +
+    ".iu-custom-buttons-field{display:flex;flex-direction:column;gap:4px;min-width:0}" +
+    ".iu-custom-buttons-field label{font-size:13px;font-weight:600;color:rgba(0,0,0,.85)}" +
+    ".iu-custom-buttons-field input{width:100%;box-sizing:border-box;min-width:0;padding:10px 12px;border:1px solid rgba(20,40,70,.16);border-radius:8px;font-size:16px;font-family:inherit}" +
+    ".iu-custom-buttons-field input:focus-visible{outline:2px solid #1f4b99;outline-offset:1px}" +
+    ".iu-custom-buttons-formError,.iu-custom-buttons-limitMsg{margin:0;font-size:13px;line-height:1.35}" +
+    ".iu-custom-buttons-formError{color:#b91c1c}.iu-custom-buttons-limitMsg{color:#92400e}" +
+    ".iu-custom-buttons-saveBtn{align-self:flex-start;padding:10px 18px;border:0;border-radius:8px;background:#1f4b99;color:#fff;font-size:14px;font-weight:600;cursor:pointer}" +
+    ".iu-custom-buttons-saveBtn:disabled{opacity:.55;cursor:not-allowed}" +
+    ".iu-custom-buttons-list{display:flex;flex-direction:column;gap:10px;min-width:0}" +
+    ".iu-custom-buttons-empty{margin:0;font-size:13px;color:rgba(0,0,0,.55)}" +
+    ".iu-custom-buttons-item{border:1px solid rgba(20,40,70,.12);border-radius:10px;padding:10px 12px;background:rgba(0,0,0,.02);min-width:0;box-sizing:border-box}" +
+    ".iu-custom-buttons-item-head{display:flex;align-items:center;gap:8px;min-width:0}" +
+    ".iu-custom-buttons-item-marker{width:8px;height:8px;border-radius:50%;flex-shrink:0}" +
+    ".iu-custom-buttons-item-title{font-size:14px;font-weight:600;color:#0b1f33;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
+    ".iu-custom-buttons-item-url{display:block;margin-top:4px;font-size:12px;color:#1f4b99;word-break:break-all;overflow-wrap:anywhere;text-decoration:none}" +
+    ".iu-custom-buttons-item-url:hover{text-decoration:underline}" +
+    ".iu-custom-buttons-item-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}" +
+    ".iu-custom-buttons-item-edit,.iu-custom-buttons-item-delete,.iu-custom-buttons-deleteCancel,.iu-custom-buttons-deleteConfirmBtn{padding:7px 12px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}" +
+    ".iu-custom-buttons-item-edit{border:1px solid rgba(31,75,153,.25);background:rgba(31,75,153,.08);color:#1f4b99}" +
+    ".iu-custom-buttons-item-delete{border:1px solid rgba(185,28,28,.25);background:rgba(185,28,28,.08);color:#b91c1c}" +
+    "#iuCustomButtonsDeleteConfirm[hidden]{display:none!important}" +
+    "#iuCustomButtonsDeleteConfirm:not([hidden]){position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}" +
+    ".iu-custom-buttons-deleteConfirm-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.48)}" +
+    ".iu-custom-buttons-deleteConfirm-dialog{position:relative;z-index:1;width:min(360px,100%);background:#fff;border-radius:12px;padding:16px;box-shadow:0 12px 32px rgba(0,0,0,.18);box-sizing:border-box}" +
+    ".iu-custom-buttons-deleteConfirm-dialog p{margin:0 0 14px;font-size:15px;line-height:1.4;color:#0b1f33}" +
+    ".iu-custom-buttons-deleteConfirm-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}" +
+    ".iu-custom-buttons-deleteCancel{border:1px solid rgba(20,40,70,.16);background:#fff;color:#334155}" +
+    ".iu-custom-buttons-deleteConfirmBtn{border:0;background:#b91c1c;color:#fff}" +
+    "body.iu-custom-buttons-overlay-open{overflow:hidden}" +
+    "#iuMobileGatePanelTools .mindMenu :is(input[type=text],input[type=url],input[type=search],textarea,select),.iu-custom-buttons-overlay-panel :is(input,textarea,select){font-size:16px!important}" +
+    "@media(min-width:1025px){" +
+    "body .layout>aside.accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow,body .accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;flex-wrap:nowrap!important;max-width:100%!important;position:relative!important;z-index:2!important}" +
+    "body .layout>aside.accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow .iu-mmSectionTitle,body .accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow .iu-mmSectionTitle{width:auto!important;flex:0 1 auto!important;min-width:0!important}" +
+    "body .layout>aside.accordionCol .mindMenu section.iu-mmQuickLinks .iu-quicktools-settings-trigger,body .accordionCol .mindMenu section.iu-mmQuickLinks .iu-quicktools-settings-trigger{display:inline-flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;flex:0 0 auto!important;width:32px!important;height:32px!important;min-width:32px!important;min-height:32px!important;margin:0!important;padding:0!important;position:relative!important;z-index:3!important;background:transparent!important;border:0!important;box-shadow:none!important;font-size:14px!important;cursor:pointer!important;color:var(--iu-rightcol-text,#2e3238)!important}" +
+    "body .layout>aside.accordionCol .mindMenu section.iu-mmQuickLinks .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,body .accordionCol .mindMenu section.iu-mmQuickLinks .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,body .layout>aside.accordionCol .mindMenu section.iu-mmQuickLinks .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg,body .accordionCol .mindMenu section.iu-mmQuickLinks .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg{display:block!important;visibility:visible!important;opacity:1!important;width:14px!important;height:14px!important;min-width:14px!important;min-height:14px!important;overflow:visible!important;color:inherit!important;stroke:currentColor!important;fill:none!important}" +
+    "}" +
+    "@media(max-width:1023px){" +
+    ".iu-custom-buttons-overlay-panel:not([hidden]){padding:0;align-items:stretch;justify-content:stretch}" +
+    ".iu-custom-buttons-overlay-panel:not([hidden]) .iu-custom-buttons-overlay-cardShell{width:100%;max-width:none;max-height:none;height:100dvh}" +
+    ".iu-custom-buttons-overlay-inner{border-radius:0;border-left:0;border-right:0;box-shadow:none}" +
     "}";
   try{
     if (document.getElementById(ID)) return;
