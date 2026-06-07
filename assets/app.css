@@ -14451,12 +14451,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   column-gap: 14px !important;
   row-gap: 14px !important;
 }
-@media (min-width: 1025px) {
-  body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid {
-    gap: 6px !important;
-    column-gap: 10px !important;
-    row-gap: 4px !important;
-  }
+body.iu-desktop-home-grid .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid {
+  gap: 6px !important;
+  column-gap: 10px !important;
+  row-gap: 4px !important;
+}
+body.iu-desktop-home-grid .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) {
+  --iu-mm-first-gap: 12px;
 }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > *:nth-child(9) {
   grid-column: auto !important;
@@ -16358,9 +16359,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
 
   
-  #iuSilverWelcomeCard .iu-nameday-wish{
-    display: none !important;
-  }
+  #iuSilverWelcomeCard .iu-nameday-wish,
   #iuSilverWelcomeCard #iuNamedayCta .iu-nameday-flowers{
     display: none !important;
   }
@@ -16373,26 +16372,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     overflow: hidden !important;
     border: 0 !important;
   }
-  #silver-slot #iuSilverWelcomeStack #iuSilverWelcomeCard.iuSilverWelcomeCard{
-    min-height: 0;
-  }
+  #silver-slot #iuSilverWelcomeStack #iuSilverWelcomeCard.iuSilverWelcomeCard,
   #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection{
+    min-height: 0;
     margin-top: 0;
-  }
-  .accordionCol .mindMenu .iu-mmQuickLinks:not(.iu-mojeSluzby){
-    --iu-rr-rowGap: 4px;
-    --iu-mm-gap: 10px;
-    --iu-rr-gapY: 3px;
-    --iu-rr-py: 4px;
-  }
-  body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby){
-    --iu-mm-first-gap: 12px;
-  }
-  body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmSectionHead + .iu-mmQuickGrid{
-    margin-top: var(--iu-mm-first-gap) !important;
-  }
-  .accordionCol .mindMenu .iu-mmSectionHead + .iu-mmQuickGrid{
-    margin-top: 8px !important;
   }
 
   
@@ -16542,7 +16525,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     outline: 2px solid rgba(37, 99, 235, 0.85);
     outline-offset: 2px;
   }
-  #iuSilverWelcomeCard #iuNamedayCta{display:none!important;grid-column:1 / -1;grid-row:auto;margin:0!important;width:100%;min-height:0!important;height:0!important;overflow:hidden!important}
+  #iuSilverWelcomeCard #iuNamedayCta{grid-column:1 / -1;grid-row:auto;width:100%}
   .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg > circle:nth-child(1) {
     fill: rgba(255, 255, 255, 0.12);
     stroke: rgba(255, 255, 255, 0.42);
