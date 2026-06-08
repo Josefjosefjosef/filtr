@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-08T14:17:22.536741Z",
+  "ingestedAt": "2026-06-08T15:03:01.030345Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jsem neuvěřitelně frustrovaný, podle dat jsem neudělal nic špatně, stěžuje si Russell",
+      "url": "https://www.sport.cz/clanek/moto-formule-1-jsem-neuveritelne-frustrovany-podle-dat-jsem-neudelal-nic-spatne-stezuje-si-russell-5475835",
+      "dt": "2026-06-08T14:32:44Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dat",
+        "frustrovaný",
+        "jsem",
+        "neudělal",
+        "neuvěřitelně",
+        "nic",
+        "podle",
+        "russell",
+        "stěžuje",
+        "špatně"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -747,30 +774,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chorvati porazili v přípravě Slovinsko, pomohl i Modričův gól",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-chorvati-porazili-v-priprave-slovinsko-pomohl-i-modricuv-gol-5475800",
-      "dt": "2026-06-07T21:13:17Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "chorvati",
-        "gól",
-        "modričův",
-        "pomohl",
-        "porazili",
-        "přípravě",
-        "slovinsko"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43621,
+      "bytes": 43837,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,7 +821,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-08T13:43:42Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T14:32:44Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -833,6 +836,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jsem neuvěřitelně frustrovaný, podle dat jsem neudělal nic špatně, stěžuje si Russell",
+            "publishedAt": "2026-06-08T14:32:44Z"
+          },
           {
             "title": "GLOSA: Siniaková a ‚kdokoli‘. Češka dělá ze spoluhráček šampionky, projekt Taylorina prosperuje",
             "publishedAt": "2026-06-08T13:43:42Z"
@@ -860,10 +867,6 @@
           {
             "title": "Fotbalový svátek v TV a na internetu. Kde sledovat světový šampionát 2026 v USA, Kanadě a Mexiku",
             "publishedAt": "2026-05-27T11:35:35Z"
-          },
-          {
-            "title": "Čeští mladíci před draftem do NHL zazářili. Gólmana překvapila podivná otázka",
-            "publishedAt": "2026-06-08T11:10:38Z"
           }
         ]
       }
