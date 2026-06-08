@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-06-08T12:33:22.819366Z",
+  "ingestedAt": "2026-06-08T13:23:10.392443Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "007: First Light slaví další úspěch a odhaluje plán podpory pro první rok - INDIAN",
+      "url": "https://indian-tv.cz/clanek/007-first-light-slavi-dalsi-uspech-a-odhaluje-plan-podpory-yakeae",
+      "dt": "2026-06-08T13:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "007",
+        "další",
+        "first",
+        "indian",
+        "light",
+        "odhaluje",
+        "plán",
+        "podpory",
+        "první",
+        "rok",
+        "slaví",
+        "úspěch"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1063,30 +1092,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Wardogs chce navázat na slavný mod pro Armu 3 - INDIAN",
-      "url": "https://indian-tv.cz/clanek/wardogs-chce-navazat-na-slavny-mod-z-army-3-niqaph",
-      "dt": "2026-06-06T19:37:27Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "armu",
-        "chce",
-        "indian",
-        "mod",
-        "navázat",
-        "slavný",
-        "wardogs"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1097,7 +1102,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 203466,
+      "bytes": 203627,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1134,7 +1139,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-08T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T13:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1149,6 +1154,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "007: First Light slaví další úspěch a odhaluje plán podpory pro první rok - INDIAN",
+            "publishedAt": "2026-06-08T13:00:00Z"
+          },
           {
             "title": "V The Elder Scrolls Online se vrátí cech zlodějů a Sheogorath - INDIAN",
             "publishedAt": "2026-06-08T12:00:00Z"
@@ -1176,10 +1185,6 @@
           {
             "title": "Fable odhalilo první rozšíření. Order of the Hero zavede hráče do tajemného kultu - INDIAN",
             "publishedAt": "2026-06-08T06:44:51Z"
-          },
-          {
-            "title": "Netradiční 33 Immortals opouští předběžný přístup - INDIAN",
-            "publishedAt": "2026-06-08T06:00:00Z"
           }
         ]
       }

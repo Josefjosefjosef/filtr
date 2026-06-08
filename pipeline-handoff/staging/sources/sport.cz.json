@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-08T12:33:22.819366Z",
+  "ingestedAt": "2026-06-08T13:23:10.392443Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Šampion zuří. Měl mít krev v moči a nevidí na jedno oko",
+      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-sampion-zuri-mel-mit-krev-v-moci-a-nevidi-na-jedno-oko-5475820",
+      "dt": "2026-06-08T13:19:37Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "jedno",
+        "krev",
+        "moči",
+        "mít",
+        "měl",
+        "nevidí",
+        "oko",
+        "zuří",
+        "šampion"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Sinner je po kolapsu na Roland Garros v nemocnici v Miláně",
+      "url": "https://www.sport.cz/clanek/tenis-french-open-sinner-je-po-kolapsu-na-roland-garros-v-nemocnici-v-milane-5475829",
+      "dt": "2026-06-08T13:12:22Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "garros",
+        "kolapsu",
+        "miláně",
+        "nemocnici",
+        "roland",
+        "sinner"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -720,56 +769,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dánský fotbalista Eriksen znovu zkolaboval na hřišti",
-      "url": "https://www.sport.cz/clanek/fotbal-dansky-fotbalista-eriksen-znovu-zkolaboval-na-hristi-5475789",
-      "dt": "2026-06-07T18:26:27Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dánský",
-        "eriksen",
-        "fotbalista",
-        "hřišti",
-        "zkolaboval",
-        "znovu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Velká euforie v Pardubicích. Beksa skolila Nymburk a ve finálové sérii snížila ztrátu",
-      "url": "https://www.sport.cz/clanek/basketbal-velka-euforie-v-pardubicich-beksa-skolila-nymburk-a-ve-finalove-serii-snizila-ztratu-5475798",
-      "dt": "2026-06-07T19:48:54Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "beksa",
-        "euforie",
-        "finálové",
-        "nymburk",
-        "pardubicích",
-        "skolila",
-        "snížila",
-        "sérii",
-        "velká",
-        "ztrátu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -780,7 +779,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44125,
+      "bytes": 44100,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -817,11 +816,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-08T11:42:08Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T13:19:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 29,
-          "finance": 1
+          "sport": 30
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -833,6 +831,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šampion zuří. Měl mít krev v moči a nevidí na jedno oko",
+            "publishedAt": "2026-06-08T13:19:37Z"
+          },
+          {
+            "title": "Sinner je po kolapsu na Roland Garros v nemocnici v Miláně",
+            "publishedAt": "2026-06-08T13:12:22Z"
+          },
           {
             "title": "Mexiko v chaosu, divoké protesty před startem MS paralyzují zemi",
             "publishedAt": "2026-06-08T11:41:57Z"
@@ -856,14 +862,6 @@
           {
             "title": "Testy moči, hrozba ponorky a přehřátí. Češi se chystají do nebes, lékař dává rady i fanouškům pivařům",
             "publishedAt": "2026-06-08T11:02:02Z"
-          },
-          {
-            "title": "Velká přestavba kádru pokračuje, Olomouc má už dvanáctou posilu",
-            "publishedAt": "2026-06-08T10:23:57Z"
-          },
-          {
-            "title": "Definitivně potvrzeno! Čeští hokejisté odehrají skupinu na příštím MS v Düsseldorfu",
-            "publishedAt": "2026-06-08T09:36:20Z"
           }
         ]
       }
