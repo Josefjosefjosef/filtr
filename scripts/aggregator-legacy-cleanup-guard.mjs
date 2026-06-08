@@ -313,9 +313,16 @@ function main() {
   }
 
   const wrangler = read("cloudflare/articles-watchdog/wrangler.toml");
-  const wfFile = wrangler.match(/WORKFLOW_FILE\s*=\s*"([^"]+)"/)?.[1];
-  if (wfFile !== WATCHDOG_WORKFLOW_FILE) {
-    fail(`watchdog WORKFLOW_FILE must be ${WATCHDOG_WORKFLOW_FILE}`);
+  const slowWf =
+    wrangler.match(/SLOW_WORKFLOW_FILE\s*=\s*"([^"]+)"/)?.[1] ||
+    wrangler.match(/WORKFLOW_FILE\s*=\s*"([^"]+)"/)?.[1];
+  const fastWf = wrangler.match(/FAST_WORKFLOW_FILE\s*=\s*"([^"]+)"/)?.[1];
+  if (slowWf !== WATCHDOG_WORKFLOW_FILE) {
+    fail(`watchdog slow workflow must be ${WATCHDOG_WORKFLOW_FILE}`);
+    failed = true;
+  }
+  if (fastWf !== FAST_POOL_PUBLISH_WORKFLOW) {
+    fail(`watchdog fast workflow must be ${FAST_POOL_PUBLISH_WORKFLOW}`);
     failed = true;
   }
 

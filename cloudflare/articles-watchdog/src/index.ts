@@ -1,19 +1,32 @@
 /**
  * Cloudflare Worker: cron + optional manual /run (secret).
- * Triggers GitHub workflow_dispatch only when public data is stale and pipeline is idle.
+ * Dual dispatch: fast publishable_pool path (15m) + slow full pipeline path.
  */
 import { decideWatchdog, DEFAULT_QUEUED_STALE_MINUTES, parseIsoToMs } from "./decision";
+import {
+  buildDualTelemetry,
+  resolveLaneConfigs,
+  runLane,
+  type DualDispatchTelemetry,
+  type LaneDeps,
+} from "./lanes";
 
 export interface Env {
   GITHUB_TOKEN: string;
   /** e.g. Josefjosefjosef/filtr */
   GITHUB_REPOSITORY: string;
-  /** e.g. update-articles.yml */
-  WORKFLOW_FILE: string;
-  /** Public JSON with generatedAt (articles index) */
+  /** Legacy single-workflow var (slow path fallback). */
+  WORKFLOW_FILE?: string;
+  FAST_WORKFLOW_FILE?: string;
+  SLOW_WORKFLOW_FILE?: string;
+  /** Legacy slow freshness URL. */
   FRESHNESS_URL: string;
-  /** Minutes; default 15 in wrangler.toml */
+  FAST_FRESHNESS_URL?: string;
+  SLOW_FRESHNESS_URL?: string;
+  /** Legacy slow stale minutes. */
   STALE_AFTER_MINUTES: string;
+  FAST_STALE_AFTER_MINUTES?: string;
+  SLOW_STALE_AFTER_MINUTES?: string;
   /** Optional: Bearer secret for POST /run only */
   MANUAL_TRIGGER_SECRET?: string;
 }
@@ -25,10 +38,6 @@ type GhRun = {
   created_at: string;
   id?: number;
 };
-
-function toRunLite(run: GhRun) {
-  return { status: run.status, event: run.event, created_at: run.created_at };
-}
 
 type FreshnessDoc = {
   generatedAt?: string;
@@ -52,6 +61,7 @@ export type ProbeResult = {
   decision_error: string | null;
   blocking_run_ids: number[];
   zombie_queued_cancelled: number;
+  dual_dispatch?: DualDispatchTelemetry;
 };
 
 function ghHeaders(token: string): HeadersInit {
@@ -70,12 +80,12 @@ function assertGithubToken(env: Env): void {
   }
 }
 
-async function fetchGeneratedAt(env: Env): Promise<string | null> {
-  const res = await fetch(env.FRESHNESS_URL, {
+async function fetchGeneratedAtFromUrl(url: string): Promise<string | null> {
+  const res = await fetch(url, {
     headers: { Accept: "application/json", "Cache-Control": "no-cache" },
   });
   if (!res.ok) {
-    console.log(`[watchdog] freshness fetch failed: ${res.status}`);
+    console.log(`[watchdog] freshness fetch failed: ${res.status} url=${url}`);
     return null;
   }
   const json = (await res.json()) as FreshnessDoc;
@@ -83,11 +93,11 @@ async function fetchGeneratedAt(env: Env): Promise<string | null> {
   return typeof g === "string" && g.length > 0 ? g : null;
 }
 
-async function fetchWorkflowRuns(env: Env): Promise<GhRun[]> {
+async function fetchWorkflowRunsForFile(env: Env, workflowFile: string): Promise<GhRun[]> {
   assertGithubToken(env);
   const [owner, repo] = env.GITHUB_REPOSITORY.split("/");
   if (!owner || !repo) throw new Error("Invalid GITHUB_REPOSITORY");
-  const wf = encodeURIComponent(env.WORKFLOW_FILE);
+  const wf = encodeURIComponent(workflowFile);
   const url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${wf}/runs?per_page=15`;
   const res = await fetch(url, { headers: ghHeaders(env.GITHUB_TOKEN) });
   if (!res.ok) {
@@ -98,14 +108,18 @@ async function fetchWorkflowRuns(env: Env): Promise<GhRun[]> {
   return data.workflow_runs ?? [];
 }
 
-async function cancelStaleQueuedRuns(env: Env, queuedStaleMinutes: number): Promise<number> {
+async function cancelStaleQueuedRunsForFile(
+  env: Env,
+  workflowFile: string,
+  queuedStaleMinutes: number,
+): Promise<number> {
   assertGithubToken(env);
   const [owner, repo] = env.GITHUB_REPOSITORY.split("/");
-  const wf = encodeURIComponent(env.WORKFLOW_FILE);
+  const wf = encodeURIComponent(workflowFile);
   const url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${wf}/runs?per_page=20&status=queued`;
   const res = await fetch(url, { headers: ghHeaders(env.GITHUB_TOKEN) });
   if (!res.ok) {
-    console.log(`[watchdog] list queued runs failed: ${res.status}`);
+    console.log(`[watchdog] list queued runs failed: ${res.status} wf=${workflowFile}`);
     return 0;
   }
   const data = (await res.json()) as { workflow_runs?: Array<GhRun & { id?: number }> };
@@ -119,16 +133,18 @@ async function cancelStaleQueuedRuns(env: Env, queuedStaleMinutes: number): Prom
     if (!run.id) continue;
     const cancelUrl = `https://api.github.com/repos/${owner}/${repo}/actions/runs/${run.id}/cancel`;
     const cr = await fetch(cancelUrl, { method: "POST", headers: ghHeaders(env.GITHUB_TOKEN) });
-    console.log(`[watchdog] cancel queued run_id=${run.id} age_min=${ageMin.toFixed(0)} status=${cr.status}`);
+    console.log(
+      `[watchdog] cancel queued run_id=${run.id} wf=${workflowFile} age_min=${ageMin.toFixed(0)} status=${cr.status}`,
+    );
     if (cr.ok || cr.status === 409) cancelled += 1;
   }
   return cancelled;
 }
 
-async function dispatchWorkflow(env: Env): Promise<Response> {
+async function dispatchWorkflowFile(env: Env, workflowFile: string): Promise<void> {
   assertGithubToken(env);
   const [owner, repo] = env.GITHUB_REPOSITORY.split("/");
-  const wf = encodeURIComponent(env.WORKFLOW_FILE);
+  const wf = encodeURIComponent(workflowFile);
   const url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${wf}/dispatches`;
   console.log(`[watchdog] dispatch POST ${url} ref=main repo=${env.GITHUB_REPOSITORY}`);
   const res = await fetch(url, {
@@ -140,30 +156,121 @@ async function dispatchWorkflow(env: Env): Promise<Response> {
     body: JSON.stringify({ ref: "main" }),
   });
   const bodyText = res.status === 204 ? "" : await res.text();
-  console.log(`[watchdog] dispatch status=${res.status} body=${bodyText.slice(0, 300)}`);
+  console.log(`[watchdog] dispatch status=${res.status} wf=${workflowFile} body=${bodyText.slice(0, 300)}`);
   if (res.status !== 204) {
     throw new Error(`GitHub dispatch failed: ${res.status} ${bodyText}`);
   }
-  return new Response(JSON.stringify({ ok: true, dispatched: true, status: res.status }), {
-    status: 200,
-    headers: { "content-type": "application/json; charset=utf-8" },
-  });
+}
+
+function makeLaneDeps(env: Env): LaneDeps {
+  return {
+    fetchGeneratedAt: (url) => fetchGeneratedAtFromUrl(url),
+    fetchWorkflowRuns: (workflowFile) => fetchWorkflowRunsForFile(env, workflowFile),
+    cancelStaleQueuedRuns: (workflowFile, queuedStaleMinutes) =>
+      cancelStaleQueuedRunsForFile(env, workflowFile, queuedStaleMinutes),
+    dispatchWorkflow: (workflowFile) => dispatchWorkflowFile(env, workflowFile),
+  };
+}
+
+function logDualTelemetry(telemetry: DualDispatchTelemetry): void {
+  console.log(`[watchdog] FAST_DISPATCH_ATTEMPTED=${telemetry.FAST_DISPATCH_ATTEMPTED}`);
+  console.log(`[watchdog] FAST_DISPATCHED=${telemetry.FAST_DISPATCHED}`);
+  console.log(`[watchdog] FAST_SKIPPED_BUSY=${telemetry.FAST_SKIPPED_BUSY}`);
+  console.log(`[watchdog] FAST_SKIPPED_NOT_STALE=${telemetry.FAST_SKIPPED_NOT_STALE}`);
+  console.log(`[watchdog] FAST_STALE_MINUTES=${telemetry.FAST_STALE_MINUTES}`);
+  console.log(`[watchdog] SLOW_DISPATCH_ATTEMPTED=${telemetry.SLOW_DISPATCH_ATTEMPTED}`);
+  console.log(`[watchdog] SLOW_DISPATCHED=${telemetry.SLOW_DISPATCHED}`);
+  console.log(`[watchdog] SLOW_SKIPPED_BUSY=${telemetry.SLOW_SKIPPED_BUSY}`);
+  console.log(`[watchdog] SLOW_STALE_MINUTES=${telemetry.SLOW_STALE_MINUTES}`);
+  console.log(`[watchdog] WATCHDOG_DUAL_DISPATCH_STATUS=${telemetry.WATCHDOG_DUAL_DISPATCH_STATUS}`);
+}
+
+export async function runDualWatchdog(env: Env, options?: { dispatch?: boolean }): Promise<{
+  telemetry: DualDispatchTelemetry;
+  errors: string[];
+}> {
+  const lanes = resolveLaneConfigs(env);
+  const deps = makeLaneDeps(env);
+  const shouldDispatch = options?.dispatch !== false;
+  const results = [];
+  const errors: string[] = [];
+
+  for (const laneConfig of lanes) {
+    try {
+      if (!shouldDispatch) {
+        const generatedAtIso = await deps.fetchGeneratedAt(laneConfig.freshnessUrl);
+        const runs = await deps.fetchWorkflowRuns(laneConfig.workflowFile);
+        const nowMs = Date.now();
+        const decision = decideWatchdog({
+          generatedAtIso,
+          staleAfterMinutes: laneConfig.staleAfterMinutes,
+          nowMs,
+          runs: runs.map((r) => ({ status: r.status, created_at: r.created_at })),
+        });
+        const generatedMs = parseIsoToMs(generatedAtIso ?? undefined);
+        results.push({
+          lane: laneConfig.kind,
+          workflow_file: laneConfig.workflowFile,
+          freshness_url: laneConfig.freshnessUrl,
+          stale_after_minutes: laneConfig.staleAfterMinutes,
+          generated_at: generatedAtIso,
+          stale_minutes: generatedMs !== null ? (nowMs - generatedMs) / 60_000 : null,
+          dispatch_attempted: true,
+          dispatched: false,
+          skipped_busy: decision.action === "skip_busy",
+          skipped_not_stale: decision.action === "skip_fresh",
+          decision,
+          blocking_run_ids: [],
+          zombie_queued_cancelled: 0,
+          dispatch_error: null,
+        });
+        continue;
+      }
+      const laneResult = await runLane(laneConfig, deps);
+      results.push(laneResult);
+      console.log(`[watchdog] lane=${laneConfig.kind} decision`, JSON.stringify(laneResult.decision));
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      errors.push(`${laneConfig.kind}:${msg}`);
+      console.error(`[watchdog] lane=${laneConfig.kind} error`, msg);
+    }
+  }
+
+  const telemetry = buildDualTelemetry(results);
+  logDualTelemetry(telemetry);
+  return { telemetry, errors };
+}
+
+/** Backward-compatible single-lane entry (slow path probe semantics). */
+export async function runWatchdog(env: Env): Promise<Response> {
+  const { telemetry, errors } = await runDualWatchdog(env, { dispatch: true });
+  const status = errors.length ? 500 : 200;
+  return new Response(
+    JSON.stringify({
+      ok: errors.length === 0,
+      dual_dispatch: telemetry,
+      errors,
+    }),
+    { status, headers: { "content-type": "application/json; charset=utf-8" } },
+  );
 }
 
 export async function buildProbe(env: Env, dispatchProbe = false): Promise<ProbeResult> {
   const token = (env.GITHUB_TOKEN || "").trim();
-  const staleAfter = Number.parseInt(env.STALE_AFTER_MINUTES || "15", 10);
+  const slowWorkflow = (env.SLOW_WORKFLOW_FILE || env.WORKFLOW_FILE || "update-articles.yml").trim();
+  const slowFreshness = (env.SLOW_FRESHNESS_URL || env.FRESHNESS_URL || "").trim();
+  const slowStale = Number.parseInt(
+    env.SLOW_STALE_AFTER_MINUTES || env.STALE_AFTER_MINUTES || "5",
+    10,
+  );
   const nowMs = Date.now();
-  const generatedAtIso = await fetchGeneratedAt(env);
-  const generatedMs = parseIsoToMs(generatedAtIso ?? undefined);
-  const generatedAgeMin = generatedMs !== null ? (nowMs - generatedMs) / 60_000 : null;
 
   let githubListStatus: number | null = null;
   let githubListError: string | null = null;
   let runs: GhRun[] = [];
   if (token) {
     try {
-      runs = await fetchWorkflowRuns(env);
+      runs = await fetchWorkflowRunsForFile(env, slowWorkflow);
       githubListStatus = 200;
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
@@ -175,14 +282,18 @@ export async function buildProbe(env: Env, dispatchProbe = false): Promise<Probe
     githubListError = "GITHUB_TOKEN secret missing";
   }
 
+  const generatedAtIso = slowFreshness ? await fetchGeneratedAtFromUrl(slowFreshness) : null;
+  const generatedMs = parseIsoToMs(generatedAtIso ?? undefined);
+  const generatedAgeMin = generatedMs !== null ? (nowMs - generatedMs) / 60_000 : null;
+
   let decision: ReturnType<typeof decideWatchdog> | null = null;
   let decisionError: string | null = null;
   try {
     decision = decideWatchdog({
       generatedAtIso,
-      staleAfterMinutes: staleAfter,
+      staleAfterMinutes: slowStale,
       nowMs,
-      runs: runs.map(toRunLite),
+      runs: runs.map((r) => ({ status: r.status, created_at: r.created_at })),
     });
   } catch (e) {
     decisionError = e instanceof Error ? e.message : String(e);
@@ -201,19 +312,18 @@ export async function buildProbe(env: Env, dispatchProbe = false): Promise<Probe
 
   let zombieCancelled = 0;
   if (token) {
-    zombieCancelled = await cancelStaleQueuedRuns(env, DEFAULT_QUEUED_STALE_MINUTES);
+    zombieCancelled = await cancelStaleQueuedRunsForFile(env, slowWorkflow, DEFAULT_QUEUED_STALE_MINUTES);
   }
 
   let dispatchProbeStatus: number | null = null;
-  if (dispatchProbe && token && decision?.action === "dispatch") {
-    try {
-      const res = await dispatchWorkflow(env);
-      dispatchProbeStatus = res.status;
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      const m = msg.match(/failed: (\d{3})/);
-      dispatchProbeStatus = m ? Number(m[1]) : 500;
-    }
+  let dualDispatch: DualDispatchTelemetry | undefined;
+  if (dispatchProbe && token) {
+    const dual = await runDualWatchdog(env, { dispatch: true });
+    dualDispatch = dual.telemetry;
+    dispatchProbeStatus = dual.errors.length ? 500 : 200;
+  } else if (token) {
+    const dual = await runDualWatchdog(env, { dispatch: false });
+    dualDispatch = dual.telemetry;
   }
 
   return {
@@ -222,9 +332,9 @@ export async function buildProbe(env: Env, dispatchProbe = false): Promise<Probe
     github_token_present: Boolean(token),
     github_token_length: token.length,
     github_repository: env.GITHUB_REPOSITORY,
-    workflow_file: env.WORKFLOW_FILE,
-    freshness_url: env.FRESHNESS_URL,
-    stale_after_minutes: staleAfter,
+    workflow_file: slowWorkflow,
+    freshness_url: slowFreshness,
+    stale_after_minutes: slowStale,
     generated_at: generatedAtIso,
     generated_age_minutes: generatedAgeMin,
     github_list_runs_status: githubListStatus,
@@ -234,46 +344,8 @@ export async function buildProbe(env: Env, dispatchProbe = false): Promise<Probe
     decision_error: decisionError,
     blocking_run_ids: blockingRunIds,
     zombie_queued_cancelled: zombieCancelled,
+    dual_dispatch: dualDispatch,
   };
-}
-
-export async function runWatchdog(env: Env): Promise<Response> {
-  const staleAfter = Number.parseInt(env.STALE_AFTER_MINUTES || "15", 10);
-  if (!Number.isFinite(staleAfter) || staleAfter < 1) {
-    throw new Error("Invalid STALE_AFTER_MINUTES");
-  }
-
-  const zombieCancelled = await cancelStaleQueuedRuns(env, DEFAULT_QUEUED_STALE_MINUTES);
-  if (zombieCancelled > 0) {
-    console.log(`[watchdog] preflight cancelled stale queued runs=${zombieCancelled}`);
-  }
-
-  const nowMs = Date.now();
-  const generatedAtIso = await fetchGeneratedAt(env);
-  const runs = await fetchWorkflowRuns(env);
-
-  const decision = decideWatchdog({
-    generatedAtIso,
-    staleAfterMinutes: staleAfter,
-    nowMs,
-    runs: runs.map(toRunLite),
-  });
-
-  console.log("[watchdog] decision", JSON.stringify(decision));
-
-  if (decision.action === "skip_fresh") {
-    return new Response(
-      JSON.stringify({ ok: true, action: "skip_fresh", decision, zombie_queued_cancelled: zombieCancelled }),
-      { status: 200, headers: { "content-type": "application/json; charset=utf-8" } }
-    );
-  }
-  if (decision.action === "skip_busy") {
-    return new Response(
-      JSON.stringify({ ok: true, action: "skip_busy", decision, zombie_queued_cancelled: zombieCancelled }),
-      { status: 200, headers: { "content-type": "application/json; charset=utf-8" } }
-    );
-  }
-  return dispatchWorkflow(env);
 }
 
 export default {
@@ -334,7 +406,7 @@ export default {
           const msg = e instanceof Error ? e.message : String(e);
           console.error("[watchdog] scheduled error", msg);
         }
-      })()
+      })(),
     );
   },
 };

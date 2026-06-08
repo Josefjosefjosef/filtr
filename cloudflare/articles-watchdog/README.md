@@ -1,20 +1,47 @@
 # infouzel-articles-watchdog
 
-Cloudflare Worker + Cron (every **5 minutes**) that **optionally** dispatches the GitHub Actions workflow **Update articles data** via `workflow_dispatch`.
+Cloudflare Worker + Cron (every **5 minutes**) that **optionally** dispatches GitHub Actions workflows via `workflow_dispatch`.
 
 ## Why this exists
 
 GitHub `schedule` triggers for article autorun proved unreliable in this repository. This worker uses **Cloudflare Cron** as the clock and **GitHub Actions only as the execution engine**.
 
-## Architecture
+## Architecture (dual dispatch)
 
 1. **Cron** fires every **5 minutes** (`*/5 * * * *` UTC).
-2. Worker fetches public **`generatedAt`** from `FRESHNESS_URL` (default: `articles/index.json` on production).
-3. If age **&lt; STALE_AFTER_MINUTES** (default **5**) → **no API call** to GitHub (freshness guard).
-4. Worker lists recent runs for **`update-articles.yml`** via GitHub REST API. If any run is **`queued`** or **`in_progress`** → **no dispatch** (running guard / duplicate protection).
-5. If data are **stale or timestamp missing** and pipeline is **idle** → `POST .../actions/workflows/update-articles.yml/dispatches` with `ref: main`.
+2. Worker evaluates **two independent lanes** on each tick:
 
-**Loop protection:** the worker does not subscribe to GitHub webhooks; it only reads JSON + Actions API. Completing a workflow does not re-trigger the worker in a loop.
+### Fast lane (publishable_pool)
+
+- **Workflow:** `update-articles-fast-pool.yml`
+- **Freshness:** `FAST_FRESHNESS_URL` → `publishable_pool.json` `generatedAt`
+- **Stale threshold:** `FAST_STALE_AFTER_MINUTES` (default **15** minutes)
+- **Busy check:** only runs of `update-articles-fast-pool.yml` block fast dispatch
+- **Purpose:** incremental merge of new quality articles into `publishable_pool.json` (no full aggregate)
+
+### Slow lane (full pipeline)
+
+- **Workflow:** `update-articles.yml`
+- **Freshness:** `FRESHNESS_URL` → `articles/index.json` `generatedAt`
+- **Stale threshold:** `STALE_AFTER_MINUTES` (default **5** minutes)
+- **Busy check:** only runs of `update-articles.yml` block slow dispatch
+- **Purpose:** full aggregate, `articles.json`, guards, retention, cleanup
+
+3. Each lane independently: fetch `generatedAt` → list recent runs for **that workflow only** → dispatch if stale/missing and idle.
+
+**Concurrency:** fast and slow paths use **separate** busy guards (per-workflow run lists). A running slow pipeline does **not** block fast publish unless the fast workflow itself is busy.
+
+**Loop protection:** the worker does not subscribe to GitHub webhooks; it only reads JSON + Actions API.
+
+## Telemetry (scheduled logs)
+
+Each tick logs:
+
+- `FAST_DISPATCH_ATTEMPTED`, `FAST_DISPATCHED`, `FAST_SKIPPED_BUSY`, `FAST_SKIPPED_NOT_STALE`, `FAST_STALE_MINUTES`
+- `SLOW_DISPATCH_ATTEMPTED`, `SLOW_DISPATCHED`, `SLOW_SKIPPED_BUSY`, `SLOW_STALE_MINUTES`
+- `WATCHDOG_DUAL_DISPATCH_STATUS` (`ok` | `partial` | `error`)
+
+`GET /probe` includes `dual_dispatch` with the same fields (dry-run unless `?dispatch=1`).
 
 ## Secrets (Cloudflare)
 
@@ -35,18 +62,16 @@ npx wrangler secret put MANUAL_TRIGGER_SECRET
 
 ## GitHub token minimum scope
 
-- **Classic PAT:** scope **`repo`** (full) or minimal with **Actions: Read and write** on the target repo (GitHub documents workflow dispatch under Actions permissions).
+- **Classic PAT:** scope **`repo`** (full) or minimal with **Actions: Read and write** on the target repo.
 - **Fine-grained:** repository access to `Josefjosefjosef/filtr`, permissions **Actions: Read and write**.
 
 Do **not** embed the token in `wrangler.toml` or the repo.
 
 ## Freshness policy
 
-- **Fresh:** `generatedAt` is **newer than** `STALE_AFTER_MINUTES` (default **5** minutes). No dispatch.
-- **Stale:** age **≥ 5** minutes → eligible for dispatch if idle.
-- **Missing / invalid `generatedAt`:** treated as **stale** (dispatch allowed if idle) so production can self-heal.
-
-Rationale: check every **5** minutes (Phase 2B RSS batch rotation); pipeline run ~50 minutes so only one run at a time (`skip_busy`). Stale threshold matches check interval.
+- **Fresh:** `generatedAt` is newer than the lane's stale threshold → no dispatch for that lane.
+- **Stale:** age ≥ threshold → eligible for dispatch if that workflow is idle.
+- **Missing / invalid `generatedAt`:** treated as **stale** (dispatch allowed if idle).
 
 ## Deploy / verify (manual checklist)
 
@@ -81,7 +106,7 @@ gh variable set ARTICLES_WATCHDOG_HEALTH_URL --body "https://infouzel-articles-w
 # gh variable set REQUIRE_ARTICLES_WATCHDOG --body "true"   # after GITHUB_TOKEN secret verified on worker
 ```
 
-After deploy, confirm Cloudflare dashboard → Worker → Triggers shows cron `*/5 * * * *` and scheduled invocations succeed (no `GitHub dispatch failed` in logs).
+After deploy, confirm Cloudflare dashboard → Worker → Triggers shows cron `*/5 * * * *` and scheduled invocations succeed.
 
 ## Manual smoke test (optional)
 
@@ -96,7 +121,7 @@ curl -sS -X POST "https://<worker-host>/run" \
 
 ## Remove GitHub-side article cron
 
-The repository should **not** rely on GitHub `schedule` to dispatch **Update articles data**. Dispatch is driven by this worker only (see root workflow comments).
+The repository should **not** rely on GitHub `schedule` to dispatch article workflows. Dispatch is driven by this worker only.
 
 ## Failure / fallback
 
