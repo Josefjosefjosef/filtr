@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-08T21:19:04.798920Z",
+  "ingestedAt": "2026-06-08T22:12:36.854550Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Mistr světa z roku 2018 zvládl generálku, hvězda Bayernu řádila hattrickem",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-mistr-sveta-z-ruska-zvladl-generalku-hvezda-bayernu-radila-hattrickem-5475872",
+      "dt": "2026-06-08T21:39:55Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "2018",
+        "bayernu",
+        "generálku",
+        "hattrickem",
+        "hvězda",
+        "mistr",
+        "roku",
+        "světa",
+        "zvládl",
+        "řádila"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -740,32 +767,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Čeští mladíci před draftem do NHL zazářili. Gólmana překvapila podivná otázka",
-      "url": "https://www.sport.cz/clanek/hokej-nhl-cesti-mladici-pred-draftem-do-nhl-zazarili-golmana-prekvapila-podivna-otazka-5475819",
-      "dt": "2026-06-08T11:10:38Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "draftem",
-        "gólmana",
-        "mladíci",
-        "nhl",
-        "otázka",
-        "podivná",
-        "překvapila",
-        "zazářili",
-        "čeští"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -776,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41794,
+      "bytes": 41596,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,7 +814,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-08T21:03:43Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T21:39:55Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -828,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mistr světa z roku 2018 zvládl generálku, hvězda Bayernu řádila hattrickem",
+            "publishedAt": "2026-06-08T21:39:55Z"
+          },
           {
             "title": "Nevídaným hodem rozhodl proti bývalému klubu. Největší střela kariéry, rozplýval se střelec",
             "publishedAt": "2026-06-08T21:03:43Z"
@@ -855,10 +860,6 @@
           {
             "title": "Sagan exkluzivně: Nebaví mě, jak Pogačar dominuje. Škoda, že už cyklistika není show",
             "publishedAt": "2026-06-08T18:18:45Z"
-          },
-          {
-            "title": "Táborsko po neúspěšné baráži ohlásilo staronového kouče",
-            "publishedAt": "2026-06-08T18:13:20Z"
           }
         ]
       }
