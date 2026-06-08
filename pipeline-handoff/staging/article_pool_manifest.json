@@ -1,19 +1,19 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-08T00:44:15.107725Z",
-  "source_run_id": "27109445248",
-  "pipeline_phase": "aggregate",
+  "generatedAt": "2026-06-08T01:07:46.905253Z",
+  "source_run_id": "27110394672",
+  "pipeline_phase": "ingest_incremental",
   "pool_boundary": "post_dedupe_pre_release_guards",
   "clean_article_pool_definition": "Articles after RSS fetch, normalize, URL dedupe, title clustering, event-level dedupe, section classification, and quality/relevance checks; before release guards, PR creation, publish, and homepage selection.",
-  "total_raw_items": 285,
-  "total_normalized": 275,
-  "total_after_url_dedupe": 180,
+  "total_raw_items": 275,
+  "total_normalized": 265,
+  "total_after_url_dedupe": 175,
   "total_after_event_dedupe": 14573,
   "total_clean_pool": 14573,
   "articles_full_count": 14573,
   "articles_final_count": 14573,
-  "cluster_count": 178,
-  "new_articles_built": 178,
+  "cluster_count": 175,
+  "new_articles_built": 175,
   "per_section_counts": {
     "aktualne": 5240,
     "krimi": 449,
@@ -104,7 +104,7 @@
   },
   "duplicate_counts": {
     "url_dedupe_dropped": 0,
-    "title_cluster_nonprimary_dropped": 2,
+    "title_cluster_nonprimary_dropped": 0,
     "event_dedupe_suppressed": 0
   },
   "event_cluster_counts": 0,
@@ -114,11 +114,11 @@
   "reason_if_not_released": "release_guards_evaluated_in_separate_publish_job",
   "ingest_publish_decoupling_active": false,
   "handoffMeta": {
-    "stagingSnapshotIngestRunId": "27109445248",
-    "aggregateWorkflowRunId": "27109445248"
+    "stagingSnapshotIngestRunId": "27110394672",
+    "aggregateWorkflowRunId": "27110394672"
   },
   "ingest_manifest_ref": {
-    "ingestedAt": "2026-06-08T00:29:20.109038Z",
+    "ingestedAt": "2026-06-08T01:07:46.863125Z",
     "sourceBatchKeys": [
       "crzpravy.cz",
       "denik.cz",
@@ -134,6 +134,6 @@
       "youtube.com",
       "zdravotnickydenik.cz"
     ],
-    "pipelineRunId": "27109445248"
+    "pipelineRunId": "27110394672"
   }
 }
