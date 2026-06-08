@@ -429,55 +429,31 @@ def aggregate_feed_health_runtime_24h(
     return agg, commits
 
 
-def count_gh_success_runs_24h() -> Optional[int]:
-    """Optional: gh run list for Update articles data (success) in last 24h. Requires gh + network in CI."""
+def classify_pipeline_runs_24h_buckets() -> Tuple[Dict[str, int], Optional[str]]:
+    """Bucket update-articles runs (24h) by pipeline_overall_status via phase status classifier."""
+    scripts_dir = str(REPO_ROOT / "scripts")
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
+    from iu_pipeline_run_classifier import classify_pipeline_runs_24h, empty_bucket_counts
+
+    fetch_artifacts = os.environ.get("ULTRA_AUDIT_FETCH_ARTIFACTS", "1").strip().lower() not in (
+        "0",
+        "false",
+        "no",
+    )
     try:
-        r = subprocess.run(
-            [
-                "gh",
-                "run",
-                "list",
-                "--repo",
-                os.environ.get("GITHUB_REPOSITORY", ""),
-                "--workflow",
-                INGEST_WORKFLOW_FILE,
-                "--limit",
-                "200",
-                "--json",
-                "conclusion,createdAt",
-            ],
-            cwd=str(REPO_ROOT),
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            timeout=60,
-        )
-        if r.returncode != 0 or not (r.stdout or "").strip():
-            return None
-        runs = json.loads(r.stdout)
-        if not isinstance(runs, list):
-            return None
-        now = datetime.now(timezone.utc)
-        start = now - timedelta(hours=24)
-        n = 0
-        for row in runs:
-            if not isinstance(row, dict):
-                continue
-            if str(row.get("conclusion") or "") != "success":
-                continue
-            ca = row.get("createdAt")
-            if not ca:
-                continue
-            try:
-                dt = datetime.fromisoformat(str(ca).replace("Z", "+00:00"))
-            except ValueError:
-                continue
-            if dt.astimezone(timezone.utc) > start:
-                n += 1
-        return n
-    except (OSError, subprocess.TimeoutExpired, json.JSONDecodeError):
+        counts, err = classify_pipeline_runs_24h(fetch_artifact=fetch_artifacts)
+        return counts, err
+    except Exception as exc:  # noqa: BLE001
+        return empty_bucket_counts(), f"{type(exc).__name__}: {exc}"
+
+
+def count_gh_success_runs_24h() -> Optional[int]:
+    """Deprecated: legacy success count; kept for selftest compatibility."""
+    counts, err = classify_pipeline_runs_24h_buckets()
+    if err:
         return None
+    return int(counts.get("PIPELINE_SUCCESS", 0))
 
 
 def load_config_source_urls() -> List[Tuple[str, str, str]]:
@@ -566,8 +542,9 @@ def _md_cell(s: str, max_len: int = 80) -> str:
 def _runtime_snapshot_json(
     agg: Mapping[str, Dict[str, Any]],
     commit_shas: Sequence[str],
-    gh_success: Optional[int],
+    pipeline_buckets: Optional[Dict[str, int]],
     runtime_error: Optional[str],
+    bucket_error: Optional[str] = None,
 ) -> str:
     """Compact JSON for the mandatory RUNTIME DATA block (truncated)."""
     preview: Dict[str, Any] = {}
@@ -576,7 +553,8 @@ def _runtime_snapshot_json(
     payload = {
         "commits_in_window": len(commit_shas),
         "feed_count": len(agg),
-        "gh_success_runs_24h": gh_success,
+        "pipeline_runs_24h": pipeline_buckets,
+        "pipeline_bucket_error": bucket_error,
         "error": runtime_error,
         "agg_preview": preview,
     }
@@ -592,11 +570,12 @@ def _runtime_snapshot_json(
 def render_runtime_24h_section(
     agg: Mapping[str, Dict[str, Any]],
     commit_shas: Sequence[str],
-    gh_success: Optional[int],
+    pipeline_buckets: Optional[Dict[str, int]],
     now: datetime,
     runtime_error: Optional[str] = None,
+    bucket_error: Optional[str] = None,
 ) -> str:
-    snap = _runtime_snapshot_json(agg, commit_shas, gh_success, runtime_error)
+    snap = _runtime_snapshot_json(agg, commit_shas, pipeline_buckets, runtime_error, bucket_error)
     lines: List[str] = [
         "## RUNTIME AKTIVITA ZA POSLEDNÍCH 24 H (ODVOZENO Z DOSTUPNÝCH DAT)",
         "",
@@ -645,13 +624,33 @@ def render_runtime_24h_section(
     lines.append(
         f"- Commity měnící `feed_health.json` v okně (**snapshoty health reportu**): **{len(commit_shas)}**."
     )
-    if gh_success is not None:
+    if pipeline_buckets is not None:
+        lines.extend(
+            [
+                f"- `{INGEST_WORKFLOW_FILE}` pipeline běhy (24 h, phase-status classifier):",
+                f"  - **PIPELINE_SUCCESS**: **{pipeline_buckets.get('PIPELINE_SUCCESS', 0)}**",
+                f"  - **INGEST_SUCCESS_RELEASE_BLOCKED**: **{pipeline_buckets.get('INGEST_SUCCESS_RELEASE_BLOCKED', 0)}** (YELLOW)",
+                f"  - **INGEST_FAILED**: **{pipeline_buckets.get('INGEST_FAILED', 0)}**",
+                f"  - **AGGREGATE_FAILED**: **{pipeline_buckets.get('AGGREGATE_FAILED', 0)}**",
+                f"  - **RELEASE_FAILED**: **{pipeline_buckets.get('RELEASE_FAILED', 0)}**",
+                f"  - **SKIPPED_DUPLICATE**: **{pipeline_buckets.get('SKIPPED_DUPLICATE', 0)}**",
+                f"  - **RUN_CANCELLED**: **{pipeline_buckets.get('RUN_CANCELLED', 0)}**",
+                f"  - **UNKNOWN_INCOMPLETE**: **{pipeline_buckets.get('UNKNOWN_INCOMPLETE', 0)}**",
+            ]
+        )
+        blocked = int(pipeline_buckets.get("INGEST_SUCCESS_RELEASE_BLOCKED", 0))
+        success_n = int(pipeline_buckets.get("PIPELINE_SUCCESS", 0))
+        if blocked > 0 and success_n == 0:
+            lines.append(
+                "> **YELLOW:** V okně jsou pouze release-blocked běhy (ingest+aggregate OK, release guard) — prod se nemusí aktualizovat."
+            )
+    elif bucket_error:
         lines.append(
-            f"- Úspěšné běhy workflow `{INGEST_WORKFLOW_FILE}` (GitHub CLI, posledních 24 h): **{gh_success}**."
+            f"- Pipeline bucket klasifikace selhala: `{bucket_error}` — použijte commity u `feed_health.json` jako proxy."
         )
     else:
         lines.append(
-            f"- Počet úspěšných běhů z `gh run list` nelze v tomto prostředí ověřit (není k dispozici nebo selhalo). "
+            f"- Počet pipeline běhů z phase-status classifier nelze ověřit (není k dispozici nebo selhalo). "
             f"Použijte řádek výše (commity u `feed_health.json`) jako konzervativní proxy."
         )
     lines.extend(["", "### Per-source statistika (feed_health / Git, 24h)", ""])
@@ -972,7 +971,7 @@ def build_report() -> str:
     except Exception as exc:  # noqa: BLE001 — report must still render; never silent fail
         agg, fh_commits = {}, []
         runtime_error = f"{type(exc).__name__}: {exc}"
-    gh_ok = count_gh_success_runs_24h()
+    gh_buckets, bucket_err = classify_pipeline_runs_24h_buckets()
     config_rows = load_config_source_urls()
     missing_urls = config_urls_not_in_runtime(agg, config_rows)
 
@@ -1039,7 +1038,9 @@ def build_report() -> str:
             "",
             render_sections_and_sources(feeds, workflow_texts, stats, cadence).strip(),
             "",
-            render_runtime_24h_section(agg, fh_commits, gh_ok, now, runtime_error=runtime_error).strip(),
+            render_runtime_24h_section(
+                agg, fh_commits, gh_buckets, now, runtime_error=runtime_error, bucket_error=bucket_err
+            ).strip(),
             "",
             render_config_not_seen_section(missing_urls).strip(),
             "",
@@ -1060,7 +1061,8 @@ def build_report() -> str:
         runtime_data = {
             "commits_in_window": len(fh_commits),
             "feed_count": len(agg),
-            "gh_success_runs_24h": gh_ok,
+            "pipeline_runs_24h": gh_buckets,
+            "pipeline_bucket_error": bucket_err,
             "error": runtime_error,
         }
         print("RUNTIME DATA:", json.dumps(runtime_data, ensure_ascii=False), file=sys.stderr)

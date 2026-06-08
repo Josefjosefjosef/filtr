@@ -38,6 +38,20 @@ PUBLISH_OK = "PUBLISH_OK"
 PUBLISH_SKIPPED = "PUBLISH_SKIPPED"
 PUBLISH_FAILED = "PUBLISH_FAILED"
 
+# Derived pipeline_overall_status (Phase 3D-B consumer migration)
+PIPELINE_SUCCESS = "PIPELINE_SUCCESS"
+INGEST_SUCCESS_RELEASE_BLOCKED = "INGEST_SUCCESS_RELEASE_BLOCKED"
+RELEASE_FAILED = "RELEASE_FAILED"
+INGEST_FAILED = "INGEST_FAILED"
+AGGREGATE_FAILED = "AGGREGATE_FAILED"
+SKIPPED_DUPLICATE = "SKIPPED_DUPLICATE"
+RUN_CANCELLED = "RUN_CANCELLED"
+UNKNOWN_INCOMPLETE = "UNKNOWN_INCOMPLETE"
+
+ALERT_GREEN = "GREEN"
+ALERT_YELLOW = "YELLOW"
+ALERT_RED = "RED"
+
 STAGING_TELEMETRY_FILES = (
     PHASE_STATUS_NAME,
     "article_pool_manifest.json",
@@ -306,6 +320,114 @@ def artifacts_persisted(status: dict) -> bool:
         and status.get("aggregate_status") == AGGREGATE_OK
         and status.get("clean_pool_status") == CLEAN_POOL_CREATED
     )
+
+
+def _job_by_name(jobs: list[dict] | None, name: str) -> dict | None:
+    if not jobs:
+        return None
+    for job in jobs:
+        if isinstance(job, dict) and job.get("name") == name:
+            return job
+    return None
+
+
+def _is_legacy_run(jobs: list[dict] | None) -> bool:
+    """Pre split-job workflow runs lack article_pipeline_* job names."""
+    return _job_by_name(jobs, "article_pipeline_ingest") is None
+
+
+def _skipped_duplicate_from_jobs(jobs: list[dict] | None) -> bool:
+    gate = _job_by_name(jobs, "pipeline_gate")
+    ingest = _job_by_name(jobs, "article_pipeline_ingest")
+    aggregate = _job_by_name(jobs, "article_pipeline_aggregate")
+    if gate is None or ingest is None or aggregate is None:
+        return False
+    return (
+        str(gate.get("conclusion") or "") == "success"
+        and str(ingest.get("conclusion") or "") == "skipped"
+        and str(aggregate.get("conclusion") or "") == "skipped"
+    )
+
+
+def derive_pipeline_overall_status(
+    phase_status: dict | None,
+    *,
+    jobs: list[dict] | None = None,
+    run_conclusion: str | None = None,
+    run_status: str | None = None,
+) -> str:
+    """
+    Map phase status manifest (+ optional jobs/run metadata) to pipeline_overall_status.
+
+    Priority: phase_status fields > jobs API > legacy workflow conclusion.
+    """
+    rc = str(run_conclusion or "").lower()
+    rs = str(run_status or "").lower()
+    if rs == "cancelled" or rc == "cancelled":
+        return RUN_CANCELLED
+
+    if _skipped_duplicate_from_jobs(jobs):
+        return SKIPPED_DUPLICATE
+
+    if isinstance(phase_status, dict):
+        ingest = phase_status.get("ingest_status")
+        aggregate = phase_status.get("aggregate_status")
+        release = phase_status.get("release_status")
+        publish = phase_status.get("publish_status")
+        if ingest == INGEST_FAIL:
+            return INGEST_FAILED
+        if aggregate == AGGREGATE_FAIL:
+            return AGGREGATE_FAILED
+        if ingest == INGEST_OK and aggregate == AGGREGATE_OK:
+            if release == RELEASE_BLOCKED:
+                return INGEST_SUCCESS_RELEASE_BLOCKED
+            if release == RELEASE_FAIL or publish == PUBLISH_FAILED:
+                return RELEASE_FAILED
+            if release == RELEASE_OK and publish in (PUBLISH_OK, PUBLISH_SKIPPED, None):
+                return PIPELINE_SUCCESS
+
+    if jobs:
+        ingest_job = _job_by_name(jobs, "article_pipeline_ingest")
+        aggregate_job = _job_by_name(jobs, "article_pipeline_aggregate")
+        release_job = _job_by_name(jobs, "article_data_release")
+        if ingest_job and str(ingest_job.get("conclusion") or "") == "failure":
+            return INGEST_FAILED
+        if aggregate_job and str(aggregate_job.get("conclusion") or "") == "failure":
+            return AGGREGATE_FAILED
+        ingest_ok = ingest_job and str(ingest_job.get("conclusion") or "") == "success"
+        aggregate_ok = aggregate_job and str(aggregate_job.get("conclusion") or "") == "success"
+        if ingest_ok and aggregate_ok:
+            if release_job is None or str(release_job.get("conclusion") or "") == "skipped":
+                return UNKNOWN_INCOMPLETE
+            rel_c = str(release_job.get("conclusion") or "")
+            if rel_c == "success":
+                return PIPELINE_SUCCESS
+            if rel_c == "failure":
+                return UNKNOWN_INCOMPLETE
+
+    if _is_legacy_run(jobs):
+        if rc == "success":
+            return PIPELINE_SUCCESS
+        if rc == "failure":
+            return UNKNOWN_INCOMPLETE
+
+    return UNKNOWN_INCOMPLETE
+
+
+def alert_level_for_overall_status(overall: str) -> str:
+    if overall in (PIPELINE_SUCCESS, SKIPPED_DUPLICATE):
+        return ALERT_GREEN
+    if overall == INGEST_SUCCESS_RELEASE_BLOCKED:
+        return ALERT_YELLOW
+    return ALERT_RED
+
+
+def is_ingest_aggregate_ok_status(overall: str) -> bool:
+    return overall in (PIPELINE_SUCCESS, INGEST_SUCCESS_RELEASE_BLOCKED)
+
+
+def is_pipeline_failure_status(overall: str) -> bool:
+    return alert_level_for_overall_status(overall) == ALERT_RED
 
 
 def append_github_summary(status: dict) -> None:
