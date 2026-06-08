@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-08T08:28:05.280970Z",
+  "ingestedAt": "2026-06-08T09:08:16.257546Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Nadšení i zděšení. Vědci poprvé upravili lidská embrya novou technologií",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/nadseni-i-zdeseni-vedci-poprve-upravili-lidska-embrya-novou-technologii-374335",
+      "dt": "2026-06-08T08:45:03Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "embrya",
+        "lidská",
+        "nadšení",
+        "novou",
+        "poprvé",
+        "technologií",
+        "upravili",
+        "vědci",
+        "zděšení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -291,7 +317,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Zemětřesení na filipínském ostrově má nejméně osm obětí",
+      "title": "Zemětřesení na filipínském ostrově má nejméně šestnáct obětí",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/zemetreseni-na-filipinskem-ostrove-ma-jednu-obet-374330",
       "dt": "2026-06-08T03:41:20Z",
       "media_raw": "ČT24 / Domácí",
@@ -300,9 +326,9 @@
         "filipínském",
         "nejméně",
         "obětí",
-        "osm",
         "ostrově",
-        "zemětřesení"
+        "zemětřesení",
+        "šestnáct"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -314,18 +340,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Izrael a Írán podnikají vzájemné raketové údery",
+      "title": "Izrael a Írán na sebe útočí, v Teheránu se ozývají exploze",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/izrael-oznamil-udery-na-iran-media-pisi-o-explozich-v-teheranu-374329",
       "dt": "2026-06-08T01:38:56Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24",
       "tokens": [
+        "exploze",
         "izrael",
-        "podnikají",
-        "raketové",
-        "vzájemné",
+        "ozývají",
+        "sebe",
+        "teheránu",
         "írán",
-        "údery"
+        "útočí"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -337,14 +364,14 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Pavel dorazí na jednání vlády, ta rozhodnutí o delegaci na summit NATO odložila",
+      "title": "Pavel dorazil na jednání vlády, ta rozhodnutí o delegaci na summit NATO odložila",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pavel-dorazi-na-jednani-vlady-ta-rozhodnuti-o-delegaci-na-summit-nato-odlozila-374328",
       "dt": "2026-06-08T01:15:00Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24",
       "tokens": [
         "delegaci",
-        "dorazí",
+        "dorazil",
         "jednání",
         "nato",
         "odložila",
@@ -710,31 +737,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Z reformy penzijního spoření vyjdou nejlépe mladí, říká ekonom",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/z-reformy-penzijniho-sporeni-vyjdou-nejlepe-mladi-rika-ekonom-374303",
-      "dt": "2026-06-07T11:13:34Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "ekonom",
-        "mladí",
-        "nejlépe",
-        "penzijního",
-        "reformy",
-        "spoření",
-        "vyjdou",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -745,7 +747,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42775,
+      "bytes": 42605,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -782,12 +784,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-08T08:17:43Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T08:45:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "other": 2,
-          "finance": 1
+          "other": 3,
+          "zpravy": 27
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -799,6 +800,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nadšení i zděšení. Vědci poprvé upravili lidská embrya novou technologií",
+            "publishedAt": "2026-06-08T08:45:03Z"
+          },
           {
             "title": "Letouny NATO v Lotyšsku sestřelily dron z Ruska",
             "publishedAt": "2026-06-08T08:17:43Z"
@@ -826,10 +831,6 @@
           {
             "title": "Reforma řízení vysokých škol budí obavy u části akademiků. Pojistky tam budou, tvrdí Plaga",
             "publishedAt": "2026-06-08T06:00:00Z"
-          },
-          {
-            "title": "Vítězství v arménských volbách obhájila Pašinjanova strana",
-            "publishedAt": "2026-06-08T05:32:01Z"
           }
         ]
       }
