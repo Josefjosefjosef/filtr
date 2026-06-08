@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-07T17:32:53.641359Z",
-  "total_sources": 46,
-  "total_active_feeds": 59,
+  "generatedAt": "2026-06-08T09:46:45.268494Z",
+  "total_sources": 43,
+  "total_active_feeds": 56,
   "max_fetches_per_source_per_hour": 4,
   "max_fetches_per_source_per_hour_exception": 5,
   "exception_keys": [],
@@ -32,7 +32,6 @@
       "penize.cz",
       "technet.cz",
       "tydenikpolicie.cz",
-      "vortex.cz",
       "zdravezpravy.cz",
       "zdravotnickydenik.cz",
       "zing.cz"
@@ -45,12 +44,10 @@
       "indian-tv.cz",
       "kverulant.org",
       "mmamag.cz",
-      "nedd.cz",
       "nespechej.cz",
       "pelipecky.cz",
       "plnezdravi.cz",
       "prozeny.cz",
-      "sector.sk",
       "svetcestovatele.cz",
       "tenisportal.cz",
       "travelbible.cz",
@@ -194,10 +191,10 @@
         50
       ],
       "accepted_last_snapshot": 60,
-      "articles_in_bundle_24h": 14,
+      "articles_in_bundle_24h": 7,
       "priority": "P0",
       "recommended_frequency": "4/hour",
-      "estimated_articles_per_day": 14
+      "estimated_articles_per_day": 7
     },
     {
       "source": "cestujlevne.cz",
@@ -673,32 +670,6 @@
       "estimated_articles_per_day": 0
     },
     {
-      "source": "nedd.cz",
-      "scheduler_key": "nedd.cz",
-      "slot_key": "nedd.cz",
-      "feeds": [
-        {
-          "id": "hry_nedd",
-          "label": "Nedd",
-          "feed_url": "https://www.nedd.cz/feed/",
-          "section_primary": "hry"
-        }
-      ],
-      "sections": [
-        "hry"
-      ],
-      "display_weight_max": 0.7,
-      "fetches_per_hour": 1,
-      "slot_minutes": [
-        23
-      ],
-      "accepted_last_snapshot": 0,
-      "articles_in_bundle_24h": 0,
-      "priority": "P2",
-      "recommended_frequency": "1/hour",
-      "estimated_articles_per_day": 0
-    },
-    {
       "source": "nespechej.cz",
       "scheduler_key": "nespechej.cz",
       "slot_key": "nespechej.cz",
@@ -789,10 +760,10 @@
         45
       ],
       "accepted_last_snapshot": 60,
-      "articles_in_bundle_24h": 49,
+      "articles_in_bundle_24h": 25,
       "priority": "P0",
       "recommended_frequency": "4/hour",
-      "estimated_articles_per_day": 49
+      "estimated_articles_per_day": 25
     },
     {
       "source": "pelipecky.cz",
@@ -902,32 +873,6 @@
       "estimated_articles_per_day": 0
     },
     {
-      "source": "sector.sk",
-      "scheduler_key": "sector.sk",
-      "slot_key": "sector.sk",
-      "feeds": [
-        {
-          "id": "hry_sector",
-          "label": "Sector",
-          "feed_url": "https://sector.sk/feed/",
-          "section_primary": "hry"
-        }
-      ],
-      "sections": [
-        "hry"
-      ],
-      "display_weight_max": 0.75,
-      "fetches_per_hour": 1,
-      "slot_minutes": [
-        37
-      ],
-      "accepted_last_snapshot": 0,
-      "articles_in_bundle_24h": 0,
-      "priority": "P2",
-      "recommended_frequency": "1/hour",
-      "estimated_articles_per_day": 0
-    },
-    {
       "source": "seznamzpravy.cz",
       "scheduler_key": "seznamzpravy.cz",
       "slot_key": "seznamzpravy.cz",
@@ -965,10 +910,10 @@
         45
       ],
       "accepted_last_snapshot": 30,
-      "articles_in_bundle_24h": 35,
+      "articles_in_bundle_24h": 20,
       "priority": "P0",
       "recommended_frequency": "4/hour",
-      "estimated_articles_per_day": 35
+      "estimated_articles_per_day": 20
     },
     {
       "source": "sport.ceskatelevize.cz",
@@ -1023,10 +968,10 @@
         45
       ],
       "accepted_last_snapshot": 30,
-      "articles_in_bundle_24h": 22,
+      "articles_in_bundle_24h": 11,
       "priority": "P0",
       "recommended_frequency": "4/hour",
-      "estimated_articles_per_day": 22
+      "estimated_articles_per_day": 11
     },
     {
       "source": "svetcestovatele.cz",
@@ -1210,33 +1155,6 @@
       "articles_in_bundle_24h": 0,
       "priority": "P2",
       "recommended_frequency": "1/hour",
-      "estimated_articles_per_day": 0
-    },
-    {
-      "source": "vortex.cz",
-      "scheduler_key": "vortex.cz",
-      "slot_key": "vortex.cz",
-      "feeds": [
-        {
-          "id": "hry_vortex",
-          "label": "Vortex",
-          "feed_url": "https://www.vortex.cz/feed/",
-          "section_primary": "hry"
-        }
-      ],
-      "sections": [
-        "hry"
-      ],
-      "display_weight_max": 0.9,
-      "fetches_per_hour": 2,
-      "slot_minutes": [
-        25,
-        55
-      ],
-      "accepted_last_snapshot": 0,
-      "articles_in_bundle_24h": 0,
-      "priority": "P1",
-      "recommended_frequency": "2/hour",
       "estimated_articles_per_day": 0
     },
     {
@@ -1622,15 +1540,6 @@
       "within_limit": true
     },
     {
-      "source": "nedd.cz",
-      "priority": "P2",
-      "fetches_per_hour": 1,
-      "slot_minutes": [
-        23
-      ],
-      "within_limit": true
-    },
-    {
       "source": "nespechej.cz",
       "priority": "P2",
       "fetches_per_hour": 1,
@@ -1687,15 +1596,6 @@
       "fetches_per_hour": 1,
       "slot_minutes": [
         31
-      ],
-      "within_limit": true
-    },
-    {
-      "source": "sector.sk",
-      "priority": "P2",
-      "fetches_per_hour": 1,
-      "slot_minutes": [
-        37
       ],
       "within_limit": true
     },
@@ -1797,16 +1697,6 @@
       "fetches_per_hour": 1,
       "slot_minutes": [
         47
-      ],
-      "within_limit": true
-    },
-    {
-      "source": "vortex.cz",
-      "priority": "P1",
-      "fetches_per_hour": 2,
-      "slot_minutes": [
-        25,
-        55
       ],
       "within_limit": true
     },
