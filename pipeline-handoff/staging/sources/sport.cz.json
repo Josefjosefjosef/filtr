@@ -1,27 +1,24 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-08T09:48:50.263944Z",
+  "ingestedAt": "2026-06-08T10:25:25.591784Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Luxus a adrenalin v unikátním prostředí. Chtěli jsme něco speciálního, zní z organizace",
-      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-luxus-a-adrenalin-v-unikatnim-prostredi-chteli-jsme-neco-specialniho-zni-z-organizace-5475816",
-      "dt": "2026-06-08T09:46:45Z",
+      "title": "Velká přestavba kádru pokračuje, Olomouc má už dvanáctou posilu",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-velka-prestavba-kadru-pokracuje-olomouc-ma-uz-dvanactou-posilu-5475818",
+      "dt": "2026-06-08T10:23:57Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "adrenalin",
-        "chtěli",
-        "jsme",
-        "luxus",
-        "něco",
-        "organizace",
-        "prostředí",
-        "speciálního",
-        "unikátním",
-        "zní"
+        "dvanáctou",
+        "kádru",
+        "olomouc",
+        "pokračuje",
+        "posilu",
+        "přestavba",
+        "velká"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -47,6 +44,29 @@
         "příštím",
         "skupinu",
         "čeští"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dávka adrenalinu. Na Slovensku se chystá výjimečná akce",
+      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-luxus-a-adrenalin-v-unikatnim-prostredi-chteli-jsme-neco-specialniho-zni-z-organizace-5475816",
+      "dt": "2026-06-08T09:46:45Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "adrenalinu",
+        "akce",
+        "chystá",
+        "dávka",
+        "slovensku",
+        "výjimečná"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -747,30 +767,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Česko má znovu po třech letech šampionku v Lize mistryň",
-      "url": "https://www.sport.cz/clanek/hazena-cesko-ma-znovu-po-trech-letech-sampionku-v-lize-mistryn-5475782",
-      "dt": "2026-06-07T17:37:18Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "letech",
-        "lize",
-        "mistryň",
-        "třech",
-        "znovu",
-        "česko",
-        "šampionku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44166,
+      "bytes": 43779,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -806,7 +802,7 @@
           "official_only": true,
           "fetch_mode": "rss_or_official_rubric_only",
           "per_domain_cooldown_min": 12,
-          "slot_offset_min": 12,
+          "slot_offset_min": 38,
           "max_items_per_fetch": 40,
           "last_fetch_at": null,
           "last_success_at": null,
@@ -818,7 +814,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-08T09:46:45Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T10:23:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -835,12 +831,16 @@
         },
         "sample_titles": [
           {
-            "title": "Luxus a adrenalin v unikátním prostředí. Chtěli jsme něco speciálního, zní z organizace",
-            "publishedAt": "2026-06-08T09:46:45Z"
+            "title": "Velká přestavba kádru pokračuje, Olomouc má už dvanáctou posilu",
+            "publishedAt": "2026-06-08T10:23:57Z"
           },
           {
             "title": "Definitivně potvrzeno! Čeští hokejisté odehrají skupinu na příštím MS v Düsseldorfu",
             "publishedAt": "2026-06-08T09:36:20Z"
+          },
+          {
+            "title": "Dávka adrenalinu. Na Slovensku se chystá výjimečná akce",
+            "publishedAt": "2026-06-08T09:46:45Z"
           },
           {
             "title": "Olympijská vítězka chystá další útok na rekord Kratochvílové v červenci",
@@ -861,10 +861,6 @@
           {
             "title": "Další posila pro Kladno! Rytíři do obrany získávají šampiona finské ligy",
             "publishedAt": "2026-06-08T08:07:24Z"
-          },
-          {
-            "title": "JEDEN TÝM: Suchého kariéru zachraňují angličtí specialisté. Po boku mu stále stojí první láska",
-            "publishedAt": "2026-06-08T06:32:28Z"
           }
         ]
       }
