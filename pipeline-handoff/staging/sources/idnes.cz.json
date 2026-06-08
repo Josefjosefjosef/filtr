@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-08T20:37:22.776182Z",
+  "ingestedAt": "2026-06-08T21:19:04.798920Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Americká stíhačka zasáhla tanker mířící do Íránu, na palubě byli Indové",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/americke-sily-v-omanskem-zalivu-vyradily-z-provozu-tanker-smerujici-k-iranu.A260608_221726_zahranicni_ichuc",
+      "dt": "2026-06-08T20:37:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "americká",
+        "byli",
+        "indové",
+        "mířící",
+        "palubě",
+        "stíhačka",
+        "tanker",
+        "zasáhla",
+        "íránu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -767,31 +793,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Počasí se obrátí o 180 stupňů, do Česka nastupuje vlna ochlazení",
-      "url": "https://www.idnes.cz/zpravy/domaci/pocasi-se-zmeni-o-180-stupnu-do-ceska-nastupuje-vlna-ochlazeni.A260608_123313_domaci_wall",
-      "dt": "2026-06-08T14:21:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "180",
-        "nastupuje",
-        "obrátí",
-        "ochlazení",
-        "počasí",
-        "stupňů",
-        "vlna",
-        "česka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +803,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50368,
+      "bytes": 50981,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +840,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-08T20:21:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T20:37:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -856,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Americká stíhačka zasáhla tanker mířící do Íránu, na palubě byli Indové",
+            "publishedAt": "2026-06-08T20:37:00Z"
+          },
           {
             "title": "Dramatická volba prezidenta v Peru, rozhodují hlasy z venkova",
             "publishedAt": "2026-06-08T20:21:00Z"
@@ -883,10 +888,6 @@
           {
             "title": "V Plzni se zřítila část činžáku. Dům má neslavnou minulost",
             "publishedAt": "2026-06-08T18:39:00Z"
-          },
-          {
-            "title": "Nejdříve Krym, teď už i metropole. Rusko kvůli nedostatku benzinu zavedlo příděly",
-            "publishedAt": "2026-06-08T18:07:00Z"
           }
         ]
       }

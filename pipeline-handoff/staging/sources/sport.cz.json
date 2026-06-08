@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-08T20:37:22.776182Z",
+  "ingestedAt": "2026-06-08T21:19:04.798920Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nevídaným hodem rozhodl proti bývalému klubu. Největší střela kariéry, rozplýval se střelec",
+      "url": "https://www.sport.cz/clanek/basketbal-nevidanym-hodem-rozhodl-proti-byvalemu-klubu-nejvetsi-strela-kariery-rozplyval-se-strelec-5475869",
+      "dt": "2026-06-08T21:03:43Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bývalému",
+        "hodem",
+        "kariéry",
+        "klubu",
+        "největší",
+        "nevídaným",
+        "proti",
+        "rozhodl",
+        "rozplýval",
+        "střela",
+        "střelec"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -738,36 +766,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Testy moči, hrozba ponorky a přehřátí. Češi se chystají do nebes, lékař dává rady i fanouškům pivařům",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-testy-moci-hrozba-ponorky-a-prehrati-cesi-se-chystaji-do-nebes-lekar-dava-rady-i-fanouskum-pivarum-5475803",
-      "dt": "2026-06-08T11:02:02Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "chystají",
-        "dává",
-        "fanouškům",
-        "hrozba",
-        "lékař",
-        "moči",
-        "nebes",
-        "pivařům",
-        "ponorky",
-        "přehřátí",
-        "rady",
-        "testy",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -778,7 +776,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41374,
+      "bytes": 41794,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -815,7 +813,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-08T19:14:21Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T21:03:43Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -830,6 +828,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nevídaným hodem rozhodl proti bývalému klubu. Největší střela kariéry, rozplýval se střelec",
+            "publishedAt": "2026-06-08T21:03:43Z"
+          },
           {
             "title": "Senzace na úvod turnaje! Sedmnáctiletá Slovenka vyřadila nasazenou dvojku. Plíšková slaví postup",
             "publishedAt": "2026-06-08T17:56:50Z"
@@ -857,10 +859,6 @@
           {
             "title": "Táborsko po neúspěšné baráži ohlásilo staronového kouče",
             "publishedAt": "2026-06-08T18:13:20Z"
-          },
-          {
-            "title": "Bývalý šéf UEFA podal trestní oznámení na prezidenta FIFA",
-            "publishedAt": "2026-06-08T18:09:00Z"
           }
         ]
       }
