@@ -97,6 +97,8 @@ jobs:
       RETENTION_DAYS: "45"
       # Phase 2B: A/B/C/D batch rotation when RSS_ROTATION_BATCH_RUNTIME=1 (ingest only).
       RSS_ROTATION_BATCH_RUNTIME: "1"
+      # Phase 9B: fast pool publish handles pool updates; IU_SKIP_INCREMENTAL_PUBLISH prevents duplicate aggregate at runtime.
+      IU_SKIP_INCREMENTAL_PUBLISH: "1"
       IU_INCREMENTAL_PUBLISH: "1"
     steps:
       - name: Checkout repository
@@ -154,6 +156,7 @@ jobs:
       - name: Article pipeline — ingest (RSS → staging)
         env:
           IU_ARTICLE_PIPELINE_PHASE: ingest
+          IU_SKIP_INCREMENTAL_PUBLISH: "1"
           IU_INCREMENTAL_PUBLISH: "1"
           IU_TRIGGER_SOURCE: cloudflare_watchdog
           RSS_ROTATION_BATCH_RUNTIME: "1"

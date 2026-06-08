@@ -2861,6 +2861,85 @@ def cluster_items(items: list) -> list:
     return clusters
 
 
+def build_articles_from_clusters(clusters: list) -> list:
+    """Build article dicts from ingest clusters (shared by aggregate + fast pool publish)."""
+    new_articles: list = []
+    sec_rank = {s: i for i, s in enumerate(SECTION_ORDER)}
+    clusters.sort(key=lambda c: (c.published_at(), -sec_rank.get(c.section, 999)), reverse=True)
+
+    for c in clusters:
+        sources = c.sources_unique()
+        published = c.published_at().isoformat().replace("+00:00", "Z")
+
+        if c.content_type == "video":
+            t = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]["title"]
+            title_out = _ensure_video_prefix(t)
+        else:
+            if c.unique_media_count() == 1:
+                t = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]["title"]
+                title_out = clean_single_source_title(t)
+            else:
+                title_out = choose_neutral_title(c.titles(), section=c.section)
+
+        pcat = _primary_category_from_cluster_items(c.items)
+        ftype = _feed_type_from_cluster_items(c.items)
+        thash = topic_hash_from_title(title_out)
+
+        primary_item = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]
+        src0 = (sources or [{}])[0]
+        candidate = (src0.get("url", "") or "").strip()
+        article_url = candidate if candidate.lower().startswith(("http://", "https://")) else ""
+        _sl = media_source_display(str(primary_item.get("media_raw") or ""), article_url)
+        sources_out = [
+            {
+                "name": media_source_display(
+                    str(s.get("name") or ""), str(s.get("url") or article_url)
+                ),
+                "url": s.get("url"),
+            }
+            for s in sources
+        ]
+        article_out = {
+            "topic": c.section,
+            "section": c.section,
+            "contentType": c.content_type,
+            "title": fix_cz_mojibake(title_out),
+            "publishedAt": published,
+            "sources": sources_out,
+            "primaryCategory": pcat,
+            "topicHash": thash,
+            "feedType": ftype,
+            "sourceDisplayWeight": float(primary_item.get("sourceDisplayWeight") or 1.0),
+            "sectionPrimary": str(primary_item.get("feedCategory") or ""),
+            "sourceLabel": _sl,
+        }
+        _fid = str(primary_item.get("feedId") or "").strip()
+        if _fid:
+            article_out["feedId"] = _fid
+        article_out["url"] = article_url
+        new_articles.append(article_out)
+
+    return new_articles
+
+
+def apply_publishable_pre_cap_pipeline(merged_articles: list, generated_at: str) -> list:
+    """Post-merge processing up to publishable_pool boundary (no section caps)."""
+    merged_articles = purge_blocked_articles(merged_articles)
+    merged_articles = [remap_article_section_if_url_mismatch(a) for a in merged_articles]
+    merged_articles = [_apply_output_vertical_purity(a) for a in merged_articles]
+    merged_articles = [a for a in merged_articles if a is not None]
+    merged_articles = [_apply_second_layer_targeted_section_cleanup(a) for a in merged_articles]
+    merged_articles = _apply_conservative_topic_clustering(merged_articles)
+    for a in merged_articles:
+        a["duplicatePenalty"] = float(a.get("duplicatePenalty") or 1.0)
+        a["displayScore"] = compute_display_score(a)
+
+    merged_articles.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
+    merged_articles = apply_staggered_section_release(merged_articles, generated_at)
+    merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
+    return _apply_source_display_to_articles(merged_articles)
+
+
 # =========================
 # Brief / Meta
 # =========================
@@ -2985,80 +3064,15 @@ def _aggregate_pipeline(
     deduped_items = _dedupe_ingest_items_by_url_priority(all_items)
 
     clusters = cluster_items(deduped_items)
-
-    new_articles = []
-
-    sec_rank = {s: i for i, s in enumerate(SECTION_ORDER)}
-    clusters.sort(key=lambda c: (c.published_at(), -sec_rank.get(c.section, 999)), reverse=True)
-
-    for c in clusters:
-        sources = c.sources_unique()
-        published = c.published_at().isoformat().replace("+00:00", "Z")
-
-        if c.content_type == "video":
-            t = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]["title"]
-            title_out = _ensure_video_prefix(t)
-        else:
-            if c.unique_media_count() == 1:
-                t = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]["title"]
-                title_out = clean_single_source_title(t)
-            else:
-                title_out = choose_neutral_title(c.titles(), section=c.section)
-
-        pcat = _primary_category_from_cluster_items(c.items)
-        ftype = _feed_type_from_cluster_items(c.items)
-        thash = topic_hash_from_title(title_out)
-
-        primary_item = sorted(c.items, key=lambda x: x["dt"], reverse=True)[0]
-        src0 = (sources or [{}])[0]
-        candidate = (src0.get("url", "") or "").strip()
-        article_url = candidate if candidate.lower().startswith(("http://", "https://")) else ""
-        _sl = media_source_display(str(primary_item.get("media_raw") or ""), article_url)
-        sources_out = [
-            {"name": media_source_display(str(s.get("name") or ""), str(s.get("url") or article_url)), "url": s.get("url")}
-            for s in sources
-        ]
-        article_out = {
-            "topic": c.section,
-            "section": c.section,
-            "contentType": c.content_type,
-            "title": fix_cz_mojibake(title_out),
-            "publishedAt": published,
-            "sources": sources_out,
-            "primaryCategory": pcat,
-            "topicHash": thash,
-            "feedType": ftype,
-            "sourceDisplayWeight": float(primary_item.get("sourceDisplayWeight") or 1.0),
-            "sectionPrimary": str(primary_item.get("feedCategory") or ""),
-            "sourceLabel": _sl,
-        }
-        _fid = str(primary_item.get("feedId") or "").strip()
-        if _fid:
-            article_out["feedId"] = _fid
-        article_out["url"] = article_url
-
-        new_articles.append(article_out)
+    new_articles = build_articles_from_clusters(clusters)
 
     generated_at = iso_now_z()
 
     prev_payload = _safe_read_json(OUT_PATH) or {}
     prev_list = list(prev_payload.get("articles") or [])
     merged_articles = merge_article_lists(prev_list, new_articles, MAX_MERGED_ARTICLES_POOL)
-    merged_articles = purge_blocked_articles(merged_articles)
-    merged_articles = [remap_article_section_if_url_mismatch(a) for a in merged_articles]
-    merged_articles = [_apply_output_vertical_purity(a) for a in merged_articles]
-    merged_articles = [a for a in merged_articles if a is not None]
-    merged_articles = [_apply_second_layer_targeted_section_cleanup(a) for a in merged_articles]
-    merged_articles = _apply_conservative_topic_clustering(merged_articles)
+    merged_articles = apply_publishable_pre_cap_pipeline(merged_articles, generated_at)
     pre_limit_event_stats = dict(_TOPIC_DEDUPE_LAST_STATS or {})
-    for a in merged_articles:
-        a["duplicatePenalty"] = float(a.get("duplicatePenalty") or 1.0)
-        a["displayScore"] = compute_display_score(a)
-
-    merged_articles.sort(key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
-    merged_articles = apply_staggered_section_release(merged_articles, generated_at)
-    merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
-    merged_articles = _apply_source_display_to_articles(merged_articles)
 
     # Phase 6B export point: post event-dedupe + quality gates, pre section/topic/source caps.
     publishable_pool = list(merged_articles)
@@ -4174,11 +4188,27 @@ def main() -> int:
         print("WARN: scheduler_state write failed:", str(e))
 
     if phase == "ingest":
-        _incr_pub = os.getenv("IU_INCREMENTAL_PUBLISH", "").strip().lower() in (
+        _fast_pool = os.getenv("IU_FAST_POOL_PUBLISH", "").strip().lower() in (
             "1",
             "true",
             "yes",
         )
+        _skip_incr = os.getenv("IU_SKIP_INCREMENTAL_PUBLISH", "").strip().lower() in (
+            "1",
+            "true",
+            "yes",
+        )
+        _incr_pub = (
+            not _fast_pool
+            and not _skip_incr
+            and os.getenv("IU_INCREMENTAL_PUBLISH", "").strip().lower() in ("1", "true", "yes")
+        )
+        if _fast_pool or _skip_incr:
+            print(
+                "[iu-pipeline] incremental publish skipped "
+                f"(fast_pool={_fast_pool} skip_incr={_skip_incr})",
+                flush=True,
+            )
         if _incr_pub and all_items:
             print(
                 f"[iu-pipeline] incremental publish: {len(all_items)} new ingest items",
