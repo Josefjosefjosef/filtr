@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-06-08T10:25:25.591784Z",
+  "ingestedAt": "2026-06-08T11:07:12.685006Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Dave the Diver: In the Jungle dorazí už v červnu - INDIAN",
+      "url": "https://indian-tv.cz/clanek/dave-the-diver-in-the-jungle-dorazi-uz-v-cervnu-lejk8y",
+      "dt": "2026-06-08T11:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "dave",
+        "diver",
+        "dorazí",
+        "indian",
+        "jungle",
+        "the",
+        "červnu"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1065,33 +1089,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Detaily a obrázky z Halo: Campaign Evolved. Microsoft omylem odhalil informace - INDIAN",
-      "url": "https://indian-tv.cz/clanek/detaily-a-obrazky-z-halo-campaign-evolved-3fqnwq",
-      "dt": "2026-06-06T17:58:11Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "campaign",
-        "detaily",
-        "evolved",
-        "halo",
-        "indian",
-        "informace",
-        "microsoft",
-        "obrázky",
-        "odhalil",
-        "omylem"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1102,7 +1099,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 203501,
+      "bytes": 203139,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1139,7 +1136,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-08T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T11:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1154,6 +1151,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dave the Diver: In the Jungle dorazí už v červnu - INDIAN",
+            "publishedAt": "2026-06-08T11:00:00Z"
+          },
           {
             "title": "Xbox oficiálně vrací exkluzivity. Gears of War: E-Day a Clockwork Revolution na PlayStation 5 nevyjdou - INDIAN",
             "publishedAt": "2026-06-08T10:00:00Z"
@@ -1181,10 +1182,6 @@
           {
             "title": "Sega oživuje Crazy Taxi. S podtitulem World Tour vyjde v roce 2027 - INDIAN",
             "publishedAt": "2026-06-08T05:30:00Z"
-          },
-          {
-            "title": "Persona 6 oficiálně oznámena. Detaily ale drží Atlus pod pokličkou - INDIAN",
-            "publishedAt": "2026-06-08T05:00:00Z"
           }
         ]
       }

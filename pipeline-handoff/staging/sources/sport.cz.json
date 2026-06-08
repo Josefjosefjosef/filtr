@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-08T10:25:25.591784Z",
+  "ingestedAt": "2026-06-08T11:07:12.685006Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Testy moči, hrozba ponorky a přehřátí. Češi se chystají do nebes, lékař dává rady i fanouškům pivařům",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-testy-moci-hrozba-ponorky-a-prehrati-cesi-se-chystaji-do-nebes-lekar-dava-rady-i-fanouskum-pivarum-5475803",
+      "dt": "2026-06-08T11:02:02Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chystají",
+        "dává",
+        "fanouškům",
+        "hrozba",
+        "lékař",
+        "moči",
+        "nebes",
+        "pivařům",
+        "ponorky",
+        "přehřátí",
+        "rady",
+        "testy",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -741,32 +771,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dominantní výkon s infarktovým závěrem. Antonelli vyhrál v Monaku popáté v řadě",
-      "url": "https://www.sport.cz/clanek/moto-formule-1-antonelli-si-v-monaku-z-pole-position-pojede-pro-patou-vyhru-v-rade-5475433",
-      "dt": "2026-06-07T08:50:51Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "antonelli",
-        "dominantní",
-        "infarktovým",
-        "monaku",
-        "popáté",
-        "vyhrál",
-        "výkon",
-        "závěrem",
-        "řadě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43779,
+      "bytes": 43889,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,7 +818,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-08T10:23:57Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T11:02:02Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -830,6 +834,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Testy moči, hrozba ponorky a přehřátí. Češi se chystají do nebes, lékař dává rady i fanouškům pivařům",
+            "publishedAt": "2026-06-08T11:02:02Z"
+          },
           {
             "title": "Velká přestavba kádru pokračuje, Olomouc má už dvanáctou posilu",
             "publishedAt": "2026-06-08T10:23:57Z"
@@ -857,10 +865,6 @@
           {
             "title": "Zářez ve finále Roland Garros. Ukažte tu zatracenou stopu, běsnila legenda",
             "publishedAt": "2026-06-08T08:37:26Z"
-          },
-          {
-            "title": "Další posila pro Kladno! Rytíři do obrany získávají šampiona finské ligy",
-            "publishedAt": "2026-06-08T08:07:24Z"
           }
         ]
       }
