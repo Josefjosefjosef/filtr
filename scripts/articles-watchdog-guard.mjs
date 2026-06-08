@@ -60,11 +60,35 @@ function checkConfig() {
   } else {
     log("config cron PASS");
   }
-  for (const key of ["GITHUB_REPOSITORY", "WORKFLOW_FILE", "FRESHNESS_URL", "STALE_AFTER_MINUTES"]) {
+  const requiredVars = [
+    "GITHUB_REPOSITORY",
+    "SLOW_WORKFLOW_FILE",
+    "FAST_WORKFLOW_FILE",
+    "FRESHNESS_URL",
+    "STALE_AFTER_MINUTES",
+    "FAST_FRESHNESS_URL",
+    "FAST_STALE_AFTER_MINUTES",
+  ];
+  for (const key of requiredVars) {
     if (!toml.includes(key)) {
       fail(`wrangler var ${key} missing`);
       ok = false;
     }
+  }
+  const fastWf = toml.match(/FAST_WORKFLOW_FILE\s*=\s*"([^"]+)"/)?.[1];
+  const slowWf = toml.match(/SLOW_WORKFLOW_FILE\s*=\s*"([^"]+)"/)?.[1];
+  const fastStale = toml.match(/FAST_STALE_AFTER_MINUTES\s*=\s*"([^"]+)"/)?.[1];
+  if (fastWf !== "update-articles-fast-pool.yml") {
+    fail(`FAST_WORKFLOW_FILE must be update-articles-fast-pool.yml (got ${fastWf ?? "n/a"})`);
+    ok = false;
+  }
+  if (slowWf !== "update-articles.yml") {
+    fail(`SLOW_WORKFLOW_FILE must be update-articles.yml (got ${slowWf ?? "n/a"})`);
+    ok = false;
+  }
+  if (fastStale !== "15") {
+    fail(`FAST_STALE_AFTER_MINUTES must be 15 (got ${fastStale ?? "n/a"})`);
+    ok = false;
   }
   if (ok) log("wrangler vars PASS");
   return { ok, cron };
