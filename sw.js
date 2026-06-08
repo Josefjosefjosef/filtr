@@ -9,7 +9,7 @@
 // 2026-03-22: bump — app.js silent SW activation (SKIP_WAITING + jeden reload, bez spodního CTA)
 // 2026-03-22: HTML document = network-first (žádný preferovaný starý shell)
 // 2026-03-29: PR #1488 — nový SW + vyprázdnění APP_SHELL_CACHE po deployi (staré app.*.css v cache)
-const CACHE_VERSION = "2026-06-07-desktop-header-height-compression";
+const CACHE_VERSION = "2026-06-08-homepage-publishable-pool-phase6c";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
@@ -34,6 +34,7 @@ const MAX_STALE_MS = {
 const DATA_FETCH_TIMEOUT_MS = 5500;
 
 function getDataRequestType(pathname) {
+  if (pathname.includes("publishable_pool.json")) return "articles";
   if (pathname.includes("articles.json")) return "articles";
   if (pathname.includes("videos.json")) return "videos";
   if (pathname.endsWith("probe.txt")) return "probe";
@@ -121,7 +122,7 @@ function getSeedVideos() {
 }
 
 function seedResponse(pathname) {
-  const isArticles = pathname.includes("articles.json");
+  const isArticles = pathname.includes("articles.json") || pathname.includes("publishable_pool.json");
   const body = isArticles ? getSeedArticles() : getSeedVideos();
   return new Response(body, {
     status: 200,
@@ -140,7 +141,7 @@ function seedResponse(pathname) {
 function isProjectsFeedDataPath(pathname) {
   if (!pathname.startsWith("/projects/data/")) return false;
   const name = pathname.slice("/projects/data/".length);
-  if (name === "articles.json" || name === "videos.json" || name === "_probe.txt") {
+  if (name === "articles.json" || name === "publishable_pool.json" || name === "videos.json" || name === "_probe.txt") {
     return true;
   }
   if (name === "articles/bootstrap.json") return true;
@@ -200,7 +201,7 @@ async function handleProjectsFeedDataPassthrough(event, pathname) {
     if (r.ok) return r;
   } catch (_) {}
 
-  if (pathname.endsWith("articles.json")) return seedResponse(pathname);
+  if (pathname.endsWith("articles.json") || pathname.endsWith("publishable_pool.json")) return seedResponse(pathname);
   if (pathname.endsWith("videos.json")) return seedResponse(pathname);
   return new Response("stale\n", {
     status: 200,
