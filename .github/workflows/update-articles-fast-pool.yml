@@ -246,6 +246,7 @@ jobs:
               gh workflow run pages.yml --ref main --repo "$REPO"
               exit 0
             fi
+            echo "[CLOSEOUT] poll_attempt=$attempt waiting_for_merge"
             sleep 20
           done
           echo "[CLOSEOUT] WARN: merge poll timeout; pages-publish-from-main-data cron will catch up"
