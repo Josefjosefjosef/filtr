@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-06-08T15:47:16.213465Z",
+  "ingestedAt": "2026-06-08T16:32:48.538018Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Nintendo nezůstane stranou. Společnost chystá červnovou prezentaci - INDIAN",
+      "url": "https://indian-tv.cz/clanek/nintendo-nezustane-stranou-direct-3t0uhf",
+      "dt": "2026-06-08T16:30:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "chystá",
+        "indian",
+        "nezůstane",
+        "nintendo",
+        "prezentaci",
+        "společnost",
+        "stranou",
+        "červnovou"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1070,30 +1095,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Cronos: Lazarus bude akčnější a intenzivnější příběhové rozšíření - INDIAN",
-      "url": "https://indian-tv.cz/clanek/cronos-lazarus-bude-akcnejsi-a-intenzivnejsi-pribehove-dlc-wfqiwf",
-      "dt": "2026-06-06T20:53:20Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "akčnější",
-        "cronos",
-        "indian",
-        "intenzivnější",
-        "lazarus",
-        "příběhové",
-        "rozšíření"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1104,7 +1105,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 204145,
+      "bytes": 204395,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1141,7 +1142,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-08T15:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T16:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1156,6 +1157,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nintendo nezůstane stranou. Společnost chystá červnovou prezentaci - INDIAN",
+            "publishedAt": "2026-06-08T16:30:00Z"
+          },
           {
             "title": "Days of Play jsou zpět! Přináší slevy na PlayStation hry a příslušenství - INDIAN",
             "publishedAt": "2026-06-08T15:40:00Z"
@@ -1183,10 +1188,6 @@
           {
             "title": "Xbox oficiálně vrací exkluzivity. Gears of War: E-Day a Clockwork Revolution na PlayStation 5 nevyjdou - INDIAN",
             "publishedAt": "2026-06-08T10:00:00Z"
-          },
-          {
-            "title": "Microsoft ukázal nová rozšíření pro Age of Empires 4, Sea of Thieves, Fallout 76 a Microsoft Flight Simulator 2024 - INDIAN",
-            "publishedAt": "2026-06-08T09:00:00Z"
           }
         ]
       }
