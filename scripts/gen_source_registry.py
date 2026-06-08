@@ -74,6 +74,34 @@ def base(
     }
 
 
+def blocked_feed(eid, label, domain, topic, url, reason):
+    """Inactive registry row — kept for audit; excluded from rotation/fetch."""
+    return {
+        "id": eid,
+        "label": label,
+        "domain": domain,
+        "entry_type": "rss",
+        "section_primary": topic,
+        "section_secondary": [],
+        "interval_min": 9999,
+        "display_weight": 0.0,
+        "active": False,
+        "blocked": True,
+        "official_only": True,
+        "fetch_mode": "blocked",
+        "per_domain_cooldown_min": 9999,
+        "slot_offset_min": 0,
+        "max_items_per_fetch": 0,
+        "last_fetch_at": None,
+        "last_success_at": None,
+        "error_streak": 0,
+        "backoff_multiplier": 1.0,
+        "feed_url": url,
+        "topic": topic,
+        "reason": reason,
+    }
+
+
 ENTRIES = []
 
 # --- Blocked (explicit) ---
@@ -189,10 +217,38 @@ ENTRIES.append(base("ces_travelbible", "TravelBible", "travelbible.cz", "rss", "
 # 5.6 HRY (games.cz/rss mrtvé → iDNES/Novinky rubriky; zing kanonický feed)
 ENTRIES.append(base("hry_novinky", "Novinky / Hry", "novinky.cz", "rubric", "hry", [], 25, 1.05, "https://www.novinky.cz/rss/hry", slot=20))
 ENTRIES.append(base("hry_indian", "Indian", "indian-tv.cz", "rss", "hry", [], 90, 0.90, "https://indian-tv.cz/feed/"))
-ENTRIES.append(base("hry_vortex", "Vortex", "vortex.cz", "rss", "hry", [], 90, 0.90, "https://www.vortex.cz/feed/"))
+# vortex/sector/nedd: live HTTP 523/404 (Phase 5A) — blocked, not deleted.
+ENTRIES.append(
+    blocked_feed(
+        "hry_vortex",
+        "BLOCKED Vortex (HTTP 523)",
+        "vortex.cz",
+        "hry",
+        "https://www.vortex.cz/feed/",
+        "feed_unreachable_http_523",
+    )
+)
 ENTRIES.append(base("hry_zing", "Zing", "zing.cz", "rss", "hry", [], 90, 0.85, "https://zing.cz/rss/all"))
-ENTRIES.append(base("hry_sector", "Sector", "sector.sk", "rss", "hry", [], 180, 0.75, "https://sector.sk/feed/"))
-ENTRIES.append(base("hry_nedd", "Nedd", "nedd.cz", "rss", "hry", [], 180, 0.70, "https://www.nedd.cz/feed/"))
+ENTRIES.append(
+    blocked_feed(
+        "hry_sector",
+        "BLOCKED Sector (HTTP 404)",
+        "sector.sk",
+        "hry",
+        "https://sector.sk/feed/",
+        "feed_not_found_http_404",
+    )
+)
+ENTRIES.append(
+    blocked_feed(
+        "hry_nedd",
+        "BLOCKED Nedd (HTTP 404)",
+        "nedd.cz",
+        "hry",
+        "https://www.nedd.cz/feed/",
+        "feed_not_found_http_404",
+    )
+)
 
 # 5.7 KULTURA
 ENTRIES.append(base("kul_ctart", "ČT art", "ct24.ceskatelevize.cz", "rubric", "kultura", [], 40, 1.05, "https://ct24.ceskatelevize.cz/rss/kultura", cooldown=20))

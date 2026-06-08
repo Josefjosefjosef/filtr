@@ -3,28 +3,27 @@
   "foundation_only": true,
   "batch_cycle_minutes": 20,
   "min_fetch_interval_min": 15,
-  "total_active_sources": 59,
+  "total_active_sources": 56,
   "batches": {
     "A": {
       "batch_id": "A",
       "tick_minute": 0,
-      "source_count": 15,
+      "source_count": 14,
       "source_ids": [
-        "ces_pelipecky",
         "fin_ekonom",
-        "fin_epenize",
         "fin_hn",
         "fin_novinky_ekonomika",
         "hry_indian",
         "hry_novinky",
-        "hry_zing",
         "kul_kinobox",
-        "kul_vipzivot",
+        "kul_vlasta",
+        "spt_crzpravy_sport",
         "vzd_nespechej",
         "vzd_novinky_skola",
-        "zdr_zdrave",
         "zpr_ct24_svet",
-        "zpr_seznam_domaci"
+        "zpr_kverulant",
+        "zpr_seznam_domaci",
+        "zpr_tydenikpolicie"
       ],
       "sources": [
         {
@@ -100,36 +99,28 @@
           "estimated_rss_load": 10
         },
         {
-          "id": "hry_zing",
-          "label": "Zing",
-          "section": "hry",
+          "id": "zpr_tydenikpolicie",
+          "label": "Týdeník Policie",
+          "section": "zpravy",
           "source_strength": "MEDIUM",
-          "source_weight": 0.85,
+          "source_weight": 0.75,
           "estimated_rss_load": 10
         },
         {
-          "id": "fin_epenize",
-          "label": "ePeníze",
-          "section": "finance",
-          "source_strength": "WEAK",
-          "source_weight": 0.8,
+          "id": "spt_crzpravy_sport",
+          "label": "ČR Zprávy / Sport",
+          "section": "sport",
+          "source_strength": "MEDIUM",
+          "source_weight": 0.75,
           "estimated_rss_load": 10
         },
         {
-          "id": "zdr_zdrave",
-          "label": "Zdravě.cz",
-          "section": "zdravi",
+          "id": "zpr_kverulant",
+          "label": "Kverulant",
+          "section": "zpravy",
           "source_strength": "WEAK",
           "source_weight": 0.75,
-          "estimated_rss_load": 5
-        },
-        {
-          "id": "ces_pelipecky",
-          "label": "Pelipecky",
-          "section": "cestovani",
-          "source_strength": "WEAK",
-          "source_weight": 0.75,
-          "estimated_rss_load": 5
+          "estimated_rss_load": 10
         },
         {
           "id": "vzd_nespechej",
@@ -140,8 +131,8 @@
           "estimated_rss_load": 5
         },
         {
-          "id": "kul_vipzivot",
-          "label": "VIPživot",
+          "id": "kul_vlasta",
+          "label": "Vlasta",
           "section": "kultura",
           "source_strength": "WEAK",
           "source_weight": 0.7,
@@ -149,8 +140,8 @@
         }
       ],
       "expected_rss_items": 250,
-      "load_score": 253.8,
-      "expected_run_sec": 108,
+      "load_score": 252.2,
+      "expected_run_sec": 101,
       "strong_source_count": 5,
       "strong_source_ids": [
         "zpr_seznam_domaci",
@@ -164,21 +155,20 @@
     "B": {
       "batch_id": "B",
       "tick_minute": 5,
-      "source_count": 15,
+      "source_count": 14,
       "source_ids": [
         "ces_novinky_cestovani",
+        "ces_pelipecky",
         "ces_svetcestovatele",
-        "ces_travelbible",
+        "fin_ekonomickydenik",
+        "fin_faei",
         "fin_sz_byznys",
-        "hry_vortex",
-        "kul_vlasta",
-        "spt_crzpravy_sport",
-        "spt_tenisportal",
+        "hry_zing",
+        "kul_vipzivot",
+        "kul_vtelce",
         "ved_novinky",
         "zdr_zdravotnickydenik",
         "zpr_denik",
-        "zpr_hlidacipes",
-        "zpr_kverulant",
         "zpr_novinky_domaci",
         "zpr_novinky_zahranicni"
       ],
@@ -248,65 +238,57 @@
           "estimated_rss_load": 10
         },
         {
-          "id": "hry_vortex",
-          "label": "Vortex",
-          "section": "hry",
+          "id": "fin_ekonomickydenik",
+          "label": "Ekonomický deník",
+          "section": "finance",
           "source_strength": "MEDIUM",
-          "source_weight": 0.9,
+          "source_weight": 0.85,
           "estimated_rss_load": 10
         },
         {
-          "id": "zpr_hlidacipes",
-          "label": "HlídacíPes",
-          "section": "zpravy",
+          "id": "hry_zing",
+          "label": "Zing",
+          "section": "hry",
           "source_strength": "MEDIUM",
+          "source_weight": 0.85,
+          "estimated_rss_load": 10
+        },
+        {
+          "id": "fin_faei",
+          "label": "FAEI",
+          "section": "finance",
+          "source_strength": "WEAK",
           "source_weight": 0.8,
           "estimated_rss_load": 10
         },
         {
-          "id": "spt_crzpravy_sport",
-          "label": "ČR Zprávy / Sport",
-          "section": "sport",
-          "source_strength": "MEDIUM",
-          "source_weight": 0.75,
-          "estimated_rss_load": 10
-        },
-        {
-          "id": "zpr_kverulant",
-          "label": "Kverulant",
-          "section": "zpravy",
-          "source_strength": "WEAK",
-          "source_weight": 0.75,
-          "estimated_rss_load": 10
-        },
-        {
-          "id": "ces_travelbible",
-          "label": "TravelBible",
+          "id": "ces_pelipecky",
+          "label": "Pelipecky",
           "section": "cestovani",
           "source_strength": "WEAK",
           "source_weight": 0.75,
           "estimated_rss_load": 5
         },
         {
-          "id": "spt_tenisportal",
-          "label": "TenisPortal",
-          "section": "sport",
+          "id": "kul_vtelce",
+          "label": "vTelce",
+          "section": "kultura",
           "source_strength": "WEAK",
-          "source_weight": 0.7,
+          "source_weight": 0.75,
           "estimated_rss_load": 5
         },
         {
-          "id": "kul_vlasta",
-          "label": "Vlasta",
+          "id": "kul_vipzivot",
+          "label": "VIPživot",
           "section": "kultura",
           "source_strength": "WEAK",
           "source_weight": 0.7,
           "estimated_rss_load": 5
         }
       ],
-      "expected_rss_items": 255,
-      "load_score": 256.2,
-      "expected_run_sec": 108,
+      "expected_rss_items": 245,
+      "load_score": 249.5,
+      "expected_run_sec": 101,
       "strong_source_count": 5,
       "strong_source_ids": [
         "zpr_novinky_domaci",
@@ -322,20 +304,20 @@
       "tick_minute": 10,
       "source_count": 14,
       "source_ids": [
+        "ces_travelbible",
         "fin_e15",
-        "fin_faei",
+        "fin_epenize",
         "fin_idnes_ekonomika",
-        "fin_penize",
-        "hry_sector",
         "spt_ctsport",
         "spt_idnes",
         "spt_isport",
         "ved_vtm",
-        "zdr_betterlife",
+        "vzd_betterlife",
+        "zdr_plnezdravi",
         "zdr_prozeny_zdravi",
+        "zdr_zdrave",
         "zdr_zdravezpravy",
-        "zpr_idnes_zpravy",
-        "zpr_tydenikpolicie"
+        "zpr_idnes_zpravy"
       ],
       "sources": [
         {
@@ -403,33 +385,33 @@
           "estimated_rss_load": 20
         },
         {
-          "id": "fin_penize",
-          "label": "Peníze.cz",
-          "section": "finance",
+          "id": "zdr_plnezdravi",
+          "label": "Plné zdraví",
+          "section": "zdravi",
           "source_strength": "MEDIUM",
           "source_weight": 0.85,
           "estimated_rss_load": 10
         },
         {
-          "id": "zpr_tydenikpolicie",
-          "label": "Týdeník Policie",
-          "section": "zpravy",
-          "source_strength": "MEDIUM",
-          "source_weight": 0.75,
-          "estimated_rss_load": 10
-        },
-        {
-          "id": "fin_faei",
-          "label": "FAEI",
+          "id": "fin_epenize",
+          "label": "ePeníze",
           "section": "finance",
           "source_strength": "WEAK",
           "source_weight": 0.8,
           "estimated_rss_load": 10
         },
         {
-          "id": "hry_sector",
-          "label": "Sector",
-          "section": "hry",
+          "id": "zdr_zdrave",
+          "label": "Zdravě.cz",
+          "section": "zdravi",
+          "source_strength": "WEAK",
+          "source_weight": 0.75,
+          "estimated_rss_load": 5
+        },
+        {
+          "id": "ces_travelbible",
+          "label": "TravelBible",
+          "section": "cestovani",
           "source_strength": "WEAK",
           "source_weight": 0.75,
           "estimated_rss_load": 5
@@ -443,16 +425,16 @@
           "estimated_rss_load": 5
         },
         {
-          "id": "zdr_betterlife",
-          "label": "BetterLife",
-          "section": "zdravi",
+          "id": "vzd_betterlife",
+          "label": "BetterLife (edu)",
+          "section": "vzdelavani",
           "source_strength": "WEAK",
           "source_weight": 0.65,
           "estimated_rss_load": 5
         }
       ],
-      "expected_rss_items": 255,
-      "load_score": 256.5,
+      "expected_rss_items": 250,
+      "load_score": 252.8,
       "expected_run_sec": 100,
       "strong_source_count": 5,
       "strong_source_ids": [
@@ -467,23 +449,22 @@
     "D": {
       "batch_id": "D",
       "tick_minute": 15,
-      "source_count": 15,
+      "source_count": 14,
       "source_ids": [
         "ces_cestujlevne",
-        "fin_ekonomickydenik",
-        "hry_nedd",
+        "fin_penize",
         "kul_ctart",
-        "kul_vtelce",
         "spt_mmamag",
         "spt_sportcz",
+        "spt_tenisportal",
         "ved_ct24_veda",
         "ved_technet",
-        "vzd_betterlife",
         "vzd_seznam",
-        "zdr_plnezdravi",
+        "zdr_betterlife",
         "zpr_aktualne",
         "zpr_ceskajustice",
-        "zpr_ct24_domaci"
+        "zpr_ct24_domaci",
+        "zpr_hlidacipes"
       ],
       "sources": [
         {
@@ -551,19 +532,19 @@
           "estimated_rss_load": 10
         },
         {
-          "id": "fin_ekonomickydenik",
-          "label": "Ekonomický deník",
+          "id": "fin_penize",
+          "label": "Peníze.cz",
           "section": "finance",
           "source_strength": "MEDIUM",
           "source_weight": 0.85,
           "estimated_rss_load": 10
         },
         {
-          "id": "zdr_plnezdravi",
-          "label": "Plné zdraví",
-          "section": "zdravi",
+          "id": "zpr_hlidacipes",
+          "label": "HlídacíPes",
+          "section": "zpravy",
           "source_strength": "MEDIUM",
-          "source_weight": 0.85,
+          "source_weight": 0.8,
           "estimated_rss_load": 10
         },
         {
@@ -583,33 +564,25 @@
           "estimated_rss_load": 10
         },
         {
-          "id": "kul_vtelce",
-          "label": "vTelce",
-          "section": "kultura",
-          "source_strength": "WEAK",
-          "source_weight": 0.75,
-          "estimated_rss_load": 5
-        },
-        {
-          "id": "hry_nedd",
-          "label": "Nedd",
-          "section": "hry",
+          "id": "spt_tenisportal",
+          "label": "TenisPortal",
+          "section": "sport",
           "source_strength": "WEAK",
           "source_weight": 0.7,
           "estimated_rss_load": 5
         },
         {
-          "id": "vzd_betterlife",
-          "label": "BetterLife (edu)",
-          "section": "vzdelavani",
+          "id": "zdr_betterlife",
+          "label": "BetterLife",
+          "section": "zdravi",
           "source_strength": "WEAK",
           "source_weight": 0.65,
           "estimated_rss_load": 5
         }
       ],
-      "expected_rss_items": 255,
-      "load_score": 256.5,
-      "expected_run_sec": 108,
+      "expected_rss_items": 250,
+      "load_score": 252.2,
+      "expected_run_sec": 101,
       "strong_source_count": 5,
       "strong_source_ids": [
         "zpr_ct24_domaci",
@@ -631,12 +604,11 @@
     "fin_ekonom": "A",
     "kul_kinobox": "A",
     "hry_indian": "A",
-    "hry_zing": "A",
-    "fin_epenize": "A",
-    "zdr_zdrave": "A",
-    "ces_pelipecky": "A",
+    "zpr_tydenikpolicie": "A",
+    "spt_crzpravy_sport": "A",
+    "zpr_kverulant": "A",
     "vzd_nespechej": "A",
-    "kul_vipzivot": "A",
+    "kul_vlasta": "A",
     "zpr_novinky_domaci": "B",
     "zpr_novinky_zahranicni": "B",
     "fin_sz_byznys": "B",
@@ -645,13 +617,12 @@
     "zdr_zdravotnickydenik": "B",
     "ces_novinky_cestovani": "B",
     "ces_svetcestovatele": "B",
-    "hry_vortex": "B",
-    "zpr_hlidacipes": "B",
-    "spt_crzpravy_sport": "B",
-    "zpr_kverulant": "B",
-    "ces_travelbible": "B",
-    "spt_tenisportal": "B",
-    "kul_vlasta": "B",
+    "fin_ekonomickydenik": "B",
+    "hry_zing": "B",
+    "fin_faei": "B",
+    "ces_pelipecky": "B",
+    "kul_vtelce": "B",
+    "kul_vipzivot": "B",
     "zpr_idnes_zpravy": "C",
     "spt_isport": "C",
     "spt_ctsport": "C",
@@ -660,12 +631,12 @@
     "zdr_zdravezpravy": "C",
     "fin_e15": "C",
     "ved_vtm": "C",
-    "fin_penize": "C",
-    "zpr_tydenikpolicie": "C",
-    "fin_faei": "C",
-    "hry_sector": "C",
+    "zdr_plnezdravi": "C",
+    "fin_epenize": "C",
+    "zdr_zdrave": "C",
+    "ces_travelbible": "C",
     "zdr_prozeny_zdravi": "C",
-    "zdr_betterlife": "C",
+    "vzd_betterlife": "C",
     "zpr_ct24_domaci": "D",
     "spt_sportcz": "D",
     "ved_ct24_veda": "D",
@@ -674,13 +645,12 @@
     "kul_ctart": "D",
     "ved_technet": "D",
     "ces_cestujlevne": "D",
-    "fin_ekonomickydenik": "D",
-    "zdr_plnezdravi": "D",
+    "fin_penize": "D",
+    "zpr_hlidacipes": "D",
     "spt_mmamag": "D",
     "zpr_ceskajustice": "D",
-    "kul_vtelce": "D",
-    "hry_nedd": "D",
-    "vzd_betterlife": "D"
+    "spt_tenisportal": "D",
+    "zdr_betterlife": "D"
   },
   "source_metadata_by_id": {
     "zpr_seznam_domaci": {
@@ -746,32 +716,25 @@
       "estimated_rss_load": 10,
       "last_rotation_assignment": null
     },
-    "hry_zing": {
+    "zpr_tydenikpolicie": {
       "batch_id": "A",
-      "source_weight": 0.85,
+      "source_weight": 0.75,
       "source_strength": "MEDIUM",
       "estimated_rss_load": 10,
       "last_rotation_assignment": null
     },
-    "fin_epenize": {
+    "spt_crzpravy_sport": {
       "batch_id": "A",
-      "source_weight": 0.8,
-      "source_strength": "WEAK",
+      "source_weight": 0.75,
+      "source_strength": "MEDIUM",
       "estimated_rss_load": 10,
       "last_rotation_assignment": null
     },
-    "zdr_zdrave": {
+    "zpr_kverulant": {
       "batch_id": "A",
       "source_weight": 0.75,
       "source_strength": "WEAK",
-      "estimated_rss_load": 5,
-      "last_rotation_assignment": null
-    },
-    "ces_pelipecky": {
-      "batch_id": "A",
-      "source_weight": 0.75,
-      "source_strength": "WEAK",
-      "estimated_rss_load": 5,
+      "estimated_rss_load": 10,
       "last_rotation_assignment": null
     },
     "vzd_nespechej": {
@@ -781,7 +744,7 @@
       "estimated_rss_load": 5,
       "last_rotation_assignment": null
     },
-    "kul_vipzivot": {
+    "kul_vlasta": {
       "batch_id": "A",
       "source_weight": 0.7,
       "source_strength": "WEAK",
@@ -844,49 +807,42 @@
       "estimated_rss_load": 10,
       "last_rotation_assignment": null
     },
-    "hry_vortex": {
+    "fin_ekonomickydenik": {
       "batch_id": "B",
-      "source_weight": 0.9,
+      "source_weight": 0.85,
       "source_strength": "MEDIUM",
       "estimated_rss_load": 10,
       "last_rotation_assignment": null
     },
-    "zpr_hlidacipes": {
+    "hry_zing": {
+      "batch_id": "B",
+      "source_weight": 0.85,
+      "source_strength": "MEDIUM",
+      "estimated_rss_load": 10,
+      "last_rotation_assignment": null
+    },
+    "fin_faei": {
       "batch_id": "B",
       "source_weight": 0.8,
-      "source_strength": "MEDIUM",
-      "estimated_rss_load": 10,
-      "last_rotation_assignment": null
-    },
-    "spt_crzpravy_sport": {
-      "batch_id": "B",
-      "source_weight": 0.75,
-      "source_strength": "MEDIUM",
-      "estimated_rss_load": 10,
-      "last_rotation_assignment": null
-    },
-    "zpr_kverulant": {
-      "batch_id": "B",
-      "source_weight": 0.75,
       "source_strength": "WEAK",
       "estimated_rss_load": 10,
       "last_rotation_assignment": null
     },
-    "ces_travelbible": {
+    "ces_pelipecky": {
       "batch_id": "B",
       "source_weight": 0.75,
       "source_strength": "WEAK",
       "estimated_rss_load": 5,
       "last_rotation_assignment": null
     },
-    "spt_tenisportal": {
+    "kul_vtelce": {
       "batch_id": "B",
-      "source_weight": 0.7,
+      "source_weight": 0.75,
       "source_strength": "WEAK",
       "estimated_rss_load": 5,
       "last_rotation_assignment": null
     },
-    "kul_vlasta": {
+    "kul_vipzivot": {
       "batch_id": "B",
       "source_weight": 0.7,
       "source_strength": "WEAK",
@@ -949,28 +905,28 @@
       "estimated_rss_load": 20,
       "last_rotation_assignment": null
     },
-    "fin_penize": {
+    "zdr_plnezdravi": {
       "batch_id": "C",
       "source_weight": 0.85,
       "source_strength": "MEDIUM",
       "estimated_rss_load": 10,
       "last_rotation_assignment": null
     },
-    "zpr_tydenikpolicie": {
-      "batch_id": "C",
-      "source_weight": 0.75,
-      "source_strength": "MEDIUM",
-      "estimated_rss_load": 10,
-      "last_rotation_assignment": null
-    },
-    "fin_faei": {
+    "fin_epenize": {
       "batch_id": "C",
       "source_weight": 0.8,
       "source_strength": "WEAK",
       "estimated_rss_load": 10,
       "last_rotation_assignment": null
     },
-    "hry_sector": {
+    "zdr_zdrave": {
+      "batch_id": "C",
+      "source_weight": 0.75,
+      "source_strength": "WEAK",
+      "estimated_rss_load": 5,
+      "last_rotation_assignment": null
+    },
+    "ces_travelbible": {
       "batch_id": "C",
       "source_weight": 0.75,
       "source_strength": "WEAK",
@@ -984,7 +940,7 @@
       "estimated_rss_load": 5,
       "last_rotation_assignment": null
     },
-    "zdr_betterlife": {
+    "vzd_betterlife": {
       "batch_id": "C",
       "source_weight": 0.65,
       "source_strength": "WEAK",
@@ -1047,16 +1003,16 @@
       "estimated_rss_load": 10,
       "last_rotation_assignment": null
     },
-    "fin_ekonomickydenik": {
+    "fin_penize": {
       "batch_id": "D",
       "source_weight": 0.85,
       "source_strength": "MEDIUM",
       "estimated_rss_load": 10,
       "last_rotation_assignment": null
     },
-    "zdr_plnezdravi": {
+    "zpr_hlidacipes": {
       "batch_id": "D",
-      "source_weight": 0.85,
+      "source_weight": 0.8,
       "source_strength": "MEDIUM",
       "estimated_rss_load": 10,
       "last_rotation_assignment": null
@@ -1075,21 +1031,14 @@
       "estimated_rss_load": 10,
       "last_rotation_assignment": null
     },
-    "kul_vtelce": {
-      "batch_id": "D",
-      "source_weight": 0.75,
-      "source_strength": "WEAK",
-      "estimated_rss_load": 5,
-      "last_rotation_assignment": null
-    },
-    "hry_nedd": {
+    "spt_tenisportal": {
       "batch_id": "D",
       "source_weight": 0.7,
       "source_strength": "WEAK",
       "estimated_rss_load": 5,
       "last_rotation_assignment": null
     },
-    "vzd_betterlife": {
+    "zdr_betterlife": {
       "batch_id": "D",
       "source_weight": 0.65,
       "source_strength": "WEAK",
@@ -1097,5 +1046,5 @@
       "last_rotation_assignment": null
     }
   },
-  "generated_at": "2026-06-07T20:41:33Z"
+  "generated_at": "2026-06-08T09:40:16Z"
 }
