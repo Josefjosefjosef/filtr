@@ -2037,6 +2037,47 @@ _TOPIC_DIVERSITY_LAST_STATS: dict = {}
 _SECTION_TOPIC_CAP_LAST_STATS: dict = {}
 
 
+def _build_alt_title_index(articles: list) -> dict[str, str]:
+    """Resolve suppressed alternativeSource URLs to titles for cumulative dedupe replay."""
+    idx: dict[str, str] = {}
+
+    def _add(article: dict) -> None:
+        if not isinstance(article, dict):
+            return
+        url = _article_url_canonical(article)
+        title = str(article.get("title") or "").strip()
+        if url and title:
+            idx[url] = title
+
+    for article in articles or []:
+        _add(article)
+
+    try:
+        payload = _safe_read_json(TOPIC_DEDUPE_SUPPRESSED_PATH) or {}
+        for row in payload.get("suppressed") or []:
+            if not isinstance(row, dict):
+                continue
+            url = str(row.get("url") or "").strip()
+            title = str(row.get("title") or "").strip()
+            if url and title:
+                idx[url] = title
+    except Exception:
+        pass
+
+    try:
+        import glob
+
+        for path in glob.glob(os.path.join(ARTICLES_SHARD_DIR, "*.json")):
+            shard = _safe_read_json(path) or {}
+            for item in shard.get("items") or shard.get("articles") or []:
+                if isinstance(item, dict):
+                    _add(item)
+    except Exception:
+        pass
+
+    return idx
+
+
 def _apply_conservative_topic_clustering(articles: list) -> list:
     """
     Topic/event dedupe V1: same section, different URLs, conservative title match + time window.
@@ -2056,6 +2097,7 @@ def _apply_conservative_topic_clustering(articles: list) -> list:
         u = _article_url_canonical(ad)
         return (ds, pa, sw, tq, u)
 
+    alt_titles = _build_alt_title_index(articles)
     visible, suppressed, stats = apply_topic_event_dedupe(
         articles,
         stable_section_fn=stable_section,
@@ -2063,6 +2105,7 @@ def _apply_conservative_topic_clustering(articles: list) -> list:
         tokenize_fn=_tokenize_story_cluster_title,
         score_fn=_score,
         url_fn=_article_url_canonical,
+        alt_title_fn=lambda url: alt_titles.get(url, ""),
     )
     _TOPIC_DEDUPE_LAST_STATS = dict(stats)
     print(f"EVENT_DEDUPE_LOW_SLUG_SKIP={int(stats.get('event_dedupe_low_slug_skip') or 0)}", flush=True)
