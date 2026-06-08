@@ -1,40 +1,40 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-08T06:03:58.471813Z",
-  "source_run_id": "27118456652",
-  "pipeline_phase": "aggregate",
+  "generatedAt": "2026-06-08T06:27:45.997153Z",
+  "source_run_id": "27119899690",
+  "pipeline_phase": "ingest_incremental",
   "pool_boundary": "post_dedupe_pre_release_guards",
   "clean_article_pool_definition": "Articles after RSS fetch, normalize, URL dedupe, title clustering, event-level dedupe, section classification, and quality/relevance checks; before release guards, PR creation, publish, and homepage selection.",
   "total_raw_items": 285,
   "total_normalized": 275,
   "total_after_url_dedupe": 180,
-  "total_after_event_dedupe": 14578,
-  "total_clean_pool": 14578,
-  "articles_full_count": 14578,
-  "articles_final_count": 14578,
-  "cluster_count": 178,
-  "new_articles_built": 178,
+  "total_after_event_dedupe": 14579,
+  "total_clean_pool": 14579,
+  "articles_full_count": 14579,
+  "articles_final_count": 14579,
+  "cluster_count": 177,
+  "new_articles_built": 177,
   "per_section_counts": {
     "aktualne": 5240,
     "kultura": 133,
+    "zdravi": 1043,
+    "finance": 2633,
     "sport": 4379,
-    "finance": 2632,
-    "zdravi": 1042,
     "cestovani": 45,
     "pocasi": 124,
-    "doprava": 321,
+    "doprava": 320,
     "krimi": 449,
     "veda": 77,
     "vzdelavani": 69,
     "hry": 67
   },
   "per_source_counts": {
-    "zpr_novinky_zahranicni": 80,
-    "fin_sz_byznys": 266,
+    "zpr_denik": 1031,
+    "zpr_novinky_zahranicni": 81,
     "kul_vlasta": 71,
     "zdr_zdravotnickydenik": 303,
+    "fin_sz_byznys": 267,
     "zpr_hlidacipes": 108,
-    "zpr_denik": 1032,
     "ces_svetcestovatele": 11,
     "zpr_kverulant": 39,
     "zpr_seznam_domaci": 592,
@@ -104,21 +104,21 @@
   },
   "duplicate_counts": {
     "url_dedupe_dropped": 0,
-    "title_cluster_nonprimary_dropped": 2,
+    "title_cluster_nonprimary_dropped": 3,
     "event_dedupe_suppressed": 0
   },
   "event_cluster_counts": 0,
   "suppressed_duplicate_count": 0,
-  "ready_for_release_count": 14578,
+  "ready_for_release_count": 14579,
   "blocked_by_release_guard_count": 0,
   "reason_if_not_released": "release_guards_evaluated_in_separate_publish_job",
   "ingest_publish_decoupling_active": false,
   "handoffMeta": {
-    "stagingSnapshotIngestRunId": "27118456652",
-    "aggregateWorkflowRunId": "27118456652"
+    "stagingSnapshotIngestRunId": "27119899690",
+    "aggregateWorkflowRunId": "27119899690"
   },
   "ingest_manifest_ref": {
-    "ingestedAt": "2026-06-08T05:47:48.362521Z",
+    "ingestedAt": "2026-06-08T06:27:45.943689Z",
     "sourceBatchKeys": [
       "crzpravy.cz",
       "denik.cz",
@@ -134,6 +134,6 @@
       "youtube.com",
       "zdravotnickydenik.cz"
     ],
-    "pipelineRunId": "27118456652"
+    "pipelineRunId": "27119899690"
   }
 }

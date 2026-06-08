@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-06-08T05:47:48.362521Z",
+  "ingestedAt": "2026-06-08T06:27:45.943689Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Českem hýbe epidemie duševních poruch u dětí. Experti viní i přehnanou péči rodičů",
+      "url": "https://www.zdravotnickydenik.cz/2026/06/dusevni-poruchy-deti-experti-prehnana-pece-rodice/",
+      "dt": "2026-06-08T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "duševních",
+        "dětí",
+        "epidemie",
+        "experti",
+        "hýbe",
+        "poruch",
+        "péči",
+        "přehnanou",
+        "rodičů",
+        "viní",
+        "českem"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -259,33 +287,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Klíčové dny pro lékaře na Bulovce. Kvůli ebole je izolovaný v bioboxu, čas se mu krátí",
-      "url": "https://www.zdravotnickydenik.cz/2026/06/bulovka-lekar-ebola-izolace/",
-      "dt": "2026-06-05T16:10:27Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "bioboxu",
-        "bulovce",
-        "dny",
-        "ebole",
-        "izolovaný",
-        "klíčové",
-        "krátí",
-        "kvůli",
-        "lékaře",
-        "čas"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -296,7 +297,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 89228,
+      "bytes": 95431,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -333,7 +334,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-06-08T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -348,6 +349,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Českem hýbe epidemie duševních poruch u dětí. Experti viní i přehnanou péči rodičů",
+            "publishedAt": "2026-06-08T06:00:00Z"
+          },
           {
             "title": "Sestry z Filipín se snaží získat i Němci. Trochu jim to ale drhne kvůli vlastní byrokracii",
             "publishedAt": "2026-06-08T05:00:00Z"
@@ -375,10 +380,6 @@
           {
             "title": "Zlom v boji s ebolou: Nakaženého lékaře propustili, v Česku ale dál izolují dva muže",
             "publishedAt": "2026-06-06T12:40:59Z"
-          },
-          {
-            "title": "Jsme na cestě k úplnému vyléčení rakoviny? Vývoj jde kupředu, Evropu ale brzdí vlastní pravidla",
-            "publishedAt": "2026-06-06T11:50:54Z"
           }
         ]
       }
