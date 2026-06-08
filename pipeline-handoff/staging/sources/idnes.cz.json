@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-08T18:07:14.406139Z",
+  "ingestedAt": "2026-06-08T18:57:36.564409Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Plzni se zřítila část činžáku. Dům má neslavnou minulost",
+      "url": "https://www.idnes.cz/plzen/zpravy/v-plzni-se-zritila-cast-cinzaku-dum-ma-neslavnou-minulost.A260608_194845_plzen-zpravy_meli",
+      "dt": "2026-06-08T18:39:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "dům",
+        "minulost",
+        "neslavnou",
+        "plzni",
+        "zřítila",
+        "činžáku",
+        "část"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nejdříve Krym, teď už i metropole. Rusko kvůli nedostatku benzinu zavedlo příděly",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/nejdriv-krym-ted-uz-i-metropole-rusko-kvuli-nedostatku-benzinu-zavedlo-pridely.A260608_194107_zahranicni_idh",
+      "dt": "2026-06-08T18:07:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "benzinu",
+        "krym",
+        "kvůli",
+        "metropole",
+        "nedostatku",
+        "nejdříve",
+        "příděly",
+        "rusko",
+        "zavedlo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -746,58 +796,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "KVIFF 2026: Program, kdo jsou hlavní hosté a jak získat vstupenky na filmy ve Varech",
-      "url": "https://www.idnes.cz/kultura/film-televize/kviff-2026-program-hlavni-hoste-vstupenky-vasaryova-chytilova.A260421_125332_hudba_hrat",
-      "dt": "2026-06-08T13:40:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "2026",
-        "filmy",
-        "hlavní",
-        "hosté",
-        "kviff",
-        "program",
-        "varech",
-        "vstupenky",
-        "získat"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zaměstnanci pražské zoo jsou přetížení, ukázal audit. Ředitelka slibuje změny",
-      "url": "https://www.idnes.cz/praha/zpravy/zoo-praha-audit-lenka-poliakova-miroslav-bobek-platy.A260608_151014_praha-zpravy_dvou",
-      "dt": "2026-06-08T13:35:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "audit",
-        "pražské",
-        "přetížení",
-        "slibuje",
-        "ukázal",
-        "zaměstnanci",
-        "změny",
-        "zoo",
-        "ředitelka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -808,7 +806,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50320,
+      "bytes": 50352,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -845,11 +843,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-08T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T18:39:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 3,
-          "zpravy": 23,
+          "zpravy": 24,
+          "other": 2,
           "finance": 4
         },
         "drop_counts": {
@@ -862,6 +860,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Plzni se zřítila část činžáku. Dům má neslavnou minulost",
+            "publishedAt": "2026-06-08T18:39:00Z"
+          },
+          {
+            "title": "Nejdříve Krym, teď už i metropole. Rusko kvůli nedostatku benzinu zavedlo příděly",
+            "publishedAt": "2026-06-08T18:07:00Z"
+          },
           {
             "title": "A vyprávěl lidem o rybaření. Kapitán Demo o tom, proč rád šokuje a jak tvoří hudbu",
             "publishedAt": "2026-06-08T18:00:00Z"
@@ -885,14 +891,6 @@
           {
             "title": "Od Vladimíra Remka po Aleše Svobodu. Jakou stopu zanechali Češi ve vesmíru?",
             "publishedAt": "2026-06-08T16:45:00Z"
-          },
-          {
-            "title": "Krizi na gymnáziu chce řešit kraj. Vyhrocenou atmosféru nezvládla ani mediátorka",
-            "publishedAt": "2026-06-08T16:25:00Z"
-          },
-          {
-            "title": "Po tragické nehodě v Sofii řeší Bulhaři možné kšeftování s českými řidičáky",
-            "publishedAt": "2026-06-08T16:07:00Z"
           }
         ]
       }
