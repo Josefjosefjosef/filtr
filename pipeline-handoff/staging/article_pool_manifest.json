@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-08T20:37:22.855332Z",
+  "generatedAt": "2026-06-08T20:51:51.954507Z",
   "source_run_id": "27165324569",
-  "pipeline_phase": "ingest_incremental",
+  "pipeline_phase": "aggregate",
   "pool_boundary": "post_event_dedupe_pre_section_limits",
   "clean_article_pool_definition": "Articles after RSS fetch, normalize, URL dedupe, title clustering, event-level dedupe, section classification, and quality/relevance checks; before release guards, PR creation, publish, and homepage selection.",
   "POOL_TOTAL": 14841,
@@ -156,5 +156,5 @@
   "HOMEPAGE_DATA_SOURCE": "publishable_pool.json",
   "HOMEPAGE_READONLY_SELECTION": "YES",
   "PUBLISHABLE_POOL_SCHEMA_VERSION": 1,
-  "PUBLISHABLE_POOL_GENERATED_AT": "2026-06-08T20:37:22.855332Z"
+  "PUBLISHABLE_POOL_GENERATED_AT": "2026-06-08T20:51:51.954507Z"
 }
