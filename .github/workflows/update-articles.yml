@@ -649,13 +649,9 @@ jobs:
           DELETED_LIST="${RELEASE_OVERLAY}/.deleted_paths"
           rm -rf "$RELEASE_OVERLAY"
           mkdir -p "$RELEASE_OVERLAY"
-          while IFS= read -r line; do
-            [ -n "$line" ] || continue
-            _status="${line%%$'\t'*}"
-            _rest="${line#*$'\t'}"
-            _path="${_rest%%$'\t'*}"
-            _path2="${_rest#*$_path}"
-            _path2="${_path2#$'\t'}"
+          while IFS=$'\t' read -r _status _path _path2; do
+            [ -n "$_status" ] || continue
+            [ -n "$_path" ] || continue
             case "$_status" in
               D*)
                 echo "$_path" >> "$DELETED_LIST"
@@ -696,7 +692,7 @@ jobs:
             done < "$DELETED_LIST"
           fi
           while IFS= read -r -d '' _src; do
-            _rel="${_src#$RELEASE_OVERLAY/}"
+            _rel="${_src#"$RELEASE_OVERLAY/"}"
             [ "$_rel" = ".deleted_paths" ] && continue
             mkdir -p "$(dirname "$_rel")"
             cp -a "$_src" "$_rel"
