@@ -730,6 +730,103 @@ def cmd_mark_publish_done(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_push_release_telemetry(args: argparse.Namespace) -> int:
+    """
+    Phase 3C: persist release outcome telemetry (phase status, pool manifest) to handoff
+    without altering aggregate checkpoint or pool data. Release guard failure must not
+    erase ingest/aggregate success markers.
+    """
+    repo = _repo_root()
+    branch = os.environ.get("PIPELINE_HANDOFF_BRANCH", DEFAULT_BRANCH).strip() or DEFAULT_BRANCH
+    data_dir = os.path.join(repo, os.environ.get("OUTPUT_DIR", "projects/data"))
+    local_staging = os.path.join(data_dir, "staging")
+    phase_path = os.path.join(local_staging, "article_pipeline_phase_status.json")
+    if not os.path.isfile(phase_path):
+        print("[pipeline-handoff] push-release-telemetry SKIP no local phase status", flush=True)
+        return 0
+    if not remote_branch_exists(repo, branch):
+        print("[pipeline-handoff] push-release-telemetry SKIP handoff branch missing", flush=True)
+        return 0
+
+    rid = os.environ.get("GITHUB_RUN_ID", "") or os.environ.get("IU_PIPELINE_RUN_ID", "") or "local"
+    my_rid = _run_id_int(rid)
+
+    _run(["git", "fetch", "origin"], repo)
+    _run(["git", "fetch", "origin", branch], repo)
+    remote_pre = _manifest_from_show(repo, f"origin/{branch}")
+    if not remote_pre or not remote_pre.get("aggregateReady"):
+        print("[pipeline-handoff] push-release-telemetry SKIP aggregate not ready", flush=True)
+        return 0
+
+    ra_pre = _winning_aggregate_from_manifest(remote_pre)
+    if not _cas_disabled() and my_rid > 0 and ra_pre > 0 and my_rid != ra_pre:
+        print(
+            "[pipeline-handoff] STALE_RELEASE_TELEMETRY_SKIP aggregate_run_mismatch my_run=%s remote=%s"
+            % (rid, ra_pre),
+            flush=True,
+        )
+        print("RELEASE_BLOCKED_DOES_NOT_DELETE_POOL=YES", flush=True)
+        return 0
+
+    def build(dest: str) -> None:
+        parent = os.path.dirname(dest)
+        shutil.rmtree(dest, ignore_errors=True)
+        _run(["git", "fetch", "origin", branch], repo)
+        ref = f"origin/{branch}"
+        ar = subprocess.run(
+            ["git", "archive", ref, HANDOFF_DIR],
+            cwd=repo,
+            capture_output=True,
+        )
+        if ar.returncode != 0:
+            raise RuntimeError("git archive failed for push-release-telemetry")
+        tarfile.open(fileobj=io.BytesIO(ar.stdout), mode="r|").extractall(parent)
+        if not os.path.isdir(os.path.join(dest, STAGING_REL)):
+            raise RuntimeError("handoff missing staging tree after archive")
+        ck_path = os.path.join(dest, AGGREGATE_REL)
+        if not os.path.isfile(ck_path):
+            raise RuntimeError("handoff missing aggregate checkpoint — will not push telemetry only")
+        _merge_local_staging_telemetry(data_dir, os.path.join(dest, STAGING_REL))
+        remote_m = _manifest_from_show(repo, ref)
+        if not remote_m:
+            raise RuntimeError("missing remote manifest")
+        ra = _winning_aggregate_from_manifest(remote_m)
+        if not _cas_disabled() and my_rid > 0 and ra > 0 and my_rid != ra:
+            raise RuntimeError("STALE_RELEASE_TELEMETRY")
+        manifest = dict(remote_m)
+        manifest["updatedAtUtc"] = _now_utc()
+        manifest["handoffEpoch"] = _handoff_epoch_from_manifest(remote_m) + 1
+        manifest["releaseTelemetryRunId"] = rid
+        manifest["pointerNote"] = (
+            "CAS: release telemetry overlay only; aggregate checkpoint unchanged"
+        )
+        _atomic_write_json(os.path.join(dest, MANIFEST_NAME), manifest)
+
+    try:
+        out = _commit_handoff_tree_with_retry(
+            repo,
+            branch,
+            f"pipeline-handoff: release telemetry (run {rid})",
+            build,
+        )
+    except RuntimeError as e:
+        if str(e) == "STALE_RELEASE_TELEMETRY":
+            print(
+                "[pipeline-handoff] STALE_RELEASE_TELEMETRY_SKIP concurrent_remote_advanced=YES my_run=%s"
+                % rid,
+                flush=True,
+            )
+            print("RELEASE_BLOCKED_DOES_NOT_DELETE_POOL=YES", flush=True)
+            return 0
+        raise
+    if out == "error":
+        return 2
+    print("[pipeline-handoff] push-release-telemetry OK branch=%s outcome=%s" % (branch, out))
+    print("RELEASE_BLOCKED_DOES_NOT_DELETE_POOL=YES", flush=True)
+    print("INGEST_AGGREGATE_SUCCESS_PRESERVED=YES", flush=True)
+    return 0
+
+
 def main() -> int:
     p = argparse.ArgumentParser(description="Git cross-run pipeline handoff")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -739,6 +836,7 @@ def main() -> int:
     sub.add_parser("pull-for-publish")
     sub.add_parser("verify-publish-latest")
     sub.add_parser("mark-publish-done")
+    sub.add_parser("push-release-telemetry")
     args = p.parse_args()
     if args.cmd == "push-staging":
         return cmd_push_staging(args)
@@ -752,6 +850,8 @@ def main() -> int:
         return cmd_verify_publish_latest(args)
     if args.cmd == "mark-publish-done":
         return cmd_mark_publish_done(args)
+    if args.cmd == "push-release-telemetry":
+        return cmd_push_release_telemetry(args)
     return 2
 
 

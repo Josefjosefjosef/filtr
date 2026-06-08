@@ -244,6 +244,24 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           python scripts/pipeline_handoff_git.py push-aggregate
 
+      - name: Build ingest+aggregate durable artifact (Phase 3C)
+        run: |
+          set -euo pipefail
+          DEST="${{ runner.temp }}/ingest-aggregate-success"
+          python scripts/iu_article_pipeline_decoupled_artifact.py build --dest "$DEST"
+          echo "INGEST_AGGREGATE_SUCCESS_PERSISTED=YES"
+          echo "PIPELINE_ARTIFACTS_PERSISTED=YES"
+          echo "POOL_MANIFEST_ARTIFACT=YES"
+          echo "PHASE_STATUS_ARTIFACT=YES"
+
+      - name: Upload ingest+aggregate durable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ingest-aggregate-success-${{ github.run_id }}
+          path: ${{ runner.temp }}/ingest-aggregate-success/
+          retention-days: 30
+          if-no-files-found: error
+
       - name: Aggregate job proof
         run: |
           set -euo pipefail
@@ -873,3 +891,20 @@ jobs:
             --job-status "$JOB_STATUS" \
             --data-changed "${{ steps.no_diff.outputs.data_changed }}" \
             --pr-number "${{ steps.pr.outputs.pr_number }}"
+
+      - name: Persist release telemetry to handoff (Phase 3C — does not alter aggregate checkpoint)
+        if: always()
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python scripts/pipeline_handoff_git.py push-release-telemetry
+
+      - name: Upload pipeline phase status artifact (Phase 3C)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-phase-status-${{ github.run_id }}
+          path: projects/data/staging/article_pipeline_phase_status.json
+          retention-days: 30
+          if-no-files-found: warn

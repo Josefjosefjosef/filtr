@@ -299,14 +299,24 @@ def summary_row(status: dict) -> dict[str, str]:
     }
 
 
+def artifacts_persisted(status: dict) -> bool:
+    """True when ingest+aggregate succeeded and durable artifacts should exist."""
+    return (
+        status.get("ingest_status") == INGEST_OK
+        and status.get("aggregate_status") == AGGREGATE_OK
+        and status.get("clean_pool_status") == CLEAN_POOL_CREATED
+    )
+
+
 def append_github_summary(status: dict) -> None:
     path = os.environ.get("GITHUB_STEP_SUMMARY")
     if not path:
         return
     row = summary_row(status)
+    persisted = "YES" if artifacts_persisted(status) else "NO"
     lines = [
         "",
-        "## Article pipeline — phase status (Phase 3B)",
+        "## Article pipeline — phase status (Phase 3C)",
         "",
         "| Phase | Status |",
         "| --- | --- |",
@@ -315,6 +325,7 @@ def append_github_summary(status: dict) -> None:
         f"| POOL | {row['POOL']} |",
         f"| RELEASE | {row['RELEASE']} |",
         f"| PUBLISH | {row['PUBLISH']} |",
+        f"| PIPELINE_ARTIFACTS_PERSISTED | {persisted} |",
         "",
     ]
     if status.get("release_status") == RELEASE_BLOCKED:
@@ -324,7 +335,9 @@ def append_github_summary(status: dict) -> None:
                 "",
                 f"Reason: {status.get('release_blocked_reason') or 'n/a'}",
                 "",
-                f"Clean pool count: {status.get('clean_pool_count', 'n/a')} (articles preserved in staging handoff)",
+                f"Clean pool count: {status.get('clean_pool_count', 'n/a')} (preserved in git handoff + workflow artifact)",
+                "",
+                "Ingest/aggregate success is **not lost** when release guards block — see `ingest-aggregate-success` workflow artifact.",
                 "",
             ]
         )
@@ -425,9 +438,15 @@ def cmd_finalize_release(args: argparse.Namespace) -> int:
     row = summary_row(status)
     for phase, val in row.items():
         print(f"PHASE_{phase}={val}", flush=True)
-    print(f"INGEST_STATUS={status.get('ingest_status')}", flush=True)
-    print(f"RELEASE_STATUS={status.get('release_status')}", flush=True)
-    print(f"PUBLISH_STATUS={status.get('publish_status')}", flush=True)
+    print(f"INGEST_STATUS={row['INGEST']}", flush=True)
+    print(f"AGGREGATE_STATUS={row['AGGREGATE']}", flush=True)
+    print(f"CLEAN_POOL_STATUS={row['POOL']}", flush=True)
+    print(f"RELEASE_STATUS={row['RELEASE']}", flush=True)
+    print(f"PUBLISH_STATUS={row['PUBLISH']}", flush=True)
+    print(
+        f"PIPELINE_ARTIFACTS_PERSISTED={'YES' if artifacts_persisted(status) else 'NO'}",
+        flush=True,
+    )
     return 0
 
 
