@@ -1,23 +1,23 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-08T01:57:32.991151Z",
-  "source_run_id": "27111312535",
-  "pipeline_phase": "aggregate",
+  "generatedAt": "2026-06-08T02:28:44.485186Z",
+  "source_run_id": "27112404483",
+  "pipeline_phase": "ingest_incremental",
   "pool_boundary": "post_dedupe_pre_release_guards",
   "clean_article_pool_definition": "Articles after RSS fetch, normalize, URL dedupe, title clustering, event-level dedupe, section classification, and quality/relevance checks; before release guards, PR creation, publish, and homepage selection.",
-  "total_raw_items": 626,
-  "total_normalized": 337,
+  "total_raw_items": 596,
+  "total_normalized": 307,
   "total_after_url_dedupe": 180,
-  "total_after_event_dedupe": 14567,
-  "total_clean_pool": 14567,
-  "articles_full_count": 14567,
-  "articles_final_count": 14567,
+  "total_after_event_dedupe": 14569,
+  "total_clean_pool": 14569,
+  "articles_full_count": 14569,
+  "articles_final_count": 14569,
   "cluster_count": 180,
   "new_articles_built": 180,
   "per_section_counts": {
-    "aktualne": 5236,
-    "finance": 2634,
-    "zdravi": 1040,
+    "aktualne": 5234,
+    "finance": 2636,
+    "zdravi": 1042,
     "hry": 71,
     "sport": 4380,
     "pocasi": 122,
@@ -29,12 +29,11 @@
     "doprava": 319
   },
   "per_source_counts": {
-    "zpr_ct24_svet": 5,
-    "fin_epenize": 115,
+    "vzd_novinky_skola": 54,
+    "fin_epenize": 116,
     "fin_hn": 649,
     "hry_zing": 140,
     "hry_indian": 100,
-    "vzd_novinky_skola": 54,
     "zpr_seznam_domaci": 597,
     "zpr_novinky_zahranicni": 72,
     "spt_sportcz": 1232,
@@ -46,6 +45,7 @@
     "fin_penize": 182,
     "zdr_zdravezpravy": 109,
     "ces_cestujlevne": 16,
+    "fin_ekonom": 43,
     "fin_faei": 214,
     "zdr_prozeny_zdravi": 241,
     "ces_novinky_cestovani": 9,
@@ -76,12 +76,12 @@
     "kul_ctart": 11,
     "ces_pelipecky": 9,
     "zpr_kverulant": 37,
-    "fin_ekonom": 40,
     "ces_travelbible": 18,
     "hry_novinky": 27,
     "fin_novinky_ekonomika": 52,
     "vzd_betterlife": 7,
     "zpr_ctk": 4,
+    "zpr_ct24_svet": 3,
     "isport": 1,
     "irozhlas": 6,
     "aktualne": 1,
@@ -109,16 +109,16 @@
   },
   "event_cluster_counts": 0,
   "suppressed_duplicate_count": 0,
-  "ready_for_release_count": 14567,
+  "ready_for_release_count": 14569,
   "blocked_by_release_guard_count": 0,
   "reason_if_not_released": "release_guards_evaluated_in_separate_publish_job",
   "ingest_publish_decoupling_active": false,
   "handoffMeta": {
-    "stagingSnapshotIngestRunId": "27111312535",
-    "aggregateWorkflowRunId": "27111312535"
+    "stagingSnapshotIngestRunId": "27112404483",
+    "aggregateWorkflowRunId": "27112404483"
   },
   "ingest_manifest_ref": {
-    "ingestedAt": "2026-06-08T01:42:32.029799Z",
+    "ingestedAt": "2026-06-08T02:28:44.421095Z",
     "sourceBatchKeys": [
       "ceskatelevize.cz",
       "ekonom.cz",
@@ -135,6 +135,6 @@
       "zdrave.cz",
       "zing.cz"
     ],
-    "pipelineRunId": "27111312535"
+    "pipelineRunId": "27112404483"
   }
 }
