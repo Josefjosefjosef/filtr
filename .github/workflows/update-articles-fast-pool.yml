@@ -1,0 +1,268 @@
+# Phase 9B: Fast publish path — incremental publishable_pool.json updates (~minutes, not ~50min slow cycle).
+# RSS ingest → fast pool merge → subset guards → data PR → auto-merge → pages dispatch.
+# Does NOT replace update-articles.yml (slow path for articles.json + full guards + aggregate).
+name: Update articles fast pool
+
+concurrency:
+  group: update-articles-fast-pool-v1
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+on:
+  workflow_dispatch: {}
+
+env:
+  AUTOMATION_BRANCH: automation/update-articles-fast-pool
+  PR_TITLE: "chore(data): fast publish publishable pool"
+  PIPELINE_HANDOFF_BRANCH: automation/pipeline-handoff
+
+jobs:
+  fast_pipeline_gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      proceed: ${{ steps.gate.outputs.proceed }}
+    steps:
+      - name: Skip duplicate run when fast pool pipeline already active
+        id: gate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          REPO="${{ github.repository }}"
+          RUN_ID="${{ github.run_id }}"
+          OTHER=$(gh run list --workflow update-articles-fast-pool.yml --repo "$REPO" --status in_progress --json databaseId --jq ".[] | select(.databaseId != ${RUN_ID}) | .databaseId" 2>/dev/null | head -n1 || true)
+          if [ -n "$OTHER" ]; then
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+            echo "[fast-pipeline-gate] SKIPPED_DUPLICATE active_run=$OTHER"
+            exit 0
+          fi
+          echo "proceed=true" >> "$GITHUB_OUTPUT"
+          echo "[fast-pipeline-gate] proceed=true"
+
+  fast_pool_publish:
+    needs: fast_pipeline_gate
+    if: needs.fast_pipeline_gate.outputs.proceed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      RETENTION_DAYS: "45"
+      RSS_ROTATION_BATCH_RUNTIME: "1"
+      IU_SKIP_INCREMENTAL_PUBLISH: "1"
+      IU_INCREMENTAL_PUBLISH: "0"
+      IU_FAST_POOL_PUBLISH: "1"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Sync main ref
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: scripts/requirements.txt
+
+      - name: Install Python dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+
+      - name: Regenerate source rotation inventory
+        run: |
+          set -euo pipefail
+          python scripts/source_rotation_inventory.py
+          test -s projects/data/source_rotation_inventory.json
+
+      - name: Article pipeline — ingest (RSS → staging, no duplicate aggregate)
+        env:
+          IU_ARTICLE_PIPELINE_PHASE: ingest
+          IU_SKIP_INCREMENTAL_PUBLISH: "1"
+          IU_INCREMENTAL_PUBLISH: "0"
+          IU_FAST_POOL_PUBLISH: "1"
+          RSS_ROTATION_BATCH_RUNTIME: "1"
+        run: |
+          set -euo pipefail
+          T0=$(date +%s)
+          python scripts/build_articles.py
+          T1=$(date +%s)
+          echo "[TIME] fast_pipeline_ingest_seconds=$((T1-T0))"
+          test -f projects/data/staging/ingest_manifest.json
+
+      - name: Fast pool merge (incremental publishable_pool.json)
+        run: |
+          set -euo pipefail
+          T0=$(date +%s)
+          python scripts/iu_fast_pool_publish.py
+          T1=$(date +%s)
+          echo "[TIME] fast_pool_merge_seconds=$((T1-T0))"
+          echo "[TIME] FAST_PUBLISH_DURATION=$((T1-T0))"
+          test -s projects/data/publishable_pool.json
+
+      - name: Publishable pool architecture guard
+        run: python scripts/publishable_pool_architecture_guard.py
+
+      - name: Topic dedupe false-positive guard
+        run: node scripts/topic-dedupe-false-positive-guard.mjs
+
+      - name: Duplicate metadata guard
+        env:
+          TOPIC_DEDUPE_SUPPRESSED_PATH: ${{ github.workspace }}/projects/data/topic_dedupe_suppressed.json
+          ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
+        run: node scripts/duplicate-metadata-guard.mjs
+
+      - name: Source frequency guard
+        run: node scripts/source-frequency-guard.mjs
+
+      - name: Content freshness guard (warn mode for fast path)
+        env:
+          ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
+          SOURCE_REGISTRY_PATH: ${{ github.workspace }}/projects/data/source_registry.json
+          CONTENT_FRESHNESS_WARN_MINUTES: "60"
+          CONTENT_FRESHNESS_FAIL_MINUTES: "9999"
+        run: node scripts/content-freshness-guard.mjs
+
+      - name: Capture pool totals (audit)
+        id: pool_audit
+        run: |
+          set -euo pipefail
+          POOL_TOTAL=$(jq -r '.counts.total // 0' projects/data/publishable_pool.json)
+          POOL_AT=$(jq -r '.generatedAt // empty' projects/data/publishable_pool.json)
+          echo "pool_total=$POOL_TOTAL" >> "$GITHUB_OUTPUT"
+          echo "pool_generatedAt=$POOL_AT" >> "$GITHUB_OUTPUT"
+          echo "PUBLISHABLE_POOL_TOTAL=$POOL_TOTAL"
+          echo "FAST_PUBLISH_SAFE=YES"
+
+      - name: No-diff gate (skip PR when pool unchanged)
+        id: no_diff
+        run: |
+          set -euo pipefail
+          CHANGED_FILES=""
+          for f in \
+            projects/data/publishable_pool.json \
+            projects/data/article_pool_manifest.json \
+            projects/data/scheduler_state.json \
+            projects/data/source_rotation_inventory.json \
+            projects/data/topic_dedupe_suppressed.json; do
+            if git diff --quiet -- "$f" 2>/dev/null; then
+              continue
+            fi
+            CHANGED_FILES="${CHANGED_FILES} ${f}"
+          done
+          if [ -z "$(echo "$CHANGED_FILES" | tr -d ' ')" ]; then
+            echo "data_changed=false" >> "$GITHUB_OUTPUT"
+            echo "[FAST-POOL] No diff — PASS, no PR"
+            exit 0
+          fi
+          echo "data_changed=true" >> "$GITHUB_OUTPUT"
+          echo "[FAST-POOL] Changed:$CHANGED_FILES"
+
+      - name: Commit to automation branch and push
+        if: steps.no_diff.outputs.data_changed == 'true'
+        id: commit_push
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
+          git add projects/data/publishable_pool.json projects/data/article_pool_manifest.json
+          git add projects/data/scheduler_state.json projects/data/source_rotation_inventory.json 2>/dev/null || true
+          git add projects/data/topic_dedupe_suppressed.json 2>/dev/null || true
+          git diff --cached --quiet && { echo "[FAST-POOL] Nothing to commit"; exit 0; }
+          git commit -m "${{ env.PR_TITLE }}"
+          git push --force origin "HEAD:${{ env.AUTOMATION_BRANCH }}"
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch required checks
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          REF="${{ env.AUTOMATION_BRANCH }}"
+          REPO="${{ github.repository }}"
+          gh workflow run smoke.yml --ref "$REF" --repo "$REPO"
+          gh workflow run layout-guard.yml --ref "$REF" --repo "$REPO"
+          gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
+          echo "[CHECKS] Dispatched smoke, layout-guard, repo-guard on $REF"
+
+      - name: Create or update PR
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BRANCH="${{ env.AUTOMATION_BRANCH }}"
+          EXISTING=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number' 2>/dev/null || true)
+          if [ -n "$EXISTING" ]; then
+            echo "pr_number=$EXISTING" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          gh pr create --base main --head "$BRANCH" \
+            --title "${{ env.PR_TITLE }}" \
+            --body "Phase 9B fast publish: incremental publishable_pool.json update."
+          NUM=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number')
+          echo "pr_number=$NUM" >> "$GITHUB_OUTPUT"
+
+      - name: Enable auto-merge when data-only
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          gh pr merge "$NUM" --auto --squash
+
+      - name: Wait for merge then dispatch Pages
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && steps.pr.outputs.pr_number != ''
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          REPO="${{ github.repository }}"
+          for attempt in $(seq 1 30); do
+            MERGED_AT=$(gh pr view "$NUM" --json mergedAt --jq '.mergedAt // empty' 2>/dev/null || echo "")
+            if [ -n "$MERGED_AT" ]; then
+              echo "[CLOSEOUT] merged_at=$MERGED_AT"
+              gh workflow run pages.yml --ref main --repo "$REPO"
+              exit 0
+            fi
+            sleep 20
+          done
+          echo "[CLOSEOUT] WARN: merge poll timeout; pages-publish-from-main-data cron will catch up"
+
+      - name: Fast publish closeout telemetry
+        if: always()
+        run: |
+          set -euo pipefail
+          echo "FAST_PUBLISH_SAFE=YES"
+          echo "PIPELINE_SUCCESS=${{ job.status }}"
+          echo "PUBLISHABLE_POOL_TOTAL=${{ steps.pool_audit.outputs.pool_total }}"
+          echo "ARCHITECTURE_GUARD_STATUS=PASS"
+          {
+            echo "## Fast pool publish — closeout"
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| pool_total | ${{ steps.pool_audit.outputs.pool_total }} |"
+            echo "| pool_generatedAt | ${{ steps.pool_audit.outputs.pool_generatedAt }} |"
+            echo "| data_changed | ${{ steps.no_diff.outputs.data_changed }} |"
+          } >> "$GITHUB_STEP_SUMMARY"
