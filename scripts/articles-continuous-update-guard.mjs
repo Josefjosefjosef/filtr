@@ -9,8 +9,10 @@
  *   GITHUB_REPOSITORY — owner/repo
  *   GITHUB_TOKEN / GH_TOKEN — GitHub API (required for run checks)
  *   MAX_GENERATED_AGE_MINUTES — prod bundle staleness (default 90; ~53m run + 15m stale + margin)
- *   MAX_LAST_SUCCESS_AGE_MINUTES — last successful workflow (default 120)
- *   MAX_FAILURE_STREAK — consecutive fails without intervening success (default 6)
+ *   MAX_LAST_SUCCESS_AGE_MINUTES — last ingest+aggregate OK run (default 120)
+ *   MAX_FAILURE_STREAK — consecutive RED pipeline runs (default 6)
+ *   MAX_RELEASE_BLOCKED_STREAK — consecutive release-blocked runs (default 3)
+ *   STRICT_YELLOW — "true" to fail on YELLOW pipeline state
  *   QUEUED_STALE_MINUTES — zombie queued threshold (default 120)
  *   IN_PROGRESS_STALE_MINUTES — stuck in_progress (default 90)
  *   WATCHDOG_HEALTH_URL — optional; if reachable, automatic trigger considered present
@@ -19,6 +21,15 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import {
+  ALERT_YELLOW,
+  INGEST_SUCCESS_RELEASE_BLOCKED,
+  PIPELINE_SUCCESS,
+  alertLevelForOverallStatus,
+  classifyRunFromGitHub,
+  isIngestAggregateOkStatus,
+  isPipelineFailureStatus,
+} from "./iu_pipeline_run_classifier.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -34,6 +45,9 @@ const GITHUB_TOKEN = (process.env.GITHUB_TOKEN || process.env.GH_TOKEN || "").tr
 const MAX_GEN_AGE_MIN = Number(process.env.MAX_GENERATED_AGE_MINUTES || "90");
 const MAX_SUCCESS_AGE_MIN = Number(process.env.MAX_LAST_SUCCESS_AGE_MINUTES || "120");
 const MAX_FAIL_STREAK = Number(process.env.MAX_FAILURE_STREAK || "6");
+const MAX_RELEASE_BLOCKED_STREAK = Number(process.env.MAX_RELEASE_BLOCKED_STREAK || "3");
+const STRICT_YELLOW = String(process.env.STRICT_YELLOW || "").toLowerCase() === "true";
+const CLASSIFIER_RUN_LIMIT = Number(process.env.CLASSIFIER_RUN_LIMIT || "20");
 const QUEUED_STALE_MIN = Number(process.env.QUEUED_STALE_MINUTES || "120");
 const IN_PROGRESS_STALE_MIN = Number(process.env.IN_PROGRESS_STALE_MINUTES || "90");
 const WATCHDOG_HEALTH_URL =
@@ -53,6 +67,10 @@ function log(msg) {
 
 function fail(msg) {
   console.error(`[articles-continuous-update-guard] FAIL: ${msg}`);
+}
+
+function warn(msg) {
+  console.warn(`[articles-continuous-update-guard] WARN: ${msg}`);
 }
 
 function parseTs(v) {
@@ -155,27 +173,81 @@ async function checkProductionFreshness(nowMs) {
   };
 }
 
-async function checkLastSuccessfulRun(nowMs) {
-  log(`last_success workflow=${UPDATE_WORKFLOW} limit_min=${MAX_SUCCESS_AGE_MIN}`);
+async function loadClassifiedRuns(limit = CLASSIFIER_RUN_LIMIT) {
   const [owner, repo] = GITHUB_REPOSITORY.split("/");
   const wf = encodeURIComponent(UPDATE_WORKFLOW);
   const data = await ghApi(
-    `/repos/${owner}/${repo}/actions/workflows/${wf}/runs?per_page=30&branch=main&status=completed`,
+    `/repos/${owner}/${repo}/actions/workflows/${wf}/runs?per_page=${limit}&branch=main`,
   );
-  const success = (data.workflow_runs || []).find((r) => r.conclusion === "success");
-  if (!success) {
-    fail("no successful update-articles run found");
-    return { ok: false, runId: null, ageMinutes: null };
+  const runs = (data.workflow_runs || []).filter((r) => r.status === "completed");
+  const classified = [];
+  for (const run of runs) {
+    try {
+      classified.push(await classifyRunFromGitHub(owner, repo, run, GITHUB_TOKEN, { fetchArtifact: true }));
+    } catch (e) {
+      log(`WARN classify run_id=${run.id} ${e instanceof Error ? e.message : e}`);
+    }
   }
-  const updated = parseTs(success.updated_at);
+  return classified;
+}
+
+async function checkLastIngestAggregateOk(nowMs) {
+  log(`last_ingest_aggregate_ok limit_min=${MAX_SUCCESS_AGE_MIN}`);
+  const classified = await loadClassifiedRuns();
+  const hit = classified.find((r) => isIngestAggregateOkStatus(r.overall));
+  if (!hit) {
+    fail("no recent run with ingest+aggregate OK (phase status)");
+    return { ok: false, runId: null, ageMinutes: null, overall: null };
+  }
+  const updated = parseTs(hit.updatedAt);
   const ageMin = updated ? minutesAgo(updated, nowMs) : null;
-  log(`last_success run_id=${success.id} updated_at=${success.updated_at} age_min=${ageMin?.toFixed(1)} event=${success.event}`);
+  log(
+    `last_ingest_aggregate_ok run_id=${hit.runId} overall=${hit.overall} updated_at=${hit.updatedAt} age_min=${ageMin?.toFixed(1)}`,
+  );
   if (ageMin !== null && ageMin > MAX_SUCCESS_AGE_MIN) {
-    fail(`last successful run older than ${MAX_SUCCESS_AGE_MIN}m`);
-    return { ok: false, runId: success.id, ageMinutes: ageMin };
+    fail(`last ingest+aggregate OK older than ${MAX_SUCCESS_AGE_MIN}m`);
+    return { ok: false, runId: hit.runId, ageMinutes: ageMin, overall: hit.overall };
   }
-  log("last_success PASS");
-  return { ok: true, runId: success.id, ageMinutes: ageMin };
+  log("last_ingest_aggregate_ok PASS");
+  return { ok: true, runId: hit.runId, ageMinutes: ageMin, overall: hit.overall };
+}
+
+async function checkPipelineFailureStreak() {
+  log(`pipeline_failure_streak max=${MAX_FAIL_STREAK}`);
+  const classified = await loadClassifiedRuns();
+  let streak = 0;
+  for (const row of classified) {
+    if (!isPipelineFailureStatus(row.overall)) break;
+    streak += 1;
+  }
+  log(`pipeline_failure_streak count=${streak}`);
+  if (streak >= MAX_FAIL_STREAK) {
+    fail(`${streak} consecutive RED pipeline runs without intervening GREEN/YELLOW`);
+    return { ok: false, streak };
+  }
+  log("pipeline_failure_streak PASS");
+  return { ok: true, streak };
+}
+
+async function checkReleaseBlockedStreak() {
+  log(`release_blocked_streak max=${MAX_RELEASE_BLOCKED_STREAK}`);
+  const classified = await loadClassifiedRuns();
+  let streak = 0;
+  for (const row of classified) {
+    if (row.overall === PIPELINE_SUCCESS) break;
+    if (row.overall === INGEST_SUCCESS_RELEASE_BLOCKED) streak += 1;
+    else break;
+  }
+  log(`release_blocked_streak count=${streak}`);
+  if (streak >= MAX_RELEASE_BLOCKED_STREAK) {
+    fail(`${streak} consecutive release-blocked runs without pipeline success`);
+    return { ok: false, streak };
+  }
+  if (streak > 0) {
+    warn(`${streak} consecutive release-blocked run(s) (YELLOW)`);
+  }
+  log("release_blocked_streak PASS");
+  return { ok: true, streak };
 }
 
 async function checkZombies(nowMs) {
@@ -216,26 +288,6 @@ async function checkZombies(nowMs) {
   return { ok: !failed };
 }
 
-async function checkFailureStreak() {
-  log(`failure_streak max=${MAX_FAIL_STREAK}`);
-  const [owner, repo] = GITHUB_REPOSITORY.split("/");
-  const wf = encodeURIComponent(UPDATE_WORKFLOW);
-  const data = await ghApi(`/repos/${owner}/${repo}/actions/workflows/${wf}/runs?per_page=20&branch=main`);
-  const runs = (data.workflow_runs || []).filter((r) => r.status === "completed");
-  let streak = 0;
-  for (const r of runs) {
-    if (r.conclusion === "success") break;
-    if (r.conclusion === "failure" || r.conclusion === "cancelled") streak += 1;
-  }
-  log(`failure_streak count=${streak}`);
-  if (streak >= MAX_FAIL_STREAK) {
-    fail(`${streak} consecutive non-success runs without intervening success`);
-    return { ok: false, streak };
-  }
-  log("failure_streak PASS");
-  return { ok: true, streak };
-}
-
 function hasGithubSchedule() {
   if (!fs.existsSync(WORKFLOW_PATH)) return false;
   const wf = fs.readFileSync(WORKFLOW_PATH, "utf8");
@@ -272,6 +324,7 @@ async function checkAutomaticTrigger() {
 async function main() {
   const nowMs = Date.now();
   let failed = false;
+  let yellowWarn = false;
 
   if (GITHUB_EVENT === "pull_request" && SKIP_PROD_FRESHNESS_ON_PR) {
     log("prod_freshness SKIP on pull_request (post-merge proof required)");
@@ -285,13 +338,16 @@ async function main() {
 
   if (GITHUB_TOKEN) {
     if (GITHUB_EVENT === "pull_request") {
-      log("last_success SKIP on pull_request (post-merge proof required)");
+      log("last_ingest_aggregate_ok SKIP on pull_request (post-merge proof required)");
     } else {
       try {
-        const last = await checkLastSuccessfulRun(nowMs);
+        const last = await checkLastIngestAggregateOk(nowMs);
         if (!last.ok) failed = true;
+        else if (last.overall && alertLevelForOverallStatus(last.overall) === ALERT_YELLOW) {
+          yellowWarn = true;
+        }
       } catch (e) {
-        fail(`last_success ${e instanceof Error ? e.message : e}`);
+        fail(`last_ingest_aggregate_ok ${e instanceof Error ? e.message : e}`);
         failed = true;
       }
     }
@@ -303,14 +359,29 @@ async function main() {
       failed = true;
     }
     try {
-      const fs_ = await checkFailureStreak();
-      if (!fs_.ok) failed = true;
+      const pfs = await checkPipelineFailureStreak();
+      if (!pfs.ok) failed = true;
     } catch (e) {
-      fail(`failure_streak ${e instanceof Error ? e.message : e}`);
+      fail(`pipeline_failure_streak ${e instanceof Error ? e.message : e}`);
+      failed = true;
+    }
+    try {
+      const rbs = await checkReleaseBlockedStreak();
+      if (!rbs.ok) failed = true;
+      else if (rbs.streak > 0) yellowWarn = true;
+    } catch (e) {
+      fail(`release_blocked_streak ${e instanceof Error ? e.message : e}`);
       failed = true;
     }
   } else {
     log("github run checks SKIP (GITHUB_TOKEN unset)");
+  }
+
+  if (yellowWarn && STRICT_YELLOW) {
+    fail("STRICT_YELLOW: YELLOW pipeline state treated as failure");
+    failed = true;
+  } else if (yellowWarn) {
+    warn("YELLOW pipeline state present (release blocked or streak warning)");
   }
 
   if (failed) {
