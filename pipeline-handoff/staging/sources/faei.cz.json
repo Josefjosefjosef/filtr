@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-06-08T03:52:11.649118Z",
+  "ingestedAt": "2026-06-08T04:32:30.021597Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "The Economist: Levičácké nápady socialistů z generace Z ohrožují prosperitu společnosti. Je načase se jim postavit",
+      "url": "https://profitonline.cz/the-economist-levicacke-napady-socialistu-z-generace-z-ohrozuji-prosperitu-spolecnosti-je-nacase-se-jim-postavit/",
+      "dt": "2026-06-08T04:00:45Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "economist",
+        "generace",
+        "jim",
+        "levičácké",
+        "načase",
+        "nápady",
+        "ohrožují",
+        "postavit",
+        "prosperitu",
+        "socialistů",
+        "společnosti",
+        "the"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -260,31 +289,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Týden na akciových trzích: Trhy klesly, S&P500 opět na rekordu",
-      "url": "https://profitonline.cz/tyden-na-akciovych-trzich-trhy-klesly-sp500-opet-na-rekordu/",
-      "dt": "2026-06-05T17:40:11Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "akciových",
-        "klesly",
-        "opět",
-        "p500",
-        "rekordu",
-        "trhy",
-        "trzích",
-        "týden"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -295,7 +299,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18696,
+      "bytes": 19072,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -332,7 +336,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-06-07T12:00:59Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T04:00:45Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -347,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "The Economist: Levičácké nápady socialistů z generace Z ohrožují prosperitu společnosti. Je načase se jim postavit",
+            "publishedAt": "2026-06-08T04:00:45Z"
+          },
           {
             "title": "Cerebras jako výzva pro Nvidii",
             "publishedAt": "2026-06-07T12:00:59Z"
@@ -374,10 +382,6 @@
           {
             "title": "Nahradí Churchilla zajíc, žába nebo strakapoud?",
             "publishedAt": "2026-06-06T10:00:35Z"
-          },
-          {
-            "title": "Trumpova masivní sázka na uhlí",
-            "publishedAt": "2026-06-06T08:00:33Z"
           }
         ]
       }

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-08T04:07:35.233378Z",
-  "source_run_id": "27114900203",
-  "pipeline_phase": "aggregate",
+  "generatedAt": "2026-06-08T04:32:30.089661Z",
+  "source_run_id": "27116109251",
+  "pipeline_phase": "ingest_incremental",
   "pool_boundary": "post_dedupe_pre_release_guards",
   "clean_article_pool_definition": "Articles after RSS fetch, normalize, URL dedupe, title clustering, event-level dedupe, section classification, and quality/relevance checks; before release guards, PR creation, publish, and homepage selection.",
   "total_raw_items": 349,
@@ -30,13 +30,14 @@
   },
   "per_source_counts": {
     "fin_penize": 184,
-    "fin_e15": 609,
     "zpr_idnes_zpravy": 1319,
+    "fin_faei": 216,
+    "fin_e15": 609,
+    "spt_ctsport": 557,
     "spt_isport": 875,
     "zdr_prozeny_zdravi": 243,
     "fin_idnes_ekonomika": 138,
     "spt_idnes": 855,
-    "spt_ctsport": 557,
     "zpr_tydenikpolicie": 423,
     "ved_vtm": 76,
     "zpr_novinky_zahranicni": 72,
@@ -44,7 +45,6 @@
     "spt_sportcz": 1232,
     "zpr_ct24_domaci": 898,
     "zdr_betterlife": 96,
-    "fin_faei": 216,
     "vzd_novinky_skola": 52,
     "vzd_seznam": 73,
     "fin_hn": 645,
@@ -114,11 +114,11 @@
   "reason_if_not_released": "release_guards_evaluated_in_separate_publish_job",
   "ingest_publish_decoupling_active": false,
   "handoffMeta": {
-    "stagingSnapshotIngestRunId": "27114900203",
-    "aggregateWorkflowRunId": "27114900203"
+    "stagingSnapshotIngestRunId": "27116109251",
+    "aggregateWorkflowRunId": "27116109251"
   },
   "ingest_manifest_ref": {
-    "ingestedAt": "2026-06-08T03:52:11.649118Z",
+    "ingestedAt": "2026-06-08T04:32:30.021597Z",
     "sourceBatchKeys": [
       "betterlife.cz",
       "e15.cz",
@@ -135,6 +135,6 @@
       "youtube.com",
       "zdravezpravy.cz"
     ],
-    "pipelineRunId": "27114900203"
+    "pipelineRunId": "27116109251"
   }
 }
