@@ -639,28 +639,65 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git fetch origin main
-          CHANGED=$(git diff --name-only origin/main -- projects/data || true)
-          if [ -z "$CHANGED" ]; then
+          DIFF_STATUS=$(git diff --name-status origin/main -- projects/data || true)
+          if [ -z "$DIFF_STATUS" ]; then
             echo "[DATA] Nothing to commit vs origin/main"
             exit 0
           fi
 
           RELEASE_OVERLAY="${RUNNER_TEMP}/iu_release_overlay"
+          DELETED_LIST="${RELEASE_OVERLAY}/.deleted_paths"
           rm -rf "$RELEASE_OVERLAY"
           mkdir -p "$RELEASE_OVERLAY"
-          while IFS= read -r _f; do
-            [ -n "$_f" ] || continue
-            mkdir -p "$RELEASE_OVERLAY/$(dirname "$_f")"
-            cp -a "$_f" "$RELEASE_OVERLAY/$_f"
-          done <<< "$CHANGED"
-          echo "[DATA] Overlay saved for $(echo "$CHANGED" | wc -l | tr -d ' ') path(s)"
+          while IFS=$'\t' read -r _status _path _path2; do
+            [ -n "$_status" ] || continue
+            [ -n "$_path" ] || continue
+            case "$_status" in
+              D*)
+                echo "$_path" >> "$DELETED_LIST"
+                echo "[DATA] overlay queued-delete: $_path"
+                ;;
+              R*|C*)
+                echo "$_path" >> "$DELETED_LIST"
+                if [ -n "$_path2" ] && [ -e "$_path2" ]; then
+                  mkdir -p "$RELEASE_OVERLAY/$(dirname "$_path2")"
+                  cp -a "$_path2" "$RELEASE_OVERLAY/$_path2"
+                  echo "[DATA] overlay copied (rename): $_path2"
+                fi
+                ;;
+              *)
+                if [ -e "$_path" ]; then
+                  mkdir -p "$RELEASE_OVERLAY/$(dirname "$_path")"
+                  cp -a "$_path" "$RELEASE_OVERLAY/$_path"
+                  echo "[DATA] overlay copied: $_path"
+                else
+                  echo "[DATA] overlay skip-missing: $_path (status=$_status)"
+                fi
+                ;;
+            esac
+          done <<< "$DIFF_STATUS"
+          _copied=$(find "$RELEASE_OVERLAY" -type f ! -name '.deleted_paths' 2>/dev/null | wc -l | tr -d ' ')
+          _deleted=0
+          [ -f "$DELETED_LIST" ] && _deleted=$(wc -l < "$DELETED_LIST" | tr -d ' ')
+          echo "[DATA] Overlay saved: copied=${_copied} deleted=${_deleted}"
 
           git checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
-          while IFS= read -r _f; do
-            [ -n "$_f" ] || continue
-            mkdir -p "$(dirname "$_f")"
-            cp -a "$RELEASE_OVERLAY/$_f" "$_f"
-          done <<< "$CHANGED"
+          if [ -f "$DELETED_LIST" ]; then
+            while IFS= read -r _f; do
+              [ -n "$_f" ] || continue
+              if [ -e "$_f" ]; then
+                rm -f "$_f"
+                echo "[DATA] overlay applied-delete: $_f"
+              fi
+            done < "$DELETED_LIST"
+          fi
+          while IFS= read -r -d '' _src; do
+            _rel="${_src#"$RELEASE_OVERLAY/"}"
+            [ "$_rel" = ".deleted_paths" ] && continue
+            mkdir -p "$(dirname "$_rel")"
+            cp -a "$_src" "$_rel"
+            echo "[DATA] overlay applied-copy: $_rel"
+          done < <(find "$RELEASE_OVERLAY" -type f -print0)
 
           node scripts/articles-release-conflict-marker-guard.mjs
           git diff --check
