@@ -9,6 +9,7 @@ Single scheduler path (legacy, default):
 Phase 2B batch path (RSS_ROTATION_BATCH_RUNTIME=1 + valid rotation_batch_registry.json):
   • batch_id = floor(minute/5) % 4 → A/B/C/D;
   • full batch per tick with 15min SKIPPED_MIN_INTERVAL_FLOOR;
+  • overdue P0_HEADLINE_REGISTRY_IDS merged across batches (Phase 4C liveness bypass);
   • invalid/missing registry → legacy fallback.
 """
 from __future__ import annotations
@@ -769,6 +770,78 @@ def _source_passes_min_interval_floor(state: dict, entry: dict, now: datetime) -
     return (now - last).total_seconds() >= HARD_DOMAIN_COOLDOWN_MIN * 60
 
 
+def _p0_headline_batch_liveness_due(state: dict, entry: dict, now: datetime) -> bool:
+    """
+    Batch runtime P0 headline bypass (mirrors legacy section 1b intent).
+
+    Adds overdue P0 headline registry feeds from outside the current batch when the
+    15min min_interval floor is satisfied. Never-fetched feeds are left to their
+    assigned batch tick (fresh-state / first-cycle isolation).
+    """
+    eid = str(entry.get("id") or "")
+    if eid not in P0_HEADLINE_REGISTRY_IDS:
+        return False
+    if not _source_passes_min_interval_floor(state, entry, now):
+        return False
+    last = _entry_last_checked_at(state, entry)
+    if last is None:
+        return False
+    sla = compute_entry_sla(state, entry, now)
+    return bool(sla.get("overdue"))
+
+
+def _merge_batch_p0_headline_liveness_picks(
+    picked: list[dict],
+    by_id: dict[str, dict],
+    state: dict,
+    now: datetime,
+    batch_id: str,
+    batch_reg: dict,
+) -> tuple[list[dict], list[dict]]:
+    """
+    Merge overdue P0 headline feeds into batch tick selection.
+
+    Batch A/B/C/D membership is unchanged; this only appends P0_HEADLINE_REGISTRY_IDS
+    that are overdue, pass min_interval, and are not already selected. No tick cap —
+    batch mode already processes a full batch (~15 feeds); at most len(P0_HEADLINE_REGISTRY_IDS)
+    extras (6) prevents multi-hour P0 staleness when pipeline cadence misses C/D ticks.
+    """
+    mapping = batch_reg.get("rotation_batch_by_source_id") or {}
+    picked_ids = {str(e.get("id") or "") for e in picked}
+    seen_urls = {(e.get("feed_url") or "").strip() for e in picked if (e.get("feed_url") or "").strip()}
+    merged: list[dict] = list(picked)
+    bypass_added: list[dict] = []
+
+    for eid in sorted(P0_HEADLINE_REGISTRY_IDS):
+        if eid in picked_ids:
+            continue
+        e = by_id.get(eid)
+        if e is None:
+            continue
+        u = (e.get("feed_url") or "").strip()
+        if not u or u in seen_urls:
+            continue
+        sla = compute_entry_sla(state, e, now)
+        if sla.get("in_flight"):
+            continue
+        if not _p0_headline_batch_liveness_due(state, e, now):
+            continue
+        home_batch = mapping.get(eid)
+        merged.append(e)
+        bypass_added.append(
+            {
+                "source_id": eid,
+                "reason": "P0_HEADLINE_BATCH_LIVENESS",
+                "home_batch": home_batch,
+                "current_batch": batch_id,
+            }
+        )
+        picked_ids.add(eid)
+        seen_urls.add(u)
+
+    return merged, bypass_added
+
+
 def _select_feeds_for_tick_batch(
     registry: dict,
     state: dict,
@@ -812,9 +885,14 @@ def _select_feeds_for_tick_batch(
             continue
         picked.append(e)
 
+    picked, p0_bypass = _merge_batch_p0_headline_liveness_picks(
+        picked, by_id, state, now, batch_id, batch_reg
+    )
+
     tick_meta = {
         "selected_source_ids": [str(e.get("id") or "") for e in picked],
         "skipped_sources": skipped,
+        "p0_headline_bypass": p0_bypass,
         "rotation_mode": "batch",
         "batch_id": batch_id,
         "batch_index": batch_idx,
