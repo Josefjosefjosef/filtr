@@ -431,9 +431,26 @@ try {
     return "/projects/";
   }
 
+  /** Phase 6C: homepage feed reads publishable pool (pre section-limits), not articles.json publish slice. */
+  const IU_HOMEPAGE_FEED_DATA_FILE = "publishable_pool.json";
+
+  function iuHomepageFeedDataUrl() {
+    return iuDataUrl(IU_HOMEPAGE_FEED_DATA_FILE);
+  }
+
+  function iuIsHomepageFeedJsonPath(pathLower) {
+    const p = String(pathLower || "").toLowerCase();
+    return (
+      p.endsWith("/publishable_pool.json") ||
+      p.endsWith("publishable_pool.json") ||
+      p.endsWith("/articles.json") ||
+      p.endsWith("articles.json")
+    );
+  }
+
   function iuDataUrl(file) {
     const base = iuBasePath() + "data/" + file;
-    if (file === "articles.json" || file === "videos.json") {
+    if (file === "articles.json" || file === "videos.json" || file === "publishable_pool.json") {
       const verRaw = (typeof document !== "undefined" && document.querySelector)
         ? (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute('content') || '').trim()
         : '';
@@ -442,6 +459,10 @@ try {
     }
     return base;
   }
+
+  try {
+    window.__iuHomepageFeedDataSource = IU_HOMEPAGE_FEED_DATA_FILE;
+  } catch (_) {}
 
   function iuGetMindMenuRoot(){
     try{
@@ -1943,7 +1964,7 @@ try {
     debugWarn("[DEBUG] Unexpected #debugPanel present in DOM (should not exist).");
   }
   const BASE_ROOT = iuBasePath();
-  const DATA_URL = iuDataUrl("articles.json");
+  const DATA_URL = iuHomepageFeedDataUrl();
   const VIDEOS_URL = iuDataUrl("videos.json");
   const SECTION_LABELS = {
     vse: "Vše",
@@ -1969,7 +1990,7 @@ try {
   function withCacheBust(url) {
     const candidate = String(url || "");
     if (!candidate) return "";
-    if (!/(articles|videos)\.json/.test(candidate)) return candidate;
+    if (!/(articles|videos|publishable_pool)\.json/.test(candidate)) return candidate;
     return candidate;
   }
 
@@ -1977,7 +1998,7 @@ try {
     const candidate = String(url || "");
     try {
       const pathLower = new URL(candidate, location.href).pathname.toLowerCase();
-      if (/(articles|videos)\.json$/i.test(pathLower)) {
+      if (/(articles|videos|publishable_pool)\.json$/i.test(pathLower)) {
         return candidate;
       }
     } catch (_) {}
@@ -1995,7 +2016,7 @@ try {
     } = opts;
 
     const pathLower = new URL(String(url || ""), location.href).pathname.toLowerCase();
-    if ((pathLower.endsWith("/articles.json") || pathLower.endsWith("articles.json")) && typeof window.__iuLoadArticlesJsonOnce === "function") {
+    if (iuIsHomepageFeedJsonPath(pathLower) && typeof window.__iuLoadArticlesJsonOnce === "function") {
       return await window.__iuLoadArticlesJsonOnce();
     }
     if ((pathLower.endsWith("/videos.json") || pathLower.endsWith("videos.json")) && typeof window.__iuLoadVideosJsonOnce === "function") {
@@ -2206,7 +2227,7 @@ try {
   }
 
   async function probeRootPaths() {
-    const rootArticlesPath = iuDataUrl("articles.json");
+    const rootArticlesPath = iuHomepageFeedDataUrl();
     const rootVideosPath = iuDataUrl("videos.json");
     const [articlesOk, videosOk] = await Promise.all([
       quickCheckUrl(rootArticlesPath),
@@ -2221,7 +2242,7 @@ try {
     };
   }
 
-  /** Single-flight + memory cache for primary articles.json + videos.json GET (initial load /projects/). */
+  /** Single-flight + memory cache for primary publishable_pool.json + videos.json GET (initial load /projects/). */
   let __iuFeedPrimaryPairInflight = null;
   let __iuFeedPrimaryPairLast = null;
 
@@ -2244,11 +2265,11 @@ try {
     if (__iuFeedPrimaryPairInflight) {
       return await __iuFeedPrimaryPairInflight;
     }
-    const articlesUrl = iuDataUrl("articles.json");
+    const articlesUrl = iuHomepageFeedDataUrl();
     const videosUrl = iuDataUrl("videos.json");
     const p = (async () => {
       const [articlesData, videosData] = await Promise.all([
-        fetchDiag(articlesUrl, "articles"),
+        fetchDiag(articlesUrl, "publishable_pool"),
         fetchDiag(videosUrl, "videos"),
       ]);
       const out = { articlesData, videosData };
@@ -2267,7 +2288,7 @@ try {
 
   // === DATA ENDPOINT OVERRIDE (maintenance-safe) ===
   (function(){
-    const ARTICLES_ENDPOINT = iuDataUrl("articles.json");
+    const ARTICLES_ENDPOINT = iuHomepageFeedDataUrl();
     const VIDEOS_ENDPOINT   = iuDataUrl("videos.json");
 
     if (typeof window.makeDataUrl === "function") {
@@ -15471,7 +15492,7 @@ function buildVideoAsArticleCard(it) {
             throw e;
           }
         } else {
-          const res = await timeoutFetch(iuDataUrl("articles.json"), { cache: "no-store" }, 9000);
+          const res = await timeoutFetch(iuHomepageFeedDataUrl(), { cache: "no-store" }, 9000);
           if (!res.ok) {
             el.textContent = `Články: chyba (${res.status})`;
             selfDiag.articlesState = "FAIL";
@@ -15955,7 +15976,7 @@ function buildVideoAsArticleCard(it) {
       emptyBox.innerHTML = "<p>Načítám data…</p>";
     }
     const preferredEntry = getPreferredPairForLoadData();
-    const baseArticleUrls = [iuDataUrl("articles.json")];
+    const baseArticleUrls = [iuHomepageFeedDataUrl()];
     const baseVideoUrls = [iuDataUrl("videos.json")];
     const articleUrls = buildCandidateListFromPair(preferredEntry, "articles", baseArticleUrls);
     const videoUrls = buildCandidateListFromPair(preferredEntry, "videos", baseVideoUrls);
@@ -15979,7 +16000,7 @@ function buildVideoAsArticleCard(it) {
 
     try {
       const probeUrl = iuDataUrl("_probe.txt");
-      const ARTICLES_URL = iuDataUrl("articles.json");
+      const ARTICLES_URL = iuHomepageFeedDataUrl();
       const VIDEOS_URL = iuDataUrl("videos.json");
       const articlesUrl = ARTICLES_URL;
       const videosUrl = VIDEOS_URL;
@@ -16234,7 +16255,7 @@ function buildVideoAsArticleCard(it) {
       
       // === TOPIC GROUPING ===
       let articlesForFeed = sanitizedArticles;
-      // Média = agregace všech sekcí z articles.json — cluster dedup na /projects/ by globálně zúžil pool (jedna sekce „vyhrává“ v hlavě feedu).
+      // Média = agregace všech sekcí z publishable_pool.json — cluster dedup na /projects/ by globálně zúžil pool (jedna sekce „vyhrává“ v hlavě feedu).
       const skipClusterForProjectsFullPool =
         typeof iuIsProjectsRoute === "function" && iuIsProjectsRoute();
       if (ENABLE_CLUSTER_DEDUP && !skipClusterForProjectsFullPool) {

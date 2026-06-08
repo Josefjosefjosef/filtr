@@ -135,10 +135,12 @@ class PublishablePoolArtifactProofTests(unittest.TestCase):
         self.assertIn('"articles": final', pub)
         self.assertIn("_atomic_write_json(OUT_PATH, payload)", pub)
 
-    def test_homepage_and_assets_unchanged(self) -> None:
+    def test_homepage_feed_wiring_is_phase6c_scope(self) -> None:
+        """Phase 6B pipeline scripts only; homepage pool wiring belongs to Phase 6C."""
         app_src = _read_repo_file("assets/app.js")
+        if "publishable_pool.json" in app_src:
+            self.skipTest("homepage Phase 6C active — see homepage_publishable_pool_phase6c_proof.py")
         self.assertNotIn("publishable_pool", app_src)
-        self.assertNotIn("publishable_pool.json", app_src)
 
     def test_emit_helper_additive_only(self) -> None:
         src = _read_repo_file("scripts/build_articles.py")

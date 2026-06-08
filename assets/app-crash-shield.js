@@ -506,7 +506,7 @@
     return "?v=" + encodeURIComponent(v);
   })();
   const DATA = {
-    articlesUrl: `${PROJECTS_DATA_BASE}/articles.json${dataVerQParam}`,
+    articlesUrl: `${PROJECTS_DATA_BASE}/publishable_pool.json${dataVerQParam}`,
     videosUrl: `${PROJECTS_DATA_BASE}/videos.json${dataVerQParam}`,
     metaUrl: `${PROJECTS_DATA_BASE}/meta.json`,
     statusUrl: `${PROJECTS_DATA_BASE}/status.json`  // status.json se generuje v workflow
