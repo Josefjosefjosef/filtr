@@ -12,6 +12,7 @@ const root = path.join(__dirname, "..");
 const CANONICAL_UA =
   "infoUzelBot/1.0 (+https://infouzel.cz; contact: Info@infoUzel.cz)";
 const PRIMARY_PUBLISH_WORKFLOW = "update-articles.yml";
+const FAST_POOL_PUBLISH_WORKFLOW = "update-articles-fast-pool.yml";
 const WATCHDOG_WORKFLOW_FILE = "update-articles.yml";
 const NIGHTLY_REBUILD_WORKFLOW = "articles-nightly-full-rebuild.yml";
 const ARCHIVE_DIR = "scripts/archive/deprecated/aggregator-v2";
@@ -247,6 +248,7 @@ function main() {
     nightly_only_workflows: [],
     guard_only_workflows: [],
     publish_workflows: [],
+    fast_pool_publish_workflows: [],
     legacy_publish_paths: ["scripts/archive/deprecated/aggregator-v2 → filtr/data/ (DEAD_CODE)"],
     dead_code_candidates: [],
     dead_code_confirmed: deadCodeConfirmed,
@@ -277,6 +279,18 @@ function main() {
       report.active_workflows.push(name);
       report.publish_workflows.push(name);
       prodPublishCount += 1;
+    } else if (name === FAST_POOL_PUBLISH_WORKFLOW) {
+      const tr = parseTriggers(text);
+      if (tr.schedule.length > 0) {
+        fail(`${name} has GitHub schedule`);
+        failed = true;
+      }
+      if (!/iu_fast_pool_publish\.py/.test(text)) {
+        fail(`${name} must invoke iu_fast_pool_publish.py`);
+        failed = true;
+      }
+      report.active_workflows.push(name);
+      report.fast_pool_publish_workflows.push(name);
     } else if (name === NIGHTLY_REBUILD_WORKFLOW) {
       report.nightly_only_workflows.push(name);
     } else if (invokesBuild) {
@@ -318,10 +332,16 @@ function main() {
 
   log(`active_workflows=${JSON.stringify(report.active_workflows)}`);
   log(`publish_workflows=${JSON.stringify(report.publish_workflows)}`);
+  log(`fast_pool_publish_workflows=${JSON.stringify(report.fast_pool_publish_workflows)}`);
   log(`nightly_only_workflows=${JSON.stringify(report.nightly_only_workflows)}`);
   log(`guard_only_workflows=${JSON.stringify(report.guard_only_workflows)}`);
   log(`legacy_workflows=${JSON.stringify(report.legacy_workflows)}`);
-  log(`active_publish_paths=${JSON.stringify([".github/workflows/update-articles.yml → build_articles.py"])}`);
+  log(
+    `active_publish_paths=${JSON.stringify([
+      ".github/workflows/update-articles.yml → build_articles.py",
+      ".github/workflows/update-articles-fast-pool.yml → build_articles.py(ingest) + iu_fast_pool_publish.py",
+    ])}`,
+  );
   log(`active_fetch_helpers=${JSON.stringify(activeFetchHelpers)}`);
   log(`legacy_fetch_helpers=${JSON.stringify(legacyFetchHelpers)}`);
   log(`dead_code_confirmed=${JSON.stringify(deadCodeConfirmed)}`);
