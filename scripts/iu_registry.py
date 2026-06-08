@@ -10,6 +10,7 @@ Phase 2B batch path (RSS_ROTATION_BATCH_RUNTIME=1 + valid rotation_batch_registr
   • batch_id = floor(minute/5) % 4 → A/B/C/D;
   • full batch per tick with 15min SKIPPED_MIN_INTERVAL_FLOOR;
   • overdue P0_HEADLINE_REGISTRY_IDS merged across batches (Phase 4C liveness bypass);
+  • overdue HRY_VERTICAL_LIVENESS_REGISTRY_IDS merged across batches (Phase 5B liveness bypass);
   • invalid/missing registry → legacy fallback.
 """
 from __future__ import annotations
@@ -84,6 +85,21 @@ P0_HEADLINE_REGISTRY_IDS: frozenset[str] = frozenset(
         "zpr_ct24_domaci",
         "spt_sportcz",
     }
+)
+
+# Live Hry vertical feeds — batch liveness bypass when home batch is starved (Phase 5B).
+# Dead registry entries (blocked vortex/sector/nedd) are excluded by registry_active_entries.
+HRY_VERTICAL_LIVENESS_REGISTRY_IDS: frozenset[str] = frozenset(
+    {
+        "hry_zing",
+        "hry_novinky",
+        "hry_indian",
+    }
+)
+HRY_VERTICAL_LIVENESS_REGISTRY_ORDER: tuple[str, ...] = (
+    "hry_zing",
+    "hry_novinky",
+    "hry_indian",
 )
 
 # Native finance RSS feeds — production-liveness guard (Finance min 1 / 2h).
@@ -842,6 +858,75 @@ def _merge_batch_p0_headline_liveness_picks(
     return merged, bypass_added
 
 
+def _hry_vertical_batch_liveness_due(state: dict, entry: dict, now: datetime) -> bool:
+    """
+    Batch runtime Hry vertical bypass (mirrors Phase 4C P0 headline intent).
+
+    Adds overdue live Hry feeds from outside the current batch when the 15min
+    min_interval floor is satisfied. Never-fetched feeds stay on their home batch tick.
+    """
+    eid = str(entry.get("id") or "")
+    if eid not in HRY_VERTICAL_LIVENESS_REGISTRY_IDS:
+        return False
+    if not _source_passes_min_interval_floor(state, entry, now):
+        return False
+    last = _entry_last_checked_at(state, entry)
+    if last is None:
+        return False
+    sla = compute_entry_sla(state, entry, now)
+    return bool(sla.get("overdue"))
+
+
+def _merge_batch_hry_vertical_liveness_picks(
+    picked: list[dict],
+    by_id: dict[str, dict],
+    state: dict,
+    now: datetime,
+    batch_id: str,
+    batch_reg: dict,
+) -> tuple[list[dict], list[dict]]:
+    """
+    Merge overdue live Hry vertical feeds into batch tick selection.
+
+    Batch A/B/C/D membership is unchanged; appends HRY_VERTICAL_LIVENESS_REGISTRY_IDS
+    that are overdue, pass min_interval, and are not already selected.
+    """
+    mapping = batch_reg.get("rotation_batch_by_source_id") or {}
+    picked_ids = {str(e.get("id") or "") for e in picked}
+    seen_urls = {(e.get("feed_url") or "").strip() for e in picked if (e.get("feed_url") or "").strip()}
+    merged: list[dict] = list(picked)
+    bypass_added: list[dict] = []
+
+    for eid in HRY_VERTICAL_LIVENESS_REGISTRY_ORDER:
+        if eid in picked_ids:
+            continue
+        e = by_id.get(eid)
+        if e is None:
+            continue
+        u = (e.get("feed_url") or "").strip()
+        if not u or u in seen_urls:
+            continue
+        sla = compute_entry_sla(state, e, now)
+        if sla.get("in_flight"):
+            continue
+        if not _hry_vertical_batch_liveness_due(state, e, now):
+            continue
+        home_batch = mapping.get(eid)
+        merged.append(e)
+        bypass_added.append(
+            {
+                "source_id": eid,
+                "reason": "HRY_VERTICAL_BATCH_LIVENESS",
+                "home_batch": home_batch,
+                "current_batch": batch_id,
+            }
+        )
+        picked_ids.add(eid)
+        seen_urls.add(u)
+
+    return merged, bypass_added
+
+
 def _select_feeds_for_tick_batch(
     registry: dict,
     state: dict,
@@ -888,11 +973,15 @@ def _select_feeds_for_tick_batch(
     picked, p0_bypass = _merge_batch_p0_headline_liveness_picks(
         picked, by_id, state, now, batch_id, batch_reg
     )
+    picked, hry_bypass = _merge_batch_hry_vertical_liveness_picks(
+        picked, by_id, state, now, batch_id, batch_reg
+    )
 
     tick_meta = {
         "selected_source_ids": [str(e.get("id") or "") for e in picked],
         "skipped_sources": skipped,
         "p0_headline_bypass": p0_bypass,
+        "hry_vertical_bypass": hry_bypass,
         "rotation_mode": "batch",
         "batch_id": batch_id,
         "batch_index": batch_idx,
