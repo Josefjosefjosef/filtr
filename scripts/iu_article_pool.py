@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Phase 3A: clean article pool manifest (read-only telemetry).
+Phase 3A/6B: clean article pool manifest + publishable pool artifact (read-only telemetry).
 
-The clean pool is the post-aggregate article list after fetch, normalize, URL/title
+The publishable pool is the post-aggregate article list after fetch, normalize, URL/title
 clustering, event dedupe, section classification, and quality gates — but before
-release CI guards, PR creation, publish writes, and homepage selection.
+section/topic/source caps, release CI guards, publish writes, and homepage selection.
 
-Manifest path: OUTPUT_DIR/staging/article_pool_manifest.json (gitignored staging tree).
+Staging manifest: OUTPUT_DIR/staging/article_pool_manifest.json (gitignored).
+Public manifest: OUTPUT_DIR/article_pool_manifest.json (telemetry counts at publish).
+Public pool: OUTPUT_DIR/publishable_pool.json (full publishable dataset).
+
 Does not alter articles.json, bootstrap, index, or release guard behavior.
 """
 
@@ -22,7 +25,11 @@ from typing import Any
 from iu_staging import staging_root
 
 POOL_MANIFEST_NAME = "article_pool_manifest.json"
+PUBLIC_POOL_MANIFEST_NAME = "article_pool_manifest.json"
+PUBLISHABLE_POOL_NAME = "publishable_pool.json"
 SCHEMA_VERSION = 1
+PUBLISHABLE_POOL_SCHEMA_VERSION = 1
+UNKNOWN_NOT_EXPORTED = "UNKNOWN_NOT_EXPORTED"
 
 CLEAN_POOL_DEFINITION = (
     "Articles after RSS fetch, normalize, URL dedupe, title clustering, "
@@ -50,6 +57,81 @@ def _source_key(article: dict) -> str:
     return "unknown"
 
 
+def build_publishable_pool_payload(articles: list, *, generated_at: str) -> dict:
+    """Build public publishable_pool.json document (Phase 6B)."""
+    rows = [a for a in (articles or []) if isinstance(a, dict)]
+    per_section = dict(Counter(_section_key(a) for a in rows))
+    per_source = dict(Counter(_source_key(a) for a in rows))
+    return {
+        "generatedAt": generated_at,
+        "schemaVersion": PUBLISHABLE_POOL_SCHEMA_VERSION,
+        "pipelinePhase": "publishable_pool",
+        "articles": rows,
+        "counts": {
+            "total": len(rows),
+            "bySection": per_section,
+            "bySource": per_source,
+        },
+        "stage": {
+            "afterNormalize": True,
+            "afterUrlDedupe": True,
+            "afterEventDedupe": True,
+            "afterClassification": True,
+            "afterQualityChecks": True,
+            "beforeHomepageSelection": True,
+            "beforeRailSelection": True,
+        },
+    }
+
+
+def write_publishable_pool(output_dir: str, payload: dict) -> str:
+    """Persist publishable_pool.json under OUTPUT_DIR. Atomic write."""
+    os.makedirs(output_dir, exist_ok=True)
+    path = os.path.join(output_dir, PUBLISHABLE_POOL_NAME)
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    os.replace(tmp, path)
+    return path
+
+
+def read_publishable_pool(output_dir: str) -> dict | None:
+    path = os.path.join(output_dir, PUBLISHABLE_POOL_NAME)
+    if not os.path.isfile(path):
+        return None
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else None
+    except Exception:
+        return None
+
+
+def write_public_article_pool_manifest(output_dir: str, manifest: dict) -> str:
+    """Persist public telemetry manifest at OUTPUT_DIR/article_pool_manifest.json."""
+    os.makedirs(output_dir, exist_ok=True)
+    path = os.path.join(output_dir, PUBLIC_POOL_MANIFEST_NAME)
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    os.replace(tmp, path)
+    return path
+
+
+def read_public_article_pool_manifest(output_dir: str) -> dict | None:
+    path = os.path.join(output_dir, PUBLIC_POOL_MANIFEST_NAME)
+    if not os.path.isfile(path):
+        return None
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else None
+    except Exception:
+        return None
+
+
 def build_article_pool_manifest(
     bundle: dict,
     *,
@@ -57,8 +139,10 @@ def build_article_pool_manifest(
     ingest_manifest: dict | None = None,
     aggregate_input_count: int | None = None,
     pipeline_phase: str = "aggregate",
+    articles_json_total: int | None = None,
 ) -> dict:
     """Build read-only pool manifest from aggregate bundle (no publish side effects)."""
+    articles_publishable = list(bundle.get("articles_publishable") or [])
     articles_full = list(bundle.get("articles_full") or [])
     articles_final = list(bundle.get("articles_final") or [])
     tel_summary = bundle.get("ingest_telemetry_summary") or {}
@@ -102,26 +186,57 @@ def build_article_pool_manifest(
     suppressed = int(topic_stats.get("suppressed_count") or 0)
     clusters_merged = int(topic_stats.get("clusters_merged") or 0)
 
-    per_section = dict(Counter(_section_key(a) for a in articles_full if isinstance(a, dict)))
-    per_source = dict(Counter(_source_key(a) for a in articles_full if isinstance(a, dict)))
+    publishable_rows = articles_publishable if articles_publishable else articles_full
+    per_section = dict(Counter(_section_key(a) for a in publishable_rows if isinstance(a, dict)))
+    per_source = dict(Counter(_source_key(a) for a in publishable_rows if isinstance(a, dict)))
 
-    clean_count = len(articles_full)
+    publishable_count = len(publishable_rows)
+    clean_count = publishable_count
     final_count = len(articles_final)
+    json_total = int(articles_json_total) if articles_json_total is not None else final_count
+    after_limits = int(pool_stage.get("after_section_limits_items") or 0)
+    if after_limits <= 0 and articles_full:
+        after_limits = len(articles_full)
+
+    url_dedupe_article_loss = UNKNOWN_NOT_EXPORTED
+    if new_built and cluster_count and new_built > cluster_count:
+        url_dedupe_article_loss = max(0, new_built - cluster_count)
+
+    event_dedupe_loss = (
+        int(pool_stage.get("event_dedupe_suppressed_pre_limits") or 0)
+        if pool_stage.get("event_dedupe_suppressed_pre_limits") is not None
+        else (suppressed if suppressed else UNKNOWN_NOT_EXPORTED)
+    )
+
+    section_limits_loss = UNKNOWN_NOT_EXPORTED
+    if publishable_count and after_limits >= 0:
+        section_limits_loss = max(0, publishable_count - after_limits)
 
     return {
         "schemaVersion": SCHEMA_VERSION,
         "generatedAt": str(bundle.get("generated_at") or _iso_now()),
         "source_run_id": run_id,
         "pipeline_phase": pipeline_phase,
-        "pool_boundary": "post_dedupe_pre_release_guards",
+        "pool_boundary": "post_event_dedupe_pre_section_limits",
         "clean_article_pool_definition": CLEAN_POOL_DEFINITION,
+        "POOL_TOTAL": publishable_count,
+        "PUBLISHABLE_POOL_TOTAL": publishable_count,
+        "ARTICLES_JSON_TOTAL": json_total,
+        "HOMEPAGE_VISIBLE_ESTIMATE": UNKNOWN_NOT_EXPORTED,
+        "UNIQUE_ARTICLES_LOST_AFTER_DEDUPE": url_dedupe_article_loss,
+        "UNIQUE_ARTICLES_LOST_AFTER_EVENT_DEDUPE": event_dedupe_loss,
+        "UNIQUE_ARTICLES_LOST_AFTER_SECTION_LIMITS": section_limits_loss,
+        "UNIQUE_ARTICLES_LOST_AFTER_HOMEPAGE_SELECTION_ESTIMATE": UNKNOWN_NOT_EXPORTED,
         "total_raw_items": total_raw,
         "total_normalized": total_normalized,
         "total_after_url_dedupe": after_url or None,
-        "total_after_event_dedupe": clean_count,
+        "total_after_event_dedupe": publishable_count,
+        "total_publishable_pool": publishable_count,
         "total_clean_pool": clean_count,
-        "articles_full_count": clean_count,
+        "articles_publishable_count": publishable_count,
+        "articles_full_count": len(articles_full),
         "articles_final_count": final_count,
+        "articles_json_count": json_total,
         "cluster_count": cluster_count or None,
         "new_articles_built": new_built or None,
         "per_section_counts": per_section,

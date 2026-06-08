@@ -79,6 +79,17 @@ def _fixture_bundle() -> dict:
     ]
     return {
         "generated_at": "2026-06-07T22:45:00Z",
+        "articles_publishable": list(articles) + [
+            {
+                "topic": "finance",
+                "section": "finance",
+                "title": "Extra publishable",
+                "publishedAt": "2026-06-07T10:00:00Z",
+                "feedId": "fin_hn",
+                "url": "https://example.com/extra",
+                "sources": [{"name": "HN", "url": "https://example.com/extra"}],
+            }
+        ],
         "articles_full": articles,
         "articles_final": list(articles),
         "ingest_telemetry_summary": {
@@ -92,6 +103,9 @@ def _fixture_bundle() -> dict:
             "after_url_dedupe_items": 150,
             "cluster_count": 145,
             "new_articles_built": 140,
+            "publishable_pool_items": 4,
+            "after_section_limits_items": 3,
+            "event_dedupe_suppressed_pre_limits": 2,
         },
     }
 
@@ -112,7 +126,8 @@ class ArticlePoolManifestProofTests(unittest.TestCase):
         for key in REQUIRED_MANIFEST_KEYS:
             self.assertIn(key, manifest, msg=f"missing {key}")
         self.assertEqual(manifest["schemaVersion"], SCHEMA_VERSION)
-        self.assertEqual(manifest["total_clean_pool"], 3)
+        self.assertEqual(manifest["total_clean_pool"], 4)
+        self.assertEqual(manifest["PUBLISHABLE_POOL_TOTAL"], 4)
         self.assertEqual(manifest["ready_for_release_count"], 3)
         self.assertEqual(manifest["blocked_by_release_guard_count"], 0)
         self.assertEqual(manifest["ingest_publish_decoupling_active"], False)
@@ -128,7 +143,7 @@ class ArticlePoolManifestProofTests(unittest.TestCase):
             self.assertTrue(os.path.isfile(path))
             loaded = read_article_pool_manifest(data_dir)
             self.assertIsInstance(loaded, dict)
-            self.assertEqual(loaded.get("total_clean_pool"), 3)
+            self.assertEqual(loaded.get("total_clean_pool"), 4)
 
     def test_checkpoint_bundle_unchanged_by_pool_metadata(self) -> None:
         src = _read_repo_file("scripts/build_articles.py")
@@ -137,11 +152,11 @@ class ArticlePoolManifestProofTests(unittest.TestCase):
         cp_block = src.split("def _checkpoint_bundle_for_disk", 1)[1].split("\ndef ", 1)[0]
         self.assertNotIn("_pool_stage", cp_block)
 
-    def test_publish_path_not_modified_by_emit_helper(self) -> None:
+    def test_publish_path_emits_publishable_pool_additive(self) -> None:
         src = _read_repo_file("scripts/build_articles.py")
         pub = src.split("def _publish_article_outputs", 1)[1].split("\ndef ", 1)[0]
-        self.assertNotIn("article_pool_manifest", pub)
-        self.assertNotIn("iu_article_pool", pub)
+        self.assertIn("_emit_publishable_pool_artifacts(bundle, final)", pub)
+        self.assertIn('"articles": final', pub)
 
     def test_dedupe_functions_unchanged_surface(self) -> None:
         src = _read_repo_file("scripts/build_articles.py")
@@ -167,7 +182,7 @@ class ArticlePoolManifestProofTests(unittest.TestCase):
             self.assertTrue(os.path.isfile(path))
             with open(path, encoding="utf-8") as f:
                 doc = json.load(f)
-            self.assertEqual(doc["total_clean_pool"], 3)
+            self.assertEqual(doc["total_clean_pool"], 4)
             self.assertEqual(doc["per_section_counts"]["hry"], 1)
 
     def test_clean_pool_definition_matches_spec(self) -> None:

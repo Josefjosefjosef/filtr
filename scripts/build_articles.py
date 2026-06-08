@@ -2998,6 +2998,7 @@ def _aggregate_pipeline(
     merged_articles = [a for a in merged_articles if a is not None]
     merged_articles = [_apply_second_layer_targeted_section_cleanup(a) for a in merged_articles]
     merged_articles = _apply_conservative_topic_clustering(merged_articles)
+    pre_limit_event_stats = dict(_TOPIC_DEDUPE_LAST_STATS or {})
     for a in merged_articles:
         a["duplicatePenalty"] = float(a.get("duplicatePenalty") or 1.0)
         a["displayScore"] = compute_display_score(a)
@@ -3007,7 +3008,11 @@ def _aggregate_pipeline(
     merged_articles = sorted(merged_articles, key=lambda a: str(a.get("publishedAt") or ""), reverse=True)
     merged_articles = _apply_source_display_to_articles(merged_articles)
 
+    # Phase 6B export point: post event-dedupe + quality gates, pre section/topic/source caps.
+    publishable_pool = list(merged_articles)
+
     out_articles = apply_per_section_limits_then_cap(merged_articles)
+    after_section_limits_count = len(out_articles)
     out_articles = apply_per_section_published_retention(prev_list, out_articles)
     # Retention can re-introduce older same-event URLs from prev public bundle.
     out_articles = _apply_conservative_topic_clustering(out_articles)
@@ -3033,6 +3038,7 @@ def _aggregate_pipeline(
 
     return {
         "generated_at": generated_at,
+        "articles_publishable": publishable_pool,
         "articles_full": out_articles,
         "articles_final": final,
         "per_feed_report": per_feed_report,
@@ -3046,6 +3052,9 @@ def _aggregate_pipeline(
             "after_url_dedupe_items": len(deduped_items),
             "cluster_count": len(clusters),
             "new_articles_built": len(new_articles),
+            "publishable_pool_items": len(publishable_pool),
+            "after_section_limits_items": after_section_limits_count,
+            "event_dedupe_suppressed_pre_limits": int(pre_limit_event_stats.get("suppressed_count") or 0),
         },
     }
 
@@ -3182,6 +3191,7 @@ def _publish_article_outputs(bundle: dict) -> int:
 
     _atomic_write_json(OUT_PATH, payload)
     _emit_bootstrap_json(final, generated_at)
+    _emit_publishable_pool_artifacts(bundle, final)
 
     health_payload = {
         "updatedAt": generated_at,
@@ -3392,6 +3402,47 @@ def _publish_article_outputs(bundle: dict) -> int:
     return 0
 
 
+def _emit_publishable_pool_artifacts(bundle: dict, articles_json_list: list) -> None:
+    """Phase 6B: write publishable_pool.json + public article_pool_manifest.json (additive only)."""
+    try:
+        from iu_article_pool import (
+            build_article_pool_manifest,
+            build_publishable_pool_payload,
+            write_public_article_pool_manifest,
+            write_publishable_pool,
+        )
+
+        generated_at = str(bundle.get("generated_at") or iso_now_z())
+        publishable_raw = list(bundle.get("articles_publishable") or [])
+        if not publishable_raw:
+            print(
+                "WARN: publishable_pool skipped — articles_publishable missing "
+                "(re-run aggregate after deploy)",
+                flush=True,
+            )
+            return
+        publishable_enriched = enrich_article_list(publishable_raw)
+        pool_payload = build_publishable_pool_payload(
+            publishable_enriched, generated_at=generated_at
+        )
+        pool_path = write_publishable_pool(OUTPUT_DIR, pool_payload)
+        json_total = len(articles_json_list or [])
+        manifest = build_article_pool_manifest(
+            bundle,
+            articles_json_total=json_total,
+            pipeline_phase="publish",
+        )
+        manifest_path = write_public_article_pool_manifest(OUTPUT_DIR, manifest)
+        print(
+            f"[PUBLISHABLE_POOL] written {pool_path} total={pool_payload['counts']['total']} "
+            f"articles_json={json_total}",
+            flush=True,
+        )
+        print(f"[ARTICLE_POOL_MANIFEST] public telemetry {manifest_path}", flush=True)
+    except Exception as e:
+        print("WARN: publishable_pool artifact write failed:", str(e), flush=True)
+
+
 def _emit_article_pool_manifest(
     bundle: dict,
     handoff_meta: dict | None,
@@ -3465,6 +3516,7 @@ def _checkpoint_bundle_for_disk(bundle: dict, handoff_meta: dict | None = None) 
     rv = reg.get("version") if isinstance(reg, dict) else None
     out = {
         "generated_at": bundle["generated_at"],
+        "articles_publishable": bundle.get("articles_publishable") or [],
         "articles_full": bundle["articles_full"],
         "articles_final": bundle["articles_final"],
         "per_feed_report": bundle["per_feed_report"],
@@ -3496,6 +3548,7 @@ def _bundle_from_checkpoint(cp: dict) -> dict | None:
                 yt_restored.append(deserialize_youtube_row(r))
     return {
         "generated_at": cp["generated_at"],
+        "articles_publishable": cp.get("articles_publishable") or [],
         "articles_full": cp["articles_full"],
         "articles_final": cp["articles_final"],
         "per_feed_report": cp["per_feed_report"],
