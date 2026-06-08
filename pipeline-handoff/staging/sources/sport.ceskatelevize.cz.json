@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.ceskatelevize.cz",
-  "ingestedAt": "2026-06-08T04:32:30.021597Z",
+  "ingestedAt": "2026-06-08T05:12:14.691711Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Na mistrovství světa v Brně se můžu připravit ještě líp, říká Ondra",
+      "url": "https://sport.ceskatelevize.cz/clanek/lezeni/na-mistrovstvi-sveta-v-brne-se-muzu-pripravit-jeste-lip-rika-lezec-ondra-157261",
+      "dt": "2026-06-08T05:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "brně",
+        "ještě",
+        "líp",
+        "mistrovství",
+        "můžu",
+        "ondra",
+        "připravit",
+        "světa",
+        "říká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "sport.ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -746,35 +772,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "sport.ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Satkové fandila v Troji sestra. Bylo to krásné, hned doběhla do cíle a brečela, řekla stříbrná kanoistka",
-      "url": "https://sport.ceskatelevize.cz/clanek/vodni-slalom/martine-satkove-fandila-v-troji-sestra-bylo-to-krasne-hned-dobehla-do-cile-a-brecela-rekla-157236",
-      "dt": "2026-06-06T15:35:52Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "brečela",
-        "cíle",
-        "doběhla",
-        "fandila",
-        "hned",
-        "kanoistka",
-        "krásné",
-        "satkové",
-        "sestra",
-        "stříbrná",
-        "troji",
-        "řekla"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "sport.ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +782,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39116,
+      "bytes": 39118,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,7 +819,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-08T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -837,6 +834,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na mistrovství světa v Brně se můžu připravit ještě líp, říká Ondra",
+            "publishedAt": "2026-06-08T05:00:00Z"
+          },
           {
             "title": "Skupina K: Portugalské hvězdy, skvělí Kolumbijci a dva týmy, které chtějí překvapit",
             "publishedAt": "2026-06-08T04:00:00Z"
@@ -864,10 +865,6 @@
           {
             "title": "Volleringová to dokázala, po Tour de France a Vueltě vyhrála i Giro",
             "publishedAt": "2026-06-07T16:27:10Z"
-          },
-          {
-            "title": "Ondra obsadil v lezení na obtížnost na SP v Praze páté místo, vyhráli Tri Ramadani a Sandersová",
-            "publishedAt": "2026-06-07T15:56:07Z"
           }
         ]
       }

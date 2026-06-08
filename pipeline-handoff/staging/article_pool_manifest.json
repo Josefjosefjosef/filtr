@@ -1,23 +1,23 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-08T04:47:49.731349Z",
-  "source_run_id": "27116109251",
-  "pipeline_phase": "aggregate",
+  "generatedAt": "2026-06-08T05:12:14.748262Z",
+  "source_run_id": "27117322441",
+  "pipeline_phase": "ingest_incremental",
   "pool_boundary": "post_dedupe_pre_release_guards",
   "clean_article_pool_definition": "Articles after RSS fetch, normalize, URL dedupe, title clustering, event-level dedupe, section classification, and quality/relevance checks; before release guards, PR creation, publish, and homepage selection.",
   "total_raw_items": 349,
   "total_normalized": 337,
   "total_after_url_dedupe": 180,
-  "total_after_event_dedupe": 14570,
-  "total_clean_pool": 14570,
-  "articles_full_count": 14570,
-  "articles_final_count": 14570,
+  "total_after_event_dedupe": 14571,
+  "total_clean_pool": 14571,
+  "articles_full_count": 14571,
+  "articles_final_count": 14571,
   "cluster_count": 180,
   "new_articles_built": 180,
   "per_section_counts": {
     "finance": 2637,
+    "sport": 4383,
     "aktualne": 5234,
-    "sport": 4382,
     "zdravi": 1042,
     "veda": 79,
     "pocasi": 122,
@@ -30,14 +30,14 @@
   },
   "per_source_counts": {
     "fin_penize": 184,
-    "zpr_idnes_zpravy": 1319,
-    "fin_faei": 216,
-    "fin_e15": 609,
+    "spt_idnes": 856,
     "spt_ctsport": 557,
+    "zpr_idnes_zpravy": 1319,
     "spt_isport": 875,
+    "fin_e15": 609,
+    "fin_faei": 216,
     "zdr_prozeny_zdravi": 243,
     "fin_idnes_ekonomika": 138,
-    "spt_idnes": 855,
     "zpr_tydenikpolicie": 423,
     "ved_vtm": 76,
     "zpr_novinky_zahranicni": 72,
@@ -109,16 +109,16 @@
   },
   "event_cluster_counts": 0,
   "suppressed_duplicate_count": 0,
-  "ready_for_release_count": 14570,
+  "ready_for_release_count": 14571,
   "blocked_by_release_guard_count": 0,
   "reason_if_not_released": "release_guards_evaluated_in_separate_publish_job",
   "ingest_publish_decoupling_active": false,
   "handoffMeta": {
-    "stagingSnapshotIngestRunId": "27116109251",
-    "aggregateWorkflowRunId": "27116109251"
+    "stagingSnapshotIngestRunId": "27117322441",
+    "aggregateWorkflowRunId": "27117322441"
   },
   "ingest_manifest_ref": {
-    "ingestedAt": "2026-06-08T04:32:30.021597Z",
+    "ingestedAt": "2026-06-08T05:12:14.691711Z",
     "sourceBatchKeys": [
       "betterlife.cz",
       "e15.cz",
@@ -135,6 +135,6 @@
       "youtube.com",
       "zdravezpravy.cz"
     ],
-    "pipelineRunId": "27116109251"
+    "pipelineRunId": "27117322441"
   }
 }

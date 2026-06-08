@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-08T04:32:30.021597Z",
+  "ingestedAt": "2026-06-08T05:12:14.691711Z",
   "items": [
     {
       "section": "finance",
@@ -788,6 +788,58 @@
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "Arménský premiér Pašinjan se prohlásil za vítěze voleb, usiluje o sblížení s EU",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/armensky-premier-pasinjan-se-prohlasil-za-viteze-voleb-jeho-strana-vede.A260608_065638_zahranicni_tbr",
+      "dt": "2026-06-08T04:59:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "arménský",
+        "pašinjan",
+        "premiér",
+        "prohlásil",
+        "sblížení",
+        "usiluje",
+        "voleb",
+        "vítěze"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Izrael nevyslyšel Trumpa a vyslal rakety na Írán jako odvetu za noční útok",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/izrael-hlasi-udery-na-vojenske-cile-v-iranu-exploze-i-v-teheranu.A260608_033343_zahranicni_air",
+      "dt": "2026-06-08T04:40:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "izrael",
+        "jako",
+        "nevyslyšel",
+        "noční",
+        "odvetu",
+        "rakety",
+        "trumpa",
+        "vyslal",
+        "írán",
+        "útok"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "Začátek týdne bude slunečný. Od úterý přijdou deště a pokles teplot",
       "url": "https://www.idnes.cz/zpravy/domaci/predpoved-pocasi-cerven-dest-teploty-chladno.A260608_060225_domaci_lysa",
       "dt": "2026-06-08T04:26:00Z",
@@ -802,33 +854,6 @@
         "týdne",
         "začátek",
         "úterý"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Izrael nevyslyšel Trumpa a vyslal rakety na Írán jako odvetu za noční útok",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/izrael-hlasi-udery-na-vojenske-cile-v-iranu-exploze-i-v-teheranu.A260608_033343_zahranicni_air",
-      "dt": "2026-06-08T04:15:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "izrael",
-        "jako",
-        "nevyslyšel",
-        "noční",
-        "odvetu",
-        "rakety",
-        "trumpa",
-        "vyslal",
-        "írán",
-        "útok"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1542,31 +1567,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Šelma z jihu je na postupu. Šakal může osídlit až tři čtvrtiny Evropy",
-      "url": "https://www.idnes.cz/zpravy/domaci/selma-evropa-zvire-vyskyt-cesko-klimaticka-zmena.A260605_132101_domaci_row",
-      "dt": "2026-06-07T10:28:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "evropy",
-        "jihu",
-        "osídlit",
-        "postupu",
-        "tři",
-        "čtvrtiny",
-        "šakal",
-        "šelma"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1671,8 +1671,8 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48213,
-      "reason": "fetch_timeout",
+      "bytes": 47853,
+      "reason": "",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 30,
@@ -1708,7 +1708,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-08T04:26:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T04:59:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1725,12 +1725,16 @@
         },
         "sample_titles": [
           {
-            "title": "Začátek týdne bude slunečný. Od úterý přijdou deště a pokles teplot",
-            "publishedAt": "2026-06-08T04:26:00Z"
+            "title": "Arménský premiér Pašinjan se prohlásil za vítěze voleb, usiluje o sblížení s EU",
+            "publishedAt": "2026-06-08T04:59:00Z"
           },
           {
             "title": "Izrael nevyslyšel Trumpa a vyslal rakety na Írán jako odvetu za noční útok",
-            "publishedAt": "2026-06-08T04:15:00Z"
+            "publishedAt": "2026-06-08T04:40:00Z"
+          },
+          {
+            "title": "Začátek týdne bude slunečný. Od úterý přijdou deště a pokles teplot",
+            "publishedAt": "2026-06-08T04:26:00Z"
           },
           {
             "title": "Pavel přijde na vládu, která o účasti na summitu NATO rozhodne za dva týdny",
@@ -1750,10 +1754,6 @@
           },
           {
             "title": "Soukromá obrana proti dronům. Ukrajina povolila firmám protiletecké „jednotky“",
-            "publishedAt": "2026-06-07T22:00:00Z"
-          },
-          {
-            "title": "Akce, která se nebude opakovat. 7 měsíců iDNES Premium za pouhých 49 Kč",
             "publishedAt": "2026-06-07T22:00:00Z"
           }
         ]
