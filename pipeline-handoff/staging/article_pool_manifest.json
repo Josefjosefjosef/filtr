@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-08T03:28:54.240743Z",
-  "source_run_id": "27113781179",
-  "pipeline_phase": "aggregate",
+  "generatedAt": "2026-06-08T03:52:11.717379Z",
+  "source_run_id": "27114900203",
+  "pipeline_phase": "ingest_incremental",
   "pool_boundary": "post_dedupe_pre_release_guards",
   "clean_article_pool_definition": "Articles after RSS fetch, normalize, URL dedupe, title clustering, event-level dedupe, section classification, and quality/relevance checks; before release guards, PR creation, publish, and homepage selection.",
-  "total_raw_items": 319,
-  "total_normalized": 307,
+  "total_raw_items": 349,
+  "total_normalized": 337,
   "total_after_url_dedupe": 180,
   "total_after_event_dedupe": 14570,
   "total_clean_pool": 14570,
@@ -16,9 +16,9 @@
   "new_articles_built": 180,
   "per_section_counts": {
     "finance": 2637,
+    "aktualne": 5234,
     "sport": 4382,
     "zdravi": 1042,
-    "aktualne": 5234,
     "veda": 79,
     "pocasi": 122,
     "krimi": 445,
@@ -30,10 +30,11 @@
   },
   "per_source_counts": {
     "fin_penize": 184,
+    "fin_e15": 609,
+    "zpr_idnes_zpravy": 1319,
     "spt_isport": 875,
     "zdr_prozeny_zdravi": 243,
-    "zpr_idnes_zpravy": 1320,
-    "fin_e15": 609,
+    "fin_idnes_ekonomika": 138,
     "spt_idnes": 855,
     "spt_ctsport": 557,
     "zpr_tydenikpolicie": 423,
@@ -67,7 +68,6 @@
     "kul_vlasta": 69,
     "zpr_hlidacipes": 106,
     "zpr_ceskajustice": 172,
-    "fin_idnes_ekonomika": 137,
     "ved_technet": 146,
     "fin_sz_byznys": 259,
     "ved_novinky": 29,
@@ -114,11 +114,11 @@
   "reason_if_not_released": "release_guards_evaluated_in_separate_publish_job",
   "ingest_publish_decoupling_active": false,
   "handoffMeta": {
-    "stagingSnapshotIngestRunId": "27113781179",
-    "aggregateWorkflowRunId": "27113781179"
+    "stagingSnapshotIngestRunId": "27114900203",
+    "aggregateWorkflowRunId": "27114900203"
   },
   "ingest_manifest_ref": {
-    "ingestedAt": "2026-06-08T03:13:22.089253Z",
+    "ingestedAt": "2026-06-08T03:52:11.649118Z",
     "sourceBatchKeys": [
       "betterlife.cz",
       "e15.cz",
@@ -135,6 +135,6 @@
       "youtube.com",
       "zdravezpravy.cz"
     ],
-    "pipelineRunId": "27113781179"
+    "pipelineRunId": "27114900203"
   }
 }
