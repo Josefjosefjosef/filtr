@@ -430,6 +430,71 @@ def is_pipeline_failure_status(overall: str) -> bool:
     return alert_level_for_overall_status(overall) == ALERT_RED
 
 
+def operational_summary_kv(status: dict, overall: str) -> dict[str, str]:
+    """Canonical KEY=VALUE lines for Phase 3D-B-2 workflow closeout."""
+    row = summary_row(status)
+    alert = alert_level_for_overall_status(overall)
+    return {
+        "INGEST_STATUS": row["INGEST"],
+        "AGGREGATE_STATUS": row["AGGREGATE"],
+        "CLEAN_POOL_STATUS": row["POOL"],
+        "RELEASE_STATUS": row["RELEASE"],
+        "PUBLISH_STATUS": row["PUBLISH"],
+        "PIPELINE_OVERALL_STATUS": overall,
+        "PIPELINE_ALERT_LEVEL": alert,
+    }
+
+
+def closeout_exit_code_for_overall(overall: str) -> int:
+    """GREEN and YELLOW closeout succeed; RED fails the closeout job."""
+    if alert_level_for_overall_status(overall) == ALERT_RED:
+        return 1
+    return 0
+
+
+def append_operational_closeout_github_summary(status: dict, overall: str) -> None:
+    path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not path:
+        return
+    kv = operational_summary_kv(status, overall)
+    alert = kv["PIPELINE_ALERT_LEVEL"]
+    lines = [
+        "",
+        "## Pipeline operational closeout (Phase 3D-B-2)",
+        "",
+        f"INGEST_STATUS={kv['INGEST_STATUS']}",
+        f"AGGREGATE_STATUS={kv['AGGREGATE_STATUS']}",
+        f"CLEAN_POOL_STATUS={kv['CLEAN_POOL_STATUS']}",
+        f"RELEASE_STATUS={kv['RELEASE_STATUS']}",
+        f"PUBLISH_STATUS={kv['PUBLISH_STATUS']}",
+        f"PIPELINE_OVERALL_STATUS={kv['PIPELINE_OVERALL_STATUS']}",
+        "",
+        "| Field | Value |",
+        "| --- | --- |",
+        f"| INGEST_STATUS | {kv['INGEST_STATUS']} |",
+        f"| AGGREGATE_STATUS | {kv['AGGREGATE_STATUS']} |",
+        f"| CLEAN_POOL_STATUS | {kv['CLEAN_POOL_STATUS']} |",
+        f"| RELEASE_STATUS | {kv['RELEASE_STATUS']} |",
+        f"| PUBLISH_STATUS | {kv['PUBLISH_STATUS']} |",
+        f"| PIPELINE_OVERALL_STATUS | {kv['PIPELINE_OVERALL_STATUS']} |",
+        f"| PIPELINE_ALERT_LEVEL | {alert} |",
+        "",
+    ]
+    if status.get("release_status") == RELEASE_BLOCKED:
+        lines.extend(
+            [
+                f"Release blocked by: `{status.get('guard_name') or status.get('release_blocked_by') or 'unknown'}`",
+                "",
+                f"Reason: {status.get('release_blocked_reason') or 'n/a'}",
+                "",
+                "Ingest and aggregate succeeded; publish was skipped because a release guard failed.",
+                "",
+            ]
+        )
+    with open(path, "a", encoding="utf-8") as f:
+        f.write("\n".join(lines))
+
+
 def append_github_summary(status: dict) -> None:
     path = os.environ.get("GITHUB_STEP_SUMMARY")
     if not path:

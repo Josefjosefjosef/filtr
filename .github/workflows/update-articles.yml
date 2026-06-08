@@ -282,6 +282,8 @@ jobs:
       - article_pipeline_ingest
       - article_pipeline_aggregate
     if: needs.pipeline_gate.outputs.proceed == 'true'
+    # Phase 3D-B-2: allow operational closeout when release guards fail (job still records failure).
+    continue-on-error: true
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
@@ -908,3 +910,43 @@ jobs:
           path: projects/data/staging/article_pipeline_phase_status.json
           retention-days: 30
           if-no-files-found: warn
+
+  pipeline_operational_closeout:
+    needs:
+      - pipeline_gate
+      - cancel_concurrency_zombies
+      - article_pipeline_ingest
+      - article_pipeline_aggregate
+      - article_data_release
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Download pipeline phase status artifact
+        if: always()
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: pipeline-phase-status-${{ github.run_id }}
+          path: ${{ runner.temp }}/phase-status
+
+      - name: Pipeline operational closeout (Phase 3D-B-2)
+        env:
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PHASE_STATUS_PATH: ${{ runner.temp }}/phase-status/article_pipeline_phase_status.json
+        run: |
+          set -euo pipefail
+          python scripts/iu_pipeline_operational_closeout.py run
