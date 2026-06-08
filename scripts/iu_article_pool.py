@@ -29,6 +29,9 @@ PUBLIC_POOL_MANIFEST_NAME = "article_pool_manifest.json"
 PUBLISHABLE_POOL_NAME = "publishable_pool.json"
 SCHEMA_VERSION = 1
 PUBLISHABLE_POOL_SCHEMA_VERSION = 1
+ARCHITECTURE_VERSION = "7A"
+HOMEPAGE_FEED_DATA_SOURCE = "publishable_pool.json"
+HOMEPAGE_READONLY_SELECTION = "YES"
 UNKNOWN_NOT_EXPORTED = "UNKNOWN_NOT_EXPORTED"
 
 CLEAN_POOL_DEFINITION = (
@@ -212,6 +215,20 @@ def build_article_pool_manifest(
     if publishable_count and after_limits >= 0:
         section_limits_loss = max(0, publishable_count - after_limits)
 
+    pool_generated_at = str(bundle.get("generated_at") or _iso_now())
+    publishable_minus_articles = max(0, publishable_count - json_total)
+
+    architecture_integrity = {
+        "ARCHITECTURE_VERSION": ARCHITECTURE_VERSION,
+        "PUBLISHABLE_POOL_TOTAL": publishable_count,
+        "ARTICLES_JSON_TOTAL": json_total,
+        "PUBLISHABLE_MINUS_ARTICLES": publishable_minus_articles,
+        "HOMEPAGE_DATA_SOURCE": HOMEPAGE_FEED_DATA_SOURCE,
+        "HOMEPAGE_READONLY_SELECTION": HOMEPAGE_READONLY_SELECTION,
+        "PUBLISHABLE_POOL_SCHEMA_VERSION": PUBLISHABLE_POOL_SCHEMA_VERSION,
+        "PUBLISHABLE_POOL_GENERATED_AT": pool_generated_at,
+    }
+
     return {
         "schemaVersion": SCHEMA_VERSION,
         "generatedAt": str(bundle.get("generated_at") or _iso_now()),
@@ -260,7 +277,75 @@ def build_article_pool_manifest(
         }
         if isinstance(ingest_manifest, dict)
         else None,
+        **architecture_integrity,
     }
+
+
+def count_publishable_pool_articles(pool: dict | None) -> int:
+    if not isinstance(pool, dict):
+        return 0
+    counts = pool.get("counts")
+    if isinstance(counts, dict):
+        total = counts.get("total")
+        if isinstance(total, int):
+            return total
+    articles = pool.get("articles")
+    if isinstance(articles, list):
+        return len(articles)
+    return 0
+
+
+def count_articles_json_total(payload: dict | None) -> int:
+    if not isinstance(payload, dict):
+        return 0
+    articles = payload.get("articles")
+    if isinstance(articles, list):
+        return len(articles)
+    return 0
+
+
+def validate_publishable_pool_schema(pool: dict | None) -> list[str]:
+    """Return schema validation errors (empty list = valid)."""
+    errors: list[str] = []
+    if not isinstance(pool, dict):
+        return ["publishable_pool payload is not an object"]
+    if pool.get("schemaVersion") != PUBLISHABLE_POOL_SCHEMA_VERSION:
+        errors.append(
+            f"schemaVersion expected {PUBLISHABLE_POOL_SCHEMA_VERSION}, got {pool.get('schemaVersion')!r}"
+        )
+    if pool.get("pipelinePhase") != "publishable_pool":
+        errors.append(f"pipelinePhase expected publishable_pool, got {pool.get('pipelinePhase')!r}")
+    if not str(pool.get("generatedAt") or "").strip():
+        errors.append("generatedAt missing")
+    articles = pool.get("articles")
+    if not isinstance(articles, list):
+        errors.append("articles must be an array")
+    elif not articles:
+        errors.append("articles array is empty")
+    stage = pool.get("stage")
+    if not isinstance(stage, dict):
+        errors.append("stage object missing")
+    else:
+        for flag in (
+            "beforeHomepageSelection",
+            "afterEventDedupe",
+            "afterClassification",
+        ):
+            if stage.get(flag) is not True:
+                errors.append(f"stage.{flag} must be true")
+    return errors
+
+
+def read_articles_json(output_dir: str) -> dict | None:
+    path = os.path.join(output_dir, "articles.json")
+    if not os.path.isfile(path):
+        return None
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else None
+    except Exception:
+        return None
 
 
 def write_article_pool_manifest(output_dir: str, manifest: dict) -> str:

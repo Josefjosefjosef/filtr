@@ -45,6 +45,15 @@ jobs:
           python -m py_compile scripts/iu_feed_classification.py
           python -m py_compile scripts/validate_feed_classification.py
           python -m py_compile scripts/validate_articles_bootstrap.py
+          python -m py_compile scripts/iu_article_pool.py
+          python -m py_compile scripts/publishable_pool_architecture_guard.py
+          python -m py_compile scripts/publishable_pool_architecture_proof.py
+
+      - name: Publishable pool architecture guard (Phase 7A)
+        run: python scripts/publishable_pool_architecture_guard.py
+
+      - name: Publishable pool architecture proof (Phase 7A)
+        run: python scripts/publishable_pool_architecture_proof.py
 
       - name: Počasíčko / pocasicko export guard
         run: python scripts/weather_pocasicko_guard.py

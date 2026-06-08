@@ -20,6 +20,7 @@ if ROOT not in sys.path:
     sys.path.insert(0, os.path.join(ROOT, "scripts"))
 
 from iu_article_pool import (  # noqa: E402
+    ARCHITECTURE_VERSION,
     CLEAN_POOL_DEFINITION,
     POOL_MANIFEST_NAME,
     SCHEMA_VERSION,
@@ -129,6 +130,10 @@ class ArticlePoolManifestProofTests(unittest.TestCase):
         self.assertEqual(manifest["total_clean_pool"], 4)
         self.assertEqual(manifest["PUBLISHABLE_POOL_TOTAL"], 4)
         self.assertEqual(manifest["ready_for_release_count"], 3)
+        self.assertEqual(manifest["ARCHITECTURE_VERSION"], ARCHITECTURE_VERSION)
+        self.assertEqual(manifest["HOMEPAGE_DATA_SOURCE"], "publishable_pool.json")
+        self.assertEqual(manifest["HOMEPAGE_READONLY_SELECTION"], "YES")
+        self.assertEqual(manifest["PUBLISHABLE_MINUS_ARTICLES"], 1)
         self.assertEqual(manifest["blocked_by_release_guard_count"], 0)
         self.assertEqual(manifest["ingest_publish_decoupling_active"], False)
         self.assertIn("event-level dedupe", manifest["clean_article_pool_definition"])
