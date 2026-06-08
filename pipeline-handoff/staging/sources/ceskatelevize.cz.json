@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-08T11:07:12.685006Z",
+  "ingestedAt": "2026-06-08T11:52:46.212671Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ostravská zoo odchytila uprchlého lemura, krmil se třešněmi",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/ostravska-zoo-odchytila-uprchleho-lemura-krmil-se-tresnemi-374343",
+      "dt": "2026-06-08T11:11:23Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "krmil",
+        "lemura",
+        "odchytila",
+        "ostravská",
+        "třešněmi",
+        "uprchlého",
+        "zoo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -220,7 +244,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Rusové útočili na zastávku s lidmi v Oděse, v Záporožské oblasti zabíjeli",
+      "title": "Rusové útočili na zastávku s lidmi v Oděse, v Záporožské a Sumské oblasti zabíjeli",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/ukrajinci-hlasi-zabite-v-zaporozske-oblasti-rusove-zasazeny-vlak-374333",
       "dt": "2026-06-08T06:28:55Z",
       "media_raw": "ČT24 / Domácí",
@@ -230,6 +254,7 @@
         "oblasti",
         "oděse",
         "rusové",
+        "sumské",
         "zabíjeli",
         "zastávku",
         "záporožské",
@@ -413,19 +438,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Trump rázně vyzval Izrael a Írán k zastavení útoků",
+      "title": "Írán zastavuje útoky na Izrael. Přidal ale výhrůžky",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/izrael-oznamil-udery-na-iran-media-pisi-o-explozich-v-teheranu-374329",
       "dt": "2026-06-08T01:38:56Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24",
       "tokens": [
+        "ale",
         "izrael",
-        "rázně",
-        "trump",
-        "vyzval",
-        "zastavení",
+        "přidal",
+        "výhrůžky",
+        "zastavuje",
         "írán",
-        "útoků"
+        "útoky"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -709,29 +734,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Archeologové našli na Bahamách vraky „pirátů z Karibiku“",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/archeologove-nasli-na-bahamach-vraky-piratu-z-karibiku-374314",
-      "dt": "2026-06-07T13:26:12Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "archeologové",
-        "bahamách",
-        "karibiku",
-        "našli",
-        "pirátů",
-        "vraky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -742,7 +744,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42228,
+      "bytes": 42025,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -779,11 +781,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-08T11:02:57Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T11:11:23Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 6,
-          "zpravy": 24
+          "zpravy": 25,
+          "other": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -795,6 +797,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ostravská zoo odchytila uprchlého lemura, krmil se třešněmi",
+            "publishedAt": "2026-06-08T11:11:23Z"
+          },
           {
             "title": "Vzácné setkání. Žraloka bílého natočili pod hladinou Středozemního moře",
             "publishedAt": "2026-06-08T11:02:57Z"
@@ -822,10 +828,6 @@
           {
             "title": "Hosté Událostí, komentářů týdne probrali nepravomocný verdikt za plakáty SPD",
             "publishedAt": "2026-06-08T07:16:15Z"
-          },
-          {
-            "title": "Od úterý se začne ochlazovat a bude pršet",
-            "publishedAt": "2026-06-08T06:50:05Z"
           }
         ]
       }
