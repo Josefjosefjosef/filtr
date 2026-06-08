@@ -2065,6 +2065,15 @@ def _apply_conservative_topic_clustering(articles: list) -> list:
         url_fn=_article_url_canonical,
     )
     _TOPIC_DEDUPE_LAST_STATS = dict(stats)
+    print(f"EVENT_DEDUPE_LOW_SLUG_SKIP={int(stats.get('event_dedupe_low_slug_skip') or 0)}", flush=True)
+    print(
+        f"EVENT_DEDUPE_REPLAY_GUARD_SKIP={int(stats.get('event_dedupe_replay_guard_skip') or 0)}",
+        flush=True,
+    )
+    print(
+        f"EVENT_DEDUPE_RECURRING_TEMPLATE_SKIP={int(stats.get('event_dedupe_recurring_template_skip') or 0)}",
+        flush=True,
+    )
     try:
         os.makedirs(os.path.dirname(TOPIC_DEDUPE_SUPPRESSED_PATH), exist_ok=True)
         _atomic_write_json(
