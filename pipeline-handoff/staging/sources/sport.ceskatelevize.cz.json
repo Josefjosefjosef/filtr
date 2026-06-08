@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.ceskatelevize.cz",
-  "ingestedAt": "2026-06-08T11:52:46.212671Z",
+  "ingestedAt": "2026-06-08T12:33:22.819366Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Mediální den fotbalistů na MS: focení, gólové oslavy a návštěva velvyslance",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/medialni-den-fotbalistu-na-ms-foceni-golove-oslavy-a-navsteva-velvyslance-157265",
+      "dt": "2026-06-08T12:06:08Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "den",
+        "focení",
+        "fotbalistů",
+        "gólové",
+        "mediální",
+        "návštěva",
+        "oslavy",
+        "velvyslance"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "sport.ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -751,31 +776,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "sport.ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bouldering v Praze vyhrála osmnáctiletá Sandersová, Češky skončily v kvalifikaci",
-      "url": "https://sport.ceskatelevize.cz/clanek/lezeni/bouldering-v-praze-vyhrala-osmnactileta-sandersova-cesky-skoncily-v-kvalifikaci-157239",
-      "dt": "2026-06-06T20:02:07Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "bouldering",
-        "kvalifikaci",
-        "osmnáctiletá",
-        "praze",
-        "sandersová",
-        "skončily",
-        "vyhrála",
-        "češky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "sport.ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39147,
+      "bytes": 38997,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,7 +823,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-08T09:56:35Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T12:06:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -838,6 +838,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mediální den fotbalistů na MS: focení, gólové oslavy a návštěva velvyslance",
+            "publishedAt": "2026-06-08T12:06:08Z"
+          },
           {
             "title": "Čeští hokejisté odehrají základní skupinu příštího MS v Düsseldorfu",
             "publishedAt": "2026-06-08T09:56:35Z"
@@ -865,10 +869,6 @@
           {
             "title": "Eriksen opět na hřišti zkolaboval. Už je v dobrém stavu a brzy opustí nemocnici",
             "publishedAt": "2026-06-07T19:15:35Z"
-          },
-          {
-            "title": "Novotná ovládla s Metami házenkářskou Ligu mistryň",
-            "publishedAt": "2026-06-07T19:15:17Z"
           }
         ]
       }

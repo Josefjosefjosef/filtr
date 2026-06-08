@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-06-08T11:52:46.212671Z",
+  "ingestedAt": "2026-06-08T12:33:22.819366Z",
   "items": [
     {
       "section": "veda",
@@ -20,6 +20,36 @@
         "pracuje",
         "produktů",
         "stále"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Nová reklama Applu útočí na soukromí v Androidu. Používá k tomu fiktivní telefony jako z minulého desetiletí",
+      "url": "https://mobilmania.zive.cz/clanky/nova-reklama-applu-utoci-na-soukromi-v-androidu-pouziva-k-tomu-fiktivni-telefony-jako-z-minuleho-desetileti/sc-3-a-1364849/default.aspx",
+      "dt": "2026-06-08T11:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "androidu",
+        "applu",
+        "desetiletí",
+        "fiktivní",
+        "jako",
+        "minulého",
+        "nová",
+        "používá",
+        "reklama",
+        "soukromí",
+        "telefony",
+        "tomu",
+        "útočí"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -971,33 +1001,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Evropský parlament zrušil Google a jako výchozí vyhledávač používá francouzský Qwant",
-      "url": "https://www.zive.cz/clanky/evropsky-parlament-zrusil-google-a-jako-vychozi-vyhledavac-pouziva-francouzsky-qwant/sc-3-a-241540/default.aspx",
-      "dt": "2026-06-04T16:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "evropský",
-        "francouzský",
-        "google",
-        "jako",
-        "parlament",
-        "používá",
-        "qwant",
-        "vyhledávač",
-        "výchozí",
-        "zrušil"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1008,7 +1011,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23432,
+      "bytes": 23275,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1045,7 +1048,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-06-08T10:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T11:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1063,6 +1066,10 @@
           {
             "title": "10 produktů, které Applu stále chybí. Na polovině z nich se ale už pracuje",
             "publishedAt": "2026-06-08T10:15:00Z"
+          },
+          {
+            "title": "Nová reklama Applu útočí na soukromí v Androidu. Používá k tomu fiktivní telefony jako z minulého desetiletí",
+            "publishedAt": "2026-06-08T11:45:00Z"
           },
           {
             "title": "Ve virtuálním muzeu si můžete zadarmo vyzkoušet 600 historických operačních systémů",
@@ -1087,10 +1094,6 @@
           {
             "title": "Z Česka se stává světové centrum výroby technologií pro AI. Další velký hráč míří do Pardubic",
             "publishedAt": "2026-06-07T11:45:00Z"
-          },
-          {
-            "title": "Pizza Hut čelí žalobě o 100 milionů dolarů. AI systém zpomalil rozvoz a kurýři vozili zákazníkům studené pizzy",
-            "publishedAt": "2026-06-07T07:45:00Z"
           }
         ]
       }
