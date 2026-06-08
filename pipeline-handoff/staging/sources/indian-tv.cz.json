@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-06-08T17:16:50.266446Z",
+  "ingestedAt": "2026-06-08T18:07:14.406139Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Příběhový trailer Halo: Campaign Evolved sází na nostalgii. Ukazuje PS5 Pro verzi - INDIAN",
+      "url": "https://indian-tv.cz/clanek/pribehovy-trailer-halo-campaign-evolved-sazi-na-nostalgii-wi2llz",
+      "dt": "2026-06-08T17:30:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "campaign",
+        "evolved",
+        "halo",
+        "indian",
+        "nostalgii",
+        "ps5",
+        "příběhový",
+        "sází",
+        "trailer",
+        "ukazuje",
+        "verzi"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1068,32 +1096,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Tomb Raider: Legacy of Atlantis není remake, ale „přerod“ klasiky - INDIAN",
-      "url": "https://indian-tv.cz/clanek/tomb-raider-legacy-of-atlantis-neni-remake-ale-prerod-jpmayt",
-      "dt": "2026-06-07T09:11:03Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "ale",
-        "atlantis",
-        "indian",
-        "klasiky",
-        "legacy",
-        "přerod",
-        "raider",
-        "remake",
-        "tomb"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1104,7 +1106,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 205684,
+      "bytes": 205786,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1141,7 +1143,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-08T17:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-08T17:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1156,6 +1158,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Příběhový trailer Halo: Campaign Evolved sází na nostalgii. Ukazuje PS5 Pro verzi - INDIAN",
+            "publishedAt": "2026-06-08T17:30:00Z"
+          },
           {
             "title": "Experimentální horor Project Mara nebude. V Ninja Theory se soustředí na Senuu - INDIAN",
             "publishedAt": "2026-06-08T17:00:00Z"
@@ -1183,10 +1189,6 @@
           {
             "title": "V The Elder Scrolls Online se vrátí cech zlodějů a Sheogorath - INDIAN",
             "publishedAt": "2026-06-08T12:00:00Z"
-          },
-          {
-            "title": "Dave the Diver: In the Jungle dorazí už v červnu - INDIAN",
-            "publishedAt": "2026-06-08T11:00:00Z"
           }
         ]
       }
