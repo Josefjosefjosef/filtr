@@ -34,6 +34,16 @@ DEFAULT_EVENT_WINDOW_H = 72
 
 LOW_SLUG_JACCARD_BLOCK = 0.20
 
+_DEDUPE_STRIP_KEYS = (
+    "alternativeSources",
+    "topic_duplicate_count",
+    "topic_key",
+    "duplicate_of",
+    "duplicate_reason",
+    "duplicate_confidence",
+    "selected_primary_reason",
+)
+
 FOLLOW_UP_MARKERS = frozenset(
     {
         "reakce",
@@ -79,6 +89,83 @@ def slug_jaccard(url_a: str, url_b: str) -> float:
     if not a or not b:
         return 0.0
     return len(a & b) / len(a | b)
+
+
+def _slug_as_title(url: str) -> str:
+    path = urlparse(url or "").path
+    slug = path.rstrip("/").split("/")[-1]
+    slug = re.sub(r"\.(html|htm|php|aspx)$", "", slug, flags=re.I)
+    return unquote(slug).replace("-", " ").replace("_", " ").strip()
+
+
+def _strip_dedupe_metadata(article: dict) -> dict:
+    out = dict(article)
+    for key in _DEDUPE_STRIP_KEYS:
+        out.pop(key, None)
+    return out
+
+
+def expand_suppressed_alts_for_rededupe(
+    articles: list[dict],
+    *,
+    url_fn: Callable[[dict], str],
+    alt_title_fn: Callable[[str], str] | None = None,
+) -> list[dict]:
+    """
+    Phase 8D closeout: re-materialize alternativeSources as standalone articles so
+    cumulative event dedupe re-evaluates previously suppressed URLs with current guards.
+    """
+    expanded: list[dict] = []
+    seen: set[str] = set()
+
+    def _alt_title(alt: dict, winner: dict) -> str:
+        stored = str(alt.get("title") or "").strip()
+        if stored:
+            return stored
+        alt_url = str(alt.get("url") or "").strip()
+        if alt_title_fn and alt_url:
+            resolved = str(alt_title_fn(alt_url) or "").strip()
+            if resolved:
+                return resolved
+        name = str(alt.get("name") or "").strip()
+        if name and len(name.split()) >= 4:
+            return name
+        return _slug_as_title(alt_url)
+
+    for article in articles:
+        if not isinstance(article, dict):
+            continue
+        base = _strip_dedupe_metadata(article)
+        primary_url = url_fn(base)
+        if primary_url:
+            if primary_url not in seen:
+                seen.add(primary_url)
+                expanded.append(base)
+        else:
+            expanded.append(base)
+
+        for alt in article.get("alternativeSources") or []:
+            if not isinstance(alt, dict):
+                continue
+            alt_url = str(alt.get("url") or "").strip()
+            if not alt_url or alt_url in seen:
+                continue
+            seen.add(alt_url)
+            alt_title = _alt_title(alt, base)
+            expanded.append(
+                {
+                    "title": alt_title,
+                    "url": alt_url,
+                    "publishedAt": base.get("publishedAt"),
+                    "topic": base.get("topic") or base.get("section"),
+                    "section": base.get("section") or base.get("topic"),
+                    "sourceDisplayWeight": float(base.get("sourceDisplayWeight") or 1.0),
+                    "sourceLabel": str(alt.get("name") or base.get("sourceLabel") or ""),
+                    "sources": [{"name": str(alt.get("name") or ""), "url": alt_url}],
+                }
+            )
+
+    return expanded
 
 
 def _parse_pub(article: dict) -> datetime | None:
@@ -286,6 +373,7 @@ def apply_topic_event_dedupe(
     tokenize_fn,
     score_fn,
     url_fn,
+    alt_title_fn: Callable[[str], str] | None = None,
 ) -> tuple[list[dict], list[dict], dict[str, Any]]:
     """
     Returns (visible_articles, suppressed_records, stats).
@@ -299,7 +387,11 @@ def apply_topic_event_dedupe(
             "event_dedupe_recurring_template_skip": 0,
         }
 
-    clean = [a for a in articles if isinstance(a, dict)]
+    clean = expand_suppressed_alts_for_rededupe(
+        [a for a in articles if isinstance(a, dict)],
+        url_fn=url_fn,
+        alt_title_fn=alt_title_fn,
+    )
     by_sec: dict[str, list[dict]] = defaultdict(list)
     for a in clean:
         sec = stable_section_fn(str(a.get("topic") or a.get("section") or "aktualne"))
@@ -408,6 +500,7 @@ def apply_topic_event_dedupe(
                     alts.append(
                         {
                             "name": str(src0.get("name") or loser.get("sourceLabel") or ""),
+                            "title": str(loser.get("title") or ""),
                             "url": str(src0.get("url") or url_fn(loser)),
                             "duplicate_reason": rec["duplicate_reason"],
                         }

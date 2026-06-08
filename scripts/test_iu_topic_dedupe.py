@@ -15,6 +15,7 @@ from iu_topic_dedupe import (  # noqa: E402
     _replay_guard_distinct_events,
     apply_topic_event_dedupe,
     classify_pair_relation,
+    expand_suppressed_alts_for_rededupe,
     pair_blocks_event_merge,
     slug_jaccard,
 )
@@ -187,6 +188,35 @@ def test_true_duplicate_low_slug_still_merges_with_story_match():
     assert len(suppressed) == 1
 
 
+def test_cumulative_replay_expands_alternative_sources():
+    winner = _art(
+        "Při dronovém útoku na tržiště v Súdánu zahynulo pět lidí",
+        url="https://news/a/sudan-trziste-dron-2026",
+    )
+    winner["alternativeSources"] = [
+        {
+            "name": "Example",
+            "title": "Čtyři lidé zahynuli při ukrajinském útoku v Rjazani",
+            "url": "https://news/b/rjazan-ukrajina-utok-2026",
+        }
+    ]
+    winner["topic_duplicate_count"] = 1
+    expanded = expand_suppressed_alts_for_rededupe(
+        [winner], url_fn=lambda a: a["url"]
+    )
+    assert len(expanded) == 2
+    visible, suppressed, stats = apply_topic_event_dedupe(
+        [winner],
+        stable_section_fn=lambda s: s,
+        story_match_fn=_never_match,
+        tokenize_fn=lambda t: set(t.lower().split()),
+        score_fn=lambda a: str(a.get("publishedAt") or ""),
+        url_fn=lambda a: a["url"],
+    )
+    assert len(visible) == 2
+    assert len(suppressed) == 0
+
+
 def main() -> int:
     test_same_event_duplicate()
     test_follow_up_not_merged_as_duplicate()
@@ -201,6 +231,7 @@ def main() -> int:
     test_apply_dedupe_keeps_distinct_low_slug_pairs()
     test_slug_jaccard_low_for_distinct_urls()
     test_true_duplicate_low_slug_still_merges_with_story_match()
+    test_cumulative_replay_expands_alternative_sources()
     print("test_iu_topic_dedupe: PASS")
     return 0
 
