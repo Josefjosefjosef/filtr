@@ -69,6 +69,13 @@ jobs:
           git checkout main
           git reset --hard origin/main
 
+      - name: Prepare automation branch (before data generation)
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
+          echo "[FAST-POOL] branch=${{ env.AUTOMATION_BRANCH }} base=origin/main"
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -157,7 +164,8 @@ jobs:
             projects/data/article_pool_manifest.json \
             projects/data/scheduler_state.json \
             projects/data/source_rotation_inventory.json \
-            projects/data/topic_dedupe_suppressed.json; do
+            projects/data/topic_dedupe_suppressed.json \
+            projects/data/pipeline_reports/article_scheduler_report.json; do
             if git diff --quiet -- "$f" 2>/dev/null; then
               continue
             fi
@@ -171,6 +179,9 @@ jobs:
           echo "data_changed=true" >> "$GITHUB_OUTPUT"
           echo "[FAST-POOL] Changed:$CHANGED_FILES"
 
+      - name: Fast pool git staging guard
+        run: python scripts/fast_pool_git_staging_guard.py
+
       - name: Commit to automation branch and push
         if: steps.no_diff.outputs.data_changed == 'true'
         id: commit_push
@@ -178,15 +189,30 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin main
-          git checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
+          CURRENT=$(git branch --show-current)
+          if [ "$CURRENT" != "${{ env.AUTOMATION_BRANCH }}" ]; then
+            echo "[FAST-POOL] ERROR: expected branch ${{ env.AUTOMATION_BRANCH }}, got $CURRENT"
+            exit 1
+          fi
           git add projects/data/publishable_pool.json projects/data/article_pool_manifest.json
           git add projects/data/scheduler_state.json projects/data/source_rotation_inventory.json 2>/dev/null || true
           git add projects/data/topic_dedupe_suppressed.json 2>/dev/null || true
+          git add projects/data/pipeline_reports/article_scheduler_report.json 2>/dev/null || true
           git diff --cached --quiet && { echo "[FAST-POOL] Nothing to commit"; exit 0; }
           git commit -m "${{ env.PR_TITLE }}"
           git push --force origin "HEAD:${{ env.AUTOMATION_BRANCH }}"
           echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Git clean guard
+        if: always()
+        run: |
+          set -euo pipefail
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "[FAST-POOL] ERROR: dirty working tree at job end"
+            git status --porcelain
+            exit 1
+          fi
+          echo "GIT_CLEAN=YES"
 
       - name: Dispatch required checks
         if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
