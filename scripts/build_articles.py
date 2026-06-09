@@ -2078,6 +2078,13 @@ def _build_alt_title_index(articles: list) -> dict[str, str]:
     return idx
 
 
+def _apply_section_purity_fallback_pass(articles: list) -> list:
+    """Phase 10B: targeted fallback guards on publishable pool writer path."""
+    from iu_section_purity_fallback import apply_section_purity_fallback
+
+    return [apply_section_purity_fallback(a) for a in articles]
+
+
 def _apply_conservative_topic_clustering(articles: list) -> list:
     """
     Topic/event dedupe V1: same section, different URLs, conservative title match + time window.
@@ -2929,6 +2936,7 @@ def apply_publishable_pre_cap_pipeline(merged_articles: list, generated_at: str)
     merged_articles = [_apply_output_vertical_purity(a) for a in merged_articles]
     merged_articles = [a for a in merged_articles if a is not None]
     merged_articles = [_apply_second_layer_targeted_section_cleanup(a) for a in merged_articles]
+    merged_articles = _apply_section_purity_fallback_pass(merged_articles)
     merged_articles = _apply_conservative_topic_clustering(merged_articles)
     for a in merged_articles:
         a["duplicatePenalty"] = float(a.get("duplicatePenalty") or 1.0)
@@ -4345,6 +4353,7 @@ def _legacy_main_removed_placeholder():
     merged_articles = [_apply_output_vertical_purity(a) for a in merged_articles]
     merged_articles = [a for a in merged_articles if a is not None]
     merged_articles = [_apply_second_layer_targeted_section_cleanup(a) for a in merged_articles]
+    merged_articles = _apply_section_purity_fallback_pass(merged_articles)
     merged_articles = _apply_conservative_topic_clustering(merged_articles)
     for a in merged_articles:
         a["duplicatePenalty"] = float(a.get("duplicatePenalty") or 1.0)
