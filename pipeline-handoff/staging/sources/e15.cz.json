@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-06-09T16:58:53.127170Z",
+  "ingestedAt": "2026-06-09T17:33:45.913522Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Lagardeová sází na prevenci. Ve čtvrtek pravděpodobně zvýší sazby i bez kompletních dat o mzdách",
+      "url": "https://www.e15.cz/nazory-a-analyzy/lagardeova-sazi-na-prevenci-ve-ctvrtek-pravdepodobne-zvysi-sazby-i-bez-kompletnich-dat-o-mzdach-1433453",
+      "dt": "2026-06-09T17:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "dat",
+        "kompletních",
+        "lagardeová",
+        "mzdách",
+        "pravděpodobně",
+        "prevenci",
+        "sazby",
+        "sází",
+        "zvýší",
+        "čtvrtek"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1089,34 +1116,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Boom minipivovarů skončil. Prodeje piva klesají i velkým hráčům, situaci zachraňuje nealko",
-      "url": "https://www.e15.cz/byznys/boom-minipivovaru-skoncil-prodeje-piva-klesaji-i-velkym-hracum-situaci-zachranuje-nealko-1433360",
-      "dt": "2026-06-08T03:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "boom",
-        "hráčům",
-        "klesají",
-        "minipivovarů",
-        "nealko",
-        "piva",
-        "prodeje",
-        "situaci",
-        "skončil",
-        "velkým",
-        "zachraňuje"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1127,7 +1126,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 48916,
+      "bytes": 49106,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1164,7 +1163,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-09T16:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-09T17:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 37,
@@ -1181,6 +1180,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lagardeová sází na prevenci. Ve čtvrtek pravděpodobně zvýší sazby i bez kompletních dat o mzdách",
+            "publishedAt": "2026-06-09T17:30:00Z"
+          },
           {
             "title": "Evropa se chystá na první zvýšení sazeb po třech letech a Musk si jde pro miliardy",
             "publishedAt": "2026-06-09T16:30:00Z"
@@ -1208,10 +1211,6 @@
           {
             "title": "Nová Siri míří do světa, ale k nám ne. Brusel odmítl ustoupit Applu",
             "publishedAt": "2026-06-09T12:12:00Z"
-          },
-          {
-            "title": "Vede Itálie a Slovensko. Bezpečnost ve světě mění plány na dovolenou třetině Čechů",
-            "publishedAt": "2026-06-09T10:30:00Z"
           }
         ]
       }
