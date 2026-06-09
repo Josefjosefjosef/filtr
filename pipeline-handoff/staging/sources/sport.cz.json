@@ -1,12 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-09T06:02:54.875626Z",
+  "ingestedAt": "2026-06-09T06:52:52.698047Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Hororová cesta a obrovský stres. Letadlo českých soupeřek zasáhl blesk",
+      "title": "Hokejisty Los Angeles Kings podle médií v NHL převezme trenéra Laviolette",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-hokejisty-los-angeles-kings-podle-medii-v-nhl-prevezme-trenera-laviolette-5475886",
+      "dt": "2026-06-09T06:30:26Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "angeles",
+        "hokejisty",
+        "kings",
+        "laviolette",
+        "los",
+        "médií",
+        "nhl",
+        "podle",
+        "převezme",
+        "trenéra"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hororová cesta a stres. Letadlo českých soupeřek zasáhl blesk",
       "url": "https://www.sport.cz/clanek/fotbal-hororova-cesta-a-obrovsky-stres-letadlo-ceskych-souperek-zasahl-blesk-5475863",
       "dt": "2026-06-09T05:47:22Z",
       "media_raw": "Sport.cz",
@@ -16,7 +43,6 @@
         "cesta",
         "hororová",
         "letadlo",
-        "obrovský",
         "soupeřek",
         "stres",
         "zasáhl",
@@ -760,31 +786,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Real Madrid vyztuží obranu. Přivede stopera, který skončil v Liverpoolu",
-      "url": "https://www.sport.cz/clanek/fotbal-la-liga-real-madrid-vystuzi-obranu-po-konci-v-liverpoolu-privede-stopera-5475845",
-      "dt": "2026-06-08T15:41:47Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "liverpoolu",
-        "madrid",
-        "obranu",
-        "přivede",
-        "real",
-        "skončil",
-        "stopera",
-        "vyztuží"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41581,
+      "bytes": 41809,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-09T05:47:22Z",
+        "raw_feed_latest_publishedAt": "2026-06-09T06:30:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,7 +849,11 @@
         },
         "sample_titles": [
           {
-            "title": "Hororová cesta a obrovský stres. Letadlo českých soupeřek zasáhl blesk",
+            "title": "Hokejisty Los Angeles Kings podle médií v NHL převezme trenéra Laviolette",
+            "publishedAt": "2026-06-09T06:30:26Z"
+          },
+          {
+            "title": "Hororová cesta a stres. Letadlo českých soupeřek zasáhl blesk",
             "publishedAt": "2026-06-09T05:47:22Z"
           },
           {
@@ -874,10 +879,6 @@
           {
             "title": "Nevídaným způsobem rozhodl finále proti bývalému klubu. Největší střela kariéry, rozplýval se Kovář",
             "publishedAt": "2026-06-08T21:03:43Z"
-          },
-          {
-            "title": "Největší stres v životě! Češka pomáhá hvězdám, běhá i v Diamantové lize",
-            "publishedAt": "2026-06-09T04:27:07Z"
           }
         ]
       }

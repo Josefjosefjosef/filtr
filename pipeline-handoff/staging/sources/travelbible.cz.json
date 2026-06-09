@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "sourceBatchKey": "travelbible.cz",
+  "ingestedAt": "2026-06-09T06:52:52.698047Z",
+  "items": [],
+  "feedReports": [
+    {
+      "feed": "https://travelbible.cz/feed/",
+      "source": "TravelBible",
+      "topic": "cestovani",
+      "httpStatus": 415,
+      "contentType": "text/html",
+      "finalUrl": "https://travelbible.cz/feed/",
+      "bytes": 0,
+      "reason": "http_415",
+      "bozo": false,
+      "bozoException": "",
+      "itemsParsed": 0,
+      "itemsKept": 0,
+      "accepted": 0,
+      "status": "BOZO",
+      "bozo_but_used": false,
+      "registryId": "ces_travelbible",
+      "registryGroup": [
+        {
+          "id": "ces_travelbible",
+          "label": "TravelBible",
+          "domain": "travelbible.cz",
+          "entry_type": "rss",
+          "section_primary": "cestovani",
+          "section_secondary": [],
+          "interval_min": 180,
+          "display_weight": 0.75,
+          "active": true,
+          "blocked": false,
+          "official_only": true,
+          "fetch_mode": "rss_or_official_rubric_only",
+          "per_domain_cooldown_min": 12,
+          "slot_offset_min": 26,
+          "max_items_per_fetch": 40,
+          "last_fetch_at": null,
+          "last_success_at": null,
+          "error_streak": 0,
+          "backoff_multiplier": 1.0,
+          "feed_url": "https://travelbible.cz/feed/",
+          "topic": "cestovani"
+        }
+      ]
+    }
+  ]
+}
