@@ -1,0 +1,103 @@
+/* infoUzel.cz — technická informační lišta (storage notice, ne marketing consent) */
+
+.iuStorageNotice {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10020;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 0 max(12px, env(safe-area-inset-left, 0px)) max(12px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-right, 0px));
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.iuStorageNotice[hidden] {
+  display: none !important;
+}
+
+.iuStorageNotice__panel {
+  pointer-events: auto;
+  width: min(920px, 100%);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 12px 14px;
+  border-radius: 14px 14px 0 0;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-bottom: 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.97) 0%, rgba(2, 6, 23, 0.98) 100%);
+  color: #e2e8f0;
+  box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
+}
+
+.iuStorageNotice__text {
+  flex: 1 1 220px;
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.iuStorageNotice__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.iuStorageNotice__btn {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 0;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.iuStorageNotice__btn--primary {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+.iuStorageNotice__btn--primary:hover {
+  background: #7dd3fc;
+}
+
+.iuStorageNotice__btn--ghost {
+  background: rgba(226, 232, 240, 0.12);
+  color: #f8fafc;
+}
+
+.iuStorageNotice__btn--ghost:hover {
+  background: rgba(226, 232, 240, 0.2);
+}
+
+@media (max-width: 900px) {
+  .iuStorageNotice {
+    bottom: calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 8px);
+    padding-bottom: 0;
+  }
+
+  .iuStorageNotice__panel {
+    border-radius: 12px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+  }
+}
+
+@media (min-width: 901px) {
+  .iuStorageNotice {
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .iuStorageNotice__panel {
+    border-radius: 14px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+  }
+}

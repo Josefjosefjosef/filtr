@@ -40,11 +40,15 @@
     <meta http-equiv="Content-Security-Policy"
     content="
 default-src 'self' https:;
+base-uri 'self';
+object-src 'none';
+connect-src 'self' https://api.open-meteo.com;
 frame-src https://www.youtube.com https://www.youtube-nocookie.com;
 img-src 'self' data: blob: https://i.ytimg.com https:;
-script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https:;
-worker-src 'self' blob: https:;
-style-src 'self' 'unsafe-inline' https:;
+script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval';
+worker-src 'self' blob:;
+style-src 'self' 'unsafe-inline';
+font-src 'self' data:;
 ">
 
     <style>
@@ -510,6 +514,7 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/iu-tasks-premium.css?v=tasks-premium-scope-20260503" />
     <link rel="stylesheet" href="/assets/iu-notes-premium.css?v=notes-premium-teal-20260503" />
     <link rel="stylesheet" href="/assets/iu-info-center.css?v=info-center-v2-4-20260609" />
+    <link rel="stylesheet" href="/assets/iu-storage-notice.css?v=storage-notice-v1-20260609" />
     <style id="iuInfoCardsMobileTabletPostAppCss">
       /* P0 info cards Kalendář+Úkoly ≤1023: post app.css — beats #iuInfoCardsMobileTablet min-height:160px (assets/app.css CLS reserve). */
       @media (max-width: 1023px) {
@@ -5277,6 +5282,7 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script type="module" src="/assets/app.js?v=p0-daily-cal-add-edit-ux-20260503"></script>
     <script defer src="/assets/iu-info-center.js?v=info-center-v2-4-20260609"></script>
+    <script defer src="/assets/iu-storage-notice.js?v=storage-notice-v1-20260609"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=6"></script>
     <script>
     (function(){
@@ -5947,6 +5953,15 @@ style-src 'self' 'unsafe-inline' https:;
                 <li><strong>Service Worker cache</strong> — stažené soubory webu a články</li>
                 <li><strong>Externí poskytovatelé</strong> — u funkcí, které je používají (počasí, videa, dopravci, mapy)</li>
               </ul>
+              <h3 class="iuInfoCenter__h3">Doba uchování dat (retention)</h3>
+              <p class="iuInfoCenter__p">Osobní data v prohlížeči zůstávají uložena, dokud je uživatel sám nesmaže nebo dokud nedojde ke smazání dat webu, resetu zařízení či výměně zařízení. InfoUzel <strong>negarantuje</strong> trvalé uchování lokálních dat.</p>
+              <ul class="iuInfoCenter__ul">
+                <li><strong>localStorage / IndexedDB / sessionStorage</strong> — bez pevného časového limitu; závisí na zařízení a prohlížeči</li>
+                <li><strong>Service Worker cache</strong> — obnovuje se při aktualizaci webu; články a JSON mají TTL ve služebním workeru (viz sekce Cookies)</li>
+                <li><strong>Poznámky, úkoly, kalendář</strong> — lokálně do smazání uživatelem nebo vymazáním dat prohlížeče</li>
+                <li><strong>Preference a nastavení</strong> — lokálně do smazání; technický příznak informační lišty je také lokální</li>
+                <li><strong>Smazání dat prohlížeče / reset / nové zařízení</strong> — může vést ke ztrátě všech lokálních dat bez možnosti obnovy ze serveru InfoUzel</li>
+              </ul>
               <h3 class="iuInfoCenter__h3">3. Co na serverech InfoUzel běžně neuchováváme</h3>
               <div class="iuInfoCenter__box" role="note">
                 <ul class="iuInfoCenter__ul">
@@ -6023,6 +6038,16 @@ style-src 'self' 'unsafe-inline' https:;
         </div>
       </div>
     </div>
+
+    <aside id="iuStorageNotice" class="iuStorageNotice" role="region" aria-label="Informace o technickém ukládání" hidden>
+      <div class="iuStorageNotice__panel">
+        <p class="iuStorageNotice__text">InfoUzel používá technické ukládání v prohlížeči pro fungování nástrojů, nastavení a offline režim.</p>
+        <div class="iuStorageNotice__actions">
+          <button type="button" class="iuStorageNotice__btn iuStorageNotice__btn--primary" id="iuStorageNoticeOk">Rozumím</button>
+          <button type="button" class="iuStorageNotice__btn iuStorageNotice__btn--ghost" id="iuStorageNoticeMore">Více informací</button>
+        </div>
+      </div>
+    </aside>
     <!-- P0 Silver hero (≤1024): body-end cascade lock — document order after head-injected styles (app.js) so justify-content + absolute input host always win. -->
     <style id="iuSilverHeroMobileLayoutCascadeLock">
       @media (max-width: 1024px) {
