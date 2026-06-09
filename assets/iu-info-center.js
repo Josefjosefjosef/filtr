@@ -1,0 +1,164 @@
+/**
+ * infoUzel.cz — Informační centrum V2 (navigace menu ↔ sekce)
+ * Scope: pouze overlay #iuTopbarInfoOverlay; open/close zůstává v app.js.
+ */
+(function iuInfoCenterV2Module() {
+  "use strict";
+
+  var SECTION_TITLES = {
+    menu: "Informační centrum",
+    pwa: "Vytvořit ikonu na plochu",
+    about: "O InfoUzel.cz",
+    silver: "O Silverovi",
+    cookies: "Cookies a technické ukládání",
+    privacy: "Ochrana soukromí a data",
+    contact: "Provozovatel a kontakt"
+  };
+
+  var DOC_VERSION = "1.0";
+
+  function qs(sel, root) {
+    return (root || document).querySelector(sel);
+  }
+
+  function qsa(sel, root) {
+    return Array.prototype.slice.call((root || document).querySelectorAll(sel));
+  }
+
+  function formatCsDate(d) {
+    try {
+      return d.toLocaleDateString("cs-CZ", { day: "numeric", month: "numeric", year: "numeric" });
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function stampVersionDates() {
+    var today = formatCsDate(new Date());
+    qsa("[data-iu-info-version-date]").forEach(function (el) {
+      el.textContent = today;
+    });
+    qsa("[data-iu-info-doc-version]").forEach(function (el) {
+      el.textContent = DOC_VERSION;
+    });
+  }
+
+  function initNavigation() {
+    var overlay = document.getElementById("iuTopbarInfoOverlay");
+    if (!overlay || overlay.getAttribute("data-iu-info-center-v2") !== "1") return;
+
+    var menu = document.getElementById("iuInfoCenterMenu");
+    var titleEl = document.getElementById("iuTopbarInfoOverlayTitle");
+    var backBtn = document.getElementById("iuInfoCenterBack");
+    var details = qsa(".iuInfoCenter__detail", overlay);
+    var tiles = qsa("[data-iu-info-section]", overlay);
+    var currentSection = "menu";
+
+    function setTitle(key) {
+      if (!titleEl) return;
+      titleEl.textContent = SECTION_TITLES[key] || SECTION_TITLES.menu;
+    }
+
+    function showSection(key) {
+      currentSection = key || "menu";
+      if (menu) menu.hidden = currentSection !== "menu";
+      details.forEach(function (panel) {
+        var id = panel.getAttribute("data-iu-info-section");
+        panel.hidden = id !== currentSection;
+      });
+      if (backBtn) backBtn.hidden = currentSection === "menu";
+      setTitle(currentSection);
+      var body = qs(".iuInfoCenter__body", overlay);
+      if (body) {
+        try { body.scrollTop = 0; } catch (_) {}
+      }
+    }
+
+    function resetToMenu() {
+      showSection("menu");
+      var ios = document.getElementById("iuInfoCenterPwaIos");
+      var and = document.getElementById("iuInfoCenterPwaAndroid");
+      var btnIos = qs('[data-iu-info-pwa-platform="ios"]', overlay);
+      var btnAnd = qs('[data-iu-info-pwa-platform="android"]', overlay);
+      if (ios) ios.hidden = false;
+      if (and) and.hidden = true;
+      if (btnIos) btnIos.classList.add("is-active");
+      if (btnAnd) btnAnd.classList.remove("is-active");
+    }
+
+    tiles.forEach(function (tile) {
+      tile.addEventListener("click", function (e) {
+        try { e.preventDefault(); } catch (_) {}
+        var sec = tile.getAttribute("data-iu-info-section");
+        if (sec) showSection(sec);
+      });
+    });
+
+    if (backBtn) {
+      backBtn.addEventListener("click", function (e) {
+        try { e.preventDefault(); } catch (_) {}
+        if (currentSection === "pwa") {
+          var ios = document.getElementById("iuInfoCenterPwaIos");
+          var and = document.getElementById("iuInfoCenterPwaAndroid");
+          if (ios && !ios.hidden && and && and.hidden) {
+            showSection("menu");
+            return;
+          }
+        }
+        showSection("menu");
+      });
+    }
+
+    qsa("[data-iu-info-pwa-platform]", overlay).forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var plat = btn.getAttribute("data-iu-info-pwa-platform");
+        var ios = document.getElementById("iuInfoCenterPwaIos");
+        var and = document.getElementById("iuInfoCenterPwaAndroid");
+        qsa("[data-iu-info-pwa-platform]", overlay).forEach(function (b) {
+          var active = b === btn;
+          b.classList.toggle("is-active", active);
+          b.setAttribute("aria-selected", active ? "true" : "false");
+        });
+        if (plat === "ios") {
+          if (ios) ios.hidden = false;
+          if (and) and.hidden = true;
+        } else {
+          if (ios) ios.hidden = true;
+          if (and) and.hidden = false;
+        }
+      });
+    });
+
+    try {
+      var mo = new MutationObserver(function () {
+        if (!overlay.hidden) resetToMenu();
+      });
+      mo.observe(overlay, { attributes: true, attributeFilter: ["hidden"] });
+    } catch (_) {}
+
+    var closeBtn = document.getElementById("iuTopbarInfoOverlayClose");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function () {
+        resetToMenu();
+      });
+    }
+    qsa("[data-iu-topbar-info-close]", overlay).forEach(function (el) {
+      el.addEventListener("click", function () {
+        resetToMenu();
+      });
+    });
+
+    stampVersionDates();
+    resetToMenu();
+  }
+
+  function boot() {
+    initNavigation();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
