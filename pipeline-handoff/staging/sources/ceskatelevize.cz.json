@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-09T00:12:40.372187Z",
+  "ingestedAt": "2026-06-09T02:12:38.521619Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pracovní skupina bude jednat o změně financování ČT a ČRo",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pracovni-skupina-bude-jednat-o-zmene-financovani-ct-a-cro-374365",
+      "dt": "2026-06-09T01:15:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "financování",
+        "jednat",
+        "pracovní",
+        "skupina",
+        "změně",
+        "čro"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -734,27 +757,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Od úterý se začne ochlazovat a bude pršet",
-      "url": "https://ct24.ceskatelevize.cz/clanek/pocasi/od-utery-se-zacne-ochlazovat-a-bude-prset-374332",
-      "dt": "2026-06-08T06:50:05Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "ochlazovat",
-        "pršet",
-        "začne",
-        "úterý"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -765,7 +767,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41094,
+      "bytes": 40860,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -802,7 +804,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-09T00:04:04Z",
+        "raw_feed_latest_publishedAt": "2026-06-09T01:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -818,6 +820,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pracovní skupina bude jednat o změně financování ČT a ČRo",
+            "publishedAt": "2026-06-09T01:15:00Z"
+          },
           {
             "title": "Prokurátor ICC Khan byl dočasně zbaven funkce kvůli obvinění ze sexuálního obtěžování",
             "publishedAt": "2026-06-09T00:04:04Z"
@@ -845,10 +851,6 @@
           {
             "title": "Nedostatek pohonných hmot v Rusku způsobily ukrajinské útoky, přiznala Moskva",
             "publishedAt": "2026-06-08T18:17:42Z"
-          },
-          {
-            "title": "Psi uhynuli po procházce u vody. Vědci mají podezření na toxické sinice",
-            "publishedAt": "2026-06-08T18:10:24Z"
           }
         ]
       }
