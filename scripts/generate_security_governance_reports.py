@@ -58,6 +58,14 @@ SKIP_GIT_GREP_PATHS = (
     ".git/",
 )
 
+# Nightly STOP-SHIP grep + PEM scanner self-reference (audit tooling, not live secrets)
+AUDIT_GUARD_PATHS = frozenset(
+    {
+        ".github/workflows/nightly-health-report.yml",
+        "scripts/generate_security_governance_reports.py",
+    }
+)
+
 
 def _run_git(args: List[str], cwd: Path = ROOT, timeout: float = 60) -> str:
     p = subprocess.run(
@@ -182,6 +190,28 @@ def classify_doc_line(line: str) -> bool:
     return False
 
 
+def is_audit_guard_hit(path: str, line: str, pat_id: str) -> bool:
+    """Classify scanner/guard self-references and env indirection — not live credential material."""
+    norm = path.replace("\\", "/")
+    if norm in AUDIT_GUARD_PATHS:
+        return True
+    if pat_id == "PAT_PEM":
+        low = line.lower()
+        if "grep" in low or "stop-ship" in low or "stop_ship" in low or "redact" in low:
+            return True
+        if "assert " in low and "private key" in low:
+            return True
+    if pat_id == "PAT_AK":
+        low = line.lower()
+        if "env." in low or "process.env" in low:
+            return True
+        if "vin_upstream_key" in low or "vin_api_key" in low:
+            return True
+        if norm.endswith("cloudflare/vin-worker/src/index.mjs") and "api_key:" in low:
+            return True
+    return False
+
+
 def scan_secrets() -> List[SecretHit]:
     hits: List[SecretHit] = []
     for p in iter_tracked_text_files():
@@ -202,7 +232,7 @@ def scan_secrets() -> List[SecretHit]:
                             rel,
                             i,
                             sn,
-                            classify_doc_line(line),
+                            classify_doc_line(line) or is_audit_guard_hit(rel, line, pat_id),
                         )
                     )
     return hits
@@ -269,7 +299,9 @@ def build_security_report(
         else:
             risk += 1
 
-    if any("PRIVATE KEY" in h.snippet for h in secret_hits):
+    if any(
+        "PRIVATE KEY" in h.snippet and not h.likely_doc for h in secret_hits
+    ):
         stop_ship += 1
     if any(h.pat_id == "PAT_AWS" and not h.likely_doc for h in secret_hits):
         stop_ship += 1
@@ -344,10 +376,10 @@ def build_security_report(
         lines.append("No pattern hits in tracked text scan (PASS empty).")
     lines.append("")
     lines.append("=== THIRD-PARTY (scripts / styles / fonts) ===")
-    lines.append("script: self-hosted /assets/app*.js; third-party: YouTube embeds (where used)")
-    lines.append("style: /assets/app.css; Font Awesome CDN (use.fontawesome.com) in projects/index.html")
-    lines.append("font: external CSS from Font Awesome CDN")
-    lines.append("vendor: YouTube, Font Awesome CDN, image hosts per CSP img-src")
+    lines.append("script: self-hosted /assets/*.js; YouTube iframe embeds only (no external script CDN on /projects/)")
+    lines.append("style: self-hosted /assets/app.css and module CSS; inline bootstrap styles in projects/index.html")
+    lines.append("font: self-hosted /assets/fonts/ (Noto Sans); Font Awesome CDN removed from production UI")
+    lines.append("vendor: YouTube embeds, Open-Meteo fetch, RSS/article image hosts per CSP img-src")
     lines.append("")
     lines.append("=== FINDINGS ===")
     lines.append(

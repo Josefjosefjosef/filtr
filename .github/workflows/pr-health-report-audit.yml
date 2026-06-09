@@ -1,6 +1,9 @@
 # PR-only gate: proves tinycss2 + health_report duplicate audit on PR head (no nightly/main coupling).
 name: PR Health Report Audit
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
