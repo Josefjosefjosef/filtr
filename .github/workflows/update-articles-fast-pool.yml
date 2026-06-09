@@ -203,6 +203,14 @@ jobs:
           git push --force origin "HEAD:${{ env.AUTOMATION_BRANCH }}"
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
+      - name: Clean fast pool runtime artifacts
+        if: always()
+        run: |
+          set -euo pipefail
+          rm -f iu_content_freshness_guard_report.json
+          rm -f projects/data/robots_cache.json
+          echo "FAST_POOL_RUNTIME_ARTIFACTS_CLEANED=YES"
+
       - name: Git clean guard
         if: always()
         run: |

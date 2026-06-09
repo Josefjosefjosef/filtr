@@ -74,8 +74,21 @@ def validate_workflow(path: Path = WORKFLOW) -> list[str]:
                 )
                 break
 
+    cleanup_markers = (
+        "Clean fast pool runtime artifacts",
+        "iu_content_freshness_guard_report.json",
+        "projects/data/robots_cache.json",
+    )
+    if not all(m in content for m in cleanup_markers):
+        errors.append("missing step: Clean fast pool runtime artifacts (before git clean guard)")
+
     if "Git clean guard" not in content:
         errors.append("missing step: Git clean guard")
+    else:
+        cleanup_idx = content.find("Clean fast pool runtime artifacts")
+        guard_idx = content.find("Git clean guard")
+        if cleanup_idx < 0 or guard_idx < 0 or cleanup_idx > guard_idx:
+            errors.append("Clean fast pool runtime artifacts must run before Git clean guard")
 
     return errors
 
