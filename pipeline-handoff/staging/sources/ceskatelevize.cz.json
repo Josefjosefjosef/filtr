@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-09T17:33:45.913522Z",
+  "ingestedAt": "2026-06-09T18:13:16.571891Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Za požár rozvodny v německém Reutlingenu zřejmě může žhář, uvedli vyšetřovatelé",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/za-pozar-rozvodny-v-nemeckem-reutlingenu-zrejme-muze-zhar-uvedli-vysetrovatele-374402",
+      "dt": "2026-06-09T17:45:28Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "německém",
+        "požár",
+        "reutlingenu",
+        "rozvodny",
+        "uvedli",
+        "vyšetřovatelé",
+        "zřejmě",
+        "žhář"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -613,20 +638,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "U Hormuzského průlivu se zřítil americký vrtulník, dle Trumpa ho sestřelil Írán",
+      "title": "Írán nám sestřelil vrtulník, budeme muset odpovědět, prohlásil Trump",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/u-hormuzskeho-prulivu-se-zritil-americky-vrtulnik-374368",
       "dt": "2026-06-09T05:30:03Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24",
       "tokens": [
-        "americký",
-        "dle",
-        "hormuzského",
-        "průlivu",
+        "budeme",
+        "muset",
+        "nám",
+        "odpovědět",
+        "prohlásil",
         "sestřelil",
-        "trumpa",
+        "trump",
         "vrtulník",
-        "zřítil",
         "írán"
       ],
       "feedCategory": "zpravy",
@@ -731,32 +756,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Koalice oznámila ředitelům ČT a ČRo, že poplatky zruší. O nové částce se nemluvilo",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pracovni-skupina-bude-jednat-o-zmene-financovani-ct-a-cro-374365",
-      "dt": "2026-06-09T01:15:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "koalice",
-        "nemluvilo",
-        "nové",
-        "oznámila",
-        "poplatky",
-        "zruší",
-        "čro",
-        "částce",
-        "ředitelům"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -767,7 +766,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42364,
+      "bytes": 42133,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -804,7 +803,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-09T17:22:23Z",
+        "raw_feed_latest_publishedAt": "2026-06-09T17:45:28Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -821,6 +820,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Za požár rozvodny v německém Reutlingenu zřejmě může žhář, uvedli vyšetřovatelé",
+            "publishedAt": "2026-06-09T17:45:28Z"
+          },
           {
             "title": "Brno má další tunel. Pod sídlištěm Kamechy a budou v něm jezdit tramvaje",
             "publishedAt": "2026-06-09T17:22:23Z"
@@ -848,10 +851,6 @@
           {
             "title": "AI mění vstup na trh práce, mladým Španělům má pomoci praxe i technické dovednosti",
             "publishedAt": "2026-06-09T14:04:55Z"
-          },
-          {
-            "title": "Loni bylo ve světě nejvíc válek od konce druhé světové",
-            "publishedAt": "2026-06-09T13:26:15Z"
           }
         ]
       }
