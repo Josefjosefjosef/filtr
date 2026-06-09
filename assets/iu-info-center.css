@@ -1,52 +1,163 @@
-/* infoUzel.cz — Informační centrum V2 (overlay pod ikonou „i“) */
+/* infoUzel.cz — Informační centrum V2.4 (overlay pod ikonou „i“) */
+
+/* Nad spodní mobilní navigací (z-index 10025) — stejně jako ostatní overlaye */
+.iuInfoCenterV2.iuTopbarInfoOverlay{
+  z-index: 10032;
+}
 
 .iuInfoCenterV2 .iuTopbarInfoOverlay__panel{
   width: min(680px, 100%);
 }
 
-.iuInfoCenterV2 .iuTopbarInfoOverlay__title{
-  flex: 1 1 auto;
-  min-width: 0;
-  text-align: center;
-  font-size: 1.08rem;
+/* —— Hlavička: menu = titulek vlevo + Zavřít vpravo; detail = Zpět + titulek + Zavřít —— */
+.iuInfoCenterV2 .iuInfoCenter__head{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "title close";
+  align-items: center;
+  gap: 10px 12px;
+  padding: 12px 14px;
+  min-height: 56px;
+}
+
+.iuInfoCenterV2[data-iu-info-view="detail"] .iuInfoCenter__head{
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "back title close";
 }
 
 .iuInfoCenter__back{
-  flex: 0 0 auto;
-  width: 40px;
-  height: 40px;
-  padding: 0;
+  grid-area: back;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  min-height: 40px;
+  min-width: 40px;
+  padding: 0 10px 0 6px;
   border: 0;
   border-radius: 10px;
   background: rgba(14, 42, 74, 0.08);
   color: #0b1f33;
-  font-size: 1.5rem;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
   line-height: 1;
   cursor: pointer;
+  flex-shrink: 0;
 }
 .iuInfoCenter__back:hover{
   background: rgba(14, 42, 74, 0.14);
 }
-.iuInfoCenterV2 .iuTopbarInfoOverlay__head{
-  display: grid;
-  grid-template-columns: 40px 1fr 40px;
-  align-items: center;
-}
 .iuInfoCenter__back[hidden]{
-  visibility: hidden;
-  pointer-events: none;
+  display: none !important;
+}
+.iuInfoCenter__backGlyph{
+  font-size: 1.1rem;
+  line-height: 1;
 }
 
-.iuInfoCenter__body{
+.iuInfoCenterV2 .iuInfoCenter__title{
+  grid-area: title;
+  margin: 0;
+  min-width: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #0b1f33;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.iuInfoCenterV2[data-iu-info-view="detail"] .iuInfoCenter__title{
+  text-align: center;
+}
+
+.iuInfoCenterV2 .iuInfoCenter__closeBtn{
+  grid-area: close;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(14, 42, 74, 0.08);
+  color: #0b1f33;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.iuInfoCenterV2 .iuInfoCenter__closeBtn:hover{
+  background: rgba(14, 42, 74, 0.14);
+}
+.iuInfoCenter__closeGlyph{
+  font-size: 1.25rem;
+  line-height: 1;
+  font-weight: 400;
+}
+
+@media (max-width: 380px){
+  .iuInfoCenter__backText,
+  .iuInfoCenter__closeText{
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .iuInfoCenter__back{
+    padding: 0 8px;
+    min-width: 40px;
+    justify-content: center;
+  }
+  .iuInfoCenterV2 .iuInfoCenter__closeBtn{
+    min-width: 40px;
+    padding: 0 10px;
+  }
+}
+
+/* —— Tělo: menu a detail = samostatné celoobrazovkové vrstvy —— */
+.iuInfoCenterV2 .iuTopbarInfoOverlay__body.iuInfoCenter__body{
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.iuInfoCenter__menu,
+.iuInfoCenter__detail{
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   padding: 16px 16px 20px;
+  box-sizing: border-box;
 }
 
-.iuInfoCenter__menu{
-  display: block;
-}
-
+.iuInfoCenter__menu[hidden],
 .iuInfoCenter__detail[hidden]{
   display: none !important;
+}
+
+@media (max-width: 1024px){
+  .iuInfoCenter__menu,
+  .iuInfoCenter__detail{
+    padding-bottom: calc(var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 20px)) + 8px);
+    scroll-padding-bottom: calc(var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 20px)) + 8px);
+  }
 }
 
 /* —— Tile grid —— */

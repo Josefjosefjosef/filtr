@@ -1,5 +1,5 @@
 /**
- * infoUzel.cz — Informační centrum V2 (navigace menu ↔ sekce)
+ * infoUzel.cz — Informační centrum V2.4 (menu ↔ samostatný detail overlay)
  * Scope: pouze overlay #iuTopbarInfoOverlay; open/close zůstává v app.js.
  */
 (function iuInfoCenterV2Module() {
@@ -51,27 +51,36 @@
     var titleEl = document.getElementById("iuTopbarInfoOverlayTitle");
     var backBtn = document.getElementById("iuInfoCenterBack");
     var details = qsa(".iuInfoCenter__detail", overlay);
-    var tiles = qsa("[data-iu-info-section]", overlay);
+    var tiles = menu ? qsa(".iuInfoCenter__tile[data-iu-info-section]", menu) : [];
     var currentSection = "menu";
+
+    function setViewMode(key) {
+      overlay.setAttribute("data-iu-info-view", key === "menu" ? "menu" : "detail");
+    }
 
     function setTitle(key) {
       if (!titleEl) return;
       titleEl.textContent = SECTION_TITLES[key] || SECTION_TITLES.menu;
     }
 
+    function scrollPanelToTop(panel) {
+      if (!panel) return;
+      try { panel.scrollTop = 0; } catch (_) {}
+    }
+
     function showSection(key) {
       currentSection = key || "menu";
+      setViewMode(currentSection);
       if (menu) menu.hidden = currentSection !== "menu";
       details.forEach(function (panel) {
         var id = panel.getAttribute("data-iu-info-section");
-        panel.hidden = id !== currentSection;
+        var active = id === currentSection;
+        panel.hidden = !active;
+        if (active) scrollPanelToTop(panel);
       });
       if (backBtn) backBtn.hidden = currentSection === "menu";
       setTitle(currentSection);
-      var body = qs(".iuInfoCenter__body", overlay);
-      if (body) {
-        try { body.scrollTop = 0; } catch (_) {}
-      }
+      if (currentSection === "menu") scrollPanelToTop(menu);
     }
 
     function resetToMenu() {
@@ -82,8 +91,14 @@
       var btnAnd = qs('[data-iu-info-pwa-platform="android"]', overlay);
       if (ios) ios.hidden = false;
       if (and) and.hidden = true;
-      if (btnIos) btnIos.classList.add("is-active");
-      if (btnAnd) btnAnd.classList.remove("is-active");
+      if (btnIos) {
+        btnIos.classList.add("is-active");
+        btnIos.setAttribute("aria-selected", "true");
+      }
+      if (btnAnd) {
+        btnAnd.classList.remove("is-active");
+        btnAnd.setAttribute("aria-selected", "false");
+      }
     }
 
     tiles.forEach(function (tile) {
@@ -97,14 +112,6 @@
     if (backBtn) {
       backBtn.addEventListener("click", function (e) {
         try { e.preventDefault(); } catch (_) {}
-        if (currentSection === "pwa") {
-          var ios = document.getElementById("iuInfoCenterPwaIos");
-          var and = document.getElementById("iuInfoCenterPwaAndroid");
-          if (ios && !ios.hidden && and && and.hidden) {
-            showSection("menu");
-            return;
-          }
-        }
         showSection("menu");
       });
     }
