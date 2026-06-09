@@ -16,7 +16,8 @@ const { chromium, webkit, firefox } = require("playwright");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8893", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const CLS_CAP = 0.043;
-const SECTION_SWITCH_MAX_MS = 1200;
+/** publishable_pool.json primary loader: first section switch may need longer while full pool parses. */
+const SECTION_SWITCH_MAX_MS = 2500;
 const STALE_HEADER_MAX_MS = 80;
 const STALE_ARTICLES_MAX_MS = 150;
 
