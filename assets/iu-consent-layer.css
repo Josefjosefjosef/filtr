@@ -94,14 +94,22 @@
 }
 
 @media (max-width: 900px) {
+  /* Top anchor: bottom sheet overlapped Silver quick actions on narrow mobile (smoke calendar_flow). */
   .iuConsentLayer {
-    bottom: calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 8px);
+    top: 0;
+    bottom: auto;
+    padding-top: max(10px, env(safe-area-inset-top, 0px));
     padding-bottom: 0;
+    align-items: flex-start;
   }
 
   .iuConsentLayer__panel {
-    border-radius: 12px;
+    border-radius: 0 0 12px 12px;
+    border-top: 0;
     border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    max-height: min(46vh, 360px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
