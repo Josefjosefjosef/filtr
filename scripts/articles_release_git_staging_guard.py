@@ -2,18 +2,30 @@
 # -*- coding: utf-8 -*-
 """
 Guard: slow articles release workflow must prepare automation branch before data
-generation and must not checkout another branch after local data changes.
+generation, must not checkout another branch after local data changes, and must
+clean runtime guard reports before git clean guard.
 """
 
 from __future__ import annotations
 
 import re
+import subprocess
 import sys
+import tempfile
+import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = ROOT / ".github" / "workflows" / "update-articles.yml"
 RELEASE_JOB = "article_data_release"
+
+RUNTIME_ARTIFACTS = (
+    "iu_content_freshness_guard_report.json",
+    "iu_active_article_trace_report.json",
+    "iu_p0_source_coverage_report.json",
+    "iu_production_liveness_report.json",
+    "projects/data/robots_cache.json",
+)
 
 DATA_STEP_MARKERS = (
     "Load persisted aggregate output for publish",
@@ -50,6 +62,13 @@ def _step_block(block: str, name: str) -> str:
     pattern = rf"^\s+- name:\s+{re.escape(name)}\s*\n(.*?)(?=^\s+- name:|\Z)"
     m = re.search(pattern, block, re.MULTILINE | re.DOTALL)
     return m.group(1) if m else ""
+
+
+def _cleanup_runtime_artifacts(repo_root: Path) -> None:
+    for rel in RUNTIME_ARTIFACTS:
+        path = repo_root / rel
+        if path.is_file():
+            path.unlink()
 
 
 def validate_workflow(path: Path = WORKFLOW) -> list[str]:
@@ -92,13 +111,13 @@ def validate_workflow(path: Path = WORKFLOW) -> list[str]:
         if "git branch --show-current" not in commit_block:
             errors.append("Commit step must verify current branch before staging data")
 
-    cleanup_markers = (
-        "Clean release runtime artifacts",
-        "iu_content_freshness_guard_report.json",
-        "projects/data/robots_cache.json",
-    )
-    if not all(m in release for m in cleanup_markers):
+    cleanup_block = _step_block(release, "Clean release runtime artifacts")
+    if not cleanup_block:
         errors.append("missing step: Clean release runtime artifacts (before git clean guard)")
+    else:
+        for rel in RUNTIME_ARTIFACTS:
+            if rel not in cleanup_block:
+                errors.append(f"cleanup step must remove runtime artifact: {rel}")
 
     if "Git clean guard" not in release:
         errors.append("missing step: Git clean guard")
@@ -115,17 +134,72 @@ def validate_workflow(path: Path = WORKFLOW) -> list[str]:
     return errors
 
 
+class ArticlesReleaseRuntimeCleanupTests(unittest.TestCase):
+    def test_runtime_artifacts_removed_data_preserved(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            data_dir = repo / "projects" / "data"
+            data_dir.mkdir(parents=True)
+            articles = data_dir / "articles.json"
+            articles.write_text('{"generatedAt":"2026-01-01T00:00:00Z","articles":[]}', encoding="utf-8")
+            for rel in RUNTIME_ARTIFACTS:
+                path = repo / rel
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("{}", encoding="utf-8")
+
+            _cleanup_runtime_artifacts(repo)
+
+            for rel in RUNTIME_ARTIFACTS:
+                self.assertFalse((repo / rel).exists(), msg=rel)
+            self.assertTrue(articles.exists())
+
+    def test_unexpected_dirty_file_still_detected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            subprocess.run(["git", "init"], cwd=repo, capture_output=True, check=True)
+            surprise = repo / "unexpected_dirty.txt"
+            surprise.write_text("leak", encoding="utf-8")
+            for rel in RUNTIME_ARTIFACTS:
+                path = repo / rel
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("{}", encoding="utf-8")
+
+            _cleanup_runtime_artifacts(repo)
+
+            proc = subprocess.run(
+                ["git", "status", "--porcelain"],
+                cwd=repo,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            porcelain = proc.stdout.strip()
+            self.assertIn("unexpected_dirty.txt", porcelain)
+            for rel in RUNTIME_ARTIFACTS:
+                self.assertNotIn(rel, porcelain)
+
+
 def main() -> int:
     errors = validate_workflow()
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(ArticlesReleaseRuntimeCleanupTests)
+    test_result = unittest.TextTestRunner(verbosity=0).run(suite)
+    if not test_result.wasSuccessful():
+        print("ARTICLE_RELEASE_CLEANUP_GUARD_PASS=NO", file=sys.stderr)
+        return 1
+
     if errors:
         for e in errors:
             print(f"ARTICLES_RELEASE_GIT_STAGING_GUARD=FAIL {e}", file=sys.stderr)
         print("ARTICLES_RELEASE_GIT_RACE_FIXED=NO")
         print("LOCAL_CHANGES_CHECKOUT_ERROR_GONE=NO")
+        print("ARTICLE_RELEASE_CLEANUP_GUARD_PASS=NO")
         return 1
+
     print("ARTICLES_RELEASE_GIT_STAGING_GUARD=PASS")
     print("ARTICLES_RELEASE_GIT_RACE_FIXED=YES")
     print("LOCAL_CHANGES_CHECKOUT_ERROR_GONE=YES")
+    print("ARTICLE_RELEASE_CLEANUP_GUARD_PASS=YES")
+    print("RUNTIME_REPORT_GIT_CLEAN_ERROR_GONE=YES")
     return 0
 
 

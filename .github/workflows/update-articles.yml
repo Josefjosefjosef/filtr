@@ -681,6 +681,9 @@ jobs:
         run: |
           set -euo pipefail
           rm -f iu_content_freshness_guard_report.json
+          rm -f iu_active_article_trace_report.json
+          rm -f iu_p0_source_coverage_report.json
+          rm -f iu_production_liveness_report.json
           rm -f projects/data/robots_cache.json
           echo "RELEASE_RUNTIME_ARTIFACTS_CLEANED=YES"
 
