@@ -81,6 +81,10 @@ projects/data/feed_snapshots/
 projects/data/feed_transport_state.json
 projects/data/section_release_state.json
 
+# Fast pool / ingest runtime caches (never commit)
+projects/data/robots_cache.json
+iu_content_freshness_guard_report.json
+
 # Silver retrieval stress 300k local JSON exports (runtime; never commit large artifacts)
 scripts/silver-retrieval-stress-300k-export*.json
 
