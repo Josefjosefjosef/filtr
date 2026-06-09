@@ -208,6 +208,9 @@ jobs:
           git diff --cached --quiet && { echo "[FAST-POOL] Nothing to commit"; exit 0; }
           git commit -m "${{ env.PR_TITLE }}"
           git push --force origin "HEAD:${{ env.AUTOMATION_BRANCH }}"
+          PUSHED_SHA=$(git rev-parse HEAD)
+          echo "pushed_sha=$PUSHED_SHA" >> "$GITHUB_OUTPUT"
+          echo "[FAST-POOL] pushed_sha=$PUSHED_SHA"
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
       - name: Clean fast pool runtime artifacts
@@ -268,8 +271,18 @@ jobs:
         run: |
           set -euo pipefail
           NUM="${{ steps.pr.outputs.pr_number }}"
+          PUSHED_SHA="${{ steps.commit_push.outputs.pushed_sha }}"
           [ -z "$NUM" ] && exit 0
+          [ -z "$PUSHED_SHA" ] && { echo "[CLOSEOUT] ERROR: missing pushed_sha"; exit 1; }
+          HEAD_SHA=$(gh pr view "$NUM" --json headRefOid --jq '.headRefOid')
+          if [ "$HEAD_SHA" != "$PUSHED_SHA" ]; then
+            echo "[CLOSEOUT] ERROR: PR head $HEAD_SHA != pushed $PUSHED_SHA (stale PR tip)"
+            exit 1
+          fi
+          gh pr merge "$NUM" --disable-auto 2>/dev/null || true
+          sleep 3
           gh pr merge "$NUM" --auto --squash
+          echo "[CLOSEOUT] auto_merge_armed pr=$NUM head=$HEAD_SHA"
 
       - name: Wait for merge then dispatch Pages
         if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && steps.pr.outputs.pr_number != ''
@@ -278,16 +291,79 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          NUM="${{ steps.pr.outputs.pr_number }}"
           REPO="${{ github.repository }}"
-          for attempt in $(seq 1 30); do
-            MERGED_AT=$(gh pr view "$NUM" --json mergedAt --jq '.mergedAt // empty' 2>/dev/null || echo "")
-            if [ -n "$MERGED_AT" ]; then
-              echo "[CLOSEOUT] merged_at=$MERGED_AT"
+          BRANCH="${{ env.AUTOMATION_BRANCH }}"
+          EXPECTED_POOL_AT="${{ steps.pool_audit.outputs.pool_generatedAt }}"
+          PUSHED_SHA="${{ steps.commit_push.outputs.pushed_sha }}"
+          PR_TITLE="${{ env.PR_TITLE }}"
+          [ -z "$EXPECTED_POOL_AT" ] && { echo "[CLOSEOUT] ERROR: missing pool_generatedAt"; exit 1; }
+          [ -z "$PUSHED_SHA" ] && { echo "[CLOSEOUT] ERROR: missing pushed_sha"; exit 1; }
+
+          fetch_main_pool_at() {
+            gh api "repos/${REPO}/contents/projects/data/publishable_pool.json?ref=main" \
+              --jq -r '.content' | tr -d '\n' | base64 -d | jq -r '.generatedAt // empty' 2>/dev/null || echo ""
+          }
+
+          open_pr_number() {
+            gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number' 2>/dev/null || true
+          }
+
+          ensure_open_pr() {
+            EXISTING=$(open_pr_number)
+            if [ -n "$EXISTING" ]; then
+              echo "$EXISTING"
+              return
+            fi
+            gh pr create --base main --head "$BRANCH" \
+              --title "$PR_TITLE" \
+              --body "Phase 9B fast publish: incremental publishable_pool.json update."
+            open_pr_number
+          }
+
+          dispatch_required_checks() {
+            gh workflow run smoke.yml --ref "$BRANCH" --repo "$REPO"
+            gh workflow run layout-guard.yml --ref "$BRANCH" --repo "$REPO"
+            gh workflow run repo-guard.yml --ref "$BRANCH" --repo "$REPO"
+          }
+
+          arm_auto_merge() {
+            local num="$1"
+            local head
+            head=$(gh pr view "$num" --json headRefOid --jq '.headRefOid')
+            if [ "$head" != "$PUSHED_SHA" ]; then
+              echo "[CLOSEOUT] skip_auto_merge pr=$num head=$head expected=$PUSHED_SHA"
+              return 1
+            fi
+            gh pr merge "$num" --disable-auto 2>/dev/null || true
+            sleep 2
+            gh pr merge "$num" --auto --squash
+            echo "[CLOSEOUT] auto_merge_rearmed pr=$num head=$head"
+          }
+
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          for attempt in $(seq 1 45); do
+            MAIN_POOL_AT=$(fetch_main_pool_at)
+            if [ -n "$MAIN_POOL_AT" ] && [ "$MAIN_POOL_AT" = "$EXPECTED_POOL_AT" ]; then
+              echo "[CLOSEOUT] main_pool_at=$MAIN_POOL_AT matched expected — dispatching Pages"
               gh workflow run pages.yml --ref main --repo "$REPO"
+              echo "DOUBLE_CYCLE_RACE_AVOIDED=YES"
               exit 0
             fi
-            echo "[CLOSEOUT] poll_attempt=$attempt waiting_for_merge"
+
+            NUM=$(open_pr_number)
+            if [ -z "$NUM" ]; then
+              echo "[CLOSEOUT] poll_attempt=$attempt no_open_pr main_pool_at=${MAIN_POOL_AT:-none} reopening"
+              NUM=$(ensure_open_pr)
+              dispatch_required_checks
+              arm_auto_merge "$NUM" || true
+            else
+              HEAD_SHA=$(gh pr view "$NUM" --json headRefOid --jq '.headRefOid')
+              if [ "$HEAD_SHA" = "$PUSHED_SHA" ]; then
+                arm_auto_merge "$NUM" || true
+              else
+                echo "[CLOSEOUT] poll_attempt=$attempt waiting head=$HEAD_SHA expected=$PUSHED_SHA"
+              fi
+            fi
             sleep 20
           done
           echo "[CLOSEOUT] WARN: merge poll timeout; pages-publish-from-main-data cron will catch up"

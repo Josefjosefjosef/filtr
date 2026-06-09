@@ -1,5 +1,5 @@
 # Articles pipeline watchdog: Cloudflare Cron → GitHub workflow_dispatch (no GitHub schedule).
-# Dual dispatch: fast publishable_pool path (15m) + slow full pipeline path.
+# Dual dispatch: fast publishable_pool path (8m) + slow full pipeline path.
 # Deploy: cd cloudflare/articles-watchdog && npm ci && npx wrangler deploy
 # Secret: npx wrangler secret put GITHUB_TOKEN
 # Optional manual smoke: POST /run with Authorization: Bearer <MANUAL_TRIGGER_SECRET>
@@ -8,7 +8,7 @@ main = "src/index.ts"
 compatibility_date = "2024-11-01"
 
 [triggers]
-# Check every 5 minutes; fast lane dispatches when publishable_pool stale >= 15m; slow lane when articles/index stale >= 5m.
+# Check every 5 minutes; fast lane dispatches when publishable_pool stale >= 8m; slow lane when articles/index stale >= 5m.
 crons = ["*/5 * * * *"]
 
 [vars]
@@ -20,6 +20,6 @@ STALE_AFTER_MINUTES = "5"
 # Fast path (incremental publishable_pool merge only).
 FAST_WORKFLOW_FILE = "update-articles-fast-pool.yml"
 FAST_FRESHNESS_URL = "https://infouzel.cz/projects/data/publishable_pool.json"
-FAST_STALE_AFTER_MINUTES = "15"
+FAST_STALE_AFTER_MINUTES = "8"
 
 # Optional: wrangler secret put MANUAL_TRIGGER_SECRET — then POST /run works for smoke tests.

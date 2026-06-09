@@ -175,7 +175,7 @@ export function resolveLaneConfigs(env: {
     env.SLOW_STALE_AFTER_MINUTES || env.STALE_AFTER_MINUTES || "5",
     10,
   );
-  const fastStale = Number.parseInt(env.FAST_STALE_AFTER_MINUTES || "15", 10);
+  const fastStale = Number.parseInt(env.FAST_STALE_AFTER_MINUTES || "8", 10);
 
   if (!slowFreshness) throw new Error("SLOW_FRESHNESS_URL or FRESHNESS_URL required");
   if (!fastFreshness) throw new Error("FAST_FRESHNESS_URL required");
