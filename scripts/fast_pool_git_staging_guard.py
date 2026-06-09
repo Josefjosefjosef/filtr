@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Guard: fast pool workflow must prepare automation branch before data generation
-and must not checkout another branch after local data changes.
+Guard: fast pool workflow must prepare automation branch before data generation,
+must not checkout another branch after local data changes, and must verify that
+Pages closeout waits for this run's publishable_pool.generatedAt on main (race fix).
 """
 
 from __future__ import annotations
 
 import re
 import sys
+import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,6 +29,13 @@ PREP_BRANCH_MARKERS = (
 FORBIDDEN_IN_COMMIT = (
     re.compile(r"git\s+checkout\s+-B\s+.*AUTOMATION_BRANCH"),
     re.compile(r"git\s+checkout\s+-B\s+.*automation/update-articles-fast-pool"),
+)
+
+RACE_FIX_WAIT_MARKERS = (
+    "fetch_main_pool_at",
+    "EXPECTED_POOL_AT",
+    "DOUBLE_CYCLE_RACE_AVOIDED=YES",
+    "ensure_open_pr",
 )
 
 
@@ -73,6 +82,27 @@ def validate_workflow(path: Path = WORKFLOW) -> list[str]:
                     "Commit step must not git checkout automation branch after data generation"
                 )
                 break
+        if "pushed_sha=" not in commit_block:
+            errors.append("Commit step must emit pushed_sha output for merge race guard")
+
+    auto_merge_block = _step_block(content, "Enable auto-merge when data-only")
+    if not auto_merge_block:
+        errors.append("missing step: Enable auto-merge when data-only")
+    else:
+        if "headRefOid" not in auto_merge_block:
+            errors.append("Enable auto-merge must verify PR headRefOid matches pushed_sha")
+        if "--disable-auto" not in auto_merge_block:
+            errors.append("Enable auto-merge must reset auto-merge with --disable-auto before arming")
+
+    wait_block = _step_block(content, "Wait for merge then dispatch Pages")
+    if not wait_block:
+        errors.append("missing step: Wait for merge then dispatch Pages")
+    else:
+        for marker in RACE_FIX_WAIT_MARKERS:
+            if marker not in wait_block:
+                errors.append(f"Wait for merge step missing race-fix marker: {marker}")
+        if "mergedAt // empty" in wait_block:
+            errors.append("Wait for merge must not close on mergedAt alone (stale merge race)")
 
     cleanup_markers = (
         "Clean fast pool runtime artifacts",
@@ -99,12 +129,22 @@ def main() -> int:
         for e in errors:
             print(f"FAST_POOL_GIT_STAGING_GUARD=FAIL {e}", file=sys.stderr)
         print("FAST_POOL_GIT_RACE_FIXED=NO")
+        print("DOUBLE_CYCLE_RACE_FIXED=NO")
         return 1
     print("FAST_POOL_GIT_STAGING_GUARD=PASS")
     print("FAST_POOL_GIT_RACE_FIXED=YES")
+    print("DOUBLE_CYCLE_RACE_FIXED=YES")
     print("LOCAL_CHANGES_CHECKOUT_ERROR_GONE=YES")
     return 0
 
 
+class FastPoolGitStagingGuardTests(unittest.TestCase):
+    def test_validate_passes_on_repo_workflow(self) -> None:
+        errors = validate_workflow()
+        self.assertEqual(errors, [])
+
+
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "test":
+        raise SystemExit(unittest.main(argv=[sys.argv[0]]))
     raise SystemExit(main())

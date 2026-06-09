@@ -86,8 +86,8 @@ function checkConfig() {
     fail(`SLOW_WORKFLOW_FILE must be update-articles.yml (got ${slowWf ?? "n/a"})`);
     ok = false;
   }
-  if (fastStale !== "15") {
-    fail(`FAST_STALE_AFTER_MINUTES must be 15 (got ${fastStale ?? "n/a"})`);
+  if (fastStale !== "8") {
+    fail(`FAST_STALE_AFTER_MINUTES must be 8 (got ${fastStale ?? "n/a"})`);
     ok = false;
   }
   if (ok) log("wrangler vars PASS");
