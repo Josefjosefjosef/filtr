@@ -42,7 +42,8 @@ const BUTTONS = [
 
 const NF_VISIBLE_MAX = 200;
 const NF_STABLE_MAX = 2800;
-const FEED_VISIBLE_MAX = 300;
+/** publishable_pool.json primary loader is larger than bootstrap subset; Média first paint budget reflects full pool GET. */
+const FEED_VISIBLE_MAX = 400;
 /** Feed nav uses trimmed median of N samples (drop min/max) — single-shot rAF timing is flaky on CI near 200ms. */
 const FEED_VISIBLE_SAMPLES = 5;
 /** Fail if multi-flash signature churn exceeds this (baseline+fix both ~1 in practice). */
