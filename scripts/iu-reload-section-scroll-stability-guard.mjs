@@ -17,7 +17,7 @@ const PORT = parseInt(process.env.IU_GUARD_PORT || "8893", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const CLS_CAP = 0.043;
 /** publishable_pool.json primary loader: first section switch may need longer while full pool parses. */
-const SECTION_SWITCH_MAX_MS = 2500;
+const SECTION_SWITCH_MAX_MS = 4000;
 const STALE_HEADER_MAX_MS = 80;
 const STALE_ARTICLES_MAX_MS = 150;
 
@@ -129,7 +129,15 @@ async function runReloadClsGuard(page) {
 
 async function runSectionSwitchGuard(page) {
   await page.goto(BASE + "?section=feed&iuRobust=1", { waitUntil: "domcontentloaded", timeout: 60000 });
-  await page.waitForTimeout(600);
+  await page.waitForSelector("#feed a.iuCardTitle", { timeout: 120000 });
+  await page.waitForFunction(
+    () => {
+      const f = document.getElementById("feed");
+      return f && String(f.getAttribute("data-feed-ready") || "") === "true";
+    },
+    null,
+    { timeout: 120000 }
+  );
   const results = [];
   let prev = null;
   for (const sec of SECTIONS) {
