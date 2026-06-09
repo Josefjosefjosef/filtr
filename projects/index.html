@@ -4966,8 +4966,8 @@ font-src 'self' data:;
     </script>
     <script type="module">import{franc}from"/assets/vendor/franc-min.js";window.franc=franc;</script>
     <!-- P0: jediný globální network GET na primární články (single-flight před crash-shield + app.js).
-         Default: bootstrap.json + retention shardy; kill-switch ?iuArticlesFull=1 nebo ?iuArticlesBootstrap=0 → publishable_pool.json;
-         ?iuArticlesBootstrap=1 explicitně (stejný bootstrap režim); fallback na publishable_pool.json při chybě bootstrapu. -->
+         Default: publishable_pool.json (Phase 9B fast publish cadence); ?iuArticlesBootstrap=1 → bootstrap.json + retention shardy;
+         kill-switch ?iuArticlesFull=1 nebo ?iuArticlesBootstrap=0 → publishable_pool.json; fallback na publishable_pool.json při chybě bootstrapu. -->
     <script>
     (function () {
       function iuBasePathForData() {
@@ -5032,11 +5032,12 @@ font-src 'self' data:;
           return false;
         }
       }
-      /** Primární zdroj článků = bootstrap, kromě kill-switchů (iuArticlesFull=1 / iuArticlesBootstrap=0). */
+      /** Primární zdroj = publishable_pool (fast publish); bootstrap jen při ?iuArticlesBootstrap=1. */
       function iuUseBootstrapPrimaryArticlesSource() {
         if (iuArticlesFullForced()) return false;
         if (iuArticlesBootstrapExplicitOff()) return false;
-        return true;
+        if (iuArticlesBootstrapExplicitOn()) return true;
+        return false;
       }
       function iuPrimaryArticlesLoadKey() {
         return iuUseBootstrapPrimaryArticlesSource() ? "BOOT:" + iuCanonBootstrapJsonUrl() : "POOL:" + iuCanonPublishablePoolJsonUrl();
