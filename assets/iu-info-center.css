@@ -483,3 +483,111 @@
   background: rgba(15, 23, 42, 0.06);
   color: #334155;
 }
+
+/* —— Nastavení soukromí (consent PR-1) —— */
+.iuPrivacySettings__card{
+  margin: 0 0 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(14, 42, 74, 0.1);
+  background: rgba(248, 250, 252, 0.95);
+}
+.iuPrivacySettings__cardHead{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+.iuPrivacySettings__cardTitle{
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0b1f33;
+}
+.iuPrivacySettings__radioGroup{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 10px 0 0;
+}
+.iuPrivacySettings__radioRow{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 4px 0;
+  font-size: 0.92rem;
+  color: #334155;
+  cursor: pointer;
+}
+.iuPrivacySettings__radioRow input{
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: #1d4ed8;
+}
+.iuPrivacySettings__meta{
+  margin: 8px 0 0;
+  font-size: 0.82rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+.iuPrivacySettings__saveRow{
+  margin-top: 16px;
+}
+.iuPrivacySettings__saveBtn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 160px;
+  width: 100%;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 10px;
+  background: #1d4ed8;
+  color: #fff;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.iuPrivacySettings__saveBtn:hover{
+  background: #1e40af;
+}
+.iuPrivacySettings__saveBtn:focus-visible{
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+.iuPrivacySettings__footer{
+  margin-top: 12px;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+.iuPrivacySettings__status{
+  margin: 8px 0 0;
+  min-height: 1.25em;
+  font-size: 0.88rem;
+  color: #0f766e;
+}
+.iuInfoCenter__actionLink{
+  display: inline-flex;
+  align-items: center;
+  margin-top: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #1d4ed8;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.iuInfoCenter__actionLink:hover{
+  color: #1e40af;
+}

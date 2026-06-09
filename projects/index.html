@@ -513,8 +513,8 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-silver-premium-draft.css?v=silver-premium-draft-cards-20260602" />
     <link rel="stylesheet" href="/assets/iu-tasks-premium.css?v=tasks-premium-scope-20260503" />
     <link rel="stylesheet" href="/assets/iu-notes-premium.css?v=notes-premium-teal-20260503" />
-    <link rel="stylesheet" href="/assets/iu-info-center.css?v=info-center-v2-4-20260609" />
-    <link rel="stylesheet" href="/assets/iu-storage-notice.css?v=storage-notice-v1-20260609" />
+    <link rel="stylesheet" href="/assets/iu-info-center.css?v=info-center-v2-5-consent-20260609" />
+    <link rel="stylesheet" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" />
     <style id="iuInfoCardsMobileTabletPostAppCss">
       /* P0 info cards Kalendář+Úkoly ≤1023: post app.css — beats #iuInfoCardsMobileTablet min-height:160px (assets/app.css CLS reserve). */
       @media (max-width: 1023px) {
@@ -5281,8 +5281,9 @@ font-src 'self' data:;
       })();
     </script>
     <script type="module" src="/assets/app.js?v=p0-daily-cal-add-edit-ux-20260503"></script>
-    <script defer src="/assets/iu-info-center.js?v=info-center-v2-4-20260609"></script>
-    <script defer src="/assets/iu-storage-notice.js?v=storage-notice-v1-20260609"></script>
+    <script defer src="/assets/iu-consent.js?v=consent-v1-20260609"></script>
+    <script defer src="/assets/iu-info-center.js?v=info-center-v2-5-consent-20260609"></script>
+    <script defer src="/assets/iu-consent-layer.js?v=consent-layer-v1-20260609"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=6"></script>
     <script>
     (function(){
@@ -5762,6 +5763,10 @@ font-src 'self' data:;
                 <span class="iuInfoCenter__tileIcon" aria-hidden="true">🍪</span>
                 <span class="iuInfoCenter__tileLabel">Cookies a technické ukládání</span>
               </button>
+              <button type="button" class="iuInfoCenter__tile" data-iu-info-section="privacy-settings">
+                <span class="iuInfoCenter__tileIcon" aria-hidden="true">🔐</span>
+                <span class="iuInfoCenter__tileLabel">Nastavení soukromí</span>
+              </button>
               <button type="button" class="iuInfoCenter__tile" data-iu-info-section="privacy">
                 <span class="iuInfoCenter__tileIcon" aria-hidden="true">🔒</span>
                 <span class="iuInfoCenter__tileLabel">Ochrana soukromí a data</span>
@@ -5896,52 +5901,126 @@ font-src 'self' data:;
 
           <article id="iuInfoCenterDetailCookies" class="iuInfoCenter__detail" data-iu-info-section="cookies" hidden>
             <div class="iuInfoCenter__detailInner">
-              <p class="iuInfoCenter__lead">InfoUzel pro běh webu využívá technologie prohlížeče. Rozlišujeme mezi technickým ukládáním potřebným pro funkce a případnou budoucí anonymní analytikou.</p>
-              <h3 class="iuInfoCenter__h3">A) Aktuální technické ukládání</h3>
+              <p class="iuInfoCenter__lead">InfoUzel v prohlížeči ukládá data pro nástroje a offline režim. Anonymní statistiky návštěvnosti jsou <strong>volitelné</strong> a <strong>defaultně vypnuté</strong>. Zapnete je v liště soukromí nebo v Nastavení soukromí.</p>
+              <h3 class="iuInfoCenter__h3">A) Nezbytné technické ukládání</h3>
+              <p class="iuInfoCenter__p">Tyto technologie jsou potřeba, aby InfoUzel fungoval jako osobní nástroj a PWA. <strong>Nejsou</strong> určeny pro reklamu ani profilování návštěvnosti.</p>
               <ul class="iuInfoCenter__ul">
-                <li><strong>localStorage</strong> — poznámky, úkoly, kalendář, faktury, nastavení vzhledu, preference počasí, schránky MindMenu, cache feedu a další uživatelská data</li>
+                <li><strong>localStorage</strong> — poznámky, úkoly, kalendář, faktury, nastavení vzhledu, preference počasí, schránky MindMenu, cache feedu, volba soukromí a příznak zavření consent lišty</li>
                 <li><strong>sessionStorage</strong> — dočasné údaje relace (návrat z odkazu, aktualizace PWA, obnova po chybě)</li>
                 <li><strong>IndexedDB</strong> — záloha kalendáře (databáze <code>iu.calendar.idb</code>)</li>
                 <li><strong>Cache API</strong> — uložené soubory webu a naposledy stažené články pro rychlejší načtení</li>
                 <li><strong>Service Worker</strong> — správa cache, offline přístup a aktualizace webu</li>
                 <li><strong>PWA / ikona na ploše</strong> — instalace webu jako aplikace, bez samostatného účtu</li>
               </ul>
-              <p class="iuInfoCenter__p">Tato data slouží pro funkčnost, kterou jste si zvolili, ne pro reklamní profilování.</p>
-              <h3 class="iuInfoCenter__h3">Co aktuálně nepoužíváme</h3>
+              <p class="iuInfoCenter__p">Tato data slouží pro funkčnost, kterou jste si zvolili. <strong>Neprodáváme je</strong> a <strong>nepoužíváme</strong> pro reklamní profilování.</p>
+              <h3 class="iuInfoCenter__h3">B) Co nepoužíváme (a nikdy nebudeme)</h3>
               <div class="iuInfoCenter__box" role="note">
                 <ul class="iuInfoCenter__ul">
-                  <li>nepoužíváme marketingové cookies</li>
-                  <li>nepoužíváme reklamní profilování</li>
-                  <li>nevytváříme reklamní profily uživatelů</li>
-                  <li>neprodáváme osobní data třetím stranám</li>
+                  <li>marketingové cookies ani reklamní sítě (Google Analytics, Meta Pixel apod.)</li>
+                  <li>behaviorální reklamu nebo cross-site tracking</li>
+                  <li>prodej osobních dat třetím stranám</li>
+                  <li>reklamní profily uživatelů</li>
+                  <li>tlačítka typu „Přijmout vše“ pro skryté zapnutí statistik</li>
                 </ul>
               </div>
-              <h3 class="iuInfoCenter__h3">B) Budoucí anonymní statistiky návštěvnosti</h3>
-              <p class="iuInfoCenter__p">InfoUzel může v budoucnu zavést privacy-friendly statistiky návštěvnosti. Účelem bude:</p>
-              <ul class="iuInfoCenter__ul">
-                <li>zjistit počet návštěv</li>
-                <li>poznat vytížení webu</li>
-                <li>odhalovat technické chyby</li>
-                <li>zlepšovat funkce webu</li>
-                <li>zjistit, které části webu jsou používané</li>
-              </ul>
-              <p class="iuInfoCenter__p">Nesmí sloužit k behaviorální reklamě, prodeji dat, vytváření reklamních profilů ani sledování konkrétních osob.</p>
-              <p class="iuInfoCenter__p">Před případným zavedením netechnické analytiky musí být uživatelé odpovídajícím způsobem informováni a tam, kde to právní předpisy vyžadují, musí být získán souhlas.</p>
-              <h3 class="iuInfoCenter__h3">Třetí strany</h3>
-              <p class="iuInfoCenter__p">Při přehrání videa (YouTube / youtube-nocookie.com) nebo načtení počasí (Open-Meteo) mohou tyto služby ukládat vlastní technická data nebo cookies dle svých pravidel. Na to nemáme přímou kontrolu.</p>
+              <h3 class="iuInfoCenter__h3">Co nikdy nesbíráme</h3>
+              <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
+                <p class="iuInfoCenter__p">InfoUzel <strong>nikdy</strong> neodesílá na server ani neukládá pro statistiky:</p>
+                <ul class="iuInfoCenter__ul">
+                  <li>obsah vašich <strong>poznámek</strong></li>
+                  <li>obsah vašich <strong>úkolů</strong></li>
+                  <li>obsah vašeho <strong>kalendáře</strong></li>
+                  <li>obsah <strong>financí</strong> (kalkulačky, přehledy, zadané údaje)</li>
+                  <li>obsah <strong>faktur</strong> (odběratelé, položky, částky)</li>
+                  <li>obsah <strong>MindMenu</strong> (schránky, vložené texty)</li>
+                  <li><strong>osobní dokumenty</strong>, které vložíte nebo vytvoříte v nástrojích InfoUzel</li>
+                  <li>jména, e-maily, telefony a přesnou polohu</li>
+                </ul>
+                <p class="iuInfoCenter__p">Statistiky pracují pouze s <strong>agregovanými</strong> údaji o návštěvnosti a používání webu — nikoli s obsahem, který píšete do nástrojů.</p>
+              </div>
+              <h3 class="iuInfoCenter__h3">C) Anonymní statistiky návštěvnosti (volitelné)</h3>
+              <p class="iuInfoCenter__p">Statistiky jsou <strong>vypnuté</strong>, dokud nezvolíte <strong>Povolit anonymní statistiky</strong> v liště soukromí nebo nezapnete volbu v Nastavení soukromí. Volba <strong>Pouze nezbytné</strong> statistiky nezapíná.</p>
+              <p class="iuInfoCenter__p">Po zapnutí (v budoucnu) pomohou zjistit počet návštěv, vytížení webu, technické chyby a využití sekcí — bez reklamního profilování.</p>
+              <p class="iuInfoCenter__p">Souhlas se statistikami <strong>není</strong> odvozen z pokračování v prohlížení ani z používání nástrojů.</p>
+              <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy-settings">Upravit v Nastavení soukromí →</button>
+              <h3 class="iuInfoCenter__h3">D) Třetí strany (mimo naše statistiky)</h3>
+              <p class="iuInfoCenter__p">Při přehrání videa (YouTube / youtube-nocookie.com) nebo načtení počasí (Open-Meteo) mohou tyto služby ukládat vlastní technická data dle svých pravidel. Na to nemáme přímou kontrolu. Naše volitelné statistiky se jich netýkají.</p>
               <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
+            </div>
+          </article>
+
+          <article id="iuInfoCenterDetailPrivacySettings" class="iuInfoCenter__detail" data-iu-info-section="privacy-settings" hidden>
+            <div class="iuInfoCenter__detailInner">
+              <p class="iuInfoCenter__lead">Zde si kdykoli změníte volbu anonymních statistik. Web InfoUzel funguje v plném rozsahu i bez statistik. Technické ukládání pro nástroje je vždy potřeba pro fungování webu.</p>
+              <section class="iuPrivacySettings__card" aria-labelledby="iuPrivacyEssentialHeading">
+                <div class="iuPrivacySettings__cardHead">
+                  <h3 class="iuPrivacySettings__cardTitle" id="iuPrivacyEssentialHeading">1. Nezbytné technické ukládání</h3>
+                  <span class="iuInfoCenter__pill iuInfoCenter__pill--local">Vždy aktivní</span>
+                </div>
+                <p class="iuInfoCenter__p">InfoUzel ukládá v prohlížeči data pro:</p>
+                <ul class="iuInfoCenter__ul">
+                  <li><strong>poznámky, úkoly a kalendář</strong></li>
+                  <li><strong>nastavení</strong> vzhledu a vaše preference</li>
+                  <li><strong>PWA</strong> — ikona na ploše a offline režim</li>
+                  <li><strong>cache</strong> a service worker — rychlejší načtení a aktualizace webu</li>
+                </ul>
+                <p class="iuInfoCenter__p">Bez toho by osobní nástroje nefungovaly. Tato data nejsou určena pro reklamu ani prodej třetím stranám.</p>
+                <p class="iuPrivacySettings__meta"><strong>Stav:</strong> vždy zapnuto · nelze vypnout v tomto menu</p>
+                <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="cookies">Více o technickém ukládání →</button>
+              </section>
+              <section class="iuPrivacySettings__card" aria-labelledby="iuPrivacyStatsHeading">
+                <h3 class="iuPrivacySettings__cardTitle" id="iuPrivacyStatsHeading">2. Anonymní statistika návštěvnosti</h3>
+                <div class="iuPrivacySettings__radioGroup" role="radiogroup" aria-labelledby="iuPrivacyStatsHeading">
+                  <label class="iuPrivacySettings__radioRow">
+                    <input type="radio" name="iuPrivacyStats" id="iuPrivacyStatsOff" value="denied" checked />
+                    <span>Vypnuto</span>
+                  </label>
+                  <label class="iuPrivacySettings__radioRow">
+                    <input type="radio" name="iuPrivacyStats" id="iuPrivacyStatsOn" value="granted" />
+                    <span>Zapnuto</span>
+                  </label>
+                </div>
+                <div class="iuInfoCenter__box iuInfoCenter__box--legal" role="note">
+                  <strong>Co měříme (agregovaně)</strong>
+                  <ul class="iuInfoCenter__ul">
+                    <li>návštěvy a zobrazení stránek</li>
+                    <li>výkon webu (agregovaně)</li>
+                    <li>technické chyby (bez textů, které píšete)</li>
+                    <li>využití funkcí a sekcí (např. Silver, MindMenu, Finance)</li>
+                  </ul>
+                </div>
+                <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
+                  <strong>Co nikdy neměříme</strong>
+                  <ul class="iuInfoCenter__ul">
+                    <li>obsah poznámek, úkolů a kalendáře</li>
+                    <li>obsah financí a faktur</li>
+                    <li>obsah MindMenu a osobní dokumenty</li>
+                    <li>osobní texty, jména, e-maily a telefony</li>
+                  </ul>
+                </div>
+                <p class="iuPrivacySettings__meta"><strong>Právní základ:</strong> váš souhlas · můžete kdykoli odvolat stejným způsobem</p>
+                <p class="iuPrivacySettings__meta"><strong>Výchozí stav:</strong> vypnuto</p>
+                <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="cookies">Co přesně měříme v Cookies →</button>
+              </section>
+              <div class="iuPrivacySettings__saveRow">
+                <button type="button" class="iuPrivacySettings__saveBtn" id="iuPrivacySettingsSave">Uložit</button>
+              </div>
+              <p class="iuPrivacySettings__status" id="iuPrivacySettingsStatus" aria-live="polite"></p>
+              <p class="iuPrivacySettings__footer">Poslední změna: <span id="iuPrivacySettingsLastChange">—</span> · Verze nastavení: <span data-iu-info-doc-version>1.0</span></p>
             </div>
           </article>
 
           <article id="iuInfoCenterDetailPrivacy" class="iuInfoCenter__detail" data-iu-info-section="privacy" hidden>
             <div class="iuInfoCenter__detailInner">
               <p class="iuInfoCenter__lead">Tato sekce popisuje poctivě, jaká data InfoUzel používá, kde zůstávají a co můžete ovlivnit vy.</p>
+              <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy-settings">Správa souhlasu a nastavení soukromí →</button></p>
               <h3 class="iuInfoCenter__h3">1. Jaká data mohou být zpracována</h3>
               <ul class="iuInfoCenter__ul">
                 <li>nastavení vzhledu a uživatelské preference</li>
                 <li>lokálně uložené poznámky, úkoly a kalendářní údaje</li>
                 <li>data vložená uživatelem do jednotlivých nástrojů (faktury, schránky, zásilky, kalkulačky)</li>
                 <li>technická data potřebná pro běh webu (cache, verze, lokální diagnostika chyb)</li>
+                <li>volitelné anonymní statistiky návštěvnosti — pouze po explicitním souhlasu; agregované údaje, ne obsah vašich nástrojů</li>
                 <li>poloha — pouze pokud ji uživatel výslovně povolí pro počasí nebo podobnou funkci</li>
               </ul>
               <h3 class="iuInfoCenter__h3">2. Kde jsou data uložena</h3>
@@ -5959,22 +6038,24 @@ font-src 'self' data:;
                 <li><strong>localStorage / IndexedDB / sessionStorage</strong> — bez pevného časového limitu; závisí na zařízení a prohlížeči</li>
                 <li><strong>Service Worker cache</strong> — obnovuje se při aktualizaci webu; články a JSON mají TTL ve služebním workeru (viz sekce Cookies)</li>
                 <li><strong>Poznámky, úkoly, kalendář</strong> — lokálně do smazání uživatelem nebo vymazáním dat prohlížeče</li>
-                <li><strong>Preference a nastavení</strong> — lokálně do smazání; technický příznak informační lišty je také lokální</li>
+                <li><strong>Preference a nastavení</strong> — lokálně do smazání; volba soukromí a consent lišty je také lokální</li>
                 <li><strong>Smazání dat prohlížeče / reset / nové zařízení</strong> — může vést ke ztrátě všech lokálních dat bez možnosti obnovy ze serveru InfoUzel</li>
               </ul>
-              <h3 class="iuInfoCenter__h3">3. Co na serverech InfoUzel běžně neuchováváme</h3>
+              <h3 class="iuInfoCenter__h3">3. Co na serverech InfoUzel neuchováváme</h3>
               <div class="iuInfoCenter__box" role="note">
                 <ul class="iuInfoCenter__ul">
                   <li>nevytváříme uživatelské účty</li>
-                  <li>neprovozujeme uživatelské profily</li>
-                  <li>neuchováváme centrální databázi poznámek, úkolů a kalendářů</li>
+                  <li>neprovozujeme reklamní profily</li>
+                  <li><strong>osobní obsah</strong> poznámek, úkolů, kalendářů a faktur na serveru neuchováváme</li>
                   <li>neprodáváme osobní data</li>
                   <li>nepoužíváme cílenou reklamní profilaci</li>
                 </ul>
               </div>
+              <p class="iuInfoCenter__p">Pokud povolíte statistiky (v budoucnu), ukládáme pouze <strong>agregované a anonymizované</strong> údaje o návštěvnosti — nikoli texty z vašich nástrojů. Viz sekce Cookies → Co nikdy nesbíráme.</p>
               <p class="iuInfoCenter__p">Na serveru jsou dostupné veřejné statické soubory (články, videa, metadata) generované pipeline — ne osobní data uživatelů.</p>
-              <h3 class="iuInfoCenter__h3">4. Jak může uživatel data smazat</h3>
+              <h3 class="iuInfoCenter__h3">4. Jak může uživatel data smazat nebo změnit souhlas</h3>
               <ul class="iuInfoCenter__ul">
+                <li>změnou volby v <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy-settings">Nastavení soukromí</button> (zapnout / vypnout statistiky)</li>
                 <li>smazáním dat webu v prohlížeči (Safari, Chrome, Firefox a další)</li>
                 <li>vymazáním localStorage a cache v nastavení prohlížeče pro <strong>infouzel.cz</strong></li>
                 <li>resetem zařízení nebo obnovením továrního nastavení</li>
@@ -5991,7 +6072,7 @@ font-src 'self' data:;
                 <li>právo vznést námitku</li>
                 <li>právo podat stížnost u <a class="iuInfoCenter__link" href="https://uoou.cz" target="_blank" rel="noopener noreferrer">Úřadu pro ochranu osobních údajů (ÚOOÚ)</a></li>
               </ul>
-              <p class="iuInfoCenter__p">U lokálních dat v zařízení můžete práva uplatnit smazáním dle návodu výše. Dotazy: <a class="iuInfoCenter__link" href="mailto:info@infouzel.cz">info@infouzel.cz</a>.</p>
+              <p class="iuInfoCenter__p">U lokálních dat v zařízení můžete práva uplatnit smazáním dle návodu výše. Souhlas se statistikami můžete kdykoli odvolat v Nastavení soukromí — stejně snadno, jako jste ho udělili. Dotazy: <a class="iuInfoCenter__link" href="mailto:info@infouzel.cz">info@infouzel.cz</a>.</p>
               <h3 class="iuInfoCenter__h3">6. Externí poskytovatelé</h3>
               <ul class="iuInfoCenter__ul">
                 <li><strong>YouTube / Google</strong> — náhledy a přehrávání videí (youtube.com, youtube-nocookie.com, i.ytimg.com)</li>
@@ -6039,12 +6120,14 @@ font-src 'self' data:;
       </div>
     </div>
 
-    <aside id="iuStorageNotice" class="iuStorageNotice" role="region" aria-label="Informace o technickém ukládání" hidden>
-      <div class="iuStorageNotice__panel">
-        <p class="iuStorageNotice__text">InfoUzel používá technické ukládání v prohlížeči pro fungování nástrojů, nastavení a offline režim.</p>
-        <div class="iuStorageNotice__actions">
-          <button type="button" class="iuStorageNotice__btn iuStorageNotice__btn--primary" id="iuStorageNoticeOk">Rozumím</button>
-          <button type="button" class="iuStorageNotice__btn iuStorageNotice__btn--ghost" id="iuStorageNoticeMore">Více informací</button>
+    <aside id="iuConsentLayer" class="iuConsentLayer" role="region" aria-label="Volba soukromí a ukládání" hidden>
+      <div class="iuConsentLayer__panel">
+        <h2 class="iuConsentLayer__title">Soukromí a ukládání v prohlížeči</h2>
+        <p class="iuConsentLayer__text">InfoUzel používá nezbytné technické ukládání pro fungování nástrojů a offline režim. Volitelně můžete povolit anonymní statistiky návštěvnosti, které nám v budoucnu pomohou zlepšovat web. Nepoužíváme reklamní profilování a neprodáváme data třetím stranám.</p>
+        <div class="iuConsentLayer__actions">
+          <button type="button" class="iuConsentLayer__btn" id="iuConsentAllowStats">Povolit anonymní statistiky</button>
+          <button type="button" class="iuConsentLayer__btn" id="iuConsentEssentialOnly">Pouze nezbytné</button>
+          <button type="button" class="iuConsentLayer__btn" id="iuConsentSettings">Nastavení</button>
         </div>
       </div>
     </aside>

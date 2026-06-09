@@ -1,5 +1,5 @@
 /**
- * infoUzel.cz — Informační centrum V2.4 (menu ↔ samostatný detail overlay)
+ * infoUzel.cz — Informační centrum V2.5 (consent / Nastavení soukromí)
  * Scope: pouze overlay #iuTopbarInfoOverlay; open/close zůstává v app.js.
  */
 (function iuInfoCenterV2Module() {
@@ -11,11 +11,12 @@
     about: "O InfoUzel.cz",
     silver: "O Silverovi",
     cookies: "Cookies a technické ukládání",
+    "privacy-settings": "Nastavení soukromí",
     privacy: "Ochrana soukromí a data",
     contact: "Provozovatel a kontakt"
   };
 
-  var DOC_VERSION = "1.0";
+  var DOC_VERSION = "1.1";
 
   function qs(sel, root) {
     return (root || document).querySelector(sel);
@@ -43,6 +44,59 @@
     });
   }
 
+  function initPrivacySettings() {
+    var panel = document.getElementById("iuInfoCenterDetailPrivacySettings");
+    if (!panel) return;
+
+    var offRadio = document.getElementById("iuPrivacyStatsOff");
+    var onRadio = document.getElementById("iuPrivacyStatsOn");
+    var saveBtn = document.getElementById("iuPrivacySettingsSave");
+    var lastChangeEl = document.getElementById("iuPrivacySettingsLastChange");
+    var statusLive = document.getElementById("iuPrivacySettingsStatus");
+
+    function syncRadiosFromStorage() {
+      var consent = window.iuConsent;
+      if (!consent) return;
+      var granted = consent.getAnalyticsConsent() === "granted";
+      if (onRadio) onRadio.checked = granted;
+      if (offRadio) offRadio.checked = !granted;
+      if (lastChangeEl && consent.formatConsentTimestamp) {
+        lastChangeEl.textContent = consent.formatConsentTimestamp(consent.getConsentTimestamp());
+      }
+    }
+
+    function announce(msg) {
+      if (statusLive) statusLive.textContent = msg;
+    }
+
+    if (saveBtn) {
+      saveBtn.addEventListener("click", function (e) {
+        try {
+          e.preventDefault();
+        } catch (_) {}
+        var consent = window.iuConsent;
+        if (!consent) return;
+        var val = onRadio && onRadio.checked ? "granted" : "denied";
+        consent.setAnalyticsConsent(val);
+        consent.dismissLayer();
+        var bar = document.getElementById("iuConsentLayer");
+        if (bar) bar.hidden = true;
+        syncRadiosFromStorage();
+        announce("Nastavení soukromí uloženo.");
+      });
+    }
+
+    try {
+      var mo = new MutationObserver(function () {
+        if (!panel.hidden) syncRadiosFromStorage();
+      });
+      mo.observe(panel, { attributes: true, attributeFilter: ["hidden"] });
+    } catch (_) {}
+
+    window.addEventListener("iu:consent-change", syncRadiosFromStorage);
+    syncRadiosFromStorage();
+  }
+
   function initNavigation() {
     var overlay = document.getElementById("iuTopbarInfoOverlay");
     if (!overlay || overlay.getAttribute("data-iu-info-center-v2") !== "1") return;
@@ -65,7 +119,9 @@
 
     function scrollPanelToTop(panel) {
       if (!panel) return;
-      try { panel.scrollTop = 0; } catch (_) {}
+      try {
+        panel.scrollTop = 0;
+      } catch (_) {}
     }
 
     function showSection(key) {
@@ -101,17 +157,50 @@
       }
     }
 
+    window.iuInfoCenterOpenSection = function (key) {
+      if (overlay.hidden) {
+        var trigger =
+          document.getElementById("iuTopbarInfoBtn") ||
+          document.getElementById("iuSilverWelcomeInfoBtn");
+        if (trigger) {
+          try {
+            trigger.click();
+          } catch (_) {}
+        } else {
+          try {
+            overlay.hidden = false;
+            overlay.removeAttribute("aria-hidden");
+          } catch (_) {}
+        }
+      }
+      showSection(key || "menu");
+    };
+
     tiles.forEach(function (tile) {
       tile.addEventListener("click", function (e) {
-        try { e.preventDefault(); } catch (_) {}
+        try {
+          e.preventDefault();
+        } catch (_) {}
         var sec = tile.getAttribute("data-iu-info-section");
         if (sec) showSection(sec);
       });
     });
 
+    qsa("[data-iu-info-goto]", overlay).forEach(function (link) {
+      link.addEventListener("click", function (e) {
+        try {
+          e.preventDefault();
+        } catch (_) {}
+        var dest = link.getAttribute("data-iu-info-goto");
+        if (dest) showSection(dest);
+      });
+    });
+
     if (backBtn) {
       backBtn.addEventListener("click", function (e) {
-        try { e.preventDefault(); } catch (_) {}
+        try {
+          e.preventDefault();
+        } catch (_) {}
         showSection("menu");
       });
     }
@@ -138,7 +227,7 @@
 
     try {
       var mo = new MutationObserver(function () {
-        if (!overlay.hidden) resetToMenu();
+        if (overlay.hidden) resetToMenu();
       });
       mo.observe(overlay, { attributes: true, attributeFilter: ["hidden"] });
     } catch (_) {}
@@ -157,6 +246,7 @@
 
     stampVersionDates();
     resetToMenu();
+    initPrivacySettings();
   }
 
   function boot() {
