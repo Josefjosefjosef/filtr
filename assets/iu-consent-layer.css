@@ -1,0 +1,126 @@
+/* infoUzel.cz — consent layer (Varianta A, equal-weight buttons) */
+
+.iuConsentLayer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10020;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 0 max(12px, env(safe-area-inset-left, 0px)) max(12px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-right, 0px));
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.iuConsentLayer[hidden] {
+  display: none !important;
+}
+
+.iuConsentLayer__panel {
+  pointer-events: auto;
+  width: min(920px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px 14px 0 0;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-bottom: 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.97) 0%, rgba(2, 6, 23, 0.98) 100%);
+  color: #e2e8f0;
+  box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
+}
+
+.iuConsentLayer__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #f8fafc;
+}
+
+.iuConsentLayer__text {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #e2e8f0;
+}
+
+.iuConsentLayer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+
+.iuConsentLayer__btn {
+  flex: 1 1 140px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  background: rgba(226, 232, 240, 0.1);
+  color: #f8fafc;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.25;
+  cursor: pointer;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.iuConsentLayer__btn:hover {
+  background: rgba(226, 232, 240, 0.18);
+}
+
+.iuConsentLayer__btn:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+@media (max-width: 479px) {
+  .iuConsentLayer__actions {
+    flex-direction: column;
+  }
+
+  .iuConsentLayer__btn {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .iuConsentLayer {
+    bottom: calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 8px);
+    padding-bottom: 0;
+  }
+
+  .iuConsentLayer__panel {
+    border-radius: 12px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+  }
+}
+
+@media (min-width: 901px) {
+  .iuConsentLayer {
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .iuConsentLayer__panel {
+    border-radius: 14px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+  }
+
+  .iuConsentLayer__actions {
+    justify-content: flex-end;
+  }
+
+  .iuConsentLayer__btn {
+    flex: 0 1 auto;
+    white-space: nowrap;
+  }
+}
