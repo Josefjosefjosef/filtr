@@ -260,7 +260,7 @@ jobs:
           fi
           gh pr create --base main --head "$BRANCH" \
             --title "${{ env.PR_TITLE }}" \
-            --body "Phase 9B fast publish: incremental publishable_pool.json update."
+            --body "Phase 9B fast publish: incremental publishable_pool.json update." >/dev/null
           NUM=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number')
           echo "pr_number=$NUM" >> "$GITHUB_OUTPUT"
 
@@ -299,25 +299,21 @@ jobs:
           [ -z "$EXPECTED_POOL_AT" ] && { echo "[CLOSEOUT] ERROR: missing pool_generatedAt"; exit 1; }
           [ -z "$PUSHED_SHA" ] && { echo "[CLOSEOUT] ERROR: missing pushed_sha"; exit 1; }
 
+          # Read generatedAt from real main via git; Contents API fails on the ~20MB pool (main_pool_at=none regression).
           fetch_main_pool_at() {
-            gh api "repos/${REPO}/contents/projects/data/publishable_pool.json?ref=main" \
-              --jq -r '.content' | tr -d '\n' | base64 -d | jq -r '.generatedAt // empty' 2>/dev/null || echo ""
+            git fetch --quiet origin main 2>/dev/null || { echo ""; return; }
+            git show FETCH_HEAD:projects/data/publishable_pool.json 2>/dev/null \
+              | jq -r '.generatedAt // empty' 2>/dev/null || echo ""
           }
 
           open_pr_number() {
             gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number' 2>/dev/null || true
           }
 
-          ensure_open_pr() {
-            EXISTING=$(open_pr_number)
-            if [ -n "$EXISTING" ]; then
-              echo "$EXISTING"
-              return
-            fi
-            gh pr create --base main --head "$BRANCH" \
-              --title "$PR_TITLE" \
-              --body "Phase 9B fast publish: incremental publishable_pool.json update."
-            open_pr_number
+          merged_pr_count_for_pushed_sha() {
+            gh pr list --head "$BRANCH" --base main --state merged --limit 10 \
+              --json headRefOid \
+              --jq "[.[] | select(.headRefOid == \"$PUSHED_SHA\")] | length" 2>/dev/null || echo 0
           }
 
           dispatch_required_checks() {
@@ -337,31 +333,61 @@ jobs:
             gh pr merge "$num" --disable-auto 2>/dev/null || true
             sleep 2
             gh pr merge "$num" --auto --squash
-            echo "[CLOSEOUT] auto_merge_rearmed pr=$num head=$head"
+            echo "[CLOSEOUT] auto_merge_armed pr=$num head=$head"
+          }
+
+          # Recovery guard: one open PR max per release commit, capped recreates,
+          # never recreate when pushed commit already merged. Sets NUM/NEW_PR_CREATED
+          # without a subshell so counters persist.
+          RECREATE_COUNT=0
+          MAX_RECREATES=2
+          NEW_PR_CREATED=false
+          recreate_pr_if_needed() {
+            NEW_PR_CREATED=false
+            NUM=$(open_pr_number)
+            [ -n "$NUM" ] && return 0
+            MERGED_SAME=$(merged_pr_count_for_pushed_sha)
+            if [ "${MERGED_SAME:-0}" -gt 0 ]; then
+              echo "[CLOSEOUT] pushed_sha_already_merged — not recreating, waiting for main pool"
+              return 0
+            fi
+            if [ "$RECREATE_COUNT" -ge "$MAX_RECREATES" ]; then
+              echo "[CLOSEOUT] recreate_limit_reached max=$MAX_RECREATES — not recreating"
+              return 0
+            fi
+            gh pr create --base main --head "$BRANCH" \
+              --title "$PR_TITLE" \
+              --body "Phase 9B fast publish: incremental publishable_pool.json update." >/dev/null
+            RECREATE_COUNT=$((RECREATE_COUNT+1))
+            NEW_PR_CREATED=true
+            NUM=$(open_pr_number)
           }
 
           NUM="${{ steps.pr.outputs.pr_number }}"
+          ARMED_PR="$NUM"
           for attempt in $(seq 1 45); do
             MAIN_POOL_AT=$(fetch_main_pool_at)
             if [ -n "$MAIN_POOL_AT" ] && [ "$MAIN_POOL_AT" = "$EXPECTED_POOL_AT" ]; then
               echo "[CLOSEOUT] main_pool_at=$MAIN_POOL_AT matched expected — dispatching Pages"
               gh workflow run pages.yml --ref main --repo "$REPO"
+              echo "MAIN_POOL_AT_READ_PASS=YES"
               echo "DOUBLE_CYCLE_RACE_AVOIDED=YES"
               exit 0
             fi
 
-            NUM=$(open_pr_number)
+            recreate_pr_if_needed
             if [ -z "$NUM" ]; then
-              echo "[CLOSEOUT] poll_attempt=$attempt no_open_pr main_pool_at=${MAIN_POOL_AT:-none} reopening"
-              NUM=$(ensure_open_pr)
+              echo "[CLOSEOUT] poll_attempt=$attempt no_open_pr main_pool_at=${MAIN_POOL_AT:-none} waiting"
+            elif [ "$NEW_PR_CREATED" = "true" ]; then
+              echo "[CLOSEOUT] poll_attempt=$attempt recreated_pr=$NUM recreate_count=$RECREATE_COUNT"
               dispatch_required_checks
-              arm_auto_merge "$NUM" || true
+              if arm_auto_merge "$NUM"; then ARMED_PR="$NUM"; fi
             else
-              HEAD_SHA=$(gh pr view "$NUM" --json headRefOid --jq '.headRefOid')
-              if [ "$HEAD_SHA" = "$PUSHED_SHA" ]; then
-                arm_auto_merge "$NUM" || true
+              HEAD_SHA=$(gh pr view "$NUM" --json headRefOid --jq '.headRefOid' 2>/dev/null || echo "")
+              if [ "$HEAD_SHA" = "$PUSHED_SHA" ] && [ "$ARMED_PR" != "$NUM" ]; then
+                if arm_auto_merge "$NUM"; then ARMED_PR="$NUM"; fi
               else
-                echo "[CLOSEOUT] poll_attempt=$attempt waiting head=$HEAD_SHA expected=$PUSHED_SHA"
+                echo "[CLOSEOUT] poll_attempt=$attempt waiting pr=$NUM head=${HEAD_SHA:-none} main_pool_at=${MAIN_POOL_AT:-none}"
               fi
             fi
             sleep 20
