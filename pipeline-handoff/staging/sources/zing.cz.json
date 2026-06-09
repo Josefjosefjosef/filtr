@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-06-09T03:57:29.352037Z",
+  "ingestedAt": "2026-06-09T04:32:42.450284Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Na Steamu odstartoval další tematický výprodej",
+      "url": "https://zing.cz/article/na-steamu-odstartoval-dalsi-tematicky-vyprodej-15",
+      "dt": "2026-06-09T04:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "další",
+        "odstartoval",
+        "steamu",
+        "tematický",
+        "výprodej"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -971,29 +993,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "HITMAN se vrací v remasterované kolekci původní trilogie",
-      "url": "https://zing.cz/article/hitman-se-vraci-v-remasterovane-kolekci",
-      "dt": "2026-06-06T02:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "hitman",
-        "kolekci",
-        "původní",
-        "remasterované",
-        "trilogie",
-        "vrací"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1004,7 +1003,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126114,
+      "bytes": 126087,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1041,7 +1040,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-08T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-09T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1056,6 +1055,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Steamu odstartoval další tematický výprodej",
+            "publishedAt": "2026-06-09T04:00:00Z"
+          },
           {
             "title": "Vikinský fenomén Valheim odhalil datum vydání plné verze",
             "publishedAt": "2026-06-08T18:00:00Z"
@@ -1083,10 +1086,6 @@
           {
             "title": "Návrat zlodějské legendy. Thief se dočká omlazovací kúry",
             "publishedAt": "2026-06-08T08:00:00Z"
-          },
-          {
-            "title": "Stronghold 4 bylo oficiálně představeno, česká lokalizace nechybí",
-            "publishedAt": "2026-06-08T06:00:00Z"
           }
         ]
       }
