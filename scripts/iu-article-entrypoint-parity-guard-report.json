@@ -1,0 +1,335 @@
+{
+  "generatedAt": "2026-06-09T16:58:19.667Z",
+  "scenarios": [
+    {
+      "id": "A",
+      "category": "homepage_entry",
+      "legs": [
+        {
+          "leg": "zpravy",
+          "initial_article_count_received": 130,
+          "initial_transfer_kb": 144.3,
+          "publishable_pool_requested": false,
+          "chunk_sections_at_initial": [
+            "zpravy"
+          ],
+          "section_key": "zpravy",
+          "media_topic_key": "zpravy",
+          "expected_section": "zpravy",
+          "loaderMode": "chunk-v1",
+          "homepageFeedSource": "article_feed_chunks/manifest.json",
+          "background_preload_completed": true,
+          "after_background_article_count_received": 130,
+          "after_background_transfer_kb": 726.9,
+          "background_preloads_all_sections": false,
+          "url_topic": "zpravy",
+          "chunk_sections_after_background": [
+            "zpravy"
+          ],
+          "buffer_chunk_sections": [
+            "zpravy"
+          ],
+          "load_more": {
+            "clicked": true,
+            "load_more_fetches_new_chunk": true,
+            "load_more_only_reveals_existing_data": false,
+            "new_chunk_urls": [
+              "http://127.0.0.1:8896/projects/data/article_feed_chunks/zpravy/001.json"
+            ],
+            "metaBefore": "37 / 6369",
+            "metaAfter": "150 / 6369"
+          }
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "B",
+      "category": "menu_entry",
+      "legs": [
+        {
+          "leg": "zpravy",
+          "initial_article_count_received": 130,
+          "initial_transfer_kb": 158.6,
+          "publishable_pool_requested": false,
+          "chunk_sections_at_initial": [
+            "feed"
+          ],
+          "section_key": "zpravy",
+          "media_topic_key": "zpravy",
+          "expected_section": "zpravy",
+          "loaderMode": "chunk-v1",
+          "homepageFeedSource": "article_feed_chunks/manifest.json",
+          "background_preload_completed": true,
+          "after_background_article_count_received": 130,
+          "after_background_transfer_kb": 447.2,
+          "background_preloads_all_sections": false,
+          "url_topic": "zpravy",
+          "chunk_sections_after_background": [
+            "feed",
+            "zpravy"
+          ],
+          "buffer_chunk_sections": [
+            "feed",
+            "zpravy"
+          ],
+          "load_more": {
+            "clicked": true,
+            "load_more_fetches_new_chunk": true,
+            "load_more_only_reveals_existing_data": false,
+            "new_chunk_urls": [
+              "http://127.0.0.1:8896/projects/data/article_feed_chunks/zpravy/001.json"
+            ],
+            "metaBefore": "38 / 6369",
+            "metaAfter": "150 / 6369"
+          }
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "C",
+      "category": "menu_entry",
+      "legs": [
+        {
+          "leg": "sport",
+          "initial_article_count_received": 130,
+          "initial_transfer_kb": 158.6,
+          "publishable_pool_requested": false,
+          "chunk_sections_at_initial": [
+            "feed"
+          ],
+          "section_key": "sport",
+          "media_topic_key": "sport",
+          "expected_section": "sport",
+          "loaderMode": "chunk-v1",
+          "homepageFeedSource": "article_feed_chunks/manifest.json",
+          "background_preload_completed": true,
+          "after_background_article_count_received": 130,
+          "after_background_transfer_kb": 345.5,
+          "background_preloads_all_sections": false,
+          "url_topic": "sport",
+          "chunk_sections_after_background": [
+            "feed",
+            "sport"
+          ],
+          "buffer_chunk_sections": [
+            "feed",
+            "sport"
+          ],
+          "load_more": {
+            "clicked": true,
+            "load_more_fetches_new_chunk": true,
+            "load_more_only_reveals_existing_data": false,
+            "new_chunk_urls": [
+              "http://127.0.0.1:8896/projects/data/article_feed_chunks/sport/001.json"
+            ],
+            "metaBefore": "30 / 4565",
+            "metaAfter": "130 / 4565"
+          }
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "D",
+      "category": "direct_url_entry",
+      "legs": [
+        {
+          "leg": "zpravy",
+          "initial_article_count_received": 130,
+          "initial_transfer_kb": 170.3,
+          "publishable_pool_requested": false,
+          "chunk_sections_at_initial": [
+            "zpravy"
+          ],
+          "section_key": "zpravy",
+          "media_topic_key": "zpravy",
+          "expected_section": "zpravy",
+          "loaderMode": "chunk-v1",
+          "homepageFeedSource": "article_feed_chunks/manifest.json",
+          "background_preload_completed": true,
+          "after_background_article_count_received": 130,
+          "after_background_transfer_kb": 170.3,
+          "background_preloads_all_sections": false,
+          "url_topic": "zpravy",
+          "chunk_sections_after_background": [
+            "zpravy"
+          ],
+          "buffer_chunk_sections": [
+            "zpravy"
+          ],
+          "load_more": {
+            "clicked": true,
+            "load_more_fetches_new_chunk": true,
+            "load_more_only_reveals_existing_data": false,
+            "new_chunk_urls": [
+              "http://127.0.0.1:8896/projects/data/article_feed_chunks/zpravy/001.json"
+            ],
+            "metaBefore": "38 / 6369",
+            "metaAfter": "150 / 6369"
+          }
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "E",
+      "category": "direct_url_entry",
+      "legs": [
+        {
+          "leg": "sport",
+          "initial_article_count_received": 130,
+          "initial_transfer_kb": 169.8,
+          "publishable_pool_requested": false,
+          "chunk_sections_at_initial": [
+            "sport"
+          ],
+          "section_key": "sport",
+          "media_topic_key": "sport",
+          "expected_section": "sport",
+          "loaderMode": "chunk-v1",
+          "homepageFeedSource": "article_feed_chunks/manifest.json",
+          "background_preload_completed": true,
+          "after_background_article_count_received": 130,
+          "after_background_transfer_kb": 169.8,
+          "background_preloads_all_sections": false,
+          "url_topic": "sport",
+          "chunk_sections_after_background": [
+            "sport"
+          ],
+          "buffer_chunk_sections": [
+            "sport"
+          ],
+          "load_more": {
+            "clicked": true,
+            "load_more_fetches_new_chunk": true,
+            "load_more_only_reveals_existing_data": false,
+            "new_chunk_urls": [
+              "http://127.0.0.1:8896/projects/data/article_feed_chunks/sport/001.json"
+            ],
+            "metaBefore": "30 / 4565",
+            "metaAfter": "130 / 4565"
+          }
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "F",
+      "category": "internal_navigation",
+      "legs": [
+        {
+          "leg": "zpravy",
+          "initial_article_count_received": 130,
+          "initial_transfer_kb": 201.1,
+          "publishable_pool_requested": false,
+          "chunk_sections_at_initial": [
+            "feed",
+            "zpravy"
+          ],
+          "section_key": "zpravy",
+          "media_topic_key": "zpravy",
+          "expected_section": "zpravy",
+          "loaderMode": "chunk-v1",
+          "homepageFeedSource": "article_feed_chunks/manifest.json",
+          "background_preload_completed": true,
+          "after_background_article_count_received": 130,
+          "after_background_transfer_kb": 783.7,
+          "background_preloads_all_sections": false,
+          "url_topic": "zpravy",
+          "chunk_sections_after_background": [
+            "feed",
+            "zpravy"
+          ],
+          "buffer_chunk_sections": [
+            "zpravy"
+          ],
+          "load_more": {
+            "skipped": true,
+            "clicked": false,
+            "load_more_fetches_new_chunk": true,
+            "load_more_only_reveals_existing_data": false
+          }
+        },
+        {
+          "leg": "sport",
+          "initial_article_count_received": 130,
+          "initial_transfer_kb": 143.8,
+          "publishable_pool_requested": false,
+          "chunk_sections_at_initial": [
+            "sport"
+          ],
+          "section_key": "sport",
+          "media_topic_key": "sport",
+          "expected_section": "sport",
+          "loaderMode": "chunk-v1",
+          "homepageFeedSource": "article_feed_chunks/manifest.json",
+          "background_preload_completed": true,
+          "after_background_article_count_received": 130,
+          "after_background_transfer_kb": 1510.8,
+          "background_preloads_all_sections": false,
+          "url_topic": "sport",
+          "chunk_sections_after_background": [
+            "sport"
+          ],
+          "buffer_chunk_sections": [
+            "sport"
+          ],
+          "load_more": {
+            "skipped": true,
+            "clicked": false,
+            "load_more_fetches_new_chunk": true,
+            "load_more_only_reveals_existing_data": false
+          }
+        },
+        {
+          "leg": "finance",
+          "initial_article_count_received": 130,
+          "initial_transfer_kb": 145.4,
+          "publishable_pool_requested": false,
+          "chunk_sections_at_initial": [
+            "finance"
+          ],
+          "section_key": "finance",
+          "media_topic_key": "finance",
+          "expected_section": "finance",
+          "loaderMode": "chunk-v1",
+          "homepageFeedSource": "article_feed_chunks/manifest.json",
+          "background_preload_completed": true,
+          "after_background_article_count_received": 130,
+          "after_background_transfer_kb": 1242.9,
+          "background_preloads_all_sections": false,
+          "url_topic": "finance",
+          "chunk_sections_after_background": [
+            "finance"
+          ],
+          "buffer_chunk_sections": [
+            "finance"
+          ],
+          "load_more": {
+            "skipped": true,
+            "clicked": false,
+            "load_more_fetches_new_chunk": true,
+            "load_more_only_reveals_existing_data": false
+          }
+        }
+      ],
+      "pass": true
+    }
+  ],
+  "homepage_entry_pass": true,
+  "menu_entry_pass": true,
+  "direct_url_entry_pass": true,
+  "internal_navigation_pass": true,
+  "publishable_pool_requested_anywhere": false,
+  "all_sections_preloaded_anywhere": false,
+  "load_more_fetches_chunk_everywhere": true,
+  "load_more_reveals_cache_anywhere": false,
+  "guard_added": true,
+  "ci_blocks_regression": true,
+  "git_status_clean": false,
+  "recommended_merge_decision": "MERGE_AS_IS",
+  "final_verdict": "PASS",
+  "failures": []
+}

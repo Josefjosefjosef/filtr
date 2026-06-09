@@ -123,6 +123,12 @@ jobs:
       - name: Publishable pool architecture guard
         run: python scripts/publishable_pool_architecture_guard.py
 
+      - name: Emit frontend article feed chunks (V1 delivery layer)
+        run: |
+          set -euo pipefail
+          python scripts/emit_frontend_article_chunks.py
+          test -s projects/data/article_feed_chunks/manifest.json
+
       - name: Topic dedupe false-positive guard
         run: node scripts/topic-dedupe-false-positive-guard.mjs
 
@@ -195,6 +201,7 @@ jobs:
             exit 1
           fi
           git add projects/data/publishable_pool.json projects/data/article_pool_manifest.json
+          git add projects/data/article_feed_chunks/
           git add projects/data/scheduler_state.json projects/data/source_rotation_inventory.json 2>/dev/null || true
           git add projects/data/topic_dedupe_suppressed.json 2>/dev/null || true
           git add projects/data/pipeline_reports/article_scheduler_report.json 2>/dev/null || true

@@ -506,7 +506,9 @@
     return "?v=" + encodeURIComponent(v);
   })();
   const DATA = {
-    articlesUrl: `${PROJECTS_DATA_BASE}/publishable_pool.json${dataVerQParam}`,
+    articlesUrl: (typeof window !== "undefined" && window.__iuHomepageFeedDataSource === "article_feed_chunks/manifest.json")
+      ? `${PROJECTS_DATA_BASE}/article_feed_chunks/manifest.json${dataVerQParam}`
+      : `${PROJECTS_DATA_BASE}/publishable_pool.json${dataVerQParam}`,
     videosUrl: `${PROJECTS_DATA_BASE}/videos.json${dataVerQParam}`,
     metaUrl: `${PROJECTS_DATA_BASE}/meta.json`,
     statusUrl: `${PROJECTS_DATA_BASE}/status.json`  // status.json se generuje v workflow

@@ -15,6 +15,25 @@ import {
   iuSafeDativeSingleFirstName,
   iuSvatekBuildPoprejLineFromRaw,
 } from "./iu-nameday-dative.js";
+import {
+  IU_HOMEPAGE_CHUNK_MANIFEST_FILE,
+  IU_CHUNK_BUFFER_MAX,
+  IU_CHUNK_INITIAL_SIZE,
+  iuUseChunkedArticleLoader,
+  iuChunkResolveSectionKey,
+  iuChunkLoadInitial,
+  iuChunkFetchBackgroundBuffer,
+  iuChunkFetchLoadMore,
+  iuChunkPoolShapedPayload,
+  iuChunkHasMoreOnServer,
+  iuChunkSectionMeta,
+  iuChunkDataVer,
+  iuChunkEnsureManifest,
+  iuChunkFetchInit,
+  iuChunkCreateLoaderState,
+  iuChunkNavSectionFromUrl,
+  iuChunkVisibleArticleBudget,
+} from "./iu-article-chunk-loader.js";
 /* P0.5: financial / legal / invoice tool overlays load via dynamic import (see iuBootDeferredToolOverlays) — reduces initial parse + main-thread work. */
 /* SEV1: iuIsProjectsRoute — global + window for safe scope (module/global) */
 var iuIsProjectsRoute = function iuIsProjectsRoute(){
@@ -431,11 +450,18 @@ try {
     return "/projects/";
   }
 
-  /** Phase 6C: homepage feed reads publishable pool (pre section-limits), not articles.json publish slice. */
-  const IU_HOMEPAGE_FEED_DATA_FILE = "publishable_pool.json";
+  /** Phase 6C / P0 chunked V1: homepage reads section chunks; full pool only via ?iuArticlesFull=1. */
+  const IU_HOMEPAGE_FEED_DATA_FILE = "article_feed_chunks/manifest.json";
 
   function iuHomepageFeedDataUrl() {
-    return iuDataUrl(IU_HOMEPAGE_FEED_DATA_FILE);
+    if (iuUseChunkedArticleLoader()) {
+      const verRaw = (typeof document !== "undefined" && document.querySelector)
+        ? (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute("content") || "").trim()
+        : "";
+      const vq = !verRaw || verRaw === "iu-data-ver-placeholder" ? "iu-data-ver-placeholder" : verRaw;
+      return `${iuBasePath()}data/${IU_HOMEPAGE_FEED_DATA_FILE}?v=${encodeURIComponent(vq)}`;
+    }
+    return iuDataUrl("publishable_pool.json");
   }
 
   function iuIsHomepageFeedJsonPath(pathLower) {
@@ -443,6 +469,9 @@ try {
     return (
       p.endsWith("/publishable_pool.json") ||
       p.endsWith("publishable_pool.json") ||
+      p.endsWith("/article_feed_chunks/manifest.json") ||
+      p.endsWith("article_feed_chunks/manifest.json") ||
+      p.includes("/article_feed_chunks/") ||
       p.endsWith("/articles.json") ||
       p.endsWith("articles.json")
     );
@@ -450,7 +479,7 @@ try {
 
   function iuDataUrl(file) {
     const base = iuBasePath() + "data/" + file;
-    if (file === "articles.json" || file === "videos.json" || file === "publishable_pool.json") {
+    if (file === "articles.json" || file === "videos.json" || file === "publishable_pool.json" || file.indexOf("article_feed_chunks/") === 0) {
       const verRaw = (typeof document !== "undefined" && document.querySelector)
         ? (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute('content') || '').trim()
         : '';
@@ -461,7 +490,9 @@ try {
   }
 
   try {
-    window.__iuHomepageFeedDataSource = IU_HOMEPAGE_FEED_DATA_FILE;
+    window.__iuHomepageFeedDataSource = iuUseChunkedArticleLoader()
+      ? IU_HOMEPAGE_FEED_DATA_FILE
+      : "publishable_pool.json";
   } catch (_) {}
 
   function iuGetMindMenuRoot(){
@@ -697,6 +728,8 @@ try {
     retentionIsLoading: false,
     /** Set in loadData from articles.json root: pipeline classification meta (not per-article). */
     feedClassificationMeta: null,
+    /** P0 chunked article loader V1 (section-scoped fetch; no full publishable_pool on visit). */
+    chunkLoader: null,
   };
   state.cachedItems ??= [];
   state.filteredItems ??= [];
@@ -2259,15 +2292,26 @@ try {
   }
 
   async function __iuFetchArticlesVideosPrimaryPair() {
-    if (__iuFeedPrimaryPairLast) {
+    if (__iuFeedPrimaryPairLast && !iuUseChunkedArticleLoader()) {
       return __iuFeedPrimaryPairLast;
     }
     if (__iuFeedPrimaryPairInflight) {
       return await __iuFeedPrimaryPairInflight;
     }
-    const articlesUrl = iuHomepageFeedDataUrl();
     const videosUrl = iuDataUrl("videos.json");
     const p = (async () => {
+      if (iuUseChunkedArticleLoader()) {
+        const sectionKey = iuChunkNavSectionFromUrl();
+        const init = await iuChunkLoadInitial(iuBasePath(), iuChunkDataVer(), sectionKey);
+        state.chunkLoader = init.loader;
+        try {
+          window.__iuArticlesLoaderMode = "chunk-v1";
+        } catch (_) {}
+        const videosData = await fetchDiag(videosUrl, "videos");
+        const articlesData = iuChunkPoolShapedPayload(init.loader, init.initialArticles, init.generatedAt);
+        return { articlesData, videosData, _iuChunkInitial: init };
+      }
+      const articlesUrl = iuHomepageFeedDataUrl();
       const [articlesData, videosData] = await Promise.all([
         fetchDiag(articlesUrl, "publishable_pool"),
         fetchDiag(videosUrl, "videos"),
@@ -5130,9 +5174,16 @@ try {
 
     // Render-only paging: show at most pageSize*page items, no other slicing elsewhere
     const mediaHub100 = iuIsMediaHubFullFeedPaging();
-    const pageSize = mediaHub100 ? 100 : Number(state.pageSize) > 0 ? Number(state.pageSize) : 100;
+    const chunkMode = iuUseChunkedArticleLoader() && state.chunkLoader;
+    const pageSize = chunkMode
+      ? IU_CHUNK_INITIAL_SIZE
+      : mediaHub100
+        ? 100
+        : Number(state.pageSize) > 0
+          ? Number(state.pageSize)
+          : 100;
     const page = Number(state.page) >= 1 ? Number(state.page) : 1;
-    const articleBudget = page * pageSize;
+    const articleBudget = chunkMode ? iuChunkVisibleArticleBudget(page) : page * pageSize;
     const totalArticlesInFeed = iuCountFeedArticles(items);
     let visibleItems;
     let visibleCount;
@@ -5143,9 +5194,15 @@ try {
       visibleCount = articleBudget;
       visibleItems = items.slice(0, visibleCount);
     }
-    const hasMore = mediaHub100
+    const hasMore = chunkMode
+      ? visibleItems.length < items.length || iuChunkHasMoreOnServer(state.chunkLoader)
+      : mediaHub100
       ? iuCountFeedArticles(visibleItems) < totalArticlesInFeed || visibleItems.length < items.length
       : visibleItems.length < items.length;
+    const chunkTotalInSection =
+      chunkMode && state.chunkLoader
+        ? iuChunkSectionMeta(state.chunkLoader)?.totalArticles || state.chunkLoader.totalInSection || items.length
+        : items.length;
     // debug/gate-friendly snapshot (read-only)
     try{
       window.__iuFeedPaging = {
@@ -5474,8 +5531,9 @@ try {
     // "Load more" button (no infinite auto-load)
     let loadMoreWrap = null;
     const canLoadRetention =
-      Boolean(state.retentionIsLoading) ||
-      (Array.isArray(state.retentionDays) && state.retentionCursor < state.retentionDays.length);
+      !chunkMode &&
+      (Boolean(state.retentionIsLoading) ||
+        (Array.isArray(state.retentionDays) && state.retentionCursor < state.retentionDays.length));
     // Média (100+Další): po vyčerpání aktuálního seznamu neukazovat „Další“ jen kvůli shardům — působilo by to jako falešně aktivní tlačítko.
     const canShowLoadMore =
       hasMore ||
@@ -5489,7 +5547,7 @@ try {
         <button type="button" class="iuLoadMoreBtn" aria-label="${loadMoreAria}">
           ${loadMoreBtnLabel}
         </button>
-        <div class="iuLoadMoreMeta">${visibleItems.length} / ${items.length}${canLoadRetention ? "+" : ""}</div>
+        <div class="iuLoadMoreMeta">${visibleItems.length} / ${chunkMode ? chunkTotalInSection : items.length}${canLoadRetention ? "+" : ""}</div>
       `.trim();
       loadMoreWrap = wrap;
     }
@@ -5606,25 +5664,36 @@ try {
       const btn = loadMoreWrap.querySelector(".iuLoadMoreBtn");
       if (btn) {
         btn.addEventListener("click", () => {
-          const nextPage = (Number(state.page) >= 1 ? Number(state.page) : 1) + 1;
-          state.page = nextPage;
-          const artNeed = nextPage * pageSize;
-          const desiredVisible = mediaHub100
-            ? iuMinLengthForArticleBudget(state.filteredItems || [], artNeed)
-            : artNeed;
           (async () => {
-            // If we need older data beyond the current cache, fetch day-shards lazily (no auto-load).
-            if (desiredVisible > (state.filteredItems?.length ?? 0)) {
-              const prevText = btn.textContent;
-              try{
-                btn.disabled = true;
-                btn.textContent = "Načítám…";
+            const prevText = btn.textContent;
+            try {
+              btn.disabled = true;
+              btn.textContent = "Načítám…";
+              if (iuUseChunkedArticleLoader() && state.chunkLoader) {
+                const { added } = await iuChunkFetchLoadMore(state.chunkLoader, iuBasePath(), iuChunkDataVer());
+                if (added.length) {
+                  await iuChunkMergeArticlesIntoCache(added, state.loadRequestId);
+                  state.page = (Number(state.page) >= 1 ? Number(state.page) : 1) + 1;
+                  await applyFilter({ resetPage: false, render: true });
+                } else if (visibleItems.length < (state.filteredItems?.length ?? 0)) {
+                  state.page = (Number(state.page) >= 1 ? Number(state.page) : 1) + 1;
+                  await renderFeed(safeTarget, state.filteredItems);
+                }
+                return;
+              }
+              const nextPage = (Number(state.page) >= 1 ? Number(state.page) : 1) + 1;
+              state.page = nextPage;
+              const artNeed = nextPage * pageSize;
+              const desiredVisible = mediaHub100
+                ? iuMinLengthForArticleBudget(state.filteredItems || [], artNeed)
+                : artNeed;
+              if (desiredVisible > (state.filteredItems?.length ?? 0)) {
                 await loadRetentionUntilVisibleCount(desiredVisible);
-              }catch{}
-              btn.disabled = false;
-              btn.textContent = prevText;
-            }
-            await renderFeed(safeTarget, state.filteredItems);
+              }
+              await renderFeed(safeTarget, state.filteredItems);
+            } catch (_) {}
+            btn.disabled = false;
+            btn.textContent = prevText;
           })();
         });
       }
@@ -14623,6 +14692,30 @@ function buildVideoAsArticleCard(it) {
     return out;
   }
 
+  async function iuChunkReloadIfSectionChanged() {
+    if (!iuUseChunkedArticleLoader()) return false;
+    const nextKey = iuChunkResolveSectionKey({
+      mediaTopicKey: state.mediaTopicKey,
+      activeSection: state.activeSection,
+    });
+    if (state.chunkLoader && state.chunkLoader.sectionKey === nextKey) return false;
+    const videosOnly = (state.cachedItems || []).filter((e) => String(e?.contentType || "").toLowerCase() === "video");
+    const init = await iuChunkLoadInitial(iuBasePath(), iuChunkDataVer(), nextKey);
+    state.chunkLoader = init.loader;
+    __iuFeedPrimaryPairLast = null;
+    const sanitized = await iuChunkNormalizeArticleRows(init.initialArticles);
+    const enriched = sanitized.map((item) => {
+      const published = String(item.publishedAt || item.published || item.date || item.createdAt || item.time || "");
+      return { ...item, _ts: published ? Date.parse(published) || 0 : 0 };
+    });
+    const mixed = buildCombinedFeed(enriched, videosOnly);
+    state.cachedItems = mixed.filter((entry) => iuArticleReleaseEligible(entry));
+    state.filteredItems = state.cachedItems.slice();
+    state.page = 1;
+    void iuChunkScheduleBackgroundBuffer(state.loadRequestId);
+    return true;
+  }
+
   // === LOCKED PIPELINE ===
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
@@ -14649,6 +14742,13 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       if (!state.hasLoadedData) return;
+      if (iuUseChunkedArticleLoader()) {
+        try {
+          await iuChunkReloadIfSectionChanged();
+        } catch (e) {
+          debugWarn("[CHUNK] section reload failed", e);
+        }
+      }
       if (state.__iuApplyFilterBusy) {
         try {
           state.__iuApplyFilterPendingOpts = options;
@@ -14761,7 +14861,7 @@ function buildVideoAsArticleCard(it) {
           auditRun.phases.renderItemsMs =
             (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) - tRi0;
         }
-        if (usePubClusterCap && !state.__iuHomeFullPubClusterIdleScheduled) {
+        if (usePubClusterCap && !state.__iuHomeFullPubClusterIdleScheduled && !iuUseChunkedArticleLoader()) {
           state.__iuHomeFullPubClusterIdleScheduled = true;
           iuScheduleHomeFullPublicationCluster();
         }
@@ -14830,7 +14930,8 @@ function buildVideoAsArticleCard(it) {
         filtered = iuApplyPublicationFeedFilterMixed(filtered, pubOpts2);
         if (
           usePubClusterCap2 &&
-          !state.__iuHomeFullPubClusterIdleScheduled
+          !state.__iuHomeFullPubClusterIdleScheduled &&
+          !iuUseChunkedArticleLoader()
         ) {
           state.__iuHomeFullPubClusterIdleScheduled = true;
           iuScheduleHomeFullPublicationCluster();
@@ -15947,6 +16048,89 @@ function buildVideoAsArticleCard(it) {
     return result;
   }
 
+  async function iuChunkNormalizeArticleRows(rawRows) {
+    const raw = Array.isArray(rawRows) ? rawRows : [];
+    const normalizedPass = await normalizeArticleListBatched(raw);
+    let sanitized = normalizedPass.map((item) => ({
+      ...item,
+      contentType: "article",
+      suspiciousTitle: isSuspiciousTitle(item.title),
+    }));
+    try {
+      sanitized = sanitized.filter((item) => {
+        if (!item) return false;
+        if (iuArticleIsHardBlocked(item)) return false;
+        return !(
+          iuArticleMatchesMediaTopicKey(item, "tech") ||
+          iuArticleMatchesMediaTopicKey(item, "bydleni")
+        );
+      });
+    } catch (_) {}
+    return sanitized;
+  }
+
+  async function iuChunkMergeArticlesIntoCache(newArticles, requestToken) {
+    if (!Array.isArray(newArticles) || !newArticles.length) return 0;
+    if (!isLatestLoadRequest(requestToken)) return 0;
+    const sanitized = await iuChunkNormalizeArticleRows(newArticles);
+    if (!sanitized.length || !isLatestLoadRequest(requestToken)) return 0;
+    const videosOnly = (state.cachedItems || []).filter((e) => String(e?.contentType || "").toLowerCase() === "video");
+    const articlesOnly = (state.cachedItems || []).filter((e) => String(e?.contentType || "").toLowerCase() === "article");
+    const seen = new Set(
+      articlesOnly.map((a) => String(a?.url || "").trim()).filter(Boolean),
+    );
+    const mergedArticles = articlesOnly.slice();
+    for (const it of sanitized) {
+      const u = String(it?.url || "").trim();
+      if (u && seen.has(u)) continue;
+      if (u) seen.add(u);
+      mergedArticles.push(it);
+    }
+    mergedArticles.sort((a, b) => (Date.parse(b.publishedAt || "") || 0) - (Date.parse(a.publishedAt || "") || 0));
+    const enriched = mergedArticles.map((item) => {
+      const published = String(item.publishedAt || item.published || item.date || item.createdAt || item.time || "");
+      return { ...item, _ts: published ? Date.parse(published) || 0 : 0 };
+    });
+    const mixed = buildCombinedFeed(enriched, videosOnly);
+    state.cachedItems = mixed.filter((entry) => iuArticleReleaseEligible(entry));
+    state.hasLoadedData = true;
+    return sanitized.length;
+  }
+
+  async function iuChunkScheduleBackgroundBuffer(requestToken) {
+    if (!iuUseChunkedArticleLoader() || !state.chunkLoader) return;
+    try {
+      iuBootTracePhase("chunk_background_buffer_start");
+      await iuYieldOneRaf();
+      if (!isLatestLoadRequest(requestToken) || !state.chunkLoader || state.chunkLoader.backgroundDone) return;
+      const before = (state.cachedItems || []).filter((e) => String(e?.contentType || "") === "article").length;
+      await iuChunkFetchBackgroundBuffer(state.chunkLoader, iuBasePath(), iuChunkDataVer());
+      const bufferArticles = (state.chunkLoader.articles || []).slice(0, IU_CHUNK_BUFFER_MAX);
+      const existingUrls = new Set(
+        (state.cachedItems || [])
+          .filter((e) => String(e?.contentType || "") === "article")
+          .map((a) => String(a?.url || "").trim())
+          .filter(Boolean),
+      );
+      const toMerge = bufferArticles.filter((a) => {
+        const u = String(a?.url || "").trim();
+        return u && !existingUrls.has(u);
+      });
+      if (toMerge.length) {
+        await iuChunkMergeArticlesIntoCache(toMerge, requestToken);
+        if (isLatestLoadRequest(requestToken)) {
+          await applyFilter({ resetPage: false, render: true });
+        }
+      }
+      iuBootTracePhase("chunk_background_buffer_end");
+      try {
+        window.__iuChunkBackgroundBufferDone = true;
+      } catch (_) {}
+    } catch (e) {
+      debugWarn("[CHUNK] background buffer failed", e);
+    }
+  }
+
   async function loadData() {
     const startedAt = new Date();
     if (state.isLoadingData) return;
@@ -15962,6 +16146,10 @@ function buildVideoAsArticleCard(it) {
     state.__iuApplyFilterPassSeq = 0;
     state.__iuRenderFeedPassSeq = 0;
     state.__iuLoadDataMainApplyFilterDone = false;
+    if (iuUseChunkedArticleLoader()) {
+      state.chunkLoader = null;
+      __iuFeedPrimaryPairLast = null;
+    }
     iuBootTracePhase("loadData_start");
     iuPreviewFeedProbeTick("loadDataStart");
     const requestToken = ++state.loadRequestId;
@@ -16392,6 +16580,9 @@ function buildVideoAsArticleCard(it) {
       iuBootTracePhase("loadData_first_renderItems_done");
       iuPreviewFeedProbeTick("afterFirstRenderFeed");
       iuHomeLoadAuditNotify("loadData:afterFirstRender");
+      if (iuUseChunkedArticleLoader()) {
+        void iuChunkScheduleBackgroundBuffer(requestToken);
+      }
       if (isDebugLogging) {
         debugLog(
           "[CACHE] total",
@@ -16456,7 +16647,7 @@ function buildVideoAsArticleCard(it) {
         (!parsedNavTopic || parsedNavTopic === "all" || parsedNavTopic === "zpravy");
       // Niche sections: articles often live only in older day-shards. Index + shards must load before
       // first filter, or the feed stays empty until "Načíst další stránku" (retention was never tied to first paint).
-      if (navNeedsShardMerge) {
+      if (!iuUseChunkedArticleLoader() && navNeedsShardMerge) {
         iuBootTracePhase("retention_nav_shard_merge_start");
         await initRetentionIndex();
         await applyFilter({ resetPage: true, render: false });
@@ -16473,7 +16664,7 @@ function buildVideoAsArticleCard(it) {
           }
         } catch (_) {}
         iuBootTracePhase("retention_nav_shard_merge_end");
-      } else if (silverStackPreviewsLikelyVisible) {
+      } else if (!iuUseChunkedArticleLoader() && silverStackPreviewsLikelyVisible) {
         // P0: Do not block first homepage settle on sequential day-shard retention (was ~21–23s before first applyFilter).
         // Retention boost runs after first applyFilter + status; second applyFilter + preview refresh when merge completes.
         try {
