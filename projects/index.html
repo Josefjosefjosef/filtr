@@ -509,7 +509,7 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/iu-silver-premium-draft.css?v=silver-premium-draft-cards-20260602" />
     <link rel="stylesheet" href="/assets/iu-tasks-premium.css?v=tasks-premium-scope-20260503" />
     <link rel="stylesheet" href="/assets/iu-notes-premium.css?v=notes-premium-teal-20260503" />
-    <link rel="stylesheet" href="/assets/iu-info-center.css?v=info-center-v2-3-20260609" />
+    <link rel="stylesheet" href="/assets/iu-info-center.css?v=info-center-v2-4-20260609" />
     <style id="iuInfoCardsMobileTabletPostAppCss">
       /* P0 info cards Kalendář+Úkoly ≤1023: post app.css — beats #iuInfoCardsMobileTablet min-height:160px (assets/app.css CLS reserve). */
       @media (max-width: 1023px) {
@@ -5276,7 +5276,7 @@ style-src 'self' 'unsafe-inline' https:;
       })();
     </script>
     <script type="module" src="/assets/app.js?v=p0-daily-cal-add-edit-ux-20260503"></script>
-    <script defer src="/assets/iu-info-center.js?v=info-center-v2-3-20260609"></script>
+    <script defer src="/assets/iu-info-center.js?v=info-center-v2-4-20260609"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=6"></script>
     <script>
     (function(){
@@ -5725,10 +5725,16 @@ style-src 'self' 'unsafe-inline' https:;
     <div id="iuTopbarInfoOverlay" class="iuTopbarInfoOverlay iuInfoCenterV2" data-iu-info-center-v2="1" role="dialog" aria-modal="true" aria-labelledby="iuTopbarInfoOverlayTitle" hidden>
       <div class="iuTopbarInfoOverlay__backdrop" data-iu-topbar-info-close="backdrop" aria-hidden="true"></div>
       <div class="iuTopbarInfoOverlay__panel" role="document">
-        <header class="iuTopbarInfoOverlay__head">
-          <button type="button" class="iuInfoCenter__back" id="iuInfoCenterBack" hidden aria-label="Zpět na menu">‹</button>
-          <h2 id="iuTopbarInfoOverlayTitle" class="iuTopbarInfoOverlay__title">Informační centrum</h2>
-          <button type="button" class="iuTopbarInfoOverlay__close" id="iuTopbarInfoOverlayClose" data-iu-topbar-info-close="button" aria-label="Zavřít">×</button>
+        <header class="iuTopbarInfoOverlay__head iuInfoCenter__head">
+          <button type="button" class="iuInfoCenter__back" id="iuInfoCenterBack" hidden aria-label="Zpět na menu">
+            <span class="iuInfoCenter__backGlyph" aria-hidden="true">←</span>
+            <span class="iuInfoCenter__backText">Zpět</span>
+          </button>
+          <h2 id="iuTopbarInfoOverlayTitle" class="iuTopbarInfoOverlay__title iuInfoCenter__title">Informační centrum</h2>
+          <button type="button" class="iuTopbarInfoOverlay__close iuInfoCenter__closeBtn" id="iuTopbarInfoOverlayClose" data-iu-topbar-info-close="button" aria-label="Zavřít">
+            <span class="iuInfoCenter__closeGlyph" aria-hidden="true">×</span>
+            <span class="iuInfoCenter__closeText">Zavřít</span>
+          </button>
         </header>
         <div class="iuTopbarInfoOverlay__body iuInfoCenter__body">
 
