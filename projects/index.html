@@ -509,6 +509,7 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/iu-silver-premium-draft.css?v=silver-premium-draft-cards-20260602" />
     <link rel="stylesheet" href="/assets/iu-tasks-premium.css?v=tasks-premium-scope-20260503" />
     <link rel="stylesheet" href="/assets/iu-notes-premium.css?v=notes-premium-teal-20260503" />
+    <link rel="stylesheet" href="/assets/iu-info-center.css?v=info-center-v2-3-20260609" />
     <style id="iuInfoCardsMobileTabletPostAppCss">
       /* P0 info cards Kalendář+Úkoly ≤1023: post app.css — beats #iuInfoCardsMobileTablet min-height:160px (assets/app.css CLS reserve). */
       @media (max-width: 1023px) {
@@ -2103,8 +2104,8 @@ style-src 'self' 'unsafe-inline' https:;
                                     </div>
                                   </div>
                                   <div class="iu-silver-trust" data-iu-silver-trust>
-                                    <p class="silver-privacy-line silver-privacy-line--1" data-iu-silver-privacy-line>🔒 Co napíšeš nebo si uložíš, zůstává jen u tebe.</p>
-                                    <p class="silver-privacy-line silver-privacy-line--2" data-iu-silver-privacy-line-2>Nic neopouští tvoje zařízení.</p>
+                                    <p class="silver-privacy-line silver-privacy-line--1" data-iu-silver-privacy-line>🔒 Osobní záznamy ukládáme primárně v tvém zařízení.</p>
+                                    <p class="silver-privacy-line silver-privacy-line--2" data-iu-silver-privacy-line-2>Část webu může používat externí služby.</p>
                                   </div>
                                   <p class="iu-hero-silverLines iu-hero-silverLines--desktop" aria-label="Pomůžu ti se vším na infoUzel.cz">
                                     <span class="iu-hero-line iu-hero-line--2">Pomůžu ti se vším</span>
@@ -3809,7 +3810,7 @@ style-src 'self' 'unsafe-inline' https:;
                           <button type="button" class="iuModalClose iu-ds-close" data-iu-close aria-label="Zavřít">×</button>
                         </div>
                         <div class="iu-ds-panelBody">
-                          <p class="iu-ds-helper">Údaje se ukládají pouze v tomto prohlížeči na tomto zařízení. Nikdy se neodesílají na server infoUzel.cz.</p>
+                          <p class="iu-ds-helper">Údaje se ukládají pouze v tomto prohlížeči na tomto zařízení a neodesíláme je na server infoUzel.cz.</p>
                           <p id="iuDsAutofillStatus" class="iu-ds-status" aria-live="polite">Externí přihlašovací stránka běží na jiné doméně — prohlížeč z bezpečnostních důvodů neumožňuje automatické vyplnění jména a hesla z infoUzel.cz. Po otevření přihlášení zkopírujte údaje z polí níže ručně.</p>
                           <div id="iuDsProfileListHost" class="iu-ds-profile-list"></div>
                           <button type="button" id="iuDsAddBtn" class="iu-ds-add">+ Přidat další</button>
@@ -5275,6 +5276,7 @@ style-src 'self' 'unsafe-inline' https:;
       })();
     </script>
     <script type="module" src="/assets/app.js?v=p0-daily-cal-add-edit-ux-20260503"></script>
+    <script defer src="/assets/iu-info-center.js?v=info-center-v2-3-20260609"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=6"></script>
     <script>
     (function(){
@@ -5720,33 +5722,298 @@ style-src 'self' 'unsafe-inline' https:;
       <iframe id="iuVideoFrame" allowfullscreen></iframe>
     </div>
 
-    <div id="iuTopbarInfoOverlay" class="iuTopbarInfoOverlay" role="dialog" aria-modal="true" aria-labelledby="iuTopbarInfoOverlayTitle" hidden>
+    <div id="iuTopbarInfoOverlay" class="iuTopbarInfoOverlay iuInfoCenterV2" data-iu-info-center-v2="1" role="dialog" aria-modal="true" aria-labelledby="iuTopbarInfoOverlayTitle" hidden>
       <div class="iuTopbarInfoOverlay__backdrop" data-iu-topbar-info-close="backdrop" aria-hidden="true"></div>
       <div class="iuTopbarInfoOverlay__panel" role="document">
         <header class="iuTopbarInfoOverlay__head">
-          <h2 id="iuTopbarInfoOverlayTitle" class="iuTopbarInfoOverlay__title">Informace</h2>
+          <button type="button" class="iuInfoCenter__back" id="iuInfoCenterBack" hidden aria-label="Zpět na menu">‹</button>
+          <h2 id="iuTopbarInfoOverlayTitle" class="iuTopbarInfoOverlay__title">Informační centrum</h2>
           <button type="button" class="iuTopbarInfoOverlay__close" id="iuTopbarInfoOverlayClose" data-iu-topbar-info-close="button" aria-label="Zavřít">×</button>
         </header>
-        <div class="iuTopbarInfoOverlay__body">
-          <section class="iuTopbarInfoOverlay__block" aria-labelledby="iuTopbarInfoHPrivacy">
-            <h3 id="iuTopbarInfoHPrivacy" class="iuTopbarInfoOverlay__h">Ochrana soukromí a data</h3>
-            <p>Web může ukládat technická data v prohlížeči, například localStorage, cache nebo data související se service workerem.</p>
-            <p>Tato data slouží především pro funkčnost webu a jeho částí.</p>
-            <p>Web může pracovat s externími zdroji dat podle aktuálně dostupných funkcí.</p>
-            <p>Rozsah práce s daty se může průběžně upřesňovat a doplňovat podle vývoje služby.</p>
-          </section>
-          <section class="iuTopbarInfoOverlay__block" aria-labelledby="iuTopbarInfoHCookies">
-            <h3 id="iuTopbarInfoHCookies" class="iuTopbarInfoOverlay__h">Cookies / technické ukládání</h3>
-            <p>Web může využívat technické ukládání dat pro zajištění funkčnosti.</p>
-            <p>Rozsah ukládání dat se může lišit podle konkrétní funkce webu.</p>
-            <p>Podrobnější informace budou doplňovány podle dalšího vývoje služby.</p>
-          </section>
-          <section class="iuTopbarInfoOverlay__block" aria-labelledby="iuTopbarInfoHContact">
-            <h3 id="iuTopbarInfoHContact" class="iuTopbarInfoOverlay__h">Provozovatel a kontakt</h3>
-            <p><strong>Provozovatel webu:</strong> Bude doplněno před oficiálním spuštěním služby.</p>
-            <p><strong>Kontakt:</strong> <a href="mailto:info@infouzel.cz" class="iuTopbarInfoOverlay__mailto">info@infouzel.cz</a></p>
-            <p>Podrobnější provozní a informační údaje budou doplňovány s rozšiřováním služby.</p>
-          </section>
+        <div class="iuTopbarInfoOverlay__body iuInfoCenter__body">
+
+          <div id="iuInfoCenterMenu" class="iuInfoCenter__menu" data-iu-info-view="menu">
+            <nav class="iuInfoCenter__grid" aria-label="Informační centrum">
+              <button type="button" class="iuInfoCenter__tile iuInfoCenter__tile--hero" data-iu-info-section="pwa">
+                <span class="iuInfoCenter__tileIcon" aria-hidden="true">⭐</span>
+                <span class="iuInfoCenter__tileLabel">Vytvořit ikonu na plochu</span>
+              </button>
+              <button type="button" class="iuInfoCenter__tile" data-iu-info-section="about">
+                <span class="iuInfoCenter__tileIcon" aria-hidden="true">ℹ️</span>
+                <span class="iuInfoCenter__tileLabel">O InfoUzel.cz</span>
+              </button>
+              <button type="button" class="iuInfoCenter__tile" data-iu-info-section="silver">
+                <span class="iuInfoCenter__tileIcon" aria-hidden="true">🤖</span>
+                <span class="iuInfoCenter__tileLabel">O Silverovi / osobní asistent</span>
+              </button>
+              <button type="button" class="iuInfoCenter__tile" data-iu-info-section="cookies">
+                <span class="iuInfoCenter__tileIcon" aria-hidden="true">🍪</span>
+                <span class="iuInfoCenter__tileLabel">Cookies a technické ukládání</span>
+              </button>
+              <button type="button" class="iuInfoCenter__tile" data-iu-info-section="privacy">
+                <span class="iuInfoCenter__tileIcon" aria-hidden="true">🔒</span>
+                <span class="iuInfoCenter__tileLabel">Ochrana soukromí a data</span>
+              </button>
+              <button type="button" class="iuInfoCenter__tile" data-iu-info-section="contact">
+                <span class="iuInfoCenter__tileIcon" aria-hidden="true">🏢</span>
+                <span class="iuInfoCenter__tileLabel">Provozovatel a kontakt</span>
+              </button>
+            </nav>
+          </div>
+
+          <article id="iuInfoCenterDetailPwa" class="iuInfoCenter__detail" data-iu-info-section="pwa" data-iu-info-view="pwa" hidden>
+            <div class="iuInfoCenter__detailInner">
+              <p class="iuInfoCenter__lead">Přidání ikony na plochu zvyšuje pohodlí — InfoUzel se pak spouští podobně jako aplikace, jedním klepnutím z plochy telefonu nebo tabletu.</p>
+              <h3 class="iuInfoCenter__h3">Proč to doporučujeme</h3>
+              <ul class="iuInfoCenter__ul">
+                <li>rychlejší spuštění bez hledání v záložkách</li>
+                <li>používání v režimu podobném aplikaci</li>
+                <li>jednodušší návrat na web</li>
+                <li>pohodlnější ovládání Silvera a MindMenu</li>
+                <li>lepší uživatelský komfort na mobilu i tabletu</li>
+              </ul>
+              <div class="iuInfoCenter__platformRow" role="tablist" aria-label="Platforma pro návod">
+                <button type="button" class="iuInfoCenter__platformBtn is-active" data-iu-info-pwa-platform="ios" role="tab" aria-selected="true">🍎 iPhone / iPad</button>
+                <button type="button" class="iuInfoCenter__platformBtn" data-iu-info-pwa-platform="android" role="tab" aria-selected="false">🤖 Android</button>
+              </div>
+              <div id="iuInfoCenterPwaIos" class="iuInfoCenter__card">
+                <h3 class="iuInfoCenter__h3">iPhone / iPad</h3>
+                <p class="iuInfoCenter__p">Na iPhonu a iPadu používejte prohlížeč <strong>Safari</strong>.</p>
+                <ol class="iuInfoCenter__steps">
+                  <li>Otevřete InfoUzel v Safari.</li>
+                  <li>Klepněte na <strong>Sdílet</strong> (čtverec se šipkou).</li>
+                  <li>Zvolte <strong>Přidat na plochu</strong>.</li>
+                  <li>Potvrďte vytvoření ikony.</li>
+                </ol>
+                <div class="iuInfoCenter__shotPlaceholder" aria-hidden="true">Prostor pro budoucí screenshoty návodu (iPhone / iPad)</div>
+              </div>
+              <div id="iuInfoCenterPwaAndroid" class="iuInfoCenter__card" hidden>
+                <h3 class="iuInfoCenter__h3">Android</h3>
+                <p class="iuInfoCenter__p">Na Androidu typicky použijte <strong>Chrome</strong> nebo systémový prohlížeč, který nabízí instalaci na plochu.</p>
+                <ol class="iuInfoCenter__steps">
+                  <li>Otevřete InfoUzel v Chrome nebo podporovaném prohlížeči.</li>
+                  <li>Otevřete <strong>menu prohlížeče</strong> (⋮).</li>
+                  <li>Zvolte <strong>Přidat na plochu</strong> nebo <strong>Nainstalovat aplikaci</strong>.</li>
+                  <li>Potvrďte vytvoření ikony.</li>
+                </ol>
+                <div class="iuInfoCenter__shotPlaceholder" aria-hidden="true">Prostor pro budoucí screenshoty návodu (Android)</div>
+              </div>
+              <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
+                <strong>Důležité upozornění:</strong> Vytvoření ikony na ploše <strong>samo o sobě nezaručuje</strong> zachování uložených dat. Ke ztrátě lokálně uložených údajů může dojít při vymazání dat prohlížeče, resetu telefonu, výměně zařízení, obnovení továrního nastavení nebo ručním smazání dat uživatelem. InfoUzel <strong>není určen jako jediná záloha</strong> důležitých údajů.
+              </div>
+              <h3 class="iuInfoCenter__h3">Jak chránit svá data</h3>
+              <ul class="iuInfoCenter__ul">
+                <li>Vytvořte ikonu na plochu pro pohodlnější přístup — ne jako náhradu zálohy.</li>
+                <li>Důležité údaje si ukládejte nebo zálohujte i <strong>mimo InfoUzel</strong> (záloha telefonu, export, vlastní záznam).</li>
+                <li>Zálohujte zařízení podle návodu výrobce.</li>
+                <li>Nemažte bezdůvodně data prohlížeče pro InfoUzel — obsahuje poznámky, úkoly, kalendář a další lokální nastavení.</li>
+              </ul>
+              <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
+            </div>
+          </article>
+
+          <article id="iuInfoCenterDetailAbout" class="iuInfoCenter__detail" data-iu-info-section="about" hidden>
+            <div class="iuInfoCenter__detailInner">
+              <p class="iuInfoCenter__lead">InfoUzel.cz je český přehledový web a sada praktických nástrojů v jednom — bez nutnosti registrace. Kombinuje lokální osobní nástroje s automaticky agregovaným obsahem z veřejných zdrojů.</p>
+              <h3 class="iuInfoCenter__h3">Hlavní části webu</h3>
+              <ul class="iuInfoCenter__moduleList">
+                <li class="iuInfoCenter__moduleItem"><strong>Homepage</strong> — úvodní rozcestník, souhrn dne a rychlý přístup k modulům.<br><span class="iuInfoCenter__moduleTag">Orientační informace · kombinace lokálních a externích dat</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Silver</strong> — osobní asistent pro rychlé zadání úkolů, poznámek a událostí.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj · orientační odpovědi</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Kalendář</strong> — osobní události, připomínky a plánování.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj · data v zařízení</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Úkoly</strong> — seznam úkolů s termíny a prioritami.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Poznámky</strong> — textové záznamy s vyhledáváním a tagy.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>MindMenu</strong> — rychlé odkazy, schránky, bankovnictví, datovka a další nástroje.<br><span class="iuInfoCenter__moduleTag">Lokální navigace · část odkazů vede na externí weby</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Zprávy</strong> — přehled zpráv a RSS kanálů podle témat.<br><span class="iuInfoCenter__moduleTag">Automaticky agregovaný obsah · externí zdroje</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>RSS agregátor článků</strong> — titulky z veřejných zdrojů s odkazem na originál.<br><span class="iuInfoCenter__moduleTag">Automaticky agregovaný obsah · závislost na třetích stranách</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Sport, Finance, Zdraví, Kultura, Hry, Věda, Vzdělávání, Cestování</strong> — tematické přehledy a filtry.<br><span class="iuInfoCenter__moduleTag">Externí data · orientační informace</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Videa</strong> — denní výběr a přehrávání z YouTube.<br><span class="iuInfoCenter__moduleTag">Externí data · závislost na YouTube</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Počasí</strong> — předpověď pro zvolené město nebo polohu (Open-Meteo).<br><span class="iuInfoCenter__moduleTag">Externí data · poloha jen po vašem souhlasu</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Doprava</strong> — odkazy na IDOS, PID, železnici a další dopravní služby.<br><span class="iuInfoCenter__moduleTag">Externí data · orientační informace</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Mapy a poloha</strong> — mapové a navigační odkazy tam, kde jsou v UI dostupné.<br><span class="iuInfoCenter__moduleTag">Externí služby · závislost na třetích stranách</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Vyhledávání zásilek</strong> — detekce dopravce a přesměrování na oficiální stránky.<br><span class="iuInfoCenter__moduleTag">Externí služby dopravců</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Finance</strong> — fakturační pomůcka a související nástroje.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj · data vložená uživatelem</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Kalkulačky</strong> — praktické finanční a daňové výpočty.<br><span class="iuInfoCenter__moduleTag">Orientační informace · nejsou odborné poradenství</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Jmeniny a svátky</strong> — denní přehled jmen a svátků.<br><span class="iuInfoCenter__moduleTag">Orientační informace</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>TV, rádio, datovka, AI odkazy, právní generátor</strong> — další moduly podle aktuální nabídky webu.<br><span class="iuInfoCenter__moduleTag">Kombinace lokálních nástrojů a externích odkazů</span></li>
+              </ul>
+              <div class="iuInfoCenter__box" role="note">
+                <strong>Informace a data z externích zdrojů</strong>
+                <p class="iuInfoCenter__p">Část obsahu pochází z veřejných nebo externích zdrojů — například RSS kanály (ČT24, Seznam, Novinky, iRozhlas a další), YouTube, počasí (Open-Meteo), dopravní data, mapové služby, dopravci (Zásilkovna, PPL, DPD, GLS, Balíkovna, DHL a další) a další poskytovatelé. Tyto zdroje se mohou měnit, být dočasně nedostupné, zpomalené nebo obsahovat chybu. U článků vždy odkazujeme na původní web vydavatele — nejsme autorem těchto textů.</p>
+              </div>
+              <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
+                <strong>Omezení služby</strong>
+                <ul class="iuInfoCenter__ul">
+                  <li>InfoUzel nemusí být dostupný nepřetržitě.</li>
+                  <li>Informace mohou být zpožděné nebo dočasně neaktuální.</li>
+                  <li>Externí data mohou být nepřesná, neúplná nebo chybná.</li>
+                  <li>Kalkulačky, přehledy a odpovědi Silvera jsou orientační.</li>
+                  <li>Konečné rozhodnutí — zejména v právních, zdravotních, finančních nebo bezpečnostních záležitostech — zůstává vždy na uživateli.</li>
+                </ul>
+              </div>
+              <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
+            </div>
+          </article>
+
+          <article id="iuInfoCenterDetailSilver" class="iuInfoCenter__detail" data-iu-info-section="silver" hidden>
+            <div class="iuInfoCenter__detailInner">
+              <p class="iuInfoCenter__lead">Silver je osobní asistent přímo v InfoUzel.cz. Pomůže vám rychle zapsat úkol, poznámku nebo událost běžnou češtinou.</p>
+              <h3 class="iuInfoCenter__h3">Co Silver umí</h3>
+              <ul class="iuInfoCenter__ul">
+                <li>navrhnout a uložit událost do kalendáře</li>
+                <li>vytvořit úkol s termínem</li>
+                <li>uložit poznámku</li>
+                <li>zobrazit souhrn dnešních událostí a úkolů</li>
+              </ul>
+              <h3 class="iuInfoCenter__h3">Jak funguje</h3>
+              <p class="iuInfoCenter__p">Silver pracuje <strong>ve vašem prohlížeči</strong>. Osobní poznámky, úkoly a kalendářní údaje jsou navrženy <strong>primárně pro lokální ukládání</strong> v zařízení uživatele. Po potvrzení se data ukládají do lokálních modulů (kalendář, úkoly, poznámky).</p>
+              <h3 class="iuInfoCenter__h3">Práce s daty</h3>
+              <div class="iuInfoCenter__pillRow">
+                <span class="iuInfoCenter__pill iuInfoCenter__pill--local">Primárně lokálně: úkoly, poznámky, kalendář</span>
+                <span class="iuInfoCenter__pill iuInfoCenter__pill--ext">Externě: počasí, videa, mapy, dopravci</span>
+              </div>
+              <p class="iuInfoCenter__p">Některé části webu nebo doplňkové funkce mohou používat externí služby — například předpověď počasí (Open-Meteo podle zvolené polohy), videa (YouTube) nebo odkazy na mapy a dopravce. Tyto požadavky směřují k příslušným poskytovatelům.</p>
+              <p class="iuInfoCenter__p">Do webu byste neměli vkládat údaje, které nechcete uchovávat v prohlížeči nebo zařízení.</p>
+              <h3 class="iuInfoCenter__h3">Orientační charakter odpovědí</h3>
+              <p class="iuInfoCenter__p">Odpovědi Silvera mohou být orientační. U důležitých informací vždy ověřte údaje z nezávislého nebo odborného zdroje. Při zdravotních, právních, finančních nebo krizových situacích kontaktujte odborníka nebo příslušnou službu.</p>
+              <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
+                <strong>Silver není:</strong> právník, advokát, lékař, finanční poradce, krizová služba ani náhrada odborné pomoci. V urgentní situaci volejte <strong>155</strong> (zdravotní), <strong>158</strong> (policie) nebo <strong>112</strong>.
+              </div>
+              <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
+            </div>
+          </article>
+
+          <article id="iuInfoCenterDetailCookies" class="iuInfoCenter__detail" data-iu-info-section="cookies" hidden>
+            <div class="iuInfoCenter__detailInner">
+              <p class="iuInfoCenter__lead">InfoUzel pro běh webu využívá technologie prohlížeče. Rozlišujeme mezi technickým ukládáním potřebným pro funkce a případnou budoucí anonymní analytikou.</p>
+              <h3 class="iuInfoCenter__h3">A) Aktuální technické ukládání</h3>
+              <ul class="iuInfoCenter__ul">
+                <li><strong>localStorage</strong> — poznámky, úkoly, kalendář, faktury, nastavení vzhledu, preference počasí, schránky MindMenu, cache feedu a další uživatelská data</li>
+                <li><strong>sessionStorage</strong> — dočasné údaje relace (návrat z odkazu, aktualizace PWA, obnova po chybě)</li>
+                <li><strong>IndexedDB</strong> — záloha kalendáře (databáze <code>iu.calendar.idb</code>)</li>
+                <li><strong>Cache API</strong> — uložené soubory webu a naposledy stažené články pro rychlejší načtení</li>
+                <li><strong>Service Worker</strong> — správa cache, offline přístup a aktualizace webu</li>
+                <li><strong>PWA / ikona na ploše</strong> — instalace webu jako aplikace, bez samostatného účtu</li>
+              </ul>
+              <p class="iuInfoCenter__p">Tato data slouží pro funkčnost, kterou jste si zvolili, ne pro reklamní profilování.</p>
+              <h3 class="iuInfoCenter__h3">Co aktuálně nepoužíváme</h3>
+              <div class="iuInfoCenter__box" role="note">
+                <ul class="iuInfoCenter__ul">
+                  <li>nepoužíváme marketingové cookies</li>
+                  <li>nepoužíváme reklamní profilování</li>
+                  <li>nevytváříme reklamní profily uživatelů</li>
+                  <li>neprodáváme osobní data třetím stranám</li>
+                </ul>
+              </div>
+              <h3 class="iuInfoCenter__h3">B) Budoucí anonymní statistiky návštěvnosti</h3>
+              <p class="iuInfoCenter__p">InfoUzel může v budoucnu zavést privacy-friendly statistiky návštěvnosti. Účelem bude:</p>
+              <ul class="iuInfoCenter__ul">
+                <li>zjistit počet návštěv</li>
+                <li>poznat vytížení webu</li>
+                <li>odhalovat technické chyby</li>
+                <li>zlepšovat funkce webu</li>
+                <li>zjistit, které části webu jsou používané</li>
+              </ul>
+              <p class="iuInfoCenter__p">Nesmí sloužit k behaviorální reklamě, prodeji dat, vytváření reklamních profilů ani sledování konkrétních osob.</p>
+              <p class="iuInfoCenter__p">Před případným zavedením netechnické analytiky musí být uživatelé odpovídajícím způsobem informováni a tam, kde to právní předpisy vyžadují, musí být získán souhlas.</p>
+              <h3 class="iuInfoCenter__h3">Třetí strany</h3>
+              <p class="iuInfoCenter__p">Při přehrání videa (YouTube / youtube-nocookie.com) nebo načtení počasí (Open-Meteo) mohou tyto služby ukládat vlastní technická data nebo cookies dle svých pravidel. Na to nemáme přímou kontrolu.</p>
+              <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
+            </div>
+          </article>
+
+          <article id="iuInfoCenterDetailPrivacy" class="iuInfoCenter__detail" data-iu-info-section="privacy" hidden>
+            <div class="iuInfoCenter__detailInner">
+              <p class="iuInfoCenter__lead">Tato sekce popisuje poctivě, jaká data InfoUzel používá, kde zůstávají a co můžete ovlivnit vy.</p>
+              <h3 class="iuInfoCenter__h3">1. Jaká data mohou být zpracována</h3>
+              <ul class="iuInfoCenter__ul">
+                <li>nastavení vzhledu a uživatelské preference</li>
+                <li>lokálně uložené poznámky, úkoly a kalendářní údaje</li>
+                <li>data vložená uživatelem do jednotlivých nástrojů (faktury, schránky, zásilky, kalkulačky)</li>
+                <li>technická data potřebná pro běh webu (cache, verze, lokální diagnostika chyb)</li>
+                <li>poloha — pouze pokud ji uživatel výslovně povolí pro počasí nebo podobnou funkci</li>
+              </ul>
+              <h3 class="iuInfoCenter__h3">2. Kde jsou data uložena</h3>
+              <ul class="iuInfoCenter__ul">
+                <li><strong>Zařízení uživatele</strong> — většina osobních údajů zůstává v prohlížeči</li>
+                <li><strong>localStorage</strong> — poznámky, úkoly, kalendář, faktury, nastavení, preference</li>
+                <li><strong>IndexedDB</strong> — záloha kalendáře (<code>iu.calendar.idb</code>)</li>
+                <li><strong>sessionStorage</strong> — dočasné údaje během relace</li>
+                <li><strong>Service Worker cache</strong> — stažené soubory webu a články</li>
+                <li><strong>Externí poskytovatelé</strong> — u funkcí, které je používají (počasí, videa, dopravci, mapy)</li>
+              </ul>
+              <h3 class="iuInfoCenter__h3">3. Co na serverech InfoUzel běžně neuchováváme</h3>
+              <div class="iuInfoCenter__box" role="note">
+                <ul class="iuInfoCenter__ul">
+                  <li>nevytváříme uživatelské účty</li>
+                  <li>neprovozujeme uživatelské profily</li>
+                  <li>neuchováváme centrální databázi poznámek, úkolů a kalendářů</li>
+                  <li>neprodáváme osobní data</li>
+                  <li>nepoužíváme cílenou reklamní profilaci</li>
+                </ul>
+              </div>
+              <p class="iuInfoCenter__p">Na serveru jsou dostupné veřejné statické soubory (články, videa, metadata) generované pipeline — ne osobní data uživatelů.</p>
+              <h3 class="iuInfoCenter__h3">4. Jak může uživatel data smazat</h3>
+              <ul class="iuInfoCenter__ul">
+                <li>smazáním dat webu v prohlížeči (Safari, Chrome, Firefox a další)</li>
+                <li>vymazáním localStorage a cache v nastavení prohlížeče pro <strong>infouzel.cz</strong></li>
+                <li>resetem zařízení nebo obnovením továrního nastavení</li>
+                <li>jednotlivými položkami přímo v modulech Poznámky, Úkoly a Kalendář</li>
+              </ul>
+              <p class="iuInfoCenter__p"><strong>Upozornění:</strong> Tím může uživatel přijít o lokálně uložená data. InfoUzel negarantuje jejich obnovu.</p>
+              <h3 class="iuInfoCenter__h3">5. Práva uživatele</h3>
+              <ul class="iuInfoCenter__ul">
+                <li>právo na informace</li>
+                <li>právo na přístup</li>
+                <li>právo na opravu</li>
+                <li>právo na výmaz</li>
+                <li>právo na omezení zpracování</li>
+                <li>právo vznést námitku</li>
+                <li>právo podat stížnost u <a class="iuInfoCenter__link" href="https://uoou.cz" target="_blank" rel="noopener noreferrer">Úřadu pro ochranu osobních údajů (ÚOOÚ)</a></li>
+              </ul>
+              <p class="iuInfoCenter__p">U lokálních dat v zařízení můžete práva uplatnit smazáním dle návodu výše. Dotazy: <a class="iuInfoCenter__link" href="mailto:info@infouzel.cz">info@infouzel.cz</a>.</p>
+              <h3 class="iuInfoCenter__h3">6. Externí poskytovatelé</h3>
+              <ul class="iuInfoCenter__ul">
+                <li><strong>YouTube / Google</strong> — náhledy a přehrávání videí (youtube.com, youtube-nocookie.com, i.ytimg.com)</li>
+                <li><strong>Open-Meteo</strong> — předpověď počasí (api.open-meteo.com, souřadnice při GPS režimu)</li>
+                <li><strong>RSS vydavatelé</strong> — ČT24, Seznam, Novinky, iRozhlas, Deník a další veřejné zdroje</li>
+                <li><strong>Zásilkoví dopravci</strong> — Zásilkovna/Packeta, PPL, DPD, GLS, Balíkovna, DHL, WeDo, Messenger</li>
+                <li><strong>Mapové a dopravní služby</strong> — odkazy na externí weby (IDOS, PID, Google Maps a další)</li>
+                <li><strong>Externí AI a překladače</strong> — odkazy z MindMenu (ChatGPT, Gemini, DeepL a další), pokud je uživatel otevře</li>
+              </ul>
+              <p class="iuInfoCenter__p">Každý poskytovatel má vlastní podmínky ochrany soukromí. InfoUzel za jejich zpracování nenese plnou odpovědnost.</p>
+              <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
+                <strong>InfoUzel negarantuje:</strong>
+                <ul class="iuInfoCenter__ul">
+                  <li>nepřetržitou dostupnost</li>
+                  <li>bezchybnost externích dat</li>
+                  <li>aktuálnost všech informací</li>
+                  <li>vhodnost údajů pro konkrétní rozhodnutí uživatele</li>
+                  <li>zachování lokálně uložených dat při smazání dat prohlížeče, výměně zařízení nebo resetu telefonu</li>
+                </ul>
+              </div>
+              <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
+            </div>
+          </article>
+
+          <article id="iuInfoCenterDetailContact" class="iuInfoCenter__detail" data-iu-info-section="contact" hidden>
+            <div class="iuInfoCenter__detailInner">
+              <div class="iuInfoCenter__companyCard">
+                <p class="iuInfoCenter__companyName">Media Uzel s.r.o.</p>
+                <p class="iuInfoCenter__companyRow">Kněžická 96<br>190 12 Praha 9</p>
+                <p class="iuInfoCenter__companyRow"><strong>IČ:</strong> 29482241</p>
+                <p class="iuInfoCenter__companyRow"><strong>E-mail:</strong> <a class="iuInfoCenter__link" href="mailto:info@infouzel.cz">info@infouzel.cz</a></p>
+                <p class="iuInfoCenter__companyRow"><strong>Web:</strong> <a class="iuInfoCenter__link" href="https://infouzel.cz" target="_blank" rel="noopener noreferrer">https://infouzel.cz</a></p>
+                <p class="iuInfoCenter__companyRow">Společnost zapsaná u Městského soudu v Praze</p>
+                <p class="iuInfoCenter__companyRow"><strong>Spisová značka:</strong> C 447292</p>
+                <p class="iuInfoCenter__companyRow"><strong>Bankovní účet:</strong> 294822412/5500</p>
+              </div>
+              <h3 class="iuInfoCenter__h3">Kontakt pro dotazy k ochraně soukromí</h3>
+              <p class="iuInfoCenter__p">Dotazy k provozu webu, ochraně soukromí a uplatnění práv směřujte na <a class="iuInfoCenter__link" href="mailto:info@infouzel.cz">info@infouzel.cz</a>. U GDPR žádostí se snažíme odpovědět do 30 dnů.</p>
+              <p class="iuInfoCenter__p">Provozovatel není pověřencem pro ochranu osobních údajů (DPO), pokud právní povinnost jeho jmenování nevznikne.</p>
+              <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
+            </div>
+          </article>
+
         </div>
       </div>
     </div>
