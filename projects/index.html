@@ -5039,12 +5039,31 @@ font-src 'self' data:;
         if (iuArticlesBootstrapExplicitOn()) return true;
         return false;
       }
+      function iuCanonChunkManifestUrl() {
+        var ver = iuMetaDataVer();
+        var q = ver === "iu-data-ver-placeholder" ? "iu-data-ver-placeholder" : ver;
+        return iuBasePathForData() + "data/article_feed_chunks/manifest.json?v=" + encodeURIComponent(q);
+      }
+      function iuUseChunkedArticlesLoader() {
+        if (iuArticlesFullForced()) return false;
+        if (iuUseBootstrapPrimaryArticlesSource()) return false;
+        try {
+          return iuArticlesUrlParams().get("iuArticlesChunk") !== "0";
+        } catch (_) {
+          return true;
+        }
+      }
       function iuPrimaryArticlesLoadKey() {
-        return iuUseBootstrapPrimaryArticlesSource() ? "BOOT:" + iuCanonBootstrapJsonUrl() : "POOL:" + iuCanonPublishablePoolJsonUrl();
+        if (iuUseBootstrapPrimaryArticlesSource()) return "BOOT:" + iuCanonBootstrapJsonUrl();
+        if (iuUseChunkedArticlesLoader()) return "CHUNK:" + iuCanonChunkManifestUrl();
+        return "POOL:" + iuCanonPublishablePoolJsonUrl();
       }
       try {
         window.__iuUseArticlesBootstrapPrimary = iuUseBootstrapPrimaryArticlesSource;
-        window.__iuHomepageFeedDataSource = "publishable_pool.json";
+        window.__iuUseChunkedArticlesLoader = iuUseChunkedArticlesLoader;
+        window.__iuHomepageFeedDataSource = iuUseChunkedArticlesLoader()
+          ? "article_feed_chunks/manifest.json"
+          : "publishable_pool.json";
       } catch (_) {}
       function iuValidateBootstrapArticlesPayload(d) {
         if (!d || typeof d !== "object") return false;
@@ -5122,7 +5141,7 @@ font-src 'self' data:;
         }
         try {
           if (!window.__iuArticlesLoaderFetchCounts) {
-            window.__iuArticlesLoaderFetchCounts = { articles: 0, bootstrap: 0, publishable_pool: 0 };
+            window.__iuArticlesLoaderFetchCounts = { articles: 0, bootstrap: 0, publishable_pool: 0, article_feed_chunks: 0 };
           }
         } catch (_) {}
         var C = window.__iuArticlesLoaderFetchCounts;
@@ -5130,6 +5149,7 @@ font-src 'self' data:;
           try {
             if (!C) return;
             if (String(u).indexOf("bootstrap.json") !== -1) C.bootstrap = (C.bootstrap | 0) + 1;
+            else if (String(u).indexOf("article_feed_chunks") !== -1) C.article_feed_chunks = (C.article_feed_chunks | 0) + 1;
             else if (String(u).indexOf("publishable_pool.json") !== -1) C.publishable_pool = (C.publishable_pool | 0) + 1;
             else if (String(u).indexOf("articles.json") !== -1) C.articles = (C.articles | 0) + 1;
           } catch (_) {}
@@ -5161,6 +5181,18 @@ font-src 'self' data:;
               } catch (_) {}
               return fetchJsonNoThrow(iuCanonPublishablePoolJsonUrl());
             });
+        } else if (iuUseChunkedArticlesLoader()) {
+          chain = fetchJsonNoThrow(iuCanonChunkManifestUrl()).then(function (d) {
+            try {
+              window.__iuArticlesLoaderMode = "chunk-v1-manifest";
+            } catch (_) {}
+            return {
+              generatedAt: d && d.generatedAt ? d.generatedAt : null,
+              articles: [],
+              _iuChunkDeferred: true,
+              _iuChunkManifest: d,
+            };
+          });
         } else {
           chain = fetchJsonNoThrow(iuCanonPublishablePoolJsonUrl()).then(function (d) {
             try {

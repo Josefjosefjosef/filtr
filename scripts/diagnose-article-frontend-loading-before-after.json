@@ -1,0 +1,30 @@
+{
+  "BEFORE": {
+    "source": "production diagnostic pre-chunk V1",
+    "article_count_received": 15488,
+    "article_count_parsed": 15317,
+    "transfer_kb": 11847,
+    "mobile_usable_ms": 10138,
+    "homepage_loads_full_publishable_pool": "YES",
+    "load_more_uses_existing_loaded_data": "YES",
+    "load_more_fetches_new_chunk": "NO"
+  },
+  "AFTER": {
+    "source": "local diagnostic post-chunk V1 (http://127.0.0.1:8890/projects/)",
+    "article_count_received_first_network": 130,
+    "article_count_parsed_at_settle": 125,
+    "article_count_rendered": 33,
+    "transfer_kb": 591,
+    "mobile_usable_ms": 8572,
+    "homepage_loads_full_publishable_pool": "NO",
+    "load_more_uses_existing_loaded_data": "NO",
+    "load_more_fetches_new_chunk": "YES"
+  },
+  "DELTA": {
+    "received_reduction": "15488 -> 130 first network (~99.2%)",
+    "parsed_reduction": "15317 -> 125 at settle (~99.2%)",
+    "transfer_reduction": "11847 KB -> 591 KB (~95.0%)",
+    "mobile_speedup": "10138 ms -> 8572 ms (~15.4% faster)"
+  },
+  "VERDICT": "IMPROVED"
+}

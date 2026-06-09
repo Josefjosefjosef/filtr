@@ -1,0 +1,982 @@
+{
+  "generatedAt": "2026-06-09T16:17:11.363Z",
+  "production_url": "http://127.0.0.1:8890/projects/",
+  "main_commit": "a8755317fc4a0ca8a5a7c2dc3845501cfab80d7a",
+  "git_status_clean": false,
+  "behavior_changed": false,
+  "browser_initial_transfer_kb": 591,
+  "browser_initial_unique_article_files": [
+    "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json",
+    "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/init.json",
+    "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/000.json",
+    "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/001.json"
+  ],
+  "publishable_pool_fetch_count_observed": 0,
+  "fileProbe": {
+    "pool_article_count": 15488,
+    "pool_uncompressed_kb": 20353.9,
+    "pool_gzip_kb_estimate": 2856,
+    "bootstrap_article_count": 1000,
+    "bootstrap_kb": 1301.6,
+    "index_day_count": 42,
+    "archive_articles_json_kb": 19717.8,
+    "probes": [
+      {
+        "path": "data/publishable_pool.json",
+        "url": "http://127.0.0.1:8890/projects/data/publishable_pool.json",
+        "status": 200,
+        "transferBytes": 20842440,
+        "contentEncoding": "identity",
+        "contentLengthHeader": null,
+        "articleCount": 15488,
+        "dayCount": null,
+        "generatedAt": "2026-06-09T10:42:14.312423Z"
+      },
+      {
+        "path": "data/articles/bootstrap.json",
+        "url": "http://127.0.0.1:8890/projects/data/articles/bootstrap.json",
+        "status": 200,
+        "transferBytes": 1332858,
+        "contentEncoding": "identity",
+        "contentLengthHeader": null,
+        "articleCount": 1000,
+        "dayCount": null,
+        "generatedAt": "2026-06-09T06:58:39.492726Z"
+      },
+      {
+        "path": "data/articles/index.json",
+        "url": "http://127.0.0.1:8890/projects/data/articles/index.json",
+        "status": 200,
+        "transferBytes": 2567,
+        "contentEncoding": "identity",
+        "contentLengthHeader": null,
+        "articleCount": null,
+        "dayCount": 42,
+        "generatedAt": "2026-06-09T06:58:39.492726Z"
+      },
+      {
+        "path": "data/articles.json",
+        "url": "http://127.0.0.1:8890/projects/data/articles.json",
+        "status": 200,
+        "transferBytes": 20190984,
+        "contentEncoding": "identity",
+        "contentLengthHeader": null,
+        "articleCount": 14999,
+        "dayCount": null,
+        "generatedAt": "2026-06-09T06:58:39.492726Z"
+      },
+      {
+        "path": "data/videos.json",
+        "url": "http://127.0.0.1:8890/projects/data/videos.json",
+        "status": 200,
+        "transferBytes": 109186,
+        "contentEncoding": "identity",
+        "contentLengthHeader": null,
+        "articleCount": null,
+        "dayCount": null,
+        "generatedAt": "2026-06-09T12:30:14.573203Z"
+      },
+      {
+        "path": "data/meta.json",
+        "url": "http://127.0.0.1:8890/projects/data/meta.json",
+        "status": 200,
+        "transferBytes": 384,
+        "contentEncoding": "identity",
+        "contentLengthHeader": null,
+        "articleCount": null,
+        "dayCount": null,
+        "generatedAt": "2026-06-09T06:58:39.492726Z"
+      }
+    ]
+  },
+  "browser": {
+    "viewports": [
+      {
+        "viewport": "mobile",
+        "navUrl": "http://127.0.0.1:8890/projects/?section=feed&topic=zpravy",
+        "navDurationMs": 15413,
+        "consoleErrors": [],
+        "network": {
+          "articleFiles": [
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": null,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/init.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 30742,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/000.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 103632,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/001.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 103247,
+              "contentEncoding": null,
+              "phase": "initial"
+            }
+          ],
+          "allDataFiles": [
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/videos.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 109186,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/meta.json",
+              "status": 200,
+              "transferBytes": 384,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": null,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/videos.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 109186,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/meta.json",
+              "status": 200,
+              "transferBytes": 384,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/init.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 30742,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/videos.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 109186,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/000.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 103632,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/001.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 103247,
+              "contentEncoding": null,
+              "phase": "initial"
+            }
+          ],
+          "totalTransferBytes": 606000
+        },
+        "snapshot": {
+          "cachedItemsLen": 125,
+          "filteredItemsLen": 91,
+          "articlesRawKeys": [
+            "generatedAt",
+            "schemaVersion",
+            "pipelinePhase",
+            "articles",
+            "_iuChunkMode",
+            "_iuChunkSectionKey",
+            "_iuChunkTotalInSection"
+          ],
+          "articlesRawArticleCount": 30,
+          "hasLoadedData": true,
+          "loaderMode": "chunk-v1",
+          "homepageFeedSource": "article_feed_chunks/manifest.json",
+          "chunkLoaderMode": true,
+          "chunkSectionKey": "zpravy",
+          "chunkArticlesReceived": 130,
+          "fetchCounts": {
+            "articles": 0,
+            "bootstrap": 0,
+            "article_feed_chunks": 3
+          },
+          "paging": {
+            "pageSize": 30,
+            "page": 1,
+            "visibleCount": 38,
+            "visibleArticleCount": 30,
+            "totalCount": 91,
+            "totalArticleCount": 71,
+            "visibleCountRendered": 38,
+            "hasMore": true,
+            "mediaHub100": true
+          },
+          "loadMoreMetaText": "38 / 6369",
+          "renderedArticleCards": 33,
+          "feedChildCount": 35,
+          "feedReady": "true",
+          "domNodeCount": 2906,
+          "loadMoreVisible": true,
+          "fcpMs": 244,
+          "domContentLoadedMs": 313,
+          "loadEventMs": 325,
+          "scriptResourceDurationMs": 912,
+          "longTaskCount": 4,
+          "mainThreadBlockingMs": 411,
+          "usableMs": 8684,
+          "retentionDaysLen": 42,
+          "retentionCursor": 1,
+          "clusterDedup": {
+            "skippedForProjectsFullPool": true,
+            "rawCount": 30,
+            "finalCount": 30
+          },
+          "overflowX": false
+        },
+        "loadMoreTest": {
+          "clicked": true,
+          "newArticleRequests": [
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/001.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 103247,
+              "contentEncoding": null,
+              "phase": "initial"
+            }
+          ],
+          "newDayShardRequests": [],
+          "metaBefore": "38 / 6369",
+          "metaAfter": "150 / 6369",
+          "filteredBefore": 91,
+          "renderedAfter": 146,
+          "filteredAfter": 166,
+          "pageAfter": 2,
+          "newChunkRequests": [
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/001.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 103247,
+              "contentEncoding": null,
+              "phase": "initial"
+            }
+          ],
+          "filteredUnchanged": false
+        }
+      },
+      {
+        "viewport": "tablet",
+        "navUrl": "http://127.0.0.1:8890/projects/?section=feed&topic=zpravy",
+        "navDurationMs": 15326,
+        "consoleErrors": [],
+        "network": {
+          "articleFiles": [
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": null,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/init.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 30742,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/000.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 103632,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/001.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 103247,
+              "contentEncoding": null,
+              "phase": "initial"
+            }
+          ],
+          "allDataFiles": [
+            {
+              "url": "http://127.0.0.1:8890/projects/data/meta.json",
+              "status": 200,
+              "transferBytes": 384,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/videos.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 109186,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": null,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/videos.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 109186,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/meta.json",
+              "status": 200,
+              "transferBytes": 384,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/init.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 30742,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/videos.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 109186,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/000.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 103632,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/001.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 103247,
+              "contentEncoding": null,
+              "phase": "initial"
+            }
+          ],
+          "totalTransferBytes": 606000
+        },
+        "snapshot": {
+          "cachedItemsLen": 125,
+          "filteredItemsLen": 91,
+          "articlesRawKeys": [
+            "generatedAt",
+            "schemaVersion",
+            "pipelinePhase",
+            "articles",
+            "_iuChunkMode",
+            "_iuChunkSectionKey",
+            "_iuChunkTotalInSection"
+          ],
+          "articlesRawArticleCount": 30,
+          "hasLoadedData": true,
+          "loaderMode": "chunk-v1",
+          "homepageFeedSource": "article_feed_chunks/manifest.json",
+          "chunkLoaderMode": true,
+          "chunkSectionKey": "zpravy",
+          "chunkArticlesReceived": 130,
+          "fetchCounts": {
+            "articles": 0,
+            "bootstrap": 0,
+            "article_feed_chunks": 3
+          },
+          "paging": {
+            "pageSize": 30,
+            "page": 1,
+            "visibleCount": 39,
+            "visibleArticleCount": 30,
+            "totalCount": 91,
+            "totalArticleCount": 71,
+            "visibleCountRendered": 39,
+            "hasMore": true,
+            "mediaHub100": true
+          },
+          "loadMoreMetaText": "39 / 6369",
+          "renderedArticleCards": 33,
+          "feedChildCount": 35,
+          "feedReady": "true",
+          "domNodeCount": 2907,
+          "loadMoreVisible": true,
+          "fcpMs": 252,
+          "domContentLoadedMs": 317,
+          "loadEventMs": 325,
+          "scriptResourceDurationMs": 890,
+          "longTaskCount": 2,
+          "mainThreadBlockingMs": 154,
+          "usableMs": 8695,
+          "retentionDaysLen": 42,
+          "retentionCursor": 1,
+          "clusterDedup": {
+            "skippedForProjectsFullPool": true,
+            "rawCount": 30,
+            "finalCount": 30
+          },
+          "overflowX": false
+        },
+        "loadMoreTest": {
+          "clicked": true,
+          "newArticleRequests": [
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/001.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 103247,
+              "contentEncoding": null,
+              "phase": "initial"
+            }
+          ],
+          "newDayShardRequests": [],
+          "metaBefore": "39 / 6369",
+          "metaAfter": "150 / 6369",
+          "filteredBefore": 91,
+          "renderedAfter": 146,
+          "filteredAfter": 166,
+          "pageAfter": 2,
+          "newChunkRequests": [
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/001.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 103247,
+              "contentEncoding": null,
+              "phase": "initial"
+            }
+          ],
+          "filteredUnchanged": false
+        }
+      },
+      {
+        "viewport": "desktop",
+        "navUrl": "http://127.0.0.1:8890/projects/?section=feed&topic=zpravy",
+        "navDurationMs": 39328,
+        "consoleErrors": [],
+        "network": {
+          "articleFiles": [
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/init.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 30742,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/000.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 103632,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            }
+          ],
+          "allDataFiles": [
+            {
+              "url": "http://127.0.0.1:8890/projects/data/meta.json",
+              "status": 200,
+              "transferBytes": 384,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/videos.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 109186,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/videos.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 109186,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/meta.json",
+              "status": 200,
+              "transferBytes": 384,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 13351,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/init.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 30742,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/videos.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 109186,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            },
+            {
+              "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/000.json?v=iu-data-ver-placeholder",
+              "status": 200,
+              "transferBytes": 103632,
+              "contentEncoding": null,
+              "phase": "pre_load_more"
+            }
+          ],
+          "totalTransferBytes": 516104
+        },
+        "snapshot": {
+          "cachedItemsLen": 125,
+          "filteredItemsLen": 91,
+          "articlesRawKeys": [
+            "generatedAt",
+            "schemaVersion",
+            "pipelinePhase",
+            "articles",
+            "_iuChunkMode",
+            "_iuChunkSectionKey",
+            "_iuChunkTotalInSection"
+          ],
+          "articlesRawArticleCount": 30,
+          "hasLoadedData": true,
+          "loaderMode": "chunk-v1",
+          "homepageFeedSource": "article_feed_chunks/manifest.json",
+          "chunkLoaderMode": true,
+          "chunkSectionKey": "zpravy",
+          "chunkArticlesReceived": 130,
+          "fetchCounts": {
+            "articles": 0,
+            "bootstrap": 0,
+            "article_feed_chunks": 3
+          },
+          "paging": {
+            "pageSize": 30,
+            "page": 1,
+            "visibleCount": 38,
+            "visibleArticleCount": 30,
+            "totalCount": 91,
+            "totalArticleCount": 71,
+            "visibleCountRendered": 38,
+            "hasMore": true,
+            "mediaHub100": true
+          },
+          "loadMoreMetaText": "38 / 6369",
+          "renderedArticleCards": 33,
+          "feedChildCount": 35,
+          "feedReady": "true",
+          "domNodeCount": 2899,
+          "loadMoreVisible": true,
+          "fcpMs": 208,
+          "domContentLoadedMs": 313,
+          "loadEventMs": 320,
+          "scriptResourceDurationMs": 973,
+          "longTaskCount": 2,
+          "mainThreadBlockingMs": 115,
+          "usableMs": 8774,
+          "retentionDaysLen": 42,
+          "retentionCursor": 1,
+          "clusterDedup": {
+            "skippedForProjectsFullPool": true,
+            "rawCount": 30,
+            "finalCount": 30
+          },
+          "overflowX": false
+        },
+        "loadMoreTest": {
+          "clicked": true,
+          "newArticleRequests": [],
+          "newDayShardRequests": [],
+          "metaBefore": "38 / 6369",
+          "metaAfter": null,
+          "filteredBefore": 91,
+          "error": "elementHandle.click: Timeout 30000ms exceeded.\nCall log:\n  - attempting click action\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <div class=\"iuConsentLayer__actions\">…</div> from <aside role=\"region\" id=\"iuConsentLayer\" class=\"iuConsentLayer\" aria-label=\"Volba soukromí a ukládání\">…</aside> subtree intercepts pointer events\n  - retrying click action\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <div class=\"iuConsentLayer__panel\">…</div> from <aside role=\"region\" id=\"iuConsentLayer\" class=\"iuConsentLayer\" aria-label=\"Volba soukromí a ukládání\">…</aside> subtree intercepts pointer events\n  - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"iuConsentLayer__actions\">…</div> from <aside role=\"region\" id=\"iuConsentLayer\" class=\"iuConsentLayer\" aria-label=\"Volba soukromí a ukládání\">…</aside> subtree intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    14 × waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"iuConsentLayer__actions\">…</div> from <aside role=\"region\" id=\"iuConsentLayer\" class=\"iuConsentLayer\" aria-label=\"Volba soukromí a ukládání\">…</aside> subtree intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"iuConsentLayer__panel\">…</div> from <aside role=\"region\" id=\"iuConsentLayer\" class=\"iuConsentLayer\" aria-label=\"Volba soukromí a ukládání\">…</aside> subtree intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"iuConsentLayer__actions\">…</div> from <aside role=\"region\" id=\"iuConsentLayer\" class=\"iuConsentLayer\" aria-label=\"Volba soukromí a ukládání\">…</aside> subtree intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"iuConsentLayer__actions\">…</div> from <aside role=\"region\" id=\"iuConsentLayer\" class=\"iuConsentLayer\" aria-label=\"Volba soukromí a ukládání\">…</aside> subtree intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n",
+          "newChunkRequests": [],
+          "filteredUnchanged": false
+        }
+      }
+    ]
+  },
+  "mobile": {
+    "first_content_ms": 244,
+    "usable_ms": 8684,
+    "console_errors": 0,
+    "overflow_x": false,
+    "cached_items": 125,
+    "filtered_items": 91,
+    "rendered_cards": 33,
+    "dom_nodes": 2906,
+    "main_thread_blocking_ms": 411,
+    "script_resource_ms": 912,
+    "load_more_meta": "38 / 6369",
+    "homepageFeedSource": "article_feed_chunks/manifest.json",
+    "chunkArticlesReceived": 130,
+    "article_network_files": [
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json",
+        "kb": 13
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json",
+        "kb": null
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json",
+        "kb": 13
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json",
+        "kb": 13
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/init.json",
+        "kb": 30
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/000.json",
+        "kb": 101.2
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/001.json",
+        "kb": 100.8
+      }
+    ],
+    "load_more_test": {
+      "clicked": true,
+      "newArticleRequests": [
+        {
+          "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/001.json?v=iu-data-ver-placeholder",
+          "status": 200,
+          "transferBytes": 103247,
+          "contentEncoding": null,
+          "phase": "initial"
+        }
+      ],
+      "newDayShardRequests": [],
+      "metaBefore": "38 / 6369",
+      "metaAfter": "150 / 6369",
+      "filteredBefore": 91,
+      "renderedAfter": 146,
+      "filteredAfter": 166,
+      "pageAfter": 2,
+      "newChunkRequests": [
+        {
+          "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/001.json?v=iu-data-ver-placeholder",
+          "status": 200,
+          "transferBytes": 103247,
+          "contentEncoding": null,
+          "phase": "initial"
+        }
+      ],
+      "filteredUnchanged": false
+    }
+  },
+  "tablet": {
+    "first_content_ms": 252,
+    "usable_ms": 8695,
+    "console_errors": 0,
+    "overflow_x": false,
+    "cached_items": 125,
+    "filtered_items": 91,
+    "rendered_cards": 33,
+    "dom_nodes": 2907,
+    "main_thread_blocking_ms": 154,
+    "script_resource_ms": 890,
+    "load_more_meta": "39 / 6369",
+    "homepageFeedSource": "article_feed_chunks/manifest.json",
+    "chunkArticlesReceived": 130,
+    "article_network_files": [
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json",
+        "kb": 13
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json",
+        "kb": null
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json",
+        "kb": 13
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json",
+        "kb": 13
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/init.json",
+        "kb": 30
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/000.json",
+        "kb": 101.2
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/001.json",
+        "kb": 100.8
+      }
+    ],
+    "load_more_test": {
+      "clicked": true,
+      "newArticleRequests": [
+        {
+          "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/001.json?v=iu-data-ver-placeholder",
+          "status": 200,
+          "transferBytes": 103247,
+          "contentEncoding": null,
+          "phase": "initial"
+        }
+      ],
+      "newDayShardRequests": [],
+      "metaBefore": "39 / 6369",
+      "metaAfter": "150 / 6369",
+      "filteredBefore": 91,
+      "renderedAfter": 146,
+      "filteredAfter": 166,
+      "pageAfter": 2,
+      "newChunkRequests": [
+        {
+          "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/001.json?v=iu-data-ver-placeholder",
+          "status": 200,
+          "transferBytes": 103247,
+          "contentEncoding": null,
+          "phase": "initial"
+        }
+      ],
+      "filteredUnchanged": false
+    }
+  },
+  "desktop": {
+    "first_content_ms": 208,
+    "usable_ms": 8774,
+    "console_errors": 0,
+    "overflow_x": false,
+    "cached_items": 125,
+    "filtered_items": 91,
+    "rendered_cards": 33,
+    "dom_nodes": 2899,
+    "main_thread_blocking_ms": 115,
+    "script_resource_ms": 973,
+    "load_more_meta": "38 / 6369",
+    "homepageFeedSource": "article_feed_chunks/manifest.json",
+    "chunkArticlesReceived": 130,
+    "article_network_files": [
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json",
+        "kb": 13
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json",
+        "kb": 13
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json",
+        "kb": 13
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/manifest.json",
+        "kb": 13
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/init.json",
+        "kb": 30
+      },
+      {
+        "url": "http://127.0.0.1:8890/projects/data/article_feed_chunks/zpravy/000.json",
+        "kb": 101.2
+      }
+    ],
+    "load_more_test": {
+      "clicked": true,
+      "newArticleRequests": [],
+      "newDayShardRequests": [],
+      "metaBefore": "38 / 6369",
+      "metaAfter": null,
+      "filteredBefore": 91,
+      "error": "elementHandle.click: Timeout 30000ms exceeded.\nCall log:\n  - attempting click action\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <div class=\"iuConsentLayer__actions\">…</div> from <aside role=\"region\" id=\"iuConsentLayer\" class=\"iuConsentLayer\" aria-label=\"Volba soukromí a ukládání\">…</aside> subtree intercepts pointer events\n  - retrying click action\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <div class=\"iuConsentLayer__panel\">…</div> from <aside role=\"region\" id=\"iuConsentLayer\" class=\"iuConsentLayer\" aria-label=\"Volba soukromí a ukládání\">…</aside> subtree intercepts pointer events\n  - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"iuConsentLayer__actions\">…</div> from <aside role=\"region\" id=\"iuConsentLayer\" class=\"iuConsentLayer\" aria-label=\"Volba soukromí a ukládání\">…</aside> subtree intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    14 × waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"iuConsentLayer__actions\">…</div> from <aside role=\"region\" id=\"iuConsentLayer\" class=\"iuConsentLayer\" aria-label=\"Volba soukromí a ukládání\">…</aside> subtree intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"iuConsentLayer__panel\">…</div> from <aside role=\"region\" id=\"iuConsentLayer\" class=\"iuConsentLayer\" aria-label=\"Volba soukromí a ukládání\">…</aside> subtree intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"iuConsentLayer__actions\">…</div> from <aside role=\"region\" id=\"iuConsentLayer\" class=\"iuConsentLayer\" aria-label=\"Volba soukromí a ukládání\">…</aside> subtree intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"iuConsentLayer__actions\">…</div> from <aside role=\"region\" id=\"iuConsentLayer\" class=\"iuConsentLayer\" aria-label=\"Volba soukromí a ukládání\">…</aside> subtree intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n",
+      "newChunkRequests": [],
+      "filteredUnchanged": false
+    }
+  },
+  "perfNotes": {
+    "bottomNavOverlay": "Mobilni spodni navigace (#iuMobileGateWrap) presouva #iuLeftRail do overlay panelu pri <=900px; neblokuje loadData, ale pridava DOM a ResizeObserver. Scroll guard existuje (iu-reload-section-scroll-stability-guard).",
+    "videoCards": "Videa se nacitaji z videos.json (~107 KB gzip) paralelne s publishable_pool; vlozeni videokaret do feedu je render-only kazdych 8 clanku (IU_FEED_VIDEO_EVERY). Pri topic=zpravy nejsou v primarni davce dominantni, ale pridavaji DOM nody a poster lazy-load.",
+    "offScreenSections": "applyFilter pocita filteredItems pro aktivni sekci/topic z CELEHO cachedItems (~15k); publikacni filtr a idle iuScheduleHomeFullPublicationCluster mohou re-renderovat nad celym filtrem. Sekce mimo viewport nejsou lazy — data jsou jiz v pameti.",
+    "duplicatePoolFetch": "Pozorovano az 4x GET publishable_pool.json pri jedne navsteve (index.html loader + app.js __iuFetchArticlesVideosPrimaryPair + mozne crash-shield); single-flight __iuArticlesLoaderFetchCounts.publishable_pool=1, ale sit muze mit duplicity.",
+    "silverRetentionDeferred": "Po first paint bezi initRetentionIndex + loadRetentionForSilverHomePreviews (day-shard merge na pozadi) — muze pridat dalsi sit/CPU po ~10s."
+  },
+  "codeAnalysis": {
+    "primaryLoader": "publishable_pool.json (default); bootstrap.json only with ?iuArticlesBootstrap=1",
+    "pageSize": 100,
+    "mediaHub100": true,
+    "normalizeBatchSize": 800,
+    "clusterDedupSkippedOnProjects": true,
+    "retentionIndexOnStart": "articles/index.json metadata only; day shards on demand (load-more / niche nav / Silver preview boost)",
+    "displayCounterMeaning": "iuLoadMoreMeta = visibleItems.length / filteredItems.length (not network progress)"
+  },
+  "root_cause_summary": "Chunked V1 aktivni: homepage nacita manifest + init.json (~30 clanku) + background buffer chunk 000 (~100 clanku/sekci). Publishable pool se pri navsteve nestahuje. Load-more fetchuje dalsi serverove chunky (napr. 001.json).",
+  "recommended_architecture": "Prvni render max 30 clanku/sekci; background preload max 100/sekci; pak stop; Load-more az po kliknuti nacte dalsich 100 ze serverovych chunku po sekcich; publishable pool zustane zdroj pravdy, prohlizec nedostane tisice clanku najednou.",
+  "recommended_next_pr_scope": "Frontend chunked loading: section-scoped API/chunky, omezit loadData na first chunk, zrusit full-pool parse pri kazde navsteve, load-more = realny fetch dalsiho chunku.",
+  "safe_to_implement_chunked_loading": "YES",
+  "chunkModeActive": true,
+  "chunkReceived": 130
+}

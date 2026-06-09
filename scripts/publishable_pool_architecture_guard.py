@@ -47,21 +47,24 @@ def check_homepage_source_code() -> list[str]:
 
     required_app = (
         "IU_HOMEPAGE_FEED_DATA_FILE",
-        '"publishable_pool.json"',
         "iuHomepageFeedDataUrl",
         "__iuHomepageFeedDataSource",
+        "iuUseChunkedArticleLoader",
     )
     for needle in required_app:
         if needle not in app_src:
             errors.append(f"assets/app.js missing homepage feed marker: {needle}")
+
+    if '"publishable_pool.json"' not in app_src and "article_feed_chunks/manifest.json" not in app_src:
+        errors.append("assets/app.js must reference publishable_pool.json or article_feed_chunks manifest")
 
     pair_block = app_src.split("async function __iuFetchArticlesVideosPrimaryPair", 1)
     if len(pair_block) < 2:
         errors.append("assets/app.js missing __iuFetchArticlesVideosPrimaryPair")
     else:
         block = pair_block[1].split("\n  async function ", 1)[0]
-        if "iuHomepageFeedDataUrl()" not in block:
-            errors.append("primary feed pair must use iuHomepageFeedDataUrl()")
+        if "iuHomepageFeedDataUrl()" not in block and "iuUseChunkedArticleLoader()" not in block:
+            errors.append("primary feed pair must use chunked loader or iuHomepageFeedDataUrl()")
         if 'iuDataUrl("articles.json")' in block:
             errors.append("primary feed pair must not fetch articles.json")
 
@@ -71,8 +74,8 @@ def check_homepage_source_code() -> list[str]:
         if "iuHomepageFeedDataUrl()" not in block:
             errors.append("loadData must use iuHomepageFeedDataUrl() for feed fetch")
 
-    if "iuCanonPublishablePoolJsonUrl" not in index_src:
-        errors.append("projects/index.html missing iuCanonPublishablePoolJsonUrl")
+    if "iuCanonPublishablePoolJsonUrl" not in index_src and "iuCanonChunkManifestUrl" not in index_src:
+        errors.append("projects/index.html missing iuCanonPublishablePoolJsonUrl or iuCanonChunkManifestUrl")
     if "__iuHomepageFeedDataSource" not in index_src:
         errors.append("projects/index.html missing __iuHomepageFeedDataSource")
 

@@ -144,6 +144,7 @@ function isProjectsFeedDataPath(pathname) {
   if (name === "articles.json" || name === "publishable_pool.json" || name === "videos.json" || name === "_probe.txt") {
     return true;
   }
+  if (name.startsWith("article_feed_chunks/") && name.endsWith(".json")) return true;
   if (name === "articles/bootstrap.json") return true;
   if (name.startsWith("articles/") && name.endsWith(".json")) return true;
   return false;
