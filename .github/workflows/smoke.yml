@@ -70,6 +70,9 @@ jobs:
       - name: Section switch scroll position guard
         run: npm run iu-section-switch-scroll-position-guard
 
+      - name: Article entrypoint parity guard (chunked loading V1)
+        run: npm run article-entrypoint-parity-guard
+
       - name: Set required status context (smoke)
         if: always()
         env:
