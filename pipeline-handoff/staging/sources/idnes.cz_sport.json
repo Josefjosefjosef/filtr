@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-06-09T15:53:09.505779Z",
+  "ingestedAt": "2026-06-09T16:58:53.127170Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hurikán z pobřeží, Mazadona z Berlína či nový Messi. Kdo na MS může zaujmout?",
+      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/koho-se-vyplati-sledovat-na-ms-ve-fotbale-2026.A260609_153329_ms-fotbal_duff/foto",
+      "dt": "2026-06-09T16:05:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES",
+      "tokens": [
+        "berlína",
+        "hurikán",
+        "mazadona",
+        "messi",
+        "nový",
+        "pobřeží",
+        "zaujmout"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,33 +782,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Klobasniks a spánem-bouhem! Fotbalem bude žít i West, malé Česko poblíž Dallasu",
-      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/.A260608_193436_ms-fotbal_tit",
-      "dt": "2026-06-09T05:37:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES",
-      "tokens": [
-        "bouhem",
-        "dallasu",
-        "fotbalem",
-        "klobasniks",
-        "malé",
-        "poblíž",
-        "spánem",
-        "west",
-        "česko",
-        "žít"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48741,
+      "bytes": 48747,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-09T15:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-09T16:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -847,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hurikán z pobřeží, Mazadona z Berlína či nový Messi. Kdo na MS může zaujmout?",
+            "publishedAt": "2026-06-09T16:05:00Z"
+          },
           {
             "title": "Které dresy pro MS se povedly nejvíc? Češi v hodnocení prestižního deníku propadli",
             "publishedAt": "2026-06-09T15:23:00Z"
@@ -874,10 +875,6 @@
           {
             "title": "World Cup of Darts 2026: program, výsledky, týmy, Češi",
             "publishedAt": "2026-06-09T12:59:00Z"
-          },
-          {
-            "title": "Pamatujete si chobotnici Paula? Letos výsledky MS předpovídá žraločice",
-            "publishedAt": "2026-06-09T12:50:00Z"
           }
         ]
       }
