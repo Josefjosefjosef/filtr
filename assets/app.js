@@ -145,9 +145,179 @@ try {
   if (typeof window !== "undefined") {
     window.scrollTo(0, 0);
     window.addEventListener("load", function(){ window.scrollTo(0, 0); });
-    window.addEventListener("pageshow", function(){ window.scrollTo(0, 0); });
+    /* P0 scroll restore: bfcache return (ev.persisted) keeps the browser-preserved position —
+       forcing top here erased scroll on Back from an external page. Reload stays top via "load". */
+    window.addEventListener("pageshow", function(ev){
+      if (ev && ev.persisted) return;
+      window.scrollTo(0, 0);
+    });
   }
 } catch(e){}
+
+/* === IU SCROLL RESTORE LAYER V1 ===
+   Root cause: history.scrollRestoration="manual" (above) disables native back/forward restore and the
+   popstate route apply re-rendered the view at top (applySectionFromURL arms section-switch scroll +
+   resets feed page). This layer saves the main scroll position per route key (section|topic|mode,
+   "home" for the hub) into sessionStorage and restores it ONLY on history back/forward (popstate)
+   or on the internal mobile "Zpět" → hub path (via window.iuScrollRestoreRequest).
+   Forward navigation (left rail, hex tiles, Domů/home) keeps the existing scroll-to-top behavior.
+   Must register its popstate listener BEFORE initNavRouter ones (module-top placement). */
+(function iuScrollRestoreLayerV1() {
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+  var STORE_KEY = "iu:scrollRestoreMapV1";
+  var MAX_ENTRIES = 40;
+  /* back-navigation re-render (incl. feed batches) can take seconds on slower devices */
+  var RESTORE_TIMEOUT_MS = 6000;
+
+  function iuSrRouteKey() {
+    try {
+      var p = new URLSearchParams(String(location.search || ""));
+      var s = String(p.get("section") || "");
+      if (!s) return "home";
+      return s + "|" + String(p.get("topic") || "") + "|" + String(p.get("mode") || "");
+    } catch (_) {
+      return "home";
+    }
+  }
+  function iuSrReadMap() {
+    try {
+      var raw = sessionStorage.getItem(STORE_KEY);
+      var m = raw ? JSON.parse(raw) : null;
+      return m && typeof m === "object" ? m : {};
+    } catch (_) {
+      return {};
+    }
+  }
+  function iuSrWriteMap(m) {
+    try {
+      var keys = Object.keys(m);
+      if (keys.length > MAX_ENTRIES) {
+        keys.sort(function (a, b) { return ((m[a] && m[a].t) || 0) - ((m[b] && m[b].t) || 0); });
+        for (var i = 0; i < keys.length - MAX_ENTRIES; i++) delete m[keys[i]];
+      }
+      sessionStorage.setItem(STORE_KEY, JSON.stringify(m));
+    } catch (_) {}
+  }
+  function iuSrGetY() {
+    var y = 0;
+    try { y = Math.max(y, window.scrollY || 0); } catch (_) {}
+    try {
+      var se = document.scrollingElement || document.documentElement;
+      if (se) y = Math.max(y, se.scrollTop || 0);
+    } catch (_) {}
+    try { if (document.body) y = Math.max(y, document.body.scrollTop || 0); } catch (_) {}
+    return y;
+  }
+  function iuSrSetY(y) {
+    var yv = Math.max(0, Math.round(Number(y) || 0));
+    try { window.scrollTo(0, yv); } catch (_) {}
+    try {
+      var se = document.scrollingElement || document.documentElement;
+      if (se) se.scrollTop = yv;
+    } catch (_) {}
+    try { if (document.body) document.body.scrollTop = yv; } catch (_) {}
+  }
+  function iuSrFeedPage() {
+    try {
+      var st = window.__iuFeedPipelineState;
+      var pg = st ? Number(st.page) : 1;
+      return Number.isFinite(pg) && pg >= 1 ? pg : 1;
+    } catch (_) {
+      return 1;
+    }
+  }
+  function iuSrOverlayLockP() {
+    try {
+      var de = document.documentElement;
+      var b = document.body;
+      return !!(
+        (de && de.classList.contains("iu-mobileGateOverlayOpen")) ||
+        (b && b.classList.contains("iu-mobileGateOverlayOpen"))
+      );
+    } catch (_) {
+      return false;
+    }
+  }
+
+  var iuSrSaveQueued = false;
+  function iuSrSaveNow() {
+    iuSrSaveQueued = false;
+    if (iuSrOverlayLockP()) return; /* overlay locks background scroll — never overwrite with 0 */
+    if (iuSrRestoreState) return;   /* don't persist transient positions during an active restore */
+    var m = iuSrReadMap();
+    m[iuSrRouteKey()] = { y: iuSrGetY(), p: iuSrFeedPage(), t: Date.now() };
+    iuSrWriteMap(m);
+  }
+  function iuSrQueueSave() {
+    if (iuSrSaveQueued) return;
+    iuSrSaveQueued = true;
+    try { requestAnimationFrame(iuSrSaveNow); } catch (_) { iuSrSaveNow(); }
+  }
+  try { window.addEventListener("scroll", iuSrQueueSave, { passive: true }); } catch (_) {}
+  try { document.addEventListener("scroll", iuSrQueueSave, { passive: true, capture: true }); } catch (_) {}
+
+  var iuSrRestoreState = null; /* { y, until } */
+  function iuSrCancelRestore() {
+    if (!iuSrRestoreState) return;
+    iuSrRestoreState = null;
+    try { window.__iuScrollRestorePendingNav = null; } catch (_) {}
+  }
+  /* user interaction (incl. forward nav clicks) wins over an in-flight restore */
+  try {
+    window.addEventListener("wheel", iuSrCancelRestore, { passive: true });
+    window.addEventListener("touchstart", iuSrCancelRestore, { passive: true });
+    window.addEventListener("keydown", iuSrCancelRestore, true);
+    window.addEventListener("pointerdown", iuSrCancelRestore, true);
+  } catch (_) {}
+
+  function iuSrRestoreTick() {
+    if (!iuSrRestoreState) return;
+    var target = iuSrRestoreState.y;
+    if (Date.now() > iuSrRestoreState.until) {
+      iuSrSetY(target); /* best effort: clamps to max reachable height */
+      iuSrCancelRestore();
+      return;
+    }
+    /* HOLD until the window expires: the back-navigation re-render (view swap, async feed batches,
+       mobile shell sync) can scroll to 0 AFTER a successful restore — a one-shot restore loses. */
+    var doc = document.scrollingElement || document.documentElement;
+    var maxY = doc ? Math.max(0, doc.scrollHeight - (window.innerHeight || 0)) : 0;
+    if (maxY >= target - 2 && Math.abs(iuSrGetY() - target) > 2) {
+      iuSrSetY(target);
+    }
+    try { requestAnimationFrame(iuSrRestoreTick); } catch (_) { iuSrCancelRestore(); }
+  }
+  function iuSrRequestRestore(key) {
+    var m = iuSrReadMap();
+    var entry = m[String(key || iuSrRouteKey())];
+    if (!entry || !(Number(entry.y) > 0)) {
+      try { window.__iuScrollRestorePendingNav = null; } catch (_) {}
+      return false;
+    }
+    try {
+      window.__iuScrollRestorePendingNav = {
+        key: String(key || ""),
+        y: Math.round(Number(entry.y)),
+        page: Number(entry.p) > 1 ? Number(entry.p) : 1,
+      };
+    } catch (_) {}
+    iuSrRestoreState = { y: Math.round(Number(entry.y)), until: Date.now() + RESTORE_TIMEOUT_MS };
+    try { requestAnimationFrame(iuSrRestoreTick); } catch (_) { iuSrRestoreTick(); }
+    return true;
+  }
+
+  try {
+    window.iuScrollRestoreSaveNow = iuSrSaveNow;
+    window.iuScrollRestoreRequest = function (key) { return iuSrRequestRestore(key); };
+  } catch (_) {}
+
+  /* popstate fires after location changed; scroll listener saved the left route continuously.
+     Registering here (module top) guarantees this runs before the nav router's popstate handlers,
+     so window.__iuScrollRestorePendingNav is visible inside applySectionFromURL. */
+  window.addEventListener("popstate", function () {
+    try { iuSrRequestRestore(iuSrRouteKey()); } catch (_) {}
+  });
+})();
 
 // === MAINTENANCE
 // ::contentReference[oaicite:0]{index=0}
@@ -2690,6 +2860,202 @@ try {
     } finally {
       restoreScroll();
     }
+  }
+
+  /* === ARTICLE APPEND STABILITY LAYER V1 ===
+     Root cause: "load more" re-renders the whole feed (replaceChildren + async batched appends in
+     renderFeed). Between the clear and the first re-appended batch the document height collapses and
+     the browser clamps scrollY → visible jump / lost reading position. Late passes (video re-anchor)
+     can additionally shift content above the viewport.
+     Fix: freeze #feed min-height for the whole async load-more pass (prevents the collapse clamp),
+     then re-align the viewport to the reference article the user was reading (visual position,
+     robust against scroll-anchoring adjustments). User scroll input skips the final correction. */
+  function iuAppendStabGetY() {
+    try {
+      return Math.max(
+        window.scrollY || 0,
+        (document.scrollingElement || document.documentElement).scrollTop || 0,
+        document.body ? document.body.scrollTop || 0 : 0
+      );
+    } catch (_) {
+      return 0;
+    }
+  }
+  function iuAppendStabSetY(y) {
+    const yv = Math.max(0, Math.round(Number(y) || 0));
+    try { window.scrollTo(0, yv); } catch (_) {}
+    try {
+      const se = document.scrollingElement || document.documentElement;
+      if (se) se.scrollTop = yv;
+    } catch (_) {}
+    try { if (document.body) document.body.scrollTop = yv; } catch (_) {}
+  }
+  function iuAppendStabRefArticleKey(article) {
+    try {
+      const a = article.querySelector("a[href]");
+      if (a && a.href) return String(a.href);
+      return String(article.textContent || "").trim().slice(0, 120);
+    } catch (_) {
+      return "";
+    }
+  }
+  function iuArticleAppendStabilityBegin() {
+    const ctx = {
+      y: 0,
+      host: null,
+      prevMinHeight: "",
+      userScrolled: false,
+      cancel: null,
+      refKey: "",
+      refTop: 0,
+      awaitDone: false,
+      released: false,
+    };
+    ctx.y = iuAppendStabGetY();
+    try {
+      const el = document.getElementById("feed");
+      if (el) {
+        ctx.host = el;
+        ctx.prevMinHeight = el.style.minHeight || "";
+        const h = el.offsetHeight;
+        if (h > 0) el.style.minHeight = h + "px";
+        /* reference = topmost article still (partially) visible in the viewport */
+        const arts = el.querySelectorAll("article.news-card");
+        for (const art of arts) {
+          const r = art.getBoundingClientRect();
+          if (r.bottom > 0 && r.top < (window.innerHeight || 0)) {
+            const key = iuAppendStabRefArticleKey(art);
+            if (key) {
+              ctx.refKey = key;
+              ctx.refTop = r.top;
+            }
+            break;
+          }
+        }
+      }
+    } catch (_) {}
+    ctx.cancel = function () { ctx.userScrolled = true; };
+    try {
+      window.addEventListener("wheel", ctx.cancel, { passive: true });
+      window.addEventListener("touchmove", ctx.cancel, { passive: true });
+      window.addEventListener("keydown", ctx.cancel, true);
+    } catch (_) {}
+    /* guard observability (mirrors __iuFeedSwitchMetrics pattern) */
+    try {
+      window.__iuAppendStab = {
+        phase: "begin",
+        y: ctx.y,
+        refKey: String(ctx.refKey).slice(0, 80),
+        refTop: ctx.refTop,
+        corrections: 0,
+        lastD: null,
+        refFound: null,
+        releaseReason: "",
+      };
+    } catch (_) {}
+    iuArticleAppendStabilityRunLoop(ctx);
+    return ctx;
+  }
+  function iuArticleAppendStabilityFindRef(ctx) {
+    if (!ctx.refKey) return null;
+    try {
+      const feed = document.getElementById("feed");
+      if (!feed) return null;
+      const arts = feed.querySelectorAll("article.news-card");
+      for (const art of arts) {
+        if (iuAppendStabRefArticleKey(art) === ctx.refKey) return art;
+      }
+    } catch (_) {}
+    return null;
+  }
+  function iuArticleAppendStabilityEnd(ctx) {
+    if (!ctx || ctx.awaitDone) return;
+    ctx.awaitDone = true;
+  }
+
+  /* Runs from begin(): the load-more chain re-renders the feed in async DOM batches. While the
+     reference article is out of the DOM, browser scroll anchoring keeps the remaining content
+     (load-more button) visually stable — we deliberately do NOT fight it (forcing raw scrollY
+     would double layout shifts / CLS). As soon as the reference article re-appears, every frame
+     re-aligns it to its pre-click viewport offset, which restores the exact reading position.
+     The loop finishes once the awaited load-more chain is done AND the feed has been stable for
+     a while. User scroll input cancels. */
+  function iuArticleAppendStabilityRunLoop(ctx) {
+    const SETTLE_STABLE_MS = 900;
+    const SETTLE_TOTAL_MAX_MS = 15000;
+    const t0 = Date.now();
+    let lastChange = Date.now();
+    let lastCount = -1;
+    function feedSnapshot() {
+      try {
+        const f = document.getElementById("feed");
+        if (!f) return { ready: true, count: 0 };
+        return {
+          ready: String(f.getAttribute("data-feed-ready") || "") === "true",
+          count: f.querySelectorAll("article.news-card").length,
+        };
+      } catch (_) {
+        return { ready: true, count: 0 };
+      }
+    }
+    function release(reason) {
+      if (ctx.released) return;
+      ctx.released = true;
+      try {
+        window.removeEventListener("wheel", ctx.cancel);
+        window.removeEventListener("touchmove", ctx.cancel);
+        window.removeEventListener("keydown", ctx.cancel, true);
+      } catch (_) {}
+      try { if (ctx.host) ctx.host.style.minHeight = ctx.prevMinHeight; } catch (_) {}
+      try {
+        if (window.__iuAppendStab) {
+          window.__iuAppendStab.phase = "released";
+          window.__iuAppendStab.releaseReason = String(reason || "");
+        }
+      } catch (_) {}
+    }
+    function correct() {
+      try {
+        const ref = iuArticleAppendStabilityFindRef(ctx);
+        try {
+          if (window.__iuAppendStab) window.__iuAppendStab.refFound = !!ref;
+        } catch (_) {}
+        if (ref) {
+          const d = ref.getBoundingClientRect().top - ctx.refTop;
+          try {
+            if (window.__iuAppendStab) window.__iuAppendStab.lastD = d;
+          } catch (_) {}
+          if (Math.abs(d) > 1) {
+            iuAppendStabSetY(iuAppendStabGetY() + d);
+            try {
+              if (window.__iuAppendStab) window.__iuAppendStab.corrections += 1;
+            } catch (_) {}
+          }
+        }
+        /* no raw-scrollY fallback while the reference is out of the DOM: scroll anchoring keeps
+           the visible remainder stable and fighting it doubles the layout shifts (CLS) */
+      } catch (_) {}
+    }
+    function tick() {
+      if (ctx.userScrolled || Date.now() - t0 > SETTLE_TOTAL_MAX_MS) {
+        release(ctx.userScrolled ? "user-scroll" : "timeout");
+        return;
+      }
+      const snap = feedSnapshot();
+      if (!snap.ready || snap.count !== lastCount) {
+        lastChange = Date.now();
+        lastCount = snap.count;
+        correct(); /* hold the reading position through the in-flight batches too */
+      } else {
+        correct();
+        if (ctx.awaitDone && Date.now() - lastChange > SETTLE_STABLE_MS) {
+          release("settled");
+          return;
+        }
+      }
+      try { requestAnimationFrame(tick); } catch (_) { release("raf-error"); }
+    }
+    try { requestAnimationFrame(tick); } catch (_) { release("raf-error"); }
   }
 
   function isDebugOn() {
@@ -5666,6 +6032,8 @@ try {
         btn.addEventListener("click", () => {
           (async () => {
             const prevText = btn.textContent;
+            /* ARTICLE APPEND STABILITY: hold scroll + feed height for the whole load-more pass */
+            const appendStab = iuArticleAppendStabilityBegin();
             try {
               btn.disabled = true;
               btn.textContent = "Načítám…";
@@ -5691,7 +6059,10 @@ try {
                 await loadRetentionUntilVisibleCount(desiredVisible);
               }
               await renderFeed(safeTarget, state.filteredItems);
-            } catch (_) {}
+            } catch (_) {
+            } finally {
+              iuArticleAppendStabilityEnd(appendStab);
+            }
             btn.disabled = false;
             btn.textContent = prevText;
           })();
@@ -13267,6 +13638,12 @@ function buildVideoAsArticleCard(it) {
       try {
         if (typeof window.iuApplySectionFromURL === "function") window.iuApplySectionFromURL();
       } catch (_) {}
+      /* P0 Domů reset: applySectionFromURL arms section-switch scroll; the async first-batch
+         consumer would scroll DOWN to the feed start (tablet: feed anchor below the hub) after the
+         explicit reset-to-top. Hub reset must always land at the top. */
+      try {
+        window.__iuSectionSwitchScrollArm = false;
+      } catch (_) {}
       try {
         if (typeof window.iuApplyPanelFromUrl === "function") window.iuApplyPanelFromUrl();
       } catch (_) {}
@@ -14054,6 +14431,11 @@ function buildVideoAsArticleCard(it) {
                     var uBack = new URL(window.location.href);
                     if (uBack.searchParams.get("section") && typeof window.iuProjectsHubNavigateHardResetFromHomeOrBack === "function") {
                       window.iuProjectsHubNavigateHardResetFromHomeOrBack();
+                      /* internal "Zpět" → hub must restore the last known homepage scroll
+                         (Domů/home keeps the explicit reset-to-top above). */
+                      try {
+                        if (typeof window.iuScrollRestoreRequest === "function") window.iuScrollRestoreRequest("home");
+                      } catch (_) {}
                       return;
                     }
                   }
@@ -31070,6 +31452,20 @@ function buildVideoAsArticleCard(it) {
              Left-rail / Silver preview handlers add this class before applySectionFromURL(); stripping it
              here re-showed #iuMobileGateWrap (body:not(.iu-mobileMainVisible) loses the gate-hide rule)
              and on ≤767px hid #leftContent again — taps looked dead or needed a second try. */
+          /* P0 tablet portrait (768–900) Back→homepage: pure hub URL (no ?section=) must drop
+             iu-mobileMainVisible — the leftover class clamps #leftContent (overflow:hidden) and the
+             homepage comes back clipped + unscrollable, so scroll restore has no scroll range.
+             Cold tablet home load has no such class; phones (≤767) keep the protection above. */
+          try {
+            var iuHubNoSectionParam = !new URLSearchParams(String(window.location.search || "")).has("section");
+            if (
+              iuHubNoSectionParam &&
+              window.matchMedia &&
+              window.matchMedia("(min-width: 768px) and (max-width: 900px)").matches
+            ) {
+              document.body.classList.remove("iu-mobileMainVisible");
+            }
+          } catch (_) {}
           try {
             if (!(typeof window !== "undefined" && window.__iuWebNavGateDetailLatch === true)) {
               document.body.classList.remove("iu-webnavDetailFromGate");
@@ -31223,9 +31619,12 @@ function buildVideoAsArticleCard(it) {
       document.body && document.body.style.setProperty("--iuContentAccent", color);
     }catch{}
     // feed paging must reset on section change
+    // (exception: history back/forward with a pending scroll restore keeps the saved page,
+    //  otherwise deep positions from "load more" pages are unreachable after Back)
     try {
       const fp = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
-      if (fp) fp.page = 1;
+      const prPage = typeof window !== "undefined" && window.__iuScrollRestorePendingNav ? Number(window.__iuScrollRestorePendingNav.page) : 0;
+      if (fp) fp.page = prPage > 1 ? prPage : 1;
     } catch (_) {}
     let viewKey = "media";
     if (section === "travel") {
@@ -31247,7 +31646,9 @@ function buildVideoAsArticleCard(it) {
 
     /* P0 section switch stability: eager feed filter+render — idle deferral kept stale articles/header visible up to ~500ms. */
     if (usesFeed) {
-      try{ window.__iuSectionSwitchScrollArm = true; }catch(_){}
+      /* scroll restore (back/forward): do not arm scroll-to-section-start — the restore layer brings
+         the user back to the saved position instead. Forward navigation keeps arming as before. */
+      try{ window.__iuSectionSwitchScrollArm = !(window.__iuScrollRestorePendingNav); }catch(_){}
       try {
         state.__iuFeedSwitchSeq = (state.__iuFeedSwitchSeq || 0) + 1;
         state.__iuRenderFeedGeneration = (state.__iuRenderFeedGeneration | 0) + 1;
@@ -31278,7 +31679,9 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
       try {
         if (typeof window.__iuApplyFeedFilter === "function") {
-          void window.__iuApplyFeedFilter({ resetPage: true, instantSectionSwitch: true });
+          const prFeedNav = typeof window !== "undefined" ? window.__iuScrollRestorePendingNav : null;
+          const keepPage = !!(prFeedNav && Number(prFeedNav.page) > 1);
+          void window.__iuApplyFeedFilter({ resetPage: !keepPage, instantSectionSwitch: true });
         }
       } catch (_) {}
     }
