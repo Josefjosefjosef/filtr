@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-06-10T21:49:32.393502Z",
+  "ingestedAt": "2026-06-10T22:26:10.403495Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Fanoušci hororů šílí, Resident Evil Veronica je přesně to, co chtějí",
+      "url": "https://www.idnes.cz/hry/preview/resident-evil-veronica-2027.A260610_094029_bw-preview_oz/foto",
+      "dt": "2026-06-10T22:00:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "chtějí",
+        "evil",
+        "fanoušci",
+        "hororů",
+        "přesně",
+        "resident",
+        "veronica",
+        "šílí"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -697,27 +722,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Call of the Elder Gods",
-      "url": "https://www.idnes.cz/hry/call-of-the-elder-gods.G260601_141445_oz",
-      "dt": "2026-06-01T12:19:30Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "call",
-        "elder",
-        "gods",
-        "the"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -728,7 +732,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 38912,
+      "bytes": 39777,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -765,7 +769,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-09T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-10T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -780,6 +784,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fanoušci hororů šílí, Resident Evil Veronica je přesně to, co chtějí",
+            "publishedAt": "2026-06-10T22:00:00Z"
+          },
           {
             "title": "ANALÝZA: Připlatíme si a některé hvězdy padnou. Kam kráčí herní průmysl",
             "publishedAt": "2026-06-09T22:00:00Z"
@@ -807,10 +815,6 @@
           {
             "title": "Gears of War: E-Day",
             "publishedAt": "2026-06-08T11:11:14Z"
-          },
-          {
-            "title": "Trefa přímo na komoru. Vybíráme 15 nejlepších her, které musíte vidět",
-            "publishedAt": "2026-06-08T10:30:00Z"
           }
         ]
       }
