@@ -228,7 +228,19 @@ ENTRIES.append(
         "purity audit 2026-06-10: /rss/zdravi == site-global lifestyle feed, polluted section zdravi",
     )
 )
-ENTRIES.append(base("zdr_betterlife", "BetterLife", "betterlife.cz", "rss", "zdravi", [], 180, 0.65, "https://www.betterlife.cz/feed/"))
+# 2026-06-10 purity final fix (PR #5155 audit): betterlife.cz/feed/ is 100% celebrity
+# lifestyle (Bydlení slavných + Tip na seriál) — no health content. Remapped to kultura
+# (kul_betterlife, precedent kul_vipzivot for celebrity content); blocked row kept for audit.
+ENTRIES.append(
+    blocked_feed(
+        "zdr_betterlife",
+        "BLOCKED BetterLife in zdravi (celebrity lifestyle feed, remapped to kultura)",
+        "betterlife.cz",
+        "zdravi",
+        "https://www.betterlife.cz/feed/",
+        "purity audit 2026-06-10: 100% celebrity lifestyle content, remapped to kultura as kul_betterlife",
+    )
+)
 
 # 5.5 CESTOVÁNÍ
 # 2026-06-10 purity audit (PR #5142): novinky.cz/rss/cestovani returns the site-global feed
@@ -314,18 +326,56 @@ ENTRIES.append(
         "purity audit 2026-06-10: feed is site-wide mix, polluted kultura/zdravi/cestovani",
     )
 )
+# 2026-06-10 purity final fix: BetterLife remapped from zdravi/vzdelavani to kultura —
+# live probe shows 100% celebrity lifestyle (vily celebrit, seriál Ulice), fits kultura
+# alongside kul_vipzivot/kul_vtelce.
+ENTRIES.append(base("kul_betterlife", "BetterLife", "betterlife.cz", "rss", "kultura", [], 180, 0.65, "https://www.betterlife.cz/feed/"))
 
 # 5.8 VĚDA
 ENTRIES.append(base("ved_ct24_veda", "ČT24 / Věda", "ct24.ceskatelevize.cz", "rubric", "veda", [], 25, 1.10, "https://ct24.ceskatelevize.cz/rss/veda", slot=10))
-ENTRIES.append(base("ved_novinky", "Novinky / Věda a škola", "novinky.cz", "rubric", "veda", [], 25, 1.05, "https://www.novinky.cz/rss/veda", slot=18))
+# 2026-06-10 purity final fix (PR #5155 audit re-probe): novinky.cz/rss/veda STILL_DEAD —
+# HTTP 200 but 100% item overlap with the site-global feed.
+ENTRIES.append(
+    blocked_feed(
+        "ved_novinky",
+        "BLOCKED Novinky / Věda a škola (rubric RSS returns global feed)",
+        "novinky.cz",
+        "veda",
+        "https://www.novinky.cz/rss/veda",
+        "purity audit 2026-06-10: /rss/veda == site-global feed (100% overlap), polluted section veda",
+    )
+)
 ENTRIES.append(base("ved_technet", "iDNES / Technet", "idnes.cz", "rubric", "veda", [], 40, 1.00, "https://servis.idnes.cz/rss.aspx?c=technet", cooldown=20))
 ENTRIES.append(base("ved_vtm", "VTM", "vtm.zive.cz", "rss", "veda", [], 40, 0.95, "https://vtm.zive.cz/rss"))
 
 # 5.9 VZDĚLÁVÁNÍ
 ENTRIES.append(base("vzd_seznam", "Seznam Zprávy / Vzdělávání", "seznamzpravy.cz", "rubric", "vzdelavani", [], 25, 1.05, "https://www.seznamzpravy.cz/rss/vzdelavani", slot=12))
-ENTRIES.append(base("vzd_novinky_skola", "Novinky / Škola", "novinky.cz", "rubric", "vzdelavani", [], 25, 1.00, "https://www.novinky.cz/rss/skola", slot=24))
+# 2026-06-10 purity final fix (PR #5155 audit re-probe): novinky.cz/rss/skola STILL_DEAD —
+# HTTP 200 but 100% item overlap with the site-global feed.
+ENTRIES.append(
+    blocked_feed(
+        "vzd_novinky_skola",
+        "BLOCKED Novinky / Škola (rubric RSS returns global feed)",
+        "novinky.cz",
+        "vzdelavani",
+        "https://www.novinky.cz/rss/skola",
+        "purity audit 2026-06-10: /rss/skola == site-global feed (100% overlap), polluted section vzdelavani",
+    )
+)
 ENTRIES.append(base("vzd_nespechej", "Nespěchej", "nespechej.cz", "rss", "vzdelavani", [], 180, 0.75, "https://www.nespechej.cz/feed/"))
-ENTRIES.append(base("vzd_betterlife", "BetterLife (edu)", "betterlife.cz", "rss", "vzdelavani", [], 180, 0.65, "https://www.betterlife.cz/feed/", slot=36))
+# 2026-06-10 purity final fix (PR #5155 audit): duplicate registration of the BetterLife
+# celebrity-lifestyle feed under vzdelavani (E1/E2 registry errors). Feed lives on as
+# kul_betterlife in kultura.
+ENTRIES.append(
+    blocked_feed(
+        "vzd_betterlife",
+        "BLOCKED BetterLife (edu) (celebrity lifestyle feed, remapped to kultura)",
+        "betterlife.cz",
+        "vzdelavani",
+        "https://www.betterlife.cz/feed/",
+        "purity audit 2026-06-10: 100% celebrity lifestyle content, no education content; remapped to kultura as kul_betterlife",
+    )
+)
 
 
 def main():

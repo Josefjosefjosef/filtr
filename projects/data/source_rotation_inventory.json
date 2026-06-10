@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-10T19:10:13.258496Z",
+  "generatedAt": "2026-06-10T21:20:23.392163Z",
   "total_sources": 42,
-  "total_active_feeds": 52,
+  "total_active_feeds": 49,
   "max_fetches_per_source_per_hour": 4,
   "max_fetches_per_source_per_hour_exception": 5,
   "exception_keys": [],
@@ -93,21 +93,14 @@
       "slot_key": "betterlife.cz",
       "feeds": [
         {
-          "id": "zdr_betterlife",
+          "id": "kul_betterlife",
           "label": "BetterLife",
           "feed_url": "https://www.betterlife.cz/feed/",
-          "section_primary": "zdravi"
-        },
-        {
-          "id": "vzd_betterlife",
-          "label": "BetterLife (edu)",
-          "feed_url": "https://www.betterlife.cz/feed/",
-          "section_primary": "vzdelavani"
+          "section_primary": "kultura"
         }
       ],
       "sections": [
-        "vzdelavani",
-        "zdravi"
+        "kultura"
       ],
       "display_weight_max": 0.65,
       "fetches_per_hour": 1,
@@ -217,10 +210,10 @@
         45
       ],
       "accepted_last_snapshot": 0,
-      "articles_in_bundle_24h": 1,
+      "articles_in_bundle_24h": 0,
       "priority": "P1",
       "recommended_frequency": "2/hour",
-      "estimated_articles_per_day": 1
+      "estimated_articles_per_day": 0
     },
     {
       "source": "crzpravy.cz",
@@ -736,23 +729,9 @@
           "label": "Novinky / Zahraniční",
           "feed_url": "https://www.novinky.cz/rss/zahranicni",
           "section_primary": "zpravy"
-        },
-        {
-          "id": "ved_novinky",
-          "label": "Novinky / Věda a škola",
-          "feed_url": "https://www.novinky.cz/rss/veda",
-          "section_primary": "veda"
-        },
-        {
-          "id": "vzd_novinky_skola",
-          "label": "Novinky / Škola",
-          "feed_url": "https://www.novinky.cz/rss/skola",
-          "section_primary": "vzdelavani"
         }
       ],
       "sections": [
-        "veda",
-        "vzdelavani",
         "zpravy"
       ],
       "display_weight_max": 1.15,
@@ -888,10 +867,10 @@
         45
       ],
       "accepted_last_snapshot": 30,
-      "articles_in_bundle_24h": 17,
+      "articles_in_bundle_24h": 15,
       "priority": "P0",
       "recommended_frequency": "4/hour",
-      "estimated_articles_per_day": 17
+      "estimated_articles_per_day": 15
     },
     {
       "source": "sport.ceskatelevize.cz",
@@ -946,10 +925,10 @@
         45
       ],
       "accepted_last_snapshot": 30,
-      "articles_in_bundle_24h": 8,
+      "articles_in_bundle_24h": 6,
       "priority": "P0",
       "recommended_frequency": "4/hour",
-      "estimated_articles_per_day": 8
+      "estimated_articles_per_day": 6
     },
     {
       "source": "svetcestovatele.cz",
