@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-06-10T14:30:26.234833Z",
+  "ingestedAt": "2026-06-10T15:07:37.714876Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Místo tří nemocnic jen jedna a třetina lůžek. Plán na novou pražskou nemocnici budí velké otazníky",
+      "url": "https://www.zdravotnickydenik.cz/2026/06/nova-prazska-nemocnice-bude-mit-800-az-1300/",
+      "dt": "2026-06-10T14:40:39Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "budí",
+        "jedna",
+        "jen",
+        "lůžek",
+        "místo",
+        "nemocnic",
+        "nemocnici",
+        "novou",
+        "otazníky",
+        "plán",
+        "pražskou",
+        "třetina",
+        "tří",
+        "velké"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -257,34 +288,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Třikrát vyšší riziko rakoviny kůže. Na Slovensku schválili radikální zákaz pro mladší 18 let",
-      "url": "https://www.zdravotnickydenik.cz/2026/06/solarium-slovensko-zakaz-mladsi-18-let/",
-      "dt": "2026-06-09T17:06:27Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "kůže",
-        "let",
-        "mladší",
-        "radikální",
-        "rakoviny",
-        "riziko",
-        "schválili",
-        "slovensku",
-        "třikrát",
-        "vyšší",
-        "zákaz"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -295,7 +298,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 84360,
+      "bytes": 86762,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -332,11 +335,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-06-10T14:17:43Z",
+        "raw_feed_latest_publishedAt": "2026-06-10T14:40:39Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
           "zdravi": 8,
+          "zpravy": 1,
           "finance": 1
         },
         "drop_counts": {
@@ -349,6 +352,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Místo tří nemocnic jen jedna a třetina lůžek. Plán na novou pražskou nemocnici budí velké otazníky",
+            "publishedAt": "2026-06-10T14:40:39Z"
+          },
           {
             "title": "Ponurá zpráva z EU: Tisíce obětí předávkování a kokain dostupnější než kdykoliv předtím",
             "publishedAt": "2026-06-10T14:17:43Z"
@@ -376,10 +383,6 @@
           {
             "title": "Zvrat v kauze úmrtí dvou novorozenců: Kontrola odhalila, že lékaři chybovali při použití léčiv",
             "publishedAt": "2026-06-10T06:56:49Z"
-          },
-          {
-            "title": "Porcování medvěda drhne: Tři klíčové segmenty jsou zatím bez dohody. Pomůže 24 miliard navíc?",
-            "publishedAt": "2026-06-10T06:00:00Z"
           }
         ]
       }
