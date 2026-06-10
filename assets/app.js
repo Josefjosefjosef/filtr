@@ -8519,31 +8519,82 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  /**
+   * P1 Vzdělávání fallback: education articles are sparse, so the global homepage feed
+   * (newest ~100-130 items) usually contains none and the card stayed on the
+   * "Vzdělávání se načítá" placeholder forever even though the vzdelavani section chunk
+   * exists. Lazy one-time fetch of article_feed_chunks/vzdelavani/000.json fills the
+   * card when the feed state has no education article. No other card behavior changes.
+   */
+  let iuEducationSectionFallbackArticles = null;
+  let iuEducationSectionFallbackInflight = false;
+
+  function iuEducationPreviewEnsureSectionFallback(){
+    try{
+      if (iuEducationSectionFallbackArticles || iuEducationSectionFallbackInflight) return;
+      iuEducationSectionFallbackInflight = true;
+      fetch(iuDataUrl("article_feed_chunks/vzdelavani/000.json"), {
+        cache: "no-store",
+        credentials: "same-origin",
+        headers: { "cache-control": "no-cache" },
+      })
+        .then(function (res) { return res && res.ok ? res.json() : null; })
+        .then(function (payload) {
+          const rows = payload && Array.isArray(payload.articles) ? payload.articles : [];
+          rows.sort(function (a, b) {
+            const am = iuNewsPreviewParsePublishedMs(a);
+            const bm = iuNewsPreviewParsePublishedMs(b);
+            return (isNaN(bm) ? 0 : bm) - (isNaN(am) ? 0 : am);
+          });
+          iuEducationSectionFallbackArticles = rows;
+          if (rows.length) {
+            try { iuEducationPreviewRefresh(); } catch (_) {}
+          }
+        })
+        .catch(function () {
+          iuEducationSectionFallbackInflight = false;
+        });
+    }catch(_){
+      iuEducationSectionFallbackInflight = false;
+    }
+  }
+
+  function iuEducationPreviewPickLatestTwoFromList(items){
+    let latest = null;
+    let second = null;
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i];
+      try{
+        if (!it) continue;
+        if (String(it.contentType || "article").toLowerCase() !== "article") continue;
+        if (!iuArticleMatchesMediaTopicKey(it, "vzdelavani")) continue;
+        if (!latest) {
+          latest = it;
+          continue;
+        }
+        if (!second) {
+          second = it;
+          break;
+        }
+      }catch(_){}
+    }
+    return { latest, second };
+  }
+
   function iuEducationPreviewPickLatestTwoFromState(){
     try{
       const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
-      if (!items.length) return { latest: null, second: null, latestMs: NaN };
-      let latest = null;
-      let second = null;
-      for (let i = 0; i < items.length; i++) {
-        const it = items[i];
-        try{
-          if (!it) continue;
-          if (String(it.contentType || "article").toLowerCase() !== "article") continue;
-          if (!iuArticleMatchesMediaTopicKey(it, "vzdelavani")) continue;
-          if (!latest) {
-            latest = it;
-            continue;
-          }
-          if (!second) {
-            second = it;
-            break;
-          }
-        }catch(_){}
+      let picked = iuEducationPreviewPickLatestTwoFromList(items);
+      if (!picked.latest) {
+        if (Array.isArray(iuEducationSectionFallbackArticles) && iuEducationSectionFallbackArticles.length) {
+          picked = iuEducationPreviewPickLatestTwoFromList(iuEducationSectionFallbackArticles);
+        } else {
+          iuEducationPreviewEnsureSectionFallback();
+        }
       }
-      if (!latest) return { latest: null, second: null, latestMs: NaN };
-      const latestMs = iuNewsPreviewParsePublishedMs(latest);
-      return { latest, second, latestMs };
+      if (!picked.latest) return { latest: null, second: null, latestMs: NaN };
+      const latestMs = iuNewsPreviewParsePublishedMs(picked.latest);
+      return { latest: picked.latest, second: picked.second, latestMs };
     }catch(_){
       return { latest: null, second: null, latestMs: NaN };
     }
