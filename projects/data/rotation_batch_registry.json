@@ -3,7 +3,7 @@
   "foundation_only": true,
   "batch_cycle_minutes": 20,
   "min_fetch_interval_min": 15,
-  "total_active_sources": 49,
+  "total_active_sources": 50,
   "batches": {
     "A": {
       "batch_id": "A",
@@ -15,7 +15,7 @@
         "fin_ekonomickydenik",
         "fin_epenize",
         "hry_idnes_bonusweb",
-        "kul_vipzivot",
+        "spt_tenisportal",
         "ved_ct24_veda",
         "zdr_plnezdravi",
         "zdr_zdrave",
@@ -122,9 +122,9 @@
           "estimated_rss_load": 5
         },
         {
-          "id": "kul_vipzivot",
-          "label": "VIPživot",
-          "section": "kultura",
+          "id": "spt_tenisportal",
+          "label": "TenisPortal",
+          "section": "sport",
           "source_strength": "WEAK",
           "source_weight": 0.7,
           "estimated_rss_load": 5
@@ -153,7 +153,7 @@
         "fin_penize",
         "fin_sz_byznys",
         "hry_zing",
-        "kul_betterlife",
+        "kul_vipzivot",
         "kul_vtelce",
         "ved_technet",
         "zdr_zdravotnickydenik",
@@ -259,16 +259,16 @@
           "estimated_rss_load": 5
         },
         {
-          "id": "kul_betterlife",
-          "label": "BetterLife",
+          "id": "kul_vipzivot",
+          "label": "VIPživot",
           "section": "kultura",
           "source_strength": "WEAK",
-          "source_weight": 0.65,
+          "source_weight": 0.7,
           "estimated_rss_load": 5
         }
       ],
       "expected_rss_items": 215,
-      "load_score": 217.8,
+      "load_score": 218.0,
       "expected_run_sec": 93,
       "strong_source_count": 4,
       "strong_source_ids": [
@@ -282,9 +282,10 @@
     "C": {
       "batch_id": "C",
       "tick_minute": 10,
-      "source_count": 11,
+      "source_count": 12,
       "source_ids": [
         "fin_ekonom",
+        "kul_betterlife",
         "kul_ctart",
         "spt_crzpravy_sport",
         "spt_ctsport",
@@ -384,11 +385,19 @@
           "source_strength": "WEAK",
           "source_weight": 0.75,
           "estimated_rss_load": 5
+        },
+        {
+          "id": "kul_betterlife",
+          "label": "BetterLife",
+          "section": "kultura",
+          "source_strength": "WEAK",
+          "source_weight": 0.65,
+          "estimated_rss_load": 5
         }
       ],
-      "expected_rss_items": 215,
-      "load_score": 217.2,
-      "expected_run_sec": 78,
+      "expected_rss_items": 220,
+      "load_score": 220.5,
+      "expected_run_sec": 85,
       "strong_source_count": 4,
       "strong_source_ids": [
         "zpr_idnes_zpravy",
@@ -411,7 +420,7 @@
         "spt_idnes",
         "spt_mmamag",
         "spt_sportcz",
-        "spt_tenisportal",
+        "vzd_pedagogicke_info",
         "zpr_ceskajustice",
         "zpr_ct24_domaci",
         "zpr_hlidacipes"
@@ -506,16 +515,16 @@
           "estimated_rss_load": 10
         },
         {
-          "id": "spt_tenisportal",
-          "label": "TenisPortal",
-          "section": "sport",
+          "id": "vzd_pedagogicke_info",
+          "label": "Pedagogické.info",
+          "section": "vzdelavani",
           "source_strength": "WEAK",
-          "source_weight": 0.7,
+          "source_weight": 0.75,
           "estimated_rss_load": 5
         }
       ],
       "expected_rss_items": 215,
-      "load_score": 217.5,
+      "load_score": 217.8,
       "expected_run_sec": 86,
       "strong_source_count": 4,
       "strong_source_ids": [
@@ -540,7 +549,7 @@
     "fin_epenize": "A",
     "zdr_zdrave": "A",
     "ces_travelbible": "A",
-    "kul_vipzivot": "A",
+    "spt_tenisportal": "A",
     "zpr_novinky_domaci": "B",
     "zpr_novinky_zahranicni": "B",
     "fin_sz_byznys": "B",
@@ -553,7 +562,7 @@
     "fin_faei": "B",
     "ces_pelipecky": "B",
     "kul_vtelce": "B",
-    "kul_betterlife": "B",
+    "kul_vipzivot": "B",
     "zpr_idnes_zpravy": "C",
     "spt_isport": "C",
     "spt_ctsport": "C",
@@ -565,6 +574,7 @@
     "spt_crzpravy_sport": "C",
     "zpr_kverulant": "C",
     "vzd_nespechej": "C",
+    "kul_betterlife": "C",
     "zpr_ct24_domaci": "D",
     "spt_sportcz": "D",
     "fin_idnes_ekonomika": "D",
@@ -576,7 +586,7 @@
     "zpr_hlidacipes": "D",
     "spt_mmamag": "D",
     "zpr_ceskajustice": "D",
-    "spt_tenisportal": "D"
+    "vzd_pedagogicke_info": "D"
   },
   "source_metadata_by_id": {
     "zpr_seznam_domaci": {
@@ -663,7 +673,7 @@
       "estimated_rss_load": 5,
       "last_rotation_assignment": null
     },
-    "kul_vipzivot": {
+    "spt_tenisportal": {
       "batch_id": "A",
       "source_weight": 0.7,
       "source_strength": "WEAK",
@@ -754,9 +764,9 @@
       "estimated_rss_load": 5,
       "last_rotation_assignment": null
     },
-    "kul_betterlife": {
+    "kul_vipzivot": {
       "batch_id": "B",
-      "source_weight": 0.65,
+      "source_weight": 0.7,
       "source_strength": "WEAK",
       "estimated_rss_load": 5,
       "last_rotation_assignment": null
@@ -838,6 +848,13 @@
       "estimated_rss_load": 5,
       "last_rotation_assignment": null
     },
+    "kul_betterlife": {
+      "batch_id": "C",
+      "source_weight": 0.65,
+      "source_strength": "WEAK",
+      "estimated_rss_load": 5,
+      "last_rotation_assignment": null
+    },
     "zpr_ct24_domaci": {
       "batch_id": "D",
       "source_weight": 1.2,
@@ -915,13 +932,13 @@
       "estimated_rss_load": 10,
       "last_rotation_assignment": null
     },
-    "spt_tenisportal": {
+    "vzd_pedagogicke_info": {
       "batch_id": "D",
-      "source_weight": 0.7,
+      "source_weight": 0.75,
       "source_strength": "WEAK",
       "estimated_rss_load": 5,
       "last_rotation_assignment": null
     }
   },
-  "generated_at": "2026-06-10T21:18:32Z"
+  "generated_at": "2026-06-10T21:31:17Z"
 }

@@ -363,6 +363,10 @@ ENTRIES.append(
     )
 )
 ENTRIES.append(base("vzd_nespechej", "Nespěchej", "nespechej.cz", "rss", "vzdelavani", [], 180, 0.75, "https://www.nespechej.cz/feed/"))
+# 2026-06-10 purity final fix: third native vzdelavani feed (section-cz-guard requires >=3 active)
+# after blocking dead vzd_novinky_skola + off-section vzd_betterlife. Live probe 2026-06-10:
+# HTTPS 200, daily items, 100% education content (MŠMT/RVP/školy/učitelé).
+ENTRIES.append(base("vzd_pedagogicke_info", "Pedagogické.info", "pedagogicke.info", "rss", "vzdelavani", [], 180, 0.75, "https://www.pedagogicke.info/feeds/posts/default?alt=rss"))
 # 2026-06-10 purity final fix (PR #5155 audit): duplicate registration of the BetterLife
 # celebrity-lifestyle feed under vzdelavani (E1/E2 registry errors). Feed lives on as
 # kul_betterlife in kultura.

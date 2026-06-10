@@ -213,6 +213,7 @@ FIXED_MINUTE_SLOTS_BY_KEY: dict[str, frozenset[int]] = {
     "mmamag.cz": frozenset({21}),
     "nedd.cz": frozenset({23}),
     "nespechej.cz": frozenset({27}),
+    "pedagogicke.info": frozenset({49}),
     "plnezdravi.cz": frozenset({29}),
     "prozeny.cz": frozenset({31}),
     "sector.sk": frozenset({37}),

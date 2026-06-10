@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-10T21:20:23.392163Z",
-  "total_sources": 42,
-  "total_active_feeds": 49,
+  "generatedAt": "2026-06-10T21:31:17.487513Z",
+  "total_sources": 43,
+  "total_active_feeds": 50,
   "max_fetches_per_source_per_hour": 4,
   "max_fetches_per_source_per_hour_exception": 5,
   "exception_keys": [],
@@ -46,6 +46,7 @@
       "kverulant.org",
       "mmamag.cz",
       "nespechej.cz",
+      "pedagogicke.info",
       "pelipecky.cz",
       "plnezdravi.cz",
       "svetcestovatele.cz",
@@ -747,6 +748,32 @@
       "priority": "P0",
       "recommended_frequency": "4/hour",
       "estimated_articles_per_day": 17
+    },
+    {
+      "source": "pedagogicke.info",
+      "scheduler_key": "pedagogicke.info",
+      "slot_key": "pedagogicke.info",
+      "feeds": [
+        {
+          "id": "vzd_pedagogicke_info",
+          "label": "Pedagogické.info",
+          "feed_url": "https://www.pedagogicke.info/feeds/posts/default?alt=rss",
+          "section_primary": "vzdelavani"
+        }
+      ],
+      "sections": [
+        "vzdelavani"
+      ],
+      "display_weight_max": 0.75,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        49
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 0
     },
     {
       "source": "pelipecky.cz",
@@ -1497,6 +1524,15 @@
         15,
         30,
         45
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "pedagogicke.info",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        49
       ],
       "within_limit": true
     },
