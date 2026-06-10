@@ -1,0 +1,1269 @@
+{
+  "report": "PRODUCTION_STABILITY_AUDIT",
+  "generatedAt": "2026-06-10T22:19:21.495Z",
+  "read_only": true,
+  "windows": {
+    "24h": {
+      "fast_pool_runs": 60,
+      "fast_pool_success": 45,
+      "fast_pool_failed": 13,
+      "fast_pool_cancelled": 1,
+      "pages_publish_runs": 26,
+      "pages_publish_success": 25,
+      "prod_data_update_commits": 47,
+      "longest_gap_between_fast_pool_success_min": 267,
+      "average_gap_between_fast_pool_success_min": 31.3,
+      "max_staleness_estimate_min": 267
+    },
+    "72h": {
+      "fast_pool_runs": 97,
+      "fast_pool_success": 72,
+      "fast_pool_failed": 20,
+      "fast_pool_cancelled": 4,
+      "pages_publish_runs": 108,
+      "pages_publish_success": 106,
+      "prod_data_update_commits": 123,
+      "longest_gap_between_fast_pool_success_min": 310,
+      "average_gap_between_fast_pool_success_min": 40,
+      "max_staleness_estimate_min": 310
+    },
+    "7d": {
+      "fast_pool_runs": 97,
+      "fast_pool_success": 72,
+      "fast_pool_failed": 20,
+      "fast_pool_cancelled": 4,
+      "pages_publish_runs": 307,
+      "pages_publish_success": 305,
+      "prod_data_update_commits": 167,
+      "longest_gap_between_fast_pool_success_min": 310,
+      "average_gap_between_fast_pool_success_min": 40,
+      "max_staleness_estimate_min": 310
+    }
+  },
+  "current": {
+    "last_fast_pool_success_at": "2026-06-10T22:04:59Z",
+    "current_fast_pool_gap_min": 14,
+    "last_prod_data_commit": {
+      "hash": "8f9a9c8b98d3e0e7c1db1078714ea3cbb03e0417",
+      "date": "2026-06-10T21:48:37Z",
+      "author": "github-actions[bot]",
+      "subject": "chore(data): fast publish publishable pool (#5159)"
+    },
+    "publishable_pool_generated_at": "2026-06-10T22:07:11.013966Z",
+    "publishable_pool_age_min": 12,
+    "homepage_feed_generated_at": "2026-06-10T22:07:11.013966Z",
+    "homepage_feed_age_min": 12,
+    "education_preview_items": 2
+  },
+  "dispatch_screening": {
+    "workflow_dispatch_runs_by_actor_7d": {
+      "Josefjosefjosef": 306
+    },
+    "note": "watchdog (Cloudflare) dispatches via owner PAT — regular sub-hour cadence; no irregular human burst detected means no manual keep-alive",
+    "human_direct_pushes_to_main_7d": [
+      {
+        "hash": "e482467392dc2e0862bfd0a3030f6134bfe53053",
+        "date": "2026-06-08T15:55:27+02:00",
+        "author": "Josefjosefjosef",
+        "subject": "chore: add publishable_pool.json artifact foundation (Phase 6B)"
+      },
+      {
+        "hash": "f88d2de50102ce8bae2d1bf38b8fb1ae7faccd62",
+        "date": "2026-06-08T02:05:50+02:00",
+        "author": "Josefjosefjosef",
+        "subject": "chore: persist ingest aggregate artifacts across release blocks"
+      },
+      {
+        "hash": "1de840a5c38268ee6b25b8b15cb28239de0dda83",
+        "date": "2026-06-08T01:48:14+02:00",
+        "author": "Josefjosefjosef",
+        "subject": "chore: add article pipeline phase status telemetry"
+      },
+      {
+        "hash": "9b2a9fc8fa6ef3ebc9541e3c00daccdb00790bc1",
+        "date": "2026-06-08T01:32:41+02:00",
+        "author": "Josefjosefjosef",
+        "subject": "chore: add article pool foundation manifest"
+      },
+      {
+        "hash": "d80589d99a08f3d0f30f672fa015acb923b7d497",
+        "date": "2026-06-08T00:27:05+02:00",
+        "author": "Josefjosefjosef",
+        "subject": "feat: activate RSS batch rotation runtime"
+      },
+      {
+        "hash": "94983002c7747a479ceac8292e830d0d05b49c91",
+        "date": "2026-06-08T00:08:38+02:00",
+        "author": "Josefjosefjosef",
+        "subject": "chore: add RSS rotation phase 2A dry-run simulation"
+      },
+      {
+        "hash": "82c3404725fc893e6fa1e90b4af8d961fdaf72f1",
+        "date": "2026-06-07T23:18:14+02:00",
+        "author": "Josefjosefjosef",
+        "subject": "chore: add RSS rotation foundation metadata"
+      },
+      {
+        "hash": "e5102faa84a98c2c340b5a6a6d7b52d61c7afdc8",
+        "date": "2026-06-07T04:58:04+02:00",
+        "author": "Josefjosefjosef",
+        "subject": "feat: add custom MindMenu buttons"
+      },
+      {
+        "hash": "c6943b2ff42e0547dff3b7ea62b8e9008cf1ea2b",
+        "date": "2026-06-04T11:46:13+02:00",
+        "author": "Josefjosefjosef",
+        "subject": "fix: clean up refinance mortgage form labels"
+      }
+    ],
+    "pipeline_keepalive_interventions_7d": []
+  },
+  "quality_samples": {
+    "24h": {
+      "sampled": 323,
+      "registry_leaks": 14,
+      "classifier_suspects": 1,
+      "pending_merge_issues": 4,
+      "purity_sample_pct": 95.36,
+      "post_5145_merge_sampled": 42,
+      "post_5145_merge_regressions": 0,
+      "merged_scope_purity_pct": 100,
+      "details": [
+        {
+          "section": "finance",
+          "kind": "classifier_suspect",
+          "cls": "pending_5160",
+          "post_5145_merge": false,
+          "detail": "faei_societal_in_finance",
+          "title": "Začíná sezona koupání. Hygienici už varují před kvalitou vody",
+          "publishedAt": "2026-06-10T12:00:03Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Lékaři schválili: Dovolená all inclusive na účet pojišťovny. Pro seniory je cesta do lázní",
+          "publishedAt": "2026-06-10T06:02:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Prožívali těžké období. Hledali pomoc. Našli návod na sebevraždu",
+          "publishedAt": "2026-06-10T05:21:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Samotný vápník nestačí. Osteoporózu zažene pouze kombinace s tímto opomíjeným vitaminem, ř",
+          "publishedAt": "2026-06-10T03:58:00Z"
+        },
+        {
+          "section": "cestovani",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "source=Novinky",
+          "title": "Guadalajara čeká české fanoušky. Krásné město, kde se vyplatí být opatrný",
+          "publishedAt": "2026-06-10T14:03:00Z"
+        },
+        {
+          "section": "cestovani",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Zákaz dávkovačů na léky do letadla. Bez originální krabičky jste považováni za drogového d",
+          "publishedAt": "2026-06-10T05:32:00Z"
+        },
+        {
+          "section": "cestovani",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "O tomto skvostném místě nevědí ani rodilí Pražané. Turisté si ho pletou s bradavickým hrad",
+          "publishedAt": "2026-06-10T05:02:00Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "ScioŠkola žaluje ministerstvo kvůli konci kombinované výuky. Sama podmínky nedodržovala",
+          "publishedAt": "2026-06-10T05:03:00Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Kongres USA schválil dodatečných 70 miliard dolarů na Trumpovu imigrační politiku",
+          "publishedAt": "2026-06-10T04:46:02Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Falešný premiér sliboval výhodný obchod s čínskou ropou. Z muže vylákal statisíce",
+          "publishedAt": "2026-06-09T22:53:00Z"
+        },
+        {
+          "section": "kultura",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Dnes v Ulici: Podpantoflák Filip se bojí přijmout do firmy krásnou Denisu. Petr s Magdou j",
+          "publishedAt": "2026-06-10T07:21:00Z"
+        },
+        {
+          "section": "kultura",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Kamila Trnková jako řidička kamionu zamíchá dějem Ulice. „Svede Petra a Magda bude sama,“ ",
+          "publishedAt": "2026-06-10T07:02:00Z"
+        },
+        {
+          "section": "veda",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": true,
+          "detail": "feedId=ved_novinky",
+          "title": "Lidé z Jablonecka, které čeká hromadné propuštění, by neměli mít problém najít novou práci",
+          "publishedAt": "2026-06-10T20:51:00Z"
+        },
+        {
+          "section": "veda",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=ved_novinky",
+          "title": "Zemřela Zdena Mašínová",
+          "publishedAt": "2026-06-10T16:34:29Z"
+        },
+        {
+          "section": "vzdelavani",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=vzd_betterlife",
+          "title": "Zvenku zanedbaná vila, uvnitř luxus pro tři rodiny. Iva Janžurová zvolila netradiční souži",
+          "publishedAt": "2026-06-10T16:13:42Z"
+        }
+      ]
+    },
+    "72h": {
+      "sampled": 468,
+      "registry_leaks": 44,
+      "classifier_suspects": 3,
+      "pending_merge_issues": 8,
+      "purity_sample_pct": 89.96,
+      "post_5145_merge_sampled": 42,
+      "post_5145_merge_regressions": 0,
+      "merged_scope_purity_pct": 100,
+      "details": [
+        {
+          "section": "finance",
+          "kind": "classifier_suspect",
+          "cls": "pending_5160",
+          "post_5145_merge": false,
+          "detail": "faei_societal_in_finance",
+          "title": "Začíná sezona koupání. Hygienici už varují před kvalitou vody",
+          "publishedAt": "2026-06-10T12:00:03Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Lékaři schválili: Dovolená all inclusive na účet pojišťovny. Pro seniory je cesta do lázní",
+          "publishedAt": "2026-06-10T06:02:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Prožívali těžké období. Hledali pomoc. Našli návod na sebevraždu",
+          "publishedAt": "2026-06-10T05:21:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Samotný vápník nestačí. Osteoporózu zažene pouze kombinace s tímto opomíjeným vitaminem, ř",
+          "publishedAt": "2026-06-10T03:58:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "classifier_suspect",
+          "cls": "pending_5160",
+          "post_5145_merge": false,
+          "detail": "ekonomickydenik_covid_only_in_zdravi",
+          "title": "Peníze pro aerolinky během covidu. Spor o veřejnou podporu rozlítil dopravce",
+          "publishedAt": "2026-06-09T17:09:39Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "classifier_suspect",
+          "cls": "pending_5160",
+          "post_5145_merge": false,
+          "detail": "sportcz_sport_entity_in_zdravi",
+          "title": "Ocenění pro mladého rychlobruslaře. Jílek předvedl nejhodnotnější sportovní výkon",
+          "publishedAt": "2026-06-09T14:36:17Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Aneta Vignerová nakrátko: Sluší jí víc mikádo, nebo dlouhé vlasy? Fanoušci mají jasno. A c",
+          "publishedAt": "2026-06-09T09:41:21Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Agáta Hanychová královnou soudní módy: Šaty z konfekce, doplňky za majlant. Kde pořídit po",
+          "publishedAt": "2026-06-09T07:38:55Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Jak šel čas s Tomem Hanksem a Ritou Wilson? Společně překonali rozvod, nemoc i nástrahy sl",
+          "publishedAt": "2026-06-09T03:00:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Očima staré holky: „Čistej vzduch“ aneb Jak jsem si v dceřině bytě zkusila být znovu mladá",
+          "publishedAt": "2026-06-09T03:00:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Žádné šedé hradby! Naše červené hrady a zámky se na fotkách budou opravdu vyjímat",
+          "publishedAt": "2026-06-09T03:00:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Proč vztah nefunguje? „Žena je často emoční servis pro všechny.“ Nezájem pomalu ničí blízk",
+          "publishedAt": "2026-06-09T03:00:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Aneta Krejčíková v odvážném saku ukázala štíhlé nohy, v plavkách zase tělo bohyně",
+          "publishedAt": "2026-06-08T11:30:56Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Zuzana Belohorcová je po rozvodu sexy jako nikdy: Dokonalou postavu předvedla v šatech s v",
+          "publishedAt": "2026-06-08T08:00:00Z"
+        },
+        {
+          "section": "cestovani",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "source=Novinky",
+          "title": "Guadalajara čeká české fanoušky. Krásné město, kde se vyplatí být opatrný",
+          "publishedAt": "2026-06-10T14:03:00Z"
+        },
+        {
+          "section": "cestovani",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Zákaz dávkovačů na léky do letadla. Bez originální krabičky jste považováni za drogového d",
+          "publishedAt": "2026-06-10T05:32:00Z"
+        },
+        {
+          "section": "cestovani",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "O tomto skvostném místě nevědí ani rodilí Pražané. Turisté si ho pletou s bradavickým hrad",
+          "publishedAt": "2026-06-10T05:02:00Z"
+        },
+        {
+          "section": "cestovani",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "source=Novinky",
+          "title": "Malebné Baskicko pro cestovatele a gurmány",
+          "publishedAt": "2026-06-08T12:35:00Z"
+        },
+        {
+          "section": "cestovani",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Nejděsivější les v ČR, z něhož tuhne krev. Svědci popisují černého rytíře, časové smyčky i",
+          "publishedAt": "2026-06-08T07:32:00Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "ScioŠkola žaluje ministerstvo kvůli konci kombinované výuky. Sama podmínky nedodržovala",
+          "publishedAt": "2026-06-10T05:03:00Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Kongres USA schválil dodatečných 70 miliard dolarů na Trumpovu imigrační politiku",
+          "publishedAt": "2026-06-10T04:46:02Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Falešný premiér sliboval výhodný obchod s čínskou ropou. Z muže vylákal statisíce",
+          "publishedAt": "2026-06-09T22:53:00Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Nenormální pohoda, kamarádi a nostalgie. Elán se v Praze opět loučil",
+          "publishedAt": "2026-06-09T22:07:38Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Ruský politik v Petrohradu vyzval k použití jaderných zbraní. Vypnuli mu mikrofon",
+          "publishedAt": "2026-06-09T19:04:16Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "U Moskvy vybouchlo auto s ruským plukovníkem",
+          "publishedAt": "2026-06-09T18:58:46Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Apache u Hormuzského průlivu sestřelil Írán, tvrdí Trump. USA budou reagovat",
+          "publishedAt": "2026-06-09T17:03:15Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Šéf maďarského protikorupčního úřadu byl obviněn ze zpronevěry a dalších trestných činů",
+          "publishedAt": "2026-06-09T16:41:06Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "V Bratislavě se narodila siamská dvojčata",
+          "publishedAt": "2026-06-09T15:31:26Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Draci, trestanci i láska v kanceláři. Novinky na streamech mají od všeho něco",
+          "publishedAt": "2026-06-09T15:07:00Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Královéhradecký kraj konečně našel kupce romantického zámku Skřivany. Cena klesla téměř o ",
+          "publishedAt": "2026-06-09T06:49:31Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Siri se skamarádila s AI. Evropané si ale na nové vychytávky od Applu počkají",
+          "publishedAt": "2026-06-09T06:45:15Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "„Studená skvrna“ v Atlantiku znepokojuje vědce. Oceánská cirkulace slábne",
+          "publishedAt": "2026-06-08T18:49:00Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Turecké stíhačky obtěžovaly letadla s ministry, stěžuje si Kypr",
+          "publishedAt": "2026-06-08T18:32:17Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Prezident zatím připravenou žalobu k Ústavnímu soudu nepodá",
+          "publishedAt": "2026-06-08T18:01:38Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Pět let a propadnutí majetku. Expředsedu ukrajinského nejvyššího soudu potrestali za úplat",
+          "publishedAt": "2026-06-08T17:13:15Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "EU přitvrdila vůči ruské stínové flotile",
+          "publishedAt": "2026-06-08T16:31:13Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Macinka s OSN otočil. Pavlovi chtěl původně v reprezentaci bránit",
+          "publishedAt": "2026-06-08T16:26:40Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Chodorkovského v Rusku odsoudili k deseti letům vězení",
+          "publishedAt": "2026-06-08T14:05:48Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Soud nevyhověl Lichtenštejnům, pozemky na Orlickoústecku jim nepřiklepl",
+          "publishedAt": "2026-06-08T12:22:35Z"
+        },
+        {
+          "section": "kultura",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Dnes v Ulici: Podpantoflák Filip se bojí přijmout do firmy krásnou Denisu. Petr s Magdou j",
+          "publishedAt": "2026-06-10T07:21:00Z"
+        },
+        {
+          "section": "kultura",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Kamila Trnková jako řidička kamionu zamíchá dějem Ulice. „Svede Petra a Magda bude sama,“ ",
+          "publishedAt": "2026-06-10T07:02:00Z"
+        },
+        {
+          "section": "kultura",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Kvůli Margitovi přiletěla až z Floridy. Zpěvačka Lenka Graf oslnila v róbě vážící patnáct ",
+          "publishedAt": "2026-06-08T11:13:00Z"
+        },
+        {
+          "section": "veda",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": true,
+          "detail": "feedId=ved_novinky",
+          "title": "Lidé z Jablonecka, které čeká hromadné propuštění, by neměli mít problém najít novou práci",
+          "publishedAt": "2026-06-10T20:51:00Z"
+        },
+        {
+          "section": "veda",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=ved_novinky",
+          "title": "Zemřela Zdena Mašínová",
+          "publishedAt": "2026-06-10T16:34:29Z"
+        },
+        {
+          "section": "vzdelavani",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=vzd_betterlife",
+          "title": "Zvenku zanedbaná vila, uvnitř luxus pro tři rodiny. Iva Janžurová zvolila netradiční souži",
+          "publishedAt": "2026-06-10T16:13:42Z"
+        },
+        {
+          "section": "vzdelavani",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=vzd_betterlife",
+          "title": "David Pastrňák v dětství nazouval dívčí brusle a žil v 2+1 v Havířově. Dnes obývá luxusní ",
+          "publishedAt": "2026-06-09T16:08:14Z"
+        },
+        {
+          "section": "vzdelavani",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=vzd_betterlife",
+          "title": "Ulice: Návrat, který zabolí. Pavel má jasno, Bára bude jen zírat",
+          "publishedAt": "2026-06-08T10:45:14Z"
+        }
+      ]
+    },
+    "7d": {
+      "sampled": 541,
+      "registry_leaks": 52,
+      "classifier_suspects": 3,
+      "pending_merge_issues": 14,
+      "purity_sample_pct": 89.83,
+      "post_5145_merge_sampled": 42,
+      "post_5145_merge_regressions": 0,
+      "merged_scope_purity_pct": 100,
+      "details": [
+        {
+          "section": "finance",
+          "kind": "classifier_suspect",
+          "cls": "pending_5160",
+          "post_5145_merge": false,
+          "detail": "faei_societal_in_finance",
+          "title": "Začíná sezona koupání. Hygienici už varují před kvalitou vody",
+          "publishedAt": "2026-06-10T12:00:03Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Lékaři schválili: Dovolená all inclusive na účet pojišťovny. Pro seniory je cesta do lázní",
+          "publishedAt": "2026-06-10T06:02:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Prožívali těžké období. Hledali pomoc. Našli návod na sebevraždu",
+          "publishedAt": "2026-06-10T05:21:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Samotný vápník nestačí. Osteoporózu zažene pouze kombinace s tímto opomíjeným vitaminem, ř",
+          "publishedAt": "2026-06-10T03:58:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "classifier_suspect",
+          "cls": "pending_5160",
+          "post_5145_merge": false,
+          "detail": "ekonomickydenik_covid_only_in_zdravi",
+          "title": "Peníze pro aerolinky během covidu. Spor o veřejnou podporu rozlítil dopravce",
+          "publishedAt": "2026-06-09T17:09:39Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "classifier_suspect",
+          "cls": "pending_5160",
+          "post_5145_merge": false,
+          "detail": "sportcz_sport_entity_in_zdravi",
+          "title": "Ocenění pro mladého rychlobruslaře. Jílek předvedl nejhodnotnější sportovní výkon",
+          "publishedAt": "2026-06-09T14:36:17Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Aneta Vignerová nakrátko: Sluší jí víc mikádo, nebo dlouhé vlasy? Fanoušci mají jasno. A c",
+          "publishedAt": "2026-06-09T09:41:21Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Agáta Hanychová královnou soudní módy: Šaty z konfekce, doplňky za majlant. Kde pořídit po",
+          "publishedAt": "2026-06-09T07:38:55Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Jak šel čas s Tomem Hanksem a Ritou Wilson? Společně překonali rozvod, nemoc i nástrahy sl",
+          "publishedAt": "2026-06-09T03:00:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Očima staré holky: „Čistej vzduch“ aneb Jak jsem si v dceřině bytě zkusila být znovu mladá",
+          "publishedAt": "2026-06-09T03:00:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Žádné šedé hradby! Naše červené hrady a zámky se na fotkách budou opravdu vyjímat",
+          "publishedAt": "2026-06-09T03:00:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Proč vztah nefunguje? „Žena je často emoční servis pro všechny.“ Nezájem pomalu ničí blízk",
+          "publishedAt": "2026-06-09T03:00:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Aneta Krejčíková v odvážném saku ukázala štíhlé nohy, v plavkách zase tělo bohyně",
+          "publishedAt": "2026-06-08T11:30:56Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_prozeny_zdravi",
+          "title": "Zuzana Belohorcová je po rozvodu sexy jako nikdy: Dokonalou postavu předvedla v šatech s v",
+          "publishedAt": "2026-06-08T08:00:00Z"
+        },
+        {
+          "section": "zdravi",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=zdr_betterlife",
+          "title": "Příští týden v seriálu Ulice: Nečekané spojenectví, boj o záchranu lásky a panika kvůli da",
+          "publishedAt": "2026-06-07T15:54:51Z"
+        },
+        {
+          "section": "cestovani",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "source=Novinky",
+          "title": "Guadalajara čeká české fanoušky. Krásné město, kde se vyplatí být opatrný",
+          "publishedAt": "2026-06-10T14:03:00Z"
+        },
+        {
+          "section": "cestovani",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Zákaz dávkovačů na léky do letadla. Bez originální krabičky jste považováni za drogového d",
+          "publishedAt": "2026-06-10T05:32:00Z"
+        },
+        {
+          "section": "cestovani",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "O tomto skvostném místě nevědí ani rodilí Pražané. Turisté si ho pletou s bradavickým hrad",
+          "publishedAt": "2026-06-10T05:02:00Z"
+        },
+        {
+          "section": "cestovani",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "source=Novinky",
+          "title": "Malebné Baskicko pro cestovatele a gurmány",
+          "publishedAt": "2026-06-08T12:35:00Z"
+        },
+        {
+          "section": "cestovani",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Nejděsivější les v ČR, z něhož tuhne krev. Svědci popisují černého rytíře, časové smyčky i",
+          "publishedAt": "2026-06-08T07:32:00Z"
+        },
+        {
+          "section": "cestovani",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "source=Novinky",
+          "title": "Nejdéle sloužící letuška míří po 66 letech ve vzduchu do penze",
+          "publishedAt": "2026-06-07T09:03:00Z"
+        },
+        {
+          "section": "cestovani",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "source=Novinky",
+          "title": "KVÍZ: Nejoblíbenější destinace Čechů. Jak dobře je znáte",
+          "publishedAt": "2026-06-07T07:16:00Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "ScioŠkola žaluje ministerstvo kvůli konci kombinované výuky. Sama podmínky nedodržovala",
+          "publishedAt": "2026-06-10T05:03:00Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Kongres USA schválil dodatečných 70 miliard dolarů na Trumpovu imigrační politiku",
+          "publishedAt": "2026-06-10T04:46:02Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Falešný premiér sliboval výhodný obchod s čínskou ropou. Z muže vylákal statisíce",
+          "publishedAt": "2026-06-09T22:53:00Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Nenormální pohoda, kamarádi a nostalgie. Elán se v Praze opět loučil",
+          "publishedAt": "2026-06-09T22:07:38Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Ruský politik v Petrohradu vyzval k použití jaderných zbraní. Vypnuli mu mikrofon",
+          "publishedAt": "2026-06-09T19:04:16Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "U Moskvy vybouchlo auto s ruským plukovníkem",
+          "publishedAt": "2026-06-09T18:58:46Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Apache u Hormuzského průlivu sestřelil Írán, tvrdí Trump. USA budou reagovat",
+          "publishedAt": "2026-06-09T17:03:15Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Šéf maďarského protikorupčního úřadu byl obviněn ze zpronevěry a dalších trestných činů",
+          "publishedAt": "2026-06-09T16:41:06Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "V Bratislavě se narodila siamská dvojčata",
+          "publishedAt": "2026-06-09T15:31:26Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Draci, trestanci i láska v kanceláři. Novinky na streamech mají od všeho něco",
+          "publishedAt": "2026-06-09T15:07:00Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Královéhradecký kraj konečně našel kupce romantického zámku Skřivany. Cena klesla téměř o ",
+          "publishedAt": "2026-06-09T06:49:31Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Siri se skamarádila s AI. Evropané si ale na nové vychytávky od Applu počkají",
+          "publishedAt": "2026-06-09T06:45:15Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "„Studená skvrna“ v Atlantiku znepokojuje vědce. Oceánská cirkulace slábne",
+          "publishedAt": "2026-06-08T18:49:00Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Turecké stíhačky obtěžovaly letadla s ministry, stěžuje si Kypr",
+          "publishedAt": "2026-06-08T18:32:17Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Prezident zatím připravenou žalobu k Ústavnímu soudu nepodá",
+          "publishedAt": "2026-06-08T18:01:38Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Pět let a propadnutí majetku. Expředsedu ukrajinského nejvyššího soudu potrestali za úplat",
+          "publishedAt": "2026-06-08T17:13:15Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "EU přitvrdila vůči ruské stínové flotile",
+          "publishedAt": "2026-06-08T16:31:13Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Macinka s OSN otočil. Pavlovi chtěl původně v reprezentaci bránit",
+          "publishedAt": "2026-06-08T16:26:40Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Chodorkovského v Rusku odsoudili k deseti letům vězení",
+          "publishedAt": "2026-06-08T14:05:48Z"
+        },
+        {
+          "section": "hry",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=hry_novinky",
+          "title": "Soud nevyhověl Lichtenštejnům, pozemky na Orlickoústecku jim nepřiklepl",
+          "publishedAt": "2026-06-08T12:22:35Z"
+        },
+        {
+          "section": "kultura",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Dnes v Ulici: Podpantoflák Filip se bojí přijmout do firmy krásnou Denisu. Petr s Magdou j",
+          "publishedAt": "2026-06-10T07:21:00Z"
+        },
+        {
+          "section": "kultura",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Kamila Trnková jako řidička kamionu zamíchá dějem Ulice. „Svede Petra a Magda bude sama,“ ",
+          "publishedAt": "2026-06-10T07:02:00Z"
+        },
+        {
+          "section": "kultura",
+          "kind": "registry_leak",
+          "cls": "blocked_5145",
+          "post_5145_merge": false,
+          "detail": "feedId=kul_vlasta",
+          "title": "Kvůli Margitovi přiletěla až z Floridy. Zpěvačka Lenka Graf oslnila v róbě vážící patnáct ",
+          "publishedAt": "2026-06-08T11:13:00Z"
+        },
+        {
+          "section": "veda",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": true,
+          "detail": "feedId=ved_novinky",
+          "title": "Lidé z Jablonecka, které čeká hromadné propuštění, by neměli mít problém najít novou práci",
+          "publishedAt": "2026-06-10T20:51:00Z"
+        },
+        {
+          "section": "veda",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=ved_novinky",
+          "title": "Zemřela Zdena Mašínová",
+          "publishedAt": "2026-06-10T16:34:29Z"
+        },
+        {
+          "section": "vzdelavani",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=vzd_betterlife",
+          "title": "Zvenku zanedbaná vila, uvnitř luxus pro tři rodiny. Iva Janžurová zvolila netradiční souži",
+          "publishedAt": "2026-06-10T16:13:42Z"
+        },
+        {
+          "section": "vzdelavani",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=vzd_betterlife",
+          "title": "David Pastrňák v dětství nazouval dívčí brusle a žil v 2+1 v Havířově. Dnes obývá luxusní ",
+          "publishedAt": "2026-06-09T16:08:14Z"
+        },
+        {
+          "section": "vzdelavani",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=vzd_betterlife",
+          "title": "Ulice: Návrat, který zabolí. Pavel má jasno, Bára bude jen zírat",
+          "publishedAt": "2026-06-08T10:45:14Z"
+        },
+        {
+          "section": "vzdelavani",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=vzd_betterlife",
+          "title": "Pavel Nový vyměnil město za venkovský dům s lesem. Každý den tam zahajuje rutinou, která h",
+          "publishedAt": "2026-06-07T09:56:35Z"
+        },
+        {
+          "section": "vzdelavani",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=vzd_betterlife",
+          "title": "Kateřina Brožová si zařídila prostornou vilu hned u lesa. Její zahrada díky tomu nabízí sp",
+          "publishedAt": "2026-06-06T16:10:55Z"
+        },
+        {
+          "section": "vzdelavani",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=vzd_betterlife",
+          "title": "Do Ulice míří nová postava. Natáčení s sebou přineslo pro Josefa Cardu velmi nečekanou výz",
+          "publishedAt": "2026-06-06T06:58:29Z"
+        },
+        {
+          "section": "vzdelavani",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=vzd_betterlife",
+          "title": "Vladimír Mečiar ukázal interiér své luxusní vily. Domácnosti vévodí devadesátky, obří seda",
+          "publishedAt": "2026-06-05T16:12:12Z"
+        },
+        {
+          "section": "vzdelavani",
+          "kind": "registry_leak",
+          "cls": "pending_5156",
+          "post_5145_merge": false,
+          "detail": "feedId=vzd_betterlife",
+          "title": "Ta sedla, panečku. V seriálu Ulice budou lítat facky",
+          "publishedAt": "2026-06-05T08:44:51Z"
+        }
+      ]
+    }
+  },
+  "section_freshness": {
+    "zpravy": {
+      "sampled": 80,
+      "newest_published_at": "2026-06-10T21:34:02Z",
+      "newest_age_hours": 0.8
+    },
+    "sport": {
+      "sampled": 80,
+      "newest_published_at": "2026-06-10T21:31:58Z",
+      "newest_age_hours": 0.8
+    },
+    "finance": {
+      "sampled": 80,
+      "newest_published_at": "2026-06-10T22:00:00Z",
+      "newest_age_hours": 0.3
+    },
+    "zdravi": {
+      "sampled": 80,
+      "newest_published_at": "2026-06-10T16:00:00Z",
+      "newest_age_hours": 6.3
+    },
+    "cestovani": {
+      "sampled": 80,
+      "newest_published_at": "2026-06-10T16:58:56Z",
+      "newest_age_hours": 5.3
+    },
+    "hry": {
+      "sampled": 80,
+      "newest_published_at": "2026-06-10T22:00:00Z",
+      "newest_age_hours": 0.3
+    },
+    "kultura": {
+      "sampled": 80,
+      "newest_published_at": "2026-06-10T17:14:43Z",
+      "newest_age_hours": 5.1
+    },
+    "veda": {
+      "sampled": 80,
+      "newest_published_at": "2026-06-10T20:51:00Z",
+      "newest_age_hours": 1.5
+    },
+    "vzdelavani": {
+      "sampled": 10,
+      "newest_published_at": "2026-06-10T16:13:42Z",
+      "newest_age_hours": 6.1
+    }
+  },
+  "dead_sections": [],
+  "duplicates_in_section_samples": [],
+  "verdict": {
+    "AUTONOMOUS_OPERATION_STABLE": "YES",
+    "MANUAL_INTERVENTION_REQUIRED": "NO",
+    "VZDELANI_CARD_OK": "YES",
+    "HRY_LIVENESS_OK": "YES",
+    "NO_DUPLICATE_ARTICLES": "YES",
+    "NO_DEAD_SECTIONS": "YES"
+  }
+}
