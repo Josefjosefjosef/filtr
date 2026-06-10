@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-10T17:50:03.827037Z",
-  "total_sources": 43,
-  "total_active_feeds": 56,
+  "generatedAt": "2026-06-10T18:27:31.859562Z",
+  "total_sources": 42,
+  "total_active_feeds": 52,
   "max_fetches_per_source_per_hour": 4,
   "max_fetches_per_source_per_hour_exception": 5,
   "exception_keys": [],
@@ -41,18 +41,17 @@
       "ceska-justice.cz",
       "epenize.eu",
       "faei.cz",
+      "idnes.cz/hry",
       "indian-tv.cz",
       "kverulant.org",
       "mmamag.cz",
       "nespechej.cz",
       "pelipecky.cz",
       "plnezdravi.cz",
-      "prozeny.cz",
       "svetcestovatele.cz",
       "tenisportal.cz",
       "travelbible.cz",
       "vipzivot.cz",
-      "vlasta.cz",
       "vtelce.cz",
       "vtm.cz",
       "zdrave.cz"
@@ -507,6 +506,32 @@
       "estimated_articles_per_day": 0
     },
     {
+      "source": "idnes.cz/hry",
+      "scheduler_key": "idnes.cz/hry",
+      "slot_key": "idnes.cz/hry",
+      "feeds": [
+        {
+          "id": "hry_idnes_bonusweb",
+          "label": "iDNES / Bonusweb",
+          "feed_url": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
+          "section_primary": "hry"
+        }
+      ],
+      "sections": [
+        "hry"
+      ],
+      "display_weight_max": 1.0,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        11
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 0
+    },
+    {
       "source": "idnes.cz/sport",
       "scheduler_key": "idnes.cz/sport",
       "slot_key": "idnes.cz/sport",
@@ -664,10 +689,10 @@
         21
       ],
       "accepted_last_snapshot": 0,
-      "articles_in_bundle_24h": 1,
+      "articles_in_bundle_24h": 0,
       "priority": "P2",
       "recommended_frequency": "1/hour",
-      "estimated_articles_per_day": 1
+      "estimated_articles_per_day": 0
     },
     {
       "source": "nespechej.cz",
@@ -713,24 +738,6 @@
           "section_primary": "zpravy"
         },
         {
-          "id": "fin_novinky_ekonomika",
-          "label": "Novinky / Ekonomika",
-          "feed_url": "https://www.novinky.cz/rss/ekonomika",
-          "section_primary": "finance"
-        },
-        {
-          "id": "ces_novinky_cestovani",
-          "label": "Novinky / Cestování",
-          "feed_url": "https://www.novinky.cz/rss/cestovani",
-          "section_primary": "cestovani"
-        },
-        {
-          "id": "hry_novinky",
-          "label": "Novinky / Hry",
-          "feed_url": "https://www.novinky.cz/rss/hry",
-          "section_primary": "hry"
-        },
-        {
           "id": "ved_novinky",
           "label": "Novinky / Věda a škola",
           "feed_url": "https://www.novinky.cz/rss/veda",
@@ -744,9 +751,6 @@
         }
       ],
       "sections": [
-        "cestovani",
-        "finance",
-        "hry",
         "veda",
         "vzdelavani",
         "zpravy"
@@ -759,11 +763,11 @@
         30,
         45
       ],
-      "accepted_last_snapshot": 150,
-      "articles_in_bundle_24h": 15,
+      "accepted_last_snapshot": 90,
+      "articles_in_bundle_24h": 14,
       "priority": "P0",
       "recommended_frequency": "4/hour",
-      "estimated_articles_per_day": 15
+      "estimated_articles_per_day": 14
     },
     {
       "source": "pelipecky.cz",
@@ -839,32 +843,6 @@
       "fetches_per_hour": 1,
       "slot_minutes": [
         29
-      ],
-      "accepted_last_snapshot": 0,
-      "articles_in_bundle_24h": 0,
-      "priority": "P2",
-      "recommended_frequency": "1/hour",
-      "estimated_articles_per_day": 0
-    },
-    {
-      "source": "prozeny.cz",
-      "scheduler_key": "prozeny.cz",
-      "slot_key": "prozeny.cz",
-      "feeds": [
-        {
-          "id": "zdr_prozeny_zdravi",
-          "label": "ProŽeny / Zdraví",
-          "feed_url": "https://www.prozeny.cz/rss/zdravi",
-          "section_primary": "zdravi"
-        }
-      ],
-      "sections": [
-        "zdravi"
-      ],
-      "display_weight_max": 0.7,
-      "fetches_per_hour": 1,
-      "slot_minutes": [
-        31
       ],
       "accepted_last_snapshot": 0,
       "articles_in_bundle_24h": 0,
@@ -1132,32 +1110,6 @@
       "estimated_articles_per_day": 3
     },
     {
-      "source": "vlasta.cz",
-      "scheduler_key": "vlasta.cz",
-      "slot_key": "vlasta.cz",
-      "feeds": [
-        {
-          "id": "kul_vlasta",
-          "label": "Vlasta",
-          "feed_url": "https://www.vlasta.cz/feed/",
-          "section_primary": "kultura"
-        }
-      ],
-      "sections": [
-        "kultura"
-      ],
-      "display_weight_max": 0.7,
-      "fetches_per_hour": 1,
-      "slot_minutes": [
-        47
-      ],
-      "accepted_last_snapshot": 40,
-      "articles_in_bundle_24h": 7,
-      "priority": "P2",
-      "recommended_frequency": "1/hour",
-      "estimated_articles_per_day": 7
-    },
-    {
       "source": "vtelce.cz",
       "scheduler_key": "vtelce.cz",
       "slot_key": "vtelce.cz",
@@ -1178,10 +1130,10 @@
         51
       ],
       "accepted_last_snapshot": 0,
-      "articles_in_bundle_24h": 1,
+      "articles_in_bundle_24h": 0,
       "priority": "P2",
       "recommended_frequency": "1/hour",
-      "estimated_articles_per_day": 1
+      "estimated_articles_per_day": 0
     },
     {
       "source": "vtm.cz",
@@ -1313,10 +1265,10 @@
         40
       ],
       "accepted_last_snapshot": 40,
-      "articles_in_bundle_24h": 6,
+      "articles_in_bundle_24h": 5,
       "priority": "P1",
       "recommended_frequency": "2/hour",
-      "estimated_articles_per_day": 6
+      "estimated_articles_per_day": 5
     }
   ],
   "frequency_plan": [
@@ -1479,6 +1431,15 @@
       "within_limit": true
     },
     {
+      "source": "idnes.cz/hry",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        11
+      ],
+      "within_limit": true
+    },
+    {
       "source": "idnes.cz/sport",
       "priority": "P0",
       "fetches_per_hour": 4,
@@ -1591,15 +1552,6 @@
       "within_limit": true
     },
     {
-      "source": "prozeny.cz",
-      "priority": "P2",
-      "fetches_per_hour": 1,
-      "slot_minutes": [
-        31
-      ],
-      "within_limit": true
-    },
-    {
       "source": "seznamzpravy.cz",
       "priority": "P0",
       "fetches_per_hour": 4,
@@ -1688,15 +1640,6 @@
       "fetches_per_hour": 1,
       "slot_minutes": [
         43
-      ],
-      "within_limit": true
-    },
-    {
-      "source": "vlasta.cz",
-      "priority": "P2",
-      "fetches_per_hour": 1,
-      "slot_minutes": [
-        47
       ],
       "within_limit": true
     },
