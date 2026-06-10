@@ -1,0 +1,104 @@
+{
+  "report": "CONTENT_PURITY_FINAL_AUDIT",
+  "generatedAt": "2026-06-10T21:05:00Z",
+  "read_only": true,
+  "dataset": "replay dataset of source-registry purity audit 2026-06-10 (PR #5142, 484 audited articles); post-fix state after PR #5145 (purity 98.4%, 6 errors remaining)",
+  "section_purity_current_pct": 98.4,
+  "errors_remaining": 6,
+  "remaining_errors": [
+    {
+      "id": "E1",
+      "article_title": "David Pastrňák v dětství nazouval dívčí brusle a žil v 2+1 v Havířově. Dnes obývá luxusní mezonet…",
+      "source": "BetterLife (edu) / vzd_betterlife",
+      "section": "vzdelavani",
+      "expected_section": "kultura (celebrity lifestyle), rozhodně ne vzdelavani",
+      "root_cause": "REGISTRY — vzd_betterlife registruje celosite lifestyle feed betterlife.cz/feed/ jako vzdělávání"
+    },
+    {
+      "id": "E2",
+      "article_title": "Ulice: Návrat, který zabolí. Pavel má jasno, Bára bude jen zírat",
+      "source": "BetterLife (edu) / vzd_betterlife",
+      "section": "vzdelavani",
+      "expected_section": "kultura (TV seriál)",
+      "root_cause": "REGISTRY — stejný feed, TV-seriálový obsah označen topic=vzdelavani"
+    },
+    {
+      "id": "E3",
+      "article_title": "Začíná sezona koupání. Hygienici už varují před kvalitou vody",
+      "source": "FAEI / fin_faei (profitonline.cz/feed)",
+      "section": "finance",
+      "expected_section": "zdravi nebo zpravy",
+      "root_cause": "CLASSIFIER — item nese RSS kategorii 'Lidé a společnost' (živě ověřeno), ale klasifikátor item-level <category> ignoruje a věří topic_field=finance (conf 0.95)"
+    },
+    {
+      "id": "E4",
+      "article_title": "Peníze pro aerolinky během covidu. Spor o veřejnou podporu rozlítil dopravce",
+      "source": "Ekonomický deník",
+      "section": "zdravi",
+      "expected_section": "finance nebo zpravy",
+      "root_cause": "CLASSIFIER — health-title guard false positive na 'covid' (byznysový spor o veřejnou podporu, ne zdravotní téma)"
+    },
+    {
+      "id": "E5",
+      "article_title": "Ocenění pro mladého rychlobruslaře. Jílek předvedl nejhodnotnější sportovní výkon",
+      "source": "Sport.cz",
+      "section": "zdravi",
+      "expected_section": "sport",
+      "root_cause": "CLASSIFIER — sportovní ocenění routováno do zdraví (health keyword heuristika); v prod sekci zdravi je aktuálně 9 Sport.cz článků stejného vzoru (zranění/operace sportovců)"
+    },
+    {
+      "id": "E6",
+      "article_title": "Soud ji osvobodil a řekl, že obžaloba byla absurdní. Parkanové to bylo k ničemu, devět let stíhání ji zlomilo",
+      "source": "VIPŽivot / kul_vipzivot",
+      "section": "kultura",
+      "expected_section": "zpravy (justice) — ale celebrita, obhajitelné i v kultuře",
+      "root_cause": "AMBIGUOUS_CONTENT — soudní kauza známé osobnosti; obsahově nejednoznačné"
+    }
+  ],
+  "error_breakdown": {
+    "registry_errors": 2,
+    "classifier_errors": 3,
+    "ambiguous_content": 1
+  },
+  "betterlife": {
+    "probe_date": "2026-06-10",
+    "feed_url": "https://www.betterlife.cz/feed/",
+    "real_content": "100% celebrity lifestyle: rubriky 'Bydlení slavných' (vily/interiéry celebrit) + 'Tip na seriál' (Nova/ONEPLAY, seriál Ulice). Žádný vzdělávací ani zdravotní obsah v posledních 10 items.",
+    "current_sections": [
+      "vzdelavani (vzd_betterlife)",
+      "zdravi (zdr_betterlife) — STEJNÁ feed URL registrovaná dvakrát"
+    ],
+    "recommended_section": "kultura (precedent kul_vipzivot pro celebrity obsah), případně blocked_feed; rozhodně odregistrovat duplicitní vzd_betterlife",
+    "note": "Pattern pokračuje i po auditu: 2026-06-10T16:13Z přibyl do vzdelavani článek 'Zvenku zanedbaná vila… Iva Janžurová…' (Bydlení slavných)."
+  },
+  "novinky_dead_rubrics_reprobe": {
+    "probe_date": "2026-06-10",
+    "vzd_novinky_skola": {
+      "url": "https://www.novinky.cz/rss/skola",
+      "status": "STILL_DEAD — HTTP 200, 20 items, overlap_with_global=100% (identický celosite feed)",
+      "safe_to_restore": "NO — rubrikové RSS upstream neexistuje; feed je v registru stále AKTIVNÍ s topic=vzdelavani (chrání jen vzdelavani relevance guard); doporučeno blocked_feed v další vlně"
+    },
+    "ved_novinky": {
+      "url": "https://www.novinky.cz/rss/veda",
+      "status": "STILL_DEAD — HTTP 200, 20 items, overlap_with_global=100%",
+      "safe_to_restore": "NO — stejný stav; feed stále AKTIVNÍ s topic=veda; doporučeno blocked_feed v další vlně"
+    }
+  },
+  "autonomy_24h": {
+    "window": "2026-06-09T21:00Z — 2026-06-10T21:00Z (přibližně)",
+    "fast_pool_runs": 56,
+    "fast_pool_successful": 42,
+    "fast_pool_cancelled_by_concurrency": 3,
+    "fast_pool_failed": 10,
+    "failure_pattern": "2 clustery transientních selhání kroku 'Dispatch required checks' (01:55–02:15Z a 15:07–16:13Z); pipeline se v obou případech zotavila autonomně dalšími ticky, data publish pokračoval",
+    "pages_publish_runs_successful": 48,
+    "prod_data_update_commits": 68,
+    "longest_gap_between_successful_fast_pool_runs_min": 267,
+    "longest_gap_window": "2026-06-10T01:40Z → 06:07Z (noční útlum + 3 selhání; autonomní recovery cron fallbackem, bez ručního zásahu)",
+    "average_gap_min": 32.7,
+    "max_staleness_estimate_min": 270,
+    "current_prod_staleness_min": 14.3,
+    "manual_pipeline_dispatches_in_window": 0,
+    "note": "Jediná lidská aktivita v okně byly review/merge PR #5145 a #5150 (vývoj, ne keep-alive pipeline). Žádný manuální workflow dispatch, žádný probe."
+  }
+}
