@@ -8910,14 +8910,15 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
        #feed{height:100%} inner-scroller above never activates (100% resolves against auto-height
        ancestors → #feed grows to full content height) and #leftContent{overflow:hidden} clips the
        rest → scroll range 0 in every feed section. Make #leftContent the scroller whenever the
-       mobile main shell is visible — the exact pattern that already works for the tool sections
-       above. Home (no iu-mobileMainVisible) and other breakpoints are untouched. */
-    body.iu-mobileMainVisible #leftContent{
+       mobile main shell is visible and no gate overlay modal is open (modal owns its own scroll)
+       — the exact pattern that already works for the tool sections above. Home (no
+       iu-mobileMainVisible) and other breakpoints are untouched. */
+    body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #leftContent{
       overflow-y: auto;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
     }
-    body.iu-mobileMainVisible #leftContent #feed{
+    body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #leftContent #feed{
       height: auto !important;
       min-height: 0 !important;
       max-height: none !important;
