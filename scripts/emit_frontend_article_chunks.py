@@ -119,20 +119,23 @@ def emit_chunks(output_dir: str) -> dict:
         chunk_paths: list[str] = []
         init_rel = f"{url_prefix}/{section_key}/init.json"
         init_rows = rows[:INITIAL_SIZE]
-        _atomic_write_json(
-            os.path.join(section_dir, "init.json"),
-            {
-                "schemaVersion": SCHEMA_VERSION,
-                "sectionKey": section_key,
-                "chunkIndex": -1,
-                "chunkSize": INITIAL_SIZE,
-                "articleCount": len(init_rows),
-                "totalInSection": len(rows),
-                "generatedAt": generated_at,
-                "poolGeneratedAt": generated_at,
-                "articles": init_rows,
-            },
-        )
+        init_payload = {
+            "schemaVersion": SCHEMA_VERSION,
+            "sectionKey": section_key,
+            "chunkIndex": -1,
+            "chunkSize": INITIAL_SIZE,
+            "articleCount": len(init_rows),
+            "totalInSection": len(rows),
+            "generatedAt": generated_at,
+            "poolGeneratedAt": generated_at,
+            "articles": init_rows,
+        }
+        if section_key == "feed":
+            # Homepage education preview card: education articles are sparse and rarely
+            # land in the feed init window, so ship the 2 latest directly with the
+            # homepage payload (additive field — no extra section fetch on the client).
+            init_payload["educationPreviewItems"] = (buckets.get("vzdelavani") or [])[:2]
+        _atomic_write_json(os.path.join(section_dir, "init.json"), init_payload)
         for idx in range(0, len(rows), CHUNK_SIZE):
             chunk_index = idx // CHUNK_SIZE
             chunk_rows = rows[idx : idx + CHUNK_SIZE]

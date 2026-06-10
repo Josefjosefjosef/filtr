@@ -8522,7 +8522,6 @@ function buildVideoAsArticleCard(it) {
   function iuEducationPreviewPickLatestTwoFromState(){
     try{
       const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
-      if (!items.length) return { latest: null, second: null, latestMs: NaN };
       let latest = null;
       let second = null;
       for (let i = 0; i < items.length; i++) {
@@ -8540,6 +8539,30 @@ function buildVideoAsArticleCard(it) {
             break;
           }
         }catch(_){}
+      }
+      if (!latest) {
+        /* Education articles are sparse — the feed init payload ships the 2 latest
+           (educationPreviewItems) so the card never needs a section chunk fetch. */
+        const shipped =
+          state.chunkLoader && Array.isArray(state.chunkLoader.educationPreviewItems)
+            ? state.chunkLoader.educationPreviewItems
+            : [];
+        for (let i = 0; i < shipped.length; i++) {
+          const it = shipped[i];
+          try{
+            if (!it) continue;
+            if (String(it.contentType || "article").toLowerCase() !== "article") continue;
+            if (!iuArticleMatchesMediaTopicKey(it, "vzdelavani")) continue;
+            if (!latest) {
+              latest = it;
+              continue;
+            }
+            if (!second) {
+              second = it;
+              break;
+            }
+          }catch(_){}
+        }
       }
       if (!latest) return { latest: null, second: null, latestMs: NaN };
       const latestMs = iuNewsPreviewParsePublishedMs(latest);
@@ -9650,7 +9673,7 @@ function buildVideoAsArticleCard(it) {
       out.educationTitleCount = titlesHost ? titlesHost.querySelectorAll(".iuNewsPreviewHeadline, .iuNewsPreviewHeadline2").length : -1;
       const lines = [];
       let articleLines = 0;
-      const loadingPhrase = "Vzdělávání se načítá";
+      const loadingPhrase = "Zatím žádné články ze vzdělávání";
       if (t1) {
         const a = String(t1.textContent || "").trim();
         lines.push(a);
@@ -10857,7 +10880,7 @@ function buildVideoAsArticleCard(it) {
             <img id="iuEducationPreviewImage" class="iuNewsPreviewImg" src="/assets/images/vzdelavani-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
           </div>
           <div id="iuEducationPreviewTitles" class="iuNewsPreviewText">
-            <p class="iuNewsPreviewHeadline" data-iu-education-preview-title-1>Vzdělávání se načítá</p>
+            <p class="iuNewsPreviewHeadline" data-iu-education-preview-title-1>Zatím žádné články ze vzdělávání</p>
             <p class="iuNewsPreviewHeadline2 iuNewsPreviewHeadline2--empty" data-iu-education-preview-title-2></p>
           </div>
         </div>
@@ -10944,7 +10967,7 @@ function buildVideoAsArticleCard(it) {
           elT1,
           hasLatest,
           "data-iu-education-preview-has-latest",
-          "Vzdělávání se načítá",
+          "Zatím žádné články ze vzdělávání",
         )
       ) {
         return;
@@ -10970,7 +10993,7 @@ function buildVideoAsArticleCard(it) {
         elFresh.setAttribute("data-iu-education-preview-has-freshness", "0");
         card.removeAttribute("data-iu-education-preview-latest-ms");
         card.removeAttribute("data-iu-education-preview-published-raw");
-        elT1.textContent = "Vzdělávání se načítá";
+        elT1.textContent = "Zatím žádné články ze vzdělávání";
         elT2.textContent = "";
         try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
         try {

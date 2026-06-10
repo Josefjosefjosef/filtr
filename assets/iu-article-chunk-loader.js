@@ -110,6 +110,7 @@ export function iuChunkCreateLoaderState(sectionKey) {
     loadMoreInflight: false,
     articlesReceivedCount: 0,
     articlesParsedCount: 0,
+    educationPreviewItems: [],
   };
 }
 
@@ -176,6 +177,10 @@ async function iuChunkFetchRel(loader, relPath, basePath, dataVer, label, chunkI
   const url = iuChunkFileUrl(basePath, relPath, dataVer);
   const payload = await iuChunkFetchJson(url, label);
   const rows = Array.isArray(payload && payload.articles) ? payload.articles : [];
+  /* Education preview rides along with the feed init payload — no separate section fetch. */
+  if (payload && Array.isArray(payload.educationPreviewItems) && payload.educationPreviewItems.length) {
+    loader.educationPreviewItems = payload.educationPreviewItems.slice(0, 2);
+  }
   loader.articlesReceivedCount += rows.length;
   if (chunkIndexMark != null) loader.loadedChunkIndexes.add(chunkIndexMark);
   loader.totalInSection = Number(payload && payload.totalInSection) || Number(iuChunkSectionMeta(loader)?.totalArticles) || loader.totalInSection;
