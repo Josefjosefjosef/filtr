@@ -1,16 +1,28 @@
-# P0-1 cron repair: GitHub-side fallback for the Cloudflare watchdog cron.
+# P0 article autorun: GitHub-side fallback + self-sustaining chain for the Cloudflare watchdog cron.
 #
 # Primary autorun stays the Cloudflare Worker cron (*/5, cloudflare/articles-watchdog).
-# Audit (2026-06-10) proved scheduled events stopped being delivered while the HTTP
-# path of the same worker kept working. This fallback calls the worker's own
-# /probe?dispatch=1 endpoint, so ALL dispatch decisions (staleness >= FAST_STALE 8m,
-# blocking in_progress/queued runs, zombie handling) stay in ONE place — the worker.
-# That guarantees at most one fast-pool dispatch per slot: a dispatch only happens
-# when the pool is stale AND no fast-pool run is queued/in_progress, regardless of
-# whether the Cloudflare cron or this fallback asked. The fast-pool workflow's own
+# Audit (2026-06-10) proved Cloudflare scheduled events are delivered INTERMITTENTLY
+# (multi-hour dead windows: 02:20-06:05 and 06:20-10:15 UTC on 2026-06-10) while the
+# HTTP path of the same worker kept working. The plain GitHub schedule fallback is
+# also throttled by GitHub (fired once in ~8.6h despite a */5 cron), so neither timer
+# alone keeps the loop alive.
+#
+# Fix: event-driven chain. This workflow now ALSO runs on completion of the article
+# pipeline workflows themselves (workflow_run), so every finished cycle re-arms the
+# next probe without depending on any scheduler. All dispatch decisions (staleness >=
+# FAST_STALE 8m, blocking in_progress/queued runs, zombie handling) stay in ONE place
+# — the worker (/probe?dispatch=1). That guarantees at most one fast-pool dispatch per
+# slot regardless of how many triggers fire. The fast-pool workflow's own
 # fast_pipeline_gate dedupes the residual seconds-level race.
 #
-# Schedule offset (minute 2-59/5) deliberately avoids the Cloudflare */5 grid.
+# Chain loop: probe the worker every 2 minutes (max 12 attempts) until the worker
+# either dispatches a run (pool stale) or reports a run already in progress. The pool
+# crosses the 8-minute staleness threshold within the loop window, so each completed
+# cycle deterministically arms the next one. Concurrency (cancel-in-progress) keeps a
+# single chain runner alive.
+#
+# Schedule offset (minute 2-59/5) deliberately avoids the Cloudflare */5 grid and
+# remains as a sparse re-seeder if the chain ever breaks (e.g. GitHub outage).
 #
 # This workflow is ALSO the cron liveness alert: it fails red when the production
 # publishable_pool is stale beyond FAST_ALERT_STALE_MINUTES (cron dead / pipeline
@@ -21,6 +33,13 @@ on:
   workflow_dispatch: {}
   schedule:
     - cron: "2-59/5 * * * *"
+  workflow_run:
+    workflows:
+      - "Update articles fast pool"
+      - "Update articles data"
+      - "Pages publish from main data"
+      - "Deploy articles watchdog"
+    types: [completed]
 
 permissions:
   contents: read
@@ -32,62 +51,78 @@ concurrency:
 env:
   WATCHDOG_PROBE_URL: "https://infouzel-articles-watchdog.josef-zmrhal.workers.dev/probe"
   FAST_ALERT_STALE_MINUTES: "60"
+  CHAIN_MAX_ATTEMPTS: "12"
+  CHAIN_SLEEP_SECONDS: "120"
 
 jobs:
   fallback_dispatch:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 30
     steps:
-      - name: Probe watchdog with dispatch (worker decides, fallback only triggers)
+      - name: Probe watchdog until cycle dispatched or running (worker decides, chain only triggers)
         id: probe
         shell: bash
         run: |
           set -euo pipefail
           OUT="${RUNNER_TEMP}/watchdog_probe.json"
-          HTTP_STATUS=$(curl -sS --max-time 50 -o "$OUT" -w "%{http_code}" \
-            -H "Accept: application/json" -H "Cache-Control: no-cache" \
-            "${WATCHDOG_PROBE_URL}?dispatch=1") || {
-              echo "::error::WATCHDOG_UNREACHABLE: probe request failed"
-              exit 1
-            }
-          echo "[fallback] probe_http_status=$HTTP_STATUS"
-          if [ "$HTTP_STATUS" != "200" ]; then
-            echo "::error::WATCHDOG_PROBE_FAILED: HTTP $HTTP_STATUS"
-            head -c 2000 "$OUT" || true
-            exit 1
-          fi
+          FAST_STALE_MINUTES="null"
+          CHAIN_RESULT="no_dispatch"
+          UNREACHABLE_COUNT=0
 
-          FAST_DISPATCHED=$(jq -r '.dual_dispatch.FAST_DISPATCHED // false' "$OUT")
-          FAST_SKIPPED_BUSY=$(jq -r '.dual_dispatch.FAST_SKIPPED_BUSY // false' "$OUT")
-          FAST_SKIPPED_NOT_STALE=$(jq -r '.dual_dispatch.FAST_SKIPPED_NOT_STALE // false' "$OUT")
-          FAST_STALE_MINUTES=$(jq -r '.dual_dispatch.FAST_STALE_MINUTES // "null"' "$OUT")
-          SLOW_DISPATCHED=$(jq -r '.dual_dispatch.SLOW_DISPATCHED // false' "$OUT")
-          SLOW_SKIPPED_BUSY=$(jq -r '.dual_dispatch.SLOW_SKIPPED_BUSY // false' "$OUT")
-          SLOW_STALE_MINUTES=$(jq -r '.dual_dispatch.SLOW_STALE_MINUTES // "null"' "$OUT")
-          DUAL_STATUS=$(jq -r '.dual_dispatch.WATCHDOG_DUAL_DISPATCH_STATUS // "n/a"' "$OUT")
+          for attempt in $(seq 1 "${CHAIN_MAX_ATTEMPTS}"); do
+            HTTP_STATUS=$(curl -sS --max-time 50 -o "$OUT" -w "%{http_code}" \
+              -H "Accept: application/json" -H "Cache-Control: no-cache" \
+              "${WATCHDOG_PROBE_URL}?dispatch=1") || HTTP_STATUS="000"
+            if [ "$HTTP_STATUS" != "200" ]; then
+              UNREACHABLE_COUNT=$((UNREACHABLE_COUNT+1))
+              echo "[chain] attempt=$attempt probe_http_status=$HTTP_STATUS (worker probe failed, retrying)"
+              head -c 1000 "$OUT" 2>/dev/null || true
+              sleep "${CHAIN_SLEEP_SECONDS}"
+              continue
+            fi
 
-          echo "FAST_DISPATCHED=$FAST_DISPATCHED"
-          echo "FAST_SKIPPED_BUSY=$FAST_SKIPPED_BUSY"
-          echo "FAST_SKIPPED_NOT_STALE=$FAST_SKIPPED_NOT_STALE"
+            FAST_DISPATCHED=$(jq -r '.dual_dispatch.FAST_DISPATCHED // false' "$OUT")
+            FAST_SKIPPED_BUSY=$(jq -r '.dual_dispatch.FAST_SKIPPED_BUSY // false' "$OUT")
+            FAST_SKIPPED_NOT_STALE=$(jq -r '.dual_dispatch.FAST_SKIPPED_NOT_STALE // false' "$OUT")
+            FAST_STALE_MINUTES=$(jq -r '.dual_dispatch.FAST_STALE_MINUTES // "null"' "$OUT")
+            SLOW_DISPATCHED=$(jq -r '.dual_dispatch.SLOW_DISPATCHED // false' "$OUT")
+            SLOW_SKIPPED_BUSY=$(jq -r '.dual_dispatch.SLOW_SKIPPED_BUSY // false' "$OUT")
+            SLOW_STALE_MINUTES=$(jq -r '.dual_dispatch.SLOW_STALE_MINUTES // "null"' "$OUT")
+
+            echo "[chain] attempt=$attempt FAST_DISPATCHED=$FAST_DISPATCHED FAST_SKIPPED_BUSY=$FAST_SKIPPED_BUSY FAST_SKIPPED_NOT_STALE=$FAST_SKIPPED_NOT_STALE FAST_STALE_MINUTES=$FAST_STALE_MINUTES SLOW_DISPATCHED=$SLOW_DISPATCHED SLOW_SKIPPED_BUSY=$SLOW_SKIPPED_BUSY SLOW_STALE_MINUTES=$SLOW_STALE_MINUTES"
+
+            if [ "$FAST_DISPATCHED" = "true" ]; then
+              CHAIN_RESULT="dispatched"
+              break
+            fi
+            if [ "$FAST_SKIPPED_BUSY" = "true" ]; then
+              CHAIN_RESULT="cycle_already_running"
+              break
+            fi
+            # Pool fresh (< FAST_STALE 8m): keep polling — it crosses the threshold
+            # within the loop window, so the next cycle is armed deterministically.
+            sleep "${CHAIN_SLEEP_SECONDS}"
+          done
+
+          echo "CHAIN_RESULT=$CHAIN_RESULT"
           echo "FAST_STALE_MINUTES=$FAST_STALE_MINUTES"
-          echo "SLOW_DISPATCHED=$SLOW_DISPATCHED"
-          echo "SLOW_SKIPPED_BUSY=$SLOW_SKIPPED_BUSY"
-          echo "SLOW_STALE_MINUTES=$SLOW_STALE_MINUTES"
-          echo "WATCHDOG_DUAL_DISPATCH_STATUS=$DUAL_STATUS"
 
           {
-            echo "## Watchdog cron fallback"
+            echo "## Watchdog chain fallback"
             echo "| Field | Value |"
             echo "| --- | --- |"
-            echo "| FAST_DISPATCHED | $FAST_DISPATCHED |"
-            echo "| FAST_SKIPPED_BUSY | $FAST_SKIPPED_BUSY |"
-            echo "| FAST_SKIPPED_NOT_STALE | $FAST_SKIPPED_NOT_STALE |"
+            echo "| CHAIN_RESULT | $CHAIN_RESULT |"
             echo "| FAST_STALE_MINUTES | $FAST_STALE_MINUTES |"
-            echo "| SLOW_DISPATCHED | $SLOW_DISPATCHED |"
-            echo "| SLOW_STALE_MINUTES | $SLOW_STALE_MINUTES |"
+            echo "| UNREACHABLE_COUNT | $UNREACHABLE_COUNT |"
           } >> "$GITHUB_STEP_SUMMARY"
 
+          echo "chain_result=$CHAIN_RESULT" >> "$GITHUB_OUTPUT"
           echo "fast_stale_minutes=$FAST_STALE_MINUTES" >> "$GITHUB_OUTPUT"
+
+          if [ "$CHAIN_RESULT" = "no_dispatch" ] && [ "$UNREACHABLE_COUNT" -ge "${CHAIN_MAX_ATTEMPTS}" ]; then
+            echo "::error::WATCHDOG_UNREACHABLE: all probe attempts failed"
+            exit 1
+          fi
 
       - name: Cron liveness alert (publishable_pool too stale)
         shell: bash
