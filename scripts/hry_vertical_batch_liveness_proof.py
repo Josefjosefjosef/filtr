@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Phase 5B — Hry vertical liveness bypass for batch runtime scheduler.
+Phase 5B â€” Hry vertical liveness bypass for batch runtime scheduler.
 
 Verifies overdue HRY_VERTICAL_LIVENESS_REGISTRY_IDS merge into non-home batches,
 batch-A starvation scenario is recoverable, min_interval preserved, duplicates prevented.
@@ -28,7 +28,7 @@ from iu_registry import (  # noqa: E402
 from iu_rotation_foundation import load_rotation_batch_registry, load_source_registry  # noqa: E402
 
 HRY_ZING = "hry_zing"
-HRY_NOVINKY = "hry_novinky"
+HRY_BONUSWEB = "hry_idnes_bonusweb"
 HRY_INDIAN = "hry_indian"
 NON_HRY_SAMPLE = "kul_kinobox"
 
@@ -58,7 +58,7 @@ def test_overdue_hry_added_on_batch_b() -> dict[str, Any]:
         now = _prague_minute_to_utc(25)
         assert batch_id_for_minute(25) == "B"
         state = _fresh_state()
-        for sid in (HRY_ZING, HRY_NOVINKY, HRY_INDIAN):
+        for sid in (HRY_ZING, HRY_BONUSWEB, HRY_INDIAN):
             state["entry_state"][sid] = {"last_fetch_at": _overdue_ts(now, 840)}
         picked, st = select_feeds_for_tick(registry, state, now=now)
         picked_ids = {str(e.get("id") or "") for e in picked}
@@ -68,14 +68,14 @@ def test_overdue_hry_added_on_batch_b() -> dict[str, Any]:
         home_a = {sid for sid in HRY_VERTICAL_LIVENESS_REGISTRY_IDS if mapping.get(sid) == "A"}
         ok = (
             HRY_ZING in picked_ids
-            and HRY_NOVINKY in picked_ids
+            and HRY_BONUSWEB in picked_ids
             and HRY_INDIAN in picked_ids
             and bypass_ids >= home_a
         )
         return {
             "pass": ok,
             "picked_has_zing": HRY_ZING in picked_ids,
-            "picked_has_novinky": HRY_NOVINKY in picked_ids,
+            "picked_has_bonusweb": HRY_BONUSWEB in picked_ids,
             "picked_has_indian": HRY_INDIAN in picked_ids,
             "bypass_ids": sorted(bypass_ids),
             "expected_bypass_from_batch_a": sorted(home_a),
@@ -114,16 +114,16 @@ def test_no_duplicate_when_in_home_batch() -> dict[str, Any]:
         now = _prague_minute_to_utc(2)
         assert batch_id_for_minute(2) == "A"
         state = _fresh_state()
-        state["entry_state"][HRY_NOVINKY] = {"last_fetch_at": _overdue_ts(now, 60)}
+        state["entry_state"][HRY_BONUSWEB] = {"last_fetch_at": _overdue_ts(now, 60)}
         picked, st = select_feeds_for_tick(registry, state, now=now)
         ids = [str(e.get("id") or "") for e in picked]
         bypass = (st.get("last_scheduler_tick") or {}).get("hry_vertical_bypass") or []
         bypass_ids = [b.get("source_id") for b in bypass]
-        ok = ids.count(HRY_NOVINKY) == 1 and HRY_NOVINKY not in bypass_ids
+        ok = ids.count(HRY_BONUSWEB) == 1 and HRY_BONUSWEB not in bypass_ids
         return {
             "pass": ok,
-            "novinky_count": ids.count(HRY_NOVINKY),
-            "bypass_has_novinky": HRY_NOVINKY in bypass_ids,
+            "novinky_count": ids.count(HRY_BONUSWEB),
+            "bypass_has_novinky": HRY_BONUSWEB in bypass_ids,
         }
     finally:
         os.environ.pop(RSS_ROTATION_BATCH_RUNTIME_ENV, None)
@@ -137,14 +137,14 @@ def test_min_interval_preserved() -> dict[str, Any]:
         state = _fresh_state()
         recent = (now - timedelta(minutes=HARD_DOMAIN_COOLDOWN_MIN - 2)).strftime("%Y-%m-%dT%H:%M:%SZ")
         state["entry_state"][HRY_ZING] = {"last_fetch_at": recent}
-        state["entry_state"][HRY_NOVINKY] = {"last_fetch_at": _overdue_ts(now, 60)}
+        state["entry_state"][HRY_BONUSWEB] = {"last_fetch_at": _overdue_ts(now, 60)}
         picked, st = select_feeds_for_tick(registry, state, now=now)
         picked_ids = {str(e.get("id") or "") for e in picked}
-        ok = HRY_ZING not in picked_ids and HRY_NOVINKY in picked_ids
+        ok = HRY_ZING not in picked_ids and HRY_BONUSWEB in picked_ids
         return {
             "pass": ok,
             "zing_blocked_by_floor": HRY_ZING not in picked_ids,
-            "novinky_overdue_selected": HRY_NOVINKY in picked_ids,
+            "novinky_overdue_selected": HRY_BONUSWEB in picked_ids,
         }
     finally:
         os.environ.pop(RSS_ROTATION_BATCH_RUNTIME_ENV, None)
@@ -182,13 +182,13 @@ def test_non_hry_not_bypassed() -> dict[str, Any]:
 def assess_batch_a_starvation() -> dict[str, Any]:
     """
     Document Phase 5A watchdog dispatch aliasing: pipeline minutes 10/25/45/50
-    map to batches C/B only — batch A (live Hry feeds) starved without bypass.
+    map to batches C/B only â€” batch A (live Hry feeds) starved without bypass.
     """
     BIDS = ["A", "B", "C", "D"]
     run_minutes_prague = [10, 25, 45, 50, 10, 25, 45, 50, 10]
     batches = [BIDS[(m // 5) % 4] for m in run_minutes_prague]
     batch_a_hits = batches.count("A")
-    hry_home_a = {"hry_zing", "hry_novinky", "hry_indian"}
+    hry_home_a = {"hry_zing", "HRY_BONUSWEB", "hry_indian"}
     starvation = batch_a_hits == 0
     return {
         "BATCH_A_STARVATION_CONFIRMED": "YES" if starvation else "NO",

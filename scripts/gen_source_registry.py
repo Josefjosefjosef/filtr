@@ -189,7 +189,19 @@ ENTRIES.append(base("spt_crzpravy_sport", "ČR Zprávy / Sport", "crzpravy.cz", 
 
 # 5.3 FINANCE
 ENTRIES.append(base("fin_sz_byznys", "Seznam Zprávy / Byznys", "seznamzpravy.cz", "rubric", "finance", [], 25, 1.15, "https://www.seznamzpravy.cz/rss/byznys", slot=6))
-ENTRIES.append(base("fin_novinky_ekonomika", "Novinky / Ekonomika", "novinky.cz", "rubric", "finance", [], 25, 1.10, "https://www.novinky.cz/rss/ekonomika", slot=14))
+# 2026-06-10 purity audit (PR #5142): novinky.cz/rss/ekonomika returns the site-global feed.
+# Legit Novinky finance articles still arrive via the main feeds and classify through the
+# URL-strong layer (/clanek/ekonomika-… path).
+ENTRIES.append(
+    blocked_feed(
+        "fin_novinky_ekonomika",
+        "BLOCKED Novinky / Ekonomika (rubric RSS returns global feed)",
+        "novinky.cz",
+        "finance",
+        "https://www.novinky.cz/rss/ekonomika",
+        "purity audit 2026-06-10: /rss/ekonomika == site-global feed, polluted section finance",
+    )
+)
 ENTRIES.append(base("fin_idnes_ekonomika", "iDNES / Ekonomika", "idnes.cz", "rubric", "finance", [], 25, 1.05, "https://servis.idnes.cz/rss.aspx?c=ekonomika", slot=26))
 ENTRIES.append(base("fin_hn", "HN / Ekonomika", "hn.cz", "rss", "finance", [], 40, 1.00, "https://hn.cz/?m=rss", cooldown=25))
 ENTRIES.append(base("fin_e15", "E15", "e15.cz", "rss", "finance", [], 40, 1.00, "https://www.e15.cz/rss"))
@@ -204,18 +216,53 @@ ENTRIES.append(base("zdr_zdravezpravy", "ZdravéZprávy", "zdravezpravy.cz", "rs
 ENTRIES.append(base("zdr_zdravotnickydenik", "Zdravotnický deník", "zdravotnickydenik.cz", "rss", "zdravi", [], 40, 1.05, "https://www.zdravotnickydenik.cz/feed/"))
 ENTRIES.append(base("zdr_plnezdravi", "Plné zdraví", "plnezdravi.cz", "rss", "zdravi", [], 90, 0.85, "https://www.plnezdravi.cz/feed/"))
 ENTRIES.append(base("zdr_zdrave", "Zdravě.cz", "zdrave.cz", "rss", "zdravi", [], 180, 0.75, "https://www.zdrave.cz/rss/"))
-ENTRIES.append(base("zdr_prozeny_zdravi", "ProŽeny / Zdraví", "prozeny.cz", "rubric", "zdravi", [], 180, 0.70, "https://www.prozeny.cz/rss/zdravi"))
+# 2026-06-10 purity audit (PR #5142): prozeny.cz/rss/zdravi returns the site-global ProŽeny
+# feed (fashion/celebrity/horoscopes/household) — 53.8% of sampled entries off-section.
+ENTRIES.append(
+    blocked_feed(
+        "zdr_prozeny_zdravi",
+        "BLOCKED ProŽeny / Zdraví (rubric RSS returns global feed)",
+        "prozeny.cz",
+        "zdravi",
+        "https://www.prozeny.cz/rss/zdravi",
+        "purity audit 2026-06-10: /rss/zdravi == site-global lifestyle feed, polluted section zdravi",
+    )
+)
 ENTRIES.append(base("zdr_betterlife", "BetterLife", "betterlife.cz", "rss", "zdravi", [], 180, 0.65, "https://www.betterlife.cz/feed/"))
 
 # 5.5 CESTOVÁNÍ
-ENTRIES.append(base("ces_novinky_cestovani", "Novinky / Cestování", "novinky.cz", "rubric", "cestovani", [], 40, 1.00, "https://www.novinky.cz/rss/cestovani", cooldown=20))
+# 2026-06-10 purity audit (PR #5142): novinky.cz/rss/cestovani returns the site-global feed
+# (war/politics/crime flooded section cestovani).
+ENTRIES.append(
+    blocked_feed(
+        "ces_novinky_cestovani",
+        "BLOCKED Novinky / Cestování (rubric RSS returns global feed)",
+        "novinky.cz",
+        "cestovani",
+        "https://www.novinky.cz/rss/cestovani",
+        "purity audit 2026-06-10: /rss/cestovani == site-global feed, polluted section cestovani",
+    )
+)
 ENTRIES.append(base("ces_svetcestovatele", "SvětCestovatele", "svetcestovatele.cz", "rss", "cestovani", [], 90, 0.90, "https://www.svetcestovatele.cz/feed/"))
 ENTRIES.append(base("ces_cestujlevne", "Cestujlevně", "cestujlevne.com", "rss", "cestovani", [], 90, 0.90, "https://www.cestujlevne.com/feed/"))
 ENTRIES.append(base("ces_pelipecky", "Pelipecky", "pelipecky.cz", "rss", "cestovani", [], 180, 0.75, "https://www.pelipecky.cz/feed/"))
 ENTRIES.append(base("ces_travelbible", "TravelBible", "travelbible.cz", "rss", "cestovani", [], 180, 0.75, "https://travelbible.cz/feed/"))
 
-# 5.6 HRY (games.cz/rss mrtvé → iDNES/Novinky rubriky; zing kanonický feed)
-ENTRIES.append(base("hry_novinky", "Novinky / Hry", "novinky.cz", "rubric", "hry", [], 25, 1.05, "https://www.novinky.cz/rss/hry", slot=20))
+# 5.6 HRY (games.cz/rss mrtvé; zing kanonický feed)
+# 2026-06-10 purity audit (PR #5142): novinky.cz/rss/hry returns the site-global feed
+# (100% item overlap) — general news flooded section hry (66.7% purity). Replaced by
+# iDNES Bonusweb rubric (native games RSS, domain already in registry).
+ENTRIES.append(
+    blocked_feed(
+        "hry_novinky",
+        "BLOCKED Novinky / Hry (rubric RSS returns global feed)",
+        "novinky.cz",
+        "hry",
+        "https://www.novinky.cz/rss/hry",
+        "purity audit 2026-06-10: /rss/hry == site-global feed, polluted section hry",
+    )
+)
+ENTRIES.append(base("hry_idnes_bonusweb", "iDNES / Bonusweb", "idnes.cz", "rubric", "hry", [], 40, 1.00, "https://servis.idnes.cz/rss.aspx?c=bonusweb", cooldown=20))
 ENTRIES.append(base("hry_indian", "Indian", "indian-tv.cz", "rss", "hry", [], 90, 0.90, "https://indian-tv.cz/feed/"))
 # vortex/sector/nedd: live HTTP 523/404 (Phase 5A) — blocked, not deleted.
 ENTRIES.append(
@@ -255,7 +302,18 @@ ENTRIES.append(base("kul_ctart", "ČT art", "ct24.ceskatelevize.cz", "rubric", "
 ENTRIES.append(base("kul_kinobox", "Kinobox", "kinobox.cz", "rss", "kultura", [], 90, 0.95, "https://www.kinobox.cz/api/rss"))
 ENTRIES.append(base("kul_vtelce", "vTelce", "vtelce.cz", "rss", "kultura", [], 180, 0.75, "https://www.vtelce.cz/feed/"))
 ENTRIES.append(base("kul_vipzivot", "VIPživot", "vipzivot.cz", "rss", "kultura", [], 180, 0.70, "https://www.vipzivot.cz/feed/"))
-ENTRIES.append(base("kul_vlasta", "Vlasta", "vlasta.cz", "rss", "kultura", [], 180, 0.70, "https://www.vlasta.cz/feed/"))
+# 2026-06-10 purity audit (PR #5142): vlasta.cz/feed/ redirects to /rss/vse.xml (all-site mix:
+# celebrity + zdraví + cestování + household tips) — 25% of sampled kultura entries off-section.
+ENTRIES.append(
+    blocked_feed(
+        "kul_vlasta",
+        "BLOCKED Vlasta (all-site feed, off-section content)",
+        "vlasta.cz",
+        "kultura",
+        "https://www.vlasta.cz/feed/",
+        "purity audit 2026-06-10: feed is site-wide mix, polluted kultura/zdravi/cestovani",
+    )
+)
 
 # 5.8 VĚDA
 ENTRIES.append(base("ved_ct24_veda", "ČT24 / Věda", "ct24.ceskatelevize.cz", "rubric", "veda", [], 25, 1.10, "https://ct24.ceskatelevize.cz/rss/veda", slot=10))
