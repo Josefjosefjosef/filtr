@@ -396,7 +396,11 @@ export default {
     return new Response("Not found", { status: 404 });
   },
 
-  async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+    // P0-1: explicit start marker proves cron event delivery in Workers Logs.
+    console.log(
+      `[watchdog] scheduled fired cron=${event.cron} scheduledTime=${new Date(event.scheduledTime).toISOString()}`,
+    );
     ctx.waitUntil(
       (async () => {
         try {

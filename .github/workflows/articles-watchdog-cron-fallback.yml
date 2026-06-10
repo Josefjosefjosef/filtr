@@ -1,0 +1,109 @@
+# P0-1 cron repair: GitHub-side fallback for the Cloudflare watchdog cron.
+#
+# Primary autorun stays the Cloudflare Worker cron (*/5, cloudflare/articles-watchdog).
+# Audit (2026-06-10) proved scheduled events stopped being delivered while the HTTP
+# path of the same worker kept working. This fallback calls the worker's own
+# /probe?dispatch=1 endpoint, so ALL dispatch decisions (staleness >= FAST_STALE 8m,
+# blocking in_progress/queued runs, zombie handling) stay in ONE place — the worker.
+# That guarantees at most one fast-pool dispatch per slot: a dispatch only happens
+# when the pool is stale AND no fast-pool run is queued/in_progress, regardless of
+# whether the Cloudflare cron or this fallback asked. The fast-pool workflow's own
+# fast_pipeline_gate dedupes the residual seconds-level race.
+#
+# Schedule offset (minute 2-59/5) deliberately avoids the Cloudflare */5 grid.
+#
+# This workflow is ALSO the cron liveness alert: it fails red when the production
+# publishable_pool is stale beyond FAST_ALERT_STALE_MINUTES (cron dead / pipeline
+# stuck), so a broken watchdog can no longer stay invisible.
+name: Articles watchdog cron fallback
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "2-59/5 * * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: articles-watchdog-cron-fallback
+  cancel-in-progress: true
+
+env:
+  WATCHDOG_PROBE_URL: "https://infouzel-articles-watchdog.josef-zmrhal.workers.dev/probe"
+  FAST_ALERT_STALE_MINUTES: "60"
+
+jobs:
+  fallback_dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe watchdog with dispatch (worker decides, fallback only triggers)
+        id: probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${RUNNER_TEMP}/watchdog_probe.json"
+          HTTP_STATUS=$(curl -sS --max-time 50 -o "$OUT" -w "%{http_code}" \
+            -H "Accept: application/json" -H "Cache-Control: no-cache" \
+            "${WATCHDOG_PROBE_URL}?dispatch=1") || {
+              echo "::error::WATCHDOG_UNREACHABLE: probe request failed"
+              exit 1
+            }
+          echo "[fallback] probe_http_status=$HTTP_STATUS"
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "::error::WATCHDOG_PROBE_FAILED: HTTP $HTTP_STATUS"
+            head -c 2000 "$OUT" || true
+            exit 1
+          fi
+
+          FAST_DISPATCHED=$(jq -r '.dual_dispatch.FAST_DISPATCHED // false' "$OUT")
+          FAST_SKIPPED_BUSY=$(jq -r '.dual_dispatch.FAST_SKIPPED_BUSY // false' "$OUT")
+          FAST_SKIPPED_NOT_STALE=$(jq -r '.dual_dispatch.FAST_SKIPPED_NOT_STALE // false' "$OUT")
+          FAST_STALE_MINUTES=$(jq -r '.dual_dispatch.FAST_STALE_MINUTES // "null"' "$OUT")
+          SLOW_DISPATCHED=$(jq -r '.dual_dispatch.SLOW_DISPATCHED // false' "$OUT")
+          SLOW_SKIPPED_BUSY=$(jq -r '.dual_dispatch.SLOW_SKIPPED_BUSY // false' "$OUT")
+          SLOW_STALE_MINUTES=$(jq -r '.dual_dispatch.SLOW_STALE_MINUTES // "null"' "$OUT")
+          DUAL_STATUS=$(jq -r '.dual_dispatch.WATCHDOG_DUAL_DISPATCH_STATUS // "n/a"' "$OUT")
+
+          echo "FAST_DISPATCHED=$FAST_DISPATCHED"
+          echo "FAST_SKIPPED_BUSY=$FAST_SKIPPED_BUSY"
+          echo "FAST_SKIPPED_NOT_STALE=$FAST_SKIPPED_NOT_STALE"
+          echo "FAST_STALE_MINUTES=$FAST_STALE_MINUTES"
+          echo "SLOW_DISPATCHED=$SLOW_DISPATCHED"
+          echo "SLOW_SKIPPED_BUSY=$SLOW_SKIPPED_BUSY"
+          echo "SLOW_STALE_MINUTES=$SLOW_STALE_MINUTES"
+          echo "WATCHDOG_DUAL_DISPATCH_STATUS=$DUAL_STATUS"
+
+          {
+            echo "## Watchdog cron fallback"
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| FAST_DISPATCHED | $FAST_DISPATCHED |"
+            echo "| FAST_SKIPPED_BUSY | $FAST_SKIPPED_BUSY |"
+            echo "| FAST_SKIPPED_NOT_STALE | $FAST_SKIPPED_NOT_STALE |"
+            echo "| FAST_STALE_MINUTES | $FAST_STALE_MINUTES |"
+            echo "| SLOW_DISPATCHED | $SLOW_DISPATCHED |"
+            echo "| SLOW_STALE_MINUTES | $SLOW_STALE_MINUTES |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "fast_stale_minutes=$FAST_STALE_MINUTES" >> "$GITHUB_OUTPUT"
+
+      - name: Cron liveness alert (publishable_pool too stale)
+        shell: bash
+        env:
+          FAST_STALE_MINUTES: ${{ steps.probe.outputs.fast_stale_minutes }}
+        run: |
+          set -euo pipefail
+          LIMIT="${FAST_ALERT_STALE_MINUTES}"
+          STALE="${FAST_STALE_MINUTES:-null}"
+          if [ "$STALE" = "null" ] || [ -z "$STALE" ]; then
+            echo "::error::ALERT_CRON_NOT_FIRING: publishable_pool generatedAt unreadable on production"
+            exit 1
+          fi
+          STALE_INT=${STALE%%.*}
+          if [ "$STALE_INT" -gt "$LIMIT" ]; then
+            echo "::error::ALERT_CRON_NOT_FIRING: publishable_pool stale ${STALE} min > ${LIMIT} min — Cloudflare cron and/or fast pipeline not healing production"
+            exit 1
+          fi
+          echo "[fallback] liveness OK (stale=${STALE} min <= ${LIMIT} min)"

@@ -128,6 +128,13 @@ The repository should **not** rely on GitHub `schedule` to dispatch article work
 - If **freshness URL** fails: `generatedAt` is `null` → worker may dispatch if idle (heal path) or skip if busy.
 - If **GitHub API** errors: the scheduled invocation logs the error; the next cron tick retries.
 - If **dispatch** fails: same — next tick retries when stale.
+- If the **Cloudflare cron itself stops firing** (P0-1 incident 2026-06-10): the GitHub-side
+  fallback `.github/workflows/articles-watchdog-cron-fallback.yml` calls `GET /probe?dispatch=1`
+  on an offset schedule (`2-59/5`). All dispatch decisions still happen inside this worker
+  (single decision-maker → at most one fast-pool dispatch per slot). The fallback run goes
+  **red** when production `publishable_pool.json` is stale > 60 min (cron liveness alert).
+- `[observability] enabled = true` in `wrangler.toml` persists scheduled-event logs in
+  Cloudflare → Workers Logs, so missing cron invocations are diagnosable.
 
 ## Development
 

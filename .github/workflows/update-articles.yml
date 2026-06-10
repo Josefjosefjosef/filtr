@@ -285,8 +285,8 @@ jobs:
       - article_pipeline_ingest
       - article_pipeline_aggregate
     if: needs.pipeline_gate.outputs.proceed == 'true'
-    # Phase 3D-B-2: allow operational closeout when release guards fail (job still records failure).
-    continue-on-error: true
+    # P0-2 silent-fail fix: release failure must fail the whole run (no false-green runs).
+    # Operational closeout still runs via pipeline_operational_closeout `if: always()`.
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:

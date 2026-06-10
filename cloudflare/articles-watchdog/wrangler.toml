@@ -11,6 +11,11 @@ compatibility_date = "2024-11-01"
 # Check every 5 minutes; fast lane dispatches when publishable_pool stale >= 8m; slow lane when articles/index stale >= 5m.
 crons = ["*/5 * * * *"]
 
+# P0-1 cron repair: persist worker logs (incl. scheduled/cron events) so missing cron
+# invocations are diagnosable in the Cloudflare dashboard (Workers Logs).
+[observability]
+enabled = true
+
 [vars]
 GITHUB_REPOSITORY = "Josefjosefjosef/filtr"
 # Slow path (full aggregate, articles.json, guards, retention).
