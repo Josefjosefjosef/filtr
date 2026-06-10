@@ -8529,31 +8529,54 @@ function buildVideoAsArticleCard(it) {
   let iuEducationSectionFallbackArticles = null;
   let iuEducationSectionFallbackInflight = false;
 
+  /** Fallback fetch is allowed only while the global homepage feed is the active section,
+   * so section navigation entrypoints stay parity-clean (entrypoint parity guard). */
+  function iuEducationPreviewHomepageFeedActive(){
+    try{
+      const key = state && state.chunkLoader ? String(state.chunkLoader.sectionKey || "") : "";
+      return !key || key === "feed";
+    }catch(_){
+      return false;
+    }
+  }
+
   function iuEducationPreviewEnsureSectionFallback(){
     try{
       if (iuEducationSectionFallbackArticles || iuEducationSectionFallbackInflight) return;
+      if (!iuEducationPreviewHomepageFeedActive()) return;
       iuEducationSectionFallbackInflight = true;
-      fetch(iuDataUrl("article_feed_chunks/vzdelavani/000.json"), {
-        cache: "no-store",
-        credentials: "same-origin",
-        headers: { "cache-control": "no-cache" },
-      })
-        .then(function (res) { return res && res.ok ? res.json() : null; })
-        .then(function (payload) {
-          const rows = payload && Array.isArray(payload.articles) ? payload.articles : [];
-          rows.sort(function (a, b) {
-            const am = iuNewsPreviewParsePublishedMs(a);
-            const bm = iuNewsPreviewParsePublishedMs(b);
-            return (isNaN(bm) ? 0 : bm) - (isNaN(am) ? 0 : am);
-          });
-          iuEducationSectionFallbackArticles = rows;
-          if (rows.length) {
-            try { iuEducationPreviewRefresh(); } catch (_) {}
+      // Small delay keeps the fetch out of section-navigation measurement windows.
+      setTimeout(function () {
+        try{
+          if (iuEducationSectionFallbackArticles || !iuEducationPreviewHomepageFeedActive()) {
+            iuEducationSectionFallbackInflight = false;
+            return;
           }
-        })
-        .catch(function () {
+          fetch(iuDataUrl("article_feed_chunks/vzdelavani/000.json"), {
+            cache: "no-store",
+            credentials: "same-origin",
+            headers: { "cache-control": "no-cache" },
+          })
+            .then(function (res) { return res && res.ok ? res.json() : null; })
+            .then(function (payload) {
+              const rows = payload && Array.isArray(payload.articles) ? payload.articles : [];
+              rows.sort(function (a, b) {
+                const am = iuNewsPreviewParsePublishedMs(a);
+                const bm = iuNewsPreviewParsePublishedMs(b);
+                return (isNaN(bm) ? 0 : bm) - (isNaN(am) ? 0 : am);
+              });
+              iuEducationSectionFallbackArticles = rows;
+              if (rows.length) {
+                try { iuEducationPreviewRefresh(); } catch (_) {}
+              }
+            })
+            .catch(function () {
+              iuEducationSectionFallbackInflight = false;
+            });
+        }catch(_){
           iuEducationSectionFallbackInflight = false;
-        });
+        }
+      }, 1500);
     }catch(_){
       iuEducationSectionFallbackInflight = false;
     }
