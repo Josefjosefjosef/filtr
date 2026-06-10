@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-06-10T18:07:48.370851Z",
+  "ingestedAt": "2026-06-10T18:42:44.649282Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Koruna – pojistka před dražším bydlením",
+      "url": "https://profitonline.cz/koruna-pojistka-pred-drazsim-bydlenim/",
+      "dt": "2026-06-10T18:15:43Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "bydlením",
+        "dražším",
+        "koruna",
+        "pojistka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -263,29 +284,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "S Hormuzem už to nejspíš nikdy nebude jako dřív",
-      "url": "https://profitonline.cz/s-hormuzem-uz-to-nejspis-nikdy-nebude-jako-driv/",
-      "dt": "2026-06-09T08:00:08Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "dřív",
-        "hormuzem",
-        "jako",
-        "nebude",
-        "nejspíš",
-        "nikdy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -296,7 +294,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18643,
+      "bytes": 18776,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -321,7 +319,7 @@
           "official_only": true,
           "fetch_mode": "rss_or_official_rubric_only",
           "per_domain_cooldown_min": 12,
-          "slot_offset_min": 24,
+          "slot_offset_min": 0,
           "max_items_per_fetch": 40,
           "last_fetch_at": null,
           "last_success_at": null,
@@ -333,7 +331,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-06-10T12:00:03Z",
+        "raw_feed_latest_publishedAt": "2026-06-10T18:15:43Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -349,6 +347,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Koruna – pojistka před dražším bydlením",
+            "publishedAt": "2026-06-10T18:15:43Z"
+          },
           {
             "title": "Začíná sezona koupání. Hygienici už varují před kvalitou vody",
             "publishedAt": "2026-06-10T12:00:03Z"
@@ -376,10 +378,6 @@
           {
             "title": "Tisíce falešných účtů. Hackeři mají díky fotbalovému mistrovství žně",
             "publishedAt": "2026-06-10T04:00:21Z"
-          },
-          {
-            "title": "Levné hypotéky jsou pryč",
-            "publishedAt": "2026-06-09T12:00:38Z"
           }
         ]
       }
