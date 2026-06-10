@@ -89,16 +89,17 @@ P0_HEADLINE_REGISTRY_IDS: frozenset[str] = frozenset(
 
 # Live Hry vertical feeds — batch liveness bypass when home batch is starved (Phase 5B).
 # Dead registry entries (blocked vortex/sector/nedd) are excluded by registry_active_entries.
+# 2026-06-10: hry_novinky blocked (rubric RSS returns global feed) → replaced by hry_idnes_bonusweb.
 HRY_VERTICAL_LIVENESS_REGISTRY_IDS: frozenset[str] = frozenset(
     {
         "hry_zing",
-        "hry_novinky",
+        "hry_idnes_bonusweb",
         "hry_indian",
     }
 )
 HRY_VERTICAL_LIVENESS_REGISTRY_ORDER: tuple[str, ...] = (
     "hry_zing",
-    "hry_novinky",
+    "hry_idnes_bonusweb",
     "hry_indian",
 )
 
@@ -322,7 +323,7 @@ def entry_fixed_slot_key(e: dict) -> str | None:
     if "servis.idnes.cz" in url or host.endswith("idnes.cz"):
         if "c=sport" in url or "c%3dsport" in url:
             return "idnes.cz/sport"
-        if "c=hry" in url or "c%3dhry" in url:
+        if "c=hry" in url or "c%3dhry" in url or "c=bonusweb" in url or "c%3dbonusweb" in url:
             return "idnes.cz/hry"
         if "c=technet" in url or "c%3dtechnet" in url:
             return "technet.cz"
