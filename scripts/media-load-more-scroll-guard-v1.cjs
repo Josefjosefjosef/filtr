@@ -15,6 +15,39 @@ const shared = require("./mobile-stability-guards-v1-shared.cjs");
 const GUARD_NAME = "MEDIA_LOAD_MORE_SCROLL_GUARD_V1";
 const REPORT = "scripts/media-load-more-scroll-guard-v1-report.json";
 const READING_POSITION_TOLERANCE_PX = 8;
+const WAIT_TIMEOUT_MS = 60000;
+
+/* Deterministický layout-settle (quiescence detection): signatura layoutu (scroll pozice +
+   pozice/výšky karet) se nesmí změnit po dobu LAYOUT_QUIET_MS — čeká se na reálný stav DOM,
+   ne na pevný odhad doby renderu. */
+const LAYOUT_QUIET_MS = 400;
+async function waitForLayoutSettle(page) {
+  await page.evaluate(() => {
+    window.__iuGuardLayoutSig = null;
+    window.__iuGuardLayoutSigSince = 0;
+  });
+  await page.waitForFunction(
+    (quietMs) => {
+      const arts = document.querySelectorAll('#feed article.news-card[data-feed-type="article"]');
+      if (!arts.length) return false;
+      let sig = String(Math.round(window.scrollY));
+      const n = Math.min(arts.length, 60);
+      for (let i = 0; i < n; i++) {
+        const r = arts[i].getBoundingClientRect();
+        sig += "|" + Math.round(r.top) + ":" + Math.round(r.height);
+      }
+      const now = performance.now();
+      if (window.__iuGuardLayoutSig !== sig) {
+        window.__iuGuardLayoutSig = sig;
+        window.__iuGuardLayoutSigSince = now;
+        return false;
+      }
+      return now - window.__iuGuardLayoutSigSince >= quietMs;
+    },
+    LAYOUT_QUIET_MS,
+    { timeout: WAIT_TIMEOUT_MS }
+  );
+}
 
 async function runGuard(baseUrl) {
   const browser = await chromium.launch({ headless: true });
@@ -30,20 +63,28 @@ async function runGuard(baseUrl) {
           waitUntil: "domcontentloaded",
           timeout: 90000,
         });
-        await page.waitForTimeout(4200);
-
-        const before = await page.evaluate(() => {
-          const btn = document.querySelector("#feed .iuLoadMoreBtn");
-          if (!btn) return { btn_found: false };
-          btn.scrollIntoView({ block: "center" });
-          return { btn_found: true };
-        });
-        if (!before.btn_found) {
-          results.push({ viewport: vp.w + "x" + vp.h, mode: vp.mode, btn_found: false, _pass: false });
+        /* Deterministicky: čekat na reálný DOM stav (button viditelný + články vykreslené),
+           žádný fixní waitForTimeout — robustní i proti pomalé síti / produkční URL. */
+        let btnVisible = true;
+        try {
+          await page.waitForSelector("#feed .iuLoadMoreBtn", { state: "visible", timeout: WAIT_TIMEOUT_MS });
+          await page.waitForFunction(
+            () => document.querySelectorAll('#feed article.news-card[data-feed-type="article"]').length > 0,
+            undefined,
+            { timeout: WAIT_TIMEOUT_MS }
+          );
+        } catch (_) {
+          btnVisible = false;
+        }
+        if (!btnVisible) {
+          results.push({ viewport: vp.w + "x" + vp.h, mode: vp.mode, btn_found: false, btn_visible: false, _pass: false });
           continue;
         }
+        /* Locator re-queryuje element — feed se může mezi waity přerendrovat (nový node).
+           block:center = stejná geometrie měření jako reálné dočtení k tlačítku. */
+        await page.locator("#feed .iuLoadMoreBtn").evaluate((el) => el.scrollIntoView({ block: "center" }));
         /* Nechat content-visibility doreneded viditelné karty po scrollIntoView. */
-        await page.waitForTimeout(800);
+        await waitForLayoutSettle(page);
 
         const preClick = await page.evaluate(() => {
           function hrefOf(el) {
@@ -77,16 +118,28 @@ async function runGuard(baseUrl) {
           continue;
         }
 
-        await page.click("#feed .iuLoadMoreBtn");
+        /* page.click = actionability checks (visible, stable, enabled, receives events). */
+        await page.click("#feed .iuLoadMoreBtn", { timeout: WAIT_TIMEOUT_MS });
+        let growthSeen = true;
         try {
           await page.waitForFunction(
             (prevCount) => document.querySelectorAll('#feed article.news-card[data-feed-type="article"]').length > prevCount,
             preClick.article_count,
-            { timeout: 20000 }
+            { timeout: WAIT_TIMEOUT_MS }
+          );
+        } catch (_) {
+          growthSeen = false;
+        }
+        /* Deterministicky počkat na release append-stability vrstvy (phase: "released")
+           a na ustálený layout — místo fixního čekání. */
+        try {
+          await page.waitForFunction(
+            () => !window.__iuAppendStab || window.__iuAppendStab.phase === "released",
+            undefined,
+            { timeout: WAIT_TIMEOUT_MS }
           );
         } catch (_) {}
-        /* Počkat na settle append-stability vrstvy (release po 900 ms klidu). */
-        await page.waitForTimeout(2000);
+        await waitForLayoutSettle(page);
 
         const after = await page.evaluate(({ refHref, anchorHref }) => {
           function hrefOf(el) {
@@ -124,6 +177,9 @@ async function runGuard(baseUrl) {
           viewport: vp.w + "x" + vp.h,
           mode: vp.mode,
           btn_found: true,
+          btn_visible: true,
+          btn_clicked: true,
+          growth_seen: growthSeen,
           before_count: preClick.article_count,
           after_count: after.article_count,
           grew,
