@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-10T11:57:13.419532Z",
+  "ingestedAt": "2026-06-10T12:48:09.406245Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "KVÍZ: Startuje MS ve fotbale. Co víte o největším fotbalovém turnaji světa?",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-kviz-startuje-ms-ve-fotbale-co-vite-o-nejvetsim-fotbalovem-turnaji-sveta-5475933",
+      "dt": "2026-06-10T12:04:59Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "fotbale",
+        "fotbalovém",
+        "kvíz",
+        "největším",
+        "startuje",
+        "světa",
+        "turnaji",
+        "víte"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -742,31 +767,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Úspěšný návrat Sereny Williamsové. S Mbokovou vyhrály v Queen's Clubu",
-      "url": "https://www.sport.cz/clanek/tenis-uspesny-navrat-sereny-williamsove-s-mbokovou-vyhraly-v-queen-s-clubu-5475951",
-      "dt": "2026-06-09T18:51:28Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "clubu",
-        "mbokovou",
-        "návrat",
-        "queen",
-        "sereny",
-        "vyhrály",
-        "williamsové",
-        "úspěšný"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42628,
+      "bytes": 42463,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,7 +814,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-10T11:12:36Z",
+        "raw_feed_latest_publishedAt": "2026-06-10T12:04:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -829,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "KVÍZ: Startuje MS ve fotbale. Co víte o největším fotbalovém turnaji světa?",
+            "publishedAt": "2026-06-10T12:04:59Z"
+          },
           {
             "title": "Nejúspěšnější klub české historie se stěhuje do Edenu",
             "publishedAt": "2026-06-10T10:13:28Z"
@@ -856,10 +860,6 @@
           {
             "title": "McCarron bude v NHL dál hájit barvy Minnesoty",
             "publishedAt": "2026-06-10T09:03:01Z"
-          },
-          {
-            "title": "Překvapivý konec! Procházka se rozešel s dlouholetým trenérem",
-            "publishedAt": "2026-06-10T08:56:39Z"
           }
         ]
       }
