@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-10T22:19:00.411251Z",
-  "total_sources": 42,
-  "total_active_feeds": 52,
+  "generatedAt": "2026-06-10T22:35:03.001016Z",
+  "total_sources": 43,
+  "total_active_feeds": 50,
   "max_fetches_per_source_per_hour": 4,
   "max_fetches_per_source_per_hour_exception": 5,
   "exception_keys": [],
@@ -46,6 +46,7 @@
       "kverulant.org",
       "mmamag.cz",
       "nespechej.cz",
+      "pedagogicke.info",
       "pelipecky.cz",
       "plnezdravi.cz",
       "svetcestovatele.cz",
@@ -93,21 +94,14 @@
       "slot_key": "betterlife.cz",
       "feeds": [
         {
-          "id": "zdr_betterlife",
+          "id": "kul_betterlife",
           "label": "BetterLife",
           "feed_url": "https://www.betterlife.cz/feed/",
-          "section_primary": "zdravi"
-        },
-        {
-          "id": "vzd_betterlife",
-          "label": "BetterLife (edu)",
-          "feed_url": "https://www.betterlife.cz/feed/",
-          "section_primary": "vzdelavani"
+          "section_primary": "kultura"
         }
       ],
       "sections": [
-        "vzdelavani",
-        "zdravi"
+        "kultura"
       ],
       "display_weight_max": 0.65,
       "fetches_per_hour": 1,
@@ -736,23 +730,9 @@
           "label": "Novinky / Zahraniční",
           "feed_url": "https://www.novinky.cz/rss/zahranicni",
           "section_primary": "zpravy"
-        },
-        {
-          "id": "ved_novinky",
-          "label": "Novinky / Věda a škola",
-          "feed_url": "https://www.novinky.cz/rss/veda",
-          "section_primary": "veda"
-        },
-        {
-          "id": "vzd_novinky_skola",
-          "label": "Novinky / Škola",
-          "feed_url": "https://www.novinky.cz/rss/skola",
-          "section_primary": "vzdelavani"
         }
       ],
       "sections": [
-        "veda",
-        "vzdelavani",
         "zpravy"
       ],
       "display_weight_max": 1.15,
@@ -768,6 +748,32 @@
       "priority": "P0",
       "recommended_frequency": "4/hour",
       "estimated_articles_per_day": 17
+    },
+    {
+      "source": "pedagogicke.info",
+      "scheduler_key": "pedagogicke.info",
+      "slot_key": "pedagogicke.info",
+      "feeds": [
+        {
+          "id": "vzd_pedagogicke_info",
+          "label": "Pedagogické.info",
+          "feed_url": "https://www.pedagogicke.info/feeds/posts/default?alt=rss",
+          "section_primary": "vzdelavani"
+        }
+      ],
+      "sections": [
+        "vzdelavani"
+      ],
+      "display_weight_max": 0.75,
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        49
+      ],
+      "accepted_last_snapshot": 0,
+      "articles_in_bundle_24h": 0,
+      "priority": "P2",
+      "recommended_frequency": "1/hour",
+      "estimated_articles_per_day": 0
     },
     {
       "source": "pelipecky.cz",
@@ -1518,6 +1524,15 @@
         15,
         30,
         45
+      ],
+      "within_limit": true
+    },
+    {
+      "source": "pedagogicke.info",
+      "priority": "P2",
+      "fetches_per_hour": 1,
+      "slot_minutes": [
+        49
       ],
       "within_limit": true
     },
