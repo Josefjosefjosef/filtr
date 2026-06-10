@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-10T19:26:01.412623Z",
+  "ingestedAt": "2026-06-10T20:19:13.957264Z",
   "items": [
     {
       "section": "sport",
@@ -21,6 +21,53 @@
         "znovu",
         "zářila",
         "čas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Komplikace. Generálka Anglie před MS se zpozdí minimálně o hodinu",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-komplikace-generalka-anglie-pred-ms-se-zpozdi-minimalne-o-hodinu-5476019",
+      "dt": "2026-06-10T20:01:44Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "anglie",
+        "generálka",
+        "hodinu",
+        "komplikace",
+        "minimálně",
+        "zpozdí"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Plíšková je ve čtvrtfinále, favoritka skrečovala! Bartůňková nezvládla dohrávku",
+      "url": "https://www.sport.cz/clanek/tenis-bartunkova-v-hertogenboschi-dohravku-nezvladla-a-vypadla-5475993",
+      "dt": "2026-06-10T13:38:43Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bartůňková",
+        "dohrávku",
+        "favoritka",
+        "nezvládla",
+        "plíšková",
+        "skrečovala",
+        "čtvrtfinále"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -283,30 +330,6 @@
         "věrná",
         "zůstává",
         "česká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Plíšková je ve čtvrtfinále, favoritka skrečovala! Bartůňková nezvládla dohrávku",
-      "url": "https://www.sport.cz/clanek/tenis-bartunkova-v-hertogenboschi-dohravku-nezvladla-a-vypadla-5475993",
-      "dt": "2026-06-10T13:38:43Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bartůňková",
-        "dohrávku",
-        "favoritka",
-        "nezvládla",
-        "plíšková",
-        "skrečovala",
-        "čtvrtfinále"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -748,31 +771,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Staněk si zvyká na japonskou Super Formuli, jeho cílem zůstává F1",
-      "url": "https://www.sport.cz/clanek/moto-formule-1-stanek-si-zvyka-na-japonskou-super-formuli-jeho-cilem-zustava-f1-5475979",
-      "dt": "2026-06-10T09:16:41Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "cílem",
-        "formuli",
-        "japonskou",
-        "jeho",
-        "staněk",
-        "super",
-        "zvyká",
-        "zůstává"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -783,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46150,
+      "bytes": 45969,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -820,7 +818,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-10T18:45:50Z",
+        "raw_feed_latest_publishedAt": "2026-06-10T20:01:44Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -838,6 +836,14 @@
           {
             "title": "Manuel znovu zářila! V diamantové konkurenci zaběhla druhý čas kariéry",
             "publishedAt": "2026-06-10T18:21:23Z"
+          },
+          {
+            "title": "Komplikace. Generálka Anglie před MS se zpozdí minimálně o hodinu",
+            "publishedAt": "2026-06-10T20:01:44Z"
+          },
+          {
+            "title": "Plíšková je ve čtvrtfinále, favoritka skrečovala! Bartůňková nezvládla dohrávku",
+            "publishedAt": "2026-06-10T13:38:43Z"
           },
           {
             "title": "Nováček zimních her zaujal. Po premiéře na olympiádě může zůstat i ve Francii",
@@ -858,14 +864,6 @@
           {
             "title": "Nejlepší motor má Red Bull, říká FIA. Místo hrdosti ale v týmu cítí křivdu",
             "publishedAt": "2026-06-10T17:29:55Z"
-          },
-          {
-            "title": "Z pole na úplný vrchol. Ještě jsem se z toho snu neprobudila, rozplývá se česká vítězka Ligy mistryň",
-            "publishedAt": "2026-06-10T17:17:26Z"
-          },
-          {
-            "title": "Mám jasno, cítím se Češkou, říká juniorská šampionka French Open, která brzy získá občanství",
-            "publishedAt": "2026-06-10T15:50:38Z"
           }
         ]
       }
