@@ -62,8 +62,10 @@ _CEST_HAY = re.compile(
 _RE_ARCHIV_HN = re.compile(r"archiv\.hn\.cz|archiv\.hn\.", re.I)
 _RE_EKONOMICKY_DENIK = re.compile(r"ekonomickydenik\.cz", re.I)
 _RE_BYZNYS_LEADING = re.compile(r"^\s*Byznys\b", re.I)
+# Purity final wave 2026-06-10 (E4): „covid" vyřazen — samo o sobě není zdravotní signál
+# (byznysové spory o covidovou podporu); covid + jiný zdravotní termín matchne přes ten termín.
 _RE_HEALTH_TITLE = re.compile(
-    r"\b(nemoc|nemocnic|lékař|lekars|pacient|zdraví|zdravi|očkov|covid|onkolog|operac|chorob|léč|lecba|vakcín|antibiot|psychiatr|rehabilit|epidemi|ambulanc|lék\s)",
+    r"\b(nemoc|nemocnic|lékař|lekars|pacient|zdraví|zdravi|očkov|onkolog|operac|chorob|léč|lecba|vakcín|antibiot|psychiatr|rehabilit|epidemi|ambulanc|lék\s)",
     re.I,
 )
 
