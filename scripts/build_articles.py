@@ -215,6 +215,15 @@ KW_ZDRAVI = {
     "epidemi","chřipk","chripk","covid","nádor","rakovin","psych","terapi","rehabilit","prevence","ambul",
     "nemocnic","pacient","ordinac","lék","lek",
 }
+# Purity final wave 2026-06-10 (E4): „covid" samo o sobě není zdravotní signál — bez dalšího
+# zdravotního klíčového slova nesmí routovat do zdraví (byznysové spory o covidovou podporu).
+KW_ZDRAVI_WEAK_ALONE = frozenset({"covid"})
+# Purity final wave 2026-06-10 (E5): sportovní entity pro nativní Sport.cz feed — health
+# heuristika (KW_ZDRAVI) nesmí přebít zjevně sportovní obsah.
+KW_SPORT_ENTITY = KW_SPORT | {
+    "sportov","sportovec","rychlobrusl","brusl","závod","zavod","atlet","lyža","lyza",
+    "cyklist","maraton","stadion","reprezentac","medail",
+}
 
 # Pořadí sekcí (video NENÍ sekce; je to contentType)
 SECTION_ORDER = ["pocasi", "doprava", "aktualne", "krimi", "finance", "sport", "zdravi", "cestovani", "hry", "kultura", "veda", "vzdelavani"]
@@ -1460,7 +1469,14 @@ def infer_section(url: str, title: str, fallback_topic: str) -> str:
         return "pocasi"
     if contains_kw(KW_DOPRAVA):
         return "doprava"
-    if contains_kw(KW_ZDRAVI):
+    # E5: nativní Sport.cz feed + sportovní entita v titulku — health heuristika nesmí přebít sport
+    # (např. „Ocenění pro mladého rychlobruslaře. Jílek…" — substring „lek" ≠ zdravotní téma).
+    host_nw = host[4:] if host.startswith("www.") else host
+    if (host_nw == "sport.cz" or host_nw.endswith(".sport.cz")) and contains_kw(KW_SPORT_ENTITY):
+        return "sport"
+    # E4: covid-only titulek nestačí na zdraví — vyžaduje další zdravotní signál.
+    zdravi_hits = {k for k in KW_ZDRAVI if k in t}
+    if zdravi_hits and not zdravi_hits.issubset(KW_ZDRAVI_WEAK_ALONE):
         return "zdravi"
     if contains_kw(KW_SPORT):
         return "sport"
@@ -1544,6 +1560,48 @@ def enforce_news_source_section_truth(url: str, title: str, fallback_topic: str)
     if strong is not None:
         return strong
     return _adjust_fallback_topic_for_path(url, "aktualne")
+
+
+# Purity final wave 2026-06-10 (E3, FAEI): item-level RSS kategorie, které vylučují slepý
+# finance fallback (celospolečenský obsah na byznysovém feedu).
+NON_FINANCE_ITEM_CATEGORY_FOLDED = frozenset({"lide a spolecnost"})
+
+
+def _entry_category_terms(entry) -> list:
+    """Item-level <category> termy z feedparser entry (RSS category / Atom term)."""
+    out = []
+    try:
+        for tag in (entry.get("tags") or []):
+            try:
+                term = str(tag.get("term") or "").strip()
+            except Exception:
+                term = ""
+            if term:
+                out.append(term)
+    except Exception:
+        pass
+    return out
+
+
+def demote_finance_by_item_category(section: str, entry, url: str, title: str) -> str:
+    """
+    E3 (FAEI): item s RSS kategorií „Lidé a společnost" nesmí zdědit finance jen z registry
+    fallbacku. Finance zůstává pouze při explicitním finance signálu v URL nebo titulku.
+    """
+    if section != "finance":
+        return section
+    cats = {_fold_cs_for_cluster(c) for c in _entry_category_terms(entry)}
+    if not (cats & NON_FINANCE_ITEM_CATEGORY_FOLDED):
+        return section
+    if _infer_section_strong_explicit_url_signals(url) == "finance":
+        return section
+    tl = (title or "").lower()
+    if any(k in tl for k in KW_FINANCE):
+        return section
+    zdravi_hits = {k for k in KW_ZDRAVI if k in tl}
+    if zdravi_hits and not zdravi_hits.issubset(KW_ZDRAVI_WEAK_ALONE):
+        return "zdravi"
+    return "aktualne"
 
 
 def stable_section(section: str) -> str:
@@ -4085,6 +4143,7 @@ def main() -> int:
                 section = fallback_topic
             else:
                 section = enforce_news_source_section_truth(link, title, fallback_topic=fallback_topic)
+                section = demote_finance_by_item_category(section, entry, link, title)
             section = stable_section(section)
 
             purity_sec = vertical_purity_final_section(

@@ -124,9 +124,31 @@ def _fallback_zdravi_fake(title: str, url: str) -> str | None:
     if not path_ok and not title_ok:
         if _finance_title_signals(title) and not _RE_HEALTH_TITLE.search(title):
             return "finance"
+        # Purity final wave 2026-06-10 (E4): byznysový deník bez skutečného zdravotního
+        # signálu (covid-only se už nepočítá) nepatří do zdraví.
+        if _RE_EKONOMICKY_DENIK.search(url):
+            return "finance"
         if _energy_or_infra_not_health_title(title):
             return NEWS_SECTION
 
+    return None
+
+
+def _fallback_zdravi_sportcz(title: str, url: str) -> str | None:
+    """
+    Purity final wave 2026-06-10 (E5): nativní Sport.cz článek se sportovní entitou
+    v titulku nesmí zůstat ve zdraví (health keyword heuristika, např. „Jílek" ⊃ „lek").
+    """
+    ba = _import_ba()
+    host, path = ba._host_path(url)
+    host_nw = host[4:] if host.startswith("www.") else host
+    if not (host_nw == "sport.cz" or host_nw.endswith(".sport.cz")):
+        return None
+    if "/zdravi" in path or "/zdrav" in path:
+        return None
+    tl = title.lower()
+    if _sport_event_title_signals(title) or any(k in tl for k in ba.KW_SPORT_ENTITY):
+        return "sport"
     return None
 
 
@@ -205,6 +227,9 @@ def apply_section_purity_fallback(article: dict) -> dict:
             return _set_section(article, target)
 
     if current == "zdravi":
+        target = _fallback_zdravi_sportcz(title, url)
+        if target:
+            return _set_section(article, target)
         target = _fallback_zdravi_fake(title, url)
         if target:
             return _set_section(article, target)
