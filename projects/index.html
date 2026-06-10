@@ -474,7 +474,8 @@ font-src 'self' data:;
         }
         @media(min-width:768px) and (max-width:900px){
           :root{
-            --iu-mobile-bottom-nav-safe-space:calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 12px + 8px);
+            /* +40px jako phone — reálná výška lišty (~91px) > 56px; +8px nechávalo poslední prvek pod lištou. */
+            --iu-mobile-bottom-nav-safe-space:calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 12px + 40px);
           }
         }
         html,body{height:auto!important;min-height:100%!important}
@@ -509,7 +510,7 @@ font-src 'self' data:;
       }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
-    <link rel="stylesheet" href="/assets/app.css?v=tablet-portrait-scroll-blocker-20260610" />
+    <link rel="stylesheet" href="/assets/app.css?v=mobile-tablet-stability-v1-20260610" />
     <link rel="stylesheet" href="/assets/iu-silver-premium-draft.css?v=silver-premium-draft-cards-20260602" />
     <link rel="stylesheet" href="/assets/iu-tasks-premium.css?v=tasks-premium-scope-20260503" />
     <link rel="stylesheet" href="/assets/iu-notes-premium.css?v=notes-premium-teal-20260503" />
@@ -1902,6 +1903,17 @@ font-src 'self' data:;
           document.documentElement.removeAttribute("data-iu-tool-main");
           document.body.removeAttribute("data-iu-tool-main");
         }
+        /* P0 CLS (tablet 768–900 cold load): mirror iuApplyMobileMainShellFromSectionNav (assets/app.js) —
+           non-hub sekce nebo hub s topicem = main column; bez early class se nejdřív vykreslil
+           gate (Silver, min-height 656px) a pozdní iu-mobileMainVisible ho zhasl (~0.85 layout shift).
+           Phone (≤767) má sync toggle v applySectionFromURL — early class tam jen přidávala parse-paint shift. */
+        if (window.matchMedia && window.matchMedia("(min-width: 768px) and (max-width: 900px)").matches) {
+          var iuHubLike = (sec === "media" || sec === "feed" || sec === "ads");
+          var iuTopicEarly = String(u.searchParams.get("topic") || "").trim().toLowerCase();
+          if (!iuHubLike || (iuTopicEarly && iuTopicEarly !== "all")) {
+            document.body.classList.add("iu-mobileMainVisible");
+          }
+        }
       }catch(e){}
     })();
     </script>
@@ -2109,8 +2121,8 @@ font-src 'self' data:;
                                     </div>
                                   </div>
                                   <div class="iu-silver-trust" data-iu-silver-trust>
-                                    <p class="silver-privacy-line silver-privacy-line--1" data-iu-silver-privacy-line>🔒 Osobní záznamy ukládáme primárně v tvém zařízení.</p>
-                                    <p class="silver-privacy-line silver-privacy-line--2" data-iu-silver-privacy-line-2>Část webu může používat externí služby.</p>
+                                    <p class="silver-privacy-line silver-privacy-line--1" data-iu-silver-privacy-line>🔒 Co napíšeš nebo si uložíš, zůstává jen u tebe.</p>
+                                    <p class="silver-privacy-line silver-privacy-line--2" data-iu-silver-privacy-line-2>Nic neopouští tvoje zařízení.</p>
                                   </div>
                                   <p class="iu-hero-silverLines iu-hero-silverLines--desktop" aria-label="Pomůžu ti se vším na infoUzel.cz">
                                     <span class="iu-hero-line iu-hero-line--2">Pomůžu ti se vším</span>
@@ -5313,7 +5325,7 @@ font-src 'self' data:;
         } catch (_) {}
       })();
     </script>
-    <script type="module" src="/assets/app.js?v=p0-scroll-restore-append-stab-20260610"></script>
+    <script type="module" src="/assets/app.js?v=mobile-tablet-stability-v1-20260610"></script>
     <script defer src="/assets/iu-consent.js?v=consent-v1-20260609"></script>
     <script defer src="/assets/iu-info-center.js?v=info-center-v2-5-consent-20260609"></script>
     <script defer src="/assets/iu-consent-layer.js?v=consent-layer-v1-20260609"></script>

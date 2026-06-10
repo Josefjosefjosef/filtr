@@ -1,0 +1,30 @@
+{
+  "pass": true,
+  "url": "http://127.0.0.1:8897",
+  "results": [
+    {
+      "check": "static_source",
+      "line1_present": true,
+      "line2_present": true,
+      "forbidden_absent": true
+    },
+    {
+      "line1_text": "🔒 Co napíšeš nebo si uložíš, zůstává jen u tebe.",
+      "line2_text": "Nic neopouští tvoje zařízení.",
+      "line1_ok": true,
+      "line2_ok": true,
+      "check": "dom",
+      "viewport": "390x844",
+      "mode": "mobile"
+    },
+    {
+      "line1_text": "🔒 Co napíšeš nebo si uložíš, zůstává jen u tebe.",
+      "line2_text": "Nic neopouští tvoje zařízení.",
+      "line1_ok": true,
+      "line2_ok": true,
+      "check": "dom",
+      "viewport": "768x1024",
+      "mode": "tablet"
+    }
+  ]
+}

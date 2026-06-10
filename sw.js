@@ -9,7 +9,8 @@
 // 2026-03-22: bump — app.js silent SW activation (SKIP_WAITING + jeden reload, bez spodního CTA)
 // 2026-03-22: HTML document = network-first (žádný preferovaný starý shell)
 // 2026-03-29: PR #1488 — nový SW + vyprázdnění APP_SHELL_CACHE po deployi (staré app.*.css v cache)
-const CACHE_VERSION = "2026-06-08-homepage-publishable-pool-phase6c";
+// 2026-06-10: mobile/tablet stability v1 — bottom-nav clearance, app-render-optimizer.js odstraněn z precache
+const CACHE_VERSION = "2026-06-10-mobile-tablet-stability-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
@@ -52,7 +53,6 @@ function getAppShellUrls() {
     `${BASE}assets/iu-legal-documents-overlay.css`,
     `${BASE}assets/iu-invoice-overlay.css`,
     `${BASE}assets/app-crash-shield.js`,
-    `${BASE}assets/app-render-optimizer.js`,
     `${BASE}assets/app.js`,
     `${BASE}sw.js`
   ];

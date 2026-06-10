@@ -2870,8 +2870,22 @@ try {
      Fix: freeze #feed min-height for the whole async load-more pass (prevents the collapse clamp),
      then re-align the viewport to the reference article the user was reading (visual position,
      robust against scroll-anchoring adjustments). User scroll input skips the final correction. */
+  /* Tablet portrait (768–900): #leftContent je inner scroller (overflow-y:auto) — load-more
+     korekce musí držet jeho scrollTop, ne window (jinak re-render shodí seznam na začátek). */
+  function iuAppendStabScroller() {
+    try {
+      const lc = document.getElementById("leftContent");
+      if (lc && lc.clientHeight > 0 && lc.scrollHeight > lc.clientHeight + 1) {
+        const st = getComputedStyle(lc);
+        if (st.overflowY === "auto" || st.overflowY === "scroll") return lc;
+      }
+    } catch (_) {}
+    return null;
+  }
   function iuAppendStabGetY() {
     try {
+      const sc = iuAppendStabScroller();
+      if (sc) return sc.scrollTop || 0;
       return Math.max(
         window.scrollY || 0,
         (document.scrollingElement || document.documentElement).scrollTop || 0,
@@ -2883,6 +2897,13 @@ try {
   }
   function iuAppendStabSetY(y) {
     const yv = Math.max(0, Math.round(Number(y) || 0));
+    try {
+      const sc = iuAppendStabScroller();
+      if (sc) {
+        sc.scrollTop = yv;
+        return;
+      }
+    } catch (_) {}
     try { window.scrollTo(0, yv); } catch (_) {}
     try {
       const se = document.scrollingElement || document.documentElement;
@@ -2899,11 +2920,76 @@ try {
       return "";
     }
   }
+  /* P0 LOAD-MORE ORDER PIN (viz renderFeed): klíč položky = normalizovaná URL článku
+     (stejná derivace jako buildArticleHtml). */
+  function iuLoadMorePinKey(it) {
+    try {
+      if (!it) return "";
+      if (it.contentType && String(it.contentType) !== "article") return "";
+      const u =
+        it.url ||
+        (Array.isArray(it.sources) ? (it.sources.find((s) => s && s.url && String(s.url).trim())?.url || "") : "") ||
+        (it.canonicalUrl || "") ||
+        (typeof it.link === "string"
+          ? it.link
+          : (it.link && typeof it.link === "object" ? (it.link.href || it.link.url || "") : ""));
+      if (!u) return "";
+      return normalizeArticleUrl(u);
+    } catch (_) {
+      return "";
+    }
+  }
+  function iuLoadMoreCapturePinnedOrder(visibleItemsAtClick) {
+    try {
+      const pinned = [];
+      if (Array.isArray(visibleItemsAtClick)) {
+        for (const it of visibleItemsAtClick) {
+          if (iuLoadMorePinKey(it)) pinned.push(it);
+        }
+      }
+      window.__iuLoadMorePinnedItems = pinned.length ? pinned : null;
+    } catch (_) {
+      try { window.__iuLoadMorePinnedItems = null; } catch (__) {}
+    }
+  }
+  function iuLoadMoreReleasePinnedOrder() {
+    try { window.__iuLoadMorePinnedItems = null; } catch (_) {}
+  }
+  function iuLoadMoreApplyPinnedOrder(visibleItems) {
+    let pinnedItems = null;
+    try {
+      pinnedItems =
+        Array.isArray(window.__iuLoadMorePinnedItems) && window.__iuLoadMorePinnedItems.length
+          ? window.__iuLoadMorePinnedItems
+          : null;
+    } catch (_) {}
+    if (!pinnedItems || !Array.isArray(visibleItems)) return visibleItems;
+    try {
+      /* Autoritativní prefix: už zobrazené články zůstávají přesně v původním pořadí
+         (i když je re-cluster passu z nového seznamu vyřadil — uživatel je už viděl);
+         zbytek (nové položky + ne-články) jde pod ně. */
+      const pinnedKeys = new Set();
+      for (const it of pinnedItems) {
+        const k = iuLoadMorePinKey(it);
+        if (k) pinnedKeys.add(k);
+      }
+      const rest = [];
+      for (const it of visibleItems) {
+        const k = iuLoadMorePinKey(it);
+        if (!k || !pinnedKeys.has(k)) rest.push(it);
+      }
+      return pinnedItems.concat(rest);
+    } catch (_) {
+      return visibleItems;
+    }
+  }
+
   function iuArticleAppendStabilityBegin() {
     const ctx = {
       y: 0,
       host: null,
       prevMinHeight: "",
+      prevMinHeightPriority: "",
       userScrolled: false,
       cancel: null,
       refKey: "",
@@ -2916,9 +3002,12 @@ try {
       const el = document.getElementById("feed");
       if (el) {
         ctx.host = el;
-        ctx.prevMinHeight = el.style.minHeight || "";
+        ctx.prevMinHeight = el.style.getPropertyValue("min-height") || "";
+        ctx.prevMinHeightPriority = el.style.getPropertyPriority("min-height") || "";
         const h = el.offsetHeight;
-        if (h > 0) el.style.minHeight = h + "px";
+        /* "important": tablet portrait má `#leftContent #feed{min-height:0!important}` —
+           bez priority by freeze nefungoval a inner scroller by se při re-renderu zhroutil. */
+        if (h > 0) el.style.setProperty("min-height", h + "px", "important");
         /* reference = topmost article still (partially) visible in the viewport */
         const arts = el.querySelectorAll("article.news-card");
         for (const art of arts) {
@@ -3006,7 +3095,12 @@ try {
         window.removeEventListener("touchmove", ctx.cancel);
         window.removeEventListener("keydown", ctx.cancel, true);
       } catch (_) {}
-      try { if (ctx.host) ctx.host.style.minHeight = ctx.prevMinHeight; } catch (_) {}
+      try {
+        if (ctx.host) {
+          if (ctx.prevMinHeight) ctx.host.style.setProperty("min-height", ctx.prevMinHeight, ctx.prevMinHeightPriority || "");
+          else ctx.host.style.removeProperty("min-height");
+        }
+      } catch (_) {}
       try {
         if (window.__iuAppendStab) {
           window.__iuAppendStab.phase = "released";
@@ -5560,6 +5654,11 @@ try {
       visibleCount = articleBudget;
       visibleItems = items.slice(0, visibleCount);
     }
+    /* P0 LOAD-MORE ORDER PIN: applyFilter po load-more re-clusteruje celý seznam — už zobrazené
+       články se nesmí přeskupit (vizuální skok uprostřed viewportu). Během load-more passu drží
+       už vykreslené články své pořadí jako prefix; nové položky jdou až pod ně. */
+    visibleItems = iuLoadMoreApplyPinnedOrder(visibleItems);
+    try { window.__iuLoadMoreLastRenderedItems = visibleItems; } catch (_) {}
     const hasMore = chunkMode
       ? visibleItems.length < items.length || iuChunkHasMoreOnServer(state.chunkLoader)
       : mediaHub100
@@ -6034,6 +6133,7 @@ try {
             const prevText = btn.textContent;
             /* ARTICLE APPEND STABILITY: hold scroll + feed height for the whole load-more pass */
             const appendStab = iuArticleAppendStabilityBegin();
+            iuLoadMoreCapturePinnedOrder(window.__iuLoadMoreLastRenderedItems);
             try {
               btn.disabled = true;
               btn.textContent = "Načítám…";
@@ -6061,6 +6161,7 @@ try {
               await renderFeed(safeTarget, state.filteredItems);
             } catch (_) {
             } finally {
+              iuLoadMoreReleasePinnedOrder();
               iuArticleAppendStabilityEnd(appendStab);
             }
             btn.disabled = false;
@@ -16525,6 +16626,7 @@ function buildVideoAsArticleCard(it) {
       window.__IU_SOURCE_LABEL_MISMATCH_DROPS__ = 0;
     } catch (_) {}
     state.isLoadingData = true;
+    try { window.__iuLastLoadDataStartTs = Date.now(); } catch (_) {}
     state.__iuApplyFilterPassSeq = 0;
     state.__iuRenderFeedPassSeq = 0;
     state.__iuLoadDataMainApplyFilterDone = false;
@@ -23634,17 +23736,29 @@ function buildVideoAsArticleCard(it) {
     try { iuVideoDebugAutoTest(); } catch {}
   }
 
+  /* P0 mobile stability: návrat z článku (target=_blank tab / bfcache) nesmí viditelně
+     přerenderovat feed. Data se přenačtou jen pokud jsou starší než tento práh; jinak se
+     pouze obnoví auto-refresh timer (žádný loadData → žádný "Načítám data…" flash). */
+  const IU_VISIBILITY_REFRESH_MIN_AGE_MS = 5 * 60 * 1000;
+  function iuFeedDataIsStaleForVisibilityRefresh() {
+    const ts = Number(window.__iuLastLoadDataStartTs || 0);
+    if (!ts) return true;
+    return Date.now() - ts > IU_VISIBILITY_REFRESH_MIN_AGE_MS;
+  }
+
   document.addEventListener("visibilitychange", () => {
     debugLog("[VIS]", document.visibilityState);
     if (document.visibilityState === "visible") {
       if (!(document.body && document.body.classList && document.body.classList.contains("iu-home"))) {
-        try {
-          if (typeof window.__iuLoadData === "function") window.__iuLoadData();
-          else loadData();
-        } catch (_) {
+        if (iuFeedDataIsStaleForVisibilityRefresh()) {
           try {
-            loadData();
-          } catch (__) {}
+            if (typeof window.__iuLoadData === "function") window.__iuLoadData();
+            else loadData();
+          } catch (_) {
+            try {
+              loadData();
+            } catch (__) {}
+          }
         }
         startAutoRefresh();
       }
@@ -23661,9 +23775,11 @@ function buildVideoAsArticleCard(it) {
       __iuInvalidateFeedPrimaryJsonCache();
     } catch (_) {}
     if (!(document.body && document.body.classList && document.body.classList.contains("iu-home"))) {
-      try {
-        loadData();
-      } catch (_) {}
+      if (iuFeedDataIsStaleForVisibilityRefresh()) {
+        try {
+          loadData();
+        } catch (_) {}
+      }
       try {
         startAutoRefresh();
       } catch (_) {}

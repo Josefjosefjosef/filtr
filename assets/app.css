@@ -3639,12 +3639,42 @@ body[data-iu-fc="1"] #feed{
 }
 @media (min-width: 768px) and (max-width: 900px) {
   :root{
-    --iu-mobile-bottom-nav-safe-space: calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 12px + 8px);
+    /* +40px stejně jako phone: reálná výška lišty (~91px s labely) > 56px proměnné; +8px nestačilo
+       (poslední prvek končil pod lištou — bottom-navigation-visibility-guard-v1). */
+    --iu-mobile-bottom-nav-safe-space: calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 12px + 40px);
   }
 }
 @media (max-width: 900px) {
   html{
     scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space);
+  }
+}
+
+/* P0 BOTTOM NAV CLEARANCE V1 (central): každý mobilní scroll root musí končit nad fixní
+   #iuMobileBottomNav (PWA standalone + Safari: env(safe-area-inset-bottom) přes
+   --iu-mobile-bottom-nav-safe-space, viewport-fit=cover v projects/index.html).
+   Doplňuje stávající konzumenty (#feed ≤767, tool hosty, gate panely, tasks/notes/kalendář)
+   o chybějící scroll rooty — žádné per-page hardcody. */
+@media (max-width: 767px) {
+  /* Domů/Silver: document scroll, poslední prvek je #iuMobileGateWrap (leftContent hidden).
+     !important: přebíjí reset `#iuMobileGateWrap.iu-mobileGateWrap{padding:0!important}` níže. */
+  body:not(.iu-mobileMainVisible):not(.iu-mobileGateOverlayOpen) #iuMobileGateWrap{
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    box-sizing: border-box !important;
+  }
+}
+@media (min-width: 768px) and (max-width: 900px) {
+  /* Tablet: #feed v document flow (landscape / home) — stejná rezerva jako portrait inner-scroll. */
+  body:not(.iu-mobileGateOverlayOpen) #feed{
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 20px));
+    box-sizing: border-box;
+  }
+}
+@media (max-width: 900px) {
+  /* Článek / web detail (quick view): fixed fullscreen scroller bez rezervy. */
+  #leftContent:has(#iuCenterStage[data-iu-view="quick"]){
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 20px)) !important;
+    box-sizing: border-box !important;
   }
 }
 
