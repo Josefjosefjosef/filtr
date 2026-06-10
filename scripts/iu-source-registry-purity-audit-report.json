@@ -1,0 +1,371 @@
+{
+  "generatedAt": "2026-06-10T17:06:21.705Z",
+  "read_only": true,
+  "rubric_feed_identity_probe": [
+    {
+      "registry_id": "hry_novinky",
+      "registered_section": "hry",
+      "rubric_url": "https://www.novinky.cz/rss/hry",
+      "http_status": 200,
+      "redirected_to": null,
+      "items_compared": 20,
+      "overlap_with_global_pct": 100,
+      "rubric_feed_is_global_feed": true
+    },
+    {
+      "registry_id": "ces_novinky_cestovani",
+      "registered_section": "cestovani",
+      "rubric_url": "https://www.novinky.cz/rss/cestovani",
+      "http_status": 200,
+      "redirected_to": null,
+      "items_compared": 20,
+      "overlap_with_global_pct": 100,
+      "rubric_feed_is_global_feed": true
+    },
+    {
+      "registry_id": "fin_novinky_ekonomika",
+      "registered_section": "finance",
+      "rubric_url": "https://www.novinky.cz/rss/ekonomika",
+      "http_status": 200,
+      "redirected_to": null,
+      "items_compared": 20,
+      "overlap_with_global_pct": 100,
+      "rubric_feed_is_global_feed": true
+    },
+    {
+      "registry_id": "vzd_novinky_skola",
+      "registered_section": "vzdelavani",
+      "rubric_url": "https://www.novinky.cz/rss/skola",
+      "http_status": 200,
+      "redirected_to": null,
+      "items_compared": 20,
+      "overlap_with_global_pct": 100,
+      "rubric_feed_is_global_feed": true
+    },
+    {
+      "registry_id": "ved_novinky",
+      "registered_section": "veda",
+      "rubric_url": "https://www.novinky.cz/rss/veda",
+      "http_status": 200,
+      "redirected_to": null,
+      "items_compared": 20,
+      "overlap_with_global_pct": 100,
+      "rubric_feed_is_global_feed": true
+    },
+    {
+      "registry_id": "zdr_prozeny_zdravi",
+      "registered_section": "zdravi",
+      "rubric_url": "https://www.prozeny.cz/rss/zdravi",
+      "http_status": 200,
+      "redirected_to": null,
+      "items_compared": 20,
+      "overlap_with_global_pct": 100,
+      "rubric_feed_is_global_feed": true
+    }
+  ],
+  "dead_rubric_feeds_returning_global_feed": [
+    "hry_novinky",
+    "ces_novinky_cestovani",
+    "fin_novinky_ekonomika",
+    "vzd_novinky_skola",
+    "ved_novinky",
+    "zdr_prozeny_zdravi"
+  ],
+  "production_section_composition": {
+    "zpravy": {
+      "articles_counted": 500,
+      "chunks_read": 5,
+      "by_source": {
+        "Novinky": 94,
+        "iDNES.cz": 93,
+        "Seznam Zprávy": 79,
+        "ČT24": 73,
+        "Deník": 55,
+        "Týdeník Policie": 25,
+        "HN": 16,
+        "Ekonomický deník": 14,
+        "Aktuálně": 10,
+        "Česká justice": 9,
+        "Peníze.cz": 7,
+        "HlídacíPes": 7,
+        "Zdravotnický deník": 3,
+        "Kverulant": 3,
+        "E15": 3,
+        "ePeníze": 2,
+        "VIPživot": 2,
+        "vTelce": 2,
+        "ZdravéZprávy": 1,
+        "Sport.cz": 1,
+        "BetterLife": 1
+      }
+    },
+    "sport": {
+      "articles_counted": 500,
+      "chunks_read": 5,
+      "by_source": {
+        "Sport.cz": 145,
+        "iSport": 71,
+        "iDNES.cz": 70,
+        "ČT sport": 64,
+        "MMAMAG": 58,
+        "Aktuálně": 49,
+        "Seznam Zprávy": 25,
+        "HN": 7,
+        "FAEI": 4,
+        "E15": 3,
+        "Peníze.cz": 2,
+        "Zdravotnický deník": 2
+      }
+    },
+    "finance": {
+      "articles_counted": 500,
+      "chunks_read": 5,
+      "by_source": {
+        "HN": 75,
+        "Ekonomický deník": 71,
+        "iDNES.cz": 71,
+        "E15": 52,
+        "FAEI": 48,
+        "Seznam Zprávy": 44,
+        "Peníze.cz": 31,
+        "ePeníze": 25,
+        "Deník": 20,
+        "Aktuálně": 18,
+        "ČT24": 17,
+        "Novinky": 14,
+        "Ekonom (HN)": 8,
+        "Zdravotnický deník": 3,
+        "Sport.cz": 2,
+        "ZdravéZprávy": 1
+      }
+    },
+    "zdravi": {
+      "articles_counted": 500,
+      "chunks_read": 5,
+      "by_source": {
+        "Zdravotnický deník": 129,
+        "ProŽeny": 116,
+        "ZdravéZprávy": 52,
+        "BetterLife": 43,
+        "Plné zdraví": 39,
+        "HN": 22,
+        "Seznam Zprávy": 19,
+        "Deník": 18,
+        "E15": 12,
+        "Sport.cz": 9,
+        "Ekonomický deník": 7,
+        "Aktuálně": 6,
+        "Novinky": 5,
+        "FAEI": 5,
+        "Vlasta": 4,
+        "Peníze.cz": 4,
+        "Ekonom (HN)": 4,
+        "ePeníze": 3,
+        "ČT24": 2,
+        "iDNES.cz": 1
+      }
+    },
+    "cestovani": {
+      "articles_counted": 90,
+      "chunks_read": 1,
+      "by_source": {
+        "SvětCestovatele": 24,
+        "Cestujlevně": 18,
+        "Novinky": 15,
+        "Pelipecky": 9,
+        "Vlasta": 4,
+        "Ekonomický deník": 4,
+        "TravelBible": 4,
+        "iDNES.cz": 2,
+        "Deník": 2,
+        "Aktuálně": 2,
+        "Seznam Zprávy": 1,
+        "FAEI": 1,
+        "E15": 1,
+        "ČT24": 1,
+        "Peníze.cz": 1,
+        "Zdravotnický deník": 1
+      }
+    },
+    "hry": {
+      "articles_counted": 165,
+      "chunks_read": 2,
+      "by_source": {
+        "Zing": 87,
+        "Indian": 54,
+        "Novinky": 24
+      }
+    },
+    "kultura": {
+      "articles_counted": 184,
+      "chunks_read": 2,
+      "by_source": {
+        "Vlasta": 38,
+        "ČT24": 33,
+        "VIPživot": 32,
+        "vTelce": 28,
+        "iDNES.cz": 27,
+        "Aktuálně": 18,
+        "Kinobox": 8
+      }
+    },
+    "veda": {
+      "articles_counted": 98,
+      "chunks_read": 1,
+      "by_source": {
+        "ČT24": 57,
+        "iDNES.cz": 34,
+        "Novinky": 6,
+        "iDNES": 1
+      }
+    },
+    "vzdelavani": {
+      "articles_counted": 4,
+      "chunks_read": 1,
+      "by_source": {
+        "BetterLife (edu)": 2,
+        "Seznam Zprávy": 1,
+        "EDU.cz": 1
+      }
+    }
+  },
+  "manual_error_attribution": {
+    "audit_date": "2026-06-10",
+    "audited_articles": 484,
+    "true_errors": 55,
+    "breakdown": {
+      "source_mapping": {
+        "count": 51,
+        "pct": 92.7,
+        "detail": {
+          "hry_novinky (Novinky -> hry)": 20,
+          "zdr_prozeny_zdravi (ProŽeny -> zdravi)": 14,
+          "ces_novinky_cestovani (Novinky -> cestovani)": 6,
+          "kul_vlasta (Vlasta all-site feed -> kultura)": 5,
+          "fin_novinky_ekonomika (Novinky -> finance)": 4,
+          "vzd_betterlife (BetterLife lifestyle feed -> vzdelavani)": 2
+        }
+      },
+      "classifier": {
+        "count": 3,
+        "pct": 5.5,
+        "detail": {
+          "FAEI 'Lidé a společnost' item kept as finance (item-level RSS category ignored)": 1,
+          "Ekonomický deník covid-aid dispute routed to zdravi (health-title guard false positive)": 1,
+          "Sport.cz speed-skating award routed to zdravi": 1
+        }
+      },
+      "ambiguous_content": {
+        "count": 1,
+        "pct": 1.8,
+        "detail": {
+          "VIPŽivot court-case celebrity story in kultura": 1
+        }
+      },
+      "harness": {
+        "count": 0,
+        "pct": 0,
+        "detail": {}
+      }
+    },
+    "per_source_sample": [
+      {
+        "source": "Novinky",
+        "sections": "hry+cestovani+finance+zdravi",
+        "checked": 53,
+        "misclassified": 30,
+        "error_rate_pct": 56.6
+      },
+      {
+        "source": "ProŽeny",
+        "sections": "zdravi",
+        "checked": 26,
+        "misclassified": 14,
+        "error_rate_pct": 53.8
+      },
+      {
+        "source": "BetterLife (edu)",
+        "sections": "vzdelavani",
+        "checked": 2,
+        "misclassified": 2,
+        "error_rate_pct": 100
+      },
+      {
+        "source": "FAEI",
+        "sections": "finance",
+        "checked": 3,
+        "misclassified": 1,
+        "error_rate_pct": 33.3
+      },
+      {
+        "source": "Vlasta",
+        "sections": "kultura+zdravi+cestovani",
+        "checked": 20,
+        "misclassified": 5,
+        "error_rate_pct": 25
+      },
+      {
+        "source": "Ekonomický deník",
+        "sections": "finance+zdravi+cestovani+zpravy",
+        "checked": 7,
+        "misclassified": 1,
+        "error_rate_pct": 14.3
+      },
+      {
+        "source": "Sport.cz",
+        "sections": "sport+zdravi",
+        "checked": 14,
+        "misclassified": 1,
+        "error_rate_pct": 7.1
+      },
+      {
+        "source": "VIPživot",
+        "sections": "kultura",
+        "checked": 18,
+        "misclassified": 1,
+        "error_rate_pct": 5.6
+      },
+      {
+        "source": "Seznam Zprávy",
+        "sections": "all",
+        "checked": 27,
+        "misclassified": 0,
+        "error_rate_pct": 0
+      }
+    ],
+    "top_feeds_by_harm": [
+      {
+        "rank": 1,
+        "registry_id": "hry_novinky",
+        "errors_in_sample": 20
+      },
+      {
+        "rank": 2,
+        "registry_id": "zdr_prozeny_zdravi",
+        "errors_in_sample": 14
+      },
+      {
+        "rank": 3,
+        "registry_id": "ces_novinky_cestovani",
+        "errors_in_sample": 6
+      },
+      {
+        "rank": 4,
+        "registry_id": "kul_vlasta",
+        "errors_in_sample": 5
+      },
+      {
+        "rank": 5,
+        "registry_id": "fin_novinky_ekonomika",
+        "errors_in_sample": 4
+      }
+    ],
+    "purity_projection": {
+      "current_pct": 88.6,
+      "after_top3_fix_pct": 96.9,
+      "after_top5_fix_pct": 98.8
+    }
+  },
+  "root_cause_primary": "SOURCE REGISTRY / upstream RSS: registered rubric feeds deliver site-global or off-section content; ingest stamps registry section as topic; classifier layer-3 trusts topic_field at confidence 0.95.",
+  "root_cause_secondary": "CLASSIFIER: item-level RSS categories are ignored and per-feed quality guards cover only a few audited feeds (HN archiv, Ekonomický deník sport), so the topic_field trust has no generic content sanity check."
+}
