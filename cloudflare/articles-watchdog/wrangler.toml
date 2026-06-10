@@ -1,5 +1,9 @@
-# Articles pipeline watchdog: Cloudflare Cron → GitHub workflow_dispatch (no GitHub schedule).
+# Articles pipeline watchdog: Cloudflare Cron → GitHub workflow_dispatch.
 # Dual dispatch: fast publishable_pool path (8m) + slow full pipeline path.
+# 2026-06-10: Cloudflare scheduled events proven intermittent (multi-hour dead windows);
+# articles-watchdog-cron-fallback.yml now chains off completed pipeline runs (workflow_run)
+# and calls /probe?dispatch=1, so the loop self-sustains even when this cron is not delivered.
+# This comment change also forces a redeploy that re-registers the cron trigger.
 # Deploy: cd cloudflare/articles-watchdog && npm ci && npx wrangler deploy
 # Secret: npx wrangler secret put GITHUB_TOKEN
 # Optional manual smoke: POST /run with Authorization: Bearer <MANUAL_TRIGGER_SECRET>
