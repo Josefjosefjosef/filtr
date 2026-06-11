@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-06-11T22:06:05.451356Z",
+  "ingestedAt": "2026-06-11T22:50:44.287429Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Na tu se opravdu těšíme. Unikátní česká hra už je za rohem",
+      "url": "https://www.idnes.cz/hry/magazin/scarlet-deer-inn-preview-datum-vydani-ceska-hra-vysivana.A260610_230638_bw-magazin_oma/foto",
+      "dt": "2026-06-11T22:00:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "hra",
+        "opravdu",
+        "rohem",
+        "těšíme",
+        "unikátní",
+        "česká"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -696,31 +719,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "RECENZE: Call of the Elder Gods je dobrodružství ve stylu Indiany Jonese",
-      "url": "https://www.idnes.cz/hry/recenze/call-of-the-elder-gods-recenze.A260601_095957_bw-recenze_oz",
-      "dt": "2026-06-01T22:00:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "call",
-        "dobrodružství",
-        "elder",
-        "gods",
-        "indiany",
-        "jonese",
-        "stylu",
-        "the"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -731,7 +729,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 39810,
+      "bytes": 39953,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -768,7 +766,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T07:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -783,6 +781,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na tu se opravdu těšíme. Unikátní česká hra už je za rohem",
+            "publishedAt": "2026-06-11T22:00:00Z"
+          },
           {
             "title": "Zemětřesení v Ubisoftu. Zavřel dvě studia, v dalších propouští",
             "publishedAt": "2026-06-11T07:25:00Z"
@@ -810,10 +812,6 @@
           {
             "title": "Minecraft Dungeons II",
             "publishedAt": "2026-06-08T11:23:16Z"
-          },
-          {
-            "title": "Stranger Than Heaven",
-            "publishedAt": "2026-06-08T11:15:32Z"
           }
         ]
       }
