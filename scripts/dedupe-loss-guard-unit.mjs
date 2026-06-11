@@ -6,6 +6,7 @@ import {
   VERTICALS,
   evaluateDedupeLossGuard,
   isVerticalRubricMirror,
+  resolveTodayForBundle,
 } from "./dedupe-loss-guard.mjs";
 
 function assert(cond, msg) {
@@ -177,6 +178,21 @@ function telemetryRow(sourceId, topic, extra = {}) {
   assert(!r.failed, "hry_mirror_test: mirror RSS must not false-positive");
   assert(r.todayWritten.hry === 0, "hry mirror excluded from today_written");
   console.log("hry_mirror_test: PASS");
+}
+
+// Scenario 6 — midnight boundary: today derives from bundle generatedAt (Prague day)
+{
+  // 21:56 UTC = 23:56 Prague on 06-10; wall clock may already be 06-11
+  const doc = { generatedAt: "2026-06-10T21:56:27.784195Z" };
+  assert(
+    resolveTodayForBundle(doc, "2026-06-11") === "2026-06-10",
+    "midnight_boundary_test: today must follow bundle generatedAt Prague day",
+  );
+  assert(
+    resolveTodayForBundle({}, "2026-06-11") === "2026-06-11",
+    "midnight_boundary_test: fallback to wall-clock day when generatedAt missing",
+  );
+  console.log("midnight_boundary_test: PASS");
 }
 
 console.log("PASS dedupe-loss-guard-unit", { verticals: VERTICALS.length });

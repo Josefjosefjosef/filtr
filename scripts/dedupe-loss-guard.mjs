@@ -148,6 +148,18 @@ export function evaluateDedupeLossGuard({
   return { jsonToday, todayWritten, failures, failed: failures.length > 0 };
 }
 
+/**
+ * Day used for today-scoped comparison: the bundle's own Prague day, not wall clock.
+ * Around midnight the guard can run on a new calendar day while the bundle (and its
+ * telemetry "today" counters) were generated on the previous day — comparing against
+ * wall-clock "today" then yields json_today=0 for everything (false wipeout).
+ */
+export function resolveTodayForBundle(articlesDoc, fallbackToday) {
+  const gen = articlesDoc && (articlesDoc.generatedAt || articlesDoc.generated_at);
+  const day = gen ? pragueDayFromIso(String(gen)) : null;
+  return day || fallbackToday;
+}
+
 async function loadArticlesDoc() {
   if (remoteArticles) {
     const res = await fetch(remoteArticles, { headers: { Accept: "application/json", "Cache-Control": "no-cache" } });
@@ -180,8 +192,8 @@ function loadTelemetryRows(articlesDoc) {
 }
 
 async function main() {
-  const today = pragueTodayIso();
   const articlesDoc = await loadArticlesDoc();
+  const today = resolveTodayForBundle(articlesDoc, pragueTodayIso());
   const articles = Array.isArray(articlesDoc.articles) ? articlesDoc.articles : [];
   const telemetryRows = loadTelemetryRows(articlesDoc);
 
