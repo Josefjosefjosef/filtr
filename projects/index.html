@@ -509,6 +509,8 @@ font-src 'self' data:;
         #iuMobileBottomNav.iu-mobileBottomNav{display:none!important;visibility:hidden!important;pointer-events:none!important}
       }
     </style>
+    <!-- P0 LCP fast path: feed section header (hub) je JS-injected v app.js (renderFeed) — preload scanner ho nevidí; preload jen ≥768px (mobile LCP = silver-hero, feed skrytý pre-gate). -->
+    <link rel="preload" as="image" href="/assets/images/section-prehled-dne.webp" type="image/webp" fetchpriority="high" media="(min-width: 768px)" />
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
     <link rel="stylesheet" href="/assets/app.css?v=mobile-tablet-stability-v1-20260610" />
     <link rel="stylesheet" href="/assets/iu-silver-premium-draft.css?v=silver-premium-draft-cards-20260602" />
@@ -2271,7 +2273,7 @@ font-src 'self' data:;
                                     <div class="iuNewsPreviewImgWrap" aria-hidden="true">
                                       <picture>
                                         <source type="image/webp" srcset="/assets/images/news-default-120w.webp 120w, /assets/images/news-default-240w.webp 240w" sizes="112px" />
-                                        <img class="iuNewsPreviewImg" src="/assets/images/news-default.jpg" srcset="/assets/images/news-default-120w.jpg 120w, /assets/images/news-default-240w.jpg 240w" sizes="112px" width="112" height="84" loading="eager" decoding="sync" alt="" />
+                                        <img class="iuNewsPreviewImg" src="/assets/images/news-default.jpg" srcset="/assets/images/news-default-120w.jpg 120w, /assets/images/news-default-240w.jpg 240w" sizes="112px" width="112" height="84" loading="lazy" decoding="async" alt="" />
                                       </picture>
                                     </div>
                                     <div class="iuNewsPreviewText">
@@ -5358,7 +5360,7 @@ font-src 'self' data:;
     </script>
     <script defer src="/assets/iu-info-center-lazy-mount.js?v=info-center-lazy-mount-v1-20260611"></script>
     <script defer src="/assets/iu-section-views-lazy-mount.js?v=section-views-lazy-mount-v1-20260611"></script>
-    <script type="module" src="/assets/app.js?v=overlay-cluster-lazy-mount-v1-20260611"></script>
+    <script type="module" src="/assets/app.js?v=lcp-fast-path-v1-20260611"></script>
     <script defer src="/assets/iu-consent.js?v=consent-v1-20260609"></script>
     <script defer src="/assets/iu-info-center.js?v=info-center-v2-7-lazy-mount-20260611"></script>
     <script defer src="/assets/iu-consent-layer.js?v=consent-layer-v1-20260609"></script>
