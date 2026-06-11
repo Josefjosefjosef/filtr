@@ -1,28 +1,55 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-11T01:30:52.702493Z",
+  "ingestedAt": "2026-06-11T02:21:00.037328Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Další úder. USA znovu útočí na Írán, ten zcela uzavřel Hormuzský průliv",
+      "title": "Další úder. USA útočily na Írán, ten oznámil úplné uzavření Hormuzského průlivu",
       "url": "https://www.idnes.cz/zpravy/zahranicni/usa-zahajily-nove-vzdusne-udery-na-cile-v-iranu-hlasi-armada.A260610_235135_zahranicni_air",
-      "dt": "2026-06-10T23:41:43Z",
+      "dt": "2026-06-11T02:01:23Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES",
       "tokens": [
         "další",
-        "hormuzský",
-        "průliv",
+        "hormuzského",
+        "oznámil",
+        "průlivu",
         "ten",
         "usa",
-        "uzavřel",
-        "zcela",
-        "znovu",
+        "uzavření",
         "írán",
         "úder",
-        "útočí"
+        "úplné",
+        "útočily"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "USA ukončily další údery na Írán, Teherán hlásí útoky na Bahrajn a Kuvajt",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/usa-zahajily-nove-vzdusne-udery-na-cile-v-iranu-hlasi-armada.A260610_235135_zahranicni_air",
+      "dt": "2026-06-11T01:36:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "bahrajn",
+        "další",
+        "hlásí",
+        "kuvajt",
+        "teherán",
+        "ukončily",
+        "usa",
+        "írán",
+        "údery",
+        "útoky"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -770,32 +797,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Přepravil tisíce cestujících, kanadskému pilotovi ale 17 let chyběl průkaz",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/air-canada-pilot-licence-doklad-prukaz-letadlo-kapitan.A260610_163919_zahranicni_herp",
-      "dt": "2026-06-10T14:59:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "ale",
-        "cestujících",
-        "chyběl",
-        "kanadskému",
-        "let",
-        "pilotovi",
-        "průkaz",
-        "přepravil",
-        "tisíce"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -806,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47898,
+      "bytes": 47712,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -843,7 +844,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-10T23:41:43Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T02:01:23Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -861,8 +862,12 @@
         },
         "sample_titles": [
           {
-            "title": "Další úder. USA znovu útočí na Írán, ten zcela uzavřel Hormuzský průliv",
-            "publishedAt": "2026-06-10T23:41:43Z"
+            "title": "Další úder. USA útočily na Írán, ten oznámil úplné uzavření Hormuzského průlivu",
+            "publishedAt": "2026-06-11T02:01:23Z"
+          },
+          {
+            "title": "USA ukončily další údery na Írán, Teherán hlásí útoky na Bahrajn a Kuvajt",
+            "publishedAt": "2026-06-11T01:36:00Z"
           },
           {
             "title": "Írán po amerických útocích uzavřel Hormuzský průliv pro všechny lodě",
@@ -886,10 +891,6 @@
           },
           {
             "title": "Když se jízda na kole zvrtne: jaké pojištění vás podrží",
-            "publishedAt": "2026-06-10T22:00:00Z"
-          },
-          {
-            "title": "Část zakázek na železnici zlevnila. Změny v tendrech se projeví až na konci roku",
             "publishedAt": "2026-06-10T22:00:00Z"
           }
         ]
