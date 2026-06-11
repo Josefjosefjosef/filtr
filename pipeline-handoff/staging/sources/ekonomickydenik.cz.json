@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-06-11T10:03:25.946017Z",
+  "ingestedAt": "2026-06-11T10:46:54.137294Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Smartwings přidává Lisabon. Z Prahy rozšiřuje lety i do dalších evropských měst",
+      "url": "https://ekonomickydenik.cz/smartwings-pridava-lisabon/",
+      "dt": "2026-06-11T10:22:07Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dalších",
+        "evropských",
+        "lety",
+        "lisabon",
+        "měst",
+        "prahy",
+        "přidává",
+        "rozšiřuje",
+        "smartwings"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -770,32 +796,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Peníze pro aerolinky během covidu. Spor o veřejnou podporu rozlítil dopravce",
-      "url": "https://ekonomickydenik.cz/penize-aerolinky-covid-spory-verejna-podpora/",
-      "dt": "2026-06-09T17:09:39Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "aerolinky",
-        "během",
-        "covidu",
-        "dopravce",
-        "peníze",
-        "podporu",
-        "rozlítil",
-        "spor",
-        "veřejnou"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -806,7 +806,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73231,
+      "bytes": 73378,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -843,7 +843,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T09:24:15Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T10:22:07Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -860,6 +860,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Smartwings přidává Lisabon. Z Prahy rozšiřuje lety i do dalších evropských měst",
+            "publishedAt": "2026-06-11T10:22:07Z"
+          },
           {
             "title": "Američané zuří. Kanada jim dala košem, miliardy na zbraně posílá do Evropy",
             "publishedAt": "2026-06-11T09:24:15Z"
@@ -887,10 +891,6 @@
           {
             "title": "EET pro řemeslníky? Nesmysl, tvrdí daňový poradce",
             "publishedAt": "2026-06-11T04:05:00Z"
-          },
-          {
-            "title": "Lidé čekají na byty a parkování. Praha mezitím drží miliardy na účtech, říká Prokop",
-            "publishedAt": "2026-06-10T17:35:24Z"
           }
         ]
       }

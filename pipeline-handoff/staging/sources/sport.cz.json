@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-11T10:03:25.946017Z",
+  "ingestedAt": "2026-06-11T10:46:54.137294Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jižní Korea na MS ve fotbale: Soupiska, program a historická bilance prvního soupeře Česka",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-2026-jizni-korea-bilance-soupiska-program-5476197",
+      "dt": "2026-06-11T10:19:25Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bilance",
+        "fotbale",
+        "historická",
+        "jižní",
+        "korea",
+        "program",
+        "prvního",
+        "soupeře",
+        "soupiska",
+        "česka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -736,30 +763,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Je to v háji! napadlo mě okamžitě. Odhodlaný Kuchta jde přes bolest",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-je-to-v-haji-pomyslel-si-kuchta-o-zraneni-pred-ms-sve-promene-i-budoucnosti-ve-sparte-5475960",
-      "dt": "2026-06-11T03:59:06Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bolest",
-        "háji",
-        "jde",
-        "kuchta",
-        "napadlo",
-        "odhodlaný",
-        "okamžitě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -770,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41874,
+      "bytes": 42491,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -807,7 +810,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T09:54:27Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T10:19:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -823,6 +826,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jižní Korea na MS ve fotbale: Soupiska, program a historická bilance prvního soupeře Česka",
+            "publishedAt": "2026-06-11T10:19:25Z"
+          },
           {
             "title": "Kritizovaný prezident FIS Eliasch končí, ve volbách ho těsně porazil Ospelt",
             "publishedAt": "2026-06-11T09:54:27Z"
@@ -850,10 +857,6 @@
           {
             "title": "Soupisky MS ve fotbale 2026: Nominace všech týmů na šampionátu",
             "publishedAt": "2026-06-10T15:53:08Z"
-          },
-          {
-            "title": "Mahomes má jako první hráč v NFL smlouvu na více než půl miliardy dolarů",
-            "publishedAt": "2026-06-11T09:34:29Z"
           }
         ]
       }
