@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-06-11T15:18:45.982387Z",
+  "ingestedAt": "2026-06-11T15:57:18.407791Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Somálský sudí v létě odřídí Superpohár. Fotbal má spojovat, řekla UEFA",
+      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/ms-ve-fotbale-2026-somalsko-sudi-uefa-superpohar-fifa.A260611_165143_ms-fotbal_tals",
+      "dt": "2026-06-11T15:18:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES",
+      "tokens": [
+        "fotbal",
+        "létě",
+        "odřídí",
+        "somálský",
+        "spojovat",
+        "sudí",
+        "superpohár",
+        "uefa",
+        "řekla"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -747,32 +773,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kričfaluši se Baníku vyplatil, belgický vicemistr za něj dává 121 milionů",
-      "url": "https://www.idnes.cz/fotbal/zahranici/ondrej-kricfalusi-prestup-baniku-ostrava-saint-gilloise.A260611_105959_fot_zahranici_ten",
-      "dt": "2026-06-11T09:02:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES",
-      "tokens": [
-        "121",
-        "baníku",
-        "belgický",
-        "dává",
-        "kričfaluši",
-        "milionů",
-        "něj",
-        "vicemistr",
-        "vyplatil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -783,7 +783,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47293,
+      "bytes": 46977,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -820,7 +820,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T15:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T15:18:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -837,6 +837,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Somálský sudí v létě odřídí Superpohár. Fotbal má spojovat, řekla UEFA",
+            "publishedAt": "2026-06-11T15:18:00Z"
+          },
           {
             "title": "Poslouchám intuici, očkovat se nenechám. Švýcarský kouč vysvětlil covidový skandál",
             "publishedAt": "2026-06-11T15:04:00Z"
@@ -864,10 +868,6 @@
           {
             "title": "MS ve fotbale 2026 ONLINE: Blízcí posílají reprezentantům vzkazy na šampionát",
             "publishedAt": "2026-06-11T13:58:00Z"
-          },
-          {
-            "title": "Krejčíková je v Hertogenboschi ve čtvrtfinále, na trávě poprvé slaví i Lehečka",
-            "publishedAt": "2026-06-11T13:55:00Z"
           }
         ]
       }

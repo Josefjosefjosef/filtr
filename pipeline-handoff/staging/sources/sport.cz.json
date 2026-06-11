@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-11T15:18:45.982387Z",
+  "ingestedAt": "2026-06-11T15:57:18.407791Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Brutální napadení v podání chuligánů v červenobílých kuklách. Slavia reaguje",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-brutalni-napadeni-v-podani-chuliganu-v-cervenobilych-kuklach-slavia-reaguje-5476228",
+      "dt": "2026-06-11T15:20:36Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "brutální",
+        "chuligánů",
+        "kuklách",
+        "napadení",
+        "podání",
+        "reaguje",
+        "slavia",
+        "červenobílých"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -739,30 +764,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Soupisky MS ve fotbale 2026: Nominace všech týmů na šampionátu",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-2026-soupisky-nominace-tymy-5475991",
-      "dt": "2026-06-10T15:53:08Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "2026",
-        "fotbale",
-        "nominace",
-        "soupisky",
-        "týmů",
-        "všech",
-        "šampionátu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -773,7 +774,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43115,
+      "bytes": 43824,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -810,7 +811,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T14:32:54Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T15:20:36Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -825,6 +826,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Brutální napadení v podání chuligánů v červenobílých kuklách. Slavia reaguje",
+            "publishedAt": "2026-06-11T15:20:36Z"
+          },
           {
             "title": "Náhrada za fotbalové MS. Somálský rozhodčí, kterého nepustili do USA, odřídí Superpohár UEFA",
             "publishedAt": "2026-06-11T14:18:33Z"
@@ -852,10 +857,6 @@
           {
             "title": "Krejčíková pomstila Bartůňkovou a v Hertogenboschi je ve čtvrtfinále",
             "publishedAt": "2026-06-11T13:21:10Z"
-          },
-          {
-            "title": "Kritizovaný prezident FIS Eliasch končí, ve volbách ho těsně porazil Ospelt",
-            "publishedAt": "2026-06-11T09:54:27Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-06-11T15:18:45.982387Z",
+  "ingestedAt": "2026-06-11T15:57:18.407791Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Živě: SMO ČR ocení inspirativní starosty a primátory. Slavnostní večer bude v Senátu",
+      "url": "https://domaci.hn.cz/c1-67890050-zive-smo-cr-oceni-inspirativni-starosty-a-primatory-slavnostni-vecer-bude-v-senatu",
+      "dt": "2026-06-11T15:45:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN",
+      "tokens": [
+        "inspirativní",
+        "ocení",
+        "primátory",
+        "senátu",
+        "slavnostní",
+        "smo",
+        "starosty",
+        "večer"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -1083,33 +1108,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zemřela Zdena Mašínová. Dcera hrdiny druhého odboje čelila za komunismu perzekuci",
-      "url": "https://domaci.hn.cz/c1-67889720-zemrela-zdena-masinova-dcera-hrdiny-druheho-odboje-celila-za-komunismu-perzekuci",
-      "dt": "2026-06-10T17:41:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN",
-      "tokens": [
-        "dcera",
-        "druhého",
-        "hrdiny",
-        "komunismu",
-        "mašínová",
-        "odboje",
-        "perzekuci",
-        "zdena",
-        "zemřela",
-        "čelila"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1120,7 +1118,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 186007,
+      "bytes": 186005,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1157,11 +1155,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-11T15:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T15:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 5,
           "finance": 33,
+          "zpravy": 5,
           "zdravi": 2
         },
         "drop_counts": {
@@ -1174,6 +1172,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Živě: SMO ČR ocení inspirativní starosty a primátory. Slavnostní večer bude v Senátu",
+            "publishedAt": "2026-06-11T15:45:00Z"
+          },
           {
             "title": "Vlastní pokojíček ve vlaku. Komfortní německé vagony budou jezdit z východu Slovenska do Prahy – a je to zamotaný příběh",
             "publishedAt": "2026-06-11T15:01:00Z"
@@ -1201,10 +1203,6 @@
           {
             "title": "Prodáno, zaplaceno. Pražské sídliště Písnice přebírá za miliardy korun fond z dílny skupiny Wood & Company",
             "publishedAt": "2026-06-11T13:11:00Z"
-          },
-          {
-            "title": "Železo tu taví od dob krále Jiřího z Poděbrad. Slavný středočeský závod teď kupuje světový lídr",
-            "publishedAt": "2026-06-11T13:05:00Z"
           }
         ]
       }
