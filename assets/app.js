@@ -27582,6 +27582,7 @@ function buildVideoAsArticleCard(it) {
           <div class="iu-video"><iframe src="https://www.youtube-nocookie.com/embed/IHlkhnhRsZI?rel=0&amp;modestbranding=1" title="Jak používat Linguee" loading="lazy" allowfullscreen></iframe></div>
         </div>
       `;
+      void iuEnsureFrancLoaded();
       iuTrInit(quick, data);
       iuTrNotesBootstrap(quick);
       const preposlatBtn = document.getElementById("iuTrHeaderPreposlat");
@@ -27751,6 +27752,41 @@ function buildVideoAsArticleCard(it) {
   const IU_TR_PREFILL_LIMIT = 900;
   const IU_TR_DETECT_MIN = 40;
 
+  var iuFrancPromise = null;
+  function iuEnsureFrancLoaded() {
+    try {
+      if (typeof window !== "undefined") {
+        window.__iuFrancDeferState = window.__iuFrancDeferState || {
+          loadCount: 0,
+          loadedAt: null,
+          moduleEvalAt: typeof performance !== "undefined" && performance.now ? performance.now() : 0,
+        };
+      }
+    } catch (_) {}
+    try {
+      if (typeof window.franc === "function") return Promise.resolve();
+    } catch (_) {}
+    if (iuFrancPromise) return iuFrancPromise;
+    iuFrancPromise = import("/assets/vendor/franc-min.js")
+      .then(function (m) {
+        try {
+          window.franc = m.franc;
+          if (window.__iuFrancDeferState) {
+            window.__iuFrancDeferState.loadCount += 1;
+            window.__iuFrancDeferState.loadedAt =
+              typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+          }
+        } catch (_) {}
+      })
+      .catch(function (e) {
+        iuFrancPromise = null;
+        try {
+          console.warn("[iu] franc-min import failed", e);
+        } catch (_) {}
+      });
+    return iuFrancPromise;
+  }
+
   function iuTrInit(quick, data){
     const textarea = document.getElementById("iuTrText");
     const langEl = document.getElementById("iuTrLang");
@@ -27760,14 +27796,18 @@ function buildVideoAsArticleCard(it) {
     const clearBtn = document.getElementById("iuTrClear");
     if (!textarea || !langEl || !countEl) return;
 
+    void iuEnsureFrancLoaded();
+
     function updateCount(){ const n = (textarea.value || "").length; countEl.textContent = n + " znaků"; }
     function updateLang(){
       const text = (textarea.value || "").trim();
       if (text.length < IU_TR_DETECT_MIN) { langEl.textContent = "Odhad jazyka: —"; return; }
-      try {
-        const code = (typeof window.franc === "function") ? window.franc(text) : "und";
-        langEl.textContent = "Odhad jazyka: " + (code && code !== "und" ? iuTrLangName(code) : "—");
-      } catch(e){ langEl.textContent = "Odhad jazyka: —"; }
+      iuEnsureFrancLoaded().then(function () {
+        try {
+          const code = (typeof window.franc === "function") ? window.franc(text) : "und";
+          langEl.textContent = "Odhad jazyka: " + (code && code !== "und" ? iuTrLangName(code) : "—");
+        } catch(e){ langEl.textContent = "Odhad jazyka: —"; }
+      });
     }
     function showToast(msg){ if (toastEl) { toastEl.textContent = msg; toastEl.classList.add("iuTrToastVisible"); setTimeout(() => { toastEl.textContent = ""; toastEl.classList.remove("iuTrToastVisible"); }, 3000); } }
 
@@ -27797,6 +27837,7 @@ function buildVideoAsArticleCard(it) {
       const baseUrl = item.baseUrl || item.url || "#";
       if (!text) { window.open(baseUrl, "_blank", "noopener,noreferrer"); return; }
       let from = "auto", to = "cs";
+      await iuEnsureFrancLoaded();
       if (typeof window.franc === "function") {
         try { const iso = window.franc(text); from = (iso && iso !== "und") ? iuTrIsoToUrl(iso) : "en"; } catch(_){ from = "en"; }
       }
