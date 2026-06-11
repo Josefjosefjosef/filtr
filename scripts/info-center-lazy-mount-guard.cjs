@@ -225,8 +225,11 @@ async function runViewport(browser, vp, baseUrl) {
   });
   checks.regression_silver = regression.silver_stack !== "MISSING";
   checks.regression_calendar = regression.calendar_overlay === "PRESENT_HIDDEN";
-  checks.regression_tasks = regression.tasks_overlay === "PRESENT_HIDDEN";
-  checks.regression_notes = regression.notes_overlay === "PRESENT_HIDDEN";
+  /* Overlay-cluster lazy mount (P1 fix #4): tasks/notes overlays no longer
+     exist at load — they mount on first open. MISSING at load is the new
+     expected state; PRESENT_HIDDEN kept for pre-fix builds. */
+  checks.regression_tasks = regression.tasks_overlay === "PRESENT_HIDDEN" || regression.tasks_overlay === "MISSING";
+  checks.regression_notes = regression.notes_overlay === "PRESENT_HIDDEN" || regression.notes_overlay === "MISSING";
   checks.regression_weather = regression.weather_card !== "MISSING" && regression.weather_view !== "MISSING";
   checks.regression_finance = regression.finance_card !== "MISSING";
   checks.regression_parcelwatch = regression.parcel_card !== "MISSING" && regression.parcel_modal !== "MISSING";

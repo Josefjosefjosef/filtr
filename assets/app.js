@@ -11644,6 +11644,20 @@ function buildVideoAsArticleCard(it) {
       }catch{}
     }
 
+    /* Overlay is lazy-mounted on first open (P1 perf fix) — watch body for its
+       insertion so the close-refresh observer attaches no matter which trigger
+       opened it (Silver card, mind menu, mobile tools). */
+    try{
+      const bodyObs = new MutationObserver(() => {
+        const ov = document.getElementById("iuTasksOverlay");
+        if (!ov) return;
+        tryAttachOverlayObserver();
+        try{ bodyObs.disconnect(); }catch{}
+      });
+      if (document.getElementById("iuTasksOverlay")) tryAttachOverlayObserver();
+      else bodyObs.observe(document.body, { childList: true });
+    }catch{}
+
     let inFlight = 0;
     function openTasks(triggerEl){
       if (inFlight) return;
@@ -11653,7 +11667,8 @@ function buildVideoAsArticleCard(it) {
       if (svc && typeof svc.openOverlay === "function"){
         try{ svc.openOverlay(triggerEl || card); }catch{}
       }
-      try{ setTimeout(() => refresh(), 0); }catch{}
+      /* Overlay is lazy-mounted on first open — (re)attach the close observer here. */
+      try{ setTimeout(() => { refresh(); tryAttachOverlayObserver(); }, 0); }catch{}
     }
 
     try{
@@ -22417,7 +22432,94 @@ function buildVideoAsArticleCard(it) {
   try { window.iuCustomButtonsOverlayClose = iuCustomButtonsOverlayClose; } catch (_) {}
   try { window.iuCustomButtonsOverlayOpen = iuCustomButtonsOverlayOpen; } catch (_) {}
 
+  /* P1 perf (overlay cluster lazy mount): panel+backdrop ship inside an inert
+     <template id="iuLazyOverlayTpl-custombuttons"> and mount on first open. */
+  function iuCustomButtonsEnsureMounted() {
+    if (document.getElementById("iuCustomButtonsPanel")) {
+      iuCustomButtonsBindPanel();
+      return true;
+    }
+    const tpl = document.getElementById("iuLazyOverlayTpl-custombuttons");
+    if (!tpl || !tpl.content) return false;
+    try {
+      tpl.parentNode.insertBefore(tpl.content.cloneNode(true), tpl);
+      tpl.parentNode.removeChild(tpl);
+    } catch (_) {
+      return false;
+    }
+    iuCustomButtonsBindPanel();
+    return true;
+  }
+
+  /* Panel-scoped bindings (formerly bound eagerly inside iuCustomButtonsInit). */
+  function iuCustomButtonsBindPanel() {
+    if (window.__iuCustomButtonsPanelBound) return;
+    const panel = document.getElementById("iuCustomButtonsPanel");
+    const backdrop = document.getElementById("iuCustomButtonsBackdrop");
+    const closeBtn = document.getElementById("iuCustomButtonsClose");
+    const form = document.getElementById("iuCustomButtonsForm");
+    const list = document.getElementById("iuCustomButtonsList");
+    const deleteDlg = document.getElementById("iuCustomButtonsDeleteConfirm");
+    if (!panel || !form) return;
+    window.__iuCustomButtonsPanelBound = 1;
+
+    if (closeBtn) closeBtn.addEventListener("click", function(){ iuCustomButtonsOverlayClose(); });
+    if (backdrop) backdrop.addEventListener("click", function(){ iuCustomButtonsOverlayClose(); });
+    panel.addEventListener("click", function(e){
+      if (e.target === panel) iuCustomButtonsOverlayClose();
+    });
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      iuCustomButtonsSaveFromForm();
+    });
+    if (list) {
+      list.addEventListener("click", function(e){
+        const t = e.target;
+        if (!t || !t.closest) return;
+        const editBtn = t.closest("[data-custom-btn-edit]");
+        if (editBtn) {
+          const id = editBtn.getAttribute("data-custom-btn-edit");
+          let cfg = loadQuickToolsConfig();
+          if (!cfg) cfg = getDefaultQuickToolsConfig();
+          cfg = sanitizeQuickToolsConfig(cfg);
+          const btn = (cfg.customButtons || []).find(function(b){ return b.id === id; });
+          if (!btn) return;
+          const editIdEl = document.getElementById("iuCustomButtonsEditId");
+          const nameEl = document.getElementById("iuCustomButtonsName");
+          const urlEl = document.getElementById("iuCustomButtonsUrl");
+          if (editIdEl) editIdEl.value = btn.id;
+          if (nameEl) nameEl.value = btn.label;
+          if (urlEl) urlEl.value = btn.url;
+          iuCustomButtonsShowFormError("");
+          iuCustomButtonsUpdateFormState();
+          if (nameEl) nameEl.focus();
+          return;
+        }
+        const delBtn = t.closest("[data-custom-btn-delete]");
+        if (delBtn) {
+          iuCustomButtonsShowDeleteConfirm(delBtn.getAttribute("data-custom-btn-delete"));
+        }
+      });
+    }
+    if (deleteDlg) {
+      deleteDlg.addEventListener("click", function(e){
+        const t = e.target;
+        if (!t || !t.closest) return;
+        if (t.closest("[data-custom-btn-cancel]")) {
+          iuCustomButtonsHideDeleteConfirm();
+          return;
+        }
+        if (t.closest("[data-custom-btn-confirm-delete]")) {
+          const id = iuCustomButtonsPendingDeleteId;
+          iuCustomButtonsHideDeleteConfirm();
+          iuCustomButtonsDeleteById(id);
+        }
+      });
+    }
+  }
+
   function iuCustomButtonsOverlayOpen() {
+    iuCustomButtonsEnsureMounted();
     const panel = document.getElementById("iuCustomButtonsPanel");
     const backdrop = document.getElementById("iuCustomButtonsBackdrop");
     if (!panel || !backdrop) return;
@@ -22612,14 +22714,10 @@ function buildVideoAsArticleCard(it) {
   function iuCustomButtonsInit() {
     if (window.__iuCustomButtonsInitDone) return;
     window.__iuCustomButtonsInitDone = 1;
-    const panel = document.getElementById("iuCustomButtonsPanel");
-    const backdrop = document.getElementById("iuCustomButtonsBackdrop");
-    const closeBtn = document.getElementById("iuCustomButtonsClose");
-    const form = document.getElementById("iuCustomButtonsForm");
-    const list = document.getElementById("iuCustomButtonsList");
-    const deleteDlg = document.getElementById("iuCustomButtonsDeleteConfirm");
-    if (!panel || !form) return;
 
+    /* Document-level handlers stay eager; panel-scoped bindings happen in
+       iuCustomButtonsBindPanel() on first mount (lazy) or now when the panel
+       is already in the DOM (template missing fallback). */
     document.addEventListener("click", function(e){
       const t = e.target;
       if (!t || !t.closest) return;
@@ -22632,59 +22730,6 @@ function buildVideoAsArticleCard(it) {
       }
     }, false);
 
-    if (closeBtn) closeBtn.addEventListener("click", function(){ iuCustomButtonsOverlayClose(); });
-    if (backdrop) backdrop.addEventListener("click", function(){ iuCustomButtonsOverlayClose(); });
-    panel.addEventListener("click", function(e){
-      if (e.target === panel) iuCustomButtonsOverlayClose();
-    });
-    form.addEventListener("submit", function(e){
-      e.preventDefault();
-      iuCustomButtonsSaveFromForm();
-    });
-    if (list) {
-      list.addEventListener("click", function(e){
-        const t = e.target;
-        if (!t || !t.closest) return;
-        const editBtn = t.closest("[data-custom-btn-edit]");
-        if (editBtn) {
-          const id = editBtn.getAttribute("data-custom-btn-edit");
-          let cfg = loadQuickToolsConfig();
-          if (!cfg) cfg = getDefaultQuickToolsConfig();
-          cfg = sanitizeQuickToolsConfig(cfg);
-          const btn = (cfg.customButtons || []).find(function(b){ return b.id === id; });
-          if (!btn) return;
-          const editIdEl = document.getElementById("iuCustomButtonsEditId");
-          const nameEl = document.getElementById("iuCustomButtonsName");
-          const urlEl = document.getElementById("iuCustomButtonsUrl");
-          if (editIdEl) editIdEl.value = btn.id;
-          if (nameEl) nameEl.value = btn.label;
-          if (urlEl) urlEl.value = btn.url;
-          iuCustomButtonsShowFormError("");
-          iuCustomButtonsUpdateFormState();
-          if (nameEl) nameEl.focus();
-          return;
-        }
-        const delBtn = t.closest("[data-custom-btn-delete]");
-        if (delBtn) {
-          iuCustomButtonsShowDeleteConfirm(delBtn.getAttribute("data-custom-btn-delete"));
-        }
-      });
-    }
-    if (deleteDlg) {
-      deleteDlg.addEventListener("click", function(e){
-        const t = e.target;
-        if (!t || !t.closest) return;
-        if (t.closest("[data-custom-btn-cancel]")) {
-          iuCustomButtonsHideDeleteConfirm();
-          return;
-        }
-        if (t.closest("[data-custom-btn-confirm-delete]")) {
-          const id = iuCustomButtonsPendingDeleteId;
-          iuCustomButtonsHideDeleteConfirm();
-          iuCustomButtonsDeleteById(id);
-        }
-      });
-    }
     document.addEventListener("keydown", function(e){
       if (e.key !== "Escape") return;
       const dlg = document.getElementById("iuCustomButtonsDeleteConfirm");
@@ -22695,6 +22740,8 @@ function buildVideoAsArticleCard(it) {
       const p = document.getElementById("iuCustomButtonsPanel");
       if (p && !p.hidden) iuCustomButtonsOverlayClose();
     });
+
+    iuCustomButtonsBindPanel();
   }
 
   function iuQuickToolsInit() {
@@ -29186,7 +29233,84 @@ function buildVideoAsArticleCard(it) {
     iuDsLastFocus = null;
   }
 
+  /* P1 perf (overlay cluster lazy mount): #iuDsOverlay + #iuDsPanel ship inside
+     an inert <template id="iuLazyOverlayTpl-datovka"> and mount on first open. */
+  function iuDsEnsureMounted() {
+    if (document.getElementById("iuDsPanel")) {
+      iuDsBindPanel();
+      return true;
+    }
+    const tpl = document.getElementById("iuLazyOverlayTpl-datovka");
+    if (!tpl || !tpl.content) return false;
+    try {
+      tpl.parentNode.insertBefore(tpl.content.cloneNode(true), tpl);
+      tpl.parentNode.removeChild(tpl);
+    } catch (_) {
+      return false;
+    }
+    iuDsBindPanel();
+    return true;
+  }
+
+  /* Panel-scoped bindings (formerly bound eagerly inside iuDsInit). */
+  function iuDsBindPanel() {
+    if (window.__iuDsPanelBound) return;
+    const addBtn = document.getElementById("iuDsAddBtn");
+    const overlay = document.getElementById("iuDsOverlay");
+    const panel = document.getElementById("iuDsPanel");
+    const modalInner = panel ? panel.querySelector(".iu-ds-modal") : null;
+    if (!panel) return;
+    window.__iuDsPanelBound = true;
+
+    iuDsEnsureGuardClasses();
+    iuDsMountDeleteConfirm();
+
+    if (addBtn) {
+      addBtn.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        iuDsSyncFromDomIfOpen();
+        if (iuDsProfiles.length >= IU_DS_MAX) return;
+        const t = iuDsNow();
+        iuDsProfiles.push({ id: iuDsNewId(), label: "", username: "", password: "", createdAt: t, updatedAt: t });
+        iuDsPersist();
+        iuDsRender();
+        try {
+          const host = document.getElementById("iuDsProfileListHost");
+          const last = host ? host.querySelector(".iu-ds-profile:last-of-type .iu-ds-f-label") : null;
+          if (last) last.focus();
+        } catch (_) {}
+      });
+    }
+
+    if (overlay) {
+      overlay.addEventListener("click", function () {
+        if (iuDsDeleteConfirmIsOpen()) {
+          iuDsCloseDeleteConfirm();
+          return;
+        }
+        iuDatovkaCloseSurface();
+      });
+    }
+    if (panel) {
+      panel.addEventListener("click", function (e) {
+        if (e.target === panel) {
+          if (iuDsDeleteConfirmIsOpen()) {
+            iuDsCloseDeleteConfirm();
+            return;
+          }
+          iuDatovkaCloseSurface();
+        }
+      });
+    }
+    if (modalInner) {
+      modalInner.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+    }
+  }
+
   function iuDatovkaOpenSurface() {
+    iuDsEnsureMounted();
     const panel = document.getElementById("iuDsPanel");
     const overlay = document.getElementById("iuDsOverlay");
     if (!panel || !overlay) return;
@@ -29271,58 +29395,14 @@ function buildVideoAsArticleCard(it) {
   function iuDsInit() {
     if (window.__iuDsInitOnce) return;
     window.__iuDsInitOnce = true;
-    const addBtn = document.getElementById("iuDsAddBtn");
-    const overlay = document.getElementById("iuDsOverlay");
-    const panel = document.getElementById("iuDsPanel");
-    const modalInner = panel ? panel.querySelector(".iu-ds-modal") : null;
 
+    /* Panel-scoped bindings moved to iuDsBindPanel() — runs on first lazy
+       mount, or right away when the panel is already in the DOM (fallback).
+       iuDsEnsureGuardClasses stays eager: it also tags the calendar close
+       button (null-safe for the not-yet-mounted DS panel). */
     iuDsEnsureGuardClasses();
-    iuDsMountDeleteConfirm();
-
     iuDsLoadFromStorage();
-
-    if (addBtn) {
-      addBtn.addEventListener("click", function (ev) {
-        ev.preventDefault();
-        iuDsSyncFromDomIfOpen();
-        if (iuDsProfiles.length >= IU_DS_MAX) return;
-        const t = iuDsNow();
-        iuDsProfiles.push({ id: iuDsNewId(), label: "", username: "", password: "", createdAt: t, updatedAt: t });
-        iuDsPersist();
-        iuDsRender();
-        try {
-          const host = document.getElementById("iuDsProfileListHost");
-          const last = host ? host.querySelector(".iu-ds-profile:last-of-type .iu-ds-f-label") : null;
-          if (last) last.focus();
-        } catch (_) {}
-      });
-    }
-
-    if (overlay) {
-      overlay.addEventListener("click", function () {
-        if (iuDsDeleteConfirmIsOpen()) {
-          iuDsCloseDeleteConfirm();
-          return;
-        }
-        iuDatovkaCloseSurface();
-      });
-    }
-    if (panel) {
-      panel.addEventListener("click", function (e) {
-        if (e.target === panel) {
-          if (iuDsDeleteConfirmIsOpen()) {
-            iuDsCloseDeleteConfirm();
-            return;
-          }
-          iuDatovkaCloseSurface();
-        }
-      });
-    }
-    if (modalInner) {
-      modalInner.addEventListener("click", function (e) {
-        e.stopPropagation();
-      });
-    }
+    iuDsBindPanel();
 
     document.addEventListener(
       "keydown",
@@ -34486,7 +34566,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function openOverlay(originEl){
-    ensureOverlayDomFresh();
+    mountOverlay(); /* lazy mount on first open (covers DOM-version refresh too) */
     const ov = getOverlay();
     if (!ov) return;
     state.returnFocusEl = originEl || document.activeElement;
@@ -34976,8 +35056,9 @@ function buildVideoAsArticleCard(it) {
     if (state.inited) return;
     state.inited = true;
     ensureStyles();
-    mountOverlay();
-    ensureOverlayDomFresh();
+    /* P1 perf (overlay cluster lazy mount): overlay DOM is built on first
+       openOverlay() — not at startup. All UI handlers are document-delegated
+       and overlay-scoped handlers attach inside mountOverlay(). */
     loadNotes();
     sortNotesInPlace(state.data.notes);
     if (!state.selectedId){
@@ -35784,7 +35865,8 @@ function buildVideoAsArticleCard(it) {
   function init(){
     if (state.inited) return;
     state.inited = true;
-    mountOverlay();
+    /* P1 perf (overlay cluster lazy mount): overlay DOM is built on first
+       openOverlay() — not at startup. bindUi() is document-delegated. */
     /* Hydrate in-memory store from localStorage before exposing tasksGetSnapshot (summary box, etc.). */
     loadTasks();
     bindUi();
