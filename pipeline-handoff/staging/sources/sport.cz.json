@@ -1,29 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-11T19:25:05.766074Z",
+  "ingestedAt": "2026-06-11T20:18:29.512983Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Mexiko v euforii! Domácí výběr využil obří chyby soupeře, tribuny šílí",
+      "title": "FOTBAL ONLINE: Totální mexická euforie! Domácí drtí soupeře, ten navíc viděl červenou",
       "url": "https://www.sport.cz/clanek/fotbal-ms-2026-mexiko-jihoafricka-republika-jar-online-5476038",
       "dt": "2026-06-11T11:47:27Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "chyby",
         "domácí",
-        "euforii",
+        "drtí",
+        "euforie",
         "fotbal",
-        "mexiko",
-        "obří",
+        "mexická",
+        "navíc",
         "online",
         "soupeře",
-        "tribuny",
-        "využil",
-        "výběr",
-        "šílí"
+        "ten",
+        "totální",
+        "viděl",
+        "červenou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Změna v nominaci úřadujících mistrů světa. Nový spoluhráč Kinského jede na mundial",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-zmena-v-nominaci-uradujicich-mistru-sveta-novy-spoluhrac-kinskeho-jede-na-mundial-5476312",
+      "dt": "2026-06-11T20:09:00Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "jede",
+        "kinského",
+        "mistrů",
+        "mundial",
+        "nominaci",
+        "nový",
+        "spoluhráč",
+        "světa",
+        "změna",
+        "úřadujících"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -741,34 +768,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Obrovská pocta, ale i velká zodpovědnost, ví Eliáš. V reprezentaci by chtěl dát prostor mladým",
-      "url": "https://www.sport.cz/clanek/hokej-reprezentace-obrovska-pocta-ale-i-velka-zodpovednost-vi-elias-v-reprezentaci-by-chtel-dat-prostor-mladym-5476215",
-      "dt": "2026-06-11T12:41:50Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ale",
-        "chtěl",
-        "dát",
-        "eliáš",
-        "mladým",
-        "obrovská",
-        "pocta",
-        "prostor",
-        "reprezentaci",
-        "velká",
-        "zodpovědnost"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41900,
+      "bytes": 41790,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,7 +815,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T19:22:16Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T20:09:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -833,8 +832,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Mexiko v euforii! Domácí výběr využil obří chyby soupeře, tribuny šílí",
+            "title": "FOTBAL ONLINE: Totální mexická euforie! Domácí drtí soupeře, ten navíc viděl červenou",
             "publishedAt": "2026-06-11T11:47:27Z"
+          },
+          {
+            "title": "Změna v nominaci úřadujících mistrů světa. Nový spoluhráč Kinského jede na mundial",
+            "publishedAt": "2026-06-11T20:09:00Z"
           },
           {
             "title": "Velká ztráta pro Japonsko, těsně před MS přišlo o kapitána",
@@ -859,10 +862,6 @@
           {
             "title": "Kanoista Fuksa si na ME vyjel dvě finále. Dařilo se i Dostálovi na pětistovce",
             "publishedAt": "2026-06-11T11:55:34Z"
-          },
-          {
-            "title": "Češi vstoupí do mistrovství světa proti Korejcům",
-            "publishedAt": "2026-06-11T18:00:00Z"
           }
         ]
       }
