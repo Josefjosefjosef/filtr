@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-06-11T14:40:29.352643Z",
+  "ingestedAt": "2026-06-11T15:18:45.982387Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Poslouchám intuici, očkovat se nenechám. Švýcarský kouč vysvětlil covidový skandál",
+      "url": "https://www.idnes.cz/hokej/reprezentace/patrick-fischer-priznani-trener-svycarsko-covid-ockovani-skandal.A260611_101641_reprezentace_drev",
+      "dt": "2026-06-11T15:04:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES",
+      "tokens": [
+        "covidový",
+        "intuici",
+        "kouč",
+        "nenechám",
+        "očkovat",
+        "poslouchám",
+        "skandál",
+        "vysvětlil",
+        "švýcarský"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jména, která by nikdo nečekal. Kterým tenistům nejvíce vyhovuje travnatý povrch",
+      "url": "https://www.idnes.cz/sport/trendy/jmena-ktera-by-nikdo-necekal-kterym-tenistum-nejvice-vyhovuje-travnaty-povrch.A260611_095325_trendy_blah",
+      "dt": "2026-06-11T15:03:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES",
+      "tokens": [
+        "jména",
+        "nejvíce",
+        "nečekal",
+        "nikdo",
+        "povrch",
+        "tenistům",
+        "travnatý",
+        "vyhovuje"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -722,58 +773,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Z gauče je cyklistika mnohem příjemnější! Neumanová o brzkém konci, zdraví i UAE",
-      "url": "https://www.idnes.cz/sport/cyklistika/tereza-neumanova-konec-kariery-ohlednuti-zdravotni-komplikace.A260608_142356_cyklistika_ipet",
-      "dt": "2026-06-11T09:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES",
-      "tokens": [
-        "brzkém",
-        "cyklistika",
-        "gauče",
-        "konci",
-        "mnohem",
-        "neumanová",
-        "příjemnější",
-        "uae",
-        "zdraví"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rekordní obrat a NY Knicks jsou výhru od titulu. Spurs promarnili náskok 29 bodů",
-      "url": "https://www.idnes.cz/sport/basket/finale-play-off-nba-4-zapas-new-york-knicks-san-antonio-spurs-107-106.A260611_070429_sport-basket_ten",
-      "dt": "2026-06-11T08:35:18Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES",
-      "tokens": [
-        "bodů",
-        "knicks",
-        "náskok",
-        "obrat",
-        "promarnili",
-        "rekordní",
-        "spurs",
-        "titulu",
-        "výhru"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +783,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47448,
+      "bytes": 47293,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +820,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T14:16:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T15:04:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -838,6 +837,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poslouchám intuici, očkovat se nenechám. Švýcarský kouč vysvětlil covidový skandál",
+            "publishedAt": "2026-06-11T15:04:00Z"
+          },
+          {
+            "title": "Jména, která by nikdo nečekal. Kterým tenistům nejvíce vyhovuje travnatý povrch",
+            "publishedAt": "2026-06-11T15:03:00Z"
+          },
           {
             "title": "Čeští soupeři na MS: Nestárnoucí gólman, elitní Korejci i tým, kterému odečítali body",
             "publishedAt": "2026-06-11T14:16:00Z"
@@ -861,14 +868,6 @@
           {
             "title": "Krejčíková je v Hertogenboschi ve čtvrtfinále, na trávě poprvé slaví i Lehečka",
             "publishedAt": "2026-06-11T13:55:00Z"
-          },
-          {
-            "title": "Slavnostní zahájení MS ve fotbale 2026: Program, časy a hvězdy",
-            "publishedAt": "2026-06-11T13:49:00Z"
-          },
-          {
-            "title": "Kdo bude hrát pod košem? Ptáčkovou v přípravě trápí absence klíčových hráček",
-            "publishedAt": "2026-06-11T13:35:00Z"
           }
         ]
       }
