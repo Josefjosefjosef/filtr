@@ -30,6 +30,11 @@ import {
   resolveFeedUrlForP0,
 } from "./content-freshness-guard-lib.mjs";
 
+const __guardDir = path.dirname(fileURLToPath(import.meta.url));
+const topicDedupeSuppressedPath =
+  process.env.TOPIC_DEDUPE_SUPPRESSED_PATH ||
+  path.join(__guardDir, "..", "projects", "data", "topic_dedupe_suppressed.json");
+
 const sampleCount = Math.max(1, Number(process.env.TRACE_SAMPLE_COUNT || "5"));
 const maxAgeH = Number(process.env.TRACE_MAX_AGE_HOURS || "6");
 const maxAgeMs = maxAgeH * 3_600_000;
@@ -109,6 +114,35 @@ export function p0DefForSourceId(sourceId) {
   return P0_CONTENT_SOURCES.find((d) => d.id === sourceId) || null;
 }
 
+/** Canonical URLs of articles intentionally hidden by topic dedupe (suppressed report). */
+export function loadTopicDedupeSuppressedUrls(filePath = topicDedupeSuppressedPath) {
+  const out = new Set();
+  try {
+    const raw = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    const rows = Array.isArray(raw) ? raw : raw.suppressed || [];
+    for (const r of rows) {
+      const u = canonicalUrl(r && r.url);
+      if (u) out.add(u);
+    }
+  } catch {
+    /* suppressed report optional */
+  }
+  return out;
+}
+
+/** Canonical URLs kept on cluster winners as alternativeSources (dedupe losers). */
+export function buildDedupeAlternativeUrlSet(articles) {
+  const out = new Set();
+  for (const a of articles) {
+    if (!a || !Array.isArray(a.alternativeSources)) continue;
+    for (const alt of a.alternativeSources) {
+      const u = canonicalUrl(alt && alt.url);
+      if (u) out.add(u);
+    }
+  }
+  return out;
+}
+
 /** Newest bundle article for a P0 source (optional freshness floor). */
 export function newestArticleForP0Source(articles, def, referenceMs, minPublishedMs = null) {
   let best = null;
@@ -128,12 +162,16 @@ export function newestArticleForP0Source(articles, def, referenceMs, minPublishe
  * Trace one sampled RSS item: exact URL OR fresh P0 source presence in bundle.
  * Returns { pass, matchMode, article?, productionTs? }.
  */
-export function evaluateTraceSampleItem(item, articles, def, byUrl, referenceMs) {
+export function evaluateTraceSampleItem(item, articles, def, byUrl, referenceMs, dedupeSuppressedUrls = null) {
   if (!def) return { pass: false, matchMode: "unknown_source" };
 
   const urlHit = byUrl.get(canonicalUrl(item.url));
   if (urlHit) {
     return { pass: true, matchMode: "url", article: urlHit };
+  }
+
+  if (dedupeSuppressedUrls && dedupeSuppressedUrls.has(canonicalUrl(item.url))) {
+    return { pass: true, matchMode: "dedupe_suppressed" };
   }
 
   const minFreshMs = referenceMs - freshnessFailMs;
@@ -172,13 +210,16 @@ export async function runActiveArticleTraceGuard() {
     return 1;
   }
 
+  const dedupeSuppressedUrls = loadTopicDedupeSuppressedUrls();
+  for (const u of buildDedupeAlternativeUrlSet(articles)) dedupeSuppressedUrls.add(u);
+
   const allCandidates = await collectRecentRssCandidates();
   const bundleAligned = filterCandidatesForBundleSnapshot(allCandidates, generatedMs, bundleSlackMs);
   const excludedPostBundle = allCandidates.length - bundleAligned.length;
   const sample = pickSample(bundleAligned);
 
   log(
-    `bundle_generatedAt=${new Date(generatedMs).toISOString()} bundle_slack_minutes=${bundleSlackMin} rss_candidates_recent=${allCandidates.length} rss_candidates_bundle_aligned=${bundleAligned.length} rss_excluded_post_bundle=${excludedPostBundle} tracing=${sample.length}`,
+    `bundle_generatedAt=${new Date(generatedMs).toISOString()} bundle_slack_minutes=${bundleSlackMin} rss_candidates_recent=${allCandidates.length} rss_candidates_bundle_aligned=${bundleAligned.length} rss_excluded_post_bundle=${excludedPostBundle} dedupe_suppressed_urls=${dedupeSuppressedUrls.size} tracing=${sample.length}`,
   );
 
   if (sample.length === 0) {
@@ -192,16 +233,21 @@ export async function runActiveArticleTraceGuard() {
   const traces = [];
   for (const item of sample) {
     const def = p0DefForSourceId(item.sourceId);
-    const result = evaluateTraceSampleItem(item, articles, def, byUrl, generatedMs);
+    const result = evaluateTraceSampleItem(item, articles, def, byUrl, generatedMs, dedupeSuppressedUrls);
     const hit = result.article || null;
     const trace = {
       source: item.source,
       title: item.title,
       published_at: item.publishedAt,
       rss_found: true,
-      crawler_found: Boolean(hit),
-      normalized: Boolean(hit && hit.title),
-      dedupe_result: result.pass ? "accepted" : result.matchMode,
+      crawler_found: Boolean(hit) || result.matchMode === "dedupe_suppressed",
+      normalized: Boolean(hit && hit.title) || result.matchMode === "dedupe_suppressed",
+      dedupe_result:
+        result.matchMode === "dedupe_suppressed"
+          ? "suppressed_duplicate"
+          : result.pass
+            ? "accepted"
+            : result.matchMode,
       published: result.pass,
       in_articles_json: result.pass,
       match_mode: result.matchMode,

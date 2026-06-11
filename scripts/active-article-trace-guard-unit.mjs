@@ -7,7 +7,13 @@ import {
   filterRssCandidatesForBundleSnapshot,
   isRssPublishTraceableAtBundle,
 } from "./content-freshness-guard-lib.mjs";
-import { filterCandidatesForBundleSnapshot, pickSample, evaluateTraceSampleItem, p0DefForSourceId } from "./active-article-trace-guard.mjs";
+import {
+  filterCandidatesForBundleSnapshot,
+  pickSample,
+  evaluateTraceSampleItem,
+  p0DefForSourceId,
+  buildDedupeAlternativeUrlSet,
+} from "./active-article-trace-guard.mjs";
 import { buildArticleUrlIndex } from "./content-freshness-guard-lib.mjs";
 
 const bundleMs = Date.parse("2026-06-02T06:09:00.000Z");
@@ -121,6 +127,33 @@ const staleCt24 = [
 ];
 const r3 = evaluateTraceSampleItem(rssHeadline, staleCt24, ct24Def, byUrl, refMs);
 assert(!r3.pass && r3.matchMode === "stale_source", "stale P0 source → FAIL");
+
+// 3b) Source stale, but sampled URL was suppressed by topic dedupe → PASS
+const suppressedSet = new Set([rssHeadline.url.toLowerCase()]);
+const r3b = evaluateTraceSampleItem(rssHeadline, staleCt24, ct24Def, byUrl, refMs, suppressedSet);
+assert(
+  r3b.pass && r3b.matchMode === "dedupe_suppressed",
+  "topic-dedupe-suppressed RSS item must PASS as dedupe_suppressed",
+);
+
+// 3c) Same scenario without suppression info still FAILs (guard integrity)
+const r3c = evaluateTraceSampleItem(rssHeadline, staleCt24, ct24Def, byUrl, refMs, new Set());
+assert(!r3c.pass && r3c.matchMode === "stale_source", "non-suppressed stale source must still FAIL");
+
+// 3d) alternativeSources on a cluster winner expose the suppressed loser URL
+const winnerWithAlt = [
+  {
+    title: "Vítěz clusteru",
+    url: "https://www.idnes.cz/zpravy/zahranicni/iran.A260610_zahranicni",
+    publishedAt: "2026-06-02T11:12:00.000Z",
+    sources: [{ name: "iDNES.cz", url: "https://www.idnes.cz/zpravy/zahranicni/iran.A260610_zahranicni" }],
+    alternativeSources: [{ name: "ČT24", title: rssHeadline.title, url: rssHeadline.url }],
+  },
+];
+const altSet = buildDedupeAlternativeUrlSet(winnerWithAlt);
+assert(altSet.has(rssHeadline.url.toLowerCase()), "alternativeSources URL indexed");
+const r3d = evaluateTraceSampleItem(rssHeadline, staleCt24, ct24Def, byUrl, refMs, altSet);
+assert(r3d.pass && r3d.matchMode === "dedupe_suppressed", "alternativeSources loser URL must PASS");
 
 // 4) Original URL-based positive → PASS
 const urlArticles = [
