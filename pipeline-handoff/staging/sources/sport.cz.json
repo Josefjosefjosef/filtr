@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-11T09:53:00.160875Z",
+  "ingestedAt": "2026-06-11T10:03:25.946017Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kritizovaný prezident FIS Eliasch končí, ve volbách ho těsně porazil Ospelt",
+      "url": "https://www.sport.cz/clanek/zimni-sporty-lyzovani-kritizovany-prezident-fis-eliasch-konci-ve-volbach-ho-tesne-porazil-ospelt-5476199",
+      "dt": "2026-06-11T09:54:27Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "eliasch",
+        "fis",
+        "končí",
+        "kritizovaný",
+        "ospelt",
+        "porazil",
+        "prezident",
+        "těsně",
+        "volbách"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -734,27 +760,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ronaldo a spol. se na MS naladili vítězně",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-komplikace-generalka-anglie-pred-ms-se-zpozdi-minimalne-o-hodinu-5476019",
-      "dt": "2026-06-10T20:01:44Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "naladili",
-        "ronaldo",
-        "spol",
-        "vítězně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -765,7 +770,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41757,
+      "bytes": 41874,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -802,7 +807,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T09:51:09Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T09:54:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -818,6 +823,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kritizovaný prezident FIS Eliasch končí, ve volbách ho těsně porazil Ospelt",
+            "publishedAt": "2026-06-11T09:54:27Z"
+          },
           {
             "title": "Trump americké fotbalisty nepodpoří, dává přednost jiné akci",
             "publishedAt": "2026-06-11T09:51:09Z"
@@ -845,10 +854,6 @@
           {
             "title": "Mahomes má jako první hráč v NFL smlouvu na více než půl miliardy dolarů",
             "publishedAt": "2026-06-11T09:34:29Z"
-          },
-          {
-            "title": "Maroko těsně před startem MS přišlo o dva hráče základní sestavy",
-            "publishedAt": "2026-06-11T09:30:20Z"
           }
         ]
       }

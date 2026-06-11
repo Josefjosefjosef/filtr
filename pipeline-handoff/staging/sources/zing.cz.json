@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-06-11T09:53:00.160875Z",
+  "ingestedAt": "2026-06-11T10:03:25.946017Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Gears of War: E-Day odhaluje herní dobu a několik novinek",
+      "url": "https://zing.cz/article/gears-of-war-e-day-odhaluje-herni-dobu-a-nekolik-novinek",
+      "dt": "2026-06-11T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "day",
+        "dobu",
+        "gears",
+        "herní",
+        "novinek",
+        "několik",
+        "odhaluje",
+        "war"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -978,31 +1003,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Senua ze série Hellblade se překvapivě vrací v úplně nové hře",
-      "url": "https://zing.cz/article/senua-ze-serie-hellblade-se-prekvapive-vraci-v-uplne-nove-hre",
-      "dt": "2026-06-07T17:55:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "hellblade",
-        "hře",
-        "nové",
-        "překvapivě",
-        "senua",
-        "série",
-        "vrací",
-        "úplně"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1013,7 +1013,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126116,
+      "bytes": 126078,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1050,7 +1050,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-11T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1065,6 +1065,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Gears of War: E-Day odhaluje herní dobu a několik novinek",
+            "publishedAt": "2026-06-11T10:00:00Z"
+          },
           {
             "title": "Gran Turismo 7 obdrželo lákavou aktualizaci s novými auty",
             "publishedAt": "2026-06-11T08:00:00Z"
@@ -1092,10 +1096,6 @@
           {
             "title": "Tvůrci série Hellblade potvrdili zrušení hororu Project Mara",
             "publishedAt": "2026-06-10T14:00:00Z"
-          },
-          {
-            "title": "Konami oživuje další značku, nová Castlevania odhalila datum vydání",
-            "publishedAt": "2026-06-10T10:00:00Z"
           }
         ]
       }
