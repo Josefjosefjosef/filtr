@@ -5444,6 +5444,7 @@ try {
     img.setAttribute("aria-hidden", "true");
     img.decoding = "async";
     img.loading = "eager";
+    img.setAttribute("fetchpriority", "high");
     img.alt = "";
     img.setAttribute("width", String(IU_FEED_SECTION_HEADER_IMG_REF_W));
     img.setAttribute("height", String(IU_FEED_SECTION_HEADER_IMG_REF_H));
@@ -8251,6 +8252,59 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  /** P1 perf fix #5 (image scheduling): below-fold preview thumbs keep src in data-iu-defer-src and load only near viewport. */
+  var iuPreviewImgDeferIO = null;
+  function iuPreviewImgDeferHydrate(img) {
+    try {
+      if (!img) return;
+      const ds = img.getAttribute("data-iu-defer-src");
+      if (!ds) return;
+      img.removeAttribute("data-iu-defer-src");
+      if (!iuNewsPreviewImgSrcIsSame(img, ds)) img.src = ds;
+    } catch (_) {}
+  }
+  function iuPreviewImgDeferObserve(img) {
+    try {
+      if (!img || !img.getAttribute("data-iu-defer-src")) return;
+      if (typeof IntersectionObserver !== "function") {
+        iuPreviewImgDeferHydrate(img);
+        return;
+      }
+      if (img.getAttribute("data-iu-defer-observed") === "1") return;
+      img.setAttribute("data-iu-defer-observed", "1");
+      if (!iuPreviewImgDeferIO) {
+        iuPreviewImgDeferIO = new IntersectionObserver(
+          function (entries) {
+            for (let i = 0; i < entries.length; i++) {
+              const en = entries[i];
+              if (!en.isIntersecting) continue;
+              try {
+                iuPreviewImgDeferIO.unobserve(en.target);
+              } catch (_) {}
+              iuPreviewImgDeferHydrate(en.target);
+            }
+          },
+          { rootMargin: "200px" }
+        );
+      }
+      iuPreviewImgDeferIO.observe(img);
+    } catch (_) {}
+  }
+  /** Single entry point for preview thumb src writes: while deferred, only retargets data-iu-defer-src (no network). */
+  function iuPreviewImgApplyThumb(img, nextSrc) {
+    try {
+      if (!img || nextSrc == null) return;
+      const next = String(nextSrc).trim();
+      if (!next) return;
+      if (img.getAttribute("data-iu-defer-src") !== null) {
+        if (img.getAttribute("data-iu-defer-src") !== next) img.setAttribute("data-iu-defer-src", next);
+        iuPreviewImgDeferObserve(img);
+        return;
+      }
+      if (!iuNewsPreviewImgSrcIsSame(img, next)) img.src = next;
+    } catch (_) {}
+  }
+
   /** News preview thumb: non-empty http(s), root-relative path, or data:image URL. */
   function iuNewsPreviewIsValidImage(v) {
     if (v === null || v === undefined) return false;
@@ -8850,7 +8904,7 @@ function buildVideoAsArticleCard(it) {
         </div>
         <div class="iuNewsPreviewBody">
           <div class="iuNewsPreviewImgWrap" aria-hidden="true">
-            <img class="iuNewsPreviewImg" src="/assets/images/news-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+            <img class="iuNewsPreviewImg" data-iu-defer-src="/assets/images/news-default.jpg" width="112" height="84" loading="lazy" decoding="async" alt="" />
           </div>
           <div class="iuNewsPreviewText">
             <p class="iuNewsPreviewHeadline" data-iu-news-preview-title-1>Zprávy se načítají</p>
@@ -8931,7 +8985,7 @@ function buildVideoAsArticleCard(it) {
         elT2.textContent = "";
         try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
         try {
-          if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fallbackThumb)) elImg.src = fallbackThumb;
+          iuPreviewImgApplyThumb(elImg, fallbackThumb);
         } catch (_) {}
         return;
       }
@@ -8989,7 +9043,7 @@ function buildVideoAsArticleCard(it) {
         if (elImg) {
           const rawIm = latest && latest.image !== undefined && latest.image !== null ? latest.image : "";
           const thumbSrc = iuNewsPreviewIsValidImage(rawIm) ? String(rawIm).trim() : fallbackThumb;
-          if (!iuNewsPreviewImgSrcIsSame(elImg, thumbSrc)) elImg.src = thumbSrc;
+          iuPreviewImgApplyThumb(elImg, thumbSrc);
         }
       } catch (_) {}
     }catch(_){}
@@ -9023,7 +9077,7 @@ function buildVideoAsArticleCard(it) {
         </div>
         <div class="iuNewsPreviewBody">
           <div class="iuNewsPreviewImgWrap" aria-hidden="true">
-            <img class="iuNewsPreviewImg" src="/assets/images/sport-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+            <img class="iuNewsPreviewImg" data-iu-defer-src="/assets/images/sport-default.jpg" width="112" height="84" loading="lazy" decoding="async" alt="" />
           </div>
           <div class="iuNewsPreviewText">
             <p class="iuNewsPreviewHeadline" data-iu-sport-preview-title-1>Sport se načítá</p>
@@ -9132,7 +9186,7 @@ function buildVideoAsArticleCard(it) {
         elT2.textContent = "";
         try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
         try {
-          if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+          iuPreviewImgApplyThumb(elImg, fixedThumb);
         } catch (_) {}
         return;
       }
@@ -9166,7 +9220,7 @@ function buildVideoAsArticleCard(it) {
       }
 
       try {
-        if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+        iuPreviewImgApplyThumb(elImg, fixedThumb);
       } catch (_) {}
     }catch(_){}
   }
@@ -9740,7 +9794,7 @@ function buildVideoAsArticleCard(it) {
         </div>
         <div class="iuNewsPreviewBody">
           <div class="iuNewsPreviewImgWrap" aria-hidden="true">
-            <img id="iuFinancePreviewImage" class="iuNewsPreviewImg" src="/assets/images/finance-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+            <img id="iuFinancePreviewImage" class="iuNewsPreviewImg" data-iu-defer-src="/assets/images/finance-default.jpg" width="112" height="84" loading="lazy" decoding="async" alt="" />
           </div>
           <div id="iuFinancePreviewTitles" class="iuNewsPreviewText">
             <p class="iuNewsPreviewHeadline" data-iu-finance-preview-title-1>Finance se načítají</p>
@@ -9857,7 +9911,7 @@ function buildVideoAsArticleCard(it) {
         elT2.textContent = "";
         try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
         try {
-          if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+          iuPreviewImgApplyThumb(elImg, fixedThumb);
         } catch (_) {}
         try { iuFinancePreviewRegressionAudit(); } catch (_) {}
         return;
@@ -9892,7 +9946,7 @@ function buildVideoAsArticleCard(it) {
       }
 
       try {
-        if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+        iuPreviewImgApplyThumb(elImg, fixedThumb);
       } catch (_) {}
       try { iuFinancePreviewRegressionAudit(); } catch (_) {}
     }catch(_){}
@@ -9928,7 +9982,7 @@ function buildVideoAsArticleCard(it) {
         </div>
         <div class="iuNewsPreviewBody">
           <div class="iuNewsPreviewImgWrap" aria-hidden="true">
-            <img id="iuHealthPreviewImage" class="iuNewsPreviewImg" src="/assets/images/zdravi-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+            <img id="iuHealthPreviewImage" class="iuNewsPreviewImg" data-iu-defer-src="/assets/images/zdravi-default.jpg" width="112" height="84" loading="lazy" decoding="async" alt="" />
           </div>
           <div id="iuHealthPreviewTitles" class="iuNewsPreviewText">
             <p class="iuNewsPreviewHeadline" data-iu-health-preview-title-1>Zdraví se načítá</p>
@@ -10045,7 +10099,7 @@ function buildVideoAsArticleCard(it) {
         elT2.textContent = "";
         try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
         try {
-          if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+          iuPreviewImgApplyThumb(elImg, fixedThumb);
         } catch (_) {}
         try { iuHealthPreviewRegressionAudit(); } catch (_) {}
         return;
@@ -10080,7 +10134,7 @@ function buildVideoAsArticleCard(it) {
       }
 
       try {
-        if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+        iuPreviewImgApplyThumb(elImg, fixedThumb);
       } catch (_) {}
       try { iuHealthPreviewRegressionAudit(); } catch (_) {}
     }catch(_){}
@@ -10116,7 +10170,7 @@ function buildVideoAsArticleCard(it) {
         </div>
         <div class="iuNewsPreviewBody">
           <div class="iuNewsPreviewImgWrap" aria-hidden="true">
-            <img id="iuTravelPreviewImage" class="iuNewsPreviewImg" src="/assets/images/cestovani-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+            <img id="iuTravelPreviewImage" class="iuNewsPreviewImg" data-iu-defer-src="/assets/images/cestovani-default.jpg" width="112" height="84" loading="lazy" decoding="async" alt="" />
           </div>
           <div id="iuTravelPreviewTitles" class="iuNewsPreviewText">
             <p class="iuNewsPreviewHeadline" data-iu-travel-preview-title-1>Cestování se načítá</p>
@@ -10233,7 +10287,7 @@ function buildVideoAsArticleCard(it) {
         elT2.textContent = "";
         try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
         try {
-          if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+          iuPreviewImgApplyThumb(elImg, fixedThumb);
         } catch (_) {}
         try { iuTravelPreviewRegressionAudit(); } catch (_) {}
         return;
@@ -10268,7 +10322,7 @@ function buildVideoAsArticleCard(it) {
       }
 
       try {
-        if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+        iuPreviewImgApplyThumb(elImg, fixedThumb);
       } catch (_) {}
       try { iuTravelPreviewRegressionAudit(); } catch (_) {}
     }catch(_){}
@@ -10304,7 +10358,7 @@ function buildVideoAsArticleCard(it) {
         </div>
         <div class="iuNewsPreviewBody">
           <div class="iuNewsPreviewImgWrap" aria-hidden="true">
-            <img id="iuGamesPreviewImage" class="iuNewsPreviewImg" src="/assets/images/hry-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+            <img id="iuGamesPreviewImage" class="iuNewsPreviewImg" data-iu-defer-src="/assets/images/hry-default.jpg" width="112" height="84" loading="lazy" decoding="async" alt="" />
           </div>
           <div id="iuGamesPreviewTitles" class="iuNewsPreviewText">
             <p class="iuNewsPreviewHeadline" data-iu-games-preview-title-1>Hry se načítají</p>
@@ -10424,7 +10478,7 @@ function buildVideoAsArticleCard(it) {
         elT2.textContent = "";
         try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
         try {
-          if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+          iuPreviewImgApplyThumb(elImg, fixedThumb);
         } catch (_) {}
         try { iuGamesPreviewRegressionAudit(); } catch (_) {}
         return;
@@ -10459,7 +10513,7 @@ function buildVideoAsArticleCard(it) {
       }
 
       try {
-        if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+        iuPreviewImgApplyThumb(elImg, fixedThumb);
       } catch (_) {}
       try { iuGamesPreviewRegressionAudit(); } catch (_) {}
     }catch(_){}
@@ -10495,7 +10549,7 @@ function buildVideoAsArticleCard(it) {
         </div>
         <div class="iuNewsPreviewBody">
           <div class="iuNewsPreviewImgWrap" aria-hidden="true">
-            <img id="iuCulturePreviewImage" class="iuNewsPreviewImg" src="/assets/images/culture-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+            <img id="iuCulturePreviewImage" class="iuNewsPreviewImg" data-iu-defer-src="/assets/images/culture-default.jpg" width="112" height="84" loading="lazy" decoding="async" alt="" />
           </div>
           <div id="iuCulturePreviewTitles" class="iuNewsPreviewText">
             <p class="iuNewsPreviewHeadline" data-iu-culture-preview-title-1>Kultura / Akce se načítá</p>
@@ -10615,7 +10669,7 @@ function buildVideoAsArticleCard(it) {
         elT2.textContent = "";
         try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
         try {
-          if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+          iuPreviewImgApplyThumb(elImg, fixedThumb);
         } catch (_) {}
         try { iuCulturePreviewRegressionAudit(); } catch (_) {}
         return;
@@ -10650,7 +10704,7 @@ function buildVideoAsArticleCard(it) {
       }
 
       try {
-        if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+        iuPreviewImgApplyThumb(elImg, fixedThumb);
       } catch (_) {}
       try { iuCulturePreviewRegressionAudit(); } catch (_) {}
     }catch(_){}
@@ -10686,7 +10740,7 @@ function buildVideoAsArticleCard(it) {
         </div>
         <div class="iuNewsPreviewBody">
           <div class="iuNewsPreviewImgWrap" aria-hidden="true">
-            <img id="iuScienceHistoryPreviewImage" class="iuNewsPreviewImg" src="/assets/images/veda-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+            <img id="iuScienceHistoryPreviewImage" class="iuNewsPreviewImg" data-iu-defer-src="/assets/images/veda-default.jpg" width="112" height="84" loading="lazy" decoding="async" alt="" />
           </div>
           <div id="iuScienceHistoryPreviewTitles" class="iuNewsPreviewText">
             <p class="iuNewsPreviewHeadline" data-iu-science-history-preview-title-1>Věda & Historie se načítá</p>
@@ -10806,7 +10860,7 @@ function buildVideoAsArticleCard(it) {
         elT2.textContent = "";
         try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
         try {
-          if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+          iuPreviewImgApplyThumb(elImg, fixedThumb);
         } catch (_) {}
         try { iuScienceHistoryPreviewRegressionAudit(); } catch (_) {}
         return;
@@ -10841,7 +10895,7 @@ function buildVideoAsArticleCard(it) {
       }
 
       try {
-        if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+        iuPreviewImgApplyThumb(elImg, fixedThumb);
       } catch (_) {}
       try { iuScienceHistoryPreviewRegressionAudit(); } catch (_) {}
     }catch(_){}
@@ -10877,7 +10931,7 @@ function buildVideoAsArticleCard(it) {
         </div>
         <div class="iuNewsPreviewBody">
           <div class="iuNewsPreviewImgWrap" aria-hidden="true">
-            <img id="iuEducationPreviewImage" class="iuNewsPreviewImg" src="/assets/images/vzdelavani-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt="" />
+            <img id="iuEducationPreviewImage" class="iuNewsPreviewImg" data-iu-defer-src="/assets/images/vzdelavani-default.jpg" width="112" height="84" loading="lazy" decoding="async" alt="" />
           </div>
           <div id="iuEducationPreviewTitles" class="iuNewsPreviewText">
             <p class="iuNewsPreviewHeadline" data-iu-education-preview-title-1>Zatím žádné články ze vzdělávání</p>
@@ -10997,7 +11051,7 @@ function buildVideoAsArticleCard(it) {
         elT2.textContent = "";
         try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
         try {
-          if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+          iuPreviewImgApplyThumb(elImg, fixedThumb);
         } catch (_) {}
         try { iuEducationPreviewRegressionAudit(); } catch (_) {}
         return;
@@ -11032,7 +11086,7 @@ function buildVideoAsArticleCard(it) {
       }
 
       try {
-        if (elImg && !iuNewsPreviewImgSrcIsSame(elImg, fixedThumb)) elImg.src = fixedThumb;
+        iuPreviewImgApplyThumb(elImg, fixedThumb);
       } catch (_) {}
       try { iuEducationPreviewRegressionAudit(); } catch (_) {}
     }catch(_){}
