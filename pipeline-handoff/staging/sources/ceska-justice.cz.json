@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-06-11T11:45:48.694538Z",
+  "ingestedAt": "2026-06-11T12:44:03.420725Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Konec sociálních sítí pro děti: Jako další se přidává Kanada, k zákazu se kloní i Babiš",
+      "url": "https://www.ceska-justice.cz/2026/06/konec-socialnich-siti-pro-deti-jako-dalsi-se-pridava-kanada-k-zakazu-se-kloni-i-babis/",
+      "dt": "2026-06-11T12:27:11Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "babiš",
+        "další",
+        "děti",
+        "jako",
+        "kanada",
+        "kloní",
+        "konec",
+        "přidává",
+        "sociálních",
+        "sítí",
+        "zákazu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -242,34 +270,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hrozil vystřílením třídy, teď dostal trest. Mladík měl schvalovat i útok na Filozofické fakultě",
-      "url": "https://www.ceska-justice.cz/2026/06/hrozil-vystrilenim-tridy-dostal-trest/",
-      "dt": "2026-06-10T09:15:55Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "dostal",
-        "fakultě",
-        "filozofické",
-        "hrozil",
-        "mladík",
-        "měl",
-        "schvalovat",
-        "trest",
-        "třídy",
-        "vystřílením",
-        "útok"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 94356,
+      "bytes": 95155,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-06-11T09:16:51Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T12:27:11Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -332,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec sociálních sítí pro děti: Jako další se přidává Kanada, k zákazu se kloní i Babiš",
+            "publishedAt": "2026-06-11T12:27:11Z"
+          },
           {
             "title": "Chcete nahrávat lékaře v ordinaci? Ministerstvo poradí, jak postupovat",
             "publishedAt": "2026-06-11T09:16:51Z"
@@ -359,10 +363,6 @@
           {
             "title": "Povinná střízlivost neprošla, faktické poznámky zůstanou. Sněmovna má nová pravidla",
             "publishedAt": "2026-06-10T13:57:47Z"
-          },
-          {
-            "title": "Nová mise pro exministryni Decroix: Ve sněmovně dohlédne na rodinné právo",
-            "publishedAt": "2026-06-10T12:38:26Z"
           }
         ]
       }
