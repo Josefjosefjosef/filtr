@@ -1,8 +1,65 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-11T03:12:33.735292Z",
+  "ingestedAt": "2026-06-11T03:47:24.504377Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Větší balení, nižší cena. Tyto tyčinky chutnají skoro jako Margot, pro peněženku jsou výhra",
+      "url": "https://www.idnes.cz/spotrebitel/test/vetsi-baleni-nizsi-cena-tyto-tycinky-chutnaji-skoro-jako-margot-pro-penezenku-jsou-vyhra.A260601_182338_test_matt/foto",
+      "dt": "2026-06-11T03:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "balení",
+        "cena",
+        "chutnají",
+        "jako",
+        "margot",
+        "nižší",
+        "peněženku",
+        "skoro",
+        "tyto",
+        "tyčinky",
+        "výhra",
+        "větší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "O předčasný důchod zažádal dvojnásobek lidí než loni. Důvod je jasný, říká analytik",
+      "url": "https://www.idnes.cz/finance/penze/o-predcasny-duchod-zazadal-dvojnasobek-lidi-nez-loni-duvod-je-jasny-rika-analytik.A260602_091425_penze_pzak",
+      "dt": "2026-06-11T03:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "analytik",
+        "dvojnásobek",
+        "důchod",
+        "důvod",
+        "jasný",
+        "lidí",
+        "loni",
+        "než",
+        "předčasný",
+        "zažádal",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -741,59 +798,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Do Česka míří bouřky. Mapa ukazuje, které kraje ve čtvrtek zasáhnou",
-      "url": "https://www.idnes.cz/zpravy/domaci/do-ceska-miri-bourky-mapa-ukazuje-ktere-kraje-ve-ctvrtek-zasahnou.A260610_160630_domaci_wall",
-      "dt": "2026-06-10T15:32:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "bouřky",
-        "kraje",
-        "mapa",
-        "míří",
-        "ukazuje",
-        "zasáhnou",
-        "česka",
-        "čtvrtek"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Češi mají velký problém s cukrovkou, varují lékaři. Pomoci má nový národní plán",
-      "url": "https://www.idnes.cz/zpravy/domaci/cukrovka-narodni-diabetologicky-plan-lecba.A260610_134209_domaci_row",
-      "dt": "2026-06-10T15:25:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "cukrovkou",
-        "lékaři",
-        "mají",
-        "nový",
-        "národní",
-        "plán",
-        "pomoci",
-        "problém",
-        "varují",
-        "velký",
-        "češi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +808,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47739,
+      "bytes": 48745,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,11 +845,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T02:52:38Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T03:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 6,
-          "zpravy": 24
+          "zpravy": 23,
+          "finance": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -857,6 +861,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Větší balení, nižší cena. Tyto tyčinky chutnají skoro jako Margot, pro peněženku jsou výhra",
+            "publishedAt": "2026-06-11T03:00:00Z"
+          },
+          {
+            "title": "O předčasný důchod zažádal dvojnásobek lidí než loni. Důvod je jasný, říká analytik",
+            "publishedAt": "2026-06-11T03:00:00Z"
+          },
           {
             "title": "Země EU a europoslanci se shodli na úpravě systému emisních povolenek",
             "publishedAt": "2026-06-11T02:52:38Z"
@@ -879,14 +891,6 @@
           },
           {
             "title": "Nemovitostní fondy porážejí inflaci, nejlepší vydělal přes 20 %. Co čekat letos?",
-            "publishedAt": "2026-06-10T22:00:00Z"
-          },
-          {
-            "title": "Jak to vidí čeští řidiči? Vytroubit a zmlátit! Každý pátý se lepí na kufr, jiní se chtějí bít",
-            "publishedAt": "2026-06-10T22:00:00Z"
-          },
-          {
-            "title": "Belfast v ohni. Vláda viní krajní pravici, nikoli agresivního Súdánce s nožem",
             "publishedAt": "2026-06-10T22:00:00Z"
           }
         ]
