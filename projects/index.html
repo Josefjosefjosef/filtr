@@ -5325,9 +5325,10 @@ font-src 'self' data:;
         } catch (_) {}
       })();
     </script>
+    <script defer src="/assets/iu-info-center-lazy-mount.js?v=info-center-lazy-mount-v1-20260611"></script>
     <script type="module" src="/assets/app.js?v=mobile-tablet-stability-v1-20260610"></script>
     <script defer src="/assets/iu-consent.js?v=consent-v1-20260609"></script>
-    <script defer src="/assets/iu-info-center.js?v=info-center-v2-5-consent-20260609"></script>
+    <script defer src="/assets/iu-info-center.js?v=info-center-v2-7-lazy-mount-20260611"></script>
     <script defer src="/assets/iu-consent-layer.js?v=consent-layer-v1-20260609"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=6"></script>
     <script>
@@ -5774,6 +5775,7 @@ font-src 'self' data:;
       <iframe id="iuVideoFrame" allowfullscreen></iframe>
     </div>
 
+    <template id="iuTopbarInfoOverlayTpl" data-iu-info-center-lazy="1">
     <div id="iuTopbarInfoOverlay" class="iuTopbarInfoOverlay iuInfoCenterV2" data-iu-info-center-v2="1" role="dialog" aria-modal="true" aria-labelledby="iuTopbarInfoOverlayTitle" hidden>
       <div class="iuTopbarInfoOverlay__backdrop" data-iu-topbar-info-close="backdrop" aria-hidden="true"></div>
       <div class="iuTopbarInfoOverlay__panel" role="document">
@@ -6164,6 +6166,7 @@ font-src 'self' data:;
         </div>
       </div>
     </div>
+    </template>
 
     <aside id="iuConsentLayer" class="iuConsentLayer" role="region" aria-label="Volba soukromí a ukládání" hidden>
       <div class="iuConsentLayer__panel">
