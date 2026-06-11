@@ -1,8 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-11T15:57:18.407791Z",
+  "ingestedAt": "2026-06-11T16:49:08.078202Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události čtvrtka 11. června",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-ctvrtka-11-cervna-374479",
+      "dt": "2026-06-11T16:28:40Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "souhrn",
+        "události",
+        "zásadní",
+        "června",
+        "čtvrtka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Spielberg nepochybuje o mimozemšťanech v době, kdy se zpochybňuje vše",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/spielberg-nepochybuje-o-mimozemstanech-v-dobe-kdy-se-zpochybnuje-vse-374480",
+      "dt": "2026-06-11T16:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "době",
+        "mimozemšťanech",
+        "nepochybuje",
+        "spielberg",
+        "vše",
+        "zpochybňuje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -713,56 +758,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Opozice kritizovala novelu o střetu zájmů jako účelovou službu Babišovi",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/snemovna-se-mimoradne-sejde-kvuli-stretu-zajmu-babise-374440",
-      "dt": "2026-06-11T04:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "babišovi",
-        "jako",
-        "kritizovala",
-        "novelu",
-        "opozice",
-        "službu",
-        "střetu",
-        "zájmů",
-        "účelovou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Státy EU a europoslanci se shodli na úpravě emisních povolenek ETS 2",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/staty-eu-a-europoslanci-se-shodli-na-uprave-emisnich-povolenek-ets-2-374452",
-      "dt": "2026-06-11T03:00:01Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "emisních",
-        "ets",
-        "europoslanci",
-        "povolenek",
-        "shodli",
-        "státy",
-        "úpravě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -773,7 +768,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41725,
+      "bytes": 41102,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -810,11 +805,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T15:48:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T16:28:40Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "other": 7
+          "zpravy": 22,
+          "other": 8
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -826,6 +821,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události čtvrtka 11. června",
+            "publishedAt": "2026-06-11T16:28:40Z"
+          },
+          {
+            "title": "Spielberg nepochybuje o mimozemšťanech v době, kdy se zpochybňuje vše",
+            "publishedAt": "2026-06-11T16:00:00Z"
+          },
           {
             "title": "Silniční inspekce varuje před podvodnými zprávami, které vyzývají k platbě pokuty",
             "publishedAt": "2026-06-11T15:48:00Z"
@@ -849,14 +852,6 @@
           {
             "title": "Poslankyně čelí osobnějším výpadům než poslanci. Ve sněmovně se i bojí, ukázal výzkum",
             "publishedAt": "2026-06-11T12:54:08Z"
-          },
-          {
-            "title": "NYT: Trumpův tým se kvůli Epsteinovi scházel v situační místnosti Bílého domu",
-            "publishedAt": "2026-06-11T12:15:04Z"
-          },
-          {
-            "title": "Polsko je největším producentem syntetických drog v EU, ukazuje zpráva",
-            "publishedAt": "2026-06-11T12:06:12Z"
           }
         ]
       }
