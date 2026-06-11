@@ -218,7 +218,7 @@ async function runSmoke() {
       const badge = card.querySelector(".iu-previewBadge--finance");
       if (!badge || String(badge.textContent || "").trim() !== "Finance") return { ok: false, reason: "badge" };
       const img = document.getElementById("iuFinancePreviewImage");
-      const src = img ? String(img.getAttribute("src") || "") : "";
+      const src = img ? String(img.getAttribute("src") || img.getAttribute("data-iu-defer-src") || "") : "";
       if (src.indexOf("finance-default.jpg") < 0) return { ok: false, reason: "img", src };
       const titles = document.getElementById("iuFinancePreviewTitles");
       if (!titles) return { ok: false, reason: "titles_host" };
@@ -239,7 +239,7 @@ async function runSmoke() {
       const badge = card.querySelector(".iu-previewBadge--health");
       if (!badge || String(badge.textContent || "").trim() !== "Zdraví") return { ok: false, reason: "badge" };
       const img = document.getElementById("iuHealthPreviewImage");
-      const src = img ? String(img.getAttribute("src") || "") : "";
+      const src = img ? String(img.getAttribute("src") || img.getAttribute("data-iu-defer-src") || "") : "";
       if (src.indexOf("zdravi-default.jpg") < 0) return { ok: false, reason: "img", src };
       const titles = document.getElementById("iuHealthPreviewTitles");
       if (!titles) return { ok: false, reason: "titles_host" };
@@ -265,7 +265,7 @@ async function runSmoke() {
       const badge = card.querySelector(".iu-previewBadge--travel");
       if (!badge || String(badge.textContent || "").trim() !== "Cestování") return { ok: false, reason: "badge" };
       const img = document.getElementById("iuTravelPreviewImage");
-      const src = img ? String(img.getAttribute("src") || "") : "";
+      const src = img ? String(img.getAttribute("src") || img.getAttribute("data-iu-defer-src") || "") : "";
       if (src.indexOf("cestovani-default.jpg") < 0) return { ok: false, reason: "img", src };
       const titles = document.getElementById("iuTravelPreviewTitles");
       if (!titles) return { ok: false, reason: "titles_host" };
@@ -291,7 +291,7 @@ async function runSmoke() {
       const badge = card.querySelector(".iu-previewBadge--games");
       if (!badge || String(badge.textContent || "").trim() !== "Hry") return { ok: false, reason: "badge" };
       const img = document.getElementById("iuGamesPreviewImage");
-      const src = img ? String(img.getAttribute("src") || "") : "";
+      const src = img ? String(img.getAttribute("src") || img.getAttribute("data-iu-defer-src") || "") : "";
       if (src.indexOf("hry-default.jpg") < 0) return { ok: false, reason: "img", src };
       const titles = document.getElementById("iuGamesPreviewTitles");
       if (!titles) return { ok: false, reason: "titles_host" };
@@ -317,7 +317,7 @@ async function runSmoke() {
       const badge = card.querySelector(".iu-previewBadge--culture");
       if (!badge || String(badge.textContent || "").trim() !== "Kultura / Akce") return { ok: false, reason: "badge" };
       const img = document.getElementById("iuCulturePreviewImage");
-      const src = img ? String(img.getAttribute("src") || "") : "";
+      const src = img ? String(img.getAttribute("src") || img.getAttribute("data-iu-defer-src") || "") : "";
       if (src.indexOf("culture-default.jpg") < 0) return { ok: false, reason: "img", src };
       const titles = document.getElementById("iuCulturePreviewTitles");
       if (!titles) return { ok: false, reason: "titles_host" };
@@ -343,7 +343,7 @@ async function runSmoke() {
       const badge = card.querySelector(".iu-previewBadge--science-history");
       if (!badge || String(badge.textContent || "").trim() !== "Věda & Historie") return { ok: false, reason: "badge" };
       const img = document.getElementById("iuScienceHistoryPreviewImage");
-      const src = img ? String(img.getAttribute("src") || "") : "";
+      const src = img ? String(img.getAttribute("src") || img.getAttribute("data-iu-defer-src") || "") : "";
       if (src.indexOf("veda-default.jpg") < 0) return { ok: false, reason: "img", src };
       const titles = document.getElementById("iuScienceHistoryPreviewTitles");
       if (!titles) return { ok: false, reason: "titles_host" };
@@ -369,7 +369,7 @@ async function runSmoke() {
       const badge = card.querySelector(".iu-previewBadge--education");
       if (!badge || String(badge.textContent || "").trim() !== "Vzdělávání") return { ok: false, reason: "badge" };
       const img = document.getElementById("iuEducationPreviewImage");
-      const src = img ? String(img.getAttribute("src") || "") : "";
+      const src = img ? String(img.getAttribute("src") || img.getAttribute("data-iu-defer-src") || "") : "";
       if (src.indexOf("vzdelavani-default.jpg") < 0) return { ok: false, reason: "img", src };
       const titles = document.getElementById("iuEducationPreviewTitles");
       if (!titles) return { ok: false, reason: "titles_host" };
