@@ -3708,6 +3708,7 @@ font-src 'self' data:;
                     <!-- AI Panel (Modal) -->
                     <div id="iu-aiOverlay" class="iu-aiOverlay" hidden></div>
 
+                    <template id="iuLazyOverlayTpl-custombuttons" data-iu-overlay-lazy="custombuttons">
                     <div id="iuCustomButtonsBackdrop" class="iu-custom-buttons-overlay iu-custom-buttons-overlay-backdrop" hidden aria-hidden="true"></div>
                     <div id="iuCustomButtonsPanel" class="iu-custom-buttons-overlay iu-custom-buttons-overlay-panel" role="dialog" aria-modal="true" aria-labelledby="iuCustomButtonsTitle" hidden data-open="0" aria-hidden="true">
                       <div class="iu-custom-buttons-overlay-cardShell">
@@ -3746,6 +3747,7 @@ font-src 'self' data:;
                         </div>
                       </div>
                     </div>
+                    </template>
 
                     <div id="iuFinancialCalcBackdrop" class="iu-financial-overlay iu-financial-overlay-backdrop" hidden aria-hidden="true"></div>
                     <div id="iuFinancialCalcPanel" class="iu-financial-overlay iu-financial-overlay-panel" role="dialog" aria-modal="true" aria-labelledby="iuFinancialCalcTitle" hidden data-open="0" aria-hidden="true">
@@ -3846,6 +3848,7 @@ font-src 'self' data:;
                       </div>
                     </div>
 
+                    <template id="iuLazyOverlayTpl-datovka" data-iu-overlay-lazy="datovka">
                     <div id="iuDsOverlay" class="iu-ds-tool iu-ds-overlay" hidden></div>
                     <div id="iuDsPanel" class="iu-ds-tool iu-ds-panel iuSectionDS" hidden role="dialog" aria-modal="true" aria-labelledby="iuDsPanelTitle" data-open="0">
                       <div class="iu-ds-modal">
@@ -3862,6 +3865,7 @@ font-src 'self' data:;
                         </div>
                       </div>
                     </div>
+                    </template>
               </aside>
             </div>
           </div>
@@ -5354,7 +5358,7 @@ font-src 'self' data:;
     </script>
     <script defer src="/assets/iu-info-center-lazy-mount.js?v=info-center-lazy-mount-v1-20260611"></script>
     <script defer src="/assets/iu-section-views-lazy-mount.js?v=section-views-lazy-mount-v1-20260611"></script>
-    <script type="module" src="/assets/app.js?v=section-views-lazy-mount-v1-20260611"></script>
+    <script type="module" src="/assets/app.js?v=overlay-cluster-lazy-mount-v1-20260611"></script>
     <script defer src="/assets/iu-consent.js?v=consent-v1-20260609"></script>
     <script defer src="/assets/iu-info-center.js?v=info-center-v2-7-lazy-mount-20260611"></script>
     <script defer src="/assets/iu-consent-layer.js?v=consent-layer-v1-20260609"></script>
@@ -5798,10 +5802,12 @@ font-src 'self' data:;
       </div>
     </div>
 
+    <template id="iuLazyOverlayTpl-videomodal" data-iu-overlay-lazy="videomodal">
     <div id="iuVideoModal" class="iuVideoModal" hidden aria-modal="true" aria-label="Přehrát video">
       <button type="button" class="iuVideoModalClose" aria-label="Zavřít">×</button>
       <iframe id="iuVideoFrame" allowfullscreen></iframe>
     </div>
+    </template>
 
     <template id="iuTopbarInfoOverlayTpl" data-iu-info-center-lazy="1">
     <div id="iuTopbarInfoOverlay" class="iuTopbarInfoOverlay iuInfoCenterV2" data-iu-info-center-v2="1" role="dialog" aria-modal="true" aria-labelledby="iuTopbarInfoOverlayTitle" hidden>
