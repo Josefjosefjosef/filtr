@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-11T03:47:24.504377Z",
+  "ingestedAt": "2026-06-11T04:36:58.623413Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sněmovna se mimořádně sejde kvůli střetu zájmů Babiše",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/snemovna-se-mimoradne-sejde-kvuli-stretu-zajmu-babise-374440",
+      "dt": "2026-06-11T04:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "babiše",
+        "kvůli",
+        "mimořádně",
+        "sejde",
+        "sněmovna",
+        "střetu",
+        "zájmů"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -733,31 +757,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "ČEZ vybuduje na Orlické přehradě velkou přečerpávací elektrárnu za miliardy",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/cez-vybuduje-na-orlicke-prehrade-velkou-precerpavaci-elektrarnu-374419",
-      "dt": "2026-06-10T10:39:09Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "elektrárnu",
-        "miliardy",
-        "orlické",
-        "přehradě",
-        "přečerpávací",
-        "velkou",
-        "vybuduje",
-        "čez"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -768,7 +767,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43807,
+      "bytes": 43831,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -805,7 +804,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T03:00:01Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -822,6 +821,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sněmovna se mimořádně sejde kvůli střetu zájmů Babiše",
+            "publishedAt": "2026-06-11T04:00:00Z"
+          },
           {
             "title": "Státy EU a europoslanci se shodli na úpravě emisních povolenek ETS 2",
             "publishedAt": "2026-06-11T03:00:01Z"
@@ -849,10 +852,6 @@
           {
             "title": "Mexická města se před fotbalovým šampionátem potýkají s protesty",
             "publishedAt": "2026-06-10T18:08:09Z"
-          },
-          {
-            "title": "Papež požehnal věž baziliky Sagrada Família v Barceloně",
-            "publishedAt": "2026-06-10T18:00:57Z"
           }
         ]
       }
