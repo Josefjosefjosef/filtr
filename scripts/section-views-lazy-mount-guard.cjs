@@ -23,6 +23,10 @@ const fs = require("fs");
 const path = require("path");
 const http = require("http");
 const { chromium } = require("playwright");
+const {
+  installProofGuardNetworkStubs,
+  isIgnorableGuardConsoleError,
+} = require("./proofs/open_meteo_guard_stub.cjs");
 
 const REPO = path.resolve(__dirname, "..");
 const EXTERNAL_URL = process.env.IU_GUARD_URL || null;
@@ -144,13 +148,16 @@ async function runViewport(browser, vp, baseUrl) {
     hasTouch: vp.isMobile,
     userAgent: vp.isMobile ? MOBILE_UA : undefined,
     locale: "cs-CZ",
+    /* SW-controlled fetches bypass page.route — block SW so the open-meteo
+       stub stays deterministic (same policy as weather_emphasis_guard). */
+    serviceWorkers: "block",
   });
   const page = await context.newPage();
   const consoleErrors = [];
   const pageErrors = [];
   // ServiceWorker update failures on the local static server / during CDN deploys
   // are environment artifacts, not app errors (same policy as info-center guard).
-  const isEnvNoise = (t) => /ServiceWorker/i.test(t);
+  const isEnvNoise = (t) => /ServiceWorker/i.test(t) || isIgnorableGuardConsoleError(t);
   page.on("console", (m) => {
     if (m.type() !== "error") return;
     const t = String(m.text()).slice(0, 250);
@@ -160,6 +167,9 @@ async function runViewport(browser, vp, baseUrl) {
     const t = String(e.message || e).slice(0, 250);
     if (!isEnvNoise(t)) pageErrors.push(t);
   });
+
+  /* Deterministic external weather/thumbnail responses (same stub as smoke/CI guards). */
+  await installProofGuardNetworkStubs(page);
 
   const checks = {};
 
@@ -272,13 +282,13 @@ async function runViewport(browser, vp, baseUrl) {
   });
   checks.regression_info_center_lazy = regression.info_center_template && regression.info_center_overlay_absent;
   checks.regression_silver = regression.silver_stack !== "MISSING";
-  checks.regression_calendar = regression.calendar_overlay === "PRESENT_HIDDEN";
-  /* Overlay-cluster lazy mount (P1 fix #4): tasks/notes overlays no longer
-     exist at load — they mount on first open. MISSING at load is the new
-     expected state; PRESENT_HIDDEN kept for pre-fix builds. */
+  /* Weather+Calendar lazy mount (P1 fix #6): calendar overlay + weather view
+     no longer exist at load — they mount on first open. MISSING at load is
+     the new expected state; PRESENT_HIDDEN kept for pre-fix builds. */
+  checks.regression_calendar = regression.calendar_overlay === "PRESENT_HIDDEN" || regression.calendar_overlay === "MISSING";
   checks.regression_tasks = regression.tasks_overlay === "PRESENT_HIDDEN" || regression.tasks_overlay === "MISSING";
   checks.regression_notes = regression.notes_overlay === "PRESENT_HIDDEN" || regression.notes_overlay === "MISSING";
-  checks.regression_weather = regression.weather_view_present && regression.weather_card !== "MISSING";
+  checks.regression_weather = regression.weather_card !== "MISSING";
   checks.regression_finance = regression.finance_card !== "MISSING";
   checks.regression_parcelwatch = regression.parcel_card !== "MISSING";
   checks.regression_articles = regression.articles_feed_children > 0;

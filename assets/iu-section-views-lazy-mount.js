@@ -20,7 +20,7 @@
 
   if (window.__iuSectionViewsLazyMount) return;
 
-  var KEYS = ["jr", "tvprogram", "travel", "mapy", "radio", "tvonline"];
+  var KEYS = ["jr", "tvprogram", "travel", "mapy", "radio", "tvonline", "pocasi"];
   var SELECTOR_TO_KEY = {
     "#iuJrEmptyView": "jr",
     "#iuTvProgramView": "tvprogram",
@@ -28,6 +28,7 @@
     "#iuMapyView": "mapy",
     "#iuRadioView": "radio",
     "#iuTvOnlineView": "tvonline",
+    "#iuWeatherView": "pocasi",
   };
 
   function getTpl(key) {
@@ -46,15 +47,17 @@
       return false;
     }
     try {
-      var slot = document.querySelector('[data-iu-seo-slot="' + k + '"]');
-      var stub = document.querySelector('[data-iu-seo-stub="' + k + '"]');
-      if (slot && stub) {
-        while (stub.firstChild) slot.parentNode.insertBefore(stub.firstChild, slot);
+      /* A view may have several SEO stubs: exact key or "key:suffix" pairs. */
+      document.querySelectorAll("[data-iu-seo-slot]").forEach(function (slot) {
+        var sk = String(slot.getAttribute("data-iu-seo-slot") || "");
+        if (sk !== k && sk.indexOf(k + ":") !== 0) return;
+        var stub = document.querySelector('[data-iu-seo-stub="' + sk + '"]');
+        if (stub) {
+          while (stub.firstChild) slot.parentNode.insertBefore(stub.firstChild, slot);
+          stub.parentNode.removeChild(stub);
+        }
         slot.parentNode.removeChild(slot);
-        stub.parentNode.removeChild(stub);
-      } else if (slot) {
-        slot.parentNode.removeChild(slot);
-      }
+      });
     } catch (_) {}
     try {
       document.dispatchEvent(new CustomEvent("iu:section-view-mounted", { detail: { key: k } }));
