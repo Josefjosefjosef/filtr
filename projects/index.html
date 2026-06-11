@@ -2775,9 +2775,10 @@ font-src 'self' data:;
                       <p>Cílem je mít praktický rozcestník pro situace, kdy potřebujete rychle najít spoj, ověřit dopravní informace nebo otevřít oficiální službu dopravce bez zbytečného hledání.</p>
                     </section>
     </div>
-                  <div id="iuWeatherView" class="iuWeatherView" data-view-host="pocasi" hidden>
+                  <template id="iuLazyViewTpl-pocasi" data-iu-lazy-view="pocasi">
+<div id="iuWeatherView" class="iuWeatherView" data-view-host="pocasi" hidden>
                     <div class="iuSectionHeader iuSectionHeader--weather">
-                      <h1>Počasí – <span id="iuWeatherCityH1">Praha</span></h1>
+                      <div data-iu-seo-slot="pocasi:h1" hidden></div>
                       <div class="iuSectionHeaderLine" aria-hidden="true"></div>
                     </div>
                     <p class="iuSectionSubtitle">
@@ -2973,7 +2974,21 @@ font-src 'self' data:;
                         <div id="iuWeatherHistoryPlayerHost" class="iuWeatherHistoryPlayerHost iu-weather-video-embed-host" hidden></div>
                       </div>
 
-                      <div class="iuWeatherHistorySeo" aria-label="Historie meteorologie (SEO)">
+                      <div data-iu-seo-slot="pocasi:seo" hidden></div>
+
+                      <div id="iuWeatherHistoryFallback" class="iuWeatherHistoryFallback" hidden>
+                        <p>Historické video dnes není k dispozici.</p>
+                      </div>
+                    </section>
+
+                    </div>
+                  </div>
+    </template>
+    <div data-iu-seo-stub="pocasi:h1" hidden>
+<h1>Počasí – <span id="iuWeatherCityH1">Praha</span></h1>
+    </div>
+    <div data-iu-seo-stub="pocasi:seo" hidden>
+<div class="iuWeatherHistorySeo" aria-label="Historie meteorologie (SEO)">
                         <h2>Historické předpovědi počasí a meteorologie v ČR</h2>
                         <p>
                           Sekce „Návrat do historie počasí“ propojuje <strong>archiv počasí</strong> s každodenní praxí: i když dnes máme radar srážek,
@@ -3045,14 +3060,7 @@ font-src 'self' data:;
                           meteorologie a její historie, vracejte se: právě v tom je síla „každodenního“ archivu.
                         </p>
                       </div>
-
-                      <div id="iuWeatherHistoryFallback" class="iuWeatherHistoryFallback" hidden>
-                        <p>Historické video dnes není k dispozici.</p>
-                      </div>
-                    </section>
-
-                    </div>
-                  </div>
+    </div>
 
                   <template id="iuLazyViewTpl-tvprogram" data-iu-lazy-view="tvprogram">
 <section id="iuTvProgramView" class="iuView iuTvProgramView" data-section="tvprogram" data-view-host="tvprogram" aria-label="TV program" hidden>
@@ -3600,6 +3608,7 @@ font-src 'self' data:;
               </div>
               <div id="iuMobileMindMenuFlow" class="iu-mobileMindMenuFlow" aria-label="MindMenu a nástroje"></div>
               <aside class="accordionCol" aria-label="Postranní panel">
+                <template id="iuLazyOverlayTpl-weathergeo" data-iu-overlay-lazy="weathergeo">
                 <div id="iuSilverWeatherGeoOverlay" class="iuSilverWeatherGeoOverlay" role="dialog" aria-modal="true" aria-labelledby="iuSilverWeatherGeoOverlayTitle" aria-label="Souhlas s polohou pro počasí" hidden>
                   <div class="iuSilverWeatherGeoOverlay__backdrop" data-iu-silver-wx-geo-overlay-close></div>
                   <div class="iuSilverWeatherGeoOverlay__sheet">
@@ -3618,6 +3627,7 @@ font-src 'self' data:;
                     </div>
                   </div>
                 </div>
+                </template>
                 <div id="iuPwaIosOverlay" class="iuPwaIosOverlay" role="dialog" aria-modal="true" aria-labelledby="iuPwaIosOverlayTitle" aria-label="Přidat infoUzel na plochu" hidden>
                   <div class="iuPwaIosOverlay__backdrop" data-iu-pwa-overlay-close></div>
                   <div class="iuPwaIosOverlay__sheet">
@@ -5720,6 +5730,7 @@ font-src 'self' data:;
         </div>
       </div>
     </div>
+    <template id="iuLazyOverlayTpl-calendar" data-iu-overlay-lazy="calendar">
     <div id="iuCalendarOverlay" class="iu-calendarOverlay iu-tools-overlay-fullscreen-desktop" hidden aria-hidden="true">
       <div class="iu-calendarOverlay__backdrop" data-iu-calendar-close="backdrop"></div>
       <section class="iu-calendarOverlay__dialog" role="dialog" aria-modal="true" aria-labelledby="iuCalendarTitle">
@@ -5770,6 +5781,7 @@ font-src 'self' data:;
       </div>
       <div class="iu-calendar-day-content"></div>
     </div>
+    </template>
 
     <div id="iuSilverChatOverlay" class="iuSilverChatOverlay" hidden aria-hidden="true">
       <div class="iuSilverChatBackdrop" data-iu-silver-chat-close="1"></div>

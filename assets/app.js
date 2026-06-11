@@ -12649,9 +12649,10 @@ function buildVideoAsArticleCard(it) {
     const actionsFirst = document.getElementById("iuSilverWeatherActions");
     const btnGeo = document.getElementById("iuSilverWeatherBtnGeo");
     const btnCity = document.getElementById("iuSilverWeatherBtnCity");
-    const geoOverlay = document.getElementById("iuSilverWeatherGeoOverlay");
-    const geoOverlayAllow = document.getElementById("iuSilverWeatherGeoOverlayAllow");
-    const geoOverlayDeny = document.getElementById("iuSilverWeatherGeoOverlayDeny");
+    /* P1 lazy mount (weathergeo): overlay ships in <template id="iuLazyOverlayTpl-weathergeo">
+       and is mounted + bound on first open (iuSilverWeatherEnsureGeoOverlayMounted). */
+    let geoOverlay = document.getElementById("iuSilverWeatherGeoOverlay");
+    let geoOverlayBound = false;
     if (!card || !line1 || !line2) return;
 
     let overlayGeoPending = false;
@@ -12667,7 +12668,24 @@ function buildVideoAsArticleCard(it) {
     }
 
     function iuSilverWeatherEnsureGeoOverlayMounted(){
+      if (!geoOverlay) {
+        geoOverlay = document.getElementById("iuSilverWeatherGeoOverlay");
+      }
+      if (!geoOverlay) {
+        const tpl = document.getElementById("iuLazyOverlayTpl-weathergeo");
+        if (tpl && tpl.content) {
+          try{
+            tpl.parentNode.insertBefore(tpl.content.cloneNode(true), tpl);
+            tpl.parentNode.removeChild(tpl);
+          }catch{}
+          geoOverlay = document.getElementById("iuSilverWeatherGeoOverlay");
+        }
+      }
       if (!geoOverlay) return null;
+      if (!geoOverlayBound) {
+        geoOverlayBound = true;
+        try{ iuSilverWeatherBindGeoOverlay(geoOverlay); }catch{}
+      }
       try{
         if (geoOverlay.parentElement !== document.body) {
           document.body.appendChild(geoOverlay);
@@ -12685,6 +12703,7 @@ function buildVideoAsArticleCard(it) {
         overlayEl.setAttribute("aria-hidden", "false");
       }catch{}
       try{
+        const geoOverlayAllow = document.getElementById("iuSilverWeatherGeoOverlayAllow");
         if (geoOverlayAllow && typeof geoOverlayAllow.focus === "function") geoOverlayAllow.focus();
       }catch{}
     }
@@ -13069,8 +13088,9 @@ function buildVideoAsArticleCard(it) {
       });
     }catch{}
 
-    if (geoOverlay) {
-      geoOverlay.addEventListener("click", (ev) => {
+    function iuSilverWeatherBindGeoOverlay(el){
+      if (!el) return;
+      el.addEventListener("click", (ev) => {
         try{
           const closeBtn = ev.target && ev.target.closest ? ev.target.closest("[data-iu-silver-wx-geo-overlay-close]") : null;
           if (closeBtn) {
@@ -13092,6 +13112,11 @@ function buildVideoAsArticleCard(it) {
           }
         }catch{}
       });
+    }
+    /* Eager-DOM fallback (no template): bind right away, same as before. */
+    if (geoOverlay && !geoOverlayBound) {
+      geoOverlayBound = true;
+      try{ iuSilverWeatherBindGeoOverlay(geoOverlay); }catch{}
     }
 
     function wireBtn(el, fn){
@@ -21897,6 +21922,9 @@ function buildVideoAsArticleCard(it) {
       try{ iuWxApplyMobileLayoutFix(); }catch{}
     }catch{}
   }
+  /* P1 lazy mount (pocasi): the section-view mount listener lives in another
+     closure — expose the init so it can re-bind after the view mounts. */
+  try{ window.iuWeatherInit = iuWeatherInit; }catch{}
 
   // === IU Daily Panel (right sidebar top) — time/date + nameday + weather + hours ===
   window.iuDailyPanelInit = function iuDailyPanelInit(){
@@ -21918,7 +21946,15 @@ function buildVideoAsArticleCard(it) {
     const elMinMax = document.getElementById("iuWxMinMax");
     const elHours = document.getElementById("iuWxHours");
 
-    if (!elTime && !elDate && !elWeather && !elErr) return;
+    /* P1 lazy mount (pocasi): panel elements live inside the not-yet-mounted
+       #iuWeatherView template — nameday/clock/weather-state boot work must
+       still run (topbar svátek + Silver card read from here). All element
+       writes below are null-guarded. On other pages (no template) keep the
+       original early return. */
+    const wxLazyPending =
+      !!document.getElementById("iuLazyViewTpl-pocasi") ||
+      !!document.getElementById("iuWeatherView");
+    if (!elTime && !elDate && !elWeather && !elErr && !wxLazyPending) return;
 
     function fmtTime(d){
       return new Intl.DateTimeFormat("cs-CZ",{hour:"2-digit",minute:"2-digit",timeZone:TZ}).format(d);
@@ -21948,7 +21984,9 @@ function buildVideoAsArticleCard(it) {
     // NAME DAY (Svátky)
     function updateNameday(){
       if (!IU_ENABLE_NAMEDAY) return;
-      if (!elNameday && !elWxStickyNameday) return;
+      /* P1 lazy mount (pocasi): topbar svátek must update even while the
+         weather view (and #iuWxStickyNameday) still sits in its template. */
+      if (!elNameday && !elWxStickyNameday && !wxLazyPending) return;
 
       if (elWxStickyNameday) {
         elWxStickyNameday.textContent = "";
@@ -32586,6 +32624,13 @@ function buildVideoAsArticleCard(it) {
             var rvLazy = document.getElementById("iuRadioView");
             if (rvLazy) renderRadioView(rvLazy);
           } catch (_) {}
+        } else if (kLazy === "pocasi") {
+          /* Weather view mounted after boot: re-bind direct listeners
+             (iuWeatherInit is once-guarded and no-opped at boot) and re-run
+             the daily panel init against the freshly mounted elements. */
+          try { window.__iuWeatherInitDone = 0; } catch (_) {}
+          try { if (typeof window.iuWeatherInit === "function") window.iuWeatherInit(); } catch (_) {}
+          try { if (typeof window.iuDailyPanelInit === "function") window.iuDailyPanelInit(); } catch (_) {}
         }
       });
     } catch (_) {}
@@ -36486,7 +36531,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         st7.textContent = CAL_PREMIUM_FIX_V4_CSS;
         document.head.appendChild(st7);
       }
-      ensureCalPremiumDom();
+      /* P1 lazy mount: ensureCalPremiumDom() moved to ensureCalendarOverlayMounted()
+         — premium overlay DOM is built on first calendar open, not at boot. */
     }catch{}
   }
 
@@ -36922,7 +36968,48 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function setMessage(msg){ const el = document.getElementById("iuCalendarFormMsg"); if (el) el.textContent = msg || ""; }
   function getOverlay(){ return document.getElementById("iuCalendarOverlay"); }
 
+  /* P1 perf (weather+calendar lazy mount): #iuCalendarOverlay, #iuCalTimeWheelHost
+     and #iuCalendarDayOverlay ship inside an inert <template id="iuLazyOverlayTpl-calendar">
+     and mount on first open. Premium overlay DOM + direct element bindings follow. */
+  function ensureCalendarOverlayMounted(){
+    if (getOverlay()){
+      bindOverlayDirectUiOnce();
+      return true;
+    }
+    const tpl = document.getElementById("iuLazyOverlayTpl-calendar");
+    if (!tpl || !tpl.content) return false;
+    try{
+      tpl.parentNode.insertBefore(tpl.content.cloneNode(true), tpl);
+      tpl.parentNode.removeChild(tpl);
+    }catch{
+      return false;
+    }
+    bindOverlayDirectUiOnce();
+    return !!getOverlay();
+  }
+
+  function bindOverlayDirectUiOnce(){
+    if (state.overlayDirectUiBound) return;
+    if (!getOverlay()) return;
+    state.overlayDirectUiBound = true;
+    try{ ensureCalPremiumDom(); }catch{}
+    const form = document.getElementById("iuCalendarEventForm");
+    if (form){ form.addEventListener("submit", (e)=>{ e.preventDefault(); upsertEventFromForm(); }); }
+    const photoInput = document.getElementById("iuCalendarPhotoInput");
+    if (photoInput){ photoInput.addEventListener("change", ()=>handlePhotoAdd(photoInput.files)); }
+    const dayCloseBtn = document.querySelector("#iuCalendarDayOverlay .iu-day-close");
+    if (dayCloseBtn){
+      dayCloseBtn.addEventListener("click", (ev)=>{
+        ev.preventDefault();
+        ev.stopPropagation();
+        closeDayOverlay();
+      });
+    }
+    try{ bindCalPremiumUiOnce(); }catch{}
+  }
+
   function openOverlay(originEl){
+    try{ ensureCalendarOverlayMounted(); }catch{}
     const ov = getOverlay();
     if (!ov) return;
     state.returnFocusEl = originEl || document.activeElement;
@@ -38389,8 +38476,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function bindUi(){
-    const overlay = getOverlay();
-    if (!overlay) return;
+    /* P1 lazy mount: the document-delegated open/close/nav listener must bind
+       at boot even when the overlay still sits inside its <template>.
+       Direct element bindings live in bindOverlayDirectUiOnce() (first open). */
     document.addEventListener("click", (e)=>{
       const t = e.target;
       const trigger = t && t.closest ? t.closest("[data-iu-calendar-trigger]") : null;
@@ -38448,18 +38536,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         return;
       }
     });
-    const form = document.getElementById("iuCalendarEventForm");
-    if (form){ form.addEventListener("submit", (e)=>{ e.preventDefault(); upsertEventFromForm(); }); }
-    const photoInput = document.getElementById("iuCalendarPhotoInput");
-    if (photoInput){ photoInput.addEventListener("change", ()=>handlePhotoAdd(photoInput.files)); }
-    const dayCloseBtn = document.querySelector("#iuCalendarDayOverlay .iu-day-close");
-    if (dayCloseBtn){
-      dayCloseBtn.addEventListener("click", (ev)=>{
-        ev.preventDefault();
-        ev.stopPropagation();
-        closeDayOverlay();
-      });
-    }
   }
 
   async function init(){
@@ -38469,7 +38545,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     await initStorage();
     await readStore();
     bindUi();
-    bindCalPremiumUiOnce();
+    /* Eager-DOM fallback (no template in HTML): bind direct UI right away,
+       same as the previous boot path. With the template this is a no-op and
+       binding happens on first open (ensureCalendarOverlayMounted). */
+    bindOverlayDirectUiOnce();
     try{
       if (!window.__iuCalVvInlineScroll && window.visualViewport){
         window.__iuCalVvInlineScroll = 1;
