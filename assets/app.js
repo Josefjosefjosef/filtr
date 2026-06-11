@@ -14709,7 +14709,11 @@ function buildVideoAsArticleCard(it) {
         const tilesHtml = sections.map((s) => {
           const isPlaceholder = !!(s && s.placeholder);
           const target = String((s && s.target) || "");
-          const hasTarget = !isPlaceholder && !!resolveTarget(target);
+          /* P1 lazy mount: views inside <template> count as available targets. */
+          const hasTarget =
+            !isPlaceholder &&
+            (!!resolveTarget(target) ||
+              !!(window.__iuSectionViewsLazyMount && window.__iuSectionViewsLazyMount.hasTarget(target)));
           const disabled = isPlaceholder ? "" : (hasTarget ? "" : " disabled");
           const dataTarget = isPlaceholder ? "" : ` data-target="${escapeHtml(target)}"`;
           const dataPlaceholder = isPlaceholder ? ` data-placeholder="1"` : "";
@@ -14747,6 +14751,8 @@ function buildVideoAsArticleCard(it) {
           return;
         }
 
+        /* P1 lazy mount: mount the view before resolving the reparent target. */
+        try { if (window.__iuSectionViewsLazyMount) window.__iuSectionViewsLazyMount.ensureTarget(s.target); } catch (_) {}
         const el = resolveTarget(s.target);
         if (!el) return;
 
@@ -31027,6 +31033,8 @@ function buildVideoAsArticleCard(it) {
   }
 
   function showView(key){
+    /* P1 lazy mount: section view DOM is mounted from <template> on first show. */
+    try { if (window.__iuSectionViewsLazyMount) window.__iuSectionViewsLazyMount.ensure(key); } catch (_) {}
     const center = document.getElementById('iuCenterStage');
     if (!center) return;
     center.dataset.view = key || 'media';
@@ -32430,6 +32438,22 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
     try {
       iuInitTvProgramChoiceUi();
+    } catch (_) {}
+
+    /* P1 lazy mount: re-run boot renderers for views mounted after this boot pass. */
+    try {
+      document.addEventListener("iu:section-view-mounted", function (ev) {
+        var kLazy = ev && ev.detail ? String(ev.detail.key || "") : "";
+        if (kLazy === "tvprogram") {
+          try { iuMountTvProgramVerifiedLinks(); } catch (_) {}
+          try { iuInitTvProgramChoiceUi(); } catch (_) {}
+        } else if (kLazy === "radio") {
+          try {
+            var rvLazy = document.getElementById("iuRadioView");
+            if (rvLazy) renderRadioView(rvLazy);
+          } catch (_) {}
+        }
+      });
     } catch (_) {}
 
     // P0 cold reload / partial DOM: URL→section must run even if radio feed host is missing (never skip applySectionFromURL).

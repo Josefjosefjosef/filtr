@@ -2726,7 +2726,8 @@ font-src 'self' data:;
                   </script>
                   </div>
                   <section id="iuQuickFeed" class="iuQuickFeed" hidden aria-label="Rychlé odkazy – detail"></section>
-                  <div id="iuJrEmptyView" class="iuJrEmptyView" data-view-host="jr" hidden>
+                  <template id="iuLazyViewTpl-jr" data-iu-lazy-view="jr">
+<div id="iuJrEmptyView" class="iuJrEmptyView" data-view-host="jr" hidden>
                     <div class="iuSectionHeader iuSectionHeader--jr">
                       <h2>Jízdní řády</h2>
                       <div class="iuSectionHeaderLine" aria-hidden="true"></div>
@@ -2761,13 +2762,17 @@ font-src 'self' data:;
                         <span class="iuRadioChipTitle">PID</span>
                       </a>
                     </div>
-                    <section class="iu-timetables-seo-block" aria-label="Informace o jízdních řádech">
+                    <div data-iu-seo-slot="jr" hidden></div>
+                  </div>
+    </template>
+    <div data-iu-seo-stub="jr" hidden>
+<section class="iu-timetables-seo-block" aria-label="Informace o jízdních řádech">
                       <h2>Jízdní řády vlaků, autobusů a MHD online</h2>
                       <p>Na jednom místě najdete rychlé odkazy na vyhledávání spojů a dopravní informace v České republice. Snadno otevřete IDOS, PID Lítačku, DPP Praha, České dráhy, RegioJet, Leo Express, IDS JMK nebo PID a můžete rychle ověřit spojení vlakem, autobusem, tramvají, metrem i regionální dopravou.</p>
                       <p>Sekce Jízdní řády pomáhá při plánování každodenních cest i delších přesunů. Hodí se pro kontrolu odjezdů, příjezdů, návazností, zpoždění, výluk, tarifních informací nebo spojení v Praze, Brně a dalších regionech.</p>
                       <p>Cílem je mít praktický rozcestník pro situace, kdy potřebujete rychle najít spoj, ověřit dopravní informace nebo otevřít oficiální službu dopravce bez zbytečného hledání.</p>
                     </section>
-                  </div>
+    </div>
                   <div id="iuWeatherView" class="iuWeatherView" data-view-host="pocasi" hidden>
                     <div class="iuSectionHeader iuSectionHeader--weather">
                       <h1>Počasí – <span id="iuWeatherCityH1">Praha</span></h1>
@@ -3047,7 +3052,8 @@ font-src 'self' data:;
                     </div>
                   </div>
 
-                  <section id="iuTvProgramView" class="iuView iuTvProgramView" data-section="tvprogram" data-view-host="tvprogram" aria-label="TV program" hidden>
+                  <template id="iuLazyViewTpl-tvprogram" data-iu-lazy-view="tvprogram">
+<section id="iuTvProgramView" class="iuView iuTvProgramView" data-section="tvprogram" data-view-host="tvprogram" aria-label="TV program" hidden>
                     <div class="iuViewBody iuTvProgramView__body">
                       <div class="iuTvPgHero" id="iuTvPg-hero" data-iu-tv-hero>
                         <div class="iuTvPgHero__inner">
@@ -3113,24 +3119,7 @@ font-src 'self' data:;
                         <div id="iuTvProgramVerifiedHost" class="iuTvPgGrid" role="list" aria-label="TV programy stanic"></div>
                       </div>
 
-                      <aside class="iu-tv-seo-block" aria-label="Informace o sekci TV program">
-                        <h3 class="iu-tv-seo-block__title">TV program online přehledně</h3>
-                        <p class="iu-tv-seo-block__lead">
-                          Najdi rychle aktuální TV program na dnes večer, filmy, seriály, sportovní přenosy, zprávy i pořady pro děti. Sekce TV program na
-                          infoUzel.cz slouží jako jednoduchý rozcestník na hlavní televizní programy a oficiální přehledy stanic. Vybereš typ obsahu nebo
-                          konkrétní stanici a otevřeš odpovídající TV program v nové kartě.
-                        </p>
-                        <ul class="iu-tv-seo-block__list">
-                          <li>rychlý výběr filmů, seriálů, sportu, zpráv, dětského obsahu a zábavy</li>
-                          <li>odkazy na hlavní TV programy stanic</li>
-                          <li>čistý přehled vhodný pro mobil, tablet i počítač</li>
-                          <li>bez zbytečného hledání a bez zahlcení reklamními prvky</li>
-                        </ul>
-                        <p class="iu-tv-seo-block__foot">
-                          TV program je určený jako praktický rozcestník. Samotné vysílací časy, změny programu a aktuální pořady se vždy řídí informacemi
-                          uvedenými na oficiálních stránkách jednotlivých televizních stanic.
-                        </p>
-                      </aside>
+                      <div data-iu-seo-slot="tvprogram" hidden></div>
 
                       <div id="iuTvProgramChoiceOverlay" class="iuTvProgramChoiceOverlay" hidden aria-hidden="true">
                         <div class="iuTvProgramChoiceOverlay__backdrop" data-iu-tv-choice-close tabindex="-1" aria-hidden="true"></div>
@@ -3167,8 +3156,30 @@ font-src 'self' data:;
                       </div>
                     </div>
                   </section>
+    </template>
+    <div data-iu-seo-stub="tvprogram" hidden>
+<aside class="iu-tv-seo-block" aria-label="Informace o sekci TV program">
+                        <h3 class="iu-tv-seo-block__title">TV program online přehledně</h3>
+                        <p class="iu-tv-seo-block__lead">
+                          Najdi rychle aktuální TV program na dnes večer, filmy, seriály, sportovní přenosy, zprávy i pořady pro děti. Sekce TV program na
+                          infoUzel.cz slouží jako jednoduchý rozcestník na hlavní televizní programy a oficiální přehledy stanic. Vybereš typ obsahu nebo
+                          konkrétní stanici a otevřeš odpovídající TV program v nové kartě.
+                        </p>
+                        <ul class="iu-tv-seo-block__list">
+                          <li>rychlý výběr filmů, seriálů, sportu, zpráv, dětského obsahu a zábavy</li>
+                          <li>odkazy na hlavní TV programy stanic</li>
+                          <li>čistý přehled vhodný pro mobil, tablet i počítač</li>
+                          <li>bez zbytečného hledání a bez zahlcení reklamními prvky</li>
+                        </ul>
+                        <p class="iu-tv-seo-block__foot">
+                          TV program je určený jako praktický rozcestník. Samotné vysílací časy, změny programu a aktuální pořady se vždy řídí informacemi
+                          uvedenými na oficiálních stránkách jednotlivých televizních stanic.
+                        </p>
+                      </aside>
+    </div>
 
-                  <div id="iuTravelView" class="iuTravelView" data-view-host="travel" hidden>
+                  <template id="iuLazyViewTpl-travel" data-iu-lazy-view="travel">
+<div id="iuTravelView" class="iuTravelView" data-view-host="travel" hidden>
                     <div class="iuSectionHeader iuSectionHeader--travel">
                       <h2>Cestování</h2>
                       <div class="iuSectionHeaderLine" aria-hidden="true"></div>
@@ -3345,7 +3356,9 @@ font-src 'self' data:;
                     </div>
                     <div class="iuNotesHost" data-iu-notes-key="travel_claims_issues" data-iu-notes-scope="travel" data-iu-notes-title="Reklamace a problémy"></div>
                   </div>
-                  <div id="iuMapyView" class="iuMapyView" data-view-host="mapy" hidden>
+    </template>
+                  <template id="iuLazyViewTpl-mapy" data-iu-lazy-view="mapy">
+<div id="iuMapyView" class="iuMapyView" data-view-host="mapy" hidden>
                     <div class="iuSectionHeader iuSectionHeader--mapy">
                       <h2>Mapy &amp; Navigace</h2>
                       <div class="iuSectionHeaderLine" aria-hidden="true"></div>
@@ -3385,7 +3398,11 @@ font-src 'self' data:;
                       <a class="iuRadioChip" role="listitem" href="https://edalnice.cz" target="_blank" rel="noopener"><span class="iuRadioChipTitle">Dálniční známky</span></a>
                     </div>
 
-                    <section class="iu-maps-seo-block" aria-label="Informace o mapách a navigaci">
+                    <div data-iu-seo-slot="mapy" hidden></div>
+                  </div>
+    </template>
+    <div data-iu-seo-stub="mapy" hidden>
+<section class="iu-maps-seo-block" aria-label="Informace o mapách a navigaci">
                       <h2>Mapy, navigace a dopravní služby online</h2>
                       <p>
                         Na jednom místě najdete rychlé odkazy na nejpoužívanější mapové a navigační služby. Snadno otevřete Google Maps, Mapy.cz, OpenStreetMap nebo Apple Maps a můžete pokračovat přímo k plánování trasy, hledání adresy, ověření dopravní situace nebo orientaci v okolí.
@@ -3397,8 +3414,9 @@ font-src 'self' data:;
                         Cílem je mít praktický rozcestník pro běžné situace: když potřebujete najít trasu, ověřit provoz, zaparkovat, zkontrolovat dopravu nebo otevřít mapu bez zbytečného hledání.
                       </p>
                     </section>
-                  </div>
-                  <div id="iuRadioView" class="iuRadioView" data-view-host="radio" hidden>
+    </div>
+                  <template id="iuLazyViewTpl-radio" data-iu-lazy-view="radio">
+<div id="iuRadioView" class="iuRadioView" data-view-host="radio" hidden>
                     <div class="iuSectionHeader iuSectionHeader--radio">
                       <h2>Rádio</h2>
                       <div class="iuSectionHeaderLine" aria-hidden="true"></div>
@@ -3419,7 +3437,11 @@ font-src 'self' data:;
                         <a class="iuRadioChip" href="https://www.radioblanik.cz/" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Blaník</span><span class="iuRadioChipDesc">České hity</span></a>
                       </div>
                     </div>
-                    <section class="iuSeoText iu-radio-seo-block" id="iuRadioSeoBlock" aria-label="SEO text – Rádio">
+                    <div data-iu-seo-slot="radio" hidden></div>
+                  </div>
+    </template>
+    <div data-iu-seo-stub="radio" hidden>
+<section class="iuSeoText iu-radio-seo-block" id="iuRadioSeoBlock" aria-label="SEO text – Rádio">
                       <h2>Česká online rádia na jednom místě</h2>
                       <p>
                         Sekce Rádio na infoUzel.cz slouží jako rychlý rozcestník na oblíbené české rozhlasové stanice. Najdete zde odkazy na Radiožurnál, Dvojku, Vltavu, Evropu 2, Impuls, Fajn rádio, Kiss, Rádio Beat a Blaník.
@@ -3445,8 +3467,9 @@ font-src 'self' data:;
                         Ne. infoUzel.cz poskytuje odkazy na oficiální weby a online vysílání jednotlivých rádií.
                       </p>
                     </section>
-                  </div>
-                  <div id="iuTvOnlineView" class="iuRadioView iuTvOnlineView" data-view-host="tvonline" hidden>
+    </div>
+                  <template id="iuLazyViewTpl-tvonline" data-iu-lazy-view="tvonline">
+<div id="iuTvOnlineView" class="iuRadioView iuTvOnlineView" data-view-host="tvonline" hidden>
                     <div class="iuSectionHeader iuSectionHeader--tvonline">
                       <h2 class="iu-tv-online-section-title">TV online</h2>
                       <div class="iuSectionHeaderLine" aria-hidden="true"></div>
@@ -3518,7 +3541,11 @@ font-src 'self' data:;
                       <a class="iuRadioChip iu-tv-online-card" href="https://tv.apple.com/" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle iu-tv-online-card-title">Apple TV+</span></a>
                       <a class="iuRadioChip iu-tv-online-card" href="https://www.skyshowtime.com/" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle iu-tv-online-card-title">SkyShowtime</span></a>
                     </div>
-                    <section
+                    <div data-iu-seo-slot="tvonline" hidden></div>
+                  </div>
+    </template>
+    <div data-iu-seo-stub="tvonline" hidden>
+<section
                       class="iu-tv-online-seo"
                       aria-labelledby="iu-tv-online-seo-heading"
                     >
@@ -3564,7 +3591,7 @@ font-src 'self' data:;
                         </div>
                       </div>
                     </section>
-                  </div>
+    </div>
                 </div>
                 </div>
                   </div>
@@ -5326,7 +5353,8 @@ font-src 'self' data:;
       })();
     </script>
     <script defer src="/assets/iu-info-center-lazy-mount.js?v=info-center-lazy-mount-v1-20260611"></script>
-    <script type="module" src="/assets/app.js?v=mobile-tablet-stability-v1-20260610"></script>
+    <script defer src="/assets/iu-section-views-lazy-mount.js?v=section-views-lazy-mount-v1-20260611"></script>
+    <script type="module" src="/assets/app.js?v=section-views-lazy-mount-v1-20260611"></script>
     <script defer src="/assets/iu-consent.js?v=consent-v1-20260609"></script>
     <script defer src="/assets/iu-info-center.js?v=info-center-v2-7-lazy-mount-20260611"></script>
     <script defer src="/assets/iu-consent-layer.js?v=consent-layer-v1-20260609"></script>
