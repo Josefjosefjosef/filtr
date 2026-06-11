@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-11T02:21:00.037328Z",
+  "ingestedAt": "2026-06-11T03:12:33.735292Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Země EU a europoslanci se shodli na úpravě systému emisních povolenek",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/eu-a-europoslanci-se-shodli-na-uprave-ets-2-proti-vykyvum-cen-povolenek.A260611_042439_zahranicni_air",
+      "dt": "2026-06-11T02:52:38Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "emisních",
+        "europoslanci",
+        "povolenek",
+        "shodli",
+        "systému",
+        "země",
+        "úpravě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -770,33 +794,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Dirigent Petr Popelka se stane generálním hudebním ředitelem Bavorské státní opery",
-      "url": "https://www.idnes.cz/kultura/hudba/novym-generalnim-hudebnim-reditelem-bavorske-statni-opery-bude-od-sezony-2029-2030-cesky-dirigent-po.A260610_164812_hudba_ts",
-      "dt": "2026-06-10T15:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "bavorské",
-        "dirigent",
-        "generálním",
-        "hudebním",
-        "opery",
-        "petr",
-        "popelka",
-        "stane",
-        "státní",
-        "ředitelem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -807,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47712,
+      "bytes": 47739,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -844,12 +841,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T02:01:23Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T02:52:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "finance": 5,
-          "other": 1
+          "finance": 6,
+          "zpravy": 24
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -861,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Země EU a europoslanci se shodli na úpravě systému emisních povolenek",
+            "publishedAt": "2026-06-11T02:52:38Z"
+          },
           {
             "title": "Další úder. USA útočily na Írán, ten oznámil úplné uzavření Hormuzského průlivu",
             "publishedAt": "2026-06-11T02:01:23Z"
@@ -887,10 +887,6 @@
           },
           {
             "title": "Belfast v ohni. Vláda viní krajní pravici, nikoli agresivního Súdánce s nožem",
-            "publishedAt": "2026-06-10T22:00:00Z"
-          },
-          {
-            "title": "Když se jízda na kole zvrtne: jaké pojištění vás podrží",
             "publishedAt": "2026-06-10T22:00:00Z"
           }
         ]
