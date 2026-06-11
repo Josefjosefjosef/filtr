@@ -10,7 +10,8 @@
 // 2026-03-22: HTML document = network-first (žádný preferovaný starý shell)
 // 2026-03-29: PR #1488 — nový SW + vyprázdnění APP_SHELL_CACHE po deployi (staré app.*.css v cache)
 // 2026-06-10: mobile/tablet stability v1 — bottom-nav clearance, app-render-optimizer.js odstraněn z precache
-const CACHE_VERSION = "2026-06-10-mobile-tablet-stability-v1";
+// 2026-06-11: P1 perf fix #7 — IU_SW_DEPLOY_RELOAD se NEposílá při první instalaci SW (cold load se načítal 2×)
+const CACHE_VERSION = "2026-06-11-sw-first-install-no-reload-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
@@ -311,8 +312,17 @@ async function handleDataRequest(event) {
   }
 }
 
+/* P1 perf fix #7: rozlišení FIRST INSTALL vs UPDATE.
+   Při install nového SW je registration.active starý SW (= update / deploy);
+   při úplně první instalaci je null. Flag přežije do activate (skipWaiting
+   aktivuje tentýž SW instance hned po install). */
+let IU_HAD_ACTIVE_SW_AT_INSTALL = false;
+
 // Install: cache App Shell
 self.addEventListener("install", (event) => {
+  try {
+    IU_HAD_ACTIVE_SW_AT_INSTALL = !!(self.registration && self.registration.active);
+  } catch (_) {}
   event.waitUntil(
     caches.open(APP_SHELL_CACHE).then((cache) => {
       const urls = getAppShellUrls().map(url => normalizeUrl(url));
@@ -328,14 +338,23 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
+    /* P1 perf fix #7: reload signál jen pro UPDATE (deploy refresh), nikdy pro
+       první instalaci — cold load se kvůli broadcastu načítal 2× (LCP +1.7-3.9 s).
+       Update detekce: starý SW byl aktivní při install NEBO existují iu-* cache
+       z jiné CACHE_VERSION (fallback, kdyby SW instance mezi install/activate padla). */
+    const hadPreviousDeploy =
+      IU_HAD_ACTIVE_SW_AT_INSTALL ||
+      keys.some((key) => key.indexOf("iu-") === 0 && !key.endsWith(CACHE_VERSION));
     await Promise.all(keys.map((key) => caches.delete(key)));
     await self.clients.claim();
-    try {
-      const clients = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
-      for (const client of clients) {
-        client.postMessage({ type: "IU_SW_DEPLOY_RELOAD", cacheVersion: CACHE_VERSION });
-      }
-    } catch (_) {}
+    if (hadPreviousDeploy) {
+      try {
+        const clients = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+        for (const client of clients) {
+          client.postMessage({ type: "IU_SW_DEPLOY_RELOAD", cacheVersion: CACHE_VERSION });
+        }
+      } catch (_) {}
+    }
   })());
 });
 
