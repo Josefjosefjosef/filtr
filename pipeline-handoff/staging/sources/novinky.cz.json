@@ -1,11 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-06-11T20:18:29.512983Z",
+  "ingestedAt": "2026-06-11T21:13:20.145223Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "Dohoda s Íránem by mohla být podepsána tento víkend v Evropě, slibuje Trump",
+      "url": "https://www.novinky.cz/clanek/zahranicni-blizky-a-stredni-vychod-dohoda-s-iranem-by-mohla-byt-podepsana-tento-vikend-v-evrope-slibuje-trump-40582845",
+      "dt": "2026-06-11T20:45:46Z",
+      "media_raw": "Novinky / Domácí",
+      "media_norm": "Novinky",
+      "tokens": [
+        "být",
+        "dohoda",
+        "evropě",
+        "podepsána",
+        "slibuje",
+        "tento",
+        "trump",
+        "víkend",
+        "íránem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_novinky_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "Brazilská třicátnice se vydávala za dvanáctiletou dívku. Oklamaný pár se o ni přes rok staral",
       "url": "https://www.novinky.cz/clanek/zahranicni-svet-brazilska-tricatnice-se-vydavala-za-dvanactiletou-divku-oklamany-par-se-o-ni-pres-rok-staral-40582740",
       "dt": "2026-06-11T19:40:47Z",
@@ -723,27 +749,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
+      "section": "aktualne",
       "contentType": "article",
-      "title": "Maximální ceny pohonných hmot. Benzín bude nepatrně dražší, nafta levnější",
-      "url": "https://www.novinky.cz/clanek/ekonomika-maximalni-ceny-pohonnych-hmot-benzin-bude-nepatrne-drazsi-nafta-levnejsi-40582705",
-      "dt": "2026-06-11T14:17:30Z",
-      "media_raw": "Novinky / Domácí",
+      "title": "Dohoda s Íránem by mohla být podepsána tento víkend v Evropě, slibuje Trump",
+      "url": "https://www.novinky.cz/clanek/zahranicni-blizky-a-stredni-vychod-dohoda-s-iranem-by-mohla-byt-podepsana-tento-vikend-v-evrope-slibuje-trump-40582845",
+      "dt": "2026-06-11T20:45:46Z",
+      "media_raw": "Novinky / Zahraniční",
       "media_norm": "Novinky",
       "tokens": [
-        "benzín",
-        "ceny",
-        "dražší",
-        "hmot",
-        "levnější",
-        "maximální",
-        "nafta",
-        "nepatrně",
-        "pohonných"
+        "být",
+        "dohoda",
+        "evropě",
+        "podepsána",
+        "slibuje",
+        "tento",
+        "trump",
+        "víkend",
+        "íránem"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
-      "feedId": "zpr_novinky_domaci",
+      "feedId": "zpr_novinky_zahranicni",
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "novinky.cz",
       "_dt_serialized": true
@@ -1459,32 +1485,6 @@
         "utekli",
         "včas",
         "zlobicích"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_novinky_zahranicni",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Maximální ceny pohonných hmot. Benzín bude nepatrně dražší, nafta levnější",
-      "url": "https://www.novinky.cz/clanek/ekonomika-maximalni-ceny-pohonnych-hmot-benzin-bude-nepatrne-drazsi-nafta-levnejsi-40582705",
-      "dt": "2026-06-11T14:17:30Z",
-      "media_raw": "Novinky / Zahraniční",
-      "media_norm": "Novinky",
-      "tokens": [
-        "benzín",
-        "ceny",
-        "dražší",
-        "hmot",
-        "levnější",
-        "maximální",
-        "nafta",
-        "nepatrně",
-        "pohonných"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1502,7 +1502,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/domaci",
-      "bytes": 48947,
+      "bytes": 49174,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1539,11 +1539,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T19:40:47Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T20:45:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "finance": 3
+          "zpravy": 28,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1555,6 +1555,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dohoda s Íránem by mohla být podepsána tento víkend v Evropě, slibuje Trump",
+            "publishedAt": "2026-06-11T20:45:46Z"
+          },
           {
             "title": "Brazilská třicátnice se vydávala za dvanáctiletou dívku. Oklamaný pár se o ni přes rok staral",
             "publishedAt": "2026-06-11T19:40:47Z"
@@ -1582,10 +1586,6 @@
           {
             "title": "Řidič ve Švédsku 89krát oklamal radary tím, že si zakryl obličej",
             "publishedAt": "2026-06-11T17:17:23Z"
-          },
-          {
-            "title": "FOTO: Staví se od roku 1882. Sagrada Família se stala nejvyšším kostelem na světě",
-            "publishedAt": "2026-06-11T17:12:00Z"
           }
         ]
       }
@@ -1597,7 +1597,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/zahranicni",
-      "bytes": 48947,
+      "bytes": 49174,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1634,11 +1634,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T19:40:47Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T20:45:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "finance": 3
+          "zpravy": 28,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1650,6 +1650,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dohoda s Íránem by mohla být podepsána tento víkend v Evropě, slibuje Trump",
+            "publishedAt": "2026-06-11T20:45:46Z"
+          },
           {
             "title": "Brazilská třicátnice se vydávala za dvanáctiletou dívku. Oklamaný pár se o ni přes rok staral",
             "publishedAt": "2026-06-11T19:40:47Z"
@@ -1677,10 +1681,6 @@
           {
             "title": "Řidič ve Švédsku 89krát oklamal radary tím, že si zakryl obličej",
             "publishedAt": "2026-06-11T17:17:23Z"
-          },
-          {
-            "title": "FOTO: Staví se od roku 1882. Sagrada Família se stala nejvyšším kostelem na světě",
-            "publishedAt": "2026-06-11T17:12:00Z"
           }
         ]
       }
