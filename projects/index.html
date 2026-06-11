@@ -514,10 +514,12 @@ font-src 'self' data:;
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
     <link rel="stylesheet" href="/assets/app.css?v=mobile-tablet-stability-v1-20260610" />
     <link rel="stylesheet" href="/assets/iu-silver-premium-draft.css?v=silver-premium-draft-cards-20260602" />
-    <link rel="stylesheet" href="/assets/iu-tasks-premium.css?v=tasks-premium-scope-20260503" />
-    <link rel="stylesheet" href="/assets/iu-notes-premium.css?v=notes-premium-teal-20260503" />
-    <link rel="stylesheet" href="/assets/iu-info-center.css?v=info-center-v2-6-close-nav-20260609" />
-    <link rel="stylesheet" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" />
+    <!-- P0 perf: overlay CSS non-blocking (media=print onload swap) — open guards in iuOverlayCssDeferGuard below app.js -->
+    <link rel="preload" as="style" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" />
+    <link rel="stylesheet" href="/assets/iu-tasks-premium.css?v=tasks-premium-scope-20260503" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-notes-premium.css?v=notes-premium-teal-20260503" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-info-center.css?v=info-center-v2-6-close-nav-20260609" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <style id="iuInfoCardsMobileTabletPostAppCss">
       /* P0 info cards Kalendář+Úkoly ≤1023: post app.css — beats #iuInfoCardsMobileTablet min-height:160px (assets/app.css CLS reserve). */
       @media (max-width: 1023px) {
@@ -1646,10 +1648,10 @@ font-src 'self' data:;
         #iuTvProgramView .iu-tv-seo-block{margin-bottom:12px}
       }
     </style>
-    <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1550fincalc-datovka-desktop-layout" />
-    <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
-    <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-root-cause-v1" />
-    <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
+    <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1550fincalc-datovka-desktop-layout" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-root-cause-v1" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=20" />
     <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=3" />
     <style id="iuParcelWatchFirstPaintClsGuard">
@@ -5371,6 +5373,122 @@ font-src 'self' data:;
     <script defer src="/assets/iu-info-center-lazy-mount.js?v=info-center-lazy-mount-v1-20260611"></script>
     <script defer src="/assets/iu-section-views-lazy-mount.js?v=section-views-lazy-mount-v1-20260611"></script>
     <script type="module" src="/assets/app.js?v=lcp-fast-path-v1-20260611"></script>
+    <script>
+    (function iuOverlayCssDeferGuard(){
+      "use strict";
+      if(window.__iuOverlayCssDeferGuardInit)return;
+      window.__iuOverlayCssDeferGuardInit=true;
+      var FRAGS=[
+        "iu-tasks-premium.css",
+        "iu-notes-premium.css",
+        "iu-info-center.css",
+        "iu-consent-layer.css",
+        "iu-financial-overlay.css",
+        "iu-legal-documents-overlay.css",
+        "iu-invoice-overlay.css",
+        "iu-parcel-overlay.css"
+      ];
+      function findLink(frag){
+        var nodes=document.querySelectorAll('link[rel="stylesheet"]');
+        for(var i=0;i<nodes.length;i++){
+          if(String(nodes[i].href||"").indexOf(frag)!==-1)return nodes[i];
+        }
+        return null;
+      }
+      function markReady(link){
+        try{link.dataset.iuDeferReady="1";}catch(_){}
+      }
+      function isReady(link){
+        if(!link)return true;
+        if(link.dataset&&link.dataset.iuDeferReady==="1")return true;
+        try{
+          if(link.sheet&&link.media==="all"){
+            markReady(link);
+            return true;
+          }
+        }catch(_){}
+        return false;
+      }
+      window.iuEnsureOverlayCss=function(frag){
+        frag=String(frag||"");
+        return new Promise(function(resolve){
+          var link=findLink(frag);
+          if(!link||isReady(link)){resolve(true);return;}
+          function finish(){markReady(link);resolve(true);}
+          link.addEventListener("load",finish,{once:true});
+          try{link.media="all";}catch(_){}
+          if(isReady(link))finish();
+        });
+      };
+      function guardGlobal(name,frag){
+        if(typeof window[name]!=="function"||window[name].__iuOverlayCssGuard)return;
+        var orig=window[name];
+        window[name]=function(){
+          var self=this,args=arguments;
+          return window.iuEnsureOverlayCss(frag).then(function(){
+            return orig.apply(self,args);
+          });
+        };
+        window[name].__iuOverlayCssGuard=true;
+      }
+      function guardMethod(obj,method,frag){
+        if(!obj||typeof obj[method]!=="function"||obj[method].__iuOverlayCssGuard)return;
+        var orig=obj[method];
+        obj[method]=function(){
+          var self=this,args=arguments;
+          return window.iuEnsureOverlayCss(frag).then(function(){
+            return orig.apply(self,args);
+          });
+        };
+        obj[method].__iuOverlayCssGuard=true;
+      }
+      function installWrappers(){
+        guardGlobal("iuInvoiceOpenSurface","iu-invoice-overlay.css");
+        guardGlobal("iuLegalDocsOpenSurface","iu-legal-documents-overlay.css");
+        guardGlobal("iuFinancialCalcOpenSurface","iu-financial-overlay.css");
+        guardGlobal("iuParcelsOpenSurface","iu-parcel-overlay.css");
+        guardGlobal("iuDatovkaOpenSurface","iu-financial-overlay.css");
+        guardGlobal("iuInfoCenterOpenSection","iu-info-center.css");
+        guardGlobal("iuEnsureFinancialCalcOverlayBoot","iu-financial-overlay.css");
+        guardGlobal("iuEnsureLegalDocsOverlayBoot","iu-legal-documents-overlay.css");
+        guardGlobal("iuEnsureInvoiceOverlayBoot","iu-invoice-overlay.css");
+        if(window.iuNotesService)guardMethod(window.iuNotesService,"openOverlay","iu-notes-premium.css");
+        if(window.iuTasksService)guardMethod(window.iuTasksService,"openOverlay","iu-tasks-premium.css");
+      }
+      document.addEventListener("click",function(ev){
+        if(ev.__iuInfoCssReplay)return;
+        var btn=ev.target&&ev.target.closest&&ev.target.closest("#iuTopbarInfoBtn,#iuSilverWelcomeInfoBtn");
+        if(!btn)return;
+        var link=findLink("iu-info-center.css");
+        if(!link||isReady(link))return;
+        ev.stopImmediatePropagation();
+        ev.preventDefault();
+        window.iuEnsureOverlayCss("iu-info-center.css").then(function(){
+          ev.__iuInfoCssReplay=true;
+          btn.click();
+        });
+      },true);
+      var consentBar=document.getElementById("iuConsentLayer");
+      if(consentBar&&!consentBar.__iuConsentCssObs){
+        consentBar.__iuConsentCssObs=true;
+        new MutationObserver(function(){
+          if(!consentBar.hidden){
+            window.iuEnsureOverlayCss("iu-consent-layer.css");
+          }
+        }).observe(consentBar,{attributes:true,attributeFilter:["hidden"]});
+      }
+      var attempts=0;
+      function tick(){
+        installWrappers();
+        if(++attempts<48)setTimeout(tick,250);
+      }
+      if(document.readyState==="loading"){
+        document.addEventListener("DOMContentLoaded",tick);
+      }else{
+        tick();
+      }
+    })();
+    </script>
     <script defer src="/assets/iu-consent.js?v=consent-v1-20260609"></script>
     <script defer src="/assets/iu-info-center.js?v=info-center-v2-7-lazy-mount-20260611"></script>
     <script defer src="/assets/iu-consent-layer.js?v=consent-layer-v1-20260609"></script>
