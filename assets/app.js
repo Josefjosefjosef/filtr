@@ -23973,7 +23973,85 @@ function buildVideoAsArticleCard(it) {
     })();
   });
 
-  init();
+  /** P1 perf: defer feed init() off module-eval critical path → post-first-paint (double rAF). */
+  function iuScheduleFeedInitAfterFirstPaint() {
+    try {
+      if (typeof window !== "undefined") {
+        window.__iuFeedInitDeferState = window.__iuFeedInitDeferState || {
+          moduleEvalAt:
+            typeof performance !== "undefined" && performance.now ? performance.now() : 0,
+          initCallCount: 0,
+          initStartedAt: null,
+          syncInitDuringModuleEval: false,
+          fcpAt: null,
+        };
+      }
+    } catch (_) {}
+
+    try {
+      if (typeof PerformanceObserver !== "undefined") {
+        new PerformanceObserver(function (list) {
+          try {
+            const entries = list.getEntries();
+            for (let i = 0; i < entries.length; i++) {
+              const e = entries[i];
+              if (e.name === "first-contentful-paint" && window.__iuFeedInitDeferState) {
+                window.__iuFeedInitDeferState.fcpAt = e.startTime;
+              }
+            }
+          } catch (_) {}
+        }).observe({ type: "paint", buffered: true });
+      }
+    } catch (_) {}
+
+    if (typeof window !== "undefined" && window.__iuFeedInitScheduled) return;
+    try {
+      if (typeof window !== "undefined") window.__iuFeedInitScheduled = true;
+    } catch (_) {}
+
+    function runInitOnce() {
+      try {
+        if (typeof window !== "undefined" && window.__iuFeedInitDone) return;
+        if (typeof window !== "undefined") {
+          window.__iuFeedInitDone = true;
+          if (window.__iuFeedInitDeferState) {
+            window.__iuFeedInitDeferState.initCallCount += 1;
+            window.__iuFeedInitDeferState.initStartedAt =
+              typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+          }
+        }
+      } catch (_) {}
+      init();
+    }
+
+    function doubleRaf(run) {
+      try {
+        requestAnimationFrame(function () {
+          requestAnimationFrame(run);
+        });
+      } catch (_) {
+        run();
+      }
+    }
+
+    function scheduleAfterFirstPaint() {
+      doubleRaf(runInitOnce);
+    }
+
+    if (typeof document !== "undefined" && document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", scheduleAfterFirstPaint, { once: true });
+    } else {
+      scheduleAfterFirstPaint();
+    }
+  }
+
+  iuScheduleFeedInitAfterFirstPaint();
+
+  try {
+    if (typeof window !== "undefined" && window.__iuFeedInitDeferState) {
+      window.__iuFeedInitDeferState.syncInitDuringModuleEval = !!window.__iuFeedInitDone;
+    }
+  } catch (_) {}
 })();
 
 
