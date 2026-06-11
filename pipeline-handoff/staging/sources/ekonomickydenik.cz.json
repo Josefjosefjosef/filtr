@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-06-11T07:42:43.014124Z",
+  "ingestedAt": "2026-06-11T08:22:31.980028Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Zaplatíme za D4 miliardu navíc? Firma, která dálnici postavila, pokračuje ve sporu",
+      "url": "https://ekonomickydenik.cz/arbitraz-miliarda-d4-via-salis-stat/",
+      "dt": "2026-06-11T07:53:20Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dálnici",
+        "firma",
+        "miliardu",
+        "navíc",
+        "pokračuje",
+        "postavila",
+        "sporu",
+        "zaplatíme"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -771,33 +796,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Novou koncepci armády probere generálská rada. Hlaváč na výboru žádal o vyškrtnutí",
-      "url": "https://ekonomickydenik.cz/novou-koncepci-armady-probere-generalska-rada-hlavac/",
-      "dt": "2026-06-09T14:45:36Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "armády",
-        "generálská",
-        "hlaváč",
-        "koncepci",
-        "novou",
-        "probere",
-        "rada",
-        "vyškrtnutí",
-        "výboru",
-        "žádal"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -808,7 +806,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73740,
+      "bytes": 73806,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -845,11 +843,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T07:38:11Z",
+        "raw_feed_latest_publishedAt": "2026-06-11T07:53:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 26,
-          "zpravy": 3,
+          "zpravy": 4,
+          "finance": 25,
           "zdravi": 1
         },
         "drop_counts": {
@@ -862,6 +860,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zaplatíme za D4 miliardu navíc? Firma, která dálnici postavila, pokračuje ve sporu",
+            "publishedAt": "2026-06-11T07:53:20Z"
+          },
           {
             "title": "Pirát Bartoš se vyfotil úplně nahý kvůli Babišovi. Tvrdí, že nemá co skrývat",
             "publishedAt": "2026-06-11T07:38:11Z"
@@ -889,10 +891,6 @@
           {
             "title": "Luxusní resort Trumpova zetě v ráji plameňáků může potopit přijetí Albánie do EU",
             "publishedAt": "2026-06-10T17:21:00Z"
-          },
-          {
-            "title": "Investujte s Havlem a Masarykem. ČNB vydá unikátní bankovky, které zmizí během pár dní",
-            "publishedAt": "2026-06-10T16:41:04Z"
           }
         ]
       }
