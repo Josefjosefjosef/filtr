@@ -100,6 +100,8 @@
   function initNavigation() {
     var overlay = document.getElementById("iuTopbarInfoOverlay");
     if (!overlay || overlay.getAttribute("data-iu-info-center-v2") !== "1") return;
+    if (overlay.getAttribute("data-iu-info-center-v2-inited") === "1") return;
+    overlay.setAttribute("data-iu-info-center-v2-inited", "1");
 
     var menu = document.getElementById("iuInfoCenterMenu");
     var titleEl = document.getElementById("iuTopbarInfoOverlayTitle");
@@ -258,4 +260,8 @@
   } else {
     boot();
   }
+
+  // Lazy mount (P0 perf fix): overlay is mounted from <template> on first
+  // open; re-run inner navigation init at that moment.
+  document.addEventListener("iu:info-center-mounted", boot);
 })();
