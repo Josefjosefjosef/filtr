@@ -28,6 +28,61 @@ const DEFAULT_URL = "https://infouzel.cz/projects/";
 const CLS_CAP = 0.044;
 const PARCEL_HEIGHT_DELTA_CAP = 8;
 
+/** External Cloudflare Insights analytics beacon blocked by CSP — not Silver layout/app signal. */
+function isCloudflareInsightsCspBeaconNoise(text) {
+  const s = String(text || "");
+  if (!s) return false;
+  if (!/static\.cloudflareinsights\.com\/beacon\.min\.js/i.test(s)) return false;
+  if (!/violates the Content Security Policy directive/i.test(s)) return false;
+  if (!/The action has been blocked/i.test(s)) return false;
+  return true;
+}
+
+function isIgnoredSilverLayoutConsoleError(text, ignorableOpts) {
+  return isIgnorableGuardConsoleError(text, ignorableOpts) || isCloudflareInsightsCspBeaconNoise(text);
+}
+
+function partitionConsoleErrors(rawConsoleErrors, ignorableOpts) {
+  const ignoredConsoleErrors = [];
+  const blockingConsoleErrors = [];
+  for (let i = 0; i < rawConsoleErrors.length; i++) {
+    const t = rawConsoleErrors[i];
+    if (isIgnoredSilverLayoutConsoleError(t, ignorableOpts)) ignoredConsoleErrors.push(t);
+    else blockingConsoleErrors.push(t);
+  }
+  return { ignoredConsoleErrors, blockingConsoleErrors };
+}
+
+function runConsoleErrorFilterSelfCheck() {
+  const cloudflareSample =
+    "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/abc' violates the Content Security Policy directive \"script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'\". The action has been blocked.";
+  const genericCspSample =
+    "Loading the script 'https://infouzel.cz/projects/assets/app.js' violates the Content Security Policy directive \"script-src 'self'\". The action has been blocked.";
+  const appSample = "Uncaught TypeError: Cannot read properties of undefined (reading 'x')";
+  const faviconSample = "Failed to load resource: the server responded with a status of 404 (Not Found) https://infouzel.cz/favicon.ico";
+  const checks = [
+    { name: "cloudflare_beacon_ignored", pass: isCloudflareInsightsCspBeaconNoise(cloudflareSample) },
+    { name: "generic_csp_not_ignored", pass: !isCloudflareInsightsCspBeaconNoise(genericCspSample) },
+    { name: "app_error_not_ignored", pass: !isCloudflareInsightsCspBeaconNoise(appSample) },
+    {
+      name: "favicon_still_ignored",
+      pass: isIgnoredSilverLayoutConsoleError(faviconSample, {}),
+    },
+    {
+      name: "blocking_partition",
+      pass:
+        partitionConsoleErrors([cloudflareSample, genericCspSample], {}).blockingConsoleErrors.length === 1,
+    },
+  ];
+  const failed = checks.filter((c) => !c.pass);
+  if (failed.length) {
+    throw new Error(
+      "Silver layout guard console filter self-check failed: " + failed.map((c) => c.name).join(", ")
+    );
+  }
+  return checks;
+}
+
 function envUrl() {
   const u = String(process.env.SILVER_LAYOUT_GUARD_URL || DEFAULT_URL).trim();
   return u || DEFAULT_URL;
@@ -299,8 +354,9 @@ async function runViewport(page, w, h) {
   const ignorableOpts = {
     hadRecentIgnorableFailure: ignorableTracker.hadRecentIgnorableFailure.bind(ignorableTracker),
   };
-  const consoleErrors = rawConsoleErrors.filter(
-    (t) => !isIgnorableGuardConsoleError(t, ignorableOpts)
+  const { ignoredConsoleErrors, blockingConsoleErrors } = partitionConsoleErrors(
+    rawConsoleErrors,
+    ignorableOpts
   );
 
   const g = geom;
@@ -333,7 +389,7 @@ async function runViewport(page, w, h) {
     g.parcel_input_visible &&
     g.parcel_button_visible &&
     g.parcel_shell_not_clipped &&
-    consoleErrors.length === 0 &&
+    blockingConsoleErrors.length === 0 &&
     appErrors === 0 &&
     clsPass &&
     parcelHeightDeltaPass;
@@ -355,7 +411,10 @@ async function runViewport(page, w, h) {
     parcel_input_visible: g.parcel_input_visible,
     parcel_button_visible: g.parcel_button_visible,
     parcel_shell_not_clipped: g.parcel_shell_not_clipped,
-    consoleErrorsCount: consoleErrors.length,
+    rawConsoleErrorsCount: rawConsoleErrors.length,
+    ignoredConsoleErrorsCount: ignoredConsoleErrors.length,
+    blockingConsoleErrorsCount: blockingConsoleErrors.length,
+    consoleErrorsCount: blockingConsoleErrors.length,
     appErrorsCount: appErrors,
     cls,
     cls_pass: clsPass,
@@ -366,7 +425,8 @@ async function runViewport(page, w, h) {
     parcel_height_delta_px: parcelTrack.effectiveDelta,
     parcel_height_shift_delta_px: parcelTrack.shiftDelta,
     parcel_height_delta_pass: parcelHeightDeltaPass,
-    consoleErrorsText: consoleErrors.slice(),
+    consoleErrorsText: blockingConsoleErrors.slice(),
+    ignoredConsoleErrorsText: ignoredConsoleErrors.slice(),
     _pass: pass,
   };
 }
@@ -390,6 +450,9 @@ function formatBlock(label, o) {
     "  parcel_input_visible: " + o.parcel_input_visible,
     "  parcel_button_visible: " + o.parcel_button_visible,
     "  parcel_shell_not_clipped: " + o.parcel_shell_not_clipped,
+    "  rawConsoleErrorsCount: " + o.rawConsoleErrorsCount,
+    "  ignoredConsoleErrorsCount: " + o.ignoredConsoleErrorsCount,
+    "  blockingConsoleErrorsCount: " + o.blockingConsoleErrorsCount,
     "  consoleErrorsCount: " + o.consoleErrorsCount,
     "  appErrorsCount: " + o.appErrorsCount,
     "  cls: " + o.cls,
@@ -400,6 +463,12 @@ function formatBlock(label, o) {
     "  parcel_height_stable: " + (o.parcel_height_first_px != null && o.parcel_height_last_px != null && Math.abs(o.parcel_height_last_px - o.parcel_height_first_px) <= 8),
     "  parcel_height_delta_pass: " + o.parcel_height_delta_pass,
   ];
+  if (Array.isArray(o.ignoredConsoleErrorsText) && o.ignoredConsoleErrorsText.length) {
+    lines.push("  ignored_console_errors_text:");
+    for (let ii = 0; ii < o.ignoredConsoleErrorsText.length; ii++) {
+      lines.push("    - " + String(o.ignoredConsoleErrorsText[ii]).slice(0, 800));
+    }
+  }
   if (Array.isArray(o.consoleErrorsText) && o.consoleErrorsText.length) {
     lines.push("  console_errors_text:");
     for (let ci = 0; ci < o.consoleErrorsText.length; ci++) {
@@ -410,6 +479,13 @@ function formatBlock(label, o) {
 }
 
 async function main() {
+  const selfCheckOnly = process.argv.includes("--self-check");
+  runConsoleErrorFilterSelfCheck();
+  if (selfCheckOnly) {
+    process.stdout.write("SILVER_LAYOUT_GUARD_CONSOLE_FILTER_SELF_CHECK: PASS\n");
+    return;
+  }
+
   const browser = await chromium.launch({ headless: true });
   const ctx = await browser.newContext({ serviceWorkers: "block" });
   await installClsObserver(ctx);
@@ -452,3 +528,10 @@ main().catch((e) => {
   process.stderr.write(String(e && e.stack ? e.stack : e) + "\n");
   process.exit(1);
 });
+
+module.exports = {
+  isCloudflareInsightsCspBeaconNoise,
+  isIgnoredSilverLayoutConsoleError,
+  partitionConsoleErrors,
+  runConsoleErrorFilterSelfCheck,
+};
