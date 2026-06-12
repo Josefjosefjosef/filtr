@@ -900,6 +900,8 @@ try {
     feedClassificationMeta: null,
     /** P0 chunked article loader V1 (section-scoped fetch; no full publishable_pool on visit). */
     chunkLoader: null,
+    /** Top-2 per vertical from feed init (same rows as section init); homepage preview source of truth. */
+    sectionPreviewItems: null,
   };
   state.cachedItems ??= [];
   state.filteredItems ??= [];
@@ -2474,6 +2476,7 @@ try {
         const sectionKey = iuChunkNavSectionFromUrl();
         const init = await iuChunkLoadInitial(iuBasePath(), iuChunkDataVer(), sectionKey);
         state.chunkLoader = init.loader;
+        iuPreviewSyncSectionPreviewItemsFromLoader(init.loader);
         try {
           window.__iuArticlesLoaderMode = "chunk-v1";
         } catch (_) {}
@@ -8317,19 +8320,51 @@ function buildVideoAsArticleCard(it) {
     return false;
   }
 
-  function iuNewsPreviewPickLatestTwoFromState(){
-    try{
+  function iuPreviewSyncSectionPreviewItemsFromLoader(loader) {
+    try {
+      if (!loader || !loader.sectionPreviewItems || typeof loader.sectionPreviewItems !== "object") return;
+      state.sectionPreviewItems = loader.sectionPreviewItems;
+    } catch (_) {}
+  }
+
+  function iuPreviewPickTwoFromRows(rows, topicKey) {
+    let latest = null;
+    let second = null;
+    const topic = String(topicKey || "").trim().toLowerCase();
+    for (let i = 0; i < (rows || []).length; i++) {
+      const it = rows[i];
+      try {
+        if (!it) continue;
+        if (String(it.contentType || "article").toLowerCase() !== "article") continue;
+        if (!iuArticleReleaseEligible(it)) continue;
+        if (!iuArticleMatchesMediaTopicKey(it, topic)) continue;
+        if (!latest) {
+          latest = it;
+          continue;
+        }
+        if (!second) {
+          second = it;
+          break;
+        }
+      } catch (_) {}
+    }
+    if (!latest) return { latest: null, second: null, latestMs: NaN };
+    return { latest, second, latestMs: iuNewsPreviewParsePublishedMs(latest) };
+  }
+
+  function iuPreviewPickTwoFromCachedItems(topicKey) {
+    try {
       const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
       if (!items.length) return { latest: null, second: null, latestMs: NaN };
-      /** Same order as feed pipeline: walk cachedItems (already newest-first) and take first two Zprávy articles. */
       let latest = null;
       let second = null;
+      const topic = String(topicKey || "").trim().toLowerCase();
       for (let i = 0; i < items.length; i++) {
         const it = items[i];
-        try{
+        try {
           if (!it) continue;
           if (String(it.contentType || "article").toLowerCase() !== "article") continue;
-          if (!iuArticleMatchesMediaTopicKey(it, "zpravy")) continue;
+          if (!iuArticleMatchesMediaTopicKey(it, topic)) continue;
           if (!latest) {
             latest = it;
             continue;
@@ -8338,14 +8373,45 @@ function buildVideoAsArticleCard(it) {
             second = it;
             break;
           }
-        }catch(_){}
+        } catch (_) {}
       }
       if (!latest) return { latest: null, second: null, latestMs: NaN };
-      const latestMs = iuNewsPreviewParsePublishedMs(latest);
-      return { latest, second, latestMs };
-    }catch(_){
+      return { latest, second, latestMs: iuNewsPreviewParsePublishedMs(latest) };
+    } catch (_) {
       return { latest: null, second: null, latestMs: NaN };
     }
+  }
+
+  /** Homepage section cards: prefer feed init sectionPreviewItems (identical to section init top-2). */
+  function iuPreviewPickLatestTwoForTopic(topicKey) {
+    try {
+      const topic = String(topicKey || "").trim().toLowerCase();
+      const shippedMap = state.sectionPreviewItems;
+      if (shippedMap && typeof shippedMap === "object") {
+        const shipped = shippedMap[topic];
+        if (Array.isArray(shipped) && shipped.length) {
+          const picked = iuPreviewPickTwoFromRows(shipped, topic);
+          if (picked.latest) return picked;
+        }
+      }
+      if (topic === "vzdelavani") {
+        const legacy =
+          state.chunkLoader && Array.isArray(state.chunkLoader.educationPreviewItems)
+            ? state.chunkLoader.educationPreviewItems
+            : [];
+        if (legacy.length) {
+          const picked = iuPreviewPickTwoFromRows(legacy, topic);
+          if (picked.latest) return picked;
+        }
+      }
+      return iuPreviewPickTwoFromCachedItems(topic);
+    } catch (_) {
+      return { latest: null, second: null, latestMs: NaN };
+    }
+  }
+
+  function iuNewsPreviewPickLatestTwoFromState(){
+    return iuPreviewPickLatestTwoForTopic("zpravy");
   }
 
   /**
@@ -8364,266 +8430,35 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuSportPreviewPickLatestTwoFromState(){
-    try{
-      const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
-      if (!items.length) return { latest: null, second: null, latestMs: NaN };
-      let latest = null;
-      let second = null;
-      for (let i = 0; i < items.length; i++) {
-        const it = items[i];
-        try{
-          if (!it) continue;
-          if (String(it.contentType || "article").toLowerCase() !== "article") continue;
-          if (!iuArticleMatchesMediaTopicKey(it, "sport")) continue;
-          if (!latest) {
-            latest = it;
-            continue;
-          }
-          if (!second) {
-            second = it;
-            break;
-          }
-        }catch(_){}
-      }
-      if (!latest) return { latest: null, second: null, latestMs: NaN };
-      const latestMs = iuNewsPreviewParsePublishedMs(latest);
-      return { latest, second, latestMs };
-    }catch(_){
-      return { latest: null, second: null, latestMs: NaN };
-    }
+    return iuPreviewPickLatestTwoForTopic("sport");
   }
 
   function iuFinancePreviewPickLatestTwoFromState(){
-    try{
-      const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
-      if (!items.length) return { latest: null, second: null, latestMs: NaN };
-      let latest = null;
-      let second = null;
-      for (let i = 0; i < items.length; i++) {
-        const it = items[i];
-        try{
-          if (!it) continue;
-          if (String(it.contentType || "article").toLowerCase() !== "article") continue;
-          if (!iuArticleMatchesMediaTopicKey(it, "finance")) continue;
-          if (!latest) {
-            latest = it;
-            continue;
-          }
-          if (!second) {
-            second = it;
-            break;
-          }
-        }catch(_){}
-      }
-      if (!latest) return { latest: null, second: null, latestMs: NaN };
-      const latestMs = iuNewsPreviewParsePublishedMs(latest);
-      return { latest, second, latestMs };
-    }catch(_){
-      return { latest: null, second: null, latestMs: NaN };
-    }
+    return iuPreviewPickLatestTwoForTopic("finance");
   }
 
   function iuHealthPreviewPickLatestTwoFromState(){
-    try{
-      const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
-      if (!items.length) return { latest: null, second: null, latestMs: NaN };
-      let latest = null;
-      let second = null;
-      for (let i = 0; i < items.length; i++) {
-        const it = items[i];
-        try{
-          if (!it) continue;
-          if (String(it.contentType || "article").toLowerCase() !== "article") continue;
-          if (!iuArticleMatchesMediaTopicKey(it, "zdravi")) continue;
-          if (!latest) {
-            latest = it;
-            continue;
-          }
-          if (!second) {
-            second = it;
-            break;
-          }
-        }catch(_){}
-      }
-      if (!latest) return { latest: null, second: null, latestMs: NaN };
-      const latestMs = iuNewsPreviewParsePublishedMs(latest);
-      return { latest, second, latestMs };
-    }catch(_){
-      return { latest: null, second: null, latestMs: NaN };
-    }
+    return iuPreviewPickLatestTwoForTopic("zdravi");
   }
 
   function iuTravelPreviewPickLatestTwoFromState(){
-    try{
-      const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
-      if (!items.length) return { latest: null, second: null, latestMs: NaN };
-      let latest = null;
-      let second = null;
-      for (let i = 0; i < items.length; i++) {
-        const it = items[i];
-        try{
-          if (!it) continue;
-          if (String(it.contentType || "article").toLowerCase() !== "article") continue;
-          if (!iuArticleMatchesMediaTopicKey(it, "cestovani")) continue;
-          if (!latest) {
-            latest = it;
-            continue;
-          }
-          if (!second) {
-            second = it;
-            break;
-          }
-        }catch(_){}
-      }
-      if (!latest) return { latest: null, second: null, latestMs: NaN };
-      const latestMs = iuNewsPreviewParsePublishedMs(latest);
-      return { latest, second, latestMs };
-    }catch(_){
-      return { latest: null, second: null, latestMs: NaN };
-    }
+    return iuPreviewPickLatestTwoForTopic("cestovani");
   }
 
   function iuGamesPreviewPickLatestTwoFromState(){
-    try{
-      const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
-      if (!items.length) return { latest: null, second: null, latestMs: NaN };
-      let latest = null;
-      let second = null;
-      for (let i = 0; i < items.length; i++) {
-        const it = items[i];
-        try{
-          if (!it) continue;
-          if (String(it.contentType || "article").toLowerCase() !== "article") continue;
-          if (!iuArticleMatchesMediaTopicKey(it, "hry")) continue;
-          if (!latest) {
-            latest = it;
-            continue;
-          }
-          if (!second) {
-            second = it;
-            break;
-          }
-        }catch(_){}
-      }
-      if (!latest) return { latest: null, second: null, latestMs: NaN };
-      const latestMs = iuNewsPreviewParsePublishedMs(latest);
-      return { latest, second, latestMs };
-    }catch(_){
-      return { latest: null, second: null, latestMs: NaN };
-    }
+    return iuPreviewPickLatestTwoForTopic("hry");
   }
 
   function iuCulturePreviewPickLatestTwoFromState(){
-    try{
-      const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
-      if (!items.length) return { latest: null, second: null, latestMs: NaN };
-      let latest = null;
-      let second = null;
-      for (let i = 0; i < items.length; i++) {
-        const it = items[i];
-        try{
-          if (!it) continue;
-          if (String(it.contentType || "article").toLowerCase() !== "article") continue;
-          if (!iuArticleMatchesMediaTopicKey(it, "kultura")) continue;
-          if (!latest) {
-            latest = it;
-            continue;
-          }
-          if (!second) {
-            second = it;
-            break;
-          }
-        }catch(_){}
-      }
-      if (!latest) return { latest: null, second: null, latestMs: NaN };
-      const latestMs = iuNewsPreviewParsePublishedMs(latest);
-      return { latest, second, latestMs };
-    }catch(_){
-      return { latest: null, second: null, latestMs: NaN };
-    }
+    return iuPreviewPickLatestTwoForTopic("kultura");
   }
 
   function iuScienceHistoryPreviewPickLatestTwoFromState(){
-    try{
-      const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
-      if (!items.length) return { latest: null, second: null, latestMs: NaN };
-      let latest = null;
-      let second = null;
-      for (let i = 0; i < items.length; i++) {
-        const it = items[i];
-        try{
-          if (!it) continue;
-          if (String(it.contentType || "article").toLowerCase() !== "article") continue;
-          if (!iuArticleMatchesMediaTopicKey(it, "veda")) continue;
-          if (!latest) {
-            latest = it;
-            continue;
-          }
-          if (!second) {
-            second = it;
-            break;
-          }
-        }catch(_){}
-      }
-      if (!latest) return { latest: null, second: null, latestMs: NaN };
-      const latestMs = iuNewsPreviewParsePublishedMs(latest);
-      return { latest, second, latestMs };
-    }catch(_){
-      return { latest: null, second: null, latestMs: NaN };
-    }
+    return iuPreviewPickLatestTwoForTopic("veda");
   }
 
   function iuEducationPreviewPickLatestTwoFromState(){
-    try{
-      const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
-      let latest = null;
-      let second = null;
-      for (let i = 0; i < items.length; i++) {
-        const it = items[i];
-        try{
-          if (!it) continue;
-          if (String(it.contentType || "article").toLowerCase() !== "article") continue;
-          if (!iuArticleMatchesMediaTopicKey(it, "vzdelavani")) continue;
-          if (!latest) {
-            latest = it;
-            continue;
-          }
-          if (!second) {
-            second = it;
-            break;
-          }
-        }catch(_){}
-      }
-      if (!latest) {
-        /* Education articles are sparse — the feed init payload ships the 2 latest
-           (educationPreviewItems) so the card never needs a section chunk fetch. */
-        const shipped =
-          state.chunkLoader && Array.isArray(state.chunkLoader.educationPreviewItems)
-            ? state.chunkLoader.educationPreviewItems
-            : [];
-        for (let i = 0; i < shipped.length; i++) {
-          const it = shipped[i];
-          try{
-            if (!it) continue;
-            if (String(it.contentType || "article").toLowerCase() !== "article") continue;
-            if (!iuArticleMatchesMediaTopicKey(it, "vzdelavani")) continue;
-            if (!latest) {
-              latest = it;
-              continue;
-            }
-            if (!second) {
-              second = it;
-              break;
-            }
-          }catch(_){}
-        }
-      }
-      if (!latest) return { latest: null, second: null, latestMs: NaN };
-      const latestMs = iuNewsPreviewParsePublishedMs(latest);
-      return { latest, second, latestMs };
-    }catch(_){
-      return { latest: null, second: null, latestMs: NaN };
-    }
+    return iuPreviewPickLatestTwoForTopic("vzdelavani");
   }
 
   /** Silver tall preview cards: stejná navigační cesta jako „Navigace po webu“ — přímo persist + apply (ne syntetický peer.click() na <a>, který je na mobilu/WebKit nespolehlivý vs skutečný tap). */
@@ -15308,6 +15143,7 @@ function buildVideoAsArticleCard(it) {
     const videosOnly = (state.cachedItems || []).filter((e) => String(e?.contentType || "").toLowerCase() === "video");
     const init = await iuChunkLoadInitial(iuBasePath(), iuChunkDataVer(), nextKey);
     state.chunkLoader = init.loader;
+    iuPreviewSyncSectionPreviewItemsFromLoader(init.loader);
     __iuFeedPrimaryPairLast = null;
     const sanitized = await iuChunkNormalizeArticleRows(init.initialArticles);
     const enriched = sanitized.map((item) => {
