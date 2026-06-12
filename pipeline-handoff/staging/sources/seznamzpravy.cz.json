@@ -1,26 +1,25 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-06-12T20:06:24.846193Z",
+  "ingestedAt": "2026-06-12T20:46:57.397723Z",
   "items": [
     {
-      "section": "krimi",
+      "section": "finance",
       "contentType": "article",
-      "title": "Španělská policie zadržela muže hledaného českými úřady kvůli podvodu",
-      "url": "https://www.seznamzpravy.cz/clanek/domaci-zivot-v-cesku-spanelska-policie-zadrzela-muze-hledaneho-ceskymi-urady-kvuli-podvodu-308470",
-      "dt": "2026-06-12T19:36:55Z",
+      "title": "Akcie SpaceX odstartovaly růstem a Musk je první dolarový bilionář",
+      "url": "https://www.seznamzpravy.cz/clanek/ekonomika-finance-akcie-fondy-akcie-spacex-predbezne-naznacuji-rust-alespon-o-28-procent-308416",
+      "dt": "2026-06-12T14:10:52Z",
       "media_raw": "Seznam Zprávy / Byznys",
       "media_norm": "Seznam Zprávy",
       "tokens": [
-        "hledaného",
-        "kvůli",
-        "muže",
-        "podvodu",
-        "policie",
-        "zadržela",
-        "úřady",
-        "českými",
-        "španělská"
+        "akcie",
+        "bilionář",
+        "dolarový",
+        "musk",
+        "odstartovaly",
+        "první",
+        "růstem",
+        "spacex"
       ],
       "feedCategory": "finance",
       "feedType": "rubric",
@@ -44,6 +43,32 @@
         "porážce",
         "ukrajinské",
         "velká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rubric",
+      "feedId": "fin_sz_byznys",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Španělská policie zadržela muže hledaného českými úřady kvůli podvodu",
+      "url": "https://www.seznamzpravy.cz/clanek/domaci-zivot-v-cesku-spanelska-policie-zadrzela-muze-hledaneho-ceskymi-urady-kvuli-podvodu-308470",
+      "dt": "2026-06-12T19:36:55Z",
+      "media_raw": "Seznam Zprávy / Byznys",
+      "media_norm": "Seznam Zprávy",
+      "tokens": [
+        "hledaného",
+        "kvůli",
+        "muže",
+        "podvodu",
+        "policie",
+        "zadržela",
+        "úřady",
+        "českými",
+        "španělská"
       ],
       "feedCategory": "finance",
       "feedType": "rubric",
@@ -560,31 +585,6 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Akcie SpaceX odstartovaly růstem a Musk je první dolarový bilionář",
-      "url": "https://www.seznamzpravy.cz/clanek/ekonomika-finance-akcie-fondy-akcie-spacex-predbezne-naznacuji-rust-alespon-o-28-procent-308416",
-      "dt": "2026-06-12T14:10:52Z",
-      "media_raw": "Seznam Zprávy / Byznys",
-      "media_norm": "Seznam Zprávy",
-      "tokens": [
-        "akcie",
-        "bilionář",
-        "dolarový",
-        "musk",
-        "odstartovaly",
-        "první",
-        "růstem",
-        "spacex"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rubric",
-      "feedId": "fin_sz_byznys",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
       "title": "Hlavně žádná angličtina. Chcete-li se s námi bavit, naučte se česky",
       "url": "https://www.seznamzpravy.cz/clanek/kampus-hlavne-zadna-anglictina-chcete-li-se-s-nami-bavit-naucte-se-cesky-308307",
       "dt": "2026-06-12T14:00:00Z",
@@ -765,7 +765,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/byznys",
-      "bytes": 44230,
+      "bytes": 44228,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -805,8 +805,8 @@
         "raw_feed_latest_publishedAt": "2026-06-12T19:36:55Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 18,
           "finance": 10,
+          "zpravy": 18,
           "sport": 2
         },
         "drop_counts": {
@@ -820,12 +820,16 @@
         },
         "sample_titles": [
           {
-            "title": "Španělská policie zadržela muže hledaného českými úřady kvůli podvodu",
-            "publishedAt": "2026-06-12T19:36:55Z"
+            "title": "Akcie SpaceX odstartovaly růstem a Musk je první dolarový bilionář",
+            "publishedAt": "2026-06-12T14:10:52Z"
           },
           {
             "title": "Další velká bitva se chýlí k ukrajinské porážce",
             "publishedAt": "2026-06-12T13:40:00Z"
+          },
+          {
+            "title": "Španělská policie zadržela muže hledaného českými úřady kvůli podvodu",
+            "publishedAt": "2026-06-12T19:36:55Z"
           },
           {
             "title": "Státy EU se shodly na zahájení prvního bloku přístupových jednání s Ukrajinou",
@@ -846,10 +850,6 @@
           {
             "title": "Sbíječky mohou každou chvíli odstranit Trumpovo jméno ze srdce Washingtonu",
             "publishedAt": "2026-06-12T17:07:00Z"
-          },
-          {
-            "title": "Uvrhl Německo do ruské plynové pasti. Teď by Uniper mohl zamířit na burzu",
-            "publishedAt": "2026-06-12T17:00:00Z"
           }
         ]
       }
