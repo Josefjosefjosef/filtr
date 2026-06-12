@@ -1,0 +1,171 @@
+{
+  "repo": "filtr",
+  "generated_at": "2026-06-12T12:00:00Z",
+  "source_audits": [
+    "GDPR_DEEP_AUDIT_REPORT.md",
+    "gdpr_deep_audit_report.json",
+    "SILVER_LOCAL_ONLY_FORENSIC_RESULT"
+  ],
+  "architecture_facts": {
+    "notes_server_storage": false,
+    "tasks_server_storage": false,
+    "calendar_server_storage": false,
+    "invoice_server_storage": false,
+    "legaldoc_server_storage": false,
+    "user_data_network_calls": false,
+    "user_data_telemetry": false,
+    "can_operator_access_user_content": false,
+    "can_github_access_user_content": false,
+    "can_third_party_access_user_content": false,
+    "overall_classification": "Hybrid application",
+    "accounts": false,
+    "central_user_database": false,
+    "paid_subscription": false,
+    "user_generated_public_content_on_server": false
+  },
+  "classification": {
+    "PRIMARY_CLASSIFICATION": "Informační portál s local-first PWA osobními nástroji (hybrid digitální služba)",
+    "SECONDARY_CLASSIFICATION": "Poskytovatel informační společnosti / elektronické služby (ISS)",
+    "NOT_APPLICABLE_CLASSIFICATIONS": [
+      "SaaS s cloudovým úložištěm uživatelského obsahu",
+      "Cloud storage provider",
+      "Online platforma (DSA UGC)",
+      "Sociální síť",
+      "Marketplace",
+      "Hosting provider pro třetí strany",
+      "Telekomunikační služba"
+    ],
+    "justification": "Statický veřejný portál (RSS/články) + PWA nástroje ukládající data pouze v prohlížeči; žádné účty, žádný server-side user content store, žádné automatické odesílání obsahu nástrojů na API provozovatele."
+  },
+  "levels": {
+    "GDPR_LEVEL": "REQUIRED (core transparency + security); partial gaps in formal internal records",
+    "EPRIVACY_LEVEL": "REQUIRED (storage information + consent for optional analytics)",
+    "DSA_LEVEL": "NOT_APPLICABLE (platform obligations); partial ISS/hosting-adjacent only",
+    "NIS2_LEVEL": "LIKELY_OUT_OF_SCOPE",
+    "CONSUMER_LAW_LEVEL": "REQUIRED (disclaimers, trader identification); not distance-selling withdrawal regime"
+  },
+  "gdpr_requirement_matrix": [
+    { "area": "Privacy Policy / informační povinnost", "status": "REQUIRED", "why": "Art. 13 GDPR — zpracování osobních údajů (web, GPS volba, budoucí analytika, provoz hostingu); Info Center plní roli privacy informace." },
+    { "area": "Legal Basis Matrix", "status": "REQUIRED", "why": "Art. 13(1)(c) — informovat o právním základu; interní matice RECOMMENDED jako evidence. User-facing souhrn REQUIRED, samostatný interní doc RECOMMENDED." },
+    { "area": "User Rights", "status": "REQUIRED", "why": "Art. 12–22 — informovat a umožnit kontakt; u local-first vysvětlit rozsah (provozovatel nedrží obsah nástrojů na serveru)." },
+    { "area": "Retention Policy", "status": "REQUIRED", "why": "Art. 13(2)(a) — informovat o době uchování; interní schedule RECOMMENDED." },
+    { "area": "Processor Registry", "status": "REQUIRED", "why": "Art. 28 + Art. 30 — GitHub Pages/Actions, příp. Cloudflare; smlouvy/DPA interně. User-facing seznam příjemců/zpracovatelů REQUIRED v rozsahu Art. 13." },
+    { "area": "Subprocessor Registry", "status": "RECOMMENDED", "why": "Art. 28(2) — kde existuje řetězec (GitHub → subdodavatelé); detailní seznam interně RECOMMENDED, ne v Info Center." },
+    { "area": "DPA", "status": "REQUIRED", "why": "Art. 28 — smlouvy se zpracovateli infrastruktury; interní dokument, ne Info Center." },
+    { "area": "Data Export (operator-held data)", "status": "NOT_APPLICABLE", "why": "Obsah poznámek/úkolů/kalendáře/faktur provozovatel neukládá na server; Art. 15/20 se vůči provozovateli pro tento obsah prakticky nevztahuje. RECOMMENDED produktový export jako UX." },
+    { "area": "Data Deletion (operator-held data)", "status": "REQUIRED", "why": "Art. 17 pro data u provozovatele (logy, budoucí analytika, e-mailová korespondence); u local-only obsahu smazání v zařízení — popsat v informaci." },
+    { "area": "DPIA", "status": "NOT_APPLICABLE", "why": "Bez rozsáhlého profilování, bez server-side ukládání obsahu nástrojů, bez special categories at scale. RECOMMENDED screening dokument." },
+    { "area": "LIA", "status": "RECOMMENDED", "why": "Pokud nezbytné ukládání / provoz webu bude založen na oprávněném zájmu — LIA REQUIRED pro tento základ; jinak NOT_APPLICABLE." },
+    { "area": "Records of Processing (ROPA)", "status": "REQUIRED", "why": "Art. 30 — pravidelné zpracování (provoz webu, pipeline, hosting) není příležitostné; interní povinnost." },
+    { "area": "DPO", "status": "NOT_APPLICABLE", "why": "Art. 37 — bez rozsáhlého systematického monitoringu jako hlavní činnosti a bez special categories at scale." }
+  ],
+  "eprivacy_matrix": [
+    { "storage_type": "localStorage (notes, tasks, calendar, invoices, prefs)", "consent_required": "NO", "legal_reason": "Strictly necessary / storage requested by user for functionality (ePrivacy exception); inform consent REQUIRED via Info Center", "status": "REQUIRED disclosure" },
+    { "storage_type": "sessionStorage (session UI state)", "consent_required": "NO", "legal_reason": "Strictly necessary for session", "status": "REQUIRED disclosure" },
+    { "storage_type": "IndexedDB (iu.calendar.idb backup)", "consent_required": "NO", "legal_reason": "Strictly necessary for calendar tool", "status": "REQUIRED disclosure" },
+    { "storage_type": "Service Worker cache (articles, weather JSON, static assets)", "consent_required": "NO", "legal_reason": "Strictly necessary for offline/PWA and content delivery requested by user", "status": "REQUIRED disclosure" },
+    { "storage_type": "Consent flags (iu:consent:*)", "consent_required": "NO", "legal_reason": "Storage of consent itself — necessary to record choice", "status": "REQUIRED disclosure" },
+    { "storage_type": "Optional analytics (future)", "consent_required": "YES", "legal_reason": "Not strictly necessary; ePrivacy + GDPR consent", "status": "REQUIRED consent before activation" },
+    { "storage_type": "Marketing / tracking cookies", "consent_required": "NOT_APPLICABLE", "legal_reason": "Not used in production", "status": "NOT_APPLICABLE" }
+  ],
+  "zek_requirements": [
+    { "requirement": "Registrace jako poskytovatel elektronických komunikací", "status": "NOT_APPLICABLE", "why": "InfoUzel neposkytuje ECNS (telefon, internet, VoIP)." },
+    { "requirement": "Informační povinnost k cookies/ukládání v terminálu", "status": "REQUIRED", "why": "Prováděno přes GDPR + ePrivacy implementaci; sekce Cookies Info Center." },
+    { "requirement": "Marketingové oslovování / commercial communications", "status": "NOT_APPLICABLE", "why": "Bez newsletteru / SMS marketingu v produkci." },
+    { "requirement": "Ochrana údajů o koncovém uživateli (traffic/location data)", "status": "NOT_APPLICABLE", "why": "Ne ECNS; GPS pro počasí je volba uživatele v aplikaci, ne síťový operátor." },
+    { "requirement": "Identifikace provozovatele služby", "status": "REQUIRED", "why": "ISS / podnikatelský web — Info Center contact." }
+  ],
+  "dsa": {
+    "status": "NOT_APPLICABLE (platform); partial context as ISS",
+    "applies_as": "Informační společnost / hosting own static site — not online platform, not VLOP, no user public content on server",
+    "required_actions": [],
+    "recommended_actions": [
+      "Maintain single contact point info@infouzel.cz for illegal content notices if aggregated RSS links — RECOMMENDED low priority"
+    ],
+    "not_applicable": [
+      "DSA online platform moderation duties",
+      "DSA transparency reporting (VLOP/VLOP thresholds)",
+      "Trader traceability for marketplace",
+      "Recommender system transparency for platforms"
+    ]
+  },
+  "nis2": {
+    "status": "LIKELY_OUT_OF_SCOPE",
+    "in_scope": false,
+    "out_of_scope": true,
+    "justification": "Media Uzel SME; veřejný informační portál + local-first PWA; ne kritická infrastruktura; NIS2_SCOPE_REVIEW.md",
+    "requires_legal_review": true
+  },
+  "consumer_law_matrix": [
+    { "feature": "Silver (free assistant)", "status": "REQUIRED", "why": "Disclaimer orientační / ne profesionální poradenství — prevence klamavých praktik; NOT distance contract withdrawal (free, no purchase)." },
+    { "feature": "Faktury (invoice generator)", "status": "REQUIRED", "why": "Disclaimer že nejde o účetní/daňové poradenství; NOT_APPLICABLE spotřebitelské odstoupení (free tool)." },
+    { "feature": "Právní dokumenty (generator)", "status": "REQUIRED", "why": "Disclaimer not legal advice; RECOMMENDED high-risk note already in module." },
+    { "feature": "Parcel tracking", "status": "NOT_APPLICABLE", "why": "Odkazy na dopravce; InfoUzel není prodejce dopravy." },
+    { "feature": "Finanční kalkulačky", "status": "REQUIRED", "why": "Disclaimer orientační / ne investiční poradenství — prevence klamavých praktik." },
+    { "feature": "Paid digital content / subscription", "status": "NOT_APPLICABLE", "why": "No paid tier in scope." }
+  ],
+  "third_party_legal_map": [
+    { "party": "YouTube / Google", "is_processor": false, "is_recipient": true, "only_external_service": true, "notes": "Independent controller when user plays embed; receives interaction data, not notes/tasks content from InfoUzel server." },
+    { "party": "Open-Meteo", "is_processor": true, "is_recipient": true, "only_external_service": false, "notes": "Processor/recipient for weather API calls (coordinates); not for Silver tool content." },
+    { "party": "GitHub Pages", "is_processor": true, "is_recipient": false, "only_external_service": false, "notes": "Hosting processor for static site; does not receive user notes content from app." },
+    { "party": "GitHub Actions", "is_processor": true, "is_recipient": false, "only_external_service": false, "notes": "CI/build processor; no production user tool content." },
+    { "party": "RSS publishers", "is_processor": false, "is_recipient": false, "only_external_service": true, "notes": "Independent sources; aggregated public metadata only." },
+    { "party": "Leaflet / map tile providers", "is_processor": false, "is_recipient": true, "only_external_service": true, "notes": "External on user map action; IP/usage to tile host." },
+    { "party": "Cloudflare (VIN/articles workers if deployed)", "is_processor": true, "is_recipient": true, "only_external_service": false, "notes": "Infrastructure processor; VIN feature separate from Silver modules; not user notes." },
+    { "party": "Parcel carriers (Packeta, DPD, …)", "is_processor": false, "is_recipient": true, "only_external_service": true, "notes": "User opens tracking URL; tracking number leaves device by user action." }
+  ],
+  "info_center": {
+    "required_sections": [
+      "contact",
+      "privacy",
+      "cookies",
+      "privacy-settings",
+      "pwa"
+    ],
+    "recommended_sections": [
+      "about",
+      "silver",
+      "expanded legal basis in privacy",
+      "infrastructure processors in privacy",
+      "user rights procedure detail",
+      "legal docs generator disclaimer link"
+    ],
+    "not_required_sections": [
+      "full ROPA",
+      "DPA texts",
+      "DPIA document",
+      "NIS2 scope",
+      "DSA transparency report",
+      "subprocessor technical list",
+      "standalone Terms of Service (unless paid/B2B added)"
+    ],
+    "existing_sections": [
+      "pwa",
+      "about",
+      "silver",
+      "cookies",
+      "privacy-settings",
+      "privacy",
+      "contact"
+    ],
+    "gaps": [
+      "Legal basis per category in privacy (only analytics explicit)",
+      "GitHub/Cloudflare not listed as infrastructure processors",
+      "Explicit operator cannot access local tool content (forensic fact)",
+      "Legal document generator disclaimer not linked from Info Center menu"
+    ]
+  },
+  "verdict": {
+    "CAN_WE_COMPLETE_INFO_CENTER_NOW": "PARTIAL",
+    "CAN_WE_COMPLETE_INFO_CENTER_NOW_detail": "User-facing REQUIRED sections largely exist; text gaps closable without product change; final wording requires legal review",
+    "REQUIRES_LEGAL_REVIEW": true,
+    "NEXT_RECOMMENDED_PR": "PR-1 Info Center legal text completion (documentation-only): legal basis summary, infrastructure processors, user-rights scope for local-first, legal-docs disclaimer cross-link — NO app.js, NO CSS, NO consent runtime"
+  },
+  "constraints": {
+    "NO_PRODUCT_CHANGES": true,
+    "NO_APP_JS_CHANGE": true,
+    "NO_CSS_CHANGE": true,
+    "NO_COMMIT": true,
+    "NO_PR": true
+  }
+}

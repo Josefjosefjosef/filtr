@@ -1,0 +1,375 @@
+{
+  "repo": "filtr",
+  "branch": "chore/product-health-baseline-snapshot",
+  "commit": "e0552a9c27cc42e24b94d059d4e9ec6e841c9d94",
+  "generated_at": "2026-06-12T10:33:28Z",
+  "git_clean_before": true,
+  "git_clean_after": false,
+  "overall_status": "PARTIAL",
+  "risk_level": "MEDIUM",
+  "summary": {
+    "legal_basis": "PARTIAL",
+    "consent": "PARTIAL",
+    "export": "PARTIAL",
+    "delete": "PARTIAL",
+    "retention": "PARTIAL",
+    "processors": "PARTIAL",
+    "incident": "NO"
+  },
+  "baseline": {
+    "current_branch": "chore/product-health-baseline-snapshot",
+    "current_commit": "e0552a9c27cc42e24b94d059d4e9ec6e841c9d94",
+    "git_clean_before": "YES"
+  },
+  "file_inventory": {
+    "GDPR_FILES_FOUND": [
+      "INFO_CENTER_LEGAL_REVIEW.md",
+      "RETENTION_POLICY_REPORT.md",
+      "STORAGE_NOTICE_REPORT.md",
+      "NIS2_SCOPE_REVIEW.md",
+      "PUBLIC_CONTACTS_REPORT.md",
+      "SECURITY_HEADERS_REPORT.md",
+      "SECURITY_PRIVACY_HARDENING_PHASE1_REPORT.md",
+      "SECURITY_STOP_SHIP_REVIEW.md",
+      "SERVICE_WORKER_SECURITY_REPORT.md",
+      "scripts/generate_security_governance_reports.py",
+      "scripts/generate_ultra_audit_wiki.py"
+    ],
+    "LEGAL_FILES_FOUND": [
+      "INFO_CENTER_LEGAL_REVIEW.md",
+      "assets/iu-legal-documents-module.js",
+      "assets/iu-legal-documents-overlay.css",
+      "assets/iu-legal-documents-registry.js",
+      "assets/iu-legal-documents-schema.js",
+      "projects/index.html"
+    ],
+    "STORAGE_FILES_FOUND": [
+      "assets/iu-storage-notice.js",
+      "assets/iu-storage-notice.css",
+      "STORAGE_NOTICE_REPORT.md",
+      "sw.js",
+      "assets/iu-consent.js",
+      "projects/index.html"
+    ],
+    "CONSENT_FILES_FOUND": [
+      "assets/iu-consent.js",
+      "assets/iu-consent-layer.js",
+      "assets/iu-consent-layer.css",
+      "assets/iu-info-center.js",
+      "projects/index.html"
+    ],
+    "RETENTION_FILES_FOUND": [
+      "RETENTION_POLICY_REPORT.md",
+      "sw.js",
+      "projects/index.html",
+      ".github/workflows/nightly-health-report.yml"
+    ],
+    "PROCESSOR_FILES_FOUND": [
+      "projects/index.html",
+      "INFO_CENTER_LEGAL_REVIEW.md"
+    ]
+  },
+  "legal_basis": {
+    "status": "PARTIAL",
+    "risk_level": "MEDIUM",
+    "gaps": [
+      "No Art. 6 legal basis matrix per data category",
+      "Only analytics has explicit legal basis text in UI",
+      "Nightly compliance report hardcodes UNKNOWN (generator limitation)",
+      "Final legal review by counsel not completed"
+    ],
+    "evidence_files": [
+      "projects/index.html",
+      "INFO_CENTER_LEGAL_REVIEW.md",
+      "RETENTION_POLICY_REPORT.md",
+      "scripts/generate_security_governance_reports.py"
+    ]
+  },
+  "consent": {
+    "status": "PARTIAL",
+    "implemented": "YES",
+    "default_analytics_off": "YES",
+    "can_reject": "YES",
+    "can_change": "YES",
+    "storage_keys": [
+      "iu:consent:analytics:v1",
+      "iu:consent:layer:dismissed:v1",
+      "iu:consent:analytics:ts:v1",
+      "iu:consent:analytics:version:v1"
+    ],
+    "ui_files": [
+      "assets/iu-consent.js",
+      "assets/iu-consent-layer.js",
+      "assets/iu-consent-layer.css",
+      "assets/iu-info-center.js",
+      "projects/index.html"
+    ],
+    "gaps": [
+      "iu-storage-notice assets exist but are not mounted in projects/index.html",
+      "Analytics vendor not deployed yet (stub only)",
+      "Nightly report marks consent_implemented UNKNOWN"
+    ],
+    "risk_level": "LOW"
+  },
+  "export": {
+    "status": "PARTIAL",
+    "scope": "Invoice PDF per document only",
+    "missing_for": [
+      "notes",
+      "tasks",
+      "calendar",
+      "preferences",
+      "parcels",
+      "invoice form state",
+      "legal document drafts",
+      "MindMenu clipboards",
+      "bulk localStorage JSON backup"
+    ],
+    "risk_level": "MEDIUM",
+    "evidence_files": [
+      "assets/iu-invoice-module.js",
+      "RETENTION_POLICY_REPORT.md",
+      "projects/index.html"
+    ]
+  },
+  "delete": {
+    "status": "PARTIAL",
+    "scope": "Per-item delete in tasks, calendar, notes, parcels, profiles; browser clear documented; consent revoke",
+    "missing_for": [
+      "unified delete all local data UI",
+      "user-facing service worker cache purge",
+      "bulk delete for invoices and legal docs"
+    ],
+    "cache_handled": "PARTIAL",
+    "risk_level": "MEDIUM",
+    "evidence_files": [
+      "assets/app.js",
+      "assets/iu-silver-parcel-dashboard.js",
+      "projects/index.html"
+    ]
+  },
+  "retention": {
+    "status": "PARTIAL",
+    "technical_ttl_found": "YES",
+    "user_data_found": "PARTIAL",
+    "ci_logs_found": "PARTIAL",
+    "gaps": [
+      "No standalone formal retention schedule document",
+      "CI artifact retention not documented",
+      "data_governance generator still says full policy UNKNOWN"
+    ],
+    "risk_level": "MEDIUM",
+    "evidence_files": [
+      "RETENTION_POLICY_REPORT.md",
+      "sw.js",
+      "projects/index.html"
+    ]
+  },
+  "processors": {
+    "third_party_map_created": "YES",
+    "processor_list_exists": "PARTIAL",
+    "subprocessor_gaps": [
+      "No formal processor/subprocessor registry with DPA references",
+      "GitHub Pages and GitHub Actions not in user-facing processor list",
+      "Cloudflare workers not in Info Center external providers list"
+    ],
+    "risk_level": "MEDIUM",
+    "evidence_files": [
+      "projects/index.html",
+      "INFO_CENTER_LEGAL_REVIEW.md",
+      "scripts/generate_security_governance_reports.py"
+    ]
+  },
+  "incident_nis2": {
+    "nis2_scope_documented": "PARTIAL",
+    "incident_process_documented": "NO",
+    "security_contact_documented": "PARTIAL",
+    "breach_process_documented": "NO",
+    "risk_level": "MEDIUM",
+    "evidence_files": [
+      "NIS2_SCOPE_REVIEW.md",
+      "PUBLIC_CONTACTS_REPORT.md",
+      "SECURITY_HEADERS_REPORT.md",
+      "SECURITY_PRIVACY_HARDENING_PHASE1_REPORT.md"
+    ]
+  },
+  "nightly_report_delta": {
+    "compliance_status_report": {
+      "legal_basis_reported": "UNKNOWN",
+      "legal_basis_actual": "PARTIAL",
+      "consent_reported": "UNKNOWN",
+      "consent_actual": "PARTIAL",
+      "export_reported": "UNKNOWN",
+      "export_actual": "PARTIAL",
+      "delete_reported": "UNKNOWN",
+      "delete_actual": "PARTIAL",
+      "retention_reported": "PARTIAL",
+      "retention_actual": "PARTIAL"
+    },
+    "root_cause": "scripts/generate_security_governance_reports.py uses static placeholders and does not parse Info Center or consent runtime"
+  },
+  "gaps": [
+    {
+      "id": "G01",
+      "severity": "critical",
+      "area": "Production legal review",
+      "description": "INFO_CENTER_LEGAL_REVIEW.md states final counsel/DPO review not performed"
+    },
+    {
+      "id": "G02",
+      "severity": "medium",
+      "area": "Legal basis",
+      "description": "No per-category GDPR Art. 6 matrix; requires legal review"
+    },
+    {
+      "id": "G03",
+      "severity": "medium",
+      "area": "Processors",
+      "description": "No formal processor/subprocessor registry or DPA index"
+    },
+    {
+      "id": "G04",
+      "severity": "medium",
+      "area": "Export",
+      "description": "No bulk export of locally stored user data (notes, tasks, calendar, prefs)"
+    },
+    {
+      "id": "G05",
+      "severity": "medium",
+      "area": "Delete",
+      "description": "No unified user control to wipe all local data and SW cache"
+    },
+    {
+      "id": "G06",
+      "severity": "medium",
+      "area": "Incident response",
+      "description": "No documented incident or personal data breach response process"
+    },
+    {
+      "id": "G07",
+      "severity": "medium",
+      "area": "Storage notice",
+      "description": "iu-storage-notice assets exist but are not mounted in projects/index.html"
+    },
+    {
+      "id": "G08",
+      "severity": "medium",
+      "area": "Audit tooling",
+      "description": "Nightly compliance reports emit UNKNOWN despite in-repo evidence"
+    },
+    {
+      "id": "G09",
+      "severity": "medium",
+      "area": "DPIA/LIA",
+      "description": "No documented need assessment for DPIA or legitimate interest assessment"
+    },
+    {
+      "id": "G10",
+      "severity": "low",
+      "area": "Contacts",
+      "description": "Bot pages use admin@infouzel.cz vs public info@infouzel.cz"
+    }
+  ],
+  "gap_counts": {
+    "critical": 1,
+    "medium": 8,
+    "low": 1
+  },
+  "recommended_prs": [
+    {
+      "id": "PR-1",
+      "title": "GDPR evidence/documentation only",
+      "priority": 1,
+      "scope": "docs/governance pack: legal basis matrix, processors registry, retention policy, user rights process, DPIA/LIA screening — all requires legal review markers",
+      "risk": "LOW",
+      "files_likely_changed": [
+        "docs/governance/LEGAL_BASIS_MATRIX.md",
+        "docs/governance/PROCESSORS_REGISTRY.md",
+        "docs/governance/RETENTION_POLICY.md",
+        "docs/governance/USER_RIGHTS_PROCESS.md",
+        "docs/governance/DPIA_LIA_SCREENING.md"
+      ],
+      "expected_gates": [
+        "npm run smoke"
+      ],
+      "no_go": [
+        "assets/app.js",
+        "assets/*.css",
+        "enable analytics",
+        "legal assertions without requires legal review"
+      ]
+    },
+    {
+      "id": "PR-2",
+      "title": "Consent runtime verification",
+      "priority": 3,
+      "scope": "Optional remount of iu-storage-notice or remove orphaned assets; consent layer already functional",
+      "risk": "LOW",
+      "files_likely_changed": [
+        "projects/index.html",
+        "assets/iu-storage-notice.js",
+        "assets/iu-storage-notice.css"
+      ],
+      "expected_gates": [
+        "npm run smoke",
+        "layout-guard workflow"
+      ],
+      "no_go": [
+        "analytics default ON",
+        "assets/app.js unless mount bug proven"
+      ]
+    },
+    {
+      "id": "PR-3",
+      "title": "Export/delete local data",
+      "priority": 2,
+      "scope": "Bulk JSON export and unified local data delete in Info Center after legal approval",
+      "risk": "MEDIUM",
+      "files_likely_changed": [
+        "assets/iu-privacy-data-controls.js",
+        "assets/iu-info-center.js",
+        "projects/index.html"
+      ],
+      "expected_gates": [
+        "npm run smoke",
+        "silver-help-privacy-storage-governance-guard"
+      ],
+      "no_go": [
+        "server-side user storage",
+        "silent data deletion"
+      ]
+    },
+    {
+      "id": "PR-4",
+      "title": "Incident/NIS2 governance docs",
+      "priority": 2,
+      "scope": "Incident response, breach notification procedure, security contact escalation",
+      "risk": "LOW",
+      "files_likely_changed": [
+        "docs/governance/INCIDENT_RESPONSE.md",
+        "docs/governance/BREACH_NOTIFICATION.md",
+        "NIS2_SCOPE_REVIEW.md"
+      ],
+      "expected_gates": [
+        "repo-guard workflow"
+      ],
+      "no_go": [
+        "false NIS2 compliance claims",
+        "workflow secrets"
+      ]
+    }
+  ],
+  "gates": {
+    "SMOKE": "PASS",
+    "LAYOUT_GUARD": "SKIP_WITH_REASON",
+    "LAYOUT_GUARD_REASON": "No npm run layout-guard script; use .github/workflows/layout-guard.yml",
+    "REPO_GUARD": "SKIP_WITH_REASON",
+    "REPO_GUARD_REASON": "No npm run repo-guard script; use .github/workflows/repo-guard.yml",
+    "JSON_REPORT_VALID": "YES"
+  },
+  "product_change": {
+    "NO_PRODUCT_LOGIC_CHANGE": "YES",
+    "NO_APP_JS_CHANGE": "YES",
+    "NO_CSS_CHANGE": "YES"
+  }
+}

@@ -5984,6 +5984,10 @@ font-src 'self' data:;
                 <span class="iuInfoCenter__tileIcon" aria-hidden="true">🔒</span>
                 <span class="iuInfoCenter__tileLabel">Ochrana soukromí a data</span>
               </button>
+              <button type="button" class="iuInfoCenter__tile" data-iu-info-section="data-storage">
+                <span class="iuInfoCenter__tileIcon" aria-hidden="true">💾</span>
+                <span class="iuInfoCenter__tileLabel">Jak funguje ukládání dat</span>
+              </button>
               <button type="button" class="iuInfoCenter__tile" data-iu-info-section="contact">
                 <span class="iuInfoCenter__tileIcon" aria-hidden="true">🏢</span>
                 <span class="iuInfoCenter__tileLabel">Provozovatel a kontakt</span>
@@ -6068,7 +6072,7 @@ font-src 'self' data:;
               </ul>
               <div class="iuInfoCenter__box" role="note">
                 <strong>Informace a data z externích zdrojů</strong>
-                <p class="iuInfoCenter__p">Část obsahu pochází z veřejných nebo externích zdrojů — například RSS kanály (ČT24, Seznam, Novinky, iRozhlas a další), YouTube, počasí (Open-Meteo), dopravní data, mapové služby, dopravci (Zásilkovna, PPL, DPD, GLS, Balíkovna, DHL a další) a další poskytovatelé. Tyto zdroje se mohou měnit, být dočasně nedostupné, zpomalené nebo obsahovat chybu. U článků vždy odkazujeme na původní web vydavatele — nejsme autorem těchto textů.</p>
+                <p class="iuInfoCenter__p">Část obsahu pochází z veřejných nebo externích zdrojů — například RSS kanály (ČT24, Seznam, Novinky, iRozhlas a další), YouTube, počasí (Open-Meteo), dopravní data, mapové služby, dopravci (Zásilkovna, PPL, DPD, GLS, Balíkovna, DHL a další) a další poskytovatelé. Tyto zdroje se mohou měnit, být dočasně nedostupné, zpomalené nebo obsahovat chybu. U článků odkazujeme na původní web vydavatele — nejsme autorem těchto textů.</p>
               </div>
               <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
                 <strong>Omezení služby</strong>
@@ -6079,6 +6083,13 @@ font-src 'self' data:;
                   <li>Kalkulačky, přehledy a odpovědi Silvera jsou orientační.</li>
                   <li>Konečné rozhodnutí — zejména v právních, zdravotních, finančních nebo bezpečnostních záležitostech — zůstává vždy na uživateli.</li>
                 </ul>
+              </div>
+              <div class="iuInfoCenter__box" role="note">
+                <strong>Upozornění k vybraným nástrojům</strong>
+                <p class="iuInfoCenter__p"><strong>Právní dokumenty</strong> — pomocný generátor textu. Nejde o právní službu, poradenství ani advokátní činnost.</p>
+                <p class="iuInfoCenter__p"><strong>Faktury</strong> — pomocný nástroj; uživatel odpovídá za správnost údajů. Nejde o účetní ani daňové poradenství.</p>
+                <p class="iuInfoCenter__p"><strong>Kalkulačky</strong> — výpočty jsou orientační. Nejde o investiční, daňové ani finanční poradenství.</p>
+                <p class="iuInfoCenter__p">Podrobnosti: <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy">Ochrana soukromí → sekce 7</button></p>
               </div>
               <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
             </div>
@@ -6126,7 +6137,7 @@ font-src 'self' data:;
                 <li><strong>PWA / ikona na ploše</strong> — instalace webu jako aplikace, bez samostatného účtu</li>
               </ul>
               <p class="iuInfoCenter__p">Tato data slouží pro funkčnost, kterou jste si zvolili. <strong>Neprodáváme je</strong> a <strong>nepoužíváme</strong> pro reklamní profilování.</p>
-              <h3 class="iuInfoCenter__h3">B) Co nepoužíváme (a nikdy nebudeme)</h3>
+              <h3 class="iuInfoCenter__h3">B) Co aktuálně nezpracováváme</h3>
               <div class="iuInfoCenter__box" role="note">
                 <ul class="iuInfoCenter__ul">
                   <li>marketingové cookies ani reklamní sítě (Google Analytics, Meta Pixel apod.)</li>
@@ -6136,9 +6147,9 @@ font-src 'self' data:;
                   <li>tlačítka typu „Přijmout vše“ pro skryté zapnutí statistik</li>
                 </ul>
               </div>
-              <h3 class="iuInfoCenter__h3">Co nikdy nesbíráme</h3>
+              <h3 class="iuInfoCenter__h3">Jaká data standardně nezískáváme</h3>
               <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
-                <p class="iuInfoCenter__p">InfoUzel <strong>nikdy</strong> neodesílá na server ani neukládá pro statistiky:</p>
+                <p class="iuInfoCenter__p">InfoUzel <strong>standardně neodesílá</strong> obsah vašich nástrojů na servery InfoUzel.cz ani je neukládá pro volitelné statistiky (pokud je zapnete):</p>
                 <ul class="iuInfoCenter__ul">
                   <li>obsah vašich <strong>poznámek</strong></li>
                   <li>obsah vašich <strong>úkolů</strong></li>
@@ -6203,7 +6214,7 @@ font-src 'self' data:;
                   </ul>
                 </div>
                 <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
-                  <strong>Co nikdy neměříme</strong>
+                  <strong>Jaká data standardně neměříme</strong>
                   <ul class="iuInfoCenter__ul">
                     <li>obsah poznámek, úkolů a kalendáře</li>
                     <li>obsah financí a faktur</li>
@@ -6211,7 +6222,7 @@ font-src 'self' data:;
                     <li>osobní texty, jména, e-maily a telefony</li>
                   </ul>
                 </div>
-                <p class="iuPrivacySettings__meta"><strong>Právní základ:</strong> váš souhlas · můžete kdykoli odvolat stejným způsobem</p>
+                <p class="iuPrivacySettings__meta"><strong>Podmínka zapnutí:</strong> váš souhlas · můžete kdykoli odvolat stejným způsobem</p>
                 <p class="iuPrivacySettings__meta"><strong>Výchozí stav:</strong> vypnuto</p>
                 <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="cookies">Co přesně měříme v Cookies →</button>
               </section>
@@ -6226,7 +6237,12 @@ font-src 'self' data:;
           <article id="iuInfoCenterDetailPrivacy" class="iuInfoCenter__detail" data-iu-info-section="privacy" hidden>
             <div class="iuInfoCenter__detailInner">
               <p class="iuInfoCenter__lead">Tato sekce popisuje poctivě, jaká data InfoUzel používá, kde zůstávají a co můžete ovlivnit vy.</p>
+              <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-storage">Jak funguje ukládání dat (local-first) →</button></p>
               <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy-settings">Správa souhlasu a nastavení soukromí →</button></p>
+              <h3 class="iuInfoCenter__h3">Jak používáme údaje a nastavení</h3>
+              <p class="iuInfoCenter__p">InfoUzel používá pouze údaje a nastavení nezbytné pro provoz webu a funkcí, které si uživatel zvolí.</p>
+              <p class="iuInfoCenter__p">U nástrojů fungujících local-first (poznámky, úkoly, kalendář, faktury a právní dokumenty) zůstává obsah standardně uložen v zařízení uživatele.</p>
+              <p class="iuInfoCenter__p">Podrobnosti o ukládání dat naleznete v sekci <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-storage">Jak funguje ukládání dat</button>.</p>
               <h3 class="iuInfoCenter__h3">1. Jaká data mohou být zpracována</h3>
               <ul class="iuInfoCenter__ul">
                 <li>nastavení vzhledu a uživatelské preference</li>
@@ -6247,13 +6263,22 @@ font-src 'self' data:;
               </ul>
               <h3 class="iuInfoCenter__h3">Doba uchování dat (retention)</h3>
               <p class="iuInfoCenter__p">Osobní data v prohlížeči zůstávají uložena, dokud je uživatel sám nesmaže nebo dokud nedojde ke smazání dat webu, resetu zařízení či výměně zařízení. InfoUzel <strong>negarantuje</strong> trvalé uchování lokálních dat.</p>
-              <ul class="iuInfoCenter__ul">
-                <li><strong>localStorage / IndexedDB / sessionStorage</strong> — bez pevného časového limitu; závisí na zařízení a prohlížeči</li>
-                <li><strong>Service Worker cache</strong> — obnovuje se při aktualizaci webu; články a JSON mají TTL ve služebním workeru (viz sekce Cookies)</li>
-                <li><strong>Poznámky, úkoly, kalendář</strong> — lokálně do smazání uživatelem nebo vymazáním dat prohlížeče</li>
-                <li><strong>Preference a nastavení</strong> — lokálně do smazání; volba soukromí a consent lišty je také lokální</li>
-                <li><strong>Smazání dat prohlížeče / reset / nové zařízení</strong> — může vést ke ztrátě všech lokálních dat bez možnosti obnovy ze serveru InfoUzel</li>
-              </ul>
+              <div class="iuInfoCenter__box" role="note">
+                <table class="iuInfoCenter__table">
+                  <thead>
+                    <tr><th scope="col">Data</th><th scope="col">Retence</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Volba souhlasu / consent preference</td><td>v prohlížeči do odstranění uživatelem</td></tr>
+                    <tr><td>PWA cache / Service Worker cache</td><td>TTL a obnova při aktualizaci webu (viz Cookies)</td></tr>
+                    <tr><td>Počasí cache (Open-Meteo / weather.json)</td><td>krátká TTL v prohlížeči a SW; obnova při načtení</td></tr>
+                    <tr><td>Veřejná data (články, videa, metadata)</td><td>statické soubory na hostingu; cache dle SW TTL</td></tr>
+                    <tr><td>Poznámky, úkoly, kalendář, faktury (formulář)</td><td>v zařízení do odstranění uživatelem</td></tr>
+                    <tr><td>Právní dokumenty (generátor)</td><td>primárně v relaci prohlížeče; po obnovení stránky může být ztracen náhled — neukládáme na server</td></tr>
+                    <tr><td>E-mailová korespondence (dotazy k ochraně soukromí)</td><td>po dobu vyřízení dotazu</td></tr>
+                  </tbody>
+                </table>
+              </div>
               <h3 class="iuInfoCenter__h3">3. Co na serverech InfoUzel neuchováváme</h3>
               <div class="iuInfoCenter__box" role="note">
                 <ul class="iuInfoCenter__ul">
@@ -6264,7 +6289,7 @@ font-src 'self' data:;
                   <li>nepoužíváme cílenou reklamní profilaci</li>
                 </ul>
               </div>
-              <p class="iuInfoCenter__p">Pokud povolíte statistiky (v budoucnu), ukládáme pouze <strong>agregované a anonymizované</strong> údaje o návštěvnosti — nikoli texty z vašich nástrojů. Viz sekce Cookies → Co nikdy nesbíráme.</p>
+              <p class="iuInfoCenter__p">Pokud povolíte statistiky (v budoucnu), ukládáme pouze <strong>agregované a anonymizované</strong> údaje o návštěvnosti — nikoli texty z vašich nástrojů. Viz sekce Cookies → Jaká data standardně nezískáváme.</p>
               <p class="iuInfoCenter__p">Na serveru jsou dostupné veřejné statické soubory (články, videa, metadata) generované pipeline — ne osobní data uživatelů.</p>
               <h3 class="iuInfoCenter__h3">4. Jak může uživatel data smazat nebo změnit souhlas</h3>
               <ul class="iuInfoCenter__ul">
@@ -6273,9 +6298,13 @@ font-src 'self' data:;
                 <li>vymazáním localStorage a cache v nastavení prohlížeče pro <strong>infouzel.cz</strong></li>
                 <li>resetem zařízení nebo obnovením továrního nastavení</li>
                 <li>jednotlivými položkami přímo v modulech Poznámky, Úkoly a Kalendář</li>
+                <li>exportem nebo sdílením PDF faktury — pouze pokud to sami zvolíte (soubor opouští zařízení vaší akcí)</li>
+                <li>zkopírováním textu z generátoru právních dokumentů do schránky — pouze pokud to sami zvolíte</li>
               </ul>
-              <p class="iuInfoCenter__p"><strong>Upozornění:</strong> Tím může uživatel přijít o lokálně uložená data. InfoUzel negarantuje jejich obnovu.</p>
+              <p class="iuInfoCenter__p"><strong>Upozornění:</strong> Tím může uživatel přijít o lokálně uložená data. InfoUzel negarantuje jejich obnovu ze serveru, protože obsah nástrojů standardně na serveru neuchováváme.</p>
               <h3 class="iuInfoCenter__h3">5. Práva uživatele</h3>
+              <p class="iuInfoCenter__p"><strong>Local-first moduly:</strong> Obsah poznámek, úkolů, kalendáře, faktur (formulář) a generátoru právních dokumentů provozovatel <strong>standardně nevidí a neukládá na servery InfoUzel.cz</strong>. Proto u těchto dat nemůžeme z serveru poskytnout kopii ani smazat záznam, který u nás neexistuje — správu provádíte v zařízení (smazání položky, vymazání dat webu v prohlížeči).</p>
+              <p class="iuInfoCenter__p"><strong>Data u provozovatele:</strong> Dotazy e-mailem, budoucí agregované statistiky (pokud zapnete), provozní logy hostingu/CDN (pokud vzniknou u poskytovatele infrastruktury) — zde lze uplatnit níže uvedená práva v rozsahu, v jakém data u provozovatele existují.</p>
               <ul class="iuInfoCenter__ul">
                 <li>právo na informace</li>
                 <li>právo na přístup</li>
@@ -6285,17 +6314,34 @@ font-src 'self' data:;
                 <li>právo vznést námitku</li>
                 <li>právo podat stížnost u <a class="iuInfoCenter__link" href="https://uoou.cz" target="_blank" rel="noopener noreferrer">Úřadu pro ochranu osobních údajů (ÚOOÚ)</a></li>
               </ul>
-              <p class="iuInfoCenter__p">U lokálních dat v zařízení můžete práva uplatnit smazáním dle návodu výše. Souhlas se statistikami můžete kdykoli odvolat v Nastavení soukromí — stejně snadno, jako jste ho udělili. Dotazy: <a class="iuInfoCenter__link" href="mailto:info@infouzel.cz">info@infouzel.cz</a>.</p>
-              <h3 class="iuInfoCenter__h3">6. Externí poskytovatelé</h3>
-              <ul class="iuInfoCenter__ul">
-                <li><strong>YouTube / Google</strong> — náhledy a přehrávání videí (youtube.com, youtube-nocookie.com, i.ytimg.com)</li>
-                <li><strong>Open-Meteo</strong> — předpověď počasí (api.open-meteo.com, souřadnice při GPS režimu)</li>
-                <li><strong>RSS vydavatelé</strong> — ČT24, Seznam, Novinky, iRozhlas, Deník a další veřejné zdroje</li>
-                <li><strong>Zásilkoví dopravci</strong> — Zásilkovna/Packeta, PPL, DPD, GLS, Balíkovna, DHL, WeDo, Messenger</li>
-                <li><strong>Mapové a dopravní služby</strong> — odkazy na externí weby (IDOS, PID, Google Maps a další)</li>
-                <li><strong>Externí AI a překladače</strong> — odkazy z MindMenu (ChatGPT, Gemini, DeepL a další), pokud je uživatel otevře</li>
-              </ul>
+              <p class="iuInfoCenter__p"><strong>Odvolání souhlasu se statistikami:</strong> kdykoli v <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy-settings">Nastavení soukromí</button> — stejně snadno, jako jste souhlas udělili.</p>
+              <p class="iuInfoCenter__p"><strong>Kontakt:</strong> <a class="iuInfoCenter__link" href="mailto:info@infouzel.cz">info@infouzel.cz</a> · u GDPR žádostí se snažíme odpovědět do 30 dnů.</p>
+              <h3 class="iuInfoCenter__h3">6. Externí poskytovatelé a infrastruktura</h3>
+              <p class="iuInfoCenter__p">U služeb níže uvádíme, zda mohou získat <strong>obsah poznámek, úkolů, kalendáře, faktur nebo právních dokumentů</strong>. Forenzní audit potvrdil: tyto moduly <strong>standardně neodesílají</strong> tento obsah na servery InfoUzel.cz.</p>
+              <div class="iuInfoCenter__box" role="note">
+                <table class="iuInfoCenter__table">
+                  <thead>
+                    <tr><th scope="col">Služba</th><th scope="col">Účel</th><th scope="col">Jaká data může získat</th><th scope="col">Obsah nástrojů (poznámky/úkoly/…)</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>GitHub Pages</td><td>hosting statického webu</td><td>technický provoz, IP při HTTP požadavku</td><td><strong>Ne</strong> — neukládá obsah local-first modulů</td></tr>
+                    <tr><td>GitHub Actions</td><td>CI, generování veřejných JSON</td><td>repozitář, build logy</td><td><strong>Ne</strong> — bez user content z prohlížeče</td></tr>
+                    <tr><td>Cloudflare Workers</td><td>volitelně VIN API, articles-watchdog (pokud nasazeno)</td><td>technický provoz, VIN dotaz pokud uživatel použije VIN modul</td><td><strong>Ne</strong> pro poznámky/úkoly/kalendář/faktury/právní docs</td></tr>
+                    <tr><td>Open-Meteo</td><td>předpověď počasí</td><td>souřadnice / město při volbě polohy</td><td><strong>Ne</strong></td></tr>
+                    <tr><td>YouTube / Google</td><td>embed videí</td><td>technická data při přehrání dle Google</td><td><strong>Ne</strong> — neposíláme texty z nástrojů</td></tr>
+                    <tr><td>RSS vydavatelé</td><td>veřejné články</td><td>veřejný obsah feedu</td><td><strong>Ne</strong></td></tr>
+                    <tr><td>Leaflet / mapové dlaždice</td><td>mapy (pokud otevřete)</td><td>IP, oblast mapy dle poskytovatele dlaždic</td><td><strong>Ne</strong> — pokud nezadáte adresu ručně do externí mapy</td></tr>
+                    <tr><td>Dopravci (zásilky)</td><td>sledování zásilky po vašem kliknutí</td><td>číslo zásilky v URL</td><td><strong>Ne</strong> pro poznámky/úkoly; tracking číslo pouze vaší volbou</td></tr>
+                  </tbody>
+                </table>
+              </div>
               <p class="iuInfoCenter__p">Každý poskytovatel má vlastní podmínky ochrany soukromí. InfoUzel za jejich zpracování nenese plnou odpovědnost.</p>
+              <h3 class="iuInfoCenter__h3">7. Upozornění k nástrojům (ne právní / účetní služba)</h3>
+              <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
+                <p class="iuInfoCenter__p"><strong>Právní dokumenty</strong> — generátor slouží jako pomocný nástroj pro sestavení textu. <strong>Nejde o právní službu, právní poradenství ani advokátní činnost.</strong> Před použitím dokumentu v právním styku ověřte text u odborníka.</p>
+                <p class="iuInfoCenter__p"><strong>Faktury</strong> — pomocný nástroj pro vytvoření PDF v prohlížeči. <strong>Uživatel odpovídá za správnost údajů.</strong> Nejde o účetní ani daňové poradenství.</p>
+                <p class="iuInfoCenter__p"><strong>Kalkulačky</strong> — výpočty jsou <strong>orientační</strong>. Nejde o investiční, daňové ani finanční poradenství.</p>
+              </div>
               <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
                 <strong>InfoUzel negarantuje:</strong>
                 <ul class="iuInfoCenter__ul">
@@ -6306,6 +6352,37 @@ font-src 'self' data:;
                   <li>zachování lokálně uložených dat při smazání dat prohlížeče, výměně zařízení nebo resetu telefonu</li>
                 </ul>
               </div>
+              <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
+            </div>
+          </article>
+
+          <article id="iuInfoCenterDetailDataStorage" class="iuInfoCenter__detail" data-iu-info-section="data-storage" hidden>
+            <div class="iuInfoCenter__detailInner">
+              <p class="iuInfoCenter__lead">InfoUzel je <strong>hybridní aplikace</strong>: veřejný obsah (články, počasí, videa) se načítá ze sítě, ale osobní nástroje ukládají data <strong>primárně ve vašem zařízení</strong>.</p>
+              <h3 class="iuInfoCenter__h3">Co se ukládá lokálně</h3>
+              <ul class="iuInfoCenter__ul">
+                <li><strong>Poznámky</strong> — localStorage (<code>iu.notes.store.v1</code>)</li>
+                <li><strong>Úkoly</strong> — localStorage (<code>iu.tasks.mvp.v1</code>)</li>
+                <li><strong>Kalendář</strong> — localStorage a záloha IndexedDB (<code>iu.calendar.idb</code>)</li>
+                <li><strong>Faktury</strong> — formulář a seznamy v localStorage (PDF vzniká v prohlížeči)</li>
+                <li><strong>Právní dokumenty</strong> — text generovaný v prohlížeči; standardně neukládáme na server InfoUzel.cz</li>
+              </ul>
+              <h3 class="iuInfoCenter__h3">Co provozovatel standardně nevidí</h3>
+              <p class="iuInfoCenter__p">Forenzní audit kódu potvrdil: obsah poznámek, úkolů, kalendáře, faktur a generátoru právních dokumentů <strong>standardně neodesíláme na servery InfoUzel.cz</strong> a provozovatel k němu <strong>standardně nemá přístup</strong>. Neprovozujeme uživatelské účty ani centrální databázi těchto obsahů.</p>
+              <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
+                <strong>Co může data opustit zařízení (vaší volbou nebo jinou částí webu):</strong>
+                <ul class="iuInfoCenter__ul">
+                  <li><strong>Export nebo sdílení PDF faktury</strong> — stáhnutí nebo sdílení souboru</li>
+                  <li><strong>Kopírování textu</strong> z generátoru právních dokumentů do schránky</li>
+                  <li><strong>Externí odkazy</strong> — mapy, dopravci, YouTube, AI nástroje z MindMenu (po kliknutí)</li>
+                  <li><strong>Počasí</strong> — souřadnice nebo město odeslané službě Open-Meteo, pokud funkci použijete</li>
+                  <li><strong>Záloha telefonu / prohlížeče</strong> — mimo kontrolu InfoUzel.cz</li>
+                </ul>
+                <p class="iuInfoCenter__p">Proto nepoužíváme formulaci „data nikdy neopouštějí zařízení“. Používáme přesnější: data nástrojů jsou <strong>primárně lokální</strong> a <strong>standardně neputují na servery InfoUzel.cz</strong>.</p>
+              </div>
+              <h3 class="iuInfoCenter__h3">Silver a local-first</h3>
+              <p class="iuInfoCenter__p">Silver zapisuje do stejných lokálních modulů (poznámky, úkoly, kalendář). Vyhledávání v Silveru probíhá nad daty v prohlížeči, ne na serveru.</p>
+              <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy">Ochrana soukromí a data →</button></p>
               <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
             </div>
           </article>
@@ -6325,6 +6402,9 @@ font-src 'self' data:;
               <h3 class="iuInfoCenter__h3">Kontakt pro dotazy k ochraně soukromí</h3>
               <p class="iuInfoCenter__p">Dotazy k provozu webu, ochraně soukromí a uplatnění práv směřujte na <a class="iuInfoCenter__link" href="mailto:info@infouzel.cz">info@infouzel.cz</a>. U GDPR žádostí se snažíme odpovědět do 30 dnů.</p>
               <p class="iuInfoCenter__p">Provozovatel není pověřencem pro ochranu osobních údajů (DPO), pokud právní povinnost jeho jmenování nevznikne.</p>
+              <h3 class="iuInfoCenter__h3">Bezpečnost a hlášení problémů</h3>
+              <p class="iuInfoCenter__p">Pokud zjistíte bezpečnostní zranitelnost webu, podezření na zneužití nebo problém s ochranou osobních údajů u dat, která u provozovatele existují (e-mail, budoucí statistiky, provoz hostingu), napište na <a class="iuInfoCenter__link" href="mailto:info@infouzel.cz">info@infouzel.cz</a> s předmětem „Bezpečnost / GDPR“.</p>
+              <p class="iuInfoCenter__p">U obsahu uloženého pouze ve vašem prohlížeči (poznámky, úkoly, kalendář) nám obvykle nelze pomoci se smazáním ze serveru — postupujte dle sekce <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-storage">Jak funguje ukládání dat</button>.</p>
               <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
             </div>
           </article>
