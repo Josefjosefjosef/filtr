@@ -36,6 +36,14 @@ PREP_BRANCH_MARKERS = (
     "Prepare automation branch",
 )
 
+FINAL_STAGING_STEP = "Final release data staging (all generators + guards complete)"
+
+GIT_CLEAN_GUARD_MARKERS = (
+    "steps.no_diff.outcome == 'success'",
+    "steps.commit_push.outcome == 'success'",
+    "steps.commit_push.outcome == 'failure'",
+)
+
 FORBIDDEN_IN_COMMIT = (
     re.compile(r"git\s+checkout\s+-B\s+.*AUTOMATION_BRANCH"),
     re.compile(r"git\s+checkout\s+-B\s+.*automation/update-articles-data"),
@@ -130,6 +138,34 @@ def validate_workflow(path: Path = WORKFLOW) -> list[str]:
     guard_step = _step_block(release, "Release git staging guard")
     if not guard_step:
         errors.append("missing step: Release git staging guard")
+
+    final_staging = _step_block(release, FINAL_STAGING_STEP)
+    if not final_staging:
+        errors.append(f"missing step: {FINAL_STAGING_STEP}")
+    else:
+        for rel in (
+            "projects/data/videos.json",
+            "projects/data/source_rotation_inventory.json",
+            "projects/data/pipeline_reports/",
+        ):
+            if rel not in final_staging:
+                errors.append(f"final staging step must git add release path: {rel}")
+
+    commit_idx = release.find("Commit to automation branch and push")
+    staging_idx = release.find(FINAL_STAGING_STEP)
+    if commit_idx >= 0 and staging_idx >= 0 and staging_idx > commit_idx:
+        errors.append("Final release data staging must run before Commit to automation branch and push")
+
+    git_clean_block = _step_block(release, "Git clean guard")
+    if git_clean_block:
+        if "if: always()" in git_clean_block.split("run:")[0] and "steps.no_diff.outcome" not in git_clean_block:
+            errors.append(
+                "Git clean guard must not use bare if: always(); "
+                "run only after no_diff and release commit path"
+            )
+        for marker in GIT_CLEAN_GUARD_MARKERS:
+            if marker not in release[release.find("Git clean guard") : release.find("Git clean guard") + 800]:
+                errors.append(f"Git clean guard missing commit-path gate: {marker}")
 
     return errors
 

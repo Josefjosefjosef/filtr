@@ -643,6 +643,30 @@ jobs:
         if: steps.no_diff.outputs.data_changed == 'true' && steps.publish_final_verify.outputs.stale_publish == 'false'
         run: python scripts/articles_release_git_staging_guard.py
 
+      - name: Final release data staging (all generators + guards complete)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.publish_final_verify.outputs.stale_publish == 'false'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add \
+            projects/data/articles.json \
+            projects/data/videos.json \
+            projects/data/feed_health.json \
+            projects/data/brief.json \
+            projects/data/meta.json \
+            projects/data/release_manifest.json \
+            projects/data/scheduler_state.json \
+            projects/data/source_rotation_inventory.json \
+            projects/data/publishable_pool.json \
+            projects/data/article_pool_manifest.json \
+            projects/data/latest_valid_articles_snapshot.json \
+            projects/data/latest_valid_staging_snapshot.json \
+            projects/data/_probe.txt \
+            2>/dev/null || true
+          git add projects/data/articles/ projects/data/pipeline_reports/ projects/data/ingest_telemetry/
+          git add projects/data
+          echo "RELEASE_DATA_STAGED=YES"
+
       - name: Commit to automation branch and push
         if: steps.no_diff.outputs.data_changed == 'true' && steps.publish_final_verify.outputs.stale_publish == 'false'
         id: commit_push
@@ -661,6 +685,7 @@ jobs:
 
           if git diff --quiet origin/main -- projects/data 2>/dev/null; then
             echo "[DATA] Nothing to commit vs origin/main"
+            git restore --staged --worktree projects/data 2>/dev/null || git checkout -- projects/data
             exit 0
           fi
 
@@ -668,8 +693,28 @@ jobs:
           git diff --check
           python -c "import json,pathlib; json.load(open('projects/data/articles.json',encoding='utf-8')); p=pathlib.Path('projects/data/videos.json'); json.load(p.open(encoding='utf-8')) if p.is_file() else None"
 
+          git add \
+            projects/data/articles.json \
+            projects/data/videos.json \
+            projects/data/feed_health.json \
+            projects/data/brief.json \
+            projects/data/meta.json \
+            projects/data/release_manifest.json \
+            projects/data/scheduler_state.json \
+            projects/data/source_rotation_inventory.json \
+            projects/data/publishable_pool.json \
+            projects/data/article_pool_manifest.json \
+            projects/data/latest_valid_articles_snapshot.json \
+            projects/data/latest_valid_staging_snapshot.json \
+            projects/data/_probe.txt \
+            2>/dev/null || true
+          git add projects/data/articles/ projects/data/pipeline_reports/ projects/data/ingest_telemetry/
           git add projects/data
-          git diff --cached --quiet && { echo "[DATA] Nothing to commit after staging"; exit 0; }
+          git diff --cached --quiet && {
+            echo "[DATA] Nothing to commit after staging"
+            git restore --staged --worktree projects/data 2>/dev/null || git checkout -- projects/data
+            exit 0
+          }
 
           git commit -m "${{ env.PR_TITLE }}"
           # Force push: automation branch is bot-owned; --force-with-lease can block when remote diverged after main-only merges (PR stuck BEHIND).
@@ -688,7 +733,17 @@ jobs:
           echo "RELEASE_RUNTIME_ARTIFACTS_CLEANED=YES"
 
       - name: Git clean guard
-        if: always()
+        if: >-
+          always() &&
+          steps.no_diff.outcome == 'success' &&
+          (
+            steps.no_diff.outputs.data_changed == 'false' ||
+            (
+              steps.no_diff.outputs.data_changed == 'true' &&
+              steps.publish_final_verify.outputs.stale_publish == 'false' &&
+              (steps.commit_push.outcome == 'success' || steps.commit_push.outcome == 'failure')
+            )
+          )
         run: |
           set -euo pipefail
           if [ -n "$(git status --porcelain)" ]; then
