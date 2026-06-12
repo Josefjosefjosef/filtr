@@ -22,10 +22,12 @@ import {
   bundleGeneratedAtMs,
   canonicalUrl,
   effectivePublishedMs,
+  evaluateContentFreshnessPolicy,
   extractItems,
   fetchFeedXml,
   filterRssCandidatesForBundleSnapshot,
   loadArticlesDoc,
+  measureP0ContentGaps,
   parseRssDate,
   resolveFeedUrlForP0,
 } from "./content-freshness-guard-lib.mjs";
@@ -40,9 +42,15 @@ const maxAgeH = Number(process.env.TRACE_MAX_AGE_HOURS || "6");
 const maxAgeMs = maxAgeH * 3_600_000;
 const bundleSlackMin = Math.max(0, Number(process.env.TRACE_BUNDLE_SLACK_MINUTES || "3"));
 const bundleSlackMs = bundleSlackMin * 60_000;
+const freshnessWarnMin = Number(process.env.CONTENT_FRESHNESS_WARN_MINUTES || "60");
 const freshnessFailMin = Number(process.env.CONTENT_FRESHNESS_FAIL_MINUTES || "120");
 const freshnessFailMs = freshnessFailMin * 60_000;
 const maxFutureMs = 3_600_000;
+const dataRoot = path.join(__guardDir, "..", "projects", "data");
+const poolManifestPath =
+  process.env.ARTICLE_POOL_MANIFEST_PATH || path.join(dataRoot, "article_pool_manifest.json");
+const schedulerStatePath =
+  process.env.SCHEDULER_STATE_PATH || path.join(dataRoot, "scheduler_state.json");
 
 function log(msg) {
   console.log(`[active-article-trace-guard] ${msg}`);
@@ -50,6 +58,98 @@ function log(msg) {
 
 function fail(msg) {
   console.error(`[active-article-trace-guard] FAIL: ${msg}`);
+}
+
+function warn(msg) {
+  console.log(`[active-article-trace-guard] WARN: ${msg}`);
+}
+
+function readJsonFile(filePath) {
+  try {
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+/** Ingest + rotation batch context for stale_source downgrade (aligned with content-freshness policy). */
+export function loadTraceIngestContext(options = {}) {
+  const poolPath = options.poolManifestPath || poolManifestPath;
+  const schedPath = options.schedulerStatePath || schedulerStatePath;
+  const pool = readJsonFile(poolPath);
+  const scheduler = readJsonFile(schedPath);
+  const ingestRef = pool && typeof pool.ingest_manifest_ref === "object" ? pool.ingest_manifest_ref : null;
+  const batchKeys = new Set(
+    Array.isArray(ingestRef?.sourceBatchKeys)
+      ? ingestRef.sourceBatchKeys.map((k) => String(k).toLowerCase())
+      : [],
+  );
+  const tick = scheduler && typeof scheduler.last_scheduler_tick === "object" ? scheduler.last_scheduler_tick : null;
+  const selectedIds = new Set(
+    Array.isArray(tick?.selected_source_ids) ? tick.selected_source_ids.map((id) => String(id)) : [],
+  );
+  return {
+    sourceBatchKeys: batchKeys,
+    selectedSourceIds: selectedIds,
+    ingestManifestPresent: Boolean(ingestRef),
+    schedulerStatePresent: Boolean(scheduler),
+  };
+}
+
+export function p0InIngestBatch(def, context) {
+  if (!def || !context?.ingestManifestPresent) return false;
+  const slot = String(def.slotKey || "").toLowerCase();
+  if (!slot || context.sourceBatchKeys.size === 0) return false;
+  return context.sourceBatchKeys.has(slot);
+}
+
+export function p0InRotationBatch(def, context) {
+  if (!def || !context?.schedulerStatePresent) return false;
+  const feedIds = Array.isArray(def.feedIds) ? def.feedIds : [];
+  if (feedIds.length === 0 || context.selectedSourceIds.size === 0) return false;
+  return feedIds.some((id) => context.selectedSourceIds.has(String(id)));
+}
+
+/** Mirrors content-freshness-guard-lib gap>failMin downgrade when pipeline is alive. */
+export function wouldContentFreshnessWarnForP0(def, report, verdict, options = {}) {
+  if (!def || !report || !verdict?.pipelineAlive || verdict.failed) return false;
+  const rows = Array.isArray(report.rows) ? report.rows : [];
+  const row = rows.find((r) => r.sourceId === def.id);
+  if (!row || row.fetchError) return false;
+  const failMin = options.failMin ?? freshnessFailMin;
+  const totalSources = rows.length || P0_CONTENT_SOURCES.length;
+  const sourcesWithProduction = rows.filter((r) => r.productionLatest && !r.fetchError).length;
+  const majorityWithProduction = sourcesWithProduction >= Math.ceil(totalSources / 2);
+  if (!majorityWithProduction) return false;
+  if (row.gapMinutes === null) return false;
+  if (row.gapMinutes === Infinity) {
+    const infinityGapRows = rows.filter((r) => !r.fetchError && r.gapMinutes === Infinity);
+    return infinityGapRows.length <= 2;
+  }
+  return row.gapMinutes > failMin;
+}
+
+/**
+ * stale_source: FAIL by default; WARN when off ingest+rotation batch and content-freshness would WARN.
+ * Returns { failed, action: "pass"|"warn"|"fail", reason? }.
+ */
+export function resolveStaleSourceTraceOutcome(traceResult, def, context, freshnessReport, freshnessVerdict, options = {}) {
+  if (traceResult.pass || traceResult.matchMode !== "stale_source") {
+    return { failed: false, action: "pass" };
+  }
+  if (p0InIngestBatch(def, context)) {
+    return { failed: true, action: "fail", reason: "stale_source_in_ingest_batch" };
+  }
+  if (p0InRotationBatch(def, context)) {
+    return { failed: true, action: "fail", reason: "stale_source_in_rotation_batch" };
+  }
+  if (!freshnessVerdict?.pipelineAlive) {
+    return { failed: true, action: "fail", reason: "pipeline_not_alive" };
+  }
+  if (!wouldContentFreshnessWarnForP0(def, freshnessReport, freshnessVerdict, options)) {
+    return { failed: true, action: "fail", reason: "stale_source_no_freshness_warn" };
+  }
+  return { failed: false, action: "warn", reason: "stale_source_off_batch_pipeline_alive" };
 }
 
 export function bundleSnapshotCutoffMs(doc) {
@@ -200,6 +300,17 @@ export function evaluateTraceSampleItem(item, articles, def, byUrl, referenceMs,
 
 export async function runActiveArticleTraceGuard() {
   let failed = false;
+  let warned = false;
+  const ingestContext = loadTraceIngestContext();
+  const freshnessReport = await measureP0ContentGaps();
+  const freshnessVerdict = evaluateContentFreshnessPolicy(freshnessReport, {
+    warnMin: freshnessWarnMin,
+    failMin: freshnessFailMin,
+  });
+  log(
+    `pipeline_alive=${freshnessVerdict.pipelineAlive ? "YES" : "NO"} ingest_batch_keys=${ingestContext.sourceBatchKeys.size} rotation_selected=${ingestContext.selectedSourceIds.size}`,
+  );
+
   const doc = await loadArticlesDoc();
   const articles = Array.isArray(doc.articles) ? doc.articles : [];
   const byUrl = buildArticleUrlIndex(articles);
@@ -261,13 +372,28 @@ export async function runActiveArticleTraceGuard() {
     );
     if (!result.pass) {
       if (result.matchMode === "stale_source") {
-        fail(
-          `stale P0 source in articles.json: [${item.source}] production=${trace.production_ts || "none"} older than ${freshnessFailMin}m`,
+        const staleOutcome = resolveStaleSourceTraceOutcome(
+          result,
+          def,
+          ingestContext,
+          freshnessReport,
+          freshnessVerdict,
+          { failMin: freshnessFailMin },
         );
+        const staleMsg = `stale P0 source in articles.json: [${item.source}] production=${trace.production_ts || "none"} older than ${freshnessFailMin}m`;
+        if (staleOutcome.action === "warn") {
+          warn(`${staleMsg} (off ingest/rotation batch, pipeline_alive)`);
+          trace.dedupe_result = "stale_source_warn";
+          trace.match_mode = "stale_source_warn";
+          warned = true;
+        } else {
+          fail(staleMsg);
+          failed = true;
+        }
       } else {
         fail(`missing P0 source in articles.json: [${item.source}] ${item.title.slice(0, 80)}`);
+        failed = true;
       }
-      failed = true;
     }
   }
 
@@ -281,6 +407,10 @@ export async function runActiveArticleTraceGuard() {
         bundleGeneratedAt: new Date(generatedMs).toISOString(),
         bundleSlackMinutes: bundleSlackMin,
         rssExcludedPostBundle: excludedPostBundle,
+        pipelineAlive: freshnessVerdict.pipelineAlive,
+        ingestBatchKeys: [...ingestContext.sourceBatchKeys],
+        rotationSelectedIds: [...ingestContext.selectedSourceIds],
+        warned,
       },
       null,
       2,
@@ -292,7 +422,7 @@ export async function runActiveArticleTraceGuard() {
     console.error("[active-article-trace-guard] RESULT=FAIL");
     return 1;
   }
-  log("RESULT=PASS");
+  log(`RESULT=${warned ? "PASS_WITH_WARN" : "PASS"}`);
   return 0;
 }
 
