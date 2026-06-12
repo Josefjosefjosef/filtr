@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "updatedAtUtc": "2026-06-12T05:32:57.353836Z",
+  "updatedAtUtc": "2026-06-12T05:58:38.739697Z",
   "handoffComplete": true,
   "stagingReady": true,
   "aggregateReady": true,
@@ -9,7 +9,8 @@
   "winningIngestRunId": "27395802478",
   "aggregateRunId": "27395802478",
   "winningAggregateRunId": "27395802478",
-  "handoffEpoch": 5143,
+  "handoffEpoch": 5144,
   "stagingBytesApprox": 402102,
-  "pointerNote": "CAS: aggregate run id + staging snapshot match; atomic commit"
+  "pointerNote": "CAS: release telemetry overlay only; aggregate checkpoint unchanged",
+  "releaseTelemetryRunId": "27395802478"
 }
