@@ -2,8 +2,22 @@
   "name": "infoUzel.cz",
   "short_name": "infoUzel",
   "start_url": "/projects/",
+  "scope": "/projects/",
   "display": "standalone",
   "theme_color": "#1f4b99",
   "background_color": "#ffffff",
-  "icons": []
+  "icons": [
+    {
+      "src": "/projects/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/projects/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }

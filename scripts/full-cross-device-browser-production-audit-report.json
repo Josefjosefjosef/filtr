@@ -1,0 +1,2508 @@
+{
+  "audit": "full-cross-device-browser-production-audit",
+  "version": 1,
+  "startedAt": "2026-06-12T00:50:27.552Z",
+  "finishedAt": "2026-06-12T00:58:56.625Z",
+  "targetUrl": "https://infouzel.cz/projects/",
+  "alsoVerified": [
+    "https://infouzel.cz/",
+    "https://infouzel.cz/projects/",
+    "https://infouzel.cz/manifest.json",
+    "https://infouzel.cz/projects/manifest.json",
+    "https://infouzel.cz/sw.js",
+    "https://infouzel.cz/version.json",
+    "https://infouzel.cz/projects/version.json",
+    "https://infouzel.cz/favicon.svg"
+  ],
+  "notes": [
+    "AUDIT ONLY — no production changes",
+    "Playwright headless; network unthrottled"
+  ],
+  "repo": {
+    "branch": "fix/pwa-icons",
+    "commit": "c8b9e6fe490aff8d2914e1d613c1b040e1464ca6"
+  },
+  "testMatrix": {
+    "desktop": [
+      "Chromium 1366x768",
+      "Edge/Chromium 1366x768",
+      "Firefox 1366x768",
+      "WebKit/Safari 1366x768"
+    ],
+    "mobile": [
+      "Chrome Android 390x844",
+      "Safari iPhone 390x844",
+      "Android narrow 360x800"
+    ],
+    "tablet": [
+      "Tablet portrait 768x1024",
+      "Tablet landscape 1024x768",
+      "iPad WebKit 820x1180"
+    ],
+    "browsers": [
+      "chromium (Chrome/Edge)",
+      "firefox",
+      "webkit (Safari/iOS/iPad)"
+    ],
+    "coverage": "10 viewport profiles, navigation on desktop+mobile chromium, PWA+SW on chromium, cross-engine spot checks on desktop firefox/webkit"
+  },
+  "staticUrls": {
+    "root": {
+      "url": "https://infouzel.cz/",
+      "status": 200,
+      "ok": true,
+      "contentType": "text/html; charset=utf-8",
+      "bodyPreview": ""
+    },
+    "projects": {
+      "url": "https://infouzel.cz/projects/",
+      "status": 200,
+      "ok": true,
+      "contentType": "text/html; charset=utf-8",
+      "bodyPreview": ""
+    },
+    "manifest_root": {
+      "url": "https://infouzel.cz/manifest.json",
+      "status": 404,
+      "ok": false,
+      "contentType": "text/html; charset=utf-8",
+      "bodyPreview": ""
+    },
+    "manifest_projects": {
+      "url": "https://infouzel.cz/projects/manifest.json",
+      "status": 200,
+      "ok": true,
+      "contentType": "application/json; charset=utf-8",
+      "bodyPreview": "{\n  \"name\": \"infoUzel.cz\",\n  \"short_name\": \"infoUzel\",\n  \"start_url\": \"/projects/\",\n  \"display\": \"standalone\",\n  \"theme_color\": \"#1f4b99\",\n  \"background_color\": \"#ffffff\",\n  \"icons\": []\n}\n"
+    },
+    "sw_root": {
+      "url": "https://infouzel.cz/sw.js",
+      "status": 200,
+      "ok": true,
+      "contentType": "application/javascript; charset=utf-8",
+      "bodyPreview": "/* sw.js – Service Worker pro infoUzel.cz\n   Strategie: Network First + Cache Fallback pro JSON data s TTL\n   App Shell: Cache First\n   Poznámka: Kill switch ?nosw=1 je řešen v registraci na stránce (app-crash-shield.js), ne zde\n*/\n\n// Verze cache (měnit při každé významné změně)\n// 2026-03-22: bust app shell po gap-align CSS (PR #1362) — klienti se starým SW mohli držet zastaralé /assets cache\n// 2026-03-22: bump — app.js silent SW activation (SKIP_WAITING + jeden reload, bez spodního CTA)\n// 2"
+    },
+    "version_root": {
+      "url": "https://infouzel.cz/version.json",
+      "status": 404,
+      "ok": false,
+      "contentType": "text/html; charset=utf-8",
+      "bodyPreview": ""
+    },
+    "version_projects": {
+      "url": "https://infouzel.cz/projects/version.json",
+      "status": 200,
+      "ok": true,
+      "contentType": "application/json; charset=utf-8",
+      "bodyPreview": "{\n  \"version\": \"desktop-header-height-compression-20260607\",\n  \"builtAt\": \"2026-06-07T15:00:00Z\"\n}\n"
+    },
+    "favicon": {
+      "url": "https://infouzel.cz/favicon.svg",
+      "status": 200,
+      "ok": true,
+      "contentType": "image/svg+xml",
+      "bodyPreview": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\"><rect width=\"32\" height=\"32\" rx=\"6\" fill=\"#0B1F33\"/></svg>\n"
+    }
+  },
+  "loadPerformanceAudit": {
+    "byViewport": {
+      "desktop_chrome": {
+        "viewport": "Chromium 1366x768",
+        "engine": "chromium",
+        "navError": null,
+        "metrics": {
+          "domContentLoadedMs": 3811,
+          "loadEventMs": 3813,
+          "fcpMs": 3120,
+          "lcpMs": 4472,
+          "cls": 0.203,
+          "tbtMs": 333,
+          "longTaskCount": 6
+        },
+        "requests": {
+          "total": 70,
+          "totalTransferKB": 2479.2,
+          "jsKB": 701.7,
+          "cssKB": 135.6,
+          "imageKB": 1475.7,
+          "documentKB": 87.8
+        },
+        "layout": {
+          "overflowX": false,
+          "bottomNavSafe": true,
+          "bottomNavVisible": false,
+          "scrollOk": true
+        },
+        "content": {
+          "section": "feed",
+          "articleCards": 1,
+          "articleTitlesSample": [
+            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům"
+          ],
+          "images": 18,
+          "lazyImages": 9
+        },
+        "errors": {
+          "console": [],
+          "page": [],
+          "failedRequests": [],
+          "httpErrors": [],
+          "statusCounts": {
+            "404": 0,
+            "429": 0,
+            "500": 0,
+            "cors": 0,
+            "failed": 0
+          }
+        }
+      },
+      "desktop_edge": {
+        "viewport": "Edge/Chromium 1366x768",
+        "engine": "chromium",
+        "navError": null,
+        "metrics": {
+          "domContentLoadedMs": 19552,
+          "loadEventMs": 19555,
+          "fcpMs": 19164,
+          "lcpMs": 20212,
+          "cls": 0.097,
+          "tbtMs": 310,
+          "longTaskCount": 9
+        },
+        "requests": {
+          "total": 70,
+          "totalTransferKB": 2571.6,
+          "jsKB": 701.4,
+          "cssKB": 227.4,
+          "imageKB": 1476.2,
+          "documentKB": 87.8
+        },
+        "layout": {
+          "overflowX": false,
+          "bottomNavSafe": true,
+          "bottomNavVisible": false,
+          "scrollOk": true
+        },
+        "content": {
+          "section": "feed",
+          "articleCards": 1,
+          "articleTitlesSample": [
+            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům"
+          ],
+          "images": 18,
+          "lazyImages": 9
+        },
+        "errors": {
+          "console": [],
+          "page": [],
+          "failedRequests": [],
+          "httpErrors": [],
+          "statusCounts": {
+            "404": 0,
+            "429": 0,
+            "500": 0,
+            "cors": 0,
+            "failed": 0
+          }
+        }
+      },
+      "desktop_firefox": {
+        "viewport": "Firefox 1366x768",
+        "engine": "firefox",
+        "navError": null,
+        "metrics": {
+          "domContentLoadedMs": 1972,
+          "loadEventMs": 1973,
+          "fcpMs": 848,
+          "lcpMs": 2768,
+          "cls": 0,
+          "tbtMs": 0,
+          "longTaskCount": 0
+        },
+        "requests": {
+          "total": 73,
+          "totalTransferKB": 4040.8,
+          "jsKB": 686.6,
+          "cssKB": 126.7,
+          "imageKB": 3077.7,
+          "documentKB": 86.9
+        },
+        "layout": {
+          "overflowX": false,
+          "bottomNavSafe": true,
+          "bottomNavVisible": false,
+          "scrollOk": true
+        },
+        "content": {
+          "section": "feed",
+          "articleCards": 1,
+          "articleTitlesSample": [
+            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům"
+          ],
+          "images": 18,
+          "lazyImages": 9
+        },
+        "errors": {
+          "console": [],
+          "page": [],
+          "failedRequests": [],
+          "httpErrors": [],
+          "statusCounts": {
+            "404": 0,
+            "429": 0,
+            "500": 0,
+            "cors": 0,
+            "failed": 0
+          }
+        }
+      },
+      "desktop_webkit": {
+        "viewport": "WebKit/Safari 1366x768",
+        "engine": "webkit",
+        "navError": null,
+        "metrics": {
+          "domContentLoadedMs": 742,
+          "loadEventMs": 743,
+          "fcpMs": 423,
+          "lcpMs": 4739,
+          "cls": 0,
+          "tbtMs": 0,
+          "longTaskCount": 0
+        },
+        "requests": {
+          "total": 74,
+          "totalTransferKB": 4037.6,
+          "jsKB": 686.5,
+          "cssKB": 126.7,
+          "imageKB": 3079.9,
+          "documentKB": 81.4
+        },
+        "layout": {
+          "overflowX": false,
+          "bottomNavSafe": true,
+          "bottomNavVisible": false,
+          "scrollOk": true
+        },
+        "content": {
+          "section": "feed",
+          "articleCards": 1,
+          "articleTitlesSample": [
+            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům"
+          ],
+          "images": 18,
+          "lazyImages": 9
+        },
+        "errors": {
+          "console": [],
+          "page": [],
+          "failedRequests": [],
+          "httpErrors": [],
+          "statusCounts": {
+            "404": 0,
+            "429": 0,
+            "500": 0,
+            "cors": 0,
+            "failed": 0
+          }
+        }
+      },
+      "mobile_chrome": {
+        "viewport": "Chrome Android 390x844",
+        "engine": "chromium",
+        "navError": null,
+        "metrics": {
+          "domContentLoadedMs": 981,
+          "loadEventMs": 985,
+          "fcpMs": 592,
+          "lcpMs": 652,
+          "cls": 0.002,
+          "tbtMs": 216,
+          "longTaskCount": 4
+        },
+        "requests": {
+          "total": 60,
+          "totalTransferKB": 1336.4,
+          "jsKB": 701.5,
+          "cssKB": 135.6,
+          "imageKB": 336.4,
+          "documentKB": 87.8
+        },
+        "layout": {
+          "overflowX": false,
+          "bottomNavSafe": true,
+          "bottomNavVisible": true,
+          "scrollOk": true
+        },
+        "content": {
+          "section": "feed",
+          "articleCards": 1,
+          "articleTitlesSample": [
+            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům\n                                      Rozhovor s Jakubem Čechem"
+          ],
+          "images": 18,
+          "lazyImages": 9
+        },
+        "errors": {
+          "console": [],
+          "page": [],
+          "failedRequests": [],
+          "httpErrors": [],
+          "statusCounts": {
+            "404": 0,
+            "429": 0,
+            "500": 0,
+            "cors": 0,
+            "failed": 0
+          }
+        }
+      },
+      "mobile_safari": {
+        "viewport": "Safari iPhone 390x844",
+        "engine": "webkit",
+        "navError": null,
+        "metrics": {
+          "domContentLoadedMs": 852,
+          "loadEventMs": 875,
+          "fcpMs": 592,
+          "lcpMs": 1513,
+          "cls": 0,
+          "tbtMs": 0,
+          "longTaskCount": 0
+        },
+        "requests": {
+          "total": 65,
+          "totalTransferKB": 2887.7,
+          "jsKB": 686.5,
+          "cssKB": 126.7,
+          "imageKB": 1928.7,
+          "documentKB": 81.4
+        },
+        "layout": {
+          "overflowX": false,
+          "bottomNavSafe": true,
+          "bottomNavVisible": true,
+          "scrollOk": true
+        },
+        "content": {
+          "section": "feed",
+          "articleCards": 1,
+          "articleTitlesSample": [
+            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům\n                                      Rozhovor s Jakubem Čechem"
+          ],
+          "images": 18,
+          "lazyImages": 9
+        },
+        "errors": {
+          "console": [],
+          "page": [],
+          "failedRequests": [],
+          "httpErrors": [],
+          "statusCounts": {
+            "404": 0,
+            "429": 0,
+            "500": 0,
+            "cors": 0,
+            "failed": 0
+          }
+        }
+      },
+      "mobile_narrow": {
+        "viewport": "Android narrow 360x800",
+        "engine": "chromium",
+        "navError": null,
+        "metrics": {
+          "domContentLoadedMs": 629,
+          "loadEventMs": 636,
+          "fcpMs": 472,
+          "lcpMs": 472,
+          "cls": 0.002,
+          "tbtMs": 136,
+          "longTaskCount": 2
+        },
+        "requests": {
+          "total": 61,
+          "totalTransferKB": 1340,
+          "jsKB": 701.5,
+          "cssKB": 135.7,
+          "imageKB": 336.5,
+          "documentKB": 87.8
+        },
+        "layout": {
+          "overflowX": false,
+          "bottomNavSafe": true,
+          "bottomNavVisible": true,
+          "scrollOk": true
+        },
+        "content": {
+          "section": "feed",
+          "articleCards": 1,
+          "articleTitlesSample": [
+            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům\n                                      Rozhovor s Jakubem Čechem"
+          ],
+          "images": 18,
+          "lazyImages": 9
+        },
+        "errors": {
+          "console": [],
+          "page": [],
+          "failedRequests": [],
+          "httpErrors": [],
+          "statusCounts": {
+            "404": 0,
+            "429": 0,
+            "500": 0,
+            "cors": 0,
+            "failed": 0
+          }
+        }
+      },
+      "tablet_portrait": {
+        "viewport": "Tablet portrait 768x1024",
+        "engine": "chromium",
+        "navError": null,
+        "metrics": {
+          "domContentLoadedMs": 698,
+          "loadEventMs": 706,
+          "fcpMs": 584,
+          "lcpMs": 1156,
+          "cls": 0,
+          "tbtMs": 327,
+          "longTaskCount": 7
+        },
+        "requests": {
+          "total": 67,
+          "totalTransferKB": 1784.9,
+          "jsKB": 701.7,
+          "cssKB": 136.3,
+          "imageKB": 780.3,
+          "documentKB": 87.7
+        },
+        "layout": {
+          "overflowX": false,
+          "bottomNavSafe": true,
+          "bottomNavVisible": true,
+          "scrollOk": true
+        },
+        "content": {
+          "section": "feed",
+          "articleCards": 1,
+          "articleTitlesSample": [
+            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům\n                                      Rozhovor s Jakubem Čechem"
+          ],
+          "images": 18,
+          "lazyImages": 9
+        },
+        "errors": {
+          "console": [],
+          "page": [],
+          "failedRequests": [],
+          "httpErrors": [],
+          "statusCounts": {
+            "404": 0,
+            "429": 0,
+            "500": 0,
+            "cors": 0,
+            "failed": 0
+          }
+        }
+      },
+      "tablet_landscape": {
+        "viewport": "Tablet landscape 1024x768",
+        "engine": "chromium",
+        "navError": null,
+        "metrics": {
+          "domContentLoadedMs": 1128,
+          "loadEventMs": 1137,
+          "fcpMs": 796,
+          "lcpMs": 796,
+          "cls": 0.045,
+          "tbtMs": 603,
+          "longTaskCount": 8
+        },
+        "requests": {
+          "total": 62,
+          "totalTransferKB": 1359.9,
+          "jsKB": 702.1,
+          "cssKB": 135.8,
+          "imageKB": 355.6,
+          "documentKB": 87.8
+        },
+        "layout": {
+          "overflowX": false,
+          "bottomNavSafe": true,
+          "bottomNavVisible": false,
+          "scrollOk": true
+        },
+        "content": {
+          "section": "feed",
+          "articleCards": 1,
+          "articleTitlesSample": [
+            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům\n                                      Rozhovor s Jakubem Čechem"
+          ],
+          "images": 18,
+          "lazyImages": 9
+        },
+        "errors": {
+          "console": [],
+          "page": [],
+          "failedRequests": [],
+          "httpErrors": [],
+          "statusCounts": {
+            "404": 0,
+            "429": 0,
+            "500": 0,
+            "cors": 0,
+            "failed": 0
+          }
+        }
+      },
+      "tablet_ipad": {
+        "viewport": "iPad WebKit 820x1180",
+        "engine": "webkit",
+        "navError": null,
+        "metrics": {
+          "domContentLoadedMs": 636,
+          "loadEventMs": 7956,
+          "fcpMs": 348,
+          "lcpMs": 8900,
+          "cls": 0,
+          "tbtMs": 0,
+          "longTaskCount": 0
+        },
+        "requests": {
+          "total": 73,
+          "totalTransferKB": 3566.6,
+          "jsKB": 686.5,
+          "cssKB": 126.7,
+          "imageKB": 2608.9,
+          "documentKB": 81.4
+        },
+        "layout": {
+          "overflowX": false,
+          "bottomNavSafe": true,
+          "bottomNavVisible": true,
+          "scrollOk": true
+        },
+        "content": {
+          "section": "feed",
+          "articleCards": 1,
+          "articleTitlesSample": [
+            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům\n                                      Rozhovor s Jakubem Čechem"
+          ],
+          "images": 18,
+          "lazyImages": 9
+        },
+        "errors": {
+          "console": [],
+          "page": [],
+          "failedRequests": [],
+          "httpErrors": [],
+          "statusCounts": {
+            "404": 0,
+            "429": 0,
+            "500": 0,
+            "cors": 0,
+            "failed": 0
+          }
+        }
+      }
+    },
+    "summary": {}
+  },
+  "navigationClickAudit": {
+    "runs": [
+      {
+        "viewport": "Chromium 1366x768",
+        "isMobile": false,
+        "results": [
+          {
+            "id": "home",
+            "label": "Hlavní stránka",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": false,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "feed",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "feed",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=media"
+            }
+          },
+          {
+            "id": "zpravy",
+            "label": "Zprávy",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "feed",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "feed",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=feed&topic=zpravy"
+            }
+          },
+          {
+            "id": "sport",
+            "label": "Sport",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "feed",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "feed",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=feed&topic=sport"
+            }
+          },
+          {
+            "id": "finance",
+            "label": "Finance",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "feed",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "feed",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=feed&topic=finance"
+            }
+          },
+          {
+            "id": "zdravi",
+            "label": "Zdraví",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "feed",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "feed",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=feed&topic=zdravi"
+            }
+          },
+          {
+            "id": "vzdelavani",
+            "label": "Vzdělávání",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "feed",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "vzdelavani",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=vzdelavani"
+            }
+          },
+          {
+            "id": "veda",
+            "label": "Věda",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "vzdelavani",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "veda",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=veda"
+            }
+          },
+          {
+            "id": "kultura",
+            "label": "Kultura",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "veda",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "kultura",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=kultura"
+            }
+          },
+          {
+            "id": "hry",
+            "label": "Hry",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "kultura",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "hry",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=hry"
+            }
+          },
+          {
+            "id": "travel",
+            "label": "Cestování",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "hry",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "travel",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=travel&mode=guide"
+            }
+          },
+          {
+            "id": "tvprogram",
+            "label": "TV program",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "travel",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "tvprogram",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=tvprogram"
+            }
+          },
+          {
+            "id": "radio",
+            "label": "Rádio",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "tvprogram",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "radio",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=radio"
+            }
+          },
+          {
+            "id": "mapy",
+            "label": "Mapy",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "radio",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "mapy",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=mapy"
+            }
+          },
+          {
+            "id": "jr",
+            "label": "Jízdní řády",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "mapy",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "jr",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=jr"
+            }
+          },
+          {
+            "id": "pocasi",
+            "label": "Počasí",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "jr",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=pocasi"
+            }
+          },
+          {
+            "id": "fincalc",
+            "label": "Finance kalkulačky",
+            "click_success": true,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=pocasi"
+            }
+          },
+          {
+            "id": "zasilky",
+            "label": "Zásilky",
+            "click_success": true,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=pocasi"
+            }
+          },
+          {
+            "id": "kalendar",
+            "label": "Kalendář",
+            "click_success": true,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=pocasi"
+            }
+          },
+          {
+            "id": "ukoly",
+            "label": "Úkoly",
+            "click_success": true,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=pocasi"
+            }
+          },
+          {
+            "id": "poznamky",
+            "label": "Poznámky",
+            "click_success": true,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=pocasi"
+            }
+          },
+          {
+            "id": "info_centrum",
+            "label": "Info centrum",
+            "click_success": true,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=pocasi"
+            }
+          },
+          {
+            "id": "silver_panel",
+            "label": "Silver panel",
+            "click_success": true,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=pocasi"
+            }
+          },
+          {
+            "id": "menu_overlay",
+            "label": "Menu overlay",
+            "click_success": true,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=pocasi"
+            }
+          },
+          {
+            "id": "menu_repeat",
+            "label": "Opakované menu",
+            "click_success": true,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=pocasi"
+            }
+          }
+        ],
+        "errorsCollected": []
+      },
+      {
+        "viewport": "Chrome Android 390x844",
+        "isMobile": true,
+        "results": [
+          {
+            "id": "home",
+            "label": "Hlavní stránka",
+            "click_success": true,
+            "view_changed": false,
+            "url_or_state_correct": false,
+            "back_button_ok": true,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "feed",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "feed",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/"
+            }
+          },
+          {
+            "id": "zpravy",
+            "label": "Zprávy",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": false,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"zpravy\"], .iu-leftNavItem[data-rail=\"zpravy\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "sport",
+            "label": "Sport",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": false,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"sport\"], .iu-leftNavItem[data-rail=\"sport\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "finance",
+            "label": "Finance",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": false,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"finance\"], .iu-leftNavItem[data-rail=\"finance\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "zdravi",
+            "label": "Zdraví",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": false,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"zdravi\"], .iu-leftNavItem[data-rail=\"zdravi\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "vzdelavani",
+            "label": "Vzdělávání",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"vzdelavani\"], .iu-leftNavItem[data-rail=\"vzdelavani\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "veda",
+            "label": "Věda",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"veda\"], .iu-leftNavItem[data-rail=\"veda\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "kultura",
+            "label": "Kultura",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"kultura\"], .iu-leftNavItem[data-rail=\"kultura\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "hry",
+            "label": "Hry",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"hry\"], .iu-leftNavItem[data-rail=\"hry\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "travel",
+            "label": "Cestování",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"travel\"], .iu-leftNavItem[data-rail=\"travel\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "tvprogram",
+            "label": "TV program",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"tvprogram\"], .iu-leftNavItem[data-rail=\"tvprogram\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "radio",
+            "label": "Rádio",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"radio\"], .iu-leftNavItem[data-rail=\"radio\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "mapy",
+            "label": "Mapy",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"maps\"], .iu-leftNavItem[data-rail=\"maps\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "jr",
+            "label": "Jízdní řády",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"jr\"], .iu-leftNavItem[data-rail=\"jr\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "pocasi",
+            "label": "Počasí",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"weather\"], .iu-leftNavItem[data-rail=\"weather\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "fincalc",
+            "label": "Finance kalkulačky",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('[data-iu-bottom-nav=\"mindmenu\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "zasilky",
+            "label": "Zásilky",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('[data-iu-bottom-nav=\"mindmenu\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "kalendar",
+            "label": "Kalendář",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('[data-iu-bottom-nav=\"mindmenu\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "ukoly",
+            "label": "Úkoly",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('[data-iu-bottom-nav=\"mindmenu\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "poznamky",
+            "label": "Poznámky",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('[data-iu-bottom-nav=\"mindmenu\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "info_centrum",
+            "label": "Info centrum",
+            "click_success": false,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [
+              "locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('[data-iu-bottom-nav=\"mindmenu\"]').first()\n"
+            ],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "silver_panel",
+            "label": "Silver panel",
+            "click_success": true,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "menu_overlay",
+            "label": "Menu overlay",
+            "click_success": true,
+            "view_changed": false,
+            "url_or_state_correct": false,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          },
+          {
+            "id": "menu_repeat",
+            "label": "Opakované menu",
+            "click_success": true,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "errors": [],
+            "before": {
+              "section": "",
+              "topic": "",
+              "cards": 0
+            },
+            "after": {
+              "section": "",
+              "topic": "",
+              "cards": 0,
+              "url": "about:blank"
+            }
+          }
+        ],
+        "errorsCollected": []
+      }
+    ],
+    "summary": {
+      "desktopPass": 23,
+      "desktopTotal": 24,
+      "mobilePass": 2,
+      "mobileTotal": 24
+    }
+  },
+  "dataRefreshAudit": {
+    "articles": {
+      "feedLoaded": true,
+      "notEmpty": true,
+      "titlesSample": [
+        "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům"
+      ],
+      "sourcesVisible": false,
+      "imagesLoaded": 1,
+      "loaderMode": "chunk-v1",
+      "loadMore": false,
+      "afterReloadCount": 1,
+      "reloadPreservesData": true
+    },
+    "weather": {
+      "cardVisible": false,
+      "overlayOk": true,
+      "fallback": null
+    },
+    "calendar": {
+      "open": false,
+      "close": false,
+      "reopen": false,
+      "empty": null,
+      "errors": []
+    },
+    "tasks": {
+      "open": false,
+      "close": false,
+      "reopen": false,
+      "empty": null,
+      "errors": []
+    },
+    "notes": {
+      "open": false,
+      "close": false,
+      "reopen": false,
+      "empty": null,
+      "errors": []
+    },
+    "cache_behavior": {
+      "swBlocked": true,
+      "reloadArticleCount": 1
+    },
+    "failures": []
+  },
+  "pwaAudit": {
+    "manifest": {
+      "root404": true,
+      "projectsOk": true,
+      "parsed": {
+        "name": "infoUzel.cz",
+        "short_name": "infoUzel",
+        "start_url": "/projects/",
+        "display": "standalone",
+        "theme_color": "#1f4b99",
+        "background_color": "#ffffff",
+        "icons": []
+      },
+      "fields": {
+        "name": "infoUzel.cz",
+        "short_name": "infoUzel",
+        "start_url": "/projects/",
+        "display": "standalone",
+        "theme_color": "#1f4b99",
+        "background_color": "#ffffff",
+        "iconCount": 0
+      }
+    },
+    "icons": [],
+    "favicon": {
+      "url": "https://infouzel.cz/favicon.svg",
+      "status": 200,
+      "ok": true,
+      "contentType": "image/svg+xml",
+      "bodyPreview": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\"><rect width=\"32\" height=\"32\" rx=\"6\" fill=\"#0B1F33\"/></svg>\n"
+    },
+    "apple_touch_icon": {
+      "status": 404,
+      "ok": false,
+      "url": "https://infouzel.cz/projects/icons/apple-touch-icon.png"
+    },
+    "android_icons": [],
+    "service_worker": {
+      "sw_root": {
+        "url": "https://infouzel.cz/sw.js",
+        "status": 200,
+        "ok": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "bodyPreview": "/* sw.js – Service Worker pro infoUzel.cz\n   Strategie: Network First + Cache Fallback pro JSON data s TTL\n   App Shell: Cache First\n   Poznámka: Kill switch ?nosw=1 je řešen v registraci na stránce (app-crash-shield.js), ne zde\n*/\n\n// Verze cache (měnit při každé významné změně)\n// 2026-03-22: bust app shell po gap-align CSS (PR #1362) — klienti se starým SW mohli držet zastaralé /assets cache\n// 2026-03-22: bump — app.js silent SW activation (SKIP_WAITING + jeden reload, bez spodního CTA)\n// 2"
+      },
+      "state": {
+        "supported": true,
+        "registered": true,
+        "controller": true,
+        "scriptURL": "https://infouzel.cz/sw.js",
+        "caches": []
+      },
+      "consoleEvents": []
+    },
+    "first_install_reload": {
+      "autoReloadCountOnFirstLoad": "NO_EXTRA",
+      "note": "Measured reload events on first visit+wait; inline boot should skip reload on first SW install"
+    },
+    "update_reload": {
+      "reloadCountAfterManualReload": 2,
+      "note": "Manual reload only in this probe; deploy update reload requires version bump simulation"
+    },
+    "cache": {
+      "cacheNames": [],
+      "versionMeta": "desktop-header-height-compression-20260607",
+      "versionJson": {
+        "version": "desktop-header-height-compression-20260607",
+        "builtAt": "2026-06-07T15:00:00Z"
+      }
+    },
+    "errors": []
+  },
+  "responsiveLayoutAudit": {
+    "desktop": {
+      "desktop_chrome": {
+        "overflowX": false,
+        "bottomNavSafe": true,
+        "bottomNavVisible": false,
+        "scrollOk": true
+      },
+      "desktop_edge": {
+        "overflowX": false,
+        "bottomNavSafe": true,
+        "bottomNavVisible": false,
+        "scrollOk": true
+      },
+      "desktop_firefox": {
+        "overflowX": false,
+        "bottomNavSafe": true,
+        "bottomNavVisible": false,
+        "scrollOk": true
+      },
+      "desktop_webkit": {
+        "overflowX": false,
+        "bottomNavSafe": true,
+        "bottomNavVisible": false,
+        "scrollOk": true
+      }
+    },
+    "mobile": {
+      "mobile_chrome": {
+        "overflowX": false,
+        "bottomNavSafe": true,
+        "bottomNavVisible": true,
+        "scrollOk": true
+      },
+      "mobile_safari": {
+        "overflowX": false,
+        "bottomNavSafe": true,
+        "bottomNavVisible": true,
+        "scrollOk": true
+      },
+      "mobile_narrow": {
+        "overflowX": false,
+        "bottomNavSafe": true,
+        "bottomNavVisible": true,
+        "scrollOk": true
+      }
+    },
+    "tablet_portrait": {
+      "overflowX": false,
+      "bottomNavSafe": true,
+      "bottomNavVisible": true,
+      "scrollOk": true
+    },
+    "tablet_landscape": {
+      "overflowX": false,
+      "bottomNavSafe": true,
+      "bottomNavVisible": false,
+      "scrollOk": true
+    },
+    "overflow": {
+      "desktop_chrome": false,
+      "desktop_edge": false,
+      "desktop_firefox": false,
+      "desktop_webkit": false,
+      "mobile_chrome": false,
+      "mobile_safari": false,
+      "mobile_narrow": false,
+      "tablet_portrait": false,
+      "tablet_landscape": false,
+      "tablet_ipad": false
+    },
+    "scroll": {},
+    "bottom_nav": {
+      "desktop_chrome": {
+        "visible": false,
+        "safe": true
+      },
+      "desktop_edge": {
+        "visible": false,
+        "safe": true
+      },
+      "desktop_firefox": {
+        "visible": false,
+        "safe": true
+      },
+      "desktop_webkit": {
+        "visible": false,
+        "safe": true
+      },
+      "mobile_chrome": {
+        "visible": true,
+        "safe": true
+      },
+      "mobile_safari": {
+        "visible": true,
+        "safe": true
+      },
+      "mobile_narrow": {
+        "visible": true,
+        "safe": true
+      },
+      "tablet_portrait": {
+        "visible": true,
+        "safe": true
+      },
+      "tablet_landscape": {
+        "visible": false,
+        "safe": true
+      },
+      "tablet_ipad": {
+        "visible": true,
+        "safe": true
+      }
+    },
+    "system_nav_safety": {},
+    "layout_failures": []
+  },
+  "cacheUpdateAudit": {
+    "first_visit": {
+      "build": "desktop-header-height-compression-20260607",
+      "appJs": null,
+      "href": "https://infouzel.cz/projects/",
+      "swController": true
+    },
+    "second_visit": {
+      "build": "desktop-header-height-compression-20260607",
+      "appJs": null,
+      "href": "https://infouzel.cz/projects/",
+      "swController": true
+    },
+    "hard_reload": {
+      "build": "desktop-header-height-compression-20260607",
+      "swController": true
+    },
+    "normal_reload": {
+      "build": "desktop-header-height-compression-20260607",
+      "swController": true
+    },
+    "sw_install": {
+      "controllerAfterSecondVisit": true
+    },
+    "sw_update": {
+      "note": "Full SW update simulation not run (would require deploy bump); version.json checked",
+      "versionFetch": {
+        "version": "desktop-header-height-compression-20260607",
+        "builtAt": "2026-06-07T15:00:00Z"
+      }
+    },
+    "asset_versioning": {
+      "uniqueBuilds": [
+        "desktop-header-height-compression-20260607"
+      ],
+      "uniqueAppJs": []
+    },
+    "stale_cache_risk": "LOW"
+  },
+  "errorAudit": {
+    "real_errors": [],
+    "external_api_noise": [],
+    "benign_errors": [],
+    "critical_errors": []
+  },
+  "issueList": [
+    {
+      "id": "IU-AUDIT-001",
+      "title": "Root /manifest.json returns 404 (PWA path is /projects/manifest.json)",
+      "severity": "P2",
+      "device": "all",
+      "browser": "all",
+      "repro_steps": "GET https://infouzel.cz/manifest.json",
+      "evidence": {
+        "status": 404,
+        "correctPath": "/projects/manifest.json"
+      },
+      "impact": "Install prompts / crawlers hitting root manifest fail",
+      "risk": "low",
+      "recommended_fix": "Add redirect from /manifest.json to /projects/manifest.json or document canonical path only"
+    },
+    {
+      "id": "IU-AUDIT-002",
+      "title": "PWA manifest has empty icons array",
+      "severity": "P0",
+      "device": "mobile",
+      "browser": "all",
+      "repro_steps": "Open /projects/manifest.json",
+      "evidence": {
+        "name": "infoUzel.cz",
+        "short_name": "infoUzel",
+        "start_url": "/projects/",
+        "display": "standalone",
+        "theme_color": "#1f4b99",
+        "background_color": "#ffffff",
+        "iconCount": 0
+      },
+      "impact": "Add-to-home-screen shows generic/missing icon on Android/iOS",
+      "risk": "high",
+      "recommended_fix": "Populate manifest.icons with 192/512 maskable PNGs and verify URLs"
+    },
+    {
+      "id": "IU-AUDIT-003",
+      "title": "CLS above 0.1 on Chromium 1366x768",
+      "severity": "P2",
+      "device": "desktop",
+      "browser": "chromium",
+      "repro_steps": "Load https://infouzel.cz/projects/ at Chromium 1366x768",
+      "evidence": {
+        "cls": 0.203,
+        "lcpMs": 4472
+      },
+      "impact": "Visible layout shift hurts UX and Core Web Vitals",
+      "risk": "medium",
+      "recommended_fix": "Identify shifting elements (hero, bottom nav, images without dimensions)"
+    },
+    {
+      "id": "IU-AUDIT-004",
+      "title": "LCP > 4s on Chromium 1366x768",
+      "severity": "P1",
+      "device": "desktop",
+      "browser": "chromium",
+      "repro_steps": "Cold load https://infouzel.cz/projects/",
+      "evidence": {
+        "lcpMs": 4472,
+        "fcpMs": 3120
+      },
+      "impact": "Slow first meaningful paint",
+      "risk": "high",
+      "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
+    },
+    {
+      "id": "IU-AUDIT-005",
+      "title": "LCP > 4s on Edge/Chromium 1366x768",
+      "severity": "P1",
+      "device": "desktop",
+      "browser": "chromium",
+      "repro_steps": "Cold load https://infouzel.cz/projects/",
+      "evidence": {
+        "lcpMs": 20212,
+        "fcpMs": 19164
+      },
+      "impact": "Slow first meaningful paint",
+      "risk": "high",
+      "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
+    },
+    {
+      "id": "IU-AUDIT-006",
+      "title": "LCP > 4s on WebKit/Safari 1366x768",
+      "severity": "P1",
+      "device": "desktop",
+      "browser": "webkit",
+      "repro_steps": "Cold load https://infouzel.cz/projects/",
+      "evidence": {
+        "lcpMs": 4739,
+        "fcpMs": 423
+      },
+      "impact": "Slow first meaningful paint",
+      "risk": "high",
+      "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
+    },
+    {
+      "id": "IU-AUDIT-007",
+      "title": "LCP > 4s on iPad WebKit 820x1180",
+      "severity": "P1",
+      "device": "desktop",
+      "browser": "webkit",
+      "repro_steps": "Cold load https://infouzel.cz/projects/",
+      "evidence": {
+        "lcpMs": 8900,
+        "fcpMs": 348
+      },
+      "impact": "Slow first meaningful paint",
+      "risk": "high",
+      "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
+    },
+    {
+      "id": "IU-AUDIT-008",
+      "title": "Navigation issue: Hlavní stránka",
+      "severity": "P1",
+      "device": "mobile/tablet",
+      "browser": "chromium",
+      "repro_steps": "Click Hlavní stránka from bottom nav / menu",
+      "evidence": {
+        "id": "home",
+        "label": "Hlavní stránka",
+        "click_success": true,
+        "view_changed": true,
+        "url_or_state_correct": false,
+        "back_button_ok": null,
+        "scroll_ok": true,
+        "layout_ok": true,
+        "errors": [],
+        "before": {
+          "section": "feed",
+          "topic": "",
+          "cards": 1
+        },
+        "after": {
+          "section": "feed",
+          "topic": "",
+          "cards": 1,
+          "url": "https://infouzel.cz/projects/?section=media"
+        }
+      },
+      "impact": "User cannot reach section or tool",
+      "risk": "high",
+      "recommended_fix": "Fix click handler or mobile gate routing for this target"
+    },
+    {
+      "id": "IU-AUDIT-009",
+      "title": "Navigation issue: Hlavní stránka",
+      "severity": "P1",
+      "device": "mobile/tablet",
+      "browser": "chromium",
+      "repro_steps": "Click Hlavní stránka from bottom nav / menu",
+      "evidence": {
+        "id": "home",
+        "label": "Hlavní stránka",
+        "click_success": true,
+        "view_changed": false,
+        "url_or_state_correct": false,
+        "back_button_ok": true,
+        "scroll_ok": true,
+        "layout_ok": true,
+        "errors": [],
+        "before": {
+          "section": "feed",
+          "topic": "",
+          "cards": 1
+        },
+        "after": {
+          "section": "feed",
+          "topic": "",
+          "cards": 1,
+          "url": "https://infouzel.cz/projects/"
+        }
+      },
+      "impact": "User cannot reach section or tool",
+      "risk": "high",
+      "recommended_fix": "Fix click handler or mobile gate routing for this target"
+    },
+    {
+      "id": "IU-AUDIT-010",
+      "title": "Navigation issue: Zprávy",
+      "severity": "P1",
+      "device": "mobile/tablet",
+      "browser": "chromium",
+      "repro_steps": "Click Zprávy from bottom nav / menu",
+      "evidence": {
+        "id": "zpravy",
+        "label": "Zprávy",
+        "click_success": false,
+        "view_changed": false,
+        "url_or_state_correct": false,
+        "back_button_ok": null,
+        "scroll_ok": true,
+        "layout_ok": true,
+        "errors": [
+          "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"zpravy\"], .iu-leftNavItem[data-rail=\"zpravy\"]').first()\n"
+        ],
+        "before": {
+          "section": "",
+          "topic": "",
+          "cards": 0
+        },
+        "after": {
+          "section": "",
+          "topic": "",
+          "cards": 0,
+          "url": "about:blank"
+        }
+      },
+      "impact": "User cannot reach section or tool",
+      "risk": "high",
+      "recommended_fix": "Fix click handler or mobile gate routing for this target"
+    },
+    {
+      "id": "IU-AUDIT-011",
+      "title": "Navigation issue: Sport",
+      "severity": "P1",
+      "device": "mobile/tablet",
+      "browser": "chromium",
+      "repro_steps": "Click Sport from bottom nav / menu",
+      "evidence": {
+        "id": "sport",
+        "label": "Sport",
+        "click_success": false,
+        "view_changed": false,
+        "url_or_state_correct": false,
+        "back_button_ok": null,
+        "scroll_ok": true,
+        "layout_ok": true,
+        "errors": [
+          "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"sport\"], .iu-leftNavItem[data-rail=\"sport\"]').first()\n"
+        ],
+        "before": {
+          "section": "",
+          "topic": "",
+          "cards": 0
+        },
+        "after": {
+          "section": "",
+          "topic": "",
+          "cards": 0,
+          "url": "about:blank"
+        }
+      },
+      "impact": "User cannot reach section or tool",
+      "risk": "high",
+      "recommended_fix": "Fix click handler or mobile gate routing for this target"
+    },
+    {
+      "id": "IU-AUDIT-012",
+      "title": "Navigation issue: Finance",
+      "severity": "P1",
+      "device": "mobile/tablet",
+      "browser": "chromium",
+      "repro_steps": "Click Finance from bottom nav / menu",
+      "evidence": {
+        "id": "finance",
+        "label": "Finance",
+        "click_success": false,
+        "view_changed": false,
+        "url_or_state_correct": false,
+        "back_button_ok": null,
+        "scroll_ok": true,
+        "layout_ok": true,
+        "errors": [
+          "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"finance\"], .iu-leftNavItem[data-rail=\"finance\"]').first()\n"
+        ],
+        "before": {
+          "section": "",
+          "topic": "",
+          "cards": 0
+        },
+        "after": {
+          "section": "",
+          "topic": "",
+          "cards": 0,
+          "url": "about:blank"
+        }
+      },
+      "impact": "User cannot reach section or tool",
+      "risk": "high",
+      "recommended_fix": "Fix click handler or mobile gate routing for this target"
+    },
+    {
+      "id": "IU-AUDIT-013",
+      "title": "Navigation issue: Zdraví",
+      "severity": "P1",
+      "device": "mobile/tablet",
+      "browser": "chromium",
+      "repro_steps": "Click Zdraví from bottom nav / menu",
+      "evidence": {
+        "id": "zdravi",
+        "label": "Zdraví",
+        "click_success": false,
+        "view_changed": false,
+        "url_or_state_correct": false,
+        "back_button_ok": null,
+        "scroll_ok": true,
+        "layout_ok": true,
+        "errors": [
+          "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"zdravi\"], .iu-leftNavItem[data-rail=\"zdravi\"]').first()\n"
+        ],
+        "before": {
+          "section": "",
+          "topic": "",
+          "cards": 0
+        },
+        "after": {
+          "section": "",
+          "topic": "",
+          "cards": 0,
+          "url": "about:blank"
+        }
+      },
+      "impact": "User cannot reach section or tool",
+      "risk": "high",
+      "recommended_fix": "Fix click handler or mobile gate routing for this target"
+    },
+    {
+      "id": "IU-AUDIT-014",
+      "title": "Navigation issue: Vzdělávání",
+      "severity": "P1",
+      "device": "mobile/tablet",
+      "browser": "chromium",
+      "repro_steps": "Click Vzdělávání from bottom nav / menu",
+      "evidence": {
+        "id": "vzdelavani",
+        "label": "Vzdělávání",
+        "click_success": false,
+        "view_changed": false,
+        "url_or_state_correct": true,
+        "back_button_ok": null,
+        "scroll_ok": true,
+        "layout_ok": true,
+        "errors": [
+          "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"vzdelavani\"], .iu-leftNavItem[data-rail=\"vzdelavani\"]').first()\n"
+        ],
+        "before": {
+          "section": "",
+          "topic": "",
+          "cards": 0
+        },
+        "after": {
+          "section": "",
+          "topic": "",
+          "cards": 0,
+          "url": "about:blank"
+        }
+      },
+      "impact": "User cannot reach section or tool",
+      "risk": "high",
+      "recommended_fix": "Fix click handler or mobile gate routing for this target"
+    },
+    {
+      "id": "IU-AUDIT-015",
+      "title": "Navigation issue: Věda",
+      "severity": "P1",
+      "device": "mobile/tablet",
+      "browser": "chromium",
+      "repro_steps": "Click Věda from bottom nav / menu",
+      "evidence": {
+        "id": "veda",
+        "label": "Věda",
+        "click_success": false,
+        "view_changed": false,
+        "url_or_state_correct": true,
+        "back_button_ok": null,
+        "scroll_ok": true,
+        "layout_ok": true,
+        "errors": [
+          "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"veda\"], .iu-leftNavItem[data-rail=\"veda\"]').first()\n"
+        ],
+        "before": {
+          "section": "",
+          "topic": "",
+          "cards": 0
+        },
+        "after": {
+          "section": "",
+          "topic": "",
+          "cards": 0,
+          "url": "about:blank"
+        }
+      },
+      "impact": "User cannot reach section or tool",
+      "risk": "high",
+      "recommended_fix": "Fix click handler or mobile gate routing for this target"
+    },
+    {
+      "id": "IU-AUDIT-016",
+      "title": "Root /version.json 404 (canonical /projects/version.json)",
+      "severity": "P3",
+      "device": "all",
+      "browser": "all",
+      "repro_steps": "GET /version.json",
+      "evidence": {
+        "status": 404
+      },
+      "impact": "Deploy probes using wrong path fail",
+      "risk": "low",
+      "recommended_fix": "Redirect or document /projects/version.json as canonical"
+    }
+  ],
+  "priorityRanking": {
+    "top_1": {
+      "id": "IU-AUDIT-002",
+      "title": "PWA manifest has empty icons array",
+      "severity": "P0",
+      "device": "mobile",
+      "browser": "all",
+      "repro_steps": "Open /projects/manifest.json",
+      "evidence": {
+        "name": "infoUzel.cz",
+        "short_name": "infoUzel",
+        "start_url": "/projects/",
+        "display": "standalone",
+        "theme_color": "#1f4b99",
+        "background_color": "#ffffff",
+        "iconCount": 0
+      },
+      "impact": "Add-to-home-screen shows generic/missing icon on Android/iOS",
+      "risk": "high",
+      "recommended_fix": "Populate manifest.icons with 192/512 maskable PNGs and verify URLs"
+    },
+    "top_2": {
+      "id": "IU-AUDIT-004",
+      "title": "LCP > 4s on Chromium 1366x768",
+      "severity": "P1",
+      "device": "desktop",
+      "browser": "chromium",
+      "repro_steps": "Cold load https://infouzel.cz/projects/",
+      "evidence": {
+        "lcpMs": 4472,
+        "fcpMs": 3120
+      },
+      "impact": "Slow first meaningful paint",
+      "risk": "high",
+      "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
+    },
+    "top_3": {
+      "id": "IU-AUDIT-005",
+      "title": "LCP > 4s on Edge/Chromium 1366x768",
+      "severity": "P1",
+      "device": "desktop",
+      "browser": "chromium",
+      "repro_steps": "Cold load https://infouzel.cz/projects/",
+      "evidence": {
+        "lcpMs": 20212,
+        "fcpMs": 19164
+      },
+      "impact": "Slow first meaningful paint",
+      "risk": "high",
+      "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
+    },
+    "top_4": {
+      "id": "IU-AUDIT-006",
+      "title": "LCP > 4s on WebKit/Safari 1366x768",
+      "severity": "P1",
+      "device": "desktop",
+      "browser": "webkit",
+      "repro_steps": "Cold load https://infouzel.cz/projects/",
+      "evidence": {
+        "lcpMs": 4739,
+        "fcpMs": 423
+      },
+      "impact": "Slow first meaningful paint",
+      "risk": "high",
+      "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
+    },
+    "top_5": {
+      "id": "IU-AUDIT-007",
+      "title": "LCP > 4s on iPad WebKit 820x1180",
+      "severity": "P1",
+      "device": "desktop",
+      "browser": "webkit",
+      "repro_steps": "Cold load https://infouzel.cz/projects/",
+      "evidence": {
+        "lcpMs": 8900,
+        "fcpMs": 348
+      },
+      "impact": "Slow first meaningful paint",
+      "risk": "high",
+      "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
+    }
+  },
+  "finalGitStatus": {
+    "changed_files": [
+      "M projects/index.html",
+      " M projects/manifest.json",
+      "?? projects/icons/",
+      "?? scripts/full-cross-device-browser-production-audit-report.json",
+      "?? scripts/full-cross-device-browser-production-audit.cjs"
+    ],
+    "tracked_dirty": 2,
+    "untracked": 3,
+    "scope_ok": false
+  }
+}
