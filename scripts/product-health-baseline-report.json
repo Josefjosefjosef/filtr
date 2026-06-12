@@ -1,0 +1,139 @@
+{
+  "report": "product-health-baseline",
+  "version": 1,
+  "phase": "audit-closure-variant-a",
+  "generatedAt": "2026-06-12T10:25:17.716Z",
+  "mainCommit": "76fdd77fae7e22c123518d97b7f60b7c18a62879",
+  "closureMerges": {
+    "performanceSeries": ["#5242 lazy-load franc-min", "#5242 dynamic-import-guard", "init-defer-guard", "overlay-cluster-lazy-mount", "article chunk V1"],
+    "pwaFix": "#5252 fix/pwa-icons",
+    "mobileWeatherFix": "#5263 fix/mobile-weather-navigation-routing",
+    "auditHarnessHardening": "#5265 chore/harden-cross-device-audit-harness"
+  },
+  "productHealthSnapshot": {
+    "performance": {
+      "domBefore": 2906,
+      "domAfter": 1562,
+      "domDelta": -1344,
+      "domDeltaPercent": -46.2,
+      "domBeforeSource": "scripts/diagnose-article-frontend-loading-report.json (pre-chunk/lazy-mount era mobile settle)",
+      "domAfterSource": "production snapshot 2026-06-12 Chromium 1366x768 post-audit-phase",
+      "gtmetrixBefore": {
+        "performance": 47,
+        "tbtMs": 540,
+        "lcpS": 3.7,
+        "fcpS": 1.3,
+        "source": "scripts/init-defer-guard.cjs desktop_before_gtmetrix (FWuwtw7l/zp8Av5Ii era)"
+      },
+      "gtmetrixAfter": {
+        "performance": null,
+        "tbtMs": null,
+        "lcpS": null,
+        "note": "GTmetrix post-series re-run not scheduled in Variant A; use Playwright production audit as canonical after proxy",
+        "playwrightProductionAudit": {
+          "desktopChromeLcpMs": 1172,
+          "desktopChromeTbtMs": 139,
+          "desktopChromeCls": 0.149,
+          "source": "scripts/full-cross-device-browser-production-audit-report.json"
+        },
+        "liveSnapshot": {
+          "domNodes": 1562,
+          "lcpMs": 3628,
+          "fcpMs": 2712,
+          "cls": 0.104,
+          "capturedAt": "2026-06-12T10:25:17.716Z"
+        }
+      },
+      "lcpBeforeMs": 3700,
+      "lcpAfterMs": 1172,
+      "lcpDeltaMs": -2528,
+      "lcpBeforeSource": "GTmetrix 3.7s pre init-defer series",
+      "lcpAfterSource": "full-cross-device audit desktop_chrome median run",
+      "tbtBeforeMs": 705,
+      "tbtAfterMs": 139,
+      "tbtDeltaMs": -566,
+      "tbtBeforeSource": "iu_tbt_forensic_phase2 pre init-defer (init-defer-guard.cjs)",
+      "tbtAfterSource": "full-cross-device audit desktop_chrome"
+    },
+    "pwa": {
+      "manifest": { "path": "/projects/manifest.json", "status": 200, "linkedFromHtml": true },
+      "icons": { "count": 2, "icon192Status": 200, "icon512Status": 200 },
+      "appleTouchIcon": { "path": "/projects/icons/apple-touch-icon.png", "status": 200 },
+      "serviceWorker": { "path": "/sw.js", "status": 200, "scope": "/projects/" },
+      "rootManifest404": true,
+      "rootVersion404": true,
+      "userImpactFromRoot404": "none — canonical paths used by HTML and inline PWA boot"
+    },
+    "audit": {
+      "issueCountBefore": 11,
+      "issueCountAfter": 7,
+      "falsePositivesRemoved": 4,
+      "reductionPercent": 36.4,
+      "auditTrustworthiness": "HIGH",
+      "harnessVersion": "audit-hardening-v1",
+      "replayGuardsPass": {
+        "zasilky": true,
+        "kalendar": true,
+        "ukoly": true,
+        "poznamky": true,
+        "pocasi": true
+      },
+      "source": "scripts/full-cross-device-browser-production-audit-report.json auditRerun"
+    },
+    "ux": {
+      "confirmedMobileBugs": 0,
+      "confirmedDesktopBugs": 0,
+      "confirmedPwaBugs": 0,
+      "confirmedCacheBugs": 0,
+      "note": "Post-triage: no confirmed REAL_PRODUCT_BUG among remaining audit IDs; mobile weather routing fixed in #5263"
+    }
+  },
+  "currentOpenItems": {
+    "confirmedBugs": [],
+    "performanceObservations": [
+      {
+        "id": "IU-AUDIT-003",
+        "title": "LCP > 4s on iPad WebKit 820x1180",
+        "classification": "PERFORMANCE_METRIC_ONLY",
+        "repro": "5/5 Playwright runs >4000ms median 5417ms",
+        "userImpact": "moderate iPad Safari paint delay",
+        "fixScope": "needs separate perf investigation PR — not Variant A"
+      },
+      {
+        "id": "IU-AUDIT-002",
+        "title": "CLS above 0.1 on Chromium 1366x768",
+        "classification": "PERFORMANCE_METRIC_ONLY",
+        "repro": "borderline — median 0.097, intermittent 0.149-0.193",
+        "userImpact": "low",
+        "fixScope": "monitor only"
+      }
+    ],
+    "futureCandidates": [
+      {
+        "id": "IU-AUDIT-004",
+        "title": "Info centrum overlay detection (mobile)",
+        "classification": "NEEDS_SEPARATE_PROOF",
+        "note": "suppressed from remaining_real_issues after harness hardening; verify with #iuTopbarInfoBtn selector"
+      },
+      {
+        "id": "IU-AUDIT-001",
+        "title": "Root /manifest.json 404",
+        "classification": "AUDIT_PATH_FALSE_POSITIVE",
+        "optional": "harness suppress root-path 404 checks"
+      },
+      {
+        "id": "IU-AUDIT-007",
+        "title": "Root /version.json 404",
+        "classification": "BENIGN_404",
+        "optional": "redirect or harness suppress"
+      }
+    ]
+  },
+  "auditPhaseClosure": {
+    "auditPhase": "cross-device-production-audit-hardening",
+    "status": "CLOSED",
+    "reason": "Harness hardened (#5265), false positives removed (4/11), replay guards PASS on production, PWA (#5252) and mobile weather (#5263) merged, no confirmed product bugs remain for immediate fix",
+    "confirmedProductBugsRemaining": 0,
+    "readyForNewFeatureWork": true
+  }
+}
