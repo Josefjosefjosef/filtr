@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-12T20:29:23.514385Z",
-  "source_run_id": "27441156208",
+  "generatedAt": "2026-06-12T20:58:12.120576Z",
+  "source_run_id": "27442537883",
   "pipeline_phase": "fast_pool_publish",
   "pool_boundary": "post_event_dedupe_pre_section_limits",
   "clean_article_pool_definition": "Articles after RSS fetch, normalize, URL dedupe, title clustering, event-level dedupe, section classification, and quality/relevance checks; before release guards, PR creation, publish, and homepage selection.",
@@ -13,9 +13,9 @@
   "UNIQUE_ARTICLES_LOST_AFTER_EVENT_DEDUPE": "UNKNOWN_NOT_EXPORTED",
   "UNIQUE_ARTICLES_LOST_AFTER_SECTION_LIMITS": 0,
   "UNIQUE_ARTICLES_LOST_AFTER_HOMEPAGE_SELECTION_ESTIMATE": "UNKNOWN_NOT_EXPORTED",
-  "total_raw_items": 17,
-  "total_normalized": 17,
-  "total_after_url_dedupe": 17,
+  "total_raw_items": 30,
+  "total_normalized": 30,
+  "total_after_url_dedupe": 30,
   "total_after_event_dedupe": 16374,
   "total_publishable_pool": 16374,
   "total_clean_pool": 16374,
@@ -23,11 +23,11 @@
   "articles_full_count": 16374,
   "articles_final_count": 15509,
   "articles_json_count": 15509,
-  "cluster_count": 15,
-  "new_articles_built": 15,
+  "cluster_count": 30,
+  "new_articles_built": 30,
   "per_section_counts": {
-    "aktualne": 5972,
-    "sport": 4797,
+    "aktualne": 5976,
+    "sport": 4793,
     "hry": 208,
     "finance": 2993,
     "kultura": 216,
@@ -40,11 +40,11 @@
     "vzdelavani": 14
   },
   "per_source_counts": {
-    "zpr_idnes_zpravy": 1468,
-    "zpr_novinky_domaci": 163,
+    "zpr_idnes_zpravy": 1470,
+    "zpr_novinky_domaci": 164,
+    "spt_idnes": 916,
     "zpr_seznam_domaci": 717,
     "spt_isport": 935,
-    "spt_idnes": 914,
     "hry_zing": 179,
     "spt_ctsport": 606,
     "fin_ekonomickydenik": 581,
@@ -100,10 +100,10 @@
     "fin_novinky_ekonomika": 52,
     "Seznam Zprávy": 4,
     "Deník": 26,
-    "iSport": 28,
+    "iSport": 22,
     "HN": 3,
+    "Aktuálně": 38,
     "Týdeník Policie": 2,
-    "Aktuálně": 37,
     "Peníze.cz": 4,
     "E15": 7,
     "Novinky": 1,
@@ -133,7 +133,7 @@
   },
   "duplicate_counts": {
     "url_dedupe_dropped": 0,
-    "title_cluster_nonprimary_dropped": 2,
+    "title_cluster_nonprimary_dropped": 0,
     "event_dedupe_suppressed": 0
   },
   "event_cluster_counts": 0,
@@ -149,10 +149,10 @@
   "HOMEPAGE_DATA_SOURCE": "publishable_pool.json",
   "HOMEPAGE_READONLY_SELECTION": "YES",
   "PUBLISHABLE_POOL_SCHEMA_VERSION": 1,
-  "PUBLISHABLE_POOL_GENERATED_AT": "2026-06-12T20:29:23.514385Z",
+  "PUBLISHABLE_POOL_GENERATED_AT": "2026-06-12T20:58:12.120576Z",
   "fast_publish": {
     "new_articles_published": 8,
-    "prev_pool_total": 16370,
+    "prev_pool_total": 16374,
     "publishable_pool_total": 16374
   }
 }
