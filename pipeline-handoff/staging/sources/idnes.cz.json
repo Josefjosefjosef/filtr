@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-12T20:46:57.397723Z",
+  "ingestedAt": "2026-06-12T21:29:41.458957Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Dohoda s USA počítá s ukončením americké blokády Íránu, zní z Teheránu",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/dohoda-s-usa-pocita-s-ukoncenim-americke-blokady-iranu-rekl-arakci.A260612_223507_zahranicni_iluj",
+      "dt": "2026-06-12T20:55:29Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "americké",
+        "blokády",
+        "dohoda",
+        "počítá",
+        "teheránu",
+        "ukončením",
+        "usa",
+        "zní",
+        "íránu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SAE vyplatily Íránu tři miliardy dolarů. Na oplátku má přestat útočit na jejich území",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/sau-iran-dolary-miliarda-vyplaceni.A260612_223538_zahranicni_votr",
+      "dt": "2026-06-12T20:50:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "dolarů",
+        "jejich",
+        "miliardy",
+        "oplátku",
+        "přestat",
+        "sae",
+        "tři",
+        "vyplatily",
+        "íránu",
+        "útočit",
+        "území"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -20,32 +74,6 @@
         "spacex",
         "vystřelily",
         "vzhůru"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dohoda s USA počítá s ukončením americké blokády Íránu, zní z Teheránu",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/dohoda-s-usa-pocita-s-ukoncenim-americke-blokady-iranu-rekl-arakci.A260612_223507_zahranicni_iluj",
-      "dt": "2026-06-12T20:38:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "americké",
-        "blokády",
-        "dohoda",
-        "počítá",
-        "teheránu",
-        "ukončením",
-        "usa",
-        "zní",
-        "íránu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -770,32 +798,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vítej zpátky, po půl století. Trolejbus otestoval elektrifikovanou trať na Strahov",
-      "url": "https://www.idnes.cz/praha/zpravy/trolejbus-trat-strahov-doprava-praha.A260612_123008_praha-zpravy_bur",
-      "dt": "2026-06-12T13:33:56Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "elektrifikovanou",
-        "otestoval",
-        "půl",
-        "století",
-        "strahov",
-        "trať",
-        "trolejbus",
-        "vítej",
-        "zpátky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -806,7 +808,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50575,
+      "bytes": 50361,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -843,11 +845,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-12T20:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-12T20:55:29Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 3,
           "zpravy": 23,
+          "finance": 3,
           "other": 3,
           "sport": 1
         },
@@ -862,12 +864,16 @@
         },
         "sample_titles": [
           {
-            "title": "Akcie SpaceX vystřelily vzhůru, z Muska je první dolarový bilionář",
-            "publishedAt": "2026-06-12T20:43:00Z"
+            "title": "Dohoda s USA počítá s ukončením americké blokády Íránu, zní z Teheránu",
+            "publishedAt": "2026-06-12T20:55:29Z"
           },
           {
-            "title": "Dohoda s USA počítá s ukončením americké blokády Íránu, zní z Teheránu",
-            "publishedAt": "2026-06-12T20:38:00Z"
+            "title": "SAE vyplatily Íránu tři miliardy dolarů. Na oplátku má přestat útočit na jejich území",
+            "publishedAt": "2026-06-12T20:50:00Z"
+          },
+          {
+            "title": "Akcie SpaceX vystřelily vzhůru, z Muska je první dolarový bilionář",
+            "publishedAt": "2026-06-12T20:43:00Z"
           },
           {
             "title": "EU se shodla na přístupových jednáních pro Ukrajinu a Moldavsko, začnou v pondělí",
@@ -888,10 +894,6 @@
           {
             "title": "Střelec v Texasu zabil jednoho člověka a dalších devět zranil. Unikal několik hodin",
             "publishedAt": "2026-06-12T18:24:00Z"
-          },
-          {
-            "title": "Nová připomínka slavného seriálu v Brně. Po hrdinovi z Návštěvníků pojmenovali most",
-            "publishedAt": "2026-06-12T18:06:00Z"
           }
         ]
       }
