@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-06-12T06:00:55.302130Z",
+  "ingestedAt": "2026-06-12T06:40:33.016529Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Studio Display bez jablka a za méně peněz. Otestovali jsme BenQ MA270S, 5K monitor šitý na míru macbookům",
+      "url": "https://tech.hn.cz/c1-67890370-studio-display-bez-jablka-a-za-mene-penez-otestovali-jsme-benq-ma270s-5k-monitor-sity-na-miru-macbookum",
+      "dt": "2026-06-12T05:13:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN",
+      "tokens": [
+        "benq",
+        "display",
+        "jablka",
+        "jsme",
+        "ma270s",
+        "macbookům",
+        "monitor",
+        "míru",
+        "otestovali",
+        "peněz",
+        "studio",
+        "šitý"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1123,31 +1152,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Energetická bouře na obzoru. Máme proplout, anebo se vrátit na břeh?",
-      "url": "https://archiv.hn.cz/c1-67886400-energeticka-boure-na-obzoru-mame-proplout-anebo-se-vratit-na-breh",
-      "dt": "2026-06-11T07:58:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN",
-      "tokens": [
-        "anebo",
-        "bouře",
-        "břeh",
-        "energetická",
-        "máme",
-        "obzoru",
-        "proplout",
-        "vrátit"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1158,7 +1162,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185614,
+      "bytes": 185604,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1195,12 +1199,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-12T04:49:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-12T05:13:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
+          "zpravy": 4,
           "sport": 3,
-          "finance": 33,
-          "zpravy": 4
+          "finance": 33
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1212,6 +1216,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Studio Display bez jablka a za méně peněz. Otestovali jsme BenQ MA270S, 5K monitor šitý na míru macbookům",
+            "publishedAt": "2026-06-12T05:13:00Z"
+          },
           {
             "title": "Čeští fotbalisté neudrželi vedení a do mistrovství světa vstoupili porážkou 1:2 s Koreou",
             "publishedAt": "2026-06-12T04:49:00Z"
@@ -1238,10 +1246,6 @@
           },
           {
             "title": "Týden s technologiemi: Apple se Siri AI kouzlí, i když jen dohání konkurenci. Evropany však stále drží jako rukojmí",
-            "publishedAt": "2026-06-11T22:00:00Z"
-          },
-          {
-            "title": "Válka je děsivý urychlovač technologického vývoje. Rolí investorů je přeměnit krizí vynucené inovace na&nbsp;udržitelné firmy",
             "publishedAt": "2026-06-11T22:00:00Z"
           }
         ]
