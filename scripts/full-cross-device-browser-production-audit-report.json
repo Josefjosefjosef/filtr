@@ -1,8 +1,9 @@
 {
   "audit": "full-cross-device-browser-production-audit",
-  "version": 1,
-  "startedAt": "2026-06-12T00:50:27.552Z",
-  "finishedAt": "2026-06-12T00:58:56.625Z",
+  "version": 2,
+  "harness": "audit-hardening-v1",
+  "startedAt": "2026-06-12T09:19:52.657Z",
+  "finishedAt": "2026-06-12T09:25:37.162Z",
   "targetUrl": "https://infouzel.cz/projects/",
   "alsoVerified": [
     "https://infouzel.cz/",
@@ -16,11 +17,55 @@
   ],
   "notes": [
     "AUDIT ONLY — no production changes",
-    "Playwright headless; network unthrottled"
+    "Playwright headless; network unthrottled",
+    "V2 harness: overlay_is_open, AUDIT_FAILURE vs PRODUCT_FAILURE, replay guards"
   ],
+  "replayGuards": {
+    "zasilky": {
+      "pass": true,
+      "clickPath": "click+openFn",
+      "overlay": {
+        "open": true,
+        "selector": "#iuParcelsPopover"
+      },
+      "classification": "PASS"
+    },
+    "kalendar": {
+      "pass": true,
+      "clickPath": "click",
+      "overlay": {
+        "open": true,
+        "selector": "#iuParcelsPopover"
+      },
+      "classification": "PASS"
+    },
+    "ukoly": {
+      "pass": true,
+      "clickPath": "click",
+      "overlay": {
+        "open": true,
+        "selector": "#iuParcelsPopover"
+      },
+      "classification": "PASS"
+    },
+    "poznamky": {
+      "pass": true,
+      "clickPath": "click",
+      "overlay": {
+        "open": true,
+        "selector": "#iuParcelsPopover"
+      },
+      "classification": "PASS"
+    },
+    "pocasi": {
+      "pass": true,
+      "section": "pocasi",
+      "classification": "PASS"
+    }
+  },
   "repo": {
-    "branch": "fix/pwa-icons",
-    "commit": "c8b9e6fe490aff8d2914e1d613c1b040e1464ca6"
+    "branch": "chore/harden-cross-device-audit-harness",
+    "commit": "760ce45bd3ae935be5fb8c6ef4442241d83d2b8e"
   },
   "testMatrix": {
     "desktop": [
@@ -73,7 +118,7 @@
       "status": 200,
       "ok": true,
       "contentType": "application/json; charset=utf-8",
-      "bodyPreview": "{\n  \"name\": \"infoUzel.cz\",\n  \"short_name\": \"infoUzel\",\n  \"start_url\": \"/projects/\",\n  \"display\": \"standalone\",\n  \"theme_color\": \"#1f4b99\",\n  \"background_color\": \"#ffffff\",\n  \"icons\": []\n}\n"
+      "bodyPreview": "{\n  \"name\": \"infoUzel.cz\",\n  \"short_name\": \"infoUzel\",\n  \"start_url\": \"/projects/\",\n  \"scope\": \"/projects/\",\n  \"display\": \"standalone\",\n  \"theme_color\": \"#1f4b99\",\n  \"background_color\": \"#ffffff\",\n  \"icons\": [\n    {\n      \"src\": \"/projects/icons/icon-192.png\",\n      \"sizes\": \"192x192\",\n      \"type\": \"image/png\",\n      \"purpose\": \"any maskable\"\n    },\n    {\n      \"src\": \"/projects/icons/icon-512.png\",\n      \"sizes\": \"512x512\",\n      \"type\": \"image/png\",\n      \"purpose\": \"any maskable\"\n    }\n  ]\n}"
     },
     "sw_root": {
       "url": "https://infouzel.cz/sw.js",
@@ -111,20 +156,20 @@
         "engine": "chromium",
         "navError": null,
         "metrics": {
-          "domContentLoadedMs": 3811,
-          "loadEventMs": 3813,
-          "fcpMs": 3120,
-          "lcpMs": 4472,
-          "cls": 0.203,
-          "tbtMs": 333,
-          "longTaskCount": 6
+          "domContentLoadedMs": 630,
+          "loadEventMs": 637,
+          "fcpMs": 416,
+          "lcpMs": 1172,
+          "cls": 0.149,
+          "tbtMs": 139,
+          "longTaskCount": 5
         },
         "requests": {
-          "total": 70,
-          "totalTransferKB": 2479.2,
-          "jsKB": 701.7,
-          "cssKB": 135.6,
-          "imageKB": 1475.7,
+          "total": 66,
+          "totalTransferKB": 2406.5,
+          "jsKB": 701.6,
+          "cssKB": 135.7,
+          "imageKB": 1423.8,
           "documentKB": 87.8
         },
         "layout": {
@@ -137,7 +182,7 @@
           "section": "feed",
           "articleCards": 1,
           "articleTitlesSample": [
-            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům"
+            "Zprávy\n                                      před 13 min.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      Mladí hackeři obchodovali s citlivými daty. Francouzi zadrželi sedm podezřelých"
           ],
           "images": 18,
           "lazyImages": 9
@@ -161,20 +206,20 @@
         "engine": "chromium",
         "navError": null,
         "metrics": {
-          "domContentLoadedMs": 19552,
-          "loadEventMs": 19555,
-          "fcpMs": 19164,
-          "lcpMs": 20212,
+          "domContentLoadedMs": 609,
+          "loadEventMs": 613,
+          "fcpMs": 344,
+          "lcpMs": 1180,
           "cls": 0.097,
-          "tbtMs": 310,
-          "longTaskCount": 9
+          "tbtMs": 155,
+          "longTaskCount": 6
         },
         "requests": {
-          "total": 70,
-          "totalTransferKB": 2571.6,
+          "total": 66,
+          "totalTransferKB": 2406.9,
           "jsKB": 701.4,
-          "cssKB": 227.4,
-          "imageKB": 1476.2,
+          "cssKB": 135.7,
+          "imageKB": 1424.2,
           "documentKB": 87.8
         },
         "layout": {
@@ -187,7 +232,7 @@
           "section": "feed",
           "articleCards": 1,
           "articleTitlesSample": [
-            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům"
+            "Zprávy\n                                      před 14 min.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      Mladí hackeři obchodovali s citlivými daty. Francouzi zadrželi sedm podezřelých"
           ],
           "images": 18,
           "lazyImages": 9
@@ -211,20 +256,20 @@
         "engine": "firefox",
         "navError": null,
         "metrics": {
-          "domContentLoadedMs": 1972,
-          "loadEventMs": 1973,
-          "fcpMs": 848,
-          "lcpMs": 2768,
+          "domContentLoadedMs": 1466,
+          "loadEventMs": 1467,
+          "fcpMs": 698,
+          "lcpMs": 2127,
           "cls": 0,
           "tbtMs": 0,
           "longTaskCount": 0
         },
         "requests": {
-          "total": 73,
-          "totalTransferKB": 4040.8,
+          "total": 69,
+          "totalTransferKB": 3949,
           "jsKB": 686.6,
-          "cssKB": 126.7,
-          "imageKB": 3077.7,
+          "cssKB": 126.8,
+          "imageKB": 3006.8,
           "documentKB": 86.9
         },
         "layout": {
@@ -237,7 +282,7 @@
           "section": "feed",
           "articleCards": 1,
           "articleTitlesSample": [
-            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům"
+            "Zprávy\n                                      před 14 min.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      Mladí hackeři obchodovali s citlivými daty. Francouzi zadrželi sedm podezřelých"
           ],
           "images": 18,
           "lazyImages": 9
@@ -261,20 +306,20 @@
         "engine": "webkit",
         "navError": null,
         "metrics": {
-          "domContentLoadedMs": 742,
-          "loadEventMs": 743,
-          "fcpMs": 423,
-          "lcpMs": 4739,
+          "domContentLoadedMs": 967,
+          "loadEventMs": 967,
+          "fcpMs": 568,
+          "lcpMs": 1885,
           "cls": 0,
           "tbtMs": 0,
           "longTaskCount": 0
         },
         "requests": {
-          "total": 74,
-          "totalTransferKB": 4037.6,
+          "total": 69,
+          "totalTransferKB": 3944,
           "jsKB": 686.5,
-          "cssKB": 126.7,
-          "imageKB": 3079.9,
+          "cssKB": 126.8,
+          "imageKB": 3007.2,
           "documentKB": 81.4
         },
         "layout": {
@@ -287,7 +332,7 @@
           "section": "feed",
           "articleCards": 1,
           "articleTitlesSample": [
-            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům"
+            "Zprávy\n                                      před 14 min.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      Mladí hackeři obchodovali s citlivými daty. Francouzi zadrželi sedm podezřelých"
           ],
           "images": 18,
           "lazyImages": 9
@@ -311,19 +356,19 @@
         "engine": "chromium",
         "navError": null,
         "metrics": {
-          "domContentLoadedMs": 981,
-          "loadEventMs": 985,
-          "fcpMs": 592,
-          "lcpMs": 652,
+          "domContentLoadedMs": 583,
+          "loadEventMs": 590,
+          "fcpMs": 452,
+          "lcpMs": 452,
           "cls": 0.002,
-          "tbtMs": 216,
-          "longTaskCount": 4
+          "tbtMs": 149,
+          "longTaskCount": 2
         },
         "requests": {
-          "total": 60,
-          "totalTransferKB": 1336.4,
-          "jsKB": 701.5,
-          "cssKB": 135.6,
+          "total": 61,
+          "totalTransferKB": 1319,
+          "jsKB": 701.6,
+          "cssKB": 135.7,
           "imageKB": 336.4,
           "documentKB": 87.8
         },
@@ -337,7 +382,7 @@
           "section": "feed",
           "articleCards": 1,
           "articleTitlesSample": [
-            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům\n                                      Rozhovor s Jakubem Čechem"
+            "Zprávy\n                                      před 14 min.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      Mladí hackeři obchodovali s citlivými daty. Francouzi zadrželi sedm podezřelých\n                                      Na bezpečnost na Slavii bude dohlížet exšéf policejní ochranné služby Komorous"
           ],
           "images": 18,
           "lazyImages": 9
@@ -361,19 +406,19 @@
         "engine": "webkit",
         "navError": null,
         "metrics": {
-          "domContentLoadedMs": 852,
-          "loadEventMs": 875,
-          "fcpMs": 592,
-          "lcpMs": 1513,
+          "domContentLoadedMs": 708,
+          "loadEventMs": 722,
+          "fcpMs": 422,
+          "lcpMs": 1015,
           "cls": 0,
           "tbtMs": 0,
           "longTaskCount": 0
         },
         "requests": {
           "total": 65,
-          "totalTransferKB": 2887.7,
+          "totalTransferKB": 2866.9,
           "jsKB": 686.5,
-          "cssKB": 126.7,
+          "cssKB": 126.8,
           "imageKB": 1928.7,
           "documentKB": 81.4
         },
@@ -387,7 +432,7 @@
           "section": "feed",
           "articleCards": 1,
           "articleTitlesSample": [
-            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům\n                                      Rozhovor s Jakubem Čechem"
+            "Zprávy\n                                      před 14 min.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      Mladí hackeři obchodovali s citlivými daty. Francouzi zadrželi sedm podezřelých\n                                      Na bezpečnost na Slavii bude dohlížet exšéf policejní ochranné služby Komorous"
           ],
           "images": 18,
           "lazyImages": 9
@@ -411,21 +456,21 @@
         "engine": "chromium",
         "navError": null,
         "metrics": {
-          "domContentLoadedMs": 629,
-          "loadEventMs": 636,
-          "fcpMs": 472,
-          "lcpMs": 472,
-          "cls": 0.002,
-          "tbtMs": 136,
-          "longTaskCount": 2
+          "domContentLoadedMs": 661,
+          "loadEventMs": 15582,
+          "fcpMs": 440,
+          "lcpMs": 500,
+          "cls": 0.003,
+          "tbtMs": 121,
+          "longTaskCount": 3
         },
         "requests": {
           "total": 61,
-          "totalTransferKB": 1340,
-          "jsKB": 701.5,
-          "cssKB": 135.7,
-          "imageKB": 336.5,
-          "documentKB": 87.8
+          "totalTransferKB": 1380.8,
+          "jsKB": 701.3,
+          "cssKB": 136.4,
+          "imageKB": 397.7,
+          "documentKB": 88
         },
         "layout": {
           "overflowX": false,
@@ -437,7 +482,7 @@
           "section": "feed",
           "articleCards": 1,
           "articleTitlesSample": [
-            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům\n                                      Rozhovor s Jakubem Čechem"
+            "Zprávy\n                                      před 14 min.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      Mladí hackeři obchodovali s citlivými daty. Francouzi zadrželi sedm podezřelých\n                                      Na bezpečnost na Slavii bude dohlížet exšéf policejní ochranné služby Komorous"
           ],
           "images": 18,
           "lazyImages": 9
@@ -461,21 +506,21 @@
         "engine": "chromium",
         "navError": null,
         "metrics": {
-          "domContentLoadedMs": 698,
-          "loadEventMs": 706,
-          "fcpMs": 584,
-          "lcpMs": 1156,
+          "domContentLoadedMs": 823,
+          "loadEventMs": 829,
+          "fcpMs": 612,
+          "lcpMs": 1236,
           "cls": 0,
-          "tbtMs": 327,
-          "longTaskCount": 7
+          "tbtMs": 201,
+          "longTaskCount": 5
         },
         "requests": {
-          "total": 67,
-          "totalTransferKB": 1784.9,
-          "jsKB": 701.7,
-          "cssKB": 136.3,
-          "imageKB": 780.3,
-          "documentKB": 87.7
+          "total": 63,
+          "totalTransferKB": 1712,
+          "jsKB": 701.3,
+          "cssKB": 136.4,
+          "imageKB": 729,
+          "documentKB": 87.8
         },
         "layout": {
           "overflowX": false,
@@ -487,7 +532,7 @@
           "section": "feed",
           "articleCards": 1,
           "articleTitlesSample": [
-            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům\n                                      Rozhovor s Jakubem Čechem"
+            "Zprávy\n                                      před 15 min.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      Mladí hackeři obchodovali s citlivými daty. Francouzi zadrželi sedm podezřelých\n                                      Na bezpečnost na Slavii bude dohlížet exšéf policejní ochranné služby Komorous"
           ],
           "images": 18,
           "lazyImages": 9
@@ -511,20 +556,20 @@
         "engine": "chromium",
         "navError": null,
         "metrics": {
-          "domContentLoadedMs": 1128,
-          "loadEventMs": 1137,
-          "fcpMs": 796,
-          "lcpMs": 796,
-          "cls": 0.045,
-          "tbtMs": 603,
-          "longTaskCount": 8
+          "domContentLoadedMs": 659,
+          "loadEventMs": 669,
+          "fcpMs": 492,
+          "lcpMs": 1008,
+          "cls": 0.059,
+          "tbtMs": 169,
+          "longTaskCount": 4
         },
         "requests": {
-          "total": 62,
-          "totalTransferKB": 1359.9,
-          "jsKB": 702.1,
-          "cssKB": 135.8,
-          "imageKB": 355.6,
+          "total": 61,
+          "totalTransferKB": 1319.8,
+          "jsKB": 701.2,
+          "cssKB": 136.4,
+          "imageKB": 337.2,
           "documentKB": 87.8
         },
         "layout": {
@@ -537,7 +582,7 @@
           "section": "feed",
           "articleCards": 1,
           "articleTitlesSample": [
-            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům\n                                      Rozhovor s Jakubem Čechem"
+            "Zprávy\n                                      před 15 min.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      Mladí hackeři obchodovali s citlivými daty. Francouzi zadrželi sedm podezřelých\n                                      Na bezpečnost na Slavii bude dohlížet exšéf policejní ochranné služby Komorous"
           ],
           "images": 18,
           "lazyImages": 9
@@ -561,20 +606,20 @@
         "engine": "webkit",
         "navError": null,
         "metrics": {
-          "domContentLoadedMs": 636,
-          "loadEventMs": 7956,
-          "fcpMs": 348,
-          "lcpMs": 8900,
+          "domContentLoadedMs": 651,
+          "loadEventMs": 666,
+          "fcpMs": 369,
+          "lcpMs": 4430,
           "cls": 0,
           "tbtMs": 0,
           "longTaskCount": 0
         },
         "requests": {
-          "total": 73,
-          "totalTransferKB": 3566.6,
+          "total": 68,
+          "totalTransferKB": 3464.5,
           "jsKB": 686.5,
-          "cssKB": 126.7,
-          "imageKB": 2608.9,
+          "cssKB": 126.8,
+          "imageKB": 2526.3,
           "documentKB": 81.4
         },
         "layout": {
@@ -587,7 +632,7 @@
           "section": "feed",
           "articleCards": 1,
           "articleTitlesSample": [
-            "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům\n                                      Rozhovor s Jakubem Čechem"
+            "Zprávy\n                                      před 15 min.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      Mladí hackeři obchodovali s citlivými daty. Francouzi zadrželi sedm podezřelých\n                                      Na bezpečnost na Slavii bude dohlížet exšéf policejní ochranné služby Komorous"
           ],
           "images": 18,
           "lazyImages": 9
@@ -620,10 +665,12 @@
             "label": "Hlavní stránka",
             "click_success": true,
             "view_changed": true,
-            "url_or_state_correct": false,
+            "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "feed",
@@ -635,7 +682,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=media"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "zpravy",
@@ -643,9 +691,11 @@
             "click_success": true,
             "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "feed",
@@ -657,7 +707,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=feed&topic=zpravy"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "sport",
@@ -665,9 +716,11 @@
             "click_success": true,
             "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "feed",
@@ -679,7 +732,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=feed&topic=sport"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "finance",
@@ -687,9 +741,11 @@
             "click_success": true,
             "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "feed",
@@ -701,7 +757,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=feed&topic=finance"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "zdravi",
@@ -709,9 +766,11 @@
             "click_success": true,
             "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "feed",
@@ -723,7 +782,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=feed&topic=zdravi"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "vzdelavani",
@@ -731,9 +791,11 @@
             "click_success": true,
             "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "feed",
@@ -745,7 +807,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=vzdelavani"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "veda",
@@ -753,9 +816,11 @@
             "click_success": true,
             "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "vzdelavani",
@@ -767,7 +832,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=veda"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "kultura",
@@ -775,9 +841,11 @@
             "click_success": true,
             "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "veda",
@@ -789,7 +857,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=kultura"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "hry",
@@ -797,9 +866,11 @@
             "click_success": true,
             "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "kultura",
@@ -811,7 +882,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=hry"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "travel",
@@ -819,9 +891,11 @@
             "click_success": true,
             "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "hry",
@@ -833,7 +907,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=travel&mode=guide"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "tvprogram",
@@ -841,9 +916,11 @@
             "click_success": true,
             "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "travel",
@@ -855,7 +932,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=tvprogram"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "radio",
@@ -863,9 +941,11 @@
             "click_success": true,
             "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "tvprogram",
@@ -877,7 +957,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=radio"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "mapy",
@@ -885,9 +966,11 @@
             "click_success": true,
             "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "radio",
@@ -899,7 +982,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=mapy"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "jr",
@@ -907,9 +991,11 @@
             "click_success": true,
             "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "mapy",
@@ -921,7 +1007,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=jr"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "pocasi",
@@ -929,9 +1016,11 @@
             "click_success": true,
             "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "jr",
@@ -943,7 +1032,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=pocasi"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "fincalc",
@@ -951,9 +1041,11 @@
             "click_success": true,
             "view_changed": false,
             "url_or_state_correct": true,
+            "overlay_open": true,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "pocasi",
@@ -965,7 +1057,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=pocasi"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "zasilky",
@@ -973,9 +1066,11 @@
             "click_success": true,
             "view_changed": false,
             "url_or_state_correct": true,
+            "overlay_open": true,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "pocasi",
@@ -987,7 +1082,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=pocasi"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "kalendar",
@@ -995,9 +1091,11 @@
             "click_success": true,
             "view_changed": false,
             "url_or_state_correct": true,
+            "overlay_open": true,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "pocasi",
@@ -1009,7 +1107,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=pocasi"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "ukoly",
@@ -1017,9 +1116,11 @@
             "click_success": true,
             "view_changed": false,
             "url_or_state_correct": true,
+            "overlay_open": true,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "pocasi",
@@ -1031,7 +1132,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=pocasi"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "poznamky",
@@ -1039,9 +1141,11 @@
             "click_success": true,
             "view_changed": false,
             "url_or_state_correct": true,
+            "overlay_open": true,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "pocasi",
@@ -1053,7 +1157,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=pocasi"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "info_centrum",
@@ -1061,9 +1166,11 @@
             "click_success": true,
             "view_changed": false,
             "url_or_state_correct": true,
+            "overlay_open": false,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "pocasi",
@@ -1075,7 +1182,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=pocasi"
-            }
+            },
+            "failure_type": "PRODUCT_FAILURE"
           },
           {
             "id": "silver_panel",
@@ -1083,9 +1191,11 @@
             "click_success": true,
             "view_changed": false,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "pocasi",
@@ -1097,7 +1207,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=pocasi"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "menu_overlay",
@@ -1105,9 +1216,11 @@
             "click_success": true,
             "view_changed": false,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "pocasi",
@@ -1119,7 +1232,8 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=pocasi"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "menu_repeat",
@@ -1127,9 +1241,11 @@
             "click_success": true,
             "view_changed": false,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "pocasi",
@@ -1141,7 +1257,36 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/?section=pocasi"
-            }
+            },
+            "failure_type": "PASS"
+          }
+        ],
+        "auditFailures": [],
+        "productFailures": [
+          {
+            "id": "info_centrum",
+            "label": "Info centrum",
+            "click_success": true,
+            "view_changed": false,
+            "url_or_state_correct": true,
+            "overlay_open": false,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "harness_degraded": false,
+            "errors": [],
+            "before": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=pocasi"
+            },
+            "failure_type": "PRODUCT_FAILURE"
           }
         ],
         "errorsCollected": []
@@ -1155,10 +1300,12 @@
             "label": "Hlavní stránka",
             "click_success": true,
             "view_changed": false,
-            "url_or_state_correct": false,
-            "back_button_ok": true,
+            "url_or_state_correct": true,
+            "overlay_open": null,
+            "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [],
             "before": {
               "section": "feed",
@@ -1170,487 +1317,576 @@
               "topic": "",
               "cards": 1,
               "url": "https://infouzel.cz/projects/"
-            }
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "zpravy",
             "label": "Zprávy",
-            "click_success": false,
-            "view_changed": false,
-            "url_or_state_correct": false,
-            "back_button_ok": null,
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "overlay_open": null,
+            "back_button_ok": true,
             "scroll_ok": true,
             "layout_ok": true,
-            "errors": [
-              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"zpravy\"], .iu-leftNavItem[data-rail=\"zpravy\"]').first()\n"
-            ],
+            "harness_degraded": false,
+            "errors": [],
             "before": {
-              "section": "",
+              "section": "feed",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "feed",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=feed&topic=zpravy"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "sport",
             "label": "Sport",
-            "click_success": false,
-            "view_changed": false,
-            "url_or_state_correct": false,
-            "back_button_ok": null,
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "overlay_open": null,
+            "back_button_ok": true,
             "scroll_ok": true,
             "layout_ok": true,
-            "errors": [
-              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"sport\"], .iu-leftNavItem[data-rail=\"sport\"]').first()\n"
-            ],
+            "harness_degraded": false,
+            "errors": [],
             "before": {
-              "section": "",
+              "section": "feed",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "feed",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=feed&topic=sport"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "finance",
             "label": "Finance",
-            "click_success": false,
-            "view_changed": false,
-            "url_or_state_correct": false,
-            "back_button_ok": null,
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "overlay_open": null,
+            "back_button_ok": true,
             "scroll_ok": true,
             "layout_ok": true,
-            "errors": [
-              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"finance\"], .iu-leftNavItem[data-rail=\"finance\"]').first()\n"
-            ],
+            "harness_degraded": false,
+            "errors": [],
             "before": {
-              "section": "",
+              "section": "feed",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "feed",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=feed&topic=finance"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "zdravi",
             "label": "Zdraví",
-            "click_success": false,
-            "view_changed": false,
-            "url_or_state_correct": false,
-            "back_button_ok": null,
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "overlay_open": null,
+            "back_button_ok": true,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"zdravi\"], .iu-leftNavItem[data-rail=\"zdravi\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "feed",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "feed",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/#iu-nav"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "vzdelavani",
             "label": "Vzdělávání",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
-            "back_button_ok": null,
+            "overlay_open": null,
+            "back_button_ok": true,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"vzdelavani\"], .iu-leftNavItem[data-rail=\"vzdelavani\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "feed",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "vzdelavani",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=vzdelavani"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "veda",
             "label": "Věda",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
-            "back_button_ok": null,
+            "overlay_open": null,
+            "back_button_ok": true,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"veda\"], .iu-leftNavItem[data-rail=\"veda\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "vzdelavani",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "veda",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=veda"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "kultura",
             "label": "Kultura",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
-            "back_button_ok": null,
+            "overlay_open": null,
+            "back_button_ok": true,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"kultura\"], .iu-leftNavItem[data-rail=\"kultura\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "veda",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "kultura",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=kultura"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "hry",
             "label": "Hry",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
-            "back_button_ok": null,
+            "overlay_open": null,
+            "back_button_ok": true,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"hry\"], .iu-leftNavItem[data-rail=\"hry\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "kultura",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "hry",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=hry"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "travel",
             "label": "Cestování",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
-            "back_button_ok": null,
+            "overlay_open": null,
+            "back_button_ok": true,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"travel\"], .iu-leftNavItem[data-rail=\"travel\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "hry",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "hry",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/#iu-mindmenu"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "tvprogram",
             "label": "TV program",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
-            "back_button_ok": null,
+            "overlay_open": null,
+            "back_button_ok": true,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"tvprogram\"], .iu-leftNavItem[data-rail=\"tvprogram\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "hry",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "tvprogram",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=tvprogram"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "radio",
             "label": "Rádio",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
-            "back_button_ok": null,
+            "overlay_open": null,
+            "back_button_ok": true,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"radio\"], .iu-leftNavItem[data-rail=\"radio\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "tvprogram",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "radio",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=radio"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "mapy",
             "label": "Mapy",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
-            "back_button_ok": null,
+            "overlay_open": null,
+            "back_button_ok": true,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"maps\"], .iu-leftNavItem[data-rail=\"maps\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "radio",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "mapy",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=mapy"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "jr",
             "label": "Jízdní řády",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
-            "back_button_ok": null,
+            "overlay_open": null,
+            "back_button_ok": true,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"jr\"], .iu-leftNavItem[data-rail=\"jr\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "mapy",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "jr",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=jr"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "pocasi",
             "label": "Počasí",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
-            "back_button_ok": null,
+            "overlay_open": null,
+            "back_button_ok": true,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"weather\"], .iu-leftNavItem[data-rail=\"weather\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "jr",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/?section=pocasi"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "fincalc",
             "label": "Finance kalkulačky",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": false,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('[data-iu-bottom-nav=\"mindmenu\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/#iu-mindmenu"
+            },
+            "failure_type": "PRODUCT_FAILURE"
           },
           {
             "id": "zasilky",
             "label": "Zásilky",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": true,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('[data-iu-bottom-nav=\"mindmenu\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/#iu-mindmenu"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "kalendar",
             "label": "Kalendář",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": true,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('[data-iu-bottom-nav=\"mindmenu\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/#iu-mindmenu"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "ukoly",
             "label": "Úkoly",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": true,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('[data-iu-bottom-nav=\"mindmenu\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/#iu-mindmenu"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "poznamky",
             "label": "Poznámky",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": true,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('[data-iu-bottom-nav=\"mindmenu\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/#iu-mindmenu"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "info_centrum",
             "label": "Info centrum",
-            "click_success": false,
-            "view_changed": false,
+            "click_success": true,
+            "view_changed": true,
             "url_or_state_correct": true,
+            "overlay_open": true,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
+            "harness_degraded": false,
             "errors": [
-              "locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('[data-iu-bottom-nav=\"mindmenu\"]').first()\n"
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
             ],
             "before": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/#iu-mindmenu"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "silver_panel",
@@ -1658,21 +1894,28 @@
             "click_success": true,
             "view_changed": false,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
-            "errors": [],
+            "harness_degraded": false,
+            "errors": [
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
+            ],
             "before": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/#iu-mindmenu"
+            },
+            "failure_type": "PASS"
           },
           {
             "id": "menu_overlay",
@@ -1680,21 +1923,28 @@
             "click_success": true,
             "view_changed": false,
             "url_or_state_correct": false,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
-            "errors": [],
+            "harness_degraded": false,
+            "errors": [
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
+            ],
             "before": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/#iu-mindmenu"
+            },
+            "failure_type": "PRODUCT_FAILURE"
           },
           {
             "id": "menu_repeat",
@@ -1702,31 +1952,105 @@
             "click_success": true,
             "view_changed": false,
             "url_or_state_correct": true,
+            "overlay_open": null,
             "back_button_ok": null,
             "scroll_ok": true,
             "layout_ok": true,
-            "errors": [],
+            "harness_degraded": false,
+            "errors": [
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
+            ],
             "before": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0
+              "cards": 1
             },
             "after": {
-              "section": "",
+              "section": "pocasi",
               "topic": "",
-              "cards": 0,
-              "url": "about:blank"
-            }
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/#iu-mindmenu"
+            },
+            "failure_type": "PASS"
           }
         ],
-        "errorsCollected": []
+        "auditFailures": [],
+        "productFailures": [
+          {
+            "id": "fincalc",
+            "label": "Finance kalkulačky",
+            "click_success": true,
+            "view_changed": true,
+            "url_or_state_correct": true,
+            "overlay_open": false,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "harness_degraded": false,
+            "errors": [
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
+            ],
+            "before": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/#iu-mindmenu"
+            },
+            "failure_type": "PRODUCT_FAILURE"
+          },
+          {
+            "id": "menu_overlay",
+            "label": "Menu overlay",
+            "click_success": true,
+            "view_changed": false,
+            "url_or_state_correct": false,
+            "overlay_open": null,
+            "back_button_ok": null,
+            "scroll_ok": true,
+            "layout_ok": true,
+            "harness_degraded": false,
+            "errors": [
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup",
+              "[ERR] Invariant breach: builder returned falsy markup"
+            ],
+            "before": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1
+            },
+            "after": {
+              "section": "pocasi",
+              "topic": "",
+              "cards": 1,
+              "url": "https://infouzel.cz/projects/#iu-mindmenu"
+            },
+            "failure_type": "PRODUCT_FAILURE"
+          }
+        ],
+        "errorsCollected": [
+          "[ERR] Invariant breach: builder returned falsy markup",
+          "[ERR] Invariant breach: builder returned falsy markup",
+          "[ERR] Invariant breach: builder returned falsy markup"
+        ]
       }
     ],
     "summary": {
-      "desktopPass": 23,
+      "desktopPass": 24,
       "desktopTotal": 24,
-      "mobilePass": 2,
-      "mobileTotal": 24
+      "mobilePass": 23,
+      "mobileTotal": 24,
+      "auditFailures": 0,
+      "productFailures": 3
     }
   },
   "dataRefreshAudit": {
@@ -1734,7 +2058,7 @@
       "feedLoaded": true,
       "notEmpty": true,
       "titlesSample": [
-        "Zprávy\n                                      před 1 hod.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      V EU začíná platit migrační pakt, Česko má výjimku kvůli ukrajinským uprchlíkům"
+        "Zprávy\n                                      před 18 min.\n                                    \n                                    \n                                      \n                                    \n                                  \n                                  \n                                    \n                                      \n                                        \n                                        \n                                      \n                                    \n                                    \n                                      Mladí hackeři obchodovali s citlivými daty. Francouzi zadrželi sedm podezřelých"
       ],
       "sourcesVisible": false,
       "imagesLoaded": 1,
@@ -1744,30 +2068,51 @@
       "reloadPreservesData": true
     },
     "weather": {
-      "cardVisible": false,
+      "setup": "OK",
+      "cardVisible": true,
+      "sectionOpen": true,
       "overlayOk": true,
-      "fallback": null
+      "fallback": {
+        "tipVisible": true,
+        "alertVisible": true
+      },
+      "temperature": "11:24"
     },
     "calendar": {
-      "open": false,
-      "close": false,
-      "reopen": false,
+      "open": true,
+      "close": true,
+      "reopen": true,
       "empty": null,
-      "errors": []
+      "errors": [],
+      "setup": "OK"
     },
     "tasks": {
-      "open": false,
+      "open": true,
       "close": false,
       "reopen": false,
       "empty": null,
-      "errors": []
+      "errors": [
+        "locator.click: Timeout 3000ms exceeded.\nCall log:\n  - waiting for locator('#iuTasksOverlay [aria-label=\"Zavřít\"], #iuTasksOverlay .iu-overlay-close, #"
+      ],
+      "setup": "OK"
     },
     "notes": {
-      "open": false,
+      "open": true,
       "close": false,
       "reopen": false,
       "empty": null,
-      "errors": []
+      "errors": [
+        "locator.click: Timeout 3000ms exceeded.\nCall log:\n  - waiting for locator('#iuNotesOverlay [aria-label=\"Zavřít\"], #iuNotesOverlay .iu-overlay-close, #"
+      ],
+      "setup": "OK"
+    },
+    "parcels": {
+      "open": true,
+      "close": true,
+      "reopen": true,
+      "empty": null,
+      "errors": [],
+      "setup": "OK"
     },
     "cache_behavior": {
       "swBlocked": true,
@@ -1783,10 +2128,24 @@
         "name": "infoUzel.cz",
         "short_name": "infoUzel",
         "start_url": "/projects/",
+        "scope": "/projects/",
         "display": "standalone",
         "theme_color": "#1f4b99",
         "background_color": "#ffffff",
-        "icons": []
+        "icons": [
+          {
+            "src": "/projects/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+          },
+          {
+            "src": "/projects/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+          }
+        ]
       },
       "fields": {
         "name": "infoUzel.cz",
@@ -1795,10 +2154,23 @@
         "display": "standalone",
         "theme_color": "#1f4b99",
         "background_color": "#ffffff",
-        "iconCount": 0
+        "iconCount": 2
       }
     },
-    "icons": [],
+    "icons": [
+      {
+        "src": "/projects/icons/icon-192.png",
+        "status": 200,
+        "sizes": "192x192",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "/projects/icons/icon-512.png",
+        "status": 200,
+        "sizes": "512x512",
+        "purpose": "any maskable"
+      }
+    ],
     "favicon": {
       "url": "https://infouzel.cz/favicon.svg",
       "status": 200,
@@ -1807,11 +2179,24 @@
       "bodyPreview": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\"><rect width=\"32\" height=\"32\" rx=\"6\" fill=\"#0B1F33\"/></svg>\n"
     },
     "apple_touch_icon": {
-      "status": 404,
-      "ok": false,
+      "status": 200,
+      "ok": true,
       "url": "https://infouzel.cz/projects/icons/apple-touch-icon.png"
     },
-    "android_icons": [],
+    "android_icons": [
+      {
+        "src": "/projects/icons/icon-192.png",
+        "status": 200,
+        "sizes": "192x192",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "/projects/icons/icon-512.png",
+        "status": 200,
+        "sizes": "512x512",
+        "purpose": "any maskable"
+      }
+    ],
     "service_worker": {
       "sw_root": {
         "url": "https://infouzel.cz/sw.js",
@@ -1825,7 +2210,10 @@
         "registered": true,
         "controller": true,
         "scriptURL": "https://infouzel.cz/sw.js",
-        "caches": []
+        "caches": [
+          "iu-data-2026-06-11-sw-first-install-no-reload-v1",
+          "iu-data-meta-2026-06-11-sw-first-install-no-reload-v1"
+        ]
       },
       "consoleEvents": []
     },
@@ -1838,7 +2226,10 @@
       "note": "Manual reload only in this probe; deploy update reload requires version bump simulation"
     },
     "cache": {
-      "cacheNames": [],
+      "cacheNames": [
+        "iu-data-2026-06-11-sw-first-install-no-reload-v1",
+        "iu-data-meta-2026-06-11-sw-first-install-no-reload-v1"
+      ],
       "versionMeta": "desktop-header-height-compression-20260607",
       "versionJson": {
         "version": "desktop-header-height-compression-20260607",
@@ -2027,377 +2418,152 @@
     },
     {
       "id": "IU-AUDIT-002",
-      "title": "PWA manifest has empty icons array",
-      "severity": "P0",
-      "device": "mobile",
-      "browser": "all",
-      "repro_steps": "Open /projects/manifest.json",
-      "evidence": {
-        "name": "infoUzel.cz",
-        "short_name": "infoUzel",
-        "start_url": "/projects/",
-        "display": "standalone",
-        "theme_color": "#1f4b99",
-        "background_color": "#ffffff",
-        "iconCount": 0
-      },
-      "impact": "Add-to-home-screen shows generic/missing icon on Android/iOS",
-      "risk": "high",
-      "recommended_fix": "Populate manifest.icons with 192/512 maskable PNGs and verify URLs"
-    },
-    {
-      "id": "IU-AUDIT-003",
       "title": "CLS above 0.1 on Chromium 1366x768",
       "severity": "P2",
       "device": "desktop",
       "browser": "chromium",
       "repro_steps": "Load https://infouzel.cz/projects/ at Chromium 1366x768",
       "evidence": {
-        "cls": 0.203,
-        "lcpMs": 4472
+        "cls": 0.149,
+        "lcpMs": 1172
       },
       "impact": "Visible layout shift hurts UX and Core Web Vitals",
       "risk": "medium",
       "recommended_fix": "Identify shifting elements (hero, bottom nav, images without dimensions)"
     },
     {
-      "id": "IU-AUDIT-004",
-      "title": "LCP > 4s on Chromium 1366x768",
-      "severity": "P1",
-      "device": "desktop",
-      "browser": "chromium",
-      "repro_steps": "Cold load https://infouzel.cz/projects/",
-      "evidence": {
-        "lcpMs": 4472,
-        "fcpMs": 3120
-      },
-      "impact": "Slow first meaningful paint",
-      "risk": "high",
-      "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
-    },
-    {
-      "id": "IU-AUDIT-005",
-      "title": "LCP > 4s on Edge/Chromium 1366x768",
-      "severity": "P1",
-      "device": "desktop",
-      "browser": "chromium",
-      "repro_steps": "Cold load https://infouzel.cz/projects/",
-      "evidence": {
-        "lcpMs": 20212,
-        "fcpMs": 19164
-      },
-      "impact": "Slow first meaningful paint",
-      "risk": "high",
-      "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
-    },
-    {
-      "id": "IU-AUDIT-006",
-      "title": "LCP > 4s on WebKit/Safari 1366x768",
-      "severity": "P1",
-      "device": "desktop",
-      "browser": "webkit",
-      "repro_steps": "Cold load https://infouzel.cz/projects/",
-      "evidence": {
-        "lcpMs": 4739,
-        "fcpMs": 423
-      },
-      "impact": "Slow first meaningful paint",
-      "risk": "high",
-      "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
-    },
-    {
-      "id": "IU-AUDIT-007",
+      "id": "IU-AUDIT-003",
       "title": "LCP > 4s on iPad WebKit 820x1180",
       "severity": "P1",
       "device": "desktop",
       "browser": "webkit",
       "repro_steps": "Cold load https://infouzel.cz/projects/",
       "evidence": {
-        "lcpMs": 8900,
-        "fcpMs": 348
+        "lcpMs": 4430,
+        "fcpMs": 369
       },
       "impact": "Slow first meaningful paint",
       "risk": "high",
       "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
     },
     {
-      "id": "IU-AUDIT-008",
-      "title": "Navigation issue: Hlavní stránka",
+      "id": "IU-AUDIT-004",
+      "title": "Tool overlay not open: Info centrum",
       "severity": "P1",
       "device": "mobile/tablet",
       "browser": "chromium",
-      "repro_steps": "Click Hlavní stránka from bottom nav / menu",
+      "repro_steps": "Open Info centrum from MindMenu / hero quick action",
       "evidence": {
-        "id": "home",
-        "label": "Hlavní stránka",
+        "id": "info_centrum",
+        "label": "Info centrum",
+        "click_success": true,
+        "view_changed": false,
+        "url_or_state_correct": true,
+        "overlay_open": false,
+        "back_button_ok": null,
+        "scroll_ok": true,
+        "layout_ok": true,
+        "harness_degraded": false,
+        "errors": [],
+        "before": {
+          "section": "pocasi",
+          "topic": "",
+          "cards": 1
+        },
+        "after": {
+          "section": "pocasi",
+          "topic": "",
+          "cards": 1,
+          "url": "https://infouzel.cz/projects/?section=pocasi"
+        },
+        "failure_type": "PRODUCT_FAILURE"
+      },
+      "impact": "User cannot reach tool overlay",
+      "risk": "high",
+      "recommended_fix": "Verify overlay mount and open handler for this tool"
+    },
+    {
+      "id": "IU-AUDIT-005",
+      "title": "Tool overlay not open: Finance kalkulačky",
+      "severity": "P1",
+      "device": "mobile/tablet",
+      "browser": "chromium",
+      "repro_steps": "Open Finance kalkulačky from MindMenu / hero quick action",
+      "evidence": {
+        "id": "fincalc",
+        "label": "Finance kalkulačky",
         "click_success": true,
         "view_changed": true,
-        "url_or_state_correct": false,
+        "url_or_state_correct": true,
+        "overlay_open": false,
         "back_button_ok": null,
         "scroll_ok": true,
         "layout_ok": true,
-        "errors": [],
+        "harness_degraded": false,
+        "errors": [
+          "[ERR] Invariant breach: builder returned falsy markup",
+          "[ERR] Invariant breach: builder returned falsy markup",
+          "[ERR] Invariant breach: builder returned falsy markup"
+        ],
         "before": {
-          "section": "feed",
+          "section": "pocasi",
           "topic": "",
           "cards": 1
         },
         "after": {
-          "section": "feed",
+          "section": "pocasi",
           "topic": "",
           "cards": 1,
-          "url": "https://infouzel.cz/projects/?section=media"
-        }
+          "url": "https://infouzel.cz/projects/#iu-mindmenu"
+        },
+        "failure_type": "PRODUCT_FAILURE"
       },
-      "impact": "User cannot reach section or tool",
+      "impact": "User cannot reach tool overlay",
       "risk": "high",
-      "recommended_fix": "Fix click handler or mobile gate routing for this target"
+      "recommended_fix": "Verify overlay mount and open handler for this tool"
     },
     {
-      "id": "IU-AUDIT-009",
-      "title": "Navigation issue: Hlavní stránka",
+      "id": "IU-AUDIT-006",
+      "title": "Navigation issue: Menu overlay",
       "severity": "P1",
       "device": "mobile/tablet",
       "browser": "chromium",
-      "repro_steps": "Click Hlavní stránka from bottom nav / menu",
+      "repro_steps": "Click Menu overlay from bottom nav / menu",
       "evidence": {
-        "id": "home",
-        "label": "Hlavní stránka",
+        "id": "menu_overlay",
+        "label": "Menu overlay",
         "click_success": true,
         "view_changed": false,
         "url_or_state_correct": false,
-        "back_button_ok": true,
+        "overlay_open": null,
+        "back_button_ok": null,
         "scroll_ok": true,
         "layout_ok": true,
-        "errors": [],
+        "harness_degraded": false,
+        "errors": [
+          "[ERR] Invariant breach: builder returned falsy markup",
+          "[ERR] Invariant breach: builder returned falsy markup",
+          "[ERR] Invariant breach: builder returned falsy markup"
+        ],
         "before": {
-          "section": "feed",
+          "section": "pocasi",
           "topic": "",
           "cards": 1
         },
         "after": {
-          "section": "feed",
+          "section": "pocasi",
           "topic": "",
           "cards": 1,
-          "url": "https://infouzel.cz/projects/"
-        }
-      },
-      "impact": "User cannot reach section or tool",
-      "risk": "high",
-      "recommended_fix": "Fix click handler or mobile gate routing for this target"
-    },
-    {
-      "id": "IU-AUDIT-010",
-      "title": "Navigation issue: Zprávy",
-      "severity": "P1",
-      "device": "mobile/tablet",
-      "browser": "chromium",
-      "repro_steps": "Click Zprávy from bottom nav / menu",
-      "evidence": {
-        "id": "zpravy",
-        "label": "Zprávy",
-        "click_success": false,
-        "view_changed": false,
-        "url_or_state_correct": false,
-        "back_button_ok": null,
-        "scroll_ok": true,
-        "layout_ok": true,
-        "errors": [
-          "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"zpravy\"], .iu-leftNavItem[data-rail=\"zpravy\"]').first()\n"
-        ],
-        "before": {
-          "section": "",
-          "topic": "",
-          "cards": 0
+          "url": "https://infouzel.cz/projects/#iu-mindmenu"
         },
-        "after": {
-          "section": "",
-          "topic": "",
-          "cards": 0,
-          "url": "about:blank"
-        }
+        "failure_type": "PRODUCT_FAILURE"
       },
       "impact": "User cannot reach section or tool",
       "risk": "high",
       "recommended_fix": "Fix click handler or mobile gate routing for this target"
     },
     {
-      "id": "IU-AUDIT-011",
-      "title": "Navigation issue: Sport",
-      "severity": "P1",
-      "device": "mobile/tablet",
-      "browser": "chromium",
-      "repro_steps": "Click Sport from bottom nav / menu",
-      "evidence": {
-        "id": "sport",
-        "label": "Sport",
-        "click_success": false,
-        "view_changed": false,
-        "url_or_state_correct": false,
-        "back_button_ok": null,
-        "scroll_ok": true,
-        "layout_ok": true,
-        "errors": [
-          "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"sport\"], .iu-leftNavItem[data-rail=\"sport\"]').first()\n"
-        ],
-        "before": {
-          "section": "",
-          "topic": "",
-          "cards": 0
-        },
-        "after": {
-          "section": "",
-          "topic": "",
-          "cards": 0,
-          "url": "about:blank"
-        }
-      },
-      "impact": "User cannot reach section or tool",
-      "risk": "high",
-      "recommended_fix": "Fix click handler or mobile gate routing for this target"
-    },
-    {
-      "id": "IU-AUDIT-012",
-      "title": "Navigation issue: Finance",
-      "severity": "P1",
-      "device": "mobile/tablet",
-      "browser": "chromium",
-      "repro_steps": "Click Finance from bottom nav / menu",
-      "evidence": {
-        "id": "finance",
-        "label": "Finance",
-        "click_success": false,
-        "view_changed": false,
-        "url_or_state_correct": false,
-        "back_button_ok": null,
-        "scroll_ok": true,
-        "layout_ok": true,
-        "errors": [
-          "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"finance\"], .iu-leftNavItem[data-rail=\"finance\"]').first()\n"
-        ],
-        "before": {
-          "section": "",
-          "topic": "",
-          "cards": 0
-        },
-        "after": {
-          "section": "",
-          "topic": "",
-          "cards": 0,
-          "url": "about:blank"
-        }
-      },
-      "impact": "User cannot reach section or tool",
-      "risk": "high",
-      "recommended_fix": "Fix click handler or mobile gate routing for this target"
-    },
-    {
-      "id": "IU-AUDIT-013",
-      "title": "Navigation issue: Zdraví",
-      "severity": "P1",
-      "device": "mobile/tablet",
-      "browser": "chromium",
-      "repro_steps": "Click Zdraví from bottom nav / menu",
-      "evidence": {
-        "id": "zdravi",
-        "label": "Zdraví",
-        "click_success": false,
-        "view_changed": false,
-        "url_or_state_correct": false,
-        "back_button_ok": null,
-        "scroll_ok": true,
-        "layout_ok": true,
-        "errors": [
-          "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"zdravi\"], .iu-leftNavItem[data-rail=\"zdravi\"]').first()\n"
-        ],
-        "before": {
-          "section": "",
-          "topic": "",
-          "cards": 0
-        },
-        "after": {
-          "section": "",
-          "topic": "",
-          "cards": 0,
-          "url": "about:blank"
-        }
-      },
-      "impact": "User cannot reach section or tool",
-      "risk": "high",
-      "recommended_fix": "Fix click handler or mobile gate routing for this target"
-    },
-    {
-      "id": "IU-AUDIT-014",
-      "title": "Navigation issue: Vzdělávání",
-      "severity": "P1",
-      "device": "mobile/tablet",
-      "browser": "chromium",
-      "repro_steps": "Click Vzdělávání from bottom nav / menu",
-      "evidence": {
-        "id": "vzdelavani",
-        "label": "Vzdělávání",
-        "click_success": false,
-        "view_changed": false,
-        "url_or_state_correct": true,
-        "back_button_ok": null,
-        "scroll_ok": true,
-        "layout_ok": true,
-        "errors": [
-          "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"vzdelavani\"], .iu-leftNavItem[data-rail=\"vzdelavani\"]').first()\n"
-        ],
-        "before": {
-          "section": "",
-          "topic": "",
-          "cards": 0
-        },
-        "after": {
-          "section": "",
-          "topic": "",
-          "cards": 0,
-          "url": "about:blank"
-        }
-      },
-      "impact": "User cannot reach section or tool",
-      "risk": "high",
-      "recommended_fix": "Fix click handler or mobile gate routing for this target"
-    },
-    {
-      "id": "IU-AUDIT-015",
-      "title": "Navigation issue: Věda",
-      "severity": "P1",
-      "device": "mobile/tablet",
-      "browser": "chromium",
-      "repro_steps": "Click Věda from bottom nav / menu",
-      "evidence": {
-        "id": "veda",
-        "label": "Věda",
-        "click_success": false,
-        "view_changed": false,
-        "url_or_state_correct": true,
-        "back_button_ok": null,
-        "scroll_ok": true,
-        "layout_ok": true,
-        "errors": [
-          "locator.click: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('#iuMobileGatePanelNav .iu-leftNavItem[data-rail=\"veda\"], .iu-leftNavItem[data-rail=\"veda\"]').first()\n"
-        ],
-        "before": {
-          "section": "",
-          "topic": "",
-          "cards": 0
-        },
-        "after": {
-          "section": "",
-          "topic": "",
-          "cards": 0,
-          "url": "about:blank"
-        }
-      },
-      "impact": "User cannot reach section or tool",
-      "risk": "high",
-      "recommended_fix": "Fix click handler or mobile gate routing for this target"
-    },
-    {
-      "id": "IU-AUDIT-016",
+      "id": "IU-AUDIT-007",
       "title": "Root /version.json 404 (canonical /projects/version.json)",
       "severity": "P3",
       "device": "all",
@@ -2411,98 +2577,173 @@
       "recommended_fix": "Redirect or document /projects/version.json as canonical"
     }
   ],
+  "auditRerun": {
+    "previous_issue_count": 11,
+    "new_issue_count": 7,
+    "false_positives_removed": 4,
+    "remaining_real_issues": [
+      "IU-AUDIT-001",
+      "IU-AUDIT-002",
+      "IU-AUDIT-003",
+      "IU-AUDIT-007"
+    ]
+  },
   "priorityRanking": {
     "top_1": {
-      "id": "IU-AUDIT-002",
-      "title": "PWA manifest has empty icons array",
-      "severity": "P0",
-      "device": "mobile",
-      "browser": "all",
-      "repro_steps": "Open /projects/manifest.json",
-      "evidence": {
-        "name": "infoUzel.cz",
-        "short_name": "infoUzel",
-        "start_url": "/projects/",
-        "display": "standalone",
-        "theme_color": "#1f4b99",
-        "background_color": "#ffffff",
-        "iconCount": 0
-      },
-      "impact": "Add-to-home-screen shows generic/missing icon on Android/iOS",
-      "risk": "high",
-      "recommended_fix": "Populate manifest.icons with 192/512 maskable PNGs and verify URLs"
-    },
-    "top_2": {
-      "id": "IU-AUDIT-004",
-      "title": "LCP > 4s on Chromium 1366x768",
-      "severity": "P1",
-      "device": "desktop",
-      "browser": "chromium",
-      "repro_steps": "Cold load https://infouzel.cz/projects/",
-      "evidence": {
-        "lcpMs": 4472,
-        "fcpMs": 3120
-      },
-      "impact": "Slow first meaningful paint",
-      "risk": "high",
-      "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
-    },
-    "top_3": {
-      "id": "IU-AUDIT-005",
-      "title": "LCP > 4s on Edge/Chromium 1366x768",
-      "severity": "P1",
-      "device": "desktop",
-      "browser": "chromium",
-      "repro_steps": "Cold load https://infouzel.cz/projects/",
-      "evidence": {
-        "lcpMs": 20212,
-        "fcpMs": 19164
-      },
-      "impact": "Slow first meaningful paint",
-      "risk": "high",
-      "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
-    },
-    "top_4": {
-      "id": "IU-AUDIT-006",
-      "title": "LCP > 4s on WebKit/Safari 1366x768",
-      "severity": "P1",
-      "device": "desktop",
-      "browser": "webkit",
-      "repro_steps": "Cold load https://infouzel.cz/projects/",
-      "evidence": {
-        "lcpMs": 4739,
-        "fcpMs": 423
-      },
-      "impact": "Slow first meaningful paint",
-      "risk": "high",
-      "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
-    },
-    "top_5": {
-      "id": "IU-AUDIT-007",
+      "id": "IU-AUDIT-003",
       "title": "LCP > 4s on iPad WebKit 820x1180",
       "severity": "P1",
       "device": "desktop",
       "browser": "webkit",
       "repro_steps": "Cold load https://infouzel.cz/projects/",
       "evidence": {
-        "lcpMs": 8900,
-        "fcpMs": 348
+        "lcpMs": 4430,
+        "fcpMs": 369
       },
       "impact": "Slow first meaningful paint",
       "risk": "high",
       "recommended_fix": "Optimize LCP image/text, reduce blocking JS, improve TTFB"
+    },
+    "top_2": {
+      "id": "IU-AUDIT-004",
+      "title": "Tool overlay not open: Info centrum",
+      "severity": "P1",
+      "device": "mobile/tablet",
+      "browser": "chromium",
+      "repro_steps": "Open Info centrum from MindMenu / hero quick action",
+      "evidence": {
+        "id": "info_centrum",
+        "label": "Info centrum",
+        "click_success": true,
+        "view_changed": false,
+        "url_or_state_correct": true,
+        "overlay_open": false,
+        "back_button_ok": null,
+        "scroll_ok": true,
+        "layout_ok": true,
+        "harness_degraded": false,
+        "errors": [],
+        "before": {
+          "section": "pocasi",
+          "topic": "",
+          "cards": 1
+        },
+        "after": {
+          "section": "pocasi",
+          "topic": "",
+          "cards": 1,
+          "url": "https://infouzel.cz/projects/?section=pocasi"
+        },
+        "failure_type": "PRODUCT_FAILURE"
+      },
+      "impact": "User cannot reach tool overlay",
+      "risk": "high",
+      "recommended_fix": "Verify overlay mount and open handler for this tool"
+    },
+    "top_3": {
+      "id": "IU-AUDIT-005",
+      "title": "Tool overlay not open: Finance kalkulačky",
+      "severity": "P1",
+      "device": "mobile/tablet",
+      "browser": "chromium",
+      "repro_steps": "Open Finance kalkulačky from MindMenu / hero quick action",
+      "evidence": {
+        "id": "fincalc",
+        "label": "Finance kalkulačky",
+        "click_success": true,
+        "view_changed": true,
+        "url_or_state_correct": true,
+        "overlay_open": false,
+        "back_button_ok": null,
+        "scroll_ok": true,
+        "layout_ok": true,
+        "harness_degraded": false,
+        "errors": [
+          "[ERR] Invariant breach: builder returned falsy markup",
+          "[ERR] Invariant breach: builder returned falsy markup",
+          "[ERR] Invariant breach: builder returned falsy markup"
+        ],
+        "before": {
+          "section": "pocasi",
+          "topic": "",
+          "cards": 1
+        },
+        "after": {
+          "section": "pocasi",
+          "topic": "",
+          "cards": 1,
+          "url": "https://infouzel.cz/projects/#iu-mindmenu"
+        },
+        "failure_type": "PRODUCT_FAILURE"
+      },
+      "impact": "User cannot reach tool overlay",
+      "risk": "high",
+      "recommended_fix": "Verify overlay mount and open handler for this tool"
+    },
+    "top_4": {
+      "id": "IU-AUDIT-006",
+      "title": "Navigation issue: Menu overlay",
+      "severity": "P1",
+      "device": "mobile/tablet",
+      "browser": "chromium",
+      "repro_steps": "Click Menu overlay from bottom nav / menu",
+      "evidence": {
+        "id": "menu_overlay",
+        "label": "Menu overlay",
+        "click_success": true,
+        "view_changed": false,
+        "url_or_state_correct": false,
+        "overlay_open": null,
+        "back_button_ok": null,
+        "scroll_ok": true,
+        "layout_ok": true,
+        "harness_degraded": false,
+        "errors": [
+          "[ERR] Invariant breach: builder returned falsy markup",
+          "[ERR] Invariant breach: builder returned falsy markup",
+          "[ERR] Invariant breach: builder returned falsy markup"
+        ],
+        "before": {
+          "section": "pocasi",
+          "topic": "",
+          "cards": 1
+        },
+        "after": {
+          "section": "pocasi",
+          "topic": "",
+          "cards": 1,
+          "url": "https://infouzel.cz/projects/#iu-mindmenu"
+        },
+        "failure_type": "PRODUCT_FAILURE"
+      },
+      "impact": "User cannot reach section or tool",
+      "risk": "high",
+      "recommended_fix": "Fix click handler or mobile gate routing for this target"
+    },
+    "top_5": {
+      "id": "IU-AUDIT-001",
+      "title": "Root /manifest.json returns 404 (PWA path is /projects/manifest.json)",
+      "severity": "P2",
+      "device": "all",
+      "browser": "all",
+      "repro_steps": "GET https://infouzel.cz/manifest.json",
+      "evidence": {
+        "status": 404,
+        "correctPath": "/projects/manifest.json"
+      },
+      "impact": "Install prompts / crawlers hitting root manifest fail",
+      "risk": "low",
+      "recommended_fix": "Add redirect from /manifest.json to /projects/manifest.json or document canonical path only"
     }
   },
   "finalGitStatus": {
     "changed_files": [
-      "M projects/index.html",
-      " M projects/manifest.json",
-      "?? projects/icons/",
-      "?? scripts/full-cross-device-browser-production-audit-report.json",
-      "?? scripts/full-cross-device-browser-production-audit.cjs"
+      "M scripts/full-cross-device-browser-production-audit-report.json",
+      " M scripts/full-cross-device-browser-production-audit.cjs",
+      "?? scripts/full-cross-device-audit-harness.cjs"
     ],
     "tracked_dirty": 2,
-    "untracked": 3,
-    "scope_ok": false
+    "untracked": 1,
+    "scope_ok": true
   }
 }
