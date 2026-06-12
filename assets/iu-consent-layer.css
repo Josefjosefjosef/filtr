@@ -82,34 +82,64 @@
   outline-offset: 2px;
 }
 
-@media (max-width: 479px) {
-  .iuConsentLayer__actions {
-    flex-direction: column;
-  }
-
-  .iuConsentLayer__btn {
-    flex: 1 1 auto;
-    width: 100%;
-  }
-}
-
 @media (max-width: 900px) {
-  /* Top anchor: bottom sheet overlapped Silver quick actions on narrow mobile (smoke calendar_flow). */
+  /* Bottom anchor above #iuMobileBottomNav (--bottom-nav-height from index.html inline). */
   .iuConsentLayer {
-    top: 0;
-    bottom: auto;
-    padding-top: max(10px, env(safe-area-inset-top, 0px));
-    padding-bottom: 0;
-    align-items: flex-start;
+    top: auto;
+    bottom: var(
+      --bottom-nav-height,
+      calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 32px)
+    );
+    padding-top: 0;
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    align-items: stretch;
   }
 
   .iuConsentLayer__panel {
-    border-radius: 0 0 12px 12px;
-    border-top: 0;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.35);
-    max-height: min(46vh, 360px);
+    border-radius: 14px 14px 0 0;
+    border-top: 1px solid rgba(148, 163, 184, 0.35);
+    border-bottom: 0;
+    box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.35);
+    max-height: min(36vh, 320px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Phone: compact bottom bar — must not cover Silver quick actions (smoke calendar_flow). */
+@media (max-width: 479px) {
+  .iuConsentLayer__panel {
+    gap: 4px;
+    padding: 8px 10px;
+    max-height: 86px;
+    overflow: hidden;
+  }
+
+  .iuConsentLayer__title {
+    font-size: 0.72rem;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .iuConsentLayer__text {
+    display: none;
+  }
+
+  .iuConsentLayer__actions {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+
+  .iuConsentLayer__btn {
+    flex: 1 1 0;
+    min-height: 34px;
+    padding: 5px 4px;
+    font-size: 0.65rem;
+    line-height: 1.1;
+    border-radius: 8px;
   }
 }
 
