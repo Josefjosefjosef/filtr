@@ -131,10 +131,27 @@ def emit_chunks(output_dir: str) -> dict:
             "articles": init_rows,
         }
         if section_key == "feed":
-            # Homepage education preview card: education articles are sparse and rarely
-            # land in the feed init window, so ship the 2 latest directly with the
-            # homepage payload (additive field — no extra section fetch on the client).
-            init_payload["educationPreviewItems"] = (buckets.get("vzdelavani") or [])[:2]
+            # Homepage section preview cards must mirror each section's init top-2.
+            # The mixed feed init window (30 global articles) often has 0–1 row per
+            # vertical — ship section-scoped previews in the same payload (no extra fetch).
+            preview_section_keys = (
+                "zpravy",
+                "sport",
+                "finance",
+                "zdravi",
+                "cestovani",
+                "hry",
+                "kultura",
+                "veda",
+                "vzdelavani",
+            )
+            init_payload["sectionPreviewItems"] = {
+                sk: (buckets.get(sk) or [])[:2] for sk in preview_section_keys
+            }
+            # Backward-compatible alias for older clients (education card only).
+            init_payload["educationPreviewItems"] = init_payload["sectionPreviewItems"].get(
+                "vzdelavani", []
+            )
         _atomic_write_json(os.path.join(section_dir, "init.json"), init_payload)
         for idx in range(0, len(rows), CHUNK_SIZE):
             chunk_index = idx // CHUNK_SIZE

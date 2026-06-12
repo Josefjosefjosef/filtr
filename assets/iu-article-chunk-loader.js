@@ -111,6 +111,7 @@ export function iuChunkCreateLoaderState(sectionKey) {
     articlesReceivedCount: 0,
     articlesParsedCount: 0,
     educationPreviewItems: [],
+    sectionPreviewItems: null,
   };
 }
 
@@ -177,8 +178,14 @@ async function iuChunkFetchRel(loader, relPath, basePath, dataVer, label, chunkI
   const url = iuChunkFileUrl(basePath, relPath, dataVer);
   const payload = await iuChunkFetchJson(url, label);
   const rows = Array.isArray(payload && payload.articles) ? payload.articles : [];
-  /* Education preview rides along with the feed init payload — no separate section fetch. */
-  if (payload && Array.isArray(payload.educationPreviewItems) && payload.educationPreviewItems.length) {
+  /* Section preview cards ride along with the feed init payload — no per-section fetch on homepage. */
+  if (payload && payload.sectionPreviewItems && typeof payload.sectionPreviewItems === "object") {
+    loader.sectionPreviewItems = payload.sectionPreviewItems;
+    const edu = payload.sectionPreviewItems.vzdelavani;
+    if (Array.isArray(edu) && edu.length) {
+      loader.educationPreviewItems = edu.slice(0, 2);
+    }
+  } else if (payload && Array.isArray(payload.educationPreviewItems) && payload.educationPreviewItems.length) {
     loader.educationPreviewItems = payload.educationPreviewItems.slice(0, 2);
   }
   loader.articlesReceivedCount += rows.length;
