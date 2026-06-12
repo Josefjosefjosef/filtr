@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "sourceBatchKey": "tenisportal.cz",
+  "ingestedAt": "2026-06-12T19:24:29.308495Z",
+  "items": [],
+  "feedReports": [
+    {
+      "feed": "https://www.tenisportal.cz/rss",
+      "source": "TenisPortal",
+      "topic": "sport",
+      "httpStatus": 404,
+      "contentType": "text/html; charset=utf-8",
+      "finalUrl": "https://www.tenisportal.cz/rss/",
+      "bytes": 0,
+      "reason": "http_404",
+      "bozo": false,
+      "bozoException": "",
+      "itemsParsed": 0,
+      "itemsKept": 0,
+      "accepted": 0,
+      "status": "BOZO",
+      "bozo_but_used": false,
+      "registryId": "spt_tenisportal",
+      "registryGroup": [
+        {
+          "id": "spt_tenisportal",
+          "label": "TenisPortal",
+          "domain": "tenisportal.cz",
+          "entry_type": "rss",
+          "section_primary": "sport",
+          "section_secondary": [],
+          "interval_min": 180,
+          "display_weight": 0.7,
+          "active": true,
+          "blocked": false,
+          "official_only": true,
+          "fetch_mode": "rss_or_official_rubric_only",
+          "per_domain_cooldown_min": 12,
+          "slot_offset_min": 20,
+          "max_items_per_fetch": 40,
+          "last_fetch_at": null,
+          "last_success_at": null,
+          "error_streak": 0,
+          "backoff_multiplier": 1.0,
+          "feed_url": "https://www.tenisportal.cz/rss",
+          "topic": "sport"
+        }
+      ]
+    }
+  ]
+}
