@@ -1,18 +1,3340 @@
 {
-  "generatedAt": "2026-06-12T11:56:36.537276Z",
+  "generatedAt": "2026-06-12T17:29:47.163082Z",
   "allowlistVersion": 1,
+  "sortedBy": "publishedAt_desc",
+  "insertEveryN": 8,
+  "maxVideosPerPage": 25,
+  "freshDaysPrimary": 14,
+  "freshDaysFallback": 60,
   "freshTargetShare": 0.7,
   "dedupeDays": 30,
-  "maxPerSource": 25,
-  "maxTotal": 240,
+  "langTargetCz": 0.5,
+  "langTargetEn": 0.5,
+  "minGapSameSource": 5,
+  "maxSameLangStreak": 2,
+  "maxSameCategoryStreak": 2,
+  "maxPerSource": 20,
+  "maxTotal": 25,
   "freshness": {
     "primaryDays": 14,
     "fallbackDays": 60,
-    "primaryCount": 0,
+    "primaryCount": 25,
     "fallbackCount": 0,
     "olderCount": 0,
-    "total": 0
+    "total": 25
   },
-  "categories": [],
-  "videos": []
+  "meta": {
+    "windowHours": 24,
+    "targetCz": 12,
+    "outTotal": 25
+  },
+  "sourcesMeta": [
+    {
+      "sourceKey": "yt:handle:veritasium",
+      "title": "Veritasium",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCin0m13qWv3-051xlWlHamA",
+      "channelId": "UCin0m13qWv3-051xlWlHamA",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCin0m13qWv3-051xlWlHamA",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "science_tech"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:kurzgesagt",
+      "title": "Kurzgesagt",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCq8ZAAsI89IoJ-fn1gYpO3g",
+      "channelId": "UCq8ZAAsI89IoJ-fn1gYpO3g",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq8ZAAsI89IoJ-fn1gYpO3g",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "science_tech"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:Computerphile",
+      "title": "Computerphile",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCoxcjq-8xIDTYp3uz647V5A",
+      "channelId": "UCoxcjq-8xIDTYp3uz647V5A",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCoxcjq-8xIDTYp3uz647V5A",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "science_tech"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:TwoMinutePapers",
+      "title": "Two Minute Papers",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCbfYPyITQ-7l4upoX8nvctg",
+      "channelId": "UCbfYPyITQ-7l4upoX8nvctg",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCbfYPyITQ-7l4upoX8nvctg",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "science_tech"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:LexClips",
+      "title": "Lex Clips",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCSHZKyawb77ixDdsGog4iWA",
+      "channelId": "UCSHZKyawb77ixDdsGog4iWA",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCSHZKyawb77ixDdsGog4iWA",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "science_tech"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:ColdFusion",
+      "title": "ColdFusion",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCGkpFfEMF0eMJlh9xXj2lMw",
+      "channelId": "UCGkpFfEMF0eMJlh9xXj2lMw",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCGkpFfEMF0eMJlh9xXj2lMw",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "science_tech"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:RealEngineering",
+      "title": "Real Engineering",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UC176GAQozKKjhz62H8u9vQQ",
+      "channelId": "UC176GAQozKKjhz62H8u9vQQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC176GAQozKKjhz62H8u9vQQ",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "science_tech"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:TechAltar",
+      "title": "TechAltar",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCRG_N2uO405WO4P3Ruef9NA",
+      "channelId": "UCRG_N2uO405WO4P3Ruef9NA",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCRG_N2uO405WO4P3Ruef9NA",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "science_tech"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:CzechCrunch",
+      "title": "CzechCrunch",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCuTf9Dg2a3dA-RRtMuA4ARQ",
+      "channelId": "UCuTf9Dg2a3dA-RRtMuA4ARQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCuTf9Dg2a3dA-RRtMuA4ARQ",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "science_tech"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:zivecz",
+      "title": "Živě.cz",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCEZrvIAg8gvB1Ur5gx6-Zwg",
+      "channelId": "UCEZrvIAg8gvB1Ur5gx6-Zwg",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCEZrvIAg8gvB1Ur5gx6-Zwg",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "science_tech"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:HONESTGUIDE",
+      "title": "HONEST GUIDE",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCbpMZ4ri2yh342M6dH1GFIg",
+      "channelId": "UCbpMZ4ri2yh342M6dH1GFIg",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCbpMZ4ri2yh342M6dH1GFIg",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:KluciZPrahy",
+      "title": "Kluci z Prahy",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCt7oj318jVQi7vRbc1bNjJA",
+      "channelId": "UCt7oj318jVQi7vRbc1bNjJA",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCt7oj318jVQi7vRbc1bNjJA",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:NotJustBikes",
+      "title": "Not Just Bikes",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UClhGRUBCbui0IKCAe-ezG3A",
+      "channelId": "UClhGRUBCbui0IKCAe-ezG3A",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UClhGRUBCbui0IKCAe-ezG3A",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:CityBeautiful",
+      "title": "City Beautiful",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCGc8ZVCsrR3dAuhvUbkbToQ",
+      "channelId": "UCGc8ZVCsrR3dAuhvUbkbToQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCGc8ZVCsrR3dAuhvUbkbToQ",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:RickSteves",
+      "title": "Rick Steves",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCchgIh8Tc4sTmBfnMQ5pDdg",
+      "channelId": "UCchgIh8Tc4sTmBfnMQ5pDdg",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCchgIh8Tc4sTmBfnMQ5pDdg",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:Vox",
+      "title": "Vox",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCLXo7UDZvByw2ixzpQCufnA",
+      "channelId": "UCLXo7UDZvByw2ixzpQCufnA",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCLXo7UDZvByw2ixzpQCufnA",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:DWTravel",
+      "title": "DW Travel",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCd-swDW3HCs4LTZhq8Cf7Fg",
+      "channelId": "UCd-swDW3HCs4LTZhq8Cf7Fg",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCd-swDW3HCs4LTZhq8Cf7Fg",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:channel:UCGMzV8k2T_q9rgyCpTWVexA",
+      "title": "Policie ČR",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCGMzV8k2T_q9rgyCpTWVexA",
+      "channelId": "UCGMzV8k2T_q9rgyCpTWVexA",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCGMzV8k2T_q9rgyCpTWVexA",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:channel:UCbavWathZu8eeSyDL_VD-hg",
+      "title": "Hasiči CZ",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCbavWathZu8eeSyDL_VD-hg",
+      "channelId": "UCbavWathZu8eeSyDL_VD-hg",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCbavWathZu8eeSyDL_VD-hg",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:PatrickBoyleOnFinance",
+      "title": "Patrick Boyle",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCASM0cgfkJxQ1ICmRilfHLw",
+      "channelId": "UCASM0cgfkJxQ1ICmRilfHLw",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCASM0cgfkJxQ1ICmRilfHLw",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:EconomicsExplained",
+      "title": "Economics Explained",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCVWX3F3DrTvDKa0LRilQoQQ",
+      "channelId": "UCVWX3F3DrTvDKa0LRilQoQQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCVWX3F3DrTvDKa0LRilQoQQ",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:TLDRBusiness",
+      "title": "TLDR Business",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCSMqateX8OA2s1wsOR2EgJA",
+      "channelId": "UCSMqateX8OA2s1wsOR2EgJA",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCSMqateX8OA2s1wsOR2EgJA",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:XTBcz",
+      "title": "XTB ČR",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCNTPLCvBqnA0NFFDLNkKZGQ",
+      "channelId": "UCNTPLCvBqnA0NFFDLNkKZGQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCNTPLCvBqnA0NFFDLNkKZGQ",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:InvesticniBrambora",
+      "title": "Investiční brambora",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCCNmrEhZwbA82zPigULLnEw",
+      "channelId": "UCCNmrEhZwbA82zPigULLnEw",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCCNmrEhZwbA82zPigULLnEw",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:forbescesko",
+      "title": "Forbes Česko",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCTTAE_HClD_DRs17iRiqZSg",
+      "channelId": "UCTTAE_HClD_DRs17iRiqZSg",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCTTAE_HClD_DRs17iRiqZSg",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:BloombergQuicktake",
+      "title": "Bloomberg Quicktake",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCU1Pp4a-TwbrB40ja-4JG_Q",
+      "channelId": "UCU1Pp4a-TwbrB40ja-4JG_Q",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCU1Pp4a-TwbrB40ja-4JG_Q",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:CNBC",
+      "title": "CNBC",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCH5_L3ytGbBziX0CLuYdQ1Q",
+      "channelId": "UCH5_L3ytGbBziX0CLuYdQ1Q",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCH5_L3ytGbBziX0CLuYdQ1Q",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:rozbiteprasatko",
+      "title": "Rozbité prasátko",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCNz5riDHBTe7eM1PIZFy4QQ",
+      "channelId": "UCNz5riDHBTe7eM1PIZFy4QQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCNz5riDHBTe7eM1PIZFy4QQ",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:DVTVvideo",
+      "title": "DVTV",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCFb-u3ISt99gxZ9TxIQW7UA",
+      "channelId": "UCFb-u3ISt99gxZ9TxIQW7UA",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCFb-u3ISt99gxZ9TxIQW7UA",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:lexfridman",
+      "title": "Lex Fridman",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCJIfeSCssxSC_Dhc5s7woww",
+      "channelId": "UCJIfeSCssxSC_Dhc5s7woww",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCJIfeSCssxSC_Dhc5s7woww",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:WIRED",
+      "title": "WIRED",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCftwRNsjfRo08xYE31tkiyw",
+      "channelId": "UCftwRNsjfRo08xYE31tkiyw",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCftwRNsjfRo08xYE31tkiyw",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:TED",
+      "title": "TED",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "channelId": "UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:ForbesCesko",
+      "title": "Forbes Česko",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCTTAE_HClD_DRs17iRiqZSg",
+      "channelId": "UCTTAE_HClD_DRs17iRiqZSg",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCTTAE_HClD_DRs17iRiqZSg",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:Reflexcz",
+      "title": "Reflex",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCd0zFqqH7r1YetxOajyowFA",
+      "channelId": "UCd0zFqqH7r1YetxOajyowFA",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCd0zFqqH7r1YetxOajyowFA",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:StanfordECorner",
+      "title": "Stanford eCorner",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCctkeBNtFIOn7Yl_9TTj_4w",
+      "channelId": "UCctkeBNtFIOn7Yl_9TTj_4w",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCctkeBNtFIOn7Yl_9TTj_4w",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:OxfordUnion",
+      "title": "OxfordUnion",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCY7dD6waquGnKTZSumPMTlQ",
+      "channelId": "UCY7dD6waquGnKTZSumPMTlQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCY7dD6waquGnKTZSumPMTlQ",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:KingsandGenerals",
+      "title": "Kings and Generals",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCCGvq-qmjFmmMD4e-PLQqGg",
+      "channelId": "UCCGvq-qmjFmmMD4e-PLQqGg",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCCGvq-qmjFmmMD4e-PLQqGg",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "history"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:HistoriaCivilis",
+      "title": "Historia Civilis",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCv_vLHiWVBh_FR9vbeuiY-A",
+      "channelId": "UCv_vLHiWVBh_FR9vbeuiY-A",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCv_vLHiWVBh_FR9vbeuiY-A",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "history"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:Oversimplified",
+      "title": "OverSimplified",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCNIuvl7V8zACPpTmmNIqP2A",
+      "channelId": "UCNIuvl7V8zACPpTmmNIqP2A",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCNIuvl7V8zACPpTmmNIqP2A",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "history"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:TheBritishMuseum",
+      "title": "The British Museum",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCvpQ-l09fCVxJd3urZbxzHg",
+      "channelId": "UCvpQ-l09fCVxJd3urZbxzHg",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCvpQ-l09fCVxJd3urZbxzHg",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "history"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:NationalGeographic",
+      "title": "National Geographic",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCpVm7bg6pXKo1Pr6k5kxG9A",
+      "channelId": "UCpVm7bg6pXKo1Pr6k5kxG9A",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCpVm7bg6pXKo1Pr6k5kxG9A",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "history"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:CzechRadio",
+      "title": "Český rozhlas",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UC4Pydbt9Z9nJrAp-DQ2D3MQ",
+      "channelId": "UC4Pydbt9Z9nJrAp-DQ2D3MQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC4Pydbt9Z9nJrAp-DQ2D3MQ",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "history"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:ArteTV",
+      "title": "ARTE",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCwI-JbGNsojunnHbFAc0M4Q",
+      "channelId": "UCwI-JbGNsojunnHbFAc0M4Q",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCwI-JbGNsojunnHbFAc0M4Q",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "history"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:Wendoverproductions",
+      "title": "Wendover Productions",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCTWKe1zATFV6d0o6oLS9sgw",
+      "channelId": "UCTWKe1zATFV6d0o6oLS9sgw",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCTWKe1zATFV6d0o6oLS9sgw",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:HalfAsInteresting",
+      "title": "Half as Interesting",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UC9RM-iSvTu1uPJb8X5yp3EQ",
+      "channelId": "UC9RM-iSvTu1uPJb8X5yp3EQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC9RM-iSvTu1uPJb8X5yp3EQ",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:TomScottGo",
+      "title": "Tom Scott",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCHqDTfIX-0DGaHlWvv6JZCw",
+      "channelId": "UCHqDTfIX-0DGaHlWvv6JZCw",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCHqDTfIX-0DGaHlWvv6JZCw",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:Zdopravy",
+      "title": "Zdopravy.cz",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UC2P1y2_qFJtg6LLPb66A-NA",
+      "channelId": "UC2P1y2_qFJtg6LLPb66A-NA",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC2P1y2_qFJtg6LLPb66A-NA",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:PragueAirport",
+      "title": "Prague Airport",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCF7gGGK5faKRXZExCSp1Vyw",
+      "channelId": "UCF7gGGK5faKRXZExCSp1Vyw",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCF7gGGK5faKRXZExCSp1Vyw",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:BBCNews",
+      "title": "BBC News",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCCj956IF62FbT7Gouszaj9w",
+      "channelId": "UCCj956IF62FbT7Gouszaj9w",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCCj956IF62FbT7Gouszaj9w",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:RegioJet",
+      "title": "RegioJet",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCILlFKvW9ezEkNEvRoD6a0Q",
+      "channelId": "UCILlFKvW9ezEkNEvRoD6a0Q",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCILlFKvW9ezEkNEvRoD6a0Q",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:hubermanlab",
+      "title": "Huberman Lab",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UC2D2CMWXMOVWx7giW1n3LIg",
+      "channelId": "UC2D2CMWXMOVWx7giW1n3LIg",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC2D2CMWXMOVWx7giW1n3LIg",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:theschooloflifetv",
+      "title": "The School of Life",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UC7IcJI8PUf5Z3zKxnZvTBog",
+      "channelId": "UC7IcJI8PUf5Z3zKxnZvTBog",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC7IcJI8PUf5Z3zKxnZvTBog",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:aliabdaal",
+      "title": "Ali Abdaal",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UChfo46ZNOV-vtehDc25A1Ug",
+      "channelId": "UChfo46ZNOV-vtehDc25A1Ug",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UChfo46ZNOV-vtehDc25A1Ug",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:Kovy",
+      "title": "Kovy",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCGC8o-hW_TS-UpnThU0Wa1w",
+      "channelId": "UCGC8o-hW_TS-UpnThU0Wa1w",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCGC8o-hW_TS-UpnThU0Wa1w",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:KurzgesagtInANutshell",
+      "title": "Kurzgesagt (alt)",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCjZ2y5glyoUWJXIzWCooqtQ",
+      "channelId": "UCjZ2y5glyoUWJXIzWCooqtQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCjZ2y5glyoUWJXIzWCooqtQ",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:TEDxTalks",
+      "title": "TEDxTalks",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "channelId": "UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:CestmirStrakaty",
+      "title": "Čestmír Strakatý",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCJf7w1Fl5b6yxlCHdC5lOhw",
+      "channelId": "UCJf7w1Fl5b6yxlCHdC5lOhw",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCJf7w1Fl5b6yxlCHdC5lOhw",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:LegalEagle",
+      "title": "LegalEagle",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCpSUQewzOXg1F0zLmieKCqQ",
+      "channelId": "UCpSUQewzOXg1F0zLmieKCqQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCpSUQewzOXg1F0zLmieKCqQ",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:TLDRnews",
+      "title": "TLDR News",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UC-eegKVWEgBCa4OzjnK_PtA",
+      "channelId": "UC-eegKVWEgBCa4OzjnK_PtA",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC-eegKVWEgBCa4OzjnK_PtA",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:DWNews",
+      "title": "DW News",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCbbS1GE942k3UVqpLklyhIA",
+      "channelId": "UCbbS1GE942k3UVqpLklyhIA",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCbbS1GE942k3UVqpLklyhIA",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:BBC",
+      "title": "BBC",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UC16niRr50-MSBwiO3YDb3RA",
+      "channelId": "UC16niRr50-MSBwiO3YDb3RA",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC16niRr50-MSBwiO3YDb3RA",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:SeznamZpravy",
+      "title": "Seznam Zprávy",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCcINojTCz1nhQIpg4iooONQ",
+      "channelId": "UCcINojTCz1nhQIpg4iooONQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCcINojTCz1nhQIpg4iooONQ",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:iROZHLAScz",
+      "title": "iROZHLAS",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCtiVvnCqHn9AtUhUrI1lFLQ",
+      "channelId": "UCtiVvnCqHn9AtUhUrI1lFLQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCtiVvnCqHn9AtUhUrI1lFLQ",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:ceskatelevize",
+      "title": "Česká televize",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCGKO2td3HikyNBf0n9ISkjg",
+      "channelId": "UCGKO2td3HikyNBf0n9ISkjg",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCGKO2td3HikyNBf0n9ISkjg",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:PerunAU",
+      "title": "Perun",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCPYJiiMoA0yOMHI-aiB44RQ",
+      "channelId": "UCPYJiiMoA0yOMHI-aiB44RQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCPYJiiMoA0yOMHI-aiB44RQ",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:ycombinator",
+      "title": "Y Combinator",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCxIJaCMEptJjxmmQgGFsnCg",
+      "channelId": "UCxIJaCMEptJjxmmQgGFsnCg",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCxIJaCMEptJjxmmQgGFsnCg",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:a16z",
+      "title": "a16z",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCQ1VQj-37kl2yS_VUhfQHsw",
+      "channelId": "UCQ1VQj-37kl2yS_VUhfQHsw",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ1VQj-37kl2yS_VUhfQHsw",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:GoogleDevelopers",
+      "title": "Google Developers",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UC_x5XG1OV2P6uZZ5FSM9Ttw",
+      "channelId": "UC_x5XG1OV2P6uZZ5FSM9Ttw",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC_x5XG1OV2P6uZZ5FSM9Ttw",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:MicrosoftDeveloper",
+      "title": "Microsoft Developer",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCV_6HOhwxYLXAGd-JOqKPoQ",
+      "channelId": "UCV_6HOhwxYLXAGd-JOqKPoQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCV_6HOhwxYLXAGd-JOqKPoQ",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:CzechCrunch",
+      "title": "CzechCrunch",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCuTf9Dg2a3dA-RRtMuA4ARQ",
+      "channelId": "UCuTf9Dg2a3dA-RRtMuA4ARQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCuTf9Dg2a3dA-RRtMuA4ARQ",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:StartupJobsCZ",
+      "title": "StartupJobs",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UC14qAyl4pOosvNYgSSyHcDQ",
+      "channelId": "UC14qAyl4pOosvNYgSSyHcDQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC14qAyl4pOosvNYgSSyHcDQ",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:smartereveryday",
+      "title": "Smarter Every Day",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UC8VkNBOwvsTlFjoSnNSMmxw",
+      "channelId": "UC8VkNBOwvsTlFjoSnNSMmxw",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC8VkNBOwvsTlFjoSnNSMmxw",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:CGPGrey",
+      "title": "CGP Grey",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UC2C_jShtL725hvbm1arSV9w",
+      "channelId": "UC2C_jShtL725hvbm1arSV9w",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC2C_jShtL725hvbm1arSV9w",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:MinuteEarth",
+      "title": "MinuteEarth",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCUHW94eEFW7hkUMVaZz4eDg",
+      "channelId": "UCUHW94eEFW7hkUMVaZz4eDg",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCUHW94eEFW7hkUMVaZz4eDg",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:Vsauce",
+      "title": "Vsauce",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UC6nSFpj9HTCZ5t-N3Rm3-HA",
+      "channelId": "UC6nSFpj9HTCZ5t-N3Rm3-HA",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC6nSFpj9HTCZ5t-N3Rm3-HA",
+      "region": "world",
+      "langDefault": "en",
+      "assumeCzSubs": false,
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:JirkaVysvetluje",
+      "title": "Jirka Vysvětluje",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCiel0FdALxeIPW5Zaer0Brg",
+      "channelId": "UCiel0FdALxeIPW5Zaer0Brg",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCiel0FdALxeIPW5Zaer0Brg",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    },
+    {
+      "sourceKey": "yt:handle:PetrMara",
+      "title": "Petr Mára",
+      "type": "channel",
+      "url": "https://www.youtube.com/channel/UCSgFxc7dM_mjQIC0zxn1zqw",
+      "channelId": "UCSgFxc7dM_mjQIC0zxn1zqw",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCSgFxc7dM_mjQIC0zxn1zqw",
+      "region": "cz",
+      "langDefault": "cz",
+      "assumeCzSubs": false,
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "official": true
+    }
+  ],
+  "categories": [
+    {
+      "name": "science_tech_ai",
+      "weight": 15,
+      "sources": [
+        {
+          "sourceKey": "yt:handle:veritasium",
+          "title": "Veritasium",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCin0m13qWv3-051xlWlHamA",
+          "channelId": "UCin0m13qWv3-051xlWlHamA",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCin0m13qWv3-051xlWlHamA",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "science_tech"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:kurzgesagt",
+          "title": "Kurzgesagt",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCq8ZAAsI89IoJ-fn1gYpO3g",
+          "channelId": "UCq8ZAAsI89IoJ-fn1gYpO3g",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCq8ZAAsI89IoJ-fn1gYpO3g",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "science_tech"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:Computerphile",
+          "title": "Computerphile",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCoxcjq-8xIDTYp3uz647V5A",
+          "channelId": "UCoxcjq-8xIDTYp3uz647V5A",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCoxcjq-8xIDTYp3uz647V5A",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "science_tech"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:TwoMinutePapers",
+          "title": "Two Minute Papers",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCbfYPyITQ-7l4upoX8nvctg",
+          "channelId": "UCbfYPyITQ-7l4upoX8nvctg",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCbfYPyITQ-7l4upoX8nvctg",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "science_tech"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:LexClips",
+          "title": "Lex Clips",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCSHZKyawb77ixDdsGog4iWA",
+          "channelId": "UCSHZKyawb77ixDdsGog4iWA",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCSHZKyawb77ixDdsGog4iWA",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "science_tech"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:ColdFusion",
+          "title": "ColdFusion",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCGkpFfEMF0eMJlh9xXj2lMw",
+          "channelId": "UCGkpFfEMF0eMJlh9xXj2lMw",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCGkpFfEMF0eMJlh9xXj2lMw",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "science_tech"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:RealEngineering",
+          "title": "Real Engineering",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UC176GAQozKKjhz62H8u9vQQ",
+          "channelId": "UC176GAQozKKjhz62H8u9vQQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC176GAQozKKjhz62H8u9vQQ",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "science_tech"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:TechAltar",
+          "title": "TechAltar",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCRG_N2uO405WO4P3Ruef9NA",
+          "channelId": "UCRG_N2uO405WO4P3Ruef9NA",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCRG_N2uO405WO4P3Ruef9NA",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "science_tech"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:CzechCrunch",
+          "title": "CzechCrunch",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCuTf9Dg2a3dA-RRtMuA4ARQ",
+          "channelId": "UCuTf9Dg2a3dA-RRtMuA4ARQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCuTf9Dg2a3dA-RRtMuA4ARQ",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "science_tech"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:zivecz",
+          "title": "Živě.cz",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCEZrvIAg8gvB1Ur5gx6-Zwg",
+          "channelId": "UCEZrvIAg8gvB1Ur5gx6-Zwg",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCEZrvIAg8gvB1Ur5gx6-Zwg",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "science_tech"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "practical_life_city_travel",
+      "weight": 15,
+      "sources": [
+        {
+          "sourceKey": "yt:handle:HONESTGUIDE",
+          "title": "HONEST GUIDE",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCbpMZ4ri2yh342M6dH1GFIg",
+          "channelId": "UCbpMZ4ri2yh342M6dH1GFIg",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCbpMZ4ri2yh342M6dH1GFIg",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:KluciZPrahy",
+          "title": "Kluci z Prahy",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCt7oj318jVQi7vRbc1bNjJA",
+          "channelId": "UCt7oj318jVQi7vRbc1bNjJA",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCt7oj318jVQi7vRbc1bNjJA",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:NotJustBikes",
+          "title": "Not Just Bikes",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UClhGRUBCbui0IKCAe-ezG3A",
+          "channelId": "UClhGRUBCbui0IKCAe-ezG3A",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UClhGRUBCbui0IKCAe-ezG3A",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:CityBeautiful",
+          "title": "City Beautiful",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCGc8ZVCsrR3dAuhvUbkbToQ",
+          "channelId": "UCGc8ZVCsrR3dAuhvUbkbToQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCGc8ZVCsrR3dAuhvUbkbToQ",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:RickSteves",
+          "title": "Rick Steves",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCchgIh8Tc4sTmBfnMQ5pDdg",
+          "channelId": "UCchgIh8Tc4sTmBfnMQ5pDdg",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCchgIh8Tc4sTmBfnMQ5pDdg",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:Vox",
+          "title": "Vox",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCLXo7UDZvByw2ixzpQCufnA",
+          "channelId": "UCLXo7UDZvByw2ixzpQCufnA",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCLXo7UDZvByw2ixzpQCufnA",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:DWTravel",
+          "title": "DW Travel",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCd-swDW3HCs4LTZhq8Cf7Fg",
+          "channelId": "UCd-swDW3HCs4LTZhq8Cf7Fg",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCd-swDW3HCs4LTZhq8Cf7Fg",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:channel:UCGMzV8k2T_q9rgyCpTWVexA",
+          "title": "Policie ČR",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCGMzV8k2T_q9rgyCpTWVexA",
+          "channelId": "UCGMzV8k2T_q9rgyCpTWVexA",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCGMzV8k2T_q9rgyCpTWVexA",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:channel:UCbavWathZu8eeSyDL_VD-hg",
+          "title": "Hasiči CZ",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCbavWathZu8eeSyDL_VD-hg",
+          "channelId": "UCbavWathZu8eeSyDL_VD-hg",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCbavWathZu8eeSyDL_VD-hg",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "finance_economy",
+      "weight": 10,
+      "sources": [
+        {
+          "sourceKey": "yt:handle:PatrickBoyleOnFinance",
+          "title": "Patrick Boyle",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCASM0cgfkJxQ1ICmRilfHLw",
+          "channelId": "UCASM0cgfkJxQ1ICmRilfHLw",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCASM0cgfkJxQ1ICmRilfHLw",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "finance"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:EconomicsExplained",
+          "title": "Economics Explained",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCVWX3F3DrTvDKa0LRilQoQQ",
+          "channelId": "UCVWX3F3DrTvDKa0LRilQoQQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCVWX3F3DrTvDKa0LRilQoQQ",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "finance"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:TLDRBusiness",
+          "title": "TLDR Business",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCSMqateX8OA2s1wsOR2EgJA",
+          "channelId": "UCSMqateX8OA2s1wsOR2EgJA",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCSMqateX8OA2s1wsOR2EgJA",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "finance"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:XTBcz",
+          "title": "XTB ČR",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCNTPLCvBqnA0NFFDLNkKZGQ",
+          "channelId": "UCNTPLCvBqnA0NFFDLNkKZGQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCNTPLCvBqnA0NFFDLNkKZGQ",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "finance"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:InvesticniBrambora",
+          "title": "Investiční brambora",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCCNmrEhZwbA82zPigULLnEw",
+          "channelId": "UCCNmrEhZwbA82zPigULLnEw",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCCNmrEhZwbA82zPigULLnEw",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "finance"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:forbescesko",
+          "title": "Forbes Česko",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCTTAE_HClD_DRs17iRiqZSg",
+          "channelId": "UCTTAE_HClD_DRs17iRiqZSg",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCTTAE_HClD_DRs17iRiqZSg",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "finance"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:BloombergQuicktake",
+          "title": "Bloomberg Quicktake",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCU1Pp4a-TwbrB40ja-4JG_Q",
+          "channelId": "UCU1Pp4a-TwbrB40ja-4JG_Q",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCU1Pp4a-TwbrB40ja-4JG_Q",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "finance"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:CNBC",
+          "title": "CNBC",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCH5_L3ytGbBziX0CLuYdQ1Q",
+          "channelId": "UCH5_L3ytGbBziX0CLuYdQ1Q",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCH5_L3ytGbBziX0CLuYdQ1Q",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "finance"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:rozbiteprasatko",
+          "title": "Rozbité prasátko",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCNz5riDHBTe7eM1PIZFy4QQ",
+          "channelId": "UCNz5riDHBTe7eM1PIZFy4QQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCNz5riDHBTe7eM1PIZFy4QQ",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "finance"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "interviews_people",
+      "weight": 10,
+      "sources": [
+        {
+          "sourceKey": "yt:handle:DVTVvideo",
+          "title": "DVTV",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCFb-u3ISt99gxZ9TxIQW7UA",
+          "channelId": "UCFb-u3ISt99gxZ9TxIQW7UA",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCFb-u3ISt99gxZ9TxIQW7UA",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "interviews"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:lexfridman",
+          "title": "Lex Fridman",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCJIfeSCssxSC_Dhc5s7woww",
+          "channelId": "UCJIfeSCssxSC_Dhc5s7woww",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCJIfeSCssxSC_Dhc5s7woww",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "interviews"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:WIRED",
+          "title": "WIRED",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCftwRNsjfRo08xYE31tkiyw",
+          "channelId": "UCftwRNsjfRo08xYE31tkiyw",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCftwRNsjfRo08xYE31tkiyw",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "interviews"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:TED",
+          "title": "TED",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCsT0YIqwnpJCM-mx7-gSA4Q",
+          "channelId": "UCsT0YIqwnpJCM-mx7-gSA4Q",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCsT0YIqwnpJCM-mx7-gSA4Q",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "interviews"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:ForbesCesko",
+          "title": "Forbes Česko",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCTTAE_HClD_DRs17iRiqZSg",
+          "channelId": "UCTTAE_HClD_DRs17iRiqZSg",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCTTAE_HClD_DRs17iRiqZSg",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "interviews"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:Reflexcz",
+          "title": "Reflex",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCd0zFqqH7r1YetxOajyowFA",
+          "channelId": "UCd0zFqqH7r1YetxOajyowFA",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCd0zFqqH7r1YetxOajyowFA",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "interviews"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:StanfordECorner",
+          "title": "Stanford eCorner",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCctkeBNtFIOn7Yl_9TTj_4w",
+          "channelId": "UCctkeBNtFIOn7Yl_9TTj_4w",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCctkeBNtFIOn7Yl_9TTj_4w",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "interviews"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:OxfordUnion",
+          "title": "OxfordUnion",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCY7dD6waquGnKTZSumPMTlQ",
+          "channelId": "UCY7dD6waquGnKTZSumPMTlQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCY7dD6waquGnKTZSumPMTlQ",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "interviews"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "history_culture",
+      "weight": 10,
+      "sources": [
+        {
+          "sourceKey": "yt:handle:KingsandGenerals",
+          "title": "Kings and Generals",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCCGvq-qmjFmmMD4e-PLQqGg",
+          "channelId": "UCCGvq-qmjFmmMD4e-PLQqGg",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCCGvq-qmjFmmMD4e-PLQqGg",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "history"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:HistoriaCivilis",
+          "title": "Historia Civilis",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCv_vLHiWVBh_FR9vbeuiY-A",
+          "channelId": "UCv_vLHiWVBh_FR9vbeuiY-A",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCv_vLHiWVBh_FR9vbeuiY-A",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "history"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:Oversimplified",
+          "title": "OverSimplified",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCNIuvl7V8zACPpTmmNIqP2A",
+          "channelId": "UCNIuvl7V8zACPpTmmNIqP2A",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCNIuvl7V8zACPpTmmNIqP2A",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "history"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:TheBritishMuseum",
+          "title": "The British Museum",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCvpQ-l09fCVxJd3urZbxzHg",
+          "channelId": "UCvpQ-l09fCVxJd3urZbxzHg",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCvpQ-l09fCVxJd3urZbxzHg",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "history"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:NationalGeographic",
+          "title": "National Geographic",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCpVm7bg6pXKo1Pr6k5kxG9A",
+          "channelId": "UCpVm7bg6pXKo1Pr6k5kxG9A",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCpVm7bg6pXKo1Pr6k5kxG9A",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "history"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:CzechRadio",
+          "title": "Český rozhlas",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UC4Pydbt9Z9nJrAp-DQ2D3MQ",
+          "channelId": "UC4Pydbt9Z9nJrAp-DQ2D3MQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC4Pydbt9Z9nJrAp-DQ2D3MQ",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "history"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:ArteTV",
+          "title": "ARTE",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCwI-JbGNsojunnHbFAc0M4Q",
+          "channelId": "UCwI-JbGNsojunnHbFAc0M4Q",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCwI-JbGNsojunnHbFAc0M4Q",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "history"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "transport_infra",
+      "weight": 10,
+      "sources": [
+        {
+          "sourceKey": "yt:handle:Wendoverproductions",
+          "title": "Wendover Productions",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCTWKe1zATFV6d0o6oLS9sgw",
+          "channelId": "UCTWKe1zATFV6d0o6oLS9sgw",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCTWKe1zATFV6d0o6oLS9sgw",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:HalfAsInteresting",
+          "title": "Half as Interesting",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UC9RM-iSvTu1uPJb8X5yp3EQ",
+          "channelId": "UC9RM-iSvTu1uPJb8X5yp3EQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC9RM-iSvTu1uPJb8X5yp3EQ",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:TomScottGo",
+          "title": "Tom Scott",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCHqDTfIX-0DGaHlWvv6JZCw",
+          "channelId": "UCHqDTfIX-0DGaHlWvv6JZCw",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCHqDTfIX-0DGaHlWvv6JZCw",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:Zdopravy",
+          "title": "Zdopravy.cz",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UC2P1y2_qFJtg6LLPb66A-NA",
+          "channelId": "UC2P1y2_qFJtg6LLPb66A-NA",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC2P1y2_qFJtg6LLPb66A-NA",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:PragueAirport",
+          "title": "Prague Airport",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCF7gGGK5faKRXZExCSp1Vyw",
+          "channelId": "UCF7gGGK5faKRXZExCSp1Vyw",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCF7gGGK5faKRXZExCSp1Vyw",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:BBCNews",
+          "title": "BBC News",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCCj956IF62FbT7Gouszaj9w",
+          "channelId": "UCCj956IF62FbT7Gouszaj9w",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCCj956IF62FbT7Gouszaj9w",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:RegioJet",
+          "title": "RegioJet",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCILlFKvW9ezEkNEvRoD6a0Q",
+          "channelId": "UCILlFKvW9ezEkNEvRoD6a0Q",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCILlFKvW9ezEkNEvRoD6a0Q",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "health_psychology",
+      "weight": 10,
+      "sources": [
+        {
+          "sourceKey": "yt:handle:hubermanlab",
+          "title": "Huberman Lab",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UC2D2CMWXMOVWx7giW1n3LIg",
+          "channelId": "UC2D2CMWXMOVWx7giW1n3LIg",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC2D2CMWXMOVWx7giW1n3LIg",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:theschooloflifetv",
+          "title": "The School of Life",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UC7IcJI8PUf5Z3zKxnZvTBog",
+          "channelId": "UC7IcJI8PUf5Z3zKxnZvTBog",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC7IcJI8PUf5Z3zKxnZvTBog",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:aliabdaal",
+          "title": "Ali Abdaal",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UChfo46ZNOV-vtehDc25A1Ug",
+          "channelId": "UChfo46ZNOV-vtehDc25A1Ug",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UChfo46ZNOV-vtehDc25A1Ug",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:Kovy",
+          "title": "Kovy",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCGC8o-hW_TS-UpnThU0Wa1w",
+          "channelId": "UCGC8o-hW_TS-UpnThU0Wa1w",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCGC8o-hW_TS-UpnThU0Wa1w",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:KurzgesagtInANutshell",
+          "title": "Kurzgesagt (alt)",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCjZ2y5glyoUWJXIzWCooqtQ",
+          "channelId": "UCjZ2y5glyoUWJXIzWCooqtQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCjZ2y5glyoUWJXIzWCooqtQ",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:TEDxTalks",
+          "title": "TEDxTalks",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCsT0YIqwnpJCM-mx7-gSA4Q",
+          "channelId": "UCsT0YIqwnpJCM-mx7-gSA4Q",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCsT0YIqwnpJCM-mx7-gSA4Q",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:CestmirStrakaty",
+          "title": "Čestmír Strakatý",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCJf7w1Fl5b6yxlCHdC5lOhw",
+          "channelId": "UCJf7w1Fl5b6yxlCHdC5lOhw",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCJf7w1Fl5b6yxlCHdC5lOhw",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "practical"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "law_politics_explained",
+      "weight": 10,
+      "sources": [
+        {
+          "sourceKey": "yt:handle:LegalEagle",
+          "title": "LegalEagle",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCpSUQewzOXg1F0zLmieKCqQ",
+          "channelId": "UCpSUQewzOXg1F0zLmieKCqQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCpSUQewzOXg1F0zLmieKCqQ",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "explainer"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:TLDRnews",
+          "title": "TLDR News",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UC-eegKVWEgBCa4OzjnK_PtA",
+          "channelId": "UC-eegKVWEgBCa4OzjnK_PtA",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC-eegKVWEgBCa4OzjnK_PtA",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "explainer"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:DWNews",
+          "title": "DW News",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCbbS1GE942k3UVqpLklyhIA",
+          "channelId": "UCbbS1GE942k3UVqpLklyhIA",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCbbS1GE942k3UVqpLklyhIA",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "explainer"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:BBC",
+          "title": "BBC",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UC16niRr50-MSBwiO3YDb3RA",
+          "channelId": "UC16niRr50-MSBwiO3YDb3RA",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC16niRr50-MSBwiO3YDb3RA",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "explainer"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:SeznamZpravy",
+          "title": "Seznam Zprávy",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCcINojTCz1nhQIpg4iooONQ",
+          "channelId": "UCcINojTCz1nhQIpg4iooONQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCcINojTCz1nhQIpg4iooONQ",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "explainer"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:iROZHLAScz",
+          "title": "iROZHLAS",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCtiVvnCqHn9AtUhUrI1lFLQ",
+          "channelId": "UCtiVvnCqHn9AtUhUrI1lFLQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCtiVvnCqHn9AtUhUrI1lFLQ",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "explainer"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:ceskatelevize",
+          "title": "Česká televize",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCGKO2td3HikyNBf0n9ISkjg",
+          "channelId": "UCGKO2td3HikyNBf0n9ISkjg",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCGKO2td3HikyNBf0n9ISkjg",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "explainer"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:PerunAU",
+          "title": "Perun",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCPYJiiMoA0yOMHI-aiB44RQ",
+          "channelId": "UCPYJiiMoA0yOMHI-aiB44RQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCPYJiiMoA0yOMHI-aiB44RQ",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "explainer"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "business_startups",
+      "weight": 5,
+      "sources": [
+        {
+          "sourceKey": "yt:handle:ycombinator",
+          "title": "Y Combinator",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCxIJaCMEptJjxmmQgGFsnCg",
+          "channelId": "UCxIJaCMEptJjxmmQgGFsnCg",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCxIJaCMEptJjxmmQgGFsnCg",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "finance"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:a16z",
+          "title": "a16z",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCQ1VQj-37kl2yS_VUhfQHsw",
+          "channelId": "UCQ1VQj-37kl2yS_VUhfQHsw",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ1VQj-37kl2yS_VUhfQHsw",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "finance"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:GoogleDevelopers",
+          "title": "Google Developers",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UC_x5XG1OV2P6uZZ5FSM9Ttw",
+          "channelId": "UC_x5XG1OV2P6uZZ5FSM9Ttw",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC_x5XG1OV2P6uZZ5FSM9Ttw",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "finance"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:MicrosoftDeveloper",
+          "title": "Microsoft Developer",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCV_6HOhwxYLXAGd-JOqKPoQ",
+          "channelId": "UCV_6HOhwxYLXAGd-JOqKPoQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCV_6HOhwxYLXAGd-JOqKPoQ",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "finance"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:CzechCrunch",
+          "title": "CzechCrunch",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCuTf9Dg2a3dA-RRtMuA4ARQ",
+          "channelId": "UCuTf9Dg2a3dA-RRtMuA4ARQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCuTf9Dg2a3dA-RRtMuA4ARQ",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "finance"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:StartupJobsCZ",
+          "title": "StartupJobs",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UC14qAyl4pOosvNYgSSyHcDQ",
+          "channelId": "UC14qAyl4pOosvNYgSSyHcDQ",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC14qAyl4pOosvNYgSSyHcDQ",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "finance"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "smart_fun_short",
+      "weight": 5,
+      "sources": [
+        {
+          "sourceKey": "yt:handle:smartereveryday",
+          "title": "Smarter Every Day",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UC8VkNBOwvsTlFjoSnNSMmxw",
+          "channelId": "UC8VkNBOwvsTlFjoSnNSMmxw",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC8VkNBOwvsTlFjoSnNSMmxw",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "explainer"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:CGPGrey",
+          "title": "CGP Grey",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UC2C_jShtL725hvbm1arSV9w",
+          "channelId": "UC2C_jShtL725hvbm1arSV9w",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC2C_jShtL725hvbm1arSV9w",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "explainer"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:MinuteEarth",
+          "title": "MinuteEarth",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCUHW94eEFW7hkUMVaZz4eDg",
+          "channelId": "UCUHW94eEFW7hkUMVaZz4eDg",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCUHW94eEFW7hkUMVaZz4eDg",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "explainer"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:Vsauce",
+          "title": "Vsauce",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UC6nSFpj9HTCZ5t-N3Rm3-HA",
+          "channelId": "UC6nSFpj9HTCZ5t-N3Rm3-HA",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC6nSFpj9HTCZ5t-N3Rm3-HA",
+          "region": "world",
+          "langDefault": "en",
+          "assumeCzSubs": false,
+          "topics": [
+            "explainer"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:JirkaVysvetluje",
+          "title": "Jirka Vysvětluje",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCiel0FdALxeIPW5Zaer0Brg",
+          "channelId": "UCiel0FdALxeIPW5Zaer0Brg",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCiel0FdALxeIPW5Zaer0Brg",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "explainer"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        },
+        {
+          "sourceKey": "yt:handle:PetrMara",
+          "title": "Petr Mára",
+          "type": "channel",
+          "url": "https://www.youtube.com/channel/UCSgFxc7dM_mjQIC0zxn1zqw",
+          "channelId": "UCSgFxc7dM_mjQIC0zxn1zqw",
+          "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCSgFxc7dM_mjQIC0zxn1zqw",
+          "region": "cz",
+          "langDefault": "cz",
+          "assumeCzSubs": false,
+          "topics": [
+            "explainer"
+          ],
+          "weight": 1.0,
+          "maxPerDay": 2,
+          "official": true
+        }
+      ]
+    }
+  ],
+  "videos": [
+    {
+      "videoId": "78kTssB3Wzo",
+      "title": "She’s performed on the world’s biggest stages & the #Strictly ballroom is next. It’s Delta Goodrem!!",
+      "url": "https://www.youtube.com/watch?v=78kTssB3Wzo",
+      "publishedAt": "2026-06-12T17:10:17+00:00",
+      "publishedAtTs": 1781284217000,
+      "channel": "BBC",
+      "sourceUrl": "https://www.youtube.com/channel/UCCj956IF62FbT7Gouszaj9w",
+      "sourceKey": "yt:handle:BBCNews",
+      "sourceTitle": "BBC News",
+      "channelId": "UCCj956IF62FbT7Gouszaj9w",
+      "region": "world",
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "en",
+      "langClass": "en",
+      "hasCzSubtitles": false,
+      "category": "transport_infra",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/78kTssB3Wzo/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "nuyyle8OzFk",
+      "title": "Defence 'the number one priority' at spending review, says PM Starmer. #UK #KeirStarmer #BBCNews",
+      "url": "https://www.youtube.com/watch?v=nuyyle8OzFk",
+      "publishedAt": "2026-06-12T17:00:24+00:00",
+      "publishedAtTs": 1781283624000,
+      "channel": "BBC News",
+      "sourceUrl": "https://www.youtube.com/channel/UC16niRr50-MSBwiO3YDb3RA",
+      "sourceKey": "yt:handle:BBC",
+      "sourceTitle": "BBC",
+      "channelId": "UC16niRr50-MSBwiO3YDb3RA",
+      "region": "world",
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "en",
+      "langClass": "en",
+      "hasCzSubtitles": false,
+      "category": "law_politics_explained",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/nuyyle8OzFk/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "zLf-2LtAqys",
+      "title": "Why we need to stop ranking our grief | Kelly Cervantes | TEDxNortheasternU",
+      "url": "https://www.youtube.com/watch?v=zLf-2LtAqys",
+      "publishedAt": "2026-06-12T17:00:20+00:00",
+      "publishedAtTs": 1781283620000,
+      "channel": "TEDx Talks",
+      "sourceUrl": "https://www.youtube.com/channel/UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "sourceKey": "yt:handle:TED",
+      "sourceTitle": "TED",
+      "channelId": "UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "region": "world",
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "en",
+      "langClass": "en",
+      "hasCzSubtitles": false,
+      "category": "interviews_people",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/zLf-2LtAqys/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "dWV5Xbs-WCs",
+      "title": "Why The Grass Isn't Always Greener | Luis Antonio Salvador | TEDxUofTScarborough",
+      "url": "https://www.youtube.com/watch?v=dWV5Xbs-WCs",
+      "publishedAt": "2026-06-12T16:50:49+00:00",
+      "publishedAtTs": 1781283049000,
+      "channel": "TEDx Talks",
+      "sourceUrl": "https://www.youtube.com/channel/UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "sourceKey": "yt:handle:TED",
+      "sourceTitle": "TED",
+      "channelId": "UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "region": "world",
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "en",
+      "langClass": "en",
+      "hasCzSubtitles": false,
+      "category": "interviews_people",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/dWV5Xbs-WCs/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "S98-haP0UXg",
+      "title": "Trump claims deal to end Iran war near, but Tehran says 'nothing' finalised | BBC News",
+      "url": "https://www.youtube.com/watch?v=S98-haP0UXg",
+      "publishedAt": "2026-06-12T16:45:36+00:00",
+      "publishedAtTs": 1781282736000,
+      "channel": "BBC News",
+      "sourceUrl": "https://www.youtube.com/channel/UC16niRr50-MSBwiO3YDb3RA",
+      "sourceKey": "yt:handle:BBC",
+      "sourceTitle": "BBC",
+      "channelId": "UC16niRr50-MSBwiO3YDb3RA",
+      "region": "world",
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "en",
+      "langClass": "en",
+      "hasCzSubtitles": false,
+      "category": "law_politics_explained",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/S98-haP0UXg/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "kkHgZ7qNOPA",
+      "title": "POV: Your Dad on a road trip",
+      "url": "https://www.youtube.com/watch?v=kkHgZ7qNOPA",
+      "publishedAt": "2026-06-12T16:45:18+00:00",
+      "publishedAtTs": 1781282718000,
+      "channel": "BBC",
+      "sourceUrl": "https://www.youtube.com/channel/UCCj956IF62FbT7Gouszaj9w",
+      "sourceKey": "yt:handle:BBCNews",
+      "sourceTitle": "BBC News",
+      "channelId": "UCCj956IF62FbT7Gouszaj9w",
+      "region": "world",
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "en",
+      "langClass": "en",
+      "hasCzSubtitles": false,
+      "category": "transport_infra",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/kkHgZ7qNOPA/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "sDxL-z6pB1c",
+      "title": "Novotná z BESIPu: Parkoviště je pro děti jedno z nejrizikovějších míst. Při couvání je nevidíte",
+      "url": "https://www.youtube.com/watch?v=sDxL-z6pB1c",
+      "publishedAt": "2026-06-12T16:45:12+00:00",
+      "publishedAtTs": 1781282712000,
+      "channel": "Český rozhlas",
+      "sourceUrl": "https://www.youtube.com/channel/UCtiVvnCqHn9AtUhUrI1lFLQ",
+      "sourceKey": "yt:handle:iROZHLAScz",
+      "sourceTitle": "iROZHLAS",
+      "channelId": "UCtiVvnCqHn9AtUhUrI1lFLQ",
+      "region": "cz",
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "cz",
+      "langClass": "cz",
+      "hasCzSubtitles": false,
+      "category": "law_politics_explained",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/sDxL-z6pB1c/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "SsBAm-w_pII",
+      "title": "Living Life in the Stretch Zone | Abigail Lee | TEDxQueensU",
+      "url": "https://www.youtube.com/watch?v=SsBAm-w_pII",
+      "publishedAt": "2026-06-12T16:34:16+00:00",
+      "publishedAtTs": 1781282056000,
+      "channel": "TEDx Talks",
+      "sourceUrl": "https://www.youtube.com/channel/UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "sourceKey": "yt:handle:TED",
+      "sourceTitle": "TED",
+      "channelId": "UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "region": "world",
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "en",
+      "langClass": "en",
+      "hasCzSubtitles": false,
+      "category": "interviews_people",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/SsBAm-w_pII/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "hmssMOa7HbI",
+      "title": "Why creativity matters in times of change | Stephanie Utz | TEDxTUM",
+      "url": "https://www.youtube.com/watch?v=hmssMOa7HbI",
+      "publishedAt": "2026-06-12T16:33:57+00:00",
+      "publishedAtTs": 1781282037000,
+      "channel": "TEDx Talks",
+      "sourceUrl": "https://www.youtube.com/channel/UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "sourceKey": "yt:handle:TED",
+      "sourceTitle": "TED",
+      "channelId": "UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "region": "world",
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "en",
+      "langClass": "en",
+      "hasCzSubtitles": false,
+      "category": "interviews_people",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/hmssMOa7HbI/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "MY_ZaD53SpM",
+      "title": "SPEAKING ANYWAY: FINDING POWER IN AN UNCOMMON VOICE | Whitney Robinson | TEDxBillings Youth",
+      "url": "https://www.youtube.com/watch?v=MY_ZaD53SpM",
+      "publishedAt": "2026-06-12T16:33:07+00:00",
+      "publishedAtTs": 1781281987000,
+      "channel": "TEDx Talks",
+      "sourceUrl": "https://www.youtube.com/channel/UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "sourceKey": "yt:handle:TED",
+      "sourceTitle": "TED",
+      "channelId": "UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "region": "world",
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "en",
+      "langClass": "en",
+      "hasCzSubtitles": false,
+      "category": "interviews_people",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/MY_ZaD53SpM/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "elgrc2-EGhw",
+      "title": "Performance by Alternative Singer/Songwriter | Milli Bear | TEDxBillings Youth",
+      "url": "https://www.youtube.com/watch?v=elgrc2-EGhw",
+      "publishedAt": "2026-06-12T16:32:59+00:00",
+      "publishedAtTs": 1781281979000,
+      "channel": "TEDx Talks",
+      "sourceUrl": "https://www.youtube.com/channel/UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "sourceKey": "yt:handle:TED",
+      "sourceTitle": "TED",
+      "channelId": "UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "region": "world",
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "en",
+      "langClass": "en",
+      "hasCzSubtitles": false,
+      "category": "interviews_people",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/elgrc2-EGhw/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "D00uwASApzY",
+      "title": "Üretmek Neden Zordur? Bir Balon Hikâyesi | M. Halis Aydoğan | TEDxDerinkuyu",
+      "url": "https://www.youtube.com/watch?v=D00uwASApzY",
+      "publishedAt": "2026-06-12T16:32:41+00:00",
+      "publishedAtTs": 1781281961000,
+      "channel": "TEDx Talks",
+      "sourceUrl": "https://www.youtube.com/channel/UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "sourceKey": "yt:handle:TED",
+      "sourceTitle": "TED",
+      "channelId": "UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "region": "world",
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "en",
+      "langClass": "en",
+      "hasCzSubtitles": false,
+      "category": "interviews_people",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/D00uwASApzY/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "NUa7M_0ID_g",
+      "title": "A LIFE OF COLORS | Nico Brown | TEDxBillings Youth",
+      "url": "https://www.youtube.com/watch?v=NUa7M_0ID_g",
+      "publishedAt": "2026-06-12T16:32:27+00:00",
+      "publishedAtTs": 1781281947000,
+      "channel": "TEDx Talks",
+      "sourceUrl": "https://www.youtube.com/channel/UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "sourceKey": "yt:handle:TED",
+      "sourceTitle": "TED",
+      "channelId": "UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "region": "world",
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "en",
+      "langClass": "en",
+      "hasCzSubtitles": false,
+      "category": "interviews_people",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/NUa7M_0ID_g/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "CsKkHPNjokg",
+      "title": "Yeniden İnşa Et! | Mehmet Çetin | TEDxDerinkuyu",
+      "url": "https://www.youtube.com/watch?v=CsKkHPNjokg",
+      "publishedAt": "2026-06-12T16:32:20+00:00",
+      "publishedAtTs": 1781281940000,
+      "channel": "TEDx Talks",
+      "sourceUrl": "https://www.youtube.com/channel/UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "sourceKey": "yt:handle:TED",
+      "sourceTitle": "TED",
+      "channelId": "UCsT0YIqwnpJCM-mx7-gSA4Q",
+      "region": "world",
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "en",
+      "langClass": "en",
+      "hasCzSubtitles": false,
+      "category": "interviews_people",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/CsKkHPNjokg/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "ghi6pp0ttVQ",
+      "title": "Cesta na vrchol je manažerská práce. Důležité je nenechat se odradit, říká horolezec Radek Jaroš",
+      "url": "https://www.youtube.com/watch?v=ghi6pp0ttVQ",
+      "publishedAt": "2026-06-12T16:10:00+00:00",
+      "publishedAtTs": 1781280600000,
+      "channel": "Český rozhlas",
+      "sourceUrl": "https://www.youtube.com/channel/UCtiVvnCqHn9AtUhUrI1lFLQ",
+      "sourceKey": "yt:handle:iROZHLAScz",
+      "sourceTitle": "iROZHLAS",
+      "channelId": "UCtiVvnCqHn9AtUhUrI1lFLQ",
+      "region": "cz",
+      "topics": [
+        "explainer"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "cz",
+      "langClass": "cz",
+      "hasCzSubtitles": false,
+      "category": "law_politics_explained",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/ghi6pp0ttVQ/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "veSQQfBtyEE",
+      "title": "Kuba Ryba: Motoristé jsou pětileté, nevychované děti. Trika s Klempířem jsou boj proti hlouposti",
+      "url": "https://www.youtube.com/watch?v=veSQQfBtyEE",
+      "publishedAt": "2026-06-12T15:00:00+00:00",
+      "publishedAtTs": 1781276400000,
+      "channel": "DVTV",
+      "sourceUrl": "https://www.youtube.com/channel/UCFb-u3ISt99gxZ9TxIQW7UA",
+      "sourceKey": "yt:handle:DVTVvideo",
+      "sourceTitle": "DVTV",
+      "channelId": "UCFb-u3ISt99gxZ9TxIQW7UA",
+      "region": "cz",
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "cz",
+      "langClass": "cz",
+      "hasCzSubtitles": false,
+      "category": "interviews_people",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/veSQQfBtyEE/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "QUNfQ_KkPLA",
+      "title": "Komoditní výhled: Zlato se sesunulo na letošní minima. Čeká nás další propad?",
+      "url": "https://www.youtube.com/watch?v=QUNfQ_KkPLA",
+      "publishedAt": "2026-06-12T13:00:38+00:00",
+      "publishedAtTs": 1781269238000,
+      "channel": "XTB Česká republika a Slovensko",
+      "sourceUrl": "https://www.youtube.com/channel/UCNTPLCvBqnA0NFFDLNkKZGQ",
+      "sourceKey": "yt:handle:XTBcz",
+      "sourceTitle": "XTB ČR",
+      "channelId": "UCNTPLCvBqnA0NFFDLNkKZGQ",
+      "region": "cz",
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "cz",
+      "langClass": "cz",
+      "hasCzSubtitles": false,
+      "category": "finance_economy",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/QUNfQ_KkPLA/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "CGOJuHEPhRo",
+      "title": "Investovat z pláže půl hodiny denně? Šéf XTB ukazuje, proč tahle iluze funguje jen na Instagramu",
+      "url": "https://www.youtube.com/watch?v=CGOJuHEPhRo",
+      "publishedAt": "2026-06-12T12:39:35+00:00",
+      "publishedAtTs": 1781267975000,
+      "channel": "CzechCrunch",
+      "sourceUrl": "https://www.youtube.com/channel/UCuTf9Dg2a3dA-RRtMuA4ARQ",
+      "sourceKey": "yt:handle:CzechCrunch",
+      "sourceTitle": "CzechCrunch",
+      "channelId": "UCuTf9Dg2a3dA-RRtMuA4ARQ",
+      "region": "cz",
+      "topics": [
+        "science_tech"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "cz",
+      "langClass": "cz",
+      "hasCzSubtitles": false,
+      "category": "science_tech_ai",
+      "categoryWeight": 15,
+      "thumb": "https://i.ytimg.com/vi/CGOJuHEPhRo/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "lawBrPwkUTc",
+      "title": "Axon Body 2 Video STŘIH",
+      "url": "https://www.youtube.com/watch?v=lawBrPwkUTc",
+      "publishedAt": "2026-06-12T11:45:31+00:00",
+      "publishedAtTs": 1781264731000,
+      "channel": "Policie ČR (Policie České republiky)",
+      "sourceUrl": "https://www.youtube.com/channel/UCGMzV8k2T_q9rgyCpTWVexA",
+      "sourceKey": "yt:channel:UCGMzV8k2T_q9rgyCpTWVexA",
+      "sourceTitle": "Policie ČR",
+      "channelId": "UCGMzV8k2T_q9rgyCpTWVexA",
+      "region": "cz",
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "cz",
+      "langClass": "cz",
+      "hasCzSubtitles": false,
+      "category": "practical_life_city_travel",
+      "categoryWeight": 15,
+      "thumb": "https://i.ytimg.com/vi/lawBrPwkUTc/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "kOQneFO2oac",
+      "title": "Watchlist: Odolá Mercado Libre tvrdé konkurenci Amazonu?",
+      "url": "https://www.youtube.com/watch?v=kOQneFO2oac",
+      "publishedAt": "2026-06-12T11:00:31+00:00",
+      "publishedAtTs": 1781262031000,
+      "channel": "XTB Česká republika a Slovensko",
+      "sourceUrl": "https://www.youtube.com/channel/UCNTPLCvBqnA0NFFDLNkKZGQ",
+      "sourceKey": "yt:handle:XTBcz",
+      "sourceTitle": "XTB ČR",
+      "channelId": "UCNTPLCvBqnA0NFFDLNkKZGQ",
+      "region": "cz",
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "cz",
+      "langClass": "cz",
+      "hasCzSubtitles": false,
+      "category": "finance_economy",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/kOQneFO2oac/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "fC7PL2UUlaQ",
+      "title": "💥| Babišův boj s polistopadovým režimem pod drobnohledem Luďka a Martina, kteří ho nešetří.",
+      "url": "https://www.youtube.com/watch?v=fC7PL2UUlaQ",
+      "publishedAt": "2026-06-12T09:30:35+00:00",
+      "publishedAtTs": 1781256635000,
+      "channel": "DVTV",
+      "sourceUrl": "https://www.youtube.com/channel/UCFb-u3ISt99gxZ9TxIQW7UA",
+      "sourceKey": "yt:handle:DVTVvideo",
+      "sourceTitle": "DVTV",
+      "channelId": "UCFb-u3ISt99gxZ9TxIQW7UA",
+      "region": "cz",
+      "topics": [
+        "interviews"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "cz",
+      "langClass": "cz",
+      "hasCzSubtitles": false,
+      "category": "interviews_people",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/fC7PL2UUlaQ/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "bVaVWDOfSGY",
+      "title": "Policie ČR: Zadržení podezřelého - Výhrůžky z Argentiny",
+      "url": "https://www.youtube.com/watch?v=bVaVWDOfSGY",
+      "publishedAt": "2026-06-12T09:00:10+00:00",
+      "publishedAtTs": 1781254810000,
+      "channel": "Policie ČR (Policie České republiky)",
+      "sourceUrl": "https://www.youtube.com/channel/UCGMzV8k2T_q9rgyCpTWVexA",
+      "sourceKey": "yt:channel:UCGMzV8k2T_q9rgyCpTWVexA",
+      "sourceTitle": "Policie ČR",
+      "channelId": "UCGMzV8k2T_q9rgyCpTWVexA",
+      "region": "cz",
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "cz",
+      "langClass": "cz",
+      "hasCzSubtitles": false,
+      "category": "practical_life_city_travel",
+      "categoryWeight": 15,
+      "thumb": "https://i.ytimg.com/vi/bVaVWDOfSGY/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "ldGFTl8MWLI",
+      "title": "Policie ČR: Cvičení Josefov 2026",
+      "url": "https://www.youtube.com/watch?v=ldGFTl8MWLI",
+      "publishedAt": "2026-06-12T08:50:43+00:00",
+      "publishedAtTs": 1781254243000,
+      "channel": "Policie ČR (Policie České republiky)",
+      "sourceUrl": "https://www.youtube.com/channel/UCGMzV8k2T_q9rgyCpTWVexA",
+      "sourceKey": "yt:channel:UCGMzV8k2T_q9rgyCpTWVexA",
+      "sourceTitle": "Policie ČR",
+      "channelId": "UCGMzV8k2T_q9rgyCpTWVexA",
+      "region": "cz",
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "cz",
+      "langClass": "cz",
+      "hasCzSubtitles": false,
+      "category": "practical_life_city_travel",
+      "categoryWeight": 15,
+      "thumb": "https://i.ytimg.com/vi/ldGFTl8MWLI/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "vw4mREo9TeY",
+      "title": "Policie ČR: Poznáte muže na záběrech? Kriminalisté s ním potřebují mluvit.",
+      "url": "https://www.youtube.com/watch?v=vw4mREo9TeY",
+      "publishedAt": "2026-06-12T08:39:32+00:00",
+      "publishedAtTs": 1781253572000,
+      "channel": "Policie ČR (Policie České republiky)",
+      "sourceUrl": "https://www.youtube.com/channel/UCGMzV8k2T_q9rgyCpTWVexA",
+      "sourceKey": "yt:channel:UCGMzV8k2T_q9rgyCpTWVexA",
+      "sourceTitle": "Policie ČR",
+      "channelId": "UCGMzV8k2T_q9rgyCpTWVexA",
+      "region": "cz",
+      "topics": [
+        "practical"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "cz",
+      "langClass": "cz",
+      "hasCzSubtitles": false,
+      "category": "practical_life_city_travel",
+      "categoryWeight": 15,
+      "thumb": "https://i.ytimg.com/vi/vw4mREo9TeY/hqdefault.jpg",
+      "durationSec": null
+    },
+    {
+      "videoId": "y9Rnm11ht8g",
+      "title": "Výsledková sezóna s XTB: Akcie Adobe sa po výsledkoch prepadávajú a dostávajú sa na ceny z roku 2018",
+      "url": "https://www.youtube.com/watch?v=y9Rnm11ht8g",
+      "publishedAt": "2026-06-12T07:15:11+00:00",
+      "publishedAtTs": 1781248511000,
+      "channel": "XTB Česká republika a Slovensko",
+      "sourceUrl": "https://www.youtube.com/channel/UCNTPLCvBqnA0NFFDLNkKZGQ",
+      "sourceKey": "yt:handle:XTBcz",
+      "sourceTitle": "XTB ČR",
+      "channelId": "UCNTPLCvBqnA0NFFDLNkKZGQ",
+      "region": "cz",
+      "topics": [
+        "finance"
+      ],
+      "weight": 1.0,
+      "maxPerDay": 2,
+      "lang": "cz",
+      "langClass": "cz",
+      "hasCzSubtitles": false,
+      "category": "finance_economy",
+      "categoryWeight": 10,
+      "thumb": "https://i.ytimg.com/vi/y9Rnm11ht8g/hqdefault.jpg",
+      "durationSec": null
+    }
+  ]
 }
