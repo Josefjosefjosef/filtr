@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-06-11T23:44:22.275304Z",
+  "ingestedAt": "2026-06-12T00:39:19.377418Z",
   "items": [
     {
       "section": "aktualne",
@@ -46,6 +46,30 @@
         "světa",
         "začalo",
         "zlato"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_seznam_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Když je soupeřem i vzduch. Co udělá extrémní výška s fotbalem",
+      "url": "https://www.seznamzpravy.cz/clanek/sport-fotbal-ms-ve-fotbale-kdyz-je-souperem-i-vzduch-co-udela-extremni-nadmorska-vyska-s-fotbalem-307777",
+      "dt": "2026-06-11T10:14:07Z",
+      "media_raw": "Seznam Zprávy / Domácí",
+      "media_norm": "Seznam Zprávy",
+      "tokens": [
+        "extrémní",
+        "fotbalem",
+        "když",
+        "soupeřem",
+        "udělá",
+        "vzduch",
+        "výška"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -736,33 +760,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "seznamzpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trump hrozí Íránu obsazením srdce ropného průmyslu. Splnil by si dávný sen",
-      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-trump-hrozi-iranu-obsazenim-srdce-ropneho-prumyslu-splnil-by-si-davny-sen-308352",
-      "dt": "2026-06-11T14:15:00Z",
-      "media_raw": "Seznam Zprávy / Domácí",
-      "media_norm": "Seznam Zprávy",
-      "tokens": [
-        "dávný",
-        "hrozí",
-        "obsazením",
-        "průmyslu",
-        "ropného",
-        "sen",
-        "splnil",
-        "srdce",
-        "trump",
-        "íránu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_seznam_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -773,7 +770,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/domaci",
-      "bytes": 46933,
+      "bytes": 46480,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,8 +810,8 @@
         "raw_feed_latest_publishedAt": "2026-06-11T21:17:13Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "sport": 3,
+          "zpravy": 22,
+          "sport": 4,
           "finance": 4
         },
         "drop_counts": {
@@ -836,6 +833,10 @@
             "publishedAt": "2026-06-11T18:38:51Z"
           },
           {
+            "title": "Když je soupeřem i vzduch. Co udělá extrémní výška s fotbalem",
+            "publishedAt": "2026-06-11T10:14:07Z"
+          },
+          {
             "title": "Mexičtí fotbalisté porazili JAR 2:0, premiéra MS přinesla tři vyloučené",
             "publishedAt": "2026-06-11T21:17:13Z"
           },
@@ -854,10 +855,6 @@
           {
             "title": "Novela stavebního zákona míří po dnešku ve Sněmovně ke schvalování",
             "publishedAt": "2026-06-11T18:40:15Z"
-          },
-          {
-            "title": "USA uvalily sankce na kubánskou státní ropnou společnost CUPET",
-            "publishedAt": "2026-06-11T18:51:09Z"
           }
         ]
       }

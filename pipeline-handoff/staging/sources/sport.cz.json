@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-11T23:44:22.275304Z",
+  "ingestedAt": "2026-06-12T00:39:19.377418Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Báli se, že je mrtvý. Střelce Mexika dohnaly po životním gólu na MS slzy",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-bali-se-ze-je-mrtvy-strelce-mexika-dohnaly-po-zivotnim-golu-na-ms-slzy-5476380",
+      "dt": "2026-06-12T00:23:32Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "báli",
+        "dohnaly",
+        "gólu",
+        "mexika",
+        "mrtvý",
+        "slzy",
+        "střelce",
+        "životním"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -746,27 +771,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Na Slovácku to po odchodu trenéra vře",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-na-slovacku-to-po-odchodu-trenera-vre-prodejte-klub-zadaji-fanousci-majitele-5476210",
-      "dt": "2026-06-11T12:11:37Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "odchodu",
-        "slovácku",
-        "trenéra",
-        "vře"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42035,
+      "bytes": 41784,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,7 +818,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-11T21:51:12Z",
+        "raw_feed_latest_publishedAt": "2026-06-12T00:23:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -830,6 +834,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Báli se, že je mrtvý. Střelce Mexika dohnaly po životním gólu na MS slzy",
+            "publishedAt": "2026-06-12T00:23:32Z"
+          },
           {
             "title": "Povinné tři body! Experti rozcupovali výkon druhého soupeře Česka na MS",
             "publishedAt": "2026-06-11T21:51:12Z"
@@ -857,10 +865,6 @@
           {
             "title": "Pat a Mat, Češi jako atrakce. V Mexiku propukl fotbalový fanatismus",
             "publishedAt": "2026-06-11T18:29:57Z"
-          },
-          {
-            "title": "Real Madrid dotáhl příchod Mourinha",
-            "publishedAt": "2026-06-11T18:26:58Z"
           }
         ]
       }
