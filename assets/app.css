@@ -9165,7 +9165,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   }
   body.iu-mobileGateOverlayOpen #iuMobileGateContent.iu-mobileGateContent[aria-hidden="false"]{
     position: fixed !important;
-    z-index: 10018 !important;
+    /* P1 mobile Menu→Počasí: gate host must stack above #iuConsentLayer (10020, top sheet ≤900px). */
+    z-index: 10025 !important;
     left: 0 !important;
     right: 0 !important;
     top: 0 !important;
