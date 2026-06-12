@@ -33,7 +33,7 @@ function isCloudflareInsightsCspBeaconNoise(text) {
   const s = String(text || "");
   if (!s) return false;
   if (!/static\.cloudflareinsights\.com\/beacon\.min\.js/i.test(s)) return false;
-  if (!/violates the Content Security Policy directive/i.test(s)) return false;
+  if (!/violates the (following )?Content Security Policy directive/i.test(s)) return false;
   if (!/The action has been blocked/i.test(s)) return false;
   return true;
 }
@@ -55,9 +55,9 @@ function partitionConsoleErrors(rawConsoleErrors, ignorableOpts) {
 
 function runConsoleErrorFilterSelfCheck() {
   const cloudflareSample =
-    "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/abc' violates the Content Security Policy directive \"script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'\". The action has been blocked.";
+    "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/abc' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.";
   const genericCspSample =
-    "Loading the script 'https://infouzel.cz/projects/assets/app.js' violates the Content Security Policy directive \"script-src 'self'\". The action has been blocked.";
+    "Loading the script 'https://infouzel.cz/projects/assets/app.js' violates the following Content Security Policy directive: \"script-src 'self'\". The action has been blocked.";
   const appSample = "Uncaught TypeError: Cannot read properties of undefined (reading 'x')";
   const faviconSample = "Failed to load resource: the server responded with a status of 404 (Not Found) https://infouzel.cz/favicon.ico";
   const checks = [
