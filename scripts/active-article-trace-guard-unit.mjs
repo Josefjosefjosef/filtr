@@ -13,8 +13,17 @@ import {
   evaluateTraceSampleItem,
   p0DefForSourceId,
   buildDedupeAlternativeUrlSet,
+  loadTraceIngestContext,
+  p0InIngestBatch,
+  p0InRotationBatch,
+  wouldContentFreshnessWarnForP0,
+  resolveStaleSourceTraceOutcome,
 } from "./active-article-trace-guard.mjs";
-import { buildArticleUrlIndex } from "./content-freshness-guard-lib.mjs";
+import {
+  buildArticleUrlIndex,
+  evaluateContentFreshnessPolicy,
+  P0_CONTENT_SOURCES,
+} from "./content-freshness-guard-lib.mjs";
 
 const bundleMs = Date.parse("2026-06-02T06:09:00.000Z");
 const slackMs = 0;
@@ -167,5 +176,121 @@ const urlArticles = [
 const byUrlHit = buildArticleUrlIndex(urlArticles);
 const r4 = evaluateTraceSampleItem(rssHeadline, urlArticles, ct24Def, byUrlHit, refMs);
 assert(r4.pass && r4.matchMode === "url", "exact RSS URL in bundle → PASS");
+
+// --- stale_source policy (Variant A hotfix) ---
+function freshnessReportRun4802Style() {
+  const genTs = Date.parse("2026-06-12T15:12:00.000Z");
+  const rows = [
+    { sourceId: "novinky", source: "Novinky.cz", gapMinutes: 196, fetchError: null, productionLatest: { ts: 1 } },
+    { sourceId: "idnes", source: "iDNES.cz", gapMinutes: 196, fetchError: null, productionLatest: { ts: 1 } },
+    { sourceId: "seznam", source: "Seznam Zprávy", gapMinutes: 210, fetchError: null, productionLatest: { ts: 1 } },
+    { sourceId: "sportcz", source: "Sport.cz", gapMinutes: 216, fetchError: null, productionLatest: { ts: 1 } },
+    { sourceId: "ct24", source: "ČT24", gapMinutes: 30, fetchError: null, productionLatest: { ts: 1 } },
+  ];
+  return {
+    generatedAtTs: genTs,
+    articleCount: 15535,
+    contentNewerThanGenerated: 42,
+    rows,
+  };
+}
+
+const run4802BatchKeys = [
+  "ceskatelevize.cz",
+  "denik.cz",
+  "aktualne.cz",
+  "blesk.cz",
+  "e15.cz",
+  "forbes.cz",
+  "hn.cz",
+  "irozhlas.cz",
+  "lidovky.cz",
+  "reflex.cz",
+  "zive.cz",
+];
+const run4802Context = {
+  sourceBatchKeys: new Set(run4802BatchKeys),
+  selectedSourceIds: new Set(["zpr_ct24", "zpr_denik", "zpr_aktualne"]),
+  ingestManifestPresent: true,
+  schedulerStatePresent: true,
+};
+const run4802Report = freshnessReportRun4802Style();
+const run4802Verdict = evaluateContentFreshnessPolicy(run4802Report, { warnMin: 60, failMin: 120 });
+assert(run4802Verdict.pipelineAlive, "run4802 pipeline_alive");
+assert(!run4802Verdict.failed, "run4802 content-freshness PASS_WITH_WARN not FAIL");
+assert(run4802Verdict.result === "PASS_WITH_WARN", "run4802 freshness result");
+
+const staleTrace = { pass: false, matchMode: "stale_source" };
+assert(!staleTrace.pass && staleTrace.matchMode === "stale_source", "evaluateTraceSampleItem still detects stale_source");
+for (const sid of ["novinky", "idnes", "seznam", "sportcz"]) {
+  const def = p0DefForSourceId(sid);
+  assert(!p0InIngestBatch(def, run4802Context), `${sid} not in ingest batch`);
+  assert(!p0InRotationBatch(def, run4802Context), `${sid} not in rotation batch`);
+  const newOutcome = resolveStaleSourceTraceOutcome(
+    staleTrace,
+    def,
+    run4802Context,
+    run4802Report,
+    run4802Verdict,
+    { failMin: 120 },
+  );
+  assert(newOutcome.action === "warn" && !newOutcome.failed, `${sid} NEW_BEHAVIOR=WARN run4802`);
+}
+
+// A: missing_source still FAIL
+const missingTrace = { pass: false, matchMode: "missing_source" };
+const missingOutcome = resolveStaleSourceTraceOutcome(
+  missingTrace,
+  p0DefForSourceId("novinky"),
+  run4802Context,
+  run4802Report,
+  run4802Verdict,
+);
+assert(missingOutcome.action === "pass", "missing_source handled outside stale resolver");
+
+// B: ingested stale still FAIL
+const ingestedContext = {
+  ...run4802Context,
+  sourceBatchKeys: new Set([...run4802BatchKeys, "novinky.cz"]),
+};
+const ingestedOutcome = resolveStaleSourceTraceOutcome(
+  staleTrace,
+  p0DefForSourceId("novinky"),
+  ingestedContext,
+  run4802Report,
+  run4802Verdict,
+  { failMin: 120 },
+);
+assert(ingestedOutcome.failed && ingestedOutcome.action === "fail", "INGESTED_STALE_SOURCE_STILL_FAILS");
+
+// C: pipeline dead still FAIL
+const deadVerdict = { ...run4802Verdict, pipelineAlive: false, failed: true };
+const deadOutcome = resolveStaleSourceTraceOutcome(
+  staleTrace,
+  p0DefForSourceId("novinky"),
+  run4802Context,
+  run4802Report,
+  deadVerdict,
+  { failMin: 120 },
+);
+assert(deadOutcome.failed && deadOutcome.reason === "pipeline_not_alive", "PIPELINE_DEAD_STILL_FAILS");
+
+// D: broken feed still FAIL (fetchError → no freshness warn downgrade)
+const brokenReport = {
+  ...run4802Report,
+  rows: run4802Report.rows.map((r) =>
+    r.sourceId === "novinky" ? { ...r, fetchError: "HTTP/status 404 not RSS", gapMinutes: null } : r,
+  ),
+};
+const brokenVerdict = evaluateContentFreshnessPolicy(brokenReport, { warnMin: 60, failMin: 120 });
+const brokenOutcome = resolveStaleSourceTraceOutcome(
+  staleTrace,
+  p0DefForSourceId("novinky"),
+  run4802Context,
+  brokenReport,
+  brokenVerdict,
+  { failMin: 120 },
+);
+assert(brokenOutcome.failed, "BROKEN_FEED_STILL_FAILS");
 
 console.log("PASS active-article-trace-guard-unit");
