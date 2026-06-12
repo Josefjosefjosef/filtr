@@ -13,10 +13,11 @@
     cookies: "Cookies a technické ukládání",
     "privacy-settings": "Nastavení soukromí",
     privacy: "Ochrana soukromí a data",
+    "data-storage": "Jak funguje ukládání dat",
     contact: "Provozovatel a kontakt"
   };
 
-  var DOC_VERSION = "1.1";
+  var DOC_VERSION = "1.2";
 
   function qs(sel, root) {
     return (root || document).querySelector(sel);
