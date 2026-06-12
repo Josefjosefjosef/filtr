@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-06-12T14:22:31.433610Z",
+  "ingestedAt": "2026-06-12T15:04:46.941920Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Začíná platit nový jízdní řád: Koukněte na změny vlaků a autobusů ve vašem kraji",
+      "url": "https://www.denik.cz/doprava/o-vikendu-zacne-platit-novy-jizdni-rad-podivejte-se-na-zmeny-ve-vasem-kraji-2027.html",
+      "dt": "2026-06-12T14:37:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "autobusů",
+        "jízdní",
+        "koukněte",
+        "kraji",
+        "nový",
+        "platit",
+        "vašem",
+        "vlaků",
+        "začíná",
+        "změny",
+        "řád"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -616,30 +644,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Začátek MS ve fotbale poznamenalo neštěstí. U stadionu zemřel fanoušek",
-      "url": "https://www.denik.cz/ze_sveta/fotbal-mistrovstvi-sveta-srmrt-fanouska.html",
-      "dt": "2026-06-12T07:15:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "fanoušek",
-        "fotbale",
-        "neštěstí",
-        "poznamenalo",
-        "stadionu",
-        "začátek",
-        "zemřel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -650,7 +654,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28039,
+      "bytes": 28480,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -687,12 +691,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-06-12T14:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-12T14:37:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 1,
-          "sport": 1
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -704,6 +707,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Začíná platit nový jízdní řád: Koukněte na změny vlaků a autobusů ve vašem kraji",
+            "publishedAt": "2026-06-12T14:37:00Z"
+          },
           {
             "title": "Orlík čeká revoluce. Z přehrady vznikne obří baterie pro desetitisíce domácností",
             "publishedAt": "2026-06-12T14:10:00Z"
@@ -731,10 +738,6 @@
           {
             "title": "Policie vyšetřuje vraždu na pražském Chodově. Podezřelého již zadržela",
             "publishedAt": "2026-06-12T12:11:00Z"
-          },
-          {
-            "title": "Armáda propustila vojáka z preventivní karantény po návratu z Konga",
-            "publishedAt": "2026-06-12T12:09:00Z"
           }
         ]
       }
