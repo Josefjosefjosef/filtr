@@ -101,7 +101,6 @@
       --bottom-nav-height,
       calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 32px)
     );
-    z-index: 10030;
     padding-top: 0;
     padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
     align-items: stretch;
