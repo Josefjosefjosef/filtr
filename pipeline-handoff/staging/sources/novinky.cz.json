@@ -1,9 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-06-13T19:59:54.540411Z",
+  "ingestedAt": "2026-06-13T20:55:37.055357Z",
   "items": [
     {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Při šarvátce na oslavě v Kladně vyletěl jeden host ze dveří a zřítil se ze schodů",
+      "url": "https://www.novinky.cz/clanek/krimi-pri-sarvatce-na-oslave-v-kladne-vyletel-jeden-host-ze-dveri-a-zritil-se-ze-schodu-40583102",
+      "dt": "2026-06-13T20:31:10Z",
+      "media_raw": "Novinky / Domácí",
+      "media_norm": "Novinky",
+      "tokens": [
+        "dveří",
+        "host",
+        "jeden",
+        "kladně",
+        "oslavě",
+        "při",
+        "schodů",
+        "vyletěl",
+        "zřítil",
+        "šarvátce"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_novinky_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "aktualne",
       "contentType": "article",
       "title": "Magyarova vláda je prozatímní se sídlem v Bruselu, prohlásil znovuzvolený šéf Fidesz Orbán",
@@ -753,26 +780,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "krimi",
       "contentType": "article",
-      "title": "Divadla se stěhují pod širé nebe a nabízejí oblíbené hity i premiéry",
-      "url": "https://www.novinky.cz/clanek/kultura-divadlo-divadla-se-stehuji-pod-sire-nebe-a-nabizeji-oblibene-hity-i-premiery-40580689",
-      "dt": "2026-06-13T12:56:00Z",
-      "media_raw": "Novinky / Domácí",
+      "title": "Při šarvátce na oslavě v Kladně vyletěl jeden host ze dveří a zřítil se ze schodů",
+      "url": "https://www.novinky.cz/clanek/krimi-pri-sarvatce-na-oslave-v-kladne-vyletel-jeden-host-ze-dveri-a-zritil-se-ze-schodu-40583102",
+      "dt": "2026-06-13T20:31:10Z",
+      "media_raw": "Novinky / Zahraniční",
       "media_norm": "Novinky",
       "tokens": [
-        "divadla",
-        "hity",
-        "nabízejí",
-        "nebe",
-        "oblíbené",
-        "premiéry",
-        "stěhují",
-        "širé"
+        "dveří",
+        "host",
+        "jeden",
+        "kladně",
+        "oslavě",
+        "při",
+        "schodů",
+        "vyletěl",
+        "zřítil",
+        "šarvátce"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
-      "feedId": "zpr_novinky_domaci",
+      "feedId": "zpr_novinky_zahranicni",
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "novinky.cz",
       "_dt_serialized": true
@@ -1518,31 +1547,6 @@
         "našli",
         "pytli",
         "stadionem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_novinky_zahranicni",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Divadla se stěhují pod širé nebe a nabízejí oblíbené hity i premiéry",
-      "url": "https://www.novinky.cz/clanek/kultura-divadlo-divadla-se-stehuji-pod-sire-nebe-a-nabizeji-oblibene-hity-i-premiery-40580689",
-      "dt": "2026-06-13T12:56:00Z",
-      "media_raw": "Novinky / Zahraniční",
-      "media_norm": "Novinky",
-      "tokens": [
-        "divadla",
-        "hity",
-        "nabízejí",
-        "nebe",
-        "oblíbené",
-        "premiéry",
-        "stěhují",
-        "širé"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1560,7 +1564,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/domaci",
-      "bytes": 52188,
+      "bytes": 52466,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1597,7 +1601,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-13T19:40:40Z",
+        "raw_feed_latest_publishedAt": "2026-06-13T20:31:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1613,6 +1617,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Při šarvátce na oslavě v Kladně vyletěl jeden host ze dveří a zřítil se ze schodů",
+            "publishedAt": "2026-06-13T20:31:10Z"
+          },
           {
             "title": "Magyarova vláda je prozatímní se sídlem v Bruselu, prohlásil znovuzvolený šéf Fidesz Orbán",
             "publishedAt": "2026-06-13T19:40:40Z"
@@ -1640,10 +1648,6 @@
           {
             "title": "Padající stromy a větve zastavily vlaky na třech místech v Praze a okolí",
             "publishedAt": "2026-06-13T12:57:42Z"
-          },
-          {
-            "title": "Pochodu na podporu LGBT+ se ve Vídni zúčastnilo 320 tisíc lidí",
-            "publishedAt": "2026-06-13T16:55:59Z"
           }
         ]
       }
@@ -1655,7 +1659,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/zahranicni",
-      "bytes": 52188,
+      "bytes": 52466,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1692,7 +1696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-13T19:40:40Z",
+        "raw_feed_latest_publishedAt": "2026-06-13T20:31:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1708,6 +1712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Při šarvátce na oslavě v Kladně vyletěl jeden host ze dveří a zřítil se ze schodů",
+            "publishedAt": "2026-06-13T20:31:10Z"
+          },
           {
             "title": "Magyarova vláda je prozatímní se sídlem v Bruselu, prohlásil znovuzvolený šéf Fidesz Orbán",
             "publishedAt": "2026-06-13T19:40:40Z"
@@ -1735,10 +1743,6 @@
           {
             "title": "Padající stromy a větve zastavily vlaky na třech místech v Praze a okolí",
             "publishedAt": "2026-06-13T12:57:42Z"
-          },
-          {
-            "title": "Pochodu na podporu LGBT+ se ve Vídni zúčastnilo 320 tisíc lidí",
-            "publishedAt": "2026-06-13T16:55:59Z"
           }
         ]
       }
