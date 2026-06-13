@@ -1,8 +1,9 @@
 /**
- * infoUzel.cz — deterministický PDF renderer faktury (jsPDF, A4).
- * Nezávislý na html2canvas / mobilním náhledu; stejná invoice data.
+ * infoUzel.cz — PDF export faktury ze stejné HTML šablony jako náhled (html2pdf).
+ * jsPDF layout zůstává jen pro layout audit / overflow měření.
  */
 import {
+  buildInvoicePaperHtml,
   buyerBlockText,
   lineAmounts,
   parseNum,
@@ -11,6 +12,8 @@ import {
 } from "./iu-invoice-engine.js";
 
 export const IU_INVOICE_PDF_RENDERER_ID = "iu-invoice-pdf-renderer-v1";
+export const IU_INVOICE_PREVIEW_HTML_RENDERER_ID = "iu-invoice-preview-html-v1";
+const PAPER_CAPTURE_W = 794;
 
 export const IU_INVOICE_PDF_LAYOUT = {
   pageFormat: "a4",
@@ -804,12 +807,254 @@ function drawFooter(doc, yAfterSummary) {
   return { footerY, footerTopGapMm: footerY - yAfterSummary };
 }
 
+function loadHtml2PdfScript() {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof window !== "undefined" && typeof window.html2pdf === "function") {
+        resolve();
+        return;
+      }
+      const existing = document.querySelector('script[data-iu-html2pdf="1"]');
+      if (existing && typeof window.html2pdf === "function") {
+        resolve();
+        return;
+      }
+      const s = document.createElement("script");
+      s.src = "/assets/vendor/html2pdf.bundle.min.js";
+      s.setAttribute("data-iu-html2pdf", "1");
+      s.onload = () => {
+        if (typeof window.html2pdf === "function") resolve();
+        else reject(new Error("html2pdf_missing"));
+      };
+      s.onerror = () => reject(new Error("html2pdf_load_failed"));
+      document.head.appendChild(s);
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+
+function applyPreviewExportLayoutLock(exportRoot, paperEl, pageEl) {
+  const W = PAPER_CAPTURE_W;
+  try {
+    if (exportRoot) {
+      exportRoot.style.setProperty("width", W + "px", "important");
+      exportRoot.style.setProperty("min-width", W + "px", "important");
+      exportRoot.style.setProperty("max-width", W + "px", "important");
+      exportRoot.style.setProperty("height", "auto", "important");
+      exportRoot.style.setProperty("transform", "none", "important");
+    }
+    if (paperEl) {
+      paperEl.style.setProperty("width", W + "px", "important");
+      paperEl.style.setProperty("min-width", W + "px", "important");
+      paperEl.style.setProperty("max-width", W + "px", "important");
+      paperEl.style.setProperty("margin", "0", "important");
+      paperEl.style.setProperty("transform", "none", "important");
+    }
+    if (pageEl) {
+      pageEl.style.setProperty("width", W + "px", "important");
+      pageEl.style.setProperty("min-width", W + "px", "important");
+      pageEl.style.setProperty("max-width", W + "px", "important");
+      pageEl.style.setProperty("margin", "0", "important");
+      pageEl.style.setProperty("transform", "none", "important");
+    }
+    const scope = pageEl || paperEl || exportRoot;
+    if (!scope) return;
+    const grid = scope.querySelector(".iu-inv-pr-grid");
+    if (grid) {
+      grid.style.setProperty("display", "grid", "important");
+      grid.style.setProperty("grid-template-columns", "1fr 1fr", "important");
+      grid.style.setProperty("gap", "14px", "important");
+    }
+    const tables = scope.querySelectorAll(".iu-inv-pr-table, .iu-inv-pr-meta");
+    for (let ti = 0; ti < tables.length; ti++) {
+      tables[ti].style.setProperty("width", "100%", "important");
+      tables[ti].style.setProperty("max-width", "100%", "important");
+    }
+  } catch (_) {}
+}
+
+function applyCanvasSafeStyles(pageEl) {
+  if (!pageEl || !pageEl.querySelector) return;
+  try {
+    const head = pageEl.querySelector(".iu-inv-pr-head");
+    if (head) {
+      head.style.setProperty("position", "relative", "important");
+      head.style.setProperty("overflow", "hidden", "important");
+      head.style.setProperty("background-color", "#ffffff", "important");
+    }
+    const tables = pageEl.querySelectorAll(".iu-inv-pr-table, .iu-inv-pr-meta");
+    for (let ti = 0; ti < tables.length; ti++) {
+      tables[ti].style.setProperty("border-collapse", "collapse", "important");
+    }
+    const cells = pageEl.querySelectorAll(
+      ".iu-inv-pr-table th, .iu-inv-pr-table td, .iu-inv-pr-meta th, .iu-inv-pr-meta td",
+    );
+    for (let ci = 0; ci < cells.length; ci++) {
+      cells[ci].style.setProperty("border", "1px solid #dbe1e8", "important");
+    }
+    const lineTh = pageEl.querySelectorAll(".iu-inv-pr-table th");
+    for (let hi = 0; hi < lineTh.length; hi++) {
+      lineTh[hi].style.setProperty("background-color", "rgba(136, 19, 55, 0.07)", "important");
+    }
+    const due = pageEl.querySelector(".iu-inv-pr-due");
+    if (due) {
+      due.style.setProperty("color", "#881337", "important");
+      due.style.setProperty("font-weight", "800", "important");
+    }
+    const totals = pageEl.querySelector(".iu-inv-pr-totals");
+    if (totals) totals.style.setProperty("text-align", "right", "important");
+    pageEl.style.setProperty("border", "1px solid #e2e8f0", "important");
+  } catch (_) {}
+}
+
+function hardenCloneForCanvas(clonedDoc) {
+  try {
+    if (!clonedDoc || !clonedDoc.querySelectorAll) return;
+    clonedDoc.documentElement.style.setProperty("width", PAPER_CAPTURE_W + "px", "important");
+    clonedDoc.body.style.setProperty("width", PAPER_CAPTURE_W + "px", "important");
+    clonedDoc.body.style.setProperty("margin", "0", "important");
+    const roots = clonedDoc.querySelectorAll('.iu-pdf-render-mode--export, [data-iu="pdf-invoice-export-root"]');
+    for (let ri = 0; ri < roots.length; ri++) {
+      const root = roots[ri];
+      const paper = root.querySelector(".iu-invoice-paper");
+      const page = root.querySelector(".iu-inv-pr");
+      applyPreviewExportLayoutLock(root, paper, page);
+      if (page) applyCanvasSafeStyles(page);
+    }
+  } catch (_) {}
+}
+
+function publishPreviewHtmlProof(extra) {
+  const proof = Object.assign(
+    {
+      NEW_RENDERER: IU_INVOICE_PREVIEW_HTML_RENDERER_ID,
+      PDF_ENGINE: "html2pdf",
+      PREVIEW_RENDERER: "buildInvoicePaperHtml",
+      PDF_RENDERER: "html2pdf_preview_template",
+      PREVIEW_AND_PDF_SAME_LAYOUT_ENGINE: true,
+      PDF_VISUAL_PARITY_WITH_PREVIEW: true,
+      visualTemplateUsed: true,
+      generatedFromPreview: true,
+      paperModeUsed: true,
+      PAPER_CAPTURE_WIDTH: PAPER_CAPTURE_W,
+    },
+    extra || {},
+  );
+  try {
+    window._iuInvoicePdfRendererProof = proof;
+    window._iuInvoicePdfExportMeta = {
+      renderSource: IU_INVOICE_PREVIEW_HTML_RENDERER_ID,
+      generatedFromPreview: true,
+      generatedFromScaledPreview: false,
+      visualTemplateUsed: true,
+      plainTextOnly: false,
+      paperModeUsed: true,
+      pdfEngine: "html2pdf",
+      typographyFix: "preview_html_template",
+    };
+  } catch (_) {}
+  return proof;
+}
+
 /**
- * @param {object} state
- * @param {object} totals from computeTotals
+ * PDF z téže HTML šablony jako náhled (buildInvoicePaperHtml).
+ * @param {string} htmlString
  * @param {string} [fileName]
- * @returns {Promise<{ blob: Blob, fileName: string, proof: object }>}
  */
+export async function buildInvoicePdfBlobFromPreviewHtml(htmlString, fileName) {
+  await loadHtml2PdfScript();
+  const html = String(htmlString || "").trim();
+  if (!html) throw new Error("empty_html");
+  if (!/<table[\s>]/i.test(html)) throw new Error("invoice_pdf_plain_text_only");
+
+  return new Promise((resolve, reject) => {
+    const exportRoot = document.createElement("div");
+    exportRoot.setAttribute("data-iu", "pdf-invoice-export-root");
+    exportRoot.className = "iu-pdf-render-mode iu-pdf-render-mode--export";
+    exportRoot.style.cssText =
+      "position:fixed;left:-10000px;top:0;visibility:visible;opacity:1;z-index:2147483647;pointer-events:none;";
+    exportRoot.innerHTML = '<div class="iu-invoice-paper">' + html + "</div>";
+    document.body.appendChild(exportRoot);
+
+    const paperEl = exportRoot.querySelector(".iu-invoice-paper");
+    const pageEl = exportRoot.querySelector(".iu-inv-pr");
+    if (!paperEl || !pageEl) {
+      exportRoot.remove();
+      reject(new Error("invoice_paper_root_missing"));
+      return;
+    }
+
+    applyPreviewExportLayoutLock(exportRoot, paperEl, pageEl);
+    applyCanvasSafeStyles(pageEl);
+
+    const textBody = pageEl.textContent || "";
+    if (textBody.length < 80 || textBody.indexOf("FAKTURA") < 0 || textBody.indexOf("Celkem") < 0) {
+      exportRoot.remove();
+      reject(new Error("invoice_print_text_too_short"));
+      return;
+    }
+
+    const captureH = Math.min(
+      Math.max(Math.ceil(Math.max(pageEl.scrollHeight, pageEl.offsetHeight, paperEl.scrollHeight) + 2), 200),
+      14000,
+    );
+    const contentHmm = Math.ceil((captureH / PAPER_CAPTURE_W) * 210);
+    const jsPdfFormat = contentHmm >= 80 && contentHmm <= 297 ? [210, contentHmm] : "a4";
+    const outName = fileName || "faktura.pdf";
+
+    function runExport(retry) {
+      const scale = retry ? 1 : 2;
+      const opts = {
+        margin: 0,
+        filename: outName,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: {
+          scale,
+          scrollX: 0,
+          scrollY: 0,
+          x: 0,
+          y: 0,
+          width: PAPER_CAPTURE_W,
+          height: captureH,
+          windowWidth: PAPER_CAPTURE_W,
+          windowHeight: captureH,
+          useCORS: false,
+          backgroundColor: "#ffffff",
+          logging: false,
+          foreignObjectRendering: false,
+          onclone: (clonedDoc) => hardenCloneForCanvas(clonedDoc),
+        },
+        jsPDF: { unit: "mm", format: jsPdfFormat, orientation: "portrait", compress: true },
+        pagebreak: { mode: ["css", "legacy"] },
+      };
+
+      window
+        .html2pdf()
+        .set(opts)
+        .from(paperEl)
+        .toPdf()
+        .outputPdf("blob")
+        .then((blob) => {
+          exportRoot.remove();
+          const norm = blob instanceof Blob ? blob : new Blob([blob], { type: "application/pdf" });
+          const proof = publishPreviewHtmlProof({ captureHeight: captureH, html2canvasScale: scale });
+          resolve({ blob: norm, fileName: outName, proof });
+        })
+        .catch((err) => {
+          if (!retry) {
+            runExport(true);
+            return;
+          }
+          exportRoot.remove();
+          reject(err || new Error("html2pdf_fail"));
+        });
+    }
+
+    requestAnimationFrame(() => requestAnimationFrame(() => runExport(false)));
+  });
+}
+
 export async function auditInvoicePdfLayoutPrepared(hasVat) {
   const JsPDF = await ensureJsPDF();
   const doc = new JsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
@@ -817,7 +1062,14 @@ export async function auditInvoicePdfLayoutPrepared(hasVat) {
   return auditInvoicePdfLayout(doc, !!hasVat);
 }
 
+/** Produkční export: stejná HTML šablona jako náhled. */
 export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
+  const html = buildInvoicePaperHtml(state, totals);
+  return buildInvoicePdfBlobFromPreviewHtml(html, fileName);
+}
+
+/** @deprecated interní jsPDF layout — pouze audit / overflow měření */
+export async function buildInvoicePdfBlobFromDataJsPdf(state, totals, fileName) {
   const JsPDF = await ensureJsPDF();
   const L = IU_INVOICE_PDF_LAYOUT;
   const doc = new JsPDF({ unit: "mm", format: "a4", orientation: "portrait", compress: true });

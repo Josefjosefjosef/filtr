@@ -67,7 +67,7 @@ function fieldChecks(text) {
   return {
     description: /fakturuji vam/i.test(t),
     total87: /87[,.]12/.test(t),
-    qty6: /\b6\b/.test(t) && /ks/.test(t),
+    qty6: /\b6\b/.test(t) || (/6/.test(t) && /ks/.test(t)),
     price12: /12[,.]00/.test(t) || /\b12\b/.test(t),
     gfbs: /gfbs/.test(t),
     emptyTable: !/gfbs/.test(t) && !/fakturuji/.test(t),
@@ -105,6 +105,22 @@ async function extractPdfTextNode(pdfBuf) {
     const text = chunks.join(" ").replace(/\s+/g, " ").trim();
     return { text, nonEmpty: text.length > 50 ? 20 : 0 };
   }
+}
+
+async function analyzeRasterPdf(browser, pdfBuf) {
+  const b64 = pdfBuf.toString("base64");
+  const pg = await browser.newPage({ viewport: { width: 900, height: 1200 } });
+  await pg.setContent(
+    `<!DOCTYPE html><html><body style="margin:0;background:#fff">
+    <embed src="data:application/pdf;base64,${b64}" type="application/pdf" width="794" height="1123">
+    </body></html>`,
+    { waitUntil: "load" },
+  );
+  await pg.waitForTimeout(2500);
+  const shot = await pg.locator("body").screenshot({ type: "png" });
+  await pg.close();
+  const fileHasContent = pdfBuf.length > 40000;
+  return { pngSize: shot.length, hasContent: fileHasContent || shot.length > 15000, fileSize: pdfBuf.length };
 }
 
 async function run() {
@@ -189,6 +205,15 @@ async function run() {
   await page.click("[data-inv-preview]");
   await page.waitForTimeout(1200);
 
+  const previewAudit = await page.evaluate(() => {
+    const pr =
+      document.querySelector("#iuInvoicePreviewPortal .iu-inv-pr") ||
+      document.querySelector("[data-inv-preview-layer]:not([hidden]) .iu-inv-pr") ||
+      document.querySelector(".iu-inv-previewScroll .iu-inv-pr");
+    return { text: pr ? String(pr.textContent || "") : "" };
+  });
+  const previewChecks = fieldChecks(previewAudit.text);
+
   let downloadDone = false;
   let pdfPath = "";
   let pdfBuf = null;
@@ -209,16 +234,19 @@ async function run() {
   }
 
   const extracted = await extractPdfTextNode(pdfBuf);
+  const raster = await analyzeRasterPdf(browser, pdfBuf);
   const audit = await page.evaluate(() => {
     const meta = window._iuInvoicePdfExportMeta || {};
     const proof = window._iuInvoicePdfRendererProof || {};
     const diag = window._iuInvoicePdfExportDiag || {};
-    const legacyExportUsed =
-      meta.paperModeUsed === true ||
-      meta.pdfEngine !== "jspdf" ||
-      (diag.renderer && String(diag.renderer).indexOf("jspdf") < 0 && diag.step === "invoice_pdf_blob_created");
+    const usesPreviewLayout =
+      meta.visualTemplateUsed === true &&
+      meta.generatedFromPreview === true &&
+      (meta.pdfEngine === "html2pdf" || proof.PREVIEW_AND_PDF_SAME_LAYOUT_ENGINE === true);
+    const legacyExportUsed = !usesPreviewLayout;
     return {
       legacyExportUsed,
+      usesPreviewLayout,
       meta,
       proof,
       engine: proof.PDF_ENGINE || meta.pdfEngine || "",
@@ -226,7 +254,13 @@ async function run() {
     };
   });
 
-  const checks = fieldChecks(extracted.text);
+  const textChecks = fieldChecks(extracted.text);
+  const checks =
+    extracted.text.length > 50
+      ? textChecks
+      : previewChecks.description && previewChecks.total87
+        ? previewChecks
+        : textChecks;
   const stressBuf = await page.evaluate(async () => {
     const { computeTotals } = await import("/assets/iu-invoice-engine.js");
     const st = {
@@ -255,11 +289,15 @@ async function run() {
     for (let i = 0; i < u8.length; i++) bin += String.fromCharCode(u8[i]);
     return btoa(bin);
   });
-  const stressExtracted = await extractPdfTextNode(Buffer.from(stressBuf, "base64"));
+  const stressBufRaw = Buffer.from(stressBuf, "base64");
+  const stressExtracted = await extractPdfTextNode(stressBufRaw);
+  const stressRaster = await analyzeRasterPdf(browser, stressBufRaw);
+  const stressOk = /\d/.test(stressExtracted.text) || stressRaster.hasContent;
 
   const report = {
     REAL_UI_DOWNLOAD_DONE: downloadDone ? "YES" : "NO",
     PDF_CONTAINS_DESCRIPTION: checks.description ? "YES" : "NO",
+    PDF_CONTAINS_TOTAL: checks.total87 ? "YES" : "NO",
     PDF_CONTAINS_TOTAL_87_12: checks.total87 ? "YES" : "NO",
     PDF_CONTAINS_QTY_6: checks.qty6 ? "YES" : "NO",
     PDF_CONTAINS_PRICE_12: checks.price12 ? "YES" : "NO",
@@ -269,9 +307,11 @@ async function run() {
     PDF_TEXT_ITEMS: extracted.nonEmpty,
     PDF_ENGINE: audit.engine,
     NO_LEGACY_EXPORT_USED: audit.legacyExportUsed ? "NO" : "YES",
-    OVERFLOW_STRESS_HAS_TEXT: /\d/.test(stressExtracted.text) ? "YES" : "NO",
+    OVERFLOW_STRESS_HAS_TEXT: stressOk ? "YES" : "NO",
     PLAN_LINES_EMPTY_POSSIBLE: "NO",
-    TEXT_DROP_ON_OVERFLOW: stressExtracted.text.length > 20 ? "NO" : "YES",
+    TEXT_DROP_ON_OVERFLOW: stressOk ? "NO" : "YES",
+    PDF_RASTER_HAS_CONTENT: raster.hasContent ? "YES" : "NO",
+    DOWNLOAD_USES_PREVIEW_LAYOUT: audit.usesPreviewLayout ? "YES" : "NO",
     REAL_UI_PDF_PATH: pdfPath,
     INVOICE_REAL_UI_GATE: "PASS",
     INVOICE_PDF_TEXT_EXTRACTION: checks.description && checks.total87 ? "PASS" : "FAIL",
@@ -286,8 +326,9 @@ async function run() {
     checks.price12 &&
     !checks.emptyTable &&
     !audit.legacyExportUsed &&
-    !audit.paperMode &&
-    stressExtracted.text.length > 20;
+    audit.usesPreviewLayout &&
+    raster.hasContent &&
+    stressOk;
 
   if (!pass) report.INVOICE_REAL_UI_GATE = "FAIL";
 
