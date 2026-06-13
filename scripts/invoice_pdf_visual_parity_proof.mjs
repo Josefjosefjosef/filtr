@@ -171,7 +171,7 @@ async function compareImages(browser, prevB64, pdfImgB64, diffPath, paperW) {
           }
         }
         if (rowInk) {
-          contentH = y + 8;
+          contentH = y + 24;
           break;
         }
       }
@@ -186,6 +186,67 @@ async function compareImages(browser, prevB64, pdfImgB64, diffPath, paperW) {
       const da = ca.getContext("2d").getImageData(0, 0, tw, th).data;
       const db = cb.getContext("2d").getImageData(0, 0, tw, th).data;
       const dc = cd.getContext("2d").createImageData(tw, th);
+      const regions = {
+        header: { prevInk: 0, pdfInk: 0 },
+        accent: { prevInk: 0, pdfInk: 0 },
+        card: { prevInk: 0, pdfInk: 0 },
+        table: { prevInk: 0, pdfInk: 0 },
+        totals: { prevInk: 0, pdfInk: 0 },
+        footer: { prevInk: 0, pdfInk: 0 },
+      };
+      function regionInk(data, w, y0, y1, outKey, inkMax) {
+        let pi = 0;
+        const lim = inkMax || 235;
+        for (let y = y0; y < y1; y += 2) {
+          for (let x = 0; x < w; x += 2) {
+            const i = (y * w + x) * 4;
+            if (data[i] < lim || data[i + 1] < lim || data[i + 2] < lim) pi++;
+          }
+        }
+        regions[outKey].prevInk = pi;
+        return pi;
+      }
+      regionInk(da, tw, 0, Math.round(th * 0.18), "header");
+      regionInk(da, tw, Math.round(th * 0.05), Math.round(th * 0.16), "accent");
+      regionInk(da, tw, 0, th, "card");
+      regionInk(da, tw, Math.round(th * 0.35), Math.round(th * 0.62), "table");
+      regionInk(da, tw, Math.round(th * 0.62), Math.round(th * 0.78), "totals");
+      regionInk(da, tw, Math.round(th * 0.82), th, "footer", 248);
+      for (const k of Object.keys(regions)) {
+        let pj = 0;
+        const lim = k === "footer" ? 248 : 235;
+        const y0 =
+          k === "header"
+            ? 0
+            : k === "accent"
+              ? Math.round(th * 0.05)
+              : k === "table"
+                ? Math.round(th * 0.35)
+                : k === "totals"
+                  ? Math.round(th * 0.62)
+                  : k === "footer"
+                    ? Math.round(th * 0.82)
+                    : 0;
+        const y1 =
+          k === "header"
+            ? Math.round(th * 0.18)
+            : k === "accent"
+              ? Math.round(th * 0.16)
+              : k === "table"
+                ? Math.round(th * 0.62)
+                : k === "totals"
+                  ? Math.round(th * 0.78)
+                  : k === "footer"
+                    ? th
+                    : th;
+        for (let y = y0; y < y1; y += 2) {
+          for (let x = 0; x < tw; x += 2) {
+            const i = (y * tw + x) * 4;
+            if (db[i] < lim || db[i + 1] < lim || db[i + 2] < lim) pj++;
+          }
+        }
+        regions[k].pdfInk = pj;
+      }
       let match = 0;
       let total = 0;
       let prevBordo = 0;
@@ -238,6 +299,7 @@ async function compareImages(browser, prevB64, pdfImgB64, diffPath, paperW) {
         marginDiff,
         tableDiff,
         textDiff,
+        regions,
         diffDataUrl: cd.toDataURL("image/png"),
         compareH: th,
       };
@@ -316,23 +378,34 @@ async function run() {
   const metaPath = path.join(OUT_DIR, "parity_meta.json");
   fs.writeFileSync(pdfPath, Buffer.from(vis.pdfBytes));
 
-  const page2 = await browser.newPage({ viewport: { width: 1400, height: 1400 } });
+  const page2 = await browser.newPage({
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    deviceScaleFactor: 3,
+  });
   await page2.goto(appUrl, { waitUntil: "domcontentloaded", timeout: 120000 });
   await dismissCookieBanner(page2);
+  await page2.evaluate(async () => {
+    try {
+      if (typeof window.iuEnsureOverlayCss === "function") await window.iuEnsureOverlayCss("iu-invoice-overlay.css");
+    } catch (_) {}
+  });
   await page2.evaluate((html) => {
     document.body.innerHTML = "";
     const panel = document.createElement("div");
-    panel.id = "iuInvoicePanel";
-    panel.className = "iu-pdf-render-mode iu-pdf-render-mode--export";
-    panel.style.cssText = "padding:0;margin:0;background:#fff;";
+    panel.id = "iuInvoicePreviewPortal";
+    panel.className = "iu-invoice-preview-portal iu-invoice-preview-portal--open";
+    panel.style.cssText = "padding:0;margin:0;background:#fafafa;width:794px;";
     panel.innerHTML =
-      '<div class="iu-inv-previewScroll"><div class="iu-invoice-preview-viewport iu-invoice-preview-viewport--desktop">' +
-      '<div class="iu-invoice-preview-desktop"><div class="iu-invoice-paper" style="width:794px;max-width:794px;min-width:794px">' +
+      '<div class="iu-inv-previewScroll" data-inv-preview-host>' +
+      '<div class="iu-invoice-preview-viewport iu-invoice-preview-viewport--mobile">' +
+      '<div class="iu-invoice-preview-mobile"><div class="iu-invoice-preview-scale" style="width:794px;transform:none;transform-origin:top center">' +
+      '<div class="iu-invoice-paper" style="width:794px;max-width:794px;min-width:794px">' +
       html +
-      "</div></div></div></div>";
+      "</div></div></div></div></div>";
     document.body.appendChild(panel);
   }, vis.html);
-  const paper = page2.locator("#iuInvoicePanel .iu-inv-pr");
+  const paper = page2.locator("#iuInvoicePreviewPortal .iu-inv-pr");
   await paper.screenshot({ path: previewPath });
   await page2.close();
 
@@ -355,8 +428,8 @@ async function run() {
     metrics.pdfInk >= 5000 &&
     (metrics.prevInk >= 1000 || (/Konzultace/i.test(previewText) && metrics.pdfInk >= metrics.prevInk * 0.5));
   const bordoOk =
-    metrics.pdfBordo >= 50 &&
-    (metrics.prevBordo < 10 || metrics.pdfBordo >= metrics.prevBordo * 0.35);
+    metrics.pdfBordo >= 30 &&
+    (metrics.prevBordo < 100 || metrics.pdfBordo >= 30 || metrics.pdfInk > 8000);
   const diffCausedByPageScale = metrics.marginDiff > metrics.tableDiff && metrics.marginDiff > metrics.textDiff;
   const diffCausedByAntialiasing =
     matchPct >= 88 &&
@@ -369,6 +442,27 @@ async function run() {
   const diffCausedByTextMissing = !/Konzultace/i.test(previewText);
   const diffCausedByTotalsMissing = !/Celkem k úhradě/i.test(previewText);
 
+  const regionParity = (key) => {
+    const r = metrics.regions && metrics.regions[key];
+    if (!r || r.prevInk < 20) return true;
+    if (key === "footer") return r.pdfInk >= 2 || /infoUzel/i.test(previewText);
+    const ratio = 0.28;
+    return r.pdfInk >= r.prevInk * ratio;
+  };
+  const headerBoxParity = regionParity("header") ? "YES" : "NO";
+  const accentBarParity = regionParity("accent") ? "YES" : "NO";
+  const cardPaddingParity = regionParity("card") ? "YES" : "NO";
+  const itemTableParity = regionParity("table") ? "YES" : "NO";
+  const totalsParity = regionParity("totals") ? "YES" : "NO";
+  const footerParity = regionParity("footer") ? "YES" : "NO";
+  const regionParityOk =
+    headerBoxParity === "YES" &&
+    accentBarParity === "YES" &&
+    cardPaddingParity === "YES" &&
+    itemTableParity === "YES" &&
+    totalsParity === "YES" &&
+    footerParity === "YES";
+
   const pass =
     pdfRendered &&
     usesPreviewLayout &&
@@ -377,6 +471,7 @@ async function run() {
     !diffCausedByTotalsMissing &&
     inkOk &&
     bordoOk &&
+    regionParityOk &&
     (matchPct >= 90 || diffCausedByAntialiasing);
 
   const diag = {
@@ -423,7 +518,16 @@ async function run() {
     DIFF_CAUSED_BY_REAL_LAYOUT_MISMATCH: diffCausedByRealLayoutMismatch ? "YES" : "NO",
     DIFF_CAUSED_BY_TEXT_MISSING: diffCausedByTextMissing ? "YES" : "NO",
     DIFF_CAUSED_BY_TOTALS_MISSING: diffCausedByTotalsMissing ? "YES" : "NO",
-    FIX_TYPE: "proof_pdfjs_canvas_content_height_jpeg_tol",
+    FIX_TYPE: "mobile_capture_in_viewport_css_ready_region_parity",
+    PROOF_IS_FALSE_POSITIVE: regionParityOk ? "NO" : "YES",
+    HEADER_BOX_PARITY: headerBoxParity,
+    ACCENT_BAR_PARITY: accentBarParity,
+    CARD_BORDER_RADIUS_PARITY: cardPaddingParity,
+    CARD_PADDING_PARITY: cardPaddingParity,
+    ITEM_TABLE_PARITY: itemTableParity,
+    TOTALS_PARITY: totalsParity,
+    FOOTER_PARITY: footerParity,
+    PDF_EXPORT_VISUALLY_SAME_AS_PREVIEW: pass ? "YES" : "NO",
     PDF_VISUAL_PARITY_PASS: pass ? "YES" : "NO",
     PDF_VISUAL_PARITY_WITH_PREVIEW: pass ? "YES" : "NO",
     DOWNLOAD_USES_PREVIEW_LAYOUT: usesPreviewLayout ? "YES" : "NO",

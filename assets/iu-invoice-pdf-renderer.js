@@ -807,6 +807,211 @@ function drawFooter(doc, yAfterSummary) {
   return { footerY, footerTopGapMm: footerY - yAfterSummary };
 }
 
+const INVOICE_EXPORT_CRITICAL_CSS = `
+.iu-pdf-render-mode,.iu-pdf-render-mode--export{position:fixed;left:0;top:0;width:794px;max-width:794px;background:#fff;color:#0f172a;visibility:visible;opacity:1;transform:none!important;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.iu-pdf-render-mode .iu-invoice-paper{width:794px;max-width:794px;background:#fff;box-sizing:border-box}
+.iu-pdf-render-mode .iu-inv-pr{width:794px;max-width:794px;margin:0 auto;background:#fff;border-radius:12px;border:1px solid rgba(15,23,42,.1);padding:18px 20px 22px;box-sizing:border-box;color:#0f172a}
+.iu-pdf-render-mode .iu-inv-pr-head{padding:12px 14px;border-radius:10px;background:#fff;margin-bottom:16px;position:relative;overflow:hidden}
+.iu-pdf-render-mode .iu-inv-pr-head-accent{position:absolute;left:0;top:0;bottom:0;width:48%;background:rgba(136,19,55,.06);border-radius:10px 0 0 10px;pointer-events:none;z-index:0}
+.iu-pdf-render-mode .iu-inv-pr-head>*{position:relative;z-index:1}
+.iu-pdf-render-mode .iu-inv-pr-created{font-size:13px;font-weight:700;color:#881337;margin-bottom:4px}
+.iu-pdf-render-mode .iu-inv-pr-title{font-size:22px;font-weight:800;margin-top:6px}
+.iu-pdf-render-mode .iu-inv-pr-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.iu-pdf-render-mode .iu-inv-pr-h{font-size:12px;font-weight:750;text-transform:uppercase;color:#881337;margin-bottom:6px}
+.iu-pdf-render-mode .iu-inv-pr-pre{margin:0;white-space:pre-wrap;font-size:13px;line-height:1.45}
+.iu-pdf-render-mode .iu-inv-pr-meta,.iu-pdf-render-mode .iu-inv-pr-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px}
+.iu-pdf-render-mode .iu-inv-pr-meta th,.iu-pdf-render-mode .iu-inv-pr-meta td,.iu-pdf-render-mode .iu-inv-pr-table th,.iu-pdf-render-mode .iu-inv-pr-table td{border:1px solid rgba(15,23,42,.1);padding:8px;text-align:left}
+.iu-pdf-render-mode .iu-inv-pr-meta th{background:rgba(15,23,42,.03);font-weight:650}
+.iu-pdf-render-mode .iu-inv-pr-table th{background:rgba(136,19,55,.07);font-weight:700}
+.iu-pdf-render-mode .iu-inv-pr-bank{padding:10px 12px;border-radius:10px;background:rgba(15,23,42,.03);margin-bottom:12px}
+.iu-pdf-render-mode .iu-inv-pr-totals{font-size:14px;text-align:right;margin-top:8px}
+.iu-pdf-render-mode .iu-inv-pr-due{margin-top:10px;font-size:18px;font-weight:800;color:#881337}
+.iu-pdf-render-mode .iu-inv-pr-foot{margin-top:16px;padding-top:12px;border-top:1px solid rgba(15,23,42,.08);font-size:12px;color:rgba(15,23,42,.5);text-align:center}
+`;
+
+function isNarrowViewport() {
+  try {
+    return !!(window.matchMedia && window.matchMedia("(max-width: 1024px)").matches);
+  } catch (_) {
+    return false;
+  }
+}
+
+function isIOSDevice() {
+  try {
+    const ua = String((typeof navigator !== "undefined" && navigator.userAgent) || "");
+    return /iPad|iPhone|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  } catch (_) {
+    return false;
+  }
+}
+
+export async function ensureInvoiceOverlayCssReady() {
+  try {
+    if (typeof window !== "undefined" && typeof window.iuEnsureOverlayCss === "function") {
+      await window.iuEnsureOverlayCss("iu-invoice-overlay.css");
+      return true;
+    }
+  } catch (_) {}
+  try {
+    const link = document.querySelector('link[href*="iu-invoice-overlay.css"]');
+    if (!link) return false;
+    try {
+      link.media = "all";
+    } catch (_) {}
+    if (link.sheet) return true;
+    return await new Promise((resolve) => {
+      const finish = () => resolve(!!link.sheet);
+      link.addEventListener("load", finish, { once: true });
+      link.addEventListener("error", () => resolve(false), { once: true });
+      window.setTimeout(finish, 3000);
+    });
+  } catch (_) {
+    return false;
+  }
+}
+
+function injectExportCriticalCss(exportRoot) {
+  if (!exportRoot || exportRoot.querySelector('[data-iu="invoice-export-critical-css"]')) return;
+  try {
+    const style = document.createElement("style");
+    style.setAttribute("data-iu", "invoice-export-critical-css");
+    style.textContent = INVOICE_EXPORT_CRITICAL_CSS;
+    exportRoot.insertBefore(style, exportRoot.firstChild);
+  } catch (_) {}
+}
+
+function materializeExportHeaderAccent(pageEl) {
+  if (!pageEl || !pageEl.querySelector) return;
+  try {
+    const head = pageEl.querySelector(".iu-inv-pr-head");
+    if (!head || head.querySelector(".iu-inv-pr-head-accent")) return;
+    const accent = document.createElement("div");
+    accent.className = "iu-inv-pr-head-accent";
+    accent.setAttribute("aria-hidden", "true");
+    head.insertBefore(accent, head.firstChild);
+  } catch (_) {}
+}
+
+function findLivePreviewPageEl() {
+  try {
+    const portal = document.getElementById("iuInvoicePreviewPortal");
+    if (portal && !portal.hidden) {
+      const page = portal.querySelector(".iu-inv-pr");
+      if (page) return page;
+    }
+    const panel = document.getElementById("iuInvoicePanel");
+    if (panel) {
+      const page =
+        panel.querySelector("[data-inv-preview-layer]:not([hidden]) .iu-inv-pr") ||
+        panel.querySelector(".iu-inv-previewScroll .iu-inv-pr");
+      if (page) return page;
+    }
+  } catch (_) {}
+  return null;
+}
+
+function mirrorPreviewTableWidths(pageEl) {
+  if (!pageEl) return;
+  try {
+    const previewRoot = findLivePreviewPageEl();
+    const exportTable = pageEl.querySelector(".iu-inv-pr-table");
+    const previewTable = previewRoot && previewRoot.querySelector(".iu-inv-pr-table");
+    if (!previewTable || !exportTable) return;
+    const pHead = previewTable.querySelector("thead tr");
+    const eHead = exportTable.querySelector("thead tr");
+    if (!pHead || !eHead) return;
+    exportTable.style.setProperty("table-layout", "fixed", "important");
+    exportTable.style.setProperty("width", "100%", "important");
+    for (let i = 0; i < pHead.cells.length && i < eHead.cells.length; i++) {
+      const w = pHead.cells[i].offsetWidth;
+      if (w > 0) {
+        eHead.cells[i].style.setProperty("width", w + "px", "important");
+        eHead.cells[i].style.setProperty("min-width", w + "px", "important");
+        eHead.cells[i].style.setProperty("max-width", w + "px", "important");
+      }
+    }
+  } catch (_) {}
+}
+
+async function waitForExportLayoutReady(pageEl) {
+  try {
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+  } catch (_) {}
+  let stable = 0;
+  let lastH = -1;
+  for (let i = 0; i < 14; i++) {
+    await new Promise((r) => requestAnimationFrame(r));
+    const h = pageEl ? Math.max(pageEl.scrollHeight || 0, pageEl.offsetHeight || 0) : 0;
+    if (h > 0 && h === lastH) stable++;
+    else stable = 0;
+    lastH = h;
+    if (stable >= 2) break;
+  }
+  return { layoutReady: stable >= 2 && lastH >= 200, scrollHeight: lastH };
+}
+
+function validateExportComputedStyles(pageEl) {
+  const out = {
+    cardBorderRadius: "",
+    cardPadding: "",
+    headerBackground: "",
+    accentVisible: false,
+    tableHeaderBackground: "",
+    totalColor: "",
+    footerStyle: "",
+    parity: false,
+  };
+  if (!pageEl) return out;
+  try {
+    const cs = window.getComputedStyle(pageEl);
+    out.cardBorderRadius = cs.borderRadius || "";
+    out.cardPadding = cs.padding || "";
+    const head = pageEl.querySelector(".iu-inv-pr-head");
+    if (head) out.headerBackground = window.getComputedStyle(head).backgroundColor || "";
+    const accent = pageEl.querySelector(".iu-inv-pr-head-accent");
+    if (accent) {
+      const acs = window.getComputedStyle(accent);
+      out.accentVisible = (parseFloat(acs.width) || 0) > 20 && acs.display !== "none";
+    }
+    const th = pageEl.querySelector(".iu-inv-pr-table th");
+    if (th) out.tableHeaderBackground = window.getComputedStyle(th).backgroundColor || "";
+    const due = pageEl.querySelector(".iu-inv-pr-due");
+    if (due) out.totalColor = window.getComputedStyle(due).color || "";
+    const foot = pageEl.querySelector(".iu-inv-pr-foot");
+    if (foot) {
+      const fcs = window.getComputedStyle(foot);
+      out.footerStyle = (fcs.borderTopWidth || "") + " " + (fcs.fontSize || "");
+    }
+    const br = parseFloat(out.cardBorderRadius) || 0;
+    const pad = parseFloat(out.cardPadding) || 0;
+    const bordo =
+      String(out.totalColor).indexOf("136, 19, 55") !== -1 || String(out.totalColor).indexOf("881337") !== -1;
+    out.parity = br >= 8 && pad >= 12 && bordo && !!out.tableHeaderBackground;
+  } catch (_) {}
+  return out;
+}
+
+function repositionCloneForCapture(clonedDoc) {
+  try {
+    if (!clonedDoc || !clonedDoc.querySelectorAll) return;
+    const roots = clonedDoc.querySelectorAll('.iu-pdf-render-mode--export, [data-iu="pdf-invoice-export-root"]');
+    for (let ri = 0; ri < roots.length; ri++) {
+      const root = roots[ri];
+      root.style.setProperty("left", "0", "important");
+      root.style.setProperty("top", "0", "important");
+      root.style.setProperty("visibility", "visible", "important");
+      root.style.setProperty("opacity", "1", "important");
+      root.style.setProperty("z-index", "2147483647", "important");
+      root.style.setProperty("position", "fixed", "important");
+      root.style.setProperty("pointer-events", "none", "important");
+      root.style.setProperty("transform", "none", "important");
+      root.style.setProperty("clip", "auto", "important");
+      root.style.setProperty("clip-path", "none", "important");
+    }
+  } catch (_) {}
+}
+
 function loadHtml2PdfScript() {
   return new Promise((resolve, reject) => {
     try {
@@ -877,15 +1082,23 @@ function applyPreviewExportLayoutLock(exportRoot, paperEl, pageEl) {
 function applyCanvasSafeStyles(pageEl) {
   if (!pageEl || !pageEl.querySelector) return;
   try {
+    materializeExportHeaderAccent(pageEl);
     const head = pageEl.querySelector(".iu-inv-pr-head");
     if (head) {
       head.style.setProperty("position", "relative", "important");
       head.style.setProperty("overflow", "hidden", "important");
+      head.style.setProperty("background-image", "none", "important");
       head.style.setProperty("background-color", "#ffffff", "important");
+      head.style.setProperty("border-radius", "10px", "important");
+      head.style.setProperty("padding", "12px 14px", "important");
     }
+    pageEl.style.setProperty("border-radius", "12px", "important");
+    pageEl.style.setProperty("padding", "18px 20px 22px", "important");
+    pageEl.style.setProperty("background-color", "#ffffff", "important");
     const tables = pageEl.querySelectorAll(".iu-inv-pr-table, .iu-inv-pr-meta");
     for (let ti = 0; ti < tables.length; ti++) {
       tables[ti].style.setProperty("border-collapse", "collapse", "important");
+      tables[ti].style.setProperty("border-spacing", "0", "important");
     }
     const cells = pageEl.querySelectorAll(
       ".iu-inv-pr-table th, .iu-inv-pr-table td, .iu-inv-pr-meta th, .iu-inv-pr-meta td",
@@ -895,22 +1108,43 @@ function applyCanvasSafeStyles(pageEl) {
     }
     const lineTh = pageEl.querySelectorAll(".iu-inv-pr-table th");
     for (let hi = 0; hi < lineTh.length; hi++) {
+      lineTh[hi].style.setProperty("background-image", "none", "important");
       lineTh[hi].style.setProperty("background-color", "rgba(136, 19, 55, 0.07)", "important");
+    }
+    const metaTh = pageEl.querySelectorAll(".iu-inv-pr-meta th");
+    for (let mi = 0; mi < metaTh.length; mi++) {
+      metaTh[mi].style.setProperty("background-image", "none", "important");
+      metaTh[mi].style.setProperty("background-color", "rgba(15, 23, 42, 0.03)", "important");
+    }
+    const bank = pageEl.querySelector(".iu-inv-pr-bank");
+    if (bank) {
+      bank.style.setProperty("background-image", "none", "important");
+      bank.style.setProperty("background-color", "rgba(15, 23, 42, 0.03)", "important");
+      bank.style.setProperty("border-radius", "10px", "important");
     }
     const due = pageEl.querySelector(".iu-inv-pr-due");
     if (due) {
       due.style.setProperty("color", "#881337", "important");
       due.style.setProperty("font-weight", "800", "important");
+      due.style.setProperty("font-size", "18px", "important");
     }
     const totals = pageEl.querySelector(".iu-inv-pr-totals");
     if (totals) totals.style.setProperty("text-align", "right", "important");
+    const foot = pageEl.querySelector(".iu-inv-pr-foot");
+    if (foot) {
+      foot.style.setProperty("border-top", "1px solid rgba(15, 23, 42, 0.08)", "important");
+      foot.style.setProperty("text-align", "center", "important");
+    }
     pageEl.style.setProperty("border", "1px solid #e2e8f0", "important");
+    const grid = pageEl.querySelector(".iu-inv-pr-grid");
+    if (grid) grid.style.setProperty("grid-template-columns", "1fr 1fr", "important");
   } catch (_) {}
 }
 
 function hardenCloneForCanvas(clonedDoc) {
   try {
     if (!clonedDoc || !clonedDoc.querySelectorAll) return;
+    repositionCloneForCapture(clonedDoc);
     clonedDoc.documentElement.style.setProperty("width", PAPER_CAPTURE_W + "px", "important");
     clonedDoc.body.style.setProperty("width", PAPER_CAPTURE_W + "px", "important");
     clonedDoc.body.style.setProperty("margin", "0", "important");
@@ -920,12 +1154,16 @@ function hardenCloneForCanvas(clonedDoc) {
       const paper = root.querySelector(".iu-invoice-paper");
       const page = root.querySelector(".iu-inv-pr");
       applyPreviewExportLayoutLock(root, paper, page);
-      if (page) applyCanvasSafeStyles(page);
+      if (page) {
+        applyCanvasSafeStyles(page);
+        materializeExportHeaderAccent(page);
+      }
     }
   } catch (_) {}
 }
 
 function publishPreviewHtmlProof(extra) {
+  const fromPreviewDom = !!(extra && extra.fromPreviewDom);
   const proof = Object.assign(
     {
       NEW_RENDERER: IU_INVOICE_PREVIEW_HTML_RENDERER_ID,
@@ -936,8 +1174,12 @@ function publishPreviewHtmlProof(extra) {
       PDF_VISUAL_PARITY_WITH_PREVIEW: true,
       visualTemplateUsed: true,
       generatedFromPreview: true,
+      generatedFromPreviewDom: fromPreviewDom,
       paperModeUsed: true,
       PAPER_CAPTURE_WIDTH: PAPER_CAPTURE_W,
+      HTML2PDF_USED: true,
+      HTML2CANVAS_USED: true,
+      JSPDF_FALLBACK_USED: false,
     },
     extra || {},
   );
@@ -946,12 +1188,15 @@ function publishPreviewHtmlProof(extra) {
     window._iuInvoicePdfExportMeta = {
       renderSource: IU_INVOICE_PREVIEW_HTML_RENDERER_ID,
       generatedFromPreview: true,
+      generatedFromPreviewDom: fromPreviewDom,
       generatedFromScaledPreview: false,
       visualTemplateUsed: true,
       plainTextOnly: false,
       paperModeUsed: true,
       pdfEngine: "html2pdf",
-      typographyFix: "preview_html_template",
+      typographyFix: "preview_html_template_mobile_capture_v2",
+      layoutReady: !!(extra && extra.layoutReady),
+      narrowExport: !!(extra && extra.narrowExport),
     };
   } catch (_) {}
   return proof;
@@ -962,18 +1207,24 @@ function publishPreviewHtmlProof(extra) {
  * @param {string} htmlString
  * @param {string} [fileName]
  */
-export async function buildInvoicePdfBlobFromPreviewHtml(htmlString, fileName) {
+export async function buildInvoicePdfBlobFromPreviewHtml(htmlString, fileName, options) {
   await loadHtml2PdfScript();
+  await ensureInvoiceOverlayCssReady();
   const html = String(htmlString || "").trim();
   if (!html) throw new Error("empty_html");
   if (!/<table[\s>]/i.test(html)) throw new Error("invoice_pdf_plain_text_only");
+  const fromPreviewDom = !!(options && options.fromPreviewDom);
+  const narrowExport = isNarrowViewport();
 
   return new Promise((resolve, reject) => {
     const exportRoot = document.createElement("div");
     exportRoot.setAttribute("data-iu", "pdf-invoice-export-root");
     exportRoot.className = "iu-pdf-render-mode iu-pdf-render-mode--export";
-    exportRoot.style.cssText =
-      "position:fixed;left:-10000px;top:0;visibility:visible;opacity:1;z-index:2147483647;pointer-events:none;";
+    const hostPos = narrowExport
+      ? "position:fixed;left:0;top:0;width:794px;visibility:visible;opacity:1;z-index:2147483646;pointer-events:none;"
+      : "position:fixed;left:0;top:0;width:794px;visibility:visible;opacity:1;z-index:-1;pointer-events:none;";
+    exportRoot.style.cssText = hostPos;
+    injectExportCriticalCss(exportRoot);
     exportRoot.innerHTML = '<div class="iu-invoice-paper">' + html + "</div>";
     document.body.appendChild(exportRoot);
 
@@ -987,28 +1238,65 @@ export async function buildInvoicePdfBlobFromPreviewHtml(htmlString, fileName) {
 
     applyPreviewExportLayoutLock(exportRoot, paperEl, pageEl);
     applyCanvasSafeStyles(pageEl);
+    mirrorPreviewTableWidths(pageEl);
 
-    const textBody = pageEl.textContent || "";
-    if (textBody.length < 80 || textBody.indexOf("FAKTURA") < 0 || textBody.indexOf("Celkem") < 0) {
-      exportRoot.remove();
-      reject(new Error("invoice_print_text_too_short"));
-      return;
-    }
+    const runAfterLayout = async (retry) => {
+      const layout = await waitForExportLayoutReady(pageEl);
+      applyPreviewExportLayoutLock(exportRoot, paperEl, pageEl);
+      applyCanvasSafeStyles(pageEl);
+      mirrorPreviewTableWidths(pageEl);
 
-    const captureH = Math.min(
-      Math.max(Math.ceil(Math.max(pageEl.scrollHeight, pageEl.offsetHeight, paperEl.scrollHeight) + 2), 200),
-      14000,
-    );
-    const contentHmm = Math.ceil((captureH / PAPER_CAPTURE_W) * 210);
-    const jsPdfFormat = contentHmm >= 80 && contentHmm <= 297 ? [210, contentHmm] : "a4";
-    const outName = fileName || "faktura.pdf";
+      const paperW = Math.max(
+        paperEl.offsetWidth || 0,
+        paperEl.scrollWidth || 0,
+        pageEl.offsetWidth || 0,
+        pageEl.scrollWidth || 0,
+        paperEl.getBoundingClientRect().width || 0,
+      );
+      const pageW = Math.max(
+        pageEl.offsetWidth || 0,
+        pageEl.scrollWidth || 0,
+        pageEl.getBoundingClientRect().width || 0,
+      );
+      const styleAudit = validateExportComputedStyles(pageEl);
+      if (!layout.layoutReady || paperW < 700 || pageW < 700) {
+        if (!retry) {
+          runAfterLayout(true);
+          return;
+        }
+        exportRoot.remove();
+        reject(new Error("invoice_paper_layout_invalid"));
+        return;
+      }
+      if (!styleAudit.parity && !retry) {
+        applyCanvasSafeStyles(pageEl);
+        materializeExportHeaderAccent(pageEl);
+        runAfterLayout(true);
+        return;
+      }
 
-    function runExport(retry) {
+      const textBody = pageEl.textContent || "";
+      if (textBody.length < 80 || textBody.indexOf("FAKTURA") < 0 || textBody.indexOf("Celkem") < 0) {
+        exportRoot.remove();
+        reject(new Error("invoice_print_text_too_short"));
+        return;
+      }
+
+      const captureH = Math.min(
+        Math.max(
+          Math.ceil(Math.max(pageEl.scrollHeight, pageEl.offsetHeight, paperEl.scrollHeight, layout.scrollHeight) + 2),
+          200,
+        ),
+        narrowExport ? 7200 : 14000,
+      );
+      const contentHmm = Math.ceil((captureH / PAPER_CAPTURE_W) * 210);
+      const jsPdfFormat = contentHmm >= 80 && contentHmm <= 297 ? [210, contentHmm] : "a4";
+      const outName = fileName || "faktura.pdf";
       const scale = retry ? 1 : 2;
       const opts = {
         margin: 0,
         filename: outName,
-        image: { type: "jpeg", quality: 0.98 },
+        image: { type: "jpeg", quality: narrowExport ? 0.92 : 0.98 },
         html2canvas: {
           scale,
           scrollX: 0,
@@ -1038,20 +1326,29 @@ export async function buildInvoicePdfBlobFromPreviewHtml(htmlString, fileName) {
         .then((blob) => {
           exportRoot.remove();
           const norm = blob instanceof Blob ? blob : new Blob([blob], { type: "application/pdf" });
-          const proof = publishPreviewHtmlProof({ captureHeight: captureH, html2canvasScale: scale });
+          const proof = publishPreviewHtmlProof({
+            captureHeight: captureH,
+            html2canvasScale: scale,
+            narrowExport,
+            fromPreviewDom,
+            layoutReady: layout.layoutReady,
+            styleAudit,
+            devicePixelRatio: typeof window.devicePixelRatio === "number" ? window.devicePixelRatio : 1,
+            viewportWidth: typeof window.innerWidth === "number" ? window.innerWidth : 0,
+          });
           resolve({ blob: norm, fileName: outName, proof });
         })
         .catch((err) => {
           if (!retry) {
-            runExport(true);
+            runAfterLayout(true);
             return;
           }
           exportRoot.remove();
           reject(err || new Error("html2pdf_fail"));
         });
-    }
+    };
 
-    requestAnimationFrame(() => requestAnimationFrame(() => runExport(false)));
+    requestAnimationFrame(() => requestAnimationFrame(() => runAfterLayout(false)));
   });
 }
 
@@ -1063,9 +1360,9 @@ export async function auditInvoicePdfLayoutPrepared(hasVat) {
 }
 
 /** Produkční export: stejná HTML šablona jako náhled. */
-export async function buildInvoicePdfBlobFromData(state, totals, fileName) {
+export async function buildInvoicePdfBlobFromData(state, totals, fileName, options) {
   const html = buildInvoicePaperHtml(state, totals);
-  return buildInvoicePdfBlobFromPreviewHtml(html, fileName);
+  return buildInvoicePdfBlobFromPreviewHtml(html, fileName, options);
 }
 
 /** @deprecated interní jsPDF layout — pouze audit / overflow měření */
@@ -1183,6 +1480,8 @@ export async function buildInvoicePdfBlobFromDataJsPdf(state, totals, fileName) 
 try {
   if (typeof window !== "undefined") {
     window.iuInvoiceRenderPdfBlobFromData = buildInvoicePdfBlobFromData;
+    window.buildInvoicePdfBlobFromPreviewHtml = buildInvoicePdfBlobFromPreviewHtml;
+    window.ensureInvoiceOverlayCssReady = ensureInvoiceOverlayCssReady;
     window.iuInvoicePreloadPdfFont = preloadInvoicePdfFont;
     window.iuInvoiceAuditPdfLayout = auditInvoicePdfLayout;
     window.iuInvoiceAuditPdfLayoutPrepared = auditInvoicePdfLayoutPrepared;
