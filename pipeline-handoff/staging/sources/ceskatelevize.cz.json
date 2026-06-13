@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-13T00:28:33.090048Z",
+  "ingestedAt": "2026-06-13T01:09:44.693961Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ministerstvo USA schválilo převzetí Warner Bros společností Paramount",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/ministerstvo-usa-schvalilo-prevzeti-warner-bros-spolecnosti-paramount-374531",
+      "dt": "2026-06-13T01:00:30Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "bros",
+        "ministerstvo",
+        "paramount",
+        "převzetí",
+        "schválilo",
+        "společností",
+        "usa",
+        "warner"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -734,30 +759,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Izraelské údery na Týr vyhnaly z města i libanonské křesťany",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/izraelske-udery-na-tyr-vyhnaly-z-mesta-i-libanonske-krestany-374485",
-      "dt": "2026-06-12T06:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "izraelské",
-        "křesťany",
-        "libanonské",
-        "města",
-        "týr",
-        "vyhnaly",
-        "údery"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -768,7 +769,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41518,
+      "bytes": 41483,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -805,7 +806,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-12T21:09:19Z",
+        "raw_feed_latest_publishedAt": "2026-06-13T01:00:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -822,6 +823,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ministerstvo USA schválilo převzetí Warner Bros společností Paramount",
+            "publishedAt": "2026-06-13T01:00:30Z"
+          },
           {
             "title": "Dohoda s USA počítá s ukončením americké blokády Íránu, tvrdí Arakčí",
             "publishedAt": "2026-06-12T21:09:19Z"
@@ -849,10 +854,6 @@
           {
             "title": "Sociální sítě měly výpadek. Nefungoval Instagram, Facebook i Messenger",
             "publishedAt": "2026-06-12T14:32:09Z"
-          },
-          {
-            "title": "Zelenskyj vyzval k otevřené debatě o LGBTQ+ a rovných právech občanů",
-            "publishedAt": "2026-06-12T14:17:20Z"
           }
         ]
       }
