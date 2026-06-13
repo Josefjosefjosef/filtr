@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.ceskatelevize.cz",
-  "ingestedAt": "2026-06-13T20:55:37.055357Z",
+  "ingestedAt": "2026-06-13T21:52:28.303335Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Veselý si před koncem kariéry zahraje s Barcelonou o španělský titul",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/vesely-si-pred-koncem-kariery-zahraje-s-barcelonou-o-spanelsky-titul-157373",
+      "dt": "2026-06-13T21:14:58Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "barcelonou",
+        "kariéry",
+        "koncem",
+        "titul",
+        "veselý",
+        "zahraje",
+        "španělský"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "sport.ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -59,15 +83,21 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "MS ve fotbale: Katar – Švýcarsko",
+      "title": "Katar slaví první bod v historii, blíží se šlágr Brazílie – Maroko",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/ms-ve-fotbale-katar-svycarsko-157370",
       "dt": "2026-06-13T18:15:00Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "fotbale",
+        "blíží",
+        "bod",
+        "brazílie",
+        "historii",
         "katar",
-        "švýcarsko"
+        "maroko",
+        "první",
+        "slaví",
+        "šlágr"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -720,32 +750,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "sport.ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Aklimatizace na Mexiko byla nemožná, pomohlo nám vedro v Texasu, říká lékař",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/aklimatizace-na-podminky-v-mexiku-byla-nemozna-pomohlo-nam-vedro-v-texasu-rika-lekar-157344",
-      "dt": "2026-06-12T15:22:07Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "aklimatizace",
-        "lékař",
-        "mexiko",
-        "nemožná",
-        "nám",
-        "pomohlo",
-        "texasu",
-        "vedro",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "sport.ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -756,7 +760,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39901,
+      "bytes": 39794,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -793,7 +797,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-13T20:20:38Z",
+        "raw_feed_latest_publishedAt": "2026-06-13T21:14:58Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -809,6 +813,10 @@
         },
         "sample_titles": [
           {
+            "title": "Veselý si před koncem kariéry zahraje s Barcelonou o španělský titul",
+            "publishedAt": "2026-06-13T21:14:58Z"
+          },
+          {
             "title": "Stříbro, pak zlato, nakonec stříbro. Tahanice kolem výsledků Dostála otrávily",
             "publishedAt": "2026-06-13T20:20:38Z"
           },
@@ -817,7 +825,7 @@
             "publishedAt": "2026-06-13T18:57:42Z"
           },
           {
-            "title": "MS ve fotbale: Katar – Švýcarsko",
+            "title": "Katar slaví první bod v historii, blíží se šlágr Brazílie – Maroko",
             "publishedAt": "2026-06-13T18:15:00Z"
           },
           {
@@ -835,10 +843,6 @@
           {
             "title": "V Hustopečích kraloval Stříteský a upevnil si vedení v MČR",
             "publishedAt": "2026-06-13T15:04:50Z"
-          },
-          {
-            "title": "Velký návrat Tourého. Africká legenda usedne na lavičku Slovanu",
-            "publishedAt": "2026-06-13T14:46:54Z"
           }
         ]
       }

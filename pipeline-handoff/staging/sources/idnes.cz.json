@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-13T20:55:37.055357Z",
+  "ingestedAt": "2026-06-13T21:52:28.303335Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Orbán dál povede Fidesz. Nevzdám se, nikdy, nikdy, nikdy, vzkázal",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/madarska-strana-fidesz-orban-volba-predsedy.A260613_172210_zahranicni_aoc",
+      "dt": "2026-06-13T21:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "fidesz",
+        "nevzdám",
+        "nikdy",
+        "orbán",
+        "povede",
+        "vzkázal"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -231,29 +254,6 @@
         "romskou",
         "stovky",
         "svatý"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Orbán dál povede Fidesz. Nevzdám se, nikdy, nikdy, nikdy, vzkázal",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/madarska-strana-fidesz-orban-volba-predsedy.A260613_172210_zahranicni_aoc",
-      "dt": "2026-06-13T15:39:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "fidesz",
-        "nevzdám",
-        "nikdy",
-        "orbán",
-        "povede",
-        "vzkázal"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -787,8 +787,8 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48823,
-      "reason": "http_500",
+      "bytes": 48992,
+      "reason": "",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 30,
@@ -824,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-13T18:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-13T21:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -841,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Orbán dál povede Fidesz. Nevzdám se, nikdy, nikdy, nikdy, vzkázal",
+            "publishedAt": "2026-06-13T21:00:00Z"
+          },
           {
             "title": "Hrůzný nález, v Polsku objevili ostatky nenarozených dětí. Šlo o experimenty?",
             "publishedAt": "2026-06-13T18:32:00Z"
@@ -868,10 +872,6 @@
           {
             "title": "Vzácná a těžko poznatelná nemoc. Že může mít albinismus, žena zjistila až ve třiceti",
             "publishedAt": "2026-06-13T16:42:00Z"
-          },
-          {
-            "title": "OBRAZEM: Ne rasismu i vzkaz Muskovi. V Belfastu protestovaly tisíce lidí",
-            "publishedAt": "2026-06-13T16:36:00Z"
           }
         ]
       }
