@@ -258,6 +258,24 @@ function fitFontSizeForColumn(doc, text, maxW, startPt, minPt) {
   return minPt;
 }
 
+/** Never return empty — smallest visible line that fits (split / truncate). */
+function truncateTextToFit(doc, text, maxW, pt) {
+  const raw = String(text || "").trim() || "—";
+  applyNormalTracking(doc);
+  doc.setFontSize(pt);
+  const split = doc.splitTextToSize(raw, maxW);
+  for (let i = 0; i < split.length; i++) {
+    if (measureTextWidthMm(doc, split[i], pt) <= maxW + 0.2) return split[i];
+  }
+  const ell = "…";
+  let t = raw;
+  while (t.length > 0 && measureTextWidthMm(doc, t + ell, pt) > maxW + 0.2) {
+    t = t.slice(0, -1);
+  }
+  if (t.length > 0) return t + ell;
+  return raw.charAt(0) || "—";
+}
+
 function withColumnClip(doc, col, yTop, h, drawFn) {
   doc.saveGraphicsState();
   doc.rect(col.x + 0.25, yTop + 0.15, Math.max(2, col.w - 0.5), Math.max(2, h - 0.3));
@@ -286,15 +304,26 @@ function planTableCellDraw(doc, col, text, startPt, minPt) {
     if (measureTextWidthMm(doc, amt, pt) <= maxW + 0.2) {
       return { overflow: false, fontPt: pt, twoLine: true, lines: [amt, "Kč"], lineH: lh, cellH: lh * 2.2 };
     }
+    const amtFallback = truncateTextToFit(doc, amt, maxW, minPt);
+    const lhFb = lineHeightMm(minPt, 1.1);
+    return {
+      overflow: true,
+      fontPt: minPt,
+      twoLine: true,
+      lines: [amtFallback, "Kč"],
+      lineH: lhFb,
+      cellH: lhFb * 2.2,
+    };
   }
   pt = minPt;
-  const tw = measureTextWidthMm(doc, raw, pt);
   const lineH = lineHeightMm(pt, 1.1);
+  const fallback = truncateTextToFit(doc, raw, maxW, pt);
+  const tw = measureTextWidthMm(doc, raw, pt);
   return {
     overflow: tw > maxW + 0.2,
     fontPt: pt,
     twoLine: false,
-    lines: tw <= maxW + 0.2 ? [raw] : [],
+    lines: [fallback],
     lineH,
     cellH: lineH,
   };
@@ -311,17 +340,15 @@ function drawTableCellText(doc, col, text, yTop, rowH, opts) {
   const x = align === "center" ? col.x + col.w / 2 : col.x + col.w - pad;
   setPdfFont(doc, style);
   const plan = planTableCellDraw(doc, col, text, startPt, minPt);
-  if (!plan.lines.length) {
-    return { overflow: true, fontPt: plan.fontPt, twoLine: plan.twoLine, cellH: plan.lineH };
-  }
+  const lines = plan.lines && plan.lines.length ? plan.lines : [truncateTextToFit(doc, String(text || ""), Math.max(4, col.w - pad * 2), minPt)];
   withColumnClip(doc, col, yTop, rowH, () => {
     doc.setFontSize(plan.fontPt);
-    if (plan.twoLine && plan.lines.length === 2) {
+    if (plan.twoLine && lines.length === 2) {
       const mid = yTop + rowH / 2;
-      pdfText(doc, plan.lines[0], x, mid - plan.lineH * 0.45, { align, style });
-      pdfText(doc, plan.lines[1], x, mid + plan.lineH * 0.35, { align, style });
+      pdfText(doc, lines[0], x, mid - plan.lineH * 0.45, { align, style });
+      pdfText(doc, lines[1], x, mid + plan.lineH * 0.35, { align, style });
     } else {
-      pdfText(doc, plan.lines[0], x, yTop + rowH / 2, { align, style });
+      pdfText(doc, lines[0], x, yTop + rowH / 2, { align, style });
     }
   });
   return {
