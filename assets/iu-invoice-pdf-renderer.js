@@ -811,8 +811,9 @@ const INVOICE_EXPORT_CRITICAL_CSS = `
 .iu-pdf-render-mode,.iu-pdf-render-mode--export{position:fixed;left:0;top:0;width:794px;max-width:794px;background:#fff;color:#0f172a;visibility:visible;opacity:1;transform:none!important;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 .iu-pdf-render-mode .iu-invoice-paper{width:794px;max-width:794px;background:#fff;box-sizing:border-box}
 .iu-pdf-render-mode .iu-inv-pr{width:794px;max-width:794px;margin:0 auto;background:#fff;border-radius:12px;border:1px solid rgba(15,23,42,.1);padding:18px 20px 22px;box-sizing:border-box;color:#0f172a}
-.iu-pdf-render-mode .iu-inv-pr-head{padding:12px 14px;border-radius:10px;background:#fff;margin-bottom:16px;position:relative;overflow:hidden}
-.iu-pdf-render-mode .iu-inv-pr-head-accent{position:absolute;left:0;top:0;bottom:0;width:48%;background:rgba(136,19,55,.06);border-radius:10px 0 0 10px;pointer-events:none;z-index:0}
+.iu-pdf-render-mode .iu-inv-pr-head{padding:12px 14px;border-radius:10px;background:transparent;margin-bottom:16px;position:relative;overflow:hidden}
+.iu-pdf-render-mode .iu-inv-pr-head-bg{position:absolute;left:0;top:0;right:0;bottom:0;z-index:0;pointer-events:none;border-radius:10px;overflow:hidden;background:#fff}
+.iu-pdf-render-mode .iu-inv-pr-head-accent{display:none}
 .iu-pdf-render-mode .iu-inv-pr-head>*{position:relative;z-index:1}
 .iu-pdf-render-mode .iu-inv-pr-created{font-size:13px;font-weight:700;color:#881337;margin-bottom:4px}
 .iu-pdf-render-mode .iu-inv-pr-title{font-size:22px;font-weight:800;margin-top:6px}
@@ -881,15 +882,50 @@ function injectExportCriticalCss(exportRoot) {
   } catch (_) {}
 }
 
-function materializeExportHeaderAccent(pageEl) {
+function materializeExportHeaderVisual(pageEl) {
   if (!pageEl || !pageEl.querySelector) return;
   try {
     const head = pageEl.querySelector(".iu-inv-pr-head");
-    if (!head || head.querySelector(".iu-inv-pr-head-accent")) return;
-    const accent = document.createElement("div");
-    accent.className = "iu-inv-pr-head-accent";
-    accent.setAttribute("aria-hidden", "true");
-    head.insertBefore(accent, head.firstChild);
+    if (!head) return;
+    head.querySelectorAll(".iu-inv-pr-head-accent, .iu-inv-pr-head-bg").forEach(function (el) {
+      el.remove();
+    });
+    const doc = head.ownerDocument || document;
+    const wrap = doc.createElement("div");
+    wrap.className = "iu-inv-pr-head-bg";
+    wrap.setAttribute("aria-hidden", "true");
+    wrap.style.cssText =
+      "position:absolute;left:0;top:0;right:0;bottom:0;z-index:0;pointer-events:none;" +
+      "border-radius:10px;overflow:hidden;background:#ffffff;";
+    const strips = [
+      { left: 0, width: 16, color: "rgba(136, 19, 55, 0.06)" },
+      { left: 16, width: 8, color: "rgba(136, 19, 55, 0.045)" },
+      { left: 24, width: 8, color: "rgba(136, 19, 55, 0.03)" },
+      { left: 32, width: 8, color: "rgba(136, 19, 55, 0.015)" },
+    ];
+    for (let si = 0; si < strips.length; si++) {
+      const s = strips[si];
+      const strip = doc.createElement("div");
+      strip.style.cssText =
+        "position:absolute;top:0;bottom:0;left:" +
+        s.left +
+        "%;width:" +
+        s.width +
+        "%;background:" +
+        s.color +
+        ";";
+      wrap.appendChild(strip);
+    }
+    head.insertBefore(wrap, head.firstChild);
+    if (!head.style.borderLeft) {
+      head.style.setProperty("border-left", "4px solid #881337", "important");
+    }
+    Array.from(head.children).forEach(function (child) {
+      if (child !== wrap) {
+        child.style.position = "relative";
+        child.style.zIndex = "1";
+      }
+    });
   } catch (_) {}
 }
 
@@ -969,10 +1005,10 @@ function validateExportComputedStyles(pageEl) {
     out.cardPadding = cs.padding || "";
     const head = pageEl.querySelector(".iu-inv-pr-head");
     if (head) out.headerBackground = window.getComputedStyle(head).backgroundColor || "";
-    const accent = pageEl.querySelector(".iu-inv-pr-head-accent");
-    if (accent) {
-      const acs = window.getComputedStyle(accent);
-      out.accentVisible = (parseFloat(acs.width) || 0) > 20 && acs.display !== "none";
+    const bg = pageEl.querySelector(".iu-inv-pr-head-bg");
+    if (bg) {
+      const strips = bg.querySelectorAll("div");
+      out.accentVisible = strips.length >= 3 || (parseFloat(window.getComputedStyle(bg).width) || 0) > 100;
     }
     const th = pageEl.querySelector(".iu-inv-pr-table th");
     if (th) out.tableHeaderBackground = window.getComputedStyle(th).backgroundColor || "";
@@ -1082,43 +1118,43 @@ function applyPreviewExportLayoutLock(exportRoot, paperEl, pageEl) {
 function applyCanvasSafeStyles(pageEl) {
   if (!pageEl || !pageEl.querySelector) return;
   try {
-    materializeExportHeaderAccent(pageEl);
+    materializeExportHeaderVisual(pageEl);
     const head = pageEl.querySelector(".iu-inv-pr-head");
     if (head) {
       head.style.setProperty("position", "relative", "important");
       head.style.setProperty("overflow", "hidden", "important");
+      head.style.setProperty("background-color", "transparent", "important");
       head.style.setProperty("background-image", "none", "important");
-      head.style.setProperty("background-color", "#ffffff", "important");
       head.style.setProperty("border-radius", "10px", "important");
       head.style.setProperty("padding", "12px 14px", "important");
     }
     pageEl.style.setProperty("border-radius", "12px", "important");
     pageEl.style.setProperty("padding", "18px 20px 22px", "important");
     pageEl.style.setProperty("background-color", "#ffffff", "important");
+    pageEl.style.setProperty("border", "1px solid rgba(15, 23, 42, 0.1)", "important");
     const tables = pageEl.querySelectorAll(".iu-inv-pr-table, .iu-inv-pr-meta");
     for (let ti = 0; ti < tables.length; ti++) {
       tables[ti].style.setProperty("border-collapse", "collapse", "important");
       tables[ti].style.setProperty("border-spacing", "0", "important");
     }
-    const cells = pageEl.querySelectorAll(
-      ".iu-inv-pr-table th, .iu-inv-pr-table td, .iu-inv-pr-meta th, .iu-inv-pr-meta td",
-    );
-    for (let ci = 0; ci < cells.length; ci++) {
-      cells[ci].style.setProperty("border", "1px solid #dbe1e8", "important");
+    const metaCells = pageEl.querySelectorAll(".iu-inv-pr-meta th, .iu-inv-pr-meta td");
+    for (let ci = 0; ci < metaCells.length; ci++) {
+      metaCells[ci].style.setProperty("border", "1px solid rgba(15, 23, 42, 0.08)", "important");
+    }
+    const tableCells = pageEl.querySelectorAll(".iu-inv-pr-table th, .iu-inv-pr-table td");
+    for (let ci = 0; ci < tableCells.length; ci++) {
+      tableCells[ci].style.setProperty("border", "1px solid rgba(15, 23, 42, 0.1)", "important");
     }
     const lineTh = pageEl.querySelectorAll(".iu-inv-pr-table th");
     for (let hi = 0; hi < lineTh.length; hi++) {
-      lineTh[hi].style.setProperty("background-image", "none", "important");
       lineTh[hi].style.setProperty("background-color", "rgba(136, 19, 55, 0.07)", "important");
     }
     const metaTh = pageEl.querySelectorAll(".iu-inv-pr-meta th");
     for (let mi = 0; mi < metaTh.length; mi++) {
-      metaTh[mi].style.setProperty("background-image", "none", "important");
       metaTh[mi].style.setProperty("background-color", "rgba(15, 23, 42, 0.03)", "important");
     }
     const bank = pageEl.querySelector(".iu-inv-pr-bank");
     if (bank) {
-      bank.style.setProperty("background-image", "none", "important");
       bank.style.setProperty("background-color", "rgba(15, 23, 42, 0.03)", "important");
       bank.style.setProperty("border-radius", "10px", "important");
     }
@@ -1135,7 +1171,6 @@ function applyCanvasSafeStyles(pageEl) {
       foot.style.setProperty("border-top", "1px solid rgba(15, 23, 42, 0.08)", "important");
       foot.style.setProperty("text-align", "center", "important");
     }
-    pageEl.style.setProperty("border", "1px solid #e2e8f0", "important");
     const grid = pageEl.querySelector(".iu-inv-pr-grid");
     if (grid) grid.style.setProperty("grid-template-columns", "1fr 1fr", "important");
   } catch (_) {}
@@ -1156,7 +1191,7 @@ function hardenCloneForCanvas(clonedDoc) {
       applyPreviewExportLayoutLock(root, paper, page);
       if (page) {
         applyCanvasSafeStyles(page);
-        materializeExportHeaderAccent(page);
+        materializeExportHeaderVisual(page);
       }
     }
   } catch (_) {}
@@ -1270,7 +1305,7 @@ export async function buildInvoicePdfBlobFromPreviewHtml(htmlString, fileName, o
       }
       if (!styleAudit.parity && !retry) {
         applyCanvasSafeStyles(pageEl);
-        materializeExportHeaderAccent(pageEl);
+        materializeExportHeaderVisual(pageEl);
         runAfterLayout(true);
         return;
       }
@@ -1333,6 +1368,7 @@ export async function buildInvoicePdfBlobFromPreviewHtml(htmlString, fileName, o
             fromPreviewDom,
             layoutReady: layout.layoutReady,
             styleAudit,
+            gradientDomLayer: true,
             devicePixelRatio: typeof window.devicePixelRatio === "number" ? window.devicePixelRatio : 1,
             viewportWidth: typeof window.innerWidth === "number" ? window.innerWidth : 0,
           });
