@@ -23,7 +23,12 @@ import {
   validateForm,
   validateSupplierProfile,
 } from "./iu-invoice-engine.js";
-import { buildInvoicePdfBlobFromData, preloadInvoicePdfFont } from "./iu-invoice-pdf-renderer.js";
+import {
+  buildInvoicePdfBlobFromData,
+  buildInvoicePdfBlobFromPreviewHtml,
+  ensureInvoiceOverlayCssReady,
+  preloadInvoicePdfFont,
+} from "./iu-invoice-pdf-renderer.js";
 
 function esc(s) {
   return String(s || "")
@@ -1115,6 +1120,19 @@ export function initIuInvoiceOverlay(deps) {
       return "PDF se nepodařilo vygenerovat.";
     }
 
+    function getOpenPreviewPaperInnerHtml() {
+      try {
+        const portal = document.getElementById("iuInvoicePreviewPortal");
+        if (!portal || portal.hidden) return null;
+        const paper = portal.querySelector(".iu-invoice-paper");
+        if (!paper) return null;
+        const inner = String(paper.innerHTML || "").trim();
+        return inner || null;
+      } catch (_) {
+        return null;
+      }
+    }
+
     function exportInvoicePdfBlob(cb) {
       readStateFromDom(root, state);
       copySupplierBankToInvoiceIfEmpty(state);
@@ -1132,7 +1150,14 @@ export function initIuInvoiceOverlay(deps) {
         window._iuInvoiceWordPdfStackUsed = false;
       } catch (_) {}
       invoicePdfDiag("invoice_pdf_export_start", { via: "invoice_module", renderer: "preview_html_v1" });
-      buildInvoicePdfBlobFromData(state, totals, fileName)
+      const previewHtml = getOpenPreviewPaperInnerHtml();
+      const exportPromise = ensureInvoiceOverlayCssReady().then(() => {
+        if (previewHtml) {
+          return buildInvoicePdfBlobFromPreviewHtml(previewHtml, fileName, { fromPreviewDom: true });
+        }
+        return buildInvoicePdfBlobFromData(state, totals, fileName, { fromPreviewDom: false });
+      });
+      exportPromise
         .then((out) => {
           if (!out || !out.blob) {
             const err = new Error("pdf_blob_empty");
@@ -1145,6 +1170,7 @@ export function initIuInvoiceOverlay(deps) {
             size: out.blob.size,
             via: "invoice_module",
             renderer: "preview_html_v1",
+            fromPreviewDom: !!previewHtml,
           });
           cb(null, out.blob, out.fileName || fileName);
         })

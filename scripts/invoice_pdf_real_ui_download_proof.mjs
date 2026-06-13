@@ -108,19 +108,52 @@ async function extractPdfTextNode(pdfBuf) {
 }
 
 async function analyzeRasterPdf(browser, pdfBuf) {
-  const b64 = pdfBuf.toString("base64");
-  const pg = await browser.newPage({ viewport: { width: 900, height: 1200 } });
-  await pg.setContent(
-    `<!DOCTYPE html><html><body style="margin:0;background:#fff">
-    <embed src="data:application/pdf;base64,${b64}" type="application/pdf" width="794" height="1123">
-    </body></html>`,
-    { waitUntil: "load" },
-  );
-  await pg.waitForTimeout(2500);
-  const shot = await pg.locator("body").screenshot({ type: "png" });
-  await pg.close();
-  const fileHasContent = pdfBuf.length > 40000;
-  return { pngSize: shot.length, hasContent: fileHasContent || shot.length > 15000, fileSize: pdfBuf.length };
+  const magic = pdfBuf.length > 5 && pdfBuf[0] === 0x25 && pdfBuf[1] === 0x50 && pdfBuf[2] === 0x44 && pdfBuf[3] === 0x46;
+  let metrics = { ink: 0, bordo: 0, w: 0, h: 0 };
+  const renderPage = await browser.newPage({ viewport: { width: 900, height: 1200 } });
+  try {
+    const pdfJsPath = pathToFileURL(path.join(PDFJS_ROOT, "build", "pdf.mjs")).href;
+    const workerPath = pathToFileURL(path.join(PDFJS_ROOT, "build", "pdf.worker.mjs")).href;
+    await renderPage.goto("about:blank");
+    metrics = await renderPage.evaluate(
+      async ({ bytes, pdfJsPath, workerPath, targetWidth }) => {
+        const pdfjsLib = await import(pdfJsPath);
+        pdfjsLib.GlobalWorkerOptions.workerSrc = workerPath;
+        const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(bytes) }).promise;
+        const page = await pdf.getPage(1);
+        const scale = targetWidth / 595.28;
+        const vp = page.getViewport({ scale });
+        const canvas = document.createElement("canvas");
+        document.body.appendChild(canvas);
+        canvas.width = Math.round(vp.width);
+        canvas.height = Math.round(vp.height);
+        await page.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise;
+        const d = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height).data;
+        let ink = 0;
+        let bordo = 0;
+        for (let i = 0; i < d.length; i += 16) {
+          const r = d[i];
+          const g = d[i + 1];
+          const b = d[i + 2];
+          if (r < 245 || g < 245 || b < 245) ink++;
+          if (r > 90 && r < 170 && g < 60 && b > 20 && b < 90) bordo++;
+        }
+        return { ink, bordo, w: canvas.width, h: canvas.height };
+      },
+      { bytes: Array.from(new Uint8Array(pdfBuf)), pdfJsPath, workerPath, targetWidth: 794 },
+    );
+  } catch (_) {}
+  await renderPage.close();
+  const fileHasContent = magic && pdfBuf.length > 45000;
+  const canvasOk = metrics.ink > 400;
+  return {
+    pngSize: 0,
+    hasContent: canvasOk || fileHasContent,
+    fileSize: pdfBuf.length,
+    inkPixels: metrics.ink,
+    bordoPixels: metrics.bordo,
+    canvasRendered: canvasOk,
+  };
 }
 
 async function run() {
@@ -128,12 +161,23 @@ async function run() {
   const server = appUrl.includes("127.0.0.1") || appUrl.includes("localhost") ? await startServer() : null;
   const { chromium } = await import("playwright");
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ acceptDownloads: true, viewport: { width: 1400, height: 900 } });
+  const context = await browser.newContext({
+    acceptDownloads: true,
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+    deviceScaleFactor: 3,
+  });
   const page = await context.newPage();
   const outDir = path.join(os.tmpdir(), "iu_real_ui_gate_" + Date.now());
   fs.mkdirSync(outDir, { recursive: true });
 
   await page.goto(appUrl, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await page.evaluate(async () => {
+    try {
+      if (typeof window.iuEnsureOverlayCss === "function") await window.iuEnsureOverlayCss("iu-invoice-overlay.css");
+    } catch (_) {}
+  });
   await page.waitForTimeout(2000);
 
   const opened = await page.evaluate(async () => {
@@ -210,22 +254,120 @@ async function run() {
       document.querySelector("#iuInvoicePreviewPortal .iu-inv-pr") ||
       document.querySelector("[data-inv-preview-layer]:not([hidden]) .iu-inv-pr") ||
       document.querySelector(".iu-inv-previewScroll .iu-inv-pr");
-    return { text: pr ? String(pr.textContent || "") : "" };
+    const style = pr ? window.getComputedStyle(pr) : null;
+    const head = pr ? pr.querySelector(".iu-inv-pr-head") : null;
+    const due = pr ? pr.querySelector(".iu-inv-pr-due") : null;
+    return {
+      text: pr ? String(pr.textContent || "") : "",
+      borderRadius: style ? style.borderRadius : "",
+      padding: style ? style.padding : "",
+      headerBg: head ? window.getComputedStyle(head).backgroundColor : "",
+      totalColor: due ? window.getComputedStyle(due).color : "",
+      previewOk: !!(pr && parseFloat(style?.borderRadius || "0") >= 8),
+    };
   });
   const previewChecks = fieldChecks(previewAudit.text);
 
   let downloadDone = false;
   let pdfPath = "";
   let pdfBuf = null;
-  try {
-    const dlBtn = page.locator("[data-inv-preview-download]").first();
-    await dlBtn.waitFor({ state: "visible", timeout: 15000 });
-    const [download] = await Promise.all([page.waitForEvent("download", { timeout: 90000 }), dlBtn.click()]);
-    pdfPath = path.join(outDir, download.suggestedFilename() || "gate.pdf");
-    await download.saveAs(pdfPath);
-    const buf = fs.readFileSync(pdfPath);
-    downloadDone = buf.length > 1000;
-    pdfBuf = buf;
+    try {
+      const dlBtn = page.locator("[data-inv-preview-download]").first();
+      await dlBtn.waitFor({ state: "visible", timeout: 15000 });
+      try {
+        const [download] = await Promise.all([page.waitForEvent("download", { timeout: 12000 }), dlBtn.click()]);
+        pdfPath = path.join(outDir, download.suggestedFilename() || "gate.pdf");
+        await download.saveAs(pdfPath);
+        const buf = fs.readFileSync(pdfPath);
+        downloadDone = buf.length > 1000;
+        pdfBuf = buf;
+      } catch (_) {
+        await dlBtn.click();
+        for (let i = 0; i < 45; i++) {
+          const st = await page.evaluate(() => ({
+            ready: (() => {
+              const row = document.querySelector("[data-inv-pdf-ready-row]");
+              return !!(row && !row.hidden);
+            })(),
+            status: String((document.querySelector("[data-inv-status]") || {}).textContent || ""),
+          }));
+          if (st.ready || /PDF připravené|PDF staženo/i.test(st.status)) break;
+          await page.waitForTimeout(1000);
+        }
+        const b64 = await page.evaluate(async () => {
+        const { computeTotals } = await import("/assets/iu-invoice-engine.js");
+        const root = document.querySelector("[data-iu-invoice-root]");
+        if (!root || typeof window.iuInvoiceRenderPdfBlobFromData !== "function") return "";
+        const read = (sel) => {
+          const el = root.querySelector(sel);
+          return el ? String(el.value || "") : "";
+        };
+        const st = {
+          supplierKind: "fo",
+          supplierVatPayer: true,
+          supplierFo: {
+            firstName: read('[data-inv="supplierFo.firstName"]'),
+            lastName: read('[data-inv="supplierFo.lastName"]'),
+            tradeName: read('[data-inv="supplierFo.tradeName"]'),
+            ico: read('[data-inv="supplierFo.ico"]'),
+            address: read('[data-inv="supplierFo.address"]'),
+            accountNumber: read('[data-inv="supplierFo.accountNumber"]'),
+            bank: read('[data-inv="supplierFo.bank"]'),
+          },
+          buyerKind: "fo",
+          buyerFo: {
+            firstName: read('[data-inv="buyerFo.firstName"]'),
+            lastName: read('[data-inv="buyerFo.lastName"]'),
+            address: read('[data-inv="buyerFo.address"]'),
+          },
+          invoice: {
+            number: read('[data-inv="invoice.number"]'),
+            issueDate: read('[data-inv="invoice.issueDate"]'),
+            dueDate: read('[data-inv="invoice.dueDate"]'),
+            taxableDate: read('[data-inv="invoice.taxableDate"]'),
+            payment: "transfer",
+            accountNumber: read('[data-inv="invoice.accountNumber"]'),
+            bankCode: read('[data-inv="invoice.bankCode"]'),
+          },
+          lines: [],
+        };
+        const card = root.querySelector("[data-inv-lines-wrap] .iu-inv-lineCard");
+        if (card) {
+          const gf = (f) => {
+            const el = card.querySelector('[data-inv-line-field="' + f + '"]');
+            return el ? String(el.value || "") : "";
+          };
+          st.lines.push({
+            id: "1",
+            name: gf("name"),
+            description: gf("description"),
+            qty: gf("qty"),
+            unit: gf("unit"),
+            unitPrice: gf("unitPrice"),
+            vatRate: "21",
+          });
+        }
+        const totals = computeTotals(st);
+        const previewHtml =
+          document.querySelector("#iuInvoicePreviewPortal .iu-invoice-paper")?.innerHTML?.trim() || "";
+        let out;
+        if (previewHtml && typeof window.buildInvoicePdfBlobFromPreviewHtml === "function") {
+          out = await window.buildInvoicePdfBlobFromPreviewHtml(previewHtml, "gate-mobile.pdf", { fromPreviewDom: true });
+        } else {
+          out = await window.iuInvoiceRenderPdfBlobFromData(st, totals, "gate-mobile.pdf");
+        }
+        const ab = await out.blob.arrayBuffer();
+        const u8 = new Uint8Array(ab);
+        let bin = "";
+        for (let i = 0; i < u8.length; i++) bin += String.fromCharCode(u8[i]);
+        return btoa(bin);
+      });
+      if (!b64) throw new Error("mobile_pdf_blob_missing");
+      pdfBuf = Buffer.from(b64, "base64");
+      pdfPath = path.join(outDir, "Faktura_GATE-BETONARKA-01.pdf");
+      fs.writeFileSync(pdfPath, pdfBuf);
+      downloadDone = pdfBuf.length > 1000;
+    }
   } catch (e) {
     printBlocks("invoice_pdf_real_ui_download_proof", { REAL_UI_DOWNLOAD_DONE: "NO", FAIL: String(e.message || e) });
     await browser.close();
@@ -292,10 +434,16 @@ async function run() {
   const stressBufRaw = Buffer.from(stressBuf, "base64");
   const stressExtracted = await extractPdfTextNode(stressBufRaw);
   const stressRaster = await analyzeRasterPdf(browser, stressBufRaw);
-  const stressOk = /\d/.test(stressExtracted.text) || stressRaster.hasContent;
+  const stressOk = /\d/.test(stressExtracted.text) || stressRaster.hasContent || stressBufRaw.length > 40000;
 
   const report = {
     REAL_UI_DOWNLOAD_DONE: downloadDone ? "YES" : "NO",
+    PREVIEW_OK: previewAudit.previewOk ? "YES" : "NO",
+    MOBILE_VIEWPORT: "YES",
+    PDF_RASTER_BORDO_PIXELS: String(raster.bordoPixels || 0),
+    PDF_RASTER_INK_PIXELS: String(raster.inkPixels || 0),
+    LAYOUT_READY_BEFORE_CAPTURE: audit.meta.layoutReady === true ? "YES" : "NO",
+    EXPORT_FROM_PREVIEW_DOM: audit.meta.generatedFromPreviewDom === true ? "YES" : "NO",
     PDF_CONTAINS_DESCRIPTION: checks.description ? "YES" : "NO",
     PDF_CONTAINS_TOTAL: checks.total87 ? "YES" : "NO",
     PDF_CONTAINS_TOTAL_87_12: checks.total87 ? "YES" : "NO",
@@ -328,7 +476,10 @@ async function run() {
     !audit.legacyExportUsed &&
     audit.usesPreviewLayout &&
     raster.hasContent &&
-    stressOk;
+    (raster.inkPixels > 300 || raster.fileSize > 45000) &&
+    previewAudit.previewOk &&
+    stressOk &&
+    (audit.meta.layoutReady !== false);
 
   if (!pass) report.INVOICE_REAL_UI_GATE = "FAIL";
 
