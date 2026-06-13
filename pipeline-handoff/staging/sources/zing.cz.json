@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-06-13T09:07:36.839285Z",
+  "ingestedAt": "2026-06-13T10:02:11.805075Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Cozy novinky s Terry #58",
+      "url": "https://zing.cz/article/cozy-novinky-s-terry-58",
+      "dt": "2026-06-13T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "cozy",
+        "novinky",
+        "terry"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -965,31 +985,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Druhoválečná série Company of Heroes dostane remaster prvního dílu",
-      "url": "https://zing.cz/article/druhovalecna-serie-company-of-heroes-dostane-remaster-prvniho-dilu",
-      "dt": "2026-06-08T10:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "company",
-        "dostane",
-        "druhoválečná",
-        "dílu",
-        "heroes",
-        "prvního",
-        "remaster",
-        "série"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1000,7 +995,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125852,
+      "bytes": 125870,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1037,7 +1032,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-13T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-13T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1052,6 +1047,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cozy novinky s Terry #58",
+            "publishedAt": "2026-06-13T10:00:00Z"
+          },
           {
             "title": "Quake Champions slaví 30 let Quake velkým updatem zdarma",
             "publishedAt": "2026-06-13T06:00:00Z"
@@ -1079,10 +1078,6 @@
           {
             "title": "Valve ukončuje prodej dárkových Steam karet",
             "publishedAt": "2026-06-12T08:00:00Z"
-          },
-          {
-            "title": "Tomb Raider: Legacy of Atlantis ukázal první gameplay záběry",
-            "publishedAt": "2026-06-12T06:00:00Z"
           }
         ]
       }
