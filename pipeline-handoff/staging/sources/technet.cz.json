@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-06-13T08:26:03.822598Z",
+  "ingestedAt": "2026-06-13T09:07:36.839285Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Vláda USA nařídila pozastavit přístup k pokročilým AI modelům Anthropicu",
+      "url": "https://www.idnes.cz/technet/software/anthropic-usa-vlada.A260613_094858_software_alv",
+      "dt": "2026-06-13T08:11:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES",
+      "tokens": [
+        "anthropicu",
+        "modelům",
+        "nařídila",
+        "pokročilým",
+        "pozastavit",
+        "přístup",
+        "usa",
+        "vláda"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -738,31 +763,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Těžilo se tu zlato a ještě zbylo. Teď tu testují i ukládání jaderného odpadu",
-      "url": "https://www.idnes.cz/technet/technika/podzemni-laborator-dul-josef-cvut-zlato-kremen-jaderny-odpad.A260603_130909_tec_technika_vse/foto",
-      "dt": "2026-06-03T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES",
-      "tokens": [
-        "jaderného",
-        "ještě",
-        "odpadu",
-        "testují",
-        "těžilo",
-        "ukládání",
-        "zbylo",
-        "zlato"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -773,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46830,
+      "bytes": 46206,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -810,7 +810,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-12T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-13T08:11:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -825,6 +825,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vláda USA nařídila pozastavit přístup k pokročilým AI modelům Anthropicu",
+            "publishedAt": "2026-06-13T08:11:00Z"
+          },
           {
             "title": "Prada pomohla se speciálním oblečením, ale nám ho neprodají ani za milion",
             "publishedAt": "2026-06-12T22:00:00Z"
@@ -852,10 +856,6 @@
           {
             "title": "Umělá inteligence od Googlu měla problém. Uživatelé Gemini bojovali s výpadky",
             "publishedAt": "2026-06-11T04:39:01Z"
-          },
-          {
-            "title": "Nvidia slíbila revoluci ve Windows, nový čip má být zázrak. Je tu však několik ale",
-            "publishedAt": "2026-06-10T22:00:00Z"
           }
         ]
       }
