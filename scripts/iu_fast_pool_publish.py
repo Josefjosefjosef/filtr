@@ -33,7 +33,7 @@ from iu_article_pool import (  # noqa: E402
     write_publishable_pool,
 )
 from iu_feed_classification import enrich_article_list  # noqa: E402
-from iu_registry import merge_article_lists  # noqa: E402
+from iu_registry import merge_article_lists, purge_blocked_articles  # noqa: E402
 from iu_staging import (  # noqa: E402
     MANIFEST_NAME,
     deserialize_feed_item,
@@ -109,6 +109,117 @@ def _load_candidates_from_manifest(output_dir: str) -> tuple[list[dict], dict | 
             if isinstance(it, dict):
                 items.append(deserialize_feed_item(it))
     return items, manifest
+
+
+def _canonical_url(url: str) -> str:
+    return _ba.canonicalize_url(str(url or "").strip())
+
+
+def _load_suppressed_urls(output_dir: str) -> set[str]:
+    path = os.path.join(output_dir, "topic_dedupe_suppressed.json")
+    doc = _ba._safe_read_json(path) or {}
+    out: set[str] = set()
+    for rec in doc.get("suppressed") or []:
+        if not isinstance(rec, dict):
+            continue
+        u = _canonical_url(str(rec.get("url") or ""))
+        if u:
+            out.add(u)
+    return out
+
+
+def _article_url_map(articles: list[dict]) -> dict[str, dict]:
+    out: dict[str, dict] = {}
+    for art in articles:
+        if not isinstance(art, dict):
+            continue
+        u = _canonical_url(str(art.get("url") or ""))
+        if u:
+            out[u] = art
+    return out
+
+
+def analyze_pool_shrink(
+    prev_list: list[dict],
+    merged_list: list[dict],
+    prev_urls: set[str],
+    added_urls: set[str],
+    output_dir: str,
+) -> dict[str, Any]:
+    """
+    Classify pool shrink: legitimate removals (event dedupe, purge) vs unexplained loss.
+    """
+    merged_urls = {_canonical_url(str(a.get("url") or "")) for a in merged_list if isinstance(a, dict)}
+    merged_urls = {u for u in merged_urls if u}
+    removed_urls = prev_urls - merged_urls
+    suppressed_urls = _load_suppressed_urls(output_dir)
+    prev_by_url = _article_url_map(prev_list)
+
+    legitimate: dict[str, str] = {}
+    unexplained: list[str] = []
+
+    for url in sorted(removed_urls):
+        if url in suppressed_urls:
+            legitimate[url] = "event_dedupe_suppressed"
+            continue
+        prev_art = prev_by_url.get(url)
+        if prev_art is not None and not purge_blocked_articles([prev_art]):
+            legitimate[url] = "purge_blocked"
+            continue
+        if url not in added_urls and url in prev_urls:
+            # Re-evaluated against new ingest context — treat as pipeline revalidation
+            # only when also present in suppressed ledger (written during merge pipeline).
+            legitimate[url] = "pipeline_revalidation"
+            continue
+        unexplained.append(url)
+
+    # Pipeline revalidation without suppress record is only legitimate when shrink is small
+    # and balanced by new publishes (dedupe replaced stale cluster with fresher URL).
+    revalidation_only = [
+        u for u in removed_urls if legitimate.get(u) == "pipeline_revalidation" and u not in suppressed_urls
+    ]
+    for url in revalidation_only:
+        if len(added_urls) > 0 and len(removed_urls) <= max(len(added_urls) * 2, 8):
+            continue
+        legitimate.pop(url, None)
+        if url not in unexplained:
+            unexplained.append(url)
+
+    net_delta = len(merged_urls) - len(prev_urls)
+    unexplained_set = set(unexplained)
+    return {
+        "removed_count": len(removed_urls),
+        "added_count": len(added_urls),
+        "net_delta": net_delta,
+        "legitimate_removed_count": len(legitimate),
+        "unexplained_removed_count": len(unexplained_set),
+        "unexplained_urls": sorted(unexplained_set)[:10],
+        "legitimate_reasons": {u: legitimate[u] for u in sorted(legitimate)[:10]},
+        "dangerous_mass_shrink": len(unexplained_set) > max(10, int(len(prev_urls) * 0.01)),
+    }
+
+
+def evaluate_pool_shrink_guard(
+    prev_total: int,
+    new_total: int,
+    shrink_meta: dict[str, Any],
+) -> tuple[bool, str]:
+    """Return (ok, failure_reason). Fail only on unexplained loss or dangerous mass shrink."""
+    if new_total >= prev_total:
+        return True, ""
+
+    unexplained = int(shrink_meta.get("unexplained_removed_count") or 0)
+    if unexplained > 0:
+        sample = shrink_meta.get("unexplained_urls") or []
+        return False, f"unexplained_removed_count={unexplained} sample={sample[:3]}"
+
+    if shrink_meta.get("dangerous_mass_shrink"):
+        return False, (
+            f"dangerous_mass_shrink removed={shrink_meta.get('removed_count')} "
+            f"prev_total={prev_total}"
+        )
+
+    return True, ""
 
 
 def _filter_new_ingest_items(candidates: list[dict], pool_urls: set[str]) -> list[dict]:
@@ -232,12 +343,23 @@ def run_fast_pool_publish(output_dir: str) -> tuple[int, dict[str, Any]]:
     print(f"[fast-pool] FAST_PUBLISH_DURATION_SEC={meta['fast_publish_elapsed_sec']}", flush=True)
     print("FAST_PUBLISH_SAFE=YES", flush=True)
 
+    shrink_meta = analyze_pool_shrink(prev_list, merged, pool_urls, added_urls, output_dir)
+    meta.update(shrink_meta)
+
     if new_total < prev_total:
+        ok, reason = evaluate_pool_shrink_guard(prev_total, new_total, shrink_meta)
         print(
-            f"[fast-pool] ERROR: pool shrank {prev_total} -> {new_total}",
-            file=sys.stderr,
+            f"[fast-pool] pool shrink {prev_total} -> {new_total} "
+            f"removed={shrink_meta.get('removed_count')} "
+            f"added={shrink_meta.get('added_count')} "
+            f"legitimate_removed={shrink_meta.get('legitimate_removed_count')} "
+            f"unexplained_removed={shrink_meta.get('unexplained_removed_count')}",
+            flush=True,
         )
-        return 2, meta
+        if not ok:
+            print(f"[fast-pool] ERROR: pool shrink guard: {reason}", file=sys.stderr)
+            return 2, meta
+        print("[fast-pool] pool shrink legitimate — publish continues", flush=True)
 
     return 0, meta
 

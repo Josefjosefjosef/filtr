@@ -26,6 +26,15 @@ PREP_BRANCH_MARKERS = (
     "Prepare automation branch",
 )
 
+FINAL_STAGING_STEP = "Final fast pool data staging (all generators + guards complete)"
+
+GIT_CLEAN_GUARD_MARKERS = (
+    "steps.fast_pool_merge.outcome == 'success'",
+    "steps.no_diff.outcome == 'success'",
+    "steps.commit_push.outcome == 'success'",
+    "steps.commit_push.outcome == 'failure'",
+)
+
 FORBIDDEN_IN_COMMIT = (
     re.compile(r"git\s+checkout\s+-B\s+.*AUTOMATION_BRANCH"),
     re.compile(r"git\s+checkout\s+-B\s+.*automation/update-articles-fast-pool"),
@@ -153,6 +162,37 @@ def validate_workflow(path: Path = WORKFLOW) -> list[str]:
         guard_idx = content.find("Git clean guard")
         if cleanup_idx < 0 or guard_idx < 0 or cleanup_idx > guard_idx:
             errors.append("Clean fast pool runtime artifacts must run before Git clean guard")
+        git_clean_block = _step_block(content, "Git clean guard")
+        if git_clean_block:
+            if "if: always()" in git_clean_block.split("run:")[0] and "steps.fast_pool_merge.outcome" not in git_clean_block:
+                errors.append(
+                    "Git clean guard must not use bare if: always(); "
+                    "run only after fast pool merge and commit path"
+                )
+            guard_slice = content[content.find("Git clean guard") : content.find("Git clean guard") + 800]
+            for marker in GIT_CLEAN_GUARD_MARKERS:
+                if marker not in guard_slice:
+                    errors.append(f"Git clean guard missing commit-path gate: {marker}")
+
+    final_staging = _step_block(content, FINAL_STAGING_STEP)
+    if not final_staging:
+        errors.append(f"missing step: {FINAL_STAGING_STEP}")
+    else:
+        for rel in (
+            "projects/data/publishable_pool.json",
+            "projects/data/topic_dedupe_suppressed.json",
+            "projects/data/pipeline_reports/",
+        ):
+            if rel not in final_staging:
+                errors.append(f"final staging step must git add fast pool path: {rel}")
+
+    merge_idx = content.find("Fast pool merge (incremental publishable_pool.json)")
+    staging_idx = content.find(FINAL_STAGING_STEP)
+    commit_idx = content.find("Commit to automation branch and push")
+    if merge_idx >= 0 and staging_idx >= 0 and staging_idx < merge_idx:
+        errors.append("Final fast pool data staging must run after Fast pool merge")
+    if commit_idx >= 0 and staging_idx >= 0 and staging_idx > commit_idx:
+        errors.append("Final fast pool data staging must run before Commit to automation branch and push")
 
     return errors
 

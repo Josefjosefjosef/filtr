@@ -29,7 +29,11 @@ from iu_staging import (  # noqa: E402
     write_ingest_manifest,
     write_source_staging,
 )
-from iu_fast_pool_publish import run_fast_pool_publish  # noqa: E402
+from iu_fast_pool_publish import (  # noqa: E402
+    analyze_pool_shrink,
+    evaluate_pool_shrink_guard,
+    run_fast_pool_publish,
+)
 
 
 def _base_article(url: str, title: str, section: str = "aktualne") -> dict:
@@ -136,13 +140,98 @@ class FastPoolPublishProofTests(unittest.TestCase):
             self.assertEqual(meta["publishable_pool_total"], 1)
 
 
+class FastPoolShrinkGuardProofTests(unittest.TestCase):
+    def test_legitimate_shrink_with_suppressed_url_passes(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            data_dir = os.path.join(tmp, "projects", "data")
+            os.makedirs(data_dir, exist_ok=True)
+            removed_url = "https://example.com/removed-by-dedupe"
+            prev = [
+                _base_article(removed_url, "Old duplicate story"),
+                _base_article("https://example.com/keep", "Keep me"),
+            ]
+            merged = [_base_article("https://example.com/keep", "Keep me")]
+            suppressed_path = os.path.join(data_dir, "topic_dedupe_suppressed.json")
+            with open(suppressed_path, "w", encoding="utf-8") as f:
+                json.dump(
+                    {
+                        "generatedAt": "2026-06-09T12:00:00Z",
+                        "suppressed": [{"url": removed_url, "reason": "event_dedupe"}],
+                    },
+                    f,
+                )
+
+            meta = analyze_pool_shrink(
+                prev,
+                merged,
+                {removed_url, "https://example.com/keep"},
+                set(),
+                data_dir,
+            )
+            ok, reason = evaluate_pool_shrink_guard(2, 1, meta)
+            self.assertTrue(ok, msg=reason)
+            self.assertEqual(meta["unexplained_removed_count"], 0)
+            self.assertEqual(meta["legitimate_removed_count"], 1)
+
+    def test_unexplained_shrink_fails_guard(self) -> None:
+        prev = [
+            _base_article("https://example.com/a", "A"),
+            _base_article("https://example.com/b", "B"),
+        ]
+        merged = [_base_article("https://example.com/a", "A")]
+        meta = analyze_pool_shrink(
+            prev,
+            merged,
+            {"https://example.com/a", "https://example.com/b"},
+            set(),
+            os.path.join(tempfile.gettempdir(), "nonexistent"),
+        )
+        ok, reason = evaluate_pool_shrink_guard(2, 1, meta)
+        self.assertFalse(ok)
+        self.assertGreater(meta["unexplained_removed_count"], 0)
+        self.assertIn("unexplained_removed_count", reason)
+
+    def test_balanced_pipeline_revalidation_shrink_passes(self) -> None:
+        removed_urls = [f"https://example.com/stale-{i}" for i in range(4)]
+        added_urls = [f"https://example.com/fresh-{i}" for i in range(3)]
+        prev = [_base_article(u, f"Stale {i}") for i, u in enumerate(removed_urls)]
+        prev.extend(
+            [
+                _base_article("https://example.com/stable-1", "Stable 1"),
+                _base_article("https://example.com/stable-2", "Stable 2"),
+            ]
+        )
+        merged = [_base_article(u, f"Fresh {i}") for i, u in enumerate(added_urls)]
+        merged.extend(
+            [
+                _base_article("https://example.com/stable-1", "Stable 1"),
+                _base_article("https://example.com/stable-2", "Stable 2"),
+            ]
+        )
+        prev_url_set = {a["url"] for a in prev}
+        meta = analyze_pool_shrink(
+            prev,
+            merged,
+            prev_url_set,
+            set(added_urls),
+            os.path.join(tempfile.gettempdir(), "nonexistent"),
+        )
+        ok, reason = evaluate_pool_shrink_guard(6, 5, meta)
+        self.assertTrue(ok, msg=reason)
+        self.assertEqual(meta["unexplained_removed_count"], 0)
+        self.assertEqual(meta["removed_count"], 4)
+
+
 def main() -> int:
-    suite = unittest.defaultTestLoader.loadTestsFromTestCase(FastPoolPublishProofTests)
+    suite = unittest.TestSuite()
+    suite.addTests(unittest.defaultTestLoader.loadTestsFromTestCase(FastPoolPublishProofTests))
+    suite.addTests(unittest.defaultTestLoader.loadTestsFromTestCase(FastPoolShrinkGuardProofTests))
     result = unittest.TextTestRunner(verbosity=2).run(suite)
     passed = result.wasSuccessful()
     verdict = {
         "FAST_PUBLISH_SAFE": "YES" if passed else "NO",
         "FAST_POOL_PUBLISH_PROOF": "PASS" if passed else "FAIL",
+        "FAST_POOL_SHRINK_GUARD_PROOF": "PASS" if passed else "FAIL",
         "DUPLICATE_REGRESSION": "NO" if passed else "YES",
         "PUBLISHABLE_POOL_APPEND": "YES" if passed else "NO",
     }

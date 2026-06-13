@@ -111,6 +111,7 @@ jobs:
           test -f projects/data/staging/ingest_manifest.json
 
       - name: Fast pool merge (incremental publishable_pool.json)
+        id: fast_pool_merge
         run: |
           set -euo pipefail
           T0=$(date +%s)
@@ -186,10 +187,26 @@ jobs:
           echo "[FAST-POOL] Changed:$CHANGED_FILES"
 
       - name: Fast pool git staging guard
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.fast_pool_merge.outcome == 'success'
         run: python scripts/fast_pool_git_staging_guard.py
 
+      - name: Final fast pool data staging (all generators + guards complete)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.fast_pool_merge.outcome == 'success'
+        run: |
+          set -euo pipefail
+          git add projects/data/publishable_pool.json projects/data/article_pool_manifest.json
+          git add projects/data/article_feed_chunks/
+          git add projects/data/scheduler_state.json projects/data/source_rotation_inventory.json 2>/dev/null || true
+          git add projects/data/topic_dedupe_suppressed.json 2>/dev/null || true
+          git add projects/data/pipeline_reports/article_scheduler_report.json 2>/dev/null || true
+          git add -A projects/data/publishable_pool.json projects/data/article_pool_manifest.json
+          git add -A projects/data/article_feed_chunks/ projects/data/scheduler_state.json
+          git add -A projects/data/source_rotation_inventory.json projects/data/topic_dedupe_suppressed.json
+          git add -A projects/data/pipeline_reports/
+          echo "FAST_POOL_DATA_STAGED=YES"
+
       - name: Commit to automation branch and push
-        if: steps.no_diff.outputs.data_changed == 'true'
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.fast_pool_merge.outcome == 'success'
         id: commit_push
         run: |
           set -euo pipefail
@@ -205,7 +222,11 @@ jobs:
           git add projects/data/scheduler_state.json projects/data/source_rotation_inventory.json 2>/dev/null || true
           git add projects/data/topic_dedupe_suppressed.json 2>/dev/null || true
           git add projects/data/pipeline_reports/article_scheduler_report.json 2>/dev/null || true
-          git diff --cached --quiet && { echo "[FAST-POOL] Nothing to commit"; exit 0; }
+          git diff --cached --quiet && {
+            echo "[FAST-POOL] Nothing to commit"
+            git restore --staged --worktree projects/data 2>/dev/null || git checkout -- projects/data
+            exit 0
+          }
           git commit -m "${{ env.PR_TITLE }}"
           git push --force origin "HEAD:${{ env.AUTOMATION_BRANCH }}"
           PUSHED_SHA=$(git rev-parse HEAD)
@@ -222,7 +243,17 @@ jobs:
           echo "FAST_POOL_RUNTIME_ARTIFACTS_CLEANED=YES"
 
       - name: Git clean guard
-        if: always()
+        if: >-
+          always() &&
+          steps.fast_pool_merge.outcome == 'success' &&
+          steps.no_diff.outcome == 'success' &&
+          (
+            steps.no_diff.outputs.data_changed == 'false' ||
+            (
+              steps.no_diff.outputs.data_changed == 'true' &&
+              (steps.commit_push.outcome == 'success' || steps.commit_push.outcome == 'failure')
+            )
+          )
         run: |
           set -euo pipefail
           if [ -n "$(git status --porcelain)" ]; then
