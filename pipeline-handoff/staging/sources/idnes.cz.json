@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-13T10:44:48.771794Z",
+  "ingestedAt": "2026-06-13T11:27:24.190104Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Prezident toužil někam jet, tak ať jede, řekl Macinka k OSN. Rakušan mluví o „šílené“ situaci",
+      "url": "https://www.idnes.cz/zpravy/domaci/ministr-zahranici-petr-macinka-debata-byvaly-ministr-vnitra-vit-rakusan.A260613_081019_domaci_vank",
+      "dt": "2026-06-13T11:13:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "jede",
+        "jet",
+        "macinka",
+        "mluví",
+        "někam",
+        "osn",
+        "prezident",
+        "rakušan",
+        "situaci",
+        "tak",
+        "toužil",
+        "řekl",
+        "šílené"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -758,31 +788,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Akcie SpaceX vystřelily vzhůru, z Muska je první dolarový bilionář",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/na-trhu-nasdaq-se-zacne-obchodovat-s-akciemi-americke-spolecnosti-spacex.A260612_104217_eko-zahranicni_ven",
-      "dt": "2026-06-12T20:43:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "akcie",
-        "bilionář",
-        "dolarový",
-        "muska",
-        "první",
-        "spacex",
-        "vystřelily",
-        "vzhůru"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47828,
+      "bytes": 47681,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,12 +835,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-13T10:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-13T11:13:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
+          "zpravy": 23,
           "other": 2,
-          "finance": 5,
+          "finance": 4,
           "cestovani": 1
         },
         "drop_counts": {
@@ -848,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prezident toužil někam jet, tak ať jede, řekl Macinka k OSN. Rakušan mluví o „šílené“ situaci",
+            "publishedAt": "2026-06-13T11:13:00Z"
+          },
           {
             "title": "Ve válce oslepl, žena ho opustila. Pak veterána z Ukrajiny zachránila keramika",
             "publishedAt": "2026-06-13T10:32:00Z"
@@ -874,10 +883,6 @@
           },
           {
             "title": "Na poradnu kvůli dluhům se v Praze čeká i měsíce. Pomoct může online formulář",
-            "publishedAt": "2026-06-13T09:00:00Z"
-          },
-          {
-            "title": "Vinařská ikona Bordeaux upadá. Zdejší vína už nepijí ani místní",
             "publishedAt": "2026-06-13T09:00:00Z"
           }
         ]

@@ -1,27 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-13T10:44:48.771794Z",
+  "ingestedAt": "2026-06-13T11:27:24.190104Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "TENIS ONLINE: První sada pro Krejčíkovou, ve druhém je krok od ztráty. Lehečka čeká na soupeře",
+      "title": "Skvělá Krejčíková si po téměř dvou letech zahraje finále. Lehečka čeká na jméno semifinálového soupeře",
       "url": "https://www.sport.cz/clanek/tenis-krejcikovou-a-lehecku-ceka-boj-o-finale-cesky-hrac-zatim-soupere-nezna-5477175",
       "dt": "2026-06-13T04:57:39Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "druhém",
-        "krejčíkovou",
-        "krok",
+        "dvou",
+        "finále",
+        "jméno",
+        "krejčíková",
         "lehečka",
-        "online",
-        "první",
-        "sada",
+        "letech",
+        "semifinálového",
+        "skvělá",
         "soupeře",
-        "tenis",
-        "ztráty",
+        "téměř",
+        "zahraje",
         "čeká"
       ],
       "feedCategory": "sport",
@@ -48,6 +49,29 @@
         "soka",
         "udolal",
         "vládne"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Švýcaři si věří, zahajují MS proti outsiderovi skupiny",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-svycari-si-veri-zahajuji-ms-proti-outsiderovi-skupiny-5476652",
+      "dt": "2026-06-13T11:02:43Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "outsiderovi",
+        "proti",
+        "skupiny",
+        "věří",
+        "zahajují",
+        "švýcaři"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -728,32 +752,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Volejbalistům vyšel úvod turnaje Evropské ligy v Jihlavě. Přejeli Bosnu",
-      "url": "https://www.sport.cz/clanek/volejbal-volejbalistum-vysel-uvod-turnaje-evropske-ligy-v-jihlave-prejeli-bosnu-5477053",
-      "dt": "2026-06-12T18:09:29Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bosnu",
-        "evropské",
-        "jihlavě",
-        "ligy",
-        "přejeli",
-        "turnaje",
-        "volejbalistům",
-        "vyšel",
-        "úvod"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -764,7 +762,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41722,
+      "bytes": 41786,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -801,7 +799,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-13T10:23:33Z",
+        "raw_feed_latest_publishedAt": "2026-06-13T11:02:43Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -817,12 +815,16 @@
         },
         "sample_titles": [
           {
-            "title": "TENIS ONLINE: První sada pro Krejčíkovou, ve druhém je krok od ztráty. Lehečka čeká na soupeře",
+            "title": "Skvělá Krejčíková si po téměř dvou letech zahraje finále. Lehečka čeká na jméno semifinálového soupeře",
             "publishedAt": "2026-06-13T04:57:39Z"
           },
           {
             "title": "Neporazitelný Fuksa udolal ruského soka, opět vládne Evropě!",
             "publishedAt": "2026-06-13T10:12:20Z"
+          },
+          {
+            "title": "Švýcaři si věří, zahajují MS proti outsiderovi skupiny",
+            "publishedAt": "2026-06-13T11:02:43Z"
           },
           {
             "title": "Prezident FIFA se vysmál Itálii",
@@ -843,10 +845,6 @@
           {
             "title": "Plzeň hlásí druhou posilu, přivedla srbského záložníka",
             "publishedAt": "2026-06-13T08:19:40Z"
-          },
-          {
-            "title": "Polský fotbalový kanonýr Lewandowski míří do MLS, jedná o smlouvě s Chicagem",
-            "publishedAt": "2026-06-13T08:08:47Z"
           }
         ]
       }
