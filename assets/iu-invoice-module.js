@@ -1131,7 +1131,7 @@ export function initIuInvoiceOverlay(deps) {
         window._iuInvoiceExportMode = "pdf_only";
         window._iuInvoiceWordPdfStackUsed = false;
       } catch (_) {}
-      invoicePdfDiag("invoice_pdf_export_start", { via: "invoice_module", renderer: "jspdf_v1" });
+      invoicePdfDiag("invoice_pdf_export_start", { via: "invoice_module", renderer: "preview_html_v1" });
       buildInvoicePdfBlobFromData(state, totals, fileName)
         .then((out) => {
           if (!out || !out.blob) {
@@ -1144,7 +1144,7 @@ export function initIuInvoiceOverlay(deps) {
           invoicePdfDiag("invoice_pdf_blob_created", {
             size: out.blob.size,
             via: "invoice_module",
-            renderer: "jspdf_v1",
+            renderer: "preview_html_v1",
           });
           cb(null, out.blob, out.fileName || fileName);
         })
