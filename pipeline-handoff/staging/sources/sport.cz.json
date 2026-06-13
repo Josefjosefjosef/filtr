@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-13T22:53:48.257977Z",
+  "ingestedAt": "2026-06-13T23:49:17.288752Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Brazílie udeřila! Atraktivní bitva na MS nabírá grády",
+      "title": "FOTBAL ONLINE: Brazílie bojuje o obrat. Atraktivní bitva na MS vrcholí",
       "url": "https://www.sport.cz/clanek/fotbal-ms-ms-zacina-i-pro-prvniho-favorita-brazilie-se-utka-s-marokem-5477499",
       "dt": "2026-06-13T14:00:57Z",
       "media_raw": "Sport.cz",
@@ -14,12 +14,35 @@
       "tokens": [
         "atraktivní",
         "bitva",
+        "bojuje",
         "brazílie",
         "fotbal",
-        "grády",
-        "nabírá",
+        "obrat",
         "online",
-        "udeřila"
+        "vrcholí"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Katarstrophe! Švýcaři se vzpamatovávají ze šokující ztráty bodů",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-katarstrophe-svycari-se-vzpamatovavaji-ze-sokujici-ztraty-bodu-musime-se-vratit-na-zem-hlesl-kapitan-5478062",
+      "dt": "2026-06-13T23:03:20Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bodů",
+        "katarstrophe",
+        "vzpamatovávají",
+        "ztráty",
+        "šokující",
+        "švýcaři"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -727,32 +750,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "V reprezentaci zažil už hodně. Teď měl k hráčům proslov a prosbu: Buďte trpěliví!",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-v-reprezentaci-zazil-uz-hodne-ted-mel-k-hracum-proslov-a-prosbu-budte-trpelivi-5477277",
-      "dt": "2026-06-13T11:51:37Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "buďte",
-        "hodně",
-        "hráčům",
-        "měl",
-        "prosbu",
-        "proslov",
-        "reprezentaci",
-        "trpěliví",
-        "zažil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -763,7 +760,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40408,
+      "bytes": 40481,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -800,7 +797,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-13T21:29:39Z",
+        "raw_feed_latest_publishedAt": "2026-06-13T23:03:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -817,8 +814,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Brazílie udeřila! Atraktivní bitva na MS nabírá grády",
+            "title": "FOTBAL ONLINE: Brazílie bojuje o obrat. Atraktivní bitva na MS vrcholí",
             "publishedAt": "2026-06-13T14:00:57Z"
+          },
+          {
+            "title": "Katarstrophe! Švýcaři se vzpamatovávají ze šokující ztráty bodů",
+            "publishedAt": "2026-06-13T23:03:20Z"
           },
           {
             "title": "Český asistent překvapil: Korejci lapali po dechu!",
@@ -843,10 +844,6 @@
           {
             "title": "Zlato, nebo stříbro? Závod kajakáře Dostála na ME měl neobvyklou dohru",
             "publishedAt": "2026-06-13T18:45:56Z"
-          },
-          {
-            "title": "Ranní duel na MS obstará Austrálie s Tureckem",
-            "publishedAt": "2026-06-13T20:01:02Z"
           }
         ]
       }
