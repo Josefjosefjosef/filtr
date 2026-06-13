@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-13T15:50:16.042550Z",
+  "ingestedAt": "2026-06-13T16:33:56.601627Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Svatý Kopeček přilákal stovky lidí. Romskou pouť poprvé navštívil i Přibyl",
+      "url": "https://www.idnes.cz/olomouc/zpravy/svaty-kopecek-romska-pout-olomouc-vira-kultura-poutnik.A260613_171741_olomouc-zpravy_mikp",
+      "dt": "2026-06-13T15:52:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "kopeček",
+        "lidí",
+        "navštívil",
+        "poprvé",
+        "pouť",
+        "přibyl",
+        "přilákal",
+        "romskou",
+        "stovky",
+        "svatý"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -749,33 +776,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "GLOSA: Smrt fašismu, vzkázal kytarový mág Morello. Se synem uchvátili Hradec",
-      "url": "https://www.idnes.cz/hradec-kralove/zpravy/rock-for-people-festival-glosa-hradec-tom-morello-rage-against-the-machine-koncert.A260613_095449_hradec-zpravy_pos",
-      "dt": "2026-06-13T09:42:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "fašismu",
-        "glosa",
-        "hradec",
-        "kytarový",
-        "morello",
-        "mág",
-        "smrt",
-        "synem",
-        "uchvátili",
-        "vzkázal"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49612,
+      "bytes": 49304,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,7 +823,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-13T15:39:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-13T15:52:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -840,6 +840,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Svatý Kopeček přilákal stovky lidí. Romskou pouť poprvé navštívil i Přibyl",
+            "publishedAt": "2026-06-13T15:52:00Z"
+          },
           {
             "title": "Orbán dál povede Fidesz. Nevzdám se, nikdy, nikdy, nikdy, vzkázal",
             "publishedAt": "2026-06-13T15:39:00Z"
@@ -867,10 +871,6 @@
           {
             "title": "GLOSA: Festival Mighty Sounds zraje se svými fanoušky. Letos myslí i na děti",
             "publishedAt": "2026-06-13T14:49:00Z"
-          },
-          {
-            "title": "Ještě pravicovější. Farage čelí nové síle, zhrzený spojenec chce masové deportace",
-            "publishedAt": "2026-06-13T14:29:00Z"
           }
         ]
       }
