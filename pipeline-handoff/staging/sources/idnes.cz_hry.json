@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-06-13T21:52:28.303335Z",
+  "ingestedAt": "2026-06-13T22:53:48.257977Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Deset her, na které se dnes už moc nevzpomíná, ale zasloužily by si to",
+      "url": "https://www.idnes.cz/hry/retro/deset-zapomenutych-her-hra-videohra.A260610_125017_bw-klasika_srp/foto",
+      "dt": "2026-06-13T22:00:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "ale",
+        "deset",
+        "her",
+        "moc",
+        "nevzpomíná",
+        "zasloužily"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -692,33 +715,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Co se stane s bohy po smrti? V God of War Laufey budeme hrát za Kratovu ženu",
-      "url": "https://www.idnes.cz/hry/preview/god-of-war-laufey-novinka-playstation-akcni.A260603_104551_bw-novinky_oma",
-      "dt": "2026-06-03T10:08:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "bohy",
-        "budeme",
-        "god",
-        "hrát",
-        "kratovu",
-        "laufey",
-        "smrti",
-        "stane",
-        "war",
-        "ženu"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -729,7 +725,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 40293,
+      "bytes": 40221,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -766,7 +762,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-12T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-13T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -781,6 +777,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Deset her, na které se dnes už moc nevzpomíná, ale zasloužily by si to",
+            "publishedAt": "2026-06-13T22:00:00Z"
+          },
           {
             "title": "Vybíráme největší hity a zklamání z herního svátku Summer Game Fest",
             "publishedAt": "2026-06-12T22:00:00Z"
@@ -807,10 +807,6 @@
           },
           {
             "title": "ANALÝZA: Připlatíme si a některé hvězdy padnou. Kam kráčí herní průmysl",
-            "publishedAt": "2026-06-09T22:00:00Z"
-          },
-          {
-            "title": "Bez nich by to bylo lepší. Tato herní pokračování nikdy neměla vzniknout",
             "publishedAt": "2026-06-09T22:00:00Z"
           }
         ]
