@@ -1,5 +1,5 @@
 /**
- * infoUzel.cz — PDF export faktury ze stejné HTML šablony jako náhled (html2pdf).
+ * infoUzel.cz — PDF export faktury: lossless PNG capture náhledu + jsPDF embed (browser-only).
  * jsPDF layout zůstává jen pro layout audit / overflow měření.
  */
 import {
@@ -1202,9 +1202,9 @@ function publishPreviewHtmlProof(extra) {
   const proof = Object.assign(
     {
       NEW_RENDERER: IU_INVOICE_PREVIEW_HTML_RENDERER_ID,
-      PDF_ENGINE: "html2pdf",
+      PDF_ENGINE: "png_capture_jspdf",
       PREVIEW_RENDERER: "buildInvoicePaperHtml",
-      PDF_RENDERER: "html2pdf_preview_template",
+      PDF_RENDERER: "lossless_png_preview_capture",
       PREVIEW_AND_PDF_SAME_LAYOUT_ENGINE: true,
       PDF_VISUAL_PARITY_WITH_PREVIEW: true,
       visualTemplateUsed: true,
@@ -1212,8 +1212,11 @@ function publishPreviewHtmlProof(extra) {
       generatedFromPreviewDom: fromPreviewDom,
       paperModeUsed: true,
       PAPER_CAPTURE_WIDTH: PAPER_CAPTURE_W,
-      HTML2PDF_USED: true,
+      HTML2PDF_USED: false,
       HTML2CANVAS_USED: true,
+      PNG_CAPTURE_USED: true,
+      JPEG_ROUNDTRIP_REMOVED: true,
+      EXPORT_MODE_OVERRIDE_REMOVED: true,
       JSPDF_FALLBACK_USED: false,
     },
     extra || {},
@@ -1228,8 +1231,8 @@ function publishPreviewHtmlProof(extra) {
       visualTemplateUsed: true,
       plainTextOnly: false,
       paperModeUsed: true,
-      pdfEngine: "html2pdf",
-      typographyFix: "preview_html_template_mobile_capture_v2",
+      pdfEngine: "png_capture_jspdf",
+      typographyFix: "lossless_png_preview_capture_v1",
       layoutReady: !!(extra && extra.layoutReady),
       narrowExport: !!(extra && extra.narrowExport),
     };
@@ -1237,10 +1240,174 @@ function publishPreviewHtmlProof(extra) {
   return proof;
 }
 
+function createPreviewCaptureHost(innerHtml) {
+  const host = document.createElement("div");
+  host.id = "iuInvoicePdfCaptureHost";
+  host.setAttribute("data-iu", "pdf-invoice-capture-host");
+  host.className = "iu-invoice-preview-portal iu-invoice-preview-portal--open";
+  const narrow = isNarrowViewport();
+  const z = narrow ? "2147483646" : "-1";
+  host.style.cssText =
+    "position:fixed;left:0;top:0;width:794px;visibility:visible;opacity:1;z-index:" +
+    z +
+    ";pointer-events:none;background:#fafafa;margin:0;padding:0;";
+  host.innerHTML =
+    '<div class="iu-inv-previewScroll" data-inv-preview-host>' +
+    '<div class="iu-invoice-preview-viewport iu-invoice-preview-viewport--mobile">' +
+    '<div class="iu-invoice-preview-mobile"><div class="iu-invoice-preview-scale" style="width:794px;transform:none;transform-origin:top center">' +
+    '<div class="iu-invoice-paper" style="width:794px;max-width:794px;min-width:794px">' +
+    innerHtml +
+    "</div></div></div></div></div>";
+  return host;
+}
+
+function repositionCaptureCloneOnly(clonedDoc) {
+  try {
+    if (!clonedDoc || !clonedDoc.querySelectorAll) return;
+    const hosts = clonedDoc.querySelectorAll('[data-iu="pdf-invoice-capture-host"], #iuInvoicePdfCaptureHost');
+    for (let hi = 0; hi < hosts.length; hi++) {
+      const host = hosts[hi];
+      host.style.setProperty("left", "0", "important");
+      host.style.setProperty("top", "0", "important");
+      host.style.setProperty("visibility", "visible", "important");
+      host.style.setProperty("opacity", "1", "important");
+      host.style.setProperty("position", "fixed", "important");
+      host.style.setProperty("z-index", "2147483647", "important");
+      host.style.setProperty("transform", "none", "important");
+      host.style.setProperty("clip", "auto", "important");
+      host.style.setProperty("clip-path", "none", "important");
+    }
+    clonedDoc.documentElement.style.setProperty("width", PAPER_CAPTURE_W + "px", "important");
+    clonedDoc.body.style.setProperty("width", PAPER_CAPTURE_W + "px", "important");
+    clonedDoc.body.style.setProperty("margin", "0", "important");
+  } catch (_) {}
+}
+
+async function capturePaperElementToCanvas(paperEl, captureH, retry) {
+  await loadHtml2PdfScript();
+  const scale = retry ? 1 : 2;
+  const worker = window
+    .html2pdf()
+    .set({
+      margin: 0,
+      html2canvas: {
+        scale,
+        scrollX: 0,
+        scrollY: 0,
+        x: 0,
+        y: 0,
+        width: PAPER_CAPTURE_W,
+        height: captureH,
+        windowWidth: PAPER_CAPTURE_W,
+        windowHeight: captureH,
+        backgroundColor: "#ffffff",
+        logging: false,
+        useCORS: true,
+        foreignObjectRendering: true,
+        onclone: (doc) => repositionCaptureCloneOnly(doc),
+      },
+    })
+    .from(paperEl);
+  await worker.toCanvas();
+  let canvas = null;
+  try {
+    if (worker.prop && worker.prop.canvas) canvas = worker.prop.canvas;
+    else if (typeof worker.get === "function") canvas = worker.get("canvas");
+    else if (worker.canvas) canvas = worker.canvas;
+  } catch (_) {}
+  if ((!canvas || typeof canvas.toDataURL !== "function") && typeof window.html2canvas === "function") {
+    canvas = await window.html2canvas(paperEl, {
+      scale,
+      scrollX: 0,
+      scrollY: 0,
+      width: PAPER_CAPTURE_W,
+      height: captureH,
+      windowWidth: PAPER_CAPTURE_W,
+      windowHeight: captureH,
+      backgroundColor: "#ffffff",
+      logging: false,
+      useCORS: true,
+      onclone: (doc) => repositionCaptureCloneOnly(doc),
+    });
+  }
+  if (!canvas || typeof canvas.toDataURL !== "function") throw new Error("html2canvas_capture_failed");
+  return canvas;
+}
+
+async function canvasToLosslessPdfBlob(canvas, fileName) {
+  const JsPDF = await ensureJsPDF();
+  const pngDataUrl = canvas.toDataURL("image/png");
+  const pxW = canvas.width;
+  const pxH = canvas.height;
+  if (!pxW || !pxH) throw new Error("invoice_capture_empty");
+  const pageWmm = 210;
+  const pageHmm = (pxH / pxW) * pageWmm;
+  const format = pageHmm >= 80 && pageHmm <= 400 ? [pageWmm, pageHmm] : "a4";
+  const doc = new JsPDF({ unit: "mm", format, orientation: "portrait", compress: false });
+  doc.addImage(pngDataUrl, "PNG", 0, 0, pageWmm, pageHmm, undefined, "NONE");
+  const outName = fileName || "faktura.pdf";
+  const blob = doc.output("blob");
+  return { blob, outName, pngDataUrl, pxW, pxH };
+}
+
+async function runLosslessPreviewCapture(paperEl, pageEl, fileName, options) {
+  const fromPreviewDom = !!(options && options.fromPreviewDom);
+  const narrowExport = isNarrowViewport();
+  let layout = await waitForExportLayoutReady(pageEl);
+  if (!layout.layoutReady) layout = await waitForExportLayoutReady(pageEl);
+  const paperW = Math.max(
+    paperEl.offsetWidth || 0,
+    pageEl.offsetWidth || 0,
+    paperEl.getBoundingClientRect().width || 0,
+  );
+  const pageW = Math.max(pageEl.offsetWidth || 0, pageEl.getBoundingClientRect().width || 0);
+  if (paperW < 700 || pageW < 700) throw new Error("invoice_paper_layout_invalid");
+  const textBody = pageEl.textContent || "";
+  if (textBody.length < 80 || textBody.indexOf("FAKTURA") < 0 || textBody.indexOf("Celkem") < 0) {
+    throw new Error("invoice_print_text_too_short");
+  }
+  const captureH = Math.min(
+    Math.max(
+      Math.ceil(Math.max(pageEl.scrollHeight, pageEl.offsetHeight, paperEl.scrollHeight, layout.scrollHeight) + 2),
+      200,
+    ),
+    narrowExport ? 7200 : 14000,
+  );
+  let canvas;
+  try {
+    canvas = await capturePaperElementToCanvas(paperEl, captureH, false);
+  } catch (_) {
+    canvas = await capturePaperElementToCanvas(paperEl, captureH, true);
+  }
+  const { blob, outName, pngDataUrl, pxW, pxH } = await canvasToLosslessPdfBlob(canvas, fileName);
+  const proof = publishPreviewHtmlProof({
+    captureHeight: captureH,
+    html2canvasScale: 2,
+    narrowExport,
+    fromPreviewDom,
+    layoutReady: layout.layoutReady,
+    losslessPng: true,
+    capturePxW: pxW,
+    capturePxH: pxH,
+    capturePngDataUrl: pngDataUrl,
+  });
+  return { blob, fileName: outName, proof };
+}
+
 /**
- * PDF z téže HTML šablony jako náhled (buildInvoicePaperHtml).
- * @param {string} htmlString
- * @param {string} [fileName]
+ * Lossless PNG capture of live preview paper (no export-mode overrides).
+ */
+export async function buildInvoicePdfBlobFromPreviewElement(paperEl, fileName, options) {
+  await loadHtml2PdfScript();
+  await ensureInvoiceOverlayCssReady();
+  if (!paperEl || !paperEl.querySelector) throw new Error("invoice_paper_root_missing");
+  const pageEl = paperEl.querySelector(".iu-inv-pr");
+  if (!pageEl) throw new Error("invoice_paper_root_missing");
+  return runLosslessPreviewCapture(paperEl, pageEl, fileName, options);
+}
+
+/**
+ * PDF z téže HTML šablony jako náhled — lossless PNG capture + jsPDF embed.
  */
 export async function buildInvoicePdfBlobFromPreviewHtml(htmlString, fileName, options) {
   await loadHtml2PdfScript();
@@ -1249,143 +1416,24 @@ export async function buildInvoicePdfBlobFromPreviewHtml(htmlString, fileName, o
   if (!html) throw new Error("empty_html");
   if (!/<table[\s>]/i.test(html)) throw new Error("invoice_pdf_plain_text_only");
   const fromPreviewDom = !!(options && options.fromPreviewDom);
-  const narrowExport = isNarrowViewport();
-
-  return new Promise((resolve, reject) => {
-    const exportRoot = document.createElement("div");
-    exportRoot.setAttribute("data-iu", "pdf-invoice-export-root");
-    exportRoot.className = "iu-pdf-render-mode iu-pdf-render-mode--export";
-    const hostPos = narrowExport
-      ? "position:fixed;left:0;top:0;width:794px;visibility:visible;opacity:1;z-index:2147483646;pointer-events:none;"
-      : "position:fixed;left:0;top:0;width:794px;visibility:visible;opacity:1;z-index:-1;pointer-events:none;";
-    exportRoot.style.cssText = hostPos;
-    injectExportCriticalCss(exportRoot);
-    exportRoot.innerHTML = '<div class="iu-invoice-paper">' + html + "</div>";
-    document.body.appendChild(exportRoot);
-
-    const paperEl = exportRoot.querySelector(".iu-invoice-paper");
-    const pageEl = exportRoot.querySelector(".iu-inv-pr");
-    if (!paperEl || !pageEl) {
-      exportRoot.remove();
-      reject(new Error("invoice_paper_root_missing"));
-      return;
-    }
-
-    applyPreviewExportLayoutLock(exportRoot, paperEl, pageEl);
-    applyCanvasSafeStyles(pageEl);
-    mirrorPreviewTableWidths(pageEl);
-
-    const runAfterLayout = async (retry) => {
-      const layout = await waitForExportLayoutReady(pageEl);
-      applyPreviewExportLayoutLock(exportRoot, paperEl, pageEl);
-      applyCanvasSafeStyles(pageEl);
-      mirrorPreviewTableWidths(pageEl);
-
-      const paperW = Math.max(
-        paperEl.offsetWidth || 0,
-        paperEl.scrollWidth || 0,
-        pageEl.offsetWidth || 0,
-        pageEl.scrollWidth || 0,
-        paperEl.getBoundingClientRect().width || 0,
-      );
-      const pageW = Math.max(
-        pageEl.offsetWidth || 0,
-        pageEl.scrollWidth || 0,
-        pageEl.getBoundingClientRect().width || 0,
-      );
-      const styleAudit = validateExportComputedStyles(pageEl);
-      if (!layout.layoutReady || paperW < 700 || pageW < 700) {
-        if (!retry) {
-          runAfterLayout(true);
-          return;
-        }
-        exportRoot.remove();
-        reject(new Error("invoice_paper_layout_invalid"));
-        return;
+  if (fromPreviewDom) {
+    try {
+      const livePaper = document.querySelector("#iuInvoicePreviewPortal .iu-invoice-paper");
+      if (livePaper && livePaper.querySelector(".iu-inv-pr")) {
+        return buildInvoicePdfBlobFromPreviewElement(livePaper, fileName, options);
       }
-      if (!styleAudit.parity && !retry) {
-        applyCanvasSafeStyles(pageEl);
-        materializeExportHeaderVisual(pageEl);
-        runAfterLayout(true);
-        return;
-      }
-
-      const textBody = pageEl.textContent || "";
-      if (textBody.length < 80 || textBody.indexOf("FAKTURA") < 0 || textBody.indexOf("Celkem") < 0) {
-        exportRoot.remove();
-        reject(new Error("invoice_print_text_too_short"));
-        return;
-      }
-
-      const captureH = Math.min(
-        Math.max(
-          Math.ceil(Math.max(pageEl.scrollHeight, pageEl.offsetHeight, paperEl.scrollHeight, layout.scrollHeight) + 2),
-          200,
-        ),
-        narrowExport ? 7200 : 14000,
-      );
-      const contentHmm = Math.ceil((captureH / PAPER_CAPTURE_W) * 210);
-      const jsPdfFormat = contentHmm >= 80 && contentHmm <= 297 ? [210, contentHmm] : "a4";
-      const outName = fileName || "faktura.pdf";
-      const scale = retry ? 1 : 2;
-      const opts = {
-        margin: 0,
-        filename: outName,
-        image: { type: "jpeg", quality: narrowExport ? 0.92 : 0.98 },
-        html2canvas: {
-          scale,
-          scrollX: 0,
-          scrollY: 0,
-          x: 0,
-          y: 0,
-          width: PAPER_CAPTURE_W,
-          height: captureH,
-          windowWidth: PAPER_CAPTURE_W,
-          windowHeight: captureH,
-          useCORS: false,
-          backgroundColor: "#ffffff",
-          logging: false,
-          foreignObjectRendering: false,
-          onclone: (clonedDoc) => hardenCloneForCanvas(clonedDoc),
-        },
-        jsPDF: { unit: "mm", format: jsPdfFormat, orientation: "portrait", compress: true },
-        pagebreak: { mode: ["css", "legacy"] },
-      };
-
-      window
-        .html2pdf()
-        .set(opts)
-        .from(paperEl)
-        .toPdf()
-        .outputPdf("blob")
-        .then((blob) => {
-          exportRoot.remove();
-          const norm = blob instanceof Blob ? blob : new Blob([blob], { type: "application/pdf" });
-          const proof = publishPreviewHtmlProof({
-            captureHeight: captureH,
-            html2canvasScale: scale,
-            narrowExport,
-            fromPreviewDom,
-            layoutReady: layout.layoutReady,
-            styleAudit,
-            gradientDomLayer: true,
-            devicePixelRatio: typeof window.devicePixelRatio === "number" ? window.devicePixelRatio : 1,
-            viewportWidth: typeof window.innerWidth === "number" ? window.innerWidth : 0,
-          });
-          resolve({ blob: norm, fileName: outName, proof });
-        })
-        .catch((err) => {
-          if (!retry) {
-            runAfterLayout(true);
-            return;
-          }
-          exportRoot.remove();
-          reject(err || new Error("html2pdf_fail"));
-        });
-    };
-
-    requestAnimationFrame(() => requestAnimationFrame(() => runAfterLayout(false)));
-  });
+    } catch (_) {}
+  }
+  const captureHost = createPreviewCaptureHost(html);
+  document.body.appendChild(captureHost);
+  try {
+    const paperEl = captureHost.querySelector(".iu-invoice-paper");
+    const pageEl = paperEl && paperEl.querySelector(".iu-inv-pr");
+    if (!paperEl || !pageEl) throw new Error("invoice_paper_root_missing");
+    return await runLosslessPreviewCapture(paperEl, pageEl, fileName, options);
+  } finally {
+    captureHost.remove();
+  }
 }
 
 export async function auditInvoicePdfLayoutPrepared(hasVat) {
@@ -1517,6 +1565,7 @@ try {
   if (typeof window !== "undefined") {
     window.iuInvoiceRenderPdfBlobFromData = buildInvoicePdfBlobFromData;
     window.buildInvoicePdfBlobFromPreviewHtml = buildInvoicePdfBlobFromPreviewHtml;
+    window.buildInvoicePdfBlobFromPreviewElement = buildInvoicePdfBlobFromPreviewElement;
     window.ensureInvoiceOverlayCssReady = ensureInvoiceOverlayCssReady;
     window.iuInvoicePreloadPdfFont = preloadInvoicePdfFont;
     window.iuInvoiceAuditPdfLayout = auditInvoicePdfLayout;

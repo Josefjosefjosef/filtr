@@ -26,6 +26,7 @@ import {
 import {
   buildInvoicePdfBlobFromData,
   buildInvoicePdfBlobFromPreviewHtml,
+  buildInvoicePdfBlobFromPreviewElement,
   ensureInvoiceOverlayCssReady,
   preloadInvoicePdfFont,
 } from "./iu-invoice-pdf-renderer.js";
@@ -1152,6 +1153,10 @@ export function initIuInvoiceOverlay(deps) {
       invoicePdfDiag("invoice_pdf_export_start", { via: "invoice_module", renderer: "preview_html_v1" });
       const previewHtml = getOpenPreviewPaperInnerHtml();
       const exportPromise = ensureInvoiceOverlayCssReady().then(() => {
+        const livePaper = document.querySelector("#iuInvoicePreviewPortal .iu-invoice-paper");
+        if (livePaper && livePaper.querySelector(".iu-inv-pr")) {
+          return buildInvoicePdfBlobFromPreviewElement(livePaper, fileName, { fromPreviewDom: true });
+        }
         if (previewHtml) {
           return buildInvoicePdfBlobFromPreviewHtml(previewHtml, fileName, { fromPreviewDom: true });
         }

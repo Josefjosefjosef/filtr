@@ -830,105 +830,21 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
     z-index: 2147483646 !important;
   }
 }
-.iu-pdf-render-mode .iu-inv-pr-head-accent,
-.iu-pdf-render-mode .iu-inv-pr-head-bg,
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-head-bg{
-  display: block;
-  position: absolute !important;
+/* Capture host: preview portal mirror only — no export-mode visual overrides. */
+[data-iu="pdf-invoice-capture-host"].iu-invoice-preview-portal{
+  position: fixed !important;
   left: 0 !important;
   top: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  z-index: 0 !important;
-  pointer-events: none !important;
-  border-radius: 10px !important;
-  background: #ffffff !important;
-  overflow: hidden !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-head-accent{
-  display: none !important;
-}
-.iu-pdf-render-mode .iu-inv-pr-head,
-.iu-pdf-render-mode .iu-inv-pr-meta,
-.iu-pdf-render-mode .iu-inv-pr-table thead,
-.iu-pdf-render-mode .iu-inv-pr-totals{
-  break-inside: avoid;
-  page-break-inside: avoid;
-}
-.iu-pdf-render-mode .iu-inv-pr-table tbody tr{
-  break-inside: auto;
-  page-break-inside: auto;
-}
-
-/* Export capture: keep preview visuals via DOM gradient layer, only lock layout. */
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr{
-  border: 1px solid rgba(15, 23, 42, 0.1) !important;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-grid{
-  grid-template-columns: 1fr 1fr !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-grid{
-  grid-template-columns: 1fr 1fr !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-invoice-paper{
   width: 794px !important;
-  min-width: 794px !important;
-  max-width: 794px !important;
-  margin: 0 !important;
-  transform: none !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: none !important;
+  overflow: visible !important;
 }
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-meta,
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-table{
-  width: 100% !important;
-  max-width: 100% !important;
-  table-layout: auto !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-head{
-  position: relative !important;
-  overflow: hidden !important;
-  background: transparent !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-head > *{
-  position: relative !important;
-  z-index: 1 !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-meta,
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-table{
-  border-collapse: collapse !important;
-  border-spacing: 0 !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-meta th,
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-meta td{
-  border: 1px solid rgba(15, 23, 42, 0.08) !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-table th,
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-table td{
-  border: 1px solid rgba(15, 23, 42, 0.1) !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-meta th{
-  background-color: rgba(15, 23, 42, 0.03) !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-table th{
-  background-color: rgba(136, 19, 55, 0.07) !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-bank{
-  background-color: rgba(15, 23, 42, 0.03) !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-totals{
-  font-size: 14px !important;
-  text-align: right !important;
-  margin-top: 8px !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-due{
-  color: #881337 !important;
-  font-weight: 800 !important;
-  font-size: 18px !important;
-  margin-top: 10px !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-foot{
-  border-top: 1px solid rgba(15, 23, 42, 0.08) !important;
+@media (max-width: 1024px){
+  [data-iu="pdf-invoice-capture-host"].iu-invoice-preview-portal{
+    z-index: 2147483646 !important;
+  }
 }
 
 #iuInvoicePanel .iu-invoice-overlay-cardShell{

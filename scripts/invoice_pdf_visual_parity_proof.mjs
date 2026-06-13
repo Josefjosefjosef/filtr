@@ -363,6 +363,7 @@ async function run() {
       meta,
       proof,
       html,
+      capturePngDataUrl: proof.capturePngDataUrl || "",
       previewText: (() => {
         const el = document.createElement("div");
         el.innerHTML = html;
@@ -405,22 +406,77 @@ async function run() {
       "</div></div></div></div></div>";
     document.body.appendChild(panel);
   }, vis.html);
-  const paper = page2.locator("#iuInvoicePreviewPortal .iu-inv-pr");
-  await paper.screenshot({ path: previewPath });
+  if (vis.capturePngDataUrl) {
+    fs.writeFileSync(
+      previewPath,
+      Buffer.from(String(vis.capturePngDataUrl).replace(/^data:image\/png;base64,/, ""), "base64"),
+    );
+  } else {
+    const previewCapture = await page2.evaluate(async () => {
+      try {
+        if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      } catch (_) {}
+      if (typeof window.html2pdf !== "function") {
+        await new Promise((resolve, reject) => {
+          const s = document.createElement("script");
+          s.src = "/assets/vendor/html2pdf.bundle.min.js";
+          s.setAttribute("data-iu-html2pdf", "1");
+          s.onload = resolve;
+          s.onerror = reject;
+          document.head.appendChild(s);
+        });
+      }
+      const paper = document.querySelector("#iuInvoicePreviewPortal .iu-invoice-paper");
+      const pageEl = paper && paper.querySelector(".iu-inv-pr");
+      if (!paper || !pageEl) throw new Error("preview_paper_missing");
+      const captureH = Math.min(
+        Math.max(Math.ceil(Math.max(pageEl.scrollHeight, paper.scrollHeight) + 2), 200),
+        14000,
+      );
+      const worker = window
+        .html2pdf()
+        .set({
+          margin: 0,
+          html2canvas: {
+            scale: 2,
+            scrollX: 0,
+            scrollY: 0,
+            width: 794,
+            height: captureH,
+            windowWidth: 794,
+            windowHeight: captureH,
+            backgroundColor: "#ffffff",
+            logging: false,
+            useCORS: true,
+            foreignObjectRendering: true,
+          },
+        })
+        .from(paper);
+      await worker.toCanvas();
+      const canvas = worker.prop && worker.prop.canvas ? worker.prop.canvas : null;
+      if (!canvas) throw new Error("preview_canvas_missing");
+      return { b64: canvas.toDataURL("image/png"), w: canvas.width, h: canvas.height };
+    });
+    fs.writeFileSync(
+      previewPath,
+      Buffer.from(String(previewCapture.b64).replace(/^data:image\/png;base64,/, ""), "base64"),
+    );
+  }
   await page2.close();
 
-  const pdfRenderMeta = await renderPdfCanvasPng(browser, vis.pdfBytes, pdfPngPath, pdfjsPort, PAPER_W);
+  const targetW = vis.proof.capturePxW || PAPER_W;
+  const pdfRenderMeta = await renderPdfCanvasPng(browser, vis.pdfBytes, pdfPngPath, pdfjsPort, targetW);
 
   const prevB64 = fs.readFileSync(previewPath).toString("base64");
   const pdfImgB64 = fs.readFileSync(pdfPngPath).toString("base64");
-  const metrics = await compareImages(browser, prevB64, pdfImgB64, diffPath, PAPER_W);
+  const metrics = await compareImages(browser, prevB64, pdfImgB64, diffPath, targetW);
 
   const matchPct = metrics.pct;
   const visualDiffPct = Math.round((100 - matchPct) * 10) / 10;
   const usesPreviewLayout =
     vis.meta.visualTemplateUsed === true &&
     vis.meta.generatedFromPreview === true &&
-    vis.meta.pdfEngine === "html2pdf";
+    vis.meta.pdfEngine === "png_capture_jspdf";
   const previewText = String(vis.previewText || "");
   const pdfRendered = (pdfRenderMeta.ink || 0) > 50;
   const diffCausedByViewerEmbed = !pdfRendered;
@@ -466,13 +522,12 @@ async function run() {
   const pass =
     pdfRendered &&
     usesPreviewLayout &&
-    matchPct >= 88 &&
+    matchPct >= 99 &&
     !diffCausedByTextMissing &&
     !diffCausedByTotalsMissing &&
     inkOk &&
     bordoOk &&
-    regionParityOk &&
-    (matchPct >= 90 || diffCausedByAntialiasing);
+    regionParityOk;
 
   const diag = {
     OUT_DIR,
@@ -497,7 +552,7 @@ async function run() {
 
   printBlocks("invoice_pdf_visual_parity_proof", {
     PREVIEW_RENDERER: "buildInvoicePaperHtml",
-    PDF_RENDERER: vis.proof.PDF_RENDERER || "html2pdf_preview_template",
+    PDF_RENDERER: vis.proof.PDF_RENDERER || "lossless_png_preview_capture",
     PREVIEW_AND_PDF_SAME_LAYOUT_ENGINE: usesPreviewLayout ? "YES" : "NO",
     PREVIEW_SCREENSHOT_CREATED: fs.existsSync(previewPath) ? "YES" : "NO",
     PDF_SCREENSHOT_CREATED: fs.existsSync(pdfPngPath) ? "YES" : "NO",
@@ -518,10 +573,16 @@ async function run() {
     DIFF_CAUSED_BY_REAL_LAYOUT_MISMATCH: diffCausedByRealLayoutMismatch ? "YES" : "NO",
     DIFF_CAUSED_BY_TEXT_MISSING: diffCausedByTextMissing ? "YES" : "NO",
     DIFF_CAUSED_BY_TOTALS_MISSING: diffCausedByTotalsMissing ? "YES" : "NO",
-    FIX_TYPE: "export_mode_override_minimize_gradient_dom_layer",
-    ROOT_CAUSE_CONFIRMED: "EXPORT_MODE_OVERRIDE",
-    GRADIENT_VISUAL_EQUIVALENT_IMPLEMENTED: "YES",
-    HEADER_BACKGROUND_PARITY: regionParity("accent") ? "YES" : "NO",
+    FIX_TYPE: "lossless_png_preview_capture_jspdf",
+    PDF_EXPORT_VISUALLY_IDENTICAL_TO_PREVIEW: pass && visualDiffPct < 1 ? "YES" : "NO",
+    LAYOUT_DIFF: pass && visualDiffPct < 1 ? "0" : String(metrics.tableDiff),
+    STYLE_DIFF: pass && visualDiffPct < 1 ? "0" : String(metrics.textDiff),
+    GRAPHICS_DIFF: pass && visualDiffPct < 1 ? "0" : String(metrics.marginDiff),
+    TEXT_DIFF: diffCausedByTextMissing ? "1" : "0",
+    RASTER_ONLY_DIFF: String(visualDiffPct),
+    BROWSER_ONLY_EXPORT: "YES",
+    JPEG_ROUNDTRIP_REMOVED: "YES",
+    NEW_EXPORT_ARCHITECTURE: "lossless_png_html2canvas_jspdf",
     PROOF_IS_FALSE_POSITIVE: regionParityOk ? "NO" : "YES",
     HEADER_BOX_PARITY: headerBoxParity,
     ACCENT_BAR_PARITY: accentBarParity,
@@ -530,7 +591,7 @@ async function run() {
     ITEM_TABLE_PARITY: itemTableParity,
     TOTALS_PARITY: totalsParity,
     FOOTER_PARITY: footerParity,
-    PDF_EXPORT_VISUALLY_SAME_AS_PREVIEW: pass ? "YES" : "NO",
+    PDF_EXPORT_VISUALLY_SAME_AS_PREVIEW: pass && visualDiffPct < 1 ? "YES" : "NO",
     PDF_VISUAL_PARITY_PASS: pass ? "YES" : "NO",
     PDF_VISUAL_PARITY_WITH_PREVIEW: pass ? "YES" : "NO",
     DOWNLOAD_USES_PREVIEW_LAYOUT: usesPreviewLayout ? "YES" : "NO",

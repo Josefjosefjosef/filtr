@@ -384,7 +384,7 @@ async function run() {
     const usesPreviewLayout =
       meta.visualTemplateUsed === true &&
       meta.generatedFromPreview === true &&
-      (meta.pdfEngine === "html2pdf" || proof.PREVIEW_AND_PDF_SAME_LAYOUT_ENGINE === true);
+      (meta.pdfEngine === "png_capture_jspdf" || meta.pdfEngine === "html2pdf" || proof.PREVIEW_AND_PDF_SAME_LAYOUT_ENGINE === true);
     const legacyExportUsed = !usesPreviewLayout;
     return {
       legacyExportUsed,

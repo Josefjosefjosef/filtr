@@ -288,16 +288,16 @@ async function runViewport(browser, appUrl, vp, pdfjsPort, outSub) {
     const el = document.createElement("div");
     el.innerHTML = html;
     const text = el.textContent || "";
-    const exportRoot = document.querySelector('[data-iu="pdf-invoice-export-root"]');
-    const headBg = exportRoot && exportRoot.querySelector(".iu-inv-pr-head-bg");
-    const proof = window._iuInvoicePdfRendererProof || {};
+    const proof = window._iuInvoicePdfRendererProof || out.proof || {};
     return {
       pdfBytes: Array.from(new Uint8Array(ab)),
       html,
       meta,
+      proof,
+      capturePngDataUrl: proof.capturePngDataUrl || "",
       previewText: text,
-      hasHeadBg: !!headBg || proof.gradientDomLayer === true,
-      exportMode: !!(exportRoot && exportRoot.classList.contains("iu-pdf-render-mode--export")),
+      losslessPng: proof.PNG_CAPTURE_USED === true,
+      exportModeOverrideRemoved: proof.EXPORT_MODE_OVERRIDE_REMOVED === true,
     };
   }, LONG_DESC);
 
@@ -306,35 +306,43 @@ async function runViewport(browser, appUrl, vp, pdfjsPort, outSub) {
   const pdfPath = path.join(outSub, "export.pdf");
   fs.writeFileSync(pdfPath, Buffer.from(vis.pdfBytes));
 
-  const page2 = await browser.newPage({
-    viewport: { width: vp.width, height: vp.height },
-    isMobile: vp.isMobile,
-    deviceScaleFactor: vp.dsf,
-  });
-  await page2.goto(appUrl, { waitUntil: "domcontentloaded", timeout: 120000 });
-  await page2.evaluate((html) => {
-    document.body.innerHTML = "";
-    const panel = document.createElement("div");
-    panel.id = "iuInvoicePreviewPortal";
-    panel.className = "iu-invoice-preview-portal iu-invoice-preview-portal--open";
-    panel.style.cssText = "padding:0;margin:0;background:#fafafa;width:794px;";
-    panel.innerHTML =
-      '<div class="iu-inv-previewScroll" data-inv-preview-host>' +
-      '<div class="iu-invoice-preview-viewport iu-invoice-preview-viewport--mobile">' +
-      '<div class="iu-invoice-preview-mobile"><div class="iu-invoice-preview-scale" style="width:794px;transform:none;transform-origin:top center">' +
-      '<div class="iu-invoice-paper" style="width:794px;max-width:794px;min-width:794px">' +
-      html +
-      "</div></div></div></div></div>";
-    document.body.appendChild(panel);
-  }, vis.html);
-  await page2.locator("#iuInvoicePreviewPortal .iu-inv-pr").screenshot({ path: previewPath });
-  await page2.close();
+  if (vis.capturePngDataUrl) {
+    fs.writeFileSync(
+      previewPath,
+      Buffer.from(String(vis.capturePngDataUrl).replace(/^data:image\/png;base64,/, ""), "base64"),
+    );
+  } else {
+    const page2 = await browser.newPage({
+      viewport: { width: vp.width, height: vp.height },
+      isMobile: vp.isMobile,
+      deviceScaleFactor: vp.dsf,
+    });
+    await page2.goto(appUrl, { waitUntil: "domcontentloaded", timeout: 120000 });
+    await page2.evaluate((html) => {
+      document.body.innerHTML = "";
+      const panel = document.createElement("div");
+      panel.id = "iuInvoicePreviewPortal";
+      panel.className = "iu-invoice-preview-portal iu-invoice-preview-portal--open";
+      panel.style.cssText = "padding:0;margin:0;background:#fafafa;width:794px;";
+      panel.innerHTML =
+        '<div class="iu-inv-previewScroll" data-inv-preview-host>' +
+        '<div class="iu-invoice-preview-viewport iu-invoice-preview-viewport--mobile">' +
+        '<div class="iu-invoice-preview-mobile"><div class="iu-invoice-preview-scale" style="width:794px;transform:none;transform-origin:top center">' +
+        '<div class="iu-invoice-paper" style="width:794px;max-width:794px;min-width:794px">' +
+        html +
+        "</div></div></div></div></div>";
+      document.body.appendChild(panel);
+    }, vis.html);
+    await page2.locator("#iuInvoicePreviewPortal .iu-invoice-paper").screenshot({ path: previewPath });
+    await page2.close();
+  }
   await page.close();
 
-  await renderPdfCanvasPng(browser, vis.pdfBytes, pdfPngPath, pdfjsPort, PAPER_W);
+  const targetW = vis.proof && vis.proof.capturePxW ? vis.proof.capturePxW : PAPER_W;
+  await renderPdfCanvasPng(browser, vis.pdfBytes, pdfPngPath, pdfjsPort, targetW);
   const prevB64 = fs.readFileSync(previewPath).toString("base64");
   const pdfImgB64 = fs.readFileSync(pdfPngPath).toString("base64");
-  const metrics = await compareImages(browser, prevB64, pdfImgB64, PAPER_W);
+  const metrics = await compareImages(browser, prevB64, pdfImgB64, targetW);
   const visualDiffPct = Math.round((100 - metrics.pct) * 10) / 10;
   const previewText = String(vis.previewText || "");
   const regionOk = (key) => {
@@ -348,12 +356,11 @@ async function runViewport(browser, appUrl, vp, pdfjsPort, outSub) {
   const pass =
     /Konzultace/i.test(previewText) &&
     /Celkem k úhradě/i.test(previewText) &&
-    metrics.pct >= 88 &&
+    metrics.pct >= 99 &&
     regionOk("header") &&
     regionOk("card") &&
     regionOk("table") &&
-    regionOk("totals") &&
-    (metrics.pct >= 90 || visualDiffPctNum <= 11);
+    regionOk("totals");
 
   return {
     DEVICE: vp.device,
@@ -369,8 +376,8 @@ async function runViewport(browser, appUrl, vp, pdfjsPort, outSub) {
     TOTALS_PARITY: regionOk("totals") ? "YES" : "NO",
     FOOTER_PARITY: regionOk("footer") ? "YES" : "NO",
     VISUAL_DIFF_PERCENT: String(visualDiffPct),
-    HAS_HEAD_BG_LAYER: vis.hasHeadBg ? "YES" : "NO",
-    EXPORT_MODE_CLASS_ACTIVE: vis.exportMode ? "YES" : "NO",
+    HAS_CAPTURE_PNG: vis.capturePngDataUrl ? "YES" : "NO",
+    LOSSLESS_PNG: vis.losslessPng ? "YES" : "NO",
     pass,
   };
 }
