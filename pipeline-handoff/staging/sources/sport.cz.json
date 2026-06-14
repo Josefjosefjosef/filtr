@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-14T22:18:35.765042Z",
+  "ingestedAt": "2026-06-14T23:23:12.962970Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "FOTBAL ONLINE: Ekvádor zahodil obrovskou šanci",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-do-sampionatu-vstupuje-cerny-kun-z-jizni-ameriky-vyzve-pobrezi-slonoviny-5478360",
+      "dt": "2026-06-14T14:55:27Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ekvádor",
+        "fotbal",
+        "obrovskou",
+        "online",
+        "zahodil",
+        "šanci"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -554,32 +577,6 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Do šampionátu vstupuje černý kůň z Jižní Ameriky, vyzve Pobřeží slonoviny",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-do-sampionatu-vstupuje-cerny-kun-z-jizni-ameriky-vyzve-pobrezi-slonoviny-5478360",
-      "dt": "2026-06-14T14:55:27Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ameriky",
-        "jižní",
-        "kůň",
-        "pobřeží",
-        "slonoviny",
-        "vstupuje",
-        "vyzve",
-        "černý",
-        "šampionátu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
       "title": "Smůla pro českou tenistku! Krejčíková k boji o titul nenastoupila, vyřadila ji nemoc",
       "url": "https://www.sport.cz/clanek/tenis-krejcikova-hraje-v-hertogenboschi-o-titul-5477882",
       "dt": "2026-06-14T04:05:11Z",
@@ -797,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40963,
+      "bytes": 40876,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -850,6 +847,10 @@
         },
         "sample_titles": [
           {
+            "title": "FOTBAL ONLINE: Ekvádor zahodil obrovskou šanci",
+            "publishedAt": "2026-06-14T14:55:27Z"
+          },
+          {
             "title": "Přestřelka bez vítěze. Japonci proti Nizozemsku dvakrát vyrovnali",
             "publishedAt": "2026-06-14T12:00:10Z"
           },
@@ -876,10 +877,6 @@
           {
             "title": "Curacao šokovalo Němce, ti ale trpaslíka nakonec smetli",
             "publishedAt": "2026-06-14T09:00:44Z"
-          },
-          {
-            "title": "Čeští volejbalisté utrpěli v Evropské lize první porážku, v dramatu podlehli Dánsku",
-            "publishedAt": "2026-06-14T16:52:02Z"
           }
         ]
       }

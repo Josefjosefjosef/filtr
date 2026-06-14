@@ -1,11 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-06-14T22:18:35.765042Z",
+  "ingestedAt": "2026-06-14T23:23:12.962970Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "Útok na Kyjev: Na 140 tisíc lidí je bez elektřiny, hoří slavný klášter",
+      "url": "https://www.novinky.cz/clanek/valka-na-ukrajine-utok-na-kyjev-na-140-tisic-lidi-je-bez-elektriny-hori-slavny-klaster-40583174",
+      "dt": "2026-06-14T23:21:35Z",
+      "media_raw": "Novinky / Domácí",
+      "media_norm": "Novinky",
+      "tokens": [
+        "140",
+        "elektřiny",
+        "hoří",
+        "klášter",
+        "kyjev",
+        "lidí",
+        "slavný",
+        "tisíc",
+        "útok"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_novinky_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "USA a Írán se dohodly na míru",
       "url": "https://www.novinky.cz/clanek/zahranicni-blizky-a-stredni-vychod-usa-a-iran-uzavrely-dohodu-40583173",
       "dt": "2026-06-14T21:34:59Z",
@@ -758,21 +784,25 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Z Kennedyho centra odstranili Trumpovo jméno",
-      "url": "https://www.novinky.cz/clanek/zahranicni-amerika-z-kennedyho-centra-odstranili-trumpovo-jmeno-40583123",
-      "dt": "2026-06-14T10:13:40Z",
-      "media_raw": "Novinky / Domácí",
+      "title": "Útok na Kyjev: Na 140 tisíc lidí je bez elektřiny, hoří slavný klášter",
+      "url": "https://www.novinky.cz/clanek/valka-na-ukrajine-utok-na-kyjev-na-140-tisic-lidi-je-bez-elektriny-hori-slavny-klaster-40583174",
+      "dt": "2026-06-14T23:21:35Z",
+      "media_raw": "Novinky / Zahraniční",
       "media_norm": "Novinky",
       "tokens": [
-        "centra",
-        "jméno",
-        "kennedyho",
-        "odstranili",
-        "trumpovo"
+        "140",
+        "elektřiny",
+        "hoří",
+        "klášter",
+        "kyjev",
+        "lidí",
+        "slavný",
+        "tisíc",
+        "útok"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
-      "feedId": "zpr_novinky_domaci",
+      "feedId": "zpr_novinky_zahranicni",
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "novinky.cz",
       "_dt_serialized": true
@@ -1521,28 +1551,6 @@
         "stopě",
         "travičů",
         "zvířat"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_novinky_zahranicni",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Z Kennedyho centra odstranili Trumpovo jméno",
-      "url": "https://www.novinky.cz/clanek/zahranicni-amerika-z-kennedyho-centra-odstranili-trumpovo-jmeno-40583123",
-      "dt": "2026-06-14T10:13:40Z",
-      "media_raw": "Novinky / Zahraniční",
-      "media_norm": "Novinky",
-      "tokens": [
-        "centra",
-        "jméno",
-        "kennedyho",
-        "odstranili",
-        "trumpovo"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1560,7 +1568,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/domaci",
-      "bytes": 50598,
+      "bytes": 50196,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1597,7 +1605,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-14T21:34:59Z",
+        "raw_feed_latest_publishedAt": "2026-06-14T23:21:35Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1613,6 +1621,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Útok na Kyjev: Na 140 tisíc lidí je bez elektřiny, hoří slavný klášter",
+            "publishedAt": "2026-06-14T23:21:35Z"
+          },
           {
             "title": "USA a Írán se dohodly na míru",
             "publishedAt": "2026-06-14T21:34:59Z"
@@ -1640,10 +1652,6 @@
           {
             "title": "Nelegálně držené zbraně, Donbas a dětská pornografie. Pokračuje soud s Československou domobranou",
             "publishedAt": "2026-06-14T16:38:29Z"
-          },
-          {
-            "title": "Odborník povolaný k odchytu dikobraza poznal vlastní ztracené zvíře",
-            "publishedAt": "2026-06-14T16:34:00Z"
           }
         ]
       }
@@ -1655,7 +1663,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/zahranicni",
-      "bytes": 50597,
+      "bytes": 50196,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1692,7 +1700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-14T21:34:59Z",
+        "raw_feed_latest_publishedAt": "2026-06-14T23:21:35Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1708,6 +1716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Útok na Kyjev: Na 140 tisíc lidí je bez elektřiny, hoří slavný klášter",
+            "publishedAt": "2026-06-14T23:21:35Z"
+          },
           {
             "title": "USA a Írán se dohodly na míru",
             "publishedAt": "2026-06-14T21:34:59Z"
@@ -1735,10 +1747,6 @@
           {
             "title": "Nelegálně držené zbraně, Donbas a dětská pornografie. Pokračuje soud s Československou domobranou",
             "publishedAt": "2026-06-14T16:38:29Z"
-          },
-          {
-            "title": "Odborník povolaný k odchytu dikobraza poznal vlastní ztracené zvíře",
-            "publishedAt": "2026-06-14T16:34:00Z"
           }
         ]
       }
