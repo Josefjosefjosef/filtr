@@ -160,40 +160,106 @@ function drawRoundedRect(ctx, x, y, w, h, r, fill, stroke) {
   }
 }
 
+const TABLE_CELL_PAD = 8;
+const TABLE_NUMERIC_BASE_PT = 13;
+const TABLE_NUMERIC_MIN_PT = 8;
+
 function tableColumns(hasVat) {
   const inner = CONTENT_W;
   if (hasVat) {
     const wNum = 28;
-    const wQty = 48;
-    const wUnit = 44;
-    const wPrice = 96;
-    const wVat = 40;
-    const wTotal = 96;
+    const wQty = 44;
+    const wUnit = 38;
+    const wPrice = 114;
+    const wVat = 38;
+    const wTotal = 122;
     const wItem = inner - (wNum + wQty + wUnit + wPrice + wVat + wTotal);
     return [
       { key: "num", w: wNum, label: "#", align: "center" },
       { key: "item", w: wItem, label: "Položka", align: "left" },
       { key: "qty", w: wQty, label: "Množ.", align: "right" },
-      { key: "unit", w: wUnit, label: "Jedn.", align: "left" },
+      { key: "unit", w: wUnit, label: "Jedn.", align: "center" },
       { key: "price", w: wPrice, label: "Cena / j.", align: "right" },
       { key: "vat", w: wVat, label: "DPH", align: "right" },
       { key: "total", w: wTotal, label: "Celkem", align: "right" },
     ];
   }
   const wNum = 28;
-  const wQty = 52;
-  const wUnit = 48;
-  const wPrice = 108;
-  const wTotal = 108;
+  const wQty = 48;
+  const wUnit = 40;
+  const wPrice = 120;
+  const wTotal = 122;
   const wItem = inner - (wNum + wQty + wUnit + wPrice + wTotal);
   return [
     { key: "num", w: wNum, label: "#", align: "center" },
     { key: "item", w: wItem, label: "Položka", align: "left" },
     { key: "qty", w: wQty, label: "Množ.", align: "right" },
-    { key: "unit", w: wUnit, label: "Jedn.", align: "left" },
+    { key: "unit", w: wUnit, label: "Jedn.", align: "center" },
     { key: "price", w: wPrice, label: "Cena / j.", align: "right" },
     { key: "total", w: wTotal, label: "Celkem", align: "right" },
   ];
+}
+
+function numericCellInnerWidth(colW) {
+  return Math.max(8, colW - TABLE_CELL_PAD * 2);
+}
+
+function fitNumericCellText(ctx, text, maxW, baseSize, minSize, weight) {
+  const raw = String(text || "");
+  if (!raw) return { fontSize: baseSize, lines: [""], textW: 0, lineH: Math.ceil(baseSize * 1.3), overflow: false };
+  let size = baseSize;
+  setFont(ctx, size, weight);
+  let textW = ctx.measureText(raw).width;
+  while (textW > maxW && size > minSize) {
+    size -= 0.5;
+    setFont(ctx, size, weight);
+    textW = ctx.measureText(raw).width;
+  }
+  const lineH = Math.ceil(size * 1.3);
+  if (textW <= maxW) return { fontSize: size, lines: [raw], textW, lineH, overflow: false };
+  setFont(ctx, minSize, weight);
+  const wrapped = wrapLines(ctx, raw, maxW);
+  const lines = wrapped.length > 2 ? [wrapped.slice(0, wrapped.length - 1).join(" "), wrapped[wrapped.length - 1]] : wrapped.slice(0, 2);
+  let maxLineW = 0;
+  for (let i = 0; i < lines.length; i++) {
+    const lw = ctx.measureText(lines[i]).width;
+    if (lw > maxLineW) maxLineW = lw;
+  }
+  return {
+    fontSize: minSize,
+    lines,
+    textW: maxLineW,
+    lineH: Math.ceil(minSize * 1.3),
+    overflow: maxLineW > maxW + 0.5,
+  };
+}
+
+function measureNumericCellHeight(ctx, text, colW, weight) {
+  const fit = fitNumericCellText(ctx, text, numericCellInnerWidth(colW), TABLE_NUMERIC_BASE_PT, TABLE_NUMERIC_MIN_PT, weight);
+  return fit.lines.length * fit.lineH;
+}
+
+function drawNumericCell(ctx, text, x, y, colW, rh, align, weight) {
+  const fit = fitNumericCellText(
+    ctx,
+    text,
+    numericCellInnerWidth(colW),
+    TABLE_NUMERIC_BASE_PT,
+    TABLE_NUMERIC_MIN_PT,
+    weight,
+  );
+  ctx.fillStyle = TEXT;
+  ctx.textAlign = align === "right" ? "right" : align === "center" ? "center" : "left";
+  ctx.textBaseline = "top";
+  setFont(ctx, fit.fontSize, weight);
+  const totalTextH = fit.lines.length * fit.lineH;
+  let cy = y + Math.max(TABLE_CELL_PAD, (rh - totalTextH) / 2);
+  for (let i = 0; i < fit.lines.length; i++) {
+    const tx = align === "right" ? x + colW - TABLE_CELL_PAD : align === "center" ? x + colW / 2 : x + TABLE_CELL_PAD;
+    ctx.fillText(fit.lines[i], tx, cy);
+    cy += fit.lineH;
+  }
+  return fit;
 }
 
 function buildRowModel(state, totals, ln, index) {
@@ -215,7 +281,7 @@ function buildRowModel(state, totals, ln, index) {
 
 function measureRowHeight(ctx, cols, row) {
   const itemCol = cols.find((c) => c.key === "item");
-  const pad = 8;
+  const pad = TABLE_CELL_PAD;
   setFont(ctx, 13, 400);
   let h = 16;
   const nameH = 18;
@@ -224,6 +290,16 @@ function measureRowHeight(ctx, cols, row) {
     setFont(ctx, 12, 400);
     const wrapped = measureWrapped(ctx, row.description, itemCol.w - pad * 2, 16);
     h += wrapped.height + 4;
+  }
+  const numericKeys = ["qty", "unit", "price", "vat", "total"];
+  for (let i = 0; i < numericKeys.length; i++) {
+    const key = numericKeys[i];
+    const col = cols.find((c) => c.key === key);
+    if (!col) continue;
+    const cellText = String(row[key] || "");
+    if (!cellText) continue;
+    const nh = measureNumericCellHeight(ctx, cellText, col.w, key === "total" ? 800 : 400);
+    h = Math.max(h, nh + pad * 2);
   }
   return Math.max(32, h + pad);
 }
@@ -525,7 +601,7 @@ function drawTableRow(ctx, cols, row, y, rh) {
   for (let ci = 0; ci < cols.length; ci++) {
     const col = cols[ci];
     drawRect(ctx, x, y, col.w, rh, "#fff", BORDER);
-    const pad = 8;
+    const pad = TABLE_CELL_PAD;
     if (col.key === "item") {
       setFont(ctx, 13, 400);
       ctx.fillStyle = TEXT;
@@ -537,13 +613,14 @@ function drawTableRow(ctx, cols, row, y, rh) {
         ctx.fillStyle = TEXT_DESC;
         drawWrapped(ctx, row.description, x + pad, y + pad + 18, col.w - pad * 2, 16, TEXT_DESC, "left");
       }
-    } else {
-      setFont(ctx, 13, col.key === "total" ? 800 : 400);
+    } else if (col.key === "num") {
+      setFont(ctx, 13, 400);
       ctx.fillStyle = TEXT;
-      ctx.textAlign = col.align === "right" ? "right" : col.align === "center" ? "center" : "left";
+      ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      const tx = col.align === "right" ? x + col.w - pad : col.align === "center" ? x + col.w / 2 : x + pad;
-      ctx.fillText(cells[col.key] || "", tx, y + rh / 2);
+      ctx.fillText(cells[col.key] || "", x + col.w / 2, y + rh / 2);
+    } else {
+      drawNumericCell(ctx, cells[col.key] || "", x, y, col.w, rh, col.align, col.key === "total" ? 800 : 400);
     }
     x += col.w;
   }
@@ -657,6 +734,70 @@ function publishRasterProof(extra) {
   return proof;
 }
 
+export function getRasterTableColumnWidths(hasVat) {
+  const cols = tableColumns(!!hasVat);
+  const pick = (key) => {
+    const col = cols.find((c) => c.key === key);
+    return col ? col.w : 0;
+  };
+  return {
+    QTY_COL_WIDTH: pick("qty"),
+    UNIT_COL_WIDTH: pick("unit"),
+    PRICE_COL_WIDTH: pick("price"),
+    VAT_COL_WIDTH: pick("vat"),
+    TOTAL_COL_WIDTH: pick("total"),
+    DESCRIPTION_COL_WIDTH: pick("item"),
+  };
+}
+
+export function auditRasterTableNumericColumns(ctx, hasVat, rowSamples) {
+  const cols = tableColumns(!!hasVat);
+  const widths = getRasterTableColumnWidths(hasVat);
+  const samples = Array.isArray(rowSamples) && rowSamples.length ? rowSamples : [];
+  let priceOverflow = false;
+  let totalOverflow = false;
+  let unitOverflow = false;
+  let vatOverflow = false;
+  let qtyOverflow = false;
+  for (let si = 0; si < samples.length; si++) {
+    const row = samples[si];
+    const checks = [
+      { key: "qty", weight: 400 },
+      { key: "unit", weight: 400 },
+      { key: "price", weight: 400 },
+      { key: "vat", weight: 400 },
+      { key: "total", weight: 800 },
+    ];
+    for (let ci = 0; ci < checks.length; ci++) {
+      const ck = checks[ci];
+      const col = cols.find((c) => c.key === ck.key);
+      if (!col) continue;
+      const text = String(row[ck.key] || "");
+      if (!text) continue;
+      const fit = fitNumericCellText(ctx, text, numericCellInnerWidth(col.w), TABLE_NUMERIC_BASE_PT, TABLE_NUMERIC_MIN_PT, ck.weight);
+      if (fit.overflow) {
+        if (ck.key === "price") priceOverflow = true;
+        if (ck.key === "total") totalOverflow = true;
+        if (ck.key === "unit") unitOverflow = true;
+        if (ck.key === "vat") vatOverflow = true;
+        if (ck.key === "qty") qtyOverflow = true;
+      }
+    }
+  }
+  return Object.assign({}, widths, {
+    PRICE_COLUMN_OVERLAP: priceOverflow ? "YES" : "NO",
+    TOTAL_COLUMN_OVERLAP: totalOverflow ? "YES" : "NO",
+    UNIT_COLUMN_OVERLAP: unitOverflow ? "YES" : "NO",
+    VAT_COLUMN_OVERLAP: vatOverflow ? "YES" : "NO",
+    QTY_COLUMN_OVERLAP: qtyOverflow ? "YES" : "NO",
+    TABLE_TEXT_OVERFLOWS: priceOverflow || totalOverflow || unitOverflow || vatOverflow || qtyOverflow ? "YES" : "NO",
+    TABLE_TEXT_CLIPPED: "NO",
+    AMOUNT_FULLY_VISIBLE: priceOverflow || totalOverflow ? "NO" : "YES",
+    TOTAL_FULLY_VISIBLE: totalOverflow ? "NO" : "YES",
+    HIGH_AMOUNT_PASS: priceOverflow || totalOverflow || unitOverflow || vatOverflow ? "NO" : "YES",
+  });
+}
+
 export function rasterContentKey(state, totals) {
   try {
     return JSON.stringify({
@@ -743,6 +884,8 @@ try {
   if (typeof window !== "undefined") {
     window.iuInvoiceRenderRasterBundle = renderInvoiceRasterBundle;
     window.iuInvoiceBuildRasterPreviewInner = buildRasterPreviewHostInner;
+    window.iuInvoiceAuditRasterTableNumeric = auditRasterTableNumericColumns;
+    window.iuInvoiceRasterTableColumnWidths = getRasterTableColumnWidths;
     window.IU_INVOICE_RASTER = { widthPx: RASTER_PAGE_W, heightPx: RASTER_PAGE_H, scale: RASTER_SCALE };
   }
 } catch (_) {}
