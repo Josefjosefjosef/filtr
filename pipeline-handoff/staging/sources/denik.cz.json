@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-06-14T19:25:24.299654Z",
+  "ingestedAt": "2026-06-14T20:23:36.419438Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Brazílii se srazili dva vrtulníky. V jednom měl být hudebník Oliver Tree",
+      "url": "https://www.denik.cz/ze_sveta/v-brazilii-se-srazili-dva-vrtulniky-v-jednom-mel-byt-hudebnik-oliver-tree-202606.html",
+      "dt": "2026-06-14T18:49:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "brazílii",
+        "být",
+        "dva",
+        "hudebník",
+        "jednom",
+        "měl",
+        "oliver",
+        "srazili",
+        "tree",
+        "vrtulníky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -85,7 +112,7 @@
     {
       "section": "krimi",
       "contentType": "article",
-      "title": "Rvačka v pražském baru skončila tragicky, bodnutí nožem jeden z mužů nepřežil",
+      "title": "Rvačka v pražském baru skončila tragicky. Bodnutí nožem jeden z mužů nepřežil",
       "url": "https://www.denik.cz/krimi/rvacka-v-baru-v-centru-skoncila-tragiky-bodnuti-nozem-jeden-muz-neprezil-2026061.html",
       "dt": "2026-06-14T16:19:00Z",
       "media_raw": "Deník",
@@ -625,32 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vzpoura pod medvědí vlajkou: rebelové vyvěsili prapor sešitý z dámské spodničky",
-      "url": "https://www.denik.cz/historie/povstani-medvedi-vlajky-kalifornie-cerven-1846-sonoma.html",
-      "dt": "2026-06-14T03:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dámské",
-        "medvědí",
-        "prapor",
-        "rebelové",
-        "sešitý",
-        "spodničky",
-        "vlajkou",
-        "vyvěsili",
-        "vzpoura"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28874,
+      "bytes": 28619,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-06-14T17:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-14T18:49:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -716,6 +717,10 @@
         },
         "sample_titles": [
           {
+            "title": "V Brazílii se srazili dva vrtulníky. V jednom měl být hudebník Oliver Tree",
+            "publishedAt": "2026-06-14T18:49:00Z"
+          },
+          {
             "title": "Zemřela Kateřina Niklová. Asistentku Leoše Mareše našli mrtvou v bytě",
             "publishedAt": "2026-06-14T17:59:00Z"
           },
@@ -728,7 +733,7 @@
             "publishedAt": "2026-06-14T17:00:00Z"
           },
           {
-            "title": "Rvačka v pražském baru skončila tragicky, bodnutí nožem jeden z mužů nepřežil",
+            "title": "Rvačka v pražském baru skončila tragicky. Bodnutí nožem jeden z mužů nepřežil",
             "publishedAt": "2026-06-14T16:19:00Z"
           },
           {
@@ -742,10 +747,6 @@
           {
             "title": "Švýcaři podle předběžných výsledků odmítli omezit počet obyvatel v zemi",
             "publishedAt": "2026-06-14T13:06:00Z"
-          },
-          {
-            "title": "Děti sledovaly zrození nového života. Před očima se jim líhla kuřátka",
-            "publishedAt": "2026-06-14T13:00:00Z"
           }
         ]
       }
