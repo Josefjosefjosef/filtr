@@ -830,115 +830,21 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
     z-index: 2147483646 !important;
   }
 }
-.iu-pdf-render-mode .iu-inv-pr-head-accent,
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-head-accent{
-  content: none;
-  display: block;
-  position: absolute !important;
+/* Capture host: preview portal mirror only — no export-mode visual overrides. */
+[data-iu="pdf-invoice-capture-host"].iu-invoice-preview-portal{
+  position: fixed !important;
   left: 0 !important;
   top: 0 !important;
-  bottom: 0 !important;
-  width: 48% !important;
-  background-color: rgba(136, 19, 55, 0.06) !important;
-  border-radius: 10px 0 0 10px !important;
-  pointer-events: none !important;
-  z-index: 0 !important;
-}
-.iu-pdf-render-mode .iu-inv-pr-head,
-.iu-pdf-render-mode .iu-inv-pr-meta,
-.iu-pdf-render-mode .iu-inv-pr-table thead,
-.iu-pdf-render-mode .iu-inv-pr-totals{
-  break-inside: avoid;
-  page-break-inside: avoid;
-}
-.iu-pdf-render-mode .iu-inv-pr-table tbody tr{
-  break-inside: auto;
-  page-break-inside: auto;
-}
-
-/* Export / html2canvas: solid borders & backgrounds (gradients + collapse often rasterize blank). */
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr{
-  border: 1px solid #e2e8f0 !important;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-grid{
-  grid-template-columns: 1fr 1fr !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-grid{
-  grid-template-columns: 1fr 1fr !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-invoice-paper{
   width: 794px !important;
-  min-width: 794px !important;
-  max-width: 794px !important;
-  margin: 0 !important;
-  transform: none !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-meta,
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-table{
-  width: 100% !important;
-  max-width: 100% !important;
-  table-layout: auto !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-head{
-  position: relative !important;
-  overflow: hidden !important;
-  background-image: none !important;
-  background-color: #ffffff !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-head::before{
-  content: "" !important;
-  position: absolute !important;
-  left: 0 !important;
-  top: 0 !important;
-  bottom: 0 !important;
-  width: 48% !important;
-  background-color: rgba(136, 19, 55, 0.06) !important;
-  border-radius: 10px 0 0 10px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
   pointer-events: none !important;
-  z-index: 0 !important;
+  overflow: visible !important;
 }
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-head > *{
-  position: relative !important;
-  z-index: 1 !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-meta,
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-table{
-  border-collapse: collapse !important;
-  border-spacing: 0 !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-meta th,
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-meta td,
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-table th,
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-table td{
-  border: 1px solid #dbe1e8 !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-meta th{
-  background-color: rgba(15, 23, 42, 0.03) !important;
-  background-image: none !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-table th{
-  background-color: rgba(136, 19, 55, 0.07) !important;
-  background-image: none !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-bank{
-  background-color: rgba(15, 23, 42, 0.03) !important;
-  background-image: none !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-totals{
-  font-size: 14px !important;
-  text-align: right !important;
-  margin-top: 8px !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-due{
-  color: #881337 !important;
-  font-weight: 800 !important;
-  font-size: 18px !important;
-  margin-top: 10px !important;
-}
-.iu-pdf-render-mode.iu-pdf-render-mode--export .iu-inv-pr-foot{
-  border-top: 1px solid #e2e8f0 !important;
+@media (max-width: 1024px){
+  [data-iu="pdf-invoice-capture-host"].iu-invoice-preview-portal{
+    z-index: 2147483646 !important;
+  }
 }
 
 #iuInvoicePanel .iu-invoice-overlay-cardShell{
