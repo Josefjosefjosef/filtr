@@ -1,25 +1,51 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-14T20:23:36.419438Z",
+  "ingestedAt": "2026-06-14T21:21:31.103287Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Do šampionátu vstupuje další z favoritů, začal zostra!",
+      "title": "FOTBAL ONLINE: Šok pro Nizozemce! Japonci z ojedinělé šance srovnali",
       "url": "https://www.sport.cz/clanek/fotbal-ms-2026-nizozemsko-japonsko-online-5479009",
       "dt": "2026-06-14T12:00:10Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "další",
-        "favoritů",
         "fotbal",
+        "japonci",
+        "nizozemce",
+        "ojedinělé",
         "online",
-        "vstupuje",
-        "začal",
-        "zostra",
-        "šampionátu"
+        "srovnali",
+        "šance",
+        "šok"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kuriózní příčina nedokončeného závodu. Hülkenbergovi vypnul vůz odražený kamínek",
+      "url": "https://www.sport.cz/clanek/moto-formule-1-kuriozni-pricina-nedokonceneho-zavodu-hulkenbergovi-vypnul-vuz-odrazeny-kaminek-5480538",
+      "dt": "2026-06-14T20:42:15Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hülkenbergovi",
+        "kamínek",
+        "kuriózní",
+        "nedokončeného",
+        "odražený",
+        "příčina",
+        "vypnul",
+        "vůz",
+        "závodu"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -766,32 +792,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ekvádorský prezident rozhodl o zlevnění piva během fotbalového mistrovství světa",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-ekvadorsky-prezident-rozhodl-o-zlevneni-piva-behem-fotbaloveho-mistrovstvi-sveta-5479057",
-      "dt": "2026-06-14T10:51:06Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "během",
-        "ekvádorský",
-        "fotbalového",
-        "mistrovství",
-        "piva",
-        "prezident",
-        "rozhodl",
-        "světa",
-        "zlevnění"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40943,
+      "bytes": 40921,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-14T20:09:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-14T20:42:15Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -855,8 +855,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Do šampionátu vstupuje další z favoritů, začal zostra!",
+            "title": "FOTBAL ONLINE: Šok pro Nizozemce! Japonci z ojedinělé šance srovnali",
             "publishedAt": "2026-06-14T12:00:10Z"
+          },
+          {
+            "title": "Kuriózní příčina nedokončeného závodu. Hülkenbergovi vypnul vůz odražený kamínek",
+            "publishedAt": "2026-06-14T20:42:15Z"
           },
           {
             "title": "S outsiderem slavil celý svět. Rekordmana mezi trenéry přemohly slzy",
@@ -881,10 +885,6 @@
           {
             "title": "Cucurella má podle médií namířeno z Chelsea do Realu",
             "publishedAt": "2026-06-14T18:15:30Z"
-          },
-          {
-            "title": "Čeští sousedé z Dallasu jdou do boje. Švédové s hvězdným útokem vyzvou Tunisko",
-            "publishedAt": "2026-06-14T18:00:09Z"
           }
         ]
       }
