@@ -1,12 +1,11 @@
 /**
  * infoUzel.cz — overlay „Vytvořit fakturu“ (UI vrstva).
  */
-export const IU_INVOICE_MODULE_BUILD = "invoice-real-root-cause-v1-20260605";
+export const IU_INVOICE_MODULE_BUILD = "invoice-raster-single-source-v1-20260615";
 
 import {
   applyBuyerSnapshot,
   applySupplierSnapshot,
-  buildInvoicePaperHtml,
   buildPlainText,
   computeTotals,
   defaultFormState,
@@ -24,12 +23,15 @@ import {
   validateSupplierProfile,
 } from "./iu-invoice-engine.js";
 import {
-  buildInvoicePdfBlobFromData,
-  buildInvoicePdfBlobFromPreviewHtml,
-  buildInvoicePdfBlobFromPreviewElement,
+  buildInvoicePdfBlobFromRasterBundle,
   ensureInvoiceOverlayCssReady,
   preloadInvoicePdfFont,
 } from "./iu-invoice-pdf-renderer.js";
+import {
+  buildRasterPreviewHostInner,
+  rasterContentKey,
+  renderInvoiceRasterBundle,
+} from "./iu-invoice-raster-renderer.js";
 
 function esc(s) {
   return String(s || "")
@@ -604,6 +606,8 @@ export function initIuInvoiceOverlay(deps) {
   let saveTimer = 0;
   let rootEl = null;
   let readyPdfBundle = null;
+  let previewRasterBundle = null;
+  let previewRasterKey = "";
   let iosPdfPopup = null;
   let closePreviewFn = null;
   let previewPortalHost = null;
@@ -1007,24 +1011,35 @@ export function initIuInvoiceOverlay(deps) {
       }
     }
 
-    function buildPreviewHostInner(innerHtml, mode) {
+    function buildPreviewHostInner(rasterInnerHtml, mode) {
       if (mode === "desktop") {
         return (
           '<div class="iu-invoice-preview-viewport iu-invoice-preview-viewport--desktop">' +
           '<div class="iu-invoice-preview-desktop">' +
-          '<div class="iu-invoice-paper">' +
-          innerHtml +
-          "</div></div></div>"
+          rasterInnerHtml +
+          "</div></div>"
         );
       }
       return (
         '<div class="iu-invoice-preview-viewport iu-invoice-preview-viewport--mobile">' +
         '<div class="iu-invoice-preview-mobile">' +
         '<div class="iu-invoice-preview-scale">' +
-        '<div class="iu-invoice-paper">' +
-        innerHtml +
-        "</div></div></div></div>"
+        rasterInnerHtml +
+        "</div></div></div>"
       );
+    }
+
+    async function ensurePreviewRasterBundle() {
+      readStateFromDom(root, state);
+      const totals = computeTotals(state);
+      const key = rasterContentKey(state, totals);
+      if (previewRasterBundle && previewRasterKey === key && previewRasterBundle.canvases && previewRasterBundle.canvases.length) {
+        return previewRasterBundle;
+      }
+      const bundle = await renderInvoiceRasterBundle(state, totals);
+      previewRasterBundle = bundle;
+      previewRasterKey = key;
+      return bundle;
     }
 
     root.addEventListener("change", (e) => {
@@ -1202,19 +1217,6 @@ export function initIuInvoiceOverlay(deps) {
       return "PDF se nepodařilo vygenerovat.";
     }
 
-    function getOpenPreviewPaperInnerHtml() {
-      try {
-        const portal = document.getElementById("iuInvoicePreviewPortal");
-        if (!portal || portal.hidden) return null;
-        const paper = portal.querySelector(".iu-invoice-paper");
-        if (!paper) return null;
-        const inner = String(paper.innerHTML || "").trim();
-        return inner || null;
-      } catch (_) {
-        return null;
-      }
-    }
-
     function exportInvoicePdfBlob(cb) {
       readStateFromDom(root, state);
       copySupplierBankToInvoiceIfEmpty(state);
@@ -1231,17 +1233,16 @@ export function initIuInvoiceOverlay(deps) {
         window._iuInvoiceExportMode = "pdf_only";
         window._iuInvoiceWordPdfStackUsed = false;
       } catch (_) {}
-      invoicePdfDiag("invoice_pdf_export_start", { via: "invoice_module", renderer: "preview_html_v1" });
-      const previewHtml = getOpenPreviewPaperInnerHtml();
-      const exportPromise = ensureInvoiceOverlayCssReady().then(() => {
-        const livePaper = document.querySelector("#iuInvoicePreviewPortal .iu-invoice-paper");
-        if (livePaper && livePaper.querySelector(".iu-inv-pr")) {
-          return buildInvoicePdfBlobFromPreviewElement(livePaper, fileName, { fromPreviewDom: true });
+      invoicePdfDiag("invoice_pdf_export_start", { via: "invoice_module", renderer: "raster_canvas_v1" });
+      const key = rasterContentKey(state, totals);
+      const exportPromise = ensureInvoiceOverlayCssReady().then(async () => {
+        let bundle = previewRasterBundle && previewRasterKey === key ? previewRasterBundle : null;
+        if (!bundle || !bundle.canvases || !bundle.canvases.length) {
+          bundle = await renderInvoiceRasterBundle(state, totals);
+          previewRasterBundle = bundle;
+          previewRasterKey = key;
         }
-        if (previewHtml) {
-          return buildInvoicePdfBlobFromPreviewHtml(previewHtml, fileName, { fromPreviewDom: true });
-        }
-        return buildInvoicePdfBlobFromData(state, totals, fileName, { fromPreviewDom: false });
+        return buildInvoicePdfBlobFromRasterBundle(bundle, fileName, { fromPreviewDom: true, rasterBundle: bundle });
       });
       exportPromise
         .then((out) => {
@@ -1255,8 +1256,8 @@ export function initIuInvoiceOverlay(deps) {
           invoicePdfDiag("invoice_pdf_blob_created", {
             size: out.blob.size,
             via: "invoice_module",
-            renderer: "preview_html_v1",
-            fromPreviewDom: !!previewHtml,
+            renderer: "raster_canvas_v1",
+            fromRasterBundle: true,
           });
           cb(null, out.blob, out.fileName || fileName);
         })
@@ -1471,7 +1472,7 @@ export function initIuInvoiceOverlay(deps) {
     function syncInvoicePreviewLayout() {
       const host = getPreviewHostEl();
       if (!host) return;
-      const paper = host.querySelector(".iu-invoice-paper");
+      const paper = host.querySelector(".iu-invoice-paper--raster, .iu-invoice-paper");
       if (!paper) return;
       const mobileWrap = host.querySelector(".iu-invoice-preview-mobile");
       const scaleEl = mobileWrap && mobileWrap.querySelector(".iu-invoice-preview-scale");
@@ -1556,106 +1557,113 @@ export function initIuInvoiceOverlay(deps) {
 
     function openPreview() {
       let previewException = "";
-      try {
-        previewEventTrace.handlerEntered += 1;
-        readStateFromDom(root, state);
-        copySupplierBankToInvoiceIfEmpty(state);
-        const v = validateForm(state);
-        previewEventTrace.lastValidationResult = v.ok ? "pass" : "fail";
-        if (!v.ok) {
-          previewEventTrace.validationBlocked += 1;
-          showPreviewValidationErrors(v.errors);
-          scrollToFirstValidationError(root);
-          publishPreviewDiag(null, {
-            PREVIEW_OPEN: false,
-            PREVIEW_VALIDATION_BLOCKED: true,
-            PREVIEW_VALIDATION_RESULT: "fail",
-            PREVIEW_EXCEPTION: "",
-            reason: "validation",
-            errors: v.errors,
-          });
-          return;
-        }
-        clearValidationHighlights(root);
-        clearReadyPdfUi();
-        const totals = computeTotals(state);
-        const layer = ensurePreviewPortalHost();
-        const host = layer ? layer.querySelector("[data-inv-preview-host]") : null;
-        const formLayer = root.querySelector("[data-inv-preview-layer]");
-        if (formLayer && formLayer !== layer) {
-          formLayer.hidden = true;
-          formLayer.setAttribute("hidden", "");
-          formLayer.classList.add("iu-inv-guard-hidden");
-        }
-        if (!host || !layer) {
-          const msg = "Náhled faktury: chybí portál náhledu.";
-          showPreviewValidationErrors([msg]);
-          publishPreviewDiag(layer, {
-            PREVIEW_OPEN: false,
-            PREVIEW_EXCEPTION: "missing_host_or_layer",
-            reason: "missing_host_or_layer",
-          });
-          return;
-        }
-        const inner = buildInvoicePaperHtml(state, totals);
-        const mode = isDesktopPreviewBreakpoint() ? "desktop" : "mobile";
-        host.innerHTML = buildPreviewHostInner(inner, mode);
-        previewLayoutMode = mode;
-        applyPreviewPortalOpenStyles(layer);
-        try {
-          document.body.classList.add("iu-invoice-preview-open");
-        } catch (_) {}
-        const opened = isPreviewLayerOpen(layer);
-        if (!opened) {
-          const msg = "Náhled faktury se nepodařilo zobrazit. Obnovte stránku (tvrdý reload).";
-          showPreviewValidationErrors([msg]);
-          publishPreviewDiag(layer, {
-            PREVIEW_OPEN: false,
-            PREVIEW_VALIDATION_RESULT: "pass",
-            PREVIEW_VALIDATION_BLOCKED: false,
-            PREVIEW_EXCEPTION: "layer_not_visible",
-            reason: "layer_not_visible",
-          });
-          return;
-        }
-        publishPreviewDiag(layer, {
-          PREVIEW_OPEN: true,
-          PREVIEW_VALIDATION_RESULT: "pass",
-          PREVIEW_VALIDATION_BLOCKED: false,
-          PREVIEW_EXCEPTION: "",
-          previewLayoutMode: mode,
-        });
-        try {
-          scrollHost.scrollTop = 0;
-          window.requestAnimationFrame(() => {
-            try {
-              syncInvoicePreviewLayout();
-              scrollHost.scrollTop = 0;
-              const backBtn = layer.querySelector("[data-inv-preview-back]");
-              if (backBtn) backBtn.focus();
-              publishPreviewDiag(layer, {
-                PREVIEW_OPEN: isPreviewLayerOpen(layer),
-                PREVIEW_VALIDATION_RESULT: "pass",
-                PREVIEW_VALIDATION_BLOCKED: false,
-                PREVIEW_EXCEPTION: "",
-                previewLayoutMode: mode,
-              });
-            } catch (rafErr) {
-              previewException = String(rafErr);
-            }
-          });
-        } catch (scrollErr) {
-          previewException = String(scrollErr);
-        }
-      } catch (err) {
-        previewException = String(err);
-        showPreviewValidationErrors(["Náhled faktury: " + previewException]);
+      previewEventTrace.handlerEntered += 1;
+      readStateFromDom(root, state);
+      copySupplierBankToInvoiceIfEmpty(state);
+      const v = validateForm(state);
+      previewEventTrace.lastValidationResult = v.ok ? "pass" : "fail";
+      if (!v.ok) {
+        previewEventTrace.validationBlocked += 1;
+        showPreviewValidationErrors(v.errors);
+        scrollToFirstValidationError(root);
         publishPreviewDiag(null, {
           PREVIEW_OPEN: false,
-          ERROR_THROWN: previewException,
-          PREVIEW_EXCEPTION: previewException,
+          PREVIEW_VALIDATION_BLOCKED: true,
+          PREVIEW_VALIDATION_RESULT: "fail",
+          PREVIEW_EXCEPTION: "",
+          reason: "validation",
+          errors: v.errors,
         });
+        return;
       }
+      clearValidationHighlights(root);
+      clearReadyPdfUi();
+      const layer = ensurePreviewPortalHost();
+      const host = layer ? layer.querySelector("[data-inv-preview-host]") : null;
+      const formLayer = root.querySelector("[data-inv-preview-layer]");
+      if (formLayer && formLayer !== layer) {
+        formLayer.hidden = true;
+        formLayer.setAttribute("hidden", "");
+        formLayer.classList.add("iu-inv-guard-hidden");
+      }
+      if (!host || !layer) {
+        const msg = "Náhled faktury: chybí portál náhledu.";
+        showPreviewValidationErrors([msg]);
+        publishPreviewDiag(layer, {
+          PREVIEW_OPEN: false,
+          PREVIEW_EXCEPTION: "missing_host_or_layer",
+          reason: "missing_host_or_layer",
+        });
+        return;
+      }
+      const mode = isDesktopPreviewBreakpoint() ? "desktop" : "mobile";
+      previewLayoutMode = mode;
+      host.innerHTML =
+        '<div class="iu-invoice-raster-loading" data-inv-raster-loading>Připravuji náhled faktury…</div>';
+      applyPreviewPortalOpenStyles(layer);
+      try {
+        document.body.classList.add("iu-invoice-preview-open");
+      } catch (_) {}
+      ensurePreviewRasterBundle()
+        .then((bundle) => {
+          const rasterInner = buildRasterPreviewHostInner(bundle);
+          host.innerHTML = buildPreviewHostInner(rasterInner, mode);
+          const opened = isPreviewLayerOpen(layer);
+          if (!opened) {
+            const msg = "Náhled faktury se nepodařilo zobrazit. Obnovte stránku (tvrdý reload).";
+            showPreviewValidationErrors([msg]);
+            publishPreviewDiag(layer, {
+              PREVIEW_OPEN: false,
+              PREVIEW_VALIDATION_RESULT: "pass",
+              PREVIEW_VALIDATION_BLOCKED: false,
+              PREVIEW_EXCEPTION: "layer_not_visible",
+              reason: "layer_not_visible",
+            });
+            return;
+          }
+          publishPreviewDiag(layer, {
+            PREVIEW_OPEN: true,
+            PREVIEW_VALIDATION_RESULT: "pass",
+            PREVIEW_VALIDATION_BLOCKED: false,
+            PREVIEW_EXCEPTION: "",
+            previewLayoutMode: mode,
+            PREVIEW_RASTER_PAGES: bundle.pageCount,
+            PREVIEW_USES_SAME_RASTER_AS_PDF: true,
+          });
+          const scrollHost = getPreviewScrollEl();
+          try {
+            if (scrollHost) scrollHost.scrollTop = 0;
+            window.requestAnimationFrame(() => {
+              try {
+                syncInvoicePreviewLayout();
+                if (scrollHost) scrollHost.scrollTop = 0;
+                const backBtn = layer.querySelector("[data-inv-preview-back]");
+                if (backBtn) backBtn.focus();
+                publishPreviewDiag(layer, {
+                  PREVIEW_OPEN: isPreviewLayerOpen(layer),
+                  PREVIEW_VALIDATION_RESULT: "pass",
+                  PREVIEW_VALIDATION_BLOCKED: false,
+                  PREVIEW_EXCEPTION: "",
+                  previewLayoutMode: mode,
+                  PREVIEW_RASTER_PAGES: bundle.pageCount,
+                });
+              } catch (rafErr) {
+                previewException = String(rafErr);
+              }
+            });
+          } catch (scrollErr) {
+            previewException = String(scrollErr);
+          }
+        })
+        .catch((err) => {
+          previewException = String(err);
+          showPreviewValidationErrors(["Náhled faktury: " + previewException]);
+          publishPreviewDiag(null, {
+            PREVIEW_OPEN: false,
+            ERROR_THROWN: previewException,
+            PREVIEW_EXCEPTION: previewException,
+          });
+        });
     }
 
     function closePreview() {
@@ -1681,7 +1689,7 @@ export function initIuInvoiceOverlay(deps) {
     function repaintPreviewShellIfNeeded() {
       const layer = getPreviewLayerEl();
       const host = getPreviewHostEl();
-      if (!isPreviewLayerOpen(layer) || !host || !host.querySelector(".iu-inv-pr")) return;
+      if (!isPreviewLayerOpen(layer) || !host || !host.querySelector("[data-invoice-raster-preview]")) return;
       const nextMode = isDesktopPreviewBreakpoint() ? "desktop" : "mobile";
       if (nextMode === previewLayoutMode) {
         syncInvoicePreviewLayout();
@@ -1693,19 +1701,24 @@ export function initIuInvoiceOverlay(deps) {
         syncInvoicePreviewLayout();
         return;
       }
-      const totals = computeTotals(state);
-      const inner = buildInvoicePaperHtml(state, totals);
-      host.innerHTML = buildPreviewHostInner(inner, nextMode);
       previewLayoutMode = nextMode;
-      try {
-        window.requestAnimationFrame(() => {
-          window.requestAnimationFrame(() => {
-            try {
-              syncInvoicePreviewLayout();
-            } catch (_) {}
-          });
+      ensurePreviewRasterBundle()
+        .then((bundle) => {
+          const rasterInner = buildRasterPreviewHostInner(bundle);
+          host.innerHTML = buildPreviewHostInner(rasterInner, nextMode);
+          try {
+            window.requestAnimationFrame(() => {
+              window.requestAnimationFrame(() => {
+                try {
+                  syncInvoicePreviewLayout();
+                } catch (_) {}
+              });
+            });
+          } catch (_) {}
+        })
+        .catch(() => {
+          syncInvoicePreviewLayout();
         });
-      } catch (_) {}
     }
 
     const previewScrollForRo = getPreviewScrollEl();
