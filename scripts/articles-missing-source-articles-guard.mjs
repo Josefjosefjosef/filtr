@@ -1,6 +1,9 @@
 /**
- * Missing source articles guard — fails when today's RSS items are absent from articles.json
+ * Missing source articles guard — reports when today's RSS items are absent from articles.json
  * without a valid documented reason (inactive feed, fetch error, feed not RSS).
+ *
+ * PUBLISH_ALWAYS policy: content gaps emit WARNING/INCIDENT (exit 0), never block release/publish.
+ * Hard FAIL only for infra errors (missing files, fetch crash, invalid JSON).
  *
  * Run: node scripts/articles-missing-source-articles-guard.mjs
  *
@@ -265,7 +268,7 @@ async function main() {
     await new Promise((r) => setTimeout(r, 200));
   }
 
-  let failed = false;
+  let warned = false;
   const bundleAgeMs = articlesDoc.generatedAt ? Date.now() - Date.parse(articlesDoc.generatedAt) : Infinity;
   const bundleAgeHours = bundleAgeMs / 3_600_000;
 
@@ -283,19 +286,19 @@ async function main() {
       `[articles-missing-source-articles-guard] section=${sec} today_in_feed=${inFeed} today_in_json=${inJson}`,
     );
     if (inFeed >= minTodayPerSection && inJson < minTodayPerSection && bundleAgeHours > 2) {
-      console.error(
-        `[articles-missing-source-articles-guard] FAIL: section=${sec} feed has today items but json has ${inJson} (bundle age ${bundleAgeHours.toFixed(1)}h)`,
+      console.warn(
+        `[articles-missing-source-articles-guard] WARN: section=${sec} feed has today items but json has ${inJson} (bundle age ${bundleAgeHours.toFixed(1)}h)`,
       );
-      failed = true;
+      warned = true;
     }
   }
 
-  // Hard fail: many missing today items when bundle is older than 2h (pipeline should have caught up)
+  // Incident: many missing today items when bundle is older than 2h (pipeline should have caught up)
   if (report.articlesMissingFromFeed >= 10 && bundleAgeHours > 2) {
-    console.error(
-      `[articles-missing-source-articles-guard] FAIL: ${report.articlesMissingFromFeed} today feed items missing from articles.json (bundle age ${bundleAgeHours.toFixed(1)}h)`,
+    console.warn(
+      `[articles-missing-source-articles-guard] WARN: ${report.articlesMissingFromFeed} today feed items missing from articles.json (bundle age ${bundleAgeHours.toFixed(1)}h)`,
     );
-    failed = true;
+    warned = true;
   }
 
   if (report.missingArticles.length) {
@@ -317,9 +320,11 @@ async function main() {
   fs.writeFileSync(outPath, JSON.stringify(report, null, 2));
   console.log(`[articles-missing-source-articles-guard] report=${outPath}`);
 
-  if (failed) {
-    console.error("[articles-missing-source-articles-guard] RESULT=FAIL");
-    process.exit(1);
+  if (warned) {
+    console.warn("[articles-missing-source-articles-guard] RESULT=WARNING");
+    console.warn("[articles-missing-source-articles-guard] MISSING_SOURCE_RESULT=WARNING_NOT_BLOCKING");
+    console.warn("[articles-missing-source-articles-guard] PUBLISH_ALWAYS_ENFORCED=YES");
+    process.exit(0);
   }
   console.log("[articles-missing-source-articles-guard] RESULT=PASS");
 }

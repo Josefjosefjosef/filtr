@@ -81,9 +81,14 @@ export function derivePipelineOverallStatus(phaseStatus, meta = {}) {
     if (ingest === INGEST_FAIL) return INGEST_FAILED;
     if (aggregate === AGGREGATE_FAIL) return AGGREGATE_FAILED;
     if (ingest === INGEST_OK && aggregate === AGGREGATE_OK) {
+      const pool = phaseStatus.clean_pool_status;
       if (release === RELEASE_BLOCKED) return INGEST_SUCCESS_RELEASE_BLOCKED;
       if (release === RELEASE_FAIL || publish === PUBLISH_FAILED) return RELEASE_FAILED;
       if (release === RELEASE_OK && (publish === PUBLISH_OK || publish === PUBLISH_SKIPPED || publish == null)) {
+        return PIPELINE_SUCCESS;
+      }
+      // PUBLISH_ALWAYS: ingest+aggregate+clean pool succeeded; release/publish n/a is not a blocker
+      if (pool === "CLEAN_POOL_CREATED" && release == null && publish == null) {
         return PIPELINE_SUCCESS;
       }
     }

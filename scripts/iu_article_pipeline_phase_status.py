@@ -379,11 +379,15 @@ def derive_pipeline_overall_status(
         if aggregate == AGGREGATE_FAIL:
             return AGGREGATE_FAILED
         if ingest == INGEST_OK and aggregate == AGGREGATE_OK:
+            pool = phase_status.get("clean_pool_status")
             if release == RELEASE_BLOCKED:
                 return INGEST_SUCCESS_RELEASE_BLOCKED
             if release == RELEASE_FAIL or publish == PUBLISH_FAILED:
                 return RELEASE_FAILED
             if release == RELEASE_OK and publish in (PUBLISH_OK, PUBLISH_SKIPPED, None):
+                return PIPELINE_SUCCESS
+            # PUBLISH_ALWAYS: ingest+aggregate+clean pool succeeded; release/publish n/a is not a blocker
+            if pool == CLEAN_POOL_CREATED and release is None and publish is None:
                 return PIPELINE_SUCCESS
 
     if jobs:

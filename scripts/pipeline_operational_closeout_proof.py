@@ -29,6 +29,7 @@ from iu_article_pipeline_phase_status import (  # noqa: E402
     SKIPPED_DUPLICATE,
     alert_level_for_overall_status,
     closeout_exit_code_for_overall,
+    derive_pipeline_overall_status,
     operational_summary_kv,
     record_aggregate_ok,
     record_ingest_ok,
@@ -78,6 +79,23 @@ class OperationalCloseoutProofTests(unittest.TestCase):
         kv = operational_summary_kv(status, PIPELINE_SUCCESS)
         self.assertEqual(kv["PIPELINE_OVERALL_STATUS"], PIPELINE_SUCCESS)
         self.assertEqual(closeout_exit_code_for_overall(PIPELINE_SUCCESS), 0)
+
+    def test_publish_always_ingest_aggregate_pool_ok_release_na_green(self) -> None:
+        """PUBLISH_ALWAYS: release/publish n/a after clean pool must not RED-closeout."""
+        status = {
+            "ingest_status": INGEST_OK,
+            "aggregate_status": AGGREGATE_OK,
+            "clean_pool_status": CLEAN_POOL_CREATED,
+            "release_status": None,
+            "publish_status": None,
+        }
+        overall = derive_pipeline_overall_status(status)
+        self.assertEqual(overall, PIPELINE_SUCCESS)
+        self.assertEqual(alert_level_for_overall_status(overall), "GREEN")
+        self.assertEqual(closeout_exit_code_for_overall(overall), 0)
+        kv = operational_summary_kv(status, overall)
+        self.assertEqual(kv["RELEASE_STATUS"], "n/a")
+        self.assertEqual(kv["PUBLISH_STATUS"], "n/a")
 
     def test_ingest_failed_red_closeout_fails(self) -> None:
         self.assertEqual(closeout_exit_code_for_overall(INGEST_FAILED), 1)

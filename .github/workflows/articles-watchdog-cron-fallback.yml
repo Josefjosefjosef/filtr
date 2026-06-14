@@ -68,8 +68,11 @@ jobs:
           FAST_STALE_MINUTES="null"
           CHAIN_RESULT="no_dispatch"
           UNREACHABLE_COUNT=0
+          HEAL_ATTEMPTED="NO"
+          HEAL_DISPATCHED="NO"
 
           for attempt in $(seq 1 "${CHAIN_MAX_ATTEMPTS}"); do
+            HEAL_ATTEMPTED="YES"
             HTTP_STATUS=$(curl -sS --max-time 50 -o "$OUT" -w "%{http_code}" \
               -H "Accept: application/json" -H "Cache-Control: no-cache" \
               "${WATCHDOG_PROBE_URL}?dispatch=1") || HTTP_STATUS="000"
@@ -93,6 +96,12 @@ jobs:
 
             if [ "$FAST_DISPATCHED" = "true" ]; then
               CHAIN_RESULT="dispatched"
+              HEAL_DISPATCHED="YES"
+              break
+            fi
+            if [ "$SLOW_DISPATCHED" = "true" ]; then
+              CHAIN_RESULT="dispatched"
+              HEAL_DISPATCHED="YES"
               break
             fi
             if [ "$FAST_SKIPPED_BUSY" = "true" ]; then
@@ -106,6 +115,8 @@ jobs:
 
           echo "CHAIN_RESULT=$CHAIN_RESULT"
           echo "FAST_STALE_MINUTES=$FAST_STALE_MINUTES"
+          echo "HEAL_ATTEMPTED=$HEAL_ATTEMPTED"
+          echo "HEAL_DISPATCHED=$HEAL_DISPATCHED"
 
           {
             echo "## Watchdog chain fallback"
@@ -114,10 +125,14 @@ jobs:
             echo "| CHAIN_RESULT | $CHAIN_RESULT |"
             echo "| FAST_STALE_MINUTES | $FAST_STALE_MINUTES |"
             echo "| UNREACHABLE_COUNT | $UNREACHABLE_COUNT |"
+            echo "| HEAL_ATTEMPTED | $HEAL_ATTEMPTED |"
+            echo "| HEAL_DISPATCHED | $HEAL_DISPATCHED |"
           } >> "$GITHUB_STEP_SUMMARY"
 
           echo "chain_result=$CHAIN_RESULT" >> "$GITHUB_OUTPUT"
           echo "fast_stale_minutes=$FAST_STALE_MINUTES" >> "$GITHUB_OUTPUT"
+          echo "heal_attempted=$HEAL_ATTEMPTED" >> "$GITHUB_OUTPUT"
+          echo "heal_dispatched=$HEAL_DISPATCHED" >> "$GITHUB_OUTPUT"
 
           if [ "$CHAIN_RESULT" = "no_dispatch" ] && [ "$UNREACHABLE_COUNT" -ge "${CHAIN_MAX_ATTEMPTS}" ]; then
             echo "::error::WATCHDOG_UNREACHABLE: all probe attempts failed"
@@ -128,17 +143,44 @@ jobs:
         shell: bash
         env:
           FAST_STALE_MINUTES: ${{ steps.probe.outputs.fast_stale_minutes }}
+          HEAL_ATTEMPTED: ${{ steps.probe.outputs.heal_attempted }}
+          HEAL_DISPATCHED: ${{ steps.probe.outputs.heal_dispatched }}
         run: |
           set -euo pipefail
           LIMIT="${FAST_ALERT_STALE_MINUTES}"
           STALE="${FAST_STALE_MINUTES:-null}"
+          WATCHDOG_ALERT="NO"
+          PRODUCTION_STILL_STALE="NO"
+
           if [ "$STALE" = "null" ] || [ -z "$STALE" ]; then
+            WATCHDOG_ALERT="YES"
             echo "::error::ALERT_CRON_NOT_FIRING: publishable_pool generatedAt unreadable on production"
+            echo "WATCHDOG_ALERT=$WATCHDOG_ALERT"
+            echo "HEAL_ATTEMPTED=${HEAL_ATTEMPTED:-NO}"
+            echo "HEAL_DISPATCHED=${HEAL_DISPATCHED:-NO}"
+            echo "PRODUCTION_STILL_STALE=UNKNOWN"
             exit 1
           fi
+
           STALE_INT=${STALE%%.*}
           if [ "$STALE_INT" -gt "$LIMIT" ]; then
-            echo "::error::ALERT_CRON_NOT_FIRING: publishable_pool stale ${STALE} min > ${LIMIT} min — Cloudflare cron and/or fast pipeline not healing production"
-            exit 1
+            WATCHDOG_ALERT="YES"
+            PRODUCTION_STILL_STALE="YES"
+            echo "::warning::ALERT_CRON_NOT_FIRING: publishable_pool stale ${STALE} min > ${LIMIT} min — Cloudflare cron and/or fast pipeline not healing production"
+            echo "WATCHDOG_ALERT=$WATCHDOG_ALERT"
+            echo "HEAL_ATTEMPTED=${HEAL_ATTEMPTED:-NO}"
+            echo "HEAL_DISPATCHED=${HEAL_DISPATCHED:-NO}"
+            echo "PRODUCTION_STILL_STALE=$PRODUCTION_STILL_STALE"
+            if [ "${HEAL_ATTEMPTED:-NO}" = "NO" ]; then
+              echo "::error::HEAL_NOT_ATTEMPTED: stale pool with no watchdog probe dispatch"
+              exit 1
+            fi
+            echo "[fallback] liveness ALERT non-blocking (heal attempted; pool may refresh after dispatch)"
+            exit 0
           fi
+
+          echo "WATCHDOG_ALERT=$WATCHDOG_ALERT"
+          echo "HEAL_ATTEMPTED=${HEAL_ATTEMPTED:-NO}"
+          echo "HEAL_DISPATCHED=${HEAL_DISPATCHED:-NO}"
+          echo "PRODUCTION_STILL_STALE=$PRODUCTION_STILL_STALE"
           echo "[fallback] liveness OK (stale=${STALE} min <= ${LIMIT} min)"

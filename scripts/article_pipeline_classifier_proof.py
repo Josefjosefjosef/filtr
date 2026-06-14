@@ -38,6 +38,7 @@ from iu_article_pipeline_phase_status import (  # noqa: E402
     SKIPPED_DUPLICATE,
     UNKNOWN_INCOMPLETE,
     alert_level_for_overall_status,
+    closeout_exit_code_for_overall,
     derive_pipeline_overall_status,
     is_ingest_aggregate_ok_status,
     is_pipeline_failure_status,
@@ -91,6 +92,19 @@ class ClassifierProofTests(unittest.TestCase):
         self.assertEqual(alert_level_for_overall_status(overall), ALERT_YELLOW)
         self.assertTrue(is_ingest_aggregate_ok_status(overall))
         self.assertFalse(is_pipeline_failure_status(overall))
+
+    def test_publish_always_clean_pool_release_na_green(self) -> None:
+        status = {
+            "ingest_status": INGEST_OK,
+            "aggregate_status": AGGREGATE_OK,
+            "clean_pool_status": CLEAN_POOL_CREATED,
+            "release_status": None,
+            "publish_status": None,
+        }
+        overall = derive_pipeline_overall_status(status)
+        self.assertEqual(overall, PIPELINE_SUCCESS)
+        self.assertEqual(alert_level_for_overall_status(overall), ALERT_GREEN)
+        self.assertEqual(closeout_exit_code_for_overall(overall), 0)
 
     def test_release_failed_red(self) -> None:
         status = {

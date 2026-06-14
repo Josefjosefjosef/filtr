@@ -280,24 +280,32 @@ function runMissingSourceGuard() {
   const skip = String(process.env.SKIP_MISSING_SOURCE_ARTICLES_GUARD || "").toLowerCase();
   if (skip === "1" || skip === "true" || skip === "yes") {
     log("missing_source_guard SKIP (SKIP_MISSING_SOURCE_ARTICLES_GUARD)");
-    return true;
+    return { ok: true, blocking: false, result: "SKIP" };
   }
   // PR CI checks prod snapshot that is stale until merge + update-articles publish.
   if (process.env.GITHUB_EVENT_NAME === "pull_request") {
     log("missing_source_guard SKIP (pull_request — run post-publish in update-articles.yml)");
-    return true;
+    return { ok: true, blocking: false, result: "SKIP" };
   }
   const script = path.join(root, "scripts", "articles-missing-source-articles-guard.mjs");
   if (!fs.existsSync(script)) {
     log("missing_source_guard SKIP (script not found)");
-    return true;
+    return { ok: true, blocking: false, result: "SKIP" };
   }
   log("missing_source_guard delegating to articles-missing-source-articles-guard.mjs");
   const res = spawnSync(process.execPath, [script], {
     env: { ...process.env, ARTICLES_JSON_URL },
-    stdio: "inherit",
+    encoding: "utf8",
   });
-  return res.status === 0;
+  const out = `${res.stdout || ""}${res.stderr || ""}`;
+  if (res.status !== 0) {
+    return { ok: false, blocking: true, result: "FAIL" };
+  }
+  if (/RESULT=WARNING/.test(out) || /MISSING_SOURCE_RESULT=WARNING_NOT_BLOCKING/.test(out)) {
+    log("missing_source_guard RESULT=WARNING (non-blocking under PUBLISH_ALWAYS)");
+    return { ok: true, blocking: false, result: "WARNING" };
+  }
+  return { ok: true, blocking: false, result: "PASS" };
 }
 
 function runSourceDisplayGuard() {
@@ -330,9 +338,14 @@ async function main() {
     failed = true;
   }
 
-  if (!runMissingSourceGuard()) {
+  const missingSource = runMissingSourceGuard();
+  if (!missingSource.ok && missingSource.blocking) {
     fail("missing_source_articles_guard RESULT=FAIL");
     failed = true;
+  } else if (missingSource.result === "WARNING") {
+    log("missing_source_articles_guard RESULT=WARNING_NOT_BLOCKING");
+  } else if (missingSource.result === "PASS") {
+    log("missing_source_articles_guard RESULT=PASS");
   }
 
   if (!runSourceDisplayGuard()) {
