@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-14T18:27:53.592384Z",
+  "ingestedAt": "2026-06-14T19:25:24.299654Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nesneseme být v práci. Personál Meloniové stávkuje, omezila home office",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/italie-giorgia-meloniova-zamestnanci-home-office-prace-podminky.A260612_134133_zahranicni_kha",
+      "dt": "2026-06-14T18:35:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "být",
+        "home",
+        "meloniové",
+        "nesneseme",
+        "office",
+        "omezila",
+        "personál",
+        "práci",
+        "stávkuje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Ženevě to vřelo kvůli G7. Demonstranti zapálili Teslu a rozbili okna banky",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/demonstrace-g7-zeneva-ohen-tesla.A260614_194634_zahranicni_pari",
+      "dt": "2026-06-14T18:28:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "banky",
+        "demonstranti",
+        "kvůli",
+        "okna",
+        "rozbili",
+        "teslu",
+        "vřelo",
+        "zapálili",
+        "ženevě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -741,59 +793,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Lidé považují spory prezidenta s vládou za závažné, ukázal průzkum",
-      "url": "https://www.idnes.cz/zpravy/domaci/spor-prezidenta-petra-pavla-a-vlady.A260614_102122_domaci_vank",
-      "dt": "2026-06-14T11:42:04Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "lidé",
-        "považují",
-        "prezidenta",
-        "průzkum",
-        "spory",
-        "ukázal",
-        "vládou",
-        "závažné"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Volby by vyhrál Babiš, ODS a STAN se dělí o druhé místo. Těsně by prošli Motoristé",
-      "url": "https://www.idnes.cz/zpravy/domaci/volebni-model-volici-strany-a-hnuti.A260614_124315_domaci_vank",
-      "dt": "2026-06-14T11:06:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "babiš",
-        "druhé",
-        "dělí",
-        "motoristé",
-        "místo",
-        "ods",
-        "prošli",
-        "stan",
-        "těsně",
-        "volby",
-        "vyhrál"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +803,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48401,
+      "bytes": 49160,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +840,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-14T18:12:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-14T18:35:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -859,6 +858,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nesneseme být v práci. Personál Meloniové stávkuje, omezila home office",
+            "publishedAt": "2026-06-14T18:35:00Z"
+          },
+          {
+            "title": "V Ženevě to vřelo kvůli G7. Demonstranti zapálili Teslu a rozbili okna banky",
+            "publishedAt": "2026-06-14T18:28:00Z"
+          },
           {
             "title": "Proč to musel Bibi udělat, zuří Trump kvůli úderům v Libanonu. V podpis dohody věří",
             "publishedAt": "2026-06-14T18:12:00Z"
@@ -882,14 +889,6 @@
           {
             "title": "Nejméně tři Češi zemřeli u Splitu po srážce lodí",
             "publishedAt": "2026-06-14T17:31:00Z"
-          },
-          {
-            "title": "Putin telefonicky blahopřál Trumpovi, do Bílého domu volal i Zelenskyj",
-            "publishedAt": "2026-06-14T17:15:00Z"
-          },
-          {
-            "title": "Mladých přichází málo. Nemocnice hlásí výrazný úbytek prvodárců krve",
-            "publishedAt": "2026-06-14T17:04:00Z"
           }
         ]
       }
