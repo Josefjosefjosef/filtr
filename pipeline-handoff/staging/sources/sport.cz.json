@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-14T10:56:14.787805Z",
+  "ingestedAt": "2026-06-14T11:52:38.477936Z",
   "items": [
     {
       "section": "sport",
@@ -23,6 +23,60 @@
         "vybojoval",
         "vítězný",
         "zlato"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Smůla pro českou tenistku! Krejčíková k boji o titul nenastoupila, vyřadila ji nemoc",
+      "url": "https://www.sport.cz/clanek/tenis-krejcikova-hraje-v-hertogenboschi-o-titul-5477882",
+      "dt": "2026-06-14T04:05:11Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "boji",
+        "krejčíková",
+        "nemoc",
+        "nenastoupila",
+        "smůla",
+        "tenistku",
+        "titul",
+        "vyřadila",
+        "českou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fanoušek se při českém zápase smál Korejce za šikmé oči. Rasistická urážka se mu vymstila",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-fanousek-se-pri-ceskem-zapase-smal-korejce-za-sikme-oci-rasisticka-urazka-se-mu-vymstila-5478358",
+      "dt": "2026-06-14T11:00:10Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "fanoušek",
+        "korejce",
+        "oči",
+        "při",
+        "rasistická",
+        "smál",
+        "urážka",
+        "vymstila",
+        "zápase",
+        "českém",
+        "šikmé"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -99,32 +153,6 @@
         "kayakcrossu",
         "kneblová",
         "časovce"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Smůla pro českou tenistku! Krejčíková k boji o titul nenastoupila, vyřadila ji nemoc",
-      "url": "https://www.sport.cz/clanek/tenis-krejcikova-hraje-v-hertogenboschi-o-titul-5477882",
-      "dt": "2026-06-14T04:05:11Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "boji",
-        "krejčíková",
-        "nemoc",
-        "nenastoupila",
-        "smůla",
-        "tenistku",
-        "titul",
-        "vyřadila",
-        "českou"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -723,30 +751,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rakousko si před vstupem do MS pojistilo trenéra. Měl ho chtít AC Milán",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-rakousko-si-pred-vstupem-do-ms-pojistilo-trenera-mel-ho-chtit-ac-milan-5477900",
-      "dt": "2026-06-13T18:20:02Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "chtít",
-        "milán",
-        "měl",
-        "pojistilo",
-        "rakousko",
-        "trenéra",
-        "vstupem"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -757,7 +761,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41311,
+      "bytes": 41448,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -794,7 +798,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-14T10:52:40Z",
+        "raw_feed_latest_publishedAt": "2026-06-14T11:00:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -814,6 +818,14 @@
             "publishedAt": "2026-06-14T08:24:18Z"
           },
           {
+            "title": "Smůla pro českou tenistku! Krejčíková k boji o titul nenastoupila, vyřadila ji nemoc",
+            "publishedAt": "2026-06-14T04:05:11Z"
+          },
+          {
+            "title": "Fanoušek se při českém zápase smál Korejce za šikmé oči. Rasistická urážka se mu vymstila",
+            "publishedAt": "2026-06-14T11:00:10Z"
+          },
+          {
             "title": "Že budeme snadnou kořistí? Výroky Turků nás rozčílily a motivovaly, vzkázali Australané po výhře",
             "publishedAt": "2026-06-14T10:52:40Z"
           },
@@ -826,20 +838,12 @@
             "publishedAt": "2026-06-14T08:51:21Z"
           },
           {
-            "title": "Smůla pro českou tenistku! Krejčíková k boji o titul nenastoupila, vyřadila ji nemoc",
-            "publishedAt": "2026-06-14T04:05:11Z"
-          },
-          {
             "title": "Veslařky Flamíková s Šantrůčkovou byly v závodě SP v Plovdivu třetí",
             "publishedAt": "2026-06-14T09:06:48Z"
           },
           {
             "title": "Turci těžko koušou porážku. Zasloužili jsme si vyhrát, řekl kapitán",
             "publishedAt": "2026-06-14T09:13:34Z"
-          },
-          {
-            "title": "Němci začnou MS soubojem s trpaslíkem z Curacaa",
-            "publishedAt": "2026-06-14T09:00:44Z"
           }
         ]
       }

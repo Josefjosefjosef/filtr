@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.ceskatelevize.cz",
-  "ingestedAt": "2026-06-14T10:56:14.787805Z",
+  "ingestedAt": "2026-06-14T11:52:38.477936Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Krejčíková kvůli nemoci nemohla zabojovat o titul v Hertogenboschi",
+      "url": "https://sport.ceskatelevize.cz/clanek/tenis/krejcikova-kvuli-nemoci-nemohla-zabojovat-o-titul-v-hertogenboschi-157380",
+      "dt": "2026-06-14T11:08:52Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "hertogenboschi",
+        "krejčíková",
+        "kvůli",
+        "nemoci",
+        "nemohla",
+        "titul",
+        "zabojovat"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "sport.ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -728,31 +752,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "sport.ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Neymar ještě nedoléčil zranění a proti Maroku hrát nebude",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/neymar-jeste-nedolecil-zraneni-a-proti-maroku-hrat-nebude-157353",
-      "dt": "2026-06-13T06:31:32Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "hrát",
-        "ještě",
-        "maroku",
-        "nebude",
-        "nedoléčil",
-        "neymar",
-        "proti",
-        "zranění"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "sport.ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -763,7 +762,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39437,
+      "bytes": 39168,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -800,7 +799,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-14T10:34:35Z",
+        "raw_feed_latest_publishedAt": "2026-06-14T11:08:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -815,6 +814,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Krejčíková kvůli nemoci nemohla zabojovat o titul v Hertogenboschi",
+            "publishedAt": "2026-06-14T11:08:52Z"
+          },
           {
             "title": "Flamíková se Šantrůčkovou skončily na SP v Plovdivu třetí",
             "publishedAt": "2026-06-14T10:34:35Z"
@@ -842,10 +845,6 @@
           {
             "title": "New York Knicks získali po 53 letech titul v NBA. Brunson zazářil 45 body",
             "publishedAt": "2026-06-14T05:17:31Z"
-          },
-          {
-            "title": "Rezek věří v postup, hráči dostali první den volna",
-            "publishedAt": "2026-06-13T22:13:18Z"
           }
         ]
       }
