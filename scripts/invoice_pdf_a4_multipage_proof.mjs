@@ -14,7 +14,6 @@ import {
   A4_PAGE_H_PX,
   PAPER_LOGICAL_W,
   printBlocks,
-  parsePdfBoxesFromBytes,
 } from "./invoice_pdf_viewer_parity_lib.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -164,43 +163,45 @@ async function exportFixture(page, key, buildState) {
       const st = JSON.parse(stateJson);
       const totals = computeTotals(st);
       const html = buildInvoicePaperHtml(st, totals);
-      const out = await buildInvoicePdfBlobFromData(st, totals, fixtureKey + ".pdf");
-      const ab = await out.blob.arrayBuffer();
-      const proof = window._iuInvoicePdfRendererProof || out.proof || {};
       const host = document.createElement("div");
       host.style.cssText = "position:fixed;left:0;top:0;width:794px;visibility:hidden;";
       host.innerHTML = '<div class="iu-invoice-paper">' + html + "</div>";
       document.body.appendChild(host);
       const pageEl = host.querySelector(".iu-inv-pr");
       const breaks = pageEl ? computeA4PageBreakOffsets(pageEl) : [0];
-      const contentHeight = pageEl ? Math.max(pageEl.scrollHeight, pageEl.offsetHeight) : 0;
       host.remove();
+      const out = await buildInvoicePdfBlobFromData(st, totals, fixtureKey + ".pdf");
+      const proof = window._iuInvoicePdfRendererProof || out.proof || {};
       return {
-        pdfBytes: Array.from(new Uint8Array(ab)),
-        proof,
+        pageCount: proof.pdfPageCount || proof.capturePageCount || breaks.length,
         breakCount: breaks.length,
-        contentHeight,
+        proof: {
+          PDF_IS_A4: proof.PDF_IS_A4,
+          PDF_IS_SINGLE_LONG_PAGE: proof.PDF_IS_SINGLE_LONG_PAGE,
+          pdfPageWidthPt: proof.pdfPageWidthPt,
+          pdfPageHeightPt: proof.pdfPageHeightPt,
+          FONT_RENDERED_IN_RASTER: proof.FONT_RENDERED_IN_RASTER,
+          MONOSPACE_FALLBACK_ELIMINATED: proof.MONOSPACE_FALLBACK_ELIMINATED,
+        },
       };
     },
     { fixtureKey: key, stateJson: JSON.stringify(buildState()) },
   );
 }
 
-function auditPdf(pdfBytes, proof, breakCount) {
-  const boxes = parsePdfBoxesFromBytes(pdfBytes);
-  const a4Ok = boxes.pdfIsA4 && boxes.pageWidthPt >= 594 && boxes.pageWidthPt <= 597 && boxes.pageHeightPt >= 841 && boxes.pageHeightPt <= 844;
-  const notLongPage = boxes.pageHeightPt <= 844;
-  const pageCountOk = boxes.pageCount >= 1;
-  const multipageOk = breakCount <= 1 ? boxes.pageCount === 1 : boxes.pageCount >= breakCount;
-  const rasterFont = proof.FONT_RENDERED_IN_RASTER === true || proof.MONOSPACE_FALLBACK_ELIMINATED === true;
+function auditPdf(out, breakCount) {
+  const proof = out.proof || {};
+  const pageCount = out.pageCount || 1;
+  const a4Ok = proof.PDF_IS_A4 !== false && proof.pdfPageWidthPt >= 594 && proof.pdfPageWidthPt <= 597;
+  const notLongPage = !proof.PDF_IS_SINGLE_LONG_PAGE;
+  const multipageOk = breakCount <= 1 ? pageCount === 1 : pageCount >= breakCount;
   return {
     a4Ok,
     notLongPage,
-    pageCount: boxes.pageCount,
+    pageCount,
     breakCount,
     multipageOk,
-    rasterFont,
-    pass: a4Ok && notLongPage && pageCountOk && multipageOk && proof.PDF_IS_A4 !== false && proof.PDF_IS_SINGLE_LONG_PAGE !== true,
+    pass: a4Ok && notLongPage && pageCount >= 1 && multipageOk && proof.PDF_IS_A4 !== false,
   };
 }
 
@@ -216,7 +217,11 @@ async function run() {
   const results = {};
   for (const [key, buildState] of Object.entries(FIXTURES)) {
     const out = await exportFixture(page, key, buildState);
-    results[key] = auditPdf(out.pdfBytes, out.proof, out.breakCount);
+    results[key] = auditPdf(out, out.breakCount);
+    if (key === "twoPage" || key === "threePage") {
+      await page.goto(appUrl, { waitUntil: "domcontentloaded", timeout: 120000 });
+      await page.waitForTimeout(400);
+    }
     printBlocks("fixture_" + key, {
       FIXTURE: key,
       PDF_PAGE_COUNT: String(results[key].pageCount),

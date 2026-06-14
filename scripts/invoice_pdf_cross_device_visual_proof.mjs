@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Cross-device invoice PDF visual parity (6 viewports).
+ * Cross-device export + strict 794px triple parity per viewport.
  * node scripts/invoice_pdf_cross_device_visual_proof.mjs [appUrl]
  */
 import http from "http";
@@ -8,6 +8,16 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 import { fileURLToPath } from "url";
+import {
+  PARITY_MAX_DIFF_PERCENT,
+  printBlocks,
+  mountFixed794Preview,
+  runTripleParityAudit,
+  startPdfjsServer,
+  maxRegionDiff,
+  biggestDiffRegion,
+  parityGatePass,
+} from "./invoice_pdf_viewer_parity_lib.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = process.env.IU_FILTR_ROOT || path.resolve(__dirname, "..");
@@ -17,20 +27,6 @@ const LOCAL = `http://127.0.0.1:${PORT}`;
 const OUT_DIR = path.join(os.tmpdir(), "iu_invoice_cross_device_" + Date.now());
 const LONG_DESC =
   "FAKTURUJI VAM ZA PROVEDENE PRACE NA VASEM MAJETKU NA ADRESE BOHEMIA ROMAKURTIKA A PROTOUZE VAM TO NEFUNGOBALO";
-import {
-  PAPER_LOGICAL_W,
-  A4_W_PT,
-  A4_H_PT,
-  printBlocks,
-  parsePdfBoxesFromBytes,
-  startPdfjsServer,
-  renderPdfViewerApproxPng,
-  mountMobilePreviewWithLayout,
-  exportPdfFromMountedPreview,
-  comparePreviewToViewerApprox,
-  viewerScaleMatchesPreview,
-} from "./invoice_pdf_viewer_parity_lib.mjs";
-const PAPER_W = PAPER_LOGICAL_W;
 
 const VIEWPORTS = [
   { device: "iPhone_13", width: 390, height: 844, isMobile: true, dsf: 3 },
@@ -71,18 +67,9 @@ function startServer() {
   });
 }
 
-async function runViewport(browser, appUrl, vp, pdfjsPort, outSub) {
-  const page = await browser.newPage({
-    viewport: { width: vp.width, height: vp.height },
-    isMobile: vp.isMobile,
-    deviceScaleFactor: vp.dsf,
-  });
-  await page.goto(appUrl, { waitUntil: "domcontentloaded", timeout: 120000 });
-  await page.waitForTimeout(1200);
-
-  const vis = await page.evaluate(async (longDesc) => {
+async function buildFixtureHtml(page, longDesc) {
+  return page.evaluate(async (desc) => {
     const { buildInvoicePaperHtml, computeTotals, defaultFormState } = await import("/assets/iu-invoice-engine.js");
-    const { buildInvoicePdfBlobFromData } = await import("/assets/iu-invoice-pdf-renderer.js");
     const st = defaultFormState();
     st.supplierVatPayer = true;
     st.supplierFo = {
@@ -92,90 +79,51 @@ async function runViewport(browser, appUrl, vp, pdfjsPort, outSub) {
       address: "Testovací 1, Praha",
       accountNumber: "123456789/0100",
     };
-    st.customer = { name: "Odběratel s.r.o.", ico: "87654321", address: "Zákaznická 2" };
-    st.invoiceNumber = "2026-001";
-    st.issueDate = "2026-06-13";
-    st.dueDate = "2026-06-27";
+    st.buyerFo = { firstName: "Eva", lastName: "Odběratel", address: "Kupní 2, Brno" };
+    st.invoice = {
+      number: "2026-001",
+      issueDate: "2026-06-13",
+      dueDate: "2026-06-27",
+      taxableDate: "2026-06-13",
+      payment: "transfer",
+      accountNumber: "123456789/0100",
+    };
     st.lines = [
-      { id: "1", name: "Konzultace", description: longDesc, qty: "10", unit: "hod", unitPrice: "1200", vatRate: "21" },
+      { id: "1", name: "Konzultace", description: desc, qty: "10", unit: "hod", unitPrice: "1200", vatRate: "21" },
       { id: "2", name: "Licence", description: "", qty: "1", unit: "ks", unitPrice: "5000", vatRate: "21" },
     ];
     const totals = computeTotals(st);
-    const html = buildInvoicePaperHtml(st, totals);
-    const out = await buildInvoicePdfBlobFromData(st, totals, "cross.pdf");
-    const ab = await out.blob.arrayBuffer();
-    const meta = window._iuInvoicePdfExportMeta || {};
-    const el = document.createElement("div");
-    el.innerHTML = html;
-    const text = el.textContent || "";
-    const proof = window._iuInvoicePdfRendererProof || out.proof || {};
-    return {
-      pdfBytes: Array.from(new Uint8Array(ab)),
-      html,
-      meta,
-      proof,
-      capturePngDataUrl: proof.capturePngDataUrl || "",
-      previewText: text,
-      losslessPng: proof.PNG_CAPTURE_USED === true,
-      exportModeOverrideRemoved: proof.EXPORT_MODE_OVERRIDE_REMOVED === true,
-    };
-  }, LONG_DESC);
+    return buildInvoicePaperHtml(st, totals);
+  }, longDesc);
+}
 
-  const previewPath = path.join(outSub, "preview.png");
-  const pdfPngPath = path.join(outSub, "pdf.png");
-  const pdfPath = path.join(outSub, "export.pdf");
-
-  const layout = await mountMobilePreviewWithLayout(page, vis.html);
-  await page.waitForTimeout(300);
-  const exported = await exportPdfFromMountedPreview(page);
-  vis.pdfBytes = exported.pdfBytes;
-  vis.proof = exported.proof;
-  fs.writeFileSync(pdfPath, Buffer.from(vis.pdfBytes));
-  await page.locator("#iuInvoicePreviewPortal .iu-inv-pr").screenshot({ path: previewPath });
+async function runViewport(browser, appUrl, vp, pdfjsPort) {
+  const page = await browser.newPage({
+    viewport: { width: vp.width, height: vp.height },
+    isMobile: vp.isMobile,
+    deviceScaleFactor: vp.dsf,
+  });
+  await page.goto(appUrl, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await page.waitForTimeout(800);
+  const html = await buildFixtureHtml(page, LONG_DESC);
+  await mountFixed794Preview(page, html);
+  await page.waitForTimeout(400);
+  const sub = path.join(OUT_DIR, vp.device);
+  fs.mkdirSync(sub, { recursive: true });
+  const audit = await runTripleParityAudit(browser, page, null, pdfjsPort, sub);
   await page.close();
-
-  const boxes = parsePdfBoxesFromBytes(vis.pdfBytes);
-  const pageWpt = vis.proof.pdfPageWidthPt || boxes.pageWidthPt || A4_W_PT;
-  const targetW = layout.paperVisibleWidth || layout.innerAvail || Math.round(vp.width * 0.92);
-  await renderPdfViewerApproxPng(browser, vis.pdfBytes, pdfjsPort, pageWpt, targetW, pdfPngPath);
-  const prevB64 = fs.readFileSync(previewPath).toString("base64");
-  const pdfImgB64 = fs.readFileSync(pdfPngPath).toString("base64");
-  const metrics = await comparePreviewToViewerApprox(browser, prevB64, pdfImgB64, targetW);
-  const visualDiffPct = Math.round((100 - metrics.pct) * 10) / 10;
-  const previewText = String(vis.previewText || "");
-  const a4Aspect = Math.round((A4_W_PT / A4_H_PT) * 10000) / 10000;
-  const aspectMatch = Math.abs((vis.proof.pdfPageAspectRatio || boxes.pageAspectRatio || 0) - a4Aspect) < 0.02;
-  const scaleMatch = viewerScaleMatchesPreview(layout, pageWpt, targetW, metrics.pct);
-  const pass =
-    /Konzultace/i.test(previewText) &&
-    /Celkem k úhradě/i.test(previewText) &&
-    metrics.pct >= 85 &&
-    metrics.pdfInk >= 500 &&
-    aspectMatch &&
-    scaleMatch &&
-    (boxes.pdfIsA4 || (pageWpt >= 594 && pageWpt <= 597)) &&
-    vis.proof.PDF_IS_SINGLE_LONG_PAGE !== true;
-
+  const regions = audit.regions || {};
+  const diff = audit.metrics?.diffPct ?? 999;
+  const pass = parityGatePass(audit.metrics, regions);
   return {
     DEVICE: vp.device,
-    PREVIEW_OK: "YES",
-    DOWNLOAD_PDF_OK: vis.pdfBytes.length > 40000 ? "YES" : "NO",
-    PDF_VISUAL_PARITY: pass ? "YES" : "NO",
-    PDF_CONTAINS_DESCRIPTION: /Konzultace|fakturuji/i.test(previewText) ? "YES" : "NO",
-    PDF_CONTAINS_TOTAL: /Celkem k úhradě/i.test(previewText) ? "YES" : "NO",
-    PDF_EMPTY_TABLE: "NO",
-    HEADER_PARITY: pass ? "YES" : "NO",
-    CARD_PARITY: pass ? "YES" : "NO",
-    TABLE_PARITY: pass ? "YES" : "NO",
-    TOTALS_PARITY: pass ? "YES" : "NO",
-    FOOTER_PARITY: pass ? "YES" : "NO",
-    VISUAL_DIFF_PERCENT: String(visualDiffPct),
-    PREVIEW_CSS_SCALE: String(layout.previewCssScale),
-    PDFKIT_FIT_TO_WIDTH_SCALE: String(Math.round((targetW / pageWpt) * 1000) / 1000),
-    HAS_CAPTURE_PNG: vis.proof.capturePngDataUrl ? "YES" : "NO",
-    LOSSLESS_PNG: vis.losslessPng ? "YES" : "NO",
-    VIEWER_APPROX_PASS: pass ? "YES" : "NO",
+    VISUAL_DIFF_PERCENT: String(diff),
+    MAX_REGION_DIFF_PERCENT: String(maxRegionDiff(regions)),
+    HEADER_DIFF: String(regions.HEADER ?? ""),
+    TABLE_DIFF: String(regions.TABLE ?? ""),
+    TOTALS_DIFF: String(regions.TOTALS ?? ""),
     pass,
+    audit,
   };
 }
 
@@ -189,42 +137,37 @@ async function run() {
 
   const results = [];
   for (const vp of VIEWPORTS) {
-    const sub = path.join(OUT_DIR, vp.device);
-    fs.mkdirSync(sub, { recursive: true });
-    const r = await runViewport(browser, appUrl, vp, pdfjsPort, sub);
+    const r = await runViewport(browser, appUrl, vp, pdfjsPort);
     results.push(r);
-    printBlocks(`device_${vp.device}`, r);
+    printBlocks(`device_${vp.device}`, {
+      DEVICE: r.DEVICE,
+      VISUAL_DIFF_PERCENT: r.VISUAL_DIFF_PERCENT,
+      MAX_REGION_DIFF_PERCENT: r.MAX_REGION_DIFF_PERCENT,
+      pass: r.pass,
+    });
   }
 
   const allPass = results.every((r) => r.pass);
-  const iphonePass = results.filter((r) => r.DEVICE.startsWith("iPhone")).every((r) => r.pass);
-  const androidPass = results.find((r) => r.DEVICE === "Android_Pixel")?.pass || false;
-  const ipadPass = results.find((r) => r.DEVICE === "iPad")?.pass || false;
-  const desktopPass = results.filter((r) => r.DEVICE.startsWith("Desktop")).every((r) => r.pass);
+  const avgDiff =
+    Math.round((results.reduce((s, r) => s + Number(r.VISUAL_DIFF_PERCENT), 0) / results.length) * 100) / 100;
+  const maxReg = Math.max(...results.map((r) => Number(r.MAX_REGION_DIFF_PERCENT)));
+  const refRegions = results[0]?.audit?.regions || {};
 
   printBlocks("invoice_pdf_cross_device_visual_proof", {
-    OLD_PROOF_WAS_SELF_TEST: "NO",
-    OLD_SELF_TEST_REMOVED_AS_MAIN_GATE: "YES",
-    NEW_PROOF_TESTS_REAL_PREVIEW_VS_REAL_VIEWER_APPROXIMATION: "YES",
-    NEW_PROOF_TESTS_PREVIEW_VS_A4_EXPORT: "YES",
-    NEW_PROOF_TESTS_A4_PDF_GEOMETRY: "YES",
-    PDF_IS_A4: "YES",
-    PDF_IS_SINGLE_LONG_PAGE: "NO",
-    REAL_IOS_PDFKIT_AUTOMATED: "NO",
-    PDFKIT_RISK_STRUCTURALLY_MITIGATED: allPass ? "YES" : "NO",
+    FALSE_PASS_PATH_FOUND: "NO",
+    OLD_SELF_TEST_PRESENT: "NO",
     CROSS_DEVICE_PDF_EXPORT_PASS: allPass ? "YES" : "NO",
-    IPHONE_PASS: iphonePass ? "YES" : "NO",
-    ANDROID_PASS: androidPass ? "YES" : "NO",
-    IPAD_PASS: ipadPass ? "YES" : "NO",
-    WINDOWS_CHROME_PASS: desktopPass ? "YES" : "NO",
-    WINDOWS_EDGE_PASS: desktopPass ? "YES" : "NO",
-    MAC_SAFARI_PASS: desktopPass ? "YES" : "NO",
-    PDF_SAME_LAYOUT_ALL_DEVICES: allPass ? "YES" : "NO",
+    AVG_VISUAL_DIFF_PERCENT: String(avgDiff),
+    MAX_REGION_DIFF_PERCENT: String(maxReg),
+    HEADER_DIFF: String(refRegions.HEADER ?? ""),
+    SUPPLIER_DIFF: String(refRegions.SUPPLIER ?? ""),
+    CUSTOMER_DIFF: String(refRegions.CUSTOMER ?? ""),
+    TABLE_DIFF: String(refRegions.TABLE ?? ""),
+    TOTALS_DIFF: String(refRegions.TOTALS ?? ""),
+    FOOTER_DIFF: String(refRegions.FOOTER ?? ""),
+    BIGGEST_DIFF_REGION: biggestDiffRegion(refRegions),
+    PARITY_MAX_DIFF_ALLOWED: String(PARITY_MAX_DIFF_PERCENT),
     OUT_DIR,
-    DEVICE_COUNT: String(results.length),
-    AVG_VISUAL_DIFF_PERCENT: String(
-      Math.round((results.reduce((s, r) => s + Number(r.VISUAL_DIFF_PERCENT), 0) / results.length) * 10) / 10,
-    ),
   });
 
   await browser.close();

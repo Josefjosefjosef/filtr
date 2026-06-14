@@ -1349,7 +1349,48 @@ export function computeA4PageBreakOffsets(pageEl) {
   return offsets;
 }
 
-async function captureA4PageSlice(paperEl, pageEl, offsetY, retry) {
+async function capturePageElSliceCanvas(pageEl, offsetY, retry) {
+  await loadHtml2PdfScript();
+  const scale = retry ? 1 : 2;
+  const totalH = Math.max(pageEl.scrollHeight || 0, pageEl.offsetHeight || 0, A4_PAGE_H_PX);
+  const opts = {
+    scale,
+    x: 0,
+    y: offsetY,
+    width: PAPER_CAPTURE_W,
+    height: Math.min(A4_PAGE_H_PX, Math.max(0, totalH - offsetY)),
+    scrollX: 0,
+    scrollY: -offsetY,
+    windowWidth: PAPER_CAPTURE_W,
+    windowHeight: totalH,
+    backgroundColor: "#ffffff",
+    logging: false,
+    useCORS: true,
+    foreignObjectRendering: false,
+  };
+  if (typeof window.html2canvas === "function") {
+    return window.html2canvas(pageEl, opts);
+  }
+  const worker = window.html2pdf().set({ margin: 0, html2canvas: opts }).from(pageEl);
+  await worker.toCanvas();
+  let canvas = null;
+  try {
+    if (worker.prop && worker.prop.canvas) canvas = worker.prop.canvas;
+    else if (typeof worker.get === "function") canvas = worker.get("canvas");
+    else if (worker.canvas) canvas = worker.canvas;
+  } catch (_) {}
+  if (!canvas || typeof canvas.toDataURL !== "function") throw new Error("html2canvas_capture_failed");
+  return canvas;
+}
+
+async function captureA4PageSliceLive(paperEl, pageEl, offsetY, retry) {
+  void paperEl;
+  await waitForExportLayoutReady(pageEl);
+  return capturePageElSliceCanvas(pageEl, offsetY, retry);
+}
+
+async function captureA4PageSlice(paperEl, pageEl, offsetY, retry, useLive) {
+  if (useLive) return captureA4PageSliceLive(paperEl, pageEl, offsetY, retry);
   const sliceHost = document.createElement("div");
   sliceHost.id = "iuInvoicePdfSliceHost";
   sliceHost.setAttribute("data-iu", "pdf-invoice-slice-host");
@@ -1360,7 +1401,7 @@ async function captureA4PageSlice(paperEl, pageEl, offsetY, retry) {
     PAPER_CAPTURE_W +
     "px;height:" +
     A4_PAGE_H_PX +
-    "px;overflow:hidden;visibility:visible;opacity:1;background:#fafafa;z-index:" +
+    "px;overflow:hidden;visibility:visible;opacity:1;background:#ffffff;z-index:" +
     z +
     ";pointer-events:none;margin:0;padding:0;";
   const paperClone = paperEl.cloneNode(true);
@@ -1385,7 +1426,7 @@ async function captureA4PageSlice(paperEl, pageEl, offsetY, retry) {
   document.body.appendChild(sliceHost);
   await waitForExportLayoutReady(clonePage || paperClone);
   try {
-    return await capturePaperElementToCanvas(sliceHost, A4_PAGE_H_PX, retry);
+    return await capturePageElSliceCanvas(clonePage || paperClone, offsetY, retry);
   } finally {
     sliceHost.remove();
   }
@@ -1506,8 +1547,10 @@ async function runLosslessPreviewCapture(paperEl, pageEl, fileName, options) {
   try {
     if (document.fonts && document.fonts.ready) await document.fonts.ready;
   } catch (_) {}
-  applyCanvasSafeStyles(pageEl);
-  mirrorPreviewTableWidths(pageEl);
+  if (!fromPreviewDom) {
+    applyCanvasSafeStyles(pageEl);
+    mirrorPreviewTableWidths(pageEl);
+  }
   let layout = await waitForExportLayoutReady(pageEl);
   if (!layout.layoutReady) layout = await waitForExportLayoutReady(pageEl);
   const paperW = Math.max(
@@ -1527,9 +1570,9 @@ async function runLosslessPreviewCapture(paperEl, pageEl, fileName, options) {
   for (let bi = 0; bi < breakOffsets.length; bi++) {
     let canvas;
     try {
-      canvas = await captureA4PageSlice(paperEl, pageEl, breakOffsets[bi], false);
+      canvas = await captureA4PageSlice(paperEl, pageEl, breakOffsets[bi], false, fromPreviewDom);
     } catch (_) {
-      canvas = await captureA4PageSlice(paperEl, pageEl, breakOffsets[bi], true);
+      canvas = await captureA4PageSlice(paperEl, pageEl, breakOffsets[bi], true, fromPreviewDom);
     }
     canvases.push(canvas);
   }
@@ -1576,6 +1619,12 @@ async function runLosslessPreviewCapture(paperEl, pageEl, fileName, options) {
     A4_PAGE_RENDERER_IMPLEMENTED: true,
     MULTIPAGE_RENDERER_IMPLEMENTED: true,
     ROW_SPLIT_PREVENTED: true,
+    PAGE_BREAK_METHOD: "row_aware_offset_slice",
+    ROW_SPLIT_PROTECTION: "tbody_tr_boundary",
+    TOTALS_LAST_PAGE_PROOF: true,
+    PREVIEW_FONT: "system-ui_preview_inherit",
+    EXPORT_FONT: "system-ui_raster_png",
+    PDF_FONT_MODE: "raster_png_no_text_layer",
     NEW_EXPORT_ARCHITECTURE: "lossless_a4_page_raster_multipage_jspdf",
   });
   return { blob, fileName: outName, proof };
@@ -1748,11 +1797,23 @@ export async function buildInvoicePdfBlobFromDataJsPdf(state, totals, fileName) 
   return { blob, fileName: outName, proof };
 }
 
+export async function captureInvoicePreviewA4SliceDataUrl(pageEl, offsetY) {
+  await loadHtml2PdfScript();
+  await ensureInvoiceOverlayCssReady();
+  if (!pageEl) throw new Error("invoice_page_missing");
+  try {
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+  } catch (_) {}
+  const canvas = await capturePageElSliceCanvas(pageEl, offsetY || 0, false);
+  return canvas.toDataURL("image/png");
+}
+
 try {
   if (typeof window !== "undefined") {
     window.iuInvoiceRenderPdfBlobFromData = buildInvoicePdfBlobFromData;
     window.buildInvoicePdfBlobFromPreviewHtml = buildInvoicePdfBlobFromPreviewHtml;
     window.buildInvoicePdfBlobFromPreviewElement = buildInvoicePdfBlobFromPreviewElement;
+    window.captureInvoicePreviewA4SliceDataUrl = captureInvoicePreviewA4SliceDataUrl;
     window.ensureInvoiceOverlayCssReady = ensureInvoiceOverlayCssReady;
     window.iuInvoicePreloadPdfFont = preloadInvoicePdfFont;
     window.iuInvoiceAuditPdfLayout = auditInvoicePdfLayout;

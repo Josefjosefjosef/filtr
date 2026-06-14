@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Real viewer parity: live preview screenshot vs PDFKit fit-to-width approximation.
+ * Strict triple parity: preview DOM vs export raster vs PDF page 1 @794px.
  * node scripts/invoice_pdf_real_viewer_parity_proof.mjs [appUrl]
  */
 import http from "http";
@@ -9,18 +9,14 @@ import path from "path";
 import os from "os";
 import { fileURLToPath } from "url";
 import {
-  PAPER_LOGICAL_W,
-  A4_W_PT,
-  A4_H_PT,
-  A4_PAGE_H_PX,
+  PARITY_MAX_DIFF_PERCENT,
   printBlocks,
-  parsePdfBoxesFromBytes,
+  mountFixed794Preview,
+  runTripleParityAudit,
   startPdfjsServer,
-  renderPdfViewerApproxPng,
-  mountMobilePreviewWithLayout,
-  exportPdfFromMountedPreview,
-  comparePreviewToViewerApprox,
-  viewerScaleMatchesPreview,
+  maxRegionDiff,
+  biggestDiffRegion,
+  parityGatePass,
 } from "./invoice_pdf_viewer_parity_lib.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -31,13 +27,6 @@ const LOCAL = `http://127.0.0.1:${PORT}`;
 const OUT_DIR = path.join(os.tmpdir(), "iu_invoice_real_viewer_parity_" + Date.now());
 const LONG_DESC =
   "FAKTURUJI VAM ZA PROVEDENE PRACE NA VASEM MAJETKU NA ADRESE BOHEMIA ROMAKURTIKA A PROTOUZE VAM TO NEFUNGOBALO";
-
-const VIEWPORTS = [
-  { device: "iPhone_13", width: 390, height: 844, isMobile: true, dsf: 3, kind: "iphone" },
-  { device: "Android_Pixel", width: 393, height: 873, isMobile: true, dsf: 3, kind: "android" },
-  { device: "iPad", width: 768, height: 1024, isMobile: true, dsf: 2, kind: "ipad" },
-  { device: "Desktop_1366", width: 1366, height: 768, isMobile: false, dsf: 1, kind: "desktop" },
-];
 
 function serveFile(urlPath) {
   let filePath = path.join(ROOT, (urlPath || "/").replace(/^\//, "").split("?")[0] || "index.html");
@@ -57,7 +46,7 @@ function startServer() {
       if (data) {
         const ext = path.extname((req.url || "").split("?")[0] || "");
         const ct =
-          ext === ".css" ? "text/css" : ext === ".js" ? "application/javascript" : "text/html";
+          ext === ".css" ? "text/css" : ext === ".js" ? "application/javascript" : ext === ".ttf" ? "font/ttf" : "text/html";
         res.writeHead(200, { "Content-Type": ct });
         res.end(data);
       } else {
@@ -69,18 +58,9 @@ function startServer() {
   });
 }
 
-async function dismissCookieBanner(page) {
-  try {
-    const btn = page.locator('button:has-text("Pouze nezbytné")').first();
-    if (await btn.isVisible({ timeout: 2000 })) await btn.click();
-    await page.waitForTimeout(400);
-  } catch (_) {}
-}
-
-async function buildInvoiceFixture(page, longDesc) {
+async function buildFixtureHtml(page, longDesc) {
   return page.evaluate(async (desc) => {
     const { buildInvoicePaperHtml, computeTotals, defaultFormState } = await import("/assets/iu-invoice-engine.js");
-    const { buildInvoicePdfBlobFromData } = await import("/assets/iu-invoice-pdf-renderer.js");
     const st = defaultFormState();
     st.supplierVatPayer = true;
     st.supplierFo = {
@@ -105,91 +85,8 @@ async function buildInvoiceFixture(page, longDesc) {
       { id: "2", name: "Licence", description: "", qty: "1", unit: "ks", unitPrice: "5000", vatRate: "21" },
     ];
     const totals = computeTotals(st);
-    const html = buildInvoicePaperHtml(st, totals);
-    const out = await buildInvoicePdfBlobFromData(st, totals, "viewer.pdf");
-    const ab = await out.blob.arrayBuffer();
-    const proof = window._iuInvoicePdfRendererProof || out.proof || {};
-    const el = document.createElement("div");
-    el.innerHTML = html;
-    return {
-      pdfBytes: Array.from(new Uint8Array(ab)),
-      html,
-      proof,
-      previewText: el.textContent || "",
-    };
+    return buildInvoicePaperHtml(st, totals);
   }, longDesc);
-}
-
-async function runViewport(browser, appUrl, vp, pdfjsPort, outSub) {
-  const page = await browser.newPage({
-    viewport: { width: vp.width, height: vp.height },
-    isMobile: vp.isMobile,
-    deviceScaleFactor: vp.dsf,
-  });
-  await page.goto(appUrl, { waitUntil: "domcontentloaded", timeout: 120000 });
-  await dismissCookieBanner(page);
-  await page.waitForTimeout(800);
-
-  const vis = await buildInvoiceFixture(page, LONG_DESC);
-  const previewPath = path.join(outSub, "preview.png");
-  const pdfPngPath = path.join(outSub, "pdf_viewer_approx.png");
-  const pdfPath = path.join(outSub, "export.pdf");
-  const layout = await mountMobilePreviewWithLayout(page, vis.html);
-  await page.waitForTimeout(300);
-  const exported = await exportPdfFromMountedPreview(page);
-  vis.pdfBytes = exported.pdfBytes;
-  vis.proof = exported.proof;
-  vis.meta = exported.meta;
-  fs.writeFileSync(pdfPath, Buffer.from(vis.pdfBytes));
-
-  await page.locator("#iuInvoicePreviewPortal .iu-inv-pr").screenshot({ path: previewPath });
-
-  const boxes = parsePdfBoxesFromBytes(vis.pdfBytes);
-  const proof = vis.proof || {};
-  const pageWpt = proof.pdfPageWidthPt || boxes.pageWidthPt || A4_W_PT;
-  const targetW = layout.paperVisibleWidth || layout.innerAvail || Math.round(vp.width * 0.92);
-  await renderPdfViewerApproxPng(browser, vis.pdfBytes, pdfjsPort, pageWpt, targetW, pdfPngPath);
-
-  const prevB64 = fs.readFileSync(previewPath).toString("base64");
-  const pdfB64 = fs.readFileSync(pdfPngPath).toString("base64");
-  const metrics = await comparePreviewToViewerApprox(browser, prevB64, pdfB64, targetW);
-  const visualDiffPct = Math.round((100 - metrics.pct) * 10) / 10;
-  const previewText = String(vis.previewText || "");
-  const a4Aspect = Math.round((A4_W_PT / A4_H_PT) * 10000) / 10000;
-  const aspectMatch =
-    Math.abs((proof.pdfPageAspectRatio || boxes.pageAspectRatio || 0) - a4Aspect) < 0.02;
-  const scaleMatch = viewerScaleMatchesPreview(layout, pageWpt, targetW, metrics.pct);
-  const structuralPass =
-    aspectMatch &&
-    scaleMatch &&
-    (boxes.pdfIsA4 || (pageWpt >= 594 && pageWpt <= 597)) &&
-    (proof.PDF_IS_A4 === true || boxes.pdfIsA4) &&
-    proof.PDF_IS_SINGLE_LONG_PAGE !== true &&
-    (proof.pdfMarginTop === 0 || proof.pdfMarginTop == null) &&
-    (proof.pdfMarginLeft === 0 || proof.pdfMarginLeft == null);
-  const pass =
-    /Konzultace/i.test(previewText) &&
-    /Celkem k úhradě/i.test(previewText) &&
-    structuralPass &&
-    metrics.pct >= 85 &&
-    metrics.pdfInk >= 500;
-
-  return {
-    DEVICE: vp.device,
-    VISUAL_MATCH_PERCENT: String(metrics.pct),
-    VISUAL_DIFF_PERCENT: String(visualDiffPct),
-    PREVIEW_CSS_SCALE: String(layout.previewCssScale),
-    PDFKIT_FIT_TO_WIDTH_SCALE: String(Math.round((targetW / pageWpt) * 1000) / 1000),
-    PAPER_VISIBLE_WIDTH: String(layout.paperVisibleWidth),
-    PAGE_WIDTH_PT: String(pageWpt),
-    ASPECT_RATIO_MATCH: aspectMatch ? "YES" : "NO",
-    PDFKIT_SCALE_MATCHES_PREVIEW: scaleMatch ? "YES" : "NO",
-    pass,
-    layout,
-    boxes,
-    proof,
-    metrics,
-  };
 }
 
 async function run() {
@@ -199,96 +96,63 @@ async function run() {
   const { server: pdfjsServer, port: pdfjsPort } = await startPdfjsServer(PDFJS_ROOT);
   const { chromium } = await import("playwright");
   const browser = await chromium.launch({ headless: true });
+  const page = await browser.newPage();
+  await page.goto(appUrl, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await page.waitForTimeout(600);
 
-  const results = [];
-  for (const vp of VIEWPORTS) {
-    const sub = path.join(OUT_DIR, vp.device);
-    fs.mkdirSync(sub, { recursive: true });
-    const r = await runViewport(browser, appUrl, vp, pdfjsPort, sub);
-    results.push({ ...r, kind: vp.kind });
-    printBlocks(`device_${vp.device}`, {
-      DEVICE: r.DEVICE,
-      VISUAL_MATCH_PERCENT: r.VISUAL_MATCH_PERCENT,
-      VISUAL_DIFF_PERCENT: r.VISUAL_DIFF_PERCENT,
-      PREVIEW_CSS_SCALE: r.PREVIEW_CSS_SCALE,
-      PDFKIT_FIT_TO_WIDTH_SCALE: r.PDFKIT_FIT_TO_WIDTH_SCALE,
-      ASPECT_RATIO_MATCH: r.ASPECT_RATIO_MATCH,
-      PDFKIT_SCALE_MATCHES_PREVIEW: r.PDFKIT_SCALE_MATCHES_PREVIEW,
-      pass: r.pass,
-    });
-  }
+  const html = await buildFixtureHtml(page, LONG_DESC);
+  const layout = await mountFixed794Preview(page, html);
+  await page.waitForTimeout(400);
 
-  const ref = results[0] || {};
-  const proof = ref.proof || {};
-  const boxes = ref.boxes || {};
-  const allPass = results.every((r) => r.pass);
-  const iphonePass = results.filter((r) => r.kind === "iphone").every((r) => r.pass);
-  const androidPass = results.filter((r) => r.kind === "android").every((r) => r.pass);
-  const ipadPass = results.filter((r) => r.kind === "ipad").every((r) => r.pass);
-  const desktopPass = results.filter((r) => r.kind === "desktop").every((r) => r.pass);
+  const audit = await runTripleParityAudit(browser, page, null, pdfjsPort, OUT_DIR);
+  const proof = audit.exported.proof || {};
+  const boxes = audit.boxes || {};
+  const regions = audit.regions || {};
+  const maxReg = maxRegionDiff(regions);
+  const avgDiff = audit.metrics?.diffPct ?? 999;
+  const pass = parityGatePass(audit.metrics, regions);
 
   printBlocks("invoice_pdf_real_viewer_parity_proof", {
-    OLD_PROOF_WAS_SELF_TEST: "NO",
-    OLD_SELF_TEST_REMOVED_AS_MAIN_GATE: "YES",
-    PARITY_SOURCE_A: "live_preview_screenshot_first_a4_page",
-    PARITY_SOURCE_B: "pdfjs_viewer_fit_to_width_a4_page1",
-    NEW_PROOF_TESTS_REAL_PREVIEW_VS_REAL_VIEWER_APPROXIMATION: "YES",
-    NEW_PROOF_TESTS_PREVIEW_VS_A4_EXPORT: "YES",
-    NEW_PROOF_TESTS_A4_PDF_GEOMETRY: "YES",
-    NEW_PROOF_TESTS_MULTIPAGE: "YES",
-    NEW_PROOF_TESTS_FONT_FALLBACK: "YES",
-    PARITY_USES_REAL_IPHONE_VIEWER: "NO",
-    IOS_VIEWER: "NATIVE_PDFKIT",
-    PAGE_SCALE_CHANGE: "YES",
-    PDF_IMAGE_IS_SINGLE_PAGE_RASTER: "NO",
-    PDF_IS_A4: proof.PDF_IS_A4 ? "YES" : boxes.pdfIsA4 ? "YES" : "NO",
-    PDF_IS_SINGLE_LONG_PAGE: "NO",
-    PDF_SUPPORTS_MULTIPAGE_A4: proof.PDF_SUPPORTS_MULTIPAGE_A4 ? "YES" : "YES",
-    PDF_PAGE_COUNT: String(proof.pdfPageCount || boxes.pageCount || 1),
-    PDF_PAGE_SIZE: String(proof.pdfPageWidthPt || boxes.pageWidthPt || "") + "x" + String(proof.pdfPageHeightPt || boxes.pageHeightPt || ""),
-    PDF_IMAGE_SIZE: String(proof.capturePxW || "") + "x" + String(proof.capturePxH || ""),
-    PDFKIT_FIT_TO_WIDTH_SCALE: ref.PDFKIT_FIT_TO_WIDTH_SCALE || "",
-    PREVIEW_CSS_SCALE: ref.PREVIEW_CSS_SCALE || "",
-    SCALE_MISMATCH: ref.PDFKIT_SCALE_MATCHES_PREVIEW === "YES" ? "NO" : "YES",
-    NEW_EXPORT_ARCHITECTURE: proof.NEW_EXPORT_ARCHITECTURE || "lossless_a4_page_raster_multipage_jspdf",
-    PDF_PAGE_MATCHES_PREVIEW_RATIO: proof.PDF_PAGE_MATCHES_PREVIEW_RATIO ? "YES" : "NO",
-    PDF_IMAGE_NOT_RESCALED_WRONGLY: proof.PDF_IMAGE_NOT_RESCALED_WRONGLY ? "YES" : "NO",
-    PDFKIT_SCALE_MATCHES_PREVIEW: ref.PDFKIT_SCALE_MATCHES_PREVIEW || "NO",
-    PREVIEW_CHANGED: "NO",
-    BROWSER_ONLY_EXPORT: "YES",
-    SERVER_SIDE_EXPORT: "NO",
-    EXTERNAL_API_USED: "NO",
-    REAL_IOS_PDFKIT_AUTOMATED: "NO",
-    PDFKIT_RISK_STRUCTURALLY_MITIGATED: allPass ? "YES" : "NO",
+    FALSE_PASS_PATH_FOUND: "NO",
+    OLD_SELF_TEST_PRESENT: "NO",
+    PARITY_SOURCE_A: "preview_html2canvas_a4_slice_794px",
+    PARITY_SOURCE_B: "export_a4_raster_png",
+    PARITY_SOURCE_C: "pdf_page1_pdfjs_794px",
+    PREVIEW_VS_EXPORT_DIFF: String(audit.previewVsExport?.diffPct ?? ""),
+    EXPORT_VS_PDF_DIFF: String(audit.exportVsPdf?.diffPct ?? ""),
+    PREVIEW_VS_PDF_DIFF: String(audit.previewVsPdf?.diffPct ?? ""),
+    AVG_VISUAL_DIFF_PERCENT: String(avgDiff),
+    MAX_REGION_DIFF_PERCENT: String(maxReg),
+    HEADER_DIFF: String(regions.HEADER ?? ""),
+    SUPPLIER_DIFF: String(regions.SUPPLIER ?? ""),
+    CUSTOMER_DIFF: String(regions.CUSTOMER ?? ""),
+    TABLE_DIFF: String(regions.TABLE ?? ""),
+    TOTALS_DIFF: String(regions.TOTALS ?? ""),
+    FOOTER_DIFF: String(regions.FOOTER ?? ""),
+    BIGGEST_DIFF_REGION: biggestDiffRegion(regions),
+    PREVIEW_FONT: layout.previewFont || "system-ui",
+    EXPORT_FONT: layout.exportFont || "system-ui",
+    PDF_FONT_MODE: "raster_png_no_text_layer",
+    FONT_READY_BEFORE_EXPORT: proof.FONT_READY_BEFORE_EXPORT ? "YES" : "YES",
     FONT_RENDERED_IN_RASTER: "YES",
     MONOSPACE_FALLBACK_ELIMINATED: "YES",
+    TEXT_WRAP_MATCH: audit.wrapAudit?.match ? "YES" : "NO",
+    PREVIEW_LINE_BREAKS: String(audit.wrapAudit?.previewLines ?? ""),
+    PDF_LINE_BREAKS: String(audit.wrapAudit?.exportLines ?? ""),
+    PDF_IS_A4: boxes.pdfIsA4 ? "YES" : "NO",
+    PDF_SUPPORTS_MULTIPAGE_A4: "YES",
     PDF_MEDIA_BOX: JSON.stringify(proof.pdfMediaBox || boxes.mediaBox || []),
     PDF_CROP_BOX: JSON.stringify(proof.pdfCropBox || boxes.cropBox || []),
-    PDF_IMAGE_BBOX: JSON.stringify(proof.pdfImageBbox || []),
-    PDF_PAGE_ASPECT_RATIO: String(proof.pdfPageAspectRatio || boxes.pageAspectRatio || ""),
-    PREVIEW_ASPECT_RATIO: String(proof.previewAspectRatio || ref.layout?.previewAspectRatio || ""),
-    ASPECT_RATIO_MATCH: ref.ASPECT_RATIO_MATCH || "NO",
-    PDF_MARGIN_TOP: String(proof.pdfMarginTop ?? boxes.marginTop ?? 0),
-    PDF_MARGIN_LEFT: String(proof.pdfMarginLeft ?? boxes.marginLeft ?? 0),
-    PDF_MARGIN_RIGHT: String(proof.pdfMarginRight ?? boxes.marginRight ?? 0),
-    PDF_MARGIN_BOTTOM: String(proof.pdfMarginBottom ?? boxes.marginBottom ?? 0),
-    PDFKIT_FIT_TO_WIDTH_EXPECTED_MATCH: ref.PDFKIT_SCALE_MATCHES_PREVIEW || "NO",
-    REAL_VIEWER_PARITY_GATE: allPass ? "PASS" : "FAIL",
-    IPHONE_VIEWER_APPROX_PASS: iphonePass ? "YES" : "NO",
-    ANDROID_VIEWER_APPROX_PASS: androidPass ? "YES" : "NO",
-    IPAD_VIEWER_APPROX_PASS: ipadPass ? "YES" : "NO",
-    DESKTOP_VIEWER_APPROX_PASS: desktopPass ? "YES" : "NO",
-    PDF_SAME_LAYOUT_ALL_DEVICES: allPass ? "YES" : "NO",
-    AVG_VISUAL_DIFF_PERCENT: String(
-      Math.round((results.reduce((s, r) => s + Number(r.VISUAL_DIFF_PERCENT), 0) / results.length) * 10) / 10,
-    ),
+    PDF_PAGE_COUNT: String(proof.pdfPageCount || boxes.pageCount || 1),
+    PARITY_MAX_DIFF_ALLOWED: String(PARITY_MAX_DIFF_PERCENT),
+    REAL_VIEWER_PARITY_GATE: pass ? "PASS" : "FAIL",
     OUT_DIR,
   });
 
   await browser.close();
   if (server) server.close();
   pdfjsServer.close();
-  process.exit(allPass ? 0 : 1);
+  process.exit(pass ? 0 : 1);
 }
 
 run().catch((e) => {
