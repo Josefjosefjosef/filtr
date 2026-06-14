@@ -115,8 +115,8 @@ async function run() {
   printBlocks("invoice_pdf_real_viewer_parity_proof", {
     FALSE_PASS_PATH_FOUND: "NO",
     OLD_SELF_TEST_PRESENT: "NO",
-    PARITY_SOURCE_A: "preview_html2canvas_a4_slice_794px",
-    PARITY_SOURCE_B: "export_a4_raster_png",
+    PARITY_SOURCE_A: "preview_a4_export_sandbox_794px",
+    PARITY_SOURCE_B: "export_a4_export_sandbox_raster_png",
     PARITY_SOURCE_C: "pdf_page1_pdfjs_794px",
     PREVIEW_VS_EXPORT_DIFF: String(audit.previewVsExport?.diffPct ?? ""),
     EXPORT_VS_PDF_DIFF: String(audit.exportVsPdf?.diffPct ?? ""),

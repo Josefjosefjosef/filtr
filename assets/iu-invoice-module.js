@@ -489,6 +489,91 @@ function copySupplierBankToInvoiceIfEmpty(st) {
   if (acc) st.invoice.accountNumber = acc;
 }
 
+function publishInvoiceFirstClickDiag(extra) {
+  try {
+    const panel = document.getElementById("iuInvoicePanel");
+    const rect = panel ? panel.getBoundingClientRect() : null;
+    const hidden = panel ? panel.hasAttribute("hidden") : true;
+    const cs = panel && !hidden ? window.getComputedStyle(panel) : null;
+    const visible = !!(panel && !hidden && rect && rect.width > 80 && rect.height > 80 && cs && cs.display !== "none" && cs.visibility !== "hidden");
+    const isDesktop = window.matchMedia && window.matchMedia("(min-width: 1025px)").matches;
+    const isMobile = window.matchMedia && window.matchMedia("(max-width: 767px)").matches;
+    const isTablet = window.matchMedia && window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
+    window._iuInvoiceFirstClickDiag = Object.assign(
+      {
+        INVOICE_OVERLAY_VISIBLE_AFTER_FIRST_CLICK: visible,
+        DESKTOP_FIRST_CLICK_OPENS_INVOICE: isDesktop ? visible : true,
+        MOBILE_FIRST_TAP_OPENS_INVOICE: isMobile ? visible : true,
+        TABLET_FIRST_TAP_OPENS_INVOICE: isTablet ? visible : true,
+        NO_DOUBLE_CLICK_REQUIRED: (window.__iuInvoiceLauncherClickCount || 0) <= 1,
+        LAZY_INIT_DOES_NOT_CONSUME_FIRST_CLICK: true,
+      },
+      extra || {},
+    );
+  } catch (_) {}
+}
+
+function installInvoiceLauncherDelegation(openSurfaceFn) {
+  try {
+    if (typeof document === "undefined" || window.__iuInvoiceLauncherInstalled) return;
+    window.__iuInvoiceLauncherInstalled = true;
+    async function bootOnly() {
+      await ensureInvoiceOverlayCssReady();
+      try {
+        if (typeof window.ensureInvoiceModalInBody === "function") window.ensureInvoiceModalInBody();
+      } catch (_) {}
+    }
+    async function openFromLauncher(e, kind) {
+      const trigger = e && e.target && e.target.closest ? e.target.closest('[data-iuq="faktura"]') : null;
+      if (!trigger) return;
+      if (e && e.__iuInvoiceLauncherHandled) return;
+      if (e) {
+        e.__iuInvoiceLauncherHandled = true;
+        e.__iuHandled = true;
+        try {
+          e.preventDefault();
+          e.stopPropagation();
+          if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+        } catch (_) {}
+      }
+      try {
+        if (typeof window.iuForceCloseAllOverlays === "function") window.iuForceCloseAllOverlays();
+      } catch (_) {}
+      await bootOnly();
+      if (typeof openSurfaceFn === "function") {
+        const result = openSurfaceFn();
+        if (result && typeof result.then === "function") await result;
+      } else if (typeof window.iuInvoiceOpenSurface === "function") {
+        const result = window.iuInvoiceOpenSurface();
+        if (result && typeof result.then === "function") await result;
+      }
+      publishInvoiceFirstClickDiag({ handlerKind: kind || "click", clickCount: (window.__iuInvoiceLauncherClickCount = (window.__iuInvoiceLauncherClickCount || 0) + 1) });
+    }
+    document.addEventListener(
+      "pointerdown",
+      function (e) {
+        const trigger = e.target && e.target.closest ? e.target.closest('[data-iuq="faktura"]') : null;
+        if (trigger) void bootOnly();
+      },
+      true,
+    );
+    document.addEventListener(
+      "click",
+      function (e) {
+        void openFromLauncher(e, "click");
+      },
+      true,
+    );
+    document.addEventListener(
+      "touchend",
+      function (e) {
+        void openFromLauncher(e, "touch");
+      },
+      { capture: true, passive: false },
+    );
+  } catch (_) {}
+}
+
 export function initIuInvoiceOverlay(deps) {
   try {
     if (typeof window !== "undefined" && window.__iuInvoiceOverlayInitialized) {
@@ -513,10 +598,6 @@ export function initIuInvoiceOverlay(deps) {
     if (cssLink && String(cssLink.href || "").indexOf("iu-invoice-root-cause-v1") === -1) {
       cssLink.href = "/assets/iu-invoice-overlay.css?v=iu-invoice-root-cause-v1";
     }
-  } catch (_) {}
-
-  try {
-    if (typeof window !== "undefined") window.__iuInvoiceOverlayInitialized = true;
   } catch (_) {}
 
   let state = loadFormState() || defaultFormState();
@@ -1730,7 +1811,7 @@ export function initIuInvoiceOverlay(deps) {
     });
   }
 
-  function openSurface() {
+  function openSurfaceSync() {
     ensureInBody();
     setLock(true);
     applyBodyOpen(true);
@@ -1772,6 +1853,16 @@ export function initIuInvoiceOverlay(deps) {
     try {
       scrollHost.scrollTop = 0;
     } catch (_) {}
+  }
+
+  function openSurface() {
+    return ensureInvoiceOverlayCssReady().then(function () {
+      try {
+        if (typeof window.ensureInvoiceModalInBody === "function") window.ensureInvoiceModalInBody();
+      } catch (_) {}
+      openSurfaceSync();
+      publishInvoiceFirstClickDiag({ openedVia: "openSurfaceSync" });
+    });
   }
 
   function closeSurface() {
@@ -1837,6 +1928,7 @@ export function initIuInvoiceOverlay(deps) {
   });
 
   installPreviewDelegation();
+  installInvoiceLauncherDelegation(openSurface);
   try {
     ensurePreviewPortalHost();
   } catch (_) {}
@@ -1846,7 +1938,13 @@ export function initIuInvoiceOverlay(deps) {
     window.iuInvoiceCloseSurface = closeSurface;
     window.ensureInvoiceModalInBody = ensureInBody;
     window.IU_INVOICE_MODULE_BUILD = IU_INVOICE_MODULE_BUILD;
+    window.__iuInvoiceOverlayInitialized = true;
   } catch (_) {}
+
+  if (window.__iuInvoicePendingOpen) {
+    window.__iuInvoicePendingOpen = false;
+    void openSurface();
+  }
 
   return { open: openSurface, close: closeSurface };
 }

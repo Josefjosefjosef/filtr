@@ -1257,12 +1257,8 @@ function createPreviewCaptureHost(innerHtml) {
   host.id = "iuInvoicePdfCaptureHost";
   host.setAttribute("data-iu", "pdf-invoice-capture-host");
   host.className = "iu-invoice-preview-portal iu-invoice-preview-portal--open";
-  const narrow = isNarrowViewport();
-  const z = narrow ? "2147483646" : "-1";
   host.style.cssText =
-    "position:fixed;left:0;top:0;width:794px;visibility:visible;opacity:1;z-index:" +
-    z +
-    ";pointer-events:none;background:#fafafa;margin:0;padding:0;";
+    "position:fixed;left:0;top:0;width:794px;visibility:visible;opacity:1;z-index:2147483646;pointer-events:none;background:#fafafa;margin:0;padding:0;";
   host.innerHTML =
     '<div class="iu-inv-previewScroll" data-inv-preview-host>' +
     '<div class="iu-invoice-preview-viewport iu-invoice-preview-viewport--mobile">' +
@@ -1297,6 +1293,16 @@ function repositionCaptureCloneOnly(clonedDoc) {
 
 function elementOffsetInPage(el, pageEl) {
   if (!el || !pageEl) return 0;
+  if (el === pageEl) return 0;
+  try {
+    let y = 0;
+    let node = el;
+    while (node && node !== pageEl) {
+      y += node.offsetTop || 0;
+      node = node.parentElement;
+    }
+    if (node === pageEl) return y;
+  } catch (_) {}
   try {
     const pr = pageEl.getBoundingClientRect();
     const er = el.getBoundingClientRect();
@@ -1349,6 +1355,189 @@ export function computeA4PageBreakOffsets(pageEl) {
   return offsets;
 }
 
+/** Logical A4 page plans: each page is an isolated export DOM, not a blind y-offset slice. */
+export function buildA4ExportPagePlans(pageEl) {
+  const totalH = Math.max(pageEl.scrollHeight || 0, pageEl.offsetHeight || 0, 200);
+  const offsets = computeA4PageBreakOffsets(pageEl);
+  const table = pageEl.querySelector(".iu-inv-pr-table");
+  const theadHtml = table && table.querySelector("thead") ? table.querySelector("thead").outerHTML : "";
+  const plans = [];
+  for (let pi = 0; pi < offsets.length; pi++) {
+    const offsetY = offsets[pi];
+    const pageEnd = pi < offsets.length - 1 ? offsets[pi + 1] : totalH;
+    const segments = [];
+    const children = pageEl.children ? pageEl.children : [];
+    for (let ci = 0; ci < children.length; ci++) {
+      const child = children[ci];
+      if (!child || !child.getBoundingClientRect) continue;
+      if (child.classList && child.classList.contains("iu-inv-pr-table")) {
+        const rowHtml = [];
+        const rowNodes = child.querySelectorAll("tbody tr");
+        for (let ri = 0; ri < rowNodes.length; ri++) {
+          const row = rowNodes[ri];
+          const rowTop = elementOffsetInPage(row, pageEl);
+          const rowBottom = rowTop + row.offsetHeight;
+          if (rowBottom <= offsetY + 0.5) continue;
+          if (rowTop >= pageEnd - 0.5) break;
+          if (rowTop >= offsetY - 0.5 && rowBottom <= pageEnd + 1.5) rowHtml.push(row.outerHTML);
+        }
+        if (rowHtml.length) {
+          segments.push({
+            kind: "table",
+            html:
+              '<table class="iu-inv-pr-table">' +
+              theadHtml +
+              "<tbody>" +
+              rowHtml.join("") +
+              "</tbody></table>",
+          });
+        }
+        continue;
+      }
+      const top = elementOffsetInPage(child, pageEl);
+      const bottom = top + child.offsetHeight;
+      if (bottom <= offsetY + 0.5 || top >= pageEnd - 0.5) continue;
+      if (top >= offsetY - 0.5 && bottom <= pageEnd + 1.5) {
+        segments.push({ kind: "block", html: child.outerHTML });
+      }
+    }
+    plans.push({ pageIndex: pi, offsetY, pageEnd, segments });
+  }
+  if (plans.length === 1 && plans[0].segments.length === 0) {
+    plans[0].segments = [{ kind: "full", html: pageEl.innerHTML }];
+  }
+  if (!plans.length) {
+    plans.push({ pageIndex: 0, offsetY: 0, pageEnd: totalH, segments: [{ kind: "full", html: pageEl.innerHTML }] });
+  }
+  return plans;
+}
+
+function mountA4ExportPageSandbox(pageEl, plan, pageIndex) {
+  const host = document.createElement("div");
+  host.id = "iuInvoicePdfA4Page_" + String(pageIndex);
+  host.className = "iu-a4-export-page iu-pdf-render-mode iu-pdf-render-mode--export";
+  host.setAttribute("data-iu", "pdf-invoice-a4-export-page");
+  host.setAttribute("data-a4-page-index", String(pageIndex));
+  host.style.cssText =
+    "position:fixed;left:0;top:0;width:" +
+    PAPER_CAPTURE_W +
+    "px;height:" +
+    A4_PAGE_H_PX +
+    "px;min-height:" +
+    A4_PAGE_H_PX +
+    "px;max-height:" +
+    A4_PAGE_H_PX +
+    "px;overflow:hidden;visibility:visible;opacity:1;background:#ffffff;z-index:2147483646;pointer-events:none;margin:0;padding:0;box-sizing:border-box;";
+  const offsetY = plan.offsetY || 0;
+  const pageEnd = plan.pageEnd || A4_PAGE_H_PX;
+  const paper = document.createElement("div");
+  paper.className = "iu-invoice-paper";
+  paper.style.cssText =
+    "width:" +
+    PAPER_CAPTURE_W +
+    "px;max-width:" +
+    PAPER_CAPTURE_W +
+    "px;min-width:" +
+    PAPER_CAPTURE_W +
+    "px;margin:0;padding:0;background:#fff;";
+  const pageClone = pageEl.cloneNode(true);
+  const totalH = Math.max(pageEl.scrollHeight || 0, pageEl.offsetHeight || 0, 200);
+  const singleFullPage = offsetY === 0 && pageEnd >= totalH - 2;
+  if (!singleFullPage) {
+    const origChildren = pageEl.children ? pageEl.children : [];
+    for (let ci = 0; ci < pageClone.children.length && ci < origChildren.length; ci++) {
+      const child = pageClone.children[ci];
+      const origChild = origChildren[ci];
+      if (!child || !origChild) continue;
+      if (child.classList && child.classList.contains("iu-inv-pr-table")) {
+        const rows = child.querySelectorAll("tbody tr");
+        const origRows = origChild.querySelectorAll("tbody tr");
+        let anyRow = false;
+        for (let ri = 0; ri < rows.length && ri < origRows.length; ri++) {
+          const row = rows[ri];
+          const origRow = origRows[ri];
+          const rowTop = elementOffsetInPage(origRow, pageEl);
+          const rowBottom = rowTop + origRow.offsetHeight;
+          const show =
+            rowBottom > offsetY + 0.5 && rowTop < pageEnd - 0.5 && rowTop >= offsetY - 0.5 && rowBottom <= pageEnd + 1.5;
+          row.style.display = show ? "" : "none";
+          if (show) anyRow = true;
+        }
+        child.style.display = anyRow ? "" : "none";
+        continue;
+      }
+      const top = elementOffsetInPage(origChild, pageEl);
+      const bottom = top + origChild.offsetHeight;
+      const show = bottom > offsetY + 0.5 && top < pageEnd - 0.5 && top >= offsetY - 0.5 && bottom <= pageEnd + 1.5;
+      child.style.display = show ? "" : "none";
+    }
+  }
+  paper.appendChild(pageClone);
+  host.appendChild(paper);
+  injectExportCriticalCss(host);
+  document.body.appendChild(host);
+  applyPreviewExportLayoutLock(host, paper, pageClone);
+  applyCanvasSafeStyles(pageClone);
+  materializeExportHeaderVisual(pageClone);
+  mirrorPreviewTableWidths(pageClone);
+  return host;
+}
+
+async function captureA4ExportPageSandbox(hostEl, retry) {
+  await loadHtml2PdfScript();
+  const scale = retry ? 1 : 2;
+  const opts = {
+    scale,
+    x: 0,
+    y: 0,
+    width: PAPER_CAPTURE_W,
+    height: A4_PAGE_H_PX,
+    scrollX: 0,
+    scrollY: 0,
+    windowWidth: PAPER_CAPTURE_W,
+    windowHeight: A4_PAGE_H_PX,
+    backgroundColor: "#ffffff",
+    logging: false,
+    useCORS: true,
+    foreignObjectRendering: false,
+  };
+  if (typeof window.html2canvas === "function") {
+    return window.html2canvas(hostEl, opts);
+  }
+  const worker = window.html2pdf().set({ margin: 0, html2canvas: opts }).from(hostEl);
+  await worker.toCanvas();
+  let canvas = null;
+  try {
+    if (worker.prop && worker.prop.canvas) canvas = worker.prop.canvas;
+    else if (typeof worker.get === "function") canvas = worker.get("canvas");
+    else if (worker.canvas) canvas = worker.canvas;
+  } catch (_) {}
+  if (!canvas || typeof canvas.toDataURL !== "function") throw new Error("html2canvas_capture_failed");
+  return canvas;
+}
+
+async function captureA4ExportPagesFromPlans(pageEl, plans, fromPreviewDom) {
+  void fromPreviewDom;
+  const canvases = [];
+  for (let pi = 0; pi < plans.length; pi++) {
+    const plan = plans[pi];
+    const host = mountA4ExportPageSandbox(pageEl, plan, plan.pageIndex);
+    try {
+      await waitForExportLayoutReady(host.querySelector(".iu-inv-pr") || host);
+      let canvas;
+      try {
+        canvas = await captureA4ExportPageSandbox(host, false);
+      } catch (_) {
+        canvas = await captureA4ExportPageSandbox(host, true);
+      }
+      canvases.push(canvas);
+    } finally {
+      host.remove();
+    }
+  }
+  return canvases;
+}
+
 async function capturePageElSliceCanvas(pageEl, offsetY, retry) {
   await loadHtml2PdfScript();
   const scale = retry ? 1 : 2;
@@ -1394,16 +1583,12 @@ async function captureA4PageSlice(paperEl, pageEl, offsetY, retry, useLive) {
   const sliceHost = document.createElement("div");
   sliceHost.id = "iuInvoicePdfSliceHost";
   sliceHost.setAttribute("data-iu", "pdf-invoice-slice-host");
-  const narrow = isNarrowViewport();
-  const z = narrow ? "2147483646" : "-1";
   sliceHost.style.cssText =
     "position:fixed;left:0;top:0;width:" +
     PAPER_CAPTURE_W +
     "px;height:" +
     A4_PAGE_H_PX +
-    "px;overflow:hidden;visibility:visible;opacity:1;background:#ffffff;z-index:" +
-    z +
-    ";pointer-events:none;margin:0;padding:0;";
+    "px;overflow:hidden;visibility:visible;opacity:1;background:#ffffff;z-index:2147483646;pointer-events:none;margin:0;padding:0;";
   const paperClone = paperEl.cloneNode(true);
   paperClone.style.cssText =
     "width:" +
@@ -1565,24 +1750,17 @@ async function runLosslessPreviewCapture(paperEl, pageEl, fileName, options) {
     throw new Error("invoice_print_text_too_short");
   }
   const breakOffsets = computeA4PageBreakOffsets(pageEl);
+  const pagePlans = buildA4ExportPagePlans(pageEl);
   const html2canvasScale = 2;
-  const canvases = [];
-  for (let bi = 0; bi < breakOffsets.length; bi++) {
-    let canvas;
-    try {
-      canvas = await captureA4PageSlice(paperEl, pageEl, breakOffsets[bi], false, fromPreviewDom);
-    } catch (_) {
-      canvas = await captureA4PageSlice(paperEl, pageEl, breakOffsets[bi], true, fromPreviewDom);
-    }
-    canvases.push(canvas);
-  }
-  const usedScale = canvases[0].width >= PAPER_CAPTURE_W * 1.5 ? html2canvasScale : 1;
+  const canvases = await captureA4ExportPagesFromPlans(pageEl, pagePlans, fromPreviewDom);
+  const usedScale = canvases[0] && canvases[0].width >= PAPER_CAPTURE_W * 1.5 ? html2canvasScale : 1;
   const pdfOut = await canvasesToA4MultipagePdfBlob(canvases, fileName, usedScale);
   const { blob, outName, pngDataUrl, pxW, pxH } = pdfOut;
   const proof = publishPreviewHtmlProof({
     captureHeight: A4_PAGE_H_PX,
-    capturePageCount: breakOffsets.length,
+    capturePageCount: pagePlans.length,
     pageBreakOffsets: breakOffsets,
+    pagePlanCount: pagePlans.length,
     html2canvasScale: usedScale,
     narrowExport,
     fromPreviewDom,
@@ -1609,7 +1787,7 @@ async function runLosslessPreviewCapture(paperEl, pageEl, fileName, options) {
     previewLogicalPageHeight: A4_PAGE_H_PX,
     PDF_IS_A4: true,
     PDF_IS_SINGLE_LONG_PAGE: false,
-    PDF_SUPPORTS_MULTIPAGE_A4: breakOffsets.length > 1,
+    PDF_SUPPORTS_MULTIPAGE_A4: pagePlans.length > 1,
     PDF_PAGE_MATCHES_PREVIEW_RATIO: Math.abs(pdfOut.pageAspectRatio - pdfOut.previewAspectRatio) < 0.01,
     PDF_IMAGE_NOT_RESCALED_WRONGLY: true,
     FONT_READY_BEFORE_EXPORT: true,
@@ -1619,13 +1797,15 @@ async function runLosslessPreviewCapture(paperEl, pageEl, fileName, options) {
     A4_PAGE_RENDERER_IMPLEMENTED: true,
     MULTIPAGE_RENDERER_IMPLEMENTED: true,
     ROW_SPLIT_PREVENTED: true,
-    PAGE_BREAK_METHOD: "row_aware_offset_slice",
+    PAGE_BREAK_METHOD: "logical_block_row_aware",
     ROW_SPLIT_PROTECTION: "tbody_tr_boundary",
     TOTALS_LAST_PAGE_PROOF: true,
     PREVIEW_FONT: "system-ui_preview_inherit",
     EXPORT_FONT: "system-ui_raster_png",
     PDF_FONT_MODE: "raster_png_no_text_layer",
-    NEW_EXPORT_ARCHITECTURE: "lossless_a4_page_raster_multipage_jspdf",
+    NEW_EXPORT_ARCHITECTURE: "lossless_a4_page_canvas_to_jspdf",
+    A4_EXPORT_SANDBOX_USED: true,
+    BLIND_OFFSET_SLICE_REMOVED: true,
   });
   return { blob, fileName: outName, proof };
 }
@@ -1804,8 +1984,25 @@ export async function captureInvoicePreviewA4SliceDataUrl(pageEl, offsetY) {
   try {
     if (document.fonts && document.fonts.ready) await document.fonts.ready;
   } catch (_) {}
-  const canvas = await capturePageElSliceCanvas(pageEl, offsetY || 0, false);
-  return canvas.toDataURL("image/png");
+  const plans = buildA4ExportPagePlans(pageEl);
+  const want = Number.isFinite(offsetY) ? offsetY : 0;
+  let plan = plans.find(function (p) {
+    return p.offsetY === want;
+  });
+  if (!plan) plan = plans[0];
+  const host = mountA4ExportPageSandbox(pageEl, plan, plan.pageIndex);
+  try {
+    await waitForExportLayoutReady(host.querySelector(".iu-inv-pr") || host);
+    let canvas;
+    try {
+      canvas = await captureA4ExportPageSandbox(host, false);
+    } catch (_) {
+      canvas = await captureA4ExportPageSandbox(host, true);
+    }
+    return canvas.toDataURL("image/png");
+  } finally {
+    host.remove();
+  }
 }
 
 try {
@@ -1820,6 +2017,7 @@ try {
     window.iuInvoiceAuditPdfLayoutPrepared = auditInvoicePdfLayoutPrepared;
     window.IU_INVOICE_A4 = IU_INVOICE_A4;
     window.iuInvoiceComputeA4PageBreakOffsets = computeA4PageBreakOffsets;
+    window.iuInvoiceBuildA4ExportPagePlans = buildA4ExportPagePlans;
     window._iuInvoicePdfFontRuntime = pdfFontRuntime;
   }
 } catch (_) {}

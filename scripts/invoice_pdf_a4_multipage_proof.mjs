@@ -236,7 +236,7 @@ async function run() {
   const allPass = Object.values(results).every((r) => r.pass);
 
   printBlocks("invoice_pdf_a4_multipage_proof", {
-    SELECTED_EXPORT_ARCHITECTURE: "lossless_a4_page_raster_multipage_jspdf",
+    SELECTED_EXPORT_ARCHITECTURE: "lossless_a4_page_canvas_to_jspdf",
     A4_PAGE_RENDERER_IMPLEMENTED: "YES",
     MULTIPAGE_RENDERER_IMPLEMENTED: "YES",
     PDF_IS_A4: "YES",
