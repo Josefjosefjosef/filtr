@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-14T16:34:42.911600Z",
+  "ingestedAt": "2026-06-14T17:32:06.375706Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Z náplavky u Vltavy sjela nezabrzděná dodávka, část zůstala viset nad vodou",
+      "url": "https://www.idnes.cz/praha/zpravy/dodavka-naplavka-sjela-do-vody-hasici.A260614_183056_praha-zpravy_aoc",
+      "dt": "2026-06-14T16:35:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "dodávka",
+        "nezabrzděná",
+        "náplavky",
+        "sjela",
+        "viset",
+        "vltavy",
+        "vodou",
+        "zůstala",
+        "část"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -766,31 +792,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Luxus jménem bydlení. Ceny v Curychu jsou proti Paříži dvojnásobné",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/bydleni-ceny-bytu-evropska-mesta.A260610_100319_eko-zahranicni_rie",
-      "dt": "2026-06-14T09:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "bydlení",
-        "ceny",
-        "curychu",
-        "dvojnásobné",
-        "jménem",
-        "luxus",
-        "paříži",
-        "proti"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49618,
+      "bytes": 49418,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,11 +839,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-14T16:21:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-14T16:35:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 21,
-          "finance": 6,
+          "zpravy": 22,
+          "finance": 5,
           "zdravi": 1,
           "other": 2
         },
@@ -856,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z náplavky u Vltavy sjela nezabrzděná dodávka, část zůstala viset nad vodou",
+            "publishedAt": "2026-06-14T16:35:00Z"
+          },
           {
             "title": "Trump zpražil Izrael za údery v Libanonu. Sní o krásném začátku míru",
             "publishedAt": "2026-06-14T16:21:00Z"
@@ -883,10 +888,6 @@
           {
             "title": "Fermentace dává dříve nechtěným surovinám druhý život. Vznikají sýry i krmiva",
             "publishedAt": "2026-06-14T15:00:00Z"
-          },
-          {
-            "title": "Stud ženu na roky uvěznil doma. Byli jsme u zákroku, který změnil život i jí",
-            "publishedAt": "2026-06-14T14:06:00Z"
           }
         ]
       }

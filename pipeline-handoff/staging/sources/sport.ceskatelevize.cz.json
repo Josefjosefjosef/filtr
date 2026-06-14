@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.ceskatelevize.cz",
-  "ingestedAt": "2026-06-14T16:34:42.911600Z",
+  "ingestedAt": "2026-06-14T17:32:06.375706Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Čeští volejbalisté po dramatickém souboji podlehli v Evropské lize Dánsku 2:3",
+      "url": "https://sport.ceskatelevize.cz/clanek/volejbal/cesti-volejbaliste-po-dramatickem-souboji-podlehli-v-evropske-lize-dansku-23-157392",
+      "dt": "2026-06-14T17:20:57Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "dramatickém",
+        "dánsku",
+        "evropské",
+        "lize",
+        "podlehli",
+        "souboji",
+        "volejbalisté",
+        "čeští"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "sport.ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -30,18 +55,14 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Němci vstoupí do turnaje proti debutantovi z Curacaa",
+      "title": "Německo – Curacao 1:1",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/nemci-vstoupi-do-turnaje-proti-debutantovi-z-curacaa-157387",
       "dt": "2026-06-14T16:17:06Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "curacaa",
-        "debutantovi",
-        "němci",
-        "proti",
-        "turnaje",
-        "vstoupí"
+        "curacao",
+        "německo"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -717,31 +738,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "sport.ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Křetínský se stane největším akcionářem West Hamu, bude vlastnit 43 procent",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/kretinsky-se-stane-nejvetsim-akcionarem-west-hamu-bude-vlastnit-43-procent-157361",
-      "dt": "2026-06-13T13:09:07Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "akcionářem",
-        "hamu",
-        "křetínský",
-        "největším",
-        "procent",
-        "stane",
-        "vlastnit",
-        "west"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "sport.ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -752,7 +748,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38347,
+      "bytes": 38142,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -789,7 +785,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-14T16:28:03Z",
+        "raw_feed_latest_publishedAt": "2026-06-14T17:20:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -805,11 +801,15 @@
         },
         "sample_titles": [
           {
+            "title": "Čeští volejbalisté po dramatickém souboji podlehli v Evropské lize Dánsku 2:3",
+            "publishedAt": "2026-06-14T17:20:57Z"
+          },
+          {
             "title": "Stuttgart ovládl Shelton, v Queen’s Clubu kralovala Vekičová",
             "publishedAt": "2026-06-14T16:28:03Z"
           },
           {
-            "title": "Němci vstoupí do turnaje proti debutantovi z Curacaa",
+            "title": "Německo – Curacao 1:1",
             "publishedAt": "2026-06-14T16:17:06Z"
           },
           {
@@ -831,10 +831,6 @@
           {
             "title": "Tereza Kneblová suverénně vyhrála kayakcross v Augsburgu",
             "publishedAt": "2026-06-14T14:52:43Z"
-          },
-          {
-            "title": "Mrůzek vyhrál turnaj druhé nejvyšší evropské série",
-            "publishedAt": "2026-06-14T13:19:57Z"
           }
         ]
       }
