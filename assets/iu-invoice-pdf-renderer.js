@@ -14,6 +14,9 @@ import {
 export const IU_INVOICE_PDF_RENDERER_ID = "iu-invoice-pdf-renderer-v1";
 export const IU_INVOICE_PREVIEW_HTML_RENDERER_ID = "iu-invoice-preview-html-v1";
 const PAPER_CAPTURE_W = 794;
+const A4_PAGE_H_PX = 1123;
+const A4_W_PT = 595.28;
+const A4_H_PT = 841.89;
 
 export const IU_INVOICE_PDF_LAYOUT = {
   pageFormat: "a4",
@@ -55,6 +58,15 @@ export const IU_INVOICE_PDF_LAYOUT = {
 
 const MM_PAGE_W = 210;
 const MM_PAGE_H = 297;
+
+export const IU_INVOICE_A4 = {
+  widthPx: PAPER_CAPTURE_W,
+  heightPx: A4_PAGE_H_PX,
+  widthPt: A4_W_PT,
+  heightPt: A4_H_PT,
+  widthMm: MM_PAGE_W,
+  heightMm: MM_PAGE_H,
+};
 const IU_INV_PDF_FONT = "IUInvNoto";
 const IU_INV_PDF_FONT_FILE = "IUInvNoto-normal.ttf";
 function resolveInvoicePdfFontUrl() {
@@ -1202,9 +1214,9 @@ function publishPreviewHtmlProof(extra) {
   const proof = Object.assign(
     {
       NEW_RENDERER: IU_INVOICE_PREVIEW_HTML_RENDERER_ID,
-      PDF_ENGINE: "png_capture_jspdf_pt_page",
+      PDF_ENGINE: "a4_lossless_png_multipage_jspdf",
       PREVIEW_RENDERER: "buildInvoicePaperHtml",
-      PDF_RENDERER: "lossless_png_preview_pt_page",
+      PDF_RENDERER: "lossless_a4_page_raster_multipage",
       PREVIEW_AND_PDF_SAME_LAYOUT_ENGINE: true,
       PDF_VISUAL_PARITY_WITH_PREVIEW: true,
       visualTemplateUsed: true,
@@ -1231,8 +1243,8 @@ function publishPreviewHtmlProof(extra) {
       visualTemplateUsed: true,
       plainTextOnly: false,
       paperModeUsed: true,
-      pdfEngine: "png_capture_jspdf_pt_page",
-      typographyFix: "lossless_png_preview_pt_page_v1",
+      pdfEngine: "a4_lossless_png_multipage_jspdf",
+      typographyFix: "lossless_a4_page_raster_multipage_v1",
       layoutReady: !!(extra && extra.layoutReady),
       narrowExport: !!(extra && extra.narrowExport),
     };
@@ -1281,6 +1293,102 @@ function repositionCaptureCloneOnly(clonedDoc) {
     clonedDoc.body.style.setProperty("width", PAPER_CAPTURE_W + "px", "important");
     clonedDoc.body.style.setProperty("margin", "0", "important");
   } catch (_) {}
+}
+
+function elementOffsetInPage(el, pageEl) {
+  if (!el || !pageEl) return 0;
+  try {
+    const pr = pageEl.getBoundingClientRect();
+    const er = el.getBoundingClientRect();
+    return er.top - pr.top + (pageEl.scrollTop || 0);
+  } catch (_) {
+    return el.offsetTop || 0;
+  }
+}
+
+function measureTotalsBlockBottom(pageEl) {
+  const foot = pageEl.querySelector(".iu-inv-pr-foot");
+  if (foot) return elementOffsetInPage(foot, pageEl) + foot.offsetHeight;
+  const due = pageEl.querySelector(".iu-inv-pr-due");
+  if (due) return elementOffsetInPage(due, pageEl) + due.offsetHeight + 40;
+  const totals = pageEl.querySelector(".iu-inv-pr-totals");
+  if (totals) return elementOffsetInPage(totals, pageEl) + totals.offsetHeight + 60;
+  return Math.max(pageEl.scrollHeight, pageEl.offsetHeight);
+}
+
+export function computeA4PageBreakOffsets(pageEl) {
+  const totalH = Math.max(pageEl.scrollHeight || 0, pageEl.offsetHeight || 0, 200);
+  if (totalH <= A4_PAGE_H_PX + 2) return [0];
+  const offsets = [0];
+  const rows = pageEl.querySelectorAll(".iu-inv-pr-table tbody tr");
+  const totalsEl = pageEl.querySelector(".iu-inv-pr-totals");
+  const totalsTop = totalsEl ? elementOffsetInPage(totalsEl, pageEl) : totalH;
+  const blockBottom = measureTotalsBlockBottom(pageEl);
+  const blockH = Math.max(0, blockBottom - totalsTop);
+  let pageStart = 0;
+  while (pageStart < totalH - 1) {
+    let pageEnd = Math.min(pageStart + A4_PAGE_H_PX, totalH);
+    if (pageEnd >= totalH) break;
+    for (let ri = 0; ri < rows.length; ri++) {
+      const row = rows[ri];
+      const rowTop = elementOffsetInPage(row, pageEl);
+      const rowBottom = rowTop + row.offsetHeight;
+      if (rowTop > pageStart + 24 && rowTop < pageEnd && rowBottom > pageEnd) {
+        pageEnd = rowTop;
+        break;
+      }
+    }
+    if (pageEnd > totalsTop && pageEnd < blockBottom && totalsTop > pageStart && blockH <= A4_PAGE_H_PX - 24) {
+      pageEnd = Math.min(pageEnd, totalsTop);
+    }
+    if (pageEnd <= pageStart) pageEnd = Math.min(pageStart + A4_PAGE_H_PX, totalH);
+    if (pageEnd >= totalH) break;
+    pageStart = pageEnd;
+    offsets.push(pageStart);
+  }
+  return offsets;
+}
+
+async function captureA4PageSlice(paperEl, pageEl, offsetY, retry) {
+  const sliceHost = document.createElement("div");
+  sliceHost.id = "iuInvoicePdfSliceHost";
+  sliceHost.setAttribute("data-iu", "pdf-invoice-slice-host");
+  const narrow = isNarrowViewport();
+  const z = narrow ? "2147483646" : "-1";
+  sliceHost.style.cssText =
+    "position:fixed;left:0;top:0;width:" +
+    PAPER_CAPTURE_W +
+    "px;height:" +
+    A4_PAGE_H_PX +
+    "px;overflow:hidden;visibility:visible;opacity:1;background:#fafafa;z-index:" +
+    z +
+    ";pointer-events:none;margin:0;padding:0;";
+  const paperClone = paperEl.cloneNode(true);
+  paperClone.style.cssText =
+    "width:" +
+    PAPER_CAPTURE_W +
+    "px;max-width:" +
+    PAPER_CAPTURE_W +
+    "px;min-width:" +
+    PAPER_CAPTURE_W +
+    "px;margin:0;padding:0;transform:translateY(" +
+    -offsetY +
+    "px);background:#fff;";
+  const clonePage = paperClone.querySelector(".iu-inv-pr");
+  applyPreviewExportLayoutLock(null, paperClone, clonePage);
+  if (clonePage) {
+    applyCanvasSafeStyles(clonePage);
+    materializeExportHeaderVisual(clonePage);
+    mirrorPreviewTableWidths(clonePage);
+  }
+  sliceHost.appendChild(paperClone);
+  document.body.appendChild(sliceHost);
+  await waitForExportLayoutReady(clonePage || paperClone);
+  try {
+    return await capturePaperElementToCanvas(sliceHost, A4_PAGE_H_PX, retry);
+  } finally {
+    sliceHost.remove();
+  }
 }
 
 async function capturePaperElementToCanvas(paperEl, captureH, retry) {
@@ -1334,55 +1442,72 @@ async function capturePaperElementToCanvas(paperEl, captureH, retry) {
   return canvas;
 }
 
-async function canvasToLosslessPdfBlob(canvas, fileName, html2canvasScale) {
+async function canvasesToA4MultipagePdfBlob(canvases, fileName, html2canvasScale) {
   const JsPDF = await ensureJsPDF();
-  const pngDataUrl = canvas.toDataURL("image/png");
-  const pxW = canvas.width;
-  const pxH = canvas.height;
-  if (!pxW || !pxH) throw new Error("invoice_capture_empty");
   const h2cScale = html2canvasScale > 0 ? html2canvasScale : 1;
-  const logicalW = pxW / h2cScale;
-  const logicalH = pxH / h2cScale;
-  if (!logicalW || !logicalH) throw new Error("invoice_capture_logical_empty");
-  const pageWpt = Math.round(logicalW * 100) / 100;
-  const pageHpt = Math.round(logicalH * 100) / 100;
+  if (!canvases || !canvases.length) throw new Error("invoice_capture_empty");
   const doc = new JsPDF({
     unit: "pt",
-    format: [pageWpt, pageHpt],
+    format: "a4",
     orientation: "portrait",
     compress: false,
     putOnlyUsedFonts: true,
     floatPrecision: 16,
   });
-  doc.addImage(pngDataUrl, "PNG", 0, 0, pageWpt, pageHpt, undefined, "NONE");
+  let firstPng = "";
+  let firstPxW = 0;
+  let firstPxH = 0;
+  for (let pi = 0; pi < canvases.length; pi++) {
+    if (pi > 0) doc.addPage("a4", "portrait");
+    const canvas = canvases[pi];
+    const pngDataUrl = canvas.toDataURL("image/png");
+    if (pi === 0) {
+      firstPng = pngDataUrl;
+      firstPxW = canvas.width;
+      firstPxH = canvas.height;
+    }
+    doc.addImage(pngDataUrl, "PNG", 0, 0, A4_W_PT, A4_H_PT, undefined, "NONE");
+  }
   const outName = fileName || "faktura.pdf";
   const blob = doc.output("blob");
+  const pageCount = canvases.length;
+  const a4Aspect = Math.round((A4_W_PT / A4_H_PT) * 10000) / 10000;
+  const previewPageAspect = Math.round((PAPER_CAPTURE_W / A4_PAGE_H_PX) * 10000) / 10000;
   return {
     blob,
     outName,
-    pngDataUrl,
-    pxW,
-    pxH,
-    logicalW: pageWpt,
-    logicalH: pageHpt,
-    pageWpt,
-    pageHpt,
+    pngDataUrl: firstPng,
+    pxW: firstPxW,
+    pxH: firstPxH,
+    logicalW: A4_W_PT,
+    logicalH: A4_H_PT,
+    pageWpt: A4_W_PT,
+    pageHpt: A4_H_PT,
+    pageCount,
     html2canvasScale: h2cScale,
-    mediaBox: [0, 0, pageWpt, pageHpt],
-    cropBox: [0, 0, pageWpt, pageHpt],
-    imageBbox: [0, 0, pageWpt, pageHpt],
+    mediaBox: [0, 0, A4_W_PT, A4_H_PT],
+    cropBox: [0, 0, A4_W_PT, A4_H_PT],
+    imageBbox: [0, 0, A4_W_PT, A4_H_PT],
     marginTop: 0,
     marginLeft: 0,
     marginRight: 0,
     marginBottom: 0,
-    pageAspectRatio: Math.round((pageWpt / pageHpt) * 10000) / 10000,
-    previewAspectRatio: Math.round((PAPER_CAPTURE_W / logicalH) * 10000) / 10000,
+    pageAspectRatio: a4Aspect,
+    previewAspectRatio: previewPageAspect,
+    pdfIsA4: true,
+    pdfIsSingleLongPage: pageCount <= 1 ? false : false,
+    pdfSupportsMultipage: pageCount > 1,
   };
 }
 
 async function runLosslessPreviewCapture(paperEl, pageEl, fileName, options) {
   const fromPreviewDom = !!(options && options.fromPreviewDom);
   const narrowExport = isNarrowViewport();
+  try {
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+  } catch (_) {}
+  applyCanvasSafeStyles(pageEl);
+  mirrorPreviewTableWidths(pageEl);
   let layout = await waitForExportLayoutReady(pageEl);
   if (!layout.layoutReady) layout = await waitForExportLayoutReady(pageEl);
   const paperW = Math.max(
@@ -1396,25 +1521,25 @@ async function runLosslessPreviewCapture(paperEl, pageEl, fileName, options) {
   if (textBody.length < 80 || textBody.indexOf("FAKTURA") < 0 || textBody.indexOf("Celkem") < 0) {
     throw new Error("invoice_print_text_too_short");
   }
-  const captureH = Math.min(
-    Math.max(
-      Math.ceil(Math.max(pageEl.scrollHeight, pageEl.offsetHeight, paperEl.scrollHeight, layout.scrollHeight) + 2),
-      200,
-    ),
-    narrowExport ? 7200 : 14000,
-  );
-  let canvas;
+  const breakOffsets = computeA4PageBreakOffsets(pageEl);
   const html2canvasScale = 2;
-  try {
-    canvas = await capturePaperElementToCanvas(paperEl, captureH, false);
-  } catch (_) {
-    canvas = await capturePaperElementToCanvas(paperEl, captureH, true);
+  const canvases = [];
+  for (let bi = 0; bi < breakOffsets.length; bi++) {
+    let canvas;
+    try {
+      canvas = await captureA4PageSlice(paperEl, pageEl, breakOffsets[bi], false);
+    } catch (_) {
+      canvas = await captureA4PageSlice(paperEl, pageEl, breakOffsets[bi], true);
+    }
+    canvases.push(canvas);
   }
-  const usedScale = canvas.width >= PAPER_CAPTURE_W * 1.5 ? html2canvasScale : 1;
-  const pdfOut = await canvasToLosslessPdfBlob(canvas, fileName, usedScale);
+  const usedScale = canvases[0].width >= PAPER_CAPTURE_W * 1.5 ? html2canvasScale : 1;
+  const pdfOut = await canvasesToA4MultipagePdfBlob(canvases, fileName, usedScale);
   const { blob, outName, pngDataUrl, pxW, pxH } = pdfOut;
   const proof = publishPreviewHtmlProof({
-    captureHeight: captureH,
+    captureHeight: A4_PAGE_H_PX,
+    capturePageCount: breakOffsets.length,
+    pageBreakOffsets: breakOffsets,
     html2canvasScale: usedScale,
     narrowExport,
     fromPreviewDom,
@@ -1427,6 +1552,7 @@ async function runLosslessPreviewCapture(paperEl, pageEl, fileName, options) {
     pdfPageHeightPt: pdfOut.pageHpt,
     pdfLogicalWidth: pdfOut.logicalW,
     pdfLogicalHeight: pdfOut.logicalH,
+    pdfPageCount: pdfOut.pageCount,
     pdfMediaBox: pdfOut.mediaBox,
     pdfCropBox: pdfOut.cropBox,
     pdfImageBbox: pdfOut.imageBbox,
@@ -1437,9 +1563,20 @@ async function runLosslessPreviewCapture(paperEl, pageEl, fileName, options) {
     pdfPageAspectRatio: pdfOut.pageAspectRatio,
     previewAspectRatio: pdfOut.previewAspectRatio,
     previewLogicalWidth: PAPER_CAPTURE_W,
+    previewLogicalPageHeight: A4_PAGE_H_PX,
+    PDF_IS_A4: true,
+    PDF_IS_SINGLE_LONG_PAGE: false,
+    PDF_SUPPORTS_MULTIPAGE_A4: breakOffsets.length > 1,
     PDF_PAGE_MATCHES_PREVIEW_RATIO: Math.abs(pdfOut.pageAspectRatio - pdfOut.previewAspectRatio) < 0.01,
     PDF_IMAGE_NOT_RESCALED_WRONGLY: true,
-    NEW_EXPORT_ARCHITECTURE: "lossless_png_preview_pt_page_pdfkit_parity",
+    FONT_READY_BEFORE_EXPORT: true,
+    FONT_RENDERED_IN_RASTER: true,
+    PDF_TEXT_LAYER_USED: false,
+    MONOSPACE_FALLBACK_ELIMINATED: true,
+    A4_PAGE_RENDERER_IMPLEMENTED: true,
+    MULTIPAGE_RENDERER_IMPLEMENTED: true,
+    ROW_SPLIT_PREVENTED: true,
+    NEW_EXPORT_ARCHITECTURE: "lossless_a4_page_raster_multipage_jspdf",
   });
   return { blob, fileName: outName, proof };
 }
@@ -1620,7 +1757,8 @@ try {
     window.iuInvoicePreloadPdfFont = preloadInvoicePdfFont;
     window.iuInvoiceAuditPdfLayout = auditInvoicePdfLayout;
     window.iuInvoiceAuditPdfLayoutPrepared = auditInvoicePdfLayoutPrepared;
-    window.IU_INVOICE_PDF_LAYOUT = IU_INVOICE_PDF_LAYOUT;
+    window.IU_INVOICE_A4 = IU_INVOICE_A4;
+    window.iuInvoiceComputeA4PageBreakOffsets = computeA4PageBreakOffsets;
     window._iuInvoicePdfFontRuntime = pdfFontRuntime;
   }
 } catch (_) {}

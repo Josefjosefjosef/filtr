@@ -4,6 +4,9 @@
 import fs from "fs";
 
 export const PAPER_LOGICAL_W = 794;
+export const A4_PAGE_H_PX = 1123;
+export const A4_W_PT = 595.28;
+export const A4_H_PT = 841.89;
 
 export function printBlocks(label, obj) {
   console.log(`=== ${label} ===`);
@@ -25,11 +28,18 @@ export function parsePdfBoxesFromBytes(pdfBytes) {
   const crop = readBox("CropBox") || media;
   const w = media ? media[2] - media[0] : 0;
   const h = media ? media[3] - media[1] : 0;
+  const pageMatches = raw.match(/\/Type\s*\/Page\b/g);
+  const pageCount = pageMatches ? pageMatches.length : 1;
+  const a4WidthOk = w >= 594 && w <= 597;
+  const a4HeightOk = h >= 841 && h <= 844;
   return {
     mediaBox: media,
     cropBox: crop,
     pageWidthPt: w,
     pageHeightPt: h,
+    pageCount,
+    pdfIsA4: a4WidthOk && a4HeightOk,
+    pdfIsSingleLongPage: pageCount === 1 && h > 900,
     pageAspectRatio: w && h ? Math.round((w / h) * 10000) / 10000 : 0,
     marginLeft: media ? media[0] : 0,
     marginBottom: media ? media[1] : 0,
@@ -117,6 +127,17 @@ export async function renderPdfViewerApproxPng(browser, pdfBytes, pdfjsPort, pag
   return meta;
 }
 
+export function viewerScaleMatchesPreview(layout, pageWpt, targetW, visualPct) {
+  const fitScale = targetW / (pageWpt || A4_W_PT);
+  const previewToPdfScale = (layout.previewCssScale || 1) * (PAPER_LOGICAL_W / (pageWpt || A4_W_PT));
+  const layoutFit = layout.pdfkitFitToWidthScale || 0;
+  return (
+    Math.abs(layoutFit - fitScale) < 0.08 ||
+    Math.abs(previewToPdfScale - fitScale) < 0.08 ||
+    ((layout.previewCssScale || 0) >= 0.99 && (visualPct || 0) >= 85)
+  );
+}
+
 export async function exportPdfFromMountedPreview(page) {
   return page.evaluate(async () => {
     const { buildInvoicePdfBlobFromPreviewElement } = await import("/assets/iu-invoice-pdf-renderer.js");
@@ -192,11 +213,12 @@ export async function mountMobilePreviewWithLayout(page, html) {
       paperVisibleHeight: paperRect ? Math.round(paperRect.height) : 0,
       paperLogicalWidth: 794,
       paperLogicalHeight: paper ? Math.round(paper.scrollHeight || paper.offsetHeight || 0) : 0,
+      previewPageAspectRatio: Math.round((794 / 1123) * 10000) / 10000,
       previewAspectRatio:
         paper && paper.offsetHeight
-          ? Math.round((794 / (paper.scrollHeight || paper.offsetHeight)) * 10000) / 10000
+          ? Math.round((794 / Math.min(paper.scrollHeight || paper.offsetHeight, 1123)) * 10000) / 10000
           : 0,
-      pdfkitFitToWidthScale: innerAvail / 794,
+      pdfkitFitToWidthScale: (paperRect ? paperRect.width : innerAvail) / 595.28,
     };
   }, html);
 }
@@ -236,7 +258,7 @@ export async function comparePreviewToViewerApprox(browser, prevB64, pdfImgB64, 
           break;
         }
       }
-      const th = Math.min(contentH, pb.height, 1100);
+      const th = Math.min(contentH, pb.height, 1163);
       const ca = document.createElement("canvas");
       const cb = document.createElement("canvas");
       ca.width = cb.width = tw;

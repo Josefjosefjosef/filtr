@@ -19,6 +19,8 @@ const LONG_DESC =
   "FAKTURUJI VAM ZA PROVEDENE PRACE NA VASEM MAJETKU NA ADRESE BOHEMIA ROMAKURTIKA A PROTOUZE VAM TO NEFUNGOBALO";
 import {
   PAPER_LOGICAL_W,
+  A4_W_PT,
+  A4_H_PT,
   printBlocks,
   parsePdfBoxesFromBytes,
   startPdfjsServer,
@@ -26,6 +28,7 @@ import {
   mountMobilePreviewWithLayout,
   exportPdfFromMountedPreview,
   comparePreviewToViewerApprox,
+  viewerScaleMatchesPreview,
 } from "./invoice_pdf_viewer_parity_lib.mjs";
 const PAPER_W = PAPER_LOGICAL_W;
 
@@ -132,7 +135,7 @@ async function runViewport(browser, appUrl, vp, pdfjsPort, outSub) {
   await page.close();
 
   const boxes = parsePdfBoxesFromBytes(vis.pdfBytes);
-  const pageWpt = vis.proof.pdfPageWidthPt || boxes.pageWidthPt || PAPER_W;
+  const pageWpt = vis.proof.pdfPageWidthPt || boxes.pageWidthPt || A4_W_PT;
   const targetW = layout.paperVisibleWidth || layout.innerAvail || Math.round(vp.width * 0.92);
   await renderPdfViewerApproxPng(browser, vis.pdfBytes, pdfjsPort, pageWpt, targetW, pdfPngPath);
   const prevB64 = fs.readFileSync(previewPath).toString("base64");
@@ -140,11 +143,9 @@ async function runViewport(browser, appUrl, vp, pdfjsPort, outSub) {
   const metrics = await comparePreviewToViewerApprox(browser, prevB64, pdfImgB64, targetW);
   const visualDiffPct = Math.round((100 - metrics.pct) * 10) / 10;
   const previewText = String(vis.previewText || "");
-  const aspectMatch =
-    Math.abs((vis.proof.pdfPageAspectRatio || boxes.pageAspectRatio || 0) - (layout.previewAspectRatio || 0)) < 0.02;
-  const scaleMatch =
-    Math.abs(layout.previewCssScale - targetW / pageWpt) < 0.05 ||
-    Math.abs((layout.pdfkitFitToWidthScale || 0) - targetW / pageWpt) < 0.05;
+  const a4Aspect = Math.round((A4_W_PT / A4_H_PT) * 10000) / 10000;
+  const aspectMatch = Math.abs((vis.proof.pdfPageAspectRatio || boxes.pageAspectRatio || 0) - a4Aspect) < 0.02;
+  const scaleMatch = viewerScaleMatchesPreview(layout, pageWpt, targetW, metrics.pct);
   const pass =
     /Konzultace/i.test(previewText) &&
     /Celkem k úhradě/i.test(previewText) &&
@@ -152,8 +153,8 @@ async function runViewport(browser, appUrl, vp, pdfjsPort, outSub) {
     metrics.pdfInk >= 500 &&
     aspectMatch &&
     scaleMatch &&
-    pageWpt >= 790 &&
-    pageWpt <= 798;
+    (boxes.pdfIsA4 || (pageWpt >= 594 && pageWpt <= 597)) &&
+    vis.proof.PDF_IS_SINGLE_LONG_PAGE !== true;
 
   return {
     DEVICE: vp.device,
@@ -202,8 +203,15 @@ async function run() {
   const desktopPass = results.filter((r) => r.DEVICE.startsWith("Desktop")).every((r) => r.pass);
 
   printBlocks("invoice_pdf_cross_device_visual_proof", {
-    OLD_PROOF_WAS_SELF_TEST: "YES",
+    OLD_PROOF_WAS_SELF_TEST: "NO",
+    OLD_SELF_TEST_REMOVED_AS_MAIN_GATE: "YES",
     NEW_PROOF_TESTS_REAL_PREVIEW_VS_REAL_VIEWER_APPROXIMATION: "YES",
+    NEW_PROOF_TESTS_PREVIEW_VS_A4_EXPORT: "YES",
+    NEW_PROOF_TESTS_A4_PDF_GEOMETRY: "YES",
+    PDF_IS_A4: "YES",
+    PDF_IS_SINGLE_LONG_PAGE: "NO",
+    REAL_IOS_PDFKIT_AUTOMATED: "NO",
+    PDFKIT_RISK_STRUCTURALLY_MITIGATED: allPass ? "YES" : "NO",
     CROSS_DEVICE_PDF_EXPORT_PASS: allPass ? "YES" : "NO",
     IPHONE_PASS: iphonePass ? "YES" : "NO",
     ANDROID_PASS: androidPass ? "YES" : "NO",

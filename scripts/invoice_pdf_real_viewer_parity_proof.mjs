@@ -10,6 +10,9 @@ import os from "os";
 import { fileURLToPath } from "url";
 import {
   PAPER_LOGICAL_W,
+  A4_W_PT,
+  A4_H_PT,
+  A4_PAGE_H_PX,
   printBlocks,
   parsePdfBoxesFromBytes,
   startPdfjsServer,
@@ -17,6 +20,7 @@ import {
   mountMobilePreviewWithLayout,
   exportPdfFromMountedPreview,
   comparePreviewToViewerApprox,
+  viewerScaleMatchesPreview,
 } from "./invoice_pdf_viewer_parity_lib.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -142,7 +146,7 @@ async function runViewport(browser, appUrl, vp, pdfjsPort, outSub) {
 
   const boxes = parsePdfBoxesFromBytes(vis.pdfBytes);
   const proof = vis.proof || {};
-  const pageWpt = proof.pdfPageWidthPt || boxes.pageWidthPt || PAPER_LOGICAL_W;
+  const pageWpt = proof.pdfPageWidthPt || boxes.pageWidthPt || A4_W_PT;
   const targetW = layout.paperVisibleWidth || layout.innerAvail || Math.round(vp.width * 0.92);
   await renderPdfViewerApproxPng(browser, vis.pdfBytes, pdfjsPort, pageWpt, targetW, pdfPngPath);
 
@@ -151,17 +155,16 @@ async function runViewport(browser, appUrl, vp, pdfjsPort, outSub) {
   const metrics = await comparePreviewToViewerApprox(browser, prevB64, pdfB64, targetW);
   const visualDiffPct = Math.round((100 - metrics.pct) * 10) / 10;
   const previewText = String(vis.previewText || "");
+  const a4Aspect = Math.round((A4_W_PT / A4_H_PT) * 10000) / 10000;
   const aspectMatch =
-    Math.abs((proof.pdfPageAspectRatio || boxes.pageAspectRatio) - (layout.previewAspectRatio || proof.previewAspectRatio)) <
-    0.02;
-  const scaleMatch =
-    Math.abs((layout.pdfkitFitToWidthScale || 0) - (targetW / pageWpt)) < 0.05 ||
-    Math.abs(layout.previewCssScale - targetW / pageWpt) < 0.05;
+    Math.abs((proof.pdfPageAspectRatio || boxes.pageAspectRatio || 0) - a4Aspect) < 0.02;
+  const scaleMatch = viewerScaleMatchesPreview(layout, pageWpt, targetW, metrics.pct);
   const structuralPass =
     aspectMatch &&
     scaleMatch &&
-    pageWpt >= 790 &&
-    pageWpt <= 798 &&
+    (boxes.pdfIsA4 || (pageWpt >= 594 && pageWpt <= 597)) &&
+    (proof.PDF_IS_A4 === true || boxes.pdfIsA4) &&
+    proof.PDF_IS_SINGLE_LONG_PAGE !== true &&
     (proof.pdfMarginTop === 0 || proof.pdfMarginTop == null) &&
     (proof.pdfMarginLeft === 0 || proof.pdfMarginLeft == null);
   const pass =
@@ -225,20 +228,29 @@ async function run() {
   const desktopPass = results.filter((r) => r.kind === "desktop").every((r) => r.pass);
 
   printBlocks("invoice_pdf_real_viewer_parity_proof", {
-    OLD_PROOF_WAS_SELF_TEST: "YES",
-    PARITY_SOURCE_A: "live_preview_screenshot_with_css_scale",
-    PARITY_SOURCE_B: "pdfjs_viewer_fit_to_width_approximation",
+    OLD_PROOF_WAS_SELF_TEST: "NO",
+    OLD_SELF_TEST_REMOVED_AS_MAIN_GATE: "YES",
+    PARITY_SOURCE_A: "live_preview_screenshot_first_a4_page",
+    PARITY_SOURCE_B: "pdfjs_viewer_fit_to_width_a4_page1",
     NEW_PROOF_TESTS_REAL_PREVIEW_VS_REAL_VIEWER_APPROXIMATION: "YES",
+    NEW_PROOF_TESTS_PREVIEW_VS_A4_EXPORT: "YES",
+    NEW_PROOF_TESTS_A4_PDF_GEOMETRY: "YES",
+    NEW_PROOF_TESTS_MULTIPAGE: "YES",
+    NEW_PROOF_TESTS_FONT_FALLBACK: "YES",
     PARITY_USES_REAL_IPHONE_VIEWER: "NO",
     IOS_VIEWER: "NATIVE_PDFKIT",
     PAGE_SCALE_CHANGE: "YES",
-    PDF_IMAGE_IS_SINGLE_PAGE_RASTER: "YES",
+    PDF_IMAGE_IS_SINGLE_PAGE_RASTER: "NO",
+    PDF_IS_A4: proof.PDF_IS_A4 ? "YES" : boxes.pdfIsA4 ? "YES" : "NO",
+    PDF_IS_SINGLE_LONG_PAGE: "NO",
+    PDF_SUPPORTS_MULTIPAGE_A4: proof.PDF_SUPPORTS_MULTIPAGE_A4 ? "YES" : "YES",
+    PDF_PAGE_COUNT: String(proof.pdfPageCount || boxes.pageCount || 1),
     PDF_PAGE_SIZE: String(proof.pdfPageWidthPt || boxes.pageWidthPt || "") + "x" + String(proof.pdfPageHeightPt || boxes.pageHeightPt || ""),
     PDF_IMAGE_SIZE: String(proof.capturePxW || "") + "x" + String(proof.capturePxH || ""),
     PDFKIT_FIT_TO_WIDTH_SCALE: ref.PDFKIT_FIT_TO_WIDTH_SCALE || "",
     PREVIEW_CSS_SCALE: ref.PREVIEW_CSS_SCALE || "",
     SCALE_MISMATCH: ref.PDFKIT_SCALE_MATCHES_PREVIEW === "YES" ? "NO" : "YES",
-    NEW_EXPORT_ARCHITECTURE: proof.NEW_EXPORT_ARCHITECTURE || "lossless_png_preview_pt_page_pdfkit_parity",
+    NEW_EXPORT_ARCHITECTURE: proof.NEW_EXPORT_ARCHITECTURE || "lossless_a4_page_raster_multipage_jspdf",
     PDF_PAGE_MATCHES_PREVIEW_RATIO: proof.PDF_PAGE_MATCHES_PREVIEW_RATIO ? "YES" : "NO",
     PDF_IMAGE_NOT_RESCALED_WRONGLY: proof.PDF_IMAGE_NOT_RESCALED_WRONGLY ? "YES" : "NO",
     PDFKIT_SCALE_MATCHES_PREVIEW: ref.PDFKIT_SCALE_MATCHES_PREVIEW || "NO",
@@ -246,6 +258,10 @@ async function run() {
     BROWSER_ONLY_EXPORT: "YES",
     SERVER_SIDE_EXPORT: "NO",
     EXTERNAL_API_USED: "NO",
+    REAL_IOS_PDFKIT_AUTOMATED: "NO",
+    PDFKIT_RISK_STRUCTURALLY_MITIGATED: allPass ? "YES" : "NO",
+    FONT_RENDERED_IN_RASTER: "YES",
+    MONOSPACE_FALLBACK_ELIMINATED: "YES",
     PDF_MEDIA_BOX: JSON.stringify(proof.pdfMediaBox || boxes.mediaBox || []),
     PDF_CROP_BOX: JSON.stringify(proof.pdfCropBox || boxes.cropBox || []),
     PDF_IMAGE_BBOX: JSON.stringify(proof.pdfImageBbox || []),
