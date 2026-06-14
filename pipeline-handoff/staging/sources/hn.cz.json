@@ -1,8 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-06-14T06:21:36.827984Z",
+  "ingestedAt": "2026-06-14T07:18:18.369701Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Tatra má zelenou k nové hale. Na pozadí sporu vlastníků investuje do zvýšení a zrychlení výroby aut více než dvě miliardy korun",
+      "url": "https://byznys.hn.cz/c1-67890930-tatra-ma-zelenou-k-nove-hale-na-pozadi-sporu-vlastniku-investuje-do-zvyseni-a-zrychleni-vyroby-aut-vice-nez-dve-miliardy-korun",
+      "dt": "2026-06-14T06:50:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN",
+      "tokens": [
+        "aut",
+        "dvě",
+        "hale",
+        "investuje",
+        "korun",
+        "miliardy",
+        "než",
+        "nové",
+        "pozadí",
+        "sporu",
+        "tatra",
+        "vlastníků",
+        "výroby",
+        "zelenou",
+        "zrychlení",
+        "zvýšení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1132,34 +1165,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Svěží jména z hitparád, rockové legendy či metal. Kam v létě vyrazit na festival, který si užijete",
-      "url": "https://vikend.hn.cz/c1-67888530-svezi-jmena-z-hitparad-rockove-legendy-ci-metal-kam-v-lete-vyrazit-na-festival-ktery-si-uzijete",
-      "dt": "2026-06-11T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN",
-      "tokens": [
-        "festival",
-        "hitparád",
-        "jména",
-        "kam",
-        "legendy",
-        "létě",
-        "metal",
-        "rockové",
-        "svěží",
-        "užijete",
-        "vyrazit"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1170,7 +1175,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 186000,
+      "bytes": 186060,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1207,7 +1212,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-14T06:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-14T06:50:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 32,
@@ -1224,6 +1229,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tatra má zelenou k nové hale. Na pozadí sporu vlastníků investuje do zvýšení a zrychlení výroby aut více než dvě miliardy korun",
+            "publishedAt": "2026-06-14T06:50:00Z"
+          },
           {
             "title": "Hodnota aut se přesouvá tam, kde je Evropa slabá. Automobilky bojují o baterie, software i kontrolu nad klíčovými technologiemi",
             "publishedAt": "2026-06-14T06:08:00Z"
@@ -1251,10 +1260,6 @@
           {
             "title": "Od noblesní zábavy aristokratů k fanouškovským rvačkám mezi dělníky. Jaké byly počátky fotbalu v Čechách",
             "publishedAt": "2026-06-13T06:35:00Z"
-          },
-          {
-            "title": "Za medaili knedlíky a jitrnice. Jak si Češi užívali fotbal, když ho ještě uměli hrát",
-            "publishedAt": "2026-06-13T06:34:00Z"
           }
         ]
       }

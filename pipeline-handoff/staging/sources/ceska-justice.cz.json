@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-06-14T06:21:36.827984Z",
+  "ingestedAt": "2026-06-14T07:18:18.369701Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Hrad míří stovky žádostí o milost. Petr Pavel letos rozhodl jen ve 4 případech",
+      "url": "https://www.ceska-justice.cz/2026/06/stovky-zadosti-o-milost-pavel-rozhodl-ve-4-pripadech/",
+      "dt": "2026-06-14T07:01:42Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "hrad",
+        "jen",
+        "letos",
+        "milost",
+        "míří",
+        "pavel",
+        "petr",
+        "případech",
+        "rozhodl",
+        "stovky",
+        "žádostí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -239,32 +267,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zaměstnancům dala volno, aby se učili na testy. Předsedkyni soudu hrozilo odvolání",
-      "url": "https://www.ceska-justice.cz/2026/06/spor-soudkyn-lacinova-karny-senat-odvolani/",
-      "dt": "2026-06-12T09:41:19Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "dala",
-        "hrozilo",
-        "odvolání",
-        "předsedkyni",
-        "soudu",
-        "testy",
-        "učili",
-        "volno",
-        "zaměstnancům"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 109115,
+      "bytes": 108863,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-06-14T05:57:59Z",
+        "raw_feed_latest_publishedAt": "2026-06-14T07:01:42Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -327,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Hrad míří stovky žádostí o milost. Petr Pavel letos rozhodl jen ve 4 případech",
+            "publishedAt": "2026-06-14T07:01:42Z"
+          },
           {
             "title": "Do nápoje, jídla i injekcí. Vláda chce tvrdě trestat podávání drog bez vědomí oběti",
             "publishedAt": "2026-06-14T05:57:59Z"
@@ -354,10 +360,6 @@
           {
             "title": "Žebříček EU: Spory o peníze soudy v Česku řeší rychle. V přístupu k dětem ale zaostávají",
             "publishedAt": "2026-06-13T04:30:00Z"
-          },
-          {
-            "title": "Nejvíc firemních bankrotů od roku 2017. Přibyly hlavně na Pardubicku a Plzeňsku",
-            "publishedAt": "2026-06-12T11:28:58Z"
           }
         ]
       }
