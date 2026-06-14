@@ -1,9 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-06-14T21:21:31.103287Z",
+  "ingestedAt": "2026-06-14T22:18:35.765042Z",
   "items": [
     {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "USA a Írán se dohodly na míru",
+      "url": "https://www.novinky.cz/clanek/zahranicni-blizky-a-stredni-vychod-usa-a-iran-uzavrely-dohodu-40583173",
+      "dt": "2026-06-14T21:34:59Z",
+      "media_raw": "Novinky / Domácí",
+      "media_norm": "Novinky",
+      "tokens": [
+        "dohodly",
+        "míru",
+        "usa",
+        "írán"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_novinky_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "krimi",
       "contentType": "article",
       "title": "Zabránili tragédii. Klatovští policisté vytáhli řidiče z hořícího auta",
@@ -759,26 +780,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "PŘEHLEDNĚ: Babiš říká, že se vzdal Agrofertu a střet zájmů vyřešil. Proč EU pochybuje",
-      "url": "https://www.novinky.cz/clanek/domaci-andrej-babis-agrofert-stret-zajmu-proc-eu-pochybuje-40581221",
-      "dt": "2026-06-14T10:01:17Z",
-      "media_raw": "Novinky / Domácí",
+      "title": "USA a Írán se dohodly na míru",
+      "url": "https://www.novinky.cz/clanek/zahranicni-blizky-a-stredni-vychod-usa-a-iran-uzavrely-dohodu-40583173",
+      "dt": "2026-06-14T21:34:59Z",
+      "media_raw": "Novinky / Zahraniční",
       "media_norm": "Novinky",
       "tokens": [
-        "agrofertu",
-        "babiš",
-        "pochybuje",
-        "proč",
-        "přehledně",
-        "střet",
-        "vyřešil",
-        "vzdal",
-        "zájmů",
-        "říká"
+        "dohodly",
+        "míru",
+        "usa",
+        "írán"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
-      "feedId": "zpr_novinky_domaci",
+      "feedId": "zpr_novinky_zahranicni",
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "novinky.cz",
       "_dt_serialized": true
@@ -1528,33 +1543,6 @@
         "kennedyho",
         "odstranili",
         "trumpovo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_novinky_zahranicni",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "PŘEHLEDNĚ: Babiš říká, že se vzdal Agrofertu a střet zájmů vyřešil. Proč EU pochybuje",
-      "url": "https://www.novinky.cz/clanek/domaci-andrej-babis-agrofert-stret-zajmu-proc-eu-pochybuje-40581221",
-      "dt": "2026-06-14T10:01:17Z",
-      "media_raw": "Novinky / Zahraniční",
-      "media_norm": "Novinky",
-      "tokens": [
-        "agrofertu",
-        "babiš",
-        "pochybuje",
-        "proč",
-        "přehledně",
-        "střet",
-        "vyřešil",
-        "vzdal",
-        "zájmů",
-        "říká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1572,7 +1560,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/domaci",
-      "bytes": 50865,
+      "bytes": 50598,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1609,7 +1597,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-14T20:47:48Z",
+        "raw_feed_latest_publishedAt": "2026-06-14T21:34:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1625,6 +1613,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA a Írán se dohodly na míru",
+            "publishedAt": "2026-06-14T21:34:59Z"
+          },
           {
             "title": "Zabránili tragédii. Klatovští policisté vytáhli řidiče z hořícího auta",
             "publishedAt": "2026-06-14T20:47:48Z"
@@ -1652,10 +1644,6 @@
           {
             "title": "Odborník povolaný k odchytu dikobraza poznal vlastní ztracené zvíře",
             "publishedAt": "2026-06-14T16:34:00Z"
-          },
-          {
-            "title": "Novela o střetu zájmů nevznikla kvůli Babišovi, brání zákon Schillerová",
-            "publishedAt": "2026-06-14T15:38:42Z"
           }
         ]
       }
@@ -1667,7 +1655,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/zahranicni",
-      "bytes": 50865,
+      "bytes": 50597,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1704,7 +1692,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-14T20:47:48Z",
+        "raw_feed_latest_publishedAt": "2026-06-14T21:34:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1720,6 +1708,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA a Írán se dohodly na míru",
+            "publishedAt": "2026-06-14T21:34:59Z"
+          },
           {
             "title": "Zabránili tragédii. Klatovští policisté vytáhli řidiče z hořícího auta",
             "publishedAt": "2026-06-14T20:47:48Z"
@@ -1747,10 +1739,6 @@
           {
             "title": "Odborník povolaný k odchytu dikobraza poznal vlastní ztracené zvíře",
             "publishedAt": "2026-06-14T16:34:00Z"
-          },
-          {
-            "title": "Novela o střetu zájmů nevznikla kvůli Babišovi, brání zákon Schillerová",
-            "publishedAt": "2026-06-14T15:38:42Z"
           }
         ]
       }
