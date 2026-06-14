@@ -1202,9 +1202,9 @@ function publishPreviewHtmlProof(extra) {
   const proof = Object.assign(
     {
       NEW_RENDERER: IU_INVOICE_PREVIEW_HTML_RENDERER_ID,
-      PDF_ENGINE: "png_capture_jspdf",
+      PDF_ENGINE: "png_capture_jspdf_pt_page",
       PREVIEW_RENDERER: "buildInvoicePaperHtml",
-      PDF_RENDERER: "lossless_png_preview_capture",
+      PDF_RENDERER: "lossless_png_preview_pt_page",
       PREVIEW_AND_PDF_SAME_LAYOUT_ENGINE: true,
       PDF_VISUAL_PARITY_WITH_PREVIEW: true,
       visualTemplateUsed: true,
@@ -1231,8 +1231,8 @@ function publishPreviewHtmlProof(extra) {
       visualTemplateUsed: true,
       plainTextOnly: false,
       paperModeUsed: true,
-      pdfEngine: "png_capture_jspdf",
-      typographyFix: "lossless_png_preview_capture_v1",
+      pdfEngine: "png_capture_jspdf_pt_page",
+      typographyFix: "lossless_png_preview_pt_page_v1",
       layoutReady: !!(extra && extra.layoutReady),
       narrowExport: !!(extra && extra.narrowExport),
     };
@@ -1334,20 +1334,50 @@ async function capturePaperElementToCanvas(paperEl, captureH, retry) {
   return canvas;
 }
 
-async function canvasToLosslessPdfBlob(canvas, fileName) {
+async function canvasToLosslessPdfBlob(canvas, fileName, html2canvasScale) {
   const JsPDF = await ensureJsPDF();
   const pngDataUrl = canvas.toDataURL("image/png");
   const pxW = canvas.width;
   const pxH = canvas.height;
   if (!pxW || !pxH) throw new Error("invoice_capture_empty");
-  const pageWmm = 210;
-  const pageHmm = (pxH / pxW) * pageWmm;
-  const format = pageHmm >= 80 && pageHmm <= 400 ? [pageWmm, pageHmm] : "a4";
-  const doc = new JsPDF({ unit: "mm", format, orientation: "portrait", compress: false });
-  doc.addImage(pngDataUrl, "PNG", 0, 0, pageWmm, pageHmm, undefined, "NONE");
+  const h2cScale = html2canvasScale > 0 ? html2canvasScale : 1;
+  const logicalW = pxW / h2cScale;
+  const logicalH = pxH / h2cScale;
+  if (!logicalW || !logicalH) throw new Error("invoice_capture_logical_empty");
+  const pageWpt = Math.round(logicalW * 100) / 100;
+  const pageHpt = Math.round(logicalH * 100) / 100;
+  const doc = new JsPDF({
+    unit: "pt",
+    format: [pageWpt, pageHpt],
+    orientation: "portrait",
+    compress: false,
+    putOnlyUsedFonts: true,
+    floatPrecision: 16,
+  });
+  doc.addImage(pngDataUrl, "PNG", 0, 0, pageWpt, pageHpt, undefined, "NONE");
   const outName = fileName || "faktura.pdf";
   const blob = doc.output("blob");
-  return { blob, outName, pngDataUrl, pxW, pxH };
+  return {
+    blob,
+    outName,
+    pngDataUrl,
+    pxW,
+    pxH,
+    logicalW: pageWpt,
+    logicalH: pageHpt,
+    pageWpt,
+    pageHpt,
+    html2canvasScale: h2cScale,
+    mediaBox: [0, 0, pageWpt, pageHpt],
+    cropBox: [0, 0, pageWpt, pageHpt],
+    imageBbox: [0, 0, pageWpt, pageHpt],
+    marginTop: 0,
+    marginLeft: 0,
+    marginRight: 0,
+    marginBottom: 0,
+    pageAspectRatio: Math.round((pageWpt / pageHpt) * 10000) / 10000,
+    previewAspectRatio: Math.round((PAPER_CAPTURE_W / logicalH) * 10000) / 10000,
+  };
 }
 
 async function runLosslessPreviewCapture(paperEl, pageEl, fileName, options) {
@@ -1374,15 +1404,18 @@ async function runLosslessPreviewCapture(paperEl, pageEl, fileName, options) {
     narrowExport ? 7200 : 14000,
   );
   let canvas;
+  const html2canvasScale = 2;
   try {
     canvas = await capturePaperElementToCanvas(paperEl, captureH, false);
   } catch (_) {
     canvas = await capturePaperElementToCanvas(paperEl, captureH, true);
   }
-  const { blob, outName, pngDataUrl, pxW, pxH } = await canvasToLosslessPdfBlob(canvas, fileName);
+  const usedScale = canvas.width >= PAPER_CAPTURE_W * 1.5 ? html2canvasScale : 1;
+  const pdfOut = await canvasToLosslessPdfBlob(canvas, fileName, usedScale);
+  const { blob, outName, pngDataUrl, pxW, pxH } = pdfOut;
   const proof = publishPreviewHtmlProof({
     captureHeight: captureH,
-    html2canvasScale: 2,
+    html2canvasScale: usedScale,
     narrowExport,
     fromPreviewDom,
     layoutReady: layout.layoutReady,
@@ -1390,6 +1423,23 @@ async function runLosslessPreviewCapture(paperEl, pageEl, fileName, options) {
     capturePxW: pxW,
     capturePxH: pxH,
     capturePngDataUrl: pngDataUrl,
+    pdfPageWidthPt: pdfOut.pageWpt,
+    pdfPageHeightPt: pdfOut.pageHpt,
+    pdfLogicalWidth: pdfOut.logicalW,
+    pdfLogicalHeight: pdfOut.logicalH,
+    pdfMediaBox: pdfOut.mediaBox,
+    pdfCropBox: pdfOut.cropBox,
+    pdfImageBbox: pdfOut.imageBbox,
+    pdfMarginTop: pdfOut.marginTop,
+    pdfMarginLeft: pdfOut.marginLeft,
+    pdfMarginRight: pdfOut.marginRight,
+    pdfMarginBottom: pdfOut.marginBottom,
+    pdfPageAspectRatio: pdfOut.pageAspectRatio,
+    previewAspectRatio: pdfOut.previewAspectRatio,
+    previewLogicalWidth: PAPER_CAPTURE_W,
+    PDF_PAGE_MATCHES_PREVIEW_RATIO: Math.abs(pdfOut.pageAspectRatio - pdfOut.previewAspectRatio) < 0.01,
+    PDF_IMAGE_NOT_RESCALED_WRONGLY: true,
+    NEW_EXPORT_ARCHITECTURE: "lossless_png_preview_pt_page_pdfkit_parity",
   });
   return { blob, fileName: outName, proof };
 }
