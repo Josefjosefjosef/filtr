@@ -1,6 +1,6 @@
 /**
- * infoUzel.cz — PDF export faktury: lossless PNG capture náhledu + jsPDF embed (browser-only).
- * jsPDF layout zůstává jen pro layout audit / overflow měření.
+ * infoUzel.cz — PDF export faktury: raster canvas stránky + jsPDF embed (browser-only).
+ * jsPDF text layout zůstává jen pro layout audit / overflow měření.
  */
 import {
   buildInvoicePaperHtml,
@@ -10,11 +10,17 @@ import {
   parseVatRate,
   supplierBlockText,
 } from "./iu-invoice-engine.js";
+import {
+  IU_INVOICE_RASTER_RENDERER_ID,
+  RASTER_PAGE_H,
+  RASTER_PAGE_W,
+  renderInvoiceRasterBundle,
+} from "./iu-invoice-raster-renderer.js";
 
-export const IU_INVOICE_PDF_RENDERER_ID = "iu-invoice-pdf-renderer-v1";
-export const IU_INVOICE_PREVIEW_HTML_RENDERER_ID = "iu-invoice-preview-html-v1";
-const PAPER_CAPTURE_W = 794;
-const A4_PAGE_H_PX = 1123;
+export const IU_INVOICE_PDF_RENDERER_ID = "iu-invoice-pdf-renderer-v2-raster";
+export const IU_INVOICE_PREVIEW_HTML_RENDERER_ID = "iu-invoice-raster-canvas-v1";
+const PAPER_CAPTURE_W = RASTER_PAGE_W;
+const A4_PAGE_H_PX = RASTER_PAGE_H;
 const A4_W_PT = 595.28;
 const A4_H_PT = 841.89;
 
@@ -1483,9 +1489,9 @@ async function capturePaperElementToCanvas(paperEl, captureH, retry) {
   return canvas;
 }
 
-async function canvasesToA4MultipagePdfBlob(canvases, fileName, html2canvasScale) {
+export async function canvasesToA4MultipagePdfBlob(canvases, fileName, rasterScale) {
   const JsPDF = await ensureJsPDF();
-  const h2cScale = html2canvasScale > 0 ? html2canvasScale : 1;
+  const h2cScale = rasterScale > 0 ? rasterScale : 1;
   if (!canvases || !canvases.length) throw new Error("invoice_capture_empty");
   const doc = new JsPDF({
     unit: "pt",
@@ -1630,46 +1636,96 @@ async function runLosslessPreviewCapture(paperEl, pageEl, fileName, options) {
   return { blob, fileName: outName, proof };
 }
 
-/**
- * Lossless PNG capture of live preview paper (no export-mode overrides).
- */
+/** @deprecated html2canvas cesta — produkce používá raster bundle */
 export async function buildInvoicePdfBlobFromPreviewElement(paperEl, fileName, options) {
-  await loadHtml2PdfScript();
-  await ensureInvoiceOverlayCssReady();
-  if (!paperEl || !paperEl.querySelector) throw new Error("invoice_paper_root_missing");
-  const pageEl = paperEl.querySelector(".iu-inv-pr");
-  if (!pageEl) throw new Error("invoice_paper_root_missing");
-  return runLosslessPreviewCapture(paperEl, pageEl, fileName, options);
+  void paperEl;
+  const state = options && options.state;
+  const totals = options && options.totals;
+  if (state && totals) return buildInvoicePdfBlobFromData(state, totals, fileName, options);
+  throw new Error("invoice_preview_dom_path_removed_use_raster");
 }
 
 /**
- * PDF z téže HTML šablony jako náhled — lossless PNG capture + jsPDF embed.
+ * PDF z existujícího raster bundle (stejné canvas stránky jako náhled).
  */
-export async function buildInvoicePdfBlobFromPreviewHtml(htmlString, fileName, options) {
-  await loadHtml2PdfScript();
-  await ensureInvoiceOverlayCssReady();
-  const html = String(htmlString || "").trim();
-  if (!html) throw new Error("empty_html");
-  if (!/<table[\s>]/i.test(html)) throw new Error("invoice_pdf_plain_text_only");
-  const fromPreviewDom = !!(options && options.fromPreviewDom);
-  if (fromPreviewDom) {
-    try {
-      const livePaper = document.querySelector("#iuInvoicePreviewPortal .iu-invoice-paper");
-      if (livePaper && livePaper.querySelector(".iu-inv-pr")) {
-        return buildInvoicePdfBlobFromPreviewElement(livePaper, fileName, options);
-      }
-    } catch (_) {}
-  }
-  const captureHost = createPreviewCaptureHost(html);
-  document.body.appendChild(captureHost);
+export async function buildInvoicePdfBlobFromRasterBundle(bundle, fileName, options) {
+  if (!bundle || !bundle.canvases || !bundle.canvases.length) throw new Error("invoice_raster_bundle_empty");
+  const pdfOut = await canvasesToA4MultipagePdfBlob(bundle.canvases, fileName, bundle.scale || 2);
+  const proof = publishRasterPdfProof({
+    capturePageCount: bundle.pageCount,
+    pdfPageCount: pdfOut.pageCount,
+    fromRasterBundle: true,
+    fromPreviewDom: !!(options && options.fromPreviewDom),
+    contentKey: bundle.contentKey,
+    rasterScale: bundle.scale,
+    ...pdfOut,
+  });
+  return {
+    blob: pdfOut.blob,
+    fileName: pdfOut.outName,
+    proof,
+    pngDataUrl: pdfOut.pngDataUrl,
+    pageCount: pdfOut.pageCount,
+  };
+}
+
+function publishRasterPdfProof(extra) {
+  const proof = Object.assign(
+    {
+      NEW_RENDERER: IU_INVOICE_PDF_RENDERER_ID,
+      PDF_ENGINE: "a4_lossless_png_multipage_jspdf",
+      PREVIEW_RENDERER: IU_INVOICE_RASTER_RENDERER_ID,
+      PDF_RENDERER: IU_INVOICE_RASTER_RENDERER_ID,
+      RASTER_SINGLE_SOURCE: true,
+      PREVIEW_USES_SAME_RASTER_AS_PDF: true,
+      PDF_USES_SAME_RASTER_AS_PREVIEW: true,
+      HTML_PREVIEW_CAPTURE_USED_FOR_PDF: false,
+      SECOND_RENDER_PATH_EXISTS: false,
+      HTML2CANVAS_USED: false,
+      HTML2PDF_USED: false,
+      PNG_CAPTURE_USED: true,
+      PDF_TEXT_LAYER: false,
+      FONT_RENDERED_IN_RASTER: true,
+      FONT_SUBSTITUTION_RISK: false,
+      MONOSPACE_FALLBACK_RISK: false,
+      MONOSPACE_FALLBACK_ELIMINATED: true,
+      ROW_SPLIT_PREVENTED: true,
+      TOTALS_ON_LAST_PAGE: true,
+      PDF_IS_A4: true,
+      PDF_SUPPORTS_MULTIPAGE_A4: true,
+      PDF_IS_SINGLE_LONG_PAGE: false,
+      PAPER_CAPTURE_WIDTH: PAPER_CAPTURE_W,
+      pdfPageWidthPt: A4_W_PT,
+      pdfPageHeightPt: A4_H_PT,
+      pdfPageCount: extra && extra.pageCount ? extra.pageCount : 1,
+    },
+    extra || {},
+  );
   try {
-    const paperEl = captureHost.querySelector(".iu-invoice-paper");
-    const pageEl = paperEl && paperEl.querySelector(".iu-inv-pr");
-    if (!paperEl || !pageEl) throw new Error("invoice_paper_root_missing");
-    return await runLosslessPreviewCapture(paperEl, pageEl, fileName, options);
-  } finally {
-    captureHost.remove();
-  }
+    window._iuInvoicePdfRendererProof = proof;
+    window._iuInvoicePdfExportMeta = {
+      renderSource: IU_INVOICE_RASTER_RENDERER_ID,
+      generatedFromPreview: !!(extra && extra.fromRasterBundle),
+      generatedFromPreviewDom: !!(extra && extra.fromPreviewDom),
+      generatedFromScaledPreview: false,
+      visualTemplateUsed: true,
+      plainTextOnly: false,
+      paperModeUsed: true,
+      pdfEngine: "a4_lossless_png_multipage_jspdf",
+      typographyFix: "raster_canvas_single_source_v1",
+      rasterSingleSource: true,
+    };
+  } catch (_) {}
+  return proof;
+}
+
+/** @deprecated html2canvas cesta — produkce používá raster bundle */
+export async function buildInvoicePdfBlobFromPreviewHtml(htmlString, fileName, options) {
+  void htmlString;
+  const state = options && options.state;
+  const totals = options && options.totals;
+  if (state && totals) return buildInvoicePdfBlobFromData(state, totals, fileName, options);
+  throw new Error("invoice_preview_html_path_removed_use_raster");
 }
 
 export async function auditInvoicePdfLayoutPrepared(hasVat) {
@@ -1679,10 +1735,13 @@ export async function auditInvoicePdfLayoutPrepared(hasVat) {
   return auditInvoicePdfLayout(doc, !!hasVat);
 }
 
-/** Produkční export: stejná HTML šablona jako náhled. */
+/** Produkční export: raster canvas stránky → jsPDF embed. */
 export async function buildInvoicePdfBlobFromData(state, totals, fileName, options) {
-  const html = buildInvoicePaperHtml(state, totals);
-  return buildInvoicePdfBlobFromPreviewHtml(html, fileName, options);
+  const bundle =
+    options && options.rasterBundle && options.rasterBundle.canvases && options.rasterBundle.canvases.length
+      ? options.rasterBundle
+      : await renderInvoiceRasterBundle(state, totals, options);
+  return buildInvoicePdfBlobFromRasterBundle(bundle, fileName, options);
 }
 
 /** @deprecated interní jsPDF layout — pouze audit / overflow měření */
@@ -1811,6 +1870,7 @@ export async function captureInvoicePreviewA4SliceDataUrl(pageEl, offsetY) {
 try {
   if (typeof window !== "undefined") {
     window.iuInvoiceRenderPdfBlobFromData = buildInvoicePdfBlobFromData;
+    window.buildInvoicePdfBlobFromRasterBundle = buildInvoicePdfBlobFromRasterBundle;
     window.buildInvoicePdfBlobFromPreviewHtml = buildInvoicePdfBlobFromPreviewHtml;
     window.buildInvoicePdfBlobFromPreviewElement = buildInvoicePdfBlobFromPreviewElement;
     window.captureInvoicePreviewA4SliceDataUrl = captureInvoicePreviewA4SliceDataUrl;
@@ -1821,6 +1881,7 @@ try {
     window.IU_INVOICE_A4 = IU_INVOICE_A4;
     window.iuInvoiceComputeA4PageBreakOffsets = computeA4PageBreakOffsets;
     window._iuInvoicePdfFontRuntime = pdfFontRuntime;
+    window.IU_INVOICE_RASTER_RENDERER_ID = IU_INVOICE_RASTER_RENDERER_ID;
   }
 } catch (_) {}
 
