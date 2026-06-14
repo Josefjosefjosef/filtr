@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-14T13:40:26.625428Z",
+  "ingestedAt": "2026-06-14T14:38:26.533151Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Plaga chce navýšit průměrný plat učitelů na 75 tisíc korun do konce volebního období",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/plaga-chce-navysit-prumerny-plat-ucitelu-na-75-tisic-korun-do-konce-volebniho-obdobi-374563",
+      "dt": "2026-06-14T14:17:15Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "chce",
+        "konce",
+        "korun",
+        "navýšit",
+        "období",
+        "plaga",
+        "plat",
+        "průměrný",
+        "tisíc",
+        "učitelů",
+        "volebního"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -112,22 +140,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Ukrajinské drony zasáhly sklady paliv v ruské Jaroslavské oblasti, uvedly úřady",
+      "title": "Ukrajina hlásí zásah ruského ropného zařízení a chemické továrny",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/ukrajinske-drony-zasahly-sklady-paliv-v-ruske-jaroslavske-oblasti-uvedly-urady-374560",
       "dt": "2026-06-14T09:51:06Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24",
       "tokens": [
-        "drony",
-        "jaroslavské",
-        "oblasti",
-        "paliv",
-        "ruské",
-        "sklady",
-        "ukrajinské",
-        "uvedly",
-        "zasáhly",
-        "úřady"
+        "chemické",
+        "hlásí",
+        "ropného",
+        "ruského",
+        "továrny",
+        "ukrajina",
+        "zařízení",
+        "zásah"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -742,34 +768,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Finský program proti šikaně pomáhá na více než stovce českých škol, připojí se další",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/finsky-program-proti-sikane-pomaha-na-vice-nez-stovce-ceskych-skol-pripoji-se-dalsi-374518",
-      "dt": "2026-06-13T08:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "další",
-        "finský",
-        "než",
-        "pomáhá",
-        "program",
-        "proti",
-        "připojí",
-        "stovce",
-        "českých",
-        "šikaně",
-        "škol"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -780,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42888,
+      "bytes": 42812,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -817,7 +815,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-14T13:22:53Z",
+        "raw_feed_latest_publishedAt": "2026-06-14T14:17:15Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 29,
@@ -833,6 +831,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Plaga chce navýšit průměrný plat učitelů na 75 tisíc korun do konce volebního období",
+            "publishedAt": "2026-06-14T14:17:15Z"
+          },
           {
             "title": "U Splitu zemřeli po srážce katamaránu s plachetnicí nejméně tři Češi",
             "publishedAt": "2026-06-14T13:22:53Z"
@@ -850,7 +852,7 @@
             "publishedAt": "2026-06-14T10:43:02Z"
           },
           {
-            "title": "Ukrajinské drony zasáhly sklady paliv v ruské Jaroslavské oblasti, uvedly úřady",
+            "title": "Ukrajina hlásí zásah ruského ropného zařízení a chemické továrny",
             "publishedAt": "2026-06-14T09:51:06Z"
           },
           {
@@ -860,10 +862,6 @@
           {
             "title": "Počet potvrzených případů eboly v DR Kongo dál roste",
             "publishedAt": "2026-06-14T08:37:30Z"
-          },
-          {
-            "title": "Kosti jako nástroje, mozek odebraný z hlavy. Skotští archeologové luští hádanku",
-            "publishedAt": "2026-06-14T08:00:00Z"
           }
         ]
       }
