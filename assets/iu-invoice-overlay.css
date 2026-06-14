@@ -47,7 +47,15 @@
   }
 }
 @media (min-width: 1025px){
-  body.iu-invoice-overlay-open #iuInvoicePanel.iu-invoice-overlay-panel:not([hidden]){
+  #iuInvoiceBackdrop.iu-invoice-overlay-backdrop:not([hidden]){
+    position: fixed;
+    inset: 0;
+    z-index: 10033;
+    display: block;
+    background: rgba(15, 23, 42, 0.48);
+    box-sizing: border-box;
+  }
+  #iuInvoicePanel.iu-invoice-overlay-panel:not([hidden]){
     position: fixed;
     inset: 0;
     left: 0;
@@ -71,7 +79,7 @@
     background: rgb(241, 245, 249);
     pointer-events: none;
   }
-  body.iu-invoice-overlay-open #iuInvoicePanel.iu-invoice-overlay-panel:not([hidden]) .iu-invoice-overlay-cardShell{
+  #iuInvoicePanel.iu-invoice-overlay-panel:not([hidden]) .iu-invoice-overlay-cardShell{
     pointer-events: auto;
     flex: 1 1 auto;
     min-height: 0;
@@ -90,11 +98,11 @@
     border: 1px solid rgba(136, 19, 55, 0.12);
     background: #fafafa;
   }
-  body.iu-invoice-overlay-open #iuInvoicePanel.iu-invoice-overlay-panel:not([hidden]) .iu-invoice-overlay-header{
+  #iuInvoicePanel.iu-invoice-overlay-panel:not([hidden]) .iu-invoice-overlay-header{
     flex: 0 0 auto;
     padding: 14px 16px;
   }
-  body.iu-invoice-overlay-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
+  #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;

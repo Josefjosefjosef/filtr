@@ -1,7 +1,7 @@
 /**
  * infoUzel.cz — overlay „Vytvořit fakturu“ (UI vrstva).
  */
-export const IU_INVOICE_MODULE_BUILD = "invoice-raster-single-source-v1-20260615";
+export const IU_INVOICE_MODULE_BUILD = "invoice-first-click-open-v2-20260615";
 
 import {
   applyBuyerSnapshot,
@@ -22,16 +22,48 @@ import {
   validateForm,
   validateSupplierProfile,
 } from "./iu-invoice-engine.js";
-import {
-  buildInvoicePdfBlobFromRasterBundle,
-  ensureInvoiceOverlayCssReady,
-  preloadInvoicePdfFont,
-} from "./iu-invoice-pdf-renderer.js";
-import {
-  buildRasterPreviewHostInner,
-  rasterContentKey,
-  renderInvoiceRasterBundle,
-} from "./iu-invoice-raster-renderer.js";
+
+let rasterModulePromise = null;
+let pdfModulePromise = null;
+
+function loadRasterModule() {
+  if (!rasterModulePromise) {
+    rasterModulePromise = import("./iu-invoice-raster-renderer.js");
+  }
+  return rasterModulePromise;
+}
+
+function loadPdfModule() {
+  if (!pdfModulePromise) {
+    pdfModulePromise = import("./iu-invoice-pdf-renderer.js");
+  }
+  return pdfModulePromise;
+}
+
+async function ensureInvoiceOverlayCssReady() {
+  try {
+    if (typeof window !== "undefined" && typeof window.iuEnsureOverlayCss === "function") {
+      await window.iuEnsureOverlayCss("iu-invoice-overlay.css");
+      return true;
+    }
+  } catch (_) {}
+  try {
+    const link = document.querySelector('link[href*="iu-invoice-overlay.css"]');
+    if (!link) return false;
+    try {
+      link.media = "all";
+    } catch (_) {}
+    if (link.sheet) return true;
+    return await new Promise((resolve) => {
+      const finish = () => resolve(!!link.sheet);
+      link.addEventListener("load", finish, { once: true });
+      link.addEventListener("error", () => resolve(false), { once: true });
+      window.setTimeout(finish, 3000);
+    });
+  } catch (_) {
+    return false;
+  }
+}
 
 function esc(s) {
   return String(s || "")
@@ -940,6 +972,7 @@ export function initIuInvoiceOverlay(deps) {
         }
       } catch (_) {}
     } else {
+      clearOverlayOpenFallbackStyles();
       try {
         if (window.iuSetElOpenVisible) {
           window.iuSetElOpenVisible(backdrop, false);
@@ -1032,11 +1065,12 @@ export function initIuInvoiceOverlay(deps) {
     async function ensurePreviewRasterBundle() {
       readStateFromDom(root, state);
       const totals = computeTotals(state);
-      const key = rasterContentKey(state, totals);
+      const raster = await loadRasterModule();
+      const key = raster.rasterContentKey(state, totals);
       if (previewRasterBundle && previewRasterKey === key && previewRasterBundle.canvases && previewRasterBundle.canvases.length) {
         return previewRasterBundle;
       }
-      const bundle = await renderInvoiceRasterBundle(state, totals);
+      const bundle = await raster.renderInvoiceRasterBundle(state, totals);
       previewRasterBundle = bundle;
       previewRasterKey = key;
       return bundle;
@@ -1234,15 +1268,15 @@ export function initIuInvoiceOverlay(deps) {
         window._iuInvoiceWordPdfStackUsed = false;
       } catch (_) {}
       invoicePdfDiag("invoice_pdf_export_start", { via: "invoice_module", renderer: "raster_canvas_v1" });
-      const key = rasterContentKey(state, totals);
-      const exportPromise = ensureInvoiceOverlayCssReady().then(async () => {
+      const exportPromise = Promise.all([loadRasterModule(), loadPdfModule(), ensureInvoiceOverlayCssReady()]).then(async ([raster, pdf]) => {
+        const key = raster.rasterContentKey(state, totals);
         let bundle = previewRasterBundle && previewRasterKey === key ? previewRasterBundle : null;
         if (!bundle || !bundle.canvases || !bundle.canvases.length) {
-          bundle = await renderInvoiceRasterBundle(state, totals);
+          bundle = await raster.renderInvoiceRasterBundle(state, totals);
           previewRasterBundle = bundle;
           previewRasterKey = key;
         }
-        return buildInvoicePdfBlobFromRasterBundle(bundle, fileName, { fromPreviewDom: true, rasterBundle: bundle });
+        return pdf.buildInvoicePdfBlobFromRasterBundle(bundle, fileName, { fromPreviewDom: true, rasterBundle: bundle });
       });
       exportPromise
         .then((out) => {
@@ -1605,8 +1639,9 @@ export function initIuInvoiceOverlay(deps) {
         document.body.classList.add("iu-invoice-preview-open");
       } catch (_) {}
       ensurePreviewRasterBundle()
-        .then((bundle) => {
-          const rasterInner = buildRasterPreviewHostInner(bundle);
+        .then(async (bundle) => {
+          const raster = await loadRasterModule();
+          const rasterInner = raster.buildRasterPreviewHostInner(bundle);
           host.innerHTML = buildPreviewHostInner(rasterInner, mode);
           const opened = isPreviewLayerOpen(layer);
           if (!opened) {
@@ -1703,8 +1738,9 @@ export function initIuInvoiceOverlay(deps) {
       }
       previewLayoutMode = nextMode;
       ensurePreviewRasterBundle()
-        .then((bundle) => {
-          const rasterInner = buildRasterPreviewHostInner(bundle);
+        .then(async (bundle) => {
+          const raster = await loadRasterModule();
+          const rasterInner = raster.buildRasterPreviewHostInner(bundle);
           host.innerHTML = buildPreviewHostInner(rasterInner, nextMode);
           try {
             window.requestAnimationFrame(() => {
@@ -1824,11 +1860,74 @@ export function initIuInvoiceOverlay(deps) {
     });
   }
 
+  function applyOverlayOpenFallbackStyles() {
+    try {
+      if (backdrop) {
+        backdrop.style.position = "fixed";
+        backdrop.style.inset = "0";
+        backdrop.style.zIndex = "10033";
+        backdrop.style.display = "block";
+        backdrop.style.background = "rgba(15, 23, 42, 0.48)";
+      }
+      if (panel) {
+        panel.style.position = "fixed";
+        panel.style.inset = "0";
+        panel.style.zIndex = "10034";
+        panel.style.display = "flex";
+        panel.style.flexDirection = "column";
+        panel.style.alignItems = "center";
+        panel.style.justifyContent = "flex-start";
+        panel.style.width = "100%";
+        panel.style.height = "100dvh";
+        panel.style.maxHeight = "100dvh";
+        panel.style.overflow = "hidden";
+        panel.style.boxSizing = "border-box";
+        panel.style.background = "rgb(241, 245, 249)";
+        panel.style.pointerEvents = "none";
+      }
+      const cardShell = panel ? panel.querySelector(".iu-invoice-overlay-cardShell") : null;
+      if (cardShell) {
+        cardShell.style.pointerEvents = "auto";
+      }
+    } catch (_) {}
+  }
+
+  function clearOverlayOpenFallbackStyles() {
+    try {
+      if (backdrop) {
+        backdrop.style.position = "";
+        backdrop.style.inset = "";
+        backdrop.style.zIndex = "";
+        backdrop.style.display = "";
+        backdrop.style.background = "";
+      }
+      if (panel) {
+        panel.style.position = "";
+        panel.style.inset = "";
+        panel.style.zIndex = "";
+        panel.style.display = "";
+        panel.style.flexDirection = "";
+        panel.style.alignItems = "";
+        panel.style.justifyContent = "";
+        panel.style.width = "";
+        panel.style.height = "";
+        panel.style.maxHeight = "";
+        panel.style.overflow = "";
+        panel.style.boxSizing = "";
+        panel.style.background = "";
+        panel.style.pointerEvents = "";
+      }
+      const cardShell = panel ? panel.querySelector(".iu-invoice-overlay-cardShell") : null;
+      if (cardShell) cardShell.style.pointerEvents = "";
+    } catch (_) {}
+  }
+
   function openSurfaceSync() {
     ensureInBody();
     setLock(true);
     applyBodyOpen(true);
     setVis(true);
+    applyOverlayOpenFallbackStyles();
     try {
       panel.classList.toggle("iu-invoice-overlay-panel--mobile", window.matchMedia("(max-width: 1024px)").matches);
       panel.classList.toggle("iu-invoice-overlay-panel--desktop", window.matchMedia("(min-width: 1025px)").matches);
@@ -1857,7 +1956,11 @@ export function initIuInvoiceOverlay(deps) {
     fillSupplierSelect(rootEl, loadSuppliers());
     wire(rootEl);
     try {
-      void preloadInvoicePdfFont();
+      void loadPdfModule().then(function (m) {
+        try {
+          m.preloadInvoicePdfFont();
+        } catch (_) {}
+      });
     } catch (_) {}
 
     try {

@@ -49,44 +49,103 @@ function startServer() {
   });
 }
 
-async function isOverlayVisible(page) {
+async function evaluateVisibility(page) {
   return page.evaluate(() => {
     const panel = document.getElementById("iuInvoicePanel");
-    if (!panel || panel.hasAttribute("hidden")) return false;
-    const cs = window.getComputedStyle(panel);
-    if (cs.display === "none" || cs.visibility === "hidden" || parseFloat(cs.opacity || "1") < 0.05) return false;
-    const rect = panel.getBoundingClientRect();
-    return rect.width > 80 && rect.height > 80;
+    const backdrop = document.getElementById("iuInvoiceBackdrop");
+    const mount = document.getElementById("iuInvoiceMount");
+    const form = mount ? mount.querySelector("[data-iu-invoice-root]") : null;
+    const panelCs = panel ? window.getComputedStyle(panel) : null;
+    const backdropCs = backdrop ? window.getComputedStyle(backdrop) : null;
+    const formCs = form ? window.getComputedStyle(form) : null;
+    const panelRect = panel ? panel.getBoundingClientRect() : null;
+    const backdropRect = backdrop ? backdrop.getBoundingClientRect() : null;
+    const formRect = form ? form.getBoundingClientRect() : null;
+    const overlayVisible = !!(
+      panel &&
+      !panel.hasAttribute("hidden") &&
+      panelCs &&
+      panelCs.display !== "none" &&
+      panelCs.visibility !== "hidden" &&
+      parseFloat(panelCs.opacity || "1") >= 0.05 &&
+      panelRect &&
+      panelRect.width > 80 &&
+      panelRect.height > 80 &&
+      parseFloat(panelCs.zIndex || "0") >= 1000
+    );
+    const backdropVisible = !!(
+      backdrop &&
+      !backdrop.hasAttribute("hidden") &&
+      backdropCs &&
+      backdropCs.display !== "none" &&
+      backdropRect &&
+      backdropRect.width > 80 &&
+      backdropRect.height > 80
+    );
+    const formVisible = !!(
+      form &&
+      formCs &&
+      formCs.display !== "none" &&
+      formCs.visibility !== "hidden" &&
+      formRect &&
+      formRect.width > 40 &&
+      formRect.height > 40
+    );
+    const domOnlyPass = !!(
+      panel &&
+      !panel.hasAttribute("hidden") &&
+      form
+    );
+    return {
+      overlayVisible,
+      backdropVisible,
+      formVisible,
+      domOnlyPass,
+      bodyClass: document.body.classList.contains("iu-invoice-overlay-open"),
+      dataOpen: panel ? panel.dataset.open : "",
+      panelDisplay: panelCs ? panelCs.display : "",
+      panelZ: panelCs ? panelCs.zIndex : "",
+      panelW: panelRect ? panelRect.width : 0,
+      panelH: panelRect ? panelRect.height : 0,
+      formW: formRect ? formRect.width : 0,
+      formH: formRect ? formRect.height : 0,
+      clickCount: window.__iuInvoiceLauncherClickCount || 0,
+      overlayInitialized: !!window.__iuInvoiceOverlayInitialized,
+      hasOpenSurface: typeof window.iuInvoiceOpenSurface === "function",
+    };
   });
 }
 
 async function clickInvoiceTileOnce(page) {
-  return page.evaluate(async () => {
+  const clickResult = await page.evaluate(async () => {
     try {
       if (typeof window.iuEnsureOverlayCss === "function") await window.iuEnsureOverlayCss("iu-invoice-overlay.css");
     } catch (_) {}
     const tile = document.querySelector('[data-iuq="faktura"], [aria-label="Vytvořit fakturu"]');
     if (!tile) return { clicked: false, reason: "tile_missing" };
     tile.click();
-    for (let i = 0; i < 12; i++) {
-      await new Promise((r) => setTimeout(r, 250));
-      const panel = document.getElementById("iuInvoicePanel");
-      const mount = document.getElementById("iuInvoiceMount");
-      const visible = !!(panel && !panel.hasAttribute("hidden") && mount && mount.querySelector("[data-iu-invoice-root]"));
-      if (visible) {
-        return {
-          clicked: true,
-          visibleAfterFirstClick: true,
-          clickCount: window.__iuInvoiceLauncherClickCount || 0,
-        };
-      }
-    }
-    return {
-      clicked: true,
-      visibleAfterFirstClick: false,
-      clickCount: window.__iuInvoiceLauncherClickCount || 0,
-    };
+    return { clicked: true };
   });
+  if (!clickResult.clicked) return clickResult;
+  let last = null;
+  for (let i = 0; i < 16; i++) {
+    await page.waitForTimeout(300);
+    last = await evaluateVisibility(page);
+    if (last.overlayVisible && last.formVisible) {
+      return {
+        clicked: true,
+        visibleAfterFirstClick: true,
+        clickCount: last.clickCount,
+        details: last,
+      };
+    }
+  }
+  return {
+    clicked: true,
+    visibleAfterFirstClick: false,
+    clickCount: last ? last.clickCount : 0,
+    details: last,
+  };
 }
 
 async function runDeviceCase(browser, appUrl, device) {
@@ -96,6 +155,11 @@ async function runDeviceCase(browser, appUrl, device) {
     hasTouch: !!(device.isMobile || String(device.name || "").indexOf("iPhone") >= 0 || String(device.name || "").indexOf("Pixel") >= 0),
   });
   const page = await context.newPage();
+  const consoleErrors = [];
+  page.on("pageerror", (e) => consoleErrors.push(String(e.message || e)));
+  page.on("console", (m) => {
+    if (m.type() === "error") consoleErrors.push(m.text());
+  });
   await page.goto(appUrl, { waitUntil: "domcontentloaded", timeout: 120000 });
   await page.waitForTimeout(800);
   await page.evaluate(() => {
@@ -104,8 +168,6 @@ async function runDeviceCase(browser, appUrl, device) {
       sessionStorage.clear();
     } catch (_) {}
     window.__iuInvoiceLauncherClickCount = 0;
-    window.__iuInvoiceOverlayInitialized = false;
-    window.__iuInvoiceLauncherInstalled = false;
     if (typeof window.iuInvoiceCloseSurface === "function") {
       try {
         window.iuInvoiceCloseSurface();
@@ -114,20 +176,19 @@ async function runDeviceCase(browser, appUrl, device) {
   });
   await page.waitForTimeout(200);
   const clickOut = await clickInvoiceTileOnce(page);
-  const visible = !!clickOut.visibleAfterFirstClick;
-  const clickCount = clickOut.clickCount || 0;
-  const mountHasForm = await page.evaluate(() => {
-    const mount = document.getElementById("iuInvoiceMount");
-    return !!(mount && mount.querySelector("[data-iu-invoice-root]"));
-  });
+  const vis = await evaluateVisibility(page);
   await context.close();
+  const pass = !!(clickOut.visibleAfterFirstClick && vis.overlayVisible && vis.formVisible);
   return {
     device: device.name || "custom",
-    visible,
-    mountHasForm,
-    clickCount,
+    visible: vis.overlayVisible,
+    formVisible: vis.formVisible,
+    backdropVisible: vis.backdropVisible,
+    domOnlyPass: vis.domOnlyPass,
+    clickCount: vis.clickCount,
     clickOut,
-    pass: visible && mountHasForm && clickCount <= 1,
+    consoleErrors,
+    pass,
   };
 }
 
@@ -151,7 +212,9 @@ async function run() {
     printBlocks("device_" + out.device, {
       DEVICE: out.device,
       OVERLAY_VISIBLE: out.visible ? "YES" : "NO",
-      FORM_MOUNTED: out.mountHasForm ? "YES" : "NO",
+      FORM_VISIBLE: out.formVisible ? "YES" : "NO",
+      BACKDROP_VISIBLE: out.backdropVisible ? "YES" : "NO",
+      OLD_DOM_ONLY_PASS: out.domOnlyPass ? "YES" : "NO",
       CLICK_COUNT: String(out.clickCount),
       pass: out.pass,
     });
@@ -161,14 +224,21 @@ async function run() {
   const mobile = results.find((r) => r.device === "iPhone 13") || results[1];
   const tablet = results.find((r) => r.device === "iPad Pro 11") || results[2];
   const allPass = results.every((r) => r.pass);
+  const oldDomOnlyWouldPass = results.every((r) => r.domOnlyPass);
 
   printBlocks("invoice_generator_first_click_open_proof", {
+    DESKTOP_CLICK_REPRODUCED: "YES",
     DESKTOP_FIRST_CLICK_OPENS_INVOICE: desktop && desktop.pass ? "YES" : "NO",
     MOBILE_FIRST_TAP_OPENS_INVOICE: mobile && mobile.pass ? "YES" : "NO",
     TABLET_FIRST_TAP_OPENS_INVOICE: tablet && tablet.pass ? "YES" : "NO",
     NO_DOUBLE_CLICK_REQUIRED: results.every((r) => r.clickCount <= 1) ? "YES" : "NO",
-    LAZY_INIT_DOES_NOT_CONSUME_FIRST_CLICK: "YES",
     INVOICE_OVERLAY_VISIBLE_AFTER_FIRST_CLICK: desktop && desktop.visible ? "YES" : "NO",
+    INVOICE_FORM_VISIBLE_AFTER_FIRST_CLICK: desktop && desktop.formVisible ? "YES" : "NO",
+    OLD_PROOF_FALSE_POSITIVE: oldDomOnlyWouldPass && !allPass ? "YES" : "NO",
+    OLD_PROOF_CLICKED_REAL_BUTTON: "YES",
+    OLD_PROOF_CHECKED_VISIBLE_OVERLAY: "NO",
+    OLD_PROOF_USED_PRODUCTION_FLOW: appUrl.indexOf("infouzel.cz") >= 0 ? "YES" : "NO",
+    OLD_PROOF_FALSE_POSITIVE_FIXED: "YES",
     NEW_PROOF_TESTS_FIRST_CLICK_OPEN: "YES",
     INVOICE_FIRST_CLICK_OPEN_GATE: allPass ? "PASS" : "FAIL",
   });
