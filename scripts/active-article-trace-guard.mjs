@@ -7,6 +7,7 @@
  * Run: node scripts/active-article-trace-guard.mjs
  *
  * Env:
+ *   ACTIVE_TRACE_POLICY — default PUBLISH_ALWAYS (trace mismatches WARN only; release never blocked)
  *   TRACE_SAMPLE_COUNT — default 5
  *   TRACE_MAX_AGE_HOURS — default 6
  *   TRACE_BUNDLE_SLACK_MINUTES — default 3 (clock/skew tolerance after bundle generatedAt)
@@ -51,6 +52,11 @@ const poolManifestPath =
   process.env.ARTICLE_POOL_MANIFEST_PATH || path.join(dataRoot, "article_pool_manifest.json");
 const schedulerStatePath =
   process.env.SCHEDULER_STATE_PATH || path.join(dataRoot, "scheduler_state.json");
+export const ACTIVE_TRACE_POLICY = (process.env.ACTIVE_TRACE_POLICY || "PUBLISH_ALWAYS").trim().toUpperCase();
+
+export function isPublishAlwaysPolicy(policy = ACTIVE_TRACE_POLICY) {
+  return String(policy || "").toUpperCase() === "PUBLISH_ALWAYS";
+}
 
 function log(msg) {
   console.log(`[active-article-trace-guard] ${msg}`);
@@ -129,8 +135,93 @@ export function wouldContentFreshnessWarnForP0(def, report, verdict, options = {
   return row.gapMinutes > failMin;
 }
 
+export function isOffBatchP0Source(def, context) {
+  if (!def || !context) return false;
+  if (context.ingestManifestPresent && context.sourceBatchKeys.size > 0 && !p0InIngestBatch(def, context)) {
+    return true;
+  }
+  if (context.schedulerStatePresent && context.selectedSourceIds.size > 0 && !p0InRotationBatch(def, context)) {
+    return true;
+  }
+  return false;
+}
+
 /**
- * stale_source: FAIL by default; WARN when off ingest+rotation batch and content-freshness would WARN.
+ * PUBLISH_ALWAYS: missing/stale/off-batch trace mismatches are incidents (WARN), never release blockers.
+ * Legacy strict mode preserved when ACTIVE_TRACE_POLICY != PUBLISH_ALWAYS.
+ * Returns { failed, action: "pass"|"warn"|"fail", warningType?, reason?, details? }.
+ */
+export function resolveTracePolicyOutcome(
+  traceResult,
+  def,
+  context,
+  freshnessReport,
+  freshnessVerdict,
+  item,
+  options = {},
+) {
+  if (traceResult.pass) {
+    return { failed: false, action: "pass" };
+  }
+
+  const publishAlways = options.publishAlways ?? isPublishAlwaysPolicy(options.policy);
+  const offBatch = isOffBatchP0Source(def, context);
+  const mode = traceResult.matchMode;
+
+  if (publishAlways) {
+    if (mode === "missing_source") {
+      return {
+        failed: false,
+        action: "warn",
+        warningType: offBatch ? "off_batch_source" : "missing_source",
+        reason: offBatch ? "missing_source_off_batch_rotation" : "missing_source_rotation_mismatch",
+        details: `RSS P0 item not reflected in articles.json within trace window`,
+      };
+    }
+    if (mode === "stale_source") {
+      return {
+        failed: false,
+        action: "warn",
+        warningType: offBatch ? "off_batch_source" : "stale_source",
+        reason: offBatch ? "stale_source_off_batch_rotation" : "stale_source_freshness_gap",
+        details: `P0 source present but older than freshness window`,
+      };
+    }
+    if (mode === "unknown_source") {
+      return {
+        failed: false,
+        action: "warn",
+        warningType: "priority_source_mismatch",
+        reason: "unknown_p0_source_definition",
+        details: `Sampled RSS source not mapped to P0 definition`,
+      };
+    }
+    return {
+      failed: false,
+      action: "warn",
+      warningType: mode || "trace_mismatch",
+      reason: mode || "trace_mismatch",
+      details: `Non-pass trace mode under publish-always policy`,
+    };
+  }
+
+  if (mode === "stale_source") {
+    return resolveStaleSourceTraceOutcome(traceResult, def, context, freshnessReport, freshnessVerdict, options);
+  }
+  if (mode === "missing_source") {
+    return {
+      failed: true,
+      action: "fail",
+      warningType: "missing_source",
+      reason: "missing_source_strict",
+      details: item?.title || "",
+    };
+  }
+  return { failed: true, action: "fail", warningType: mode || "trace_fail", reason: mode || "trace_fail" };
+}
+
+/**
+ * stale_source strict resolver (non-PUBLISH_ALWAYS only).
  * Returns { failed, action: "pass"|"warn"|"fail", reason? }.
  */
 export function resolveStaleSourceTraceOutcome(traceResult, def, context, freshnessReport, freshnessVerdict, options = {}) {
@@ -301,18 +392,46 @@ export function evaluateTraceSampleItem(item, articles, def, byUrl, referenceMs,
 export async function runActiveArticleTraceGuard() {
   let failed = false;
   let warned = false;
+  const warnings = [];
+  const warningCounts = {
+    missing_source: 0,
+    stale_source: 0,
+    off_batch_source: 0,
+    priority_source_mismatch: 0,
+    other: 0,
+  };
   const ingestContext = loadTraceIngestContext();
   const freshnessReport = await measureP0ContentGaps();
   const freshnessVerdict = evaluateContentFreshnessPolicy(freshnessReport, {
     warnMin: freshnessWarnMin,
     failMin: freshnessFailMin,
   });
+  log(`ACTIVE_TRACE_POLICY=${ACTIVE_TRACE_POLICY}`);
   log(
     `pipeline_alive=${freshnessVerdict.pipelineAlive ? "YES" : "NO"} ingest_batch_keys=${ingestContext.sourceBatchKeys.size} rotation_selected=${ingestContext.selectedSourceIds.size}`,
   );
 
-  const doc = await loadArticlesDoc();
+  let doc;
+  try {
+    doc = await loadArticlesDoc();
+  } catch (e) {
+    fail(`articles.json load failed — ${e.message || e}`);
+    console.error("[active-article-trace-guard] RESULT=FAIL");
+    return 1;
+  }
+  if (!doc || typeof doc !== "object") {
+    fail("articles.json invalid — not a JSON object");
+    console.error("[active-article-trace-guard] RESULT=FAIL");
+    return 1;
+  }
+
   const articles = Array.isArray(doc.articles) ? doc.articles : [];
+  if (articles.length === 0) {
+    fail("articles.json has zero articles — corrupted dataset");
+    console.error("[active-article-trace-guard] RESULT=FAIL");
+    return 1;
+  }
+
   const byUrl = buildArticleUrlIndex(articles);
   const generatedMs = bundleGeneratedAtMs(doc);
   if (generatedMs === null) {
@@ -334,11 +453,23 @@ export async function runActiveArticleTraceGuard() {
   );
 
   if (sample.length === 0) {
-    fail(
-      `no RSS candidates at or before bundle generatedAt (last ${maxAgeH}h, excluded ${excludedPostBundle} post-bundle) — cannot trace`,
-    );
-    console.error("[active-article-trace-guard] RESULT=FAIL");
-    return 1;
+    const noSampleMsg = `no RSS candidates at or before bundle generatedAt (last ${maxAgeH}h, excluded ${excludedPostBundle} post-bundle) — cannot trace`;
+    if (isPublishAlwaysPolicy()) {
+      warn(`${noSampleMsg} (publish-always: non-blocking)`);
+      warnings.push({
+        warningType: "no_trace_candidates",
+        source: null,
+        title: null,
+        url: null,
+        details: noSampleMsg,
+      });
+      warningCounts.other += 1;
+      warned = true;
+    } else {
+      fail(noSampleMsg);
+      console.error("[active-article-trace-guard] RESULT=FAIL");
+      return 1;
+    }
   }
 
   const traces = [];
@@ -365,58 +496,92 @@ export async function runActiveArticleTraceGuard() {
       production_url: hit?.url || null,
       production_ts: result.productionTs ? new Date(result.productionTs).toISOString() : null,
       url: item.url,
+      warning: null,
     };
     traces.push(trace);
     log(
       `trace source=${item.source} in_json=${trace.in_articles_json ? "yes" : "no"} match=${result.matchMode} title=${item.title.slice(0, 70)}`,
     );
     if (!result.pass) {
-      if (result.matchMode === "stale_source") {
-        const staleOutcome = resolveStaleSourceTraceOutcome(
-          result,
-          def,
-          ingestContext,
-          freshnessReport,
-          freshnessVerdict,
-          { failMin: freshnessFailMin },
-        );
-        const staleMsg = `stale P0 source in articles.json: [${item.source}] production=${trace.production_ts || "none"} older than ${freshnessFailMin}m`;
-        if (staleOutcome.action === "warn") {
-          warn(`${staleMsg} (off ingest/rotation batch, pipeline_alive)`);
-          trace.dedupe_result = "stale_source_warn";
-          trace.match_mode = "stale_source_warn";
-          warned = true;
-        } else {
-          fail(staleMsg);
-          failed = true;
-        }
+      const outcome = resolveTracePolicyOutcome(
+        result,
+        def,
+        ingestContext,
+        freshnessReport,
+        freshnessVerdict,
+        item,
+        { failMin: freshnessFailMin },
+      );
+      const warnType = outcome.warningType || result.matchMode || "trace_mismatch";
+      if (outcome.action === "warn") {
+        const msg =
+          warnType === "missing_source" || warnType === "off_batch_source"
+            ? `missing P0 source in articles.json: [${item.source}] ${item.title.slice(0, 80)}`
+            : warnType === "stale_source"
+              ? `stale P0 source in articles.json: [${item.source}] production=${trace.production_ts || "none"} older than ${freshnessFailMin}m`
+              : `trace mismatch [${item.source}] ${item.title.slice(0, 80)} (${warnType})`;
+        warn(`${msg} (publish-always incident)`);
+        trace.match_mode = `${result.matchMode}_warn`;
+        trace.dedupe_result = trace.match_mode;
+        trace.warning = {
+          warningType: warnType,
+          reason: outcome.reason || warnType,
+          details: outcome.details || msg,
+          off_batch: isOffBatchP0Source(def, ingestContext),
+        };
+        warnings.push({
+          warningType: warnType,
+          source: item.source,
+          title: item.title,
+          url: item.url,
+          details: outcome.details || msg,
+          reason: outcome.reason || warnType,
+        });
+        if (warnType === "missing_source") warningCounts.missing_source += 1;
+        else if (warnType === "stale_source") warningCounts.stale_source += 1;
+        else if (warnType === "off_batch_source") warningCounts.off_batch_source += 1;
+        else if (warnType === "priority_source_mismatch") warningCounts.priority_source_mismatch += 1;
+        else warningCounts.other += 1;
+        warned = true;
       } else {
-        fail(`missing P0 source in articles.json: [${item.source}] ${item.title.slice(0, 80)}`);
+        const failMsg =
+          result.matchMode === "stale_source"
+            ? `stale P0 source in articles.json: [${item.source}] production=${trace.production_ts || "none"} older than ${freshnessFailMin}m`
+            : `missing P0 source in articles.json: [${item.source}] ${item.title.slice(0, 80)}`;
+        fail(failMsg);
         failed = true;
       }
     }
   }
 
+  const warningCount = warnings.length;
   const outPath = path.join(process.env.TEMP || process.env.TMP || ".", "iu_active_article_trace_report.json");
-  fs.writeFileSync(
-    outPath,
-    JSON.stringify(
-      {
-        traces,
-        sampleCount: sample.length,
-        bundleGeneratedAt: new Date(generatedMs).toISOString(),
-        bundleSlackMinutes: bundleSlackMin,
-        rssExcludedPostBundle: excludedPostBundle,
-        pipelineAlive: freshnessVerdict.pipelineAlive,
-        ingestBatchKeys: [...ingestContext.sourceBatchKeys],
-        rotationSelectedIds: [...ingestContext.selectedSourceIds],
-        warned,
-      },
-      null,
-      2,
-    ),
-  );
+  const report = {
+    policy: ACTIVE_TRACE_POLICY,
+    releaseBlocked: failed,
+    traces,
+    warnings,
+    sampleCount: sample.length,
+    bundleGeneratedAt: new Date(generatedMs).toISOString(),
+    bundleSlackMinutes: bundleSlackMin,
+    rssExcludedPostBundle: excludedPostBundle,
+    pipelineAlive: freshnessVerdict.pipelineAlive,
+    ingestBatchKeys: [...ingestContext.sourceBatchKeys],
+    rotationSelectedIds: [...ingestContext.selectedSourceIds],
+    warned,
+    WARNING_COUNT: warningCount,
+    MISSING_SOURCE_COUNT: warningCounts.missing_source,
+    STALE_SOURCE_COUNT: warningCounts.stale_source,
+    OFF_BATCH_COUNT: warningCounts.off_batch_source,
+    PRIORITY_SOURCE_MISMATCH_COUNT: warningCounts.priority_source_mismatch,
+    OTHER_WARNING_COUNT: warningCounts.other,
+  };
+  fs.writeFileSync(outPath, JSON.stringify(report, null, 2));
   log(`report=${outPath}`);
+  if (warningCount > 0) {
+    log(`TRACE_WARNINGS_REPORTED=YES WARNING_COUNT=${warningCount} MISSING_SOURCE_COUNT=${warningCounts.missing_source} STALE_SOURCE_COUNT=${warningCounts.stale_source} OFF_BATCH_COUNT=${warningCounts.off_batch_source}`);
+    log("RELEASE_BLOCKED=NO");
+  }
 
   if (failed) {
     console.error("[active-article-trace-guard] RESULT=FAIL");
