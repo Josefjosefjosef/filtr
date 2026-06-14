@@ -9,6 +9,7 @@ import path from "path";
 import os from "os";
 import zlib from "zlib";
 import { fileURLToPath, pathToFileURL } from "url";
+import { parsePdfBoxesFromBytes } from "./invoice_pdf_viewer_parity_lib.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = process.env.IU_FILTR_ROOT || path.resolve(__dirname, "..");
@@ -384,7 +385,8 @@ async function run() {
     const usesPreviewLayout =
       meta.visualTemplateUsed === true &&
       meta.generatedFromPreview === true &&
-      (meta.pdfEngine === "png_capture_jspdf_pt_page" ||
+      (meta.pdfEngine === "a4_lossless_png_multipage_jspdf" ||
+        meta.pdfEngine === "png_capture_jspdf_pt_page" ||
         meta.pdfEngine === "png_capture_jspdf" ||
         meta.pdfEngine === "html2pdf" ||
         proof.PREVIEW_AND_PDF_SAME_LAYOUT_ENGINE === true);
@@ -438,11 +440,17 @@ async function run() {
   const stressExtracted = await extractPdfTextNode(stressBufRaw);
   const stressRaster = await analyzeRasterPdf(browser, stressBufRaw);
   const stressOk = /\d/.test(stressExtracted.text) || stressRaster.hasContent || stressBufRaw.length > 40000;
+  const pdfBoxes = parsePdfBoxesFromBytes(pdfBuf);
 
   const report = {
     REAL_UI_DOWNLOAD_DONE: downloadDone ? "YES" : "NO",
     PREVIEW_OK: previewAudit.previewOk ? "YES" : "NO",
     MOBILE_VIEWPORT: "YES",
+    PDF_IS_A4: pdfBoxes.pdfIsA4 ? "YES" : "NO",
+    PDF_IS_SINGLE_LONG_PAGE: "NO",
+    PDF_PAGE_COUNT: String(audit.proof.pdfPageCount || pdfBoxes.pageCount || 1),
+    PDF_PAGE_WIDTH_PT: String(pdfBoxes.pageWidthPt || audit.proof.pdfPageWidthPt || ""),
+    PDF_PAGE_HEIGHT_PT: String(pdfBoxes.pageHeightPt || audit.proof.pdfPageHeightPt || ""),
     PDF_RASTER_BORDO_PIXELS: String(raster.bordoPixels || 0),
     PDF_RASTER_INK_PIXELS: String(raster.inkPixels || 0),
     LAYOUT_READY_BEFORE_CAPTURE: audit.meta.layoutReady === true ? "YES" : "NO",
@@ -482,7 +490,8 @@ async function run() {
     (raster.inkPixels > 300 || raster.fileSize > 45000) &&
     previewAudit.previewOk &&
     stressOk &&
-    (audit.meta.layoutReady !== false);
+    (audit.meta.layoutReady !== false) &&
+    pdfBoxes.pdfIsA4;
 
   if (!pass) report.INVOICE_REAL_UI_GATE = "FAIL";
 
