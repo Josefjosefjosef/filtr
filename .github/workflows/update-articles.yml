@@ -561,6 +561,7 @@ jobs:
       - name: Same-topic overexposure guard
         env:
           ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
+          SAME_TOPIC_POLICY: PUBLISH_ALWAYS
         run: node scripts/same-topic-overexposure-guard.mjs
 
       - name: Aggregator legacy cleanup guard
@@ -729,6 +730,7 @@ jobs:
           rm -f iu_active_article_trace_report.json
           rm -f iu_p0_source_coverage_report.json
           rm -f iu_production_liveness_report.json
+          rm -f iu_same_topic_overexposure_guard_report.json
           rm -f projects/data/robots_cache.json
           echo "RELEASE_RUNTIME_ARTIFACTS_CLEANED=YES"
 

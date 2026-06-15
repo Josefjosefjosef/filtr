@@ -22,6 +22,7 @@ on:
       - "scripts/backpressure-guard.mjs"
       - "scripts/publish-continuity-guard.mjs"
       - "scripts/same-topic-overexposure-guard.mjs"
+      - "scripts/same-topic-overexposure-guard-policy-unit.mjs"
       - "scripts/topic-dedupe-false-positive-guard.mjs"
       - "scripts/duplicate-metadata-guard.mjs"
       - "scripts/content-freshness-guard.mjs"
@@ -64,6 +65,7 @@ on:
       - "scripts/backpressure-guard.mjs"
       - "scripts/publish-continuity-guard.mjs"
       - "scripts/same-topic-overexposure-guard.mjs"
+      - "scripts/same-topic-overexposure-guard-policy-unit.mjs"
       - "scripts/topic-dedupe-false-positive-guard.mjs"
       - "scripts/duplicate-metadata-guard.mjs"
       - "scripts/content-freshness-guard.mjs"
@@ -179,6 +181,9 @@ jobs:
 
       - name: Publish continuity guard
         run: node scripts/publish-continuity-guard.mjs
+
+      - name: Same-topic overexposure policy unit tests
+        run: node scripts/same-topic-overexposure-guard-policy-unit.mjs
 
       - name: Topic dedupe false-positive guard
         run: node scripts/topic-dedupe-false-positive-guard.mjs
