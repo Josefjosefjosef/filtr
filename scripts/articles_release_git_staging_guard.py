@@ -144,13 +144,16 @@ def validate_workflow(path: Path = WORKFLOW) -> list[str]:
         errors.append(f"missing step: {FINAL_STAGING_STEP}")
     else:
         for rel in (
-            "projects/data/videos.json",
             "projects/data/source_rotation_inventory.json",
             "projects/data/pipeline_reports/",
             "git add -A projects/data",
+            "git restore --staged projects/data/videos.json",
+            "git checkout HEAD -- projects/data/videos.json",
         ):
             if rel not in final_staging:
-                errors.append(f"final staging step must git add release path: {rel}")
+                errors.append(f"final staging step must include release path: {rel}")
+        if "projects/data/videos.json \\" in final_staging or "projects/data/videos.json\\" in final_staging:
+            errors.append("final staging step must not git add projects/data/videos.json (owned by update-videos-data.yml)")
 
     commit_idx = release.find("Commit to automation branch and push")
     staging_idx = release.find(FINAL_STAGING_STEP)

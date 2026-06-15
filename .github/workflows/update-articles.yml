@@ -657,6 +657,28 @@ jobs:
         if: steps.no_diff.outputs.data_changed == 'true' && steps.publish_final_verify.outputs.stale_publish == 'false'
         run: python scripts/articles_release_git_staging_guard.py
 
+      - name: Protect videos.json from legacy empty overwrite
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.publish_final_verify.outputs.stale_publish == 'false'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f projects/data/videos.json ]; then
+            echo "[VIDEOS] videos.json absent — skip protect (owned by update-videos-data.yml)"
+            exit 0
+          fi
+          NEW_COUNT=$(python -c "import json; d=json.load(open('projects/data/videos.json',encoding='utf-8')); print(len(d.get('videos') or []))")
+          if [ "$NEW_COUNT" -gt 0 ]; then
+            echo "[VIDEOS] build produced $NEW_COUNT videos — no restore needed"
+            exit 0
+          fi
+          if git cat-file -e HEAD:projects/data/videos.json 2>/dev/null; then
+            OLD_COUNT=$(python -c "import json,subprocess; b=subprocess.check_output(['git','show','HEAD:projects/data/videos.json']); d=json.loads(b); print(len(d.get('videos') or []))")
+            if [ "$OLD_COUNT" -gt 0 ]; then
+              echo "[VIDEOS] Restoring $OLD_COUNT videos from HEAD (legacy build produced empty)"
+              git checkout HEAD -- projects/data/videos.json
+            fi
+          fi
+
       - name: Final release data staging (all generators + guards complete)
         if: steps.no_diff.outputs.data_changed == 'true' && steps.publish_final_verify.outputs.stale_publish == 'false'
         shell: bash
@@ -664,7 +686,6 @@ jobs:
           set -euo pipefail
           git add \
             projects/data/articles.json \
-            projects/data/videos.json \
             projects/data/feed_health.json \
             projects/data/brief.json \
             projects/data/meta.json \
@@ -679,6 +700,8 @@ jobs:
             2>/dev/null || true
           git add projects/data/articles/ projects/data/pipeline_reports/ projects/data/ingest_telemetry/
           git add -A projects/data
+          git restore --staged projects/data/videos.json 2>/dev/null || true
+          git checkout HEAD -- projects/data/videos.json 2>/dev/null || true
           echo "RELEASE_DATA_STAGED=YES"
 
       - name: Commit to automation branch and push
@@ -709,7 +732,6 @@ jobs:
 
           git add \
             projects/data/articles.json \
-            projects/data/videos.json \
             projects/data/feed_health.json \
             projects/data/brief.json \
             projects/data/meta.json \
@@ -724,6 +746,8 @@ jobs:
             2>/dev/null || true
           git add projects/data/articles/ projects/data/pipeline_reports/ projects/data/ingest_telemetry/
           git add -A projects/data
+          git restore --staged projects/data/videos.json 2>/dev/null || true
+          git checkout HEAD -- projects/data/videos.json 2>/dev/null || true
           git diff --cached --quiet && {
             echo "[DATA] Nothing to commit after staging"
             git restore --staged --worktree projects/data 2>/dev/null || git checkout -- projects/data
