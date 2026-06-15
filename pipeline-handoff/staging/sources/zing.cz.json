@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-06-15T11:07:19.443242Z",
+  "ingestedAt": "2026-06-15T12:16:25.756488Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Gears of War: E-Day odhalilo HW nároky",
+      "url": "https://zing.cz/article/gears-of-war-e-day-odhalilo-hw-naroky",
+      "dt": "2026-06-15T12:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "day",
+        "gears",
+        "nároky",
+        "odhalilo",
+        "war"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -943,32 +965,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Zelda hlásí návrat. Nintendo oznámilo remake jedné z nejoceňovanějších her",
-      "url": "https://zing.cz/article/zelda-hlasi-navrat-nintendo-oznamilo-remake-jedne-z-nejocenovanejsich-her",
-      "dt": "2026-06-09T18:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "her",
-        "hlásí",
-        "jedné",
-        "nejoceňovanějších",
-        "nintendo",
-        "návrat",
-        "oznámilo",
-        "remake",
-        "zelda"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -979,7 +975,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125980,
+      "bytes": 125953,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1016,7 +1012,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-15T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-15T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1031,6 +1027,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Gears of War: E-Day odhalilo HW nároky",
+            "publishedAt": "2026-06-15T12:00:00Z"
+          },
           {
             "title": "EA zanedlouho vypne servery u známé závodní hry",
             "publishedAt": "2026-06-15T10:00:00Z"
@@ -1058,10 +1058,6 @@
           {
             "title": "Mod pro Zaklínače 3 oživí ztracenou příběhovou linku",
             "publishedAt": "2026-06-14T18:00:00Z"
-          },
-          {
-            "title": "Planescape: Torment dostal fanouškovské DLC",
-            "publishedAt": "2026-06-14T16:00:00Z"
           }
         ]
       }
