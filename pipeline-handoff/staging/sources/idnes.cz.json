@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-15T20:13:19.830131Z",
+  "ingestedAt": "2026-06-15T21:33:55.092382Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Kalifornii havaroval po startu strategický bombardér B-52",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/bombarder-b-52-kalifornie-usa-zriceni.A260615_214324_zahranicni_aya",
+      "dt": "2026-06-15T20:06:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "bombardér",
+        "havaroval",
+        "kalifornii",
+        "startu",
+        "strategický"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -743,34 +765,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Přidat uspávací prášek do pití má být nový trestný čin. Návrh podpořila vláda",
-      "url": "https://www.idnes.cz/zpravy/domaci/vlada-podavani-navykovych-latek-jinym-bez-jejich-vedomi-ma-byt-trestne.A260615_160426_domaci_iluj",
-      "dt": "2026-06-15T14:07:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "být",
-        "nový",
-        "návrh",
-        "pití",
-        "podpořila",
-        "prášek",
-        "přidat",
-        "trestný",
-        "uspávací",
-        "vláda",
-        "čin"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +775,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 46555,
+      "bytes": 46270,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,7 +812,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-15T19:48:22Z",
+        "raw_feed_latest_publishedAt": "2026-06-15T20:06:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -835,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Kalifornii havaroval po startu strategický bombardér B-52",
+            "publishedAt": "2026-06-15T20:06:00Z"
+          },
           {
             "title": "Hromadná nehoda omezila provoz na D1 těsně před Prahou. Na místě jsou zranění",
             "publishedAt": "2026-06-15T19:48:22Z"
@@ -862,10 +860,6 @@
           {
             "title": "Každému, kdo přijde, dám ochutnat. Jak mladý podnikatel věnečkárnou dobyl Prahu",
             "publishedAt": "2026-06-15T18:00:00Z"
-          },
-          {
-            "title": "Zařízli Orbána nadobro? Maďarsko zavádí osmiletý limit pro premiéry",
-            "publishedAt": "2026-06-15T17:52:00Z"
           }
         ]
       }
