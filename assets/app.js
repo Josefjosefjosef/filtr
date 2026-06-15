@@ -22332,10 +22332,16 @@ function buildVideoAsArticleCard(it) {
       }
     }
     panel.hidden = false;
+    panel.removeAttribute("hidden");
     panel.setAttribute("aria-hidden", "false");
+    try { panel.scrollTop = 0; } catch (_) {}
     if (typeof panel._iuQuickToolsSync === "function") panel._iuQuickToolsSync();
     document.body.addEventListener("keydown", iuQuickToolsSettingsOnEsc);
     document.addEventListener("click", iuQuickToolsSettingsOnOutside);
+    try {
+      if (!panel.hasAttribute("tabindex")) panel.setAttribute("tabindex", "-1");
+      panel.focus({ preventScroll: true });
+    } catch (_) {}
   }
 
   function iuQuickToolsSettingsClose() {
@@ -22969,6 +22975,7 @@ function buildVideoAsArticleCard(it) {
     cfg = sanitizeQuickToolsConfig(cfg);
     iuQuickToolsSettingsRender(cfg);
   }
+  try { window.iuQuickToolsSettingsClose = iuQuickToolsSettingsClose; } catch (_) {}
 
   function initRightPanel() {
     const root = document.querySelector(".mindMenu") || document.querySelector("aside.accordionCol") || null;
@@ -28145,6 +28152,9 @@ function buildVideoAsArticleCard(it) {
     try {
       if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) return;
     } catch (_){}
+    try {
+      if (typeof window.iuQuickToolsSettingsClose === "function") window.iuQuickToolsSettingsClose();
+    } catch (_) {}
     iuActiveOverlay = null;
     try { window.__iuLastQuickfeedKey = null; } catch (_) {}
     try { window.__iuLastMojeSluzbyKind = null; } catch (_) {}
