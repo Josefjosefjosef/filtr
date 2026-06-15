@@ -33742,7 +33742,7 @@ function buildVideoAsArticleCard(it) {
 
     var rootHtml = [
       "<div class=\"iu-mojeSluzbyBakalari bakalari-root\">",
-      "  <p class=\"bakalari-privacy-note\" data-bakalari-privacy>Údaje se ukládají pouze ve vašem zařízení (prohlížeči). Nikam se neposílají.</p>",
+      "  <p class=\"bakalari-privacy-note\" data-bakalari-privacy>Údaje se ukládají pouze v tomto prohlížeči na tomto zařízení a neodesíláme je na server infoUzel.cz.</p>",
       "  <div class=\"bakalari-cards-container\" data-bakalari-cards></div>",
       "  <button type=\"button\" class=\"bakalari-add-another\" data-bakalari-add>Přidat další</button>",
       "  <div class=\"bakalari-global-feedback\" data-bakalari-global-feedback aria-live=\"polite\"></div>",
@@ -33911,6 +33911,23 @@ function buildVideoAsArticleCard(it) {
       return false;
     }
 
+    function bakalariBtnFlashLabel(btn, tempLabel, ms, extraClass) {
+      if (!btn || btn.disabled) return;
+      if (btn.__iuBakalariFlashTimer) {
+        clearTimeout(btn.__iuBakalariFlashTimer);
+        btn.__iuBakalariFlashTimer = null;
+      }
+      var defaultLabel = btn.getAttribute("data-bakalari-default-label") || btn.textContent;
+      if (!btn.getAttribute("data-bakalari-default-label")) btn.setAttribute("data-bakalari-default-label", defaultLabel);
+      btn.textContent = tempLabel;
+      if (extraClass) btn.classList.add(extraClass);
+      btn.__iuBakalariFlashTimer = setTimeout(function () {
+        btn.textContent = btn.getAttribute("data-bakalari-default-label") || defaultLabel;
+        if (extraClass) btn.classList.remove(extraClass);
+        btn.__iuBakalariFlashTimer = null;
+      }, ms || 1600);
+    }
+
     function bindCard(cardEl) {
       var urlInp = cardEl.querySelector("[data-field=\"url\"]");
       var openBtn = cardEl.querySelector("[data-bakalari-open]");
@@ -33936,6 +33953,7 @@ function buildVideoAsArticleCard(it) {
           var isPw = passInp.getAttribute("type") === "password";
           passInp.setAttribute("type", isPw ? "text" : "password");
           togglePw.textContent = isPw ? "Skrýt heslo" : "Zobrazit heslo";
+          togglePw.classList.toggle("iu-bakalari-toggle-pw--visible", isPw);
         });
       }
 
@@ -33943,14 +33961,14 @@ function buildVideoAsArticleCard(it) {
       if (copyUser && userInp) {
         copyUser.addEventListener("click", function () {
           var v = stripPlaceholder(userInp.value, PH_USER);
-          if (v) bakalariCopyToClipboard(v);
+          if (v && bakalariCopyToClipboard(v)) bakalariBtnFlashLabel(copyUser, "Zkopírováno ✓", 1600, "iu-bakalari-btn--copied");
         });
       }
       var copyPass = cardEl.querySelector("[data-copy-password]");
       if (copyPass && passInp) {
         copyPass.addEventListener("click", function () {
           var v = stripPlaceholder(passInp.value, PH_PASS);
-          if (v) bakalariCopyToClipboard(v);
+          if (v && bakalariCopyToClipboard(v)) bakalariBtnFlashLabel(copyPass, "Zkopírováno ✓", 1600, "iu-bakalari-btn--copied");
         });
       }
 
@@ -33978,6 +33996,7 @@ function buildVideoAsArticleCard(it) {
           applyCardLock(cardEl, true);
           persistAllFromDom();
           showGlobalFb("Uloženo.", 2200);
+          bakalariBtnFlashLabel(saveBtn, "Uloženo ✓", 1800, "iu-bakalari-btn--saved");
           var cf = cardEl.querySelector("[data-bakalari-card-feedback]");
           if (cf) cf.textContent = "";
         });
@@ -33988,6 +34007,7 @@ function buildVideoAsArticleCard(it) {
         editBtn.addEventListener("click", function () {
           applyCardLock(cardEl, false);
           persistAllFromDom();
+          bakalariBtnFlashLabel(editBtn, "Upraveno ✓", 1400, "iu-bakalari-btn--saved");
           cardEl.classList.remove("bakalari-card--highlight");
           void cardEl.offsetWidth;
           cardEl.classList.add("bakalari-card--highlight");
