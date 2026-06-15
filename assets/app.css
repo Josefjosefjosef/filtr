@@ -13012,26 +13012,6 @@ section.iu-mojeSluzby{
   flex-direction: column;
   gap: 14px;
 }
-.bakalari-cards-container > .bakalari-card:nth-child(5n+1){
-  background: rgba(219,234,254,.22);
-  border-color: rgba(147,197,253,.35);
-}
-.bakalari-cards-container > .bakalari-card:nth-child(5n+2){
-  background: rgba(209,250,229,.22);
-  border-color: rgba(110,231,183,.35);
-}
-.bakalari-cards-container > .bakalari-card:nth-child(5n+3){
-  background: rgba(254,249,195,.22);
-  border-color: rgba(253,224,71,.35);
-}
-.bakalari-cards-container > .bakalari-card:nth-child(5n+4){
-  background: rgba(237,233,254,.22);
-  border-color: rgba(196,181,253,.35);
-}
-.bakalari-cards-container > .bakalari-card:nth-child(5n){
-  background: rgba(255,237,213,.22);
-  border-color: rgba(253,186,116,.35);
-}
 .bakalari-card{
   display: flex;
   flex-direction: column;
@@ -13064,10 +13044,6 @@ section.iu-mojeSluzby{
 .bakalari-open-btn:hover:not(:disabled){
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(42,125,224,.45);
-}
-.bakalari-open-btn:active:not(:disabled){
-  transform: scale(.97);
-  box-shadow: 0 2px 8px rgba(42,125,224,.3);
 }
 .bakalari-open-btn:disabled{
   opacity: .45;
@@ -13121,45 +13097,16 @@ section.iu-mojeSluzby{
   border: 1px solid transparent;
   font-family: inherit;
   -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  transition: background-color .15s ease, border-color .15s ease, filter .15s ease, box-shadow .15s ease, transform .12s ease;
 }
 .bakalari-btn--secondary{
   background: linear-gradient(180deg, #2a7de0, #1a5bb5);
   color: #fff;
   border-color: rgba(255,255,255,.12);
 }
-.bakalari-btn--secondary:hover:not(:disabled){
-  filter: brightness(1.05);
-}
-.bakalari-btn--secondary:active:not(:disabled){
-  filter: brightness(.9);
-  transform: scale(.97);
-}
 .bakalari-btn--ghost{
   background: rgba(255,255,255,.08);
   color: inherit;
   border-color: rgba(255,255,255,.2);
-}
-.bakalari-btn--ghost:hover:not(:disabled){
-  background: rgba(255,255,255,.14);
-  border-color: rgba(255,255,255,.28);
-}
-.bakalari-btn--ghost:active:not(:disabled){
-  background: rgba(255,255,255,.2);
-  border-color: rgba(255,255,255,.34);
-  transform: scale(.97);
-}
-.bakalari-btn.iu-bakalari-btn--copied,
-.bakalari-btn.iu-bakalari-btn--saved{
-  background: #dcfce7 !important;
-  color: #166534 !important;
-  border-color: #86efac !important;
-}
-.bakalari-toggle-pw.iu-bakalari-toggle-pw--visible{
-  background: rgba(224,231,255,.35) !important;
-  border-color: rgba(99,102,241,.45) !important;
-  color: #3730a3 !important;
 }
 
 .bakalari-btn--danger{
@@ -13176,7 +13123,6 @@ section.iu-mojeSluzby{
   background-color: #fca5a5 !important;
   color: #7f1d1d !important;
   border-color: #ef4444 !important;
-  transform: scale(.97);
 }
 .bakalari-btn--danger:focus-visible{
   outline: 2px solid #b91c1c;
@@ -13200,17 +13146,6 @@ section.iu-mojeSluzby{
   background: rgba(255,255,255,.08);
   color: inherit;
   font-family: inherit;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  transition: background-color .15s ease, border-color .15s ease, transform .12s ease;
-}
-.bakalari-add-another:hover:not(:disabled){
-  background: rgba(255,255,255,.14);
-  border-color: rgba(255,255,255,.3);
-}
-.bakalari-add-another:active:not(:disabled){
-  transform: scale(.97);
-  background: rgba(255,255,255,.2);
 }
 .bakalari-add-another:disabled{
   opacity: .45;
@@ -13247,21 +13182,6 @@ section.iu-mojeSluzby{
 #iuQuickFeed .bakalari-card{
   border-color: rgba(15, 23, 42, 0.12);
 }
-#iuQuickFeed .bakalari-cards-container > .bakalari-card:nth-child(5n+1){
-  background: rgba(219,234,254,.55);
-}
-#iuQuickFeed .bakalari-cards-container > .bakalari-card:nth-child(5n+2){
-  background: rgba(209,250,229,.55);
-}
-#iuQuickFeed .bakalari-cards-container > .bakalari-card:nth-child(5n+3){
-  background: rgba(254,249,195,.55);
-}
-#iuQuickFeed .bakalari-cards-container > .bakalari-card:nth-child(5n+4){
-  background: rgba(237,233,254,.55);
-}
-#iuQuickFeed .bakalari-cards-container > .bakalari-card:nth-child(5n){
-  background: rgba(255,237,213,.55);
-}
 #iuQuickFeed .bakalari-label{
   color: rgba(15, 23, 42, 0.65);
 }
@@ -13279,35 +13199,6 @@ section.iu-mojeSluzby{
   background: #f1f5f9;
   color: #0f172a;
   border-color: rgba(15, 23, 42, 0.14);
-}
-#iuQuickFeed .bakalari-btn--ghost:hover:not(:disabled){
-  background: #e2e8f0;
-  border-color: rgba(15, 23, 42, 0.22);
-}
-#iuQuickFeed .bakalari-btn--ghost:active:not(:disabled){
-  background: #cbd5e1;
-  border-color: rgba(15, 23, 42, 0.3);
-  transform: scale(.97);
-}
-#iuQuickFeed .bakalari-btn--secondary:hover:not(:disabled){
-  filter: brightness(1.05);
-}
-#iuQuickFeed .bakalari-btn--secondary:active:not(:disabled){
-  filter: brightness(.9);
-  transform: scale(.97);
-}
-#iuQuickFeed .bakalari-add-another:hover:not(:disabled){
-  background: #eef2f7;
-  border-color: rgba(15, 23, 42, 0.22);
-}
-#iuQuickFeed .bakalari-add-another:active:not(:disabled){
-  background: #e2e8f0;
-  transform: scale(.97);
-}
-#iuQuickFeed .bakalari-toggle-pw.iu-bakalari-toggle-pw--visible{
-  background: #e0e7ff !important;
-  border-color: rgba(29,78,216,.35) !important;
-  color: #1e3a8a !important;
 }
 #iuQuickFeed .bakalari-global-feedback,
 #iuQuickFeed .bakalari-card-feedback{
