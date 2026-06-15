@@ -305,6 +305,16 @@ jobs:
           git checkout main
           git reset --hard origin/main
 
+      - name: Capture workflow run anchor (publish continuity guard)
+        id: run_anchor
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          STARTED=$(gh run view "${{ github.run_id }}" --repo "${{ github.repository }}" --json createdAt --jq '.createdAt')
+          echo "started_at=$STARTED" >> "$GITHUB_OUTPUT"
+          echo "[RUN-ANCHOR] WORKFLOW_RUN_STARTED_AT=$STARTED"
+
       - name: Prepare automation branch (before data generation)
         run: |
           set -euo pipefail
@@ -498,7 +508,7 @@ jobs:
         env:
           ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
           REQUIRE_PROD_FRESHNESS: "0"
-          WORKFLOW_RUN_STARTED_AT: ${{ github.run_started_at }}
+          WORKFLOW_RUN_STARTED_AT: ${{ steps.run_anchor.outputs.started_at }}
           GITHUB_RUN_ID: ${{ github.run_id }}
           LOCAL_ARTIFACT_RUNTIME_TOLERANCE_MINUTES: "60"
         run: node scripts/publish-continuity-guard.mjs
