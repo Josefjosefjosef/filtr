@@ -15,7 +15,7 @@ export function iuFinCtaConfigIsRenderable(cfg) {
   if (!cfg || cfg.enabled === false) return false;
   const mode = cfg.ctaMode;
   if (mode === "disabled") return false;
-  if (mode !== "contact" && mode !== "landing") return false;
+  if (mode !== "contact" && mode !== "landing" && mode !== "placeholder") return false;
   if (!iuFinIsNonEmptyString(cfg.ctaLabel)) return false;
   if (!iuFinIsNonEmptyString(cfg.ctaServiceKey)) return false;
   return true;
@@ -68,6 +68,7 @@ export function resolveIuFinCta(cfg, ctx) {
     try {
       if (ev && typeof ev.preventDefault === "function") ev.preventDefault();
     } catch (_) {}
+    if (mode === "placeholder") return;
     const detail = { mode, serviceKey, calculatorId, target };
     try {
       const map =
