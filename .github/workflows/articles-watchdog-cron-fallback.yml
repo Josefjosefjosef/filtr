@@ -25,8 +25,8 @@
 # remains as a sparse re-seeder if the chain ever breaks (e.g. GitHub outage).
 #
 # This workflow is ALSO the cron liveness alert: it fails red when the production
-# publishable_pool is stale beyond FAST_ALERT_STALE_MINUTES (cron dead / pipeline
-# stuck), so a broken watchdog can no longer stay invisible.
+# publishable_pool stays stale beyond FAST_ALERT_STALE_MINUTES after a real healing
+# attempt (dispatch + wait/recheck), so a broken watchdog can no longer stay invisible.
 name: Articles watchdog cron fallback
 
 on:
@@ -50,14 +50,17 @@ concurrency:
 
 env:
   WATCHDOG_PROBE_URL: "https://infouzel-articles-watchdog.josef-zmrhal.workers.dev/probe"
+  PUBLISHABLE_POOL_URL: "https://infouzel.cz/projects/data/publishable_pool.json"
   FAST_ALERT_STALE_MINUTES: "60"
   CHAIN_MAX_ATTEMPTS: "12"
   CHAIN_SLEEP_SECONDS: "120"
+  HEAL_MAX_ATTEMPTS: "15"
+  HEAL_SLEEP_SECONDS: "90"
 
 jobs:
   fallback_dispatch:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - name: Probe watchdog until cycle dispatched or running (worker decides, chain only triggers)
         id: probe
@@ -124,21 +127,101 @@ jobs:
             exit 1
           fi
 
-      - name: Cron liveness alert (publishable_pool too stale)
+      - name: Wait for production healing then liveness gate (publishable_pool recheck)
+        id: heal
         shell: bash
         env:
+          CHAIN_RESULT: ${{ steps.probe.outputs.chain_result }}
           FAST_STALE_MINUTES: ${{ steps.probe.outputs.fast_stale_minutes }}
         run: |
           set -euo pipefail
           LIMIT="${FAST_ALERT_STALE_MINUTES}"
+          CHAIN="${CHAIN_RESULT:-no_dispatch}"
+          HEALING_ATTEMPTED="false"
+          HEALING_SUCCESS="false"
+
+          write_heal_outputs() {
+            {
+              echo "healing_attempted=${HEALING_ATTEMPTED}"
+              echo "healing_success=${HEALING_SUCCESS}"
+              echo "pool_stale_minutes=${STALE}"
+            } >> "$GITHUB_OUTPUT"
+          }
+
+          fetch_pool_stale_minutes() {
+            local gen_at epoch_gen epoch_now
+            gen_at=$(curl -sS --max-time 30 -H "Accept: application/json" -H "Cache-Control: no-cache" \
+              "${PUBLISHABLE_POOL_URL}" | jq -r '.generatedAt // empty')
+            if [ -z "$gen_at" ]; then
+              echo "null"
+              return 0
+            fi
+            epoch_gen=$(date -u -d "$gen_at" +%s)
+            epoch_now=$(date -u +%s)
+            awk "BEGIN { printf \"%.6f\", ($epoch_now - $epoch_gen) / 60.0 }"
+          }
+
+          stale_gt_limit() {
+            local stale="$1"
+            local stale_int
+            if [ "$stale" = "null" ] || [ -z "$stale" ]; then
+              return 0
+            fi
+            stale_int=${stale%%.*}
+            [ "$stale_int" -gt "$LIMIT" ]
+          }
+
           STALE="${FAST_STALE_MINUTES:-null}"
+          if [ "$STALE" = "null" ] || [ -z "$STALE" ]; then
+            STALE=$(fetch_pool_stale_minutes)
+          fi
+
+          if ! stale_gt_limit "$STALE"; then
+            echo "[fallback] liveness OK (stale=${STALE} min <= ${LIMIT} min)"
+            HEALING_ATTEMPTED="false"
+            HEALING_SUCCESS="true"
+            write_heal_outputs
+            exit 0
+          fi
+
+          if [ "$CHAIN" = "dispatched" ] || [ "$CHAIN" = "cycle_already_running" ]; then
+            HEALING_ATTEMPTED="true"
+            echo "[heal] production stale=${STALE} min chain=${CHAIN} — waiting for fast/slow pipeline to refresh publishable_pool"
+            for attempt in $(seq 1 "${HEAL_MAX_ATTEMPTS}"); do
+              if [ "$attempt" -gt 1 ] || [ "$CHAIN" = "dispatched" ]; then
+                sleep "${HEAL_SLEEP_SECONDS}"
+              fi
+              STALE=$(fetch_pool_stale_minutes)
+              if [ "$STALE" = "null" ] || [ -z "$STALE" ]; then
+                echo "[heal] attempt=${attempt} generatedAt unreadable on production"
+                continue
+              fi
+              echo "[heal] attempt=${attempt} publishable_pool stale=${STALE} min (limit=${LIMIT})"
+              if ! stale_gt_limit "$STALE"; then
+                HEALING_SUCCESS="true"
+                echo "[fallback] healing OK (stale=${STALE} min <= ${LIMIT} min after chain=${CHAIN})"
+                write_heal_outputs
+                exit 0
+              fi
+            done
+          fi
+
+          {
+            echo "## Production healing incident report"
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| CHAIN_RESULT | ${CHAIN} |"
+            echo "| HEALING_ATTEMPTED | ${HEALING_ATTEMPTED} |"
+            echo "| HEALING_SUCCESS | ${HEALING_SUCCESS} |"
+            echo "| POOL_STALE_MINUTES | ${STALE} |"
+            echo "| STALE_LIMIT_MINUTES | ${LIMIT} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          write_heal_outputs
+
           if [ "$STALE" = "null" ] || [ -z "$STALE" ]; then
             echo "::error::ALERT_CRON_NOT_FIRING: publishable_pool generatedAt unreadable on production"
             exit 1
           fi
-          STALE_INT=${STALE%%.*}
-          if [ "$STALE_INT" -gt "$LIMIT" ]; then
-            echo "::error::ALERT_CRON_NOT_FIRING: publishable_pool stale ${STALE} min > ${LIMIT} min — Cloudflare cron and/or fast pipeline not healing production"
-            exit 1
-          fi
-          echo "[fallback] liveness OK (stale=${STALE} min <= ${LIMIT} min)"
+          echo "::error::ALERT_CRON_NOT_FIRING: publishable_pool stale ${STALE} min > ${LIMIT} min — Cloudflare cron and/or fast pipeline not healing production (chain=${CHAIN} healing_attempted=${HEALING_ATTEMPTED})"
+          exit 1
