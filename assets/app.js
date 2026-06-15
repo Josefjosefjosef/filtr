@@ -4944,6 +4944,58 @@ try {
     }
   }
 
+  function iuArticleSourceTimeIso(it) {
+    try {
+      if (!it || typeof it !== "object") return "";
+      return String(
+        it.publishedAt ||
+          it.published ||
+          it.pubDate ||
+          it.date ||
+          it.createdAt ||
+          it.uploadedAt ||
+          it.time ||
+          ""
+      ).trim();
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function iuArticleInfoUzelPublishTimeIso(it) {
+    try {
+      if (!it || typeof it !== "object") return "";
+      return String(it.iuReleaseAt || "").trim();
+    } catch (_) {
+      return "";
+    }
+  }
+
+  /** User-visible article time: InfoUzel publish (iuReleaseAt); never future source RSS time. */
+  function iuArticleUserVisibleTimeIso(it) {
+    try {
+      const sourceIso = iuArticleSourceTimeIso(it);
+      const iuIso = iuArticleInfoUzelPublishTimeIso(it);
+      const now = Date.now();
+      const sourceMs = sourceIso ? Date.parse(sourceIso) : NaN;
+      const sourceFuture = Number.isFinite(sourceMs) && sourceMs > now;
+
+      if (sourceFuture) {
+        if (iuIso) {
+          addTelemetryEvent("article_future_time_guard", "src=" + sourceIso + " iu=" + iuIso);
+          return iuIso;
+        }
+        addTelemetryEvent("article_future_time_guard", "src=" + sourceIso + " iu=—");
+        return "";
+      }
+
+      if (iuIso) return iuIso;
+      return sourceIso;
+    } catch (_) {
+      return iuArticleSourceTimeIso(it);
+    }
+  }
+
   function ensureFeedTarget() {
     let feed = document.getElementById("feed");
     if (feed) return feed;
@@ -6343,7 +6395,7 @@ try {
     }
     const displayName = labelFromArticle || primaryNameRaw;
 
-    const dateText = fmtDate(it.publishedAt || it.date || it.published || "");
+    const dateText = fmtDate(iuArticleUserVisibleTimeIso(it));
     const datePart = dateText ? `<span class="iu-meta-date">${escapeHtml(dateText)}</span>` : "";
     const primaryUrl = normalizeArticleUrl(primary.url) || primary.url;
     const primaryPart = `<span class="iu-meta-src">Zdroj: <a class="iu-meta-link" href="${escapeHtml(primaryUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayName)}</a></span>`;
@@ -8190,21 +8242,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuNewsPreviewPublishedRaw(item) {
-    try {
-      if (!item || typeof item !== "object") return "";
-      return String(
-        item.publishedAt ||
-          item.published ||
-          item.pubDate ||
-          item.date ||
-          item.createdAt ||
-          item.uploadedAt ||
-          item.time ||
-          ""
-      ).trim();
-    } catch (_) {
-      return "";
-    }
+    return iuArticleUserVisibleTimeIso(item);
   }
 
   function iuNewsPreviewParsePublishedMs(item){
