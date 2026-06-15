@@ -1,29 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-15T01:01:31.529728Z",
+  "ingestedAt": "2026-06-15T01:54:46.595945Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Gól! Útočník Manchesteru United poslal Pobřeží Slonoviny do vedení. Zápas vrcholí",
+      "title": "FOTBAL ONLINE: Čeští sousedé z Dallasu jdou do boje. Švédové s hvězdným útokem vyzvou Tunisko",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-cesti-sousede-z-dallasu-jdou-do-boje-svedove-s-hvezdnym-utokem-vyzvou-tunisko-5478361",
+      "dt": "2026-06-14T18:00:09Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "boje",
+        "dallasu",
+        "fotbal",
+        "hvězdným",
+        "jdou",
+        "online",
+        "sousedé",
+        "tunisko",
+        "vyzvou",
+        "útokem",
+        "čeští",
+        "švédové"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nejprve duněla břevna, výhru Afričanů nad Ekvádorem trefil talent z Manchesteru United",
       "url": "https://www.sport.cz/clanek/fotbal-ms-do-sampionatu-vstupuje-cerny-kun-z-jizni-ameriky-vyzve-pobrezi-slonoviny-5478360",
       "dt": "2026-06-14T14:55:27Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "fotbal",
-        "gól",
+        "afričanů",
+        "břevna",
+        "duněla",
+        "ekvádorem",
         "manchesteru",
-        "online",
-        "pobřeží",
-        "poslal",
-        "slonoviny",
+        "nejprve",
+        "talent",
+        "trefil",
         "united",
-        "vedení",
-        "vrcholí",
-        "zápas",
-        "útočník"
+        "výhru"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -301,33 +328,6 @@
         "namířeno",
         "podle",
         "realu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Čeští sousedé z Dallasu jdou do boje. Švédové s hvězdným útokem vyzvou Tunisko",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-cesti-sousede-z-dallasu-jdou-do-boje-svedove-s-hvezdnym-utokem-vyzvou-tunisko-5478361",
-      "dt": "2026-06-14T18:00:09Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "boje",
-        "dallasu",
-        "hvězdným",
-        "jdou",
-        "sousedé",
-        "tunisko",
-        "vyzvou",
-        "útokem",
-        "čeští",
-        "švédové"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -797,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40318,
+      "bytes": 40333,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -850,7 +850,11 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Gól! Útočník Manchesteru United poslal Pobřeží Slonoviny do vedení. Zápas vrcholí",
+            "title": "FOTBAL ONLINE: Čeští sousedé z Dallasu jdou do boje. Švédové s hvězdným útokem vyzvou Tunisko",
+            "publishedAt": "2026-06-14T18:00:09Z"
+          },
+          {
+            "title": "Nejprve duněla břevna, výhru Afričanů nad Ekvádorem trefil talent z Manchesteru United",
             "publishedAt": "2026-06-14T14:55:27Z"
           },
           {
@@ -876,10 +880,6 @@
           {
             "title": "Nevšední příčina nedokončeného závodu. Hülkenbergovi vypnul vůz odražený kamínek",
             "publishedAt": "2026-06-14T20:42:15Z"
-          },
-          {
-            "title": "S outsiderem slavil celý svět. Rekordmana mezi trenéry přemohly slzy",
-            "publishedAt": "2026-06-14T20:09:00Z"
           }
         ]
       }
