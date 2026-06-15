@@ -28956,6 +28956,7 @@ function buildVideoAsArticleCard(it) {
       label: "",
       username: "",
       password: "",
+      locked: false,
       createdAt: t,
       updatedAt: t,
     });
@@ -29009,7 +29010,7 @@ function buildVideoAsArticleCard(it) {
       "#iuDsPanel.iu-ds-panel .iu-ds-modal{flex:1 1 auto!important;min-height:0!important;display:flex!important;flex-direction:column!important;width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;overflow:hidden!important;border-radius:0!important;box-shadow:none!important}" +
       "#iuDsPanel.iu-ds-panel .iu-ds-panelHeader{flex:0 0 auto!important}" +
       "#iuDsPanel.iu-ds-panel .iu-ds-panelBody,#iuDsPanel.iu-ds-panel .iu-datovka-scroll-host{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain!important;touch-action:pan-y!important}" +
-      ".iu-ds-profile .iu-ds-f-label,.iu-ds-profile .iu-ds-f-user,.iu-ds-profile .iu-ds-f-pass,.iu-ds-open-btn,.iu-ds-toggle-pass,.iu-ds-delete,.iu-ds-add{font-size:16px!important}" +
+      ".iu-ds-profile .iu-ds-f-label,.iu-ds-profile .iu-ds-f-user,.iu-ds-profile .iu-ds-f-pass,.iu-ds-open-btn,#iuDsPanel .bakalari-btn,.iu-ds-add{font-size:16px!important}" +
       "}";
     try {
       document.head.appendChild(s);
@@ -29061,12 +29062,11 @@ function buildVideoAsArticleCard(it) {
     const title = document.createElement("div");
     title.className = "iu-ds-deleteConfirm__title";
     title.id = "iuDsDeleteConfirmTitle";
-    title.textContent = "Smazat profil?";
+    title.textContent = "Odstranit datovou schránku?";
 
     const text = document.createElement("p");
     text.className = "iu-ds-deleteConfirm__text";
-    text.textContent =
-      "Opravdu chcete smazat tento profil? Údaje se odstraní pouze z tohoto prohlížeče na tomto zařízení.";
+    text.textContent = "Tato akce je nevratná.";
 
     const actions = document.createElement("div");
     actions.className = "iu-ds-deleteConfirm__actions";
@@ -29081,7 +29081,7 @@ function buildVideoAsArticleCard(it) {
     ok.type = "button";
     ok.id = "iuDsDeleteConfirmOk";
     ok.className = "iu-ds-deleteConfirm__ok";
-    ok.textContent = "Ano, smazat";
+    ok.textContent = "Odstranit";
 
     actions.appendChild(cancel);
     actions.appendChild(ok);
@@ -29150,9 +29150,39 @@ function buildVideoAsArticleCard(it) {
     const label = row && typeof row.label === "string" ? row.label : "";
     const username = row && typeof row.username === "string" ? row.username : "";
     const password = row && typeof row.password === "string" ? row.password : "";
+    const locked = !!(row && row.locked);
     const c0 = typeof row.createdAt === "number" && row.createdAt > 0 ? row.createdAt : t;
     const u0 = typeof row.updatedAt === "number" && row.updatedAt > 0 ? row.updatedAt : t;
-    return { id: id, label: label, username: username, password: password, createdAt: c0, updatedAt: u0 };
+    return { id: id, label: label, username: username, password: password, locked: locked, createdAt: c0, updatedAt: u0 };
+  }
+
+  function iuDsCopyToClipboard(text) {
+    const t = String(text || "");
+    if (!t) return false;
+    try {
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+        const pr = navigator.clipboard.writeText(t);
+        if (pr && typeof pr.catch === "function") pr.catch(function () {});
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
+
+  function iuDsApplyCardLock(card, locked) {
+    if (!card) return;
+    card.classList.toggle("iu-ds-profile--locked", !!locked);
+    const inputs = card.querySelectorAll(".iu-ds-f-label, .iu-ds-f-user, .iu-ds-f-pass");
+    for (let i = 0; i < inputs.length; i++) {
+      if (locked) inputs[i].setAttribute("readonly", "readonly");
+      else inputs[i].removeAttribute("readonly");
+    }
+    const passInput = card.querySelector(".iu-ds-f-pass");
+    const togglePw = card.querySelector("[data-ds-toggle-password]");
+    if (passInput && locked && passInput.getAttribute("type") === "text") {
+      passInput.setAttribute("type", "password");
+      if (togglePw) togglePw.textContent = "Zobrazit heslo";
+    }
   }
 
   function iuDsLoadFromStorage() {
@@ -29233,11 +29263,13 @@ function buildVideoAsArticleCard(it) {
       const labelEl = card.querySelector(".iu-ds-f-label");
       const userEl = card.querySelector(".iu-ds-f-user");
       const passEl = card.querySelector(".iu-ds-f-pass");
+      const locked = card.classList.contains("iu-ds-profile--locked");
       next.push({
         id: id,
         label: labelEl ? String(labelEl.value || "") : "",
         username: userEl ? String(userEl.value || "") : "",
         password: passEl ? String(passEl.value || "") : "",
+        locked: locked,
         createdAt: prev ? prev.createdAt : t,
         updatedAt: t,
       });
@@ -29294,23 +29326,31 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
-  function iuDsBuildProfileCard(p, isFirstProfile) {
+  function iuDsBuildProfileCard(p) {
     const card = document.createElement("div");
     card.className = "iu-ds-profile iu-ds-tool";
     card.setAttribute("data-profile-id", p.id);
+    if (p.locked) card.classList.add("iu-ds-profile--locked");
 
     const openBtn = document.createElement("button");
     openBtn.type = "button";
     openBtn.className = "iu-ds-open-btn";
     openBtn.textContent = "Otevřít a přihlásit do datové schránky";
+    openBtn.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      iuDsOpenLoginInNewTab();
+    });
+    card.appendChild(openBtn);
 
-    function field(labelText, className, inputType, value, idSuffix) {
-      const wrap = document.createElement("div");
-      wrap.className = "iu-ds-field";
-      const lab = document.createElement("label");
-      lab.className = "iu-ds-label";
+    const formBlock = document.createElement("div");
+    formBlock.className = "iu-ds-form-block";
+
+    function makeInput(labelText, className, inputType, value, idSuffix) {
       const inpId = "iu-ds-" + idSuffix + "-" + p.id;
-      lab.setAttribute("for", inpId);
+      const wrap = document.createElement("label");
+      wrap.className = "iu-ds-field";
+      const lab = document.createElement("span");
+      lab.className = "iu-ds-label";
       lab.textContent = labelText;
       const inp = document.createElement("input");
       inp.id = inpId;
@@ -29320,49 +29360,162 @@ function buildVideoAsArticleCard(it) {
       inp.setAttribute("autocomplete", inputType === "password" ? "new-password" : "off");
       inp.setAttribute("autocapitalize", "off");
       inp.setAttribute("spellcheck", "false");
-      if (className === "iu-ds-f-label") inp.setAttribute("maxlength", "120");
-      if (className === "iu-ds-f-user") inp.setAttribute("maxlength", "200");
       if (className === "iu-ds-f-label") {
+        inp.setAttribute("maxlength", "120");
         inp.setAttribute("placeholder", IU_DS_LABEL_PLACEHOLDER);
       }
+      if (className === "iu-ds-f-user") inp.setAttribute("maxlength", "200");
       wrap.appendChild(lab);
       wrap.appendChild(inp);
-      return wrap;
+      return { wrap: wrap, inp: inp };
     }
 
-    openBtn.addEventListener("click", function (ev) {
-      ev.preventDefault();
-      iuDsOpenLoginInNewTab();
-    });
+    const labelField = makeInput("Název přihlášení", "iu-ds-f-label", "text", p.label, "lbl");
+    formBlock.appendChild(labelField.wrap);
 
-    card.appendChild(openBtn);
-    card.appendChild(field("Název přihlášení", "iu-ds-f-label", "text", p.label, "lbl"));
-    card.appendChild(field("Uživatelské jméno", "iu-ds-f-user", "text", p.username, "usr"));
-    const passWrap = field("Heslo", "iu-ds-f-pass", "password", p.password, "pwd");
-    card.appendChild(passWrap);
-    const passInput = passWrap.querySelector(".iu-ds-f-pass");
+    const userWrap = document.createElement("div");
+    userWrap.className = "iu-ds-field";
+    const userLab = document.createElement("span");
+    userLab.className = "iu-ds-label";
+    userLab.textContent = "Uživatelské jméno";
+    const userRow = document.createElement("div");
+    userRow.className = "bakalari-inline-row";
+    const userInpId = "iu-ds-usr-" + p.id;
+    const userInp = document.createElement("input");
+    userInp.id = userInpId;
+    userInp.type = "text";
+    userInp.className = "iu-ds-f-user bakalari-input";
+    userInp.value = p.username || "";
+    userInp.setAttribute("autocomplete", "off");
+    userInp.setAttribute("autocapitalize", "off");
+    userInp.setAttribute("spellcheck", "false");
+    userInp.setAttribute("maxlength", "200");
+    const copyUserBtn = document.createElement("button");
+    copyUserBtn.type = "button";
+    copyUserBtn.className = "bakalari-btn bakalari-btn--mini bakalari-btn--ghost";
+    copyUserBtn.setAttribute("data-ds-copy-username", "");
+    copyUserBtn.textContent = "Kopírovat";
+    userRow.appendChild(userInp);
+    userRow.appendChild(copyUserBtn);
+    userWrap.appendChild(userLab);
+    userWrap.appendChild(userRow);
+    formBlock.appendChild(userWrap);
 
-    const row = document.createElement("div");
-    row.className = "iu-ds-row-actions";
-
+    const passWrap = document.createElement("div");
+    passWrap.className = "iu-ds-field";
+    const passLab = document.createElement("span");
+    passLab.className = "iu-ds-label";
+    passLab.textContent = "Heslo";
+    const passRow = document.createElement("div");
+    passRow.className = "bakalari-inline-row";
+    const passInpId = "iu-ds-pwd-" + p.id;
+    const passInput = document.createElement("input");
+    passInput.id = passInpId;
+    passInput.type = "password";
+    passInput.className = "iu-ds-f-pass bakalari-input";
+    passInput.value = p.password || "";
+    passInput.setAttribute("autocomplete", "new-password");
+    passInput.setAttribute("autocapitalize", "off");
+    passInput.setAttribute("spellcheck", "false");
+    const copyPassBtn = document.createElement("button");
+    copyPassBtn.type = "button";
+    copyPassBtn.className = "bakalari-btn bakalari-btn--mini bakalari-btn--ghost";
+    copyPassBtn.setAttribute("data-ds-copy-password", "");
+    copyPassBtn.textContent = "Kopírovat";
+    passRow.appendChild(passInput);
+    passRow.appendChild(copyPassBtn);
     const toggle = document.createElement("button");
     toggle.type = "button";
-    toggle.className = "iu-ds-toggle-pass";
+    toggle.className = "bakalari-btn bakalari-btn--ghost bakalari-toggle-pw";
+    toggle.setAttribute("data-ds-toggle-password", "");
     toggle.textContent = "Zobrazit heslo";
+    passWrap.appendChild(passLab);
+    passWrap.appendChild(passRow);
+    passWrap.appendChild(toggle);
+    formBlock.appendChild(passWrap);
 
+    const cardActions = document.createElement("div");
+    cardActions.className = "bakalari-card-actions";
+    const saveBtn = document.createElement("button");
+    saveBtn.type = "button";
+    saveBtn.className = "bakalari-btn bakalari-btn--secondary";
+    saveBtn.setAttribute("data-ds-action", "save");
+    saveBtn.textContent = "Uložit";
+    const editBtn = document.createElement("button");
+    editBtn.type = "button";
+    editBtn.className = "bakalari-btn bakalari-btn--ghost";
+    editBtn.setAttribute("data-ds-action", "edit");
+    editBtn.textContent = "Upravit";
+    const delBtn = document.createElement("button");
+    delBtn.type = "button";
+    delBtn.className = "bakalari-btn bakalari-btn--danger";
+    delBtn.setAttribute("data-ds-action", "delete");
+    delBtn.textContent = "Odstranit";
+    cardActions.appendChild(saveBtn);
+    cardActions.appendChild(editBtn);
+    cardActions.appendChild(delBtn);
+    formBlock.appendChild(cardActions);
+
+    const feedback = document.createElement("div");
+    feedback.className = "bakalari-card-feedback";
+    feedback.setAttribute("data-ds-card-feedback", "");
+    feedback.setAttribute("aria-live", "polite");
+    formBlock.appendChild(feedback);
+
+    card.appendChild(formBlock);
+
+    copyUserBtn.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      const v = String(userInp.value || "").trim();
+      if (v) iuDsCopyToClipboard(v);
+    });
+    copyPassBtn.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      const v = String(passInput.value || "").trim();
+      if (v) iuDsCopyToClipboard(v);
+    });
     toggle.addEventListener("click", function (ev) {
       ev.preventDefault();
-      if (!passInput) return;
       const showing = passInput.getAttribute("type") === "text";
       passInput.setAttribute("type", showing ? "password" : "text");
       toggle.textContent = showing ? "Zobrazit heslo" : "Skrýt heslo";
     });
 
-    const del = document.createElement("button");
-    del.type = "button";
-    del.className = "iu-ds-delete";
-    del.textContent = "Smazat profil";
-    del.addEventListener("click", function (ev) {
+    saveBtn.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      const data = {
+        label: String(labelField.inp.value || "").trim(),
+        username: String(userInp.value || "").trim(),
+        password: String(passInput.value || "").trim(),
+      };
+      if (!data.label && !data.username && !data.password) {
+        feedback.textContent = "Vyplňte alespoň jedno pole.";
+        setTimeout(function () {
+          if (feedback.textContent === "Vyplňte alespoň jedno pole.") feedback.textContent = "";
+        }, 2200);
+        return;
+      }
+      iuDsApplyCardLock(card, true);
+      iuDsSyncFromDomIfOpen();
+      feedback.textContent = "";
+    });
+
+    editBtn.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      iuDsApplyCardLock(card, false);
+      iuDsSyncFromDomIfOpen();
+      formBlock.classList.remove("bakalari-card--highlight");
+      void formBlock.offsetWidth;
+      formBlock.classList.add("bakalari-card--highlight");
+      setTimeout(function () {
+        formBlock.classList.remove("bakalari-card--highlight");
+      }, 600);
+      try {
+        labelField.inp.focus();
+      } catch (_) {}
+    });
+
+    delBtn.addEventListener("click", function (ev) {
       ev.preventDefault();
       ev.stopPropagation();
       if (iuDsDeleteConfirmIsOpen()) return;
@@ -29372,9 +29525,7 @@ function buildVideoAsArticleCard(it) {
       iuDsOpenDeleteConfirm(id);
     });
 
-    row.appendChild(toggle);
-    row.appendChild(del);
-    card.appendChild(row);
+    iuDsApplyCardLock(card, !!p.locked);
 
     card.addEventListener(
       "input",
@@ -29392,7 +29543,7 @@ function buildVideoAsArticleCard(it) {
     if (!host) return;
     host.textContent = "";
     for (let i = 0; i < iuDsProfiles.length; i++) {
-      host.appendChild(iuDsBuildProfileCard(iuDsProfiles[i], i === 0));
+      host.appendChild(iuDsBuildProfileCard(iuDsProfiles[i]));
     }
     iuDsUpdateAddUi();
   }
@@ -29472,7 +29623,7 @@ function buildVideoAsArticleCard(it) {
         iuDsSyncFromDomIfOpen();
         if (iuDsProfiles.length >= IU_DS_MAX) return;
         const t = iuDsNow();
-        iuDsProfiles.push({ id: iuDsNewId(), label: "", username: "", password: "", createdAt: t, updatedAt: t });
+        iuDsProfiles.push({ id: iuDsNewId(), label: "", username: "", password: "", locked: false, createdAt: t, updatedAt: t });
         iuDsPersist();
         iuDsRender();
         try {

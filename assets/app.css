@@ -3052,21 +3052,25 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
 .iu-ds-helper{margin:0 0 10px;font-size:13px;line-height:1.45;color:var(--muted,rgba(11,27,43,0.6))}
 .iu-ds-status{margin:0 0 14px;font-size:13px;line-height:1.45;color:var(--muted,rgba(11,27,43,0.72));padding:10px 12px;border-radius:10px;background:rgba(31,75,153,0.06);border:1px solid rgba(31,75,153,0.12);word-break:break-word}
 .iu-ds-profile-list{display:flex;flex-direction:column;gap:14px;min-width:0}
-.iu-ds-profile{border:1px solid rgba(0,0,0,0.1);border-radius:12px;padding:12px;background:rgba(247,248,250,0.85);min-width:0;box-sizing:border-box}
-.iu-ds-open-btn{display:block;width:100%;margin:0 0 12px;padding:10px 14px;font-size:14px;font-family:inherit;font-weight:600;border:0;border-radius:10px;background:#1D4ED8;color:#fff;cursor:pointer;text-align:center;box-sizing:border-box}
+.iu-ds-profile{display:flex;flex-direction:column;gap:12px;min-width:0;box-sizing:border-box;max-width:100%;overflow-x:hidden}
+.iu-ds-open-btn{display:block;width:100%;margin:0;padding:10px 14px;font-size:14px;font-family:inherit;font-weight:600;border:0;border-radius:10px;background:#1D4ED8;color:#fff;cursor:pointer;text-align:center;box-sizing:border-box;flex-shrink:0}
 .iu-ds-open-btn:hover{background:#1e40af}
 .iu-ds-open-btn:focus-visible{outline:2px solid #1D4ED8;outline-offset:2px}
-.iu-ds-field{margin-bottom:10px;min-width:0}
-.iu-ds-field:last-of-type{margin-bottom:0}
-.iu-ds-label{display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:var(--text,rgba(11,27,43,0.88))}
-.iu-ds-profile .iu-ds-f-label,.iu-ds-profile .iu-ds-f-user,.iu-ds-profile .iu-ds-f-pass{width:100%;max-width:100%;box-sizing:border-box;padding:9px 10px;font-size:14px;font-family:inherit;border:1px solid rgba(0,0,0,0.14);border-radius:8px;background:#fff;min-width:0}
+.iu-ds-form-block{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:14px;border:1px solid rgba(0,0,0,.1);min-width:0;box-sizing:border-box;max-width:100%}
+.iu-ds-profile-list>.iu-ds-profile:nth-child(5n+1) .iu-ds-form-block{background:rgba(219,234,254,.55)}
+.iu-ds-profile-list>.iu-ds-profile:nth-child(5n+2) .iu-ds-form-block{background:rgba(209,250,229,.55)}
+.iu-ds-profile-list>.iu-ds-profile:nth-child(5n+3) .iu-ds-form-block{background:rgba(254,249,195,.55)}
+.iu-ds-profile-list>.iu-ds-profile:nth-child(5n+4) .iu-ds-form-block{background:rgba(237,233,254,.55)}
+.iu-ds-profile-list>.iu-ds-profile:nth-child(5n) .iu-ds-form-block{background:rgba(255,237,213,.55)}
+.iu-ds-field{display:flex;flex-direction:column;gap:4px;margin:0;min-width:0}
+.iu-ds-label{font-size:12px;font-weight:600;color:var(--text,rgba(11,27,43,.88))}
+.iu-ds-profile .iu-ds-f-label,.iu-ds-profile .iu-ds-f-user,.iu-ds-profile .iu-ds-f-pass{width:100%;max-width:100%;box-sizing:border-box;padding:9px 10px;font-size:14px;font-family:inherit;border:1px solid rgba(0,0,0,.14);border-radius:8px;background:#fff;min-width:0;color:inherit}
 .iu-ds-profile .iu-ds-f-label,.iu-ds-profile .iu-ds-f-user{overflow:hidden;text-overflow:ellipsis}
-.iu-ds-row-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
-.iu-ds-toggle-pass,.iu-ds-delete{padding:6px 10px;font-size:13px;font-family:inherit;border-radius:8px;border:1px solid rgba(0,0,0,0.12);background:#fff;cursor:pointer;color:#111}
-.iu-ds-delete{color:#b91c1c;border-color:rgba(185,28,28,0.25)}
-.iu-ds-add{display:block;width:100%;margin-top:14px;padding:10px 14px;font-size:14px;font-family:inherit;border-radius:10px;border:1px dashed rgba(0,0,0,0.22);background:transparent;cursor:pointer;color:inherit;box-sizing:border-box}
+.iu-ds-profile .iu-ds-f-label:focus,.iu-ds-profile .iu-ds-f-user:focus,.iu-ds-profile .iu-ds-f-pass:focus{outline:2px solid rgba(29,78,216,.45);outline-offset:1px}
+#iuDsPanel .bakalari-btn--ghost{background:#f1f5f9;color:#0f172a;border-color:rgba(15,23,42,.14)}
+.iu-ds-add{display:block;width:100%;margin-top:14px;padding:10px 16px;font-size:14px;font-family:inherit;font-weight:600;border-radius:10px;border:1px solid rgba(15,23,42,.14);background:#f8fafc;cursor:pointer;color:inherit;box-sizing:border-box}
 .iu-ds-add:disabled{opacity:.45;cursor:not-allowed}
-.iu-ds-limit-note{margin:8px 0 0;font-size:12px;color:var(--muted,rgba(11,27,43,0.55));text-align:center}
+.iu-ds-limit-note{margin:8px 0 0;font-size:12px;color:var(--muted,rgba(11,27,43,.55));text-align:center}
 
 
 button.iu-close-btn-38{
