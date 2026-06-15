@@ -12,10 +12,11 @@
     if (bar) bar.hidden = true;
   }
 
-  function openPrivacySettings() {
+  function openInfoCenter(sectionKey) {
+    var key = sectionKey || "menu";
     var openFn = window.iuInfoCenterOpenSection;
     if (typeof openFn === "function") {
-      openFn("privacy-settings");
+      openFn(key);
       return;
     }
     var trigger = document.getElementById("iuTopbarInfoBtn") || document.getElementById("iuSilverWelcomeInfoBtn");
@@ -33,9 +34,13 @@
     }
     window.setTimeout(function () {
       if (typeof window.iuInfoCenterOpenSection === "function") {
-        window.iuInfoCenterOpenSection("privacy-settings");
+        window.iuInfoCenterOpenSection(key);
       }
     }, 80);
+  }
+
+  function openPrivacySettings() {
+    openInfoCenter("privacy-settings");
   }
 
   function applyChoice(bar, value, dismiss) {
@@ -63,6 +68,7 @@
     var allowBtn = document.getElementById("iuConsentAllowStats");
     var essentialBtn = document.getElementById("iuConsentEssentialOnly");
     var settingsBtn = document.getElementById("iuConsentSettings");
+    var infoBtn = document.getElementById("iuConsentInfoBtn");
 
     if (allowBtn) {
       allowBtn.addEventListener("click", function (e) {
@@ -88,6 +94,15 @@
           e.preventDefault();
         } catch (_) {}
         openPrivacySettings();
+      });
+    }
+
+    if (infoBtn) {
+      infoBtn.addEventListener("click", function (e) {
+        try {
+          e.preventDefault();
+        } catch (_) {}
+        openInfoCenter("menu");
       });
     }
   }

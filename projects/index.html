@@ -6422,14 +6422,14 @@ font-src 'self' data:;
     </div>
     </template>
 
-    <aside id="iuConsentLayer" class="iuConsentLayer" role="region" aria-label="Volba soukromí a ukládání" hidden>
+    <aside id="iuConsentLayer" class="iuConsentLayer" role="region" aria-label="Volba soukromí a anonymní statistiky" hidden>
       <div class="iuConsentLayer__panel">
-        <h2 class="iuConsentLayer__title">Soukromí a ukládání v prohlížeči</h2>
-        <p class="iuConsentLayer__text">InfoUzel používá nezbytné technické ukládání pro fungování nástrojů a offline režim. Volitelně můžete povolit anonymní statistiky návštěvnosti, které nám v budoucnu pomohou zlepšovat web. Nepoužíváme reklamní profilování a neprodáváme data třetím stranám.</p>
+        <h2 class="iuConsentLayer__title">Soukromí a anonymní statistiky</h2>
+        <p class="iuConsentLayer__text">Anonymní statistiky nám pomáhají pochopit návštěvnost a zlepšovat InfoUzel.cz. Neslouží k identifikaci konkrétních osob. Více informací najdete v Informačním centru.<button type="button" class="iuConsentLayer__infoBtn" id="iuConsentInfoBtn" aria-label="Otevřít Informační centrum"><span class="iuConsentLayer__infoGlyph" aria-hidden="true">i</span></button></p>
         <div class="iuConsentLayer__actions">
-          <button type="button" class="iuConsentLayer__btn" id="iuConsentAllowStats">Povolit anonymní statistiky</button>
-          <button type="button" class="iuConsentLayer__btn" id="iuConsentEssentialOnly">Pouze nezbytné</button>
-          <button type="button" class="iuConsentLayer__btn" id="iuConsentSettings">Nastavení</button>
+          <button type="button" class="iuConsentLayer__btn iuConsentLayer__btn--essential" id="iuConsentEssentialOnly">Povolit pouze nezbytné</button>
+          <button type="button" class="iuConsentLayer__btn iuConsentLayer__btn--primary" id="iuConsentAllowStats">Povolit anonymní statistiky</button>
+          <button type="button" class="iuConsentLayer__btn iuConsentLayer__btn--settings" id="iuConsentSettings">Nastavení</button>
         </div>
       </div>
     </aside>

@@ -49,11 +49,51 @@
   color: #e2e8f0;
 }
 
+.iuConsentLayer__infoBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  margin: 0 0 0 4px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  background: rgba(226, 232, 240, 0.12);
+  color: #f8fafc;
+  font: inherit;
+  line-height: 1;
+  vertical-align: middle;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.iuConsentLayer__infoGlyph {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-style: italic;
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1;
+}
+
+.iuConsentLayer__infoBtn:hover {
+  background: rgba(226, 232, 240, 0.2);
+}
+
+.iuConsentLayer__infoBtn:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
 .iuConsentLayer__actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   width: 100%;
+  align-items: stretch;
 }
 
 .iuConsentLayer__btn {
@@ -80,6 +120,15 @@
 .iuConsentLayer__btn:focus-visible {
   outline: 2px solid #38bdf8;
   outline-offset: 2px;
+}
+
+.iuConsentLayer__btn--primary {
+  border-color: rgba(56, 189, 248, 0.62);
+  background: rgba(56, 189, 248, 0.14);
+}
+
+.iuConsentLayer__btn--primary:hover {
+  background: rgba(56, 189, 248, 0.22);
 }
 
 @media (max-width: 900px) {
@@ -128,13 +177,11 @@
   }
 
   .iuConsentLayer__actions {
-    flex-direction: row;
-    flex-wrap: nowrap;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 4px;
   }
 
   .iuConsentLayer__btn {
-    flex: 1 1 0;
     min-height: 34px;
     padding: 5px 4px;
     font-size: 0.65rem;
@@ -153,12 +200,7 @@
     border-bottom: 1px solid rgba(148, 163, 184, 0.35);
   }
 
-  .iuConsentLayer__actions {
-    justify-content: flex-end;
-  }
-
   .iuConsentLayer__btn {
-    flex: 0 1 auto;
     white-space: nowrap;
   }
 }
