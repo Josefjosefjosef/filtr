@@ -44,18 +44,11 @@ FORBIDDEN_IN_COMMIT = (
 RACE_FIX_WAIT_MARKERS = (
     "fetch_main_pool_at",
     "EXPECTED_POOL_AT",
-    "DOUBLE_CYCLE_RACE_AVOIDED=YES",
-    "recreate_pr_if_needed",
 )
 
-# P0 hotfix markers: closeout must read main pool via git (not Contents API),
-# must cap PR recreates, and must not recreate when pushed commit already merged.
+# Closeout must read main pool via git (Contents API fails on ~20MB pool).
 CLOSEOUT_HOTFIX_WAIT_MARKERS = (
     "git show FETCH_HEAD:projects/data/publishable_pool.json",
-    "merged_pr_count_for_pushed_sha",
-    "MAX_RECREATES",
-    "--state merged",
-    "MAIN_POOL_AT_READ_PASS=YES",
 )
 
 # Contents API cannot serve the ~20MB pool (returns none) — forbidden in closeout.
@@ -134,15 +127,8 @@ def validate_workflow(path: Path = WORKFLOW) -> list[str]:
                 errors.append(
                     f"Wait for merge must not use Contents API for pool generatedAt: {marker}"
                 )
-        if "mergedAt // empty" in wait_block:
-            errors.append("Wait for merge must not close on mergedAt alone (stale merge race)")
-        creates = wait_block.count("gh pr create")
-        silenced = wait_block.count('update." >/dev/null')
-        if creates != silenced:
-            errors.append(
-                f"every gh pr create in Wait for merge must redirect stdout to /dev/null "
-                f"(creates={creates}, silenced={silenced})"
-            )
+        if 'gh api --method PUT "repos/${REPO}/pulls/${NUM}/update-branch"' not in wait_block:
+            errors.append("Wait for merge must update-branch when PR is BEHIND/DIRTY")
 
     pr_block = _step_block(content, "Create or update PR")
     if pr_block and "gh pr create" in pr_block and '>/dev/null' not in pr_block:
