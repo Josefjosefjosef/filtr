@@ -6168,7 +6168,7 @@ font-src 'self' data:;
               <p class="iuInfoCenter__p">Souhlas se statistikami <strong>není</strong> odvozen z pokračování v prohlížení ani z používání nástrojů.</p>
               <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy-settings">Upravit v Nastavení soukromí →</button>
               <h3 class="iuInfoCenter__h3">D) Třetí strany (mimo naše statistiky)</h3>
-              <p class="iuInfoCenter__p">Při přehrání videa (YouTube / youtube-nocookie.com) nebo načtení počasí (Open-Meteo) mohou tyto služby ukládat vlastní technická data dle svých pravidel. Na to nemáme přímou kontrolu. Naše volitelné statistiky se jich netýkají.</p>
+              <p class="iuInfoCenter__p">Při zobrazení náhledů videí v sekci Média může prohlížeč načíst obrázky z CDN YouTube (<code>i.ytimg.com</code>) ještě <strong>před</strong> kliknutím na přehrání. Při přehrání videa (YouTube / youtube-nocookie.com) nebo načtení počasí (Open-Meteo) mohou tyto služby ukládat vlastní technická data dle svých pravidel. Na to nemáme přímou kontrolu. Naše volitelné statistiky se jich netýkají.</p>
               <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
             </div>
           </article>
@@ -6243,6 +6243,14 @@ font-src 'self' data:;
               <p class="iuInfoCenter__p">InfoUzel používá pouze údaje a nastavení nezbytné pro provoz webu a funkcí, které si uživatel zvolí.</p>
               <p class="iuInfoCenter__p">U nástrojů fungujících local-first (poznámky, úkoly, kalendář, faktury a právní dokumenty) zůstává obsah standardně uložen v zařízení uživatele.</p>
               <p class="iuInfoCenter__p">Podrobnosti o ukládání dat naleznete v sekci <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-storage">Jak funguje ukládání dat</button>.</p>
+              <h3 class="iuInfoCenter__h3">Provozní a bezpečnostní logy u hostingu</h3>
+              <p class="iuInfoCenter__p">Při běžném provozu webu mohou hosting (GitHub Pages) a případně CDN/workery (Cloudflare) zpracovávat:</p>
+              <ul class="iuInfoCenter__ul">
+                <li><strong>provozní logy</strong> — doručení statického obsahu webu</li>
+                <li><strong>bezpečnostní logy</strong> — ochrana proti zneužití, chybám a útokům na dostupnost</li>
+                <li><strong>technické logy</strong> — IP adresa, čas HTTP požadavku, URL, user-agent (dle poskytovatele)</li>
+              </ul>
+              <p class="iuInfoCenter__p"><strong>Právní základ:</strong> oprávněný zájem provozovatele (GDPR Art.&nbsp;6 odst.&nbsp;1 písm.&nbsp;f) — zajištění dostupnosti, bezpečnosti a ochrany webu proti zneužití.</p>
               <h3 class="iuInfoCenter__h3">1. Jaká data mohou být zpracována</h3>
               <ul class="iuInfoCenter__ul">
                 <li>nastavení vzhledu a uživatelské preference</li>
@@ -6328,7 +6336,7 @@ font-src 'self' data:;
                     <tr><td>GitHub Actions</td><td>CI, generování veřejných JSON</td><td>repozitář, build logy</td><td><strong>Ne</strong> — bez user content z prohlížeče</td></tr>
                     <tr><td>Cloudflare Workers</td><td>volitelně VIN API, articles-watchdog (pokud nasazeno)</td><td>technický provoz, VIN dotaz pokud uživatel použije VIN modul</td><td><strong>Ne</strong> pro poznámky/úkoly/kalendář/faktury/právní docs</td></tr>
                     <tr><td>Open-Meteo</td><td>předpověď počasí</td><td>souřadnice / město při volbě polohy</td><td><strong>Ne</strong></td></tr>
-                    <tr><td>YouTube / Google</td><td>embed videí</td><td>technická data při přehrání dle Google</td><td><strong>Ne</strong> — neposíláme texty z nástrojů</td></tr>
+                    <tr><td>YouTube / Google</td><td>náhledy videí (<code>i.ytimg.com</code>) a embed po kliknutí</td><td>technická data při načtení náhledu a při přehrání dle Google</td><td><strong>Ne</strong> — neposíláme texty z nástrojů</td></tr>
                     <tr><td>RSS vydavatelé</td><td>veřejné články</td><td>veřejný obsah feedu</td><td><strong>Ne</strong></td></tr>
                     <tr><td>Leaflet / mapové dlaždice</td><td>mapy (pokud otevřete)</td><td>IP, oblast mapy dle poskytovatele dlaždic</td><td><strong>Ne</strong> — pokud nezadáte adresu ručně do externí mapy</td></tr>
                     <tr><td>Dopravci (zásilky)</td><td>sledování zásilky po vašem kliknutí</td><td>číslo zásilky v URL</td><td><strong>Ne</strong> pro poznámky/úkoly; tracking číslo pouze vaší volbou</td></tr>
@@ -6374,7 +6382,7 @@ font-src 'self' data:;
                 <ul class="iuInfoCenter__ul">
                   <li><strong>Export nebo sdílení PDF faktury</strong> — stáhnutí nebo sdílení souboru</li>
                   <li><strong>Kopírování textu</strong> z generátoru právních dokumentů do schránky</li>
-                  <li><strong>Externí odkazy</strong> — mapy, dopravci, YouTube, AI nástroje z MindMenu (po kliknutí)</li>
+                  <li><strong>Externí odkazy</strong> — mapy, dopravci, YouTube embed (po kliknutí); náhledy videí z <code>i.ytimg.com</code> (při zobrazení karty v Média)</li>
                   <li><strong>Počasí</strong> — souřadnice nebo město odeslané službě Open-Meteo, pokud funkci použijete</li>
                   <li><strong>Záloha telefonu / prohlížeče</strong> — mimo kontrolu InfoUzel.cz</li>
                 </ul>
