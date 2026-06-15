@@ -3683,7 +3683,7 @@ try {
     }
 
     const forceAllowIds = new Set(beforeIds);
-    const pickedVideos = iuPickVideosForSlots(stream, effectiveSlots, { seen, forceAllowIds });
+    const pickedVideos = iuPickVideosForSlots(stream, effectiveSlots, { seen, forceAllowIds, fillEmptySlots: fillMode });
 
     // Mark seen for any video entering the queue.
     for (const v of pickedVideos) {
@@ -4449,10 +4449,20 @@ try {
       const lastLang = last ? langClassOf(last) : "";
 
       const stages = [
-        { enforceExpectedLang: true, relaxQuotas: false, allowAnyLang: false, reason: "" },
-        { enforceExpectedLang: true, relaxQuotas: true, allowAnyLang: false, reason: "" },
-        { enforceExpectedLang: false, relaxQuotas: true, allowAnyLang: true, reason: "allow_any_lang" },
+        { enforceExpectedLang: true, relaxQuotas: false, allowAnyLang: false, allowSeen: false, skipMonotonic: false, reason: "" },
+        { enforceExpectedLang: true, relaxQuotas: true, allowAnyLang: false, allowSeen: false, skipMonotonic: false, reason: "" },
+        { enforceExpectedLang: false, relaxQuotas: true, allowAnyLang: true, allowSeen: false, skipMonotonic: false, reason: "allow_any_lang" },
       ];
+      if (cfg && cfg.fillEmptySlots) {
+        stages.push({
+          enforceExpectedLang: false,
+          relaxQuotas: true,
+          allowAnyLang: true,
+          allowSeen: true,
+          skipMonotonic: true,
+          reason: "fill_empty_slot",
+        });
+      }
 
       let chosen = null;
       let chosenReason = "";
@@ -4467,12 +4477,14 @@ try {
           const id = String(cand.videoId || "").trim();
           if (!id || usedIds.has(id)) continue;
           const forceAllow = Boolean(cfg && cfg.forceAllowIds && cfg.forceAllowIds.has(id));
-          if (!forceAllow && seen && seen[id]) continue;
+          if (!forceAllow && !st.allowSeen && seen && seen[id]) continue;
 
           const ts = tsOf(cand);
           if (!ts) continue;
-          if (capTs && ts > capTs) continue; // never newer than first
-          if (ts > lastPickedTs) continue; // monotonic newest-first (non-increasing)
+          if (!st.skipMonotonic) {
+            if (capTs && ts > capTs) continue; // never newer than first
+            if (ts > lastPickedTs) continue; // monotonic newest-first (non-increasing)
+          }
 
           const src = iuGetVideoSourceId(cand);
           if (src && lastSource && src === lastSource) continue; // never 2 same source in a row
@@ -4514,7 +4526,19 @@ try {
         if (chosen) break;
       }
 
-      if (!chosen) break;
+      if (!chosen) {
+        for (const cand of pool) {
+          const id = String(cand.videoId || "").trim();
+          if (!id || usedIds.has(id)) continue;
+          const src = iuGetVideoSourceId(cand);
+          if (src && lastSource && src === lastSource) continue;
+          chosen = cand;
+          chosenReason = "fill_slot_fallback";
+          break;
+        }
+      }
+
+      if (!chosen) continue;
 
       const chosenTs = tsOf(chosen);
       if (i === 0) {
@@ -4544,6 +4568,16 @@ try {
         if (iuDebug) console.warn("[iuVideoMix] WARN fallback_slot=%d reason=%s", i, chosenReason || "bad_alternation");
       }
       if (capTs && chosenTs > capTs) newer_than_first += 1;
+    }
+
+    if (picked.length < N) {
+      for (const cand of pool) {
+        if (picked.length >= N) break;
+        const id = String(cand.videoId || "").trim();
+        if (!id || usedIds.has(id)) continue;
+        usedIds.add(id);
+        picked.push(cand);
+      }
     }
 
     if (iuDebug) {
