@@ -292,12 +292,25 @@ function runMissingSourceGuard() {
     log("missing_source_guard SKIP (script not found)");
     return true;
   }
-  log("missing_source_guard delegating to articles-missing-source-articles-guard.mjs");
+  const policy = (process.env.MISSING_SOURCE_POLICY || "PUBLISH_ALWAYS").trim().toUpperCase();
+  log(`missing_source_guard policy=${policy} delegating to articles-missing-source-articles-guard.mjs`);
   const res = spawnSync(process.execPath, [script], {
-    env: { ...process.env, ARTICLES_JSON_URL },
+    env: { ...process.env, ARTICLES_JSON_URL, MISSING_SOURCE_POLICY: policy },
     stdio: "inherit",
+    encoding: "utf8",
   });
-  return res.status === 0;
+  if (res.status === 0) {
+    if (policy === "PUBLISH_ALWAYS") {
+      log("PUBLISH_ALWAYS_POLICY_ENFORCED=YES MISSING_SOURCE_BLOCKS_RELEASE=NO MISSING_SOURCE_CREATES_ALERT=YES TECHNICAL_FAILURE_STILL_BLOCKS=YES");
+    }
+    return true;
+  }
+  if (policy === "PUBLISH_ALWAYS") {
+    log("missing_source_guard INCIDENT (publish-always: non-blocking)");
+    log("PUBLISH_ALWAYS_POLICY_ENFORCED=YES MISSING_SOURCE_BLOCKS_RELEASE=NO MISSING_SOURCE_CREATES_ALERT=YES");
+    return true;
+  }
+  return false;
 }
 
 function runSourceDisplayGuard() {
