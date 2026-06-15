@@ -336,6 +336,33 @@ def _atomic_write_json(path: str, payload) -> None:
     os.replace(tmp, path)
 
 
+def _write_legacy_videos_json(videos_payload: dict) -> int:
+    """
+    Legacy YouTube playlist feeds may still populate videos_payload.
+    Canonical pool is scripts/build_videos.py (update-videos-data.yml).
+    Never overwrite a non-empty videos.json with an empty legacy output.
+    """
+    out_vid = videos_payload.get("videos") if isinstance(videos_payload.get("videos"), list) else []
+    if not out_vid:
+        if os.path.isfile(VIDEOS_OUT_PATH):
+            try:
+                with open(VIDEOS_OUT_PATH, "r", encoding="utf-8") as f:
+                    existing = json.load(f)
+                existing_count = len(existing.get("videos") or []) if isinstance(existing, dict) else 0
+            except Exception:
+                existing_count = 0
+            if existing_count > 0:
+                print(
+                    f"=== OUTPUT === skipped empty legacy videos write; preserving {existing_count} videos in {VIDEOS_OUT_PATH}"
+                )
+                return existing_count
+        print(f"WARN: legacy YouTube feeds produced 0 videos; not writing empty {VIDEOS_OUT_PATH}")
+        return 0
+    _atomic_write_json(VIDEOS_OUT_PATH, videos_payload)
+    print(f"=== OUTPUT === wrote {len(out_vid)} videos to {VIDEOS_OUT_PATH}")
+    return len(out_vid)
+
+
 def _feed_transport_state_path() -> str:
     return os.path.join(OUTPUT_DIR, "feed_transport_state.json")
 
@@ -3489,12 +3516,14 @@ def _publish_article_outputs(bundle: dict) -> int:
         "videos": out_vid,
     }
 
-    _atomic_write_json(VIDEOS_OUT_PATH, videos_payload)
-    print(f"VIDEOS_FRESHNESS primary14={primary_count} fallback60={fallback_count} older={older_count} total={len(out_vid)}")
+    legacy_video_count = _write_legacy_videos_json(videos_payload)
+    print(
+        f"VIDEOS_FRESHNESS primary14={primary_count} fallback60={fallback_count} "
+        f"older={older_count} total={legacy_video_count}"
+    )
     print("=== FEED REPORT ===")
     print(json.dumps(health_payload, ensure_ascii=False, indent=2))
     print(f"=== OUTPUT === wrote {len(final)} items to {OUT_PATH}")
-    print(f"=== OUTPUT === wrote {len(out_vid)} videos to {VIDEOS_OUT_PATH}")
 
     try:
         run_id = str(os.getenv("GITHUB_RUN_ID") or "")

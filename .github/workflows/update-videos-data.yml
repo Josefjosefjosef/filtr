@@ -74,6 +74,15 @@ jobs:
             echo "ERROR: projects/data/videos.json is empty"
             exit 1
           fi
+          python -c "
+          import json, sys
+          data = json.load(open('projects/data/videos.json', encoding='utf-8'))
+          videos = data.get('videos') if isinstance(data.get('videos'), list) else []
+          if not videos:
+              print('ERROR: videos.json videos array is empty after build')
+              sys.exit(1)
+          print(f'VIDEO_BUILD_COUNT={len(videos)}')
+          "
 
       - name: No-diff gate (videos.json only)
         id: no_diff
@@ -97,22 +106,27 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add projects/data/videos.json
-          git diff --cached --quiet && { echo "[DATA] Nothing to commit"; exit 0; }
-
-          git stash push -m "vid" -- projects/data/videos.json
+          _built="${RUNNER_TEMP}/videos.json.built"
+          cp projects/data/videos.json "$_built"
           git fetch origin main
-          git fetch origin "${{ env.AUTOMATION_BRANCH }}" 2>/dev/null || true
           git checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
-          git stash pop
+          cp "$_built" projects/data/videos.json
           _v="projects/data/videos.json"
           if grep -qE '^(<<<<<<<|=======|>>>>>>>)' "$_v"; then
-            echo "ERROR: conflict markers in $_v (stash/merge) — aborting without commit"
+            echo "ERROR: conflict markers in $_v — aborting without commit"
             exit 1
           fi
-          python -c "import json; json.load(open('projects/data/videos.json', encoding='utf-8'))"
+          python -c "
+          import json, sys
+          data = json.load(open('projects/data/videos.json', encoding='utf-8'))
+          videos = data.get('videos') if isinstance(data.get('videos'), list) else []
+          if not videos:
+              print('ERROR: videos.json videos array is empty — aborting without commit')
+              sys.exit(1)
+          print(f'VIDEO_COMMIT_COUNT={len(videos)}')
+          "
           git add projects/data/videos.json
-          git diff --cached --quiet && { echo "[DATA] Nothing to commit after stash"; exit 0; }
+          git diff --cached --quiet && { echo "[DATA] Nothing to commit"; exit 0; }
 
           git commit -m "${{ env.PR_TITLE }}"
           git push --force origin "HEAD:${{ env.AUTOMATION_BRANCH }}"
