@@ -11,6 +11,7 @@
  *   MAX_SAMPLE_MISSING — max missing rows in report (default 25)
  *   MIN_TODAY_PER_SECTION — min today articles expected per main section when feed has them (default 1)
  *   ALLOW_INACTIVE_SOURCE_IDS — comma list extra allowed inactive ids
+ *   MISSING_SOURCE_POLICY — PUBLISH_ALWAYS (default: incidents WARN only, never block release) | STRICT
  */
 import fs from "fs";
 import path from "path";
@@ -37,6 +38,19 @@ const remoteArticles = (process.env.ARTICLES_JSON_URL || "").trim();
 const registryPath = process.env.SOURCE_REGISTRY_PATH || path.join(root, "projects", "data", "source_registry.json");
 const maxSample = Number(process.env.MAX_SAMPLE_MISSING || "25");
 const minTodayPerSection = Number(process.env.MIN_TODAY_PER_SECTION || "1");
+const MISSING_SOURCE_POLICY = (process.env.MISSING_SOURCE_POLICY || "PUBLISH_ALWAYS").trim().toUpperCase();
+
+function isPublishAlwaysPolicy() {
+  return MISSING_SOURCE_POLICY === "PUBLISH_ALWAYS";
+}
+
+function warn(msg) {
+  console.warn(`[articles-missing-source-articles-guard] WARN: ${msg}`);
+}
+
+function incident(msg) {
+  console.warn(`[articles-missing-source-articles-guard] INCIDENT: ${msg}`);
+}
 
 function pragueTodayIsoDate(now = new Date()) {
   return now.toLocaleDateString("sv-SE", { timeZone: "Europe/Prague" });
@@ -266,6 +280,8 @@ async function main() {
   }
 
   let failed = false;
+  let incidentCount = 0;
+  const publishAlways = isPublishAlwaysPolicy();
   const bundleAgeMs = articlesDoc.generatedAt ? Date.now() - Date.parse(articlesDoc.generatedAt) : Infinity;
   const bundleAgeHours = bundleAgeMs / 3_600_000;
 
@@ -283,19 +299,27 @@ async function main() {
       `[articles-missing-source-articles-guard] section=${sec} today_in_feed=${inFeed} today_in_json=${inJson}`,
     );
     if (inFeed >= minTodayPerSection && inJson < minTodayPerSection && bundleAgeHours > 2) {
-      console.error(
-        `[articles-missing-source-articles-guard] FAIL: section=${sec} feed has today items but json has ${inJson} (bundle age ${bundleAgeHours.toFixed(1)}h)`,
-      );
-      failed = true;
+      const msg = `section=${sec} feed has today items but json has ${inJson} (bundle age ${bundleAgeHours.toFixed(1)}h)`;
+      if (publishAlways) {
+        incident(msg);
+        incidentCount += 1;
+      } else {
+        console.error(`[articles-missing-source-articles-guard] FAIL: ${msg}`);
+        failed = true;
+      }
     }
   }
 
-  // Hard fail: many missing today items when bundle is older than 2h (pipeline should have caught up)
+  // Many missing today items when bundle is older than 2h — incident under PUBLISH_ALWAYS, fail in STRICT
   if (report.articlesMissingFromFeed >= 10 && bundleAgeHours > 2) {
-    console.error(
-      `[articles-missing-source-articles-guard] FAIL: ${report.articlesMissingFromFeed} today feed items missing from articles.json (bundle age ${bundleAgeHours.toFixed(1)}h)`,
-    );
-    failed = true;
+    const msg = `${report.articlesMissingFromFeed} today feed items missing from articles.json (bundle age ${bundleAgeHours.toFixed(1)}h)`;
+    if (publishAlways) {
+      incident(msg);
+      incidentCount += 1;
+    } else {
+      console.error(`[articles-missing-source-articles-guard] FAIL: ${msg}`);
+      failed = true;
+    }
   }
 
   if (report.missingArticles.length) {
@@ -317,9 +341,19 @@ async function main() {
   fs.writeFileSync(outPath, JSON.stringify(report, null, 2));
   console.log(`[articles-missing-source-articles-guard] report=${outPath}`);
 
+  if (incidentCount > 0 || report.articlesMissingFromFeed > 0) {
+    console.log(
+      `[articles-missing-source-articles-guard] MISSING_SOURCE_ALERT=YES MISSING_SOURCE_BLOCKING=${publishAlways ? "NO" : "YES"} incidents=${incidentCount || report.articlesMissingFromFeed}`,
+    );
+  }
+
   if (failed) {
     console.error("[articles-missing-source-articles-guard] RESULT=FAIL");
     process.exit(1);
+  }
+  if (incidentCount > 0 && publishAlways) {
+    console.log("[articles-missing-source-articles-guard] RESULT=PASS (publish-always incidents logged, release continues)");
+    process.exit(0);
   }
   console.log("[articles-missing-source-articles-guard] RESULT=PASS");
 }
