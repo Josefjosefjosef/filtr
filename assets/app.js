@@ -14603,6 +14603,9 @@ function buildVideoAsArticleCard(it) {
     try {
       if (typeof window.iuSilverCalendarGuidedFlowInit === "function") window.iuSilverCalendarGuidedFlowInit();
     } catch (_) {}
+    try {
+      iuQuickToolsInit();
+    } catch (_) {}
   }
   try { window.iuMobileLayoutReorder = iuMobileLayoutReorder; } catch (_) {}
 
@@ -22054,6 +22057,21 @@ function buildVideoAsArticleCard(it) {
     { id: "pridat_tlacitko", label: "Přidat tlačítko", accent: "#455a64" },
     { id: "naceneni_nakupu_domu", label: "Nákup potravin online", accent: "#2e7d32" }
   ];
+  const IU_QUICKTOOLS_PINNED_SYSTEM_ID = "pridat_tlacitko";
+
+  function iuQuickToolsIsPinnedSystemId(id) {
+    return id === IU_QUICKTOOLS_PINNED_SYSTEM_ID;
+  }
+
+  function iuQuickToolsEnforcePinnedRules(cfg) {
+    if (!cfg || !Array.isArray(cfg.order)) return cfg;
+    const addId = IU_QUICKTOOLS_PINNED_SYSTEM_ID;
+    const withoutAdd = cfg.order.filter(function(id) { return id !== addId; });
+    cfg.order = withoutAdd.concat([addId]);
+    if (!Array.isArray(cfg.visible)) cfg.visible = cfg.order.slice();
+    if (cfg.visible.indexOf(addId) === -1) cfg.visible.push(addId);
+    return cfg;
+  }
 
   function iuQuickToolsMigrateId(id) {
     if (id === "katastr_nemovitosti") return "vytvorit_fakturu";
@@ -22163,7 +22181,7 @@ function buildVideoAsArticleCard(it) {
     });
     let visible = Array.isArray(stored.visible) ? stored.visible.map(iuQuickToolsMigrateId).filter(function(id){ return knownIds.has(id); }) : [];
     visible = order.filter(function(id){ return visible.indexOf(id) !== -1; });
-    return { version: IU_QUICKTOOLS_CONFIG_VERSION, order: order, visible: visible, customButtons: customButtons };
+    return iuQuickToolsEnforcePinnedRules({ version: IU_QUICKTOOLS_CONFIG_VERSION, order: order, visible: visible, customButtons: customButtons });
   }
 
   function iuQuickToolsGetGrid() {
@@ -22320,9 +22338,9 @@ function buildVideoAsArticleCard(it) {
 
   function iuQuickToolsSettingsOnOutside(e) {
     const panel = document.getElementById("iuQuickToolsSettingsPanel");
-    const trigger = document.querySelector(".iu-quicktools-settings-trigger");
     if (!panel || !e.target) return;
-    if (panel.contains(e.target) || (trigger && trigger.contains(e.target))) return;
+    const trig = e.target.closest ? e.target.closest("[data-iu-quicktools-settings], .iu-quicktools-settings-trigger") : null;
+    if (panel.contains(e.target) || trig) return;
     iuQuickToolsSettingsClose();
   }
 
@@ -22341,16 +22359,17 @@ function buildVideoAsArticleCard(it) {
     cfg.order.forEach(function(id){
       const item = iuQuickToolsGetItemMeta(id, cfg);
       if (!item) return;
+      const isPinned = iuQuickToolsIsPinnedSystemId(id);
       const row = document.createElement("div");
-      row.className = "iu-quicktools-settings-row";
+      row.className = "iu-quicktools-settings-row" + (isPinned ? " iu-quicktools-settings-row--pinned" : "");
       row.setAttribute("data-quicktool-id", id);
-      row.setAttribute("draggable", "true");
+      if (!isPinned) row.setAttribute("draggable", "true");
       row.setAttribute("role", "listitem");
       const handle = document.createElement("span");
       handle.className = "iu-quicktools-drag-handle";
-      handle.setAttribute("data-drag-handle", "true");
+      if (!isPinned) handle.setAttribute("data-drag-handle", "true");
       handle.setAttribute("aria-hidden", "true");
-      handle.textContent = "⋮⋮";
+      handle.textContent = isPinned ? "—" : "⋮⋮";
       const marker = document.createElement("span");
       marker.className = "iu-quicktools-settings-marker";
       marker.style.backgroundColor = item.accent || "#666";
@@ -22359,9 +22378,13 @@ function buildVideoAsArticleCard(it) {
       label.textContent = item.label;
       const toggle = document.createElement("input");
       toggle.type = "checkbox";
-      toggle.checked = visibleSet.has(id);
-      toggle.setAttribute("data-iu-quicktools-visible-toggle", id);
+      toggle.checked = isPinned ? true : visibleSet.has(id);
+      if (!isPinned) toggle.setAttribute("data-iu-quicktools-visible-toggle", id);
       toggle.setAttribute("aria-label", "Zobrazit " + item.label);
+      if (isPinned) {
+        toggle.disabled = true;
+        toggle.checked = true;
+      }
       row.appendChild(handle);
       row.appendChild(marker);
       row.appendChild(label);
@@ -22379,6 +22402,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuQuickToolsSaveAndApply(cfg) {
+    cfg = sanitizeQuickToolsConfig(cfg || getDefaultQuickToolsConfig());
     saveQuickToolsConfig(cfg);
     iuQuickToolsApplyConfig();
     iuQuickToolsSettingsRender(cfg);
@@ -22724,33 +22748,39 @@ function buildVideoAsArticleCard(it) {
     iuCustomButtonsBindPanel();
   }
 
-  function iuQuickToolsInit() {
-    if (window.__iuQuickToolsInitDone) return;
-    window.__iuQuickToolsInitDone = 1;
-    iuQuickToolsApplyConfig();
-    const section = document.querySelector(".mindMenu section.iu-mmQuickLinks");
-    const trigger = section ? section.querySelector(".iu-quicktools-settings-trigger") : document.querySelector(".iu-quicktools-settings-trigger");
-    const panel = document.getElementById("iuQuickToolsSettingsPanel");
-    if (!panel || !trigger) return;
-    let cfg = loadQuickToolsConfig();
-    if (!cfg) cfg = getDefaultQuickToolsConfig();
-    cfg = sanitizeQuickToolsConfig(cfg);
-    iuQuickToolsSettingsRender(cfg);
+  function iuQuickToolsBindDocumentOnce() {
+    if (window.__iuQuickToolsDocBound) return;
+    window.__iuQuickToolsDocBound = 1;
+    document.addEventListener("click", function(e) {
+      const t = e.target;
+      if (!t || !t.closest) return;
+      const trig = t.closest("[data-iu-quicktools-settings], .iu-quicktools-settings-trigger");
+      if (!trig) return;
+      const panel = document.getElementById("iuQuickToolsSettingsPanel");
+      if (!panel) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (panel.hidden) iuQuickToolsSettingsOpen();
+      else iuQuickToolsSettingsClose();
+    }, false);
+  }
 
-    trigger.addEventListener("click", function(){
-      if (panel.hidden) iuQuickToolsSettingsOpen(); else iuQuickToolsSettingsClose();
-    });
+  function iuQuickToolsBindPanelOnce(panel) {
+    if (!panel || window.__iuQuickToolsPanelBound) return false;
+    window.__iuQuickToolsPanelBound = 1;
 
     function applyQuickToolsVisibilityFromCheckbox(checkboxEl) {
       if (!checkboxEl || checkboxEl.getAttribute("data-iu-quicktools-visible-toggle") == null) return;
       if (!panel.contains(checkboxEl)) return;
       const id = checkboxEl.getAttribute("data-iu-quicktools-visible-toggle");
+      if (iuQuickToolsIsPinnedSystemId(id)) return;
       let cfg = loadQuickToolsConfig();
       if (!cfg) cfg = getDefaultQuickToolsConfig();
       cfg = sanitizeQuickToolsConfig(cfg);
       const idx = cfg.visible.indexOf(id);
       if (checkboxEl.checked) { if (idx === -1) cfg.visible.push(id); }
       else { if (idx !== -1) cfg.visible.splice(idx, 1); }
+      cfg = iuQuickToolsEnforcePinnedRules(cfg);
       saveQuickToolsConfig(cfg);
       iuQuickToolsApplyConfig();
     }
@@ -22774,7 +22804,7 @@ function buildVideoAsArticleCard(it) {
       for (var i = 0; i < checkboxes.length; i++) {
         var cb = checkboxes[i];
         var id = cb.getAttribute("data-iu-quicktools-visible-toggle");
-        if (!id) continue;
+        if (!id || iuQuickToolsIsPinnedSystemId(id)) continue;
         var inVisible = cfg.visible.indexOf(id) !== -1;
         if (cb.checked !== inVisible) {
           if (cb.checked) { if (cfg.visible.indexOf(id) === -1) { cfg.visible.push(id); changed = true; } }
@@ -22782,6 +22812,7 @@ function buildVideoAsArticleCard(it) {
         }
       }
       if (changed) {
+        cfg = iuQuickToolsEnforcePinnedRules(cfg);
         saveQuickToolsConfig(cfg);
         iuQuickToolsApplyConfig();
       }
@@ -22791,7 +22822,7 @@ function buildVideoAsArticleCard(it) {
     panel.addEventListener("click", function(e){
       if (e.target && e.target.classList && e.target.classList.contains("iu-quicktools-settings-reset")) {
         resetQuickToolsConfig();
-        cfg = getDefaultQuickToolsConfig();
+        var cfg = getDefaultQuickToolsConfig();
         iuQuickToolsSaveAndApply(cfg);
         iuQuickToolsSettingsClose();
       }
@@ -22805,19 +22836,28 @@ function buildVideoAsArticleCard(it) {
       if (!cfg) cfg = getDefaultQuickToolsConfig();
       cfg = sanitizeQuickToolsConfig(cfg);
       cfg.order = ids;
+      cfg = iuQuickToolsEnforcePinnedRules(cfg);
       iuQuickToolsSaveAndApply(cfg);
     }
 
     var dragSrc = null;
     panel.addEventListener("dragstart", function(e){
-      const row = e.target && e.target.closest ? e.target.closest("[data-quicktool-id]") : null;
-      if (row) { dragSrc = row; e.dataTransfer.setData("text/plain", row.getAttribute("data-quicktool-id")); e.dataTransfer.effectAllowed = "move"; }
+      const handle = e.target && e.target.closest ? e.target.closest("[data-drag-handle]") : null;
+      const row = handle ? handle.closest("[data-quicktool-id]") : null;
+      if (!row || iuQuickToolsIsPinnedSystemId(row.getAttribute("data-quicktool-id"))) {
+        e.preventDefault();
+        return;
+      }
+      dragSrc = row;
+      e.dataTransfer.setData("text/plain", row.getAttribute("data-quicktool-id"));
+      e.dataTransfer.effectAllowed = "move";
     });
     panel.addEventListener("dragover", function(e){
       e.preventDefault();
       if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
       var row = e.target && e.target.closest ? e.target.closest("[data-quicktool-id]") : null;
       if (row && dragSrc && row !== dragSrc) {
+        if (iuQuickToolsIsPinnedSystemId(row.getAttribute("data-quicktool-id"))) return;
         row.parentNode.insertBefore(dragSrc, row.nextSibling);
       }
     });
@@ -22837,6 +22877,7 @@ function buildVideoAsArticleCard(it) {
       var el = document.elementFromPoint(e.clientX, e.clientY);
       var row = el && el.closest ? el.closest("[data-quicktool-id]") : null;
       if (row && row !== pointerDragRow && pointerDragList.contains(row)) {
+        if (iuQuickToolsIsPinnedSystemId(row.getAttribute("data-quicktool-id"))) return;
         pointerDragList.insertBefore(pointerDragRow, row.nextSibling);
       }
     }
@@ -22849,8 +22890,11 @@ function buildVideoAsArticleCard(it) {
       }
     }
     panel.addEventListener("pointerdown", function(e){
-      var row = e.target && e.target.closest ? e.target.closest("[data-quicktool-id]") : null;
-      if (!row) return;
+      if (e.target && e.target.closest && e.target.closest('input[type="checkbox"]')) return;
+      var handle = e.target && e.target.closest ? e.target.closest("[data-drag-handle]") : null;
+      if (!handle) return;
+      var row = handle.closest("[data-quicktool-id]");
+      if (!row || iuQuickToolsIsPinnedSystemId(row.getAttribute("data-quicktool-id"))) return;
       var listEl = row.parentNode;
       if (!listEl || !listEl.classList.contains("iu-quicktools-settings-list")) return;
       pointerDragRow = row;
@@ -22873,9 +22917,23 @@ function buildVideoAsArticleCard(it) {
         if (!cfg) cfg = getDefaultQuickToolsConfig();
         cfg = sanitizeQuickToolsConfig(cfg);
         cfg.order = e.detail.order;
+        cfg = iuQuickToolsEnforcePinnedRules(cfg);
         iuQuickToolsSaveAndApply(cfg);
       }
     });
+    return true;
+  }
+
+  function iuQuickToolsInit() {
+    iuQuickToolsBindDocumentOnce();
+    iuQuickToolsApplyConfig();
+    const panel = document.getElementById("iuQuickToolsSettingsPanel");
+    if (!panel) return;
+    iuQuickToolsBindPanelOnce(panel);
+    let cfg = loadQuickToolsConfig();
+    if (!cfg) cfg = getDefaultQuickToolsConfig();
+    cfg = sanitizeQuickToolsConfig(cfg);
+    iuQuickToolsSettingsRender(cfg);
   }
 
   function initRightPanel() {
