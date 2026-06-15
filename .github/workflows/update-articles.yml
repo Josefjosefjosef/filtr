@@ -288,7 +288,7 @@ jobs:
     # P0-2 silent-fail fix: release failure must fail the whole run (no false-green runs).
     # Operational closeout still runs via pipeline_operational_closeout `if: always()`.
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 60
     env:
       RETENTION_DAYS: "45"
     steps:
@@ -753,6 +753,42 @@ jobs:
           fi
           echo "GIT_CLEAN=YES"
 
+      - name: Sync automation branch with main before PR (prevent DIRTY/CONFLICTING state)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        id: pr_branch_sync
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          if git merge origin/main -m "chore(data): sync automation branch with main before PR"; then
+            echo "[PR-SYNC] clean merge with origin/main"
+          else
+            mapfile -t CONFLICTS < <(git diff --name-only --diff-filter=U)
+            if [ "${#CONFLICTS[@]}" -eq 0 ]; then
+              echo "[PR-SYNC] FAIL: merge failed without listed conflicts"
+              exit 1
+            fi
+            echo "[PR-SYNC] conflicts detected:"
+            for f in "${CONFLICTS[@]}"; do
+              [ -z "$f" ] && continue
+              echo "  - $f"
+              case "$f" in
+                projects/data/*)
+                  git checkout --ours -- "$f"
+                  git add -- "$f"
+                  echo "[PR-SYNC] resolved data conflict in favor of automation branch: $f"
+                  ;;
+                *)
+                  echo "[PR-SYNC] FAIL: conflict outside projects/data: $f"
+                  exit 1
+                  ;;
+              esac
+            done
+            git commit -m "chore(data): sync automation branch with main before PR"
+          fi
+          git push --force-with-lease origin "HEAD:${{ env.AUTOMATION_BRANCH }}" || git push --force origin "HEAD:${{ env.AUTOMATION_BRANCH }}"
+          echo "pr_branch_synced=true" >> "$GITHUB_OUTPUT"
+          echo "[PR-SYNC] automation branch synced and pushed"
+
       - name: Dispatch required checks (GITHUB_TOKEN push does not start push-triggered workflows)
         if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
         env:
@@ -789,17 +825,19 @@ jobs:
           echo "pr_url=https://github.com/${{ github.repository }}/pull/$NUM" >> "$GITHUB_OUTPUT"
           echo "[PR] Created PR #$NUM"
 
-      - name: Merge latest main into PR head if behind (unblock auto-merge)
-        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
-        continue-on-error: true
+      - name: Refresh PR merge state after branch sync (unblock auto-merge)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && steps.pr.outputs.pr_number != ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           NUM="${{ steps.pr.outputs.pr_number }}"
-          [ -z "$NUM" ] && exit 0
-          echo "[SYNC] PUT update-branch for PR #$NUM"
-          gh api --method PUT "repos/${{ github.repository }}/pulls/${NUM}/update-branch" || echo "[SYNC] update-branch skipped or failed (non-fatal)"
+          MSS=$(gh pr view "$NUM" --json mergeStateStatus --jq '.mergeStateStatus // empty' 2>/dev/null || echo "")
+          echo "[SYNC] pr=$NUM mergeStateStatus=${MSS:-unknown}"
+          if [ "$MSS" = "BEHIND" ] || [ "$MSS" = "DIRTY" ]; then
+            echo "[SYNC] PUT update-branch for PR #$NUM"
+            gh api --method PUT "repos/${{ github.repository }}/pulls/${NUM}/update-branch" || echo "[SYNC] update-branch skipped (branch already synced in prior step)"
+          fi
 
       - name: Diff scope check (data-only → allow auto-merge)
         if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
@@ -871,8 +909,8 @@ jobs:
               echo "[CLOSEOUT] PR #$NUM closed without merge record — skip Pages dispatch"
               exit 0
             fi
-            if [ "$MSS" = "BEHIND" ]; then
-              echo "[CLOSEOUT] poll_attempt=$attempt state=${STATE:-unknown} merge_state=BEHIND — sync branch"
+            if [ "$MSS" = "BEHIND" ] || [ "$MSS" = "DIRTY" ]; then
+              echo "[CLOSEOUT] poll_attempt=$attempt state=${STATE:-unknown} merge_state=${MSS} — sync branch"
               gh api --method PUT "repos/${REPO}/pulls/${NUM}/update-branch" || echo "[CLOSEOUT] update-branch failed (will retry)"
               if [ "$AUTO" != "true" ]; then
                 gh pr merge "$NUM" --auto --squash || echo "[CLOSEOUT] auto-merge re-enable failed (will retry)"
