@@ -22334,7 +22334,11 @@ function buildVideoAsArticleCard(it) {
     panel.hidden = false;
     panel.removeAttribute("hidden");
     panel.setAttribute("aria-hidden", "false");
-    try { panel.scrollTop = 0; } catch (_) {}
+    try {
+      var scrollEl = panel.querySelector(".iu-quicktools-settings-scroll");
+      if (scrollEl) scrollEl.scrollTop = 0;
+      else panel.scrollTop = 0;
+    } catch (_) {}
     if (typeof panel._iuQuickToolsSync === "function") panel._iuQuickToolsSync();
     document.body.addEventListener("keydown", iuQuickToolsSettingsOnEsc);
     document.addEventListener("click", iuQuickToolsSettingsOnOutside);
@@ -22389,10 +22393,21 @@ function buildVideoAsArticleCard(it) {
     if (!panel) return;
     const visibleSet = new Set(cfg.visible);
     const frag = document.createDocumentFragment();
+    const header = document.createElement("div");
+    header.className = "iu-quicktools-settings-header";
     const title = document.createElement("div");
     title.className = "iu-quicktools-settings-title";
     title.textContent = "Viditelnost a pořadí";
-    frag.appendChild(title);
+    const closeBtn = document.createElement("button");
+    closeBtn.type = "button";
+    closeBtn.className = "iu-quicktools-settings-close";
+    closeBtn.setAttribute("aria-label", "Zavřít");
+    closeBtn.textContent = "\u2715";
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+    frag.appendChild(header);
+    const scrollHost = document.createElement("div");
+    scrollHost.className = "iu-quicktools-settings-scroll";
     const list = document.createElement("div");
     list.className = "iu-quicktools-settings-list";
     list.setAttribute("role", "list");
@@ -22403,11 +22418,13 @@ function buildVideoAsArticleCard(it) {
       const row = document.createElement("div");
       row.className = "iu-quicktools-settings-row" + (isPinned ? " iu-quicktools-settings-row--pinned" : "");
       row.setAttribute("data-quicktool-id", id);
-      if (!isPinned) row.setAttribute("draggable", "true");
       row.setAttribute("role", "listitem");
       const handle = document.createElement("span");
       handle.className = "iu-quicktools-drag-handle";
-      if (!isPinned) handle.setAttribute("data-drag-handle", "true");
+      if (!isPinned) {
+        handle.setAttribute("data-drag-handle", "true");
+        handle.setAttribute("draggable", "true");
+      }
       handle.setAttribute("aria-hidden", "true");
       handle.textContent = isPinned ? "—" : "⋮⋮";
       const marker = document.createElement("span");
@@ -22431,12 +22448,13 @@ function buildVideoAsArticleCard(it) {
       row.appendChild(toggle);
       list.appendChild(row);
     });
-    frag.appendChild(list);
+    scrollHost.appendChild(list);
     const resetBtn = document.createElement("button");
     resetBtn.type = "button";
     resetBtn.className = "iu-quicktools-settings-reset";
     resetBtn.textContent = "Obnovit výchozí";
-    frag.appendChild(resetBtn);
+    scrollHost.appendChild(resetBtn);
+    frag.appendChild(scrollHost);
     panel.innerHTML = "";
     panel.appendChild(frag);
   }
@@ -22860,6 +22878,10 @@ function buildVideoAsArticleCard(it) {
     panel._iuQuickToolsSync = syncQuickToolsVisibilityFromPanel;
 
     panel.addEventListener("click", function(e){
+      if (e.target && e.target.closest && e.target.closest(".iu-quicktools-settings-close")) {
+        iuQuickToolsSettingsClose();
+        return;
+      }
       if (e.target && e.target.classList && e.target.classList.contains("iu-quicktools-settings-reset")) {
         resetQuickToolsConfig();
         var cfg = getDefaultQuickToolsConfig();
@@ -36632,8 +36654,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ".iu-custom-buttons-overlay-panel:not([hidden]) .iu-custom-buttons-overlay-cardShell{width:100%;max-width:none;max-height:none;height:100dvh}" +
     ".iu-custom-buttons-overlay-inner{border-radius:0;border-left:0;border-right:0;box-shadow:none}" +
     ".iu-quicktools-settings-backdrop:not([hidden]){top:0!important;left:0!important;right:0!important;bottom:0!important;z-index:10026!important}" +
-    ".iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed:not([hidden]){left:12px!important;right:12px!important;top:max(12px,env(safe-area-inset-top,0px))!important;bottom:max(12px,env(safe-area-inset-bottom,0px))!important;width:auto!important;max-width:none!important;max-height:none!important;transform:none!important;z-index:10027!important;display:block!important;box-sizing:border-box!important}" +
-    ".iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed .iu-quicktools-settings-list{touch-action:pan-y}" +
+    ".iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed:not([hidden]){left:12px!important;right:12px!important;top:max(12px,env(safe-area-inset-top,0px))!important;bottom:max(12px,env(safe-area-inset-bottom,0px))!important;width:auto!important;max-width:none!important;max-height:none!important;height:auto!important;transform:none!important;z-index:10027!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;box-sizing:border-box!important;padding:0!important}" +
+    ".iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed .iu-quicktools-settings-scroll{flex:1 1 auto!important;min-height:0!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:contain!important;touch-action:pan-y!important}" +
+    ".iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed .iu-quicktools-drag-handle{touch-action:none!important}" +
     "body.iu-quicktools-settings-mobile-open{overflow:hidden!important}" +
     "body.iu-quicktools-settings-mobile-open #iuMobileBottomNav.iu-mobileBottomNav{z-index:10028!important;pointer-events:auto!important}" +
     "@media(max-width:900px){" +
