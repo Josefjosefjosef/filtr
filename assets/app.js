@@ -29029,18 +29029,66 @@ function buildVideoAsArticleCard(it) {
       ".iu-ds-deleteConfirm__title{margin:0 0 10px;font-size:17px;font-weight:700}" +
       ".iu-ds-deleteConfirm__text{margin:0 0 16px;font-size:14px;line-height:1.45;color:rgba(11,27,43,.75)}" +
       ".iu-ds-deleteConfirm__actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}" +
-      ".iu-ds-deleteConfirm__cancel,.iu-ds-deleteConfirm__ok{padding:10px 16px;font-size:16px;font-family:inherit;font-weight:600;border-radius:10px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}" +
+      ".iu-ds-deleteConfirm__cancel,.iu-ds-deleteConfirm__ok{padding:10px 16px;font-size:16px;font-family:inherit;font-weight:600;border-radius:10px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:background-color .15s ease,filter .15s ease,transform .12s ease}" +
       ".iu-ds-deleteConfirm__cancel{border:1px solid rgba(0,0,0,.14);background:#f8fafc;color:#111}" +
+      ".iu-ds-deleteConfirm__cancel:hover:not(:disabled){background:#eef2f7}" +
+      ".iu-ds-deleteConfirm__cancel:active:not(:disabled){transform:scale(.97);background:#e2e8f0}" +
       ".iu-ds-deleteConfirm__ok{border:0;background:#b91c1c;color:#fff}" +
+      ".iu-ds-deleteConfirm__ok:hover:not(:disabled){filter:brightness(1.08)}" +
+      ".iu-ds-deleteConfirm__ok:active:not(:disabled){transform:scale(.97);filter:brightness(.9)}" +
       ".iu-ds-deleteConfirm__ok:disabled,.iu-ds-deleteConfirm__cancel:disabled{opacity:.55;cursor:not-allowed}";
     try {
       document.head.appendChild(s);
     } catch (_) {}
   }
 
+  function iuDsInjectButtonFeedbackCssOnce() {
+    if (document.getElementById("iuDsButtonFeedbackCss")) return;
+    const s = document.createElement("style");
+    s.id = "iuDsButtonFeedbackCss";
+    s.textContent =
+      "#iuDsPanel .bakalari-btn--ghost{background:#f1f5f9;color:#0f172a;border-color:rgba(15,23,42,.14)}" +
+      "#iuDsPanel .bakalari-btn,#iuDsPanel .iu-ds-open-btn,#iuDsPanel .iu-ds-add{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:background-color .15s ease,border-color .15s ease,filter .15s ease,box-shadow .15s ease,transform .12s ease}" +
+      "#iuDsPanel .bakalari-btn:active:not(:disabled),#iuDsPanel .iu-ds-open-btn:active,#iuDsPanel .iu-ds-add:active:not(:disabled){transform:scale(.97)}" +
+      "#iuDsPanel .bakalari-btn--ghost:hover:not(:disabled){background:#e2e8f0;border-color:rgba(15,23,42,.22)}" +
+      "#iuDsPanel .bakalari-btn--ghost:active:not(:disabled){background:#cbd5e1;border-color:rgba(15,23,42,.3)}" +
+      "#iuDsPanel .bakalari-btn--secondary:hover:not(:disabled){filter:brightness(1.05)}" +
+      "#iuDsPanel .bakalari-btn--secondary:active:not(:disabled){filter:brightness(.9);transform:scale(.97)}" +
+      "#iuDsPanel .bakalari-btn--danger:hover:not(:disabled){filter:brightness(.95)}" +
+      "#iuDsPanel .bakalari-btn--danger:active:not(:disabled){transform:scale(.97);filter:brightness(.88)}" +
+      "#iuDsPanel .bakalari-btn--mini{min-width:7.2em}" +
+      "#iuDsPanel .bakalari-btn.iu-ds-btn--copied,#iuDsPanel .bakalari-btn.iu-ds-btn--saved{background:#dcfce7!important;color:#166534!important;border-color:#86efac!important}" +
+      "#iuDsPanel .iu-ds-form-block--editing{box-shadow:0 0 0 2px rgba(29,78,216,.38)}" +
+      "#iuDsPanel .iu-ds-toggle-pw--visible{background:#e0e7ff!important;border-color:rgba(29,78,216,.35)!important;color:#1e3a8a!important}" +
+      "#iuDsPanel .iu-ds-add:hover:not(:disabled){background:#eef2f7;border-color:rgba(15,23,42,.22)}" +
+      "#iuDsPanel .iu-ds-add:active:not(:disabled){background:#e2e8f0}" +
+      "#iuDsPanel .iu-ds-open-btn:active{background:#1e3a8a}";
+    try {
+      document.head.appendChild(s);
+    } catch (_) {}
+  }
+
+  function iuDsBtnFlashLabel(btn, tempLabel, ms, extraClass) {
+    if (!btn || btn.disabled) return;
+    if (btn.__iuDsFlashTimer) {
+      clearTimeout(btn.__iuDsFlashTimer);
+      btn.__iuDsFlashTimer = null;
+    }
+    const defaultLabel = btn.getAttribute("data-ds-default-label") || btn.textContent;
+    if (!btn.getAttribute("data-ds-default-label")) btn.setAttribute("data-ds-default-label", defaultLabel);
+    btn.textContent = tempLabel;
+    if (extraClass) btn.classList.add(extraClass);
+    btn.__iuDsFlashTimer = setTimeout(function () {
+      btn.textContent = btn.getAttribute("data-ds-default-label") || defaultLabel;
+      if (extraClass) btn.classList.remove(extraClass);
+      btn.__iuDsFlashTimer = null;
+    }, ms || 1600);
+  }
+
   function iuDsMountDeleteConfirm() {
     iuDsInjectMobileTabletCssOnce();
     iuDsInjectDeleteConfirmCssOnce();
+    iuDsInjectButtonFeedbackCssOnce();
     const panel = document.getElementById("iuDsPanel");
     const modal = panel ? panel.querySelector(".iu-ds-modal") : null;
     if (!modal || document.getElementById("iuDsDeleteConfirm")) return;
@@ -29172,6 +29220,8 @@ function buildVideoAsArticleCard(it) {
   function iuDsApplyCardLock(card, locked) {
     if (!card) return;
     card.classList.toggle("iu-ds-profile--locked", !!locked);
+    const formBlock = card.querySelector(".iu-ds-form-block");
+    if (formBlock) formBlock.classList.toggle("iu-ds-form-block--editing", !locked);
     const inputs = card.querySelectorAll(".iu-ds-f-label, .iu-ds-f-user, .iu-ds-f-pass");
     for (let i = 0; i < inputs.length; i++) {
       if (locked) inputs[i].setAttribute("readonly", "readonly");
@@ -29181,7 +29231,11 @@ function buildVideoAsArticleCard(it) {
     const togglePw = card.querySelector("[data-ds-toggle-password]");
     if (passInput && locked && passInput.getAttribute("type") === "text") {
       passInput.setAttribute("type", "password");
-      if (togglePw) togglePw.textContent = "Zobrazit heslo";
+      if (togglePw) {
+        togglePw.textContent = "Zobrazit heslo";
+        togglePw.setAttribute("aria-pressed", "false");
+        togglePw.classList.remove("iu-ds-toggle-pw--visible");
+      }
     }
   }
 
@@ -29467,18 +29521,21 @@ function buildVideoAsArticleCard(it) {
     copyUserBtn.addEventListener("click", function (ev) {
       ev.preventDefault();
       const v = String(userInp.value || "").trim();
-      if (v) iuDsCopyToClipboard(v);
+      if (v && iuDsCopyToClipboard(v)) iuDsBtnFlashLabel(copyUserBtn, "Zkopírováno ✓", 1600, "iu-ds-btn--copied");
     });
     copyPassBtn.addEventListener("click", function (ev) {
       ev.preventDefault();
       const v = String(passInput.value || "").trim();
-      if (v) iuDsCopyToClipboard(v);
+      if (v && iuDsCopyToClipboard(v)) iuDsBtnFlashLabel(copyPassBtn, "Zkopírováno ✓", 1600, "iu-ds-btn--copied");
     });
     toggle.addEventListener("click", function (ev) {
       ev.preventDefault();
       const showing = passInput.getAttribute("type") === "text";
       passInput.setAttribute("type", showing ? "password" : "text");
-      toggle.textContent = showing ? "Zobrazit heslo" : "Skrýt heslo";
+      const nowShowing = !showing;
+      toggle.textContent = nowShowing ? "Skrýt heslo" : "Zobrazit heslo";
+      toggle.setAttribute("aria-pressed", nowShowing ? "true" : "false");
+      toggle.classList.toggle("iu-ds-toggle-pw--visible", nowShowing);
     });
 
     saveBtn.addEventListener("click", function (ev) {
@@ -29498,6 +29555,7 @@ function buildVideoAsArticleCard(it) {
       iuDsApplyCardLock(card, true);
       iuDsSyncFromDomIfOpen();
       feedback.textContent = "";
+      iuDsBtnFlashLabel(saveBtn, "Uloženo ✓", 1800, "iu-ds-btn--saved");
     });
 
     editBtn.addEventListener("click", function (ev) {
