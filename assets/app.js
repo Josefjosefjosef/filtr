@@ -33729,7 +33729,41 @@ function buildVideoAsArticleCard(it) {
     });
   }
 
+  function iuBakalariInjectUxCssOnce() {
+    if (document.getElementById("iuBakalariUxCss")) return;
+    const s = document.createElement("style");
+    s.id = "iuBakalariUxCss";
+    s.textContent =
+      ".bakalari-root .bakalari-btn,.bakalari-root .bakalari-open-btn,.bakalari-root .bakalari-add-another{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:background-color .15s ease,border-color .15s ease,filter .15s ease,box-shadow .15s ease,transform .12s ease}" +
+      ".bakalari-root .bakalari-open-btn:active:not(:disabled){transform:scale(.97);box-shadow:0 2px 8px rgba(42,125,224,.3)}" +
+      ".bakalari-root .bakalari-btn--secondary:hover:not(:disabled){filter:brightness(1.05)}" +
+      ".bakalari-root .bakalari-btn--secondary:active:not(:disabled){filter:brightness(.9);transform:scale(.97)}" +
+      ".bakalari-root .bakalari-btn--ghost:hover:not(:disabled){background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.28)}" +
+      ".bakalari-root .bakalari-btn--ghost:active:not(:disabled){background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.34);transform:scale(.97)}" +
+      ".bakalari-root .bakalari-btn--danger:active:not(:disabled){transform:scale(.97)}" +
+      ".bakalari-root .bakalari-add-another:hover:not(:disabled){background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3)}" +
+      ".bakalari-root .bakalari-add-another:active:not(:disabled){transform:scale(.97);background:rgba(255,255,255,.2)}" +
+      ".bakalari-root .bakalari-btn.iu-bakalari-btn--copied,.bakalari-root .bakalari-btn.iu-bakalari-btn--saved{background:#dcfce7!important;color:#166534!important;border-color:#86efac!important}" +
+      ".bakalari-root .bakalari-toggle-pw.iu-bakalari-toggle-pw--visible{background:rgba(224,231,255,.35)!important;border-color:rgba(99,102,241,.45)!important;color:#3730a3!important}" +
+      ".bakalari-root .bakalari-cards-container>.bakalari-card:nth-child(5n+1){background:rgba(219,234,254,.55)}" +
+      ".bakalari-root .bakalari-cards-container>.bakalari-card:nth-child(5n+2){background:rgba(209,250,229,.55)}" +
+      ".bakalari-root .bakalari-cards-container>.bakalari-card:nth-child(5n+3){background:rgba(254,249,195,.55)}" +
+      ".bakalari-root .bakalari-cards-container>.bakalari-card:nth-child(5n+4){background:rgba(237,233,254,.55)}" +
+      ".bakalari-root .bakalari-cards-container>.bakalari-card:nth-child(5n){background:rgba(255,237,213,.55)}" +
+      "#iuQuickFeed .bakalari-root .bakalari-btn--ghost{background:#f1f5f9;color:#0f172a;border-color:rgba(15,23,42,.14)}" +
+      "#iuQuickFeed .bakalari-root .bakalari-btn--ghost:hover:not(:disabled){background:#e2e8f0;border-color:rgba(15,23,42,.22)}" +
+      "#iuQuickFeed .bakalari-root .bakalari-btn--ghost:active:not(:disabled){background:#cbd5e1;border-color:rgba(15,23,42,.3);transform:scale(.97)}" +
+      "#iuQuickFeed .bakalari-root .bakalari-add-another{background:#f8fafc;border-color:rgba(15,23,42,.14);color:#0f172a}" +
+      "#iuQuickFeed .bakalari-root .bakalari-add-another:hover:not(:disabled){background:#eef2f7;border-color:rgba(15,23,42,.22)}" +
+      "#iuQuickFeed .bakalari-root .bakalari-add-another:active:not(:disabled){background:#e2e8f0;transform:scale(.97)}" +
+      "#iuQuickFeed .bakalari-root .bakalari-toggle-pw.iu-bakalari-toggle-pw--visible{background:#e0e7ff!important;border-color:rgba(29,78,216,.35)!important;color:#1e3a8a!important}";
+    try {
+      document.head.appendChild(s);
+    } catch (_) {}
+  }
+
   function renderBakalariModal(container) {
+    iuBakalariInjectUxCssOnce();
     var PH_NAME = "Jméno dítěte";
     var PH_URL = "https://...";
     var PH_USER = "Uživatelské jméno";
@@ -33742,7 +33776,7 @@ function buildVideoAsArticleCard(it) {
 
     var rootHtml = [
       "<div class=\"iu-mojeSluzbyBakalari bakalari-root\">",
-      "  <p class=\"bakalari-privacy-note\" data-bakalari-privacy>Údaje se ukládají pouze ve vašem zařízení (prohlížeči). Nikam se neposílají.</p>",
+      "  <p class=\"bakalari-privacy-note\" data-bakalari-privacy>Údaje se ukládají pouze v tomto prohlížeči na tomto zařízení a neodesíláme je na server infoUzel.cz.</p>",
       "  <div class=\"bakalari-cards-container\" data-bakalari-cards></div>",
       "  <button type=\"button\" class=\"bakalari-add-another\" data-bakalari-add>Přidat další</button>",
       "  <div class=\"bakalari-global-feedback\" data-bakalari-global-feedback aria-live=\"polite\"></div>",
@@ -33911,6 +33945,23 @@ function buildVideoAsArticleCard(it) {
       return false;
     }
 
+    function bakalariBtnFlashLabel(btn, tempLabel, ms, extraClass) {
+      if (!btn || btn.disabled) return;
+      if (btn.__iuBakalariFlashTimer) {
+        clearTimeout(btn.__iuBakalariFlashTimer);
+        btn.__iuBakalariFlashTimer = null;
+      }
+      var defaultLabel = btn.getAttribute("data-bakalari-default-label") || btn.textContent;
+      if (!btn.getAttribute("data-bakalari-default-label")) btn.setAttribute("data-bakalari-default-label", defaultLabel);
+      btn.textContent = tempLabel;
+      if (extraClass) btn.classList.add(extraClass);
+      btn.__iuBakalariFlashTimer = setTimeout(function () {
+        btn.textContent = btn.getAttribute("data-bakalari-default-label") || defaultLabel;
+        if (extraClass) btn.classList.remove(extraClass);
+        btn.__iuBakalariFlashTimer = null;
+      }, ms || 1600);
+    }
+
     function bindCard(cardEl) {
       var urlInp = cardEl.querySelector("[data-field=\"url\"]");
       var openBtn = cardEl.querySelector("[data-bakalari-open]");
@@ -33936,6 +33987,7 @@ function buildVideoAsArticleCard(it) {
           var isPw = passInp.getAttribute("type") === "password";
           passInp.setAttribute("type", isPw ? "text" : "password");
           togglePw.textContent = isPw ? "Skrýt heslo" : "Zobrazit heslo";
+          togglePw.classList.toggle("iu-bakalari-toggle-pw--visible", isPw);
         });
       }
 
@@ -33943,14 +33995,14 @@ function buildVideoAsArticleCard(it) {
       if (copyUser && userInp) {
         copyUser.addEventListener("click", function () {
           var v = stripPlaceholder(userInp.value, PH_USER);
-          if (v) bakalariCopyToClipboard(v);
+          if (v && bakalariCopyToClipboard(v)) bakalariBtnFlashLabel(copyUser, "Zkopírováno ✓", 1600, "iu-bakalari-btn--copied");
         });
       }
       var copyPass = cardEl.querySelector("[data-copy-password]");
       if (copyPass && passInp) {
         copyPass.addEventListener("click", function () {
           var v = stripPlaceholder(passInp.value, PH_PASS);
-          if (v) bakalariCopyToClipboard(v);
+          if (v && bakalariCopyToClipboard(v)) bakalariBtnFlashLabel(copyPass, "Zkopírováno ✓", 1600, "iu-bakalari-btn--copied");
         });
       }
 
@@ -33978,6 +34030,7 @@ function buildVideoAsArticleCard(it) {
           applyCardLock(cardEl, true);
           persistAllFromDom();
           showGlobalFb("Uloženo.", 2200);
+          bakalariBtnFlashLabel(saveBtn, "Uloženo ✓", 1800, "iu-bakalari-btn--saved");
           var cf = cardEl.querySelector("[data-bakalari-card-feedback]");
           if (cf) cf.textContent = "";
         });
@@ -33988,6 +34041,7 @@ function buildVideoAsArticleCard(it) {
         editBtn.addEventListener("click", function () {
           applyCardLock(cardEl, false);
           persistAllFromDom();
+          bakalariBtnFlashLabel(editBtn, "Upraveno ✓", 1400, "iu-bakalari-btn--saved");
           cardEl.classList.remove("bakalari-card--highlight");
           void cardEl.offsetWidth;
           cardEl.classList.add("bakalari-card--highlight");
