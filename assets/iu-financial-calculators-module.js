@@ -125,6 +125,9 @@ const IU_FIN_INFO_INVESTMENT_GOAL =
   "Návrh investičního plánu je vždy individuální. Záleží na cílové částce, časovém horizontu, výši pravidelných vkladů, rizikovém profilu investora i dalších parametrech. Pro vytvoření vhodného investičního plánu doporučujeme konzultaci s finančním poradcem.";
 const IU_FIN_INFO_DIP =
   "Daňové výhody DIP a budoucí hodnota investice závisí na individuální situaci klienta, výši příspěvků, investiční strategii, legislativě a dalších faktorech. Pro správné nastavení produktu doporučujeme konzultaci s finančním poradcem.";
+const IU_FIN_DETAIL_PRIVACY_NOTICE =
+  "🔒 Zadané údaje se nikam neodesílají ani neukládají. Pokud kliknete na spodní tlačítko, budete přesměrováni mimo InfoUzel.cz.";
+const IU_FIN_HUB_SCROLL_KEY = "iuFinCalcHubScrollTop";
 
 function buildFinInfoOnlyCard(root, text) {
   root.innerHTML = `<div class="iu-financial-overlay-infoCard" data-iu-fin-info-card="1"><p class="iu-financial-overlay-infoCardText">${esc(text)}</p></div>`;
@@ -139,11 +142,6 @@ const IU_FIN_CALC_REGISTRY = [
     category: "everyday",
     pillar: "everyday",
     enabled: true,
-    ctaMode: "contact",
-    ctaLabel: "Potřebuji poradit s DPH",
-    ctaTarget: IU_FIN_CTA_DELEGATE,
-    ctaServiceKey: "vat",
-    resultSummaryMode: "default",
     accentClass: "iu-financial-accent--vat",
     disclaimers: [DISCLAIMER_DPH, DISCLAIMER_SHORT],
     defaults: { amount: "1000", amountMode: "net", ratePreset: "21", customRate: "15" },
@@ -373,11 +371,6 @@ const IU_FIN_CALC_REGISTRY = [
     category: "everyday",
     pillar: "everyday",
     enabled: true,
-    ctaMode: "contact",
-    ctaLabel: "Projít rozpočet nákupů",
-    ctaTarget: IU_FIN_CTA_DELEGATE,
-    ctaServiceKey: "discount",
-    resultSummaryMode: "default",
     accentClass: "iu-financial-accent--discount",
     disclaimers: [DISCLAIMER_SHORT],
     defaults: { original: "1000", changePercent: "20", direction: "discount" },
@@ -764,6 +757,9 @@ const IU_FIN_CALC_REGISTRY = [
     pillar: "protection",
     enabled: true,
     infoOnly: true,
+    ctaMode: "placeholder",
+    ctaLabel: "Chci poradit s řešením výpadku příjmu",
+    ctaServiceKey: "income-loss-sick",
     accentClass: "iu-financial-accent--sick",
     build(root) {
       buildFinInfoOnlyCard(root, IU_FIN_INFO_SICK);
@@ -777,6 +773,9 @@ const IU_FIN_CALC_REGISTRY = [
     pillar: "protection",
     enabled: true,
     infoOnly: true,
+    ctaMode: "placeholder",
+    ctaLabel: "Chci poradit s řešením dlouhodobého výpadku příjmu",
+    ctaServiceKey: "disability-income",
     accentClass: "iu-financial-accent--disability",
     build(root) {
       buildFinInfoOnlyCard(root, IU_FIN_INFO_DISABILITY);
@@ -790,6 +789,9 @@ const IU_FIN_CALC_REGISTRY = [
     pillar: "protection",
     enabled: true,
     infoOnly: true,
+    ctaMode: "placeholder",
+    ctaLabel: "Chci poradit s nastavením životního krytí",
+    ctaServiceKey: "life-coverage",
     accentClass: "iu-financial-accent--life",
     build(root) {
       buildFinInfoOnlyCard(root, IU_FIN_INFO_LIFE);
@@ -861,6 +863,9 @@ export function initIuFinancialCalculatorsOverlay(deps) {
     view: "hub",
     activeId: null,
     lastFocus: null,
+    hubScrollTop: 0,
+    hubScrollLock: false,
+    hubScrollRestoring: false,
   };
 
   function setLock(on) {
@@ -968,6 +973,76 @@ export function initIuFinancialCalculatorsOverlay(deps) {
     }
   }
 
+  function persistHubScrollTop() {
+    try {
+      sessionStorage.setItem(IU_FIN_HUB_SCROLL_KEY, String(Math.max(0, state.hubScrollTop || 0)));
+    } catch (_) {}
+  }
+
+  function readPersistedHubScrollTop() {
+    try {
+      const raw = sessionStorage.getItem(IU_FIN_HUB_SCROLL_KEY);
+      const v = parseInt(raw, 10);
+      if (Number.isFinite(v) && v >= 0) return v;
+    } catch (_) {}
+    return Math.max(0, state.hubScrollTop || 0);
+  }
+
+  function syncHubScrollFromHost() {
+    if (state.view !== "hub" || state.hubScrollLock || state.hubScrollRestoring) return;
+    try {
+      const next = scrollHost.scrollTop;
+      const persisted = readPersistedHubScrollTop();
+      if (next === 0 && persisted > 50) return;
+      state.hubScrollTop = next;
+      persistHubScrollTop();
+    } catch (_) {}
+  }
+
+  function lockHubScrollFromHost() {
+    state.hubScrollLock = true;
+    persistHubScrollTop();
+  }
+
+  function unlockHubScroll() {
+    state.hubScrollLock = false;
+  }
+
+  function restoreHubScroll() {
+    const y = readPersistedHubScrollTop();
+    state.hubScrollTop = y;
+    state.hubScrollRestoring = true;
+    function apply() {
+      try {
+        scrollHost.scrollTop = y;
+      } catch (_) {}
+    }
+    apply();
+    try {
+      requestAnimationFrame(function () {
+        apply();
+        requestAnimationFrame(function () {
+          apply();
+          setTimeout(apply, 0);
+          setTimeout(apply, 50);
+          setTimeout(apply, 150);
+          setTimeout(function () {
+            apply();
+            state.hubScrollRestoring = false;
+          }, 200);
+        });
+      });
+    } catch (_) {
+      state.hubScrollRestoring = false;
+    }
+  }
+
+  function returnToHub() {
+    renderHub();
+    restoreHubScroll();
+    unlockHubScroll();
+  }
+
   function renderHub() {
     state.view = "hub";
     state.activeId = null;
@@ -996,6 +1071,9 @@ export function initIuFinancialCalculatorsOverlay(deps) {
     }).join("");
     views.innerHTML = `<div class="iu-fin-hub-wrap iu-financial-calculators-list" data-iu-fin-hub="1"><p class="iu-financial-overlay-info iu-fin-hub-privacy" role="note">🔒 Veškeré výpočty probíhají pouze ve vašem zařízení. Zadané údaje se nikam neodesílají ani neukládají.</p>${sections}</div>`;
     views.querySelectorAll("[data-iu-fin-pick]").forEach((btn) => {
+      btn.addEventListener("pointerdown", () => {
+        lockHubScrollFromHost();
+      });
       btn.addEventListener("click", () => openCalculator(btn.getAttribute("data-iu-fin-pick"), null));
     });
   }
@@ -1053,8 +1131,10 @@ export function initIuFinancialCalculatorsOverlay(deps) {
         ? `<p class="iu-financial-overlay-interpret">${esc(String(result.meta.interpretation))}</p>`
         : "";
     const notes = (def.disclaimers || []).map((t) => `<p class="iu-financial-overlay-footnote">${esc(t)}</p>`).join("");
-    container.innerHTML = `<div class="iu-financial-overlay-results">${rows}${interp}</div><div class="iu-financial-overlay-ctaHost" data-iu-fin-cta-wrap></div><div class="iu-financial-overlay-footnotes">${notes}</div>`;
-    mountResultCta(def, result, container.querySelector("[data-iu-fin-cta-wrap]"));
+    const showCta = iuFinCtaConfigIsRenderable(def);
+    const ctaBlock = showCta ? `<div class="iu-financial-overlay-ctaHost" data-iu-fin-cta-wrap></div>` : "";
+    container.innerHTML = `<div class="iu-financial-overlay-results">${rows}${interp}</div>${ctaBlock}<div class="iu-financial-overlay-footnotes">${notes}</div>`;
+    if (showCta) mountResultCta(def, result, container.querySelector("[data-iu-fin-cta-wrap]"));
   }
 
   function wireCalculator(def, root, resultsEl) {
@@ -1090,9 +1170,10 @@ export function initIuFinancialCalculatorsOverlay(deps) {
   function openCalculator(id, preset) {
     const def = byId(id);
     if (!def) return;
+    if (state.view === "hub") lockHubScrollFromHost();
     state.view = "detail";
     state.activeId = id;
-    if (subEl) subEl.textContent = def.description;
+    if (subEl) subEl.textContent = IU_FIN_DETAIL_PRIVACY_NOTICE;
     titleEl.textContent = def.title;
     if (backBtn) backBtn.hidden = false;
     panel.classList.add("iu-financial-overlay-panel--detail");
@@ -1164,6 +1245,8 @@ export function initIuFinancialCalculatorsOverlay(deps) {
       openCalculator(String(ex.calculatorId), ex.presetValues || null);
     } else {
       renderHub();
+      restoreHubScroll();
+      unlockHubScroll();
     }
     try {
       if (closeBtn) closeBtn.focus();
@@ -1171,6 +1254,12 @@ export function initIuFinancialCalculatorsOverlay(deps) {
   }
 
   function closeSurface() {
+    if (state.view === "hub") {
+      unlockHubScroll();
+      syncHubScrollFromHost();
+    } else {
+      persistHubScrollTop();
+    }
     setVis(false);
     setLock(false);
     iuFinCalcClearDesktopFullpageLayout();
@@ -1185,12 +1274,18 @@ export function initIuFinancialCalculatorsOverlay(deps) {
 
   if (backBtn) {
     backBtn.addEventListener("click", () => {
-      renderHub();
-      try {
-        scrollHost.scrollTop = 0;
-      } catch (_) {}
+      returnToHub();
     });
   }
+  try {
+    scrollHost.addEventListener(
+      "scroll",
+      function () {
+        syncHubScrollFromHost();
+      },
+      { passive: true },
+    );
+  } catch (_) {}
   if (closeBtn) {
     closeBtn.addEventListener("click", (e) => {
       e.preventDefault();
