@@ -8382,31 +8382,43 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
-  /** Homepage section cards: prefer feed init sectionPreviewItems (identical to section init top-2). */
-  function iuPreviewPickLatestTwoForTopic(topicKey) {
+  /** Homepage section cards: feed init sectionPreviewItems[topic][0|1] is the sole source when present. */
+  function iuPreviewFromSectionPreviewItems(topicKey) {
     try {
       const topic = String(topicKey || "").trim().toLowerCase();
       const shippedMap = state.sectionPreviewItems;
-      if (shippedMap && typeof shippedMap === "object") {
-        const shipped = shippedMap[topic];
-        if (Array.isArray(shipped) && shipped.length) {
-          const picked = iuPreviewPickTwoFromRows(shipped, topic);
-          if (picked.latest) return picked;
-        }
-      }
-      if (topic === "vzdelavani") {
-        const legacy =
-          state.chunkLoader && Array.isArray(state.chunkLoader.educationPreviewItems)
-            ? state.chunkLoader.educationPreviewItems
-            : [];
-        if (legacy.length) {
-          const picked = iuPreviewPickTwoFromRows(legacy, topic);
-          if (picked.latest) return picked;
-        }
-      }
-      return iuPreviewPickTwoFromCachedItems(topic);
+      if (!shippedMap || typeof shippedMap !== "object") return null;
+      const shipped = shippedMap[topic];
+      if (!Array.isArray(shipped) || !shipped.length) return null;
+      const latest = shipped[0] && typeof shipped[0] === "object" ? shipped[0] : null;
+      if (!latest) return null;
+      const second =
+        shipped.length > 1 && shipped[1] && typeof shipped[1] === "object" ? shipped[1] : null;
+      return {
+        latest,
+        second,
+        latestMs: iuNewsPreviewParsePublishedMs(latest),
+        source: "sectionPreviewItems",
+      };
     } catch (_) {
-      return { latest: null, second: null, latestMs: NaN };
+      return null;
+    }
+  }
+
+  function iuPreviewTrustsSectionPreviewItems(picked) {
+    return Boolean(picked && picked.source === "sectionPreviewItems");
+  }
+
+  function iuPreviewPickLatestTwoForTopic(topicKey) {
+    try {
+      const fromShipped = iuPreviewFromSectionPreviewItems(topicKey);
+      if (fromShipped) return fromShipped;
+      const cached = iuPreviewPickTwoFromCachedItems(topicKey);
+      if (cached && cached.latest) cached.source = "cachedItems";
+      else if (cached) cached.source = "";
+      return cached;
+    } catch (_) {
+      return { latest: null, second: null, latestMs: NaN, source: "" };
     }
   }
 
@@ -9705,7 +9717,7 @@ function buildVideoAsArticleCard(it) {
       const second = picked.second;
       let latestTitle = latest && latest.title ? String(latest.title) : "";
       const secondTitle = second && second.title ? String(second.title) : "";
-      if (latest && !iuArticleMatchesMediaTopicKey(latest, "finance")) {
+      if (!iuPreviewTrustsSectionPreviewItems(picked) && latest && !iuArticleMatchesMediaTopicKey(latest, "finance")) {
         latestTitle = "";
       }
       const hasLatest = !!latestTitle;
@@ -9893,7 +9905,7 @@ function buildVideoAsArticleCard(it) {
       const second = picked.second;
       let latestTitle = latest && latest.title ? String(latest.title) : "";
       const secondTitle = second && second.title ? String(second.title) : "";
-      if (latest && !iuArticleMatchesMediaTopicKey(latest, "zdravi")) {
+      if (!iuPreviewTrustsSectionPreviewItems(picked) && latest && !iuArticleMatchesMediaTopicKey(latest, "zdravi")) {
         latestTitle = "";
       }
       const hasLatest = !!latestTitle;
@@ -10081,7 +10093,7 @@ function buildVideoAsArticleCard(it) {
       const second = picked.second;
       let latestTitle = latest && latest.title ? String(latest.title) : "";
       const secondTitle = second && second.title ? String(second.title) : "";
-      if (latest && !iuArticleMatchesMediaTopicKey(latest, "cestovani")) {
+      if (!iuPreviewTrustsSectionPreviewItems(picked) && latest && !iuArticleMatchesMediaTopicKey(latest, "cestovani")) {
         latestTitle = "";
       }
       const hasLatest = !!latestTitle;
@@ -10269,10 +10281,10 @@ function buildVideoAsArticleCard(it) {
       const second = picked.second;
       let latestTitle = latest && latest.title ? String(latest.title) : "";
       let secondTitle = second && second.title ? String(second.title) : "";
-      if (latest && !iuArticleMatchesMediaTopicKey(latest, "hry")) {
+      if (!iuPreviewTrustsSectionPreviewItems(picked) && latest && !iuArticleMatchesMediaTopicKey(latest, "hry")) {
         latestTitle = "";
       }
-      if (second && !iuArticleMatchesMediaTopicKey(second, "hry")) {
+      if (!iuPreviewTrustsSectionPreviewItems(picked) && second && !iuArticleMatchesMediaTopicKey(second, "hry")) {
         secondTitle = "";
       }
       const hasLatest = !!latestTitle;
@@ -10460,10 +10472,10 @@ function buildVideoAsArticleCard(it) {
       const second = picked.second;
       let latestTitle = latest && latest.title ? String(latest.title) : "";
       let secondTitle = second && second.title ? String(second.title) : "";
-      if (latest && !iuArticleMatchesMediaTopicKey(latest, "kultura")) {
+      if (!iuPreviewTrustsSectionPreviewItems(picked) && latest && !iuArticleMatchesMediaTopicKey(latest, "kultura")) {
         latestTitle = "";
       }
-      if (second && !iuArticleMatchesMediaTopicKey(second, "kultura")) {
+      if (!iuPreviewTrustsSectionPreviewItems(picked) && second && !iuArticleMatchesMediaTopicKey(second, "kultura")) {
         secondTitle = "";
       }
       const hasLatest = !!latestTitle;
@@ -10651,10 +10663,10 @@ function buildVideoAsArticleCard(it) {
       const second = picked.second;
       let latestTitle = latest && latest.title ? String(latest.title) : "";
       let secondTitle = second && second.title ? String(second.title) : "";
-      if (latest && !iuArticleMatchesMediaTopicKey(latest, "veda")) {
+      if (!iuPreviewTrustsSectionPreviewItems(picked) && latest && !iuArticleMatchesMediaTopicKey(latest, "veda")) {
         latestTitle = "";
       }
-      if (second && !iuArticleMatchesMediaTopicKey(second, "veda")) {
+      if (!iuPreviewTrustsSectionPreviewItems(picked) && second && !iuArticleMatchesMediaTopicKey(second, "veda")) {
         secondTitle = "";
       }
       const hasLatest = !!latestTitle;
@@ -10842,10 +10854,10 @@ function buildVideoAsArticleCard(it) {
       const second = picked.second;
       let latestTitle = latest && latest.title ? String(latest.title) : "";
       let secondTitle = second && second.title ? String(second.title) : "";
-      if (latest && !iuArticleMatchesMediaTopicKey(latest, "vzdelavani")) {
+      if (!iuPreviewTrustsSectionPreviewItems(picked) && latest && !iuArticleMatchesMediaTopicKey(latest, "vzdelavani")) {
         latestTitle = "";
       }
-      if (second && !iuArticleMatchesMediaTopicKey(second, "vzdelavani")) {
+      if (!iuPreviewTrustsSectionPreviewItems(picked) && second && !iuArticleMatchesMediaTopicKey(second, "vzdelavani")) {
         secondTitle = "";
       }
       const hasLatest = !!latestTitle;
@@ -11030,6 +11042,8 @@ function buildVideoAsArticleCard(it) {
     try{ if (!iuIsProdHost()) window.iuScienceHistoryPreviewRegressionAudit = iuScienceHistoryPreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuEducationPreviewRegressionAudit = iuEducationPreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuSilverTallMediaPreviewsRefresh = iuSilverTallMediaPreviewsRefresh; }catch(_){}
+    try{ if (!iuIsProdHost()) window.__iuPreviewPickLatestTwoForTopic = iuPreviewPickLatestTwoForTopic; }catch(_){}
+    try{ if (!iuIsProdHost()) window.__iuPreviewFromSectionPreviewItems = iuPreviewFromSectionPreviewItems; }catch(_){}
     /* P0: avoid painting placeholder titles before feed loadData() populates cache (late swap / flicker). */
     try{
       if (typeof state !== "undefined" && state && state.hasLoadedData) {
@@ -17011,7 +17025,7 @@ function buildVideoAsArticleCard(it) {
         cachedLen: Array.isArray(state.cachedItems) ? state.cachedItems.length : 0,
         sanitizedArticles: Array.isArray(sanitizedArticles) ? sanitizedArticles.length : 0,
       });
-      /* Preview cards read state.cachedItems only — refresh before heavy feed DOM so titles are not blocked behind renderFeed(). */
+      /* Preview cards read state.sectionPreviewItems (feed init top-2) — refresh before heavy feed DOM. */
       iuBootTracePhase("pre_silver_preview_refresh");
       try {
         await iuSilverTallMediaPreviewsRefreshYielded();
