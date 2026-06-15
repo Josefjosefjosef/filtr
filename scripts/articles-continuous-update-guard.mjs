@@ -4,7 +4,8 @@
  * Run: node scripts/articles-continuous-update-guard.mjs
  *
  * Env:
- *   FRESHNESS_URL — public index with generatedAt (default prod articles/index.json)
+ *   FRESHNESS_URL — primary prod freshness source (default publishable_pool.json)
+ *   ARTICLES_INDEX_URL — retention index for split-brain detection (default articles/index.json)
  *   ARTICLES_JSON_URL — full bundle for newest article (default prod articles.json)
  *   GITHUB_REPOSITORY — owner/repo
  *   GITHUB_TOKEN / GH_TOKEN — GitHub API (required for run checks)
@@ -36,6 +37,9 @@ const root = path.join(__dirname, "..");
 
 const FRESHNESS_URL =
   (process.env.FRESHNESS_URL || "").trim() ||
+  "https://infouzel.cz/projects/data/publishable_pool.json";
+const ARTICLES_INDEX_URL =
+  (process.env.ARTICLES_INDEX_URL || "").trim() ||
   "https://infouzel.cz/projects/data/articles/index.json";
 const ARTICLES_JSON_URL =
   (process.env.ARTICLES_JSON_URL || "").trim() ||
@@ -99,77 +103,153 @@ async function ghApi(pathname) {
   return res.json();
 }
 
-async function checkProductionFreshness(nowMs) {
-  log(`prod_freshness index=${FRESHNESS_URL} limit_min=${MAX_GEN_AGE_MIN}`);
-  const res = await fetch(FRESHNESS_URL, {
+async function fetchJsonFreshness(url, label) {
+  const res = await fetch(url, {
     headers: { Accept: "application/json", "Cache-Control": "no-cache" },
   });
   if (!res.ok) {
-    fail(`prod_freshness HTTP ${res.status}`);
-    return { ok: false, generatedAt: null, ageMinutes: null, todayCount: null, count: null };
+    return { ok: false, label, url, httpStatus: res.status, generatedAt: null, ageMinutes: null };
   }
-  const index = await res.json();
-  const genTs = parseTs(index.generatedAt);
+  const doc = await res.json();
+  const generatedAt = typeof doc.generatedAt === "string" ? doc.generatedAt : null;
+  const genTs = parseTs(generatedAt);
   if (!genTs) {
-    fail("prod_freshness missing generatedAt");
-    return { ok: false, generatedAt: null, ageMinutes: null, todayCount: null, count: null };
+    return { ok: false, label, url, httpStatus: res.status, generatedAt: null, ageMinutes: null };
   }
-  const ageMin = minutesAgo(genTs, nowMs);
-  const today = new Date(nowMs).toISOString().slice(0, 10);
-  const todayEntry = Array.isArray(index.days)
-    ? index.days.find((d) => d?.date === today)
-    : null;
-  const todayCount = todayEntry?.count ?? null;
-  log(`prod_freshness generatedAt=${index.generatedAt} age_min=${ageMin.toFixed(1)} todayCount=${todayCount}`);
+  return {
+    ok: true,
+    label,
+    url,
+    httpStatus: res.status,
+    generatedAt,
+    ageMinutes: null,
+    doc,
+  };
+}
 
-  let newestArticle = null;
-  let articleCount = null;
+async function checkProductionFreshness(nowMs) {
+  log(`prod_freshness primary=${FRESHNESS_URL} index=${ARTICLES_INDEX_URL} limit_min=${MAX_GEN_AGE_MIN}`);
+
+  const primary = await fetchJsonFreshness(FRESHNESS_URL, "publishable_pool");
+  if (!primary.ok) {
+    fail(`prod_freshness primary HTTP ${primary.httpStatus || "error"} url=${FRESHNESS_URL}`);
+    return {
+      ok: false,
+      generatedAt: null,
+      ageMinutes: null,
+      todayCount: null,
+      count: null,
+      splitBrain: null,
+    };
+  }
+
+  const primaryAgeMin = minutesAgo(parseTs(primary.generatedAt), nowMs);
+  primary.ageMinutes = primaryAgeMin;
+  log(
+    `prod_freshness primary generatedAt=${primary.generatedAt} age_min=${primaryAgeMin.toFixed(1)} source=publishable_pool`,
+  );
+
+  let indexFreshness = null;
+  let splitBrain = false;
   try {
-    const full = await fetch(ARTICLES_JSON_URL, {
-      headers: { Accept: "application/json", "Cache-Control": "no-cache" },
-    });
-    if (full.ok) {
-      const doc = await full.json();
-      const list = Array.isArray(doc.articles) ? doc.articles : Array.isArray(doc.items) ? doc.items : [];
-      articleCount = list.length;
-      for (const a of list) {
-        const ts = parseTs(a.publishedAt || a.pubDate || a.date);
-        if (!ts) continue;
-        if (!newestArticle || ts > parseTs(newestArticle.publishedAt || newestArticle.pubDate || newestArticle.date)) {
-          newestArticle = a;
-        }
-      }
-      if (newestArticle) {
-        log(
-          `prod_newest title=${String(newestArticle.title || "").slice(0, 60)} publishedAt=${newestArticle.publishedAt || newestArticle.pubDate || newestArticle.date}`,
+    indexFreshness = await fetchJsonFreshness(ARTICLES_INDEX_URL, "articles_index");
+    if (indexFreshness.ok) {
+      const indexAgeMin = minutesAgo(parseTs(indexFreshness.generatedAt), nowMs);
+      indexFreshness.ageMinutes = indexAgeMin;
+      splitBrain =
+        indexFreshness.generatedAt !== primary.generatedAt &&
+        indexAgeMin > MAX_GEN_AGE_MIN &&
+        primaryAgeMin <= MAX_GEN_AGE_MIN;
+      log(
+        `prod_freshness index generatedAt=${indexFreshness.generatedAt} age_min=${indexAgeMin.toFixed(1)} split_brain=${splitBrain ? "YES" : "NO"}`,
+      );
+      if (splitBrain) {
+        warn(
+          "articles/index.json stale while publishable_pool fresh — fast pool index sync missing on prod",
         );
       }
     } else {
-      log(`prod_articles.json HTTP ${full.status} (index-only check)`);
+      log(`prod_freshness index HTTP ${indexFreshness.httpStatus || "error"} (non-blocking)`);
     }
   } catch (e) {
-    log(`prod_articles.json fetch skipped: ${e instanceof Error ? e.message : e}`);
+    log(`prod_freshness index fetch skipped: ${e instanceof Error ? e.message : e}`);
   }
 
-  if (ageMin > MAX_GEN_AGE_MIN) {
-    fail(`prod generatedAt older than ${MAX_GEN_AGE_MIN}m (${ageMin.toFixed(1)}m)`);
+  const today = new Date(nowMs).toISOString().slice(0, 10);
+  const indexDoc = indexFreshness?.doc;
+  const todayEntry = Array.isArray(indexDoc?.days) ? indexDoc.days.find((d) => d?.date === today) : null;
+  const todayCount = todayEntry?.count ?? null;
+
+  let newestArticle = null;
+  let articleCount = null;
+  const poolDoc = primary.doc;
+  const poolList = Array.isArray(poolDoc?.articles)
+    ? poolDoc.articles
+    : Array.isArray(poolDoc?.items)
+      ? poolDoc.items
+      : [];
+  articleCount = poolList.length || null;
+  for (const a of poolList) {
+    const ts = parseTs(a.publishedAt || a.pubDate || a.date);
+    if (!ts) continue;
+    if (!newestArticle || ts > parseTs(newestArticle.publishedAt || newestArticle.pubDate || newestArticle.date)) {
+      newestArticle = a;
+    }
+  }
+  if (newestArticle) {
+    log(
+      `prod_newest title=${String(newestArticle.title || "").slice(0, 60)} publishedAt=${newestArticle.publishedAt || newestArticle.pubDate || newestArticle.date}`,
+    );
+  } else {
+    try {
+      const full = await fetch(ARTICLES_JSON_URL, {
+        headers: { Accept: "application/json", "Cache-Control": "no-cache" },
+      });
+      if (full.ok) {
+        const doc = await full.json();
+        const list = Array.isArray(doc.articles) ? doc.articles : Array.isArray(doc.items) ? doc.items : [];
+        articleCount = list.length;
+        for (const a of list) {
+          const ts = parseTs(a.publishedAt || a.pubDate || a.date);
+          if (!ts) continue;
+          if (!newestArticle || ts > parseTs(newestArticle.publishedAt || newestArticle.pubDate || newestArticle.date)) {
+            newestArticle = a;
+          }
+        }
+        if (newestArticle) {
+          log(
+            `prod_newest title=${String(newestArticle.title || "").slice(0, 60)} publishedAt=${newestArticle.publishedAt || newestArticle.pubDate || newestArticle.date}`,
+          );
+        }
+      } else {
+        log(`prod_articles.json HTTP ${full.status} (pool-only check)`);
+      }
+    } catch (e) {
+      log(`prod_articles.json fetch skipped: ${e instanceof Error ? e.message : e}`);
+    }
+  }
+
+  if (primaryAgeMin > MAX_GEN_AGE_MIN) {
+    fail(`prod publishable_pool generatedAt older than ${MAX_GEN_AGE_MIN}m (${primaryAgeMin.toFixed(1)}m)`);
     return {
       ok: false,
-      generatedAt: index.generatedAt,
-      ageMinutes: ageMin,
+      generatedAt: primary.generatedAt,
+      ageMinutes: primaryAgeMin,
       todayCount,
       count: articleCount,
       newestArticle,
+      splitBrain,
     };
   }
   log("prod_freshness PASS");
   return {
     ok: true,
-    generatedAt: index.generatedAt,
-    ageMinutes: ageMin,
+    generatedAt: primary.generatedAt,
+    ageMinutes: primaryAgeMin,
     todayCount,
     count: articleCount,
     newestArticle,
+    splitBrain,
   };
 }
 
@@ -321,10 +401,11 @@ async function checkAutomaticTrigger() {
   return { ok: true };
 }
 
-function emitReleaseBlockerDiagnostics({ prodStale, pipelineIngestOk, releaseBlocked }) {
+function emitReleaseBlockerDiagnostics({ prodStale, pipelineIngestOk, releaseBlocked, splitBrain }) {
   log(`PIPELINE_INGEST_OK=${pipelineIngestOk ? "YES" : "NO"}`);
   log(`RELEASE_BLOCKED=${releaseBlocked ? "YES" : "NO"}`);
   log(`PROD_STALE=${prodStale ? "YES" : "NO"}`);
+  log(`SPLIT_BRAIN=${splitBrain ? "YES" : "NO"}`);
   if (pipelineIngestOk && releaseBlocked && prodStale) {
     log("ACTION_REQUIRED=FIX_RELEASE_BLOCKER");
     warn("ingest+aggregate OK but release blocked — prod staleness is a release blocker, not ingest failure");
@@ -341,12 +422,14 @@ async function main() {
   let prodStale = false;
   let pipelineIngestOk = false;
   let releaseBlocked = false;
+  let splitBrain = false;
 
   if (GITHUB_EVENT === "pull_request" && SKIP_PROD_FRESHNESS_ON_PR) {
     log("prod_freshness SKIP on pull_request (post-merge proof required)");
   } else {
     const prod = await checkProductionFreshness(nowMs);
     prodStale = !prod.ok;
+    splitBrain = Boolean(prod.splitBrain);
     if (!prod.ok) failed = true;
   }
 
@@ -403,7 +486,7 @@ async function main() {
     warn("YELLOW pipeline state present (release blocked or streak warning)");
   }
 
-  emitReleaseBlockerDiagnostics({ prodStale, pipelineIngestOk, releaseBlocked });
+  emitReleaseBlockerDiagnostics({ prodStale, pipelineIngestOk, releaseBlocked, splitBrain });
 
   if (failed) {
     console.error("[articles-continuous-update-guard] RESULT=FAIL");

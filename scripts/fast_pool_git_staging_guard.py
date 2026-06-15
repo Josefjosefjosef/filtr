@@ -20,6 +20,7 @@ DATA_STEP_MARKERS = (
     "Regenerate source rotation inventory",
     "Article pipeline — ingest",
     "Fast pool merge",
+    "Sync articles index from publishable pool",
 )
 
 PREP_BRANCH_MARKERS = (
@@ -180,6 +181,7 @@ def validate_workflow(path: Path = WORKFLOW) -> list[str]:
     else:
         for rel in (
             "projects/data/publishable_pool.json",
+            "projects/data/articles/index.json",
             "projects/data/topic_dedupe_suppressed.json",
             "projects/data/pipeline_reports/",
         ):
