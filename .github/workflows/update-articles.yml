@@ -498,6 +498,9 @@ jobs:
         env:
           ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
           REQUIRE_PROD_FRESHNESS: "0"
+          WORKFLOW_RUN_STARTED_AT: ${{ github.run_started_at }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          LOCAL_ARTIFACT_RUNTIME_TOLERANCE_MINUTES: "60"
         run: node scripts/publish-continuity-guard.mjs
 
       - name: Topic dedupe false-positive guard

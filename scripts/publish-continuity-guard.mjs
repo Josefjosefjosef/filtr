@@ -4,6 +4,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { evaluateLocalArtifactFreshness, parseGeneratedAtTs } from "./publish-continuity-guard-lib.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -13,6 +14,9 @@ const FRESHNESS_URL = (process.env.FRESHNESS_URL || "").trim();
 const REQUIRE_PROD = String(process.env.REQUIRE_PROD_FRESHNESS || "").toLowerCase() === "1";
 const MAX_GAP_MIN = Number(process.env.MAX_PUBLISH_GAP_MINUTES || "90");
 const MAX_LOCAL_AGE_MIN = Number(process.env.MAX_LOCAL_GENERATED_AGE_MINUTES || "30");
+const RUNTIME_TOLERANCE_MIN = Number(process.env.LOCAL_ARTIFACT_RUNTIME_TOLERANCE_MINUTES || "60");
+const WORKFLOW_RUN_STARTED_AT = (process.env.WORKFLOW_RUN_STARTED_AT || "").trim();
+const GITHUB_RUN_ID = (process.env.GITHUB_RUN_ID || "").trim();
 
 function log(msg) {
   console.log(`[publish-continuity-guard] ${msg}`);
@@ -23,9 +27,18 @@ function fail(msg) {
 }
 
 function parseTs(v) {
-  if (!v) return null;
-  const t = Date.parse(v);
-  return Number.isFinite(t) ? t : null;
+  return parseGeneratedAtTs(v);
+}
+
+function readArtifactPipelineRunId(articlesPath) {
+  try {
+    const manifestPath = path.join(path.dirname(articlesPath), "release_manifest.json");
+    if (!fs.existsSync(manifestPath)) return null;
+    const doc = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+    return String(doc.pipelineRunId || doc.winningIngestRunId || "").trim() || null;
+  } catch {
+    return null;
+  }
 }
 
 async function main() {
@@ -49,19 +62,29 @@ async function main() {
 
   if (localArticles && fs.existsSync(localArticles)) {
     const doc = JSON.parse(fs.readFileSync(localArticles, "utf8"));
-    const genTs = parseTs(doc.generatedAt);
-    if (!genTs) {
-      fail("local articles.json missing generatedAt");
+    const artifactRunId = readArtifactPipelineRunId(localArticles);
+    const verdict = evaluateLocalArtifactFreshness({
+      generatedAt: doc.generatedAt,
+      maxAgeMin: MAX_LOCAL_AGE_MIN,
+      runtimeToleranceMin: RUNTIME_TOLERANCE_MIN,
+      workflowRunStartedAt: WORKFLOW_RUN_STARTED_AT || null,
+      githubRunId: GITHUB_RUN_ID || null,
+      artifactPipelineRunId: artifactRunId,
+    });
+
+    log(`local generatedAt=${doc.generatedAt} age_min=${verdict.localArtifactAgeMin?.toFixed(1)}`);
+    log(`LOCAL_ARTIFACT_CURRENT_RUN=${verdict.localArtifactCurrentRun}`);
+    log(`LOCAL_ARTIFACT_AGE_MIN=${verdict.localArtifactAgeMin?.toFixed(1)}`);
+    log(`LOCAL_ARTIFACT_LIMIT_MIN=${verdict.localArtifactLimitMin}`);
+    log(`LOCAL_ARTIFACT_RUNTIME_TOLERANCE_MIN=${verdict.localArtifactRuntimeToleranceMin}`);
+    log(`LOCAL_ARTIFACT_EFFECTIVE_LIMIT_MIN=${verdict.localArtifactEffectiveLimitMin}`);
+    log(`RELEASE_ALLOWED=${verdict.releaseAllowed}`);
+
+    if (verdict.releaseAllowed !== "YES") {
+      fail(verdict.failReason || "local artifact freshness check failed");
       failed = true;
     } else {
-      const ageMin = (Date.now() - genTs) / 60_000;
-      log(`local generatedAt=${doc.generatedAt} age_min=${ageMin.toFixed(1)}`);
-      if (ageMin > MAX_LOCAL_AGE_MIN) {
-        fail(`local generatedAt age ${ageMin.toFixed(1)}m > ${MAX_LOCAL_AGE_MIN}m`);
-        failed = true;
-      } else {
-        log("local publish bundle fresh PASS");
-      }
+      log("local publish bundle fresh PASS");
     }
   }
 
