@@ -588,12 +588,25 @@ jobs:
         run: node scripts/dedupe-loss-guard.mjs
 
       - name: Section purity guard (finance/zdravi vs URL)
+        id: section_purity_guard
+        env:
+          ARTICLES_JSON_PATH: ${{ github.workspace }}/projects/data/articles.json
+          SECTION_PURITY_POLICY: PUBLISH_ALWAYS
         run: |
           set -euo pipefail
           T0=$(date +%s)
           python scripts/section_purity_guard.py
           T1=$(date +%s)
           echo "[TIME] section_purity_guard_seconds=$((T1-T0))"
+
+      - name: Upload section purity guard report (non-blocking alert artifact)
+        if: always() && steps.section_purity_guard.outcome != 'skipped'
+        uses: actions/upload-artifact@v4
+        with:
+          name: section-purity-guard-report-${{ github.run_id }}
+          path: ${{ runner.temp }}/iu_section_purity_guard_report.json
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Normalize output paths
         shell: bash
