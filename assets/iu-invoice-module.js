@@ -1339,6 +1339,19 @@ export function initIuInvoiceOverlay(deps) {
       }
     }
 
+    function canSharePdfFile(blob, fileName) {
+      try {
+        const name = fileName || "faktura.pdf";
+        const file = new File([blob], name, { type: "application/pdf" });
+        const nav = typeof navigator !== "undefined" ? navigator : null;
+        const shareFn = nav && typeof nav.share === "function" ? nav.share : null;
+        const canShareFn = nav && typeof nav.canShare === "function" ? nav.canShare.bind(nav) : null;
+        return !!(shareFn && canShareFn && canShareFn({ files: [file] }));
+      } catch (_) {
+        return false;
+      }
+    }
+
     function runPdfDownloadFallback(blob, name) {
       invoicePdfDiag("invoice_pdf_download_start", { ios: isIosDevice(), gesture: needsGesturePdfDelivery() });
       try {
@@ -1352,45 +1365,100 @@ export function initIuInvoiceOverlay(deps) {
         a.click();
         a.remove();
         window.setTimeout(() => URL.revokeObjectURL(url), 2000);
-        setStatus(root, "PDF staženo.");
+        return true;
       } catch (eDl) {
         invoicePdfDiag("invoice_pdf_error", { phase: "download" }, eDl);
-        setStatus(root, "Stažení PDF se nezdařilo — klepněte na „Otevřít PDF“.");
+        return false;
       }
     }
 
-    function deliverPdfBlob(blob, fileName, mode) {
-      const name = fileName || "faktura.pdf";
-      readyPdfBundle = { blob, fileName: name };
-      if (!needsGesturePdfDelivery()) {
-        runPdfDownloadFallback(blob, name);
-        return;
-      }
+    function tryIosPopupPdfRedirect(blob, mode) {
+      if (!iosPdfPopup || iosPdfPopup.closed) return false;
       const url = URL.createObjectURL(blob);
-      if (iosPdfPopup && !iosPdfPopup.closed) {
+      try {
+        iosPdfPopup.location.href = url;
+        iosPdfPopup.focus();
+        iosPdfPopup = null;
+        invoicePdfDiag("invoice_pdf_download_start", { via: "ios_popup_redirect", mode: mode || "" });
+        window.setTimeout(() => {
+          try {
+            URL.revokeObjectURL(url);
+          } catch (_) {}
+        }, 120000);
+        return true;
+      } catch (ePop) {
+        invoicePdfDiag("invoice_pdf_error", { phase: "ios_popup_redirect" }, ePop);
+        closeIosPdfPopup();
         try {
-          iosPdfPopup.location.href = url;
-          iosPdfPopup.focus();
-          iosPdfPopup = null;
-          invoicePdfDiag("invoice_pdf_download_start", { via: "ios_popup_redirect", mode: mode || "" });
-          setStatus(root, "PDF otevřeno — uložte přes ikonu sdílení v prohlížeči.");
+          URL.revokeObjectURL(url);
+        } catch (_) {}
+        return false;
+      }
+    }
+
+    function tryOpenPdfBlobUrl(blob) {
+      const url = URL.createObjectURL(blob);
+      try {
+        const w = window.open(url, "_blank");
+        if (w) {
           window.setTimeout(() => {
             try {
               URL.revokeObjectURL(url);
             } catch (_) {}
           }, 120000);
-          return;
-        } catch (ePop) {
-          invoicePdfDiag("invoice_pdf_error", { phase: "ios_popup_redirect" }, ePop);
-          closeIosPdfPopup();
+          return true;
         }
+        if (isIosDevice() || needsGesturePdfDelivery()) {
+          try {
+            URL.revokeObjectURL(url);
+          } catch (_) {}
+          return false;
+        }
+        const a = document.createElement("a");
+        a.href = url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.setTimeout(() => {
+          try {
+            URL.revokeObjectURL(url);
+          } catch (_) {}
+        }, 120000);
+        return true;
+      } catch (eOpen) {
+        invoicePdfDiag("invoice_pdf_error", { phase: "open_pdf_blob" }, eOpen);
+        try {
+          URL.revokeObjectURL(url);
+        } catch (_) {}
+        return false;
+      }
+    }
+
+    function deliverPdfDownload(blob, fileName) {
+      const name = fileName || "faktura.pdf";
+      readyPdfBundle = { blob, fileName: name };
+      if (isIosDevice()) {
+        if (tryIosPopupPdfRedirect(blob, "download")) {
+          setStatus(root, "PDF otevřeno — uložte přes ikonu sdílení v prohlížeči.");
+          return;
+        }
+      } else if (!needsGesturePdfDelivery()) {
+        if (runPdfDownloadFallback(blob, name)) {
+          setStatus(root, "PDF staženo.");
+          return;
+        }
+      } else if (runPdfDownloadFallback(blob, name)) {
+        setStatus(root, "PDF staženo.");
+        return;
+      }
+      if (tryOpenPdfBlobUrl(blob)) {
+        setStatus(root, "PDF otevřeno — uložte nebo sdílejte ze souboru.");
+        return;
       }
       showReadyPdfUi(blob, name);
-      if (mode === "share") {
-        setStatus(root, "PDF připravené. Klepněte znovu na „Sdílet PDF“ nebo „Otevřít PDF“.");
-      } else {
-        setStatus(root, "PDF připravené. Klepněte na „Otevřít PDF“.");
-      }
+      setStatus(root, "PDF připravené. Klepněte na „Otevřít PDF“.");
     }
 
     function openReadyPdfNow() {
@@ -1427,30 +1495,40 @@ export function initIuInvoiceOverlay(deps) {
 
     async function sharePdfBlobNow(blob, fileName) {
       const name = fileName || "faktura.pdf";
-      const file = new File([blob], name, { type: "application/pdf" });
-      const nav = typeof navigator !== "undefined" ? navigator : null;
-      const shareFn = nav && typeof nav.share === "function" ? nav.share : null;
-      const canShareFn = nav && typeof nav.canShare === "function" ? nav.canShare.bind(nav) : null;
-      const canShareFiles = !!(shareFn && canShareFn && canShareFn({ files: [file] }));
+      readyPdfBundle = { blob, fileName: name };
+      const canShareFiles = canSharePdfFile(blob, name);
       invoicePdfDiag("invoice_pdf_share_start", { canShareFiles: canShareFiles, hasBlob: true });
-      if (!shareFn || !canShareFiles) {
-        setStatus(root, "Sdílení souborů není dostupné. Klepněte na „Otevřít PDF“.");
-        showReadyPdfUi(blob, name);
+      if (canShareFiles) {
+        const file = new File([blob], name, { type: "application/pdf" });
+        const nav = typeof navigator !== "undefined" ? navigator : null;
+        const shareFn = nav && typeof nav.share === "function" ? nav.share : null;
+        try {
+          await shareFn.call(nav, { files: [file], title: "Faktura" });
+          setStatus(root, "PDF sdíleno nebo zrušeno uživatelem.");
+          return;
+        } catch (e) {
+          const aborted = e && (e.name === "AbortError" || String(e.name) === "AbortError");
+          if (aborted) {
+            setStatus(root, "Sdílení zrušeno.");
+            return;
+          }
+          invoicePdfDiag("invoice_pdf_error", { phase: "share" }, e);
+        }
+      }
+      if (!isIosDevice() && runPdfDownloadFallback(blob, name)) {
+        setStatus(root, "Sdílení není dostupné — PDF staženo.");
         return;
       }
-      try {
-        await shareFn.call(nav, { files: [file], title: "Faktura" });
-        setStatus(root, "PDF sdíleno nebo zrušeno uživatelem.");
-      } catch (e) {
-        const aborted = e && (e.name === "AbortError" || String(e.name) === "AbortError");
-        if (aborted) {
-          setStatus(root, "Sdílení zrušeno.");
-          return;
-        }
-        invoicePdfDiag("invoice_pdf_error", { phase: "share" }, e);
-        setStatus(root, "Sdílení se nezdařilo. Klepněte na „Otevřít PDF“.");
-        showReadyPdfUi(blob, name);
+      if (isIosDevice() && tryIosPopupPdfRedirect(blob, "share")) {
+        setStatus(root, "PDF otevřeno — sdílejte přes ikonu sdílení v prohlížeči.");
+        return;
       }
+      if (tryOpenPdfBlobUrl(blob)) {
+        setStatus(root, "PDF otevřeno — uložte nebo sdílejte ze souboru.");
+        return;
+      }
+      showReadyPdfUi(blob, name);
+      setStatus(root, "Sdílení není dostupné. Klepněte na „Otevřít PDF“.");
     }
 
     function doDownloadPdf() {
@@ -1469,7 +1547,7 @@ export function initIuInvoiceOverlay(deps) {
           if (err) setStatus(root, pdfExportFailStatus(err));
           return;
         }
-        deliverPdfBlob(blob, fileName || "faktura.pdf", "download");
+        deliverPdfDownload(blob, fileName || "faktura.pdf");
       });
     }
 
@@ -1493,13 +1571,7 @@ export function initIuInvoiceOverlay(deps) {
           if (err) setStatus(root, pdfExportFailStatus(err));
           return;
         }
-        const name = fileName || "faktura.pdf";
-        readyPdfBundle = { blob, fileName: name };
-        if (needsGesturePdfDelivery()) {
-          deliverPdfBlob(blob, name, "share");
-          return;
-        }
-        await sharePdfBlobNow(blob, name);
+        await sharePdfBlobNow(blob, fileName || "faktura.pdf");
       });
     }
 
