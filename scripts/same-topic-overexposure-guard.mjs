@@ -13,6 +13,7 @@
  *   SAME_TOPIC_POLICY — PUBLISH_ALWAYS | STRICT (default PUBLISH_ALWAYS)
  */
 import fs from "fs";
+import os from "os";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -186,10 +187,7 @@ export function evaluateSameTopicOverexposure(articles, options = {}) {
 }
 
 function writeReport(report) {
-  const outPath = path.join(
-    process.env.TEMP || process.env.TMP || root,
-    "iu_same_topic_overexposure_guard_report.json",
-  );
+  const outPath = path.join(os.tmpdir(), "iu_same_topic_overexposure_guard_report.json");
   fs.writeFileSync(outPath, JSON.stringify(report, null, 2));
   log(`report=${outPath}`);
   return outPath;
