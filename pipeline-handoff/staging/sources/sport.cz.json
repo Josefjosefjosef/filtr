@@ -1,27 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-15T00:12:55.465972Z",
+  "ingestedAt": "2026-06-15T01:01:31.529728Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Nůžky v akci, gól byl blízko. Ekvádor trefil dvakrát břevno",
+      "title": "FOTBAL ONLINE: Gól! Útočník Manchesteru United poslal Pobřeží Slonoviny do vedení. Zápas vrcholí",
       "url": "https://www.sport.cz/clanek/fotbal-ms-do-sampionatu-vstupuje-cerny-kun-z-jizni-ameriky-vyzve-pobrezi-slonoviny-5478360",
       "dt": "2026-06-14T14:55:27Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "akci",
-        "blízko",
-        "břevno",
-        "dvakrát",
-        "ekvádor",
         "fotbal",
         "gól",
-        "nůžky",
+        "manchesteru",
         "online",
-        "trefil"
+        "pobřeží",
+        "poslal",
+        "slonoviny",
+        "united",
+        "vedení",
+        "vrcholí",
+        "zápas",
+        "útočník"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kovář je borec! hlásí Nizozemci. I je uchvátil dallaský kolos: Brutální",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-kovar-je-borec-hlasi-nizozemci-i-je-uchvatil-dallasky-kolos-brutalni-5480690",
+      "dt": "2026-06-15T00:53:45Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "borec",
+        "brutální",
+        "dallaský",
+        "hlásí",
+        "kolos",
+        "kovář",
+        "nizozemci",
+        "uchvátil"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -760,34 +787,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fuksa slaví vítězný double, zlato mu na krk pověsil Dostál. Medaili vybojoval i deblkajak",
-      "url": "https://www.sport.cz/clanek/vodni-sporty-fuksa-slavi-zlaty-double-diky-drtivemu-finisi-uz-popatnacte-vladne-evrope-5478353",
-      "dt": "2026-06-14T08:24:18Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "deblkajak",
-        "dostál",
-        "double",
-        "fuksa",
-        "krk",
-        "medaili",
-        "pověsil",
-        "slaví",
-        "vybojoval",
-        "vítězný",
-        "zlato"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40826,
+      "bytes": 40318,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-14T23:37:44Z",
+        "raw_feed_latest_publishedAt": "2026-06-15T00:53:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -851,8 +850,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Nůžky v akci, gól byl blízko. Ekvádor trefil dvakrát břevno",
+            "title": "FOTBAL ONLINE: Gól! Útočník Manchesteru United poslal Pobřeží Slonoviny do vedení. Zápas vrcholí",
             "publishedAt": "2026-06-14T14:55:27Z"
+          },
+          {
+            "title": "Kovář je borec! hlásí Nizozemci. I je uchvátil dallaský kolos: Brutální",
+            "publishedAt": "2026-06-15T00:53:45Z"
           },
           {
             "title": "Japonci kuriózně obrali favorita o vítězství. Šťastný střelec se na míč ani nedíval, mínil expert",
@@ -877,10 +880,6 @@
           {
             "title": "S outsiderem slavil celý svět. Rekordmana mezi trenéry přemohly slzy",
             "publishedAt": "2026-06-14T20:09:00Z"
-          },
-          {
-            "title": "Formule 1 2026: Program, výsledky závodů a průběžné pořadí sezony F1",
-            "publishedAt": "2026-05-02T04:03:00Z"
           }
         ]
       }
