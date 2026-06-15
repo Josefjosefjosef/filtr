@@ -36422,6 +36422,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ".iu-custom-buttons-overlay-panel:not([hidden]){padding:0;align-items:stretch;justify-content:stretch}" +
     ".iu-custom-buttons-overlay-panel:not([hidden]) .iu-custom-buttons-overlay-cardShell{width:100%;max-width:none;max-height:none;height:100dvh}" +
     ".iu-custom-buttons-overlay-inner{border-radius:0;border-left:0;border-right:0;box-shadow:none}" +
+    ".iu-quicktools-settings-backdrop:not([hidden]){top:0!important;left:0!important;right:0!important;bottom:0!important;z-index:10026!important}" +
+    ".iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed:not([hidden]){left:12px!important;right:12px!important;top:max(12px,env(safe-area-inset-top,0px))!important;bottom:max(12px,env(safe-area-inset-bottom,0px))!important;width:auto!important;max-width:none!important;max-height:none!important;transform:none!important;z-index:10027!important;display:block!important;box-sizing:border-box!important}" +
+    ".iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed .iu-quicktools-settings-list{touch-action:pan-y}" +
+    "body.iu-quicktools-settings-mobile-open{overflow:hidden!important}" +
+    "body.iu-quicktools-settings-mobile-open #iuMobileBottomNav.iu-mobileBottomNav{z-index:10028!important;pointer-events:auto!important}" +
+    "@media(max-width:900px){" +
+    ".iu-quicktools-settings-backdrop:not([hidden]){bottom:var(--iu-mobile-bottom-nav-safe-space,calc(56px + env(safe-area-inset-bottom,0px) + 52px))!important}" +
+    ".iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed:not([hidden]){bottom:calc(var(--iu-mobile-bottom-nav-safe-space,calc(56px + env(safe-area-inset-bottom,0px) + 52px)) + 12px)!important}" +
+    "}" +
     "}";
   try{
     if (document.getElementById(ID)) return;
