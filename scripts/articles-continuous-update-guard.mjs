@@ -321,15 +321,32 @@ async function checkAutomaticTrigger() {
   return { ok: true };
 }
 
+function emitReleaseBlockerDiagnostics({ prodStale, pipelineIngestOk, releaseBlocked }) {
+  log(`PIPELINE_INGEST_OK=${pipelineIngestOk ? "YES" : "NO"}`);
+  log(`RELEASE_BLOCKED=${releaseBlocked ? "YES" : "NO"}`);
+  log(`PROD_STALE=${prodStale ? "YES" : "NO"}`);
+  if (pipelineIngestOk && releaseBlocked && prodStale) {
+    log("ACTION_REQUIRED=FIX_RELEASE_BLOCKER");
+    warn("ingest+aggregate OK but release blocked — prod staleness is a release blocker, not ingest failure");
+  } else if (pipelineIngestOk && releaseBlocked) {
+    log("ACTION_REQUIRED=FIX_RELEASE_BLOCKER");
+    warn("ingest+aggregate OK but release blocked — investigate publish/release guards");
+  }
+}
+
 async function main() {
   const nowMs = Date.now();
   let failed = false;
   let yellowWarn = false;
+  let prodStale = false;
+  let pipelineIngestOk = false;
+  let releaseBlocked = false;
 
   if (GITHUB_EVENT === "pull_request" && SKIP_PROD_FRESHNESS_ON_PR) {
     log("prod_freshness SKIP on pull_request (post-merge proof required)");
   } else {
     const prod = await checkProductionFreshness(nowMs);
+    prodStale = !prod.ok;
     if (!prod.ok) failed = true;
   }
 
@@ -342,6 +359,8 @@ async function main() {
     } else {
       try {
         const last = await checkLastIngestAggregateOk(nowMs);
+        pipelineIngestOk = last.ok && isIngestAggregateOkStatus(last.overall);
+        releaseBlocked = last.overall === INGEST_SUCCESS_RELEASE_BLOCKED;
         if (!last.ok) failed = true;
         else if (last.overall && alertLevelForOverallStatus(last.overall) === ALERT_YELLOW) {
           yellowWarn = true;
@@ -383,6 +402,8 @@ async function main() {
   } else if (yellowWarn) {
     warn("YELLOW pipeline state present (release blocked or streak warning)");
   }
+
+  emitReleaseBlockerDiagnostics({ prodStale, pipelineIngestOk, releaseBlocked });
 
   if (failed) {
     console.error("[articles-continuous-update-guard] RESULT=FAIL");

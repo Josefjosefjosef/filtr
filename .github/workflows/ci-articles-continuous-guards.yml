@@ -21,6 +21,8 @@ on:
       - "scripts/robots-compliance-guard.mjs"
       - "scripts/backpressure-guard.mjs"
       - "scripts/publish-continuity-guard.mjs"
+      - "scripts/publish-continuity-guard-lib.mjs"
+      - "scripts/publish-continuity-guard-policy-unit.mjs"
       - "scripts/same-topic-overexposure-guard.mjs"
       - "scripts/same-topic-overexposure-guard-policy-unit.mjs"
       - "scripts/topic-dedupe-false-positive-guard.mjs"
@@ -64,6 +66,8 @@ on:
       - "scripts/robots-compliance-guard.mjs"
       - "scripts/backpressure-guard.mjs"
       - "scripts/publish-continuity-guard.mjs"
+      - "scripts/publish-continuity-guard-lib.mjs"
+      - "scripts/publish-continuity-guard-policy-unit.mjs"
       - "scripts/same-topic-overexposure-guard.mjs"
       - "scripts/same-topic-overexposure-guard-policy-unit.mjs"
       - "scripts/topic-dedupe-false-positive-guard.mjs"
@@ -178,6 +182,9 @@ jobs:
 
       - name: Backpressure guard
         run: node scripts/backpressure-guard.mjs
+
+      - name: Publish continuity guard policy unit tests
+        run: node scripts/publish-continuity-guard-policy-unit.mjs
 
       - name: Publish continuity guard
         run: node scripts/publish-continuity-guard.mjs
