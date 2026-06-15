@@ -22996,6 +22996,15 @@ function buildVideoAsArticleCard(it) {
     if (!cfg) cfg = getDefaultQuickToolsConfig();
     cfg = sanitizeQuickToolsConfig(cfg);
     iuQuickToolsSettingsRender(cfg);
+    if (!window.__iuQuickToolsViewportBound) {
+      window.__iuQuickToolsViewportBound = 1;
+      try {
+        var mqQt = window.matchMedia("(max-width: 1023px)");
+        if (mqQt && mqQt.addEventListener) {
+          mqQt.addEventListener("change", function() { iuQuickToolsSettingsClose(); });
+        }
+      } catch (_) {}
+    }
   }
   try { window.iuQuickToolsSettingsClose = iuQuickToolsSettingsClose; } catch (_) {}
 
@@ -36598,6 +36607,20 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   "use strict";
   var ID = "iu-mindmenu-custom-buttons";
   var CSS =
+    ".iu-quicktools-settings-panel[hidden]{display:none!important;pointer-events:none!important}" +
+    ".iu-quicktools-settings-panel:not([hidden]){display:flex;flex-direction:column;overflow:hidden;padding:0;box-sizing:border-box;max-height:min(520px,calc(100dvh - 24px))}" +
+    ".iu-quicktools-settings-header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 12px 10px;flex:0 0 auto}" +
+    ".iu-quicktools-settings-title{margin:0;min-width:0}" +
+    ".iu-quicktools-settings-close{flex:0 0 auto;width:32px;height:32px;margin:0;padding:0;border:0;border-radius:8px;background:rgba(0,0,0,.04);color:rgba(0,0,0,.72);font-size:18px;line-height:1;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}" +
+    ".iu-quicktools-settings-close:hover{background:rgba(0,0,0,.08)}" +
+    ".iu-quicktools-settings-close:focus-visible{outline:2px solid #1F4B99;outline-offset:2px}" +
+    ".iu-quicktools-settings-scroll{flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;padding:0 12px calc(12px + env(safe-area-inset-bottom,0px));box-sizing:border-box}" +
+    ".iu-quicktools-settings-list{touch-action:pan-y}" +
+    ".iu-quicktools-settings-row{touch-action:pan-y}" +
+    ".iu-quicktools-settings-label{touch-action:pan-y}" +
+    ".iu-quicktools-settings-row input[type=checkbox]{touch-action:manipulation}" +
+    ".iu-quicktools-drag-handle{touch-action:none;padding:6px 8px;margin:-6px 0 -6px -4px;border-radius:6px}" +
+    ".iu-quicktools-drag-handle:active{background:rgba(0,0,0,.06)}" +
     "body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql=\"pridat-tlacitko\"]{--iu-ql-accent:#455a64}" +
     "body .accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql-custom=\"1\"]>.iuTileLink{border-color:var(--iu-ql-accent,#2563EB)!important}" +
     "#iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql=\"pridat-tlacitko\"]{--iu-ql-accent:#455a64}" +
