@@ -130,6 +130,19 @@ jobs:
           python scripts/emit_frontend_article_chunks.py
           test -s projects/data/article_feed_chunks/manifest.json
 
+      - name: Sync articles index from publishable pool
+        run: |
+          set -euo pipefail
+          python scripts/sync_articles_index_from_pool.py
+          test -s projects/data/articles/index.json
+          POOL_AT=$(jq -r '.generatedAt // empty' projects/data/publishable_pool.json)
+          IDX_AT=$(jq -r '.generatedAt // empty' projects/data/articles/index.json)
+          if [ -z "$POOL_AT" ] || [ "$POOL_AT" != "$IDX_AT" ]; then
+            echo "[FAST-POOL] ERROR: articles/index generatedAt ($IDX_AT) != pool ($POOL_AT)"
+            exit 1
+          fi
+          echo "ARTICLES_INDEX_SYNCED=YES generatedAt=$IDX_AT"
+
       - name: Topic dedupe false-positive guard
         run: node scripts/topic-dedupe-false-positive-guard.mjs
 
@@ -168,6 +181,7 @@ jobs:
           CHANGED_FILES=""
           for f in \
             projects/data/publishable_pool.json \
+            projects/data/articles/index.json \
             projects/data/article_pool_manifest.json \
             projects/data/scheduler_state.json \
             projects/data/source_rotation_inventory.json \
@@ -195,6 +209,7 @@ jobs:
         run: |
           set -euo pipefail
           git add projects/data/publishable_pool.json projects/data/article_pool_manifest.json
+          git add projects/data/articles/index.json
           git add projects/data/article_feed_chunks/
           git add projects/data/scheduler_state.json projects/data/source_rotation_inventory.json 2>/dev/null || true
           git add projects/data/topic_dedupe_suppressed.json 2>/dev/null || true
@@ -218,6 +233,7 @@ jobs:
             exit 1
           fi
           git add projects/data/publishable_pool.json projects/data/article_pool_manifest.json
+          git add projects/data/articles/index.json
           git add projects/data/article_feed_chunks/
           git add projects/data/scheduler_state.json projects/data/source_rotation_inventory.json 2>/dev/null || true
           git add projects/data/topic_dedupe_suppressed.json 2>/dev/null || true
