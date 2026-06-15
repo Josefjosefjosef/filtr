@@ -140,6 +140,14 @@ jobs:
           HEALING_ATTEMPTED="false"
           HEALING_SUCCESS="false"
 
+          write_heal_outputs() {
+            {
+              echo "healing_attempted=${HEALING_ATTEMPTED}"
+              echo "healing_success=${HEALING_SUCCESS}"
+              echo "pool_stale_minutes=${STALE}"
+            } >> "$GITHUB_OUTPUT"
+          }
+
           fetch_pool_stale_minutes() {
             local gen_at epoch_gen epoch_now
             gen_at=$(curl -sS --max-time 30 -H "Accept: application/json" -H "Cache-Control: no-cache" \
@@ -170,9 +178,9 @@ jobs:
 
           if ! stale_gt_limit "$STALE"; then
             echo "[fallback] liveness OK (stale=${STALE} min <= ${LIMIT} min)"
-            echo "healing_attempted=false" >> "$GITHUB_OUTPUT"
-            echo "healing_success=true" >> "$GITHUB_OUTPUT"
-            echo "pool_stale_minutes=${STALE}" >> "$GITHUB_OUTPUT"
+            HEALING_ATTEMPTED="false"
+            HEALING_SUCCESS="true"
+            write_heal_outputs
             exit 0
           fi
 
@@ -192,9 +200,7 @@ jobs:
               if ! stale_gt_limit "$STALE"; then
                 HEALING_SUCCESS="true"
                 echo "[fallback] healing OK (stale=${STALE} min <= ${LIMIT} min after chain=${CHAIN})"
-                echo "healing_attempted=${HEALING_ATTEMPTED}" >> "$GITHUB_OUTPUT"
-                echo "healing_success=${HEALING_SUCCESS}" >> "$GITHUB_OUTPUT"
-                echo "pool_stale_minutes=${STALE}" >> "$GITHUB_OUTPUT"
+                write_heal_outputs
                 exit 0
               fi
             done
@@ -211,9 +217,7 @@ jobs:
             echo "| STALE_LIMIT_MINUTES | ${LIMIT} |"
           } >> "$GITHUB_STEP_SUMMARY"
 
-          echo "healing_attempted=${HEALING_ATTEMPTED}" >> "$GITHUB_OUTPUT"
-          echo "healing_success=${HEALING_SUCCESS}" >> "$GITHUB_OUTPUT"
-          echo "pool_stale_minutes=${STALE}" >> "$GITHUB_OUTPUT"
+          write_heal_outputs
 
           if [ "$STALE" = "null" ] || [ -z "$STALE" ]; then
             echo "::error::ALERT_CRON_NOT_FIRING: publishable_pool generatedAt unreadable on production"
