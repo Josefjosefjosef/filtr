@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-06-15T07:35:46.432409Z",
+  "ingestedAt": "2026-06-15T08:29:37.538717Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Marvel's Wolverine zavítá do Tokia. Jde o jedno z nejdůležitějších míst - INDIAN",
+      "url": "https://indian-tv.cz/clanek/marvels-wolverine-zavita-do-tokia-8mbgv3",
+      "dt": "2026-06-15T08:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "indian",
+        "jde",
+        "jedno",
+        "marvel",
+        "míst",
+        "nejdůležitějších",
+        "tokia",
+        "wolverine",
+        "zavítá"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1090,33 +1116,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Xbox přehodnocuje podobu konzole Project Helix kvůli drahým komponentům - INDIAN",
-      "url": "https://indian-tv.cz/clanek/xbox-prehodnocuje-podobu-konzole-project-helix-f1dqnj",
-      "dt": "2026-06-10T07:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "drahým",
-        "helix",
-        "indian",
-        "komponentům",
-        "konzole",
-        "kvůli",
-        "podobu",
-        "project",
-        "přehodnocuje",
-        "xbox"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1127,7 +1126,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 220577,
+      "bytes": 220464,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1164,7 +1163,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-15T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-15T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1179,6 +1178,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Marvel's Wolverine zavítá do Tokia. Jde o jedno z nejdůležitějších míst - INDIAN",
+            "publishedAt": "2026-06-15T08:00:00Z"
+          },
           {
             "title": "Jak si vedou PlayStation hry? Ghost of Yōtei míří k 5 milionům prodaných kopií. Zklamáním je Saros - INDIAN",
             "publishedAt": "2026-06-15T07:00:00Z"
@@ -1206,10 +1209,6 @@
           {
             "title": "Valor Mortis z napoleonských válek uteče přeplněnému září - INDIAN",
             "publishedAt": "2026-06-14T08:32:07Z"
-          },
-          {
-            "title": "Gran Turismo 7 obohacují vozy Le Mans a nové závody - INDIAN",
-            "publishedAt": "2026-06-14T08:14:14Z"
           }
         ]
       }
