@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-06-15T08:29:37.538717Z",
+  "ingestedAt": "2026-06-15T09:25:55.771952Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Gothic 1 Remake se lidem líbí, vydavatel se už chlubí prodeji",
+      "url": "https://www.idnes.cz/hry/novinky/gothic-1-remake-prodeje.A260615_101246_bw-novinky_oz",
+      "dt": "2026-06-15T09:05:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "chlubí",
+        "gothic",
+        "lidem",
+        "líbí",
+        "prodeji",
+        "remake",
+        "vydavatel"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -696,25 +720,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Control Resonant",
-      "url": "https://www.idnes.cz/hry/control-resonant.G260603_144113_oz",
-      "dt": "2026-06-08T11:08:26Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "control",
-        "resonant"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -725,7 +730,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 40751,
+      "bytes": 41396,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -762,7 +767,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-14T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-15T09:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -777,6 +782,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Gothic 1 Remake se lidem líbí, vydavatel se už chlubí prodeji",
+            "publishedAt": "2026-06-15T09:05:00Z"
+          },
           {
             "title": "Poznáte staré RPG klasiky?",
             "publishedAt": "2026-06-14T22:00:00Z"
@@ -804,10 +813,6 @@
           {
             "title": "Zemětřesení v Ubisoftu. Zavřel dvě studia, v dalších propouští",
             "publishedAt": "2026-06-11T07:25:00Z"
-          },
-          {
-            "title": "Fanoušci hororů šílí, Resident Evil Veronica je přesně to, co chtějí",
-            "publishedAt": "2026-06-10T22:00:00Z"
           }
         ]
       }
