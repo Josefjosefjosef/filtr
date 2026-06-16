@@ -145,6 +145,19 @@ font-src 'self' data:;
           display: none !important;
         }
       }
+      /* Desktop Layout V3 — inline kvůli css_debt_guard (app.css size/duplicate baseline). */
+      @media (min-width: 901px) {
+        .iuBrandSubtitle{display:none!important}
+        .iu-leftRail{display:block!important}
+        #newsList{display:grid!important;grid-template-columns:var(--iuLeftRailW) minmax(0,1fr)!important;column-gap:20px!important;align-items:start!important}
+        #newsList>#iuLeftRail,#newsList>#iuCenterStage{margin-top:0!important}
+        .layout{grid-template-columns:minmax(0,1fr) var(--iu-right-rail-width,360px)!important;align-items:start!important}
+        .layout>aside.accordionCol{grid-column:2!important;width:var(--iu-right-rail-width,360px)!important;min-width:var(--iu-right-rail-width,360px)!important;max-width:var(--iu-right-rail-width,360px)!important;flex:0 0 var(--iu-right-rail-width,360px)!important;display:flex!important;flex-direction:column!important;align-self:start!important;padding:0!important;background:transparent!important;position:static!important}
+        .layout>aside.accordionCol :is(.mindMenu-scroll-wrapper,.mindMenu,#iuMindMenuView,section.iu-mailboxes,.iu-mmTopTools,section.iu-mmQuickLinks,#iuMailboxControls){display:none!important}
+        #iuDesktopQrBanner,#iuDesktopQrBanner img{display:block!important;width:100%!important;position:static!important;margin:0!important;padding:0!important}
+        #iuDesktopQrBanner img{height:auto!important}
+        html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) :is(body,#content,.container,#page,.mainCol,#leftContent,#newsList,#feed,.layout>aside.accordionCol){background:var(--iu-page-bg)!important}
+      }
       /* P0 CLS feed section header: reserve aspect ratio before app.css / image decode (1200×575). */
       #feed > picture.iu-feed-section-header-picture,
       #feed > img.iu-feed-section-header-img {

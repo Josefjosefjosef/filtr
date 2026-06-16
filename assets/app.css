@@ -21267,26 +21267,46 @@ overflow:hidden !important;
     --iu-right-rail-width: 360px;
   }
 
-  .iuBrandSubtitle{display:none!important}
+  .layout{
+    grid-template-columns: minmax(0, 1fr) var(--iu-right-rail-width) !important;
+  }
 
-  .iu-leftRail{display:block!important}
-  #newsList{display:grid!important;grid-template-columns:var(--iuLeftRailW) minmax(0,1fr)!important;column-gap:20px!important;align-items:start!important}
-
-  #newsList > #iuLeftRail,#newsList > #iuCenterStage{margin-top:0!important}
-
-  .layout{grid-template-columns:minmax(0,1fr) var(--iu-right-rail-width)!important;align-items:start!important}
-  .layout>aside.accordionCol{grid-column:2!important;width:var(--iu-right-rail-width)!important;min-width:var(--iu-right-rail-width)!important;max-width:var(--iu-right-rail-width)!important;flex:0 0 var(--iu-right-rail-width)!important;display:flex!important;flex-direction:column!important;align-self:start!important;padding:0!important;background:transparent!important;position:static!important}
+  .layout > aside.accordionCol{
+    grid-column: 2 !important;
+    width: var(--iu-right-rail-width) !important;
+    min-width: var(--iu-right-rail-width) !important;
+    max-width: var(--iu-right-rail-width) !important;
+    flex: 0 0 var(--iu-right-rail-width) !important;
+    justify-self: stretch !important;
+    box-sizing: border-box !important;
+    overflow-x: clip !important;
+  }
 
   .layout > .mainCol{
     min-width: 0 !important;
   }
 
-  .layout>aside.accordionCol :is(.mindMenu-scroll-wrapper,.mindMenu,#iuMindMenuView,section.iu-mailboxes,.iu-mmTopTools,section.iu-mmQuickLinks,#iuMailboxControls){display:none!important}
-  #iuDesktopQrBanner,#iuDesktopQrBanner img{display:block!important;width:100%!important;position:static!important;margin:0!important;padding:0!important}
-  #iuDesktopQrBanner img{height:auto!important}
+  .layout > aside.accordionCol .mindMenu,
+  .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks,
+  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid,
+  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid > *,
+  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iu-mmQuickItem,
+  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iu-mmQuickItemLink{
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
 
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) :is(body, #content, .container, #page, .mainCol, #leftContent, #newsList, #feed, .layout > aside.accordionCol){
-    background: var(--iu-page-bg) !important;
+  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid{
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    justify-items: stretch !important;
+    align-items: start !important;
+  }
+
+  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iu-mmQuickItem span:last-of-type{
+    min-width: 0 !important;
+    max-width: 100% !important;
   }
 }
 
