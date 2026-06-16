@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { isDataOnlyScope } from "./smoke-data-only-scope.mjs";
+import { isDataOnlyScope, isFastPoolPipelineScope } from "./smoke-data-only-scope.mjs";
 
 let failed = 0;
 function assert(cond, msg) {
@@ -14,6 +14,8 @@ assert(isDataOnlyScope(["projects/data/articles/index.json", "projects/data/arti
 assert(!isDataOnlyScope(["assets/app.js"]), "assets not data-only");
 assert(!isDataOnlyScope(["projects/data/x.json", "assets/app.js"]), "mixed not data-only");
 assert(!isDataOnlyScope([]), "empty not data-only");
+assert(isFastPoolPipelineScope([".github/workflows/update-articles-fast-pool.yml"]), "fast pool workflow-only is pipeline scope");
+assert(!isFastPoolPipelineScope([".github/workflows/update-articles-fast-pool.yml", "assets/app.js"]), "mixed workflow+assets not pipeline scope");
 
 console.log("SMOKE_DATA_ONLY_SCOPE_PROOF=" + (failed === 0 ? "PASS" : "FAIL"));
 process.exit(failed === 0 ? 0 : 1);
