@@ -44,6 +44,19 @@ export function isDataOnlyScope(files) {
   return paths.every((f) => f.startsWith("projects/data/"));
 }
 
+/** CI-only fast pool workflow edits — no UI surface; skip Playwright guards. */
+export function isFastPoolPipelineScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  return paths.every(
+    (f) =>
+      f.startsWith("projects/data/") ||
+      f === ".github/workflows/update-articles-fast-pool.yml" ||
+      f === "scripts/smoke-data-only-scope.mjs" ||
+      f === "scripts/smoke_data_only_scope_proof.mjs"
+  );
+}
+
 function writeOutput(name, value) {
   const out = process.env.GITHUB_OUTPUT;
   if (out) {
@@ -69,8 +82,11 @@ function main() {
   }
 
   const dataOnly = isDataOnlyScope(files);
+  const pipelineOnly = isFastPoolPipelineScope(files);
   const allowFastPath =
-    dataOnly || (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
+    dataOnly ||
+    pipelineOnly ||
+    (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
 
   console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"}`);
   for (const f of files.slice(0, 20)) {
