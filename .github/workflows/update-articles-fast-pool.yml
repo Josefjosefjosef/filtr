@@ -317,7 +317,7 @@ jobs:
           echo "head_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           echo "[PR-SYNC] automation branch synced head=$(git rev-parse HEAD)"
 
-      - name: Dispatch required checks
+      - name: Dispatch required checks (GITHUB_TOKEN push does not start push-triggered workflows)
         if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -325,10 +325,11 @@ jobs:
           set -euo pipefail
           REF="${{ env.AUTOMATION_BRANCH }}"
           REPO="${{ github.repository }}"
-          # smoke.yml push trigger on automation/update-articles-fast-pool runs data-only fast path — do not dispatch duplicate smoke (~4m).
+          # smoke.yml data-only fast path (~1m) — push trigger never fires on GITHUB_TOKEN commits.
+          gh workflow run smoke.yml --ref "$REF" --repo "$REPO"
           gh workflow run layout-guard.yml --ref "$REF" --repo "$REPO"
           gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
-          echo "[CHECKS] Dispatched layout-guard, repo-guard on $REF (smoke via push data-only fast path)"
+          echo "[CHECKS] Dispatched smoke, layout-guard, repo-guard on $REF"
 
       - name: Create or update PR
         if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
