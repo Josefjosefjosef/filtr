@@ -145,18 +145,9 @@ font-src 'self' data:;
           display: none !important;
         }
       }
-      /* Desktop Layout V3 — inline kvůli css_debt_guard (app.css size/duplicate baseline). */
+      /* Desktop Layout V3 baseline (pre app.css) — full 3-column rules in #iuDesktopLayoutV3PostAppCss after app.css. */
       @media (min-width: 901px) {
         .iuBrandSubtitle{display:none!important}
-        .iu-leftRail{display:block!important}
-        #newsList{display:grid!important;grid-template-columns:var(--iuLeftRailW) minmax(0,1fr)!important;column-gap:20px!important;align-items:start!important}
-        #newsList>#iuLeftRail,#newsList>#iuCenterStage{margin-top:0!important}
-        .layout{grid-template-columns:minmax(0,1fr) var(--iu-right-rail-width,360px)!important;align-items:start!important}
-        .layout>aside.accordionCol{grid-column:2!important;width:var(--iu-right-rail-width,360px)!important;min-width:var(--iu-right-rail-width,360px)!important;max-width:var(--iu-right-rail-width,360px)!important;flex:0 0 var(--iu-right-rail-width,360px)!important;display:flex!important;flex-direction:column!important;align-self:start!important;padding:0!important;background:transparent!important;position:static!important}
-        .layout>aside.accordionCol :is(.mindMenu-scroll-wrapper,.mindMenu,#iuMindMenuView,section.iu-mailboxes,.iu-mmTopTools,section.iu-mmQuickLinks,#iuMailboxControls){display:none!important}
-        #iuDesktopQrBanner,#iuDesktopQrBanner img{display:block!important;width:100%!important;position:static!important;margin:0!important;padding:0!important}
-        #iuDesktopQrBanner img{height:auto!important}
-        html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) :is(body,#content,.container,#page,.mainCol,#leftContent,#newsList,#feed,.layout>aside.accordionCol){background:var(--iu-page-bg)!important}
       }
       /* P0 CLS feed section header: reserve aspect ratio before app.css / image decode (1200×575). */
       #feed > picture.iu-feed-section-header-picture,
@@ -527,6 +518,35 @@ font-src 'self' data:;
     <link rel="preload" as="image" href="/assets/images/section-prehled-dne.webp" type="image/webp" fetchpriority="high" media="(min-width: 768px)" />
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
     <link rel="stylesheet" href="/assets/app.css?v=mobile-tablet-stability-v1-20260610" />
+    <style id="iuDesktopLayoutV3PostAppCss">
+      /* Desktop Layout V3 — post app.css (beats assets/app.css 2-column .layout !important). */
+      @media (min-width: 901px) {
+        .iu-leftRail{display:block!important}
+        .layout{display:grid!important;grid-template-columns:var(--iuLeftRailW) minmax(0,1fr) var(--iu-right-rail-width,360px)!important;column-gap:20px!important;row-gap:0!important;align-items:start!important;width:100%!important;min-width:0!important;box-sizing:border-box!important;padding-top:0!important}
+        .layout:has(#leftStickyHeader)>aside.accordionCol{margin-top:0!important;padding-top:0!important}
+        .mainCol{display:contents!important}
+        #leftStickyHeader{grid-column:1/-1!important;grid-row:1!important}
+        #iuSilverTopCardsStack{grid-column:2!important;grid-row:2!important;margin-top:0!important;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;align-self:start!important}
+        #leftContent{display:contents!important}
+        #newsList{display:contents!important}
+        #newsList>#iuLeftRail{grid-column:1!important;grid-row:2!important;margin-top:0!important;padding-top:0!important;align-self:start!important}
+        #newsList>#iuLeftRail .iuLeftRailSectionTitle:first-child{display:none!important}
+        #newsList>#iuLeftRail .iu-leftNav{padding-top:0!important;margin-top:0!important}
+        #newsList>#iuLeftRail .iu-leftNav .iu-leftNavItem:first-of-type{margin-top:0!important}
+        #newsList>#iuCenterStage{grid-column:2!important;grid-row:2!important;margin-top:0!important;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;align-self:start!important}
+        .layout>aside.accordionCol,.mainCol>aside.accordionCol{grid-column:3!important;grid-row:2!important;width:var(--iu-right-rail-width,360px)!important;min-width:var(--iu-right-rail-width,360px)!important;max-width:var(--iu-right-rail-width,360px)!important;flex:0 0 var(--iu-right-rail-width,360px)!important;display:flex!important;flex-direction:column!important;align-self:start!important;padding:0!important;margin-top:0!important;background:transparent!important;position:static!important}
+        .layout>aside.accordionCol :is(.mindMenu-scroll-wrapper,.mindMenu,#iuMindMenuView,section.iu-mailboxes,.iu-mmTopTools,section.iu-mmQuickLinks,#iuMailboxControls),.mainCol>aside.accordionCol :is(.mindMenu-scroll-wrapper,.mindMenu,#iuMindMenuView,section.iu-mailboxes,.iu-mmTopTools,section.iu-mmQuickLinks,#iuMailboxControls){display:none!important}
+        #iuDesktopQrBanner,#iuDesktopQrBanner img{display:block!important;width:100%!important;position:static!important;margin:0!important;padding:0!important}
+        #iuDesktopQrBanner img{height:auto!important}
+        html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) :is(body,#content,.container,#page,.mainCol,#leftContent,#newsList,#feed,.layout>aside.accordionCol){background:var(--iu-page-bg)!important}
+      }
+      @media (min-width: 1025px) {
+        #iuSilverTopCardsStack{margin-top:0!important}
+      }
+      @media (min-width: 1240px) {
+        .layout{grid-template-columns:var(--iuLeftRailW) minmax(0,min(720px,1fr)) var(--iu-right-rail-width,360px)!important}
+      }
+    </style>
     <link rel="stylesheet" href="/assets/iu-silver-premium-draft.css?v=silver-premium-draft-cards-20260602" />
     <!-- P0 perf: overlay CSS non-blocking (media=print onload swap) — open guards in iuOverlayCssDeferGuard below app.js -->
     <link rel="preload" as="style" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" />
