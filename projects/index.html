@@ -520,28 +520,34 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/app.css?v=mobile-tablet-stability-v1-20260610" />
     <style id="iuDesktopLayoutV3PostAppCss">
       /* Desktop Layout V3 — post app.css (beats assets/app.css 2-column .layout !important). */
+      @media (max-width: 900px) {
+        #iuDesktopRightRailCards{display:none!important}
+      }
       @media (min-width: 901px) {
         .iu-leftRail{display:block!important}
         .layout{display:grid!important;grid-template-columns:var(--iuLeftRailW) minmax(0,1fr) var(--iu-right-rail-width,360px)!important;column-gap:20px!important;row-gap:0!important;align-items:start!important;width:100%!important;min-width:0!important;box-sizing:border-box!important;padding-top:0!important}
-        .layout:has(#leftStickyHeader)>aside.accordionCol{margin-top:0!important;padding-top:0!important}
+        .layout:has(#leftStickyHeader)>aside.accordionCol{margin-top:20px!important;padding-top:0!important}
         .mainCol{display:contents!important}
         #leftStickyHeader{grid-column:1/-1!important;grid-row:1!important}
-        #iuSilverTopCardsStack{grid-column:2!important;grid-row:2!important;margin-top:0!important;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;align-self:start!important}
+        #iuSilverTopCardsStack{grid-column:2!important;grid-row:2!important;margin-top:20px!important;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;align-self:start!important}
         #leftContent{display:contents!important}
         #newsList{display:contents!important}
-        #newsList>#iuLeftRail{grid-column:1!important;grid-row:2!important;margin-top:0!important;padding-top:0!important;align-self:start!important}
+        #newsList>#iuLeftRail{grid-column:1!important;grid-row:2!important;margin-top:20px!important;padding-top:0!important;align-self:start!important}
         #newsList>#iuLeftRail .iuLeftRailSectionTitle:first-child{display:none!important}
         #newsList>#iuLeftRail .iu-leftNav{padding-top:0!important;margin-top:0!important}
         #newsList>#iuLeftRail .iu-leftNav .iu-leftNavItem:first-of-type{margin-top:0!important}
-        #newsList>#iuCenterStage{grid-column:2!important;grid-row:2!important;margin-top:0!important;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;align-self:start!important}
-        .layout>aside.accordionCol,.mainCol>aside.accordionCol{grid-column:3!important;grid-row:2!important;width:var(--iu-right-rail-width,360px)!important;min-width:var(--iu-right-rail-width,360px)!important;max-width:var(--iu-right-rail-width,360px)!important;flex:0 0 var(--iu-right-rail-width,360px)!important;display:flex!important;flex-direction:column!important;align-self:start!important;padding:0!important;margin-top:0!important;background:transparent!important;position:static!important}
+        #newsList>#iuCenterStage{grid-column:2!important;grid-row:2!important;margin-top:20px!important;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;align-self:start!important}
+        .layout>aside.accordionCol,.mainCol>aside.accordionCol{grid-column:3!important;grid-row:2!important;width:var(--iu-right-rail-width,360px)!important;min-width:var(--iu-right-rail-width,360px)!important;max-width:var(--iu-right-rail-width,360px)!important;flex:0 0 var(--iu-right-rail-width,360px)!important;display:flex!important;flex-direction:column!important;align-self:start!important;padding:0!important;margin-top:20px!important;background:transparent!important;position:static!important}
         .layout>aside.accordionCol :is(.mindMenu-scroll-wrapper,.mindMenu,#iuMindMenuView,section.iu-mailboxes,.iu-mmTopTools,section.iu-mmQuickLinks,#iuMailboxControls),.mainCol>aside.accordionCol :is(.mindMenu-scroll-wrapper,.mindMenu,#iuMindMenuView,section.iu-mailboxes,.iu-mmTopTools,section.iu-mmQuickLinks,#iuMailboxControls){display:none!important}
         #iuDesktopQrBanner,#iuDesktopQrBanner img{display:block!important;width:100%!important;position:static!important;margin:0!important;padding:0!important}
         #iuDesktopQrBanner img{height:auto!important}
+        #iuDesktopRightRailCards{display:flex!important;flex-direction:column!important;width:100%!important;min-width:0!important;gap:20px!important;margin-top:20px!important;box-sizing:border-box!important}
+        #iuDesktopRightRailCards>:is(#iuSilverParcelWatch,#iuSilverFinanceHomeCard){width:100%!important;max-width:100%!important;margin:0!important;box-sizing:border-box!important}
+        #silver-slot #iuSilverParcelWatch,#silver-slot #iuSilverFinanceHomeCard{display:none!important}
         html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) :is(body,#content,.container,#page,.mainCol,#leftContent,#newsList,#feed,.layout>aside.accordionCol){background:var(--iu-page-bg)!important}
       }
       @media (min-width: 1025px) {
-        #iuSilverTopCardsStack{margin-top:0!important}
+        #iuSilverTopCardsStack{margin-top:20px!important}
       }
       @media (min-width: 1240px) {
         .layout{grid-template-columns:var(--iuLeftRailW) minmax(0,min(720px,1fr)) var(--iu-right-rail-width,360px)!important}
@@ -1688,6 +1694,7 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=20" />
     <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=3" />
+    <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=1" />
     <style id="iuParcelWatchFirstPaintClsGuard">
       /* P0 CLS: post parcel-dashboard.css — lock first paint = hydrated compact height; no vertical clip on mainShell. */
       @media (max-width: 1023px) {
@@ -3647,6 +3654,7 @@ font-src 'self' data:;
                 <div id="iuDesktopQrBanner" class="iu-desktop-qr-banner" data-iu-desktop-qr-banner="1" aria-label="QR kód pro přidání infoUzel.cz na plochu">
                   <img class="iu-desktop-qr-banner__img" src="/assets/images/silver-desktop-qr-banner.png" alt="QR kód — přidejte infoUzel.cz na plochu" width="360" height="480" decoding="async" />
                 </div>
+                <div id="iuDesktopRightRailCards" class="iu-desktop-right-rail-cards" data-iu-desktop-right-rail-cards="1" aria-label="Desktop postranní karty"></div>
                 <template id="iuLazyOverlayTpl-weathergeo" data-iu-overlay-lazy="weathergeo">
                 <div id="iuSilverWeatherGeoOverlay" class="iuSilverWeatherGeoOverlay" role="dialog" aria-modal="true" aria-labelledby="iuSilverWeatherGeoOverlayTitle" aria-label="Souhlas s polohou pro počasí" hidden>
                   <div class="iuSilverWeatherGeoOverlay__backdrop" data-iu-silver-wx-geo-overlay-close></div>
@@ -5377,6 +5385,36 @@ font-src 'self' data:;
         }
         /* P0: document scroll — do not lock --iu-silver-slot-max-h (see iuSilverMobileStackFitApply in assets/app.js). */
         try { silver.style.removeProperty("--iu-silver-slot-max-h"); } catch (_) {}
+      }catch(_){}
+    })();
+    </script>
+    <script>
+    (function(){
+      try{
+        var mq = window.matchMedia && window.matchMedia("(min-width: 901px)");
+        var parcel = document.getElementById("iuSilverParcelWatch");
+        var finance = document.getElementById("iuSilverFinanceHomeCard");
+        var rightRail = document.getElementById("iuDesktopRightRailCards");
+        var stack = document.getElementById("iuSilverWelcomeStack");
+        var feedAnchor = document.getElementById("iuSilverWelcomeStackSeparatorHolidayWeather");
+        if (!parcel || !finance || !rightRail || !stack || !feedAnchor) return;
+        function iuDesktopRightRailCardsApply(){
+          try{
+            var desktop = mq ? mq.matches : (window.innerWidth >= 901);
+            if (desktop) {
+              if (!rightRail.contains(parcel)) rightRail.appendChild(parcel);
+              if (!rightRail.contains(finance)) rightRail.appendChild(finance);
+              return;
+            }
+            if (rightRail.contains(parcel)) stack.insertBefore(parcel, feedAnchor);
+            if (rightRail.contains(finance)) stack.insertBefore(finance, feedAnchor);
+          }catch(_){}
+        }
+        iuDesktopRightRailCardsApply();
+        try { window.iuDesktopRightRailCardsApply = iuDesktopRightRailCardsApply; } catch (_) {}
+        if (mq && mq.addEventListener) mq.addEventListener("change", iuDesktopRightRailCardsApply);
+        else if (mq && mq.addListener) mq.addListener(iuDesktopRightRailCardsApply);
+        window.addEventListener("resize", iuDesktopRightRailCardsApply, { passive: true });
       }catch(_){}
     })();
     </script>
