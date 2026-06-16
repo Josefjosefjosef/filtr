@@ -1,27 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-16T22:20:52.750150Z",
+  "ingestedAt": "2026-06-16T23:18:27.424144Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Norové se trápí! Houževnatý soupeř nepouští Haalanda a spol. do šancí",
+      "title": "FOTBAL ONLINE: Obří chyba! Haaland využil zaváhání gólmana a vrací Norsku vedení",
       "url": "https://www.sport.cz/clanek/fotbal-ms-norsko-s-haalandem-vstoupi-do-ms-vyzve-irak-s-hracem-plzne-5481399",
       "dt": "2026-06-16T13:55:57Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "chyba",
         "fotbal",
-        "haalanda",
-        "houževnatý",
-        "nepouští",
-        "norové",
+        "gólmana",
+        "haaland",
+        "norsku",
+        "obří",
         "online",
-        "soupeř",
-        "spol",
-        "trápí",
-        "šancí"
+        "vedení",
+        "vrací",
+        "využil",
+        "zaváhání"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Mbappé překonal rekord a na další útočí. Chci se zapsat do historie, říká",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-mbappe-prekonal-rekord-a-na-dalsi-utoci-chci-se-zapsat-do-historie-rika-5481604",
+      "dt": "2026-06-16T23:03:25Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chci",
+        "další",
+        "historie",
+        "mbappé",
+        "překonal",
+        "rekord",
+        "zapsat",
+        "útočí",
+        "říká"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -737,34 +764,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pět let na farmě ovoce nepřineslo. Bývalý kapitán české dvacítky se vrací do Evropy",
-      "url": "https://www.sport.cz/clanek/hokej-evropske-ligy-pet-let-na-farme-ovoce-neprineslo-byvaly-kapitan-ceske-dvacitky-se-vraci-do-evropy-5481439",
-      "dt": "2026-06-16T16:20:03Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bývalý",
-        "dvacítky",
-        "evropy",
-        "farmě",
-        "kapitán",
-        "let",
-        "nepřineslo",
-        "ovoce",
-        "pět",
-        "vrací",
-        "české"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -775,7 +774,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41069,
+      "bytes": 41013,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -812,7 +811,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-16T20:34:33Z",
+        "raw_feed_latest_publishedAt": "2026-06-16T23:03:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -828,8 +827,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Norové se trápí! Houževnatý soupeř nepouští Haalanda a spol. do šancí",
+            "title": "FOTBAL ONLINE: Obří chyba! Haaland využil zaváhání gólmana a vrací Norsku vedení",
             "publishedAt": "2026-06-16T13:55:57Z"
+          },
+          {
+            "title": "Mbappé překonal rekord a na další útočí. Chci se zapsat do historie, říká",
+            "publishedAt": "2026-06-16T23:03:25Z"
           },
           {
             "title": "Povedený vstup do šampionátu. Francouzi rozhodli o výhře ve druhé půli, zářil Mbappé",
@@ -854,10 +857,6 @@
           {
             "title": "Korejci na MS bojkotují média kvůli posměškům na adresu kapitána",
             "publishedAt": "2026-06-16T19:47:25Z"
-          },
-          {
-            "title": "Lehečka si poradil se senzací minulého týdne, Menšíkovi nepomohl fantastický obrat",
-            "publishedAt": "2026-06-16T12:02:37Z"
           }
         ]
       }

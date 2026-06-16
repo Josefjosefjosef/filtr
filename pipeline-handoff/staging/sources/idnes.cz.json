@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-16T22:20:52.750150Z",
+  "ingestedAt": "2026-06-16T23:18:27.424144Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Stavíme za 80 tisíc za metr. Stavbaři za drahé byty nemohou, říká šéf Hochtiefu",
+      "url": "https://www.idnes.cz/ekonomika/domaci/stavby-byty-silnice-hochtief.A260616_163255_ekonomika_cfr",
+      "dt": "2026-06-16T22:00:00Z",
+      "media_raw": "iDNES / Ekonomika",
+      "media_norm": "iDNES",
+      "tokens": [
+        "byty",
+        "drahé",
+        "hochtiefu",
+        "metr",
+        "nemohou",
+        "stavbaři",
+        "stavíme",
+        "tisíc",
+        "říká",
+        "šéf"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rubric",
+      "feedId": "fin_idnes_ekonomika",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vracení zboží bude jednodušší. E-shopy přidaly tlačítko pro zrušení smlouvy",
+      "url": "https://www.idnes.cz/ekonomika/domaci/tlacitko-evropska-unie-odstoupeni-od-smlouvy.A260616_125653_ekonomika_vebe",
+      "dt": "2026-06-16T22:00:00Z",
+      "media_raw": "iDNES / Ekonomika",
+      "media_norm": "iDNES",
+      "tokens": [
+        "jednodušší",
+        "přidaly",
+        "shopy",
+        "smlouvy",
+        "tlačítko",
+        "vracení",
+        "zboží",
+        "zrušení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rubric",
+      "feedId": "fin_idnes_ekonomika",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -732,59 +784,6 @@
         "stát",
         "zemědělství",
         "žádný"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rubric",
-      "feedId": "fin_idnes_ekonomika",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jaroslav Strnad otevírá brány svých holdingů investorům: Vznikl nový fond",
-      "url": "https://www.idnes.cz/ekonomika/domaci/jaroslav-strnad-ce-industries-aerospace-fond-vznik.A260609_200908_ekonomika_vok",
-      "dt": "2026-06-10T08:30:00Z",
-      "media_raw": "iDNES / Ekonomika",
-      "media_norm": "iDNES",
-      "tokens": [
-        "brány",
-        "fond",
-        "holdingů",
-        "investorům",
-        "jaroslav",
-        "nový",
-        "otevírá",
-        "strnad",
-        "svých",
-        "vznikl"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rubric",
-      "feedId": "fin_idnes_ekonomika",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fanoušci fotbalu mohou fandit i posnídat v hospodě. Otevřou během ranních zápasů",
-      "url": "https://www.idnes.cz/ekonomika/domaci/fotbal-mistrovstvi-hospody-oteviraci-doba-snidane.A260609_150620_ekonomika_vebe",
-      "dt": "2026-06-09T22:00:00Z",
-      "media_raw": "iDNES / Ekonomika",
-      "media_norm": "iDNES",
-      "tokens": [
-        "během",
-        "fandit",
-        "fanoušci",
-        "fotbalu",
-        "hospodě",
-        "otevřou",
-        "posnídat",
-        "ranních",
-        "zápasů"
       ],
       "feedCategory": "finance",
       "feedType": "rubric",
@@ -1583,7 +1582,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
-      "bytes": 46534,
+      "bytes": 46497,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,11 +1619,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-16T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-16T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 28,
-          "sport": 2
+          "finance": 29,
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1636,6 +1635,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stavíme za 80 tisíc za metr. Stavbaři za drahé byty nemohou, říká šéf Hochtiefu",
+            "publishedAt": "2026-06-16T22:00:00Z"
+          },
+          {
+            "title": "Vracení zboží bude jednodušší. E-shopy přidaly tlačítko pro zrušení smlouvy",
+            "publishedAt": "2026-06-16T22:00:00Z"
+          },
           {
             "title": "Sucho, kroupy i mráz. Každý rok čekáme jiný extrém, říká ředitel Habánských sklepů",
             "publishedAt": "2026-06-16T18:00:00Z"
@@ -1659,14 +1666,6 @@
           {
             "title": "Každému, kdo přijde, dám ochutnat. Jak mladý podnikatel věnečkárnou dobyl Prahu",
             "publishedAt": "2026-06-15T18:00:00Z"
-          },
-          {
-            "title": "Policie ani záchranáři by neměli palivo, řekl ekonom, proč s válkou prudce zdražilo",
-            "publishedAt": "2026-06-15T17:16:00Z"
-          },
-          {
-            "title": "KOMENTÁŘ: Euro, nebo koruna? Co je výhodnější z hlediska odolnosti rodin i země",
-            "publishedAt": "2026-06-15T11:01:00Z"
           }
         ]
       }
