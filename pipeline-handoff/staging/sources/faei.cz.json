@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-06-16T03:49:54.831562Z",
+  "ingestedAt": "2026-06-16T04:47:18.969083Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Češi se obávají zdražování energií, skutečně vyletí ceny vzhůru?",
+      "url": "https://profitonline.cz/cesi-se-obavaji-zdrazovani-energii-skutecne-vyleti-ceny-vzhuru/",
+      "dt": "2026-06-16T04:00:29Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "ceny",
+        "energií",
+        "obávají",
+        "skutečně",
+        "vyletí",
+        "vzhůru",
+        "zdražování",
+        "češi"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,29 +294,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "ECB podle očekávání zvýšila úrokové sazby",
-      "url": "https://profitonline.cz/ecb-podle-ocekavani-zvysila-urokove-sazby/",
-      "dt": "2026-06-12T18:00:11Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ecb",
-        "očekávání",
-        "podle",
-        "sazby",
-        "zvýšila",
-        "úrokové"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -302,7 +304,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19425,
+      "bytes": 19436,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -339,7 +341,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-06-15T10:00:37Z",
+        "raw_feed_latest_publishedAt": "2026-06-16T04:00:29Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 9,
@@ -355,6 +357,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Češi se obávají zdražování energií, skutečně vyletí ceny vzhůru?",
+            "publishedAt": "2026-06-16T04:00:29Z"
+          },
           {
             "title": "Lidem dramaticky vyskočí splátky hypoték. Klidně o 7 000 korun",
             "publishedAt": "2026-06-15T10:00:37Z"
@@ -382,10 +388,6 @@
           {
             "title": "Evropou se šíří šakali, zastavit je může jenom jiná šelma",
             "publishedAt": "2026-06-14T04:00:40Z"
-          },
-          {
-            "title": "McDonald’s mění recept na růst",
-            "publishedAt": "2026-06-13T14:15:39Z"
           }
         ]
       }
