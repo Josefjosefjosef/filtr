@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-06-16T16:34:58.411542Z",
+  "ingestedAt": "2026-06-16T17:52:54.794407Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "The Blood of Dawnwalker nabídne svobodu ve stylu Falloutu. Po vydání navíc dorazí DLC zdarma - INDIAN",
+      "url": "https://indian-tv.cz/clanek/the-blood-of-dawnwalker-nabidne-svobodu-ve-stylu-falloutu-beibga",
+      "dt": "2026-06-16T17:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "blood",
+        "dawnwalker",
+        "dlc",
+        "dorazí",
+        "falloutu",
+        "indian",
+        "nabídne",
+        "navíc",
+        "stylu",
+        "svobodu",
+        "the",
+        "vydání",
+        "zdarma"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1090,36 +1120,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Halo: Campaign Evolved na nových záběrech ukazuje průchod mise nebo pohled ze třetí osoby - INDIAN",
-      "url": "https://indian-tv.cz/clanek/halo-campaign-evolved-na-novych-zaberech-mck8ee",
-      "dt": "2026-06-11T17:04:20Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "campaign",
-        "evolved",
-        "halo",
-        "indian",
-        "mise",
-        "nebo",
-        "nových",
-        "osoby",
-        "pohled",
-        "průchod",
-        "třetí",
-        "ukazuje",
-        "záběrech"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1130,7 +1130,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 230431,
+      "bytes": 228169,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1167,7 +1167,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-16T16:21:12Z",
+        "raw_feed_latest_publishedAt": "2026-06-16T17:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1182,6 +1182,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "The Blood of Dawnwalker nabídne svobodu ve stylu Falloutu. Po vydání navíc dorazí DLC zdarma - INDIAN",
+            "publishedAt": "2026-06-16T17:00:00Z"
+          },
           {
             "title": "Call of Duty: Vanguard, fotbal, 3D plošinovka i Tony Hawk dorazí do Game Passu - INDIAN",
             "publishedAt": "2026-06-16T16:21:12Z"
@@ -1209,10 +1213,6 @@
           {
             "title": "Gears of War: E-Day má být jedna z nejdražších her od Xboxu - INDIAN",
             "publishedAt": "2026-06-16T08:00:00Z"
-          },
-          {
-            "title": "Halo: Campaign Evolved boduje na PS5. Remake ovládl předobjednávkové žebříčky - INDIAN",
-            "publishedAt": "2026-06-16T07:27:58Z"
           }
         ]
       }
