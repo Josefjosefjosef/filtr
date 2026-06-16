@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-06-16T01:42:39.600644Z",
+  "ingestedAt": "2026-06-16T02:38:28.403317Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "RECENZE: To se opravdu povedlo. Gothic 1 Remake je výborná hra",
+      "url": "https://www.idnes.cz/hry/recenze/gothic-remake-recenze-test-pc.A260615_145414_bw-recenze_oma",
+      "dt": "2026-06-16T02:00:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "gothic",
+        "hra",
+        "opravdu",
+        "povedlo",
+        "remake",
+        "výborná"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -705,31 +728,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Návrat sexy Lary bude jednou z největších herních událostí roku",
-      "url": "https://www.idnes.cz/hry/novinky/tomb-raider-legacy-of-atlantis-odklad-nove-informace.A260603_094507_bw-novinky_oz/foto",
-      "dt": "2026-06-03T22:00:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "herních",
-        "jednou",
-        "lary",
-        "největších",
-        "návrat",
-        "roku",
-        "sexy",
-        "událostí"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -740,7 +738,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 42855,
+      "bytes": 42714,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -777,7 +775,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-15T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-16T02:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -792,6 +790,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "RECENZE: To se opravdu povedlo. Gothic 1 Remake je výborná hra",
+            "publishedAt": "2026-06-16T02:00:00Z"
+          },
           {
             "title": "Zvládne váš počítač Gears of War: E-Day? Podívejte se na nároky",
             "publishedAt": "2026-06-15T14:00:00Z"
@@ -819,10 +821,6 @@
           {
             "title": "Robotí holčičky z nových her dráždí publikum, nevypadají až příliš dětsky?",
             "publishedAt": "2026-06-12T22:00:00Z"
-          },
-          {
-            "title": "Závodní Warhammer a šachy na steroidech zdarma. Ale neváhejte dlouho",
-            "publishedAt": "2026-06-12T07:58:00Z"
           }
         ]
       }
