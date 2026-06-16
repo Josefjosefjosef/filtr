@@ -1105,22 +1105,58 @@ async function runSmoke() {
       fail(`Silver parcel: manual Odstranit must clear item: ${JSON.stringify(silverParcelManualRemove)}`);
     }
 
+    // MindMenu parcels overlay: mobile/tablet (≤900px). Desktop Layout V3 hides MindMenu at 901px+.
+    await page.locator('#iuMobileBottomNav [data-iu-bottom-nav="mindmenu"]').first().click({ timeout: 8000, force: true }).catch(() => {});
+    await page.waitForTimeout(700);
+    await page.evaluate(() => {
+      const tab = document.getElementById("iuMobileGateTabTools");
+      const panel = document.getElementById("iuMobileGatePanelTools");
+      if (tab && panel && panel.hidden) tab.click();
+    });
+    await page.waitForTimeout(600);
+
+    const parcelsBtnMobile = await page.$("#iuParcelsBtn");
+    if (!parcelsBtnMobile) {
+      fail("Silver parcel smoke: #iuParcelsBtn missing at 390x844");
+    } else {
+      const parcelsBtnMobileVisible = await parcelsBtnMobile.isVisible();
+      if (!parcelsBtnMobileVisible) {
+        fail("Silver parcel smoke: #iuParcelsBtn must be visible at 390x844");
+      } else {
+        await parcelsBtnMobile.click();
+        await page.waitForTimeout(500);
+        const silverParcelManualMobile = await page.evaluate(() => {
+          const m = document.getElementById("iuParcelsPopover");
+          return !!(m && m.classList.contains("is-open"));
+        });
+        if (!silverParcelManualMobile) {
+          fail("Silver parcel smoke: MindMenu parcels overlay did not open at 390x844");
+        }
+        await page.keyboard.press("Escape");
+        await page.waitForTimeout(350);
+      }
+    }
+
     await page.setViewportSize({ width: 1366, height: 768 });
     await page.waitForTimeout(200);
 
-    const parcelsBtn = await page.$("#iuParcelsBtn");
-    if (parcelsBtn) {
-      await parcelsBtn.click();
-      await page.waitForTimeout(500);
-      const silverParcelManual = await page.evaluate(() => {
-        const m = document.getElementById("iuParcelsPopover");
-        return !!(m && m.classList.contains("is-open"));
-      });
-      if (!silverParcelManual) {
-        fail("Silver parcel smoke: manual MindMenu parcels overlay did not open");
+    const parcelsBtnDesktop = await page.$("#iuParcelsBtn");
+    if (parcelsBtnDesktop) {
+      const parcelsBtnDesktopVisible = await parcelsBtnDesktop.isVisible();
+      if (parcelsBtnDesktopVisible) {
+        await parcelsBtnDesktop.click();
+        await page.waitForTimeout(500);
+        const silverParcelManualDesktop = await page.evaluate(() => {
+          const m = document.getElementById("iuParcelsPopover");
+          return !!(m && m.classList.contains("is-open"));
+        });
+        if (!silverParcelManualDesktop) {
+          fail("Silver parcel smoke: MindMenu parcels overlay did not open on desktop when visible");
+        }
+        await page.keyboard.press("Escape");
+        await page.waitForTimeout(350);
       }
-      await page.keyboard.press("Escape");
-      await page.waitForTimeout(350);
+      // Desktop Layout V3: hidden MindMenu at 901px+ — skip click when not visible (expected).
     }
 
     const navSelectors = ["a.iu-leftNavItem", "a[data-rail]", ".iuLeftNav a", "nav a"];
