@@ -8080,7 +8080,10 @@ function buildVideoAsArticleCard(it) {
           }
           const ndCluster = doc.createElement("span");
           ndCluster.className = "iuSilverWelcomeMetaSvatekCluster";
-          ndCluster.appendChild(doc.createTextNode(" \u00B7 sv\u00E1tek m\u00E1 "));
+          const svatekLabel = doc.createElement("span");
+          svatekLabel.className = "iuSilverWelcomeMetaSvatekLabel";
+          svatekLabel.textContent = "sv\u00E1tek m\u00E1";
+          ndCluster.appendChild(svatekLabel);
           const pillBtn = doc.createElement("button");
           pillBtn.className = "svatek-pill";
           pillBtn.type = "button";

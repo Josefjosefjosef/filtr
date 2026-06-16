@@ -1,0 +1,277 @@
+/**
+ * Desktop homepage premium UI polish (≥1025px, body.iu-desktop-home-grid only).
+ * Mobile / tablet untouched.
+ */
+
+@media (min-width: 1025px) {
+  body.iu-desktop-home-grid {
+    --iu-dhp-homecard-img-h: 65px;
+    --iu-dhp-homecard-img-ratio: 4 / 3;
+    --iu-dhp-stack-gap: 10px;
+  }
+
+  /* ── Vertical rhythm: welcome + weather + homecards ── */
+  body.iu-desktop-home-grid #iuSilverTopCardsStack {
+    gap: 6px;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack {
+    column-gap: var(--iu-dhp-stack-gap);
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack #iuSilverWelcomeCard.iuSilverWelcomeCard {
+    --iuSilverStackPadY: 10px;
+    min-height: 0;
+    padding-top: 10px;
+    padding-bottom: 8px;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeTextBlock {
+    gap: 5px;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-layout="ready"] {
+    min-height: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection,
+  body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection {
+    margin-top: 16px !important;
+  }
+
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport {
+    row-gap: 6px;
+    column-gap: 6px;
+  }
+
+  /* ── Welcome box: 3 rows (greet / date / svátek) ── */
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMeta {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaDateCluster {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekCluster {
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: nowrap !important;
+    align-items: center;
+    gap: 0.35em;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekCluster::before {
+    content: none;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekLabel {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    margin-right: 0;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekLabel::first-letter {
+    text-transform: uppercase;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .svatek-pill {
+    margin-left: 0;
+    flex: 0 0 auto;
+    max-width: none;
+    min-height: 32px;
+    padding: 3px 10px;
+  }
+
+  /* ── Weather: dominant temperature hierarchy ── */
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-stack {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    align-items: start;
+    column-gap: 14px;
+    row-gap: 5px;
+    min-width: 0;
+    padding-right: 0;
+    min-height: 0;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-stack::after {
+    display: none !important;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .silver-weather-line1,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .silver-weather-line2 {
+    display: contents;
+    white-space: normal;
+    overflow: visible;
+    overflow-wrap: normal;
+    word-break: normal;
+    text-overflow: unset;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .silver-weather-line2[data-iu-action-indicator="chevron"]::after {
+    display: none !important;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .silver-weather-dpart {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    align-self: center;
+    justify-self: center;
+    font-size: 44px;
+    line-height: 1;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-tempCol {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-divider {
+    display: none !important;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .silver-weather-outside-temp.iu-weather-compact-temp {
+    font-size: clamp(44px, 3.2vw, 52px);
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    white-space: nowrap;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-feels {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.15;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-feels::before {
+    content: none !important;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-status {
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 600;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-status::before {
+    content: none !important;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-advice {
+    grid-column: 2;
+    grid-row: 3;
+    display: block;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+    font-size: 13px;
+    line-height: 1.25;
+    font-weight: 500;
+    white-space: normal;
+    overflow: visible;
+    overflow-wrap: anywhere;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack--evening #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .silver-weather-outside-temp.iu-weather-compact-temp {
+    color: #86c6f9;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack--evening #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-feels {
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack--evening #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-status,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack--evening #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-advice {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  /* ── Homecards: 65px images + slimmer cards ── */
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport [class$="PreviewCardMount"] {
+    min-height: 0;
+  }
+
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewHeader {
+    padding: 7px 10px;
+    gap: 8px;
+  }
+
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewBody {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 10px;
+    padding: 8px 10px 10px;
+    align-items: center;
+  }
+
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewCard .iuNewsPreviewImgWrap,
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport :is(
+    .box-sport,
+    .box-finance,
+    .box-health,
+    .box-travel,
+    .box-games,
+    .box-culture,
+    .box-science-history,
+    .box-education
+  ) .iuNewsPreviewImgWrap {
+    width: auto;
+    height: var(--iu-dhp-homecard-img-h);
+    min-height: var(--iu-dhp-homecard-img-h);
+    max-height: var(--iu-dhp-homecard-img-h);
+    aspect-ratio: var(--iu-dhp-homecard-img-ratio);
+    flex-shrink: 0;
+  }
+
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewText {
+    gap: 6px;
+  }
+
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewHeadline {
+    min-height: 0;
+    font-weight: 650;
+  }
+
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewHeadline2 {
+    font-weight: 600;
+  }
+}
