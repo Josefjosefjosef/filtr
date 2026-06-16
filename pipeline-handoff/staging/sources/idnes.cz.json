@@ -1,13 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-16T00:46:41.454100Z",
+  "ingestedAt": "2026-06-16T01:42:39.600644Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "V Kalifornii havaroval strategický bombardér B-52, zahynula zřejmě celá posádka",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/bombarder-b-52-kalifornie-usa-zriceni.A260615_214324_zahranicni_aya",
+      "dt": "2026-06-16T01:36:50Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "bombardér",
+        "celá",
+        "havaroval",
+        "kalifornii",
+        "posádka",
+        "strategický",
+        "zahynula",
+        "zřejmě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "Havárie bombardéru B-52 v Kalifornii zřejmě nepřežila celá posádka",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/havarie-bombarderu-b-52-v-kalifornii-zrejme-neprezila-cela-posadka.A260616_003337_zahranicni_air",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/bombarder-b-52-kalifornie-usa-zriceni.A260615_214324_zahranicni_aya",
       "dt": "2026-06-15T22:58:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES",
@@ -99,28 +124,6 @@
         "ukazují",
         "úpravy",
         "čez"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Kalifornii havaroval po startu strategický bombardér B-52",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/bombarder-b-52-kalifornie-usa-zriceni.A260615_214324_zahranicni_aya",
-      "dt": "2026-06-15T20:06:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "bombardér",
-        "havaroval",
-        "kalifornii",
-        "startu",
-        "strategický"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -775,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 46085,
+      "bytes": 45931,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -812,7 +815,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-15T22:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-16T01:36:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -830,6 +833,10 @@
         },
         "sample_titles": [
           {
+            "title": "V Kalifornii havaroval strategický bombardér B-52, zahynula zřejmě celá posádka",
+            "publishedAt": "2026-06-16T01:36:50Z"
+          },
+          {
             "title": "Havárie bombardéru B-52 v Kalifornii zřejmě nepřežila celá posádka",
             "publishedAt": "2026-06-15T22:58:00Z"
           },
@@ -844,10 +851,6 @@
           {
             "title": "Energetika se decentralizuje. Úpravy stojí miliardy, ukazují data ČEZ Distribuce",
             "publishedAt": "2026-06-15T22:00:00Z"
-          },
-          {
-            "title": "V Kalifornii havaroval po startu strategický bombardér B-52",
-            "publishedAt": "2026-06-15T20:06:00Z"
           },
           {
             "title": "Hromadná nehoda omezila provoz na D1 těsně před Prahou. Na místě jsou zranění",

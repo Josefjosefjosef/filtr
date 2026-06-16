@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-16T00:46:41.454100Z",
+  "ingestedAt": "2026-06-16T01:42:39.600644Z",
   "items": [
     {
       "section": "veda",
@@ -777,6 +777,32 @@
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "CNN: Vance věří, že Izrael podpoří dohodu mezi USA a Íránem i přes neshody",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/cnn-vance-veri-ze-izrael-podpori-dohodu-mezi-usa-a-iranem-i-pres-neshody-374613",
+      "dt": "2026-06-16T01:07:20Z",
+      "media_raw": "ČT24 / Svět",
+      "media_norm": "ČT24",
+      "tokens": [
+        "cnn",
+        "dohodu",
+        "izrael",
+        "neshody",
+        "podpoří",
+        "usa",
+        "vance",
+        "věří",
+        "íránem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_svet",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "Reportéři ČT se zaměřili na podvodná call centra, která z lidí lákají peníze",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/reporteri-ct-se-zamerili-na-podvodna-call-centra-ktera-z-lidi-lakaji-penize-374604",
       "dt": "2026-06-15T20:01:19Z",
@@ -1505,29 +1531,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Stát redukuje akcelerační zóny pro větrné elektrárny",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/stat-redukuje-akceleracni-zony-reaguje-tak-i-na-vyhrady-armady-374568",
-      "dt": "2026-06-15T06:00:00Z",
-      "media_raw": "ČT24 / Svět",
-      "media_norm": "ČT24",
-      "tokens": [
-        "akcelerační",
-        "elektrárny",
-        "redukuje",
-        "stát",
-        "větrné",
-        "zóny"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_svet",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1632,7 +1635,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42318,
+      "bytes": 42556,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1669,7 +1672,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-15T20:01:19Z",
+        "raw_feed_latest_publishedAt": "2026-06-16T01:07:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1685,6 +1688,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "CNN: Vance věří, že Izrael podpoří dohodu mezi USA a Íránem i přes neshody",
+            "publishedAt": "2026-06-16T01:07:20Z"
+          },
           {
             "title": "Reportéři ČT se zaměřili na podvodná call centra, která z lidí lákají peníze",
             "publishedAt": "2026-06-15T20:01:19Z"
@@ -1712,10 +1719,6 @@
           {
             "title": "Polsko nedodalo Ukrajině stíhačky MiG-29, protože mu prý neposkytla své drony",
             "publishedAt": "2026-06-15T18:00:00Z"
-          },
-          {
-            "title": "Zabránění návratu Orbána. Maďarští poslanci omezili funkční období premiérů",
-            "publishedAt": "2026-06-15T17:50:25Z"
           }
         ]
       }
