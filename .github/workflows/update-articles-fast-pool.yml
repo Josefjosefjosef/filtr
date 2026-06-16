@@ -19,6 +19,8 @@ env:
   AUTOMATION_BRANCH: automation/update-articles-fast-pool
   PR_TITLE: "chore(data): fast publish publishable pool"
   PIPELINE_HANDOFF_BRANCH: automation/pipeline-handoff
+  FAST_POOL_CLOSEOUT_MAX_ATTEMPTS: "12"
+  FAST_POOL_CLOSEOUT_SLEEP_SEC: "10"
 
 jobs:
   fast_pipeline_gate:
@@ -323,10 +325,10 @@ jobs:
           set -euo pipefail
           REF="${{ env.AUTOMATION_BRANCH }}"
           REPO="${{ github.repository }}"
-          gh workflow run smoke.yml --ref "$REF" --repo "$REPO"
+          # smoke.yml push trigger on automation/update-articles-fast-pool runs data-only fast path — do not dispatch duplicate smoke (~4m).
           gh workflow run layout-guard.yml --ref "$REF" --repo "$REPO"
           gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
-          echo "[CHECKS] Dispatched smoke, layout-guard, repo-guard on $REF"
+          echo "[CHECKS] Dispatched layout-guard, repo-guard on $REF (smoke via push data-only fast path)"
 
       - name: Create or update PR
         if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
@@ -404,8 +406,8 @@ jobs:
               | jq -r '.generatedAt // empty' 2>/dev/null || echo ""
           }
 
-          echo "[CLOSEOUT] poll_merge_fast_pool_pr=$NUM expected_pool_at=$EXPECTED_POOL_AT head=$POST_PUSH_SHA"
-          for attempt in $(seq 1 30); do
+          echo "[CLOSEOUT] poll_merge_fast_pool_pr=$NUM expected_pool_at=$EXPECTED_POOL_AT head=$POST_PUSH_SHA max_attempts=${{ env.FAST_POOL_CLOSEOUT_MAX_ATTEMPTS }} sleep=${{ env.FAST_POOL_CLOSEOUT_SLEEP_SEC }}s"
+          for attempt in $(seq 1 "${{ env.FAST_POOL_CLOSEOUT_MAX_ATTEMPTS }}"); do
             MERGED_AT=$(gh pr view "$NUM" --json mergedAt --jq '.mergedAt // empty' 2>/dev/null || echo "")
             if [ -n "$MERGED_AT" ]; then
               MAIN_POOL_AT=$(fetch_main_pool_at)
@@ -452,9 +454,10 @@ jobs:
             else
               echo "[CLOSEOUT] poll_attempt=$attempt waiting pr=$NUM head=${HEAD_SHA:-none} merge_state=${MSS:-unknown} main_pool_at=${MAIN_POOL_AT:-none}"
             fi
-            sleep 20
+            sleep "${{ env.FAST_POOL_CLOSEOUT_SLEEP_SEC }}"
           done
-          echo "[CLOSEOUT] WARN: merge poll timeout after 30 attempts; pages-publish-from-main-data cron will catch up"
+          echo "[CLOSEOUT] WARN: merge poll timeout after ${{ env.FAST_POOL_CLOSEOUT_MAX_ATTEMPTS }} attempts; pages-publish-from-main-data cron will catch up"
+          echo "FAST_POOL_CLOSEOUT_DEFERRED=YES"
 
       - name: Fast publish closeout telemetry
         if: always()

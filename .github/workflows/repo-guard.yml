@@ -8,6 +8,7 @@ on:
     branches:
       - main
       - automation/update-articles-data
+      - automation/update-articles-fast-pool
       - "fix/**"
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]

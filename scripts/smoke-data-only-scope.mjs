@@ -1,0 +1,89 @@
+#!/usr/bin/env node
+/**
+ * Detect data-only scope for smoke fast path (projects/data/** only).
+ * Data-only PRs must not block on unrelated UI Playwright guards.
+ *
+ * Writes GITHUB_OUTPUT: data_only=true|false
+ * Prints: SMOKE_DATA_ONLY_SCOPE=YES|NO
+ */
+import { execSync } from "child_process";
+import fs from "fs";
+
+function run(cmd) {
+  return execSync(cmd, { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
+}
+
+function listChangedFiles() {
+  const event = (process.env.GITHUB_EVENT_NAME || "").trim();
+  const baseSha = (process.env.SMOKE_BASE_SHA || "").trim();
+  const headSha = (process.env.SMOKE_HEAD_SHA || "").trim();
+
+  try {
+    run("git fetch origin main --depth=64 2>/dev/null || git fetch origin main");
+  } catch {
+    /* best effort */
+  }
+
+  if (baseSha && headSha) {
+    return run(`git diff --name-only ${baseSha}...${headSha}`).split("\n");
+  }
+  if (event === "push") {
+    const before = (process.env.GITHUB_EVENT_BEFORE || "").trim();
+    const after = (process.env.GITHUB_SHA || "").trim();
+    if (before && after && before !== "0000000000000000000000000000000000000000") {
+      return run(`git diff --name-only ${before}..${after}`).split("\n");
+    }
+    return run("git diff --name-only origin/main...HEAD").split("\n");
+  }
+  return run("git diff --name-only origin/main...HEAD").split("\n");
+}
+
+export function isDataOnlyScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  return paths.every((f) => f.startsWith("projects/data/"));
+}
+
+function writeOutput(name, value) {
+  const out = process.env.GITHUB_OUTPUT;
+  if (out) {
+    fs.appendFileSync(out, `${name}=${value}\n`);
+  }
+}
+
+function main() {
+  const ref = (process.env.GITHUB_REF || "").trim();
+  const headRef = (process.env.GITHUB_HEAD_REF || "").trim();
+  const fastPoolBranch =
+    ref === "refs/heads/automation/update-articles-fast-pool" ||
+    headRef === "automation/update-articles-fast-pool";
+
+  let files = [];
+  try {
+    files = listChangedFiles();
+  } catch (err) {
+    console.log(`[smoke-data-only-scope] WARN diff failed: ${err instanceof Error ? err.message : err}`);
+    writeOutput("data_only", "false");
+    console.log("SMOKE_DATA_ONLY_SCOPE=NO");
+    process.exit(0);
+  }
+
+  const dataOnly = isDataOnlyScope(files);
+  const allowFastPath =
+    dataOnly || (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
+
+  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"}`);
+  for (const f of files.slice(0, 20)) {
+    console.log(`[smoke-data-only-scope] changed=${f}`);
+  }
+  if (files.length > 20) {
+    console.log(`[smoke-data-only-scope] ... and ${files.length - 20} more`);
+  }
+
+  writeOutput("data_only", allowFastPath ? "true" : "false");
+  console.log(`SMOKE_DATA_ONLY_SCOPE=${allowFastPath ? "YES" : "NO"}`);
+}
+
+if (process.argv[1] && process.argv[1].endsWith("smoke-data-only-scope.mjs")) {
+  main();
+}

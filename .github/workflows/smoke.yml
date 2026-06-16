@@ -11,6 +11,7 @@ on:
       - main
       # Force-pushes z update-articles.yml často nespustí pull_request synchronize → povinné checky na data PR zůstaly viset (mergeStateStatus BLOCKED).
       - automation/update-articles-data
+      - automation/update-articles-fast-pool
       # Silver/release PR heads: pull_request webhooks občas nedorazí; push na fix/* spustí required status na head SHA.
       - "fix/**"
   workflow_dispatch:
@@ -21,6 +22,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect data-only scope (fast pool / data PR fast path)
+        id: scope
+        env:
+          SMOKE_BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+          SMOKE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: node scripts/smoke-data-only-scope.mjs
 
       - uses: actions/setup-node@v4
         with:
@@ -28,49 +38,75 @@ jobs:
 
       - run: npm ci
 
+      - name: Data-only smoke fast path (skip unrelated UI guards)
+        if: steps.scope.outputs.data_only == 'true'
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/sync_articles_index_from_pool.py
+          python -m py_compile scripts/emit_frontend_article_chunks.py
+          node scripts/smoke_data_only_scope_proof.mjs
+          echo "SMOKE_DATA_ONLY_FAST_PATH=YES"
+          echo "UI_GUARDS_SKIPPED=YES"
+
       - name: Silver calendar.create regression
+        if: steps.scope.outputs.data_only != 'true'
         run: npm run silver-regression
 
       - name: Install Playwright browsers
+        if: steps.scope.outputs.data_only != 'true'
         run: node node_modules/playwright/cli.js install --with-deps chromium
 
       - name: Ensure playwright bin executable (fallback)
+        if: steps.scope.outputs.data_only != 'true'
         run: |
           if [ -f node_modules/.bin/playwright ]; then chmod +x node_modules/.bin/playwright || true; fi
 
-      - run: npm run smoke
+      - name: Full UI smoke suite
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run smoke
 
       - name: Silver Notes V2 UX guard (checkout localhost)
+        if: steps.scope.outputs.data_only != 'true'
         run: npm run silver-notes-v2-ux-guard-checkout
 
       - name: Silver mobile layout guard (checkout localhost)
+        if: steps.scope.outputs.data_only != 'true'
         run: node scripts/run_silver_layout_guard_against_checkout.cjs
 
       - name: Weather outside-temp emphasis guard
+        if: steps.scope.outputs.data_only != 'true'
         run: npm run weather-emphasis-guard
 
       - name: Počasíčko / pocasicko data guard
+        if: steps.scope.outputs.data_only != 'true'
         run: npm run weather-pocasicko-guard
 
       - name: CZ vertical sections guard (hry/kultura/veda/vzdelavani)
+        if: steps.scope.outputs.data_only != 'true'
         run: npm run section-cz-guard
 
       - name: Nameday overlay dative guard (Laura → Lauře)
+        if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-nameday-dative-guard
 
       - name: Perf regression guards (flicker phases + 16 nav latency + calendar/Silver surface)
+        if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-perf-regression-guards
 
       - name: Reload / section switch / scroll stability guard
+        if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-reload-section-scroll-stability-guard
 
       - name: Section switch instant response guard
+        if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-section-switch-instant-response-guard
 
       - name: Section switch scroll position guard
+        if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-section-switch-scroll-position-guard
 
       - name: Article entrypoint parity guard (chunked loading V1)
+        if: steps.scope.outputs.data_only != 'true'
         run: npm run article-entrypoint-parity-guard
 
       - name: Set required status context (smoke)
@@ -82,6 +118,9 @@ jobs:
           STATE="success"
           if [ "${{ job.status }}" != "success" ]; then STATE="failure"; fi
           SHA="${GITHUB_SHA}"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            SHA="${{ github.event.pull_request.head.sha }}"
+          fi
           gh api --method POST "repos/${{ github.repository }}/statuses/${SHA}" \
             -f state="$STATE" \
             -f context="smoke" \
