@@ -21267,46 +21267,26 @@ overflow:hidden !important;
     --iu-right-rail-width: 360px;
   }
 
-  .layout{
-    grid-template-columns: minmax(0, 1fr) var(--iu-right-rail-width) !important;
-  }
+  .iuBrandSubtitle{display:none!important}
 
-  .layout > aside.accordionCol{
-    grid-column: 2 !important;
-    width: var(--iu-right-rail-width) !important;
-    min-width: var(--iu-right-rail-width) !important;
-    max-width: var(--iu-right-rail-width) !important;
-    flex: 0 0 var(--iu-right-rail-width) !important;
-    justify-self: stretch !important;
-    box-sizing: border-box !important;
-    overflow-x: clip !important;
-  }
+  .iu-leftRail{display:block!important}
+  #newsList{display:grid!important;grid-template-columns:var(--iuLeftRailW) minmax(0,1fr)!important;column-gap:20px!important;align-items:start!important}
+
+  #newsList > #iuLeftRail,#newsList > #iuCenterStage{margin-top:0!important}
+
+  .layout{grid-template-columns:minmax(0,1fr) var(--iu-right-rail-width)!important;align-items:start!important}
+  .layout>aside.accordionCol{grid-column:2!important;width:var(--iu-right-rail-width)!important;min-width:var(--iu-right-rail-width)!important;max-width:var(--iu-right-rail-width)!important;flex:0 0 var(--iu-right-rail-width)!important;display:flex!important;flex-direction:column!important;align-self:start!important;padding:0!important;background:transparent!important;position:static!important}
 
   .layout > .mainCol{
     min-width: 0 !important;
   }
 
-  .layout > aside.accordionCol .mindMenu,
-  .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks,
-  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid,
-  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid > *,
-  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iu-mmQuickItem,
-  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iu-mmQuickItemLink{
-    min-width: 0 !important;
-    max-width: 100% !important;
-    width: 100%;
-    box-sizing: border-box;
-  }
+  .layout>aside.accordionCol :is(.mindMenu-scroll-wrapper,.mindMenu,#iuMindMenuView,section.iu-mailboxes,.iu-mmTopTools,section.iu-mmQuickLinks,#iuMailboxControls){display:none!important}
+  #iuDesktopQrBanner,#iuDesktopQrBanner img{display:block!important;width:100%!important;position:static!important;margin:0!important;padding:0!important}
+  #iuDesktopQrBanner img{height:auto!important}
 
-  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid{
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    justify-items: stretch !important;
-    align-items: start !important;
-  }
-
-  .layout > aside.accordionCol .mindMenu .iu-mmQuickGrid .iu-mmQuickItem span:last-of-type{
-    min-width: 0 !important;
-    max-width: 100% !important;
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) :is(body, #content, .container, #page, .mainCol, #leftContent, #newsList, #feed, .layout > aside.accordionCol){
+    background: var(--iu-page-bg) !important;
   }
 }
 
@@ -22017,155 +21997,4 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   cursor: pointer;
   touch-action: manipulation;
   flex-shrink: 0;
-}
-
-/* Desktop Layout V3 — 901px+ only (STATIC_BACKGROUND) */
-@media (min-width: 901px) {
-  .iuBrandSubtitle{
-    display: none !important;
-  }
-
-  .iu-leftRail{
-    display: block !important;
-  }
-
-  #newsList{
-    display: grid !important;
-    grid-template-columns: var(--iuLeftRailW) minmax(0, 1fr) !important;
-    column-gap: 20px !important;
-    row-gap: 14px !important;
-    align-items: start !important;
-    flex-wrap: nowrap !important;
-  }
-
-  #newsList > #iuLeftRail{
-    grid-column: 1;
-    grid-row: 1;
-    align-self: start !important;
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  #newsList > #iuCenterStage{
-    grid-column: 2;
-    grid-row: 1;
-    align-self: start !important;
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  #leftContent{
-    align-self: start !important;
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  .layout{
-    align-items: start !important;
-  }
-
-  .layout > aside.accordionCol{
-    display: flex !important;
-    flex-direction: column !important;
-    align-self: start !important;
-    margin-top: 0 !important;
-    padding: 0 !important;
-    gap: 0 !important;
-    background: transparent !important;
-    background-color: transparent !important;
-    background-image: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    position: static !important;
-    top: auto !important;
-    overflow: visible !important;
-  }
-
-  .layout:has(#leftStickyHeader) > aside.accordionCol{
-    margin-top: calc(var(--iuTopbarHeight) + var(--iu-hub-top-extra, 0px)) !important;
-    padding-top: 0 !important;
-  }
-
-  .layout > aside.accordionCol .mindMenu-scroll-wrapper,
-  .layout > aside.accordionCol .mindMenu,
-  .layout > aside.accordionCol #iuMindMenuView,
-  .layout > aside.accordionCol section.iu-mailboxes,
-  .layout > aside.accordionCol .iu-mmTopTools,
-  .layout > aside.accordionCol section.iu-mmQuickLinks,
-  .layout > aside.accordionCol #iuMailboxControls{
-    display: none !important;
-  }
-
-  #iuDesktopQrBanner.iu-desktop-qr-banner{
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    position: static !important;
-    top: auto !important;
-    inset: auto !important;
-    float: none !important;
-    box-sizing: border-box !important;
-    flex: 0 0 auto !important;
-  }
-
-  #iuDesktopQrBanner.iu-desktop-qr-banner .iu-desktop-qr-banner__img{
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    position: static !important;
-    top: auto !important;
-    object-fit: contain !important;
-    box-sizing: border-box !important;
-  }
-
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) body,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #content,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .container,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .iuFrame,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .iuLayout,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #leftContent #iuLeftRail,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .iu-rightContent,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #feed,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #feedWrap,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #page,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .mainCol,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #newsList,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #leftContent,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .layout > aside.accordionCol{
-    background: var(--iu-page-bg) !important;
-    background-color: transparent !important;
-    background-image: var(--iu-page-bg) !important;
-  }
-
-  html,
-  body,
-  #content,
-  .container,
-  .iuFrame,
-  .iuLayout,
-  #page,
-  .mainCol,
-  #leftContent,
-  #newsList,
-  #feed,
-  #feedWrap,
-  .layout > aside.accordionCol{
-    background: var(--iu-page-bg) !important;
-    background-color: transparent !important;
-    background-image: var(--iu-page-bg) !important;
-  }
-
-  #iuLeftRail,
-  .iu-leftRail,
-  .iu-leftNav{
-    background: var(--iuRailBg, #fff) !important;
-    background-color: var(--iuRailBg, #fff) !important;
-    background-image: none !important;
-  }
 }
