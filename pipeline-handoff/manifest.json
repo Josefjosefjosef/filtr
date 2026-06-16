@@ -1,14 +1,15 @@
 {
   "schemaVersion": 3,
-  "updatedAtUtc": "2026-06-16T08:33:38.901730Z",
+  "updatedAtUtc": "2026-06-16T08:58:42.515994Z",
   "handoffComplete": true,
   "stagingReady": true,
-  "aggregateReady": false,
+  "aggregateReady": true,
   "publishReady": false,
   "ingestRunId": "27604414867",
   "winningIngestRunId": "27604414867",
-  "winningAggregateRunId": "27600571484",
-  "handoffEpoch": 5475,
+  "aggregateRunId": "27604414867",
+  "winningAggregateRunId": "27604414867",
+  "handoffEpoch": 5476,
   "stagingBytesApprox": 259855,
-  "pointerNote": "CAS: winningIngestRunId + handoffEpoch; atomic commit"
+  "pointerNote": "CAS: aggregate run id + staging snapshot match; atomic commit"
 }
