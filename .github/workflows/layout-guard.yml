@@ -9,6 +9,7 @@ on:
   push:
     branches:
       - automation/update-articles-data
+      - automation/update-articles-fast-pool
       - "fix/**"
   workflow_dispatch:
 
