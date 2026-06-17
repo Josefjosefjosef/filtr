@@ -22194,3 +22194,77 @@ body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"] .iu-leftNavIco
   stroke: currentColor !important;
   fill: none !important;
 }
+
+/* Affiliate nav — per-category accents (override #iuLeftRail global blue hotfix at ~19475) */
+body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"],
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent^="aff-"]{
+  border: 2px solid color-mix(in srgb, var(--iuNavAccent) 38%, rgba(0,0,0,0.06)) !important;
+  background: linear-gradient(165deg, #fbfcfd, color-mix(in srgb, var(--iuNavAccent) 7%, #f4f5f7) 58%, #eceef1) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.85) inset, 0 8px 18px color-mix(in srgb, var(--iuNavAccent) 6%, rgba(0,0,0,0.08)) !important;
+  transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
+}
+body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"] .iu-leftNavIcon,
+body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"] .iu-leftNavIcon svg,
+body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"] .iu-leftNavIcon svg *{
+  color: var(--iuNavAccent) !important;
+  fill: none !important;
+  stroke: currentColor !important;
+}
+body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"] .iu-leftNavLabel{
+  color: var(--iuTopbarBrandColor, #0B1F33) !important;
+  fill: currentColor !important;
+  stroke: none !important;
+}
+@media (hover:hover) and (pointer:fine){
+  body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"]:hover,
+  body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"]:focus-visible{
+    border-color: color-mix(in srgb, var(--iuNavAccent) 52%, rgba(0,0,0,0.06)) !important;
+    background: linear-gradient(155deg, color-mix(in srgb, var(--iuNavAccent) 10%, #fff), color-mix(in srgb, var(--iuNavAccent) 14%, #f8fafc)) !important;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.9) inset, 0 10px 22px color-mix(in srgb, var(--iuNavAccent) 12%, rgba(0,0,0,0.08)) !important;
+  }
+  body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"]:hover .iu-leftNavIcon,
+  body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"]:focus-visible .iu-leftNavIcon,
+  body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"]:hover .iu-leftNavIcon svg,
+  body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"]:focus-visible .iu-leftNavIcon svg{
+    color: var(--iuNavAccent) !important;
+    filter: drop-shadow(0 0 12px color-mix(in srgb, var(--iuNavAccent) 24%, transparent)) !important;
+  }
+}
+#iuLeftRail .iuLeftRailSectionTitle.iuLeftRailSectionTitle--affiliate{
+  --iuRailSectionAccent: color-mix(in srgb, #64748B 55%, transparent) !important;
+}
+
+#iuAffiliateView .iuAffiliateSeo{
+  margin: 16px 0 12px;
+  padding: 14px 14px 16px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--iuSectionAccent) 20%, rgba(11,27,43,.1));
+  background: linear-gradient(165deg, #fbfcfd, color-mix(in srgb, var(--iuSectionAccent) 8%, #f6f2eb) 52%, #f8fafc);
+  box-shadow: 0 1px 0 #fffc inset, 0 1px 2px rgba(11,27,43,.05), 0 10px 22px rgba(11,27,43,.04);
+}
+#iuAffiliateView .iuAffiliateSeo h2{
+  margin: 0 0 10px;
+  font-size: clamp(16px, .95rem + .5vw, 18px);
+  font-weight: 780;
+  letter-spacing: .02em;
+  line-height: 1.25;
+  color: var(--iuSectionAccent, #64748B);
+}
+#iuAffiliateView .iuAffiliateSeo p{
+  margin: 0 0 10px;
+  color: rgba(11,27,43,.88);
+  font-size: 14px;
+  line-height: 1.45;
+}
+#iuAffiliateView .iuAffiliateSeo p:last-child{
+  margin-bottom: 0;
+}
+#iuAffiliateView .iuAffiliateSeo .iuAffiliateSeoKeywords{
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(11,27,43,.68);
+}

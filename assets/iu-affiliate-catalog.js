@@ -19,6 +19,253 @@
     };
   }
 
+  function affSeo(title, paragraphs, keywords) {
+    return {
+      title: title,
+      paragraphs: paragraphs,
+      keywords: keywords,
+    };
+  }
+
+  function getAffCssColor(catId) {
+    try {
+      var v = getComputedStyle(document.documentElement)
+        .getPropertyValue("--iuAff-" + catId)
+        .trim();
+      return v || "";
+    } catch (_) {
+      return "";
+    }
+  }
+
+  var IU_AFFILIATE_SEO = {
+    "aff-cestovni-kancelare": affSeo(
+      "Cestovní kanceláře a zájezdy online",
+      [
+        "V sekci Cestovní kanceláře najdete přehled známých touroperátorů a portálů se zájezdy do Evropy i exotických destinací. Rychle otevřete nabídky last minute, rodinných dovolených u moře, poznávacích cest i lyžařských pobytů.",
+        "Praktický rozcestník ušetří čas při hledání aktuálních akcí, termínů odletů a dostupnosti kapacit. Hodí se, když chcete porovnat více cestovních kanceláří na jednom místě.",
+        "Cílem je nabídnout přehledné odkazy na ověřené služby pro plánování dovolené bez zbytečného proklikávání.",
+      ],
+      "cestovní kanceláře, zájezdy, last minute, dovolená u moře, poznávací cesty"
+    ),
+    "aff-ubytovani-hotely": affSeo(
+      "Ubytování, hotely a apartmány",
+      [
+        "Sekce Ubytování a hotely shrnuje služby pro rezervaci hotelů, apartmánů, penzionů i wellness pobytů v Česku i v zahraničí.",
+        "Snadno najdete nabídky pro víkendové pobyty, rodinnou dovolenou, pracovní cesty nebo romantický výlet. Užitečné je i při rychlém porovnání dostupnosti termínů a cen.",
+        "Jde o praktický rozcestník pro každého, kdo hledá spolehlivé ubytování online.",
+      ],
+      "ubytování, hotely, apartmány, rezervace, wellness pobyty"
+    ),
+    "aff-letenky": affSeo(
+      "Letenky a cestovní pomoc online",
+      [
+        "Letenky a cestovní pomoc spojují vyhledávače letenek, dopravce a služby pro cestující, včetně pomoci s kompenzacemi nebo zpožděními.",
+        "Sekce je užitečná při plánování cest po Evropě i do vzdálenějších destinací, a také když potřebujete rychle ověřit spojení autobusem či vlakem.",
+        "Cílem je mít po ruce ověřené odkazy pro cestování bez zbytečného hledání.",
+      ],
+      "letenky, levné letenky, cestovní pomoc, kompenzace, autobusy"
+    ),
+    "aff-cestovni-pojisteni": affSeo(
+      "Cestovní pojištění a asistence",
+      [
+        "Cestovní pojištění chrání před neočekávanými výdaji na zahraniční dovolené i pracovní cesty. V této sekci najdete přehled pojišťoven a asistenčních služeb.",
+        "Hodí se před odletem k moři, na hory i na krátký víkend v EU, kdy potřebujete rychle srovnat rozsah krytí, limity a asistenci.",
+        "Praktický rozcestník usnadní výběr cestovního pojištění podle typu cesty.",
+      ],
+      "cestovní pojištění, asistenční služby, pojištění na dovolenou"
+    ),
+    "aff-auto-moto": affSeo(
+      "Auto, moto a příslušenství",
+      [
+        "Sekce Auto a moto sdružuje e-shopy s autodoplňky, pneumatikami, moto vybavením i servisními produkty pro řidiče a motorkáře.",
+        "Pomůže při nákupu sezónních pneumatik, olejů, autokosmetiky, brašen, helmic nebo příslušenství pro údržbu vozu.",
+        "Cílem je rychlý přístup k ověřeným obchodům pro motoristy.",
+      ],
+      "auto, moto, pneumatiky, autodoplňky, motorkářské vybavení"
+    ),
+    "aff-pojisteni": affSeo(
+      "Pojištění vozidel, majetku a odpovědnosti",
+      [
+        "V kategorii Pojištění najdete odkazy na srovnání a sjednání pojištění vozidel, domácnosti, odpovědnosti i dalších běžných produktů.",
+        "Sekce je užitečná, když chcete rychle porovnat nabídky pojišťoven, ceny a rozsah krytí před obnovou smlouvy.",
+        "Jde o praktický rozcestník pro informované rozhodnutí o pojištění.",
+      ],
+      "pojištění, povinné ručení, havarijní pojištění, pojištění domácnosti"
+    ),
+    "aff-finance": affSeo(
+      "Finance, investice a platební služby",
+      [
+        "Finance shrnují digitální bankovní služby, investiční platformy, půjčky, splátkové programy a další finanční nástroje pro běžné použití.",
+        "Sekce pomáhá rychle najít ověřené služby pro správu peněz, spoření, investování nebo výhodnější placení online.",
+        "Cílem je přehledný vstup do světa osobních financí bez zbytečného hledání.",
+      ],
+      "finance, investice, půjčky, platební služby, spoření"
+    ),
+    "aff-energie-uspor": affSeo(
+      "Energie, úspory a domácí efektivita",
+      [
+        "Energie a úspory nabízejí odkazy na srovnání dodavatelů energií, úsporné produkty a technologie pro nižší spotřebu domácnosti.",
+        "Hodí se při hledání levnějšího tarifu, LED osvětlení, chytrého měření nebo tipů, jak snížit náklady na elektřinu a plyn.",
+        "Praktický rozcestník pro každého, kdo chce lépe hospodařit s domácí energií.",
+      ],
+      "energie, úspory, elektřina, plyn, LED osvětlení"
+    ),
+    "aff-lekarny": affSeo(
+      "Online lékárny a zdravotní sortiment",
+      [
+        "Lékárny online umožňují rychlý nákup volně prodejných léků, doplňků, kosmetiky a zdravotnických potřeb s doručením domů.",
+        "Sekce je užitečná, když potřebujete rychle objednat běžné preparáty, vitamíny nebo produkty pro celou rodinu.",
+        "Cílem je přehledný přístup k ověřeným internetovým lékárnám.",
+      ],
+      "lékárna online, e-lékárna, volně prodejné léky, zdravotní potřeby"
+    ),
+    "aff-zdravi-doplnky": affSeo(
+      "Zdraví, doplňky stravy a wellness",
+      [
+        "Zdraví a doplňky sdružují e-shopy se doplňky stravy, produkty pro aktivní životní styl, rehabilitaci a celkovou pohodu.",
+        "Sekce pomáhá najít ověřené značky vitamínů, proteinů, bylinných produktů i pomůcek pro domácí péči o zdraví.",
+        "Praktický rozcestník pro každodenní podporu zdravého životního stylu.",
+      ],
+      "zdraví, doplňky stravy, vitamíny, wellness, rehabilitace"
+    ),
+    "aff-kosmetika": affSeo(
+      "Kosmetika, parfémy a péče o pleť",
+      [
+        "Kosmetika a parfémy nabízejí přehled obchodů s makeupy, parfémy, pleťovou péčí a dárkovými sady pro ženy i muže.",
+        "Hodí se při hledání novinek, slev, niche vůní nebo osvědčené péče pro citlivou pleť.",
+        "Cílem je rychlý přístup ke kvalitní kosmetice online.",
+      ],
+      "kosmetika, parfémy, péče o pleť, makeup, dárkové sady"
+    ),
+    "aff-drogerie": affSeo(
+      "Drogerie a domácí péče",
+      [
+        "Drogerie online spojují běžné produkty pro domácnost, hygienu, péči o tělo i ekologické alternativy.",
+        "Sekce je praktická pro pravidelný nákup papírenského zboží, pracích prostředků, kosmetiky a drobností pro celou rodinu.",
+        "Rozcestník šetří čas při objednávání z ověřených drogerií.",
+      ],
+      "drogerie, domácí péče, hygiena, ekologická drogerie"
+    ),
+    "aff-moda": affSeo(
+      "Móda a oblečení online",
+      [
+        "Móda sdružuje e-shopy s oblečením pro ženy, muže i děti včetně běžné módy, značkových kolekcí a sezónních výprodejů.",
+        "Sekce pomáhá rychle najít nové kolekce, slevy a ověřené obchody s doručením po celé ČR.",
+        "Praktický rozcestník pro nákup oblečení online.",
+      ],
+      "móda, oblečení, fashion e-shopy, slevy, značková móda"
+    ),
+    "aff-boty": affSeo(
+      "Boty, tenisky a barefoot obuv",
+      [
+        "Boty a tenisky nabízejí přehled obchodů s volnočasovou, sportovní i elegantní obuví včetně barefoot a minimalistických střihů.",
+        "Hodí se při výběru sezónní obuvi, běžeckých tenisek nebo pohodlné obuvi na každý den.",
+        "Cílem je rychlý přístup k široké nabídce obuvi online.",
+      ],
+      "boty, tenisky, barefoot, obuv online, sportovní obuv"
+    ),
+    "aff-sportovni-obleceni": affSeo(
+      "Sportovní oblečení a funkční móda",
+      [
+        "Sportovní oblečení sdružuje značky s funkčními materiály pro běh, fitness, outdoor i týmové sporty.",
+        "Sekce je užitečná při hledání kvalitního sportovního oblečení, termo vrstev nebo výbavy pro pravidelný trénink.",
+        "Praktický rozcestník pro aktivní sportovce i rekreační uživatele.",
+      ],
+      "sportovní oblečení, funkční móda, fitness, běžecké oblečení"
+    ),
+    "aff-sport-outdoor": affSeo(
+      "Sport, outdoor a aktivní život",
+      [
+        "Sport a outdoor spojují e-shopy s vybavením na turistiku, kempování, cyklistiku, rybaření i další volnočasové aktivity.",
+        "Hodí se při plánování výletu, nákupu stanu, batohu, trekingového vybavení nebo sportovních potřeb pro děti.",
+        "Cílem je mít po ruce ověřené obchody pro aktivní trávení volného času.",
+      ],
+      "outdoor, sport, turistika, kempování, cyklistika"
+    ),
+    "aff-dum-zahrada": affSeo(
+      "Dům, zahrada a hobby",
+      [
+        "Dům a zahrada shrnují obchody se stavebním materiálem, zahradní technikou, nářadím a vybavením pro rekonstrukce i hobby projekty.",
+        "Sekce pomáhá rychle najít produkty pro údržbu zahrady, stavbu pergoly, zavlažování nebo vybavení dílny.",
+        "Praktický rozcestník pro majitele domů a zahrádkáře.",
+      ],
+      "dům, zahrada, hobby, zahradní technika, rekonstrukce"
+    ),
+    "aff-nabytek": affSeo(
+      "Nábytek, bydlení a dekorace",
+      [
+        "Nábytek a bydlení nabízejí e-shopy s nábytkem, matracemi, osvětlením a doplňky pro obývák, ložnici i pracovnu.",
+        "Hodí se při zařizování bytu, výměně matrace nebo hledání designových kousků za rozumnou cenu.",
+        "Cílem je přehledný vstup do světa online nábytku a bydlení.",
+      ],
+      "nábytek, bydlení, matrace, dekorace, interiér"
+    ),
+    "aff-kuchyn": affSeo(
+      "Kuchyně, domácnost a spotřebiče",
+      [
+        "Kuchyně a domácnost sdružují obchody s kuchyňskými potřebami, spotřebiči, úklidovými produkty a vybavením pro každodenní provoz domácnosti.",
+        "Sekce je užitečná při výběru hrnců, nožů, robotů, vysavačů nebo organizace kuchyně.",
+        "Praktický rozcestník pro vybavení moderní domácnosti.",
+      ],
+      "kuchyně, domácnost, spotřebiče, kuchyňské potřeby, úklid"
+    ),
+    "aff-elektro": affSeo(
+      "Elektro a chytrá domácnost",
+      [
+        "Elektro a chytrá domácnost spojují e-shopy s elektronikou, spotřebiči, robotickými vysavači, chytrými zařízeními a příslušenstvím.",
+        "Hodí se při výběru televize, audio vybavení, domácích robotů nebo produktů pro automatizaci bytu.",
+        "Cílem je rychlý přístup k ověřeným prodejcům elektroniky.",
+      ],
+      "elektro, chytrá domácnost, robotický vysavač, elektronika, spotřebiče"
+    ),
+    "aff-mobily": affSeo(
+      "Mobily, tablety a příslušenství",
+      [
+        "Mobily a příslušenství nabízejí obchody s telefony, kryty, tvrzeným sklem, nabíječkami a dalšími doplňky pro každodenní použití.",
+        "Sekce pomáhá rychle najít vhodné příslušenství, ochranu displeje nebo repasované a nové telefony.",
+        "Praktický rozcestník pro mobilní techniku a doplňky.",
+      ],
+      "mobily, telefony, příslušenství, tvrzené sklo, kryty"
+    ),
+    "aff-software": affSeo(
+      "Software, antiviry a digitální bezpečnost",
+      [
+        "Software a bezpečnost sdružují antiviry, VPN služby, kancelářské nástroje a další digitální produkty pro ochranu soukromí i práci.",
+        "Hodí se při výběru zabezpečení počítače, mobilu nebo domácí sítě a také pro nákup licencí software.",
+        "Cílem je přehledný vstup do světa digitální bezpečnosti.",
+      ],
+      "software, antivir, VPN, bezpečnost, digitální služby"
+    ),
+    "aff-knihy": affSeo(
+      "Knihy, filmy, hry a zábava",
+      [
+        "Knihy, filmy a hry spojují knihkupectví, prodejce deskových her, audioknih a streamovacích služeb pro volný čas.",
+        "Sekce je užitečná při hledání nové četby, dárků pro děti nebo zábavy pro celou rodinu.",
+        "Praktický rozcestník pro kulturu a volnočasové aktivity doma.",
+      ],
+      "knihy, filmy, hry, deskové hry, zábava"
+    ),
+    "aff-jidlo": affSeo(
+      "Jídlo, potraviny a online nákup",
+      [
+        "Jídlo a potraviny shrnují služby pro online nákup potravin, kávy, čokolády, zdravé výživy a gastronomických specialit.",
+        "Hodí se pro pravidelný rozvoz nákupu, objednání kvalitní kávy nebo výběr produktů pro zdravější stravování.",
+        "Cílem je rychlý přístup k ověřeným potravinovým e-shopům.",
+      ],
+      "potraviny, online nákup, rozvoz potravin, káva, zdravá výživa"
+    ),
+    "aff-zvirata": affSeo(
+      "Zvířata, krmiva a chovatelské potřeby",
+      [
+        "Zvířata a chovatelství nabízejí e-shopy s krmivy, hračkami, pelíšky a vybavením pro psy, kočky i další domácí mazlíčky.",
+        "Sekce pomáhá rychle najít kvalitní krmivo, antiparazitika nebo doplňky pro péči o zvíře.",
+        "Praktický rozcestník pro chovatele a majitele domácích mazlíčků.",
+      ],
+      "zvířata, krmivo, chovatelské potřeby, psi, kočky"
+    ),
+  };
+
   var IU_AFFILIATE_CATALOG = [
     {
       id: "aff-cestovni-kancelare",
@@ -420,33 +667,14 @@
     },
   ];
 
-  var IU_AFFILIATE_COLORS = {
-    "aff-cestovni-kancelare": "#C9A227",
-    "aff-ubytovani-hotely": "#60A5FA",
-    "aff-letenky": "#2DD4BF",
-    "aff-cestovni-pojisteni": "#34D399",
-    "aff-auto-moto": "#FB923C",
-    "aff-pojisteni": "#059669",
-    "aff-finance": "#10B981",
-    "aff-energie-uspor": "#A3E635",
-    "aff-lekarny": "#22C55E",
-    "aff-zdravi-doplnky": "#6EE7B7",
-    "aff-kosmetika": "#F9A8D4",
-    "aff-drogerie": "#C4B5FD",
-    "aff-moda": "#A78BFA",
-    "aff-boty": "#A8A29E",
-    "aff-sportovni-obleceni": "#3B82F6",
-    "aff-sport-outdoor": "#4ADE80",
-    "aff-dum-zahrada": "#65A30D",
-    "aff-nabytek": "#D6C4A8",
-    "aff-kuchyn": "#FDBA74",
-    "aff-elektro": "#22D3EE",
-    "aff-mobily": "#7DD3FC",
-    "aff-software": "#14B8A6",
-    "aff-knihy": "#8B5CF6",
-    "aff-jidlo": "#FBBF24",
-    "aff-zvirata": "#86EFAC",
-  };
+  var IU_AFFILIATE_COLORS = {};
+
+  function refreshAffiliateColorsFromCss() {
+    for (var ri = 0; ri < IU_AFFILIATE_CATALOG.length; ri++) {
+      var cid = IU_AFFILIATE_CATALOG[ri].id;
+      IU_AFFILIATE_COLORS[cid] = getAffCssColor(cid);
+    }
+  }
 
   var catalogById = {};
   for (var ci = 0; ci < IU_AFFILIATE_CATALOG.length; ci++) {
@@ -577,6 +805,30 @@
     } catch (_) {}
   }
 
+  function renderAffiliateSeo(cat) {
+    var seoEl = document.getElementById("iuAffiliateSeo");
+    if (!seoEl || !cat) return;
+    var seo = IU_AFFILIATE_SEO[cat.id];
+    if (!seo) {
+      seoEl.hidden = true;
+      seoEl.innerHTML = "";
+      return;
+    }
+    var parts = ['<h2>', escapeHtml(seo.title), "</h2>"];
+    for (var pi = 0; pi < seo.paragraphs.length; pi++) {
+      parts.push("<p>", escapeHtml(seo.paragraphs[pi]), "</p>");
+    }
+    if (seo.keywords) {
+      parts.push(
+        '<p class="iuAffiliateSeoKeywords"><strong>Klíčová slova:</strong> ',
+        escapeHtml(seo.keywords),
+        "</p>"
+      );
+    }
+    seoEl.innerHTML = parts.join("");
+    seoEl.hidden = false;
+  }
+
   function renderAffiliateSection(section) {
     var cat = getCategoryBySection(section);
     var view = document.getElementById("iuAffiliateView");
@@ -621,10 +873,7 @@
     }
 
     view.setAttribute("data-aff-category", cat.id);
-    try {
-      var accent = IU_AFFILIATE_COLORS[cat.id] || "";
-      if (accent) view.style.setProperty("--iuSectionAccent", accent);
-    } catch (_) {}
+    renderAffiliateSeo(cat);
     ensureAffiliateViewMountPoint();
     return true;
   }
@@ -644,9 +893,11 @@
     if (!nav || nav.getAttribute("data-iu-aff-nav-mounted") === "1") return;
 
     var title = document.createElement("div");
-    title.className = "iuLeftRailSectionTitle";
+    title.className = "iuLeftRailSectionTitle iuLeftRailSectionTitle--affiliate";
     title.textContent = "Doporučené služby";
     nav.appendChild(title);
+
+    refreshAffiliateColorsFromCss();
 
     for (var i = 0; i < IU_AFFILIATE_CATALOG.length; i++) {
       var cat = IU_AFFILIATE_CATALOG[i];
@@ -664,10 +915,6 @@
       label.textContent = cat.title;
       a.appendChild(iconWrap);
       a.appendChild(label);
-      try {
-        var navAccent = IU_AFFILIATE_COLORS[cat.id];
-        if (navAccent) a.style.setProperty("--iuNavAccent", navAccent);
-      } catch (_) {}
       nav.appendChild(a);
     }
 
@@ -676,6 +923,7 @@
 
   function initAffiliateCatalog() {
     ensureAffiliateInlineSprite();
+    refreshAffiliateColorsFromCss();
     mountLeftRailNav();
     if (!document.__iuAffClickBound) {
       document.addEventListener("click", handleAffiliateGridClick);
@@ -693,7 +941,9 @@
   }
 
   window.IU_AFFILIATE_CATALOG = IU_AFFILIATE_CATALOG;
+  window.IU_AFFILIATE_SEO = IU_AFFILIATE_SEO;
   window.IU_AFFILIATE_COLORS = IU_AFFILIATE_COLORS;
+  window.iuAffiliateRefreshColors = refreshAffiliateColorsFromCss;
   window.IU_AFFILIATE_DISCLOSURE = IU_AFFILIATE_DISCLOSURE;
   window.iuAffiliateCatalogInit = initAffiliateCatalog;
   window.iuAffiliateApplySection = applyAffiliateFromSection;
