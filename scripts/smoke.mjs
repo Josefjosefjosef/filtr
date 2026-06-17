@@ -38,7 +38,13 @@ function fail(msg) {
 
 // Minimal static server (0 extra deps)
 function serveFile(urlPath) {
-  let filePath = path.join(ROOT, (urlPath === "/" || urlPath === "") ? "index.html" : urlPath.replace(/^\//, "").replace(/\/$/, "") || "index.html");
+  let decodedPath = urlPath;
+  try {
+    decodedPath = decodeURIComponent(String(urlPath || "").split("?")[0]);
+  } catch (_) {
+    decodedPath = String(urlPath || "").split("?")[0];
+  }
+  let filePath = path.join(ROOT, (decodedPath === "/" || decodedPath === "") ? "index.html" : decodedPath.replace(/^\//, "").replace(/\/$/, "") || "index.html");
   if (urlPath && urlPath !== "/" && !urlPath.startsWith("/projects")) {
     const lastSeg = (urlPath.split("?")[0] || "").split("/").filter(Boolean).pop() || "";
     if (!path.extname(lastSeg)) {

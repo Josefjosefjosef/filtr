@@ -25,6 +25,9 @@ function mime(f) {
 
 function serveStatic(urlPath) {
   let u = urlPath.split("?")[0];
+  try {
+    u = decodeURIComponent(u);
+  } catch (_) {}
   if (u === "/" || u === "/projects" || u === "/projects/")
     u = "/projects/index.html";
   const fp = path.resolve(path.join(ROOT, u.replace(/^\//, "").split("/").join(path.sep)));
