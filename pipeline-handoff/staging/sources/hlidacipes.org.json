@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hlidacipes.org",
-  "ingestedAt": "2026-06-17T09:19:50.175664Z",
+  "ingestedAt": "2026-06-17T10:37:00.184126Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Demokracie 2.0: Vize, systémové změny a pravidla budoucnosti",
+      "url": "https://hlidacipes.org/demokracie-2-0-vize-systemove-zmeny-a-pravidla-budoucnosti/",
+      "dt": "2026-06-17T09:30:02Z",
+      "media_raw": "HlídacíPes",
+      "media_norm": "HlídacíPes",
+      "tokens": [
+        "budoucnosti",
+        "demokracie",
+        "pravidla",
+        "systémové",
+        "vize",
+        "změny"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_hlidacipes",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "hlidacipes.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,32 +263,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "hlidacipes.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Putinův „Davos“ v Petrohradu podpořila AfD i potomek zakladatele řetězce Globus",
-      "url": "https://hlidacipes.org/potomek-zakladatele-retezce-globus-sklidil-kritiku-za-ucast-na-putinovu-foru/",
-      "dt": "2026-06-12T09:30:07Z",
-      "media_raw": "HlídacíPes",
-      "media_norm": "HlídacíPes",
-      "tokens": [
-        "afd",
-        "davos",
-        "globus",
-        "petrohradu",
-        "podpořila",
-        "potomek",
-        "putinův",
-        "zakladatele",
-        "řetězce"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_hlidacipes",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "hlidacipes.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,9 +271,9 @@
       "source": "HlídacíPes",
       "topic": "aktualne",
       "httpStatus": 200,
-      "contentType": "text/xml;charset=utf-8",
+      "contentType": "text/html; charset=utf-8",
       "finalUrl": "https://hlidacipes.org/feed/",
-      "bytes": 17655,
+      "bytes": 17546,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-06-17T04:30:55Z",
+        "raw_feed_latest_publishedAt": "2026-06-17T09:30:02Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -328,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Demokracie 2.0: Vize, systémové změny a pravidla budoucnosti",
+            "publishedAt": "2026-06-17T09:30:02Z"
+          },
           {
             "title": "Vláda chce jednodušší dosazování lidí do státních firem. Jde o trafiky, varují kritici",
             "publishedAt": "2026-06-17T04:30:55Z"
@@ -355,10 +356,6 @@
           {
             "title": "Manuál asymetrické obrany: Jaké zbraně využít k záchraně demokracie",
             "publishedAt": "2026-06-14T06:00:01Z"
-          },
-          {
-            "title": "Čtyřicet let strachu. Svědectví obětí tchajwanského Bílého teroru",
-            "publishedAt": "2026-06-13T06:00:48Z"
           }
         ]
       }
