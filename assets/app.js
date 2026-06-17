@@ -32705,6 +32705,30 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
+  /**
+   * P0 CLS (tablet 768–900 Menu → tool/affiliate): Silver gate min-height (~656px) vs #leftContent main
+   * shell paint only after applySection/showView — same ~0.86 shift as cold URL before early shell.
+   * Mirror index.html early inline script: set data-iu-tool-main + iu-mobileMainVisible before overlay
+   * teardown and showView, only on tablet portrait band (phones use applySection toggle).
+   */
+  function iuPreApplyTabletToolShellBeforeNav(accentKey, mediaTopicKey) {
+    try {
+      if (!window.matchMedia || !window.matchMedia("(min-width: 768px) and (max-width: 900px)").matches) return;
+      var sec = mediaTopicKey ? IU_ARTICLE_HUB_SECTION : normalizeSection(accentKey);
+      if (!sec || sec === "travel" || iuArticleHubSectionP(sec)) return;
+      var toolSec = { pocasi: 1, mapy: 1, maps: 1, jr: 1, tvprogram: 1, tvonline: 1, radio: 1 };
+      if (!(toolSec[sec] || sec.indexOf("aff-") === 0)) return;
+      if (document.documentElement) document.documentElement.setAttribute("data-iu-tool-main", "1");
+      if (document.body) document.body.setAttribute("data-iu-tool-main", "1");
+      document.body.classList.add("iu-mobileMainVisible");
+      try {
+        if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
+      } catch (_) {}
+      var mbPre = document.getElementById("iuMobileMainBackBar");
+      if (mbPre) mbPre.hidden = true;
+    } catch (_) {}
+  }
+
   function applySectionFromURL(accentOverride){
     void accentOverride;
     /* P0 web-nav return controller: jeden tick bez obecného section apply při řízeném návratu do overlaye. */
@@ -33107,6 +33131,9 @@ function buildVideoAsArticleCard(it) {
           }
         } catch (_){}
       }
+      try {
+        iuPreApplyTabletToolShellBeforeNav(accentEarly, mediaTopic);
+      } catch (_) {}
       if (typeof window.iuNavRailHideOverlaysFast === "function") {
         window.iuNavRailHideOverlaysFast();
       } else {
@@ -33166,6 +33193,9 @@ function buildVideoAsArticleCard(it) {
       const cls = Array.from(hex.classList).find(c => c.startsWith('iuHex--'));
       const sectionFromClass = cls ? cls.slice('iuHex--'.length).toLowerCase() : '';
       const rawHexKey = sectionAttr || sectionFromClass;
+      try {
+        iuPreApplyTabletToolShellBeforeNav(rawHexKey, "");
+      } catch (_) {}
       if (typeof window.iuNavRailHideOverlaysFast === "function") {
         window.iuNavRailHideOverlaysFast();
       } else {
