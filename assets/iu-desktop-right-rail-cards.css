@@ -332,3 +332,66 @@
     object-position: center center;
   }
 }
+
+/* Partner banner — desktop only (≥1025px), below Vytvořit fakturu card */
+#iuDesktopRightRailPartnerResistance {
+  display: none;
+}
+
+@media (min-width: 1025px) {
+  #iuDesktopRightRailPartnerResistance {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 25px 0 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  #iuDesktopRightRailPartnerResistance .iu-desktop-right-rail-partner__adHead {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0 0 5px;
+    min-width: 0;
+  }
+
+  #iuDesktopRightRailPartnerResistance .iu-desktop-right-rail-partner__adPos {
+    font-size: 11.6px;
+    font-weight: 800;
+    color: rgba(11, 27, 43, 0.70);
+    white-space: nowrap;
+  }
+
+  #iuDesktopRightRailPartnerResistance .iu-desktop-right-rail-partner__adLabel {
+    font-size: 11.6px;
+    font-weight: 750;
+    color: rgba(11, 27, 43, 0.58);
+    white-space: nowrap;
+  }
+
+  #iuDesktopRightRailPartnerResistance .iu-desktop-right-rail-partner__link {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+    text-decoration: none;
+    border: 0;
+    aspect-ratio: 360 / 240;
+  }
+
+  #iuDesktopRightRailPartnerResistance .iu-desktop-right-rail-partner__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    object-fit: contain;
+    object-position: center top;
+  }
+}
