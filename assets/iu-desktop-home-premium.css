@@ -52,6 +52,7 @@
     justify-self: start;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
     box-sizing: border-box;
   }
@@ -63,8 +64,8 @@
   }
 
   body.iu-desktop-home-grid #iuSilverTallScrollViewport {
-    row-gap: 6px;
-    column-gap: 6px;
+    row-gap: 10px !important;
+    column-gap: 10px !important;
   }
 
   /* ── Welcome box: 3 rows (greet / date / svátek) ── */
@@ -125,19 +126,23 @@
     padding: 3px 10px;
   }
 
-  /* ── Weather: dominant temperature hierarchy (340px column) ── */
+  /* ── Weather: moon left + aligned text column, centered in 340px area ── */
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-stack {
     display: grid !important;
-    grid-template-columns: 64px minmax(0, 1fr) !important;
-    grid-template-rows: auto auto auto !important;
+    grid-template-columns: auto minmax(0, max-content) !important;
+    grid-template-rows: auto auto auto auto !important;
     align-items: start;
     align-content: center;
-    column-gap: 18px;
-    row-gap: 6px;
-    width: 100%;
+    justify-content: center;
+    justify-items: start;
+    column-gap: 14px;
+    row-gap: 4px;
+    width: max-content;
+    max-width: 100%;
     min-width: 0;
+    margin-inline: auto;
     padding-right: 0 !important;
-    min-height: 96px;
+    min-height: 0;
     position: static !important;
   }
 
@@ -164,24 +169,26 @@
     display: none !important;
   }
 
-  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .silver-weather-dpart {
-    grid-column: 1;
-    grid-row: 1 / span 3;
-    align-self: center;
-    justify-self: center;
-    font-size: 48px;
-    line-height: 1;
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-temp-prefix {
+    display: none !important;
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-tempCol {
-    grid-column: 2;
-    grid-row: 1;
+    display: contents !important;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .silver-weather-dpart {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    align-self: stretch;
+    justify-self: center;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 3px;
-    min-width: 0;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(56px, 4.6vw, 66px);
+    line-height: 1;
+    width: 1.1em;
+    text-align: center;
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-divider {
@@ -189,6 +196,8 @@
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .silver-weather-outside-temp.iu-weather-compact-temp {
+    grid-column: 2;
+    grid-row: 1;
     font-size: clamp(46px, 3.4vw, 54px);
     line-height: 1;
     font-weight: 800;
@@ -197,6 +206,8 @@
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-feels {
+    grid-column: 2;
+    grid-row: 2;
     margin: 0;
     font-size: 14px;
     line-height: 1.2;
@@ -210,7 +221,7 @@
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-status {
     grid-column: 2 !important;
-    grid-row: 2 !important;
+    grid-row: 3 !important;
     display: block !important;
     min-width: 0;
     font-size: 14px;
@@ -224,9 +235,13 @@
     content: none !important;
   }
 
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-status .silver-weather-stat {
+    display: none !important;
+  }
+
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-advice {
     grid-column: 2 !important;
-    grid-row: 3 !important;
+    grid-row: 4 !important;
     display: block !important;
     margin: 0;
     padding: 0;
