@@ -103,6 +103,17 @@
       ensure(sec);
     } else if (sec.indexOf("aff-") === 0) {
       ensure("affiliate");
+      try {
+        var setAffView = function () {
+          var cs = document.getElementById("iuCenterStage");
+          if (cs) cs.setAttribute("data-view", "affiliate");
+        };
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", setAffView);
+        } else {
+          setAffView();
+        }
+      } catch (_) {}
     }
   } catch (_) {}
 })();

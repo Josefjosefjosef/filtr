@@ -577,6 +577,13 @@
   window.iuAffiliateGetCategory = getCategoryBySection;
 
   initAffiliateCatalog();
+  try {
+    var pEarly = new URLSearchParams(typeof location !== "undefined" ? location.search || "" : "");
+    var secEarly = String(pEarly.get("section") || "").trim().toLowerCase();
+    if (isAffiliateSectionKey(secEarly)) {
+      applyAffiliateFromSection(secEarly);
+    }
+  } catch (_) {}
 
   document.addEventListener("iu:section-view-mounted", function (ev) {
     try {

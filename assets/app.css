@@ -4746,6 +4746,7 @@ body[data-section="home"] .iuHomeCanvas{
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuMapyView,
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuMapsView,
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuJrEmptyView,
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuAffiliateView,
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuRadioView,
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuWeatherView,
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuTvOnlineView,
@@ -4764,6 +4765,7 @@ body[data-section="home"] .iuHomeCanvas{
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuMapyView,
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuMapsView,
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuJrEmptyView,
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuAffiliateView,
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuRadioView,
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuWeatherView,
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuTvOnlineView,
@@ -6070,6 +6072,9 @@ body[data-section="jr"] #iuJrEmptyView,
 html[data-section="jr"] #iuJrEmptyView{
   display: block !important;
 }
+#iuCenterStage[data-view="affiliate"] #iuAffiliateView{
+  display: block !important;
+}
 body[data-section="radio"] #iuRadioView,
 html[data-section="radio"] #iuRadioView{
   display: block !important;
@@ -6663,7 +6668,8 @@ html[data-section="mapy"] #iuMapyView .iuMapyGrid{
 }
 
 body[data-section="jr"] #iuJrEmptyView .iuJRGrid,
-html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
+html[data-section="jr"] #iuJrEmptyView .iuJRGrid,
+#iuAffiliateView .iuJRGrid{
   width: 100%;
   max-width: none;
   margin-left: 0;
@@ -8082,7 +8088,8 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 }
 
 body[data-section="jr"] #iuCenterStage #iuJrEmptyView,
-html[data-section="jr"] #iuCenterStage #iuJrEmptyView{
+html[data-section="jr"] #iuCenterStage #iuJrEmptyView,
+#iuCenterStage[data-view="affiliate"] #iuAffiliateView{
   flex: 1 1 0;
   min-width: 0;
   width: auto !important;
@@ -8142,7 +8149,8 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
     min-width: 0;
   }
   body[data-section="jr"] #iuCenterStage #iuJrEmptyView,
-  html[data-section="jr"] #iuCenterStage #iuJrEmptyView{
+  html[data-section="jr"] #iuCenterStage #iuJrEmptyView,
+  #iuCenterStage[data-view="affiliate"] #iuAffiliateView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
@@ -22025,35 +22033,13 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   flex-shrink: 0;
 }
 
-/* Affiliate services catalog — reuse Jízdní řády chip grid */
+/* Affiliate services catalog — disclosure + accent only (layout reuses JR tool hosts) */
 #iuAffiliateView{
   --iuSectionAccent: var(--iuNavAccent-affiliate, #64748B);
   min-height: 360px;
 }
-#iuAffiliateGrid{
-  min-height: 240px;
-}
-.iuSectionHeader--affiliate h2{
-  color: var(--iuNavAccent-affiliate, #64748B);
-}
-body[data-section^="aff-"] #iuAffiliateView,
-html[data-section^="aff-"] #iuAffiliateView{
-  display: block !important;
-}
-body[data-section^="aff-"] #iuCenterStage #iuAffiliateView,
-html[data-section^="aff-"] #iuCenterStage #iuAffiliateView{
-  flex: 1 1 0;
-  min-width: 0;
-  width: auto !important;
-}
-@media (max-width: 1100px){
-  body[data-section^="aff-"] #iuCenterStage #iuAffiliateView,
-  html[data-section^="aff-"] #iuCenterStage #iuAffiliateView{
-    flex: 0 0 100%;
-    width: 100% !important;
-    min-width: 0;
-  }
-}
+#iuAffiliateGrid{ min-height: 240px; }
+.iuSectionHeader--affiliate h2{ color: var(--iuNavAccent-affiliate, #64748B); }
 .iuAffiliateDisclosure{
   margin: 0 0 14px 0;
   padding: 12px 14px;
@@ -22064,9 +22050,7 @@ html[data-section^="aff-"] #iuCenterStage #iuAffiliateView{
   font-size: 14px;
   line-height: 1.45;
 }
-.iuAffiliateChip[data-aff-ready="0"]{
-  cursor: pointer;
-}
+.iuAffiliateChip[data-aff-ready="0"]{ cursor: pointer; }
 .iuAffiliatePlaceholderNote{
   margin-top: 10px;
   padding: 10px 12px;
@@ -22078,32 +22062,5 @@ html[data-section^="aff-"] #iuCenterStage #iuAffiliateView{
   opacity: 0;
   transition: opacity 0.2s ease;
 }
-.iuAffiliatePlaceholderNote.is-visible{
-  opacity: 1;
-}
-.iu-leftNav .iu-leftNavItem[data-accent^="aff-"]{
-  --iuNavAccent: var(--iuNavAccent-affiliate, #64748B);
-}
-@media (max-width: 767px){
-  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuAffiliateView{
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space) !important;
-    box-sizing: border-box !important;
-  }
-}
-@media (max-width: 900px){
-  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuAffiliateView{
-    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space);
-  }
-}
-body[data-section^="aff-"] #iuAffiliateView .iuJRGrid,
-html[data-section^="aff-"] #iuAffiliateView .iuJRGrid{
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-@media (max-width: 420px){
-  body[data-section^="aff-"] #iuAffiliateView .iuJRGrid,
-  html[data-section^="aff-"] #iuAffiliateView .iuJRGrid{
-    grid-template-columns: 1fr;
-  }
-}
+.iuAffiliatePlaceholderNote.is-visible{ opacity: 1; }
+.iu-leftNav .iu-leftNavItem[data-accent^="aff-"]{ --iuNavAccent: var(--iuNavAccent-affiliate, #64748B); }

@@ -1952,6 +1952,17 @@ font-src 'self' data:;
           document.documentElement.removeAttribute("data-iu-tool-main");
           document.body.removeAttribute("data-iu-tool-main");
         }
+        if (sec.indexOf("aff-") === 0) {
+          var setAffViewEarly = function(){
+            var cs = document.getElementById("iuCenterStage");
+            if (cs) cs.setAttribute("data-view", "affiliate");
+          };
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", setAffViewEarly);
+          } else {
+            setAffViewEarly();
+          }
+        }
         /* P0 CLS (tablet 768–900 cold load): mirror iuApplyMobileMainShellFromSectionNav (assets/app.js) —
            non-hub sekce nebo hub s topicem = main column; bez early class se nejdřív vykreslil
            gate (Silver, min-height 656px) a pozdní iu-mobileMainVisible ho zhasl (~0.85 layout shift).
