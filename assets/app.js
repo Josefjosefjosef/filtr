@@ -8564,6 +8564,7 @@ function buildVideoAsArticleCard(it) {
   function iuDesktopPreviewNavScrollAfterOpen(){
     try {
       if (!iuIsDesktopNavLayout()) return false;
+      try { iuDesktopHomeSectionTopGapSync(); } catch (_) {}
       try { window.__iuSectionSwitchScrollArm = true; } catch (_) {}
       try {
         var left = 48;
@@ -8960,6 +8961,24 @@ function buildVideoAsArticleCard(it) {
   }
 
   /** P0 desktop-only (≥1025px + /projects/ hub): body.iu-desktop-home-grid — 2-column section tiles; mobile/tablet unchanged. */
+  function iuDesktopHomeSectionTopGapSync(){
+    try{
+      const stage = document.getElementById("iuCenterStage");
+      const root = document.documentElement;
+      if (!stage) return;
+      if (!document.body || !document.body.classList.contains("iu-desktop-home-grid") || !iuIsDesktopNavLayout()) {
+        root.style.removeProperty("--iu-dhp-center-stage-mt");
+        return;
+      }
+      const homecards = document.getElementById("iuSilverTallScrollSection");
+      const stack = document.getElementById("iuSilverTopCardsStack");
+      if (!homecards || !stack) return;
+      const stackTop = stack.getBoundingClientRect().top;
+      const hcBottom = homecards.getBoundingClientRect().bottom;
+      const margin = Math.max(20, Math.round(hcBottom - stackTop + 20));
+      root.style.setProperty("--iu-dhp-center-stage-mt", margin + "px");
+    }catch(_){}
+  }
   function iuDesktopHomeSectionGridGuardApply(){
     try{
       const body = document.body;
@@ -8967,6 +8986,7 @@ function buildVideoAsArticleCard(it) {
       const vp = document.getElementById("iuSilverTallScrollViewport");
       if (!vp) {
         body.classList.remove("iu-desktop-home-grid");
+        try{ iuDesktopHomeSectionTopGapSync(); }catch(_){}
         return;
       }
       const p = typeof location !== "undefined" && location && location.pathname ? String(location.pathname) : "";
@@ -8980,6 +9000,7 @@ function buildVideoAsArticleCard(it) {
       const ok = !!(hub && mq && mq.matches);
       if (ok) body.classList.add("iu-desktop-home-grid");
       else body.classList.remove("iu-desktop-home-grid");
+      try{ iuDesktopHomeSectionTopGapSync(); }catch(_){}
     }catch(_){}
   }
   function iuDesktopHomeSectionGridGuardInit(){
@@ -8989,6 +9010,7 @@ function buildVideoAsArticleCard(it) {
     }catch{}
     try{
       window.iuDesktopHomeSectionGridGuardApply = iuDesktopHomeSectionGridGuardApply;
+      window.iuDesktopHomeSectionTopGapSync = iuDesktopHomeSectionTopGapSync;
     }catch{}
     iuDesktopHomeSectionGridGuardApply();
     try{
@@ -8997,8 +9019,17 @@ function buildVideoAsArticleCard(it) {
       else if (mq && mq.addListener) mq.addListener(iuDesktopHomeSectionGridGuardApply);
     }catch{}
     try{
-      window.addEventListener("resize", iuDesktopHomeSectionGridGuardApply, { passive: true });
+      window.addEventListener("resize", iuDesktopHomeSectionTopGapSync, { passive: true });
     }catch{}
+    try{
+      const homecards = document.getElementById("iuSilverTallScrollSection");
+      if (homecards && typeof ResizeObserver === "function") {
+        const ro = new ResizeObserver(function () {
+          try{ iuDesktopHomeSectionTopGapSync(); }catch(_){}
+        });
+        ro.observe(homecards);
+      }
+    }catch(_){}
     try{ iuDesktopHomeCardsDragInit(); }catch(_){}
   }
 
