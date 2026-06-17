@@ -1,8 +1,64 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-06-17T10:37:00.184126Z",
+  "ingestedAt": "2026-06-17T11:37:34.273525Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Rutte potvrdil český dluh vůči NATO. Na obranu loni vydalo málo peněz",
+      "url": "https://www.e15.cz/zahranicni/geopolitika/rutte-potvrdil-cesky-dluh-vuci-nato-na-obranu-loni-vydalo-malo-penez-1433632",
+      "dt": "2026-06-17T10:46:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "dluh",
+        "loni",
+        "málo",
+        "nato",
+        "obranu",
+        "peněz",
+        "potvrdil",
+        "rutte",
+        "vydalo",
+        "vůči",
+        "český"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jedna z největších bank v Česku oznámila víkendovou odstávku. Vypne bankovnictví i bankovní identitu",
+      "url": "https://www.e15.cz/finexpert/banky-a-ucty/jedna-z-nejvetsich-bank-v-cesku-oznamila-vikendovou-odstavku-vypne-bankovnictvi-i-bankovni-identitu-1433631",
+      "dt": "2026-06-17T10:40:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "bank",
+        "bankovnictví",
+        "bankovní",
+        "identitu",
+        "jedna",
+        "největších",
+        "odstávku",
+        "oznámila",
+        "vypne",
+        "víkendovou",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1056,60 +1112,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Stovky lidí přijdou o práci. Česká televize a rozhlas se chystají na tvrdé škrty",
-      "url": "https://www.e15.cz/domaci/stovky-lidi-prijdou-o-praci-ceska-televize-a-rozhlas-se-chystaji-na-tvrde-skrty-1433567",
-      "dt": "2026-06-15T14:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "chystají",
-        "lidí",
-        "práci",
-        "přijdou",
-        "rozhlas",
-        "stovky",
-        "televize",
-        "tvrdé",
-        "česká",
-        "škrty"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Souboj o zakázku za stovky miliard. České dráhy nabídly o téměř 20 miliard méně než RegioJet",
-      "url": "https://www.e15.cz/byznys/doprava-a-logistika/souboj-o-zakazku-za-stovky-miliard-ceske-drahy-nabidly-o-temer-20-miliard-mene-nez-regiojet-1433571",
-      "dt": "2026-06-15T13:56:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "dráhy",
-        "miliard",
-        "nabídly",
-        "než",
-        "regiojet",
-        "souboj",
-        "stovky",
-        "téměř",
-        "zakázku",
-        "české"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1120,7 +1122,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 51504,
+      "bytes": 51170,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1157,11 +1159,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-17T10:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-17T10:46:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 36,
-          "zpravy": 4
+          "finance": 37,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1173,6 +1175,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rutte potvrdil český dluh vůči NATO. Na obranu loni vydalo málo peněz",
+            "publishedAt": "2026-06-17T10:46:00Z"
+          },
+          {
+            "title": "Jedna z největších bank v Česku oznámila víkendovou odstávku. Vypne bankovnictví i bankovní identitu",
+            "publishedAt": "2026-06-17T10:40:00Z"
+          },
           {
             "title": "Ropný šok se může rychle otočit. IEA čeká příští rok nadbytek nabídky",
             "publishedAt": "2026-06-17T10:01:00Z"
@@ -1196,14 +1206,6 @@
           {
             "title": "Koncesionářské poplatky pro firmy 2026: Aktuální pravidla a chystané zrušení",
             "publishedAt": "2026-06-17T08:00:00Z"
-          },
-          {
-            "title": "Koncesionářské poplatky za televizi a rozhlas 2026: Aktuální výše a pravidla",
-            "publishedAt": "2026-06-17T07:00:00Z"
-          },
-          {
-            "title": "Babiš selhal. Hraje si na bosse, ale u Heřmanické haldy  působí jen jako další slibotechna",
-            "publishedAt": "2026-06-17T06:42:00Z"
           }
         ]
       }
