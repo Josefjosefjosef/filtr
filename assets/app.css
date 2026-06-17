@@ -15696,7 +15696,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuSilverTallScrollViewport [class$="PreviewCardMount"] + [class$="PreviewCardMount"]{
     margin-top: 9px !important;
   }
-  #iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){
+  #iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education,.box-prehled-dne){
     margin: 0 !important;
   }
   
@@ -15704,7 +15704,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuSilverTallScrollViewport:has([data-iu-news-preview-card="1"]) [data-iu-silver-tall-scroll-probe]{
     display: none !important;
   }
-  .silver-welcome-stack--evening #iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){
+  .silver-welcome-stack--evening #iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education,.box-prehled-dne){
     border-color: rgba(190, 205, 255, 0.15) !important;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.028) 100%),
@@ -15772,10 +15772,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 #iuSilverTallScrollViewport [class$="PreviewCardMount"] + [class$="PreviewCardMount"]{
   margin-top:2px;
 }
-.iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){
+.iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education,.box-prehled-dne){
   appearance:none;-webkit-appearance:none;width:100%;max-width:100%;min-width:0;display:grid;grid-template-rows:auto 1fr;border:1px solid rgba(15,35,55,.16);border-radius:12px;background:rgba(255,255,255,.78);box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 10px 26px rgba(8,14,22,.1);color:#0b1f33;text-align:left;padding:0;margin:6px 0 2px 0;cursor:pointer;overflow:hidden
 }
-.silver-welcome-stack--evening .iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:rgba(230,238,248,.92)}
+.silver-welcome-stack--evening .iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education,.box-prehled-dne){border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:rgba(230,238,248,.92)}
 .iuSilverTallScrollViewport .iuNewsPreviewHeader{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid rgba(15,35,55,.14);min-width:0}
 .iuSilverTallScrollViewport .iuNewsPreviewTitleRow{display:flex;align-items:center;gap:10px;min-width:0;flex:1 1 auto}
 .iuSilverTallScrollViewport .iuNewsPreviewLabel{font-weight:800;flex:0 0 auto}
@@ -15784,9 +15784,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 .iuSilverTallScrollViewport .iuNewsPreviewFreshness{flex:1 1 auto;min-width:0;font-size:12px;line-height:1.2;font-weight:600;color:currentColor;opacity:.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .iuSilverTallScrollViewport .iuNewsPreviewChevron{flex:0 0 auto;width:18px;height:18px;opacity:.62;color:currentColor}
 .iuSilverTallScrollViewport .iuNewsPreviewBody{display:grid;grid-template-columns:min(112px,28vw) 1fr;gap:12px;padding:12px;min-width:0;justify-items:start;align-items:start}
-.iuSilverTallScrollViewport .iuNewsPreviewCard .iuNewsPreviewImgWrap,.iuSilverTallScrollViewport :is(.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education) .iuNewsPreviewImgWrap{display:block;width:100%;height:84px;min-height:84px;max-height:84px;overflow:hidden;border-radius:0 !important;background:rgba(15,35,55,.08);box-sizing:border-box;flex-shrink:0}
+.iuSilverTallScrollViewport .iuNewsPreviewCard .iuNewsPreviewImgWrap,.iuSilverTallScrollViewport :is(.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education,.box-prehled-dne) .iuNewsPreviewImgWrap{display:block;width:100%;height:84px;min-height:84px;max-height:84px;overflow:hidden;border-radius:0 !important;background:rgba(15,35,55,.08);box-sizing:border-box;flex-shrink:0}
 .iuSilverTallScrollViewport .iuNewsPreviewCard .iuNewsPreviewImg{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 35%;border-radius:0 !important}
-.iuSilverTallScrollViewport :is(.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education) .iuNewsPreviewImg{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 50%;border-radius:0 !important}
+.iuSilverTallScrollViewport :is(.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education,.box-prehled-dne) .iuNewsPreviewImg{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 50%;border-radius:0 !important}
 .iuSilverTallScrollViewport :is(.iu-previewBadge--finance,.iu-previewBadge--health,.iu-previewBadge--travel,.iu-previewBadge--games,.iu-previewBadge--culture,.iu-previewBadge--science-history,.iu-previewBadge--education){flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;height:18px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:800;letter-spacing:.03em;line-height:1;white-space:nowrap}
 .iuSilverTallScrollViewport .iu-previewBadge--finance{background:linear-gradient(180deg,#e8cf7a 0%,#c9a84a 55%,#b8922a 100%);color:#2a1f0a;border:1px solid rgba(160,120,40,.38);box-shadow:0 1px 0 rgba(255,255,255,.45) inset}
 .silver-welcome-stack--evening .iuSilverTallScrollViewport .iu-previewBadge--finance{background:linear-gradient(180deg,#d9bc62 0%,#a88428 100%);color:#f6f0d8;border-color:rgba(255,220,150,.28);box-shadow:0 1px 0 rgba(255,255,255,.22) inset}
@@ -16456,7 +16456,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     align-items: start;
     align-content: start;
     
-    min-height: min(78vh, 820px);
+    min-height: 0;
     
     overflow: visible !important;
     scrollbar-gutter: auto !important;
