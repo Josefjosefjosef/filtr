@@ -73,8 +73,8 @@
   }
 
   body.iu-desktop-home-grid #iuSilverTallScrollViewport {
-    row-gap: 10px !important;
-    column-gap: 10px !important;
+    row-gap: 15px !important;
+    column-gap: 15px !important;
   }
 
   /* ── Welcome box: 3 rows (greet / date / svátek) ── */
@@ -320,10 +320,64 @@
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewHeadline {
     min-height: 0;
     font-weight: 650;
+    color: #0b1f33 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewHeadline2 {
     font-weight: 600;
+    color: #0b1f33 !important;
+    opacity: 0.82 !important;
+    visibility: visible !important;
+  }
+
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewBadge,
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuSportPreviewLiveBadge {
+    height: 21px;
+    padding: 0 10px;
+    border-radius: 7px;
+    font-size: 14px;
+  }
+
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewFreshness {
+    font-size: 15px;
+  }
+
+  /* Desktop: no dark evening shell on homecards / welcome stack (greeting text unchanged) */
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack--evening,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack--evening #iuSilverWeatherCard,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack--evening #iuSilverWelcomeCard {
+    background: transparent !important;
+    color: inherit !important;
+  }
+
+  body.iu-desktop-home-grid .silver-welcome-stack--evening #iuSilverTallScrollViewport :is(
+    .iuNewsPreviewCard,
+    .box-sport,
+    .box-finance,
+    .box-health,
+    .box-travel,
+    .box-games,
+    .box-culture,
+    .box-science-history,
+    .box-education,
+    .box-prehled-dne
+  ) {
+    border-color: rgba(15, 35, 55, 0.16) !important;
+    background: rgba(255, 255, 255, 0.78) !important;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.55) inset, 0 10px 26px rgba(8, 14, 22, 0.1) !important;
+    color: #0b1f33 !important;
+  }
+
+  body.iu-desktop-home-grid .silver-welcome-stack--evening #iuSilverTallScrollViewport .iuNewsPreviewHeader {
+    border-bottom-color: rgba(15, 35, 55, 0.1) !important;
+  }
+
+  body.iu-desktop-home-grid .silver-welcome-stack--evening #iuSilverTallScrollViewport .box-prehled-dne {
+    border-color: rgba(15, 35, 55, 0.16) !important;
+    background: rgba(255, 255, 255, 0.78) !important;
+    color: #0b1f33 !important;
   }
 
   /* ── Homecards drag & drop (desktop only) ── */
@@ -404,9 +458,9 @@
   }
 
   body.iu-desktop-home-grid .silver-welcome-stack--evening #iuSilverTallScrollViewport .box-prehled-dne {
-    border-color: rgba(255, 255, 255, 0.18);
-    background: rgba(255, 255, 255, 0.06);
-    color: rgba(230, 238, 248, 0.92);
+    border-color: rgba(15, 35, 55, 0.16);
+    background: rgba(255, 255, 255, 0.78);
+    color: #0b1f33;
   }
 
   body.iu-desktop-home-grid #silver-slot .iuSilverWelcomeSticky {
@@ -416,5 +470,17 @@
   body.iu-desktop-home-grid #silver-slot.silver-slot,
   body.iu-desktop-home-grid .iuSilverTopCardsStack #silver-slot.silver-slot {
     margin-bottom: 0 !important;
+  }
+
+  /* Desktop: keep afternoon/light page shell during evening daypart (greeting unchanged) */
+  html.iu-time-evening body.iu-desktop-home-grid,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-desktop-home-grid,
+  html.iu-time-evening body.iu-desktop-home-grid #leftContent,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-desktop-home-grid #leftContent,
+  html.iu-time-evening body.iu-desktop-home-grid #newsList,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-desktop-home-grid #newsList {
+    background: var(--iu-page-bg, #f8fafc) !important;
+    background-color: var(--iu-page-bg, #f8fafc) !important;
+    background-image: none !important;
   }
 }

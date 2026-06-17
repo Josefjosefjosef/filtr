@@ -1194,6 +1194,7 @@ try {
   // FEED VIDEO EVERY 8 (YouTube preview card, lazy embed)
   const IU_FEED_VIDEO_ENABLED = true;
   const IU_FEED_VIDEO_EVERY = 8;
+  const IU_PREHLED_DNE_VIDEO_EVERY = 10;
   const IU_FEED_VIDEO_MAX_PER_PAGE = 25;
   /** P0 UI: first DOM append batch ≈ first viewport; follow-up batches keep main-thread slices small. */
   const IU_FEED_FIRST_DOM_BATCH = 12;
@@ -3785,7 +3786,7 @@ try {
     const articleSelectorUsed = picked.selectorUsed;
     const articles = picked.articles;
 
-    const insertEveryN = Number(IU_FEED_VIDEO_EVERY) || 8;
+    const insertEveryN = iuFeedVideoInsertEveryN();
     const maxVideosPerPage =
       Number(state?.videosRaw?.maxVideosPerPage) || Number(IU_FEED_VIDEO_MAX_PER_PAGE) || 25;
     const slotCount = Math.min(maxVideosPerPage, Math.floor(articles.length / insertEveryN));
@@ -5391,6 +5392,27 @@ try {
     return allowed.has(k) ? k : IU_ARTICLE_HUB_SECTION;
   }
 
+  function iuIsPrehledDneFeedContext() {
+    try {
+      if (document.body && document.body.classList.contains("iu-home")) return false;
+      const p = new URLSearchParams(String(location.search || ""));
+      const section = iuFeedPagingNormalizeSectionRaw(p.get("section") || IU_ARTICLE_HUB_SECTION);
+      if (!iuArticleHubSectionP(section)) return false;
+      let topic = String(p.get("topic") || "").trim().toLowerCase();
+      if (topic === "tech" || topic === "bydleni") topic = "all";
+      return !topic || topic === "all";
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuFeedVideoInsertEveryN() {
+    try {
+      if (iuIsPrehledDneFeedContext()) return Number(IU_PREHLED_DNE_VIDEO_EVERY) || 10;
+    } catch (_) {}
+    return Number(IU_FEED_VIDEO_EVERY) || 8;
+  }
+
   /**
    * Článkový hub (?section=feed&topic=…): 100 článků na obrazovku + tlačítko „Další“ (render-only, data už v cache).
    * Zprávy, Sport, Finance, Zdraví, Cestování, Hry, Kultura / Akce, Věda & Historie, Vzdělávání: stejné chování.
@@ -5783,7 +5805,7 @@ try {
       !isHome &&
       !hasVideoSection;
     const videoPool = shouldInjectVideos ? normalizeVideoList(state.videosRaw || {}) : [];
-    const insertEveryN = Number(IU_FEED_VIDEO_EVERY) || 8;
+    const insertEveryN = iuFeedVideoInsertEveryN();
     const maxVideosPerPage = Number(state?.videosRaw?.maxVideosPerPage) || Number(IU_FEED_VIDEO_MAX_PER_PAGE) || 25;
     const videoCfg = {
       primaryDays: Number(state?.videosRaw?.freshDaysPrimary) || Number(state?.videosRaw?.freshness?.primaryDays) || 14,
@@ -7944,10 +7966,12 @@ function buildVideoAsArticleCard(it) {
     function applyVariantClass(daypart){
       try{
         const k = greetingKeyFromDaypart(daypart);
-        try{ syncHtmlSilverTimeClass(k); }catch{}
+        const visualK =
+          k === "evening" && iuIsDesktopNavLayout() ? "afternoon" : k;
+        try{ syncHtmlSilverTimeClass(visualK); }catch{}
         const variants = ["morning", "lateMorning", "afternoon", "evening"];
         const prefix = "silver-welcome-stack--";
-        const want = prefix + k;
+        const want = prefix + visualK;
         try{
           const slotEl0 = document.getElementById("silver-slot");
           const hostTop0 = document.getElementById("iuTopbarSilverComposerHost");
@@ -8961,6 +8985,41 @@ function buildVideoAsArticleCard(it) {
   }
 
   /** P0 desktop-only (≥1025px + /projects/ hub): body.iu-desktop-home-grid — 2-column section tiles; mobile/tablet unchanged. */
+  function iuDesktopHomeCardsEnsureDomAll() {
+    try {
+      if (!document.body || !document.body.classList.contains("iu-desktop-home-grid")) return;
+      try { iuNewsPreviewEnsureDom(); } catch (_) {}
+      try { iuSportPreviewEnsureDom(); } catch (_) {}
+      try { iuFinancePreviewEnsureDom(); } catch (_) {}
+      try { iuHealthPreviewEnsureDom(); } catch (_) {}
+      try { iuTravelPreviewEnsureDom(); } catch (_) {}
+      try { iuGamesPreviewEnsureDom(); } catch (_) {}
+      try { iuCulturePreviewEnsureDom(); } catch (_) {}
+      try { iuScienceHistoryPreviewEnsureDom(); } catch (_) {}
+      try { iuEducationPreviewEnsureDom(); } catch (_) {}
+      try { iuPrehledDnePreviewEnsureDom(); } catch (_) {}
+      try {
+        if (typeof state !== "undefined" && state && state.hasLoadedData) {
+          iuSilverTallMediaPreviewsRefresh();
+        }
+      } catch (_) {}
+    } catch (_) {}
+  }
+
+  function iuDesktopInitialScrollTopApply() {
+    try {
+      if (!iuIsDesktopNavLayout()) return;
+      const p = new URLSearchParams(String(location.search || ""));
+      if (String(p.get("section") || "").trim()) return;
+      window.scrollTo(0, 0);
+      const se = document.scrollingElement || document.documentElement;
+      if (se) se.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
+    } catch (_) {}
+  }
+
+  try { window.iuDesktopInitialScrollTopApply = iuDesktopInitialScrollTopApply; } catch (_) {}
+
   function iuDesktopHomeSectionTopGapSync(){
     try{
       const stage = document.getElementById("iuCenterStage");
@@ -9006,6 +9065,10 @@ function buildVideoAsArticleCard(it) {
       const ok = !!(hub && mq && mq.matches);
       if (ok) body.classList.add("iu-desktop-home-grid");
       else body.classList.remove("iu-desktop-home-grid");
+      if (ok) {
+        try { iuDesktopHomeCardsEnsureDomAll(); } catch (_) {}
+        try { iuDesktopInitialScrollTopApply(); } catch (_) {}
+      }
       try{ iuDesktopHomeSectionTopGapSync(); }catch(_){}
     }catch(_){}
   }
@@ -9019,6 +9082,7 @@ function buildVideoAsArticleCard(it) {
       window.iuDesktopHomeSectionTopGapSync = iuDesktopHomeSectionTopGapSync;
     }catch{}
     iuDesktopHomeSectionGridGuardApply();
+    try { iuDesktopInitialScrollTopApply(); } catch (_) {}
     try{
       const mq = window.matchMedia && window.matchMedia("(min-width: 1025px)");
       if (mq && mq.addEventListener) mq.addEventListener("change", iuDesktopHomeSectionGridGuardApply);
@@ -15638,7 +15702,11 @@ function buildVideoAsArticleCard(it) {
     }
 
     const tSort0 = audit ? (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) : 0;
+    const prehledDnePureTimeSort = iuIsPrehledDneFeedContext();
     const sortedArts = [...urlDedupedArts].sort((a, b) => {
+      if (prehledDnePureTimeSort) {
+        return cachedPubMs(b) - cachedPubMs(a);
+      }
       const ka = cachedCanonKey(a);
       const kb = cachedCanonKey(b);
       const pa = ka && prevSet.has(ka) ? 1 : 0;
@@ -29014,7 +29082,13 @@ function buildVideoAsArticleCard(it) {
       } else if (resolved.overlayId === "legal") {
         iuOpenOverlay("legal", null);
       } else if (resolved.overlayId === "invoice") {
-        iuOpenOverlay("invoice", null);
+        if (typeof window.iuEnsureInvoiceOverlayBoot === "function") {
+          void window.iuEnsureInvoiceOverlayBoot().then(function () {
+            iuOpenOverlay("invoice", null);
+          });
+        } else {
+          iuOpenOverlay("invoice", null);
+        }
       } else if (resolved.overlayId === "ai") {
         iuOpenOverlay("ai");
       } else {

@@ -541,9 +541,10 @@ font-src 'self' data:;
         .layout>aside.accordionCol :is(.mindMenu-scroll-wrapper,.mindMenu,#iuMindMenuView,section.iu-mailboxes,.iu-mmTopTools,section.iu-mmQuickLinks,#iuMailboxControls),.mainCol>aside.accordionCol :is(.mindMenu-scroll-wrapper,.mindMenu,#iuMindMenuView,section.iu-mailboxes,.iu-mmTopTools,section.iu-mmQuickLinks,#iuMailboxControls){display:none!important}
         #iuDesktopQrBanner,#iuDesktopQrBanner img{display:block!important;width:100%!important;position:static!important;margin:0!important;padding:0!important}
         #iuDesktopQrBanner img{height:auto!important}
-        #iuDesktopRightRailCards{display:flex!important;flex-direction:column!important;width:100%!important;min-width:0!important;gap:20px!important;margin-top:20px!important;box-sizing:border-box!important}
-        #iuDesktopRightRailCards>:is(#iuSilverParcelWatch,#iuSilverFinanceHomeCard,#iuDesktopLegalDocsCard,#iuDesktopInvoiceCard){width:100%!important;max-width:100%!important;margin:0!important;box-sizing:border-box!important}
+        #iuDesktopRightRailCards{display:flex!important;flex-direction:column!important;width:100%!important;min-width:0!important;gap:15px!important;margin-top:20px!important;box-sizing:border-box!important;background:transparent!important}
+        .layout>aside.accordionCol,.mainCol>aside.accordionCol{background:transparent!important;background-color:transparent!important}
         #silver-slot #iuSilverParcelWatch,#silver-slot #iuSilverFinanceHomeCard{display:none!important}
+        @media (min-width:901px){#iuDesktopRightRailCards .iu-desktop-right-rail-banner{display:block!important;width:100%!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important}}
         html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) :is(body,#content,.container,#page,.mainCol,#leftContent,#newsList,#feed,.layout>aside.accordionCol){background:var(--iu-page-bg)!important}
       }
       @media (min-width: 1025px) {
@@ -1698,7 +1699,8 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=20" />
     <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=3" />
-    <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=4" />
+    <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=5" />
+    <link rel="stylesheet" href="/assets/iu-desktop-parcel-watch-overlay.css?v=1" />
     <link rel="preload" as="image" href="/assets/partners/partner-resistance-security-right-rail-v1.png" media="(min-width: 1025px)" />
     <link rel="preload" as="image" href="/assets/partners/partner-iaf-petr-ondrus-right-rail-v1.png" media="(min-width: 1025px)" />
     <link rel="stylesheet" href="/assets/iu-desktop-home-premium.css?v=1" />
@@ -2043,17 +2045,21 @@ font-src 'self' data:;
                       }
                       var daypart = daypartKeyFromHour(new Date().getHours());
                       var k = greetingKeyFromDaypart(daypart);
+                      var visualK = k;
+                      try {
+                        if (k === "evening" && window.matchMedia && window.matchMedia("(min-width: 901px)").matches) visualK = "afternoon";
+                      } catch (eDesk) {}
                       try { window.__IU_SILVER_DAYPART__ = daypart; } catch (e00) {}
                       try { window.__IU_SILVER_WELCOME_PAINT_K__ = k; } catch (e0) {}
                       try { document.documentElement.setAttribute("data-iu-daypart", daypart); } catch (e01) {}
-                      try { document.documentElement.setAttribute("data-iu-silver-welcome-paint", k); } catch (e1) {}
+                      try { document.documentElement.setAttribute("data-iu-silver-welcome-paint", visualK); } catch (e1) {}
                       try {
                         var _iuSilverTimeAll = ["iu-time-morning", "iu-time-late-morning", "iu-time-afternoon", "iu-time-evening"];
                         for (var _iuSi = 0; _iuSi < _iuSilverTimeAll.length; _iuSi++) {
                           document.documentElement.classList.remove(_iuSilverTimeAll[_iuSi]);
                         }
                         var _iuSilverTimeByK = { morning: "iu-time-morning", lateMorning: "iu-time-late-morning", afternoon: "iu-time-afternoon", evening: "iu-time-evening" };
-                        var _iuAddSilverTime = _iuSilverTimeByK[k];
+                        var _iuAddSilverTime = _iuSilverTimeByK[visualK];
                         if (_iuAddSilverTime) document.documentElement.classList.add(_iuAddSilverTime);
                       } catch (eCls) {}
                       var slot = document.getElementById("silver-slot");
@@ -2084,6 +2090,10 @@ font-src 'self' data:;
                       var k = typeof window.__IU_SILVER_WELCOME_PAINT_K__ === "string" && window.__IU_SILVER_WELCOME_PAINT_K__
                         ? window.__IU_SILVER_WELCOME_PAINT_K__
                         : greetingKeyFromDaypart(daypart);
+                      var visualK = k;
+                      try {
+                        if (k === "evening" && window.matchMedia && window.matchMedia("(min-width: 901px)").matches) visualK = "afternoon";
+                      } catch (eDesk) {}
                       var stack = document.currentScript && document.currentScript.parentNode;
                       if (!stack || !stack.classList) return;
                       var prefix = "silver-welcome-stack--";
@@ -2091,7 +2101,7 @@ font-src 'self' data:;
                       for (var i = 0; i < variants.length; i++) {
                         stack.classList.remove(prefix + variants[i]);
                       }
-                      stack.classList.add(prefix + k);
+                      stack.classList.add(prefix + visualK);
                       stack.setAttribute("data-iu-silver-welcome-variant", k);
                       stack.setAttribute("data-iu-daypart", daypart);
                     })();
@@ -3606,59 +3616,26 @@ font-src 'self' data:;
                 <div id="iuDesktopQrBanner" class="iu-desktop-qr-banner" data-iu-desktop-qr-banner="1" aria-label="QR kód pro přidání infoUzel.cz na plochu">
                   <img class="iu-desktop-qr-banner__img" src="/assets/images/silver-desktop-qr-banner.png" alt="QR kód — přidejte infoUzel.cz na plochu" width="360" height="480" decoding="async" />
                 </div>
-                <div id="iuDesktopRightRailCards" class="iu-desktop-right-rail-cards" data-iu-desktop-right-rail-cards="1" aria-label="Desktop postranní karty">
-                  <button type="button" id="iuDesktopLegalDocsCard" class="iuDesktopRightRailActionCard" data-iuq="legaldocs" data-iu-desktop-right-rail-card="1" aria-label="Vzory smluv a plné moci">
-                    <span class="iuDesktopRightRailActionCard__hero">
-                      <span class="iuDesktopRightRailActionCard__content">
-                        <span class="iuDesktopRightRailActionCard__title">📄 Vzory smluv a plné moci</span>
-                        <span class="iuDesktopRightRailActionCard__lead">Smlouvy, plné moci a další dokumenty připravené k vyplnění.</span>
-                      </span>
-                      <span class="iuDesktopRightRailActionCard__illus" aria-hidden="true">
-                        <svg class="iuDesktopRightRailActionCard__illusSvg" viewBox="0 0 72 88" role="img" focusable="false">
-                          <defs>
-                            <linearGradient id="iuDesktopLegalDocsGold" x1="0" y1="0" x2="1" y2="1">
-                              <stop offset="0%" stop-color="currentColor" stop-opacity="0.95"/>
-                              <stop offset="100%" stop-color="currentColor" stop-opacity="0.55"/>
-                            </linearGradient>
-                          </defs>
-                          <g fill="none" stroke="url(#iuDesktopLegalDocsGold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 10h36a4 4 0 0 1 4 4v58a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4V14a4 4 0 0 1 4-4z"/>
-                            <path d="M22 26h28M22 38h28M22 50h18"/>
-                            <path d="M20 68c6-4 12 4 18 0 4-3 8-2 12 2"/>
-                            <path d="M46 58l12 12-6 6-12-12 6-6z"/>
-                            <path d="M52 52l6 6"/>
-                          </g>
-                        </svg>
-                      </span>
-                    </span>
+                <div id="iuDesktopRightRailCards" class="iu-desktop-right-rail-banners" data-iu-desktop-right-rail-cards="1" aria-label="Desktop postranní bannery">
+                  <button type="button" id="iuDesktopParcelBanner" class="iu-desktop-right-rail-banner" data-iu-desktop-parcel-banner="1" aria-label="Vyhledej mi zásilku">
+                    <img class="iu-desktop-right-rail-banner__img" src="/assets/IMAGES%20PC/iu-parcel-tracking-banner.png" alt="Vyhledej mi zásilku" width="360" height="120" decoding="async" />
                   </button>
-                  <button type="button" id="iuDesktopInvoiceCard" class="iuDesktopRightRailActionCard" data-iuq="faktura" data-iu-desktop-right-rail-card="1" aria-label="Vytvořit fakturu">
-                    <span class="iuDesktopRightRailActionCard__hero">
-                      <span class="iuDesktopRightRailActionCard__content">
-                        <span class="iuDesktopRightRailActionCard__title">🧾 Vytvořit fakturu</span>
-                        <span class="iuDesktopRightRailActionCard__lead">Vystavte fakturu, spočítejte DPH a stáhněte PDF během chvilky.</span>
-                      </span>
-                      <span class="iuDesktopRightRailActionCard__illus" aria-hidden="true">
-                        <svg class="iuDesktopRightRailActionCard__illusSvg" viewBox="0 0 72 88" role="img" focusable="false">
-                          <defs>
-                            <linearGradient id="iuDesktopInvoiceGold" x1="0" y1="0" x2="1" y2="1">
-                              <stop offset="0%" stop-color="currentColor" stop-opacity="0.95"/>
-                              <stop offset="100%" stop-color="currentColor" stop-opacity="0.55"/>
-                            </linearGradient>
-                          </defs>
-                          <g fill="none" stroke="url(#iuDesktopInvoiceGold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 14h34a4 4 0 0 1 4 4v46a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4V18a4 4 0 0 1 4-4z"/>
-                            <path d="M18 28h24M18 38h24M18 48h14"/>
-                            <rect x="42" y="8" width="18" height="14" rx="2"/>
-                            <path d="M46 14h10M46 18h6"/>
-                            <rect x="44" y="52" width="20" height="24" rx="3"/>
-                            <path d="M48 60h12M48 66h12M48 72h8"/>
-                            <path d="M24 72h8l2-4 2 4h2"/>
-                          </g>
-                        </svg>
-                      </span>
-                    </span>
+                  <button type="button" id="iuDesktopFinanceBanner" class="iu-desktop-right-rail-banner" data-iuq="fincalc" data-iu-desktop-right-rail-banner="1" aria-label="Osobní finance a kalkulačky">
+                    <img class="iu-desktop-right-rail-banner__img" src="/assets/IMAGES%20PC/iu-personal-finance-calculators-banner.png" alt="Osobní finance a kalkulačky" width="360" height="120" decoding="async" />
                   </button>
+                  <button type="button" id="iuDesktopLegalDocsBanner" class="iu-desktop-right-rail-banner" data-iuq="legaldocs" data-iu-desktop-right-rail-banner="1" aria-label="Vzory smluv a plné moci">
+                    <img class="iu-desktop-right-rail-banner__img" src="/assets/IMAGES%20PC/iu-contracts-power-of-attorney-banner.png" alt="Vzory smluv a plné moci" width="360" height="120" decoding="async" />
+                  </button>
+                  <button type="button" id="iuDesktopInvoiceBanner" class="iu-desktop-right-rail-banner" data-iuq="faktura" data-iu-desktop-right-rail-banner="1" aria-label="Vytvořit fakturu">
+                    <img class="iu-desktop-right-rail-banner__img" src="/assets/IMAGES%20PC/iu-invoice-generator-banner.png" alt="Vytvořit fakturu" width="360" height="120" decoding="async" />
+                  </button>
+                </div>
+                <div id="iuDesktopParcelWatchOverlay" class="iu-desktop-parcel-watch-overlay" hidden aria-hidden="true">
+                  <div class="iu-desktop-parcel-watch-overlay__backdrop" data-iu-desktop-parcel-close="1" tabindex="-1" aria-hidden="true"></div>
+                  <div class="iu-desktop-parcel-watch-overlay__panel" role="dialog" aria-modal="true" aria-label="Vyhledej mi zásilku">
+                    <button type="button" class="iu-desktop-parcel-watch-overlay__close iu-overlayCloseBtn38" aria-label="Zavřít" data-iu-desktop-parcel-close="1">×</button>
+                    <div id="iuDesktopParcelWatchMount" class="iu-desktop-parcel-watch-overlay__mount"></div>
+                  </div>
                 </div>
                 <div id="iuDesktopRightRailPartnerResistance" class="iu-desktop-right-rail-partner" data-iu-desktop-right-rail-partner="resistance-security" aria-label="Partnerská reklama Resistance Security">
                   <div class="iu-desktop-right-rail-partner__adHead" aria-hidden="true">
@@ -5417,31 +5394,80 @@ font-src 'self' data:;
         var mq = window.matchMedia && window.matchMedia("(min-width: 901px)");
         var parcel = document.getElementById("iuSilverParcelWatch");
         var finance = document.getElementById("iuSilverFinanceHomeCard");
-        var legalDocs = document.getElementById("iuDesktopLegalDocsCard");
-        var invoice = document.getElementById("iuDesktopInvoiceCard");
-        var rightRail = document.getElementById("iuDesktopRightRailCards");
+        var mount = document.getElementById("iuDesktopParcelWatchMount");
+        var overlay = document.getElementById("iuDesktopParcelWatchOverlay");
         var stack = document.getElementById("iuSilverWelcomeStack");
         var feedAnchor = document.getElementById("iuSilverWelcomeStackSeparatorHolidayWeather");
-        if (!parcel || !finance || !rightRail || !stack || !feedAnchor) return;
-        function iuDesktopRightRailCardsApply(){
+        if (!parcel || !stack || !feedAnchor) return;
+        function iuDesktopParcelWatchPlacementApply(){
           try{
             var desktop = mq ? mq.matches : (window.innerWidth >= 901);
-            if (desktop) {
-              rightRail.appendChild(parcel);
-              rightRail.appendChild(finance);
-              if (legalDocs) rightRail.appendChild(legalDocs);
-              if (invoice) rightRail.appendChild(invoice);
+            if (desktop && mount) {
+              if (!mount.contains(parcel)) mount.appendChild(parcel);
               return;
             }
-            if (rightRail.contains(parcel)) stack.insertBefore(parcel, feedAnchor);
-            if (rightRail.contains(finance)) stack.insertBefore(finance, feedAnchor);
+            if (mount && mount.contains(parcel)) stack.insertBefore(parcel, feedAnchor);
+            if (overlay) {
+              overlay.hidden = true;
+              overlay.classList.remove("is-open");
+              overlay.setAttribute("aria-hidden", "true");
+              document.body.classList.remove("iu-desktop-parcel-watch-overlay-open");
+            }
           }catch(_){}
         }
-        iuDesktopRightRailCardsApply();
-        try { window.iuDesktopRightRailCardsApply = iuDesktopRightRailCardsApply; } catch (_) {}
-        if (mq && mq.addEventListener) mq.addEventListener("change", iuDesktopRightRailCardsApply);
-        else if (mq && mq.addListener) mq.addListener(iuDesktopRightRailCardsApply);
-        window.addEventListener("resize", iuDesktopRightRailCardsApply, { passive: true });
+        function iuDesktopParcelWatchOverlayOpen(){
+          try{
+            var desktop = mq ? mq.matches : (window.innerWidth >= 901);
+            if (!desktop || !overlay) return;
+            iuDesktopParcelWatchPlacementApply();
+            overlay.hidden = false;
+            overlay.classList.add("is-open");
+            overlay.setAttribute("aria-hidden", "false");
+            document.body.classList.add("iu-desktop-parcel-watch-overlay-open");
+            var inp = document.getElementById("iuSilverParcelWatchInput");
+            if (inp && typeof inp.focus === "function") inp.focus();
+          }catch(_){}
+        }
+        function iuDesktopParcelWatchOverlayClose(){
+          try{
+            if (!overlay) return;
+            overlay.hidden = true;
+            overlay.classList.remove("is-open");
+            overlay.setAttribute("aria-hidden", "true");
+            document.body.classList.remove("iu-desktop-parcel-watch-overlay-open");
+          }catch(_){}
+        }
+        iuDesktopParcelWatchPlacementApply();
+        try { window.iuDesktopParcelWatchPlacementApply = iuDesktopParcelWatchPlacementApply; } catch (_) {}
+        try { window.iuDesktopParcelWatchOverlayOpen = iuDesktopParcelWatchOverlayOpen; } catch (_) {}
+        try { window.iuDesktopParcelWatchOverlayClose = iuDesktopParcelWatchOverlayClose; } catch (_) {}
+        if (mq && mq.addEventListener) mq.addEventListener("change", iuDesktopParcelWatchPlacementApply);
+        else if (mq && mq.addListener) mq.addListener(iuDesktopParcelWatchPlacementApply);
+        window.addEventListener("resize", iuDesktopParcelWatchPlacementApply, { passive: true });
+        document.addEventListener("click", function(e){
+          try{
+            var t = e.target;
+            if (t && t.nodeType === 3) t = t.parentElement;
+            if (!t || typeof t.closest !== "function") return;
+            if (t.closest("[data-iu-desktop-parcel-banner]")) {
+              e.preventDefault();
+              e.stopPropagation();
+              iuDesktopParcelWatchOverlayOpen();
+              return;
+            }
+            if (t.closest("[data-iu-desktop-parcel-close]")) {
+              e.preventDefault();
+              iuDesktopParcelWatchOverlayClose();
+            }
+          }catch(_){}
+        }, true);
+        document.addEventListener("keydown", function(e){
+          try{
+            if (e && e.key === "Escape" && overlay && overlay.classList.contains("is-open")) {
+              iuDesktopParcelWatchOverlayClose();
+            }
+          }catch(_){}
+        });
       }catch(_){}
     })();
     </script>
