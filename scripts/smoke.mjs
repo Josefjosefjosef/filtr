@@ -520,6 +520,15 @@ async function runSmoke() {
     }
 
     await gotoProjectsMediaForSmoke(page);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(300);
+    await page.evaluate(() => {
+      try {
+        if (typeof window.iuDesktopParcelWatchPlacementApply === "function") {
+          window.iuDesktopParcelWatchPlacementApply();
+        }
+      } catch (_) {}
+    });
     try {
       await page.waitForSelector("#iuSilverParcelWatchInput", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     } catch (e) {
@@ -534,8 +543,6 @@ async function runSmoke() {
         localStorage.removeItem("iu_silver_parcel_watch_v1");
       } catch (_) {}
     });
-    await page.waitForTimeout(200);
-    await page.setViewportSize({ width: 390, height: 844 });
     await page.waitForTimeout(200);
     await page.evaluate(() => {
       const inp = document.getElementById("iuSilverParcelWatchInput");
