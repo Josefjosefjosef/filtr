@@ -8,6 +8,9 @@ import path from "path";
 import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
+import {
+  clickDesktopNav,
+} from "./guards/desktop-nav-targets.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -87,8 +90,7 @@ function readFeedHeaderFile(page) {
 }
 
 async function clickRail(page, accent) {
-  await page.waitForSelector(`#iuLeftRail a[data-accent="${accent}"]`, { timeout: 60000 });
-  await page.click(`#iuLeftRail a[data-accent="${accent}"]`);
+  await clickDesktopNav(page, accent);
 }
 
 async function waitFeedSettled(page, expect, timeoutMs) {

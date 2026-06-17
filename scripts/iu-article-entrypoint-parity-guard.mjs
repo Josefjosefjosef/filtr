@@ -15,6 +15,12 @@ import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
 
+import {
+  clickDesktopNav,
+  desktopNavSelector,
+  waitDesktopNavTarget,
+} from "./guards/desktop-nav-targets.mjs";
+
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
@@ -214,9 +220,7 @@ async function captureInitialSnapshot(page, expectedSection, legStartIdx, networ
 }
 
 async function clickRail(page, accent) {
-  const sel = `#iuLeftRail a[data-accent="${accent}"]`;
-  await page.waitForSelector(sel, { timeout: 60000 });
-  await page.click(sel);
+  await clickDesktopNav(page, accent);
   await page.waitForTimeout(400);
 }
 

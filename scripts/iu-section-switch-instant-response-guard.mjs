@@ -14,6 +14,12 @@ import {
   isIgnorableGuardConsoleError,
 } from "./proofs/open_meteo_guard_stub.cjs";
 
+import {
+  clickDesktopNav,
+  desktopNavSelector,
+  waitDesktopNavTarget,
+} from "./guards/desktop-nav-targets.mjs";
+
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
@@ -97,8 +103,11 @@ async function measureTransition(page, fromAccent, toAccent) {
   );
   await page.waitForTimeout(300);
 
+  const toNavSelector = desktopNavSelector(toAccent);
+  await waitDesktopNavTarget(page, toAccent);
+
   return page.evaluate(
-    async ({ fromHeader, toHeader, toAccent, fullRenderMaxMs }) => {
+    async ({ fromHeader, toHeader, toAccent, toNavSelector, fullRenderMaxMs }) => {
       function snap() {
         const feed = document.getElementById("feed");
         const img =
@@ -116,8 +125,8 @@ async function measureTransition(page, fromAccent, toAccent) {
         return { headerFile, switching, ready, cards, topic };
       }
 
-      const el = document.querySelector('#iuLeftRail a[data-accent="' + toAccent + '"]');
-      if (!el) return { error: "no rail link" };
+      const el = document.querySelector(toNavSelector);
+      if (!el) return { error: "no nav target" };
 
       const tClick = performance.now();
       let clickToCorrectHeaderMs = null;
@@ -178,7 +187,7 @@ async function measureTransition(page, fromAccent, toAccent) {
         fullRenderDurationMs,
       };
     },
-    { fromHeader, toHeader, toAccent, fullRenderMaxMs: FULL_RENDER_MAX_MS }
+    { fromHeader, toHeader, toAccent, toNavSelector, fullRenderMaxMs: FULL_RENDER_MAX_MS }
   );
 }
 

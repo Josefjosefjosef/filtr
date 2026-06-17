@@ -293,7 +293,8 @@
     .box-games,
     .box-culture,
     .box-science-history,
-    .box-education
+    .box-education,
+    .box-prehled-dne
   ) .iuNewsPreviewImgWrap {
     width: auto;
     height: var(--iu-dhp-homecard-img-h);
@@ -314,5 +315,24 @@
 
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewHeadline2 {
     font-weight: 600;
+  }
+
+  /* ── Homecards drag & drop (desktop only) ── */
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport [class$="PreviewCardMount"] {
+    cursor: grab;
+    touch-action: none;
+    transition: opacity 120ms ease, transform 120ms ease;
+  }
+
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport [class$="PreviewCardMount"].iu-homecard-dragging {
+    opacity: 0.72;
+    cursor: grabbing;
+    z-index: 2;
+  }
+
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport [class$="PreviewCardMount"].iu-homecard-drag-over {
+    outline: 2px dashed rgba(148, 163, 184, 0.55);
+    outline-offset: 2px;
+    border-radius: 12px;
   }
 }
