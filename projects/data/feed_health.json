@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-17T01:47:05.562424Z",
+  "updatedAt": "2026-06-17T02:45:39.367823Z",
   "feeds": {
     "https://www.ceska-justice.cz/feed/": {
       "topic": "aktualne",
@@ -27,7 +27,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41313,
+      "bytes": 41467,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -97,6 +97,38 @@
       "bozoException": "",
       "bozo_but_used": false
     },
+    "https://servis.idnes.cz/rss.aspx?c=zpravodaj": {
+      "topic": "aktualne",
+      "source": "iDNES / Zprávy",
+      "accepted": 30,
+      "status": "OK",
+      "itemsParsed": 30,
+      "itemsKept": 30,
+      "httpStatus": 200,
+      "contentType": "text/xml; charset=utf-8",
+      "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
+      "bytes": 48231,
+      "reason": "",
+      "bozo": false,
+      "bozoException": "",
+      "bozo_but_used": false
+    },
+    "https://servis.idnes.cz/rss.aspx?c=bonusweb": {
+      "topic": "hry",
+      "source": "iDNES / Bonusweb",
+      "accepted": 30,
+      "status": "OK",
+      "itemsParsed": 30,
+      "itemsKept": 30,
+      "httpStatus": 200,
+      "contentType": "text/xml; charset=utf-8",
+      "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
+      "bytes": 42202,
+      "reason": "",
+      "bozo": false,
+      "bozoException": "",
+      "bozo_but_used": false
+    },
     "https://servis.idnes.cz/rss.aspx?c=sport": {
       "topic": "sport",
       "source": "iDNES / Sport",
@@ -161,6 +193,38 @@
       "bozoException": "",
       "bozo_but_used": false
     },
+    "https://www.novinky.cz/rss/domaci": {
+      "topic": "aktualne",
+      "source": "Novinky / Domácí",
+      "accepted": 30,
+      "status": "OK",
+      "itemsParsed": 30,
+      "itemsKept": 30,
+      "httpStatus": 200,
+      "contentType": "application/rss+xml; charset=utf-8",
+      "finalUrl": "https://www.novinky.cz/rss/domaci",
+      "bytes": 49517,
+      "reason": "",
+      "bozo": false,
+      "bozoException": "",
+      "bozo_but_used": false
+    },
+    "https://www.novinky.cz/rss/zahranicni": {
+      "topic": "aktualne",
+      "source": "Novinky / Zahraniční",
+      "accepted": 30,
+      "status": "OK",
+      "itemsParsed": 30,
+      "itemsKept": 30,
+      "httpStatus": 200,
+      "contentType": "application/rss+xml; charset=utf-8",
+      "finalUrl": "https://www.novinky.cz/rss/zahranicni",
+      "bytes": 49517,
+      "reason": "",
+      "bozo": false,
+      "bozoException": "",
+      "bozo_but_used": false
+    },
     "https://www.pedagogicke.info/feeds/posts/default?alt=rss": {
       "topic": "vzdelavani",
       "source": "Pedagogické.info",
@@ -177,6 +241,22 @@
       "bozoException": "",
       "bozo_but_used": false
     },
+    "https://www.seznamzpravy.cz/rss/domaci": {
+      "topic": "aktualne",
+      "source": "Seznam Zprávy / Domácí",
+      "accepted": 30,
+      "status": "OK",
+      "itemsParsed": 30,
+      "itemsKept": 30,
+      "httpStatus": 200,
+      "contentType": "application/rss+xml; charset=utf-8",
+      "finalUrl": "https://www.seznamzpravy.cz/rss/domaci",
+      "bytes": 45896,
+      "reason": "",
+      "bozo": false,
+      "bozoException": "",
+      "bozo_but_used": false
+    },
     "https://www.sport.cz/rss": {
       "topic": "sport",
       "source": "Sport.cz",
@@ -187,7 +267,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40660,
+      "bytes": 40087,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -221,6 +301,22 @@
       "finalUrl": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
       "bytes": 0,
       "reason": "disallowed_by_robots",
+      "bozo": false,
+      "bozoException": "",
+      "bozo_but_used": false
+    },
+    "https://zing.cz/rss/all": {
+      "topic": "hry",
+      "source": "Zing",
+      "accepted": 40,
+      "status": "OK",
+      "itemsParsed": 200,
+      "itemsKept": 40,
+      "httpStatus": 200,
+      "contentType": "text/xml;charset=utf-8",
+      "finalUrl": "https://zing.cz/rss/all",
+      "bytes": 125864,
+      "reason": "",
       "bozo": false,
       "bozoException": "",
       "bozo_but_used": false
