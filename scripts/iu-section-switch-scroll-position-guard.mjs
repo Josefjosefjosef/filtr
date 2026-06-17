@@ -15,6 +15,12 @@ import {
   isIgnorableGuardConsoleError,
 } from "./proofs/open_meteo_guard_stub.cjs";
 
+import {
+  discoverDesktopNavSections,
+  desktopNavSelector,
+  waitDesktopNavTarget,
+} from "./guards/desktop-nav-targets.mjs";
+
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
@@ -139,65 +145,14 @@ function readMetricsScript(distanceMax) {
 }
 
 async function discoverRailSections(page) {
-  const raw = await page.evaluate(() => {
-    const items = Array.from(document.querySelectorAll("#iuLeftRail .iu-leftNavItem[data-accent]"));
-    const out = [];
-    for (const el of items) {
-      const accent = String(el.getAttribute("data-accent") || "").trim().toLowerCase();
-      if (!accent) continue;
-      const rect = el.getBoundingClientRect();
-      if (rect.width < 1 || rect.height < 1) continue;
-      const cs = window.getComputedStyle(el);
-      if (cs.display === "none" || cs.visibility === "hidden" || cs.pointerEvents === "none") continue;
-      const topicRaw = String(el.getAttribute("data-media-topic") || "").trim().toLowerCase();
-      const topic = topicRaw && topicRaw !== "all" ? topicRaw : "";
-      const label = String(el.textContent || "").replace(/\\s+/g, " ").trim().slice(0, 60);
-      out.push({ accent, topic, label, topicRaw, hasMediaTopicAttr: !!(topicRaw && topicRaw !== "all") });
-    }
-    return out;
-  });
-
-  const sections = [];
-  const seen = new Set();
-  for (const row of raw) {
-    const key = row.accent + "|" + (row.topic || "");
-    if (seen.has(key)) continue;
-    seen.add(key);
-
-    let kind = "tool";
-    let expectTopic = row.topic || "";
-    let headerFile = "";
-
-    if (row.topic) {
-      kind = "feed-topic";
-      expectTopic = row.topic;
-      headerFile = FEED_HEADER_BY_KEY[row.topic] || "";
-    } else if (row.accent === "travel") {
-      kind = "tool";
-      expectTopic = "";
-      headerFile = "";
-    } else if (FEED_HEADER_BY_KEY[row.accent]) {
-      kind = "feed-section";
-      expectTopic = row.accent;
-      headerFile = FEED_HEADER_BY_KEY[row.accent];
-    } else if (row.accent === "media" || row.topicRaw === "all") {
-      kind = "feed-hub";
-      expectTopic = "";
-      headerFile = "section-prehled-dne.jpg";
-    }
-
-    sections.push({
-      accent: row.accent,
-      topic: expectTopic,
-      selectorTopic: row.hasMediaTopicAttr ? row.topic : "",
-      label: row.label,
-      kind,
-      headerFile,
-      skipScrollDown: kind === "tool",
-    });
+  await page.waitForSelector("#iuLeftRail .iu-leftNavItem[data-accent]", { timeout: 90000 });
+  for (const sec of discoverDesktopNavSections()) {
+    if (sec.kind === "tool") continue;
+    try {
+      await waitDesktopNavTarget(page, sec.accent, 120000);
+    } catch (_) {}
   }
-
-  return sections;
+  return discoverDesktopNavSections();
 }
 
 async function scrollFeedDown(page) {
@@ -269,9 +224,7 @@ async function waitSectionReady(page, sec, timeoutMs) {
 }
 
 async function measureSectionClick(page, sec, prevAccent) {
-  const selector = `#iuLeftRail a.iu-leftNavItem[data-accent="${sec.accent}"]${
-    sec.selectorTopic ? `[data-media-topic="${sec.selectorTopic}"]` : ""
-  }`;
+  const selector = sec.navSelector || desktopNavSelector(sec.accent);
   await page.waitForSelector(selector, { timeout: 60000 });
   const metricsFn = readMetricsScript(DISTANCE_MAX_PX);
   const before = await page.evaluate(metricsFn);
@@ -340,9 +293,7 @@ async function runSuite(page) {
 
   const start =
     testRoute.find((s) => s.accent === "zpravy" && s.kind === "feed-topic") || testRoute[0];
-  const startSel = `#iuLeftRail a.iu-leftNavItem[data-accent="${start.accent}"]${
-    start.selectorTopic ? `[data-media-topic="${start.selectorTopic}"]` : ""
-  }`;
+  const startSel = start.navSelector || desktopNavSelector(start.accent);
   await page.click(startSel);
   await waitSectionReady(page, start, SECTION_SETTLE_MS);
   await page.waitForTimeout(300);

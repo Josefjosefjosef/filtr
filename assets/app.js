@@ -8548,6 +8548,89 @@ function buildVideoAsArticleCard(it) {
     return iuPreviewPickLatestTwoForTopic("vzdelavani");
   }
 
+  function iuPrehledDnePreviewPickLatestTwoFromState(){
+    return iuPreviewPickLatestTwoForTopic("all");
+  }
+
+  /** P0 desktop ≥901px: 3-column layout — sections render below homecards block. */
+  function iuIsDesktopNavLayout(){
+    try {
+      return !!(window.matchMedia && window.matchMedia("(min-width: 901px)").matches);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuDesktopPreviewNavScrollAfterOpen(){
+    try {
+      if (!iuIsDesktopNavLayout()) return false;
+      try { window.__iuSectionSwitchScrollArm = true; } catch (_) {}
+      try {
+        var left = 48;
+        var step = function () {
+          try {
+            var feed = document.getElementById("feed");
+            var feedReady =
+              feed &&
+              String(feed.getAttribute("data-feed-ready") || "") === "true" &&
+              String(feed.getAttribute("data-feed-switching") || "") !== "1";
+            if (typeof iuScrollToActiveSectionStartInstant === "function") {
+              iuScrollToActiveSectionStartInstant();
+            }
+            if (feedReady) {
+              try { window.__iuSectionSwitchScrollArm = false; } catch (_) {}
+              return;
+            }
+          } catch (_) {}
+          left -= 1;
+          if (left > 0) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      } catch (_) {}
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuDesktopConsumeSectionSwitchScrollIfArmed(){
+    try {
+      if (!iuIsDesktopNavLayout()) return;
+      if (typeof window === "undefined" || !window.__iuSectionSwitchScrollArm) return;
+      window.__iuSectionSwitchScrollArm = false;
+      if (typeof iuScrollToActiveSectionStartInstant === "function") {
+        iuScrollToActiveSectionStartInstant();
+        try {
+          requestAnimationFrame(function () {
+            try { iuScrollToActiveSectionStartInstant(); } catch (_) {}
+          });
+        } catch (_) {}
+      }
+    } catch (_) {}
+  }
+
+  function iuDesktopScrollFallbackToTopSmooth(){
+    try {
+      requestAnimationFrame(function () {
+        try {
+          requestAnimationFrame(function () {
+            try {
+              if (typeof window !== "undefined" && typeof window.iuScrollMainToTopSmooth === "function") {
+                window.iuScrollMainToTopSmooth();
+              }
+            } catch (_) {}
+          });
+        } catch (_) {}
+      });
+    } catch (_) {
+      try {
+        if (typeof window !== "undefined" && typeof window.iuScrollMainToTopSmooth === "function") {
+          window.iuScrollMainToTopSmooth();
+        }
+      } catch (_) {}
+    }
+  }
+
   /** Silver tall preview cards: stejná navigační cesta jako „Navigace po webu“ — přímo persist + apply (ne syntetický peer.click() na <a>, který je na mobilu/WebKit nespolehlivý vs skutečný tap). */
   function iuMediaPreviewNavClick(mediaTopicKey) {
     const k = String(mediaTopicKey || "").trim().toLowerCase();
@@ -8600,23 +8683,11 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       try {
-        requestAnimationFrame(function () {
-          try {
-            requestAnimationFrame(function () {
-              try {
-                if (typeof window !== "undefined" && typeof window.iuScrollMainToTopSmooth === "function") {
-                  window.iuScrollMainToTopSmooth();
-                }
-              } catch (_) {}
-            });
-          } catch (_) {}
-        });
+        if (!iuDesktopPreviewNavScrollAfterOpen()) {
+          iuDesktopScrollFallbackToTopSmooth();
+        }
       } catch (_) {
-        try {
-          if (typeof window !== "undefined" && typeof window.iuScrollMainToTopSmooth === "function") {
-            window.iuScrollMainToTopSmooth();
-          }
-        } catch (_) {}
+        iuDesktopScrollFallbackToTopSmooth();
       }
       return;
     }
@@ -8629,6 +8700,11 @@ function buildVideoAsArticleCard(it) {
       try {
         if (typeof window !== "undefined" && typeof window.iuApplySectionFromURL === "function") {
           window.iuApplySectionFromURL();
+        }
+      } catch (_) {}
+      try {
+        if (!iuDesktopPreviewNavScrollAfterOpen()) {
+          iuDesktopScrollFallbackToTopSmooth();
         }
       } catch (_) {}
       return;
@@ -8672,24 +8748,215 @@ function buildVideoAsArticleCard(it) {
       }
     } catch (_) {}
     try {
-      requestAnimationFrame(function () {
+      if (!iuDesktopPreviewNavScrollAfterOpen()) {
+        iuDesktopScrollFallbackToTopSmooth();
+      }
+    } catch (_) {
+      iuDesktopScrollFallbackToTopSmooth();
+    }
+  }
+
+  const IU_HOME_CARDS_ORDER_KEY = "iu_desktop_homecards_order_v1";
+  const IU_HOME_CARDS_ORDER_DEFAULT = Object.freeze([
+    "zpravy",
+    "sport",
+    "finance",
+    "zdravi",
+    "cestovani",
+    "hry",
+    "kultura",
+    "veda",
+    "vzdelavani",
+    "prehled-dne",
+  ]);
+  const IU_HOME_CARD_MOUNT_BY_KEY = Object.freeze({
+    "zpravy": "iuNewsPreviewCardMount",
+    "sport": "iuSportPreviewCardMount",
+    "finance": "iuFinancePreviewCardMount",
+    "zdravi": "iuHealthPreviewCardMount",
+    "cestovani": "iuTravelPreviewCardMount",
+    "hry": "iuGamesPreviewCardMount",
+    "kultura": "iuCulturePreviewCardMount",
+    "veda": "iuScienceHistoryPreviewCardMount",
+    "vzdelavani": "iuEducationPreviewCardMount",
+    "prehled-dne": "iuPrehledDnePreviewCardMount",
+  });
+
+  function iuDesktopHomeCardsOrderNormalize(raw){
+    try {
+      const allowed = new Set(IU_HOME_CARDS_ORDER_DEFAULT);
+      const out = [];
+      const seen = new Set();
+      const src = Array.isArray(raw) ? raw : [];
+      for (let i = 0; i < src.length; i++) {
+        const k = String(src[i] || "").trim().toLowerCase();
+        if (!k || !allowed.has(k) || seen.has(k)) continue;
+        seen.add(k);
+        out.push(k);
+      }
+      for (let j = 0; j < IU_HOME_CARDS_ORDER_DEFAULT.length; j++) {
+        const dk = IU_HOME_CARDS_ORDER_DEFAULT[j];
+        if (!seen.has(dk)) out.push(dk);
+      }
+      return out;
+    } catch (_) {
+      return IU_HOME_CARDS_ORDER_DEFAULT.slice();
+    }
+  }
+
+  function iuDesktopHomeCardsOrderLoad(){
+    try {
+      const raw = localStorage.getItem(IU_HOME_CARDS_ORDER_KEY);
+      if (!raw) return IU_HOME_CARDS_ORDER_DEFAULT.slice();
+      return iuDesktopHomeCardsOrderNormalize(JSON.parse(raw));
+    } catch (_) {
+      return IU_HOME_CARDS_ORDER_DEFAULT.slice();
+    }
+  }
+
+  function iuDesktopHomeCardsOrderSave(order){
+    try {
+      const norm = iuDesktopHomeCardsOrderNormalize(order);
+      localStorage.setItem(IU_HOME_CARDS_ORDER_KEY, JSON.stringify(norm));
+      return norm;
+    } catch (_) {
+      return IU_HOME_CARDS_ORDER_DEFAULT.slice();
+    }
+  }
+
+  function iuDesktopHomeCardsOrderApply(){
+    try {
+      if (!iuIsDesktopNavLayout()) return;
+      const viewport = document.getElementById("iuSilverTallScrollViewport");
+      if (!viewport) return;
+      const order = iuDesktopHomeCardsOrderLoad();
+      const anchor = viewport.querySelector("[data-iu-silver-tall-scroll-placeholder]");
+      for (let i = 0; i < order.length; i++) {
+        const mountId = IU_HOME_CARD_MOUNT_BY_KEY[order[i]];
+        if (!mountId) continue;
+        const mount = document.getElementById(mountId);
+        if (!mount || !mount.parentNode) continue;
+        if (anchor && anchor.parentNode === viewport) {
+          viewport.insertBefore(mount, anchor);
+        } else {
+          viewport.appendChild(mount);
+        }
+      }
+    } catch (_) {}
+  }
+
+  function iuDesktopHomeCardsDragInit(){
+    try {
+      if (window.__iuDesktopHomeCardsDragInit) return;
+      window.__iuDesktopHomeCardsDragInit = 1;
+    } catch (_) {}
+    try {
+      window.iuDesktopHomeCardsOrderApply = iuDesktopHomeCardsOrderApply;
+    } catch (_) {}
+    iuDesktopHomeCardsOrderApply();
+    const viewport = document.getElementById("iuSilverTallScrollViewport");
+    if (!viewport) return;
+    let dragSrc = null;
+    let dragDidMove = false;
+    viewport.addEventListener(
+      "dragstart",
+      function (e) {
         try {
-          requestAnimationFrame(function () {
+          if (!iuIsDesktopNavLayout()) return;
+          if (!document.body.classList.contains("iu-desktop-home-grid")) return;
+          const mount = e.target && e.target.closest ? e.target.closest('[class$="PreviewCardMount"]') : null;
+          if (!mount || mount.parentNode !== viewport) return;
+          dragSrc = mount;
+          dragDidMove = false;
+          mount.classList.add("iu-homecard-dragging");
+          try {
+            if (e.dataTransfer) {
+              e.dataTransfer.effectAllowed = "move";
+              e.dataTransfer.setData("text/plain", mount.id || "");
+            }
+          } catch (_) {}
+        } catch (_) {}
+      },
+      true
+    );
+    viewport.addEventListener(
+      "dragover",
+      function (e) {
+        try {
+          if (!dragSrc) return;
+          e.preventDefault();
+          const over = e.target && e.target.closest ? e.target.closest('[class$="PreviewCardMount"]') : null;
+          viewport.querySelectorAll('[class$="PreviewCardMount"].iu-homecard-drag-over').forEach(function (el) {
+            el.classList.remove("iu-homecard-drag-over");
+          });
+          if (over && over !== dragSrc && over.parentNode === viewport) {
+            over.classList.add("iu-homecard-drag-over");
+            const rect = over.getBoundingClientRect();
+            const before = e.clientY < rect.top + rect.height / 2;
+            if (before) viewport.insertBefore(dragSrc, over);
+            else viewport.insertBefore(dragSrc, over.nextSibling);
+            dragDidMove = true;
+          }
+        } catch (_) {}
+      },
+      true
+    );
+    viewport.addEventListener(
+      "dragend",
+      function () {
+        try {
+          if (dragSrc) dragSrc.classList.remove("iu-homecard-dragging");
+          viewport.querySelectorAll('[class$="PreviewCardMount"].iu-homecard-drag-over').forEach(function (el) {
+            el.classList.remove("iu-homecard-drag-over");
+          });
+          if (dragSrc && dragDidMove) {
+            const mounts = viewport.querySelectorAll('[class$="PreviewCardMount"]');
+            const nextOrder = [];
+            mounts.forEach(function (m) {
+              const id = String(m.id || "");
+              for (const key in IU_HOME_CARD_MOUNT_BY_KEY) {
+                if (IU_HOME_CARD_MOUNT_BY_KEY[key] === id) {
+                  nextOrder.push(key);
+                  break;
+                }
+              }
+            });
+            iuDesktopHomeCardsOrderSave(nextOrder);
+          }
+        } catch (_) {}
+        dragSrc = null;
+        dragDidMove = false;
+      },
+      true
+    );
+    try {
+      const mounts = viewport.querySelectorAll('[class$="PreviewCardMount"]');
+      mounts.forEach(function (mount) {
+        try {
+          mount.setAttribute("draggable", "true");
+        } catch (_) {}
+      });
+    } catch (_) {}
+    try {
+      const mq = window.matchMedia && window.matchMedia("(min-width: 1025px)");
+      const reapply = function () {
+        try {
+          iuDesktopHomeCardsOrderApply();
+          const m = viewport.querySelectorAll('[class$="PreviewCardMount"]');
+          m.forEach(function (mount) {
             try {
-              if (typeof window !== "undefined" && typeof window.iuScrollMainToTopSmooth === "function") {
-                window.iuScrollMainToTopSmooth();
+              if (document.body.classList.contains("iu-desktop-home-grid")) {
+                mount.setAttribute("draggable", "true");
+              } else {
+                mount.removeAttribute("draggable");
               }
             } catch (_) {}
           });
         } catch (_) {}
-      });
-    } catch (_) {
-      try {
-        if (typeof window !== "undefined" && typeof window.iuScrollMainToTopSmooth === "function") {
-          window.iuScrollMainToTopSmooth();
-        }
-      } catch (_) {}
-    }
+      };
+      if (mq && mq.addEventListener) mq.addEventListener("change", reapply);
+      else if (mq && mq.addListener) mq.addListener(reapply);
+    } catch (_) {}
   }
 
   /** P0 desktop-only (≥1025px + /projects/ hub): body.iu-desktop-home-grid — 2-column section tiles; mobile/tablet unchanged. */
@@ -8732,6 +8999,7 @@ function buildVideoAsArticleCard(it) {
     try{
       window.addEventListener("resize", iuDesktopHomeSectionGridGuardApply, { passive: true });
     }catch{}
+    try{ iuDesktopHomeCardsDragInit(); }catch(_){}
   }
 
   /** P0 CLS: desktop grid ukazuje jen 1 headline — neplnit druhý řádek textem (jinak layout 2 titulků → skrytí sníží výšku dlaždice a naměří se CLS). */
@@ -11014,6 +11282,169 @@ function buildVideoAsArticleCard(it) {
     }catch(_){}
   }
 
+  function iuPrehledDnePreviewEnsureDom(){
+    try{
+      const viewport = document.getElementById("iuSilverTallScrollViewport");
+      if (!viewport) return null;
+      const mount = document.getElementById("iuPrehledDnePreviewCardMount");
+      let card = mount
+        ? mount.querySelector('[data-iu-prehled-dne-preview-card="1"]')
+        : viewport.querySelector('[data-iu-prehled-dne-preview-card="1"]');
+      if (card) return card;
+
+      card = document.createElement("button");
+      card.type = "button";
+      card.className = "box-prehled-dne";
+      card.setAttribute("data-iu-prehled-dne-preview-card", "1");
+      card.setAttribute("aria-label", "Otevřít Přehled dne");
+
+      card.innerHTML = `
+        <div class="iuNewsPreviewHeader" data-iu-prehled-dne-preview-header>
+          <div class="iuNewsPreviewTitleRow">
+            <span class="iuNewsPreviewBadge" data-iu-prehled-dne-preview-badge>Přehled dne</span>
+            <span class="iuNewsPreviewFreshness" data-iu-prehled-dne-preview-freshness></span>
+          </div>
+          <svg class="iuNewsPreviewChevron" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="M7.5 4.5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="iuNewsPreviewBody">
+          <div class="iuNewsPreviewImgWrap" aria-hidden="true">
+            <picture>
+              <source type="image/webp" srcset="/assets/images/section-prehled-dne.webp" />
+              <img class="iuNewsPreviewImg" src="/assets/images/section-prehled-dne.jpg" width="112" height="84" loading="lazy" decoding="async" alt="" />
+            </picture>
+          </div>
+          <div class="iuNewsPreviewText">
+            <p class="iuNewsPreviewHeadline" data-iu-prehled-dne-preview-title-1>Přehled dne se načítá</p>
+            <p class="iuNewsPreviewHeadline2 iuNewsPreviewHeadline2--empty" data-iu-prehled-dne-preview-title-2></p>
+          </div>
+        </div>
+      `.trim();
+
+      iuNewsPreviewHideTallScrollPlaceholder(viewport);
+
+      if (mount) {
+        mount.appendChild(card);
+      } else {
+        viewport.insertBefore(card, viewport.firstChild || null);
+      }
+
+      card.addEventListener(
+        "click",
+        function () {
+          iuMediaPreviewNavClick("all");
+        },
+        { passive: true }
+      );
+
+      const img0 = card.querySelector(".iuNewsPreviewImg");
+      if (img0 && !img0.getAttribute("data-iu-prehled-dne-preview-err-bound")) {
+        img0.setAttribute("data-iu-prehled-dne-preview-err-bound", "1");
+        img0.onerror = function () {
+          const fb = "/assets/images/section-prehled-dne.jpg";
+          try {
+            const cur = String(img0.getAttribute("src") || "");
+            if (cur.indexOf("section-prehled-dne.jpg") !== -1) {
+              img0.onerror = null;
+              return;
+            }
+          } catch (_) {}
+          img0.src = fb;
+        };
+      }
+
+      return card;
+    }catch(_){
+      return null;
+    }
+  }
+
+  function iuPrehledDnePreviewRefresh(){
+    try{
+      const card = iuPrehledDnePreviewEnsureDom();
+      if (!card) return;
+      const elFresh = card.querySelector("[data-iu-prehled-dne-preview-freshness]");
+      const elT1 = card.querySelector("[data-iu-prehled-dne-preview-title-1]");
+      const elT2 = card.querySelector("[data-iu-prehled-dne-preview-title-2]");
+      const elImg = card.querySelector(".iuNewsPreviewImg");
+      if (!elT1 || !elT2 || !elFresh) return;
+
+      const fixedThumb = "/assets/images/section-prehled-dne.jpg";
+      const picked = iuPrehledDnePreviewPickLatestTwoFromState();
+      const latest = picked.latest;
+      const second = picked.second;
+      const latestTitle = latest && latest.title ? String(latest.title) : "";
+      const secondTitle = second && second.title ? String(second.title) : "";
+      const hasLatest = !!latestTitle;
+
+      if (
+        iuTallPreviewHoldStableWhenTransientEmpty(
+          card,
+          elT1,
+          hasLatest,
+          "data-iu-prehled-dne-preview-has-latest",
+          "Přehled dne se načítá",
+        )
+      ) {
+        return;
+      }
+
+      if (hasLatest) {
+        card.setAttribute("data-iu-prehled-dne-preview-has-latest", "1");
+      } else {
+        card.setAttribute("data-iu-prehled-dne-preview-has-latest", "0");
+      }
+
+      if (!hasLatest) {
+        elFresh.textContent = "";
+        elFresh.setAttribute("data-iu-prehled-dne-preview-has-freshness", "0");
+        card.removeAttribute("data-iu-prehled-dne-preview-latest-ms");
+        elT1.textContent = "Přehled dne se načítá";
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+        try { iuPreviewImgApplyThumb(elImg, fixedThumb); } catch (_) {}
+        return;
+      }
+
+      elT1.textContent = latestTitle;
+      if (iuDesktopHomeGridOmitSecondaryHeadline()) {
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      } else if (secondTitle) {
+        elT2.textContent = secondTitle;
+        try { elT2.classList.remove("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      } else {
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      }
+
+      const publishedRaw = iuNewsPreviewPublishedRaw(latest);
+      const ms = picked.latestMs;
+      const fresh = iuCsRelativeFreshnessFromMs(ms, Date.now());
+      if (fresh) {
+        elFresh.textContent = fresh;
+        elFresh.setAttribute("data-iu-prehled-dne-preview-has-freshness", "1");
+        card.setAttribute("data-iu-prehled-dne-preview-latest-ms", String(ms));
+        if (publishedRaw) card.setAttribute("data-iu-prehled-dne-preview-published-raw", publishedRaw);
+        else card.removeAttribute("data-iu-prehled-dne-preview-published-raw");
+      } else {
+        elFresh.textContent = "";
+        elFresh.setAttribute("data-iu-prehled-dne-preview-has-freshness", "0");
+        card.removeAttribute("data-iu-prehled-dne-preview-latest-ms");
+        card.removeAttribute("data-iu-prehled-dne-preview-published-raw");
+      }
+
+      try {
+        const rawIm = latest && latest.image !== undefined && latest.image !== null ? latest.image : "";
+        const thumbSrc = iuNewsPreviewIsValidImage(rawIm) ? String(rawIm).trim() : fixedThumb;
+        iuPreviewImgApplyThumb(elImg, thumbSrc);
+      } catch (_) {
+        try { iuPreviewImgApplyThumb(elImg, fixedThumb); } catch (_) {}
+      }
+    }catch(_){}
+  }
+
   function iuSilverTallMediaPreviewsRefresh(){
     try{ iuNewsPreviewRefresh(); }catch(_){}
     try{ iuSportPreviewRefresh(); }catch(_){}
@@ -11024,6 +11455,8 @@ function buildVideoAsArticleCard(it) {
     try{ iuCulturePreviewRefresh(); }catch(_){}
     try{ iuScienceHistoryPreviewRefresh(); }catch(_){}
     try{ iuEducationPreviewRefresh(); }catch(_){}
+    try{ iuPrehledDnePreviewRefresh(); }catch(_){}
+    try{ iuDesktopHomeCardsOrderApply(); }catch(_){}
   }
 
   /** P0: same work as iuSilverTallMediaPreviewsRefresh but yields between rails so one task does not stack 9× DOM+scan work. */
@@ -11074,6 +11507,11 @@ function buildVideoAsArticleCard(it) {
           iuEducationPreviewRefresh();
         } catch (_) {}
       },
+      () => {
+        try {
+          iuPrehledDnePreviewRefresh();
+        } catch (_) {}
+      },
     ];
     const yieldOnce = () =>
       new Promise((resolve) => {
@@ -11109,6 +11547,7 @@ function buildVideoAsArticleCard(it) {
     try{ if (!iuIsProdHost()) window.iuCulturePreviewRefresh = iuCulturePreviewRefresh; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuScienceHistoryPreviewRefresh = iuScienceHistoryPreviewRefresh; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuEducationPreviewRefresh = iuEducationPreviewRefresh; }catch(_){}
+    try{ if (!iuIsProdHost()) window.iuPrehledDnePreviewRefresh = iuPrehledDnePreviewRefresh; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuFinancePreviewRegressionAudit = iuFinancePreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuHealthPreviewRegressionAudit = iuHealthPreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuTravelPreviewRegressionAudit = iuTravelPreviewRegressionAudit; }catch(_){}
@@ -30698,6 +31137,45 @@ function buildVideoAsArticleCard(it) {
 
   function iuResolveSectionScrollAnchor(){
     const feed = document.getElementById("feed");
+    const center = document.getElementById("iuCenterStage");
+    const desktopNav =
+      !!(typeof window !== "undefined" &&
+        window.matchMedia &&
+        window.matchMedia("(min-width: 901px)").matches);
+    if (desktopNav && center) {
+      if (feed && !feed.hidden) {
+        const feedHeader =
+          feed.querySelector("picture.iu-feed-section-header-picture") ||
+          feed.querySelector("img.iu-feed-section-header-img") ||
+          feed.querySelector(".iu-feed-section-header-img");
+        if (feedHeader) return feedHeader;
+        if (feed.firstElementChild) return feed;
+      }
+      try {
+        const sec = document.body && document.body.dataset ? String(document.body.dataset.section || "") : "";
+        const viewBySec = {
+          pocasi: "iuWeatherView",
+          mapy: "iuMapyView",
+          jr: "iuJrEmptyView",
+          tvprogram: "iuTvProgramView",
+          tvonline: "iuTvOnlineView",
+          radio: "iuRadioView",
+          travel: "iuTravelView",
+        };
+        const viewId = viewBySec[sec];
+        if (viewId) {
+          const viewEl = document.getElementById(viewId);
+          if (viewEl && !viewEl.hidden) {
+            return (
+              viewEl.querySelector(".iuSectionHeader") ||
+              viewEl.querySelector("[data-view-host]") ||
+              viewEl
+            );
+          }
+        }
+      } catch (_) {}
+      return center;
+    }
     if (!feed) return document.getElementById("iuCenterStage") || document.getElementById("newsList");
     return (
       feed.querySelector("picture.iu-feed-section-header-picture") ||
@@ -30710,6 +31188,9 @@ function buildVideoAsArticleCard(it) {
   function iuScrollToActiveSectionStartInstant(){
     const anchor = iuResolveSectionScrollAnchor();
     if (!anchor) {
+      try {
+        if (typeof window !== "undefined" && window.__iuSectionSwitchScrollArm) return;
+      } catch (_) {}
       iuSetMainScrollTop(0);
       return;
     }
@@ -30723,6 +31204,7 @@ function buildVideoAsArticleCard(it) {
   function iuScrollMainSectionSwitchToTop(){
     try{ window.__iuSectionSwitchScrollArm = true; }catch(_){}
     try{
+      if (iuIsDesktopNavLayout()) return;
       if (iuGetMainScrollTop() > 400) iuSetMainScrollTop(0);
     }catch(_){}
   }
@@ -32362,6 +32844,9 @@ function buildVideoAsArticleCard(it) {
         try {
           if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
         } catch (_) {}
+        try {
+          if (!usesFeed) iuDesktopConsumeSectionSwitchScrollIfArmed();
+        } catch (_) {}
 
     try {
       const barFeed = document.getElementById("iuTravelNavBar");
@@ -32491,6 +32976,8 @@ function buildVideoAsArticleCard(it) {
   try { window.iuScrollMainToTopInstant = iuScrollMainToTopInstant; } catch (e) {}
   try { window.iuScrollToActiveSectionStartInstant = iuScrollToActiveSectionStartInstant; } catch (e) {}
   try { window.iuScrollMainSectionSwitchToTop = iuScrollMainSectionSwitchToTop; } catch (e) {}
+  try { window.iuDesktopConsumeSectionSwitchScrollIfArmed = iuDesktopConsumeSectionSwitchScrollIfArmed; } catch (e) {}
+  try { window.iuDesktopPreviewNavScrollAfterOpen = iuDesktopPreviewNavScrollAfterOpen; } catch (e) {}
 
   function initNavRouter(){
     iuStripProjectsNavParamsForHomeLanding();
@@ -32596,6 +33083,11 @@ function buildVideoAsArticleCard(it) {
       try{ iuScrollMainSectionSwitchToTop(); }catch(_){}
       applySectionFromURL();
       applyPanelFromUrl();
+      try {
+        if (iuIsDesktopNavLayout() && typeof iuDesktopPreviewNavScrollAfterOpen === "function") {
+          iuDesktopPreviewNavScrollAfterOpen();
+        }
+      } catch (_) {}
       try {
         if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
           try {

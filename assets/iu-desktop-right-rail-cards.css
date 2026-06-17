@@ -1,17 +1,23 @@
 /**
  * Desktop right rail (≥901px) — Vyhledej mi zásilku + Osobní finance cards
  * moved from center feed to accordionCol below QR banner.
+ * P0 desktop: always light day variant; unified card heights.
  */
 
 @media (min-width: 901px) {
+  #iuDesktopRightRailCards {
+    --iuDesktopRightRailCardMinH: 200px;
+  }
+
   #iuDesktopRightRailCards #iuSilverParcelWatch {
-    --iuParcelIllusH: 175px;
-    --iuParcelIllusW: 131px;
+    --iuParcelIllusH: 160px;
+    --iuParcelIllusW: 120px;
     --iuParcelIllusGap: 10px;
     display: block;
     width: 100%;
     max-width: 100%;
     min-width: 0;
+    min-height: var(--iuDesktopRightRailCardMinH);
     box-sizing: border-box;
     margin: 0;
     padding: 10px 12px 12px;
@@ -19,11 +25,11 @@
     overflow-x: hidden;
     position: relative;
     isolation: isolate;
-    background: linear-gradient(145deg, #182235 0%, #111827 55%, #1a1f3a 100%);
-    border: 1px solid rgba(99, 102, 241, 0.22);
+    background: linear-gradient(145deg, #fffdf8 0%, #faf6ee 48%, #f3ebe0 100%);
+    border: 1px solid rgba(168, 148, 108, 0.32);
     box-shadow:
-      0 8px 24px rgba(0, 0, 0, 0.28),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      0 4px 16px rgba(88, 72, 40, 0.07),
+      inset 0 1px 0 rgba(255, 255, 255, 0.92);
   }
 
   #iuDesktopRightRailCards #iuSilverParcelWatch .iuSilverParcelWatch__hero {
@@ -33,12 +39,16 @@
     align-items: stretch;
     gap: var(--iuParcelIllusGap);
     min-width: 0;
+    min-height: calc(var(--iuDesktopRightRailCardMinH) - 22px);
   }
 
   #iuDesktopRightRailCards #iuSilverParcelWatch .iuSilverParcelWatch__content {
     flex: 1 1 auto;
     min-width: 0;
     max-width: calc(100% - var(--iuParcelIllusW) - var(--iuParcelIllusGap));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   #iuDesktopRightRailCards #iuSilverParcelWatch .iuSilverParcelWatch__illus {
@@ -71,7 +81,7 @@
     font-size: 15px;
     font-weight: 700;
     letter-spacing: -0.01em;
-    color: rgba(248, 250, 255, 0.96);
+    color: #0f172a;
     line-height: 1.25;
   }
 
@@ -79,7 +89,7 @@
     margin: 0 0 8px;
     font-size: 12.5px;
     line-height: 1.45;
-    color: rgba(203, 213, 225, 0.85);
+    color: #475569;
   }
 
   #iuDesktopRightRailCards #iuSilverParcelWatch .iuSilverParcelWatch__row {
@@ -97,15 +107,15 @@
     box-sizing: border-box;
     padding: 9px 12px;
     border-radius: 10px;
-    border: 1px solid rgba(99, 102, 241, 0.3);
-    background: rgba(15, 23, 42, 0.65);
-    color: #f1f5f9;
+    border: 1px solid rgba(168, 148, 108, 0.35);
+    background: rgba(255, 255, 255, 0.92);
+    color: #0f172a;
     font-size: 14px;
     outline: none;
   }
 
   #iuDesktopRightRailCards #iuSilverParcelWatch .iuSilverParcelWatch__input::placeholder {
-    color: rgba(148, 163, 184, 0.7);
+    color: rgba(100, 116, 139, 0.75);
   }
 
   #iuDesktopRightRailCards #iuSilverParcelWatch .iuSilverParcelWatch__save {
@@ -116,9 +126,9 @@
     font-weight: 600;
     font-size: 13px;
     white-space: nowrap;
-    color: rgba(203, 213, 225, 0.75);
-    background: rgba(30, 41, 59, 0.8);
-    border: 1px solid rgba(99, 102, 241, 0.2);
+    color: rgba(71, 85, 105, 0.85);
+    background: rgba(248, 250, 252, 0.95);
+    border: 1px solid rgba(168, 148, 108, 0.28);
     box-shadow: none;
   }
 
@@ -129,46 +139,25 @@
     box-shadow: 0 4px 14px rgba(79, 70, 229, 0.38);
   }
 
-  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuDesktopRightRailCards #iuSilverParcelWatch {
-    background: linear-gradient(145deg, #fffdf8 0%, #faf6ee 48%, #f3ebe0 100%);
-    border: 1px solid rgba(168, 148, 108, 0.32);
-    box-shadow:
-      0 4px 16px rgba(88, 72, 40, 0.07),
-      inset 0 1px 0 rgba(255, 255, 255, 0.92);
-  }
-
-  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuDesktopRightRailCards #iuSilverParcelWatch .iuSilverParcelWatch__title {
-    color: #0f172a;
-  }
-
-  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuDesktopRightRailCards #iuSilverParcelWatch .iuSilverParcelWatch__lead {
-    color: #475569;
-  }
-
-  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuDesktopRightRailCards #iuSilverParcelWatch .iuSilverParcelWatch__input {
-    background: rgba(255, 255, 255, 0.92);
-    border-color: rgba(168, 148, 108, 0.35);
-    color: #0f172a;
-  }
-
   #iuDesktopRightRailCards #iuSilverFinanceHomeCard {
-    --iuFinHomeIllusH: 175px;
-    --iuFinHomeIllusW: 140px;
+    --iuFinHomeIllusH: 160px;
+    --iuFinHomeIllusW: 120px;
     --iuFinHomeIllusGap: 10px;
     appearance: none;
     -webkit-appearance: none;
     display: block;
     width: 100%;
     max-width: 100%;
+    min-height: var(--iuDesktopRightRailCardMinH);
     margin: 0;
     box-sizing: border-box;
     padding: 10px 12px 12px;
     border-radius: 16px;
-    border: 1px solid rgba(99, 102, 241, 0.22);
-    background: linear-gradient(145deg, #182235 0%, #111827 55%, #1a1f3a 100%);
+    border: 1px solid rgba(168, 148, 108, 0.32);
+    background: linear-gradient(145deg, #fffdf8 0%, #faf6ee 48%, #f3ebe0 100%);
     box-shadow:
-      0 8px 24px rgba(0, 0, 0, 0.28),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      0 4px 16px rgba(88, 72, 40, 0.07),
+      inset 0 1px 0 rgba(255, 255, 255, 0.92);
     color: inherit;
     text-align: left;
     cursor: pointer;
@@ -183,9 +172,10 @@
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-items: stretch;
+    align-items: center;
     gap: var(--iuFinHomeIllusGap);
     min-width: 0;
+    min-height: calc(var(--iuDesktopRightRailCardMinH) - 22px);
   }
 
   #iuDesktopRightRailCards #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__content {
@@ -195,7 +185,16 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 4px;
+    gap: 6px;
+  }
+
+  #iuDesktopRightRailCards #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__titleRow {
+    display: block;
+    min-width: 0;
+  }
+
+  #iuDesktopRightRailCards #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__chevron {
+    display: none !important;
   }
 
   #iuDesktopRightRailCards #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__title {
@@ -204,15 +203,15 @@
     font-weight: 800;
     letter-spacing: -0.02em;
     line-height: 1.25;
-    color: rgba(248, 250, 255, 0.96);
-    white-space: nowrap;
+    color: #0f172a;
+    white-space: normal;
   }
 
   #iuDesktopRightRailCards #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__lead {
     margin: 0;
     font-size: 0.8125rem;
     line-height: 1.45;
-    color: rgba(203, 213, 225, 0.85);
+    color: #475569;
   }
 
   #iuDesktopRightRailCards #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__illus {
@@ -222,28 +221,15 @@
     max-width: var(--iuFinHomeIllusW);
     min-height: var(--iuFinHomeIllusH);
     align-self: center;
-    opacity: 0.72;
-    color: rgba(186, 210, 236, 0.92);
-  }
-
-  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuDesktopRightRailCards #iuSilverFinanceHomeCard {
-    background: linear-gradient(145deg, #fffdf8 0%, #faf6ee 48%, #f3ebe0 100%);
-    border: 1px solid rgba(168, 148, 108, 0.32);
-    box-shadow:
-      0 4px 16px rgba(88, 72, 40, 0.07),
-      inset 0 1px 0 rgba(255, 255, 255, 0.92);
-  }
-
-  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuDesktopRightRailCards #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__title {
-    color: #0f172a;
-  }
-
-  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuDesktopRightRailCards #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__lead {
-    color: #475569;
-  }
-
-  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuDesktopRightRailCards #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__illus {
     opacity: 0.88;
     color: #8b7355;
+  }
+
+  #iuDesktopRightRailCards #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__illusSvg {
+    display: block;
+    width: 100%;
+    height: var(--iuFinHomeIllusH);
+    object-fit: contain;
+    object-position: center center;
   }
 }
