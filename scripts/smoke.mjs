@@ -443,7 +443,7 @@ async function runSmoke() {
     } catch (e) {
       fail(`Weather inline iframe missing after play: ${e && e.message ? e.message : String(e)}`);
     }
-    await page.click('.iu-leftNavItem[data-accent="media"][data-media-topic="all"]');
+    await page.click('[data-iu-prehled-dne-preview-card="1"]');
     await page.waitForTimeout(900);
     const wxAutopauseProbe = await page.evaluate(() => {
       const wv = document.getElementById("iuWeatherView");
