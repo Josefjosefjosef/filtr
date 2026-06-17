@@ -3604,7 +3604,7 @@ button.iu-close-btn-38:focus-visible{
   grid-template-columns: 1fr;
   gap: 14px 18px;
   margin: 0;
-  padding-right: 8px;
+  text-align: left;
 }
 
 
@@ -3690,9 +3690,15 @@ body[data-iu-fc="1"] #feed{
   max-width: 100%;
   box-sizing: border-box;
   min-width: 0;
-  
   margin: 0;
-  padding-right: 8px;
+}
+
+/* Tablet inner-scroll scrollbar gutter only — desktop ≥901px aligns with HomeCards wrapper. */
+@media (min-width: 681px) and (max-width: 900px) {
+  #feed,
+  .iuRadioView{
+    padding-right: 8px;
+  }
 }
 
 #iuTvOnlineView{
@@ -7810,8 +7816,7 @@ html[data-iu-debug="1"] #iuDiagPanel {
   display: none !important;
 }
 
-#newsList,
-#feed{
+#newsList{
   width: 100%;
   max-width: none;
   min-width: 0;
