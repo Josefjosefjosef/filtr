@@ -32729,6 +32729,30 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
+  /**
+   * P0 CLS (tablet 768–900 Menu overlay → tool/affiliate): gate wrap stays ~2860px in document flow during
+   * overlay; SPA applySection hides it (~0.86 shift on #leftContent). Cold ?section= avoids overlay paint —
+   * hard-assign to target section from open Menu so early inline shell runs before first paint.
+   */
+  function iuTabletMenuToolHardNavIfNeeded(accentKey, mediaTopicKey) {
+    try {
+      if (!document.body || !document.body.classList.contains("iu-mobileGateOverlayOpen")) return false;
+      if (!window.matchMedia || !window.matchMedia("(min-width: 768px) and (max-width: 900px)").matches) return false;
+      var sec = mediaTopicKey ? IU_ARTICLE_HUB_SECTION : normalizeSection(accentKey);
+      if (!sec || sec === "travel" || iuArticleHubSectionP(sec)) return false;
+      var toolSec = { pocasi: 1, mapy: 1, maps: 1, jr: 1, tvprogram: 1, tvonline: 1, radio: 1 };
+      if (!(toolSec[sec] || sec.indexOf("aff-") === 0)) return false;
+      var u = new URL(window.location.href);
+      u.searchParams.set("section", sec);
+      if (mediaTopicKey) u.searchParams.set("topic", mediaTopicKey);
+      else u.searchParams.delete("topic");
+      u.searchParams.delete("panel");
+      window.location.assign(u.toString());
+      return true;
+    } catch (_) {}
+    return false;
+  }
+
   function applySectionFromURL(accentOverride){
     void accentOverride;
     /* P0 web-nav return controller: jeden tick bez obecného section apply při řízeném návratu do overlaye. */
@@ -33120,6 +33144,9 @@ function buildVideoAsArticleCard(it) {
       }catch{}
       const mediaTopic = (item.getAttribute("data-media-topic") || "").trim().toLowerCase();
       const accentEarly = (item.getAttribute("data-accent") || item.dataset?.accent || "").trim().toLowerCase();
+      try {
+        if (iuTabletMenuToolHardNavIfNeeded(accentEarly, mediaTopic)) return;
+      } catch (_) {}
       var gateWrapNavEarly = document.getElementById("iuMobileGateWrap");
       var fromWebNavGateNav =
         gateWrapNavEarly && String(gateWrapNavEarly.getAttribute("data-iu-mobile-gate") || "") === "nav";
@@ -33193,6 +33220,9 @@ function buildVideoAsArticleCard(it) {
       const cls = Array.from(hex.classList).find(c => c.startsWith('iuHex--'));
       const sectionFromClass = cls ? cls.slice('iuHex--'.length).toLowerCase() : '';
       const rawHexKey = sectionAttr || sectionFromClass;
+      try {
+        if (iuTabletMenuToolHardNavIfNeeded(rawHexKey, "")) return;
+      } catch (_) {}
       try {
         iuPreApplyTabletToolShellBeforeNav(rawHexKey, "");
       } catch (_) {}
