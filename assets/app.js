@@ -8968,16 +8968,14 @@ function buildVideoAsArticleCard(it) {
       if (!stage) return;
       if (!document.body || !document.body.classList.contains("iu-desktop-home-grid") || !iuIsDesktopNavLayout()) {
         root.style.removeProperty("--iu-dhp-center-stage-mt");
-        stage.style.removeProperty("margin-top");
         return;
       }
       const homecards = document.getElementById("iuSilverTallScrollSection");
-      if (!homecards) return;
-      root.style.setProperty("--iu-dhp-center-stage-mt", "0px");
-      void stage.offsetHeight;
+      const stack = document.getElementById("iuSilverTopCardsStack");
+      if (!homecards || !stack) return;
+      const stackTop = stack.getBoundingClientRect().top;
       const hcBottom = homecards.getBoundingClientRect().bottom;
-      const baseTop = stage.getBoundingClientRect().top;
-      const margin = Math.round(hcBottom + 20 - baseTop);
+      const margin = Math.max(20, Math.round(hcBottom - stackTop + 20));
       root.style.setProperty("--iu-dhp-center-stage-mt", margin + "px");
     }catch(_){}
   }
