@@ -31201,7 +31201,8 @@ function buildVideoAsArticleCard(it) {
           radio: "iuRadioView",
           travel: "iuTravelView",
         };
-        const viewId = viewBySec[sec];
+        let viewId = viewBySec[sec];
+        if (!viewId && sec.indexOf("aff-") === 0) viewId = "iuAffiliateView";
         if (viewId) {
           const viewEl = document.getElementById(viewId);
           if (viewEl && !viewEl.hidden) {

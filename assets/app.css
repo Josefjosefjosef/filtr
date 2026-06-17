@@ -6072,6 +6072,8 @@ body[data-section="jr"] #iuJrEmptyView,
 html[data-section="jr"] #iuJrEmptyView{
   display: block !important;
 }
+body[data-section^="aff-"] #iuAffiliateView,
+html[data-section^="aff-"] #iuAffiliateView,
 #iuCenterStage[data-view="affiliate"] #iuAffiliateView{
   display: block !important;
 }
@@ -8089,6 +8091,8 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
 
 body[data-section="jr"] #iuCenterStage #iuJrEmptyView,
 html[data-section="jr"] #iuCenterStage #iuJrEmptyView,
+body[data-section^="aff-"] #iuCenterStage #iuAffiliateView,
+html[data-section^="aff-"] #iuCenterStage #iuAffiliateView,
 #iuCenterStage[data-view="affiliate"] #iuAffiliateView{
   flex: 1 1 0;
   min-width: 0;
@@ -8150,6 +8154,8 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   }
   body[data-section="jr"] #iuCenterStage #iuJrEmptyView,
   html[data-section="jr"] #iuCenterStage #iuJrEmptyView,
+  body[data-section^="aff-"] #iuCenterStage #iuAffiliateView,
+  html[data-section^="aff-"] #iuCenterStage #iuAffiliateView,
   #iuCenterStage[data-view="affiliate"] #iuAffiliateView{
     flex: 0 0 100%;
     width: 100% !important;
@@ -22033,22 +22039,110 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   flex-shrink: 0;
 }
 
-/* Affiliate services catalog — disclosure + accent only (layout reuses JR tool hosts) */
+/* Affiliate services catalog — per-category premium accents (layout reuses JR tool hosts) */
+:root{
+  --iuAff-aff-cestovni-kancelare:#C9A227;
+  --iuAff-aff-ubytovani-hotely:#60A5FA;
+  --iuAff-aff-letenky:#2DD4BF;
+  --iuAff-aff-cestovni-pojisteni:#34D399;
+  --iuAff-aff-auto-moto:#FB923C;
+  --iuAff-aff-pojisteni:#059669;
+  --iuAff-aff-finance:#10B981;
+  --iuAff-aff-energie-uspor:#A3E635;
+  --iuAff-aff-lekarny:#22C55E;
+  --iuAff-aff-zdravi-doplnky:#6EE7B7;
+  --iuAff-aff-kosmetika:#F9A8D4;
+  --iuAff-aff-drogerie:#C4B5FD;
+  --iuAff-aff-moda:#A78BFA;
+  --iuAff-aff-boty:#A8A29E;
+  --iuAff-aff-sportovni-obleceni:#3B82F6;
+  --iuAff-aff-sport-outdoor:#4ADE80;
+  --iuAff-aff-dum-zahrada:#65A30D;
+  --iuAff-aff-nabytek:#D6C4A8;
+  --iuAff-aff-kuchyn:#FDBA74;
+  --iuAff-aff-elektro:#22D3EE;
+  --iuAff-aff-mobily:#7DD3FC;
+  --iuAff-aff-software:#14B8A6;
+  --iuAff-aff-knihy:#8B5CF6;
+  --iuAff-aff-jidlo:#FBBF24;
+  --iuAff-aff-zvirata:#86EFAC;
+}
 #iuAffiliateView{
-  --iuSectionAccent: var(--iuNavAccent-affiliate, #64748B);
+  --iuSectionAccent: var(--iuAff-aff-cestovni-kancelare, #64748B);
   min-height: 360px;
 }
+#iuAffiliateView[data-aff-category="aff-cestovni-kancelare"]{ --iuSectionAccent: var(--iuAff-aff-cestovni-kancelare); }
+#iuAffiliateView[data-aff-category="aff-ubytovani-hotely"]{ --iuSectionAccent: var(--iuAff-aff-ubytovani-hotely); }
+#iuAffiliateView[data-aff-category="aff-letenky"]{ --iuSectionAccent: var(--iuAff-aff-letenky); }
+#iuAffiliateView[data-aff-category="aff-cestovni-pojisteni"]{ --iuSectionAccent: var(--iuAff-aff-cestovni-pojisteni); }
+#iuAffiliateView[data-aff-category="aff-auto-moto"]{ --iuSectionAccent: var(--iuAff-aff-auto-moto); }
+#iuAffiliateView[data-aff-category="aff-pojisteni"]{ --iuSectionAccent: var(--iuAff-aff-pojisteni); }
+#iuAffiliateView[data-aff-category="aff-finance"]{ --iuSectionAccent: var(--iuAff-aff-finance); }
+#iuAffiliateView[data-aff-category="aff-energie-uspor"]{ --iuSectionAccent: var(--iuAff-aff-energie-uspor); }
+#iuAffiliateView[data-aff-category="aff-lekarny"]{ --iuSectionAccent: var(--iuAff-aff-lekarny); }
+#iuAffiliateView[data-aff-category="aff-zdravi-doplnky"]{ --iuSectionAccent: var(--iuAff-aff-zdravi-doplnky); }
+#iuAffiliateView[data-aff-category="aff-kosmetika"]{ --iuSectionAccent: var(--iuAff-aff-kosmetika); }
+#iuAffiliateView[data-aff-category="aff-drogerie"]{ --iuSectionAccent: var(--iuAff-aff-drogerie); }
+#iuAffiliateView[data-aff-category="aff-moda"]{ --iuSectionAccent: var(--iuAff-aff-moda); }
+#iuAffiliateView[data-aff-category="aff-boty"]{ --iuSectionAccent: var(--iuAff-aff-boty); }
+#iuAffiliateView[data-aff-category="aff-sportovni-obleceni"]{ --iuSectionAccent: var(--iuAff-aff-sportovni-obleceni); }
+#iuAffiliateView[data-aff-category="aff-sport-outdoor"]{ --iuSectionAccent: var(--iuAff-aff-sport-outdoor); }
+#iuAffiliateView[data-aff-category="aff-dum-zahrada"]{ --iuSectionAccent: var(--iuAff-aff-dum-zahrada); }
+#iuAffiliateView[data-aff-category="aff-nabytek"]{ --iuSectionAccent: var(--iuAff-aff-nabytek); }
+#iuAffiliateView[data-aff-category="aff-kuchyn"]{ --iuSectionAccent: var(--iuAff-aff-kuchyn); }
+#iuAffiliateView[data-aff-category="aff-elektro"]{ --iuSectionAccent: var(--iuAff-aff-elektro); }
+#iuAffiliateView[data-aff-category="aff-mobily"]{ --iuSectionAccent: var(--iuAff-aff-mobily); }
+#iuAffiliateView[data-aff-category="aff-software"]{ --iuSectionAccent: var(--iuAff-aff-software); }
+#iuAffiliateView[data-aff-category="aff-knihy"]{ --iuSectionAccent: var(--iuAff-aff-knihy); }
+#iuAffiliateView[data-aff-category="aff-jidlo"]{ --iuSectionAccent: var(--iuAff-aff-jidlo); }
+#iuAffiliateView[data-aff-category="aff-zvirata"]{ --iuSectionAccent: var(--iuAff-aff-zvirata); }
 #iuAffiliateGrid{ min-height: 240px; }
-.iuSectionHeader--affiliate h2{ color: var(--iuNavAccent-affiliate, #64748B); }
+#iuAffiliateView.iuAffiliateView{padding:14px 12px 16px}
+#iuAffiliateView .iuSectionHeader--affiliate{margin:0 0 8px;align-items:center}
+#iuAffiliateView .iuSectionHeader--affiliate h2{
+  font-size:clamp(19px,1.05rem + .6vw,22px);
+  font-weight:820;
+  letter-spacing:.045em;
+  line-height:1.2;
+  color:var(--iuSectionAccent, #64748B);
+}
+#iuAffiliateView .iuSectionHeader--affiliate .iuSectionHeaderLine{
+  height:3px;
+  border-radius:999px;
+  opacity:1;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--iuSectionAccent) 72%,transparent) 0%,color-mix(in srgb,var(--iuSectionAccent) 28%,transparent) 38%,transparent 100%);
+}
+#iuAffiliateView>.iuSectionSubtitle{margin:2px 0 12px;line-height:1.38}
 .iuAffiliateDisclosure{
   margin: 0 0 14px 0;
   padding: 12px 14px;
   border-radius: 12px;
-  background: rgba(100, 116, 139, 0.1);
-  border: 1px solid rgba(100, 116, 139, 0.22);
+  background: color-mix(in srgb, var(--iuSectionAccent, #64748B) 8%, rgba(255,255,255,0.98));
+  border: 1px solid color-mix(in srgb, var(--iuSectionAccent, #64748B) 22%, rgba(11,27,43,0.08));
   color: rgba(15, 23, 42, 0.88);
   font-size: 14px;
   line-height: 1.45;
+}
+#newsList #iuAffiliateView .iuJRGrid a.iuAffiliateChip,
+#newsList #iuAffiliateView .iuAffiliateGrid a.iuAffiliateChip{
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  color:rgba(11,27,43,.92)!important;
+  background:linear-gradient(165deg,#fbfcfd,color-mix(in srgb,var(--iuSectionAccent) 5%,#f8fafc))!important;
+  border:1px solid color-mix(in srgb,var(--iuSectionAccent) 24%,rgba(11,27,43,.1))!important;
+  border-radius:12px;
+  box-shadow:0 1px 0 #fffc inset,0 1px 2px rgba(11,27,43,.05),0 10px 22px rgba(11,27,43,.04)!important;
+  transition:transform .12s ease,box-shadow .12s ease,border-color .14s ease,background .14s ease,color .14s ease,filter .14s ease;
+}
+#newsList #iuAffiliateView .iuAffiliateGrid a.iuAffiliateChip .iuRadioChipTitle{color:rgba(11,27,43,.92)!important}
+@media (hover:hover) and (pointer:fine){
+  #newsList #iuAffiliateView .iuAffiliateGrid a.iuAffiliateChip:hover{
+    color:rgba(11,27,43,.93)!important;
+    background:linear-gradient(155deg,color-mix(in srgb,var(--iuSectionAccent) 12%,#fff),color-mix(in srgb,var(--iuSectionAccent) 16%,#fff),color-mix(in srgb,var(--iuSectionAccent) 8%,#f8fafc))!important;
+    border-color:color-mix(in srgb,var(--iuSectionAccent) 34%,rgba(11,27,43,.09))!important;
+    box-shadow:0 1px 0 #fffc inset,0 0 0 1px color-mix(in srgb,var(--iuSectionAccent) 14%,transparent),0 12px 30px color-mix(in srgb,var(--iuSectionAccent) 13%,transparent)!important;
+    filter:saturate(1.02);
+  }
 }
 .iuAffiliateChip[data-aff-ready="0"]{ cursor: pointer; }
 .iuAffiliatePlaceholderNote{
@@ -22063,4 +22157,40 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   transition: opacity 0.2s ease;
 }
 .iuAffiliatePlaceholderNote.is-visible{ opacity: 1; }
-.iu-leftNav .iu-leftNavItem[data-accent^="aff-"]{ --iuNavAccent: var(--iuNavAccent-affiliate, #64748B); }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-cestovni-kancelare"]{ --iuNavAccent: var(--iuAff-aff-cestovni-kancelare); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-ubytovani-hotely"]{ --iuNavAccent: var(--iuAff-aff-ubytovani-hotely); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-letenky"]{ --iuNavAccent: var(--iuAff-aff-letenky); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-cestovni-pojisteni"]{ --iuNavAccent: var(--iuAff-aff-cestovni-pojisteni); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-auto-moto"]{ --iuNavAccent: var(--iuAff-aff-auto-moto); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-pojisteni"]{ --iuNavAccent: var(--iuAff-aff-pojisteni); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-finance"]{ --iuNavAccent: var(--iuAff-aff-finance); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-energie-uspor"]{ --iuNavAccent: var(--iuAff-aff-energie-uspor); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-lekarny"]{ --iuNavAccent: var(--iuAff-aff-lekarny); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-zdravi-doplnky"]{ --iuNavAccent: var(--iuAff-aff-zdravi-doplnky); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-kosmetika"]{ --iuNavAccent: var(--iuAff-aff-kosmetika); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-drogerie"]{ --iuNavAccent: var(--iuAff-aff-drogerie); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-moda"]{ --iuNavAccent: var(--iuAff-aff-moda); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-boty"]{ --iuNavAccent: var(--iuAff-aff-boty); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-sportovni-obleceni"]{ --iuNavAccent: var(--iuAff-aff-sportovni-obleceni); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-sport-outdoor"]{ --iuNavAccent: var(--iuAff-aff-sport-outdoor); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-dum-zahrada"]{ --iuNavAccent: var(--iuAff-aff-dum-zahrada); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-nabytek"]{ --iuNavAccent: var(--iuAff-aff-nabytek); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-kuchyn"]{ --iuNavAccent: var(--iuAff-aff-kuchyn); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-elektro"]{ --iuNavAccent: var(--iuAff-aff-elektro); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-mobily"]{ --iuNavAccent: var(--iuAff-aff-mobily); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-software"]{ --iuNavAccent: var(--iuAff-aff-software); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-knihy"]{ --iuNavAccent: var(--iuAff-aff-knihy); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-jidlo"]{ --iuNavAccent: var(--iuAff-aff-jidlo); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-zvirata"]{ --iuNavAccent: var(--iuAff-aff-zvirata); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"] .iu-leftNavIcon,
+body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"]:hover .iu-leftNavIcon,
+body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"].is-active .iu-leftNavIcon,
+body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"][aria-current="page"] .iu-leftNavIcon{
+  color: var(--iuNavAccent) !important;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--iuNavAccent) 22%, transparent)) !important;
+}
+body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"] .iu-leftNavIcon svg,
+body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"] .iu-leftNavIcon svg *{
+  stroke: currentColor !important;
+  fill: none !important;
+}
