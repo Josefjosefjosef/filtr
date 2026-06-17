@@ -536,7 +536,7 @@ font-src 'self' data:;
         #newsList>#iuLeftRail .iuLeftRailSectionTitle:first-child{display:none!important}
         #newsList>#iuLeftRail .iu-leftNav{padding-top:0!important;margin-top:0!important}
         #newsList>#iuLeftRail .iu-leftNav .iu-leftNavItem:first-of-type{margin-top:0!important}
-        #newsList>#iuCenterStage{grid-column:2!important;grid-row:2!important;margin-top:20px!important;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;align-self:start!important}
+        #newsList>#iuCenterStage{grid-column:2!important;grid-row:3!important;margin-top:12px!important;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;align-self:start!important;scroll-margin-top:calc(var(--topbarStackH, 68px) + 4px)!important}
         .layout>aside.accordionCol,.mainCol>aside.accordionCol{grid-column:3!important;grid-row:2!important;width:var(--iu-right-rail-width,360px)!important;min-width:var(--iu-right-rail-width,360px)!important;max-width:var(--iu-right-rail-width,360px)!important;flex:0 0 var(--iu-right-rail-width,360px)!important;display:flex!important;flex-direction:column!important;align-self:start!important;padding:0!important;margin-top:20px!important;background:transparent!important;position:static!important}
         .layout>aside.accordionCol :is(.mindMenu-scroll-wrapper,.mindMenu,#iuMindMenuView,section.iu-mailboxes,.iu-mmTopTools,section.iu-mmQuickLinks,#iuMailboxControls),.mainCol>aside.accordionCol :is(.mindMenu-scroll-wrapper,.mindMenu,#iuMindMenuView,section.iu-mailboxes,.iu-mmTopTools,section.iu-mmQuickLinks,#iuMailboxControls){display:none!important}
         #iuDesktopQrBanner,#iuDesktopQrBanner img{display:block!important;width:100%!important;position:static!important;margin:0!important;padding:0!important}
@@ -2277,9 +2277,6 @@ font-src 'self' data:;
                             <span class="iuSilverFinanceHomeCard__content">
                               <span class="iuSilverFinanceHomeCard__titleRow">
                                 <span class="iuSilverFinanceHomeCard__title">💰 Osobní finance a kalkulačky</span>
-                                <svg class="iuSilverFinanceHomeCard__chevron" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-                                  <path d="M7.5 4.5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
                               </span>
                               <span class="iuSilverFinanceHomeCard__lead">Máte své finance pod kontrolou? Získejte rychlý přehled o rozpočtu domácnosti, hypotéce a možnostech refinancování, investicích i spoření.</span>
                             </span>
@@ -2337,6 +2334,7 @@ font-src 'self' data:;
                               <div class="iuCulturePreviewCardMount" id="iuCulturePreviewCardMount" data-iu-culture-preview-mount></div>
                               <div class="iuScienceHistoryPreviewCardMount" id="iuScienceHistoryPreviewCardMount" data-iu-science-history-preview-mount></div>
                               <div class="iuEducationPreviewCardMount" id="iuEducationPreviewCardMount" data-iu-education-preview-mount></div>
+                              <div class="iuPrehledDnePreviewCardMount" id="iuPrehledDnePreviewCardMount" data-iu-prehled-dne-preview-mount></div>
                               <p class="iuSilverTallScrollPlaceholder" data-iu-silver-tall-scroll-placeholder>Obsah připravíme — zde bude scrollovací plocha.</p>
                               <p class="iuSilverTallScrollProbeLines" aria-hidden="true" data-iu-silver-tall-scroll-probe>Řádek 2 · neutrální shell<br>Řádek 3 · neutrální shell<br>Řádek 4 · neutrální shell<br>Řádek 5 · neutrální shell<br>Řádek 6 · neutrální shell<br>Řádek 7 · neutrální shell<br>Řádek 8 · neutrální shell<br>Řádek 9 · neutrální shell<br>Řádek 10 · neutrální shell</p>
                               <div class="iuSilverTallScrollLayoutSpacer" aria-hidden="true" data-iu-silver-tall-scroll-spacer></div>
@@ -2567,84 +2565,6 @@ font-src 'self' data:;
                           <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-radio"></use></svg>
                         </span>
                         <span class="iu-leftNavLabel">Rádia</span>
-                      </a>
-
-                      <div class="iuLeftRailSectionTitle">
-                        PŘEHLED DNE
-                      </div>
-
-                      <a class="iu-leftNavItem is-active" href="#" data-rail="media-all" data-accent="media" data-media-topic="all" aria-current="page">
-                        <span class="iu-leftNavIcon" aria-hidden="true">
-                          <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-news"></use></svg>
-                        </span>
-                        <span class="iu-leftNavLabel">Média</span>
-                      </a>
-
-                      <a class="iu-leftNavItem" href="#" data-rail="zpravy" data-accent="zpravy" data-media-topic="zpravy">
-                        <span class="iu-leftNavIcon" aria-hidden="true">
-                          <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-news"></use></svg>
-                        </span>
-                        <span class="iu-leftNavLabel">Zprávy</span>
-                      </a>
-
-                      <a class="iu-leftNavItem" href="#" data-rail="sport" data-accent="sport" data-media-topic="sport">
-                        <span class="iu-leftNavIcon" aria-hidden="true">
-                          <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-sport"></use></svg>
-                        </span>
-                        <span class="iu-leftNavLabel">Sport</span>
-                      </a>
-
-                      <a class="iu-leftNavItem" href="#" data-rail="finance" data-accent="finance" data-media-topic="finance">
-                        <span class="iu-leftNavIcon" aria-hidden="true">
-                          <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-finance"></use></svg>
-                        </span>
-                        <span class="iu-leftNavLabel">Finance</span>
-                      </a>
-
-                      <a class="iu-leftNavItem" href="#" data-rail="zdravi" data-accent="zdravi" data-media-topic="zdravi">
-                        <span class="iu-leftNavIcon" aria-hidden="true">
-                          <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-health"></use></svg>
-                        </span>
-                        <span class="iu-leftNavLabel">Zdraví</span>
-                      </a>
-
-                      <a class="iu-leftNavItem" href="#" data-rail="travel" data-accent="travel">
-                        <span class="iu-leftNavIcon" aria-hidden="true">
-                          <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-travel"></use></svg>
-                        </span>
-                        <span class="iu-leftNavLabel">Cestování</span>
-                      </a>
-
-                      <div class="iuLeftRailSectionTitle">
-                        ZÁBAVA &amp; ENGAGEMENT
-                      </div>
-
-                      <a class="iu-leftNavItem" href="#" data-rail="hry" data-accent="hry">
-                        <span class="iu-leftNavIcon" aria-hidden="true">
-                          <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-games"></use></svg>
-                        </span>
-                        <span class="iu-leftNavLabel">Hry</span>
-                      </a>
-
-                      <a class="iu-leftNavItem" href="#" data-rail="kultura" data-accent="kultura">
-                        <span class="iu-leftNavIcon" aria-hidden="true">
-                          <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-culture-events"></use></svg>
-                        </span>
-                        <span class="iu-leftNavLabel">Kultura / Akce</span>
-                      </a>
-
-                      <a class="iu-leftNavItem" href="#" data-rail="veda" data-accent="veda">
-                        <span class="iu-leftNavIcon" aria-hidden="true">
-                          <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-science-history"></use></svg>
-                        </span>
-                        <span class="iu-leftNavLabel">Věda &amp; Historie</span>
-                      </a>
-
-                      <a class="iu-leftNavItem" href="#" data-rail="vzdelavani" data-accent="vzdelavani">
-                        <span class="iu-leftNavIcon" aria-hidden="true">
-                          <svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#iu-education"></use></svg>
-                        </span>
-                        <span class="iu-leftNavLabel">Vzdělávání</span>
                       </a>
                     </nav>
                   </aside>
