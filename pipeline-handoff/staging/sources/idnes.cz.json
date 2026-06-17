@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-17T05:46:53.418295Z",
+  "ingestedAt": "2026-06-17T06:48:43.725126Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pavel se účastní Bezpečnostní rady státu, na programu je výstavba armády",
+      "url": "https://www.idnes.cz/zpravy/domaci/pavel-jednani-bezpecnostni-rady-statu-o-koncepci-vystavby-armady-do-roku-2040.A260617_030817_domaci_kop",
+      "dt": "2026-06-17T06:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "armády",
+        "bezpečnostní",
+        "pavel",
+        "programu",
+        "rady",
+        "státu",
+        "výstavba",
+        "účastní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -150,32 +175,6 @@
         "představí",
         "přitvrzení",
         "rukou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pavla na jednání Bezpečnostní rady státu přitáhla koncepce výstavby armády",
-      "url": "https://www.idnes.cz/zpravy/domaci/pavel-jednani-bezpecnostni-rady-statu-o-koncepci-vystavby-armady-do-roku-2040.A260617_030817_domaci_kop",
-      "dt": "2026-06-17T03:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "armády",
-        "bezpečnostní",
-        "jednání",
-        "koncepce",
-        "pavla",
-        "přitáhla",
-        "rady",
-        "státu",
-        "výstavby"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -789,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48853,
+      "bytes": 49137,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-17T05:11:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-17T06:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -843,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pavel se účastní Bezpečnostní rady státu, na programu je výstavba armády",
+            "publishedAt": "2026-06-17T06:00:00Z"
+          },
           {
             "title": "Ukradli stovky koček, skončit měly na talíři. Policie zasáhla a mazlíčky vrátila",
             "publishedAt": "2026-06-17T05:11:00Z"
@@ -866,10 +869,6 @@
           {
             "title": "Kratom nepatří do rukou dětí. Babiš s ministry představí přitvrzení pravidel",
             "publishedAt": "2026-06-17T03:05:00Z"
-          },
-          {
-            "title": "Pavla na jednání Bezpečnostní rady státu přitáhla koncepce výstavby armády",
-            "publishedAt": "2026-06-17T03:00:00Z"
           },
           {
             "title": "Stavíme za 80 tisíc za metr. Stavbaři za drahé byty nemohou, říká šéf Hochtiefu",

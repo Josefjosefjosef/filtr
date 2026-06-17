@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-06-17T05:46:53.418295Z",
+  "ingestedAt": "2026-06-17T06:48:43.725126Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Česká hra Hubert chce oslovit pejskaře a nabídnout český dabing",
+      "url": "https://zing.cz/article/ceska-hra-hubert-chce-oslovit-pejskare-autori-vybiraji-na-cesky-dabing",
+      "dt": "2026-06-17T06:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "chce",
+        "dabing",
+        "hra",
+        "hubert",
+        "nabídnout",
+        "oslovit",
+        "pejskaře",
+        "česká",
+        "český"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -944,32 +970,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Unikátní česká hra Scarlet Deer Inn odhalila datum vydání",
-      "url": "https://zing.cz/article/unikatni-ceska-hra-scarlet-deer-inn-odhalila-datum-vydani",
-      "dt": "2026-06-11T12:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "datum",
-        "deer",
-        "hra",
-        "inn",
-        "odhalila",
-        "scarlet",
-        "unikátní",
-        "vydání",
-        "česká"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -980,7 +980,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125838,
+      "bytes": 125845,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1017,7 +1017,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-17T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-17T06:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1032,6 +1032,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česká hra Hubert chce oslovit pejskaře a nabídnout český dabing",
+            "publishedAt": "2026-06-17T06:00:00Z"
+          },
           {
             "title": "Steam si podmanil další virální hit od jediného vývojáře",
             "publishedAt": "2026-06-17T04:00:00Z"
@@ -1059,10 +1063,6 @@
           {
             "title": "ASUS nabízí zajímavou slevu. K herní sestavě přidává sluchátka za korunu",
             "publishedAt": "2026-06-16T08:30:00Z"
-          },
-          {
-            "title": "Studio Don't Nod čelí finančním problémům, může hrozit jeho konec",
-            "publishedAt": "2026-06-16T08:00:00Z"
           }
         ]
       }

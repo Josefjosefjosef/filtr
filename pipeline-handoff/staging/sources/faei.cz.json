@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-06-17T05:46:53.418295Z",
+  "ingestedAt": "2026-06-17T06:48:43.725126Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Citi spouští první tokenizované depozitní certifikáty na trhu",
+      "url": "https://profitonline.cz/citi-spousti-prvni-tokenizovane-depozitni-certifikaty-na-trhu/",
+      "dt": "2026-06-17T06:00:38Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "certifikáty",
+        "citi",
+        "depozitní",
+        "první",
+        "spouští",
+        "tokenizované",
+        "trhu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -271,30 +295,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Josef Karas partnerem v Knight Frank Czech Republic",
-      "url": "https://profitonline.cz/josef-karas-partnerem-v-knight-frank-czech-republic/",
-      "dt": "2026-06-15T06:00:29Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "czech",
-        "frank",
-        "josef",
-        "karas",
-        "knight",
-        "partnerem",
-        "republic"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -305,7 +305,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19679,
+      "bytes": 19702,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -342,12 +342,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-06-17T04:00:36Z",
+        "raw_feed_latest_publishedAt": "2026-06-17T06:00:38Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 9,
+          "finance": 10,
           "zdravi": 1,
-          "zpravy": 2
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -359,6 +359,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Citi spouští první tokenizované depozitní certifikáty na trhu",
+            "publishedAt": "2026-06-17T06:00:38Z"
+          },
           {
             "title": "Noční můra podnikatelů se mění. Daňové kontroly už nejsou „naslepo“, ale velmi cílené",
             "publishedAt": "2026-06-17T04:00:36Z"
@@ -386,10 +390,6 @@
           {
             "title": "Cena ropy klesá po zprávách o příměří. Uleví se i centrálním bankám?",
             "publishedAt": "2026-06-16T08:00:17Z"
-          },
-          {
-            "title": "Radek Žďárecký generálním ředitelem OTK printing & packaging",
-            "publishedAt": "2026-06-16T06:00:00Z"
           }
         ]
       }
