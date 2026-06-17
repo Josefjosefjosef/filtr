@@ -1,6 +1,6 @@
 /**
- * Desktop right rail (≥901px) — Vyhledej mi zásilku + Osobní finance cards
- * moved from center feed to accordionCol below QR banner.
+ * Desktop right rail (≥901px) — Vyhledej mi zásilku, Osobní finance, Vzory smluv, Vytvořit fakturu
+ * moved from center feed to accordionCol below QR banner (action cards desktop-only in right rail).
  * P0 desktop: always light day variant; unified card heights.
  */
 
@@ -186,11 +186,14 @@
     flex-direction: column;
     justify-content: center;
     gap: 6px;
+    overflow: hidden;
   }
 
   #iuDesktopRightRailCards #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__titleRow {
     display: block;
     min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   #iuDesktopRightRailCards #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__chevron {
@@ -199,12 +202,15 @@
 
   #iuDesktopRightRailCards #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__title {
     margin: 0;
-    font-size: 0.98rem;
+    font-size: 0.75rem;
     font-weight: 800;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.04em;
     line-height: 1.25;
     color: #0f172a;
-    white-space: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   #iuDesktopRightRailCards #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__lead {
@@ -212,6 +218,8 @@
     font-size: 0.8125rem;
     line-height: 1.45;
     color: #475569;
+    overflow: hidden;
+    overflow-wrap: anywhere;
   }
 
   #iuDesktopRightRailCards #iuSilverFinanceHomeCard .iuSilverFinanceHomeCard__illus {
@@ -229,6 +237,97 @@
     display: block;
     width: 100%;
     height: var(--iuFinHomeIllusH);
+    object-fit: contain;
+    object-position: center center;
+  }
+
+  #iuDesktopRightRailCards #iuDesktopLegalDocsCard,
+  #iuDesktopRightRailCards #iuDesktopInvoiceCard {
+    --iuDesktopActionIllusH: 160px;
+    --iuDesktopActionIllusW: 120px;
+    --iuDesktopActionIllusGap: 10px;
+    appearance: none;
+    -webkit-appearance: none;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-height: var(--iuDesktopRightRailCardMinH);
+    margin: 0;
+    box-sizing: border-box;
+    padding: 10px 12px 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(168, 148, 108, 0.32);
+    background: linear-gradient(145deg, #fffdf8 0%, #faf6ee 48%, #f3ebe0 100%);
+    box-shadow:
+      0 4px 16px rgba(88, 72, 40, 0.07),
+      inset 0 1px 0 rgba(255, 255, 255, 0.92);
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    touch-action: manipulation;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  #iuDesktopRightRailCards #iuDesktopLegalDocsCard .iuDesktopRightRailActionCard__hero,
+  #iuDesktopRightRailCards #iuDesktopInvoiceCard .iuDesktopRightRailActionCard__hero {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: var(--iuDesktopActionIllusGap);
+    min-width: 0;
+    min-height: calc(var(--iuDesktopRightRailCardMinH) - 22px);
+  }
+
+  #iuDesktopRightRailCards #iuDesktopLegalDocsCard .iuDesktopRightRailActionCard__content,
+  #iuDesktopRightRailCards #iuDesktopInvoiceCard .iuDesktopRightRailActionCard__content {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: calc(100% - var(--iuDesktopActionIllusW) - var(--iuDesktopActionIllusGap));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  #iuDesktopRightRailCards #iuDesktopLegalDocsCard .iuDesktopRightRailActionCard__title,
+  #iuDesktopRightRailCards #iuDesktopInvoiceCard .iuDesktopRightRailActionCard__title {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    color: #0f172a;
+  }
+
+  #iuDesktopRightRailCards #iuDesktopLegalDocsCard .iuDesktopRightRailActionCard__lead,
+  #iuDesktopRightRailCards #iuDesktopInvoiceCard .iuDesktopRightRailActionCard__lead {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: #475569;
+  }
+
+  #iuDesktopRightRailCards #iuDesktopLegalDocsCard .iuDesktopRightRailActionCard__illus,
+  #iuDesktopRightRailCards #iuDesktopInvoiceCard .iuDesktopRightRailActionCard__illus {
+    flex: 0 0 var(--iuDesktopActionIllusW);
+    width: var(--iuDesktopActionIllusW);
+    min-width: 0;
+    max-width: var(--iuDesktopActionIllusW);
+    min-height: var(--iuDesktopActionIllusH);
+    align-self: center;
+    opacity: 0.88;
+    color: #8b7355;
+  }
+
+  #iuDesktopRightRailCards #iuDesktopLegalDocsCard .iuDesktopRightRailActionCard__illusSvg,
+  #iuDesktopRightRailCards #iuDesktopInvoiceCard .iuDesktopRightRailActionCard__illusSvg {
+    display: block;
+    width: 100%;
+    height: var(--iuDesktopActionIllusH);
     object-fit: contain;
     object-position: center center;
   }
