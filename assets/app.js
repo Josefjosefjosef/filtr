@@ -32819,6 +32819,9 @@ function buildVideoAsArticleCard(it) {
       const prPage = typeof window !== "undefined" && window.__iuScrollRestorePendingNav ? Number(window.__iuScrollRestorePendingNav.page) : 0;
       if (fp) fp.page = prPage > 1 ? prPage : 1;
     } catch (_) {}
+    try {
+      iuApplyMobileMainShellFromSectionNav(section, nav);
+    } catch (_) {}
     let viewKey = "media";
     if (section === "travel") {
       viewKey = nav.mode === "media" ? "media" : "travel";
@@ -32835,9 +32838,6 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
     try {
       iuSyncBodyIuHomeFromProjectsNav(nav);
-    } catch (_) {}
-    try {
-      iuApplyMobileMainShellFromSectionNav(section, nav);
     } catch (_) {}
     /* P0 click latency: aktivní stav levé navigace ve stejném tahu jako data-section / showView (ne až v post-apply rAF). */
     try {
