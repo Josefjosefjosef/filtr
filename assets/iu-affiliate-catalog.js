@@ -420,9 +420,121 @@
     },
   ];
 
+  var IU_AFFILIATE_COLORS = {
+    "aff-cestovni-kancelare": "#C9A227",
+    "aff-ubytovani-hotely": "#60A5FA",
+    "aff-letenky": "#2DD4BF",
+    "aff-cestovni-pojisteni": "#34D399",
+    "aff-auto-moto": "#FB923C",
+    "aff-pojisteni": "#059669",
+    "aff-finance": "#10B981",
+    "aff-energie-uspor": "#A3E635",
+    "aff-lekarny": "#22C55E",
+    "aff-zdravi-doplnky": "#6EE7B7",
+    "aff-kosmetika": "#F9A8D4",
+    "aff-drogerie": "#C4B5FD",
+    "aff-moda": "#A78BFA",
+    "aff-boty": "#A8A29E",
+    "aff-sportovni-obleceni": "#3B82F6",
+    "aff-sport-outdoor": "#4ADE80",
+    "aff-dum-zahrada": "#65A30D",
+    "aff-nabytek": "#D6C4A8",
+    "aff-kuchyn": "#FDBA74",
+    "aff-elektro": "#22D3EE",
+    "aff-mobily": "#7DD3FC",
+    "aff-software": "#14B8A6",
+    "aff-knihy": "#8B5CF6",
+    "aff-jidlo": "#FBBF24",
+    "aff-zvirata": "#86EFAC",
+  };
+
   var catalogById = {};
   for (var ci = 0; ci < IU_AFFILIATE_CATALOG.length; ci++) {
     catalogById[IU_AFFILIATE_CATALOG[ci].id] = IU_AFFILIATE_CATALOG[ci];
+  }
+
+  function ensureAffiliateInlineSprite(done) {
+    if (document.getElementById("iuAffInlineSprite")) {
+      if (typeof done === "function") done();
+      return;
+    }
+    var host = document.getElementById("iuAffInlineSpriteHost");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "iuAffInlineSpriteHost";
+      host.hidden = true;
+      host.setAttribute("aria-hidden", "true");
+      document.body.insertBefore(host, document.body.firstChild);
+    }
+    var loaded = false;
+    try {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "/assets/icons/iu-sprite.svg", false);
+      xhr.send(null);
+      if (xhr.status >= 200 && xhr.status < 300 && xhr.responseText) {
+        host.innerHTML = xhr.responseText.replace("<svg ", '<svg id="iuAffInlineSprite" ');
+        loaded = !!document.getElementById("iuAffInlineSprite");
+      }
+    } catch (_) {}
+    if (loaded) {
+      if (typeof done === "function") done();
+      return;
+    }
+    try {
+      fetch("/assets/icons/iu-sprite.svg", { cache: "force-cache" })
+        .then(function (r) {
+          return r.text();
+        })
+        .then(function (txt) {
+          if (!txt) return;
+          host.innerHTML = txt.replace("<svg ", '<svg id="iuAffInlineSprite" ');
+          if (typeof done === "function") done();
+        })
+        .catch(function () {});
+    } catch (_) {}
+  }
+
+  function createAffiliateNavIcon(iconId) {
+    ensureAffiliateInlineSprite();
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "iuSvgIcon");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+    var use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", "#" + iconId);
+    try {
+      use.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#" + iconId);
+    } catch (_) {}
+    svg.appendChild(use);
+    return svg;
+  }
+
+  function ensureAffiliateViewMountPoint() {
+    var view = document.getElementById("iuAffiliateView");
+    var centerStage = document.getElementById("iuCenterStage");
+    var jr = document.getElementById("iuJrEmptyView");
+    var quickFeed = document.getElementById("iuQuickFeed");
+    if (!view || !centerStage) return;
+
+    var refNode = null;
+    if (jr && jr.parentElement === centerStage) {
+      refNode = jr.nextSibling;
+    } else if (quickFeed && quickFeed.parentElement === centerStage) {
+      refNode = quickFeed.nextSibling;
+    }
+
+    if (view.parentElement !== centerStage) {
+      centerStage.insertBefore(view, refNode);
+      return;
+    }
+    if (jr && jr.parentElement === centerStage && view.previousElementSibling !== jr) {
+      centerStage.insertBefore(view, jr.nextSibling);
+      return;
+    }
+    if (!jr && quickFeed && quickFeed.parentElement === centerStage && view.previousElementSibling !== quickFeed) {
+      centerStage.insertBefore(view, quickFeed.nextSibling);
+    }
   }
 
   function escapeHtml(s) {
@@ -509,6 +621,11 @@
     }
 
     view.setAttribute("data-aff-category", cat.id);
+    try {
+      var accent = IU_AFFILIATE_COLORS[cat.id] || "";
+      if (accent) view.style.setProperty("--iuSectionAccent", accent);
+    } catch (_) {}
+    ensureAffiliateViewMountPoint();
     return true;
   }
 
@@ -538,15 +655,19 @@
       a.href = "#";
       a.setAttribute("data-rail", "affiliate");
       a.setAttribute("data-accent", cat.id);
-      a.innerHTML =
-        '<span class="iu-leftNavIcon" aria-hidden="true">' +
-        '<svg class="iuSvgIcon" viewBox="0 0 24 24"><use href="/assets/icons/iu-sprite.svg#' +
-        escapeHtml(cat.icon) +
-        '"></use></svg>' +
-        "</span>" +
-        '<span class="iu-leftNavLabel">' +
-        escapeHtml(cat.title) +
-        "</span>";
+      var iconWrap = document.createElement("span");
+      iconWrap.className = "iu-leftNavIcon";
+      iconWrap.setAttribute("aria-hidden", "true");
+      iconWrap.appendChild(createAffiliateNavIcon(cat.icon));
+      var label = document.createElement("span");
+      label.className = "iu-leftNavLabel";
+      label.textContent = cat.title;
+      a.appendChild(iconWrap);
+      a.appendChild(label);
+      try {
+        var navAccent = IU_AFFILIATE_COLORS[cat.id];
+        if (navAccent) a.style.setProperty("--iuNavAccent", navAccent);
+      } catch (_) {}
       nav.appendChild(a);
     }
 
@@ -554,6 +675,7 @@
   }
 
   function initAffiliateCatalog() {
+    ensureAffiliateInlineSprite();
     mountLeftRailNav();
     if (!document.__iuAffClickBound) {
       document.addEventListener("click", handleAffiliateGridClick);
@@ -566,10 +688,12 @@
     try {
       if (window.__iuSectionViewsLazyMount) window.__iuSectionViewsLazyMount.ensure("affiliate");
     } catch (_) {}
+    ensureAffiliateViewMountPoint();
     return renderAffiliateSection(section);
   }
 
   window.IU_AFFILIATE_CATALOG = IU_AFFILIATE_CATALOG;
+  window.IU_AFFILIATE_COLORS = IU_AFFILIATE_COLORS;
   window.IU_AFFILIATE_DISCLOSURE = IU_AFFILIATE_DISCLOSURE;
   window.iuAffiliateCatalogInit = initAffiliateCatalog;
   window.iuAffiliateApplySection = applyAffiliateFromSection;
@@ -588,7 +712,9 @@
   document.addEventListener("iu:section-view-mounted", function (ev) {
     try {
       if (ev && ev.detail && ev.detail.key === "affiliate") {
+        ensureAffiliateInlineSprite();
         initAffiliateCatalog();
+        ensureAffiliateViewMountPoint();
         var sec =
           (document.body && document.body.dataset && document.body.dataset.section) || "";
         if (isAffiliateSectionKey(sec)) renderAffiliateSection(sec);
