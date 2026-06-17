@@ -1,26 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-17T01:38:43.762157Z",
+  "ingestedAt": "2026-06-17T02:38:31.931191Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Fantastická trefa! Argentina po výstavní brance Messiho vede",
+      "title": "FOTBAL ONLINE: Hattrick měl na dosah! Messi však v další šanci selhal",
       "url": "https://www.sport.cz/clanek/fotbal-ms-2026-argentina-alzirsko-online-5481400",
       "dt": "2026-06-16T17:00:21Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "argentina",
-        "brance",
-        "fantastická",
+        "další",
+        "dosah",
         "fotbal",
-        "messiho",
+        "hattrick",
+        "messi",
+        "měl",
         "online",
-        "trefa",
-        "vede",
-        "výstavní"
+        "selhal",
+        "však",
+        "šanci"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Irák potopil brankář, hrubkou nabídl Haalandovi vítězný gól",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-irak-potopil-brankar-hrubkou-nabidl-haalandovi-vitezny-gol-5481720",
+      "dt": "2026-06-17T01:44:26Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "brankář",
+        "gól",
+        "haalandovi",
+        "hrubkou",
+        "irák",
+        "nabídl",
+        "potopil",
+        "vítězný"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -744,31 +770,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Trať zlínské Barum rallye bude letos tvořit 13 rychlostních zkoušek",
-      "url": "https://www.sport.cz/clanek/moto-trat-zlinske-barum-rallye-bude-letos-tvorit-13-rychlostnich-zkousek-5481446",
-      "dt": "2026-06-16T16:43:07Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "barum",
-        "letos",
-        "rallye",
-        "rychlostních",
-        "trať",
-        "tvořit",
-        "zkoušek",
-        "zlínské"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +780,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40660,
+      "bytes": 40087,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,7 +817,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-16T23:30:48Z",
+        "raw_feed_latest_publishedAt": "2026-06-17T01:44:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -832,8 +833,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Fantastická trefa! Argentina po výstavní brance Messiho vede",
+            "title": "FOTBAL ONLINE: Hattrick měl na dosah! Messi však v další šanci selhal",
             "publishedAt": "2026-06-16T17:00:21Z"
+          },
+          {
+            "title": "Irák potopil brankář, hrubkou nabídl Haalandovi vítězný gól",
+            "publishedAt": "2026-06-17T01:44:26Z"
           },
           {
             "title": "Jasná záležitost! Haaland a spol. nakonec přejeli soupeře",
@@ -858,10 +863,6 @@
           {
             "title": "Softbalistky zahájily domácí základní část MS drtivou porážkou",
             "publishedAt": "2026-06-16T20:34:33Z"
-          },
-          {
-            "title": "Návrat po 28 letech. Rakušané proti nováčkovi MS musí nahradit hlavní hvězdu",
-            "publishedAt": "2026-06-16T20:00:33Z"
           }
         ]
       }
