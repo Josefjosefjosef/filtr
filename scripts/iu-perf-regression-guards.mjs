@@ -37,7 +37,7 @@ const BUTTONS = [
   { name: "Sport", accent: "sport", nonFeed: false, expect: { section: "feed", view: "media", topic: "sport" } },
   { name: "Finance", accent: "finance", nonFeed: false, expect: { section: "feed", view: "media", topic: "finance" } },
   { name: "Zdraví", accent: "zdravi", nonFeed: false, expect: { section: "feed", view: "media", topic: "zdravi" } },
-  { name: "Cestování", accent: "travel", nonFeed: false, expect: { section: "travel", view: "travel", topic: null } },
+  { name: "Cestování", accent: "travel", nonFeed: false, expect: { section: "travel", view: "media", topic: null } },
   { name: "Hry", accent: "hry", nonFeed: false, expect: { section: "hry", view: "media", topic: null } },
   { name: "Kultura / Akce", accent: "kultura", nonFeed: false, expect: { section: "kultura", view: "media", topic: null } },
   { name: "Věda & Historie", accent: "veda", nonFeed: false, expect: { section: "veda", view: "media", topic: null } },
