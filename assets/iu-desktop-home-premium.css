@@ -9,7 +9,15 @@
     --iu-dhp-homecard-img-ratio: 4 / 3;
     --iu-dhp-weather-col-w: 340px;
     --iu-dhp-hero-col-gap: 6px;
-    --iu-dhp-center-stage-mt: 260px;
+  }
+
+  body.iu-desktop-home-grid #newsList > #iuCenterStage {
+    opacity: 0;
+    transition: none;
+  }
+
+  body.iu-desktop-home-grid[data-iu-gap-synced="1"] #newsList > #iuCenterStage {
+    opacity: 1;
   }
 
   /* ── Hero row: welcome left + weather right (340px), compact vertical rhythm ── */
