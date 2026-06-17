@@ -335,4 +335,77 @@
     outline-offset: 2px;
     border-radius: 12px;
   }
+
+  /* ── Desktop homecards box: shrink to content; section 20px below ── */
+  body.iu-desktop-home-grid .iuSilverTopCardsStack #silver-slot.silver-slot,
+  body.iu-desktop-home-grid #silver-slot.silver-slot {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection {
+    min-height: 0 !important;
+  }
+
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport [class$="PreviewCardMount"] {
+    min-height: 0 !important;
+  }
+
+  /* Post-homecards stack rows are mobile/tablet-only; keep desktop section gap tight. */
+  body.iu-desktop-home-grid #silver-slot #iuInfoCardsMobileTablet,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStackSeparatorWeatherCal,
+  body.iu-desktop-home-grid #silver-slot #iuSilverCalendarSummaryCard,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStackSeparatorCal,
+  body.iu-desktop-home-grid #silver-slot #iuSilverTasksSummaryCard,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStackSeparatorBeforeSilver,
+  body.iu-desktop-home-grid #silver-slot #iuSilverHomeShellMountPoint,
+  body.iu-desktop-home-grid #silver-slot #iuSilverHomeShell {
+    display: none !important;
+    min-height: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* Přehled dne: same card shell as other homecards on desktop */
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport .box-prehled-dne {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    border: 1px solid rgba(15, 35, 55, 0.16);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.55) inset, 0 10px 26px rgba(8, 14, 22, 0.1);
+    color: #0b1f33;
+    text-align: left;
+    padding: 0;
+    margin: 0 !important;
+    cursor: pointer;
+    overflow: hidden;
+    box-sizing: border-box;
+    align-self: start;
+    min-height: 0;
+    height: auto;
+  }
+
+  body.iu-desktop-home-grid .silver-welcome-stack--evening #iuSilverTallScrollViewport .box-prehled-dne {
+    border-color: rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(230, 238, 248, 0.92);
+  }
+
+  body.iu-desktop-home-grid #silver-slot .iuSilverWelcomeSticky {
+    margin-bottom: 0 !important;
+  }
+
+  body.iu-desktop-home-grid #silver-slot.silver-slot,
+  body.iu-desktop-home-grid .iuSilverTopCardsStack #silver-slot.silver-slot {
+    margin-bottom: 0 !important;
+  }
 }
