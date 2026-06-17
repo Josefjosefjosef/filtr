@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-06-17T06:48:43.725126Z",
+  "ingestedAt": "2026-06-17T08:03:52.364828Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Game Pass již brzy opustí několik známých her",
+      "url": "https://zing.cz/article/game-pass-jiz-brzy-opusti-nekolik-znamych-her-4",
+      "dt": "2026-06-17T08:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "brzy",
+        "game",
+        "her",
+        "již",
+        "několik",
+        "opustí",
+        "pass",
+        "známých"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -947,29 +972,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Age of Empires IV obdrží další velké rozšíření",
-      "url": "https://zing.cz/article/age-of-empires-iv-obdrzi-dalsi-velke-rozsireni",
-      "dt": "2026-06-11T14:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "age",
-        "další",
-        "empires",
-        "obdrží",
-        "rozšíření",
-        "velké"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -980,7 +982,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125845,
+      "bytes": 125765,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1017,7 +1019,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-17T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-17T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1032,6 +1034,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Game Pass již brzy opustí několik známých her",
+            "publishedAt": "2026-06-17T08:00:00Z"
+          },
           {
             "title": "Česká hra Hubert chce oslovit pejskaře a nabídnout český dabing",
             "publishedAt": "2026-06-17T06:00:00Z"
@@ -1059,10 +1065,6 @@
           {
             "title": "Kontroverzní Jasuke se loučí, Assassin’s Creed Shadows dostává finální update",
             "publishedAt": "2026-06-16T10:00:00Z"
-          },
-          {
-            "title": "ASUS nabízí zajímavou slevu. K herní sestavě přidává sluchátka za korunu",
-            "publishedAt": "2026-06-16T08:30:00Z"
           }
         ]
       }
