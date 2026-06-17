@@ -10,6 +10,10 @@ import path from "path";
 import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
+import {
+  desktopNavSelector,
+  waitDesktopNavTarget,
+} from "./guards/desktop-nav-targets.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -83,10 +87,10 @@ function waitForPort(host, port, timeoutMs) {
 
 async function measureNavOnce(page, btn) {
   await page.goto(BASE + "?iuRobust=1", { waitUntil: "domcontentloaded", timeout: 60000 });
-  await page.waitForSelector(`#iuLeftRail a[data-accent="${btn.accent}"]`, { timeout: 60000 });
+  await waitDesktopNavTarget(page, btn.accent);
   await page.waitForTimeout(350);
 
-  return page.evaluate(async ({ ac, exp, nonFeed }) => {
+  return page.evaluate(async ({ navSel, exp, nonFeed }) => {
     function navMatches(ex) {
       const u = new URL(location.href);
       const sec = (document.body && document.body.getAttribute("data-section")) || "";
@@ -114,8 +118,8 @@ async function measureNavOnce(page, btn) {
       po.observe({ entryTypes: ["longtask"] });
     } catch (e) {}
 
-    const el = document.querySelector(`#iuLeftRail a[data-accent="${ac}"]`);
-    if (!el) return { error: "no rail link" };
+    const el = document.querySelector(navSel);
+    if (!el) return { error: "no nav target" };
 
     el.addEventListener(
       "pointerdown",
@@ -175,7 +179,7 @@ async function measureNavOnce(page, btn) {
       badLongTasksBeforeVisible: badLtBeforeVisible,
       nonFeed,
     };
-  }, { ac: btn.accent, exp: btn.expect, nonFeed: btn.nonFeed });
+  }, { navSel: desktopNavSelector(btn.accent), exp: btn.expect, nonFeed: btn.nonFeed });
 }
 
 async function runFlickerPhaseGuard(page) {

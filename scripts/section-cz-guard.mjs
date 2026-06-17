@@ -32,7 +32,10 @@ must(
 
 must(/if \(k === 'culture'\) return 'kultura'/.test(appJs), "legacy culture URL must map to kultura");
 
-must(idx.includes('data-accent="kultura"'), "index.html left rail kultura data-accent");
+must(
+  idx.includes("data-iu-culture-preview-mount") || idx.includes('data-section="kultura"'),
+  "index.html kultura must be reachable via preview homecard or hex grid",
+);
 must(idx.includes('data-section="kultura"'), "index.html hex kultura data-section");
 
 must(
