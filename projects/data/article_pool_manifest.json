@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-17T00:54:26.104678Z",
-  "source_run_id": "27658266870",
+  "generatedAt": "2026-06-17T01:05:17.910150Z",
+  "source_run_id": "27658643904",
   "pipeline_phase": "fast_pool_publish",
   "pool_boundary": "post_event_dedupe_pre_section_limits",
   "clean_article_pool_definition": "Articles after RSS fetch, normalize, URL dedupe, title clustering, event-level dedupe, section classification, and quality/relevance checks; before release guards, PR creation, publish, and homepage selection.",
@@ -13,9 +13,9 @@
   "UNIQUE_ARTICLES_LOST_AFTER_EVENT_DEDUPE": "UNKNOWN_NOT_EXPORTED",
   "UNIQUE_ARTICLES_LOST_AFTER_SECTION_LIMITS": 0,
   "UNIQUE_ARTICLES_LOST_AFTER_HOMEPAGE_SELECTION_ESTIMATE": "UNKNOWN_NOT_EXPORTED",
-  "total_raw_items": 10,
-  "total_normalized": 10,
-  "total_after_url_dedupe": 10,
+  "total_raw_items": 18,
+  "total_normalized": 18,
+  "total_after_url_dedupe": 18,
   "total_after_event_dedupe": 16555,
   "total_publishable_pool": 16555,
   "total_clean_pool": 16555,
@@ -23,8 +23,8 @@
   "articles_full_count": 16555,
   "articles_final_count": 16090,
   "articles_json_count": 16090,
-  "cluster_count": 9,
-  "new_articles_built": 9,
+  "cluster_count": 18,
+  "new_articles_built": 18,
   "per_section_counts": {
     "sport": 4764,
     "finance": 3032,
@@ -134,7 +134,7 @@
   },
   "duplicate_counts": {
     "url_dedupe_dropped": 0,
-    "title_cluster_nonprimary_dropped": 1,
+    "title_cluster_nonprimary_dropped": 0,
     "event_dedupe_suppressed": 0
   },
   "event_cluster_counts": 0,
@@ -150,7 +150,7 @@
   "HOMEPAGE_DATA_SOURCE": "publishable_pool.json",
   "HOMEPAGE_READONLY_SELECTION": "YES",
   "PUBLISHABLE_POOL_SCHEMA_VERSION": 1,
-  "PUBLISHABLE_POOL_GENERATED_AT": "2026-06-17T00:54:26.104678Z",
+  "PUBLISHABLE_POOL_GENERATED_AT": "2026-06-17T01:05:17.910150Z",
   "fast_publish": {
     "new_articles_published": 5,
     "prev_pool_total": 16557,
