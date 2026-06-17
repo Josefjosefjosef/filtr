@@ -1931,6 +1931,7 @@ font-src 'self' data:;
         if (k === "tv") return "tvonline";
         if (k === "radio") return "radio";
         if (k === "jr") return "jr";
+        if (k.indexOf("aff-") === 0) return k;
         var allowed = {media:1,feed:1,tv:1,tvonline:1,mapy:1,travel:1,pocasi:1,tvprogram:1,hry:1,kultura:1,veda:1,vzdelavani:1,ads:1,jr:1,radio:1};
         if (k === "home") return "media";
         return allowed[k] ? k : "media";
@@ -1944,7 +1945,7 @@ font-src 'self' data:;
         document.documentElement.setAttribute("data-iu-fc", iuFc);
         document.body.setAttribute("data-iu-fc", iuFc);
         var iuTm = { pocasi: 1, mapy: 1, maps: 1, jr: 1, tvprogram: 1, tvonline: 1, radio: 1 };
-        if (iuTm[sec]) {
+        if (iuTm[sec] || sec.indexOf("aff-") === 0) {
           document.documentElement.setAttribute("data-iu-tool-main", "1");
           document.body.setAttribute("data-iu-tool-main", "1");
         } else {
@@ -2741,6 +2742,18 @@ font-src 'self' data:;
                       <p>Cílem je mít praktický rozcestník pro situace, kdy potřebujete rychle najít spoj, ověřit dopravní informace nebo otevřít oficiální službu dopravce bez zbytečného hledání.</p>
                     </section>
     </div>
+                  <template id="iuLazyViewTpl-affiliate" data-iu-lazy-view="affiliate">
+<div id="iuAffiliateView" class="iuAffiliateView iuJrEmptyView" data-view-host="affiliate" hidden>
+                    <div class="iuSectionHeader iuSectionHeader--affiliate">
+                      <h2 id="iuAffiliateTitle">Doporučené služby</h2>
+                      <div class="iuSectionHeaderLine" aria-hidden="true"></div>
+                    </div>
+                    <p class="iuSectionSubtitle" id="iuAffiliateSubtitle"></p>
+                    <div class="iuAffiliateDisclosure" id="iuAffiliateDisclosure" role="note"></div>
+                    <div class="iuRadioGrid iuJRGrid iuAffiliateGrid" id="iuAffiliateGrid" role="list" aria-label="Partnerské služby"></div>
+                    <div class="iuAffiliatePlaceholderNote" role="status" aria-live="polite" hidden>Odkaz připravujeme.</div>
+                  </div>
+    </template>
                   <template id="iuLazyViewTpl-pocasi" data-iu-lazy-view="pocasi">
 <div id="iuWeatherView" class="iuWeatherView" data-view-host="pocasi" hidden>
                     <div class="iuSectionHeader iuSectionHeader--weather">
@@ -5426,6 +5439,7 @@ font-src 'self' data:;
     </script>
     <script defer src="/assets/iu-info-center-lazy-mount.js?v=info-center-lazy-mount-v1-20260611"></script>
     <script defer src="/assets/iu-section-views-lazy-mount.js?v=section-views-lazy-mount-v1-20260611"></script>
+    <script defer src="/assets/iu-affiliate-catalog.js?v=affiliate-catalog-v1-20260617b"></script>
     <script type="module" src="/assets/app.js?v=lcp-fast-path-v1-20260611"></script>
     <script>
     (function iuOverlayCssDeferGuard(){

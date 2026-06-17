@@ -15150,6 +15150,7 @@ function buildVideoAsArticleCard(it) {
         travel: "#iuTravelView",
         weather: "#iuWeatherView",
         tvprogram: "#iuTvProgramView",
+        affiliate: "#iuAffiliateView",
         hry: "#feed",
         kultura: "#feed",
         veda: "#feed",
@@ -30410,6 +30411,7 @@ function buildVideoAsArticleCard(it) {
     travel: 'travel',
     pocasi: 'pocasi',
     tvprogram: 'tvprogram',
+    affiliate: 'affiliate',
     hry: 'media',
     kultura: 'media',
     veda: 'media',
@@ -32095,6 +32097,7 @@ function buildVideoAsArticleCard(it) {
     if (k === 'tv') return 'tvonline';
     if (k === 'radio') return 'radio';
     if (k === 'jr') return 'jr';
+    if (k.indexOf('aff-') === 0) return k;
     if (k === 'media') return IU_ARTICLE_HUB_SECTION;
     // allow other left-rail sections to roundtrip via URL without changing feed pipeline
     const allowed = new Set([IU_ARTICLE_HUB_SECTION,'tv','tvonline','mapy','travel','pocasi','tvprogram','hry','kultura','veda','vzdelavani','jr']);
@@ -32781,7 +32784,7 @@ function buildVideoAsArticleCard(it) {
     try{ document.documentElement && (document.documentElement.dataset.section = section); }catch{}
     try{
       var iuTmSec = { pocasi: 1, mapy: 1, maps: 1, jr: 1, tvprogram: 1, tvonline: 1, radio: 1 };
-      if (iuTmSec[section]) {
+      if (iuTmSec[section] || section.indexOf("aff-") === 0) {
         if (document.documentElement) document.documentElement.setAttribute("data-iu-tool-main", "1");
         if (document.body) document.body.setAttribute("data-iu-tool-main", "1");
       } else {
@@ -32819,10 +32822,17 @@ function buildVideoAsArticleCard(it) {
     let viewKey = "media";
     if (section === "travel") {
       viewKey = nav.mode === "media" ? "media" : "travel";
+    } else if (section.indexOf("aff-") === 0) {
+      viewKey = "affiliate";
     } else {
       viewKey = VIEW_MAP[section] ?? "media";
     }
     showView(viewKey);
+    try {
+      if (section.indexOf("aff-") === 0 && typeof window.iuAffiliateApplySection === "function") {
+        window.iuAffiliateApplySection(section);
+      }
+    } catch (_) {}
     try {
       iuSyncBodyIuHomeFromProjectsNav(nav);
     } catch (_) {}

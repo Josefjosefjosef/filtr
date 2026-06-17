@@ -20,7 +20,7 @@
 
   if (window.__iuSectionViewsLazyMount) return;
 
-  var KEYS = ["jr", "tvprogram", "travel", "mapy", "radio", "tvonline", "pocasi"];
+  var KEYS = ["jr", "tvprogram", "travel", "mapy", "radio", "tvonline", "pocasi", "affiliate"];
   var SELECTOR_TO_KEY = {
     "#iuJrEmptyView": "jr",
     "#iuTvProgramView": "tvprogram",
@@ -29,6 +29,7 @@
     "#iuRadioView": "radio",
     "#iuTvOnlineView": "tvonline",
     "#iuWeatherView": "pocasi",
+    "#iuAffiliateView": "affiliate",
   };
 
   function getTpl(key) {
@@ -100,6 +101,8 @@
       if (mode !== "media") ensure("travel");
     } else if (KEYS.indexOf(sec) !== -1) {
       ensure(sec);
+    } else if (sec.indexOf("aff-") === 0) {
+      ensure("affiliate");
     }
   } catch (_) {}
 })();
