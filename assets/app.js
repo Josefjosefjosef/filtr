@@ -8967,7 +8967,10 @@ function buildVideoAsArticleCard(it) {
       const body = document.body;
       if (!stage) return;
       if (!body || !body.classList.contains("iu-desktop-home-grid") || !iuIsDesktopNavLayout()) {
-        if (body) body.style.removeProperty("--iu-dhp-center-stage-mt");
+        if (body) {
+          body.style.removeProperty("--iu-dhp-center-stage-mt");
+          body.removeAttribute("data-iu-gap-synced");
+        }
         return;
       }
       const homecards = document.getElementById("iuSilverTallScrollSection");
@@ -8979,6 +8982,7 @@ function buildVideoAsArticleCard(it) {
       const gridCellTop = stackTop - stackMt;
       const margin = Math.max(20, Math.round(hcBottom - gridCellTop + 20));
       body.style.setProperty("--iu-dhp-center-stage-mt", margin + "px");
+      body.setAttribute("data-iu-gap-synced", "1");
     }catch(_){}
   }
   function iuDesktopHomeSectionGridGuardApply(){
