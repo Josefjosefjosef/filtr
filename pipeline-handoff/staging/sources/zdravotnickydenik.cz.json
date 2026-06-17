@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-06-17T04:48:27.336194Z",
+  "ingestedAt": "2026-06-17T05:46:53.418295Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Evropa ztrácí náskok. Brusel spouští plán, který má přivést nové léky rychleji k pacientům",
+      "url": "https://www.zdravotnickydenik.cz/2026/06/eu-spousti-plan-jak-privest-nove-leky-rychleji-k-pacientum/",
+      "dt": "2026-06-17T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "brusel",
+        "evropa",
+        "léky",
+        "nové",
+        "náskok",
+        "pacientům",
+        "plán",
+        "přivést",
+        "rychleji",
+        "spouští",
+        "ztrácí"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -237,33 +265,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Hrůzný případ: Lékařka je podezřelá z experimentů s desítkami lidských plodů, hrozí jí 12 let",
-      "url": "https://www.zdravotnickydenik.cz/2026/06/hruzny-pripad-lekarka-experimentovala-s-lidskymi-plody-polsko/",
-      "dt": "2026-06-15T21:52:39Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "desítkami",
-        "experimentů",
-        "hrozí",
-        "hrůzný",
-        "let",
-        "lidských",
-        "lékařka",
-        "plodů",
-        "podezřelá",
-        "případ"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 86195,
+      "bytes": 94126,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-06-16T14:46:59Z",
+        "raw_feed_latest_publishedAt": "2026-06-17T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -326,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropa ztrácí náskok. Brusel spouští plán, který má přivést nové léky rychleji k pacientům",
+            "publishedAt": "2026-06-17T05:00:00Z"
+          },
           {
             "title": "Jed na krysy v dětské výživě: Podezřelý zůstává ve vazbě, přiznal se jen částečně",
             "publishedAt": "2026-06-16T14:46:59Z"
@@ -353,10 +358,6 @@
           {
             "title": "„To jsou ti z Filipín“ už neplatí. Penta popisuje zkušenosti se zahraničními zdravotníky",
             "publishedAt": "2026-06-16T07:00:00Z"
-          },
-          {
-            "title": "Zdravotnictví dostane míň, než se čekalo. Miliardy musí pojišťovny „vyškrábnout“ z provozních fondů",
-            "publishedAt": "2026-06-16T06:00:00Z"
           }
         ]
       }
