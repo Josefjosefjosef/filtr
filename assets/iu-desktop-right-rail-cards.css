@@ -395,3 +395,70 @@
     object-position: center top;
   }
 }
+
+/* Partner banner IAF — desktop only (≥1025px), below Resistance Security banner */
+#iuDesktopRightRailPartnerIaf {
+  display: none;
+}
+
+@media (min-width: 1025px) {
+  #iuDesktopRightRailPartnerIaf {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 25px 0 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__adHead {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0 0 5px;
+    min-width: 0;
+  }
+
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__adPos {
+    font-size: 11.6px;
+    font-weight: 800;
+    color: #16a34a !important;
+    -webkit-text-fill-color: #16a34a !important;
+    white-space: nowrap;
+  }
+
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__adLabel {
+    font-size: 11.6px;
+    font-weight: 750;
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
+    white-space: nowrap;
+  }
+
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__link {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+    text-decoration: none;
+    border: 0;
+    border-radius: 0;
+    aspect-ratio: 1024 / 1536;
+  }
+
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    object-fit: contain;
+    object-position: center top;
+  }
+}
