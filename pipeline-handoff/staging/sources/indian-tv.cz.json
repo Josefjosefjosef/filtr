@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-06-18T11:14:50.699874Z",
+  "ingestedAt": "2026-06-18T12:19:36.027427Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Přes hodinu z hraní State of Decay 3. Potvrzuje výrazný posun série - INDIAN",
+      "url": "https://indian-tv.cz/clanek/pres-hodinu-z-hrani-state-of-decay-3-in9hi5",
+      "dt": "2026-06-18T11:30:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "decay",
+        "hodinu",
+        "hraní",
+        "indian",
+        "posun",
+        "potvrzuje",
+        "state",
+        "série",
+        "výrazný"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1080,30 +1106,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Gears of War: E-Day odhalil hardwarové nároky pro PC - INDIAN",
-      "url": "https://indian-tv.cz/clanek/gears-of-war-e-day-odhalil-hardwarove-naroky-pro-pc-27d0ra",
-      "dt": "2026-06-15T05:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "day",
-        "gears",
-        "hardwarové",
-        "indian",
-        "nároky",
-        "odhalil",
-        "war"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1114,7 +1116,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 232447,
+      "bytes": 231917,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1151,7 +1153,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-18T10:54:30Z",
+        "raw_feed_latest_publishedAt": "2026-06-18T11:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1166,6 +1168,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přes hodinu z hraní State of Decay 3. Potvrzuje výrazný posun série - INDIAN",
+            "publishedAt": "2026-06-18T11:30:00Z"
+          },
           {
             "title": "Fortnite skiny i v jiných hrách? Epic má ambiciózní plány pro Unreal Engine 6 - INDIAN",
             "publishedAt": "2026-06-18T10:54:30Z"
@@ -1193,10 +1199,6 @@
           {
             "title": "Mina the Hollower je skvělou kombinací 2D Zeldy a soulsovky - INDIAN",
             "publishedAt": "2026-06-17T16:01:02Z"
-          },
-          {
-            "title": "Black Myth: Wukong se prodává výrazně rychleji než Elden Ring - INDIAN",
-            "publishedAt": "2026-06-17T15:30:00Z"
           }
         ]
       }
