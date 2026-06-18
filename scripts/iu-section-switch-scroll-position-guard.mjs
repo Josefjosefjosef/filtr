@@ -82,7 +82,7 @@ async function installClsObserver(context) {
 
 /** Mirrors assets/app.js IU_FEED_SECTION_HEADER_ASSETS for feed-topic / feed-section headers. */
 const FEED_HEADER_BY_KEY = {
-  zpravy: "section-zpravy.jpg",
+  zpravy: "section-zpravy-header-video-v1.mp4",
   sport: "section-sport.jpg",
   finance: "section-finance.jpg",
   zdravi: "section-zdravi.jpg",
@@ -99,6 +99,7 @@ function readMetricsScript(distanceMax) {
     const feed = document.getElementById("feed");
     const header =
       (feed && feed.querySelector("picture.iu-feed-section-header-picture")) ||
+      (feed && feed.querySelector(".iu-feed-section-header-video-wrap")) ||
       (feed && feed.querySelector("img.iu-feed-section-header-img")) ||
       (feed && feed.querySelector(".iu-feed-section-header-img"));
     const toolHeader =
@@ -123,8 +124,14 @@ function readMetricsScript(distanceMax) {
     const img =
       (feed && feed.querySelector(".iu-feed-section-header-img")) ||
       (feed && feed.querySelector("picture.iu-feed-section-header-picture img"));
-    const src = img ? String(img.getAttribute("src") || img.currentSrc || "") : "";
-    const headerFile = src.split("/").pop() || "";
+    const videoWrap = feed && feed.querySelector(".iu-feed-section-header-video-wrap");
+    let headerFile = "";
+    if (videoWrap) {
+      headerFile = String(videoWrap.getAttribute("data-feed-header-file") || "");
+    } else if (img) {
+      const src = String(img.getAttribute("src") || img.currentSrc || "");
+      headerFile = src.split("/").pop() || "";
+    }
     const ready = feed ? String(feed.getAttribute("data-feed-ready") || "") : "";
     const switching = feed ? String(feed.getAttribute("data-feed-switching") || "") : "";
     const feedVisible = !!(feed && feed.offsetParent !== null && feed.getBoundingClientRect().height > 40);
