@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-06-18T18:51:03.170627Z",
+  "ingestedAt": "2026-06-18T20:15:05.479054Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Zahrajte si zdarma více než 100 her od Ubisoftu",
+      "url": "https://zing.cz/article/zahrajte-si-zdarma-vice-nez-100-her-od-ubisoftu",
+      "dt": "2026-06-18T18:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "100",
+        "her",
+        "než",
+        "ubisoftu",
+        "zahrajte",
+        "zdarma"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -972,28 +995,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Aktivujte si zdarma na Steamu středověké RPG",
-      "url": "https://zing.cz/article/aktivujte-si-zdarma-na-steamu-stredoveke-rpg",
-      "dt": "2026-06-14T04:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "aktivujte",
-        "rpg",
-        "steamu",
-        "středověké",
-        "zdarma"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1004,7 +1005,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125627,
+      "bytes": 125597,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1041,7 +1042,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-18T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-18T18:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1056,6 +1057,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zahrajte si zdarma více než 100 her od Ubisoftu",
+            "publishedAt": "2026-06-18T18:00:00Z"
+          },
           {
             "title": "Epic nabízí zdarma dvě výborně hodnocené hry",
             "publishedAt": "2026-06-18T15:00:00Z"
@@ -1083,10 +1088,6 @@
           {
             "title": "Autoři slovenského GTA představili novou hru s názvem Expendabots",
             "publishedAt": "2026-06-18T06:00:00Z"
-          },
-          {
-            "title": "Zvedněte plachty, Assassin's Creed Black Flag Resynced hlásí hotovo",
-            "publishedAt": "2026-06-18T04:00:00Z"
           }
         ]
       }

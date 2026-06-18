@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-18T18:51:03.170627Z",
+  "ingestedAt": "2026-06-18T20:15:05.479054Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Vrátím se, slíbil Schwarzenegger zaplněnému Žofínu. Fotka s ním stála dvacet tisíc",
+      "url": "https://www.idnes.cz/kultura/film-televize/arnolda-schwarzeneggera-praha-herec-palac-zofin-terminator.A260618_100650_filmvideo_lysa",
+      "dt": "2026-06-18T19:30:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "dvacet",
+        "fotka",
+        "ním",
+        "schwarzenegger",
+        "slíbil",
+        "stála",
+        "tisíc",
+        "vrátím",
+        "zaplněnému",
+        "žofínu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -423,32 +450,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Schwarzenegger zavítal do Prahy. Za fotku s ním fanoušci zaplatí dvacet tisíc",
-      "url": "https://www.idnes.cz/kultura/film-televize/arnolda-schwarzeneggera-praha-herec-palac-zofin-terminator.A260618_100650_filmvideo_lysa",
-      "dt": "2026-06-18T15:20:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "dvacet",
-        "fanoušci",
-        "fotku",
-        "ním",
-        "prahy",
-        "schwarzenegger",
-        "tisíc",
-        "zaplatí",
-        "zavítal"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "aktualne",
       "contentType": "article",
       "title": "Zavřete ty, co šíří záběry z hořící Moskvy, vyzývají propagandisté. A Putin vtipkuje",
@@ -802,7 +803,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50195,
+      "bytes": 50288,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,11 +840,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-18T18:47:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-18T19:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 29,
-          "other": 1
+          "other": 1,
+          "zpravy": 29
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -855,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vrátím se, slíbil Schwarzenegger zaplněnému Žofínu. Fotka s ním stála dvacet tisíc",
+            "publishedAt": "2026-06-18T19:30:00Z"
+          },
           {
             "title": "Trump je v beznadějné situaci, váhal nad dohodou Chameneí. Ručit mu museli Íránci",
             "publishedAt": "2026-06-18T18:47:00Z"
@@ -882,10 +887,6 @@
           {
             "title": "Část metra B dvě hodiny stála. Na Andělu srazila souprava muže, na místě zemřel",
             "publishedAt": "2026-06-18T17:43:07Z"
-          },
-          {
-            "title": "USA jsou silnější a uznávanější než kdy dříve, tvrdí Trump po dohodě s Íránem",
-            "publishedAt": "2026-06-18T17:34:00Z"
           }
         ]
       }
