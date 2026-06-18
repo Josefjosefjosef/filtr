@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-18T06:57:59.814242Z",
+  "ingestedAt": "2026-06-18T08:02:20.316950Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Goláň a Mračková Vildumetzová debatovali o novele o veřejných rozpočtech",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/golan-a-mrackova-vildumetzova-debatovali-o-novele-o-verejnych-rozpoctech-374692",
+      "dt": "2026-06-18T07:28:36Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "debatovali",
+        "goláň",
+        "mračková",
+        "novele",
+        "rozpočtech",
+        "veřejných",
+        "vildumetzová"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -30,7 +54,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Ukrajina a Rusko hlásí po vzájemných útocích mrtvé, v Moskvě znovu hoří",
+      "title": "V Moskvě znovu hoří, Rusko i Ukrajina hlásí mrtvé",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/ukrajina-a-rusko-hlasi-po-vzajemnych-utocich-mrtve-v-moskve-znovu-hori-rafinerie-374694",
       "dt": "2026-06-18T06:30:02Z",
       "media_raw": "ČT24 / Domácí",
@@ -42,9 +66,7 @@
         "mrtvé",
         "rusko",
         "ukrajina",
-        "vzájemných",
-        "znovu",
-        "útocích"
+        "znovu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -719,32 +741,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Česko čeká tropický víkend. V sobotu teploty místy dosáhnou 36 stupňů",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/cesko-ceka-tropicky-vikend-v-sobotu-teploty-misty-dosahnou-36-stupnu-374668",
-      "dt": "2026-06-17T10:59:52Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "dosáhnou",
-        "místy",
-        "sobotu",
-        "stupňů",
-        "teploty",
-        "tropický",
-        "víkend",
-        "čeká",
-        "česko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -755,7 +751,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42114,
+      "bytes": 42965,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -792,7 +788,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-18T06:33:05Z",
+        "raw_feed_latest_publishedAt": "2026-06-18T07:28:36Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -810,11 +806,15 @@
         },
         "sample_titles": [
           {
+            "title": "Goláň a Mračková Vildumetzová debatovali o novele o veřejných rozpočtech",
+            "publishedAt": "2026-06-18T07:28:36Z"
+          },
+          {
             "title": "Česko čeká tropický víkend, mohou se objevit i silné bouřky",
             "publishedAt": "2026-06-18T06:33:05Z"
           },
           {
-            "title": "Ukrajina a Rusko hlásí po vzájemných útocích mrtvé, v Moskvě znovu hoří",
+            "title": "V Moskvě znovu hoří, Rusko i Ukrajina hlásí mrtvé",
             "publishedAt": "2026-06-18T06:30:02Z"
           },
           {
@@ -836,10 +836,6 @@
           {
             "title": "Uchazečům o řidičák zavařili obvinění komisaři",
             "publishedAt": "2026-06-18T04:00:00Z"
-          },
-          {
-            "title": "Ministr životního prostředí jmenuje nového šéfa KRNAP",
-            "publishedAt": "2026-06-18T03:28:02Z"
           }
         ]
       }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-06-18T06:57:59.814242Z",
+  "ingestedAt": "2026-06-18T08:02:20.316950Z",
   "items": [
     {
       "section": "finance",
@@ -53,6 +53,37 @@
         "prezidenti",
         "usa",
         "íránu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "TCL 55C7L v testu: Menší televize na fotbal nebo do dětského pokoje přináší novou technologii do střední třídy",
+      "url": "https://tech.hn.cz/c1-67893530-tcl-55c7l-v-testu-mensi-televize-na-fotbal-nebo-do-detskeho-pokoje-prinasi-novou-technologii-do-stredni-tridy",
+      "dt": "2026-06-18T05:03:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN",
+      "tokens": [
+        "55c7l",
+        "dětského",
+        "fotbal",
+        "menší",
+        "nebo",
+        "novou",
+        "pokoje",
+        "přináší",
+        "střední",
+        "tcl",
+        "technologii",
+        "televize",
+        "testu",
+        "třídy"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1123,33 +1154,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Tržní selhání na obalovém trhu neexistuje. Novela zákona nahrává jediné firmě",
-      "url": "https://archiv.hn.cz/c1-67892980-misto-otevreni-trhu-novela-obaloveho-zakona-udrzuje-byrokracii-a-chrani-hlavniho-poskytovatele-sluzeb",
-      "dt": "2026-06-17T06:29:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN",
-      "tokens": [
-        "firmě",
-        "jediné",
-        "nahrává",
-        "neexistuje",
-        "novela",
-        "obalovém",
-        "selhání",
-        "trhu",
-        "tržní",
-        "zákona"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1160,7 +1164,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 186019,
+      "bytes": 185926,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1200,8 +1204,9 @@
         "raw_feed_latest_publishedAt": "2026-06-18T05:24:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 35,
+          "finance": 34,
           "zdravi": 3,
+          "sport": 1,
           "zpravy": 2
         },
         "drop_counts": {
@@ -1223,6 +1228,10 @@
             "publishedAt": "2026-06-18T05:15:00Z"
           },
           {
+            "title": "TCL 55C7L v testu: Menší televize na fotbal nebo do dětského pokoje přináší novou technologii do střední třídy",
+            "publishedAt": "2026-06-18T05:03:00Z"
+          },
+          {
             "title": "Elasticita svalů, stiffness a dynamika. Longevity svět se vrhl na silový trénink. Co musíte vědět?",
             "publishedAt": "2026-06-18T04:56:00Z"
           },
@@ -1240,10 +1249,6 @@
           },
           {
             "title": "Jeden klik může položit i&nbsp;stoletou firmu&nbsp;– tradiční školení kyberbezpečnosti selhávají",
-            "publishedAt": "2026-06-17T22:00:00Z"
-          },
-          {
-            "title": "Digitální štít Evropy: Výrobci i&nbsp;prodejci se připravují na&nbsp;další dílek evropské obrany proti kyberútokům",
             "publishedAt": "2026-06-17T22:00:00Z"
           }
         ]
