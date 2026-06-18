@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-06-18T03:27:46.372476Z",
+  "ingestedAt": "2026-06-18T04:29:48.841870Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Co kdyby se i státní rozpočet vrátil na úroveň roku 2008, jak to chce vláda u ČT?",
+      "url": "https://profitonline.cz/co-kdyby-se-i-statni-rozpocet-vratil-na-uroven-roku-2008-jak-to-chce-vlada-u-ct/",
+      "dt": "2026-06-18T04:00:08Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "2008",
+        "chce",
+        "kdyby",
+        "roku",
+        "rozpočet",
+        "státní",
+        "vláda",
+        "vrátil",
+        "úroveň"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -268,31 +294,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Češi se obávají zdražování energií, skutečně vyletí ceny vzhůru?",
-      "url": "https://profitonline.cz/cesi-se-obavaji-zdrazovani-energii-skutecne-vyleti-ceny-vzhuru/",
-      "dt": "2026-06-16T04:00:29Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ceny",
-        "energií",
-        "obávají",
-        "skutečně",
-        "vyletí",
-        "vzhůru",
-        "zdražování",
-        "češi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +304,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19630,
+      "bytes": 19781,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,7 +341,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-06-17T10:00:34Z",
+        "raw_feed_latest_publishedAt": "2026-06-18T04:00:08Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -357,6 +358,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Co kdyby se i státní rozpočet vrátil na úroveň roku 2008, jak to chce vláda u ČT?",
+            "publishedAt": "2026-06-18T04:00:08Z"
+          },
           {
             "title": "Pivní tácek je běžný suvenýr z hospody, jeden se ale prodal za 6,5 tisíce",
             "publishedAt": "2026-06-17T10:00:34Z"
@@ -384,10 +389,6 @@
           {
             "title": "EU: Do pěti let zdražte cigarety alespoň na 200 korun",
             "publishedAt": "2026-06-16T12:00:44Z"
-          },
-          {
-            "title": "Politolog Macinka se pasoval do funkce světového psychiatra",
-            "publishedAt": "2026-06-16T10:00:38Z"
           }
         ]
       }

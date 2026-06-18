@@ -1,24 +1,49 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-18T03:27:46.372476Z",
+  "ingestedAt": "2026-06-18T04:29:48.841870Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Prapodivný gól! Uzbekistán šokoval Kolumbii",
+      "title": "Kolumbie si poradila s Uzbekistánem, zářila opora Bayernu",
       "url": "https://www.sport.cz/clanek/fotbal-ms-kolumbie-nad-ranem-zmeri-sily-s-uzbekistanem-5482155",
       "dt": "2026-06-17T17:55:17Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "fotbal",
-        "gól",
-        "kolumbii",
-        "online",
-        "prapodivný",
-        "uzbekistán",
-        "šokoval"
+        "bayernu",
+        "kolumbie",
+        "opora",
+        "poradila",
+        "uzbekistánem",
+        "zářila"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jedny olympijské šampionky střídají druhé. Češky nastoupí proti Američankám",
+      "url": "https://www.sport.cz/clanek/volejbal-jedny-olympijske-sampionky-stridaji-druhe-cesky-nastoupi-proti-americankam-5482121",
+      "dt": "2026-06-18T03:41:04Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "američankám",
+        "druhé",
+        "jedny",
+        "nastoupí",
+        "olympijské",
+        "proti",
+        "střídají",
+        "češky",
+        "šampionky"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -746,30 +771,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pardubice začaly s přípravou na novou sezonu bez výraznějších změn",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-pardubice-zacaly-s-pripravou-na-novou-sezonu-bez-vyraznejsich-zmen-5482154",
-      "dt": "2026-06-17T16:22:09Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "novou",
-        "pardubice",
-        "přípravou",
-        "sezonu",
-        "výraznějších",
-        "začaly",
-        "změn"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -780,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40712,
+      "bytes": 40244,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -817,7 +818,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-18T03:00:22Z",
+        "raw_feed_latest_publishedAt": "2026-06-18T03:41:04Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -833,8 +834,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Prapodivný gól! Uzbekistán šokoval Kolumbii",
+            "title": "Kolumbie si poradila s Uzbekistánem, zářila opora Bayernu",
             "publishedAt": "2026-06-17T17:55:17Z"
+          },
+          {
+            "title": "Jedny olympijské šampionky střídají druhé. Češky nastoupí proti Američankám",
+            "publishedAt": "2026-06-18T03:41:04Z"
           },
           {
             "title": "Ošklivý moment na MS. Kameraman skončil v péči lékařů",
@@ -859,10 +864,6 @@
           {
             "title": "Koubek chystá rošády. Šmicer navrhuje převrat v útoku",
             "publishedAt": "2026-06-17T22:29:07Z"
-          },
-          {
-            "title": "Reklama na fotbal! Anglie zaslouženě slaví po strhující přestřelce proti Chorvatsku",
-            "publishedAt": "2026-06-17T11:40:24Z"
           }
         ]
       }

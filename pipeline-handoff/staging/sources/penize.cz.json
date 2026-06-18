@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-06-18T03:27:46.372476Z",
+  "ingestedAt": "2026-06-18T04:29:48.841870Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Gaslighting v kyblíku. KFC řeší zkaženou pověst floskulemi a stehýnky za polovic",
+      "url": "https://www.penize.cz/nakupy/491825-gaslighting-v-kybliku-kfc-resi-zkazenou-povest-floskulemi-a-stehynky-za-polovic",
+      "dt": "2026-06-18T05:10:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "floskulemi",
+        "gaslighting",
+        "kfc",
+        "kyblíku",
+        "polovic",
+        "pověst",
+        "stehýnky",
+        "zkaženou",
+        "řeší"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -474,32 +500,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Zkuste pilotovat letadlo nad 3D mapou světa. Google pustil simulátor na web",
-      "url": "https://www.penize.cz/spotrebitel/491660-zkuste-pilotovat-letadlo-nad-3d-mapou-sveta-google-spustil-webovy-simulator",
-      "dt": "2026-06-15T13:02:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "google",
-        "letadlo",
-        "mapou",
-        "pilotovat",
-        "pustil",
-        "simulátor",
-        "světa",
-        "web",
-        "zkuste"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -510,7 +510,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 19308,
+      "bytes": 19496,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -547,12 +547,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-18T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-18T05:10:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 16,
           "sport": 1,
-          "finance": 15,
-          "zpravy": 4
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -564,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Gaslighting v kyblíku. KFC řeší zkaženou pověst floskulemi a stehýnky za polovic",
+            "publishedAt": "2026-06-18T05:10:00Z"
+          },
           {
             "title": "Dlužíš na alimentech? Rozluč se s fotbalem i příspěvkem na penzijko",
             "publishedAt": "2026-06-18T05:05:00Z"
@@ -591,10 +595,6 @@
           {
             "title": "Penny ve čtvrtek zavře dřív. Lidé si po práci nenakoupí",
             "publishedAt": "2026-06-17T08:55:00Z"
-          },
-          {
-            "title": "Někomu v červenci klesne paušální daň. Víme, jak si s tím poradit nejvýhodněji",
-            "publishedAt": "2026-06-17T05:05:00Z"
           }
         ]
       }
