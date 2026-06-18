@@ -26,7 +26,7 @@ const STALE_HEADER_MAX_MS = 80;
 const STALE_ARTICLES_MAX_MS = 150;
 
 const SECTIONS = [
-  { accent: "zpravy", visualKey: "zpravy", headerFile: "section-zpravy.jpg" },
+  { accent: "zpravy", visualKey: "zpravy", headerFile: "section-zpravy-header-video-v1.mp4" },
   { accent: "sport", visualKey: "sport", headerFile: "section-sport.jpg" },
   { accent: "finance", visualKey: "finance", headerFile: "section-finance.jpg" },
   { accent: "zdravi", visualKey: "zdravi", headerFile: "section-zdravi.jpg" },
@@ -70,11 +70,17 @@ async function installClsObserver(context) {
 function readFeedHeaderFile(page) {
   return page.evaluate(() => {
     const feed = document.getElementById("feed");
+    const videoWrap = feed && feed.querySelector(".iu-feed-section-header-video-wrap");
     const img =
       (feed && feed.querySelector(".iu-feed-section-header-img")) ||
       (feed && feed.querySelector("picture.iu-feed-section-header-picture img"));
-    const src = img ? String(img.getAttribute("src") || img.currentSrc || "") : "";
-    const file = src.split("/").pop() || "";
+    let file = "";
+    if (videoWrap) {
+      file = String(videoWrap.getAttribute("data-feed-header-file") || "");
+    } else if (img) {
+      const src = String(img.getAttribute("src") || img.currentSrc || "");
+      file = src.split("/").pop() || "";
+    }
     const visualKey = feed ? String(feed.getAttribute("data-feed-visual-key") || "") : "";
     const ready = feed ? String(feed.getAttribute("data-feed-ready") || "") : "";
     const switching = feed ? String(feed.getAttribute("data-feed-switching") || "") : "";

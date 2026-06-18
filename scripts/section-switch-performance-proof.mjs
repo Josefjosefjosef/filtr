@@ -21,7 +21,7 @@ const BASE = process.env.IU_GUARD_BASE_URL
 const USE_LOCAL_SERVER = !process.env.IU_GUARD_BASE_URL;
 
 const SECTION_HEADERS = {
-  zpravy: "section-zpravy.jpg",
+  zpravy: "section-zpravy-header-video-v1.mp4",
   sport: "section-sport.jpg",
   finance: "section-finance.jpg",
   zdravi: "section-zdravi.jpg",
@@ -81,11 +81,17 @@ async function installObservers(context) {
 
 function readFeedSnapshot() {
   const feed = document.getElementById("feed");
+  const videoWrap = feed && feed.querySelector(".iu-feed-section-header-video-wrap");
   const img =
     (feed && feed.querySelector(".iu-feed-section-header-img")) ||
     (feed && feed.querySelector("picture.iu-feed-section-header-picture img"));
-  const src = img ? String(img.getAttribute("src") || img.currentSrc || "") : "";
-  const headerFile = src.split("/").pop() || "";
+  let headerFile = "";
+  if (videoWrap) {
+    headerFile = String(videoWrap.getAttribute("data-feed-header-file") || "");
+  } else if (img) {
+    const src = String(img.getAttribute("src") || img.currentSrc || "");
+    headerFile = src.split("/").pop() || "";
+  }
   const switching = feed ? String(feed.getAttribute("data-feed-switching") || "") : "";
   const ready = feed ? String(feed.getAttribute("data-feed-ready") || "") : "";
   const visualKey = feed ? String(feed.getAttribute("data-feed-visual-key") || "") : "";
@@ -121,11 +127,17 @@ async function measureTransition(page, fromAccent, toAccent) {
     async ({ fromHeader, toHeader, toAccent }) => {
       function snap() {
         const feed = document.getElementById("feed");
+        const videoWrap = feed && feed.querySelector(".iu-feed-section-header-video-wrap");
         const img =
           (feed && feed.querySelector(".iu-feed-section-header-img")) ||
           (feed && feed.querySelector("picture.iu-feed-section-header-picture img"));
-        const src = img ? String(img.getAttribute("src") || img.currentSrc || "") : "";
-        const headerFile = src.split("/").pop() || "";
+        let headerFile = "";
+        if (videoWrap) {
+          headerFile = String(videoWrap.getAttribute("data-feed-header-file") || "");
+        } else if (img) {
+          const src = String(img.getAttribute("src") || img.currentSrc || "");
+          headerFile = src.split("/").pop() || "";
+        }
         const switching = feed ? String(feed.getAttribute("data-feed-switching") || "") : "";
         const ready = feed ? String(feed.getAttribute("data-feed-ready") || "") : "";
         const cards = feed

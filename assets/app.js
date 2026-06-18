@@ -5503,6 +5503,14 @@ try {
     vzdelavani: "section-vzdelavani.jpg",
   });
 
+  /** Feed section headers that render as autoplay video with image fallback on playback/load failure. */
+  const IU_FEED_SECTION_HEADER_VIDEO = Object.freeze({
+    zpravy: Object.freeze({
+      video: "section-zpravy-header-video-v1.mp4",
+      fallback: "section-zpravy.jpg",
+    }),
+  });
+
   /** Measured from assets/images/section-prehled-dne.webp (1200×575). Used only on img.iu-feed-section-header-img to reserve aspect ratio for CLS; CSS remains responsive. */
   var IU_FEED_SECTION_HEADER_IMG_REF_W = 1200;
   var IU_FEED_SECTION_HEADER_IMG_REF_H = 575;
@@ -5533,11 +5541,22 @@ try {
   function iuFeedSectionHeaderResolveAssetFile() {
     const key = iuFeedSectionHeaderResolveVisualKey();
     if (!key) return "";
+    const videoSpec = IU_FEED_SECTION_HEADER_VIDEO[key];
+    if (videoSpec && videoSpec.video) return videoSpec.video;
     return IU_FEED_SECTION_HEADER_ASSETS[key] || "";
   }
 
-  function iuBuildFeedSectionHeaderElement() {
-    const file = iuFeedSectionHeaderResolveAssetFile();
+  function iuFeedSectionHeaderQueryAnchor(feedEl) {
+    if (!feedEl) return null;
+    return (
+      feedEl.querySelector("picture.iu-feed-section-header-picture") ||
+      feedEl.querySelector(".iu-feed-section-header-video-wrap") ||
+      feedEl.querySelector("img.iu-feed-section-header-img") ||
+      feedEl.querySelector(".iu-feed-section-header-img")
+    );
+  }
+
+  function iuBuildFeedSectionHeaderPictureElement(file, visualKey) {
     if (!file) return null;
     const base = "/assets/images/";
     const picture = document.createElement("picture");
@@ -5571,18 +5590,138 @@ try {
     );
     picture.appendChild(img);
     try {
-      const vk = iuFeedSectionHeaderResolveVisualKey();
-      if (vk) picture.setAttribute("data-feed-visual-key", vk);
+      if (visualKey) picture.setAttribute("data-feed-visual-key", visualKey);
       picture.setAttribute("data-feed-header-file", file);
     } catch (_) {}
     return picture;
   }
 
+  function iuBuildFeedSectionHeaderVideoElement(videoSpec, visualKey) {
+    if (!videoSpec || !videoSpec.video) return null;
+    const base = "/assets/images/";
+    const wrap = document.createElement("div");
+    wrap.className = "iu-feed-section-header-video-wrap";
+    wrap.setAttribute("role", "presentation");
+    wrap.setAttribute("aria-hidden", "true");
+
+    const video = document.createElement("video");
+    video.className = "iu-feed-section-header-video";
+    video.muted = true;
+    video.loop = true;
+    video.autoplay = true;
+    video.playsInline = true;
+    video.setAttribute("muted", "");
+    video.setAttribute("loop", "");
+    video.setAttribute("autoplay", "");
+    video.setAttribute("playsinline", "");
+    video.preload = "auto";
+    video.setAttribute("width", String(IU_FEED_SECTION_HEADER_IMG_REF_W));
+    video.setAttribute("height", String(IU_FEED_SECTION_HEADER_IMG_REF_H));
+
+    const source = document.createElement("source");
+    source.src = base + videoSpec.video;
+    source.type = "video/mp4";
+    video.appendChild(source);
+
+    let fallbackActivated = false;
+    function activateVideoFallback() {
+      if (fallbackActivated) return;
+      fallbackActivated = true;
+      try {
+        const fallbackEl = iuBuildFeedSectionHeaderPictureElement(videoSpec.fallback, visualKey);
+        if (fallbackEl) {
+          wrap.replaceWith(fallbackEl);
+          return;
+        }
+      } catch (_) {}
+      try {
+        wrap.remove();
+      } catch (_) {}
+    }
+
+    video.addEventListener("error", activateVideoFallback, { once: true });
+    source.addEventListener("error", activateVideoFallback, { once: true });
+
+    wrap.appendChild(video);
+    try {
+      if (visualKey) wrap.setAttribute("data-feed-visual-key", visualKey);
+      wrap.setAttribute("data-feed-header-file", videoSpec.video);
+      wrap.setAttribute("data-feed-header-fallback", videoSpec.fallback || "");
+    } catch (_) {}
+    return wrap;
+  }
+
+  function iuBuildFeedSectionHeaderElement() {
+    const visualKey = iuFeedSectionHeaderResolveVisualKey();
+    if (!visualKey) return null;
+    const videoSpec = IU_FEED_SECTION_HEADER_VIDEO[visualKey];
+    if (videoSpec) return iuBuildFeedSectionHeaderVideoElement(videoSpec, visualKey);
+    const file = IU_FEED_SECTION_HEADER_ASSETS[visualKey] || "";
+    return iuBuildFeedSectionHeaderPictureElement(file, visualKey);
+  }
+
+  function iuFeedSectionHeaderReconcile(feedEl) {
+    if (!feedEl) return;
+    const vk = iuFeedSectionHeaderResolveVisualKey();
+    if (!vk) return;
+    try {
+      const existing = iuFeedSectionHeaderQueryAnchor(feedEl);
+      const existingVk = existing ? String(existing.getAttribute("data-feed-visual-key") || "") : "";
+      if (existing && existingVk === vk) return;
+      try {
+        if (existing) existing.remove();
+      } catch (_) {}
+      const headerEl = iuBuildFeedSectionHeaderElement();
+      iuFeedSectionHeaderEnsureAppended(feedEl, headerEl);
+      try {
+        if (iuIsDesktopNavLayout()) {
+          iuScrollToActiveSectionStartInstant();
+          requestAnimationFrame(function () {
+            try {
+              iuScrollToActiveSectionStartInstant();
+            } catch (_) {}
+          });
+        }
+      } catch (_) {}
+    } catch (_) {}
+  }
+
+  function iuFeedSectionHeaderInsertPoint(feedEl) {
+    if (!feedEl) return null;
+    try {
+      const sectionsBar = feedEl.querySelector("#sectionsBar");
+      if (sectionsBar && sectionsBar.parentNode === feedEl) {
+        return sectionsBar.nextSibling;
+      }
+    } catch (_) {}
+    return feedEl.firstChild;
+  }
+
   function iuFeedSectionHeaderEnsureAppended(safeTargetEl, headerEl) {
     if (!headerEl || !safeTargetEl) return;
     try {
-      if (headerEl.parentNode === safeTargetEl) return;
-      safeTargetEl.appendChild(headerEl);
+      const vk = iuFeedSectionHeaderResolveVisualKey();
+      const existing = iuFeedSectionHeaderQueryAnchor(safeTargetEl);
+      if (existing && existing.parentNode === safeTargetEl) {
+        const existingVk = String(existing.getAttribute("data-feed-visual-key") || "");
+        if (vk && existingVk === vk && existing === headerEl) return;
+        if (vk && existingVk === vk && existing !== headerEl) return;
+        if (existing !== headerEl) {
+          try {
+            existing.remove();
+          } catch (_) {}
+        }
+      }
+      if (headerEl.parentNode === safeTargetEl) {
+        const insertPoint = iuFeedSectionHeaderInsertPoint(safeTargetEl);
+        if (insertPoint && headerEl !== insertPoint && headerEl.nextSibling !== insertPoint) {
+          safeTargetEl.insertBefore(headerEl, insertPoint);
+        }
+        return;
+      }
+      const insertPoint = iuFeedSectionHeaderInsertPoint(safeTargetEl);
+      if (insertPoint) safeTargetEl.insertBefore(headerEl, insertPoint);
+      else safeTargetEl.appendChild(headerEl);
     } catch (_) {}
   }
 
@@ -5599,6 +5738,14 @@ try {
   function iuFeedSectionSwitchInstantClear(feedEl) {
     if (!feedEl || feedEl.id !== "feed") return;
     try {
+      try {
+        const staleVideo = feedEl.querySelector("video.iu-feed-section-header-video");
+        if (staleVideo) {
+          try {
+            staleVideo.pause();
+          } catch (_) {}
+        }
+      } catch (_) {}
       const sectionsBar = document.getElementById("sectionsBar");
       if (sectionsBar) {
         feedEl.replaceChildren(sectionsBar);
@@ -5607,6 +5754,7 @@ try {
       }
       const headerEl = iuBuildFeedSectionHeaderElement();
       iuFeedSectionHeaderEnsureAppended(feedEl, headerEl);
+      iuFeedSectionHeaderReconcile(feedEl);
       const vk = iuFeedSectionHeaderResolveVisualKey();
       if (vk) feedEl.setAttribute("data-feed-visual-key", vk);
       else feedEl.removeAttribute("data-feed-visual-key");
@@ -5674,10 +5822,7 @@ try {
           window.iuScrollToActiveSectionStartInstant();
         } else {
           const feed = document.getElementById("feed");
-          const header =
-            (feed && feed.querySelector("picture.iu-feed-section-header-picture")) ||
-            (feed && feed.querySelector("img.iu-feed-section-header-img")) ||
-            (feed && feed.querySelector(".iu-feed-section-header-img"));
+          const header = iuFeedSectionHeaderQueryAnchor(feed);
           const sticky =
             parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--topbarStackH")) || 68;
           let scrollEl = document.scrollingElement || document.documentElement;
@@ -5968,7 +6113,6 @@ try {
         return false;
       }
     };
-    const feedSectionHeaderEl = iuBuildFeedSectionHeaderElement();
     while (pos < visibleItems.length) {
       if (iuRenderFeedStaleP()) {
         return;
@@ -6049,12 +6193,15 @@ try {
           if (auditRf && typeof performance !== "undefined" && performance.now) {
             tDomPatch0 = performance.now();
           }
+          if (iuRenderFeedStaleP()) {
+            return;
+          }
           if (sectionsBar) {
             safeTarget.replaceChildren(sectionsBar);
           } else {
             safeTarget.replaceChildren();
           }
-          iuFeedSectionHeaderEnsureAppended(safeTarget, feedSectionHeaderEl);
+          iuFeedSectionHeaderEnsureAppended(safeTarget, iuBuildFeedSectionHeaderElement());
           domPatchStarted = true;
           if (hasDemoPending) {
             safeTarget.appendChild(demoFrag);
@@ -6133,12 +6280,15 @@ try {
       if (auditRf && typeof performance !== "undefined" && performance.now) {
         tDomPatch0 = performance.now();
       }
+      if (iuRenderFeedStaleP()) {
+        return;
+      }
       if (sectionsBar) {
         safeTarget.replaceChildren(sectionsBar);
       } else {
         safeTarget.replaceChildren();
       }
-      iuFeedSectionHeaderEnsureAppended(safeTarget, feedSectionHeaderEl);
+      iuFeedSectionHeaderEnsureAppended(safeTarget, iuBuildFeedSectionHeaderElement());
       domPatchStarted = true;
       if (iuAlertDemo && demoFrag.childNodes.length > 0) {
         safeTarget.appendChild(demoFrag);
@@ -6296,6 +6446,19 @@ try {
         break;
       }
     }
+    try {
+      iuFeedSectionHeaderReconcile(feedEl);
+      if (switchSeqAtStart && iuIsDesktopNavLayout()) {
+        iuScrollToActiveSectionStartInstant();
+        try {
+          requestAnimationFrame(function () {
+            try {
+              iuScrollToActiveSectionStartInstant();
+            } catch (_) {}
+          });
+        } catch (_) {}
+      }
+    } catch (_) {}
     feedEl.setAttribute("data-feed-ready", "true");
     try {
       iuRenderFeedReleaseSectionSwitchIfReady();
@@ -8603,7 +8766,19 @@ function buildVideoAsArticleCard(it) {
               iuScrollToActiveSectionStartInstant();
             }
             if (feedReady) {
-              try { window.__iuSectionSwitchScrollArm = false; } catch (_) {}
+              if (typeof iuScrollToActiveSectionStartInstant === "function") {
+                iuScrollToActiveSectionStartInstant();
+                try {
+                  requestAnimationFrame(function () {
+                    try {
+                      iuScrollToActiveSectionStartInstant();
+                    } catch (_) {}
+                  });
+                } catch (_) {}
+              }
+              try {
+                window.__iuSectionSwitchScrollArm = false;
+              } catch (_) {}
               return;
             }
           } catch (_) {}
@@ -31272,13 +31447,14 @@ function buildVideoAsArticleCard(it) {
         window.matchMedia &&
         window.matchMedia("(min-width: 901px)").matches);
     if (desktopNav && center) {
-      if (feed && !feed.hidden) {
+      if (feed) {
         const feedHeader =
           feed.querySelector("picture.iu-feed-section-header-picture") ||
+          feed.querySelector(".iu-feed-section-header-video-wrap") ||
           feed.querySelector("img.iu-feed-section-header-img") ||
           feed.querySelector(".iu-feed-section-header-img");
         if (feedHeader) return feedHeader;
-        if (feed.firstElementChild) return feed;
+        if (!feed.hidden && feed.firstElementChild) return feed;
       }
       try {
         const sec = document.body && document.body.dataset ? String(document.body.dataset.section || "") : "";
@@ -31307,12 +31483,7 @@ function buildVideoAsArticleCard(it) {
       return center;
     }
     if (!feed) return document.getElementById("iuCenterStage") || document.getElementById("newsList");
-    return (
-      feed.querySelector("picture.iu-feed-section-header-picture") ||
-      feed.querySelector("img.iu-feed-section-header-img") ||
-      feed.querySelector(".iu-feed-section-header-img") ||
-      feed
-    );
+    return iuFeedSectionHeaderQueryAnchor(feed) || feed;
   }
 
   function iuScrollToActiveSectionStartInstant(){
@@ -32916,6 +33087,13 @@ function buildVideoAsArticleCard(it) {
         }
       }
     } catch (_) {}
+    /* P0 section switch: sync mediaTopicKey before instant header rebuild (applyFilter runs later). */
+    try {
+      state.mediaTopicKey = null;
+      if (section === "travel" && nav.mode === "media") state.mediaTopicKey = "cestovani";
+      else if (iuArticleHubSectionP(section) && nav.topic && nav.topic !== "all") state.mediaTopicKey = nav.topic;
+      else if (["hry", "kultura", "veda", "vzdelavani"].indexOf(section) !== -1) state.mediaTopicKey = section;
+    } catch (_) {}
     const accentColorKey =
       iuArticleHubSectionP(section) && nav.topic && nav.topic !== "all" ? nav.topic : section;
     // safe: UI-only section marker for stable CSS scoping (no feed pipeline touch)
@@ -33004,6 +33182,11 @@ function buildVideoAsArticleCard(it) {
           } catch (_) {}
           try {
             iuFeedSectionSwitchInstantClear(feedSw);
+            try {
+              if (iuIsDesktopNavLayout() && window.__iuSectionSwitchScrollArm) {
+                iuScrollToActiveSectionStartInstant();
+              }
+            } catch (_) {}
           } catch (_) {}
           try {
             const vkFn =

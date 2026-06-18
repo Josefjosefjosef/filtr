@@ -4067,7 +4067,8 @@ select.iuCtrl{
 
 
 #feed > img.iu-feed-section-header-img,
-#feed > picture.iu-feed-section-header-picture{
+#feed > picture.iu-feed-section-header-picture,
+#feed > .iu-feed-section-header-video-wrap{
   background: none;
   border: none;
   border-radius: 0;
@@ -4081,8 +4082,10 @@ select.iuCtrl{
   display: block;
   aspect-ratio: 1200 / 575;
   width: 100%;
+  overflow-anchor: none;
 }
-.iu-feed-section-header-img{
+.iu-feed-section-header-img,
+.iu-feed-section-header-video{
   display: block;
   width: 100%;
   max-width: 100%;

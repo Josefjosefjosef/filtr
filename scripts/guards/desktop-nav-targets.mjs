@@ -60,7 +60,7 @@ export function discoverDesktopNavSections() {
     { accent: "radio", topic: "", label: "Rádia", kind: "tool", headerFile: "", skipScrollDown: true },
   ];
   const homecards = [
-    { accent: "zpravy", topic: "zpravy", label: "Zprávy", kind: "feed-topic", headerFile: "section-zpravy.jpg" },
+    { accent: "zpravy", topic: "zpravy", label: "Zprávy", kind: "feed-topic", headerFile: "section-zpravy-header-video-v1.mp4" },
     { accent: "sport", topic: "sport", label: "Sport", kind: "feed-topic", headerFile: "section-sport.jpg" },
     { accent: "finance", topic: "finance", label: "Finance", kind: "feed-topic", headerFile: "section-finance.jpg" },
     { accent: "zdravi", topic: "zdravi", label: "Zdraví", kind: "feed-topic", headerFile: "section-zdravi.jpg" },
