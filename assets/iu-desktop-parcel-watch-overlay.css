@@ -1,4 +1,4 @@
-/* Desktop-only parcel watch overlay (≥901px) — hosts #iuSilverParcelWatch moved from right rail. */
+/* Desktop-only parcel watch overlay (≥901px) — premium shell aligned with financial/legal overlays. */
 
 #iuDesktopParcelWatchOverlay {
   display: none;
@@ -10,59 +10,100 @@
     inset: 0;
     z-index: 10082;
     display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    box-sizing: border-box;
     pointer-events: none;
   }
 
   #iuDesktopParcelWatchOverlay.is-open {
-    display: block;
+    display: flex;
     pointer-events: auto;
   }
 
   #iuDesktopParcelWatchOverlay .iu-desktop-parcel-watch-overlay__backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.42);
     z-index: 0;
+    background: rgba(15, 23, 42, 0.48);
+    cursor: pointer;
   }
 
   #iuDesktopParcelWatchOverlay .iu-desktop-parcel-watch-overlay__panel {
-    position: fixed;
-    inset: 24px;
-    width: auto;
-    max-width: min(520px, calc(100vw - 48px));
-    max-height: calc(100vh - 48px);
-    margin: auto;
+    position: relative;
     z-index: 1;
-    background: #fff;
-    border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    width: min(520px, calc(100vw - 36px));
+    max-width: 100%;
+    max-height: min(86vh, calc(100dvh - 36px));
+    margin: 0;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    min-height: 0;
+    pointer-events: auto;
+  }
+
+  #iuDesktopParcelWatchOverlay .iu-desktop-parcel-watch-overlay__cardShell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1 1 auto;
+    max-height: inherit;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 24px 56px rgba(15, 23, 42, 0.22);
+    border: 1px solid rgba(15, 23, 42, 0.08);
     overflow: hidden;
-    box-sizing: border-box;
+  }
+
+  #iuDesktopParcelWatchOverlay .iu-desktop-parcel-watch-overlay__header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+
+  #iuDesktopParcelWatchOverlay .iu-desktop-parcel-watch-overlay__heading {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  #iuDesktopParcelWatchOverlay .iu-desktop-parcel-watch-overlay__title {
+    margin: 0;
+    font-size: 1.22rem;
+    font-weight: 750;
+    line-height: 1.25;
+    color: #0f172a;
+  }
+
+  #iuDesktopParcelWatchOverlay .iu-desktop-parcel-watch-overlay__sub {
+    margin: 4px 0 0;
+    font-size: 13px;
+    line-height: 1.4;
+    color: rgba(15, 23, 42, 0.62);
   }
 
   #iuDesktopParcelWatchOverlay .iu-desktop-parcel-watch-overlay__close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 2;
-    width: 38px;
-    height: 38px;
-    border: 0;
-    border-radius: 999px;
-    background: rgba(248, 250, 252, 0.95);
-    color: #0f172a;
-    font-size: 22px;
-    line-height: 1;
-    cursor: pointer;
+    flex: 0 0 auto;
+    margin: 0;
   }
 
   #iuDesktopParcelWatchOverlay .iu-desktop-parcel-watch-overlay__mount {
     flex: 1 1 auto;
     min-height: 0;
-    overflow: auto;
-    padding: 14px 14px 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior-y: contain;
+    padding: 14px 16px 18px;
     box-sizing: border-box;
   }
 
@@ -90,10 +131,6 @@
 
   #iuDesktopParcelWatchOverlay #iuSilverParcelWatch .iuSilverParcelWatch__content {
     max-width: 100%;
-  }
-
-  body.iu-desktop-parcel-watch-overlay-open {
-    overflow: hidden;
   }
 }
 

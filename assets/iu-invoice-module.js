@@ -1937,14 +1937,14 @@ export function initIuInvoiceOverlay(deps) {
       if (backdrop) {
         backdrop.style.position = "fixed";
         backdrop.style.inset = "0";
-        backdrop.style.zIndex = "10033";
+        backdrop.style.zIndex = "10090";
         backdrop.style.display = "block";
         backdrop.style.background = "rgba(15, 23, 42, 0.48)";
       }
       if (panel) {
         panel.style.position = "fixed";
         panel.style.inset = "0";
-        panel.style.zIndex = "10034";
+        panel.style.zIndex = "10091";
         panel.style.display = "flex";
         panel.style.flexDirection = "column";
         panel.style.alignItems = "center";
