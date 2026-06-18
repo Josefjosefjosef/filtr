@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-18T12:19:36.027427Z",
+  "ingestedAt": "2026-06-18T13:28:41.775539Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česká národní banka zvýšila základní úrokovou sazbu na 3,75 procenta",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/ceska-narodni-banka-zvysila-zakladni-urokovou-sazbu-na-375-procenta-374706",
+      "dt": "2026-06-18T12:32:52Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "banka",
+        "národní",
+        "procenta",
+        "sazbu",
+        "zvýšila",
+        "základní",
+        "úrokovou",
+        "česká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -734,31 +759,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Zavražděný ruský karikaturista zesměšňoval Putina, kritizoval ale i Zelenského",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/zavrazdeny-rusky-karikaturista-zesmesnoval-putina-kritizoval-ale-i-zelenskeho-374675",
-      "dt": "2026-06-17T14:10:51Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "ale",
-        "karikaturista",
-        "kritizoval",
-        "putina",
-        "ruský",
-        "zavražděný",
-        "zelenského",
-        "zesměšňoval"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -769,7 +769,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43503,
+      "bytes": 43548,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -806,11 +806,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-18T12:01:40Z",
+        "raw_feed_latest_publishedAt": "2026-06-18T12:32:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 1,
           "zpravy": 23,
-          "other": 7
+          "other": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -822,6 +823,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česká národní banka zvýšila základní úrokovou sazbu na 3,75 procenta",
+            "publishedAt": "2026-06-18T12:32:52Z"
+          },
           {
             "title": "Podpora na výstavbu dostupného nájemního bydlení se sníží",
             "publishedAt": "2026-06-18T12:01:40Z"
@@ -849,10 +854,6 @@
           {
             "title": "Dohoda USA s Íránem pomůže hlavně Teheránu, zní z Izraele i od amerických senátorů",
             "publishedAt": "2026-06-18T09:22:31Z"
-          },
-          {
-            "title": "USA přezkoumají přítomnost svých vojsk v Evropě, oznámil Hegseth",
-            "publishedAt": "2026-06-18T08:46:29Z"
           }
         ]
       }
