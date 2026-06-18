@@ -1699,7 +1699,7 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=20" />
     <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=3" />
-    <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=6" />
+    <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=7" />
     <link rel="stylesheet" href="/assets/iu-desktop-parcel-watch-overlay.css?v=1" />
     <link rel="preload" as="image" href="/assets/partners/partner-resistance-security-right-rail-v1.png" media="(min-width: 1025px)" />
     <link rel="preload" as="video" href="/assets/partners/partner-iaf-petr-ondrus-right-rail-motion-v2.mp4" media="(min-width: 1025px)" type="video/mp4" />
@@ -3664,19 +3664,21 @@ font-src 'self' data:;
                     <video class="iu-desktop-right-rail-partner__video" autoplay muted loop playsinline preload="metadata" width="1024" height="1536" aria-label="IAF Petr Ondruš — MMA zápasy a trénink">
                       <source src="/assets/partners/partner-iaf-petr-ondrus-right-rail-motion-v2.mp4" type="video/mp4" />
                     </video>
-                    <img class="iu-desktop-right-rail-partner__img iu-desktop-right-rail-partner__img--fallback" src="/assets/partners/partner-iaf-petr-ondrus-right-rail-v1.png" alt="IAF Petr Ondruš — MMA zápasy a trénink" width="1024" height="1536" decoding="async" hidden />
+                    <img class="iu-desktop-right-rail-partner__img iu-desktop-right-rail-partner__img--fallback" src="/assets/partners/partner-iaf-petr-ondrus-right-rail-v1.png" alt="IAF Petr Ondruš — MMA zápasy a trénink" width="1024" height="1536" decoding="async" aria-hidden="true" />
                   </a>
                 </div>
                 <script>
                 (function () {
                   var root = document.getElementById("iuDesktopRightRailPartnerIaf");
                   if (!root || window.matchMedia("(max-width: 1024px)").matches) return;
+                  var link = root.querySelector(".iu-desktop-right-rail-partner__link");
                   var video = root.querySelector(".iu-desktop-right-rail-partner__video");
                   var fallback = root.querySelector(".iu-desktop-right-rail-partner__img--fallback");
-                  if (!video || !fallback) return;
+                  if (!link || !video || !fallback) return;
                   function useFallback() {
+                    link.setAttribute("data-iaf-fallback-active", "1");
                     video.hidden = true;
-                    fallback.hidden = false;
+                    fallback.removeAttribute("aria-hidden");
                   }
                   video.addEventListener("error", useFallback);
                   if (video.error) useFallback();
