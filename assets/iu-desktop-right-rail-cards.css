@@ -187,8 +187,7 @@
     aspect-ratio: 1024 / 1536;
   }
 
-  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video,
-  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__img {
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video {
     display: block;
     width: 100%;
     height: auto;
@@ -204,8 +203,31 @@
     user-select: none;
   }
 
-  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video[hidden],
-  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__img--fallback[hidden] {
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__img--fallback {
+    display: none !important;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    object-fit: contain;
+    object-position: center top;
+    vertical-align: top;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__link[data-iaf-fallback-active="1"] .iu-desktop-right-rail-partner__video {
+    display: none !important;
+  }
+
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__link[data-iaf-fallback-active="1"] .iu-desktop-right-rail-partner__img--fallback {
+    display: block !important;
+  }
+
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video[hidden] {
     display: none !important;
   }
 
