@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-18T20:15:05.479054Z",
+  "ingestedAt": "2026-06-18T21:34:56.874636Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sankce proti Rusku se prodlouží na rok. Dosud se prodlužovaly jen o šest měsíců",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/eu-prodlouzi-protiruske-sankce-na-12-mesicu-misto-sesti.A260618_232146_zahranicni_air",
+      "dt": "2026-06-18T21:31:57Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "dosud",
+        "jen",
+        "měsíců",
+        "prodlouží",
+        "prodlužovaly",
+        "proti",
+        "rok",
+        "rusku",
+        "sankce",
+        "šest"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -767,32 +794,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zastupitelé Prahy odvolali Prokopa z kontrolního výboru kvůli kauze bytů",
-      "url": "https://www.idnes.cz/zpravy/domaci/zastupitele-prahy-prokop-kontrolni-vybor.A260618_153603_domaci_aoc",
-      "dt": "2026-06-18T13:37:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "bytů",
-        "kauze",
-        "kontrolního",
-        "kvůli",
-        "odvolali",
-        "prahy",
-        "prokopa",
-        "výboru",
-        "zastupitelé"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50288,
+      "bytes": 50140,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,11 +841,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-18T19:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-18T21:31:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 1,
-          "zpravy": 29
+          "zpravy": 29,
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -856,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sankce proti Rusku se prodlouží na rok. Dosud se prodlužovaly jen o šest měsíců",
+            "publishedAt": "2026-06-18T21:31:57Z"
+          },
           {
             "title": "Vrátím se, slíbil Schwarzenegger zaplněnému Žofínu. Fotka s ním stála dvacet tisíc",
             "publishedAt": "2026-06-18T19:30:00Z"
@@ -883,10 +888,6 @@
           {
             "title": "Polovinu Čechů znepokojuje jejich finanční situace, tvrdí průzkum. Odkládají útraty",
             "publishedAt": "2026-06-18T17:50:00Z"
-          },
-          {
-            "title": "Část metra B dvě hodiny stála. Na Andělu srazila souprava muže, na místě zemřel",
-            "publishedAt": "2026-06-18T17:43:07Z"
           }
         ]
       }

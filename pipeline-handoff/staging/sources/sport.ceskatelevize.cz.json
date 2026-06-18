@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.ceskatelevize.cz",
-  "ingestedAt": "2026-06-18T20:15:05.479054Z",
+  "ingestedAt": "2026-06-18T21:34:56.874636Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Softbalistky na MS prohrály s Tchaj-wanem, šance na postup se jim vzdálila",
+      "url": "https://sport.ceskatelevize.cz/clanek/baseball-a-softbal/softbalistky-na-ms-prohraly-tchaj-wanem-sance-na-postup-se-jim-vzdalila-157474",
+      "dt": "2026-06-18T20:49:09Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "jim",
+        "postup",
+        "prohrály",
+        "softbalistky",
+        "tchaj",
+        "vzdálila",
+        "wanem",
+        "šance"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "sport.ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -738,30 +763,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "sport.ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Jarolím opouští potápějící se loď, z Karviné míří do Polska",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/jarolim-opousti-potapejici-se-lod-z-karvine-miri-do-polska-157438",
-      "dt": "2026-06-17T10:17:40Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "jarolím",
-        "karviné",
-        "loď",
-        "míří",
-        "opouští",
-        "polska",
-        "potápějící"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "sport.ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -772,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38058,
+      "bytes": 38187,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -809,7 +810,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-18T19:19:05Z",
+        "raw_feed_latest_publishedAt": "2026-06-18T20:49:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -824,6 +825,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Softbalistky na MS prohrály s Tchaj-wanem, šance na postup se jim vzdálila",
+            "publishedAt": "2026-06-18T20:49:09Z"
+          },
           {
             "title": "Lehečka dohrál v Queen´s Clubu, porazil ho Hijikata",
             "publishedAt": "2026-06-18T19:19:05Z"
@@ -851,10 +856,6 @@
           {
             "title": "Kandidatura Česka pro MS 2031 počítá s pořádáním turnaje v Praze a Brně",
             "publishedAt": "2026-06-18T12:40:25Z"
-          },
-          {
-            "title": "Los rozhodl: Lvice čeká v baráži Skotsko, v dalším kole možná favorizované Švédky",
-            "publishedAt": "2026-06-18T12:09:26Z"
           }
         ]
       }
