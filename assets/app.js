@@ -74847,7 +74847,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (typeof window.iuInvoiceOpenSurface === "function") return Promise.resolve();
     } catch (_) {}
     if (invPromise) return invPromise;
-    invPromise = import("./iu-invoice-module.js?v=invoice-real-root-cause-v1-20260605")
+    invPromise = import("./iu-invoice-module.js?v=pr5907-desktop-v2-20260618")
       .then(function (m) {
         try {
           m.initIuInvoiceOverlay({});
