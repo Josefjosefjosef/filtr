@@ -19,8 +19,16 @@
     background: transparent;
   }
 
-  .layout > aside.accordionCol,
-  .mainCol > aside.accordionCol {
+  body.iu-desktop-home-grid .layout > aside.accordionCol,
+  body.iu-desktop-home-grid .mainCol > aside.accordionCol {
+    background: linear-gradient(180deg, #f6f9ff 0%, #eef4ff 100%) !important;
+    background-color: #f6f9ff !important;
+  }
+
+  body.iu-desktop-home-grid .layout > aside.accordionCol .mindMenu,
+  body.iu-desktop-home-grid #iuDesktopRightRailCards.iu-desktop-right-rail-banners,
+  body.iu-desktop-home-grid #iuDesktopRightRailPartnerResistance,
+  body.iu-desktop-home-grid #iuDesktopRightRailPartnerIaf {
     background: transparent !important;
     background-color: transparent !important;
   }
@@ -85,17 +93,21 @@
     min-width: 0;
   }
 
-  #iuDesktopRightRailPartnerResistance .iu-desktop-right-rail-partner__adPos {
+  #iuDesktopRightRailPartnerResistance .iu-desktop-right-rail-partner__adPos,
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__adPos {
     font-size: 11.6px;
     font-weight: 800;
-    color: rgba(11, 27, 43, 0.70);
+    color: #16a34a !important;
+    -webkit-text-fill-color: #16a34a !important;
     white-space: nowrap;
   }
 
-  #iuDesktopRightRailPartnerResistance .iu-desktop-right-rail-partner__adLabel {
+  #iuDesktopRightRailPartnerResistance .iu-desktop-right-rail-partner__adLabel,
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__adLabel {
     font-size: 11.6px;
     font-weight: 750;
-    color: rgba(11, 27, 43, 0.58);
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
     white-space: nowrap;
   }
 
