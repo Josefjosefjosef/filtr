@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-06-18T01:23:34.407292Z",
+  "ingestedAt": "2026-06-18T02:26:29.098718Z",
   "items": [
     {
       "section": "aktualne",
@@ -41,6 +41,55 @@
         "připomene",
         "vrané",
         "výstava"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Extrémní proměny: Jaroslav to, k poslednímu vážení nepřišel",
+      "url": "https://www.denik.cz/kultura/extremni-promeny-jaroslav/",
+      "dt": "2026-06-18T02:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "extrémní",
+        "jaroslav",
+        "nepřišel",
+        "poslednímu",
+        "proměny",
+        "vážení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Počet nehod řidičů nad 65 let roste. Podívejte se, proč bourají nejčastěji",
+      "url": "https://www.denik.cz/cesi-v-cislech/pocet-nehod-ridicu-nad-65-let-roste-podivejte-se-proc-bouraji-nejcasteji/",
+      "dt": "2026-06-18T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bourají",
+        "let",
+        "nehod",
+        "nejčastěji",
+        "podívejte",
+        "počet",
+        "proč",
+        "roste",
+        "řidičů"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -968,55 +1017,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Na Evropu se žene obří vlna veder. Bude až 40 stupňů",
-      "url": "https://www.denik.cz/pocasi/na-evropu-se-zene-obri-vlna-veder-bude-az-40-stupnu/",
-      "dt": "2026-06-17T10:34:08Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "evropu",
-        "obří",
-        "stupňů",
-        "veder",
-        "vlna",
-        "žene"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bez šance. České volejbalistky v Lize národů podlehly světovým jedničkám Italkám",
-      "url": "https://www.denik.cz/ostatni-sporty/veljbal-liga-narodu-zeny-cesko-italie-prohra/",
-      "dt": "2026-06-17T10:18:26Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "italkám",
-        "jedničkám",
-        "lize",
-        "národů",
-        "podlehly",
-        "světovým",
-        "volejbalistky",
-        "české",
-        "šance"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1027,7 +1027,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.denik.cz/rss/vse.xml",
-      "bytes": 69537,
+      "bytes": 69401,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1064,10 +1064,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-17T22:01:28Z",
+        "raw_feed_latest_publishedAt": "2026-06-18T02:20:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 32,
+          "zpravy": 31,
+          "other": 1,
           "sport": 6,
           "finance": 1,
           "cestovani": 1
@@ -1091,6 +1092,14 @@
             "publishedAt": "2026-06-17T05:47:09Z"
           },
           {
+            "title": "Extrémní proměny: Jaroslav to, k poslednímu vážení nepřišel",
+            "publishedAt": "2026-06-18T02:20:00Z"
+          },
+          {
+            "title": "Počet nehod řidičů nad 65 let roste. Podívejte se, proč bourají nejčastěji",
+            "publishedAt": "2026-06-18T02:00:00Z"
+          },
+          {
             "title": "Ozdoba MS. Anglie ve strhujícím utkání přestřílela Chorvatsko, Kane dal dva góly",
             "publishedAt": "2026-06-17T22:01:28Z"
           },
@@ -1105,14 +1114,6 @@
           {
             "title": "Kouč Koubek chystá změny v základní sestavě. Před klíčovým duelem není nervózní",
             "publishedAt": "2026-06-17T20:16:00Z"
-          },
-          {
-            "title": "Další vzpoura trpaslíka na MS. Portugalsko ztratilo s Kongem, Ronaldo mlčel",
-            "publishedAt": "2026-06-17T18:52:55Z"
-          },
-          {
-            "title": "Šok pod Ještědem. Liberec odvolal Kováče, na volnou lavičku má namířeno Fodrek",
-            "publishedAt": "2026-06-17T17:39:23Z"
           }
         ]
       }
