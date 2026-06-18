@@ -560,6 +560,11 @@ function installInvoiceLauncherDelegation(openSurfaceFn) {
     async function openFromLauncher(e, kind) {
       const trigger = e && e.target && e.target.closest ? e.target.closest('[data-iuq="faktura"]') : null;
       if (!trigger) return;
+      if (trigger.closest("#iuDesktopInvoiceBanner")) {
+        try {
+          if (window.matchMedia && window.matchMedia("(min-width: 901px)").matches) return;
+        } catch (_) {}
+      }
       if (e && e.__iuInvoiceLauncherHandled) return;
       if (e) {
         e.__iuInvoiceLauncherHandled = true;
@@ -1932,8 +1937,17 @@ export function initIuInvoiceOverlay(deps) {
     });
   }
 
+  function isInvoiceDesktopViewport() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(min-width: 1025px)").matches);
+    } catch (_) {
+      return false;
+    }
+  }
+
   function applyOverlayOpenFallbackStyles() {
     try {
+      const desktop = isInvoiceDesktopViewport();
       if (backdrop) {
         backdrop.style.position = "fixed";
         backdrop.style.inset = "0";
@@ -1948,18 +1962,36 @@ export function initIuInvoiceOverlay(deps) {
         panel.style.display = "flex";
         panel.style.flexDirection = "column";
         panel.style.alignItems = "center";
-        panel.style.justifyContent = "flex-start";
-        panel.style.width = "100%";
-        panel.style.height = "100dvh";
-        panel.style.maxHeight = "100dvh";
+        panel.style.justifyContent = desktop ? "center" : "stretch";
+        panel.style.width = desktop ? "" : "100%";
+        panel.style.height = desktop ? "" : "100dvh";
+        panel.style.maxHeight = desktop ? "" : "100dvh";
+        panel.style.padding = desktop ? "18px" : "0";
         panel.style.overflow = "hidden";
         panel.style.boxSizing = "border-box";
-        panel.style.background = "rgb(241, 245, 249)";
+        panel.style.background = desktop ? "transparent" : "";
         panel.style.pointerEvents = "none";
       }
       const cardShell = panel ? panel.querySelector(".iu-invoice-overlay-cardShell") : null;
       if (cardShell) {
         cardShell.style.pointerEvents = "auto";
+        if (desktop) {
+          cardShell.style.display = "flex";
+          cardShell.style.flexDirection = "column";
+          cardShell.style.flex = "0 1 auto";
+          cardShell.style.width = "min(720px, calc(100vw - 36px))";
+          cardShell.style.maxWidth = "100%";
+          cardShell.style.maxHeight = "min(86vh, calc(100dvh - 36px))";
+          cardShell.style.height = "auto";
+        } else {
+          cardShell.style.display = "";
+          cardShell.style.flexDirection = "";
+          cardShell.style.flex = "";
+          cardShell.style.width = "";
+          cardShell.style.maxWidth = "";
+          cardShell.style.maxHeight = "";
+          cardShell.style.height = "";
+        }
       }
     } catch (_) {}
   }
@@ -1984,13 +2016,23 @@ export function initIuInvoiceOverlay(deps) {
         panel.style.width = "";
         panel.style.height = "";
         panel.style.maxHeight = "";
+        panel.style.padding = "";
         panel.style.overflow = "";
         panel.style.boxSizing = "";
         panel.style.background = "";
         panel.style.pointerEvents = "";
       }
       const cardShell = panel ? panel.querySelector(".iu-invoice-overlay-cardShell") : null;
-      if (cardShell) cardShell.style.pointerEvents = "";
+      if (cardShell) {
+        cardShell.style.pointerEvents = "";
+        cardShell.style.display = "";
+        cardShell.style.flexDirection = "";
+        cardShell.style.flex = "";
+        cardShell.style.width = "";
+        cardShell.style.maxWidth = "";
+        cardShell.style.maxHeight = "";
+        cardShell.style.height = "";
+      }
     } catch (_) {}
   }
 
