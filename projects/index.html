@@ -1699,9 +1699,10 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=20" />
     <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=3" />
-    <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=5" />
+    <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=6" />
     <link rel="stylesheet" href="/assets/iu-desktop-parcel-watch-overlay.css?v=1" />
     <link rel="preload" as="image" href="/assets/partners/partner-resistance-security-right-rail-v1.png" media="(min-width: 1025px)" />
+    <link rel="preload" as="video" href="/assets/partners/partner-iaf-petr-ondrus-right-rail-motion-v2.mp4" media="(min-width: 1025px)" type="video/mp4" />
     <link rel="preload" as="image" href="/assets/partners/partner-iaf-petr-ondrus-right-rail-v1.png" media="(min-width: 1025px)" />
     <link rel="stylesheet" href="/assets/iu-desktop-home-premium.css?v=1" />
     <style id="iuParcelWatchFirstPaintClsGuard">
@@ -3660,9 +3661,27 @@ font-src 'self' data:;
                     <span class="iu-desktop-right-rail-partner__adLabel">Reklama</span>
                   </div>
                   <a class="iu-desktop-right-rail-partner__link" href="https://iamfighter.cz/?gad_source=1&amp;gad_campaignid=18700430809&amp;gbraid=0AAAAApAflWpfm0OOkHqJl3G4saG09pBsR&amp;gclid=Cj0KCQjwi8nRBhDhARIsAHZf_pZblB-VAPhv0GmewPaV2pEvVErBNyAJwQDBbRhlGh--NSYA0VA6gMMaAqejEALw_wcB" target="_blank" rel="noopener noreferrer" aria-label="IAF Petr Ondruš — MMA zápasy a trénink (otevře se v novém panelu)">
-                    <img class="iu-desktop-right-rail-partner__img" src="/assets/partners/partner-iaf-petr-ondrus-right-rail-v1.png" alt="IAF Petr Ondruš — MMA zápasy a trénink" width="1024" height="1536" decoding="async" />
+                    <video class="iu-desktop-right-rail-partner__video" autoplay muted loop playsinline preload="metadata" width="1024" height="1536" aria-label="IAF Petr Ondruš — MMA zápasy a trénink">
+                      <source src="/assets/partners/partner-iaf-petr-ondrus-right-rail-motion-v2.mp4" type="video/mp4" />
+                    </video>
+                    <img class="iu-desktop-right-rail-partner__img iu-desktop-right-rail-partner__img--fallback" src="/assets/partners/partner-iaf-petr-ondrus-right-rail-v1.png" alt="IAF Petr Ondruš — MMA zápasy a trénink" width="1024" height="1536" decoding="async" hidden />
                   </a>
                 </div>
+                <script>
+                (function () {
+                  var root = document.getElementById("iuDesktopRightRailPartnerIaf");
+                  if (!root || window.matchMedia("(max-width: 1024px)").matches) return;
+                  var video = root.querySelector(".iu-desktop-right-rail-partner__video");
+                  var fallback = root.querySelector(".iu-desktop-right-rail-partner__img--fallback");
+                  if (!video || !fallback) return;
+                  function useFallback() {
+                    video.hidden = true;
+                    fallback.hidden = false;
+                  }
+                  video.addEventListener("error", useFallback);
+                  if (video.error) useFallback();
+                })();
+                </script>
                 <template id="iuLazyOverlayTpl-weathergeo" data-iu-overlay-lazy="weathergeo">
                 <div id="iuSilverWeatherGeoOverlay" class="iuSilverWeatherGeoOverlay" role="dialog" aria-modal="true" aria-labelledby="iuSilverWeatherGeoOverlayTitle" aria-label="Souhlas s polohou pro počasí" hidden>
                   <div class="iuSilverWeatherGeoOverlay__backdrop" data-iu-silver-wx-geo-overlay-close></div>

@@ -187,6 +187,7 @@
     aspect-ratio: 1024 / 1536;
   }
 
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video,
   #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__img {
     display: block;
     width: 100%;
@@ -198,5 +199,31 @@
     border-radius: 0;
     object-fit: contain;
     object-position: center top;
+    vertical-align: top;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video[hidden],
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__img--fallback[hidden] {
+    display: none !important;
+  }
+
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video::-webkit-media-controls,
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video::-webkit-media-controls-enclosure,
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video::-webkit-media-controls-panel,
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video::-webkit-media-controls-play-button,
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video::-webkit-media-controls-start-playback-button,
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video::-webkit-media-controls-timeline,
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video::-webkit-media-controls-current-time-display,
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video::-webkit-media-controls-time-remaining-display,
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video::-webkit-media-controls-mute-button,
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video::-webkit-media-controls-toggle-closed-captions-button,
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video::-webkit-media-controls-volume-slider,
+  #iuDesktopRightRailPartnerIaf .iu-desktop-right-rail-partner__video::-webkit-media-controls-fullscreen-button {
+    display: none !important;
+    -webkit-appearance: none;
+    opacity: 0;
+    pointer-events: none;
   }
 }
