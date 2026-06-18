@@ -38,7 +38,13 @@ function fail(msg) {
 
 // Minimal static server (0 extra deps)
 function serveFile(urlPath) {
-  let filePath = path.join(ROOT, (urlPath === "/" || urlPath === "") ? "index.html" : urlPath.replace(/^\//, "").replace(/\/$/, "") || "index.html");
+  let decodedPath = urlPath;
+  try {
+    decodedPath = decodeURIComponent(String(urlPath || "").split("?")[0]);
+  } catch (_) {
+    decodedPath = String(urlPath || "").split("?")[0];
+  }
+  let filePath = path.join(ROOT, (decodedPath === "/" || decodedPath === "") ? "index.html" : decodedPath.replace(/^\//, "").replace(/\/$/, "") || "index.html");
   if (urlPath && urlPath !== "/" && !urlPath.startsWith("/projects")) {
     const lastSeg = (urlPath.split("?")[0] || "").split("/").filter(Boolean).pop() || "";
     if (!path.extname(lastSeg)) {
@@ -520,6 +526,15 @@ async function runSmoke() {
     }
 
     await gotoProjectsMediaForSmoke(page);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(300);
+    await page.evaluate(() => {
+      try {
+        if (typeof window.iuDesktopParcelWatchPlacementApply === "function") {
+          window.iuDesktopParcelWatchPlacementApply();
+        }
+      } catch (_) {}
+    });
     try {
       await page.waitForSelector("#iuSilverParcelWatchInput", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     } catch (e) {
@@ -534,8 +549,6 @@ async function runSmoke() {
         localStorage.removeItem("iu_silver_parcel_watch_v1");
       } catch (_) {}
     });
-    await page.waitForTimeout(200);
-    await page.setViewportSize({ width: 390, height: 844 });
     await page.waitForTimeout(200);
     await page.evaluate(() => {
       const inp = document.getElementById("iuSilverParcelWatchInput");
