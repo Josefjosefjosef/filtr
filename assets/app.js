@@ -28723,6 +28723,8 @@ function buildVideoAsArticleCard(it) {
       if (legPanel && vis(legPanel) && String(legPanel.dataset.open || "") === "1") ids.push("legal");
       const invPanel = document.getElementById("iuInvoicePanel");
       if (invPanel && vis(invPanel) && String(invPanel.dataset.open || "") === "1") ids.push("invoice");
+      const desktopParcelOv = document.getElementById("iuDesktopParcelWatchOverlay");
+      if (desktopParcelOv && desktopParcelOv.classList.contains("is-open") && !desktopParcelOv.hidden) ids.push("desktop-parcel");
     } catch (_) {}
     return ids;
   }
@@ -28861,6 +28863,17 @@ function buildVideoAsArticleCard(it) {
           document.body.classList.remove("iu-invoice-overlay-open");
         } catch (_) {}
       }
+      try {
+        if (typeof window.iuDesktopParcelWatchOverlayClose === "function") window.iuDesktopParcelWatchOverlayClose();
+        else {
+          const dpo = document.getElementById("iuDesktopParcelWatchOverlay");
+          if (dpo) {
+            dpo.hidden = true;
+            dpo.classList.remove("is-open");
+            dpo.setAttribute("aria-hidden", "true");
+          }
+        }
+      } catch (_) {}
       var nak = document.getElementById("iuNakupModal");
       if (nak) {
         nak.hidden = true;
@@ -29063,6 +29076,9 @@ function buildVideoAsArticleCard(it) {
       if (t.closest('#iuQuickFeed')) return;
       const el = t.closest('[data-iuq]');
       if (!el) return;
+      if (el.closest('[data-iu-desktop-right-rail-banner="1"]') && String(el.getAttribute("data-iuq") || "").trim().toLowerCase() === "faktura") {
+        return;
+      }
       const resolved = iuResolveQuickAction(el);
       if (resolved.actionType === "external") {
         // Deterministic action guard: external links must never open overlays.

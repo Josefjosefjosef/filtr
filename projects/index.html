@@ -3632,9 +3632,17 @@ font-src 'self' data:;
                 </div>
                 <div id="iuDesktopParcelWatchOverlay" class="iu-desktop-parcel-watch-overlay" hidden aria-hidden="true">
                   <div class="iu-desktop-parcel-watch-overlay__backdrop" data-iu-desktop-parcel-close="1" tabindex="-1" aria-hidden="true"></div>
-                  <div class="iu-desktop-parcel-watch-overlay__panel" role="dialog" aria-modal="true" aria-label="Vyhledej mi zásilku">
-                    <button type="button" class="iu-desktop-parcel-watch-overlay__close iu-overlayCloseBtn38" aria-label="Zavřít" data-iu-desktop-parcel-close="1">×</button>
-                    <div id="iuDesktopParcelWatchMount" class="iu-desktop-parcel-watch-overlay__mount"></div>
+                  <div class="iu-desktop-parcel-watch-overlay__panel" role="dialog" aria-modal="true" aria-labelledby="iuDesktopParcelWatchOverlayTitle">
+                    <div class="iu-desktop-parcel-watch-overlay__cardShell">
+                      <header class="iu-desktop-parcel-watch-overlay__header">
+                        <div class="iu-desktop-parcel-watch-overlay__heading">
+                          <h2 id="iuDesktopParcelWatchOverlayTitle" class="iu-desktop-parcel-watch-overlay__title">Vyhledej mi zásilku</h2>
+                          <p class="iu-desktop-parcel-watch-overlay__sub">Sledování zásilek — rychlé vyhledání podle čísla</p>
+                        </div>
+                        <button type="button" class="iu-desktop-parcel-watch-overlay__close iu-overlayCloseBtn38 iu-close-btn-38" aria-label="Zavřít" data-iu-desktop-parcel-close="1">×</button>
+                      </header>
+                      <div id="iuDesktopParcelWatchMount" class="iu-desktop-parcel-watch-overlay__mount"></div>
+                    </div>
                   </div>
                 </div>
                 <div id="iuDesktopRightRailPartnerResistance" class="iu-desktop-right-rail-partner" data-iu-desktop-right-rail-partner="resistance-security" aria-label="Partnerská reklama Resistance Security">
@@ -5411,19 +5419,26 @@ font-src 'self' data:;
               overlay.hidden = true;
               overlay.classList.remove("is-open");
               overlay.setAttribute("aria-hidden", "true");
-              document.body.classList.remove("iu-desktop-parcel-watch-overlay-open");
+              if (typeof window.iuSetViewportLock === "function") window.iuSetViewportLock(false);
             }
+          }catch(_){}
+        }
+        function iuDesktopParcelWatchOverlayEnsureInBody(){
+          try{
+            if (!overlay || overlay.parentElement === document.body) return;
+            document.body.appendChild(overlay);
           }catch(_){}
         }
         function iuDesktopParcelWatchOverlayOpen(){
           try{
             var desktop = mq ? mq.matches : (window.innerWidth >= 901);
             if (!desktop || !overlay) return;
+            iuDesktopParcelWatchOverlayEnsureInBody();
             iuDesktopParcelWatchPlacementApply();
             overlay.hidden = false;
             overlay.classList.add("is-open");
             overlay.setAttribute("aria-hidden", "false");
-            document.body.classList.add("iu-desktop-parcel-watch-overlay-open");
+            if (typeof window.iuSetViewportLock === "function") window.iuSetViewportLock(true);
             var inp = document.getElementById("iuSilverParcelWatchInput");
             if (inp && typeof inp.focus === "function") inp.focus();
           }catch(_){}
@@ -5434,10 +5449,11 @@ font-src 'self' data:;
             overlay.hidden = true;
             overlay.classList.remove("is-open");
             overlay.setAttribute("aria-hidden", "true");
-            document.body.classList.remove("iu-desktop-parcel-watch-overlay-open");
+            if (typeof window.iuSetViewportLock === "function") window.iuSetViewportLock(false);
           }catch(_){}
         }
         iuDesktopParcelWatchPlacementApply();
+        iuDesktopParcelWatchOverlayEnsureInBody();
         try { window.iuDesktopParcelWatchPlacementApply = iuDesktopParcelWatchPlacementApply; } catch (_) {}
         try { window.iuDesktopParcelWatchOverlayOpen = iuDesktopParcelWatchOverlayOpen; } catch (_) {}
         try { window.iuDesktopParcelWatchOverlayClose = iuDesktopParcelWatchOverlayClose; } catch (_) {}
@@ -5501,6 +5517,39 @@ font-src 'self' data:;
     <script defer src="/assets/iu-section-views-lazy-mount.js?v=section-views-lazy-mount-v1-20260611"></script>
     <script defer src="/assets/iu-affiliate-catalog.js?v=affiliate-catalog-v3-20260617"></script>
     <script type="module" src="/assets/app.js?v=lcp-fast-path-v1-20260611"></script>
+    <script>
+    (function iuDesktopInvoiceBannerOpen(){
+      try{
+        function openDesktopInvoiceFromBanner(e){
+          try{
+            var t = e.target;
+            if (t && t.nodeType === 3) t = t.parentElement;
+            if (!t || typeof t.closest !== "function") return;
+            if (!t.closest("#iuDesktopInvoiceBanner")) return;
+            var desktop = window.matchMedia && window.matchMedia("(min-width: 901px)").matches;
+            if (!desktop) return;
+            e.preventDefault();
+            e.stopPropagation();
+            if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+            e.__iuHandled = true;
+            e.__iuInvoiceLauncherHandled = true;
+            function openInvoice(){
+              try{
+                if (typeof window.ensureInvoiceModalInBody === "function") window.ensureInvoiceModalInBody();
+                if (typeof window.iuInvoiceOpenSurface === "function") window.iuInvoiceOpenSurface();
+              }catch(_){}
+            }
+            if (typeof window.iuEnsureInvoiceOverlayBoot === "function") {
+              void window.iuEnsureInvoiceOverlayBoot().then(openInvoice);
+            } else {
+              openInvoice();
+            }
+          }catch(_){}
+        }
+        document.addEventListener("click", openDesktopInvoiceFromBanner, true);
+      }catch(_){}
+    })();
+    </script>
     <script>
     (function iuOverlayCssDeferGuard(){
       "use strict";
