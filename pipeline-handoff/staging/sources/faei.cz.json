@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-06-18T17:28:10.950982Z",
+  "ingestedAt": "2026-06-18T18:51:03.170627Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "První a poslední krok sazeb směrem vzhůru?",
+      "url": "https://profitonline.cz/prvni-a-posledni-krok-sazeb-smerem-vzhuru/",
+      "dt": "2026-06-18T18:15:34Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "krok",
+        "poslední",
+        "první",
+        "sazeb",
+        "směrem",
+        "vzhůru"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -268,31 +291,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Cena ropy klesá po zprávách o příměří. Uleví se i centrálním bankám?",
-      "url": "https://profitonline.cz/cena-ropy-klesa-po-zpravach-o-primeri-ulevi-se-i-centralnim-bankam/",
-      "dt": "2026-06-16T08:00:17Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "bankám",
-        "cena",
-        "centrálním",
-        "klesá",
-        "příměří",
-        "ropy",
-        "uleví",
-        "zprávách"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +301,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19487,
+      "bytes": 19243,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,7 +338,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-06-18T16:40:48Z",
+        "raw_feed_latest_publishedAt": "2026-06-18T18:15:34Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -356,6 +354,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "První a poslední krok sazeb směrem vzhůru?",
+            "publishedAt": "2026-06-18T18:15:34Z"
+          },
           {
             "title": "ČNB po čtyřech letech zvyšuje úrokové sazby",
             "publishedAt": "2026-06-18T16:40:48Z"
@@ -383,10 +385,6 @@
           {
             "title": "Výrobní ceny významně zaostaly za očekáváními",
             "publishedAt": "2026-06-16T16:00:42Z"
-          },
-          {
-            "title": "Bitcoin se vrací na 66 000 dolarů",
-            "publishedAt": "2026-06-16T14:00:01Z"
           }
         ]
       }
