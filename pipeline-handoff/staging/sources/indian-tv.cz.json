@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-06-18T08:02:20.316950Z",
+  "ingestedAt": "2026-06-18T09:07:13.971896Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "God of War Laufey vyjde brzy, uvádí už i PlayStation - INDIAN",
+      "url": "https://indian-tv.cz/clanek/god-of-war-laufey-vyjde-brzy-uvadi-uz-i-playstation-dvd68x",
+      "dt": "2026-06-18T08:51:54Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "brzy",
+        "god",
+        "indian",
+        "laufey",
+        "playstation",
+        "uvádí",
+        "vyjde",
+        "war"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1085,31 +1110,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Valor Mortis z napoleonských válek uteče přeplněnému září - INDIAN",
-      "url": "https://indian-tv.cz/clanek/valor-mortis-z-napoleonskych-valek-utece-preplnenemu-zari-0aqg0q",
-      "dt": "2026-06-14T08:32:07Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "indian",
-        "mortis",
-        "napoleonských",
-        "přeplněnému",
-        "uteče",
-        "valor",
-        "válek",
-        "září"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1120,7 +1120,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 233152,
+      "bytes": 233595,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1157,7 +1157,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-18T07:55:44Z",
+        "raw_feed_latest_publishedAt": "2026-06-18T08:51:54Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1172,6 +1172,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "God of War Laufey vyjde brzy, uvádí už i PlayStation - INDIAN",
+            "publishedAt": "2026-06-18T08:51:54Z"
+          },
           {
             "title": "Do Karibiku vyplujeme včas. Vývoj Assassin’s Creed: Black Flag Resynced byl dokončen - INDIAN",
             "publishedAt": "2026-06-18T07:55:44Z"
@@ -1199,10 +1203,6 @@
           {
             "title": "V Bungie se zřejmě schyluje k velkému propouštění. O práci mají přijít stovky zaměstnanců - INDIAN",
             "publishedAt": "2026-06-17T12:59:18Z"
-          },
-          {
-            "title": "Extrakční RPG Mistfall Hunter dostalo veřejnou betaverzi s novým obsahem - INDIAN",
-            "publishedAt": "2026-06-17T11:00:00Z"
           }
         ]
       }
