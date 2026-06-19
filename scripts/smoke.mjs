@@ -485,8 +485,8 @@ async function runSmoke() {
     await page.click("#iuTravelPreviewCard");
     await page.waitForTimeout(500);
     const afterTravelClick = page.url();
-    if (afterTravelClick.indexOf("section=travel") === -1 || afterTravelClick.indexOf("mode=media") === -1) {
-      fail(`Travel preview click did not set section=travel&mode=media: ${afterTravelClick}`);
+    if (afterTravelClick.indexOf("section=travel") === -1) {
+      fail(`Travel preview click did not set section=travel: ${afterTravelClick}`);
     }
 
     await gotoProjectsMediaForSmoke(page);

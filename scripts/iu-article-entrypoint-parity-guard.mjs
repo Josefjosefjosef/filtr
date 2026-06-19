@@ -463,6 +463,8 @@ async function runScenario(browser, scenario) {
     await page.goto(withGuardParams(BASE), { waitUntil: "domcontentloaded", timeout: 120000 });
     await dismissConsentIfPresent(page);
     await page.waitForSelector("#iuLeftRail", { timeout: 60000 });
+    await waitFeedReadyForSection(page, "feed").catch(() => {});
+    await page.waitForTimeout(400);
     const mark = networkLog.length;
     await clickRail(page, scenario.target);
     await page

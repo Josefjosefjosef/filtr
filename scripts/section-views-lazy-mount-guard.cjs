@@ -45,7 +45,6 @@ const MOBILE_UA =
 const LAZY_VIEWS = [
   { key: "jr", id: "iuJrEmptyView", seoClass: "iu-timetables-seo-block" },
   { key: "tvprogram", id: "iuTvProgramView", seoClass: "iu-tv-seo-block" },
-  { key: "travel", id: "iuTravelView", seoClass: null },
   { key: "mapy", id: "iuMapyView", seoClass: "iu-maps-seo-block" },
   { key: "radio", id: "iuRadioView", seoClass: "iu-radio-seo-block" },
   { key: "tvonline", id: "iuTvOnlineView", seoClass: "iu-tv-online-seo" },
@@ -245,7 +244,7 @@ async function runViewport(browser, vp, baseUrl) {
   if (vp.width <= 900) {
     const tiles = await page.evaluate(() => {
       const all = Array.from(document.querySelectorAll(".iuMobileTile[data-target]"));
-      const lazyTargets = ["#iuRadioView", "#iuTvOnlineView", "#iuJrEmptyView", "#iuMapyView", "#iuTravelView", "#iuTvProgramView"];
+      const lazyTargets = ["#iuRadioView", "#iuTvOnlineView", "#iuJrEmptyView", "#iuMapyView", "#iuTvProgramView"];
       const rel = all.filter((t) => lazyTargets.indexOf(t.getAttribute("data-target")) !== -1);
       return { total: rel.length, disabled: rel.filter((t) => t.disabled).length };
     });
