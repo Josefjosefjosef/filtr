@@ -1,23 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-06-19T00:01:55.510735Z",
+  "ingestedAt": "2026-06-19T01:20:10.416118Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Kanada - Katar 6:0, v nastavení kompletuje hattrick David",
+      "title": "Kanada - Katar 6:0, David jako Messi, výhru domácím kazí vážné zranění Koného",
       "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/ms-ve-fotbale-2026-kanada-katar-online-vysledek.A260618_152149_ms-fotbal_tals",
-      "dt": "2026-06-18T23:26:08Z",
+      "dt": "2026-06-19T01:02:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES",
       "tokens": [
         "david",
-        "hattrick",
+        "domácím",
+        "jako",
         "kanada",
         "katar",
-        "kompletuje",
-        "nastavení"
+        "kazí",
+        "koného",
+        "messi",
+        "vážné",
+        "výhru",
+        "zranění"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Mexiko - Jižní Korea 0:0, jeden z pořadatelů čelí přemožiteli českého týmu",
+      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/ms-ve-fotbale-2026-mexiko-jizni-korea-online-vysledek.A260618_152920_ms-fotbal_tals",
+      "dt": "2026-06-19T00:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES",
+      "tokens": [
+        "jeden",
+        "jižní",
+        "korea",
+        "mexiko",
+        "pořadatelů",
+        "přemožiteli",
+        "týmu",
+        "čelí",
+        "českého"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -743,31 +774,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "MotoGP 2026 Brno: Program závodů a vstupenky. Jak si povede Salač?",
-      "url": "https://www.idnes.cz/sport/motorsport/motogp-brno-2026-velka-cena-ceske-republiky-program-vstupenky.A260615_083400_motorsport_ald",
-      "dt": "2026-06-18T14:11:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES",
-      "tokens": [
-        "2026",
-        "brno",
-        "motogp",
-        "povede",
-        "program",
-        "salač",
-        "vstupenky",
-        "závodů"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -778,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46204,
+      "bytes": 46405,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -815,7 +821,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-18T23:26:08Z",
+        "raw_feed_latest_publishedAt": "2026-06-19T01:02:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -831,8 +837,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Kanada - Katar 6:0, v nastavení kompletuje hattrick David",
-            "publishedAt": "2026-06-18T23:26:08Z"
+            "title": "Kanada - Katar 6:0, David jako Messi, výhru domácím kazí vážné zranění Koného",
+            "publishedAt": "2026-06-19T01:02:00Z"
+          },
+          {
+            "title": "ONLINE: Mexiko - Jižní Korea 0:0, jeden z pořadatelů čelí přemožiteli českého týmu",
+            "publishedAt": "2026-06-19T00:00:00Z"
           },
           {
             "title": "MS ve fotbale 2026 ONLINE: I Kapverdy hrají lépe, řekl o Česku expert na JAR",
@@ -857,10 +867,6 @@
           {
             "title": "Jak se registrovat u sázkové kanceláře: Návod a vstupní bonusy",
             "publishedAt": "2026-06-18T21:15:00Z"
-          },
-          {
-            "title": "Tabulky MS ve fotbale 2026: pořadí základních skupin",
-            "publishedAt": "2026-06-18T21:08:00Z"
           }
         ]
       }
