@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-19T03:45:17.874893Z",
+  "ingestedAt": "2026-06-19T04:51:23.760292Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "GLOSA: Češi na MS: skvělý úvod, pak útlum a ztráta vedení. Smůlu v tom ale nehledejme",
+      "url": "https://www.sport.cz/clanek/nazory-komentare-glosa-cesi-na-ms-skvely-uvod-pak-utlum-a-ztrata-vedeni-smulu-v-tom-ale-nehledejme-5483076",
+      "dt": "2026-06-19T04:35:09Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ale",
+        "glosa",
+        "nehledejme",
+        "pak",
+        "skvělý",
+        "smůlu",
+        "tom",
+        "vedení",
+        "ztráta",
+        "útlum",
+        "úvod",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Češky chtějí uštědřit favorizovaným Japonkám první porážku v sezoně",
+      "url": "https://www.sport.cz/clanek/volejbal-cesky-chteji-ustedrit-favorizovanym-japonkam-prvni-porazku-v-sezone-5482910",
+      "dt": "2026-06-19T04:16:18Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chtějí",
+        "favorizovaným",
+        "japonkám",
+        "porážku",
+        "první",
+        "sezoně",
+        "uštědřit",
+        "češky"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -704,49 +758,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sigma získala do útoku první posilu",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-sigma-ziskala-do-utoku-prvni-posilu-5482816",
-      "dt": "2026-06-18T14:52:29Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "posilu",
-        "první",
-        "sigma",
-        "získala",
-        "útoku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fotbalový Liberec už má nového trenéra",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-liberec-uz-ma-nahradu-za-kovace-5482814",
-      "dt": "2026-06-18T14:36:47Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "fotbalový",
-        "liberec",
-        "nového",
-        "trenéra"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -757,7 +768,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41690,
+      "bytes": 42300,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -794,10 +805,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-19T03:31:30Z",
+        "raw_feed_latest_publishedAt": "2026-06-19T04:35:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 30
+          "finance": 1,
+          "sport": 29
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -809,6 +821,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "GLOSA: Češi na MS: skvělý úvod, pak útlum a ztráta vedení. Smůlu v tom ale nehledejme",
+            "publishedAt": "2026-06-19T04:35:09Z"
+          },
+          {
+            "title": "Češky chtějí uštědřit favorizovaným Japonkám první porážku v sezoně",
+            "publishedAt": "2026-06-19T04:16:18Z"
+          },
           {
             "title": "Otevíráme tequilu! Mexiko slaví postup na domácím MS",
             "publishedAt": "2026-06-19T03:31:30Z"
@@ -832,14 +852,6 @@
           {
             "title": "MS 2026: Program fotbalového šampionátu v USA, Kanadě a Mexiku",
             "publishedAt": "2026-06-15T04:31:00Z"
-          },
-          {
-            "title": "Hložek o postupových nadějích: Dokud žijeme, budeme bojovat!",
-            "publishedAt": "2026-06-18T21:22:58Z"
-          },
-          {
-            "title": "Střídání rozčíslo nudu. Manzambi rozhodl o švýcarské výhře, korigoval talent z Liberce",
-            "publishedAt": "2026-06-18T10:58:52Z"
           }
         ]
       }
