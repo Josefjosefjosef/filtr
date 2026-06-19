@@ -8876,6 +8876,23 @@ function buildVideoAsArticleCard(it) {
         window.iuHideAllOverlaysNow();
       }
     } catch (_) {}
+    try {
+      if (
+        iuIsDesktopNavLayout() &&
+        k &&
+        k !== "all" &&
+        k !== "cestovani" &&
+        ["hry", "kultura", "veda", "vzdelavani"].indexOf(k) === -1
+      ) {
+        const feedEarly = document.getElementById("feed");
+        if (feedEarly) {
+          feedEarly.setAttribute("data-feed-switching", "1");
+          feedEarly.setAttribute("data-feed-ready", "false");
+        }
+        const fpEarly = window.__iuFeedPipelineState;
+        if (fpEarly) fpEarly.mediaTopicKey = k;
+      }
+    } catch (_) {}
     /* Cestování články: kanonické URL je ?section=travel&mode=media (žádný left-rail peer s data-media-topic). */
     if (k === "cestovani") {
       var gateWrapCestEarly = document.getElementById("iuMobileGateWrap");
