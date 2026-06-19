@@ -33142,31 +33142,28 @@ function buildVideoAsArticleCard(it) {
     const usesFeed = iuProjectsNavUsesFeedPipeline(nav);
     try {
       const fp = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
-      const explicitPrehledHub =
-        window.__iuDesktopExplicitPrehledDne === true &&
-        iuArticleHubSectionP(section) &&
-        (!nav.topic || nav.topic === "all");
-      state.mediaTopicKey = null;
-      if (fp) fp.mediaTopicKey = null;
-      if (explicitPrehledHub) {
-        /* desktop Přehled dne click: keep global hub feed, never re-apply default Zprávy */
-      } else if (section === "travel" && nav.mode === "media") {
-        state.mediaTopicKey = "cestovani";
-        if (fp) fp.mediaTopicKey = "cestovani";
-      } else if (iuArticleHubSectionP(section) && nav.topic && nav.topic !== "all") {
-        state.mediaTopicKey = nav.topic;
-        if (fp) fp.mediaTopicKey = nav.topic;
-      } else {
-        const desktopDefaultTopic = iuDesktopDefaultFeedTopicResolve(nav);
-        if (desktopDefaultTopic) {
-          state.mediaTopicKey = desktopDefaultTopic;
-          if (fp) fp.mediaTopicKey = desktopDefaultTopic;
-        } else if (["hry", "kultura", "veda", "vzdelavani"].indexOf(section) !== -1) {
-          state.mediaTopicKey = section;
-          if (fp) fp.mediaTopicKey = section;
+      if (fp) {
+        const explicitPrehledHub =
+          window.__iuDesktopExplicitPrehledDne === true &&
+          iuArticleHubSectionP(section) &&
+          (!nav.topic || nav.topic === "all");
+        fp.mediaTopicKey = null;
+        if (explicitPrehledHub) {
+          /* desktop Přehled dne click: keep global hub feed, never re-apply default Zprávy */
+        } else if (section === "travel" && nav.mode === "media") {
+          fp.mediaTopicKey = "cestovani";
+        } else if (iuArticleHubSectionP(section) && nav.topic && nav.topic !== "all") {
+          fp.mediaTopicKey = nav.topic;
+        } else {
+          const desktopDefaultTopic = iuDesktopDefaultFeedTopicResolve(nav);
+          if (desktopDefaultTopic) {
+            fp.mediaTopicKey = desktopDefaultTopic;
+          } else if (["hry", "kultura", "veda", "vzdelavani"].indexOf(section) !== -1) {
+            fp.mediaTopicKey = section;
+          }
         }
+        fp.travelUiMode = nav.mode || "guide";
       }
-      if (fp) fp.travelUiMode = nav.mode || "guide";
     } catch (_) {}
     const accentColorKey =
       iuArticleHubSectionP(section) && nav.topic && nav.topic !== "all" ? nav.topic : section;
@@ -33244,8 +33241,11 @@ function buildVideoAsArticleCard(it) {
           !window.__iuScrollRestorePendingNav && !iuDesktopHubEntryShouldStartAtTop();
       }catch(_){}
       try {
-        state.__iuFeedSwitchSeq = (state.__iuFeedSwitchSeq || 0) + 1;
-        state.__iuRenderFeedGeneration = (state.__iuRenderFeedGeneration | 0) + 1;
+        const fpSw = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
+        if (fpSw) {
+          fpSw.__iuFeedSwitchSeq = (fpSw.__iuFeedSwitchSeq || 0) + 1;
+          fpSw.__iuRenderFeedGeneration = (fpSw.__iuRenderFeedGeneration | 0) + 1;
+        }
       } catch (_) {}
       try {
         const feedSw = document.getElementById("feed");
@@ -33255,7 +33255,9 @@ function buildVideoAsArticleCard(it) {
           feedSw.setAttribute("data-feed-ready", "false");
           feedSw.setAttribute("data-feed-switching", "1");
           try {
-            feedSw.setAttribute("data-feed-switch-seq", String(state.__iuFeedSwitchSeq || 0));
+            const fpSeq =
+              typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
+            feedSw.setAttribute("data-feed-switch-seq", String((fpSeq && fpSeq.__iuFeedSwitchSeq) || 0));
           } catch (_) {}
           try {
             iuFeedSectionSwitchInstantClear(feedSw);
