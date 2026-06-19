@@ -33251,7 +33251,12 @@ function buildVideoAsArticleCard(it) {
         const feedSw = document.getElementById("feed");
         if (feedSw) {
           const prevH = feedSw.offsetHeight;
-          if (prevH > 120) feedSw.style.minHeight = prevH + "px";
+          const topicOnlyDesktopFeedSwitch =
+            iuIsDesktopNavLayout() &&
+            iuArticleHubSectionP(section) &&
+            nav.topic &&
+            nav.topic !== "all";
+          if (prevH > 120 && !topicOnlyDesktopFeedSwitch) feedSw.style.minHeight = prevH + "px";
           feedSw.setAttribute("data-feed-ready", "false");
           feedSw.setAttribute("data-feed-switching", "1");
           try {
