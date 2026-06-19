@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-06-19T07:34:09.646634Z",
+  "ingestedAt": "2026-06-19T08:54:46.987983Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Xenoblade Chronicles: Definitive Edition – Nintendo Switch 2 Edition",
+      "url": "https://www.idnes.cz/hry/xenoblade-chronicles-definitive-edition-nintendo-switch-2-edition.G260619_103008_oz",
+      "dt": "2026-06-19T08:34:28Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "chronicles",
+        "definitive",
+        "edition",
+        "nintendo",
+        "switch",
+        "xenoblade"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -697,32 +720,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Xbox se oficiálně vrací k exkluzivitám, ale má jich zatím extrémně málo",
-      "url": "https://www.idnes.cz/hry/magazin/xbox-games-showcase-2026-novinky-exkluzivity-chystane-hry.A260607_201309_bw-magazin_oma",
-      "dt": "2026-06-08T06:22:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "ale",
-        "exkluzivitám",
-        "extrémně",
-        "jich",
-        "málo",
-        "oficiálně",
-        "vrací",
-        "xbox",
-        "zatím"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -733,7 +730,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 42573,
+      "bytes": 41829,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -770,7 +767,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-18T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-19T08:34:28Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -785,6 +782,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Xenoblade Chronicles: Definitive Edition – Nintendo Switch 2 Edition",
+            "publishedAt": "2026-06-19T08:34:28Z"
+          },
           {
             "title": "O víkendu se nudit nebudete. Vyzkoušejte zdarma ukázky z očekávaných her",
             "publishedAt": "2026-06-18T22:00:00Z"
@@ -812,10 +813,6 @@
           {
             "title": "Sexy pilotku z Overwatche cosplayerky milují. Posuďte, která je nejpovedenější",
             "publishedAt": "2026-06-16T22:00:00Z"
-          },
-          {
-            "title": "Před týdnem ukazovali novou hru, dnes je zavírají. Xbox resetuje svůj byznys",
-            "publishedAt": "2026-06-16T09:00:00Z"
           }
         ]
       }

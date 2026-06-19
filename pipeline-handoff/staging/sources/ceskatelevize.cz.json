@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-19T07:34:09.646634Z",
+  "ingestedAt": "2026-06-19T08:54:46.987983Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Filmové premiéry: Toy Story, Tahle párty je DEAD či dokument o Pavlíčkovi",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/filmove-premiery-toy-story-tahle-party-je-dead-ci-dokument-o-pavlickovi-374729",
+      "dt": "2026-06-19T08:19:41Z",
+      "media_raw": "ČT art",
+      "media_norm": "ČT art",
+      "tokens": [
+        "dead",
+        "dokument",
+        "filmové",
+        "pavlíčkovi",
+        "premiéry",
+        "párty",
+        "story",
+        "tahle",
+        "toy"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rubric",
+      "feedId": "kul_ctart",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -731,32 +757,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Hostel v knihovně i další louka pro stany. Vary před festivalem posilují ubytování",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/hostel-v-knihovne-i-dalsi-louka-pro-stany-vary-pred-festivalem-posiluji-ubytovani-374227",
-      "dt": "2026-06-05T05:30:00Z",
-      "media_raw": "ČT art",
-      "media_norm": "ČT art",
-      "tokens": [
-        "další",
-        "festivalem",
-        "hostel",
-        "knihovně",
-        "louka",
-        "posilují",
-        "stany",
-        "ubytování",
-        "vary"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rubric",
-      "feedId": "kul_ctart",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -767,7 +767,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss/rubrika/kultura-24",
-      "bytes": 41213,
+      "bytes": 41438,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -804,7 +804,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-18T15:23:25Z",
+        "raw_feed_latest_publishedAt": "2026-06-19T08:19:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -819,6 +819,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Filmové premiéry: Toy Story, Tahle párty je DEAD či dokument o Pavlíčkovi",
+            "publishedAt": "2026-06-19T08:19:41Z"
+          },
           {
             "title": "PR zástěrka, nebo prestiž? Albánský premiér vystavuje sochu „načmáranou“ v úřadě",
             "publishedAt": "2026-06-18T15:23:25Z"
@@ -846,10 +850,6 @@
           {
             "title": "Spor o vysílání filmu Sbormistr končí, strany uzavřely smír",
             "publishedAt": "2026-06-16T13:43:26Z"
-          },
-          {
-            "title": "„Musíme bojovat proti tomuto návrhu.“ Ředitelé ČT a ČRo chtějí zachovat poplatky",
-            "publishedAt": "2026-06-15T17:20:49Z"
           }
         ]
       }
