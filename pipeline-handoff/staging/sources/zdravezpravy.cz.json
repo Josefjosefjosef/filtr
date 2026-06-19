@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-06-19T15:02:33.465051Z",
+  "ingestedAt": "2026-06-19T16:24:33.526169Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Vloupání do bytu či domu se často pojí i s psychickou újmou",
+      "url": "https://www.zdravezpravy.cz/2026/06/19/vloupani-do-bytu-ci-domu-zasahne-dusevni-zdravi-da-se-mu-i-predejit/",
+      "dt": "2026-06-19T14:12:43Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "bytu",
+        "domu",
+        "pojí",
+        "psychickou",
+        "vloupání",
+        "újmou",
+        "často"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -474,33 +498,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Výdaje na zdravotní péči jen rostou. Úměrně k nim péče ale lepší není",
-      "url": "https://www.zdravezpravy.cz/2026/06/11/vydaje-na-peci-jsou-rok-od-roku-vyssi-umerne-k-tomu-ale-neni-pece-lepsi/",
-      "dt": "2026-06-11T09:45:00Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "ale",
-        "jen",
-        "lepší",
-        "nim",
-        "péče",
-        "péči",
-        "rostou",
-        "výdaje",
-        "zdravotní",
-        "úměrně"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -511,7 +508,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 199454,
+      "bytes": 198075,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -548,7 +545,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-19T10:40:05Z",
+        "raw_feed_latest_publishedAt": "2026-06-19T14:12:43Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -564,6 +561,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vloupání do bytu či domu se často pojí i s psychickou újmou",
+            "publishedAt": "2026-06-19T14:12:43Z"
+          },
           {
             "title": "Spotřební daň z tabáků je v Česku přestřelená. Sílí padělky a nákupy venku",
             "publishedAt": "2026-06-19T10:40:05Z"
@@ -591,10 +592,6 @@
           {
             "title": "Zpřísněná regulace kratomu začne platit od ledna 2027",
             "publishedAt": "2026-06-17T12:55:33Z"
-          },
-          {
-            "title": "Boj s ebolou v Africe nekončí. Naopak si žádá vysoké částky od bohatých států",
-            "publishedAt": "2026-06-17T09:06:53Z"
           }
         ]
       }
