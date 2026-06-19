@@ -29371,7 +29371,7 @@ function buildVideoAsArticleCard(it) {
       } else if (resolved.overlayId === "legal") {
         iuOpenOverlay("legal", null);
       } else if (resolved.overlayId === "invoice") {
-        return;
+        iuOpenOverlay("invoice");
       } else if (resolved.overlayId === "ai") {
         iuOpenOverlay("ai");
       } else {
