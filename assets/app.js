@@ -8895,13 +8895,7 @@ function buildVideoAsArticleCard(it) {
       }
     } catch (_) {}
     try {
-      if (
-        iuIsDesktopNavLayout() &&
-        k &&
-        k !== "all" &&
-        k !== "cestovani" &&
-        ["hry", "kultura", "veda", "vzdelavani"].indexOf(k) === -1
-      ) {
+      if (iuIsDesktopNavLayout() && k && k !== "all") {
         const feedEarly = document.getElementById("feed");
         if (feedEarly) {
           feedEarly.setAttribute("data-feed-switching", "1");
@@ -8960,9 +8954,34 @@ function buildVideoAsArticleCard(it) {
     }
     if (["hry", "kultura", "veda", "vzdelavani"].indexOf(k) !== -1) {
       try {
+        window.__iuDesktopExplicitPrehledDne = false;
+        state.mediaTopicKey = k;
+      } catch (_) {}
+      var gateWrapCzEarly = document.getElementById("iuMobileGateWrap");
+      var fromWebNavGateCz =
+        gateWrapCzEarly && String(gateWrapCzEarly.getAttribute("data-iu-mobile-gate") || "") === "nav";
+      try {
+        if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = !!fromWebNavGateCz;
+      } catch (_) {}
+      if (fromWebNavGateCz) {
+        try {
+          if (typeof window.iuMobileWebNavReturnArmForTile === "function") {
+            window.iuMobileWebNavReturnArmForTile(k);
+          }
+        } catch (_) {}
+      }
+      try {
         if (typeof window !== "undefined" && typeof window.iuPersistNavState === "function") {
           window.iuPersistNavState({ section: k });
         }
+      } catch (_) {}
+      try {
+        if (typeof window !== "undefined" && typeof window.iuSetPanelInUrl === "function") {
+          window.iuSetPanelInUrl("", { replace: true });
+        }
+      } catch (_) {}
+      try {
+        iuScrollMainSectionSwitchToTop();
       } catch (_) {}
       try {
         if (typeof window !== "undefined" && typeof window.iuApplySectionFromURL === "function") {
@@ -8970,10 +8989,34 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       try {
+        if (typeof window !== "undefined" && typeof window.iuApplyPanelFromUrl === "function") {
+          window.iuApplyPanelFromUrl();
+        }
+      } catch (_) {}
+      try {
+        if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+          try {
+            if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
+          } catch (_) {}
+          document.body.classList.add("iu-mobileMainVisible");
+          var mbCz = document.getElementById("iuMobileMainBackBar");
+          if (mbCz) mbCz.hidden = true;
+          try {
+            if (fromWebNavGateCz) document.body.classList.add("iu-webnavDetailFromGate");
+            else document.body.classList.remove("iu-webnavDetailFromGate");
+          } catch (_) {}
+          try {
+            if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
+          } catch (_) {}
+        }
+      } catch (_) {}
+      try {
         if (!iuDesktopPreviewNavScrollAfterOpen()) {
           iuDesktopScrollFallbackToTopSmooth();
         }
-      } catch (_) {}
+      } catch (_) {
+        iuDesktopScrollFallbackToTopSmooth();
+      }
       return;
     }
     if (k === "all") {
@@ -10878,6 +10921,20 @@ function buildVideoAsArticleCard(it) {
     }catch(_){}
   }
 
+  function iuGamesPreviewWireCard(card){
+    try{
+      if (!card || card.getAttribute("data-iu-games-preview-iu-bound") === "1") return;
+      card.setAttribute("data-iu-games-preview-iu-bound", "1");
+      card.addEventListener(
+        "click",
+        function () {
+          iuMediaPreviewNavClick("hry");
+        },
+        { passive: true }
+      );
+    }catch(_){}
+  }
+
   function iuGamesPreviewEnsureDom(){
     try{
       const viewport = document.getElementById("iuSilverTallScrollViewport");
@@ -10886,7 +10943,10 @@ function buildVideoAsArticleCard(it) {
       let card = mount
         ? mount.querySelector('[data-iu-games-preview-card="1"]')
         : viewport.querySelector('[data-iu-games-preview-card="1"]');
-      if (card) return card;
+      if (card) {
+        iuGamesPreviewWireCard(card);
+        return card;
+      }
 
       card = document.createElement("button");
       card.type = "button";
@@ -11069,6 +11129,20 @@ function buildVideoAsArticleCard(it) {
     }catch(_){}
   }
 
+  function iuCulturePreviewWireCard(card){
+    try{
+      if (!card || card.getAttribute("data-iu-culture-preview-iu-bound") === "1") return;
+      card.setAttribute("data-iu-culture-preview-iu-bound", "1");
+      card.addEventListener(
+        "click",
+        function () {
+          iuMediaPreviewNavClick("kultura");
+        },
+        { passive: true }
+      );
+    }catch(_){}
+  }
+
   function iuCulturePreviewEnsureDom(){
     try{
       const viewport = document.getElementById("iuSilverTallScrollViewport");
@@ -11077,7 +11151,10 @@ function buildVideoAsArticleCard(it) {
       let card = mount
         ? mount.querySelector('[data-iu-culture-preview-card="1"]')
         : viewport.querySelector('[data-iu-culture-preview-card="1"]');
-      if (card) return card;
+      if (card) {
+        iuCulturePreviewWireCard(card);
+        return card;
+      }
 
       card = document.createElement("button");
       card.type = "button";
@@ -11260,6 +11337,20 @@ function buildVideoAsArticleCard(it) {
     }catch(_){}
   }
 
+  function iuScienceHistoryPreviewWireCard(card){
+    try{
+      if (!card || card.getAttribute("data-iu-science-history-preview-iu-bound") === "1") return;
+      card.setAttribute("data-iu-science-history-preview-iu-bound", "1");
+      card.addEventListener(
+        "click",
+        function () {
+          iuMediaPreviewNavClick("veda");
+        },
+        { passive: true }
+      );
+    }catch(_){}
+  }
+
   function iuScienceHistoryPreviewEnsureDom(){
     try{
       const viewport = document.getElementById("iuSilverTallScrollViewport");
@@ -11268,7 +11359,10 @@ function buildVideoAsArticleCard(it) {
       let card = mount
         ? mount.querySelector('[data-iu-science-history-preview-card="1"]')
         : viewport.querySelector('[data-iu-science-history-preview-card="1"]');
-      if (card) return card;
+      if (card) {
+        iuScienceHistoryPreviewWireCard(card);
+        return card;
+      }
 
       card = document.createElement("button");
       card.type = "button";
@@ -11451,6 +11545,20 @@ function buildVideoAsArticleCard(it) {
     }catch(_){}
   }
 
+  function iuEducationPreviewWireCard(card){
+    try{
+      if (!card || card.getAttribute("data-iu-education-preview-iu-bound") === "1") return;
+      card.setAttribute("data-iu-education-preview-iu-bound", "1");
+      card.addEventListener(
+        "click",
+        function () {
+          iuMediaPreviewNavClick("vzdelavani");
+        },
+        { passive: true }
+      );
+    }catch(_){}
+  }
+
   function iuEducationPreviewEnsureDom(){
     try{
       const viewport = document.getElementById("iuSilverTallScrollViewport");
@@ -11459,7 +11567,10 @@ function buildVideoAsArticleCard(it) {
       let card = mount
         ? mount.querySelector('[data-iu-education-preview-card="1"]')
         : viewport.querySelector('[data-iu-education-preview-card="1"]');
-      if (card) return card;
+      if (card) {
+        iuEducationPreviewWireCard(card);
+        return card;
+      }
 
       card = document.createElement("button");
       card.type = "button";
@@ -16037,9 +16148,15 @@ function buildVideoAsArticleCard(it) {
 
   async function iuChunkReloadIfSectionChanged() {
     if (!iuUseChunkedArticleLoader()) return false;
+    let navSec = "";
+    try {
+      navSec = String((document.body && document.body.dataset && document.body.dataset.section) || "")
+        .trim()
+        .toLowerCase();
+    } catch (_) {}
     const nextKey = iuChunkResolveSectionKey({
       mediaTopicKey: state.mediaTopicKey,
-      activeSection: state.activeSection,
+      activeSection: navSec || state.activeSection,
     });
     if (state.chunkLoader && state.chunkLoader.sectionKey === nextKey) return false;
     const videosOnly = (state.cachedItems || []).filter((e) => String(e?.contentType || "").toLowerCase() === "video");
@@ -33177,28 +33294,33 @@ function buildVideoAsArticleCard(it) {
     } catch (_wxVidStop) {}
     const usesFeed = iuProjectsNavUsesFeedPipeline(nav);
     try {
-      const fp = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
-      if (fp) {
+      const feedState =
+        typeof window !== "undefined" && window.__iuFeedPipelineState
+          ? window.__iuFeedPipelineState
+          : state;
+      const czVerticals = ["hry", "kultura", "veda", "vzdelavani"];
+      if (czVerticals.indexOf(section) !== -1) {
+        feedState.mediaTopicKey = section;
+        feedState.travelUiMode = "media";
+      } else {
         const explicitPrehledHub =
           window.__iuDesktopExplicitPrehledDne === true &&
           iuArticleHubSectionP(section) &&
           (!nav.topic || nav.topic === "all");
-        fp.mediaTopicKey = null;
+        feedState.mediaTopicKey = null;
         if (explicitPrehledHub) {
           /* desktop Přehled dne click: keep global hub feed, never re-apply default Zprávy */
         } else if (section === "travel") {
-          fp.mediaTopicKey = "cestovani";
+          feedState.mediaTopicKey = "cestovani";
         } else if (iuArticleHubSectionP(section) && nav.topic && nav.topic !== "all") {
-          fp.mediaTopicKey = nav.topic;
+          feedState.mediaTopicKey = nav.topic;
         } else {
           const desktopDefaultTopic = iuDesktopDefaultFeedTopicResolve(nav);
           if (desktopDefaultTopic) {
-            fp.mediaTopicKey = desktopDefaultTopic;
-          } else if (["hry", "kultura", "veda", "vzdelavani"].indexOf(section) !== -1) {
-            fp.mediaTopicKey = section;
+            feedState.mediaTopicKey = desktopDefaultTopic;
           }
         }
-        fp.travelUiMode = "media";
+        feedState.travelUiMode = "media";
       }
     } catch (_) {}
     const accentColorKey =
