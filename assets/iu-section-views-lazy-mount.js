@@ -1,7 +1,7 @@
 /**
  * infoUzel.cz — Section views LAZY MOUNT (P1 performance fix #2)
  *
- * The non-feed section views (jr, tvprogram, travel, mapy, radio, tvonline)
+ * The non-feed section views (jr, tvprogram, mapy, radio, tvonline)
  * ship inside inert <template id="iuLazyViewTpl-KEY"> elements and are mounted
  * into #iuCenterStage only when their section is first opened.
  *
@@ -20,11 +20,10 @@
 
   if (window.__iuSectionViewsLazyMount) return;
 
-  var KEYS = ["jr", "tvprogram", "travel", "mapy", "radio", "tvonline", "pocasi", "affiliate"];
+  var KEYS = ["jr", "tvprogram", "mapy", "radio", "tvonline", "pocasi", "affiliate"];
   var SELECTOR_TO_KEY = {
     "#iuJrEmptyView": "jr",
     "#iuTvProgramView": "tvprogram",
-    "#iuTravelView": "travel",
     "#iuMapyView": "mapy",
     "#iuRadioView": "radio",
     "#iuTvOnlineView": "tvonline",
@@ -96,10 +95,7 @@
     var sec = String(p.get("section") || "").trim().toLowerCase();
     if (sec === "tv") sec = "tvonline";
     if (sec === "maps") sec = "mapy";
-    if (sec === "travel") {
-      var mode = String(p.get("mode") || "guide").trim().toLowerCase();
-      if (mode !== "media") ensure("travel");
-    } else if (KEYS.indexOf(sec) !== -1) {
+    if (KEYS.indexOf(sec) !== -1) {
       ensure(sec);
     } else if (sec.indexOf("aff-") === 0) {
       ensure("affiliate");
