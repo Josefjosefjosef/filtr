@@ -483,4 +483,43 @@
     background-color: var(--iu-page-bg, #f8fafc) !important;
     background-image: none !important;
   }
+
+  /* Desktop: unify middle feed + homecards box with left-rail chrome (all dayparts). */
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack--morning,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack--lateMorning,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack--afternoon,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack--evening,
+  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon, .iu-time-evening) body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack {
+    background: var(--iuRailBg, #fff) !important;
+    background-color: var(--iuRailBg, #fff) !important;
+    background-image: none !important;
+    --iu-stack-ambient-bg: none;
+    border-color: rgba(15, 35, 55, 0.1) !important;
+    box-shadow: none !important;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack .iuSilverStackChromaFrame,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack--morning .iuSilverStackChromaFrame,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack--lateMorning .iuSilverStackChromaFrame,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack--afternoon .iuSilverStackChromaFrame,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack--evening .iuSilverStackChromaFrame {
+    background: transparent !important;
+    background-image: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body.iu-desktop-home-grid #leftContent,
+  body.iu-desktop-home-grid #newsList,
+  body.iu-desktop-home-grid #feed,
+  body.iu-desktop-home-grid #feedWrap,
+  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon, .iu-time-evening) body.iu-desktop-home-grid #leftContent,
+  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon, .iu-time-evening) body.iu-desktop-home-grid #newsList,
+  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon, .iu-time-evening) body.iu-desktop-home-grid #feed,
+  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon, .iu-time-evening) body.iu-desktop-home-grid #feedWrap {
+    background: var(--iuRailBg, #fff) !important;
+    background-color: var(--iuRailBg, #fff) !important;
+    background-image: none !important;
+  }
 }
