@@ -1,10 +1,10 @@
 {
   "report": "ARTICLE_SCHEDULER_REPORT",
-  "run_id": "27799550304",
-  "main_commit": "f1c014f7c308",
+  "run_id": "27800282521",
+  "main_commit": "d0d1f0ed857a",
   "trigger_source": "workflow_dispatch",
-  "trigger_time": "2026-06-19T01:23:10.749789Z",
-  "scheduler_tick": 1134,
+  "trigger_time": "2026-06-19T01:45:49.229506Z",
+  "scheduler_tick": 1135,
   "min_fetch_interval_min": 15,
   "max_fetch_interval_min": 25,
   "selected_sources": [
@@ -13,7 +13,8 @@
     "fin_ekonomickydenik",
     "fin_epenize",
     "hry_idnes_bonusweb",
-    "hry_zing",
+    "hry_indian",
+    "spt_sportcz",
     "spt_tenisportal",
     "ved_ct24_veda",
     "zdr_plnezdravi",
@@ -21,9 +22,6 @@
     "zdr_zdravezpravy",
     "zpr_ct24_svet",
     "zpr_denik",
-    "zpr_idnes_zpravy",
-    "zpr_novinky_domaci",
-    "zpr_novinky_zahranicni",
     "zpr_seznam_domaci"
   ],
   "skipped_sources": [],
@@ -32,7 +30,7 @@
     {
       "source_id": "zpr_ct24_domaci",
       "eligible": true,
-      "overdue": false,
+      "overdue": true,
       "urgent": true,
       "priority_boost": true,
       "in_flight": false,
@@ -48,9 +46,9 @@
       "urgent": false,
       "priority_boost": false,
       "in_flight": false,
-      "last_checked_at": "2026-06-19T01:22:38.744922Z",
-      "next_allowed_at": "2026-06-19T01:37:38.744922Z",
-      "must_check_before": "2026-06-19T01:47:38.744922Z",
+      "last_checked_at": "2026-06-19T01:45:29.761238Z",
+      "next_allowed_at": "2026-06-19T02:00:29.761238Z",
+      "must_check_before": "2026-06-19T02:10:29.761238Z",
       "selected": true
     },
     {
@@ -60,46 +58,46 @@
       "urgent": false,
       "priority_boost": false,
       "in_flight": false,
-      "last_checked_at": "2026-06-19T01:22:46.385860Z",
-      "next_allowed_at": "2026-06-19T01:37:46.385860Z",
-      "must_check_before": "2026-06-19T01:47:46.385860Z",
+      "last_checked_at": "2026-06-19T01:45:38.678666Z",
+      "next_allowed_at": "2026-06-19T02:00:38.678666Z",
+      "must_check_before": "2026-06-19T02:10:38.678666Z",
       "selected": true
     },
     {
       "source_id": "zpr_novinky_domaci",
-      "eligible": false,
+      "eligible": true,
       "overdue": false,
-      "urgent": false,
-      "priority_boost": false,
+      "urgent": true,
+      "priority_boost": true,
       "in_flight": false,
       "last_checked_at": "2026-06-19T01:22:53.056640Z",
       "next_allowed_at": "2026-06-19T01:37:53.056640Z",
       "must_check_before": "2026-06-19T01:47:53.056640Z",
-      "selected": true
+      "selected": false
     },
     {
       "source_id": "zpr_novinky_zahranicni",
-      "eligible": false,
+      "eligible": true,
       "overdue": false,
-      "urgent": false,
-      "priority_boost": false,
+      "urgent": true,
+      "priority_boost": true,
       "in_flight": false,
       "last_checked_at": "2026-06-19T01:22:55.660633Z",
       "next_allowed_at": "2026-06-19T01:37:55.660633Z",
       "must_check_before": "2026-06-19T01:47:55.660633Z",
-      "selected": true
+      "selected": false
     },
     {
       "source_id": "zpr_idnes_zpravy",
-      "eligible": false,
+      "eligible": true,
       "overdue": false,
-      "urgent": false,
-      "priority_boost": false,
+      "urgent": true,
+      "priority_boost": true,
       "in_flight": false,
       "last_checked_at": "2026-06-19T01:22:48.453084Z",
       "next_allowed_at": "2026-06-19T01:37:48.453084Z",
       "must_check_before": "2026-06-19T01:47:48.453084Z",
-      "selected": true
+      "selected": false
     },
     {
       "source_id": "zpr_denik",
@@ -108,9 +106,9 @@
       "urgent": false,
       "priority_boost": false,
       "in_flight": false,
-      "last_checked_at": "2026-06-19T01:22:41.759460Z",
-      "next_allowed_at": "2026-06-19T01:37:41.759460Z",
-      "must_check_before": "2026-06-19T01:47:41.759460Z",
+      "last_checked_at": "2026-06-19T01:45:33.879971Z",
+      "next_allowed_at": "2026-06-19T02:00:33.879971Z",
+      "must_check_before": "2026-06-19T02:10:33.879971Z",
       "selected": true
     },
     {
@@ -128,7 +126,7 @@
     {
       "source_id": "zpr_hlidacipes",
       "eligible": true,
-      "overdue": false,
+      "overdue": true,
       "urgent": true,
       "priority_boost": true,
       "in_flight": false,
@@ -152,7 +150,7 @@
     {
       "source_id": "zpr_ceskajustice",
       "eligible": true,
-      "overdue": false,
+      "overdue": true,
       "urgent": true,
       "priority_boost": true,
       "in_flight": false,
@@ -187,15 +185,15 @@
     },
     {
       "source_id": "spt_sportcz",
-      "eligible": true,
+      "eligible": false,
       "overdue": false,
-      "urgent": true,
-      "priority_boost": true,
+      "urgent": false,
+      "priority_boost": false,
       "in_flight": false,
-      "last_checked_at": "2026-06-19T01:00:00.022539Z",
-      "next_allowed_at": "2026-06-19T01:15:00.022539Z",
-      "must_check_before": "2026-06-19T01:25:00.022539Z",
-      "selected": false
+      "last_checked_at": "2026-06-19T01:45:43.085317Z",
+      "next_allowed_at": "2026-06-19T02:00:43.085317Z",
+      "must_check_before": "2026-06-19T02:10:43.085317Z",
+      "selected": true
     },
     {
       "source_id": "spt_isport",
@@ -212,7 +210,7 @@
     {
       "source_id": "spt_idnes",
       "eligible": true,
-      "overdue": false,
+      "overdue": true,
       "urgent": true,
       "priority_boost": true,
       "in_flight": false,
@@ -228,15 +226,15 @@
       "urgent": false,
       "priority_boost": false,
       "in_flight": false,
-      "last_checked_at": "2026-06-19T01:22:12.600015Z",
-      "next_allowed_at": "2026-06-19T01:37:12.600015Z",
-      "must_check_before": "2026-06-19T01:47:12.600015Z",
+      "last_checked_at": "2026-06-19T01:45:06.105278Z",
+      "next_allowed_at": "2026-06-19T02:00:06.105278Z",
+      "must_check_before": "2026-06-19T02:10:06.105278Z",
       "selected": true
     },
     {
       "source_id": "spt_mmamag",
       "eligible": true,
-      "overdue": false,
+      "overdue": true,
       "urgent": true,
       "priority_boost": true,
       "in_flight": false,
@@ -272,7 +270,7 @@
     {
       "source_id": "fin_idnes_ekonomika",
       "eligible": true,
-      "overdue": false,
+      "overdue": true,
       "urgent": true,
       "priority_boost": true,
       "in_flight": false,
@@ -284,7 +282,7 @@
     {
       "source_id": "fin_hn",
       "eligible": true,
-      "overdue": false,
+      "overdue": true,
       "urgent": true,
       "priority_boost": true,
       "in_flight": false,
@@ -296,7 +294,7 @@
     {
       "source_id": "fin_e15",
       "eligible": true,
-      "overdue": false,
+      "overdue": true,
       "urgent": true,
       "priority_boost": true,
       "in_flight": false,
@@ -324,9 +322,9 @@
       "urgent": false,
       "priority_boost": false,
       "in_flight": false,
-      "last_checked_at": "2026-06-19T01:21:41.741772Z",
-      "next_allowed_at": "2026-06-19T01:36:41.741772Z",
-      "must_check_before": "2026-06-19T01:46:41.741772Z",
+      "last_checked_at": "2026-06-19T01:44:35.707698Z",
+      "next_allowed_at": "2026-06-19T01:59:35.707698Z",
+      "must_check_before": "2026-06-19T02:09:35.707698Z",
       "selected": true
     },
     {
@@ -348,9 +346,9 @@
       "urgent": false,
       "priority_boost": false,
       "in_flight": false,
-      "last_checked_at": "2026-06-19T01:21:48.146171Z",
-      "next_allowed_at": "2026-06-19T01:36:48.146171Z",
-      "must_check_before": "2026-06-19T01:46:48.146171Z",
+      "last_checked_at": "2026-06-19T01:44:42.425673Z",
+      "next_allowed_at": "2026-06-19T01:59:42.425673Z",
+      "must_check_before": "2026-06-19T02:09:42.425673Z",
       "selected": true
     },
     {
@@ -372,9 +370,9 @@
       "urgent": false,
       "priority_boost": false,
       "in_flight": false,
-      "last_checked_at": "2026-06-19T01:22:35.227760Z",
-      "next_allowed_at": "2026-06-19T01:37:35.227760Z",
-      "must_check_before": "2026-06-19T01:47:35.227760Z",
+      "last_checked_at": "2026-06-19T01:45:28.432992Z",
+      "next_allowed_at": "2026-06-19T02:00:28.432992Z",
+      "must_check_before": "2026-06-19T02:10:28.432992Z",
       "selected": true
     },
     {
@@ -396,9 +394,9 @@
       "urgent": false,
       "priority_boost": false,
       "in_flight": false,
-      "last_checked_at": "2026-06-19T01:22:23.282651Z",
-      "next_allowed_at": "2026-06-19T01:37:23.282651Z",
-      "must_check_before": "2026-06-19T01:47:23.282651Z",
+      "last_checked_at": "2026-06-19T01:45:18.325338Z",
+      "next_allowed_at": "2026-06-19T02:00:18.325338Z",
+      "must_check_before": "2026-06-19T02:10:18.325338Z",
       "selected": true
     },
     {
@@ -408,9 +406,9 @@
       "urgent": false,
       "priority_boost": false,
       "in_flight": false,
-      "last_checked_at": "2026-06-19T01:22:28.969398Z",
-      "next_allowed_at": "2026-06-19T01:37:28.969398Z",
-      "must_check_before": "2026-06-19T01:47:28.969398Z",
+      "last_checked_at": "2026-06-19T01:45:23.020259Z",
+      "next_allowed_at": "2026-06-19T02:00:23.020259Z",
+      "must_check_before": "2026-06-19T02:10:23.020259Z",
       "selected": true
     },
     {
@@ -420,9 +418,9 @@
       "urgent": false,
       "priority_boost": false,
       "in_flight": false,
-      "last_checked_at": "2026-06-19T01:21:31.679380Z",
-      "next_allowed_at": "2026-06-19T01:36:31.679380Z",
-      "must_check_before": "2026-06-19T01:46:31.679380Z",
+      "last_checked_at": "2026-06-19T01:44:26.438173Z",
+      "next_allowed_at": "2026-06-19T01:59:26.438173Z",
+      "must_check_before": "2026-06-19T02:09:26.438173Z",
       "selected": true
     },
     {
@@ -456,9 +454,9 @@
       "urgent": false,
       "priority_boost": false,
       "in_flight": false,
-      "last_checked_at": "2026-06-19T01:21:36.346075Z",
-      "next_allowed_at": "2026-06-19T01:36:36.346075Z",
-      "must_check_before": "2026-06-19T01:46:36.346075Z",
+      "last_checked_at": "2026-06-19T01:44:31.127526Z",
+      "next_allowed_at": "2026-06-19T01:59:31.127526Z",
+      "must_check_before": "2026-06-19T02:09:31.127526Z",
       "selected": true
     },
     {
@@ -468,34 +466,34 @@
       "urgent": false,
       "priority_boost": false,
       "in_flight": false,
-      "last_checked_at": "2026-06-19T01:21:51.478809Z",
-      "next_allowed_at": "2026-06-19T01:36:51.478809Z",
-      "must_check_before": "2026-06-19T01:46:51.478809Z",
+      "last_checked_at": "2026-06-19T01:44:46.287495Z",
+      "next_allowed_at": "2026-06-19T01:59:46.287495Z",
+      "must_check_before": "2026-06-19T02:09:46.287495Z",
       "selected": true
     },
     {
       "source_id": "hry_indian",
-      "eligible": true,
-      "overdue": false,
-      "urgent": true,
-      "priority_boost": true,
-      "in_flight": false,
-      "last_checked_at": "2026-06-19T00:59:22.825556Z",
-      "next_allowed_at": "2026-06-19T01:14:22.825556Z",
-      "must_check_before": "2026-06-19T01:24:22.825556Z",
-      "selected": false
-    },
-    {
-      "source_id": "hry_zing",
       "eligible": false,
       "overdue": false,
       "urgent": false,
       "priority_boost": false,
       "in_flight": false,
+      "last_checked_at": "2026-06-19T01:45:47.814004Z",
+      "next_allowed_at": "2026-06-19T02:00:47.814004Z",
+      "must_check_before": "2026-06-19T02:10:47.814004Z",
+      "selected": true
+    },
+    {
+      "source_id": "hry_zing",
+      "eligible": true,
+      "overdue": false,
+      "urgent": true,
+      "priority_boost": true,
+      "in_flight": false,
       "last_checked_at": "2026-06-19T01:23:10.468111Z",
       "next_allowed_at": "2026-06-19T01:38:10.468111Z",
       "must_check_before": "2026-06-19T01:48:10.468111Z",
-      "selected": true
+      "selected": false
     },
     {
       "source_id": "kul_ctart",
@@ -512,7 +510,7 @@
     {
       "source_id": "kul_kinobox",
       "eligible": true,
-      "overdue": false,
+      "overdue": true,
       "urgent": true,
       "priority_boost": true,
       "in_flight": false,
@@ -564,9 +562,9 @@
       "urgent": false,
       "priority_boost": false,
       "in_flight": false,
-      "last_checked_at": "2026-06-19T01:22:17.381110Z",
-      "next_allowed_at": "2026-06-19T01:37:17.381110Z",
-      "must_check_before": "2026-06-19T01:47:17.381110Z",
+      "last_checked_at": "2026-06-19T01:45:11.784343Z",
+      "next_allowed_at": "2026-06-19T02:00:11.784343Z",
+      "must_check_before": "2026-06-19T02:10:11.784343Z",
       "selected": true
     },
     {
@@ -620,7 +618,7 @@
     {
       "source_id": "vzd_pedagogicke_info",
       "eligible": true,
-      "overdue": false,
+      "overdue": true,
       "urgent": true,
       "priority_boost": true,
       "in_flight": false,
