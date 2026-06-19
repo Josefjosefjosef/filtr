@@ -560,11 +560,6 @@ function installInvoiceLauncherDelegation(openSurfaceFn) {
     async function openFromLauncher(e, kind) {
       const trigger = e && e.target && e.target.closest ? e.target.closest('[data-iuq="faktura"]') : null;
       if (!trigger) return;
-      if (trigger.closest("#iuDesktopInvoiceBanner")) {
-        try {
-          if (window.matchMedia && window.matchMedia("(min-width: 901px)").matches) return;
-        } catch (_) {}
-      }
       if (e && e.__iuInvoiceLauncherHandled) return;
       if (e) {
         e.__iuInvoiceLauncherHandled = true;
@@ -580,11 +575,9 @@ function installInvoiceLauncherDelegation(openSurfaceFn) {
       } catch (_) {}
       await bootOnly();
       if (typeof openSurfaceFn === "function") {
-        const result = openSurfaceFn();
-        if (result && typeof result.then === "function") await result;
+        await Promise.resolve(openSurfaceFn());
       } else if (typeof window.iuInvoiceOpenSurface === "function") {
-        const result = window.iuInvoiceOpenSurface();
-        if (result && typeof result.then === "function") await result;
+        await Promise.resolve(window.iuInvoiceOpenSurface());
       }
       publishInvoiceFirstClickDiag({ handlerKind: kind || "click", clickCount: (window.__iuInvoiceLauncherClickCount = (window.__iuInvoiceLauncherClickCount || 0) + 1) });
     }

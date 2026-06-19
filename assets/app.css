@@ -1,4 +1,4 @@
-.checkItem input:checked{
+﻿.checkItem input:checked{
   accent-color: var(--gold-main);
 }
 /* TOPBAR CONTENT GRID */
@@ -724,7 +724,7 @@ html:not([data-iu-js]) .iuDailyWeather{
 }
 
 .iu-infoItem::before{
-  content: "â?¬Ä?";
+  content: "Ă˘?Â¬Ă„?";
   margin: 0 6px 0 2px;
   color: rgba(0,0,0,.35);
 }
@@ -1157,11 +1157,11 @@ aside.accordionCol{
   color: #10a37f;
 }
 
-.iu-mmQuickItem[aria-label="Pâ????ekladaâ????"] i{
+.iu-mmQuickItem[aria-label="PĂ˘????ekladaĂ˘????"] i{
   color: #0d2e4c;
 }
 
-.iu-mmQuickItem[aria-label="Balâ????ky"] i{
+.iu-mmQuickItem[aria-label="BalĂ˘????ky"] i{
   color: #e60012;
 }
 
@@ -1177,9 +1177,9 @@ aside.accordionCol{
   color: #ff0000;
 }
 
-.iu-mmQuickItem[aria-label="Z??silky a sledov??n?­"] i{ color: #e60012; }
-.iu-mmQuickItem[aria-label="Vzory smluv a pln?© moci"] i{ color: #ff0000; }
-.iu-mmQuickItem[aria-label="FinanÄ?n?­ kalkulaÄ?ky"] i{ color: #4285f4; }
+.iu-mmQuickItem[aria-label="Z??silky a sledov??n?Â­"] i{ color: #e60012; }
+.iu-mmQuickItem[aria-label="Vzory smluv a pln?Â© moci"] i{ color: #ff0000; }
+.iu-mmQuickItem[aria-label="FinanĂ„?n?Â­ kalkulaĂ„?ky"] i{ color: #4285f4; }
 .iu-mmQuickItem--inert{ cursor: default; }
 .iu-mmQuickItem--inert:hover{ background: transparent; transform: none; }
 
@@ -3125,7 +3125,7 @@ button.iu-close-btn-38:focus-visible{
 }
 
 /*
-  P0 infoUzel: mobile/tablet (<=1024px) month view only — zero grid gap between day cells.
+  P0 infoUzel: mobile/tablet (<=1024px) month view only â€” zero grid gap between day cells.
   Single 1px dividers via grid top/left + cell right/bottom (no doubled borders). Desktop unchanged.
 */
 @media (max-width: 1024px) {
@@ -3635,7 +3635,7 @@ body[data-iu-fc="1"] #feed{
   }
 }
 
-/* P0: phone doc-scroll buffer; tablet ≤900 smaller (#leftContent, no +168px). */
+/* P0: phone doc-scroll buffer; tablet â‰¤900 smaller (#leftContent, no +168px). */
 @media (max-width: 767px) {
   :root{
     --iu-mobile-bottom-nav-safe-space: calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 12px + 40px);
@@ -3643,8 +3643,8 @@ body[data-iu-fc="1"] #feed{
 }
 @media (min-width: 768px) and (max-width: 900px) {
   :root{
-    /* +40px stejně jako phone: reálná výška lišty (~91px s labely) > 56px proměnné; +8px nestačilo
-       (poslední prvek končil pod lištou — bottom-navigation-visibility-guard-v1). */
+    /* +40px stejnÄ› jako phone: reĂˇlnĂˇ vĂ˝Ĺˇka liĹˇty (~91px s labely) > 56px promÄ›nnĂ©; +8px nestaÄŤilo
+       (poslednĂ­ prvek konÄŤil pod liĹˇtou â€” bottom-navigation-visibility-guard-v1). */
     --iu-mobile-bottom-nav-safe-space: calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 12px + 40px);
   }
 }
@@ -3654,28 +3654,28 @@ body[data-iu-fc="1"] #feed{
   }
 }
 
-/* P0 BOTTOM NAV CLEARANCE V1 (central): každý mobilní scroll root musí končit nad fixní
-   #iuMobileBottomNav (PWA standalone + Safari: env(safe-area-inset-bottom) přes
+/* P0 BOTTOM NAV CLEARANCE V1 (central): kaĹľdĂ˝ mobilnĂ­ scroll root musĂ­ konÄŤit nad fixnĂ­
+   #iuMobileBottomNav (PWA standalone + Safari: env(safe-area-inset-bottom) pĹ™es
    --iu-mobile-bottom-nav-safe-space, viewport-fit=cover v projects/index.html).
-   Doplňuje stávající konzumenty (#feed ≤767, tool hosty, gate panely, tasks/notes/kalendář)
-   o chybějící scroll rooty — žádné per-page hardcody. */
+   DoplĹuje stĂˇvajĂ­cĂ­ konzumenty (#feed â‰¤767, tool hosty, gate panely, tasks/notes/kalendĂˇĹ™)
+   o chybÄ›jĂ­cĂ­ scroll rooty â€” ĹľĂˇdnĂ© per-page hardcody. */
 @media (max-width: 767px) {
-  /* Domů/Silver: document scroll, poslední prvek je #iuMobileGateWrap (leftContent hidden).
-     !important: přebíjí reset `#iuMobileGateWrap.iu-mobileGateWrap{padding:0!important}` níže. */
+  /* DomĹŻ/Silver: document scroll, poslednĂ­ prvek je #iuMobileGateWrap (leftContent hidden).
+     !important: pĹ™ebĂ­jĂ­ reset `#iuMobileGateWrap.iu-mobileGateWrap{padding:0!important}` nĂ­Ĺľe. */
   body:not(.iu-mobileMainVisible):not(.iu-mobileGateOverlayOpen) #iuMobileGateWrap{
     padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
     box-sizing: border-box !important;
   }
 }
 @media (min-width: 768px) and (max-width: 900px) {
-  /* Tablet: #feed v document flow (landscape / home) — stejná rezerva jako portrait inner-scroll. */
+  /* Tablet: #feed v document flow (landscape / home) â€” stejnĂˇ rezerva jako portrait inner-scroll. */
   body:not(.iu-mobileGateOverlayOpen) #feed{
     padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 20px));
     box-sizing: border-box;
   }
 }
 @media (max-width: 900px) {
-  /* Článek / web detail (quick view): fixed fullscreen scroller bez rezervy. */
+  /* ÄŚlĂˇnek / web detail (quick view): fixed fullscreen scroller bez rezervy. */
   #leftContent:has(#iuCenterStage[data-iu-view="quick"]){
     padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 20px)) !important;
     box-sizing: border-box !important;
@@ -3694,7 +3694,7 @@ body[data-iu-fc="1"] #feed{
   margin: 0;
 }
 
-/* Tablet inner-scroll scrollbar gutter only — desktop ≥901px aligns with HomeCards wrapper. */
+/* Tablet inner-scroll scrollbar gutter only â€” desktop â‰Ą901px aligns with HomeCards wrapper. */
 @media (min-width: 681px) and (max-width: 900px) {
   #feed,
   .iuRadioView{
@@ -3745,7 +3745,7 @@ html[data-section="tvonline"] #iuTvOnlineView{
 #iuTvOnlineView .iuRadioTitle{font-weight:800;letter-spacing:-.012em}
 #iuTvOnlineView .iuRadioLine{height:2px;opacity:.3;border-radius:999px;background:linear-gradient(to right,color-mix(in srgb,var(--iuAccentTVOnline,#3b82f6) 48%,transparent),rgba(11,27,43,0))}
 
-/* TV online — P0: 2 cols na úzkém viewportu + kompaktní karty (sdílené chip styly :is Mapy/Rádio/TV zůstávají) */
+/* TV online â€” P0: 2 cols na ĂşzkĂ©m viewportu + kompaktnĂ­ karty (sdĂ­lenĂ© chip styly :is Mapy/RĂˇdio/TV zĹŻstĂˇvajĂ­) */
 #iuTvOnlineView .iu-tv-online-grid{
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3800,7 +3800,7 @@ html[data-section="tvonline"] #iuTvOnlineView{
   line-height: 1.2;
 }
 
-/* TV online — SEO + FAQ (scoped P0): pod mřížkou tlačítek, premium light, bez globálních zásahů */
+/* TV online â€” SEO + FAQ (scoped P0): pod mĹ™Ă­Ĺľkou tlaÄŤĂ­tek, premium light, bez globĂˇlnĂ­ch zĂˇsahĹŻ */
 #iuTvOnlineView .iu-tv-online-seo{
   box-sizing: border-box;
   width: 100%;
@@ -3869,7 +3869,7 @@ html[data-section="tvonline"] #iuTvOnlineView{
   color: rgba(51, 65, 85, 0.9);
 }
 @media (max-width: 767px) {
-  /* TV online: nesnižovat globální safe-space — pouze přidat cílený buffer (scrollIntoView / dolní lišta). */
+  /* TV online: nesniĹľovat globĂˇlnĂ­ safe-space â€” pouze pĹ™idat cĂ­lenĂ˝ buffer (scrollIntoView / dolnĂ­ liĹˇta). */
   html[data-section="tvonline"]{
     scroll-padding-bottom: calc(var(--iu-mobile-bottom-nav-safe-space) + 18px);
   }
@@ -4610,7 +4610,7 @@ body[data-section="home"] .iuHomeCanvas{
 .iuHomeHex434 .iuHex--travel{    background: var(--iuNavAccent-travel, #0284C7); }
 .iuHomeHex434 .iuHex--jr{        background: var(--iuNavAccent-jr); }
 .iuHomeHex434 .iuHex--tvprogram{ background: var(--iuNavAccent-tvprogram, #334155); }
-/* P0 Menu hex TV program icon; desktop #FACC15; mobil ≤1024 #B8860B. */
+/* P0 Menu hex TV program icon; desktop #FACC15; mobil â‰¤1024 #B8860B. */
 .iuHomeHex434 .iuHex--tvprogram .iuHex__icon,
 .iuHomeHex434 .iuHex--tvprogram .iuHex__icon svg{
   color: #FACC15 !important;
@@ -4740,7 +4740,7 @@ body[data-section="home"] .iuHomeCanvas{
   --iuSectionAccent: var(--iuNavAccent-pocasi, #38BDF8);
 }
 
-/* P0: na telefonu (≤767) je scroll typicky document — padding na hostech + #feed. Na tabletu portrait (768–900) drží rezervu jen #leftContent (níže), aby nevznikl dvojitý padding. */
+/* P0: na telefonu (â‰¤767) je scroll typicky document â€” padding na hostech + #feed. Na tabletu portrait (768â€“900) drĹľĂ­ rezervu jen #leftContent (nĂ­Ĺľe), aby nevznikl dvojitĂ˝ padding. */
 @media (max-width: 767px) {
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #feed:not([hidden]){
     padding-bottom: var(--iu-mobile-bottom-nav-safe-space) !important;
@@ -4763,7 +4763,7 @@ body[data-section="home"] .iuHomeCanvas{
   }
 }
 
-/* P0 regression guard (≤900): tool host jako scroll kontejner — min. scroll-padding nad lištou (bez nových tříd). */
+/* P0 regression guard (â‰¤900): tool host jako scroll kontejner â€” min. scroll-padding nad liĹˇtou (bez novĂ˝ch tĹ™Ă­d). */
 @media (max-width: 900px) {
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuMapyView,
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuMapsView,
@@ -5558,7 +5558,7 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   text-align: left;
 }
 
-/* Počasí — historické video: prémiová karta (scoped, bez dopadu na Média) */
+/* PoÄŤasĂ­ â€” historickĂ© video: prĂ©miovĂˇ karta (scoped, bez dopadu na MĂ©dia) */
 #iuWeatherView .iu-weather-video-card.iuWeatherHistoryCard{
   position: relative;
   isolation: isolate;
@@ -6361,150 +6361,6 @@ html[data-section="pocasi"] #iuWeatherView .iuWeatherLinksGrid{
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.iuTravelView{
-  padding: 18px 12px;
-  --iuSectionAccent: var(--iuNavAccent-travel, #06B6D4);
-}
-
-body[data-section="travel"] #iuTravelView,
-html[data-section="travel"] #iuTravelView{
-  display: block !important;
-}
-body[data-section="travel"] #feed,
-html[data-section="travel"] #feed{
-  display: none !important;
-}
-
-body[data-section="travel"][data-travel-feed="1"] #iuTravelView,
-html[data-section="travel"][data-travel-feed="1"] #iuTravelView{
-  display: none !important;
-}
-body[data-section="travel"][data-travel-feed="1"] #feed,
-html[data-section="travel"][data-travel-feed="1"] #feed{
-  display: block !important;
-}
-
-
-.iuTravelNavBar{
-  margin: 0 0 12px;
-}
-.iuTravelModeSwitch{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-.iuTravelModeSwitch--inView{
-  margin-top: 2px;
-  margin-bottom: 12px;
-}
-.iuTravelModeBtn{
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(148, 163, 184, 0.55);
-  background: rgba(255, 255, 255, 0.06);
-  color: inherit;
-  cursor: pointer;
-}
-.iuTravelModeBtn.is-active{
-  border-color: rgba(59, 130, 246, 0.65);
-  background: rgba(59, 130, 246, 0.16);
-}
-
-body[data-section="travel"] #iuTravelView .iuSectionSubTitle,
-html[data-section="travel"] #iuTravelView .iuSectionSubTitle{
-  margin: 0;
-  font-size: 14px;
-  font-weight: 900;
-  letter-spacing: -0.01em;
-  opacity: 0.9;
-  color: var(--iuSectionAccent, currentColor);
-}
-
-body[data-section="travel"] #iuTravelView .iuSubSectionHeader,
-html[data-section="travel"] #iuTravelView .iuSubSectionHeader{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 16px 0 10px 0;
-  color: var(--iuSectionAccent, currentColor);
-}
-body[data-section="travel"] #iuTravelView .iuSubSectionHeader .iuSectionHeaderLine,
-html[data-section="travel"] #iuTravelView .iuSubSectionHeader .iuSectionHeaderLine{
-  opacity: 0.35;
-}
-
-body[data-section="travel"] #iuTravelView .iuTravelGrid,
-html[data-section="travel"] #iuTravelView .iuTravelGrid{
-  width: 100%;
-  max-width: none;
-  margin-left: 0;
-  margin-right: 0;
-  margin-bottom: 14px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-body[data-section="travel"] #iuTravelView .iuTravelCrisisGrid,
-html[data-section="travel"] #iuTravelView .iuTravelCrisisGrid{
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  width: 100%;
-  margin: 0 0 14px 0;
-}
-body[data-section="travel"] #iuTravelView .iuTravelCrisisBox,
-html[data-section="travel"] #iuTravelView .iuTravelCrisisBox{
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-}
-body[data-section="travel"] #iuTravelView .iuTravelCrisisChip,
-html[data-section="travel"] #iuTravelView .iuTravelCrisisChip{
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-  min-height: 88px; 
-  padding: 12px 12px;
-  box-sizing: border-box;
-}
-body[data-section="travel"] #iuTravelView .iuTravelChipDesc,
-html[data-section="travel"] #iuTravelView .iuTravelChipDesc{
-  display: block;
-  font-size: 12px;
-  line-height: 1.25;
-  opacity: 0.86;
-  max-width: 62ch;
-}
-body[data-section="travel"] #iuTravelView .iuTravelCrisisLinks,
-html[data-section="travel"] #iuTravelView .iuTravelCrisisLinks{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 10px;
-  font-size: 12px;
-}
-body[data-section="travel"] #iuTravelView .iuTravelCrisisLinks a,
-html[data-section="travel"] #iuTravelView .iuTravelCrisisLinks a{
-  color: var(--iuSectionAccent, currentColor);
-  text-decoration: none;
-  border-bottom: 1px solid color-mix(in srgb, var(--iuSectionAccent, currentColor) 55%, transparent);
-}
-body[data-section="travel"] #iuTravelView .iuTravelCrisisLinks a:hover,
-body[data-section="travel"] #iuTravelView .iuTravelCrisisLinks a:focus-visible,
-html[data-section="travel"] #iuTravelView .iuTravelCrisisLinks a:hover,
-html[data-section="travel"] #iuTravelView .iuTravelCrisisLinks a:focus-visible{
-  border-bottom-color: var(--iuSectionAccent, currentColor);
-}
-@media (max-width: 640px){
-  body[data-section="travel"] #iuTravelView .iuTravelCrisisGrid,
-  html[data-section="travel"] #iuTravelView .iuTravelCrisisGrid{
-    grid-template-columns: 1fr;
-  }
-}
 
 .iuMapyView{
   padding: 16px 12px;
@@ -6585,7 +6441,7 @@ html[data-section="mapy"] #iuMapyView .iuMapyGrid{
   gap: 9px;
 }
 
-/* Mapy & Navigace — SEO blok pod tlačítky (čitelná karta, rezerva nad spodní lištou). */
+/* Mapy & Navigace â€” SEO blok pod tlaÄŤĂ­tky (ÄŤitelnĂˇ karta, rezerva nad spodnĂ­ liĹˇtou). */
 #iuMapyView .iu-maps-seo-block{
   margin-top: 14px;
   margin-bottom: 20px;
@@ -6622,7 +6478,7 @@ html[data-section="mapy"] #iuMapyView .iuMapyGrid{
   margin-bottom: 0;
 }
 
-/* Mapy + TV online + Rádio: společná dlaždice; accent z --iuSectionAccent; hover jen fine pointer. */
+/* Mapy + TV online + RĂˇdio: spoleÄŤnĂˇ dlaĹľdice; accent z --iuSectionAccent; hover jen fine pointer. */
 :is(#iuMapyView,#iuMapsView,#iuTvOnlineView,#iuRadioView) .iuRadioChip{
   -webkit-tap-highlight-color: transparent;
   border-radius: 12px;
@@ -7224,7 +7080,7 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid,
     place-items:center;
   }
   .searchBtn::before{
-    content: "???®Ä?";
+    content: "???Â®Ă„?";
     font-size: 16px;
     color: rgba(11,27,43,0.72);
   }
@@ -8109,13 +7965,6 @@ html[data-section="mapy"] #iuCenterStage #iuMapyView{
   width: auto !important;
 }
 
-body[data-section="travel"] #iuCenterStage #iuTravelView,
-html[data-section="travel"] #iuCenterStage #iuTravelView{
-  flex: 1 1 0;
-  min-width: 0;
-  width: auto !important;
-}
-
 body[data-section="pocasi"] #iuCenterStage #iuWeatherView,
 html[data-section="pocasi"] #iuCenterStage #iuWeatherView{
   flex: 1 1 auto;
@@ -8166,12 +8015,6 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   }
   body[data-section="mapy"] #iuCenterStage #iuMapyView,
   html[data-section="mapy"] #iuCenterStage #iuMapyView{
-    flex: 0 0 100%;
-    width: 100% !important;
-    min-width: 0;
-  }
-  body[data-section="travel"] #iuCenterStage #iuTravelView,
-  html[data-section="travel"] #iuCenterStage #iuTravelView{
     flex: 0 0 100%;
     width: 100% !important;
     min-width: 0;
@@ -8941,7 +8784,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
       overflow-y: auto;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
-      /* Tablet portrait tool: kompaktní rezerva + safe-area (real-flow proof clearance cca 16–48px). */
+      /* Tablet portrait tool: kompaktnĂ­ rezerva + safe-area (real-flow proof clearance cca 16â€“48px). */
       scroll-padding-bottom: max(4px, env(safe-area-inset-bottom, 0px));
       padding-bottom: max(4px, env(safe-area-inset-bottom, 0px));
       box-sizing: border-box;
@@ -8964,10 +8807,10 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     /* P0 tablet portrait scroll blocker fix (feed sections): #feed is NOT a direct child of
        #leftContent (#leftContent > #newsList > #iuCenterStage > .iuArticlesStage > #feed), so the
        #feed{height:100%} inner-scroller above never activates (100% resolves against auto-height
-       ancestors → #feed grows to full content height) and #leftContent{overflow:hidden} clips the
-       rest → scroll range 0 in every feed section. Make #leftContent the scroller whenever the
+       ancestors â†’ #feed grows to full content height) and #leftContent{overflow:hidden} clips the
+       rest â†’ scroll range 0 in every feed section. Make #leftContent the scroller whenever the
        mobile main shell is visible and no gate overlay modal is open (modal owns its own scroll)
-       — the exact pattern that already works for the tool sections above. Home (no
+       â€” the exact pattern that already works for the tool sections above. Home (no
        iu-mobileMainVisible) and other breakpoints are untouched. */
     body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #leftContent{
       overflow-y: auto;
@@ -9191,7 +9034,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   }
   body.iu-mobileGateOverlayOpen #iuMobileGateContent.iu-mobileGateContent[aria-hidden="false"]{
     position: fixed !important;
-    /* P1 mobile Menu→Počasí: gate host must stack above #iuConsentLayer (10020, top sheet ≤900px). */
+    /* P1 mobile Menuâ†’PoÄŤasĂ­: gate host must stack above #iuConsentLayer (10020, top sheet â‰¤900px). */
     z-index: 10025 !important;
     left: 0 !important;
     right: 0 !important;
@@ -9212,18 +9055,18 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     flex-direction: column !important;
     align-items: stretch !important;
     overflow: hidden !important;
-    /* P0: nesmí používat večerní --iu-bg (dokument); overlay host musí být vždy světlý podklad pro nav/tools. */
+    /* P0: nesmĂ­ pouĹľĂ­vat veÄŤernĂ­ --iu-bg (dokument); overlay host musĂ­ bĂ˝t vĹľdy svÄ›tlĂ˝ podklad pro nav/tools. */
     background: #f8fafc !important;
     box-sizing: border-box !important;
   }
-  /* P0 mobile/tablet: Menu (gate „navigace“) — vždy světlý shell; večerní --iu-bg dokumentu nesmí přetínat overlay. */
+  /* P0 mobile/tablet: Menu (gate â€žnavigaceâ€ś) â€” vĹľdy svÄ›tlĂ˝ shell; veÄŤernĂ­ --iu-bg dokumentu nesmĂ­ pĹ™etĂ­nat overlay. */
   body.iu-mobileGateOverlayOpen #iuMobileGateWrap[data-iu-mobile-gate="nav"] #iuMobileGateContent.iu-mobileGateContent[aria-hidden="false"]{
     background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 52%, #e8edf3 100%) !important;
   }
   body.iu-mobileGateOverlayOpen #iuMobileGateWrap[data-iu-mobile-gate="nav"] #iuMobileGatePanelNav.iu-mobileGatePanel:not([hidden]){
     background: transparent !important;
   }
-  /* P0 Menu grid: rail přesunutý do panelu nesmí dědit tmavý chrome (#iuLeftRail / body #iuLeftRail) — světlé pozadí za mřížkou. */
+  /* P0 Menu grid: rail pĹ™esunutĂ˝ do panelu nesmĂ­ dÄ›dit tmavĂ˝ chrome (#iuLeftRail / body #iuLeftRail) â€” svÄ›tlĂ© pozadĂ­ za mĹ™Ă­Ĺľkou. */
   body.iu-mobileGateOverlayOpen #iuMobileGatePanelNav aside#iuLeftRail.iu-leftRail,
   body.iu-mobileGateOverlayOpen #iuMobileGatePanelNav #iuLeftRail,
   #iuMobileGateWrap[data-iu-mobile-gate="nav"] #iuMobileGatePanelNav:not([hidden]) aside#iuLeftRail.iu-leftRail,
@@ -9401,7 +9244,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     -webkit-user-select: none !important;
     user-select: none !important;
   }
-  /* P0: horní duplicitní „Zpět“ lišta odstraněna — návrat jen přes #iuMobileBottomNav (JS stále volá .click() na skrytém #iuMobileMainBackBar). */
+  /* P0: hornĂ­ duplicitnĂ­ â€žZpÄ›tâ€ś liĹˇta odstranÄ›na â€” nĂˇvrat jen pĹ™es #iuMobileBottomNav (JS stĂˇle volĂˇ .click() na skrytĂ©m #iuMobileMainBackBar). */
   body.iu-mobileMainVisible #iuMobileMainBackBar,
   body.iu-mobileGateOverlayOpen #iuMobileGateBackBar,
   body.iu-mobileGateOverlayOpen #iuMobileGateBackBar:not([hidden]){
@@ -10049,7 +9892,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 #newsList #iuWeatherView .iuRadioChip,
 #newsList #iuMapyView .iuRadioChip,
 #newsList #iuMapsView .iuRadioChip,
-#newsList #iuTravelView .iuRadioChip,
 #newsList #iuTvProgramView .iuRadioChip,
 #newsList #iuKulturaView .iuRadioChip,
 #newsList .iuRadioChip[data-iu-text="dark"] .iuRadioChipTitle,
@@ -10059,12 +9901,10 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 
 #newsList #iuRadioView .iuRadioChip:hover,
 #newsList #iuWeatherView .iuRadioChip:hover,
-#newsList #iuTravelView .iuRadioChip:hover,
 #newsList #iuTvProgramView .iuRadioChip:hover,
 #newsList #iuKulturaView .iuRadioChip:hover,
 #newsList #iuRadioView .iuRadioChip:focus-visible,
 #newsList #iuWeatherView .iuRadioChip:focus-visible,
-#newsList #iuTravelView .iuRadioChip:focus-visible,
 #newsList #iuTvProgramView .iuRadioChip:focus-visible,
 #newsList #iuKulturaView .iuRadioChip:focus-visible{
   outline: 3px solid #0b1b2b !important;
@@ -10201,7 +10041,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   margin-top: 14px;
 }
 
-/* P0 Jízdní řády: pojistka — žádný viditelný notes host (primární je vypnutý mount v app.js). */
+/* P0 JĂ­zdnĂ­ Ĺ™Ăˇdy: pojistka â€” ĹľĂˇdnĂ˝ viditelnĂ˝ notes host (primĂˇrnĂ­ je vypnutĂ˝ mount v app.js). */
 #iuJrEmptyView .iuNotesHost{
   display: none !important;
 }
@@ -10264,7 +10104,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   #newsList #iuJrEmptyView .iuJRGrid.iuRadioGrid a.iuRadioChip:active{transform:none}
 }
 
-/* Poznámky overlay (#iuNotesOverlay): vizuál v assets/iu-notes-premium.css */
+/* PoznĂˇmky overlay (#iuNotesOverlay): vizuĂˇl v assets/iu-notes-premium.css */
 
 .iu-rightContent{
   height: auto !important;
@@ -11178,7 +11018,7 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   height: 100%;
   display: block;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg{
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg{
   display: block !important;
 }
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-quicktools-settings-trigger:focus-visible{
@@ -12290,6 +12130,7 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
     display: block;
     position: relative;
     overflow: hidden;
+    aspect-ratio: 16 / 9;
   }
 
   
@@ -12309,6 +12150,7 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
     width: 100%;
     height: 100%;
     display: block;
+    background: var(--iuVideoThumb) center / cover no-repeat;
   }
 
   
@@ -14295,23 +14137,23 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmLabel{
   display: block;
 }
 
-section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluâ????by"] .iu-mmQuickItemLink svg{
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluĂ˘????by"] .iu-mmQuickItemLink svg{
   display: none !important;
 }
-section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluâ????by"] .iu-mmQuickItemLink :is(.iuIcon,.iu-mmIcon,[class*="Icon"],[class*="icon"],[data-icon]){
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluĂ˘????by"] .iu-mmQuickItemLink :is(.iuIcon,.iu-mmIcon,[class*="Icon"],[class*="icon"],[data-icon]){
   display: none !important;
 }
-section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluâ????by"] .iu-mmQuickItemLink::before,
-section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluâ????by"] .iu-mmQuickItemLink::after{
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluĂ˘????by"] .iu-mmQuickItemLink::before,
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluĂ˘????by"] .iu-mmQuickItemLink::after{
   content: none !important;
   display: none !important;
 }
-section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluâ????by"] .iu-mmQuickGrid{
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluĂ˘????by"] .iu-mmQuickGrid{
   display: flex !important;
   flex-direction: column !important;
   gap: 6px !important;
 }
-section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluâ????by"] .iu-mmQuickItemLink{
+section.iu-mmQuickLinks.iu-mojeSluzby[aria-label="Moje sluĂ˘????by"] .iu-mmQuickItemLink{
   width: 100% !important;
   min-height: 40px !important;
   display: flex !important;
@@ -14893,15 +14735,15 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon
 }
 
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon {
   box-shadow: 0 6px 14px rgba(0,0,0,0.12), inset 0 2px 4px rgba(255,255,255,0.35) !important;
   transition: transform .18s ease, box-shadow .18s ease !important;
 }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink:hover .iuQlIcon,
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickItemLink:active .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:hover .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:active .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:hover .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:active .iuQlIcon,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:hover .iuQlIcon,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:active .iuQlIcon {
   transform: translateY(-1px) !important;
@@ -14945,11 +14787,11 @@ body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickIt
 }
 
 body .accordionCol .mindMenu section.iu-mojeSluzby .iu-mmQuickGrid .iu-mmQuickItemLink,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
   background: #E5E7EB !important;
   background-color: #E5E7EB !important;
 }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem {
   display: grid !important;
   grid-template-columns: 32px minmax(0,1fr) !important;
@@ -14990,7 +14832,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   min-width: 0 !important;
 }
 
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink {
   background: transparent !important;
   background-color: transparent !important;
@@ -15009,22 +14851,22 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   padding: 0 !important;
   box-sizing: border-box !important;
 }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink:hover,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink:active,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink:hover,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink:active,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink:hover,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink:active {
   background: transparent !important;
   background-color: transparent !important;
   box-shadow: none !important;
 }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:hover,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:hover,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:hover {
   background: #D1D5DB !important;
   background-color: #D1D5DB !important;
 }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > .iuIconTile,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > .iuIconTile,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink .iuQlIcon,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem > .iuIconTile {
   flex: 0 0 32px !important;
@@ -15039,7 +14881,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   align-items: center !important;
   justify-content: center !important;
 }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
   width: 32px !important;
   height: 32px !important;
   min-width: 32px !important;
@@ -15054,50 +14896,50 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   background-image: none !important;
   box-shadow: 0 0 0 1px rgba(0,0,0,0.10) !important;
 }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile > i {
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile > i {
   font-size: 17px !important;
   color: #fff !important;
 }
 
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon {
   background-image: none !important;
   box-shadow: 0 0 0 1px rgba(0,0,0,0.10) !important;
 }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:hover .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:active .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:hover .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:active .iuQlIcon,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:hover .iuQlIcon,
 .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:active .iuQlIcon {
   box-shadow: 0 0 0 1px rgba(0,0,0,0.12) !important;
 }
 
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="ds"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="ds"] .iuIconTile { background-color: #C44569 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="banka"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="banka"] .iuIconTile { background-color: #17C3B2 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="pojistovna"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="pojistovna"] .iuIconTile { background-color: #E8B923 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="bakalari"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="bakalari"] .iuIconTile { background-color: #7B68EE !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="ds"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="ds"] .iuIconTile { background-color: #C44569 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="banka"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="banka"] .iuIconTile { background-color: #17C3B2 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="pojistovna"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="pojistovna"] .iuIconTile { background-color: #E8B923 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="bakalari"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ms="bakalari"] .iuIconTile { background-color: #7B68EE !important; }
 
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="ai"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="ai"] .iuIconTile { background-color: #00BBF9 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="deepl"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="deepl"] .iuIconTile { background-color: #F15BB5 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="convert"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="convert"] .iuIconTile { background-color: #06D6A0 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="baliky"] .iuQlIcon,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="zasilky"] .iuQlIcon { background-color: #F77F00 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="sms"] .iuQlIcon { background-color: #2E86AB !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="youtube"] .iuQlIcon { background-color: #E63946 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="google"] .iuQlIcon { background-color: #7209B7 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="seznam"] .iuQlIcon { background-color: #3A86FF !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="katastr"] .iuQlIcon { background-color: #1D3557 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="rejstrik"] .iuQlIcon { background-color: #A8DADC !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="zivnost"] .iuQlIcon { background-color: #457B9D !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="platformy"] .iuQlIcon { background-color: #F4A261 !important; }
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
-.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > span:not(.iuQlIcon):not(.iuIconTile) {
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="ai"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="ai"] .iuIconTile { background-color: #00BBF9 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="deepl"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="deepl"] .iuIconTile { background-color: #F15BB5 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="convert"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="convert"] .iuIconTile { background-color: #06D6A0 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="baliky"] .iuQlIcon,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="zasilky"] .iuQlIcon { background-color: #F77F00 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="sms"] .iuQlIcon { background-color: #2E86AB !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="youtube"] .iuQlIcon { background-color: #E63946 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="google"] .iuQlIcon { background-color: #7209B7 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-iuq="seznam"] .iuQlIcon { background-color: #3A86FF !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="katastr"] .iuQlIcon { background-color: #1D3557 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="rejstrik"] .iuQlIcon { background-color: #A8DADC !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="zivnost"] .iuQlIcon { background-color: #457B9D !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem[data-ql="platformy"] .iuQlIcon { background-color: #F4A261 !important; }
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
+.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > span:not(.iuQlIcon):not(.iuIconTile) {
   font-size: 11px !important;
   font-weight: 600 !important;
   color: #2E3238 !important;
@@ -15110,8 +14952,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   min-width: 0 !important;
 }
 body .accordionCol .mindMenu section.iu-mojeSluzby .iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > span:not(.iuQlIcon):not(.iuIconTile) {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > span:not(.iuQlIcon):not(.iuIconTile) {
   font-size: 11px !important;
   font-weight: 600 !important;
   color: #2E3238 !important;
@@ -15157,8 +14999,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   padding-left: 36px !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlLabel {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlLabel {
   min-width: min-content !important;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
   font-size: 12.6px !important;
@@ -15176,11 +15018,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class][
   overflow: hidden !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
   position: relative !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmCircle,
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon.iu-mmCircle {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmCircle,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon.iu-mmCircle {
   position: absolute !important;
   left: 12px !important;
   top: 50% !important;
@@ -15199,7 +15041,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-la
   filter: none !important;
   outline: none !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon .iuIconTile {
   width: 15px !important;
   height: 15px !important;
   min-width: 15px !important;
@@ -15215,7 +15057,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-la
   filter: none !important;
   outline: none !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlIcon {
   flex: 0 0 15px !important;
   width: 15px !important;
   height: 15px !important;
@@ -15227,12 +15069,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-la
   box-shadow: none !important;
   background-image: none !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(> .iuQlIcon) {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(> .iuQlIcon) {
   padding-left: 36px !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:nth-child(-n+4) .iuIconTile {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:nth-child(-n+4) .iuIconTile {
   display: none !important;
   visibility: hidden !important;
   width: 0 !important;
@@ -15284,13 +15126,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   pointer-events: auto !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) {
   display: block !important;
   width: 100% !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) .iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) a.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) button.iu-mmQuickItemLink {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) .iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) a.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) button.iu-mmQuickItemLink {
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
@@ -15301,7 +15143,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-la
   text-decoration: none !important;
   box-sizing: border-box !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) .iuQlText {
+body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:has(.iu-mmQuickItemLink) .iuQlText {
   flex: 1 !important;
   min-width: 0 !important;
   margin-left: 10px !important;
@@ -15323,13 +15165,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   overflow: visible !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuIconTile i[class*="fa-"] {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuIconTile i[class*="fa-"] {
   display: none !important;
   visibility: hidden !important;
   pointer-events: none !important;
   font-size: 0 !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuIconTile {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuIconTile {
   pointer-events: none !important;
 }
 
@@ -15574,7 +15416,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   contain: layout;
 }
 
-/* CLS: silver summary — reserve before JS fill */
+/* CLS: silver summary â€” reserve before JS fill */
 #iuSilverCalendarSummaryCard.silver-calendar-summary-card{border-radius:0;min-height:104px;box-sizing:border-box}
 #iuSilverTasksSummaryCard.silver-calendar-summary-card{border-radius:0;min-height:104px;box-sizing:border-box}
 #iuSilverCalendarSummaryCard .silver-calendar-summary-row--1 .silver-calendar-summary-text{min-height:2.56em;box-sizing:border-box}
@@ -15690,7 +15532,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{
     min-height: 72px !important;
   }
-  /* P0 Silver hero card only: drop artificial min-height/padding slack (≤1024) — scoped #iuSilverWelcomeStack path */
+  /* P0 Silver hero card only: drop artificial min-height/padding slack (â‰¤1024) â€” scoped #iuSilverWelcomeStack path */
   #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium,
   #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium{
     min-height: 0 !important;
@@ -15739,16 +15581,16 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     border-bottom-color: rgba(255, 255, 255, 0.1) !important;
   }
   /*
-    P0: Silver „evening“ shell (dark) applies ONLY to Přehled dne (feed/media) + Hry.
-    Light-only menu sections (mapy, tvprogram, …) must never inherit this block — reload
-    must not flash dark behind non–article-hub hosts (root: html[data-section] matches body).
+    P0: Silver â€ževeningâ€ś shell (dark) applies ONLY to PĹ™ehled dne (feed/media) + Hry.
+    Light-only menu sections (mapy, tvprogram, â€¦) must never inherit this block â€” reload
+    must not flash dark behind nonâ€“article-hub hosts (root: html[data-section] matches body).
   */
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) body,
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #content,
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .container,
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .iuFrame,
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .iuLayout,
-  /* P0: rail je při ≤900px v #iuMobileGatePanelNav — evening shell jen pro sloupec v #leftContent, ne pro Menu grid. */
+  /* P0: rail je pĹ™i â‰¤900px v #iuMobileGatePanelNav â€” evening shell jen pro sloupec v #leftContent, ne pro Menu grid. */
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #leftContent #iuLeftRail,
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .iu-rightContent,
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #feed,
@@ -16012,7 +15854,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 .iu-silver-actionRow[data-iu-action-indicator="chevron"]::after{
-  content: "↗";
+  content: "â†—";
   position: absolute;
   right: 0;
   top: 0;
@@ -16941,14 +16783,14 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   color: var(--iuNamedayFemaleAccent);
 }
 
-/* P0 projects: svátek meta row — mobile/tablet compact one-line row (no flex-grow date cluster); desktop min-width 769 beze změny. */
+/* P0 projects: svĂˇtek meta row â€” mobile/tablet compact one-line row (no flex-grow date cluster); desktop min-width 769 beze zmÄ›ny. */
 @media (max-width: 768px) {
   #silver-slot #iuSilverWelcomeTextBlock,
   #iuMobileSilverSlot #silver-slot #iuSilverWelcomeTextBlock {
     padding-top: 12px;
     box-sizing: border-box;
   }
-  /* Column flex parent defaults to stretch — bez align-self by meta box roztáhl na 100 % a vypadalo to jako space-between. */
+  /* Column flex parent defaults to stretch â€” bez align-self by meta box roztĂˇhl na 100 % a vypadalo to jako space-between. */
   #silver-slot #iuSilverWelcomeTextBlock > .iuSilverWelcomeMeta,
   #iuMobileSilverSlot #silver-slot #iuSilverWelcomeTextBlock > .iuSilverWelcomeMeta {
     align-self: flex-start;
@@ -17078,7 +16920,7 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
     overflow-x: visible;
     overflow-y: visible;
   }
-  /* P0 desktop header: 120px floor (CLS reserve) — tablet 240px reserve scoped to ≤1024 only. */
+  /* P0 desktop header: 120px floor (CLS reserve) â€” tablet 240px reserve scoped to â‰¤1024 only. */
   #silver-slot #iuSilverWelcomeStack #iuSilverWelcomeCard.iuSilverWelcomeCard{
     min-height: 120px;
     max-height: none;
@@ -17738,16 +17580,16 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
     grid-column:2;grid-row:1;justify-self:center;align-self:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;
     font-size:1.05rem;font-weight:700;color:#1f3a5f;line-height:1.2;white-space:nowrap;pointer-events:none;
   }
-  .iuSilverChatOverlay--quickTemplateCalendar .iuSilverChatHeader::after{content:"Kalendář"}
-  .iuSilverChatOverlay--quickTemplateTask .iuSilverChatHeader::after{content:"Úkoly"}
-  .iuSilverChatOverlay--quickTemplateNote .iuSilverChatHeader::after{content:"Poznámky"}
+  .iuSilverChatOverlay--quickTemplateCalendar .iuSilverChatHeader::after{content:"KalendĂˇĹ™"}
+  .iuSilverChatOverlay--quickTemplateTask .iuSilverChatHeader::after{content:"Ăškoly"}
+  .iuSilverChatOverlay--quickTemplateNote .iuSilverChatHeader::after{content:"PoznĂˇmky"}
   /* Quick-template forms: label column sized to content (not 120px cap); shared input left edge per form. */
   .iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftGrid--edit{
     grid-template-columns:max-content minmax(0,1fr);
     column-gap:12px;
     row-gap:11px;
   }
-  /* Notes: min label track + standard gap — avoids textarea hugging short "Text" label. */
+  /* Notes: min label track + standard gap â€” avoids textarea hugging short "Text" label. */
   .iuSilverDraftCard--quickTemplateNote .iuSilverDraftGrid--note{
     padding:4px 16px 0;
     gap:11px 12px;
@@ -18192,7 +18034,7 @@ html, body,
 }
 
 .iu-leftNav .iu-leftNavItem[data-accent="media"]{ --iuNavAccent: var(--iuNavAccent-media); }
-/* P0 Přehled dne: Zprávy — stejná zelená akcentace jako mapy (bez plošné změny ostatních topic railů). */
+/* P0 PĹ™ehled dne: ZprĂˇvy â€” stejnĂˇ zelenĂˇ akcentace jako mapy (bez ploĹˇnĂ© zmÄ›ny ostatnĂ­ch topic railĹŻ). */
 .iu-leftNav .iu-leftNavItem[data-accent="zpravy"]{ --iuNavAccent: var(--iuNavAccent-mapy); }
 
 .iu-leftNav .iu-leftNavItem[data-accent="radio"]{ --iuNavAccent: var(--iuNavAccent-radio); }
@@ -19498,7 +19340,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem,
   stroke: #2563EB !important;
 }
 
-/* Hotfix PR #3479: Zprávy — zelená (#10B981, stejná jako Média/Sport v Přehled dne) nad #iuLeftRail modrým !important na .iu-leftNavIcon. */
+/* Hotfix PR #3479: ZprĂˇvy â€” zelenĂˇ (#10B981, stejnĂˇ jako MĂ©dia/Sport v PĹ™ehled dne) nad #iuLeftRail modrĂ˝m !important na .iu-leftNavIcon. */
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zpravy"] .iu-leftNavIcon{
   color: #10B981 !important;
   fill: #10B981 !important;
@@ -19520,7 +19362,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem,
   stroke: #2563EB !important;
 }
 
-/* Hotfix PR #3479: TV program — hex ikona nad obecným #iuHomeView modrým !important. Desktop výchozí #FACC15; mobil/tablet ≤1024px #B8860B. */
+/* Hotfix PR #3479: TV program â€” hex ikona nad obecnĂ˝m #iuHomeView modrĂ˝m !important. Desktop vĂ˝chozĂ­ #FACC15; mobil/tablet â‰¤1024px #B8860B. */
 #iuHomeView .iuHomeHex434 .iuHex--tvprogram .iuHex__icon,
 #iuHomeView .iuHomeHex434 .iuHex--tvprogram .iuHex__icon svg,
 #iuHomeView .iuHomeHex434 .iuHex--tvprogram .iuHex__icon svg path{
@@ -19810,7 +19652,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   line-height: 1.4;
 }
 .iuQuickFeed .iu-external-notice::before{
-  content: "ℹ️ ";
+  content: "â„ąď¸Ź ";
 }
 
 #iuQuickFeed [data-iu="pdfconvert-tools"] {
@@ -20040,8 +19882,8 @@ section.iu-mmQuickLinks .iu-mmQuickItem:is(a, button),
 .rightRail .quickLinks button.iu-mmQuickItemLink,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:is(a, button),
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) {
   padding-left: 0 !important;
   text-indent: 0 !important;
   display: grid !important;
@@ -20058,8 +19900,8 @@ section.iu-mmQuickLinks .iu-mmQuickItem:is(a, button) span.iuQlIcon,
 .rightRail .quickLinks button.iu-mmQuickItemLink span.iuQlIcon,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlIcon,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlIcon {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlIcon {
   display: none !important;
 }
 
@@ -20071,8 +19913,8 @@ section.iu-mmQuickLinks .iu-mmQuickItem span.iuQlText,
 .rightRail .quickLinks button.iu-mmQuickItemLink span.iuQlText,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlText,
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlText {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink span.iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) span.iuQlText {
   margin: 0 !important;
   padding: 0 12px !important;
   font-weight: 600 !important;
@@ -20241,11 +20083,11 @@ body .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItemLink span.iuQlText 
   --iu-ql-center-final-v2: 1;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem {
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iu-mmQuickItemLink {
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
   text-indent: 0 !important;
@@ -20253,13 +20095,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   align-items: center !important;
   justify-content: center !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iuIconTile,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iuIcon {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iu-mmQuickGrid .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iu-mmQuickGrid .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iu-mmQuickGrid .iuIcon {
   display: none !important;
 }
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iu-mmQuickItemLink span.iuQlText {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iu-mmQuickGrid .iu-mmQuickItemLink span.iuQlText {
   margin: 0 !important;
   padding: 0 12px !important;
   font-weight: 600 !important;
@@ -20275,12 +20117,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   --iu-ql-center-final-v3: 1;
 }
 
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickItem {
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iu-mmQuickItem {
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
 }
 
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickItemLink {
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iu-mmQuickItemLink {
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
   text-indent: 0 !important;
@@ -20289,12 +20131,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   justify-content: center !important;
 }
 
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuQlIcon,
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuIconTile {
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iuQlIcon,
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iuIconTile {
   display: none !important;
 }
 
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuQlText {
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iuQlText {
   margin: 0 !important;
   padding: 0 12px !important;
   font-weight: 600 !important;
@@ -20310,10 +20152,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   --iu-ql-center-realitem-v1: 1;
 }
 
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] a.iu-mmQuickItem,
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] button.iu-mmQuickItem,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] a.iu-mmQuickItem,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] button.iu-mmQuickItem {
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] a.iu-mmQuickItem,
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] button.iu-mmQuickItem,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] a.iu-mmQuickItem,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] button.iu-mmQuickItem {
   padding: 10px 14px !important;
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
@@ -20323,7 +20165,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy
   justify-content: center !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem .iu-mmQuickItemLink {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem .iu-mmQuickItemLink {
   padding: 10px 14px !important;
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
@@ -20333,21 +20175,21 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy
   justify-content: center !important;
 }
 
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlIcon,
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIconTile,
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIcon,
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] i,
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] svg,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIconTile,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] i,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] svg {
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlIcon,
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIconTile,
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIcon,
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] i,
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] svg,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] i,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] svg {
   display: none !important;
 }
 
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlText {
+.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlText {
   margin: 0 !important;
   padding: 0 8px !important;
   font-weight: 600 !important;
@@ -20363,8 +20205,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy
   --iu-ql-center-realtiles-v2: 1;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem {
   padding: 10px 14px !important;
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
@@ -20375,14 +20217,14 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy
   box-sizing: border-box !important;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem > a.iu-mmQuickItemLink,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem > button.iu-mmQuickItemLink,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] a.iu-mmQuickItemLink,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] button.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem > a.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem > button.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] a.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] button.iu-mmQuickItemLink {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem > a.iu-mmQuickItemLink,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem > button.iu-mmQuickItemLink,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] a.iu-mmQuickItemLink,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] button.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem > a.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem > button.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] a.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] button.iu-mmQuickItemLink {
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
   text-indent: 0 !important;
@@ -20393,21 +20235,21 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy
   justify-content: center !important;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuQlIcon,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuIconTile,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuIcon,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] i,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] svg,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuIconTile,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] i,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] svg {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iuQlIcon,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iuIconTile,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iuIcon,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] i,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] svg,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iuIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] i,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] svg {
   display: none !important;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuQlText,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuQlText {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iuQlText,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iuQlText {
   margin: 0 !important;
   padding: 0 8px !important;
   font-weight: 600 !important;
@@ -20423,10 +20265,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   --iu-ql-center-realtiles-v3: 1;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] a.iu-mmQuickItem,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] button.iu-mmQuickItem,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid a.iu-mmQuickItem,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid button.iu-mmQuickItem {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] a.iu-mmQuickItem,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] button.iu-mmQuickItem,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid a.iu-mmQuickItem,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid button.iu-mmQuickItem {
   padding: 10px 14px 10px 14px !important;
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
@@ -20437,12 +20279,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy
   box-sizing: border-box !important;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] a.iu-mmQuickItem > a.iu-mmQuickItemLink,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] button.iu-mmQuickItem > button.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] a.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] button.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > a.iu-mmQuickItemLink,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > button.iu-mmQuickItemLink {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] a.iu-mmQuickItem > a.iu-mmQuickItemLink,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] button.iu-mmQuickItem > button.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] a.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] button.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > a.iu-mmQuickItemLink,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem > button.iu-mmQuickItemLink {
   padding: 0 !important;
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
@@ -20454,10 +20296,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy
   justify-content: center !important;
 }
 
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon svg {
   display: inline-block !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -20467,8 +20309,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy
   min-height: 14px !important;
   overflow: visible !important;
 }
-body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon {
+body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-quicktools-settings-trigger .iu-quicktools-gear-icon {
   flex-shrink: 0 !important;
 }
 
@@ -20476,7 +20318,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy
   --iu-ql-center-realtiles-v4: 1;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem:is(a, button) {
   padding: 10px 14px 10px 14px !important;
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
@@ -20486,15 +20328,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?© odkazy
   box-sizing: border-box !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iuQlIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iuIconTile,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iuIcon,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid i,
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid svg {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iu-mmQuickGrid .iuQlIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iu-mmQuickGrid .iuIconTile,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iu-mmQuickGrid .iuIcon,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iu-mmQuickGrid i,
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iu-mmQuickGrid svg {
   display: none !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickGrid .iuQlText {
+body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="RychlĂ© odkazy"] .iu-mmQuickGrid .iuQlText {
   margin: 0 !important;
   padding: 0 8px !important;
   font-weight: 600 !important;
@@ -20506,7 +20348,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   overflow: hidden !important;
 }
 
-body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem{
+body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iu-mmQuickItem{
   padding:10px 14px !important;
   padding-left:0 !important;
   padding-inline-start:0 !important;
@@ -20515,14 +20357,14 @@ body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQ
   justify-content:center !important;
   box-sizing:border-box !important;
 }
-body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuQlIcon,
-body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuIconTile,
-body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuIcon,
-body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid i,
-body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid svg{
+body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuQlIcon,
+body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuIconTile,
+body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuIcon,
+body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid i,
+body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid svg{
   display:none !important;
 }
-body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickGrid .iuQlText{
+body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickGrid .iuQlText{
   margin:0 !important;
   padding:0 8px !important;
   text-align:center !important;
@@ -20536,7 +20378,7 @@ body .accordionCol section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQ
   overflow-wrap:break-word !important;
 }
 
-body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem{
+body section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem{
   padding:10px 14px !important;
   padding-left:0 !important;
   padding-inline-start:0 !important;
@@ -20545,14 +20387,14 @@ body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem{
   justify-content:center !important;
   box-sizing:border-box !important;
 }
-body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlIcon,
-body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIconTile,
-body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuIcon,
-body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem i,
-body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iu-mmQuickItem svg{
+body section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlIcon,
+body section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIconTile,
+body section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuIcon,
+body section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem i,
+body section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iu-mmQuickItem svg{
   display:none !important;
 }
-body section.iu-mmQuickLinks[aria-label="Rychl?© odkazy"] .iuQlText{
+body section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlText{
   margin:0 !important;
   padding:0 8px !important;
   text-align:center !important;
@@ -21725,7 +21567,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     align-self: stretch !important;
     box-shadow: none !important;
   }
-  /* P0 Silver hero (projects / ≤1024): taller input row — #iuSilverHeroPremium beats #silver-slot generic 52px */
+  /* P0 Silver hero (projects / â‰¤1024): taller input row â€” #iuSilverHeroPremium beats #silver-slot generic 52px */
   #iuSilverHeroPremium .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput,
   #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput{
     min-height: 78px !important;
@@ -21860,7 +21702,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
 }
 
-/* P0: mobile/tablet ≤1024 #iuSilverHeroPremium base gradient (premium viz html.iu-time-* níže). */
+/* P0: mobile/tablet â‰¤1024 #iuSilverHeroPremium base gradient (premium viz html.iu-time-* nĂ­Ĺľe). */
 @media (max-width: 1024px){
   #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium,
   #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium{
@@ -21869,7 +21711,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
 }
 
-/* P0: mobile/tablet — Silver hero premium cinematic (všechny časové režimy; :is() kvůli css_debt_guard bytes). */
+/* P0: mobile/tablet â€” Silver hero premium cinematic (vĹˇechny ÄŤasovĂ© reĹľimy; :is() kvĹŻli css_debt_guard bytes). */
 @media (max-width: 1024px){
   html:is(.iu-time-morning,.iu-time-late-morning,.iu-time-afternoon,.iu-time-evening) #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium,
   html:is(.iu-time-morning,.iu-time-late-morning,.iu-time-afternoon,.iu-time-evening) #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium{
@@ -21930,7 +21772,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 
 /* === CALENDAR ACCENT HARD LOCK (DO NOT MODIFY) === */
 
-/* P0 TV program: viditelná ikonka v levém railu / mobilním Menu panelu (≤1024px) — pouze tvprogram, #B8860B; nepřebíjí desktop >1024px. */
+/* P0 TV program: viditelnĂˇ ikonka v levĂ©m railu / mobilnĂ­m Menu panelu (â‰¤1024px) â€” pouze tvprogram, #B8860B; nepĹ™ebĂ­jĂ­ desktop >1024px. */
 @media (max-width: 1024px){
   #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon,
   #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon svg,
@@ -21953,7 +21795,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
 }
 
-/* P0 MindMenu (≤1024px): gear + social — žádný „karty“ wrapper (shadow/bg); desktop min-width 1025px beze změny. */
+/* P0 MindMenu (â‰¤1024px): gear + social â€” ĹľĂˇdnĂ˝ â€žkartyâ€ś wrapper (shadow/bg); desktop min-width 1025px beze zmÄ›ny. */
 @media (max-width: 1024px){
   #iuMindMenuView .iu-mailbox-row .iu-mailbox-gear,
   #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-row .iu-mailbox-gear,
@@ -21988,7 +21830,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
 }
 
-/* P0: Kalendář — samostatný denní overlay (mobil/tablet), nad hlavním kalendářovým overlay */
+/* P0: KalendĂˇĹ™ â€” samostatnĂ˝ dennĂ­ overlay (mobil/tablet), nad hlavnĂ­m kalendĂˇĹ™ovĂ˝m overlay */
 .iu-calendar-day-overlay {
   position: fixed;
   inset: 0;
@@ -22056,7 +21898,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   flex-shrink: 0;
 }
 
-/* Affiliate services catalog — per-category premium accents (layout reuses JR tool hosts) */
+/* Affiliate services catalog â€” per-category premium accents (layout reuses JR tool hosts) */
 :root{
   --iuAff-aff-cestovni-kancelare:#C9A227;
   --iuAff-aff-ubytovani-hotely:#60A5FA;
@@ -22212,7 +22054,7 @@ body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"] .iu-leftNavIco
   fill: none !important;
 }
 
-/* Affiliate nav — per-category accents (override #iuLeftRail global blue hotfix at ~19475) */
+/* Affiliate nav â€” per-category accents (override #iuLeftRail global blue hotfix at ~19475) */
 body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"],
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent^="aff-"]{
   border: 2px solid color-mix(in srgb, var(--iuNavAccent) 38%, rgba(0,0,0,0.06)) !important;
