@@ -1,27 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-19T21:55:09.832123Z",
+  "ingestedAt": "2026-06-19T23:04:21.540699Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Skotové hrají o historický postup. Vyzvou poslední semifinalisty MS z Maroka",
+      "title": "FOTBAL ONLINE: Maročané vedou po bleskovém gólu. Skotové se probudili",
       "url": "https://www.sport.cz/clanek/fotbal-ms-skotove-hraji-o-historicky-postup-vyzvou-posledni-semifinalisty-ms-z-maroka-5483451",
       "dt": "2026-06-19T14:00:00Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "bleskovém",
         "fotbal",
-        "historický",
-        "hrají",
-        "maroka",
+        "gólu",
+        "maročané",
         "online",
-        "poslední",
-        "postup",
-        "semifinalisty",
+        "probudili",
         "skotové",
-        "vyzvou"
+        "vedou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Rozhodčího v utkání Američanů postihl problém, sesunul se k zemi. Několik minut se nehrálo",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-rozhodciho-v-utkani-americanu-postihl-problem-sesunul-se-k-zemi-nekolik-minut-se-nehralo-5484338",
+      "dt": "2026-06-19T22:33:28Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "američanů",
+        "minut",
+        "nehrálo",
+        "několik",
+        "postihl",
+        "problém",
+        "rozhodčího",
+        "sesunul",
+        "utkání",
+        "zemi"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -756,28 +781,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Olympijský šampion si poprvé zazávodí na kole",
-      "url": "https://www.sport.cz/clanek/cyklistika-olympijsky-sampion-si-poprve-zazavodi-na-kole-5483020",
-      "dt": "2026-06-19T14:36:04Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "kole",
-        "olympijský",
-        "poprvé",
-        "zazávodí",
-        "šampion"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43191,
+      "bytes": 42686,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-19T19:59:29Z",
+        "raw_feed_latest_publishedAt": "2026-06-19T22:33:28Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -842,8 +845,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Skotové hrají o historický postup. Vyzvou poslední semifinalisty MS z Maroka",
+            "title": "FOTBAL ONLINE: Maročané vedou po bleskovém gólu. Skotové se probudili",
             "publishedAt": "2026-06-19T14:00:00Z"
+          },
+          {
+            "title": "Rozhodčího v utkání Američanů postihl problém, sesunul se k zemi. Několik minut se nehrálo",
+            "publishedAt": "2026-06-19T22:33:28Z"
           },
           {
             "title": "Američané vyhráli i podruhé na MS a slaví postup ze skupiny",
@@ -868,10 +875,6 @@
           {
             "title": "Štefela nezářil, Vadlejch skončil předčasně. Slovenská překážkářská kometa už je šestá v historii",
             "publishedAt": "2026-06-19T18:19:01Z"
-          },
-          {
-            "title": "Turecko musí zabrat. V boji o naději na postup vyzve Paraguay",
-            "publishedAt": "2026-06-19T19:00:07Z"
           }
         ]
       }
