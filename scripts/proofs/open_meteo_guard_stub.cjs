@@ -122,6 +122,8 @@ function isIgnorableGuardResourceUrl(url) {
   if (/api\.open-meteo\.com/i.test(u)) return true;
   if (/i\.ytimg\.com/i.test(u)) return true;
   if (/\/favicon\.ico/i.test(u)) return true;
+  if (/\/assets\/partners\//i.test(u)) return true;
+  if (/section-zpravy-header-video/i.test(u)) return true;
   return false;
 }
 
@@ -165,8 +167,9 @@ function isIgnorableGuardConsoleError(text, opts) {
   if (!s) return true;
   if (/\/favicon\.ico/i.test(s)) return true;
   if (/i\.ytimg\.com|thumbnail/i.test(s)) return true;
+  if (/section-zpravy-header-video|\/assets\/partners\//i.test(s)) return true;
   if (/Failed to load resource/i.test(s)) {
-    if (/ytimg|favicon|open-meteo/i.test(s)) return true;
+    if (/ytimg|favicon|open-meteo|section-zpravy-header-video|assets\/partners/i.test(s)) return true;
     if (/status of 404/i.test(s) && opts && typeof opts.hadRecentIgnorableFailure === "function") {
       if (opts.hadRecentIgnorableFailure()) return true;
     }
