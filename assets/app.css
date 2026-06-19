@@ -10302,6 +10302,26 @@ header.iuTopbar .iuHamburger svg,
 .iuBrand__cz{ font-weight: 300; margin: 0; padding: 0; }
 .iuBrand__uzel{ font-weight: 500; margin: 0; padding: 0; }
 
+.iuTopbarSilverBrandIcon{
+  display: none;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  line-height: 0;
+}
+.iuTopbarSilverBrandIconImg{
+  display: block;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+}
+
 .iuTopbar .iuTopbarLeft{
   height: 100%;
 }
@@ -16041,7 +16061,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     max-width: 100%;
     align-self: center;
     box-sizing: border-box;
-    padding: 0 6px 0 10px;
+    padding: 0 6px 0 6px;
   }
   #topbarWrap.iuTopbarHost--silverComposer #iuTopbarSilverComposerHost.iuTopbarSilverComposerHost{
     display: flex !important;
@@ -16133,24 +16153,48 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
 
   header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand{
-    color: #0b1f33 !important;
+    font-size: 32px !important;
+    font-weight: 500 !important;
+    color: #000000 !important;
+    background-image: none !important;
+    -webkit-background-clip: border-box !important;
+    background-clip: border-box !important;
+    -webkit-text-fill-color: currentColor !important;
   }
   header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover{
-    color: #0a2540 !important;
+    color: #000000 !important;
+    background-image: none !important;
+    -webkit-text-fill-color: currentColor !important;
   }
-  @supports ((-webkit-background-clip: text) or (background-clip: text)){
-    header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand{
-      background-image: linear-gradient(96deg, #1e40af 0%, #2563EB 14%, #0e7490 32%, #06B6D4 46%, #0f766e 58%, #22C55E 72%, #ca8a04 88%, #F59E0B 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent !important;
-      -webkit-text-fill-color: transparent;
-    }
-    header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover{
-      background-image: linear-gradient(96deg, #1d4ed8 0%, #2563EB 12%, #0891b2 30%, #22d3ee 44%, #14b8a6 56%, #4ade80 70%, #eab308 86%, #fbbf24 100%);
-      color: transparent !important;
-      -webkit-text-fill-color: transparent;
-    }
+  header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand__info,
+  header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand__uzel,
+  header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand__cz{
+    font-weight: 500 !important;
+    background-image: none !important;
+    -webkit-background-clip: border-box !important;
+    background-clip: border-box !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+  header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand__info{
+    color: #000000 !important;
+  }
+  header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand__uzel,
+  header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand__cz{
+    color: #1fa85a !important;
+  }
+  header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__info{
+    color: #000000 !important;
+  }
+  header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__uzel,
+  header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
+    color: #24bd63 !important;
+  }
+
+  .iuTopbarSilverBrandIcon{
+    display: inline-flex !important;
+    flex: 0 0 auto;
+    align-self: center;
+    margin: 0 2px 0 4px;
   }
   header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__menu{
     color: #5b6e86 !important;
