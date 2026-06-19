@@ -13912,9 +13912,18 @@ function buildVideoAsArticleCard(it) {
       try{ iuSilverWeatherHandleOverlayGeoPendingAfterLoad(); }catch{}
     }
 
+    function iuSilverWeatherFeedCardClickEnabled(){
+      try{
+        const mq = window.matchMedia && window.matchMedia("(min-width: 1025px)");
+        if (mq && mq.matches && document.body && document.body.classList.contains("iu-desktop-home-grid")) return false;
+      }catch{}
+      return true;
+    }
+
     try{
       card.addEventListener("click", (ev) => {
         try{
+          if (!iuSilverWeatherFeedCardClickEnabled()) return;
           if (ev.target && ev.target.closest && ev.target.closest("button, a")) return;
           if (iuSilverWeatherShouldOfferGeoOverlay()) {
             iuSilverWeatherOpenGeoOverlay();
