@@ -488,6 +488,29 @@ async function runSmoke() {
     if (afterTravelClick.indexOf("section=travel") === -1) {
       fail(`Travel preview click did not set section=travel: ${afterTravelClick}`);
     }
+    await page.waitForFunction(
+      () => {
+        const feed = document.getElementById("feed");
+        return feed && feed.getAttribute("data-feed-ready") === "true";
+      },
+      { timeout: 60000 }
+    );
+    const travelFeedAfterClick = await page.evaluate(() => {
+      const feed = document.getElementById("feed");
+      const fc = document.body ? document.body.getAttribute("data-iu-fc") : null;
+      const cs = feed ? window.getComputedStyle(feed) : null;
+      const visible = !!(feed && cs && cs.display !== "none" && feed.offsetHeight > 20);
+      const articleCount = feed ? feed.querySelectorAll("article").length : 0;
+      const poradna = Array.from(document.querySelectorAll("button, a"))
+        .some((el) => /cestovn[ií]\s*poradna/i.test(String(el.textContent || "")));
+      return { fc, visible, articleCount, poradna, travelView: !!document.getElementById("iuTravelView") };
+    });
+    if (travelFeedAfterClick.fc !== "1" || !travelFeedAfterClick.visible || travelFeedAfterClick.articleCount < 1) {
+      fail(`Travel section article feed missing after preview click: ${JSON.stringify(travelFeedAfterClick)}`);
+    }
+    if (travelFeedAfterClick.poradna || travelFeedAfterClick.travelView) {
+      fail(`Travel poradna must stay removed: ${JSON.stringify(travelFeedAfterClick)}`);
+    }
 
     await gotoProjectsMediaForSmoke(page);
     await page.waitForSelector("#iuGamesPreviewCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });

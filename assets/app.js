@@ -33217,7 +33217,7 @@ function buildVideoAsArticleCard(it) {
       }
     }catch(_iuTm){}
     try{
-      const iuFc = ["media", "feed", "hry", "kultura", "veda", "vzdelavani"].indexOf(section) !== -1 ? "1" : "0";
+      const iuFc = ["media", "feed", "travel", "hry", "kultura", "veda", "vzdelavani"].indexOf(section) !== -1 ? "1" : "0";
       if (document.body) document.body.setAttribute("data-iu-fc", iuFc);
       if (document.documentElement) document.documentElement.setAttribute("data-iu-fc", iuFc);
     }catch{}
