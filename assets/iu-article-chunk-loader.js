@@ -73,9 +73,8 @@ export function iuChunkNavSectionFromUrl() {
     if (sec === "media") sec = "feed";
     let topic = (p.get("topic") || "").trim().toLowerCase();
     if (topic === "tech" || topic === "bydleni") topic = "zpravy";
-    let mode = (p.get("mode") || "guide").trim().toLowerCase();
     let mediaTopicKey = null;
-    if (sec === "travel" && mode === "media") mediaTopicKey = "cestovani";
+    if (sec === "travel") mediaTopicKey = "cestovani";
     else if ((sec === "feed" || sec === "media") && topic && topic !== "all") mediaTopicKey = topic;
     else if (["hry", "kultura", "veda", "vzdelavani"].indexOf(sec) !== -1) mediaTopicKey = sec;
     return iuChunkResolveSectionKey({ mediaTopicKey, activeSection: sec });
