@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-19T08:54:46.987983Z",
+  "ingestedAt": "2026-06-19T10:14:41.011886Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Na Prague Proms se hraje hudba z francouzských komedií i bondovek",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/na-prague-proms-se-hraje-hudba-z-francouzskych-komedii-i-bondovek-374738",
+      "dt": "2026-06-19T10:02:27Z",
+      "media_raw": "ČT art",
+      "media_norm": "ČT art",
+      "tokens": [
+        "bondovek",
+        "francouzských",
+        "hraje",
+        "hudba",
+        "komedií",
+        "prague",
+        "proms"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rubric",
+      "feedId": "kul_ctart",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -733,30 +757,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Při Soudném dni v Ostravě rozhoduje veřejné mínění",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/pri-soudnem-dni-v-ostrave-rozhoduje-verejne-mineni-374256",
-      "dt": "2026-06-05T09:27:46Z",
-      "media_raw": "ČT art",
-      "media_norm": "ČT art",
-      "tokens": [
-        "dni",
-        "mínění",
-        "ostravě",
-        "při",
-        "rozhoduje",
-        "soudném",
-        "veřejné"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rubric",
-      "feedId": "kul_ctart",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -767,7 +767,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss/rubrika/kultura-24",
-      "bytes": 41438,
+      "bytes": 41357,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -804,7 +804,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-19T08:19:41Z",
+        "raw_feed_latest_publishedAt": "2026-06-19T10:02:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -819,6 +819,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Prague Proms se hraje hudba z francouzských komedií i bondovek",
+            "publishedAt": "2026-06-19T10:02:27Z"
+          },
           {
             "title": "Filmové premiéry: Toy Story, Tahle párty je DEAD či dokument o Pavlíčkovi",
             "publishedAt": "2026-06-19T08:19:41Z"
@@ -846,10 +850,6 @@
           {
             "title": "Konec jara prožívají na Zábradlí Brežněv i Dubček",
             "publishedAt": "2026-06-16T14:46:16Z"
-          },
-          {
-            "title": "Spor o vysílání filmu Sbormistr končí, strany uzavřely smír",
-            "publishedAt": "2026-06-16T13:43:26Z"
           }
         ]
       }
