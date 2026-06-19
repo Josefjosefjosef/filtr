@@ -8889,8 +8889,6 @@ function buildVideoAsArticleCard(it) {
           feedEarly.setAttribute("data-feed-switching", "1");
           feedEarly.setAttribute("data-feed-ready", "false");
         }
-        const fpEarly = window.__iuFeedPipelineState;
-        if (fpEarly) fpEarly.mediaTopicKey = k;
       }
     } catch (_) {}
     /* Cestování články: kanonické URL je ?section=travel&mode=media (žádný left-rail peer s data-media-topic). */
