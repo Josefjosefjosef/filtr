@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-06-19T23:04:21.540699Z",
+  "ingestedAt": "2026-06-20T00:27:36.488303Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Wellbeing ve školách. Ano, ale jen s maximální přísností",
+      "url": "https://www.epenize.eu/wellbeing-ve-skolach-ano-ale-jen-s-maximalni-prisnosti/",
+      "dt": "2026-06-19T23:00:52Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "ale",
+        "ano",
+        "jen",
+        "maximální",
+        "přísností",
+        "wellbeing",
+        "školách"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -485,30 +509,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Selfie při propouštění z nemocnice. Taťána Malá v akci",
-      "url": "https://www.epenize.eu/selfie-pri-propousteni-z-nemocnice-tatana-mala-v-akci/",
-      "dt": "2026-06-11T06:24:02Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "akci",
-        "malá",
-        "nemocnice",
-        "propouštění",
-        "při",
-        "selfie",
-        "taťána"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -519,7 +519,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 107673,
+      "bytes": 108020,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -556,13 +556,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-19T06:20:20Z",
+        "raw_feed_latest_publishedAt": "2026-06-19T23:00:52Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 15,
+          "finance": 16,
           "sport": 2,
           "zpravy": 1,
-          "zdravi": 2
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -574,6 +574,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Wellbeing ve školách. Ano, ale jen s maximální přísností",
+            "publishedAt": "2026-06-19T23:00:52Z"
+          },
           {
             "title": "Babišův kohout Silver ukrajinské obilí nemohl, občané České republiky ano",
             "publishedAt": "2026-06-19T06:20:20Z"
@@ -601,10 +605,6 @@
           {
             "title": "Zrušení koncesionářských poplatků: Pomník inteligence Otíka Klempíře",
             "publishedAt": "2026-06-17T06:22:52Z"
-          },
-          {
-            "title": "Bizarní mlčení Bílého domu na urážku Michelle Obamové",
-            "publishedAt": "2026-06-16T23:00:41Z"
           }
         ]
       }

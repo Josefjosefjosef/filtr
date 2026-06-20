@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-19T23:04:21.540699Z",
+  "ingestedAt": "2026-06-20T00:27:36.488303Z",
   "items": [
     {
       "section": "veda",
@@ -776,6 +776,59 @@
       "_dt_serialized": true
     },
     {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Axios: Witkoff míří do Švýcarska na jednání s Íránem, Kushner tam již je",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/axios-witkoff-miri-do-svycarska-na-jednani-s-iranem-kushner-tam-jiz-je-374771",
+      "dt": "2026-06-20T00:10:01Z",
+      "media_raw": "ČT24 / Svět",
+      "media_norm": "ČT24",
+      "tokens": [
+        "axios",
+        "jednání",
+        "již",
+        "kushner",
+        "míří",
+        "tam",
+        "witkoff",
+        "íránem",
+        "švýcarska"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_svet",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump odhalil nový prezidentský letoun Air Force One darovaný Katarem",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/trump-odhalil-novy-prezidentsky-letoun-air-force-one-darovany-katarem-374769",
+      "dt": "2026-06-19T23:05:20Z",
+      "media_raw": "ČT24 / Svět",
+      "media_norm": "ČT24",
+      "tokens": [
+        "air",
+        "darovaný",
+        "force",
+        "katarem",
+        "letoun",
+        "nový",
+        "odhalil",
+        "one",
+        "prezidentský",
+        "trump"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_svet",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "finance",
       "contentType": "article",
       "title": "Regulace cen paliv by mohla skončit už před prázdninami",
@@ -1468,55 +1521,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "V Sherwoodu odumřel tisíciletý dub Robina Hooda",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/v-sherwoodu-odumrel-tisicilety-dub-robina-hooda-374734",
-      "dt": "2026-06-19T08:40:46Z",
-      "media_raw": "ČT24 / Svět",
-      "media_norm": "ČT24",
-      "tokens": [
-        "dub",
-        "hooda",
-        "odumřel",
-        "robina",
-        "sherwoodu",
-        "tisíciletý"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_svet",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Filmové premiéry: Toy Story, Tahle párty je DEAD či dokument o Pavlíčkovi",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/filmove-premiery-toy-story-tahle-party-je-dead-ci-dokument-o-pavlickovi-374729",
-      "dt": "2026-06-19T08:19:41Z",
-      "media_raw": "ČT24 / Svět",
-      "media_norm": "ČT24",
-      "tokens": [
-        "dead",
-        "dokument",
-        "filmové",
-        "pavlíčkovi",
-        "premiéry",
-        "párty",
-        "story",
-        "tahle",
-        "toy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_svet",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1621,7 +1625,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41363,
+      "bytes": 41037,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1658,12 +1662,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-19T18:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-20T00:10:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zpravy": 24,
           "finance": 2,
-          "zpravy": 22,
-          "other": 6
+          "other": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1675,6 +1679,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Axios: Witkoff míří do Švýcarska na jednání s Íránem, Kushner tam již je",
+            "publishedAt": "2026-06-20T00:10:01Z"
+          },
+          {
+            "title": "Trump odhalil nový prezidentský letoun Air Force One darovaný Katarem",
+            "publishedAt": "2026-06-19T23:05:20Z"
+          },
           {
             "title": "Regulace cen paliv by mohla skončit už před prázdninami",
             "publishedAt": "2026-06-19T18:58:00Z"
@@ -1698,14 +1710,6 @@
           {
             "title": "Trump se označil za všemocného, píše Axios",
             "publishedAt": "2026-06-19T16:41:32Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události pátku 19. června",
-            "publishedAt": "2026-06-19T16:30:00Z"
-          },
-          {
-            "title": "Hormuz překonalo nejvíc lodí od dubna, plný provoz brzdí miny",
-            "publishedAt": "2026-06-19T15:22:19Z"
           }
         ]
       }
