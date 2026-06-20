@@ -66,6 +66,19 @@
     box-sizing: border-box;
   }
 
+  /* Feed weather box: information-only on desktop (left-column Počasí button unchanged). */
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card,
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-phase="data"],
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-layout="ready"] {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-phase="data"]:hover .iu-silver-actionRow[data-iu-action-indicator="chevron"]::after {
+    opacity: inherit;
+    transform: none;
+  }
+
   body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection,
   body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection {
     margin-top: 10px !important;
