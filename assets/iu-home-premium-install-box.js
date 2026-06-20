@@ -20,7 +20,61 @@
     return false;
   }
 
-  function openPwaSection() {
+  function rectsOverlap(a, b) {
+    if (!a || !b) return false;
+    return !(a.right <= b.left || a.left >= b.right || a.bottom <= b.top || a.top >= b.bottom);
+  }
+
+  function overlayIsOpen(el) {
+    if (!el) return false;
+    if (el.hidden) return false;
+    if (el.getAttribute("aria-hidden") === "true") return false;
+    return true;
+  }
+
+  function syncInstallBoxClearance(box) {
+    if (!box || box.hidden) return;
+    var suppress = false;
+    var quick = document.querySelector("#iuSilverHeroPremium .iu-hero-quickActions");
+    var heroInput = document.getElementById("iuSilverHomeInput");
+    var boxRect = box.getBoundingClientRect();
+    if (quick && rectsOverlap(boxRect, quick.getBoundingClientRect())) suppress = true;
+    if (!suppress && heroInput && rectsOverlap(boxRect, heroInput.getBoundingClientRect())) {
+      suppress = true;
+    }
+    if (
+      overlayIsOpen(document.getElementById("iuCalendarOverlay")) ||
+      overlayIsOpen(document.getElementById("iuTasksOverlay")) ||
+      overlayIsOpen(document.getElementById("iuNotesOverlay")) ||
+      overlayIsOpen(document.getElementById("iuTopbarInfoOverlay"))
+    ) {
+      suppress = true;
+    }
+    box.classList.toggle("iuHomePremiumInstallBox--clearance", suppress);
+  }
+
+  function bindInstallBoxClearance(box) {
+    var tick = function () {
+      syncInstallBoxClearance(box);
+    };
+    window.addEventListener("scroll", tick, { passive: true });
+    window.addEventListener("resize", tick, { passive: true });
+    window.addEventListener("orientationchange", tick, { passive: true });
+    try {
+      var mo = new MutationObserver(tick);
+      [
+        "iuCalendarOverlay",
+        "iuTasksOverlay",
+        "iuNotesOverlay",
+        "iuTopbarInfoOverlay"
+      ].forEach(function (id) {
+        var node = document.getElementById(id);
+        if (node) mo.observe(node, { attributes: true, attributeFilter: ["hidden", "aria-hidden", "class"] });
+      });
+    } catch (_) {}
+    tick();
+  }
+
     var key = "pwa";
     var openFn = window.iuInfoCenterOpenSection;
     if (typeof openFn === "function") {
@@ -60,6 +114,8 @@
       box.hidden = true;
       return;
     }
+
+    bindInstallBoxClearance(box);
 
     box.addEventListener(
       "click",
