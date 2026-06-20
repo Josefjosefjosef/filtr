@@ -1,7 +1,7 @@
 /**
  * infoUzel.cz — overlay „Vytvořit fakturu“ (UI vrstva).
  */
-export const IU_INVOICE_MODULE_BUILD = "invoice-preview-portal-hidden-guard-v1-20260620";
+export const IU_INVOICE_MODULE_BUILD = "invoice-desktop-fullpage-v1-20260620";
 
 import {
   applyBuyerSnapshot,
@@ -959,13 +959,55 @@ export function initIuInvoiceOverlay(deps) {
     return true;
   }
 
-  function applyBodyOpen(on) {
+  function iuInvoiceIsDesktopFullpageGuards() {
+    try {
+      if (typeof document === "undefined" || !document.body) return false;
+      if (typeof window.matchMedia !== "function") return false;
+      if (!window.matchMedia("(min-width: 1025px)").matches) return false;
+      const p = String(typeof location !== "undefined" && location && location.pathname ? location.pathname : "").replace(/\\/g, "/");
+      const hub =
+        p === "/projects/" ||
+        p === "/projects" ||
+        p.indexOf("/projects/") === 0 ||
+        p === "/filtr/projects" ||
+        p === "/filtr/projects/";
+      return !!hub;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuInvoiceClearDesktopFullpageLayout() {
+    try {
+      if (backdrop) backdrop.classList.remove("iu-invoice-fullpage");
+    } catch (_) {}
+    try {
+      if (panel) panel.classList.remove("iu-invoice-fullpage");
+    } catch (_) {}
+  }
+
+  function iuInvoiceApplyDesktopFullpageLayout(active) {
+    if (!active) {
+      iuInvoiceClearDesktopFullpageLayout();
+      return;
+    }
+    try {
+      if (backdrop) backdrop.classList.add("iu-invoice-fullpage");
+    } catch (_) {}
+    try {
+      if (panel) panel.classList.add("iu-invoice-fullpage");
+    } catch (_) {}
+  }
+
+  function applyBodyOpen(on, opts) {
+    const desktopFp = !!(opts && opts.desktopFullpage);
     try {
       if (on) {
         document.body.classList.add("iu-invoice-overlay-open", "iu-modal-open");
+        if (desktopFp) document.body.classList.add("iu-invoice-desktop-overlay-open");
         panel.dataset.open = "1";
       } else {
-        document.body.classList.remove("iu-invoice-overlay-open", "iu-modal-open");
+        document.body.classList.remove("iu-invoice-overlay-open", "iu-modal-open", "iu-invoice-desktop-overlay-open");
         panel.dataset.open = "0";
       }
     } catch (_) {}
@@ -1956,6 +1998,7 @@ export function initIuInvoiceOverlay(deps) {
 
   function applyOverlayOpenFallbackStyles() {
     try {
+      if (iuInvoiceIsDesktopFullpageGuards()) return;
       const desktop = isInvoiceDesktopViewport();
       if (backdrop) {
         backdrop.style.position = "fixed";
@@ -2047,10 +2090,12 @@ export function initIuInvoiceOverlay(deps) {
 
   function openSurfaceSync() {
     ensureInBody();
+    const desktopFp = iuInvoiceIsDesktopFullpageGuards();
+    iuInvoiceApplyDesktopFullpageLayout(!!desktopFp);
     setLock(true);
-    applyBodyOpen(true);
+    applyBodyOpen(true, { desktopFullpage: !!desktopFp });
     setVis(true);
-    applyOverlayOpenFallbackStyles();
+    if (!desktopFp) applyOverlayOpenFallbackStyles();
     try {
       panel.classList.toggle("iu-invoice-overlay-panel--mobile", window.matchMedia("(max-width: 1024px)").matches);
       panel.classList.toggle("iu-invoice-overlay-panel--desktop", window.matchMedia("(min-width: 1025px)").matches);
@@ -2124,7 +2169,8 @@ export function initIuInvoiceOverlay(deps) {
     }
     setVis(false);
     setLock(false);
-    applyBodyOpen(false);
+    iuInvoiceClearDesktopFullpageLayout();
+    applyBodyOpen(false, { desktopFullpage: false });
     mount.innerHTML = "";
     rootEl = null;
   }

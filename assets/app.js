@@ -75251,7 +75251,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (typeof window.iuInvoiceOpenSurface === "function") return Promise.resolve();
     } catch (_) {}
     if (invPromise) return invPromise;
-    invPromise = import("./iu-invoice-module.js?v=invoice-preview-portal-hidden-guard-v1-20260620")
+    invPromise = import("./iu-invoice-module.js?v=invoice-desktop-fullpage-v1-20260620")
       .then(function (m) {
         try {
           m.initIuInvoiceOverlay({});
