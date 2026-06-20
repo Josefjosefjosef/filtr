@@ -22194,3 +22194,65 @@ body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"] .iu-leftNavLab
   line-height: 1.4;
   color: rgba(11,27,43,.68);
 }
+
+/* Desktop ≥1025px: Rychlý servis — zelené ikony + 1px rámeček (#16964E = topbar border-bottom) */
+@media (min-width: 1025px){
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="pocasi"],
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="mapy"],
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="jr"],
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="tvprogram"],
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="tvonline"],
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="radio"],
+  body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="pocasi"],
+  body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="mapy"],
+  body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="jr"],
+  body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"],
+  body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvonline"],
+  body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="radio"]{
+    border-color: #16964E !important;
+  }
+
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="pocasi"] .iu-leftNavIcon,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="mapy"] .iu-leftNavIcon,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="jr"] .iu-leftNavIcon,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="tvonline"] .iu-leftNavIcon,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="radio"] .iu-leftNavIcon,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="pocasi"] .iu-leftNavIcon,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="mapy"] .iu-leftNavIcon,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="jr"] .iu-leftNavIcon,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvonline"] .iu-leftNavIcon,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="radio"] .iu-leftNavIcon{
+    color: #16964E !important;
+  }
+
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="pocasi"] .iu-leftNavIcon svg,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="mapy"] .iu-leftNavIcon svg,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="jr"] .iu-leftNavIcon svg,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon svg,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="tvonline"] .iu-leftNavIcon svg,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="radio"] .iu-leftNavIcon svg,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="pocasi"] .iu-leftNavIcon svg *,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="mapy"] .iu-leftNavIcon svg *,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="jr"] .iu-leftNavIcon svg *,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon svg *,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="tvonline"] .iu-leftNavIcon svg *,
+  aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="radio"] .iu-leftNavIcon svg *,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="pocasi"] .iu-leftNavIcon svg,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="mapy"] .iu-leftNavIcon svg,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="jr"] .iu-leftNavIcon svg,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon svg,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvonline"] .iu-leftNavIcon svg,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="radio"] .iu-leftNavIcon svg,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="pocasi"] .iu-leftNavIcon svg *,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="mapy"] .iu-leftNavIcon svg *,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="jr"] .iu-leftNavIcon svg *,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon svg *,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvonline"] .iu-leftNavIcon svg *,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="radio"] .iu-leftNavIcon svg *{
+    color: #16964E !important;
+    fill: #16964E !important;
+    stroke: #16964E !important;
+  }
+}
