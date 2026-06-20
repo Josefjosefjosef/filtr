@@ -21056,6 +21056,12 @@ overflow:hidden !important;
     background: #eaf0f7 !important;
     padding: calc(env(safe-area-inset-top, 0px) + 8px) 8px 8px !important;
   }
+  /* MindMenu gate (#iuMobileGateContent z-index 10025) must not cover Kalendář/Úkoly/Poznámky opened from tools panel. */
+  body.iu-mobileGateOverlayOpen #iuCalendarOverlay.iu-calendarOverlay:not([hidden]),
+  body.iu-mobileGateOverlayOpen #iuTasksOverlay.iu-tasksPremiumScope:not([hidden]),
+  body.iu-mobileGateOverlayOpen #iuNotesOverlay.iu-notesPremiumScope:not([hidden]){
+    z-index: 10030 !important;
+  }
 }
 
 @media (max-width: 1023px){
