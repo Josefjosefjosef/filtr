@@ -22,6 +22,11 @@ import {
   validateForm,
   validateSupplierProfile,
 } from "./iu-invoice-engine.js";
+import {
+  IU_INVOICE_STATIC_NOTICE,
+  confirmClearForm,
+  guardProtectedAction,
+} from "./iu-tool-guard.js";
 
 let rasterModulePromise = null;
 let pdfModulePromise = null;
@@ -182,7 +187,9 @@ function renderFormShell() {
       <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-preview>Náhled faktury</button>
       <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-download>Stáhnout</button>
       <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-share-pdf>Sdílet PDF</button>
+      <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-clear-form>Vyčistit formulář</button>
     </div>
+    <p class="iu-inv-staticNotice">${esc(IU_INVOICE_STATIC_NOTICE)}</p>
   </section>
 
   <div class="iu-inv-status" data-inv-status role="status" aria-live="polite"></div>
@@ -1703,7 +1710,7 @@ export function initIuInvoiceOverlay(deps) {
             e.preventDefault();
             e.stopPropagation();
           } catch (_) {}
-          doDownloadPdf();
+          void guardProtectedAction("invoice", doDownloadPdf);
         };
       }
       if (sh) {
@@ -1712,7 +1719,7 @@ export function initIuInvoiceOverlay(deps) {
             e.preventDefault();
             e.stopPropagation();
           } catch (_) {}
-          void doSharePdf();
+          void guardProtectedAction("invoice", doSharePdf);
         };
       }
     }
@@ -1902,7 +1909,7 @@ export function initIuInvoiceOverlay(deps) {
     }
 
     root.querySelector("[data-inv-copy]")?.addEventListener("click", () => {
-      doCopy();
+      void guardProtectedAction("invoice", doCopy);
     });
     function bindPreviewOpen(btn) {
       if (!btn || btn.getAttribute("data-inv-preview-bound") === "1") return;
@@ -1912,7 +1919,7 @@ export function initIuInvoiceOverlay(deps) {
           e.preventDefault();
           e.stopPropagation();
         } catch (_) {}
-        openPreview();
+        void guardProtectedAction("invoice", openPreview);
       };
       btn.addEventListener("click", handler);
       btn.addEventListener("touchend", handler, { passive: false });
@@ -1924,7 +1931,7 @@ export function initIuInvoiceOverlay(deps) {
       window.__iuInvoicePreviewOpenCore = openPreview;
     } catch (_) {}
     root.querySelector("[data-inv-download]")?.addEventListener("click", () => {
-      doDownloadPdf();
+      void guardProtectedAction("invoice", doDownloadPdf);
     });
     root.querySelectorAll("[data-inv-open-pdf]").forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -1932,7 +1939,24 @@ export function initIuInvoiceOverlay(deps) {
       });
     });
     root.querySelector("[data-inv-share-pdf]")?.addEventListener("click", () => {
-      void doSharePdf();
+      void guardProtectedAction("invoice", doSharePdf);
+    });
+
+    root.querySelector("[data-inv-clear-form]")?.addEventListener("click", () => {
+      void confirmClearForm().then((ok) => {
+        if (!ok) return;
+        state = defaultFormState();
+        clearReadyPdfUi();
+        refreshPanelsContent();
+        renderLines(root, state);
+        renderSummary(root, state);
+        syncBankBlock(root, state);
+        fillSupplierSelect(root, loadSuppliers());
+        fillRecipientSelect(root, loadRecipients());
+        writeStateToDom(root, state);
+        persistFormState(state);
+        setStatus(root, "Formulář vymazán.");
+      });
     });
     root.querySelector("[data-inv-supplier-load]")?.addEventListener("click", () => {
       const sel = root.querySelector("[data-inv-supplier-select]");

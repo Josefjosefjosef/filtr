@@ -7,6 +7,15 @@ export const IU_INVOICE_RECIPIENTS_KEY = "iu_invoice_recipients_v1";
 export const IU_INVOICE_SUPPLIERS_KEY = "iu_invoice_suppliers_v1";
 export const IU_INVOICE_COUNTER_KEY = "iu_invoice_counter_year_v1";
 
+function iuLocalStorageAllowed() {
+  try {
+    if (typeof localStorage === "undefined") return false;
+    return localStorage.getItem("iu:tool-local-storage-consent:v1") === "granted";
+  } catch (_) {
+    return false;
+  }
+}
+
 export function escHtml(s) {
   return String(s || "").replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
 }
@@ -529,6 +538,7 @@ export function buildInvoiceHtmlPreview(state, totals) {
 
 export function loadRecipients() {
   try {
+    if (!iuLocalStorageAllowed()) return [];
     const raw = typeof localStorage !== "undefined" ? localStorage.getItem(IU_INVOICE_RECIPIENTS_KEY) : null;
     if (!raw) return [];
     const arr = JSON.parse(raw);
@@ -552,12 +562,14 @@ export function loadRecipients() {
 
 export function saveRecipients(list) {
   try {
+    if (!iuLocalStorageAllowed()) return;
     if (typeof localStorage !== "undefined") localStorage.setItem(IU_INVOICE_RECIPIENTS_KEY, JSON.stringify(list));
   } catch (_) {}
 }
 
 export function loadSuppliers() {
   try {
+    if (!iuLocalStorageAllowed()) return [];
     const raw = typeof localStorage !== "undefined" ? localStorage.getItem(IU_INVOICE_SUPPLIERS_KEY) : null;
     if (!raw) return [];
     const arr = JSON.parse(raw);
@@ -581,6 +593,7 @@ export function loadSuppliers() {
 
 export function saveSuppliers(list) {
   try {
+    if (!iuLocalStorageAllowed()) return;
     if (typeof localStorage !== "undefined") localStorage.setItem(IU_INVOICE_SUPPLIERS_KEY, JSON.stringify(list));
   } catch (_) {}
 }
@@ -621,6 +634,7 @@ export function applyBuyerSnapshot(state, snap) {
 
 export function loadFormState() {
   try {
+    if (!iuLocalStorageAllowed()) return null;
     const raw = typeof localStorage !== "undefined" ? localStorage.getItem(IU_INVOICE_FORM_KEY) : null;
     if (!raw) return null;
     const o = JSON.parse(raw);
@@ -641,6 +655,7 @@ export function loadFormState() {
 
 export function persistFormState(state) {
   try {
+    if (!iuLocalStorageAllowed()) return;
     if (typeof localStorage !== "undefined") localStorage.setItem(IU_INVOICE_FORM_KEY, JSON.stringify(state));
   } catch (_) {}
 }

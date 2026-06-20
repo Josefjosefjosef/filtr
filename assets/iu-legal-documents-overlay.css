@@ -449,13 +449,25 @@
 #iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-actions{
   margin-top: 10px;
 }
+#iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-actionsRow{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 0 6px;
+  border-top: 1px solid rgba(15, 23, 42, 0.1);
+}
 #iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-btn{
-  padding: 10px 18px;
+  padding: 10px 14px;
   font-size: 14px;
   font-family: inherit;
   border-radius: 10px;
   border: 1px solid rgba(15, 23, 42, 0.14);
   cursor: pointer;
+  background: #fff;
+  color: #0f172a;
+}
+#iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-btn--ghost{
+  background: #f8fafc;
 }
 #iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-btn--primary{
   background: #881337;
@@ -465,6 +477,154 @@
 }
 #iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-btn--primary:hover{
   background: #9f1239;
+}
+#iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-staticNotice{
+  margin: 10px 0 0;
+  padding: 12px 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #475569;
+  background: rgba(22, 150, 78, 0.06);
+  border: 1px solid rgba(22, 150, 78, 0.18);
+  border-radius: 10px;
+}
+#iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-status{
+  min-height: 1.25em;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #b45309;
+}
+#iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-pdfReadyRow{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+#iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-pdfReadyRow[hidden]{
+  display: none !important;
+}
+#iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-pdfReadyHint{
+  font-size: 13px;
+  color: #64748b;
+}
+.iu-legal-doc-paper{
+  max-width: 720px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  overflow: hidden;
+}
+.iu-legal-doc-paper__bar{
+  height: 5px;
+  background: #16964E;
+}
+.iu-legal-doc-paper__brand{
+  margin: 0;
+  padding: 16px 28px 10px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #16964E;
+}
+.iu-legal-doc-paper__rule{
+  height: 0;
+  margin: 0 28px;
+  border-top: 1px solid rgba(15, 23, 42, 0.12);
+}
+.iu-legal-doc-paper__rule--foot{
+  margin-top: 0;
+}
+.iu-legal-doc-paper__footerBlock{
+  margin: 0;
+  padding: 12px 28px 22px;
+  background: #fff;
+}
+.iu-legal-doc-paper__footerLine{
+  margin: 0 0 5px;
+  font-size: 10px;
+  line-height: 1.45;
+  color: #94a3b8;
+}
+.iu-legal-doc-paper__footerLine--lead{
+  font-weight: 600;
+  color: #64748b;
+}
+.iu-legal-doc-paper__footerLine a{
+  color: #94a3b8;
+  text-decoration: none;
+}
+.iu-legal-doc-paper__footerLine a:hover{
+  text-decoration: underline;
+}
+.iu-legal-doc-paper__body{
+  margin: 0;
+  padding: 24px 28px 32px;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #1e293b;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #fff;
+  border: 0;
+}
+.iu-legal-doc-paper__body:first-line{
+  font-weight: 700;
+  font-size: 1.08em;
+  color: #0f172a;
+}
+@media print{
+  .iu-legal-doc-paper{
+    max-width: none;
+    box-shadow: none;
+    border: 0;
+    border-radius: 0;
+  }
+  .iu-legal-doc-paper__bar{
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .iu-legal-doc-paper__footerBlock{
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+.iu-legal-preview-portal{
+  position: fixed;
+  inset: 0;
+  z-index: 10140;
+  display: flex;
+  flex-direction: column;
+  background: rgb(241, 245, 249);
+}
+.iu-legal-preview-portal[hidden]{
+  display: none !important;
+}
+.iu-legal-preview-portal--open{
+  display: flex !important;
+}
+.iu-legal-previewToolbar{
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+  background: #fff;
+}
+.iu-legal-previewScroll{
+  flex: 1 1 auto;
+  overflow: auto;
+  padding: 20px 16px 32px;
+  -webkit-overflow-scrolling: touch;
+}
+body.iu-legal-docs-preview-open #iuLegalDocsPanel .iu-legal-overlay-cardShell{
+  visibility: hidden;
+  pointer-events: none;
 }
 #iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-srOnly{
   position: absolute;
