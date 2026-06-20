@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-06-20T12:44:53.587872Z",
+  "ingestedAt": "2026-06-20T14:02:29.685694Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zpožděný nebo zrušený let: Kde mohou cestující žádat o kompenzaci?",
+      "url": "https://ekonomickydenik.cz/zpozdeny-nebo-zruseny-let-kompenzace/",
+      "dt": "2026-06-20T13:10:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "cestující",
+        "kompenzaci",
+        "let",
+        "nebo",
+        "zpožděný",
+        "zrušený",
+        "žádat"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -789,33 +813,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Velký zátah kvůli chybám v DPH. Stovky firem čeká nepříjemné překvapení",
-      "url": "https://ekonomickydenik.cz/velky-zatah-kvuli-chybam-v-dph-stovky-firem-ceka-neprijemne-prekvapeni/",
-      "dt": "2026-06-18T11:01:43Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chybám",
-        "dph",
-        "firem",
-        "kvůli",
-        "nepříjemné",
-        "překvapení",
-        "stovky",
-        "velký",
-        "zátah",
-        "čeká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -826,7 +823,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71508,
+      "bytes": 72168,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -863,7 +860,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-20T11:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-20T13:10:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -880,6 +877,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zpožděný nebo zrušený let: Kde mohou cestující žádat o kompenzaci?",
+            "publishedAt": "2026-06-20T13:10:00Z"
+          },
           {
             "title": "Ústupek Trumpovi, nebo záchrana před celní válkou? EU ruší cla na zboží z USA",
             "publishedAt": "2026-06-20T11:35:00Z"
@@ -907,10 +908,6 @@
           {
             "title": "Z vládního zmocněnce pro NATO šéfem obranné politiky. Landovský potřebuje novou prověrku",
             "publishedAt": "2026-06-19T17:38:51Z"
-          },
-          {
-            "title": "Trump, ze kterého mrazí: Mám neomezenou moc. Srovnává se s Hitlerem a Stalinem",
-            "publishedAt": "2026-06-19T15:49:16Z"
           }
         ]
       }
