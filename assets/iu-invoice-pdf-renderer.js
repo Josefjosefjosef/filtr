@@ -58,7 +58,7 @@ export const IU_INVOICE_PDF_LAYOUT = {
   summaryLineMm: 4.5,
   summaryBlockPadMm: 1.5,
   footerGapFromSummaryMm: 11,
-  brandRgb: [136, 19, 55],
+  brandRgb: [22, 150, 78],
   lineGrayRgb: [219, 225, 232],
 };
 
@@ -833,18 +833,18 @@ const INVOICE_EXPORT_CRITICAL_CSS = `
 .iu-pdf-render-mode .iu-inv-pr-head-bg{position:absolute;left:0;top:0;right:0;bottom:0;z-index:0;pointer-events:none;border-radius:10px;overflow:hidden;background:#fff}
 .iu-pdf-render-mode .iu-inv-pr-head-accent{display:none}
 .iu-pdf-render-mode .iu-inv-pr-head>*{position:relative;z-index:1}
-.iu-pdf-render-mode .iu-inv-pr-created{font-size:13px;font-weight:700;color:#881337;margin-bottom:4px}
+.iu-pdf-render-mode .iu-inv-pr-created{font-size:13px;font-weight:700;color:#16964E;margin-bottom:4px}
 .iu-pdf-render-mode .iu-inv-pr-title{font-size:22px;font-weight:800;margin-top:6px}
 .iu-pdf-render-mode .iu-inv-pr-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.iu-pdf-render-mode .iu-inv-pr-h{font-size:12px;font-weight:750;text-transform:uppercase;color:#881337;margin-bottom:6px}
+.iu-pdf-render-mode .iu-inv-pr-h{font-size:12px;font-weight:750;text-transform:uppercase;color:#16964E;margin-bottom:6px}
 .iu-pdf-render-mode .iu-inv-pr-pre{margin:0;white-space:pre-wrap;font-size:13px;line-height:1.45}
 .iu-pdf-render-mode .iu-inv-pr-meta,.iu-pdf-render-mode .iu-inv-pr-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px}
 .iu-pdf-render-mode .iu-inv-pr-meta th,.iu-pdf-render-mode .iu-inv-pr-meta td,.iu-pdf-render-mode .iu-inv-pr-table th,.iu-pdf-render-mode .iu-inv-pr-table td{border:1px solid rgba(15,23,42,.1);padding:8px;text-align:left}
 .iu-pdf-render-mode .iu-inv-pr-meta th{background:rgba(15,23,42,.03);font-weight:650}
-.iu-pdf-render-mode .iu-inv-pr-table th{background:rgba(136,19,55,.07);font-weight:700}
+.iu-pdf-render-mode .iu-inv-pr-table th{background:rgba(22,150,78,.07);font-weight:700}
 .iu-pdf-render-mode .iu-inv-pr-bank{padding:10px 12px;border-radius:10px;background:rgba(15,23,42,.03);margin-bottom:12px}
 .iu-pdf-render-mode .iu-inv-pr-totals{font-size:14px;text-align:right;margin-top:8px}
-.iu-pdf-render-mode .iu-inv-pr-due{margin-top:10px;font-size:18px;font-weight:800;color:#881337}
+.iu-pdf-render-mode .iu-inv-pr-due{margin-top:10px;font-size:18px;font-weight:800;color:#16964E}
 .iu-pdf-render-mode .iu-inv-pr-foot{margin-top:16px;padding-top:12px;border-top:1px solid rgba(15,23,42,.08);font-size:12px;color:rgba(15,23,42,.5);text-align:center}
 `;
 
@@ -916,10 +916,10 @@ function materializeExportHeaderVisual(pageEl) {
       "position:absolute;left:0;top:0;right:0;bottom:0;z-index:0;pointer-events:none;" +
       "border-radius:10px;overflow:hidden;background:#ffffff;";
     const strips = [
-      { left: 0, width: 16, color: "rgba(136, 19, 55, 0.06)" },
-      { left: 16, width: 8, color: "rgba(136, 19, 55, 0.045)" },
-      { left: 24, width: 8, color: "rgba(136, 19, 55, 0.03)" },
-      { left: 32, width: 8, color: "rgba(136, 19, 55, 0.015)" },
+      { left: 0, width: 16, color: "rgba(22, 150, 78, 0.06)" },
+      { left: 16, width: 8, color: "rgba(22, 150, 78, 0.045)" },
+      { left: 24, width: 8, color: "rgba(22, 150, 78, 0.03)" },
+      { left: 32, width: 8, color: "rgba(22, 150, 78, 0.015)" },
     ];
     for (let si = 0; si < strips.length; si++) {
       const s = strips[si];
@@ -936,7 +936,7 @@ function materializeExportHeaderVisual(pageEl) {
     }
     head.insertBefore(wrap, head.firstChild);
     if (!head.style.borderLeft) {
-      head.style.setProperty("border-left", "4px solid #881337", "important");
+      head.style.setProperty("border-left", "4px solid #16964E", "important");
     }
     Array.from(head.children).forEach(function (child) {
       if (child !== wrap) {
@@ -1040,7 +1040,7 @@ function validateExportComputedStyles(pageEl) {
     const br = parseFloat(out.cardBorderRadius) || 0;
     const pad = parseFloat(out.cardPadding) || 0;
     const bordo =
-      String(out.totalColor).indexOf("136, 19, 55") !== -1 || String(out.totalColor).indexOf("881337") !== -1;
+      String(out.totalColor).indexOf("22, 150, 78") !== -1 || String(out.totalColor).indexOf("16964") !== -1;
     out.parity = br >= 8 && pad >= 12 && bordo && !!out.tableHeaderBackground;
   } catch (_) {}
   return out;
@@ -1165,7 +1165,7 @@ function applyCanvasSafeStyles(pageEl) {
     }
     const lineTh = pageEl.querySelectorAll(".iu-inv-pr-table th");
     for (let hi = 0; hi < lineTh.length; hi++) {
-      lineTh[hi].style.setProperty("background-color", "rgba(136, 19, 55, 0.07)", "important");
+      lineTh[hi].style.setProperty("background-color", "rgba(22, 150, 78, 0.07)", "important");
     }
     const metaTh = pageEl.querySelectorAll(".iu-inv-pr-meta th");
     for (let mi = 0; mi < metaTh.length; mi++) {
@@ -1178,7 +1178,7 @@ function applyCanvasSafeStyles(pageEl) {
     }
     const due = pageEl.querySelector(".iu-inv-pr-due");
     if (due) {
-      due.style.setProperty("color", "#881337", "important");
+      due.style.setProperty("color", "#16964E", "important");
       due.style.setProperty("font-weight", "800", "important");
       due.style.setProperty("font-size", "18px", "important");
     }

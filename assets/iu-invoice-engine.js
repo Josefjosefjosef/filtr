@@ -435,7 +435,7 @@ export function buildPlainText(state, totals) {
 /** Jednotná vizuální HTML šablona faktury (náhled + PDF). Neplain-text export. */
 export function buildInvoicePaperHtml(state, totals) {
   const inv = state.invoice || {};
-  const brand = "#881337";
+  const brand = "#16964E";
   const rows = (state.lines || [])
     .map((ln, i) => {
       const qty = parseNum(ln.qty);
