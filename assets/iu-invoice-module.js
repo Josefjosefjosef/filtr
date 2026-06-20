@@ -1,7 +1,7 @@
 /**
  * infoUzel.cz — overlay „Vytvořit fakturu“ (UI vrstva).
  */
-export const IU_INVOICE_MODULE_BUILD = "invoice-first-click-open-v2-20260615";
+export const IU_INVOICE_MODULE_BUILD = "invoice-preview-portal-hidden-guard-v1-20260620";
 
 import {
   applyBuyerSnapshot,
@@ -661,6 +661,19 @@ export function initIuInvoiceOverlay(deps) {
     "</div>" +
     '<div class="iu-inv-previewScroll" data-inv-preview-host></div>';
 
+  function sealPreviewPortalClosed(el) {
+    if (!el) return;
+    if (el.classList.contains("iu-invoice-preview-portal--open") || el.getAttribute("data-preview-open") === "1") return;
+    el.hidden = true;
+    el.setAttribute("hidden", "");
+    el.classList.add("iu-inv-guard-hidden");
+    try {
+      el.style.setProperty("display", "none", "important");
+      el.style.setProperty("pointer-events", "none", "important");
+      el.style.setProperty("visibility", "hidden", "important");
+    } catch (_) {}
+  }
+
   function ensurePreviewPortalHost() {
     let el = document.getElementById("iuInvoicePreviewPortal");
     if (el && el.tagName === "DIALOG") {
@@ -674,6 +687,7 @@ export function initIuInvoiceOverlay(deps) {
       previewPortalHost = null;
     }
     if (previewPortalHost && previewPortalHost.isConnected && previewPortalHost.tagName !== "DIALOG") {
+      sealPreviewPortalClosed(previewPortalHost);
       return previewPortalHost;
     }
     if (!el) {
@@ -687,10 +701,12 @@ export function initIuInvoiceOverlay(deps) {
       el.hidden = true;
       el.innerHTML = PREVIEW_PORTAL_HTML;
       document.body.appendChild(el);
+      sealPreviewPortalClosed(el);
     }
     if (!el.querySelector("[data-inv-preview-host]")) {
       el.innerHTML = PREVIEW_PORTAL_HTML;
     }
+    sealPreviewPortalClosed(el);
     previewPortalHost = el;
     return el;
   }
