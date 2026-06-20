@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-20T00:27:36.488303Z",
+  "ingestedAt": "2026-06-20T01:34:47.050059Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Witkoff míří do Švýcarska na jednání s Íránem, Kushner tam již je",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/witkoff-miri-do-svycarska-na-jednani-s-iranem-kushner-uz-je-tam.A260620_020039_zahranicni_air",
+      "dt": "2026-06-20T00:28:57Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "jednání",
+        "již",
+        "kushner",
+        "míří",
+        "tam",
+        "witkoff",
+        "íránem",
+        "švýcarska"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -755,33 +780,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zbyla jen prázdná místa. Populární pojízdné stánky s kávou zmizely z ulic",
-      "url": "https://www.idnes.cz/brno/zpravy/kofi-kofi-kava-s-sebou-pojizdne-stanky-ukonceni-provozu.A260619_134314_brno-zpravy_azu",
-      "dt": "2026-06-19T13:31:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "jen",
-        "kávou",
-        "místa",
-        "pojízdné",
-        "populární",
-        "prázdná",
-        "stánky",
-        "ulic",
-        "zbyla",
-        "zmizely"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49366,
+      "bytes": 49243,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-19T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-20T00:28:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -846,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Witkoff míří do Švýcarska na jednání s Íránem, Kushner tam již je",
+            "publishedAt": "2026-06-20T00:28:57Z"
+          },
           {
             "title": "Trump si myslel, že Ukrajina prohraje. Názor změnil díky Macronovi i Zelenskému",
             "publishedAt": "2026-06-19T22:00:00Z"
@@ -873,10 +875,6 @@
           {
             "title": "V Bavorsku havarovala česká paraglidistka, uvízla na stromě",
             "publishedAt": "2026-06-19T18:16:00Z"
-          },
-          {
-            "title": "Ukrajina poprvé pohrozila Bělorusku ozbrojeným útokem. Nemá Rusku pomáhat",
-            "publishedAt": "2026-06-19T18:01:00Z"
           }
         ]
       }
