@@ -1,8 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-20T10:20:23.058213Z",
+  "ingestedAt": "2026-06-20T11:28:26.985292Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Srážka vlaků na jihu Británie má téměř devadesát zraněných",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/srazka-vlaku-na-jihu-britanie-ma-temer-devadesat-zranenych-374777",
+      "dt": "2026-06-20T11:19:08Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "británie",
+        "devadesát",
+        "jihu",
+        "srážka",
+        "téměř",
+        "vlaků",
+        "zraněných"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Chybovat je lidské, hájí se Prokop. Podle Zábranského je nedůvěryhodný",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/hlavni-mesto-praha/chybovat-je-lidske-haji-se-prokop-podle-zabranskeho-je-neduveryhodny-374770",
+      "dt": "2026-06-20T10:58:54Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "chybovat",
+        "hájí",
+        "lidské",
+        "nedůvěryhodný",
+        "podle",
+        "prokop",
+        "zábranského"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -714,53 +762,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Sledujte v mapě, jak padají teplotní rekordy",
-      "url": "https://ct24.ceskatelevize.cz/clanek/pocasi/sledujte-na-mape-kde-padaji-teplotni-rekordy-374743",
-      "dt": "2026-06-19T12:06:35Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "mapě",
-        "padají",
-        "rekordy",
-        "sledujte",
-        "teplotní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policie pátrá po primátorovi Karviné Wolfovi. Ten reaguje, že je na dovolené",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/policie-patra-po-primatorovi-karvine-wolfovi-z-korupcni-fotbalove-kauzy-374747",
-      "dt": "2026-06-19T12:03:07Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "dovolené",
-        "karviné",
-        "policie",
-        "primátorovi",
-        "pátrá",
-        "reaguje",
-        "ten",
-        "wolfovi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -771,7 +772,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42636,
+      "bytes": 43368,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -808,11 +809,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-20T09:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-20T11:19:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 4,
           "zpravy": 24,
+          "other": 4,
           "finance": 2
         },
         "drop_counts": {
@@ -825,6 +826,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Srážka vlaků na jihu Británie má téměř devadesát zraněných",
+            "publishedAt": "2026-06-20T11:19:08Z"
+          },
+          {
+            "title": "Chybovat je lidské, hájí se Prokop. Podle Zábranského je nedůvěryhodný",
+            "publishedAt": "2026-06-20T10:58:54Z"
+          },
           {
             "title": "Festival Colours hlásí velký zájem o ubytování v kempech, hotely zdražily i několikanásobně",
             "publishedAt": "2026-06-20T09:01:00Z"
@@ -848,14 +857,6 @@
           {
             "title": "Čeští vědci úpravou RNA opravili poruchu, která krade zrak",
             "publishedAt": "2026-06-20T07:00:00Z"
-          },
-          {
-            "title": "Čína mění taktiku vůči Tchaj-wanu, snaží se ho připravit o podporu ve světě",
-            "publishedAt": "2026-06-20T06:48:09Z"
-          },
-          {
-            "title": "Pítek a mlžítek přibývá, někde přidávají osvěžovače na podněty občanů",
-            "publishedAt": "2026-06-20T06:00:00Z"
           }
         ]
       }
