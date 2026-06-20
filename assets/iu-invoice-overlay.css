@@ -417,6 +417,12 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
 #iuInvoicePanel .iu-inv-previewLayer.iu-inv-guard-hidden{
   display: none !important;
 }
+#iuInvoicePreviewPortal[hidden],
+#iuInvoicePreviewPortal.iu-inv-guard-hidden:not(.iu-invoice-preview-portal--open):not([data-preview-open="1"]){
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
 #iuInvoicePreviewPortal.iu-inv-previewLayer,
 #iuInvoicePanel .iu-inv-previewLayer,
 .iu-inv-previewLayer.iu-invoice-preview-portal{
