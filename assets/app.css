@@ -22194,3 +22194,9 @@ body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"] .iu-leftNavLab
   line-height: 1.4;
   color: rgba(11,27,43,.68);
 }
+
+@media (min-width:1025px){
+#iuLeftRail .iu-leftNav .iu-leftNavItem:nth-child(n+2):nth-child(-n+7){border-color:#16964E!important}
+#iuLeftRail .iu-leftNav .iu-leftNavItem:nth-child(n+2):nth-child(-n+7) .iu-leftNavIcon,
+#iuLeftRail .iu-leftNav .iu-leftNavItem:nth-child(n+2):nth-child(-n+7) .iu-leftNavIcon :is(svg,svg *){color:#16964E!important;fill:#16964E!important;stroke:#16964E!important}
+}
