@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-20T19:19:27.184978Z",
+  "ingestedAt": "2026-06-20T20:29:03.203129Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bílinská kyselka hledá nového majitele",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/ustecky-kraj/bilinska-kyselka-hleda-noveho-majitele-374787",
+      "dt": "2026-06-20T19:25:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "bílinská",
+        "hledá",
+        "kyselka",
+        "majitele",
+        "nového"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -131,16 +153,16 @@
     {
       "section": "pocasi",
       "contentType": "article",
-      "title": "Bouřky lámaly stromy, hasiči vyjížděli k desítkám událostí",
+      "title": "Bouřky lámaly stromy, hasiči vyjížděli ke stovkám událostí",
       "url": "https://ct24.ceskatelevize.cz/clanek/pocasi/v-cesku-se-uz-objevily-prvni-bourky-hrozi-kroupy-i-intenzivni-srazky-374781",
       "dt": "2026-06-20T13:06:27Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24",
       "tokens": [
         "bouřky",
-        "desítkám",
         "hasiči",
         "lámaly",
+        "stovkám",
         "stromy",
         "událostí",
         "vyjížděli"
@@ -726,29 +748,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zrcadlové jezírko zezelenalo a nový nátěr se loupe",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/zrcadlove-jezirko-u-lincolnova-pamatniku-zezelenalo-kvuli-rasam-a-novy-nater-se-olupuje-374752",
-      "dt": "2026-06-19T14:47:28Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "jezírko",
-        "loupe",
-        "nový",
-        "nátěr",
-        "zezelenalo",
-        "zrcadlové"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -759,7 +758,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43810,
+      "bytes": 43732,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -796,7 +795,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-20T18:23:45Z",
+        "raw_feed_latest_publishedAt": "2026-06-20T19:25:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -813,6 +812,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bílinská kyselka hledá nového majitele",
+            "publishedAt": "2026-06-20T19:25:00Z"
+          },
           {
             "title": "Do zdravotnictví půjde víc peněz, Vojtěch chce vyrovnané příjmy a výdaje",
             "publishedAt": "2026-06-20T18:23:45Z"
@@ -834,16 +837,12 @@
             "publishedAt": "2026-06-20T13:50:03Z"
           },
           {
-            "title": "Bouřky lámaly stromy, hasiči vyjížděli k desítkám událostí",
+            "title": "Bouřky lámaly stromy, hasiči vyjížděli ke stovkám událostí",
             "publishedAt": "2026-06-20T13:06:27Z"
           },
           {
             "title": "Srážka vlaků na jihu Británie má téměř sto zraněných",
             "publishedAt": "2026-06-20T11:19:08Z"
-          },
-          {
-            "title": "Chybovat je lidské, hájí se Prokop. Podle Zábranského je nedůvěryhodný",
-            "publishedAt": "2026-06-20T10:58:54Z"
           }
         ]
       }
