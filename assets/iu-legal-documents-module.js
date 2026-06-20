@@ -8,6 +8,12 @@ import {
   createEmptyParty,
 } from "./iu-legal-documents-schema.js";
 import { IU_LEGAL_DOCUMENTS, getLegalDocumentById, listLegalDocumentsInCategory } from "./iu-legal-documents-registry.js";
+import { buildLegalDocumentPreviewHtml, exportLegalDocumentPdfBlob } from "./iu-legal-documents-pdf-renderer.js";
+import {
+  IU_CONTRACT_STATIC_NOTICE,
+  confirmClearForm,
+  guardProtectedAction,
+} from "./iu-tool-guard.js";
 
 function esc(s) {
   return String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -215,9 +221,19 @@ function renderDocumentForm(doc) {
   </section>
   <section class="iu-legal-block">
     <h4 class="iu-legal-h4">Náhled textu</h4>
-    <textarea class="iu-legal-preview" readonly rows="14" data-iu-legal-preview aria-label="Náhled dokumentu"></textarea>
-    <div class="iu-legal-actions">
-      <button type="button" class="iu-legal-btn iu-legal-btn--primary" data-iu-legal-copy>Zkopírovat text</button>
+    <textarea class="iu-legal-preview" readonly rows="14" data-iu-legal-preview-text aria-label="Náhled dokumentu"></textarea>
+    <div class="iu-legal-actions iu-legal-actionsRow" data-iu-legal-actions>
+      <button type="button" class="iu-legal-btn iu-legal-btn--ghost" data-iu-legal-copy>Kopírovat text</button>
+      <button type="button" class="iu-legal-btn iu-legal-btn--primary" data-iu-legal-preview-open>Náhled dokumentu</button>
+      <button type="button" class="iu-legal-btn iu-legal-btn--ghost" data-iu-legal-download>Stáhnout</button>
+      <button type="button" class="iu-legal-btn iu-legal-btn--primary" data-iu-legal-share-pdf>Sdílet PDF</button>
+      <button type="button" class="iu-legal-btn iu-legal-btn--ghost" data-iu-legal-clear-form>Vyčistit formulář</button>
+    </div>
+    <p class="iu-legal-staticNotice">${esc(IU_CONTRACT_STATIC_NOTICE)}</p>
+    <div class="iu-legal-status" data-iu-legal-status role="status" aria-live="polite"></div>
+    <div class="iu-legal-pdfReadyRow" data-iu-legal-pdf-ready-row hidden>
+      <button type="button" class="iu-legal-btn iu-legal-btn--primary" data-iu-legal-open-pdf>Otevřít PDF</button>
+      <span class="iu-legal-pdfReadyHint">PDF je připravené — klepnutím otevřete soubor (iPhone/Safari).</span>
     </div>
   </section>`;
 }
@@ -256,6 +272,316 @@ export function initIuLegalDocumentsOverlay(deps) {
   };
 
   let previewTimer = 0;
+  let previewPortalHost = null;
+  let readyPdfBundle = null;
+
+  function setLegalStatus(root, msg) {
+    const el = root ? root.querySelector("[data-iu-legal-status]") : null;
+    if (el) el.textContent = String(msg || "");
+  }
+
+  function clearReadyPdfUi(root) {
+    readyPdfBundle = null;
+    const row = root ? root.querySelector("[data-iu-legal-pdf-ready-row]") : null;
+    if (row) {
+      row.hidden = true;
+      row.setAttribute("hidden", "");
+    }
+  }
+
+  function showReadyPdfUi(root, blob, fileName) {
+    readyPdfBundle = { blob, fileName };
+    const row = root ? root.querySelector("[data-iu-legal-pdf-ready-row]") : null;
+    if (row) {
+      row.hidden = false;
+      row.removeAttribute("hidden");
+    }
+  }
+
+  function isIosDevice() {
+    try {
+      const ua = String((typeof navigator !== "undefined" && navigator.userAgent) || "");
+      return /iPad|iPhone|iPod/i.test(ua);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function runPdfDownloadFallback(blob, fileName) {
+    try {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName || "dokument.pdf";
+      a.rel = "noopener";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.setTimeout(() => {
+        try {
+          URL.revokeObjectURL(url);
+        } catch (_) {}
+      }, 60000);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function canSharePdfFile(blob, fileName) {
+    try {
+      const nav = typeof navigator !== "undefined" ? navigator : null;
+      if (!nav || typeof nav.share !== "function" || typeof nav.canShare !== "function") return false;
+      const file = new File([blob], fileName || "dokument.pdf", { type: "application/pdf" });
+      return nav.canShare({ files: [file] });
+    } catch (_) {
+      return false;
+    }
+  }
+
+  async function sharePdfBlobNow(root, blob, fileName) {
+    const name = fileName || "dokument.pdf";
+    readyPdfBundle = { blob, fileName: name };
+    if (canSharePdfFile(blob, name)) {
+      try {
+        const file = new File([blob], name, { type: "application/pdf" });
+        await navigator.share({ files: [file], title: "Dokument" });
+        setLegalStatus(root, "PDF sdíleno nebo zrušeno uživatelem.");
+        return;
+      } catch (e) {
+        if (e && (e.name === "AbortError" || String(e.name) === "AbortError")) {
+          setLegalStatus(root, "Sdílení zrušeno.");
+          return;
+        }
+      }
+    }
+    if (!isIosDevice() && runPdfDownloadFallback(blob, name)) {
+      setLegalStatus(root, "Sdílení není dostupné — PDF staženo.");
+      return;
+    }
+    showReadyPdfUi(root, blob, name);
+    setLegalStatus(root, "Sdílení není dostupné. Klepněte na „Otevřít PDF“.");
+  }
+
+  function deliverPdfDownload(root, blob, fileName) {
+    const name = fileName || "dokument.pdf";
+    if (runPdfDownloadFallback(blob, name)) {
+      setLegalStatus(root, "PDF staženo.");
+      return;
+    }
+    showReadyPdfUi(root, blob, name);
+    setLegalStatus(root, "PDF připravené. Klepněte na „Otevřít PDF“.");
+  }
+
+  function ensurePreviewPortalHost() {
+    let el = document.getElementById("iuLegalDocsPreviewPortal");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "iuLegalDocsPreviewPortal";
+      el.className = "iu-legal-preview-portal iu-inv-guard-hidden";
+      el.hidden = true;
+      el.setAttribute("hidden", "");
+      el.setAttribute("data-iu-legal-preview-layer", "");
+      el.setAttribute("role", "dialog");
+      el.setAttribute("aria-modal", "true");
+      el.innerHTML =
+        '<div class="iu-legal-previewToolbar">' +
+        '<button type="button" class="iu-legal-btn iu-legal-btn--ghost" data-iu-legal-preview-back>Zpět do formuláře</button>' +
+        '<button type="button" class="iu-legal-btn iu-legal-btn--ghost" data-iu-legal-preview-download>Stáhnout dokument</button>' +
+        '<button type="button" class="iu-legal-btn iu-legal-btn--primary" data-iu-legal-preview-share-pdf>Sdílet PDF</button>' +
+        "</div>" +
+        '<div class="iu-legal-previewScroll" data-iu-legal-preview-host></div>';
+      document.body.appendChild(el);
+    }
+    previewPortalHost = el;
+    return el;
+  }
+
+  function openPreviewPortal(html) {
+    const layer = ensurePreviewPortalHost();
+    const host = layer.querySelector("[data-iu-legal-preview-host]");
+    if (!host) return;
+    host.innerHTML = html;
+    layer.hidden = false;
+    layer.removeAttribute("hidden");
+    layer.classList.remove("iu-inv-guard-hidden");
+    layer.classList.add("iu-legal-preview-portal--open");
+    try {
+      document.body.classList.add("iu-legal-docs-preview-open");
+    } catch (_) {}
+  }
+
+  function closePreviewPortal() {
+    const layer = previewPortalHost || document.getElementById("iuLegalDocsPreviewPortal");
+    if (!layer) return;
+    layer.hidden = true;
+    layer.setAttribute("hidden", "");
+    layer.classList.add("iu-inv-guard-hidden");
+    layer.classList.remove("iu-legal-preview-portal--open");
+    const host = layer.querySelector("[data-iu-legal-preview-host]");
+    if (host) host.innerHTML = "";
+    try {
+      document.body.classList.remove("iu-legal-docs-preview-open");
+    } catch (_) {}
+  }
+
+  function resetFormFields(root, doc) {
+    root.querySelectorAll("[data-iu-legal-path]").forEach((el) => {
+      el.value = "";
+    });
+    applyPartyTypeConstraints(doc, root);
+    schedulePreview(root, doc);
+  }
+
+  function wireDetailActions(root, doc) {
+    const getText = () => {
+      const st = readFormState(root, doc);
+      return doc.buildText(st);
+    };
+
+    const copyBtn = root.querySelector("[data-iu-legal-copy]");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", () => {
+        void guardProtectedAction("contract", async () => {
+          const text = getText();
+          try {
+            await navigator.clipboard.writeText(text);
+            setLegalStatus(root, "Text zkopírován do schránky.");
+          } catch (_) {
+            setLegalStatus(root, "Kopírování se nezdařilo.");
+          }
+        });
+      });
+    }
+
+    const previewBtn = root.querySelector("[data-iu-legal-preview-open]");
+    if (previewBtn) {
+      previewBtn.addEventListener("click", () => {
+        void guardProtectedAction("contract", async () => {
+          const text = getText();
+          openPreviewPortal(buildLegalDocumentPreviewHtml(doc.title, text));
+          wirePreviewPortalToolbar(root, doc);
+        });
+      });
+    }
+
+    async function doDownloadPdf() {
+      setLegalStatus(root, "Připravuji PDF…");
+      clearReadyPdfUi(root);
+      try {
+        const text = getText();
+        const result = await exportLegalDocumentPdfBlob(doc.title, text);
+        deliverPdfDownload(root, result.blob, result.fileName);
+      } catch (_) {
+        setLegalStatus(root, "PDF se nepodařilo vygenerovat.");
+      }
+    }
+
+    async function doSharePdf() {
+      if (readyPdfBundle && readyPdfBundle.blob) {
+        await sharePdfBlobNow(root, readyPdfBundle.blob, readyPdfBundle.fileName);
+        return;
+      }
+      setLegalStatus(root, "Připravuji PDF…");
+      clearReadyPdfUi(root);
+      try {
+        const text = getText();
+        const result = await exportLegalDocumentPdfBlob(doc.title, text);
+        await sharePdfBlobNow(root, result.blob, result.fileName);
+      } catch (_) {
+        setLegalStatus(root, "PDF se nepodařilo vygenerovat.");
+      }
+    }
+
+    root.querySelector("[data-iu-legal-download]")?.addEventListener("click", () => {
+      void guardProtectedAction("contract", doDownloadPdf);
+    });
+    root.querySelector("[data-iu-legal-share-pdf]")?.addEventListener("click", () => {
+      void guardProtectedAction("contract", doSharePdf);
+    });
+    root.querySelector("[data-iu-legal-open-pdf]")?.addEventListener("click", () => {
+      const prep = readyPdfBundle;
+      if (!prep || !prep.blob) {
+        setLegalStatus(root, "Nejdřív vygenerujte PDF (Stáhnout / Sdílet).");
+        return;
+      }
+      const url = URL.createObjectURL(prep.blob);
+      const w = window.open(url, "_blank");
+      if (!w) {
+        try {
+          const a = document.createElement("a");
+          a.href = url;
+          a.target = "_blank";
+          a.rel = "noopener";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        } catch (_) {
+          setLegalStatus(root, "Otevření PDF se nezdařilo.");
+          return;
+        }
+      }
+      setLegalStatus(root, "PDF otevřeno — uložte nebo sdílejte ze souboru.");
+    });
+
+    root.querySelector("[data-iu-legal-clear-form]")?.addEventListener("click", () => {
+      void confirmClearForm().then((ok) => {
+        if (!ok) return;
+        resetFormFields(root, doc);
+        clearReadyPdfUi(root);
+        setLegalStatus(root, "Formulář vymazán.");
+      });
+    });
+  }
+
+  function wirePreviewPortalToolbar(root, doc) {
+    const layer = ensurePreviewPortalHost();
+    if (!layer) return;
+    const getText = () => {
+      const st = readFormState(root, doc);
+      return doc.buildText(st);
+    };
+
+    const back = layer.querySelector("[data-iu-legal-preview-back]");
+    const dl = layer.querySelector("[data-iu-legal-preview-download]");
+    const sh = layer.querySelector("[data-iu-legal-preview-share-pdf]");
+
+    if (back) {
+      back.onclick = (e) => {
+        e.preventDefault();
+        closePreviewPortal();
+      };
+    }
+    if (dl) {
+      dl.onclick = (e) => {
+        e.preventDefault();
+        void guardProtectedAction("contract", async () => {
+          setLegalStatus(root, "Připravuji PDF…");
+          try {
+            const text = getText();
+            const result = await exportLegalDocumentPdfBlob(doc.title, text);
+            deliverPdfDownload(root, result.blob, result.fileName);
+          } catch (_) {
+            setLegalStatus(root, "PDF se nepodařilo vygenerovat.");
+          }
+        });
+      };
+    }
+    if (sh) {
+      sh.onclick = (e) => {
+        e.preventDefault();
+        void guardProtectedAction("contract", async () => {
+          try {
+            const text = getText();
+            const result = await exportLegalDocumentPdfBlob(doc.title, text);
+            await sharePdfBlobNow(root, result.blob, result.fileName);
+          } catch (_) {
+            setLegalStatus(root, "PDF se nepodařilo vygenerovat.");
+          }
+        });
+      };
+    }
+  }
 
   function setLock(on) {
     try {
@@ -449,7 +775,7 @@ export function initIuLegalDocumentsOverlay(deps) {
     if (previewTimer) clearTimeout(previewTimer);
     previewTimer = window.setTimeout(() => {
       previewTimer = 0;
-      const ta = root.querySelector("[data-iu-legal-preview]");
+      const ta = root.querySelector("[data-iu-legal-preview-text]");
       if (!ta || !doc) return;
       try {
         const st = readFormState(root, doc);
@@ -486,22 +812,7 @@ export function initIuLegalDocumentsOverlay(deps) {
     root.addEventListener("input", () => schedulePreview(root, doc));
     root.addEventListener("change", () => schedulePreview(root, doc));
 
-    const copyBtn = root.querySelector("[data-iu-legal-copy]");
-    if (copyBtn) {
-      copyBtn.addEventListener("click", async () => {
-        const st = readFormState(root, doc);
-        const text = doc.buildText(st);
-        try {
-          await navigator.clipboard.writeText(text);
-          copyBtn.textContent = "Zkopírováno";
-          window.setTimeout(() => {
-            copyBtn.textContent = "Zkopírovat text";
-          }, 1600);
-        } catch (_) {
-          copyBtn.textContent = "Zkopírování selhalo";
-        }
-      });
-    }
+    wireDetailActions(root, doc);
 
     schedulePreview(root, doc);
     try {
@@ -535,6 +846,8 @@ export function initIuLegalDocumentsOverlay(deps) {
   }
 
   function closeSurface() {
+    closePreviewPortal();
+    clearReadyPdfUi(null);
     setVis(false);
     setLock(false);
     applyBodyOpen(false);
