@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-20T04:08:48.686086Z",
+  "ingestedAt": "2026-06-20T05:28:32.190746Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Spolkové země chtějí bránit soudy i média před extremisty",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/spolkove-zeme-chteji-branit-soudy-i-media-pred-extremisty-374764",
+      "dt": "2026-06-20T05:01:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "bránit",
+        "chtějí",
+        "extremisty",
+        "média",
+        "soudy",
+        "spolkové",
+        "země"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -723,32 +747,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ruské útoky na Ukrajinu si vyžádaly několik obětí, je mezi nimi i osmiletá dívka",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/ruske-utoky-na-ukrajinu-si-vyzadaly-nekolik-obeti-je-mezi-nimi-i-osmileta-divka-374732",
-      "dt": "2026-06-19T08:56:31Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "dívka",
-        "nimi",
-        "několik",
-        "obětí",
-        "osmiletá",
-        "ruské",
-        "ukrajinu",
-        "vyžádaly",
-        "útoky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -759,7 +757,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41015,
+      "bytes": 40873,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -796,7 +794,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-20T00:10:01Z",
+        "raw_feed_latest_publishedAt": "2026-06-20T05:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -813,6 +811,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Spolkové země chtějí bránit soudy i média před extremisty",
+            "publishedAt": "2026-06-20T05:01:00Z"
+          },
           {
             "title": "Axios: Witkoff míří do Švýcarska na jednání s Íránem, Kushner tam již je",
             "publishedAt": "2026-06-20T00:10:01Z"
@@ -840,10 +842,6 @@
           {
             "title": "O víkendu dopravu zkomplikuje MotoGP nebo festival Metronome",
             "publishedAt": "2026-06-19T17:54:40Z"
-          },
-          {
-            "title": "Trump se označil za všemocného, píše Axios",
-            "publishedAt": "2026-06-19T16:41:32Z"
           }
         ]
       }

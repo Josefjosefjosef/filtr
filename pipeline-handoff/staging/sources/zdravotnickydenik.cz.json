@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-06-20T04:08:48.686086Z",
+  "ingestedAt": "2026-06-20T05:28:32.190746Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Česko a dalších 15 států varují před výpadky léků. Ekologické ambice EU tvrdě narazily",
+      "url": "https://www.zdravotnickydenik.cz/2026/06/vypadky-leku-ekologie-eu/",
+      "dt": "2026-06-20T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ambice",
+        "dalších",
+        "ekologické",
+        "léků",
+        "narazily",
+        "států",
+        "tvrdě",
+        "varují",
+        "výpadky",
+        "česko"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -251,31 +278,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Neměňme chirurga uprostřed operace. Zdravotnická veřejnost se staví za Vojtěcha",
-      "url": "https://www.zdravotnickydenik.cz/2026/06/vymena-vojtecha-nejlepsi-ministr-nazory-expetru/",
-      "dt": "2026-06-18T14:33:50Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chirurga",
-        "neměňme",
-        "operace",
-        "staví",
-        "uprostřed",
-        "veřejnost",
-        "vojtěcha",
-        "zdravotnická"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -286,7 +288,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 109061,
+      "bytes": 101453,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -323,7 +325,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-06-19T14:47:11Z",
+        "raw_feed_latest_publishedAt": "2026-06-20T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -338,6 +340,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko a dalších 15 států varují před výpadky léků. Ekologické ambice EU tvrdě narazily",
+            "publishedAt": "2026-06-20T05:00:00Z"
+          },
           {
             "title": "Konec papírových zpráv u lékaře se blíží. Ministerstvo oznámilo přelomový rok",
             "publishedAt": "2026-06-19T14:47:11Z"
@@ -365,10 +371,6 @@
           {
             "title": "Místo zdraví budeme investovat do formulářů a razítek. Prouza ostře zkritizoval Vojtěchův plán",
             "publishedAt": "2026-06-19T07:00:00Z"
-          },
-          {
-            "title": "Přes 60 % Čechů s rakovinou plic nezačne léčbu včas. Systém nasazuje novou zbraň",
-            "publishedAt": "2026-06-19T06:00:00Z"
           }
         ]
       }
