@@ -517,13 +517,41 @@
   border: 1px solid rgba(15, 23, 42, 0.1);
   overflow: hidden;
 }
+.iu-legal-doc-paper__bar,
+.iu-legal-doc-paper__header,
+.iu-legal-doc-paper__rule,
+.iu-legal-doc-paper__footerBlock,
+[data-iu-legal-doc-visual-only="1"]{
+  user-select: none;
+  -webkit-user-select: none;
+}
 .iu-legal-doc-paper__bar{
   height: 5px;
   background: #16964E;
 }
-.iu-legal-doc-paper__brand{
+.iu-legal-doc-paper__header{
   margin: 0;
-  padding: 16px 28px 10px;
+  padding: 14px 28px 4px;
+}
+.iu-legal-doc-paper__topbarBrand{
+  display: inline-flex;
+  align-items: center;
+  font-size: 22px;
+  font-weight: 500;
+  color: #0B1F33;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+.iu-legal-doc-paper__topbarBrand .iuBrand__info,
+.iu-legal-doc-paper__topbarBrand .iuBrand__cz{
+  font-weight: 300;
+}
+.iu-legal-doc-paper__topbarBrand .iuBrand__uzel{
+  font-weight: 500;
+}
+.iu-legal-doc-paper__brand{
+  margin: 8px 0 0;
+  padding: 0;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.03em;

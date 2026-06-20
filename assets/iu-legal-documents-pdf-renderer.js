@@ -11,9 +11,14 @@ export const IU_LEGAL_DOC_FOOTER_LINES = [
   "www.infouzel.cz",
 ];
 
+/** Stejný zdroj jako desktop top bar (#topbarWrap .iuBrand). */
+export const IU_LEGAL_DOC_TOPBAR_BRAND_SELECTOR = "#topbarWrap .iuBrand";
+
 const PDF_FONT = "IULegalNoto";
 const PDF_FONT_FILE = "IULegalNoto-normal.ttf";
 const PDF_FOOTER_RESERVE_MM = 24;
+const PDF_HEADER_RESERVE_MM = 16;
+const PLACEHOLDER_ONLY_LINE_RE = /^[\.·…\s_,\-]+$/;
 
 function escHtml(s) {
   return String(s || "")
@@ -108,6 +113,88 @@ function hexToRgb(hex) {
   return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
 }
 
+function isPlaceholderOnlyLine(line) {
+  const s = String(line || "").trim();
+  if (!s) return true;
+  if (/^[_\s]+$/.test(s)) return false;
+  return PLACEHOLDER_ONLY_LINE_RE.test(s);
+}
+
+function isStructuralSectionHeading(line) {
+  const s = String(line || "").trim();
+  return s === "Místo a datum" || s === "Podpisy" || /^Závěrečná/i.test(s);
+}
+
+function shouldKeepVisualBlock(block) {
+  const lines = String(block || "").split("\n");
+  const nonEmpty = lines.filter((line) => String(line).trim());
+  if (!nonEmpty.length) return false;
+  if (nonEmpty.length === 1) {
+    const only = nonEmpty[0].trim();
+    if (/^\d+\.\s+/.test(only)) return false;
+    if (isPlaceholderOnlyLine(only)) return false;
+    return true;
+  }
+  const heading = nonEmpty[0];
+  if (isStructuralSectionHeading(heading)) return true;
+  const restNonEmpty = lines.slice(1).filter((line) => String(line).trim());
+  if (!restNonEmpty.length) return false;
+  if (restNonEmpty.every(isPlaceholderOnlyLine)) return false;
+  return true;
+}
+
+/** Vizuální výstup/PDF: vynechá celé sekce bez uživatelských dat (bez úpravy zdrojového textu). */
+export function filterEmptySectionsForVisualOutput(plainText) {
+  const text = String(plainText || "");
+  if (!text.trim()) return text;
+  return text
+    .split(/\n\n/)
+    .filter(shouldKeepVisualBlock)
+    .join("\n\n");
+}
+
+/** Logo z desktop top baru — stejná značka .iuBrand, bez nového assetu. */
+export function buildTopbarBrandHtml() {
+  try {
+    const el = document.querySelector(IU_LEGAL_DOC_TOPBAR_BRAND_SELECTOR);
+    if (el) {
+      const inner = String(el.innerHTML || "").trim();
+      if (inner) {
+        return (
+          '<span class="iuBrand iu-legal-doc-paper__topbarBrand" data-iu-legal-doc-logo="1" aria-hidden="true">' +
+          inner +
+          "</span>"
+        );
+      }
+    }
+  } catch (_) {}
+  return (
+    '<span class="iuBrand iu-legal-doc-paper__topbarBrand" data-iu-legal-doc-logo="1" aria-hidden="true">' +
+    '<span class="iuBrand__info">info</span><span class="iuBrand__uzel">Uzel</span><span class="iuBrand__cz">.cz</span>' +
+    "</span>"
+  );
+}
+
+function trimTrailingEmptyLines(lines) {
+  const out = lines.slice();
+  while (out.length > 0 && !String(out[out.length - 1]).trim()) {
+    out.pop();
+  }
+  return out;
+}
+
+function pageHasRealContent(chunk) {
+  return (chunk || []).some((line) => String(line).trim().length > 0);
+}
+
+function removeEmptyPdfPages(pages) {
+  const nonEmpty = (pages || []).filter(pageHasRealContent);
+  if (!nonEmpty.length) {
+    return pages && pages.length ? [pages[0]] : [[""]];
+  }
+  return nonEmpty;
+}
+
 export function buildLegalDocumentFooterHtml() {
   const lines = IU_LEGAL_DOC_FOOTER_LINES.map((line, idx) => {
     if (idx === IU_LEGAL_DOC_FOOTER_LINES.length - 1) {
@@ -125,16 +212,19 @@ export function buildLegalDocumentFooterHtml() {
   );
 }
 
-/** Ověření: obsah dokumentu v náhledu odpovídá zdrojovému textu (bez úprav). */
+/** Ověření: vizuální tělo náhledu odpovídá filtrovanému textu (bez obalu a bez úpravy právního významu). */
 export function verifyLegalDocumentPreviewContent(sourceText, previewHtml) {
   try {
     const host = document.createElement("div");
     host.innerHTML = previewHtml;
     const pre = host.querySelector("[data-iu-legal-doc-body]");
     const footer = host.querySelector("[data-iu-legal-doc-footer]");
+    const logo = host.querySelector("[data-iu-legal-doc-logo]");
     if (!pre || !footer) return false;
     if (pre.closest("[data-iu-legal-doc-footer]") || footer.contains(pre)) return false;
-    return String(pre.textContent || "") === String(sourceText || "");
+    if (logo && pre.contains(logo)) return false;
+    const expected = filterEmptySectionsForVisualOutput(sourceText);
+    return String(pre.textContent || "") === String(expected || "");
   } catch (_) {
     return false;
   }
@@ -206,18 +296,22 @@ export function validateLegalDocumentPdfPageLayout(chunk, isLast, pageH, topY, l
 
 /** @param {string} _documentTitle @param {string} plainText */
 export function buildLegalDocumentPreviewHtml(_documentTitle, plainText) {
-  const body = escHtml(plainText || "");
+  const visualText = filterEmptySectionsForVisualOutput(plainText);
+  const body = escHtml(visualText || "");
   return (
     '<article class="iu-legal-doc-paper" data-iu-legal-doc-paper="1">' +
-    '<div class="iu-legal-doc-paper__bar" aria-hidden="true"></div>' +
+    '<div class="iu-legal-doc-paper__bar" data-iu-legal-doc-visual-only="1" aria-hidden="true"></div>' +
+    '<header class="iu-legal-doc-paper__header" data-iu-legal-doc-visual-only="1">' +
+    buildTopbarBrandHtml() +
     '<p class="iu-legal-doc-paper__brand">' +
     escHtml(IU_LEGAL_DOC_BRAND_HEADER) +
     "</p>" +
-    '<div class="iu-legal-doc-paper__rule" aria-hidden="true"></div>' +
+    "</header>" +
+    '<div class="iu-legal-doc-paper__rule" data-iu-legal-doc-visual-only="1" aria-hidden="true"></div>' +
     '<pre class="iu-legal-doc-paper__body" data-iu-legal-doc-body>' +
     body +
     "</pre>" +
-    '<div class="iu-legal-doc-paper__rule iu-legal-doc-paper__rule--foot" aria-hidden="true"></div>' +
+    '<div class="iu-legal-doc-paper__rule iu-legal-doc-paper__rule--foot" data-iu-legal-doc-visual-only="1" aria-hidden="true"></div>' +
     buildLegalDocumentFooterHtml() +
     "</article>"
   );
@@ -233,23 +327,41 @@ function slugFileName(title) {
   return (base || "dokument") + ".pdf";
 }
 
-function drawPageHeader(doc, pageW, pageNum, totalPages) {
+function drawTopbarBrandInPdf(doc, marginX, baseY) {
+  const fontName = doc.getFont().fontName;
+  doc.setTextColor(11, 31, 51);
+  doc.setFontSize(10.5);
+  let x = marginX;
+  doc.setFont(fontName, "normal");
+  doc.text("info", x, baseY);
+  x += doc.getTextWidth("info");
+  doc.setFont(fontName, "bold");
+  doc.text("Uzel", x, baseY);
+  x += doc.getTextWidth("Uzel");
+  doc.setFont(fontName, "normal");
+  doc.text(".cz", x, baseY);
+}
+
+function drawPageHeader(doc, pageW, pageNum, totalPages, marginX) {
   const rgb = hexToRgb(IU_LEGAL_DOC_GREEN);
   doc.setFillColor(rgb[0], rgb[1], rgb[2]);
   doc.rect(0, 0, pageW, 1.6, "F");
 
+  drawTopbarBrandInPdf(doc, marginX, 6.2);
+
   doc.setTextColor(rgb[0], rgb[1], rgb[2]);
-  doc.setFontSize(8);
-  doc.text(IU_LEGAL_DOC_BRAND_HEADER, 16, 7);
+  doc.setFontSize(7);
+  doc.setFont(doc.getFont().fontName, "normal");
+  doc.text(IU_LEGAL_DOC_BRAND_HEADER, marginX, 10.2);
 
   doc.setDrawColor(210, 218, 226);
   doc.setLineWidth(0.2);
-  doc.line(16, 9.5, pageW - 16, 9.5);
+  doc.line(marginX, 12.2, pageW - marginX, 12.2);
 
   if (totalPages > 1) {
     doc.setFontSize(7);
     doc.setTextColor(148, 163, 184);
-    doc.text(String(pageNum) + " / " + String(totalPages), pageW - 16, 7, { align: "right" });
+    doc.text(String(pageNum) + " / " + String(totalPages), pageW - marginX, 6.2, { align: "right" });
   }
 }
 
@@ -279,6 +391,7 @@ function drawDocumentFooterBlock(doc, pageW, pageH, marginX) {
 /** @param {string} documentTitle @param {string} plainText */
 export async function exportLegalDocumentPdfBlob(documentTitle, plainText) {
   const sourceText = String(plainText || "");
+  const visualText = filterEmptySectionsForVisualOutput(sourceText);
   const jsPDF = await loadJsPDF();
   const b64 = await loadFontBase64();
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
@@ -287,18 +400,17 @@ export async function exportLegalDocumentPdfBlob(documentTitle, plainText) {
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
   const marginX = 16;
-  const topY = 14;
+  const topY = PDF_HEADER_RESERVE_MM;
   const normalBottom = pageH - 10;
   const lastPageBottom = pageH - PDF_FOOTER_RESERVE_MM;
   const maxW = pageW - marginX * 2;
-  const allLines = plainTextToLayoutLines(doc, sourceText, maxW);
+  const allLines = trimTrailingEmptyLines(plainTextToLayoutLines(doc, visualText, maxW));
 
   const lineH = 4.8;
   const linesPerNormal = Math.max(1, Math.floor((normalBottom - topY) / lineH));
   const linesPerLast = Math.max(1, Math.floor((lastPageBottom - topY) / lineH));
-  const pages = paginateDocumentLines(allLines, linesPerNormal, linesPerLast);
+  const pages = removeEmptyPdfPages(paginateDocumentLines(allLines, linesPerNormal, linesPerLast));
   let layoutValid = true;
-  let layoutIssue = "";
 
   pages.forEach((chunk, idx) => {
     if (idx > 0) doc.addPage();
@@ -314,11 +426,11 @@ export async function exportLegalDocumentPdfBlob(documentTitle, plainText) {
     );
     if (!layoutCheck.valid) {
       layoutValid = false;
-      layoutIssue = layoutCheck.reason || "layout_invalid";
-      throw new Error(layoutIssue);
+      throw new Error(layoutCheck.reason || "layout_invalid");
     }
-    drawPageHeader(doc, pageW, idx + 1, pages.length);
+    drawPageHeader(doc, pageW, idx + 1, pages.length, marginX);
     doc.setFontSize(10);
+    doc.setFont(doc.getFont().fontName, "normal");
     doc.setTextColor(15, 23, 42);
     const bottomLimit = isLast ? lastPageBottom : normalBottom;
     let y = topY;
@@ -336,10 +448,12 @@ export async function exportLegalDocumentPdfBlob(documentTitle, plainText) {
     blob,
     fileName: slugFileName(documentTitle),
     sourceText,
-    contentIdentical: true,
+    visualText,
+    contentIdentical: sourceText === plainText,
     pageCount: pages.length,
     layoutValid,
     layoutLines: allLines.length,
     fontMode,
+    lastPageHasRealContent: pages.length ? pageHasRealContent(pages[pages.length - 1]) : false,
   };
 }
