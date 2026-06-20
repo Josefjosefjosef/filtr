@@ -1,23 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-20T01:34:47.050059Z",
+  "ingestedAt": "2026-06-20T02:55:58.755698Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Další trefa, Brazilci řádí",
+      "title": "Brazilci si zastříleli i zatančili, ale ztratili oporu. MS má první vyřazený tým",
       "url": "https://www.sport.cz/clanek/fotbal-ms-po-bide-vyhlizeji-napravu-brazilci-si-chteji-zastrilet-proti-outsiderum-z-haiti-5483485",
       "dt": "2026-06-19T15:33:42Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "ale",
         "brazilci",
-        "další",
+        "oporu",
+        "první",
+        "tým",
+        "vyřazený",
+        "zastříleli",
+        "zatančili",
+        "ztratili"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "FOTBAL ONLINE: Turecko musí zabrat. V boji o naději na postup vyzve Paraguay",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-turecko-musi-zabrat-v-boji-o-nadeji-na-postup-vyzve-paraguay-5484198",
+      "dt": "2026-06-19T19:00:07Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "boji",
         "fotbal",
+        "musí",
+        "naději",
         "online",
-        "trefa",
-        "řádí"
+        "paraguay",
+        "postup",
+        "turecko",
+        "vyzve",
+        "zabrat"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -225,31 +255,6 @@
         "vadlejch",
         "šestá",
         "štefela"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Turecko musí zabrat. V boji o naději na postup vyzve Paraguay",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-turecko-musi-zabrat-v-boji-o-nadeji-na-postup-vyzve-paraguay-5484198",
-      "dt": "2026-06-19T19:00:07Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "boji",
-        "musí",
-        "naději",
-        "paraguay",
-        "postup",
-        "turecko",
-        "vyzve",
-        "zabrat"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -790,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42682,
+      "bytes": 42865,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -844,8 +849,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Další trefa, Brazilci řádí",
+            "title": "Brazilci si zastříleli i zatančili, ale ztratili oporu. MS má první vyřazený tým",
             "publishedAt": "2026-06-19T15:33:42Z"
+          },
+          {
+            "title": "FOTBAL ONLINE: Turecko musí zabrat. V boji o naději na postup vyzve Paraguay",
+            "publishedAt": "2026-06-19T19:00:07Z"
           },
           {
             "title": "Nejrychlejší gól na MS zařídil marocký triumf. Bezzubí Skotové zůstali bez střely na bránu",
@@ -870,10 +879,6 @@
           {
             "title": "Komplikace pro Španělsko. Ještě není správný čas na to, abych nastoupil, tvrdí opora",
             "publishedAt": "2026-06-19T19:59:29Z"
-          },
-          {
-            "title": "Ošklivé scény, stadion utichl. Kanadský záložník má po ostrém faulu nadvakrát zlomenou nohu",
-            "publishedAt": "2026-06-19T00:55:27Z"
           }
         ]
       }

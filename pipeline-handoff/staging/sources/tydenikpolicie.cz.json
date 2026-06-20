@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-06-20T01:34:47.050059Z",
+  "ingestedAt": "2026-06-20T02:55:58.755698Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Neznámý řidič nedal ve Velké Polomi přednost motorkáři, který následně havaroval. Pátrají po něm policisté",
+      "url": "https://tydenikpolicie.cz/neznamy-ridic-nedal-ve-velke-polomi-prednost-motorkari-ktery-nasledne-havaroval-patraji-po-nem-policiste/",
+      "dt": "2026-06-20T02:02:10Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "havaroval",
+        "motorkáři",
+        "nedal",
+        "neznámý",
+        "následně",
+        "něm",
+        "policisté",
+        "polomi",
+        "pátrají",
+        "přednost",
+        "velké",
+        "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,31 +269,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Upravená počítačová hra posloužila jako zdroj miliónových příjmů",
-      "url": "https://tydenikpolicie.cz/upravena-pocitacova-hra-poslouzila-jako-zdroj-milionovych-prijmu/",
-      "dt": "2026-06-19T09:21:23Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "hra",
-        "jako",
-        "miliónových",
-        "posloužila",
-        "počítačová",
-        "příjmů",
-        "upravená",
-        "zdroj"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16557,
+      "bytes": 16622,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-06-19T22:02:38Z",
+        "raw_feed_latest_publishedAt": "2026-06-20T02:02:10Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -327,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neznámý řidič nedal ve Velké Polomi přednost motorkáři, který následně havaroval. Pátrají po něm policisté",
+            "publishedAt": "2026-06-20T02:02:10Z"
+          },
           {
             "title": "Policisté v době osobního volna zadrželi muže, který usedl za volant i přes zákaz řízení",
             "publishedAt": "2026-06-19T22:02:38Z"
@@ -354,10 +362,6 @@
           {
             "title": "Myslel si, že peníze posílá kamarádovi. Mezitím je z bankomatu v Praze vybral neznámý muž",
             "publishedAt": "2026-06-19T12:13:56Z"
-          },
-          {
-            "title": "Policisté apelují na řidiče, aby se věnovali řízení. Zveřejnili záběry z vážné nehody na D1",
-            "publishedAt": "2026-06-19T09:51:01Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-20T01:34:47.050059Z",
+  "ingestedAt": "2026-06-20T02:55:58.755698Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nesnesitelné horko vyhnalo Indy z domovů. Stovky jich spí na plážích",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/nesnesitelne-horko-vyhnalo-indy-z-domovu-stovky-jich-spi-na-plazich.A260619_211234_zahranicni_varg",
+      "dt": "2026-06-20T02:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "domovů",
+        "horko",
+        "indy",
+        "jich",
+        "nesnesitelné",
+        "plážích",
+        "spí",
+        "stovky",
+        "vyhnalo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -755,31 +781,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Evropa je strana konfliktu, která má zájem na porážce Ruska, zní z Moskvy",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-moskva-ukrajina-valka-eu-evropa.A260619_151053_zahranicni_kurl",
-      "dt": "2026-06-19T13:33:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "evropa",
-        "konfliktu",
-        "moskvy",
-        "porážce",
-        "ruska",
-        "strana",
-        "zní",
-        "zájem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49243,
+      "bytes": 49085,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-20T00:28:57Z",
+        "raw_feed_latest_publishedAt": "2026-06-20T02:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -844,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nesnesitelné horko vyhnalo Indy z domovů. Stovky jich spí na plážích",
+            "publishedAt": "2026-06-20T02:00:00Z"
+          },
           {
             "title": "Witkoff míří do Švýcarska na jednání s Íránem, Kushner tam již je",
             "publishedAt": "2026-06-20T00:28:57Z"
@@ -871,10 +876,6 @@
           {
             "title": "Nawrocki odebral Zelenskému Řád bílé orlice kvůli sporu o nacionalisty",
             "publishedAt": "2026-06-19T19:41:37Z"
-          },
-          {
-            "title": "V Bavorsku havarovala česká paraglidistka, uvízla na stromě",
-            "publishedAt": "2026-06-19T18:16:00Z"
           }
         ]
       }
