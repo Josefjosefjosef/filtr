@@ -90,7 +90,7 @@
     box-shadow: 0 24px 56px rgba(15, 23, 42, 0.22);
     box-sizing: border-box;
     overflow: hidden;
-    border: 1px solid rgba(136, 19, 55, 0.12);
+    border: 1px solid rgba(22, 150, 78, 0.12);
     background: #fafafa;
   }
   #iuInvoicePanel.iu-invoice-overlay-panel:not([hidden]) .iu-invoice-overlay-header{
@@ -169,7 +169,7 @@
     overflow: hidden;
     pointer-events: auto;
     background: #fafafa;
-    border: 1px solid rgba(136, 19, 55, 0.12);
+    border: 1px solid rgba(22, 150, 78, 0.12);
   }
   body.iu-invoice-desktop-overlay-open #iuInvoicePanel.iu-invoice-overlay-panel.iu-invoice-fullpage .iu-invoice-overlay-inner{
     flex: 1 1 auto;
@@ -388,13 +388,13 @@
   background: #f8fafc;
 }
 #iuInvoicePanel .iu-inv-btn--primary{
-  background: #881337;
-  border-color: #881337;
+  background: #16964E;
+  border-color: #16964E;
   color: #fff;
   font-weight: 650;
 }
 #iuInvoicePanel .iu-inv-btn--primary:hover{
-  background: #9f1239;
+  background: #128042;
 }
 #iuInvoicePanel .iu-inv-summary{
   font-size: 15px;
@@ -405,11 +405,11 @@
   margin-top: 10px;
   padding: 12px 14px;
   border-radius: 12px;
-  background: rgba(136, 19, 55, 0.08);
-  border: 1px solid rgba(136, 19, 55, 0.2);
+  background: rgba(22, 150, 78, 0.08);
+  border: 1px solid rgba(22, 150, 78, 0.2);
   font-size: 17px;
   font-weight: 800;
-  color: #881337;
+  color: #16964E;
 }
 /* Akční tlačítka: vždy tok dokumentu pod souhrnem — žádný sticky/float přes obsah */
 #iuInvoicePanel .iu-invoice-actions-static{
@@ -438,8 +438,8 @@
   font-size: 12px;
   line-height: 1.5;
   color: #475569;
-  background: rgba(136, 19, 55, 0.06);
-  border: 1px solid rgba(136, 19, 55, 0.16);
+  background: rgba(22, 150, 78, 0.06);
+  border: 1px solid rgba(22, 150, 78, 0.16);
   border-radius: 10px;
 }
 
@@ -623,14 +623,14 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
 :is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-head{
   padding: 12px 14px;
   border-radius: 10px;
-  background: linear-gradient(90deg, rgba(136, 19, 55, 0.06) 0%, #fff 40%);
+  background: linear-gradient(90deg, rgba(22, 150, 78, 0.06) 0%, #fff 40%);
   margin-bottom: 16px;
 }
 :is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-created{
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: #881337;
+  color: #16964E;
   margin-bottom: 4px;
 }
 :is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-title{
@@ -659,7 +659,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   font-weight: 750;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #881337;
+  color: #16964E;
   margin-bottom: 6px;
 }
 :is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-pre{
@@ -708,7 +708,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   text-align: left;
 }
 :is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-table th{
-  background: rgba(136, 19, 55, 0.07);
+  background: rgba(22, 150, 78, 0.07);
   font-weight: 700;
 }
 :is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-num{
@@ -731,7 +731,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   margin-top: 10px;
   font-size: 18px;
   font-weight: 800;
-  color: #881337;
+  color: #16964E;
 }
 :is(#iuInvoicePanel, #iuInvoicePreviewPortal, .iu-invoice-preview-portal) .iu-inv-pr-foot{
   margin-top: 16px;
@@ -776,14 +776,14 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
 .iu-pdf-render-mode .iu-inv-pr-head{
   padding: 12px 14px;
   border-radius: 10px;
-  background: linear-gradient(90deg, rgba(136, 19, 55, 0.06) 0%, #fff 40%);
+  background: linear-gradient(90deg, rgba(22, 150, 78, 0.06) 0%, #fff 40%);
   margin-bottom: 16px;
 }
 .iu-pdf-render-mode .iu-inv-pr-created{
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: #881337;
+  color: #16964E;
   margin-bottom: 4px;
 }
 .iu-pdf-render-mode .iu-inv-pr-title{
@@ -812,7 +812,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   font-weight: 750;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #881337;
+  color: #16964E;
   margin-bottom: 6px;
 }
 .iu-pdf-render-mode .iu-inv-pr-pre{
@@ -861,7 +861,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   text-align: left;
 }
 .iu-pdf-render-mode .iu-inv-pr-table th{
-  background: rgba(136, 19, 55, 0.07);
+  background: rgba(22, 150, 78, 0.07);
   font-weight: 700;
 }
 .iu-pdf-render-mode .iu-inv-pr-num{
@@ -884,7 +884,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   margin-top: 10px;
   font-size: 18px;
   font-weight: 800;
-  color: #881337;
+  color: #16964E;
 }
 .iu-pdf-render-mode .iu-inv-pr-foot{
   margin-top: 16px;
@@ -1039,9 +1039,9 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   font-size: 26px;
   font-weight: 700;
   line-height: 1.2;
-  color: #7a1f2b;
+  color: #117A3D;
   text-align: left;
-  background: #f3e8ea;
+  background: #e8f5ee;
   padding: 10px 12px;
   border-radius: 4px;
 }
@@ -1078,7 +1078,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   font-weight: 750;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #881337;
+  color: #16964E;
   margin-bottom: 8px;
 }
 [data-iu-invoice-print-host] .iu-invoice-print-section-label--bold{
@@ -1177,7 +1177,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   word-break: break-word;
 }
 [data-iu-invoice-print-host] .iu-invoice-print-table th{
-  background: rgba(136, 19, 55, 0.08);
+  background: rgba(22, 150, 78, 0.08);
   font-weight: 700;
 }
 [data-iu-invoice-print-host] .iu-invoice-print-items thead{
@@ -1283,7 +1283,7 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   margin-bottom: 20px;
   font-size: 1.22em;
   font-weight: 700;
-  color: #881337;
+  color: #16964E;
   line-height: 1.35;
 }
 [data-iu-invoice-print-host] .iu-invoice-print-total-due-label{
