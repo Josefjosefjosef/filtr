@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.ceskatelevize.cz",
-  "ingestedAt": "2026-06-20T06:36:40.786580Z",
+  "ingestedAt": "2026-06-20T07:56:01.633814Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Chci si užít tento nejkrásnější okamžik kariéry, řekl Saibárí po druhém gólu na MS",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/chci-si-uzit-tento-nejkrasnejsi-okamzik-kariery-rekl-saibari-po-druhem-golu-na-ms-157503",
+      "dt": "2026-06-20T07:39:54Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "chci",
+        "druhém",
+        "gólu",
+        "kariéry",
+        "nejkrásnější",
+        "okamžik",
+        "saibárí",
+        "tento",
+        "užít",
+        "řekl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "sport.ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -763,35 +790,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "sport.ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Mexiko má jistý postup z „české“ skupiny. Švýcaři dali čtyři góly, Kanada dokonce šest",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/ms-ve-fotbale-svycarsko-bosna-a-hercegovina-00-157469",
-      "dt": "2026-06-18T19:00:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dali",
-        "dokonce",
-        "góly",
-        "jistý",
-        "kanada",
-        "mexiko",
-        "postup",
-        "skupiny",
-        "české",
-        "čtyři",
-        "šest",
-        "švýcaři"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "sport.ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40150,
+      "bytes": 40323,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-19T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-20T07:39:54Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -854,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chci si užít tento nejkrásnější okamžik kariéry, řekl Saibárí po druhém gólu na MS",
+            "publishedAt": "2026-06-20T07:39:54Z"
+          },
           {
             "title": "Soutěž k MS ve fotbale – 20. června",
             "publishedAt": "2026-06-19T22:00:00Z"
@@ -881,10 +883,6 @@
           {
             "title": "Narváez zvítězil ve třetí etapě Kolem Švýcarska, Vacek drží průběžné čtvrté místo",
             "publishedAt": "2026-06-19T16:46:36Z"
-          },
-          {
-            "title": "Kopcovitou L’Etape Czech Republic pojede Sagan, představí se i Jílek nebo Čech",
-            "publishedAt": "2026-06-19T16:30:00Z"
           }
         ]
       }
