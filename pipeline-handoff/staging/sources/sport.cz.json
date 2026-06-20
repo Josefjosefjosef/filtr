@@ -1,26 +1,48 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-20T20:29:03.203129Z",
+  "ingestedAt": "2026-06-20T21:51:57.858153Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Pískot z tribun. Němci udeřili, ale gól neplatí",
+      "title": "FOTBAL ONLINE: Úleva pro favorita! Němci srovnali, duel vrcholí",
       "url": "https://www.sport.cz/clanek/fotbal-ms-nemecko-vyzve-pobrezi-slonoviny-hraje-se-o-postup-5484730",
       "dt": "2026-06-20T12:00:26Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "ale",
+        "duel",
+        "favorita",
         "fotbal",
-        "gól",
-        "neplatí",
         "němci",
         "online",
-        "pískot",
-        "tribun",
-        "udeřili"
+        "srovnali",
+        "vrcholí",
+        "úleva"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Z břídila géniem! Kouč Nizozemska umlčel kritiky",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-z-bridila-geniem-kouc-nizozemska-umlcel-kritiky-5485107",
+      "dt": "2026-06-20T20:47:59Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "břídila",
+        "géniem",
+        "kouč",
+        "kritiky",
+        "nizozemska",
+        "umlčel"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -755,28 +777,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Mannsverk se stal kmenovým hráčem Sparty",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-mannsverk-se-stal-kmenovym-hracem-sparty-5484795",
-      "dt": "2026-06-20T12:37:53Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hráčem",
-        "kmenovým",
-        "mannsverk",
-        "sparty",
-        "stal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43471,
+      "bytes": 43510,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-20T20:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-20T20:47:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -840,8 +840,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Pískot z tribun. Němci udeřili, ale gól neplatí",
+            "title": "FOTBAL ONLINE: Úleva pro favorita! Němci srovnali, duel vrcholí",
             "publishedAt": "2026-06-20T12:00:26Z"
+          },
+          {
+            "title": "Z břídila géniem! Kouč Nizozemska umlčel kritiky",
+            "publishedAt": "2026-06-20T20:47:59Z"
           },
           {
             "title": "Čeští hokejbalisté zahájili domácí MS výhrou nad Finskem",
@@ -866,10 +870,6 @@
           {
             "title": "MS 2026: Program fotbalového šampionátu v USA, Kanadě a Mexiku",
             "publishedAt": "2026-06-15T04:31:00Z"
-          },
-          {
-            "title": "Skandál na MotoGP v Brně. Lídr šampionátu napadl traťového komisaře a byl suspendován ze závodu",
-            "publishedAt": "2026-06-20T18:50:27Z"
           }
         ]
       }

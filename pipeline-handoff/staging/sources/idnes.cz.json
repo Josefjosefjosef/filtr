@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-20T20:29:03.203129Z",
+  "ingestedAt": "2026-06-20T21:51:57.858153Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ve Švýcarsku pokračují jednání o dohodě USA a Íránu",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/bern-svycarsko-jednani-diploamcie-valka-iran-usa-izrael.A260620_135240_zahranicni_berr",
+      "dt": "2026-06-20T21:39:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "dohodě",
+        "jednání",
+        "pokračují",
+        "usa",
+        "íránu",
+        "švýcarsku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pod známým klubem v centru Prahy vypukl požár, oheň vyhnal z budovy stovku lidí",
+      "url": "https://www.idnes.cz/praha/zpravy/pozar-vaclavske-namesti-klub-duplex-kancelare-hasici-evakuace.A260620_230925_praha-zpravy_idh",
+      "dt": "2026-06-20T21:09:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "budovy",
+        "centru",
+        "klubem",
+        "lidí",
+        "oheň",
+        "požár",
+        "prahy",
+        "stovku",
+        "vyhnal",
+        "vypukl",
+        "známým"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -537,29 +588,6 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Ve Švýcarsku pokračují jednání o dohodě USA a Íránu",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/bern-svycarsko-jednani-diploamcie-valka-iran-usa-izrael.A260620_135240_zahranicni_berr",
-      "dt": "2026-06-20T15:30:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "dohodě",
-        "jednání",
-        "pokračují",
-        "usa",
-        "íránu",
-        "švýcarsku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
       "title": "OBRAZEM: Berlíňané protestují proti stoletému zákazu koupání ve Sprévě",
       "url": "https://www.idnes.cz/zpravy/zahranicni/berlin-spreva-kanal-zakaz-koupani-protest-fluss-bad-berlin.A260620_145804_zahranicni_berr/foto",
       "dt": "2026-06-20T15:07:00Z",
@@ -769,32 +797,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Mexiku vyrůstá konkurence. Agáve otevírá Indii cestu k novému byznysu",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/agave-indie-prijmy-farmari-zemedelci-sklizen-mexiko.A260616_161957_eko-zahranicni_jla",
-      "dt": "2026-06-20T13:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "agáve",
-        "byznysu",
-        "cestu",
-        "indii",
-        "konkurence",
-        "mexiku",
-        "novému",
-        "otevírá",
-        "vyrůstá"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 51687,
+      "bytes": 51387,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,12 +844,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-20T19:41:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-20T21:39:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "zpravy": 25,
           "other": 3,
-          "finance": 3
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -859,6 +861,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ve Švýcarsku pokračují jednání o dohodě USA a Íránu",
+            "publishedAt": "2026-06-20T21:39:00Z"
+          },
+          {
+            "title": "Pod známým klubem v centru Prahy vypukl požár, oheň vyhnal z budovy stovku lidí",
+            "publishedAt": "2026-06-20T21:09:00Z"
+          },
           {
             "title": "Nawrocki odebral Zelenskému Řád bílé orlice kvůli sporu o nacionalisty",
             "publishedAt": "2026-06-20T19:41:00Z"
@@ -882,14 +892,6 @@
           {
             "title": "Sebevrahů na kolejích neubývá, stát zavádí speciální reflexní tabule. Mají je odradit",
             "publishedAt": "2026-06-20T18:00:00Z"
-          },
-          {
-            "title": "Na letišti ve Frýdlantu nad Ostravicí zemřel muž, srazil jej letoun na tahání větroňů",
-            "publishedAt": "2026-06-20T17:57:00Z"
-          },
-          {
-            "title": "Horký den vystřídaly nebezpečné bouřky. Po tropické noci hrozí kroupy i lijáky",
-            "publishedAt": "2026-06-20T17:42:00Z"
           }
         ]
       }
