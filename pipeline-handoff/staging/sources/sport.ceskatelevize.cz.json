@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.ceskatelevize.cz",
-  "ingestedAt": "2026-06-20T21:51:57.858153Z",
+  "ingestedAt": "2026-06-20T23:14:29.664132Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Soutěž k MS ve fotbale – 21. června",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-21-cervna-157481",
+      "dt": "2026-06-20T22:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "fotbale",
+        "soutěž",
+        "června"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "sport.ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -110,7 +130,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Německo – Pobřeží slonoviny 1:1. Švédové marně bránili nápadité akce Nizozemců",
+      "title": "Němce spasil střídající Undav, Švédové marně bránili nápadité akce Nizozemců",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/ms-ve-fotbale-nizozemsko-svedsko-157514",
       "dt": "2026-06-20T16:15:00Z",
       "media_raw": "ČT sport",
@@ -121,9 +141,10 @@
         "marně",
         "nizozemců",
         "nápadité",
-        "německo",
-        "pobřeží",
-        "slonoviny",
+        "němce",
+        "spasil",
+        "střídající",
+        "undav",
         "švédové"
       ],
       "feedCategory": "sport",
@@ -737,34 +758,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "sport.ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Češky hrály s Japonkami vyrovnaně, přesto jim v Lize národů podlehly ve třech setech",
-      "url": "https://sport.ceskatelevize.cz/clanek/volejbal/liga-narodu-volejbalistek-japonsko-cesko-157491",
-      "dt": "2026-06-19T12:05:06Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "hrály",
-        "japonkami",
-        "jim",
-        "lize",
-        "národů",
-        "podlehly",
-        "přesto",
-        "setech",
-        "třech",
-        "vyrovnaně",
-        "češky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "sport.ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -775,7 +768,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40275,
+      "bytes": 39925,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -812,7 +805,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-20T21:40:23Z",
+        "raw_feed_latest_publishedAt": "2026-06-20T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -827,6 +820,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soutěž k MS ve fotbale – 21. června",
+            "publishedAt": "2026-06-20T22:00:00Z"
+          },
           {
             "title": "Koeman: Byl na nás velký tlak, ale poradili jsme si",
             "publishedAt": "2026-06-20T21:40:23Z"
@@ -844,7 +841,7 @@
             "publishedAt": "2026-06-20T16:21:34Z"
           },
           {
-            "title": "Německo – Pobřeží slonoviny 1:1. Švédové marně bránili nápadité akce Nizozemců",
+            "title": "Němce spasil střídající Undav, Švédové marně bránili nápadité akce Nizozemců",
             "publishedAt": "2026-06-20T16:15:00Z"
           },
           {
@@ -854,10 +851,6 @@
           {
             "title": "Sparta dál vyztužuje kádr, na Letnou se plnohodnotně přesouvá Mannsverk",
             "publishedAt": "2026-06-20T13:00:12Z"
-          },
-          {
-            "title": "Salačovi úspěch přeji, ale musí to zvládnout v hlavě, říká Kornfeil",
-            "publishedAt": "2026-06-20T12:30:00Z"
           }
         ]
       }
