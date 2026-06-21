@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-06-21T18:11:22.809416Z",
+  "ingestedAt": "2026-06-21T19:53:31.543628Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Při letecké nehodě zemřel spoluzakladatel Ubisoftu Claude Guillemot - INDIAN",
+      "url": "https://indian-tv.cz/clanek/pri-letecke-nehode-zemrel-spoluzakladatel-ubisoftu-jnuxjo",
+      "dt": "2026-06-21T18:26:29Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "claude",
+        "guillemot",
+        "indian",
+        "letecké",
+        "nehodě",
+        "při",
+        "spoluzakladatel",
+        "ubisoftu",
+        "zemřel"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1068,30 +1094,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "American Truck Simulator dostal velkou aktualizaci 1.60 - INDIAN",
-      "url": "https://indian-tv.cz/clanek/american-truck-simulator-dostal-velkou-aktualizaci-1-60-cwpfag",
-      "dt": "2026-06-17T05:53:39Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "aktualizaci",
-        "american",
-        "dostal",
-        "indian",
-        "simulator",
-        "truck",
-        "velkou"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1102,7 +1104,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 231128,
+      "bytes": 227401,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1139,7 +1141,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-21T09:11:41Z",
+        "raw_feed_latest_publishedAt": "2026-06-21T18:26:29Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1154,6 +1156,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Při letecké nehodě zemřel spoluzakladatel Ubisoftu Claude Guillemot - INDIAN",
+            "publishedAt": "2026-06-21T18:26:29Z"
+          },
           {
             "title": "Grinch bude v dobrodružné hře zachraňovat Vánoce i letos - INDIAN",
             "publishedAt": "2026-06-21T09:11:41Z"
@@ -1181,10 +1187,6 @@
           {
             "title": "Zemřel Bobby Prince, autor legendární hudby z Doomu - INDIAN",
             "publishedAt": "2026-06-19T14:31:13Z"
-          },
-          {
-            "title": "Epic Games Store čeká velká proměna. Nový launcher má být až pětkrát rychlejší a přidá sociální funkce - INDIAN",
-            "publishedAt": "2026-06-19T13:00:00Z"
           }
         ]
       }
