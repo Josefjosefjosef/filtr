@@ -1700,6 +1700,7 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=20" />
     <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=3" />
+    <link rel="stylesheet" href="/assets/iu-home-premium-install-box.css?v=1" />
     <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=pr5907-desktop-v2-20260618" />
     <link rel="stylesheet" href="/assets/iu-desktop-parcel-watch-overlay.css?v=pr5907-desktop-parcel-premium-20260619" />
     <link rel="preload" as="image" href="/assets/partners/partner-resistance-security-right-rail-v1.png" media="(min-width: 1025px)" />
@@ -2503,6 +2504,31 @@ font-src 'self' data:;
                     <div id="iuMobileGatePanelTools" class="iu-mobileGatePanel" role="tabpanel" aria-labelledby="iuMobileGateTabTools" hidden></div>
                   </div>
                 </div>
+                <!-- P0 Mobile/tablet: premium homepage install box — opens iCentrum › PWA (no new overlay). -->
+                <button type="button" id="iuHomePremiumInstallBox" class="iuHomePremiumInstallBox" data-iu-home-premium-install-box="1" aria-label="Přidejte si InfoUzel.cz na plochu">
+                  <span class="iuHomePremiumInstallBox__inner">
+                    <span class="iuHomePremiumInstallBox__icons" aria-hidden="true">
+                      <span class="iuHomePremiumInstallBox__icon">
+                        <svg class="iuHomePremiumInstallBox__iconSvg" viewBox="0 0 24 24" focusable="false" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 5.5h3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="18.5" r="1" fill="currentColor"/></svg>
+                      </span>
+                      <span class="iuHomePremiumInstallBox__arrow" aria-hidden="true">›</span>
+                      <span class="iuHomePremiumInstallBox__icon">
+                        <svg class="iuHomePremiumInstallBox__iconSvg" viewBox="0 0 24 24" focusable="false" aria-hidden="true"><rect x="3.5" y="3.5" width="7.5" height="7.5" rx="1.75" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="3.5" width="7.5" height="7.5" rx="1.75" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="13" width="7.5" height="7.5" rx="1.75" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="13" width="7.5" height="7.5" rx="1.75" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+                      </span>
+                      <span class="iuHomePremiumInstallBox__arrow" aria-hidden="true">›</span>
+                      <span class="iuHomePremiumInstallBox__icon iuHomePremiumInstallBox__icon--logo">
+                        <img class="iuHomePremiumInstallBox__logoImg" src="/projects/icons/icon-192.png" alt="" width="30" height="30" decoding="async" />
+                      </span>
+                    </span>
+                    <span class="iuHomePremiumInstallBox__text">
+                      <span class="iuHomePremiumInstallBox__title">📱 Přidejte si InfoUzel.cz na plochu</span>
+                      <span class="iuHomePremiumInstallBox__subtitle">Otevřete InfoUzel.cz jedním klepnutím stejně jako běžnou aplikaci.</span>
+                    </span>
+                    <span class="iuHomePremiumInstallBox__chevron" aria-hidden="true">
+                      <svg class="iuHomePremiumInstallBox__chevronSvg" viewBox="0 0 20 20" focusable="false"><path d="M7.5 4.5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                  </span>
+                </button>
                 <!-- P0 Mobile/tablet: fixed bottom nav (labels + icons); desktop hidden in assets/app.css (≥901px). -->
                 <nav id="iuMobileBottomNav" class="iu-mobileBottomNav" aria-label="Hlavní navigace">
                   <button type="button" class="iu-mobileBottomNav__btn" data-iu-bottom-nav="home" aria-label="Domů">
@@ -5477,6 +5503,7 @@ font-src 'self' data:;
     </script>
     <script defer src="/assets/iu-consent.js?v=consent-v1-20260609"></script>
     <script defer src="/assets/iu-info-center.js?v=info-center-v2-7-lazy-mount-20260611"></script>
+    <script defer src="/assets/iu-home-premium-install-box.js?v=1"></script>
     <script defer src="/assets/iu-consent-layer.js?v=consent-layer-v1-20260609"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=6"></script>
     <script>
