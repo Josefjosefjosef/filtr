@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.ceskatelevize.cz",
-  "ingestedAt": "2026-06-21T14:14:30.409376Z",
+  "ingestedAt": "2026-06-21T15:34:15.170987Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Bouzková vyhrála turnaj v Nottinghamu",
+      "url": "https://sport.ceskatelevize.cz/clanek/tenis/bouzkova-vyhrala-turnaj-v-nottinghamu-157534",
+      "dt": "2026-06-21T14:15:34Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "bouzková",
+        "nottinghamu",
+        "turnaj",
+        "vyhrála"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "sport.ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -733,28 +754,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "sport.ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Salač odstartuje v Brně z první řady",
-      "url": "https://sport.ceskatelevize.cz/clanek/motorsport/salacovi-vysel-i-treti-trenink-vyhral-ho-v-tratovem-rekordu-157505",
-      "dt": "2026-06-20T08:33:13Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "brně",
-        "odstartuje",
-        "první",
-        "salač",
-        "řady"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "sport.ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -765,7 +764,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40047,
+      "bytes": 39525,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -802,7 +801,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-21T13:13:50Z",
+        "raw_feed_latest_publishedAt": "2026-06-21T14:15:34Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -817,6 +816,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bouzková vyhrála turnaj v Nottinghamu",
+            "publishedAt": "2026-06-21T14:15:34Z"
+          },
           {
             "title": "Salač: Nejlepší den v životě. Je to jako sen, ze kterého se nechci vzbudit",
             "publishedAt": "2026-06-21T13:13:50Z"
@@ -844,10 +847,6 @@
           {
             "title": "Napraví Belgie remízu z úvodu turnaje? První výhru vyhlíží i Uruguay či Španělsko",
             "publishedAt": "2026-06-21T08:00:00Z"
-          },
-          {
-            "title": "Volejbalistky po obratu porazily v Lize národů Dominikánskou republiku",
-            "publishedAt": "2026-06-21T07:50:00Z"
           }
         ]
       }
