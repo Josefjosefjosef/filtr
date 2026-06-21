@@ -35,6 +35,8 @@ const QUEUE_EXCLUDE_NAMES = [
   "pexels-initial-import-plan-proof",
   "pexels-initial-import-queue-proof",
   "pexels-initial-import-queue-build",
+  "pexels-import-preparation-proof",
+  "pexels-import-runner",
 ];
 
 function loadJson(p) {

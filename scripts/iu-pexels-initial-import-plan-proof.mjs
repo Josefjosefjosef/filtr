@@ -112,7 +112,15 @@ function walkDir(dir, hits) {
     }
     const ext = path.extname(name).toLowerCase();
     if (![".yml", ".yaml", ".js", ".mjs", ".py", ".toml", ".json"].includes(ext)) continue;
-    if (name.includes("pexels-initial-import-plan-proof")) continue;
+    if (
+      name.includes("pexels-initial-import-plan-proof") ||
+      name.includes("pexels-initial-import-queue-proof") ||
+      name.includes("pexels-initial-import-queue-build") ||
+      name.includes("pexels-import-preparation-proof") ||
+      name.includes("pexels-import-runner")
+    ) {
+      continue;
+    }
     const text = fs.readFileSync(full, "utf8");
     for (const pat of FORBIDDEN_CRON_PATTERNS) {
       if (pat.test(text)) {

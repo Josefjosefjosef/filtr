@@ -24,6 +24,17 @@ Initial import je **jednorázová manuální operace** prováděná operátorem 
 - Exact match vyžaduje `imageExactMatchVerified: true` a shodu entity v titulku.
 - Import z Pexels ukládá metadata licence (`imageLicenseSource: "Pexels License"`) a zdrojové URL autora.
 
+### Právní guard (verified entities)
+
+| Guard | Hodnota |
+|-------|---------|
+| `VERIFIED_PERSONS_REQUIRE_MANUAL_REVIEW` | YES |
+| `VERIFIED_PLACES_REQUIRE_MANUAL_REVIEW` | YES |
+| `AUTO_PERSON_MATCHING_ALLOWED` | NO |
+| `AUTO_PLACE_MATCHING_ALLOWED` | NO |
+
+Ověřené osoby a místa/objekty **nesmí** projít automatickým importem bez manuálního schválení search dotazu operátorem. Položky fronty s `__ENTITY_QUERY_PENDING__` jsou blokovány až do review.
+
 ## Sledování použití (usageCount / lastUsedAt)
 
 Každý záznam v interní galerii nese povinná pole:
@@ -136,6 +147,35 @@ Metadata fronty zachovává:
 
 Pokud `ESTIMATED_QUEUE_REQUESTS` > 200: `IMPORT_BATCHING_REQUIRED=YES`, `MAX_REQUESTS_PER_BATCH=200`.
 
+## Import state registry (runtime)
+
+Stav importu je evidován v `projects/data/image_gallery/import_state.json`:
+
+- `currentBatch` — index aktuální dávky
+- `completedBatches` — dokončené dávky
+- `completedRequests` / `remainingRequests` — počítadlo request budgetu
+- `lastRunAt` — ISO timestamp posledního běhu (null před prvním importem)
+- `rateLimitLimit` / `rateLimitRemaining` / `rateLimitReset` — hlavičky z Pexels API (null v skeleton fázi)
+- `status` — `idle` | `running` | `paused` | `completed`
+
+## Environment (API klíč)
+
+| Guard | Hodnota |
+|-------|---------|
+| `API_KEY_REQUIRED_NOW` | NO |
+| `PEXELS_API_KEY` | placeholder only — viz `docs/pexels-import-env.example.md` |
+
+Klíč se nastavuje **až při schváleném reálném importu** v prostředí operátora. Nikdy v repozitáři.
+
+## Import runner (skeleton)
+
+```powershell
+npm run pexels-import-runner
+npm run pexels-import-preparation-proof
+```
+
+Runner načte frontu + state, spočítá batching, aplikuje rate/legal guardy. **Nevolá API, nestahuje fotky.**
+
 ## Související soubory
 
 | Soubor | Účel |
@@ -145,5 +185,9 @@ Pokud `ESTIMATED_QUEUE_REQUESTS` > 200: `IMPORT_BATCHING_REQUIRED=YES`, `MAX_REQ
 | `scripts/iu-pexels-initial-import-plan-proof.mjs` | Dry-run proof skript (plán) |
 | `scripts/iu-pexels-initial-import-queue-build.mjs` | Builder fronty z plánu |
 | `scripts/iu-pexels-initial-import-queue-proof.mjs` | Dry-run proof skript (fronta) |
+| `projects/data/image_gallery/import_state.json` | Runtime registry stavu importu |
+| `docs/pexels-import-env.example.md` | Placeholder env konfigurace (bez klíče) |
+| `scripts/iu-pexels-import-runner.mjs` | Manuální import runner (skeleton) |
+| `scripts/iu-pexels-import-preparation-proof.mjs` | Dry-run proof (V1 preparation) |
 | `assets/iu-internal-image-gallery.js` | Datový model a výběr z interní galerie |
 | `assets/iu-photo-article-safety.js` | Právní safety + ilustrační label audit |
