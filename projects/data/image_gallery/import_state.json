@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "description": "Runtime state pro manuální Pexels initial import V1 — skeleton, bez API volání",
+  "dryRunOnly": true,
+  "sourceQueue": "docs/pexels-initial-import-queue.json",
+  "currentBatch": 0,
+  "completedBatches": [],
+  "completedRequests": 0,
+  "remainingRequests": 220,
+  "lastRunAt": null,
+  "rateLimitLimit": 200,
+  "rateLimitRemaining": null,
+  "rateLimitReset": null,
+  "status": "idle",
+  "governance": {
+    "stopOnRateLimitReached": true,
+    "stopOnMonthlyBudgetReached": true,
+    "maxRequestsPerBatch": 200,
+    "rateLimitBypassAllowed": false,
+    "verifiedPersonsRequireManualReview": true,
+    "verifiedPlacesRequireManualReview": true,
+    "autoPersonMatchingAllowed": false,
+    "autoPlaceMatchingAllowed": false,
+    "apiKeyRequiredNow": false
+  }
+}
