@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-06-21T21:03:56.632115Z",
+  "ingestedAt": "2026-06-21T22:17:09.535576Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Izraelští vojáci zůstanou na jihu Libanonu, řekl Netanjahu",
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-izraelsti-vojaci-zustanou-na-jihu-libanonu-rekl-netanjahu-309024",
+      "dt": "2026-06-21T21:22:24Z",
+      "media_raw": "Seznam Zprávy / Domácí",
+      "media_norm": "Seznam Zprávy",
+      "tokens": [
+        "izraelští",
+        "jihu",
+        "libanonu",
+        "netanjahu",
+        "vojáci",
+        "zůstanou",
+        "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_seznam_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -398,30 +422,6 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Letní shakespearovské slavnosti 2026: Co nabízejí a které představení má derniéru",
-      "url": "https://www.seznamzpravy.cz/clanek/kultura-letni-shakespearovske-slavnosti-2026-program-309004",
-      "dt": "2026-06-21T14:04:00Z",
-      "media_raw": "Seznam Zprávy / Domácí",
-      "media_norm": "Seznam Zprávy",
-      "tokens": [
-        "2026",
-        "derniéru",
-        "letní",
-        "nabízejí",
-        "představení",
-        "shakespearovské",
-        "slavnosti"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_seznam_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
       "title": "Lukašenko dělá věci, které si ani u Putina neumím představit, říká novinářka",
       "url": "https://www.seznamzpravy.cz/clanek/zahranicni-lukasenko-dela-veci-ktere-si-ani-u-putina-neumim-predstavit-rika-novinarka-308440",
       "dt": "2026-06-21T14:00:00Z",
@@ -754,7 +754,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/domaci",
-      "bytes": 43680,
+      "bytes": 43575,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -791,7 +791,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-21T20:43:15Z",
+        "raw_feed_latest_publishedAt": "2026-06-21T21:22:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -808,6 +808,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Izraelští vojáci zůstanou na jihu Libanonu, řekl Netanjahu",
+            "publishedAt": "2026-06-21T21:22:24Z"
+          },
           {
             "title": "Zemřel Castrův blízký spolupracovník. Ramíro Valdésovi bylo 94 let",
             "publishedAt": "2026-06-21T20:43:15Z"
@@ -835,10 +839,6 @@
           {
             "title": "Trump chce, abychom ve vztazích s Íránem obrátili list, řekl Vance",
             "publishedAt": "2026-06-21T14:06:57Z"
-          },
-          {
-            "title": "Víkendové počasí přineslo teplotní rekordy i silné bouřky",
-            "publishedAt": "2026-06-21T17:24:53Z"
           }
         ]
       }
