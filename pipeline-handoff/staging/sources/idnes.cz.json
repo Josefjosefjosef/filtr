@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-21T19:53:31.543628Z",
+  "ingestedAt": "2026-06-21T21:03:56.632115Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zemřel Castrův blízký spolupracovník Ramiro Valdés. Bylo mu 94 let",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/ramiro-valdes-zemrel-hrdina-kubanske-revoluce-castro.A260621_221334_zahranicni_ikul",
+      "dt": "2026-06-21T20:26:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "blízký",
+        "castrův",
+        "let",
+        "ramiro",
+        "spolupracovník",
+        "valdés",
+        "zemřel"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -761,30 +785,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "„Čínský Instagram“ míří na burzu. Investoři chtějí, aby to bylo co nejdříve",
-      "url": "https://www.idnes.cz/ekonomika/podniky/xiaohongshu-cina-vstup-na-burzu.A260617_155957_ekoakcie_rie",
-      "dt": "2026-06-21T13:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "burzu",
-        "chtějí",
-        "instagram",
-        "investoři",
-        "míří",
-        "nejdříve",
-        "čínský"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49498,
+      "bytes": 49581,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,11 +832,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-21T19:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-21T20:26:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "finance": 3,
+          "zpravy": 27,
+          "finance": 2,
           "other": 1
         },
         "drop_counts": {
@@ -849,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zemřel Castrův blízký spolupracovník Ramiro Valdés. Bylo mu 94 let",
+            "publishedAt": "2026-06-21T20:26:00Z"
+          },
           {
             "title": "Čtyři parašutisté se vážně zranili při nouzovém přistání na Rokycansku",
             "publishedAt": "2026-06-21T19:23:00Z"
@@ -876,10 +880,6 @@
           {
             "title": "Žena spadla do výtahové šachty na stavbě, je vážně zraněná. Byla pod vlivem alkoholu",
             "publishedAt": "2026-06-21T17:48:00Z"
-          },
-          {
-            "title": "Srážka auta s elektrokoloběžkou v Opavě. Její řidič skončil vážně zraněný nemocnici",
-            "publishedAt": "2026-06-21T17:39:00Z"
           }
         ]
       }
