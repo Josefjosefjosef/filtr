@@ -1200,6 +1200,11 @@ try {
   // FEED VIDEO EVERY 8 (YouTube preview card, lazy embed)
   const IU_FEED_VIDEO_ENABLED = true;
   const IU_FEED_VIDEO_EVERY = 8;
+  /** Middle feed only: Pexels photo article slots every 4–7 regular articles (preferred 5). */
+  const IU_FEED_PHOTO_ARTICLE_ENABLED = true;
+  const IU_FEED_PHOTO_INTERVAL_MIN = 4;
+  const IU_FEED_PHOTO_INTERVAL_MAX = 7;
+  const IU_FEED_PHOTO_PREFERRED_INTERVAL = 5;
   const IU_PREHLED_DNE_VIDEO_EVERY = 10;
   const IU_FEED_VIDEO_MAX_PER_PAGE = 25;
   /** P0 UI: first DOM append batch ≈ first viewport; follow-up batches keep main-thread slices small. */
@@ -6128,6 +6133,7 @@ try {
     let pos = 0;
     let firstDomBatch = true;
     let firstFeedBatchMarked = false;
+    const middleFeedPhotoArticleIndexSet = iuMiddleFeedPhotoArticleIndexSet(visibleItems);
     const reloadDomTight = iuFeedReloadDomTightenP();
     const sectionSwitchActive = iuFeedSectionSwitchActiveP();
     const iuFeedMicroDomYieldOffP = () => {
@@ -6178,7 +6184,14 @@ try {
           continue;
         }
 
-        const markup = kind === "video" ? buildVideoAsArticleCard(item) : buildArticleHtml(item);
+        const usePhotoLayout =
+          kind === "article" &&
+          IU_FEED_PHOTO_ARTICLE_ENABLED &&
+          middleFeedPhotoArticleIndexSet.has(pos);
+        const markup =
+          kind === "video"
+            ? buildVideoAsArticleCard(item)
+            : buildArticleHtml(item, { photoLayout: usePhotoLayout });
         if (!markup) {
           persistLastError("Invariant breach: builder returned falsy markup");
           renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
@@ -6340,6 +6353,21 @@ try {
       iuEnsureVideoAnchors(sectionKey);
       injectedVideosCount = safeTarget.querySelectorAll(".iuVideoCard[data-slot]").length;
     } catch {}
+
+    try {
+      const photoCards = safeTarget.querySelectorAll("article.news-card.iuPhotoArticle[data-photo-layout='1']");
+      const textOnlyCards = safeTarget.querySelectorAll(
+        "article.news-card[data-feed-type='article']:not(.iuPhotoArticle)"
+      );
+      window.__iuPhotoArticleMetrics = {
+        intervalMin: Number(IU_FEED_PHOTO_INTERVAL_MIN) || 4,
+        intervalMax: Number(IU_FEED_PHOTO_INTERVAL_MAX) || 7,
+        preferredInterval: Number(IU_FEED_PHOTO_PREFERRED_INTERVAL) || 5,
+        photoArticlesRendered: photoCards.length,
+        textOnlyArticlesRendered: textOnlyCards.length,
+        photoArticleIndexSetSize: middleFeedPhotoArticleIndexSet.size,
+      };
+    } catch (_) {}
 
     const feedChildrenAfter = safeTarget.childElementCount;
     const typeCounts = visibleItems.reduce(
@@ -6648,7 +6676,106 @@ try {
     return `<div class="iu-meta-line">${datePart}${sep}${primaryPart}</div>`;
   }
 
-  function buildArticleHtml(it) {
+  function iuArticleHasValidPhotoImage(it) {
+    try {
+      if (!it || typeof it !== "object") return false;
+      const thumb = String(it.imageThumbUrl || it.imageUrl || "").trim();
+      if (!thumb || !/^https?:\/\//i.test(thumb)) return false;
+      const provider = String(it.imageProvider || "").trim().toLowerCase();
+      if (provider && provider !== "pexels") return false;
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuPhotoArticleNextInterval(slotIndex) {
+    const min = Number(IU_FEED_PHOTO_INTERVAL_MIN) || 4;
+    const max = Number(IU_FEED_PHOTO_INTERVAL_MAX) || 7;
+    const span = Math.max(1, max - min + 1);
+    const slot = Number(slotIndex) >= 0 ? Number(slotIndex) : 0;
+    return min + ((slot * 11 + 5) % span);
+  }
+
+  function iuMiddleFeedPhotoArticleIndexSet(items) {
+    const photoIndices = new Set();
+    if (!IU_FEED_PHOTO_ARTICLE_ENABLED || !Array.isArray(items) || !items.length) {
+      return photoIndices;
+    }
+    const minGap = Number(IU_FEED_PHOTO_INTERVAL_MIN) || 4;
+    const preferredGap = Number(IU_FEED_PHOTO_PREFERRED_INTERVAL) || 5;
+    const maxGap = Number(IU_FEED_PHOTO_INTERVAL_MAX) || 7;
+    let regularSincePhoto = 0;
+    let photoSlotCounter = 0;
+
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i];
+      const kind = String(it?.contentType || "").toLowerCase();
+      if (kind !== "article") continue;
+      if (photoIndices.has(i)) continue;
+
+      const slotTarget =
+        photoSlotCounter === 0 ? preferredGap : iuPhotoArticleNextInterval(photoSlotCounter);
+      const canUsePhoto =
+        iuArticleHasValidPhotoImage(it) &&
+        regularSincePhoto >= minGap &&
+        (regularSincePhoto >= slotTarget ||
+          regularSincePhoto >= preferredGap ||
+          regularSincePhoto >= maxGap);
+
+      if (canUsePhoto) {
+        photoIndices.add(i);
+        regularSincePhoto = 0;
+        photoSlotCounter += 1;
+      } else {
+        regularSincePhoto += 1;
+      }
+    }
+    return photoIndices;
+  }
+
+  function iuPhotoArticleLegalDataAttrs(it) {
+    const fields = [
+      ["data-image-provider", it?.imageProvider],
+      ["data-image-url", it?.imageUrl],
+      ["data-image-thumb-url", it?.imageThumbUrl],
+      ["data-image-alt", it?.imageAlt],
+      ["data-image-author", it?.imageAuthor],
+      ["data-image-author-url", it?.imageAuthorUrl],
+      ["data-image-source-url", it?.imageSourceUrl],
+      ["data-image-license-source", it?.imageLicenseSource],
+      ["data-image-matched-query", it?.imageMatchedQuery],
+      ["data-image-assigned-at", it?.imageAssignedAt],
+    ];
+    let out = "";
+    for (const [attr, raw] of fields) {
+      const val = String(raw || "").trim();
+      if (!val) continue;
+      out += ` ${attr}="${escapeHtml(val)}"`;
+    }
+    return out;
+  }
+
+  function buildPhotoArticleHtml(it, parts) {
+    const thumbUrl = String(it.imageThumbUrl || it.imageUrl || "").trim();
+    const altText = String(it.imageAlt || parts.title || "Ilustrační fotografie").trim();
+    const legalAttrs = iuPhotoArticleLegalDataAttrs(it);
+    return `
+      <article class="news-card iuPhotoArticle" data-feed-type="article" data-photo-layout="1"${legalAttrs}>
+        <div class="iuPhotoArticle-row">
+          <div class="iu-article-thumb iuPhotoArticle-thumb" aria-hidden="true">
+            <img class="iuPhotoArticle-img" src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(altText)}" loading="lazy" decoding="async" width="128" height="72" onerror="this.classList.add('iuPhotoArticle-img--failed');this.removeAttribute('src');">
+          </div>
+          <div class="iuPhotoArticle-body">
+            <h2 class="news-title">${parts.titleMarkup}${parts.suspiciousFlag}</h2>
+            ${parts.sourcesMetaLine}
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function buildArticleHtml(it, opts) {
     if (iuArticleIsHardBlocked(it)) {
       return "";
     }
@@ -6674,8 +6801,12 @@ try {
       : "";
 
     const sourcesMetaLine = renderSourcesMetaLine(it);
+    const photoLayout = Boolean(opts && opts.photoLayout) && iuArticleHasValidPhotoImage(it);
 
     debugLog("[RENDER ARTICLE]", title);
+    if (photoLayout) {
+      return buildPhotoArticleHtml(it, { title, titleMarkup, suspiciousFlag, sourcesMetaLine });
+    }
     return `
       <article class="news-card" data-feed-type="article">
         <h2 class="news-title">${titleMarkup}${suspiciousFlag}</h2>

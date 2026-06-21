@@ -4184,6 +4184,61 @@ body[data-iu-fc="1"] #feed > article.news-card ~ article.news-card{
   object-fit: cover;
 }
 
+/* Middle feed: Pexels photo article — image left, title + meta right */
+#feed > article.news-card.iuPhotoArticle{
+  contain-intrinsic-size: auto 96px;
+}
+
+#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-row{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 72px;
+}
+
+#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-thumb{
+  flex: 0 0 128px;
+  width: 128px;
+  max-width: 38%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-thumb img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-img.iuPhotoArticle-img--failed{
+  display: none;
+}
+
+#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-body{
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+#feed > article.news-card.iuPhotoArticle .news-title,
+#feed > article.news-card.iuPhotoArticle .news-titleLink{
+  margin-top: 0;
+}
+
+@media (max-width: 420px){
+  #feed > article.news-card.iuPhotoArticle .iuPhotoArticle-thumb{
+    flex: 0 0 96px;
+    width: 96px;
+    max-width: 34%;
+  }
+  #feed > article.news-card.iuPhotoArticle .iuPhotoArticle-row{
+    gap: 10px;
+  }
+}
+
 .iuLoadMoreWrap{
   display: flex;
   flex-direction: column;
