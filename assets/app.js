@@ -6782,7 +6782,7 @@ try {
     const altText = String(it.imageAlt || parts.title || "Ilustrační fotografie").trim();
     const legalAttrs = iuPhotoArticleLegalDataAttrs(it);
     const illustrativeLabel = audit.showIllustrativeLabel
-      ? `<span class="iuPhotoArticle-illustrativeLabel">Ilustrační foto</span>`
+      ? `<span class="iuPhotoArticle-illustrativeLabel" style="position:absolute;left:4px;bottom:4px;padding:1px 5px;border-radius:4px;font-size:10px;line-height:1.2;font-weight:500;color:rgba(255,255,255,.92);background:rgba(11,27,43,.62);pointer-events:none">Ilustrační foto</span>`
       : "";
     return `
       <article class="news-card iuPhotoArticle" data-feed-type="article" data-photo-layout="1"${legalAttrs}>
