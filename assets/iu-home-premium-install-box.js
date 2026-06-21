@@ -75,6 +75,7 @@
     tick();
   }
 
+  function openPwaSection() {
     var key = "pwa";
     var openFn = window.iuInfoCenterOpenSection;
     if (typeof openFn === "function") {
