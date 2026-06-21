@@ -143,7 +143,7 @@ export function iuPhotoArticleSafetyAudit(it) {
       return audit;
     }
     const provider = String(it.imageProvider || "").trim().toLowerCase();
-    if (provider && provider !== "pexels") {
+    if (provider && provider !== "pexels" && provider !== "internal_gallery") {
       audit.reason = "unsupported_provider";
       return audit;
     }
