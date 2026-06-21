@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-06-21T05:17:24.660283Z",
+  "generatedAt": "2026-06-21T05:29:14.293536Z",
   "stats": {
     "suppressed_count": 635,
     "clusters_merged": 522,
-    "visible_count": 17507,
+    "visible_count": 17513,
     "event_dedupe_low_slug_skip": 0,
     "event_dedupe_replay_guard_skip": 1,
     "event_dedupe_recurring_template_skip": 13
@@ -1000,32 +1000,22 @@
       "sourceLabel": "Seznam Zprávy"
     },
     {
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/spor-o-vysilani-filmu-sbormistr-konci-strany-uzavrely-smir-374634",
-      "title": "Spor o vysílání filmu Sbormistr končí, strany uzavřely smír",
-      "duplicate_of": "https://www.idnes.cz/kultura/film-televize/spor-o-vysilani-filmu-sbormistr-konci-strany-se-dohodly-na-smiru.A260616_190901_filmvideo_fohl",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "3da7bed9d9a98462",
-      "section": "kultura",
-      "sourceLabel": "ČT24"
-    },
-    {
-      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/nemecko-na-ms-ve-fotbale.A260610_090233_ms-fotbal_jure",
-      "title": "Německo na MS ve fotbale 2026: Program, výsledky, soupiska, historie",
-      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/469672/ms-ve-fotbale-2026-kompletni-program-vysledky-tabulky-skupiny-zajimavosti-kdy-hraji-cesi.html",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "6c5661618651b2a6",
-      "section": "sport",
-      "sourceLabel": "iDNES.cz"
-    },
-    {
       "url": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/476872/online-ekvador-curacao-souboj-porazenych-ve-skupine-e-kdo-ziska-prvni-body.html",
       "title": "Ekvádor - Curacao. Souboj poražených ve skupině E, kdo získá první body",
       "duplicate_of": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/ekvador-curacao-ms-2026-skupina-e.A260620_183511_ms-fotbal_min",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
       "topic_key": "a6066c9d5c68c9ad",
+      "section": "sport",
+      "sourceLabel": "iSport"
+    },
+    {
+      "url": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/469672/ms-ve-fotbale-2026-kompletni-program-vysledky-tabulky-skupiny-zajimavosti-kdy-hraji-cesi.html",
+      "title": "MS ve fotbale 2026: Kompletní program, výsledky, tabulky, skupiny, zajímavosti, kdy hrají Češi",
+      "duplicate_of": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/nemecko-na-ms-ve-fotbale.A260610_090233_ms-fotbal_jure",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "d4d4c3edbe239873",
       "section": "sport",
       "sourceLabel": "iSport"
     },
@@ -4450,6 +4440,16 @@
       "sourceLabel": "E15"
     },
     {
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/spor-o-vysilani-filmu-sbormistr-konci-strany-uzavrely-smir-374634",
+      "title": "Spor o vysílání filmu Sbormistr končí, strany uzavřely smír",
+      "duplicate_of": "https://www.idnes.cz/kultura/film-televize/spor-o-vysilani-filmu-sbormistr-konci-strany-se-dohodly-na-smiru.A260616_190901_filmvideo_fohl",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "3da7bed9d9a98462",
+      "section": "kultura",
+      "sourceLabel": "ČT24"
+    },
+    {
       "url": "https://www.cestujlevne.com/akcni-letenky/madeira-z-prahy-na-tyden-ve-4-hotelu-s-polopenzi",
       "title": "Madeira z Prahy na týden ve 4* hotelu s polopenzí. Zájezd od 12 790 Kč",
       "duplicate_of": "https://www.cestujlevne.com/akcni-letenky/la-palma-exoticky-kanarsky-ostrov-primo-z-prahy-s-polopenzi-na-tyden",
@@ -4548,6 +4548,26 @@
       "topic_key": "6ac54c2abe6733be",
       "section": "cestovani",
       "sourceLabel": "TravelBible"
+    },
+    {
+      "url": "https://www.zdravotnickydenik.cz/2026/05/hantavirus-jak-se-siri-priznaky/",
+      "title": "Nemoc, která zabíjela na výletní lodi v Atlantiku: Co je to hantavirus a jak se přenáší na člověka",
+      "duplicate_of": "https://zahranicni.hn.cz/c1-67874710-nemoc-hlodavcu-ktera-se-rozsirila-na-vyletni-lodi-co-je-hantavirus-odkud-se-vzal-a-jak-velkou-muze-byt-hrozbou",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "85f3e1080b3e6d88",
+      "section": "zdravi",
+      "sourceLabel": "Zdravotnický deník"
+    },
+    {
+      "url": "https://www.zdravotnickydenik.cz/2026/04/nemocnice-praha-vojenska-babis-nato/",
+      "title": "Proč bude nová nemocnice v Praze vojenská? Babiš ji spojuje se závazky vůči NATO",
+      "duplicate_of": "https://www.zdravotnickydenik.cz/2026/04/nova-vojenska-nemocnice-cernochova-babis/",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "cc45e81997c05e26",
+      "section": "zdravi",
+      "sourceLabel": "Zdravotnický deník"
     },
     {
       "url": "https://www.idnes.cz/hry/novinky/prologue-go-wayback-zdarma-steam-pubg.A260618_085122_bw-novinky_oz",
@@ -4748,26 +4768,6 @@
       "topic_key": "61793561a206f033",
       "section": "pocasi",
       "sourceLabel": "Deník"
-    },
-    {
-      "url": "https://www.zdravotnickydenik.cz/2026/05/hantavirus-jak-se-siri-priznaky/",
-      "title": "Nemoc, která zabíjela na výletní lodi v Atlantiku: Co je to hantavirus a jak se přenáší na člověka",
-      "duplicate_of": "https://zahranicni.hn.cz/c1-67874710-nemoc-hlodavcu-ktera-se-rozsirila-na-vyletni-lodi-co-je-hantavirus-odkud-se-vzal-a-jak-velkou-muze-byt-hrozbou",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "85f3e1080b3e6d88",
-      "section": "zdravi",
-      "sourceLabel": "Zdravotnický deník"
-    },
-    {
-      "url": "https://www.zdravotnickydenik.cz/2026/04/nemocnice-praha-vojenska-babis-nato/",
-      "title": "Proč bude nová nemocnice v Praze vojenská? Babiš ji spojuje se závazky vůči NATO",
-      "duplicate_of": "https://www.zdravotnickydenik.cz/2026/04/nova-vojenska-nemocnice-cernochova-babis/",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "cc45e81997c05e26",
-      "section": "zdravi",
-      "sourceLabel": "Zdravotnický deník"
     },
     {
       "url": "https://www.penize.cz/doprava/491813-nafta-pod-38-korunami-za-litr-maximalni-ceny-pohonnych-hmot-na-ctvrtek-18-cervna",
