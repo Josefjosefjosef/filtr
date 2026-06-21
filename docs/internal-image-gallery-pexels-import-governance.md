@@ -108,11 +108,42 @@ Skript **nevolá Pexels**, **nestahuje fotky**, pouze:
 - ověří absenci cron/scheduler pro gallery import
 - ověří, že frontend nevolá Pexels API
 
+## Import queue (plánovaná fronta)
+
+Fronta je generována z plánu bez API volání:
+
+```powershell
+npm run pexels-initial-import-queue-build
+npm run pexels-initial-import-queue-proof
+```
+
+Každá položka fronty obsahuje: `galleryId`, `galleryType`, `targetCount`, `query`, `locale`, `orientation`, `photosPerPage`, `estimatedRequests`, `status=planned`, `dryRunOnly=true`.
+
+Metadata fronty zachovává:
+
+| Guard | Hodnota |
+|-------|---------|
+| `PEXELS_MANUAL_INITIAL_IMPORT_ONLY` | YES |
+| `QUEUE_DRY_RUN_ONLY` | YES |
+| `IMAGE_REMOVED_AFTER_USE` | NO |
+| `IMAGE_REUSED_ALLOWED` | YES |
+| `USAGE_COUNT_SUPPORTED` | YES |
+| `LAST_USED_AT_SUPPORTED` | YES |
+| `FEED_IMAGE_LABEL_ALWAYS_VISIBLE` | YES |
+| `RATE_LIMIT_BYPASS_ALLOWED` | NO |
+| `STOP_ON_RATE_LIMIT_REACHED` | YES |
+| `STOP_ON_MONTHLY_BUDGET_REACHED` | YES |
+
+Pokud `ESTIMATED_QUEUE_REQUESTS` > 200: `IMPORT_BATCHING_REQUIRED=YES`, `MAX_REQUESTS_PER_BATCH=200`.
+
 ## Související soubory
 
 | Soubor | Účel |
 |--------|------|
 | `docs/pexels-initial-import-plan.json` | Cílové počty a search dotazy V1 |
-| `scripts/iu-pexels-initial-import-plan-proof.mjs` | Dry-run proof skript |
+| `docs/pexels-initial-import-queue.json` | Plánovaná importní fronta V1 (dry-run) |
+| `scripts/iu-pexels-initial-import-plan-proof.mjs` | Dry-run proof skript (plán) |
+| `scripts/iu-pexels-initial-import-queue-build.mjs` | Builder fronty z plánu |
+| `scripts/iu-pexels-initial-import-queue-proof.mjs` | Dry-run proof skript (fronta) |
 | `assets/iu-internal-image-gallery.js` | Datový model a výběr z interní galerie |
 | `assets/iu-photo-article-safety.js` | Právní safety + ilustrační label audit |
