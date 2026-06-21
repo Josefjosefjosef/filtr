@@ -1,22 +1,49 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.ceskatelevize.cz",
-  "ingestedAt": "2026-06-21T12:53:02.910926Z",
+  "ingestedAt": "2026-06-21T14:14:30.409376Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Evropská liga volejbalistů Gruzie – Česko",
+      "title": "Salač: Nejlepší den v životě. Je to jako sen, ze kterého se nechci vzbudit",
+      "url": "https://sport.ceskatelevize.cz/clanek/motorsport/salac-nejlepsi-den-v-zivote-je-to-jako-sen-ze-ktereho-se-nechci-vzbudit-157532",
+      "dt": "2026-06-21T13:13:50Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "den",
+        "jako",
+        "kterého",
+        "nechci",
+        "nejlepší",
+        "salač",
+        "sen",
+        "vzbudit",
+        "životě"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "sport.ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Češi si poradili s Gruzínci a udrželi naději na semifinále EL",
       "url": "https://sport.ceskatelevize.cz/clanek/volejbal/evropska-liga-volejbalistu-gruzie-cesko-157530",
       "dt": "2026-06-21T12:00:00Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "evropská",
-        "gruzie",
-        "liga",
-        "volejbalistů",
-        "česko"
+        "gruzínci",
+        "naději",
+        "poradili",
+        "semifinále",
+        "udrželi",
+        "češi"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -83,17 +110,20 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Salač si vyjel v Brně pódium, vyhrál Ortolá",
+      "title": "Salač si vyjel v Brně pódium. V MotoGP obhájil loňský triumf Márquez",
       "url": "https://sport.ceskatelevize.cz/clanek/motorsport/zavod-moto3-vyhral-v-brne-danish-z-malajsie-157529",
       "dt": "2026-06-21T10:13:54Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
         "brně",
-        "ortolá",
+        "loňský",
+        "motogp",
+        "márquez",
+        "obhájil",
         "pódium",
         "salač",
-        "vyhrál",
+        "triumf",
         "vyjel"
       ],
       "feedCategory": "sport",
@@ -725,33 +755,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "sport.ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chci si užít tento nejkrásnější okamžik kariéry, řekl Saibárí po druhém gólu na MS",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/chci-si-uzit-tento-nejkrasnejsi-okamzik-kariery-rekl-saibari-po-druhem-golu-na-ms-157503",
-      "dt": "2026-06-20T07:39:54Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "chci",
-        "druhém",
-        "gólu",
-        "kariéry",
-        "nejkrásnější",
-        "okamžik",
-        "saibárí",
-        "tento",
-        "užít",
-        "řekl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "sport.ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -762,7 +765,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39922,
+      "bytes": 40047,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -799,7 +802,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-21T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-21T13:13:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -815,7 +818,11 @@
         },
         "sample_titles": [
           {
-            "title": "Evropská liga volejbalistů Gruzie – Česko",
+            "title": "Salač: Nejlepší den v životě. Je to jako sen, ze kterého se nechci vzbudit",
+            "publishedAt": "2026-06-21T13:13:50Z"
+          },
+          {
+            "title": "Češi si poradili s Gruzínci a udrželi naději na semifinále EL",
             "publishedAt": "2026-06-21T12:00:00Z"
           },
           {
@@ -827,7 +834,7 @@
             "publishedAt": "2026-06-21T10:30:00Z"
           },
           {
-            "title": "Salač si vyjel v Brně pódium, vyhrál Ortolá",
+            "title": "Salač si vyjel v Brně pódium. V MotoGP obhájil loňský triumf Márquez",
             "publishedAt": "2026-06-21T10:13:54Z"
           },
           {
@@ -841,10 +848,6 @@
           {
             "title": "Volejbalistky po obratu porazily v Lize národů Dominikánskou republiku",
             "publishedAt": "2026-06-21T07:50:00Z"
-          },
-          {
-            "title": "Clark navýšil na golfovém US Open vedení na šest ran",
-            "publishedAt": "2026-06-21T07:22:23Z"
           }
         ]
       }
