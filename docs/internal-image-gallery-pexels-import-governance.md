@@ -176,6 +176,35 @@ npm run pexels-import-preparation-proof
 
 Runner načte frontu + state, spočítá batching, aplikuje rate/legal guardy. **Nevolá API, nestahuje fotky.**
 
+## Pilot import (V1 — 20–50 ilustračních fotek)
+
+Manuální pilot pouze pro ilustrativní galerie `general_fallback`, `priroda`, `doprava`.
+
+```powershell
+$env:PEXELS_API_KEY = "<your-key>"
+npm run pexels-import-pilot
+npm run pexels-import-pilot-proof
+```
+
+| Guard | Hodnota |
+|-------|---------|
+| `PILOT_IMPORT_MODE` | YES |
+| `MAX_REQUESTS_THIS_RUN` | 10 |
+| `PILOT_PHOTO_TARGET` | 20–50 |
+| `IMPORTED_IMAGES_APPROVED_BY_DEFAULT` | NO |
+| `IMPORTED_IMAGES_VISIBLE_ON_WEB` | NO |
+| `BINARY_IMAGES_COMMITTED` | NO |
+| `ORIGINAL_PEXELS_FILES_STORED` | NO |
+| `WEBP_OPTIMIZED_IMAGES` | YES |
+| `MAX_IMAGE_WIDTH` | 800 |
+
+Storage:
+
+- `IMAGE_STORAGE_PATH=projects/data/image_gallery/imported/pilot/webp`
+- `METADATA_STORAGE_PATH=projects/data/image_gallery/imported/pilot/manifest.json`
+
+Stažené WebP soubory jsou v `.gitignore` — commitují se pouze skripty a `manifest.example.json`.
+
 ## Související soubory
 
 | Soubor | Účel |
@@ -189,5 +218,8 @@ Runner načte frontu + state, spočítá batching, aplikuje rate/legal guardy. *
 | `docs/pexels-import-env.example.md` | Placeholder env konfigurace (bez klíče) |
 | `scripts/iu-pexels-import-runner.mjs` | Manuální import runner (skeleton) |
 | `scripts/iu-pexels-import-preparation-proof.mjs` | Dry-run proof (V1 preparation) |
+| `scripts/iu-pexels-import-pilot.mjs` | Manuální pilot import (ilustrativní) |
+| `scripts/iu-pexels-import-pilot-proof.mjs` | Pilot import proof |
+| `projects/data/image_gallery/imported/pilot/manifest.example.json` | Pilot manifest template |
 | `assets/iu-internal-image-gallery.js` | Datový model a výběr z interní galerie |
 | `assets/iu-photo-article-safety.js` | Právní safety + ilustrační label audit |
