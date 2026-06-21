@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.ceskatelevize.cz",
-  "ingestedAt": "2026-06-21T04:34:12.895205Z",
+  "ingestedAt": "2026-06-21T05:56:22.318454Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Room čaroval proti Ekvádoru. Možná mi na Curacau postaví sochu, smál se",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/room-caroval-proti-ekvadoru-mozna-mi-na-curacau-postavi-sochu-smal-se-157523",
+      "dt": "2026-06-21T05:52:16Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "curacau",
+        "ekvádoru",
+        "možná",
+        "postaví",
+        "proti",
+        "room",
+        "smál",
+        "sochu",
+        "čaroval"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "sport.ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -152,7 +178,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "MS ve fotbale: Tunisko – Japonsko 0:2. Curacao uhrálo remízu s Ekvádorem",
+      "title": "MS ve fotbale: Tunisko – Japonsko 0:4. Curacao uhrálo remízu s Ekvádorem",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/ms-ve-fotbale-nizozemsko-svedsko-157514",
       "dt": "2026-06-20T16:15:00Z",
       "media_raw": "ČT sport",
@@ -380,7 +406,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Softbalistky nestačily na Kubu a ve skupině na MS skončily šesté",
+      "title": "Softbalistky nestačily na Kubu a v pražské skupině MS skončily šesté",
       "url": "https://sport.ceskatelevize.cz/clanek/baseball-a-softbal/softbalistky-nestacily-na-kubu-a-ve-skupine-na-ms-skoncily-seste-157507",
       "dt": "2026-06-20T09:49:23Z",
       "media_raw": "ČT sport",
@@ -388,6 +414,7 @@
       "tokens": [
         "kubu",
         "nestačily",
+        "pražské",
         "skončily",
         "skupině",
         "softbalistky",
@@ -726,32 +753,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "sport.ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Češky v semifinále. Bouzková a Plíšková postoupily v Nottinghamu, Nosková uspěla v Berlíně",
-      "url": "https://sport.ceskatelevize.cz/clanek/tenis/bouzkova-je-v-nottinghamu-v-semifinale-premierove-na-travnatem-turnaji-157493",
-      "dt": "2026-06-19T12:22:47Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "berlíně",
-        "bouzková",
-        "nosková",
-        "nottinghamu",
-        "plíšková",
-        "postoupily",
-        "semifinále",
-        "uspěla",
-        "češky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "sport.ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -762,7 +763,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39776,
+      "bytes": 39579,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -799,7 +800,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-21T01:21:21Z",
+        "raw_feed_latest_publishedAt": "2026-06-21T05:52:16Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -814,6 +815,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Room čaroval proti Ekvádoru. Možná mi na Curacau postaví sochu, smál se",
+            "publishedAt": "2026-06-21T05:52:16Z"
+          },
           {
             "title": "Nedvěd přiznal, že výkony na MS jsou zatím za očekáváním",
             "publishedAt": "2026-06-21T01:21:21Z"
@@ -839,12 +844,8 @@
             "publishedAt": "2026-06-20T16:21:34Z"
           },
           {
-            "title": "MS ve fotbale: Tunisko – Japonsko 0:2. Curacao uhrálo remízu s Ekvádorem",
+            "title": "MS ve fotbale: Tunisko – Japonsko 0:4. Curacao uhrálo remízu s Ekvádorem",
             "publishedAt": "2026-06-20T16:15:00Z"
-          },
-          {
-            "title": "Český hokejbal na vítězné vlně. Obě reprezentace vstoupily do domácího MS výhrou",
-            "publishedAt": "2026-06-20T15:55:39Z"
           }
         ]
       }
