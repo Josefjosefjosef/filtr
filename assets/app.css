@@ -4205,6 +4205,7 @@ body[data-iu-fc="1"] #feed > article.news-card ~ article.news-card{
   overflow: hidden;
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.06);
+  position: relative;
 }
 
 #feed > article.news-card.iuPhotoArticle .iuPhotoArticle-thumb img{
@@ -4212,6 +4213,20 @@ body[data-iu-fc="1"] #feed > article.news-card ~ article.news-card{
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-illustrativeLabel{
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(11, 27, 43, 0.62);
+  pointer-events: none;
 }
 
 #feed > article.news-card.iuPhotoArticle .iuPhotoArticle-img.iuPhotoArticle-img--failed{

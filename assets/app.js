@@ -16,6 +16,13 @@ import {
   iuSvatekBuildPoprejLineFromRaw,
 } from "./iu-nameday-dative.js";
 import {
+  IU_IMAGE_GUESSING_ALLOWED,
+  IU_IMAGE_MODE_EXACT,
+  IU_IMAGE_MODE_ILLUSTRATIVE,
+  iuArticleHasValidPhotoImage,
+  iuPhotoArticleSafetyAudit,
+} from "./iu-photo-article-safety.js";
+import {
   IU_HOMEPAGE_CHUNK_MANIFEST_FILE,
   IU_CHUNK_BUFFER_MAX,
   IU_CHUNK_INITIAL_SIZE,
@@ -360,6 +367,17 @@ window.addEventListener("unhandledrejection", (e) => {
 if (!iuIsProdHost() && new URLSearchParams(location.search || "").get("debug") === "1") {
   document.documentElement.classList.add("iu-debug-on");
 }
+
+try {
+  if (typeof window !== "undefined") {
+    window.iuPhotoArticleSafetyAudit = iuPhotoArticleSafetyAudit;
+    window.__iuImageSafetyConfig = {
+      guessingAllowed: IU_IMAGE_GUESSING_ALLOWED,
+      exactMatchMode: IU_IMAGE_MODE_EXACT,
+      illustrativeMode: IU_IMAGE_MODE_ILLUSTRATIVE,
+    };
+  }
+} catch (_) {}
 
 try {
 (() => {
@@ -6366,6 +6384,8 @@ try {
         photoArticlesRendered: photoCards.length,
         textOnlyArticlesRendered: textOnlyCards.length,
         photoArticleIndexSetSize: middleFeedPhotoArticleIndexSet.size,
+        illustrativeLabelsRendered: safeTarget.querySelectorAll(".iuPhotoArticle-illustrativeLabel").length,
+        imageGuessingAllowed: IU_IMAGE_GUESSING_ALLOWED,
       };
     } catch (_) {}
 
@@ -6676,19 +6696,6 @@ try {
     return `<div class="iu-meta-line">${datePart}${sep}${primaryPart}</div>`;
   }
 
-  function iuArticleHasValidPhotoImage(it) {
-    try {
-      if (!it || typeof it !== "object") return false;
-      const thumb = String(it.imageThumbUrl || it.imageUrl || "").trim();
-      if (!thumb || !/^https?:\/\//i.test(thumb)) return false;
-      const provider = String(it.imageProvider || "").trim().toLowerCase();
-      if (provider && provider !== "pexels") return false;
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
-
   function iuPhotoArticleNextInterval(slotIndex) {
     const min = Number(IU_FEED_PHOTO_INTERVAL_MIN) || 4;
     const max = Number(IU_FEED_PHOTO_INTERVAL_MAX) || 7;
@@ -6735,7 +6742,9 @@ try {
   }
 
   function iuPhotoArticleLegalDataAttrs(it) {
+    const audit = iuPhotoArticleSafetyAudit(it);
     const fields = [
+      ["data-image-mode", audit.mode || it?.imageMode],
       ["data-image-provider", it?.imageProvider],
       ["data-image-url", it?.imageUrl],
       ["data-image-thumb-url", it?.imageThumbUrl],
@@ -6746,6 +6755,9 @@ try {
       ["data-image-license-source", it?.imageLicenseSource],
       ["data-image-matched-query", it?.imageMatchedQuery],
       ["data-image-assigned-at", it?.imageAssignedAt],
+      ["data-image-title-entity", it?.imageTitleEntity],
+      ["data-image-matched-entity", it?.imageMatchedEntity],
+      ["data-image-safety-reason", audit.reason || ""],
     ];
     let out = "";
     for (const [attr, raw] of fields) {
@@ -6757,14 +6769,27 @@ try {
   }
 
   function buildPhotoArticleHtml(it, parts) {
+    const audit = iuPhotoArticleSafetyAudit(it);
+    if (!audit.allowed) {
+      return `
+      <article class="news-card" data-feed-type="article">
+        <h2 class="news-title">${parts.titleMarkup}${parts.suspiciousFlag}</h2>
+        ${parts.sourcesMetaLine}
+      </article>
+    `;
+    }
     const thumbUrl = String(it.imageThumbUrl || it.imageUrl || "").trim();
     const altText = String(it.imageAlt || parts.title || "Ilustrační fotografie").trim();
     const legalAttrs = iuPhotoArticleLegalDataAttrs(it);
+    const illustrativeLabel = audit.showIllustrativeLabel
+      ? `<span class="iuPhotoArticle-illustrativeLabel">Ilustrační foto</span>`
+      : "";
     return `
       <article class="news-card iuPhotoArticle" data-feed-type="article" data-photo-layout="1"${legalAttrs}>
         <div class="iuPhotoArticle-row">
           <div class="iu-article-thumb iuPhotoArticle-thumb" aria-hidden="true">
             <img class="iuPhotoArticle-img" src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(altText)}" loading="lazy" decoding="async" width="128" height="72" onerror="this.classList.add('iuPhotoArticle-img--failed');this.removeAttribute('src');">
+            ${illustrativeLabel}
           </div>
           <div class="iuPhotoArticle-body">
             <h2 class="news-title">${parts.titleMarkup}${parts.suspiciousFlag}</h2>
@@ -6801,7 +6826,9 @@ try {
       : "";
 
     const sourcesMetaLine = renderSourcesMetaLine(it);
-    const photoLayout = Boolean(opts && opts.photoLayout) && iuArticleHasValidPhotoImage(it);
+    const photoRequested = Boolean(opts && opts.photoLayout);
+    const photoAudit = photoRequested ? iuPhotoArticleSafetyAudit(it) : null;
+    const photoLayout = photoRequested && photoAudit && photoAudit.allowed === true;
 
     debugLog("[RENDER ARTICLE]", title);
     if (photoLayout) {

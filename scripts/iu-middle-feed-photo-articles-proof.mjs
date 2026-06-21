@@ -72,6 +72,11 @@ function injectPhotoFieldsIntoArticlesList(articles) {
     a.imageLicenseSource = "Pexels License";
     a.imageMatchedQuery = String(a.title || "news").slice(0, 60);
     a.imageAssignedAt = new Date().toISOString();
+    a.imageMode = "illustrative";
+    a.imageIllustrativeVerified = true;
+    a.imageIllustrativeScope = "generic";
+    a.imageIllustrativeCategory = "news";
+    a.imageAlt = "Ilustrační snímek k článku";
   }
 }
 
