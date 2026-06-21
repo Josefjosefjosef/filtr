@@ -6,7 +6,32 @@
 
 Galerie je **knihovna**, ne zásobník. Fotografie se po použití **neodstraňují** a lze je **znovu použít**.
 
-Initial import je **jednorázová manuální operace** prováděná operátorem z backendu. Nikdy při načtení webu.
+Initial import je **jednorázová manuální operace** prováděná operátorem z backendu / publish pipeline. Nikdy při načtení webu.
+
+**Pexels API se volá výhradně z backendu** při manuálním importu operátorem. Frontend ani feed pipeline Pexels nevolají.
+
+## Výběr fotografií a fallback
+
+- Výběr fotografie pro článek probíhá **výhradně z interní galerie** (`projects/data/image_gallery/`).
+- **Žádné automatické hádání** osob, míst, objektů, firem, značek ani produktů (`AUTO_GUESSING=NO`).
+- Ověřené osoby a místa vyžadují **exact match** dle dat v galerii; bez shody se použije ilustrativní fallback nebo `no_image`.
+- **Fallback do interní galerie** — pokud není exact match, ilustrativní vrstva nebo `general_fallback`; nikdy externí API za běhu webu.
+
+## Právní bezpečnost
+
+- Každý záznam musí projít `iuPhotoArticleSafetyAudit` (`assets/iu-photo-article-safety.js`).
+- Ilustrativní fotografie ve feedu mají vždy label **Ilustrační foto**.
+- Exact match vyžaduje `imageExactMatchVerified: true` a shodu entity v titulku.
+- Import z Pexels ukládá metadata licence (`imageLicenseSource: "Pexels License"`) a zdrojové URL autora.
+
+## Sledování použití (usageCount / lastUsedAt)
+
+Každý záznam v interní galerii nese povinná pole:
+
+- `usageCount` — kolikrát byla fotografie vybrána pro článek (knihovna, ne zásobník; **neodečítá se** po použití).
+- `lastUsedAt` — ISO timestamp posledního výběru; prázdné/null pokud ještě nebyla použita.
+
+Import inicializuje `usageCount: 0` a `lastUsedAt: null`. Aktualizace probíhá až při publish pipeline, ne při dry-run.
 
 ## Zakázáno (absolutní)
 
@@ -72,7 +97,7 @@ Doporučený postup initial importu:
 ## Dry-run proof
 
 ```powershell
-npm run pexels-initial-import-plan-proof
+npm run iu:pexels-initial-import-plan-proof
 ```
 
 Skript **nevolá Pexels**, **nestahuje fotky**, pouze:
