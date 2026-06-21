@@ -1,7 +1,8 @@
-/** P0 image legal safety guards — EXACT_MATCH or ILLUSTRATIVE only, no guessing. */
+/** P0 image legal safety guards — EXACT_MATCH, ILLUSTRATIVE, or explicit NO_IMAGE only; no guessing. */
 export const IU_IMAGE_GUESSING_ALLOWED = false;
 export const IU_IMAGE_MODE_EXACT = "exact_match";
 export const IU_IMAGE_MODE_ILLUSTRATIVE = "illustrative";
+export const IU_IMAGE_MODE_NO_IMAGE = "no_image";
 export const IU_IMAGE_SPECIFIC_ENTITY_TYPES = new Set([
   "person",
   "company",
@@ -17,6 +18,7 @@ function iuNormalizeImageMode(raw) {
     .trim()
     .toLowerCase()
     .replace(/-/g, "_");
+  if (m === "no_image" || m === "none") return IU_IMAGE_MODE_NO_IMAGE;
   if (m === "exact_match" || m === "exact") return IU_IMAGE_MODE_EXACT;
   if (m === "illustrative" || m === "illustration") return IU_IMAGE_MODE_ILLUSTRATIVE;
   return "";
@@ -107,16 +109,6 @@ export function iuPhotoArticleSafetyAudit(it) {
       audit.reason = "invalid_item";
       return audit;
     }
-    const thumb = String(it.imageThumbUrl || it.imageUrl || "").trim();
-    if (!thumb || !/^https?:\/\//i.test(thumb)) {
-      audit.reason = "no_valid_thumb";
-      return audit;
-    }
-    const provider = String(it.imageProvider || "").trim().toLowerCase();
-    if (provider && provider !== "pexels") {
-      audit.reason = "unsupported_provider";
-      return audit;
-    }
     if (iuPhotoSafetyFlagBlocked(it)) {
       audit.reason = "safety_flag_blocked";
       if (it.imageSimilarPlace) audit.wrongPlace = true;
@@ -126,10 +118,33 @@ export function iuPhotoArticleSafetyAudit(it) {
       if (it.imageSimilarBrand) audit.wrongBrand = true;
       return audit;
     }
+    const rawModeToken = String(it.imageMode || "")
+      .trim()
+      .toLowerCase()
+      .replace(/-/g, "_");
     const mode = iuNormalizeImageMode(it.imageMode);
-    if (!mode) {
+    if (mode === IU_IMAGE_MODE_NO_IMAGE) {
+      audit.mode = IU_IMAGE_MODE_NO_IMAGE;
+      audit.reason = "no_image_explicit";
+      return audit;
+    }
+    if (!rawModeToken) {
       audit.reason = "missing_image_mode";
       audit.autoGuessing = true;
+      return audit;
+    }
+    if (!mode) {
+      audit.reason = "unknown_image_mode";
+      return audit;
+    }
+    const thumb = String(it.imageThumbUrl || it.imageUrl || "").trim();
+    if (!thumb || !/^https?:\/\//i.test(thumb)) {
+      audit.reason = "no_valid_thumb";
+      return audit;
+    }
+    const provider = String(it.imageProvider || "").trim().toLowerCase();
+    if (provider && provider !== "pexels") {
+      audit.reason = "unsupported_provider";
       return audit;
     }
     if (iuPhotoSafetyForbiddenSimilarHit(it)) {

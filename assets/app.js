@@ -19,6 +19,7 @@ import {
   IU_IMAGE_GUESSING_ALLOWED,
   IU_IMAGE_MODE_EXACT,
   IU_IMAGE_MODE_ILLUSTRATIVE,
+  IU_IMAGE_MODE_NO_IMAGE,
   iuArticleHasValidPhotoImage,
   iuPhotoArticleSafetyAudit,
 } from "./iu-photo-article-safety.js";
@@ -375,6 +376,7 @@ try {
       guessingAllowed: IU_IMAGE_GUESSING_ALLOWED,
       exactMatchMode: IU_IMAGE_MODE_EXACT,
       illustrativeMode: IU_IMAGE_MODE_ILLUSTRATIVE,
+      noImageMode: IU_IMAGE_MODE_NO_IMAGE,
     };
   }
 } catch (_) {}
@@ -6614,14 +6616,6 @@ try {
     } finally {
       iuBootTracePhase("renderItems_end");
     }
-  }
-
-  function renderFeedItemHtml(item) {
-    if (!item) return "";
-    const type = String(item.contentType || "article").toLowerCase();
-    if (type === "video") return buildVideoAsArticleCard(item);
-    if (type === "ad") return buildAdHtml(item);
-    return buildArticleHtml(item);
   }
 
   function normalizeMediaName(name) {

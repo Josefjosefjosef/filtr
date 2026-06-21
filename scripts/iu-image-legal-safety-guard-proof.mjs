@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 /**
- * P0 proof: image legal safety guards — no guessing, EXACT_MATCH or ILLUSTRATIVE only.
+ * P0 proof: image legal safety guards — EXACT_MATCH, ILLUSTRATIVE, NO_IMAGE; no guessing.
  * Run: npm run image-legal-safety-guard-proof
  */
 import fs from "fs";
 import path from "path";
-import { fileURLToPath, pathToFileURL } from "url";
+import { fileURLToPath } from "url";
 import {
   IU_IMAGE_GUESSING_ALLOWED,
   IU_IMAGE_MODE_EXACT,
   IU_IMAGE_MODE_ILLUSTRATIVE,
+  IU_IMAGE_MODE_NO_IMAGE,
+  iuArticleHasValidPhotoImage,
   iuPhotoArticleSafetyAudit,
 } from "../assets/iu-photo-article-safety.js";
 
@@ -206,6 +208,22 @@ const DIAGNOSTIC_CASES = [
     expectAllowed: false,
     expectWrongPerson: true,
   },
+  {
+    id: "no_image_explicit_with_thumb",
+    title: "Článek bez fotografie",
+    imageMode: "no_image",
+    expectAllowed: false,
+    expectMode: "no_image",
+    expectReason: "no_image_explicit",
+  },
+  {
+    id: "no_image_uppercase",
+    title: "Článek bez fotografie",
+    imageMode: "NO_IMAGE",
+    expectAllowed: false,
+    expectMode: "no_image",
+    expectReason: "no_image_explicit",
+  },
 ];
 
 function buildItem(c) {
@@ -227,7 +245,99 @@ function buildItem(c) {
   delete item.expectWrongProduct;
   delete item.expectWrongBrand;
   delete item.expectAutoGuessing;
+  delete item.expectReason;
   return item;
+}
+
+function runSafetyReplay() {
+  const replay = {
+    missingMode: buildItem({ title: "Bez mode" }),
+    invalidMode: buildItem({ title: "Invalid", imageMode: "castle" }),
+    exactMatch: buildItem({
+      title: "Hrad Loket",
+      imageMode: "exact_match",
+      imageExactMatchVerified: true,
+      imageTitleEntity: "Hrad Loket",
+      imageMatchedEntity: "Hrad Loket",
+      imageEntityType: "building",
+    }),
+    illustrative: buildItem({
+      title: "Hrad Loket",
+      imageMode: "illustrative",
+      imageIllustrativeVerified: true,
+      imageIllustrativeScope: "generic",
+      imageIllustrativeCategory: "medieval_gate",
+    }),
+    legacy: { contentType: "article", title: "Legacy", url: "https://example.com/l", imageThumbUrl: THUMB },
+    noImage: buildItem({ title: "No image", imageMode: "no_image" }),
+  };
+  delete replay.missingMode.imageMode;
+
+  const missingAudit = iuPhotoArticleSafetyAudit(replay.missingMode);
+  const invalidAudit = iuPhotoArticleSafetyAudit(replay.invalidMode);
+  const exactAudit = iuPhotoArticleSafetyAudit(replay.exactMatch);
+  const illustrativeAudit = iuPhotoArticleSafetyAudit(replay.illustrative);
+  const legacyAudit = iuPhotoArticleSafetyAudit(replay.legacy);
+  const noImageAudit = iuPhotoArticleSafetyAudit(replay.noImage);
+
+  return {
+    MISSING_MODE_SHOWS_IMAGE:
+      iuArticleHasValidPhotoImage(replay.missingMode) ? "YES" : "NO",
+    INVALID_MODE_SHOWS_IMAGE:
+      iuArticleHasValidPhotoImage(replay.invalidMode) ? "YES" : "NO",
+    EXACT_MATCH_REQUIRES_EXPLICIT_MODE:
+      iuArticleHasValidPhotoImage(replay.exactMatch) &&
+      !iuArticleHasValidPhotoImage(
+        buildItem({
+          title: "Hrad Loket",
+          imageMode: "exact_match",
+          imageTitleEntity: "Hrad Loket",
+          imageMatchedEntity: "Hrad Loket",
+          imageEntityType: "building",
+        })
+      )
+        ? "YES"
+        : "NO",
+    ILLUSTRATIVE_LABEL_VISIBLE: illustrativeAudit.showIllustrativeLabel ? "YES" : "NO",
+    LEGACY_IMAGE_RECORD_SHOWS_PHOTO:
+      iuArticleHasValidPhotoImage(replay.legacy) ? "YES" : "NO",
+    NO_IMAGE_MODE_SUPPORTED: IU_IMAGE_MODE_NO_IMAGE === "no_image" ? "YES" : "NO",
+    NO_IMAGE_MODE_RENDER_PHOTO: noImageAudit.allowed ? "YES" : "NO",
+    NO_IMAGE_MODE_TEXT_ONLY:
+      !noImageAudit.allowed &&
+      noImageAudit.mode === IU_IMAGE_MODE_NO_IMAGE &&
+      !noImageAudit.showIllustrativeLabel
+        ? "YES"
+        : "NO",
+    AUTO_GUESSING_COUNT: [
+      missingAudit,
+      invalidAudit,
+      legacyAudit,
+      noImageAudit,
+    ].filter((a) => a.allowed).length,
+    replayFails: [
+      missingAudit.allowed && "missing_mode_renders",
+      invalidAudit.allowed && "invalid_mode_renders",
+      !exactAudit.allowed && "exact_match_blocked",
+      !illustrativeAudit.showIllustrativeLabel && "illustrative_label_missing",
+      legacyAudit.allowed && "legacy_renders",
+      noImageAudit.allowed && "no_image_renders",
+      noImageAudit.mode !== IU_IMAGE_MODE_NO_IMAGE && "no_image_mode_missing",
+    ].filter(Boolean),
+  };
+}
+
+function checkDeadCodeGuard() {
+  const appJs = fs.readFileSync(path.join(REPO, "assets/app.js"), "utf8");
+  const hasRenderFeedItemHtml = /function\s+renderFeedItemHtml\b/.test(appJs);
+  const callsRenderFeedItemHtml = /\brenderFeedItemHtml\s*\(/.test(appJs);
+  return {
+    DEAD_CODE_REMOVED: !hasRenderFeedItemHtml && !callsRenderFeedItemHtml ? "YES" : "NO",
+    RENDERFEEDITEMHTML_BYPASS_ALLOWED:
+      !hasRenderFeedItemHtml && !callsRenderFeedItemHtml ? "NO" : "YES",
+    SAFETY_BYPASS_FOUND:
+      !hasRenderFeedItemHtml && !callsRenderFeedItemHtml ? "NO" : "YES",
+  };
 }
 
 function runDiagnostics() {
@@ -240,6 +350,7 @@ function runDiagnostics() {
     const pass =
       audit.allowed === c.expectAllowed &&
       (!c.expectMode || audit.mode === c.expectMode) &&
+      (!c.expectReason || audit.reason === c.expectReason) &&
       (!c.expectWrongPlace || audit.wrongPlace === true) &&
       (!c.expectWrongPerson || audit.wrongPerson === true) &&
       (!c.expectWrongCompany || audit.wrongCompany === true) &&
@@ -266,20 +377,36 @@ function runDiagnostics() {
 
 function main() {
   const diag = runDiagnostics();
-  const pass = diag.fails.length === 0 && IU_IMAGE_GUESSING_ALLOWED === false;
+  const replay = runSafetyReplay();
+  const deadCode = checkDeadCodeGuard();
+  const pass =
+    diag.fails.length === 0 &&
+    replay.replayFails.length === 0 &&
+    IU_IMAGE_GUESSING_ALLOWED === false &&
+    deadCode.DEAD_CODE_REMOVED === "YES";
 
   const report = {
     IMAGE_GUESSING_ALLOWED: IU_IMAGE_GUESSING_ALLOWED ? "YES" : "NO",
     EXACT_MATCH_MODE_SUPPORTED: IU_IMAGE_MODE_EXACT === "exact_match" ? "YES" : "NO",
     ILLUSTRATIVE_MODE_SUPPORTED: IU_IMAGE_MODE_ILLUSTRATIVE === "illustrative" ? "YES" : "NO",
-    ILLUSTRATIVE_LABEL_VISIBLE: diag.illustrativeLabelVisible ? "YES" : "NO",
+    NO_IMAGE_MODE_SUPPORTED: replay.NO_IMAGE_MODE_SUPPORTED,
+    NO_IMAGE_MODE_RENDER_PHOTO: replay.NO_IMAGE_MODE_RENDER_PHOTO,
+    NO_IMAGE_MODE_TEXT_ONLY: replay.NO_IMAGE_MODE_TEXT_ONLY,
+    ILLUSTRATIVE_LABEL_VISIBLE: replay.ILLUSTRATIVE_LABEL_VISIBLE,
     NO_IMAGE_FALLBACK_SUPPORTED: "YES",
+    MISSING_MODE_SHOWS_IMAGE: replay.MISSING_MODE_SHOWS_IMAGE,
+    INVALID_MODE_SHOWS_IMAGE: replay.INVALID_MODE_SHOWS_IMAGE,
+    EXACT_MATCH_REQUIRES_EXPLICIT_MODE: replay.EXACT_MATCH_REQUIRES_EXPLICIT_MODE,
+    LEGACY_IMAGE_RECORD_SHOWS_PHOTO: replay.LEGACY_IMAGE_RECORD_SHOWS_PHOTO,
+    DEAD_CODE_REMOVED: deadCode.DEAD_CODE_REMOVED,
+    RENDERFEEDITEMHTML_BYPASS_ALLOWED: deadCode.RENDERFEEDITEMHTML_BYPASS_ALLOWED,
+    SAFETY_BYPASS_FOUND: deadCode.SAFETY_BYPASS_FOUND,
     WRONG_PLACE_SUBSTITUTION: 0,
     WRONG_PERSON_SUBSTITUTION: 0,
     WRONG_COMPANY_SUBSTITUTION: 0,
     WRONG_PRODUCT_SUBSTITUTION: 0,
     WRONG_BRAND_SUBSTITUTION: 0,
-    AUTO_GUESSING_COUNT: 0,
+    AUTO_GUESSING_COUNT: replay.AUTO_GUESSING_COUNT,
     LEGAL_SAFETY_OVER_IMAGE_COUNT: "YES",
     CONSOLE_ERRORS: 0,
     APP_ERRORS: 0,
@@ -289,7 +416,7 @@ function main() {
     VERDICT: pass ? "PASS" : "FAIL",
     diagnosticPass: diag.results.filter((r) => r.pass).length,
     diagnosticTotal: diag.results.length,
-    fails: diag.fails,
+    fails: [...diag.fails, ...replay.replayFails],
     results: diag.results,
   };
 
