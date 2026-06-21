@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "description": "Jednorázový manuální Pexels initial import — plán V1 (dry-run only, bez API volání)",
+  "dryRunOnly": true,
+  "governance": {
+    "frontendPexelsApiCall": false,
+    "userPageLoadPexelsCall": false,
+    "pexelsOnlyManualBackendImport": true,
+    "automaticDailyRefill": false,
+    "automaticWeeklyRefill": false,
+    "automaticGalleryTopup": false,
+    "automaticPexelsSync": false,
+    "cronImportAllowed": false,
+    "imageRemovedAfterUse": false,
+    "imageReusedAllowed": true,
+    "feedImageLabelAlwaysVisible": true,
+    "feedImageLabelText": "Ilustrační foto"
+  },
+  "rateLimit": {
+    "pexelsDefaultHourlyLimit": 200,
+    "pexelsDefaultMonthlyLimit": 20000,
+    "rateLimitHeadersLogged": true,
+    "headers": [
+      "X-Ratelimit-Limit",
+      "X-Ratelimit-Remaining",
+      "X-Ratelimit-Reset"
+    ],
+    "stopOnRateLimitReached": true,
+    "stopOnMonthlyBudgetReached": true,
+    "requestBudgetRequired": true,
+    "cacheRequired": true,
+    "duplicateQueryCacheRequired": true,
+    "photosPerPage": 80,
+    "recommendedMaxRequestsPerRun": 180,
+    "recommendedPauseMsBetweenRequests": 500
+  },
+  "sectionGalleries": {
+    "zpravy": { "targetCount": 200, "searchQueries": ["news press conference", "journalism desk"] },
+    "sport": { "targetCount": 200, "searchQueries": ["sports stadium action", "athlete training"] },
+    "finance": { "targetCount": 200, "searchQueries": ["finance business charts", "stock market office"] },
+    "zdravi": { "targetCount": 200, "searchQueries": ["healthcare clinic", "medical wellness"] },
+    "cestovani": { "targetCount": 200, "searchQueries": ["travel destination landscape", "tourist cityscape"] },
+    "hry": { "targetCount": 150, "searchQueries": ["video games esports", "gaming controller"] },
+    "kultura-akce": { "targetCount": 200, "searchQueries": ["concert stage lights", "cultural festival crowd"] },
+    "veda-historie": { "targetCount": 200, "searchQueries": ["science laboratory research", "historical monument"] },
+    "vzdelavani": { "targetCount": 150, "searchQueries": ["education classroom students", "university library"] },
+    "prehled-dne": { "targetCount": 150, "searchQueries": ["morning newspaper coffee", "daily news summary"] }
+  },
+  "supplementalGalleries": {
+    "doprava": { "targetCount": 200, "searchQueries": ["transport traffic highway", "public transit train"] },
+    "priroda": { "targetCount": 200, "searchQueries": ["nature forest landscape", "wildlife outdoors"] },
+    "pocasi": { "targetCount": 150, "searchQueries": ["weather clouds sky", "storm rain city"] },
+    "politika": { "targetCount": 200, "searchQueries": ["parliament government building", "political debate podium"] },
+    "ekonomika": { "targetCount": 150, "searchQueries": ["economy market trade", "business district skyline"] },
+    "technologie": { "targetCount": 200, "searchQueries": ["technology innovation digital", "computer server data"] },
+    "bezpecnost": { "targetCount": 150, "searchQueries": ["security protection shield", "emergency services"] },
+    "kriminalita": { "targetCount": 150, "searchQueries": ["police investigation abstract", "court justice scales"] },
+    "energetika": { "targetCount": 150, "searchQueries": ["energy power plant solar", "electric grid wind"] },
+    "prumysl": { "targetCount": 150, "searchQueries": ["industry factory manufacturing", "industrial production line"] },
+    "bydleni": { "targetCount": 150, "searchQueries": ["housing apartment interior", "real estate building"] },
+    "zemedelstvi": { "targetCount": 150, "searchQueries": ["agriculture farm field", "harvest crops rural"] }
+  },
+  "specialGalleries": {
+    "verified_persons": {
+      "entityCountMin": 50,
+      "entityCountMax": 100,
+      "entityCountPlan": 75,
+      "photosPerEntityMin": 3,
+      "photosPerEntityMax": 5,
+      "photosPerEntityPlan": 4,
+      "note": "Každá osoba = samostatný search dotaz; fotky jsou doprovodné, ne důkaz události."
+    },
+    "verified_places_objects": {
+      "entityCountMin": 50,
+      "entityCountMax": 100,
+      "entityCountPlan": 75,
+      "photosPerEntityMin": 3,
+      "photosPerEntityMax": 5,
+      "photosPerEntityPlan": 4,
+      "note": "Každé místo/objekt = samostatný search dotaz; fotky jsou doprovodné."
+    },
+    "general_fallback": {
+      "targetCount": 300,
+      "searchQueries": [
+        "abstract news background",
+        "generic cityscape",
+        "neutral office workspace",
+        "soft focus landscape"
+      ]
+    }
+  },
+  "importMetadata": {
+    "imageProviderAfterImport": "internal_gallery",
+    "imageLicenseSource": "Pexels License",
+    "manualTriggerOnly": true,
+    "allowedTriggers": ["npm run pexels-initial-import (future, not implemented)", "operator CLI with PEXELS_API_KEY env"],
+    "forbiddenTriggers": ["page load", "cron", "scheduled workflow", "automatic topup", "feed pipeline"]
+  }
+}
