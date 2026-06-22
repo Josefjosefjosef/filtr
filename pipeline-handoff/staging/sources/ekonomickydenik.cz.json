@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-06-22T14:05:17.296419Z",
+  "ingestedAt": "2026-06-22T15:41:47.704012Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jdou po nich šmejdi. Havlíček chce omezit údaje o majitelích a šéfech firem v rejstříku",
+      "url": "https://ekonomickydenik.cz/omezit-udaje-majitele-firem-rejstrik/",
+      "dt": "2026-06-22T14:17:24Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chce",
+        "firem",
+        "havlíček",
+        "jdou",
+        "majitelích",
+        "nich",
+        "omezit",
+        "rejstříku",
+        "údaje",
+        "šmejdi",
+        "šéfech"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -769,29 +797,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Průlom. Všechny státy souhlasí se vstupem Ukrajiny do EU",
-      "url": "https://ekonomickydenik.cz/prulom-vsechny-staty-souhlasi-se-vstupem-ukrajiny-do-eu/",
-      "dt": "2026-06-20T08:55:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "průlom",
-        "souhlasí",
-        "státy",
-        "ukrajiny",
-        "vstupem",
-        "všechny"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71397,
+      "bytes": 72035,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +844,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-22T13:58:03Z",
+        "raw_feed_latest_publishedAt": "2026-06-22T14:17:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -856,6 +861,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jdou po nich šmejdi. Havlíček chce omezit údaje o majitelích a šéfech firem v rejstříku",
+            "publishedAt": "2026-06-22T14:17:24Z"
+          },
           {
             "title": "Výměna v Londýně. Nový premiér brexit nezruší, ale chystá bezpečnostní pakt",
             "publishedAt": "2026-06-22T13:58:03Z"
@@ -883,10 +892,6 @@
           {
             "title": "Pokuty už stačit nebudou. Za ničení přírody bude firmám hrozit trestní stíhání",
             "publishedAt": "2026-06-22T11:07:22Z"
-          },
-          {
-            "title": "Nález munice u brněnského nádraží: Policie evakuuje stovky lidí, vlaky stojí",
-            "publishedAt": "2026-06-22T10:11:44Z"
           }
         ]
       }
