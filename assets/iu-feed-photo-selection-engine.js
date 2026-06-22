@@ -1,13 +1,13 @@
 /**
  * Feed photo selection engine — illustrative galleries only.
  * Phase 2D: title topic matching → supplemental → section → general_fallback (last).
- * FEED_RENDER_ENABLED=true (phase 2B+): middle feed render via guarded wiring in app.js.
+ * FEED_RENDER_ENABLED=false (timeline V1): middle feed photos off; engine files kept for later cleanup.
  */
 import { IU_IMAGE_GUESSING_ALLOWED, IU_IMAGE_MODE_ILLUSTRATIVE } from "./iu-photo-article-safety.js";
 import { IU_INTERNAL_GALLERY_PROVIDER } from "./iu-internal-image-gallery.js";
 
 export const IU_FEED_PHOTO_LABEL = "Ilustrační foto";
-export const IU_FEED_RENDER_ENABLED = true;
+export const IU_FEED_RENDER_ENABLED = false;
 export const IU_FEED_PHOTO_MAX_WIDTH_PERCENT = 33;
 export const IU_FEED_PHOTO_TEXT_MIN_PERCENT = 67;
 export const IU_FEED_PHOTO_SELECTION_SOURCE = "feed_photo_engine";
