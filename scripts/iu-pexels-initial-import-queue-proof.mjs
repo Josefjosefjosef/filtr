@@ -39,6 +39,8 @@ const QUEUE_EXCLUDE_NAMES = [
   "pexels-import-runner",
   "pexels-import-pilot",
   "pexels-import-pilot-proof",
+  "pexels-import-batch",
+  "pexels-import-batch-proof",
 ];
 
 function loadJson(p) {
