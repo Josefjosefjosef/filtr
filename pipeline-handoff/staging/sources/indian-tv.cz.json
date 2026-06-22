@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-06-22T15:41:47.704012Z",
+  "ingestedAt": "2026-06-22T17:18:33.968280Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Operace Flashpoint znovu mluví česky a vyjde v remasterované podobě. Už teď je k dispozici demo - INDIAN",
+      "url": "https://indian-tv.cz/clanek/operace-flashpoint-znovu-mluvi-cesky-v-remasterovane-1germ4",
+      "dt": "2026-06-22T16:26:05Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "demo",
+        "dispozici",
+        "flashpoint",
+        "indian",
+        "mluví",
+        "operace",
+        "podobě",
+        "remasterované",
+        "vyjde",
+        "znovu",
+        "česky"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1042,34 +1070,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Gears of War: E-Day láká na emotivní příběh i technologickou špičku Unreal Enginu 5 - INDIAN",
-      "url": "https://indian-tv.cz/clanek/gears-of-war-e-day-laka-na-emotivni-pribeh-i-nvqaks",
-      "dt": "2026-06-17T17:55:18Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "day",
-        "emotivní",
-        "enginu",
-        "gears",
-        "indian",
-        "láká",
-        "příběh",
-        "technologickou",
-        "unreal",
-        "war",
-        "špičku"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1080,11 +1080,11 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 216923,
+      "bytes": 219711,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 58,
+      "itemsParsed": 59,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1117,7 +1117,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-22T14:02:38Z",
+        "raw_feed_latest_publishedAt": "2026-06-22T16:26:05Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1132,6 +1132,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Operace Flashpoint znovu mluví česky a vyjde v remasterované podobě. Už teď je k dispozici demo - INDIAN",
+            "publishedAt": "2026-06-22T16:26:05Z"
+          },
           {
             "title": "Invincible VS je hořkosladkým titulem, který mnohé zklame - INDIAN",
             "publishedAt": "2026-06-22T14:02:38Z"
@@ -1159,10 +1163,6 @@
           {
             "title": "Halo: Campaign Evolved na PS5 nebude vyžadovat PS Plus pro lokální kooperaci - INDIAN",
             "publishedAt": "2026-06-22T05:30:00Z"
-          },
-          {
-            "title": "Grand Theft Auto VI může nastavit nový cenový standard - INDIAN",
-            "publishedAt": "2026-06-22T05:10:36Z"
           }
         ]
       }
