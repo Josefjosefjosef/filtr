@@ -11,6 +11,7 @@ export const IU_FEED_RENDER_ENABLED = true;
 export const IU_FEED_PHOTO_MAX_WIDTH_PERCENT = 33;
 export const IU_FEED_PHOTO_TEXT_MIN_PERCENT = 67;
 export const IU_FEED_PHOTO_SELECTION_SOURCE = "feed_photo_engine";
+export const IU_FEED_PHOTO_CONFIG_FILE = "image_gallery/feed_photo_engine_config.json";
 export const IU_FEED_PHOTO_ENGINE_VERSION = 1;
 
 export const IU_FEED_SECTION_GALLERY_IDS = [

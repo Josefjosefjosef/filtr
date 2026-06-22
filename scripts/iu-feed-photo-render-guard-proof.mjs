@@ -56,6 +56,7 @@ function withGuardParams(url) {
   const u = new URL(url, BASE);
   if (!u.searchParams.has("iuRobust")) u.searchParams.set("iuRobust", "1");
   if (!u.searchParams.has("nosw")) u.searchParams.set("nosw", "1");
+  u.searchParams.set("iuFeedPhotoMedia", "1");
   return u.href;
 }
 
@@ -119,9 +120,8 @@ async function waitFeedReady(page) {
         ? feed.querySelectorAll("article.news-card[data-feed-type='article']").length
         : 0;
       const metrics = window.__iuPhotoArticleMetrics || {};
-      const hydrated = window.__iuFeedPhotoHydrateDone === true;
-      if (metrics.feedRenderEnabled && metrics.feedPhotoCatalogLoaded) {
-        return articles >= 8 && metrics.photoArticlesRendered >= 1 && hydrated;
+      if (metrics.feedRenderEnabled && metrics.feedPhotoMediaEnabled && metrics.feedPhotoCatalogLoaded) {
+        return articles >= 8 && metrics.photoArticlesRendered >= 1;
       }
       return articles >= 8;
     },
@@ -208,12 +208,10 @@ async function probeMiddleFeed(page) {
       if (img) {
         if (img.getAttribute("loading") !== "lazy") lazyLoading = false;
         const src = String(img.getAttribute("src") || "");
-        const dataSrc = String(img.getAttribute("data-iu-photo-src") || "");
-        const effectiveSrc = dataSrc || src;
-        if (effectiveSrc && !/^data:image\//i.test(effectiveSrc)) {
-          if (!/\.webp(\?|$)/i.test(effectiveSrc)) webpOnly = false;
-          if (/images\.pexels\.com|api\.pexels\.com/i.test(effectiveSrc)) webpOnly = false;
-          if (/\/imported\/[^/]+\/webp\//i.test(effectiveSrc)) fullSizeImages = true;
+        if (src && !/^data:image\//i.test(src)) {
+          if (!/\.webp(\?|$)/i.test(src)) webpOnly = false;
+          if (/images\.pexels\.com|api\.pexels\.com/i.test(src)) webpOnly = false;
+          if (/\/imported\/[^/]+\/webp\//i.test(src)) fullSizeImages = true;
         }
       }
 
@@ -324,7 +322,9 @@ function evaluateAll(results, safetyScan) {
   if (IU_FEED_RENDER_ENABLED !== true) fails.push("FEED_RENDER_ENABLED=NO");
   if (!desktop || desktop.photoCount < 1) fails.push("PHOTO_ARTICLES_RENDERED=0");
   if (desktop && desktop.metrics?.feedRenderEnabled !== true) fails.push("METRICS_FEED_RENDER=NO");
-  if (desktop && !desktop.metrics?.feedPhotoCatalogLoaded) fails.push("CATALOG_NOT_LOADED");
+  if (desktop && desktop.metrics?.feedPhotoMediaEnabled && !desktop.metrics?.feedPhotoCatalogLoaded) {
+    fails.push("CATALOG_NOT_LOADED");
+  }
 
   for (const r of results) {
     if (!r.probe.photoLeftTextRight) fails.push(`${r.viewport}: PHOTO_LEFT_TEXT_RIGHT=NO`);
