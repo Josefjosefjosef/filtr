@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 /**
- * Pexels import Batch 1 — post-import proof.
- * Verifies batch manifest, WebP images, guards, no API key leakage.
- * Run: npm run pexels-import-batch-proof
+ * Pexels import batch — post-import proof (PEXELS_IMPORT_BATCH_NUMBER, default 1).
+ * Run: npm run pexels-import-batch-proof | npm run pexels-import-batch2-proof
  */
 import fs from "fs";
 import path from "path";
@@ -12,7 +11,6 @@ import { execSync } from "child_process";
 import {
   IMAGE_STORAGE_PATH,
   METADATA_STORAGE_PATH,
-  BATCH_NUMBER_EXPORT,
   MAX_REQUESTS_THIS_RUN,
   ALLOWED_GALLERY_IDS,
   assertApiKeyFromEnvOnly,
@@ -25,6 +23,7 @@ import {
 import { IU_IMAGE_GUESSING_ALLOWED } from "../assets/iu-photo-article-safety.js";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const BATCH_NUMBER_EXPORT = Number(process.env.PEXELS_IMPORT_BATCH_NUMBER || "1");
 const BATCH_DIR = "batch-" + BATCH_NUMBER_EXPORT;
 const IMPORTED_ROOT = path.join(REPO, "projects", "data", "image_gallery", "imported", BATCH_DIR);
 const MANIFEST_PATH = path.join(IMPORTED_ROOT, "manifest.json");
@@ -36,11 +35,10 @@ const REPORT_PATH = path.join(
   "iu-pexels-import-batch-" + BATCH_NUMBER_EXPORT + "-proof-report.json"
 );
 
-const FORBIDDEN_GALLERY_IDS = new Set([
-  "verified_persons",
-  "verified_places_objects",
-  "general_fallback",
-]);
+const FORBIDDEN_GALLERY_IDS = new Set(["verified_persons", "verified_places_objects"]);
+if (BATCH_NUMBER_EXPORT < 2) {
+  FORBIDDEN_GALLERY_IDS.add("general_fallback");
+}
 const MAX_IMAGE_WIDTH = 800;
 
 const KEY_LEAK_PATTERNS = [
@@ -147,6 +145,39 @@ function checkScopeUnchanged() {
   }
 }
 
+function loadPriorPexelsIds(currentBatch) {
+  const ids = new Set();
+  for (let n = 1; n < currentBatch; n++) {
+    const manifestPath = path.join(
+      GALLERY_ROOT,
+      "imported",
+      "batch-" + n,
+      "manifest.json"
+    );
+    if (!fs.existsSync(manifestPath)) continue;
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+    for (const entry of manifest.entries || []) {
+      if (entry.pexelsId != null) ids.add(entry.pexelsId);
+    }
+  }
+  const pilotPath = path.join(GALLERY_ROOT, "imported", "pilot", "manifest.json");
+  if (fs.existsSync(pilotPath)) {
+    const pilot = JSON.parse(fs.readFileSync(pilotPath, "utf8"));
+    for (const entry of pilot.entries || []) {
+      if (entry.pexelsId != null) ids.add(entry.pexelsId);
+    }
+  }
+  return ids;
+}
+
+function countDuplicateImports(entries, priorIds) {
+  let count = 0;
+  for (const entry of entries) {
+    if (priorIds.has(entry.pexelsId)) count += 1;
+  }
+  return count;
+}
+
 function readRequestsUsedFromState() {
   try {
     const state = JSON.parse(
@@ -191,6 +222,9 @@ function main() {
     selection.image &&
     batchIds.has(selection.image?.imageGalleryEntryId || selection.image?.id || "");
 
+  const priorIds = loadPriorPexelsIds(BATCH_NUMBER_EXPORT);
+  const duplicateImportCount = countDuplicateImports(entries, priorIds);
+
   const importRan = count > 0 && webpCount > 0;
   const requestsOk = requestsUsed != null && requestsUsed <= MAX_REQUESTS_THIS_RUN;
   const allApprovedFalse = entries.every(
@@ -233,6 +267,7 @@ function main() {
     scopeOk.FEED_CHANGED === "NO" &&
     scopeOk.ADS_CHANGED === "NO" &&
     scopeOk.SILVER_CHANGED === "NO" &&
+    duplicateImportCount === 0 &&
     manifest.importedImagesVisibleOnWeb === false &&
     manifest.feedIntegrationEnabled === false;
 
@@ -242,6 +277,7 @@ function main() {
     REQUESTS_USED: requestsUsed,
     PHOTOS_IMPORTED_COUNT: count,
     TOTAL_IMPORTED_IMAGE_SIZE_MB: totalSizeMb(WEBP_DIR) + totalSizeMb(THUMB_DIR),
+    DUPLICATE_IMPORT_COUNT: duplicateImportCount,
     PEXELS_API_CALLED: importRan ? "YES" : "NO",
     PHOTOS_DOWNLOADED: importRan ? "YES" : "NO",
     API_KEY_FROM_ENV_ONLY: assertApiKeyFromEnvOnly().ok || importRan ? "YES" : "NO",

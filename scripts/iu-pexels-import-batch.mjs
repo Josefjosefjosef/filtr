@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Pexels import Batch 1 — manual illustrative import (max 110 API requests).
- * Requires PEXELS_API_KEY in environment. Never logs or commits the key.
- * Run: npm run pexels-import-batch
+ * Pexels import batch — manual illustrative import (max 110 API requests per run).
+ * Set PEXELS_IMPORT_BATCH_NUMBER (default 1). Requires PEXELS_API_KEY in environment.
+ * Run: npm run pexels-import-batch | npm run pexels-import-batch2
  */
 import fs from "fs";
 import path from "path";
@@ -11,7 +11,7 @@ import sharp from "sharp";
 import { loadQueue, loadState, saveState, getPendingItems } from "./iu-pexels-import-runner.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const BATCH_NUMBER = 1;
+const BATCH_NUMBER = Number(process.env.PEXELS_IMPORT_BATCH_NUMBER || "1");
 const BATCH_DIR = "batch-" + BATCH_NUMBER;
 const IMPORTED_ROOT = path.join(REPO, "projects", "data", "image_gallery", "imported", BATCH_DIR);
 const WEBP_DIR = path.join(IMPORTED_ROOT, "webp");
@@ -61,13 +61,16 @@ const SUPPLEMENTAL_GALLERY_IDS = new Set([
   "zemedelstvi",
 ]);
 
-export const ALLOWED_GALLERY_IDS = new Set([...SECTION_GALLERY_IDS, ...SUPPLEMENTAL_GALLERY_IDS]);
-
-const FORBIDDEN_GALLERY_IDS = new Set([
-  "verified_persons",
-  "verified_places_objects",
-  "general_fallback",
+export const ALLOWED_GALLERY_IDS = new Set([
+  ...SECTION_GALLERY_IDS,
+  ...SUPPLEMENTAL_GALLERY_IDS,
+  ...(BATCH_NUMBER >= 2 ? ["general_fallback"] : []),
 ]);
+
+const FORBIDDEN_GALLERY_IDS = new Set(["verified_persons", "verified_places_objects"]);
+if (BATCH_NUMBER < 2) {
+  FORBIDDEN_GALLERY_IDS.add("general_fallback");
+}
 
 const MAX_IMAGE_WIDTH = 800;
 const THUMB_WIDTH = 320;
@@ -192,8 +195,18 @@ export function selectBatchQueueItems(queue, state, maxRequests = MAX_REQUESTS_T
 
 function loadExistingPexelsIds() {
   const ids = new Set();
-  if (fs.existsSync(MANIFEST_PATH)) {
-    const manifest = JSON.parse(fs.readFileSync(MANIFEST_PATH, "utf8"));
+  for (let n = 1; n < 20; n++) {
+    const manifestPath = path.join(
+      REPO,
+      "projects",
+      "data",
+      "image_gallery",
+      "imported",
+      "batch-" + n,
+      "manifest.json"
+    );
+    if (!fs.existsSync(manifestPath)) continue;
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
     for (const entry of manifest.entries || []) {
       if (entry.pexelsId != null) ids.add(entry.pexelsId);
     }
@@ -436,7 +449,8 @@ export async function runBatchImport() {
 
   const now = new Date().toISOString();
   state.lastRunAt = now;
-  state.status = imported.length > 0 ? "batch_running" : "batch_empty";
+  state.status =
+    BATCH_NUMBER >= 2 ? "completed" : imported.length > 0 ? "batch_running" : "batch_empty";
   state.dryRunOnly = false;
   state.rateLimitLimit = lastRate.rateLimitLimit;
   state.rateLimitRemaining = lastRate.rateLimitRemaining;
@@ -485,7 +499,7 @@ function totalImportedSizeMb() {
   return Math.round((bytes / (1024 * 1024)) * 100) / 100;
 }
 
-async function main() {
+export async function main() {
   console.log("PEXELS_IMPORT_BATCH");
   console.log("BATCH_NUMBER=" + BATCH_NUMBER);
   console.log("IMAGE_STORAGE_PATH=" + IMAGE_STORAGE_PATH);

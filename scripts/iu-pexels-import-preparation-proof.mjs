@@ -52,6 +52,8 @@ const CRON_EXCLUDE_NAMES = [
   "pexels-import-pilot-proof",
   "pexels-import-batch",
   "pexels-import-batch-proof",
+  "pexels-import-batch2",
+  "pexels-import-batch2-proof",
 ];
 
 function checkFrontendPexels() {
