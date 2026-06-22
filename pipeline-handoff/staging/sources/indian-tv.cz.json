@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-06-22T08:54:53.558935Z",
+  "ingestedAt": "2026-06-22T09:46:20.899408Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "CD Projekt RED chce vydávat více her, ale ne každý rok - INDIAN",
+      "url": "https://indian-tv.cz/clanek/cd-projekt-red-chce-vydavat-vice-her-ale-ne-kazdy-rok-yiq8o1",
+      "dt": "2026-06-22T09:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "ale",
+        "chce",
+        "her",
+        "indian",
+        "každý",
+        "projekt",
+        "red",
+        "rok",
+        "vydávat"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1054,37 +1080,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Steam Machine je již údajně v rukou testerů. Uniklé benchmarky naznačují rychlejší CPU oproti PlayStationu 5 - INDIAN",
-      "url": "https://indian-tv.cz/clanek/steam-machine-je-jiz-udajne-v-rukou-testeru-scnf2c",
-      "dt": "2026-06-17T13:33:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "benchmarky",
-        "cpu",
-        "indian",
-        "již",
-        "machine",
-        "naznačují",
-        "oproti",
-        "playstationu",
-        "rukou",
-        "rychlejší",
-        "steam",
-        "testerů",
-        "uniklé",
-        "údajně"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1095,7 +1090,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 222649,
+      "bytes": 221224,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1132,7 +1127,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-22T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-22T09:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1147,6 +1142,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "CD Projekt RED chce vydávat více her, ale ne každý rok - INDIAN",
+            "publishedAt": "2026-06-22T09:00:00Z"
+          },
           {
             "title": "Capcom prý zatím nechystá remaky Resident Evil 5 a 6. Do budoucna je ale nevylučuje - INDIAN",
             "publishedAt": "2026-06-22T08:00:00Z"
@@ -1174,10 +1173,6 @@
           {
             "title": "The Crew Motorfest překonal 10 milionů prodaných kopií - INDIAN",
             "publishedAt": "2026-06-22T04:00:00Z"
-          },
-          {
-            "title": "Při letecké nehodě zemřel spoluzakladatel Ubisoftu Claude Guillemot - INDIAN",
-            "publishedAt": "2026-06-21T18:26:29Z"
           }
         ]
       }
