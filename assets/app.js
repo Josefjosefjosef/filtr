@@ -7260,13 +7260,36 @@ try {
     }
   }
 
+  function iuArticleActionsIsDesktopHomepage() {
+    try {
+      if (!iuArticleActionsIsDesktopOnlyBtn()) return false;
+      const body = document.body;
+      if (!body) return false;
+      if (body.classList.contains("iu-home") || body.classList.contains("iu-desktop-home-grid")) return true;
+      const p = typeof location !== "undefined" && location.pathname ? String(location.pathname) : "";
+      const hub =
+        p === "/projects/" ||
+        p === "/projects" ||
+        p.indexOf("/projects/") === 0 ||
+        p === "/filtr/projects" ||
+        p === "/filtr/projects/";
+      if (!hub) return false;
+      const section = new URLSearchParams(String(location.search || "")).get("section");
+      return !String(section || "").trim();
+    } catch (_) {
+      return false;
+    }
+  }
+
   function iuArticleActionsEnsureDesktopButton() {
     try {
-      if (!iuArticleActionsIsDesktopOnlyBtn()) return;
-      if (!document.body || !document.body.classList.contains("iu-home")) return;
+      if (!iuArticleActionsIsDesktopHomepage()) return;
       if (document.getElementById("iuMyInfoUzelOpenBtn")) return;
+      const card = document.getElementById("iuSilverWelcomeCard");
+      const metaEl = document.getElementById("iuSilverWelcomeMeta");
       const textBlock = document.getElementById("iuSilverWelcomeTextBlock");
-      if (!textBlock || !textBlock.parentNode) return;
+      const anchorParent = card || textBlock;
+      if (!anchorParent) return;
       const btn = document.createElement("button");
       btn.type = "button";
       btn.id = "iuMyInfoUzelOpenBtn";
@@ -7279,7 +7302,13 @@ try {
           iuArticleActionsOpenOverlay();
         } catch (_) {}
       });
-      textBlock.insertAdjacentElement("afterend", btn);
+      if (metaEl && metaEl.parentNode === textBlock) {
+        metaEl.insertAdjacentElement("afterend", btn);
+      } else if (textBlock && anchorParent.contains(textBlock)) {
+        textBlock.insertAdjacentElement("afterend", btn);
+      } else {
+        anchorParent.appendChild(btn);
+      }
     } catch (_) {}
   }
 
@@ -9447,6 +9476,20 @@ function buildVideoAsArticleCard(it) {
 
     window.iuSilverWelcomeRefresh = refresh;
     window.iuSilverWelcomeScheduleFit = scheduleSilverWelcomeFit;
+    try {
+      if (typeof window.iuArticleActionsEnsureDesktopButton === "function") {
+        const prevRefresh = refresh;
+        refresh = function () {
+          try {
+            prevRefresh();
+          } catch (_) {}
+          try {
+            iuArticleActionsEnsureDesktopButton();
+          } catch (_) {}
+        };
+        window.iuSilverWelcomeRefresh = refresh;
+      }
+    } catch (_) {}
 
     try{
       if (!window.__iuSilverWelcomeJePrefixMq){
@@ -10472,6 +10515,7 @@ function buildVideoAsArticleCard(it) {
       if (ok) {
         try { iuDesktopHomeCardsEnsureDomAll(); } catch (_) {}
         try { iuDesktopInitialScrollTopApply(); } catch (_) {}
+        try { iuArticleActionsEnsureDesktopButton(); } catch (_) {}
       }
       try{ iuDesktopHomeSectionTopGapSync(); }catch(_){}
     }catch(_){}
