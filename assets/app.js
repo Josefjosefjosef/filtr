@@ -24,6 +24,13 @@ import {
   iuPhotoArticleSafetyAudit,
 } from "./iu-photo-article-safety.js";
 import {
+  IU_FEED_PHOTO_LABEL,
+  IU_FEED_RENDER_ENABLED,
+  iuFeedPhotoApplySelectionToArticle,
+  iuFeedPhotoLoadCatalogBrowser,
+  iuFeedPhotoRenderGuardAllowsArticleImage,
+} from "./iu-feed-photo-selection-engine.js";
+import {
   IU_HOMEPAGE_CHUNK_MANIFEST_FILE,
   IU_CHUNK_BUFFER_MAX,
   IU_CHUNK_INITIAL_SIZE,
@@ -1220,11 +1227,53 @@ try {
   // FEED VIDEO EVERY 8 (YouTube preview card, lazy embed)
   const IU_FEED_VIDEO_ENABLED = true;
   const IU_FEED_VIDEO_EVERY = 8;
-  /** Middle feed only: Pexels photo article slots every 4–7 regular articles (preferred 5). */
-  const IU_FEED_PHOTO_ARTICLE_ENABLED = true;
+  /** Middle feed only: illustrative photo article slots every 4–7 regular articles (preferred 5). */
+  const IU_FEED_PHOTO_ARTICLE_ENABLED = IU_FEED_RENDER_ENABLED;
   const IU_FEED_PHOTO_INTERVAL_MIN = 4;
   const IU_FEED_PHOTO_INTERVAL_MAX = 7;
   const IU_FEED_PHOTO_PREFERRED_INTERVAL = 5;
+  let iuFeedPhotoCatalogCache = null;
+  let iuFeedPhotoCatalogLoadPromise = null;
+
+  async function iuFeedPhotoEnsureCatalogLoaded() {
+    if (!IU_FEED_RENDER_ENABLED) return null;
+    if (iuFeedPhotoCatalogCache) return iuFeedPhotoCatalogCache;
+    if (!iuFeedPhotoCatalogLoadPromise) {
+      iuFeedPhotoCatalogLoadPromise = iuFeedPhotoLoadCatalogBrowser(
+        async (url) => {
+          const res = await fetch(url, { credentials: "same-origin" });
+          if (!res.ok) throw new Error("feed_photo_catalog_fetch_failed");
+          return res.json();
+        },
+        (file) => iuDataUrl(file)
+      )
+        .then((catalog) => {
+          if (catalog && catalog.total > 0) {
+            iuFeedPhotoCatalogCache = catalog;
+            return catalog;
+          }
+          return null;
+        })
+        .catch(() => null);
+    }
+    return iuFeedPhotoCatalogLoadPromise;
+  }
+
+  function iuFeedPhotoArticleForRender(article) {
+    if (!IU_FEED_RENDER_ENABLED || !iuFeedPhotoCatalogCache) return article;
+    try {
+      const merged = iuFeedPhotoApplySelectionToArticle(
+        article,
+        iuFeedPhotoCatalogCache,
+        iuBasePath(),
+        { recordUsage: true }
+      );
+      if (!iuFeedPhotoRenderGuardAllowsArticleImage(merged)) return article;
+      return merged;
+    } catch (_) {
+      return article;
+    }
+  }
   const IU_PREHLED_DNE_VIDEO_EVERY = 10;
   const IU_FEED_VIDEO_MAX_PER_PAGE = 25;
   /** P0 UI: first DOM append batch ≈ first viewport; follow-up batches keep main-thread slices small. */
@@ -5844,6 +5893,9 @@ try {
       persistLastError("Invariant breach: invalid render target");
       return;
     }
+    if (IU_FEED_RENDER_ENABLED) {
+      await iuFeedPhotoEnsureCatalogLoaded();
+    }
     state.__iuRenderFeedPassSeq = (state.__iuRenderFeedPassSeq || 0) + 1;
     rfPassForTrace = state.__iuRenderFeedPassSeq;
     iuBootTracePhase("renderFeed_pass_" + rfPassForTrace + "_start");
@@ -6208,10 +6260,18 @@ try {
           kind === "article" &&
           IU_FEED_PHOTO_ARTICLE_ENABLED &&
           middleFeedPhotoArticleIndexSet.has(pos);
+        let renderItem = item;
+        let photoLayoutActive = usePhotoLayout;
+        if (photoLayoutActive && IU_FEED_RENDER_ENABLED) {
+          renderItem = iuFeedPhotoArticleForRender(item);
+          if (!iuArticleHasValidPhotoImage(renderItem)) {
+            photoLayoutActive = false;
+          }
+        }
         const markup =
           kind === "video"
             ? buildVideoAsArticleCard(item)
-            : buildArticleHtml(item, { photoLayout: usePhotoLayout });
+            : buildArticleHtml(renderItem, { photoLayout: photoLayoutActive });
         if (!markup) {
           persistLastError("Invariant breach: builder returned falsy markup");
           renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
@@ -6388,6 +6448,10 @@ try {
         photoArticleIndexSetSize: middleFeedPhotoArticleIndexSet.size,
         illustrativeLabelsRendered: safeTarget.querySelectorAll(".iuPhotoArticle-illustrativeLabel").length,
         imageGuessingAllowed: IU_IMAGE_GUESSING_ALLOWED,
+        feedRenderEnabled: IU_FEED_RENDER_ENABLED,
+        feedPhotoCatalogLoaded: Boolean(iuFeedPhotoCatalogCache && iuFeedPhotoCatalogCache.total > 0),
+        feedPhotoCatalogTotal: iuFeedPhotoCatalogCache?.total || 0,
+        feedPhotoLabel: IU_FEED_PHOTO_LABEL,
       };
     } catch (_) {}
 
@@ -6718,7 +6782,7 @@ try {
       const slotTarget =
         photoSlotCounter === 0 ? preferredGap : iuPhotoArticleNextInterval(photoSlotCounter);
       const canUsePhoto =
-        iuArticleHasValidPhotoImage(it) &&
+        (IU_FEED_RENDER_ENABLED || iuArticleHasValidPhotoImage(it)) &&
         regularSincePhoto >= minGap &&
         (regularSincePhoto >= slotTarget ||
           regularSincePhoto >= preferredGap ||
@@ -6763,6 +6827,14 @@ try {
   }
 
   function buildPhotoArticleHtml(it, parts) {
+    if (IU_FEED_RENDER_ENABLED && !iuFeedPhotoRenderGuardAllowsArticleImage(it)) {
+      return `
+      <article class="news-card" data-feed-type="article">
+        <h2 class="news-title">${parts.titleMarkup}${parts.suspiciousFlag}</h2>
+        ${parts.sourcesMetaLine}
+      </article>
+    `;
+    }
     const audit = iuPhotoArticleSafetyAudit(it);
     if (!audit.allowed) {
       return `
@@ -6773,11 +6845,12 @@ try {
     `;
     }
     const thumbUrl = String(it.imageThumbUrl || it.imageUrl || "").trim();
-    const altText = String(it.imageAlt || parts.title || "Ilustrační fotografie").trim();
+    const altText = String(it.imageAlt || parts.title || IU_FEED_PHOTO_LABEL).trim();
     const legalAttrs = iuPhotoArticleLegalDataAttrs(it);
-    const illustrativeLabel = audit.showIllustrativeLabel
-      ? `<span class="iuPhotoArticle-illustrativeLabel" style="position:absolute;left:4px;bottom:4px;padding:1px 5px;border-radius:4px;font-size:10px;line-height:1.2;font-weight:500;color:rgba(255,255,255,.92);background:rgba(11,27,43,.62);pointer-events:none">Ilustrační foto</span>`
-      : "";
+    const illustrativeLabel =
+      audit.showIllustrativeLabel || IU_FEED_RENDER_ENABLED
+        ? `<span class="iuPhotoArticle-illustrativeLabel">${escapeHtml(IU_FEED_PHOTO_LABEL)}</span>`
+        : "";
     return `
       <article class="news-card iuPhotoArticle" data-feed-type="article" data-photo-layout="1"${legalAttrs}>
         <div class="iuPhotoArticle-row">

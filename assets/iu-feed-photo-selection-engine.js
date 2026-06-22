@@ -1,13 +1,16 @@
 /**
  * Feed photo selection engine (phase 2A) — illustrative galleries only.
  * Article → section/supplemental routing → gallery → photo (usage rotation).
- * FEED_RENDER_ENABLED=false: engine only, no feed UI wiring.
+ * FEED_RENDER_ENABLED=true (phase 2B): middle feed render via guarded wiring in app.js.
  */
 import { IU_IMAGE_GUESSING_ALLOWED, IU_IMAGE_MODE_ILLUSTRATIVE } from "./iu-photo-article-safety.js";
 import { IU_INTERNAL_GALLERY_PROVIDER } from "./iu-internal-image-gallery.js";
 
 export const IU_FEED_PHOTO_LABEL = "Ilustrační foto";
-export const IU_FEED_RENDER_ENABLED = false;
+export const IU_FEED_RENDER_ENABLED = true;
+export const IU_FEED_PHOTO_MAX_WIDTH_PERCENT = 33;
+export const IU_FEED_PHOTO_TEXT_MIN_PERCENT = 67;
+export const IU_FEED_PHOTO_SELECTION_SOURCE = "feed_photo_engine";
 export const IU_FEED_PHOTO_ENGINE_VERSION = 1;
 
 export const IU_FEED_SECTION_GALLERY_IDS = [
@@ -80,6 +83,94 @@ const IMPORT_MANIFESTS = Object.freeze([
   { key: "batch-1", rel: "imported/batch-1/manifest.json" },
   { key: "batch-2", rel: "imported/batch-2/manifest.json" },
 ]);
+
+const IMPORT_MANIFESTS_BROWSER = Object.freeze([
+  { key: "pilot", file: "image_gallery/imported/pilot/manifest.json" },
+  { key: "batch-1", file: "image_gallery/imported/batch-1/manifest.json" },
+  { key: "batch-2", file: "image_gallery/imported/batch-2/manifest.json" },
+]);
+
+export function iuFeedPhotoPublicMediaUrl(localPath, importSource, projectsBase) {
+  const base = String(projectsBase || "/projects/").replace(/\/?$/, "/");
+  const relPath = String(localPath || "").replace(/^\/+/, "");
+  const rel = `data/image_gallery/imported/${importSource}/${relPath}`;
+  const pathOnly = base + rel;
+  try {
+    if (typeof location !== "undefined" && location.origin) {
+      return String(location.origin).replace(/\/$/, "") + pathOnly;
+    }
+  } catch (_) {}
+  return pathOnly;
+}
+
+export function iuFeedPhotoRenderGuardAllowsArticleImage(fields) {
+  if (!fields || typeof fields !== "object") return false;
+  if (fields.imageProvider !== IU_INTERNAL_GALLERY_PROVIDER) return false;
+  if (fields.imageSelectionSource !== IU_FEED_PHOTO_SELECTION_SOURCE) return false;
+  if (fields.imageMode !== IU_IMAGE_MODE_ILLUSTRATIVE) return false;
+  if (fields.imageIllustrativeVerified !== true) return false;
+  const thumb = String(fields.imageThumbUrl || fields.imageUrl || "").trim();
+  if (!thumb || !/^https?:\/\//i.test(thumb)) return false;
+  if (/api\.pexels\.com|images\.pexels\.com/i.test(thumb)) return false;
+  if (!/\.webp(\?|$)/i.test(thumb)) return false;
+  return true;
+}
+
+export function iuFeedPhotoArticleImageFromSelection(photo, importSource, projectsBase) {
+  if (!photo || !importSource) return null;
+  const thumbPath = photo.localThumbPath || photo.localImagePath;
+  if (!thumbPath) return null;
+  const thumbUrl = iuFeedPhotoPublicMediaUrl(thumbPath, importSource, projectsBase);
+  const fields = {
+    imageProvider: IU_INTERNAL_GALLERY_PROVIDER,
+    imageThumbUrl: thumbUrl,
+    imageUrl: thumbUrl,
+    imageAlt: String(photo.imageAlt || IU_FEED_PHOTO_LABEL).trim(),
+    imageAuthor: String(photo.imageAuthor || "").trim(),
+    imageAuthorUrl: String(photo.imageAuthorUrl || "").trim(),
+    imageSourceUrl: String(photo.imageSourceUrl || "").trim(),
+    imageLicenseSource: String(photo.imageLicenseSource || "Pexels License").trim(),
+    imageMode: IU_IMAGE_MODE_ILLUSTRATIVE,
+    imageIllustrativeVerified: true,
+    imageIllustrativeScope: "generic",
+    imageIllustrativeCategory: photo.imageIllustrativeCategory || photo.galleryId || "generic",
+    imageSelectionSource: IU_FEED_PHOTO_SELECTION_SOURCE,
+    imageGalleryEntryId: photo.id,
+    imageFeedLabel: IU_FEED_PHOTO_LABEL,
+  };
+  return iuFeedPhotoRenderGuardAllowsArticleImage(fields) ? fields : null;
+}
+
+export async function iuFeedPhotoLoadCatalogBrowser(fetchJson, dataUrlFn) {
+  const pool = [];
+  const byGallery = {};
+  for (const src of IMPORT_MANIFESTS_BROWSER) {
+    let manifest;
+    try {
+      manifest = await fetchJson(dataUrlFn(src.file));
+    } catch {
+      continue;
+    }
+    for (const entry of manifest.entries || []) {
+      if (!iuFeedPhotoIsIllustrativeImportEntry(entry)) continue;
+      const row = { ...entry, _importSource: src.key };
+      pool.push(row);
+      if (!byGallery[row.galleryId]) byGallery[row.galleryId] = [];
+      byGallery[row.galleryId].push(row);
+    }
+  }
+  return { pool, byGallery, total: pool.length };
+}
+
+export function iuFeedPhotoApplySelectionToArticle(article, catalog, projectsBase, options = {}) {
+  if (!IU_FEED_RENDER_ENABLED || !catalog?.pool?.length) return article;
+  const result = iuFeedPhotoSelectForArticle(article, catalog, options);
+  if (!result.ok || !result.photo) return article;
+  const importSource = result.photo._importSource || result.photo.importSource || "batch-2";
+  const fields = iuFeedPhotoArticleImageFromSelection(result.photo, importSource, projectsBase);
+  if (!fields) return article;
+  return { ...article, ...fields };
+}
 
 export function iuFeedPhotoNormalizeText(value) {
   return String(value || "")
@@ -220,14 +311,15 @@ export function iuFeedPhotoSelectWithFallback(article, pool) {
     autoGuessCount: 0,
     verifiedPersonSelectionEnabled: false,
     verifiedPlaceSelectionEnabled: false,
-    photo: iuFeedPhotoEntryToPayload(entry, usedGalleryId),
+    photo: iuFeedPhotoEntryToPayload(entry, usedGalleryId, entry._importSource),
   };
 }
 
-export function iuFeedPhotoEntryToPayload(entry, galleryId) {
+export function iuFeedPhotoEntryToPayload(entry, galleryId, importSource) {
   return {
     id: entry.id,
     galleryId: galleryId || entry.galleryId,
+    _importSource: importSource || entry._importSource || "",
     imageMode: IU_IMAGE_MODE_ILLUSTRATIVE,
     imageProvider: IU_INTERNAL_GALLERY_PROVIDER,
     imageAlt: entry.imageAlt,
@@ -240,7 +332,7 @@ export function iuFeedPhotoEntryToPayload(entry, galleryId) {
     usageCount: Number(entry.usageCount) || 0,
     lastUsedAt: entry.lastUsedAt ?? null,
     feedLabel: IU_FEED_PHOTO_LABEL,
-    imageSelectionSource: "feed_photo_engine",
+    imageSelectionSource: IU_FEED_PHOTO_SELECTION_SOURCE,
     imageIllustrativeVerified: true,
     imageIllustrativeScope: "generic",
     imageIllustrativeCategory: galleryId || entry.galleryId,
@@ -293,7 +385,7 @@ export function iuFeedPhotoSelectForArticle(article, catalog, options = {}) {
     const entry = pool.find((e) => e.id === result.photo.id);
     if (entry) {
       iuFeedPhotoRecordUsage(entry, options.nowIso);
-      result.photo = iuFeedPhotoEntryToPayload(entry, result.galleryId);
+      result.photo = iuFeedPhotoEntryToPayload(entry, result.galleryId, entry._importSource);
     }
   }
   return result;
