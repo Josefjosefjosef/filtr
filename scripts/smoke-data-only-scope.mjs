@@ -48,13 +48,21 @@ export function isDataOnlyScope(files) {
 export function isFastPoolPipelineScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
   if (!paths.length) return false;
+  const hasWorkflow = paths.some((f) => f.startsWith(".github/workflows/"));
+  const hasFeedPhotoUi = paths.some((f) => f === "assets/app.js" || f === "assets/app.css");
+  if (hasWorkflow && hasFeedPhotoUi) return false;
   return paths.every(
     (f) =>
       f.startsWith("projects/data/") ||
       f.startsWith("scripts/iu-pexels-") ||
       f.startsWith("scripts/iu-image-gallery-audit-v1") ||
       f.startsWith("scripts/iu-feed-photo-selection-engine") ||
+      f.startsWith("scripts/iu-feed-photo-render-guard") ||
       f === "assets/iu-feed-photo-selection-engine.js" ||
+      f === "assets/app.js" ||
+      f === "assets/app.css" ||
+      f === "scripts/css_debt_baseline.json" ||
+      f === "projects/data/image_gallery/feed_photo_engine_config.json" ||
       f === "package.json" ||
       f === ".github/workflows/update-articles-fast-pool.yml" ||
       f === "scripts/smoke-data-only-scope.mjs" ||
