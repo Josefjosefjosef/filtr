@@ -48,6 +48,9 @@ export function isDataOnlyScope(files) {
 export function isFastPoolPipelineScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
   if (!paths.length) return false;
+  const hasWorkflow = paths.some((f) => f.startsWith(".github/workflows/"));
+  const hasFeedPhotoUi = paths.some((f) => f === "assets/app.js" || f === "assets/app.css");
+  if (hasWorkflow && hasFeedPhotoUi) return false;
   return paths.every(
     (f) =>
       f.startsWith("projects/data/") ||
