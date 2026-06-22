@@ -6053,6 +6053,7 @@ try {
        články se nesmí přeskupit (vizuální skok uprostřed viewportu). Během load-more passu drží
        už vykreslené články své pořadí jako prefix; nové položky jdou až pod ně. */
     visibleItems = iuLoadMoreApplyPinnedOrder(visibleItems);
+    visibleItems = iuArticleActionsFilterVisible(visibleItems);
     try { window.__iuLoadMoreLastRenderedItems = visibleItems; } catch (_) {}
     const hasMore = chunkMode
       ? visibleItems.length < items.length || iuChunkHasMoreOnServer(state.chunkLoader)
@@ -6509,6 +6510,10 @@ try {
           photoArticlesRendered: photoCards.length,
           sectionColors: IU_TIMELINE_SECTION_COLORS,
         };
+        iuArticleActionsSyncFeedStates(safeTarget);
+        try {
+          iuArticleActionsInit();
+        } catch (_) {}
       }
     } catch (_) {}
 
@@ -6844,6 +6849,691 @@ try {
     return `<div class="iu-meta-line"><span class="iu-meta-src">Zdroj: ${escapeHtml(displayName)}</span></div>`;
   }
 
+  const IU_BRAND_BLUE = "#003CFF";
+  const IU_ARTICLE_ACTION_SAVE_COLOR = "#F59E0B";
+  const IU_ARTICLE_ACTION_FOLLOW_COLOR = "#003CFF";
+  const IU_ARTICLE_ACTION_HIDE_COLOR = "#DC2626";
+  const IU_SAVED_ARTICLES_KEY = "iuSavedArticles";
+  const IU_FOLLOWED_TOPICS_KEY = "iuFollowedTopics";
+  const IU_HIDDEN_ARTICLES_KEY = "iuHiddenArticles";
+  const IU_HIDE_UNDO_MS = 5000;
+
+  function iuArticleActionsReadJson(key) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function iuArticleActionsWriteJson(key, list) {
+    try {
+      localStorage.setItem(key, JSON.stringify(Array.isArray(list) ? list : []));
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuArticleActionsResolveId(it) {
+    return iuLoadMorePinKey(it) || "";
+  }
+
+  function iuArticleActionsResolveSource(it) {
+    try {
+      const srcRaw = Array.isArray(it?.sources) ? it.sources : [];
+      for (const s of srcRaw) {
+        const name = String(s?.name || "").trim();
+        if (name) return name;
+      }
+      const label = String(it?.sourceLabel || "").trim();
+      if (label) return label;
+    } catch (_) {}
+    return "";
+  }
+
+  function iuArticleActionsResolveTopic(it) {
+    try {
+      const topic = String(it?.topic || "").trim();
+      if (topic) return topic;
+      const category = String(it?.category || "").trim();
+      if (category) return category;
+      const section = String(it?.section || "").trim();
+      if (section) return section;
+      const tags = Array.isArray(it?.tags) ? it.tags : [];
+      for (const tag of tags) {
+        const t = String(tag || "").trim();
+        if (t) return t;
+      }
+      return iuTimelineResolveSectionKey(it);
+    } catch (_) {
+      return "zpravy";
+    }
+  }
+
+  function iuArticleActionsSnapshot(it) {
+    const id = iuArticleActionsResolveId(it);
+    if (!id) return null;
+    const iso = iuArticleUserVisibleTimeIso(it);
+    return {
+      articleId: id,
+      title: safeText(it?.title || it?.name || "(bez názvu)"),
+      source: iuArticleActionsResolveSource(it),
+      url: id,
+      timestamp: iso || new Date().toISOString(),
+      section: iuTimelineResolveSectionKey(it),
+      topic: iuArticleActionsResolveTopic(it),
+    };
+  }
+
+  function iuArticleActionsGetSavedList() {
+    return iuArticleActionsReadJson(IU_SAVED_ARTICLES_KEY);
+  }
+
+  function iuArticleActionsGetFollowedList() {
+    return iuArticleActionsReadJson(IU_FOLLOWED_TOPICS_KEY);
+  }
+
+  function iuArticleActionsGetHiddenList() {
+    return iuArticleActionsReadJson(IU_HIDDEN_ARTICLES_KEY);
+  }
+
+  function iuArticleActionsGetHiddenSet() {
+    const set = new Set();
+    for (const row of iuArticleActionsGetHiddenList()) {
+      const id = String(row?.articleId || row?.url || "").trim();
+      if (id) set.add(id);
+    }
+    return set;
+  }
+
+  function iuArticleActionsIsSaved(id) {
+    const key = String(id || "").trim();
+    if (!key) return false;
+    return iuArticleActionsGetSavedList().some((row) => String(row?.articleId || row?.url || "").trim() === key);
+  }
+
+  function iuArticleActionsIsFollowed(topic) {
+    const key = String(topic || "").trim().toLowerCase();
+    if (!key) return false;
+    return iuArticleActionsGetFollowedList().some(
+      (row) => String(row?.topic || row?.name || "").trim().toLowerCase() === key
+    );
+  }
+
+  function iuArticleActionsFilterVisible(items) {
+    try {
+      const hidden = iuArticleActionsGetHiddenSet();
+      if (!hidden.size) return items;
+      return items.filter((it) => {
+        if (String(it?.contentType || "").toLowerCase() !== "article") return true;
+        const id = iuArticleActionsResolveId(it);
+        return !id || !hidden.has(id);
+      });
+    } catch (_) {
+      return items;
+    }
+  }
+
+  function iuArticleActionsIconSvg(kind) {
+    if (kind === "save") {
+      return `<svg viewBox="0 0 24 24" width="18" height="18" focusable="false" aria-hidden="true"><path d="M6 4.5A2.5 2.5 0 0 1 8.5 2h7A2.5 2.5 0 0 1 18 4.5V21l-6-3.2L6 21V4.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
+    }
+    if (kind === "follow") {
+      return `<svg viewBox="0 0 24 24" width="18" height="18" focusable="false" aria-hidden="true"><path d="M12 3a2 2 0 0 0-2 2v.3A6 6 0 0 0 6 11v4.5l-1.4 2.1a1 1 0 0 0 .83 1.54H18.6a1 1 0 0 0 .83-1.54L18 15.5V11a6 6 0 0 0-4-5.67V5a2 2 0 0 0-2-2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
+    }
+    return `<svg viewBox="0 0 24 24" width="18" height="18" focusable="false" aria-hidden="true"><path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2.4" fill="currentColor"/><path d="M4 4l16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+  }
+
+  function iuTimelineVideoLeftBlock() {
+    return `<span class="iuTimelineVideoIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" focusable="false" aria-hidden="true"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5h7A2.5 2.5 0 0 1 16 7.5v9A2.5 2.5 0 0 1 13.5 19h-7A2.5 2.5 0 0 1 4 16.5v-9z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 10.2l4-2.4v8.4l-4-2.4V10.2z" fill="currentColor"/></svg></span>`;
+  }
+
+  function iuTimelineYouTubeMetaLine() {
+    return `<div class="iu-meta-line iuTimelineYouTubeMeta"><span class="iu-meta-src">Video | Zdroj: YouTube</span></div>`;
+  }
+
+  function iuTimelineArticleActionsBlock(it) {
+    const id = iuArticleActionsResolveId(it);
+    if (!id) return "";
+    const topic = iuArticleActionsResolveTopic(it);
+    const saved = iuArticleActionsIsSaved(id);
+    const followed = iuArticleActionsIsFollowed(topic);
+    const saveLabel = saved ? "Uloženo" : "Uložit";
+    const followLabel = followed ? "Sledováno" : "Sledovat";
+    return `
+      <div class="iuTimelineActions" role="group" aria-label="Akce článku">
+        <button type="button" class="iuTimelineAction iuTimelineAction--save${saved ? " is-active" : ""}" data-iu-action="save" data-iu-article-id="${escapeHtml(id)}" aria-label="${saved ? "Odebrat z uložených" : "Uložit článek"}" title="${saved ? "Odebrat z uložených" : "Uložit článek"}" aria-pressed="${saved ? "true" : "false"}">
+          <span class="iuTimelineActionIcon" aria-hidden="true">${iuArticleActionsIconSvg("save")}</span>
+          <span class="iuTimelineActionLabel">${escapeHtml(saveLabel)}</span>
+        </button>
+        <button type="button" class="iuTimelineAction iuTimelineAction--follow${followed ? " is-active" : ""}" data-iu-action="follow" data-iu-article-id="${escapeHtml(id)}" data-iu-article-topic="${escapeHtml(topic)}" aria-label="${followed ? "Zrušit sledování tématu" : "Sledovat téma"}" title="${followed ? "Zrušit sledování tématu" : "Sledovat téma"}" aria-pressed="${followed ? "true" : "false"}">
+          <span class="iuTimelineActionIcon" aria-hidden="true">${iuArticleActionsIconSvg("follow")}</span>
+          <span class="iuTimelineActionLabel">${escapeHtml(followLabel)}</span>
+        </button>
+        <button type="button" class="iuTimelineAction iuTimelineAction--hide" data-iu-action="hide" data-iu-article-id="${escapeHtml(id)}" aria-label="Skrýt článek" title="Skrýt článek">
+          <span class="iuTimelineActionIcon" aria-hidden="true">${iuArticleActionsIconSvg("hide")}</span>
+          <span class="iuTimelineActionLabel">Skrýt</span>
+        </button>
+      </div>
+    `.trim();
+  }
+
+  function iuArticleActionsArticleDataAttrs(it) {
+    const snap = iuArticleActionsSnapshot(it);
+    if (!snap) return "";
+    return ` data-iu-article-id="${escapeHtml(snap.articleId)}" data-iu-article-title="${escapeHtml(snap.title)}" data-iu-article-source="${escapeHtml(snap.source)}" data-iu-article-url="${escapeHtml(snap.url)}" data-iu-article-section="${escapeHtml(snap.section)}" data-iu-article-topic="${escapeHtml(snap.topic)}"`;
+  }
+
+  function iuArticleActionsSyncButtonState(btn, kind, active, label) {
+    if (!btn) return;
+    btn.classList.toggle("is-active", !!active);
+    btn.setAttribute("aria-pressed", active ? "true" : "false");
+    const labelEl = btn.querySelector(".iuTimelineActionLabel");
+    if (labelEl && label) labelEl.textContent = label;
+    if (kind === "save") {
+      btn.setAttribute("aria-label", active ? "Odebrat z uložených" : "Uložit článek");
+      btn.setAttribute("title", active ? "Odebrat z uložených" : "Uložit článek");
+    }
+    if (kind === "follow") {
+      btn.setAttribute("aria-label", active ? "Zrušit sledování tématu" : "Sledovat téma");
+      btn.setAttribute("title", active ? "Zrušit sledování tématu" : "Sledovat téma");
+    }
+  }
+
+  function iuArticleActionsSyncFeedStates(feedRoot) {
+    try {
+      if (!feedRoot) return;
+      const articles = feedRoot.querySelectorAll("article.iuTimelineItem[data-feed-type='article']");
+      for (const art of articles) {
+        const id = String(art.getAttribute("data-iu-article-id") || "").trim();
+        const topic = String(art.getAttribute("data-iu-article-topic") || "").trim();
+        const saveBtn = art.querySelector(".iuTimelineAction--save");
+        const followBtn = art.querySelector(".iuTimelineAction--follow");
+        if (saveBtn) {
+          const saved = iuArticleActionsIsSaved(id);
+          iuArticleActionsSyncButtonState(saveBtn, "save", saved, saved ? "Uloženo" : "Uložit");
+        }
+        if (followBtn) {
+          const followed = iuArticleActionsIsFollowed(topic);
+          iuArticleActionsSyncButtonState(followBtn, "follow", followed, followed ? "Sledováno" : "Sledovat");
+        }
+      }
+    } catch (_) {}
+  }
+
+  function iuArticleActionsToggleSave(itOrArticleEl) {
+    const snap =
+      itOrArticleEl && itOrArticleEl.contentType
+        ? iuArticleActionsSnapshot(itOrArticleEl)
+        : iuArticleActionsSnapshotFromDom(itOrArticleEl);
+    if (!snap) return false;
+    const list = iuArticleActionsGetSavedList();
+    const idx = list.findIndex((row) => String(row?.articleId || row?.url || "").trim() === snap.articleId);
+    if (idx >= 0) {
+      list.splice(idx, 1);
+      iuArticleActionsWriteJson(IU_SAVED_ARTICLES_KEY, list);
+      return false;
+    }
+    list.unshift(snap);
+    iuArticleActionsWriteJson(IU_SAVED_ARTICLES_KEY, list);
+    return true;
+  }
+
+  function iuArticleActionsToggleFollow(topic) {
+    const key = String(topic || "").trim();
+    if (!key) return false;
+    const list = iuArticleActionsGetFollowedList();
+    const idx = list.findIndex(
+      (row) => String(row?.topic || row?.name || "").trim().toLowerCase() === key.toLowerCase()
+    );
+    if (idx >= 0) {
+      list.splice(idx, 1);
+      iuArticleActionsWriteJson(IU_FOLLOWED_TOPICS_KEY, list);
+      return false;
+    }
+    list.unshift({ topic: key, followedAt: new Date().toISOString() });
+    iuArticleActionsWriteJson(IU_FOLLOWED_TOPICS_KEY, list);
+    return true;
+  }
+
+  function iuArticleActionsSnapshotFromDom(articleEl) {
+    try {
+      const id = String(articleEl.getAttribute("data-iu-article-id") || "").trim();
+      if (!id) return null;
+      return {
+        articleId: id,
+        title: String(articleEl.getAttribute("data-iu-article-title") || "").trim() || "(bez názvu)",
+        source: String(articleEl.getAttribute("data-iu-article-source") || "").trim(),
+        url: String(articleEl.getAttribute("data-iu-article-url") || id).trim() || id,
+        timestamp: new Date().toISOString(),
+        section: String(articleEl.getAttribute("data-iu-article-section") || "").trim(),
+        topic: String(articleEl.getAttribute("data-iu-article-topic") || "").trim(),
+      };
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function iuArticleActionsPersistHidden(snap) {
+    if (!snap) return;
+    const list = iuArticleActionsGetHiddenList();
+    const idx = list.findIndex((row) => String(row?.articleId || row?.url || "").trim() === snap.articleId);
+    if (idx < 0) list.unshift(snap);
+    iuArticleActionsWriteJson(IU_HIDDEN_ARTICLES_KEY, list);
+  }
+
+  function iuArticleActionsRemoveHidden(id) {
+    const key = String(id || "").trim();
+    if (!key) return;
+    const list = iuArticleActionsGetHiddenList().filter(
+      (row) => String(row?.articleId || row?.url || "").trim() !== key
+    );
+    iuArticleActionsWriteJson(IU_HIDDEN_ARTICLES_KEY, list);
+  }
+
+  function iuArticleActionsBuildHideUndoMarkup(snap) {
+    return `
+      <div class="iuTimelineHideUndo" data-iu-hide-undo-id="${escapeHtml(snap.articleId)}" role="status" aria-live="polite">
+        <span class="iuTimelineHideUndoText">Článek byl skryt.</span>
+        <button type="button" class="iuTimelineHideUndoBtn" data-iu-action="hide-undo">Vrátit zpět</button>
+      </div>
+    `.trim();
+  }
+
+  function iuArticleActionsHideArticleEl(articleEl) {
+    if (!articleEl) return;
+    const snap = iuArticleActionsSnapshotFromDom(articleEl);
+    if (!snap) return;
+    const undoHtml = iuArticleActionsBuildHideUndoMarkup(snap);
+    const undoWrap = document.createElement("div");
+    undoWrap.innerHTML = undoHtml;
+    const undoEl = undoWrap.firstElementChild;
+    if (!undoEl) return;
+    const parent = articleEl.parentNode;
+    if (!parent) return;
+    parent.replaceChild(undoEl, articleEl);
+    const timer = window.setTimeout(() => {
+      try {
+        if (undoEl.parentNode) {
+          iuArticleActionsPersistHidden(snap);
+          undoEl.remove();
+        }
+      } catch (_) {}
+    }, IU_HIDE_UNDO_MS);
+    undoEl.__iuHideUndoTimer = timer;
+    undoEl.__iuHideSnap = snap;
+    undoEl.__iuHideArticleHtml = articleEl.outerHTML;
+  }
+
+  function iuArticleActionsRestoreHiddenUndo(undoEl) {
+    if (!undoEl) return;
+    try {
+      if (undoEl.__iuHideUndoTimer) window.clearTimeout(undoEl.__iuHideUndoTimer);
+    } catch (_) {}
+    const snap = undoEl.__iuHideSnap;
+    const html = undoEl.__iuHideArticleHtml;
+    if (!html || !snap) {
+      undoEl.remove();
+      return;
+    }
+    iuArticleActionsRemoveHidden(snap.articleId);
+    const wrap = document.createElement("div");
+    wrap.innerHTML = html;
+    const articleEl = wrap.firstElementChild;
+    const parent = undoEl.parentNode;
+    if (parent && articleEl) parent.replaceChild(articleEl, undoEl);
+    else undoEl.remove();
+    iuArticleActionsSyncFeedStates(document.getElementById("feed"));
+  }
+
+  function iuArticleActionsFormatListTime(iso) {
+    if (!iso) return "";
+    try {
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return "";
+      return d.toLocaleString("cs-CZ", { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" });
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function iuArticleActionsRenderManageList(kind, mount) {
+    if (!mount) return;
+    let rows = [];
+    if (kind === "saved") rows = iuArticleActionsGetSavedList();
+    else if (kind === "followed") rows = iuArticleActionsGetFollowedList();
+    else if (kind === "hidden") rows = iuArticleActionsGetHiddenList();
+    if (!rows.length) {
+      mount.innerHTML = `<p class="iuMyInfoUzelEmpty">Zatím nic.</p>`;
+      return;
+    }
+    const items = rows
+      .map((row) => {
+        if (kind === "followed") {
+          const topic = String(row?.topic || row?.name || "").trim();
+          if (!topic) return "";
+          return `<li class="iuMyInfoUzelItem"><span class="iuMyInfoUzelItemTitle">${escapeHtml(topic)}</span><button type="button" class="iuMyInfoUzelItemBtn" data-iu-manage-action="unfollow" data-iu-topic="${escapeHtml(topic)}">Zrušit sledování</button></li>`;
+        }
+        const id = String(row?.articleId || row?.url || "").trim();
+        const title = String(row?.title || "").trim() || "(bez názvu)";
+        const source = String(row?.source || "").trim();
+        const url = String(row?.url || id).trim();
+        const time = iuArticleActionsFormatListTime(row?.timestamp);
+        const action =
+          kind === "saved"
+            ? `<button type="button" class="iuMyInfoUzelItemBtn" data-iu-manage-action="unsave" data-iu-article-id="${escapeHtml(id)}">Odebrat</button>`
+            : `<button type="button" class="iuMyInfoUzelItemBtn" data-iu-manage-action="restore" data-iu-article-id="${escapeHtml(id)}">Obnovit</button>`;
+        return `<li class="iuMyInfoUzelItem"><a class="iuMyInfoUzelItemLink" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a><span class="iuMyInfoUzelItemMeta">${escapeHtml(source)}${time ? " · " + escapeHtml(time) : ""}</span>${action}</li>`;
+      })
+      .filter(Boolean)
+      .join("");
+    mount.innerHTML = `<ul class="iuMyInfoUzelList">${items}</ul>`;
+  }
+
+  function iuArticleActionsRefreshManagePanels() {
+    try {
+      const overlay = document.getElementById("iuMyInfoUzelOverlay");
+      if (overlay) {
+        iuArticleActionsRenderManageList("saved", overlay.querySelector("[data-iu-manage-panel='saved']"));
+        iuArticleActionsRenderManageList("followed", overlay.querySelector("[data-iu-manage-panel='followed']"));
+        iuArticleActionsRenderManageList("hidden", overlay.querySelector("[data-iu-manage-panel='hidden']"));
+      }
+      const mmSaved = document.getElementById("iuMmSavedArticlesPanel");
+      const mmFollowed = document.getElementById("iuMmFollowedTopicsPanel");
+      const mmHidden = document.getElementById("iuMmHiddenArticlesPanel");
+      if (mmSaved) iuArticleActionsRenderManageList("saved", mmSaved);
+      if (mmFollowed) iuArticleActionsRenderManageList("followed", mmFollowed);
+      if (mmHidden) iuArticleActionsRenderManageList("hidden", mmHidden);
+      iuArticleActionsSyncFeedStates(document.getElementById("feed"));
+    } catch (_) {}
+  }
+
+  function iuArticleActionsIsDesktopOnlyBtn() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(min-width: 1025px)").matches);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuArticleActionsEnsureDesktopButton() {
+    try {
+      if (!iuArticleActionsIsDesktopOnlyBtn()) return;
+      if (!document.body || !document.body.classList.contains("iu-home")) return;
+      if (document.getElementById("iuMyInfoUzelOpenBtn")) return;
+      const textBlock = document.getElementById("iuSilverWelcomeTextBlock");
+      if (!textBlock || !textBlock.parentNode) return;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.id = "iuMyInfoUzelOpenBtn";
+      btn.className = "iuMyInfoUzelOpenBtn";
+      btn.textContent = "Můj InfoUzel.cz / MindMenu";
+      btn.setAttribute("aria-haspopup", "dialog");
+      btn.setAttribute("aria-controls", "iuMyInfoUzelOverlay");
+      btn.addEventListener("click", () => {
+        try {
+          iuArticleActionsOpenOverlay();
+        } catch (_) {}
+      });
+      textBlock.insertAdjacentElement("afterend", btn);
+    } catch (_) {}
+  }
+
+  function iuArticleActionsEnsureOverlay() {
+    try {
+      if (document.getElementById("iuMyInfoUzelOverlay")) return;
+      const overlay = document.createElement("div");
+      overlay.id = "iuMyInfoUzelOverlay";
+      overlay.className = "iuMyInfoUzelOverlay";
+      overlay.setAttribute("role", "dialog");
+      overlay.setAttribute("aria-modal", "true");
+      overlay.setAttribute("aria-labelledby", "iuMyInfoUzelOverlayTitle");
+      overlay.hidden = true;
+      overlay.innerHTML = `
+        <div class="iuMyInfoUzelOverlay__backdrop" data-iu-myinfouzel-close tabindex="-1"></div>
+        <div class="iuMyInfoUzelOverlay__sheet">
+          <header class="iuMyInfoUzelOverlay__head">
+            <h2 id="iuMyInfoUzelOverlayTitle" class="iuMyInfoUzelOverlay__title">Můj InfoUzel.cz / MindMenu</h2>
+            <button type="button" class="iuMyInfoUzelOverlay__close" data-iu-myinfouzel-close aria-label="Zavřít">×</button>
+          </header>
+          <div class="iuMyInfoUzelOverlay__scroll">
+            <section class="iuMyInfoUzelSection">
+              <h3 class="iuMyInfoUzelSectionTitle">Uložené články</h3>
+              <div data-iu-manage-panel="saved"></div>
+            </section>
+            <section class="iuMyInfoUzelSection">
+              <h3 class="iuMyInfoUzelSectionTitle">Sledovaná témata</h3>
+              <div data-iu-manage-panel="followed"></div>
+            </section>
+            <section class="iuMyInfoUzelSection">
+              <h3 class="iuMyInfoUzelSectionTitle">Skryté články</h3>
+              <div data-iu-manage-panel="hidden"></div>
+            </section>
+            <section class="iuMyInfoUzelSection iuMyInfoUzelSection--mindmenu">
+              <h3 class="iuMyInfoUzelSectionTitle">MindMenu</h3>
+              <div id="iuMyInfoUzelMindMenuHost" class="iuMyInfoUzelMindMenuHost"></div>
+            </section>
+          </div>
+        </div>
+      `.trim();
+      document.body.appendChild(overlay);
+      overlay.addEventListener("click", (e) => {
+        const t = e.target;
+        if (!(t instanceof Element)) return;
+        if (t.closest("[data-iu-myinfouzel-close]")) iuArticleActionsCloseOverlay();
+        const manageBtn = t.closest("[data-iu-manage-action]");
+        if (manageBtn) {
+          const action = manageBtn.getAttribute("data-iu-manage-action");
+          if (action === "unsave") {
+            const id = manageBtn.getAttribute("data-iu-article-id");
+            const list = iuArticleActionsGetSavedList().filter(
+              (row) => String(row?.articleId || row?.url || "").trim() !== String(id || "").trim()
+            );
+            iuArticleActionsWriteJson(IU_SAVED_ARTICLES_KEY, list);
+            iuArticleActionsRefreshManagePanels();
+          } else if (action === "unfollow") {
+            const topic = manageBtn.getAttribute("data-iu-topic");
+            iuArticleActionsToggleFollow(topic);
+            iuArticleActionsRefreshManagePanels();
+          } else if (action === "restore") {
+            const id = manageBtn.getAttribute("data-iu-article-id");
+            iuArticleActionsRemoveHidden(id);
+            iuArticleActionsRefreshManagePanels();
+            try {
+              if (typeof applyFilter === "function") applyFilter({ resetPage: false, render: true });
+            } catch (_) {}
+          }
+        }
+      });
+    } catch (_) {}
+  }
+
+  function iuArticleActionsMountMindMenuInOverlay() {
+    try {
+      const host = document.getElementById("iuMyInfoUzelMindMenuHost");
+      if (!host) return;
+      const wrapper =
+        document.querySelector(".layout > aside.accordionCol .mindMenu-scroll-wrapper") ||
+        document.querySelector(".mindMenu-scroll-wrapper");
+      const mindMenu = document.getElementById("iuMindMenuView") || document.querySelector(".mindMenu");
+      if (!mindMenu) return;
+      host.innerHTML = "";
+      if (wrapper && wrapper.contains(mindMenu)) {
+        host.appendChild(wrapper);
+        wrapper.style.display = "block";
+      } else if (mindMenu) {
+        host.appendChild(mindMenu);
+        mindMenu.style.display = "block";
+      }
+    } catch (_) {}
+  }
+
+  function iuArticleActionsRestoreMindMenuFromOverlay() {
+    try {
+      const host = document.getElementById("iuMyInfoUzelMindMenuHost");
+      const accordion = document.querySelector(".layout > aside.accordionCol");
+      if (!host || !accordion) return;
+      const wrapper = host.querySelector(".mindMenu-scroll-wrapper");
+      const mindMenu = host.querySelector(".mindMenu, #iuMindMenuView");
+      const afterPwa = accordion.querySelector("#iuPwaDesktopFallbackOverlay");
+      if (wrapper) {
+        accordion.insertBefore(wrapper, afterPwa ? afterPwa.nextSibling : accordion.firstChild);
+        wrapper.style.removeProperty("display");
+      } else if (mindMenu) {
+        accordion.insertBefore(mindMenu, afterPwa ? afterPwa.nextSibling : accordion.firstChild);
+        mindMenu.style.removeProperty("display");
+      }
+      host.innerHTML = "";
+    } catch (_) {}
+  }
+
+  function iuArticleActionsOpenOverlay() {
+    iuArticleActionsEnsureOverlay();
+    const overlay = document.getElementById("iuMyInfoUzelOverlay");
+    if (!overlay) return;
+    iuArticleActionsRefreshManagePanels();
+    iuArticleActionsMountMindMenuInOverlay();
+    overlay.hidden = false;
+    document.body.classList.add("iu-myinfouzel-open");
+    try {
+      const closeBtn = overlay.querySelector(".iuMyInfoUzelOverlay__close");
+      if (closeBtn) closeBtn.focus();
+    } catch (_) {}
+  }
+
+  function iuArticleActionsCloseOverlay() {
+    const overlay = document.getElementById("iuMyInfoUzelOverlay");
+    if (!overlay) return;
+    overlay.hidden = true;
+    document.body.classList.remove("iu-myinfouzel-open");
+    iuArticleActionsRestoreMindMenuFromOverlay();
+  }
+
+  function iuArticleActionsEnsureMindMenuSections() {
+    try {
+      const mindMenu = document.getElementById("iuMindMenuView") || document.querySelector(".mindMenu");
+      if (!mindMenu || mindMenu.querySelector("#iuMmArticleActionsSections")) return;
+      const wrap = document.createElement("section");
+      wrap.id = "iuMmArticleActionsSections";
+      wrap.className = "iu-mmArticleActionsSections";
+      wrap.setAttribute("aria-label", "Moje články a témata");
+      wrap.innerHTML = `
+        <div class="iu-mmSectionHead">
+          <div class="iu-mmSectionTitle">Moje články</div>
+          <div class="iu-mmSectionLine" aria-hidden="true"></div>
+        </div>
+        <div class="iu-mmArticleActionsBlock">
+          <h4 class="iu-mmArticleActionsSubtitle">Uložené články</h4>
+          <div id="iuMmSavedArticlesPanel" class="iu-mmArticleActionsPanel"></div>
+        </div>
+        <div class="iu-mmArticleActionsBlock">
+          <h4 class="iu-mmArticleActionsSubtitle">Sledovaná témata</h4>
+          <div id="iuMmFollowedTopicsPanel" class="iu-mmArticleActionsPanel"></div>
+        </div>
+        <div class="iu-mmArticleActionsBlock iu-mmArticleActionsBlock--last">
+          <h4 class="iu-mmArticleActionsSubtitle">Skryté články</h4>
+          <div id="iuMmHiddenArticlesPanel" class="iu-mmArticleActionsPanel"></div>
+        </div>
+      `.trim();
+      mindMenu.appendChild(wrap);
+      wrap.addEventListener("click", (e) => {
+        const t = e.target;
+        if (!(t instanceof Element)) return;
+        const manageBtn = t.closest("[data-iu-manage-action]");
+        if (!manageBtn) return;
+        const action = manageBtn.getAttribute("data-iu-manage-action");
+        if (action === "unsave") {
+          const id = manageBtn.getAttribute("data-iu-article-id");
+          const list = iuArticleActionsGetSavedList().filter(
+            (row) => String(row?.articleId || row?.url || "").trim() !== String(id || "").trim()
+          );
+          iuArticleActionsWriteJson(IU_SAVED_ARTICLES_KEY, list);
+          iuArticleActionsRefreshManagePanels();
+        } else if (action === "unfollow") {
+          iuArticleActionsToggleFollow(manageBtn.getAttribute("data-iu-topic"));
+          iuArticleActionsRefreshManagePanels();
+        } else if (action === "restore") {
+          iuArticleActionsRemoveHidden(manageBtn.getAttribute("data-iu-article-id"));
+          iuArticleActionsRefreshManagePanels();
+          try {
+            if (typeof applyFilter === "function") applyFilter({ resetPage: false, render: true });
+          } catch (_) {}
+        }
+      });
+      iuArticleActionsRefreshManagePanels();
+    } catch (_) {}
+  }
+
+  function iuArticleActionsOnFeedClick(e) {
+    try {
+      const t = e.target;
+      if (!(t instanceof Element)) return;
+      const undoBtn = t.closest("[data-iu-action='hide-undo']");
+      if (undoBtn) {
+        e.preventDefault();
+        const undoEl = undoBtn.closest(".iuTimelineHideUndo");
+        iuArticleActionsRestoreHiddenUndo(undoEl);
+        return;
+      }
+      const btn = t.closest(".iuTimelineAction");
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const articleEl = btn.closest("article.iuTimelineItem");
+      if (!articleEl) return;
+      const action = btn.getAttribute("data-iu-action");
+      if (action === "save") {
+        const active = iuArticleActionsToggleSave(articleEl);
+        iuArticleActionsSyncButtonState(btn, "save", active, active ? "Uloženo" : "Uložit");
+        iuArticleActionsRefreshManagePanels();
+      } else if (action === "follow") {
+        const topic = String(articleEl.getAttribute("data-iu-article-topic") || btn.getAttribute("data-iu-article-topic") || "").trim();
+        const active = iuArticleActionsToggleFollow(topic);
+        iuArticleActionsSyncButtonState(btn, "follow", active, active ? "Sledováno" : "Sledovat");
+        iuArticleActionsRefreshManagePanels();
+      } else if (action === "hide") {
+        iuArticleActionsHideArticleEl(articleEl);
+        iuArticleActionsRefreshManagePanels();
+      }
+    } catch (_) {}
+  }
+
+  function iuArticleActionsInit() {
+    try {
+      if (window.__iuArticleActionsInit) return;
+      window.__iuArticleActionsInit = 1;
+      const feed = document.getElementById("feed");
+      if (feed && !feed.__iuArticleActionsBound) {
+        feed.__iuArticleActionsBound = 1;
+        feed.addEventListener("click", iuArticleActionsOnFeedClick);
+      }
+      iuArticleActionsEnsureOverlay();
+      iuArticleActionsEnsureMindMenuSections();
+      iuArticleActionsEnsureDesktopButton();
+      iuArticleActionsRefreshManagePanels();
+      try {
+        window.addEventListener("resize", () => {
+          try {
+            const btn = document.getElementById("iuMyInfoUzelOpenBtn");
+            if (!iuArticleActionsIsDesktopOnlyBtn() && btn) btn.remove();
+            else iuArticleActionsEnsureDesktopButton();
+          } catch (_) {}
+        });
+      } catch (_) {}
+      document.addEventListener("keydown", (e) => {
+        try {
+          if (e.key === "Escape" && document.body.classList.contains("iu-myinfouzel-open")) {
+            iuArticleActionsCloseOverlay();
+          }
+        } catch (_) {}
+      });
+    } catch (_) {}
+  }
+
   function renderSourcesMetaLine(it) {
     const srcRaw = Array.isArray(it.sources) ? it.sources : [];
     const seen = new Set();
@@ -7043,16 +7733,18 @@ try {
       const sectionKey = iuTimelineResolveSectionKey(it);
       const dotColor = iuTimelineSectionDotColor(it);
       const timelineSource = iuTimelineSourceMetaLine(it);
+      const actionsBlock = iuTimelineArticleActionsBlock(it);
       const rightBody = `
             <h2 class="news-title">${titleMarkup}${suspiciousFlag}</h2>
             ${timelineSource}
           `.trim();
       return `
-      <article class="news-card iuTimelineItem" data-feed-type="article" data-timeline-section="${escapeHtml(sectionKey)}">
+      <article class="news-card iuTimelineItem" data-feed-type="article" data-timeline-section="${escapeHtml(sectionKey)}"${iuArticleActionsArticleDataAttrs(it)}>
         <div class="iuTimelineRow">
           <div class="iuTimelineLeft">${iuTimelineLeftBlock(it)}</div>
           <div class="iuTimelineAxis" aria-hidden="true"><span class="iuTimelineDot" style="--iuTimelineDotColor:${escapeHtml(dotColor)}"></span></div>
           <div class="iuTimelineRight">${rightBody}</div>
+          ${actionsBlock}
         </div>
       </article>
     `;
@@ -7096,11 +7788,7 @@ function buildVideoAsArticleCard(it) {
               ${category ? `<span class="iuVideoBadge" aria-hidden="true">${escapeHtml(category)}</span>` : ""}
             </button>
           </div>
-          <div class="iuVideoMeta">
-            <div class="iuVideoTitle">${escapeHtml(title)}</div>
-            ${publishedAt ? `<div class="iuVideoSub"><span class="iuVideoTime">${escapeHtml(publishedAt)}</span></div>` : ""}
-          </div>
-          ${iuTimelineSourceMetaLine(it, channel)}
+          ${iuTimelineYouTubeMetaLine()}
         `.trim();
       if (IU_TIMELINE_ENABLED) {
         const sectionKey = iuTimelineResolveSectionKey(it);
@@ -7108,7 +7796,7 @@ function buildVideoAsArticleCard(it) {
         return `
         <article class="news-card iuVideoCard iuTimelineItem iuTimelineItem--video" data-feed-type="video-preview" data-ytid="${escapeHtml(id)}" data-timeline-section="${escapeHtml(sectionKey)}"${noOpenAttr}>
           <div class="iuTimelineRow">
-            <div class="iuTimelineLeft">${iuTimelineLeftBlock(it)}</div>
+            <div class="iuTimelineLeft">${iuTimelineVideoLeftBlock()}</div>
             <div class="iuTimelineAxis" aria-hidden="true"><span class="iuTimelineDot" style="--iuTimelineDotColor:${escapeHtml(dotColor)}"></span></div>
             <div class="iuTimelineRight">${videoBody}</div>
           </div>
@@ -24438,6 +25126,7 @@ function buildVideoAsArticleCard(it) {
 
     try{ iuUserAddressInit(); }catch{}
     try{ iuSilverWelcomeInit(); }catch{}
+    try{ iuArticleActionsInit(); }catch{}
     try{ iuDesktopHomeSectionGridGuardInit(); }catch{}
     /* P0: measure slot max-h once welcome DOM settled — before listeners-only init reduces first paint vs late reflow (CLS). */
     try{ iuSilverMobileStackFitApply(); }catch{}
