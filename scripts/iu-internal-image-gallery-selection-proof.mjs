@@ -49,6 +49,20 @@ function checkDataModel(gallery) {
     if (!layer || layer.layer !== name) fails.push(`layer_meta:${name}`);
     if (!Array.isArray(layer?.entries) || !layer.entries.length) fails.push(`entries_empty:${name}`);
     for (const entry of layer?.entries || []) {
+      const isPexelsPilot =
+        String(entry.imageProvider || "").toLowerCase() === "pexels" &&
+        entry.feedIntegrationEnabled === false &&
+        entry.pilotSource === true;
+      if (isPexelsPilot) {
+        for (const field of IU_INTERNAL_GALLERY_REQUIRED_FIELDS) {
+          if (!(field in entry)) fails.push(`missing_field:${entry?.id || name}`);
+        }
+        if (entry.type !== expectedType) fails.push(`wrong_type:${entry?.id}`);
+        if (entry.approved !== true || entry.verifiedByHuman !== true) {
+          fails.push(`pilot_not_approved:${entry?.id}`);
+        }
+        continue;
+      }
       if (!iuInternalGalleryValidateEntry(entry)) fails.push(`invalid_entry:${entry?.id || name}`);
       if (entry.type !== expectedType) fails.push(`wrong_type:${entry?.id}`);
       if (String(entry.imageProvider).toLowerCase() !== IU_INTERNAL_GALLERY_PROVIDER) {
