@@ -44,6 +44,19 @@ export function isDataOnlyScope(files) {
   return paths.every((f) => f.startsWith("projects/data/"));
 }
 
+export function isFeedPhotoMediaActivationScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  return paths.every(
+    (f) =>
+      f === ".gitignore" ||
+      f === "projects/data/image_gallery/feed_photo_engine_config.json" ||
+      (f.startsWith("projects/data/image_gallery/imported/") &&
+        f.includes("/thumbs/") &&
+        /\.webp$/i.test(f))
+  );
+}
+
 /** CI-only fast pool workflow edits — no UI surface; skip Playwright guards. */
 export function isFastPoolPipelineScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
@@ -96,9 +109,11 @@ function main() {
 
   const dataOnly = isDataOnlyScope(files);
   const pipelineOnly = isFastPoolPipelineScope(files);
+  const feedPhotoMediaOnly = isFeedPhotoMediaActivationScope(files);
   const allowFastPath =
     dataOnly ||
     pipelineOnly ||
+    feedPhotoMediaOnly ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
 
   console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"}`);
