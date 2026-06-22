@@ -51,6 +51,8 @@ export function isFastPoolPipelineScope(files) {
   return paths.every(
     (f) =>
       f.startsWith("projects/data/") ||
+      f.startsWith("scripts/iu-pexels-") ||
+      f === "package.json" ||
       f === ".github/workflows/update-articles-fast-pool.yml" ||
       f === "scripts/smoke-data-only-scope.mjs" ||
       f === "scripts/smoke_data_only_scope_proof.mjs"
