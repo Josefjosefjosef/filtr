@@ -53,6 +53,8 @@ export function isFastPoolPipelineScope(files) {
       f.startsWith("projects/data/") ||
       f.startsWith("scripts/iu-pexels-") ||
       f.startsWith("scripts/iu-image-gallery-audit-v1") ||
+      f.startsWith("scripts/iu-feed-photo-selection-engine") ||
+      f === "assets/iu-feed-photo-selection-engine.js" ||
       f === "package.json" ||
       f === ".github/workflows/update-articles-fast-pool.yml" ||
       f === "scripts/smoke-data-only-scope.mjs" ||
