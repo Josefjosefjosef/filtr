@@ -119,8 +119,9 @@ async function waitFeedReady(page) {
         ? feed.querySelectorAll("article.news-card[data-feed-type='article']").length
         : 0;
       const metrics = window.__iuPhotoArticleMetrics || {};
+      const hydrated = window.__iuFeedPhotoHydrateDone === true;
       if (metrics.feedRenderEnabled && metrics.feedPhotoCatalogLoaded) {
-        return articles >= 8 && metrics.photoArticlesRendered >= 1;
+        return articles >= 8 && metrics.photoArticlesRendered >= 1 && hydrated;
       }
       return articles >= 8;
     },
@@ -207,9 +208,13 @@ async function probeMiddleFeed(page) {
       if (img) {
         if (img.getAttribute("loading") !== "lazy") lazyLoading = false;
         const src = String(img.getAttribute("src") || "");
-        if (!/\.webp(\?|$)/i.test(src)) webpOnly = false;
-        if (/images\.pexels\.com|api\.pexels\.com/i.test(src)) webpOnly = false;
-        if (/\/imported\/[^/]+\/webp\//i.test(src)) fullSizeImages = true;
+        const dataSrc = String(img.getAttribute("data-iu-photo-src") || "");
+        const effectiveSrc = dataSrc || src;
+        if (effectiveSrc && !/^data:image\//i.test(effectiveSrc)) {
+          if (!/\.webp(\?|$)/i.test(effectiveSrc)) webpOnly = false;
+          if (/images\.pexels\.com|api\.pexels\.com/i.test(effectiveSrc)) webpOnly = false;
+          if (/\/imported\/[^/]+\/webp\//i.test(effectiveSrc)) fullSizeImages = true;
+        }
       }
 
       const href = title ? title.getAttribute("href") : "";

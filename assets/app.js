@@ -6453,6 +6453,7 @@ try {
         feedPhotoCatalogTotal: iuFeedPhotoCatalogCache?.total || 0,
         feedPhotoLabel: IU_FEED_PHOTO_LABEL,
       };
+      iuFeedPhotoHydrateImages(safeTarget);
     } catch (_) {}
 
     const feedChildrenAfter = safeTarget.childElementCount;
@@ -6754,6 +6755,60 @@ try {
     return `<div class="iu-meta-line">${datePart}${sep}${primaryPart}</div>`;
   }
 
+  function iuFeedPhotoImgHydrateFailed(img) {
+    try {
+      if (!img) return;
+      img.classList.add("iuPhotoArticle-img--failed");
+      img.removeAttribute("data-iu-photo-src");
+      const thumb = img.closest(".iuPhotoArticle-thumb");
+      if (thumb) thumb.classList.add("iuPhotoArticle-thumb--empty");
+    } catch (_) {}
+  }
+
+  function iuFeedPhotoHydrateImages(root) {
+    if (!root || !IU_FEED_RENDER_ENABLED) {
+      try {
+        window.__iuFeedPhotoHydrateDone = true;
+      } catch (_) {}
+      return;
+    }
+    const imgs = root.querySelectorAll("img.iuPhotoArticle-img[data-iu-photo-src]");
+    if (!imgs.length) {
+      try {
+        window.__iuFeedPhotoHydrateDone = true;
+      } catch (_) {}
+      return;
+    }
+    let pending = imgs.length;
+    const doneOne = () => {
+      pending -= 1;
+      if (pending <= 0) {
+        try {
+          window.__iuFeedPhotoHydrateDone = true;
+        } catch (_) {}
+      }
+    };
+    imgs.forEach((img) => {
+      const url = String(img.getAttribute("data-iu-photo-src") || "").trim();
+      if (!url) {
+        iuFeedPhotoImgHydrateFailed(img);
+        doneOne();
+        return;
+      }
+      fetch(url, { method: "HEAD", credentials: "same-origin" })
+        .then((res) => {
+          if (res.ok) {
+            img.setAttribute("src", url);
+            img.removeAttribute("data-iu-photo-src");
+          } else {
+            iuFeedPhotoImgHydrateFailed(img);
+          }
+        })
+        .catch(() => iuFeedPhotoImgHydrateFailed(img))
+        .finally(doneOne);
+    });
+  }
+
   function iuPhotoArticleNextInterval(slotIndex) {
     const min = Number(IU_FEED_PHOTO_INTERVAL_MIN) || 4;
     const max = Number(IU_FEED_PHOTO_INTERVAL_MAX) || 7;
@@ -6851,11 +6906,13 @@ try {
       audit.showIllustrativeLabel || IU_FEED_RENDER_ENABLED
         ? `<span class="iuPhotoArticle-illustrativeLabel">${escapeHtml(IU_FEED_PHOTO_LABEL)}</span>`
         : "";
+    const placeholderSrc =
+      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
     return `
       <article class="news-card iuPhotoArticle" data-feed-type="article" data-photo-layout="1"${legalAttrs}>
         <div class="iuPhotoArticle-row">
           <div class="iu-article-thumb iuPhotoArticle-thumb" aria-hidden="true">
-            <img class="iuPhotoArticle-img" src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(altText)}" loading="lazy" decoding="async" width="128" height="72" onerror="this.classList.add('iuPhotoArticle-img--failed');this.removeAttribute('src');">
+            <img class="iuPhotoArticle-img" src="${placeholderSrc}" data-iu-photo-src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(altText)}" loading="lazy" decoding="async" width="128" height="72">
             ${illustrativeLabel}
           </div>
           <div class="iuPhotoArticle-body">

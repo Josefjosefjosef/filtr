@@ -4228,6 +4228,10 @@ body[data-iu-fc="1"] #feed > article.news-card ~ article.news-card{
   pointer-events: none;
 }
 
+#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-thumb.iuPhotoArticle-thumb--empty{
+  display: none;
+}
+
 #feed > article.news-card.iuPhotoArticle .iuPhotoArticle-img.iuPhotoArticle-img--failed{
   display: none;
 }
