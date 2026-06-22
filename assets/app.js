@@ -25,7 +25,10 @@ import {
 } from "./iu-photo-article-safety.js";
 import {
   IU_FEED_PHOTO_LABEL,
+  IU_FEED_PHOTO_POSITION,
+  IU_FEED_PHOTO_MAX_WIDTH_PERCENT,
   IU_FEED_RENDER_ENABLED,
+  IuFeedPhotoReuseWindowTracker,
   iuFeedPhotoApplySelectionToArticle,
   iuFeedPhotoLoadCatalogBrowser,
   iuFeedPhotoRenderGuardAllowsArticleImage,
@@ -1235,7 +1238,7 @@ try {
   let iuFeedPhotoCatalogCache = null;
   let iuFeedPhotoCatalogLoadPromise = null;
   let iuFeedPhotoEngineConfig = null;
-  let iuFeedPhotoSessionUsedIds = null;
+  let iuFeedPhotoReuseTracker = null;
 
   function iuFeedPhotoMediaEnabledP() {
     if (!IU_FEED_RENDER_ENABLED) return false;
@@ -1289,11 +1292,12 @@ try {
   function iuFeedPhotoArticleForRender(article) {
     if (!IU_FEED_RENDER_ENABLED || !iuFeedPhotoMediaEnabledP() || !iuFeedPhotoCatalogCache) return article;
     try {
+      const blockedPhotoIds = iuFeedPhotoReuseTracker ? iuFeedPhotoReuseTracker.getBlockedPhotoIds() : null;
       const merged = iuFeedPhotoApplySelectionToArticle(
         article,
         iuFeedPhotoCatalogCache,
         iuBasePath(),
-        { recordUsage: true, recentlyUsedIds: iuFeedPhotoSessionUsedIds }
+        { recordUsage: true, blockedPhotoIds }
       );
       if (!iuFeedPhotoRenderGuardAllowsArticleImage(merged)) return article;
       return merged;
@@ -5922,7 +5926,7 @@ try {
     }
     if (IU_FEED_RENDER_ENABLED) {
       await iuFeedPhotoEnsureCatalogLoaded();
-      iuFeedPhotoSessionUsedIds = new Set();
+      iuFeedPhotoReuseTracker = new IuFeedPhotoReuseWindowTracker();
     }
     state.__iuRenderFeedPassSeq = (state.__iuRenderFeedPassSeq || 0) + 1;
     rfPassForTrace = state.__iuRenderFeedPassSeq;
@@ -6300,6 +6304,11 @@ try {
           kind === "video"
             ? buildVideoAsArticleCard(item)
             : buildArticleHtml(renderItem, { photoLayout: photoLayoutActive });
+        if (iuFeedPhotoReuseTracker && kind === "article") {
+          const usedPhotoId =
+            photoLayoutActive && renderItem?.imageGalleryEntryId ? String(renderItem.imageGalleryEntryId) : null;
+          iuFeedPhotoReuseTracker.recordArticle(usedPhotoId);
+        }
         if (!markup) {
           persistLastError("Invariant breach: builder returned falsy markup");
           renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
@@ -6463,7 +6472,7 @@ try {
     } catch {}
 
     try {
-      const photoCards = safeTarget.querySelectorAll("article.news-card.iuPhotoArticle[data-photo-layout='1']");
+      const photoCards = safeTarget.querySelectorAll("article.news-card.iuPhotoArticle[data-photo-layout='2']");
       const textOnlyCards = safeTarget.querySelectorAll(
         "article.news-card[data-feed-type='article']:not(.iuPhotoArticle)"
       );
@@ -6481,6 +6490,9 @@ try {
         feedPhotoCatalogTotal: iuFeedPhotoCatalogCache?.total || 0,
         feedPhotoLabel: IU_FEED_PHOTO_LABEL,
         feedPhotoMediaEnabled: iuFeedPhotoMediaEnabledP(),
+        photoPosition: IU_FEED_PHOTO_POSITION,
+        photoWidthPercent: IU_FEED_PHOTO_MAX_WIDTH_PERCENT,
+        photoReuseWindow: iuFeedPhotoReuseTracker?.windowSize || 100,
       };
     } catch (_) {}
 
@@ -6882,10 +6894,10 @@ try {
         ? `<span class="iuPhotoArticle-illustrativeLabel">${escapeHtml(IU_FEED_PHOTO_LABEL)}</span>`
         : "";
     return `
-      <article class="news-card iuPhotoArticle" data-feed-type="article" data-photo-layout="1"${legalAttrs}>
+      <article class="news-card iuPhotoArticle" data-feed-type="article" data-photo-layout="2"${legalAttrs}>
         <div class="iuPhotoArticle-row">
           <div class="iu-article-thumb iuPhotoArticle-thumb" aria-hidden="true">
-            <img class="iuPhotoArticle-img" src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(altText)}" loading="lazy" decoding="async" width="128" height="72" onerror="this.classList.add('iuPhotoArticle-img--failed');this.removeAttribute('src');">
+            <img class="iuPhotoArticle-img" src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(altText)}" loading="lazy" decoding="async" width="640" height="360" onerror="this.classList.add('iuPhotoArticle-img--failed');this.removeAttribute('src');">
             ${illustrativeLabel}
           </div>
           <div class="iuPhotoArticle-body">

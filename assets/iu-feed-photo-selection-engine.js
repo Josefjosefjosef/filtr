@@ -1,6 +1,6 @@
 /**
  * Feed photo selection engine — illustrative galleries only.
- * Phase 2D: title topic matching → supplemental → section → general_fallback (last).
+ * Phase V3: title topic + subtopic matching, match-score gate, 100-article dedupe window.
  * FEED_RENDER_ENABLED=true (phase 2B+): middle feed render via guarded wiring in app.js.
  */
 import { IU_IMAGE_GUESSING_ALLOWED, IU_IMAGE_MODE_ILLUSTRATIVE } from "./iu-photo-article-safety.js";
@@ -8,11 +8,15 @@ import { IU_INTERNAL_GALLERY_PROVIDER } from "./iu-internal-image-gallery.js";
 
 export const IU_FEED_PHOTO_LABEL = "Ilustrační foto";
 export const IU_FEED_RENDER_ENABLED = true;
-export const IU_FEED_PHOTO_MAX_WIDTH_PERCENT = 33;
-export const IU_FEED_PHOTO_TEXT_MIN_PERCENT = 67;
+export const IU_FEED_PHOTO_POSITION = "top";
+export const IU_FEED_PHOTO_MAX_WIDTH_PERCENT = 100;
+export const IU_FEED_PHOTO_TEXT_MIN_PERCENT = 0;
 export const IU_FEED_PHOTO_SELECTION_SOURCE = "feed_photo_engine";
 export const IU_FEED_PHOTO_CONFIG_FILE = "image_gallery/feed_photo_engine_config.json";
-export const IU_FEED_PHOTO_ENGINE_VERSION = 1;
+export const IU_FEED_PHOTO_ENGINE_VERSION = 3;
+export const IU_FEED_PHOTO_REUSE_WINDOW = 100;
+export const IU_FEED_PHOTO_MATCH_SCORE_MIN = 5;
+export const IU_FEED_PHOTO_MATCH_SCORE_MIN_SECTION = 3;
 
 export const IU_FEED_SECTION_GALLERY_IDS = [
   "zpravy",
@@ -80,10 +84,69 @@ export const IU_FEED_SUPPLEMENTAL_KEYWORD_RULES = Object.freeze([
 ]);
 
 /**
- * Title-first topic rules (phase 2D) — ordered; first match drives gallery try-order.
+ * Title-first topic rules (V3) — ordered; first match drives gallery try-order.
  * No verified-person / entity face matching — illustrative alt-text scoring only.
  */
 export const IU_FEED_TITLE_TOPIC_RULES = Object.freeze([
+  {
+    topicId: "tennis",
+    galleryIds: ["sport"],
+    keywords: [
+      "tenis",
+      " atp",
+      " wta",
+      "vondrousova",
+      "siniakova",
+      "djokovic",
+      "alcaraz",
+      "tenisovy",
+      "tenisove",
+      "raketa",
+    ],
+    positiveAltKeywords: ["tennis", "racket", "court", "ball", "clay", "grass court"],
+    negativeAltKeywords: [
+      "football",
+      "soccer",
+      "marathon",
+      "runner",
+      "mma",
+      "boxing",
+      "hockey",
+      "ice",
+    ],
+  },
+  {
+    topicId: "hockey",
+    galleryIds: ["sport"],
+    keywords: [
+      "hokej",
+      " nhl",
+      "extraliga",
+      "puk",
+      "brankar",
+      "hokejovy",
+      "hokejove",
+      "ledovy",
+    ],
+    positiveAltKeywords: ["hockey", "ice", "puck", "rink", "skate", "stick"],
+    negativeAltKeywords: ["football", "soccer", "tennis", "marathon", "runner", "mma", "boxing"],
+  },
+  {
+    topicId: "mma",
+    galleryIds: ["sport"],
+    keywords: [
+      " mma",
+      " ufc",
+      "oktagon",
+      "kickbox",
+      "boxersk",
+      "zapasnik",
+      "boxersky",
+      "klec",
+    ],
+    positiveAltKeywords: ["boxing", "mma", "glove", "ring", "cage", "fight", "punch"],
+    negativeAltKeywords: ["football", "soccer", "tennis", "hockey", "marathon", "runner"],
+  },
   {
     topicId: "football",
     galleryIds: ["sport"],
@@ -95,12 +158,14 @@ export const IU_FEED_TITLE_TOPIC_RULES = Object.freeze([
       "fifa",
       "slavia",
       "sparta",
+      "banik",
+      "plzen",
       "messi",
       "ronaldo",
       "trener",
       "prestup",
       " hrac",
-      "zapas",
+      "fotbalovy zapas",
       "mbappe",
       "demichelis",
       "ligovy klub",
@@ -112,8 +177,48 @@ export const IU_FEED_TITLE_TOPIC_RULES = Object.freeze([
       "kopan",
       "lipsko",
     ],
-    positiveAltKeywords: ["football", "soccer", "stadium", "goal", "pitch", "match", "team", "ball"],
-    negativeAltKeywords: ["marathon", "runner", "jogging", "running event", "track and field", "sprinter"],
+    positiveAltKeywords: [
+      "football",
+      "soccer",
+      "stadium",
+      "goal",
+      "pitch",
+      "match",
+      "team",
+      "ball",
+      "grass",
+      "field",
+      "goalpost",
+    ],
+    negativeAltKeywords: [
+      "marathon",
+      "runner",
+      "jogging",
+      "running event",
+      "track and field",
+      "sprinter",
+      "tennis",
+      "hockey",
+      "mma",
+      "boxing",
+      "ice rink",
+    ],
+  },
+  {
+    topicId: "law",
+    galleryIds: ["kriminalita"],
+    keywords: [
+      "soud",
+      "zaloba",
+      "rozsudek",
+      "justice",
+      "soudni",
+      "soudce",
+      "soudni dvur",
+      "ustavni soud",
+    ],
+    positiveAltKeywords: ["gavel", "scales", "justice", "court", "lawsuit", "judge", "legal", "verdict"],
+    negativeAltKeywords: ["police", "handcuff", "crime scene", "newspaper", "reading a newspaper"],
   },
   {
     topicId: "politics",
@@ -122,6 +227,7 @@ export const IU_FEED_TITLE_TOPIC_RULES = Object.freeze([
       "trump",
       "vlada",
       "prezident",
+      "premier",
       "ministr",
       "poslanc",
       "ustava",
@@ -134,20 +240,69 @@ export const IU_FEED_TITLE_TOPIC_RULES = Object.freeze([
       "parlament",
       "volby",
       "senat",
-      "premier",
       "rezident",
       "bily dum",
       "kongres",
       "diplomat",
     ],
-    positiveAltKeywords: ["parliament", "government", "politic", "capitol", "flag", "democracy", "congress", "minister"],
-    negativeAltKeywords: ["newspaper", "reading a newspaper", "reading news", "magazine"],
+    positiveAltKeywords: [
+      "parliament",
+      "government",
+      "politic",
+      "capitol",
+      "flag",
+      "democracy",
+      "congress",
+      "minister",
+      "podium",
+      "microphone",
+      "debate",
+    ],
+    negativeAltKeywords: [
+      "newspaper",
+      "reading a newspaper",
+      "reading news",
+      "magazine",
+      "football",
+      "soccer",
+      "travel",
+      "beach",
+      "stock chart",
+    ],
+  },
+  {
+    topicId: "economy",
+    galleryIds: ["ekonomika", "finance"],
+    keywords: [
+      "inflace",
+      "ekonomika",
+      "ekonomick",
+      "dane",
+      "finance",
+      "koruna",
+      "euro",
+      "burza",
+      "mena",
+      "hdp",
+      "trh prace",
+    ],
+    positiveAltKeywords: [
+      "chart",
+      "coin",
+      "calculator",
+      "banknote",
+      "currency",
+      "stock",
+      "finance",
+      "economy",
+      "graph",
+    ],
+    negativeAltKeywords: ["newspaper", "reading a newspaper", "football", "soccer", "beach"],
   },
   {
     topicId: "crime",
     galleryIds: ["kriminalita", "bezpecnost"],
     keywords: [
-      "soud",
       "trest",
       "vrah",
       "mafie",
@@ -158,13 +313,17 @@ export const IU_FEED_TITLE_TOPIC_RULES = Object.freeze([
       "zakaz",
       "vysetrov",
       "ocistec",
-      "zlozin",
+      "zlocin",
       "krimi",
       "lupic",
       "vez",
+      "kriminalita",
+      "kriminal",
+      "kradez",
+      "vrazda",
     ],
-    positiveAltKeywords: ["police", "court", "crime", "handcuff", "prison", "security", "law"],
-    negativeAltKeywords: ["newspaper", "reading a newspaper"],
+    positiveAltKeywords: ["police", "crime", "handcuff", "prison", "security", "tape", "siren", "lock"],
+    negativeAltKeywords: ["newspaper", "reading a newspaper", "gavel", "scales of justice"],
   },
   {
     topicId: "technology",
@@ -187,6 +346,52 @@ export const IU_FEED_TITLE_TOPIC_RULES = Object.freeze([
     ],
     positiveAltKeywords: ["technology", "computer", "robot", "digital", "software", "vehicle", "military", "tech", "armored"],
     negativeAltKeywords: ["newspaper", "reading a newspaper"],
+  },
+  {
+    topicId: "travel",
+    galleryIds: ["cestovani"],
+    keywords: [
+      "dovolena",
+      "cestovani",
+      "cestovat",
+      "letiste",
+      "hotel",
+      "mesto",
+      "památka",
+      "památku",
+      "turist",
+      "vylet",
+      "resort",
+    ],
+    positiveAltKeywords: ["travel", "destination", "landscape", "cityscape", "tourist", "hotel", "airport"],
+    negativeAltKeywords: ["newspaper", "reading a newspaper", "football", "soccer"],
+    subtopics: [
+      {
+        subtopicId: "krakov",
+        keywords: ["krakov", "krakow"],
+        positiveAltKeywords: ["krakow", "krakov", "poland", "polish"],
+      },
+      {
+        subtopicId: "santorini",
+        keywords: ["santorini"],
+        positiveAltKeywords: ["santorini", "greece", "greek"],
+      },
+      {
+        subtopicId: "marmaris",
+        keywords: ["marmaris"],
+        positiveAltKeywords: ["marmaris", "turkey", "turkish"],
+      },
+      {
+        subtopicId: "mallorca",
+        keywords: ["mallorca", "majorca"],
+        positiveAltKeywords: ["mallorca", "majorca", "spain", "spanish"],
+      },
+      {
+        subtopicId: "cerna_hora",
+        keywords: ["cerna hora", "montenegro"],
+        positiveAltKeywords: ["montenegro", "cerna hora"],
+      },
+    ],
   },
   {
     topicId: "transport",
@@ -377,6 +582,47 @@ export function iuFeedPhotoDetectTitleTopicRule(article) {
   return null;
 }
 
+export function iuFeedPhotoDetectTitleSubtopic(article, topicRule) {
+  const rule = topicRule || iuFeedPhotoDetectTitleTopicRule(article);
+  if (!rule?.subtopics?.length) return null;
+  const hay = iuFeedPhotoArticleHaystack(article);
+  if (!hay) return null;
+  for (const sub of rule.subtopics) {
+    for (const kw of sub.keywords || []) {
+      if (iuFeedPhotoHaystackIncludesKeyword(hay, kw)) return sub;
+    }
+  }
+  return null;
+}
+
+/**
+ * Sliding window tracker: same photo ID cannot repeat within last N feed articles.
+ */
+export class IuFeedPhotoReuseWindowTracker {
+  constructor(windowSize = IU_FEED_PHOTO_REUSE_WINDOW) {
+    this.windowSize = Math.max(1, Number(windowSize) || IU_FEED_PHOTO_REUSE_WINDOW);
+    this.articlePhotoLog = [];
+  }
+
+  recordArticle(photoId) {
+    this.articlePhotoLog.push(photoId ? String(photoId) : null);
+  }
+
+  getBlockedPhotoIds() {
+    const recent = this.articlePhotoLog.slice(-this.windowSize);
+    const ids = new Set();
+    for (const id of recent) {
+      if (id) ids.add(id);
+    }
+    return ids;
+  }
+
+  has(photoId) {
+    if (!photoId) return false;
+    return this.getBlockedPhotoIds().has(String(photoId));
+  }
+}
+
 export function iuFeedPhotoDetectSupplementalGallery(article) {
   const hay = iuFeedPhotoArticleHaystack(article);
   if (!hay) return null;
@@ -438,6 +684,9 @@ export function iuFeedPhotoBuildGalleryTryOrder(routing, article) {
     order.push(gid);
   };
   for (const gid of routing.galleryIds || [routing.galleryId]) add(gid);
+  if (routing.routingType === "title_topic") {
+    return order;
+  }
   const sectionGallery = iuFeedPhotoResolveSectionGallery(article);
   if (sectionGallery && routing.routingType !== "section") add(sectionGallery);
   add(IU_FEED_GENERAL_FALLBACK_GALLERY_ID);
@@ -474,6 +723,12 @@ export function iuFeedPhotoScoreEntry(entry, article, topicRule, options = {}) {
     for (const kw of rule.negativeAltKeywords || []) {
       if (alt.includes(iuFeedPhotoNormalizeText(kw))) score -= 25;
     }
+    const subtopic = options.subtopic || iuFeedPhotoDetectTitleSubtopic(article, rule);
+    if (subtopic) {
+      for (const kw of subtopic.positiveAltKeywords || []) {
+        if (alt.includes(iuFeedPhotoNormalizeText(kw))) score += 15;
+      }
+    }
   }
 
   if (rule && iuFeedPhotoAltIsGenericNews(alt)) score -= 30;
@@ -482,6 +737,11 @@ export function iuFeedPhotoScoreEntry(entry, article, topicRule, options = {}) {
   if (entry?.lastUsedAt) {
     const ageMs = Date.now() - Date.parse(entry.lastUsedAt);
     if (!Number.isNaN(ageMs) && ageMs < 6 * 3600000) score -= 12;
+  }
+
+  const blocked = options.blockedPhotoIds;
+  if (blocked && typeof blocked.has === "function" && blocked.has(entry.id)) {
+    score -= 10000;
   }
 
   const recent = options.recentlyUsedIds;
@@ -516,11 +776,20 @@ export function iuFeedPhotoPickFromPool(pool, galleryId, article, options = {}) 
   if (!candidates.length) return null;
 
   const topicRule = options.topicRule || iuFeedPhotoDetectTitleTopicRule(article);
+  const subtopic = options.subtopic || (topicRule ? iuFeedPhotoDetectTitleSubtopic(article, topicRule) : null);
   const isGeneralFallback = galleryId === IU_FEED_GENERAL_FALLBACK_GALLERY_ID;
-  const scored = candidates.map((entry) => ({
-    entry,
-    ...iuFeedPhotoScoreEntry(entry, article, topicRule, options),
-  }));
+  const blocked = options.blockedPhotoIds;
+  const scored = candidates
+    .filter((entry) => {
+      if (blocked && typeof blocked.has === "function" && blocked.has(entry.id)) return false;
+      return true;
+    })
+    .map((entry) => ({
+      entry,
+      ...iuFeedPhotoScoreEntry(entry, article, topicRule, { ...options, subtopic }),
+    }));
+
+  if (!scored.length) return null;
 
   scored.sort((a, b) => {
     if (b.score !== a.score) return b.score - a.score;
@@ -530,16 +799,20 @@ export function iuFeedPhotoPickFromPool(pool, galleryId, article, options = {}) 
   const best = scored[0];
   if (!best) return null;
 
-  const minScore = isGeneralFallback ? -999 : topicRule ? 1 : 0;
+  const minScore = isGeneralFallback
+    ? IU_FEED_PHOTO_MATCH_SCORE_MIN_SECTION
+    : topicRule
+      ? IU_FEED_PHOTO_MATCH_SCORE_MIN
+      : 0;
   if (best.score < minScore) return null;
 
   if (topicRule && !isGeneralFallback && iuFeedPhotoAltIsGenericNews(iuFeedPhotoNormalizeText(best.entry.imageAlt || ""))) {
     const alt = scored.find((row) => !iuFeedPhotoAltIsGenericNews(iuFeedPhotoNormalizeText(row.entry.imageAlt || "")));
-    if (alt && alt.score >= minScore) return alt.entry;
+    if (alt && alt.score >= minScore) return { entry: alt.entry, photoMatchScore: alt.score };
     if (!isGeneralFallback) return null;
   }
 
-  return best.entry;
+  return { entry: best.entry, photoMatchScore: best.score };
 }
 
 export function iuFeedPhotoSelectWithFallback(article, pool, options = {}) {
@@ -548,17 +821,20 @@ export function iuFeedPhotoSelectWithFallback(article, pool, options = {}) {
   let entry = null;
   let usedGalleryId = routing.galleryId;
   let usedIndex = -1;
+  let photoMatchScore = 0;
 
   for (let i = 0; i < tryOrder.length; i++) {
     const gid = tryOrder[i];
     const isGeneral = gid === IU_FEED_GENERAL_FALLBACK_GALLERY_ID;
+    if (isGeneral && routing.routingType === "title_topic") break;
     if (isGeneral && routing.routingType !== "general_fallback" && entry) break;
     const pick = iuFeedPhotoPickFromPool(pool, gid, article, {
       ...options,
       topicRule: routing.topicRule,
     });
-    if (pick) {
-      entry = pick;
+    if (pick?.entry) {
+      entry = pick.entry;
+      photoMatchScore = Number(pick.photoMatchScore) || 0;
       usedGalleryId = gid;
       usedIndex = i;
       if (!isGeneral) break;
@@ -572,7 +848,8 @@ export function iuFeedPhotoSelectWithFallback(article, pool, options = {}) {
       feedRenderEnabled: IU_FEED_RENDER_ENABLED,
       routingType: routing.routingType,
       galleryId: routing.galleryId,
-      reason: "no_photo_in_gallery_pool",
+      reason: "no_photo_match_score_or_reuse_window",
+      photoMatchScore: 0,
       autoGuessCount: 0,
       verifiedPersonSelectionEnabled: false,
       verifiedPlaceSelectionEnabled: false,
@@ -600,6 +877,7 @@ export function iuFeedPhotoSelectWithFallback(article, pool, options = {}) {
       : sectionFallbackUsed
         ? "topic_empty_used_section_fallback"
         : routing.reason,
+    photoMatchScore,
     autoGuessCount: 0,
     verifiedPersonSelectionEnabled: false,
     verifiedPlaceSelectionEnabled: false,
@@ -679,9 +957,6 @@ export function iuFeedPhotoSelectForArticle(article, catalog, options = {}) {
       iuFeedPhotoRecordUsage(entry, options.nowIso);
       result.photo = iuFeedPhotoEntryToPayload(entry, result.galleryId, entry._importSource);
     }
-  }
-  if (result.ok && result.photo?.id && options.recentlyUsedIds && typeof options.recentlyUsedIds.add === "function") {
-    options.recentlyUsedIds.add(result.photo.id);
   }
   return result;
 }

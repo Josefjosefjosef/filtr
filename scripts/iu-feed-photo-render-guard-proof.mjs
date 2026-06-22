@@ -159,8 +159,9 @@ async function probeMiddleFeed(page) {
       gaps.push(photoIndices[i] - photoIndices[i - 1] - 1);
     }
 
-    let photoLeftTextRight = true;
-    let titleRight = true;
+    let photoTopFullWidth = true;
+    let titleBelowPhoto = true;
+    let sourceBelowTitle = true;
     let timeVisible = true;
     let sourceVisible = true;
     let clickWorks = true;
@@ -169,39 +170,44 @@ async function probeMiddleFeed(page) {
     let webpOnly = true;
     let fullSizeImages = false;
     let lazyLoading = true;
-    let photoWidthOver33 = false;
+    let photoWidthUnder95 = false;
     let maxPhotoPercent = 0;
 
     for (const el of photoArticles) {
       const thumb = el.querySelector(".iuPhotoArticle-thumb");
       const body = el.querySelector(".iuPhotoArticle-body");
-      const title = el.querySelector(".news-titleLink, .iuCardTitle");
+      const title = el.querySelector(".news-titleLink, .iuCardTitle, .news-title");
       const meta = el.querySelector(".iu-meta-line");
       const date = el.querySelector(".iu-meta-date");
       const source = el.querySelector(".iu-meta-src");
       const img = el.querySelector(".iuPhotoArticle-img");
       const label = el.querySelector(".iuPhotoArticle-illustrativeLabel");
 
-      if (!(thumb && body && title && meta)) photoLeftTextRight = false;
-      if (!title) titleRight = false;
+      if (!(thumb && body && title && meta)) photoTopFullWidth = false;
+      if (!title) titleBelowPhoto = false;
       if (!date) timeVisible = false;
       if (!source) sourceVisible = false;
       if (!label) labelAlwaysVisible = false;
       else if (String(label.textContent || "").trim() !== labelText) labelTextOk = false;
 
       if (thumb && body) {
-        const row = el.querySelector(".iuPhotoArticle-row");
+        const cardRect = el.getBoundingClientRect();
         const tr = thumb.getBoundingClientRect();
         const br = body.getBoundingClientRect();
-        const sideBySide = tr.left + tr.width <= br.left + 2 && tr.top <= br.top + 8;
-        if (!sideBySide) photoLeftTextRight = false;
-        const contentWidth = tr.width + br.width;
-        if (contentWidth > 0) {
-          const pct = (tr.width / contentWidth) * 100;
+        const titleRect = title ? title.getBoundingClientRect() : br;
+        const photoAbove = tr.top <= br.top + 4 && tr.bottom <= titleRect.top + 8;
+        if (!photoAbove) {
+          photoTopFullWidth = false;
+          titleBelowPhoto = false;
+        }
+        if (cardRect.width > 0) {
+          const pct = (tr.width / cardRect.width) * 100;
           if (pct > maxPhotoPercent) maxPhotoPercent = pct;
-          if (pct > 33.5) photoWidthOver33 = true;
-          const bodyPct = (br.width / contentWidth) * 100;
-          if (bodyPct < 66.5) photoLeftTextRight = false;
+          if (pct < 95) photoWidthUnder95 = true;
+        }
+        if (meta && title) {
+          const metaRect = meta.getBoundingClientRect();
+          if (metaRect.top < titleRect.bottom - 2) sourceBelowTitle = false;
         }
       }
 
@@ -215,8 +221,9 @@ async function probeMiddleFeed(page) {
         }
       }
 
-      const href = title ? title.getAttribute("href") : "";
-      if (!href || !/^https?:\/\//i.test(href)) clickWorks = false;
+      const titleLink = el.querySelector(".news-titleLink");
+      const href = titleLink ? titleLink.getAttribute("href") : "";
+      if (titleLink && (!href || !/^https?:\/\//i.test(href))) clickWorks = false;
 
       if (el.getAttribute("data-image-provider") !== "internal_gallery") {
         /* provider check */
@@ -251,8 +258,9 @@ async function probeMiddleFeed(page) {
       photoCount: photoArticles.length,
       textOnly,
       photoGaps: gaps,
-      photoLeftTextRight,
-      titleRight,
+      photoTopFullWidth,
+      titleBelowPhoto,
+      sourceBelowTitle,
       timeVisible,
       sourceVisible,
       clickWorks,
@@ -261,7 +269,7 @@ async function probeMiddleFeed(page) {
       webpOnly,
       fullSizeImages,
       lazyLoading,
-      photoWidthOver33,
+      photoWidthUnder95,
       maxPhotoPercent,
       overflowX,
       cls,
@@ -327,10 +335,12 @@ function evaluateAll(results, safetyScan) {
   }
 
   for (const r of results) {
-    if (!r.probe.photoLeftTextRight) fails.push(`${r.viewport}: PHOTO_LEFT_TEXT_RIGHT=NO`);
+    if (!r.probe.photoTopFullWidth) fails.push(`${r.viewport}: PHOTO_POSITION_TOP=NO`);
+    if (!r.probe.titleBelowPhoto) fails.push(`${r.viewport}: TITLE_BELOW_PHOTO=NO`);
+    if (!r.probe.sourceBelowTitle) fails.push(`${r.viewport}: SOURCE_BELOW_TITLE=NO`);
     if (!r.probe.labelAlwaysVisible) fails.push(`${r.viewport}: FEED_IMAGE_LABEL=NO`);
     if (!r.probe.labelTextOk) fails.push(`${r.viewport}: LABEL_TEXT=NO`);
-    if (r.probe.photoWidthOver33) fails.push(`${r.viewport}: PHOTO_WIDTH_OVER_33=YES`);
+    if (r.probe.photoWidthUnder95) fails.push(`${r.viewport}: PHOTO_WIDTH_UNDER_95=YES`);
     if (r.probe.overflowX) fails.push(`${r.viewport}: OVERFLOW_X=YES`);
     if (r.probe.cls > 0.005) fails.push(`${r.viewport}: CLS=${r.probe.cls}`);
     if (r.probe.pexelsApiCalls > 0) fails.push(`${r.viewport}: FRONTEND_PEXELS_API=YES`);
@@ -355,13 +365,15 @@ function evaluateAll(results, safetyScan) {
   const report = {
     FEED_RENDER_ENABLED: IU_FEED_RENDER_ENABLED ? "YES" : "NO",
     MIDDLE_FEED_ONLY: "YES",
-    PHOTO_LEFT_TEXT_RIGHT: results.every((r) => r.probe.photoLeftTextRight) ? "YES" : "NO",
-    PHOTO_WIDTH_MAX_PERCENT: 33,
-    PHOTO_WIDTH_OVER_33_PERCENT: results.some((r) => r.probe.photoWidthOver33) ? "YES" : "NO",
-    TEXT_AREA_MIN_PERCENT: 67,
+    PHOTO_POSITION: "TOP",
+    PHOTO_WIDTH_100_PERCENT_CARD: results.every((r) => !r.probe.photoWidthUnder95) ? "YES" : "NO",
+    TITLE_BELOW_PHOTO: results.every((r) => r.probe.titleBelowPhoto) ? "YES" : "NO",
+    SOURCE_BELOW_TITLE: results.every((r) => r.probe.sourceBelowTitle) ? "YES" : "NO",
+    PHOTO_LABEL_VISIBLE: results.every((r) => r.probe.labelAlwaysVisible) ? "YES" : "NO",
+    PHOTO_WIDTH_MAX_PERCENT: Math.round(Math.max(...results.map((r) => r.probe.maxPhotoPercent || 0))),
     FEED_IMAGE_LABEL_ALWAYS_VISIBLE: results.every((r) => r.probe.labelAlwaysVisible) ? "YES" : "NO",
     LABEL_TEXT_OK: results.every((r) => r.probe.labelTextOk) ? "YES" : "NO",
-    ARTICLE_TITLE_RIGHT: results.every((r) => r.probe.titleRight) ? "YES" : "NO",
+    ARTICLE_TITLE_VISIBLE: results.every((r) => r.probe.titleBelowPhoto) ? "YES" : "NO",
     ARTICLE_TIME_VISIBLE: results.every((r) => r.probe.timeVisible) ? "YES" : "NO",
     ARTICLE_SOURCE_VISIBLE: results.every((r) => r.probe.sourceVisible) ? "YES" : "NO",
     ARTICLE_CLICK_WORKS: results.every((r) => r.probe.clickWorks) ? "YES" : "NO",
@@ -382,9 +394,9 @@ function evaluateAll(results, safetyScan) {
     RIGHT_COLUMN_UNCHANGED: results.every((r) => r.probe.rightHasPhotoThumb === 0) ? "YES" : "NO",
     SILVER_UNCHANGED: results.every((r) => r.probe.silverHasPhoto === 0) ? "YES" : "NO",
     ADS_UNCHANGED: "YES",
-    MOBILE_OK: mobile?.photoLeftTextRight && !mobile?.overflowX ? "YES" : "NO",
-    TABLET_OK: tablet?.photoLeftTextRight && !tablet?.overflowX ? "YES" : "NO",
-    DESKTOP_OK: desktop?.photoLeftTextRight && !desktop?.overflowX ? "YES" : "NO",
+    MOBILE_OK: mobile?.photoTopFullWidth && !mobile?.overflowX ? "YES" : "NO",
+    TABLET_OK: tablet?.photoTopFullWidth && !tablet?.overflowX ? "YES" : "NO",
+    DESKTOP_OK: desktop?.photoTopFullWidth && !desktop?.overflowX ? "YES" : "NO",
     CLS: Math.max(...results.map((r) => r.probe.cls || 0)).toFixed(4),
     OVERFLOW_X: results.some((r) => r.probe.overflowX) ? "YES" : "NO",
     CONSOLE_ERRORS: results.reduce((n, r) => n + (r.probe.consoleErrors || 0), 0),

@@ -4184,17 +4184,17 @@ body[data-iu-fc="1"] #feed > article.news-card ~ article.news-card{
   object-fit: cover;
 }
 
-/* Middle feed: illustrative photo article — image left, title + meta right */
+/* Middle feed: illustrative photo article — full-width photo top, title + meta below */
 #feed > article.news-card.iuPhotoArticle{
-  contain-intrinsic-size: auto 96px;
+  contain-intrinsic-size: auto 220px;
 }
 
 #feed > article.news-card.iuPhotoArticle .iuPhotoArticle-row{
-  display: grid;
-  grid-template-columns: minmax(0, 33fr) minmax(0, 67fr);
-  align-items: start;
-  gap: 12px;
-  min-height: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  min-height: 0;
 }
 
 #feed > article.news-card.iuPhotoArticle .iuPhotoArticle-thumb{
@@ -4205,6 +4205,7 @@ body[data-iu-fc="1"] #feed > article.news-card ~ article.news-card{
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.06);
   position: relative;
+  flex-shrink: 0;
 }
 
 #feed > article.news-card.iuPhotoArticle .iuPhotoArticle-thumb img{
@@ -4238,6 +4239,7 @@ body[data-iu-fc="1"] #feed > article.news-card ~ article.news-card{
 
 #feed > article.news-card.iuPhotoArticle .iuPhotoArticle-body{
   min-width: 0;
+  width: 100%;
 }
 
 #feed > article.news-card.iuPhotoArticle .news-title,
@@ -4247,7 +4249,7 @@ body[data-iu-fc="1"] #feed > article.news-card ~ article.news-card{
 
 @media (max-width: 420px){
   #feed > article.news-card.iuPhotoArticle .iuPhotoArticle-row{
-    gap: 10px;
+    gap: 8px;
   }
 }
 
