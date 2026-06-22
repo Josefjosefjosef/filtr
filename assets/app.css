@@ -10436,7 +10436,7 @@ header.iuTopbar,
   background-image: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  border-bottom: 1px solid #16964E !important;
+  border-bottom: 1px solid #003CFF !important;
   box-shadow: 0 10px 26px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.75) !important;
   color: #0B1F33 !important;
 }
@@ -10719,7 +10719,7 @@ header#topbarWrap.topbar-new.iuTopbar{
   background-image: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  border-bottom: 1px solid #16964E !important;
+  border-bottom: 1px solid #003CFF !important;
   box-shadow: 0 10px 26px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.75) !important;
   color: #0B1F33 !important;
 
@@ -12284,7 +12284,7 @@ header#topbarWrap.topbar-new.iuTopbar{
   background-image: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  border-bottom: 1px solid #16964E !important;
+  border-bottom: 1px solid #003CFF !important;
   box-shadow: 0 10px 26px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.75) !important;
   color: #0B1F33 !important;
 }
@@ -16237,9 +16237,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     height: 32px;
     margin: 0;
     padding: 0 11px;
-    border: 1px solid rgba(22, 150, 78, 0.38);
-    background: rgba(255, 255, 255, 0.92);
-    color: #16964E;
+    border: 1px solid #003CFF;
+    background: #003CFF;
+    color: #ffffff;
     cursor: pointer;
     z-index: 6;
     display: inline-flex;
@@ -16262,7 +16262,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     white-space: nowrap;
   }
   header#topbarWrap.topbar-new.iuTopbar #iuTopbarInfoBtn:focus-visible{
-    outline: 2px solid rgba(22, 150, 78, 0.85);
+    outline: 2px solid rgba(0, 60, 255, 0.85);
     outline-offset: 2px;
   }
   header#topbarWrap.topbar-new.iuTopbar #iuTopbarInfoBtn:active{
@@ -16290,6 +16290,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #topbarWrap.iuTopbarHost--silverComposer #iuTopbarSilverComposerHost.iuTopbarSilverComposerHost{
     display: flex !important;
     align-items: center;
+    padding-right: 30px;
+    box-sizing: border-box;
+    max-width: calc(100% - 7.5rem);
   }
   #topbarWrap.iuTopbarHost--silverComposer .iuTopbarSpacer{
     display: none !important;
@@ -19751,7 +19754,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"
 header#topbarWrap.topbar-new.iuTopbar,
 header.iuTopbar.topbar-new,
 .topbar-new.iuTopbar{
-  border-bottom: 1px solid #16964E !important;
+  border-bottom: 1px solid #003CFF !important;
 }
 
 .layout > aside.accordionCol{
@@ -22457,9 +22460,9 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
 
 #feed.iuTimelineFeed .iuTimelineAction{
   display:flex;
-  flex-direction:column;
+  flex-direction:row;
   align-items:center;
-  gap:3px;
+  gap:6px;
   border:0;
   background:transparent;
   padding:2px 4px;
@@ -22537,7 +22540,7 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
   display:none;
 }
 @media (min-width:1025px){
-  body.iu-home .iuMyInfoUzelOpenBtn{
+  :is(body.iu-home,body.iu-desktop-home-grid) .iuMyInfoUzelOpenBtn{
     display:flex;
     align-items:center;
     justify-content:center;
@@ -22554,7 +22557,11 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
     cursor:pointer;
     box-sizing:border-box;
   }
-  body.iu-home .iuMyInfoUzelOpenBtn:focus-visible{
+  :is(body.iu-home,body.iu-desktop-home-grid) #iuSilverWelcomeCard .iuMyInfoUzelOpenBtn{
+    grid-column:1 / -1;
+    align-self:stretch;
+  }
+  :is(body.iu-home,body.iu-desktop-home-grid) .iuMyInfoUzelOpenBtn:focus-visible{
     outline:2px solid rgba(0,60,255,.45);
     outline-offset:2px;
   }
@@ -22703,12 +22710,15 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
     padding-right:8px;
   }
   #feed.iuTimelineFeed .iuTimelineActions{
-    flex-direction:row;
-    gap:4px;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
     min-width:0;
     padding-top:0;
   }
   #feed.iuTimelineFeed .iuTimelineAction{
+    flex-direction:column;
+    align-items:center;
     min-width:36px;
     padding:4px 2px;
   }
@@ -22723,6 +22733,28 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
     width:20px;
     height:20px;
   }
+  #iuMindMenuView .iu-mmArticleActionsSections,
+  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSections{
+    margin-top:18px;
+    padding:14px 0 calc(env(safe-area-inset-bottom,0px) + 16px);
+    border-top:1px solid rgba(148,163,184,.22);
+  }
+  #iuMindMenuView .iu-mmArticleActionsSections .iu-mmSectionTitle,
+  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSections .iu-mmSectionTitle{
+    color:rgba(240,248,255,.96);
+  }
+  #iuMindMenuView .iu-mmArticleActionsSubtitle,
+  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSubtitle{
+    color:rgba(226,232,240,.9);
+    font-weight:600;
+  }
+  #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItem,
+  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItem{
+    background:rgba(8,15,32,.55);
+    border:1px solid rgba(148,163,184,.2);
+    border-radius:12px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  }
   #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItemLink,
   #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItemLink{
     color:rgba(240,248,255,.95);
@@ -22731,13 +22763,18 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
   #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItemMeta,
   #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelEmpty,
   #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelEmpty{
-    color:rgba(226,232,240,.82);
+    color:rgba(203,213,225,.88);
   }
   #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItemBtn,
   #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItemBtn{
-    border-color:rgba(255,255,255,.22);
-    background:rgba(255,255,255,.08);
-    color:rgba(240,248,255,.95);
+    border:1px solid rgba(96,165,250,.35);
+    background:rgba(0,60,255,.14);
+    color:rgba(240,248,255,.96);
+    border-radius:8px;
+  }
+  #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItemBtn:hover,
+  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItemBtn:hover{
+    background:rgba(0,60,255,.24);
   }
 }
 
@@ -22767,6 +22804,19 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
     background:rgba(255,255,255,.08);
     border-color:rgba(96,165,250,.35);
     color:#93C5FD;
+  }
+}
+
+@media (min-width:1025px){
+  #feed.iuTimelineFeed .iuTimelineActions{
+    flex-direction:column;
+    align-items:flex-end;
+  }
+  #feed.iuTimelineFeed .iuTimelineAction{
+    flex-direction:row;
+    align-items:center;
+    justify-content:flex-end;
+    min-width:88px;
   }
 }
 
