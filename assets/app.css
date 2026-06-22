@@ -3617,6 +3617,155 @@ body[data-iu-fc="1"] #feed{
   display: grid !important;
 }
 
+/* Timeline-first middle feed (V1): light canvas, 3-column rows, continuous axis */
+body[data-iu-fc="1"] #feed.iuTimelineFeed{
+  background: #ffffff;
+  gap: 0;
+  padding: 8px 0 16px;
+}
+
+body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:has(#feed.iuTimelineFeed){
+  background: #ffffff;
+}
+
+#feed.iuTimelineFeed > article.news-card.iuTimelineItem{
+  display: block !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  contain-intrinsic-size: auto 88px;
+}
+
+#feed.iuTimelineFeed > article.news-card.iuTimelineItem ~ article.news-card.iuTimelineItem{
+  border-top: none !important;
+}
+
+#feed.iuTimelineFeed .iuTimelineRow{
+  display: grid;
+  grid-template-columns: 72px 28px minmax(0, 1fr);
+  gap: 0 12px;
+  align-items: start;
+  padding: 14px 14px 14px 8px;
+  min-width: 0;
+}
+
+#feed.iuTimelineFeed .iuTimelineLeft{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 0;
+  padding-top: 2px;
+}
+
+#feed.iuTimelineFeed .iuTimelineClock{
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #0B2A4A;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+#feed.iuTimelineFeed .iuTimelineRelative{
+  font-size: 11px;
+  line-height: 1.25;
+  color: var(--iu-meta, #6b7280);
+  white-space: nowrap;
+}
+
+#feed.iuTimelineFeed .iuTimelineAxis{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-self: stretch;
+  min-height: 100%;
+}
+
+#feed.iuTimelineFeed .iuTimelineAxis::before{
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: rgba(11, 42, 74, 0.14);
+}
+
+#feed.iuTimelineFeed > article.iuTimelineItem:first-of-type .iuTimelineAxis::before{
+  top: 14px;
+}
+
+#feed.iuTimelineFeed > article.iuTimelineItem:last-of-type .iuTimelineAxis::before{
+  bottom: auto;
+  height: 14px;
+}
+
+#feed.iuTimelineFeed .iuTimelineDot{
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--iuTimelineDotColor, #EF4444);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px rgba(11, 42, 74, 0.12);
+}
+
+#feed.iuTimelineFeed .iuTimelineRight{
+  min-width: 0;
+}
+
+#feed.iuTimelineFeed .iuTimelineRight .news-title,
+#feed.iuTimelineFeed .iuTimelineRight .news-titleLink{
+  margin-top: 0;
+}
+
+#feed.iuTimelineFeed .iuTimelineRight .iu-meta-line{
+  margin-top: 8px;
+}
+
+#feed.iuTimelineFeed article.iuPhotoArticle,
+#feed.iuTimelineFeed .iuPhotoArticle-thumb,
+#feed.iuTimelineFeed .iuPhotoArticle-img{
+  display: none !important;
+}
+
+#feed.iuTimelineFeed article.iuTimelineItem--video .iuVideoFrame{
+  margin-bottom: 10px;
+}
+
+#feed.iuTimelineFeed article.iuTimelineItem--video .iuVideoMeta{
+  margin-bottom: 4px;
+}
+
+@media (max-width: 420px){
+  #feed.iuTimelineFeed .iuTimelineRow{
+    grid-template-columns: 58px 22px minmax(0, 1fr);
+    gap: 0 8px;
+    padding-left: 6px;
+    padding-right: 10px;
+  }
+  #feed.iuTimelineFeed .iuTimelineClock{
+    font-size: 13px;
+  }
+  #feed.iuTimelineFeed .iuTimelineRelative{
+    font-size: 10px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 900px){
+  body[data-iu-fc="1"] #feed.iuTimelineFeed{
+    display: block !important;
+  }
+}
+
 .iuRadioView[hidden]{
   display: none !important;
 }
