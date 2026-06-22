@@ -91,7 +91,7 @@ scripts/silver-retrieval-stress-300k-export*.json
 # Node (vendor libs in assets/vendor; do not track node_modules)
 node_modules/
 
-# infoUzel: proof scripts only in %TEMP% (never commit root-level proof_*.mjs)
-/proof_*.mjs
-/proof-*.mjs
+# infoUzel: Pexels pilot imported images (never commit binaries)
+projects/data/image_gallery/imported/pilot/webp/
+projects/data/image_gallery/imported/pilot/thumbs/
 

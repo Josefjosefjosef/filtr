@@ -117,7 +117,8 @@ function walkDir(dir, hits) {
       name.includes("pexels-initial-import-queue-proof") ||
       name.includes("pexels-initial-import-queue-build") ||
       name.includes("pexels-import-preparation-proof") ||
-      name.includes("pexels-import-runner")
+      name.includes("pexels-import-runner") ||
+      name.includes("pexels-import-pilot")
     ) {
       continue;
     }
