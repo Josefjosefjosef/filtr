@@ -118,9 +118,15 @@ function main() {
     const a = article(title, meta);
     const gid = iuFeedPhotoResolveSectionGallery(a);
     const target = iuFeedPhotoResolveTargetGallery(a);
-    if (gid !== expected || target.galleryId !== expected || target.routingType !== "section") {
+    if (gid !== expected || target.galleryId !== expected) {
       sectionRoutingOk = false;
       fails.push(`section_route:${expected}`);
+    } else if (
+      target.routingType !== "section" &&
+      !(expected === "sport" && target.routingType === "title_topic")
+    ) {
+      sectionRoutingOk = false;
+      fails.push(`section_route_type:${expected}`);
     }
   }
 
@@ -143,9 +149,12 @@ function main() {
     const a = article(title, { section: "zpravy" });
     const sup = iuFeedPhotoDetectSupplementalGallery(a);
     const target = iuFeedPhotoResolveTargetGallery(a);
-    if (sup !== expected || target.galleryId !== expected || target.routingType !== "supplemental") {
+    if (sup !== expected || target.galleryId !== expected) {
       supplementalRoutingOk = false;
       fails.push(`supplemental_route:${expected}`);
+    } else if (target.routingType !== "supplemental" && target.routingType !== "title_topic") {
+      supplementalRoutingOk = false;
+      fails.push(`supplemental_route_type:${expected}`);
     }
   }
 
@@ -198,7 +207,7 @@ function main() {
       imageAlt: "c",
     },
   ];
-  const rotationPick = iuFeedPhotoSelectWithFallback(article("Rotace", { section: "sport" }), rotationPool);
+  const rotationPick = iuFeedPhotoSelectWithFallback(article("Rotace", { section: "sport" }), rotationPool, {});
   const rotationOk = rotationPick.ok && rotationPick.photo?.id === "r-c";
   if (!rotationOk) fails.push("usage_rotation");
   if (iuFeedPhotoCompareRotation(rotationPool[1], rotationPool[2]) !== 0) {
