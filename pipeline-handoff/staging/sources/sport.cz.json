@@ -1,28 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-22T00:40:32.571781Z",
+  "ingestedAt": "2026-06-22T02:00:58.291415Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Ikony svých zemí tváří v tvář! Egypt se střetne s Novým Zélandem",
+      "title": "FOTBAL ONLINE: Salah a spol. v průšvihu! Nový Zéland o půli drží náskok",
       "url": "https://www.sport.cz/clanek/fotbal-ms-ikony-svych-zemi-tvari-v-tvar-egypt-se-stretne-s-novym-zelandem-5486079",
       "dt": "2026-06-21T17:00:20Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "egypt",
+        "drží",
         "fotbal",
-        "ikony",
-        "novým",
+        "nový",
+        "náskok",
         "online",
-        "střetne",
-        "svých",
-        "tvář",
-        "tváří",
-        "zemí",
-        "zélandem"
+        "průšvihu",
+        "půli",
+        "salah",
+        "spol",
+        "zéland"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hororové chyby! Trpaslík z Kapverd trestal minely jako z pralesa",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-hororove-chyby-trpaslik-z-kapverd-trestal-minely-jako-z-pralesa-5486765",
+      "dt": "2026-06-22T00:46:03Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chyby",
+        "hororové",
+        "jako",
+        "kapverd",
+        "minely",
+        "pralesa",
+        "trestal",
+        "trpaslík"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -744,31 +768,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Úžasný obrat! Češky udolaly Dominikánskou republiku v pěti setech",
-      "url": "https://www.sport.cz/clanek/volejbal-cesky-touzi-po-vyhre-na-filipinach-vyzvou-dominikanskou-republiku-5485073",
-      "dt": "2026-06-21T04:18:02Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dominikánskou",
-        "obrat",
-        "pěti",
-        "republiku",
-        "setech",
-        "udolaly",
-        "úžasný",
-        "češky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41476,
+      "bytes": 41318,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,7 +815,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-21T21:50:10Z",
+        "raw_feed_latest_publishedAt": "2026-06-22T00:46:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -833,8 +832,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Ikony svých zemí tváří v tvář! Egypt se střetne s Novým Zélandem",
+            "title": "FOTBAL ONLINE: Salah a spol. v průšvihu! Nový Zéland o půli drží náskok",
             "publishedAt": "2026-06-21T17:00:20Z"
+          },
+          {
+            "title": "Hororové chyby! Trpaslík z Kapverd trestal minely jako z pralesa",
+            "publishedAt": "2026-06-22T00:46:03Z"
           },
           {
             "title": "Šílené MS pokračuje! Zázrak z Kapverd oloupil o body dalšího favorita",
@@ -859,10 +862,6 @@
           {
             "title": "Comeback se vším všudy. Legendární Serena Williamsová si ve Wimbledonu zahraje i dvouhru",
             "publishedAt": "2026-06-21T19:14:31Z"
-          },
-          {
-            "title": "Španělsko naprosto dominovalo a slaví první vítězství na MS",
-            "publishedAt": "2026-06-21T08:02:02Z"
           }
         ]
       }
