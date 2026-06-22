@@ -218,17 +218,21 @@ function main() {
   const scope = checkScopeUnchanged();
   const appJs = fs.readFileSync(path.join(REPO, "assets", "app.js"), "utf8");
   const feedRenderHook =
-    /iuFeedPhotoSelectForArticle|iu-feed-photo-selection-engine|FEED_PHOTO_ENGINE/.test(appJs);
-  if (feedRenderHook) fails.push("feed_render_hook_in_app_js");
+    /iuFeedPhotoApplySelectionToArticle|iuFeedPhotoLoadCatalogBrowser|iu-feed-photo-selection-engine/.test(
+      appJs
+    );
+  const phase2B = config.phase === "2B" || config.feedRenderEnabled === true;
+  if (phase2B && !feedRenderHook) fails.push("feed_render_hook_missing_in_app_js");
+  if (!phase2B && feedRenderHook) fails.push("feed_render_hook_in_app_js");
 
   const pass =
     fails.length === 0 &&
     engineExists &&
     configExists &&
-    IU_FEED_RENDER_ENABLED === false &&
-    config.feedRenderEnabled === false &&
+    (phase2B ? IU_FEED_RENDER_ENABLED === true : IU_FEED_RENDER_ENABLED === false) &&
+    (phase2B ? config.feedRenderEnabled === true : config.feedRenderEnabled === false) &&
     IU_IMAGE_GUESSING_ALLOWED === false &&
-    scope.FRONTEND_CHANGED === "NO" &&
+    (phase2B ? true : scope.FRONTEND_CHANGED === "NO") &&
     scope.FEED_CHANGED === "NO";
 
   const report = {
