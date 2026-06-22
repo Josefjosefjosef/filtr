@@ -1227,6 +1227,11 @@ try {
   // FEED VIDEO EVERY 8 (YouTube preview card, lazy embed)
   const IU_FEED_VIDEO_ENABLED = true;
   const IU_FEED_VIDEO_EVERY = 8;
+  /** Timeline-first middle feed (V1): photos off, axis + time columns. */
+  const IU_TIMELINE_ENABLED = true;
+  const IU_FEED_PHOTOS_ENABLED = IU_FEED_RENDER_ENABLED;
+  const IU_FEED_BACKGROUND = "LIGHT";
+  const IU_YOUTUBE_CARDS_ENABLED = IU_FEED_VIDEO_ENABLED;
   /** Middle feed only: illustrative photo article slots every 4–7 regular articles (preferred 5). */
   const IU_FEED_PHOTO_ARTICLE_ENABLED = IU_FEED_RENDER_ENABLED;
   const IU_FEED_PHOTO_INTERVAL_MIN = 4;
@@ -6285,6 +6290,7 @@ try {
         }
 
         const usePhotoLayout =
+          !IU_TIMELINE_ENABLED &&
           kind === "article" &&
           IU_FEED_PHOTO_ARTICLE_ENABLED &&
           middleFeedPhotoArticleIndexSet.has(pos);
@@ -6477,11 +6483,33 @@ try {
         illustrativeLabelsRendered: safeTarget.querySelectorAll(".iuPhotoArticle-illustrativeLabel").length,
         imageGuessingAllowed: IU_IMAGE_GUESSING_ALLOWED,
         feedRenderEnabled: IU_FEED_RENDER_ENABLED,
+        feedPhotosEnabled: IU_FEED_PHOTOS_ENABLED,
+        timelineEnabled: IU_TIMELINE_ENABLED,
+        feedBackground: IU_FEED_BACKGROUND,
+        youtubeCardsEnabled: IU_YOUTUBE_CARDS_ENABLED,
         feedPhotoCatalogLoaded: Boolean(iuFeedPhotoCatalogCache && iuFeedPhotoCatalogCache.total > 0),
         feedPhotoCatalogTotal: iuFeedPhotoCatalogCache?.total || 0,
         feedPhotoLabel: IU_FEED_PHOTO_LABEL,
         feedPhotoMediaEnabled: iuFeedPhotoMediaEnabledP(),
       };
+      if (IU_TIMELINE_ENABLED) {
+        feedEl.classList.add("iuTimelineFeed");
+        feedEl.setAttribute("data-iu-timeline-enabled", "1");
+        feedEl.setAttribute("data-iu-feed-photos-enabled", IU_FEED_PHOTOS_ENABLED ? "1" : "0");
+        feedEl.setAttribute("data-iu-feed-background", IU_FEED_BACKGROUND);
+        const timelineItems = safeTarget.querySelectorAll("article.iuTimelineItem");
+        const videoCards = safeTarget.querySelectorAll("article.iuVideoCard");
+        window.__iuTimelineMetrics = {
+          timelineEnabled: IU_TIMELINE_ENABLED,
+          feedPhotosEnabled: IU_FEED_PHOTOS_ENABLED,
+          feedBackground: IU_FEED_BACKGROUND,
+          youtubeCardsEnabled: IU_YOUTUBE_CARDS_ENABLED,
+          timelineItemsRendered: timelineItems.length,
+          youtubeCardsRendered: videoCards.length,
+          photoArticlesRendered: photoCards.length,
+          sectionColors: IU_TIMELINE_SECTION_COLORS,
+        };
+      }
     } catch (_) {}
 
     const feedChildrenAfter = safeTarget.childElementCount;
@@ -6733,6 +6761,89 @@ try {
     return mediaMap[normalized] || normalized;
   }
 
+  const IU_TIMELINE_SECTION_COLORS = Object.freeze({
+    zpravy: "#EF4444",
+    aktualne: "#EF4444",
+    sport: "#22C55E",
+    finance: "#C9A24D",
+    zdravi: "#2DB8A8",
+    cestovani: "#E8892E",
+    hry: "#8B6FD4",
+    kultura: "#F06BA8",
+    "kultura-akce": "#F06BA8",
+    veda: "#5B9FE8",
+    "veda-historie": "#5B9FE8",
+    vzdelavani: "#E6C200",
+    "prehled-dne": "#EF4444",
+    hub: "#EF4444",
+  });
+
+  function iuTimelineResolveSectionKey(it) {
+    const raw = String(it?.section || it?.topic || "").trim().toLowerCase();
+    if (raw === "aktualne") return "zpravy";
+    if (raw === "kultura-akce" || raw === "kultura_akce") return "kultura";
+    if (raw === "veda-historie" || raw === "veda_historie") return "veda";
+    if (raw === "prehled-dne" || raw === "prehled_dne") return "prehled-dne";
+    return raw || "zpravy";
+  }
+
+  function iuTimelineSectionDotColor(it) {
+    const key = iuTimelineResolveSectionKey(it);
+    return IU_TIMELINE_SECTION_COLORS[key] || IU_TIMELINE_SECTION_COLORS.zpravy;
+  }
+
+  function iuTimelineClockTime(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return "";
+    return d.toLocaleTimeString("cs-CZ", { hour: "2-digit", minute: "2-digit" });
+  }
+
+  function iuTimelineRelativeFreshness(it) {
+    const ms = iuNewsPreviewParsePublishedMs(it);
+    const rel = iuCsRelativeFreshnessFromMs(ms);
+    return rel ? String(rel).replace(/\.$/, "") : "";
+  }
+
+  function iuTimelineLeftBlock(it) {
+    const iso = iuArticleUserVisibleTimeIso(it);
+    const clock = iuTimelineClockTime(iso);
+    const rel = iuTimelineRelativeFreshness(it);
+    const clockPart = clock ? `<span class="iuTimelineClock">${escapeHtml(clock)}</span>` : "";
+    const relPart = rel ? `<span class="iuTimelineRelative">${escapeHtml(rel)}</span>` : "";
+    return clockPart + relPart;
+  }
+
+  function iuTimelineSourceMetaLine(it, fallbackLabel) {
+    const srcRaw = Array.isArray(it?.sources) ? it.sources : [];
+    const seen = new Set();
+    const src = [];
+    for (const s of srcRaw) {
+      const name = (s?.name || "").trim();
+      const url = (s?.url || "").trim();
+      if (!name || !url) continue;
+      if (iuIsHardBlockedArticleUrl(url)) continue;
+      if (iuIsHardBlockedSourceLabel(name)) continue;
+      const urlBase = url.split("?")[0].split("#")[0].toLowerCase();
+      const canonicalName = normalizeMediaName(name);
+      const key = `${urlBase}||${canonicalName}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      src.push({ name, url });
+    }
+    let displayName = String(fallbackLabel || "").trim();
+    if (src.length) {
+      const primary = src[0];
+      const labelFromArticle = String(it?.sourceLabel || "").trim();
+      const primaryNameRaw = String(primary.name || "").trim();
+      displayName = labelFromArticle || primaryNameRaw || displayName;
+      const primaryUrl = normalizeArticleUrl(primary.url) || primary.url;
+      return `<div class="iu-meta-line"><span class="iu-meta-src">Zdroj: <a class="iu-meta-link" href="${escapeHtml(primaryUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayName)}</a></span></div>`;
+    }
+    if (!displayName) return "";
+    return `<div class="iu-meta-line"><span class="iu-meta-src">Zdroj: ${escapeHtml(displayName)}</span></div>`;
+  }
+
   function renderSourcesMetaLine(it) {
     const srcRaw = Array.isArray(it.sources) ? it.sources : [];
     const seen = new Set();
@@ -6928,6 +7039,24 @@ try {
     const photoLayout = photoRequested && photoAudit && photoAudit.allowed === true;
 
     debugLog("[RENDER ARTICLE]", title);
+    if (IU_TIMELINE_ENABLED) {
+      const sectionKey = iuTimelineResolveSectionKey(it);
+      const dotColor = iuTimelineSectionDotColor(it);
+      const timelineSource = iuTimelineSourceMetaLine(it);
+      const rightBody = `
+            <h2 class="news-title">${titleMarkup}${suspiciousFlag}</h2>
+            ${timelineSource}
+          `.trim();
+      return `
+      <article class="news-card iuTimelineItem" data-feed-type="article" data-timeline-section="${escapeHtml(sectionKey)}">
+        <div class="iuTimelineRow">
+          <div class="iuTimelineLeft">${iuTimelineLeftBlock(it)}</div>
+          <div class="iuTimelineAxis" aria-hidden="true"><span class="iuTimelineDot" style="--iuTimelineDotColor:${escapeHtml(dotColor)}"></span></div>
+          <div class="iuTimelineRight">${rightBody}</div>
+        </div>
+      </article>
+    `;
+    }
     if (photoLayout) {
       return buildPhotoArticleHtml(it, { title, titleMarkup, suspiciousFlag, sourcesMetaLine });
     }
@@ -6956,6 +7085,36 @@ function buildVideoAsArticleCard(it) {
       const aria = `Přehrát video: ${title}`;
       const noExternalOpen = Boolean(it && it.noExternalOpen);
       const noOpenAttr = noExternalOpen ? ` data-iu-no-external-open="1"` : "";
+      const videoBody = `
+          <div class="iuVideoFrame">
+            <button type="button" class="iuVideoPoster" style="--iuVideoThumb: url('${escapeHtml(thumb)}');" aria-label="${escapeHtml(aria)}">
+              <span class="iuVideoPlay" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" focusable="false" aria-hidden="true">
+                  <path d="M9 7.5v9l8-4.5-8-4.5z" fill="currentColor"></path>
+                </svg>
+              </span>
+              ${category ? `<span class="iuVideoBadge" aria-hidden="true">${escapeHtml(category)}</span>` : ""}
+            </button>
+          </div>
+          <div class="iuVideoMeta">
+            <div class="iuVideoTitle">${escapeHtml(title)}</div>
+            ${publishedAt ? `<div class="iuVideoSub"><span class="iuVideoTime">${escapeHtml(publishedAt)}</span></div>` : ""}
+          </div>
+          ${iuTimelineSourceMetaLine(it, channel)}
+        `.trim();
+      if (IU_TIMELINE_ENABLED) {
+        const sectionKey = iuTimelineResolveSectionKey(it);
+        const dotColor = iuTimelineSectionDotColor(it);
+        return `
+        <article class="news-card iuVideoCard iuTimelineItem iuTimelineItem--video" data-feed-type="video-preview" data-ytid="${escapeHtml(id)}" data-timeline-section="${escapeHtml(sectionKey)}"${noOpenAttr}>
+          <div class="iuTimelineRow">
+            <div class="iuTimelineLeft">${iuTimelineLeftBlock(it)}</div>
+            <div class="iuTimelineAxis" aria-hidden="true"><span class="iuTimelineDot" style="--iuTimelineDotColor:${escapeHtml(dotColor)}"></span></div>
+            <div class="iuTimelineRight">${videoBody}</div>
+          </div>
+        </article>
+      `;
+      }
       return `
         <article class="news-card iuVideoCard" data-feed-type="video-preview" data-ytid="${escapeHtml(id)}"${noOpenAttr}>
           <div class="iuVideoFrame">
