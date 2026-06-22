@@ -1235,6 +1235,7 @@ try {
   let iuFeedPhotoCatalogCache = null;
   let iuFeedPhotoCatalogLoadPromise = null;
   let iuFeedPhotoEngineConfig = null;
+  let iuFeedPhotoSessionUsedIds = null;
 
   function iuFeedPhotoMediaEnabledP() {
     if (!IU_FEED_RENDER_ENABLED) return false;
@@ -1292,7 +1293,7 @@ try {
         article,
         iuFeedPhotoCatalogCache,
         iuBasePath(),
-        { recordUsage: true }
+        { recordUsage: true, recentlyUsedIds: iuFeedPhotoSessionUsedIds }
       );
       if (!iuFeedPhotoRenderGuardAllowsArticleImage(merged)) return article;
       return merged;
@@ -5921,6 +5922,7 @@ try {
     }
     if (IU_FEED_RENDER_ENABLED) {
       await iuFeedPhotoEnsureCatalogLoaded();
+      iuFeedPhotoSessionUsedIds = new Set();
     }
     state.__iuRenderFeedPassSeq = (state.__iuRenderFeedPassSeq || 0) + 1;
     rfPassForTrace = state.__iuRenderFeedPassSeq;

@@ -71,6 +71,7 @@ export function isFastPoolPipelineScope(files) {
       f.startsWith("scripts/iu-image-gallery-audit-v1") ||
       f.startsWith("scripts/iu-feed-photo-selection-engine") ||
       f.startsWith("scripts/iu-feed-photo-render-guard") ||
+      f.startsWith("scripts/iu-feed-photo-topic-matching-proof") ||
       f === "assets/iu-feed-photo-selection-engine.js" ||
       f === "assets/app.js" ||
       f === "assets/app.css" ||
