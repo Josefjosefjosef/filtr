@@ -22587,13 +22587,17 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
 .iuMyInfoUzelOverlay__sheet{
   position:relative;
   z-index:1;
-  width:min(960px,100%);
-  max-height:100vh;
-  margin:0 auto;
+  width:min(1720px,calc(100vw - 40px));
+  max-width:min(1720px,calc(100vw - 40px));
+  max-height:calc(100vh - 24px);
+  margin:12px auto;
   background:linear-gradient(165deg,#f4f9ff 0%,#f7f5ff 42%,#eefcfb 78%,#f8fafc 100%);
   display:flex;
   flex-direction:column;
   box-shadow:0 18px 48px rgba(0,0,0,.22);
+  box-sizing:border-box;
+  contain:layout style;
+  border-radius:16px;
 }
 .iuMyInfoUzelOverlay__head{
   display:flex;
@@ -22879,3 +22883,4 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
 @media (hover:hover) and (pointer:fine){
   .mindMenu .iu-mailbox-row:hover .iu-mailbox-pill{transform:translateY(-1px);box-shadow:0 6px 16px rgba(11,42,74,.1)}
 }
+.iuMyInfoUzelOverlay .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid>.iuTile,.iuMyInfoUzelOverlay .mindMenu section.iu-mmQuickLinks .iuTileLink,.iuMyInfoUzelMindMenuHost .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid>.iuTile,.iuMyInfoUzelMindMenuHost .mindMenu section.iu-mmQuickLinks .iuTileLink{min-height:96px!important;height:96px!important;max-height:96px!important;box-sizing:border-box!important}
