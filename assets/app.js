@@ -7007,16 +7007,16 @@ try {
     return `
       <div class="iuTimelineActions" role="group" aria-label="Akce článku">
         <button type="button" class="iuTimelineAction iuTimelineAction--save${saved ? " is-active" : ""}" data-iu-action="save" data-iu-article-id="${escapeHtml(id)}" aria-label="${saved ? "Odebrat z uložených" : "Uložit článek"}" title="${saved ? "Odebrat z uložených" : "Uložit článek"}" aria-pressed="${saved ? "true" : "false"}">
-          <span class="iuTimelineActionIcon" aria-hidden="true">${iuArticleActionsIconSvg("save")}</span>
           <span class="iuTimelineActionLabel">${escapeHtml(saveLabel)}</span>
+          <span class="iuTimelineActionIcon" aria-hidden="true">${iuArticleActionsIconSvg("save")}</span>
         </button>
         <button type="button" class="iuTimelineAction iuTimelineAction--follow${followed ? " is-active" : ""}" data-iu-action="follow" data-iu-article-id="${escapeHtml(id)}" data-iu-article-topic="${escapeHtml(topic)}" aria-label="${followed ? "Zrušit sledování tématu" : "Sledovat téma"}" title="${followed ? "Zrušit sledování tématu" : "Sledovat téma"}" aria-pressed="${followed ? "true" : "false"}">
-          <span class="iuTimelineActionIcon" aria-hidden="true">${iuArticleActionsIconSvg("follow")}</span>
           <span class="iuTimelineActionLabel">${escapeHtml(followLabel)}</span>
+          <span class="iuTimelineActionIcon" aria-hidden="true">${iuArticleActionsIconSvg("follow")}</span>
         </button>
         <button type="button" class="iuTimelineAction iuTimelineAction--hide" data-iu-action="hide" data-iu-article-id="${escapeHtml(id)}" aria-label="Skrýt článek" title="Skrýt článek">
-          <span class="iuTimelineActionIcon" aria-hidden="true">${iuArticleActionsIconSvg("hide")}</span>
           <span class="iuTimelineActionLabel">Skrýt</span>
+          <span class="iuTimelineActionIcon" aria-hidden="true">${iuArticleActionsIconSvg("hide")}</span>
         </button>
       </div>
     `.trim();
@@ -7294,15 +7294,19 @@ try {
       btn.type = "button";
       btn.id = "iuMyInfoUzelOpenBtn";
       btn.className = "iuMyInfoUzelOpenBtn";
-      btn.textContent = "Můj InfoUzel.cz / MindMenu";
+      btn.innerHTML =
+        '<span class="iuMyInfoUzelOpenBtn__label">Můj InfoUzel.cz / MindMenu</span><span class="iuMyInfoUzelOpenBtn__icons" aria-hidden="true"><span class="iuMyInfoUzelOpenBtn__icon">📅</span><span class="iuMyInfoUzelOpenBtn__icon">✓</span><span class="iuMyInfoUzelOpenBtn__icon">📝</span></span>';
       btn.setAttribute("aria-haspopup", "dialog");
       btn.setAttribute("aria-controls", "iuMyInfoUzelOverlay");
+      btn.setAttribute("aria-label", "Můj InfoUzel.cz / MindMenu");
       btn.addEventListener("click", () => {
         try {
           iuArticleActionsOpenOverlay();
         } catch (_) {}
       });
-      if (metaEl && metaEl.parentNode === textBlock) {
+      if (card && textBlock && card.contains(textBlock)) {
+        textBlock.insertAdjacentElement("afterend", btn);
+      } else if (metaEl && metaEl.parentNode === textBlock) {
         metaEl.insertAdjacentElement("afterend", btn);
       } else if (textBlock && anchorParent.contains(textBlock)) {
         textBlock.insertAdjacentElement("afterend", btn);
@@ -7330,22 +7334,25 @@ try {
             <button type="button" class="iuMyInfoUzelOverlay__close" data-iu-myinfouzel-close aria-label="Zavřít">×</button>
           </header>
           <div class="iuMyInfoUzelOverlay__scroll">
-            <section class="iuMyInfoUzelSection">
-              <h3 class="iuMyInfoUzelSectionTitle">Uložené články</h3>
-              <div data-iu-manage-panel="saved"></div>
-            </section>
-            <section class="iuMyInfoUzelSection">
-              <h3 class="iuMyInfoUzelSectionTitle">Sledovaná témata</h3>
-              <div data-iu-manage-panel="followed"></div>
-            </section>
-            <section class="iuMyInfoUzelSection">
-              <h3 class="iuMyInfoUzelSectionTitle">Skryté články</h3>
-              <div data-iu-manage-panel="hidden"></div>
-            </section>
-            <section class="iuMyInfoUzelSection iuMyInfoUzelSection--mindmenu">
-              <h3 class="iuMyInfoUzelSectionTitle">MindMenu</h3>
-              <div id="iuMyInfoUzelMindMenuHost" class="iuMyInfoUzelMindMenuHost"></div>
-            </section>
+            <div class="iuMyInfoUzelDashboard">
+              <div class="iuMyInfoUzelDashboard__left">
+                <section class="iuMyInfoUzelSection iuMyInfoUzelSection--saved">
+                  <h3 class="iuMyInfoUzelSectionTitle">Uložené články</h3>
+                  <div data-iu-manage-panel="saved"></div>
+                </section>
+                <section class="iuMyInfoUzelSection iuMyInfoUzelSection--followed">
+                  <h3 class="iuMyInfoUzelSectionTitle">Sledovaná témata</h3>
+                  <div data-iu-manage-panel="followed"></div>
+                </section>
+                <section class="iuMyInfoUzelSection iuMyInfoUzelSection--hidden">
+                  <h3 class="iuMyInfoUzelSectionTitle">Skryté články</h3>
+                  <div data-iu-manage-panel="hidden"></div>
+                </section>
+              </div>
+              <div class="iuMyInfoUzelDashboard__right">
+                <div id="iuMyInfoUzelMindMenuHost" class="iuMyInfoUzelMindMenuHost"></div>
+              </div>
+            </div>
           </div>
         </div>
       `.trim();
@@ -7455,16 +7462,16 @@ try {
           <div class="iu-mmSectionTitle">Moje články</div>
           <div class="iu-mmSectionLine" aria-hidden="true"></div>
         </div>
-        <div class="iu-mmArticleActionsBlock">
-          <h4 class="iu-mmArticleActionsSubtitle">Uložené články</h4>
+        <div class="iu-mmArticleActionsBlock iu-mmArticleActionsBlock--saved">
+          <h4 class="iu-mmArticleActionsSubtitle iu-mmArticleActionsSubtitle--saved">Uložené články</h4>
           <div id="iuMmSavedArticlesPanel" class="iu-mmArticleActionsPanel"></div>
         </div>
-        <div class="iu-mmArticleActionsBlock">
-          <h4 class="iu-mmArticleActionsSubtitle">Sledovaná témata</h4>
+        <div class="iu-mmArticleActionsBlock iu-mmArticleActionsBlock--followed">
+          <h4 class="iu-mmArticleActionsSubtitle iu-mmArticleActionsSubtitle--followed">Sledovaná témata</h4>
           <div id="iuMmFollowedTopicsPanel" class="iu-mmArticleActionsPanel"></div>
         </div>
-        <div class="iu-mmArticleActionsBlock iu-mmArticleActionsBlock--last">
-          <h4 class="iu-mmArticleActionsSubtitle">Skryté články</h4>
+        <div class="iu-mmArticleActionsBlock iu-mmArticleActionsBlock--hidden iu-mmArticleActionsBlock--last">
+          <h4 class="iu-mmArticleActionsSubtitle iu-mmArticleActionsSubtitle--hidden">Skryté články</h4>
           <div id="iuMmHiddenArticlesPanel" class="iu-mmArticleActionsPanel"></div>
         </div>
       `.trim();
