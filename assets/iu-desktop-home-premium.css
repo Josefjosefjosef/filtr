@@ -620,13 +620,19 @@
     flex: 0 0 auto;
   }
 
+  .iuMyInfoUzelOverlay:not([hidden]) {
+    contain: layout style;
+  }
   .iuMyInfoUzelOverlay__sheet {
-    width: min(1720px, calc(100vw - 40px));
-    max-height: calc(100vh - 24px);
-    margin: 12px auto;
-    border-radius: 16px;
+    width: min(1720px, calc(100vw - 40px)) !important;
+    max-width: min(1720px, calc(100vw - 40px)) !important;
+    max-height: calc(100vh - 24px) !important;
+    margin: 12px auto !important;
+    border-radius: 16px !important;
     background: linear-gradient(165deg, #f0f7ff 0%, #f5f3ff 38%, #eefcfb 72%, #f8fafc 100%);
     box-shadow: 0 24px 64px rgba(11, 42, 74, 0.18);
+    box-sizing: border-box !important;
+    contain: layout style !important;
   }
   .iuMyInfoUzelOverlay__scroll {
     padding: 20px 24px 32px;
@@ -742,13 +748,25 @@
     gap: 10px 12px;
     margin-top: 10px !important;
   }
-  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile {
-    min-height: 96px;
+  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid,
+  .iuMyInfoUzelOverlay .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid {
+    min-height: 212px !important;
+    contain-intrinsic-size: auto 212px;
+    content-visibility: auto;
+  }
+  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile,
+  .iuMyInfoUzelOverlay .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile {
+    min-height: 96px !important;
+    height: 96px !important;
+    max-height: 96px !important;
+    box-sizing: border-box !important;
   }
   .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink,
-  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile .iuTileLink {
-    min-height: 96px;
-    height: 100%;
+  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile .iuTileLink,
+  .iuMyInfoUzelOverlay .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink {
+    min-height: 96px !important;
+    height: 96px !important;
+    max-height: 96px !important;
     padding: 10px 12px;
     border-radius: 12px;
     border: 1px solid rgba(15, 23, 42, 0.1);
@@ -770,6 +788,9 @@
   .iuMyInfoUzelMindMenuHost .iu-mmHoverSummaryPanelShell,
   .iuMyInfoUzelMindMenuHost .iu-mmHoverSummaryBridge {
     display: none !important;
+  }
+  body.iu-myinfouzel-open.iu-desktop-home-grid .layout > aside.accordionCol {
+    min-height: var(--iu-rail-min-h, 520px);
   }
   .iuMyInfoUzelSection--saved .iuMyInfoUzelItem,
   .iuMyInfoUzelSection--followed .iuMyInfoUzelItem,
