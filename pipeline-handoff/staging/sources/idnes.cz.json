@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-23T20:26:45.250584Z",
+  "ingestedAt": "2026-06-23T22:01:55.959880Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
       "title": "Opozice vsadila na obstrukce. Osm hodin blokovala schválení programu schůze",
       "url": "https://www.idnes.cz/zpravy/domaci/snemovna-vystrazne-obstrukce-rakusan-stan-trestny-cin-neplaceni-vyzivneho.A260623_051140_domaci_kop",
-      "dt": "2026-06-23T20:23:16Z",
+      "dt": "2026-06-23T21:00:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES",
       "tokens": [
@@ -21,6 +21,59 @@
         "schválení",
         "schůze",
         "vsadila"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Český lezec zemřel po pádu v rakouských Alpách. Pátrání komplikovalo krupobití",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/cesky-horolezec-zahynul-padu-rakouske-alpy-hora-taury-snehove-pole.A260623_224049_zahranicni_fohl",
+      "dt": "2026-06-23T20:56:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "alpách",
+        "komplikovalo",
+        "krupobití",
+        "lezec",
+        "pádu",
+        "pátrání",
+        "rakouských",
+        "zemřel",
+        "český"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Senát USA podpořil rezoluci o ukončení války s Íránem. Obává se kroků Trumpa",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/senat-usa-podporil-rezoluci-o-ukonceni-valky-s-iranem-trumpovi-navzdory.A260623_220529_zahranicni_fohl",
+      "dt": "2026-06-23T20:23:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "kroků",
+        "obává",
+        "podpořil",
+        "rezoluci",
+        "senát",
+        "trumpa",
+        "ukončení",
+        "usa",
+        "války",
+        "íránem"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -722,58 +775,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Měl by se chovat jako chlap, a ne se soudit, reagoval Turek na Pavlovu žalobu",
-      "url": "https://www.idnes.cz/zpravy/domaci/prezident-zaloba-filip-turek-petr-pavel-reakce-summit-nato-motoriste.A260623_143254_domaci_linh",
-      "dt": "2026-06-23T13:06:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "chlap",
-        "chovat",
-        "jako",
-        "měl",
-        "pavlovu",
-        "reagoval",
-        "soudit",
-        "turek",
-        "žalobu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Král severu dobyl Westminster. Teď musí Andy Burnham zachránit Británii",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/andy-burnham-labouriste-britanie.A260623_090351_zahranicni_aha",
-      "dt": "2026-06-23T13:05:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "andy",
-        "británii",
-        "burnham",
-        "dobyl",
-        "král",
-        "musí",
-        "severu",
-        "westminster",
-        "zachránit"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50297,
+      "bytes": 49535,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +822,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-23T20:23:16Z",
+        "raw_feed_latest_publishedAt": "2026-06-23T21:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -840,7 +841,15 @@
         "sample_titles": [
           {
             "title": "Opozice vsadila na obstrukce. Osm hodin blokovala schválení programu schůze",
-            "publishedAt": "2026-06-23T20:23:16Z"
+            "publishedAt": "2026-06-23T21:00:00Z"
+          },
+          {
+            "title": "Český lezec zemřel po pádu v rakouských Alpách. Pátrání komplikovalo krupobití",
+            "publishedAt": "2026-06-23T20:56:00Z"
+          },
+          {
+            "title": "Senát USA podpořil rezoluci o ukončení války s Íránem. Obává se kroků Trumpa",
+            "publishedAt": "2026-06-23T20:23:00Z"
           },
           {
             "title": "OBRAZEM: Teplotní masakr zasáhl Evropu. Kde bylo nejhůř a jak se s tím vypořádali",
@@ -861,14 +870,6 @@
           {
             "title": "Vdova po prezidentovi chce vzít Knihovně jméno Havla. Vedení další kroky analyzuje",
             "publishedAt": "2026-06-23T17:44:00Z"
-          },
-          {
-            "title": "Ukrajinci hlásí zničení strategického mostu na Krymu. Rusové zavádějí omezení",
-            "publishedAt": "2026-06-23T17:43:59Z"
-          },
-          {
-            "title": "Transgender ve skotských vězeních končí. Opět to je podle orgánu mezi nohama",
-            "publishedAt": "2026-06-23T17:39:00Z"
           }
         ]
       }
