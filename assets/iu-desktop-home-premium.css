@@ -621,12 +621,20 @@
   }
 
   .iuMyInfoUzelOverlay__sheet {
-    width: min(1080px, 96vw);
+    width: min(1720px, calc(100vw - 40px));
+    max-height: calc(100vh - 24px);
+    margin: 12px auto;
+    border-radius: 16px;
+    background: linear-gradient(165deg, #f0f7ff 0%, #f5f3ff 38%, #eefcfb 72%, #f8fafc 100%);
+    box-shadow: 0 24px 64px rgba(11, 42, 74, 0.18);
+  }
+  .iuMyInfoUzelOverlay__scroll {
+    padding: 20px 24px 32px;
   }
   .iuMyInfoUzelDashboard {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 20px;
+    grid-template-columns: minmax(320px, 42fr) minmax(420px, 58fr);
+    gap: 28px;
     align-items: start;
   }
   .iuMyInfoUzelDashboard__left {
@@ -667,36 +675,41 @@
   .iuMyInfoUzelMindMenuHost .iu-mmTopTools {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-    margin-top: 4px;
+    gap: 10px;
+    margin-top: 8px;
   }
   .iuMyInfoUzelMindMenuHost .iu-mmTopToolHoverHost {
     min-width: 0;
+    height: 100%;
   }
-  .iuMyInfoUzelMindMenuHost .iu-mmTopTool.iu-mmTopTool--imageTile {
+  .iuMyInfoUzelMindMenuHost .iu-mmTopTool.iu-mmTopTool--imageTile,
+  .iuMyInfoUzelMindMenuHost .iu-mmTopTool.iuMindMenuButton,
+  .iuMyInfoUzelMindMenuHost .iu-mmTopTool.iuMindMenuTasksBtn {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 72px;
-    max-height: 80px;
-    padding: 8px 6px;
+    min-height: 84px;
+    height: 84px;
+    max-height: 84px;
+    padding: 10px 8px;
     border: 1px solid rgba(15, 23, 42, 0.1);
-    border-radius: 10px;
-    background: #F8FAFC;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.82);
     box-sizing: border-box;
     overflow: hidden;
+    box-shadow: 0 2px 8px rgba(11, 42, 74, 0.06);
   }
   .iuMyInfoUzelMindMenuHost .iu-mmTopTool--imageTile .iu-mmTopToolImageTileWrap {
     flex: 0 0 auto;
-    width: 36px;
-    height: 36px;
-    min-height: 36px;
-    max-height: 36px;
+    width: 38px;
+    height: 38px;
+    min-height: 38px;
+    max-height: 38px;
   }
   .iuMyInfoUzelMindMenuHost .iu-mmTopTool--imageTile .iu-mmTopToolImageTile {
-    max-width: 36px;
-    max-height: 36px;
+    max-width: 38px;
+    max-height: 38px;
     width: auto;
     height: auto;
     object-fit: contain;
@@ -704,8 +717,8 @@
   .iuMyInfoUzelMindMenuHost .iu-mmTopTool.iu-mmTopTool--imageTile::after {
     content: attr(aria-label);
     display: block;
-    margin-top: 4px;
-    font-size: 11px;
+    margin-top: 6px;
+    font-size: 12px;
     font-weight: 700;
     color: #0B2A4A;
     line-height: 1.15;
@@ -713,32 +726,43 @@
     pointer-events: none;
   }
   .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks {
-    margin-top: 4px;
+    margin-top: 12px;
     padding: 0;
     border: 0;
     background: transparent;
   }
   .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmSectionTitle {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
     color: #0B2A4A;
   }
   .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
-    margin-top: 8px !important;
+    gap: 10px 12px;
+    margin-top: 10px !important;
+  }
+  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile {
+    min-height: 96px;
   }
   .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink,
   .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile .iuTileLink {
-    min-height: 34px;
-    padding: 6px 8px;
-    border-radius: 8px;
+    min-height: 96px;
+    height: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
     border: 1px solid rgba(15, 23, 42, 0.1);
-    background: #fff;
-    font-size: 12px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.92) 100%);
+    font-size: 13px;
     font-weight: 600;
     box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(11, 42, 74, 0.06);
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  }
+  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink:hover {
+    transform: translateY(-1px);
+    border-color: rgba(0, 60, 255, 0.18);
+    box-shadow: 0 6px 16px rgba(11, 42, 74, 0.1);
   }
   .iuMyInfoUzelMindMenuHost .iuMailboxControls {
     margin-top: 6px;
@@ -746,5 +770,25 @@
   .iuMyInfoUzelMindMenuHost .iu-mmHoverSummaryPanelShell,
   .iuMyInfoUzelMindMenuHost .iu-mmHoverSummaryBridge {
     display: none !important;
+  }
+  .iuMyInfoUzelSection--saved .iuMyInfoUzelItem,
+  .iuMyInfoUzelSection--followed .iuMyInfoUzelItem,
+  .iuMyInfoUzelSection--hidden .iuMyInfoUzelItem {
+    transition: box-shadow 220ms ease, border-color 220ms ease, background 220ms ease;
+  }
+  .iuMyInfoUzelSection--saved .iuMyInfoUzelItem:hover {
+    border-color: rgba(245, 158, 11, 0.34);
+    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+    box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.12), 0 8px 20px rgba(245, 158, 11, 0.12);
+  }
+  .iuMyInfoUzelSection--followed .iuMyInfoUzelItem:hover {
+    border-color: rgba(0, 60, 255, 0.28);
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    box-shadow: 0 0 0 1px rgba(0, 60, 255, 0.1), 0 8px 20px rgba(0, 60, 255, 0.1);
+  }
+  .iuMyInfoUzelSection--hidden .iuMyInfoUzelItem:hover {
+    border-color: rgba(220, 38, 38, 0.26);
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.1), 0 8px 20px rgba(220, 38, 38, 0.1);
   }
 }
