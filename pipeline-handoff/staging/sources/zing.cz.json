@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-06-23T16:07:59.941593Z",
+  "ingestedAt": "2026-06-23T17:20:04.381028Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Stronghold 4 je nově na Steamu k vyzkoušení zdarma",
+      "url": "https://zing.cz/article/vyzkousejte-si-zdarma-na-steamu-ocekavane-pokracovani-serie-stronghold",
+      "dt": "2026-06-23T16:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "nově",
+        "steamu",
+        "stronghold",
+        "vyzkoušení",
+        "zdarma"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -960,31 +982,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Grand Theft Auto VI odhalilo přesný termín startu předobjednávek",
-      "url": "https://zing.cz/article/grand-theft-auto-vi-odhalilo-presny-termin-startu-predobjednavek",
-      "dt": "2026-06-18T13:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "auto",
-        "grand",
-        "odhalilo",
-        "předobjednávek",
-        "přesný",
-        "startu",
-        "termín",
-        "theft"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -995,7 +992,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125860,
+      "bytes": 125838,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1032,7 +1029,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-23T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-23T16:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1047,6 +1044,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stronghold 4 je nově na Steamu k vyzkoušení zdarma",
+            "publishedAt": "2026-06-23T16:00:00Z"
+          },
           {
             "title": "Steam Machine měl být původně výrazně levnější",
             "publishedAt": "2026-06-23T14:00:00Z"
@@ -1074,10 +1075,6 @@
           {
             "title": "Česká Operace Flashpoint se vrací v remasteru s českým dabingem",
             "publishedAt": "2026-06-23T04:00:00Z"
-          },
-          {
-            "title": "Steam Machine od Valve odhalil cenu i termín uvedení",
-            "publishedAt": "2026-06-22T18:00:00Z"
           }
         ]
       }
