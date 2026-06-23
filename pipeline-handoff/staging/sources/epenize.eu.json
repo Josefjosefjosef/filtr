@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-06-23T22:01:55.959880Z",
+  "ingestedAt": "2026-06-23T23:25:12.037213Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nohavicova hymna rozděluje lidi? ČT ji nevysílala",
+      "url": "https://www.epenize.eu/nohavicova-hymna-rozdeluje-lidi-ct-ji-nevysilala/",
+      "dt": "2026-06-23T23:00:45Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "hymna",
+        "lidi",
+        "nevysílala",
+        "nohavicova",
+        "rozděluje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -479,30 +501,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zákaz mobilů na základní škole. Babišovi v tomto fandím",
-      "url": "https://www.epenize.eu/zakaz-mobilu-na-zakladni-skole-babisovi-v-tomto-fandim/",
-      "dt": "2026-06-16T06:06:53Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "babišovi",
-        "fandím",
-        "mobilů",
-        "tomto",
-        "zákaz",
-        "základní",
-        "škole"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -513,7 +511,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 116301,
+      "bytes": 117280,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -550,7 +548,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-23T06:32:01Z",
+        "raw_feed_latest_publishedAt": "2026-06-23T23:00:45Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 18,
@@ -567,6 +565,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nohavicova hymna rozděluje lidi? ČT ji nevysílala",
+            "publishedAt": "2026-06-23T23:00:45Z"
+          },
           {
             "title": "Miroslav Ševčík ve studiu. Buranství jako směr politiky",
             "publishedAt": "2026-06-23T06:32:01Z"
@@ -594,10 +596,6 @@
           {
             "title": "Pávkovci: Zvláštní internetová sekta lidí závidící prezidentovi koníčky",
             "publishedAt": "2026-06-21T12:50:17Z"
-          },
-          {
-            "title": "Kalousek boří sny Schillerové. Na dluh bohužel nezbohatneme",
-            "publishedAt": "2026-06-21T11:09:29Z"
           }
         ]
       }

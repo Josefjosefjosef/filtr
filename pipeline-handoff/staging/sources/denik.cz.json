@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-06-23T22:01:55.959880Z",
+  "ingestedAt": "2026-06-23T23:25:12.037213Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Zlatou hokejku vyhrál poprvé Nečas před osminásobným vítězem Pastrňákem",
+      "url": "https://www.denik.cz/hokej/zlatou-hokejku-vyhral-poprve-necas-pred-osminasobnym-vitezem-pastrnakem/",
+      "dt": "2026-06-23T21:52:54Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hokejku",
+        "nečas",
+        "osminásobným",
+        "pastrňákem",
+        "poprvé",
+        "vyhrál",
+        "vítězem",
+        "zlatou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -1003,34 +1028,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Drama kolem hvězdy: Drsný trest vyvolal bouři, český tenis brání Vondroušovou",
-      "url": "https://www.denik.cz/tenis/marketa-vondrousova-tres-noedevzdany-vzorek-dopingova-kontrola-cesky-svaz-kotrba-pala/",
-      "dt": "2026-06-23T07:55:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bouři",
-        "brání",
-        "drama",
-        "drsný",
-        "hvězdy",
-        "kolem",
-        "tenis",
-        "trest",
-        "vondroušovou",
-        "vyvolal",
-        "český"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1041,7 +1038,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.denik.cz/rss/vse.xml",
-      "bytes": 70309,
+      "bytes": 70365,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1078,11 +1075,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-23T20:45:59Z",
+        "raw_feed_latest_publishedAt": "2026-06-23T21:52:54Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 30,
           "sport": 3,
+          "zpravy": 30,
           "cestovani": 1,
           "other": 4,
           "zdravi": 1,
@@ -1098,6 +1095,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zlatou hokejku vyhrál poprvé Nečas před osminásobným vítězem Pastrňákem",
+            "publishedAt": "2026-06-23T21:52:54Z"
+          },
           {
             "title": "Český horolezec zahynul po pádu v rakouských Alpách",
             "publishedAt": "2026-06-23T20:45:59Z"
@@ -1125,10 +1126,6 @@
           {
             "title": "Dagmar Havlová odvolala souhlas k užívání jména Václav Havel knihovnou",
             "publishedAt": "2026-06-23T17:32:47Z"
-          },
-          {
-            "title": "Škoda už má čtyři elektromobily. Nový Peaq dostal obří baterku a kufr",
-            "publishedAt": "2026-06-23T17:04:00Z"
           }
         ]
       }
