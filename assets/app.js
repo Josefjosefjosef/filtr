@@ -13235,7 +13235,13 @@ function buildVideoAsArticleCard(it) {
         const mo = new MutationObserver(() => {
           try{
             clearTimeout(t);
-            t = setTimeout(() => { try{ iuSilverTallMediaPreviewsRefresh(); }catch{} }, 80);
+            t = setTimeout(() => {
+              try{
+                const fel = document.getElementById("feed");
+                if (fel && String(fel.getAttribute("data-feed-switching") || "") === "1") return;
+                iuSilverTallMediaPreviewsRefresh();
+              }catch{}
+            }, 120);
           }catch(_){}
         });
         mo.observe(feed, { childList: true, subtree: true });
@@ -19751,6 +19757,10 @@ function buildVideoAsArticleCard(it) {
   }
 
   function initAccordion() {
+    try {
+      if (window.__iuAccordionInit) return;
+      window.__iuAccordionInit = 1;
+    } catch (_) {}
     const headers = document.querySelectorAll(".accordionCol .accHeader");
     if (!headers || headers.length === 0) {
       // No accordion markup in DOM — skip init safely
@@ -25166,11 +25176,21 @@ function buildVideoAsArticleCard(it) {
     if (typeof window.iuDailyPanelInit === "function") {
       window.iuDailyPanelInit();
     }
-    setTimeout(() => {
-      if (typeof window.iuDailyPanelInit === "function") {
-        window.iuDailyPanelInit();
+    try {
+      var wxLazyPending =
+        !!document.getElementById("iuLazyViewTpl-pocasi") ||
+        !!document.getElementById("iuWeatherView");
+      var dailyReady =
+        !!document.getElementById("iuDailyTime") ||
+        !!document.getElementById("iuDailyWeather");
+      if (wxLazyPending && !dailyReady) {
+        setTimeout(function () {
+          if (typeof window.iuDailyPanelInit === "function") {
+            window.iuDailyPanelInit();
+          }
+        }, 300);
       }
-    }, 300);
+    } catch (_) {}
 
     iuWeatherInit();
     iuMailboxesInit();
@@ -25180,6 +25200,10 @@ function buildVideoAsArticleCard(it) {
   }
 
   function init() {
+    try {
+      if (window.__iuAppInitDone) return;
+      window.__iuAppInitDone = 1;
+    } catch (_) {}
     iuHomeLoadAuditNotify("init:start");
     if (sessionStorage.getItem("iu:firstLoadDone")) {
       debugLog("[LOAD] repeat");
@@ -25234,27 +25258,6 @@ function buildVideoAsArticleCard(it) {
     try{ iuSilverCalendarSummaryInit(); }catch{}
     try{ iuSilverTasksSummaryInit(); }catch{}
     try{ iuDesktopMindMenuSilverSummaryHoverInit(); }catch{}
-    try{
-      requestAnimationFrame(function (){
-        try{
-          iuDesktopMindMenuSilverSummaryHoverInit();
-        }catch{}
-      });
-    }catch{}
-    try{
-      setTimeout(function (){
-        try{
-          iuDesktopMindMenuSilverSummaryHoverInit();
-        }catch{}
-      }, 320);
-    }catch{}
-    try{
-      setTimeout(function (){
-        try{
-          iuDesktopMindMenuSilverSummaryHoverInit();
-        }catch{}
-      }, 900);
-    }catch{}
     try{ iuNamedayWishInit(); }catch{}
     try{ iuSvatekOverlayInit(); }catch{}
     try{ iuSilverHeroQuickActionsInit(); }catch{}
