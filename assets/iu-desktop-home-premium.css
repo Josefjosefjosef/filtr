@@ -535,4 +535,216 @@
     background-color: var(--iuRailBg, #fff) !important;
     background-image: none !important;
   }
+
+  /* Premium UI Hotfix V1.2 — PC overlay dashboard + desktop feed actions + My InfoUzel button */
+  :is(body.iu-home, body.iu-desktop-home-grid) .iuMyInfoUzelOpenBtn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: calc(100% - 2px);
+    height: 38px;
+    margin: 10px 2px 0 0;
+    padding: 0 12px 0 10px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--iu-brand-blue, #003CFF);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-sizing: border-box;
+    gap: 8px;
+  }
+  :is(body.iu-home, body.iu-desktop-home-grid) .iuMyInfoUzelOpenBtn__label {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 2px;
+  }
+  :is(body.iu-home, body.iu-desktop-home-grid) .iuMyInfoUzelOpenBtn__icons {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    flex: 0 0 auto;
+    font-size: 13px;
+    line-height: 1;
+    opacity: 0.95;
+  }
+  :is(body.iu-home, body.iu-desktop-home-grid) .iuMyInfoUzelOpenBtn__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+  }
+  :is(body.iu-home, body.iu-desktop-home-grid) #iuSilverWelcomeCard .iuMyInfoUzelOpenBtn {
+    grid-column: 1 / -1;
+    align-self: stretch;
+    width: 100%;
+    margin-right: 0;
+  }
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuMyInfoUzelOpenBtn {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+  }
+  :is(body.iu-home, body.iu-desktop-home-grid) .iuMyInfoUzelOpenBtn:focus-visible {
+    outline: 2px solid rgba(0, 60, 255, 0.45);
+    outline-offset: 2px;
+  }
+
+  #feed.iuTimelineFeed .iuTimelineActions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    min-width: 92px;
+  }
+  #feed.iuTimelineFeed .iuTimelineAction {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 92px;
+    width: 100%;
+    gap: 8px;
+    padding: 2px 4px;
+  }
+  #feed.iuTimelineFeed .iuTimelineActionLabel {
+    flex: 1 1 auto;
+    text-align: left;
+    font-size: 11px;
+  }
+  #feed.iuTimelineFeed .iuTimelineActionIcon {
+    flex: 0 0 auto;
+  }
+
+  .iuMyInfoUzelOverlay__sheet {
+    width: min(1080px, 96vw);
+  }
+  .iuMyInfoUzelDashboard {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+  .iuMyInfoUzelDashboard__left {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .iuMyInfoUzelDashboard__left .iuMyInfoUzelSection {
+    margin-bottom: 0;
+  }
+  .iuMyInfoUzelMindMenuHost .mindMenu,
+  .iuMyInfoUzelMindMenuHost #iuMindMenuView {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+  }
+  .iuMyInfoUzelMindMenuHost #iuMmArticleActionsSections {
+    display: none !important;
+  }
+  .iuMyInfoUzelMindMenuHost .iu-mailboxes {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+  .iuMyInfoUzelMindMenuHost .iu-mailboxes .iu-mmSectionTitle {
+    font-size: 16px;
+    font-weight: 800;
+    color: #0B2A4A;
+  }
+  .iuMyInfoUzelMindMenuHost .iu-mailbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .iuMyInfoUzelMindMenuHost .iu-mmTopTools {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .iuMyInfoUzelMindMenuHost .iu-mmTopToolHoverHost {
+    min-width: 0;
+  }
+  .iuMyInfoUzelMindMenuHost .iu-mmTopTool.iu-mmTopTool--imageTile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 72px;
+    max-height: 80px;
+    padding: 8px 6px;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    border-radius: 10px;
+    background: #F8FAFC;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .iuMyInfoUzelMindMenuHost .iu-mmTopTool--imageTile .iu-mmTopToolImageTileWrap {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    max-height: 36px;
+  }
+  .iuMyInfoUzelMindMenuHost .iu-mmTopTool--imageTile .iu-mmTopToolImageTile {
+    max-width: 36px;
+    max-height: 36px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+  .iuMyInfoUzelMindMenuHost .iu-mmTopTool.iu-mmTopTool--imageTile::after {
+    content: attr(aria-label);
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #0B2A4A;
+    line-height: 1.15;
+    text-align: center;
+    pointer-events: none;
+  }
+  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks {
+    margin-top: 4px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmSectionTitle {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0B2A4A;
+  }
+  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 8px !important;
+  }
+  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink,
+  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile .iuTileLink {
+    min-height: 34px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    background: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    box-sizing: border-box;
+  }
+  .iuMyInfoUzelMindMenuHost .iuMailboxControls {
+    margin-top: 6px;
+  }
+  .iuMyInfoUzelMindMenuHost .iu-mmHoverSummaryPanelShell,
+  .iuMyInfoUzelMindMenuHost .iu-mmHoverSummaryBridge {
+    display: none !important;
+  }
 }
