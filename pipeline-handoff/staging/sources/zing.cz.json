@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-06-23T17:20:04.381028Z",
+  "ingestedAt": "2026-06-23T18:59:53.471467Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Steam odhalil přehled nejhranějších demoverzí z festivalu Next Fest",
+      "url": "https://zing.cz/article/steam-odhalil-seznam-nejhranejsich-demoverzi-z-festivalu-next-fest",
+      "dt": "2026-06-23T18:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "demoverzí",
+        "fest",
+        "festivalu",
+        "nejhranějších",
+        "next",
+        "odhalil",
+        "přehled",
+        "steam"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -958,30 +983,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "GTA 6 představilo ústřední melodii soundtracku a nový obrázek",
-      "url": "https://zing.cz/article/gta-6-predstavilo-ustredni-melodii-soundtracku-a-novy-obrazek",
-      "dt": "2026-06-18T14:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "gta",
-        "melodii",
-        "nový",
-        "obrázek",
-        "představilo",
-        "soundtracku",
-        "ústřední"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -992,7 +993,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125838,
+      "bytes": 125810,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1029,7 +1030,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-23T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-23T18:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1044,6 +1045,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Steam odhalil přehled nejhranějších demoverzí z festivalu Next Fest",
+            "publishedAt": "2026-06-23T18:00:00Z"
+          },
           {
             "title": "Stronghold 4 je nově na Steamu k vyzkoušení zdarma",
             "publishedAt": "2026-06-23T16:00:00Z"
@@ -1071,10 +1076,6 @@
           {
             "title": "Assassin's Creed Black Flag Resynced bude chránit nepopulární Denuvo",
             "publishedAt": "2026-06-23T06:00:00Z"
-          },
-          {
-            "title": "Česká Operace Flashpoint se vrací v remasteru s českým dabingem",
-            "publishedAt": "2026-06-23T04:00:00Z"
           }
         ]
       }

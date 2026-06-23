@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-06-23T17:20:04.381028Z",
+  "ingestedAt": "2026-06-23T18:59:53.471467Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Spor o Tatru se vyostřuje. Strnadova skupina si prosadila klíčový miliardový úvěr",
+      "url": "https://www.e15.cz/byznys/spor-o-tatru-se-vyostruje-strnadova-skupina-si-prosadila-klicovy-miliardovy-uver-1433795",
+      "dt": "2026-06-23T18:21:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "klíčový",
+        "miliardový",
+        "prosadila",
+        "skupina",
+        "spor",
+        "strnadova",
+        "tatru",
+        "vyostřuje",
+        "úvěr"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -1064,33 +1090,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Kauza spojená s Babišovým \"zakleknutím\" má posun. Soud zprostil FAU i další obžalované",
-      "url": "https://www.e15.cz/domaci/kauza-spojena-s-babisovym-zakleknutim-ma-posun-soud-zprostil-fau-i-dalsi-obzalovane-1433736",
-      "dt": "2026-06-22T09:17:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "babišovým",
-        "další",
-        "fau",
-        "kauza",
-        "obžalované",
-        "posun",
-        "soud",
-        "spojená",
-        "zakleknutím",
-        "zprostil"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1101,7 +1100,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 50907,
+      "bytes": 50775,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1138,12 +1137,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-23T16:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-23T18:21:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 4,
-          "finance": 35,
-          "zdravi": 1
+          "finance": 36,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1155,6 +1153,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Spor o Tatru se vyostřuje. Strnadova skupina si prosadila klíčový miliardový úvěr",
+            "publishedAt": "2026-06-23T18:21:00Z"
+          },
           {
             "title": "To nejlepší, co vzniklo v dopravě za loňský rok. Podívejte se na osmičku oceněných staveb",
             "publishedAt": "2026-06-23T16:30:00Z"
@@ -1182,10 +1184,6 @@
           {
             "title": "Home office, nebo kancelář? Vědci konečně zjistili, kteří zaměstnanci pracují lépe a proč",
             "publishedAt": "2026-06-23T14:30:00Z"
-          },
-          {
-            "title": "Největší chyba, kterou lidé dělají před smrtí. Rodina pak nevidí ani korunu",
-            "publishedAt": "2026-06-23T14:00:00Z"
           }
         ]
       }
