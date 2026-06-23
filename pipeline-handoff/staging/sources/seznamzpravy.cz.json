@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-06-23T18:59:53.471467Z",
+  "ingestedAt": "2026-06-23T20:26:45.250584Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Komentátor po červené kartě vulgárně nadával. Na světovém šampionátu skončil",
+      "url": "https://www.seznamzpravy.cz/clanek/sport-fotbal-komentator-po-cervene-karte-vulgarne-nadaval-na-svetovem-sampionatu-skoncil-309207",
+      "dt": "2026-06-23T19:01:24Z",
+      "media_raw": "Seznam Zprávy / Domácí",
+      "media_norm": "Seznam Zprávy",
+      "tokens": [
+        "kartě",
+        "komentátor",
+        "nadával",
+        "skončil",
+        "světovém",
+        "vulgárně",
+        "červené",
+        "šampionátu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_seznam_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -54,31 +79,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "K porozumění stačila hodina. Visegrádská čtyřka je zpět, oznámil Magyar",
-      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-k-porozumeni-stacila-hodina-visegradska-ctyrka-je-zpet-oznamil-magyar-309205",
-      "dt": "2026-06-23T18:34:31Z",
-      "media_raw": "Seznam Zprávy / Domácí",
-      "media_norm": "Seznam Zprávy",
-      "tokens": [
-        "hodina",
-        "magyar",
-        "oznámil",
-        "porozumění",
-        "stačila",
-        "visegrádská",
-        "zpět",
-        "čtyřka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_seznam_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "zdravi",
       "contentType": "article",
       "title": "Co když se nechce dětem na tábor? Expertka radí, kdy je radši nechat doma",
@@ -96,6 +96,31 @@
         "radí",
         "radši",
         "tábor"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_seznam_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "K porozumění stačila hodina. Visegrádská čtyřka je zpět, oznámil Magyar",
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-k-porozumeni-stacila-hodina-visegradska-ctyrka-je-zpet-oznamil-magyar-309205",
+      "dt": "2026-06-23T18:34:31Z",
+      "media_raw": "Seznam Zprávy / Domácí",
+      "media_norm": "Seznam Zprávy",
+      "tokens": [
+        "hodina",
+        "magyar",
+        "oznámil",
+        "porozumění",
+        "stačila",
+        "visegrádská",
+        "zpět",
+        "čtyřka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -733,31 +758,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "seznamzpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hrad versus vláda. Macinku usvědčila jeho prořízlá pusa",
-      "url": "https://www.seznamzpravy.cz/clanek/audio-podcast-vlevo-dole-hrad-versus-vlada-macinku-usvedcila-jeho-prorizla-pusa-309134",
-      "dt": "2026-06-23T13:00:00Z",
-      "media_raw": "Seznam Zprávy / Domácí",
-      "media_norm": "Seznam Zprávy",
-      "tokens": [
-        "hrad",
-        "jeho",
-        "macinku",
-        "prořízlá",
-        "pusa",
-        "usvědčila",
-        "versus",
-        "vláda"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_seznam_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -768,7 +768,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/domaci",
-      "bytes": 46015,
+      "bytes": 45530,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -805,13 +805,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-23T18:39:16Z",
+        "raw_feed_latest_publishedAt": "2026-06-23T19:01:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 20,
+          "sport": 4,
+          "zpravy": 19,
           "finance": 6,
-          "zdravi": 1,
-          "sport": 3
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -824,6 +824,10 @@
         },
         "sample_titles": [
           {
+            "title": "Komentátor po červené kartě vulgárně nadával. Na světovém šampionátu skončil",
+            "publishedAt": "2026-06-23T19:01:24Z"
+          },
+          {
             "title": "Největší stadion v Česku? Politici v Brně rozhodnutí odložili, naštvali fandy",
             "publishedAt": "2026-06-23T13:42:33Z"
           },
@@ -832,12 +836,12 @@
             "publishedAt": "2026-06-23T18:39:16Z"
           },
           {
-            "title": "K porozumění stačila hodina. Visegrádská čtyřka je zpět, oznámil Magyar",
-            "publishedAt": "2026-06-23T18:34:31Z"
-          },
-          {
             "title": "Co když se nechce dětem na tábor? Expertka radí, kdy je radši nechat doma",
             "publishedAt": "2026-06-23T06:00:00Z"
+          },
+          {
+            "title": "K porozumění stačila hodina. Visegrádská čtyřka je zpět, oznámil Magyar",
+            "publishedAt": "2026-06-23T18:34:31Z"
           },
           {
             "title": "Trump bude předávat trofej pro vítěze fotbalového MS, oznámil šéf FIFA",
@@ -850,10 +854,6 @@
           {
             "title": "Škoda představila nové auto. Sedmimístný Peaq je největší i nejdražší",
             "publishedAt": "2026-06-23T17:00:00Z"
-          },
-          {
-            "title": "Pavel proti Babišovi a Macinkovi. Jak může dopadnout prezidentův spor s vládou",
-            "publishedAt": "2026-06-23T16:30:00Z"
           }
         ]
       }
