@@ -3656,9 +3656,9 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 4px;
+  gap: 3px;
   min-width: 0;
-  padding-top: 2px;
+  padding-top: 3px;
 }
 
 #feed.iuTimelineFeed .iuTimelineClock{
@@ -3711,7 +3711,7 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
   flex: 0 0 auto;
   width: 12px;
   height: 12px;
-  margin-top: 6px;
+  margin-top: 5px;
   border-radius: 50%;
   background: var(--iuTimelineDotColor, #EF4444);
   border: 2px solid #ffffff;
@@ -3725,10 +3725,13 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
 #feed.iuTimelineFeed .iuTimelineRight .news-title,
 #feed.iuTimelineFeed .iuTimelineRight .news-titleLink{
   margin-top: 0;
+  font-size: clamp(17px, calc(17px + (100vw - 680px) * 3 / 345), 20px);
+  line-height: clamp(1.28, calc(1.28 + (100vw - 680px) * 0.04 / 345), 1.32);
 }
 
 #feed.iuTimelineFeed .iuTimelineRight .iu-meta-line{
-  margin-top: 8px;
+  margin-top: 6px;
+  line-height: 1.35;
 }
 
 #feed.iuTimelineFeed article.iuPhotoArticle,
@@ -3749,7 +3752,7 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
   #feed.iuTimelineFeed .iuTimelineRow{
     grid-template-columns: 58px 22px minmax(0, 1fr);
     gap: 0 8px;
-    padding-left: 6px;
+    padding-left: 11px;
     padding-right: 10px;
   }
   #feed.iuTimelineFeed .iuTimelineClock{
@@ -22716,12 +22719,13 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
   #feed.iuTimelineFeed .iuTimelineRow{
     grid-template-columns:52px 20px minmax(0,1fr) auto;
     gap:0 8px;
+    padding-left:13px;
     padding-right:8px;
   }
   #feed.iuTimelineFeed .iuTimelineActions{
     flex-direction:column;
     align-items:center;
-    gap:3px;
+    gap:2px;
     min-width:0;
     padding-top:0;
   }
@@ -22729,7 +22733,7 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
     flex-direction:column;
     align-items:center;
     min-width:36px;
-    padding:4px 2px;
+    padding:2px 2px;
   }
   #feed.iuTimelineFeed .iuTimelineActionLabel{
     display:none!important;
@@ -22839,5 +22843,6 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
 @media (max-width:420px){
   #feed.iuTimelineFeed .iuTimelineRow{
     grid-template-columns:46px 18px minmax(0,1fr) auto;
+    padding-left:11px;
   }
 }
