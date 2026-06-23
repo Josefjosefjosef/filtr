@@ -16667,12 +16667,14 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewText{
     grid-template-rows: auto !important;
     gap: 0 !important;
+    min-height: 65px;
+    contain: layout style;
   }
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewHeadline2{
     display: none !important;
   }
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewHeadline{
-    min-height: 0;
+    min-height: 65px;
     -webkit-line-clamp: 4;
     line-clamp: 4;
   }
