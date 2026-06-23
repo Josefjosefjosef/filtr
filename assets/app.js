@@ -6970,7 +6970,10 @@ try {
   }
 
   function iuArticleActionsGetFollowedList() {
-    return iuArticleActionsReadJson(IU_FOLLOWED_TOPICS_KEY);
+    return iuArticleActionsReadJson(IU_FOLLOWED_TOPICS_KEY).filter((row) => {
+      const id = String(row?.articleId || row?.url || "").trim();
+      return !!id;
+    });
   }
 
   function iuArticleActionsGetHiddenList() {
@@ -6992,11 +6995,11 @@ try {
     return iuArticleActionsGetSavedList().some((row) => String(row?.articleId || row?.url || "").trim() === key);
   }
 
-  function iuArticleActionsIsFollowed(topic) {
-    const key = String(topic || "").trim().toLowerCase();
+  function iuArticleActionsIsFollowed(id) {
+    const key = String(id || "").trim();
     if (!key) return false;
     return iuArticleActionsGetFollowedList().some(
-      (row) => String(row?.topic || row?.name || "").trim().toLowerCase() === key
+      (row) => String(row?.articleId || row?.url || "").trim() === key
     );
   }
 
@@ -7037,7 +7040,7 @@ try {
     if (!id) return "";
     const topic = iuArticleActionsResolveTopic(it);
     const saved = iuArticleActionsIsSaved(id);
-    const followed = iuArticleActionsIsFollowed(topic);
+    const followed = iuArticleActionsIsFollowed(id);
     const saveLabel = saved ? "Uloženo" : "Uložit";
     const followLabel = followed ? "Sledováno" : "Sledovat";
     return `
@@ -7046,7 +7049,7 @@ try {
           <span class="iuTimelineActionLabel">${escapeHtml(saveLabel)}</span>
           <span class="iuTimelineActionIcon" aria-hidden="true">${iuArticleActionsIconSvg("save")}</span>
         </button>
-        <button type="button" class="iuTimelineAction iuTimelineAction--follow${followed ? " is-active" : ""}" data-iu-action="follow" data-iu-article-id="${escapeHtml(id)}" data-iu-article-topic="${escapeHtml(topic)}" aria-label="${followed ? "Zrušit sledování tématu" : "Sledovat téma"}" title="${followed ? "Zrušit sledování tématu" : "Sledovat téma"}" aria-pressed="${followed ? "true" : "false"}">
+        <button type="button" class="iuTimelineAction iuTimelineAction--follow${followed ? " is-active" : ""}" data-iu-action="follow" data-iu-article-id="${escapeHtml(id)}" data-iu-article-topic="${escapeHtml(topic)}" aria-label="${followed ? "Zrušit sledování" : "Sledovat článek"}" title="${followed ? "Zrušit sledování" : "Sledovat článek"}" aria-pressed="${followed ? "true" : "false"}">
           <span class="iuTimelineActionLabel">${escapeHtml(followLabel)}</span>
           <span class="iuTimelineActionIcon" aria-hidden="true">${iuArticleActionsIconSvg("follow")}</span>
         </button>
@@ -7075,8 +7078,8 @@ try {
       btn.setAttribute("title", active ? "Odebrat z uložených" : "Uložit článek");
     }
     if (kind === "follow") {
-      btn.setAttribute("aria-label", active ? "Zrušit sledování tématu" : "Sledovat téma");
-      btn.setAttribute("title", active ? "Zrušit sledování tématu" : "Sledovat téma");
+      btn.setAttribute("aria-label", active ? "Zrušit sledování" : "Sledovat článek");
+      btn.setAttribute("title", active ? "Zrušit sledování" : "Sledovat článek");
     }
   }
 
@@ -7086,7 +7089,6 @@ try {
       const articles = feedRoot.querySelectorAll("article.iuTimelineItem[data-feed-type='article']");
       for (const art of articles) {
         const id = String(art.getAttribute("data-iu-article-id") || "").trim();
-        const topic = String(art.getAttribute("data-iu-article-topic") || "").trim();
         const saveBtn = art.querySelector(".iuTimelineAction--save");
         const followBtn = art.querySelector(".iuTimelineAction--follow");
         if (saveBtn) {
@@ -7094,7 +7096,7 @@ try {
           iuArticleActionsSyncButtonState(saveBtn, "save", saved, saved ? "Uloženo" : "Uložit");
         }
         if (followBtn) {
-          const followed = iuArticleActionsIsFollowed(topic);
+          const followed = iuArticleActionsIsFollowed(id);
           iuArticleActionsSyncButtonState(followBtn, "follow", followed, followed ? "Sledováno" : "Sledovat");
         }
       }
@@ -7119,19 +7121,20 @@ try {
     return true;
   }
 
-  function iuArticleActionsToggleFollow(topic) {
-    const key = String(topic || "").trim();
-    if (!key) return false;
+  function iuArticleActionsToggleFollow(itOrArticleEl) {
+    const snap =
+      itOrArticleEl && itOrArticleEl.contentType
+        ? iuArticleActionsSnapshot(itOrArticleEl)
+        : iuArticleActionsSnapshotFromDom(itOrArticleEl);
+    if (!snap) return false;
     const list = iuArticleActionsGetFollowedList();
-    const idx = list.findIndex(
-      (row) => String(row?.topic || row?.name || "").trim().toLowerCase() === key.toLowerCase()
-    );
+    const idx = list.findIndex((row) => String(row?.articleId || row?.url || "").trim() === snap.articleId);
     if (idx >= 0) {
       list.splice(idx, 1);
       iuArticleActionsWriteJson(IU_FOLLOWED_TOPICS_KEY, list);
       return false;
     }
-    list.unshift({ topic: key, followedAt: new Date().toISOString() });
+    list.unshift({ ...snap, followedAt: new Date().toISOString() });
     iuArticleActionsWriteJson(IU_FOLLOWED_TOPICS_KEY, list);
     return true;
   }
@@ -7249,20 +7252,20 @@ try {
     }
     const items = rows
       .map((row) => {
-        if (kind === "followed") {
-          const topic = String(row?.topic || row?.name || "").trim();
-          if (!topic) return "";
-          return `<li class="iuMyInfoUzelItem"><span class="iuMyInfoUzelItemTitle">${escapeHtml(topic)}</span><button type="button" class="iuMyInfoUzelItemBtn" data-iu-manage-action="unfollow" data-iu-topic="${escapeHtml(topic)}">Zrušit sledování</button></li>`;
-        }
         const id = String(row?.articleId || row?.url || "").trim();
-        const title = String(row?.title || "").trim() || "(bez názvu)";
+        if (!id) return "";
+        const title = String(row?.title || row?.topic || row?.name || "").trim() || "(bez názvu)";
         const source = String(row?.source || "").trim();
         const url = String(row?.url || id).trim();
-        const time = iuArticleActionsFormatListTime(row?.timestamp);
-        const action =
-          kind === "saved"
-            ? `<button type="button" class="iuMyInfoUzelItemBtn" data-iu-manage-action="unsave" data-iu-article-id="${escapeHtml(id)}">Odebrat</button>`
-            : `<button type="button" class="iuMyInfoUzelItemBtn" data-iu-manage-action="restore" data-iu-article-id="${escapeHtml(id)}">Obnovit</button>`;
+        const time = iuArticleActionsFormatListTime(row?.timestamp || row?.followedAt);
+        let action = "";
+        if (kind === "saved") {
+          action = `<button type="button" class="iuMyInfoUzelItemBtn" data-iu-manage-action="unsave" data-iu-article-id="${escapeHtml(id)}">Odebrat</button>`;
+        } else if (kind === "followed") {
+          action = `<button type="button" class="iuMyInfoUzelItemBtn" data-iu-manage-action="unfollow" data-iu-article-id="${escapeHtml(id)}">Zrušit sledování</button>`;
+        } else {
+          action = `<button type="button" class="iuMyInfoUzelItemBtn" data-iu-manage-action="restore" data-iu-article-id="${escapeHtml(id)}">Obnovit</button>`;
+        }
         return `<li class="iuMyInfoUzelItem"><a class="iuMyInfoUzelItemLink" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a><span class="iuMyInfoUzelItemMeta">${escapeHtml(source)}${time ? " · " + escapeHtml(time) : ""}</span>${action}</li>`;
       })
       .filter(Boolean)
@@ -7331,10 +7334,10 @@ try {
       btn.id = "iuMyInfoUzelOpenBtn";
       btn.className = "iuMyInfoUzelOpenBtn";
       btn.innerHTML =
-        '<span class="iuMyInfoUzelOpenBtn__label">Můj InfoUzel.cz / MindMenu</span><span class="iuMyInfoUzelOpenBtn__icons" aria-hidden="true"><span class="iuMyInfoUzelOpenBtn__icon">📅</span><span class="iuMyInfoUzelOpenBtn__icon">✓</span><span class="iuMyInfoUzelOpenBtn__icon">📝</span></span>';
+        '<span class="iuMyInfoUzelOpenBtn__label">Můj infoUzel.cz / MindMenu</span><span class="iuMyInfoUzelOpenBtn__icons" aria-hidden="true"><span class="iuMyInfoUzelOpenBtn__icon">📅</span><span class="iuMyInfoUzelOpenBtn__icon">✓</span><span class="iuMyInfoUzelOpenBtn__icon">📝</span></span>';
       btn.setAttribute("aria-haspopup", "dialog");
       btn.setAttribute("aria-controls", "iuMyInfoUzelOverlay");
-      btn.setAttribute("aria-label", "Můj InfoUzel.cz / MindMenu");
+      btn.setAttribute("aria-label", "Můj infoUzel.cz / MindMenu");
       btn.addEventListener("click", () => {
         try {
           iuArticleActionsOpenOverlay();
@@ -7366,7 +7369,7 @@ try {
         <div class="iuMyInfoUzelOverlay__backdrop" data-iu-myinfouzel-close tabindex="-1"></div>
         <div class="iuMyInfoUzelOverlay__sheet">
           <header class="iuMyInfoUzelOverlay__head">
-            <h2 id="iuMyInfoUzelOverlayTitle" class="iuMyInfoUzelOverlay__title">Můj InfoUzel.cz / MindMenu</h2>
+            <h2 id="iuMyInfoUzelOverlayTitle" class="iuMyInfoUzelOverlay__title">Můj infoUzel.cz / MindMenu</h2>
             <button type="button" class="iuMyInfoUzelOverlay__close" data-iu-myinfouzel-close aria-label="Zavřít">×</button>
           </header>
           <div class="iuMyInfoUzelOverlay__scroll">
@@ -7408,8 +7411,11 @@ try {
             iuArticleActionsWriteJson(IU_SAVED_ARTICLES_KEY, list);
             iuArticleActionsRefreshManagePanels();
           } else if (action === "unfollow") {
-            const topic = manageBtn.getAttribute("data-iu-topic");
-            iuArticleActionsToggleFollow(topic);
+            const id = manageBtn.getAttribute("data-iu-article-id");
+            const list = iuArticleActionsGetFollowedList().filter(
+              (row) => String(row?.articleId || row?.url || "").trim() !== String(id || "").trim()
+            );
+            iuArticleActionsWriteJson(IU_FOLLOWED_TOPICS_KEY, list);
             iuArticleActionsRefreshManagePanels();
           } else if (action === "restore") {
             const id = manageBtn.getAttribute("data-iu-article-id");
@@ -7526,7 +7532,11 @@ try {
           iuArticleActionsWriteJson(IU_SAVED_ARTICLES_KEY, list);
           iuArticleActionsRefreshManagePanels();
         } else if (action === "unfollow") {
-          iuArticleActionsToggleFollow(manageBtn.getAttribute("data-iu-topic"));
+          const id = manageBtn.getAttribute("data-iu-article-id");
+          const list = iuArticleActionsGetFollowedList().filter(
+            (row) => String(row?.articleId || row?.url || "").trim() !== String(id || "").trim()
+          );
+          iuArticleActionsWriteJson(IU_FOLLOWED_TOPICS_KEY, list);
           iuArticleActionsRefreshManagePanels();
         } else if (action === "restore") {
           iuArticleActionsRemoveHidden(manageBtn.getAttribute("data-iu-article-id"));
@@ -7563,8 +7573,7 @@ try {
         iuArticleActionsSyncButtonState(btn, "save", active, active ? "Uloženo" : "Uložit");
         iuArticleActionsRefreshManagePanels();
       } else if (action === "follow") {
-        const topic = String(articleEl.getAttribute("data-iu-article-topic") || btn.getAttribute("data-iu-article-topic") || "").trim();
-        const active = iuArticleActionsToggleFollow(topic);
+        const active = iuArticleActionsToggleFollow(articleEl);
         iuArticleActionsSyncButtonState(btn, "follow", active, active ? "Sledováno" : "Sledovat");
         iuArticleActionsRefreshManagePanels();
       } else if (action === "hide") {
