@@ -61,6 +61,42 @@ var iuIsProjectsRoute = function iuIsProjectsRoute(){
 };
 try { if (typeof window !== "undefined") window.iuIsProjectsRoute = iuIsProjectsRoute; } catch(e){}
 try { if (typeof window !== "undefined") window.__iuNavOverlayLock = false; } catch (e) {}
+/** P0 mobile/tablet: transient lock during popstate overlay restore — rAF-only release left stale locks on WebKit/throttled tabs (dead Domů/Menu/Zpět). */
+function iuNavOverlayLockArm() {
+  try {
+    if (typeof window === "undefined") return;
+    window.__iuNavOverlayLock = true;
+    window.__iuNavOverlayLockSeq = (typeof window.__iuNavOverlayLockSeq === "number" ? window.__iuNavOverlayLockSeq : 0) + 1;
+    var seq = window.__iuNavOverlayLockSeq;
+    function iuNavOverlayLockReleaseIfCurrent() {
+      try {
+        if (window.__iuNavOverlayLockSeq === seq) window.__iuNavOverlayLock = false;
+      } catch (_) {}
+    }
+    try {
+      window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(iuNavOverlayLockReleaseIfCurrent);
+      });
+    } catch (_) {}
+    try {
+      window.setTimeout(iuNavOverlayLockReleaseIfCurrent, 180);
+    } catch (_) {}
+  } catch (_) {}
+}
+function iuNavOverlayLockForceClear() {
+  try {
+    if (typeof window !== "undefined") {
+      window.__iuNavOverlayLock = false;
+      window.__iuNavOverlayLockSeq = (typeof window.__iuNavOverlayLockSeq === "number" ? window.__iuNavOverlayLockSeq : 0) + 1;
+    }
+  } catch (_) {}
+}
+try {
+  if (typeof window !== "undefined") {
+    window.iuNavOverlayLockArm = iuNavOverlayLockArm;
+    window.iuNavOverlayLockForceClear = iuNavOverlayLockForceClear;
+  }
+} catch (e) {}
 
 /** P0: production host — debug UI and ?debug=1 tooling must never activate on infouzel.cz */
 function iuIsProdHost() {
@@ -15792,10 +15828,10 @@ function buildVideoAsArticleCard(it) {
       return;
     }
     /* P0 mobile/tablet Domů: explicit hub reset must never be blocked by transient web-nav overlay lock; stale locks caused no-op setTab("") and queued microtasks. */
-    try {
-      window.__iuNavOverlayLock = false;
-    } catch (_) {}
-    var hubSeq = 0;
+      try {
+        if (typeof window.iuNavOverlayLockForceClear === "function") window.iuNavOverlayLockForceClear();
+        else window.__iuNavOverlayLock = false;
+      } catch (_) {}
     try {
       window.__iuHubResetSeq = (typeof window.__iuHubResetSeq === "number" ? window.__iuHubResetSeq : 0) + 1;
       hubSeq = window.__iuHubResetSeq;
@@ -16125,6 +16161,9 @@ function buildVideoAsArticleCard(it) {
         });
       }
       function iuMobileGateNavTabToggleFromUserAction() {
+        try {
+          if (typeof window.iuNavOverlayLockForceClear === "function") window.iuNavOverlayLockForceClear();
+        } catch (_) {}
         iuMobileGatePerfMark("iu-gate-nav-toggle-start");
         var navToggleSeq = 0;
         try {
@@ -16399,6 +16438,9 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
       function iuHandleToolsTabClick(ev) {
         /* P0 mobile/tablet: no time-based throttle — 120ms discard caused MindMenu/bottom-bar to ignore rapid taps and stack perceived lag. */
+        try {
+          if (typeof window.iuNavOverlayLockForceClear === "function") window.iuNavOverlayLockForceClear();
+        } catch (_) {}
         if (ev && typeof ev.preventDefault === "function") ev.preventDefault();
         var cur = wrap.getAttribute("data-iu-mobile-gate");
         if (cur === "tools") {
@@ -16560,6 +16602,9 @@ function buildVideoAsArticleCard(it) {
       root.addEventListener(
         "click",
         function (ev) {
+          try {
+            if (typeof window.iuNavOverlayLockForceClear === "function") window.iuNavOverlayLockForceClear();
+          } catch (_) {}
           try {
             var t = ev.target;
             var btn = t && t.closest ? t.closest("[data-iu-bottom-nav]") : null;
@@ -23366,6 +23411,9 @@ function buildVideoAsArticleCard(it) {
     window.addEventListener("pageshow", function () {
       iuMindMenuRestoreIfArmed();
       iuMindMenuSyncGateFromHistory();
+      try {
+        if (typeof window.iuMobileWebNavSyncFromHistory === "function") window.iuMobileWebNavSyncFromHistory();
+      } catch (_) {}
     });
     window.addEventListener("focus", function () {
       iuMindMenuRestoreIfArmed();
@@ -34582,6 +34630,19 @@ function buildVideoAsArticleCard(it) {
             const fpSeq =
               typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
             feedSw.setAttribute("data-feed-switch-seq", String((fpSeq && fpSeq.__iuFeedSwitchSeq) || 0));
+            var swSeqWatch = String((fpSeq && fpSeq.__iuFeedSwitchSeq) || 0);
+            try {
+              window.setTimeout(function () {
+                try {
+                  var felW = document.getElementById("feed");
+                  if (!felW) return;
+                  if (String(felW.getAttribute("data-feed-switching") || "") !== "1") return;
+                  if (String(felW.getAttribute("data-feed-switch-seq") || "") !== swSeqWatch) return;
+                  felW.removeAttribute("data-feed-switching");
+                  felW.style.minHeight = "";
+                } catch (_) {}
+              }, 12000);
+            } catch (_) {}
           } catch (_) {}
           try {
             iuFeedSectionSwitchInstantClear(feedSw);
@@ -34928,7 +34989,8 @@ function buildVideoAsArticleCard(it) {
     /** P0 mobile/tablet: keep browser history aligned with „Navigace po webu“ overlay (popstate → reopen overlay, no skip-to-external). */
     function iuMobileWebNavApplyRestoredOverlay(wrapH){
       try {
-        if (typeof window !== "undefined") window.__iuNavOverlayLock = true;
+        if (typeof window.iuNavOverlayLockArm === "function") window.iuNavOverlayLockArm();
+        else if (typeof window !== "undefined") window.__iuNavOverlayLock = true;
       } catch (_){}
       wrapH.__iuMobileGateSetTab("nav");
       try { document.body.classList.remove("iu-mobileMainVisible"); } catch (_){}
@@ -34940,15 +35002,6 @@ function buildVideoAsArticleCard(it) {
       } catch (_){}
       try {
         window.__iuWebNavSectionPush = false;
-      } catch (_){}
-      try {
-        if (typeof window !== "undefined") {
-          window.requestAnimationFrame(function () {
-            window.requestAnimationFrame(function () {
-              try { window.__iuNavOverlayLock = false; } catch (_){}
-            });
-          });
-        }
       } catch (_){}
     }
     /**
@@ -35084,6 +35137,9 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_){}
     }
+    try {
+      window.iuMobileWebNavSyncFromHistory = iuMobileWebNavSyncFromHistory;
+    } catch (_eSync) {}
     function iuProjectsNavRouterRunHideApplySectionAndPanel(){
       try {
         if (window.__iuMobileWebNavReturnSuppress === true) return;
