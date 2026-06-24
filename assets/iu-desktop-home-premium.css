@@ -15,8 +15,11 @@
     --iu-dhp-tall-scroll-min-h: 920px;
     --iu-dhp-preview-card-min-h: 168px;
     --iu-dhp-preview-headline-min-h: 65px;
-    --iu-dhp-rail-min-h: 2000px;
+    --iu-dhp-rail-min-h: 520px;
     --iu-dhp-rail-banners-min-h: 540px;
+  }
+
+  body.iu-desktop-home-grid[data-section="feed"] {
     --iu-dhp-center-stage-mt: 1140px;
   }
 
@@ -103,7 +106,7 @@
     padding-top: 0 !important;
   }
 
-  body.iu-desktop-home-grid #iuSilverTallScrollViewport {
+  body.iu-desktop-home-grid[data-section="feed"] #iuSilverTallScrollViewport {
     row-gap: 15px !important;
     column-gap: 15px !important;
     min-height: var(--iu-dhp-tall-scroll-min-h);
@@ -434,35 +437,35 @@
     border-radius: 12px;
   }
 
-  /* ── Desktop homecards: CLS floor reserves (grow above floor when content loads) ── */
-  body.iu-desktop-home-grid #iuSilverTopCardsStack {
+  /* ── Desktop homecards: CLS floor reserves (feed route only; grow above floor when content loads) ── */
+  body.iu-desktop-home-grid[data-section="feed"] #iuSilverTopCardsStack {
     min-height: var(--iu-dhp-silver-slot-min-h);
     contain: layout style;
   }
 
-  body.iu-desktop-home-grid .iuSilverTopCardsStack #silver-slot.silver-slot,
-  body.iu-desktop-home-grid #silver-slot.silver-slot {
+  body.iu-desktop-home-grid[data-section="feed"] .iuSilverTopCardsStack #silver-slot.silver-slot,
+  body.iu-desktop-home-grid[data-section="feed"] #silver-slot.silver-slot {
     min-height: var(--iu-dhp-silver-slot-min-h) !important;
     height: auto !important;
     contain: layout style;
   }
 
-  body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection {
+  body.iu-desktop-home-grid[data-section="feed"] #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection {
     min-height: var(--iu-dhp-tall-scroll-min-h) !important;
     contain: layout style;
   }
 
-  body.iu-desktop-home-grid #iuSilverTallScrollViewport [class$="PreviewCardMount"] {
+  body.iu-desktop-home-grid[data-section="feed"] #iuSilverTallScrollViewport [class$="PreviewCardMount"] {
     min-height: var(--iu-dhp-preview-card-min-h) !important;
     contain: layout style;
   }
 
-  body.iu-desktop-home-grid .layout > aside.accordionCol {
+  body.iu-desktop-home-grid[data-section="feed"] .layout > aside.accordionCol {
     min-height: var(--iu-dhp-rail-min-h) !important;
     contain: layout style;
   }
 
-  body.iu-desktop-home-grid #iuDesktopRightRailCards.iu-desktop-right-rail-banners {
+  body.iu-desktop-home-grid[data-section="feed"] #iuDesktopRightRailCards.iu-desktop-right-rail-banners {
     min-height: var(--iu-dhp-rail-banners-min-h);
     contain: layout style;
   }
@@ -836,8 +839,8 @@
   .iuMyInfoUzelMindMenuHost .iu-mmHoverSummaryBridge {
     display: none !important;
   }
-  body.iu-myinfouzel-open.iu-desktop-home-grid .layout > aside.accordionCol {
-    min-height: var(--iu-dhp-rail-min-h, 2000px) !important;
+  body.iu-myinfouzel-open.iu-desktop-home-grid[data-section="feed"] .layout > aside.accordionCol {
+    min-height: var(--iu-dhp-rail-min-h, 520px) !important;
   }
   .iuMyInfoUzelSection--saved .iuMyInfoUzelItem,
   .iuMyInfoUzelSection--followed .iuMyInfoUzelItem,
