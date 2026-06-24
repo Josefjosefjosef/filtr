@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-06-24T11:48:03.154795Z",
+  "ingestedAt": "2026-06-24T13:14:25.912328Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "RECENZE: Nový Star Fox je poctivá arkádová zábava, jaká už se dnes nevidí",
+      "url": "https://www.idnes.cz/hry/recenze/star-fox-recenze-switch-2.A260622_135233_bw-recenze_oz",
+      "dt": "2026-06-24T12:00:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "arkádová",
+        "fox",
+        "jaká",
+        "nevidí",
+        "nový",
+        "poctivá",
+        "star",
+        "zábava"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "GTA 6 neodradí šílenou cenou. Rockstar navíc odhalil ultimátní edici",
+      "url": "https://www.idnes.cz/hry/novinky/gta-6-cena-ultimatni-edice-predobjednavky.A260624_125146_bw-novinky_oz/foto",
+      "dt": "2026-06-24T11:54:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "cenou",
+        "edici",
+        "gta",
+        "navíc",
+        "neodradí",
+        "odhalil",
+        "rockstar",
+        "ultimátní",
+        "šílenou"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -694,57 +745,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Robotí holčičky z nových her dráždí publikum, nevypadají až příliš dětsky?",
-      "url": "https://www.idnes.cz/hry/novinky/pragamta-stellar-blade-holcicky-pedofilie-hry.A260608_110531_bw-novinky_srp",
-      "dt": "2026-06-12T22:00:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "dráždí",
-        "dětsky",
-        "her",
-        "holčičky",
-        "nevypadají",
-        "nových",
-        "publikum",
-        "příliš",
-        "robotí"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Závodní Warhammer a šachy na steroidech zdarma. Ale neváhejte dlouho",
-      "url": "https://www.idnes.cz/hry/novinky/warhammer-ouroboros-king-hry-zdarma-epic-steam.A260612_083212_bw-novinky_oz/foto",
-      "dt": "2026-06-12T07:58:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "ale",
-        "dlouho",
-        "neváhejte",
-        "steroidech",
-        "warhammer",
-        "zdarma",
-        "závodní",
-        "šachy"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -755,7 +755,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 43816,
+      "bytes": 43651,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -792,7 +792,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-24T08:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-24T12:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -807,6 +807,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "RECENZE: Nový Star Fox je poctivá arkádová zábava, jaká už se dnes nevidí",
+            "publishedAt": "2026-06-24T12:00:00Z"
+          },
+          {
+            "title": "GTA 6 neodradí šílenou cenou. Rockstar navíc odhalil ultimátní edici",
+            "publishedAt": "2026-06-24T11:54:00Z"
+          },
           {
             "title": "Víc než sex mě zajímají videohry, přiznává známý streamer Asmongold",
             "publishedAt": "2026-06-24T08:50:00Z"
@@ -830,14 +838,6 @@
           {
             "title": "Nečekaná virální pecka. Online hra na schovávanou prodává milion kopií denně",
             "publishedAt": "2026-06-22T09:45:00Z"
-          },
-          {
-            "title": "Spoluzakladatel Ubisoftu Claude Guillemot zahynul při letecké havárii",
-            "publishedAt": "2026-06-22T07:26:00Z"
-          },
-          {
-            "title": "RECENZE: Hororová legenda The 7th Guest znovu zve do strašidelného domu",
-            "publishedAt": "2026-06-21T22:00:00Z"
           }
         ]
       }
