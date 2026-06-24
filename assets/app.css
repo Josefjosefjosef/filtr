@@ -22889,4 +22889,153 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
 @media (hover:hover) and (pointer:fine){
   .mindMenu .iu-mailbox-row:hover .iu-mailbox-pill{transform:translateY(-1px);box-shadow:0 6px 16px rgba(11,42,74,.1)}
 }
-.iuMyInfoUzelOverlay .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid>.iuTile,.iuMyInfoUzelOverlay .mindMenu section.iu-mmQuickLinks .iuTileLink,.iuMyInfoUzelMindMenuHost .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid>.iuTile,.iuMyInfoUzelMindMenuHost .mindMenu section.iu-mmQuickLinks .iuTileLink,.iuMyInfoUzelOverlay .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid>.iuTile,.iuMyInfoUzelOverlay .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iuTileLink{min-height:96px!important;height:96px!important;max-height:96px!important;box-sizing:border-box!important}
+.iuMyInfoUzelOverlay .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid>.iuTile,.iuMyInfoUzelOverlay .mindMenu section.iu-mmQuickLinks .iuTileLink,.iuMyInfoUzelMindMenuHost .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid>.iuTile,.iuMyInfoUzelMindMenuHost .mindMenu section.iu-mmQuickLinks .iuTileLink,.iuMyInfoUzelOverlay .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid>.iuTile,.iuMyInfoUzelOverlay .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iuTileLink{min-height:72px!important;height:72px!important;max-height:72px!important;box-sizing:border-box!important}
+
+/* MindMenu V2 — overlay stacking, premium shell, manage tabs, mailbox plain mode */
+body.iu-myinfouzel-open #iuCalendarOverlay.iu-calendarOverlay:not([hidden]),
+body.iu-myinfouzel-open #iuTasksOverlay.iu-tasksPremiumScope:not([hidden]),
+body.iu-myinfouzel-open #iuNotesOverlay.iu-notesPremiumScope:not([hidden]),
+body.iu-myinfouzel-open #iuDsOverlay.iu-ds-overlay:not([hidden]),
+body.iu-myinfouzel-open #iu-aiOverlay:not([hidden]),
+body.iu-myinfouzel-open #iu-aiPanel:not([hidden]),
+body.iu-myinfouzel-open #iuFinancialCalcBackdrop:not([hidden]),
+body.iu-myinfouzel-open #iuFinancialCalcPanel:not([hidden]),
+body.iu-myinfouzel-open #iuInvoiceBackdrop:not([hidden]),
+body.iu-myinfouzel-open #iuInvoicePanel:not([hidden]),
+body.iu-myinfouzel-open #iuLegalDocsBackdrop:not([hidden]),
+body.iu-myinfouzel-open #iuLegalDocsPanel:not([hidden]),
+body.iu-myinfouzel-open #iuCustomButtonsBackdrop:not([hidden]),
+body.iu-myinfouzel-open #iuCustomButtonsPanel:not([hidden]),
+body.iu-myinfouzel-open #iuDesktopParcelWatchOverlay:not([hidden]),
+body.iu-myinfouzel-open #iu-mailbox-edit-overlay,
+body.iu-myinfouzel-open .iu-quicktools-settings-backdrop:not([hidden]),
+body.iu-myinfouzel-open .iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed:not([hidden]){
+  z-index:12100!important;
+}
+body.iu-mobileGateOverlayOpen #iuDsOverlay.iu-ds-overlay:not([hidden]),
+body.iu-mobileGateOverlayOpen #iu-aiOverlay:not([hidden]),
+body.iu-mobileGateOverlayOpen #iu-aiPanel:not([hidden]),
+body.iu-mobileGateOverlayOpen #iuFinancialCalcBackdrop:not([hidden]),
+body.iu-mobileGateOverlayOpen #iuFinancialCalcPanel:not([hidden]),
+body.iu-mobileGateOverlayOpen #iuInvoiceBackdrop:not([hidden]),
+body.iu-mobileGateOverlayOpen #iuInvoicePanel:not([hidden]),
+body.iu-mobileGateOverlayOpen #iuLegalDocsBackdrop:not([hidden]),
+body.iu-mobileGateOverlayOpen #iuLegalDocsPanel:not([hidden]),
+body.iu-mobileGateOverlayOpen #iuCustomButtonsBackdrop:not([hidden]),
+body.iu-mobileGateOverlayOpen #iuCustomButtonsPanel:not([hidden]),
+body.iu-mobileGateOverlayOpen #iuDesktopParcelWatchOverlay:not([hidden]),
+body.iu-mobileGateOverlayOpen #iu-mailbox-edit-overlay,
+body.iu-mobileGateOverlayOpen .iu-quicktools-settings-backdrop:not([hidden]),
+body.iu-mobileGateOverlayOpen .iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed:not([hidden]){
+  z-index:10030!important;
+}
+body.iu-myinfouzel-open .iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed:not([hidden]){
+  z-index:12110!important;
+}
+.mindMenu .iu-mailbox-pill--plain,
+.mindMenu .iu-mailbox-list>.iu-mailbox-row .iu-mailbox-pill--plain,
+.mindMenu .iu-mailbox-list>.iu-mailbox-row:nth-child(n) .iu-mailbox-pill--plain{
+  background:#fff!important;
+  border-color:rgba(15,23,42,.12)!important;
+  color:#0B2A4A!important;
+}
+.mindMenu .iu-mailbox-pill{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.accordionCol .mindMenu .iu-mailbox-row{
+  grid-template-columns:minmax(12.5em,1fr) 36px 40px!important;
+}
+.iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill,
+.iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill{
+  min-width:12.5em;
+}
+.iuMmManageTabs__nav{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin:10px 0 12px;
+}
+.iuMmManageTabs__tab{
+  flex:1 1 auto;
+  min-width:0;
+  border:1px solid rgba(15,23,42,.1);
+  background:rgba(255,255,255,.88);
+  color:#334155;
+  border-radius:10px;
+  padding:8px 10px;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  transition:background .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease;
+}
+.iuMmManageTabs__tab.is-active{
+  color:#0B2A4A;
+  border-color:rgba(0,60,255,.22);
+  background:linear-gradient(180deg,rgba(239,246,255,.98),rgba(255,255,255,.96));
+  box-shadow:0 2px 8px rgba(11,42,74,.08);
+}
+.iuMmManageTabs__tab--saved.is-active{border-color:rgba(245,158,11,.34)}
+.iuMmManageTabs__tab--followed.is-active{border-color:rgba(0,60,255,.28)}
+.iuMmManageTabs__tab--hidden.is-active{border-color:rgba(220,38,38,.26)}
+.iuMmManageTabs__panel[hidden]{display:none!important}
+#iuMindMenuView .iu-mmArticleActionsSections .iuMmManageTabs__nav,
+#iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSections .iuMmManageTabs__nav{
+  margin-top:4px;
+}
+#iuMindMenuView .iu-mmArticleActionsSections .iuMmManageTabs__tab,
+#iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSections .iuMmManageTabs__tab{
+  font-size:11px;
+  padding:7px 8px;
+}
+.iuMyInfoUzelOverlay__sheet{
+  border:1px solid rgba(0,60,255,.08);
+  box-shadow:0 24px 64px rgba(11,42,74,.18),0 0 0 1px rgba(255,255,255,.45) inset;
+}
+.iuMyInfoUzelOverlay__head{
+  background:linear-gradient(180deg,rgba(239,246,255,.92) 0%,rgba(255,255,255,.88) 100%);
+  border-bottom:1px solid rgba(0,60,255,.1);
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.72);
+}
+.iuMyInfoUzelOverlay__headMain{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex:1 1 auto;
+  min-width:0;
+  padding:4px 6px;
+  border-radius:12px;
+  background:rgba(255,255,255,.42);
+  border:1px solid rgba(0,60,255,.08);
+}
+#iuMobileGatePanelTools .mindMenu,
+#iuMobileGatePanelTools .mindMenu-scroll-wrapper,
+.iuMyInfoUzelMindMenuHost .mindMenu,
+.iuMyInfoUzelMindMenuHost .mindMenu-scroll-wrapper{
+  background:transparent;
+}
+#iuMobileGatePanelTools .mindMenu-scroll-wrapper,
+.accordionCol .mindMenu-scroll-wrapper{
+  border-radius:14px;
+}
+@media (max-width:1024px){
+  #iuMindMenuView .iu-mmArticleActionsSections,
+  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSections{
+    background:linear-gradient(165deg,rgba(240,247,255,.96) 0%,rgba(245,243,255,.92) 52%,rgba(236,252,251,.94) 100%);
+    border:1px solid rgba(0,60,255,.08);
+    box-shadow:0 8px 24px rgba(11,42,74,.06),inset 0 1px 0 rgba(255,255,255,.72);
+  }
+}
+.iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmSectionTopRow{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  width:100%!important;
+  gap:12px!important;
+}
+.iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-quicktools-settings-trigger{
+  flex:0 0 auto;
+  margin-left:8px;
+}

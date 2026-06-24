@@ -689,15 +689,21 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 16px 20px;
-    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(0, 60, 255, 0.1);
+    background: linear-gradient(180deg, rgba(239, 246, 255, 0.92) 0%, rgba(255, 255, 255, 0.88) 100%);
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.72);
   }
   .iuMyInfoUzelOverlay__headMain {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
     flex: 1 1 auto;
     min-width: 0;
+    padding: 4px 6px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.42);
+    border: 1px solid rgba(0, 60, 255, 0.08);
   }
   .iuMyInfoUzelOverlay__title {
     margin: 0;
@@ -732,18 +738,78 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px;
-    height: 50px;
-    min-height: 50px;
-    max-height: 50px;
-    padding: 4px;
-    border: 1px solid rgba(15, 23, 42, 0.1);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.88);
+    width: 46px;
+    height: 46px;
+    min-height: 46px;
+    max-height: 46px;
+    padding: 3px;
+    border: 1px solid rgba(0, 60, 255, 0.12);
+    border-radius: 11px;
+    background: rgba(255, 255, 255, 0.94);
     box-sizing: border-box;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(11, 42, 74, 0.06);
+    box-shadow: 0 1px 6px rgba(11, 42, 74, 0.07);
   }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks {
+    position: relative;
+  }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="datova-schranka"] { --iu-ql-accent: #1D4ED8; }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="internetove-bankovnictvi"] { --iu-ql-accent: #047857; }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="bakalari"] { --iu-ql-accent: #7C3AED; }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="zdravotni-pojistovna"] { --iu-ql-accent: #0EA5A4; }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="zasilky-a-sledovani"] { --iu-ql-accent: #EA580C; }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="ai-asistenti"] { --iu-ql-accent: #2563EB; }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="prekladac"] { --iu-ql-accent: #0284C7; }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="prevod-word-pdf"] { --iu-ql-accent: #4B5563; }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="financni-kalkulacky"] { --iu-ql-accent: #CA8A04; }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="vzory-smluv-plne-moci"] { --iu-ql-accent: #9F1239; }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="vytvorit-fakturu"] { --iu-ql-accent: #0f766e; }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="naceneni-nakupu"] { --iu-ql-accent: #2E3238; }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile > .iuTileLink {
+    border-color: var(--iu-ql-accent, rgba(15, 23, 42, 0.12)) !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile > .iuTileLink::before {
+    content: "" !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    height: 100% !important;
+    width: 2px !important;
+    background: var(--iu-ql-accent, rgba(0, 60, 255, 0.45)) !important;
+    border-top-left-radius: 10px !important;
+    border-bottom-left-radius: 10px !important;
+    pointer-events: none !important;
+  }
+  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab {
+    flex: 1 1 auto;
+    min-width: 0;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    background: rgba(255, 255, 255, 0.88);
+    color: #334155;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+  }
+  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab.is-active {
+    color: #0B2A4A;
+    border-color: rgba(0, 60, 255, 0.22);
+    background: linear-gradient(180deg, rgba(239, 246, 255, 0.98), rgba(255, 255, 255, 0.96));
+    box-shadow: 0 2px 8px rgba(11, 42, 74, 0.08);
+  }
+  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab--saved.is-active { border-color: rgba(245, 158, 11, 0.34); }
+  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab--followed.is-active { border-color: rgba(0, 60, 255, 0.28); }
+  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab--hidden.is-active { border-color: rgba(220, 38, 38, 0.26); }
   .iuMyInfoUzelOverlay__headerTools .iu-mmTopTool--imageTile .iu-mmTopToolImageTileWrap {
     width: 40px;
     height: 40px;
@@ -821,7 +887,7 @@
   }
   .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row,
   .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row {
-    grid-template-columns: minmax(0, 50%) 36px 40px !important;
+    grid-template-columns: minmax(0, 1fr) 36px 40px !important;
     width: 100% !important;
     max-width: 100% !important;
   }
@@ -829,6 +895,7 @@
   .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill {
     max-width: 100% !important;
     width: 100% !important;
+    min-width: 0 !important;
   }
   .iuMyInfoUzelToolsHost section.iu-mmQuickLinks {
     margin: 0;
@@ -849,28 +916,28 @@
   }
   .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid,
   .iuMyInfoUzelOverlay .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid {
-    min-height: 212px !important;
-    contain-intrinsic-size: auto 212px;
+    min-height: 156px !important;
+    contain-intrinsic-size: auto 156px;
     content-visibility: auto;
   }
   .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile,
   .iuMyInfoUzelOverlay .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile {
-    min-height: 96px !important;
-    height: 96px !important;
-    max-height: 96px !important;
+    min-height: 72px !important;
+    height: 72px !important;
+    max-height: 72px !important;
     box-sizing: border-box !important;
   }
   .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink,
   .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile .iuTileLink,
   .iuMyInfoUzelOverlay .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink {
-    min-height: 96px !important;
-    height: 96px !important;
-    max-height: 96px !important;
-    padding: 10px 12px;
-    border-radius: 12px;
+    min-height: 72px !important;
+    height: 72px !important;
+    max-height: 72px !important;
+    padding: 8px 10px;
+    border-radius: 10px;
     border: 1px solid rgba(15, 23, 42, 0.1);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.92) 100%);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     box-sizing: border-box;
     box-shadow: 0 2px 8px rgba(11, 42, 74, 0.06);

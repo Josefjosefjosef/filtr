@@ -7273,6 +7273,31 @@ try {
     mount.innerHTML = `<ul class="iuMyInfoUzelList">${items}</ul>`;
   }
 
+  function iuArticleActionsInitManageTabs(root) {
+    try {
+      if (!root || root.__iuManageTabsBound) return;
+      root.__iuManageTabsBound = 1;
+      root.addEventListener("click", (e) => {
+        const t = e.target;
+        if (!(t instanceof Element)) return;
+        const tab = t.closest("[data-iu-manage-tab]");
+        if (!tab || !root.contains(tab)) return;
+        const kind = tab.getAttribute("data-iu-manage-tab");
+        if (!kind) return;
+        root.querySelectorAll("[data-iu-manage-tab]").forEach((el) => {
+          const active = el === tab;
+          el.classList.toggle("is-active", active);
+          el.setAttribute("aria-selected", active ? "true" : "false");
+        });
+        root.querySelectorAll("[data-iu-manage-panel-wrap]").forEach((panel) => {
+          const show = panel.getAttribute("data-iu-manage-panel-wrap") === kind;
+          panel.hidden = !show;
+          panel.classList.toggle("is-active", show);
+        });
+      });
+    } catch (_) {}
+  }
+
   function iuArticleActionsRefreshManagePanels() {
     try {
       const overlay = document.getElementById("iuMyInfoUzelOverlay");
@@ -7358,7 +7383,7 @@ try {
   function iuArticleActionsEnsureOverlay() {
     try {
       const existing = document.getElementById("iuMyInfoUzelOverlay");
-      if (existing && document.getElementById("iuMyInfoUzelToolsHost")) return;
+      if (existing && existing.querySelector("[data-iu-manage-tabs]") && document.getElementById("iuMyInfoUzelToolsHost")) return;
       if (existing) existing.remove();
       const overlay = document.createElement("div");
       overlay.id = "iuMyInfoUzelOverlay";
@@ -7386,24 +7411,30 @@ try {
                 <div id="iuMyInfoUzelToolsHost" class="iuMyInfoUzelToolsHost"></div>
               </div>
               <div class="iuMyInfoUzelDashboard__col iuMyInfoUzelDashboard__col--saved">
-                <section class="iuMyInfoUzelSection iuMyInfoUzelSection--saved">
-                  <h3 class="iuMyInfoUzelSectionTitle">Uložené články</h3>
-                  <div data-iu-manage-panel="saved"></div>
-                </section>
-                <section class="iuMyInfoUzelSection iuMyInfoUzelSection--followed">
-                  <h3 class="iuMyInfoUzelSectionTitle">Sledovaná témata</h3>
-                  <div data-iu-manage-panel="followed"></div>
-                </section>
-                <section class="iuMyInfoUzelSection iuMyInfoUzelSection--hidden">
-                  <h3 class="iuMyInfoUzelSectionTitle">Skryté články</h3>
-                  <div data-iu-manage-panel="hidden"></div>
-                </section>
+                <div class="iuMmManageTabs" data-iu-manage-tabs>
+                  <div class="iuMmManageTabs__nav" role="tablist" aria-label="Moje články a témata">
+                    <button type="button" class="iuMmManageTabs__tab is-active iuMmManageTabs__tab--saved" role="tab" data-iu-manage-tab="saved" aria-selected="true">Uložené články</button>
+                    <button type="button" class="iuMmManageTabs__tab iuMmManageTabs__tab--followed" role="tab" data-iu-manage-tab="followed" aria-selected="false">Sledovaná témata</button>
+                    <button type="button" class="iuMmManageTabs__tab iuMmManageTabs__tab--hidden" role="tab" data-iu-manage-tab="hidden" aria-selected="false">Skryté články</button>
+                  </div>
+                  <div class="iuMmManageTabs__panel is-active iuMmManageTabs__panel--saved" data-iu-manage-panel-wrap="saved" role="tabpanel">
+                    <div data-iu-manage-panel="saved"></div>
+                  </div>
+                  <div class="iuMmManageTabs__panel iuMmManageTabs__panel--followed" data-iu-manage-panel-wrap="followed" role="tabpanel" hidden>
+                    <div data-iu-manage-panel="followed"></div>
+                  </div>
+                  <div class="iuMmManageTabs__panel iuMmManageTabs__panel--hidden" data-iu-manage-panel-wrap="hidden" role="tabpanel" hidden>
+                    <div data-iu-manage-panel="hidden"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       `.trim();
       document.body.appendChild(overlay);
+      const manageTabs = overlay.querySelector("[data-iu-manage-tabs]");
+      if (manageTabs) iuArticleActionsInitManageTabs(manageTabs);
       overlay.addEventListener("click", (e) => {
         const t = e.target;
         if (!(t instanceof Element)) return;
@@ -7545,7 +7576,12 @@ try {
   function iuArticleActionsEnsureMindMenuSections() {
     try {
       const mindMenu = document.getElementById("iuMindMenuView") || document.querySelector(".mindMenu");
-      if (!mindMenu || mindMenu.querySelector("#iuMmArticleActionsSections")) return;
+      const existingSections = mindMenu && mindMenu.querySelector("#iuMmArticleActionsSections");
+      if (existingSections) {
+        if (existingSections.querySelector("[data-iu-manage-tabs]")) return;
+        existingSections.remove();
+      }
+      if (!mindMenu) return;
       const wrap = document.createElement("section");
       wrap.id = "iuMmArticleActionsSections";
       wrap.className = "iu-mmArticleActionsSections";
@@ -7555,20 +7591,26 @@ try {
           <div class="iu-mmSectionTitle">Moje články</div>
           <div class="iu-mmSectionLine" aria-hidden="true"></div>
         </div>
-        <div class="iu-mmArticleActionsBlock iu-mmArticleActionsBlock--saved">
-          <h4 class="iu-mmArticleActionsSubtitle iu-mmArticleActionsSubtitle--saved">Uložené články</h4>
-          <div id="iuMmSavedArticlesPanel" class="iu-mmArticleActionsPanel"></div>
-        </div>
-        <div class="iu-mmArticleActionsBlock iu-mmArticleActionsBlock--followed">
-          <h4 class="iu-mmArticleActionsSubtitle iu-mmArticleActionsSubtitle--followed">Sledovaná témata</h4>
-          <div id="iuMmFollowedTopicsPanel" class="iu-mmArticleActionsPanel"></div>
-        </div>
-        <div class="iu-mmArticleActionsBlock iu-mmArticleActionsBlock--hidden iu-mmArticleActionsBlock--last">
-          <h4 class="iu-mmArticleActionsSubtitle iu-mmArticleActionsSubtitle--hidden">Skryté články</h4>
-          <div id="iuMmHiddenArticlesPanel" class="iu-mmArticleActionsPanel"></div>
+        <div class="iuMmManageTabs iuMmManageTabs--mobile" data-iu-manage-tabs>
+          <div class="iuMmManageTabs__nav" role="tablist" aria-label="Moje články a témata">
+            <button type="button" class="iuMmManageTabs__tab is-active iuMmManageTabs__tab--saved" role="tab" data-iu-manage-tab="saved" aria-selected="true">Uložené články</button>
+            <button type="button" class="iuMmManageTabs__tab iuMmManageTabs__tab--followed" role="tab" data-iu-manage-tab="followed" aria-selected="false">Sledovaná témata</button>
+            <button type="button" class="iuMmManageTabs__tab iuMmManageTabs__tab--hidden" role="tab" data-iu-manage-tab="hidden" aria-selected="false">Skryté články</button>
+          </div>
+          <div class="iuMmManageTabs__panel is-active iuMmManageTabs__panel--saved" data-iu-manage-panel-wrap="saved" role="tabpanel">
+            <div id="iuMmSavedArticlesPanel" class="iu-mmArticleActionsPanel"></div>
+          </div>
+          <div class="iuMmManageTabs__panel iuMmManageTabs__panel--followed" data-iu-manage-panel-wrap="followed" role="tabpanel" hidden>
+            <div id="iuMmFollowedTopicsPanel" class="iu-mmArticleActionsPanel"></div>
+          </div>
+          <div class="iuMmManageTabs__panel iuMmManageTabs__panel--hidden" data-iu-manage-panel-wrap="hidden" role="tabpanel" hidden>
+            <div id="iuMmHiddenArticlesPanel" class="iu-mmArticleActionsPanel"></div>
+          </div>
         </div>
       `.trim();
       mindMenu.appendChild(wrap);
+      const mmTabs = wrap.querySelector("[data-iu-manage-tabs]");
+      if (mmTabs) iuArticleActionsInitManageTabs(mmTabs);
       wrap.addEventListener("click", (e) => {
         const t = e.target;
         if (!(t instanceof Element)) return;
@@ -23602,6 +23644,7 @@ function buildVideoAsArticleCard(it) {
           url: String(it?.url ?? "").trim(),
           social: validSocial(it?.social),
           hidden: it?.hidden === true,
+          colorful: it?.colorful !== false,
           index: i,
           slot
         };
@@ -23651,6 +23694,7 @@ function buildVideoAsArticleCard(it) {
         url: String(it?.url ?? "").trim(),
         social: IU_MAILBOX_SOCIAL_OPTIONS.includes(it?.social) ? it.social : null,
         hidden: !!it?.hidden,
+        colorful: it?.colorful !== false,
         slot: typeof it?.slot === "number" ? it.slot : 0
       }));
       localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: toSave }));
@@ -23702,7 +23746,7 @@ function buildVideoAsArticleCard(it) {
       const socialSlotHtml = social && socialUrl
         ? `<a href="${escapeHtml(socialUrl)}" class="iu-pill-social-slot" data-mailbox-social="${i}" data-social="${escapeHtml(social)}" aria-label="${escapeHtml(social)}" rel="noopener noreferrer" target="_blank"><span class="iu-pill-social-icon iu-social-ios40">${iuMailboxSocialIconSvg(social)}</span></a>`
         : "";
-      row.innerHTML = `<button class="iu-mailbox-pill" type="button" data-mailbox-index="${i}" data-mailbox-open>${escapeHtml(label)}</button>` +
+      row.innerHTML = `<button class="iu-mailbox-pill${it.colorful === false ? " iu-mailbox-pill--plain" : ""}" type="button" data-mailbox-index="${i}" data-mailbox-open>${escapeHtml(label)}</button>` +
         `<button class="iu-mailbox-gear" type="button" data-mailbox-gear="${i}" aria-label="Nastavení schránky ${i + 1}" title="Nastavení"><svg class="iu-mailbox-gear-svg" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>` +
         socialSlotHtml;
       frag.appendChild(row);
@@ -23784,14 +23828,20 @@ function buildVideoAsArticleCard(it) {
       }).join("");
       const overlay = document.createElement("div");
       overlay.setAttribute("id", "iu-mailbox-edit-overlay");
-      overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;z-index:10025;";
+      const mailboxEditZ = document.body.classList.contains("iu-myinfouzel-open") ? 12100 : 10025;
+      overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;z-index:" + mailboxEditZ + ";";
       const form = document.createElement("form");
-      form.style.cssText = "background:#fff;padding:20px;border-radius:12px;min-width:320px;box-shadow:0 10px 40px rgba(0,0,0,0.2);";
+      form.style.cssText = "background:#fff;padding:20px;border-radius:12px;min-width:360px;max-width:min(480px,calc(100vw - 32px));box-shadow:0 10px 40px rgba(0,0,0,0.2);";
+      const colorfulChecked = it.colorful !== false ? " checked" : "";
       form.innerHTML = `
         <p style="margin:0 0 12px 0;font-weight:600;">Název tlačítka (max ${MAX} znaků)</p>
-        <input type="text" id="iu-mailbox-edit-label" maxlength="${MAX}" autocomplete="off" value="${escapeHtml(it.label || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
+        <input type="text" id="iu-mailbox-edit-label" maxlength="${MAX}" autocomplete="off" value="${escapeHtml(it.label || "")}" style="width:100%;min-width:280px;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
         <p style="margin:0 0 12px 0;font-weight:600;">URL (www)</p>
-        <input type="text" id="iu-mailbox-edit-url" autocomplete="off" value="${escapeHtml(it.url || "")}" style="width:100%;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
+        <input type="text" id="iu-mailbox-edit-url" autocomplete="off" value="${escapeHtml(it.url || "")}" style="width:100%;min-width:280px;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
+        <label style="display:flex;align-items:center;gap:8px;margin:0 0 12px 0;font-size:14px;cursor:pointer;">
+          <input type="checkbox" id="iu-mailbox-edit-colorful"${colorfulChecked} />
+          <span>Barevný input</span>
+        </label>
         <div class="iu-mailbox-edit-social-row" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0;">
           ${socialRowHtml}
         </div>
@@ -23833,8 +23883,10 @@ function buildVideoAsArticleCard(it) {
         e.preventDefault();
         const label = String(labelInput.value).trim().slice(0, MAX);
         const url = String(urlInput.value).trim();
+        const colorfulEl = form.querySelector("#iu-mailbox-edit-colorful");
+        const colorful = colorfulEl ? !!colorfulEl.checked : true;
         overlay.remove();
-        onDone(label, url, selectedSocial);
+        onDone(label, url, selectedSocial, colorful);
       });
       labelInput.focus();
     }
@@ -23847,10 +23899,10 @@ function buildVideoAsArticleCard(it) {
         const items = iuMailboxLoad();
         const it = items[idx];
         if (!it) return;
-        iuMailboxOpenEditDialog(idx, it, (label, url, social) => {
+        iuMailboxOpenEditDialog(idx, it, (label, url, social, colorful) => {
           const items = iuMailboxLoad();
           const labelNorm = String(label).trim().slice(0, IU_MAILBOX_LABEL_MAX);
-          items[idx] = { ...items[idx], label: labelNorm, url: String(url).trim(), social: social && IU_MAILBOX_SOCIAL_OPTIONS.includes(social) ? social : null };
+          items[idx] = { ...items[idx], label: labelNorm, url: String(url).trim(), social: social && IU_MAILBOX_SOCIAL_OPTIONS.includes(social) ? social : null, colorful: colorful !== false };
           iuMailboxSave(items);
           iuMailboxRender();
         });
@@ -24506,6 +24558,12 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function iuQuickToolsUseFixedModalLayer() {
+    if (iuQuickToolsUseMobileModalLayer()) return true;
+    if (document.body.classList.contains("iu-myinfouzel-open")) return true;
+    return false;
+  }
+
   function iuEnsureQuickToolsSettingsBackdrop() {
     let el = document.getElementById("iuQuickToolsSettingsBackdrop");
     if (!el) {
@@ -24551,7 +24609,7 @@ function buildVideoAsArticleCard(it) {
   function iuQuickToolsSettingsOpen() {
     const panel = document.getElementById("iuQuickToolsSettingsPanel");
     if (!panel) return;
-    if (iuQuickToolsUseMobileModalLayer()) {
+    if (iuQuickToolsUseFixedModalLayer()) {
       if (!panel.__iuQtRestoreParent) {
         panel.__iuQtRestoreParent = panel.parentElement;
         panel.__iuQtRestoreNext = panel.nextSibling;
