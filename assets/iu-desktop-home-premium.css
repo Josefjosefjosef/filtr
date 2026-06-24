@@ -980,4 +980,53 @@
     background: linear-gradient(135deg, #fef2f2, #fee2e2);
     box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.1), 0 8px 20px rgba(220, 38, 38, 0.1);
   }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmSectionTopRow {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    gap: 12px !important;
+  }
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-quicktools-settings-trigger {
+    flex: 0 0 auto;
+    margin-left: 8px;
+  }
+}
+
+.iuMmManageTabs__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 12px;
+}
+.iuMmManageTabs__tab {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: rgba(255, 255, 255, 0.88);
+  color: #334155;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+.iuMmManageTabs__tab.is-active {
+  color: #0B2A4A;
+  border-color: rgba(0, 60, 255, 0.22);
+  background: linear-gradient(180deg, rgba(239, 246, 255, 0.98), rgba(255, 255, 255, 0.96));
+  box-shadow: 0 2px 8px rgba(11, 42, 74, 0.08);
+}
+.iuMmManageTabs__tab--saved.is-active { border-color: rgba(245, 158, 11, 0.34); }
+.iuMmManageTabs__tab--followed.is-active { border-color: rgba(0, 60, 255, 0.28); }
+.iuMmManageTabs__tab--hidden.is-active { border-color: rgba(220, 38, 38, 0.26); }
+.iuMmManageTabs__panel[hidden] { display: none !important; }
+.iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill,
+.iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill {
+  min-width: 12.5em;
+}
+#iuMobileGatePanelTools .mindMenu-scroll-wrapper,
+.accordionCol .mindMenu-scroll-wrapper {
+  border-radius: 14px;
 }
