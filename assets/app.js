@@ -16064,7 +16064,20 @@ function buildVideoAsArticleCard(it) {
           content.setAttribute("aria-hidden", "true");
           panelNav.hidden = true;
           panelTools.hidden = true;
-          try { document.body.classList.remove("iu-mobileMainVisible"); } catch (_) {}
+          try {
+            var keepMobileMainVisible = false;
+            try {
+              if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+                var uGateClose = new URL(window.location.href);
+                if (uGateClose.searchParams.has("section")) keepMobileMainVisible = true;
+                else {
+                  var dsGateClose = document.body && document.body.getAttribute("data-section");
+                  if (dsGateClose && String(dsGateClose).toLowerCase() !== "feed") keepMobileMainVisible = true;
+                }
+              }
+            } catch (_km) {}
+            if (!keepMobileMainVisible) document.body.classList.remove("iu-mobileMainVisible");
+          } catch (_) {}
           var mb = document.getElementById("iuMobileMainBackBar");
           if (mb) mb.hidden = true;
         }
