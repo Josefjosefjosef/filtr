@@ -1,28 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-06-24T02:30:15.073997Z",
+  "ingestedAt": "2026-06-24T03:52:33.112922Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Rozčarování, pískot! Kolumbijská trefa neplatí, obrovský nápor ale pokračuje",
+      "title": "FOTBAL ONLINE: Trefa v závěru, Kolumbie v euforii! Další gól ale neplatí",
       "url": "https://www.sport.cz/clanek/fotbal-ms-kolumbie-si-muze-zajistit-postup-dr-kongo-chce-znovu-prekvapit-5487576",
       "dt": "2026-06-23T18:00:00Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "ale",
+        "další",
+        "euforii",
         "fotbal",
-        "kolumbijská",
+        "gól",
+        "kolumbie",
         "neplatí",
-        "nápor",
-        "obrovský",
         "online",
-        "pokračuje",
-        "pískot",
-        "rozčarování",
-        "trefa"
+        "trefa",
+        "závěru"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Český tým se musel během finální přípravy na Mexiko vypořádat s komplikací",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-komplikace-pred-mexikem-finalni-pripravu-ceskeho-tymu-narusila-boure-5487940",
+      "dt": "2026-06-24T03:02:49Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "během",
+        "finální",
+        "komplikací",
+        "mexiko",
+        "musel",
+        "přípravy",
+        "tým",
+        "vypořádat",
+        "český"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -732,32 +757,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Mikula trumfl Nezmara a míří mezi legendy. Kováčův konec matadora překvapil",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-mikula-trumfl-nezmara-a-miri-mezi-legendy-kovacuv-konec-matadora-prekvapil-5487568",
-      "dt": "2026-06-23T13:10:51Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "konec",
-        "kováčův",
-        "legendy",
-        "matadora",
-        "mikula",
-        "míří",
-        "nezmara",
-        "překvapil",
-        "trumfl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -768,7 +767,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46807,
+      "bytes": 47420,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -805,7 +804,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-23T23:02:05Z",
+        "raw_feed_latest_publishedAt": "2026-06-24T03:02:49Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -822,8 +821,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Rozčarování, pískot! Kolumbijská trefa neplatí, obrovský nápor ale pokračuje",
+            "title": "FOTBAL ONLINE: Trefa v závěru, Kolumbie v euforii! Další gól ale neplatí",
             "publishedAt": "2026-06-23T18:00:00Z"
+          },
+          {
+            "title": "Český tým se musel během finální přípravy na Mexiko vypořádat s komplikací",
+            "publishedAt": "2026-06-24T03:02:49Z"
           },
           {
             "title": "Chorvatsko zvládlo zápas s Panamou, k výhře mu stačil jeden gól",
@@ -848,10 +851,6 @@
           {
             "title": "Zoufalá Anglie přišla o body s outsiderem",
             "publishedAt": "2026-06-23T12:00:00Z"
-          },
-          {
-            "title": "Nová tvář v NBA. Dallas bude trénovat May",
-            "publishedAt": "2026-06-23T21:17:48Z"
           }
         ]
       }
