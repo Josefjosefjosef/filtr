@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-06-24T21:27:59.811822Z",
+  "ingestedAt": "2026-06-24T23:02:00.421507Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "GTA 6 spustilo předobjednávky a odhalilo české ceny",
+      "url": "https://zing.cz/article/gta-6-spustilo-predobjednavky-a-odhalilo-ceske-ceny",
+      "dt": "2026-06-24T22:01:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "ceny",
+        "gta",
+        "odhalilo",
+        "předobjednávky",
+        "spustilo",
+        "české"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -953,29 +976,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Vyzkoušejte si zdarma na Steamu několik známých her",
-      "url": "https://zing.cz/article/vyzkousejte-si-zdarma-na-steamu-nekolik-znamych-her",
-      "dt": "2026-06-19T18:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "her",
-        "několik",
-        "steamu",
-        "vyzkoušejte",
-        "zdarma",
-        "známých"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -986,7 +986,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125720,
+      "bytes": 125671,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1023,7 +1023,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-24T19:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-24T22:01:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1038,6 +1038,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "GTA 6 spustilo předobjednávky a odhalilo české ceny",
+            "publishedAt": "2026-06-24T22:01:00Z"
+          },
           {
             "title": "GTA 6 ukázalo přes 50 nových obrázků, řeší se exkluzivní obsah dražší edice",
             "publishedAt": "2026-06-24T19:00:00Z"
@@ -1065,10 +1069,6 @@
           {
             "title": "Česká hra Lines We Draw odhalila datum vydání, v listopadu se postaví GTA 6",
             "publishedAt": "2026-06-24T09:00:00Z"
-          },
-          {
-            "title": "Závody Star Wars: Galactic Racer se otevřeně inspirují sérií Burnout",
-            "publishedAt": "2026-06-24T08:00:00Z"
           }
         ]
       }

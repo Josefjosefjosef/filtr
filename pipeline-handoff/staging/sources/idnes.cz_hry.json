@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-06-24T21:27:59.811822Z",
+  "ingestedAt": "2026-06-24T23:02:00.421507Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Je už mezi nimi letošní vítěz? Toto jsou nejlepší hry první poloviny roku",
+      "url": "https://www.idnes.cz/hry/magazin/nejlepsi-hry-prvni-polovina-2026-metacritic-recenze.A260624_134046_bw-magazin_oma/foto",
+      "dt": "2026-06-24T22:00:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "hry",
+        "letošní",
+        "nejlepší",
+        "nimi",
+        "poloviny",
+        "první",
+        "roku",
+        "toto",
+        "vítěz"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -719,32 +745,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Vybíráme největší hity a zklamání z herního svátku Summer Game Fest",
-      "url": "https://www.idnes.cz/hry/magazin/summer-game-fest-2026-nejlepsi-nejhorsi-hra.A260612_122127_bw-magazin_oz",
-      "dt": "2026-06-12T22:00:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "fest",
-        "game",
-        "herního",
-        "hity",
-        "největší",
-        "summer",
-        "svátku",
-        "vybíráme",
-        "zklamání"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -755,7 +755,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 43651,
+      "bytes": 43626,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -792,7 +792,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-24T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-24T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -807,6 +807,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Je už mezi nimi letošní vítěz? Toto jsou nejlepší hry první poloviny roku",
+            "publishedAt": "2026-06-24T22:00:00Z"
+          },
           {
             "title": "RECENZE: Nový Star Fox je poctivá arkádová zábava, jaká už se dnes nevidí",
             "publishedAt": "2026-06-24T12:00:00Z"
@@ -834,10 +838,6 @@
           {
             "title": "Zaklínač ve vaně i Perníkový táta. V remaku Gothicu je spousta vtípků",
             "publishedAt": "2026-06-22T22:00:00Z"
-          },
-          {
-            "title": "Nečekaná virální pecka. Online hra na schovávanou prodává milion kopií denně",
-            "publishedAt": "2026-06-22T09:45:00Z"
           }
         ]
       }
