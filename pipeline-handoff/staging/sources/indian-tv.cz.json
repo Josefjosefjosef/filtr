@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-06-24T07:51:23.149562Z",
+  "ingestedAt": "2026-06-24T09:18:19.956382Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "EA pokračuje v propouštění před akvizicí Saudskou Arábií - INDIAN",
+      "url": "https://indian-tv.cz/clanek/ea-pokracuje-v-propousteni-pred-akvizici-saudskou-arabii-l92le0",
+      "dt": "2026-06-24T09:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "akvizicí",
+        "arábií",
+        "indian",
+        "pokračuje",
+        "propouštění",
+        "saudskou"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1034,34 +1057,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Obal GTA 6 odhaluje víc, než se zdá. Fanoušci rozebrali každý detail - INDIAN",
-      "url": "https://indian-tv.cz/clanek/obal-gta-6-odhaluje-vic-nez-se-zda-glx6n6",
-      "dt": "2026-06-19T10:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "detail",
-        "fanoušci",
-        "gta",
-        "indian",
-        "každý",
-        "než",
-        "obal",
-        "odhaluje",
-        "rozebrali",
-        "víc",
-        "zdá"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1072,7 +1067,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 218528,
+      "bytes": 218367,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1109,7 +1104,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-24T07:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-24T09:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1124,6 +1119,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "EA pokračuje v propouštění před akvizicí Saudskou Arábií - INDIAN",
+            "publishedAt": "2026-06-24T09:00:00Z"
+          },
           {
             "title": "Polský obchod naznačuje přítomnost dvou režimů zobrazení v Grand Theft Auto VI - INDIAN",
             "publishedAt": "2026-06-24T07:30:00Z"
@@ -1151,10 +1150,6 @@
           {
             "title": "Experti z Digital Foundry se podívali na výkon Steam Machine - INDIAN",
             "publishedAt": "2026-06-23T15:17:00Z"
-          },
-          {
-            "title": "Capcom chystá novou prezentaci. Dočkáme se novinek z Onimushy i Dragon's Dogma 2: Dark Arisen - INDIAN",
-            "publishedAt": "2026-06-23T14:46:03Z"
           }
         ]
       }
