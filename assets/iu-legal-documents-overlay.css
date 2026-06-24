@@ -690,6 +690,13 @@
   color: #1F2937;
   word-break: break-word;
 }
+.iu-legal-doc-paper__fieldLabel{
+  font-weight: 700;
+  color: #111827;
+}
+.iu-legal-doc-paper__docTitle{
+  font-weight: 800;
+}
 .iu-legal-doc-paper__signatureGrid{
   display: flex;
   flex-wrap: wrap;
@@ -710,6 +717,15 @@
 .iu-legal-doc-paper__signatureLabel{
   display: block;
   font-size: 12px;
+  font-weight: 700;
+  color: #374151;
+  text-align: center;
+}
+.iu-legal-doc-paper__signatureName{
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 500;
   color: #4B5563;
   text-align: center;
 }

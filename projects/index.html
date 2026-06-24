@@ -518,7 +518,7 @@ font-src 'self' data:;
     <!-- P0 LCP fast path: feed section header (hub) je JS-injected v app.js (renderFeed) — preload scanner ho nevidí; preload jen ≥768px (mobile LCP = silver-hero, feed skrytý pre-gate). -->
     <link rel="preload" as="image" href="/assets/images/section-prehled-dne.webp" type="image/webp" fetchpriority="high" media="(min-width: 768px)" />
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
-    <link rel="stylesheet" href="/assets/app.css?v=mobile-tablet-stability-v1-20260610" />
+    <link rel="stylesheet" href="/assets/app.css?v=mobile-tablet-stability-v2-20260624" />
     <style id="iuDesktopLayoutV3PostAppCss">
       /* Desktop Layout V3 — post app.css (beats assets/app.css 2-column .layout !important). */
       @media (max-width: 900px) {
@@ -1695,7 +1695,7 @@ font-src 'self' data:;
       }
     </style>
     <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1550fincalc-datovka-desktop-layout" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
-    <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v2" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=invoice-desktop-fullpage-v1-20260620" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=20" />
@@ -5384,7 +5384,7 @@ font-src 'self' data:;
     <script defer src="/assets/iu-info-center-lazy-mount.js?v=info-center-lazy-mount-v1-20260611"></script>
     <script defer src="/assets/iu-section-views-lazy-mount.js?v=section-views-lazy-mount-v1-20260611"></script>
     <script defer src="/assets/iu-affiliate-catalog.js?v=affiliate-catalog-v3-20260617"></script>
-    <script type="module" src="/assets/app.js?v=fix-travel-youtube-invoice-20260619"></script>
+    <script type="module" src="/assets/app.js?v=fix-mobile-gate-main-visible-20260624"></script>
     <script>
     (function iuOverlayCssDeferGuard(){
       "use strict";

@@ -9,6 +9,18 @@
     --iu-dhp-homecard-img-ratio: 4 / 3;
     --iu-dhp-weather-col-w: 340px;
     --iu-dhp-hero-col-gap: 6px;
+    --iu-dhp-hero-row-min-h: 160px;
+    --iu-dhp-welcome-text-min-h: 88px;
+    --iu-dhp-silver-slot-min-h: 1100px;
+    --iu-dhp-tall-scroll-min-h: 920px;
+    --iu-dhp-preview-card-min-h: 168px;
+    --iu-dhp-preview-headline-min-h: 65px;
+    --iu-dhp-rail-min-h: 520px;
+    --iu-dhp-rail-banners-min-h: 540px;
+  }
+
+  body.iu-desktop-home-grid[data-section="feed"] {
+    --iu-dhp-center-stage-mt: 1140px;
   }
 
   body.iu-desktop-home-grid #newsList > #iuCenterStage {
@@ -33,7 +45,7 @@
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack #iuSilverWelcomeCard.iuSilverWelcomeCard {
     --iuSilverStackPadY: 10px;
-    min-height: 120px;
+    min-height: var(--iu-dhp-hero-row-min-h);
     padding-top: 10px;
     padding-bottom: 8px;
     align-self: stretch;
@@ -47,14 +59,23 @@
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeTextBlock {
     gap: 5px;
+    min-height: var(--iu-dhp-welcome-text-min-h);
+    contain: layout style;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMeta {
+    min-height: 56px;
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card,
-  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-layout="ready"] {
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-layout="ready"],
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-phase="loading"],
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-phase="firstVisit"],
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-phase="setup"] {
     width: var(--iu-dhp-weather-col-w);
     min-width: var(--iu-dhp-weather-col-w);
     max-width: var(--iu-dhp-weather-col-w);
-    min-height: 120px;
+    min-height: var(--iu-dhp-hero-row-min-h);
     padding-top: 10px;
     padding-bottom: 10px;
     align-self: stretch;
@@ -85,9 +106,11 @@
     padding-top: 0 !important;
   }
 
-  body.iu-desktop-home-grid #iuSilverTallScrollViewport {
+  body.iu-desktop-home-grid[data-section="feed"] #iuSilverTallScrollViewport {
     row-gap: 15px !important;
     column-gap: 15px !important;
+    min-height: var(--iu-dhp-tall-scroll-min-h);
+    contain: layout style;
   }
 
   /* ── Welcome box: 3 rows (greet / date / svátek) ── */
@@ -164,7 +187,7 @@
     min-width: 0;
     margin-inline: auto;
     padding-right: 0 !important;
-    min-height: 0;
+    min-height: calc(var(--iu-dhp-hero-row-min-h) - 20px);
     position: static !important;
   }
 
@@ -328,10 +351,12 @@
 
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewText {
     gap: 6px;
+    min-height: var(--iu-dhp-preview-headline-min-h);
+    contain: layout style;
   }
 
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewHeadline {
-    min-height: 0;
+    min-height: var(--iu-dhp-preview-headline-min-h);
     font-weight: 650;
     color: #0b1f33 !important;
     opacity: 1 !important;
@@ -412,19 +437,44 @@
     border-radius: 12px;
   }
 
-  /* ── Desktop homecards box: shrink to content; section 20px below ── */
-  body.iu-desktop-home-grid .iuSilverTopCardsStack #silver-slot.silver-slot,
-  body.iu-desktop-home-grid #silver-slot.silver-slot {
-    min-height: 0 !important;
+  /* ── Desktop homecards: CLS floor reserves (feed route only; grow above floor when content loads) ── */
+  body.iu-desktop-home-grid[data-section="feed"] #iuSilverTopCardsStack {
+    min-height: var(--iu-dhp-silver-slot-min-h);
+    contain: layout style;
+  }
+
+  body.iu-desktop-home-grid[data-section="feed"] .iuSilverTopCardsStack #silver-slot.silver-slot,
+  body.iu-desktop-home-grid[data-section="feed"] #silver-slot.silver-slot {
+    min-height: var(--iu-dhp-silver-slot-min-h) !important;
     height: auto !important;
+    contain: layout style;
   }
 
-  body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection {
-    min-height: 0 !important;
+  body.iu-desktop-home-grid[data-section="feed"] #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection {
+    min-height: var(--iu-dhp-tall-scroll-min-h) !important;
+    contain: layout style;
   }
 
-  body.iu-desktop-home-grid #iuSilverTallScrollViewport [class$="PreviewCardMount"] {
-    min-height: 0 !important;
+  body.iu-desktop-home-grid[data-section="feed"] #iuSilverTallScrollViewport [class$="PreviewCardMount"] {
+    min-height: var(--iu-dhp-preview-card-min-h) !important;
+    contain: layout style;
+  }
+
+  body.iu-desktop-home-grid[data-section="feed"] .layout > aside.accordionCol {
+    min-height: var(--iu-dhp-rail-min-h) !important;
+    contain: layout style;
+  }
+
+  body.iu-desktop-home-grid[data-section="feed"] #iuDesktopRightRailCards.iu-desktop-right-rail-banners {
+    min-height: var(--iu-dhp-rail-banners-min-h);
+    contain: layout style;
+  }
+
+  body.iu-desktop-home-grid #iuDesktopRightRailCards .iu-desktop-right-rail-banner__img {
+    aspect-ratio: 360 / 120;
+    min-height: 120px;
+    width: 100%;
+    height: auto;
   }
 
   /* Post-homecards stack rows are mobile/tablet-only; keep desktop section gap tight. */
@@ -789,8 +839,8 @@
   .iuMyInfoUzelMindMenuHost .iu-mmHoverSummaryBridge {
     display: none !important;
   }
-  body.iu-myinfouzel-open.iu-desktop-home-grid .layout > aside.accordionCol {
-    min-height: var(--iu-rail-min-h, 520px);
+  body.iu-myinfouzel-open.iu-desktop-home-grid[data-section="feed"] .layout > aside.accordionCol {
+    min-height: var(--iu-dhp-rail-min-h, 520px) !important;
   }
   .iuMyInfoUzelSection--saved .iuMyInfoUzelItem,
   .iuMyInfoUzelSection--followed .iuMyInfoUzelItem,

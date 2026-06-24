@@ -4,6 +4,7 @@
 import {
   createEmptyParty,
   formatClosing,
+  formatLabeledFieldBlock,
   formatPartyHumanReadable,
   joinSections,
 } from "./iu-legal-documents-schema.js";
@@ -49,6 +50,10 @@ function partiesTwo(doc, state, n1) {
     formatPartyHumanReadable(state.partyA, la),
     formatPartyHumanReadable(state.partyB, lb),
   ]);
+}
+
+function lf(label, value, opts) {
+  return formatLabeledFieldBlock(label, value, opts);
 }
 
 function appendixBlock(state) {
@@ -110,17 +115,18 @@ export const IU_LEGAL_DOCUMENTS = [
         partiesTwo(this, state, "1"),
         joinSections([
           "2. Předmět smlouvy",
-          g(state, "predmet") || "……………………………………………………………………",
+          lf("Předmět koupě", g(state, "predmet")),
         ]),
         joinSections([
           "3. Kupní cena",
-          g(state, "cena") || "……………………………………………………………………",
+          lf("Kupní cena", g(state, "cena"), { isPrice: true }),
         ]),
         joinSections([
           "4. Převod vlastnictví a předání",
-          g(state, "vlastnictvi") || "Vlastnictví přechází na kupujícího okamžikem úplné úhrady kupní ceny, není-li dále ujednáno jinak. Předání věci proběhne způsobem mezi stranami dohodnutým.",
+          lf("Převod vlastnictví a předání", g(state, "vlastnictvi")) ||
+            "Vlastnictví přechází na kupujícího okamžikem úplné úhrady kupní ceny, není-li dále ujednáno jinak. Předání věci proběhne způsobem mezi stranami dohodnutým.",
         ]),
-        g(state, "prava") ? joinSections(["5. Další ujednání", g(state, "prava")]) : "",
+        g(state, "prava") ? joinSections(["5. Další ujednání", lf("Práva a povinnosti stran", g(state, "prava"), { optional: true })]) : "",
         appendixBlock(state) ? joinSections(["6. Přílohy a předání", appendixBlock(state)]) : appendixBlock(state),
         joinSections(["Závěrečná ujednání", "Strany prohlásily, že jim nejsou známy žádné skutečnosti, které by uzavření smlouvy bránily. Právní vztahy se řídí právním řádem České republiky."]),
         formatClosing(state),

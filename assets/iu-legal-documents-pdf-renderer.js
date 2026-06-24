@@ -6,7 +6,7 @@ export const IU_LEGAL_DOC_GREEN_DARK = "#087A3A";
 export const IU_LEGAL_DOC_GREEN_LIGHT = "rgba(22,150,78,0.08)";
 export const IU_LEGAL_DOC_TEXT = "#111827";
 export const IU_LEGAL_DOC_TOP_CREATED = "Vytvořeno pomocí infoUzel.cz";
-export const IU_LEGAL_DOC_HEADER_SUBTITLE = "Generátor právních dokumentů";
+export const IU_LEGAL_DOC_HEADER_SUBTITLE = "Generátor dokumentů";
 export const IU_LEGAL_DOC_BRAND_HEADER = IU_LEGAL_DOC_TOP_CREATED;
 
 export const IU_LEGAL_DOC_FOOTER_LINES = [
@@ -247,6 +247,100 @@ function inferPartyLabelsFromSections(sections) {
   return { a: labels[0] || "Strana A", b: labels[1] || "Strana B" };
 }
 
+function extractPersonNameFromBlock(block) {
+  const lines = String(block || "").split("\n");
+  let first = "";
+  let last = "";
+  lines.forEach((line) => {
+    const s = String(line || "").trim();
+    const fn = /^Jméno:\s*(.+)$/i.exec(s);
+    if (fn) first = fn[1].trim();
+    const ln = /^Příjmení:\s*(.+)$/i.exec(s);
+    if (ln) last = ln[1].trim();
+  });
+  return [first, last].filter(Boolean).join(" ");
+}
+
+function splitPartyBlocks(body, labelA, labelB) {
+  const lines = String(body || "").split("\n");
+  const blocks = { a: [], b: [] };
+  let current = "";
+  lines.forEach((line) => {
+    const s = String(line || "").trim();
+    if (s === labelA) {
+      current = "a";
+      return;
+    }
+    if (s === labelB) {
+      current = "b";
+      return;
+    }
+    if (current === "a") blocks.a.push(line);
+    if (current === "b") blocks.b.push(line);
+  });
+  return {
+    a: blocks.a.join("\n"),
+    b: blocks.b.join("\n"),
+  };
+}
+
+function inferPartySignatureMeta(sections) {
+  const labels = inferPartyLabelsFromSections(sections);
+  const meta = { a: labels.a, b: labels.b, nameA: "", nameB: "" };
+  for (let i = 0; i < sections.length; i++) {
+    const sec = sections[i];
+    if (!sec || !sec.heading) continue;
+    if (!/identifikace/i.test(sec.heading) && sec.num !== "1") continue;
+    const blocks = splitPartyBlocks(sec.body, labels.a, labels.b);
+    meta.nameA = extractPersonNameFromBlock(blocks.a);
+    meta.nameB = extractPersonNameFromBlock(blocks.b);
+    break;
+  }
+  return meta;
+}
+
+function isPartyHeadingLine(line, partyMeta) {
+  const s = String(line || "").trim();
+  if (!s || s.indexOf(":") >= 0) return false;
+  if (partyMeta && (s === partyMeta.a || s === partyMeta.b)) return true;
+  return false;
+}
+
+function isFieldLabelLine(line) {
+  const s = String(line || "").trim();
+  if (!s || s.indexOf(":") >= 0) return false;
+  if (/^\d+\.\s+/.test(s)) return false;
+  if (isPlaceholderOnlyLine(s)) return false;
+  if (/^_{5,}/.test(s)) return false;
+  if (/^(podpisy|místo a datum|závěrečná)/i.test(s)) return false;
+  return s.length <= 80;
+}
+
+function formatBodyHtml(text, partyMeta) {
+  return String(text || "")
+    .split("\n")
+    .map((line) => {
+      const s = String(line || "");
+      const trimmed = s.trim();
+      const colonIdx = trimmed.indexOf(":");
+      if (colonIdx > 0 && colonIdx < 48) {
+        const label = trimmed.slice(0, colonIdx + 1);
+        const value = trimmed.slice(colonIdx + 1).trimStart();
+        return (
+          '<span class="iu-legal-doc-paper__fieldLabel">' +
+          escHtml(label) +
+          "</span>" +
+          (value ? " " + escHtml(value) : "")
+        );
+      }
+      if (isPartyHeadingLine(trimmed, partyMeta) || isFieldLabelLine(trimmed)) {
+        return '<span class="iu-legal-doc-paper__fieldLabel">' + escHtml(trimmed) + "</span>";
+      }
+      return escHtml(s);
+    })
+    .join("<br>");
+}
+
 function buildSectionBarHtml(num, heading) {
   const numLabel = num ? String(num) + "." : "";
   const title = String(heading || "").trim().toUpperCase();
@@ -262,12 +356,12 @@ function buildSectionBarHtml(num, heading) {
   );
 }
 
-function buildSignatureVisualHtml(body, partyLabels) {
+function buildSignatureVisualHtml(body, partyMeta) {
   const lines = String(body || "").split("\n");
   const sigLine = lines.find((line) => SIGNATURE_LINE_RE.test(String(line || "").trim()));
-  const labels = partyLabels || { a: "Strana A", b: "Strana B" };
+  const labels = partyMeta || { a: "Strana A", b: "Strana B", nameA: "", nameB: "" };
   if (!sigLine) {
-    return '<div class="iu-legal-doc-paper__sectionBody">' + escHtml(body).replace(/\n/g, "<br>") + "</div>";
+    return '<div class="iu-legal-doc-paper__sectionBody">' + formatBodyHtml(body, labels) + "</div>";
   }
   return (
     '<div class="iu-legal-doc-paper__signatureGrid" data-iu-legal-doc-visual-only="1">' +
@@ -276,12 +370,18 @@ function buildSignatureVisualHtml(body, partyLabels) {
     '<span class="iu-legal-doc-paper__signatureLabel">' +
     escHtml(labels.a) +
     "</span>" +
+    (labels.nameA
+      ? '<span class="iu-legal-doc-paper__signatureName">' + escHtml(labels.nameA) + "</span>"
+      : "") +
     "</div>" +
     '<div class="iu-legal-doc-paper__signatureCol">' +
     '<span class="iu-legal-doc-paper__signatureLine" aria-hidden="true"></span>' +
     '<span class="iu-legal-doc-paper__signatureLabel">' +
     escHtml(labels.b) +
     "</span>" +
+    (labels.nameB
+      ? '<span class="iu-legal-doc-paper__signatureName">' + escHtml(labels.nameB) + "</span>"
+      : "") +
     "</div>" +
     "</div>" +
     '<pre class="iu-legal-doc-paper__signatureSource" aria-hidden="true">' +
@@ -290,18 +390,18 @@ function buildSignatureVisualHtml(body, partyLabels) {
   );
 }
 
-function buildSectionHtml(section, partyLabels) {
+function buildSectionHtml(section, partyMeta) {
   if (section.isFreeBlock) {
-    return '<div class="iu-legal-doc-paper__sectionBody">' + escHtml(section.body).replace(/\n/g, "<br>") + "</div>";
+    return '<div class="iu-legal-doc-paper__sectionBody">' + formatBodyHtml(section.body, partyMeta) + "</div>";
   }
   let html = "";
   if (section.heading) {
     html += buildSectionBarHtml(section.num, section.heading);
   }
   if (section.isSignatures) {
-    html += buildSignatureVisualHtml(section.body, partyLabels);
+    html += buildSignatureVisualHtml(section.body, partyMeta);
   } else if (section.body) {
-    html += '<div class="iu-legal-doc-paper__sectionBody">' + escHtml(section.body).replace(/\n/g, "<br>") + "</div>";
+    html += '<div class="iu-legal-doc-paper__sectionBody">' + formatBodyHtml(section.body, partyMeta) + "</div>";
   }
   return '<section class="iu-legal-doc-paper__section">' + html + "</section>";
 }
@@ -437,8 +537,8 @@ export function validateLegalDocumentPdfPageLayout(chunk, isLast, pageH, topY, l
 /** @param {string} _documentTitle @param {string} plainText */
 export function buildLegalDocumentPreviewHtml(_documentTitle, plainText) {
   const structure = parseLegalDocumentVisualStructure(plainText);
-  const partyLabels = inferPartyLabelsFromSections(structure.sections);
-  const sectionsHtml = structure.sections.map((sec) => buildSectionHtml(sec, partyLabels)).join("");
+  const partyMeta = inferPartySignatureMeta(structure.sections);
+  const sectionsHtml = structure.sections.map((sec) => buildSectionHtml(sec, partyMeta)).join("");
   const titleHtml = structure.title
     ? '<h1 class="iu-legal-doc-paper__docTitle">' + escHtml(structure.title) + "</h1>"
     : "";
@@ -575,20 +675,22 @@ function drawSectionBarInPdf(doc, marginX, pageW, y, num, heading) {
   const dark = hexToRgb(IU_LEGAL_DOC_GREEN_DARK);
   const barH = 6.5;
   const boxW = 7;
+  const barTop = y - 4.2;
+  const textY = barTop + barH / 2 + 1.1;
   doc.setFillColor(rgb[0], rgb[1], rgb[2]);
-  doc.rect(marginX, y - 4.2, boxW, barH, "F");
+  doc.rect(marginX, barTop, boxW, barH, "F");
   doc.setFontSize(7.5);
   doc.setFont(doc.getFont().fontName, "bold");
   doc.setTextColor(255, 255, 255);
   const numLabel = num ? String(num) + "." : "•";
-  doc.text(numLabel, marginX + boxW / 2, y + 0.2, { align: "center" });
+  doc.text(numLabel, marginX + boxW / 2, textY, { align: "center" });
   doc.setFillColor(232, 245, 237);
-  doc.rect(marginX + boxW, y - 4.2, pageW - marginX * 2 - boxW, barH, "F");
+  doc.rect(marginX + boxW, barTop, pageW - marginX * 2 - boxW, barH, "F");
   doc.setFontSize(7.5);
   doc.setFont(doc.getFont().fontName, "bold");
   doc.setTextColor(dark[0], dark[1], dark[2]);
-  doc.text(String(heading || "").trim().toUpperCase(), marginX + boxW + 2.5, y + 0.2);
-  return y + barH - 1.5;
+  doc.text(String(heading || "").trim().toUpperCase(), marginX + boxW + 2.5, textY);
+  return barTop + barH + 1.5;
 }
 
 function drawCenteredTitleInPdf(doc, pageW, marginX, y, title, subtitle) {
@@ -628,7 +730,7 @@ function itemHeightForPdf(item) {
             ? "titleBlock"
             : "text");
   if (kind === "sectionBar") return 8;
-  if (kind === "signature") return 16;
+  if (kind === "signature") return 20;
   if (kind === "gap") return 2;
   if (kind === "titleBlock") {
     return 12 + (item.subtitle ? 8 : 0);
@@ -652,7 +754,7 @@ function buildPdfRenderQueue(structure, doc, maxW) {
       queue.push({ type: "sectionBar", num: section.num, heading: section.heading, heightMm: 8.5 });
     }
     if (section.isSignatures) {
-      queue.push({ type: "signatureBlock", body: section.body, heightMm: 16 });
+      queue.push({ type: "signatureBlock", body: section.body, heightMm: 20 });
       return;
     }
     const lines = plainTextToLayoutLines(doc, section.body, maxW);
@@ -696,7 +798,36 @@ function paginatePdfQueue(queue, topY, bottomY, titleBlock) {
   return pages;
 }
 
-function renderPdfQueuePage(doc, pageW, marginX, topY, bottomY, queue, partyLabels) {
+function drawBodyLineInPdf(doc, marginX, y, line, partyMeta) {
+  const text = String(line || "");
+  const trimmed = text.trim();
+  if (!trimmed) return y + 2.4;
+  const fontName = doc.getFont().fontName;
+  doc.setFontSize(10);
+  doc.setTextColor(17, 24, 39);
+  const colonIdx = trimmed.indexOf(":");
+  if (colonIdx > 0 && colonIdx < 48) {
+    const label = trimmed.slice(0, colonIdx + 1);
+    const value = trimmed.slice(colonIdx + 1).trimStart();
+    doc.setFont(fontName, "bold");
+    doc.text(label, marginX, y);
+    const labelW = doc.getTextWidth(label + " ");
+    doc.setFont(fontName, "normal");
+    if (value) doc.text(value, marginX + labelW, y);
+    return y + 4.8;
+  }
+  if (isPartyHeadingLine(trimmed, partyMeta) || isFieldLabelLine(trimmed)) {
+    doc.setFont(fontName, "bold");
+    doc.text(trimmed, marginX, y);
+    doc.setFont(fontName, "normal");
+    return y + 4.8;
+  }
+  doc.setFont(fontName, "normal");
+  doc.text(text, marginX, y);
+  return y + 4.8;
+}
+
+function renderPdfQueuePage(doc, pageW, marginX, topY, bottomY, queue, partyMeta) {
   let y = topY;
   queue.forEach((item) => {
     if (item.type === "titleBlock") {
@@ -708,18 +839,24 @@ function renderPdfQueuePage(doc, pageW, marginX, topY, bottomY, queue, partyLabe
       return;
     }
     if (item.type === "signatureBlock") {
-      if (y + 16 > bottomY) return;
-      const labels = partyLabels || { a: "Strana A", b: "Strana B" };
+      if (y + 20 > bottomY) return;
+      const labels = partyMeta || { a: "Strana A", b: "Strana B", nameA: "", nameB: "" };
       const colW = (pageW - marginX * 2 - 8) / 2;
       doc.setDrawColor(17, 24, 39);
       doc.setLineWidth(0.25);
       doc.line(marginX, y + 8, marginX + colW, y + 8);
       doc.line(marginX + colW + 8, y + 8, pageW - marginX, y + 8);
       doc.setFontSize(8);
-      doc.setTextColor(75, 85, 99);
+      doc.setFont(doc.getFont().fontName, "bold");
+      doc.setTextColor(55, 65, 81);
       doc.text(String(labels.a), marginX + colW / 2, y + 12, { align: "center" });
       doc.text(String(labels.b), marginX + colW + 8 + colW / 2, y + 12, { align: "center" });
-      y += 16;
+      doc.setFont(doc.getFont().fontName, "normal");
+      doc.setFontSize(7.5);
+      doc.setTextColor(75, 85, 99);
+      if (labels.nameA) doc.text(String(labels.nameA), marginX + colW / 2, y + 16.5, { align: "center" });
+      if (labels.nameB) doc.text(String(labels.nameB), marginX + colW + 8 + colW / 2, y + 16.5, { align: "center" });
+      y += 20;
       return;
     }
     if (item.type === "gap") {
@@ -727,11 +864,7 @@ function renderPdfQueuePage(doc, pageW, marginX, topY, bottomY, queue, partyLabe
       return;
     }
     if (y + 4.8 > bottomY) return;
-    doc.setFontSize(10);
-    doc.setFont(doc.getFont().fontName, "normal");
-    doc.setTextColor(17, 24, 39);
-    doc.text(String(item.text || ""), marginX, y);
-    y += item.heightMm || 4.8;
+    y = drawBodyLineInPdf(doc, marginX, y, item.text, partyMeta);
   });
   return y;
 }
@@ -741,7 +874,7 @@ export async function exportLegalDocumentPdfBlob(documentTitle, plainText) {
   const sourceText = String(plainText || "");
   const visualText = filterEmptySectionsForVisualOutput(sourceText);
   const structure = parseLegalDocumentVisualStructure(sourceText);
-  const partyLabels = inferPartyLabelsFromSections(structure.sections);
+  const partyMeta = inferPartySignatureMeta(structure.sections);
   const jsPDF = await loadJsPDF();
   const b64 = await loadFontBase64();
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
@@ -763,7 +896,7 @@ export async function exportLegalDocumentPdfBlob(documentTitle, plainText) {
   pages.forEach((chunk, idx) => {
     if (idx > 0) doc.addPage();
     drawPageHeader(doc, pageW, idx + 1, pages.length, marginX);
-    renderPdfQueuePage(doc, pageW, marginX, topY, contentBottom, chunk, partyLabels);
+    renderPdfQueuePage(doc, pageW, marginX, topY, contentBottom, chunk, partyMeta);
     drawDocumentFooterBlock(doc, pageW, pageH, marginX);
   });
 

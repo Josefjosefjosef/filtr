@@ -4272,7 +4272,7 @@ select.iuCtrl{
 #feed > article.news-card .news-title,
 #feed > article.news-card .news-titleLink{
   font-weight: var(--iuArticleTitleWeight);
-  font-size: 22px;
+  font-size: clamp(20px, calc(20px + (100vw - 900px) * 2), 22px);
   line-height: 1.3;
   margin-top: 0;
 }
@@ -4281,7 +4281,7 @@ body[data-iu-fc="1"] #feed > article.news-card .news-title,
 body[data-iu-fc="1"] #feed > article.news-card .news-titleLink,
 body[data-iu-fc="1"] #feed > article.news-card .news-titleLink:visited{
   color: #0B2A4A;
-  font-size: 22px;
+  font-size: clamp(20px, calc(20px + (100vw - 900px) * 2), 22px);
   line-height: 1.3;
 }
 
@@ -6852,7 +6852,7 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid,
     font-size: 18px;
     line-height: 1.28;
   }
-  
+
   #feed{
     max-width: 100%;
     padding-right: 0;
@@ -8965,8 +8965,11 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   body.iu-mobileMainVisible #leftContent{
     display: block !important;
   }
-  body.iu-mobileMainVisible #iuMobileGateWrap{
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuMobileGateWrap{
     display: none !important;
+  }
+  body.iu-mobileMainVisible.iu-mobileGateOverlayOpen #iuMobileGateWrap.iu-mobileGateWrap{
+    display: flex !important;
   }
   
   @media (min-width: 768px) and (max-width: 900px) and (orientation: portrait) {
@@ -16667,12 +16670,14 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewText{
     grid-template-rows: auto !important;
     gap: 0 !important;
+    min-height: 65px;
+    contain: layout style;
   }
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewHeadline2{
     display: none !important;
   }
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewHeadline{
-    min-height: 0;
+    min-height: 65px;
     -webkit-line-clamp: 4;
     line-clamp: 4;
   }
@@ -17888,9 +17893,9 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
     grid-column:2;grid-row:1;justify-self:center;align-self:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;
     font-size:1.05rem;font-weight:700;color:#1f3a5f;line-height:1.2;white-space:nowrap;pointer-events:none;
   }
-  .iuSilverChatOverlay--quickTemplateCalendar .iuSilverChatHeader::after{content:"KalendĂˇĹ™"}
-  .iuSilverChatOverlay--quickTemplateTask .iuSilverChatHeader::after{content:"Ăškoly"}
-  .iuSilverChatOverlay--quickTemplateNote .iuSilverChatHeader::after{content:"PoznĂˇmky"}
+  .iuSilverChatOverlay--quickTemplateCalendar .iuSilverChatHeader::after{content:"Kalendář"}
+  .iuSilverChatOverlay--quickTemplateTask .iuSilverChatHeader::after{content:"Úkoly"}
+  .iuSilverChatOverlay--quickTemplateNote .iuSilverChatHeader::after{content:"Poznámky"}
   /* Quick-template forms: label column sized to content (not 120px cap); shared input left edge per form. */
   .iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftGrid--edit{
     grid-template-columns:max-content minmax(0,1fr);

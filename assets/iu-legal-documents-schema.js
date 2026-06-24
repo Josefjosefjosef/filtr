@@ -54,7 +54,7 @@ export function formatPartyHumanReadable(party, heading) {
   const out = [h];
   const t = party.type;
   if (t === "fo") {
-    out.push("Typ: fyzická osoba");
+    out.push("Typ subjektu: fyzická osoba");
     const l1 = line("Jméno", party.firstName);
     const l2 = line("Příjmení", party.lastName);
     const l3 = line("Datum narození", party.birthDate);
@@ -99,6 +99,27 @@ export function formatPartyHumanReadable(party, heading) {
     out.push("(neznámý typ subjektu)");
   }
   return out.join("\n");
+}
+
+const LEGAL_PLACEHOLDER = "……………………………………………………………………";
+
+export function formatPriceValue(value) {
+  const v = String(value || "").trim();
+  if (!v) return "";
+  if (/\bkč\b/i.test(v)) return v;
+  return `${v} Kč`;
+}
+
+/** @param {string} label @param {string} value @param {{ optional?: boolean, isPrice?: boolean }} [opts] */
+export function formatLabeledFieldBlock(label, value, opts) {
+  const options = opts || {};
+  const v = String(value || "").trim();
+  if (!v) {
+    if (options.optional) return "";
+    return `${label}\n\n${LEGAL_PLACEHOLDER}`;
+  }
+  const display = options.isPrice ? formatPriceValue(v) : v;
+  return `${label}\n\n${display}`;
 }
 
 export function formatClosing(state) {
