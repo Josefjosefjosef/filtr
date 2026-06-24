@@ -7357,7 +7357,9 @@ try {
 
   function iuArticleActionsEnsureOverlay() {
     try {
-      if (document.getElementById("iuMyInfoUzelOverlay")) return;
+      const existing = document.getElementById("iuMyInfoUzelOverlay");
+      if (existing && document.getElementById("iuMyInfoUzelToolsHost")) return;
+      if (existing) existing.remove();
       const overlay = document.createElement("div");
       overlay.id = "iuMyInfoUzelOverlay";
       overlay.className = "iuMyInfoUzelOverlay";
@@ -7369,12 +7371,21 @@ try {
         <div class="iuMyInfoUzelOverlay__backdrop" data-iu-myinfouzel-close tabindex="-1"></div>
         <div class="iuMyInfoUzelOverlay__sheet">
           <header class="iuMyInfoUzelOverlay__head">
-            <h2 id="iuMyInfoUzelOverlayTitle" class="iuMyInfoUzelOverlay__title">Můj infoUzel.cz / MindMenu</h2>
+            <div class="iuMyInfoUzelOverlay__headMain">
+              <h2 id="iuMyInfoUzelOverlayTitle" class="iuMyInfoUzelOverlay__title">Můj infoUzel.cz / MindMenu</h2>
+              <div class="iuMyInfoUzelOverlay__headerTools" id="iuMyInfoUzelHeaderTools" role="group" aria-label="Kalendář, Poznámky a Úkoly"></div>
+            </div>
             <button type="button" class="iuMyInfoUzelOverlay__close" data-iu-myinfouzel-close aria-label="Zavřít">×</button>
           </header>
           <div class="iuMyInfoUzelOverlay__scroll">
             <div class="iuMyInfoUzelDashboard">
-              <div class="iuMyInfoUzelDashboard__left">
+              <div class="iuMyInfoUzelDashboard__col iuMyInfoUzelDashboard__col--emails">
+                <div id="iuMyInfoUzelMindMenuHost" class="iuMyInfoUzelMindMenuHost"></div>
+              </div>
+              <div class="iuMyInfoUzelDashboard__col iuMyInfoUzelDashboard__col--tools">
+                <div id="iuMyInfoUzelToolsHost" class="iuMyInfoUzelToolsHost"></div>
+              </div>
+              <div class="iuMyInfoUzelDashboard__col iuMyInfoUzelDashboard__col--saved">
                 <section class="iuMyInfoUzelSection iuMyInfoUzelSection--saved">
                   <h3 class="iuMyInfoUzelSectionTitle">Uložené články</h3>
                   <div data-iu-manage-panel="saved"></div>
@@ -7387,9 +7398,6 @@ try {
                   <h3 class="iuMyInfoUzelSectionTitle">Skryté články</h3>
                   <div data-iu-manage-panel="hidden"></div>
                 </section>
-              </div>
-              <div class="iuMyInfoUzelDashboard__right">
-                <div id="iuMyInfoUzelMindMenuHost" class="iuMyInfoUzelMindMenuHost"></div>
               </div>
             </div>
           </div>
@@ -7430,6 +7438,43 @@ try {
     } catch (_) {}
   }
 
+  function iuArticleActionsSplitMindMenuForOverlay() {
+    try {
+      const mindMenu = document.getElementById("iuMindMenuView") || document.querySelector(".mindMenu");
+      const headerTools = document.getElementById("iuMyInfoUzelHeaderTools");
+      const toolsHost = document.getElementById("iuMyInfoUzelToolsHost");
+      if (!mindMenu || !headerTools || !toolsHost) return;
+      const topTools = mindMenu.querySelector(":scope > .iu-mmTopTools");
+      const quickLinks = mindMenu.querySelector(":scope > section.iu-mmQuickLinks");
+      if (topTools && topTools.parentNode !== headerTools) headerTools.appendChild(topTools);
+      if (quickLinks && quickLinks.parentNode !== toolsHost) toolsHost.appendChild(quickLinks);
+    } catch (_) {}
+  }
+
+  function iuArticleActionsUnsplitMindMenuFromOverlay() {
+    try {
+      const mindMenu = document.getElementById("iuMindMenuView") || document.querySelector(".mindMenu");
+      if (!mindMenu) return;
+      const headerTools = document.getElementById("iuMyInfoUzelHeaderTools");
+      const toolsHost = document.getElementById("iuMyInfoUzelToolsHost");
+      const mailboxes = mindMenu.querySelector(":scope > section.iu-mailboxes");
+      const topTools =
+        headerTools?.querySelector(":scope > .iu-mmTopTools") || mindMenu.querySelector(":scope > .iu-mmTopTools");
+      const quickLinks =
+        toolsHost?.querySelector(":scope > section.iu-mmQuickLinks") ||
+        mindMenu.querySelector(":scope > section.iu-mmQuickLinks");
+      if (topTools && topTools.parentNode !== mindMenu) {
+        mindMenu.insertBefore(topTools, mailboxes ? mailboxes.nextSibling : mindMenu.firstChild);
+      }
+      if (quickLinks && quickLinks.parentNode !== mindMenu) {
+        const topToolsInMenu = mindMenu.querySelector(":scope > .iu-mmTopTools");
+        if (topToolsInMenu) mindMenu.insertBefore(quickLinks, topToolsInMenu.nextSibling);
+        else if (mailboxes) mindMenu.insertBefore(quickLinks, mailboxes.nextSibling);
+        else mindMenu.appendChild(quickLinks);
+      }
+    } catch (_) {}
+  }
+
   function iuArticleActionsMountMindMenuInOverlay() {
     try {
       const host = document.getElementById("iuMyInfoUzelMindMenuHost");
@@ -7447,11 +7492,13 @@ try {
         host.appendChild(mindMenu);
         mindMenu.style.display = "block";
       }
+      iuArticleActionsSplitMindMenuForOverlay();
     } catch (_) {}
   }
 
   function iuArticleActionsRestoreMindMenuFromOverlay() {
     try {
+      iuArticleActionsUnsplitMindMenuFromOverlay();
       const host = document.getElementById("iuMyInfoUzelMindMenuHost");
       const accordion = document.querySelector(".layout > aside.accordionCol");
       if (!host || !accordion) return;
@@ -7466,6 +7513,10 @@ try {
         mindMenu.style.removeProperty("display");
       }
       host.innerHTML = "";
+      const toolsHost = document.getElementById("iuMyInfoUzelToolsHost");
+      if (toolsHost) toolsHost.innerHTML = "";
+      const headerTools = document.getElementById("iuMyInfoUzelHeaderTools");
+      if (headerTools) headerTools.innerHTML = "";
     } catch (_) {}
   }
 

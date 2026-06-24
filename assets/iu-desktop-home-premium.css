@@ -684,21 +684,104 @@
     box-sizing: border-box !important;
     contain: layout style !important;
   }
+  .iuMyInfoUzelOverlay__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  }
+  .iuMyInfoUzelOverlay__headMain {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .iuMyInfoUzelOverlay__title {
+    margin: 0;
+    flex: 0 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .iuMyInfoUzelOverlay__headerTools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+  .iuMyInfoUzelOverlay__headerTools .iu-mmTopTools {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+  }
+  .iuMyInfoUzelOverlay__headerTools .iu-mmTopToolHoverHost {
+    flex: 0 0 auto;
+    width: 50px;
+    height: 50px;
+  }
+  .iuMyInfoUzelOverlay__headerTools .iu-mmTopTool.iu-mmTopTool--imageTile,
+  .iuMyInfoUzelOverlay__headerTools .iu-mmTopTool.iuMindMenuButton,
+  .iuMyInfoUzelOverlay__headerTools .iu-mmTopTool.iuMindMenuTasksBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    min-height: 50px;
+    max-height: 50px;
+    padding: 4px;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.88);
+    box-sizing: border-box;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(11, 42, 74, 0.06);
+  }
+  .iuMyInfoUzelOverlay__headerTools .iu-mmTopTool--imageTile .iu-mmTopToolImageTileWrap {
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    max-height: 40px;
+  }
+  .iuMyInfoUzelOverlay__headerTools .iu-mmTopTool--imageTile .iu-mmTopToolImageTile {
+    max-width: 40px;
+    max-height: 40px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+  .iuMyInfoUzelOverlay__headerTools .iu-mmTopTool.iu-mmTopTool--imageTile::after {
+    display: none !important;
+    content: none !important;
+  }
   .iuMyInfoUzelOverlay__scroll {
     padding: 20px 24px 32px;
+    overflow-x: hidden;
   }
   .iuMyInfoUzelDashboard {
     display: grid;
-    grid-template-columns: minmax(320px, 42fr) minmax(420px, 58fr);
-    gap: 28px;
+    grid-template-columns: minmax(220px, 28fr) minmax(300px, 40fr) minmax(240px, 32fr);
+    gap: 24px;
     align-items: start;
+    min-width: 0;
   }
-  .iuMyInfoUzelDashboard__left {
+  .iuMyInfoUzelDashboard__col {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .iuMyInfoUzelDashboard__col--saved {
     display: flex;
     flex-direction: column;
     gap: 16px;
   }
-  .iuMyInfoUzelDashboard__left .iuMyInfoUzelSection {
+  .iuMyInfoUzelDashboard__col--saved .iuMyInfoUzelSection {
     margin-bottom: 0;
   }
   .iuMyInfoUzelMindMenuHost .mindMenu,
@@ -708,7 +791,9 @@
     gap: 12px;
     min-width: 0;
   }
-  .iuMyInfoUzelMindMenuHost #iuMmArticleActionsSections {
+  .iuMyInfoUzelMindMenuHost #iuMmArticleActionsSections,
+  .iuMyInfoUzelMindMenuHost .iu-mmTopTools,
+  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks {
     display: none !important;
   }
   .iuMyInfoUzelMindMenuHost .iu-mailboxes {
@@ -718,9 +803,15 @@
     background: transparent;
   }
   .iuMyInfoUzelMindMenuHost .iu-mailboxes .iu-mmSectionTitle {
-    font-size: 16px;
+    font-size: 0;
     font-weight: 800;
     color: #0B2A4A;
+  }
+  .iuMyInfoUzelMindMenuHost .iu-mailboxes .iu-mmSectionTitle::before {
+    content: "E-MAILY";
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
   }
   .iuMyInfoUzelMindMenuHost .iu-mailbox-list {
     display: flex;
@@ -728,92 +819,50 @@
     gap: 8px;
     margin-top: 8px;
   }
-  .iuMyInfoUzelMindMenuHost .iu-mmTopTools {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-    margin-top: 8px;
+  .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row,
+  .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row {
+    grid-template-columns: minmax(0, 50%) 36px 40px !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
-  .iuMyInfoUzelMindMenuHost .iu-mmTopToolHoverHost {
-    min-width: 0;
-    height: 100%;
+  .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill,
+  .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill {
+    max-width: 100% !important;
+    width: 100% !important;
   }
-  .iuMyInfoUzelMindMenuHost .iu-mmTopTool.iu-mmTopTool--imageTile,
-  .iuMyInfoUzelMindMenuHost .iu-mmTopTool.iuMindMenuButton,
-  .iuMyInfoUzelMindMenuHost .iu-mmTopTool.iuMindMenuTasksBtn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 84px;
-    height: 84px;
-    max-height: 84px;
-    padding: 10px 8px;
-    border: 1px solid rgba(15, 23, 42, 0.1);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.82);
-    box-sizing: border-box;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(11, 42, 74, 0.06);
-  }
-  .iuMyInfoUzelMindMenuHost .iu-mmTopTool--imageTile .iu-mmTopToolImageTileWrap {
-    flex: 0 0 auto;
-    width: 38px;
-    height: 38px;
-    min-height: 38px;
-    max-height: 38px;
-  }
-  .iuMyInfoUzelMindMenuHost .iu-mmTopTool--imageTile .iu-mmTopToolImageTile {
-    max-width: 38px;
-    max-height: 38px;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-  }
-  .iuMyInfoUzelMindMenuHost .iu-mmTopTool.iu-mmTopTool--imageTile::after {
-    content: attr(aria-label);
-    display: block;
-    margin-top: 6px;
-    font-size: 12px;
-    font-weight: 700;
-    color: #0B2A4A;
-    line-height: 1.15;
-    text-align: center;
-    pointer-events: none;
-  }
-  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks {
-    margin-top: 12px;
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks {
+    margin: 0;
     padding: 0;
     border: 0;
     background: transparent;
   }
-  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmSectionTitle {
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmSectionTitle {
     font-size: 15px;
     font-weight: 700;
     color: #0B2A4A;
   }
-  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid {
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px 12px;
     margin-top: 10px !important;
   }
-  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid,
-  .iuMyInfoUzelOverlay .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid {
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid,
+  .iuMyInfoUzelOverlay .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid {
     min-height: 212px !important;
     contain-intrinsic-size: auto 212px;
     content-visibility: auto;
   }
-  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile,
-  .iuMyInfoUzelOverlay .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile {
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile,
+  .iuMyInfoUzelOverlay .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile {
     min-height: 96px !important;
     height: 96px !important;
     max-height: 96px !important;
     box-sizing: border-box !important;
   }
-  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink,
-  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile .iuTileLink,
-  .iuMyInfoUzelOverlay .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink {
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink,
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile .iuTileLink,
+  .iuMyInfoUzelOverlay .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink {
     min-height: 96px !important;
     height: 96px !important;
     max-height: 96px !important;
@@ -827,7 +876,7 @@
     box-shadow: 0 2px 8px rgba(11, 42, 74, 0.06);
     transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
   }
-  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink:hover {
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink:hover {
     transform: translateY(-1px);
     border-color: rgba(0, 60, 255, 0.18);
     box-shadow: 0 6px 16px rgba(11, 42, 74, 0.1);
@@ -836,7 +885,9 @@
     margin-top: 6px;
   }
   .iuMyInfoUzelMindMenuHost .iu-mmHoverSummaryPanelShell,
-  .iuMyInfoUzelMindMenuHost .iu-mmHoverSummaryBridge {
+  .iuMyInfoUzelMindMenuHost .iu-mmHoverSummaryBridge,
+  .iuMyInfoUzelOverlay__headerTools .iu-mmHoverSummaryPanelShell,
+  .iuMyInfoUzelOverlay__headerTools .iu-mmHoverSummaryBridge {
     display: none !important;
   }
   body.iu-myinfouzel-open.iu-desktop-home-grid[data-section="feed"] .layout > aside.accordionCol {
