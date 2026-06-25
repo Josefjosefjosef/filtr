@@ -10627,6 +10627,7 @@ function buildVideoAsArticleCard(it) {
       const homecards = document.getElementById("iuSilverTallScrollSection");
       const stack = document.getElementById("iuSilverTopCardsStack");
       if (!homecards || !stack) return;
+      if (body.getAttribute("data-iu-gap-synced") === "1") return;
       const stackTop = stack.getBoundingClientRect().top;
       const hcBottom = homecards.getBoundingClientRect().bottom;
       const stackMt = parseFloat(getComputedStyle(stack).marginTop) || 0;
