@@ -130,6 +130,18 @@
   
   --vipGold: #C9A227;
 
+  --iu-brand-blue: #003CFF;
+  --iu-brand-blue-dark: #0B2A4A;
+  --iu-brand-blue-a06: rgba(0, 60, 255, 0.06);
+  --iu-brand-blue-a07: rgba(0, 60, 255, 0.07);
+  --iu-brand-blue-a08: rgba(0, 60, 255, 0.08);
+  --iu-brand-blue-a10: rgba(0, 60, 255, 0.1);
+  --iu-brand-blue-a12: rgba(0, 60, 255, 0.12);
+  --iu-brand-blue-a16: rgba(0, 60, 255, 0.16);
+  --iu-brand-blue-a18: rgba(0, 60, 255, 0.18);
+  --iu-brand-blue-a20: rgba(0, 60, 255, 0.2);
+  --iu-brand-blue-a35: rgba(0, 60, 255, 0.35);
+
   
   --iu-bg-lock: var(--iu-page-bg);
   --iu-frame-bg: #1b2430;
@@ -16621,11 +16633,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
 
   
-  body.iu-desktop-home-grid #iuSilverTallScrollViewport{
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 15px;
-    row-gap: 15px;
+    row-gap: var(--iu-dhp-homecard-gap, 15px);
+    column-gap: var(--iu-dhp-homecard-gap, 15px);
     align-items: start;
     align-content: start;
     
@@ -22460,9 +22472,8 @@ body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"] .iu-leftNavLab
 
 /* === Timeline Feed V1.1: article actions, My InfoUzel overlay, brand blue === */
 :root{
-  --iu-brand-blue:#003CFF;
   --iu-action-save:#F59E0B;
-  --iu-action-follow:#003CFF;
+  --iu-action-follow:var(--iu-brand-blue);
   --iu-action-hide:#DC2626;
   --iu-youtube-video-icon:#7C3AED;
 }

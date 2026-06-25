@@ -1,9 +1,11 @@
 /**
  * infoUzel.cz — vizuální náhled a PDF export právních dokumentů (browser-only, text beze změny).
  */
-export const IU_LEGAL_DOC_GREEN = "#16964E";
-export const IU_LEGAL_DOC_GREEN_DARK = "#087A3A";
-export const IU_LEGAL_DOC_GREEN_LIGHT = "rgba(22,150,78,0.08)";
+import { IU_BRAND_BLUE, IU_BRAND_BLUE_DARK, IU_BRAND_BLUE_LIGHT } from "./iu-brand-colors.js";
+
+export const IU_LEGAL_DOC_GREEN = IU_BRAND_BLUE;
+export const IU_LEGAL_DOC_GREEN_DARK = IU_BRAND_BLUE_DARK;
+export const IU_LEGAL_DOC_GREEN_LIGHT = IU_BRAND_BLUE_LIGHT;
 export const IU_LEGAL_DOC_TEXT = "#111827";
 export const IU_LEGAL_DOC_TOP_CREATED = "Vytvořeno pomocí infoUzel.cz";
 export const IU_LEGAL_DOC_HEADER_SUBTITLE = "Generátor dokumentů";
@@ -116,7 +118,7 @@ function registerFont(doc, b64) {
 
 function hexToRgb(hex) {
   const h = String(hex || "").replace("#", "");
-  if (h.length !== 6) return [22, 150, 78];
+  if (h.length !== 6) return [0, 60, 255];
   return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
 }
 
