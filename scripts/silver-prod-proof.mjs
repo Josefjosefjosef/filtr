@@ -76,21 +76,126 @@ function todayIsoDate() {
  * node into #iuMmHoverSummaryPanelShellCalendar; while closed the shell parks the card
  * off-screen (fixed), so #iuSilverCalendarSummaryCard is outside the viewport until
  * the MindMenu host is hovered. Open the panel before pointer/keyboard actions.
+ *
+ * On desktop home grid the MindMenu rail in accordionCol is intentionally display:none,
+ * so the hover host exists but is not visible — use a narrow fallback only in that case.
  */
+async function probeDesktopMindMenuCalendarHoverHost(page) {
+  return page.evaluate(() => {
+    const body = document.body;
+    const desktopHomeGrid = !!(body && body.classList.contains("iu-desktop-home-grid"));
+    const hoverEnabled = !!(body && body.classList.contains("iu-desktop-hover-summary-enabled"));
+    const host = document.getElementById("iuMmHoverSummaryHostCalendar");
+    if (!host) {
+      return {
+        hostExists: false,
+        hostVisible: false,
+        hostHoverable: false,
+        desktopHomeGrid,
+        hoverEnabled,
+        hiddenByHomeGrid: false
+      };
+    }
+    const cs = window.getComputedStyle(host);
+    const rect = host.getBoundingClientRect();
+    const hostVisible =
+      rect.width > 0 &&
+      rect.height > 0 &&
+      cs.display !== "none" &&
+      cs.visibility !== "hidden" &&
+      cs.visibility !== "collapse" &&
+      Number(cs.opacity || 1) > 0;
+    const hostHoverable = hostVisible && cs.pointerEvents !== "none";
+    const mindMenu = host.closest(".mindMenu");
+    const accordionCol = host.closest("aside.accordionCol");
+    let mindMenuHidden = false;
+    if (mindMenu) {
+      mindMenuHidden = window.getComputedStyle(mindMenu).display === "none";
+    }
+    const hiddenByHomeGrid =
+      desktopHomeGrid &&
+      hoverEnabled &&
+      !!accordionCol &&
+      mindMenuHidden &&
+      !hostHoverable;
+    return {
+      hostExists: true,
+      hostVisible,
+      hostHoverable,
+      hostRect: { width: rect.width, height: rect.height },
+      display: cs.display,
+      visibility: cs.visibility,
+      pointerEvents: cs.pointerEvents,
+      desktopHomeGrid,
+      hoverEnabled,
+      mindMenuHidden,
+      hiddenByHomeGrid
+    };
+  });
+}
+
+async function openDesktopHomeGridCalendarSummaryShell(page) {
+  await page.evaluate(() => {
+    const shell = document.getElementById("iuMmHoverSummaryPanelShellCalendar");
+    const card = document.getElementById("iuSilverCalendarSummaryCard");
+    if (!shell || !card) {
+      throw new Error("calendar summary shell or card missing for desktop home grid fallback");
+    }
+    if (shell.parentNode !== document.body) {
+      document.body.appendChild(shell);
+    }
+    shell.classList.remove("iu-mmHoverSummaryPanelShell--closed");
+    shell.setAttribute("aria-hidden", "false");
+    shell.style.setProperty("position", "fixed", "important");
+    shell.style.setProperty("top", "280px", "important");
+    shell.style.setProperty("left", "320px", "important");
+    shell.style.setProperty("right", "auto", "important");
+    shell.style.setProperty("z-index", "10150", "important");
+    shell.style.setProperty("width", "360px", "important");
+    shell.style.setProperty("max-width", "360px", "important");
+  });
+  await page.waitForFunction(
+    () => {
+      const shell = document.getElementById("iuMmHoverSummaryPanelShellCalendar");
+      const card = document.getElementById("iuSilverCalendarSummaryCard");
+      if (!shell || !card) return false;
+      if (shell.classList.contains("iu-mmHoverSummaryPanelShell--closed")) return false;
+      const r = card.getBoundingClientRect();
+      return r.width > 0 && r.height > 0;
+    },
+    null,
+    { timeout: 8000 }
+  );
+}
+
 async function ensureDesktopMindMenuCalendarSummaryHoverPanelOpen(page) {
   const needs = await page.evaluate(() =>
     document.body.classList.contains("iu-desktop-hover-summary-enabled")
   );
-  if (!needs) return;
-  await page.locator("#iuMmHoverSummaryHostCalendar").hover({ timeout: 8000 });
-  await page.waitForTimeout(120);
-  await page.waitForFunction(
-    () => {
-      const shell = document.getElementById("iuMmHoverSummaryPanelShellCalendar");
-      return !!(shell && !shell.classList.contains("iu-mmHoverSummaryPanelShell--closed"));
-    },
-    null,
-    { timeout: 8000 }
+  if (!needs) return { path: "noop" };
+
+  const probe = await probeDesktopMindMenuCalendarHoverHost(page);
+  if (probe.hostHoverable) {
+    await page.locator("#iuMmHoverSummaryHostCalendar").hover({ timeout: 8000 });
+    await page.waitForTimeout(120);
+    await page.waitForFunction(
+      () => {
+        const shell = document.getElementById("iuMmHoverSummaryPanelShellCalendar");
+        return !!(shell && !shell.classList.contains("iu-mmHoverSummaryPanelShell--closed"));
+      },
+      null,
+      { timeout: 8000 }
+    );
+    return { path: "hover", probe };
+  }
+
+  if (probe.hiddenByHomeGrid) {
+    await openDesktopHomeGridCalendarSummaryShell(page);
+    return { path: "homeGridFallback", probe };
+  }
+
+  throw new Error(
+    `#iuMmHoverSummaryHostCalendar not hoverable outside desktop home grid fallback: ${JSON.stringify(probe)}`
   );
 }
 
