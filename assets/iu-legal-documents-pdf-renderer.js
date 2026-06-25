@@ -614,7 +614,8 @@ function drawPageHeader(doc, pageW, pageNum, totalPages, marginX) {
   doc.text(IU_LEGAL_DOC_HEADER_SUBTITLE, marginX, 15.5);
 
   doc.setFontSize(7);
-  doc.setTextColor(8, 122, 58);
+  const asideRgb = hexToRgb(IU_BRAND_BLUE);
+  doc.setTextColor(asideRgb[0], asideRgb[1], asideRgb[2]);
   doc.text("Spolehlivé dokumenty", pageW - marginX, 10.5, { align: "right" });
   doc.setFontSize(6.5);
   doc.setTextColor(100, 116, 139);
@@ -686,7 +687,7 @@ function drawSectionBarInPdf(doc, marginX, pageW, y, num, heading) {
   doc.setTextColor(255, 255, 255);
   const numLabel = num ? String(num) + "." : "•";
   doc.text(numLabel, marginX + boxW / 2, textY, { align: "center" });
-  doc.setFillColor(232, 245, 237);
+  doc.setFillColor(230, 238, 255);
   doc.rect(marginX + boxW, barTop, pageW - marginX * 2 - boxW, barH, "F");
   doc.setFontSize(7.5);
   doc.setFont(doc.getFont().fontName, "bold");

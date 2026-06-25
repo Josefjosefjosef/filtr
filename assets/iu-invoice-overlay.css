@@ -394,7 +394,8 @@
   font-weight: 650;
 }
 #iuInvoicePanel .iu-inv-btn--primary:hover{
-  background: #128042;
+  background: var(--iu-brand-blue-dark);
+  border-color: var(--iu-brand-blue-dark);
 }
 #iuInvoicePanel .iu-inv-summary{
   font-size: 15px;

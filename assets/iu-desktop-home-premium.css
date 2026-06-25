@@ -7,12 +7,13 @@
   body.iu-desktop-home-grid {
     --iu-dhp-homecard-img-h: 65px;
     --iu-dhp-homecard-img-ratio: 4 / 3;
+    --iu-dhp-homecard-gap: 15px;
     --iu-dhp-weather-col-w: 340px;
     --iu-dhp-hero-col-gap: 6px;
     --iu-dhp-hero-row-min-h: 160px;
     --iu-dhp-welcome-text-min-h: 88px;
     --iu-dhp-silver-slot-min-h: 1100px;
-    --iu-dhp-tall-scroll-min-h: 920px;
+    --iu-dhp-tall-scroll-min-h: 0px;
     --iu-dhp-preview-card-min-h: 168px;
     --iu-dhp-preview-headline-min-h: 65px;
     --iu-dhp-rail-min-h: 520px;
@@ -107,9 +108,11 @@
   }
 
   body.iu-desktop-home-grid[data-iu-fc="1"] #iuSilverTallScrollViewport {
-    row-gap: 15px !important;
-    column-gap: 15px !important;
-    min-height: var(--iu-dhp-tall-scroll-min-h);
+    row-gap: var(--iu-dhp-homecard-gap) !important;
+    column-gap: var(--iu-dhp-homecard-gap) !important;
+    min-height: 0 !important;
+    height: auto !important;
+    align-content: start;
     contain: layout style;
   }
 
@@ -381,13 +384,19 @@
     .iu-previewBadge--science-history,
     .iu-previewBadge--education
   ) {
-    height: 21px;
-    padding: 0 10px;
-    border-radius: 7px;
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: 0.03em;
-    line-height: 1;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 21px !important;
+    min-height: 21px !important;
+    max-height: 21px !important;
+    padding: 0 10px !important;
+    border-radius: 7px !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.03em !important;
+    line-height: 1 !important;
+    box-sizing: border-box !important;
   }
 
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewFreshness {
@@ -463,8 +472,21 @@
   }
 
   body.iu-desktop-home-grid[data-iu-fc="1"] #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection {
-    min-height: var(--iu-dhp-tall-scroll-min-h) !important;
+    min-height: 0 !important;
+    height: auto !important;
     contain: layout style;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection .iuSilverTallScrollChromaFrame.iuSilverStackChromaFrame {
+    padding-bottom: 20px;
+    min-height: 0;
+    height: auto;
+  }
+
+  body.iu-desktop-home-grid .iuSilverTallScrollLayoutSpacer {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
   }
 
   body.iu-desktop-home-grid[data-iu-fc="1"] #iuSilverTallScrollViewport [class$="PreviewCardMount"] {
@@ -622,8 +644,8 @@
     min-width: 0;
     text-align: left;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow: visible;
+    text-overflow: clip;
     padding-left: 2px;
   }
   :is(body.iu-home, body.iu-desktop-home-grid) .iuMyInfoUzelOpenBtn__icons {
@@ -651,8 +673,10 @@
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuMyInfoUzelOpenBtn {
     margin-left: 0;
     margin-right: 0;
-    width: calc(50% - (var(--iu-dhp-hero-col-gap) / 2));
-    max-width: calc(50% - (var(--iu-dhp-hero-col-gap) / 2));
+    width: 100%;
+    max-width: 100%;
+    flex-shrink: 0;
+    align-self: stretch;
   }
   :is(body.iu-home, body.iu-desktop-home-grid) .iuMyInfoUzelOpenBtn:focus-visible {
     outline: 2px solid rgba(0, 60, 255, 0.45);
@@ -692,7 +716,7 @@
     max-height: calc(100vh - 24px) !important;
     margin: 12px auto !important;
     border-radius: 16px !important;
-    background: linear-gradient(165deg, #f0f7ff 0%, #f5f3ff 38%, #eefcfb 72%, #f8fafc 100%);
+    background: var(--iu-brand-blue-premium-bg);
     box-shadow: 0 24px 64px rgba(11, 42, 74, 0.18);
     box-sizing: border-box !important;
     contain: layout style !important;
