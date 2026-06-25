@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-06-25T02:55:21.438855Z",
+  "ingestedAt": "2026-06-25T04:26:01.234786Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "God of War Laufey by mohlo vyjít už na začátku roku 2027, odhaduje Schreier",
+      "url": "https://zing.cz/article/god-of-war-laufey-by-mohlo-vyjit-uz-na-zacatku-roku-2027-odhaduje-schreier",
+      "dt": "2026-06-25T04:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "2027",
+        "god",
+        "laufey",
+        "odhaduje",
+        "roku",
+        "schreier",
+        "vyjít",
+        "war",
+        "začátku"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -951,31 +977,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Frontier chystá nový Planet, nepůjde však o zoo ani atrakce",
-      "url": "https://zing.cz/article/frontier-chysta-novy-planet-nepujde-vsak-o-zoo-ani-atrakce",
-      "dt": "2026-06-20T08:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "atrakce",
-        "chystá",
-        "frontier",
-        "nepůjde",
-        "nový",
-        "planet",
-        "však",
-        "zoo"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -986,7 +987,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125671,
+      "bytes": 125672,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1023,7 +1024,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-24T22:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-25T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1038,6 +1039,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "God of War Laufey by mohlo vyjít už na začátku roku 2027, odhaduje Schreier",
+            "publishedAt": "2026-06-25T04:00:00Z"
+          },
           {
             "title": "GTA 6 spustilo předobjednávky a odhalilo české ceny",
             "publishedAt": "2026-06-24T22:01:00Z"
@@ -1065,10 +1070,6 @@
           {
             "title": "GTA 6 odhalilo ultimátní edici, krabicovka nebude obsahovat disk",
             "publishedAt": "2026-06-24T10:30:00Z"
-          },
-          {
-            "title": "Česká hra Lines We Draw odhalila datum vydání, v listopadu se postaví GTA 6",
-            "publishedAt": "2026-06-24T09:00:00Z"
           }
         ]
       }
