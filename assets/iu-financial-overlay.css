@@ -498,7 +498,7 @@
     overflow: hidden;
     overflow-x: hidden;
     box-sizing: border-box;
-    background: rgb(241, 245, 249);
+    background: var(--iu-brand-blue-premium-bg, linear-gradient(165deg, #f0f7ff 0%, #eef4ff 42%, #f8fafc 100%));
     z-index: 10029;
     pointer-events: auto;
   }

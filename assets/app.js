@@ -7359,7 +7359,7 @@ try {
       btn.id = "iuMyInfoUzelOpenBtn";
       btn.className = "iuMyInfoUzelOpenBtn";
       btn.innerHTML =
-        '<span class="iuMyInfoUzelOpenBtn__label">Můj infoUzel.cz / MindMenu</span><span class="iuMyInfoUzelOpenBtn__icons" aria-hidden="true"><span class="iuMyInfoUzelOpenBtn__icon">📅</span><span class="iuMyInfoUzelOpenBtn__icon">✓</span><span class="iuMyInfoUzelOpenBtn__icon">📝</span></span>';
+        '<span class="iuMyInfoUzelOpenBtn__label">Můj infoUzel.cz / MindMenu</span><span class="iuMyInfoUzelOpenBtn__icons" aria-hidden="true"><span class="iuMyInfoUzelOpenBtn__icon">📧</span><span class="iuMyInfoUzelOpenBtn__icon">📅</span><span class="iuMyInfoUzelOpenBtn__icon">✅</span><span class="iuMyInfoUzelOpenBtn__icon">📝</span></span>';
       btn.setAttribute("aria-haspopup", "dialog");
       btn.setAttribute("aria-controls", "iuMyInfoUzelOverlay");
       btn.setAttribute("aria-label", "Můj infoUzel.cz / MindMenu");
@@ -14648,7 +14648,6 @@ function buildVideoAsArticleCard(it) {
         try{ overlay.style.display = ""; }catch{}
         overlay.removeAttribute("hidden");
         overlay.setAttribute("aria-hidden", "false");
-        try{ ta.focus(); }catch{}
       }catch{}
     }
 

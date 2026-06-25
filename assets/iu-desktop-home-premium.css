@@ -11,12 +11,14 @@
     --iu-dhp-hero-col-gap: 6px;
     --iu-dhp-hero-row-min-h: 160px;
     --iu-dhp-welcome-text-min-h: 88px;
-    --iu-dhp-silver-slot-min-h: 1100px;
-    --iu-dhp-tall-scroll-min-h: 920px;
-    --iu-dhp-preview-card-min-h: 168px;
+    --iu-dhp-homecard-gap: 15px;
+    --iu-dhp-silver-slot-min-h: 880px;
+    --iu-dhp-tall-scroll-min-h: 0px;
+    --iu-dhp-preview-card-min-h: 0px;
     --iu-dhp-preview-headline-min-h: 65px;
     --iu-dhp-rail-min-h: 520px;
     --iu-dhp-rail-banners-min-h: 540px;
+    --iu-brand-blue-premium-bg: linear-gradient(165deg, #f0f7ff 0%, #eef4ff 42%, #f8fafc 100%);
   }
 
   body.iu-desktop-home-grid[data-section="feed"] {
@@ -41,6 +43,8 @@
     grid-template-columns: minmax(260px, 1fr) var(--iu-dhp-weather-col-w);
     column-gap: var(--iu-dhp-hero-col-gap);
     align-items: start;
+    container-type: inline-size;
+    container-name: iuSilverWelcomeStack;
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack #iuSilverWelcomeCard.iuSilverWelcomeCard {
@@ -102,14 +106,16 @@
 
   body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection,
   body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection {
-    margin-top: 10px !important;
+    margin-top: 6px !important;
     padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    min-height: 0 !important;
   }
 
   body.iu-desktop-home-grid[data-section="feed"] #iuSilverTallScrollViewport {
-    row-gap: 15px !important;
-    column-gap: 15px !important;
-    min-height: var(--iu-dhp-tall-scroll-min-h);
+    row-gap: var(--iu-dhp-homecard-gap) !important;
+    column-gap: var(--iu-dhp-homecard-gap) !important;
+    min-height: 0;
     contain: layout style;
   }
 
@@ -371,11 +377,23 @@
   }
 
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewBadge,
-  body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuSportPreviewLiveBadge {
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuSportPreviewLiveBadge,
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport :is(
+    .iu-previewBadge--finance,
+    .iu-previewBadge--health,
+    .iu-previewBadge--travel,
+    .iu-previewBadge--games,
+    .iu-previewBadge--culture,
+    .iu-previewBadge--science-history,
+    .iu-previewBadge--education
+  ) {
     height: 21px;
     padding: 0 10px;
     border-radius: 7px;
     font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    line-height: 1;
   }
 
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewFreshness {
@@ -451,12 +469,12 @@
   }
 
   body.iu-desktop-home-grid[data-section="feed"] #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection {
-    min-height: var(--iu-dhp-tall-scroll-min-h) !important;
+    min-height: 0 !important;
     contain: layout style;
   }
 
   body.iu-desktop-home-grid[data-section="feed"] #iuSilverTallScrollViewport [class$="PreviewCardMount"] {
-    min-height: var(--iu-dhp-preview-card-min-h) !important;
+    min-height: 0 !important;
     contain: layout style;
   }
 
@@ -597,7 +615,7 @@
     padding: 0 12px 0 10px;
     border: 0;
     border-radius: 12px;
-    background: var(--iu-brand-blue, #003CFF);
+    background: var(--iu-brand-blue);
     color: #fff;
     font-size: 14px;
     font-weight: 600;
@@ -618,7 +636,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 6px;
+    gap: 5px;
     flex: 0 0 auto;
     font-size: 13px;
     line-height: 1;
@@ -639,7 +657,8 @@
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuMyInfoUzelOpenBtn {
     margin-left: 0;
     margin-right: 0;
-    width: 100%;
+    width: calc(50cqi - (var(--iu-dhp-homecard-gap) / 2));
+    max-width: calc(50cqi - (var(--iu-dhp-homecard-gap) / 2));
   }
   :is(body.iu-home, body.iu-desktop-home-grid) .iuMyInfoUzelOpenBtn:focus-visible {
     outline: 2px solid rgba(0, 60, 255, 0.45);

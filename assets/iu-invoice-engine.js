@@ -1,6 +1,7 @@
 /**
  * infoUzel.cz — fakturační modul: čistá logika (stav, výpočty, validace, text).
  */
+import { IU_BRAND_BLUE } from "./iu-brand-colors.js";
 
 export const IU_INVOICE_FORM_KEY = "iu_invoice_form_state_v1";
 export const IU_INVOICE_RECIPIENTS_KEY = "iu_invoice_recipients_v1";
@@ -435,7 +436,7 @@ export function buildPlainText(state, totals) {
 /** Jednotná vizuální HTML šablona faktury (náhled + PDF). Neplain-text export. */
 export function buildInvoicePaperHtml(state, totals) {
   const inv = state.invoice || {};
-  const brand = "#16964E";
+  const brand = IU_BRAND_BLUE;
   const rows = (state.lines || [])
     .map((ln, i) => {
       const qty = parseNum(ln.qty);
