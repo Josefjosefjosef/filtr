@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-06-25T10:12:12.313579Z",
+  "ingestedAt": "2026-06-25T11:49:27.356416Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Planet Zoo 2 dostává novou rozsáhlou ukázku z hraní - INDIAN",
+      "url": "https://indian-tv.cz/clanek/planet-zoo-2-dostava-novou-rozsahlou-ukazku-z-hrani-vscus2",
+      "dt": "2026-06-25T11:40:11Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "dostává",
+        "hraní",
+        "indian",
+        "novou",
+        "planet",
+        "rozsáhlou",
+        "ukázku",
+        "zoo"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1037,32 +1062,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "O Steam Controller je obrovský zájem. Valve prodlužuje čekací lhůty - INDIAN",
-      "url": "https://indian-tv.cz/clanek/o-steam-controller-je-obrovsky-zajem-ffshr3",
-      "dt": "2026-06-22T05:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "controller",
-        "indian",
-        "lhůty",
-        "obrovský",
-        "prodlužuje",
-        "steam",
-        "valve",
-        "zájem",
-        "čekací"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1073,7 +1072,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 225982,
+      "bytes": 225579,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1110,7 +1109,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-25T10:12:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-25T11:40:11Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1125,6 +1124,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Planet Zoo 2 dostává novou rozsáhlou ukázku z hraní - INDIAN",
+            "publishedAt": "2026-06-25T11:40:11Z"
+          },
           {
             "title": "Skvělá retro střílečka Cultic vyjde za měsíc na konzole - INDIAN",
             "publishedAt": "2026-06-25T10:12:00Z"
@@ -1152,10 +1155,6 @@
           {
             "title": "DayZ 2 je ve vývoji, potvrdilo studio Bohemia Interactive poté, co V3Skou vyvezlo influencery do lesa za Prahou - INDIAN",
             "publishedAt": "2026-06-24T17:08:19Z"
-          },
-          {
-            "title": "Maverick Games tento týden odhalí více detailů o závodní hře Clutch - INDIAN",
-            "publishedAt": "2026-06-24T15:52:30Z"
           }
         ]
       }
