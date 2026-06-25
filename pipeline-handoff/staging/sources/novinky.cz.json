@@ -1,11 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-06-25T00:35:55.643235Z",
+  "ingestedAt": "2026-06-25T02:55:21.438855Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "Venezuelu zasáhla dvě silná zemětřesení. Očekává se mnoho obětí",
+      "url": "https://www.novinky.cz/clanek/zahranicni-venezuelu-zasahla-dve-silna-zemetreseni-ocekava-se-mnoho-obeti-40584897",
+      "dt": "2026-06-25T02:46:53Z",
+      "media_raw": "Novinky / Domácí",
+      "media_norm": "Novinky",
+      "tokens": [
+        "dvě",
+        "mnoho",
+        "obětí",
+        "očekává",
+        "silná",
+        "venezuelu",
+        "zasáhla",
+        "zemětřesení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_novinky_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "RECENZE: Po téměř padesáti letech je to v Duran Duran dobré jako kdysi",
       "url": "https://www.novinky.cz/clanek/kultura-hudba-recenze-po-temer-padesati-letech-je-to-v-duran-duran-dobre-jako-kdysi-40584896",
       "dt": "2026-06-24T23:18:24Z",
@@ -722,24 +747,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
+      "section": "aktualne",
       "contentType": "article",
-      "title": "Venezuela dluží mnohem víc, než přiznávala",
-      "url": "https://www.novinky.cz/clanek/ekonomika-venezuela-dluzi-mnohem-vic-nez-priznavala-40584725",
-      "dt": "2026-06-24T14:23:03Z",
-      "media_raw": "Novinky / Domácí",
+      "title": "Venezuelu zasáhla dvě silná zemětřesení. Očekává se mnoho obětí",
+      "url": "https://www.novinky.cz/clanek/zahranicni-venezuelu-zasahla-dve-silna-zemetreseni-ocekava-se-mnoho-obeti-40584897",
+      "dt": "2026-06-25T02:46:53Z",
+      "media_raw": "Novinky / Zahraniční",
       "media_norm": "Novinky",
       "tokens": [
-        "dluží",
-        "mnohem",
-        "než",
-        "přiznávala",
-        "venezuela",
-        "víc"
+        "dvě",
+        "mnoho",
+        "obětí",
+        "očekává",
+        "silná",
+        "venezuelu",
+        "zasáhla",
+        "zemětřesení"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
-      "feedId": "zpr_novinky_domaci",
+      "feedId": "zpr_novinky_zahranicni",
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "novinky.cz",
       "_dt_serialized": true
@@ -1454,29 +1481,6 @@
         "musí",
         "obří",
         "trhlině"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_novinky_zahranicni",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Venezuela dluží mnohem víc, než přiznávala",
-      "url": "https://www.novinky.cz/clanek/ekonomika-venezuela-dluzi-mnohem-vic-nez-priznavala-40584725",
-      "dt": "2026-06-24T14:23:03Z",
-      "media_raw": "Novinky / Zahraniční",
-      "media_norm": "Novinky",
-      "tokens": [
-        "dluží",
-        "mnohem",
-        "než",
-        "přiznávala",
-        "venezuela",
-        "víc"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1494,7 +1498,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/domaci",
-      "bytes": 48549,
+      "bytes": 48710,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1531,11 +1535,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-24T23:18:24Z",
+        "raw_feed_latest_publishedAt": "2026-06-25T02:46:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "finance": 4,
+          "zpravy": 26,
+          "finance": 3,
           "cestovani": 1
         },
         "drop_counts": {
@@ -1548,6 +1552,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Venezuelu zasáhla dvě silná zemětřesení. Očekává se mnoho obětí",
+            "publishedAt": "2026-06-25T02:46:53Z"
+          },
           {
             "title": "RECENZE: Po téměř padesáti letech je to v Duran Duran dobré jako kdysi",
             "publishedAt": "2026-06-24T23:18:24Z"
@@ -1575,10 +1583,6 @@
           {
             "title": "Bělorusko vypnulo zesilovače dronů, oznámil Zelenskyj",
             "publishedAt": "2026-06-24T18:39:59Z"
-          },
-          {
-            "title": "Trval na vymazání „co nejdříve“. Magyar brání otevření všech kapitol pro vstup Ukrajiny do EU",
-            "publishedAt": "2026-06-24T17:33:07Z"
           }
         ]
       }
@@ -1590,7 +1594,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/zahranicni",
-      "bytes": 48549,
+      "bytes": 48710,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1627,11 +1631,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-24T23:18:24Z",
+        "raw_feed_latest_publishedAt": "2026-06-25T02:46:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "finance": 4,
+          "zpravy": 26,
+          "finance": 3,
           "cestovani": 1
         },
         "drop_counts": {
@@ -1644,6 +1648,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Venezuelu zasáhla dvě silná zemětřesení. Očekává se mnoho obětí",
+            "publishedAt": "2026-06-25T02:46:53Z"
+          },
           {
             "title": "RECENZE: Po téměř padesáti letech je to v Duran Duran dobré jako kdysi",
             "publishedAt": "2026-06-24T23:18:24Z"
@@ -1671,10 +1679,6 @@
           {
             "title": "Bělorusko vypnulo zesilovače dronů, oznámil Zelenskyj",
             "publishedAt": "2026-06-24T18:39:59Z"
-          },
-          {
-            "title": "Trval na vymazání „co nejdříve“. Magyar brání otevření všech kapitol pro vstup Ukrajiny do EU",
-            "publishedAt": "2026-06-24T17:33:07Z"
           }
         ]
       }

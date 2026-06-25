@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-25T00:35:55.643235Z",
+  "ingestedAt": "2026-06-25T02:55:21.438855Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Venezuelu zasáhla dvě silná zemětřesení, obětí mohou být desetitisíce",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/venezuelska-prezidentka-po-dvou-zemetresenich-vyhlasila-stav-nouze.A260625_040037_zahranicni_air",
+      "dt": "2026-06-25T02:18:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "být",
+        "desetitisíce",
+        "dvě",
+        "obětí",
+        "silná",
+        "venezuelu",
+        "zasáhla",
+        "zemětřesení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -138,7 +163,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Lukašenkův ústup. Bělorusko vypnulo  navaděče ruských dronů, uvedl Zelenskyj",
+      "title": "Lukašenkův ústup. Bělorusko vypnulo navaděče ruských dronů, uvedl Zelenskyj",
       "url": "https://www.idnes.cz/zpravy/zahranicni/belorusko-vypnulo-zarizeni-pomahajici-navadet-ruske-drony-uvedl-zelenskyj.A260624_214432_zahranicni_remy",
       "dt": "2026-06-24T19:48:00Z",
       "media_raw": "iDNES / Zprávy",
@@ -757,31 +782,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "GLOSA: Hvězdný dirigent a dva chlípní starci. Potkali se v Litomyšli",
-      "url": "https://www.idnes.cz/kultura/hudba/smetanova-litomysl-2026.A260624_103424_hudba_era",
-      "dt": "2026-06-24T14:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "chlípní",
-        "dirigent",
-        "dva",
-        "glosa",
-        "hvězdný",
-        "litomyšli",
-        "potkali",
-        "starci"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49695,
+      "bytes": 50423,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,12 +829,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-24T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-25T02:18:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
+          "zpravy": 26,
           "finance": 2,
-          "other": 3
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -846,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Venezuelu zasáhla dvě silná zemětřesení, obětí mohou být desetitisíce",
+            "publishedAt": "2026-06-25T02:18:00Z"
+          },
           {
             "title": "Poruch štítné žlázy přibývá. Alternativní léčba může někdy škodit, varují odborníci",
             "publishedAt": "2026-06-24T22:00:00Z"
@@ -867,16 +871,12 @@
             "publishedAt": "2026-06-24T19:53:00Z"
           },
           {
-            "title": "Lukašenkův ústup. Bělorusko vypnulo  navaděče ruských dronů, uvedl Zelenskyj",
+            "title": "Lukašenkův ústup. Bělorusko vypnulo navaděče ruských dronů, uvedl Zelenskyj",
             "publishedAt": "2026-06-24T19:48:00Z"
           },
           {
             "title": "Rwanda či Uzbekistán? Unie chce odmítnuté migranty posílat daleko za hranice Evropy",
             "publishedAt": "2026-06-24T19:01:00Z"
-          },
-          {
-            "title": "Ebola se v Kongu šíří nevídanou rychlostí, zdravotníci nestačí reagovat",
-            "publishedAt": "2026-06-24T18:44:00Z"
           }
         ]
       }
