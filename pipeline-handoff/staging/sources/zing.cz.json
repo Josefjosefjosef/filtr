@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-06-25T05:59:19.428812Z",
+  "ingestedAt": "2026-06-25T07:23:56.113623Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "GTA 6 se bude nejlépe hrát na PlayStationu, tvrdí společnost Sony",
+      "url": "https://zing.cz/article/gta-6-se-bude-nejlepe-hrat-na-playstationu-tvrdi-spolecnost-sony",
+      "dt": "2026-06-25T06:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "gta",
+        "hrát",
+        "nejlépe",
+        "playstationu",
+        "sony",
+        "společnost",
+        "tvrdí"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -951,32 +975,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Test SteelSeries Arctis Nova 3 Wireless: Lehká váha s dobrým zvukem",
-      "url": "https://zing.cz/article/test-steelseries-arctis-nova-3-wireless-lehka-vaha-s-dobrym-zvukem",
-      "dt": "2026-06-20T08:30:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "arctis",
-        "dobrým",
-        "lehká",
-        "nova",
-        "steelseries",
-        "test",
-        "váha",
-        "wireless",
-        "zvukem"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -987,7 +985,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125672,
+      "bytes": 125676,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1024,7 +1022,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-25T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-25T06:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1039,6 +1037,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "GTA 6 se bude nejlépe hrát na PlayStationu, tvrdí společnost Sony",
+            "publishedAt": "2026-06-25T06:00:00Z"
+          },
           {
             "title": "God of War Laufey by mohlo vyjít už na začátku roku 2027, odhaduje Schreier",
             "publishedAt": "2026-06-25T04:00:00Z"
@@ -1066,10 +1068,6 @@
           {
             "title": "GTA 6 se dočkalo zveřejnění oficiální cenovky",
             "publishedAt": "2026-06-24T11:00:08Z"
-          },
-          {
-            "title": "GTA 6 odhalilo ultimátní edici, krabicovka nebude obsahovat disk",
-            "publishedAt": "2026-06-24T10:30:00Z"
           }
         ]
       }
