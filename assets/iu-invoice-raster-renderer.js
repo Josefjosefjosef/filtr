@@ -9,14 +9,15 @@ import {
   parseVatRate,
   supplierBlockText,
 } from "./iu-invoice-engine.js";
+import { IU_BRAND_BLUE } from "./iu-brand-colors.js";
 
 export const IU_INVOICE_RASTER_RENDERER_ID = "iu-invoice-raster-canvas-v1";
 export const RASTER_PAGE_W = 794;
 export const RASTER_PAGE_H = 1123;
 export const RASTER_SCALE = 2;
 
-const BRAND = "#16964E";
-const BRAND_RGB = [22, 150, 78];
+const BRAND = IU_BRAND_BLUE;
+const BRAND_RGB = [0, 60, 255];
 const TEXT = "#0f172a";
 const TEXT_MUTED = "rgba(15, 23, 42, 0.65)";
 const TEXT_DESC = "rgba(15, 23, 42, 0.62)";
@@ -469,10 +470,10 @@ function drawHeader(ctx, inv) {
   drawRoundedRect(ctx, x, y, w, h, 10, null, null);
   ctx.clip();
   const strips = [
-    { left: 0, width: 0.16, color: "rgba(22, 150, 78, 0.06)" },
-    { left: 0.16, width: 0.08, color: "rgba(22, 150, 78, 0.045)" },
-    { left: 0.24, width: 0.08, color: "rgba(22, 150, 78, 0.03)" },
-    { left: 0.32, width: 0.08, color: "rgba(22, 150, 78, 0.015)" },
+    { left: 0, width: 0.16, color: "rgba(0, 60, 255, 0.06)" },
+    { left: 0.16, width: 0.08, color: "rgba(0, 60, 255, 0.045)" },
+    { left: 0.24, width: 0.08, color: "rgba(0, 60, 255, 0.03)" },
+    { left: 0.32, width: 0.08, color: "rgba(0, 60, 255, 0.015)" },
   ];
   for (let si = 0; si < strips.length; si++) {
     const s = strips[si];
@@ -575,7 +576,7 @@ function drawTableHeader(ctx, cols, y) {
   const h = 34;
   for (let ci = 0; ci < cols.length; ci++) {
     const col = cols[ci];
-    drawRect(ctx, x, y, col.w, h, "rgba(22, 150, 78, 0.07)", BORDER);
+    drawRect(ctx, x, y, col.w, h, "rgba(0, 60, 255, 0.07)", BORDER);
     setFont(ctx, 13, 700);
     ctx.fillStyle = TEXT;
     ctx.textAlign = col.align === "right" ? "right" : col.align === "center" ? "center" : "left";
