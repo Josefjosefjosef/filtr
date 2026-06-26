@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-26T00:27:49.629924Z",
+  "ingestedAt": "2026-06-26T02:00:48.502679Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poslanci se vrátí ke schvalování zákona, jenž má usnadnit výměnu úředníků",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/poslanci-se-vrati-ke-schvalovani-zakona-jenz-ma-usnadnit-vymenu-uredniku-374972",
+      "dt": "2026-06-26T01:37:46Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "jenž",
+        "poslanci",
+        "schvalování",
+        "usnadnit",
+        "vrátí",
+        "výměnu",
+        "zákona",
+        "úředníků"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -741,31 +766,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nová zelená úsporám opět startuje, doznala ale změn",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/nova-zelena-usporam-opet-startuje-doznala-ale-zmen-374926",
-      "dt": "2026-06-25T04:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "ale",
-        "doznala",
-        "nová",
-        "opět",
-        "startuje",
-        "zelená",
-        "změn",
-        "úsporám"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -776,7 +776,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43810,
+      "bytes": 43345,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,7 +813,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-25T22:31:45Z",
+        "raw_feed_latest_publishedAt": "2026-06-26T01:37:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -829,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poslanci se vrátí ke schvalování zákona, jenž má usnadnit výměnu úředníků",
+            "publishedAt": "2026-06-26T01:37:46Z"
+          },
           {
             "title": "Král Karel III. nebude po nákladné rekonstrukci žít v Buckinghamském paláci",
             "publishedAt": "2026-06-25T22:31:45Z"
@@ -856,10 +860,6 @@
           {
             "title": "Teplotní rekordy padly na půlce stanic v Česku, podívejte se na mapu",
             "publishedAt": "2026-06-25T16:27:47Z"
-          },
-          {
-            "title": "Ve Venezuele po zemětřesení pomůže i specializovaný český tým",
-            "publishedAt": "2026-06-25T15:27:24Z"
           }
         ]
       }
