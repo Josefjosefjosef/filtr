@@ -402,15 +402,15 @@
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    height: 21px !important;
-    min-height: 21px !important;
-    max-height: 21px !important;
-    padding: 0 10px !important;
-    border-radius: 7px !important;
-    font-size: 14px !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.03em !important;
-    line-height: 1 !important;
+    height: var(--iu-homecard-badge-h) !important;
+    min-height: var(--iu-homecard-badge-h) !important;
+    max-height: var(--iu-homecard-badge-h) !important;
+    padding: 0 var(--iu-homecard-badge-px) !important;
+    border-radius: var(--iu-homecard-badge-radius) !important;
+    font-size: var(--iu-homecard-badge-fs) !important;
+    font-weight: var(--iu-homecard-badge-fw) !important;
+    letter-spacing: var(--iu-homecard-badge-ls) !important;
+    line-height: var(--iu-homecard-badge-lh) !important;
     box-sizing: border-box !important;
   }
 
