@@ -22881,7 +22881,6 @@ function buildVideoAsArticleCard(it) {
     overlay.innerHTML = `
       <div class="iuWeatherMapPickerPanel">
         <div class="iuWeatherMapPickerHead">
-          <div class="iuWeatherMapPickerTitle">Zvolte místo na mapě</div>
           <button type="button" class="iuWeatherMapPickerClose" aria-label="Zavřít">✕</button>
         </div>
         <div class="iuWeatherMapPickerSearchRow">
