@@ -578,6 +578,78 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-notes-premium.css?v=notes-premium-teal-20260503" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-info-center.css?v=info-center-v2-6-close-nav-20260609" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
+    <style id="iuFeedNewsSplitCss">
+      /* P0 mobile/tablet: vizuální oddělovač aplikační části (Silver) od zpravodajského feedu — desktop beze změny. */
+      @media (max-width: 900px) {
+        .iuFeedNewsSplit {
+          box-sizing: border-box;
+          width: 100%;
+          max-width: 100%;
+          margin: 0;
+          padding: 8px 12px 6px;
+          pointer-events: none;
+          user-select: none;
+          -webkit-user-select: none;
+        }
+        .iuArticlesStage:has(#feed[hidden]) .iuFeedNewsSplit {
+          display: none !important;
+        }
+        .iuFeedNewsSplit__row {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          width: 100%;
+          min-width: 0;
+        }
+        .iuFeedNewsSplit__line {
+          flex: 1 1 auto;
+          height: 1px;
+          min-width: 12px;
+          background: var(--iu-brand-blue, #003CFF);
+          opacity: 0.42;
+        }
+        .iuFeedNewsSplit__capsule {
+          flex: 0 1 auto;
+          max-width: calc(100% - 24px);
+          padding: 5px 12px;
+          border: 1px solid var(--iu-brand-blue, #003CFF);
+          border-radius: 999px;
+          color: var(--iu-brand-blue, #003CFF);
+          font-size: 10px;
+          font-weight: 600;
+          line-height: 1.25;
+          letter-spacing: 0.035em;
+          text-align: center;
+          white-space: normal;
+          overflow-wrap: anywhere;
+        }
+        .iuFeedNewsSplit__hint {
+          margin: 6px 0 0;
+          padding: 0 4px;
+          text-align: center;
+          font-size: 11px;
+          line-height: 1.35;
+          font-weight: 400;
+          color: color-mix(in srgb, var(--iu-brand-blue, #003CFF) 58%, transparent);
+        }
+      }
+      @media (min-width: 681px) and (max-width: 900px) {
+        .iuFeedNewsSplit {
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+        .iuFeedNewsSplit__capsule {
+          font-size: 10.5px;
+          padding: 6px 14px;
+        }
+      }
+      @media (min-width: 901px) {
+        .iuFeedNewsSplit {
+          display: none !important;
+        }
+      }
+    </style>
     <style id="iuInfoCardsMobileTabletPostAppCss">
       /* P0 info cards Kalendář+Úkoly ≤1023: post app.css — beats #iuInfoCardsMobileTablet min-height:160px (assets/app.css CLS reserve). */
       @media (max-width: 1023px) {
@@ -2766,6 +2838,14 @@ font-src 'self' data:;
                       <div class="iuHomeModules">
                       </div>
                     </div>
+                  </div>
+                  <div id="iuFeedNewsSplit" class="iuFeedNewsSplit" aria-hidden="true">
+                    <div class="iuFeedNewsSplit__row">
+                      <span class="iuFeedNewsSplit__line" aria-hidden="true"></span>
+                      <span class="iuFeedNewsSplit__capsule">AKTUÁLNÍ ČLÁNKY Z OVĚŘENÝCH MÉDIÍ</span>
+                      <span class="iuFeedNewsSplit__line" aria-hidden="true"></span>
+                    </div>
+                    <p class="iuFeedNewsSplit__hint">Nejnovější zprávy průběžně aktualizované během dne.</p>
                   </div>
                   <div id="feed" data-view-host="media" data-feed-ready="false"></div>
                   <script>
