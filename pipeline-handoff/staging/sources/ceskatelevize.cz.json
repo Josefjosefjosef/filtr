@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-26T13:47:27.463130Z",
+  "ingestedAt": "2026-06-26T14:46:31.445071Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "V nové opeře bojuje o přežití lidstva i Horst Fuchs",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/v-nove-opere-bojuje-o-preziti-lidstva-i-horst-fuchs-374997",
+      "dt": "2026-06-26T14:01:27Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "bojuje",
+        "fuchs",
+        "horst",
+        "lidstva",
+        "nové",
+        "opeře",
+        "přežití"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -608,16 +632,16 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Venezuela hlásí šest stovek mrtvých po zemětřesení, pohřešovaných může být na 50 tisíc",
+      "title": "Venezuela hlásí šest stovek mrtvých po zemětřesení, na 50 tisíc lidí se pohřešuje",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/pocet-obeti-zemetreseni-ve-venezuele-stoupl-zhruba-na-235-a-zrejme-dale-poroste-374974",
       "dt": "2026-06-26T02:25:03Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24",
       "tokens": [
-        "být",
         "hlásí",
+        "lidí",
         "mrtvých",
-        "pohřešovaných",
+        "pohřešuje",
         "stovek",
         "tisíc",
         "venezuela",
@@ -729,32 +753,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Urbanová: Chceme, aby Babiš nebyl v područí koaličních partnerů a choval se dospěle",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/urbanova-chceme-aby-babis-nebyl-v-podruci-koalicnich-partneru-a-choval-se-dospele-374970",
-      "dt": "2026-06-25T17:58:12Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "babiš",
-        "chceme",
-        "choval",
-        "dospěle",
-        "koaličních",
-        "nebyl",
-        "partnerů",
-        "područí",
-        "urbanová"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -765,7 +763,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44216,
+      "bytes": 43490,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -802,11 +800,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-26T13:11:05Z",
+        "raw_feed_latest_publishedAt": "2026-06-26T14:01:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "other": 3,
+          "other": 4,
+          "zpravy": 25,
           "finance": 1
         },
         "drop_counts": {
@@ -819,6 +817,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V nové opeře bojuje o přežití lidstva i Horst Fuchs",
+            "publishedAt": "2026-06-26T14:01:27Z"
+          },
           {
             "title": "České řeky jsou na suchu. Některé úseky na Sázavě, Ohři nebo Lužnici jsou nesjízdné",
             "publishedAt": "2026-06-26T13:11:05Z"
@@ -846,10 +848,6 @@
           {
             "title": "Chatboti ovlivňují nákupy víc než vyhledávače. Švýcarští spotřebitelé jim přesto důvěřují",
             "publishedAt": "2026-06-26T10:55:25Z"
-          },
-          {
-            "title": "Zemřela historička Milena Flodrová, spoluzakladatelka Encyklopedie dějin Brna",
-            "publishedAt": "2026-06-26T10:18:49Z"
           }
         ]
       }
