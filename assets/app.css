@@ -17996,13 +17996,6 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
     column-gap:12px;
     row-gap:11px;
   }
-  /* Notes: min label track + standard gap â€” avoids textarea hugging short "Text" label. */
-  .iuSilverDraftCard--quickTemplateNote .iuSilverDraftGrid--note{
-    padding:4px 16px 0;
-    gap:11px 12px;
-    grid-template-columns:minmax(4.25rem,max-content) minmax(0,1fr);
-    column-gap:12px;
-  }
 }
 
 .iuSilverDisambiguationCard{
