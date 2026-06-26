@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-06-26T09:19:41.219850Z",
+  "ingestedAt": "2026-06-26T10:54:50.738348Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "GTA 6 se nakonec dočká tradiční krabicovky s diskem",
+      "url": "https://zing.cz/article/gta-6-se-nakonec-docka-tradicni-krabicovky-s-diskem",
+      "dt": "2026-06-26T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "diskem",
+        "dočká",
+        "gta",
+        "krabicovky",
+        "nakonec",
+        "tradiční"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -964,31 +987,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Zatracovaná česká hra se slavnými herci oslavila velký úspěch",
-      "url": "https://zing.cz/article/zatracovana-ceska-hra-se-slavnymi-herci-oslavila-velky-uspech",
-      "dt": "2026-06-22T07:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "herci",
-        "hra",
-        "oslavila",
-        "slavnými",
-        "velký",
-        "zatracovaná",
-        "úspěch",
-        "česká"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -999,7 +997,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126052,
+      "bytes": 126013,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1036,7 +1034,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-26T08:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-26T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1051,6 +1049,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "GTA 6 se nakonec dočká tradiční krabicovky s diskem",
+            "publishedAt": "2026-06-26T10:00:00Z"
+          },
           {
             "title": "Noví Mimoni odhalí tajemství stříbrného plátna a přinesou skutečnou apokalypsu",
             "publishedAt": "2026-06-26T08:30:00Z"
@@ -1078,10 +1080,6 @@
           {
             "title": "Epic nabízí zdarma dvě žánrově odlišné hry",
             "publishedAt": "2026-06-25T15:00:00Z"
-          },
-          {
-            "title": "PC hráči se dočkali nového Age of Empires, je zdarma a přesto čelí kritice",
-            "publishedAt": "2026-06-25T14:00:00Z"
           }
         ]
       }
