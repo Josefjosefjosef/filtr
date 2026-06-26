@@ -7,14 +7,14 @@
   body.iu-desktop-home-grid {
     --iu-dhp-homecard-img-h: 65px;
     --iu-dhp-homecard-img-ratio: 4 / 3;
-    --iu-dhp-homecard-gap: 15px;
+    --iu-dhp-homecard-gap: 10px;
     --iu-dhp-weather-col-w: 340px;
     --iu-dhp-hero-col-gap: 6px;
     --iu-dhp-hero-row-min-h: 160px;
     --iu-dhp-welcome-text-min-h: 88px;
-    --iu-dhp-silver-slot-min-h: 1100px;
+    --iu-dhp-silver-slot-min-h: 0px;
     --iu-dhp-tall-scroll-min-h: 0px;
-    --iu-dhp-preview-card-min-h: 168px;
+    --iu-dhp-preview-card-min-h: 0px;
     --iu-dhp-preview-headline-min-h: 65px;
     --iu-dhp-rail-min-h: 520px;
     --iu-dhp-rail-banners-min-h: 540px;
@@ -103,16 +103,31 @@
 
   body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection,
   body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection {
-    margin-top: 6px !important;
-    padding-top: 0 !important;
+    margin-top: 10px !important;
+    padding: 10px !important;
+    min-height: 0 !important;
+    height: auto !important;
   }
 
-  body.iu-desktop-home-grid[data-iu-fc="1"] #iuSilverTallScrollViewport {
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport {
+    gap: var(--iu-dhp-homecard-gap) !important;
     row-gap: var(--iu-dhp-homecard-gap) !important;
     column-gap: var(--iu-dhp-homecard-gap) !important;
     min-height: 0 !important;
     height: auto !important;
-    align-content: start;
+    align-content: start !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    contain: layout style;
+  }
+
+  body.iu-desktop-home-grid[data-iu-fc="1"] #iuSilverTallScrollViewport {
+    gap: var(--iu-dhp-homecard-gap) !important;
+    row-gap: var(--iu-dhp-homecard-gap) !important;
+    column-gap: var(--iu-dhp-homecard-gap) !important;
+    min-height: 0 !important;
+    height: auto !important;
+    align-content: start !important;
     contain: layout style;
   }
 
@@ -458,15 +473,16 @@
     border-radius: 12px;
   }
 
-  /* ── Desktop homecards: CLS floor reserves (feed route only; grow above floor when content loads) ── */
+  /* ── Desktop homecards: height follows content (no fixed floor slack below last row) ── */
   body.iu-desktop-home-grid[data-iu-fc="1"] #iuSilverTopCardsStack {
-    min-height: var(--iu-dhp-silver-slot-min-h);
+    min-height: 0 !important;
+    height: auto !important;
     contain: layout style;
   }
 
   body.iu-desktop-home-grid[data-iu-fc="1"] .iuSilverTopCardsStack #silver-slot.silver-slot,
   body.iu-desktop-home-grid[data-iu-fc="1"] #silver-slot.silver-slot {
-    min-height: var(--iu-dhp-silver-slot-min-h) !important;
+    min-height: 0 !important;
     height: auto !important;
     contain: layout style;
   }
@@ -478,9 +494,9 @@
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection .iuSilverTallScrollChromaFrame.iuSilverStackChromaFrame {
-    padding-bottom: 20px;
-    min-height: 0;
-    height: auto;
+    padding: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
   }
 
   body.iu-desktop-home-grid .iuSilverTallScrollLayoutSpacer {
@@ -490,7 +506,7 @@
   }
 
   body.iu-desktop-home-grid[data-iu-fc="1"] #iuSilverTallScrollViewport [class$="PreviewCardMount"] {
-    min-height: var(--iu-dhp-preview-card-min-h) !important;
+    min-height: 0 !important;
     contain: layout style;
   }
 
