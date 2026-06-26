@@ -6682,11 +6682,16 @@ html[data-section="mapy"] #iuMapyView > .iuSectionSubtitle{
   margin: 4px 0 10px;
 }
 
+body[data-section="mapy"] #iuMapyView .iuSectionHeader--mapy,
+html[data-section="mapy"] #iuMapyView .iuSectionHeader--mapy{
+  --iuSectionAccent: var(--iuNavAccent-mapy, #22C55E);
+}
 body[data-section="mapy"] #iuMapyView .iuSectionHeader--mapy h2,
 html[data-section="mapy"] #iuMapyView .iuSectionHeader--mapy h2{
   font-size: 19px;
   font-weight: 900;
   letter-spacing: 0.03em;
+  color: var(--iuSectionAccent, currentColor);
 }
 body[data-section="mapy"] #iuMapyView .iuSectionHeader--mapy .iuSectionHeaderLine,
 html[data-section="mapy"] #iuMapyView .iuSectionHeader--mapy .iuSectionHeaderLine{
