@@ -142,6 +142,10 @@
   --iu-brand-blue-a20: rgba(0, 60, 255, 0.2);
   --iu-brand-blue-a35: rgba(0, 60, 255, 0.35);
   --iu-brand-blue-premium-bg: linear-gradient(165deg, #dce8ff 0%, #e4ecff 32%, #eef3ff 58%, #f5f8ff 82%, #f8fafc 100%);
+  --iu-mindmenu-gate-premium-bg:
+    radial-gradient(ellipse 82% 58% at 10% -4%, var(--iu-brand-blue-a08) 0%, transparent 56%),
+    radial-gradient(ellipse 70% 48% at 98% 102%, rgba(37, 99, 235, 0.06) 0%, transparent 54%),
+    var(--iu-brand-blue-premium-bg);
 
   
   --iu-bg-lock: var(--iu-page-bg);
@@ -23076,4 +23080,18 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
 }
 @media (min-width:768px) and (max-width:900px){
   #feed.iuTimelineFeed{--iu-tl-title-fs:16.5px}
+}
+
+@media (max-width: 1023px){
+  body.iu-mobileGateOverlayOpen #iuMobileGateWrap[data-iu-mobile-gate="tools"] #iuMobileGateContent.iu-mobileGateContent[aria-hidden="false"]{
+    background: var(--iu-mindmenu-gate-premium-bg) !important;
+  }
+  body.iu-mobileGateOverlayOpen #iuMobileGateWrap[data-iu-mobile-gate="tools"] #iuMobileGateContent #iuMobileGatePanelTools.iu-mobileGatePanel:not([hidden]){
+    background: transparent !important;
+  }
+}
+@media (min-width: 901px) and (max-width: 1023px){
+  body.iu-mobileGateOverlayOpen #iuMobileGateWrap[data-iu-mobile-gate="tools"] #iuMobileGatePanelTools.accordionCol:not([hidden]){
+    background: var(--iu-mindmenu-gate-premium-bg) !important;
+  }
 }
