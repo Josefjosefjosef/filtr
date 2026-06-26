@@ -36153,15 +36153,18 @@ function buildVideoAsArticleCard(it) {
 
     const html = [
       "<div class=\"iu-mojeSluzbyBanka\">",
-      "  <div class=\"iu-mojeSluzbyBankaHead\"><button type=\"button\" class=\"iu-mojeSluzbyEditToggle\" data-edit-toggle>Upravit</button></div>",
-      "  <div class=\"iu-mojeSluzbyBankaFav\"><h3>MOJE BANKY</h3>",
+      "  <div class=\"iu-ib-info-box\" role=\"note\" aria-label=\"Informace o přechodu na banku\">",
+      "    <p class=\"iu-ib-info-box__text\">Po kliknutí na banku otevřeme její internetové bankovnictví v novém okně nebo kartě. Opouštíte prostředí InfoUzel.cz.</p>",
+      "  </div>",
+      "  <div class=\"iu-mojeSluzbyBankaHead\"><button type=\"button\" class=\"iu-mojeSluzbyEditToggle iu-ib-edit-btn\" data-edit-toggle>Upravit</button></div>",
+      "  <div class=\"iu-mojeSluzbyBankaFav\"><h3 class=\"iu-ib-section-title\">MOJE BANKY</h3>",
       "  <div class=\"iuBanksGrid iu-mojeSluzbyFavGrid\" data-fav-grid role=\"list\"></div></div>",
-      "  <div class=\"iu-mojeSluzbyBankaAll\"><h3>VŠECHNY BANKY</h3>",
-      "  <input type=\"text\" class=\"iu-mojeSluzbySearch\" placeholder=\"Hledat banku\" data-bank-search />",
+      "  <div class=\"iu-mojeSluzbyBankaAll\"><h3 class=\"iu-ib-section-title\">VŠECHNY BANKY</h3>",
+      "  <input type=\"text\" class=\"iu-mojeSluzbySearch iu-ib-input\" placeholder=\"Hledat banku\" data-bank-search />",
       "  <div class=\"iuBanksGrid iu-mojeSluzbyAllGrid\" data-all-grid role=\"list\"></div></div>",
-      "  <div class=\"iu-mojeSluzbyBankaCustom iu-ibBankCustomForm\" data-iu-ib-custom-form=\"1\"><h3>Přidat vlastní banku</h3>",
-      "  <input type=\"text\" class=\"iu-ibBankCustomName\" placeholder=\"Název\" data-custom-name /><input type=\"text\" class=\"iu-ibBankCustomUrl\" placeholder=\"URL (https://...)\" data-custom-url />",
-      "  <button type=\"button\" class=\"iu-ibBankCustomAdd\" data-custom-add>Přidat</button></div>",
+      "  <div class=\"iu-mojeSluzbyBankaCustom iu-ibBankCustomForm\" data-iu-ib-custom-form=\"1\"><h3 class=\"iu-ib-section-title\">Přidat vlastní banku</h3>",
+      "  <input type=\"text\" class=\"iu-ibBankCustomName iu-ib-input\" placeholder=\"Název\" data-custom-name /><input type=\"text\" class=\"iu-ibBankCustomUrl iu-ib-input\" placeholder=\"URL (https://...)\" data-custom-url />",
+      "  <button type=\"button\" class=\"iu-ibBankCustomAdd iu-ib-action-btn\" data-custom-add>Přidat</button></div>",
       "</div>"
     ].join("");
     container.innerHTML = html;
