@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-06-26T03:27:21.378702Z",
+  "ingestedAt": "2026-06-26T04:53:11.661931Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na pražském Žižkově hořel byt. Hasiči evakuovali 45 lidí",
+      "url": "https://www.idnes.cz/praha/zpravy/pozar-prazsky-zizkov-biskupova-ulice.A260626_055607_domaci_aya",
+      "dt": "2026-06-26T04:26:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "byt",
+        "evakuovali",
+        "hasiči",
+        "hořel",
+        "lidí",
+        "pražském",
+        "žižkově"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Počet obětí zemětřesení ve Venezuele stoupl na 235 a zřejmě dále poroste",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/pocet-obeti-zemetreseni-ve-venezuele-stoupl-zhruba-na-235-a-zrejme-dale-poroste.A260626_060149_zahranicni_tbr",
+      "dt": "2026-06-26T04:01:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "235",
+        "dále",
+        "obětí",
+        "poroste",
+        "počet",
+        "stoupl",
+        "venezuele",
+        "zemětřesení",
+        "zřejmě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -733,58 +783,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Udivený primátor Karviné přišel na policii. Ta jej zadržela, žalobce žádá vazbu",
-      "url": "https://www.idnes.cz/ostrava/zpravy/wolf-primator-karvina-konec-patrani-policie-fotbal-korupce.A260625_111506_ostrava-zpravy_epkbn",
-      "dt": "2026-06-25T14:51:30Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "jej",
-        "karviné",
-        "policii",
-        "primátor",
-        "přišel",
-        "udivený",
-        "vazbu",
-        "zadržela",
-        "žalobce",
-        "žádá"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na smíchovském hřbitově se prodává hrobka s kaplí. Stojí jako garsonka",
-      "url": "https://www.idnes.cz/praha/zpravy/malvazinky-hrbitov-prodej-pseudorenesancni-hrobka-kaple-reality.A260625_140913_praha-zpravy_tmps",
-      "dt": "2026-06-25T14:42:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "garsonka",
-        "hrobka",
-        "hřbitově",
-        "jako",
-        "kaplí",
-        "prodává",
-        "smíchovském",
-        "stojí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47763,
+      "bytes": 47823,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-26T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-26T04:26:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -849,6 +847,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na pražském Žižkově hořel byt. Hasiči evakuovali 45 lidí",
+            "publishedAt": "2026-06-26T04:26:00Z"
+          },
+          {
+            "title": "Počet obětí zemětřesení ve Venezuele stoupl na 235 a zřejmě dále poroste",
+            "publishedAt": "2026-06-26T04:01:00Z"
+          },
           {
             "title": "Poslanci rozhodnou o zákonu, který má usnadnit výměnu státních úředníků",
             "publishedAt": "2026-06-26T03:00:00Z"
@@ -872,14 +878,6 @@
           {
             "title": "Migranti, zmizte do 30. června, nebo... V JAR pořádají hony na cizince, prchají do buše",
             "publishedAt": "2026-06-25T22:00:00Z"
-          },
-          {
-            "title": "Gastonova dynastie pokračuje. V Zoo Praha přišel na svět lachtanův pravnuk",
-            "publishedAt": "2026-06-25T19:13:00Z"
-          },
-          {
-            "title": "Paříž má kvůli vedrům plné nemocnice, zakáže prodej a pití alkoholu",
-            "publishedAt": "2026-06-25T18:41:00Z"
           }
         ]
       }
