@@ -24460,13 +24460,10 @@ function buildVideoAsArticleCard(it) {
     { id: "zdravotni_pojistovna", label: "Zdravotní pojišťovna", accent: "#00838f" },
     { id: "zasilky", label: "Zásilky a sledování", accent: "#e60012" },
     { id: "ai_asistenti", label: "AI asistenti", accent: "#0d9488" },
-    { id: "prekladac", label: "Překladač", accent: "#0d9488" },
-    { id: "word_pdf", label: "Převod Word / PDF", accent: "#c62828" },
     { id: "financni_kalkulacky", label: "Finanční kalkulačky", accent: "#4285f4" },
     { id: "vzory_smluv", label: "Vzory smluv a plné moci", accent: "#ff0000" },
     { id: "vytvorit_fakturu", label: "Vytvořit fakturu", accent: "#0f766e" },
-    { id: "pridat_tlacitko", label: "Přidat tlačítko", accent: "#455a64" },
-    { id: "naceneni_nakupu_domu", label: "Nákup potravin online", accent: "#2e7d32" }
+    { id: "pridat_tlacitko", label: "Přidat tlačítko", accent: "#455a64" }
   ];
   const IU_QUICKTOOLS_PINNED_SYSTEM_ID = "pridat_tlacitko";
 
