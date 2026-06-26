@@ -36699,7 +36699,6 @@ function buildVideoAsArticleCard(it) {
       var ro = p.isSaved ? " readonly" : "";
       var showUrl = pr && pr.requiresCustomUrl;
       var loginLab = pr ? esc(pr.loginLabel) : esc("Přihlašovací údaj");
-      var copyLoginLab = pr ? esc(pr.copyLoginLabel) : esc("Kopírovat přihlašovací údaj");
       var openLab = pr ? esc(pr.openLabel) : esc("Otevřít pojišťovnu");
       var provLabel = pr ? esc(pr.name) : esc("Vyberte pojišťovnu");
       var provDisabled = p.isSaved ? " disabled aria-disabled=\"true\"" : "";
@@ -36714,10 +36713,6 @@ function buildVideoAsArticleCard(it) {
         "<section class=\"iu-health-card" + lockClass + "\" data-iu-health-index=\"" + ix + "\" style=\"--iu-health-accent:" + accent + "\">" +
         "  <h3 class=\"iu-health-card-title\" data-iu-health-card-title>" + esc(healthCardTitleLine(p)) + "</h3>" +
         "  <button type=\"button\" class=\"iu-health-open-btn\" data-iu-health-open disabled aria-disabled=\"true\">" + openLab + "</button>" +
-        "  <div class=\"iu-health-copy-row\">" +
-        "    <button type=\"button\" class=\"iu-health-btn iu-health-btn--mini iu-health-btn--ghost\" data-iu-health-copy-login>" + copyLoginLab + "</button>" +
-        "    <button type=\"button\" class=\"iu-health-btn iu-health-btn--mini iu-health-btn--ghost\" data-iu-health-copy-password>Kopírovat heslo</button>" +
-        "  </div>" +
         "  <label class=\"iu-health-field\">" +
         "    <span class=\"iu-health-label\">Pojišťovna</span>" +
         "    <button type=\"button\" class=\"iu-health-provider-trigger\" data-iu-health-provider-trigger" + provDisabled + ">" + provLabel + "</button>" +
@@ -36730,17 +36725,21 @@ function buildVideoAsArticleCard(it) {
         "    <span class=\"iu-health-label\">Pro koho</span>" +
         "    <input type=\"text\" class=\"iu-health-input\" data-iu-health-person maxlength=\"120\" autocomplete=\"name\" placeholder=\"např. Josef, Dcera…\"" + ro + " value=\"" + personV + "\" />" +
         "  </label>" +
-        "  <label class=\"iu-health-field\">" +
+        "  <div class=\"iu-health-field\">" +
         "    <span class=\"iu-health-label\" data-iu-health-login-label>" + loginLab + "</span>" +
-        "    <input type=\"text\" class=\"iu-health-input\" data-iu-health-login autocomplete=\"username\" spellcheck=\"false\"" + ro + " value=\"" + loginV + "\" />" +
-        "  </label>" +
-        "  <label class=\"iu-health-field\">" +
+        "    <div class=\"iu-health-inline-row\">" +
+        "      <input type=\"text\" class=\"iu-health-input\" data-iu-health-login autocomplete=\"username\" spellcheck=\"false\"" + ro + " value=\"" + loginV + "\" />" +
+        "      <button type=\"button\" class=\"iu-health-btn iu-health-btn--mini iu-health-btn--ghost\" data-iu-health-copy-login>Kopírovat</button>" +
+        "    </div>" +
+        "  </div>" +
+        "  <div class=\"iu-health-field\">" +
         "    <span class=\"iu-health-label\">Heslo</span>" +
         "    <div class=\"iu-health-inline-row\">" +
         "      <input type=\"password\" class=\"iu-health-input\" data-iu-health-password autocomplete=\"current-password\"" + ro + " value=\"" + passV + "\" />" +
-        "      <button type=\"button\" class=\"iu-health-btn iu-health-btn--mini iu-health-btn--ghost\" data-iu-health-toggle-pw aria-pressed=\"false\">Zobrazit heslo</button>" +
+        "      <button type=\"button\" class=\"iu-health-btn iu-health-btn--mini iu-health-btn--ghost\" data-iu-health-copy-password>Kopírovat</button>" +
         "    </div>" +
-        "  </label>" +
+        "    <button type=\"button\" class=\"iu-health-btn iu-health-btn--ghost iu-health-toggle-pw\" data-iu-health-toggle-pw aria-pressed=\"false\">Zobrazit heslo</button>" +
+        "  </div>" +
         helper +
         "  <div class=\"iu-health-card-actions\">" +
         "    <button type=\"button\" class=\"iu-health-btn iu-health-btn--secondary\" data-iu-health-save>Uložit</button>" +

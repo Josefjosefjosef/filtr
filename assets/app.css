@@ -13400,12 +13400,6 @@ section.iu-mojeSluzby{
   cursor: not-allowed;
   box-shadow: none;
 }
-.iu-health-copy-row{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
 .iu-health-field{
   display: flex;
   flex-direction: column;
@@ -13463,6 +13457,12 @@ section.iu-mojeSluzby{
 .iu-health-inline-row .iu-health-input{
   flex: 1;
   min-width: 0;
+}
+.iu-health-toggle-pw{
+  margin-top: 4px;
+  align-self: flex-start;
+  padding: 6px 10px;
+  font-size: 12px;
 }
 .iu-health-helper{
   margin: 0;
