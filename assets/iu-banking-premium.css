@@ -1,0 +1,166 @@
+/* Internetové bankovnictví — prémiové UI (PC + mobil + tablet) */
+
+.iu-mojeSluzbyBanka{
+  gap: 16px;
+}
+
+.iu-mojeSluzbyBanka .iu-ib-info-box{
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,60,255,.22);
+  background: linear-gradient(165deg, rgba(0,60,255,.09) 0%, rgba(0,60,255,.04) 45%, #f8faff 100%);
+  box-shadow: 0 6px 20px rgba(0,60,255,.1), 0 1px 0 rgba(255,255,255,.75) inset;
+}
+
+.iu-mojeSluzbyBanka .iu-ib-info-box__text{
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(15,23,42,.78);
+}
+
+.iu-mojeSluzbyBankaHead{
+  justify-content: flex-end;
+  margin-top: 2px;
+}
+
+.iu-mojeSluzbyBanka .iu-ib-edit-btn{
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,60,255,.22);
+  background: linear-gradient(180deg, #fff 0%, #f8faff 100%);
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.2;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,60,255,.08);
+  transition: background .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.iu-mojeSluzbyBanka .iu-ib-edit-btn:hover{
+  border-color: rgba(0,60,255,.34);
+  background: linear-gradient(180deg, #fff 0%, #eef3ff 100%);
+  box-shadow: 0 4px 14px rgba(0,60,255,.12);
+}
+
+.iu-mojeSluzbyBanka .iu-ib-edit-btn:active{
+  transform: translateY(1px);
+  box-shadow: 0 1px 6px rgba(0,60,255,.1);
+}
+
+.iu-mojeSluzbyBanka .iu-ib-edit-btn:focus-visible{
+  outline: none;
+  border-color: rgba(0,60,255,.45);
+  box-shadow: 0 0 0 3px rgba(0,60,255,.14);
+}
+
+.iu-mojeSluzbyBanka .iu-ib-section-title{
+  margin: 0 0 10px;
+  padding: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: rgba(0,60,255,.82);
+  border-bottom: 1px solid rgba(0,60,255,.14);
+}
+
+.iu-mojeSluzbyBanka .iu-ib-input{
+  width: 100%;
+  max-width: 320px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,60,255,.18);
+  background: #fff;
+  color: #0f172a;
+  font-size: 14px;
+  line-height: 1.35;
+  box-sizing: border-box;
+  box-shadow: 0 1px 2px rgba(15,23,42,.05);
+  transition: border-color .15s ease, box-shadow .15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.iu-mojeSluzbyBanka .iu-ib-input::placeholder{
+  color: rgba(15,23,42,.42);
+}
+
+.iu-mojeSluzbyBanka .iu-ib-input:focus{
+  outline: none;
+  border-color: rgba(0,60,255,.42);
+  box-shadow: 0 0 0 3px rgba(0,60,255,.12), 0 1px 2px rgba(15,23,42,.05);
+}
+
+.iu-mojeSluzbyBanka .iu-ibBankCustomForm{
+  margin-top: 4px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0,60,255,.1);
+  gap: 10px;
+}
+
+.iu-mojeSluzbyBanka .iu-ibBankCustomForm .iu-ib-input{
+  flex: 1 1 140px;
+  min-width: 0;
+  max-width: none;
+}
+
+.iu-mojeSluzbyBanka .iu-ib-action-btn{
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(4,120,87,.28);
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.2;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(22,163,74,.28);
+  transition: background .15s ease, box-shadow .15s ease, transform .15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.iu-mojeSluzbyBanka .iu-ib-action-btn:hover{
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  box-shadow: 0 4px 16px rgba(22,163,74,.34);
+}
+
+.iu-mojeSluzbyBanka .iu-ib-action-btn:active{
+  transform: translateY(1px);
+}
+
+.iu-mojeSluzbyBanka .iu-ib-action-btn:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(22,163,74,.22), 0 3px 12px rgba(22,163,74,.28);
+}
+
+.iu-mojeSluzbyBankaFav,
+.iu-mojeSluzbyBankaAll{
+  margin-top: 2px;
+}
+
+@media (max-width: 1023px){
+  #iuQuickFeed .iu-mojeSluzbyBanka .iu-ib-info-box{
+    margin-bottom: 2px;
+  }
+
+  #iuQuickFeed .iu-mojeSluzbyBanka .iu-ib-input{
+    max-width: 100%;
+  }
+
+  #iuQuickFeed .iu-ibBankCustomForm[data-iu-ib-custom-form="1"] .iu-ib-action-btn{
+    width: 100%;
+    max-width: 100%;
+    margin-top: 2px;
+    padding: 11px 18px;
+    font-size: 15px;
+    border-radius: 12px;
+    box-sizing: border-box;
+  }
+
+  #iuQuickFeed .iu-ibBankCustomForm[data-iu-ib-custom-form="1"] .iu-ib-input{
+    width: 100%;
+    max-width: 100%;
+  }
+}
