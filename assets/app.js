@@ -16810,6 +16810,13 @@ function buildVideoAsArticleCard(it) {
             var btn = t && t.closest ? t.closest("[data-iu-bottom-nav]") : null;
             if (!btn) return;
             var k = String(btn.getAttribute("data-iu-bottom-nav") || "");
+            if (k !== "silver") {
+              try {
+                if (typeof window.iuSilverQuickPanelIsOpen === "function" && window.iuSilverQuickPanelIsOpen()) {
+                  if (typeof window.iuSilverQuickPanelClose === "function") window.iuSilverQuickPanelClose();
+                }
+              } catch (_) {}
+            }
             if (k === "home") {
               try {
                 if (typeof window.iuProjectsHubNavigateHardResetFromHomeOrBack === "function") {
@@ -16863,6 +16870,11 @@ function buildVideoAsArticleCard(it) {
               return;
             }
             if (k === "silver") {
+              try {
+                if (typeof window.iuSilverQuickPanelHandleBottomNavSilver === "function") {
+                  if (window.iuSilverQuickPanelHandleBottomNavSilver()) return;
+                }
+              } catch (_) {}
               try {
                 var hero = document.getElementById("iuSilverHeroPremium");
                 if (hero && typeof hero.scrollIntoView === "function") {
