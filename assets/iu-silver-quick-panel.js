@@ -42,6 +42,22 @@
     return document.getElementById("iuSilverQuickPanelSend");
   }
 
+  function fieldShellEl() {
+    var panel = panelEl();
+    if (!panel) return null;
+    return panel.querySelector(".iuSilverQuickPanel__fieldShell");
+  }
+
+  function composerEl() {
+    var panel = panelEl();
+    if (!panel) return null;
+    return panel.querySelector(".iuSilverQuickPanel__composer");
+  }
+
+  function prefixEl() {
+    return document.getElementById("iuSilverQuickPanelPrefix");
+  }
+
   function silverNavBtn() {
     return document.querySelector('#iuMobileBottomNav [data-iu-bottom-nav="silver"]');
   }
@@ -67,18 +83,57 @@
     }
   }
 
-  function applyNotesPrefix() {
+  function syncQuickPanelUxState() {
+    var inp = inputEl();
+    var shell = fieldShellEl();
+    var composer = composerEl();
+    var prefix = prefixEl();
+    if (!inp || !shell) return;
+    var empty = !String(inp.value || "").length;
+    var focused = false;
+    try {
+      focused = document.activeElement === inp;
+    } catch (_) {}
+    var templateMode = empty && !focused;
+    try {
+      shell.classList.toggle("iuSilverQuickPanel__fieldShell--template", templateMode);
+      shell.classList.toggle("iuSilverQuickPanel__fieldShell--compose", !templateMode);
+    } catch (_) {}
+    if (composer) {
+      try {
+        composer.classList.toggle("iuSilverQuickPanel__composer--templateMode", templateMode);
+        composer.classList.toggle("iuSilverQuickPanel__composer--composeMode", !templateMode);
+      } catch (_) {}
+    }
+    if (prefix) {
+      try {
+        prefix.hidden = !templateMode;
+        prefix.setAttribute("aria-hidden", templateMode ? "false" : "true");
+      } catch (_) {}
+    }
+  }
+
+  function resetQuickPanelTemplateMode() {
+    var inp = inputEl();
+    if (inp) {
+      try {
+        inp.value = "";
+      } catch (_) {}
+      try {
+        inp.blur();
+      } catch (_) {}
+    }
+    syncQuickPanelUxState();
+  }
+
+  function insertNotesPrefix() {
     var inp = inputEl();
     if (!inp) return;
     try {
       inp.value = PREFIX_NOTES;
-      var pos = PREFIX_NOTES.length;
-      inp.setSelectionRange(pos, pos);
-    } catch (_) {
-      try {
-        inp.value = PREFIX_NOTES;
-      } catch (_2) {}
-    }
+    } catch (_) {}
+    syncQuickPanelUxState();
+    focusInput();
   }
 
   function focusInput() {
@@ -97,29 +152,21 @@
           var pos = String(inp.value || "").length;
           inp.setSelectionRange(pos, pos);
         } catch (_3) {}
+        syncQuickPanelUxState();
       }, 40);
     });
   }
 
   function closePanel() {
     if (!open) return;
-    var inp = inputEl();
-    if (inp) {
-      try {
-        inp.blur();
-      } catch (_) {}
-      try {
-        inp.value = "";
-      } catch (_) {}
-    }
+    resetQuickPanelTemplateMode();
     setOpen(false);
   }
 
   function openPanel() {
     if (!narrowMobileTablet() || !bottomNavVisible()) return;
     setOpen(true);
-    applyNotesPrefix();
-    focusInput();
+    resetQuickPanelTemplateMode();
   }
 
   function togglePanel() {
@@ -152,7 +199,7 @@
     var panel = panelEl();
     var inp = inputEl();
     var send = sendEl();
-    var prefix = document.getElementById("iuSilverQuickPanelPrefix");
+    var prefix = prefixEl();
     if (!panel || !inp || !send) return;
 
     if (!send.__iuSilverQuickPanelBound) {
@@ -173,13 +220,15 @@
           e.preventDefault();
           e.stopPropagation();
         } catch (_) {}
-        applyNotesPrefix();
-        focusInput();
+        insertNotesPrefix();
       });
     }
 
     if (!inp.__iuSilverQuickPanelBound) {
       inp.__iuSilverQuickPanelBound = 1;
+      inp.addEventListener("input", syncQuickPanelUxState);
+      inp.addEventListener("focus", syncQuickPanelUxState);
+      inp.addEventListener("blur", syncQuickPanelUxState);
       inp.addEventListener("keydown", function (e) {
         try {
           if (e.key === "Enter" && !e.shiftKey) {
@@ -189,6 +238,8 @@
         } catch (_) {}
       });
     }
+
+    syncQuickPanelUxState();
   }
 
   function handleBottomNavSilver() {
@@ -206,6 +257,7 @@
       window.iuSilverQuickPanelIsOpen = function () {
         return open;
       };
+      window.__iuSilverSyncQuickPanelUxState = syncQuickPanelUxState;
     } catch (_) {}
   }
 
