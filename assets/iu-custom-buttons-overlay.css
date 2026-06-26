@@ -1,0 +1,125 @@
+/* === Vlastní tlačítka overlay — odděleno od app.css (css_debt_guard) === */
+#iuCustomButtonsBackdrop.iu-custom-buttons-overlay-backdrop[hidden],
+#iuCustomButtonsPanel.iu-custom-buttons-overlay-panel[hidden]{
+  display: none !important;
+}
+@media (max-width: 1024px){
+  #iuCustomButtonsBackdrop.iu-custom-buttons-overlay-backdrop:not([hidden]){
+    position: fixed;
+    inset: 0;
+    z-index: 10029;
+    background: rgba(15, 23, 42, 0.48);
+    box-sizing: border-box;
+  }
+  #iuCustomButtonsPanel.iu-custom-buttons-overlay-panel:not([hidden]){
+    position: fixed;
+    inset: 0;
+    z-index: 10030;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    pointer-events: none;
+  }
+  #iuCustomButtonsPanel.iu-custom-buttons-overlay-panel:not([hidden]) .iu-custom-buttons-overlay-cardShell{
+    pointer-events: auto;
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    height: 100vh;
+    height: 100svh;
+    height: 100dvh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: #fafafa;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+    border: 0;
+  }
+  #iuCustomButtonsPanel.iu-custom-buttons-overlay-panel:not([hidden]) .iu-custom-buttons-overlay-inner{
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1 1 auto;
+    max-height: inherit;
+  }
+  #iuCustomButtonsPanel.iu-custom-buttons-overlay-panel:not([hidden]) .iu-custom-buttons-overlay-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+  #iuCustomButtonsScrollHost.iu-custom-buttons-overlay-scrollHost{
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior-y: contain;
+    padding: 14px 14px calc(var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) + 10px);
+  }
+}
+
+/* Quick-link tile grid: uniform 2-col cells (mobil/tablet ≤1024px) */
+@media (max-width: 1024px){
+  :is(#iuMobileGatePanelTools,#iuMindMenuView) .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid,
+  body :is(.layout > aside.accordionCol,.accordionCol) .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid{
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    justify-items: stretch !important;
+    align-items: stretch !important;
+    gap: 10px 12px !important;
+    min-height: 0 !important;
+  }
+  :is(#iuMobileGatePanelTools,#iuMindMenuView) .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile,
+  body :is(.layout > aside.accordionCol,.accordionCol) .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > .iuTile{
+    width: 100% !important;
+    min-width: 0 !important;
+    justify-self: stretch !important;
+    align-self: stretch !important;
+    grid-column: auto !important;
+    height: 96px !important;
+    min-height: 96px !important;
+    max-height: 96px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  :is(#iuMobileGatePanelTools,#iuMindMenuView) .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink,
+  body :is(.layout > aside.accordionCol,.accordionCol) .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink{
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: none !important;
+    flex: 1 1 auto !important;
+    box-sizing: border-box !important;
+  }
+  :is(#iuMobileGatePanelTools,#iuMindMenuView) .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText,
+  body :is(.layout > aside.accordionCol,.accordionCol) .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText{
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    flex: 1 1 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 14px !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    box-sizing: border-box !important;
+  }
+}

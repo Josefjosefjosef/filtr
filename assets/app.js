@@ -6892,7 +6892,75 @@ try {
   const IU_SAVED_ARTICLES_KEY = "iuSavedArticles";
   const IU_FOLLOWED_TOPICS_KEY = "iuFollowedTopics";
   const IU_HIDDEN_ARTICLES_KEY = "iuHiddenArticles";
+  const IU_READ_ARTICLES_KEY = "iuReadArticles_v1";
+  const IU_READ_ARTICLES_MAX = 2500;
   const IU_HIDE_UNDO_MS = 5000;
+
+  function iuReadArticlesIsMobileTabletViewport() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
+    } catch (_) {}
+    return false;
+  }
+
+  function iuReadArticlesGetIdSet() {
+    const set = new Set();
+    const list = iuArticleActionsReadJson(IU_READ_ARTICLES_KEY);
+    for (const row of list) {
+      const id = String(row || "").trim();
+      if (id) set.add(id);
+    }
+    return set;
+  }
+
+  function iuReadArticlesIsRead(articleId) {
+    const id = String(articleId || "").trim();
+    if (!id) return false;
+    return iuReadArticlesGetIdSet().has(id);
+  }
+
+  function iuReadArticlesMarkRead(articleId) {
+    const id = String(articleId || "").trim();
+    if (!id || !iuReadArticlesIsMobileTabletViewport()) return;
+    const set = iuReadArticlesGetIdSet();
+    if (set.has(id)) return;
+    set.add(id);
+    const arr = Array.from(set);
+    iuArticleActionsWriteJson(
+      IU_READ_ARTICLES_KEY,
+      arr.length > IU_READ_ARTICLES_MAX ? arr.slice(arr.length - IU_READ_ARTICLES_MAX) : arr
+    );
+  }
+
+  function iuReadArticlesApplyToArticle(articleEl) {
+    if (!articleEl || !iuReadArticlesIsMobileTabletViewport()) return;
+    const id = String(articleEl.getAttribute("data-iu-article-id") || "").trim();
+    const isRead = id && iuReadArticlesIsRead(id);
+    articleEl.classList.toggle("iuTimelineItem--read", !!isRead);
+    const left = articleEl.querySelector(".iuTimelineLeft");
+    if (!left) return;
+    let mark = left.querySelector(".iuTimelineReadMark");
+    if (isRead) {
+      if (!mark) {
+        mark = document.createElement("span");
+        mark.className = "iuTimelineReadMark";
+        mark.setAttribute("aria-hidden", "true");
+        mark.textContent = "✓";
+        left.appendChild(mark);
+      }
+    } else if (mark) {
+      mark.remove();
+    }
+  }
+
+  function iuReadArticlesSyncFeed(feedRoot) {
+    try {
+      if (!feedRoot || !iuReadArticlesIsMobileTabletViewport()) return;
+      feedRoot.querySelectorAll("article.iuTimelineItem[data-feed-type='article']").forEach(function (art) {
+        iuReadArticlesApplyToArticle(art);
+      });
+    } catch (_) {}
+  }
 
   function iuArticleActionsReadJson(key) {
     try {
@@ -7099,6 +7167,7 @@ try {
           const followed = iuArticleActionsIsFollowed(id);
           iuArticleActionsSyncButtonState(followBtn, "follow", followed, followed ? "Sledováno" : "Sledovat");
         }
+        iuReadArticlesApplyToArticle(art);
       }
     } catch (_) {}
   }
@@ -7647,6 +7716,16 @@ try {
     try {
       const t = e.target;
       if (!(t instanceof Element)) return;
+      const titleLink = t.closest("article.iuTimelineItem[data-feed-type='article'] .news-titleLink");
+      if (titleLink && iuReadArticlesIsMobileTabletViewport()) {
+        const articleEl = titleLink.closest("article.iuTimelineItem");
+        const id = articleEl ? String(articleEl.getAttribute("data-iu-article-id") || "").trim() : "";
+        if (id) {
+          iuReadArticlesMarkRead(id);
+          iuReadArticlesApplyToArticle(articleEl);
+        }
+        return;
+      }
       const undoBtn = t.closest("[data-iu-action='hide-undo']");
       if (undoBtn) {
         e.preventDefault();
@@ -16731,6 +16810,13 @@ function buildVideoAsArticleCard(it) {
             var btn = t && t.closest ? t.closest("[data-iu-bottom-nav]") : null;
             if (!btn) return;
             var k = String(btn.getAttribute("data-iu-bottom-nav") || "");
+            if (k !== "silver") {
+              try {
+                if (typeof window.iuSilverQuickPanelIsOpen === "function" && window.iuSilverQuickPanelIsOpen()) {
+                  if (typeof window.iuSilverQuickPanelClose === "function") window.iuSilverQuickPanelClose();
+                }
+              } catch (_) {}
+            }
             if (k === "home") {
               try {
                 if (typeof window.iuProjectsHubNavigateHardResetFromHomeOrBack === "function") {
@@ -16784,6 +16870,11 @@ function buildVideoAsArticleCard(it) {
               return;
             }
             if (k === "silver") {
+              try {
+                if (typeof window.iuSilverQuickPanelHandleBottomNavSilver === "function") {
+                  if (window.iuSilverQuickPanelHandleBottomNavSilver()) return;
+                }
+              } catch (_) {}
               try {
                 var hero = document.getElementById("iuSilverHeroPremium");
                 if (hero && typeof hero.scrollIntoView === "function") {
@@ -22802,7 +22893,6 @@ function buildVideoAsArticleCard(it) {
     overlay.innerHTML = `
       <div class="iuWeatherMapPickerPanel">
         <div class="iuWeatherMapPickerHead">
-          <div class="iuWeatherMapPickerTitle">Zvolte místo na mapě</div>
           <button type="button" class="iuWeatherMapPickerClose" aria-label="Zavřít">✕</button>
         </div>
         <div class="iuWeatherMapPickerSearchRow">
@@ -23585,7 +23675,8 @@ function buildVideoAsArticleCard(it) {
   const MAILBOX_STORAGE_KEY = "iu_mailboxes_v1";
   const IU_MM_SOCIAL_DEFAULTS_FLAG = "iu_mm_social_defaults_v1";
   const IU_MAILBOX_DEFAULT_SOCIAL = ["facebook", "instagram", "x", "tiktok"];
-  const MAILBOX_PLACEHOLDERS = ["Např.: e-mail 1", "Např.: e-mail 2", "Např.: pracovní web", "Např.: oblíbený web"];
+  const IU_MM_EDIT_INPUT_PLACEHOLDER = "Nastavit e-mail";
+  const MAILBOX_PLACEHOLDERS = [IU_MM_EDIT_INPUT_PLACEHOLDER, IU_MM_EDIT_INPUT_PLACEHOLDER, IU_MM_EDIT_INPUT_PLACEHOLDER, IU_MM_EDIT_INPUT_PLACEHOLDER];
   const IU_MAILBOX_MIN = 1;
   const IU_MAILBOX_MAX = 6;
   const IU_MAILBOX_LABEL_MAX = 25;
@@ -23835,9 +23926,9 @@ function buildVideoAsArticleCard(it) {
       const colorfulChecked = it.colorful !== false ? " checked" : "";
       form.innerHTML = `
         <p style="margin:0 0 12px 0;font-weight:600;">Název tlačítka (max ${MAX} znaků)</p>
-        <input type="text" id="iu-mailbox-edit-label" maxlength="${MAX}" autocomplete="off" value="${escapeHtml(it.label || "")}" style="width:100%;min-width:280px;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
+        <input type="text" id="iu-mailbox-edit-label" maxlength="${MAX}" autocomplete="off" placeholder="${escapeHtml(IU_MM_EDIT_INPUT_PLACEHOLDER)}" value="${escapeHtml(it.label || "")}" style="width:100%;min-width:280px;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
         <p style="margin:0 0 12px 0;font-weight:600;">URL (www)</p>
-        <input type="text" id="iu-mailbox-edit-url" autocomplete="off" value="${escapeHtml(it.url || "")}" style="width:100%;min-width:280px;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
+        <input type="text" id="iu-mailbox-edit-url" autocomplete="off" placeholder="${escapeHtml(IU_MM_EDIT_INPUT_PLACEHOLDER)}" value="${escapeHtml(it.url || "")}" style="width:100%;min-width:280px;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
         <label style="display:flex;align-items:center;gap:8px;margin:0 0 12px 0;font-size:14px;cursor:pointer;">
           <input type="checkbox" id="iu-mailbox-edit-colorful"${colorfulChecked} />
           <span>Barevný input</span>
@@ -25096,6 +25187,11 @@ function buildVideoAsArticleCard(it) {
     });
 
     iuCustomButtonsBindPanel();
+    const mmPh = IU_MM_EDIT_INPUT_PLACEHOLDER;
+    const cbName = document.getElementById("iuCustomButtonsName");
+    const cbUrl = document.getElementById("iuCustomButtonsUrl");
+    if (cbName) cbName.placeholder = mmPh;
+    if (cbUrl) cbUrl.placeholder = mmPh;
   }
 
   function iuQuickToolsBindDocumentOnce() {
@@ -36699,7 +36795,6 @@ function buildVideoAsArticleCard(it) {
       var ro = p.isSaved ? " readonly" : "";
       var showUrl = pr && pr.requiresCustomUrl;
       var loginLab = pr ? esc(pr.loginLabel) : esc("Přihlašovací údaj");
-      var copyLoginLab = pr ? esc(pr.copyLoginLabel) : esc("Kopírovat přihlašovací údaj");
       var openLab = pr ? esc(pr.openLabel) : esc("Otevřít pojišťovnu");
       var provLabel = pr ? esc(pr.name) : esc("Vyberte pojišťovnu");
       var provDisabled = p.isSaved ? " disabled aria-disabled=\"true\"" : "";
@@ -36714,10 +36809,6 @@ function buildVideoAsArticleCard(it) {
         "<section class=\"iu-health-card" + lockClass + "\" data-iu-health-index=\"" + ix + "\" style=\"--iu-health-accent:" + accent + "\">" +
         "  <h3 class=\"iu-health-card-title\" data-iu-health-card-title>" + esc(healthCardTitleLine(p)) + "</h3>" +
         "  <button type=\"button\" class=\"iu-health-open-btn\" data-iu-health-open disabled aria-disabled=\"true\">" + openLab + "</button>" +
-        "  <div class=\"iu-health-copy-row\">" +
-        "    <button type=\"button\" class=\"iu-health-btn iu-health-btn--mini iu-health-btn--ghost\" data-iu-health-copy-login>" + copyLoginLab + "</button>" +
-        "    <button type=\"button\" class=\"iu-health-btn iu-health-btn--mini iu-health-btn--ghost\" data-iu-health-copy-password>Kopírovat heslo</button>" +
-        "  </div>" +
         "  <label class=\"iu-health-field\">" +
         "    <span class=\"iu-health-label\">Pojišťovna</span>" +
         "    <button type=\"button\" class=\"iu-health-provider-trigger\" data-iu-health-provider-trigger" + provDisabled + ">" + provLabel + "</button>" +
@@ -36730,17 +36821,21 @@ function buildVideoAsArticleCard(it) {
         "    <span class=\"iu-health-label\">Pro koho</span>" +
         "    <input type=\"text\" class=\"iu-health-input\" data-iu-health-person maxlength=\"120\" autocomplete=\"name\" placeholder=\"např. Josef, Dcera…\"" + ro + " value=\"" + personV + "\" />" +
         "  </label>" +
-        "  <label class=\"iu-health-field\">" +
+        "  <div class=\"iu-health-field\">" +
         "    <span class=\"iu-health-label\" data-iu-health-login-label>" + loginLab + "</span>" +
-        "    <input type=\"text\" class=\"iu-health-input\" data-iu-health-login autocomplete=\"username\" spellcheck=\"false\"" + ro + " value=\"" + loginV + "\" />" +
-        "  </label>" +
-        "  <label class=\"iu-health-field\">" +
+        "    <div class=\"iu-health-inline-row\">" +
+        "      <input type=\"text\" class=\"iu-health-input\" data-iu-health-login autocomplete=\"username\" spellcheck=\"false\"" + ro + " value=\"" + loginV + "\" />" +
+        "      <button type=\"button\" class=\"iu-health-btn iu-health-btn--mini iu-health-btn--ghost\" data-iu-health-copy-login>Kopírovat</button>" +
+        "    </div>" +
+        "  </div>" +
+        "  <div class=\"iu-health-field\">" +
         "    <span class=\"iu-health-label\">Heslo</span>" +
         "    <div class=\"iu-health-inline-row\">" +
         "      <input type=\"password\" class=\"iu-health-input\" data-iu-health-password autocomplete=\"current-password\"" + ro + " value=\"" + passV + "\" />" +
-        "      <button type=\"button\" class=\"iu-health-btn iu-health-btn--mini iu-health-btn--ghost\" data-iu-health-toggle-pw aria-pressed=\"false\">Zobrazit heslo</button>" +
+        "      <button type=\"button\" class=\"iu-health-btn iu-health-btn--mini iu-health-btn--ghost\" data-iu-health-copy-password>Kopírovat</button>" +
         "    </div>" +
-        "  </label>" +
+        "    <button type=\"button\" class=\"iu-health-btn iu-health-btn--ghost iu-health-toggle-pw\" data-iu-health-toggle-pw aria-pressed=\"false\">Zobrazit heslo</button>" +
+        "  </div>" +
         helper +
         "  <div class=\"iu-health-card-actions\">" +
         "    <button type=\"button\" class=\"iu-health-btn iu-health-btn--secondary\" data-iu-health-save>Uložit</button>" +
@@ -39068,8 +39163,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   var ID = "iu-mindmenu-mobile-tablet-elevated";
   var CSS =
     "@media(max-width:1024px){" +
-    "body #iuMindMenuView .iu-mailbox-pill," +
-    "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-pill," +
+    "body #iuMindMenuView .iu-mailbox-pill--plain," +
+    "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-pill--plain," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>.iuTileLink," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>a.iuTileLink," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>button.iuTileLink," +
@@ -39078,8 +39173,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "background:#fff!important;background-color:#fff!important;" +
     "border:1px solid rgba(15,23,42,.06)!important;" +
     "box-shadow:0 6px 18px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.06)!important}" +
-    "body #iuMindMenuView .iu-mailbox-pill:active," +
-    "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-pill:active," +
+    "body #iuMindMenuView .iu-mailbox-pill--plain:active," +
+    "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-pill--plain:active," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>.iuTileLink:active," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>a.iuTileLink:active," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>button.iuTileLink:active," +
@@ -39161,6 +39256,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ".iu-custom-buttons-deleteConfirmBtn{border:0;background:#b91c1c;color:#fff}" +
     "body.iu-custom-buttons-overlay-open{overflow:hidden}" +
     "#iuMobileGatePanelTools .mindMenu :is(input[type=text],input[type=url],input[type=search],textarea,select),.iu-custom-buttons-overlay-panel :is(input,textarea,select){font-size:16px!important}" +
+    "#iu-mailbox-edit-overlay input::placeholder,.iu-custom-buttons-field input::placeholder{color:rgba(107,114,128,.78);opacity:1}" +
     "@media(min-width:1025px){" +
     "body .layout>aside.accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow,body .accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;flex-wrap:nowrap!important;max-width:100%!important;position:relative!important;z-index:2!important}" +
     "body .layout>aside.accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow .iu-mmSectionTitle,body .accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow .iu-mmSectionTitle{width:auto!important;flex:0 1 auto!important;min-width:0!important}" +

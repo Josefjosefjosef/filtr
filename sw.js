@@ -53,6 +53,7 @@ function getAppShellUrls() {
     `${BASE}assets/iu-financial-overlay.css`,
     `${BASE}assets/iu-legal-documents-overlay.css`,
     `${BASE}assets/iu-invoice-overlay.css`,
+    `${BASE}assets/iu-custom-buttons-overlay.css`,
     `${BASE}assets/app-crash-shield.js`,
     `${BASE}assets/app.js`,
     `${BASE}sw.js`
