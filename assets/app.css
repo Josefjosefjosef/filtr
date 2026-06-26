@@ -6026,6 +6026,18 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   font-size: 0.9rem;
 }
 
+#iuWeatherView .iuWeatherHistorySource{
+  display: none;
+  opacity: 0.7;
+  font-size: 0.9rem;
+  padding: 0 12px 0;
+  box-sizing: border-box;
+}
+
+#iuWeatherView #iuWeatherHistoryPlayerHost:not([hidden]) + .iuWeatherHistorySource{
+  display: block;
+}
+
 #iuWeatherView #iuWeatherHistoryPlayerHost.iu-weather-video-embed-host{
   padding: 0 12px 12px;
   box-sizing: border-box;
@@ -6166,6 +6178,7 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   cursor: pointer;
   padding: 6px 10px;
   border-radius: 10px;
+  margin-left: auto;
 }
 .iuWeatherMapPickerClose:focus-visible{
   outline: 3px solid #fff;
