@@ -1834,7 +1834,7 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v2" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=invoice-desktop-fullpage-v1-20260620" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-custom-buttons-overlay.css?v=custom-buttons-mobile-scroll-v1" />
-    <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1549parcel-universal-box-ui" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=20" />
     <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=3" />
     <link rel="stylesheet" href="/assets/iu-home-premium-install-box.css?v=1" />
@@ -5809,10 +5809,20 @@ font-src 'self' data:;
       </div>
       <div class="iu-parcels-modal-content">
         <div class="iu-parcels-content-inner">
-          <section class="iu-parcels-quicktrack iu-parcels-guard-quicktrack" aria-label="Vyhledání zásilky podle čísla">
-            <h4 class="iu-parcels-quicktrack-title">Vyhledání zásilky podle čísla</h4>
+          <section class="iu-parcels-quicktrack iu-parcels-guard-quicktrack" aria-label="Univerzální vyhledávač zásilek">
+            <span class="iu-parcels-quicktrack-badge" aria-hidden="true">Doporučeno</span>
+            <div class="iu-parcels-quicktrack-head">
+              <span class="iu-parcels-quicktrack-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" focusable="false" role="img">
+                  <path d="M4 8h16v12H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  <path d="M8 8V6h8v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M8 13h8M8 17h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <h4 class="iu-parcels-quicktrack-title">Univerzální vyhledávač zásilek</h4>
+            </div>
             <p class="iu-parcels-quicktrack-lead">
-              Zadejte číslo — otevřeme oficiální sledování u dopravce (bez scrapování a bez ukládání údajů o zásilkách).
+              Zadejte číslo zásilky a otevřeme oficiální sledování u správného dopravce.
             </p>
             <div class="iu-parcels-quicktrack-row">
               <input
@@ -5830,6 +5840,9 @@ font-src 'self' data:;
                 Vyhledat zásilku
               </button>
             </div>
+            <p class="iu-parcels-quicktrack-privacy">
+              Otevíráme pouze oficiální sledování dopravců. Údaje o zásilkách neukládáme.
+            </p>
             <div class="iu-parcels-quicktrack-postal" id="iuParcelQuickPostalRow" hidden>
               <label class="iu-parcels-quicktrack-postal-label" for="iuParcelQuickPostal">PSČ (doručovací adresa nebo výdejní místo)</label>
               <input
@@ -5844,6 +5857,10 @@ font-src 'self' data:;
               />
             </div>
             <div class="iu-parcels-quicktrack-message" id="iuParcelQuickMessage" role="status" aria-live="polite"></div>
+            <div class="iu-parcels-quicktrack-carriers">
+              <p class="iu-parcels-quicktrack-carriers-label">Podporovaní dopravci</p>
+              <div class="iu-parcels-quicktrack-chips" id="iuParcelQuickCarriers" role="list" aria-label="Podporovaní dopravci"></div>
+            </div>
           </section>
           <div class="iu-parcels-fallback-banner" id="iuParcelFallbackBanner" hidden>
             Dopravce se nepodařilo bezpečně určit podle čísla zásilky. Vyberte ho ručně v seznamu níže.
@@ -5989,6 +6006,31 @@ font-src 'self' data:;
       </div>
       </div>
     </div>
+    <script>
+      (function () {
+        function iuParcelQuicktrackSyncCarriers() {
+          var host = document.getElementById("iuParcelQuickCarriers");
+          var root = document.querySelector(".iu-parcels-content-inner");
+          if (!host || !root) return;
+          var names = root.querySelectorAll(".iu-parcel-carrier-name");
+          host.textContent = "";
+          for (var i = 0; i < names.length; i += 1) {
+            var label = (names[i].textContent || "").replace(/\s+/g, " ").trim();
+            if (!label) continue;
+            var chip = document.createElement("span");
+            chip.className = "iu-parcels-quicktrack-chip";
+            chip.setAttribute("role", "listitem");
+            chip.textContent = label;
+            host.appendChild(chip);
+          }
+        }
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", iuParcelQuicktrackSyncCarriers);
+        } else {
+          iuParcelQuicktrackSyncCarriers();
+        }
+      })();
+    </script>
 
     <div id="svatekOverlay" class="iuModal iuSvatekOverlayRoot" hidden aria-hidden="true">
       <div class="iuModalCard iuSvatekOverlayCard" role="dialog" aria-modal="true" aria-labelledby="svatekOverlayLeadMain">
