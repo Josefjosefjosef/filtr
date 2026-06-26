@@ -23664,7 +23664,8 @@ function buildVideoAsArticleCard(it) {
   const MAILBOX_STORAGE_KEY = "iu_mailboxes_v1";
   const IU_MM_SOCIAL_DEFAULTS_FLAG = "iu_mm_social_defaults_v1";
   const IU_MAILBOX_DEFAULT_SOCIAL = ["facebook", "instagram", "x", "tiktok"];
-  const MAILBOX_PLACEHOLDERS = ["Např.: e-mail 1", "Např.: e-mail 2", "Např.: pracovní web", "Např.: oblíbený web"];
+  const IU_MM_EDIT_INPUT_PLACEHOLDER = "Nastavit e-mail";
+  const MAILBOX_PLACEHOLDERS = [IU_MM_EDIT_INPUT_PLACEHOLDER, IU_MM_EDIT_INPUT_PLACEHOLDER, IU_MM_EDIT_INPUT_PLACEHOLDER, IU_MM_EDIT_INPUT_PLACEHOLDER];
   const IU_MAILBOX_MIN = 1;
   const IU_MAILBOX_MAX = 6;
   const IU_MAILBOX_LABEL_MAX = 25;
@@ -23914,9 +23915,9 @@ function buildVideoAsArticleCard(it) {
       const colorfulChecked = it.colorful !== false ? " checked" : "";
       form.innerHTML = `
         <p style="margin:0 0 12px 0;font-weight:600;">Název tlačítka (max ${MAX} znaků)</p>
-        <input type="text" id="iu-mailbox-edit-label" maxlength="${MAX}" autocomplete="off" value="${escapeHtml(it.label || "")}" style="width:100%;min-width:280px;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
+        <input type="text" id="iu-mailbox-edit-label" maxlength="${MAX}" autocomplete="off" placeholder="${escapeHtml(IU_MM_EDIT_INPUT_PLACEHOLDER)}" value="${escapeHtml(it.label || "")}" style="width:100%;min-width:280px;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
         <p style="margin:0 0 12px 0;font-weight:600;">URL (www)</p>
-        <input type="text" id="iu-mailbox-edit-url" autocomplete="off" value="${escapeHtml(it.url || "")}" style="width:100%;min-width:280px;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
+        <input type="text" id="iu-mailbox-edit-url" autocomplete="off" placeholder="${escapeHtml(IU_MM_EDIT_INPUT_PLACEHOLDER)}" value="${escapeHtml(it.url || "")}" style="width:100%;min-width:280px;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
         <label style="display:flex;align-items:center;gap:8px;margin:0 0 12px 0;font-size:14px;cursor:pointer;">
           <input type="checkbox" id="iu-mailbox-edit-colorful"${colorfulChecked} />
           <span>Barevný input</span>
@@ -25175,6 +25176,11 @@ function buildVideoAsArticleCard(it) {
     });
 
     iuCustomButtonsBindPanel();
+    const mmPh = IU_MM_EDIT_INPUT_PLACEHOLDER;
+    const cbName = document.getElementById("iuCustomButtonsName");
+    const cbUrl = document.getElementById("iuCustomButtonsUrl");
+    if (cbName) cbName.placeholder = mmPh;
+    if (cbUrl) cbUrl.placeholder = mmPh;
   }
 
   function iuQuickToolsBindDocumentOnce() {
@@ -39146,8 +39152,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   var ID = "iu-mindmenu-mobile-tablet-elevated";
   var CSS =
     "@media(max-width:1024px){" +
-    "body #iuMindMenuView .iu-mailbox-pill," +
-    "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-pill," +
+    "body #iuMindMenuView .iu-mailbox-pill--plain," +
+    "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-pill--plain," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>.iuTileLink," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>a.iuTileLink," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>button.iuTileLink," +
@@ -39156,8 +39162,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "background:#fff!important;background-color:#fff!important;" +
     "border:1px solid rgba(15,23,42,.06)!important;" +
     "box-shadow:0 6px 18px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.06)!important}" +
-    "body #iuMindMenuView .iu-mailbox-pill:active," +
-    "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-pill:active," +
+    "body #iuMindMenuView .iu-mailbox-pill--plain:active," +
+    "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-pill--plain:active," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>.iuTileLink:active," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>a.iuTileLink:active," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>button.iuTileLink:active," +
@@ -39239,6 +39245,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ".iu-custom-buttons-deleteConfirmBtn{border:0;background:#b91c1c;color:#fff}" +
     "body.iu-custom-buttons-overlay-open{overflow:hidden}" +
     "#iuMobileGatePanelTools .mindMenu :is(input[type=text],input[type=url],input[type=search],textarea,select),.iu-custom-buttons-overlay-panel :is(input,textarea,select){font-size:16px!important}" +
+    "#iu-mailbox-edit-overlay input::placeholder,.iu-custom-buttons-field input::placeholder{color:rgba(107,114,128,.78);opacity:1}" +
     "@media(min-width:1025px){" +
     "body .layout>aside.accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow,body .accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;flex-wrap:nowrap!important;max-width:100%!important;position:relative!important;z-index:2!important}" +
     "body .layout>aside.accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow .iu-mmSectionTitle,body .accordionCol .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow .iu-mmSectionTitle{width:auto!important;flex:0 1 auto!important;min-width:0!important}" +
