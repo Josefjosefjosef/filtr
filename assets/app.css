@@ -15739,6 +15739,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 .iuSilverTallScrollViewport{
+  --iu-homecard-badge-h: 21px;
+  --iu-homecard-badge-px: 10px;
+  --iu-homecard-badge-radius: 7px;
+  --iu-homecard-badge-fs: 14px;
+  --iu-homecard-badge-fw: 800;
+  --iu-homecard-badge-ls: .03em;
+  --iu-homecard-badge-lh: 1;
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -15902,7 +15909,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 .iuSilverTallScrollViewport .iuNewsPreviewHeader{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid rgba(15,35,55,.14);min-width:0}
 .iuSilverTallScrollViewport .iuNewsPreviewTitleRow{display:flex;align-items:center;gap:10px;min-width:0;flex:1 1 auto}
 .iuSilverTallScrollViewport .iuNewsPreviewLabel{font-weight:800;flex:0 0 auto}
-.iuSilverTallScrollViewport .iuNewsPreviewBadge{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;height:21px;padding:0 10px;border-radius:7px;background:#d91c1c;color:#fff;font-size:14px;font-weight:800;letter-spacing:.03em;line-height:1;white-space:nowrap}
+.iuSilverTallScrollViewport :is(.iuNewsPreviewBadge,.iuSportPreviewLiveBadge,.iu-previewBadge--finance,.iu-previewBadge--health,.iu-previewBadge--travel,.iu-previewBadge--games,.iu-previewBadge--culture,.iu-previewBadge--science-history,.iu-previewBadge--education){flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;height:var(--iu-homecard-badge-h);min-height:var(--iu-homecard-badge-h);max-height:var(--iu-homecard-badge-h);padding:0 var(--iu-homecard-badge-px);border-radius:var(--iu-homecard-badge-radius);font-size:var(--iu-homecard-badge-fs);font-weight:var(--iu-homecard-badge-fw);letter-spacing:var(--iu-homecard-badge-ls);line-height:var(--iu-homecard-badge-lh);white-space:nowrap;box-sizing:border-box}
+.iuSilverTallScrollViewport .iuNewsPreviewBadge{background:#d91c1c;color:#fff}
 .iuSilverTallScrollViewport .iuNewsPreviewCard .iuNewsPreviewBadge--off{visibility:hidden;pointer-events:none}
 .iuSilverTallScrollViewport .iuNewsPreviewFreshness{flex:1 1 auto;min-width:0;font-size:15px;line-height:1.2;font-weight:600;color:currentColor;opacity:.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .iuSilverTallScrollViewport .iuNewsPreviewChevron{flex:0 0 auto;width:18px;height:18px;opacity:.62;color:currentColor}
@@ -15910,7 +15918,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 .iuSilverTallScrollViewport .iuNewsPreviewCard .iuNewsPreviewImgWrap,.iuSilverTallScrollViewport :is(.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education,.box-prehled-dne) .iuNewsPreviewImgWrap{display:block;width:100%;height:84px;min-height:84px;max-height:84px;overflow:hidden;border-radius:0 !important;background:rgba(15,35,55,.08);box-sizing:border-box;flex-shrink:0}
 .iuSilverTallScrollViewport .iuNewsPreviewCard .iuNewsPreviewImg{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 35%;border-radius:0 !important}
 .iuSilverTallScrollViewport :is(.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education,.box-prehled-dne) .iuNewsPreviewImg{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 50%;border-radius:0 !important}
-.iuSilverTallScrollViewport :is(.iu-previewBadge--finance,.iu-previewBadge--health,.iu-previewBadge--travel,.iu-previewBadge--games,.iu-previewBadge--culture,.iu-previewBadge--science-history,.iu-previewBadge--education){flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;height:18px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:800;letter-spacing:.03em;line-height:1;white-space:nowrap}
 .iuSilverTallScrollViewport .iu-previewBadge--finance{background:linear-gradient(180deg,#e8cf7a 0%,#c9a84a 55%,#b8922a 100%);color:#2a1f0a;border:1px solid rgba(160,120,40,.38);box-shadow:0 1px 0 rgba(255,255,255,.45) inset}
 .silver-welcome-stack--evening .iuSilverTallScrollViewport .iu-previewBadge--finance{background:linear-gradient(180deg,#d9bc62 0%,#a88428 100%);color:#f6f0d8;border-color:rgba(255,220,150,.28);box-shadow:0 1px 0 rgba(255,255,255,.22) inset}
 .iuSilverTallScrollViewport .iu-previewBadge--health{background:linear-gradient(180deg,#5ee1c8 0%,#2db8a8 52%,#1a8f86 100%);color:#062a28;border:1px solid rgba(20,110,100,.42);box-shadow:0 1px 0 rgba(255,255,255,.42) inset}
@@ -15919,13 +15926,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 .silver-welcome-stack--evening .iuSilverTallScrollViewport .iu-previewBadge--travel{background:linear-gradient(180deg,#f0a050 0%,#c47018 100%);color:#fff5e8;border-color:rgba(255,200,140,.35);box-shadow:0 1px 0 rgba(255,255,255,.22) inset}
 .iuSilverTallScrollViewport .iu-previewBadge--games{background:linear-gradient(180deg,#c4b5f5 0%,#8b6fd4 52%,#6b4bb8 100%);color:#f7f4ff;border:1px solid rgba(90,55,160,.42);box-shadow:0 1px 0 rgba(255,255,255,.38) inset}
 .silver-welcome-stack--evening .iuSilverTallScrollViewport .iu-previewBadge--games{background:linear-gradient(180deg,#a894e8 0%,#7550c4 100%);color:#f2edff;border-color:rgba(200,175,255,.38);box-shadow:0 1px 0 rgba(255,255,255,.2) inset}
-.iuSilverTallScrollViewport .iu-previewBadge--culture{background:linear-gradient(180deg,#ffc4e0 0%,#f06ba8 52%,#d9488c 100%);color:#2d0a1c;border:1px solid rgba(200,70,130,.38);box-shadow:0 1px 0 rgba(255,255,255,.5) inset;font-size:10px;padding:0 7px}
+.iuSilverTallScrollViewport .iu-previewBadge--culture{background:linear-gradient(180deg,#ffc4e0 0%,#f06ba8 52%,#d9488c 100%);color:#2d0a1c;border:1px solid rgba(200,70,130,.38);box-shadow:0 1px 0 rgba(255,255,255,.5) inset}
 .silver-welcome-stack--evening .iuSilverTallScrollViewport .iu-previewBadge--culture{background:linear-gradient(180deg,#e888b8 0%,#c43878 100%);color:#fff5f9;border-color:rgba(255,180,210,.4);box-shadow:0 1px 0 rgba(255,255,255,.22) inset}
-.iuSilverTallScrollViewport .iu-previewBadge--science-history{background:linear-gradient(180deg,#b8d9ff 0%,#5b9fe8 52%,#3a7fd4 100%);color:#0a1a2e;border:1px solid rgba(40,100,180,.42);box-shadow:0 1px 0 rgba(255,255,255,.55) inset;font-size:10px;padding:0 7px}
+.iuSilverTallScrollViewport .iu-previewBadge--science-history{background:linear-gradient(180deg,#b8d9ff 0%,#5b9fe8 52%,#3a7fd4 100%);color:#0a1a2e;border:1px solid rgba(40,100,180,.42);box-shadow:0 1px 0 rgba(255,255,255,.55) inset}
 .silver-welcome-stack--evening .iuSilverTallScrollViewport .iu-previewBadge--science-history{background:linear-gradient(180deg,#7eb3ea 0%,#3d7ec8 100%);color:#f0f7ff;border-color:rgba(160,210,255,.4);box-shadow:0 1px 0 rgba(255,255,255,.22) inset}
 .iuSilverTallScrollViewport .iu-previewBadge--education{background:linear-gradient(180deg,#ffe566 0%,#e6c200 52%,#c9a400 100%);color:#1f1a05;border:1px solid rgba(160,130,20,.42);box-shadow:0 1px 0 rgba(255,255,255,.55) inset}
 .silver-welcome-stack--evening .iuSilverTallScrollViewport .iu-previewBadge--education{background:linear-gradient(180deg,#e8d040 0%,#b89400 100%);color:#fffbeb;border-color:rgba(255,230,140,.38);box-shadow:0 1px 0 rgba(255,255,255,.22) inset}
-.iuSilverTallScrollViewport .iuSportPreviewLiveBadge{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;height:18px;padding:0 8px;border-radius:6px;background:#0a7d4f;color:#fff;font-size:11px;font-weight:800;letter-spacing:.03em;line-height:1;white-space:nowrap}
+.iuSilverTallScrollViewport .iuSportPreviewLiveBadge{background:#0a7d4f;color:#fff}
 .iuSilverTallScrollViewport .iuNewsPreviewText{min-width:0;display:grid;grid-template-rows:auto auto;gap:8px;align-content:start}
 .iuSilverTallScrollViewport .iuNewsPreviewHeadline,.iuSilverTallScrollViewport .iuNewsPreviewHeadline2{margin:0;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;min-height:32px}
 .iuSilverTallScrollViewport .iuNewsPreviewHeadline{font-size:13px;font-weight:800;-webkit-line-clamp:2;color:inherit}
