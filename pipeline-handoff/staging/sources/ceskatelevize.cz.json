@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-26T02:00:48.502679Z",
+  "ingestedAt": "2026-06-26T03:27:21.378702Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Počet obětí zemětřesení ve Venezuele stoupl zhruba na 235 a zřejmě dále poroste",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/pocet-obeti-zemetreseni-ve-venezuele-stoupl-zhruba-na-235-a-zrejme-dale-poroste-374974",
+      "dt": "2026-06-26T02:25:03Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "235",
+        "dále",
+        "obětí",
+        "poroste",
+        "počet",
+        "stoupl",
+        "venezuele",
+        "zemětřesení",
+        "zhruba",
+        "zřejmě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -739,33 +766,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rusko během války v Gruzii mučilo a vraždilo zajatce, rozhodl evropský soud",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusko-behem-valky-v-gruzii-mucilo-a-vrazdilo-zajatce-rozhodl-evropsky-soud-374934",
-      "dt": "2026-06-25T05:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "během",
-        "evropský",
-        "gruzii",
-        "mučilo",
-        "rozhodl",
-        "rusko",
-        "soud",
-        "vraždilo",
-        "války",
-        "zajatce"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -776,7 +776,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43345,
+      "bytes": 43525,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,7 +813,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-26T01:37:46Z",
+        "raw_feed_latest_publishedAt": "2026-06-26T02:25:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -829,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Počet obětí zemětřesení ve Venezuele stoupl zhruba na 235 a zřejmě dále poroste",
+            "publishedAt": "2026-06-26T02:25:03Z"
+          },
           {
             "title": "Poslanci se vrátí ke schvalování zákona, jenž má usnadnit výměnu úředníků",
             "publishedAt": "2026-06-26T01:37:46Z"
@@ -856,10 +860,6 @@
           {
             "title": "SOUHRN: Zásadní události čtvrtka 25. června",
             "publishedAt": "2026-06-25T16:29:00Z"
-          },
-          {
-            "title": "Teplotní rekordy padly na půlce stanic v Česku, podívejte se na mapu",
-            "publishedAt": "2026-06-25T16:27:47Z"
           }
         ]
       }
