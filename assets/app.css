@@ -16813,20 +16813,29 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     height: 28px;
     margin: 0;
     padding: 0 9px;
-    border: 1px solid rgba(22, 150, 78, 0.38);
-    background: rgba(255, 255, 255, 0.92);
+    border: 0;
+    background: transparent;
     color: #16964E;
     cursor: pointer;
     z-index: 6;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
+    border-radius: 0;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
     transform: translate(7px, -7px);
     transform-origin: center;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    box-shadow: none;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn:hover,
+  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn:active {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    opacity: 1;
   }
   #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg {
     display: none !important;
@@ -16840,14 +16849,16 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     white-space: nowrap;
   }
   #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn:focus-visible {
-    outline: 2px solid rgba(22, 150, 78, 0.85);
-    outline-offset: 2px;
+    outline: none;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
   #iuSilverWelcomeCard #iuNamedayCta{display:none!important;grid-column:1 / -1;grid-row:auto;margin:0!important;width:100%;min-height:0!important;height:0!important;overflow:hidden!important}
   .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn {
     color: rgba(248, 250, 252, 0.95);
-    border-color: rgba(255, 255, 255, 0.35);
-    background: rgba(255, 255, 255, 0.10);
+    border: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   
