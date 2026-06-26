@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-06-26T07:38:10.595363Z",
+  "ingestedAt": "2026-06-26T09:19:41.219850Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Po Applu zdraží i konzole Xbox, a to výrazně. Připlatíme si tisíce",
+      "url": "https://www.idnes.cz/hry/novinky/konzole-xbox-series-x-s-zdrazeni.A260626_081625_bw-novinky_oz",
+      "dt": "2026-06-26T07:23:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "applu",
+        "konzole",
+        "připlatíme",
+        "tisíce",
+        "výrazně",
+        "xbox",
+        "zdraží"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -729,31 +753,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Sázka na jistotu, která baví. Kingdom Rush 6 je opět králem věžovek",
-      "url": "https://www.idnes.cz/hry/preview/kingdom-rush-6-genesis-td-dojmy-tower-defense.A260612_105349_bw-preview_oz/foto",
-      "dt": "2026-06-15T13:00:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "baví",
-        "jistotu",
-        "kingdom",
-        "králem",
-        "opět",
-        "rush",
-        "sázka",
-        "věžovek"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -764,7 +763,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 44000,
+      "bytes": 43918,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -801,7 +800,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-25T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-26T07:23:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -816,6 +815,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Po Applu zdraží i konzole Xbox, a to výrazně. Připlatíme si tisíce",
+            "publishedAt": "2026-06-26T07:23:00Z"
+          },
           {
             "title": "Stahujte zdarma super strategii RollerCoaster Tycoon 3. Ale neváhejte dlouho",
             "publishedAt": "2026-06-25T22:00:00Z"
@@ -843,10 +846,6 @@
           {
             "title": "Víc než sex mě zajímají videohry, přiznává známý streamer Asmongold",
             "publishedAt": "2026-06-24T08:50:00Z"
-          },
-          {
-            "title": "Nemůžete se nabažit Kingdom Come 2? Koupit si lze boty, komiks i kostky",
-            "publishedAt": "2026-06-23T22:00:00Z"
           }
         ]
       }
