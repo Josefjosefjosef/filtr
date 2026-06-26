@@ -1,21 +1,21 @@
 {
   "schema": "css_debt_guard_v1",
-  "duplicate_selector_groups": 288,
-  "duplicate_rule_occurrences_in_groups": 779,
+  "duplicate_selector_groups": 291,
+  "duplicate_rule_occurrences_in_groups": 788,
   "classification_counts": {
-    "breakpoint_specific": 169,
+    "breakpoint_specific": 172,
     "risky_layout_coupled": 96,
     "intentional_cascade_candidate": 23
   },
   "debt_verdict_counts": {
     "intentional_non_debt": 104,
-    "risk_now": 184
+    "risk_now": 187
   },
   "debt_occurrence_counts": {
     "intentional_non_debt": 300,
-    "risk_now": 479
+    "risk_now": 488
   },
-  "app_css_bytes": 676381,
+  "app_css_bytes": 683597,
   "css_size_guard_budget_bytes": 4096,
   "risk_zone_duplicate_groups": [
     {
@@ -47,6 +47,10 @@
       "classification": "breakpoint_specific"
     },
     {
+      "selector_normalized": "#feed.iuTimelineFeed",
+      "classification": "breakpoint_specific"
+    },
+    {
       "selector_normalized": "#feed.iuTimelineFeed .iuTimelineAction",
       "classification": "breakpoint_specific"
     },
@@ -64,6 +68,10 @@
     },
     {
       "selector_normalized": "#feed.iuTimelineFeed .iuTimelineClock",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#feed.iuTimelineFeed .iuTimelineReadMark",
       "classification": "breakpoint_specific"
     },
     {
@@ -697,6 +705,10 @@
     {
       "selector_normalized": "html.iuRailHidden #iuRailToggleBtn:hover::before",
       "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "html[data-iu-silver-welcome-paint=\"evening\"]:is([data-section=\"feed\"],[data-section=\"media\"],[data-section=\"hry\"]) #feed.iuTimelineFeed",
+      "classification": "breakpoint_specific"
     }
   ]
 }
