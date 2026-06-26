@@ -21438,8 +21438,6 @@ body.iu-myinfouzel-open .iu-quicktools-settings-panel.iu-quicktools-settings-pan
 }
 
 
-:root{ --iu-menu-first6-aff-v1:1; }
-
 @media (max-width: 1024px){
   body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="weather"],
   body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="maps"],
@@ -21521,9 +21519,7 @@ body.iu-myinfouzel-open .iu-quicktools-settings-panel.iu-quicktools-settings-pan
     filter: drop-shadow(0 0 10px color-mix(in srgb, var(--iuNavAccent) 22%, transparent)) !important;
     opacity: 1 !important;
   }
-}
 
-@media (max-width: 1024px) and (hover:hover) and (pointer:fine){
   body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="weather"]:hover,
   body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="maps"]:hover,
   body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="jr"]:hover,
