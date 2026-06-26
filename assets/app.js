@@ -6892,7 +6892,75 @@ try {
   const IU_SAVED_ARTICLES_KEY = "iuSavedArticles";
   const IU_FOLLOWED_TOPICS_KEY = "iuFollowedTopics";
   const IU_HIDDEN_ARTICLES_KEY = "iuHiddenArticles";
+  const IU_READ_ARTICLES_KEY = "iuReadArticles_v1";
+  const IU_READ_ARTICLES_MAX = 2500;
   const IU_HIDE_UNDO_MS = 5000;
+
+  function iuReadArticlesIsMobileTabletViewport() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
+    } catch (_) {}
+    return false;
+  }
+
+  function iuReadArticlesGetIdSet() {
+    const set = new Set();
+    const list = iuArticleActionsReadJson(IU_READ_ARTICLES_KEY);
+    for (const row of list) {
+      const id = String(row || "").trim();
+      if (id) set.add(id);
+    }
+    return set;
+  }
+
+  function iuReadArticlesIsRead(articleId) {
+    const id = String(articleId || "").trim();
+    if (!id) return false;
+    return iuReadArticlesGetIdSet().has(id);
+  }
+
+  function iuReadArticlesMarkRead(articleId) {
+    const id = String(articleId || "").trim();
+    if (!id || !iuReadArticlesIsMobileTabletViewport()) return;
+    const set = iuReadArticlesGetIdSet();
+    if (set.has(id)) return;
+    set.add(id);
+    const arr = Array.from(set);
+    iuArticleActionsWriteJson(
+      IU_READ_ARTICLES_KEY,
+      arr.length > IU_READ_ARTICLES_MAX ? arr.slice(arr.length - IU_READ_ARTICLES_MAX) : arr
+    );
+  }
+
+  function iuReadArticlesApplyToArticle(articleEl) {
+    if (!articleEl || !iuReadArticlesIsMobileTabletViewport()) return;
+    const id = String(articleEl.getAttribute("data-iu-article-id") || "").trim();
+    const isRead = id && iuReadArticlesIsRead(id);
+    articleEl.classList.toggle("iuTimelineItem--read", !!isRead);
+    const left = articleEl.querySelector(".iuTimelineLeft");
+    if (!left) return;
+    let mark = left.querySelector(".iuTimelineReadMark");
+    if (isRead) {
+      if (!mark) {
+        mark = document.createElement("span");
+        mark.className = "iuTimelineReadMark";
+        mark.setAttribute("aria-hidden", "true");
+        mark.textContent = "✓";
+        left.appendChild(mark);
+      }
+    } else if (mark) {
+      mark.remove();
+    }
+  }
+
+  function iuReadArticlesSyncFeed(feedRoot) {
+    try {
+      if (!feedRoot || !iuReadArticlesIsMobileTabletViewport()) return;
+      feedRoot.querySelectorAll("article.iuTimelineItem[data-feed-type='article']").forEach(function (art) {
+        iuReadArticlesApplyToArticle(art);
+      });
+    } catch (_) {}
+  }
 
   function iuArticleActionsReadJson(key) {
     try {
@@ -7099,6 +7167,7 @@ try {
           const followed = iuArticleActionsIsFollowed(id);
           iuArticleActionsSyncButtonState(followBtn, "follow", followed, followed ? "Sledováno" : "Sledovat");
         }
+        iuReadArticlesApplyToArticle(art);
       }
     } catch (_) {}
   }
@@ -7647,6 +7716,16 @@ try {
     try {
       const t = e.target;
       if (!(t instanceof Element)) return;
+      const titleLink = t.closest("article.iuTimelineItem[data-feed-type='article'] .news-titleLink");
+      if (titleLink && iuReadArticlesIsMobileTabletViewport()) {
+        const articleEl = titleLink.closest("article.iuTimelineItem");
+        const id = articleEl ? String(articleEl.getAttribute("data-iu-article-id") || "").trim() : "";
+        if (id) {
+          iuReadArticlesMarkRead(id);
+          iuReadArticlesApplyToArticle(articleEl);
+        }
+        return;
+      }
       const undoBtn = t.closest("[data-iu-action='hide-undo']");
       if (undoBtn) {
         e.preventDefault();
