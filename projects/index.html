@@ -1783,6 +1783,53 @@ font-src 'self' data:;
         #iuTvProgramView .iu-tv-seo-block{margin-bottom:12px}
       }
     </style>
+    <style id="iuTvProgramBrownMobileTabletCss">
+      /* P0 mobile/tablet: TV program — zelený motiv (#10B981) → hnědý; desktop ≥901px beze změny. */
+      @media (max-width: 900px) {
+        :root {
+          --iuNavAccent-tvprogram: #92400E;
+        }
+        #iuTvProgramView,
+        .iuTvProgramView,
+        #iuTvProgramChoiceOverlay,
+        .iuSectionHeader--tvprogram,
+        body[data-section="tvprogram"] #iuTvProgramView,
+        html[data-section="tvprogram"] #iuTvProgramView {
+          --iuSectionAccent: #92400E;
+        }
+        .iuHomeHex434 .iuHex--tvprogram,
+        #iuHomeView .iuHomeHex434 .iuHex--tvprogram {
+          background: #92400E !important;
+        }
+        #iuHomeView .iuHomeHex434 .iuHex--tvprogram {
+          border-color: color-mix(in srgb, #92400E 70%, #ffffff) !important;
+        }
+        .iuHomeHex434 .iuHex--tvprogram .iuHex__icon,
+        .iuHomeHex434 .iuHex--tvprogram .iuHex__icon svg,
+        #iuHomeView .iuHomeHex434 .iuHex--tvprogram .iuHex__icon,
+        #iuHomeView .iuHomeHex434 .iuHex--tvprogram .iuHex__icon svg,
+        #iuHomeView .iuHomeHex434 .iuHex--tvprogram .iuHex__icon svg path,
+        #iuHomeHexGrid .iuHomeHex[data-section="tvprogram"] .iuHomeHexIcon,
+        #iuHomeHexGrid .iuHomeHex[data-section="tvprogram"] .iuHomeHexIcon svg {
+          color: #F5DEB3 !important;
+          fill: #F5DEB3 !important;
+          stroke: #F5DEB3 !important;
+        }
+        .iuMobileFocusBtn[data-accent="tvprogram"],
+        .iuMobileTile[data-accent="tvprogram"] {
+          --iuMobileFocusAccent: #92400E;
+        }
+        #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon,
+        #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon svg,
+        #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon svg path,
+        body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] .iu-leftNavIcon,
+        body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] svg,
+        body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] svg path {
+          color: #92400E !important;
+          stroke: #92400E !important;
+        }
+      }
+    </style>
     <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1550fincalc-datovka-desktop-layout" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v2" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=invoice-desktop-fullpage-v1-20260620" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
