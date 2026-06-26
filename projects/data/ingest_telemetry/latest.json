@@ -1,27 +1,37 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-06-26T11:09:08.856581Z",
-  "run_time_utc": "2026-06-26T11:09:08.856581Z",
+  "generatedAt": "2026-06-26T12:35:39.005653Z",
+  "run_time_utc": "2026-06-26T12:35:39.005653Z",
   "summary": {
     "schemaVersion": 2,
-    "generatedAt": "2026-06-26T11:09:08.856581Z",
-    "run_time_utc": "2026-06-26T11:09:08.856581Z",
-    "sources_checked": 22,
+    "generatedAt": "2026-06-26T12:35:39.005653Z",
+    "run_time_utc": "2026-06-26T12:35:39.005653Z",
+    "sources_checked": 20,
     "sources_with_new_items": 17,
-    "total_raw_items": 679,
-    "total_parsed_items": 493,
-    "total_normalized_items": 493,
+    "total_raw_items": 872,
+    "total_parsed_items": 515,
+    "total_normalized_items": 515,
     "total_after_dedupe_items": 180,
-    "total_written_articles_feed_attributed": 8473,
+    "total_written_articles_feed_attributed": 9617,
     "written_by_section": {
-      "zpravy": 8375,
-      "sport": 4948,
-      "finance": 3205,
-      "zdravi": 1237,
+      "zpravy": 8396,
+      "sport": 4950,
+      "finance": 3213,
+      "zdravi": 1238,
       "cestovani": 159
     },
-    "newest_written_publishedAt": "2026-06-26T10:48:35Z",
+    "newest_written_publishedAt": "2026-06-26T12:20:00Z",
     "top_sources_by_new_items": [
+      {
+        "source_id": "fin_e15",
+        "feed_url": "https://www.e15.cz/rss",
+        "raw_feed_new_item_count": 40
+      },
+      {
+        "source_id": "fin_hn",
+        "feed_url": "https://hn.cz/?m=rss",
+        "raw_feed_new_item_count": 40
+      },
       {
         "source_id": "hry_indian",
         "feed_url": "https://indian-tv.cz/feed/",
@@ -33,14 +43,14 @@
         "raw_feed_new_item_count": 40
       },
       {
-        "source_id": "spt_isport",
-        "feed_url": "https://isport.blesk.cz/rss",
+        "source_id": "spt_mmamag",
+        "feed_url": "https://www.mmamag.cz/feed/",
         "raw_feed_new_item_count": 40
       },
       {
-        "source_id": "ved_vtm",
-        "feed_url": "https://vtm.zive.cz/rss",
-        "raw_feed_new_item_count": 35
+        "source_id": "fin_idnes_ekonomika",
+        "feed_url": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
+        "raw_feed_new_item_count": 30
       },
       {
         "source_id": "hry_idnes_bonusweb",
@@ -48,23 +58,13 @@
         "raw_feed_new_item_count": 30
       },
       {
-        "source_id": "kul_ctart",
-        "feed_url": "https://ct24.ceskatelevize.cz/rss/kultura",
-        "raw_feed_new_item_count": 30
-      },
-      {
-        "source_id": "spt_ctsport",
-        "feed_url": "https://sport.ceskatelevize.cz/rss",
+        "source_id": "spt_idnes",
+        "feed_url": "https://servis.idnes.cz/rss.aspx?c=sport",
         "raw_feed_new_item_count": 30
       },
       {
         "source_id": "spt_sportcz",
         "feed_url": "https://www.sport.cz/rss",
-        "raw_feed_new_item_count": 30
-      },
-      {
-        "source_id": "vzd_seznam",
-        "feed_url": "https://www.seznamzpravy.cz/rss/vzdelavani",
         "raw_feed_new_item_count": 30
       },
       {
@@ -77,68 +77,58 @@
       {
         "source_id": "zpr_idnes_zpravy",
         "feed_url": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-        "written_to_articles_json_count": 1627
+        "written_to_articles_json_count": 1631
       },
       {
         "source_id": "spt_sportcz",
         "feed_url": "https://www.sport.cz/rss",
-        "written_to_articles_json_count": 1432
+        "written_to_articles_json_count": 1435
       },
       {
         "source_id": "zpr_ct24_domaci",
         "feed_url": "https://ct24.ceskatelevize.cz/rss",
-        "written_to_articles_json_count": 1130
+        "written_to_articles_json_count": 1133
       },
       {
         "source_id": "zpr_seznam_domaci",
         "feed_url": "https://www.seznamzpravy.cz/rss/domaci",
-        "written_to_articles_json_count": 949
+        "written_to_articles_json_count": 953
       },
       {
-        "source_id": "spt_isport",
-        "feed_url": "https://isport.blesk.cz/rss",
+        "source_id": "spt_idnes",
+        "feed_url": "https://servis.idnes.cz/rss.aspx?c=sport",
         "written_to_articles_json_count": 918
       },
       {
-        "source_id": "spt_ctsport",
-        "feed_url": "https://sport.ceskatelevize.cz/rss",
-        "written_to_articles_json_count": 599
+        "source_id": "fin_hn",
+        "feed_url": "https://hn.cz/?m=rss",
+        "written_to_articles_json_count": 779
       },
       {
-        "source_id": "zpr_tydenikpolicie",
-        "feed_url": "https://www.tydenikpolicie.cz/feed/",
-        "written_to_articles_json_count": 468
+        "source_id": "fin_e15",
+        "feed_url": "https://www.e15.cz/rss",
+        "written_to_articles_json_count": 693
+      },
+      {
+        "source_id": "spt_mmamag",
+        "feed_url": "https://www.mmamag.cz/feed/",
+        "written_to_articles_json_count": 483
       },
       {
         "source_id": "zpr_novinky_zahranicni",
         "feed_url": "https://www.novinky.cz/rss/zahranicni",
-        "written_to_articles_json_count": 440
+        "written_to_articles_json_count": 446
       },
       {
         "source_id": "hry_zing",
         "feed_url": "https://zing.cz/rss/all",
-        "written_to_articles_json_count": 239
-      },
-      {
-        "source_id": "hry_indian",
-        "feed_url": "https://indian-tv.cz/feed/",
-        "written_to_articles_json_count": 187
+        "written_to_articles_json_count": 240
       }
     ],
     "top_drop_sources": [
       {
-        "source_id": "kul_ctart",
-        "feed_url": "https://ct24.ceskatelevize.cz/rss/kultura",
-        "raw_minus_written": 17
-      },
-      {
         "source_id": "hry_idnes_bonusweb",
         "feed_url": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-        "raw_minus_written": 0
-      },
-      {
-        "source_id": "vzd_nespechej",
-        "feed_url": "https://www.nespechej.cz/feed/",
         "raw_minus_written": 0
       },
       {
@@ -152,102 +142,256 @@
         "raw_minus_written": 0
       },
       {
-        "source_id": "spt_crzpravy_sport",
-        "feed_url": "https://www.crzpravy.cz/rss/sport/",
-        "raw_minus_written": -3
+        "source_id": "vzd_pedagogicke_info",
+        "feed_url": "https://www.pedagogicke.info/feeds/posts/default?alt=rss",
+        "raw_minus_written": -15
       },
       {
-        "source_id": "kul_betterlife",
-        "feed_url": "https://www.betterlife.cz/feed/",
-        "raw_minus_written": -6
-      },
-      {
-        "source_id": "fin_ekonom",
-        "feed_url": "https://ekonom.cz/?p=400000_rss",
-        "raw_minus_written": -36
+        "source_id": "kul_kinobox",
+        "feed_url": "https://www.kinobox.cz/api/rss",
+        "raw_minus_written": -38
       },
       {
         "source_id": "hry_zing",
         "feed_url": "https://zing.cz/rss/all",
-        "raw_minus_written": -39
+        "raw_minus_written": -40
       },
       {
-        "source_id": "vzd_seznam",
-        "feed_url": "https://www.seznamzpravy.cz/rss/vzdelavani",
-        "raw_minus_written": -47
+        "source_id": "zpr_novinky_domaci",
+        "feed_url": "https://www.novinky.cz/rss/domaci",
+        "raw_minus_written": -90
+      },
+      {
+        "source_id": "fin_idnes_ekonomika",
+        "feed_url": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
+        "raw_minus_written": -110
+      },
+      {
+        "source_id": "zpr_hlidacipes",
+        "feed_url": "https://hlidacipes.org/feed/",
+        "raw_minus_written": -127
+      },
+      {
+        "source_id": "hry_indian",
+        "feed_url": "https://indian-tv.cz/feed/",
+        "raw_minus_written": -129
       }
     ]
   },
   "sources": [
     {
-      "source_id": "fin_ekonom",
-      "registry_id": "fin_ekonom",
-      "source_label": "Ekonom (HN)",
-      "feed_url": "https://ekonom.cz/?p=400000_rss",
+      "source_id": "fin_e15",
+      "registry_id": "fin_e15",
+      "source_label": "E15",
+      "feed_url": "https://www.e15.cz/rss",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
-      "raw_feed_item_count": 18,
-      "raw_feed_new_item_count": 18,
-      "raw_feed_latest_publishedAt": "2026-06-25T05:32:00Z",
-      "ingested_item_count": 18,
-      "parsed_item_count": 18,
-      "normalized_item_count": 18,
-      "valid_publishedAt_count": 18,
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
+      "raw_feed_item_count": 48,
+      "raw_feed_new_item_count": 40,
+      "raw_feed_latest_publishedAt": "2026-06-26T11:45:00Z",
+      "ingested_item_count": 40,
+      "parsed_item_count": 40,
+      "normalized_item_count": 40,
+      "valid_publishedAt_count": 40,
       "mapped_to_section_count": {
-        "zpravy": 0,
-        "sport": 1,
-        "finance": 15,
-        "zdravi": 2,
+        "zpravy": 6,
+        "sport": 0,
+        "finance": 33,
+        "zdravi": 1,
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 54,
-      "written_to_articles_json_count": 54,
-      "today_written_to_articles_json_count": 0,
-      "newest_written_publishedAt": "2026-06-25T05:32:00Z",
+      "release_eligible_count": 693,
+      "written_to_articles_json_count": 693,
+      "today_written_to_articles_json_count": 4,
+      "newest_written_publishedAt": "2026-06-26T11:45:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
         "parser_drop": 0,
         "section_remap": 0,
         "release_gate": 0,
-        "dedupe": 18,
+        "dedupe": 24,
         "other": 0
       },
       "sample_titles": [
         {
-          "title": "Asistent v kanceláři, operátor v call centru, programátor i hlídač elektráren. Jak se AI zabydluje v českých firmách",
-          "publishedAt": "2026-06-25T05:32:00Z"
+          "title": "Co skutečně chceme od ČEZ? Ekonomové lobbují proti chystanému zestátnění",
+          "publishedAt": "2026-06-26T11:45:00Z"
         },
         {
-          "title": "Od dvou kontejnerů v karlínském dvoře k velkému gastroprojektu s Petrem Janouškem z Terminálu Karlín",
-          "publishedAt": "2026-06-24T16:00:00Z"
+          "title": "Šestimiliardový projekt UDI Group na Smíchově získal povolení pro objekt A",
+          "publishedAt": "2026-06-26T08:50:00Z"
         },
         {
-          "title": "Umělá inteligence zaplavuje internet falešnými e-shopy. Navíc hrozí, že tisíce obchodů odstaví od zákazníků, říká šéf Heureky David Chmelař",
-          "publishedAt": "2026-06-24T16:00:00Z"
+          "title": "Škoda Auto se chce zalíbit Španělům. Změnila kvůli nim svůj název a nově používá neexistující písmeno",
+          "publishedAt": "2026-06-26T08:45:00Z"
         },
         {
-          "title": "Roste zadlužení, přichází pomalejší růst. Sedm lekcí, které investorům zanechaly největší finanční krize historie, a jak se na ně připravit",
-          "publishedAt": "2026-06-24T16:00:00Z"
+          "title": "Jedna z nejvýraznějších tváří J&T končí. Michal Semotan míří za novou výzvou",
+          "publishedAt": "2026-06-26T08:40:00Z"
         },
         {
-          "title": "Stavební právo znovu na začátku. Tentokrát s bydlením v hlavní roli",
-          "publishedAt": "2026-06-24T16:00:00Z"
+          "title": "Šéf Volkswagenu chce zrušit sto tisíc pracovních míst po celém světě",
+          "publishedAt": "2026-06-26T08:31:00Z"
         },
         {
-          "title": "Letem světem",
-          "publishedAt": "2026-06-24T22:00:00Z"
+          "title": "Zbrojařská STV je blíže vstupu do Tatrovky. Komise má do měsíce rozhodnout o jejím spojení s Promet Group",
+          "publishedAt": "2026-06-26T07:30:00Z"
         },
         {
-          "title": "Poučíme se konečně?",
-          "publishedAt": "2026-06-24T16:00:00Z"
+          "title": "MacBooky i iPhony citelně zdraží: Apple oznámil nové ceny, které vás nepotěší",
+          "publishedAt": "2026-06-26T06:55:00Z"
         },
         {
-          "title": "První česká oběť umělé inteligence? Pracovní místa, která vůbec nevzniknou",
-          "publishedAt": "2026-06-24T16:00:00Z"
+          "title": "Úrokový skok v Air Bank: Banka zvedla sazby u termínovaných vkladů až o jedno procento",
+          "publishedAt": "2026-06-26T05:17:00Z"
+        }
+      ]
+    },
+    {
+      "source_id": "fin_hn",
+      "registry_id": "fin_hn",
+      "source_label": "HN / Ekonomika",
+      "feed_url": "https://hn.cz/?m=rss",
+      "topic": "finance",
+      "section_primary": "finance",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
+      "raw_feed_item_count": 150,
+      "raw_feed_new_item_count": 40,
+      "raw_feed_latest_publishedAt": "2026-06-26T11:16:00Z",
+      "ingested_item_count": 40,
+      "parsed_item_count": 40,
+      "normalized_item_count": 40,
+      "valid_publishedAt_count": 40,
+      "mapped_to_section_count": {
+        "zpravy": 3,
+        "sport": 2,
+        "finance": 31,
+        "zdravi": 4,
+        "cestovani": 0,
+        "other": 0
+      },
+      "release_eligible_count": 779,
+      "written_to_articles_json_count": 779,
+      "today_written_to_articles_json_count": 10,
+      "newest_written_publishedAt": "2026-06-26T11:16:00Z",
+      "drop_counts": {
+        "missing_publishedAt": 0,
+        "invalid_publishedAt": 0,
+        "parser_drop": 0,
+        "section_remap": 0,
+        "release_gate": 0,
+        "dedupe": 9,
+        "other": 0
+      },
+      "sample_titles": [
+        {
+          "title": "Jak před jízdou zkontrolovat kolo a za co neprojdete u módní policie? K silniční cyklistice se váže spousta pravidel, která musí znát i nováček, říká Hejda z Road Classics",
+          "publishedAt": "2026-06-26T11:16:00Z"
+        },
+        {
+          "title": "Nová vláda, drsnější styl. Šéfka finanční správy už nemluví o lidštějším přístupu, teď pranýřuje postoj Čechů k daním",
+          "publishedAt": "2026-06-26T08:24:00Z"
+        },
+        {
+          "title": "Baterie jsou klíčové pro moderní energetiku. Nesmíme promarnit jejich potenciál",
+          "publishedAt": "2026-06-26T08:01:00Z"
+        },
+        {
+          "title": "Penta dál posiluje v Pobaltí. Vedle Fortuny sází na seniory a kupuje největší síť pečovatelských zařízení v Estonsku",
+          "publishedAt": "2026-06-26T07:30:00Z"
+        },
+        {
+          "title": "Naftové motory neskončí, říká šéf Škody Zellmer. Z Epiqu už je prodejní hit, Peaq bude první ziskový elektromobil",
+          "publishedAt": "2026-06-26T07:10:00Z"
+        },
+        {
+          "title": "Vivat Amerika 250! Nezapomínejme na staré přátelství, jak vybízel Masaryk",
+          "publishedAt": "2026-06-26T06:39:00Z"
+        },
+        {
+          "title": "Kolik stát stojí, když hvězdy jako Schick věší dres reprezentace na hřebík?",
+          "publishedAt": "2026-06-26T05:44:00Z"
+        },
+        {
+          "title": "Konec pohádky o levném Applu: Firma zdražila první produkty, Macbook Neo je nyní za 20 tisíc korun",
+          "publishedAt": "2026-06-26T05:10:00Z"
+        }
+      ]
+    },
+    {
+      "source_id": "fin_idnes_ekonomika",
+      "registry_id": "fin_idnes_ekonomika",
+      "source_label": "iDNES / Ekonomika",
+      "feed_url": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
+      "topic": "finance",
+      "section_primary": "finance",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
+      "raw_feed_item_count": 30,
+      "raw_feed_new_item_count": 30,
+      "raw_feed_latest_publishedAt": "2026-06-26T09:51:00Z",
+      "ingested_item_count": 30,
+      "parsed_item_count": 30,
+      "normalized_item_count": 30,
+      "valid_publishedAt_count": 30,
+      "mapped_to_section_count": {
+        "zpravy": 1,
+        "sport": 0,
+        "finance": 29,
+        "zdravi": 0,
+        "cestovani": 0,
+        "other": 0
+      },
+      "release_eligible_count": 140,
+      "written_to_articles_json_count": 140,
+      "today_written_to_articles_json_count": 0,
+      "newest_written_publishedAt": "2026-06-18T22:00:00Z",
+      "drop_counts": {
+        "missing_publishedAt": 0,
+        "invalid_publishedAt": 0,
+        "parser_drop": 0,
+        "section_remap": 0,
+        "release_gate": 0,
+        "dedupe": 30,
+        "other": 0
+      },
+      "sample_titles": [
+        {
+          "title": "Vzácný souběh událostí. Zahraniční experti ověřili příčiny loňského blackoutu v Česku",
+          "publishedAt": "2026-06-26T09:51:00Z"
+        },
+        {
+          "title": "Mně se to stát nemůže. Největší chyby při online podvodech",
+          "publishedAt": "2026-06-26T08:00:00Z"
+        },
+        {
+          "title": "Mléko za 10 korun. Čína ho neodebírá, ceny padají pod náklady, zoufají farmáři",
+          "publishedAt": "2026-06-25T22:00:00Z"
+        },
+        {
+          "title": "Cestování se mění. Krátké pobyty ve městech ustupují, lety k moři sílí, říká agentura",
+          "publishedAt": "2026-06-25T22:00:00Z"
+        },
+        {
+          "title": "Umělá inteligence nejvíce ohrozí odborné a kvalifikované profese, tvrdí studie",
+          "publishedAt": "2026-06-25T17:51:00Z"
+        },
+        {
+          "title": "V řízcích z Tesca našla inspekce salmonelózu, pochází z polských slepic",
+          "publishedAt": "2026-06-25T15:52:00Z"
+        },
+        {
+          "title": "Výdejní boxy nemusí být strašák. Provozovatelé přijali kodex proti vizuálnímu smogu",
+          "publishedAt": "2026-06-25T11:45:00Z"
+        },
+        {
+          "title": "Nová zelená úsporám odstartovala. Rychlost podání nebude klíčová",
+          "publishedAt": "2026-06-25T09:15:39Z"
         }
       ]
     },
@@ -258,8 +402,8 @@
       "feed_url": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
       "raw_feed_latest_publishedAt": "2026-06-26T10:15:00Z",
@@ -285,7 +429,7 @@
         "parser_drop": 0,
         "section_remap": 0,
         "release_gate": 1,
-        "dedupe": 29,
+        "dedupe": 30,
         "other": 0
       },
       "sample_titles": [
@@ -330,11 +474,11 @@
       "feed_url": "https://indian-tv.cz/feed/",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
-      "raw_feed_item_count": 60,
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
+      "raw_feed_item_count": 59,
       "raw_feed_new_item_count": 40,
-      "raw_feed_latest_publishedAt": "2026-06-26T08:30:00Z",
+      "raw_feed_latest_publishedAt": "2026-06-26T11:30:00Z",
       "ingested_item_count": 40,
       "parsed_item_count": 40,
       "normalized_item_count": 40,
@@ -347,10 +491,10 @@
         "cestovani": 0,
         "other": 40
       },
-      "release_eligible_count": 177,
-      "written_to_articles_json_count": 187,
-      "today_written_to_articles_json_count": 2,
-      "newest_written_publishedAt": "2026-06-26T08:30:00Z",
+      "release_eligible_count": 178,
+      "written_to_articles_json_count": 188,
+      "today_written_to_articles_json_count": 3,
+      "newest_written_publishedAt": "2026-06-26T11:30:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -361,6 +505,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Doom: The Dark Ages dostane na PS5 Pro grafický upgrade. Démoni budou létat vzduchem v ještě větší parádě - INDIAN",
+          "publishedAt": "2026-06-26T11:30:00Z"
+        },
         {
           "title": "Nové detaily o GTA 6. Pohlcující svět, náhodné události i využití PS5 Pro - INDIAN",
           "publishedAt": "2026-06-26T08:30:00Z"
@@ -388,10 +536,6 @@
         {
           "title": "Microsoft znovu zdražuje Xbox Series X a Xbox Series S! - INDIAN",
           "publishedAt": "2026-06-25T19:44:18Z"
-        },
-        {
-          "title": "Život Není Krásný: Poslední Exekuce – Devadesátky jsou zpět. A jsou stejně zvrácené - INDIAN",
-          "publishedAt": "2026-06-25T17:36:09Z"
         }
       ]
     },
@@ -402,11 +546,11 @@
       "feed_url": "https://zing.cz/rss/all",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
       "raw_feed_item_count": 200,
       "raw_feed_new_item_count": 40,
-      "raw_feed_latest_publishedAt": "2026-06-26T10:00:00Z",
+      "raw_feed_latest_publishedAt": "2026-06-26T12:00:00Z",
       "ingested_item_count": 40,
       "parsed_item_count": 40,
       "normalized_item_count": 40,
@@ -419,10 +563,10 @@
         "cestovani": 0,
         "other": 40
       },
-      "release_eligible_count": 227,
-      "written_to_articles_json_count": 239,
-      "today_written_to_articles_json_count": 4,
-      "newest_written_publishedAt": "2026-06-26T10:00:00Z",
+      "release_eligible_count": 228,
+      "written_to_articles_json_count": 240,
+      "today_written_to_articles_json_count": 5,
+      "newest_written_publishedAt": "2026-06-26T12:00:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -433,6 +577,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Do vývoje AC IV: Black Flag Resynced se údajně zapojilo 15 studií Ubisoftu",
+          "publishedAt": "2026-06-26T12:00:00Z"
+        },
         {
           "title": "GTA 6 se nakonec dočká tradiční krabicovky s diskem",
           "publishedAt": "2026-06-26T10:00:00Z"
@@ -460,166 +608,18 @@
         {
           "title": "Bungie čelí velkému propouštění, studio rozpustilo většinu Destiny týmu",
           "publishedAt": "2026-06-25T16:00:00Z"
-        },
-        {
-          "title": "Epic nabízí zdarma dvě žánrově odlišné hry",
-          "publishedAt": "2026-06-25T15:00:00Z"
         }
       ]
     },
     {
-      "source_id": "kul_betterlife",
-      "registry_id": "kul_betterlife",
-      "source_label": "BetterLife",
-      "feed_url": "https://www.betterlife.cz/feed/",
+      "source_id": "kul_kinobox",
+      "registry_id": "kul_kinobox",
+      "source_label": "Kinobox",
+      "feed_url": "https://www.kinobox.cz/api/rss",
       "topic": "kultura",
       "section_primary": "kultura",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
-      "raw_feed_item_count": 10,
-      "raw_feed_new_item_count": 10,
-      "raw_feed_latest_publishedAt": "2026-06-26T06:35:30Z",
-      "ingested_item_count": 10,
-      "parsed_item_count": 10,
-      "normalized_item_count": 10,
-      "valid_publishedAt_count": 10,
-      "mapped_to_section_count": {
-        "zpravy": 0,
-        "sport": 0,
-        "finance": 0,
-        "zdravi": 0,
-        "cestovani": 0,
-        "other": 10
-      },
-      "release_eligible_count": 9,
-      "written_to_articles_json_count": 16,
-      "today_written_to_articles_json_count": 1,
-      "newest_written_publishedAt": "2026-06-26T06:35:30Z",
-      "drop_counts": {
-        "missing_publishedAt": 0,
-        "invalid_publishedAt": 0,
-        "parser_drop": 0,
-        "section_remap": 0,
-        "release_gate": 7,
-        "dedupe": 9,
-        "other": 0
-      },
-      "sample_titles": [
-        {
-          "title": "Důchodci chyběly peníze na živobytí, proto sbíral vratné lahve. Po přiznání úřadu mu zkrátili dávky",
-          "publishedAt": "2026-06-26T06:35:30Z"
-        },
-        {
-          "title": "Když šéf zavelí, dovolená pro vás předčasně končí. Nekompromisní pravidlo zákoníku práce nedává zaměstnancům na vybranou",
-          "publishedAt": "2026-06-25T09:52:26Z"
-        },
-        {
-          "title": "Pravý chlebíček musí mít přesnou gramáž a kyprost, říká socialistická ČSN. Dnes už je na pultech nekoupíte",
-          "publishedAt": "2026-06-24T16:22:02Z"
-        },
-        {
-          "title": "Díky Ulici se o drink spikingu více mluví. Málokterá dívka však ví, že ochránit se může i díky malému pomocníkovi",
-          "publishedAt": "2026-06-23T16:55:54Z"
-        },
-        {
-          "title": "Střešní byt Leoše Mareše se třemi terasami se rozlohou vyrovná vile. Manželé při zařizování změnili dispozici",
-          "publishedAt": "2026-06-22T16:13:33Z"
-        },
-        {
-          "title": "Ulice se chýlí ke konci: Finálový týden přinese trapný omyl, vlekou oslavu i zmizení",
-          "publishedAt": "2026-06-22T10:07:31Z"
-        },
-        {
-          "title": "Milan Drobný obětoval za vilu u Kralup všechny úspory. Získání luxusního sídla uspíšila pohnutá historie domu",
-          "publishedAt": "2026-06-21T16:12:49Z"
-        },
-        {
-          "title": "Příští týden v seriálu Ulice: Křehké příměří, poslední setkání, definitivní loučení a záhadné zmizení",
-          "publishedAt": "2026-06-21T06:56:24Z"
-        }
-      ]
-    },
-    {
-      "source_id": "kul_ctart",
-      "registry_id": "kul_ctart",
-      "source_label": "ČT art",
-      "feed_url": "https://ct24.ceskatelevize.cz/rss/kultura",
-      "topic": "kultura",
-      "section_primary": "kultura",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
-      "raw_feed_item_count": 30,
-      "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-06-25T05:30:00Z",
-      "ingested_item_count": 30,
-      "parsed_item_count": 30,
-      "normalized_item_count": 30,
-      "valid_publishedAt_count": 30,
-      "mapped_to_section_count": {
-        "zpravy": 0,
-        "sport": 0,
-        "finance": 0,
-        "zdravi": 0,
-        "cestovani": 0,
-        "other": 30
-      },
-      "release_eligible_count": 11,
-      "written_to_articles_json_count": 13,
-      "today_written_to_articles_json_count": 0,
-      "newest_written_publishedAt": "2026-06-19T10:02:27Z",
-      "drop_counts": {
-        "missing_publishedAt": 0,
-        "invalid_publishedAt": 0,
-        "parser_drop": 0,
-        "section_remap": 0,
-        "release_gate": 2,
-        "dedupe": 30,
-        "other": 0
-      },
-      "sample_titles": [
-        {
-          "title": "Betonová zeď se mění v galerii street artu pod širým nebem",
-          "publishedAt": "2026-06-25T05:30:00Z"
-        },
-        {
-          "title": "Zpívala a navíc bez hidžábu. 74 ran bičem připomnělo tlak na Íránky",
-          "publishedAt": "2026-06-24T15:09:21Z"
-        },
-        {
-          "title": "Na Goethově stezce v Karlových Varech byla odhalena monumentální plastika AJ VANA BE",
-          "publishedAt": "2026-06-24T11:00:00Z"
-        },
-        {
-          "title": "Obsluhoval jsem anglického krále, říkají i v divadle Mana",
-          "publishedAt": "2026-06-24T06:00:00Z"
-        },
-        {
-          "title": "Dagmar Havlová odvolala souhlas k užívání jména Václav Havel knihovnou",
-          "publishedAt": "2026-06-23T15:57:00Z"
-        },
-        {
-          "title": "Soud zrušil verdikt, kterým poslal Jirouse do vězení za proslov",
-          "publishedAt": "2026-06-23T15:37:17Z"
-        },
-        {
-          "title": "Hřebejk točí pro ČT Jobovku",
-          "publishedAt": "2026-06-23T14:37:21Z"
-        },
-        {
-          "title": "Všechny Kunderovy francouzské romány už vyšly česky, jako poslední Pomalost",
-          "publishedAt": "2026-06-23T12:48:08Z"
-        }
-      ]
-    },
-    {
-      "source_id": "spt_crzpravy_sport",
-      "registry_id": "spt_crzpravy_sport",
-      "source_label": "ČR Zprávy / Sport",
-      "feed_url": "https://www.crzpravy.cz/rss/sport/",
-      "topic": "sport",
-      "section_primary": "sport",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -635,10 +635,10 @@
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 3,
-      "written_to_articles_json_count": 3,
+      "release_eligible_count": 38,
+      "written_to_articles_json_count": 38,
       "today_written_to_articles_json_count": 0,
-      "newest_written_publishedAt": "2024-09-04T08:27:16Z",
+      "newest_written_publishedAt": "2026-05-31T17:00:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -651,89 +651,89 @@
       "sample_titles": []
     },
     {
-      "source_id": "spt_ctsport",
-      "registry_id": "spt_ctsport",
-      "source_label": "ČT sport",
-      "feed_url": "https://sport.ceskatelevize.cz/rss",
+      "source_id": "spt_idnes",
+      "registry_id": "spt_idnes",
+      "source_label": "iDNES / Sport",
+      "feed_url": "https://servis.idnes.cz/rss.aspx?c=sport",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-06-26T08:00:00Z",
+      "raw_feed_latest_publishedAt": "2026-06-26T12:00:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
       "valid_publishedAt_count": 30,
       "mapped_to_section_count": {
         "zpravy": 0,
-        "sport": 30,
-        "finance": 0,
+        "sport": 29,
+        "finance": 1,
         "zdravi": 0,
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 599,
-      "written_to_articles_json_count": 599,
-      "today_written_to_articles_json_count": 4,
-      "newest_written_publishedAt": "2026-06-26T08:00:00Z",
+      "release_eligible_count": 918,
+      "written_to_articles_json_count": 918,
+      "today_written_to_articles_json_count": 6,
+      "newest_written_publishedAt": "2026-06-26T12:00:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
         "parser_drop": 0,
         "section_remap": 0,
         "release_gate": 0,
-        "dedupe": 13,
+        "dedupe": 27,
         "other": 0
       },
       "sample_titles": [
         {
-          "title": "Dojde k duelu Haalanda s Mbappém? A kdo rozuzlí zamotanou skupinu H?",
-          "publishedAt": "2026-06-26T08:00:00Z"
+          "title": "KOMENTÁŘ: Narozen ve špatné éře. Schick byl drahokam, který v repre nevyleštili",
+          "publishedAt": "2026-06-26T12:00:00Z"
         },
         {
-          "title": "Největší ekvádorské vítězství v historii, rozplýval se kouč Beccacece. Prezident vyhlásil volno",
-          "publishedAt": "2026-06-26T07:31:52Z"
+          "title": "Karviná zvažuje stažení odvolaní. Liga? Je to cesta na popravu, tvrdí Táborsko",
+          "publishedAt": "2026-06-26T11:56:00Z"
         },
         {
-          "title": "Elanga chtěl vyhrát, spokojil se i s bodem a teď se soustředí na další výzvu",
-          "publishedAt": "2026-06-26T05:07:33Z"
+          "title": "MS v hokejbale 2026: program, výsledky a kde sledovat šampionát v Ostravě",
+          "publishedAt": "2026-06-26T11:38:00Z"
         },
         {
-          "title": "Fotbalový šampionát už překonal rekord v návštěvnosti, přitom zbývá odehrát ještě 48 zápasů",
-          "publishedAt": "2026-06-25T23:00:06Z"
+          "title": "Klub rváčů znovu pohromadě. Které hvězdy Hollywoodu dorazily na zápas USA?",
+          "publishedAt": "2026-06-26T11:28:00Z"
         },
         {
-          "title": "Soutěž k MS ve fotbale – 26. června",
-          "publishedAt": "2026-06-25T22:00:00Z"
+          "title": "Oršulák před draftem: Je mi jedno, kam půjdu. V Ottawě se ho ptali, jestli se holí",
+          "publishedAt": "2026-06-26T11:28:00Z"
         },
         {
-          "title": "GLOSA: Česko už na MS donudilo. Co bude dál?",
-          "publishedAt": "2026-06-25T19:54:53Z"
+          "title": "Egypt vs. Írán na MS ve fotbale 2026: kurzy a kde sledovat živě",
+          "publishedAt": "2026-06-26T11:00:00Z"
         },
         {
-          "title": "Hokejbalistky deklasovaly Velkou Británii a z prvního místa míří na MS do semifinále",
-          "publishedAt": "2026-06-25T19:33:45Z"
+          "title": "Trénink uprostřed demolice. Švédy na MS zaskočily nečekané kulisy",
+          "publishedAt": "2026-06-26T11:00:00Z"
         },
         {
-          "title": "Nizozemci přejeli Tunisko, Ekvádor otočil duel s Německem",
-          "publishedAt": "2026-06-25T19:14:00Z"
+          "title": "Los Wimbledonu: české derby hned na úvod, Muchová zažije déj&#224; vu z antuky",
+          "publishedAt": "2026-06-26T10:42:00Z"
         }
       ]
     },
     {
-      "source_id": "spt_isport",
-      "registry_id": "spt_isport",
-      "source_label": "iSport",
-      "feed_url": "https://isport.blesk.cz/rss",
+      "source_id": "spt_mmamag",
+      "registry_id": "spt_mmamag",
+      "source_label": "MMAMAG",
+      "feed_url": "https://www.mmamag.cz/feed/",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
-      "raw_feed_item_count": 46,
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
+      "raw_feed_item_count": 100,
       "raw_feed_new_item_count": 40,
-      "raw_feed_latest_publishedAt": "2026-06-26T10:27:00Z",
+      "raw_feed_latest_publishedAt": "2026-06-26T11:19:15Z",
       "ingested_item_count": 40,
       "parsed_item_count": 40,
       "normalized_item_count": 40,
@@ -746,51 +746,51 @@
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 918,
-      "written_to_articles_json_count": 918,
-      "today_written_to_articles_json_count": 4,
-      "newest_written_publishedAt": "2026-06-26T10:27:00Z",
+      "release_eligible_count": 483,
+      "written_to_articles_json_count": 483,
+      "today_written_to_articles_json_count": 2,
+      "newest_written_publishedAt": "2026-06-26T11:19:15Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
         "parser_drop": 0,
         "section_remap": 0,
         "release_gate": 0,
-        "dedupe": 0,
+        "dedupe": 21,
         "other": 0
       },
       "sample_titles": [
         {
-          "title": "Snoubenci Nečasovi zařizují doma další... Hnízdečko lásky",
-          "publishedAt": "2026-06-26T10:27:00Z"
+          "title": "Šéf UFC utrácí za sběratelské karty částky, které většina Čechů nevydělá za celý život",
+          "publishedAt": "2026-06-26T11:19:15Z"
         },
         {
-          "title": "Karviná zvažuje, že stáhne odvolání. Táborsko však ještě nikdo neoslovil",
-          "publishedAt": "2026-06-26T10:13:00Z"
+          "title": "Legendární Mirko Cro Cop ukázal na nejlepšího bojovníka historie MMA: Je to Jon Jones a nikdo to nemůže zpochybnit",
+          "publishedAt": "2026-06-26T10:46:04Z"
         },
         {
-          "title": "ONLINE: Senegal - Irák. Oba týmy nemají ani bod, k případnému postupu musí nutně vyhrát",
-          "publishedAt": "2026-06-26T10:00:00Z"
+          "title": "Usyk chystá velké rozhodnutí. Ve vzduchu visí konec kariéry",
+          "publishedAt": "2026-06-26T10:34:22Z"
         },
         {
-          "title": "ONLINE: Norsko - Francie. Evropská bitva o první místo ve skupině bez trenéra Deschampse",
-          "publishedAt": "2026-06-26T10:00:00Z"
+          "title": "Kajínek chce do klece prezidenta Pavla. Vezmu ho i zadarmo, vzkázal z nové organizace G MMA",
+          "publishedAt": "2026-06-26T10:22:43Z"
         },
         {
-          "title": "Tour de France 2026: program, etapy, trasa, Češi na startu a výsledky 113. ročníku",
-          "publishedAt": "2026-06-26T09:30:00Z"
+          "title": "Legendy UFC spolu trénovaly, pak se nenáviděly. Tito Ortiz měl z Liddella obrovský strach",
+          "publishedAt": "2026-06-26T10:05:47Z"
         },
         {
-          "title": "Geny jako výhoda: Janků, Samková a další. Příbuzní slavných září na mládežnické olympiádě",
-          "publishedAt": "2026-06-26T08:55:00Z"
+          "title": "Aspinall po operaci obou očí mění taktiku. Hodný Tom je mrtvý, teď ze mě bude padouch",
+          "publishedAt": "2026-06-26T09:52:58Z"
         },
         {
-          "title": "Haló, my jsme vyhráli skupinu! Naštvaný Pochettino nechápal novináře a odešel z tiskovky",
-          "publishedAt": "2026-06-26T08:52:00Z"
+          "title": "Jon Jones napsal Poirierovi po zatčení na letišti: Vím, čím procházíš. Odchod z UFC je jako návrat z fronty",
+          "publishedAt": "2026-06-26T09:42:54Z"
         },
         {
-          "title": "Datové vysvědčení z MS: Česko na balonu zřejmě nejhorší z Evropy, překvapivě slabé v...",
-          "publishedAt": "2026-06-26T08:10:00Z"
+          "title": "Oktagon dal smlouvy třem nováčkům z reality show. O jejich osudu hlasovalo přes 11 tisíc fanoušků přímo během zápasů",
+          "publishedAt": "2026-06-26T09:04:04Z"
         }
       ]
     },
@@ -801,27 +801,27 @@
       "feed_url": "https://www.sport.cz/rss",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-06-26T10:31:18Z",
+      "raw_feed_latest_publishedAt": "2026-06-26T11:57:44Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
       "valid_publishedAt_count": 30,
       "mapped_to_section_count": {
-        "zpravy": 0,
-        "sport": 30,
+        "zpravy": 1,
+        "sport": 29,
         "finance": 0,
         "zdravi": 0,
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 1432,
-      "written_to_articles_json_count": 1432,
-      "today_written_to_articles_json_count": 6,
-      "newest_written_publishedAt": "2026-06-26T10:31:18Z",
+      "release_eligible_count": 1435,
+      "written_to_articles_json_count": 1435,
+      "today_written_to_articles_json_count": 9,
+      "newest_written_publishedAt": "2026-06-26T11:57:44Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -833,219 +833,108 @@
       },
       "sample_titles": [
         {
-          "title": "Verstappen se má účastnit tajných jednání. Ve formuli 1 se rýsuje tým se dvěma mistry světa",
-          "publishedAt": "2026-06-26T09:40:13Z"
-        },
-        {
-          "title": "Wimbledon nabídne hned na úvod české derby, těžký los pro Menšíka",
-          "publishedAt": "2026-06-26T09:55:33Z"
-        },
-        {
-          "title": "Dopadli jako Češi, ale místo kritiky sklízeli sympatie. Celý svět ví, kdo jsme, září hrdí nováčci MS",
+          "title": "Outsideři MS se topí v euforii. Dopadli jako Češi, ale místo kritiky je chválí celý svět",
           "publishedAt": "2026-06-26T10:31:18Z"
         },
         {
-          "title": "Na MS se dostal jen kvůli zranění spoluhráče. Teď Pépé pomohl Slonům k postupu",
-          "publishedAt": "2026-06-26T10:16:49Z"
+          "title": "Bezgólová nuda odhaluje slabinu MS",
+          "publishedAt": "2026-06-26T11:18:46Z"
         },
         {
-          "title": "Po mizerném výkonu je velký favorit MS pod palbou. Přestaňte s těmi nesmysly! odmítal německý kouč kritiku",
-          "publishedAt": "2026-06-25T23:34:56Z"
+          "title": "Pardubice si pojistily služby trenéra Trousila a asistenta Polácha",
+          "publishedAt": "2026-06-26T11:45:32Z"
         },
         {
-          "title": "Dusno kolem duhových vlajek LGBT. Fotbalisté na MS hrozí protestem při zápase",
-          "publishedAt": "2026-06-26T09:21:09Z"
+          "title": "Všechny české posádky postoupily na veslařském SP v Lucernu do semifinále",
+          "publishedAt": "2026-06-26T11:57:44Z"
         },
         {
-          "title": "Vyrovnaný rekord WNBA. Rozehrávačka Mabreyová nastřílela 53 bodů",
-          "publishedAt": "2026-06-26T08:56:40Z"
+          "title": "Velké klimatické riziko. Kvůli extrémnímu počasí se nepojede motokros v Kramolíně",
+          "publishedAt": "2026-06-26T11:32:14Z"
         },
         {
-          "title": "Český talent vyhrál závod s časem, teď sní o triumfu na Tour: Snad už jsem si smůlu vybral",
-          "publishedAt": "2026-06-26T08:39:22Z"
+          "title": "Dvě ofenzivní mašiny proti sobě. Francie s Norskem zabojují o prvenství ve skupině",
+          "publishedAt": "2026-06-26T11:00:00Z"
+        },
+        {
+          "title": "Senegal i Irák hrají na MS o postup, nutně musí vyhrát",
+          "publishedAt": "2026-06-26T11:00:00Z"
+        },
+        {
+          "title": "Verstappen se má účastnit tajných jednání. Ve formuli 1 se rýsuje tým se dvěma mistry světa",
+          "publishedAt": "2026-06-26T09:40:13Z"
         }
       ]
     },
     {
-      "source_id": "ved_vtm",
-      "registry_id": "ved_vtm",
-      "source_label": "VTM",
-      "feed_url": "https://vtm.zive.cz/rss",
-      "topic": "veda",
-      "section_primary": "veda",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
-      "raw_feed_item_count": 35,
-      "raw_feed_new_item_count": 35,
-      "raw_feed_latest_publishedAt": "2026-06-26T08:45:00Z",
-      "ingested_item_count": 35,
-      "parsed_item_count": 35,
-      "normalized_item_count": 35,
-      "valid_publishedAt_count": 35,
-      "mapped_to_section_count": {
-        "zpravy": 0,
-        "sport": 0,
-        "finance": 0,
-        "zdravi": 0,
-        "cestovani": 0,
-        "other": 35
-      },
-      "release_eligible_count": 110,
-      "written_to_articles_json_count": 121,
-      "today_written_to_articles_json_count": 2,
-      "newest_written_publishedAt": "2026-06-26T08:45:00Z",
-      "drop_counts": {
-        "missing_publishedAt": 0,
-        "invalid_publishedAt": 0,
-        "parser_drop": 0,
-        "section_remap": 0,
-        "release_gate": 11,
-        "dedupe": 22,
-        "other": 0
-      },
-      "sample_titles": [
-        {
-          "title": "Apple právě masivně zdražil iPady, Macy, ale i produkty, u kterých to nedává smysl",
-          "publishedAt": "2026-06-25T17:15:00Z"
-        },
-        {
-          "title": "Computer 7/26: otestovali jsme reproduktory na chalupu či na terasu",
-          "publishedAt": "2026-06-26T08:45:00Z"
-        },
-        {
-          "title": "Mobily s Androidem jsou součástí největšího seismografu světa. Varují před zemětřesením až minutu předem",
-          "publishedAt": "2026-06-26T07:45:00Z"
-        },
-        {
-          "title": "Čipové status quo se otřásá. AMD křísí mrtvý procesor, Intel chystá nenasytné desky a Nvidia může přepsat pravidla hry",
-          "publishedAt": "2026-06-26T06:45:00Z"
-        },
-        {
-          "title": "Hry zadarmo, nebo se slevou: Letní výprodej na Steamu a RollerCoaster Tycoon 3 zdarma",
-          "publishedAt": "2026-06-26T05:10:00Z"
-        },
-        {
-          "title": "Spotify od září zruší přihlašování pomocí uživatelského jména",
-          "publishedAt": "2026-06-25T14:45:00Z"
-        },
-        {
-          "title": "Zkusili jsme rozbít telefon kladivem. Extrémně odolná fólie Mobile Outfitters nedala šanci",
-          "publishedAt": "2026-06-25T15:45:00Z"
-        },
-        {
-          "title": "25 kontroverzních filmů, které by dnes už nikdo nenatočil. Mnoho sexu, nekorektních hlášek, urážek černochů a LGBT",
-          "publishedAt": "2026-06-25T16:45:00Z"
-        }
-      ]
-    },
-    {
-      "source_id": "vzd_nespechej",
-      "registry_id": "vzd_nespechej",
-      "source_label": "Nespěchej",
-      "feed_url": "https://www.nespechej.cz/feed/",
+      "source_id": "vzd_pedagogicke_info",
+      "registry_id": "vzd_pedagogicke_info",
+      "source_label": "Pedagogické.info",
+      "feed_url": "https://www.pedagogicke.info/feeds/posts/default?alt=rss",
       "topic": "vzdelavani",
       "section_primary": "vzdelavani",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
-      "raw_feed_item_count": 0,
-      "raw_feed_new_item_count": 0,
-      "raw_feed_latest_publishedAt": "",
-      "ingested_item_count": 0,
-      "parsed_item_count": 0,
-      "normalized_item_count": 0,
-      "valid_publishedAt_count": 0,
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
+      "raw_feed_item_count": 25,
+      "raw_feed_new_item_count": 25,
+      "raw_feed_latest_publishedAt": "2026-06-25T22:03:00Z",
+      "ingested_item_count": 25,
+      "parsed_item_count": 25,
+      "normalized_item_count": 25,
+      "valid_publishedAt_count": 25,
       "mapped_to_section_count": {
-        "zpravy": 0,
+        "zpravy": 12,
         "sport": 0,
         "finance": 0,
         "zdravi": 0,
         "cestovani": 0,
-        "other": 0
+        "other": 13
       },
-      "release_eligible_count": 0,
-      "written_to_articles_json_count": 0,
-      "today_written_to_articles_json_count": 0,
-      "newest_written_publishedAt": "",
+      "release_eligible_count": 40,
+      "written_to_articles_json_count": 40,
+      "today_written_to_articles_json_count": 4,
+      "newest_written_publishedAt": "2026-06-25T22:03:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
         "parser_drop": 0,
         "section_remap": 0,
         "release_gate": 0,
-        "dedupe": 0,
-        "other": 0
-      },
-      "sample_titles": []
-    },
-    {
-      "source_id": "vzd_seznam",
-      "registry_id": "vzd_seznam",
-      "source_label": "Seznam Zprávy / Vzdělávání",
-      "feed_url": "https://www.seznamzpravy.cz/rss/vzdelavani",
-      "topic": "vzdelavani",
-      "section_primary": "vzdelavani",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
-      "raw_feed_item_count": 30,
-      "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-06-26T10:43:24Z",
-      "ingested_item_count": 30,
-      "parsed_item_count": 30,
-      "normalized_item_count": 30,
-      "valid_publishedAt_count": 30,
-      "mapped_to_section_count": {
-        "zpravy": 30,
-        "sport": 0,
-        "finance": 0,
-        "zdravi": 0,
-        "cestovani": 0,
-        "other": 0
-      },
-      "release_eligible_count": 77,
-      "written_to_articles_json_count": 77,
-      "today_written_to_articles_json_count": 0,
-      "newest_written_publishedAt": "2026-06-17T13:40:00Z",
-      "drop_counts": {
-        "missing_publishedAt": 0,
-        "invalid_publishedAt": 0,
-        "parser_drop": 0,
-        "section_remap": 0,
-        "release_gate": 0,
-        "dedupe": 30,
+        "dedupe": 18,
         "other": 0
       },
       "sample_titles": [
         {
-          "title": "Putin poslal Trumpovi papír, kam rukou napsal 3 + 2. Teď se Rusové zlobí",
-          "publishedAt": "2026-06-26T10:10:00Z"
+          "title": "Milan Hausner: Sezona lovu na učitele: Jak AI udělala z phishingového rybníčku školní sádky",
+          "publishedAt": "2026-06-25T22:03:00Z"
         },
         {
-          "title": "Šéf magistrátu pod tlakem. Má vysvětlit schůzku v michelinské restauraci",
-          "publishedAt": "2026-06-26T10:30:00Z"
+          "title": "Václav Maněna: Plošný zákaz mobilů školám nepomůže. Jen vytvoří dojem, že se něco řeší",
+          "publishedAt": "2026-06-25T22:01:00Z"
         },
         {
-          "title": "Vedro vytvořilo v cenách elektřiny novou anomálii",
-          "publishedAt": "2026-06-26T09:45:00Z"
+          "title": "Petr Jiříček: Rodiče z Hnojníku jásají. Vítězem konkursu je opět Gallus, poprvé bude ředitelem",
+          "publishedAt": "2026-06-25T22:00:00Z"
         },
         {
-          "title": "Počet utonulých při vlně veder ve Francii vzrostl na 55",
-          "publishedAt": "2026-06-26T10:43:24Z"
+          "title": "Rektor ČVUT a další signatáři Výzvy „Vraťme do škol pozornost“ vítají návrh zákonné regulace smartphonů ve školách",
+          "publishedAt": "2026-06-25T22:00:00Z"
         },
         {
-          "title": "Muž na odstřel? Koubek dělal chyby, ale problém je jinde",
-          "publishedAt": "2026-06-26T10:20:00Z"
+          "title": "Dvacet minut Radiožurnálu: Platy českých učitelů patří k nejnižším v OECD. Loni byly na úrovni 108 procent průměrné mzdy, upozorňuje ekonom Münich",
+          "publishedAt": "2026-06-25T22:00:00Z"
         },
         {
-          "title": "Šéf koncernu Volkswagen chce zrušit až 100 000 pracovních míst",
-          "publishedAt": "2026-06-26T08:35:33Z"
+          "title": "Petr Vaňous, Kamila Minaříková: Děti neumí číst ručičkové hodiny. Kolik je? Dotaz zaskočil i žáky střední školy",
+          "publishedAt": "2026-06-25T22:00:00Z"
         },
         {
-          "title": "Recenze: Na zamilovanou holku vypadá Olivia Rodrigo dost smutně",
-          "publishedAt": "2026-06-26T10:00:00Z"
+          "title": "ČŠI: Tematická zpráva - Prevence, identifikace a řešení školní neúspěšnosti v základních a středních školách",
+          "publishedAt": "2026-06-25T22:00:00Z"
         },
         {
-          "title": "Jihokorejská bývalá první dáma Kim Kon-hi dostala sedm let za úplatkářství",
-          "publishedAt": "2026-06-26T07:38:00Z"
+          "title": "Odborné stanovisko k návrhům na plošný zákaz sociálních sítí pro děti",
+          "publishedAt": "2026-06-24T22:03:00Z"
         }
       ]
     },
@@ -1056,8 +945,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -1095,8 +984,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -1128,17 +1017,89 @@
       "sample_titles": []
     },
     {
+      "source_id": "zpr_ceskajustice",
+      "registry_id": "zpr_ceskajustice",
+      "source_label": "Česká justice",
+      "feed_url": "https://www.ceska-justice.cz/feed/",
+      "topic": "aktualne",
+      "section_primary": "zpravy",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
+      "raw_feed_item_count": 10,
+      "raw_feed_new_item_count": 10,
+      "raw_feed_latest_publishedAt": "2026-06-26T11:38:45Z",
+      "ingested_item_count": 10,
+      "parsed_item_count": 10,
+      "normalized_item_count": 10,
+      "valid_publishedAt_count": 10,
+      "mapped_to_section_count": {
+        "zpravy": 10,
+        "sport": 0,
+        "finance": 0,
+        "zdravi": 0,
+        "cestovani": 0,
+        "other": 0
+      },
+      "release_eligible_count": 213,
+      "written_to_articles_json_count": 213,
+      "today_written_to_articles_json_count": 2,
+      "newest_written_publishedAt": "2026-06-26T07:36:24Z",
+      "drop_counts": {
+        "missing_publishedAt": 0,
+        "invalid_publishedAt": 0,
+        "parser_drop": 0,
+        "section_remap": 0,
+        "release_gate": 0,
+        "dedupe": 6,
+        "other": 0
+      },
+      "sample_titles": [
+        {
+          "title": "Blažek neodvrátil trestní stíhání. NSZ zamítlo stížnosti v bitcoinové kauze",
+          "publishedAt": "2026-06-26T11:38:45Z"
+        },
+        {
+          "title": "150 změn stavebního zákona. Poslanci řeší obecní byty politiků i přejmenování ministerstva",
+          "publishedAt": "2026-06-26T07:36:24Z"
+        },
+        {
+          "title": "Obral muže v nouzi o byt za 5 milionů. Ministr Tejc napadl postup soudu",
+          "publishedAt": "2026-06-26T04:30:00Z"
+        },
+        {
+          "title": "Macinka: Rychlé rozhodnutí Ústavního soudu je důkazem úpadku právní kultury",
+          "publishedAt": "2026-06-25T16:45:57Z"
+        },
+        {
+          "title": "Až 40 stupňů v soudních budovách. Přicházejí první opatření",
+          "publishedAt": "2026-06-25T10:42:49Z"
+        },
+        {
+          "title": "Drogově závislý schizofrenik nemusí do detence. Soudy mají zvažovat i mírnější opatření",
+          "publishedAt": "2026-06-25T09:56:15Z"
+        },
+        {
+          "title": "„Růžové ruky“ slibují práci servírky či modelky. Ženy pak nutí k prostituci, varuje NCOZ",
+          "publishedAt": "2026-06-25T08:15:37Z"
+        },
+        {
+          "title": "Policista udeřil a kopal mladíka kvůli hluku v domě. Vyšetřuje to inspekce",
+          "publishedAt": "2026-06-25T08:03:45Z"
+        }
+      ]
+    },
+    {
       "source_id": "zpr_ct24_domaci",
       "registry_id": "zpr_ct24_domaci",
       "source_label": "ČT24 / Domácí",
       "feed_url": "https://ct24.ceskatelevize.cz/rss",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-06-26T10:18:49Z",
+      "raw_feed_latest_publishedAt": "2026-06-26T12:06:04Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -1151,10 +1112,10 @@
         "cestovani": 0,
         "other": 3
       },
-      "release_eligible_count": 1122,
-      "written_to_articles_json_count": 1130,
-      "today_written_to_articles_json_count": 11,
-      "newest_written_publishedAt": "2026-06-26T10:18:49Z",
+      "release_eligible_count": 1125,
+      "written_to_articles_json_count": 1133,
+      "today_written_to_articles_json_count": 14,
+      "newest_written_publishedAt": "2026-06-26T12:06:04Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -1166,6 +1127,26 @@
       },
       "sample_titles": [
         {
+          "title": "Vnitro porušilo práva SPD zařazením do zprávy o extremismu za rok 2022, rozhodl soud",
+          "publishedAt": "2026-06-26T12:06:04Z"
+        },
+        {
+          "title": "Evropu sužují horka, počet obětí narůstá",
+          "publishedAt": "2026-06-26T12:01:53Z"
+        },
+        {
+          "title": "Primátor Karviné Wolf nepůjde do vazby, rozhodl pravomocně soud",
+          "publishedAt": "2026-06-26T11:51:03Z"
+        },
+        {
+          "title": "Vlna veder je bezprecedentní. Před půl stoletím by nebyla možná, vinu nese změna klimatu",
+          "publishedAt": "2026-06-26T11:05:25Z"
+        },
+        {
+          "title": "Chatboti ovlivňují nákupy víc než vyhledávače. Švýcarští spotřebitelé jim přesto důvěřují",
+          "publishedAt": "2026-06-26T10:55:25Z"
+        },
+        {
           "title": "Zemřela historička Milena Flodrová, spoluzakladatelka Encyklopedie dějin Brna",
           "publishedAt": "2026-06-26T10:18:49Z"
         },
@@ -1174,28 +1155,80 @@
           "publishedAt": "2026-06-26T09:59:17Z"
         },
         {
-          "title": "První teplotní rekordy padly už dopoledne. Sledujte v mapě, jak přibývají",
+          "title": "Teplotní rekordy hlásí desítky stanic. Sledujte na mapě, jak přibývají",
           "publishedAt": "2026-06-26T09:36:12Z"
+        }
+      ]
+    },
+    {
+      "source_id": "zpr_hlidacipes",
+      "registry_id": "zpr_hlidacipes",
+      "source_label": "HlídacíPes",
+      "feed_url": "https://hlidacipes.org/feed/",
+      "topic": "aktualne",
+      "section_primary": "zpravy",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
+      "raw_feed_item_count": 10,
+      "raw_feed_new_item_count": 10,
+      "raw_feed_latest_publishedAt": "2026-06-26T10:30:18Z",
+      "ingested_item_count": 10,
+      "parsed_item_count": 10,
+      "normalized_item_count": 10,
+      "valid_publishedAt_count": 10,
+      "mapped_to_section_count": {
+        "zpravy": 10,
+        "sport": 0,
+        "finance": 0,
+        "zdravi": 0,
+        "cestovani": 0,
+        "other": 0
+      },
+      "release_eligible_count": 137,
+      "written_to_articles_json_count": 137,
+      "today_written_to_articles_json_count": 2,
+      "newest_written_publishedAt": "2026-06-26T10:30:18Z",
+      "drop_counts": {
+        "missing_publishedAt": 0,
+        "invalid_publishedAt": 0,
+        "parser_drop": 0,
+        "section_remap": 0,
+        "release_gate": 0,
+        "dedupe": 8,
+        "other": 0
+      },
+      "sample_titles": [
+        {
+          "title": "Macinka jako Gottwald. Když křik o puči slouží skutečnému puči",
+          "publishedAt": "2026-06-26T10:30:18Z"
         },
         {
-          "title": "Dusno jako v prádelně je stále častější",
-          "publishedAt": "2026-06-26T09:29:28Z"
+          "title": "„Oholíme veřejnoprávní média po česku.“ Krajní pravice u sousedů tleská Babišovi",
+          "publishedAt": "2026-06-26T04:30:20Z"
         },
         {
-          "title": "Nakažená základna přivedla americké letectvo zpět k očkování proti chřipce",
-          "publishedAt": "2026-06-26T09:01:48Z"
+          "title": "Aleš Rozehnal: Kompetenční žaloba není politický exces, ale obrana Ústavy",
+          "publishedAt": "2026-06-25T11:24:14Z"
         },
         {
-          "title": "Loňský blackout byl souběh událostí, potvrdili mezinárodní experti",
-          "publishedAt": "2026-06-26T08:41:56Z"
+          "title": "Investor Brůna: Příběh CSG ukazuje, jak rychle může přijít vystřízlivění",
+          "publishedAt": "2026-06-25T09:30:44Z"
         },
         {
-          "title": "EK navrhla prodloužit ochranu Ukrajinců o rok s omezeními pro muže",
-          "publishedAt": "2026-06-26T08:22:54Z"
+          "title": "Jan Urban: K čemu jsou užiteční ovádi a proč se Okamura nikdy nevzdává",
+          "publishedAt": "2026-06-25T04:30:17Z"
         },
         {
-          "title": "Nejvyšší soud USA otevřel Trumpovi cestu k deportaci statisíců Haiťanů a Syřanů",
-          "publishedAt": "2026-06-26T08:19:59Z"
+          "title": "Do Prahy přijedou lidé, jejichž reklamy změnily svět",
+          "publishedAt": "2026-06-24T14:00:21Z"
+        },
+        {
+          "title": "Frakce Patrioti pro Evropu, kam patří i české ANO, čelí podezření ze zpronevěry",
+          "publishedAt": "2026-06-24T09:30:50Z"
+        },
+        {
+          "title": "Česko jede na dluh, málo investuje, budoucnost projídá, potvrzují data",
+          "publishedAt": "2026-06-24T04:30:01Z"
         }
       ]
     },
@@ -1206,109 +1239,70 @@
       "feed_url": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-06-26T10:48:35Z",
+      "raw_feed_latest_publishedAt": "2026-06-26T12:15:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
       "valid_publishedAt_count": 30,
       "mapped_to_section_count": {
-        "zpravy": 25,
+        "zpravy": 24,
         "sport": 0,
         "finance": 3,
         "zdravi": 0,
         "cestovani": 0,
-        "other": 2
+        "other": 3
       },
-      "release_eligible_count": 1624,
-      "written_to_articles_json_count": 1627,
-      "today_written_to_articles_json_count": 14,
-      "newest_written_publishedAt": "2026-06-26T10:48:35Z",
+      "release_eligible_count": 1628,
+      "written_to_articles_json_count": 1631,
+      "today_written_to_articles_json_count": 18,
+      "newest_written_publishedAt": "2026-06-26T12:15:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
         "parser_drop": 0,
         "section_remap": 0,
         "release_gate": 3,
-        "dedupe": 15,
+        "dedupe": 17,
         "other": 0
       },
       "sample_titles": [
         {
-          "title": "Piráti bojují proti zákonu. Chtěli jednat o tom, že Babiš neumí říci Macinkovi ne",
-          "publishedAt": "2026-06-26T10:48:35Z"
+          "title": "Koalice chce snadnější výměny úředníků. Riskujete ztrátu miliard eur, řekl Hřib",
+          "publishedAt": "2026-06-26T12:15:00Z"
         },
         {
-          "title": "České centrum v Budapešti podpořilo Pride. Vedení brzy skončí, reaguje Macinka",
-          "publishedAt": "2026-06-26T10:44:00Z"
+          "title": "Dělníka zasypaly skleněné tabule, zraněného do nemocnice přepravil vrtulník",
+          "publishedAt": "2026-06-26T12:08:47Z"
         },
         {
-          "title": "Na Krymu vyhlásili po ukrajinských útocích nouzový režim",
-          "publishedAt": "2026-06-26T10:44:00Z"
-        },
-        {
-          "title": "Adidas našel lék na vedra. Představil oblečení s vestavěnými ventilátory",
-          "publishedAt": "2026-06-26T10:41:00Z"
+          "title": "SPD do zprávy o extremismu nepatřila, rozhodl soud. Omluvu hnutí ale nepřiznal",
+          "publishedAt": "2026-06-26T12:08:00Z"
         },
         {
           "title": "Ve Francii se ve vedrech utopilo už před padesát lidí. Paris Pride se ruší",
-          "publishedAt": "2026-06-26T10:35:22Z"
+          "publishedAt": "2026-06-26T12:00:54Z"
         },
         {
-          "title": "Macinka vystoupil ke klimatické krizi. Zelení jsou podle něj značně přehřátí",
-          "publishedAt": "2026-06-26T10:31:00Z"
+          "title": "RECENZE: S Krejčíkovou na kolotoči. Komedie omylů je fraška se vším všudy",
+          "publishedAt": "2026-06-26T12:00:00Z"
         },
         {
-          "title": "Kdo je Anna Ponomarjovová? Rusko do Prahy vysílá diplomatku s vazbou na Česko",
-          "publishedAt": "2026-06-26T10:15:00Z"
+          "title": "Rozhodnutí o vazbě pro karvinského primátora Wolfa. Soud ho propustil",
+          "publishedAt": "2026-06-26T11:58:59Z"
         },
         {
-          "title": "Slíbili mu výnos z dlouhodobé investice, muž přišel o více než pět milionů",
-          "publishedAt": "2026-06-26T10:09:00Z"
+          "title": "„Úleva, kterou si pracující zaslouží“. New York schválil zastropování nájemného",
+          "publishedAt": "2026-06-26T11:54:00Z"
+        },
+        {
+          "title": "Pražská policie hledá ženu s nožem. Vypila fridex a může být nebezpečná",
+          "publishedAt": "2026-06-26T11:49:00Z"
         }
       ]
-    },
-    {
-      "source_id": "zpr_kverulant",
-      "registry_id": "zpr_kverulant",
-      "source_label": "Kverulant",
-      "feed_url": "https://www.kverulant.org/feed/",
-      "topic": "aktualne",
-      "section_primary": "zpravy",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
-      "raw_feed_item_count": 0,
-      "raw_feed_new_item_count": 0,
-      "raw_feed_latest_publishedAt": "",
-      "ingested_item_count": 0,
-      "parsed_item_count": 0,
-      "normalized_item_count": 0,
-      "valid_publishedAt_count": 0,
-      "mapped_to_section_count": {
-        "zpravy": 0,
-        "sport": 0,
-        "finance": 0,
-        "zdravi": 0,
-        "cestovani": 0,
-        "other": 0
-      },
-      "release_eligible_count": 50,
-      "written_to_articles_json_count": 50,
-      "today_written_to_articles_json_count": 1,
-      "newest_written_publishedAt": "2026-06-25T22:07:00Z",
-      "drop_counts": {
-        "missing_publishedAt": 0,
-        "invalid_publishedAt": 0,
-        "parser_drop": 0,
-        "section_remap": 0,
-        "release_gate": 0,
-        "dedupe": 0,
-        "other": 0
-      },
-      "sample_titles": []
     },
     {
       "source_id": "zpr_novinky_domaci",
@@ -1317,19 +1311,19 @@
       "feed_url": "https://www.novinky.cz/rss/domaci",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-06-26T10:36:24Z",
+      "raw_feed_latest_publishedAt": "2026-06-26T12:09:57Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
       "valid_publishedAt_count": 30,
       "mapped_to_section_count": {
-        "zpravy": 22,
+        "zpravy": 24,
         "sport": 0,
-        "finance": 6,
+        "finance": 4,
         "zdravi": 1,
         "cestovani": 1,
         "other": 0
@@ -1349,36 +1343,36 @@
       },
       "sample_titles": [
         {
-          "title": "Nová ruská velvyslankyně předala na Hradě pověřovací listiny",
-          "publishedAt": "2026-06-26T10:36:24Z"
+          "title": "Benzín a nafta o víkendu zdraží",
+          "publishedAt": "2026-06-26T12:09:57Z"
         },
         {
-          "title": "Turisté stáli na nejvyšší velšské hoře ve frontě. Hodinu čekali na selfie, nevadily jim ani mraky",
-          "publishedAt": "2026-06-26T10:14:00Z"
+          "title": "Vnitro porušilo práva SPD, musí se písemně omluvit",
+          "publishedAt": "2026-06-26T12:06:11Z"
         },
         {
-          "title": "Porušení cenových stropů na pohonné hmoty zjistily kontroly jen v procentu případů",
-          "publishedAt": "2026-06-26T10:12:00Z"
+          "title": "K Tokiu míří dva tajfuny najednou",
+          "publishedAt": "2026-06-26T12:04:14Z"
         },
         {
-          "title": "FOTO: První Grand Prix se jela před 120 lety. Le Mans otevřelo cestu všem slavným závodům",
-          "publishedAt": "2026-06-26T10:10:32Z"
+          "title": "Rozpálená Pálava dává hercům i štábu nových Bobulí a Bobulek pořádně zabrat",
+          "publishedAt": "2026-06-26T12:04:00Z"
         },
         {
-          "title": "Brit odnesl odpadky na cizí dvůr, zanedlouho je měl zpět",
-          "publishedAt": "2026-06-26T10:07:45Z"
+          "title": "Strážnice ruší kvůli extrémnímu vedru legendární průvod krojovaných. Poprvé v historii",
+          "publishedAt": "2026-06-26T11:53:24Z"
         },
         {
-          "title": "Bránou k íránským penězům se stala kryptoburza. Přes platformu CoinEx prošly miliardy dolarů",
-          "publishedAt": "2026-06-26T10:03:00Z"
+          "title": "Ferrari má nového šéfa marketingu a obchodu, nastupuje v nelehké době",
+          "publishedAt": "2026-06-26T11:50:00Z"
         },
         {
-          "title": "Policie a silničáři varují před riziky prázdninových cest, na řidiče čeká řada nástrah",
-          "publishedAt": "2026-06-26T09:53:33Z"
+          "title": "Soud neposlal do vazby karvinského primátora",
+          "publishedAt": "2026-06-26T11:46:59Z"
         },
         {
-          "title": "OKD se prudce propadl zisk, důvodem je plánované ukončení těžby i nízká poptávka",
-          "publishedAt": "2026-06-26T09:53:00Z"
+          "title": "Svoboda za peníze? Případ miliardáře Pelce připomíná slavné „marody“ české justice",
+          "publishedAt": "2026-06-26T11:43:58Z"
         }
       ]
     },
@@ -1389,68 +1383,68 @@
       "feed_url": "https://www.novinky.cz/rss/zahranicni",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-06-26T10:36:24Z",
+      "raw_feed_latest_publishedAt": "2026-06-26T12:09:57Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
       "valid_publishedAt_count": 30,
       "mapped_to_section_count": {
-        "zpravy": 22,
+        "zpravy": 24,
         "sport": 0,
-        "finance": 6,
+        "finance": 4,
         "zdravi": 1,
         "cestovani": 1,
         "other": 0
       },
-      "release_eligible_count": 440,
-      "written_to_articles_json_count": 440,
-      "today_written_to_articles_json_count": 19,
-      "newest_written_publishedAt": "2026-06-26T10:36:24Z",
+      "release_eligible_count": 446,
+      "written_to_articles_json_count": 446,
+      "today_written_to_articles_json_count": 25,
+      "newest_written_publishedAt": "2026-06-26T12:09:57Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
         "parser_drop": 0,
         "section_remap": 0,
         "release_gate": 0,
-        "dedupe": 15,
+        "dedupe": 13,
         "other": 0
       },
       "sample_titles": [
         {
-          "title": "Nová ruská velvyslankyně předala na Hradě pověřovací listiny",
-          "publishedAt": "2026-06-26T10:36:24Z"
+          "title": "Benzín a nafta o víkendu zdraží",
+          "publishedAt": "2026-06-26T12:09:57Z"
         },
         {
-          "title": "Turisté stáli na nejvyšší velšské hoře ve frontě. Hodinu čekali na selfie, nevadily jim ani mraky",
-          "publishedAt": "2026-06-26T10:14:00Z"
+          "title": "Vnitro porušilo práva SPD, musí se písemně omluvit",
+          "publishedAt": "2026-06-26T12:06:11Z"
         },
         {
-          "title": "Porušení cenových stropů na pohonné hmoty zjistily kontroly jen v procentu případů",
-          "publishedAt": "2026-06-26T10:12:00Z"
+          "title": "K Tokiu míří dva tajfuny najednou",
+          "publishedAt": "2026-06-26T12:04:14Z"
         },
         {
-          "title": "FOTO: První Grand Prix se jela před 120 lety. Le Mans otevřelo cestu všem slavným závodům",
-          "publishedAt": "2026-06-26T10:10:32Z"
+          "title": "Rozpálená Pálava dává hercům i štábu nových Bobulí a Bobulek pořádně zabrat",
+          "publishedAt": "2026-06-26T12:04:00Z"
         },
         {
-          "title": "Brit odnesl odpadky na cizí dvůr, zanedlouho je měl zpět",
-          "publishedAt": "2026-06-26T10:07:45Z"
+          "title": "Strážnice ruší kvůli extrémnímu vedru legendární průvod krojovaných. Poprvé v historii",
+          "publishedAt": "2026-06-26T11:53:24Z"
         },
         {
-          "title": "Bránou k íránským penězům se stala kryptoburza. Přes platformu CoinEx prošly miliardy dolarů",
-          "publishedAt": "2026-06-26T10:03:00Z"
+          "title": "Ferrari má nového šéfa marketingu a obchodu, nastupuje v nelehké době",
+          "publishedAt": "2026-06-26T11:50:00Z"
         },
         {
-          "title": "Policie a silničáři varují před riziky prázdninových cest, na řidiče čeká řada nástrah",
-          "publishedAt": "2026-06-26T09:53:33Z"
+          "title": "Soud neposlal do vazby karvinského primátora",
+          "publishedAt": "2026-06-26T11:46:59Z"
         },
         {
-          "title": "OKD se prudce propadl zisk, důvodem je plánované ukončení těžby i nízká poptávka",
-          "publishedAt": "2026-06-26T09:53:00Z"
+          "title": "Svoboda za peníze? Případ miliardáře Pelce připomíná slavné „marody“ české justice",
+          "publishedAt": "2026-06-26T11:43:58Z"
         }
       ]
     },
@@ -1461,27 +1455,27 @@
       "feed_url": "https://www.seznamzpravy.cz/rss/domaci",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
+      "generatedAt": "2026-06-26T12:35:39.005653Z",
+      "run_time_utc": "2026-06-26T12:35:39.005653Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-06-26T10:43:24Z",
+      "raw_feed_latest_publishedAt": "2026-06-26T12:20:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
       "valid_publishedAt_count": 30,
       "mapped_to_section_count": {
-        "zpravy": 20,
-        "sport": 2,
+        "zpravy": 21,
+        "sport": 1,
         "finance": 8,
         "zdravi": 0,
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 949,
-      "written_to_articles_json_count": 949,
-      "today_written_to_articles_json_count": 14,
-      "newest_written_publishedAt": "2026-06-26T10:43:24Z",
+      "release_eligible_count": 953,
+      "written_to_articles_json_count": 953,
+      "today_written_to_articles_json_count": 18,
+      "newest_written_publishedAt": "2026-06-26T12:20:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -1493,108 +1487,36 @@
       },
       "sample_titles": [
         {
+          "title": "Vláda protlačila nový služební zákon. Co změní a v čem je kontroverzní",
+          "publishedAt": "2026-06-26T11:50:23Z"
+        },
+        {
           "title": "Putin poslal Trumpovi papír, kam rukou napsal 3 + 2. Teď se Rusové zlobí",
           "publishedAt": "2026-06-26T10:10:00Z"
         },
         {
-          "title": "Šéf magistrátu pod tlakem. Má vysvětlit schůzku v michelinské restauraci",
-          "publishedAt": "2026-06-26T10:30:00Z"
+          "title": "„Pomáhal s Fidelem budovat ráj na zemi.“ Kubánci teď shání dřevo na podpal",
+          "publishedAt": "2026-06-26T12:01:24Z"
         },
         {
-          "title": "Vedro vytvořilo v cenách elektřiny novou anomálii",
-          "publishedAt": "2026-06-26T09:45:00Z"
+          "title": "Ciferník jako na hodinkách za statisíce. Swatch žalují Samsung kvůli kopírování",
+          "publishedAt": "2026-06-26T12:20:00Z"
         },
         {
-          "title": "Počet utonulých při vlně veder ve Francii vzrostl na 55",
-          "publishedAt": "2026-06-26T10:43:24Z"
+          "title": "Ministerstvo porušilo práva hnutí SPD zařazením do zprávy o extremismu",
+          "publishedAt": "2026-06-26T12:07:36Z"
         },
         {
-          "title": "Muž na odstřel? Koubek dělal chyby, ale problém je jinde",
-          "publishedAt": "2026-06-26T10:20:00Z"
+          "title": "Žalobce NSZ zamítl všechny tři stížnosti proti stíhání v bitcoinové kauze",
+          "publishedAt": "2026-06-26T11:54:10Z"
         },
         {
-          "title": "Šéf koncernu Volkswagen chce zrušit až 100 000 pracovních míst",
-          "publishedAt": "2026-06-26T08:35:33Z"
+          "title": "„Náš Matěj má samé jedničky.“ Pozor na fotky vysvědčení, lze je snadno zneužít",
+          "publishedAt": "2026-06-26T11:44:42Z"
         },
         {
-          "title": "Recenze: Na zamilovanou holku vypadá Olivia Rodrigo dost smutně",
-          "publishedAt": "2026-06-26T10:00:00Z"
-        },
-        {
-          "title": "Jihokorejská bývalá první dáma Kim Kon-hi dostala sedm let za úplatkářství",
-          "publishedAt": "2026-06-26T07:38:00Z"
-        }
-      ]
-    },
-    {
-      "source_id": "zpr_tydenikpolicie",
-      "registry_id": "zpr_tydenikpolicie",
-      "source_label": "Týdeník Policie",
-      "feed_url": "https://www.tydenikpolicie.cz/feed/",
-      "topic": "aktualne",
-      "section_primary": "zpravy",
-      "generatedAt": "2026-06-26T11:09:08.856581Z",
-      "run_time_utc": "2026-06-26T11:09:08.856581Z",
-      "raw_feed_item_count": 10,
-      "raw_feed_new_item_count": 10,
-      "raw_feed_latest_publishedAt": "2026-06-26T09:57:16Z",
-      "ingested_item_count": 10,
-      "parsed_item_count": 10,
-      "normalized_item_count": 10,
-      "valid_publishedAt_count": 10,
-      "mapped_to_section_count": {
-        "zpravy": 9,
-        "sport": 0,
-        "finance": 0,
-        "zdravi": 0,
-        "cestovani": 1,
-        "other": 0
-      },
-      "release_eligible_count": 468,
-      "written_to_articles_json_count": 468,
-      "today_written_to_articles_json_count": 5,
-      "newest_written_publishedAt": "2026-06-26T09:57:16Z",
-      "drop_counts": {
-        "missing_publishedAt": 0,
-        "invalid_publishedAt": 0,
-        "parser_drop": 0,
-        "section_remap": 0,
-        "release_gate": 0,
-        "dedupe": 0,
-        "other": 0
-      },
-      "sample_titles": [
-        {
-          "title": "Pražská policie opět pátrá po pohřešované ženě. Vypila fridex a má u sebe nůž",
-          "publishedAt": "2026-06-26T09:57:16Z"
-        },
-        {
-          "title": "Senior v Praze nepřežil střet s projíždějícím BMW",
-          "publishedAt": "2026-06-26T09:40:28Z"
-        },
-        {
-          "title": "Ženě v Jihlavě nebyl lhostejný osud muže, který chtěl skočit z mostu",
-          "publishedAt": "2026-06-26T09:34:39Z"
-        },
-        {
-          "title": "Dálniční policisté zastavili v Praze řidiče, kteří si spletli dálnici se závodním okruhem",
-          "publishedAt": "2026-06-26T09:22:33Z"
-        },
-        {
-          "title": "Policisté na jižní Moravě řešili další dva vážné případy spojené s koupáním. Jeden skončil tragicky",
-          "publishedAt": "2026-06-26T09:15:29Z"
-        },
-        {
-          "title": "K rychlému dopadení podezřelého z pokusu o znásilnění pomohla rychlá reakce svědka a poškozené dívky",
-          "publishedAt": "2026-06-26T09:11:37Z"
-        },
-        {
-          "title": "Majitel domu v Pardubicích přistihl zloděje. S mečem v ruce se jej snažil zadržet, podezřelý však nasedl na kolo a ujel",
-          "publishedAt": "2026-06-26T09:08:05Z"
-        },
-        {
-          "title": "Nepravomocně odsouzený za znásilnění si koupil letenku do Ameriky. Přišli si pro něj kriminalisté",
-          "publishedAt": "2026-06-26T09:02:16Z"
+          "title": "Než se vše orazítkuje, svářeče z Filipín nám přebere Polsko",
+          "publishedAt": "2026-06-26T11:20:00Z"
         }
       ]
     }
