@@ -352,13 +352,17 @@
   function initDelegation() {
     if (window.__iuToolPrivacyDelegation) return;
     window.__iuToolPrivacyDelegation = true;
-    document.addEventListener("click", function (e) {
-      var btn = e.target && e.target.closest && e.target.closest("[data-iu-tool-privacy-open]");
-      if (!btn) return;
-      e.preventDefault();
-      e.stopPropagation();
-      openModal(btn.getAttribute("data-iu-tool-privacy-open"));
-    });
+    document.addEventListener(
+      "click",
+      function (e) {
+        var btn = e.target && e.target.closest && e.target.closest("[data-iu-tool-privacy-open]");
+        if (!btn) return;
+        e.preventDefault();
+        e.stopPropagation();
+        openModal(btn.getAttribute("data-iu-tool-privacy-open"));
+      },
+      true
+    );
   }
 
   function bootStaticHeadings() {
