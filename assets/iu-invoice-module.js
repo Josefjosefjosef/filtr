@@ -105,7 +105,6 @@ function kindRadios(name, current) {
 
 function renderFormShell() {
   return `<div class="iu-inv-root" data-iu-invoice-root data-export-mode="pdf_only">
-  <p class="iu-inv-intro">Údaje se ukládají pouze v tomto prohlížeči. Slouží jako pomůcka — před použitím vždy zkontrolujte správnost.</p>
 
   <section class="iu-inv-block iu-inv-supplierBlock" aria-labelledby="iu-inv-h-sup" data-iu-inv-supplier-active="fo">
     <h3 class="iu-inv-h" id="iu-inv-h-sup">Dodavatel</h3>

@@ -1843,6 +1843,7 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-custom-buttons-overlay.css?v=custom-buttons-mobile-scroll-v1" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1549parcel-universal-box-ui" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-banking-premium.css?v=prod1551banking-premium-ui" />
+    <link rel="stylesheet" href="/assets/iu-tool-privacy-info.css?v=unified-tool-privacy-v1" />
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=20" />
     <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=3" />
     <link rel="stylesheet" href="/assets/iu-home-premium-install-box.css?v=1" />
@@ -3878,7 +3879,7 @@ font-src 'self' data:;
                             <button type="button" id="iuLegalDocsBack" class="iu-legal-overlay-backBtn" hidden>Zpět</button>
                             <div class="iu-legal-overlay-heading">
                               <h2 id="iuLegalDocsTitle" class="iu-legal-overlay-h2">Vzory smluv a plné moci</h2>
-                              <p id="iuLegalDocsSub" class="iu-legal-overlay-sub">Generátor strukturovaných dokumentů</p>
+                              <p id="iuLegalDocsSub" class="iu-legal-overlay-sub">Generátor smluv a plných mocí</p>
                             </div>
                             <button type="button" id="iuLegalDocsClose" class="iu-overlayCloseBtn38 iu-close-btn-38" aria-label="Zavřít" data-iu-close>×</button>
                           </header>
@@ -3896,7 +3897,6 @@ font-src 'self' data:;
                           <header class="iu-invoice-overlay-header">
                             <div class="iu-invoice-overlay-heading">
                               <h2 id="iuInvoiceTitle" class="iu-invoice-overlay-h2">Vytvořit fakturu</h2>
-                              <p class="iu-invoice-overlay-sub">Profesionální generátor faktury — údaje jen v tomto prohlížeči</p>
                             </div>
                             <button type="button" id="iuInvoiceClose" class="iu-overlayCloseBtn38 iu-close-btn-38" aria-label="Zavřít" data-iu-close>×</button>
                           </header>
@@ -3955,11 +3955,12 @@ font-src 'self' data:;
                     <div id="iuDsPanel" class="iu-ds-tool iu-ds-panel iuSectionDS" hidden role="dialog" aria-modal="true" aria-labelledby="iuDsPanelTitle" data-open="0">
                       <div class="iu-ds-modal">
                         <div class="iu-ds-panelHeader">
-                          <span id="iuDsPanelTitle">Datové schránky</span>
+                          <div class="iu-ds-panelHeaderMain">
+                            <span id="iuDsPanelTitle" class="iu-tool-privacy-title">Datové schránky</span>
+                          </div>
                           <button type="button" class="iuModalClose iu-ds-close" data-iu-close aria-label="Zavřít">×</button>
                         </div>
                         <div class="iu-ds-panelBody">
-                          <p class="iu-ds-helper">Údaje se ukládají pouze v tomto prohlížeči na tomto zařízení a neodesíláme je na server infoUzel.cz.</p>
                           <p id="iuDsAutofillStatus" class="iu-ds-status" aria-live="polite">Externí přihlašovací stránka běží na jiné doméně — prohlížeč z bezpečnostních důvodů neumožňuje automatické vyplnění jména a hesla z infoUzel.cz. Po otevření přihlášení zkopírujte údaje z polí níže ručně.</p>
                           <div id="iuDsProfileListHost" class="iu-ds-profile-list"></div>
                           <button type="button" id="iuDsAddBtn" class="iu-ds-add">+ Přidat další</button>
@@ -5552,6 +5553,7 @@ font-src 'self' data:;
     <script defer src="/assets/iu-section-views-lazy-mount.js?v=section-views-lazy-mount-v1-20260611"></script>
     <script defer src="/assets/iu-affiliate-catalog.js?v=affiliate-catalog-v3-20260617"></script>
     <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-v1"></script>
+    <script defer src="/assets/iu-tool-privacy-info.js?v=unified-tool-privacy-v1"></script>
     <script type="module" src="/assets/app.js?v=fix-mobile-gate-main-visible-20260624"></script>
     <script>
     (function iuOverlayCssDeferGuard(){

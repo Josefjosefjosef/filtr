@@ -29687,9 +29687,15 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       const qTitle = iuQfEscape(titles[keyNorm] || keyNorm);
+      var qPrivacyBlock = "";
+      if ((keyNorm === "bakalari" || keyNorm === "pojistovna") && typeof window.iuToolPrivacyHeadBlockHtml === "function") {
+        qPrivacyBlock = window.iuToolPrivacyHeadBlockHtml(keyNorm);
+      }
       const qHead =
-        "<div class=\"iuQHead\"><div class=\"iuQTitle\">" +
+        "<div class=\"iuQHead\"><div class=\"iuQHeadText\"><div class=\"iuQTitle\">" +
         qTitle +
+        "</div>" +
+        qPrivacyBlock +
         "</div><div class=\"iuQHeadActions\"><button class=\"iuQClose iu-overlayCloseBtn38\" type=\"button\" id=\"iuQCloseBtn\" aria-label=\"Zavřít\">×</button></div></div>";
       const qCard = "<div class=\"iuQCard\" id=\"iuQuickFeedMojeSluzbyBody\"></div>";
       const useMojeDesktopDsShell =
@@ -31928,6 +31934,10 @@ function buildVideoAsArticleCard(it) {
     const modalInner = panel ? panel.querySelector(".iu-ds-modal") : null;
     if (!panel) return;
     window.__iuDsPanelBound = true;
+
+    if (typeof window.iuToolPrivacyMountDatovkaHeading === "function") {
+      window.iuToolPrivacyMountDatovkaHeading();
+    }
 
     iuDsEnsureGuardClasses();
     iuDsMountDeleteConfirm();
@@ -36147,7 +36157,6 @@ function buildVideoAsArticleCard(it) {
 
     var rootHtml = [
       "<div class=\"iu-mojeSluzbyBakalari bakalari-root\">",
-      "  <p class=\"bakalari-privacy-note\" data-bakalari-privacy>Údaje se ukládají pouze v tomto prohlížeči na tomto zařízení a neodesíláme je na server infoUzel.cz.</p>",
       "  <div class=\"bakalari-cards-container\" data-bakalari-cards></div>",
       "  <button type=\"button\" class=\"bakalari-add-another\" data-bakalari-add>Přidat další</button>",
       "  <div class=\"bakalari-global-feedback\" data-bakalari-global-feedback aria-live=\"polite\"></div>",
@@ -36510,7 +36519,6 @@ function buildVideoAsArticleCard(it) {
   }
 
   function renderPojistovnaModal(container) {
-    var NOTICE_TEXT = "Údaje se ukládají pouze ve vašem zařízení. infoUzel.cz žádná data nestahuje ani nikam neposílá.";
     var profiles = healthLoadCardsFromStorage().slice();
 
     function healthCardTitleLine(card) {
@@ -36545,7 +36553,6 @@ function buildVideoAsArticleCard(it) {
 
     var rootHtml = [
       "<div class=\"iu-health-root\" data-iu-health-root>",
-      "  <p class=\"iu-health-notice\" data-iu-health-notice>" + esc(NOTICE_TEXT) + "</p>",
       "  <div class=\"iu-health-cards\" data-iu-health-cards></div>",
       "  <button type=\"button\" class=\"iu-health-add\" data-iu-health-add>Přidat další</button>",
       "  <div class=\"iu-health-global-feedback\" data-iu-health-global-feedback aria-live=\"polite\"></div>",
