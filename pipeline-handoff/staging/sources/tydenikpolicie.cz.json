@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-06-27T01:00:55.659120Z",
+  "ingestedAt": "2026-06-27T02:34:49.492857Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Středočeští celníci se při akci na dálnici D8 zaměřili na dlužníky",
+      "url": "https://tydenikpolicie.cz/stredocesti-celnici-se-pri-akci-na-dalnici-d8-zamerili-na-dluzniky/",
+      "dt": "2026-06-27T02:02:04Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "akci",
+        "celníci",
+        "dlužníky",
+        "dálnici",
+        "při",
+        "středočeští",
+        "zaměřili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -239,29 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Senior v Praze nepřežil střet s projíždějícím BMW",
-      "url": "https://tydenikpolicie.cz/senior-v-praze-neprezil-stret-s-projizdejicim-bmw/",
-      "dt": "2026-06-26T09:40:28Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "bmw",
-        "nepřežil",
-        "praze",
-        "projíždějícím",
-        "senior",
-        "střet"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -272,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16589,
+      "bytes": 16535,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -309,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-06-26T22:02:05Z",
+        "raw_feed_latest_publishedAt": "2026-06-27T02:02:04Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -324,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Středočeští celníci se při akci na dálnici D8 zaměřili na dlužníky",
+            "publishedAt": "2026-06-27T02:02:04Z"
+          },
           {
             "title": "Řidiče na Českolipsku přemohl mikrospánek. S autem se několikrát převrátil přes střechu",
             "publishedAt": "2026-06-26T22:02:05Z"
@@ -351,10 +356,6 @@
           {
             "title": "Čtyři zranění po srážce vlaku s nákladním vozem na Jičínsku",
             "publishedAt": "2026-06-26T12:52:34Z"
-          },
-          {
-            "title": "Policistům na Šluknovsku ujížděl řidič se zákazem řízení. Při honičce naboural do jednoho z policejních vozů",
-            "publishedAt": "2026-06-26T12:46:50Z"
           }
         ]
       }
