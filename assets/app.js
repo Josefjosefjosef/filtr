@@ -23675,11 +23675,30 @@ function buildVideoAsArticleCard(it) {
   const MAILBOX_STORAGE_KEY = "iu_mailboxes_v1";
   const IU_MM_SOCIAL_DEFAULTS_FLAG = "iu_mm_social_defaults_v1";
   const IU_MAILBOX_DEFAULT_SOCIAL = ["facebook", "instagram", "x", "tiktok"];
-  const IU_MM_EDIT_INPUT_PLACEHOLDER = "Nastavit e-mail";
-  const MAILBOX_PLACEHOLDERS = [IU_MM_EDIT_INPUT_PLACEHOLDER, IU_MM_EDIT_INPUT_PLACEHOLDER, IU_MM_EDIT_INPUT_PLACEHOLDER, IU_MM_EDIT_INPUT_PLACEHOLDER];
   const IU_MAILBOX_MIN = 1;
   const IU_MAILBOX_MAX = 6;
   const IU_MAILBOX_LABEL_MAX = 25;
+  const IU_MM_EDIT_INPUT_PLACEHOLDER = "Nastavit e-mail";
+  const MAILBOX_PLACEHOLDERS = Array.from({ length: IU_MAILBOX_MAX }, () => IU_MM_EDIT_INPUT_PLACEHOLDER);
+  function iuMmIsPlaceholderLabel(label) {
+    const s = String(label ?? "").trim();
+    if (!s) return true;
+    if (s === IU_MM_EDIT_INPUT_PLACEHOLDER) return true;
+    if (/^Schránka\s+\d+$/i.test(s)) return true;
+    if (/^Např\.:/i.test(s)) return true;
+    return false;
+  }
+  function iuMmDisplayMailboxLabel(label) {
+    return iuMmIsPlaceholderLabel(label) ? IU_MM_EDIT_INPUT_PLACEHOLDER : String(label).trim().slice(0, IU_MAILBOX_LABEL_MAX);
+  }
+  function iuMmInputValueFromLabel(label) {
+    return iuMmIsPlaceholderLabel(label) ? "" : String(label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX);
+  }
+  function iuMmInputValueFromUrl(url) {
+    const s = String(url ?? "").trim();
+    if (!s || s === IU_MM_EDIT_INPUT_PLACEHOLDER) return "";
+    return s;
+  }
   const IU_MAILBOX_SOCIAL_OPTIONS = ["facebook", "instagram", "youtube", "x", "linkedin", "tiktok", "messenger"];
   const IU_MAILBOX_SOCIAL_URLS = {
     facebook: "https://facebook.com",
@@ -23731,7 +23750,7 @@ function buildVideoAsArticleCard(it) {
       let fixed = raw.map((it, i) => {
         const slot = (typeof it?.slot === "number" && it.slot >= 1 && it.slot <= 6) ? it.slot : (i + 1);
         return {
-          label: String(it?.label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX) || (i < 4 ? MAILBOX_PLACEHOLDERS[i] : ""),
+          label: String(it?.label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX) || (MAILBOX_PLACEHOLDERS[i] || IU_MM_EDIT_INPUT_PLACEHOLDER),
           url: String(it?.url ?? "").trim(),
           social: validSocial(it?.social),
           hidden: it?.hidden === true,
@@ -23745,7 +23764,7 @@ function buildVideoAsArticleCard(it) {
       }
       if (fixed.length < IU_MAILBOX_MIN) {
         for (let i = fixed.length; i < IU_MAILBOX_MIN; i++) {
-          fixed.push({ label: MAILBOX_PLACEHOLDERS[i] || `Schránka ${i + 1}`, url: "", social: null, hidden: false, index: i, slot: i + 1 });
+          fixed.push({ label: MAILBOX_PLACEHOLDERS[i] || IU_MM_EDIT_INPUT_PLACEHOLDER, url: "", social: null, hidden: false, index: i, slot: i + 1 });
         }
         try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) })); }catch{}
       }
@@ -23830,14 +23849,14 @@ function buildVideoAsArticleCard(it) {
       const row = document.createElement("div");
       row.className = "iu-mailbox-row";
       const slot = typeof it.slot === "number" ? it.slot : (i + 1);
-      const ph = MAILBOX_PLACEHOLDERS[slot - 1] || ("Schránka " + slot);
-      const label = it.label || ph;
+      const label = iuMmDisplayMailboxLabel(it.label);
+      const isPlaceholderLabel = iuMmIsPlaceholderLabel(it.label);
       const social = it.social && IU_MAILBOX_SOCIAL_OPTIONS.includes(it.social) ? it.social : null;
       const socialUrl = social && IU_MAILBOX_SOCIAL_URLS[social] ? IU_MAILBOX_SOCIAL_URLS[social] : "";
       const socialSlotHtml = social && socialUrl
         ? `<a href="${escapeHtml(socialUrl)}" class="iu-pill-social-slot" data-mailbox-social="${i}" data-social="${escapeHtml(social)}" aria-label="${escapeHtml(social)}" rel="noopener noreferrer" target="_blank"><span class="iu-pill-social-icon iu-social-ios40">${iuMailboxSocialIconSvg(social)}</span></a>`
         : "";
-      row.innerHTML = `<button class="iu-mailbox-pill${it.colorful === false ? " iu-mailbox-pill--plain" : ""}" type="button" data-mailbox-index="${i}" data-mailbox-open>${escapeHtml(label)}</button>` +
+      row.innerHTML = `<button class="iu-mailbox-pill${it.colorful === false ? " iu-mailbox-pill--plain" : ""}${isPlaceholderLabel ? " iu-mailbox-pill--placeholder" : ""}" type="button" data-mailbox-index="${i}" data-mailbox-open>${escapeHtml(label)}</button>` +
         `<button class="iu-mailbox-gear" type="button" data-mailbox-gear="${i}" aria-label="Nastavení schránky ${i + 1}" title="Nastavení"><svg class="iu-mailbox-gear-svg" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>` +
         socialSlotHtml;
       frag.appendChild(row);
@@ -23926,9 +23945,9 @@ function buildVideoAsArticleCard(it) {
       const colorfulChecked = it.colorful !== false ? " checked" : "";
       form.innerHTML = `
         <p style="margin:0 0 12px 0;font-weight:600;">Název tlačítka (max ${MAX} znaků)</p>
-        <input type="text" id="iu-mailbox-edit-label" maxlength="${MAX}" autocomplete="off" placeholder="${escapeHtml(IU_MM_EDIT_INPUT_PLACEHOLDER)}" value="${escapeHtml(it.label || "")}" style="width:100%;min-width:280px;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
+        <input type="text" id="iu-mailbox-edit-label" maxlength="${MAX}" autocomplete="off" placeholder="${escapeHtml(IU_MM_EDIT_INPUT_PLACEHOLDER)}" value="${escapeHtml(iuMmInputValueFromLabel(it.label))}" style="width:100%;min-width:280px;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
         <p style="margin:0 0 12px 0;font-weight:600;">URL (www)</p>
-        <input type="text" id="iu-mailbox-edit-url" autocomplete="off" placeholder="${escapeHtml(IU_MM_EDIT_INPUT_PLACEHOLDER)}" value="${escapeHtml(it.url || "")}" style="width:100%;min-width:280px;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
+        <input type="text" id="iu-mailbox-edit-url" autocomplete="off" placeholder="${escapeHtml(IU_MM_EDIT_INPUT_PLACEHOLDER)}" value="${escapeHtml(iuMmInputValueFromUrl(it.url))}" style="width:100%;min-width:280px;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
         <label style="display:flex;align-items:center;gap:8px;margin:0 0 12px 0;font-size:14px;cursor:pointer;">
           <input type="checkbox" id="iu-mailbox-edit-colorful"${colorfulChecked} />
           <span>Barevný input</span>
