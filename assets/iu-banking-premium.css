@@ -164,3 +164,82 @@
     max-width: 100%;
   }
 }
+
+/* Bank card header — brand blue (mobil + tablet + PC) */
+.iu-mojeSluzbyBanka .iuBankCard .iuBankCardMain.iu-ibBankCardClickTop,
+#iuQuickFeed .iuBankCard .iuBankCardMain.iu-ibBankCardClickTop{
+  margin-top: 0;
+  padding: 12px 10px;
+  border-radius: 12px;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #1a5cff 0%, #003cff 100%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  color: #eef3ff;
+}
+
+.iu-mojeSluzbyBanka .iuBankCard .iuBankCardMain.iu-ibBankCardClickTop:hover,
+#iuQuickFeed .iuBankCard .iuBankCardMain.iu-ibBankCardClickTop:hover{
+  background: linear-gradient(180deg, #4d7fff 0%, #1a5cff 100%);
+}
+
+.iu-mojeSluzbyBanka .iuBankCard .iuBankCardMain.iu-ibBankCardClickTop:focus-visible,
+#iuQuickFeed .iuBankCard .iuBankCardMain.iu-ibBankCardClickTop:focus-visible{
+  outline: 2px solid rgba(147, 180, 255, 0.9);
+  outline-offset: 2px;
+}
+
+.iu-mojeSluzbyBanka .iuBankCard .iuBankCardMain.iu-ibBankCardClickTop .iuBankIconGold,
+#iuQuickFeed .iuBankCard .iuBankCardMain.iu-ibBankCardClickTop .iuBankIconGold{
+  color: rgba(220, 232, 255, 0.95);
+}
+
+.iu-mojeSluzbyBanka .iuBankCard .iuBankCardMain.iu-ibBankCardClickTop .iuBankLabelGold,
+#iuQuickFeed .iuBankCard .iuBankCardMain.iu-ibBankCardClickTop .iuBankLabelGold{
+  color: #f0f4ff;
+}
+
+/* Režim úprav — vyšší kontrast ovládacích prvků */
+.iu-mojeSluzbyBanka:has(.iu-mojeSluzbyMoveBtns) .iu-ib-edit-btn{
+  border-color: rgba(0, 60, 255, 0.5);
+  background: linear-gradient(180deg, #003cff 0%, #002ecb 100%);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0, 60, 255, 0.28);
+}
+
+.iu-mojeSluzbyBanka:has(.iu-mojeSluzbyMoveBtns) .iu-mojeSluzbyMoveBtns button{
+  min-width: 32px;
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 60, 255, 0.42);
+  background: linear-gradient(180deg, #fff 0%, #eef3ff 100%);
+  color: #003cff;
+  box-shadow: 0 2px 8px rgba(0, 60, 255, 0.14);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.iu-mojeSluzbyBanka:has(.iu-mojeSluzbyMoveBtns) .iu-mojeSluzbyMoveBtns button:hover{
+  border-color: rgba(0, 60, 255, 0.55);
+  background: linear-gradient(180deg, #fff 0%, #dbe6ff 100%);
+  box-shadow: 0 3px 10px rgba(0, 60, 255, 0.2);
+}
+
+.iu-mojeSluzbyBanka:has(.iu-mojeSluzbyMoveBtns) .iuBankCard .iuBankRemove{
+  border: 1px solid rgba(220, 38, 38, 0.55);
+  background: linear-gradient(180deg, #fff5f5 0%, #fee2e2 100%);
+  color: #b91c1c;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.12);
+}
+
+.iu-mojeSluzbyBanka:has(.iu-mojeSluzbyMoveBtns) .iuBankCard .iuBankRemove:hover{
+  background: linear-gradient(180deg, #fee2e2 0%, #fecaca 100%);
+  color: #991b1b;
+  box-shadow: 0 3px 10px rgba(220, 38, 38, 0.18);
+}

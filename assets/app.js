@@ -35985,7 +35985,7 @@ function buildVideoAsArticleCard(it) {
     const html = [
       "<div class=\"iu-mojeSluzbyBanka\">",
       "  <div class=\"iu-ib-info-box\" role=\"note\" aria-label=\"Informace o přechodu na banku\">",
-      "    <p class=\"iu-ib-info-box__text\">Po kliknutí na banku otevřeme její internetové bankovnictví v novém okně nebo kartě. Opouštíte prostředí InfoUzel.cz.</p>",
+      "    <p class=\"iu-ib-info-box__text\">Po kliknutí budete přesměrováni na oficiální internetové bankovnictví vybrané banky v nové kartě. Opustíte prostředí InfoUzel.cz.</p>",
       "  </div>",
       "  <div class=\"iu-mojeSluzbyBankaHead\"><button type=\"button\" class=\"iu-mojeSluzbyEditToggle iu-ib-edit-btn\" data-edit-toggle>Upravit</button></div>",
       "  <div class=\"iu-mojeSluzbyBankaFav\"><h3 class=\"iu-ib-section-title\">MOJE BANKY</h3>",
