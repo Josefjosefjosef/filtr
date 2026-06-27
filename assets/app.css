@@ -22957,6 +22957,13 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
     width:20px;
     height:20px;
   }
+  #feed.iuTimelineFeed article.iuTimelineItem--video .iuTimelineDot{
+    background:var(--iu-brand-blue)!important;
+    --iuTimelineDotColor:var(--iu-brand-blue);
+  }
+  #feed.iuTimelineFeed article.iuTimelineItem--video .iuTimelineVideoIcon{
+    color:var(--iu-brand-blue);
+  }
   #iuMindMenuView .iu-mmArticleActionsSections,
   #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSections{
     margin-top:18px;
