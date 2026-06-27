@@ -18823,7 +18823,8 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
-  async function loadData() {
+  async function loadData(opts) {
+    const forceRefresh = !!(opts && opts.forceRefresh);
     const startedAt = new Date();
     if (state.isLoadingData) return;
     __iuBlockedRenderDrops = 0;
@@ -18890,7 +18891,9 @@ function buildVideoAsArticleCard(it) {
         `iu debug: fetching…\nhref=${location.href}\narticlesUrl=${articlesUrl}\nvideosUrl=${videosUrl}`
       );
 
-      __iuInvalidateFeedPrimaryJsonCache();
+      if (forceRefresh) {
+        __iuInvalidateFeedPrimaryJsonCache();
+      }
 
       const probePromise = fetch(withTs(probeUrl), {
         cache: "no-store",
@@ -19639,7 +19642,7 @@ function buildVideoAsArticleCard(it) {
         15000;
       setTimeout(() => {
         if (document.visibilityState === "visible") {
-          loadData();
+          loadData({ forceRefresh: true });
         }
       }, delay);
     } finally {
@@ -19656,14 +19659,18 @@ function buildVideoAsArticleCard(it) {
     iuRefreshTimer = setInterval(() => {
       if (document.visibilityState !== "visible") return;
       if (document.body && document.body.classList && document.body.classList.contains("iu-home")) return;
-      loadData();
+      loadData({ forceRefresh: true });
     }, 7 * 60 * 1000);
   }
 
   // Safe public shims for UI-only routers (do not expose pipeline internals).
   // These are used to guarantee that navigating from Home -> any feed section triggers data load immediately.
   try{
-    window.__iuLoadData = function(){ try{ return loadData(); }catch{} };
+    window.__iuLoadData = function (opts) {
+      try {
+        return loadData(opts);
+      } catch (_) {}
+    };
     window.__iuStartAutoRefresh = function(){ try{ return startAutoRefresh(); }catch{} };
     window.__iuStopAutoRefresh = function(){
       try{
@@ -25347,7 +25354,7 @@ function buildVideoAsArticleCard(it) {
     const retryBtn = document.getElementById("dataRetryBtn");
     if (retryBtn) {
       retryBtn.addEventListener("click", () => {
-        loadData();
+        loadData({ forceRefresh: true });
       });
     }
 
@@ -26148,11 +26155,11 @@ function buildVideoAsArticleCard(it) {
       if (!(document.body && document.body.classList && document.body.classList.contains("iu-home"))) {
         if (iuFeedDataIsStaleForVisibilityRefresh()) {
           try {
-            if (typeof window.__iuLoadData === "function") window.__iuLoadData();
-            else loadData();
+            if (typeof window.__iuLoadData === "function") window.__iuLoadData({ forceRefresh: true });
+            else loadData({ forceRefresh: true });
           } catch (_) {
             try {
-              loadData();
+              loadData({ forceRefresh: true });
             } catch (__) {}
           }
         }
@@ -26167,13 +26174,10 @@ function buildVideoAsArticleCard(it) {
   /* P0 Safari/PWA bfcache: restored tabs keep JS heap — invalidate single-flight before refetch. */
   window.addEventListener("pageshow", (ev) => {
     if (!ev || !ev.persisted) return;
-    try {
-      __iuInvalidateFeedPrimaryJsonCache();
-    } catch (_) {}
     if (!(document.body && document.body.classList && document.body.classList.contains("iu-home"))) {
       if (iuFeedDataIsStaleForVisibilityRefresh()) {
         try {
-          loadData();
+          loadData({ forceRefresh: true });
         } catch (_) {}
       }
       try {
@@ -29528,8 +29532,6 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuShowQuickFeedCore(key){
-    if (typeof window.__iuDebugRca === "undefined") window.__iuDebugRca = (typeof location !== "undefined" && location.search || "").indexOf("iuDebug=1") !== -1;
-    if (window.__iuDebugRca) console.log("[iuShowQuickFeed] key=", key);
     const keyNorm = String(key || "").trim().toLowerCase();
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
@@ -29911,24 +29913,6 @@ function buildVideoAsArticleCard(it) {
             aiSeoBlock;
         } else {
           quick.innerHTML = qHeadBlock + scrollBlock + aiSeoBlock;
-        }
-        if (window.__iuDebugRca && keyNorm === "convert") {
-          var hasTools = !!quick.querySelector('[data-iu="pdfconvert-tools"]');
-          console.log("[iuShowQuickFeed] afterRender hasTools=", hasTools);
-          try {
-            var mo = new MutationObserver(function(muts) {
-              for (var i = 0; i < muts.length; i++) {
-                if (muts[i].type === "childList" && muts[i].removedNodes && muts[i].removedNodes.length) {
-                  for (var j = 0; j < muts[i].removedNodes.length; j++) {
-                    var n = muts[i].removedNodes[j];
-                    if (n && n.nodeType === 1 && (n.getAttribute && n.getAttribute("data-iu") === "pdfconvert-tools" || (n.querySelector && n.querySelector("[data-iu=\"pdfconvert-tools\"]")))) console.log("[iuShowQuickFeed] RCA: pdfconvert-tools removed");
-                  }
-                }
-              }
-            });
-            mo.observe(quick, { childList: true, subtree: true });
-            setTimeout(function() { mo.disconnect(); }, 5000);
-          } catch (_) {}
         }
         if (isAi) {
           try { renderAiVideos(quick); } catch (e) { console.warn("renderAiVideos", e); }

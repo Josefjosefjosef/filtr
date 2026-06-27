@@ -182,6 +182,25 @@ async function readCls(page) {
   return page.evaluate(() => Number(window.__iuScrollGuardCls || 0));
 }
 
+async function dismissGuardOverlays(page) {
+  try {
+    const essential = await page.$("#iuConsentEssentialOnly");
+    if (essential && (await essential.isVisible())) {
+      await essential.click({ timeout: 5000 });
+      await page.waitForTimeout(250);
+    }
+  } catch (_) {}
+  try {
+    await page.evaluate(() => {
+      const box = document.getElementById("iuHomePremiumInstallBox");
+      if (box) {
+        box.hidden = true;
+        box.setAttribute("data-iu-home-install-box-visible", "0");
+      }
+    });
+  } catch (_) {}
+}
+
 async function openEntry(page, params) {
   await page.goto(buildUrl(params), { waitUntil: "domcontentloaded", timeout: 90000 });
   try {
@@ -193,6 +212,7 @@ async function openEntry(page, params) {
   await waitBootSettled(page);
   await setScrollY(page, 0);
   await page.waitForTimeout(200);
+  await dismissGuardOverlays(page);
 }
 
 async function waitBootSettled(page) {
@@ -338,6 +358,7 @@ async function guardArticleAppendStability(page) {
     return null;
   });
   if (!ref) return { name: "ARTICLE_APPEND_STABILITY_GUARD", pass: false, reason: "no reference article in viewport" };
+  await dismissGuardOverlays(page);
   await resetCls(page);
   await page.click(".iuLoadMoreBtn");
   /* wait until appended + feed settled */
