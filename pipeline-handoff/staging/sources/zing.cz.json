@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-06-27T11:15:59.384386Z",
+  "ingestedAt": "2026-06-27T13:14:21.587470Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "I po zamítnutí, kampaň Stop Killing Games pokračuje dál",
+      "url": "https://zing.cz/article/i-po-zamitnuti-kampan-stop-killing-games-pokracuje-dal",
+      "dt": "2026-06-27T12:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "games",
+        "kampaň",
+        "killing",
+        "pokračuje",
+        "stop",
+        "zamítnutí"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -958,30 +981,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Steam Machine od Valve odhalil cenu i termín uvedení",
-      "url": "https://zing.cz/article/steam-machine-od-valve-odhalil-cenu-i-termin-uvedeni",
-      "dt": "2026-06-22T18:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "cenu",
-        "machine",
-        "odhalil",
-        "steam",
-        "termín",
-        "uvedení",
-        "valve"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -992,7 +991,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126022,
+      "bytes": 126089,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1029,7 +1028,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-27T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-27T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1044,6 +1043,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "I po zamítnutí, kampaň Stop Killing Games pokračuje dál",
+            "publishedAt": "2026-06-27T12:00:00Z"
+          },
           {
             "title": "Cozy novinky s Terry #60",
             "publishedAt": "2026-06-27T10:00:00Z"
@@ -1071,10 +1074,6 @@
           {
             "title": "Noví Mimoni odhalí tajemství stříbrného plátna a přinesou skutečnou apokalypsu",
             "publishedAt": "2026-06-26T08:30:00Z"
-          },
-          {
-            "title": "Kingdom Come: Deliverance II oslavuje další prodejní milník novým questem",
-            "publishedAt": "2026-06-26T08:00:00Z"
           }
         ]
       }

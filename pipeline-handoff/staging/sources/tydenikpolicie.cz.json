@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-06-27T11:15:59.384386Z",
+  "ingestedAt": "2026-06-27T13:14:21.587470Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Podezřelého z krádeže a následného napadení ochranky zadrželi v Ostravě strážníci",
+      "url": "https://tydenikpolicie.cz/podezreleho-z-kradeze-a-nasledneho-napadeni-ochranky-zadrzeli-v-ostrave-straznici/",
+      "dt": "2026-06-27T12:02:57Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "krádeže",
+        "napadení",
+        "následného",
+        "ochranky",
+        "ostravě",
+        "podezřelého",
+        "strážníci",
+        "zadrželi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -234,33 +259,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Řidička škodovky nedala podle policie přednost cyklistovi u Třince. Skončil v nemocnici",
-      "url": "https://tydenikpolicie.cz/ridicka-skodovky-nedala-podle-policie-prednost-cyklistovi-u-trince-skoncil-v-nemocnici/",
-      "dt": "2026-06-26T14:28:00Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "cyklistovi",
-        "nedala",
-        "nemocnici",
-        "podle",
-        "policie",
-        "přednost",
-        "skončil",
-        "třince",
-        "řidička",
-        "škodovky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -271,7 +269,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16668,
+      "bytes": 16663,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -308,7 +306,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-06-27T10:02:14Z",
+        "raw_feed_latest_publishedAt": "2026-06-27T12:02:57Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -323,6 +321,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podezřelého z krádeže a následného napadení ochranky zadrželi v Ostravě strážníci",
+            "publishedAt": "2026-06-27T12:02:57Z"
+          },
           {
             "title": "Jihočeští záchranáři v červnu zasahovali u čtyř pacientů po uštknutí hadem",
             "publishedAt": "2026-06-27T10:02:14Z"
@@ -350,10 +352,6 @@
           {
             "title": "Středočeští celníci se při akci na dálnici D8 zaměřili na dlužníky",
             "publishedAt": "2026-06-27T02:02:04Z"
-          },
-          {
-            "title": "Řidiče na Českolipsku přemohl mikrospánek. S autem se několikrát převrátil přes střechu",
-            "publishedAt": "2026-06-26T22:02:05Z"
           }
         ]
       }
