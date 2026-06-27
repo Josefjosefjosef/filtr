@@ -6777,7 +6777,9 @@ try {
           ? feedRoot
           : document.getElementById("feed");
       if (!root || !root.classList || !root.classList.contains("iuTimelineFeed")) return;
-      const items = root.querySelectorAll("article.iuTimelineItem[data-feed-type='article']");
+      const items = root.querySelectorAll(
+        "article.iuTimelineItem[data-feed-type='article'], article.iuTimelineItem.iuTimelineItem--video"
+      );
       const compact = iuTimelineCompactViewportMatches();
       for (const art of items) {
         const axis = art.querySelector(".iuTimelineAxis");
