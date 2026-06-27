@@ -272,6 +272,7 @@
   function closeModal() {
     if (!modalEl || modalEl.hidden) return;
     modalEl.hidden = true;
+    modalEl.setAttribute("hidden", "");
     modalEl.setAttribute("aria-hidden", "true");
     if (keyHandler) {
       document.removeEventListener("keydown", keyHandler);
@@ -299,6 +300,7 @@
     if (titleEl) titleEl.textContent = MODAL_TITLES[key] || "Informace o soukromí";
     if (bodyEl) bodyEl.innerHTML = renderModalBody(key);
     modalEl.hidden = false;
+    modalEl.removeAttribute("hidden");
     modalEl.removeAttribute("aria-hidden");
     modalEl.setAttribute("aria-labelledby", "iuToolPrivacyModalTitle");
     var closeBtn = modalEl.querySelector("[data-iu-tool-privacy-close]");
@@ -350,13 +352,17 @@
   function initDelegation() {
     if (window.__iuToolPrivacyDelegation) return;
     window.__iuToolPrivacyDelegation = true;
-    document.addEventListener("click", function (e) {
-      var btn = e.target && e.target.closest && e.target.closest("[data-iu-tool-privacy-open]");
-      if (!btn) return;
-      e.preventDefault();
-      e.stopPropagation();
-      openModal(btn.getAttribute("data-iu-tool-privacy-open"));
-    });
+    document.addEventListener(
+      "click",
+      function (e) {
+        var btn = e.target && e.target.closest && e.target.closest("[data-iu-tool-privacy-open]");
+        if (!btn) return;
+        e.preventDefault();
+        e.stopPropagation();
+        openModal(btn.getAttribute("data-iu-tool-privacy-open"));
+      },
+      true
+    );
   }
 
   function bootStaticHeadings() {
