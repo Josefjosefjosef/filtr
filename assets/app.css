@@ -6031,15 +6031,33 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
 }
 
 #iuWeatherView .iuWeatherHistorySource{
-  display: none;
   opacity: 0.7;
   font-size: 0.9rem;
-  padding: 0 12px 0;
   box-sizing: border-box;
 }
 
-#iuWeatherView #iuWeatherHistoryPlayerHost:not([hidden]) + .iuWeatherHistorySource{
+#iuWeatherView .iuWeatherHistorySource--preview{
   display: block;
+  padding: 0 2px 2px;
+}
+
+#iuWeatherView .iu-weather-video-card--playing .iuWeatherHistorySource--preview{
+  display: none;
+}
+
+#iuWeatherView .iuWeatherHistorySource--embed{
+  display: none;
+  padding: 0 12px 0;
+}
+
+#iuWeatherView #iuWeatherHistoryPlayerHost:not([hidden]) + .iuWeatherHistorySource--embed{
+  display: block;
+  padding: 8px 12px 4px;
+}
+
+#iuWeatherView #iuWeatherHistoryPlayerHost.iu-weather-video-embed-host .iuTimelineYouTubeMeta,
+#iuWeatherView #iuWeatherHistoryPlayerHost.iu-weather-video-embed-host .iuVideoMeta{
+  display: none !important;
 }
 
 #iuWeatherView #iuWeatherHistoryPlayerHost.iu-weather-video-embed-host{
