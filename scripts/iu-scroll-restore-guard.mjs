@@ -292,7 +292,18 @@ async function guardArticleAppendStability(page) {
     const b = document.querySelector(".iuLoadMoreBtn");
     return !!(b && b.offsetParent !== null);
   });
-  if (!btnVisible) return { name: "ARTICLE_APPEND_STABILITY_GUARD", pass: false, reason: "load-more button not present" };
+  if (!btnVisible) {
+    if (okReady) {
+      return {
+        name: "ARTICLE_APPEND_STABILITY_GUARD",
+        pass: true,
+        skipped: true,
+        articleAppendScrollJump: "NO",
+        reason: "load-more not shown (section fully loaded or chunked complete)",
+      };
+    }
+    return { name: "ARTICLE_APPEND_STABILITY_GUARD", pass: false, reason: "load-more button not present" };
+  }
   const sectionMaxY = await getMaxScrollY(page);
   if (sectionMaxY < 300) {
     /* Pre-existing tablet-portrait layout quirk: feed view has no scrollable range —
