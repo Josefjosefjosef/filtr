@@ -3734,15 +3734,17 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
   position: relative;
   display: flex;
   justify-content: center;
-  align-self: stretch;
-  min-height: 100%;
+  align-self: start;
+  height: var(--iu-tl-axis-h, auto);
+  min-height: 0;
 }
 
 #feed.iuTimelineFeed .iuTimelineAxis::before{
   content: "";
   position: absolute;
   top: 0;
-  bottom: 0;
+  bottom: auto;
+  height: var(--iu-tl-axis-h, 100%);
   left: 50%;
   width: 2px;
   transform: translateX(-50%);
@@ -3755,7 +3757,7 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
 
 #feed.iuTimelineFeed > article.iuTimelineItem:last-of-type .iuTimelineAxis::before{
   bottom: auto;
-  height: var(--iu-tl-axis-last-h);
+  height: var(--iu-tl-axis-h, var(--iu-tl-axis-last-h));
 }
 
 #feed.iuTimelineFeed .iuTimelineDot{
@@ -15966,20 +15968,20 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     Light-only menu sections (mapy, tvprogram, â€¦) must never inherit this block â€” reload
     must not flash dark behind nonâ€“article-hub hosts (root: html[data-section] matches body).
   */
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) body,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #content,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .container,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .iuFrame,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .iuLayout,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"], [data-section="travel"], [data-section="kultura"], [data-section="veda"], [data-section="vzdelavani"]) body,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"], [data-section="travel"], [data-section="kultura"], [data-section="veda"], [data-section="vzdelavani"]) #content,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"], [data-section="travel"], [data-section="kultura"], [data-section="veda"], [data-section="vzdelavani"]) .container,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"], [data-section="travel"], [data-section="kultura"], [data-section="veda"], [data-section="vzdelavani"]) .iuFrame,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"], [data-section="travel"], [data-section="kultura"], [data-section="veda"], [data-section="vzdelavani"]) .iuLayout,
   /* P0: rail je pĹ™i â‰¤900px v #iuMobileGatePanelNav â€” evening shell jen pro sloupec v #leftContent, ne pro Menu grid. */
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #leftContent #iuLeftRail,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .iu-rightContent,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #feed,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #feedWrap,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #page,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .mainCol,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #newsList,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #leftContent {
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"], [data-section="travel"], [data-section="kultura"], [data-section="veda"], [data-section="vzdelavani"]) #leftContent #iuLeftRail,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"], [data-section="travel"], [data-section="kultura"], [data-section="veda"], [data-section="vzdelavani"]) .iu-rightContent,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"], [data-section="travel"], [data-section="kultura"], [data-section="veda"], [data-section="vzdelavani"]) #feed,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"], [data-section="travel"], [data-section="kultura"], [data-section="veda"], [data-section="vzdelavani"]) #feedWrap,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"], [data-section="travel"], [data-section="kultura"], [data-section="veda"], [data-section="vzdelavani"]) #page,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"], [data-section="travel"], [data-section="kultura"], [data-section="veda"], [data-section="vzdelavani"]) .mainCol,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"], [data-section="travel"], [data-section="kultura"], [data-section="veda"], [data-section="vzdelavani"]) #newsList,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"], [data-section="travel"], [data-section="kultura"], [data-section="veda"], [data-section="vzdelavani"]) #leftContent {
     background:
       radial-gradient(ellipse 88% 60% at 5% 0%, rgba(56, 189, 248, 0.09) 0%, transparent 46%),
       radial-gradient(ellipse 85% 55% at 98% 100%, rgba(124, 58, 246, 0.08) 0%, transparent 50%),
@@ -22910,7 +22912,27 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
   padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px);
 }
 
+#feed.iuTimelineFeed .iuTimelineAction--follow{
+  display:none!important;
+}
+
 @media (max-width:1024px){
+  body[data-iu-fc="1"] #feed.iuTimelineFeed{
+    padding-top:0;
+  }
+  #feed > picture.iu-feed-section-header-picture,
+  #feed > img.iu-feed-section-header-img,
+  #feed > .iu-feed-section-header-video-wrap{
+    margin-top:0;
+  }
+  #feed > picture.iu-feed-section-header-picture .iu-feed-section-header-img,
+  .iu-feed-section-header-img,
+  .iu-feed-section-header-video{
+    object-fit:cover;
+    object-position:top center;
+    height:100%;
+    aspect-ratio:1200 / 575;
+  }
   #feed.iuTimelineFeed{
     --iu-tl-actions-gap: 5px;
     --iu-tl-action-icon-gap: 5px;
@@ -22918,7 +22940,7 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
     --iu-tl-action-save-h: 32px;
     --iu-tl-action-icon-svg: 20px;
     --iu-tl-action-save-icon-bottom: calc((var(--iu-tl-action-save-h) + var(--iu-tl-action-icon-svg)) / 2);
-    --iu-tl-row-py: 7px;
+    --iu-tl-row-py: 6px;
     --iu-tl-axis-min-h: 33px;
     --iu-tl-intrinsic: 58px;
   }
@@ -22975,12 +22997,14 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
     width:20px;
     height:20px;
   }
-  #feed.iuTimelineFeed .iuTimelineAction--follow,
   #feed.iuTimelineFeed .iuTimelineAction--hide{
     margin-top:calc(
       var(--iu-tl-action-icon-gap) - var(--iu-tl-actions-gap) -
       (var(--iu-tl-action-save-h) - var(--iu-tl-action-icon-svg))
     );
+  }
+  #feed.iuTimelineFeed .iuTimelineAction--follow{
+    display:none!important;
   }
   #feed.iuTimelineFeed article.iuTimelineItem--video .iuTimelineDot{
     background:var(--iu-brand-blue)!important;
@@ -23065,30 +23089,38 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
 }
 
 @media (max-width:1024px){
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) #feed.iuTimelineFeed{
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) body[data-iu-fc="1"] #feed.iuTimelineFeed,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:has(#feed.iuTimelineFeed){
+    background:transparent!important;
+  }
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed{
     --iu-tl-clock-color: rgba(226,232,240,.88);
     --iu-tl-rel-color: rgba(203,213,225,.88);
     --iu-tl-meta-color: rgba(240,248,255,.95);
     --iu-tl-meta-src-color: rgba(240,248,255,.95);
+    --iu-tl-title-fw: 500;
   }
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) #feed.iuTimelineFeed .iuTimelineRight .news-title,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) #feed.iuTimelineFeed .iuTimelineRight .news-titleLink,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) #feed.iuTimelineFeed .iuTimelineRight .iu-meta-line{
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineRight .news-title,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineRight .news-titleLink,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineRight .iu-meta-line{
     color:rgba(240,248,255,.95);
   }
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) #feed.iuTimelineFeed .iuTimelineAction--save.is-active .iuTimelineActionIcon{
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) body[data-iu-fc="1"] #feed.iuTimelineFeed,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:has(#feed.iuTimelineFeed){
+    background:transparent!important;
+  }
     color:#F59E0B;
   }
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) #feed.iuTimelineFeed .iuTimelineAction--follow.is-active .iuTimelineActionIcon{
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineAction--follow.is-active .iuTimelineActionIcon{
     color:#003CFF;
   }
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) #feed.iuTimelineFeed .iuTimelineAction--hide .iuTimelineActionIcon{
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineAction--hide .iuTimelineActionIcon{
     color:#9CA3AF;
   }
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) #feed.iuTimelineFeed .iuTimelineHideUndo{
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineHideUndo{
     color:rgba(226,232,240,.88);
   }
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) #feed.iuTimelineFeed .iuTimelineHideUndoBtn{
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineHideUndoBtn{
     background:rgba(255,255,255,.08);
     border-color:rgba(96,165,250,.35);
     color:#93C5FD;
@@ -23182,7 +23214,7 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
     font-weight:700;
     color:var(--iu-tl-read-mark);
   }
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) #feed.iuTimelineFeed{
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed{
     --iu-tl-clock-color:rgba(226,232,240,.94);
     --iu-tl-rel-color:rgba(203,213,225,.9);
     --iu-tl-axis-bg:rgba(148,163,184,.44);
@@ -23194,6 +23226,7 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
     --iu-tl-meta-link-color:rgba(147,197,253,.96);
     --iu-tl-read-title:rgba(240,248,255,.82);
     --iu-tl-read-mark:#4ade80;
+    --iu-tl-title-fw:500;
   }
 }
 @media (min-width:768px) and (max-width:900px){
