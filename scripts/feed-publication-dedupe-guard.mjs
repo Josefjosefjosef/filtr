@@ -16,7 +16,7 @@ function sleep(ms) {
 }
 
 async function main() {
-  const server = spawn(process.execPath, [path.join(root, "server", "projects-static-and-vin.mjs")], {
+  const server = spawn(process.execPath, [path.join(root, "server", "projects-static.mjs")], {
     cwd: root,
     env: { ...process.env, PORT },
     stdio: ["ignore", "pipe", "pipe"],

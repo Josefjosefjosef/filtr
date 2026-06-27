@@ -3,7 +3,7 @@
 
 /**
  * Run Silver layout guard against the current checkout on localhost.
- * Reuses server/projects-static-and-vin.mjs (correct /projects/ + JSON MIME for SW).
+ * Reuses server/projects-static.mjs (correct /projects/ + JSON MIME for SW).
  */
 
 const path = require("path");
@@ -12,7 +12,7 @@ const http = require("http");
 
 const PORT = Number(process.env.SILVER_LAYOUT_GUARD_LOCAL_PORT || 8080);
 const GUARD_URL = `http://127.0.0.1:${PORT}/projects/`;
-const SERVER_SCRIPT = path.join(__dirname, "..", "server", "projects-static-and-vin.mjs");
+const SERVER_SCRIPT = path.join(__dirname, "..", "server", "projects-static.mjs");
 
 function waitForServer(maxMs) {
   const deadline = Date.now() + maxMs;

@@ -132,7 +132,7 @@ async function collectAfternoonRow(page, consoleErrors, errStart) {
 }
 
 async function main() {
-  const srv = spawn(process.execPath, ["server/projects-static-and-vin.mjs"], {
+  const srv = spawn(process.execPath, ["server/projects-static.mjs"], {
     cwd: ROOT,
     env: { ...process.env, PORT: String(PORT) },
     stdio: "ignore",

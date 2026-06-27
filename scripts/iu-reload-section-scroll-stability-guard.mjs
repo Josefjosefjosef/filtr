@@ -286,7 +286,7 @@ async function runBrowserSuite(browserType, name) {
 const BROWSERS_ALL = process.env.IU_STABILITY_GUARD_BROWSERS === "all";
 
 async function main() {
-  const server = spawn(process.execPath, [path.join(REPO, "server", "projects-static-and-vin.mjs")], {
+  const server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {
     cwd: REPO,
     env: { ...process.env, PORT: String(PORT) },
     stdio: "ignore",

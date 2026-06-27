@@ -205,10 +205,6 @@ def is_audit_guard_hit(path: str, line: str, pat_id: str) -> bool:
         low = line.lower()
         if "env." in low or "process.env" in low:
             return True
-        if "vin_upstream_key" in low or "vin_api_key" in low:
-            return True
-        if norm.endswith("cloudflare/vin-worker/src/index.mjs") and "api_key:" in low:
-            return True
     return False
 
 

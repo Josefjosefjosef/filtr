@@ -11,7 +11,7 @@ const http = require("http");
 
 const PORT = Number(process.env.SILVER_NOTES_V2_GUARD_LOCAL_PORT || 8080);
 const GUARD_URL = `http://127.0.0.1:${PORT}/projects/?section=media`;
-const SERVER_SCRIPT = path.join(__dirname, "..", "server", "projects-static-and-vin.mjs");
+const SERVER_SCRIPT = path.join(__dirname, "..", "server", "projects-static.mjs");
 
 function waitForServer(maxMs) {
   const deadline = Date.now() + maxMs;

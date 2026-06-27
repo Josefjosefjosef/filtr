@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * CI/local: flicker phase sampling + 16 rail buttons nav latency + calendar/Silver surface proof.
- * No screenshots. Uses projects-static-and-vin server (same family as other Playwright proofs).
+ * No screenshots. Uses projects-static server (same family as other Playwright proofs).
  *
  * Run: npm run iu-perf-regression-guards
  */
@@ -350,7 +350,7 @@ async function runDesktopUiSanity(page) {
 }
 
 async function main() {
-  const server = spawn(process.execPath, [path.join(REPO, "server", "projects-static-and-vin.mjs")], {
+  const server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {
     cwd: REPO,
     env: { ...process.env, PORT: String(PORT) },
     stdio: "ignore",

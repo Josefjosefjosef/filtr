@@ -46,7 +46,7 @@ function waitForPort(host, port, timeoutMs) {
 }
 
 async function main() {
-  const server = spawn(process.execPath, [path.join(REPO, "server", "projects-static-and-vin.mjs")], {
+  const server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {
     cwd: REPO,
     stdio: "ignore",
     env: { ...process.env, PORT: String(PORT) },

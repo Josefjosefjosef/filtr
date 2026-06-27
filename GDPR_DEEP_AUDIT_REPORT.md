@@ -221,7 +221,7 @@ Nightly compliance reports (`scripts/generate_security_governance_reports.py`) e
 |-------|------|------------|
 | GitHub Pages | Static hosting | Implicit only |
 | GitHub Actions | CI, data pipeline | Workflows only |
-| Cloudflare Workers | VIN worker, articles-watchdog | `cloudflare/` — not in Info Center list |
+| Cloudflare Workers | articles-watchdog | `cloudflare/` — not in Info Center list |
 | YouTube / Google | Video embeds | YES — Info Center |
 | Open-Meteo | Weather API | YES — Info Center |
 | Font Awesome CDN | Styles | Removed from production UI per security report; stale mention in data_governance generator |

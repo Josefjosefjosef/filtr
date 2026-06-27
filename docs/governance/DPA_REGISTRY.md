@@ -32,13 +32,13 @@ GITHUB_DPA_REFERENCE=https://docs.github.com/en/site-policy/privacy-policies/git
 | Pole | Hodnota |
 |------|---------|
 | **Zpracovatel** | Cloudflare, Inc. |
-| **Služba** | Cloudflare Workers (articles-watchdog, VIN API), CDN/proxy |
-| **Účel zpracování** | Technický provoz, volitelné API proxy, cron watchdog |
-| **Typ dat** | IP adresa, HTTP metadata, obsah požadavku (VIN dotaz pokud uživatel použije modul) |
+| **Služba** | Cloudflare Workers (articles-watchdog), CDN/proxy |
+| **Účel zpracování** | Technický provoz, cron watchdog |
+| **Typ dat** | IP adresa, HTTP metadata |
 | **DPA reference** | Cloudflare Customer Data Processing Addendum |
 | **URL** | https://www.cloudflare.com/cloudflare-customer-dpa/ |
 | **Smluvní rámec** | Cloudflare Terms of Service + Customer DPA |
-| **Evidence nasazení v repu** | `cloudflare/articles-watchdog/`, `cloudflare/vin-worker/` |
+| **Evidence nasazení v repu** | `cloudflare/articles-watchdog/` |
 | **Interní kontakt** | info@infouzel.cz |
 
 ```

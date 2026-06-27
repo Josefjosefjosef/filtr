@@ -204,7 +204,7 @@ function round1(n) {
 async function main() {
   let server = null;
   if (USE_LOCAL_SERVER) {
-    server = spawn(process.execPath, [path.join(REPO, "server", "projects-static-and-vin.mjs")], {
+    server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {
       cwd: REPO,
       env: { ...process.env, PORT: String(PORT) },
       stdio: "ignore",

@@ -107,7 +107,7 @@ U služeb níže uvádíme, zda mohou získat obsah poznámek, úkolů, kalendá
 |--------|------|----------------------|----------------|
 | GitHub Pages | hosting statického webu | technický provoz, IP při HTTP požadavku | Ne — neukládá obsah local-first modulů |
 | GitHub Actions | CI, generování veřejných JSON | repozitář, build logy | Ne — bez user content z prohlížeče |
-| Cloudflare Workers | volitelně VIN API, articles-watchdog (pokud nasazeno) | technický provoz, VIN dotaz pokud uživatel použije VIN modul | Ne pro poznámky/úkoly/kalendář/faktury/právní docs |
+| Cloudflare Workers | volitelně articles-watchdog (pokud nasazeno) | technický provoz HTTP požadavků | Ne pro poznámky/úkoly/kalendář/faktury/právní docs |
 | Open-Meteo | předpověď počasí | souřadnice / město při volbě polohy | Ne |
 | YouTube / Google | embed videí | technická data při přehrání dle Google | Ne — neposíláme texty z nástrojů |
 | RSS vydavatelé | veřejné články | veřejný obsah feedu | Ne |

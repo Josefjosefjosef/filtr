@@ -22,7 +22,7 @@ Postupně odstranit `https:` wildcardy bez rozbití článků, PWA, YouTube, po�
 
 ## Phase 5 — connect-src rozšíření
 
-Před přidáním nových fetch API (VIN worker, geocoding) aktualizovat registry + CSP v jednom PR.
+Před přidáním nových fetch API (geocoding apod.) aktualizovat registry + CSP v jednom PR.
 
 ## Do Not Change Without Proof
 
