@@ -9100,6 +9100,13 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
       max-height: calc(100vh - 120px);
       overflow: hidden;
     }
+    body.iu-home:not(.iu-mobileMainVisible) #leftContent{
+      display: none !important;
+      height: 0 !important;
+      min-height: 0 !important;
+      max-height: 0 !important;
+      overflow: hidden !important;
+    }
     #feed{
       height: 100%;
       overflow-y: auto;
