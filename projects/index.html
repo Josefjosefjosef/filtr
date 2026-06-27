@@ -601,6 +601,13 @@ font-src 'self' data:;
         body.iu-home:not(.iu-mobileMainVisible):not(.iu-mobileGateOverlayOpen) .iuFeedNewsSplit {
           display: block !important;
         }
+        #iuSilverTallScrollViewport #iuPrehledDnePreviewCardMount + .iuFeedNewsSplit--postHomeCards {
+          margin-top: 9px;
+        }
+        #iuSilverTallScrollViewport .iuFeedNewsSplit--postHomeCards {
+          padding-left: 0;
+          padding-right: 0;
+        }
         .iuFeedNewsSplit__row {
           display: flex;
           align-items: center;
@@ -1845,7 +1852,7 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-banking-premium.css?v=prod1551banking-premium-ui" />
     <link rel="stylesheet" href="/assets/iu-tool-privacy-info.css?v=unified-tool-privacy-v1" />
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=20" />
-    <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=3" />
+    <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=mobile-tablet-news-split-20260628" />
     <link rel="stylesheet" href="/assets/iu-home-premium-install-box.css?v=1" />
     <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=pr5907-desktop-v2-20260618" />
     <link rel="stylesheet" href="/assets/iu-desktop-parcel-watch-overlay.css?v=pr5907-desktop-parcel-premium-20260619" />
@@ -2498,6 +2505,13 @@ font-src 'self' data:;
                               <div class="iuScienceHistoryPreviewCardMount" id="iuScienceHistoryPreviewCardMount" data-iu-science-history-preview-mount></div>
                               <div class="iuEducationPreviewCardMount" id="iuEducationPreviewCardMount" data-iu-education-preview-mount></div>
                               <div class="iuPrehledDnePreviewCardMount" id="iuPrehledDnePreviewCardMount" data-iu-prehled-dne-preview-mount></div>
+                              <div id="iuFeedNewsSplitPostHomeCards" class="iuFeedNewsSplit iuFeedNewsSplit--postHomeCards" aria-hidden="true">
+                                <div class="iuFeedNewsSplit__row">
+                                  <span class="iuFeedNewsSplit__line" aria-hidden="true"></span>
+                                  <span class="iuFeedNewsSplit__capsule">DALŠÍ UŽITEČNÝ OBSAH</span>
+                                  <span class="iuFeedNewsSplit__line" aria-hidden="true"></span>
+                                </div>
+                              </div>
                               <button type="button" id="iuSilverFinanceHomeCard" class="iuSilverFinanceHomeCard" data-iuq="fincalc" data-iu-silver-finance-home-card="1" aria-label="Osobní finance a kalkulačky">
                                 <span class="iuSilverFinanceHomeCard__hero">
                                   <span class="iuSilverFinanceHomeCard__content">
