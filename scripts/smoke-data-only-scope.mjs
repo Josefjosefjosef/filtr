@@ -44,39 +44,17 @@ export function isDataOnlyScope(files) {
   return paths.every((f) => f.startsWith("projects/data/"));
 }
 
-export function isFeedPhotoMediaActivationScope(files) {
-  const paths = files.map((f) => f.trim()).filter(Boolean);
-  if (!paths.length) return false;
-  return paths.every(
-    (f) =>
-      f === ".gitignore" ||
-      f === "projects/data/image_gallery/feed_photo_engine_config.json" ||
-      (f.startsWith("projects/data/image_gallery/imported/") &&
-        f.includes("/thumbs/") &&
-        /\.webp$/i.test(f))
-  );
-}
-
 /** CI-only fast pool workflow edits — no UI surface; skip Playwright guards. */
 export function isFastPoolPipelineScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
   if (!paths.length) return false;
   const hasWorkflow = paths.some((f) => f.startsWith(".github/workflows/"));
-  const hasFeedPhotoUi = paths.some((f) => f === "assets/app.js" || f === "assets/app.css");
-  if (hasWorkflow && hasFeedPhotoUi) return false;
+  const hasAppUi = paths.some((f) => f === "assets/app.js" || f === "assets/app.css");
+  if (hasWorkflow && hasAppUi) return false;
   return paths.every(
     (f) =>
       f.startsWith("projects/data/") ||
-      f.startsWith("scripts/iu-pexels-") ||
-      f.startsWith("scripts/iu-image-gallery-audit-v1") ||
-      f.startsWith("scripts/iu-feed-photo-selection-engine") ||
-      f.startsWith("scripts/iu-feed-photo-render-guard") ||
-      f.startsWith("scripts/iu-feed-photo-topic-matching-proof") ||
-      f === "assets/iu-feed-photo-selection-engine.js" ||
-      f === "assets/app.js" ||
-      f === "assets/app.css" ||
       f === "scripts/css_debt_baseline.json" ||
-      f === "projects/data/image_gallery/feed_photo_engine_config.json" ||
       f === "package.json" ||
       f === ".github/workflows/update-articles-fast-pool.yml" ||
       f === "scripts/smoke-data-only-scope.mjs" ||
@@ -110,11 +88,9 @@ function main() {
 
   const dataOnly = isDataOnlyScope(files);
   const pipelineOnly = isFastPoolPipelineScope(files);
-  const feedPhotoMediaOnly = isFeedPhotoMediaActivationScope(files);
   const allowFastPath =
     dataOnly ||
     pipelineOnly ||
-    feedPhotoMediaOnly ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
 
   console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"}`);

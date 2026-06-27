@@ -16,21 +16,6 @@ import {
   iuSvatekBuildPoprejLineFromRaw,
 } from "./iu-nameday-dative.js";
 import {
-  IU_IMAGE_GUESSING_ALLOWED,
-  IU_IMAGE_MODE_EXACT,
-  IU_IMAGE_MODE_ILLUSTRATIVE,
-  IU_IMAGE_MODE_NO_IMAGE,
-  iuArticleHasValidPhotoImage,
-  iuPhotoArticleSafetyAudit,
-} from "./iu-photo-article-safety.js";
-import {
-  IU_FEED_PHOTO_LABEL,
-  IU_FEED_RENDER_ENABLED,
-  iuFeedPhotoApplySelectionToArticle,
-  iuFeedPhotoLoadCatalogBrowser,
-  iuFeedPhotoRenderGuardAllowsArticleImage,
-} from "./iu-feed-photo-selection-engine.js";
-import {
   IU_HOMEPAGE_CHUNK_MANIFEST_FILE,
   IU_CHUNK_BUFFER_MAX,
   IU_CHUNK_INITIAL_SIZE,
@@ -411,18 +396,6 @@ window.addEventListener("unhandledrejection", (e) => {
 if (!iuIsProdHost() && new URLSearchParams(location.search || "").get("debug") === "1") {
   document.documentElement.classList.add("iu-debug-on");
 }
-
-try {
-  if (typeof window !== "undefined") {
-    window.iuPhotoArticleSafetyAudit = iuPhotoArticleSafetyAudit;
-    window.__iuImageSafetyConfig = {
-      guessingAllowed: IU_IMAGE_GUESSING_ALLOWED,
-      exactMatchMode: IU_IMAGE_MODE_EXACT,
-      illustrativeMode: IU_IMAGE_MODE_ILLUSTRATIVE,
-      noImageMode: IU_IMAGE_MODE_NO_IMAGE,
-    };
-  }
-} catch (_) {}
 
 try {
 (() => {
@@ -1265,83 +1238,8 @@ try {
   const IU_FEED_VIDEO_EVERY = 8;
   /** Timeline-first middle feed (V1): photos off, axis + time columns. */
   const IU_TIMELINE_ENABLED = true;
-  const IU_FEED_PHOTOS_ENABLED = IU_FEED_RENDER_ENABLED;
   const IU_FEED_BACKGROUND = "LIGHT";
   const IU_YOUTUBE_CARDS_ENABLED = IU_FEED_VIDEO_ENABLED;
-  /** Middle feed only: illustrative photo article slots every 4–7 regular articles (preferred 5). */
-  const IU_FEED_PHOTO_ARTICLE_ENABLED = IU_FEED_RENDER_ENABLED;
-  const IU_FEED_PHOTO_INTERVAL_MIN = 4;
-  const IU_FEED_PHOTO_INTERVAL_MAX = 7;
-  const IU_FEED_PHOTO_PREFERRED_INTERVAL = 5;
-  let iuFeedPhotoCatalogCache = null;
-  let iuFeedPhotoCatalogLoadPromise = null;
-  let iuFeedPhotoEngineConfig = null;
-  let iuFeedPhotoSessionUsedIds = null;
-
-  function iuFeedPhotoMediaEnabledP() {
-    if (!IU_FEED_RENDER_ENABLED) return false;
-    try {
-      if (/(?:^|[?&])iuFeedPhotoMedia=1(?:&|$)/.test(String(location.search || ""))) return true;
-    } catch (_) {}
-    return iuFeedPhotoEngineConfig?.localMediaAvailable === true;
-  }
-
-  async function iuFeedPhotoLoadEngineConfig() {
-    if (iuFeedPhotoEngineConfig) return iuFeedPhotoEngineConfig;
-    try {
-      const res = await fetch(iuDataUrl("image_gallery/feed_photo_engine_config.json"), {
-        credentials: "same-origin",
-      });
-      if (res.ok) {
-        iuFeedPhotoEngineConfig = await res.json();
-        return iuFeedPhotoEngineConfig;
-      }
-    } catch (_) {}
-    iuFeedPhotoEngineConfig = { feedRenderEnabled: IU_FEED_RENDER_ENABLED, localMediaAvailable: false };
-    return iuFeedPhotoEngineConfig;
-  }
-
-  async function iuFeedPhotoEnsureCatalogLoaded() {
-    if (!IU_FEED_RENDER_ENABLED) return null;
-    await iuFeedPhotoLoadEngineConfig();
-    if (!iuFeedPhotoMediaEnabledP()) return null;
-    if (iuFeedPhotoCatalogCache) return iuFeedPhotoCatalogCache;
-    if (!iuFeedPhotoCatalogLoadPromise) {
-      iuFeedPhotoCatalogLoadPromise = iuFeedPhotoLoadCatalogBrowser(
-        async (url) => {
-          const res = await fetch(url, { credentials: "same-origin" });
-          if (!res.ok) throw new Error("feed_photo_catalog_fetch_failed");
-          return res.json();
-        },
-        (file) => iuDataUrl(file)
-      )
-        .then((catalog) => {
-          if (catalog && catalog.total > 0) {
-            iuFeedPhotoCatalogCache = catalog;
-            return catalog;
-          }
-          return null;
-        })
-        .catch(() => null);
-    }
-    return iuFeedPhotoCatalogLoadPromise;
-  }
-
-  function iuFeedPhotoArticleForRender(article) {
-    if (!IU_FEED_RENDER_ENABLED || !iuFeedPhotoMediaEnabledP() || !iuFeedPhotoCatalogCache) return article;
-    try {
-      const merged = iuFeedPhotoApplySelectionToArticle(
-        article,
-        iuFeedPhotoCatalogCache,
-        iuBasePath(),
-        { recordUsage: true, recentlyUsedIds: iuFeedPhotoSessionUsedIds }
-      );
-      if (!iuFeedPhotoRenderGuardAllowsArticleImage(merged)) return article;
-      return merged;
-    } catch (_) {
-      return article;
-    }
-  }
   const IU_PREHLED_DNE_VIDEO_EVERY = 10;
   const IU_FEED_VIDEO_MAX_PER_PAGE = 25;
   /** P0 UI: first DOM append batch ≈ first viewport; follow-up batches keep main-thread slices small. */
@@ -5961,10 +5859,6 @@ try {
       persistLastError("Invariant breach: invalid render target");
       return;
     }
-    if (IU_FEED_RENDER_ENABLED) {
-      await iuFeedPhotoEnsureCatalogLoaded();
-      iuFeedPhotoSessionUsedIds = new Set();
-    }
     state.__iuRenderFeedPassSeq = (state.__iuRenderFeedPassSeq || 0) + 1;
     rfPassForTrace = state.__iuRenderFeedPassSeq;
     iuBootTracePhase("renderFeed_pass_" + rfPassForTrace + "_start");
@@ -6275,7 +6169,6 @@ try {
     let pos = 0;
     let firstDomBatch = true;
     let firstFeedBatchMarked = false;
-    const middleFeedPhotoArticleIndexSet = iuMiddleFeedPhotoArticleIndexSet(visibleItems);
     const reloadDomTight = iuFeedReloadDomTightenP();
     const sectionSwitchActive = iuFeedSectionSwitchActiveP();
     const iuFeedMicroDomYieldOffP = () => {
@@ -6326,23 +6219,10 @@ try {
           continue;
         }
 
-        const usePhotoLayout =
-          !IU_TIMELINE_ENABLED &&
-          kind === "article" &&
-          IU_FEED_PHOTO_ARTICLE_ENABLED &&
-          middleFeedPhotoArticleIndexSet.has(pos);
-        let renderItem = item;
-        let photoLayoutActive = usePhotoLayout;
-        if (photoLayoutActive && IU_FEED_RENDER_ENABLED) {
-          renderItem = iuFeedPhotoArticleForRender(item);
-          if (!iuArticleHasValidPhotoImage(renderItem)) {
-            photoLayoutActive = false;
-          }
-        }
         const markup =
           kind === "video"
             ? buildVideoAsArticleCard(item)
-            : buildArticleHtml(renderItem, { photoLayout: photoLayoutActive });
+            : buildArticleHtml(item);
         if (!markup) {
           persistLastError("Invariant breach: builder returned falsy markup");
           renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
@@ -6506,44 +6386,18 @@ try {
     } catch {}
 
     try {
-      const photoCards = safeTarget.querySelectorAll("article.news-card.iuPhotoArticle[data-photo-layout='1']");
-      const textOnlyCards = safeTarget.querySelectorAll(
-        "article.news-card[data-feed-type='article']:not(.iuPhotoArticle)"
-      );
-      window.__iuPhotoArticleMetrics = {
-        intervalMin: Number(IU_FEED_PHOTO_INTERVAL_MIN) || 4,
-        intervalMax: Number(IU_FEED_PHOTO_INTERVAL_MAX) || 7,
-        preferredInterval: Number(IU_FEED_PHOTO_PREFERRED_INTERVAL) || 5,
-        photoArticlesRendered: photoCards.length,
-        textOnlyArticlesRendered: textOnlyCards.length,
-        photoArticleIndexSetSize: middleFeedPhotoArticleIndexSet.size,
-        illustrativeLabelsRendered: safeTarget.querySelectorAll(".iuPhotoArticle-illustrativeLabel").length,
-        imageGuessingAllowed: IU_IMAGE_GUESSING_ALLOWED,
-        feedRenderEnabled: IU_FEED_RENDER_ENABLED,
-        feedPhotosEnabled: IU_FEED_PHOTOS_ENABLED,
-        timelineEnabled: IU_TIMELINE_ENABLED,
-        feedBackground: IU_FEED_BACKGROUND,
-        youtubeCardsEnabled: IU_YOUTUBE_CARDS_ENABLED,
-        feedPhotoCatalogLoaded: Boolean(iuFeedPhotoCatalogCache && iuFeedPhotoCatalogCache.total > 0),
-        feedPhotoCatalogTotal: iuFeedPhotoCatalogCache?.total || 0,
-        feedPhotoLabel: IU_FEED_PHOTO_LABEL,
-        feedPhotoMediaEnabled: iuFeedPhotoMediaEnabledP(),
-      };
       if (IU_TIMELINE_ENABLED) {
         feedEl.classList.add("iuTimelineFeed");
         feedEl.setAttribute("data-iu-timeline-enabled", "1");
-        feedEl.setAttribute("data-iu-feed-photos-enabled", IU_FEED_PHOTOS_ENABLED ? "1" : "0");
         feedEl.setAttribute("data-iu-feed-background", IU_FEED_BACKGROUND);
         const timelineItems = safeTarget.querySelectorAll("article.iuTimelineItem");
         const videoCards = safeTarget.querySelectorAll("article.iuVideoCard");
         window.__iuTimelineMetrics = {
           timelineEnabled: IU_TIMELINE_ENABLED,
-          feedPhotosEnabled: IU_FEED_PHOTOS_ENABLED,
           feedBackground: IU_FEED_BACKGROUND,
           youtubeCardsEnabled: IU_YOUTUBE_CARDS_ENABLED,
           timelineItemsRendered: timelineItems.length,
           youtubeCardsRendered: videoCards.length,
-          photoArticlesRendered: photoCards.length,
           sectionColors: IU_TIMELINE_SECTION_COLORS,
         };
         iuArticleActionsSyncFeedStates(safeTarget);
@@ -7915,121 +7769,7 @@ try {
     return `<div class="iu-meta-line">${datePart}${sep}${primaryPart}</div>`;
   }
 
-  function iuPhotoArticleNextInterval(slotIndex) {
-    const min = Number(IU_FEED_PHOTO_INTERVAL_MIN) || 4;
-    const max = Number(IU_FEED_PHOTO_INTERVAL_MAX) || 7;
-    const span = Math.max(1, max - min + 1);
-    const slot = Number(slotIndex) >= 0 ? Number(slotIndex) : 0;
-    return min + ((slot * 11 + 5) % span);
-  }
-
-  function iuMiddleFeedPhotoArticleIndexSet(items) {
-    const photoIndices = new Set();
-    if (!IU_FEED_PHOTO_ARTICLE_ENABLED || !iuFeedPhotoMediaEnabledP() || !Array.isArray(items) || !items.length) {
-      return photoIndices;
-    }
-    const minGap = Number(IU_FEED_PHOTO_INTERVAL_MIN) || 4;
-    const preferredGap = Number(IU_FEED_PHOTO_PREFERRED_INTERVAL) || 5;
-    const maxGap = Number(IU_FEED_PHOTO_INTERVAL_MAX) || 7;
-    let regularSincePhoto = 0;
-    let photoSlotCounter = 0;
-
-    for (let i = 0; i < items.length; i++) {
-      const it = items[i];
-      const kind = String(it?.contentType || "").toLowerCase();
-      if (kind !== "article") continue;
-      if (photoIndices.has(i)) continue;
-
-      const slotTarget =
-        photoSlotCounter === 0 ? preferredGap : iuPhotoArticleNextInterval(photoSlotCounter);
-      const canUsePhoto =
-        iuFeedPhotoMediaEnabledP() &&
-        (IU_FEED_RENDER_ENABLED || iuArticleHasValidPhotoImage(it)) &&
-        regularSincePhoto >= minGap &&
-        (regularSincePhoto >= slotTarget ||
-          regularSincePhoto >= preferredGap ||
-          regularSincePhoto >= maxGap);
-
-      if (canUsePhoto) {
-        photoIndices.add(i);
-        regularSincePhoto = 0;
-        photoSlotCounter += 1;
-      } else {
-        regularSincePhoto += 1;
-      }
-    }
-    return photoIndices;
-  }
-
-  function iuPhotoArticleLegalDataAttrs(it) {
-    const audit = iuPhotoArticleSafetyAudit(it);
-    const fields = [
-      ["data-image-mode", audit.mode || it?.imageMode],
-      ["data-image-provider", it?.imageProvider],
-      ["data-image-url", it?.imageUrl],
-      ["data-image-thumb-url", it?.imageThumbUrl],
-      ["data-image-alt", it?.imageAlt],
-      ["data-image-author", it?.imageAuthor],
-      ["data-image-author-url", it?.imageAuthorUrl],
-      ["data-image-source-url", it?.imageSourceUrl],
-      ["data-image-license-source", it?.imageLicenseSource],
-      ["data-image-matched-query", it?.imageMatchedQuery],
-      ["data-image-assigned-at", it?.imageAssignedAt],
-      ["data-image-title-entity", it?.imageTitleEntity],
-      ["data-image-matched-entity", it?.imageMatchedEntity],
-      ["data-image-safety-reason", audit.reason || ""],
-    ];
-    let out = "";
-    for (const [attr, raw] of fields) {
-      const val = String(raw || "").trim();
-      if (!val) continue;
-      out += ` ${attr}="${escapeHtml(val)}"`;
-    }
-    return out;
-  }
-
-  function buildPhotoArticleHtml(it, parts) {
-    if (IU_FEED_RENDER_ENABLED && !iuFeedPhotoRenderGuardAllowsArticleImage(it)) {
-      return `
-      <article class="news-card" data-feed-type="article">
-        <h2 class="news-title">${parts.titleMarkup}${parts.suspiciousFlag}</h2>
-        ${parts.sourcesMetaLine}
-      </article>
-    `;
-    }
-    const audit = iuPhotoArticleSafetyAudit(it);
-    if (!audit.allowed) {
-      return `
-      <article class="news-card" data-feed-type="article">
-        <h2 class="news-title">${parts.titleMarkup}${parts.suspiciousFlag}</h2>
-        ${parts.sourcesMetaLine}
-      </article>
-    `;
-    }
-    const thumbUrl = String(it.imageThumbUrl || it.imageUrl || "").trim();
-    const altText = String(it.imageAlt || parts.title || IU_FEED_PHOTO_LABEL).trim();
-    const legalAttrs = iuPhotoArticleLegalDataAttrs(it);
-    const illustrativeLabel =
-      audit.showIllustrativeLabel || IU_FEED_RENDER_ENABLED
-        ? `<span class="iuPhotoArticle-illustrativeLabel">${escapeHtml(IU_FEED_PHOTO_LABEL)}</span>`
-        : "";
-    return `
-      <article class="news-card iuPhotoArticle" data-feed-type="article" data-photo-layout="1"${legalAttrs}>
-        <div class="iuPhotoArticle-row">
-          <div class="iu-article-thumb iuPhotoArticle-thumb" aria-hidden="true">
-            <img class="iuPhotoArticle-img" src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(altText)}" loading="lazy" decoding="async" width="128" height="72" onerror="this.classList.add('iuPhotoArticle-img--failed');this.removeAttribute('src');">
-            ${illustrativeLabel}
-          </div>
-          <div class="iuPhotoArticle-body">
-            <h2 class="news-title">${parts.titleMarkup}${parts.suspiciousFlag}</h2>
-            ${parts.sourcesMetaLine}
-          </div>
-        </div>
-      </article>
-    `;
-  }
-
-  function buildArticleHtml(it, opts) {
+  function buildArticleHtml(it) {
     if (iuArticleIsHardBlocked(it)) {
       return "";
     }
@@ -8055,9 +7795,6 @@ try {
       : "";
 
     const sourcesMetaLine = renderSourcesMetaLine(it);
-    const photoRequested = Boolean(opts && opts.photoLayout);
-    const photoAudit = photoRequested ? iuPhotoArticleSafetyAudit(it) : null;
-    const photoLayout = photoRequested && photoAudit && photoAudit.allowed === true;
 
     debugLog("[RENDER ARTICLE]", title);
     if (IU_TIMELINE_ENABLED) {
@@ -8079,9 +7816,6 @@ try {
         </div>
       </article>
     `;
-    }
-    if (photoLayout) {
-      return buildPhotoArticleHtml(it, { title, titleMarkup, suspiciousFlag, sourcesMetaLine });
     }
     return `
       <article class="news-card" data-feed-type="article">
