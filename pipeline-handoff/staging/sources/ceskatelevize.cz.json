@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-27T21:26:45.286602Z",
+  "ingestedAt": "2026-06-27T23:08:31.496345Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Írán hlásí výbuchy na jihu země. USA oznámily nové údery",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/iran-hlasi-vybuchy-na-jihu-zeme-usa-oznamily-nove-udery-375030",
+      "dt": "2026-06-27T22:01:20Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "hlásí",
+        "jihu",
+        "nové",
+        "oznámily",
+        "usa",
+        "výbuchy",
+        "země",
+        "írán",
+        "údery"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -259,7 +285,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Do Venezuely odlétli čeští záchranáři. V troskách přežívají lidé, odhadují",
+      "title": "Ve Venezuele přistáli čeští záchranáři. V troskách přežívají lidé, odhadují",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/do-venezuely-odletli-cesti-zachranari-v-troskach-prezivaji-lide-odhaduji-375016",
       "dt": "2026-06-27T11:17:39Z",
       "media_raw": "ČT24 / Domácí",
@@ -267,10 +293,10 @@
       "tokens": [
         "lidé",
         "odhadují",
-        "odlétli",
         "přežívají",
+        "přistáli",
         "troskách",
-        "venezuely",
+        "venezuele",
         "záchranáři",
         "čeští"
       ],
@@ -722,30 +748,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "V nové opeře bojuje o přežití lidstva i Horst Fuchs",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/v-nove-opere-bojuje-o-preziti-lidstva-i-horst-fuchs-374997",
-      "dt": "2026-06-26T14:01:27Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "bojuje",
-        "fuchs",
-        "horst",
-        "lidstva",
-        "nové",
-        "opeře",
-        "přežití"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -756,7 +758,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42888,
+      "bytes": 42898,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -793,11 +795,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-27T19:04:02Z",
+        "raw_feed_latest_publishedAt": "2026-06-27T22:01:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "other": 4,
+          "zpravy": 26,
+          "other": 3,
           "finance": 1
         },
         "drop_counts": {
@@ -810,6 +812,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Írán hlásí výbuchy na jihu země. USA oznámily nové údery",
+            "publishedAt": "2026-06-27T22:01:20Z"
+          },
           {
             "title": "Publikum festivalu ve Strážnici vypískalo po Klempířovi i Macinku",
             "publishedAt": "2026-06-27T19:04:02Z"
@@ -837,10 +843,6 @@
           {
             "title": "Vedra drtí Evropu, v Německu se teploty pohybovaly kolem čtyřicítky",
             "publishedAt": "2026-06-27T14:11:26Z"
-          },
-          {
-            "title": "Česko má nový absolutní teplotní rekord. Podívejte se na mapu",
-            "publishedAt": "2026-06-27T13:25:03Z"
           }
         ]
       }
