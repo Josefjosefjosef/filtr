@@ -1,21 +1,21 @@
 {
   "schema": "css_debt_guard_v1",
-  "duplicate_selector_groups": 294,
-  "duplicate_rule_occurrences_in_groups": 794,
+  "duplicate_selector_groups": 295,
+  "duplicate_rule_occurrences_in_groups": 796,
   "classification_counts": {
-    "breakpoint_specific": 175,
+    "breakpoint_specific": 176,
     "risky_layout_coupled": 96,
     "intentional_cascade_candidate": 23
   },
   "debt_verdict_counts": {
     "intentional_non_debt": 104,
-    "risk_now": 190
+    "risk_now": 191
   },
   "debt_occurrence_counts": {
     "intentional_non_debt": 300,
-    "risk_now": 494
+    "risk_now": 496
   },
-  "app_css_bytes": 686042,
+  "app_css_bytes": 687996,
   "css_size_guard_budget_bytes": 4096,
   "risk_zone_duplicate_groups": [
     {
@@ -32,6 +32,10 @@
     },
     {
       "selector_normalized": "#feed > article.news-card",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-row",
       "classification": "breakpoint_specific"
     },
     {
