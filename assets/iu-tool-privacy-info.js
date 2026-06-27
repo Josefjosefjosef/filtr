@@ -272,6 +272,7 @@
   function closeModal() {
     if (!modalEl || modalEl.hidden) return;
     modalEl.hidden = true;
+    modalEl.setAttribute("hidden", "");
     modalEl.setAttribute("aria-hidden", "true");
     if (keyHandler) {
       document.removeEventListener("keydown", keyHandler);
@@ -299,6 +300,7 @@
     if (titleEl) titleEl.textContent = MODAL_TITLES[key] || "Informace o soukromí";
     if (bodyEl) bodyEl.innerHTML = renderModalBody(key);
     modalEl.hidden = false;
+    modalEl.removeAttribute("hidden");
     modalEl.removeAttribute("aria-hidden");
     modalEl.setAttribute("aria-labelledby", "iuToolPrivacyModalTitle");
     var closeBtn = modalEl.querySelector("[data-iu-tool-privacy-close]");
