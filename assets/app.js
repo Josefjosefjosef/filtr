@@ -6765,9 +6765,35 @@ try {
     return false;
   }
 
-  const IU_TL_AXIS_MIN_H = 33;
   let iuTimelineAxisResizeBound = false;
   let iuTimelineAxisRo = null;
+
+  function iuTimelineAxisBottomOffset(art, axisTop) {
+    let bottom = 0;
+    const hide = art.querySelector(".iuTimelineAction--hide");
+    if (hide) {
+      const hideBottom = hide.getBoundingClientRect().bottom - axisTop;
+      if (hideBottom > bottom) bottom = hideBottom;
+    }
+    const meta = art.querySelector(
+      ".iuTimelineRight .iu-meta-line, .iuTimelineRight .iuTimelineYouTubeMeta"
+    );
+    if (meta) {
+      const metaBottom = meta.getBoundingClientRect().bottom - axisTop;
+      if (metaBottom > bottom) bottom = metaBottom;
+    }
+    if (bottom <= 0) {
+      const anchor = art.querySelector(
+        ".iuTimelineRight .news-title, .iuTimelineRight .news-titleLink"
+      );
+      if (anchor) bottom = anchor.getBoundingClientRect().bottom - axisTop;
+    }
+    if (bottom <= 0) {
+      const dot = art.querySelector(".iuTimelineDot");
+      if (dot) bottom = dot.getBoundingClientRect().bottom - axisTop;
+    }
+    return bottom;
+  }
 
   function iuTimelineSyncCompactAxisHeights(feedRoot) {
     try {
@@ -6788,18 +6814,9 @@ try {
           axis.style.removeProperty("--iu-tl-axis-h");
           continue;
         }
-        const row = art.querySelector(".iuTimelineRow");
-        let axisH = IU_TL_AXIS_MIN_H;
-        if (row && axis) {
-          const axisTop = axis.getBoundingClientRect().top;
-          const meta = art.querySelector(".iuTimelineRight .iu-meta-line");
-          const anchor = meta || art.querySelector(".iuTimelineRight .news-title, .iuTimelineRight .news-titleLink");
-          if (anchor) {
-            const bottom = anchor.getBoundingClientRect().bottom - axisTop;
-            if (bottom > axisH) axisH = Math.ceil(bottom);
-          }
-        }
-        axis.style.setProperty("--iu-tl-axis-h", axisH + "px");
+        const axisTop = axis.getBoundingClientRect().top;
+        const axisH = Math.ceil(iuTimelineAxisBottomOffset(art, axisTop));
+        if (axisH > 0) axis.style.setProperty("--iu-tl-axis-h", axisH + "px");
       }
     } catch (_) {}
   }
