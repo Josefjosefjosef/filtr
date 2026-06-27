@@ -22896,6 +22896,7 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
 @media (max-width:1024px){
   #feed.iuTimelineFeed{
     --iu-tl-actions-gap: 5px;
+    --iu-tl-action-icon-gap: 5px;
     --iu-tl-action-min: 36px;
     --iu-tl-action-save-h: 32px;
     --iu-tl-action-icon-svg: 20px;
@@ -22956,6 +22957,13 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
   #feed.iuTimelineFeed .iuTimelineActionIcon svg{
     width:20px;
     height:20px;
+  }
+  #feed.iuTimelineFeed .iuTimelineAction--follow,
+  #feed.iuTimelineFeed .iuTimelineAction--hide{
+    margin-top:calc(
+      var(--iu-tl-action-icon-gap) - var(--iu-tl-actions-gap) -
+      (var(--iu-tl-action-save-h) - var(--iu-tl-action-icon-svg))
+    );
   }
   #feed.iuTimelineFeed article.iuTimelineItem--video .iuTimelineDot{
     background:var(--iu-brand-blue)!important;
