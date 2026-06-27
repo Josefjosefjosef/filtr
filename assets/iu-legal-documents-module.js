@@ -650,7 +650,7 @@ export function initIuLegalDocumentsOverlay(deps) {
     ui.docId = null;
     if (backBtn) backBtn.hidden = true;
     titleEl.textContent = "Vzory smluv a plné moci";
-    if (subEl) subEl.textContent = "Generátor strukturovaných dokumentů";
+    if (subEl) subEl.textContent = "Generátor smluv a plných mocí";
     panel.classList.remove("iu-legal-overlay-panel--detail", "iu-legal-overlay-panel--category");
     panel.classList.add("iu-legal-overlay-panel--hub");
 

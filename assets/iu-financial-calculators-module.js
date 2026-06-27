@@ -125,9 +125,6 @@ const IU_FIN_INFO_INVESTMENT_GOAL =
   "Návrh investičního plánu je vždy individuální. Záleží na cílové částce, časovém horizontu, výši pravidelných vkladů, rizikovém profilu investora i dalších parametrech. Pro vytvoření vhodného investičního plánu doporučujeme konzultaci s finančním poradcem.";
 const IU_FIN_INFO_DIP =
   "Daňové výhody DIP a budoucí hodnota investice závisí na individuální situaci klienta, výši příspěvků, investiční strategii, legislativě a dalších faktorech. Pro správné nastavení produktu doporučujeme konzultaci s finančním poradcem.";
-const IU_FIN_DETAIL_PRIVACY_NOTICE =
-  "🔒 Zadané údaje se nikam neodesílají ani neukládají. Pokud kliknete na spodní tlačítko, budete přesměrováni mimo InfoUzel.cz.";
-const IU_FIN_HUB_SCROLL_KEY = "iuFinCalcHubScrollTop";
 
 function buildFinInfoOnlyCard(root, text) {
   root.innerHTML = `<div class="iu-financial-overlay-infoCard" data-iu-fin-info-card="1"><p class="iu-financial-overlay-infoCardText">${esc(text)}</p></div>`;
@@ -1069,7 +1066,7 @@ export function initIuFinancialCalculatorsOverlay(deps) {
       <div class="iu-financial-overlay-hubGrid" role="list">${cards}</div>
     </section>`;
     }).join("");
-    views.innerHTML = `<div class="iu-fin-hub-wrap iu-financial-calculators-list" data-iu-fin-hub="1"><p class="iu-financial-overlay-info iu-fin-hub-privacy" role="note">🔒 Veškeré výpočty probíhají pouze ve vašem zařízení. Zadané údaje se nikam neodesílají ani neukládají.</p>${sections}</div>`;
+    views.innerHTML = `<div class="iu-fin-hub-wrap iu-financial-calculators-list" data-iu-fin-hub="1">${sections}</div>`;
     views.querySelectorAll("[data-iu-fin-pick]").forEach((btn) => {
       btn.addEventListener("pointerdown", () => {
         lockHubScrollFromHost();
@@ -1173,7 +1170,7 @@ export function initIuFinancialCalculatorsOverlay(deps) {
     if (state.view === "hub") lockHubScrollFromHost();
     state.view = "detail";
     state.activeId = id;
-    if (subEl) subEl.textContent = IU_FIN_DETAIL_PRIVACY_NOTICE;
+    if (subEl) subEl.textContent = def.description || "";
     titleEl.textContent = def.title;
     if (backBtn) backBtn.hidden = false;
     panel.classList.add("iu-financial-overlay-panel--detail");
