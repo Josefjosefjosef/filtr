@@ -6770,11 +6770,6 @@ try {
 
   function iuTimelineAxisBottomOffset(art, axisTop) {
     let bottom = 0;
-    const hide = art.querySelector(".iuTimelineAction--hide");
-    if (hide) {
-      const hideBottom = hide.getBoundingClientRect().bottom - axisTop;
-      if (hideBottom > bottom) bottom = hideBottom;
-    }
     const meta = art.querySelector(
       ".iuTimelineRight .iu-meta-line, .iuTimelineRight .iuTimelineYouTubeMeta"
     );
@@ -6810,13 +6805,10 @@ try {
       for (const art of items) {
         const axis = art.querySelector(".iuTimelineAxis");
         if (!axis) continue;
-        if (!compact) {
-          axis.style.removeProperty("--iu-tl-axis-h");
-          continue;
-        }
         const axisTop = axis.getBoundingClientRect().top;
         const axisH = Math.ceil(iuTimelineAxisBottomOffset(art, axisTop));
         if (axisH > 0) axis.style.setProperty("--iu-tl-axis-h", axisH + "px");
+        else axis.style.removeProperty("--iu-tl-axis-h");
       }
     } catch (_) {}
   }
@@ -6843,14 +6835,12 @@ try {
           });
         }
         iuTimelineAxisRo.disconnect();
-        if (iuTimelineCompactViewportMatches()) iuTimelineAxisRo.observe(root);
+        iuTimelineAxisRo.observe(root);
       }
-      if (iuTimelineCompactViewportMatches()) {
+      iuTimelineSyncCompactAxisHeights(root);
+      requestAnimationFrame(function () {
         iuTimelineSyncCompactAxisHeights(root);
-        requestAnimationFrame(function () {
-          iuTimelineSyncCompactAxisHeights(root);
-        });
-      }
+      });
     } catch (_) {}
   }
 
@@ -7057,20 +7047,13 @@ try {
   function iuTimelineArticleActionsBlock(it) {
     const id = iuArticleActionsResolveId(it);
     if (!id) return "";
-    const topic = iuArticleActionsResolveTopic(it);
     const saved = iuArticleActionsIsSaved(id);
-    const followed = iuArticleActionsIsFollowed(id);
     const saveLabel = saved ? "Uloženo" : "Uložit";
-    const followLabel = followed ? "Sledováno" : "Sledovat";
     return `
       <div class="iuTimelineActions" role="group" aria-label="Akce článku">
         <button type="button" class="iuTimelineAction iuTimelineAction--save${saved ? " is-active" : ""}" data-iu-action="save" data-iu-article-id="${escapeHtml(id)}" aria-label="${saved ? "Odebrat z uložených" : "Uložit článek"}" title="${saved ? "Odebrat z uložených" : "Uložit článek"}" aria-pressed="${saved ? "true" : "false"}">
           <span class="iuTimelineActionLabel">${escapeHtml(saveLabel)}</span>
           <span class="iuTimelineActionIcon" aria-hidden="true">${iuArticleActionsIconSvg("save")}</span>
-        </button>
-        <button type="button" class="iuTimelineAction iuTimelineAction--follow${followed ? " is-active" : ""}" data-iu-action="follow" data-iu-article-id="${escapeHtml(id)}" data-iu-article-topic="${escapeHtml(topic)}" aria-label="${followed ? "Zrušit sledování" : "Sledovat článek"}" title="${followed ? "Zrušit sledování" : "Sledovat článek"}" aria-pressed="${followed ? "true" : "false"}">
-          <span class="iuTimelineActionLabel">${escapeHtml(followLabel)}</span>
-          <span class="iuTimelineActionIcon" aria-hidden="true">${iuArticleActionsIconSvg("follow")}</span>
         </button>
         <button type="button" class="iuTimelineAction iuTimelineAction--hide" data-iu-action="hide" data-iu-article-id="${escapeHtml(id)}" aria-label="Skrýt článek" title="Skrýt článek">
           <span class="iuTimelineActionLabel">Skrýt</span>
@@ -7109,14 +7092,9 @@ try {
       for (const art of articles) {
         const id = String(art.getAttribute("data-iu-article-id") || "").trim();
         const saveBtn = art.querySelector(".iuTimelineAction--save");
-        const followBtn = art.querySelector(".iuTimelineAction--follow");
         if (saveBtn) {
           const saved = iuArticleActionsIsSaved(id);
           iuArticleActionsSyncButtonState(saveBtn, "save", saved, saved ? "Uloženo" : "Uložit");
-        }
-        if (followBtn) {
-          const followed = iuArticleActionsIsFollowed(id);
-          iuArticleActionsSyncButtonState(followBtn, "follow", followed, followed ? "Sledováno" : "Sledovat");
         }
         iuReadArticlesApplyToArticle(art);
       }
@@ -7694,10 +7672,6 @@ try {
       if (action === "save") {
         const active = iuArticleActionsToggleSave(articleEl);
         iuArticleActionsSyncButtonState(btn, "save", active, active ? "Uloženo" : "Uložit");
-        iuArticleActionsRefreshManagePanels();
-      } else if (action === "follow") {
-        const active = iuArticleActionsToggleFollow(articleEl);
-        iuArticleActionsSyncButtonState(btn, "follow", active, active ? "Sledováno" : "Sledovat");
         iuArticleActionsRefreshManagePanels();
       } else if (action === "hide") {
         iuArticleActionsHideArticleEl(articleEl);
