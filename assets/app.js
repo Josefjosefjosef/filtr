@@ -6550,6 +6550,7 @@ try {
         try {
           iuArticleActionsInit();
         } catch (_) {}
+        iuTimelineEnsureCompactAxisObserver(safeTarget);
       }
     } catch (_) {}
 
@@ -6901,6 +6902,83 @@ try {
       return !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
     } catch (_) {}
     return false;
+  }
+
+  function iuTimelineCompactViewportMatches() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(max-width: 1024px)").matches);
+    } catch (_) {}
+    return false;
+  }
+
+  const IU_TL_AXIS_MIN_H = 33;
+  let iuTimelineAxisResizeBound = false;
+  let iuTimelineAxisRo = null;
+
+  function iuTimelineSyncCompactAxisHeights(feedRoot) {
+    try {
+      if (!IU_TIMELINE_ENABLED) return;
+      const root =
+        feedRoot && typeof feedRoot.querySelectorAll === "function"
+          ? feedRoot
+          : document.getElementById("feed");
+      if (!root || !root.classList || !root.classList.contains("iuTimelineFeed")) return;
+      const items = root.querySelectorAll("article.iuTimelineItem[data-feed-type='article']");
+      const compact = iuTimelineCompactViewportMatches();
+      for (const art of items) {
+        const axis = art.querySelector(".iuTimelineAxis");
+        if (!axis) continue;
+        if (!compact) {
+          axis.style.removeProperty("--iu-tl-axis-h");
+          continue;
+        }
+        const row = art.querySelector(".iuTimelineRow");
+        let axisH = IU_TL_AXIS_MIN_H;
+        if (row && axis) {
+          const axisTop = axis.getBoundingClientRect().top;
+          const meta = art.querySelector(".iuTimelineRight .iu-meta-line");
+          const anchor = meta || art.querySelector(".iuTimelineRight .news-title, .iuTimelineRight .news-titleLink");
+          if (anchor) {
+            const bottom = anchor.getBoundingClientRect().bottom - axisTop;
+            if (bottom > axisH) axisH = Math.ceil(bottom);
+          }
+        }
+        axis.style.setProperty("--iu-tl-axis-h", axisH + "px");
+      }
+    } catch (_) {}
+  }
+
+  function iuTimelineEnsureCompactAxisObserver(feedRoot) {
+    try {
+      if (!IU_TIMELINE_ENABLED) return;
+      const root = feedRoot || document.getElementById("feed");
+      if (!root) return;
+      if (!iuTimelineAxisResizeBound) {
+        iuTimelineAxisResizeBound = true;
+        window.addEventListener(
+          "resize",
+          function () {
+            iuTimelineSyncCompactAxisHeights(document.getElementById("feed"));
+          },
+          { passive: true }
+        );
+      }
+      if (typeof ResizeObserver !== "undefined") {
+        if (!iuTimelineAxisRo) {
+          iuTimelineAxisRo = new ResizeObserver(function () {
+            iuTimelineSyncCompactAxisHeights(document.getElementById("feed"));
+          });
+        }
+        iuTimelineAxisRo.disconnect();
+        if (iuTimelineCompactViewportMatches()) iuTimelineAxisRo.observe(root);
+      }
+      if (iuTimelineCompactViewportMatches()) {
+        iuTimelineSyncCompactAxisHeights(root);
+        requestAnimationFrame(function () {
+          iuTimelineSyncCompactAxisHeights(root);
+        });
+      }
+    } catch (_) {}
   }
 
   function iuReadArticlesGetIdSet() {
