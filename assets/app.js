@@ -75557,6 +75557,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
   }
 
+  function iuSilverHomeInputHasRealText(raw) {
+    return String(raw || "").replace(/\s+/g, "").length > 0;
+  }
+
   function iuSilverDetectQuickTemplateEmptySubmit(text) {
     var t = String(text || "").trim();
     if (t === IU_SILVER_QUICK_TEMPLATE_EMPTY_TEXTS.calendar) return "calendar";
@@ -75710,8 +75714,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (typeof window.iuSilverGuidedOnHomeSendBefore === "function") window.iuSilverGuidedOnHomeSendBefore(input);
     } catch (_) {}
     clampSilverHomeInput(input);
-    const text = String(input.value || "").trim().slice(0, SILVER_HOME_INPUT_MAX);
-    if (!text) return;
+    const raw = String(input.value || "");
+    if (!iuSilverHomeInputHasRealText(raw)) {
+      if (iuSilverIsNarrowSilverComposerV1()) {
+        try {
+          if (typeof window.__iuSilverResetHomeTemplateMode === "function") window.__iuSilverResetHomeTemplateMode();
+        } catch (_) {}
+      }
+      return;
+    }
+    const text = raw.trim().slice(0, SILVER_HOME_INPUT_MAX);
     try {
       sessionStorage.setItem(PENDING_KEY, text);
     } catch {}

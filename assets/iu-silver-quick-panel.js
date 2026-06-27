@@ -178,8 +178,11 @@
     var qIn = inputEl();
     var mainIn = document.getElementById("iuSilverHomeInput");
     if (!qIn || !mainIn) return;
+    if (!String(qIn.value || "").replace(/\s+/g, "").length) {
+      resetQuickPanelTemplateMode();
+      return;
+    }
     var text = String(qIn.value || "").trim();
-    if (!text) return;
     try {
       mainIn.value = text;
     } catch (_) {}
