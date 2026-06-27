@@ -209,7 +209,6 @@ CLOUDFLARE_LOGGING_PRESENT=YES (conditional — pokud Workers nasazeny)
 | Log typ | Evidence |
 |---------|----------|
 | Workers observability | `cloudflare/articles-watchdog/wrangler.toml:18-21` — `[observability] enabled = true` |
-| VIN worker | `cloudflare/vin-worker/` existuje v repu |
 | CDN/proxy logy | standardní u Cloudflare účtu (mimo repozitář) |
 
 ```

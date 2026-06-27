@@ -1,7 +1,7 @@
 /**
  * Hard guard: default /projects/ = global feed (mediaTopicKey off); explicit ?topic= still filters.
  * Run: node scripts/home-feed-default-global-guard.mjs
- * Requires: playwright, local static server (projects-static-and-vin).
+ * Requires: playwright, local static server (projects-static).
  */
 import { spawn } from "child_process";
 import path from "path";
@@ -17,7 +17,7 @@ function sleep(ms) {
 }
 
 async function main() {
-  const server = spawn(process.execPath, [path.join(root, "server", "projects-static-and-vin.mjs")], {
+  const server = spawn(process.execPath, [path.join(root, "server", "projects-static.mjs")], {
     cwd: root,
     env: { ...process.env, PORT },
     stdio: ["ignore", "pipe", "pipe"],

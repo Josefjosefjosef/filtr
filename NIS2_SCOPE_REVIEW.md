@@ -24,7 +24,7 @@
 ## Triggers That Would Change Assessment
 
 - Central user accounts with server-side storage of notes/calendar.
-- API služby s vysokou dostupností (VIN worker production scale-up).
+- API služby s vysokou dostupností (production scale-up externích API).
 - Zpracování zvláštních kategorií údajů (health, biometrics) on-server.
 - Poskytovatel „managed service“ pro třetí strany (B2B SaaS).
 

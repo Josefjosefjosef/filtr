@@ -2,7 +2,7 @@
  * Homepage load audit proof (Playwright) — requires iu-home-load-audit.js + ?iuHomeAudit=1.
  *
  * Usage:
- *   node server/projects-static-and-vin.mjs
+ *   node server/projects-static.mjs
  *   node scripts/home-load-audit-proof.mjs
  *
  * Env:
