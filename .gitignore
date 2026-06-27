@@ -90,12 +90,3 @@ scripts/silver-retrieval-stress-300k-export*.json
 
 # Node (vendor libs in assets/vendor; do not track node_modules)
 node_modules/
-
-# infoUzel: Pexels imported full-size webp (never commit; feed uses thumbs only)
-projects/data/image_gallery/imported/pilot/webp/
-projects/data/image_gallery/imported/batch-*/webp/
-# thumbs/ under imported/*/thumbs/ are committed for GitHub Pages feed media (phase 2C)
-
-# infoUzel: Pexels API key (operator local only, never commit)
-projects/data/image_gallery/.pexels-api-key.local
-

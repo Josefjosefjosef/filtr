@@ -15,8 +15,7 @@ assert(!isDataOnlyScope(["assets/app.js"]), "assets not data-only");
 assert(!isDataOnlyScope(["projects/data/x.json", "assets/app.js"]), "mixed not data-only");
 assert(!isDataOnlyScope([]), "empty not data-only");
 assert(isFastPoolPipelineScope([".github/workflows/update-articles-fast-pool.yml"]), "fast pool workflow-only is pipeline scope");
-assert(isFastPoolPipelineScope(["scripts/iu-pexels-import-batch.mjs", "package.json"]), "pexels import scripts are pipeline scope");
-assert(isFastPoolPipelineScope(["scripts/iu-image-gallery-audit-v1.mjs", "scripts/iu-image-gallery-audit-v1-report.json"]), "gallery audit scripts are pipeline scope");
+assert(isFastPoolPipelineScope(["package.json", "projects/data/publishable_pool.json"]), "data + package.json is pipeline scope");
 assert(!isFastPoolPipelineScope([".github/workflows/update-articles-fast-pool.yml", "assets/app.js"]), "mixed workflow+assets not pipeline scope");
 
 console.log("SMOKE_DATA_ONLY_SCOPE_PROOF=" + (failed === 0 ? "PASS" : "FAIL"));
