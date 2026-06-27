@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-06-27T02:34:49.492857Z",
+  "ingestedAt": "2026-06-27T04:13:31.686948Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Muž se měl v Lounech obnažovat a ukájet před dětmi",
+      "url": "https://tydenikpolicie.cz/muz-se-mel-v-lounech-obnazovat-a-ukajet-pred-detmi/",
+      "dt": "2026-06-27T04:02:09Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "dětmi",
+        "lounech",
+        "muž",
+        "měl",
+        "obnažovat",
+        "ukájet"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -236,33 +259,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pražská policie opět pátrala po pohřešované ženě. Vypila fridex a má u sebe nůž",
-      "url": "https://tydenikpolicie.cz/prazska-policie-opet-patra-po-pohresovane-zene-vypila-fridex-a-ma-u-sebe-nuz/",
-      "dt": "2026-06-26T09:57:16Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "fridex",
-        "nůž",
-        "opět",
-        "pohřešované",
-        "policie",
-        "pražská",
-        "pátrala",
-        "sebe",
-        "vypila",
-        "ženě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +269,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16535,
+      "bytes": 16451,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +306,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-06-27T02:02:04Z",
+        "raw_feed_latest_publishedAt": "2026-06-27T04:02:09Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -325,6 +321,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muž se měl v Lounech obnažovat a ukájet před dětmi",
+            "publishedAt": "2026-06-27T04:02:09Z"
+          },
           {
             "title": "Středočeští celníci se při akci na dálnici D8 zaměřili na dlužníky",
             "publishedAt": "2026-06-27T02:02:04Z"
@@ -352,10 +352,6 @@
           {
             "title": "Strážníkům v Opavě ujížděl řidič audi. S autem skončil v řece",
             "publishedAt": "2026-06-26T12:59:36Z"
-          },
-          {
-            "title": "Čtyři zranění po srážce vlaku s nákladním vozem na Jičínsku",
-            "publishedAt": "2026-06-26T12:52:34Z"
           }
         ]
       }
