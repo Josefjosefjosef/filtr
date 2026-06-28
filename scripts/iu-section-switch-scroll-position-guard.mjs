@@ -248,6 +248,7 @@ async function measureSectionClick(page, sec, prevAccent) {
 
   const inheritedScroll =
     !sec.skipScrollDown &&
+    !openedAtTop &&
     before.scrollY >= INHERITED_SCROLL_MIN_BEFORE &&
     after.scrollY >= Math.round(before.scrollY * INHERITED_SCROLL_RATIO);
 
