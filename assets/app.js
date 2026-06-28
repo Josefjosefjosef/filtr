@@ -27137,6 +27137,46 @@ function buildVideoAsArticleCard(it) {
     { name: "Mistral AI", videoId: "tcBYaZqdc4A" }
   ];
 
+  function iuAiIsNarrowEmbedViewport() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuActivateAiYouTubeIframe(iframe) {
+    if (!iframe || iframe.getAttribute("data-iu-ai-embed-hydrated") === "1") return;
+    const url = String(iframe.getAttribute("data-iu-ai-embed-src") || "").trim();
+    if (!url) return;
+    iframe.setAttribute("data-iu-ai-embed-hydrated", "1");
+    try { iframe.removeAttribute("data-iu-ai-embed-src"); } catch (_) {}
+    try { iframe.referrerPolicy = "strict-origin-when-cross-origin"; } catch (_) {}
+    try { iframe.loading = "eager"; } catch (_) {}
+    iframe.src = url;
+  }
+
+  /* Mobile/tablet: defer src until overlay is visible — avoids Error 153 when lazy iframe loads without Referer */
+  function iuHydrateAiYouTubeEmbeds(root) {
+    const scope = root && root.querySelector ? root : document;
+    const pending = scope.querySelectorAll(".iuSectionAI .iuYtWrap iframe[data-iu-ai-embed-src]:not([data-iu-ai-embed-hydrated])");
+    if (!pending || !pending.length) return;
+    if (typeof IntersectionObserver !== "function") {
+      pending.forEach((frame) => iuActivateAiYouTubeIframe(frame));
+      return;
+    }
+    const scrollHost = scope.querySelector ? scope.querySelector(".iu-ai-scroll-host, .iu-aiPanelBody") : null;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const frame = entry.target;
+        try { obs.unobserve(frame); } catch (_) {}
+        iuActivateAiYouTubeIframe(frame);
+      });
+    }, { root: scrollHost || null, rootMargin: "80px 0px", threshold: 0.01 });
+    pending.forEach((frame) => obs.observe(frame));
+  }
+
   /* MAX 1 YouTube embed per AI – render from IU_AI_VIDEOS only, dedupe by name */
   function renderAiVideos(root){
     const el = root && root.querySelector ? root.querySelector(".iuAiVideoGrid") : null;
@@ -27153,10 +27193,25 @@ function buildVideoAsArticleCard(it) {
       return;
     }
     section.hidden = false;
+    const narrow = iuAiIsNarrowEmbedViewport();
+    const allowAttrs = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
     el.innerHTML = items.map(it => {
       const id = it.videoId;
       const title = it.name + " – krátké představení";
       const embedSrc = iuBuildAiYouTubeEmbedUrl(id);
+      if (narrow) {
+        return `<div class="iuAiVideoItem">
+  <div class="iuAiVideoTitle">${iuQfEscape(title)}</div>
+  <div class="iuYtWrap">
+  <iframe
+    data-iu-ai-embed-src="${iuQfEscape(embedSrc)}"
+    title="${iuQfEscape(title)}"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allow="${allowAttrs}"
+    allowfullscreen></iframe>
+  </div>
+</div>`;
+      }
       return `<div class="iuAiVideoItem">
   <div class="iuAiVideoTitle">${iuQfEscape(title)}</div>
   <div class="iuYtWrap">
@@ -27165,13 +27220,25 @@ function buildVideoAsArticleCard(it) {
     title="${iuQfEscape(title)}"
     loading="lazy"
     referrerpolicy="strict-origin-when-cross-origin"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allow="${allowAttrs}"
     allowfullscreen></iframe>
   </div>
 </div>`;
     }).join("");
+    if (narrow) {
+      try {
+        if (typeof requestAnimationFrame === "function") {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => iuHydrateAiYouTubeEmbeds(root));
+          });
+        } else {
+          iuHydrateAiYouTubeEmbeds(root);
+        }
+      } catch (_) {}
+    }
   }
   try { window.iuRenderAiVideos = renderAiVideos; } catch (_) {}
+  try { window.iuHydrateAiYouTubeEmbeds = iuHydrateAiYouTubeEmbeds; } catch (_) {}
 
   document.addEventListener("click", e => {
     const modal = document.getElementById("iuVideoModal");
@@ -31200,6 +31267,17 @@ function buildVideoAsArticleCard(it) {
       } catch {}
       try {
         if (typeof window.iuRenderAiVideos === "function") window.iuRenderAiVideos(aiPanel);
+      } catch (_) {}
+      try {
+        if (iuAiIsNarrowViewport() && typeof window.iuHydrateAiYouTubeEmbeds === "function") {
+          if (typeof requestAnimationFrame === "function") {
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => window.iuHydrateAiYouTubeEmbeds(aiPanel));
+            });
+          } else {
+            window.iuHydrateAiYouTubeEmbeds(aiPanel);
+          }
+        }
       } catch (_) {}
     }
     try { window.iuAiPanelOpenSurface = openPanel; } catch (_) {}
