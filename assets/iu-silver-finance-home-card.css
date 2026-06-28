@@ -251,17 +251,24 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (min-width: 901px) and (max-width: 1024px) {
   #silver-slot #iuSilverTallScrollViewport #iuSilverFinanceHomeCard,
   #iuMobileSilverSlot #silver-slot #iuSilverTallScrollViewport #iuSilverFinanceHomeCard {
     margin-top: 9px !important;
     margin-bottom: 0 !important;
     flex: 0 0 auto;
   }
+}
+
+@media (max-width: 900px) {
+  #silver-slot #iuSilverTallScrollViewport #iuSilverFinanceHomeCard,
+  #iuMobileSilverSlot #silver-slot #iuSilverTallScrollViewport #iuSilverFinanceHomeCard,
   #iuSilverTallScrollViewport #iuFeedNewsSplitPostHomeCards + #iuSilverFinanceHomeCard,
   #silver-slot #iuSilverTallScrollViewport #iuFeedNewsSplitPostHomeCards + #iuSilverFinanceHomeCard,
   #iuMobileSilverSlot #silver-slot #iuSilverTallScrollViewport #iuFeedNewsSplitPostHomeCards + #iuSilverFinanceHomeCard {
     margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    flex: 0 0 auto;
   }
 }
 
