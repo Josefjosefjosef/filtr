@@ -3420,18 +3420,6 @@ try {
     const origin = encodeURIComponent(window.location.origin);
     return `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&rel=0&playsinline=1&mute=1&controls=1&enablejsapi=1&origin=${origin}`;
   }
-  function iuBuildAiYouTubeEmbedUrl(id) {
-    const vid = String(id || "").trim();
-    if (!vid) return "";
-    let origin = "https://www.infouzel.cz";
-    try {
-      if (typeof window !== "undefined" && window.location && window.location.origin) {
-        origin = window.location.origin;
-      }
-    } catch (_) {}
-    const o = encodeURIComponent(origin);
-    return `https://www.youtube-nocookie.com/embed/${vid}?rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin=${o}`;
-  }
 
   function iuSafeParseDate(value) {
     try {
@@ -27124,6 +27112,19 @@ function buildVideoAsArticleCard(it) {
 
   /* AI asistenti – 1 YouTube embed per assistant (static list, embeddable) */
   /* 1 video per AI; IDs verified embeddable (oembed/fetch). Swap if "Video unavailable" on production. */
+  function iuBuildAiYouTubeEmbedUrl(id) {
+    const vid = String(id || "").trim();
+    if (!vid) return "";
+    let origin = "https://www.infouzel.cz";
+    try {
+      if (typeof window !== "undefined" && window.location && window.location.origin) {
+        origin = window.location.origin;
+      }
+    } catch (_) {}
+    const o = encodeURIComponent(origin);
+    return `https://www.youtube-nocookie.com/embed/${vid}?rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin=${o}`;
+  }
+
   const IU_AI_VIDEOS = [
     { name: "ChatGPT", videoId: "JTxsNm9IdYU" },
     { name: "Google Gemini", videoId: "_TVnM9dmUSk" },
