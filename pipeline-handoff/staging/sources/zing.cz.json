@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-06-28T07:10:31.162081Z",
+  "ingestedAt": "2026-06-28T08:53:01.834853Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Half-Life 2 i Portal si zahrajete přímo v prohlížeči",
+      "url": "https://zing.cz/article/half-life-2-i-portal-si-zahrajete-primo-v-prohlizeci",
+      "dt": "2026-06-28T08:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "half",
+        "life",
+        "portal",
+        "prohlížeči",
+        "přímo",
+        "zahrajete"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -954,32 +977,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Zapojte se do soutěže s Borotalco a vyhrajte skvělé ceny s vaším oblíbeným deodorantem!",
-      "url": "https://zing.cz/article/zapojte-se-do-souteze-s-borotalco-a-vyhrajte-skvele-ceny-s-vasim-oblibenym-deodorantem",
-      "dt": "2026-06-23T08:30:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "borotalco",
-        "ceny",
-        "deodorantem",
-        "oblíbeným",
-        "skvělé",
-        "soutěže",
-        "vaším",
-        "vyhrajte",
-        "zapojte"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -990,7 +987,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126154,
+      "bytes": 126109,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1027,7 +1024,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-27T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-28T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1042,6 +1039,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Half-Life 2 i Portal si zahrajete přímo v prohlížeči",
+            "publishedAt": "2026-06-28T08:00:00Z"
+          },
           {
             "title": "PlayStation lidem maže stovky koupených filmů, digitální vlastnictví neexistuje",
             "publishedAt": "2026-06-27T18:00:00Z"
@@ -1069,10 +1070,6 @@
           {
             "title": "Na Steam již brzy zamíří Playing Prague, česká hra zasazená do Prahy",
             "publishedAt": "2026-06-26T17:00:00Z"
-          },
-          {
-            "title": "Dočkáme se někdy next-gen verze Red Dead Redemption 2? Letos spíše ne",
-            "publishedAt": "2026-06-26T16:00:00Z"
           }
         ]
       }
