@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-06-28T12:15:39.253728Z",
+  "ingestedAt": "2026-06-28T13:58:14.633539Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Znovu se mluví o problémech při vývoji Star Wars Eclipse - INDIAN",
+      "url": "https://indian-tv.cz/clanek/znovu-se-mluvi-o-problemech-pri-vyvoji-star-wars-eclipse-efyj3n",
+      "dt": "2026-06-28T13:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "eclipse",
+        "indian",
+        "mluví",
+        "problémech",
+        "při",
+        "star",
+        "vývoji",
+        "wars",
+        "znovu"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1050,31 +1076,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Povede se návrat ke kořenům? Vyzkoušejte si demo hry Stronghold 4 - INDIAN",
-      "url": "https://indian-tv.cz/clanek/povede-se-navrat-ke-korenum-vyzkousejte-si-demo-stronghold-4-7eox6i",
-      "dt": "2026-06-24T07:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "demo",
-        "hry",
-        "indian",
-        "kořenům",
-        "návrat",
-        "povede",
-        "stronghold",
-        "vyzkoušejte"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1085,7 +1086,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 223409,
+      "bytes": 223553,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1122,7 +1123,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-06-28T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-28T13:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1137,6 +1138,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Znovu se mluví o problémech při vývoji Star Wars Eclipse - INDIAN",
+            "publishedAt": "2026-06-28T13:00:00Z"
+          },
           {
             "title": "PlayStation se nevzdává live service her. Věří jim i po několika nezdarech a propouštění - INDIAN",
             "publishedAt": "2026-06-28T12:00:00Z"
@@ -1164,10 +1169,6 @@
           {
             "title": "Magicians: The Devil's Deal láká na temnou magii, pekelný Londýn a souboje mezi mistry iluze - INDIAN",
             "publishedAt": "2026-06-27T08:09:53Z"
-          },
-          {
-            "title": "Frostpunk 2 rozšiřuje svůj ledový svět placeným DLC i velkou aktualizací - INDIAN",
-            "publishedAt": "2026-06-27T07:53:03Z"
           }
         ]
       }
