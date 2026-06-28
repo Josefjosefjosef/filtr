@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-27T23:52:42.049346Z",
-  "source_run_id": "28305556365",
+  "generatedAt": "2026-06-28T01:09:21.157355Z",
+  "source_run_id": "28307184605",
   "pipeline_phase": "fast_pool_publish",
   "pool_boundary": "post_event_dedupe_pre_section_limits",
   "clean_article_pool_definition": "Articles after RSS fetch, normalize, URL dedupe, title clustering, event-level dedupe, section classification, and quality/relevance checks; before release guards, PR creation, publish, and homepage selection.",
@@ -13,9 +13,9 @@
   "UNIQUE_ARTICLES_LOST_AFTER_EVENT_DEDUPE": "UNKNOWN_NOT_EXPORTED",
   "UNIQUE_ARTICLES_LOST_AFTER_SECTION_LIMITS": 0,
   "UNIQUE_ARTICLES_LOST_AFTER_HOMEPAGE_SELECTION_ESTIMATE": "UNKNOWN_NOT_EXPORTED",
-  "total_raw_items": 12,
-  "total_normalized": 12,
-  "total_after_url_dedupe": 12,
+  "total_raw_items": 30,
+  "total_normalized": 30,
+  "total_after_url_dedupe": 30,
   "total_after_event_dedupe": 18571,
   "total_publishable_pool": 18571,
   "total_clean_pool": 18571,
@@ -23,11 +23,11 @@
   "articles_full_count": 18571,
   "articles_final_count": 18104,
   "articles_json_count": 18104,
-  "cluster_count": 12,
-  "new_articles_built": 12,
+  "cluster_count": 28,
+  "new_articles_built": 28,
   "per_section_counts": {
-    "sport": 5120,
-    "aktualne": 6594,
+    "sport": 5118,
+    "aktualne": 6596,
     "finance": 3374,
     "hry": 349,
     "veda": 259,
@@ -40,9 +40,9 @@
     "vzdelavani": 35
   },
   "per_source_counts": {
+    "spt_sportcz": 1472,
+    "zpr_novinky_domaci": 151,
     "spt_isport": 959,
-    "spt_sportcz": 1471,
-    "zpr_novinky_domaci": 150,
     "zpr_ct24_domaci": 1145,
     "spt_ctsport": 626,
     "zpr_idnes_zpravy": 1675,
@@ -103,10 +103,10 @@
     "ved_novinky": 29,
     "fin_novinky_ekonomika": 52,
     "Seznam Zprávy": 4,
-    "iSport": 26,
+    "iSport": 23,
     "HN": 3,
+    "Aktuálně": 38,
     "Týdeník Policie": 2,
-    "Aktuálně": 37,
     "E15": 7,
     "MMAMAG": 1,
     "Ekonomický deník": 1,
@@ -134,7 +134,7 @@
   },
   "duplicate_counts": {
     "url_dedupe_dropped": 0,
-    "title_cluster_nonprimary_dropped": 0,
+    "title_cluster_nonprimary_dropped": 2,
     "event_dedupe_suppressed": 0
   },
   "event_cluster_counts": 0,
@@ -150,10 +150,10 @@
   "HOMEPAGE_DATA_SOURCE": "publishable_pool.json",
   "HOMEPAGE_READONLY_SELECTION": "YES",
   "PUBLISHABLE_POOL_SCHEMA_VERSION": 1,
-  "PUBLISHABLE_POOL_GENERATED_AT": "2026-06-27T23:52:42.049346Z",
+  "PUBLISHABLE_POOL_GENERATED_AT": "2026-06-28T01:09:21.157355Z",
   "fast_publish": {
-    "new_articles_published": 12,
-    "prev_pool_total": 18568,
+    "new_articles_published": 6,
+    "prev_pool_total": 18571,
     "publishable_pool_total": 18571
   }
 }
