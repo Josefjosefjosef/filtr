@@ -3420,6 +3420,18 @@ try {
     const origin = encodeURIComponent(window.location.origin);
     return `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&rel=0&playsinline=1&mute=1&controls=1&enablejsapi=1&origin=${origin}`;
   }
+  function iuBuildAiYouTubeEmbedUrl(id) {
+    const vid = String(id || "").trim();
+    if (!vid) return "";
+    let origin = "https://www.infouzel.cz";
+    try {
+      if (typeof window !== "undefined" && window.location && window.location.origin) {
+        origin = window.location.origin;
+      }
+    } catch (_) {}
+    const o = encodeURIComponent(origin);
+    return `https://www.youtube-nocookie.com/embed/${vid}?rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin=${o}`;
+  }
 
   function iuSafeParseDate(value) {
     try {
@@ -27143,13 +27155,15 @@ function buildVideoAsArticleCard(it) {
     el.innerHTML = items.map(it => {
       const id = it.videoId;
       const title = it.name + " – krátké představení";
+      const embedSrc = iuBuildAiYouTubeEmbedUrl(id);
       return `<div class="iuAiVideoItem">
   <div class="iuAiVideoTitle">${iuQfEscape(title)}</div>
   <div class="iuYtWrap">
   <iframe
-    src="https://www.youtube.com/embed/${iuQfEscape(id)}?rel=0&modestbranding=1"
+    src="${iuQfEscape(embedSrc)}"
     title="${iuQfEscape(title)}"
     loading="lazy"
+    referrerpolicy="strict-origin-when-cross-origin"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowfullscreen></iframe>
   </div>
