@@ -2,8 +2,9 @@
 /**
  * Article entrypoint parity guard (V1).
  *
- * Ensures chunked article loading behaves identically regardless of entry path:
- * INIT=30, BUFFER=100 (active section only), LOAD_MORE=fetches next chunk.
+ * Ensures chunked client delivery behaves identically regardless of entry path:
+ * INIT=100 (chunk 000), LOAD_MORE=fetches next chunk per section only.
+ * Přehled dne: memory-only composite — no dedicated article fetch.
  * Never: FULL_POOL, FULL_ARCHIVE, ALL_SECTIONS_PRELOAD.
  *
  * Run: npm run article-entrypoint-parity-guard
@@ -131,17 +132,19 @@ function staticArchitectureGuard() {
   const appSrc = fs.readFileSync(path.join(REPO, "assets", "app.js"), "utf8");
   const loaderSrc = fs.readFileSync(path.join(REPO, "assets", "iu-article-chunk-loader.js"), "utf8");
 
+  const storeSrc = fs.readFileSync(path.join(REPO, "assets", "iu-client-article-store.js"), "utf8");
+
   if (!appSrc.includes("iuUseChunkedArticleLoader")) {
     fails.push("static: assets/app.js missing iuUseChunkedArticleLoader");
   }
-  if (!appSrc.includes("iuChunkScheduleBackgroundBuffer")) {
-    fails.push("static: assets/app.js missing iuChunkScheduleBackgroundBuffer");
+  if (!appSrc.includes("iuClientArticleStoreReset")) {
+    fails.push("static: assets/app.js missing iuClientArticleStoreReset");
   }
-  if (!loaderSrc.includes("IU_CHUNK_INITIAL_SIZE = 30")) {
-    fails.push("static: IU_CHUNK_INITIAL_SIZE must remain 30");
+  if (!storeSrc.includes("IU_CLIENT_ARTICLE_INITIAL_LIMIT = 100")) {
+    fails.push("static: IU_CLIENT_ARTICLE_INITIAL_LIMIT must be 100");
   }
-  if (!loaderSrc.includes("IU_CHUNK_BUFFER_MAX = 100")) {
-    fails.push("static: IU_CHUNK_BUFFER_MAX must remain 100");
+  if (!loaderSrc.includes("IU_CLIENT_ARTICLE_LOAD_MORE_SIZE = 100")) {
+    fails.push("static: IU_CLIENT_ARTICLE_LOAD_MORE_SIZE must be 100");
   }
 
   const pairIdx = appSrc.indexOf("async function __iuFetchArticlesVideosPrimaryPair");
@@ -344,7 +347,7 @@ function evaluateLegMetrics(leg, fails, scenarioId) {
   if (leg.load_more && leg.load_more.load_more_only_reveals_existing_data) {
     issues.push("load_more_only_reveals_existing_data=YES");
   }
-  if (leg.loaderMode && leg.loaderMode !== "chunk-v1") {
+  if (leg.loaderMode && leg.loaderMode !== "chunk-v2-client-delivery") {
     issues.push("loaderMode=" + leg.loaderMode);
   }
 

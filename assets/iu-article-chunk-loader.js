@@ -1,15 +1,29 @@
 /**
- * Frontend article chunk loader (V1).
- * Delivery layer over publishable_pool — homepage never fetches the full pool by default.
+ * Frontend article chunk loader (V2 — client delivery layer).
+ * Reads already-published section chunks only; isolated from aggregation / Data Bot.
  */
 
-export const IU_CHUNK_SCHEMA_VERSION = 1;
-export const IU_CHUNK_INITIAL_SIZE = 30;
-export const IU_CHUNK_BUFFER_MAX = 100;
-export const IU_CHUNK_LOAD_MORE_SIZE = 100;
-export const IU_CHUNK_FILE_SIZE = 100;
+import {
+  IU_CLIENT_ARTICLE_INITIAL_LIMIT,
+  IU_CLIENT_ARTICLE_LOAD_MORE_SIZE,
+  iuClientArticleStoreIsPrehledDneKey,
+  iuClientArticleStoreIsPrehledDneNav,
+  iuClientArticleStoreRegisterSectionArticles,
+  iuClientArticleStoreGetSectionArticles,
+  iuClientArticleStoreGetLoader,
+  iuClientArticleStoreSetLoader,
+  iuClientArticleStoreHasSection,
+  iuClientArticleStoreBuildPrehledDne,
+} from "./iu-client-article-store.js";
+
+export const IU_CHUNK_SCHEMA_VERSION = 2;
+export const IU_CHUNK_INITIAL_SIZE = IU_CLIENT_ARTICLE_INITIAL_LIMIT;
+export const IU_CHUNK_BUFFER_MAX = IU_CLIENT_ARTICLE_INITIAL_LIMIT;
+export const IU_CHUNK_LOAD_MORE_SIZE = IU_CLIENT_ARTICLE_LOAD_MORE_SIZE;
+export const IU_CHUNK_FILE_SIZE = IU_CLIENT_ARTICLE_LOAD_MORE_SIZE;
 export const IU_ARTICLE_FEED_CHUNKS_DIR = "article_feed_chunks";
 export const IU_HOMEPAGE_CHUNK_MANIFEST_FILE = "article_feed_chunks/manifest.json";
+export const IU_PREHLED_DNE_SECTION_KEY = "prehled-dne";
 
 /** @typedef {{ schemaVersion:number, generatedAt:string, poolGeneratedAt:string, chunkSize:number, initialSize:number, bufferMax:number, loadMoreSize:number, sections:Record<string,{totalArticles:number,chunkCount:number,chunkSize:number,initChunk?:string,initSize?:number,bufferMax?:number,chunks:string[]}>, sourcePool:string }} IuChunkManifest */
 
@@ -67,6 +81,7 @@ export function iuUseChunkedArticleLoader() {
 }
 
 export function iuChunkNavSectionFromUrl() {
+  if (iuClientArticleStoreIsPrehledDneNav()) return IU_PREHLED_DNE_SECTION_KEY;
   try {
     const p = new URLSearchParams(String(typeof location !== "undefined" ? location.search : ""));
     let sec = (p.get("section") || "feed").trim().toLowerCase();
@@ -79,7 +94,7 @@ export function iuChunkNavSectionFromUrl() {
     else if (["hry", "kultura", "veda", "vzdelavani"].indexOf(sec) !== -1) mediaTopicKey = sec;
     return iuChunkResolveSectionKey({ mediaTopicKey, activeSection: sec });
   } catch (_) {
-    return "feed";
+    return "zpravy";
   }
 }
 
@@ -92,25 +107,28 @@ export function iuChunkResolveSectionKey(nav) {
   }
   const sec = String(n.activeSection || "").trim().toLowerCase();
   if (["hry", "kultura", "veda", "vzdelavani", "travel"].includes(sec)) return sec === "travel" ? "cestovani" : sec;
-  return "feed";
+  if (iuClientArticleStoreIsPrehledDneNav()) return IU_PREHLED_DNE_SECTION_KEY;
+  return "zpravy";
 }
 
 export function iuChunkCreateLoaderState(sectionKey) {
   return {
-    sectionKey: String(sectionKey || "feed"),
+    sectionKey: String(sectionKey || "zpravy"),
     manifest: null,
     articles: [],
     loadedChunkIndexes: new Set(),
     initLoaded: false,
+    previewMetaLoaded: false,
     bufferChunkLoaded: false,
     nextLoadMoreChunkIndex: 1,
     totalInSection: 0,
-    backgroundDone: false,
+    backgroundDone: true,
     loadMoreInflight: false,
     articlesReceivedCount: 0,
     articlesParsedCount: 0,
     educationPreviewItems: [],
     sectionPreviewItems: null,
+    clientDeliveryOnly: true,
   };
 }
 
@@ -144,7 +162,18 @@ export async function iuChunkEnsureManifest(loader, basePath, dataVer) {
 export function iuChunkSectionMeta(loader) {
   const m = loader && loader.manifest;
   if (!m || !m.sections) return null;
-  return m.sections[loader.sectionKey] || m.sections.feed || null;
+  return m.sections[loader.sectionKey] || null;
+}
+
+function iuChunkApplyPreviewPayload(loader, payload) {
+  if (!payload || typeof payload !== "object") return;
+  if (payload.sectionPreviewItems && typeof payload.sectionPreviewItems === "object") {
+    loader.sectionPreviewItems = payload.sectionPreviewItems;
+    const edu = payload.sectionPreviewItems.vzdelavani;
+    if (Array.isArray(edu) && edu.length) loader.educationPreviewItems = edu.slice(0, 2);
+  } else if (Array.isArray(payload.educationPreviewItems) && payload.educationPreviewItems.length) {
+    loader.educationPreviewItems = payload.educationPreviewItems.slice(0, 2);
+  }
 }
 
 function iuChunkDedupeAppend(existing, incoming) {
@@ -173,26 +202,32 @@ function iuChunkDedupeAppend(existing, incoming) {
   return out;
 }
 
-async function iuChunkFetchRel(loader, relPath, basePath, dataVer, label, chunkIndexMark) {
+async function iuChunkFetchRel(loader, relPath, basePath, dataVer, label, chunkIndexMark, includeArticles) {
   const url = iuChunkFileUrl(basePath, relPath, dataVer);
   const payload = await iuChunkFetchJson(url, label);
-  const rows = Array.isArray(payload && payload.articles) ? payload.articles : [];
-  /* Section preview cards ride along with the feed init payload — no per-section fetch on homepage. */
-  if (payload && payload.sectionPreviewItems && typeof payload.sectionPreviewItems === "object") {
-    loader.sectionPreviewItems = payload.sectionPreviewItems;
-    const edu = payload.sectionPreviewItems.vzdelavani;
-    if (Array.isArray(edu) && edu.length) {
-      loader.educationPreviewItems = edu.slice(0, 2);
-    }
-  } else if (payload && Array.isArray(payload.educationPreviewItems) && payload.educationPreviewItems.length) {
-    loader.educationPreviewItems = payload.educationPreviewItems.slice(0, 2);
+  if (includeArticles !== false) {
+    const rows = Array.isArray(payload && payload.articles) ? payload.articles : [];
+    loader.articlesReceivedCount += rows.length;
+    if (chunkIndexMark != null) loader.loadedChunkIndexes.add(chunkIndexMark);
+    loader.totalInSection =
+      Number(payload && payload.totalInSection) ||
+      Number(iuChunkSectionMeta(loader)?.totalArticles) ||
+      loader.totalInSection;
+    loader.articles = iuChunkDedupeAppend(loader.articles, rows);
+    loader.articlesParsedCount = loader.articles.length;
+    iuClientArticleStoreRegisterSectionArticles(loader.sectionKey, rows);
+    return rows;
   }
-  loader.articlesReceivedCount += rows.length;
-  if (chunkIndexMark != null) loader.loadedChunkIndexes.add(chunkIndexMark);
-  loader.totalInSection = Number(payload && payload.totalInSection) || Number(iuChunkSectionMeta(loader)?.totalArticles) || loader.totalInSection;
-  loader.articles = iuChunkDedupeAppend(loader.articles, rows);
-  loader.articlesParsedCount = loader.articles.length;
-  return rows;
+  iuChunkApplyPreviewPayload(loader, payload);
+  return [];
+}
+
+export async function iuChunkFetchFeedPreviewMetaOnly(loader, basePath, dataVer) {
+  if (!loader || loader.previewMetaLoaded) return;
+  const feedMeta = loader.manifest && loader.manifest.sections && loader.manifest.sections.feed;
+  if (!feedMeta || !feedMeta.initChunk) return;
+  loader.previewMetaLoaded = true;
+  await iuChunkFetchRel(loader, feedMeta.initChunk, basePath, dataVer, "feed_preview_meta", null, false);
 }
 
 export async function iuChunkFetchInit(loader, basePath, dataVer) {
@@ -208,6 +243,7 @@ export async function iuChunkFetchBufferChunk(loader, basePath, dataVer) {
   const meta = iuChunkSectionMeta(loader);
   if (!meta || !Array.isArray(meta.chunks) || !meta.chunks[0]) return [];
   loader.bufferChunkLoaded = true;
+  loader.backgroundDone = true;
   return iuChunkFetchRel(loader, meta.chunks[0], basePath, dataVer, "buffer_000", 0);
 }
 
@@ -221,28 +257,59 @@ export async function iuChunkFetchChunkIndex(loader, chunkIndex, basePath, dataV
 }
 
 export async function iuChunkLoadInitial(basePath, dataVer, sectionKey) {
-  const loader = iuChunkCreateLoaderState(sectionKey);
+  const key = String(sectionKey || "zpravy").trim().toLowerCase();
+  if (iuClientArticleStoreIsPrehledDneKey(key)) {
+    const loader = iuChunkCreateLoaderState(key);
+    return {
+      loader,
+      initialArticles: iuClientArticleStoreBuildPrehledDne(),
+      generatedAt: null,
+      totalInSection: iuClientArticleStoreBuildPrehledDne().length,
+      prehledDneFromMemory: true,
+    };
+  }
+  const cachedLoader = iuClientArticleStoreGetLoader(key);
+  if (cachedLoader && iuClientArticleStoreHasSection(key)) {
+    const cachedArticles = iuClientArticleStoreGetSectionArticles(key);
+    return {
+      loader: cachedLoader,
+      initialArticles: cachedArticles.slice(0, IU_CLIENT_ARTICLE_INITIAL_LIMIT),
+      generatedAt: cachedLoader.manifest && cachedLoader.manifest.generatedAt ? cachedLoader.manifest.generatedAt : null,
+      totalInSection: iuChunkSectionMeta(cachedLoader)?.totalArticles || cachedLoader.totalInSection || cachedArticles.length,
+      fromClientStore: true,
+    };
+  }
+  const loader = iuChunkCreateLoaderState(key);
   await iuChunkEnsureManifest(loader, basePath, dataVer);
-  const initRows = await iuChunkFetchInit(loader, basePath, dataVer);
+  void iuChunkFetchFeedPreviewMetaOnly(loader, basePath, dataVer);
+  const rows = await iuChunkFetchChunkIndex(loader, 0, basePath, dataVer);
+  loader.bufferChunkLoaded = true;
+  loader.initLoaded = true;
+  loader.backgroundDone = true;
+  loader.nextLoadMoreChunkIndex = 1;
+  const capped = rows.slice(0, IU_CLIENT_ARTICLE_INITIAL_LIMIT);
+  iuClientArticleStoreSetLoader(key, loader);
   const meta = iuChunkSectionMeta(loader);
   return {
     loader,
-    initialArticles: initRows.slice(0, IU_CHUNK_INITIAL_SIZE),
+    initialArticles: capped,
     generatedAt: loader.manifest && loader.manifest.generatedAt ? loader.manifest.generatedAt : null,
-    totalInSection: (meta && meta.totalArticles) || loader.totalInSection || initRows.length,
+    totalInSection: (meta && meta.totalArticles) || loader.totalInSection || capped.length,
   };
 }
 
+/** Legacy no-op: initial load already delivers the client limit (100). */
 export async function iuChunkFetchBackgroundBuffer(loader, basePath, dataVer) {
-  if (!loader || loader.backgroundDone) return [];
-  await iuChunkFetchBufferChunk(loader, basePath, dataVer);
-  const cap = IU_CHUNK_BUFFER_MAX;
+  if (!loader || loader.backgroundDone) return loader ? loader.articles.slice(0, IU_CLIENT_ARTICLE_INITIAL_LIMIT) : [];
   loader.backgroundDone = true;
-  return loader.articles.slice(0, cap);
+  return loader.articles.slice(0, IU_CLIENT_ARTICLE_INITIAL_LIMIT);
 }
 
 export async function iuChunkFetchLoadMore(loader, basePath, dataVer) {
   if (!loader || loader.loadMoreInflight) return { added: [], chunkIndex: null };
+  if (iuClientArticleStoreIsPrehledDneKey(loader.sectionKey)) {
+    return { added: [], chunkIndex: null, prehledDneMemoryOnly: true };
+  }
   loader.loadMoreInflight = true;
   try {
     const idx = loader.nextLoadMoreChunkIndex;
@@ -258,6 +325,7 @@ export async function iuChunkFetchLoadMore(loader, basePath, dataVer) {
 }
 
 export function iuChunkHasMoreOnServer(loader) {
+  if (!loader || iuClientArticleStoreIsPrehledDneKey(loader.sectionKey)) return false;
   const meta = iuChunkSectionMeta(loader);
   if (!meta) return false;
   return loader.nextLoadMoreChunkIndex < meta.chunkCount;
@@ -265,15 +333,14 @@ export function iuChunkHasMoreOnServer(loader) {
 
 export function iuChunkVisibleArticleBudget(page) {
   const p = Number(page) >= 1 ? Number(page) : 1;
-  if (p <= 1) return IU_CHUNK_INITIAL_SIZE;
-  return IU_CHUNK_INITIAL_SIZE + (p - 1) * IU_CHUNK_LOAD_MORE_SIZE;
+  return p * IU_CLIENT_ARTICLE_INITIAL_LIMIT;
 }
 
 export function iuChunkPoolShapedPayload(loader, articles, generatedAt) {
   return {
     generatedAt: generatedAt || (loader.manifest && loader.manifest.generatedAt) || null,
     schemaVersion: IU_CHUNK_SCHEMA_VERSION,
-    pipelinePhase: "article_feed_chunks",
+    pipelinePhase: "article_feed_chunks_client",
     articles: Array.isArray(articles) ? articles : [],
     _iuChunkMode: true,
     _iuChunkSectionKey: loader.sectionKey,
@@ -295,5 +362,9 @@ try {
   if (typeof window !== "undefined") {
     window.iuUseChunkedArticleLoader = iuUseChunkedArticleLoader;
     window.__iuHomepageFeedDataSource = IU_HOMEPAGE_CHUNK_MANIFEST_FILE;
+    window.__iuClientArticleLimits = {
+      initial: IU_CLIENT_ARTICLE_INITIAL_LIMIT,
+      loadMore: IU_CLIENT_ARTICLE_LOAD_MORE_SIZE,
+    };
   }
 } catch (_) {}
