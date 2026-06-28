@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kverulant.org",
-  "ingestedAt": "2026-06-28T22:12:46.240213Z",
+  "ingestedAt": "2026-06-28T22:53:30.743097Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SZIF odmítá ukázat e-mail z Bruselu, který údajně povoluje vyplácet dotace pro Agrofert",
+      "url": "https://www.kverulant.org/article/szif-odmita-ukazat-mail-z-bruselu-ktery-udajne-povoluje-vyplacet-dotace-pro-agrofert/",
+      "dt": "2026-06-28T22:07:00Z",
+      "media_raw": "Kverulant",
+      "media_norm": "Kverulant",
+      "tokens": [
+        "agrofert",
+        "bruselu",
+        "dotace",
+        "mail",
+        "odmítá",
+        "povoluje",
+        "szif",
+        "ukázat",
+        "vyplácet",
+        "údajně"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_kverulant",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "kverulant.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -230,26 +257,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "kverulant.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rozhovor s Jakubem Čechem",
-      "url": "https://www.kverulant.org/article/rozhovor-s-jakubem-cechem/",
-      "dt": "2026-06-11T22:07:00Z",
-      "media_raw": "Kverulant",
-      "media_norm": "Kverulant",
-      "tokens": [
-        "jakubem",
-        "rozhovor",
-        "čechem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_kverulant",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "kverulant.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -260,7 +267,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.kverulant.org/feed/",
-      "bytes": 87976,
+      "bytes": 93133,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -297,7 +304,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-06-25T22:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-28T22:07:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -312,6 +319,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SZIF odmítá ukázat e-mail z Bruselu, který údajně povoluje vyplácet dotace pro Agrofert",
+            "publishedAt": "2026-06-28T22:07:00Z"
+          },
           {
             "title": "Nelegální autobazar stojí dál, ale úřady prý nečinné nejsou",
             "publishedAt": "2026-06-25T22:07:00Z"
@@ -339,10 +350,6 @@
           {
             "title": "Bývalý hlavní správce církevního majetku Antonín Juriga je vyšetřován pro opakované znásilňování podřízené",
             "publishedAt": "2026-06-16T22:34:00Z"
-          },
-          {
-            "title": "Spravedlnost před soudem: Šalamoun účtoval s justičními omyly",
-            "publishedAt": "2026-06-15T22:07:00Z"
           }
         ]
       }
