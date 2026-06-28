@@ -1,0 +1,494 @@
+/**
+ * Desktop MindMenu premium v54 (≥1025px, body.iu-desktop-home-grid only).
+ * Mobile / tablet untouched.
+ */
+
+@media (min-width: 1025px) {
+  body.iu-desktop-home-grid {
+    --iu-mm-v54-radius: 14px;
+    --iu-mm-v54-radius-lg: 16px;
+    --iu-mm-v54-shadow: 0 4px 22px rgba(11, 42, 74, 0.08);
+    --iu-mm-v54-shadow-hover: 0 8px 28px rgba(11, 42, 74, 0.12);
+    --iu-mm-v54-panel-gap: 22px;
+    --iu-mm-v54-inner-pad: 24px;
+    --iu-mm-v54-pill-min-ch: 25ch;
+  }
+
+  /* ── Úkol 1: HomeCards ~35px pod uvítacím boxem ── */
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStackSeparatorTallBefore,
+  body.iu-desktop-home-grid #silver-slot #iuFeedNewsSplit {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection,
+  body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection {
+    margin-top: 35px !important;
+    padding-top: 0 !important;
+  }
+
+  /* ── Úkol 15–16: overlay backdrop + open animation ── */
+  body.iu-desktop-home-grid .iuMyInfoUzelOverlay__backdrop {
+    background: rgba(7, 16, 31, 0.52);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelOverlay:not([hidden]) .iuMyInfoUzelOverlay__sheet {
+    animation: iuMmV54SheetIn 180ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  @keyframes iuMmV54SheetIn {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelOverlay__sheet {
+    background: #f4f7fc;
+    border: 1px solid rgba(0, 60, 255, 0.1);
+    box-shadow: 0 28px 72px rgba(11, 42, 74, 0.2);
+    overflow: hidden;
+  }
+
+  /* ── Úkol 2: brand header 60–70px ── */
+  body.iu-desktop-home-grid .iuMyInfoUzelOverlay__head {
+    min-height: 64px;
+    padding: 0 var(--iu-mm-v54-inner-pad);
+    align-items: center;
+    border-bottom: 0;
+    background: linear-gradient(135deg, #003cff 0%, #1a52ff 52%, #0b2a4a 100%);
+    box-shadow: 0 4px 18px rgba(0, 60, 255, 0.22);
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelOverlay__headMain {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    flex: 1 1 auto;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelOverlay__title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: #fff;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelOverlay__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelOverlay__close:hover {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.42);
+    transform: translateY(-1px);
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelOverlay__scroll {
+    padding: var(--iu-mm-v54-inner-pad);
+    background: #eef2f8;
+  }
+
+  /* ── Úkol 4–5: 3 panely, mezery 20–24px ── */
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard {
+    gap: var(--iu-mm-v54-panel-gap);
+    align-items: stretch;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col {
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.07);
+    border-radius: var(--iu-mm-v54-radius-lg);
+    box-shadow: var(--iu-mm-v54-shadow);
+    padding: var(--iu-mm-v54-inner-pad);
+    box-sizing: border-box;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col--emails {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* ── Úkol 3: rychlé akce 60px + popisky ── */
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost .iu-mmTopTools {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost .iu-mmTopToolHoverHost {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost .iu-mmTopTool.iu-mmTopTool--imageTile,
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost .iu-mmTopTool.iuMindMenuButton,
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost .iu-mmTopTool.iuMindMenuTasksBtn {
+    width: 60px;
+    height: 60px;
+    min-height: 60px;
+    max-height: 60px;
+    padding: 4px;
+    border: 1px solid rgba(0, 60, 255, 0.14);
+    border-radius: var(--iu-mm-v54-radius);
+    background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+    box-shadow: var(--iu-mm-v54-shadow);
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost .iu-mmTopTool.iu-mmTopTool--imageTile:hover,
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost .iu-mmTopTool.iuMindMenuButton:hover,
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost .iu-mmTopTool.iuMindMenuTasksBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--iu-mm-v54-shadow-hover);
+    border-color: rgba(0, 60, 255, 0.24);
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost .iu-mmTopTool--imageTile .iu-mmTopToolImageTileWrap {
+    width: 52px;
+    height: 52px;
+    min-height: 52px;
+    max-height: 52px;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost .iu-mmTopTool--imageTile .iu-mmTopToolImageTile {
+    max-width: 52px;
+    max-height: 52px;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost #iuMmHoverSummaryHostCalendar::after {
+    content: "Kalendář";
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost #iuMmHoverSummaryHostNotes::after {
+    content: "Poznámky";
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost #iuMmHoverSummaryHostTasks::after {
+    content: "Úkoly";
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost .iu-mmTopToolHoverHost::after {
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost .iu-mmHoverSummaryPanelShell,
+  body.iu-desktop-home-grid .iuMyInfoUzelQuickActionsHost .iu-mmHoverSummaryBridge {
+    display: none !important;
+  }
+
+  /* ── Úkol 6–8: e-maily bez nadpisu, širší pole, čistší řádky ── */
+  body.iu-desktop-home-grid .iuMyInfoUzelMindMenuHost .iu-mailboxes .iu-mmSectionHead,
+  body.iu-desktop-home-grid .iuMyInfoUzelMindMenuHost .iu-mailboxes .iu-mmSectionLine {
+    display: none !important;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelMindMenuHost .iu-mailboxes {
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 0;
+    background: transparent;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelMindMenuHost .iu-mailbox-list {
+    gap: 14px;
+    margin-top: 0;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row,
+  body.iu-desktop-home-grid .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row {
+    grid-template-columns: minmax(var(--iu-mm-v54-pill-min-ch), 1fr) 38px auto !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    align-items: center;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill,
+  body.iu-desktop-home-grid .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill {
+    min-width: var(--iu-mm-v54-pill-min-ch) !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    background: #f8fafc;
+    box-shadow: 0 1px 4px rgba(11, 42, 74, 0.05);
+    font-size: 14px;
+    line-height: 1.2;
+    transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill:hover {
+    border-color: rgba(0, 60, 255, 0.18);
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(11, 42, 74, 0.08);
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-gear {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(11, 42, 74, 0.06);
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelMindMenuHost .iu-pill-social-slot {
+    margin-left: 2px;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelMindMenuHost .iuMailboxControls {
+    margin-top: 10px;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelMindMenuHost .iu-mmTopTools,
+  body.iu-desktop-home-grid .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks,
+  body.iu-desktop-home-grid .iuMyInfoUzelMindMenuHost #iuMmArticleActionsSections {
+    display: none !important;
+  }
+
+  /* ── Úkol 9–10: rychlé odkazy — dlaždice + barevné akcenty ── */
+  body.iu-desktop-home-grid .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmSectionHead {
+    margin-bottom: 12px;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmSectionTitle {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0b2a4a;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmSectionLine {
+    display: none;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid {
+    gap: 12px 14px;
+    margin-top: 0 !important;
+    min-height: 0 !important;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile {
+    min-height: 64px !important;
+    height: 64px !important;
+    max-height: 64px !important;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink {
+    min-height: 64px !important;
+    height: 64px !important;
+    max-height: 64px !important;
+    padding: 10px 12px 10px 14px;
+    border-radius: var(--iu-mm-v54-radius);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+    box-shadow: var(--iu-mm-v54-shadow);
+    font-size: 12px;
+    font-weight: 600;
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--iu-mm-v54-shadow-hover);
+    border-color: rgba(0, 60, 255, 0.16);
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile > .iuTileLink::before {
+    width: 3px !important;
+    border-radius: var(--iu-mm-v54-radius) 0 0 var(--iu-mm-v54-radius) !important;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="datova-schranka"] {
+    --iu-ql-accent: #1d4ed8;
+  }
+  body.iu-desktop-home-grid .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="internetove-bankovnictvi"] {
+    --iu-ql-accent: #047857;
+  }
+  body.iu-desktop-home-grid .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="ai-asistenti"] {
+    --iu-ql-accent: #7c3aed;
+  }
+  body.iu-desktop-home-grid .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="vytvorit-fakturu"] {
+    --iu-ql-accent: #ea580c;
+  }
+  body.iu-desktop-home-grid .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="vzory-smluv-plne-moci"] {
+    --iu-ql-accent: #b91c1c;
+  }
+
+  /* ── Úkol 12: segmentovaný přepínač ── */
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__nav {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+    margin: 0 0 16px;
+    padding: 4px;
+    border-radius: 12px;
+    background: #eef2f7;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab {
+    flex: 1 1 0;
+    min-width: 0;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: #64748b;
+    padding: 9px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.2;
+    box-shadow: none;
+    transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab.is-active {
+    background: var(--iu-brand-blue, #003cff);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 60, 255, 0.28);
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab--saved.is-active,
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab--followed.is-active,
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab--hidden.is-active {
+    border-color: transparent;
+  }
+
+  /* ── Úkol 11: mini karty článků ── */
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col--saved .iuMyInfoUzelList--cards {
+    gap: 14px;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col--saved .iuMyInfoUzelItem--card {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: var(--iu-mm-v54-radius);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #fff;
+    box-shadow: var(--iu-mm-v54-shadow);
+    transition: box-shadow 160ms ease, border-color 160ms ease, transform 160ms ease;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col--saved .iuMyInfoUzelItem--card:hover {
+    border-color: rgba(0, 60, 255, 0.16);
+    box-shadow: var(--iu-mm-v54-shadow-hover);
+    transform: translateY(-1px);
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelItemThumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #e0e7ff, #dbeafe);
+    flex-shrink: 0;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelItemThumbImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelItemThumb--placeholder {
+    font-size: 18px;
+    font-weight: 800;
+    color: #1e40af;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelItemBody {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col--saved .iuMyInfoUzelItemLink {
+    flex: none;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #0b2a4a;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col--saved .iuMyInfoUzelItemMeta {
+    flex: none;
+    font-size: 11px;
+    color: #64748b;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col--saved .iuMyInfoUzelItemBtn {
+    flex-shrink: 0;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 9px;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    background: #f8fafc;
+    font-size: 11px;
+    font-weight: 700;
+    transition: background 160ms ease, border-color 160ms ease;
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col--saved .iuMyInfoUzelItemBtn:hover {
+    background: #fff;
+    border-color: rgba(0, 60, 255, 0.2);
+  }
+
+  body.iu-desktop-home-grid .iuMyInfoUzelDashboard__col--saved .iuMyInfoUzelEmpty {
+    font-size: 13px;
+    color: #64748b;
+    padding: 8px 0;
+  }
+
+  /* Skrýt staré headerTools mount (legacy overlay) */
+  body.iu-desktop-home-grid .iuMyInfoUzelOverlay__headerTools {
+    display: none !important;
+  }
+}

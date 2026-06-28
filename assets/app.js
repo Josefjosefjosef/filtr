@@ -7179,6 +7179,13 @@ try {
     try {
       const id = String(articleEl.getAttribute("data-iu-article-id") || "").trim();
       if (!id) return null;
+      let imageUrl = "";
+      try {
+        const imgEl = articleEl.querySelector(
+          "img.iuPhotoArticle-img, .iuTimelineLeft img, .iuPhotoArticle-row img, img"
+        );
+        if (imgEl && imgEl.src) imageUrl = String(imgEl.currentSrc || imgEl.src || "").trim();
+      } catch (_) {}
       return {
         articleId: id,
         title: String(articleEl.getAttribute("data-iu-article-title") || "").trim() || "(bez názvu)",
@@ -7187,10 +7194,37 @@ try {
         timestamp: new Date().toISOString(),
         section: String(articleEl.getAttribute("data-iu-article-section") || "").trim(),
         topic: String(articleEl.getAttribute("data-iu-article-topic") || "").trim(),
+        imageUrl: imageUrl,
       };
     } catch (_) {
       return null;
     }
+  }
+
+  function iuArticleActionsIsDesktopOverlayMount(mount) {
+    try {
+      const overlay = document.getElementById("iuMyInfoUzelOverlay");
+      return !!(overlay && mount && overlay.contains(mount));
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuArticleActionsManageThumbHtml(row) {
+    const img = String(row?.imageUrl || "").trim();
+    if (img) {
+      return (
+        '<span class="iuMyInfoUzelItemThumb"><img class="iuMyInfoUzelItemThumbImg" src="' +
+        escapeHtml(img) +
+        '" alt="" loading="lazy" decoding="async" /></span>'
+      );
+    }
+    const topic = String(row?.topic || row?.section || "article").trim().slice(0, 1).toUpperCase() || "i";
+    return (
+      '<span class="iuMyInfoUzelItemThumb iuMyInfoUzelItemThumb--placeholder" aria-hidden="true">' +
+      escapeHtml(topic) +
+      "</span>"
+    );
   }
 
   function iuArticleActionsPersistHidden(snap) {
@@ -7286,6 +7320,7 @@ try {
       mount.innerHTML = `<p class="iuMyInfoUzelEmpty">Zatím nic.</p>`;
       return;
     }
+    const premiumCard = iuArticleActionsIsDesktopOverlayMount(mount);
     const items = rows
       .map((row) => {
         const id = String(row?.articleId || row?.url || "").trim();
@@ -7302,11 +7337,30 @@ try {
         } else {
           action = `<button type="button" class="iuMyInfoUzelItemBtn" data-iu-manage-action="restore" data-iu-article-id="${escapeHtml(id)}">Obnovit</button>`;
         }
+        if (premiumCard) {
+          return (
+            '<li class="iuMyInfoUzelItem iuMyInfoUzelItem--card">' +
+            iuArticleActionsManageThumbHtml(row) +
+            '<div class="iuMyInfoUzelItemBody">' +
+            '<a class="iuMyInfoUzelItemLink" href="' +
+            escapeHtml(url) +
+            '" target="_blank" rel="noopener noreferrer">' +
+            escapeHtml(title) +
+            "</a>" +
+            '<span class="iuMyInfoUzelItemMeta">' +
+            escapeHtml(source) +
+            (time ? " · " + escapeHtml(time) : "") +
+            "</span>" +
+            "</div>" +
+            action +
+            "</li>"
+          );
+        }
         return `<li class="iuMyInfoUzelItem"><a class="iuMyInfoUzelItemLink" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a><span class="iuMyInfoUzelItemMeta">${escapeHtml(source)}${time ? " · " + escapeHtml(time) : ""}</span>${action}</li>`;
       })
       .filter(Boolean)
       .join("");
-    mount.innerHTML = `<ul class="iuMyInfoUzelList">${items}</ul>`;
+    mount.innerHTML = `<ul class="iuMyInfoUzelList${premiumCard ? " iuMyInfoUzelList--cards" : ""}">${items}</ul>`;
   }
 
   function iuArticleActionsInitManageTabs(root) {
@@ -7419,7 +7473,13 @@ try {
   function iuArticleActionsEnsureOverlay() {
     try {
       const existing = document.getElementById("iuMyInfoUzelOverlay");
-      if (existing && existing.querySelector("[data-iu-manage-tabs]") && document.getElementById("iuMyInfoUzelToolsHost")) return;
+      if (
+        existing &&
+        existing.querySelector("[data-iu-manage-tabs]") &&
+        document.getElementById("iuMyInfoUzelToolsHost") &&
+        document.getElementById("iuMyInfoUzelQuickActionsHost")
+      )
+        return;
       if (existing) existing.remove();
       const overlay = document.createElement("div");
       overlay.id = "iuMyInfoUzelOverlay";
@@ -7434,13 +7494,13 @@ try {
           <header class="iuMyInfoUzelOverlay__head">
             <div class="iuMyInfoUzelOverlay__headMain">
               <h2 id="iuMyInfoUzelOverlayTitle" class="iuMyInfoUzelOverlay__title">Můj infoUzel.cz / MindMenu</h2>
-              <div class="iuMyInfoUzelOverlay__headerTools" id="iuMyInfoUzelHeaderTools" role="group" aria-label="Kalendář, Poznámky a Úkoly"></div>
             </div>
             <button type="button" class="iuMyInfoUzelOverlay__close" data-iu-myinfouzel-close aria-label="Zavřít">×</button>
           </header>
           <div class="iuMyInfoUzelOverlay__scroll">
             <div class="iuMyInfoUzelDashboard">
               <div class="iuMyInfoUzelDashboard__col iuMyInfoUzelDashboard__col--emails">
+                <div id="iuMyInfoUzelQuickActionsHost" class="iuMyInfoUzelQuickActionsHost"></div>
                 <div id="iuMyInfoUzelMindMenuHost" class="iuMyInfoUzelMindMenuHost"></div>
               </div>
               <div class="iuMyInfoUzelDashboard__col iuMyInfoUzelDashboard__col--tools">
@@ -7508,12 +7568,14 @@ try {
   function iuArticleActionsSplitMindMenuForOverlay() {
     try {
       const mindMenu = document.getElementById("iuMindMenuView") || document.querySelector(".mindMenu");
-      const headerTools = document.getElementById("iuMyInfoUzelHeaderTools");
+      const quickActionsHost = document.getElementById("iuMyInfoUzelQuickActionsHost");
       const toolsHost = document.getElementById("iuMyInfoUzelToolsHost");
-      if (!mindMenu || !headerTools || !toolsHost) return;
+      if (!mindMenu || !toolsHost) return;
       const topTools = mindMenu.querySelector(":scope > .iu-mmTopTools");
       const quickLinks = mindMenu.querySelector(":scope > section.iu-mmQuickLinks");
-      if (topTools && topTools.parentNode !== headerTools) headerTools.appendChild(topTools);
+      if (topTools && quickActionsHost && topTools.parentNode !== quickActionsHost) {
+        quickActionsHost.appendChild(topTools);
+      }
       if (quickLinks && quickLinks.parentNode !== toolsHost) toolsHost.appendChild(quickLinks);
     } catch (_) {}
   }
@@ -7522,11 +7584,11 @@ try {
     try {
       const mindMenu = document.getElementById("iuMindMenuView") || document.querySelector(".mindMenu");
       if (!mindMenu) return;
-      const headerTools = document.getElementById("iuMyInfoUzelHeaderTools");
+      const quickActionsHost = document.getElementById("iuMyInfoUzelQuickActionsHost");
       const toolsHost = document.getElementById("iuMyInfoUzelToolsHost");
       const mailboxes = mindMenu.querySelector(":scope > section.iu-mailboxes");
       const topTools =
-        headerTools?.querySelector(":scope > .iu-mmTopTools") || mindMenu.querySelector(":scope > .iu-mmTopTools");
+        quickActionsHost?.querySelector(":scope > .iu-mmTopTools") || mindMenu.querySelector(":scope > .iu-mmTopTools");
       const quickLinks =
         toolsHost?.querySelector(":scope > section.iu-mmQuickLinks") ||
         mindMenu.querySelector(":scope > section.iu-mmQuickLinks");
@@ -7582,8 +7644,8 @@ try {
       host.innerHTML = "";
       const toolsHost = document.getElementById("iuMyInfoUzelToolsHost");
       if (toolsHost) toolsHost.innerHTML = "";
-      const headerTools = document.getElementById("iuMyInfoUzelHeaderTools");
-      if (headerTools) headerTools.innerHTML = "";
+      const quickActionsHost = document.getElementById("iuMyInfoUzelQuickActionsHost");
+      if (quickActionsHost) quickActionsHost.innerHTML = "";
     } catch (_) {}
   }
 
