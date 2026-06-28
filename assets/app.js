@@ -234,7 +234,22 @@ try {
       sessionStorage.setItem(STORE_KEY, JSON.stringify(m));
     } catch (_) {}
   }
+  function iuSrScrollRoot() {
+    try {
+      if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return null;
+      var lc = document.getElementById("leftContent");
+      if (lc && lc.clientHeight > 0 && lc.scrollHeight > lc.clientHeight + 1) {
+        var st = getComputedStyle(lc);
+        if (st.overflowY === "auto" || st.overflowY === "scroll") return lc;
+      }
+    } catch (_) {}
+    return null;
+  }
   function iuSrGetY() {
+    try {
+      var root = iuSrScrollRoot();
+      if (root) return root.scrollTop || 0;
+    } catch (_) {}
     var y = 0;
     try { y = Math.max(y, window.scrollY || 0); } catch (_) {}
     try {
@@ -246,6 +261,14 @@ try {
   }
   function iuSrSetY(y) {
     var yv = Math.max(0, Math.round(Number(y) || 0));
+    try {
+      var root = iuSrScrollRoot();
+      if (root) {
+        root.scrollTop = yv;
+        try { window.scrollTo(0, yv); } catch (_) {}
+        return;
+      }
+    } catch (_) {}
     try { window.scrollTo(0, yv); } catch (_) {}
     try {
       var se = document.scrollingElement || document.documentElement;
@@ -291,6 +314,19 @@ try {
   }
   try { window.addEventListener("scroll", iuSrQueueSave, { passive: true }); } catch (_) {}
   try { document.addEventListener("scroll", iuSrQueueSave, { passive: true, capture: true }); } catch (_) {}
+  try {
+    function iuSrBindLeftContentScroll() {
+      try {
+        var lc = document.getElementById("leftContent");
+        if (lc && !lc.__iuSrScrollBound) {
+          lc.__iuSrScrollBound = true;
+          lc.addEventListener("scroll", iuSrQueueSave, { passive: true });
+        }
+      } catch (_) {}
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iuSrBindLeftContentScroll);
+    else iuSrBindLeftContentScroll();
+  } catch (_) {}
 
   var iuSrRestoreState = null; /* { y, until } */
   function iuSrCancelRestore() {
@@ -316,8 +352,10 @@ try {
     }
     /* HOLD until the window expires: the back-navigation re-render (view swap, async feed batches,
        mobile shell sync) can scroll to 0 AFTER a successful restore — a one-shot restore loses. */
-    var doc = document.scrollingElement || document.documentElement;
-    var maxY = doc ? Math.max(0, doc.scrollHeight - (window.innerHeight || 0)) : 0;
+    var srRoot = iuSrScrollRoot();
+    var doc = srRoot || document.scrollingElement || document.documentElement;
+    var viewH = srRoot ? srRoot.clientHeight : (window.innerHeight || 0);
+    var maxY = doc ? Math.max(0, doc.scrollHeight - viewH) : 0;
     if (maxY >= target - 2 && Math.abs(iuSrGetY() - target) > 2) {
       iuSrSetY(target);
     }
@@ -9946,6 +9984,15 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  /** P0 mobile/tablet ≤900px: menu-driven section opens always start at page top. */
+  function iuIsMobileTabletNavLayout(){
+    try {
+      return !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
+    } catch (_) {
+      return false;
+    }
+  }
+
   /** Desktop hub entry (/projects/ bez ?section=): stránka začíná nahoře — ne auto-scroll na feed. */
   function iuDesktopHubEntryShouldStartAtTop() {
     try {
@@ -10035,7 +10082,56 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
+  /** Mobile/tablet: after section paint, force main scroller to top (menu forward nav). */
+  function iuMobileTabletConsumeSectionSwitchScrollIfArmed(){
+    try {
+      if (typeof window.iuMobileTabletConsumeSectionSwitchScrollIfArmed === "function") {
+        window.iuMobileTabletConsumeSectionSwitchScrollIfArmed();
+      }
+    } catch (_) {}
+  }
+
+  function iuMobileTabletMenuNavScrollArm(){
+    try {
+      if (typeof window.iuMobileTabletMenuNavScrollArm === "function") window.iuMobileTabletMenuNavScrollArm();
+    } catch (_) {}
+  }
+
+  function iuMobileTabletMenuNavScrollFinalize(){
+    try {
+      if (!iuIsMobileTabletNavLayout()) return;
+      if (!window.__iuMenuForwardNav) return;
+      if (window.__iuScrollRestorePendingNav) {
+        window.__iuMenuForwardNav = false;
+        return;
+      }
+      if (typeof window.iuScrollMainToTopInstant === "function") window.iuScrollMainToTopInstant();
+      try { window.__iuMenuForwardNav = false; } catch (_) {}
+    } catch (_) {
+      try { window.__iuMenuForwardNav = false; } catch (_) {}
+    }
+  }
+
+  function iuMenuForwardNavScrollAfterApply(){
+    try {
+      if (typeof window.iuMenuForwardNavScrollAfterApply === "function") window.iuMenuForwardNavScrollAfterApply();
+    } catch (_) {}
+  }
+
+  function iuMobileTabletMenuForwardScrollSyncIfArmed(){
+    try {
+      if (typeof window.iuMobileTabletMenuForwardScrollSyncIfArmed === "function") {
+        window.iuMobileTabletMenuForwardScrollSyncIfArmed();
+      }
+    } catch (_) {}
+  }
+
   function iuDesktopScrollFallbackToTopSmooth(){
+    try {
+      if (!iuIsDesktopNavLayout()) return;
+    } catch (_) {
+      return;
+    }
     try {
       requestAnimationFrame(function () {
         try {
@@ -10067,6 +10163,9 @@ function buildVideoAsArticleCard(it) {
       if (typeof window !== "undefined" && typeof window.iuHideAllOverlaysNow === "function") {
         window.iuHideAllOverlaysNow();
       }
+    } catch (_) {}
+    try {
+      iuMobileTabletMenuNavScrollArm();
     } catch (_) {}
     try {
       if (iuIsDesktopNavLayout() && k && k !== "all") {
@@ -10118,8 +10217,10 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       try {
-        if (!iuDesktopPreviewNavScrollAfterOpen()) {
-          iuDesktopScrollFallbackToTopSmooth();
+        if (iuIsDesktopNavLayout() && typeof iuDesktopPreviewNavScrollAfterOpen === "function") {
+          iuDesktopPreviewNavScrollAfterOpen();
+        } else {
+          iuMenuForwardNavScrollAfterApply();
         }
       } catch (_) {
         iuDesktopScrollFallbackToTopSmooth();
@@ -10155,9 +10256,6 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       try {
-        iuScrollMainSectionSwitchToTop();
-      } catch (_) {}
-      try {
         if (typeof window !== "undefined" && typeof window.iuApplySectionFromURL === "function") {
           window.iuApplySectionFromURL();
         }
@@ -10185,8 +10283,10 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       try {
-        if (!iuDesktopPreviewNavScrollAfterOpen()) {
-          iuDesktopScrollFallbackToTopSmooth();
+        if (iuIsDesktopNavLayout() && typeof iuDesktopPreviewNavScrollAfterOpen === "function") {
+          iuDesktopPreviewNavScrollAfterOpen();
+        } else {
+          iuMenuForwardNavScrollAfterApply();
         }
       } catch (_) {
         iuDesktopScrollFallbackToTopSmooth();
@@ -10238,8 +10338,10 @@ function buildVideoAsArticleCard(it) {
       }
     } catch (_) {}
     try {
-      if (!iuDesktopPreviewNavScrollAfterOpen()) {
-        iuDesktopScrollFallbackToTopSmooth();
+      if (iuIsDesktopNavLayout() && typeof iuDesktopPreviewNavScrollAfterOpen === "function") {
+        iuDesktopPreviewNavScrollAfterOpen();
+      } else {
+        iuMenuForwardNavScrollAfterApply();
       }
     } catch (_) {
       iuDesktopScrollFallbackToTopSmooth();
@@ -32857,6 +32959,13 @@ function buildVideoAsArticleCard(it) {
         const b = document.body;
         if (b) return b;
       }
+      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+        const lc = document.getElementById("leftContent");
+        if (lc && lc.clientHeight > 0 && lc.scrollHeight > lc.clientHeight + 1) {
+          const st = getComputedStyle(lc);
+          if (st.overflowY === "auto" || st.overflowY === "scroll") return lc;
+        }
+      }
     }catch(_){}
     return document.scrollingElement || document.documentElement || document.body;
   }
@@ -32871,6 +32980,12 @@ function buildVideoAsArticleCard(it) {
 
   function iuSetMainScrollTop(y){
     const yv = Math.max(0, Math.round(Number(y) || 0));
+    try{
+      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+        const lc = document.getElementById("leftContent");
+        if (lc) lc.scrollTop = yv;
+      }
+    }catch(_){}
     try{ window.scrollTo(0, yv); }catch(_){}
     try{
       const el = iuGetMainScrollElement();
@@ -32886,10 +33001,12 @@ function buildVideoAsArticleCard(it) {
       const root = iuGetMainScrollElement();
       if (d && d !== root) d.scrollTop = yv;
     }catch(_){}
-    try{
-      const feed = document.getElementById("newsList") || document.getElementById("feed");
-      if (feed) feed.scrollTop = 0;
-    }catch(_){}
+    if (yv === 0) {
+      try{
+        const feed = document.getElementById("newsList") || document.getElementById("feed");
+        if (feed) feed.scrollTop = 0;
+      }catch(_){}
+    }
   }
 
   function iuGetTopbarStackOffsetPx(){
@@ -32949,6 +33066,14 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuScrollToActiveSectionStartInstant(){
+    try {
+      if (!iuIsDesktopNavLayout()) {
+        if (window.__iuSectionSwitchScrollArm && !window.__iuScrollRestorePendingNav) {
+          iuSetMainScrollTop(0);
+          return;
+        }
+      }
+    } catch (_) {}
     const anchor = iuResolveSectionScrollAnchor();
     if (!anchor) {
       try {
@@ -32968,8 +33093,75 @@ function buildVideoAsArticleCard(it) {
     try{ window.__iuSectionSwitchScrollArm = true; }catch(_){}
     try{
       if (iuIsDesktopNavLayout()) return;
-      if (iuGetMainScrollTop() > 400) iuSetMainScrollTop(0);
+      iuSetMainScrollTop(0);
     }catch(_){}
+  }
+
+  /** Must mirror feed IIFE — nav block is separate scope. */
+  function iuIsDesktopNavLayout(){
+    try {
+      return !!(window.matchMedia && window.matchMedia("(min-width: 901px)").matches);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuIsMobileTabletNavLayout(){
+    try {
+      return !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuMobileTabletConsumeSectionSwitchScrollIfArmed(){
+    try {
+      if (iuIsDesktopNavLayout()) return;
+      if (typeof window === "undefined" || !window.__iuSectionSwitchScrollArm) return;
+      window.__iuSectionSwitchScrollArm = false;
+      if (window.__iuScrollRestorePendingNav) return;
+      iuScrollMainToTopInstant();
+      try {
+        requestAnimationFrame(function () {
+          try { iuScrollMainToTopInstant(); } catch (_) {}
+        });
+      } catch (_) {}
+    } catch (_) {}
+  }
+
+  function iuMobileTabletMenuNavScrollArm(){
+    try {
+      if (!iuIsMobileTabletNavLayout()) return;
+      window.__iuMenuForwardNav = true;
+      if (typeof window.iuMobileTabletOverlayScrollReset === "function") {
+        window.iuMobileTabletOverlayScrollReset();
+      }
+    } catch (_) {}
+  }
+
+  function iuMobileTabletMenuForwardScrollSyncIfArmed(){
+    try {
+      if (!iuIsMobileTabletNavLayout()) return;
+      if (window.__iuScrollRestorePendingNav) return;
+      if (!window.__iuMenuForwardNav && !window.__iuSectionSwitchScrollArm) return;
+      iuScrollMainToTopInstant();
+      try { window.__iuSectionSwitchScrollArm = false; } catch (_) {}
+      try {
+        requestAnimationFrame(function () {
+          try { iuScrollMainToTopInstant(); } catch (_) {}
+          try {
+            requestAnimationFrame(function () {
+              try { iuScrollMainToTopInstant(); } catch (_) {}
+            });
+          } catch (_) {}
+        });
+      } catch (_) {}
+    } catch (_) {}
+  }
+
+  function iuMenuForwardNavScrollAfterApply(){
+    try { iuScrollMainSectionSwitchToTop(); } catch (_) {}
+    try { iuMobileTabletMenuForwardScrollSyncIfArmed(); } catch (_) {}
   }
 
   function iuScrollMainToTopInstant(){
@@ -32990,6 +33182,87 @@ function buildVideoAsArticleCard(it) {
     }catch(_){}
     iuSetMainScrollTop(0);
   }
+
+  /* P0 mobile/tablet: save/restore main scroll when overlay opens/closes inside an open section.
+     Menu forward nav sets __iuMenuForwardNav so overlay layer does not fight section-to-top. */
+  (function iuMobileTabletOverlayScrollRestoreV1(){
+    var savedY = null;
+    var depth = 0;
+
+    function activeP() {
+      try {
+        return window.matchMedia("(max-width: 900px)").matches
+          && document.body.classList.contains("iu-mobileMainVisible")
+          && !document.body.classList.contains("iu-mobileGateOverlayOpen");
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function readY() {
+      try {
+        if (typeof iuGetMainScrollTop === "function") return iuGetMainScrollTop();
+      } catch (_) {}
+      return 0;
+    }
+
+    function writeY(y) {
+      try {
+        if (typeof iuSetMainScrollTop === "function") iuSetMainScrollTop(y);
+      } catch (_) {}
+    }
+
+    function onModalOpen() {
+      if (!activeP()) return;
+      if (window.__iuMenuForwardNav) return;
+      if (depth === 0) savedY = readY();
+      depth++;
+    }
+
+    function onModalClose() {
+      try {
+        if (!window.matchMedia("(max-width: 900px)").matches) return;
+      } catch (_) {
+        return;
+      }
+      if (depth <= 0) return;
+      depth--;
+      if (depth === 0 && savedY !== null && !window.__iuMenuForwardNav) {
+        var y = savedY;
+        savedY = null;
+        writeY(y);
+        try {
+          requestAnimationFrame(function () { writeY(y); });
+        } catch (_) {}
+      }
+    }
+
+    function resetState() {
+      savedY = null;
+      depth = 0;
+    }
+
+    try {
+      var obs = new MutationObserver(function (list) {
+        for (var i = 0; i < list.length; i++) {
+          var m = list[i];
+          if (m.type !== "attributes" || m.attributeName !== "class") continue;
+          if (m.target !== document.body) continue;
+          var had = m.oldValue && /\biu-modal-open\b/.test(m.oldValue);
+          var has = document.body.classList.contains("iu-modal-open");
+          if (has && !had) onModalOpen();
+          if (!has && had) onModalClose();
+        }
+      });
+      obs.observe(document.body, { attributes: true, attributeOldValue: true, attributeFilter: ["class"] });
+    } catch (_) {}
+
+    try {
+      window.iuMobileTabletOverlayScrollNotifyOpen = onModalOpen;
+      window.iuMobileTabletOverlayScrollNotifyClose = onModalClose;
+      window.iuMobileTabletOverlayScrollReset = resetState;
+    } catch (_) {}
+  })();
 
   // ============================================================
   // NOTES — unified component across the whole web
@@ -34653,6 +34926,11 @@ function buildVideoAsArticleCard(it) {
           !window.__iuScrollRestorePendingNav && !iuDesktopHubEntryShouldStartAtTop();
       }catch(_){}
       try {
+        if (!iuIsDesktopNavLayout() && window.__iuMenuForwardNav && !window.__iuScrollRestorePendingNav) {
+          window.__iuSectionSwitchScrollArm = true;
+        }
+      } catch (_) {}
+      try {
         const fpSw = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
         if (fpSw) {
           fpSw.__iuFeedSwitchSeq = (fpSw.__iuFeedSwitchSeq || 0) + 1;
@@ -34717,14 +34995,20 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
     }
 
+    try { iuMobileTabletMenuForwardScrollSyncIfArmed(); } catch (_) {}
+
     try {
       requestAnimationFrame(function iuApplySectionPostPaint() {
         try {
           if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
         } catch (_) {}
         try {
-          if (!usesFeed) iuDesktopConsumeSectionSwitchScrollIfArmed();
+          if (!usesFeed) {
+            iuDesktopConsumeSectionSwitchScrollIfArmed();
+            iuMobileTabletConsumeSectionSwitchScrollIfArmed();
+          }
         } catch (_) {}
+        try { iuMobileTabletMenuForwardScrollSyncIfArmed(); } catch (_) {}
 
     // P0 mobile shell: iuApplyMobileMainShellFromSectionNav(section, nav) runs synchronously after showView
     // (see iuApplyMobileMainShellFromSectionNav) — do not duplicate here.
@@ -34835,6 +35119,11 @@ function buildVideoAsArticleCard(it) {
   try { window.iuScrollToActiveSectionStartInstant = iuScrollToActiveSectionStartInstant; } catch (e) {}
   try { window.iuScrollMainSectionSwitchToTop = iuScrollMainSectionSwitchToTop; } catch (e) {}
   try { window.iuDesktopConsumeSectionSwitchScrollIfArmed = iuDesktopConsumeSectionSwitchScrollIfArmed; } catch (e) {}
+  try { window.iuMobileTabletConsumeSectionSwitchScrollIfArmed = iuMobileTabletConsumeSectionSwitchScrollIfArmed; } catch (e) {}
+  try { window.iuMobileTabletMenuNavScrollArm = iuMobileTabletMenuNavScrollArm; } catch (e) {}
+  try { window.iuMobileTabletMenuNavScrollFinalize = iuMobileTabletMenuNavScrollFinalize; } catch (e) {}
+  try { window.iuMenuForwardNavScrollAfterApply = iuMenuForwardNavScrollAfterApply; } catch (e) {}
+  try { window.iuMobileTabletMenuForwardScrollSyncIfArmed = iuMobileTabletMenuForwardScrollSyncIfArmed; } catch (e) {}
   try { window.iuDesktopPreviewNavScrollAfterOpen = iuDesktopPreviewNavScrollAfterOpen; } catch (e) {}
 
   function initNavRouter(){
@@ -34944,12 +35233,15 @@ function buildVideoAsArticleCard(it) {
       try {
         if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = !!fromWebNavGateNav;
       } catch (_) {}
-      try{ iuScrollMainSectionSwitchToTop(); }catch(_){}
+      try{ iuMobileTabletMenuNavScrollArm(); }catch(_){}
+      try{ window.__iuSectionSwitchScrollArm = true; }catch(_){}
       applySectionFromURL();
       applyPanelFromUrl();
       try {
         if (iuIsDesktopNavLayout() && typeof iuDesktopPreviewNavScrollAfterOpen === "function") {
           iuDesktopPreviewNavScrollAfterOpen();
+        } else {
+          try { iuMenuForwardNavScrollAfterApply(); } catch (_) {}
         }
       } catch (_) {}
       try {
@@ -35010,9 +35302,17 @@ function buildVideoAsArticleCard(it) {
       persistNavStateFromHexKey(rawHexKey);
       /* P0 webnav back-stack: same as left-rail — panel clear must replaceState, else duplicate Back entry. */
       try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("", { replace: true }); } catch (_) {}
-      try{ iuScrollMainSectionSwitchToTop(); }catch(_){}
+      try{ iuMobileTabletMenuNavScrollArm(); }catch(_){}
+      try{ window.__iuSectionSwitchScrollArm = true; }catch(_){}
       applySectionFromURL();
       applyPanelFromUrl();
+      try {
+        if (iuIsDesktopNavLayout() && typeof iuDesktopPreviewNavScrollAfterOpen === "function") {
+          iuDesktopPreviewNavScrollAfterOpen();
+        } else {
+          try { iuMenuForwardNavScrollAfterApply(); } catch (_) {}
+        }
+      } catch (_) {}
       try {
         if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
           try {
