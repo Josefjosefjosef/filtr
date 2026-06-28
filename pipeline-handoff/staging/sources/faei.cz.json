@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-06-28T03:49:23.508028Z",
+  "ingestedAt": "2026-06-28T05:30:52.326263Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Firmy plánují rekordní nábor. Jeden klíčový obor ale zůstává stranou",
+      "url": "https://profitonline.cz/firmy-planuji-rekordni-nabor-jeden-klicovy-obor-ale-zustava-stranou/",
+      "dt": "2026-06-28T04:00:56Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "ale",
+        "firmy",
+        "jeden",
+        "klíčový",
+        "nábor",
+        "obor",
+        "plánují",
+        "rekordní",
+        "stranou",
+        "zůstává"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,30 +296,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Retailoví investoři v závodě o AI více věří Číně než USA",
-      "url": "https://profitonline.cz/retailovi-investori-v-zavode-o-ai-vice-veri-cine-nez-usa/",
-      "dt": "2026-06-25T08:00:14Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "investoři",
-        "než",
-        "retailoví",
-        "usa",
-        "věří",
-        "závodě",
-        "číně"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +306,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19645,
+      "bytes": 19655,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,7 +343,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-06-27T12:00:09Z",
+        "raw_feed_latest_publishedAt": "2026-06-28T04:00:56Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 8,
@@ -357,6 +360,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Firmy plánují rekordní nábor. Jeden klíčový obor ale zůstává stranou",
+            "publishedAt": "2026-06-28T04:00:56Z"
+          },
           {
             "title": "Deset let po Brexitu. Britské akcie zaostaly za Evropou a slabší libra smazala část výnosů",
             "publishedAt": "2026-06-27T12:00:09Z"
@@ -384,10 +391,6 @@
           {
             "title": "Aleš Blažek je prezidentem České bankovní asociace",
             "publishedAt": "2026-06-26T10:00:15Z"
-          },
-          {
-            "title": "Zlato pod tlakem rostoucích úrokových sazeb. Proč by měl vývoj zajímat i běžné Čechy?",
-            "publishedAt": "2026-06-26T06:00:36Z"
           }
         ]
       }

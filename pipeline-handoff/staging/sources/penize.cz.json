@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-06-28T03:49:23.508028Z",
+  "ingestedAt": "2026-06-28T05:30:52.326263Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "A to se vyplatí! Retro kvíz s králem teleshoppingu",
+      "url": "https://www.penize.cz/nakupy/492347-a-to-se-vyplati!-retro-kviz-s-kralem-teleshoppingu",
+      "dt": "2026-06-28T07:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "králem",
+        "kvíz",
+        "retro",
+        "teleshoppingu",
+        "vyplatí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -481,30 +503,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Banky vylepšují spoření. Nové porovnání s dluhopisy od Schillerové",
-      "url": "https://www.penize.cz/sporici-ucty/487260-banky-vylepsuji-sporeni-nove-porovnani-s-dluhopisy-od-schillerove",
-      "dt": "2026-06-23T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "banky",
-        "dluhopisy",
-        "nové",
-        "porovnání",
-        "schillerové",
-        "spoření",
-        "vylepšují"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +513,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18646,
+      "bytes": 18781,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,7 +550,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-06-27T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-06-28T07:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 12,
@@ -568,6 +566,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "A to se vyplatí! Retro kvíz s králem teleshoppingu",
+            "publishedAt": "2026-06-28T07:00:00Z"
+          },
           {
             "title": "Bitcoin dostal ránu z Ameriky. Trh smetl sázky za miliardy dolarů",
             "publishedAt": "2026-06-27T07:00:00Z"
@@ -595,10 +597,6 @@
           {
             "title": "Na nákup dluhopisů od Schillerové máte poslední dny. Porážejí spořicí účty",
             "publishedAt": "2026-06-26T05:00:00Z"
-          },
-          {
-            "title": "Maximální ceny benzinu a nafty na pátek 26. června",
-            "publishedAt": "2026-06-25T13:57:00Z"
           }
         ]
       }

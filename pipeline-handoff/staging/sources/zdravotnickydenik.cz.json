@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-06-28T03:49:23.508028Z",
+  "ingestedAt": "2026-06-28T05:30:52.326263Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Změna, kterou pocítí každý pacient. Sestry mají získat nové pravomoci, systém plýtvá lidmi",
+      "url": "https://www.zdravotnickydenik.cz/2026/06/kompetence-nelekaru-soukromi-poskytovatele-vlcek/",
+      "dt": "2026-06-28T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "každý",
+        "lidmi",
+        "mají",
+        "nové",
+        "pacient",
+        "plýtvá",
+        "pocítí",
+        "pravomoci",
+        "sestry",
+        "systém",
+        "změna",
+        "získat"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -247,34 +276,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Evropu drtí horka na umření, ročně si vyžádají desítky tisíc životů. Jak se vedrům bránit?",
-      "url": "https://www.zdravotnickydenik.cz/2026/06/horka-na-umreni-jak-se-branit/",
-      "dt": "2026-06-26T08:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "bránit",
-        "desítky",
-        "drtí",
-        "evropu",
-        "horka",
-        "ročně",
-        "tisíc",
-        "umření",
-        "vedrům",
-        "vyžádají",
-        "životů"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -285,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 90691,
+      "bytes": 94165,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -322,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-06-27T14:55:27Z",
+        "raw_feed_latest_publishedAt": "2026-06-28T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -338,6 +339,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Změna, kterou pocítí každý pacient. Sestry mají získat nové pravomoci, systém plýtvá lidmi",
+            "publishedAt": "2026-06-28T05:00:00Z"
+          },
           {
             "title": "V oblíbených letoviscích řádí „masožravá“ bakterie. 6 rad expertů, jak předejít nákaze",
             "publishedAt": "2026-06-27T14:55:27Z"
@@ -365,10 +370,6 @@
           {
             "title": "Nemocnice ukázala, jak ušetřit miliony za energie v historických budovách. Co povolí památkáři?",
             "publishedAt": "2026-06-26T13:51:59Z"
-          },
-          {
-            "title": "Ministerstvo vydalo desatero pro děsivá vedra. Pokud máte tyto příznaky, okamžitě volejte 155",
-            "publishedAt": "2026-06-26T10:07:08Z"
           }
         ]
       }
