@@ -1,8 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-06-28T15:28:31.521152Z",
+  "ingestedAt": "2026-06-28T17:10:43.754837Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události neděle 28. června",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-nedele-28-cervna-375045",
+      "dt": "2026-06-28T16:29:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "neděle",
+        "souhrn",
+        "události",
+        "zásadní",
+        "června"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Extrémní vedra nadále trápila Německo, Polsko i Slovensko",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/extremni-vedra-nadale-trapila-nemecko-polsko-i-slovensko-375043",
+      "dt": "2026-06-28T16:03:09Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "extrémní",
+        "nadále",
+        "německo",
+        "polsko",
+        "slovensko",
+        "trápila",
+        "vedra"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -713,54 +759,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ve Venezuele přistáli čeští záchranáři. V troskách přežívají lidé, odhadují",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/do-venezuely-odletli-cesti-zachranari-v-troskach-prezivaji-lide-odhaduji-375016",
-      "dt": "2026-06-27T11:17:39Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "lidé",
-        "odhadují",
-        "přežívají",
-        "přistáli",
-        "troskách",
-        "venezuele",
-        "záchranáři",
-        "čeští"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Vaječníky po menopauze mohou pomáhat s imunitou, naznačuje studie",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/vajecniky-po-menopauze-mohou-pomahat-s-imunitou-naznacuje-studie-374989",
-      "dt": "2026-06-27T08:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "imunitou",
-        "menopauze",
-        "naznačuje",
-        "pomáhat",
-        "studie",
-        "vaječníky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -771,7 +769,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44761,
+      "bytes": 44331,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -808,11 +806,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-28T14:15:07Z",
+        "raw_feed_latest_publishedAt": "2026-06-28T16:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "other": 3
+          "zpravy": 28,
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -824,6 +822,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události neděle 28. června",
+            "publishedAt": "2026-06-28T16:29:00Z"
+          },
+          {
+            "title": "Extrémní vedra nadále trápila Německo, Polsko i Slovensko",
+            "publishedAt": "2026-06-28T16:03:09Z"
+          },
           {
             "title": "Írán si nárokuje kontrolu Hormuzského průlivu jen pro sebe",
             "publishedAt": "2026-06-28T14:15:07Z"
@@ -847,14 +853,6 @@
           {
             "title": "Macinka: Delegaci na summit NATO povede premiér, ÚS nezrušil usnesení vlády",
             "publishedAt": "2026-06-28T10:47:09Z"
-          },
-          {
-            "title": "Ve Venezuele se pohřešuje na sedmdesát tisíc lidí, obětí je skoro patnáct set",
-            "publishedAt": "2026-06-28T08:51:21Z"
-          },
-          {
-            "title": "Rusko útočilo na Kyjev či Záporoží, Ukrajina zasáhla rafinerie okupantů",
-            "publishedAt": "2026-06-28T08:32:06Z"
           }
         ]
       }

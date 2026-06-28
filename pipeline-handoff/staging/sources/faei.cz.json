@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-06-28T15:28:31.521152Z",
+  "ingestedAt": "2026-06-28T17:10:43.754837Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Cenové stropy pro pohonné hmoty by se měly změnit v krizovou pojistku",
+      "url": "https://profitonline.cz/cenove-stropy-pro-pohonne-hmoty-by-se-mely-zmenit-v-krizovou-pojistku/",
+      "dt": "2026-06-28T17:00:58Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "cenové",
+        "hmoty",
+        "krizovou",
+        "měly",
+        "pohonné",
+        "pojistku",
+        "stropy",
+        "změnit"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -268,34 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zlato pod tlakem rostoucích úrokových sazeb. Proč by měl vývoj zajímat i běžné Čechy?",
-      "url": "https://profitonline.cz/zlato-pod-tlakem-rostoucich-urokovych-sazeb-proc-by-mel-vyvoj-zajimat-i-bezne-cechy/",
-      "dt": "2026-06-26T06:00:36Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "běžné",
-        "měl",
-        "proč",
-        "rostoucích",
-        "sazeb",
-        "tlakem",
-        "vývoj",
-        "zajímat",
-        "zlato",
-        "úrokových",
-        "čechy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -306,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19642,
+      "bytes": 19759,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -343,7 +340,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-06-28T13:30:03Z",
+        "raw_feed_latest_publishedAt": "2026-06-28T17:00:58Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 8,
@@ -359,6 +356,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cenové stropy pro pohonné hmoty by se měly změnit v krizovou pojistku",
+            "publishedAt": "2026-06-28T17:00:58Z"
+          },
           {
             "title": "Novinky v osobních financích: Co byste udělali, kdybyste vyhráli v loterii?",
             "publishedAt": "2026-06-28T13:30:03Z"
@@ -386,10 +387,6 @@
           {
             "title": "Jak jsem v roce 1991 nejel na reportáž do Jugoslávie",
             "publishedAt": "2026-06-27T07:00:46Z"
-          },
-          {
-            "title": "Okamžiky dějin: Slovinská desetidenní válka o nezávislost",
-            "publishedAt": "2026-06-27T04:00:12Z"
           }
         ]
       }
