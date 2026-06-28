@@ -16421,7 +16421,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   header#topbarWrap.topbar-new.iuTopbar #iuTopbarInfoBtn:active{
     opacity: 0.92;
   }
-  #iuSilverWelcomeCard #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn{
+  #iuSilverWelcomeCard .iuTopbarInfoBtn--mobileFloat{
     display: none !important;
   }
 
@@ -16876,15 +16876,15 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     display: none !important;
   }
   #iuSilverWelcomeCard{--iuWiH:40px;--iuWiR:8px;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;column-gap:var(--iuWiR);align-items:start}
-  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn{
+  .iuTopbarInfoBtn--mobileFloat{
     display:none!important;
   }
-  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn,
-  body:not(.iu-home):not(.iu-mobileGateOverlayOpen) #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn{
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) .iuTopbarInfoBtn--mobileFloat,
+  body:not(.iu-home):not(.iu-mobileGateOverlayOpen) .iuTopbarInfoBtn--mobileFloat{
     display:none!important;
   }
-  body.iu-home:not(.iu-mobileMainVisible) #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn,
-  body.iu-mobileGateOverlayOpen #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn{
+  body.iu-home:not(.iu-mobileMainVisible) .iuTopbarInfoBtn--mobileFloat,
+  body.iu-mobileGateOverlayOpen .iuTopbarInfoBtn--mobileFloat{
     position:fixed!important;
     top:calc(env(safe-area-inset-top,0px) + 6px)!important;
     right:calc(env(safe-area-inset-right,0px) + 14px)!important;
@@ -16914,34 +16914,31 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     appearance:none;
     -webkit-appearance:none;
   }
-  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn:hover,
-  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn:active {
+  .iuTopbarInfoBtn--mobileFloat:hover,
+  .iuTopbarInfoBtn--mobileFloat:active {
     background: transparent;
     border: 0;
     box-shadow: none;
     opacity: 1;
   }
-  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg {
-    display: none !important;
-  }
-  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn::before {
-    content: "☰";
+  .iuTopbarInfoBtn--mobileFloat .iuTopbarInfoBtn__burger {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
     width: 15px;
     height: 13px;
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 1;
-    color: inherit;
-    transform: translateY(-0.5px);
+    line-height: 0;
   }
-  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn .iuTopbarInfoBtn__icon {
+  .iuTopbarInfoBtn--mobileFloat .iuTopbarInfoBtn__burger svg {
+    display: block;
+    width: 15px;
+    height: 13px;
+  }
+  .iuTopbarInfoBtn--mobileFloat .iuTopbarInfoBtn__icon {
     display: none !important;
   }
-  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn .iuTopbarInfoBtn__label {
+  .iuTopbarInfoBtn--mobileFloat .iuTopbarInfoBtn__label {
     display: inline-flex;
     align-items: center;
     flex: 0 0 auto;
@@ -16952,13 +16949,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     letter-spacing: -0.02em;
     white-space: nowrap;
   }
-  #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn:focus-visible {
+  .iuTopbarInfoBtn--mobileFloat:focus-visible {
     outline: none;
     text-decoration: underline;
     text-underline-offset: 2px;
   }
   #iuSilverWelcomeCard #iuNamedayCta{display:none!important;grid-column:1 / -1;grid-row:auto;margin:0!important;width:100%;min-height:0!important;height:0!important;overflow:hidden!important}
-  .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn {
+  .silver-welcome-stack--evening .iuTopbarInfoBtn--mobileFloat {
     color: var(--iu-brand-blue, #003CFF);
     border: 0;
     background: transparent;
@@ -17240,7 +17237,7 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   font-weight: 700;
 }
 
-.iuWelcomeBox--LOCKED #iuSilverWelcomeInfoBtn{
+.iuWelcomeBox--LOCKED .iuTopbarInfoBtn--mobileFloat{
   transform:none!important;
 }
 
