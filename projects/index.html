@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <meta name="iu-build" content="desktop-header-height-compression-20260607" />
+    <meta name="iu-build" content="icentrum-hamburger-prod-inline-20260628" />
     <meta name="iu-data-ver" content="iu-data-ver-placeholder" />
-    <!-- iu-build: desktop-header-height-compression-20260607 -->
+    <!-- iu-build: icentrum-hamburger-prod-inline-20260628 -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -112,6 +112,82 @@ font-src 'self' data:;
         }
         #iuTopbarInfoBtn {
           display: none !important;
+        }
+        /*
+          P0 task39: iCentrum hamburger mobile/tablet (must stay in sync with assets/app.css @media max-width:1024).
+          Inline survives stale hashed /assets/app.*.css + SW stale-while-revalidate first paint.
+        */
+        #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn {
+          display: none !important;
+        }
+        body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn,
+        body:not(.iu-home):not(.iu-mobileGateOverlayOpen) #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn {
+          display: none !important;
+        }
+        body.iu-home:not(.iu-mobileMainVisible) #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn,
+        body.iu-mobileGateOverlayOpen #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn {
+          position: fixed !important;
+          top: calc(env(safe-area-inset-top, 0px) + 6px) !important;
+          right: calc(env(safe-area-inset-right, 0px) + 14px) !important;
+          z-index: 10030 !important;
+          grid-column: auto !important;
+          grid-row: auto !important;
+          justify-self: auto !important;
+          align-self: auto !important;
+          width: auto;
+          height: 28px;
+          margin: 0;
+          padding: 0 9px;
+          border: 0;
+          background: transparent;
+          color: var(--iu-brand-blue, #003cff);
+          cursor: pointer;
+          display: inline-flex !important;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+          border-radius: 0;
+          box-sizing: border-box;
+          -webkit-tap-highlight-color: transparent;
+          transform: none !important;
+          transform-origin: center;
+          box-shadow: none;
+          appearance: none;
+          -webkit-appearance: none;
+        }
+        #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn svg {
+          display: none !important;
+        }
+        #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn::before {
+          content: "☰";
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          flex: 0 0 auto;
+          width: 15px;
+          height: 13px;
+          font-size: 15px;
+          font-weight: 600;
+          line-height: 1;
+          color: inherit;
+          transform: translateY(-0.5px);
+        }
+        #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn .iuTopbarInfoBtn__label {
+          display: inline-flex;
+          align-items: center;
+          flex: 0 0 auto;
+          height: 13px;
+          font-size: 13px;
+          font-weight: 600;
+          line-height: 1;
+          letter-spacing: -0.02em;
+          white-space: nowrap;
+        }
+        .silver-welcome-stack--evening #iuSilverWelcomeInfoBtn.iuSilverWelcomeInfoBtn {
+          color: var(--iu-brand-blue, #003cff);
+          border: 0;
+          background: transparent;
+          box-shadow: none;
         }
       }
       /* P0 CLS desktop: první dítě .iuTopbarFlowSpacer drží in-flow výšku — fixed #topbarWrap se z flow nepočítá; bez reálného boxu může obal ustát později (.mainCol y 0→30). */
@@ -534,7 +610,7 @@ font-src 'self' data:;
     <!-- P0 LCP fast path: feed section header (hub) je JS-injected v app.js (renderFeed) — preload scanner ho nevidí; preload jen ≥768px (mobile LCP = silver-hero, feed skrytý pre-gate). -->
     <link rel="preload" as="image" href="/assets/images/section-prehled-dne.webp" type="image/webp" fetchpriority="high" media="(min-width: 768px)" />
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
-    <link rel="stylesheet" href="/assets/app.css?v=tv-online-title-color-unify-20260627" />
+    <link rel="stylesheet" href="/assets/app.css?v=icentrum-hamburger-prod-inline-20260628" />
     <style id="iuDesktopLayoutV3PostAppCss">
       /* Desktop Layout V3 — post app.css (beats assets/app.css 2-column .layout !important). */
       @media (max-width: 900px) {

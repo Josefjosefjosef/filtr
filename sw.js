@@ -11,7 +11,7 @@
 // 2026-03-29: PR #1488 — nový SW + vyprázdnění APP_SHELL_CACHE po deployi (staré app.*.css v cache)
 // 2026-06-10: mobile/tablet stability v1 — bottom-nav clearance, app-render-optimizer.js odstraněn z precache
 // 2026-06-11: P1 perf fix #7 — IU_SW_DEPLOY_RELOAD se NEposílá při první instalaci SW (cold load se načítal 2×)
-const CACHE_VERSION = "2026-06-11-sw-first-install-no-reload-v1";
+const CACHE_VERSION = "2026-06-28-icentrum-hamburger-prod-inline-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
