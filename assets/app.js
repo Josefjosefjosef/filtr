@@ -27156,6 +27156,7 @@ function buildVideoAsArticleCard(it) {
 </div>`;
     }).join("");
   }
+  try { window.iuRenderAiVideos = renderAiVideos; } catch (_) {}
 
   document.addEventListener("click", e => {
     const modal = document.getElementById("iuVideoModal");
@@ -31182,6 +31183,9 @@ function buildVideoAsArticleCard(it) {
           requestAnimationFrame(() => window.iuPersistScrollPanels());
         }
       } catch {}
+      try {
+        if (typeof window.iuRenderAiVideos === "function") window.iuRenderAiVideos(aiPanel);
+      } catch (_) {}
     }
     try { window.iuAiPanelOpenSurface = openPanel; } catch (_) {}
 
