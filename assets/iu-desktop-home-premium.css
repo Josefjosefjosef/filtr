@@ -844,10 +844,11 @@
     flex-wrap: wrap;
     gap: 6px;
     margin-bottom: 12px;
+    justify-content: center;
   }
   .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab {
-    flex: 1 1 auto;
-    min-width: 0;
+    flex: 1 1 calc(50% - 3px);
+    max-width: calc(50% - 3px);
     border: 1px solid rgba(15, 23, 42, 0.1);
     background: rgba(255, 255, 255, 0.88);
     color: #334155;
@@ -1055,10 +1056,11 @@
   flex-wrap: wrap;
   gap: 6px;
   margin: 10px 0 12px;
+  justify-content: center;
 }
 .iuMmManageTabs__tab {
-  flex: 1 1 auto;
-  min-width: 0;
+  flex: 1 1 calc(50% - 3px);
+  max-width: calc(50% - 3px);
   border: 1px solid rgba(15, 23, 42, 0.1);
   background: rgba(255, 255, 255, 0.88);
   color: #334155;
