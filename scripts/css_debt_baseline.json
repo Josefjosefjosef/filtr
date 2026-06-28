@@ -1,21 +1,24 @@
 {
   "schema": "css_debt_guard_v1",
-  "duplicate_selector_groups": 295,
-  "duplicate_rule_occurrences_in_groups": 796,
+  "duplicate_selector_groups": 297,
+  "duplicate_rule_occurrences_in_groups": 800,
   "classification_counts": {
-    "breakpoint_specific": 176,
+    "breakpoint_specific": 177,
     "risky_layout_coupled": 96,
-    "intentional_cascade_candidate": 23
+    "intentional_cascade_candidate": 23,
+    "identical_duplicate": 1
   },
   "debt_verdict_counts": {
     "intentional_non_debt": 104,
-    "risk_now": 191
+    "risk_now": 192,
+    "unresolved_needs_review": 1
   },
   "debt_occurrence_counts": {
     "intentional_non_debt": 300,
-    "risk_now": 496
+    "risk_now": 498,
+    "unresolved_needs_review": 2
   },
-  "app_css_bytes": 687996,
+  "app_css_bytes": 693941,
   "css_size_guard_budget_bytes": 4096,
   "risk_zone_duplicate_groups": [
     {
@@ -35,11 +38,11 @@
       "classification": "breakpoint_specific"
     },
     {
-      "selector_normalized": "#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-row",
+      "selector_normalized": "#feed > article.news-card .news-title, #feed > article.news-card .news-titleLink",
       "classification": "breakpoint_specific"
     },
     {
-      "selector_normalized": "#feed > article.news-card .news-title, #feed > article.news-card .news-titleLink",
+      "selector_normalized": "#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-row",
       "classification": "breakpoint_specific"
     },
     {
@@ -55,6 +58,10 @@
       "classification": "breakpoint_specific"
     },
     {
+      "selector_normalized": "#feed.iuTimelineFeed .iuTimelineAction--follow",
+      "classification": "breakpoint_specific"
+    },
+    {
       "selector_normalized": "#feed.iuTimelineFeed .iuTimelineActionIcon",
       "classification": "breakpoint_specific"
     },
@@ -64,6 +71,14 @@
     },
     {
       "selector_normalized": "#feed.iuTimelineFeed .iuTimelineActions",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#feed.iuTimelineFeed .iuTimelineAxis",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "#feed.iuTimelineFeed .iuTimelineAxis::before",
       "classification": "breakpoint_specific"
     },
     {
@@ -80,14 +95,6 @@
     },
     {
       "selector_normalized": "#feed.iuTimelineFeed .iuTimelineRow",
-      "classification": "breakpoint_specific"
-    },
-    {
-      "selector_normalized": "#feed.iuTimelineFeed .iuTimelineAxis",
-      "classification": "breakpoint_specific"
-    },
-    {
-      "selector_normalized": "#feed.iuTimelineFeed .iuTimelineAxis::before",
       "classification": "breakpoint_specific"
     },
     {
@@ -723,8 +730,12 @@
       "classification": "risky_layout_coupled"
     },
     {
-      "selector_normalized": "html[data-iu-silver-welcome-paint=\"evening\"]:is([data-section=\"feed\"],[data-section=\"media\"],[data-section=\"hry\"]) #feed.iuTimelineFeed",
+      "selector_normalized": "html[data-iu-silver-welcome-paint=\"evening\"]:is([data-section=\"feed\"],[data-section=\"media\"],[data-section=\"hry\"],[data-section=\"travel\"],[data-section=\"kultura\"],[data-section=\"veda\"],[data-section=\"vzdelavani\"]) #feed.iuTimelineFeed",
       "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "html[data-iu-silver-welcome-paint=\"evening\"]:is([data-section=\"feed\"],[data-section=\"media\"],[data-section=\"hry\"],[data-section=\"travel\"],[data-section=\"kultura\"],[data-section=\"veda\"],[data-section=\"vzdelavani\"]) body[data-iu-fc=\"1\"] #feed.iuTimelineFeed, html[data-iu-silver-welcome-paint=\"evening\"]:is([data-section=\"feed\"],[data-section=\"media\"],[data-section=\"hry\"],[data-section=\"travel\"],[data-section=\"kultura\"],[data-section=\"veda\"],[data-section=\"vzdelavani\"]) body[data-iu-fc=\"1\"] #iuCenterStage[data-iu-view=\"articles\"] .iuArticlesStage:has(#feed.iuTimelineFeed)",
+      "classification": "identical_duplicate"
     }
   ]
 }
