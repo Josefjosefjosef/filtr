@@ -22941,7 +22941,7 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
     --iu-tl-action-save-h: 32px;
     --iu-tl-action-icon-svg: 20px;
     --iu-tl-action-save-icon-bottom: calc((var(--iu-tl-action-save-h) + var(--iu-tl-action-icon-svg)) / 2);
-    --iu-tl-row-py: 6px;
+    --iu-tl-row-py: 9px;
     --iu-tl-axis-min-h: 33px;
     --iu-tl-intrinsic: 58px;
   }
@@ -23013,6 +23013,19 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
   }
   #feed.iuTimelineFeed article.iuTimelineItem--video .iuTimelineVideoIcon{
     color:var(--iu-brand-blue);
+  }
+  #feed.iuTimelineFeed .iuTimelineRight .iu-meta-src,
+  #feed.iuTimelineFeed .iuTimelineRight .iu-meta-link{
+    color:rgba(11,42,74,.52);
+    font-weight:400;
+  }
+  #feed.iuTimelineFeed .iuTimelineHideUndo{
+    color:#1f2937;
+    font-weight:600;
+  }
+  #feed.iuTimelineFeed .iuTimelineHideUndoText{
+    color:#1f2937;
+    font-weight:600;
   }
   #iuMindMenuView .iu-mmArticleActionsSections,
   #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSections{
@@ -23118,8 +23131,18 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineAction--hide .iuTimelineActionIcon{
     color:#9CA3AF;
   }
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineRight .iu-meta-src,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineRight .iu-meta-link{
+    color:rgba(203,213,225,.72);
+    font-weight:400;
+  }
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineHideUndo{
-    color:rgba(226,232,240,.88);
+    color:rgba(248,250,252,.94);
+    font-weight:600;
+  }
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineHideUndoText{
+    color:rgba(248,250,252,.94);
+    font-weight:600;
   }
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineHideUndoBtn{
     background:rgba(255,255,255,.08);
@@ -23165,7 +23188,7 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
 
 @media (max-width:900px){
   #feed.iuTimelineFeed{
-    --iu-tl-row-py:6px;
+    --iu-tl-row-py:9px;
     --iu-tl-row-pr:10px;
     --iu-tl-left-gap:2px;
     --iu-tl-left-pt:2px;

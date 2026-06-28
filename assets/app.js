@@ -7079,7 +7079,7 @@ try {
   }
 
   function iuTimelineYouTubeMetaLine() {
-    return `<div class="iu-meta-line iuTimelineYouTubeMeta"><span class="iu-meta-src">Video | Zdroj: YouTube</span></div>`;
+    return `<div class="iu-meta-line iuTimelineYouTubeMeta"><span class="iu-meta-src">Video | Zdroj: YouTube | iU: Letem světem</span></div>`;
   }
 
   function iuTimelineArticleActionsBlock(it) {
@@ -7448,16 +7448,12 @@ try {
               </div>
               <div class="iuMyInfoUzelDashboard__col iuMyInfoUzelDashboard__col--saved">
                 <div class="iuMmManageTabs" data-iu-manage-tabs>
-                  <div class="iuMmManageTabs__nav" role="tablist" aria-label="Moje články a témata">
+                  <div class="iuMmManageTabs__nav" role="tablist" aria-label="Moje články">
                     <button type="button" class="iuMmManageTabs__tab is-active iuMmManageTabs__tab--saved" role="tab" data-iu-manage-tab="saved" aria-selected="true">Uložené články</button>
-                    <button type="button" class="iuMmManageTabs__tab iuMmManageTabs__tab--followed" role="tab" data-iu-manage-tab="followed" aria-selected="false">Sledovaná témata</button>
                     <button type="button" class="iuMmManageTabs__tab iuMmManageTabs__tab--hidden" role="tab" data-iu-manage-tab="hidden" aria-selected="false">Skryté články</button>
                   </div>
                   <div class="iuMmManageTabs__panel is-active iuMmManageTabs__panel--saved" data-iu-manage-panel-wrap="saved" role="tabpanel">
                     <div data-iu-manage-panel="saved"></div>
-                  </div>
-                  <div class="iuMmManageTabs__panel iuMmManageTabs__panel--followed" data-iu-manage-panel-wrap="followed" role="tabpanel" hidden>
-                    <div data-iu-manage-panel="followed"></div>
                   </div>
                   <div class="iuMmManageTabs__panel iuMmManageTabs__panel--hidden" data-iu-manage-panel-wrap="hidden" role="tabpanel" hidden>
                     <div data-iu-manage-panel="hidden"></div>
@@ -7628,16 +7624,12 @@ try {
           <div class="iu-mmSectionLine" aria-hidden="true"></div>
         </div>
         <div class="iuMmManageTabs iuMmManageTabs--mobile" data-iu-manage-tabs>
-          <div class="iuMmManageTabs__nav" role="tablist" aria-label="Moje články a témata">
+          <div class="iuMmManageTabs__nav" role="tablist" aria-label="Moje články">
             <button type="button" class="iuMmManageTabs__tab is-active iuMmManageTabs__tab--saved" role="tab" data-iu-manage-tab="saved" aria-selected="true">Uložené články</button>
-            <button type="button" class="iuMmManageTabs__tab iuMmManageTabs__tab--followed" role="tab" data-iu-manage-tab="followed" aria-selected="false">Sledovaná témata</button>
             <button type="button" class="iuMmManageTabs__tab iuMmManageTabs__tab--hidden" role="tab" data-iu-manage-tab="hidden" aria-selected="false">Skryté články</button>
           </div>
           <div class="iuMmManageTabs__panel is-active iuMmManageTabs__panel--saved" data-iu-manage-panel-wrap="saved" role="tabpanel">
             <div id="iuMmSavedArticlesPanel" class="iu-mmArticleActionsPanel"></div>
-          </div>
-          <div class="iuMmManageTabs__panel iuMmManageTabs__panel--followed" data-iu-manage-panel-wrap="followed" role="tabpanel" hidden>
-            <div id="iuMmFollowedTopicsPanel" class="iu-mmArticleActionsPanel"></div>
           </div>
           <div class="iuMmManageTabs__panel iuMmManageTabs__panel--hidden" data-iu-manage-panel-wrap="hidden" role="tabpanel" hidden>
             <div id="iuMmHiddenArticlesPanel" class="iu-mmArticleActionsPanel"></div>
