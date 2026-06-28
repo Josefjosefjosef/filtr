@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-06-28T05:30:52.326263Z",
+  "ingestedAt": "2026-06-28T07:10:31.162081Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zlatá horečka? Co dělat, než vsadíte na zlato",
+      "url": "https://profitonline.cz/zlata-horecka-co-delat-nez-vsadite-na-zlato/",
+      "dt": "2026-06-28T06:00:15Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dělat",
+        "horečka",
+        "než",
+        "vsadíte",
+        "zlato",
+        "zlatá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -272,30 +295,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Škoda Peaq. Největší a nejdražší český elektromobil na trhu",
-      "url": "https://profitonline.cz/skoda-peaq-nejvetsi-a-nejdrazsi-cesky-elektromobil-na-trhu/",
-      "dt": "2026-06-25T10:00:49Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "elektromobil",
-        "nejdražší",
-        "největší",
-        "peaq",
-        "trhu",
-        "český",
-        "škoda"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -306,7 +305,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19655,
+      "bytes": 19663,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -343,12 +342,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-06-28T04:00:56Z",
+        "raw_feed_latest_publishedAt": "2026-06-28T06:00:15Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 8,
-          "zpravy": 3,
-          "zdravi": 1
+          "finance": 9,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -360,6 +358,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zlatá horečka? Co dělat, než vsadíte na zlato",
+            "publishedAt": "2026-06-28T06:00:15Z"
+          },
           {
             "title": "Firmy plánují rekordní nábor. Jeden klíčový obor ale zůstává stranou",
             "publishedAt": "2026-06-28T04:00:56Z"
@@ -387,10 +389,6 @@
           {
             "title": "Pádlo do ruky, rozum do hrsti: Co musíte vědět před vyplutím",
             "publishedAt": "2026-06-26T12:30:32Z"
-          },
-          {
-            "title": "Aleš Blažek je prezidentem České bankovní asociace",
-            "publishedAt": "2026-06-26T10:00:15Z"
           }
         ]
       }
