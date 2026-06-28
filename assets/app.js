@@ -35234,6 +35234,7 @@ function buildVideoAsArticleCard(it) {
         if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = !!fromWebNavGateNav;
       } catch (_) {}
       try{ iuMobileTabletMenuNavScrollArm(); }catch(_){}
+      try{ window.__iuSectionSwitchScrollArm = true; }catch(_){}
       applySectionFromURL();
       applyPanelFromUrl();
       try {
@@ -35302,6 +35303,7 @@ function buildVideoAsArticleCard(it) {
       /* P0 webnav back-stack: same as left-rail — panel clear must replaceState, else duplicate Back entry. */
       try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("", { replace: true }); } catch (_) {}
       try{ iuMobileTabletMenuNavScrollArm(); }catch(_){}
+      try{ window.__iuSectionSwitchScrollArm = true; }catch(_){}
       applySectionFromURL();
       applyPanelFromUrl();
       try {
