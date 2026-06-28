@@ -23106,6 +23106,8 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
     --iu-tl-rel-color: rgba(203,213,225,.88);
     --iu-tl-meta-color: rgba(240,248,255,.95);
     --iu-tl-meta-src-color: rgba(203, 213, 225, 0.68);
+    --iu-tl-hide-undo-color: rgba(241,245,249,.98);
+    --iu-tl-hide-undo-fw: 500;
     --iu-tl-title-fw: 500;
   }
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineRight .news-title,
@@ -23124,10 +23126,6 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
   }
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineAction--hide .iuTimelineActionIcon{
     color:#9CA3AF;
-  }
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineHideUndo{
-    --iu-tl-hide-undo-color:rgba(241,245,249,.98);
-    --iu-tl-hide-undo-fw:500;
   }
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed .iuTimelineHideUndoBtn{
     background:rgba(255,255,255,.08);
