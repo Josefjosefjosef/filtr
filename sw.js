@@ -11,7 +11,8 @@
 // 2026-03-29: PR #1488 — nový SW + vyprázdnění APP_SHELL_CACHE po deployi (staré app.*.css v cache)
 // 2026-06-10: mobile/tablet stability v1 — bottom-nav clearance, app-render-optimizer.js odstraněn z precache
 // 2026-06-11: P1 perf fix #7 — IU_SW_DEPLOY_RELOAD se NEposílá při první instalaci SW (cold load se načítal 2×)
-const CACHE_VERSION = "2026-06-11-sw-first-install-no-reload-v1";
+// 2026-06-28: task39 — versioned CSS/JS cache key includes ?v= (deploy bust without stale first paint)
+const CACHE_VERSION = "2026-06-28-icentrum-hamburger-pwa-cache-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
@@ -422,8 +423,8 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // CSS/JS assets: stale-while-revalidate, cache key bez query stringu.
-  // Důvod: stabilní ?v=... + Cache First by jinak mohl držet staré CSS/JS donekonečna.
+  // CSS/JS assets: versioned (?v=) = network-first + cache key includes ?v= (deploy bust).
+  // Unversioned = stale-while-revalidate with pathname-only key (offline resilience).
   if (
     url.origin === self.location.origin &&
     path.includes("/assets/") &&
@@ -432,7 +433,24 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       (async () => {
         const cache = await caches.open(APP_SHELL_CACHE);
-        const cacheKey = new Request(url.origin + url.pathname);
+        const versionTag = url.searchParams.get("v") || "";
+        const cacheKey = versionTag
+          ? new Request(url.origin + url.pathname + "?v=" + encodeURIComponent(versionTag))
+          : new Request(url.origin + url.pathname);
+
+        if (versionTag) {
+          try {
+            const fresh = await fetch(event.request, { cache: "no-store" });
+            if (fresh && fresh.ok) {
+              cache.put(cacheKey, fresh.clone());
+              console.info("[SW] versioned asset fresh:", url.pathname, versionTag);
+              return fresh;
+            }
+          } catch (_) {}
+          const cachedVersioned = await cache.match(cacheKey);
+          if (cachedVersioned) return cachedVersioned;
+          return fetch(event.request);
+        }
 
         const cached = await cache.match(cacheKey);
         const updatePromise = fetch(event.request, { cache: "no-store" })
@@ -445,7 +463,6 @@ self.addEventListener("fetch", (event) => {
           })
           .catch(() => null);
 
-        // Update cache in background even when serving cached.
         event.waitUntil(updatePromise);
 
         if (cached) return cached;
@@ -453,7 +470,6 @@ self.addEventListener("fetch", (event) => {
         const fresh = await updatePromise;
         if (fresh) return fresh;
 
-        // As a last resort, try cache again (race) then fall back.
         const cachedAfter = await cache.match(cacheKey);
         if (cachedAfter) return cachedAfter;
         return fetch(event.request);
