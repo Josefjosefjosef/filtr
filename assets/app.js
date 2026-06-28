@@ -29765,7 +29765,7 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
       const qTitle = iuQfEscape(titles[keyNorm] || keyNorm);
       var qPrivacyBlock = "";
-      if ((keyNorm === "bakalari" || keyNorm === "pojistovna") && typeof window.iuToolPrivacyHeadBlockHtml === "function") {
+      if ((keyNorm === "banka" || keyNorm === "bakalari" || keyNorm === "pojistovna") && typeof window.iuToolPrivacyHeadBlockHtml === "function") {
         qPrivacyBlock = window.iuToolPrivacyHeadBlockHtml(keyNorm);
       }
       const qHead =

@@ -1,0 +1,529 @@
+/**
+ * infoUzel.cz — jednotný prémiový design systém formulářových nástrojů
+ * Pouze vzhled — bez změny logiky. Brand: modrá #003cff.
+ */
+:root {
+  --iu-fps-blue: #003cff;
+  --iu-fps-blue-dark: #002ecb;
+  --iu-fps-blue-a03: rgba(0, 60, 255, 0.03);
+  --iu-fps-blue-a06: rgba(0, 60, 255, 0.06);
+  --iu-fps-blue-a10: rgba(0, 60, 255, 0.1);
+  --iu-fps-blue-a14: rgba(0, 60, 255, 0.14);
+  --iu-fps-blue-a22: rgba(0, 60, 255, 0.22);
+  --iu-fps-teal-a04: rgba(13, 148, 136, 0.04);
+  --iu-fps-teal-a12: rgba(13, 148, 136, 0.12);
+  --iu-fps-cream-a04: rgba(180, 140, 60, 0.04);
+  --iu-fps-cream-a12: rgba(180, 140, 60, 0.12);
+  --iu-fps-violet-a04: rgba(109, 40, 217, 0.04);
+  --iu-fps-violet-a12: rgba(109, 40, 217, 0.12);
+  --iu-fps-gray-a04: rgba(100, 116, 139, 0.04);
+  --iu-fps-gray-a12: rgba(100, 116, 139, 0.12);
+  --iu-fps-danger: #b91c1c;
+  --iu-fps-danger-a10: rgba(185, 28, 28, 0.1);
+  --iu-fps-radius: 16px;
+  --iu-fps-radius-sm: 12px;
+  --iu-fps-shadow: 0 4px 16px rgba(0, 60, 255, 0.08), 0 1px 3px rgba(15, 23, 42, 0.06);
+  --iu-fps-shadow-lg: 0 12px 32px rgba(0, 60, 255, 0.1), 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+/* ── Header: kompaktní, formulář hned viditelný ── */
+.iu-tool-privacy-desc {
+  display: none !important;
+}
+
+.iu-financial-overlay-sub,
+.iu-legal-overlay-sub,
+.iu-invoice-overlay-sub {
+  display: none !important;
+}
+
+.iu-financial-overlay-h2,
+.iu-legal-overlay-h2,
+.iu-invoice-overlay-h2,
+.iuQHead .iuQTitle,
+.iu-ds-panelHeaderMain .iu-tool-privacy-title {
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1.25;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.iu-financial-overlay-header,
+.iu-legal-overlay-header,
+.iu-invoice-overlay-header,
+.iu-ds-panelHeader {
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid var(--iu-fps-blue-a10);
+  background: linear-gradient(180deg, #fff 0%, #f8faff 100%);
+}
+
+.iu-tool-privacy-short {
+  margin: 6px 0 0;
+  padding: 8px 10px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: rgba(15, 23, 42, 0.62);
+  background: var(--iu-fps-blue-a03);
+  border: 1px solid var(--iu-fps-blue-a10);
+  border-radius: 10px;
+  max-width: 100%;
+}
+
+/* ── Potlačení dlouhých textů na hlavní obrazovce ── */
+.iu-legal-disclaimer,
+.iu-inv-staticNotice,
+.iu-legal-staticNotice,
+.iu-inv-intro {
+  display: none !important;
+}
+
+.iu-financial-overlay-footnotes,
+.iu-financial-overlay-footnote {
+  font-size: 11px;
+  line-height: 1.4;
+  color: rgba(15, 23, 42, 0.55);
+  opacity: 0.85;
+}
+
+.iu-financial-overlay-info,
+.iu-financial-overlay-noteStrong {
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.45;
+  border-radius: 10px;
+  background: var(--iu-fps-blue-a03);
+  border: 1px solid var(--iu-fps-blue-a10);
+  color: rgba(15, 23, 42, 0.68);
+}
+
+.iu-ds-status {
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  font-size: 11px;
+  line-height: 1.4;
+  border-radius: 10px;
+  background: var(--iu-fps-blue-a03);
+  border: 1px solid var(--iu-fps-blue-a10);
+  color: rgba(15, 23, 42, 0.62);
+}
+
+.iu-mojeSluzbyBanka .iu-ib-info-box {
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--iu-fps-blue-a14);
+  background: var(--iu-fps-blue-a03);
+  box-shadow: none;
+}
+
+.iu-mojeSluzbyBanka .iu-ib-info-box__text {
+  font-size: 11px;
+  line-height: 1.4;
+  color: rgba(15, 23, 42, 0.62);
+}
+
+.iu-health-helper {
+  font-size: 11px;
+  line-height: 1.4;
+  color: rgba(15, 23, 42, 0.55);
+}
+
+/* ── Premium card base ── */
+.iu-fps-card,
+.iu-ds-form-block,
+.bakalari-card,
+.iu-health-card,
+.iu-inv-block,
+.iu-legal-block,
+.iu-legal-partySection,
+.iu-financial-overlay-form,
+.iu-financial-overlay-results,
+.iu-financial-overlay-infoCard,
+.iu-inv-lineCard,
+.iu-legal-catCard,
+.iu-legal-docPick {
+  position: relative;
+  border-radius: var(--iu-fps-radius);
+  border: 1px solid var(--iu-fps-blue-a10);
+  box-shadow: var(--iu-fps-shadow);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.iu-ds-form-block,
+.bakalari-card,
+.iu-health-card,
+.iu-inv-block,
+.iu-legal-block,
+.iu-legal-partySection,
+.iu-financial-overlay-form,
+.iu-financial-overlay-results,
+.iu-financial-overlay-infoCard {
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.iu-ds-form-block::before,
+.bakalari-card::before,
+.iu-health-card::before,
+.iu-inv-block::before,
+.iu-legal-block::before,
+.iu-legal-partySection::before,
+.iu-financial-overlay-form::before,
+.iu-financial-overlay-results::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--iu-fps-accent, var(--iu-fps-blue));
+  border-radius: var(--iu-fps-radius) var(--iu-fps-radius) 0 0;
+}
+
+/* ── Faktury: barevné bloky ── */
+.iu-inv-supplierBlock {
+  --iu-fps-accent: var(--iu-fps-blue);
+  background: linear-gradient(165deg, var(--iu-fps-blue-a06) 0%, #fff 38%);
+}
+
+.iu-inv-buyerBlock {
+  --iu-fps-accent: #0d9488;
+  background: linear-gradient(165deg, var(--iu-fps-teal-a04) 0%, #fff 38%);
+  border-color: var(--iu-fps-teal-a12);
+}
+
+.iu-inv-block[aria-labelledby="iu-inv-h-inv"] {
+  --iu-fps-accent: #b48c3c;
+  background: linear-gradient(165deg, var(--iu-fps-cream-a04) 0%, #fff 38%);
+  border-color: var(--iu-fps-cream-a12);
+}
+
+.iu-inv-block[aria-labelledby="iu-inv-h-lines"] {
+  --iu-fps-accent: #6d28d9;
+  background: linear-gradient(165deg, var(--iu-fps-violet-a04) 0%, #fff 38%);
+  border-color: var(--iu-fps-violet-a12);
+}
+
+.iu-inv-block[aria-labelledby="iu-inv-h-sum"] {
+  --iu-fps-accent: #64748b;
+  background: linear-gradient(165deg, var(--iu-fps-gray-a04) 0%, #fff 38%);
+  border-color: var(--iu-fps-gray-a12);
+}
+
+.iu-inv-lineCard {
+  --iu-fps-accent: #6d28d9;
+  background: var(--iu-fps-violet-a04);
+  border-color: var(--iu-fps-violet-a12);
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.iu-invoice-actions-static {
+  background: #fff;
+  border: 1px solid var(--iu-fps-blue-a10);
+  border-radius: var(--iu-fps-radius);
+  padding: 14px 16px;
+  box-shadow: var(--iu-fps-shadow);
+}
+
+.iu-invoice-actions-static::before {
+  content: "";
+  display: block;
+  height: 3px;
+  margin: -14px -16px 12px;
+  background: var(--iu-fps-blue);
+  border-radius: var(--iu-fps-radius) var(--iu-fps-radius) 0 0;
+}
+
+/* ── Datovka / Bakaláři / Zdravotní karty ── */
+.iu-ds-profile-list > .iu-ds-profile:nth-child(5n+1) .iu-ds-form-block {
+  --iu-fps-accent: var(--iu-fps-blue);
+  background: linear-gradient(165deg, var(--iu-fps-blue-a06) 0%, #fff 40%);
+}
+
+.iu-ds-profile-list > .iu-ds-profile:nth-child(5n+2) .iu-ds-form-block {
+  --iu-fps-accent: #0d9488;
+  background: linear-gradient(165deg, var(--iu-fps-teal-a04) 0%, #fff 40%);
+  border-color: var(--iu-fps-teal-a12);
+}
+
+.iu-ds-profile-list > .iu-ds-profile:nth-child(5n+3) .iu-ds-form-block {
+  --iu-fps-accent: #b48c3c;
+  background: linear-gradient(165deg, var(--iu-fps-cream-a04) 0%, #fff 40%);
+  border-color: var(--iu-fps-cream-a12);
+}
+
+.bakalari-cards-container > .bakalari-card:nth-child(5n+1) {
+  --iu-fps-accent: var(--iu-fps-blue);
+  background: linear-gradient(165deg, var(--iu-fps-blue-a06) 0%, #fff 40%);
+}
+
+.bakalari-cards-container > .bakalari-card:nth-child(5n+2) {
+  --iu-fps-accent: #0d9488;
+  background: linear-gradient(165deg, var(--iu-fps-teal-a04) 0%, #fff 40%);
+  border-color: var(--iu-fps-teal-a12);
+}
+
+.bakalari-cards-container > .bakalari-card:nth-child(5n+3) {
+  --iu-fps-accent: #6d28d9;
+  background: linear-gradient(165deg, var(--iu-fps-violet-a04) 0%, #fff 40%);
+  border-color: var(--iu-fps-violet-a12);
+}
+
+.iu-health-cards > .iu-health-card {
+  background: linear-gradient(165deg, var(--iu-fps-blue-a04, rgba(0, 60, 255, 0.04)) 0%, #fff 40%);
+}
+
+/* ── Právní modul ── */
+.iu-legal-block,
+.iu-legal-partySection {
+  --iu-fps-accent: var(--iu-fps-blue);
+  background: linear-gradient(165deg, var(--iu-fps-blue-a04, rgba(0, 60, 255, 0.04)) 0%, #fff 40%);
+}
+
+.iu-legal-catCard,
+.iu-legal-docPick {
+  padding: 14px;
+  margin-bottom: 10px;
+  background: #fff;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.iu-legal-catCard:hover,
+.iu-legal-docPick:hover {
+  box-shadow: var(--iu-fps-shadow-lg);
+  border-color: var(--iu-fps-blue-a22);
+}
+
+.iu-legal-h4,
+.iu-inv-h,
+.iu-ds-label,
+.bakalari-label,
+.iu-health-label,
+.iu-financial-overlay-label,
+.iu-legal-fieldLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: 0.01em;
+}
+
+/* ── Finanční kalkulačky ── */
+.iu-fin-hub-section {
+  margin-bottom: 18px;
+}
+
+.iu-fin-hub-sectionTitle {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--iu-fps-blue);
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--iu-fps-blue-a10);
+}
+
+.iu-financial-overlay-card {
+  border-radius: var(--iu-fps-radius-sm);
+  border: 1px solid var(--iu-fps-blue-a10);
+  box-shadow: var(--iu-fps-shadow);
+  transition: box-shadow 0.15s ease, transform 0.12s ease;
+}
+
+.iu-financial-overlay-card:hover {
+  box-shadow: var(--iu-fps-shadow-lg);
+  transform: translateY(-1px);
+}
+
+.iu-financial-overlay-form {
+  --iu-fps-accent: var(--iu-fps-blue);
+  background: linear-gradient(165deg, var(--iu-fps-blue-a04, rgba(0, 60, 255, 0.04)) 0%, #fff 40%);
+}
+
+.iu-financial-overlay-results {
+  --iu-fps-accent: #64748b;
+  background: linear-gradient(165deg, var(--iu-fps-gray-a04) 0%, #fff 40%);
+  border-color: var(--iu-fps-gray-a12);
+}
+
+/* ── Banky ── */
+.iu-ib-section-title {
+  color: var(--iu-fps-blue);
+  border-bottom-color: var(--iu-fps-blue-a10);
+}
+
+.iuBankCard {
+  border-radius: var(--iu-fps-radius-sm);
+  border: 1px solid var(--iu-fps-blue-a10);
+  box-shadow: var(--iu-fps-shadow);
+  overflow: hidden;
+}
+
+.iuBankCard::before {
+  content: "";
+  display: block;
+  height: 3px;
+  background: var(--iu-fps-blue);
+}
+
+/* ── Overlay card shells ── */
+.iu-financial-overlay-cardShell,
+.iu-legal-overlay-cardShell,
+.iu-invoice-overlay-cardShell,
+.iu-ds-modal,
+.iu-banking-ds-modal {
+  box-shadow: var(--iu-fps-shadow-lg);
+}
+
+.iu-financial-overlay-scrollHost,
+.iu-legal-overlay-scrollHost,
+.iu-invoice-overlay-scrollHost,
+.iu-ds-panelBody,
+.iu-banking-scroll-host {
+  background: linear-gradient(180deg, #f8faff 0%, #f1f5f9 100%);
+}
+
+/* ── Unified buttons: primární modrá ── */
+.iu-ds-open-btn,
+.bakalari-open-btn,
+.iu-health-open-btn,
+.iu-inv-btn--primary,
+.iu-legal-btn--primary,
+.iu-financial-overlay-ctaBtn,
+.iu-mojeSluzbyBanka .iu-ib-action-btn,
+.iu-mojeSluzbyBanka .iu-ibBankCustomAdd {
+  background: linear-gradient(180deg, var(--iu-fps-blue) 0%, var(--iu-fps-blue-dark) 100%) !important;
+  border: 1px solid var(--iu-fps-blue-dark) !important;
+  color: #fff !important;
+  font-weight: 650;
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgba(0, 60, 255, 0.22);
+  transition: filter 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+  min-height: 42px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.iu-ds-open-btn:hover,
+.bakalari-open-btn:hover,
+.iu-health-open-btn:hover,
+.iu-inv-btn--primary:hover,
+.iu-legal-btn--primary:hover,
+.iu-financial-overlay-ctaBtn:hover,
+.iu-mojeSluzbyBanka .iu-ib-action-btn:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.iu-ds-add,
+.bakalari-add-another,
+.iu-health-add,
+.bakalari-btn--secondary,
+.iu-health-btn--secondary,
+.iu-financial-overlay-reset,
+.iu-ib-edit-btn {
+  background: #fff !important;
+  border: 1px solid var(--iu-fps-blue-a14) !important;
+  color: var(--iu-fps-blue) !important;
+  font-weight: 650;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0, 60, 255, 0.06);
+  min-height: 40px;
+}
+
+.bakalari-btn--ghost,
+.iu-health-btn--ghost,
+.iu-inv-btn--ghost,
+.iu-legal-btn--ghost {
+  background: #f8faff !important;
+  border: 1px solid var(--iu-fps-blue-a10) !important;
+  color: rgba(15, 23, 42, 0.82) !important;
+  border-radius: 10px;
+  min-height: 38px;
+}
+
+.bakalari-btn--danger,
+.iu-health-btn--danger,
+.iu-ds-deleteConfirm__ok {
+  background: linear-gradient(180deg, #dc2626 0%, var(--iu-fps-danger) 100%) !important;
+  border-color: var(--iu-fps-danger) !important;
+  color: #fff !important;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px var(--iu-fps-danger-a10);
+}
+
+button:disabled,
+.iu-ds-add:disabled {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* ── Inputs ── */
+.iu-ds-f-label,
+.iu-ds-f-user,
+.iu-ds-f-pass,
+.bakalari-input,
+.iu-health-input,
+.iu-inv-input,
+.iu-inv-select,
+.iu-inv-textarea,
+.iu-legal-input,
+.iu-legal-select,
+.iu-financial-overlay-input,
+.iu-ib-input {
+  border-radius: 10px;
+  border: 1px solid var(--iu-fps-blue-a14);
+  padding: 10px 12px;
+  font-size: 16px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.iu-ds-f-label:focus,
+.iu-ds-f-user:focus,
+.iu-ds-f-pass:focus,
+.bakalari-input:focus,
+.iu-health-input:focus,
+.iu-inv-input:focus,
+.iu-inv-select:focus,
+.iu-inv-textarea:focus,
+.iu-legal-input:focus,
+.iu-financial-overlay-input:focus,
+.iu-ib-input:focus {
+  outline: none;
+  border-color: var(--iu-fps-blue);
+  box-shadow: 0 0 0 3px var(--iu-fps-blue-a10);
+}
+
+/* ── Externí upozornění (kompaktní) ── */
+.iu-fps-external-notice {
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: rgba(15, 23, 42, 0.62);
+  background: var(--iu-fps-blue-a03);
+  border: 1px solid var(--iu-fps-blue-a10);
+  border-radius: 10px;
+}
+
+@media (max-width: 1023px) {
+  .iu-financial-overlay-h2,
+  .iu-legal-overlay-h2,
+  .iu-invoice-overlay-h2,
+  .iuQHead .iuQTitle {
+    font-size: 17px;
+  }
+
+  .iu-ds-form-block,
+  .bakalari-card,
+  .iu-health-card,
+  .iu-inv-block,
+  .iu-legal-block {
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+}
