@@ -216,6 +216,11 @@
     shortP.textContent = SHORT_TEXT;
     descP.parentNode.insertBefore(shortP, descP.nextSibling);
 
+    var legacySub = heading.querySelector(
+      ".iu-financial-overlay-sub, .iu-legal-overlay-sub, .iu-invoice-overlay-sub"
+    );
+    if (legacySub) legacySub.hidden = true;
+
     heading.setAttribute("data-iu-tool-privacy-mounted", "1");
     heading.setAttribute("data-iu-tool-privacy-key", toolKey);
   }

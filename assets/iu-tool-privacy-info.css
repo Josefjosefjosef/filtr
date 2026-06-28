@@ -259,6 +259,8 @@
   }
 }
 
-.iu-invoice-overlay-heading[data-iu-tool-privacy-mounted="1"] .iu-invoice-overlay-sub{
+.iu-invoice-overlay-heading[data-iu-tool-privacy-mounted="1"] .iu-invoice-overlay-sub,
+.iu-financial-overlay-heading[data-iu-tool-privacy-mounted="1"] .iu-financial-overlay-sub,
+.iu-legal-overlay-heading[data-iu-tool-privacy-mounted="1"] .iu-legal-overlay-sub{
   display: none !important;
 }
