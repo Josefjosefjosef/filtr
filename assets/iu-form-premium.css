@@ -1,0 +1,541 @@
+/* infoUzel.cz — jednotný prémiový design systém pro formulářové nástroje */
+
+:root {
+  --iuFp-brand: #003cff;
+  --iuFp-brand-dark: #002ecb;
+  --iuFp-text: #0f172a;
+  --iuFp-text-muted: rgba(15, 23, 42, 0.72);
+  --iuFp-radius-lg: 16px;
+  --iuFp-radius-md: 12px;
+  --iuFp-shadow-card: 0 4px 18px rgba(15, 23, 42, 0.06), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  --iuFp-shadow-elevated: 0 12px 32px rgba(0, 60, 255, 0.1), 0 4px 14px rgba(15, 23, 42, 0.08);
+}
+
+/* —— Premium card base —— */
+.iuFpCard,
+#iuInvoicePanel .iu-inv-block,
+.iu-ds-form-block,
+.bakalari-card,
+.iu-health-card,
+.iu-mojeSluzbyBanka .iu-mojeSluzbyBankaFav,
+.iu-mojeSluzbyBanka .iu-mojeSluzbyBankaAll,
+.iu-mojeSluzbyBanka .iu-mojeSluzbyBankaCustom,
+.iu-mojeSluzbyBanka .iu-ib-info-box {
+  position: relative;
+  border-radius: var(--iuFp-radius-lg);
+  border: 1px solid rgba(0, 60, 255, 0.1);
+  box-shadow: var(--iuFp-shadow-card);
+  box-sizing: border-box;
+}
+
+.iuFpCard::before,
+#iuInvoicePanel .iu-inv-block::before,
+.iu-ds-form-block::before,
+.bakalari-card::before,
+.iu-health-card::before,
+.iu-mojeSluzbyBanka .iu-mojeSluzbyBankaFav::before,
+.iu-mojeSluzbyBanka .iu-mojeSluzbyBankaAll::before,
+.iu-mojeSluzbyBanka .iu-mojeSluzbyBankaCustom::before,
+.iu-mojeSluzbyBanka .iu-ib-info-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12px;
+  right: 12px;
+  height: 3px;
+  border-radius: 0 0 4px 4px;
+  background: linear-gradient(90deg, rgba(0, 60, 255, 0.55), rgba(0, 60, 255, 0.18));
+  pointer-events: none;
+}
+
+/* —— Potlačení konkurenčních podnadpisů v hlavičce —— */
+.iu-legal-overlay-sub,
+.iu-financial-overlay-sub,
+.iu-tool-privacy-desc,
+#iuInvoicePanel .iu-inv-intro {
+  display: none !important;
+}
+
+/* —— Krátké bezpečnostní shrnutí —— */
+.iu-tool-privacy-short {
+  margin: 8px 0 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(0, 60, 255, 0.04);
+  border: 1px solid rgba(0, 60, 255, 0.1);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--iuFp-text-muted);
+}
+
+/* —— Externí upozornění (kompaktní) —— */
+.iuFpExternalNotice,
+.iu-mojeSluzbyBanka .iu-ib-info-box {
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  background: linear-gradient(165deg, rgba(0, 60, 255, 0.06) 0%, rgba(0, 60, 255, 0.02) 55%, #fff 100%);
+}
+
+.iuFpExternalNotice__text,
+.iu-mojeSluzbyBanka .iu-ib-info-box__text {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--iuFp-text-muted);
+}
+
+/* —— Generátor faktur — barevné bloky —— */
+#iuInvoicePanel .iu-inv-block {
+  margin-bottom: 18px;
+  padding: 16px 16px 14px;
+  overflow: hidden;
+}
+
+#iuInvoicePanel .iu-inv-supplierBlock {
+  background: linear-gradient(165deg, rgba(0, 60, 255, 0.03) 0%, rgba(0, 60, 255, 0.015) 40%, #fff 100%);
+  border-color: rgba(0, 60, 255, 0.14);
+}
+
+#iuInvoicePanel .iu-inv-supplierBlock::before {
+  background: linear-gradient(90deg, rgba(0, 60, 255, 0.7), rgba(0, 60, 255, 0.25));
+}
+
+#iuInvoicePanel .iu-inv-buyerBlock {
+  background: linear-gradient(165deg, rgba(20, 184, 166, 0.04) 0%, rgba(20, 184, 166, 0.015) 40%, #fff 100%);
+  border-color: rgba(20, 184, 166, 0.18);
+}
+
+#iuInvoicePanel .iu-inv-buyerBlock::before {
+  background: linear-gradient(90deg, rgba(20, 184, 166, 0.55), rgba(20, 184, 166, 0.2));
+}
+
+#iuInvoicePanel .iu-inv-block:has(#iu-inv-h-inv) {
+  background: linear-gradient(165deg, rgba(245, 230, 200, 0.35) 0%, rgba(245, 230, 200, 0.08) 45%, #fff 100%);
+  border-color: rgba(180, 140, 80, 0.16);
+}
+
+#iuInvoicePanel .iu-inv-block:has(#iu-inv-h-inv)::before {
+  background: linear-gradient(90deg, rgba(180, 140, 80, 0.45), rgba(180, 140, 80, 0.15));
+}
+
+#iuInvoicePanel .iu-inv-block:has(#iu-inv-h-lines) {
+  background: linear-gradient(165deg, rgba(139, 92, 246, 0.04) 0%, rgba(139, 92, 246, 0.015) 45%, #fff 100%);
+  border-color: rgba(139, 92, 246, 0.16);
+}
+
+#iuInvoicePanel .iu-inv-block:has(#iu-inv-h-lines)::before {
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0.18));
+}
+
+#iuInvoicePanel .iu-inv-block:has(#iu-inv-h-sum) {
+  background: linear-gradient(165deg, rgba(100, 116, 139, 0.06) 0%, rgba(100, 116, 139, 0.02) 45%, #fff 100%);
+  border-color: rgba(100, 116, 139, 0.14);
+}
+
+#iuInvoicePanel .iu-inv-block:has(#iu-inv-h-sum)::before {
+  background: linear-gradient(90deg, rgba(100, 116, 139, 0.45), rgba(100, 116, 139, 0.15));
+}
+
+#iuInvoicePanel .iu-inv-h {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 750;
+  color: var(--iuFp-text);
+  letter-spacing: 0.01em;
+}
+
+/* —— Tlačítka faktur —— */
+#iuInvoicePanel .iu-inv-btn {
+  min-height: 40px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 650;
+  transition: filter 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+#iuInvoicePanel .iu-inv-btn--primary {
+  border: 1px solid rgba(0, 60, 255, 0.35);
+  background: linear-gradient(180deg, var(--iuFp-brand) 0%, var(--iuFp-brand-dark) 100%);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0, 60, 255, 0.22);
+}
+
+#iuInvoicePanel .iu-inv-btn--primary:hover {
+  filter: brightness(1.06);
+}
+
+#iuInvoicePanel .iu-inv-btn--ghost {
+  border: 1px solid rgba(0, 60, 255, 0.2);
+  background: linear-gradient(180deg, #fff 0%, #f8faff 100%);
+  color: var(--iuFp-text);
+  box-shadow: 0 2px 8px rgba(0, 60, 255, 0.06);
+}
+
+#iuInvoicePanel .iu-inv-btn--ghost:hover {
+  border-color: rgba(0, 60, 255, 0.32);
+  box-shadow: 0 4px 12px rgba(0, 60, 255, 0.1);
+}
+
+#iuInvoicePanel .iu-inv-btn:disabled,
+#iuInvoicePanel .iu-inv-btn[disabled] {
+  opacity: 0.48;
+  cursor: not-allowed;
+  filter: none;
+  box-shadow: none;
+}
+
+/* —— Datové schránky —— */
+.iu-ds-form-block {
+  padding: 16px;
+  margin-bottom: 12px;
+  background: linear-gradient(165deg, rgba(0, 60, 255, 0.025) 0%, #fff 55%);
+}
+
+.iu-ds-profile-list > .iu-ds-profile:nth-child(5n+1) .iu-ds-form-block {
+  background: linear-gradient(165deg, rgba(0, 60, 255, 0.04) 0%, #fff 55%);
+}
+
+.iu-ds-profile-list > .iu-ds-profile:nth-child(5n+2) .iu-ds-form-block {
+  background: linear-gradient(165deg, rgba(20, 184, 166, 0.035) 0%, #fff 55%);
+}
+
+.iu-ds-profile-list > .iu-ds-profile:nth-child(5n+3) .iu-ds-form-block {
+  background: linear-gradient(165deg, rgba(245, 230, 200, 0.25) 0%, #fff 55%);
+}
+
+.iu-ds-profile-list > .iu-ds-profile:nth-child(5n+4) .iu-ds-form-block {
+  background: linear-gradient(165deg, rgba(139, 92, 246, 0.035) 0%, #fff 55%);
+}
+
+.iu-ds-profile-list > .iu-ds-profile:nth-child(5n) .iu-ds-form-block {
+  background: linear-gradient(165deg, rgba(100, 116, 139, 0.05) 0%, #fff 55%);
+}
+
+/* —— Bakaláři —— */
+.bakalari-card {
+  padding: 16px;
+  margin-bottom: 14px;
+  background: linear-gradient(165deg, rgba(0, 60, 255, 0.03) 0%, #fff 55%);
+}
+
+.bakalari-card--highlight {
+  background: linear-gradient(165deg, rgba(0, 60, 255, 0.05) 0%, rgba(0, 60, 255, 0.02) 45%, #fff 100%);
+  border-color: rgba(0, 60, 255, 0.18);
+}
+
+/* —— Zdravotní pojišťovny —— */
+.iu-health-card {
+  padding: 16px;
+  margin-bottom: 14px;
+  background: linear-gradient(165deg, rgba(0, 60, 255, 0.03) 0%, #fff 55%);
+}
+
+.iu-health-card--highlight {
+  background: linear-gradient(165deg, rgba(20, 184, 166, 0.04) 0%, #fff 55%);
+  border-color: rgba(20, 184, 166, 0.16);
+}
+
+/* —— Banka — sekce —— */
+.iu-mojeSluzbyBanka {
+  gap: 16px;
+}
+
+.iu-mojeSluzbyBanka .iu-mojeSluzbyBankaFav,
+.iu-mojeSluzbyBanka .iu-mojeSluzbyBankaAll,
+.iu-mojeSluzbyBanka .iu-mojeSluzbyBankaCustom {
+  padding: 16px;
+  margin-bottom: 14px;
+  background: linear-gradient(165deg, rgba(0, 60, 255, 0.03) 0%, #fff 55%);
+}
+
+.iu-mojeSluzbyBanka .iu-mojeSluzbyBankaAll {
+  background: linear-gradient(165deg, rgba(100, 116, 139, 0.04) 0%, #fff 55%);
+  border-color: rgba(100, 116, 139, 0.12);
+}
+
+.iu-mojeSluzbyBanka .iu-mojeSluzbyBankaCustom {
+  background: linear-gradient(165deg, rgba(139, 92, 246, 0.035) 0%, #fff 55%);
+  border-color: rgba(139, 92, 246, 0.12);
+}
+
+.iu-mojeSluzbyBanka .iu-mojeSluzbyBankaAll::before {
+  background: linear-gradient(90deg, rgba(100, 116, 139, 0.4), rgba(100, 116, 139, 0.12));
+}
+
+.iu-mojeSluzbyBanka .iu-mojeSluzbyBankaCustom::before {
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.45), rgba(139, 92, 246, 0.15));
+}
+
+/* —— Finanční kalkulačky — hub sekce —— */
+#iuFinancialCalcPanel .iu-fin-hub-section {
+  margin-bottom: 18px;
+  padding: 14px;
+  border-radius: var(--iuFp-radius-lg);
+  border: 1px solid rgba(0, 60, 255, 0.1);
+  background: linear-gradient(165deg, rgba(0, 60, 255, 0.025) 0%, #fff 55%);
+  box-shadow: var(--iuFp-shadow-card);
+}
+
+#iuFinancialCalcPanel .iu-fin-hub-section:nth-child(2) {
+  background: linear-gradient(165deg, rgba(20, 184, 166, 0.03) 0%, #fff 55%);
+  border-color: rgba(20, 184, 166, 0.12);
+}
+
+#iuFinancialCalcPanel .iu-fin-hub-section:nth-child(3) {
+  background: linear-gradient(165deg, rgba(139, 92, 246, 0.03) 0%, #fff 55%);
+  border-color: rgba(139, 92, 246, 0.12);
+}
+
+#iuFinancialCalcPanel .iu-fin-hub-section:nth-child(4) {
+  background: linear-gradient(165deg, rgba(100, 116, 139, 0.04) 0%, #fff 55%);
+  border-color: rgba(100, 116, 139, 0.12);
+}
+
+#iuFinancialCalcPanel .iu-fin-hub-sectionTitle {
+  color: var(--iuFp-brand);
+  font-weight: 700;
+}
+
+#iuFinancialCalcPanel .iu-financial-overlay-card {
+  border-radius: var(--iuFp-radius-md);
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(0, 60, 255, 0.08);
+}
+
+/* —— Legal documents —— */
+#iuLegalDocsPanel .iu-legal-disclaimer {
+  padding: 12px 14px;
+  border-radius: var(--iuFp-radius-md);
+  border: 1px solid rgba(0, 60, 255, 0.12);
+  background: rgba(0, 60, 255, 0.04);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--iuFp-text-muted);
+}
+
+#iuLegalDocsPanel .iu-legal-searchRow {
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: var(--iuFp-radius-lg);
+  border: 1px solid rgba(0, 60, 255, 0.1);
+  background: linear-gradient(165deg, rgba(0, 60, 255, 0.03) 0%, #fff 55%);
+  box-shadow: var(--iuFp-shadow-card);
+}
+
+#iuLegalDocsPanel .iu-legal-catGrid {
+  margin-bottom: 14px;
+}
+
+#iuLegalDocsPanel .iu-legal-chip {
+  border-radius: 10px;
+  border: 1px solid rgba(0, 60, 255, 0.16);
+}
+
+#iuLegalDocsPanel .iu-legal-chip.is-on {
+  background: rgba(0, 60, 255, 0.1);
+  border-color: rgba(0, 60, 255, 0.35);
+  color: var(--iuFp-brand);
+}
+
+/* —— Overlay shells — prémiová hloubka —— */
+#iuInvoicePanel .iu-invoice-overlay-cardShell,
+#iuFinancialCalcPanel .iu-financial-overlay-cardShell,
+#iuLegalDocsPanel .iu-legal-overlay-cardShell,
+.iu-ds-panel,
+#iuQuickFeed .iu-banking-ds-modal {
+  border-radius: 18px;
+  box-shadow: var(--iuFp-shadow-elevated);
+}
+
+/* —— QuickFeed banking shell —— */
+#iuQuickFeed.iu-banking-quickfeed-root .iuQCard,
+#iuQuickFeed.iu-bakalari-quickfeed-root .iuQCard,
+#iuQuickFeed.iu-pojistovna-quickfeed-root .iuQCard {
+  padding: 12px 4px 4px;
+}
+
+#iuQuickFeed .iuQTitle {
+  font-size: 18px;
+  font-weight: 750;
+  color: var(--iuFp-text);
+}
+
+/* —— Danger actions —— */
+.iuBankRemove,
+.bakalari-btn-delete,
+[data-inv-supplier-delete],
+[data-inv-recipient-delete] {
+  border-color: rgba(220, 38, 38, 0.28) !important;
+  color: #b91c1c !important;
+  background: linear-gradient(180deg, #fff 0%, #fef2f2 100%) !important;
+}
+
+.iuBankRemove:hover,
+.bakalari-btn-delete:hover {
+  border-color: rgba(220, 38, 38, 0.42) !important;
+  box-shadow: 0 2px 10px rgba(220, 38, 38, 0.1) !important;
+}
+
+/* —— Jednotná typografie sekcí —— */
+.iu-ib-section-title,
+.bakalari-card-title,
+.iu-health-card-title,
+.iu-ds-form-block h3,
+#iuFinancialCalcPanel .iu-fin-hub-sectionTitle,
+#iuLegalDocsPanel .iu-legal-catTitle {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  color: var(--iuFp-brand);
+}
+
+.iu-ib-section-title {
+  text-transform: uppercase;
+}
+
+#iuFinancialCalcPanel .iu-fin-hub-sectionSub,
+.iu-health-helper,
+.bakalari-helper {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--iuFp-text-muted);
+}
+
+/* —— Jednotná tlačítka (primární) —— */
+.bakalari-open-btn,
+.iu-health-open-btn,
+#iuLegalDocsPanel .iu-legal-btn--primary,
+#iuFinancialCalcPanel .iu-financial-overlay-ctaHost .iu-financial-overlay-cta,
+#iuFinancialCalcPanel .iu-fin-calc-detail .iu-financial-overlay-cta {
+  min-height: 40px;
+  min-width: 44px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 650;
+  font-family: inherit;
+  border: 1px solid rgba(0, 60, 255, 0.35);
+  background: linear-gradient(180deg, var(--iuFp-brand) 0%, var(--iuFp-brand-dark) 100%);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0, 60, 255, 0.22);
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bakalari-open-btn:hover:not(:disabled),
+.iu-health-open-btn:hover:not(:disabled),
+#iuLegalDocsPanel .iu-legal-btn--primary:hover:not(:disabled),
+#iuFinancialCalcPanel .iu-financial-overlay-ctaHost .iu-financial-overlay-cta:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+/* —— Jednotná tlačítka (sekundární / ghost) —— */
+.bakalari-btn:not(.bakalari-open-btn):not(.bakalari-btn--danger),
+.iu-health-btn,
+.iu-health-btn--secondary,
+#iuLegalDocsPanel .iu-legal-btn--ghost,
+.iu-ds-add,
+.iu-mojeSluzbyBanka .iu-ib-edit-btn {
+  min-height: 40px;
+  min-width: 44px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 650;
+  font-family: inherit;
+  border: 1px solid rgba(0, 60, 255, 0.2);
+  background: linear-gradient(180deg, #fff 0%, #f8faff 100%);
+  color: var(--iuFp-text);
+  box-shadow: 0 2px 8px rgba(0, 60, 255, 0.06);
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bakalari-btn:not(.bakalari-open-btn):not(.bakalari-btn--danger):hover:not(:disabled),
+.iu-health-btn:hover:not(:disabled),
+#iuLegalDocsPanel .iu-legal-btn--ghost:hover:not(:disabled),
+.iu-ds-add:hover:not(:disabled),
+.iu-mojeSluzbyBanka .iu-ib-edit-btn:hover:not(:disabled) {
+  border-color: rgba(0, 60, 255, 0.32);
+  box-shadow: 0 4px 12px rgba(0, 60, 255, 0.1);
+}
+
+/* —— Disabled + focus (přístupnost) —— */
+.bakalari-btn:disabled,
+.bakalari-open-btn:disabled,
+.iu-health-btn:disabled,
+.iu-health-open-btn:disabled,
+#iuLegalDocsPanel .iu-legal-btn:disabled,
+.iu-ds-add:disabled,
+#iuInvoicePanel .iu-inv-btn:disabled,
+#iuInvoicePanel .iu-inv-btn[disabled] {
+  opacity: 0.48;
+  cursor: not-allowed;
+  filter: none;
+  box-shadow: none;
+  transform: none;
+}
+
+.bakalari-btn:focus-visible,
+.bakalari-open-btn:focus-visible,
+.iu-health-btn:focus-visible,
+.iu-health-open-btn:focus-visible,
+#iuLegalDocsPanel .iu-legal-btn:focus-visible,
+.iu-ds-add:focus-visible,
+#iuInvoicePanel .iu-inv-btn:focus-visible,
+.iu-mojeSluzbyBanka .iu-ib-edit-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 60, 255, 0.22);
+}
+
+/* —— Responsivita: žádné horizontální přetečení —— */
+#iuInvoicePanel .iu-invoice-overlay-body,
+#iuLegalDocsPanel .iu-legal-overlay-body,
+#iuFinancialCalcPanel .iu-financial-overlay-body,
+.iu-ds-panelBody,
+#iuQuickFeed .iu-banking-scroll-host,
+.iu-health-root,
+.bakalari-root {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* —— Výkon: lazy paint velkých karet bez CLS —— */
+.bakalari-card,
+.iu-health-card,
+.iu-ds-form-block,
+#iuInvoicePanel .iu-inv-block,
+#iuFinancialCalcPanel .iu-fin-hub-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 140px;
+}
+
+@media (max-width: 1023px) {
+  #iuInvoicePanel .iu-inv-block,
+  .bakalari-card,
+  .iu-health-card,
+  .iu-mojeSluzbyBanka .iu-mojeSluzbyBankaFav,
+  .iu-mojeSluzbyBanka .iu-mojeSluzbyBankaAll {
+    padding: 14px;
+  }
+
+  .iu-tool-privacy-short {
+    font-size: 11px;
+    padding: 7px 10px;
+  }
+
+  .bakalari-btn,
+  .bakalari-open-btn,
+  .iu-health-btn,
+  .iu-health-open-btn,
+  #iuLegalDocsPanel .iu-legal-btn,
+  .iu-ds-add {
+    min-height: 44px;
+  }
+}

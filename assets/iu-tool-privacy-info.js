@@ -4,25 +4,55 @@
 (function iuToolPrivacyInfoModule() {
   "use strict";
 
-  var SHORT_TEXT =
-    "🔒 Vše, co si zde dobrovolně uložíte, zůstává pouze ve vašem zařízení. InfoUzel.cz tato data neodesílá na své servery ani k nim nemá přístup.";
+  var SHORT_TEXT_DEFAULT =
+    "🔒 Veškeré údaje ukládáte dobrovolně pouze do svého zařízení. InfoUzel.cz je neodesílá na své servery ani k nim nemá přístup.";
 
-  var DESCRIPTIONS = {
-    datovka: "Bezpečné otevření Datových schránek",
-    bakalari: "Rychlý přístup do Bakalářů",
-    pojistovna: "Zdravotní pojišťovny",
-    invoice: "Generátor faktur",
-    legal: "Generátor smluv a plných mocí",
-    financial: "Praktické výpočty pro běžné finance",
+  var SHORT_TEXTS = {
+    datovka: SHORT_TEXT_DEFAULT,
+    bakalari: SHORT_TEXT_DEFAULT,
+    pojistovna: SHORT_TEXT_DEFAULT,
+    banka: SHORT_TEXT_DEFAULT,
+    invoice:
+      "🔒 Fakturační údaje ukládáte dobrovolně pouze do svého zařízení. InfoUzel.cz je neodesílá na své servery ani k nim nemá přístup.",
+    legal:
+      "🔒 Vyplněné údaje zůstávají pouze ve vašem prohlížeči. InfoUzel.cz obsah dokumentů neodesílá na své servery ani k němu nemá přístup.",
+    financial:
+      "🔒 Zadané hodnoty slouží pouze pro výpočet ve vašem zařízení. InfoUzel.cz je neodesílá na své servery ani k nim nemá přístup.",
   };
 
   var MODAL_TITLES = {
     datovka: "Informace o soukromí — Datové schránky",
     bakalari: "Informace o soukromí — Bakaláři",
     pojistovna: "Informace o soukromí — Zdravotní pojišťovny",
+    banka: "Informace o soukromí — Internetové bankovnictví",
     invoice: "Informace o soukromí — Generátor faktur",
     legal: "Informace o soukromí — Generátor smluv a plných mocí",
     financial: "Informace o soukromí — Finanční kalkulačky",
+  };
+
+  var LOCAL_STORAGE_SECTION = {
+    title: "Ukládání údajů",
+    paragraphs: [
+      "Uložení údajů je dobrovolné. Údaje slouží pouze pro pohodlnější používání tohoto nástroje ve vašem prohlížeči. Data zůstávají lokálně v tomto zařízení.",
+      "InfoUzel.cz je neodesílá na své servery, nemá k nim přístup a nesynchronizuje je mezi zařízeními. Smazání dat v prohlížeči může uložené údaje odstranit.",
+    ],
+  };
+
+  var SECURITY_SECTION = {
+    title: "Bezpečnost a odpovědnost",
+    paragraphs: [
+      "Používejte tuto funkci pouze na vlastním důvěryhodném a zabezpečeném zařízení.",
+      "Na sdíleném nebo nezabezpečeném zařízení mohou mít k uloženým údajům přístup další osoby.",
+      "Za zabezpečení zařízení, správnost zadaných údajů a jejich použití odpovídáte vy.",
+    ],
+  };
+
+  var LEGAL_NOTE_SECTION = {
+    title: "Právní poznámka",
+    paragraphs: [
+      "Text je připraven s ohledem na obecná pravidla ochrany osobních údajů, zejména GDPR (Nařízení Evropského parlamentu a Rady (EU) 2016/679), zákon č. 110/2019 Sb., o zpracování osobních údajů, a zákon o elektronických komunikacích v rozsahu ukládání a čtení informací v zařízení uživatele.",
+      "InfoUzel.cz údaje z těchto nástrojů nezpracovává na svých serverech. Údaje ukládáte dobrovolně pouze lokálně ve svém prohlížeči na svém zařízení.",
+    ],
   };
 
   var MODAL_SECTIONS = {
@@ -30,137 +60,180 @@
       {
         title: "K čemu nástroj slouží",
         paragraphs: [
-          "Nástroj usnadňuje uložení přístupových údajů k datovým schránkám a rychlé otevření oficiálního portálu datovek v prohlížeči.",
-          "InfoUzel.cz není provozovatelem datových schránek ani portálu datovek. Přihlášení probíhá vždy na webu příslušného poskytovatele.",
+          "Nástroj usnadňuje uložení přístupových údajů k Datových schránek a rychlé otevření oficiálního portálu v prohlížeči.",
         ],
       },
       {
-        title: "Ukládání údajů",
+        title: "Jak funguje",
         paragraphs: [
-          "Uložení jmen, uživatelských jmen nebo hesel je zcela dobrovolné. Údaje slouží pouze pro pohodlnější používání tohoto nástroje ve vašem prohlížeči.",
-          "Data se ukládají lokálně v tomto prohlížeči na tomto zařízení. InfoUzel.cz je neodesílá na své servery, k nim nemá přístup a nesynchronizuje je mezi zařízeními.",
+          "Údaje zůstávají ve vašem prohlížeči. Po kliknutí na otevření portálu přejdete na oficiální web poskytovatele.",
         ],
       },
+      LOCAL_STORAGE_SECTION,
       {
-        title: "Bezpečnost a odpovědnost",
+        title: "Externí služby",
         paragraphs: [
-          "Při použití sdíleného nebo nezabezpečeného zařízení mohou mít k uloženým údajům přístup další osoby. Používejte tuto funkci pouze na vlastním důvěryhodném a zabezpečeném zařízení.",
-          "Za zabezpečení zařízení, správnost zadaných údajů a jejich použití odpovídáte vy.",
+          "InfoUzel.cz není provozovatelem Datových schránek. Přihlášení probíhá vždy na oficiálním portálu Datových schránek.",
+          "Po kliknutí budete přesměrováni na oficiální stránky vybraného poskytovatele. Opustíte prostředí InfoUzel.cz.",
+          "InfoUzel.cz neodpovídá za obsah, dostupnost ani změny provedené provozovatelem externí služby.",
         ],
       },
+      SECURITY_SECTION,
     ],
     bakalari: [
       {
         title: "K čemu nástroj slouží",
         paragraphs: [
-          "Nástroj umožňuje uložit odkazy a volitelně přístupové údaje k Bakalářům a rychle otevřít školní portál v prohlížeči.",
+          "Nástroj umožňuje uložit odkazy a volitelně přístupové údaje k Bakalářům a rychle otevřít školní portál.",
+        ],
+      },
+      {
+        title: "Jak funguje",
+        paragraphs: [
+          "Údaje zůstávají lokálně v prohlížeči. Otevření portálu probíhá na webu školy nebo poskytovatele.",
+        ],
+      },
+      LOCAL_STORAGE_SECTION,
+      {
+        title: "Externí služby",
+        paragraphs: [
           "InfoUzel.cz není provozovatelem systému Bakaláři. Přihlášení probíhá vždy na webu vaší školy nebo poskytovatele.",
+          "Po kliknutí budete přesměrováni na oficiální stránky vybraného poskytovatele. Opustíte prostředí InfoUzel.cz.",
         ],
       },
-      {
-        title: "Ukládání údajů",
-        paragraphs: [
-          "Uložení údajů je dobrovolné. Nepovinně můžete uložit jméno dítěte, odkaz, uživatelské jméno nebo heslo pro rychlejší práci v tomto prohlížeči.",
-          "Údaje zůstávají pouze ve vašem zařízení. InfoUzel.cz je neodesílá na své servery, k nim nemá přístup a nesynchronizuje je mezi zařízeními.",
-        ],
-      },
-      {
-        title: "Bezpečnost a odpovědnost",
-        paragraphs: [
-          "Na sdíleném nebo nezabezpečeném zařízení mohou uložené údaje vidět i jiné osoby. Doporučujeme používat nástroj jen na důvěryhodném zařízení.",
-          "Za zabezpečení zařízení, správnost údajů a jejich použití odpovídáte vy.",
-        ],
-      },
+      SECURITY_SECTION,
     ],
     pojistovna: [
       {
         title: "K čemu nástroj slouží",
         paragraphs: [
-          "Nástroj usnadňuje uložení odkazů a volitelných přístupových údajů k portálům zdravotních pojišťoven a jejich rychlé otevření.",
-          "InfoUzel.cz není provozovatelem zdravotních pojišťoven ani jejich klientských portálů.",
+          "Nástroj usnadňuje uložení odkazů a volitelných přístupových údajů k portálům zdravotních pojišťoven.",
         ],
       },
       {
-        title: "Ukládání údajů",
+        title: "Jak funguje",
         paragraphs: [
-          "Uložení údajů je zcela dobrovolné a slouží pouze pro pohodlnější používání nástroje v tomto prohlížeči.",
-          "Údaje zůstávají lokálně ve vašem zařízení. InfoUzel.cz je neodesílá na své servery, k nim nemá přístup a nesynchronizuje je mezi zařízeními.",
+          "Údaje zůstávají lokálně v prohlížeči. Otevření portálu probíhá na stránkách konkrétní pojišťovny.",
+        ],
+      },
+      LOCAL_STORAGE_SECTION,
+      {
+        title: "Externí služby",
+        paragraphs: [
+          "InfoUzel.cz není provozovatelem zdravotní pojišťovny ani klientského portálu.",
+          "Po kliknutí budete přesměrováni na oficiální stránky vybraného poskytovatele. Opustíte prostředí InfoUzel.cz.",
+        ],
+      },
+      SECURITY_SECTION,
+    ],
+    banka: [
+      {
+        title: "K čemu nástroj slouží",
+        paragraphs: [
+          "Nástroj usnadňuje rychlý přístup do internetového bankovnictví vybraných bank a správu oblíbených bank v zařízení.",
         ],
       },
       {
-        title: "Bezpečnost a odpovědnost",
+        title: "Jak funguje",
         paragraphs: [
-          "Na sdíleném nebo nezabezpečeném zařízení mohou mít k uloženým údajům přístup další osoby.",
-          "Za zabezpečení zařízení, správnost údajů a jejich použití odpovídáte vy.",
+          "Po kliknutí na banku otevřete oficiální internetové bankovnictví v nové kartě prohlížeče.",
+          "Seznam oblíbených bank a vlastní banky se ukládají lokálně pro pohodlnější použití.",
         ],
       },
+      LOCAL_STORAGE_SECTION,
+      {
+        title: "Externí služby",
+        paragraphs: [
+          "Uživatel opouští prostředí InfoUzel.cz a přechází na oficiální stránky banky.",
+          "InfoUzel.cz není provozovatelem bankovní služby a neodpovídá za přihlášení, dostupnost ani obsah bankovního portálu.",
+          "Před přihlášením vždy zkontrolujte adresu oficiálního webu banky.",
+        ],
+      },
+      SECURITY_SECTION,
     ],
     invoice: [
       {
         title: "K čemu nástroj slouží",
         paragraphs: [
-          "Generátor faktur pomáhá sestavit fakturační doklad a exportovat ho z prohlížeče. Nejde o účetní, daňové ani právní poradenství.",
+          "Generátor faktur pomáhá sestavit fakturační doklad a exportovat ho z prohlížeče.",
         ],
       },
       {
-        title: "Ukládání údajů",
+        title: "Jak funguje",
         paragraphs: [
-          "Uložení dodavatelů, odběratelů nebo rozpracovaného formuláře je dobrovolné a slouží pro pohodlnější opakované použití.",
-          "Data zůstávají pouze ve vašem zařízení. InfoUzel.cz je neodesílá na své servery, k nim nemá přístup a nesynchronizuje je mezi zařízeními.",
+          "Údaje zůstávají ve vašem prohlížeči. Export a náhled probíhají lokálně v zařízení.",
         ],
       },
+      LOCAL_STORAGE_SECTION,
       {
-        title: "Bezpečnost a odpovědnost",
+        title: "Odborné upozornění",
         paragraphs: [
-          "Před vystavením dokladu vždy zkontrolujte správnost údajů, DPH a částek. Za správnost dokladu odpovídáte vy.",
-          "Na sdíleném zařízení mohou být uložené údaje dostupné i jiným osobám. Používejte nástroj na důvěryhodném zařízení.",
+          "Nejde o účetní, daňové ani právní poradenství.",
+          "Uživatel odpovídá za správnost fakturačních údajů, DPH, částek, splatnosti a dalších údajů.",
+          "Před použitím dokladu má uživatel vše zkontrolovat.",
         ],
       },
+      SECURITY_SECTION,
     ],
     legal: [
       {
         title: "K čemu nástroj slouží",
         paragraphs: [
-          "Generátor vytváří textové vzory smluv, plných mocí a souvisejících dokumentů v prohlížeči. Nejde o právní službu ani advokacii.",
+          "Generátor vytváří textové vzory smluv, plných mocí a souvisejících dokumentů v prohlížeči.",
+        ],
+      },
+      {
+        title: "Jak funguje",
+        paragraphs: [
+          "Vyplněné údaje zůstávají v relaci prohlížeče. Trvalé ukládání konceptů je dobrovolné a probíhá lokálně.",
         ],
       },
       {
         title: "Ukládání údajů",
         paragraphs: [
-          "Vyplněné údaje ve formuláři zůstávají v relaci prohlížeče pro pohodlnou práci. Trvalé ukládání konceptů je dobrovolné a probíhá lokálně v zařízení.",
           "InfoUzel.cz neodesílá obsah dokumentů na své servery, k němu nemá přístup a nesynchronizuje ho mezi zařízeními.",
+          "Uložení konceptů je dobrovolné a slouží pouze pro pohodlnější práci v tomto prohlížeči.",
         ],
       },
       {
-        title: "Bezpečnost a odpovědnost",
+        title: "Odborné upozornění",
         paragraphs: [
-          "Před použitím dokumentu vždy ověřte jeho obsah. V důležitých případech doporučujeme konzultaci s advokátem.",
-          "Za správnost údajů, použití dokumentu a zabezpečení zařízení odpovídáte vy.",
+          "Nejde o právní službu, advokacii ani individuální právní poradenství.",
+          "Dokumenty jsou obecné textové vzory. Uživatel odpovídá za správnost údajů a vhodnost použití dokumentu.",
+          "V důležitých, sporných, nestandardních nebo hodnotnějších případech je vhodné konzultovat advokáta.",
         ],
       },
+      SECURITY_SECTION,
     ],
     financial: [
       {
         title: "K čemu nástroj slouží",
         paragraphs: [
-          "Finanční kalkulačky poskytují orientační výpočty v prohlížeči. Nejde o investiční, daňové ani finanční poradenství.",
+          "Finanční kalkulačky poskytují orientační výpočty v prohlížeči.",
+        ],
+      },
+      {
+        title: "Jak funguje",
+        paragraphs: [
+          "Zadané hodnoty slouží pro okamžitý výpočet ve vašem zařízení. Po obnovení stránky mohou být ztraceny.",
           "Některé kalkulačky mohou nabídnout odkaz na externí službu — po kliknutí opustíte InfoUzel.cz.",
         ],
       },
       {
         title: "Zpracování údajů",
         paragraphs: [
-          "Zadané hodnoty slouží pouze pro okamžitý výpočet ve vašem zařízení. InfoUzel.cz je standardně neukládá na své servery ani k nim nemá přístup.",
-          "Údaje se mezi zařízeními nesynchronizují. Po obnovení stránky mohou být zadané hodnoty ztraceny.",
+          "InfoUzel.cz standardně neukládá zadané hodnoty na své servery ani k nim nemá přístup.",
+          "Údaje se mezi zařízeními nesynchronizují.",
         ],
       },
       {
-        title: "Bezpečnost a odpovědnost",
+        title: "Odborné upozornění",
         paragraphs: [
-          "Výsledky jsou orientační — vždy je ověřte a při rozhodování zvažte odbornou konzultaci.",
-          "Za správnost vstupních údajů a použití výsledků odpovídáte vy.",
+          "Výpočty jsou pouze orientační. Nejde o investiční, finanční ani daňové poradenství.",
+          "Výsledky je nutné ověřit. U důležitých rozhodnutí zvažte konzultaci s odborníkem.",
         ],
       },
+      SECURITY_SECTION,
     ],
   };
 
@@ -175,15 +248,17 @@
       .replace(/"/g, "&quot;");
   }
 
+  function getShortText(toolKey) {
+    return SHORT_TEXTS[toolKey] || SHORT_TEXT_DEFAULT;
+  }
+
   function buildHeadBlockHtml(toolKey) {
-    var desc = DESCRIPTIONS[toolKey] || "";
     return (
       '<button type="button" class="iu-tool-privacy-btn" data-iu-tool-privacy-open="' +
       esc(toolKey) +
       '" aria-haspopup="dialog">ⓘ Informace o soukromí a bezpečnosti</button>' +
-      (desc ? '<p class="iu-tool-privacy-desc">' + esc(desc) + "</p>" : "") +
       '<p class="iu-tool-privacy-short" role="note">' +
-      esc(SHORT_TEXT) +
+      esc(getShortText(toolKey)) +
       "</p>"
     );
   }
@@ -205,23 +280,18 @@
       titleNode.parentNode.appendChild(btn);
     }
 
-    var descP = document.createElement("p");
-    descP.className = "iu-tool-privacy-desc";
-    descP.textContent = DESCRIPTIONS[toolKey] || "";
-    btn.parentNode.insertBefore(descP, btn.nextSibling);
-
     var shortP = document.createElement("p");
     shortP.className = "iu-tool-privacy-short";
     shortP.setAttribute("role", "note");
-    shortP.textContent = SHORT_TEXT;
-    descP.parentNode.insertBefore(shortP, descP.nextSibling);
+    shortP.textContent = getShortText(toolKey);
+    btn.parentNode.insertBefore(shortP, btn.nextSibling);
 
     heading.setAttribute("data-iu-tool-privacy-mounted", "1");
     heading.setAttribute("data-iu-tool-privacy-key", toolKey);
   }
 
   function renderModalBody(toolKey) {
-    var sections = MODAL_SECTIONS[toolKey] || [];
+    var sections = (MODAL_SECTIONS[toolKey] || []).concat([LEGAL_NOTE_SECTION]);
     return sections
       .map(function (sec) {
         var ps = (sec.paragraphs || [])
@@ -252,7 +322,7 @@
     modalEl.innerHTML =
       '<div class="iu-tool-privacy-modal__panel">' +
       '<div class="iu-tool-privacy-modal__head"><h2 class="iu-tool-privacy-modal__title" id="iuToolPrivacyModalTitle"></h2></div>' +
-      '<div class="iu-tool-privacy-modal__body" id="iuToolPrivacyModalBody"></div>' +
+      '<div class="iu-tool-privacy-modal__scroll"><div class="iu-tool-privacy-modal__body" id="iuToolPrivacyModalBody"></div></div>' +
       '<div class="iu-tool-privacy-modal__actions"><button type="button" class="iu-tool-privacy-modal__close" data-iu-tool-privacy-close>Zavřít</button></div>' +
       "</div>";
     document.body.appendChild(modalEl);
@@ -385,7 +455,7 @@
   }
 
   try {
-    window.iuToolPrivacyShortText = SHORT_TEXT;
+    window.iuToolPrivacyShortText = getShortText;
     window.iuToolPrivacyHeadBlockHtml = buildHeadBlockHtml;
     window.iuToolPrivacyMountInHeading = mountInHeading;
     window.iuToolPrivacyMountInOverlayHeading = mountInOverlayHeading;
