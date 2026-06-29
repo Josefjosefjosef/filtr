@@ -5902,6 +5902,50 @@ try {
     }
   }
 
+  function iuChunkShouldHoldFeedMinHeightP() {
+    try {
+      if (!iuUseChunkedArticleLoader() || !state.chunkLoader) return false;
+      if (iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader)) return false;
+      const page = Number(state.page) >= 1 ? Number(state.page) : 1;
+      if (page !== 1) return false;
+      return !state.chunkLoader.backgroundDone;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuChunkClearBackgroundDeferHandlers() {
+    try {
+      if (state.__iuChunkBgDeferTimer) {
+        clearTimeout(state.__iuChunkBgDeferTimer);
+        state.__iuChunkBgDeferTimer = null;
+      }
+      if (typeof state.__iuChunkDomExpandCleanup === "function") {
+        state.__iuChunkDomExpandCleanup();
+        state.__iuChunkDomExpandCleanup = null;
+      }
+    } catch (_) {}
+  }
+
+  function iuChunkEnqueueBackgroundBufferWhenIdle(requestToken) {
+    iuChunkClearBackgroundDeferHandlers();
+    const attempt = () => {
+      if (!isLatestLoadRequest(requestToken)) return;
+      if (iuFeedSectionSwitchActiveP()) {
+        state.__iuChunkBgDeferTimer = setTimeout(attempt, 200);
+        return;
+      }
+      void iuChunkScheduleBackgroundBuffer(requestToken);
+    };
+    const ric =
+      typeof requestIdleCallback !== "undefined"
+        ? requestIdleCallback
+        : function (cb) {
+            return setTimeout(cb, 80);
+          };
+    ric(attempt, { timeout: 1200 });
+  }
+
   /** P0 section switch: drop stale articles/header synchronously on click (before applyFilter/renderFeed). */
   function iuFeedSectionSwitchInstantClear(feedEl) {
     if (!feedEl || feedEl.id !== "feed") return;
@@ -6030,7 +6074,9 @@ try {
         if (!fel || String(fel.getAttribute("data-feed-switching") || "") !== "1") return;
         if (String(fel.getAttribute("data-feed-switch-seq") || "") !== switchSeqAtStart) return;
         fel.removeAttribute("data-feed-switching");
-        fel.style.minHeight = "";
+        if (!iuChunkShouldHoldFeedMinHeightP()) {
+          fel.style.minHeight = "";
+        }
         sectionSwitchFirstBatchReleased = true;
         iuFeedSectionSwitchScrollToStartIfArmed();
       } catch (_) {}
@@ -6086,13 +6132,23 @@ try {
     visibleItems = iuArticleActionsFilterVisible(visibleItems);
     try { window.__iuLoadMoreLastRenderedItems = visibleItems; } catch (_) {}
     const chunkInitialBufferComplete =
-      !chunkMode || !!(state.chunkLoader && state.chunkLoader.backgroundDone);
+      !chunkMode ||
+      !!(
+        state.chunkLoader &&
+        (state.chunkLoader.backgroundMemoryReady || state.chunkLoader.backgroundDone)
+      );
     const chunkBufferedArticleCount =
       chunkMode && state.chunkLoader
         ? Math.min(iuCountFeedArticles(items), CLIENT_INITIAL_LIMIT)
         : 0;
+    const chunkMemoryBufferComplete =
+      chunkMode &&
+      state.chunkLoader &&
+      state.chunkLoader.backgroundMemoryReady &&
+      (state.chunkLoader.articlesReceivedCount || 0) >= chunkBufferedArticleCount;
     const chunkVisibleBufferComplete =
       !chunkMode ||
+      chunkMemoryBufferComplete ||
       (chunkInitialBufferComplete &&
         iuCountFeedArticles(visibleItems) >= chunkBufferedArticleCount);
     const hasMore = chunkMode
@@ -6684,18 +6740,25 @@ try {
     if (
       chunkMode &&
       state.chunkLoader &&
+      !state.chunkLoader.backgroundMemoryReady &&
       !state.chunkLoader.backgroundDone &&
       !iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader) &&
       chunkAppendFrom === 0
     ) {
-      void iuChunkScheduleBackgroundBuffer(state.loadRequestId);
+      if (iuFeedSectionSwitchActiveP()) {
+        iuChunkEnqueueBackgroundBufferWhenIdle(state.loadRequestId);
+      } else {
+        void iuChunkScheduleBackgroundBuffer(state.loadRequestId);
+      }
     }
     feedEl.setAttribute("data-feed-ready", "true");
     try {
       iuRenderFeedReleaseSectionSwitchIfReady();
       if (!sectionSwitchFirstBatchReleased) {
         feedEl.removeAttribute("data-feed-switching");
-        feedEl.style.minHeight = "";
+        if (!iuChunkShouldHoldFeedMinHeightP()) {
+          feedEl.style.minHeight = "";
+        }
         iuFeedSectionSwitchScrollToStartIfArmed();
       }
       const vkDone = iuFeedSectionHeaderResolveVisualKey();
@@ -6709,7 +6772,9 @@ try {
           const finSeq = String(felFin.getAttribute("data-feed-switch-seq") || "");
           if (switchSeqAtStart && finSeq === switchSeqAtStart) {
             felFin.removeAttribute("data-feed-switching");
-            felFin.style.minHeight = "";
+            if (!iuChunkShouldHoldFeedMinHeightP()) {
+              felFin.style.minHeight = "";
+            }
             iuFeedSectionSwitchScrollToStartIfArmed();
           }
         }
@@ -19150,6 +19215,64 @@ function buildVideoAsArticleCard(it) {
     return sanitized.length;
   }
 
+  function iuChunkScheduleDomExpandToInitialLimit(requestToken) {
+    if (!iuUseChunkedArticleLoader() || !state.chunkLoader) return;
+    if (state.chunkLoader.backgroundDone) return;
+    if (!state.chunkLoader.backgroundMemoryReady) return;
+    iuChunkClearBackgroundDeferHandlers();
+
+    const runExpand = async () => {
+      if (!isLatestLoadRequest(requestToken) || !state.chunkLoader) return;
+      if (state.chunkLoader.backgroundDone) return;
+      if (iuFeedSectionSwitchActiveP()) {
+        state.__iuChunkBgDeferTimer = setTimeout(() => {
+          void runExpand();
+        }, 200);
+        return;
+      }
+      try {
+        state.__iuFeedAppendOnlyFrom = CLIENT_INITIAL_RENDER_BATCH;
+        await iuChunkMergeArticlesIntoCache(state.chunkLoader.articles, requestToken);
+        if (!isLatestLoadRequest(requestToken)) return;
+        await applyFilter({ resetPage: false, render: true, instantSectionSwitch: false });
+        if (!isLatestLoadRequest(requestToken)) return;
+        state.chunkLoader.backgroundDone = true;
+        try {
+          const fel = document.getElementById("feed");
+          if (fel) fel.style.minHeight = "";
+        } catch (_) {}
+      } catch (e) {
+        debugWarn("[CHUNK] dom expand failed", e);
+      }
+    };
+
+    const onUserActivity = () => {
+      cleanup();
+      void runExpand();
+    };
+    const cleanup = () => {
+      try {
+        window.removeEventListener("scroll", onUserActivity, true);
+        window.removeEventListener("wheel", onUserActivity, true);
+        document.removeEventListener("touchmove", onUserActivity, true);
+      } catch (_) {}
+      if (state.__iuChunkDomExpandFallbackTimer) {
+        clearTimeout(state.__iuChunkDomExpandFallbackTimer);
+        state.__iuChunkDomExpandFallbackTimer = null;
+      }
+    };
+    state.__iuChunkDomExpandCleanup = cleanup;
+    try {
+      window.addEventListener("scroll", onUserActivity, { passive: true, capture: true, once: true });
+      window.addEventListener("wheel", onUserActivity, { passive: true, capture: true, once: true });
+      document.addEventListener("touchmove", onUserActivity, { passive: true, capture: true, once: true });
+    } catch (_) {}
+    state.__iuChunkDomExpandFallbackTimer = setTimeout(() => {
+      cleanup();
+      void runExpand();
+    }, 20000);
+  }
+
   async function iuChunkScheduleBackgroundBuffer(requestToken) {
     if (!iuUseChunkedArticleLoader() || !state.chunkLoader) return;
     if (iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader)) {
@@ -19158,25 +19281,32 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
       return;
     }
-    if (state.chunkLoader.backgroundDone || state.chunkLoader.backgroundFetchInflight) {
-      try {
-        if (state.chunkLoader.backgroundDone) window.__iuChunkBackgroundBufferDone = true;
-      } catch (_) {}
-      return;
-    }
-    if (!isLatestLoadRequest(requestToken)) return;
-    try {
-      await iuChunkFetchBackgroundBuffer(state.chunkLoader, iuBasePath(), iuChunkDataVer());
-      if (!isLatestLoadRequest(requestToken)) return;
-      state.__iuFeedAppendOnlyFrom = CLIENT_INITIAL_RENDER_BATCH;
-      await iuChunkMergeArticlesIntoCache(state.chunkLoader.articles, requestToken);
-      if (!isLatestLoadRequest(requestToken)) return;
-      await applyFilter({ resetPage: false, render: true, instantSectionSwitch: true });
-      if (!isLatestLoadRequest(requestToken)) return;
-      state.chunkLoader.backgroundDone = true;
+    if (state.chunkLoader.backgroundDone) {
       try {
         window.__iuChunkBackgroundBufferDone = true;
       } catch (_) {}
+      return;
+    }
+    if (state.chunkLoader.backgroundMemoryReady) {
+      iuChunkScheduleDomExpandToInitialLimit(requestToken);
+      return;
+    }
+    if (state.chunkLoader.backgroundFetchInflight) return;
+    if (!isLatestLoadRequest(requestToken)) return;
+    if (iuFeedSectionSwitchActiveP()) {
+      iuChunkEnqueueBackgroundBufferWhenIdle(requestToken);
+      return;
+    }
+    try {
+      await iuChunkFetchBackgroundBuffer(state.chunkLoader, iuBasePath(), iuChunkDataVer());
+      if (!isLatestLoadRequest(requestToken)) return;
+      await iuChunkMergeArticlesIntoCache(state.chunkLoader.articles, requestToken);
+      if (!isLatestLoadRequest(requestToken)) return;
+      state.chunkLoader.backgroundMemoryReady = true;
+      try {
+        window.__iuChunkBackgroundBufferDone = true;
+      } catch (_) {}
+      iuChunkScheduleDomExpandToInitialLimit(requestToken);
     } catch (e) {
       debugWarn("[CHUNK] background buffer failed", e);
     }
@@ -19200,6 +19330,7 @@ function buildVideoAsArticleCard(it) {
     state.__iuRenderFeedPassSeq = 0;
     state.__iuLoadDataMainApplyFilterDone = false;
     if (iuUseChunkedArticleLoader()) {
+      iuChunkClearBackgroundDeferHandlers();
       state.chunkLoader = null;
       __iuFeedPrimaryPairLast = null;
       iuClientArticleStoreReset();
@@ -19673,7 +19804,12 @@ function buildVideoAsArticleCard(it) {
       iuBootTracePhase("loadData_first_renderItems_done");
       iuPreviewFeedProbeTick("afterFirstRenderFeed");
       iuHomeLoadAuditNotify("loadData:afterFirstRender");
-      if (iuUseChunkedArticleLoader() && state.chunkLoader && !state.chunkLoader.backgroundDone) {
+      if (
+        iuUseChunkedArticleLoader() &&
+        state.chunkLoader &&
+        !state.chunkLoader.backgroundMemoryReady &&
+        !state.chunkLoader.backgroundDone
+      ) {
         void iuChunkScheduleBackgroundBuffer(requestToken);
       } else if (iuUseChunkedArticleLoader()) {
         try {

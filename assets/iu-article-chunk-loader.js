@@ -128,6 +128,7 @@ export function iuChunkCreateLoaderState(sectionKey) {
     nextLoadMoreChunkIndex: 0,
     totalInSection: 0,
     backgroundDone: false,
+    backgroundMemoryReady: false,
     backgroundFetchInflight: false,
     loadMoreInflight: false,
     articlesReceivedCount: 0,
