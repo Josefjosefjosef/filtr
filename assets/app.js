@@ -17677,10 +17677,17 @@ function buildVideoAsArticleCard(it) {
         .trim()
         .toLowerCase();
     } catch (_) {}
-    const nextKey = iuChunkResolveSectionKey({
-      mediaTopicKey: state.mediaTopicKey,
-      activeSection: navSec || state.activeSection,
-    });
+    const nextKey = (() => {
+      let key = iuChunkResolveSectionKey({
+        mediaTopicKey: state.mediaTopicKey,
+        activeSection: navSec || state.activeSection,
+      });
+      if (key === "feed") {
+        const topic = String(state.mediaTopicKey || "").trim().toLowerCase();
+        if (!topic || topic === "all") key = "zpravy";
+      }
+      return key;
+    })();
     if (state.chunkLoader && state.chunkLoader.sectionKey === nextKey) return false;
     const videosOnly = (state.cachedItems || []).filter((e) => String(e?.contentType || "").toLowerCase() === "video");
     const init = await iuChunkLoadInitial(iuBasePath(), iuChunkDataVer(), nextKey);
