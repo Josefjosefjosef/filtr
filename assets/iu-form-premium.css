@@ -377,6 +377,145 @@
   box-shadow: 0 2px 10px rgba(220, 38, 38, 0.1) !important;
 }
 
+/* —— Jednotná typografie sekcí —— */
+.iu-ib-section-title,
+.bakalari-card-title,
+.iu-health-card-title,
+.iu-ds-form-block h3,
+#iuFinancialCalcPanel .iu-fin-hub-sectionTitle,
+#iuLegalDocsPanel .iu-legal-catTitle {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  color: var(--iuFp-brand);
+}
+
+.iu-ib-section-title {
+  text-transform: uppercase;
+}
+
+#iuFinancialCalcPanel .iu-fin-hub-sectionSub,
+.iu-health-helper,
+.bakalari-helper {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--iuFp-text-muted);
+}
+
+/* —— Jednotná tlačítka (primární) —— */
+.bakalari-open-btn,
+.iu-health-open-btn,
+#iuLegalDocsPanel .iu-legal-btn--primary,
+#iuFinancialCalcPanel .iu-financial-overlay-ctaHost .iu-financial-overlay-cta,
+#iuFinancialCalcPanel .iu-fin-calc-detail .iu-financial-overlay-cta {
+  min-height: 40px;
+  min-width: 44px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 650;
+  font-family: inherit;
+  border: 1px solid rgba(0, 60, 255, 0.35);
+  background: linear-gradient(180deg, var(--iuFp-brand) 0%, var(--iuFp-brand-dark) 100%);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0, 60, 255, 0.22);
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bakalari-open-btn:hover:not(:disabled),
+.iu-health-open-btn:hover:not(:disabled),
+#iuLegalDocsPanel .iu-legal-btn--primary:hover:not(:disabled),
+#iuFinancialCalcPanel .iu-financial-overlay-ctaHost .iu-financial-overlay-cta:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+/* —— Jednotná tlačítka (sekundární / ghost) —— */
+.bakalari-btn:not(.bakalari-open-btn):not(.bakalari-btn--danger),
+.iu-health-btn,
+.iu-health-btn--secondary,
+#iuLegalDocsPanel .iu-legal-btn--ghost,
+.iu-ds-add,
+.iu-mojeSluzbyBanka .iu-ib-edit-btn {
+  min-height: 40px;
+  min-width: 44px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 650;
+  font-family: inherit;
+  border: 1px solid rgba(0, 60, 255, 0.2);
+  background: linear-gradient(180deg, #fff 0%, #f8faff 100%);
+  color: var(--iuFp-text);
+  box-shadow: 0 2px 8px rgba(0, 60, 255, 0.06);
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bakalari-btn:not(.bakalari-open-btn):not(.bakalari-btn--danger):hover:not(:disabled),
+.iu-health-btn:hover:not(:disabled),
+#iuLegalDocsPanel .iu-legal-btn--ghost:hover:not(:disabled),
+.iu-ds-add:hover:not(:disabled),
+.iu-mojeSluzbyBanka .iu-ib-edit-btn:hover:not(:disabled) {
+  border-color: rgba(0, 60, 255, 0.32);
+  box-shadow: 0 4px 12px rgba(0, 60, 255, 0.1);
+}
+
+/* —— Disabled + focus (přístupnost) —— */
+.bakalari-btn:disabled,
+.bakalari-open-btn:disabled,
+.iu-health-btn:disabled,
+.iu-health-open-btn:disabled,
+#iuLegalDocsPanel .iu-legal-btn:disabled,
+.iu-ds-add:disabled,
+#iuInvoicePanel .iu-inv-btn:disabled,
+#iuInvoicePanel .iu-inv-btn[disabled] {
+  opacity: 0.48;
+  cursor: not-allowed;
+  filter: none;
+  box-shadow: none;
+  transform: none;
+}
+
+.bakalari-btn:focus-visible,
+.bakalari-open-btn:focus-visible,
+.iu-health-btn:focus-visible,
+.iu-health-open-btn:focus-visible,
+#iuLegalDocsPanel .iu-legal-btn:focus-visible,
+.iu-ds-add:focus-visible,
+#iuInvoicePanel .iu-inv-btn:focus-visible,
+.iu-mojeSluzbyBanka .iu-ib-edit-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 60, 255, 0.22);
+}
+
+/* —— Responsivita: žádné horizontální přetečení —— */
+#iuInvoicePanel .iu-invoice-overlay-body,
+#iuLegalDocsPanel .iu-legal-overlay-body,
+#iuFinancialCalcPanel .iu-financial-overlay-body,
+.iu-ds-panelBody,
+#iuQuickFeed .iu-banking-scroll-host,
+.iu-health-root,
+.bakalari-root {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* —— Výkon: lazy paint velkých karet bez CLS —— */
+.bakalari-card,
+.iu-health-card,
+.iu-ds-form-block,
+#iuInvoicePanel .iu-inv-block,
+#iuFinancialCalcPanel .iu-fin-hub-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 140px;
+}
+
 @media (max-width: 1023px) {
   #iuInvoicePanel .iu-inv-block,
   .bakalari-card,
@@ -389,5 +528,14 @@
   .iu-tool-privacy-short {
     font-size: 11px;
     padding: 7px 10px;
+  }
+
+  .bakalari-btn,
+  .bakalari-open-btn,
+  .iu-health-btn,
+  .iu-health-open-btn,
+  #iuLegalDocsPanel .iu-legal-btn,
+  .iu-ds-add {
+    min-height: 44px;
   }
 }
