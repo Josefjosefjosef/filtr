@@ -383,6 +383,8 @@
     var bodyEl = modalEl.querySelector("#iuToolPrivacyModalBody");
     if (titleEl) titleEl.textContent = MODAL_TITLES[key] || "Informace o soukromí";
     if (bodyEl) bodyEl.innerHTML = renderModalBody(key);
+    var scrollEl = modalEl.querySelector(".iu-tool-privacy-modal__scroll");
+    if (scrollEl) scrollEl.scrollTop = 0;
     modalEl.hidden = false;
     modalEl.removeAttribute("hidden");
     modalEl.removeAttribute("aria-hidden");
