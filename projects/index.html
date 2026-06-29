@@ -1912,6 +1912,7 @@ font-src 'self' data:;
     <link rel="preload" as="video" href="/assets/partners/partner-iaf-petr-ondrus-right-rail-motion-v2.mp4" media="(min-width: 1025px)" type="video/mp4" />
     <link rel="preload" as="image" href="/assets/partners/partner-iaf-petr-ondrus-right-rail-v1.png" media="(min-width: 1025px)" />
     <link rel="stylesheet" href="/assets/iu-desktop-home-premium.css?v=3" />
+    <link rel="stylesheet" href="/assets/iu-desktop-info-panel.css?v=desktop-info-panel-v1-20260629" />
     <link rel="stylesheet" href="/assets/iu-myinfouzel-premium-overlay.css?v=2" />
     <style id="iuParcelWatchFirstPaintClsGuard">
       /* P0 CLS: post parcel-dashboard.css — lock first paint = hydrated compact height; no vertical clip on mainShell. */
@@ -2521,6 +2522,7 @@ font-src 'self' data:;
                         </section>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHolidayWeather" aria-hidden="true"></div>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorTallBefore" aria-hidden="true"></div>
+                        <div id="iuDesktopInfoPanelMount" class="iuDesktopInfoPanelMount" hidden aria-hidden="true"></div>
                         <div id="iuFeedNewsSplit" class="iuFeedNewsSplit" aria-hidden="true">
                           <div class="iuFeedNewsSplit__row">
                             <span class="iuFeedNewsSplit__line" aria-hidden="true"></span>
@@ -5632,6 +5634,7 @@ font-src 'self' data:;
     <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-v1"></script>
     <script defer src="/assets/iu-tool-privacy-info.js?v=tool-privacy-overlay-position-v71-20260629"></script>
     <script type="module" src="/assets/app.js?v=client-article-layer-v66-20260629"></script>
+    <script type="module" src="/assets/iu-desktop-info-panel.js?v=desktop-info-panel-v1-20260629"></script>
     <script>
     (function iuOverlayCssDeferGuard(){
       "use strict";
@@ -6291,6 +6294,10 @@ font-src 'self' data:;
                 <span class="iuInfoCenter__tileIcon" aria-hidden="true">💾</span>
                 <span class="iuInfoCenter__tileLabel">Jak funguje ukládání dat</span>
               </button>
+              <button type="button" class="iuInfoCenter__tile" data-iu-info-section="data-sources">
+                <span class="iuInfoCenter__tileIcon" aria-hidden="true">📡</span>
+                <span class="iuInfoCenter__tileLabel">Zdroje dat</span>
+              </button>
               <button type="button" class="iuInfoCenter__tile" data-iu-info-section="contact">
                 <span class="iuInfoCenter__tileIcon" aria-hidden="true">🏢</span>
                 <span class="iuInfoCenter__tileLabel">Provozovatel a kontakt</span>
@@ -6700,6 +6707,25 @@ font-src 'self' data:;
               <h3 class="iuInfoCenter__h3">Silver a local-first</h3>
               <p class="iuInfoCenter__p">Silver zapisuje do stejných lokálních modulů (poznámky, úkoly, kalendář). Vyhledávání v Silveru probíhá nad daty v prohlížeči, ne na serveru.</p>
               <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy">Ochrana soukromí a data →</button></p>
+              <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
+            </div>
+          </article>
+
+          <article id="iuInfoCenterDetailDataSources" class="iuInfoCenter__detail" data-iu-info-section="data-sources" hidden>
+            <div class="iuInfoCenter__detailInner">
+              <p class="iuInfoCenter__lead">Údaje v informačním panelu slouží pouze pro rychlou orientaci. InfoUzel.cz čerpá data pouze z veřejně dostupných, oficiálních nebo licencovaných zdrojů, jejichž podmínky umožňují zobrazení na našem webu. U každé položky je uveden zdroj dat, čas poslední aktualizace a odkaz na podmínky použití. Pokud u některého údaje není bezpečný zdroj ověřen, údaj se nezobrazuje jako živé dato.</p>
+              <div class="iuInfoCenter__box" role="note">
+                <strong>Právní poznámka</strong>
+                <p class="iuInfoCenter__p">InfoUzel.cz nevydává zobrazované údaje za vlastní primární data. Údaje jsou přebírány z uvedených zdrojů v rozsahu povoleném jejich podmínkami. Data slouží pouze pro rychlou orientaci a nemusí být vhodná jako jediný podklad pro rozhodování. Uživatel by si měl důležité údaje ověřit přímo u oficiálního zdroje.</p>
+              </div>
+              <h3 class="iuInfoCenter__h3">Přehled položek panelu (PC)</h3>
+              <ul class="iuInfoCenter__ul">
+                <li><strong>EUR / CZK, USD / CZK</strong> — Česká národní banka (denní fixace). Snapshot aktualizovaný v CI. <a class="iuInfoCenter__link" href="https://www.cnb.cz/cs/verejnost/pro-media/informace-pro-media/pravidla-pro-pouzivani-informaci-cnb/" target="_blank" rel="noopener noreferrer">Podmínky ČNB</a></li>
+                <li><strong>Bitcoin</strong> — CoinGecko (orientační tržní cena). <a class="iuInfoCenter__link" href="https://www.coingecko.com/en/api_terms" target="_blank" rel="noopener noreferrer">Podmínky CoinGecko</a></li>
+                <li><strong>Benzín, doprava, elektřina, zlato, vlaky, letecká doprava</strong> — zatím placeholder „Zdroj se ověřuje“; neověřený live zdroj není napojen.</li>
+              </ul>
+              <p class="iuInfoCenter__p">Podrobný interní právní přehled je v dokumentaci projektu: <code>docs/data-sources/legal-review-info-panel.md</code>.</p>
+              <p class="iuInfoCenter__p">U každé položky panelu klepněte na ⓘ pro poskytovatele, typ dat, aktualizaci a odkazy.</p>
               <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
             </div>
           </article>
