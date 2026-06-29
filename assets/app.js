@@ -16,13 +16,12 @@ import {
   iuSvatekBuildPoprejLineFromRaw,
 } from "./iu-nameday-dative.js";
 import {
+  CLIENT_INITIAL_LIMIT,
   IU_HOMEPAGE_CHUNK_MANIFEST_FILE,
-  IU_CHUNK_BUFFER_MAX,
   IU_CHUNK_INITIAL_SIZE,
   iuUseChunkedArticleLoader,
   iuChunkResolveSectionKey,
   iuChunkLoadInitial,
-  iuChunkFetchBackgroundBuffer,
   iuChunkFetchLoadMore,
   iuChunkPoolShapedPayload,
   iuChunkHasMoreOnServer,
@@ -34,6 +33,13 @@ import {
   iuChunkNavSectionFromUrl,
   iuChunkVisibleArticleBudget,
 } from "./iu-article-chunk-loader.js";
+import {
+  iuClientArticleStoreReset,
+  iuClientArticleStoreIngest,
+  iuClientArticleStoreCreateVirtualPrehledLoader,
+  iuClientArticleStoreIsVirtualPrehledLoader,
+  iuClientArticleStoreGetPrehledDneView,
+} from "./iu-client-article-store.js";
 /* P0.5: financial / legal / invoice tool overlays load via dynamic import (see iuBootDeferredToolOverlays) — reduces initial parse + main-thread work. */
 /* SEV1: iuIsProjectsRoute — global + window for safe scope (module/global) */
 var iuIsProjectsRoute = function iuIsProjectsRoute(){
@@ -2218,6 +2224,20 @@ try {
     return false;
   }
 
+  /** Task 66: one atomic DOM write for first CLIENT_INITIAL_LIMIT chunk paint (avoids multi-batch CLS). */
+  function iuFeedChunkInitialDomTightP(visibleCount) {
+    try {
+      if (!iuUseChunkedArticleLoader() || !state.chunkLoader) return false;
+      if (iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader)) return false;
+      const page = Number(state.page) >= 1 ? Number(state.page) : 1;
+      if (page !== 1) return false;
+      if (Number(visibleCount) > CLIENT_INITIAL_LIMIT) return false;
+      return !iuFeedSectionSwitchActiveP();
+    } catch (_) {
+      return false;
+    }
+  }
+
   // === STATUS HELPERS EXTENSION (maintenance-safe) ===
   window.iuSetDataStatus = function(articlesCount, videosCount){
     const el = document.getElementById("dataStatus");
@@ -2561,6 +2581,7 @@ try {
         const sectionKey = iuChunkNavSectionFromUrl();
         const init = await iuChunkLoadInitial(iuBasePath(), iuChunkDataVer(), sectionKey);
         state.chunkLoader = init.loader;
+        iuClientArticleStoreIngest(sectionKey, init.loader.articles || init.initialArticles || []);
         iuPreviewSyncSectionPreviewItemsFromLoader(init.loader);
         try {
           window.__iuArticlesLoaderMode = "chunk-v1";
@@ -6038,7 +6059,7 @@ try {
     const mediaHub100 = iuIsMediaHubFullFeedPaging();
     const chunkMode = iuUseChunkedArticleLoader() && state.chunkLoader;
     const pageSize = chunkMode
-      ? IU_CHUNK_INITIAL_SIZE
+      ? CLIENT_INITIAL_LIMIT
       : mediaHub100
         ? 100
         : Number(state.pageSize) > 0
@@ -6248,6 +6269,7 @@ try {
     let firstFeedBatchMarked = false;
     const reloadDomTight = iuFeedReloadDomTightenP();
     const sectionSwitchActive = iuFeedSectionSwitchActiveP();
+    const chunkInitialDomTight = iuFeedChunkInitialDomTightP(visibleItems.length);
     const iuFeedMicroDomYieldOffP = () => {
       try {
         return typeof location !== "undefined" && /(?:^|[?&])iuFeedMicro=0(?:&|$)/.test(String(location.search || ""));
@@ -6260,7 +6282,9 @@ try {
         return;
       }
       const batchMax = firstDomBatch
-        ? sectionSwitchActive
+        ? chunkInitialDomTight
+          ? visibleItems.length
+          : sectionSwitchActive
           ? IU_FEED_SECTION_SWITCH_FIRST_BATCH
           : reloadDomTight
           ? IU_FEED_RELOAD_FIRST_DOM_BATCH
@@ -6274,7 +6298,7 @@ try {
       const batchEnd = Math.min(pos + batchMax, visibleItems.length);
       let microSinceYield = 0;
       const microStride =
-        isSectionSwitchFirstBatch || reloadDomTight || iuFeedMicroDomYieldOffP()
+        isSectionSwitchFirstBatch || reloadDomTight || chunkInitialDomTight || iuFeedMicroDomYieldOffP()
           ? 9999
           : iuFeedDomMicroYieldStride();
       for (; pos < batchEnd; pos++) {
@@ -17617,20 +17641,47 @@ function buildVideoAsArticleCard(it) {
 
   async function iuChunkReloadIfSectionChanged() {
     if (!iuUseChunkedArticleLoader()) return false;
+    if (iuIsPrehledDneFeedContext()) {
+      if (iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader)) return false;
+      const videosOnly = (state.cachedItems || []).filter((e) => String(e?.contentType || "").toLowerCase() === "video");
+      const virtualArticles = iuClientArticleStoreGetPrehledDneView();
+      state.chunkLoader = iuClientArticleStoreCreateVirtualPrehledLoader(
+        state.chunkLoader && state.chunkLoader.manifest ? state.chunkLoader.manifest : null,
+      );
+      __iuFeedPrimaryPairLast = null;
+      const sanitized = await iuChunkNormalizeArticleRows(virtualArticles);
+      const enriched = sanitized.map((item) => {
+        const published = String(item.publishedAt || item.published || item.date || item.createdAt || item.time || "");
+        return { ...item, _ts: published ? Date.parse(published) || 0 : 0 };
+      });
+      const mixed = buildCombinedFeed(enriched, videosOnly);
+      state.cachedItems = mixed.filter((entry) => iuArticleReleaseEligible(entry));
+      state.filteredItems = state.cachedItems.slice();
+      state.page = 1;
+      return true;
+    }
     let navSec = "";
     try {
       navSec = String((document.body && document.body.dataset && document.body.dataset.section) || "")
         .trim()
         .toLowerCase();
     } catch (_) {}
-    const nextKey = iuChunkResolveSectionKey({
-      mediaTopicKey: state.mediaTopicKey,
-      activeSection: navSec || state.activeSection,
-    });
+    const nextKey = (() => {
+      let key = iuChunkResolveSectionKey({
+        mediaTopicKey: state.mediaTopicKey,
+        activeSection: navSec || state.activeSection,
+      });
+      if (key === "feed") {
+        const topic = String(state.mediaTopicKey || "").trim().toLowerCase();
+        if (!topic || topic === "all") key = "zpravy";
+      }
+      return key;
+    })();
     if (state.chunkLoader && state.chunkLoader.sectionKey === nextKey) return false;
     const videosOnly = (state.cachedItems || []).filter((e) => String(e?.contentType || "").toLowerCase() === "video");
     const init = await iuChunkLoadInitial(iuBasePath(), iuChunkDataVer(), nextKey);
     state.chunkLoader = init.loader;
+    iuClientArticleStoreIngest(nextKey, init.loader.articles || init.initialArticles || []);
     iuPreviewSyncSectionPreviewItemsFromLoader(init.loader);
     __iuFeedPrimaryPairLast = null;
     const sanitized = await iuChunkNormalizeArticleRows(init.initialArticles);
@@ -17642,7 +17693,6 @@ function buildVideoAsArticleCard(it) {
     state.cachedItems = mixed.filter((entry) => iuArticleReleaseEligible(entry));
     state.filteredItems = state.cachedItems.slice();
     state.page = 1;
-    void iuChunkScheduleBackgroundBuffer(state.loadRequestId);
     return true;
   }
 
@@ -19002,21 +19052,27 @@ function buildVideoAsArticleCard(it) {
   async function iuChunkMergeArticlesIntoCache(newArticles, requestToken) {
     if (!Array.isArray(newArticles) || !newArticles.length) return 0;
     if (!isLatestLoadRequest(requestToken)) return 0;
+    const sectionKey =
+      state.chunkLoader && state.chunkLoader.sectionKey ? String(state.chunkLoader.sectionKey) : "feed";
     const sanitized = await iuChunkNormalizeArticleRows(newArticles);
     if (!sanitized.length || !isLatestLoadRequest(requestToken)) return 0;
+    const canonical = iuClientArticleStoreIngest(sectionKey, sanitized);
     const videosOnly = (state.cachedItems || []).filter((e) => String(e?.contentType || "").toLowerCase() === "video");
     const articlesOnly = (state.cachedItems || []).filter((e) => String(e?.contentType || "").toLowerCase() === "article");
     const seen = new Set(
       articlesOnly.map((a) => String(a?.url || "").trim()).filter(Boolean),
     );
     const mergedArticles = articlesOnly.slice();
-    for (const it of sanitized) {
+    for (const it of canonical) {
       const u = String(it?.url || "").trim();
       if (u && seen.has(u)) continue;
       if (u) seen.add(u);
       mergedArticles.push(it);
     }
     mergedArticles.sort((a, b) => (Date.parse(b.publishedAt || "") || 0) - (Date.parse(a.publishedAt || "") || 0));
+    if (state.chunkLoader && !iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader)) {
+      iuClientArticleStoreIngest(sectionKey, state.chunkLoader.articles || mergedArticles);
+    }
     const enriched = mergedArticles.map((item) => {
       const published = String(item.publishedAt || item.published || item.date || item.createdAt || item.time || "");
       return { ...item, _ts: published ? Date.parse(published) || 0 : 0 };
@@ -19028,37 +19084,13 @@ function buildVideoAsArticleCard(it) {
   }
 
   async function iuChunkScheduleBackgroundBuffer(requestToken) {
+    /* Task 66: initial load already includes CLIENT_INITIAL_LIMIT — no second background fetch pass. */
     if (!iuUseChunkedArticleLoader() || !state.chunkLoader) return;
     try {
-      iuBootTracePhase("chunk_background_buffer_start");
-      await iuYieldOneRaf();
-      if (!isLatestLoadRequest(requestToken) || !state.chunkLoader || state.chunkLoader.backgroundDone) return;
-      const before = (state.cachedItems || []).filter((e) => String(e?.contentType || "") === "article").length;
-      await iuChunkFetchBackgroundBuffer(state.chunkLoader, iuBasePath(), iuChunkDataVer());
-      const bufferArticles = (state.chunkLoader.articles || []).slice(0, IU_CHUNK_BUFFER_MAX);
-      const existingUrls = new Set(
-        (state.cachedItems || [])
-          .filter((e) => String(e?.contentType || "") === "article")
-          .map((a) => String(a?.url || "").trim())
-          .filter(Boolean),
-      );
-      const toMerge = bufferArticles.filter((a) => {
-        const u = String(a?.url || "").trim();
-        return u && !existingUrls.has(u);
-      });
-      if (toMerge.length) {
-        await iuChunkMergeArticlesIntoCache(toMerge, requestToken);
-        if (isLatestLoadRequest(requestToken)) {
-          await applyFilter({ resetPage: false, render: true });
-        }
-      }
-      iuBootTracePhase("chunk_background_buffer_end");
-      try {
+      if (state.chunkLoader.backgroundDone) {
         window.__iuChunkBackgroundBufferDone = true;
-      } catch (_) {}
-    } catch (e) {
-      debugWarn("[CHUNK] background buffer failed", e);
-    }
+      }
+    } catch (_) {}
   }
 
   async function loadData(opts) {
@@ -19081,6 +19113,7 @@ function buildVideoAsArticleCard(it) {
     if (iuUseChunkedArticleLoader()) {
       state.chunkLoader = null;
       __iuFeedPrimaryPairLast = null;
+      iuClientArticleStoreReset();
     }
     iuBootTracePhase("loadData_start");
     iuPreviewFeedProbeTick("loadDataStart");
@@ -19552,7 +19585,9 @@ function buildVideoAsArticleCard(it) {
       iuPreviewFeedProbeTick("afterFirstRenderFeed");
       iuHomeLoadAuditNotify("loadData:afterFirstRender");
       if (iuUseChunkedArticleLoader()) {
-        void iuChunkScheduleBackgroundBuffer(requestToken);
+        try {
+          window.__iuChunkBackgroundBufferDone = !!(state.chunkLoader && state.chunkLoader.backgroundDone);
+        } catch (_) {}
       }
       if (isDebugLogging) {
         debugLog(
