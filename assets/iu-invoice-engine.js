@@ -449,14 +449,14 @@ export function buildInvoicePaperHtml(state, totals) {
         "</td><td>" +
         escHtml(ln.name) +
         (ln.description ? "<div class=\"iu-inv-pr-desc\">" + escHtml(ln.description) + "</div>" : "") +
-        "</td><td class=\"iu-inv-pr-num\">" +
+        "</td><td class=\"iu-inv-pr-col iu-inv-pr-col--qty\">" +
         escHtml(String(ln.qty)) +
-        "</td><td>" +
+        "</td><td class=\"iu-inv-pr-col iu-inv-pr-col--unit\">" +
         escHtml(ln.unit || "ks") +
         "</td><td class=\"iu-inv-pr-num\">" +
         escHtml(fmtMoney(up)) +
         "</td>" +
-        (totals.payer ? "<td class=\"iu-inv-pr-num\">" + escHtml(String(vr)) + "%</td>" : "") +
+        (totals.payer ? "<td class=\"iu-inv-pr-col iu-inv-pr-col--vat\">" + escHtml(String(vr)) + "%</td>" : "") +
         "<td class=\"iu-inv-pr-num iu-inv-pr-strong\">" +
         escHtml(fmtMoney(a.gross)) +
         "</td></tr>"
@@ -507,8 +507,8 @@ export function buildInvoicePaperHtml(state, totals) {
       : "") +
     "</tbody></table>" +
     bankHtml +
-    "<table class=\"iu-inv-pr-table\"><thead><tr><th>#</th><th>Položka</th><th>Množ.</th><th>Jedn.</th><th>Cena / j.</th>" +
-    (totals.payer ? "<th>DPH</th>" : "") +
+    "<table class=\"iu-inv-pr-table\"><thead><tr><th>#</th><th>Položka</th><th class=\"iu-inv-pr-col iu-inv-pr-col--qty\">Množ.</th><th class=\"iu-inv-pr-col iu-inv-pr-col--unit\">Jedn.</th><th>Cena / j.</th>" +
+    (totals.payer ? "<th class=\"iu-inv-pr-col iu-inv-pr-col--vat\">DPH</th>" : "") +
     "<th>Celkem</th></tr></thead><tbody>" +
     rows +
     "</tbody></table>" +
