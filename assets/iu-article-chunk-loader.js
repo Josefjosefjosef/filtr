@@ -1,20 +1,35 @@
 /**
- * Frontend article chunk loader (V1).
- * Delivery layer over publishable_pool — homepage never fetches the full pool by default.
+ * Frontend article chunk loader (V1 → client delivery layer task 66).
+ * Fetches published server chunks only — no aggregation, publication, or pool decisions on client.
  */
 
+import {
+  CLIENT_INITIAL_LIMIT,
+  CLIENT_LOAD_MORE_LIMIT,
+  IU_ARTICLE_FEED_CHUNKS_DIR,
+  IU_CHUNK_FILE_SIZE,
+  IU_CHUNK_INITIAL_SIZE,
+  IU_CHUNK_LOAD_MORE_SIZE,
+  IU_HOMEPAGE_CHUNK_MANIFEST_FILE,
+} from "./iu-client-article-config.js";
+
+export {
+  CLIENT_INITIAL_LIMIT,
+  CLIENT_LOAD_MORE_LIMIT,
+  IU_ARTICLE_FEED_CHUNKS_DIR,
+  IU_CHUNK_FILE_SIZE,
+  IU_CHUNK_INITIAL_SIZE,
+  IU_CHUNK_LOAD_MORE_SIZE,
+  IU_HOMEPAGE_CHUNK_MANIFEST_FILE,
+} from "./iu-client-article-config.js";
+
 export const IU_CHUNK_SCHEMA_VERSION = 1;
-export const IU_CHUNK_INITIAL_SIZE = 30;
-export const IU_CHUNK_BUFFER_MAX = 100;
-export const IU_CHUNK_LOAD_MORE_SIZE = 100;
-export const IU_CHUNK_FILE_SIZE = 100;
-export const IU_ARTICLE_FEED_CHUNKS_DIR = "article_feed_chunks";
-export const IU_HOMEPAGE_CHUNK_MANIFEST_FILE = "article_feed_chunks/manifest.json";
+export const IU_CHUNK_BUFFER_MAX = CLIENT_INITIAL_LIMIT;
 
 /** @typedef {{ schemaVersion:number, generatedAt:string, poolGeneratedAt:string, chunkSize:number, initialSize:number, bufferMax:number, loadMoreSize:number, sections:Record<string,{totalArticles:number,chunkCount:number,chunkSize:number,initChunk?:string,initSize?:number,bufferMax?:number,chunks:string[]}>, sourcePool:string }} IuChunkManifest */
 
 export function iuChunkManifestUrl(basePath, dataVer) {
-  const base = String(basePath || "/projects/").replace(/\/?$/, "/") + "data/" + IU_HOMEPAGE_CHUNK_MANIFEST_FILE;
+  const base = String(basePath || "/projects/").replace(/\/?$/, "/") + "data/" + IU_ARTICLE_FEED_CHUNKS_DIR + "/manifest.json";
   const vq = !dataVer || dataVer === "iu-data-ver-placeholder" ? "iu-data-ver-placeholder" : dataVer;
   return `${base}?v=${encodeURIComponent(vq)}`;
 }
@@ -77,9 +92,12 @@ export function iuChunkNavSectionFromUrl() {
     if (sec === "travel") mediaTopicKey = "cestovani";
     else if ((sec === "feed" || sec === "media") && topic && topic !== "all") mediaTopicKey = topic;
     else if (["hry", "kultura", "veda", "vzdelavani"].indexOf(sec) !== -1) mediaTopicKey = sec;
-    return iuChunkResolveSectionKey({ mediaTopicKey, activeSection: sec });
+    let key = iuChunkResolveSectionKey({ mediaTopicKey, activeSection: sec });
+    /* Prehled dne / hub feed chunk is virtual on client — bootstrap from zpravy until user opens Prehled dne view. */
+    if (key === "feed" && (!topic || topic === "all")) key = "zpravy";
+    return key;
   } catch (_) {
-    return "feed";
+    return "zpravy";
   }
 }
 
@@ -144,6 +162,7 @@ export async function iuChunkEnsureManifest(loader, basePath, dataVer) {
 export function iuChunkSectionMeta(loader) {
   const m = loader && loader.manifest;
   if (!m || !m.sections) return null;
+  if (loader._iuVirtualPrehledDne) return null;
   return m.sections[loader.sectionKey] || m.sections.feed || null;
 }
 
@@ -173,11 +192,18 @@ function iuChunkDedupeAppend(existing, incoming) {
   return out;
 }
 
+function iuChunkCapArticles(loader) {
+  if (!loader || !Array.isArray(loader.articles)) return;
+  if (loader.articles.length > CLIENT_INITIAL_LIMIT) {
+    loader.articles = loader.articles.slice(0, CLIENT_INITIAL_LIMIT);
+  }
+  loader.articlesParsedCount = loader.articles.length;
+}
+
 async function iuChunkFetchRel(loader, relPath, basePath, dataVer, label, chunkIndexMark) {
   const url = iuChunkFileUrl(basePath, relPath, dataVer);
   const payload = await iuChunkFetchJson(url, label);
   const rows = Array.isArray(payload && payload.articles) ? payload.articles : [];
-  /* Section preview cards ride along with the feed init payload — no per-section fetch on homepage. */
   if (payload && payload.sectionPreviewItems && typeof payload.sectionPreviewItems === "object") {
     loader.sectionPreviewItems = payload.sectionPreviewItems;
     const edu = payload.sectionPreviewItems.vzdelavani;
@@ -220,29 +246,44 @@ export async function iuChunkFetchChunkIndex(loader, chunkIndex, basePath, dataV
   return iuChunkFetchRel(loader, meta.chunks[chunkIndex], basePath, dataVer, `chunk_${chunkIndex}`, chunkIndex);
 }
 
+/** Single initial fetch: init + first chunk until CLIENT_INITIAL_LIMIT (no background pass). */
+export async function iuChunkLoadInitialSectionArticles(loader, basePath, dataVer) {
+  await iuChunkFetchInit(loader, basePath, dataVer);
+  if (loader.articles.length < CLIENT_INITIAL_LIMIT) {
+    await iuChunkFetchBufferChunk(loader, basePath, dataVer);
+  }
+  iuChunkCapArticles(loader);
+  loader.backgroundDone = true;
+  loader.nextLoadMoreChunkIndex = loader.bufferChunkLoaded ? 1 : 0;
+  try {
+    if (typeof window !== "undefined") window.__iuChunkBackgroundBufferDone = true;
+  } catch (_) {}
+  return loader.articles.slice();
+}
+
 export async function iuChunkLoadInitial(basePath, dataVer, sectionKey) {
   const loader = iuChunkCreateLoaderState(sectionKey);
   await iuChunkEnsureManifest(loader, basePath, dataVer);
-  const initRows = await iuChunkFetchInit(loader, basePath, dataVer);
+  const initialRows = await iuChunkLoadInitialSectionArticles(loader, basePath, dataVer);
   const meta = iuChunkSectionMeta(loader);
   return {
     loader,
-    initialArticles: initRows.slice(0, IU_CHUNK_INITIAL_SIZE),
+    initialArticles: initialRows,
     generatedAt: loader.manifest && loader.manifest.generatedAt ? loader.manifest.generatedAt : null,
-    totalInSection: (meta && meta.totalArticles) || loader.totalInSection || initRows.length,
+    totalInSection: (meta && meta.totalArticles) || loader.totalInSection || initialRows.length,
   };
 }
 
+/** Legacy no-op: initial load already includes CLIENT_INITIAL_LIMIT. */
 export async function iuChunkFetchBackgroundBuffer(loader, basePath, dataVer) {
-  if (!loader || loader.backgroundDone) return [];
-  await iuChunkFetchBufferChunk(loader, basePath, dataVer);
-  const cap = IU_CHUNK_BUFFER_MAX;
-  loader.backgroundDone = true;
-  return loader.articles.slice(0, cap);
+  if (!loader || loader.backgroundDone) return loader && loader.articles ? loader.articles.slice(0, CLIENT_INITIAL_LIMIT) : [];
+  return iuChunkLoadInitialSectionArticles(loader, basePath, dataVer);
 }
 
 export async function iuChunkFetchLoadMore(loader, basePath, dataVer) {
-  if (!loader || loader.loadMoreInflight) return { added: [], chunkIndex: null };
+  if (!loader || loader.loadMoreInflight || loader._iuVirtualPrehledDne) {
+    return { added: [], chunkIndex: null };
+  }
   loader.loadMoreInflight = true;
   try {
     const idx = loader.nextLoadMoreChunkIndex;
@@ -251,13 +292,20 @@ export async function iuChunkFetchLoadMore(loader, basePath, dataVer) {
     const before = loader.articles.length;
     await iuChunkFetchChunkIndex(loader, idx, basePath, dataVer);
     loader.nextLoadMoreChunkIndex = idx + 1;
-    return { added: loader.articles.slice(before), chunkIndex: idx };
+    const added = loader.articles.slice(before);
+    if (added.length > CLIENT_LOAD_MORE_LIMIT) {
+      loader.articles = loader.articles.slice(0, before + CLIENT_LOAD_MORE_LIMIT);
+      loader.articlesParsedCount = loader.articles.length;
+      return { added: loader.articles.slice(before), chunkIndex: idx };
+    }
+    return { added, chunkIndex: idx };
   } finally {
     loader.loadMoreInflight = false;
   }
 }
 
 export function iuChunkHasMoreOnServer(loader) {
+  if (!loader || loader._iuVirtualPrehledDne) return false;
   const meta = iuChunkSectionMeta(loader);
   if (!meta) return false;
   return loader.nextLoadMoreChunkIndex < meta.chunkCount;
@@ -265,8 +313,8 @@ export function iuChunkHasMoreOnServer(loader) {
 
 export function iuChunkVisibleArticleBudget(page) {
   const p = Number(page) >= 1 ? Number(page) : 1;
-  if (p <= 1) return IU_CHUNK_INITIAL_SIZE;
-  return IU_CHUNK_INITIAL_SIZE + (p - 1) * IU_CHUNK_LOAD_MORE_SIZE;
+  if (p <= 1) return CLIENT_INITIAL_LIMIT;
+  return CLIENT_INITIAL_LIMIT + (p - 1) * CLIENT_LOAD_MORE_LIMIT;
 }
 
 export function iuChunkPoolShapedPayload(loader, articles, generatedAt) {
@@ -295,5 +343,7 @@ try {
   if (typeof window !== "undefined") {
     window.iuUseChunkedArticleLoader = iuUseChunkedArticleLoader;
     window.__iuHomepageFeedDataSource = IU_HOMEPAGE_CHUNK_MANIFEST_FILE;
+    window.__iuClientInitialLimit = CLIENT_INITIAL_LIMIT;
+    window.__iuClientLoadMoreLimit = CLIENT_LOAD_MORE_LIMIT;
   }
 } catch (_) {}

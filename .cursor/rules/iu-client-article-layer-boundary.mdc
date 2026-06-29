@@ -1,0 +1,29 @@
+---
+description: Client article delivery vs server aggregation/publication boundary (P0 task 66)
+globs:
+  - assets/iu-client-article-config.js
+  - assets/iu-client-article-store.js
+  - assets/iu-article-chunk-loader.js
+  - assets/app.js
+---
+
+# Client vs server article layers (PERMANENT)
+
+## SERVER (never import client delivery modules)
+
+- Aggregation, publication, Data Bot, RSS, DB, chunk generation, `publishable_pool.json`
+- Ordering, deduplication, and “what is published” decisions
+
+## CLIENT (browser only)
+
+- `iu-client-article-config.js` — `CLIENT_INITIAL_LIMIT`, `CLIENT_LOAD_MORE_LIMIT`
+- `iu-client-article-store.js` — single in-memory canonical objects per URL
+- `iu-article-chunk-loader.js` — fetch published chunks only; no pool on visit
+- Prehled dne — virtual view from store; **no dedicated fetch**
+
+## Rules
+
+1. Client changes must not touch `projects/data/**` generators, bots, or CI publish pipelines.
+2. Server/publish changes must not require edits to client limits or store logic.
+3. One article URL = one object in `iuClientArticleStore`.
+4. Section switch loads at most `CLIENT_INITIAL_LIMIT`; „Další“ adds `CLIENT_LOAD_MORE_LIMIT` for **active section only**.

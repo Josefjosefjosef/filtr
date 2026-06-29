@@ -3,8 +3,8 @@
  * Article entrypoint parity guard (V1).
  *
  * Ensures chunked article loading behaves identically regardless of entry path:
- * INIT=30, BUFFER=100 (active section only), LOAD_MORE=fetches next chunk.
- * Never: FULL_POOL, FULL_ARCHIVE, ALL_SECTIONS_PRELOAD.
+ * INITIAL=CLIENT_INITIAL_LIMIT (100), LOAD_MORE=CLIENT_LOAD_MORE_LIMIT per active section.
+ * Never: FULL_POOL, FULL_ARCHIVE, ALL_SECTIONS_PRELOAD, Prehled dne own fetch.
  *
  * Run: npm run article-entrypoint-parity-guard
  */
@@ -33,7 +33,7 @@ const USE_LOCAL_SERVER = !process.env.IU_GUARD_BASE_URL;
 const REPORT_PATH = path.join(REPO, "scripts", "iu-article-entrypoint-parity-guard-report.json");
 
 const RECEIVED_FAIL_MAX = 500;
-const BACKGROUND_RECEIVED_MAX = 150;
+const BACKGROUND_RECEIVED_MAX = 120;
 
 function bufferChunkSections(entries) {
   const dirs = new Set();
@@ -131,17 +131,23 @@ function staticArchitectureGuard() {
   const appSrc = fs.readFileSync(path.join(REPO, "assets", "app.js"), "utf8");
   const loaderSrc = fs.readFileSync(path.join(REPO, "assets", "iu-article-chunk-loader.js"), "utf8");
 
+  const configSrc = fs.readFileSync(path.join(REPO, "assets", "iu-client-article-config.js"), "utf8");
+  const storeSrc = fs.readFileSync(path.join(REPO, "assets", "iu-client-article-store.js"), "utf8");
+
   if (!appSrc.includes("iuUseChunkedArticleLoader")) {
     fails.push("static: assets/app.js missing iuUseChunkedArticleLoader");
   }
-  if (!appSrc.includes("iuChunkScheduleBackgroundBuffer")) {
-    fails.push("static: assets/app.js missing iuChunkScheduleBackgroundBuffer");
+  if (!appSrc.includes("iuClientArticleStoreReset")) {
+    fails.push("static: assets/app.js missing iuClientArticleStoreReset");
   }
-  if (!loaderSrc.includes("IU_CHUNK_INITIAL_SIZE = 30")) {
-    fails.push("static: IU_CHUNK_INITIAL_SIZE must remain 30");
+  if (!configSrc.includes("CLIENT_INITIAL_LIMIT = 100")) {
+    fails.push("static: CLIENT_INITIAL_LIMIT must be 100 in iu-client-article-config.js");
   }
-  if (!loaderSrc.includes("IU_CHUNK_BUFFER_MAX = 100")) {
-    fails.push("static: IU_CHUNK_BUFFER_MAX must remain 100");
+  if (!configSrc.includes("CLIENT_LOAD_MORE_LIMIT = 100")) {
+    fails.push("static: CLIENT_LOAD_MORE_LIMIT must be 100 in iu-client-article-config.js");
+  }
+  if (!storeSrc.includes("iuClientArticleStoreGetPrehledDneView")) {
+    fails.push("static: missing iuClientArticleStoreGetPrehledDneView");
   }
 
   const pairIdx = appSrc.indexOf("async function __iuFetchArticlesVideosPrimaryPair");
