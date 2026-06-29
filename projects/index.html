@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <meta name="iu-build" content="desktop-header-height-compression-20260607" />
+    <meta name="iu-build" content="form-premium-design-system-v2-final-20260629" />
     <meta name="iu-data-ver" content="iu-data-ver-placeholder" />
-    <!-- iu-build: desktop-header-height-compression-20260607 -->
+    <!-- iu-build: form-premium-design-system-v2-final-20260629 -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -33,8 +33,10 @@
     <title>infoUzel.cz</title>
     <meta name="description" content="infoUzel.cz — přehled zpráv, počasí, kalendáře a nástrojů na jednom místě. Veřejná sekce /projects/ s rychlými odkazy a přehledem obsahu." />
     <link rel="canonical" href="https://infouzel.cz/projects/" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
-    <link rel="apple-touch-icon" href="/projects/icons/apple-touch-icon.png" sizes="180x180" />
+    <meta name="theme-color" content="#003CFF" />
+    <link rel="icon" href="/favicon.svg?v=pwa-brand-blue-iu-20260628" type="image/svg+xml" sizes="any" />
+    <link rel="icon" href="/projects/icons/favicon-32.png?v=pwa-brand-blue-iu-20260628" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/projects/icons/apple-touch-icon.png?v=pwa-brand-blue-iu-20260628" sizes="180x180" />
 
     <meta name="robots" content="index,follow" />
 
@@ -375,8 +377,8 @@ font-src 'self' data:;
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard .iu-info-card__emph{color:var(--iuTasksAccent,#8b5cf6)!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .iu-info-card strong:not(.iu-info-card__emph){font-size:inherit;font-weight:inherit}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .iu-info-card *{min-width:0;overflow-wrap:anywhere}
-        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet~#iuSilverWelcomeStackSeparatorTallBefore{margin-top:12px}
-        #silver-slot #iuSilverTallScrollSection{width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;margin:12px 10px 0 10px!important}
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet~#iuSilverWelcomeStackSeparatorTallBefore{margin-top:0!important;margin-bottom:0!important}
+        #silver-slot #iuSilverTallScrollSection{width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;margin:0 10px 0 10px!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-calendar-summary-text{white-space:normal!important;overflow-wrap:anywhere;overflow-x:visible;text-overflow:unset;min-width:0}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-calendar-summary-line2main{white-space:normal!important;min-width:0}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-calendar-summary-row--1{min-width:0}
@@ -453,8 +455,8 @@ font-src 'self' data:;
       @media(min-width:768px) and (max-width:1024px){
         #iuSilverHeroPremium{margin-top:14px!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet{margin-top:14px!important}
-        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet~#iuSilverWelcomeStackSeparatorTallBefore{margin-top:14px!important}
-        #silver-slot #iuSilverTallScrollSection{margin-top:14px!important}
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet~#iuSilverWelcomeStackSeparatorTallBefore{margin-top:0!important;margin-bottom:0!important}
+        #silver-slot #iuSilverTallScrollSection{margin-top:0!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard[data-iu-silver-wx-phase=data] .iu-weather-compact-stack{grid-template-columns:42px max-content 1px minmax(0,1fr);column-gap:8px;padding-right:20px}
       }
       @media(max-width:480px){
@@ -580,13 +582,13 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <style id="iuFeedNewsSplitCss">
       /* P0 mobile/tablet: vizuální oddělovač aplikační části (Silver) od zpravodajského feedu — desktop beze změny. */
-      @media (max-width: 900px) {
+      @media (max-width: 1024px) {
         .iuFeedNewsSplit {
           box-sizing: border-box;
           width: 100%;
           max-width: 100%;
-          margin: 0;
-          padding: 8px 12px 6px;
+          margin: 8px 0 0 0 !important;
+          padding: 0 12px 4px;
           pointer-events: none;
           user-select: none;
           -webkit-user-select: none;
@@ -601,8 +603,13 @@ font-src 'self' data:;
         body.iu-home:not(.iu-mobileMainVisible):not(.iu-mobileGateOverlayOpen) .iuFeedNewsSplit {
           display: block !important;
         }
-        #iuSilverTallScrollViewport #iuPrehledDnePreviewCardMount + .iuFeedNewsSplit--postHomeCards {
-          margin-top: 9px;
+        #silver-slot #iuSilverTallScrollSection,
+        #iuMobileSilverSlot #silver-slot #iuSilverTallScrollSection {
+          margin-top: 0 !important;
+        }
+        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet ~ #iuSilverWelcomeStackSeparatorTallBefore {
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
         }
         #iuSilverTallScrollViewport .iuFeedNewsSplit--postHomeCards {
           padding-left: 0;
@@ -648,7 +655,7 @@ font-src 'self' data:;
           color: color-mix(in srgb, var(--iu-brand-blue, #003CFF) 58%, transparent);
         }
       }
-      @media (min-width: 681px) and (max-width: 900px) {
+      @media (min-width: 681px) and (max-width: 1024px) {
         .iuFeedNewsSplit {
           padding-left: 14px;
           padding-right: 14px;
@@ -658,7 +665,7 @@ font-src 'self' data:;
           padding: 6px 14px;
         }
       }
-      @media (min-width: 901px) {
+      @media (min-width: 1025px) {
         .iuFeedNewsSplit {
           display: none !important;
         }
@@ -1851,9 +1858,10 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-custom-buttons-overlay.css?v=custom-buttons-mobile-scroll-v1" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1549parcel-universal-box-ui" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-banking-premium.css?v=prod1551banking-premium-ui" />
-    <link rel="stylesheet" href="/assets/iu-tool-privacy-info.css?v=unified-tool-privacy-v1" />
-    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=20" />
-    <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=mobile-tablet-news-split-20260628" />
+    <link rel="stylesheet" href="/assets/iu-tool-privacy-info.css?v=form-premium-privacy-v3" />
+    <link rel="stylesheet" href="/assets/iu-form-premium.css?v=form-premium-v2-final" />
+    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=home-divider-spacing-8-4-20260628" />
+    <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=home-divider-spacing-8-4-20260628" />
     <link rel="stylesheet" href="/assets/iu-home-premium-install-box.css?v=1" />
     <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=pr5907-desktop-v2-20260618" />
     <link rel="stylesheet" href="/assets/iu-desktop-parcel-watch-overlay.css?v=pr5907-desktop-parcel-premium-20260619" />
@@ -1960,7 +1968,7 @@ font-src 'self' data:;
         }
       }
     </style>
-    <link rel="manifest" href="/projects/manifest.json" />
+    <link rel="manifest" href="/projects/manifest.json?v=pwa-brand-blue-iu-20260628" />
     <script>
     (function(){ try { window.__iuBipEvent = null; window.addEventListener("beforeinstallprompt", function(e) { e.preventDefault(); window.__iuBipEvent = e; }, { passive: false }); } catch(err) {} })();
     </script>
@@ -2287,7 +2295,8 @@ font-src 'self' data:;
                       }
                     })();
                     </script>
-                          <button type="button" id="iuSilverWelcomeInfoBtn" class="iuTopbarInfoBtn iuSilverWelcomeInfoBtn" aria-label="Informace o webu" aria-haspopup="dialog" aria-controls="iuTopbarInfoOverlay" aria-expanded="false">
+                          <button type="button" id="iuSilverWelcomeInfoBtn" class="iuTopbarInfoBtn iuSilverWelcomeInfoBtn iuTopbarInfoBtn--mobileFloat" aria-label="Informace o webu" aria-haspopup="dialog" aria-controls="iuTopbarInfoOverlay" aria-expanded="false">
+                            <span class="iuTopbarInfoBtn__burger" aria-hidden="true"><svg viewBox="0 0 15 13" width="15" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M1 1.5h13M1 6.5h13M1 11.5h13"/></svg></span>
                             <span class="iuTopbarInfoBtn__label">iCentrum</span>
                           </button>
                           <div class="iuSilverWelcomeTextBlock" id="iuSilverWelcomeTextBlock" data-iu-silver-welcome-text>
@@ -2437,6 +2446,13 @@ font-src 'self' data:;
                             </div>
                           </div>
                         </div>
+                        </div>
+                        <div id="iuFeedNewsSplitParcel" class="iuFeedNewsSplit iuFeedNewsSplit--parcel" aria-hidden="true">
+                          <div class="iuFeedNewsSplit__row">
+                            <span class="iuFeedNewsSplit__line" aria-hidden="true"></span>
+                            <span class="iuFeedNewsSplit__capsule">SLEDOVÁNÍ ZÁSILEK</span>
+                            <span class="iuFeedNewsSplit__line" aria-hidden="true"></span>
+                          </div>
                         </div>
                         <section id="iuSilverParcelWatch" class="iuSilverParcelWatch" aria-label="Vyhledej mi zásilku" data-iu-silver-parcel-watch="1">
                           <div class="iuSilverParcelWatch__hero">
@@ -2685,7 +2701,7 @@ font-src 'self' data:;
                       </span>
                       <span class="iuHomePremiumInstallBox__arrow" aria-hidden="true">›</span>
                       <span class="iuHomePremiumInstallBox__icon iuHomePremiumInstallBox__icon--logo">
-                        <img class="iuHomePremiumInstallBox__logoImg" src="/projects/icons/icon-192.png" alt="" width="30" height="30" decoding="async" />
+                        <img class="iuHomePremiumInstallBox__logoImg" src="/projects/icons/icon-192.png?v=pwa-brand-blue-iu-20260628" alt="" width="30" height="30" decoding="async" />
                       </span>
                     </span>
                     <span class="iuHomePremiumInstallBox__text">
@@ -5572,7 +5588,7 @@ font-src 'self' data:;
     <script defer src="/assets/iu-section-views-lazy-mount.js?v=section-views-lazy-mount-v1-20260611"></script>
     <script defer src="/assets/iu-affiliate-catalog.js?v=affiliate-disclosure-unify-v53"></script>
     <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-v1"></script>
-    <script defer src="/assets/iu-tool-privacy-info.js?v=unified-tool-privacy-v3"></script>
+    <script defer src="/assets/iu-tool-privacy-info.js?v=form-premium-privacy-v3"></script>
     <script type="module" src="/assets/app.js?v=ai-youtube-embed-scope-fix-v46b"></script>
     <script>
     (function iuOverlayCssDeferGuard(){
