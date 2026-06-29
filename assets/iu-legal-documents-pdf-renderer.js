@@ -28,6 +28,8 @@ const PDF_HEADER_RESERVE_MM = 32;
 const PLACEHOLDER_ONLY_LINE_RE = /^[\.·…\s_,\-]+$/;
 const SECTION_HEADING_RE = /^(\d+)\.\s+(.+)$/;
 const SIGNATURE_LINE_RE = /^_{5,}/;
+const GENERIC_PARTY_FALLBACK_RE = /^strana\s+[ab]$/i;
+const PARTY_SECTION_HEADING_RE = /identifikace|strany|prohlásivící/i;
 
 function escHtml(s) {
   return String(s || "")
@@ -230,23 +232,77 @@ export function buildTopbarBrandHtml() {
   );
 }
 
-function inferPartyLabelsFromSections(sections) {
+function isGenericPartyFallback(label) {
+  return GENERIC_PARTY_FALLBACK_RE.test(String(label || "").trim());
+}
+
+function isPartyIdentificationSection(section) {
+  if (!section) return false;
+  if (section.num === "1") return true;
+  if (PARTY_SECTION_HEADING_RE.test(String(section.heading || ""))) return true;
+  return /identifikace/i.test(String(section.heading || ""));
+}
+
+function findPartyRoleLabels(body) {
+  const lines = String(body || "").split("\n");
+  const roles = [];
+  for (let i = 0; i < lines.length; i++) {
+    const s = String(lines[i] || "").trim();
+    if (!s || s.indexOf(":") >= 0) continue;
+    if (/^\(neuvedeno\)$/i.test(s)) continue;
+    if (/^typ$/i.test(s)) continue;
+    const next = String(lines[i + 1] || "").trim();
+    if (/^typ(\s+subjektu)?:/i.test(next)) {
+      if (roles.indexOf(s) < 0) roles.push(s);
+    }
+  }
+  return roles;
+}
+
+function inferPartyLabelsFromPartyBody(body) {
+  const roles = findPartyRoleLabels(body);
+  if (roles.length >= 2) return { a: roles[0], b: roles[1] };
+  if (roles.length === 1) return { a: roles[0], b: "" };
   const labels = [];
+  const lines = String(body || "").split("\n");
+  for (let j = 0; j < lines.length; j++) {
+    const line = String(lines[j] || "").trim();
+    if (!line || line.indexOf(":") >= 0) continue;
+    if (/^typ$/i.test(line)) continue;
+    if (/^\(neuvedeno\)$/i.test(line)) continue;
+    if (labels.indexOf(line) < 0) labels.push(line);
+    if (labels.length >= 2) break;
+  }
+  if (labels.length >= 2) return { a: labels[0], b: labels[1] };
+  if (labels.length === 1) return { a: labels[0], b: "" };
+  return { a: "Strana A", b: "Strana B" };
+}
+
+function extractPartySectionBodyFromPlainText(plainText) {
+  const lines = String(plainText || "").split("\n");
+  let inParty = false;
+  const bodyLines = [];
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed = String(lines[i] || "").trim();
+    if (/^1\.\s+(Identifikace stran|Identifikace strany|Strany|Prohlásivší)/i.test(trimmed)) {
+      inParty = true;
+      continue;
+    }
+    if (inParty && /^\d+\.\s+/.test(trimmed)) break;
+    if (inParty) bodyLines.push(lines[i]);
+  }
+  return bodyLines.join("\n").trim();
+}
+
+function inferPartyLabelsFromSections(sections) {
   for (let i = 0; i < sections.length; i++) {
     const sec = sections[i];
-    if (!sec || !sec.heading) continue;
-    if (!/identifikace/i.test(sec.heading) && sec.num !== "1") continue;
-    const lines = String(sec.body || "").split("\n");
-    for (let j = 0; j < lines.length; j++) {
-      const line = String(lines[j] || "").trim();
-      if (!line || line.indexOf(":") >= 0) continue;
-      if (/^typ$/i.test(line)) continue;
-      if (labels.indexOf(line) < 0) labels.push(line);
-      if (labels.length >= 2) break;
-    }
-    if (labels.length) break;
+    if (!isPartyIdentificationSection(sec)) continue;
+    const labels = inferPartyLabelsFromPartyBody(sec.body);
+    if (labels.a !== "Strana A" || labels.b !== "Strana B") return labels;
+    if (labels.a && labels.a !== "Strana A") return labels;
   }
-  return { a: labels[0] || "Strana A", b: labels[1] || "Strana B" };
+  return { a: "Strana A", b: "Strana B" };
 }
 
 function extractPartyDisplayNameFromBlock(block) {
@@ -278,16 +334,19 @@ function extractPartyDisplayNameFromBlock(block) {
 }
 
 function splitPartyBlocks(body, labelA, labelB) {
+  const roles = findPartyRoleLabels(body);
+  const la = roles[0] || labelA;
+  const lb = roles[1] || labelB;
   const lines = String(body || "").split("\n");
   const blocks = { a: [], b: [] };
   let current = "";
   lines.forEach((line) => {
     const s = String(line || "").trim();
-    if (s === labelA) {
+    if (s === la) {
       current = "a";
       return;
     }
-    if (s === labelB) {
+    if (lb && s === lb) {
       current = "b";
       return;
     }
@@ -302,17 +361,49 @@ function splitPartyBlocks(body, labelA, labelB) {
 
 function inferPartySignatureMeta(sections) {
   const labels = inferPartyLabelsFromSections(sections);
-  const meta = { a: labels.a, b: labels.b, nameA: "", nameB: "" };
+  const meta = { a: labels.a, b: labels.b || labels.a, nameA: "", nameB: "" };
   for (let i = 0; i < sections.length; i++) {
     const sec = sections[i];
-    if (!sec || !sec.heading) continue;
-    if (!/identifikace/i.test(sec.heading) && sec.num !== "1") continue;
+    if (!isPartyIdentificationSection(sec)) continue;
     const blocks = splitPartyBlocks(sec.body, labels.a, labels.b);
     meta.nameA = extractPartyDisplayNameFromBlock(blocks.a);
     meta.nameB = extractPartyDisplayNameFromBlock(blocks.b);
+    if (!labels.b) meta.b = "";
     break;
   }
   return meta;
+}
+
+/** @param {string} plainText */
+export function derivePartySignatureMetaFromPlainText(plainText) {
+  const rawBody = extractPartySectionBodyFromPlainText(plainText);
+  if (rawBody) {
+    const labels = inferPartyLabelsFromPartyBody(rawBody);
+    const blocks = splitPartyBlocks(rawBody, labels.a, labels.b);
+    const meta = {
+      a: labels.a,
+      b: labels.b || labels.a,
+      nameA: extractPartyDisplayNameFromBlock(blocks.a),
+      nameB: extractPartyDisplayNameFromBlock(blocks.b),
+    };
+    if (!labels.b) meta.b = "";
+    return meta;
+  }
+  const structure = parseLegalDocumentVisualStructure(plainText);
+  return inferPartySignatureMeta(structure.sections);
+}
+
+function shouldShowSecondSignatureColumn(labels) {
+  if (labels.nameB) return true;
+  if (labels.b && labels.b !== labels.a && !isGenericPartyFallback(labels.b)) return true;
+  return false;
+}
+
+function resolveSignatureDisplayLabels(labels) {
+  const meta = labels || { a: "Strana A", b: "Strana B", nameA: "", nameB: "" };
+  const displayA = meta.nameA || meta.a;
+  const displayB = meta.nameB || meta.b;
+  return { displayA, displayB, showSecond: shouldShowSecondSignatureColumn(meta) };
 }
 
 function isPartyHeadingLine(line, partyMeta) {
@@ -330,12 +421,6 @@ function isFieldLabelLine(line) {
   if (/^_{5,}/.test(s)) return false;
   if (/^(podpisy|místo a datum|závěrečná)/i.test(s)) return false;
   return s.length <= 80;
-}
-
-function isPartyIdentificationSection(section) {
-  if (!section) return false;
-  if (section.num === "1") return true;
-  return /identifikace/i.test(String(section.heading || ""));
 }
 
 function splitBodyIntoLabeledParts(body) {
@@ -475,26 +560,32 @@ function buildSectionBarHtml(num, heading) {
 function buildSignatureVisualHtml(body, partyMeta) {
   const lines = String(body || "").split("\n");
   const sigLine = lines.find((line) => SIGNATURE_LINE_RE.test(String(line || "").trim()));
-  const labels = partyMeta || { a: "Strana A", b: "Strana B", nameA: "", nameB: "" };
-  const displayA = labels.nameA || labels.a;
-  const displayB = labels.nameB || labels.b;
+  const resolved = resolveSignatureDisplayLabels(partyMeta);
+  const displayA = resolved.displayA;
+  const displayB = resolved.displayB;
   if (!sigLine) {
-    return '<div class="iu-legal-doc-paper__sectionBody">' + formatBodyHtml(body, labels) + "</div>";
+    return '<div class="iu-legal-doc-paper__sectionBody">' + formatBodyHtml(body, partyMeta) + "</div>";
   }
+  const secondCol =
+    resolved.showSecond
+      ? '<div class="iu-legal-doc-paper__signatureCol">' +
+        '<span class="iu-legal-doc-paper__signatureLine" aria-hidden="true"></span>' +
+        '<span class="iu-legal-doc-paper__signatureLabel">' +
+        escHtml(displayB) +
+        "</span>" +
+        "</div>"
+      : "";
   return (
-    '<div class="iu-legal-doc-paper__signatureGrid" data-iu-legal-doc-visual-only="1">' +
+    '<div class="iu-legal-doc-paper__signatureGrid' +
+    (resolved.showSecond ? "" : " iu-legal-doc-paper__signatureGrid--single") +
+    '" data-iu-legal-doc-visual-only="1">' +
     '<div class="iu-legal-doc-paper__signatureCol">' +
     '<span class="iu-legal-doc-paper__signatureLine" aria-hidden="true"></span>' +
     '<span class="iu-legal-doc-paper__signatureLabel">' +
     escHtml(displayA) +
     "</span>" +
     "</div>" +
-    '<div class="iu-legal-doc-paper__signatureCol">' +
-    '<span class="iu-legal-doc-paper__signatureLine" aria-hidden="true"></span>' +
-    '<span class="iu-legal-doc-paper__signatureLabel">' +
-    escHtml(displayB) +
-    "</span>" +
-    "</div>" +
+    secondCol +
     "</div>" +
     '<pre class="iu-legal-doc-paper__signatureSource" aria-hidden="true">' +
     escHtml(sigLine) +
@@ -658,7 +749,7 @@ export function validateLegalDocumentPdfPageLayout(chunk, isLast, pageH, topY, l
 /** @param {string} _documentTitle @param {string} plainText */
 export function buildLegalDocumentPreviewHtml(_documentTitle, plainText) {
   const structure = parseLegalDocumentVisualStructure(plainText);
-  const partyMeta = inferPartySignatureMeta(structure.sections);
+  const partyMeta = derivePartySignatureMetaFromPlainText(plainText);
   const sectionsHtml = structure.sections.map((sec) => buildSectionHtml(sec, partyMeta)).join("");
   const titleHtml = structure.title
     ? '<h1 class="iu-legal-doc-paper__docTitle">' + escHtml(structure.title) + "</h1>"
@@ -961,19 +1052,23 @@ function renderPdfQueuePage(doc, pageW, marginX, topY, bottomY, queue, partyMeta
     }
     if (item.type === "signatureBlock") {
       if (y + 20 > bottomY) return;
-      const labels = partyMeta || { a: "Strana A", b: "Strana B", nameA: "", nameB: "" };
-      const displayA = labels.nameA || labels.a;
-      const displayB = labels.nameB || labels.b;
-      const colW = (pageW - marginX * 2 - 8) / 2;
+      const resolved = resolveSignatureDisplayLabels(partyMeta);
+      const displayA = resolved.displayA;
+      const displayB = resolved.displayB;
+      const colW = resolved.showSecond ? (pageW - marginX * 2 - 8) / 2 : pageW - marginX * 2;
       doc.setDrawColor(17, 24, 39);
       doc.setLineWidth(0.25);
       doc.line(marginX, y + 8, marginX + colW, y + 8);
-      doc.line(marginX + colW + 8, y + 8, pageW - marginX, y + 8);
+      if (resolved.showSecond) {
+        doc.line(marginX + colW + 8, y + 8, pageW - marginX, y + 8);
+      }
       doc.setFontSize(8);
       doc.setFont(doc.getFont().fontName, "bold");
       doc.setTextColor(55, 65, 81);
       doc.text(String(displayA), marginX + colW / 2, y + 12, { align: "center" });
-      doc.text(String(displayB), marginX + colW + 8 + colW / 2, y + 12, { align: "center" });
+      if (resolved.showSecond) {
+        doc.text(String(displayB), marginX + colW + 8 + colW / 2, y + 12, { align: "center" });
+      }
       y += 20;
       return;
     }
@@ -992,7 +1087,7 @@ export async function exportLegalDocumentPdfBlob(documentTitle, plainText) {
   const sourceText = String(plainText || "");
   const visualText = filterEmptySectionsForVisualOutput(sourceText);
   const structure = parseLegalDocumentVisualStructure(sourceText);
-  const partyMeta = inferPartySignatureMeta(structure.sections);
+  const partyMeta = derivePartySignatureMetaFromPlainText(plainText);
   const jsPDF = await loadJsPDF();
   const b64 = await loadFontBase64();
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
