@@ -192,12 +192,15 @@ function iuChunkDedupeAppend(existing, incoming) {
   return out;
 }
 
-function iuChunkCapArticles(loader) {
+function iuChunkCapArticles(loader, isInitialLoad) {
   if (!loader || !Array.isArray(loader.articles)) return;
   if (loader.articles.length > CLIENT_INITIAL_LIMIT) {
     loader.articles = loader.articles.slice(0, CLIENT_INITIAL_LIMIT);
   }
   loader.articlesParsedCount = loader.articles.length;
+  if (isInitialLoad) {
+    loader.articlesReceivedCount = loader.articles.length;
+  }
 }
 
 async function iuChunkFetchRel(loader, relPath, basePath, dataVer, label, chunkIndexMark) {
@@ -252,7 +255,7 @@ export async function iuChunkLoadInitialSectionArticles(loader, basePath, dataVe
   if (loader.articles.length < CLIENT_INITIAL_LIMIT) {
     await iuChunkFetchBufferChunk(loader, basePath, dataVer);
   }
-  iuChunkCapArticles(loader);
+  iuChunkCapArticles(loader, true);
   loader.backgroundDone = true;
   loader.nextLoadMoreChunkIndex = loader.bufferChunkLoaded ? 1 : 0;
   try {

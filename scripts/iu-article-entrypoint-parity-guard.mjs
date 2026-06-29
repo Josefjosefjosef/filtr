@@ -33,7 +33,7 @@ const USE_LOCAL_SERVER = !process.env.IU_GUARD_BASE_URL;
 const REPORT_PATH = path.join(REPO, "scripts", "iu-article-entrypoint-parity-guard-report.json");
 
 const RECEIVED_FAIL_MAX = 500;
-const BACKGROUND_RECEIVED_MAX = 120;
+const BACKGROUND_RECEIVED_MAX = 100;
 
 function bufferChunkSections(entries) {
   const dirs = new Set();
