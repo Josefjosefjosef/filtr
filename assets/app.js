@@ -19622,9 +19622,6 @@ function buildVideoAsArticleCard(it) {
       iuPreviewFeedProbeTick("afterFirstRenderFeed");
       iuHomeLoadAuditNotify("loadData:afterFirstRender");
       if (iuUseChunkedArticleLoader()) {
-        void iuChunkScheduleClientInitialExpand(requestToken);
-      }
-      if (iuUseChunkedArticleLoader()) {
         try {
           window.__iuChunkBackgroundBufferDone = !!(state.chunkLoader && state.chunkLoader.backgroundDone);
         } catch (_) {}
@@ -19788,6 +19785,9 @@ function buildVideoAsArticleCard(it) {
       state.__iuLoadDataMainApplyFilterDone = true;
       iuPreviewFeedProbeTick("afterApplyFilterLoadData");
       iuHomeLoadAuditNotify("loadData:afterApplyFilter");
+      if (iuUseChunkedArticleLoader()) {
+        void iuChunkScheduleClientInitialExpand(requestToken);
+      }
       try {
         iuSilverTallMediaPreviewsRefresh();
       } catch (_) {}
