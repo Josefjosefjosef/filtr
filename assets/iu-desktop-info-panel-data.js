@@ -1,8 +1,11 @@
 /**
- * PC informační panel — katalog položek + načtení same-origin snapshotu.
+ * PC informační panel V2 — katalog položek + same-origin snapshot.
  */
 export const IU_INFO_PANEL_DISCLAIMER =
-  "Údaje jsou informativní. Zdroj a čas aktualizace najdete u každé položky.";
+  "Údaje slouží pouze pro rychlou orientaci. Před důležitým rozhodnutím doporučujeme ověřit informace přímo u oficiálního poskytovatele.";
+
+const HOUR_MS = 60 * 60 * 1000;
+const DAY_MS = 24 * HOUR_MS;
 
 export const IU_INFO_PANEL_CATALOG = [
   {
@@ -11,7 +14,9 @@ export const IU_INFO_PANEL_CATALOG = [
     icon: "⛽",
     primaryLabel: "Natural 95",
     unit: "Kč/l",
+    maxAgeMs: 0,
     legalStatus: "placeholder_only",
+    verificationDate: "2026-06-29",
     sourceName: "Zdroj se ověřuje",
     sourceUrl: "https://www.infouzel.cz/projects/",
     termsUrl: "https://www.infouzel.cz/projects/",
@@ -27,7 +32,9 @@ export const IU_INFO_PANEL_CATALOG = [
     icon: "💶",
     primaryLabel: "",
     unit: "Kč",
+    maxAgeMs: 2 * DAY_MS,
     legalStatus: "verified_requires_attribution",
+    verificationDate: "2026-06-29",
     sourceName: "Česká národní banka",
     sourceUrl:
       "https://www.cnb.cz/cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.txt",
@@ -43,7 +50,9 @@ export const IU_INFO_PANEL_CATALOG = [
     icon: "💵",
     primaryLabel: "",
     unit: "Kč",
+    maxAgeMs: 2 * DAY_MS,
     legalStatus: "verified_requires_attribution",
+    verificationDate: "2026-06-29",
     sourceName: "Česká národní banka",
     sourceUrl:
       "https://www.cnb.cz/cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.txt",
@@ -59,7 +68,9 @@ export const IU_INFO_PANEL_CATALOG = [
     icon: "🚗",
     primaryLabel: "",
     unit: "",
+    maxAgeMs: 0,
     legalStatus: "placeholder_only",
+    verificationDate: "2026-06-29",
     sourceName: "Zdroj se ověřuje",
     sourceUrl: "https://www.infouzel.cz/projects/",
     termsUrl: "https://www.infouzel.cz/projects/",
@@ -75,7 +86,9 @@ export const IU_INFO_PANEL_CATALOG = [
     icon: "⚡",
     primaryLabel: "",
     unit: "Kč/kWh",
+    maxAgeMs: 0,
     legalStatus: "placeholder_only",
+    verificationDate: "2026-06-29",
     sourceName: "Zdroj se ověřuje",
     sourceUrl: "https://www.infouzel.cz/projects/",
     termsUrl: "https://www.infouzel.cz/projects/",
@@ -91,7 +104,9 @@ export const IU_INFO_PANEL_CATALOG = [
     icon: "🪙",
     primaryLabel: "",
     unit: "USD/oz",
+    maxAgeMs: 0,
     legalStatus: "placeholder_only",
+    verificationDate: "2026-06-29",
     sourceName: "Zdroj se ověřuje",
     sourceUrl: "https://www.infouzel.cz/projects/",
     termsUrl: "https://www.infouzel.cz/projects/",
@@ -107,7 +122,9 @@ export const IU_INFO_PANEL_CATALOG = [
     icon: "₿",
     primaryLabel: "",
     unit: "Kč",
+    maxAgeMs: 2 * HOUR_MS,
     legalStatus: "verified_requires_attribution",
+    verificationDate: "2026-06-29",
     sourceName: "CoinGecko",
     sourceUrl: "https://www.coingecko.com/en/api",
     termsUrl: "https://www.coingecko.com/en/api_terms",
@@ -121,7 +138,9 @@ export const IU_INFO_PANEL_CATALOG = [
     icon: "🚆",
     primaryLabel: "",
     unit: "",
+    maxAgeMs: 0,
     legalStatus: "placeholder_only",
+    verificationDate: "2026-06-29",
     sourceName: "Zdroj se ověřuje",
     sourceUrl: "https://www.infouzel.cz/projects/",
     termsUrl: "https://www.infouzel.cz/projects/",
@@ -137,7 +156,9 @@ export const IU_INFO_PANEL_CATALOG = [
     icon: "✈️",
     primaryLabel: "",
     unit: "",
+    maxAgeMs: 0,
     legalStatus: "placeholder_only",
+    verificationDate: "2026-06-29",
     sourceName: "Zdroj se ověřuje",
     sourceUrl: "https://www.infouzel.cz/projects/",
     termsUrl: "https://www.infouzel.cz/projects/",
@@ -151,7 +172,7 @@ export const IU_INFO_PANEL_CATALOG = [
 
 const SNAPSHOT_URL = "/projects/data/info_panel_snapshot.json";
 const LIVE_OK = new Set(["verified_free_ok", "verified_requires_attribution"]);
-const MAX_AGE_MS = 48 * 60 * 60 * 1000;
+const DEFAULT_MAX_AGE_MS = 48 * HOUR_MS;
 
 function formatNumber(n) {
   if (typeof n !== "number" || !Number.isFinite(n)) return "";
@@ -161,31 +182,118 @@ function formatNumber(n) {
   return n.toLocaleString("cs-CZ", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+function formatUpdatedAtLabel(raw, generatedAt) {
+  const s = String(raw || "").trim();
+  if (s) return s;
+  if (generatedAt) {
+    try {
+      const d = new Date(generatedAt);
+      if (!Number.isNaN(d.getTime())) {
+        return d.toLocaleString("cs-CZ", { dateStyle: "short", timeStyle: "short" });
+      }
+    } catch (_) {}
+  }
+  return "";
+}
+
+function isSnapshotRowStale(catalogItem, row, snapshotMeta) {
+  const maxAge = catalogItem.maxAgeMs > 0 ? catalogItem.maxAgeMs : DEFAULT_MAX_AGE_MS;
+  const genAt = snapshotMeta && snapshotMeta.generatedAt ? Date.parse(snapshotMeta.generatedAt) : NaN;
+  if (!Number.isFinite(genAt)) return true;
+  return Date.now() - genAt > maxAge;
+}
+
 function mergeItem(catalogItem, snapRow, snapshotMeta) {
   const base = { ...catalogItem };
   const canLive = LIVE_OK.has(catalogItem.legalStatus);
   const row = snapRow && typeof snapRow === "object" ? snapRow : null;
-  const liveOk = !!(canLive && row && row.isLive && LIVE_OK.has(row.legalStatus || catalogItem.legalStatus));
+  const snapshotFailed =
+    canLive &&
+    snapshotMeta &&
+    snapshotMeta.errors &&
+    snapshotMeta.errors.some((e) => e && (e.id === catalogItem.id || e.id === "cnb" || e.id === "bitcoin"));
 
-  if (liveOk && typeof row.value === "number") {
-    base.isLive = true;
-    base.isVerified = true;
-    base.primaryValue = formatNumber(row.value) + (row.unit || catalogItem.unit ? " " + (row.unit || catalogItem.unit) : "");
-    base.secondaryValue = row.secondaryValue || "beze změny";
-    base.trendDirection = row.trendDirection || "flat";
-    base.updatedAt = row.updatedAt || snapshotMeta.generatedAt || "";
+  if (!canLive) {
+    base.state = "placeholder";
+    base.isLive = false;
+    base.isVerified = false;
+    base.primaryValue = catalogItem.placeholderPrimary || "Zdroj se ověřuje";
+    base.secondaryValue = catalogItem.placeholderSecondary || "Data budou doplněna";
+    base.trendDirection = "neutral";
+    base.updatedAt = "";
+    base.updatedAtDisplay = "";
     base.errorState = "";
     return base;
   }
 
+  if (snapshotFailed) {
+    base.state = "error";
+    base.isLive = false;
+    base.isVerified = true;
+    base.primaryValue = "Data nyní nejsou dostupná";
+    base.secondaryValue = "Zkuste to později";
+    base.trendDirection = "neutral";
+    base.updatedAt = "";
+    base.updatedAtDisplay = "";
+    base.errorState = "fetch_failed";
+    return base;
+  }
+
+  const liveCandidate = !!(row && row.isLive && LIVE_OK.has(row.legalStatus || catalogItem.legalStatus));
+  const stale = liveCandidate && isSnapshotRowStale(catalogItem, row, snapshotMeta);
+
+  if (liveCandidate && !stale && typeof row.value === "number") {
+    base.state = "live";
+    base.isLive = true;
+    base.isVerified = true;
+    base.primaryValue =
+      formatNumber(row.value) + (row.unit || catalogItem.unit ? " " + (row.unit || catalogItem.unit) : "");
+    base.secondaryValue = row.secondaryValue || "beze změny";
+    base.trendDirection = row.trendDirection || "flat";
+    base.updatedAt = row.updatedAt || snapshotMeta.generatedAt || "";
+    base.updatedAtDisplay = formatUpdatedAtLabel(base.updatedAt, snapshotMeta.generatedAt);
+    base.errorState = "";
+    return base;
+  }
+
+  if (liveCandidate && stale) {
+    base.state = "stale";
+    base.isLive = false;
+    base.isVerified = true;
+    base.primaryValue = "Data nejsou aktuální";
+    base.secondaryValue = "Ověřte u oficiálního zdroje";
+    base.trendDirection = "neutral";
+    base.updatedAt = row.updatedAt || "";
+    base.updatedAtDisplay = formatUpdatedAtLabel(base.updatedAt, snapshotMeta.generatedAt);
+    base.errorState = "stale";
+    return base;
+  }
+
+  base.state = "placeholder";
   base.isLive = false;
-  base.isVerified = false;
+  base.isVerified = canLive;
   base.primaryValue = catalogItem.placeholderPrimary || "Zdroj se ověřuje";
   base.secondaryValue = catalogItem.placeholderSecondary || "Data budou doplněna";
   base.trendDirection = "neutral";
   base.updatedAt = "";
-  base.errorState = canLive && snapshotMeta && snapshotMeta.errors && snapshotMeta.errors.length ? "unavailable" : "";
+  base.updatedAtDisplay = "";
+  base.errorState = "";
   return base;
+}
+
+export function getLoadingInfoPanelItems() {
+  return IU_INFO_PANEL_CATALOG.map((item) => ({
+    ...item,
+    state: "loading",
+    isLive: false,
+    isVerified: false,
+    primaryValue: "…",
+    secondaryValue: "Načítání",
+    trendDirection: "neutral",
+    updatedAt: "",
+    updatedAtDisplay: "",
+    errorState: "",
+  }));
 }
 
 export async function loadInfoPanelItems() {
@@ -194,14 +302,6 @@ export async function loadInfoPanelItems() {
     const res = await fetch(SNAPSHOT_URL, { cache: "no-cache" });
     if (res.ok) snapshot = await res.json();
   } catch (_) {}
-
-  const generatedMs = snapshot.generatedAt ? Date.parse(snapshot.generatedAt) : NaN;
-  const stale = !Number.isFinite(generatedMs) || Date.now() - generatedMs > MAX_AGE_MS;
-  if (stale && snapshot.items) {
-    Object.keys(snapshot.items).forEach((key) => {
-      if (snapshot.items[key]) snapshot.items[key].isLive = false;
-    });
-  }
 
   return IU_INFO_PANEL_CATALOG.map((item) => mergeItem(item, snapshot.items && snapshot.items[item.id], snapshot));
 }

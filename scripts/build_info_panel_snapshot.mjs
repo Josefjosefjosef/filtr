@@ -103,7 +103,7 @@ async function main() {
       primaryLabel: "",
       secondaryValue: eurTrend.text,
       trendDirection: eurTrend.direction,
-      updatedAt: cnb.date,
+      updatedAt: generatedAt,
       isLive: true,
       legalStatus: "verified_requires_attribution",
     };
@@ -113,7 +113,7 @@ async function main() {
       primaryLabel: "",
       secondaryValue: usdTrend.text,
       trendDirection: usdTrend.direction,
-      updatedAt: cnb.date,
+      updatedAt: generatedAt,
       isLive: true,
       legalStatus: "verified_requires_attribution",
     };
@@ -129,7 +129,7 @@ async function main() {
       primaryLabel: "",
       secondaryValue: trendFromDelta(null, btc.change24hPct).text,
       trendDirection: trendFromDelta(null, btc.change24hPct).direction,
-      updatedAt: generatedAt.slice(0, 10),
+      updatedAt: generatedAt,
       isLive: true,
       legalStatus: "verified_requires_attribution",
     };
