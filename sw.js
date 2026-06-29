@@ -12,8 +12,8 @@
 // 2026-06-10: mobile/tablet stability v1 — bottom-nav clearance, app-render-optimizer.js odstraněn z precache
 // 2026-06-11: P1 perf fix #7 — IU_SW_DEPLOY_RELOAD se NEposílá při první instalaci SW (cold load se načítal 2×)
 // 2026-06-28: PWA brand blue iU icons — bump app shell cache for new favicon/manifest references
-// 2026-06-28: PWA brand blue iU icons — bump app shell cache for new favicon/manifest references
-const CACHE_VERSION = "2026-06-28-pwa-brand-blue-iu-icon-v1";
+// 2026-06-29: PWA icon final tuning v54 — larger optically centered iU + infoUzel.cz short_name
+const CACHE_VERSION = "2026-06-29-pwa-icon-final-v54";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
