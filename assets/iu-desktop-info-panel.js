@@ -1,8 +1,9 @@
 /**
- * PC informační panel — render, zdroje, detail (desktop feed only).
+ * PC informační panel V2 — render, zdroje, detail (desktop feed only).
  */
 import {
   IU_INFO_PANEL_DISCLAIMER,
+  getLoadingInfoPanelItems,
   loadInfoPanelItems,
 } from "./iu-desktop-info-panel-data.js";
 
@@ -37,12 +38,23 @@ function trendClass(dir) {
   return "iuDesktopInfoPanel__trend--neutral";
 }
 
+function stateClass(state) {
+  const s = String(state || "placeholder");
+  return "iuDesktopInfoPanel__segment--" + s;
+}
+
 function buildSegment(item) {
   const primaryLine = item.primaryLabel
     ? `<span class="iuDesktopInfoPanel__primaryLabel">${esc(item.primaryLabel)}</span>`
     : "";
+  const timeLine = item.updatedAtDisplay
+    ? `<p class="iuDesktopInfoPanel__time"><time>${esc(item.updatedAtDisplay)}</time></p>`
+    : item.state === "loading"
+      ? `<p class="iuDesktopInfoPanel__time iuDesktopInfoPanel__time--loading" aria-hidden="true">…</p>`
+      : "";
+  const liveAttr = item.isLive ? "true" : "false";
   return (
-    `<article class="iuDesktopInfoPanel__segment" data-iu-info-panel-id="${esc(item.id)}">` +
+    `<article class="iuDesktopInfoPanel__segment ${stateClass(item.state)}" data-iu-info-panel-id="${esc(item.id)}" data-iu-info-panel-state="${esc(item.state)}" data-iu-info-panel-live="${liveAttr}">` +
     `<div class="iuDesktopInfoPanel__segmentHead">` +
     `<span class="iuDesktopInfoPanel__icon" aria-hidden="true">${esc(item.icon)}</span>` +
     `<span class="iuDesktopInfoPanel__label">${esc(item.label)}</span>` +
@@ -51,6 +63,7 @@ function buildSegment(item) {
     primaryLine +
     `<p class="iuDesktopInfoPanel__value">${esc(item.primaryValue)}</p>` +
     `<p class="iuDesktopInfoPanel__trend ${trendClass(item.trendDirection)}">${esc(item.secondaryValue)}</p>` +
+    timeLine +
     `</article>`
   );
 }
@@ -58,8 +71,8 @@ function buildSegment(item) {
 function buildPanelHtml(items) {
   const segments = items.map(buildSegment).join("");
   return (
-    `<section id="${PANEL_ID}" class="iuDesktopInfoPanel" aria-label="Rychlý přehled">` +
-    `<div class="iuDesktopInfoPanel__scroll" tabindex="0" role="region" aria-label="Rychlé informace">` +
+    `<section id="${PANEL_ID}" class="iuDesktopInfoPanel" aria-label="Rychlý přehled orientačních údajů">` +
+    `<div class="iuDesktopInfoPanel__scroll" tabindex="0" role="region" aria-label="Rychlé informace — horizontální posuv">` +
     `<div class="iuDesktopInfoPanel__track">${segments}</div>` +
     `</div>` +
     `<p class="iuDesktopInfoPanel__legal">${esc(IU_INFO_PANEL_DISCLAIMER)}</p>` +
@@ -77,6 +90,17 @@ function buildPanelHtml(items) {
   );
 }
 
+function legalStatusLabel(status) {
+  const map = {
+    verified_free_ok: "Ověřeno — lze použít",
+    verified_requires_attribution: "Ověřeno — vyžaduje uvedení zdroje",
+    verified_not_allowed: "Ověřeno — nelze použít",
+    pending_review: "Čeká na ověření",
+    placeholder_only: "Pouze placeholder",
+  };
+  return map[status] || String(status || "neuvedeno");
+}
+
 function openDetail(item) {
   const dlg = document.getElementById(DETAIL_ID);
   if (!dlg || !item) return;
@@ -84,25 +108,34 @@ function openDetail(item) {
   const body = dlg.querySelector(".iuDesktopInfoPanelDetail__body");
   if (!title || !body) return;
   title.textContent = item.label;
-  const updated = item.updatedAt ? `Aktualizace: ${item.updatedAt}` : "Aktualizace: zatím nejsou živá data";
+  const updated = item.updatedAtDisplay
+    ? `Aktualizace: ${item.updatedAtDisplay}`
+    : "Aktualizace: zatím nejsou živá data";
   const liveNote = item.isLive
-    ? "Údaj je informativní a pochází z ověřeného snapshotu."
-    : "Údaj zatím není zobrazen jako živé dato — zdroj se ověřuje.";
+    ? "Údaj je orientační a pochází z ověřeného snapshotu."
+    : item.state === "stale"
+      ? "Údaj je starší než povolený limit — neprezentujeme ho jako aktuální."
+      : "Údaj zatím není zobrazen jako živé dato nebo se ověřuje zdroj.";
   body.innerHTML =
     `<p class="iuDesktopInfoPanelDetail__lead">${esc(liveNote)}</p>` +
     `<dl class="iuDesktopInfoPanelDetail__dl">` +
     `<dt>Poskytovatel</dt><dd>${esc(item.sourceName)}</dd>` +
     `<dt>Typ dat</dt><dd>${esc(item.dataType)}</dd>` +
     `<dt>${esc(updated)}</dt><dd>${esc(item.updateNote)}</dd>` +
+    `<dt>Stav ověření</dt><dd>${esc(legalStatusLabel(item.legalStatus))}</dd>` +
+    `<dt>Datum ověření</dt><dd>${esc(item.verificationDate || "—")}</dd>` +
     `<dt>Licence / podmínky</dt><dd>${esc(item.licenseNote)}</dd>` +
     `</dl>` +
     `<p class="iuDesktopInfoPanelDetail__links">` +
     `<a href="${esc(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">Oficiální zdroj</a>` +
     ` · ` +
     `<a href="${esc(item.termsUrl)}" target="_blank" rel="noopener noreferrer">Podmínky použití</a>` +
-    `</p>`;
+    `</p>` +
+    `<p class="iuDesktopInfoPanelDetail__note">${esc(IU_INFO_PANEL_DISCLAIMER)}</p>`;
   dlg.hidden = false;
   dlg.removeAttribute("hidden");
+  const closeBtn = dlg.querySelector(".iuDesktopInfoPanelDetail__close");
+  if (closeBtn) closeBtn.focus();
 }
 
 function closeDetail() {
@@ -141,6 +174,15 @@ function bindPanelEvents(items) {
   });
 }
 
+function syncTopGap() {
+  try {
+    if (typeof window.iuDesktopHomeSectionTopGapSync === "function") {
+      document.body.removeAttribute("data-iu-gap-synced");
+      window.iuDesktopHomeSectionTopGapSync();
+    }
+  } catch (_) {}
+}
+
 async function renderPanel() {
   const mount = document.getElementById(MOUNT_ID);
   if (!mount || !isDesktopPanelContext()) {
@@ -151,18 +193,17 @@ async function renderPanel() {
     }
     return;
   }
-  const items = await loadInfoPanelItems();
-  mount.innerHTML = buildPanelHtml(items);
+
   mount.hidden = false;
   mount.removeAttribute("hidden");
   mount.removeAttribute("aria-hidden");
+  mount.innerHTML = buildPanelHtml(getLoadingInfoPanelItems());
+  syncTopGap();
+
+  const items = await loadInfoPanelItems();
+  mount.innerHTML = buildPanelHtml(items);
   bindPanelEvents(items);
-  try {
-    if (typeof window.iuDesktopHomeSectionTopGapSync === "function") {
-      document.body.removeAttribute("data-iu-gap-synced");
-      window.iuDesktopHomeSectionTopGapSync();
-    }
-  } catch (_) {}
+  syncTopGap();
 }
 
 function initInfoPanel() {
@@ -179,7 +220,6 @@ function initInfoPanel() {
     run();
   }
   setTimeout(run, 120);
-  setTimeout(run, 900);
 
   try {
     const mq = window.matchMedia("(min-width: 1025px)");

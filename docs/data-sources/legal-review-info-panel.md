@@ -3,7 +3,7 @@
 Dokumentace interního ověření zdrojů pro horizontální informační panel v prostředním feedu (pouze PC).
 
 **Datum revize:** 2026-06-29  
-**Verze panelu:** 1.0  
+**Verze panelu:** 2.0  
 **Zásada:** Nebyly použity neověřené živé zdroje. Scraping komerčních webů nebyl použit.
 
 ---
