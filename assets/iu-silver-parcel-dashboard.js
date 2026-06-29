@@ -9,10 +9,82 @@
  * @param {string} text
  * @returns {{ version: number, statusHeadline: string|null, password: string|null, openingHours: string|null, addressLine: string|null, addressDisplay: string|null, hasStructured: boolean }}
  */
+function iuExtractParcelPickupAddress(text) {
+  var t = String(text || "").trim();
+  if (!t) return null;
+
+  var gas = t.match(/(?:Cerpaci|Čerpací)\s+stanic[ei]\s+([^.\n\r]+)/i);
+  if (gas) {
+    var gasBody = String(gas[1] || "")
+      .trim()
+      .replace(/[.;,\s]+$/, "");
+    if (gasBody && /\d/.test(gasBody)) {
+      return {
+        addressLine: gasBody,
+        addressDisplay: "Čerpací stanice " + gasBody,
+      };
+    }
+  }
+
+  var streetSuffix =
+    "(?:ská|ské|ský|ná|ní|ého|ova|ovo|třída|náměstí|nám\\.|ulice|ul\\.|tr\\.)";
+  var houseNum = "\\d{1,4}[a-zA-Z]?(?:\\/\\d{1,4})?";
+  var streetRe = new RegExp(
+    "([A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž\\-]+" +
+      streetSuffix +
+      ")\\s+(" +
+      houseNum +
+      ")(?:\\s*\\(([^)]+)\\))?",
+    "gi",
+  );
+
+  var matches = [];
+  var m;
+  while ((m = streetRe.exec(t)) !== null) {
+    matches.push({
+      index: m.index,
+      full: m[0],
+      street: m[1],
+      num: m[2],
+      paren: m[3] || "",
+    });
+  }
+  if (!matches.length) return null;
+
+  var best = matches[matches.length - 1];
+  var before = t.slice(0, best.index);
+  var clauseStart = Math.max(
+    before.lastIndexOf("."),
+    before.lastIndexOf(";"),
+    before.lastIndexOf("!"),
+  );
+  var clause = t.slice(clauseStart + 1).trim();
+  var addrEnd = best.index + best.full.length - (clauseStart + 1);
+  if (addrEnd > 0) {
+    clause = clause.slice(0, addrEnd).trim();
+  } else {
+    clause = best.street + " " + best.num + (best.paren ? " (" + best.paren + ")" : "");
+  }
+  clause = clause.replace(/[.;,\s]+$/, "");
+
+  if (!clause || clause.length < 6) {
+    clause =
+      best.street +
+      " " +
+      best.num +
+      (best.paren ? " (" + best.paren + ")" : "");
+  }
+
+  return {
+    addressLine: clause,
+    addressDisplay: clause,
+  };
+}
+
 function iuParseParcelUserDetail(text) {
   var t = String(text || "").trim();
   var base = {
-    version: 1,
+    version: 2,
     statusHeadline: null,
     password: null,
     openingHours: null,
@@ -24,7 +96,9 @@ function iuParseParcelUserDetail(text) {
   if (
     /\bk\s+vydeji\b/i.test(t) ||
     /\bk\s+výdeji\b/i.test(t) ||
-    /\bk\s+vyzvednut(i|í)\b/i.test(t)
+    /\bk\s+vyzvednut(i|í)\b/i.test(t) ||
+    /\bpřipraveno\s+k\s+v(y)?deji\b/i.test(t) ||
+    /\bpřipraveno\s+k\s+vyzvednut(i|í)\b/i.test(t)
   ) {
     base.statusHeadline = "Připraveno k vyzvednutí";
   }
@@ -34,13 +108,10 @@ function iuParseParcelUserDetail(text) {
   if (op) {
     base.openingHours = "Po–Ne " + op[1] + "–" + op[2];
   }
-  var ap = t.match(/(?:Cerpaci|Čerpací)\s+stanic[ei]\s+([^.\n\r]+)/i);
-  if (ap) {
-    var body = String(ap[1] || "").trim();
-    if (body) {
-      base.addressLine = body;
-      base.addressDisplay = "Čerpací stanice " + body;
-    }
+  var addr = iuExtractParcelPickupAddress(t);
+  if (addr) {
+    base.addressLine = addr.addressLine;
+    base.addressDisplay = addr.addressDisplay;
   }
   base.hasStructured = !!(
     base.statusHeadline ||
@@ -53,6 +124,7 @@ function iuParseParcelUserDetail(text) {
 
 try {
   globalThis.iuParseParcelUserDetail = iuParseParcelUserDetail;
+  globalThis.iuExtractParcelPickupAddress = iuExtractParcelPickupAddress;
 } catch (_) {}
 
 (function () {
@@ -367,13 +439,9 @@ try {
   function renderDetailSection(item, host, isEditing) {
     host.innerHTML = "";
     var hasStored = item.detailRawText && String(item.detailRawText).trim();
-    var parsed =
-      item.detailParsed && typeof item.detailParsed === "object"
-        ? item.detailParsed
-        : null;
-    if (!parsed && hasStored) {
-      parsed = iuParseParcelUserDetail(String(item.detailRawText));
-    }
+    var parsed = hasStored
+      ? iuParseParcelUserDetail(String(item.detailRawText))
+      : null;
 
     if (!hasStored && !isEditing) {
       var addB = document.createElement("button");
@@ -499,7 +567,7 @@ try {
         navD.textContent = "Navigovat";
         navD.addEventListener("click", function () {
           window.open(
-            mapsUrlForQuery(parsed.addressLine),
+            mapsUrlForQuery(parsed.addressLine || parsed.addressDisplay),
             "_blank",
             "noopener,noreferrer",
           );
