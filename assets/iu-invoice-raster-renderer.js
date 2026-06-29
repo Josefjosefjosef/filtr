@@ -178,10 +178,10 @@ function tableColumns(hasVat) {
     return [
       { key: "num", w: wNum, label: "#", align: "center" },
       { key: "item", w: wItem, label: "Položka", align: "left" },
-      { key: "qty", w: wQty, label: "Množ.", align: "right" },
+      { key: "qty", w: wQty, label: "Množ.", align: "center" },
       { key: "unit", w: wUnit, label: "Jedn.", align: "center" },
       { key: "price", w: wPrice, label: "Cena / j.", align: "right" },
-      { key: "vat", w: wVat, label: "DPH", align: "right" },
+      { key: "vat", w: wVat, label: "DPH", align: "center" },
       { key: "total", w: wTotal, label: "Celkem", align: "right" },
     ];
   }
@@ -194,7 +194,7 @@ function tableColumns(hasVat) {
   return [
     { key: "num", w: wNum, label: "#", align: "center" },
     { key: "item", w: wItem, label: "Položka", align: "left" },
-    { key: "qty", w: wQty, label: "Množ.", align: "right" },
+    { key: "qty", w: wQty, label: "Množ.", align: "center" },
     { key: "unit", w: wUnit, label: "Jedn.", align: "center" },
     { key: "price", w: wPrice, label: "Cena / j.", align: "right" },
     { key: "total", w: wTotal, label: "Celkem", align: "right" },

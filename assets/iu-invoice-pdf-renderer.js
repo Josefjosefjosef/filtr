@@ -681,7 +681,12 @@ function drawTableHeader(doc, layout, y) {
   const midY = yTop + h / 2 + ptToMm(L.fontTableHeadPt) * 0.35;
   for (let i = 0; i < layout.cols.length; i++) {
     const c = layout.cols[i];
-    const align = c.key === "num" ? "center" : c.key === "item" ? "left" : "right";
+    const align =
+      c.key === "num" || c.key === "qty" || c.key === "unit" || c.key === "vat"
+        ? "center"
+        : c.key === "item"
+          ? "left"
+          : "right";
     const plan = planTableCellDraw(doc, c, c.label, L.fontTableHeadPt, 7);
     withColumnClip(doc, c, yTop, h, () => {
       if (!plan.lines.length) return;
@@ -759,10 +764,10 @@ function drawTableRow(doc, layout, y, row) {
       });
       continue;
     }
-    if (c.key === "qty" || c.key === "unit") {
-      const res = drawTableCellText(doc, c, val, yTop, rowH, {
+    if (c.key === "qty" || c.key === "unit" || c.key === "vat") {
+      drawTableCellText(doc, c, val, yTop, rowH, {
         fontPt: L.fontTableCellPt,
-        align: "right",
+        align: "center",
         style: "normal",
       });
       continue;
@@ -843,6 +848,7 @@ const INVOICE_EXPORT_CRITICAL_CSS = `
 .iu-pdf-render-mode .iu-inv-pr-meta th,.iu-pdf-render-mode .iu-inv-pr-meta td,.iu-pdf-render-mode .iu-inv-pr-table th,.iu-pdf-render-mode .iu-inv-pr-table td{border:1px solid rgba(15,23,42,.1);padding:8px;text-align:left}
 .iu-pdf-render-mode .iu-inv-pr-meta th{background:rgba(15,23,42,.03);font-weight:650}
 .iu-pdf-render-mode .iu-inv-pr-table th{background:rgba(0,60,255,.07);font-weight:700}
+.iu-pdf-render-mode .iu-inv-pr-col--qty,.iu-pdf-render-mode .iu-inv-pr-col--unit,.iu-pdf-render-mode .iu-inv-pr-col--vat{text-align:center;vertical-align:middle}
 .iu-pdf-render-mode .iu-inv-pr-bank{padding:10px 12px;border-radius:10px;background:rgba(15,23,42,.03);margin-bottom:12px}
 .iu-pdf-render-mode .iu-inv-pr-totals{font-size:14px;text-align:right;margin-top:8px}
 .iu-pdf-render-mode .iu-inv-pr-due{margin-top:10px;font-size:18px;font-weight:800;color:#003CFF}
@@ -1163,6 +1169,11 @@ function applyCanvasSafeStyles(pageEl) {
     const tableCells = pageEl.querySelectorAll(".iu-inv-pr-table th, .iu-inv-pr-table td");
     for (let ci = 0; ci < tableCells.length; ci++) {
       tableCells[ci].style.setProperty("border", "1px solid rgba(15, 23, 42, 0.1)", "important");
+    }
+    const centerCols = pageEl.querySelectorAll(".iu-inv-pr-col--qty, .iu-inv-pr-col--unit, .iu-inv-pr-col--vat");
+    for (let ci = 0; ci < centerCols.length; ci++) {
+      centerCols[ci].style.setProperty("text-align", "center", "important");
+      centerCols[ci].style.setProperty("vertical-align", "middle", "important");
     }
     const lineTh = pageEl.querySelectorAll(".iu-inv-pr-table th");
     for (let hi = 0; hi < lineTh.length; hi++) {
