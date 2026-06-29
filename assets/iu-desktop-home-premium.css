@@ -18,6 +18,7 @@
     --iu-dhp-preview-headline-min-h: 65px;
     --iu-dhp-rail-min-h: 520px;
     --iu-dhp-rail-banners-min-h: 540px;
+    --iu-dhp-homecards-top-gap: 35px;
   }
 
   body.iu-desktop-home-grid[data-iu-fc="1"] {
@@ -103,8 +104,8 @@
 
   body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection,
   body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection {
-    margin-top: 10px !important;
-    padding: 10px !important;
+    margin-top: var(--iu-dhp-homecards-top-gap) !important;
+    padding: 0 !important;
     min-height: 0 !important;
     height: auto !important;
   }
@@ -206,6 +207,7 @@
     margin-inline: auto;
     padding-right: 0 !important;
     min-height: calc(var(--iu-dhp-hero-row-min-h) - 20px);
+    transform: translateY(-8px);
     position: static !important;
   }
 
