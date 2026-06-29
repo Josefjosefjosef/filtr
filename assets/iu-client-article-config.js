@@ -11,6 +11,9 @@ export const CLIENT_INITIAL_LIMIT = 100;
 /** Each „Další“ click: max additional articles for the active section only. */
 export const CLIENT_LOAD_MORE_LIMIT = 100;
 
+/** First paint DOM budget (articles already in memory; expanded client-side without extra fetch). */
+export const CLIENT_INITIAL_RENDER_BATCH = 30;
+
 /** Virtual Prehled dne loader key — no dedicated server section fetch. */
 export const CLIENT_PREHLED_DNE_VIRTUAL_SECTION_KEY = "__prehled_dne_virtual__";
 

@@ -17,6 +17,7 @@ import {
 } from "./iu-nameday-dative.js";
 import {
   CLIENT_INITIAL_LIMIT,
+  CLIENT_INITIAL_RENDER_BATCH,
   IU_HOMEPAGE_CHUNK_MANIFEST_FILE,
   IU_CHUNK_INITIAL_SIZE,
   iuUseChunkedArticleLoader,
@@ -2222,6 +2223,14 @@ try {
       }
     } catch (_) {}
     return false;
+  }
+
+  /** Task 66: first paint shows CLIENT_INITIAL_RENDER_BATCH; full CLIENT_INITIAL_LIMIT expands from memory. */
+  function iuChunkEffectiveVisibleArticleBudget(page) {
+    const full = iuChunkVisibleArticleBudget(page);
+    const p = Number(page) >= 1 ? Number(page) : 1;
+    if (p !== 1 || state.__iuClientInitialExpanded) return full;
+    return Math.min(CLIENT_INITIAL_RENDER_BATCH, full);
   }
 
   /** Task 66: one atomic DOM write for first CLIENT_INITIAL_LIMIT chunk paint (avoids multi-batch CLS). */
@@ -6066,7 +6075,7 @@ try {
           ? Number(state.pageSize)
           : 100;
     const page = Number(state.page) >= 1 ? Number(state.page) : 1;
-    const articleBudget = chunkMode ? iuChunkVisibleArticleBudget(page) : page * pageSize;
+    const articleBudget = chunkMode ? iuChunkEffectiveVisibleArticleBudget(page) : page * pageSize;
     const totalArticlesInFeed = iuCountFeedArticles(items);
     let visibleItems;
     let visibleCount;
@@ -6084,7 +6093,8 @@ try {
     visibleItems = iuArticleActionsFilterVisible(visibleItems);
     try { window.__iuLoadMoreLastRenderedItems = visibleItems; } catch (_) {}
     const hasMore = chunkMode
-      ? visibleItems.length < items.length || iuChunkHasMoreOnServer(state.chunkLoader)
+      ? state.__iuClientInitialExpanded &&
+        (visibleItems.length < items.length || iuChunkHasMoreOnServer(state.chunkLoader))
       : mediaHub100
       ? iuCountFeedArticles(visibleItems) < totalArticlesInFeed || visibleItems.length < items.length
       : visibleItems.length < items.length;
@@ -17658,6 +17668,7 @@ function buildVideoAsArticleCard(it) {
       state.cachedItems = mixed.filter((entry) => iuArticleReleaseEligible(entry));
       state.filteredItems = state.cachedItems.slice();
       state.page = 1;
+      state.__iuClientInitialExpanded = true;
       return true;
     }
     let navSec = "";
@@ -17686,6 +17697,8 @@ function buildVideoAsArticleCard(it) {
     state.cachedItems = mixed.filter((entry) => iuArticleReleaseEligible(entry));
     state.filteredItems = state.cachedItems.slice();
     state.page = 1;
+    state.__iuClientInitialExpanded = false;
+    void iuChunkScheduleClientInitialExpand(state.loadRequestId);
     return true;
   }
 
@@ -19076,14 +19089,37 @@ function buildVideoAsArticleCard(it) {
     return sanitized.length;
   }
 
-  async function iuChunkScheduleBackgroundBuffer(requestToken) {
-    /* Task 66: initial load already includes CLIENT_INITIAL_LIMIT — no second background fetch pass. */
+  async function iuChunkScheduleClientInitialExpand(requestToken) {
     if (!iuUseChunkedArticleLoader() || !state.chunkLoader) return;
-    try {
-      if (state.chunkLoader.backgroundDone) {
+    if (iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader)) return;
+    if (state.__iuClientInitialExpanded) return;
+    const loaded = Array.isArray(state.chunkLoader.articles) ? state.chunkLoader.articles.length : 0;
+    if (loaded <= CLIENT_INITIAL_RENDER_BATCH) {
+      state.__iuClientInitialExpanded = true;
+      try {
         window.__iuChunkBackgroundBufferDone = true;
-      }
-    } catch (_) {}
+        window.__iuChunkClientInitialExpandDone = true;
+      } catch (_) {}
+      return;
+    }
+    try {
+      iuBootTracePhase("chunk_client_initial_expand_start");
+      await iuYieldOneRaf();
+      if (!isLatestLoadRequest(requestToken) || state.__iuClientInitialExpanded) return;
+      state.__iuClientInitialExpanded = true;
+      await applyFilter({ resetPage: false, render: true });
+      iuBootTracePhase("chunk_client_initial_expand_end");
+      try {
+        window.__iuChunkBackgroundBufferDone = true;
+        window.__iuChunkClientInitialExpandDone = true;
+      } catch (_) {}
+    } catch (e) {
+      debugWarn("[CHUNK] client initial expand failed", e);
+    }
+  }
+
+  async function iuChunkScheduleBackgroundBuffer(requestToken) {
+    return iuChunkScheduleClientInitialExpand(requestToken);
   }
 
   async function loadData(opts) {
@@ -19106,6 +19142,7 @@ function buildVideoAsArticleCard(it) {
     if (iuUseChunkedArticleLoader()) {
       state.chunkLoader = null;
       __iuFeedPrimaryPairLast = null;
+      state.__iuClientInitialExpanded = false;
       iuClientArticleStoreReset();
     }
     iuBootTracePhase("loadData_start");
@@ -19577,6 +19614,9 @@ function buildVideoAsArticleCard(it) {
       iuBootTracePhase("loadData_first_renderItems_done");
       iuPreviewFeedProbeTick("afterFirstRenderFeed");
       iuHomeLoadAuditNotify("loadData:afterFirstRender");
+      if (iuUseChunkedArticleLoader()) {
+        void iuChunkScheduleClientInitialExpand(requestToken);
+      }
       if (iuUseChunkedArticleLoader()) {
         try {
           window.__iuChunkBackgroundBufferDone = !!(state.chunkLoader && state.chunkLoader.backgroundDone);
