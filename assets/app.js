@@ -2224,6 +2224,20 @@ try {
     return false;
   }
 
+  /** Task 66: one atomic DOM write for first CLIENT_INITIAL_LIMIT chunk paint (avoids multi-batch CLS). */
+  function iuFeedChunkInitialDomTightP(visibleCount) {
+    try {
+      if (!iuUseChunkedArticleLoader() || !state.chunkLoader) return false;
+      if (iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader)) return false;
+      const page = Number(state.page) >= 1 ? Number(state.page) : 1;
+      if (page !== 1) return false;
+      if (Number(visibleCount) > CLIENT_INITIAL_LIMIT) return false;
+      return !iuFeedSectionSwitchActiveP();
+    } catch (_) {
+      return false;
+    }
+  }
+
   // === STATUS HELPERS EXTENSION (maintenance-safe) ===
   window.iuSetDataStatus = function(articlesCount, videosCount){
     const el = document.getElementById("dataStatus");
@@ -6255,6 +6269,7 @@ try {
     let firstFeedBatchMarked = false;
     const reloadDomTight = iuFeedReloadDomTightenP();
     const sectionSwitchActive = iuFeedSectionSwitchActiveP();
+    const chunkInitialDomTight = iuFeedChunkInitialDomTightP(visibleItems.length);
     const iuFeedMicroDomYieldOffP = () => {
       try {
         return typeof location !== "undefined" && /(?:^|[?&])iuFeedMicro=0(?:&|$)/.test(String(location.search || ""));
@@ -6267,7 +6282,9 @@ try {
         return;
       }
       const batchMax = firstDomBatch
-        ? sectionSwitchActive
+        ? chunkInitialDomTight
+          ? visibleItems.length
+          : sectionSwitchActive
           ? IU_FEED_SECTION_SWITCH_FIRST_BATCH
           : reloadDomTight
           ? IU_FEED_RELOAD_FIRST_DOM_BATCH
@@ -6281,7 +6298,7 @@ try {
       const batchEnd = Math.min(pos + batchMax, visibleItems.length);
       let microSinceYield = 0;
       const microStride =
-        isSectionSwitchFirstBatch || reloadDomTight || iuFeedMicroDomYieldOffP()
+        isSectionSwitchFirstBatch || reloadDomTight || chunkInitialDomTight || iuFeedMicroDomYieldOffP()
           ? 9999
           : iuFeedDomMicroYieldStride();
       for (; pos < batchEnd; pos++) {
