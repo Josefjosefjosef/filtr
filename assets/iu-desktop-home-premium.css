@@ -1,5 +1,5 @@
-/**
- * Desktop homepage premium UI polish (≥1025px, body.iu-desktop-home-grid only).
+﻿/**
+ * Desktop homepage premium UI polish (â‰Ą1025px, body.iu-desktop-home-grid only).
  * Mobile / tablet untouched.
  */
 
@@ -34,7 +34,7 @@
     opacity: 1;
   }
 
-  /* ── Hero row: welcome left + weather right (340px), compact vertical rhythm ── */
+  /* â”€â”€ Hero row: welcome left + weather right (340px), compact vertical rhythm â”€â”€ */
   body.iu-desktop-home-grid #iuSilverTopCardsStack {
     gap: 4px;
   }
@@ -89,7 +89,7 @@
     box-sizing: border-box;
   }
 
-  /* Feed weather box: information-only on desktop (left-column Počasí button unchanged). */
+  /* Feed weather box: information-only on desktop (left-column PoÄŤasĂ­ button unchanged). */
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card,
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-phase="data"],
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-layout="ready"] {
@@ -132,7 +132,7 @@
     contain: layout style;
   }
 
-  /* ── Welcome box: 3 rows (greet / date / svátek) ── */
+  /* â”€â”€ Welcome box: 3 rows (greet / date / svĂˇtek) â”€â”€ */
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMeta {
     display: flex;
     flex-direction: column;
@@ -190,7 +190,7 @@
     padding: 3px 10px;
   }
 
-  /* ── Weather: moon left + aligned text column, centered in 340px area ── */
+  /* â”€â”€ Weather: moon left + aligned text column, centered in 340px area â”€â”€ */
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-stack {
     display: grid !important;
     grid-template-columns: auto minmax(0, max-content) !important;
@@ -332,7 +332,7 @@
     color: rgba(255, 255, 255, 0.9);
   }
 
-  /* ── Homecards: 65px images + slimmer cards ── */
+  /* â”€â”€ Homecards: 65px images + slimmer cards â”€â”€ */
   body.iu-desktop-home-grid #iuSilverTallScrollViewport [class$="PreviewCardMount"] {
     min-height: 0;
   }
@@ -456,7 +456,7 @@
     color: #0b1f33 !important;
   }
 
-  /* ── Homecards drag & drop (desktop only) ── */
+  /* â”€â”€ Homecards drag & drop (desktop only) â”€â”€ */
   body.iu-desktop-home-grid #iuSilverTallScrollViewport [class$="PreviewCardMount"] {
     cursor: grab;
     touch-action: none;
@@ -475,7 +475,7 @@
     border-radius: 12px;
   }
 
-  /* ── Desktop homecards: height follows content (no fixed floor slack below last row) ── */
+  /* â”€â”€ Desktop homecards: height follows content (no fixed floor slack below last row) â”€â”€ */
   body.iu-desktop-home-grid[data-iu-fc="1"] #iuSilverTopCardsStack {
     min-height: 0 !important;
     height: auto !important;
@@ -547,7 +547,7 @@
     pointer-events: none !important;
   }
 
-  /* Přehled dne: same card shell as other homecards on desktop */
+  /* PĹ™ehled dne: same card shell as other homecards on desktop */
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .box-prehled-dne {
     appearance: none;
     -webkit-appearance: none;
@@ -638,7 +638,7 @@
     background-image: none !important;
   }
 
-  /* Premium UI Hotfix V1.2 — PC overlay dashboard + desktop feed actions + My InfoUzel button */
+  /* Premium UI Hotfix V1.2 â€” PC overlay dashboard + desktop feed actions + My InfoUzel button */
   :is(body.iu-home, body.iu-desktop-home-grid) .iuMyInfoUzelOpenBtn {
     display: flex;
     align-items: center;
@@ -729,327 +729,6 @@
     flex: 0 0 auto;
   }
 
-  .iuMyInfoUzelOverlay:not([hidden]) {
-    contain: layout style;
-  }
-  .iuMyInfoUzelOverlay__sheet {
-    width: min(1720px, calc(100vw - 40px)) !important;
-    max-width: min(1720px, calc(100vw - 40px)) !important;
-    max-height: calc(100vh - 24px) !important;
-    margin: 12px auto !important;
-    border-radius: 16px !important;
-    background: var(--iu-brand-blue-premium-bg);
-    box-shadow: 0 24px 64px rgba(11, 42, 74, 0.18);
-    box-sizing: border-box !important;
-    contain: layout style !important;
-  }
-  .iuMyInfoUzelOverlay__head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 14px 20px;
-    border-bottom: 1px solid rgba(0, 60, 255, 0.1);
-    background: linear-gradient(180deg, rgba(239, 246, 255, 0.92) 0%, rgba(255, 255, 255, 0.88) 100%);
-    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.72);
-  }
-  .iuMyInfoUzelOverlay__headMain {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex: 1 1 auto;
-    min-width: 0;
-    padding: 4px 6px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.42);
-    border: 1px solid rgba(0, 60, 255, 0.08);
-  }
-  .iuMyInfoUzelOverlay__title {
-    margin: 0;
-    flex: 0 1 auto;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .iuMyInfoUzelOverlay__headerTools {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex: 0 0 auto;
-    margin-left: auto;
-  }
-  .iuMyInfoUzelOverlay__headerTools .iu-mmTopTools {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-    margin: 0;
-  }
-  .iuMyInfoUzelOverlay__headerTools .iu-mmTopToolHoverHost {
-    flex: 0 0 auto;
-    width: 50px;
-    height: 50px;
-  }
-  .iuMyInfoUzelOverlay__headerTools .iu-mmTopTool.iu-mmTopTool--imageTile,
-  .iuMyInfoUzelOverlay__headerTools .iu-mmTopTool.iuMindMenuButton,
-  .iuMyInfoUzelOverlay__headerTools .iu-mmTopTool.iuMindMenuTasksBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 46px;
-    height: 46px;
-    min-height: 46px;
-    max-height: 46px;
-    padding: 3px;
-    border: 1px solid rgba(0, 60, 255, 0.12);
-    border-radius: 11px;
-    background: rgba(255, 255, 255, 0.94);
-    box-sizing: border-box;
-    overflow: hidden;
-    box-shadow: 0 1px 6px rgba(11, 42, 74, 0.07);
-  }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks {
-    position: relative;
-  }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="datova-schranka"] { --iu-ql-accent: #1D4ED8; }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="internetove-bankovnictvi"] { --iu-ql-accent: #047857; }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="bakalari"] { --iu-ql-accent: #7C3AED; }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="zdravotni-pojistovna"] { --iu-ql-accent: #0EA5A4; }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="zasilky-a-sledovani"] { --iu-ql-accent: #EA580C; }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="ai-asistenti"] { --iu-ql-accent: #2563EB; }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="prekladac"] { --iu-ql-accent: #0284C7; }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="prevod-word-pdf"] { --iu-ql-accent: #4B5563; }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="financni-kalkulacky"] { --iu-ql-accent: #CA8A04; }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="vzory-smluv-plne-moci"] { --iu-ql-accent: #9F1239; }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="vytvorit-fakturu"] { --iu-ql-accent: #0f766e; }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile[data-iu-ql="naceneni-nakupu"] { --iu-ql-accent: #2E3238; }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile > .iuTileLink {
-    border-color: var(--iu-ql-accent, rgba(15, 23, 42, 0.12)) !important;
-    position: relative !important;
-    overflow: hidden !important;
-  }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile > .iuTileLink::before {
-    content: "" !important;
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
-    height: 100% !important;
-    width: 2px !important;
-    background: var(--iu-ql-accent, rgba(0, 60, 255, 0.45)) !important;
-    border-top-left-radius: 10px !important;
-    border-bottom-left-radius: 10px !important;
-    pointer-events: none !important;
-  }
-  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab {
-    flex: 1 1 auto;
-    min-width: 0;
-    border: 1px solid rgba(15, 23, 42, 0.1);
-    background: rgba(255, 255, 255, 0.88);
-    color: #334155;
-    border-radius: 10px;
-    padding: 8px 10px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
-  }
-  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab.is-active {
-    color: #0B2A4A;
-    border-color: rgba(0, 60, 255, 0.22);
-    background: linear-gradient(180deg, rgba(239, 246, 255, 0.98), rgba(255, 255, 255, 0.96));
-    box-shadow: 0 2px 8px rgba(11, 42, 74, 0.08);
-  }
-  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab--saved.is-active { border-color: rgba(245, 158, 11, 0.34); }
-  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab--followed.is-active { border-color: rgba(0, 60, 255, 0.28); }
-  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab--hidden.is-active { border-color: rgba(220, 38, 38, 0.26); }
-  .iuMyInfoUzelOverlay__headerTools .iu-mmTopTool--imageTile .iu-mmTopToolImageTileWrap {
-    width: 40px;
-    height: 40px;
-    min-height: 40px;
-    max-height: 40px;
-  }
-  .iuMyInfoUzelOverlay__headerTools .iu-mmTopTool--imageTile .iu-mmTopToolImageTile {
-    max-width: 40px;
-    max-height: 40px;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-  }
-  .iuMyInfoUzelOverlay__headerTools .iu-mmTopTool.iu-mmTopTool--imageTile::after {
-    display: none !important;
-    content: none !important;
-  }
-  .iuMyInfoUzelOverlay__scroll {
-    padding: 20px 24px 32px;
-    overflow-x: hidden;
-  }
-  .iuMyInfoUzelDashboard {
-    display: grid;
-    grid-template-columns: minmax(220px, 28fr) minmax(300px, 40fr) minmax(240px, 32fr);
-    gap: 24px;
-    align-items: start;
-    min-width: 0;
-  }
-  .iuMyInfoUzelDashboard__col {
-    min-width: 0;
-    max-width: 100%;
-  }
-  .iuMyInfoUzelDashboard__col--saved {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .iuMyInfoUzelDashboard__col--saved .iuMyInfoUzelSection {
-    margin-bottom: 0;
-  }
-  .iuMyInfoUzelMindMenuHost .mindMenu,
-  .iuMyInfoUzelMindMenuHost #iuMindMenuView {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    min-width: 0;
-  }
-  .iuMyInfoUzelMindMenuHost #iuMmArticleActionsSections,
-  .iuMyInfoUzelMindMenuHost .iu-mmTopTools,
-  .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks {
-    display: none !important;
-  }
-  .iuMyInfoUzelMindMenuHost .iu-mailboxes {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: transparent;
-  }
-  .iuMyInfoUzelMindMenuHost .iu-mailboxes .iu-mmSectionTitle {
-    font-size: 0;
-    font-weight: 800;
-    color: #0B2A4A;
-  }
-  .iuMyInfoUzelMindMenuHost .iu-mailboxes .iu-mmSectionTitle::before {
-    content: "E-MAILY";
-    font-size: 16px;
-    font-weight: 800;
-    letter-spacing: 0.02em;
-  }
-  .iuMyInfoUzelMindMenuHost .iu-mailbox-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 8px;
-  }
-  .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row,
-  .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row {
-    grid-template-columns: minmax(0, 1fr) 36px 40px !important;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-  .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill,
-  .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill {
-    max-width: 100% !important;
-    width: 100% !important;
-    min-width: 0 !important;
-  }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: transparent;
-  }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmSectionTitle {
-    font-size: 15px;
-    font-weight: 700;
-    color: #0B2A4A;
-  }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px 12px;
-    margin-top: 10px !important;
-  }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid,
-  .iuMyInfoUzelOverlay .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid {
-    min-height: 156px !important;
-    contain-intrinsic-size: auto 156px;
-    content-visibility: auto;
-  }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile,
-  .iuMyInfoUzelOverlay .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile {
-    min-height: 72px !important;
-    height: 72px !important;
-    max-height: 72px !important;
-    box-sizing: border-box !important;
-  }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink,
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile .iuTileLink,
-  .iuMyInfoUzelOverlay .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink {
-    min-height: 72px !important;
-    height: 72px !important;
-    max-height: 72px !important;
-    padding: 8px 10px;
-    border-radius: 10px;
-    border: 1px solid rgba(15, 23, 42, 0.1);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.92) 100%);
-    font-size: 12px;
-    font-weight: 600;
-    box-sizing: border-box;
-    box-shadow: 0 2px 8px rgba(11, 42, 74, 0.06);
-    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
-  }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid .iuTileLink:hover {
-    transform: translateY(-1px);
-    border-color: rgba(0, 60, 255, 0.18);
-    box-shadow: 0 6px 16px rgba(11, 42, 74, 0.1);
-  }
-  .iuMyInfoUzelMindMenuHost .iuMailboxControls {
-    margin-top: 6px;
-  }
-  .iuMyInfoUzelMindMenuHost .iu-mmHoverSummaryPanelShell,
-  .iuMyInfoUzelMindMenuHost .iu-mmHoverSummaryBridge,
-  .iuMyInfoUzelOverlay__headerTools .iu-mmHoverSummaryPanelShell,
-  .iuMyInfoUzelOverlay__headerTools .iu-mmHoverSummaryBridge {
-    display: none !important;
-  }
-  body.iu-myinfouzel-open.iu-desktop-home-grid[data-iu-fc="1"] .layout > aside.accordionCol {
-    min-height: var(--iu-dhp-rail-min-h, 520px) !important;
-  }
-  .iuMyInfoUzelSection--saved .iuMyInfoUzelItem,
-  .iuMyInfoUzelSection--followed .iuMyInfoUzelItem,
-  .iuMyInfoUzelSection--hidden .iuMyInfoUzelItem {
-    transition: box-shadow 220ms ease, border-color 220ms ease, background 220ms ease;
-  }
-  .iuMyInfoUzelSection--saved .iuMyInfoUzelItem:hover {
-    border-color: rgba(245, 158, 11, 0.34);
-    background: linear-gradient(135deg, #fffbeb, #fef3c7);
-    box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.12), 0 8px 20px rgba(245, 158, 11, 0.12);
-  }
-  .iuMyInfoUzelSection--followed .iuMyInfoUzelItem:hover {
-    border-color: rgba(0, 60, 255, 0.28);
-    background: linear-gradient(135deg, #eff6ff, #dbeafe);
-    box-shadow: 0 0 0 1px rgba(0, 60, 255, 0.1), 0 8px 20px rgba(0, 60, 255, 0.1);
-  }
-  .iuMyInfoUzelSection--hidden .iuMyInfoUzelItem:hover {
-    border-color: rgba(220, 38, 38, 0.26);
-    background: linear-gradient(135deg, #fef2f2, #fee2e2);
-    box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.1), 0 8px 20px rgba(220, 38, 38, 0.1);
-  }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmSectionTopRow {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    width: 100% !important;
-    gap: 12px !important;
-  }
-  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-quicktools-settings-trigger {
-    flex: 0 0 auto;
-    margin-left: 8px;
-  }
 }
 
 .iuMmManageTabs__nav {
@@ -1083,10 +762,6 @@
 .iuMmManageTabs__tab--followed.is-active { border-color: rgba(0, 60, 255, 0.28); }
 .iuMmManageTabs__tab--hidden.is-active { border-color: rgba(220, 38, 38, 0.26); }
 .iuMmManageTabs__panel[hidden] { display: none !important; }
-.iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill,
-.iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill {
-  min-width: 12.5em;
-}
 #iuMobileGatePanelTools .mindMenu-scroll-wrapper,
 .accordionCol .mindMenu-scroll-wrapper {
   border-radius: 14px;

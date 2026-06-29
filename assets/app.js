@@ -7501,7 +7501,7 @@ try {
   function iuArticleActionsEnsureOverlay() {
     try {
       const existing = document.getElementById("iuMyInfoUzelOverlay");
-      if (existing && existing.querySelector("[data-iu-manage-tabs]") && document.getElementById("iuMyInfoUzelToolsHost")) return;
+      if (existing && existing.querySelector("[data-iu-manage-tabs]") && document.getElementById("iuMyInfoUzelToolsHost") && existing.querySelector(".iuMyInfoUzelOverlay__headRow")) return;
       if (existing) existing.remove();
       const overlay = document.createElement("div");
       overlay.id = "iuMyInfoUzelOverlay";
@@ -7514,11 +7514,12 @@ try {
         <div class="iuMyInfoUzelOverlay__backdrop" data-iu-myinfouzel-close tabindex="-1"></div>
         <div class="iuMyInfoUzelOverlay__sheet">
           <header class="iuMyInfoUzelOverlay__head">
-            <div class="iuMyInfoUzelOverlay__headMain">
-              <h2 id="iuMyInfoUzelOverlayTitle" class="iuMyInfoUzelOverlay__title">Můj infoUzel.cz / MindMenu</h2>
-              <div class="iuMyInfoUzelOverlay__headerTools" id="iuMyInfoUzelHeaderTools" role="group" aria-label="Kalendář, Poznámky a Úkoly"></div>
+            <div class="iuMyInfoUzelOverlay__headRow">
+              <h2 id="iuMyInfoUzelOverlayTitle" class="iuMyInfoUzelOverlay__title"><span class="iuMyInfoUzelOverlay__titleBrand">Můj infoUzel.cz</span><span class="iuMyInfoUzelOverlay__titleSep" aria-hidden="true"> / </span><span class="iuMyInfoUzelOverlay__titleMind">MindMenu</span></h2>
+              <button type="button" class="iuMyInfoUzelOverlay__close" data-iu-myinfouzel-close aria-label="Zavřít">×</button>
             </div>
-            <button type="button" class="iuMyInfoUzelOverlay__close" data-iu-myinfouzel-close aria-label="Zavřít">×</button>
+            <div class="iuMyInfoUzelOverlay__headRule" aria-hidden="true"></div>
+            <div class="iuMyInfoUzelOverlay__headerTools" id="iuMyInfoUzelHeaderTools" hidden aria-hidden="true"></div>
           </header>
           <div class="iuMyInfoUzelOverlay__scroll">
             <div class="iuMyInfoUzelDashboard">
@@ -7586,12 +7587,18 @@ try {
   function iuArticleActionsSplitMindMenuForOverlay() {
     try {
       const mindMenu = document.getElementById("iuMindMenuView") || document.querySelector(".mindMenu");
-      const headerTools = document.getElementById("iuMyInfoUzelHeaderTools");
       const toolsHost = document.getElementById("iuMyInfoUzelToolsHost");
-      if (!mindMenu || !headerTools || !toolsHost) return;
+      if (!mindMenu || !toolsHost) return;
       const topTools = mindMenu.querySelector(":scope > .iu-mmTopTools");
       const quickLinks = mindMenu.querySelector(":scope > section.iu-mmQuickLinks");
-      if (topTools && topTools.parentNode !== headerTools) headerTools.appendChild(topTools);
+      const mailboxes = mindMenu.querySelector(":scope > section.iu-mailboxes");
+      if (topTools && mailboxes) {
+        if (topTools.parentNode !== mindMenu || topTools.nextElementSibling !== mailboxes) {
+          mindMenu.insertBefore(topTools, mailboxes);
+        }
+      } else if (topTools && topTools.parentNode !== mindMenu) {
+        mindMenu.insertBefore(topTools, mindMenu.firstChild);
+      }
       if (quickLinks && quickLinks.parentNode !== toolsHost) toolsHost.appendChild(quickLinks);
     } catch (_) {}
   }
@@ -7600,15 +7607,15 @@ try {
     try {
       const mindMenu = document.getElementById("iuMindMenuView") || document.querySelector(".mindMenu");
       if (!mindMenu) return;
-      const headerTools = document.getElementById("iuMyInfoUzelHeaderTools");
       const toolsHost = document.getElementById("iuMyInfoUzelToolsHost");
       const mailboxes = mindMenu.querySelector(":scope > section.iu-mailboxes");
-      const topTools =
-        headerTools?.querySelector(":scope > .iu-mmTopTools") || mindMenu.querySelector(":scope > .iu-mmTopTools");
+      const topTools = mindMenu.querySelector(":scope > .iu-mmTopTools");
       const quickLinks =
         toolsHost?.querySelector(":scope > section.iu-mmQuickLinks") ||
         mindMenu.querySelector(":scope > section.iu-mmQuickLinks");
-      if (topTools && topTools.parentNode !== mindMenu) {
+      if (topTools && mailboxes) {
+        mindMenu.insertBefore(topTools, mailboxes.nextSibling);
+      } else if (topTools && topTools.parentNode !== mindMenu) {
         mindMenu.insertBefore(topTools, mailboxes ? mailboxes.nextSibling : mindMenu.firstChild);
       }
       if (quickLinks && quickLinks.parentNode !== mindMenu) {
