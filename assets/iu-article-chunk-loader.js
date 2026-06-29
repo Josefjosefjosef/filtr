@@ -292,11 +292,7 @@ export async function iuChunkFetchBackgroundBuffer(loader, basePath, dataVer) {
       await iuChunkFetchBufferChunk(loader, basePath, dataVer);
     }
     iuChunkCapArticles(loader, true);
-    loader.backgroundDone = true;
     loader.nextLoadMoreChunkIndex = loader.bufferChunkLoaded ? 1 : 0;
-    try {
-      if (typeof window !== "undefined") window.__iuChunkBackgroundBufferDone = true;
-    } catch (_) {}
     return loader.articles.slice(0, CLIENT_INITIAL_LIMIT);
   } finally {
     loader.backgroundFetchInflight = false;

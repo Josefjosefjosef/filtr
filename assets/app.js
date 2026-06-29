@@ -6089,15 +6089,14 @@ try {
       !chunkMode || !!(state.chunkLoader && state.chunkLoader.backgroundDone);
     const chunkBufferedArticleCount =
       chunkMode && state.chunkLoader
-        ? Math.min(
-            iuCountFeedArticles(items),
-            CLIENT_INITIAL_LIMIT,
-          )
+        ? Math.min(iuCountFeedArticles(items), CLIENT_INITIAL_LIMIT)
         : 0;
+    const chunkVisibleBufferComplete =
+      !chunkMode ||
+      (chunkInitialBufferComplete &&
+        iuCountFeedArticles(visibleItems) >= chunkBufferedArticleCount);
     const hasMore = chunkMode
-      ? chunkInitialBufferComplete &&
-        iuCountFeedArticles(visibleItems) >= chunkBufferedArticleCount &&
-        iuChunkHasMoreOnServer(state.chunkLoader)
+      ? chunkVisibleBufferComplete && iuChunkHasMoreOnServer(state.chunkLoader)
       : mediaHub100
       ? iuCountFeedArticles(visibleItems) < totalArticlesInFeed || visibleItems.length < items.length
       : visibleItems.length < items.length;
@@ -19151,10 +19150,12 @@ function buildVideoAsArticleCard(it) {
       state.__iuFeedAppendOnlyFrom = CLIENT_INITIAL_RENDER_BATCH;
       await iuChunkMergeArticlesIntoCache(state.chunkLoader.articles, requestToken);
       if (!isLatestLoadRequest(requestToken)) return;
+      await applyFilter({ resetPage: false, render: true, instantSectionSwitch: true });
+      if (!isLatestLoadRequest(requestToken)) return;
+      state.chunkLoader.backgroundDone = true;
       try {
         window.__iuChunkBackgroundBufferDone = true;
       } catch (_) {}
-      await applyFilter({ resetPage: false, render: true, instantSectionSwitch: true });
     } catch (e) {
       debugWarn("[CHUNK] background buffer failed", e);
     }
