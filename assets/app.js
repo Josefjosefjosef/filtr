@@ -6994,10 +6994,30 @@ try {
   function iuArticleActionsWriteJson(key, list) {
     try {
       localStorage.setItem(key, JSON.stringify(Array.isArray(list) ? list : []));
+      iuArticleActionsOnStoreChanged(key);
       return true;
     } catch (_) {
       return false;
     }
+  }
+
+  function iuArticleActionsOnStoreChanged(key) {
+    try {
+      const k = String(key || "");
+      if (
+        k !== IU_SAVED_ARTICLES_KEY &&
+        k !== IU_HIDDEN_ARTICLES_KEY &&
+        k !== IU_FOLLOWED_TOPICS_KEY
+      ) {
+        return;
+      }
+      iuArticleActionsRefreshManagePanels();
+      if (k === IU_HIDDEN_ARTICLES_KEY) {
+        try {
+          if (typeof applyFilter === "function") applyFilter({ resetPage: false, render: true });
+        } catch (_) {}
+      }
+    } catch (_) {}
   }
 
   function iuArticleActionsResolveId(it) {
@@ -7269,13 +7289,11 @@ try {
     if (!undoEl) return;
     const parent = articleEl.parentNode;
     if (!parent) return;
+    iuArticleActionsPersistHidden(snap);
     parent.replaceChild(undoEl, articleEl);
     const timer = window.setTimeout(() => {
       try {
-        if (undoEl.parentNode) {
-          iuArticleActionsPersistHidden(snap);
-          undoEl.remove();
-        }
+        if (undoEl.parentNode) undoEl.remove();
       } catch (_) {}
     }, IU_HIDE_UNDO_MS);
     undoEl.__iuHideUndoTimer = timer;
@@ -7375,6 +7393,7 @@ try {
 
   function iuArticleActionsRefreshManagePanels() {
     try {
+      iuArticleActionsEnsureMindMenuSections();
       const overlay = document.getElementById("iuMyInfoUzelOverlay");
       if (overlay) {
         iuArticleActionsRenderManageList("saved", overlay.querySelector("[data-iu-manage-panel='saved']"));
@@ -7741,10 +7760,8 @@ try {
       if (action === "save") {
         const active = iuArticleActionsToggleSave(articleEl);
         iuArticleActionsSyncButtonState(btn, "save", active, active ? "Uloženo" : "Uložit");
-        iuArticleActionsRefreshManagePanels();
       } else if (action === "hide") {
         iuArticleActionsHideArticleEl(articleEl);
-        iuArticleActionsRefreshManagePanels();
       }
     } catch (_) {}
   }
@@ -7762,6 +7779,13 @@ try {
       iuArticleActionsEnsureMindMenuSections();
       iuArticleActionsEnsureDesktopButton();
       iuArticleActionsRefreshManagePanels();
+      try {
+        window.addEventListener("storage", (e) => {
+          try {
+            iuArticleActionsOnStoreChanged(e && e.key);
+          } catch (_) {}
+        });
+      } catch (_) {}
       try {
         window.addEventListener("resize", () => {
           try {
@@ -17058,6 +17082,11 @@ function buildVideoAsArticleCard(it) {
         try { state.movedWasHidden = Boolean(el.hidden); } catch {}
         try { panel.appendChild(el); } catch {}
         try { el.hidden = false; } catch {}
+        if (s.target === mindMenuTargetKey) {
+          try {
+            iuArticleActionsRefreshManagePanels();
+          } catch (_) {}
+        }
       }
 
       function closeSection() {
