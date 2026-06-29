@@ -7,6 +7,12 @@
   var SHORT_TEXT_DEFAULT =
     "🔒 Veškeré údaje ukládáte dobrovolně pouze do svého zařízení. InfoUzel.cz je neodesílá na své servery ani k nim nemá přístup.";
 
+  var DATOVA_AUTOFILL_NOTE =
+    "Externí přihlašovací stránka běží na jiné doméně — prohlížeč z bezpečnostních důvodů neumožňuje automatické vyplnění jména a hesla z infoUzel.cz. Po otevření přihlášení zkopírujte údaje z polí níže ručně.";
+
+  var LEGAL_MODULE_DISCLAIMER =
+    "Tento nástroj tvoří standardizované textové vzory pro vlastní použití. Nejedná se o individuální právní službu ani advokacii. V sporu, u vyšší hodnoty nebo nestandardní situace doporučujeme text konzultovat s advokátem.";
+
   var SHORT_TEXTS = {
     datovka: SHORT_TEXT_DEFAULT,
     bakalari: SHORT_TEXT_DEFAULT,
@@ -77,6 +83,10 @@
           "Po kliknutí budete přesměrováni na oficiální stránky vybraného poskytovatele. Opustíte prostředí InfoUzel.cz.",
           "InfoUzel.cz neodpovídá za obsah, dostupnost ani změny provedené provozovatelem externí služby.",
         ],
+      },
+      {
+        title: "Externí přihlašovací stránka",
+        paragraphs: [DATOVA_AUTOFILL_NOTE],
       },
       SECURITY_SECTION,
     ],
@@ -176,6 +186,10 @@
       SECURITY_SECTION,
     ],
     legal: [
+      {
+        title: "Upozornění k použití vzorů",
+        paragraphs: [LEGAL_MODULE_DISCLAIMER],
+      },
       {
         title: "K čemu nástroj slouží",
         paragraphs: [
@@ -413,10 +427,24 @@
     heading.setAttribute("data-iu-tool-privacy-key", toolKey);
   }
 
+  function relocateDatovkaAutofillNote(main) {
+    var statusEl = document.getElementById("iuDsAutofillStatus");
+    if (!statusEl || !main) return;
+    if (statusEl.getAttribute("data-iu-privacy-extra-moved") === "1") return;
+    statusEl.classList.add("iu-tool-privacy-extra");
+    statusEl.setAttribute("data-iu-privacy-extra-moved", "1");
+    statusEl.setAttribute("role", "note");
+    var anchor = main.querySelector(".iu-tool-privacy-short") || main.querySelector(".iu-tool-privacy-btn");
+    if (!anchor || !anchor.parentNode) return;
+    if (anchor.nextSibling) anchor.parentNode.insertBefore(statusEl, anchor.nextSibling);
+    else anchor.parentNode.appendChild(statusEl);
+  }
+
   function mountDatovkaHeading() {
     var main = document.querySelector(".iu-ds-panelHeaderMain");
     if (!main) return;
     mountInHeading(main, "datovka");
+    relocateDatovkaAutofillNote(main);
   }
 
   function initDelegation() {
