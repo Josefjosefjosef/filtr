@@ -125,16 +125,17 @@ export function formatLabeledFieldBlock(label, value, opts) {
 export function formatClosing(state) {
   const place = String((state && state.extra && state.extra.misto) || "").trim();
   const date = String((state && state.extra && state.extra.datum) || "").trim();
-  const lines = ["Místo a datum"];
+  const parts = [];
   if (place || date) {
-    lines.push([place, date].filter(Boolean).join(", "));
-  } else {
-    lines.push("………………, dne ………………");
+    parts.push(joinSections(["Místo a datum", [place, date].filter(Boolean).join(", ")]));
   }
-  lines.push("");
-  lines.push("Podpisy");
-  lines.push("______________________________          ______________________________");
-  return lines.join("\n");
+  parts.push(
+    joinSections([
+      "Podpisy",
+      "______________________________          ______________________________",
+    ]),
+  );
+  return joinSections(parts);
 }
 
 export function joinSections(parts) {

@@ -7587,6 +7587,22 @@ try {
         </div>
       `.trim();
       document.body.appendChild(overlay);
+      const toolsHost = overlay.querySelector("#iuMyInfoUzelToolsHost");
+      if (toolsHost && !toolsHost.__iuQtOverlayGearBound) {
+        toolsHost.__iuQtOverlayGearBound = 1;
+        toolsHost.addEventListener("click", (e) => {
+          const t = e.target;
+          if (!(t instanceof Element)) return;
+          const trig = t.closest("[data-iu-quicktools-settings], .iu-quicktools-settings-trigger");
+          if (!trig) return;
+          e.preventDefault();
+          e.stopPropagation();
+          const panel = document.getElementById("iuQuickToolsSettingsPanel");
+          if (!panel) return;
+          if (panel.hidden) iuQuickToolsSettingsOpen();
+          else iuQuickToolsSettingsClose();
+        });
+      }
       const manageTabs = overlay.querySelector("[data-iu-manage-tabs]");
       if (manageTabs) iuArticleActionsInitManageTabs(manageTabs);
       overlay.addEventListener("click", (e) => {
@@ -7868,6 +7884,11 @@ try {
       document.addEventListener("keydown", (e) => {
         try {
           if (e.key === "Escape" && document.body.classList.contains("iu-myinfouzel-open")) {
+            const qtPanel = document.getElementById("iuQuickToolsSettingsPanel");
+            if (qtPanel && !qtPanel.hidden) {
+              iuQuickToolsSettingsClose();
+              return;
+            }
             iuArticleActionsCloseOverlay();
           }
         } catch (_) {}
