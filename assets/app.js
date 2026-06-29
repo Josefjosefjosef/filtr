@@ -5970,6 +5970,7 @@ try {
       const vk = iuFeedSectionHeaderResolveVisualKey();
       if (vk) feedEl.setAttribute("data-feed-visual-key", vk);
       else feedEl.removeAttribute("data-feed-visual-key");
+      iuChunkClearBackgroundDeferHandlers();
     } catch (_) {}
   }
 
@@ -19246,31 +19247,26 @@ function buildVideoAsArticleCard(it) {
       }
     };
 
-    const onUserActivity = () => {
-      cleanup();
-      void runExpand();
-    };
     const cleanup = () => {
-      try {
-        window.removeEventListener("scroll", onUserActivity, true);
-        window.removeEventListener("wheel", onUserActivity, true);
-        document.removeEventListener("touchmove", onUserActivity, true);
-      } catch (_) {}
       if (state.__iuChunkDomExpandFallbackTimer) {
         clearTimeout(state.__iuChunkDomExpandFallbackTimer);
         state.__iuChunkDomExpandFallbackTimer = null;
       }
     };
     state.__iuChunkDomExpandCleanup = cleanup;
-    try {
-      window.addEventListener("scroll", onUserActivity, { passive: true, capture: true, once: true });
-      window.addEventListener("wheel", onUserActivity, { passive: true, capture: true, once: true });
-      document.addEventListener("touchmove", onUserActivity, { passive: true, capture: true, once: true });
-    } catch (_) {}
-    state.__iuChunkDomExpandFallbackTimer = setTimeout(() => {
-      cleanup();
-      void runExpand();
-    }, 20000);
+    const ric =
+      typeof requestIdleCallback !== "undefined"
+        ? requestIdleCallback
+        : function (cb) {
+            return setTimeout(cb, 120);
+          };
+    ric(() => {
+      if (!isLatestLoadRequest(requestToken)) return;
+      state.__iuChunkDomExpandFallbackTimer = setTimeout(() => {
+        cleanup();
+        void runExpand();
+      }, 6000);
+    }, { timeout: 4000 });
   }
 
   async function iuChunkScheduleBackgroundBuffer(requestToken) {
