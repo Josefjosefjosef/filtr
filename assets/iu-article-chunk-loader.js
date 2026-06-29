@@ -6,6 +6,7 @@
 import {
   CLIENT_INITIAL_LIMIT,
   CLIENT_LOAD_MORE_LIMIT,
+  CLIENT_INITIAL_RENDER_BATCH,
   IU_ARTICLE_FEED_CHUNKS_DIR,
   IU_CHUNK_FILE_SIZE,
   IU_CHUNK_INITIAL_SIZE,
@@ -16,6 +17,7 @@ import {
 export {
   CLIENT_INITIAL_LIMIT,
   CLIENT_LOAD_MORE_LIMIT,
+  CLIENT_INITIAL_RENDER_BATCH,
   IU_ARTICLE_FEED_CHUNKS_DIR,
   IU_CHUNK_FILE_SIZE,
   IU_CHUNK_INITIAL_SIZE,
@@ -316,8 +318,8 @@ export function iuChunkHasMoreOnServer(loader) {
 
 export function iuChunkVisibleArticleBudget(page) {
   const p = Number(page) >= 1 ? Number(page) : 1;
-  if (p <= 1) return CLIENT_INITIAL_LIMIT;
-  return CLIENT_INITIAL_LIMIT + (p - 1) * CLIENT_LOAD_MORE_LIMIT;
+  if (p <= 1) return CLIENT_INITIAL_RENDER_BATCH;
+  return CLIENT_INITIAL_RENDER_BATCH + (p - 1) * CLIENT_LOAD_MORE_LIMIT;
 }
 
 export function iuChunkPoolShapedPayload(loader, articles, generatedAt) {
