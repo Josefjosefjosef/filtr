@@ -50,7 +50,7 @@ function line(label, value) {
 /** @param {Record<string, string>} party @param {string} heading */
 export function formatPartyHumanReadable(party, heading) {
   const h = String(heading || "Subjekt").trim() || "Subjekt";
-  if (!party) return `${h}\n(neuvedeno)`;
+  if (!party) return h;
   const out = [h];
   const t = party.type;
   if (t === "fo") {

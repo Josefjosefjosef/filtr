@@ -52,6 +52,14 @@ function partiesTwo(doc, state, n1) {
   ]);
 }
 
+function partiesOne(doc, state, n1) {
+  const la = doc.partyLabels.a;
+  return joinSections([
+    `${n1}. Identifikace strany`,
+    formatPartyHumanReadable(state.partyA, la),
+  ]);
+}
+
 function lf(label, value, opts) {
   return formatLabeledFieldBlock(label, value, opts);
 }
@@ -403,11 +411,7 @@ export const IU_LEGAL_DOCUMENTS = [
     buildText(state) {
       return joinSections([
         this.title.toUpperCase(),
-        joinSections([
-          "1. Strany",
-          formatPartyHumanReadable(state.partyA, "Zmocnitel"),
-          formatPartyHumanReadable(state.partyB, "Zmocněnec"),
-        ]),
+        partiesTwo(this, state, "1"),
         sectionField("2", "Rozsah zmocnění", "Rozsah zmocnění", g(state, "rozsah")),
         sectionField("3", "Účel", "Účel", g(state, "ucel")),
         joinSections([
@@ -432,11 +436,7 @@ export const IU_LEGAL_DOCUMENTS = [
     buildText(state) {
       return joinSections([
         this.title.toUpperCase(),
-        joinSections([
-          "1. Strany",
-          formatPartyHumanReadable(state.partyA, "Zmocnitel"),
-          formatPartyHumanReadable(state.partyB, "Zmocněnec"),
-        ]),
+        partiesTwo(this, state, "1"),
         sectionField("2", "Rozsah zmocnění", "Rozsah zmocnění", g(state, "rozsah")),
         sectionField("3", "Účel", "Účel", g(state, "ucel")),
         joinSections(["4. Závěr", "Tato plná moc je speciální a zmocněnec je oprávněn pouze k úkonům výslovně uvedeným."]),
@@ -458,11 +458,7 @@ export const IU_LEGAL_DOCUMENTS = [
     buildText(state) {
       return joinSections([
         this.title.toUpperCase(),
-        joinSections([
-          "1. Strany",
-          formatPartyHumanReadable(state.partyA, "Zmocnitel"),
-          formatPartyHumanReadable(state.partyB, "Zmocněnec"),
-        ]),
+        partiesTwo(this, state, "1"),
         sectionField("2", "Vozidlo", "Vozidlo", g(state, "vozidlo")),
         sectionTextOrDefault("3", "Rozsah zmocnění", g(state, "rozsah"), "Zmocněnec je oprávněn vyřídit úkony související s převodem a přepisem vozidla v příslušných registrech a na úřadech."),
         formatClosing(state),
@@ -484,11 +480,7 @@ export const IU_LEGAL_DOCUMENTS = [
     buildText(state) {
       return joinSections([
         this.title.toUpperCase(),
-        joinSections([
-          "1. Strany",
-          formatPartyHumanReadable(state.partyA, "Zmocnitel"),
-          formatPartyHumanReadable(state.partyB, "Zmocněnec"),
-        ]),
+        partiesTwo(this, state, "1"),
         sectionField("2", "Úřad / agenda", "Úřad / agenda", g(state, "urad")),
         sectionField("3", "Rozsah zmocnění", "Rozsah zmocnění", g(state, "rozsah")),
         sectionField("4", "Účel", "Účel", g(state, "ucel")),
@@ -510,11 +502,7 @@ export const IU_LEGAL_DOCUMENTS = [
     buildText(state) {
       return joinSections([
         this.title.toUpperCase(),
-        joinSections([
-          "1. Strany",
-          formatPartyHumanReadable(state.partyA, "Zmocnitel"),
-          formatPartyHumanReadable(state.partyB, "Zmocněnec"),
-        ]),
+        partiesTwo(this, state, "1"),
         sectionField("2", "Předmět", "Předmět", g(state, "predmet")),
         sectionTextOrDefault("3", "Rozsah", g(state, "rozsah"), "Zmocněnec je oprávněn převzít uvedenou zásilku nebo dokument a podepsat potřebná potvrzení."),
         formatClosing(state),
@@ -535,11 +523,7 @@ export const IU_LEGAL_DOCUMENTS = [
     buildText(state) {
       return joinSections([
         this.title.toUpperCase(),
-        joinSections([
-          "1. Strany",
-          formatPartyHumanReadable(state.partyA, "Zmocnitel"),
-          formatPartyHumanReadable(state.partyB, "Zmocněnec"),
-        ]),
+        partiesTwo(this, state, "1"),
         sectionField("2", "Věc", "Věc", g(state, "vec")),
         sectionField("3", "Rozsah zmocnění", "Rozsah zmocnění", g(state, "rozsah")),
         joinSections([
@@ -758,6 +742,7 @@ export const IU_LEGAL_DOCUMENTS = [
     buildText(state) {
       return joinSections([
         this.title.toUpperCase(),
+        "UPOZORNĚNÍ: Odstoupení od smlouvy musí splňovat zákonné nebo smluvní podmínky. Ověřte důvod, formu a doručení.",
         partiesTwo(this, state, "1"),
         sectionField("2", "Smlouva", "Smlouva", g(state, "smlouva")),
         sectionField("3", "Odstoupení", "Odstoupení", g(state, "duvod")),
@@ -804,6 +789,7 @@ export const IU_LEGAL_DOCUMENTS = [
     buildText(state) {
       return joinSections([
         this.title.toUpperCase(),
+        "UPOZORNĚNÍ: Předžalobní výzva může ovlivnit náklady sporu a promlčení. Ověřte obsah, lhůtu a doručení.",
         partiesTwo(this, state, "1"),
         sectionField("2", "Skutkový stav", "Skutkový stav", g(state, "narok")),
         sectionField("3", "Výzva", "Výzva", g(state, "plneni")),
@@ -874,7 +860,7 @@ export const IU_LEGAL_DOCUMENTS = [
     buildText(state) {
       return joinSections([
         this.title.toUpperCase(),
-        joinSections(["1. Prohlásivší", formatPartyHumanReadable(state.partyA, "Prohlásivší")]),
+        partiesOne(this, state, "1"),
         sectionField("2", "Prohlášení", "Prohlášení", g(state, "text")),
         joinSections(["3. Závěr", "Prohlásivší prohlašuje na svou čest, že uvedené údaje jsou pravdivé."]),
         formatClosing(state),

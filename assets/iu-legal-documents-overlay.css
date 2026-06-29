@@ -704,10 +704,8 @@
   gap: 24px 32px;
   margin-top: 8px;
 }
-.iu-legal-doc-paper__signatureCol{
-  flex: 1 1 180px;
-  min-width: 160px;
-  max-width: calc(50% - 16px);
+.iu-legal-doc-paper__signatureGrid--single .iu-legal-doc-paper__signatureCol{
+  max-width: 100%;
 }
 .iu-legal-doc-paper__signatureLine{
   display: block;
