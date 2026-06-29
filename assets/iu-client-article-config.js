@@ -14,6 +14,9 @@ export const CLIENT_LOAD_MORE_LIMIT = 100;
 /** First paint DOM budget (articles already in memory; expanded client-side without extra fetch). */
 export const CLIENT_INITIAL_RENDER_BATCH = 30;
 
+/** Alias for task 66 spec (CLIENT_INITIAL_RENDER = first-paint count). */
+export const CLIENT_INITIAL_RENDER = CLIENT_INITIAL_RENDER_BATCH;
+
 /** Virtual Prehled dne loader key — no dedicated server section fetch. */
 export const CLIENT_PREHLED_DNE_VIRTUAL_SECTION_KEY = "__prehled_dne_virtual__";
 

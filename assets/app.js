@@ -17,12 +17,14 @@ import {
 } from "./iu-nameday-dative.js";
 import {
   CLIENT_INITIAL_LIMIT,
+  CLIENT_INITIAL_RENDER_BATCH,
   IU_HOMEPAGE_CHUNK_MANIFEST_FILE,
   IU_CHUNK_INITIAL_SIZE,
   iuUseChunkedArticleLoader,
   iuChunkResolveSectionKey,
   iuChunkLoadInitial,
   iuChunkFetchLoadMore,
+  iuChunkFetchBackgroundBuffer,
   iuChunkPoolShapedPayload,
   iuChunkHasMoreOnServer,
   iuChunkSectionMeta,
@@ -5900,6 +5902,50 @@ try {
     }
   }
 
+  function iuChunkShouldHoldFeedMinHeightP() {
+    try {
+      if (!iuUseChunkedArticleLoader() || !state.chunkLoader) return false;
+      if (iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader)) return false;
+      const page = Number(state.page) >= 1 ? Number(state.page) : 1;
+      if (page !== 1) return false;
+      return !state.chunkLoader.backgroundDone;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuChunkClearBackgroundDeferHandlers() {
+    try {
+      if (state.__iuChunkBgDeferTimer) {
+        clearTimeout(state.__iuChunkBgDeferTimer);
+        state.__iuChunkBgDeferTimer = null;
+      }
+      if (typeof state.__iuChunkDomExpandCleanup === "function") {
+        state.__iuChunkDomExpandCleanup();
+        state.__iuChunkDomExpandCleanup = null;
+      }
+    } catch (_) {}
+  }
+
+  function iuChunkEnqueueBackgroundBufferWhenIdle(requestToken) {
+    iuChunkClearBackgroundDeferHandlers();
+    const attempt = () => {
+      if (!isLatestLoadRequest(requestToken)) return;
+      if (iuFeedSectionSwitchActiveP()) {
+        state.__iuChunkBgDeferTimer = setTimeout(attempt, 200);
+        return;
+      }
+      void iuChunkScheduleBackgroundBuffer(requestToken);
+    };
+    const ric =
+      typeof requestIdleCallback !== "undefined"
+        ? requestIdleCallback
+        : function (cb) {
+            return setTimeout(cb, 80);
+          };
+    ric(attempt, { timeout: 1200 });
+  }
+
   /** P0 section switch: drop stale articles/header synchronously on click (before applyFilter/renderFeed). */
   function iuFeedSectionSwitchInstantClear(feedEl) {
     if (!feedEl || feedEl.id !== "feed") return;
@@ -5924,6 +5970,7 @@ try {
       const vk = iuFeedSectionHeaderResolveVisualKey();
       if (vk) feedEl.setAttribute("data-feed-visual-key", vk);
       else feedEl.removeAttribute("data-feed-visual-key");
+      iuChunkClearBackgroundDeferHandlers();
     } catch (_) {}
   }
 
@@ -6028,7 +6075,9 @@ try {
         if (!fel || String(fel.getAttribute("data-feed-switching") || "") !== "1") return;
         if (String(fel.getAttribute("data-feed-switch-seq") || "") !== switchSeqAtStart) return;
         fel.removeAttribute("data-feed-switching");
-        fel.style.minHeight = "";
+        if (!iuChunkShouldHoldFeedMinHeightP()) {
+          fel.style.minHeight = "";
+        }
         sectionSwitchFirstBatchReleased = true;
         iuFeedSectionSwitchScrollToStartIfArmed();
       } catch (_) {}
@@ -6066,7 +6115,7 @@ try {
           ? Number(state.pageSize)
           : 100;
     const page = Number(state.page) >= 1 ? Number(state.page) : 1;
-    const articleBudget = chunkMode ? iuChunkVisibleArticleBudget(page) : page * pageSize;
+    const articleBudget = chunkMode ? iuChunkVisibleArticleBudget(page, state.chunkLoader) : page * pageSize;
     const totalArticlesInFeed = iuCountFeedArticles(items);
     let visibleItems;
     let visibleCount;
@@ -6083,8 +6132,28 @@ try {
     visibleItems = iuLoadMoreApplyPinnedOrder(visibleItems);
     visibleItems = iuArticleActionsFilterVisible(visibleItems);
     try { window.__iuLoadMoreLastRenderedItems = visibleItems; } catch (_) {}
+    const chunkInitialBufferComplete =
+      !chunkMode ||
+      !!(
+        state.chunkLoader &&
+        (state.chunkLoader.backgroundMemoryReady || state.chunkLoader.backgroundDone)
+      );
+    const chunkBufferedArticleCount =
+      chunkMode && state.chunkLoader
+        ? Math.min(iuCountFeedArticles(items), CLIENT_INITIAL_LIMIT)
+        : 0;
+    const chunkMemoryBufferComplete =
+      chunkMode &&
+      state.chunkLoader &&
+      state.chunkLoader.backgroundMemoryReady &&
+      (state.chunkLoader.articlesReceivedCount || 0) >= chunkBufferedArticleCount;
+    const chunkVisibleBufferComplete =
+      !chunkMode ||
+      chunkMemoryBufferComplete ||
+      (chunkInitialBufferComplete &&
+        iuCountFeedArticles(visibleItems) >= chunkBufferedArticleCount);
     const hasMore = chunkMode
-      ? visibleItems.length < items.length || iuChunkHasMoreOnServer(state.chunkLoader)
+      ? chunkVisibleBufferComplete && iuChunkHasMoreOnServer(state.chunkLoader)
       : mediaHub100
       ? iuCountFeedArticles(visibleItems) < totalArticlesInFeed || visibleItems.length < items.length
       : visibleItems.length < items.length;
@@ -6263,8 +6332,25 @@ try {
     })();
     let tDomPatch0 = 0;
     let domPatchStarted = false;
+    let chunkAppendFrom = 0;
+    if (chunkMode) {
+      try {
+        const n = Number(state.__iuFeedAppendOnlyFrom);
+        if (Number.isFinite(n) && n > 0) {
+          chunkAppendFrom = Math.min(n, visibleItems.length);
+          state.__iuFeedAppendOnlyFrom = 0;
+        }
+      } catch (_) {}
+    }
+    if (chunkAppendFrom > 0) {
+      domPatchStarted = true;
+      try {
+        const oldLm = safeTarget.querySelector(".iuLoadMoreWrap");
+        if (oldLm) oldLm.remove();
+      } catch (_) {}
+    }
     let renderedCount = 0;
-    let pos = 0;
+    let pos = chunkAppendFrom;
     let firstDomBatch = true;
     let firstFeedBatchMarked = false;
     const reloadDomTight = iuFeedReloadDomTightenP();
@@ -6594,12 +6680,13 @@ try {
               if (iuUseChunkedArticleLoader() && state.chunkLoader) {
                 const { added } = await iuChunkFetchLoadMore(state.chunkLoader, iuBasePath(), iuChunkDataVer());
                 if (added.length) {
+                  const prevVisible = Array.isArray(window.__iuLoadMoreLastRenderedItems)
+                    ? window.__iuLoadMoreLastRenderedItems.length
+                    : visibleItems.length;
                   await iuChunkMergeArticlesIntoCache(added, state.loadRequestId);
+                  state.__iuFeedAppendOnlyFrom = prevVisible;
                   state.page = (Number(state.page) >= 1 ? Number(state.page) : 1) + 1;
                   await applyFilter({ resetPage: false, render: true });
-                } else if (visibleItems.length < (state.filteredItems?.length ?? 0)) {
-                  state.page = (Number(state.page) >= 1 ? Number(state.page) : 1) + 1;
-                  await renderFeed(safeTarget, state.filteredItems);
                 }
                 return;
               }
@@ -6651,12 +6738,28 @@ try {
         } catch (_) {}
       }
     } catch (_) {}
+    if (
+      chunkMode &&
+      state.chunkLoader &&
+      !state.chunkLoader.backgroundMemoryReady &&
+      !state.chunkLoader.backgroundDone &&
+      !iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader) &&
+      chunkAppendFrom === 0
+    ) {
+      if (iuFeedSectionSwitchActiveP()) {
+        iuChunkEnqueueBackgroundBufferWhenIdle(state.loadRequestId);
+      } else {
+        void iuChunkScheduleBackgroundBuffer(state.loadRequestId);
+      }
+    }
     feedEl.setAttribute("data-feed-ready", "true");
     try {
       iuRenderFeedReleaseSectionSwitchIfReady();
       if (!sectionSwitchFirstBatchReleased) {
         feedEl.removeAttribute("data-feed-switching");
-        feedEl.style.minHeight = "";
+        if (!iuChunkShouldHoldFeedMinHeightP()) {
+          feedEl.style.minHeight = "";
+        }
         iuFeedSectionSwitchScrollToStartIfArmed();
       }
       const vkDone = iuFeedSectionHeaderResolveVisualKey();
@@ -6670,7 +6773,9 @@ try {
           const finSeq = String(felFin.getAttribute("data-feed-switch-seq") || "");
           if (switchSeqAtStart && finSeq === switchSeqAtStart) {
             felFin.removeAttribute("data-feed-switching");
-            felFin.style.minHeight = "";
+            if (!iuChunkShouldHoldFeedMinHeightP()) {
+              felFin.style.minHeight = "";
+            }
             iuFeedSectionSwitchScrollToStartIfArmed();
           }
         }
@@ -19111,14 +19216,96 @@ function buildVideoAsArticleCard(it) {
     return sanitized.length;
   }
 
-  async function iuChunkScheduleBackgroundBuffer(requestToken) {
-    /* Task 66: initial load already includes CLIENT_INITIAL_LIMIT — no second background fetch pass. */
+  function iuChunkScheduleDomExpandToInitialLimit(requestToken) {
     if (!iuUseChunkedArticleLoader() || !state.chunkLoader) return;
-    try {
-      if (state.chunkLoader.backgroundDone) {
-        window.__iuChunkBackgroundBufferDone = true;
+    if (state.chunkLoader.backgroundDone) return;
+    if (!state.chunkLoader.backgroundMemoryReady) return;
+    iuChunkClearBackgroundDeferHandlers();
+
+    const runExpand = async () => {
+      if (!isLatestLoadRequest(requestToken) || !state.chunkLoader) return;
+      if (state.chunkLoader.backgroundDone) return;
+      if (iuFeedSectionSwitchActiveP()) {
+        state.__iuChunkBgDeferTimer = setTimeout(() => {
+          void runExpand();
+        }, 200);
+        return;
       }
-    } catch (_) {}
+      try {
+        state.__iuFeedAppendOnlyFrom = CLIENT_INITIAL_RENDER_BATCH;
+        await iuChunkMergeArticlesIntoCache(state.chunkLoader.articles, requestToken);
+        if (!isLatestLoadRequest(requestToken)) return;
+        await applyFilter({ resetPage: false, render: true, instantSectionSwitch: false });
+        if (!isLatestLoadRequest(requestToken)) return;
+        state.chunkLoader.backgroundDone = true;
+        try {
+          const fel = document.getElementById("feed");
+          if (fel) fel.style.minHeight = "";
+        } catch (_) {}
+      } catch (e) {
+        debugWarn("[CHUNK] dom expand failed", e);
+      }
+    };
+
+    const cleanup = () => {
+      if (state.__iuChunkDomExpandFallbackTimer) {
+        clearTimeout(state.__iuChunkDomExpandFallbackTimer);
+        state.__iuChunkDomExpandFallbackTimer = null;
+      }
+    };
+    state.__iuChunkDomExpandCleanup = cleanup;
+    const ric =
+      typeof requestIdleCallback !== "undefined"
+        ? requestIdleCallback
+        : function (cb) {
+            return setTimeout(cb, 120);
+          };
+    ric(() => {
+      if (!isLatestLoadRequest(requestToken)) return;
+      state.__iuChunkDomExpandFallbackTimer = setTimeout(() => {
+        cleanup();
+        void runExpand();
+      }, 6000);
+    }, { timeout: 4000 });
+  }
+
+  async function iuChunkScheduleBackgroundBuffer(requestToken) {
+    if (!iuUseChunkedArticleLoader() || !state.chunkLoader) return;
+    if (iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader)) {
+      try {
+        window.__iuChunkBackgroundBufferDone = true;
+      } catch (_) {}
+      return;
+    }
+    if (state.chunkLoader.backgroundDone) {
+      try {
+        window.__iuChunkBackgroundBufferDone = true;
+      } catch (_) {}
+      return;
+    }
+    if (state.chunkLoader.backgroundMemoryReady) {
+      iuChunkScheduleDomExpandToInitialLimit(requestToken);
+      return;
+    }
+    if (state.chunkLoader.backgroundFetchInflight) return;
+    if (!isLatestLoadRequest(requestToken)) return;
+    if (iuFeedSectionSwitchActiveP()) {
+      iuChunkEnqueueBackgroundBufferWhenIdle(requestToken);
+      return;
+    }
+    try {
+      await iuChunkFetchBackgroundBuffer(state.chunkLoader, iuBasePath(), iuChunkDataVer());
+      if (!isLatestLoadRequest(requestToken)) return;
+      await iuChunkMergeArticlesIntoCache(state.chunkLoader.articles, requestToken);
+      if (!isLatestLoadRequest(requestToken)) return;
+      state.chunkLoader.backgroundMemoryReady = true;
+      try {
+        window.__iuChunkBackgroundBufferDone = true;
+      } catch (_) {}
+      iuChunkScheduleDomExpandToInitialLimit(requestToken);
+    } catch (e) {
+      debugWarn("[CHUNK] background buffer failed", e);
+    }
   }
 
   async function loadData(opts) {
@@ -19139,6 +19326,7 @@ function buildVideoAsArticleCard(it) {
     state.__iuRenderFeedPassSeq = 0;
     state.__iuLoadDataMainApplyFilterDone = false;
     if (iuUseChunkedArticleLoader()) {
+      iuChunkClearBackgroundDeferHandlers();
       state.chunkLoader = null;
       __iuFeedPrimaryPairLast = null;
       iuClientArticleStoreReset();
@@ -19612,7 +19800,14 @@ function buildVideoAsArticleCard(it) {
       iuBootTracePhase("loadData_first_renderItems_done");
       iuPreviewFeedProbeTick("afterFirstRenderFeed");
       iuHomeLoadAuditNotify("loadData:afterFirstRender");
-      if (iuUseChunkedArticleLoader()) {
+      if (
+        iuUseChunkedArticleLoader() &&
+        state.chunkLoader &&
+        !state.chunkLoader.backgroundMemoryReady &&
+        !state.chunkLoader.backgroundDone
+      ) {
+        void iuChunkScheduleBackgroundBuffer(requestToken);
+      } else if (iuUseChunkedArticleLoader()) {
         try {
           window.__iuChunkBackgroundBufferDone = !!(state.chunkLoader && state.chunkLoader.backgroundDone);
         } catch (_) {}
