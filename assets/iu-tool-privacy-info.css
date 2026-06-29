@@ -113,17 +113,25 @@
   margin-bottom: 2px;
 }
 
-/* Modální okno */
+/* Modální okno — vždy pod horní lištou, výška z dostupného viewportu, scroll uvnitř panelu */
 .iu-tool-privacy-modal{
+  --iu-tool-privacy-top-gap: calc(env(safe-area-inset-top, 0px) + 12px);
+  --iu-tool-privacy-side-gap: max(12px, env(safe-area-inset-right, 0px), env(safe-area-inset-left, 0px));
+  --iu-tool-privacy-bottom-gap: calc(env(safe-area-inset-bottom, 0px) + 12px);
   position: fixed;
   inset: 0;
   z-index: 10550;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 16px;
+  justify-content: flex-start;
+  padding:
+    var(--iu-tool-privacy-top-gap)
+    var(--iu-tool-privacy-side-gap)
+    var(--iu-tool-privacy-bottom-gap);
   box-sizing: border-box;
   background: rgba(15, 23, 42, 0.52);
+  overflow: hidden;
   animation: iu-tool-privacy-fade-in 0.18s ease;
 }
 
@@ -140,7 +148,13 @@
   display: flex;
   flex-direction: column;
   width: min(580px, 100%);
-  max-height: min(88vh, 720px);
+  flex: 0 1 auto;
+  min-height: 0;
+  max-height: calc(
+    100dvh
+    - var(--iu-tool-privacy-top-gap)
+    - var(--iu-tool-privacy-bottom-gap)
+  );
   overflow: hidden;
   border-radius: 18px;
   border: 1px solid rgba(0, 60, 255, 0.14);
@@ -260,13 +274,24 @@
   }
 
   .iu-tool-privacy-modal{
-    padding: 12px;
-    align-items: flex-end;
+    --iu-tool-privacy-top-gap: calc(env(safe-area-inset-top, 0px) + 8px);
+    --iu-tool-privacy-side-gap: max(12px, env(safe-area-inset-right, 0px), env(safe-area-inset-left, 0px));
+    --iu-tool-privacy-bottom-gap: calc(env(safe-area-inset-bottom, 0px) + 12px);
   }
 
   .iu-tool-privacy-modal__panel{
-    max-height: min(92vh, 820px);
-    border-radius: 16px 16px 12px 12px;
+    width: 100%;
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 900px){
+  .iu-tool-privacy-modal{
+    --iu-tool-privacy-bottom-gap: calc(
+      env(safe-area-inset-bottom, 0px)
+      + var(--iu-mobile-bottom-nav-h, 56px)
+      + 12px
+    );
   }
 }
 
