@@ -15954,6 +15954,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuMobileSilverSlot #silver-slot #iuSilverTallScrollViewport #iuFeedNewsSplitPostHomeCards + #iuSilverFinanceHomeCard{
     margin-top: var(--iu-mobile-tablet-section-gap) !important;
   }
+  /* P0 task 60: 4px gap — articles divider → first home preview card (mobile/tablet only). */
+  #iuFeedNewsSplit + #iuSilverTallScrollSection #iuSilverTallScrollViewport > [class$="PreviewCardMount"]:first-child :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education,.box-prehled-dne){
+    margin-top: 0 !important;
+  }
   #iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education,.box-prehled-dne){
     margin: 0 !important;
   }
