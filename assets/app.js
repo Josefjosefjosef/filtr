@@ -3823,13 +3823,27 @@ try {
       const fp = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
       const topicKey = fp && fp.mediaTopicKey ? String(fp.mediaTopicKey).trim().toLowerCase() : "";
       if (topicKey && topicKey !== "all") return true;
+      let sec = "";
       try {
-        const sec = String((document.body && document.body.dataset && document.body.dataset.section) || "").trim().toLowerCase();
+        sec = String((document.body && document.body.dataset && document.body.dataset.section) || "").trim().toLowerCase();
         if (sec === "travel") return true;
         if (["hry", "kultura", "veda", "vzdelavani"].indexOf(sec) !== -1) return true;
       } catch (_) {}
       try {
         if (typeof iuIsDesktopNavLayout === "function" && iuIsDesktopNavLayout()) return true;
+      } catch (_) {}
+      /* P0 task 53: mobile/tablet Přehled dne — same anchored video slots as desktop article hub. */
+      try {
+        if (window.matchMedia && window.matchMedia("(max-width: 1024px)").matches) {
+          let hubSec = sec;
+          if (!hubSec) {
+            try {
+              const p = new URLSearchParams(String(location.search || ""));
+              hubSec = iuFeedPagingNormalizeSectionRaw(String(p.get("section") || IU_ARTICLE_HUB_SECTION).trim().toLowerCase());
+            } catch (_) {}
+          }
+          if (iuArticleHubSectionP(hubSec)) return true;
+        }
       } catch (_) {}
       return false;
     } catch (_) {
@@ -3856,10 +3870,12 @@ try {
     }
 
     function pickArticleElements() {
-      // Prefer explicit typed articles.
-      const primarySel = '.news-card[data-feed-type="article"]';
+      const timelineFeed = container.classList && container.classList.contains("iuTimelineFeed");
+      const primarySel = timelineFeed
+        ? 'article.iuTimelineItem[data-feed-type="article"]'
+        : '.news-card[data-feed-type="article"]';
       const primary = Array.from(container.querySelectorAll(primarySel));
-      if (primary.length >= 20) return { selectorUsed: primarySel, articles: primary };
+      if (primary.length > 0) return { selectorUsed: primarySel, articles: primary };
 
       // Fallback: any .news-card that looks like a real article card (has a[href], not a video card).
       const fallbackSel = ".news-card";
@@ -3923,29 +3939,42 @@ try {
 
     function buildPlaceholderCard(slotIndex) {
       const el = document.createElement("article");
-      el.className = "news-card iuVideoCard";
       el.setAttribute("data-feed-type", "video-preview");
       el.setAttribute("data-slot", String(slotIndex));
       el.setAttribute("data-iu-placeholder", "1");
       el.removeAttribute("data-ytid");
-      el.innerHTML = `
-        <div class="iuVideoFrame">
-          <button type="button" class="iuVideoPoster" disabled aria-label="Načítám video…">
-            <span class="iuVideoPlay" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="24" height="24" focusable="false" aria-hidden="true">
-                <path d="M9 7.5v9l8-4.5-8-4.5z" fill="currentColor"></path>
-              </svg>
-            </span>
-            <span class="iuVideoBadge" aria-hidden="true">Video</span>
-          </button>
-        </div>
+      const placeholderBody = `
+          <div class="iuVideoFrame">
+            <button type="button" class="iuVideoPoster" disabled aria-label="Načítám video…">
+              <span class="iuVideoPlay" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" focusable="false" aria-hidden="true">
+                  <path d="M9 7.5v9l8-4.5-8-4.5z" fill="currentColor"></path>
+                </svg>
+              </span>
+              <span class="iuVideoBadge" aria-hidden="true">Video</span>
+            </button>
+          </div>
+          ${IU_TIMELINE_ENABLED ? iuTimelineYouTubeMetaLine() : `
         <div class="iuVideoMeta">
           <div class="iuVideoTitle">Načítám video…</div>
           <div class="iuVideoSub">
             <span class="iuVideoChannel">Video se načítá…</span>
           </div>
-        </div>
-      `.trim();
+        </div>`}
+        `.trim();
+      if (IU_TIMELINE_ENABLED) {
+        el.className = "news-card iuVideoCard iuTimelineItem iuTimelineItem--video";
+        el.innerHTML = `
+          <div class="iuTimelineRow">
+            <div class="iuTimelineLeft">${iuTimelineVideoLeftBlock()}</div>
+            <div class="iuTimelineAxis" aria-hidden="true"><span class="iuTimelineDot" style="--iuTimelineDotColor:${IU_BRAND_BLUE}"></span></div>
+            <div class="iuTimelineRight">${placeholderBody}</div>
+          </div>
+        `.trim();
+      } else {
+        el.className = "news-card iuVideoCard";
+        el.innerHTML = placeholderBody;
+      }
       return el;
     }
 
@@ -5500,13 +5529,23 @@ try {
 
   function iuIsPrehledDneFeedContext() {
     try {
-      if (document.body && document.body.classList.contains("iu-home")) return false;
+      if (window.__iuDesktopExplicitPrehledDne) return true;
       const p = new URLSearchParams(String(location.search || ""));
       const section = iuFeedPagingNormalizeSectionRaw(p.get("section") || IU_ARTICLE_HUB_SECTION);
       if (!iuArticleHubSectionP(section)) return false;
       let topic = String(p.get("topic") || "").trim().toLowerCase();
       if (topic === "tech" || topic === "bydleni") topic = "all";
-      return !topic || topic === "all";
+      if (topic && topic !== "all") return false;
+      const fp = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
+      const pipelineTopic = fp && fp.mediaTopicKey ? String(fp.mediaTopicKey).trim().toLowerCase() : "";
+      if (pipelineTopic && pipelineTopic !== "all") return false;
+      if (document.body && document.body.classList.contains("iu-home")) {
+        try {
+          if (window.matchMedia && window.matchMedia("(min-width: 901px)").matches) return false;
+        } catch (_) {}
+        return true;
+      }
+      return true;
     } catch (_) {
       return false;
     }
@@ -6073,7 +6112,7 @@ try {
       0
     );
     const slotCount = shouldInjectVideos
-      ? Math.min(maxVideosPerPage, Math.floor(totalArticlesVisible / (Number(IU_FEED_VIDEO_EVERY) || insertEveryN)))
+      ? Math.min(maxVideosPerPage, Math.floor(totalArticlesVisible / insertEveryN))
       : 0;
     const sectionKey =
       Array.isArray(activeSections) && activeSections.length === 1 ? String(activeSections[0]) : "vse";
