@@ -121,4 +121,58 @@
     flex: 0 0 auto !important;
     margin: 0 !important;
   }
+
+  /* v70: iCentrum above mobile gate overlay + MindMenu header vertical alignment */
+  body.iu-mobileGateOverlayOpen #iuTopbarInfoOverlay:not([hidden]) {
+    z-index: 10030 !important;
+  }
+
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="nav"]) #iuMobileGateNavHead.iuMobileGatePanelHead {
+    align-items: center !important;
+    min-height: 32px;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 10px;
+  }
+
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo {
+    position: relative;
+    min-height: 32px;
+    padding-top: 0;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-items: center;
+    column-gap: 8px;
+  }
+
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo .iu-mmSectionTitle {
+    grid-column: 2;
+    grid-row: 1;
+    text-align: center !important;
+    width: auto !important;
+    margin: 0;
+    padding: 0;
+    line-height: 1.25;
+    justify-self: center;
+  }
+
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo [data-iu-mobile-gate-info-btn="tools"] {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    align-self: center;
+    position: static;
+    top: auto;
+    right: auto;
+    transform: none;
+    z-index: 2;
+    pointer-events: auto;
+  }
+
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo .iu-mmSectionLine {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+  }
 }
