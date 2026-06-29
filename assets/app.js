@@ -31283,7 +31283,7 @@ function buildVideoAsArticleCard(it) {
   "use strict";
 
   /** Single source of truth — oficiální vstup do služby (ne Portál občana). */
-  const DATOVKA_LOGIN_URL = "https://info.mojedatovaschranka.cz/info/cs/";
+  const DATOVKA_LOGIN_URL = "https://datovka.gov.cz";
   const IU_DS_LABEL_PLACEHOLDER = "např. Osobní nebo OSVČ";
   const IU_DS_STORAGE_KEY = "infouzel_datovka_profiles_v1";
   const IU_DS_MAX = 10;
