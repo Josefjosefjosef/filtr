@@ -22,31 +22,11 @@
   .iuQHead .iu-tool-privacy-short,
   .iu-legal-overlay-heading .iu-tool-privacy-short,
   .iu-financial-overlay-heading .iu-tool-privacy-short,
-  .iu-invoice-overlay-heading .iu-tool-privacy-short,
-  .iu-ds-panelHeaderMain .iu-tool-privacy-extra,
-  #iuDsAutofillStatus.iu-tool-privacy-extra {
+  .iu-invoice-overlay-heading .iu-tool-privacy-short {
     width: 100% !important;
     max-width: 100% !important;
     align-self: stretch !important;
     box-sizing: border-box !important;
-  }
-
-  .iu-tool-privacy-extra,
-  #iuDsAutofillStatus.iu-tool-privacy-extra {
-    margin: 8px 0 0 !important;
-    padding: 8px 12px !important;
-    border-radius: 10px !important;
-    background: rgba(31, 75, 153, 0.06) !important;
-    border: 1px solid rgba(31, 75, 153, 0.12) !important;
-    font-size: 12px !important;
-    line-height: 1.45 !important;
-    color: rgba(11, 27, 43, 0.72) !important;
-    word-break: break-word;
-  }
-
-  /* Autofill note must not sit in main panel body once relocated under privacy block */
-  #iuDsPanel .iu-ds-panelBody > #iuDsAutofillStatus {
-    display: none !important;
   }
 
   /* Legal hub disclaimer lives under privacy modal — not in main scroll */
@@ -111,5 +91,34 @@
     flex: none !important;
     overflow: visible !important;
     min-height: 0 !important;
+  }
+
+  /* v65: Rychlé odkazy — title + gear centered as one unit (mobile/tablet only) */
+  .mindMenu section.iu-mmQuickLinks .iu-mmSectionHead,
+  #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks .iu-mmSectionHead {
+    align-items: center !important;
+  }
+  .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow,
+  #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: auto !important;
+    max-width: 100% !important;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+  }
+  .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow .iu-mmSectionTitle,
+  #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks .iu-mmSectionTopRow .iu-mmSectionTitle {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    text-align: center !important;
+    margin: 0 !important;
+  }
+  .mindMenu section.iu-mmQuickLinks .iu-quicktools-settings-trigger,
+  #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks .iu-quicktools-settings-trigger {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
   }
 }
