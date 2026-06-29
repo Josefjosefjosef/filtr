@@ -582,13 +582,19 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-info-center.css?v=info-center-v2-6-close-nav-20260609" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <style id="iuFeedNewsSplitCss">
-      /* P0 mobile/tablet: vizuální oddělovač aplikační části (Silver) od zpravodajského feedu — desktop beze změny. */
+      /*
+       * FINÁLNÍ společný komponent — sekční oddělovníky mobil/tablet (≤1024px):
+       * SLEDOVÁNÍ ZÁSILEK | AKTUÁLNÍ ČLÁNKY OVĚŘENÝCH MÉDIÍ | DALŠÍ UŽITEČNÝ OBSAH
+       * Vzhled + spacing (25px nad / 10px pod) měnit POUZE zde — ne per-karta / per-sekce.
+       */
       @media (max-width: 1024px) {
         .iuFeedNewsSplit {
+          --iu-feed-news-split-gap-above: 25px;
+          --iu-feed-news-split-gap-below: 10px;
           box-sizing: border-box;
           width: 100%;
           max-width: 100%;
-          margin: 15px 0 0 0 !important;
+          margin: var(--iu-feed-news-split-gap-above) 0 var(--iu-feed-news-split-gap-below) 0 !important;
           padding: 0 12px 0;
           pointer-events: none;
           user-select: none;
@@ -612,9 +618,6 @@ font-src 'self' data:;
           margin-top: 0 !important;
           margin-bottom: 0 !important;
         }
-        #iuFeedNewsSplit {
-          padding-bottom: 4px !important;
-        }
         :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch ~ #iuSilverWelcomeStackSeparatorHolidayWeather,
         :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch ~ #iuSilverWelcomeStackSeparatorTallBefore {
           display: none !important;
@@ -625,10 +628,19 @@ font-src 'self' data:;
           padding: 0 !important;
           overflow: hidden !important;
         }
+        /* Spacing pod oddělovačem jen přes margin-bottom komponentu — vypnout kumulaci margin-top u sousedů. */
+        .iuFeedNewsSplit + #iuSilverParcelWatch,
+        .iuFeedNewsSplit + #iuSilverTallScrollSection,
+        #iuSilverTallScrollViewport #iuFeedNewsSplitPostHomeCards.iuFeedNewsSplit + #iuSilverFinanceHomeCard {
+          margin-top: 0 !important;
+        }
+        #iuSilverTallScrollViewport [class$="PreviewCardMount"] + #iuFeedNewsSplitPostHomeCards.iuFeedNewsSplit {
+          margin-top: var(--iu-feed-news-split-gap-above) !important;
+          margin-bottom: var(--iu-feed-news-split-gap-below) !important;
+        }
         #iuSilverTallScrollViewport .iuFeedNewsSplit--postHomeCards {
           padding-left: 0;
           padding-right: 0;
-          margin-top: 15px !important;
         }
         .iuFeedNewsSplit__row {
           display: flex;
@@ -637,28 +649,51 @@ font-src 'self' data:;
           gap: 10px;
           width: 100%;
           min-width: 0;
+          min-height: 28px;
         }
         .iuFeedNewsSplit__line {
           flex: 1 1 auto;
           height: 1px;
           min-width: 12px;
-          background: var(--iu-brand-blue, #003CFF);
-          opacity: 0.42;
+          border: 0;
+          opacity: 1;
+        }
+        .iuFeedNewsSplit__line:first-child {
+          background: linear-gradient(
+            to right,
+            rgba(0, 60, 255, 0) 0%,
+            rgba(0, 60, 255, 0.14) 28%,
+            rgba(0, 60, 255, 0.34) 100%
+          );
+        }
+        .iuFeedNewsSplit__line:last-child {
+          background: linear-gradient(
+            to left,
+            rgba(0, 60, 255, 0) 0%,
+            rgba(0, 60, 255, 0.14) 28%,
+            rgba(0, 60, 255, 0.34) 100%
+          );
         }
         .iuFeedNewsSplit__capsule {
           flex: 0 1 auto;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
           max-width: calc(100% - 24px);
-          padding: 5px 12px;
-          border: 1px solid var(--iu-brand-blue, #003CFF);
+          min-height: 26px;
+          padding: 5px 13px;
+          border: 1px solid rgba(0, 60, 255, 0.22);
           border-radius: 999px;
+          background: linear-gradient(180deg, rgba(0, 60, 255, 0.055) 0%, rgba(0, 60, 255, 0.028) 100%);
           color: var(--iu-brand-blue, #003CFF);
           font-size: 10px;
-          font-weight: 600;
-          line-height: 1.25;
-          letter-spacing: 0.035em;
+          font-weight: 650;
+          line-height: 1.2;
+          letter-spacing: 0.055em;
           text-align: center;
           white-space: normal;
           overflow-wrap: anywhere;
+          box-sizing: border-box;
         }
       }
       @media (min-width: 681px) and (max-width: 1024px) {
@@ -669,6 +704,7 @@ font-src 'self' data:;
         .iuFeedNewsSplit__capsule {
           font-size: 10.5px;
           padding: 6px 14px;
+          letter-spacing: 0.05em;
         }
       }
       @media (min-width: 1025px) {
