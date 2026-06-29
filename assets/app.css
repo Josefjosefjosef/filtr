@@ -15943,12 +15943,16 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     border-radius: 0 !important;
   }
   #iuSilverTallScrollViewport{
+    --iu-mobile-tablet-section-gap: 15px;
     padding-left: 0 !important;
     padding-right: 0 !important;
     border-radius: 0;
   }
-  #iuSilverTallScrollViewport [class$="PreviewCardMount"] + [class$="PreviewCardMount"]{
-    margin-top: 9px !important;
+  #iuSilverTallScrollViewport [class$="PreviewCardMount"] + [class$="PreviewCardMount"],
+  #iuSilverTallScrollViewport [class$="PreviewCardMount"] + #iuFeedNewsSplitPostHomeCards,
+  #silver-slot #iuSilverTallScrollViewport #iuFeedNewsSplitPostHomeCards + #iuSilverFinanceHomeCard,
+  #iuMobileSilverSlot #silver-slot #iuSilverTallScrollViewport #iuFeedNewsSplitPostHomeCards + #iuSilverFinanceHomeCard{
+    margin-top: var(--iu-mobile-tablet-section-gap) !important;
   }
   #iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education,.box-prehled-dne){
     margin: 0 !important;
@@ -16000,12 +16004,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
 }
 
-
-@media (min-width: 768px) and (max-width: 1024px){
-  #iuSilverTallScrollViewport [class$="PreviewCardMount"] + [class$="PreviewCardMount"]{
-    margin-top: 11px !important;
-  }
-}
 
 @media (min-width: 901px){
   #silver-slot #iuSilverTallScrollViewport.iuSilverTallScrollViewport{
