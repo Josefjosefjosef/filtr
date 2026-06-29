@@ -8,17 +8,12 @@
   if (window.__iuAffiliateCatalogBooted) return;
   window.__iuAffiliateCatalogBooted = true;
 
-  var IU_AFFILIATE_DISCLOSURE_TITLE = "Reklamní a partnerské odkazy";
   var IU_AFFILIATE_DISCLOSURE_TEXT =
     "Tato sekce obsahuje reklamní a partnerské odkazy na ověřené služby a obchody.";
 
   function renderAffiliateDisclosure(el) {
     if (!el) return;
-    el.innerHTML =
-      "<strong>" +
-      escapeHtml(IU_AFFILIATE_DISCLOSURE_TITLE) +
-      "</strong><br>" +
-      escapeHtml(IU_AFFILIATE_DISCLOSURE_TEXT);
+    el.innerHTML = escapeHtml(IU_AFFILIATE_DISCLOSURE_TEXT);
   }
 
   function affItem(title, slug) {
@@ -954,7 +949,6 @@
   window.IU_AFFILIATE_SEO = IU_AFFILIATE_SEO;
   window.IU_AFFILIATE_COLORS = IU_AFFILIATE_COLORS;
   window.iuAffiliateRefreshColors = refreshAffiliateColorsFromCss;
-  window.IU_AFFILIATE_DISCLOSURE_TITLE = IU_AFFILIATE_DISCLOSURE_TITLE;
   window.IU_AFFILIATE_DISCLOSURE_TEXT = IU_AFFILIATE_DISCLOSURE_TEXT;
   window.iuAffiliateCatalogInit = initAffiliateCatalog;
   window.iuAffiliateApplySection = applyAffiliateFromSection;
