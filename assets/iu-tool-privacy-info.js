@@ -427,24 +427,10 @@
     heading.setAttribute("data-iu-tool-privacy-key", toolKey);
   }
 
-  function relocateDatovkaAutofillNote(main) {
-    var statusEl = document.getElementById("iuDsAutofillStatus");
-    if (!statusEl || !main) return;
-    if (statusEl.getAttribute("data-iu-privacy-extra-moved") === "1") return;
-    statusEl.classList.add("iu-tool-privacy-extra");
-    statusEl.setAttribute("data-iu-privacy-extra-moved", "1");
-    statusEl.setAttribute("role", "note");
-    var anchor = main.querySelector(".iu-tool-privacy-short") || main.querySelector(".iu-tool-privacy-btn");
-    if (!anchor || !anchor.parentNode) return;
-    if (anchor.nextSibling) anchor.parentNode.insertBefore(statusEl, anchor.nextSibling);
-    else anchor.parentNode.appendChild(statusEl);
-  }
-
   function mountDatovkaHeading() {
     var main = document.querySelector(".iu-ds-panelHeaderMain");
     if (!main) return;
     mountInHeading(main, "datovka");
-    relocateDatovkaAutofillNote(main);
   }
 
   function initDelegation() {
