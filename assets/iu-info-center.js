@@ -14,6 +14,7 @@
     "privacy-settings": "Nastavení soukromí",
     privacy: "Ochrana soukromí a data",
     "data-storage": "Jak funguje ukládání dat",
+    "data-sources": "Zdroje dat",
     contact: "Provozovatel a kontakt"
   };
 
