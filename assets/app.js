@@ -19046,6 +19046,9 @@ function buildVideoAsArticleCard(it) {
       mergedArticles.push(it);
     }
     mergedArticles.sort((a, b) => (Date.parse(b.publishedAt || "") || 0) - (Date.parse(a.publishedAt || "") || 0));
+    if (state.chunkLoader && !iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader)) {
+      iuClientArticleStoreIngest(sectionKey, state.chunkLoader.articles || mergedArticles);
+    }
     const enriched = mergedArticles.map((item) => {
       const published = String(item.publishedAt || item.published || item.date || item.createdAt || item.time || "");
       return { ...item, _ts: published ? Date.parse(published) || 0 : 0 };
