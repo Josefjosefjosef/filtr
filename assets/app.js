@@ -25063,6 +25063,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuQuickToolsSettingsClose() {
+    iuQuickToolsHideResetConfirm();
     const panel = document.getElementById("iuQuickToolsSettingsPanel");
     if (!panel) return;
     if (panel.classList.contains("iu-quicktools-settings-panel--mobileFixed")) {
@@ -25090,11 +25091,110 @@ function buildVideoAsArticleCard(it) {
     document.removeEventListener("click", iuQuickToolsSettingsOnOutside);
   }
 
+  function iuQuickToolsResetConfirmIsOpen() {
+    const el = document.getElementById("iuQuickToolsResetConfirm");
+    return !!(el && !el.hidden);
+  }
+
+  function iuQuickToolsHideResetConfirm() {
+    const el = document.getElementById("iuQuickToolsResetConfirm");
+    if (el) {
+      el.hidden = true;
+      el.setAttribute("aria-hidden", "true");
+    }
+  }
+
+  function iuQuickToolsEnsureResetConfirm() {
+    let el = document.getElementById("iuQuickToolsResetConfirm");
+    if (el) return el;
+    el = document.createElement("div");
+    el.id = "iuQuickToolsResetConfirm";
+    el.hidden = true;
+    el.setAttribute("aria-hidden", "true");
+    el.setAttribute("role", "presentation");
+    const backdrop = document.createElement("div");
+    backdrop.className = "iu-quicktools-resetConfirm-backdrop";
+    backdrop.setAttribute("data-iu-quicktools-reset-cancel", "1");
+    const dialog = document.createElement("div");
+    dialog.className = "iu-quicktools-resetConfirm-dialog";
+    dialog.setAttribute("role", "alertdialog");
+    dialog.setAttribute("aria-modal", "true");
+    dialog.setAttribute("aria-labelledby", "iuQuickToolsResetConfirmTitle");
+    const title = document.createElement("h2");
+    title.id = "iuQuickToolsResetConfirmTitle";
+    title.className = "iu-quicktools-resetConfirm-title";
+    title.textContent = "Obnovit výchozí tlačítka?";
+    const text = document.createElement("p");
+    text.className = "iu-quicktools-resetConfirm-text";
+    text.textContent =
+      "Tímto odstraníte všechna tlačítka, která jste si sami přidali, a obnovíte výchozí tlačítka dodávaná službou InfoUzel.cz. Opravdu chcete pokračovat?";
+    const actions = document.createElement("div");
+    actions.className = "iu-quicktools-resetConfirm-actions";
+    const cancelBtn = document.createElement("button");
+    cancelBtn.type = "button";
+    cancelBtn.className = "iu-quicktools-resetConfirm-cancel";
+    cancelBtn.textContent = "Zrušit";
+    cancelBtn.setAttribute("data-iu-quicktools-reset-cancel", "1");
+    const okBtn = document.createElement("button");
+    okBtn.type = "button";
+    okBtn.className = "iu-quicktools-resetConfirm-ok";
+    okBtn.textContent = "Obnovit výchozí";
+    okBtn.setAttribute("data-iu-quicktools-reset-confirm", "1");
+    actions.appendChild(cancelBtn);
+    actions.appendChild(okBtn);
+    dialog.appendChild(title);
+    dialog.appendChild(text);
+    dialog.appendChild(actions);
+    el.appendChild(backdrop);
+    el.appendChild(dialog);
+    el.addEventListener("click", function(e) {
+      const t = e.target;
+      if (!t || !t.closest) return;
+      if (t.closest("[data-iu-quicktools-reset-cancel]")) {
+        e.preventDefault();
+        e.stopPropagation();
+        iuQuickToolsHideResetConfirm();
+        return;
+      }
+      if (t.closest("[data-iu-quicktools-reset-confirm]")) {
+        e.preventDefault();
+        e.stopPropagation();
+        iuQuickToolsPerformReset();
+      }
+    });
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function iuQuickToolsShowResetConfirm() {
+    const el = iuQuickToolsEnsureResetConfirm();
+    el.hidden = false;
+    el.removeAttribute("aria-hidden");
+    try {
+      const ok = el.querySelector("[data-iu-quicktools-reset-confirm]");
+      if (ok) ok.focus({ preventScroll: true });
+    } catch (_) {}
+  }
+
+  function iuQuickToolsPerformReset() {
+    iuQuickToolsHideResetConfirm();
+    resetQuickToolsConfig();
+    var cfg = getDefaultQuickToolsConfig();
+    iuQuickToolsSaveAndApply(cfg);
+  }
+
   function iuQuickToolsSettingsOnEsc(e) {
-    if (e.key === "Escape") iuQuickToolsSettingsClose();
+    if (e.key === "Escape") {
+      if (iuQuickToolsResetConfirmIsOpen()) {
+        iuQuickToolsHideResetConfirm();
+        return;
+      }
+      iuQuickToolsSettingsClose();
+    }
   }
 
   function iuQuickToolsSettingsOnOutside(e) {
+    if (iuQuickToolsResetConfirmIsOpen()) return;
     const panel = document.getElementById("iuQuickToolsSettingsPanel");
     if (!panel || !e.target) return;
     const trig = e.target.closest ? e.target.closest("[data-iu-quicktools-settings], .iu-quicktools-settings-trigger") : null;
@@ -25602,10 +25702,9 @@ function buildVideoAsArticleCard(it) {
         return;
       }
       if (e.target && e.target.classList && e.target.classList.contains("iu-quicktools-settings-reset")) {
-        resetQuickToolsConfig();
-        var cfg = getDefaultQuickToolsConfig();
-        iuQuickToolsSaveAndApply(cfg);
-        iuQuickToolsSettingsClose();
+        e.preventDefault();
+        e.stopPropagation();
+        iuQuickToolsShowResetConfirm();
       }
     });
 
@@ -25707,6 +25806,7 @@ function buildVideoAsArticleCard(it) {
 
   function iuQuickToolsInit() {
     iuQuickToolsBindDocumentOnce();
+    iuQuickToolsEnsureResetConfirm();
     iuQuickToolsApplyConfig();
     const panel = document.getElementById("iuQuickToolsSettingsPanel");
     if (!panel) return;
@@ -39739,6 +39839,20 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ".iu-quicktools-settings-close{flex:0 0 auto;width:32px;height:32px;margin:0;padding:0;border:0;border-radius:8px;background:rgba(0,0,0,.04);color:rgba(0,0,0,.72);font-size:18px;line-height:1;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}" +
     ".iu-quicktools-settings-close:hover{background:rgba(0,0,0,.08)}" +
     ".iu-quicktools-settings-close:focus-visible{outline:2px solid #1F4B99;outline-offset:2px}" +
+    "#iuQuickToolsResetConfirm[hidden]{display:none!important}" +
+    "#iuQuickToolsResetConfirm:not([hidden]){position:fixed;inset:0;z-index:10030;display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) 16px max(16px,env(safe-area-inset-bottom,0px));box-sizing:border-box}" +
+    "body.iu-myinfouzel-open #iuQuickToolsResetConfirm:not([hidden]),body.iu-mobileGateOverlayOpen #iuQuickToolsResetConfirm:not([hidden]){z-index:12200!important}" +
+    ".iu-quicktools-resetConfirm-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.48);-webkit-tap-highlight-color:transparent;touch-action:manipulation}" +
+    ".iu-quicktools-resetConfirm-dialog{position:relative;z-index:1;width:min(400px,calc(100vw - 32px));max-height:min(70dvh,480px);overflow:auto;background:#fff;border-radius:14px;padding:20px 18px 16px;box-shadow:0 18px 44px rgba(0,0,0,.22);box-sizing:border-box;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}" +
+    ".iu-quicktools-resetConfirm-title{margin:0 0 12px;font-size:17px;font-weight:700;color:#0f172a;line-height:1.3}" +
+    ".iu-quicktools-resetConfirm-text{margin:0 0 18px;font-size:14px;line-height:1.5;color:rgba(11,27,43,.8)}" +
+    ".iu-quicktools-resetConfirm-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}" +
+    ".iu-quicktools-resetConfirm-cancel,.iu-quicktools-resetConfirm-ok{padding:10px 16px;font-size:15px;font-family:inherit;font-weight:600;border-radius:10px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}" +
+    ".iu-quicktools-resetConfirm-cancel{border:1px solid rgba(0,0,0,.14);background:#f8fafc;color:#111}" +
+    ".iu-quicktools-resetConfirm-cancel:hover{background:#eef2f7}" +
+    ".iu-quicktools-resetConfirm-ok{border:0;background:#1F4B99;color:#fff}" +
+    ".iu-quicktools-resetConfirm-ok:hover{background:#1a3f82}" +
+    ".iu-quicktools-resetConfirm-cancel:focus-visible,.iu-quicktools-resetConfirm-ok:focus-visible{outline:2px solid #1F4B99;outline-offset:2px}" +
     ".iu-quicktools-settings-scroll{flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;padding:0 12px calc(12px + env(safe-area-inset-bottom,0px));box-sizing:border-box}" +
     ".iu-quicktools-settings-list{touch-action:pan-y}" +
     ".iu-quicktools-settings-row{touch-action:pan-y}" +
