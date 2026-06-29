@@ -7,6 +7,7 @@ import {
   CLIENT_INITIAL_LIMIT,
   CLIENT_LOAD_MORE_LIMIT,
   CLIENT_INITIAL_RENDER_BATCH,
+  CLIENT_INITIAL_RENDER,
   IU_ARTICLE_FEED_CHUNKS_DIR,
   IU_CHUNK_FILE_SIZE,
   IU_CHUNK_INITIAL_SIZE,
@@ -18,6 +19,7 @@ export {
   CLIENT_INITIAL_LIMIT,
   CLIENT_LOAD_MORE_LIMIT,
   CLIENT_INITIAL_RENDER_BATCH,
+  CLIENT_INITIAL_RENDER,
   IU_ARTICLE_FEED_CHUNKS_DIR,
   IU_CHUNK_FILE_SIZE,
   IU_CHUNK_INITIAL_SIZE,
@@ -123,9 +125,10 @@ export function iuChunkCreateLoaderState(sectionKey) {
     loadedChunkIndexes: new Set(),
     initLoaded: false,
     bufferChunkLoaded: false,
-    nextLoadMoreChunkIndex: 1,
+    nextLoadMoreChunkIndex: 0,
     totalInSection: 0,
     backgroundDone: false,
+    backgroundFetchInflight: false,
     loadMoreInflight: false,
     articlesReceivedCount: 0,
     articlesParsedCount: 0,
@@ -251,17 +254,13 @@ export async function iuChunkFetchChunkIndex(loader, chunkIndex, basePath, dataV
   return iuChunkFetchRel(loader, meta.chunks[chunkIndex], basePath, dataVer, `chunk_${chunkIndex}`, chunkIndex);
 }
 
-/** Single initial fetch: init + first chunk until CLIENT_INITIAL_LIMIT (no background pass). */
+/** Phase 1: init chunk only (~CLIENT_INITIAL_RENDER) for fastest first paint. */
 export async function iuChunkLoadInitialSectionArticles(loader, basePath, dataVer) {
   await iuChunkFetchInit(loader, basePath, dataVer);
-  if (loader.articles.length < CLIENT_INITIAL_LIMIT) {
-    await iuChunkFetchBufferChunk(loader, basePath, dataVer);
-  }
-  iuChunkCapArticles(loader, true);
-  loader.backgroundDone = true;
-  loader.nextLoadMoreChunkIndex = loader.bufferChunkLoaded ? 1 : 0;
+  loader.backgroundDone = false;
+  loader.nextLoadMoreChunkIndex = 0;
   try {
-    if (typeof window !== "undefined") window.__iuChunkBackgroundBufferDone = true;
+    if (typeof window !== "undefined") window.__iuChunkBackgroundBufferDone = false;
   } catch (_) {}
   return loader.articles.slice();
 }
@@ -279,10 +278,29 @@ export async function iuChunkLoadInitial(basePath, dataVer, sectionKey) {
   };
 }
 
-/** Legacy no-op: initial load already includes CLIENT_INITIAL_LIMIT. */
+/** Phase 2: buffer chunk (+70) until CLIENT_INITIAL_LIMIT — runs after first paint. */
 export async function iuChunkFetchBackgroundBuffer(loader, basePath, dataVer) {
-  if (!loader || loader.backgroundDone) return loader && loader.articles ? loader.articles.slice(0, CLIENT_INITIAL_LIMIT) : [];
-  return iuChunkLoadInitialSectionArticles(loader, basePath, dataVer);
+  if (!loader || loader.backgroundDone) {
+    return loader && loader.articles ? loader.articles.slice(0, CLIENT_INITIAL_LIMIT) : [];
+  }
+  if (loader.backgroundFetchInflight) {
+    return loader.articles.slice(0, CLIENT_INITIAL_LIMIT);
+  }
+  loader.backgroundFetchInflight = true;
+  try {
+    if (loader.articles.length < CLIENT_INITIAL_LIMIT) {
+      await iuChunkFetchBufferChunk(loader, basePath, dataVer);
+    }
+    iuChunkCapArticles(loader, true);
+    loader.backgroundDone = true;
+    loader.nextLoadMoreChunkIndex = loader.bufferChunkLoaded ? 1 : 0;
+    try {
+      if (typeof window !== "undefined") window.__iuChunkBackgroundBufferDone = true;
+    } catch (_) {}
+    return loader.articles.slice(0, CLIENT_INITIAL_LIMIT);
+  } finally {
+    loader.backgroundFetchInflight = false;
+  }
 }
 
 export async function iuChunkFetchLoadMore(loader, basePath, dataVer) {
@@ -316,9 +334,12 @@ export function iuChunkHasMoreOnServer(loader) {
   return loader.nextLoadMoreChunkIndex < meta.chunkCount;
 }
 
-export function iuChunkVisibleArticleBudget(page) {
+export function iuChunkVisibleArticleBudget(page, loader) {
   const p = Number(page) >= 1 ? Number(page) : 1;
-  if (p <= 1) return CLIENT_INITIAL_RENDER_BATCH;
+  if (p <= 1) {
+    if (loader && loader.backgroundDone) return CLIENT_INITIAL_LIMIT;
+    return CLIENT_INITIAL_RENDER_BATCH;
+  }
   return CLIENT_INITIAL_RENDER_BATCH + (p - 1) * CLIENT_LOAD_MORE_LIMIT;
 }
 

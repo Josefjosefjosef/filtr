@@ -17,12 +17,14 @@ import {
 } from "./iu-nameday-dative.js";
 import {
   CLIENT_INITIAL_LIMIT,
+  CLIENT_INITIAL_RENDER_BATCH,
   IU_HOMEPAGE_CHUNK_MANIFEST_FILE,
   IU_CHUNK_INITIAL_SIZE,
   iuUseChunkedArticleLoader,
   iuChunkResolveSectionKey,
   iuChunkLoadInitial,
   iuChunkFetchLoadMore,
+  iuChunkFetchBackgroundBuffer,
   iuChunkPoolShapedPayload,
   iuChunkHasMoreOnServer,
   iuChunkSectionMeta,
@@ -6066,7 +6068,7 @@ try {
           ? Number(state.pageSize)
           : 100;
     const page = Number(state.page) >= 1 ? Number(state.page) : 1;
-    const articleBudget = chunkMode ? iuChunkVisibleArticleBudget(page) : page * pageSize;
+    const articleBudget = chunkMode ? iuChunkVisibleArticleBudget(page, state.chunkLoader) : page * pageSize;
     const totalArticlesInFeed = iuCountFeedArticles(items);
     let visibleItems;
     let visibleCount;
@@ -6083,8 +6085,19 @@ try {
     visibleItems = iuLoadMoreApplyPinnedOrder(visibleItems);
     visibleItems = iuArticleActionsFilterVisible(visibleItems);
     try { window.__iuLoadMoreLastRenderedItems = visibleItems; } catch (_) {}
+    const chunkInitialBufferComplete =
+      !chunkMode || !!(state.chunkLoader && state.chunkLoader.backgroundDone);
+    const chunkBufferedArticleCount =
+      chunkMode && state.chunkLoader
+        ? Math.min(
+            iuCountFeedArticles(items),
+            CLIENT_INITIAL_LIMIT,
+          )
+        : 0;
     const hasMore = chunkMode
-      ? visibleItems.length < items.length || iuChunkHasMoreOnServer(state.chunkLoader)
+      ? chunkInitialBufferComplete &&
+        iuCountFeedArticles(visibleItems) >= chunkBufferedArticleCount &&
+        iuChunkHasMoreOnServer(state.chunkLoader)
       : mediaHub100
       ? iuCountFeedArticles(visibleItems) < totalArticlesInFeed || visibleItems.length < items.length
       : visibleItems.length < items.length;
@@ -6263,8 +6276,25 @@ try {
     })();
     let tDomPatch0 = 0;
     let domPatchStarted = false;
+    let chunkAppendFrom = 0;
+    if (chunkMode) {
+      try {
+        const n = Number(state.__iuFeedAppendOnlyFrom);
+        if (Number.isFinite(n) && n > 0) {
+          chunkAppendFrom = Math.min(n, visibleItems.length);
+          state.__iuFeedAppendOnlyFrom = 0;
+        }
+      } catch (_) {}
+    }
+    if (chunkAppendFrom > 0) {
+      domPatchStarted = true;
+      try {
+        const oldLm = safeTarget.querySelector(".iuLoadMoreWrap");
+        if (oldLm) oldLm.remove();
+      } catch (_) {}
+    }
     let renderedCount = 0;
-    let pos = 0;
+    let pos = chunkAppendFrom;
     let firstDomBatch = true;
     let firstFeedBatchMarked = false;
     const reloadDomTight = iuFeedReloadDomTightenP();
@@ -6594,12 +6624,13 @@ try {
               if (iuUseChunkedArticleLoader() && state.chunkLoader) {
                 const { added } = await iuChunkFetchLoadMore(state.chunkLoader, iuBasePath(), iuChunkDataVer());
                 if (added.length) {
+                  const prevVisible = Array.isArray(window.__iuLoadMoreLastRenderedItems)
+                    ? window.__iuLoadMoreLastRenderedItems.length
+                    : visibleItems.length;
                   await iuChunkMergeArticlesIntoCache(added, state.loadRequestId);
+                  state.__iuFeedAppendOnlyFrom = prevVisible;
                   state.page = (Number(state.page) >= 1 ? Number(state.page) : 1) + 1;
                   await applyFilter({ resetPage: false, render: true });
-                } else if (visibleItems.length < (state.filteredItems?.length ?? 0)) {
-                  state.page = (Number(state.page) >= 1 ? Number(state.page) : 1) + 1;
-                  await renderFeed(safeTarget, state.filteredItems);
                 }
                 return;
               }
@@ -6651,6 +6682,15 @@ try {
         } catch (_) {}
       }
     } catch (_) {}
+    if (
+      chunkMode &&
+      state.chunkLoader &&
+      !state.chunkLoader.backgroundDone &&
+      !iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader) &&
+      chunkAppendFrom === 0
+    ) {
+      void iuChunkScheduleBackgroundBuffer(state.loadRequestId);
+    }
     feedEl.setAttribute("data-feed-ready", "true");
     try {
       iuRenderFeedReleaseSectionSwitchIfReady();
@@ -19091,13 +19131,33 @@ function buildVideoAsArticleCard(it) {
   }
 
   async function iuChunkScheduleBackgroundBuffer(requestToken) {
-    /* Task 66: initial load already includes CLIENT_INITIAL_LIMIT — no second background fetch pass. */
     if (!iuUseChunkedArticleLoader() || !state.chunkLoader) return;
-    try {
-      if (state.chunkLoader.backgroundDone) {
+    if (iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader)) {
+      try {
         window.__iuChunkBackgroundBufferDone = true;
-      }
-    } catch (_) {}
+      } catch (_) {}
+      return;
+    }
+    if (state.chunkLoader.backgroundDone || state.chunkLoader.backgroundFetchInflight) {
+      try {
+        if (state.chunkLoader.backgroundDone) window.__iuChunkBackgroundBufferDone = true;
+      } catch (_) {}
+      return;
+    }
+    if (!isLatestLoadRequest(requestToken)) return;
+    try {
+      await iuChunkFetchBackgroundBuffer(state.chunkLoader, iuBasePath(), iuChunkDataVer());
+      if (!isLatestLoadRequest(requestToken)) return;
+      state.__iuFeedAppendOnlyFrom = CLIENT_INITIAL_RENDER_BATCH;
+      await iuChunkMergeArticlesIntoCache(state.chunkLoader.articles, requestToken);
+      if (!isLatestLoadRequest(requestToken)) return;
+      try {
+        window.__iuChunkBackgroundBufferDone = true;
+      } catch (_) {}
+      await applyFilter({ resetPage: false, render: true, instantSectionSwitch: true });
+    } catch (e) {
+      debugWarn("[CHUNK] background buffer failed", e);
+    }
   }
 
   async function loadData(opts) {
@@ -19591,7 +19651,9 @@ function buildVideoAsArticleCard(it) {
       iuBootTracePhase("loadData_first_renderItems_done");
       iuPreviewFeedProbeTick("afterFirstRenderFeed");
       iuHomeLoadAuditNotify("loadData:afterFirstRender");
-      if (iuUseChunkedArticleLoader()) {
+      if (iuUseChunkedArticleLoader() && state.chunkLoader && !state.chunkLoader.backgroundDone) {
+        void iuChunkScheduleBackgroundBuffer(requestToken);
+      } else if (iuUseChunkedArticleLoader()) {
         try {
           window.__iuChunkBackgroundBufferDone = !!(state.chunkLoader && state.chunkLoader.backgroundDone);
         } catch (_) {}
