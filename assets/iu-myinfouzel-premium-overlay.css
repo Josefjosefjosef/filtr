@@ -10,16 +10,26 @@
 
   .iuMyInfoUzelOverlay__sheet {
     --iu-miu-radius: 14px;
+    --iu-miu-icon-size: 70px;
     --iu-miu-quick-h: 58px;
-    --iu-miu-mailbox-h: 40px;
-    --iu-miu-mailbox-pill-w: min(100%, 280px);
+    --iu-miu-mailbox-h: 42px;
+    --iu-miu-mailbox-pill-min: 25ch;
+    --iu-miu-mailbox-pill-w: min(100%, 26em);
     width: min(1720px, calc(100vw - 40px)) !important;
     max-width: min(1720px, calc(100vw - 40px)) !important;
     max-height: calc(100vh - 24px) !important;
     margin: 12px auto !important;
     border-radius: var(--iu-miu-radius) !important;
-    background: #ffffff;
-    box-shadow: 0 24px 64px rgba(11, 42, 74, 0.16);
+    background: linear-gradient(
+      165deg,
+      rgba(239, 246, 255, 0.98) 0%,
+      rgba(255, 255, 255, 0.99) 42%,
+      rgba(248, 250, 252, 0.97) 100%
+    );
+    border: 1px solid rgba(0, 60, 255, 0.14);
+    box-shadow:
+      0 24px 64px rgba(11, 42, 74, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.88);
     box-sizing: border-box !important;
     contain: layout style !important;
     overflow: hidden;
@@ -105,13 +115,13 @@
   .iuMyInfoUzelOverlay__scroll {
     padding: 14px 16px 24px;
     overflow-x: hidden;
-    background: #ffffff;
+    background: transparent;
   }
 
   .iuMyInfoUzelDashboard {
     display: grid;
-    grid-template-columns: minmax(240px, 28fr) minmax(300px, 40fr) minmax(260px, 32fr);
-    gap: 12px;
+    grid-template-columns: minmax(300px, 36fr) minmax(248px, 28fr) minmax(260px, 36fr);
+    gap: 12px 16px;
     align-items: start;
     min-width: 0;
   }
@@ -125,12 +135,21 @@
   }
 
   .iuMyInfoUzelDashboard__col--emails {
-    background: #f5f9ff;
+    background: linear-gradient(180deg, rgba(245, 249, 255, 0.98) 0%, rgba(255, 255, 255, 0.94) 100%);
+    border: 1px solid rgba(0, 60, 255, 0.1);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.82),
+      0 2px 12px rgba(11, 42, 74, 0.05);
     padding: 14px 14px 16px;
   }
 
   .iuMyInfoUzelDashboard__col--tools {
-    background: #ffffff;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.94) 100%);
+    border: 1px solid rgba(0, 60, 255, 0.08);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.85),
+      0 2px 12px rgba(11, 42, 74, 0.04);
+    margin-left: 10px;
     padding: 14px 14px 16px;
   }
 
@@ -138,7 +157,11 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    background: #fafafa;
+    background: linear-gradient(180deg, rgba(252, 252, 252, 0.98) 0%, rgba(255, 255, 255, 0.94) 100%);
+    border: 1px solid rgba(0, 60, 255, 0.08);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.82),
+      0 2px 12px rgba(11, 42, 74, 0.04);
     padding: 14px 14px 16px;
   }
 
@@ -164,17 +187,17 @@
     flex-direction: row;
     align-items: stretch;
     justify-content: flex-start;
-    gap: 10px;
+    gap: 12px;
     width: 100%;
-    margin: 0 0 4px;
+    margin: 0 0 18px;
     padding: 0;
   }
 
   .iuMyInfoUzelMindMenuHost .iu-mmTopToolHoverHost {
-    flex: 1 1 0;
-    min-width: 0;
-    max-width: none;
-    width: auto;
+    flex: 0 0 var(--iu-miu-icon-size);
+    width: var(--iu-miu-icon-size);
+    min-width: var(--iu-miu-icon-size);
+    max-width: var(--iu-miu-icon-size);
     height: auto;
   }
 
@@ -184,17 +207,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 56px;
-    min-height: 56px;
-    max-height: 56px;
-    padding: 4px;
-    border: 1px solid rgba(0, 60, 255, 0.1);
+    width: var(--iu-miu-icon-size);
+    height: var(--iu-miu-icon-size);
+    min-height: var(--iu-miu-icon-size);
+    max-height: var(--iu-miu-icon-size);
+    padding: 0;
+    border: 1px solid rgba(0, 60, 255, 0.12);
     border-radius: var(--iu-miu-radius);
     background: #ffffff;
     box-sizing: border-box;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(11, 42, 74, 0.08);
+    box-shadow:
+      0 4px 14px rgba(0, 60, 255, 0.1),
+      0 2px 6px rgba(11, 42, 74, 0.08);
   }
 
   .iuMyInfoUzelMindMenuHost .iu-mmTopTool--imageTile .iu-mmTopToolImageTileWrap {
@@ -266,7 +291,7 @@
   .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill {
     width: 100% !important;
     max-width: var(--iu-miu-mailbox-pill-w) !important;
-    min-width: 0 !important;
+    min-width: min(100%, var(--iu-miu-mailbox-pill-min)) !important;
     height: var(--iu-miu-mailbox-h) !important;
     min-height: var(--iu-miu-mailbox-h) !important;
     max-height: var(--iu-miu-mailbox-h) !important;
@@ -280,7 +305,7 @@
 
   .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill > *,
   .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill > * {
-    max-width: 25ch;
+    max-width: var(--iu-miu-mailbox-pill-min);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -389,7 +414,12 @@
     padding: 8px 10px;
     border-radius: var(--iu-miu-radius);
     border: 1px solid rgba(15, 23, 42, 0.1);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.94) 100%);
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--iu-ql-accent, #003cff) 11%, #ffffff) 0%,
+      rgba(255, 255, 255, 0.98) 54%,
+      color-mix(in srgb, var(--iu-ql-accent, #003cff) 7%, #f8fafc) 100%
+    );
     font-size: 12px;
     font-weight: 600;
     box-sizing: border-box;
@@ -402,6 +432,12 @@
     border-color: color-mix(in srgb, var(--iu-ql-accent, #003cff) 42%, rgba(15, 23, 42, 0.12)) !important;
     box-shadow: 0 8px 18px rgba(11, 42, 74, 0.1);
     filter: brightness(1.02);
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--iu-ql-accent, #003cff) 16%, #ffffff) 0%,
+      rgba(255, 255, 255, 0.99) 52%,
+      color-mix(in srgb, var(--iu-ql-accent, #003cff) 10%, #f8fafc) 100%
+    );
   }
 
   .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmSectionTopRow {
@@ -416,6 +452,23 @@
     flex: 0 0 auto;
     margin-left: 8px;
     border-radius: var(--iu-miu-radius);
+    cursor: pointer;
+    pointer-events: auto;
+    position: relative;
+    z-index: 3;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0, 60, 255, 0.1);
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 1px 4px rgba(11, 42, 74, 0.06);
+  }
+
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-quicktools-settings-trigger:focus-visible {
+    outline: 2px solid rgba(0, 60, 255, 0.45);
+    outline-offset: 2px;
   }
 
   .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__nav {
