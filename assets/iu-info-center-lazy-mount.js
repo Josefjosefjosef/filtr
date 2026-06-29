@@ -20,7 +20,7 @@
   if (window.__iuInfoCenterLazyMount) return;
   window.__iuInfoCenterLazyMount = true;
 
-  var TRIGGER_SELECTOR = "#iuTopbarInfoBtn, #iuSilverWelcomeInfoBtn";
+  var TRIGGER_SELECTOR = "#iuTopbarInfoBtn, #iuSilverWelcomeInfoBtn, [data-iu-mobile-gate-info-btn]";
 
   var bound = false;
   var isOpen = false;
@@ -56,6 +56,11 @@
     var b = document.getElementById("iuSilverWelcomeInfoBtn");
     if (a) list.push(a);
     if (b) list.push(b);
+    try {
+      document.querySelectorAll("[data-iu-mobile-gate-info-btn]").forEach(function (el) {
+        list.push(el);
+      });
+    } catch (_) {}
     return list;
   }
 

@@ -164,7 +164,8 @@
       if (overlay.hidden) {
         var trigger =
           document.getElementById("iuTopbarInfoBtn") ||
-          document.getElementById("iuSilverWelcomeInfoBtn");
+          document.getElementById("iuSilverWelcomeInfoBtn") ||
+          document.querySelector("[data-iu-mobile-gate-info-btn]");
         if (trigger) {
           try {
             trigger.click();

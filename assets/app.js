@@ -15722,7 +15722,9 @@ function buildVideoAsArticleCard(it) {
             staleWrapper.remove();
           }
         }
+        iuMobileGateEnsureInfoButtons();
       } else {
+        iuMobileGateRemoveInfoButtons();
         wrap.setAttribute("aria-hidden", "true");
         if (silverSlot.contains(silver)) {
           if (topCardsStack) {
@@ -16087,6 +16089,82 @@ function buildVideoAsArticleCard(it) {
     window.iuProjectsHubNavigateHardResetFromHomeOrBack = iuProjectsHubNavigateHardResetFromHomeOrBack;
   } catch (_) {}
 
+  function iuMobileGateInfoBtnMarkup(gateKey) {
+    return (
+      '<button type="button" class="iuTopbarInfoBtn iuTopbarInfoBtn--mobileGateInline" data-iu-mobile-gate-info-btn="' +
+      escapeHtml(String(gateKey || "")) +
+      '" aria-label="Informace o webu" aria-haspopup="dialog" aria-controls="iuTopbarInfoOverlay" aria-expanded="false">' +
+      '<span class="iuTopbarInfoBtn__burger" aria-hidden="true">' +
+      '<svg viewBox="0 0 15 13" width="15" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">' +
+      '<path d="M1 1.5h13M1 6.5h13M1 11.5h13"/></svg></span>' +
+      '<span class="iuTopbarInfoBtn__label">iCentrum</span></button>'
+    );
+  }
+
+  function iuMobileGateIsMobileTabletUx() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(max-width: 1024px)").matches);
+    } catch (_) {
+      return window.innerWidth <= 1024;
+    }
+  }
+
+  function iuMobileGateRemoveInfoButtons() {
+    try {
+      var navHead = document.getElementById("iuMobileGateNavHead");
+      if (navHead) navHead.remove();
+      var toolsBtn = document.querySelector("[data-iu-mobile-gate-info-btn='tools']");
+      if (toolsBtn) toolsBtn.remove();
+      var sectionHead = document.querySelector("section.iu-mailboxes .iu-mmSectionHead.iu-mmSectionHead--gateInfo");
+      if (sectionHead) sectionHead.classList.remove("iu-mmSectionHead--gateInfo");
+    } catch (_) {}
+  }
+
+  function iuMobileGateEnsureInfoButtons() {
+    if (!iuMobileGateIsMobileTabletUx()) {
+      iuMobileGateRemoveInfoButtons();
+      return;
+    }
+    try {
+      var panelNav = document.getElementById("iuMobileGatePanelNav");
+      var rail = document.getElementById("iuLeftRail");
+      if (panelNav && rail && panelNav.contains(rail)) {
+        var navHead = document.getElementById("iuMobileGateNavHead");
+        if (!navHead) {
+          navHead = document.createElement("div");
+          navHead.id = "iuMobileGateNavHead";
+          navHead.className = "iuMobileGatePanelHead";
+          navHead.setAttribute("data-iu-gate-panel-head", "nav");
+          navHead.innerHTML = iuMobileGateInfoBtnMarkup("nav");
+          panelNav.insertBefore(navHead, rail);
+        }
+      } else {
+        var staleNavHead = document.getElementById("iuMobileGateNavHead");
+        if (staleNavHead) staleNavHead.remove();
+      }
+      var panelTools = document.getElementById("iuMobileGatePanelTools");
+      var mindMenuFlow = document.getElementById("iuMobileMindMenuFlow");
+      if (panelTools && mindMenuFlow && panelTools.contains(mindMenuFlow)) {
+        var mindMenu = document.getElementById("iuMindMenuView") || mindMenuFlow.querySelector(".mindMenu");
+        if (mindMenu) {
+          var mailboxes = mindMenu.querySelector("section.iu-mailboxes");
+          if (mailboxes) {
+            var sectionHead = mailboxes.querySelector(".iu-mmSectionHead");
+            if (sectionHead && !sectionHead.querySelector("[data-iu-mobile-gate-info-btn='tools']")) {
+              sectionHead.insertAdjacentHTML("beforeend", iuMobileGateInfoBtnMarkup("tools"));
+              sectionHead.classList.add("iu-mmSectionHead--gateInfo");
+            }
+          }
+        }
+      } else {
+        var staleToolsBtn = document.querySelector("[data-iu-mobile-gate-info-btn='tools']");
+        if (staleToolsBtn) staleToolsBtn.remove();
+        var staleSectionHead = document.querySelector("section.iu-mailboxes .iu-mmSectionHead.iu-mmSectionHead--gateInfo");
+        if (staleSectionHead) staleSectionHead.classList.remove("iu-mmSectionHead--gateInfo");
+      }
+    } catch (_) {}
+  }
+
   /** P0 Mobile gate: tab click — only one section open; use existing left rail / MindMenu; back button. */
   function iuMobileGateTabInit() {
     try {
@@ -16223,6 +16301,11 @@ function buildVideoAsArticleCard(it) {
           } else {
             document.documentElement.classList.remove("iu-mobileGateOverlayOpen");
             document.body.classList.remove("iu-mobileGateOverlayOpen");
+          }
+        } catch (_) {}
+        try {
+          if (value === "nav" || value === "tools") {
+            iuMobileGateEnsureInfoButtons();
           }
         } catch (_) {}
         try {

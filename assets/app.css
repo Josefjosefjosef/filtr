@@ -9644,6 +9644,22 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     background: var(--iu-frame-bg, #f5f5f5);
     box-shadow: 0 1px 2px rgba(0,0,0,.06);
   }
+  body.iu-mobileGateOverlayOpen #iuMobileGateWrap[data-iu-mobile-gate="nav"] #iuMobileGatePanelNav:not([hidden]){
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  #iuMobileGateNavHead.iuMobileGatePanelHead{
+    display: none;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 6px 14px 2px;
+  }
+  body.iu-mobileGateOverlayOpen #iuMobileGateWrap[data-iu-mobile-gate="nav"] #iuMobileGateNavHead{
+    display: flex;
+  }
   
   #iuMobileGatePanelTools .mindMenu-scroll-wrapper{
     width: 100% !important;
@@ -16960,6 +16976,96 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     outline: none;
     text-decoration: underline;
     text-underline-offset: 2px;
+  }
+  /* v64: Menu/MindMenu gate — inline hamburger+iCentrum (mobile/tablet ≤1024px) */
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="nav"]) #iuSilverWelcomeInfoBtn.iuTopbarInfoBtn--mobileFloat,
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuSilverWelcomeInfoBtn.iuTopbarInfoBtn--mobileFloat{
+    display: none !important;
+  }
+  .iuTopbarInfoBtn--mobileGateInline{
+    display: none !important;
+  }
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="nav"]) .iuTopbarInfoBtn--mobileGateInline[data-iu-mobile-gate-info-btn="nav"],
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) .iuTopbarInfoBtn--mobileGateInline[data-iu-mobile-gate-info-btn="tools"]{
+    position: relative;
+    z-index: 1;
+    width: auto;
+    height: 28px;
+    margin: 0;
+    padding: 0 9px;
+    border: 0;
+    background: transparent;
+    color: var(--iu-brand-blue,#003CFF);
+    cursor: pointer;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-radius: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: none;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .iuTopbarInfoBtn--mobileGateInline:hover,
+  .iuTopbarInfoBtn--mobileGateInline:active{
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    opacity: 1;
+  }
+  .iuTopbarInfoBtn--mobileGateInline .iuTopbarInfoBtn__burger{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 15px;
+    height: 13px;
+    line-height: 0;
+  }
+  .iuTopbarInfoBtn--mobileGateInline .iuTopbarInfoBtn__burger svg{
+    display: block;
+    width: 15px;
+    height: 13px;
+  }
+  .iuTopbarInfoBtn--mobileGateInline .iuTopbarInfoBtn__icon{
+    display: none !important;
+  }
+  .iuTopbarInfoBtn--mobileGateInline .iuTopbarInfoBtn__label{
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    height: 13px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .iuTopbarInfoBtn--mobileGateInline:focus-visible{
+    outline: none;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo{
+    position: relative;
+    min-height: 28px;
+    padding-top: 2px;
+    box-sizing: border-box;
+  }
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo .iu-mmSectionTitle{
+    text-align: center !important;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo .iuTopbarInfoBtn--mobileGateInline{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
   }
   #iuSilverWelcomeCard #iuNamedayCta{display:none!important;grid-column:1 / -1;grid-row:auto;margin:0!important;width:100%;min-height:0!important;height:0!important;overflow:hidden!important}
   .silver-welcome-stack--evening .iuTopbarInfoBtn--mobileFloat {
