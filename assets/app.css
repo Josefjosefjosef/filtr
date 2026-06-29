@@ -16987,9 +16987,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="nav"]) [data-iu-mobile-gate-info-btn="nav"],
   body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) [data-iu-mobile-gate-info-btn="tools"]{
     display:inline-flex!important;position:relative;z-index:1;width:auto;height:28px;margin:0;padding:0 9px;border:0;background:transparent;color:var(--iu-brand-blue,#003CFF);cursor:pointer;align-items:center;justify-content:center;gap:5px;box-sizing:border-box;-webkit-tap-highlight-color:transparent;appearance:none;-webkit-appearance:none}
-  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo{position:relative;min-height:28px;padding-top:2px}
-  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo .iu-mmSectionTitle{text-align:center!important;width:100%;margin:0;padding:0}
-  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo [data-iu-mobile-gate-info-btn="tools"]{position:absolute;top:0;right:0}
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo{position:relative;min-height:32px;padding-top:0;display:grid!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-rows:auto auto;align-items:center;column-gap:8px}
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo .iu-mmSectionTitle{grid-column:2;grid-row:1;text-align:center!important;width:auto!important;margin:0;padding:0;line-height:1.25;justify-self:center}
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo [data-iu-mobile-gate-info-btn="tools"]{grid-column:3;grid-row:1;justify-self:end;align-self:center;position:static;top:auto;right:auto;transform:none;z-index:2;pointer-events:auto}
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo .iu-mmSectionLine{grid-column:1/-1;grid-row:2;width:100%}
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="nav"]) #iuMobileGateNavHead.iuMobileGatePanelHead{align-items:center!important;min-height:32px;padding-top:0;padding-bottom:0;margin-bottom:10px}
   #iuSilverWelcomeCard #iuNamedayCta{display:none!important;grid-column:1 / -1;grid-row:auto;margin:0!important;width:100%;min-height:0!important;height:0!important;overflow:hidden!important}
   .silver-welcome-stack--evening .iuTopbarInfoBtn--mobileFloat {
     color: var(--iu-brand-blue, #003CFF);
@@ -21516,6 +21518,7 @@ overflow:hidden !important;
     padding: calc(env(safe-area-inset-top, 0px) + 8px) 8px 8px !important;
   }
   /* MindMenu gate (#iuMobileGateContent z-index 10025) must not cover tool overlays opened from tools panel. */
+  body.iu-mobileGateOverlayOpen #iuTopbarInfoOverlay:not([hidden]),
   body.iu-mobileGateOverlayOpen :is(#iuCalendarOverlay.iu-calendarOverlay,#iuTasksOverlay.iu-tasksPremiumScope,#iuNotesOverlay.iu-notesPremiumScope,#iuDsOverlay.iu-ds-overlay,#iu-aiOverlay,#iu-aiPanel,#iuFinancialCalcBackdrop,#iuFinancialCalcPanel,#iuInvoiceBackdrop,#iuInvoicePanel,#iuLegalDocsBackdrop,#iuLegalDocsPanel,#iuCustomButtonsBackdrop,#iuCustomButtonsPanel,#iuDesktopParcelWatchOverlay):not([hidden]),
   body.iu-mobileGateOverlayOpen #iu-mailbox-edit-overlay,
   body.iu-mobileGateOverlayOpen :is(.iu-quicktools-settings-backdrop,.iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed):not([hidden]){
