@@ -249,18 +249,32 @@ function inferPartyLabelsFromSections(sections) {
   return { a: labels[0] || "Strana A", b: labels[1] || "Strana B" };
 }
 
-function extractPersonNameFromBlock(block) {
+function extractPartyDisplayNameFromBlock(block) {
   const lines = String(block || "").split("\n");
   let first = "";
   let last = "";
+  let company = "";
+  let tradeName = "";
+  let acting = "";
   lines.forEach((line) => {
     const s = String(line || "").trim();
     const fn = /^Jméno:\s*(.+)$/i.exec(s);
     if (fn) first = fn[1].trim();
     const ln = /^Příjmení:\s*(.+)$/i.exec(s);
     if (ln) last = ln[1].trim();
+    const co = /^Obchodní firma.*:\s*(.+)$/i.exec(s);
+    if (co) company = co[1].trim();
+    const tf = /^Obchodní firma \(pokud používá\):\s*(.+)$/i.exec(s);
+    if (tf) tradeName = tf[1].trim();
+    const ap = /^Osoba jednající:\s*(.+)$/i.exec(s);
+    if (ap) acting = ap[1].trim();
   });
-  return [first, last].filter(Boolean).join(" ");
+  const personName = [first, last].filter(Boolean).join(" ");
+  if (personName) return personName;
+  if (acting) return acting;
+  if (company) return company;
+  if (tradeName) return tradeName;
+  return "";
 }
 
 function splitPartyBlocks(body, labelA, labelB) {
@@ -294,8 +308,8 @@ function inferPartySignatureMeta(sections) {
     if (!sec || !sec.heading) continue;
     if (!/identifikace/i.test(sec.heading) && sec.num !== "1") continue;
     const blocks = splitPartyBlocks(sec.body, labels.a, labels.b);
-    meta.nameA = extractPersonNameFromBlock(blocks.a);
-    meta.nameB = extractPersonNameFromBlock(blocks.b);
+    meta.nameA = extractPartyDisplayNameFromBlock(blocks.a);
+    meta.nameB = extractPartyDisplayNameFromBlock(blocks.b);
     break;
   }
   return meta;
@@ -316,6 +330,106 @@ function isFieldLabelLine(line) {
   if (/^_{5,}/.test(s)) return false;
   if (/^(podpisy|místo a datum|závěrečná)/i.test(s)) return false;
   return s.length <= 80;
+}
+
+function isPartyIdentificationSection(section) {
+  if (!section) return false;
+  if (section.num === "1") return true;
+  return /identifikace/i.test(String(section.heading || ""));
+}
+
+function splitBodyIntoLabeledParts(body) {
+  const parts = String(body || "").split(/\n\n+/);
+  const result = [];
+  parts.forEach((part) => {
+    const lines = part.split("\n");
+    const first = String(lines[0] || "").trim();
+    if (!first || first.indexOf(":") >= 0) return;
+    const rest = lines.slice(1).join("\n").trim();
+    if (!rest || isPlaceholderOnlyLine(rest)) return;
+    if (isFieldLabelLine(first)) {
+      result.push({ label: first, content: rest });
+    }
+  });
+  return result;
+}
+
+function formatPlainContentHtml(text) {
+  return escHtml(String(text || "")).replace(/\n/g, "<br>");
+}
+
+function buildSectionBodyVisualHtml(section, partyMeta) {
+  if (!section.body && !section.isSignatures) return "";
+  if (section.isSignatures) {
+    let html = "";
+    if (section.heading) {
+      html += buildSectionBarHtml(section.num, section.heading);
+    }
+    html += buildSignatureVisualHtml(section.body, partyMeta);
+    return html;
+  }
+  if (isPartyIdentificationSection(section)) {
+    let html = "";
+    if (section.heading) {
+      html += buildSectionBarHtml(section.num, section.heading);
+    }
+    html +=
+      '<div class="iu-legal-doc-paper__sectionBody">' + formatBodyHtml(section.body, partyMeta) + "</div>";
+    return html;
+  }
+  const labeled = splitBodyIntoLabeledParts(section.body);
+  if (labeled.length) {
+    let html = "";
+    labeled.forEach((part) => {
+      const barNum = labeled.length === 1 ? section.num : "";
+      html += buildSectionBarHtml(barNum, part.label);
+      html +=
+        '<div class="iu-legal-doc-paper__sectionBody">' + formatPlainContentHtml(part.content) + "</div>";
+    });
+    return html;
+  }
+  let html = "";
+  if (section.heading) {
+    html += buildSectionBarHtml(section.num, section.heading);
+  }
+  html +=
+    '<div class="iu-legal-doc-paper__sectionBody">' + formatBodyHtml(section.body, partyMeta) + "</div>";
+  return html;
+}
+
+function buildSectionBodyPdfItems(section, doc, maxW) {
+  const items = [];
+  if (section.isSignatures) {
+    if (section.heading) {
+      items.push({ type: "sectionBar", num: section.num, heading: section.heading, heightMm: 8.5 });
+    }
+    items.push({ type: "signatureBlock", body: section.body, heightMm: 20 });
+    return items;
+  }
+  if (isPartyIdentificationSection(section)) {
+    if (section.heading) {
+      items.push({ type: "sectionBar", num: section.num, heading: section.heading, heightMm: 8.5 });
+    }
+    const lines = plainTextToLayoutLines(doc, section.body, maxW);
+    lines.forEach((line) => items.push({ type: "line", text: line, heightMm: 4.8 }));
+    return items;
+  }
+  const labeled = splitBodyIntoLabeledParts(section.body);
+  if (labeled.length) {
+    labeled.forEach((part) => {
+      const barNum = labeled.length === 1 ? section.num : "";
+      items.push({ type: "sectionBar", num: barNum, heading: part.label, heightMm: 8.5 });
+      const contentLines = plainTextToLayoutLines(doc, part.content, maxW);
+      contentLines.forEach((line) => items.push({ type: "line", text: line, heightMm: 4.8 }));
+    });
+    return items;
+  }
+  if (section.heading) {
+    items.push({ type: "sectionBar", num: section.num, heading: section.heading, heightMm: 8.5 });
+  }
+  const lines = plainTextToLayoutLines(doc, section.body, maxW);
+  lines.forEach((line) => items.push({ type: "line", text: line, heightMm: 4.8 }));
+  return items;
 }
 
 function formatBodyHtml(text, partyMeta) {
@@ -362,6 +476,8 @@ function buildSignatureVisualHtml(body, partyMeta) {
   const lines = String(body || "").split("\n");
   const sigLine = lines.find((line) => SIGNATURE_LINE_RE.test(String(line || "").trim()));
   const labels = partyMeta || { a: "Strana A", b: "Strana B", nameA: "", nameB: "" };
+  const displayA = labels.nameA || labels.a;
+  const displayB = labels.nameB || labels.b;
   if (!sigLine) {
     return '<div class="iu-legal-doc-paper__sectionBody">' + formatBodyHtml(body, labels) + "</div>";
   }
@@ -370,20 +486,14 @@ function buildSignatureVisualHtml(body, partyMeta) {
     '<div class="iu-legal-doc-paper__signatureCol">' +
     '<span class="iu-legal-doc-paper__signatureLine" aria-hidden="true"></span>' +
     '<span class="iu-legal-doc-paper__signatureLabel">' +
-    escHtml(labels.a) +
+    escHtml(displayA) +
     "</span>" +
-    (labels.nameA
-      ? '<span class="iu-legal-doc-paper__signatureName">' + escHtml(labels.nameA) + "</span>"
-      : "") +
     "</div>" +
     '<div class="iu-legal-doc-paper__signatureCol">' +
     '<span class="iu-legal-doc-paper__signatureLine" aria-hidden="true"></span>' +
     '<span class="iu-legal-doc-paper__signatureLabel">' +
-    escHtml(labels.b) +
+    escHtml(displayB) +
     "</span>" +
-    (labels.nameB
-      ? '<span class="iu-legal-doc-paper__signatureName">' + escHtml(labels.nameB) + "</span>"
-      : "") +
     "</div>" +
     "</div>" +
     '<pre class="iu-legal-doc-paper__signatureSource" aria-hidden="true">' +
@@ -394,26 +504,35 @@ function buildSignatureVisualHtml(body, partyMeta) {
 
 function buildSectionHtml(section, partyMeta) {
   if (section.isFreeBlock) {
-    return '<div class="iu-legal-doc-paper__sectionBody">' + formatBodyHtml(section.body, partyMeta) + "</div>";
+    const labeled = splitBodyIntoLabeledParts(section.body);
+    if (labeled.length) {
+      const inner = labeled
+        .map((part) => {
+          return (
+            buildSectionBarHtml("", part.label) +
+            '<div class="iu-legal-doc-paper__sectionBody">' +
+            formatPlainContentHtml(part.content) +
+            "</div>"
+          );
+        })
+        .join("");
+      return '<section class="iu-legal-doc-paper__section">' + inner + "</section>";
+    }
+    return (
+      '<section class="iu-legal-doc-paper__section">' +
+      '<div class="iu-legal-doc-paper__sectionBody">' +
+      formatBodyHtml(section.body, partyMeta) +
+      "</div>" +
+      "</section>"
+    );
   }
-  let html = "";
-  if (section.heading) {
-    html += buildSectionBarHtml(section.num, section.heading);
-  }
-  if (section.isSignatures) {
-    html += buildSignatureVisualHtml(section.body, partyMeta);
-  } else if (section.body) {
-    html += '<div class="iu-legal-doc-paper__sectionBody">' + formatBodyHtml(section.body, partyMeta) + "</div>";
-  }
-  return '<section class="iu-legal-doc-paper__section">' + html + "</section>";
+  const inner = buildSectionBodyVisualHtml(section, partyMeta);
+  return '<section class="iu-legal-doc-paper__section">' + inner + "</section>";
 }
 
 function buildLegalDocumentHeaderHtml() {
   return (
     '<header class="iu-legal-doc-paper__header" data-iu-legal-doc-visual-only="1">' +
-    '<p class="iu-legal-doc-paper__createdTop">' +
-    escHtml(IU_LEGAL_DOC_TOP_CREATED) +
-    "</p>" +
     '<div class="iu-legal-doc-paper__headerGrid">' +
     '<div class="iu-legal-doc-paper__headerMain">' +
     buildTopbarBrandHtml() +
@@ -602,16 +721,12 @@ function drawPageHeader(doc, pageW, pageNum, totalPages, marginX) {
   doc.setFillColor(rgb[0], rgb[1], rgb[2]);
   doc.rect(0, 0, pageW, 1.2, "F");
 
-  doc.setFontSize(6.5);
-  doc.setTextColor(100, 116, 139);
-  doc.setFont(doc.getFont().fontName, "normal");
-  doc.text(IU_LEGAL_DOC_TOP_CREATED, marginX, 5.2);
-
-  drawTopbarBrandInPdf(doc, marginX, 11.5);
+  drawTopbarBrandInPdf(doc, marginX, 9.5);
 
   doc.setFontSize(7.5);
   doc.setTextColor(100, 116, 139);
-  doc.text(IU_LEGAL_DOC_HEADER_SUBTITLE, marginX, 15.5);
+  doc.setFont(doc.getFont().fontName, "normal");
+  doc.text(IU_LEGAL_DOC_HEADER_SUBTITLE, marginX, 13.5);
 
   doc.setFontSize(7);
   const asideRgb = hexToRgb(IU_BRAND_BLUE);
@@ -748,20 +863,23 @@ function buildPdfRenderQueue(structure, doc, maxW) {
   }
   structure.sections.forEach((section) => {
     if (section.isFreeBlock) {
+      const labeled = splitBodyIntoLabeledParts(section.body);
+      if (labeled.length) {
+        labeled.forEach((part) => {
+          queue.push({ type: "sectionBar", num: "", heading: part.label, heightMm: 8.5 });
+          const contentLines = plainTextToLayoutLines(doc, part.content, maxW);
+          contentLines.forEach((line) => queue.push({ type: "line", text: line, heightMm: 4.8 }));
+        });
+        queue.push({ type: "gap", heightMm: 2.5 });
+        return;
+      }
       const lines = plainTextToLayoutLines(doc, section.body, maxW);
       lines.forEach((line) => queue.push({ type: "line", text: line, heightMm: 4.8 }));
       queue.push({ type: "gap", heightMm: 2.5 });
       return;
     }
-    if (section.heading) {
-      queue.push({ type: "sectionBar", num: section.num, heading: section.heading, heightMm: 8.5 });
-    }
-    if (section.isSignatures) {
-      queue.push({ type: "signatureBlock", body: section.body, heightMm: 20 });
-      return;
-    }
-    const lines = plainTextToLayoutLines(doc, section.body, maxW);
-    lines.forEach((line) => queue.push({ type: "line", text: line, heightMm: 4.8 }));
+    const bodyItems = buildSectionBodyPdfItems(section, doc, maxW);
+    bodyItems.forEach((item) => queue.push(item));
     queue.push({ type: "gap", heightMm: 2.5 });
   });
   return queue;
@@ -844,6 +962,8 @@ function renderPdfQueuePage(doc, pageW, marginX, topY, bottomY, queue, partyMeta
     if (item.type === "signatureBlock") {
       if (y + 20 > bottomY) return;
       const labels = partyMeta || { a: "Strana A", b: "Strana B", nameA: "", nameB: "" };
+      const displayA = labels.nameA || labels.a;
+      const displayB = labels.nameB || labels.b;
       const colW = (pageW - marginX * 2 - 8) / 2;
       doc.setDrawColor(17, 24, 39);
       doc.setLineWidth(0.25);
@@ -852,13 +972,8 @@ function renderPdfQueuePage(doc, pageW, marginX, topY, bottomY, queue, partyMeta
       doc.setFontSize(8);
       doc.setFont(doc.getFont().fontName, "bold");
       doc.setTextColor(55, 65, 81);
-      doc.text(String(labels.a), marginX + colW / 2, y + 12, { align: "center" });
-      doc.text(String(labels.b), marginX + colW + 8 + colW / 2, y + 12, { align: "center" });
-      doc.setFont(doc.getFont().fontName, "normal");
-      doc.setFontSize(7.5);
-      doc.setTextColor(75, 85, 99);
-      if (labels.nameA) doc.text(String(labels.nameA), marginX + colW / 2, y + 16.5, { align: "center" });
-      if (labels.nameB) doc.text(String(labels.nameB), marginX + colW + 8 + colW / 2, y + 16.5, { align: "center" });
+      doc.text(String(displayA), marginX + colW / 2, y + 12, { align: "center" });
+      doc.text(String(displayB), marginX + colW + 8 + colW / 2, y + 12, { align: "center" });
       y += 20;
       return;
     }

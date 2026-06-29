@@ -386,9 +386,9 @@ export function initIuLegalDocumentsOverlay(deps) {
       el.setAttribute("aria-modal", "true");
       el.innerHTML =
         '<div class="iu-legal-previewToolbar">' +
-        '<button type="button" class="iu-legal-btn iu-legal-btn--ghost" data-iu-legal-preview-back>Zpět do formuláře</button>' +
-        '<button type="button" class="iu-legal-btn iu-legal-btn--ghost" data-iu-legal-preview-download>Stáhnout dokument</button>' +
-        '<button type="button" class="iu-legal-btn iu-legal-btn--primary" data-iu-legal-preview-share-pdf>Sdílet PDF</button>' +
+        '<button type="button" class="iu-legal-btn iu-legal-btn--preview iu-legal-btn--preview-back" data-iu-legal-preview-back>Zpět do formuláře</button>' +
+        '<button type="button" class="iu-legal-btn iu-legal-btn--preview iu-legal-btn--preview-download" data-iu-legal-preview-download>Stáhnout dokument</button>' +
+        '<button type="button" class="iu-legal-btn iu-legal-btn--preview iu-legal-btn--preview-share iu-legal-btn--primary" data-iu-legal-preview-share-pdf>Sdílet PDF</button>' +
         "</div>" +
         '<div class="iu-legal-previewScroll" data-iu-legal-preview-host></div>';
       document.body.appendChild(el);
