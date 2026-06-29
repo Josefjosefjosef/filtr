@@ -21494,10 +21494,11 @@ overflow:hidden !important;
   }
 }
 
-body.iu-myinfouzel-open :is(#iuCalendarOverlay.iu-calendarOverlay,#iuTasksOverlay.iu-tasksPremiumScope,#iuNotesOverlay.iu-notesPremiumScope,#iuDsOverlay.iu-ds-overlay,#iu-aiOverlay,#iu-aiPanel,#iuFinancialCalcBackdrop,#iuFinancialCalcPanel,#iuInvoiceBackdrop,#iuInvoicePanel,#iuLegalDocsBackdrop,#iuLegalDocsPanel,#iuCustomButtonsBackdrop,#iuCustomButtonsPanel,#iuDesktopParcelWatchOverlay):not([hidden]),
+body.iu-myinfouzel-open :is(#iuCalendarOverlay.iu-calendarOverlay,#iuTasksOverlay.iu-tasksPremiumScope,#iuNotesOverlay.iu-notesPremiumScope,#iuDsOverlay.iu-ds-overlay,#iuDsPanel.iu-ds-panel,#iu-aiOverlay,#iu-aiPanel,#iuFinancialCalcBackdrop,#iuFinancialCalcPanel,#iuInvoiceBackdrop,#iuInvoicePanel,#iuLegalDocsBackdrop,#iuLegalDocsPanel,#iuCustomButtonsBackdrop,#iuCustomButtonsPanel,#iuDesktopParcelWatchOverlay,#iuQuickFeed,#iuParcelsPopover,.iu-parcels-overlay):not([hidden]),
 body.iu-myinfouzel-open #iu-mailbox-edit-overlay,
 body.iu-myinfouzel-open :is(.iu-quicktools-settings-backdrop,.iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed):not([hidden]){z-index:12100!important}
 body.iu-myinfouzel-open .iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed:not([hidden]){z-index:12110!important}
+body.iu-myinfouzel-open .iu-tool-privacy-modal:not([hidden]){z-index:12200!important}
 
 @media (max-width: 1023px){
   #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="datova-schranka"]{ --iu-ql-accent:#1D4ED8; }

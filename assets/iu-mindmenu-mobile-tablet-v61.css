@@ -1,0 +1,115 @@
+/* P0 task 61 — MindMenu tool overlays: mobile/tablet unified titles, whole-page scroll, privacy notes layout. Desktop unchanged (min-width: 1025px). */
+
+@media (max-width: 1024px) {
+  /* —— Unified section titles (MindMenu tools) —— */
+  .iu-ds-panelHeaderMain .iu-tool-privacy-title,
+  #iuQuickFeed .iuQTitle,
+  #iuLegalDocsPanel .iu-legal-overlay-h2,
+  #iuFinancialCalcPanel .iu-financial-overlay-h2,
+  #iuInvoicePanel .iu-invoice-overlay-h2,
+  .iu-parcels-modal-title {
+    font-size: 18px !important;
+    font-weight: 750 !important;
+    line-height: 1.25 !important;
+    margin: 0 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+  }
+
+  /* —— Full-width privacy / lock summary boxes —— */
+  .iu-ds-panelHeaderMain .iu-tool-privacy-short,
+  .iuQHead .iu-tool-privacy-short,
+  .iu-legal-overlay-heading .iu-tool-privacy-short,
+  .iu-financial-overlay-heading .iu-tool-privacy-short,
+  .iu-invoice-overlay-heading .iu-tool-privacy-short,
+  .iu-ds-panelHeaderMain .iu-tool-privacy-extra,
+  #iuDsAutofillStatus.iu-tool-privacy-extra {
+    width: 100% !important;
+    max-width: 100% !important;
+    align-self: stretch !important;
+    box-sizing: border-box !important;
+  }
+
+  .iu-tool-privacy-extra,
+  #iuDsAutofillStatus.iu-tool-privacy-extra {
+    margin: 8px 0 0 !important;
+    padding: 8px 12px !important;
+    border-radius: 10px !important;
+    background: rgba(31, 75, 153, 0.06) !important;
+    border: 1px solid rgba(31, 75, 153, 0.12) !important;
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+    color: rgba(11, 27, 43, 0.72) !important;
+    word-break: break-word;
+  }
+
+  /* Autofill note must not sit in main panel body once relocated under privacy block */
+  #iuDsPanel .iu-ds-panelBody > #iuDsAutofillStatus {
+    display: none !important;
+  }
+
+  /* Legal hub disclaimer lives under privacy modal — not in main scroll */
+  #iuLegalDocsScrollHost .iu-legal-disclaimer {
+    display: none !important;
+  }
+
+  /* —— Whole-page scroll (Bakaláři-like) — no pinned header + inner scroll split —— */
+  body.iu-modal-open #iuDsPanel.iu-ds-panel[data-open="1"]:not([hidden]) {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+
+  #iuDsPanel.iu-ds-panel .iu-ds-modal {
+    display: block !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  #iuDsPanel.iu-ds-panel .iu-ds-panelHeader {
+    flex: none !important;
+  }
+
+  #iuDsPanel.iu-ds-panel .iu-ds-panelBody,
+  #iuDsPanel.iu-ds-panel .iu-datovka-scroll-host {
+    flex: none !important;
+    overflow: visible !important;
+    min-height: 0 !important;
+  }
+
+  #iuLegalDocsPanel.iu-legal-overlay-panel:not([hidden]) .iu-legal-overlay-cardShell,
+  #iuFinancialCalcPanel.iu-financial-overlay-panel:not([hidden]) .iu-financial-overlay-cardShell,
+  #iuInvoicePanel.iu-invoice-overlay-panel:not([hidden]) .iu-invoice-overlay-cardShell {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    display: block !important;
+  }
+
+  #iuLegalDocsPanel .iu-legal-overlay-inner,
+  #iuFinancialCalcPanel .iu-financial-overlay-inner,
+  #iuInvoicePanel .iu-invoice-overlay-inner {
+    display: block !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  #iuLegalDocsPanel .iu-legal-overlay-header,
+  #iuFinancialCalcPanel .iu-financial-overlay-header,
+  #iuInvoicePanel .iu-invoice-overlay-header {
+    flex: none !important;
+  }
+
+  #iuLegalDocsScrollHost.iu-legal-overlay-scrollHost,
+  #iuFinancialCalcScrollHost.iu-financial-overlay-scrollHost,
+  #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost {
+    flex: none !important;
+    overflow: visible !important;
+    min-height: 0 !important;
+  }
+}
