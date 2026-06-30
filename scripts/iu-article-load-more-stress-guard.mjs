@@ -14,6 +14,7 @@ import {
   clickDesktopNav,
   waitDesktopNavTarget,
 } from "./guards/desktop-nav-targets.mjs";
+import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -243,7 +244,7 @@ async function main() {
   const fails = [];
   const steps = [];
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const context = await bootstrapGuardContext(browser, { viewport: { width: 1440, height: 900 } });
   await installClsObserver(context);
   const page = await context.newPage();
   page.on("request", (req) => {

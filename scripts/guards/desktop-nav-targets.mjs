@@ -44,7 +44,20 @@ export async function waitDesktopNavTarget(page, accent, timeoutMs = 60000) {
   return sel;
 }
 
+/** CI guards: pre-accept notice + remove blocking overlay if a save opened it mid-run. */
+export async function ensureGuardLocalDataProtection(page) {
+  await page.evaluate(() => {
+    try {
+      localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+      localStorage.setItem("iu:local-data-protection:notice-accepted-at:v1", String(Date.now()));
+      localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
+    } catch (_) {}
+    document.querySelectorAll(".iu-ldp-backdrop").forEach((el) => el.remove());
+  });
+}
+
 export async function clickDesktopNav(page, accent) {
+  await ensureGuardLocalDataProtection(page);
   const sel = await waitDesktopNavTarget(page, accent);
   await page.click(sel);
 }

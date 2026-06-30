@@ -20,6 +20,7 @@ import {
   desktopNavSelector,
   waitDesktopNavTarget,
 } from "./guards/desktop-nav-targets.mjs";
+import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -433,7 +434,8 @@ async function measureLeg(page, networkLog, legStartIdx, legLabel, expectedSecti
 }
 
 async function runScenario(browser, scenario) {
-  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const context = await bootstrapGuardContext(browser, { viewport: { width: 1440, height: 900 } });
+  const page = await context.newPage();
   const networkLog = [];
   await attachNetwork(page, networkLog);
   try {
@@ -483,7 +485,7 @@ async function runScenario(browser, scenario) {
     legs.push(await measureLeg(page, networkLog, mark, scenario.target, scenario.target));
   }
 
-  await page.close();
+  await context.close();
   return { id: scenario.id, category: scenario.category, legs };
 }
 
