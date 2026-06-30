@@ -295,8 +295,10 @@ function syncMindMenuPanelGap() {
 
     const currentMargin = parseFloat(getComputedStyle(mount).marginTop) || 0;
     const marginTop = Math.round(currentMargin + (IU_INFO_PANEL_MINDMENU_GAP_PX - gap));
+    if (marginTop === currentMargin) return;
     mount.style.setProperty("--iu-dhp-info-panel-mt-sync", marginTop + "px");
     mount.style.marginTop = "var(--iu-dhp-info-panel-mt-sync)";
+    persistMindMenuGap(marginTop);
   } catch (_) {}
 }
 
@@ -321,18 +323,37 @@ function syncPanelLayoutGaps() {
   syncPanelHomecardsGap();
 }
 
+function applyCachedMindMenuGap() {
+  try {
+    if (!isDesktopPanelContext()) return;
+    const mount = document.getElementById(MOUNT_ID);
+    if (!mount) return;
+    const cached = sessionStorage.getItem("iuInfoPanelMindMenuMt");
+    if (!cached || !/^-?\d+$/.test(cached)) return;
+    mount.style.setProperty("--iu-dhp-info-panel-mt-sync", cached + "px");
+    mount.style.marginTop = "var(--iu-dhp-info-panel-mt-sync)";
+  } catch (_) {}
+}
+
+function persistMindMenuGap(marginTop) {
+  try {
+    sessionStorage.setItem("iuInfoPanelMindMenuMt", String(marginTop));
+  } catch (_) {}
+}
+
 function initGapSync() {
-  syncMindMenuPanelGap();
-  if (gapObserver || typeof ResizeObserver !== "function") return;
-  const targets = [
-    document.getElementById(MIND_MENU_BTN_ID),
-    document.getElementById(WELCOME_STACK_ID),
-    document.getElementById(MOUNT_ID),
-  ].filter(Boolean);
-  if (!targets.length) return;
-  gapObserver = new ResizeObserver(() => syncPanelLayoutGaps());
-  targets.forEach((el) => gapObserver.observe(el));
+  if (window.__iuInfoPanelGapSyncInited) return;
+  window.__iuInfoPanelGapSyncInited = 1;
   window.addEventListener("resize", syncPanelLayoutGaps, { passive: true });
+  try {
+    const btn = document.getElementById(MIND_MENU_BTN_ID);
+    const stack = document.getElementById("iuSilverWelcomeStack");
+    if (typeof ResizeObserver === "function" && (btn || stack)) {
+      gapObserver = new ResizeObserver(() => syncMindMenuPanelGap());
+      if (btn) gapObserver.observe(btn);
+      if (stack) gapObserver.observe(stack);
+    }
+  } catch (_) {}
 }
 
 function syncTopGap() {
@@ -358,17 +379,21 @@ async function renderPanelInner() {
     if (mount) {
       mount.hidden = true;
       mount.setAttribute("hidden", "");
+      mount.style.visibility = "";
       mount.innerHTML = "";
       mount.removeAttribute("data-iu-info-panel-ready");
     }
     return;
   }
 
+  applyCachedMindMenuGap();
   mount.hidden = false;
   mount.removeAttribute("hidden");
   mount.removeAttribute("aria-hidden");
+  mount.style.visibility = "visible";
   mount.removeAttribute("data-iu-info-panel-ready");
   mount.innerHTML = buildPanelHtml(getLoadingInfoPanelItems());
+  initGapSync();
   ensureDetailPortal();
 
   const panelEl = document.getElementById(PANEL_ID);
@@ -387,20 +412,6 @@ async function renderPanelInner() {
     bindPanelNav(panel);
     updateNavState(panel);
   }
-
-  try {
-    const runGapSync = () => {
-      try {
-        syncTopGap();
-        initGapSync();
-      } catch (_) {}
-    };
-    if (typeof requestIdleCallback === "function") {
-      requestIdleCallback(runGapSync, { timeout: 2500 });
-    } else {
-      setTimeout(runGapSync, 400);
-    }
-  } catch (_) {}
 }
 
 function initInfoPanel() {

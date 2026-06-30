@@ -28,6 +28,14 @@
     contain: layout style;
   }
 
+  /* Reserve grid row before JS reveals panel — avoids reload / section-switch CLS. */
+  body.iu-desktop-home-grid #iuDesktopInfoPanelMount[hidden] {
+    display: block !important;
+    visibility: hidden;
+    pointer-events: none;
+    min-height: 172px;
+  }
+
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStackSeparatorTallBefore {
     display: none !important;
   }
