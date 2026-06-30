@@ -4,6 +4,12 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import {
+  IU_INFO_PANEL_CATALOG,
+  IU_INFO_PANEL_CATALOG_COUNT,
+  IU_INFO_PANEL_ORDER_IDS,
+  IU_INFO_PANEL_EXCLUDED,
+} from "../assets/iu-desktop-info-panel-catalog.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -86,9 +92,36 @@ if (!panelJs.includes("iuDesktopInfoPanelLayoutSync")) {
 }
 
 const panelData = read("assets/iu-desktop-info-panel-data.js");
-const catalogCount = (panelData.match(/id:\s*"/g) || []).length;
-if (catalogCount !== 9) {
-  failures.push(`catalog must contain 9 items, found ${catalogCount}`);
+if (!panelData.includes("IU_INFO_PANEL_CATALOG_COUNT")) {
+  failures.push("data layer must export catalog count constant");
+}
+if (IU_INFO_PANEL_CATALOG_COUNT < 7) {
+  failures.push(`catalog must contain at least 7 items, found ${IU_INFO_PANEL_CATALOG_COUNT}`);
+}
+const catalogIds = IU_INFO_PANEL_CATALOG.map((item) => item.id);
+if (catalogIds.length !== IU_INFO_PANEL_CATALOG_COUNT) {
+  failures.push("catalog count constant mismatch");
+}
+if (catalogIds.join("|") !== IU_INFO_PANEL_ORDER_IDS.join("|")) {
+  failures.push("catalog order ids mismatch");
+}
+for (let i = 1; i < IU_INFO_PANEL_CATALOG.length; i++) {
+  if (IU_INFO_PANEL_CATALOG[i].order < IU_INFO_PANEL_CATALOG[i - 1].order) {
+    failures.push("catalog must be sorted by order field");
+    break;
+  }
+}
+if (IU_INFO_PANEL_CATALOG.some((item) => !item.sourceName || !item.termsUrl || !item.licenseNote)) {
+  failures.push("catalog items must include legal metadata for source dialog");
+}
+if (IU_INFO_PANEL_CATALOG.some((item) => !item.maxAgeMs || !item.updateNote)) {
+  failures.push("catalog items must define stale/update metadata");
+}
+if (catalogIds.includes("trains") || catalogIds.includes("aviation")) {
+  failures.push("removed proxy cards trains/aviation must not be in catalog");
+}
+if (!IU_INFO_PANEL_EXCLUDED.length) {
+  failures.push("excluded source list must be documented");
 }
 if (!panelData.includes("Data nejsou aktuální")) {
   failures.push("data layer must handle stale state message");
@@ -122,5 +155,5 @@ if (failures.length) {
 }
 
 console.log("IU_DESKTOP_INFO_PANEL_LAYOUT_GUARD_PASS");
-console.log(`catalog_items=9`);
+console.log(`catalog_items=${IU_INFO_PANEL_CATALOG_COUNT}`);
 console.log(`mount_before_homecards=${mountIdx < tallIdx}`);

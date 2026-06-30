@@ -6,6 +6,7 @@
  * Run: npm run iu-desktop-info-panel-validation-guard
  */
 import { createRequire } from "module";
+import { IU_INFO_PANEL_CATALOG_COUNT } from "../assets/iu-desktop-info-panel-data.js";
 import { spawnSync } from "child_process";
 import path from "path";
 import { spawn } from "child_process";
@@ -25,6 +26,7 @@ const LCP_MAX_MS = parseInt(process.env.IU_INFO_PANEL_LCP_MAX_MS || "4500", 10);
 const GAP_TARGET_PX = 30;
 const GAP_TOLERANCE_PX = 4;
 const MINDMENU_GAP_TARGET_PX = 30;
+const CATALOG_COUNT = IU_INFO_PANEL_CATALOG_COUNT;
 
 function runStaticGuard(scriptName) {
   const scriptPath = path.join(REPO, "scripts", scriptName);
@@ -76,14 +78,14 @@ async function installObservers(context) {
 
 async function waitForDesktopPanel(page) {
   await page.waitForFunction(
-    () =>
+    (expectedCount) =>
       document.body.classList.contains("iu-desktop-home-grid") &&
       !!document.getElementById("iuDesktopInfoPanel") &&
-      document.querySelectorAll(".iuDesktopInfoPanel__segment").length === 9 &&
+      document.querySelectorAll(".iuDesktopInfoPanel__segment").length === expectedCount &&
       document.getElementById("iuDesktopInfoPanelMount")?.getAttribute("data-iu-info-panel-ready") === "1" &&
       document.querySelector('[data-iu-info-panel-id="fuel"]')?.getAttribute("data-iu-info-panel-state") !==
         "loading",
-    null,
+    CATALOG_COUNT,
     { timeout: 45000 }
   );
   await page.waitForTimeout(350);
@@ -188,7 +190,7 @@ async function testSourceDialogs(page) {
   const ids = await page.$$eval("[data-iu-info-panel-source]", (btns) =>
     btns.map((b) => b.getAttribute("data-iu-info-panel-source"))
   );
-  if (ids.length !== 9) return { ok: false, reason: "source_buttons=" + ids.length };
+  if (ids.length !== CATALOG_COUNT) return { ok: false, reason: "source_buttons=" + ids.length };
 
   for (const id of ids) {
     await page.evaluate((segId) => {
@@ -433,7 +435,7 @@ async function main() {
         const key = `VP_${width}_Z${Math.round(zoom * 100)}`;
         const vpOk =
           m.panelVisible &&
-          m.segmentCount === 9 &&
+          m.segmentCount === CATALOG_COUNT &&
           !m.pageOverflowX &&
           m.gapOk &&
           m.mindMenuGapOk &&
