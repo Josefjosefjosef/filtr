@@ -4,6 +4,7 @@
  */
 import {
   IU_INFO_PANEL_CATALOG,
+  IU_INFO_PANEL_CATALOG_COUNT,
   getLoadingInfoPanelItems,
   mergeInfoPanelItemForGuard,
 } from "../assets/iu-desktop-info-panel-data.js";
@@ -103,7 +104,7 @@ assert(btcAfterError.state === "live", "bitcoin independent of cnb error");
 lines.push("STATE_INDEPENDENCE=PASS");
 
 const loadingItems = getLoadingInfoPanelItems();
-assert(loadingItems.length === 9, "loading must expose 9 items");
+assert(loadingItems.length === IU_INFO_PANEL_CATALOG_COUNT, `loading must expose ${IU_INFO_PANEL_CATALOG_COUNT} items`);
 assert(loadingItems.every((i) => i.state === "loading"), "all loading states");
 assert(loadingItems.every((i) => i.primaryValue === "…"), "loading primary ellipsis");
 lines.push("STATE_LOADING=PASS");

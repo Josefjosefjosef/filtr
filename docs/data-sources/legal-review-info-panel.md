@@ -1,10 +1,12 @@
 # Právní přehled zdrojů — PC informační panel (InfoUzel.cz)
 
-Dokumentace interního ověření zdrojů pro horizontální informační panel v prostředním feedu (pouze PC).
+Dokumentace interního ověření zdrojů pro horizontální informační panel v prostředním feedu (pouze PC, ≥1025 px).
 
 **Datum revize:** 2026-06-28  
-**Verze panelu:** 3.0  
+**Verze panelu:** 4.0  
 **Zásada:** Nebyly použity neověřené živé zdroje. Scraping komerčních webů nebyl použit.
+
+Detail API DataStat: [datastat-info-panel.md](./datastat-info-panel.md)
 
 ---
 
@@ -13,155 +15,115 @@ Dokumentace interního ověření zdrojů pro horizontální informační panel 
 | Pravidlo | Stav |
 |----------|------|
 | Scraping cizích webů | **NE** — nepoužito |
+| Neoficiální API | **NE** — nepoužito |
 | Loga poskytovatelů | **NE** — pouze emoji ikony panelu |
-| Osobní údaje / tracking třetích stran | **NE** |
 | API klíče ve frontendu | **NE** — snapshot generován v CI |
-| Uvedení zdroje u položky | **ANO** — ⓘ tooltip + detail |
-| iCentrum „Zdroje dat“ | **ANO** |
+| Uvedení zdroje u položky | **ANO** — dialog ⓘ Zdroj |
+| Cache snapshotu | **ANO** — `projects/data/info_panel_snapshot.json` |
+| Strojové načítání | **ANO** — GitHub Actions hodinově |
 
 ---
 
-## Položky panelu
+## Verdikt zdrojů (souhrn)
 
-### 1. EUR / CZK
-
-| Pole | Hodnota |
-|------|---------|
-| **Poskytovatel** | Česká národní banka (ČNB) |
-| **URL zdroje** | https://www.cnb.cz/cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.txt |
-| **URL podmínek** | https://www.cnb.cz/cs/verejnost/pro-media/informace-pro-media/pravidla-pro-pouzivani-informaci-cnb/ |
-| **Typ dat** | Oficiální denní fixace devizového kurzu |
-| **Aktualizace** | 1× denně (pracovní dny), snapshot v CI |
-| **Požadavek na citaci** | **ANO** — uvedení ČNB jako zdroje |
-| **Komerční použití** | Povoleno s uvedením zdroje dle pravidel ČNB |
-| **Ukládání / redistribuce** | Snapshot agregovaných hodnot v repozitáři (`projects/data/info_panel_snapshot.json`) |
-| **Závěr** | **Lze použít** (`verified_requires_attribution`) |
+| Zdroj | Verdikt | Poznámka |
+|-------|---------|----------|
+| ČNB devizové kurzy | ✅ POVOLENO S PODMÍNKAMI | Povinná atribuce ČNB |
+| CoinGecko (BTC, PAX Gold) | ✅ POVOLENO S PODMÍNKAMI | Orientační tržní ceny |
+| ČSÚ DataStat (32 ukazatelů) | ✅ POVOLENO S PODMÍNKAMI | Povinná atribuce ČSÚ |
+| CHMU / povodně / sucho / požáry | ❌ NEPOUŽÍVAT | Chybí embed API |
+| Dopravní omezení (live) | ❌ NEPOUŽÍVAT | Chybí ověřené API |
+| Vlaky / letecká doprava (live) | ❌ NEPOUŽÍVAT | COICOP nemá samostatné indexy |
+| Reálné mzdy | ❌ NEPOUŽÍVAT | Nenalezen spolehlivý samostatný ukazatel |
 
 ---
 
-### 2. USD / CZK
+## Položky panelu v4 (32 karet)
 
-| Pole | Hodnota |
-|------|---------|
-| **Poskytovatel** | Česká národní banka (ČNB) |
-| **URL zdroje** | stejné jako EUR / CZK |
-| **URL podmínek** | stejné jako EUR / CZK |
-| **Typ dat** | Oficiální denní fixace devizového kurzu |
-| **Závěr** | **Lze použít** (`verified_requires_attribution`) |
+### Denní ukazatele (1–7)
 
----
+| # | Karta | Poskytovatel | Aktualizace | Stale limit |
+|---|-------|--------------|-------------|-------------|
+| 1 | Natural 95 | ČSÚ DataStat CENPHMTT01 | týdně | 14 dní |
+| 2 | Motorová nafta | ČSÚ DataStat CENPHMTT01 | týdně | 14 dní |
+| 3 | EUR/CZK | ČNB | pracovní dny | 2 dny |
+| 4 | USD/CZK | ČNB | pracovní dny | 2 dny |
+| 5 | Elektřina (COICOP energie) | ČSÚ CEN0101ET03 | měsíčně | 45 dní |
+| 6 | Zlato (PAX Gold) | CoinGecko | hodinově | 2 hodiny |
+| 7 | Bitcoin | CoinGecko | hodinově | 2 hodiny |
 
-### 3. Bitcoin (BTC / CZK)
+### Ekonomika (16–25, bez reálných mezd)
 
-| Pole | Hodnota |
-|------|---------|
-| **Poskytovatel** | CoinGecko |
-| **URL zdroje** | https://api.coingecko.com/api/v3/simple/price |
-| **URL podmínek** | https://www.coingecko.com/en/api_terms |
-| **Typ dat** | Orientační tržní cena kryptoměny (agregovaná) |
-| **Aktualizace** | Snapshot v CI (max. hodinově) |
-| **Požadavek na citaci** | **ANO** — odkaz na CoinGecko |
-| **Komerční použití** | Free API tier s limity; zobrazení ceny povoleno s uvedením zdroje |
-| **Ukládání** | Agregovaná hodnota v snapshot JSON |
-| **Závěr** | **Lze použít** (`verified_requires_attribution`) — informativní, ne investiční rada |
+| # | Karta | DataStat kód | Periodicita |
+|---|-------|--------------|-------------|
+| 16 | Inflace | CEN0101HT02 | měsíčně |
+| 17 | Nezaměstnanost | WREG01CT4 | ročně |
+| 18 | Průměrná mzda | WPRACECRQT3 | čtvrtletně |
+| 19 | Průměrná hrubá mzda | WREG0303 | ročně |
+| 21 | HDP | WNUC01T01 | čtvrtletně |
+| 22 | Průmysl | PRU01BT1 | měsíčně |
+| 23 | Stavebnictví | STA04BT1 | měsíčně |
+| 24 | Maloobchod | OBC01BT1 | měsíčně |
+| 25 | Zemědělství | CEN02031T03 | měsíčně |
 
----
+### Trh práce (26–28)
 
-### 4. Benzín (Natural 95)
+| # | Karta | DataStat kód |
+|---|-------|--------------|
+| 26 | Volná pracovní místa | WREG01CT4 |
+| 27 | Zaměstnanost | WVSPSAT1 |
+| 28 | Registrovaná nezaměstnanost | WREG01CT4 |
 
-| Pole | Hodnota |
-|------|---------|
-| **Poskytovatel** | Český statistický úřad (DataStat) |
-| **URL zdroje** | https://data.csu.gov.cz/api/dotaz/v1/data/vybery/CENPHMTT01?format=CSV |
-| **URL podmínek** | https://csu.gov.cz/zakladni-informace-pro-pouziti-api-datastatu |
-| **Typ dat** | Průměrná týdenní cena Natural 95 |
-| **Aktualizace** | Týdně, snapshot v CI |
-| **Požadavek na citaci** | **ANO** — uvedení ČSÚ |
-| **Závěr** | **Lze použít** (`verified_requires_attribution`) |
+### Obyvatelstvo (29–36)
 
----
+| # | Karta | DataStat kód |
+|---|-------|--------------|
+| 29 | Počet obyvatel | WOBYNEJ |
+| 30 | Narození | WOBY03 |
+| 31 | Úmrtí | WOBY04A |
+| 32 | Sňatky | WOBY05A |
+| 33 | Rozvody | WOBY05B |
+| 34 | Počet cizinců | CIZ003T003 |
+| 35 | Senioři 65+ | WOBY02M2 |
+| 36 | Stěhování | OBY06T01 |
 
-### 5. Doprava (motorová nafta)
+### Společnost (37–41)
 
-| Pole | Hodnota |
-|------|---------|
-| **Poskytovatel** | Český statistický úřad (DataStat) |
-| **URL zdroje** | https://data.csu.gov.cz/api/dotaz/v1/data/vybery/CENPHMTT01?format=CSV |
-| **Typ dat** | Průměrná týdenní cena motorové nafty (orientační ukazatel dopravy) |
-| **Závěr** | **Lze použít** (`verified_requires_attribution`) |
+| # | Karta | DataStat kód |
+|---|-------|--------------|
+| 37 | Vzdělávání | VZD07T02 |
+| 38 | Zdraví | WFIN02A |
+| 39 | Kriminalita | KRI10T01 |
+| 40 | Volby | VOLPST2 |
+| 41 | Životní prostředí | WZPR05T01 |
 
----
-
-### 6. Elektřina (index energie)
-
-| Pole | Hodnota |
-|------|---------|
-| **Poskytovatel** | Český statistický úřad (DataStat) |
-| **URL zdroje** | https://data.csu.gov.cz/api/dotaz/v1/data/vybery/CEN0101ET03?format=CSV |
-| **Typ dat** | Index spotřebitelských cen COICOP — bydlení, energie a paliva |
-| **Poznámka** | Ne spotová cena kWh; oficiální statistický index |
-| **Závěr** | **Lze použít** (`verified_requires_attribution`) |
+Všechny položky: `verified_requires_attribution`, dialog ⓘ obsahuje poskytovatele, licenci, odkaz na API, periodicitu a disclaimer orientačního charakteru.
 
 ---
 
-### 7. Zlato (PAX Gold)
+## Nepoužité položky ze specifikace
 
-| Pole | Hodnota |
-|------|---------|
-| **Poskytovatel** | CoinGecko |
-| **URL zdroje** | https://api.coingecko.com/api/v3/simple/price (id: pax-gold) |
-| **Typ dat** | Orientační tržní cena tokenizovaného zlata v CZK |
-| **Závěr** | **Lze použít** (`verified_requires_attribution`) — informativní |
-
----
-
-### 8. Vlaky (index dopravy)
-
-| Pole | Hodnota |
-|------|---------|
-| **Poskytovatel** | Český statistický úřad (DataStat) |
-| **URL zdroje** | https://data.csu.gov.cz/api/dotaz/v1/data/vybery/CEN0101ET03?format=CSV |
-| **Typ dat** | Index spotřebitelských cen COICOP — doprava / železniční doprava |
-| **Poznámka** | Ne live zpoždění vlaků; statistický index jako legální náhrada |
-| **Závěr** | **Lze použít** (`verified_requires_attribution`) |
-
----
-
-### 9. Letecká doprava
-
-| Pole | Hodnota |
-|------|---------|
-| **Poskytovatel** | Český statistický úřad (DataStat) |
-| **URL zdroje** | https://data.csu.gov.cz/api/dotaz/v1/data/vybery/CEN0101ET03?format=CSV (případně WCEN01MT01 pro inflaci) |
-| **Typ dat** | Index spotřebitelských cen COICOP — letecká doprava |
-| **Závěr** | **Lze použít** (`verified_requires_attribution`) |
-
----
-
-## Shrnutí stavu panelu
-
-| Položka | Stav v UI |
-|---------|-----------|
-| EUR / CZK | **Živě** (snapshot ČNB) |
-| USD / CZK | **Živě** (snapshot ČNB) |
-| Bitcoin | **Živě** (snapshot CoinGecko) |
-| Benzín | **Živě** (snapshot ČSÚ) |
-| Doprava | **Živě** (snapshot ČSÚ) |
-| Elektřina | **Živě** (snapshot ČSÚ COICOP) |
-| Zlato | **Živě** (snapshot CoinGecko PAXG) |
-| Vlaky | **Živě** (snapshot ČSÚ COICOP) |
-| Letecká doprava | **Živě** (snapshot ČSÚ COICOP) |
+| Položka | Důvod |
+|---------|-------|
+| Dopravní omezení | ❌ Chybí oficiální embed API |
+| Vlaky (live) | ❌ COICOP bez samostatného železničního indexu |
+| Letecká doprava (live) | ❌ COICOP bez samostatného leteckého indexu |
+| Kvalita ovzduší, výstrahy ČHMÚ | ❌ Chybí ověřené API |
+| Povodně, sucho, požáry | ❌ Chybí ověřené API |
+| Reálné mzdy | ❌ Nenalezen spolehlivý DataStat výběr |
 
 ---
 
 ## Technická architektura dat
 
-- **Snapshot:** `projects/data/info_panel_snapshot.json` — generován skriptem `scripts/build_info_panel_snapshot.mjs` v CI (`.github/workflows/update-info-panel-snapshot.yml`). Zdroje: ČNB, CoinGecko (BTC, PAX Gold), ČSÚ DataStat (paliva, COICOP, inflace).
-- **Frontend:** `assets/iu-desktop-info-panel-data.js` + `assets/iu-desktop-info-panel.js` — čte pouze same-origin snapshot; nevolá třetí strany z prohlížeče.
-- **Fallback:** Při chybě snapshotu placeholder „Data nyní nejsou dostupná“; stará data nejsou prezentována jako aktuální.
+- **Katalog:** `assets/iu-desktop-info-panel-catalog.js` — id, pořadí, skupina, právní metadata, fetchBucket, maxAgeMs.
+- **Merge vrstva:** `assets/iu-desktop-info-panel-data.js` — stale/error/placeholder stavy.
+- **Snapshot build:** `scripts/build_info_panel_snapshot.mjs` — ČNB, CoinGecko, ČSÚ CSV.
+- **CI refresh:** `.github/workflows/update-info-panel-snapshot.yml` — hodinově `:15`.
+- **Frontend:** `assets/iu-desktop-info-panel.js` — pouze same-origin snapshot; vizuál V3 beze změny.
 
 ---
 
 ## Prohlášení
 
-InfoUzel.cz nevydává zobrazované údaje za vlastní primární data. Údaje jsou přebírány z uvedených zdrojů v rozsahu povoleném jejich podmínkami. Data slouží pouze pro rychlou orientaci.
+InfoUzel.cz nevydává zobrazované údaje za vlastní primární data. Údaje slouží pouze pro rychlou orientaci. Před důležitým rozhodnutím doporučujeme ověřit informace přímo u oficiálního poskytovatele.

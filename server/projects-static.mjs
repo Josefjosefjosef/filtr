@@ -13,7 +13,7 @@ const ROOT = path.resolve(__dirname, "..");
 
 function mime(f) {
   if (f.endsWith(".html")) return "text/html; charset=utf-8";
-  if (f.endsWith(".js")) return "application/javascript; charset=utf-8";
+  if (f.endsWith(".js") || f.endsWith(".mjs")) return "application/javascript; charset=utf-8";
   if (f.endsWith(".css")) return "text/css; charset=utf-8";
   if (f.endsWith(".svg")) return "image/svg+xml";
   if (f.endsWith(".json")) return "application/json; charset=utf-8";
