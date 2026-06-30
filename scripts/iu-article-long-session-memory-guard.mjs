@@ -13,6 +13,7 @@ import { fileURLToPath } from "url";
 
 import {
   createIgnorableResourceTracker,
+  installProofGuardNetworkStubs,
   isIgnorableGuardConsoleError,
 } from "./proofs/open_meteo_guard_stub.cjs";
 
@@ -297,6 +298,9 @@ async function main() {
   try {
     await page.route("**/sw.js", (route) => route.abort());
   } catch (_) {}
+  try {
+    await installProofGuardNetworkStubs(page);
+  } catch (_) {}
 
   const fails = [];
   let session = null;
@@ -332,6 +336,9 @@ async function main() {
 
   if (consoleErrors.length) {
     fails.push(`console errors: ${consoleErrors.length}`);
+    if (consoleErrors.length <= 3) {
+      for (const line of consoleErrors) fails.push(`console: ${line.slice(0, 240)}`);
+    }
   }
 
   const report = {
