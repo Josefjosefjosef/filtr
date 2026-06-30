@@ -11,6 +11,8 @@ const MOUNT_ID = "iuDesktopInfoPanelMount";
 const PANEL_ID = "iuDesktopInfoPanel";
 const DETAIL_ID = "iuDesktopInfoPanelDetail";
 
+let lastSourceBtn = null;
+
 function esc(s) {
   return String(s || "")
     .replace(/&/g, "&amp;")
@@ -101,9 +103,10 @@ function legalStatusLabel(status) {
   return map[status] || String(status || "neuvedeno");
 }
 
-function openDetail(item) {
+function openDetail(item, sourceBtn) {
   const dlg = document.getElementById(DETAIL_ID);
   if (!dlg || !item) return;
+  lastSourceBtn = sourceBtn && sourceBtn.focus ? sourceBtn : null;
   const title = dlg.querySelector(".iuDesktopInfoPanelDetail__title");
   const body = dlg.querySelector(".iuDesktopInfoPanelDetail__body");
   if (!title || !body) return;
@@ -143,6 +146,31 @@ function closeDetail() {
   if (!dlg) return;
   dlg.hidden = true;
   dlg.setAttribute("hidden", "");
+  if (lastSourceBtn && typeof lastSourceBtn.focus === "function") {
+    try {
+      lastSourceBtn.focus();
+    } catch (_) {}
+  }
+  lastSourceBtn = null;
+}
+
+function trapDetailFocus(ev) {
+  const dlg = document.getElementById(DETAIL_ID);
+  if (!dlg || dlg.hidden || ev.key !== "Tab") return;
+  const nodes = dlg.querySelectorAll(
+    'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  );
+  const focusables = Array.from(nodes).filter((el) => el.offsetParent !== null);
+  if (!focusables.length) return;
+  const first = focusables[0];
+  const last = focusables[focusables.length - 1];
+  if (ev.shiftKey && document.activeElement === first) {
+    ev.preventDefault();
+    last.focus();
+  } else if (!ev.shiftKey && document.activeElement === last) {
+    ev.preventDefault();
+    first.focus();
+  }
 }
 
 function bindPanelEvents(items) {
@@ -158,7 +186,7 @@ function bindPanelEvents(items) {
     if (!btn) return;
     ev.preventDefault();
     const id = btn.getAttribute("data-iu-info-panel-source");
-    if (id && map[id]) openDetail(map[id]);
+    if (id && map[id]) openDetail(map[id], btn);
   });
 
   const dlg = document.getElementById(DETAIL_ID);
@@ -167,6 +195,7 @@ function bindPanelEvents(items) {
       const t = ev.target;
       if (t && t.getAttribute && t.getAttribute("data-iu-info-panel-detail-close")) closeDetail();
     });
+    dlg.addEventListener("keydown", trapDetailFocus);
   }
 
   document.addEventListener("keydown", (ev) => {

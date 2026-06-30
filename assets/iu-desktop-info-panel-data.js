@@ -16,7 +16,7 @@ export const IU_INFO_PANEL_CATALOG = [
     unit: "Kč/l",
     maxAgeMs: 0,
     legalStatus: "placeholder_only",
-    verificationDate: "2026-06-29",
+    verificationDate: "2026-06-28",
     sourceName: "Zdroj se ověřuje",
     sourceUrl: "https://www.infouzel.cz/projects/",
     termsUrl: "https://www.infouzel.cz/projects/",
@@ -34,7 +34,7 @@ export const IU_INFO_PANEL_CATALOG = [
     unit: "Kč",
     maxAgeMs: 2 * DAY_MS,
     legalStatus: "verified_requires_attribution",
-    verificationDate: "2026-06-29",
+    verificationDate: "2026-06-28",
     sourceName: "Česká národní banka",
     sourceUrl:
       "https://www.cnb.cz/cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.txt",
@@ -52,7 +52,7 @@ export const IU_INFO_PANEL_CATALOG = [
     unit: "Kč",
     maxAgeMs: 2 * DAY_MS,
     legalStatus: "verified_requires_attribution",
-    verificationDate: "2026-06-29",
+    verificationDate: "2026-06-28",
     sourceName: "Česká národní banka",
     sourceUrl:
       "https://www.cnb.cz/cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.txt",
@@ -70,7 +70,7 @@ export const IU_INFO_PANEL_CATALOG = [
     unit: "",
     maxAgeMs: 0,
     legalStatus: "placeholder_only",
-    verificationDate: "2026-06-29",
+    verificationDate: "2026-06-28",
     sourceName: "Zdroj se ověřuje",
     sourceUrl: "https://www.infouzel.cz/projects/",
     termsUrl: "https://www.infouzel.cz/projects/",
@@ -88,7 +88,7 @@ export const IU_INFO_PANEL_CATALOG = [
     unit: "Kč/kWh",
     maxAgeMs: 0,
     legalStatus: "placeholder_only",
-    verificationDate: "2026-06-29",
+    verificationDate: "2026-06-28",
     sourceName: "Zdroj se ověřuje",
     sourceUrl: "https://www.infouzel.cz/projects/",
     termsUrl: "https://www.infouzel.cz/projects/",
@@ -106,7 +106,7 @@ export const IU_INFO_PANEL_CATALOG = [
     unit: "USD/oz",
     maxAgeMs: 0,
     legalStatus: "placeholder_only",
-    verificationDate: "2026-06-29",
+    verificationDate: "2026-06-28",
     sourceName: "Zdroj se ověřuje",
     sourceUrl: "https://www.infouzel.cz/projects/",
     termsUrl: "https://www.infouzel.cz/projects/",
@@ -124,7 +124,7 @@ export const IU_INFO_PANEL_CATALOG = [
     unit: "Kč",
     maxAgeMs: 2 * HOUR_MS,
     legalStatus: "verified_requires_attribution",
-    verificationDate: "2026-06-29",
+    verificationDate: "2026-06-28",
     sourceName: "CoinGecko",
     sourceUrl: "https://www.coingecko.com/en/api",
     termsUrl: "https://www.coingecko.com/en/api_terms",
@@ -140,7 +140,7 @@ export const IU_INFO_PANEL_CATALOG = [
     unit: "",
     maxAgeMs: 0,
     legalStatus: "placeholder_only",
-    verificationDate: "2026-06-29",
+    verificationDate: "2026-06-28",
     sourceName: "Zdroj se ověřuje",
     sourceUrl: "https://www.infouzel.cz/projects/",
     termsUrl: "https://www.infouzel.cz/projects/",
@@ -158,7 +158,7 @@ export const IU_INFO_PANEL_CATALOG = [
     unit: "",
     maxAgeMs: 0,
     legalStatus: "placeholder_only",
-    verificationDate: "2026-06-29",
+    verificationDate: "2026-06-28",
     sourceName: "Zdroj se ověřuje",
     sourceUrl: "https://www.infouzel.cz/projects/",
     termsUrl: "https://www.infouzel.cz/projects/",
@@ -203,6 +203,15 @@ function isSnapshotRowStale(catalogItem, row, snapshotMeta) {
   return Date.now() - genAt > maxAge;
 }
 
+function snapshotErrorAffectsItem(catalogItem, errorId) {
+  const id = String(errorId || "");
+  if (!id) return false;
+  if (id === catalogItem.id) return true;
+  if ((catalogItem.id === "eur_czk" || catalogItem.id === "usd_czk") && id === "cnb") return true;
+  if (catalogItem.id === "bitcoin" && id === "bitcoin") return true;
+  return false;
+}
+
 function mergeItem(catalogItem, snapRow, snapshotMeta) {
   const base = { ...catalogItem };
   const canLive = LIVE_OK.has(catalogItem.legalStatus);
@@ -211,7 +220,7 @@ function mergeItem(catalogItem, snapRow, snapshotMeta) {
     canLive &&
     snapshotMeta &&
     snapshotMeta.errors &&
-    snapshotMeta.errors.some((e) => e && (e.id === catalogItem.id || e.id === "cnb" || e.id === "bitcoin"));
+    snapshotMeta.errors.some((e) => e && snapshotErrorAffectsItem(catalogItem, e.id));
 
   if (!canLive) {
     base.state = "placeholder";
@@ -308,4 +317,9 @@ export async function loadInfoPanelItems() {
 
 export function getInfoPanelCatalogForDocs() {
   return IU_INFO_PANEL_CATALOG.slice();
+}
+
+/** Guard / test hook — merge catalog row with snapshot without fetch. */
+export function mergeInfoPanelItemForGuard(catalogItem, snapRow, snapshotMeta) {
+  return mergeItem(catalogItem, snapRow, snapshotMeta);
 }
