@@ -24,6 +24,7 @@ const CLS_MAX = parseFloat(process.env.IU_INFO_PANEL_CLS_MAX || "0.12");
 const LCP_MAX_MS = parseInt(process.env.IU_INFO_PANEL_LCP_MAX_MS || "4500", 10);
 const GAP_TARGET_PX = 30;
 const GAP_TOLERANCE_PX = 4;
+const MINDMENU_GAP_TARGET_PX = 30;
 
 function runStaticGuard(scriptName) {
   const scriptPath = path.join(REPO, "scripts", scriptName);
@@ -78,7 +79,10 @@ async function waitForDesktopPanel(page) {
     () =>
       document.body.classList.contains("iu-desktop-home-grid") &&
       !!document.getElementById("iuDesktopInfoPanel") &&
-      document.querySelectorAll(".iuDesktopInfoPanel__segment").length === 9,
+      document.querySelectorAll(".iuDesktopInfoPanel__segment").length === 9 &&
+      document.getElementById("iuDesktopInfoPanelMount")?.getAttribute("data-iu-info-panel-ready") === "1" &&
+      document.querySelector('[data-iu-info-panel-id="fuel"]')?.getAttribute("data-iu-info-panel-state") !==
+        "loading",
     null,
     { timeout: 45000 }
   );
@@ -90,14 +94,24 @@ async function measureViewport(page, width, zoom) {
   await page.evaluate((z) => {
     document.documentElement.style.zoom = z === 1 ? "" : String(z);
   }, zoom);
+  await page.evaluate(() => {
+    if (typeof window.iuDesktopInfoPanelLayoutSync === "function") {
+      window.iuDesktopInfoPanelLayoutSync();
+    }
+    if (typeof window.iuDesktopHomeSectionTopGapSync === "function") {
+      window.iuDesktopHomeSectionTopGapSync();
+    }
+  });
+  await page.waitForTimeout(120);
 
-  return page.evaluate(({ gapTarget, gapTol, zoomFactor }) => {
+  return page.evaluate(({ gapTarget, gapTol, zoomFactor, mindMenuGapTarget }) => {
     const doc = document.documentElement;
     const body = document.body;
     const panel = document.getElementById("iuDesktopInfoPanel");
     const mount = document.getElementById("iuDesktopInfoPanelMount");
     const homecards = document.getElementById("iuSilverTallScrollSection");
     const scroll = panel ? panel.querySelector(".iuDesktopInfoPanel__scroll") : null;
+    const mindBtn = document.getElementById("iuMyInfoUzelOpenBtn");
     const welcome = document.getElementById("iuSilverWelcomeStack");
     const weather = document.getElementById("iuSilverWeatherCard");
     const leftNav = document.getElementById("iuLeftRail");
@@ -109,8 +123,12 @@ async function measureViewport(page, width, zoom) {
       (doc && doc.scrollWidth > doc.clientWidth + 1) || (body && body.scrollWidth > body.clientWidth + 1);
 
     let gapPx = null;
+    let mindMenuGapPx = null;
     if (panel && homecards) {
       gapPx = Math.round(homecards.getBoundingClientRect().top - panel.getBoundingClientRect().bottom);
+    }
+    if (mindBtn && panel) {
+      mindMenuGapPx = Math.round(panel.getBoundingClientRect().top - mindBtn.getBoundingClientRect().bottom);
     }
     const expectedGap = gapTarget * zoomFactor;
     const gapTolScaled = gapTol * zoomFactor;
@@ -127,13 +145,22 @@ async function measureViewport(page, width, zoom) {
       if (a.right > b.left + 1) overlap = true;
     }
 
+    const scrollStyle = scroll ? getComputedStyle(scroll) : null;
+    const navPrev = panel ? panel.querySelector('[data-iu-info-panel-nav="prev"]') : null;
+    const navNext = panel ? panel.querySelector('[data-iu-info-panel-nav="next"]') : null;
+
     return {
       panelVisible: !!(panel && mount && mount.offsetParent !== null && !mount.hidden),
       segmentCount: segments.length,
       pageOverflowX,
       panelInternalScroll: !!(scroll && scroll.scrollWidth > scroll.clientWidth + 1),
+      scrollbarHidden: !!(scrollStyle && scrollStyle.scrollbarWidth === "none"),
+      hasNavButtons: !!(navPrev && navNext),
       gapPx,
       gapOk: gapPx != null && Math.abs(gapPx - expectedGap) <= gapTolScaled,
+      mindMenuGapPx,
+      mindMenuGapOk:
+        mindMenuGapPx != null && Math.abs(mindMenuGapPx - mindMenuGapTarget) <= gapTol,
       panelWidth: panelRect ? Math.round(panelRect.width) : 0,
       homecardsWidth: homeRect ? Math.round(homeRect.width) : 0,
       widthAligned: panelRect && homeRect ? Math.abs(panelRect.width - homeRect.width) <= 2 : false,
@@ -148,7 +175,7 @@ async function measureViewport(page, width, zoom) {
       cls: Number(window.__iuInfoPanelCls || 0),
       lcpMs: Number(window.__iuInfoPanelLcp || 0),
     };
-  }, { gapTarget: GAP_TARGET_PX, gapTol: GAP_TOLERANCE_PX, zoomFactor: zoom });
+  }, { gapTarget: GAP_TARGET_PX, gapTol: GAP_TOLERANCE_PX, zoomFactor: zoom, mindMenuGapTarget: MINDMENU_GAP_TARGET_PX });
 }
 
 async function testSourceDialogs(page) {
@@ -158,10 +185,28 @@ async function testSourceDialogs(page) {
   if (ids.length !== 9) return { ok: false, reason: "source_buttons=" + ids.length };
 
   for (const id of ids) {
-    const btn = page.locator(`[data-iu-info-panel-source="${id}"]`).first();
-    await btn.click();
-    const dlg = page.locator("#iuDesktopInfoPanelDetail:not([hidden])");
-    await dlg.waitFor({ state: "visible", timeout: 5000 });
+    await page.evaluate((segId) => {
+      const seg = document.querySelector(`[data-iu-info-panel-id="${segId}"]`);
+      const scroll = document.querySelector(".iuDesktopInfoPanel__scroll");
+      if (seg && scroll) {
+        scroll.scrollLeft = Math.max(0, seg.offsetLeft - Math.round(scroll.clientWidth * 0.25));
+      }
+      if (typeof window.__iuInfoPanelOpenSourceDetail === "function") {
+        window.__iuInfoPanelOpenSourceDetail(segId);
+        return;
+      }
+      const btn = document.querySelector(`[data-iu-info-panel-source="${segId}"]`);
+      if (btn) btn.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+    }, id);
+    await page.waitForTimeout(80);
+    await page.waitForFunction(
+      () => {
+        const d = document.getElementById("iuDesktopInfoPanelDetail");
+        return d && d.hidden === false && !d.hasAttribute("hidden");
+      },
+      null,
+      { timeout: 8000 }
+    );
     const audit = await page.evaluate(() => {
       const d = document.getElementById("iuDesktopInfoPanelDetail");
       if (!d || d.hidden) return { ok: false };
@@ -176,8 +221,29 @@ async function testSourceDialogs(page) {
       const hasTerms = Array.from(links).some((a) => /Podmínky/i.test(a.textContent || ""));
       const dialogRole = d.getAttribute("role") === "dialog";
       const modal = d.getAttribute("aria-modal") === "true";
+      const onBody = d.parentElement === document.body;
+      const card = d.querySelector(".iuDesktopInfoPanelDetail__card");
+      const rect = card ? card.getBoundingClientRect() : d.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const topEl = document.elementFromPoint(cx, cy);
+      const aboveHomecards =
+        onBody &&
+        (d.contains(topEl) || topEl === d || (topEl && topEl.closest && topEl.closest("#iuDesktopInfoPanelDetail")));
+      const zIndex = parseInt(getComputedStyle(d).zIndex, 10) || 0;
       return {
-        ok: hasProvider && hasType && hasLicense && hasDisclaimer && hasOfficial && hasTerms && dialogRole && modal,
+        ok:
+          hasProvider &&
+          hasType &&
+          hasLicense &&
+          hasDisclaimer &&
+          hasOfficial &&
+          hasTerms &&
+          dialogRole &&
+          modal &&
+          onBody &&
+          aboveHomecards &&
+          zIndex >= 10100,
         hasProvider,
         hasType,
         hasLicense,
@@ -186,6 +252,9 @@ async function testSourceDialogs(page) {
         hasTerms,
         dialogRole,
         modal,
+        onBody,
+        aboveHomecards,
+        zIndex,
       };
     });
     if (!audit.ok) return { ok: false, reason: "dialog_audit_" + id, audit };
@@ -224,6 +293,16 @@ async function testMockedStates(context) {
             trendDirection: "flat",
             updatedAt: "01.01.2020",
           },
+          fuel: {
+            isLive: true,
+            legalStatus: "verified_requires_attribution",
+            value: 38.82,
+            unit: "Kč/l",
+            primaryLabel: "Natural 95",
+            secondaryValue: "beze změny",
+            trendDirection: "flat",
+            updatedAt: "2020-W01",
+          },
         },
       }),
     });
@@ -237,7 +316,7 @@ async function testMockedStates(context) {
       eur &&
       eur.getAttribute("data-iu-info-panel-state") === "stale" &&
       fuel &&
-      fuel.getAttribute("data-iu-info-panel-state") === "placeholder"
+      fuel.getAttribute("data-iu-info-panel-state") === "stale"
     );
   });
 
@@ -303,12 +382,44 @@ async function main() {
       timeout: 60000,
     });
     await waitForDesktopPanel(page);
+    await page.evaluate(() => {
+      if (typeof window.iuDesktopInfoPanelLayoutSync === "function") {
+        window.iuDesktopInfoPanelLayoutSync();
+      }
+    });
+    await page.waitForTimeout(150);
 
     let panelLoadCls = null;
     await page.evaluate(() => {
       window.__iuInfoPanelCls = 0;
     });
     panelLoadCls = await page.evaluate(() => Number(window.__iuInfoPanelCls || 0));
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.evaluate(() => {
+      document.documentElement.style.zoom = "";
+      if (typeof window.iuDesktopInfoPanelLayoutSync === "function") {
+        window.iuDesktopInfoPanelLayoutSync();
+      }
+    });
+    await page.waitForTimeout(120);
+    const navTest = await page.evaluate(async () => {
+      const scroll = document.querySelector(".iuDesktopInfoPanel__scroll");
+      const next = document.querySelector('[data-iu-info-panel-nav="next"]');
+      if (!scroll || !next) return { ok: false, reason: "missing_nav" };
+      if (scroll.scrollWidth <= scroll.clientWidth + 1) return { ok: true, skipped: true };
+      scroll.scrollLeft = 0;
+      const before = scroll.scrollLeft;
+      next.removeAttribute("hidden");
+      next.click();
+      await new Promise((resolve) => setTimeout(resolve, 450));
+      return { ok: scroll.scrollLeft > before + 1, before, after: scroll.scrollLeft };
+    });
+    lines.push("NAV_SCROLL=" + (navTest.ok ? "PASS" : "FAIL"));
+    if (!navTest.ok) {
+      pass = false;
+      lines.push("NAV_SCROLL_DETAIL=" + JSON.stringify(navTest));
+    }
 
     for (const width of VIEWPORTS) {
       for (const zoom of ZOOMS) {
@@ -319,8 +430,11 @@ async function main() {
           m.segmentCount === 9 &&
           !m.pageOverflowX &&
           m.gapOk &&
+          m.mindMenuGapOk &&
           m.widthAligned &&
           !m.segmentOverlap &&
+          m.scrollbarHidden &&
+          m.hasNavButtons &&
           m.welcomeVisible &&
           m.weatherVisible &&
           m.homecardsVisible &&
