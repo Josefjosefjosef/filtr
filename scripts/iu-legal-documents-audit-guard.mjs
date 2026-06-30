@@ -4,6 +4,7 @@
 import { createEmptyParty } from "../assets/iu-legal-documents-schema.js";
 import { IU_LEGAL_DOCUMENTS } from "../assets/iu-legal-documents-registry.js";
 import {
+  buildLegalDocumentPreviewHtml,
   derivePartySignatureMetaFromPlainText,
   filterEmptySectionsForVisualOutput,
   parseLegalDocumentVisualStructure,
@@ -104,6 +105,18 @@ for (const doc of IU_LEGAL_DOCUMENTS) {
       failures += 1;
       failureLines.push(`${doc.id}: requiresSpecialWarning but no inline warning in buildText`);
     }
+  }
+
+  const previewHtml = buildLegalDocumentPreviewHtml(doc.title, filledText);
+  const barCount = (previewHtml.match(/iu-legal-doc-paper__sectionBar/g) || []).length;
+  const minBars = doc.partyMode === "one" ? 2 : 3;
+  if (barCount < minBars) {
+    failures += 1;
+    failureLines.push(`${doc.id}: preview section bars ${barCount} < ${minBars}`);
+  }
+  if (/class="iu-legal-doc-paper__fieldLabel">Prodávající<\/span>/i.test(previewHtml)) {
+    failures += 1;
+    failureLines.push(`${doc.id}: party role still rendered as plain field label (expected section bar)`);
   }
 }
 
