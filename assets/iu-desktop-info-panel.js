@@ -288,6 +288,8 @@ function syncMindMenuPanelGap() {
     const mount = document.getElementById(MOUNT_ID);
     if (!btn || !mount) return;
 
+    mount.style.removeProperty("transform");
+
     const gap = mount.getBoundingClientRect().top - btn.getBoundingClientRect().bottom;
     if (Math.abs(gap - IU_INFO_PANEL_MINDMENU_GAP_PX) <= 0.5) return;
 
@@ -387,8 +389,17 @@ async function renderPanelInner() {
   }
 
   try {
-    syncTopGap();
-    initGapSync();
+    const runGapSync = () => {
+      try {
+        syncTopGap();
+        initGapSync();
+      } catch (_) {}
+    };
+    if (typeof requestIdleCallback === "function") {
+      requestIdleCallback(runGapSync, { timeout: 2500 });
+    } else {
+      setTimeout(runGapSync, 400);
+    }
   } catch (_) {}
 }
 

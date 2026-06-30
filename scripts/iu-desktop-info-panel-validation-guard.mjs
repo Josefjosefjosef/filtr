@@ -102,6 +102,12 @@ async function measureViewport(page, width, zoom) {
       window.iuDesktopHomeSectionTopGapSync();
     }
   });
+  await page.evaluate(
+    () =>
+      new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+      })
+  );
   await page.waitForTimeout(120);
 
   return page.evaluate(({ gapTarget, gapTol, zoomFactor, mindMenuGapTarget }) => {
