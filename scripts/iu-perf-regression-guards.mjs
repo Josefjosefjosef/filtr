@@ -18,7 +18,7 @@ import {
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
-const { installLocalDataProtectionAccepted } = require("./proofs/open_meteo_guard_stub.cjs");
+const { installLocalDataProtectionAccepted } = require("./scripts/proofs/open_meteo_guard_stub.cjs");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8892", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
