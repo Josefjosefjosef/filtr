@@ -44,7 +44,24 @@ export async function waitDesktopNavTarget(page, accent, timeoutMs = 60000) {
   return sel;
 }
 
+/** CI guards: pre-accept notice + remove blocking overlays if a save opened them mid-run. */
+export async function ensureGuardLocalDataProtection(page) {
+  await page.evaluate(() => {
+    try {
+      localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+      localStorage.setItem("iu:local-data-protection:notice-accepted-at:v1", String(Date.now()));
+      localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
+      localStorage.setItem("iu:consent:layer:dismissed:v1", "1");
+      localStorage.setItem("iu:consent:analytics:v1", "denied");
+    } catch (_) {}
+    document.querySelectorAll(".iu-ldp-backdrop").forEach((el) => el.remove());
+    const consent = document.getElementById("iuConsentLayer");
+    if (consent) consent.hidden = true;
+  });
+}
+
 export async function clickDesktopNav(page, accent) {
+  await ensureGuardLocalDataProtection(page);
   const sel = await waitDesktopNavTarget(page, accent);
   await page.click(sel);
 }

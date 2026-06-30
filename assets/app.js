@@ -42,6 +42,10 @@ import {
   iuClientArticleStoreIsVirtualPrehledLoader,
   iuClientArticleStoreGetPrehledDneView,
 } from "./iu-client-article-store.js";
+import {
+  ensureLocalDataProtectionBeforeSave,
+  isLocalDataProtectionNoticeAccepted,
+} from "./iu-local-data-protection.js";
 /* P0.5: financial / legal / invoice tool overlays load via dynamic import (see iuBootDeferredToolOverlays) — reduces initial parse + main-thread work. */
 /* SEV1: iuIsProjectsRoute — global + window for safe scope (module/global) */
 var iuIsProjectsRoute = function iuIsProjectsRoute(){
@@ -7166,6 +7170,16 @@ try {
   }
 
   function iuArticleActionsWriteJson(key, list) {
+    if (!isLocalDataProtectionNoticeAccepted()) {
+      void ensureLocalDataProtectionBeforeSave().then(function (ok) {
+        if (!ok) return;
+        try {
+          localStorage.setItem(key, JSON.stringify(Array.isArray(list) ? list : []));
+          iuArticleActionsOnStoreChanged(key);
+        } catch (_) {}
+      });
+      return false;
+    }
     try {
       localStorage.setItem(key, JSON.stringify(Array.isArray(list) ? list : []));
       iuArticleActionsOnStoreChanged(key);
@@ -24199,6 +24213,13 @@ function buildVideoAsArticleCard(it) {
         colorful: it?.colorful !== false,
         slot: typeof it?.slot === "number" ? it.slot : 0
       }));
+      if (!isLocalDataProtectionNoticeAccepted()) {
+        void ensureLocalDataProtectionBeforeSave().then(function (ok) {
+          if (!ok) return;
+          try { localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: toSave })); } catch {}
+        });
+        return;
+      }
       localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: toSave }));
     }catch{}
   }
@@ -24962,6 +24983,15 @@ function buildVideoAsArticleCard(it) {
 
   function saveQuickToolsConfig(cfg) {
     try {
+      if (!isLocalDataProtectionNoticeAccepted()) {
+        void ensureLocalDataProtectionBeforeSave().then(function (ok) {
+          if (!ok) return;
+          try {
+            if (typeof localStorage !== "undefined") localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, JSON.stringify(cfg));
+          } catch (e) {}
+        });
+        return;
+      }
       if (typeof localStorage !== "undefined") localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, JSON.stringify(cfg));
     } catch (e) {}
   }
@@ -32218,6 +32248,13 @@ function buildVideoAsArticleCard(it) {
 
   function iuDsPersist() {
     const payload = { v: 1, profiles: iuDsProfiles };
+    if (!isLocalDataProtectionNoticeAccepted()) {
+      void ensureLocalDataProtectionBeforeSave().then(function (ok) {
+        if (!ok) return;
+        try { localStorage.setItem(IU_DS_STORAGE_KEY, JSON.stringify(payload)); } catch (_) {}
+      });
+      return;
+    }
     try {
       localStorage.setItem(IU_DS_STORAGE_KEY, JSON.stringify(payload));
     } catch (_) {}
@@ -34047,11 +34084,15 @@ function buildVideoAsArticleCard(it) {
         try { ta.value = String(localStorage.getItem(key) || ""); } catch { ta.value = ""; }
         iuAutosizeTextarea(ta);
         ta.addEventListener("input", () => {
-          try{
-            localStorage.setItem(key, String(ta.value || ""));
-            iuAutosizeTextarea(ta);
-            try { ta.scrollIntoView({ block: "nearest", inline: "nearest" }); } catch {}
-          }catch{}
+          void (async function () {
+            const ok = await ensureLocalDataProtectionBeforeSave();
+            if (!ok) return;
+            try{
+              localStorage.setItem(key, String(ta.value || ""));
+              iuAutosizeTextarea(ta);
+              try { ta.scrollIntoView({ block: "nearest", inline: "nearest" }); } catch {}
+            }catch{}
+          })();
         });
       }
 
@@ -38036,6 +38077,14 @@ function buildVideoAsArticleCard(it) {
   function saveNotes(data){
     const norm = normalizeStore(data) || { schemaVersion: SCHEMA_VERSION, notes: [] };
     state.data = norm;
+    if (!isLocalDataProtectionNoticeAccepted()) {
+      void ensureLocalDataProtectionBeforeSave().then(function (ok) {
+        if (!ok) return;
+        try { localStorage.setItem(STORE_KEY, JSON.stringify(norm)); } catch {}
+        state.lastSavedAt = Date.now();
+      });
+      return norm;
+    }
     try{ localStorage.setItem(STORE_KEY, JSON.stringify(norm)); }catch{}
     state.lastSavedAt = Date.now();
     return norm;
@@ -39053,10 +39102,17 @@ function buildVideoAsArticleCard(it) {
   }
 
   function saveTasks(data){
+    const copy = { schemaVersion: SCHEMA_VERSION, tasks: (data.tasks || []).map(sanitizeTask).filter(Boolean).slice(0, MAX_TASKS) };
+    state.data = copy;
+    if (!isLocalDataProtectionNoticeAccepted()) {
+      void ensureLocalDataProtectionBeforeSave().then(function (ok) {
+        if (!ok) return;
+        try { localStorage.setItem(TASKS_STORE_KEY, JSON.stringify(copy)); } catch {}
+      });
+      return;
+    }
     try{
-      const copy = { schemaVersion: SCHEMA_VERSION, tasks: (data.tasks || []).map(sanitizeTask).filter(Boolean).slice(0, MAX_TASKS) };
       localStorage.setItem(TASKS_STORE_KEY, JSON.stringify(copy));
-      state.data = copy;
     }catch{}
   }
 
@@ -40637,6 +40693,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   async function writeStore(){
+    const ok = await ensureLocalDataProtectionBeforeSave();
+    if (!ok) return;
     const payload = JSON.stringify({ schemaVersion: SCHEMA_VERSION, events: state.data.events });
     try{ localStorage.setItem(STORE_KEY, payload); }catch{}
     if (state.dbReady && state.db){

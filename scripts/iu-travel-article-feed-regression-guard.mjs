@@ -10,6 +10,7 @@ import fs from "fs";
 import path from "path";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
+import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -224,7 +225,10 @@ function evaluateProbe(probe, loadMore, viewportId, fails) {
 }
 
 async function runViewport(browser, vp) {
-  const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, locale: "cs-CZ" });
+  const context = await bootstrapGuardContext(browser, {
+    viewport: { width: vp.width, height: vp.height },
+    locale: "cs-CZ",
+  });
   const page = await context.newPage();
   const url = withGuardParams(`${BASE}?section=travel`);
   await page.goto(url, { waitUntil: "networkidle", timeout: 120000 });

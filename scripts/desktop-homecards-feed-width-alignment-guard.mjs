@@ -9,6 +9,7 @@ import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
 import { clickDesktopNav } from "./guards/desktop-nav-targets.mjs";
+import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -55,7 +56,7 @@ async function main() {
   try {
     await waitForPort("127.0.0.1", PORT, 30000);
     const browser = await chromium.launch({ headless: true });
-    const context = await browser.newContext({
+    const context = await bootstrapGuardContext(browser, {
       viewport: { width: 1280, height: 900 },
     });
     const page = await context.newPage();

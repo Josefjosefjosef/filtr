@@ -69,6 +69,9 @@ async function prepareNotesSeed(page, mainCount, trashCount) {
   const payload = seedNotesPayload(mainCount, trashCount);
   await page.addInitScript(({ key, pl }) => {
     try {
+      localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+      localStorage.setItem("iu:local-data-protection:notice-accepted-at:v1", String(Date.now()));
+      localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
       localStorage.setItem(key, JSON.stringify(pl));
     } catch (_) {}
   }, { key: STORE_KEY, pl: payload });
@@ -368,6 +371,13 @@ async function runEmptyTrashScope(page) {
 async function runGuard() {
   const browser = await chromium.launch({ headless: true });
   const ctx = await browser.newContext();
+  await ctx.addInitScript(() => {
+    try {
+      localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+      localStorage.setItem("iu:local-data-protection:notice-accepted-at:v1", String(Date.now()));
+      localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
+    } catch (_) {}
+  });
   const errState = { appErrors: 0 };
   const results = [];
 

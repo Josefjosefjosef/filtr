@@ -2,6 +2,23 @@
  * infoUzel.cz — lokální souhlas, právní potvrzení a potvrzovací dialogy (browser-only).
  */
 
+import {
+  ensureLocalDataProtectionBeforeSave,
+  ensureLocalStorageConsent,
+  isLocalDataProtectionNoticeAccepted,
+  isLocalStorageConsentGranted,
+  canUseLocalStorage,
+} from "./iu-local-data-protection.js";
+
+export {
+  ensureLocalDataProtectionBeforeSave,
+  ensureLocalStorageConsent,
+  isLocalDataProtectionNoticeAccepted,
+  isLocalStorageConsentGranted,
+  canUseLocalStorage,
+  hasLocalStorageConsentDecision,
+} from "./iu-local-data-protection.js";
+
 const LS_CONSENT_KEY = "iu:tool-local-storage-consent:v1";
 const LEGAL_CONFIRM_CONTRACT_KEY = "iu:legal-confirm:contracts:v1";
 const LEGAL_CONFIRM_INVOICE_KEY = "iu:legal-confirm:invoice:v1";
@@ -27,13 +44,6 @@ export const LEGAL_DIALOG_BODY = {
     "Za správnost dokladu odpovídám výhradně já.\n\n" +
     "Provozovatel webu nenese odpovědnost za účetní, daňové, právní ani finanční důsledky použití faktury.",
 };
-
-const LOCAL_STORAGE_CONSENT_BODY =
-  "Tento nástroj může uchovávat některé údaje pouze lokálně ve Vašem prohlížeči.\n\n" +
-  "Data nejsou odesílána na server.\n\n" +
-  "Nejedná se o zálohovací systém.\n\n" +
-  "Při vymazání historie prohlížeče, cookies, lokálního úložiště, při použití jiného zařízení, jiného prohlížeče nebo při technické chybě může dojít k nevratné ztrátě údajů.\n\n" +
-  "Důležité dokumenty a faktury doporučujeme vždy ukládat také mimo tento prohlížeč.";
 
 let stylesInjected = false;
 
@@ -100,21 +110,8 @@ export function saveLegalConfirm(scope) {
   writePersistFlag(key, "accepted");
 }
 
-export function isLocalStorageConsentGranted() {
-  return readPersistFlag(LS_CONSENT_KEY) === "granted";
-}
-
 export function isLocalStorageConsentDenied() {
-  return readPersistFlag(LS_CONSENT_KEY) === "denied";
-}
-
-export function hasLocalStorageConsentDecision() {
-  const v = readPersistFlag(LS_CONSENT_KEY);
-  return v === "granted" || v === "denied";
-}
-
-export function canUseLocalStorage() {
-  return isLocalStorageConsentGranted();
+  return readPersistFlag(LS_CONSENT_KEY) === "denied" && !isLocalDataProtectionNoticeAccepted();
 }
 
 function saveLocalStorageConsentChoice(granted) {
@@ -349,21 +346,6 @@ export function showLegalConfirmDialog(scope) {
     try {
       confirmBtn.focus();
     } catch (_) {}
-  });
-}
-
-export function ensureLocalStorageConsent() {
-  if (hasLocalStorageConsentDecision()) {
-    return Promise.resolve(isLocalStorageConsentGranted());
-  }
-  return showDialog({
-    body: LOCAL_STORAGE_CONSENT_BODY,
-    cancelLabel: "Nepovolovat ukládání",
-    confirmLabel: "Souhlasím a povoluji lokální uchování údajů",
-    confirmStyle: "green",
-  }).then((ok) => {
-    saveLocalStorageConsentChoice(!!ok);
-    return !!ok;
   });
 }
 

@@ -1054,7 +1054,7 @@ export function initIuInvoiceOverlay(deps) {
     if (saveTimer) clearTimeout(saveTimer);
     saveTimer = window.setTimeout(() => {
       saveTimer = 0;
-      persistFormState(state);
+      void persistFormState(state);
     }, 400);
   }
 
@@ -1953,7 +1953,7 @@ export function initIuInvoiceOverlay(deps) {
         fillSupplierSelect(root, loadSuppliers());
         fillRecipientSelect(root, loadRecipients());
         writeStateToDom(root, state);
-        persistFormState(state);
+        void persistFormState(state);
         setStatus(root, "Formulář vymazán.");
       });
     });
@@ -2188,7 +2188,7 @@ export function initIuInvoiceOverlay(deps) {
         if (toast) toast.remove();
       } catch (_) {}
       readStateFromDom(rootEl, state);
-      persistFormState(state);
+      void persistFormState(state);
     }
     setVis(false);
     setLock(false);

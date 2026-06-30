@@ -18,6 +18,7 @@ import {
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
+const { installLocalDataProtectionAccepted } = require("./scripts/proofs/open_meteo_guard_stub.cjs");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8892", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
@@ -358,10 +359,12 @@ async function main() {
   await waitForPort("127.0.0.1", PORT, 30000);
 
   const browser = await chromium.launch({ headless: true });
+  const guardCtx = await browser.newContext();
+  await installLocalDataProtectionAccepted(guardCtx);
   const fails = [];
 
   try {
-    const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+    const page = await guardCtx.newPage({ viewport: { width: 1440, height: 900 } });
     let flick;
     try {
       flick = await runFlickerPhaseGuard(page);
@@ -390,6 +393,7 @@ async function main() {
 
     if (!SKIP_LATENCY) {
       const ctx = await browser.newContext();
+      await installLocalDataProtectionAccepted(ctx);
       for (const btn of BUTTONS) {
         const sampleCount = btn.nonFeed ? 1 : FEED_VISIBLE_SAMPLES;
         const visSamples = [];
@@ -434,7 +438,7 @@ async function main() {
     }
 
     if (!SKIP_CALENDAR) {
-      const pCal = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+      const pCal = await guardCtx.newPage({ viewport: { width: 1280, height: 900 } });
       let cal;
       try {
         cal = await runCalendarSilverSurface(pCal);
@@ -459,7 +463,7 @@ async function main() {
     }
 
     if (!SKIP_UI) {
-      const pUi = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
+      const pUi = await guardCtx.newPage({ viewport: { width: 1920, height: 1080 } });
       let ui;
       try {
         ui = await runDesktopUiSanity(pUi);

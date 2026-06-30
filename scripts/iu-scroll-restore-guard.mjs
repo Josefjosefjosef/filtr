@@ -197,6 +197,8 @@ async function dismissGuardOverlays(page) {
         box.hidden = true;
         box.setAttribute("data-iu-home-install-box-visible", "0");
       }
+      const ldp = document.querySelector(".iu-ldp-backdrop");
+      if (ldp) ldp.remove();
     });
   } catch (_) {}
 }
