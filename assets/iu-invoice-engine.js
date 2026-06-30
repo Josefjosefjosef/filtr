@@ -2,6 +2,10 @@
  * infoUzel.cz — fakturační modul: čistá logika (stav, výpočty, validace, text).
  */
 import { IU_BRAND_BLUE } from "./iu-brand-colors.js";
+import {
+  ensureLocalDataProtectionBeforeSave,
+  isLocalDataProtectionNoticeAccepted,
+} from "./iu-local-data-protection.js";
 
 export const IU_INVOICE_FORM_KEY = "iu_invoice_form_state_v1";
 export const IU_INVOICE_RECIPIENTS_KEY = "iu_invoice_recipients_v1";
@@ -9,12 +13,7 @@ export const IU_INVOICE_SUPPLIERS_KEY = "iu_invoice_suppliers_v1";
 export const IU_INVOICE_COUNTER_KEY = "iu_invoice_counter_year_v1";
 
 function iuLocalStorageAllowed() {
-  try {
-    if (typeof localStorage === "undefined") return false;
-    return localStorage.getItem("iu:tool-local-storage-consent:v1") === "granted";
-  } catch (_) {
-    return false;
-  }
+  return isLocalDataProtectionNoticeAccepted();
 }
 
 export function escHtml(s) {
@@ -654,9 +653,10 @@ export function loadFormState() {
   }
 }
 
-export function persistFormState(state) {
+export async function persistFormState(state) {
+  const ok = await ensureLocalDataProtectionBeforeSave();
+  if (!ok) return;
   try {
-    if (!iuLocalStorageAllowed()) return;
     if (typeof localStorage !== "undefined") localStorage.setItem(IU_INVOICE_FORM_KEY, JSON.stringify(state));
   } catch (_) {}
 }

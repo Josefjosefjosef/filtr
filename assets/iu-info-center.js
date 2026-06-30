@@ -13,12 +13,13 @@
     cookies: "Cookies a technické ukládání",
     "privacy-settings": "Nastavení soukromí",
     privacy: "Ochrana soukromí a data",
-    "data-storage": "Jak funguje ukládání dat",
+    "data-storage": "Ukládání a ochrana vašich dat",
+    "device-storage": "Ukládání dat v zařízení",
     "data-sources": "Zdroje dat",
     contact: "Provozovatel a kontakt"
   };
 
-  var DOC_VERSION = "1.3";
+  var DOC_VERSION = "1.4";
 
   function qs(sel, root) {
     return (root || document).querySelector(sel);
@@ -99,6 +100,42 @@
     syncRadiosFromStorage();
   }
 
+  function initDeviceStoragePanel() {
+    var panel = document.getElementById("iuInfoCenterDetailDeviceStorage");
+    if (!panel) return;
+
+    var showBtn = document.getElementById("iuDeviceStorageShowInfoBtn");
+
+    function refreshPanel() {
+      var ldp = window.iuLocalDataProtection;
+      if (ldp && typeof ldp.refreshDeviceStorageStatusPanel === "function") {
+        void ldp.refreshDeviceStorageStatusPanel(panel);
+      }
+    }
+
+    if (showBtn) {
+      showBtn.addEventListener("click", function (e) {
+        try {
+          e.preventDefault();
+        } catch (_) {}
+        var ldp = window.iuLocalDataProtection;
+        if (ldp && typeof ldp.showLocalDataProtectionInfoReadOnly === "function") {
+          void ldp.showLocalDataProtectionInfoReadOnly();
+        }
+      });
+    }
+
+    try {
+      var mo = new MutationObserver(function () {
+        if (!panel.hidden) refreshPanel();
+      });
+      mo.observe(panel, { attributes: true, attributeFilter: ["hidden"] });
+    } catch (_) {}
+
+    document.addEventListener("iu:local-data-protection-accepted", refreshPanel);
+    refreshPanel();
+  }
+
   function initNavigation() {
     var overlay = document.getElementById("iuTopbarInfoOverlay");
     if (!overlay || overlay.getAttribute("data-iu-info-center-v2") !== "1") return;
@@ -141,6 +178,15 @@
       if (backBtn) backBtn.hidden = currentSection === "menu";
       setTitle(currentSection);
       if (currentSection === "menu") scrollPanelToTop(menu);
+      if (currentSection === "device-storage") {
+        try {
+          var ldp = window.iuLocalDataProtection;
+          if (ldp && typeof ldp.refreshDeviceStorageStatusPanel === "function") {
+            var dsp = document.getElementById("iuInfoCenterDetailDeviceStorage");
+            if (dsp) void ldp.refreshDeviceStorageStatusPanel(dsp);
+          }
+        } catch (_) {}
+      }
     }
 
     function resetToMenu() {
@@ -252,6 +298,7 @@
     stampVersionDates();
     resetToMenu();
     initPrivacySettings();
+    initDeviceStoragePanel();
   }
 
   function boot() {

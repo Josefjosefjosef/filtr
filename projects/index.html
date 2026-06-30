@@ -5756,7 +5756,8 @@ font-src 'self' data:;
     })();
     </script>
     <script defer src="/assets/iu-consent.js?v=consent-v1-20260609"></script>
-    <script defer src="/assets/iu-info-center.js?v=info-center-doc-v1-3-affiliate-v53"></script>
+    <script type="module" src="/assets/iu-local-data-protection.js?v=ldp-v1-20260630"></script>
+    <script defer src="/assets/iu-info-center.js?v=info-center-ldp-v1-4-20260630"></script>
     <script defer src="/assets/iu-home-premium-install-box.js?v=1"></script>
     <script defer src="/assets/iu-consent-layer.js?v=consent-layer-v1-20260609"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=parcel-navigate-address-v62-20260629"></script>
@@ -6293,8 +6294,8 @@ font-src 'self' data:;
                 <span class="iuInfoCenter__tileLabel">Ochrana soukromí a data</span>
               </button>
               <button type="button" class="iuInfoCenter__tile" data-iu-info-section="data-storage">
-                <span class="iuInfoCenter__tileIcon" aria-hidden="true">💾</span>
-                <span class="iuInfoCenter__tileLabel">Jak funguje ukládání dat</span>
+                <span class="iuInfoCenter__tileIcon" aria-hidden="true">🛡️</span>
+                <span class="iuInfoCenter__tileLabel">Ukládání a ochrana vašich dat</span>
               </button>
               <button type="button" class="iuInfoCenter__tile" data-iu-info-section="data-sources">
                 <span class="iuInfoCenter__tileIcon" aria-hidden="true">📡</span>
@@ -6544,6 +6545,11 @@ font-src 'self' data:;
                 <p class="iuPrivacySettings__meta"><strong>Výchozí stav:</strong> vypnuto</p>
                 <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="cookies">Co přesně měříme v Cookies →</button>
               </section>
+              <section class="iuPrivacySettings__card" aria-labelledby="iuPrivacyDeviceStorageHeading">
+                <h3 class="iuPrivacySettings__cardTitle" id="iuPrivacyDeviceStorageHeading">3. Ukládání dat v zařízení</h3>
+                <p class="iuInfoCenter__p">Osobní data InfoUzel ukládá pouze lokálně. Přehled stavu a vysvětlení najdete v sekci ukládání dat.</p>
+                <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="device-storage">Otevřít Ukládání dat v zařízení →</button>
+              </section>
               <div class="iuPrivacySettings__saveRow">
                 <button type="button" class="iuPrivacySettings__saveBtn" id="iuPrivacySettingsSave">Uložit</button>
               </div>
@@ -6684,31 +6690,59 @@ font-src 'self' data:;
 
           <article id="iuInfoCenterDetailDataStorage" class="iuInfoCenter__detail" data-iu-info-section="data-storage" hidden>
             <div class="iuInfoCenter__detailInner">
-              <p class="iuInfoCenter__lead">InfoUzel je <strong>hybridní aplikace</strong>: veřejný obsah (články, počasí, videa) se načítá ze sítě, ale osobní nástroje ukládají data <strong>primárně ve vašem zařízení</strong>.</p>
-              <h3 class="iuInfoCenter__h3">Co se ukládá lokálně</h3>
+              <p class="iuInfoCenter__lead">InfoUzel je <strong>local-first</strong> aplikace: vaše osobní údaje (poznámky, úkoly, kalendář, faktury, smlouvy, nastavení MindMenu a další) ukládáme <strong>pouze do vašeho telefonu, tabletu nebo počítače</strong>. InfoUzel je automaticky neposílá na server ani do cloudu a k nim standardně nemá přístup.</p>
+              <h3 class="iuInfoCenter__h3">Kde jsou data</h3>
               <ul class="iuInfoCenter__ul">
                 <li><strong>Poznámky</strong> — localStorage (<code>iu.notes.store.v1</code>)</li>
                 <li><strong>Úkoly</strong> — localStorage (<code>iu.tasks.mvp.v1</code>)</li>
-                <li><strong>Kalendář</strong> — localStorage a záloha IndexedDB (<code>iu.calendar.idb</code>)</li>
-                <li><strong>Faktury</strong> — formulář a seznamy v localStorage (PDF vzniká v prohlížeči)</li>
-                <li><strong>Právní dokumenty</strong> — text generovaný v prohlížeči; standardně neukládáme na server InfoUzel.cz</li>
+                <li><strong>Kalendář</strong> — localStorage + záloha IndexedDB (<code>iu.calendar.idb</code>)</li>
+                <li><strong>Faktury, smlouvy, plné moci</strong> — formuláře a rozpracované stavy v prohlížeči; PDF exportujete vy</li>
+                <li><strong>MindMenu, e-mailové odkazy, vlastní tlačítka</strong> — localStorage ve vašem zařízení</li>
               </ul>
-              <h3 class="iuInfoCenter__h3">Co provozovatel standardně nevidí</h3>
-              <p class="iuInfoCenter__p">Forenzní audit kódu potvrdil: obsah poznámek, úkolů, kalendáře, faktur a generátoru právních dokumentů <strong>standardně neodesíláme na servery InfoUzel.cz</strong> a provozovatel k němu <strong>standardně nemá přístup</strong>. Neprovozujeme uživatelské účty ani centrální databázi těchto obsahů.</p>
+              <h3 class="iuInfoCenter__h3">Co je Persistent Storage (bezpečnější ukládání)</h3>
+              <p class="iuInfoCenter__p">Některé prohlížeče umožňují požádat o <strong>trvalejší lokální úložiště</strong>. To může snížit riziko automatického smazání dat prohlížečem při nedostatku místa. <strong>Není to záloha</strong> — nechrání před ručním smazáním dat webu, vymazáním prohlížeče ani odinstalováním aplikace.</p>
+              <h3 class="iuInfoCenter__h3">Kdy mohou být data ztracena</h3>
+              <ul class="iuInfoCenter__ul">
+                <li>vymažete data webu nebo cache prohlížeče,</li>
+                <li>použijete jiné zařízení nebo prohlížeč,</li>
+                <li>odinstalujete PWA nebo aplikaci,</li>
+                <li>dojde k technické chybě zařízení.</li>
+              </ul>
+              <p class="iuInfoCenter__p">Důležité dokumenty a faktury proto pravidelně <strong>exportujte nebo stáhněte</strong> mimo prohlížeč.</p>
+              <h3 class="iuInfoCenter__h3">PWA (ikona na ploše)</h3>
+              <p class="iuInfoCenter__p">Instalace InfoUzel jako aplikace usnadní přístup, ale <strong>sama o sobě neznamená zálohu dat</strong>. Data zůstávají v tomto zařízení a prohlížeči.</p>
+              <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="pwa">Jak vytvořit ikonu na plochu →</button></p>
+              <h3 class="iuInfoCenter__h3">Jednorázové seznámení</h3>
+              <p class="iuInfoCenter__p">Při prvním ukládání důležitých dat vás InfoUzel jednou informuje o tomto způsobu ukládání. Po potvrzení se stejný dialog nezobrazuje znovu v tomto prohlížeči na tomto zařízení.</p>
+              <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="device-storage">Stav ukládání v zařízení →</button></p>
               <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
-                <strong>Co může data opustit zařízení (vaší volbou nebo jinou částí webu):</strong>
+                <strong>Co může data opustit zařízení (vaší volbou):</strong>
                 <ul class="iuInfoCenter__ul">
-                  <li><strong>Export nebo sdílení PDF faktury</strong> — stáhnutí nebo sdílení souboru</li>
-                  <li><strong>Kopírování textu</strong> z generátoru právních dokumentů do schránky</li>
-                  <li><strong>Externí odkazy</strong> — mapy, dopravci, YouTube embed (po kliknutí); náhledy videí z <code>i.ytimg.com</code> (při zobrazení karty v Média)</li>
-                  <li><strong>Počasí</strong> — souřadnice nebo město odeslané službě Open-Meteo, pokud funkci použijete</li>
-                  <li><strong>Záloha telefonu / prohlížeče</strong> — mimo kontrolu InfoUzel.cz</li>
+                  <li>export nebo sdílení PDF faktury,</li>
+                  <li>kopírování textu smlouvy do schránky,</li>
+                  <li>externí odkazy (mapy, YouTube, počasí Open-Meteo apod.).</li>
                 </ul>
-                <p class="iuInfoCenter__p">Proto nepoužíváme formulaci „data nikdy neopouštějí zařízení“. Používáme přesnější: data nástrojů jsou <strong>primárně lokální</strong> a <strong>standardně neputují na servery InfoUzel.cz</strong>.</p>
               </div>
-              <h3 class="iuInfoCenter__h3">Silver a local-first</h3>
-              <p class="iuInfoCenter__p">Silver zapisuje do stejných lokálních modulů (poznámky, úkoly, kalendář). Vyhledávání v Silveru probíhá nad daty v prohlížeči, ne na serveru.</p>
               <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy">Ochrana soukromí a data →</button></p>
+              <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
+            </div>
+          </article>
+
+          <article id="iuInfoCenterDetailDeviceStorage" class="iuInfoCenter__detail" data-iu-info-section="device-storage" hidden>
+            <div class="iuInfoCenter__detailInner">
+              <p class="iuInfoCenter__lead">Přehled lokálního ukládání v tomto prohlížeči na tomto zařízení. Hodnoty se liší podle telefonu, tabletu, počítače a prohlížeče.</p>
+              <section class="iuPrivacySettings__card" aria-labelledby="iuDeviceStorageStatusHeading">
+                <h3 class="iuPrivacySettings__cardTitle" id="iuDeviceStorageStatusHeading">Stav bezpečnějšího ukládání</h3>
+                <p class="iuInfoCenter__p"><strong>Persistent Storage:</strong> <span data-iu-ldp-persist-status>—</span></p>
+                <p class="iuInfoCenter__p"><strong>PWA (ikona na ploše):</strong> <span data-iu-ldp-pwa-status>—</span></p>
+                <p class="iuInfoCenter__p"><strong>Přibližně využité lokální úložiště:</strong> <span data-iu-ldp-usage>—</span></p>
+                <p class="iuInfoCenter__p"><strong>Datum prvního potvrzení informace o ukládání:</strong> <span data-iu-ldp-accepted-at>—</span></p>
+                <p class="iuPrivacySettings__meta">Potvrzení platí pouze pro toto zařízení a tento prohlížeč. Na jiném zařízení nebo v jiném prohlížeči se informace zobrazí znovu.</p>
+              </section>
+              <div class="iuPrivacySettings__saveRow">
+                <button type="button" class="iuPrivacySettings__saveBtn" id="iuDeviceStorageShowInfoBtn">Zobrazit informace o ukládání dat</button>
+              </div>
+              <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-storage">🛡️ Ukládání a ochrana vašich dat →</button></p>
               <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
             </div>
           </article>
