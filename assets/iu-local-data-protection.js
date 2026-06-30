@@ -112,6 +112,9 @@ function injectDialogStyles() {
 
 function showFirstSaveDialog() {
   injectDialogStyles();
+  try {
+    document.querySelectorAll(".iu-ldp-backdrop").forEach((el) => el.remove());
+  } catch (_) {}
   return new Promise((resolve) => {
     const backdrop = document.createElement("div");
     backdrop.className = "iu-ldp-backdrop";
@@ -378,23 +381,22 @@ export async function ensureLocalDataProtectionBeforeSave() {
   }
   if (dialogPromise) return dialogPromise;
 
-  dialogPromise = showFirstSaveDialog()
-    .then(async (result) => {
-      if (!result || result.action === "cancel") return false;
-      markNoticeAccepted();
-      if (result.action === "persist-and-save") {
-        await requestPersistentStorage();
-      }
-      void maybeRecommendPwa();
-      void maybeWarnStorageCapacity();
-      try {
-        document.dispatchEvent(new CustomEvent("iu:local-data-protection-accepted"));
-      } catch (_) {}
-      return true;
-    })
-    .finally(() => {
-      dialogPromise = null;
-    });
+  dialogPromise = (async () => {
+    const result = await showFirstSaveDialog();
+    if (!result || result.action === "cancel") return false;
+    markNoticeAccepted();
+    if (result.action === "persist-and-save") {
+      await requestPersistentStorage();
+    }
+    void maybeRecommendPwa();
+    void maybeWarnStorageCapacity();
+    try {
+      document.dispatchEvent(new CustomEvent("iu:local-data-protection-accepted"));
+    } catch (_) {}
+    return true;
+  })().finally(() => {
+    dialogPromise = null;
+  });
 
   return dialogPromise;
 }

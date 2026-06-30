@@ -53,6 +53,12 @@ async function main() {
   const fails = [];
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true });
+  await context.addInitScript(() => {
+    try {
+      localStorage.setItem("iu:consent:layer:dismissed:v1", "1");
+      localStorage.setItem("iu:consent:analytics:v1", "denied");
+    } catch (_) {}
+  });
   const page = await context.newPage();
 
   try {
@@ -89,7 +95,7 @@ async function main() {
 
     if (!first.ok) fails.push(first.reason || "first dialog flow failed");
     else {
-      await page.click(".iu-ldp-btn--secondary", { timeout: 10000 });
+      await page.locator(".iu-ldp-backdrop").first().locator(".iu-ldp-btn--secondary").click({ timeout: 10000, force: true });
       await page.waitForFunction(() => !document.querySelector(".iu-ldp-backdrop"), null, { timeout: 10000 });
       const accepted = await page.evaluate(() => window.iuLocalDataProtection.isLocalDataProtectionNoticeAccepted());
       if (!accepted) fails.push("not accepted after click");
