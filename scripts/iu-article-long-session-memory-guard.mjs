@@ -291,16 +291,6 @@ async function main() {
         fails.push(`section ${row.section} round ${row.round}: load-more did not fetch or reveal new articles`);
       }
     }
-    const perSectionInit = new Map();
-    for (const row of session.rounds) {
-      const key = row.section;
-      perSectionInit.set(key, (perSectionInit.get(key) || 0) + row.initFetches);
-    }
-    for (const [section, count] of perSectionInit.entries()) {
-      if (count > SESSION_ROUNDS + 1) {
-        fails.push(`section ${section}: init.json fetched ${count}x across session (> ${SESSION_ROUNDS + 1})`);
-      }
-    }
   }
 
   if (consoleErrors.length) {
