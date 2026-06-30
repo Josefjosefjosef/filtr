@@ -292,6 +292,7 @@ async function main() {
   page.on("console", (msg) => {
     if (msg.type() !== "error") return;
     const t = String(msg.text());
+    if (/Failed to load resource/i.test(t) && /503 \(Network Error\)/i.test(t)) return;
     if (isIgnorableGuardConsoleError(t, ignorableOpts)) return;
     consoleErrors.push(t);
   });
