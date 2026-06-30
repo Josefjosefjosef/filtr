@@ -96,9 +96,26 @@
     min-height: 0 !important;
     margin: 0 !important;
   }
-  #silver-slot #iuSilverTallScrollSection {
+  body:not(.iu-desktop-home-grid) #silver-slot #iuSilverTallScrollSection {
     grid-row: 2 !important;
     margin-top: 35px !important;
+    min-height: 0 !important;
+    padding-top: 0 !important;
+  }
+  body.iu-desktop-home-grid #silver-slot #iuFeedNewsSplit {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+  body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection {
+    grid-column: 1 / -1;
+    grid-row: 3 !important;
+    margin-top: 30px !important;
     min-height: 0 !important;
     padding-top: 0 !important;
   }

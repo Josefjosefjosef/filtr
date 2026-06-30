@@ -10825,7 +10825,6 @@ function buildVideoAsArticleCard(it) {
       const homecards = document.getElementById("iuSilverTallScrollSection");
       const stack = document.getElementById("iuSilverTopCardsStack");
       if (!homecards || !stack) return;
-      if (body.getAttribute("data-iu-gap-synced") === "1") return;
       const stackTop = stack.getBoundingClientRect().top;
       const hcBottom = homecards.getBoundingClientRect().bottom;
       const stackMt = parseFloat(getComputedStyle(stack).marginTop) || 0;
@@ -10884,12 +10883,16 @@ function buildVideoAsArticleCard(it) {
       window.addEventListener("resize", iuDesktopHomeSectionTopGapSync, { passive: true });
     }catch{}
     try{
-      const homecards = document.getElementById("iuSilverTallScrollSection");
-      if (homecards && typeof ResizeObserver === "function") {
+      const gapTargets = [
+        document.getElementById("iuSilverTallScrollSection"),
+        document.getElementById("iuDesktopInfoPanelMount"),
+        document.getElementById("iuSilverTopCardsStack"),
+      ].filter(Boolean);
+      if (gapTargets.length && typeof ResizeObserver === "function") {
         const ro = new ResizeObserver(function () {
           try{ iuDesktopHomeSectionTopGapSync(); }catch(_){}
         });
-        ro.observe(homecards);
+        gapTargets.forEach(function (el) { ro.observe(el); });
       }
     }catch(_){}
     try{ iuDesktopHomeCardsDragInit(); }catch(_){}

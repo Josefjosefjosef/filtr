@@ -177,7 +177,6 @@ function bindPanelEvents(items) {
 function syncTopGap() {
   try {
     if (typeof window.iuDesktopHomeSectionTopGapSync === "function") {
-      document.body.removeAttribute("data-iu-gap-synced");
       window.iuDesktopHomeSectionTopGapSync();
     }
   } catch (_) {}
