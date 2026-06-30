@@ -21,6 +21,7 @@ import {
   clickDesktopNav,
   waitDesktopNavTarget,
 } from "./guards/desktop-nav-targets.mjs";
+import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -77,16 +78,21 @@ function waitForPort(host, port, timeoutMs) {
 
 async function dismissConsentIfPresent(page) {
   try {
-    const essential = await page.$("#iuConsentEssentialOnly");
-    if (essential && (await essential.isVisible())) {
-      await essential.click({ timeout: 5000 });
-      await page.waitForTimeout(250);
+    const layer = await page.$("#iuConsentLayer:not([hidden])");
+    if (layer) {
+      const essential = await page.$("#iuConsentEssentialOnly");
+      if (essential && (await essential.isVisible())) {
+        await essential.click({ timeout: 5000 });
+        await page.waitForTimeout(250);
+      }
     }
   } catch (_) {}
   try {
     await page.evaluate(() => {
       const ldp = document.querySelector(".iu-ldp-backdrop");
       if (ldp) ldp.remove();
+      const consent = document.getElementById("iuConsentLayer");
+      if (consent) consent.hidden = true;
     });
   } catch (_) {}
 }
@@ -167,6 +173,7 @@ async function clickLoadMoreIfPresent(page, networkLog, markIdx) {
   if (!(await btn.first().isVisible())) return { clicked: false, fetchesNewChunk: true };
   const disabled = await btn.first().isDisabled().catch(() => true);
   if (disabled) return { clicked: false, fetchesNewChunk: true };
+  await dismissConsentIfPresent(page);
   const filteredBefore = await page.evaluate(() => {
     const st = window.__iuFeedPipelineState || window.state || {};
     return {
@@ -285,7 +292,8 @@ async function main() {
   const networkLog = [];
   const consoleErrors = [];
   const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const context = await bootstrapGuardContext(browser, { viewport: { width: 1440, height: 900 } });
+  const page = await context.newPage();
   const ignorableTracker = createIgnorableResourceTracker();
   ignorableTracker.attachToPage(page);
   const ignorableOpts = {
