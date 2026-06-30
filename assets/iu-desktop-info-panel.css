@@ -26,7 +26,17 @@
   }
 
   body.iu-desktop-home-grid {
-    --iu-dhp-homecards-top-gap: 24px;
+    --iu-dhp-homecards-top-gap: 30px;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuFeedNewsSplit {
+    display: none !important;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection {
+    grid-column: 1 / -1;
+    grid-row: 3 !important;
+    margin-top: 30px !important;
   }
 
   .iuDesktopInfoPanel {

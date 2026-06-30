@@ -43,6 +43,15 @@ if (!panelCss.includes("overflow-x: auto")) {
 if (!panelCss.includes("grid-row: 2")) {
   failures.push("panel mount must use grid-row 2 in desktop layout");
 }
+if (!panelCss.includes("grid-row: 3")) {
+  failures.push("homecards must use grid-row 3 below info panel on desktop");
+}
+if (!panelCss.includes("margin-top: 30px")) {
+  failures.push("homecards must have 30px top gap below info panel");
+}
+if (!panelCss.includes("--iu-dhp-homecards-top-gap: 30px")) {
+  failures.push("desktop homecards top gap token must be 30px");
+}
 
 const panelJs = read("assets/iu-desktop-info-panel.js");
 if (!panelJs.includes("min-width: 1025px")) {

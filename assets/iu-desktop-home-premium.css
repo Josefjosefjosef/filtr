@@ -18,7 +18,8 @@
     --iu-dhp-preview-headline-min-h: 65px;
     --iu-dhp-rail-min-h: 520px;
     --iu-dhp-rail-banners-min-h: 540px;
-    --iu-dhp-homecards-top-gap: 35px;
+    --iu-dhp-homecards-top-gap: 30px;
+    --iu-dhp-welcome-btn-zone-h: 48px;
   }
 
   body.iu-desktop-home-grid[data-iu-fc="1"] {
@@ -42,7 +43,7 @@
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStack.silver-welcome-stack {
     grid-template-columns: minmax(260px, 1fr) var(--iu-dhp-weather-col-w);
     column-gap: var(--iu-dhp-hero-col-gap);
-    align-items: start;
+    align-items: stretch;
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard.iuSilverWelcomeCard {
@@ -77,15 +78,28 @@
     width: var(--iu-dhp-weather-col-w);
     min-width: var(--iu-dhp-weather-col-w);
     max-width: var(--iu-dhp-weather-col-w);
-    min-height: calc(var(--iu-dhp-hero-row-min-h) + 48px);
+    min-height: 0;
+    height: auto;
     padding-top: 10px;
-    padding-bottom: 10px;
+    padding-bottom: 8px;
     align-self: stretch;
     justify-self: start;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card .iu-weather-compact-stack {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    margin-bottom: var(--iu-dhp-welcome-btn-zone-h);
     box-sizing: border-box;
   }
 
@@ -206,8 +220,9 @@
     min-width: 0;
     margin-inline: auto;
     padding-right: 0 !important;
-    min-height: calc(var(--iu-dhp-hero-row-min-h) - 20px);
-    transform: translateY(-8px);
+    min-height: 0;
+    margin-bottom: var(--iu-dhp-welcome-btn-zone-h);
+    transform: none;
     position: static !important;
   }
 
