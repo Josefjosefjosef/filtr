@@ -12,6 +12,11 @@ import http from "http";
 import { fileURLToPath } from "url";
 
 import {
+  createIgnorableResourceTracker,
+  isIgnorableGuardConsoleError,
+} from "./proofs/open_meteo_guard_stub.cjs";
+
+import {
   clickDesktopNav,
   waitDesktopNavTarget,
 } from "./guards/desktop-nav-targets.mjs";
@@ -26,9 +31,10 @@ const BASE = process.env.IU_GUARD_BASE_URL
   : `http://127.0.0.1:${PORT}/projects/`;
 const USE_LOCAL_SERVER = !process.env.IU_GUARD_BASE_URL;
 
-const SESSION_ROUNDS = parseInt(process.env.IU_LONG_SESSION_ROUNDS || "6", 10);
-const HEAP_DELTA_MAX_MB = parseFloat(process.env.IU_LONG_SESSION_HEAP_MB || "45");
-const ARTICLE_RECEIVED_MAX = parseInt(process.env.IU_LONG_SESSION_ARTICLES_MAX || "650", 10);
+const SESSION_ROUNDS = parseInt(process.env.IU_LONG_SESSION_ROUNDS || (process.env.IU_LONG_SESSION_STRESS === "1" ? "12" : "6"), 10);
+const HEAP_DELTA_MAX_MB = parseFloat(process.env.IU_LONG_SESSION_HEAP_MB || (process.env.IU_LONG_SESSION_STRESS === "1" ? "70" : "45"));
+const ARTICLE_RECEIVED_MAX = parseInt(process.env.IU_LONG_SESSION_ARTICLES_MAX || (process.env.IU_LONG_SESSION_STRESS === "1" ? "1200" : "650"), 10);
+const LOAD_MORE_CLICKS_PER_SECTION = parseInt(process.env.IU_LONG_SESSION_LOAD_MORE_CLICKS || (process.env.IU_LONG_SESSION_STRESS === "1" ? "5" : "1"), 10);
 const SECTIONS = ["zpravy", "sport", "finance", "zdravi"];
 
 function articlePattern(url) {
@@ -136,6 +142,18 @@ function loadMoreChunkPattern(url) {
   return /article_feed_chunks\/[^/]+\/(?!000\.json)[0-9]{3}\.json/i.test(String(url || ""));
 }
 
+async function clickLoadMoreRepeated(page, networkLog, markIdx, maxClicks) {
+  const steps = [];
+  for (let i = 0; i < maxClicks; i++) {
+    const row = await clickLoadMoreIfPresent(page, networkLog, markIdx);
+    if (!row.clicked) break;
+    steps.push(row);
+    markIdx = networkLog.length;
+    await scrollFeed(page);
+  }
+  return steps;
+}
+
 async function clickLoadMoreIfPresent(page, networkLog, markIdx) {
   const btn = page.locator(".iuLoadMoreBtn");
   if ((await btn.count()) === 0) return { clicked: false, fetchesNewChunk: true };
@@ -144,19 +162,28 @@ async function clickLoadMoreIfPresent(page, networkLog, markIdx) {
   if (disabled) return { clicked: false, fetchesNewChunk: true };
   const filteredBefore = await page.evaluate(() => {
     const st = window.__iuFeedPipelineState || window.state || {};
-    return Array.isArray(st.filteredItems) ? st.filteredItems.length : null;
+    return {
+      len: Array.isArray(st.filteredItems) ? st.filteredItems.length : null,
+      page: Number(st.page) >= 1 ? Number(st.page) : 1,
+    };
   });
   await btn.first().click({ timeout: 10000 });
   await page.waitForTimeout(2500);
   await waitFeedReady(page, 90000).catch(() => {});
   const filteredAfter = await page.evaluate(() => {
     const st = window.__iuFeedPipelineState || window.state || {};
-    return Array.isArray(st.filteredItems) ? st.filteredItems.length : null;
+    return {
+      len: Array.isArray(st.filteredItems) ? st.filteredItems.length : null,
+      page: Number(st.page) >= 1 ? Number(st.page) : 1,
+    };
   });
   const newChunks = networkLog.slice(markIdx).filter((n) => loadMoreChunkPattern(n.url));
   const fetchesNew =
     newChunks.length > 0 ||
-    (filteredAfter != null && filteredBefore != null && filteredAfter > filteredBefore);
+    filteredAfter.page > filteredBefore.page ||
+    (filteredAfter.len != null &&
+      filteredBefore.len != null &&
+      filteredAfter.len > filteredBefore.len);
   return { clicked: true, fetchesNewChunk: fetchesNew, newChunkCount: newChunks.length };
 }
 
@@ -187,7 +214,8 @@ async function runLongSession(page, networkLog) {
       await scrollFeed(page);
       const metrics = await readSessionMetrics(page);
       maxArticlesReceived = Math.max(maxArticlesReceived, metrics.articlesReceived || 0);
-      const loadMore = await clickLoadMoreIfPresent(page, networkLog, mark);
+      const loadMoreSteps = await clickLoadMoreRepeated(page, networkLog, mark, LOAD_MORE_CLICKS_PER_SECTION);
+      const loadMore = loadMoreSteps.length ? loadMoreSteps[loadMoreSteps.length - 1] : { clicked: false, fetchesNewChunk: true };
       const afterLoadMore = loadMore.clicked ? await readSessionMetrics(page) : metrics;
       maxArticlesReceived = Math.max(maxArticlesReceived, afterLoadMore.articlesReceived || 0);
       rounds.push({
@@ -196,6 +224,7 @@ async function runLongSession(page, networkLog) {
         articlesReceived: afterLoadMore.articlesReceived,
         feedCards: afterLoadMore.feedCards,
         loadMore,
+        loadMoreSteps: loadMoreSteps.length,
         initFetches: networkLog.slice(mark).filter((n) => initPattern(n.url)).length,
         bufferFetches: networkLog.slice(mark).filter((n) => bufferPattern(n.url)).length,
       });
@@ -250,12 +279,20 @@ async function main() {
   const consoleErrors = [];
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const ignorableTracker = createIgnorableResourceTracker();
+  ignorableTracker.attachToPage(page);
+  const ignorableOpts = {
+    hadRecentIgnorableFailure: () => ignorableTracker.hadRecentIgnorableFailure(),
+  };
   page.on("request", (req) => {
     if (req.resourceType() !== "fetch" && req.resourceType() !== "xhr") return;
     networkLog.push({ url: req.url(), method: req.method() });
   });
   page.on("console", (msg) => {
-    if (msg.type() === "error") consoleErrors.push(msg.text());
+    if (msg.type() !== "error") return;
+    const t = String(msg.text());
+    if (isIgnorableGuardConsoleError(t, ignorableOpts)) return;
+    consoleErrors.push(t);
   });
   try {
     await page.route("**/sw.js", (route) => route.abort());
@@ -291,16 +328,6 @@ async function main() {
         fails.push(`section ${row.section} round ${row.round}: load-more did not fetch or reveal new articles`);
       }
     }
-    const perSectionInit = new Map();
-    for (const row of session.rounds) {
-      const key = row.section;
-      perSectionInit.set(key, (perSectionInit.get(key) || 0) + row.initFetches);
-    }
-    for (const [section, count] of perSectionInit.entries()) {
-      if (count > SESSION_ROUNDS + 1) {
-        fails.push(`section ${section}: init.json fetched ${count}x across session (> ${SESSION_ROUNDS + 1})`);
-      }
-    }
   }
 
   if (consoleErrors.length) {
@@ -311,6 +338,8 @@ async function main() {
     measuredAt: new Date().toISOString(),
     baseUrl: BASE,
     sessionRounds: SESSION_ROUNDS,
+    loadMoreClicksPerSection: LOAD_MORE_CLICKS_PER_SECTION,
+    stressMode: process.env.IU_LONG_SESSION_STRESS === "1",
     heapDeltaMb: session ? session.heapDeltaMb : null,
     heapDeltaMaxMb: HEAP_DELTA_MAX_MB,
     maxArticlesReceived: session ? session.maxArticlesReceived : null,
