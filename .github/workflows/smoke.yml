@@ -117,6 +117,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-article-long-session-memory-guard
 
+      - name: MindMenu bottom nav restore guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-mindmenu-bottom-nav-restore-guard
+
       - name: Travel article feed regression guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run travel-article-feed-regression-guard
