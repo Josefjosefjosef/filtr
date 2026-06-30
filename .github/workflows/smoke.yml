@@ -109,6 +109,14 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run desktop-homecards-feed-width-alignment-guard
 
+      - name: Desktop info panel layout guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-desktop-info-panel-layout-guard
+
+      - name: Desktop info panel validation guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-desktop-info-panel-validation-guard
+
       - name: Article entrypoint parity guard (chunked loading V1)
         if: steps.scope.outputs.data_only != 'true'
         run: npm run article-entrypoint-parity-guard
