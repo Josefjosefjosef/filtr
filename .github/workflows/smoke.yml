@@ -117,6 +117,14 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-article-long-session-memory-guard
 
+      - name: Legal documents unified template guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-legal-documents-unified-template-guard
+
+      - name: Legal documents audit guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-legal-documents-audit-guard
+
       - name: Travel article feed regression guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run travel-article-feed-regression-guard

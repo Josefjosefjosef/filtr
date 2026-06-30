@@ -443,86 +443,63 @@ function formatPlainContentHtml(text) {
   return escHtml(String(text || "")).replace(/\n/g, "<br>");
 }
 
-function buildSectionBodyVisualHtml(section, partyMeta) {
-  if (!section.body && !section.isSignatures) return "";
-  if (section.isSignatures) {
-    let html = "";
-    if (section.heading) {
-      html += buildSectionBarHtml(section.num, section.heading);
-    }
-    html += buildSignatureVisualHtml(section.body, partyMeta);
-    return html;
-  }
-  if (isPartyIdentificationSection(section)) {
-    let html = "";
-    if (section.heading) {
-      html += buildSectionBarHtml(section.num, section.heading);
-    }
-    html +=
-      '<div class="iu-legal-doc-paper__sectionBody">' + formatBodyHtml(section.body, partyMeta) + "</div>";
-    return html;
-  }
-  const labeled = splitBodyIntoLabeledParts(section.body);
-  if (labeled.length) {
-    let html = "";
-    labeled.forEach((part) => {
-      const barNum = labeled.length === 1 ? section.num : "";
-      html += buildSectionBarHtml(barNum, part.label);
-      html +=
-        '<div class="iu-legal-doc-paper__sectionBody">' + formatPlainContentHtml(part.content) + "</div>";
-    });
-    return html;
-  }
-  let html = "";
-  if (section.heading) {
-    html += buildSectionBarHtml(section.num, section.heading);
-  }
-  html +=
-    '<div class="iu-legal-doc-paper__sectionBody">' + formatBodyHtml(section.body, partyMeta) + "</div>";
-  return html;
-}
+/** iu-legal-documents-unified-template-v1: jednotné modré pruhy pro všechny hlavní sekce (vč. stran). */
+function resolveSectionBarSegments(section) {
+  const segments = [];
+  const body = String((section && section.body) || "");
+  const heading = String((section && section.heading) || "").trim();
+  const num = String((section && section.num) || "");
 
-function buildSectionBodyPdfItems(section, doc, maxW) {
-  const items = [];
-  if (section.isSignatures) {
-    if (section.heading) {
-      items.push({ type: "sectionBar", num: section.num, heading: section.heading, heightMm: 8.5 });
-    }
-    items.push({ type: "signatureBlock", body: section.body, heightMm: 20 });
-    return items;
+  if (section && section.isSignatures) {
+    segments.push({
+      num,
+      heading: heading || "Podpisy",
+      content: "",
+      isSignatures: true,
+      rawBody: body,
+    });
+    return segments;
   }
-  if (isPartyIdentificationSection(section)) {
-    if (section.heading) {
-      items.push({ type: "sectionBar", num: section.num, heading: section.heading, heightMm: 8.5 });
-    }
-    const lines = plainTextToLayoutLines(doc, section.body, maxW);
-    lines.forEach((line) => items.push({ type: "line", text: line, heightMm: 4.8 }));
-    return items;
-  }
-  const labeled = splitBodyIntoLabeledParts(section.body);
+
+  const labeled = splitBodyIntoLabeledParts(body);
   if (labeled.length) {
     labeled.forEach((part) => {
-      const barNum = labeled.length === 1 ? section.num : "";
-      items.push({ type: "sectionBar", num: barNum, heading: part.label, heightMm: 8.5 });
-      const contentLines = plainTextToLayoutLines(doc, part.content, maxW);
-      contentLines.forEach((line) => items.push({ type: "line", text: line, heightMm: 4.8 }));
+      let barNum = "";
+      let barHeading = part.label;
+      if (labeled.length === 1 && heading) {
+        barNum = num;
+        barHeading = heading;
+      } else if (labeled.length === 1 && !heading) {
+        barNum = num;
+        barHeading = part.label;
+      }
+      segments.push({ num: barNum, heading: barHeading, content: part.content });
     });
-    return items;
+    return segments;
   }
-  if (section.heading) {
-    items.push({ type: "sectionBar", num: section.num, heading: section.heading, heightMm: 8.5 });
+
+  if (heading) {
+    segments.push({ num, heading, content: body });
+    return segments;
   }
-  const lines = plainTextToLayoutLines(doc, section.body, maxW);
-  lines.forEach((line) => items.push({ type: "line", text: line, heightMm: 4.8 }));
-  return items;
+  if (body.trim()) {
+    segments.push({ num: "", heading: "", content: body, freeText: true });
+  }
+  return segments;
 }
 
-function formatBodyHtml(text, partyMeta) {
+function resolveFreeBlockBarSegments(body) {
+  const labeled = splitBodyIntoLabeledParts(body);
+  if (!labeled.length) return [];
+  return labeled.map((part) => ({ num: "", heading: part.label, content: part.content }));
+}
+
+function formatFieldContentHtml(text) {
   return String(text || "")
     .split("\n")
     .map((line) => {
-      const s = String(line || "");
-      const trimmed = s.trim();
+      const trimmed = String(line || "").trim();
+      if (!trimmed) return "";
       const colonIdx = trimmed.indexOf(":");
       if (colonIdx > 0 && colonIdx < 48) {
         const label = trimmed.slice(0, colonIdx + 1);
@@ -534,12 +511,55 @@ function formatBodyHtml(text, partyMeta) {
           (value ? " " + escHtml(value) : "")
         );
       }
-      if (isPartyHeadingLine(trimmed, partyMeta) || isFieldLabelLine(trimmed)) {
-        return '<span class="iu-legal-doc-paper__fieldLabel">' + escHtml(trimmed) + "</span>";
-      }
-      return escHtml(s);
+      return escHtml(line);
     })
+    .filter(Boolean)
     .join("<br>");
+}
+
+function formatBodyHtml(text, partyMeta) {
+  return formatFieldContentHtml(text);
+}
+
+function buildSectionBodyVisualHtml(section, partyMeta) {
+  if (!section.body && !section.isSignatures) return "";
+  const segments = resolveSectionBarSegments(section);
+  let html = "";
+  segments.forEach((seg) => {
+    if (seg.isSignatures) {
+      if (seg.heading) html += buildSectionBarHtml(seg.num, seg.heading);
+      html += buildSignatureVisualHtml(seg.rawBody, partyMeta);
+      return;
+    }
+    if (seg.heading) html += buildSectionBarHtml(seg.num, seg.heading);
+    if (seg.content) {
+      html +=
+        '<div class="iu-legal-doc-paper__sectionBody">' + formatFieldContentHtml(seg.content) + "</div>";
+    }
+  });
+  return html;
+}
+
+function buildSectionBodyPdfItems(section, doc, maxW) {
+  const items = [];
+  const segments = resolveSectionBarSegments(section);
+  segments.forEach((seg) => {
+    if (seg.isSignatures) {
+      if (seg.heading) {
+        items.push({ type: "sectionBar", num: seg.num, heading: seg.heading, heightMm: 8.5 });
+      }
+      items.push({ type: "signatureBlock", body: seg.rawBody, heightMm: 20 });
+      return;
+    }
+    if (seg.heading) {
+      items.push({ type: "sectionBar", num: seg.num, heading: seg.heading, heightMm: 8.5 });
+    }
+    if (seg.content) {
+      const contentLines = plainTextToLayoutLines(doc, seg.content, maxW);
+      contentLines.forEach((line) => items.push({ type: "line", text: line, heightMm: 4.8 }));
+    }
+  });
+  return items;
 }
 
 function buildSectionBarHtml(num, heading) {
@@ -594,31 +614,36 @@ function buildSignatureVisualHtml(body, partyMeta) {
 }
 
 function buildSectionHtml(section, partyMeta) {
+  let sectionClass = "iu-legal-doc-paper__section";
+  if (section.isPlaceDate) sectionClass += " iu-legal-doc-paper__section--placeDate";
+  if (section.isSignatures) sectionClass += " iu-legal-doc-paper__section--signatures";
   if (section.isFreeBlock) {
-    const labeled = splitBodyIntoLabeledParts(section.body);
-    if (labeled.length) {
-      const inner = labeled
-        .map((part) => {
+    const segments = resolveFreeBlockBarSegments(section.body);
+    if (segments.length) {
+      const inner = segments
+        .map((seg) => {
           return (
-            buildSectionBarHtml("", part.label) +
+            buildSectionBarHtml(seg.num, seg.heading) +
             '<div class="iu-legal-doc-paper__sectionBody">' +
-            formatPlainContentHtml(part.content) +
+            formatFieldContentHtml(seg.content) +
             "</div>"
           );
         })
         .join("");
-      return '<section class="iu-legal-doc-paper__section">' + inner + "</section>";
+      return '<section class="' + sectionClass + '">' + inner + "</section>";
     }
     return (
-      '<section class="iu-legal-doc-paper__section">' +
+      '<section class="' +
+      sectionClass +
+      '">' +
       '<div class="iu-legal-doc-paper__sectionBody">' +
-      formatBodyHtml(section.body, partyMeta) +
+      formatFieldContentHtml(section.body) +
       "</div>" +
       "</section>"
     );
   }
   const inner = buildSectionBodyVisualHtml(section, partyMeta);
-  return '<section class="iu-legal-doc-paper__section">' + inner + "</section>";
+  return '<section class="' + sectionClass + '">' + inner + "</section>";
 }
 
 function buildLegalDocumentHeaderHtml() {
@@ -954,11 +979,11 @@ function buildPdfRenderQueue(structure, doc, maxW) {
   }
   structure.sections.forEach((section) => {
     if (section.isFreeBlock) {
-      const labeled = splitBodyIntoLabeledParts(section.body);
-      if (labeled.length) {
-        labeled.forEach((part) => {
-          queue.push({ type: "sectionBar", num: "", heading: part.label, heightMm: 8.5 });
-          const contentLines = plainTextToLayoutLines(doc, part.content, maxW);
+      const segments = resolveFreeBlockBarSegments(section.body);
+      if (segments.length) {
+        segments.forEach((seg) => {
+          queue.push({ type: "sectionBar", num: seg.num, heading: seg.heading, heightMm: 8.5 });
+          const contentLines = plainTextToLayoutLines(doc, seg.content, maxW);
           contentLines.forEach((line) => queue.push({ type: "line", text: line, heightMm: 4.8 }));
         });
         queue.push({ type: "gap", heightMm: 2.5 });
@@ -1026,12 +1051,6 @@ function drawBodyLineInPdf(doc, marginX, y, line, partyMeta) {
     const labelW = doc.getTextWidth(label + " ");
     doc.setFont(fontName, "normal");
     if (value) doc.text(value, marginX + labelW, y);
-    return y + 4.8;
-  }
-  if (isPartyHeadingLine(trimmed, partyMeta) || isFieldLabelLine(trimmed)) {
-    doc.setFont(fontName, "bold");
-    doc.text(trimmed, marginX, y);
-    doc.setFont(fontName, "normal");
     return y + 4.8;
   }
   doc.setFont(fontName, "normal");
