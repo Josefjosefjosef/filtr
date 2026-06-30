@@ -15,6 +15,7 @@ import {
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
 const { chromium, webkit, firefox } = require("playwright");
+const { installLocalDataProtectionAccepted } = require("./proofs/open_meteo_guard_stub.cjs");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8893", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
@@ -248,6 +249,7 @@ async function runScrollGuard(page) {
 async function runBrowserSuite(browserType, name) {
   const browser = await browserType.launch({ headless: true });
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  await installLocalDataProtectionAccepted(context);
   await installClsObserver(context);
   const page = await context.newPage();
   const fails = [];

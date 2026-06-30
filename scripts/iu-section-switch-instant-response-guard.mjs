@@ -12,6 +12,7 @@ import {
   installProofGuardNetworkStubs,
   createIgnorableResourceTracker,
   isIgnorableGuardConsoleError,
+  installLocalDataProtectionAccepted,
 } from "./proofs/open_meteo_guard_stub.cjs";
 
 import {
@@ -219,6 +220,7 @@ async function main() {
     viewport: { width: 1440, height: 900 },
     serviceWorkers: "block",
   });
+  await installLocalDataProtectionAccepted(context);
   await installClsObserver(context);
   const page = await context.newPage();
   await installProofGuardNetworkStubs(page);

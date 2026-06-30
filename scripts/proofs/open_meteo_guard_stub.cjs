@@ -192,12 +192,24 @@ async function installOpenMeteoRejectRoute(page, status) {
   });
 }
 
+async function installLocalDataProtectionAccepted(context) {
+  if (!context || typeof context.addInitScript !== "function") return;
+  await context.addInitScript(() => {
+    try {
+      localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+      localStorage.setItem("iu:local-data-protection:notice-accepted-at:v1", String(Date.now()));
+      localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
+    } catch (_) {}
+  });
+}
+
 module.exports = {
   buildGuardOpenMeteoMockBody,
   installOpenMeteoStubRoute,
   installOpenMeteoRejectRoute,
   installYtimgThumbnailStubRoute,
   installProofGuardNetworkStubs,
+  installLocalDataProtectionAccepted,
   isIgnorableGuardResourceUrl,
   createIgnorableResourceTracker,
   isIgnorableGuardConsoleError,
