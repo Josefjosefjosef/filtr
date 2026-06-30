@@ -125,6 +125,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-article-long-session-memory-guard
 
+      - name: Article load-more stress guard (Task 66)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-article-load-more-stress-guard
+
       - name: Travel article feed regression guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run travel-article-feed-regression-guard
