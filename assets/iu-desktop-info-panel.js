@@ -405,6 +405,10 @@ async function renderPanelInner() {
   mount.innerHTML = buildPanelHtml(items);
   ensureDetailPortal();
   bindPanelEvents(items);
+
+  syncPanelLayoutGaps();
+  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  syncPanelLayoutGaps();
   mount.setAttribute("data-iu-info-panel-ready", "1");
 
   const panel = document.getElementById(PANEL_ID);
