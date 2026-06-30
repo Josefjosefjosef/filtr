@@ -5902,6 +5902,50 @@ try {
     }
   }
 
+  function iuFeedSectionSwitchTopicOnlyDesktopP(sectionKey, nav) {
+    try {
+      return !!(
+        iuIsDesktopNavLayout() &&
+        iuArticleHubSectionP(sectionKey) &&
+        nav &&
+        nav.topic &&
+        nav.topic !== "all"
+      );
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /** Stable first-paint reserve: header + initial article batch (not prior section full scroll height). */
+  function iuFeedSectionSwitchEstimatedMinHeightPx() {
+    try {
+      const cardEstPx = 132;
+      return Math.round(IU_FEED_SECTION_HEADER_IMG_REF_H + CLIENT_INITIAL_RENDER_BATCH * cardEstPx + 48);
+    } catch (_) {
+      return IU_FEED_SECTION_HEADER_IMG_REF_H + 30 * 132 + 48;
+    }
+  }
+
+  function iuFeedReleaseMinHeightIfAllowed(feedEl) {
+    if (!feedEl || iuChunkShouldHoldFeedMinHeightP()) return;
+    try {
+      const h = feedEl.offsetHeight;
+      if (h > 120) feedEl.style.setProperty("min-height", h + "px");
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          try {
+            if (!feedEl || iuChunkShouldHoldFeedMinHeightP()) return;
+            feedEl.style.removeProperty("min-height");
+          } catch (_) {}
+        });
+      });
+    } catch (_) {
+      try {
+        feedEl.style.removeProperty("min-height");
+      } catch (__) {}
+    }
+  }
+
   function iuChunkShouldHoldFeedMinHeightP() {
     try {
       if (iuFeedSectionSwitchActiveP()) return true;
@@ -6077,7 +6121,7 @@ try {
         if (String(fel.getAttribute("data-feed-switch-seq") || "") !== switchSeqAtStart) return;
         fel.removeAttribute("data-feed-switching");
         if (!iuChunkShouldHoldFeedMinHeightP()) {
-          fel.style.minHeight = "";
+          iuFeedReleaseMinHeightIfAllowed(fel);
         }
         sectionSwitchFirstBatchReleased = true;
         iuFeedSectionSwitchScrollToStartIfArmed();
@@ -6759,7 +6803,7 @@ try {
       if (!sectionSwitchFirstBatchReleased) {
         feedEl.removeAttribute("data-feed-switching");
         if (!iuChunkShouldHoldFeedMinHeightP()) {
-          feedEl.style.minHeight = "";
+          iuFeedReleaseMinHeightIfAllowed(feedEl);
         }
         iuFeedSectionSwitchScrollToStartIfArmed();
       }
@@ -6775,7 +6819,7 @@ try {
           if (switchSeqAtStart && finSeq === switchSeqAtStart) {
             felFin.removeAttribute("data-feed-switching");
             if (!iuChunkShouldHoldFeedMinHeightP()) {
-              felFin.style.minHeight = "";
+              iuFeedReleaseMinHeightIfAllowed(felFin);
             }
             iuFeedSectionSwitchScrollToStartIfArmed();
           }
@@ -16890,6 +16934,17 @@ function buildVideoAsArticleCard(it) {
     window.iuMobileGateCloseForMainNav = iuMobileGateCloseForMainNav;
   } catch (_) {}
 
+  /** P0 MindMenu: zavře tool overlaye z MindMenu (ne gate / ne celou app). */
+  function iuMindMenuCloseToolOverlaysIfOpen() {
+    try {
+      var open = typeof iuDetectOpenOverlays === "function" ? iuDetectOpenOverlays() : [];
+      if (!open || !open.length) return false;
+      if (typeof iuForceCloseAllOverlays === "function") iuForceCloseAllOverlays();
+      return true;
+    } catch (_) {}
+    return false;
+  }
+
   /**
    * P0 Mobile/tablet: spodní „Zpět“ — nejdřív zavře otevřený overlay (stejně jako horní křížek / zavírací tlačítka),
    * pak teprve běžná navigace (gate / mainBack / history).
@@ -17025,6 +17080,12 @@ function buildVideoAsArticleCard(it) {
             }
             if (k === "home") {
               try {
+                iuMindMenuCloseToolOverlaysIfOpen();
+              } catch (_) {}
+              try {
+                if (typeof iuMobileGateCloseForMainNav === "function") iuMobileGateCloseForMainNav();
+              } catch (_) {}
+              try {
                 if (typeof window.iuProjectsHubNavigateHardResetFromHomeOrBack === "function") {
                   window.iuProjectsHubNavigateHardResetFromHomeOrBack();
                 }
@@ -17040,6 +17101,9 @@ function buildVideoAsArticleCard(it) {
             }
             if (k === "menu") {
               try {
+                iuMindMenuCloseToolOverlaysIfOpen();
+              } catch (_) {}
+              try {
                 var wMenu = document.getElementById("iuMobileGateWrap");
                 if (wMenu && typeof wMenu.__iuMobileGateNavTabToggleFromUserAction === "function") {
                   wMenu.__iuMobileGateNavTabToggleFromUserAction();
@@ -17050,6 +17114,15 @@ function buildVideoAsArticleCard(it) {
               return;
             }
             if (k === "mindmenu") {
+              try {
+                if (iuMindMenuCloseToolOverlaysIfOpen()) {
+                  var wMindOv = document.getElementById("iuMobileGateWrap");
+                  if (wMindOv && typeof wMindOv.__iuMobileGateSetTab === "function") {
+                    wMindOv.__iuMobileGateSetTab("tools");
+                  }
+                  return;
+                }
+              } catch (_) {}
               try {
                 var wMind = document.getElementById("iuMobileGateWrap");
                 if (wMind && typeof wMind.__iuMobileGateSetTab === "function") {
@@ -19244,7 +19317,7 @@ function buildVideoAsArticleCard(it) {
         state.chunkLoader.backgroundDone = true;
         try {
           const fel = document.getElementById("feed");
-          if (fel) fel.style.minHeight = "";
+          if (fel) iuFeedReleaseMinHeightIfAllowed(fel);
         } catch (_) {}
       } catch (e) {
         debugWarn("[CHUNK] dom expand failed", e);
@@ -35465,7 +35538,14 @@ function buildVideoAsArticleCard(it) {
         const feedSw = document.getElementById("feed");
         if (feedSw) {
           const prevH = feedSw.offsetHeight;
-          if (prevH > 120) feedSw.style.minHeight = prevH + "px";
+          const topicOnlyDesktopFeedSwitch = iuFeedSectionSwitchTopicOnlyDesktopP(section, nav);
+          let holdMinH = 0;
+          if (prevH > 120) {
+            holdMinH = topicOnlyDesktopFeedSwitch
+              ? iuFeedSectionSwitchEstimatedMinHeightPx()
+              : prevH;
+          }
+          if (holdMinH > 120) feedSw.style.minHeight = holdMinH + "px";
           feedSw.setAttribute("data-feed-ready", "false");
           feedSw.setAttribute("data-feed-switching", "1");
           try {
@@ -35482,7 +35562,7 @@ function buildVideoAsArticleCard(it) {
                   if (String(felW.getAttribute("data-feed-switch-seq") || "") !== swSeqWatch) return;
                   felW.removeAttribute("data-feed-switching");
                   if (!iuChunkShouldHoldFeedMinHeightP()) {
-                    felW.style.minHeight = "";
+                    iuFeedReleaseMinHeightIfAllowed(felW);
                   }
                 } catch (_) {}
               }, 12000);
