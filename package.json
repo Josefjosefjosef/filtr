@@ -77,6 +77,8 @@
     "desktop-homecards-feed-width-alignment-guard": "node scripts/desktop-homecards-feed-width-alignment-guard.mjs",
     "article-entrypoint-parity-guard": "node scripts/iu-article-entrypoint-parity-guard.mjs",
     "iu-article-long-session-memory-guard": "node scripts/iu-article-long-session-memory-guard.mjs",
+    "iu-article-long-session-memory-stress-guard": "node scripts/iu-article-long-session-memory-stress-guard.mjs",
+    "iu-article-load-more-stress-guard": "node scripts/iu-article-load-more-stress-guard.mjs",
     "travel-article-feed-regression-guard": "node scripts/iu-travel-article-feed-regression-guard.mjs",
     "middle-feed-photo-articles-proof": "node scripts/iu-middle-feed-photo-articles-proof.mjs",
     "image-legal-safety-guard-proof": "node scripts/iu-image-legal-safety-guard-proof.mjs",
@@ -127,6 +129,8 @@
     "apply-filter-audit-proof": "node scripts/apply-filter-audit-proof.mjs",
     "iu-legal-documents-audit-guard": "node scripts/iu-legal-documents-audit-guard.mjs",
     "iu-desktop-info-panel-layout-guard": "node scripts/iu-desktop-info-panel-layout-guard.mjs",
+    "iu-desktop-info-panel-states-guard": "node scripts/iu-desktop-info-panel-states-guard.mjs",
+    "iu-desktop-info-panel-validation-guard": "node scripts/iu-desktop-info-panel-validation-guard.mjs",
     "feed-classification-audit": "node scripts/audit-feed-classification.mjs",
     "test:feed-classification": "python scripts/test_iu_feed_classification.py",
     "validate:feed-classification": "python scripts/validate_feed_classification.py --skip-missing --enrich"
