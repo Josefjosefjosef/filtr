@@ -488,6 +488,13 @@ async function main() {
 
   const browser = await chromium.launch({ headless: true });
   const ctx = await browser.newContext({ serviceWorkers: "block" });
+  await ctx.addInitScript(() => {
+    try {
+      localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+      localStorage.setItem("iu:local-data-protection:notice-accepted-at:v1", String(Date.now()));
+      localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
+    } catch (_) {}
+  });
   await installClsObserver(ctx);
   await installParcelHeightTracker(ctx);
 
