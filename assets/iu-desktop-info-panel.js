@@ -1,8 +1,9 @@
 /**
- * PC informační panel V2 — render, zdroje, detail (desktop feed only).
+ * PC informační panel V3 — render, navigace šipkami, MindMenu gap, detail portal.
  */
 import {
   IU_INFO_PANEL_DISCLAIMER,
+  IU_INFO_PANEL_MINDMENU_GAP_PX,
   getLoadingInfoPanelItems,
   loadInfoPanelItems,
 } from "./iu-desktop-info-panel-data.js";
@@ -10,8 +11,12 @@ import {
 const MOUNT_ID = "iuDesktopInfoPanelMount";
 const PANEL_ID = "iuDesktopInfoPanel";
 const DETAIL_ID = "iuDesktopInfoPanelDetail";
+const MIND_MENU_BTN_ID = "iuMyInfoUzelOpenBtn";
 
 let lastSourceBtn = null;
+let gapObserver = null;
+let panelItemsMap = {};
+let activeRender = null;
 
 function esc(s) {
   return String(s || "")
@@ -70,15 +75,8 @@ function buildSegment(item) {
   );
 }
 
-function buildPanelHtml(items) {
-  const segments = items.map(buildSegment).join("");
+function buildDetailHtml() {
   return (
-    `<section id="${PANEL_ID}" class="iuDesktopInfoPanel" aria-label="Rychlý přehled orientačních údajů">` +
-    `<div class="iuDesktopInfoPanel__scroll" tabindex="0" role="region" aria-label="Rychlé informace — horizontální posuv">` +
-    `<div class="iuDesktopInfoPanel__track">${segments}</div>` +
-    `</div>` +
-    `<p class="iuDesktopInfoPanel__legal">${esc(IU_INFO_PANEL_DISCLAIMER)}</p>` +
-    `</section>` +
     `<div id="${DETAIL_ID}" class="iuDesktopInfoPanelDetail" hidden role="dialog" aria-modal="true" aria-labelledby="${DETAIL_ID}Title">` +
     `<div class="iuDesktopInfoPanelDetail__backdrop" data-iu-info-panel-detail-close="backdrop"></div>` +
     `<div class="iuDesktopInfoPanelDetail__card" role="document">` +
@@ -90,6 +88,35 @@ function buildPanelHtml(items) {
     `</div>` +
     `</div>`
   );
+}
+
+function buildPanelHtml(items) {
+  const segments = items.map(buildSegment).join("");
+  return (
+    `<section id="${PANEL_ID}" class="iuDesktopInfoPanel" aria-label="Rychlý přehled orientačních údajů">` +
+    `<div class="iuDesktopInfoPanel__viewport">` +
+    `<button type="button" class="iuDesktopInfoPanel__nav iuDesktopInfoPanel__nav--prev" data-iu-info-panel-nav="prev" aria-label="Předchozí informace" hidden>‹</button>` +
+    `<div class="iuDesktopInfoPanel__scroll" tabindex="0" role="region" aria-label="Rychlé informace">` +
+    `<div class="iuDesktopInfoPanel__track">${segments}</div>` +
+    `</div>` +
+    `<button type="button" class="iuDesktopInfoPanel__nav iuDesktopInfoPanel__nav--next" data-iu-info-panel-nav="next" aria-label="Další informace" hidden>›</button>` +
+    `</div>` +
+    `<p class="iuDesktopInfoPanel__legal">${esc(IU_INFO_PANEL_DISCLAIMER)}</p>` +
+    `</section>`
+  );
+}
+
+function ensureDetailPortal() {
+  let dlg = document.getElementById(DETAIL_ID);
+  if (!dlg) {
+    const wrap = document.createElement("div");
+    wrap.innerHTML = buildDetailHtml();
+    dlg = wrap.firstElementChild;
+  }
+  if (dlg && dlg.parentElement !== document.body) {
+    document.body.appendChild(dlg);
+  }
+  return dlg;
 }
 
 function legalStatusLabel(status) {
@@ -104,7 +131,7 @@ function legalStatusLabel(status) {
 }
 
 function openDetail(item, sourceBtn) {
-  const dlg = document.getElementById(DETAIL_ID);
+  const dlg = ensureDetailPortal();
   if (!dlg || !item) return;
   lastSourceBtn = sourceBtn && sourceBtn.focus ? sourceBtn : null;
   const title = dlg.querySelector(".iuDesktopInfoPanelDetail__title");
@@ -173,24 +200,72 @@ function trapDetailFocus(ev) {
   }
 }
 
+function updateNavState(panel) {
+  if (!panel) return;
+  const scroll = panel.querySelector(".iuDesktopInfoPanel__scroll");
+  const prev = panel.querySelector('[data-iu-info-panel-nav="prev"]');
+  const next = panel.querySelector('[data-iu-info-panel-nav="next"]');
+  if (!scroll || !prev || !next) return;
+  const maxScroll = Math.max(0, scroll.scrollWidth - scroll.clientWidth);
+  const sl = scroll.scrollLeft;
+  const canPrev = sl > 2;
+  const canNext = sl < maxScroll - 2;
+  prev.hidden = !canPrev;
+  next.hidden = !canNext;
+  if (canPrev) prev.removeAttribute("hidden");
+  else prev.setAttribute("hidden", "");
+  if (canNext) next.removeAttribute("hidden");
+  else next.setAttribute("hidden", "");
+}
+
+function scrollPanelBy(panel, direction) {
+  const scroll = panel && panel.querySelector(".iuDesktopInfoPanel__scroll");
+  if (!scroll) return;
+  const step = Math.max(240, Math.round(scroll.clientWidth * 0.72));
+  scroll.scrollBy({ left: direction * step, behavior: "smooth" });
+  window.setTimeout(() => updateNavState(panel), 320);
+}
+
+function bindPanelNav(panel) {
+  if (!panel || panel.dataset.iuNavBound === "1") return;
+  panel.dataset.iuNavBound = "1";
+  const scroll = panel.querySelector(".iuDesktopInfoPanel__scroll");
+  panel.addEventListener("click", (ev) => {
+    const nav = ev.target && ev.target.closest ? ev.target.closest("[data-iu-info-panel-nav]") : null;
+    if (!nav) return;
+    ev.preventDefault();
+    const dir = nav.getAttribute("data-iu-info-panel-nav") === "next" ? 1 : -1;
+    scrollPanelBy(panel, dir);
+  });
+  if (scroll) {
+    scroll.addEventListener("scroll", () => updateNavState(panel), { passive: true });
+  }
+  window.addEventListener("resize", () => updateNavState(panel), { passive: true });
+  requestAnimationFrame(() => updateNavState(panel));
+}
+
 function bindPanelEvents(items) {
   const mount = document.getElementById(MOUNT_ID);
   if (!mount) return;
-  const map = {};
+  panelItemsMap = {};
   items.forEach((item) => {
-    map[item.id] = item;
+    panelItemsMap[item.id] = item;
   });
 
-  mount.addEventListener("click", (ev) => {
-    const btn = ev.target && ev.target.closest ? ev.target.closest("[data-iu-info-panel-source]") : null;
-    if (!btn) return;
-    ev.preventDefault();
-    const id = btn.getAttribute("data-iu-info-panel-source");
-    if (id && map[id]) openDetail(map[id], btn);
-  });
+  if (!mount.dataset.iuPanelEventsBound) {
+    mount.dataset.iuPanelEventsBound = "1";
+    mount.addEventListener("click", (ev) => {
+      const btn = ev.target && ev.target.closest ? ev.target.closest("[data-iu-info-panel-source]") : null;
+      if (!btn) return;
+      ev.preventDefault();
+      const id = btn.getAttribute("data-iu-info-panel-source");
+      if (id && panelItemsMap[id]) openDetail(panelItemsMap[id], btn);
+    });
+  }
 
-  const dlg = document.getElementById(DETAIL_ID);
-  if (dlg) {
+  const dlg = ensureDetailPortal();
+  if (dlg && !dlg.dataset.iuDetailBound) {
+    dlg.dataset.iuDetailBound = "1";
     dlg.addEventListener("click", (ev) => {
       const t = ev.target;
       if (t && t.getAttribute && t.getAttribute("data-iu-info-panel-detail-close")) closeDetail();
@@ -198,13 +273,92 @@ function bindPanelEvents(items) {
     dlg.addEventListener("keydown", trapDetailFocus);
   }
 
-  document.addEventListener("keydown", (ev) => {
-    if (ev.key === "Escape") closeDetail();
-  });
+  if (!window.__iuInfoPanelEscapeBound) {
+    window.__iuInfoPanelEscapeBound = 1;
+    document.addEventListener("keydown", (ev) => {
+      if (ev.key === "Escape") closeDetail();
+    });
+  }
+}
+
+function syncMindMenuPanelGap() {
+  try {
+    if (!isDesktopPanelContext()) return;
+    const btn = document.getElementById(MIND_MENU_BTN_ID);
+    const mount = document.getElementById(MOUNT_ID);
+    if (!btn || !mount) return;
+
+    mount.style.removeProperty("transform");
+
+    const gap = mount.getBoundingClientRect().top - btn.getBoundingClientRect().bottom;
+    if (Math.abs(gap - IU_INFO_PANEL_MINDMENU_GAP_PX) <= 0.5) return;
+
+    const currentMargin = parseFloat(getComputedStyle(mount).marginTop) || 0;
+    const marginTop = Math.round(currentMargin + (IU_INFO_PANEL_MINDMENU_GAP_PX - gap));
+    if (marginTop === currentMargin) return;
+    mount.style.setProperty("--iu-dhp-info-panel-mt-sync", marginTop + "px");
+    mount.style.marginTop = "var(--iu-dhp-info-panel-mt-sync)";
+    persistMindMenuGap(marginTop);
+  } catch (_) {}
+}
+
+function syncPanelHomecardsGap() {
+  try {
+    if (!isDesktopPanelContext()) return;
+    const panel = document.getElementById(PANEL_ID);
+    const homecards = document.getElementById("iuSilverTallScrollSection");
+    if (!panel || !homecards) return;
+
+    const gap = homecards.getBoundingClientRect().top - panel.getBoundingClientRect().bottom;
+    if (Math.abs(gap - 30) <= 0.5) return;
+
+    const currentMargin = parseFloat(getComputedStyle(homecards).marginTop) || 30;
+    const marginTop = Math.round(currentMargin + (30 - gap));
+    homecards.style.setProperty("--iu-dhp-homecards-mt-sync", marginTop + "px");
+  } catch (_) {}
+}
+
+function syncPanelLayoutGaps() {
+  syncMindMenuPanelGap();
+  syncPanelHomecardsGap();
+}
+
+function applyCachedMindMenuGap() {
+  try {
+    if (!isDesktopPanelContext()) return;
+    const mount = document.getElementById(MOUNT_ID);
+    if (!mount) return;
+    const cached = sessionStorage.getItem("iuInfoPanelMindMenuMt");
+    if (!cached || !/^-?\d+$/.test(cached)) return;
+    mount.style.setProperty("--iu-dhp-info-panel-mt-sync", cached + "px");
+    mount.style.marginTop = "var(--iu-dhp-info-panel-mt-sync)";
+  } catch (_) {}
+}
+
+function persistMindMenuGap(marginTop) {
+  try {
+    sessionStorage.setItem("iuInfoPanelMindMenuMt", String(marginTop));
+  } catch (_) {}
+}
+
+function initGapSync() {
+  if (window.__iuInfoPanelGapSyncInited) return;
+  window.__iuInfoPanelGapSyncInited = 1;
+  window.addEventListener("resize", syncPanelLayoutGaps, { passive: true });
+  try {
+    const btn = document.getElementById(MIND_MENU_BTN_ID);
+    const stack = document.getElementById("iuSilverWelcomeStack");
+    if (typeof ResizeObserver === "function" && (btn || stack)) {
+      gapObserver = new ResizeObserver(() => syncMindMenuPanelGap());
+      if (btn) gapObserver.observe(btn);
+      if (stack) gapObserver.observe(stack);
+    }
+  } catch (_) {}
 }
 
 function syncTopGap() {
   try {
+    syncPanelLayoutGaps();
     if (typeof window.iuDesktopHomeSectionTopGapSync === "function") {
       window.iuDesktopHomeSectionTopGapSync();
     }
@@ -212,26 +366,52 @@ function syncTopGap() {
 }
 
 async function renderPanel() {
+  if (activeRender) return activeRender;
+  activeRender = renderPanelInner().finally(() => {
+    activeRender = null;
+  });
+  return activeRender;
+}
+
+async function renderPanelInner() {
   const mount = document.getElementById(MOUNT_ID);
   if (!mount || !isDesktopPanelContext()) {
     if (mount) {
       mount.hidden = true;
       mount.setAttribute("hidden", "");
+      mount.style.visibility = "";
       mount.innerHTML = "";
+      mount.removeAttribute("data-iu-info-panel-ready");
     }
     return;
   }
 
+  applyCachedMindMenuGap();
   mount.hidden = false;
   mount.removeAttribute("hidden");
   mount.removeAttribute("aria-hidden");
+  mount.style.visibility = "visible";
+  mount.removeAttribute("data-iu-info-panel-ready");
   mount.innerHTML = buildPanelHtml(getLoadingInfoPanelItems());
-  syncTopGap();
+  initGapSync();
+  ensureDetailPortal();
+
+  const panelEl = document.getElementById(PANEL_ID);
+  if (panelEl) bindPanelNav(panelEl);
 
   const items = await loadInfoPanelItems();
+  if (!mount.isConnected) return;
+
   mount.innerHTML = buildPanelHtml(items);
+  ensureDetailPortal();
   bindPanelEvents(items);
-  syncTopGap();
+  mount.setAttribute("data-iu-info-panel-ready", "1");
+
+  const panel = document.getElementById(PANEL_ID);
+  if (panel) {
+    bindPanelNav(panel);
+    updateNavState(panel);
+  }
 }
 
 function initInfoPanel() {
@@ -262,4 +442,15 @@ function initInfoPanel() {
 
 initInfoPanel();
 
-export { renderPanel, loadInfoPanelItems };
+try {
+  window.iuDesktopInfoPanelLayoutSync = syncPanelLayoutGaps;
+  window.__iuInfoPanelOpenSourceDetail = (id) => {
+    const item = panelItemsMap[id];
+    const btn = document.querySelector(`[data-iu-info-panel-source="${id}"]`);
+    if (!item) return { ok: false, reason: "missing_item" };
+    openDetail(item, btn || null);
+    return { ok: true };
+  };
+} catch (_) {}
+
+export { renderPanel, loadInfoPanelItems, syncMindMenuPanelGap, syncPanelHomecardsGap, syncPanelLayoutGaps };

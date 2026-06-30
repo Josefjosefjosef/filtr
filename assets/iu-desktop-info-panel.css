@@ -1,5 +1,5 @@
 /**
- * PC middle-feed — prémiový informační panel V2 (≥1025px, body.iu-desktop-home-grid).
+ * PC middle-feed — prémiový informační panel V3 (≥1025px, body.iu-desktop-home-grid).
  * Mobile / tablet: mount hidden.
  */
 
@@ -10,23 +10,34 @@
 }
 
 @media (min-width: 1025px) {
+  body.iu-desktop-home-grid {
+    --iu-dhp-homecards-top-gap: 30px;
+    --iu-dhp-info-panel-mindmenu-gap: 30px;
+  }
+
   body.iu-desktop-home-grid #iuDesktopInfoPanelMount {
     grid-column: 1 / -1;
     grid-row: 2;
     min-width: 0;
     width: 100%;
     max-width: 100%;
-    margin: 24px 0 0;
+    margin: 0;
     padding: 0;
     box-sizing: border-box;
+    min-height: 172px;
+    contain: layout style;
+  }
+
+  /* Reserve grid row before JS reveals panel — avoids reload / section-switch CLS. */
+  body.iu-desktop-home-grid #iuDesktopInfoPanelMount[hidden] {
+    display: block !important;
+    visibility: hidden;
+    pointer-events: none;
+    min-height: 172px;
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStackSeparatorTallBefore {
     display: none !important;
-  }
-
-  body.iu-desktop-home-grid {
-    --iu-dhp-homecards-top-gap: 30px;
   }
 
   body.iu-desktop-home-grid #silver-slot #iuFeedNewsSplit {
@@ -36,15 +47,16 @@
   body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection {
     grid-column: 1 / -1;
     grid-row: 3 !important;
-    margin-top: 30px !important;
+    margin-top: var(--iu-dhp-homecards-mt-sync, 30px) !important;
   }
 
   .iuDesktopInfoPanel {
+    position: relative;
     width: 100%;
     max-width: 100%;
     min-height: 128px;
     box-sizing: border-box;
-    padding: 16px;
+    padding: 16px 44px 16px 16px;
     border-radius: 20px;
     border: 1px solid var(--iu-brand-blue-a25, rgba(0, 60, 255, 0.22));
     background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
@@ -54,14 +66,26 @@
     overflow: hidden;
   }
 
+  .iuDesktopInfoPanel__viewport {
+    position: relative;
+    display: block;
+    min-width: 0;
+  }
+
   .iuDesktopInfoPanel__scroll {
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(15, 23, 42, 0.18) transparent;
-    margin: 0 -4px;
-    padding: 0 4px 2px;
+    scrollbar-width: none;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+  }
+
+  .iuDesktopInfoPanel__scroll::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
   }
 
   .iuDesktopInfoPanel__scroll:focus-visible {
@@ -70,21 +94,56 @@
     border-radius: 8px;
   }
 
-  .iuDesktopInfoPanel__scroll::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  .iuDesktopInfoPanel__scroll::-webkit-scrollbar-thumb {
-    background: rgba(15, 23, 42, 0.16);
-    border-radius: 999px;
-  }
-
   .iuDesktopInfoPanel__track {
     display: flex;
     flex-wrap: nowrap;
     align-items: stretch;
     gap: 0;
     min-width: min-content;
+  }
+
+  .iuDesktopInfoPanel__nav {
+    appearance: none;
+    -webkit-appearance: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.96);
+    color: #0f172a;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
+    transition: background 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  }
+
+  .iuDesktopInfoPanel__nav:hover {
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.16);
+  }
+
+  .iuDesktopInfoPanel__nav:focus-visible {
+    outline: 2px solid var(--iu-brand-blue, #003cff);
+    outline-offset: 2px;
+  }
+
+  .iuDesktopInfoPanel__nav--prev {
+    left: 0;
+  }
+
+  .iuDesktopInfoPanel__nav--next {
+    right: -28px;
+  }
+
+  .iuDesktopInfoPanel__nav[hidden] {
+    display: none !important;
   }
 
   .iuDesktopInfoPanel__segment {
@@ -234,10 +293,23 @@
     font-weight: 500;
   }
 
+  @keyframes iuDesktopInfoPanelPulse {
+    0%,
+    100% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
+/* Detail dialog — portaled to body, above HomeCards */
+@media (min-width: 1025px) {
   .iuDesktopInfoPanelDetail {
     position: fixed;
     inset: 0;
-    z-index: 10080;
+    z-index: 10150;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -355,15 +427,5 @@
     font-size: 11px;
     line-height: 1.45;
     color: #64748b;
-  }
-
-  @keyframes iuDesktopInfoPanelPulse {
-    0%,
-    100% {
-      opacity: 0.55;
-    }
-    50% {
-      opacity: 1;
-    }
   }
 }
