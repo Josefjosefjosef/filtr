@@ -80,20 +80,20 @@ async function main() {
       if (!ldp || typeof ldp.ensureLocalDataProtectionBeforeSave !== "function") {
         return { ok: false, reason: "missing iuLocalDataProtection" };
       }
-      const dialogBefore = document.querySelector(".iu-ldp-backdrop");
       const p = ldp.ensureLocalDataProtectionBeforeSave();
-      await new Promise((r) => setTimeout(r, 400));
+      await new Promise((r) => setTimeout(r, 500));
       const dialogVisible = !!document.querySelector(".iu-ldp-backdrop");
       if (!dialogVisible) return { ok: false, reason: "dialog not shown on first save" };
-      const btn = document.querySelector(".iu-ldp-btn--secondary");
-      if (!btn) return { ok: false, reason: "save-without button missing" };
-      btn.click();
-      await p;
-      const accepted = ldp.isLocalDataProtectionNoticeAccepted();
-      return { ok: accepted, reason: accepted ? "" : "not accepted after click" };
+      return { ok: true, reason: "" };
     });
 
     if (!first.ok) fails.push(first.reason || "first dialog flow failed");
+    else {
+      await page.click(".iu-ldp-btn--secondary", { timeout: 10000 });
+      await page.waitForFunction(() => !document.querySelector(".iu-ldp-backdrop"), null, { timeout: 10000 });
+      const accepted = await page.evaluate(() => window.iuLocalDataProtection.isLocalDataProtectionNoticeAccepted());
+      if (!accepted) fails.push("not accepted after click");
+    }
 
     const second = await page.evaluate(async () => {
       const ldp = window.iuLocalDataProtection;

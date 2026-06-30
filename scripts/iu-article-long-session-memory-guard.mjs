@@ -83,6 +83,12 @@ async function dismissConsentIfPresent(page) {
       await page.waitForTimeout(250);
     }
   } catch (_) {}
+  try {
+    await page.evaluate(() => {
+      const ldp = document.querySelector(".iu-ldp-backdrop");
+      if (ldp) ldp.remove();
+    });
+  } catch (_) {}
 }
 
 async function readSessionMetrics(page) {
