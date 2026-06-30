@@ -5904,6 +5904,7 @@ try {
 
   function iuChunkShouldHoldFeedMinHeightP() {
     try {
+      if (iuFeedSectionSwitchActiveP()) return true;
       if (!iuUseChunkedArticleLoader() || !state.chunkLoader) return false;
       if (iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader)) return false;
       const page = Number(state.page) >= 1 ? Number(state.page) : 1;
@@ -35464,12 +35465,7 @@ function buildVideoAsArticleCard(it) {
         const feedSw = document.getElementById("feed");
         if (feedSw) {
           const prevH = feedSw.offsetHeight;
-          const topicOnlyDesktopFeedSwitch =
-            iuIsDesktopNavLayout() &&
-            iuArticleHubSectionP(section) &&
-            nav.topic &&
-            nav.topic !== "all";
-          if (prevH > 120 && !topicOnlyDesktopFeedSwitch) feedSw.style.minHeight = prevH + "px";
+          if (prevH > 120) feedSw.style.minHeight = prevH + "px";
           feedSw.setAttribute("data-feed-ready", "false");
           feedSw.setAttribute("data-feed-switching", "1");
           try {
@@ -35485,7 +35481,9 @@ function buildVideoAsArticleCard(it) {
                   if (String(felW.getAttribute("data-feed-switching") || "") !== "1") return;
                   if (String(felW.getAttribute("data-feed-switch-seq") || "") !== swSeqWatch) return;
                   felW.removeAttribute("data-feed-switching");
-                  felW.style.minHeight = "";
+                  if (!iuChunkShouldHoldFeedMinHeightP()) {
+                    felW.style.minHeight = "";
+                  }
                 } catch (_) {}
               }, 12000);
             } catch (_) {}
