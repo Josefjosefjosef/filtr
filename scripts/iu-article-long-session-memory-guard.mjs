@@ -12,6 +12,10 @@ import http from "http";
 import { fileURLToPath } from "url";
 
 import {
+  isIgnorableGuardConsoleError,
+} from "./proofs/open_meteo_guard_stub.cjs";
+
+import {
   clickDesktopNav,
   waitDesktopNavTarget,
 } from "./guards/desktop-nav-targets.mjs";
@@ -255,7 +259,10 @@ async function main() {
     networkLog.push({ url: req.url(), method: req.method() });
   });
   page.on("console", (msg) => {
-    if (msg.type() === "error") consoleErrors.push(msg.text());
+    if (msg.type() !== "error") return;
+    const t = String(msg.text());
+    if (isIgnorableGuardConsoleError(t)) return;
+    consoleErrors.push(t);
   });
   try {
     await page.route("**/sw.js", (route) => route.abort());
