@@ -429,10 +429,26 @@ def apply_topic_event_dedupe(
             if rx != ry:
                 uf[rx] = ry
 
-        for i in range(n):
-            for j in range(i + 1, n):
+        win = _event_window_hours(_sec)
+        idx_order = sorted(
+            range(n),
+            key=lambda i: _parse_pub(arts[i]) or datetime.min.replace(tzinfo=timezone.utc),
+            reverse=True,
+        )
+
+        for oi in range(n):
+            i = idx_order[oi]
+            pi = _parse_pub(arts[i])
+            for oj in range(oi + 1, n):
+                j = idx_order[oj]
                 if url_fn(arts[i]) == url_fn(arts[j]):
                     continue
+                if pi is not None:
+                    pj = _parse_pub(arts[j])
+                    if pj is not None:
+                        hours = abs((pi - pj).total_seconds()) / 3600.0
+                        if hours > win:
+                            break
                 rel, conf = classify_pair_relation(arts[i], arts[j], _sec, story_match_fn)
                 if rel != "same_event_duplicate" or conf < 0.8:
                     continue

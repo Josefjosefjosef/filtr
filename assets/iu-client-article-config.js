@@ -17,7 +17,10 @@ export const CLIENT_INITIAL_RENDER_BATCH = 30;
 /** Alias for task 66 spec (CLIENT_INITIAL_RENDER = first-paint count). */
 export const CLIENT_INITIAL_RENDER = CLIENT_INITIAL_RENDER_BATCH;
 
-/** Virtual Prehled dne loader key — no dedicated server section fetch. */
+/** Server feed chunk key for Přehled dne (mixed timeline, publishedAt desc). */
+export const CLIENT_PREHLED_DNE_CHUNK_SECTION_KEY = "feed";
+
+/** @deprecated Legacy virtual loader key (pre task-66 feed chunk migration). */
 export const CLIENT_PREHLED_DNE_VIRTUAL_SECTION_KEY = "__prehled_dne_virtual__";
 
 export const IU_ARTICLE_FEED_CHUNKS_DIR = "article_feed_chunks";

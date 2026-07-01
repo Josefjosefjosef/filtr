@@ -4,7 +4,8 @@
  *
  * Ensures chunked article loading behaves identically regardless of entry path:
  * INITIAL=CLIENT_INITIAL_LIMIT (100), LOAD_MORE=CLIENT_LOAD_MORE_LIMIT per active section.
- * Never: FULL_POOL, FULL_ARCHIVE, ALL_SECTIONS_PRELOAD, Prehled dne own fetch.
+ * Never: FULL_POOL, FULL_ARCHIVE, ALL_SECTIONS_PRELOAD.
+ * Přehled dne: bounded feed chunk fetch only (init+buffer), not full pool.
  *
  * Run: npm run article-entrypoint-parity-guard
  */

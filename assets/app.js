@@ -17866,14 +17866,17 @@ function buildVideoAsArticleCard(it) {
   async function iuChunkReloadIfSectionChanged() {
     if (!iuUseChunkedArticleLoader()) return false;
     if (iuIsPrehledDneFeedContext()) {
-      if (iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader)) return false;
+      const feedKey = "feed";
+      if (state.chunkLoader && state.chunkLoader.sectionKey === feedKey && !iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader)) {
+        return false;
+      }
       const videosOnly = (state.cachedItems || []).filter((e) => String(e?.contentType || "").toLowerCase() === "video");
-      const virtualArticles = iuClientArticleStoreGetPrehledDneView();
-      state.chunkLoader = iuClientArticleStoreCreateVirtualPrehledLoader(
-        state.chunkLoader && state.chunkLoader.manifest ? state.chunkLoader.manifest : null,
-      );
+      const init = await iuChunkLoadInitial(iuBasePath(), iuChunkDataVer(), feedKey);
+      state.chunkLoader = init.loader;
+      iuClientArticleStoreIngest(feedKey, init.loader.articles || init.initialArticles || []);
+      iuPreviewSyncSectionPreviewItemsFromLoader(init.loader);
       __iuFeedPrimaryPairLast = null;
-      const sanitized = await iuChunkNormalizeArticleRows(virtualArticles);
+      const sanitized = await iuChunkNormalizeArticleRows(init.initialArticles);
       const enriched = sanitized.map((item) => {
         const published = String(item.publishedAt || item.published || item.date || item.createdAt || item.time || "");
         return { ...item, _ts: published ? Date.parse(published) || 0 : 0 };
