@@ -25389,10 +25389,26 @@ function buildVideoAsArticleCard(it) {
 
   function iuCustomButtonsOverlayUseFullscreen() {
     try {
-      return !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
+      return !!(window.matchMedia && window.matchMedia("(max-width: 1024px)").matches);
     } catch (_) {
       return false;
     }
+  }
+
+  function iuCustomButtonsEnsureInBody() {
+    const panel = document.getElementById("iuCustomButtonsPanel");
+    const backdrop = document.getElementById("iuCustomButtonsBackdrop");
+    if (!panel || !backdrop) return false;
+    if (backdrop.parentElement === document.body && panel.parentElement === document.body) return true;
+    try {
+      const frag = document.createDocumentFragment();
+      frag.appendChild(backdrop);
+      frag.appendChild(panel);
+      document.body.appendChild(frag);
+    } catch (_) {
+      return false;
+    }
+    return true;
   }
 
   function iuCustomButtonsOverlayClose() {
@@ -25408,7 +25424,7 @@ function buildVideoAsArticleCard(it) {
       backdrop.hidden = true;
       backdrop.setAttribute("aria-hidden", "true");
     }
-    document.body.classList.remove("iu-custom-buttons-overlay-open");
+    document.body.classList.remove("iu-custom-buttons-overlay-open", "iu-modal-open");
     iuCustomButtonsHideDeleteConfirm();
     iuCustomButtonsResetForm();
   }
@@ -25503,6 +25519,7 @@ function buildVideoAsArticleCard(it) {
 
   function iuCustomButtonsOverlayOpen() {
     iuCustomButtonsEnsureMounted();
+    iuCustomButtonsEnsureInBody();
     const panel = document.getElementById("iuCustomButtonsPanel");
     const backdrop = document.getElementById("iuCustomButtonsBackdrop");
     if (!panel || !backdrop) return;
@@ -25520,11 +25537,17 @@ function buildVideoAsArticleCard(it) {
     } else {
       panel.classList.remove("iu-custom-buttons-overlay-panel--fullscreen");
     }
-    document.body.classList.add("iu-custom-buttons-overlay-open");
+    document.body.classList.add("iu-custom-buttons-overlay-open", "iu-modal-open");
     iuCustomButtonsRefreshList();
     iuCustomButtonsUpdateFormState();
     const nameInput = document.getElementById("iuCustomButtonsName");
-    if (nameInput) nameInput.focus();
+    if (nameInput) {
+      try {
+        requestAnimationFrame(function () {
+          try { nameInput.focus({ preventScroll: true }); } catch (_) { try { nameInput.focus(); } catch (_) {} }
+        });
+      } catch (_) {}
+    }
   }
 
   function iuCustomButtonsResetForm() {

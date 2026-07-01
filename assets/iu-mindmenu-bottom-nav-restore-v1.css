@@ -143,11 +143,16 @@
     left: 0 !important;
     right: 0 !important;
     bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
-    inset: auto !important;
     width: 100vw !important;
     height: auto !important;
     max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+    min-height: 0 !important;
     padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    overflow: hidden !important;
     box-sizing: border-box !important;
   }
 
@@ -224,7 +229,6 @@
     left: 0 !important;
     right: 0 !important;
     bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
-    inset: auto !important;
     width: 100vw !important;
     height: auto !important;
     max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
@@ -293,11 +297,16 @@
     left: 0 !important;
     right: 0 !important;
     bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
-    inset: auto !important;
     width: 100vw !important;
     height: auto !important;
     max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+    min-height: 0 !important;
     padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    overflow: hidden !important;
     box-sizing: border-box !important;
   }
 
@@ -306,11 +315,16 @@
     left: 0 !important;
     right: 0 !important;
     bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
-    inset: auto !important;
     width: 100vw !important;
     height: auto !important;
     max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+    min-height: 0 !important;
     padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    overflow: hidden !important;
     box-sizing: border-box !important;
   }
 
@@ -326,6 +340,9 @@
     #iuInvoicePanel .iu-invoice-overlay-cardShell,
     #iuCustomButtonsPanel .iu-custom-buttons-overlay-cardShell
   ) {
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
     padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
     scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
     box-sizing: border-box !important;
