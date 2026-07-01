@@ -34,6 +34,7 @@ import {
   iuChunkCreateLoaderState,
   iuChunkNavSectionFromUrl,
   iuChunkVisibleArticleBudget,
+  iuChunkEnsureFeedSectionPreviewItems,
 } from "./iu-article-chunk-loader.js";
 import {
   iuClientArticleStoreReset,
@@ -26877,16 +26878,28 @@ function buildVideoAsArticleCard(it) {
   /* P0 Safari/PWA bfcache: restored tabs keep JS heap — invalidate single-flight before refetch. */
   window.addEventListener("pageshow", (ev) => {
     if (!ev || !ev.persisted) return;
-    if (!(document.body && document.body.classList && document.body.classList.contains("iu-home"))) {
-      if (iuFeedDataIsStaleForVisibilityRefresh()) {
+    if (document.body && document.body.classList && document.body.classList.contains("iu-home")) {
+      void (async function iuHomeBfcachePreviewResync() {
         try {
-          loadData({ forceRefresh: true });
+          if (iuUseChunkedArticleLoader() && state.chunkLoader && !state.sectionPreviewItems) {
+            await iuChunkEnsureFeedSectionPreviewItems(state.chunkLoader, iuBasePath(), iuChunkDataVer());
+            iuPreviewSyncSectionPreviewItemsFromLoader(state.chunkLoader);
+          }
         } catch (_) {}
-      }
+        try {
+          if (state.hasLoadedData) iuSilverTallMediaPreviewsRefresh();
+        } catch (_) {}
+      })();
+      return;
+    }
+    if (iuFeedDataIsStaleForVisibilityRefresh()) {
       try {
-        startAutoRefresh();
+        loadData({ forceRefresh: true });
       } catch (_) {}
     }
+    try {
+      startAutoRefresh();
+    } catch (_) {}
   });
 
   window.addEventListener("focus", () => debugLog("[FOCUS] in"));
