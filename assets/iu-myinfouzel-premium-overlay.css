@@ -473,6 +473,32 @@
     outline-offset: 2px;
   }
 
+  body.iu-myinfouzel-open .iu-quicktools-settings-backdrop:not([hidden]) {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 12100 !important;
+    background: rgba(15, 23, 42, 0.42) !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body.iu-myinfouzel-open .iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed:not([hidden]) {
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    width: min(400px, calc(100vw - 24px)) !important;
+    max-height: min(520px, 70vh) !important;
+    margin: 0 !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 12110 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  body.iu-myinfouzel-open.iu-quicktools-settings-mobile-open {
+    overflow: hidden !important;
+  }
+
   .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__nav {
     display: flex;
     flex-wrap: wrap;

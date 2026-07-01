@@ -21529,32 +21529,6 @@ body.iu-myinfouzel-open :is(.iu-quicktools-settings-backdrop,.iu-quicktools-sett
 body.iu-myinfouzel-open .iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed:not([hidden]){z-index:12110!important}
 body.iu-myinfouzel-open .iu-tool-privacy-modal:not([hidden]){z-index:12200!important}
 
-@media (min-width: 1025px) {
-  body.iu-myinfouzel-open .iu-quicktools-settings-backdrop:not([hidden]) {
-    position: fixed !important;
-    inset: 0 !important;
-    z-index: 12100 !important;
-    background: rgba(15, 23, 42, 0.42) !important;
-    -webkit-tap-highlight-color: transparent;
-  }
-  body.iu-myinfouzel-open .iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed:not([hidden]) {
-    position: fixed !important;
-    left: 50% !important;
-    top: 50% !important;
-    width: min(400px, calc(100vw - 24px)) !important;
-    max-height: min(520px, 70vh) !important;
-    margin: 0 !important;
-    transform: translate(-50%, -50%) !important;
-    z-index: 12110 !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    box-sizing: border-box !important;
-  }
-  body.iu-myinfouzel-open.iu-quicktools-settings-mobile-open {
-    overflow: hidden !important;
-  }
-}
-
 @media (max-width: 1023px){
   #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="datova-schranka"]{ --iu-ql-accent:#1D4ED8; }
   #iuMobileGatePanelTools.accordionCol .mindMenu .iu-mmQuickGrid .iuTile[data-iu-ql="internetove-bankovnictvi"]{ --iu-ql-accent:#047857; }
