@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-07-01T04:02:00.138846Z",
+  "ingestedAt": "2026-07-01T05:45:02.627585Z",
   "items": [
     {
       "section": "veda",
@@ -764,6 +764,53 @@
       "_dt_serialized": true
     },
     {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nová pravidla pro letní tábory: méně byrokracie i změny v hygieně",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/nova-pravidla-pro-letni-tabory-mene-byrokracie-i-zmeny-v-hygiene-375083",
+      "dt": "2026-07-01T05:05:00Z",
+      "media_raw": "ČT24 / Svět",
+      "media_norm": "ČT24",
+      "tokens": [
+        "byrokracie",
+        "hygieně",
+        "letní",
+        "nová",
+        "pravidla",
+        "tábory",
+        "změny"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_svet",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ohrožení dudci chocholatí se vrací, zahnízdili na Hradecku",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/kralovehradecky-kraj/ohrozeni-dudci-chocholati-se-vraci-zahnizdili-na-hradecku-375121",
+      "dt": "2026-07-01T04:30:00Z",
+      "media_raw": "ČT24 / Svět",
+      "media_norm": "ČT24",
+      "tokens": [
+        "chocholatí",
+        "dudci",
+        "hradecku",
+        "ohrožení",
+        "vrací",
+        "zahnízdili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_svet",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "finance",
       "contentType": "article",
       "title": "Živnostníkům se snižují zálohy, vzniká nárok na vrácení přeplatku",
@@ -1468,57 +1515,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Výbuch bomby v Monaku zranil ukrajinského oligarchu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/vybuch-bomby-v-monaku-zranil-ukrajinskeho-oligarchu-375097",
-      "dt": "2026-06-30T09:15:20Z",
-      "media_raw": "ČT24 / Svět",
-      "media_norm": "ČT24",
-      "tokens": [
-        "bomby",
-        "monaku",
-        "oligarchu",
-        "ukrajinského",
-        "výbuch",
-        "zranil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_svet",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Čeští archeologové našli v Africe britský internační tábor pro Němce z druhé světové války",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/cesti-archeologove-nasli-v-africe-britsky-internacni-tabor-pro-nemce-z-druhe-svetove-valky-375094",
-      "dt": "2026-06-30T08:57:46Z",
-      "media_raw": "ČT24 / Svět",
-      "media_norm": "ČT24",
-      "tokens": [
-        "africe",
-        "archeologové",
-        "britský",
-        "druhé",
-        "internační",
-        "našli",
-        "němce",
-        "světové",
-        "tábor",
-        "války",
-        "čeští"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_svet",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1623,7 +1619,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42388,
+      "bytes": 42510,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1660,12 +1656,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-01T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-01T05:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zpravy": 26,
           "finance": 1,
-          "zpravy": 25,
-          "other": 4
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1677,6 +1673,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nová pravidla pro letní tábory: méně byrokracie i změny v hygieně",
+            "publishedAt": "2026-07-01T05:05:00Z"
+          },
+          {
+            "title": "Ohrožení dudci chocholatí se vrací, zahnízdili na Hradecku",
+            "publishedAt": "2026-07-01T04:30:00Z"
+          },
           {
             "title": "Živnostníkům se snižují zálohy, vzniká nárok na vrácení přeplatku",
             "publishedAt": "2026-07-01T04:00:00Z"
@@ -1700,14 +1704,6 @@
           {
             "title": "Albánci už měsíc brojí proti plánu Trumpova zetě vybudovat luxusní resorty",
             "publishedAt": "2026-06-30T18:11:55Z"
-          },
-          {
-            "title": "Obětí otřesů ve Venezuele jsou téměř dva tisíce, z trosek vytáhli živého hocha",
-            "publishedAt": "2026-06-30T16:35:31Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události úterý 30. června",
-            "publishedAt": "2026-06-30T16:29:00Z"
           }
         ]
       }
