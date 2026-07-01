@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-07-01T20:41:50.590307Z",
+  "ingestedAt": "2026-07-01T22:44:44.976610Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Simulant z bazénu? Fotka obletěla svět, ale Kane líčil: Nejlepší zápas na MS",
+      "url": "https://www.denik.cz/ms-fotbal/harry-kane-penalta-simulace-pad-anglie-kongo-var-rozhodci/",
+      "dt": "2026-07-01T21:44:28Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "bazénu",
+        "fotka",
+        "kane",
+        "líčil",
+        "nejlepší",
+        "obletěla",
+        "simulant",
+        "svět",
+        "zápas"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -228,21 +255,20 @@
     {
       "section": "pocasi",
       "contentType": "article",
-      "title": "Do Česka dorazily bouřky. Vítr porážel stromy, lijáky zaplavily silnice i domy",
-      "url": "https://www.denik.cz/pocasi/do-ceska-dorazily-bourky-vitr-porazel-stromy-lijaky-zaplavily-silnice-i-domy/",
+      "title": "Do Česka dorazily bouřky. Vítr porážel stromy, u Hranic se vytvořila supercela",
+      "url": "https://www.denik.cz/pocasi/do-ceska-dorazily-bourky-vitr-porazel-stromy-u-hranic-se-vytvorila-supercela/",
       "dt": "2026-07-01T15:54:07Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
         "bouřky",
-        "domy",
         "dorazily",
-        "lijáky",
+        "hranic",
         "porážel",
-        "silnice",
         "stromy",
+        "supercela",
+        "vytvořila",
         "vítr",
-        "zaplavily",
         "česka"
       ],
       "feedCategory": "zpravy",
@@ -1004,31 +1030,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "I po zavedení eura zaplatíte v bulharské restauraci méně než v ČR, říká Marinov",
-      "url": "https://www.denik.cz/evropa-pro-cechy/vladimir-marinov-bulharsko-alexandria-podcast/",
-      "dt": "2026-07-01T10:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bulharské",
-        "eura",
-        "marinov",
-        "než",
-        "restauraci",
-        "zaplatíte",
-        "zavedení",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1039,7 +1040,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.denik.cz/rss/vse.xml",
-      "bytes": 68961,
+      "bytes": 68983,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1076,7 +1077,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-01T20:28:11Z",
+        "raw_feed_latest_publishedAt": "2026-07-01T21:44:28Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "zpravy": 34,
@@ -1094,6 +1095,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Simulant z bazénu? Fotka obletěla svět, ale Kane líčil: Nejlepší zápas na MS",
+            "publishedAt": "2026-07-01T21:44:28Z"
+          },
           {
             "title": "Námluvy nad New Yorkem. Influenceři vylezli na Empire State Building",
             "publishedAt": "2026-07-01T20:28:11Z"
@@ -1121,10 +1126,6 @@
           {
             "title": "Tragédie v Soluni. Po útocích na domy zemřela matka řecké vládní političky",
             "publishedAt": "2026-07-01T16:22:34Z"
-          },
-          {
-            "title": "Smlouva na šest let. Gudas zůstává v NHL, vrací se na Floridu",
-            "publishedAt": "2026-07-01T16:15:00Z"
           }
         ]
       }

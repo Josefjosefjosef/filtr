@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-07-01T20:41:50.590307Z",
+  "ingestedAt": "2026-07-01T22:44:44.976610Z",
   "items": [
     {
       "section": "veda",
@@ -757,6 +757,32 @@
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "V centru Kyjeva vypukl požár. Úřady hlásí sestřelení ruských dronů",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/v-centru-kyjeva-vypukl-pozar-urady-hlasi-sestreleni-ruskych-dronu-375167",
+      "dt": "2026-07-01T21:26:37Z",
+      "media_raw": "ČT24 / Svět",
+      "media_norm": "ČT24",
+      "tokens": [
+        "centru",
+        "dronů",
+        "hlásí",
+        "kyjeva",
+        "požár",
+        "ruských",
+        "sestřelení",
+        "vypukl",
+        "úřady"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_svet",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "Řidičům na D5 u Rozvadova se uzavřela většina odpočívky",
       "url": "https://ct24.ceskatelevize.cz/clanek/regiony/ridicum-na-d5-u-rozvadova-se-uzavrela-vetsina-odpocivky-375161",
       "dt": "2026-07-01T19:02:18Z",
@@ -971,7 +997,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Beskydy zasáhly extrémně silné bouřky. Jinde komplikují dopravu",
+      "title": "Beskydy zasáhly extrémně silné bouřky. Jinde komplikovaly dopravu",
       "url": "https://ct24.ceskatelevize.cz/clanek/regiony/bourky-zkomplikovaly-dopravu-cast-odberatelu-zustava-bez-elektriny-375156",
       "dt": "2026-07-01T15:00:10Z",
       "media_raw": "ČT24 / Svět",
@@ -982,7 +1008,7 @@
         "dopravu",
         "extrémně",
         "jinde",
-        "komplikují",
+        "komplikovaly",
         "silné",
         "zasáhly"
       ],
@@ -1468,30 +1494,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Novým ředitelem ÚVN je vojenský lékař Luděk Hána",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/novym-reditelem-uvn-je-vojensky-lekar-ludek-hana-375133",
-      "dt": "2026-07-01T08:17:33Z",
-      "media_raw": "ČT24 / Svět",
-      "media_norm": "ČT24",
-      "tokens": [
-        "hána",
-        "luděk",
-        "lékař",
-        "novým",
-        "vojenský",
-        "úvn",
-        "ředitelem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_svet",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1596,7 +1598,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41187,
+      "bytes": 41166,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1633,7 +1635,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-01T19:02:18Z",
+        "raw_feed_latest_publishedAt": "2026-07-01T21:26:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -1650,6 +1652,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V centru Kyjeva vypukl požár. Úřady hlásí sestřelení ruských dronů",
+            "publishedAt": "2026-07-01T21:26:37Z"
+          },
           {
             "title": "Řidičům na D5 u Rozvadova se uzavřela většina odpočívky",
             "publishedAt": "2026-07-01T19:02:18Z"
@@ -1677,10 +1683,6 @@
           {
             "title": "SOUHRN: Zásadní události středy 1. července",
             "publishedAt": "2026-07-01T16:29:00Z"
-          },
-          {
-            "title": "Opozice ve společném prohlášení odmítla změnu financování ČT a ČRo",
-            "publishedAt": "2026-07-01T16:04:23Z"
           }
         ]
       }
