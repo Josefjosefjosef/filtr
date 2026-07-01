@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-01T21:41:13.509182Z",
-  "source_run_id": "28549480062",
+  "generatedAt": "2026-07-01T22:04:01.016488Z",
+  "source_run_id": "28550647510",
   "pipeline_phase": "fast_pool_publish",
   "pool_boundary": "post_event_dedupe_pre_section_limits",
   "clean_article_pool_definition": "Articles after RSS fetch, normalize, URL dedupe, title clustering, event-level dedupe, section classification, and quality/relevance checks; before release guards, PR creation, publish, and homepage selection.",
@@ -13,9 +13,9 @@
   "UNIQUE_ARTICLES_LOST_AFTER_EVENT_DEDUPE": "UNKNOWN_NOT_EXPORTED",
   "UNIQUE_ARTICLES_LOST_AFTER_SECTION_LIMITS": 0,
   "UNIQUE_ARTICLES_LOST_AFTER_HOMEPAGE_SELECTION_ESTIMATE": "UNKNOWN_NOT_EXPORTED",
-  "total_raw_items": 20,
-  "total_normalized": 20,
-  "total_after_url_dedupe": 20,
+  "total_raw_items": 19,
+  "total_normalized": 19,
+  "total_after_url_dedupe": 19,
   "total_after_event_dedupe": 19235,
   "total_publishable_pool": 19235,
   "total_clean_pool": 19235,
@@ -23,11 +23,11 @@
   "articles_full_count": 19235,
   "articles_final_count": 18361,
   "articles_json_count": 18361,
-  "cluster_count": 20,
-  "new_articles_built": 20,
+  "cluster_count": 18,
+  "new_articles_built": 18,
   "per_section_counts": {
-    "aktualne": 6777,
-    "sport": 5227,
+    "aktualne": 6780,
+    "sport": 5224,
     "krimi": 641,
     "finance": 3509,
     "veda": 299,
@@ -40,6 +40,7 @@
     "vzdelavani": 35
   },
   "per_source_counts": {
+    "zpr_denik": 1255,
     "zpr_ct24_domaci": 1184,
     "spt_idnes": 962,
     "spt_sportcz": 1506,
@@ -52,7 +53,6 @@
     "zpr_seznam_domaci": 1025,
     "fin_sz_byznys": 274,
     "zpr_ct24_svet": 66,
-    "zpr_denik": 1253,
     "ČT24": 7,
     "fin_penize": 252,
     "Deník": 27,
@@ -104,10 +104,10 @@
     "ved_novinky": 29,
     "fin_novinky_ekonomika": 52,
     "Seznam Zprávy": 4,
-    "iSport": 26,
+    "iSport": 23,
     "HN": 3,
+    "Aktuálně": 38,
     "Týdeník Policie": 2,
-    "Aktuálně": 37,
     "E15": 7,
     "MMAMAG": 1,
     "Ekonomický deník": 1,
@@ -135,7 +135,7 @@
   },
   "duplicate_counts": {
     "url_dedupe_dropped": 0,
-    "title_cluster_nonprimary_dropped": 0,
+    "title_cluster_nonprimary_dropped": 1,
     "event_dedupe_suppressed": 0
   },
   "event_cluster_counts": 0,
@@ -151,10 +151,10 @@
   "HOMEPAGE_DATA_SOURCE": "publishable_pool.json",
   "HOMEPAGE_READONLY_SELECTION": "YES",
   "PUBLISHABLE_POOL_SCHEMA_VERSION": 1,
-  "PUBLISHABLE_POOL_GENERATED_AT": "2026-07-01T21:41:13.509182Z",
+  "PUBLISHABLE_POOL_GENERATED_AT": "2026-07-01T22:04:01.016488Z",
   "fast_publish": {
-    "new_articles_published": 9,
-    "prev_pool_total": 19233,
+    "new_articles_published": 6,
+    "prev_pool_total": 19235,
     "publishable_pool_total": 19235
   }
 }
