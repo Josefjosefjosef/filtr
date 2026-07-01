@@ -129,6 +129,38 @@
   box-shadow:var(--iu-notes-cta-shadow),var(--iu-notes-focus-glow);
 }
 
+#iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__draftActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  width:100%;
+}
+
+#iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__btn[data-iu-notes-draft-save]{
+  background:linear-gradient(135deg,#0EA5A4 0%,#0284C7 100%);
+  color:#fff;
+  border-color:rgba(34,211,238,.5);
+  font-weight:700;
+  box-shadow:var(--iu-notes-cta-shadow);
+}
+
+#iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__btn[data-iu-notes-draft-save]:hover{
+  filter:brightness(1.04);
+  box-shadow:0 10px 26px rgba(2,132,199,.24);
+}
+
+#iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__btn[data-iu-notes-draft-save]:focus-visible{
+  outline:none;
+  box-shadow:var(--iu-notes-cta-shadow),var(--iu-notes-focus-glow);
+}
+
+#iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__btn[data-iu-notes-draft-cancel]{
+  border-color:rgba(100,116,139,.45);
+  background:#f8fafc;
+  color:#334155;
+  font-weight:700;
+}
+
 #iuNotesOverlay.iu-notesPremiumScope[data-iu-notes-list-tab="main"] .iu-notesOverlay__btn[data-iu-notes-view="main"],
 #iuNotesOverlay.iu-notesPremiumScope[data-iu-notes-list-tab="trash"] .iu-notesOverlay__btn[data-iu-notes-view="trash"]{
   background:linear-gradient(135deg,rgba(14,165,164,.2) 0%,rgba(2,132,199,.14) 100%);
@@ -157,7 +189,7 @@
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__body{
   display:grid;
-  grid-template-columns:300px minmax(0,1fr);
+  grid-template-columns:450px minmax(0,1fr);
   min-height:0;
   height:100%;
 }

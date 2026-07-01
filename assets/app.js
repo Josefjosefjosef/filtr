@@ -37946,7 +37946,9 @@ function buildVideoAsArticleCard(it) {
     confirmOpen: false,
     confirmMessage: "",
     confirmAction: null,
-    overlayEventsBound: false
+    overlayEventsBound: false,
+    draftNewNote: null,
+    prevSelectedIdBeforeDraft: ""
   };
 
   function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
@@ -38111,6 +38113,65 @@ function buildVideoAsArticleCard(it) {
     return list.find((n)=>String(n.id) === key) || null;
   }
 
+  function isDraftNewNoteActive(){
+    return !!(state.draftNewNote && String(state.selectedId) === String(state.draftNewNote.id));
+  }
+
+  function getActiveNote(){
+    if (isDraftNewNoteActive()) return state.draftNewNote;
+    return getNoteById(state.selectedId);
+  }
+
+  function syncDraftFromDom(){
+    if (!state.draftNewNote) return null;
+    const titleEl = document.getElementById("iuNoteTitle");
+    const contentEl = document.getElementById("iuNoteContent");
+    if (titleEl) state.draftNewNote.title = String(titleEl.value || "").slice(0, MAX_TITLE);
+    if (contentEl) state.draftNewNote.content = String(contentEl.value || "").slice(0, MAX_CONTENT);
+    state.draftNewNote.updatedAt = Date.now();
+    return state.draftNewNote;
+  }
+
+  function discardDraftNewNote(){
+    state.draftNewNote = null;
+    state.prevSelectedIdBeforeDraft = "";
+  }
+
+  function commitDraftNewNote(){
+    if (!isDraftNewNoteActive()) return;
+    if (state.autosaveTimer){
+      try{ clearTimeout(state.autosaveTimer); }catch{}
+      state.autosaveTimer = null;
+    }
+    syncDraftFromDom();
+    const n = sanitizeNote(state.draftNewNote);
+    if (!n) return;
+    state.data.notes.unshift(n);
+    state.selectedId = n.id;
+    discardDraftNewNote();
+    sortNotesInPlace(state.data.notes);
+    saveNotes(state.data);
+    renderStatus("Uloženo " + fmtDate(state.lastSavedAt));
+    render();
+  }
+
+  function cancelDraftNewNote(){
+    if (!state.draftNewNote) return;
+    if (state.autosaveTimer){
+      try{ clearTimeout(state.autosaveTimer); }catch{}
+      state.autosaveTimer = null;
+    }
+    const prev = String(state.prevSelectedIdBeforeDraft || "").trim();
+    discardDraftNewNote();
+    if (prev && getNoteById(prev)) state.selectedId = prev;
+    else {
+      const first = searchNotes(state.searchQuery)[0];
+      state.selectedId = first ? first.id : "";
+    }
+    if (isNotesNarrowViewport()) setMobileMode(state.selectedId ? "detail" : "list");
+    render();
+  }
+
   function searchNotes(query){
     const q = foldCs(String(query || "")).trim();
     const list = state.data && Array.isArray(state.data.notes) ? state.data.notes : [];
@@ -38234,6 +38295,10 @@ function buildVideoAsArticleCard(it) {
     const back = t && t.closest ? t.closest("[data-iu-notes-back]") : null;
     if (back){
       e.preventDefault();
+      if (isDraftNewNoteActive()){
+        cancelDraftNewNote();
+        return;
+      }
       if (isNotesNarrowViewport() && state.mobileDetailOpen) flushNotesDetailToStoreSync();
       setMobileMode("list");
       if (isNotesNarrowViewport()) state.selectedId = "";
@@ -38248,9 +38313,16 @@ function buildVideoAsArticleCard(it) {
     const newBtn = t && t.closest ? t.closest("[data-iu-notes-new]") : null;
     if (newBtn){ e.preventDefault(); createNewAndSelect(); return; }
 
+    const draftSave = t && t.closest ? t.closest("[data-iu-notes-draft-save]") : null;
+    if (draftSave){ e.preventDefault(); commitDraftNewNote(); return; }
+
+    const draftCancel = t && t.closest ? t.closest("[data-iu-notes-draft-cancel]") : null;
+    if (draftCancel){ e.preventDefault(); cancelDraftNewNote(); return; }
+
     const viewBtn = t && t.closest ? t.closest("[data-iu-notes-view]") : null;
     if (viewBtn){
       e.preventDefault();
+      if (isDraftNewNoteActive()) cancelDraftNewNote();
       state.listView = String(viewBtn.getAttribute("data-iu-notes-view") || "main");
       const first = searchNotes(state.searchQuery)[0];
       if (isNotesNarrowViewport()){
@@ -38275,6 +38347,7 @@ function buildVideoAsArticleCard(it) {
     const pick = t && t.closest ? t.closest("[data-iu-note-id]") : null;
     if (pick){
       e.preventDefault();
+      if (isDraftNewNoteActive()) discardDraftNewNote();
       const id = String(pick.getAttribute("data-iu-note-id") || "");
       state.selectedId = id;
       setMobileMode("detail");
@@ -38446,6 +38519,7 @@ function buildVideoAsArticleCard(it) {
     const ov = getOverlay();
     if (!ov) return;
     hideNotesConfirm();
+    if (state.draftNewNote) discardDraftNewNote();
     setMobileMode("list");
     ov.hidden = true;
     ov.setAttribute("aria-hidden", "true");
@@ -38477,6 +38551,10 @@ function buildVideoAsArticleCard(it) {
       e.preventDefault();
       if (state.confirmOpen){
         hideNotesConfirm();
+        return;
+      }
+      if (isDraftNewNoteActive()){
+        cancelDraftNewNote();
         return;
       }
       if (isNotesNarrowViewport() && state.mobileDetailOpen){
@@ -38680,10 +38758,23 @@ function buildVideoAsArticleCard(it) {
       root.innerHTML = "";
       return;
     }
-    const note = getNoteById(state.selectedId);
+    const note = getActiveNote();
     if (!note){
       root.innerHTML = '<div class="iu-notesOverlay__empty iuNotesState--empty">Vyber poznámku vlevo, nebo vytvoř novou.</div>';
       return;
+    }
+    const draftMode = isDraftNewNoteActive();
+    let actionsHtml = "";
+    if (draftMode){
+      actionsHtml =
+        '<div class="iu-notesOverlay__draftActions">' +
+          '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-draft-save="1">Uložit</button>' +
+          '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-draft-cancel="1">Zrušit</button>' +
+        "</div>";
+    } else if (state.listView === "trash"){
+      actionsHtml = '<button type="button" class="iu-notesOverlay__btn" data-iu-note-restore="' + esc(note.id) + '">Obnovit z koše</button>';
+    } else {
+      actionsHtml = '<button type="button" class="iu-notesOverlay__btn" data-iu-note-delete="' + esc(note.id) + '">Přesunout do koše</button>';
     }
     root.innerHTML =
       '<div class="iu-notesOverlay__form">' +
@@ -38698,19 +38789,18 @@ function buildVideoAsArticleCard(it) {
           '<input class="iu-notesOverlay__input" id="iuNoteTagInput" type="text" autocomplete="off" placeholder="#práce" />' +
         "</label>" +
         '<div class="iu-notesOverlay__itemMeta">' + (Array.isArray(note.tags) && note.tags.length ? esc(note.tags.join(" ")) : "Bez tagů") + "</div>" +
-        '<div class="iu-notesOverlay__actions">' +
-          (state.listView === "trash"
-            ? '<button type="button" class="iu-notesOverlay__btn" data-iu-note-restore="' + esc(note.id) + '">Obnovit z koše</button>'
-            : '<button type="button" class="iu-notesOverlay__btn" data-iu-note-delete="' + esc(note.id) + '">Přesunout do koše</button>') +
-        "</div>" +
+        '<div class="iu-notesOverlay__actions">' + actionsHtml + "</div>" +
       "</div>";
-    renderStatus(state.lastSavedAt ? ("Uloženo " + fmtDate(state.lastSavedAt)) : "");
+    renderStatus(draftMode ? "Nová poznámka — potvrďte Uložit nebo Zrušit" : (state.lastSavedAt ? ("Uloženo " + fmtDate(state.lastSavedAt)) : ""));
   }
 
   function render(){
     try{
       const ov = getOverlay();
-      if (ov) ov.setAttribute("data-iu-notes-list-tab", state.listView === "trash" ? "trash" : "main");
+      if (ov){
+        ov.setAttribute("data-iu-notes-list-tab", state.listView === "trash" ? "trash" : "main");
+        ov.setAttribute("data-iu-notes-draft-new", isDraftNewNoteActive() ? "1" : "0");
+      }
     }catch{}
     renderList();
     renderDetail();
@@ -38719,11 +38809,14 @@ function buildVideoAsArticleCard(it) {
   }
 
   function createNewAndSelect(){
+    if (state.autosaveTimer){
+      try{ clearTimeout(state.autosaveTimer); }catch{}
+      state.autosaveTimer = null;
+    }
+    state.prevSelectedIdBeforeDraft = String(state.selectedId || "");
     const n = createEmptyNote();
-    state.data.notes.unshift(sanitizeNote(n));
+    state.draftNewNote = sanitizeNote(n);
     state.selectedId = n.id;
-    sortNotesInPlace(state.data.notes);
-    saveNotes(state.data);
     setMobileMode("detail");
     render();
     const titleEl = document.getElementById("iuNoteTitle");
@@ -38733,7 +38826,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function onInputChanged(){
-    const note = getNoteById(state.selectedId);
+    const note = getActiveNote();
     if (!note) return;
     const titleEl = document.getElementById("iuNoteTitle");
     const contentEl = document.getElementById("iuNoteContent");
@@ -38742,6 +38835,10 @@ function buildVideoAsArticleCard(it) {
     note.title = nextTitle;
     note.content = nextContent;
     note.updatedAt = Date.now();
+    if (isDraftNewNoteActive()){
+      renderStatus("Nová poznámka — potvrďte Uložit nebo Zrušit");
+      return;
+    }
     scheduleAutosave();
     patchActiveListItemInDom();
   }
@@ -38749,6 +38846,7 @@ function buildVideoAsArticleCard(it) {
   /** Flush title/content from DOM into store immediately (avoids losing last keystrokes when leaving detail on narrow). */
   function flushNotesDetailToStoreSync(){
     try{
+      if (isDraftNewNoteActive()) return;
       if (state.autosaveTimer){
         try{ clearTimeout(state.autosaveTimer); }catch{}
         state.autosaveTimer = null;
@@ -38774,7 +38872,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function addTagToSelected(raw){
-    const note = getNoteById(state.selectedId);
+    const note = getActiveNote();
     if (!note) return;
     const next = normalizeTag(raw);
     if (!next) return;
@@ -38783,6 +38881,10 @@ function buildVideoAsArticleCard(it) {
     if (!has) list.push(next);
     note.tags = list;
     note.updatedAt = Date.now();
+    if (isDraftNewNoteActive()){
+      renderDetail();
+      return;
+    }
     sortNotesInPlace(state.data.notes);
     saveNotes(state.data);
     render();
@@ -39879,7 +39981,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__listScroll," +
     "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__detailScroll{min-height:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch}" +
     "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__viewRoot{min-height:320px!important;height:calc(100% - 42px)!important;overflow:auto!important}" +
-    "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__body{display:grid!important;grid-template-columns:300px minmax(0,1fr)!important;min-height:0!important;height:100%!important;overflow:hidden!important}" +
+    "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__body{display:grid!important;grid-template-columns:450px minmax(0,1fr)!important;min-height:0!important;height:100%!important;overflow:hidden!important}" +
     "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__dialog{width:100%!important;max-width:none!important;min-height:100vh!important;min-height:100dvh!important;height:100vh!important;height:100dvh!important;max-height:100dvh!important;margin:0!important;border-radius:0!important;box-shadow:none!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;box-sizing:border-box!important}" +
     "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__scroll{flex:1 1 auto!important;min-height:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch}" +
     "}";
