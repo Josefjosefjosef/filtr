@@ -408,4 +408,175 @@
     bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
     max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
   }
+
+  /* v3 — unified scroll/safe-area: Kalendář, Úkoly, Poznámky + Rychlé odkazy overlaye (i bez MindMenu gate) */
+  body:is(
+    .iu-calendarOverlay-open,
+    .iu-tasksOverlay-open,
+    .iu-notesOverlay-open
+  ) #iuMobileBottomNav.iu-mobileBottomNav {
+    z-index: 10200 !important;
+    pointer-events: auto !important;
+  }
+
+  body.iu-calendarOverlay-open #iuCalendarOverlay.iu-calendarOverlay:not([hidden]) {
+    z-index: 10030 !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    padding: 0 !important;
+  }
+
+  body.iu-calendarOverlay-open #iuCalendarOverlay .iu-calendarOverlay__dialog {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+  }
+
+  body.iu-calendarOverlay-open #iuCalendarOverlay :is(
+    .iu-calendarOverlay__main,
+    .iu-calendarOverlay__viewRoot,
+    .iu-calendarOverlay__side,
+    .iu-calendarOverlay__body
+  ) {
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    box-sizing: border-box !important;
+  }
+
+  body.iu-calendarOverlay-open #iuCalMonthActionBar.iu-calMonthActionBar {
+    margin-bottom: calc(var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) - env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  #iuCalendarDayOverlay.iu-calendar-day-overlay:not([hidden]) {
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    height: auto !important;
+    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+    box-sizing: border-box !important;
+  }
+
+  #iuCalendarDayOverlay .iu-calendar-day-content {
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    box-sizing: border-box !important;
+  }
+
+  .iu-calBottomSheet:not([hidden]) .iu-calBottomSheet__panel {
+    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+    padding-bottom: calc(var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) - env(safe-area-inset-bottom, 0px)) !important;
+    box-sizing: border-box !important;
+  }
+
+  .iu-calBottomSheet:not([hidden]) .iu-calBottomSheet__scroll {
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    box-sizing: border-box !important;
+  }
+
+  .iu-calSearchOverlay:not([hidden]) .iu-calSearchOverlay__panel {
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    box-sizing: border-box !important;
+  }
+
+  .iu-calSearchOverlay:not([hidden]) .iu-calSearchOverlay__tableScroll {
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    box-sizing: border-box !important;
+  }
+
+  body.iu-tasksOverlay-open #iuTasksOverlay.iu-tasksPremiumScope:not([hidden]) {
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    padding: 0 !important;
+  }
+
+  body.iu-tasksOverlay-open #iuTasksOverlay .iu-tasksOverlay__dialog {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+  }
+
+  body.iu-tasksOverlay-open #iuTasksOverlay :is(
+    .iu-tasksOverlay__scroll,
+    .iu-tasksOverlay__list,
+    .iu-tasksOverlay__form
+  ) {
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    box-sizing: border-box !important;
+  }
+
+  body.iu-notesOverlay-open #iuNotesOverlay.iu-notesPremiumScope:not([hidden]) {
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    padding: 0 !important;
+  }
+
+  body.iu-notesOverlay-open #iuNotesOverlay .iu-notesOverlay__dialog {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    box-sizing: border-box !important;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+  }
+
+  body.iu-notesOverlay-open #iuNotesOverlay :is(
+    .iu-notesOverlay__listScroll,
+    .iu-notesOverlay__detailScroll,
+    .iu-notesOverlay__list,
+    .iu-notesOverlay__detail,
+    .iu-notesOverlay__body
+  ) {
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    box-sizing: border-box !important;
+  }
+
+  body.iu-modal-open #iu-mailbox-edit-overlay:not([hidden]) {
+    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    overflow-y: auto !important;
+    box-sizing: border-box !important;
+  }
 }
