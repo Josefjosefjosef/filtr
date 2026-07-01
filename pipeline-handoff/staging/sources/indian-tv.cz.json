@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-07-01T13:19:17.114137Z",
+  "ingestedAt": "2026-07-01T15:05:00.867967Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "PlayStation Store na PS3 a PS Vita končí - INDIAN",
+      "url": "https://indian-tv.cz/clanek/playstation-store-na-ps3-a-ps-vita-konci-66jbqy",
+      "dt": "2026-07-01T13:20:38Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "indian",
+        "končí",
+        "playstation",
+        "ps3",
+        "store",
+        "vita"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1054,33 +1077,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Patch 007: First Light opravuje pády, HDR i problémy s výkonem na PC - INDIAN",
-      "url": "https://indian-tv.cz/clanek/patch-007-first-light-opravuje-pady-hdr-i-problemy-5abvz5",
-      "dt": "2026-06-28T10:26:21Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "007",
-        "first",
-        "hdr",
-        "indian",
-        "light",
-        "opravuje",
-        "patch",
-        "problémy",
-        "pády",
-        "výkonem"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1091,7 +1087,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 229226,
+      "bytes": 229136,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1128,7 +1124,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-01T12:40:46Z",
+        "raw_feed_latest_publishedAt": "2026-07-01T13:20:38Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1143,6 +1139,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "PlayStation Store na PS3 a PS Vita končí - INDIAN",
+            "publishedAt": "2026-07-01T13:20:38Z"
+          },
           {
             "title": "Sony oznámila konec fyzických disků s hrami pro konzole PlayStation - INDIAN",
             "publishedAt": "2026-07-01T12:40:46Z"
@@ -1170,10 +1170,6 @@
           {
             "title": "Sony chce i nadále vydávat každý rok jeden velký hit pro PlayStation - INDIAN",
             "publishedAt": "2026-07-01T05:30:00Z"
-          },
-          {
-            "title": "Naughty Dog mělo dát přednost remaku The Last of Us před předělávkou prvního Uncharted - INDIAN",
-            "publishedAt": "2026-07-01T05:23:15Z"
           }
         ]
       }
