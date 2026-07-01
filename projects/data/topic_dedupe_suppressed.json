@@ -1,14 +1,54 @@
 {
-  "generatedAt": "2026-07-01T22:10:02.961513Z",
+  "generatedAt": "2026-07-01T22:22:05.828385Z",
   "stats": {
-    "suppressed_count": 731,
+    "suppressed_count": 728,
     "clusters_merged": 595,
-    "visible_count": 19235,
+    "visible_count": 19244,
     "event_dedupe_low_slug_skip": 0,
     "event_dedupe_replay_guard_skip": 1,
     "event_dedupe_recurring_template_skip": 15
   },
   "suppressed": [
+    {
+      "url": "https://tydenikpolicie.cz/policistum-na-prostejovsku-ujizdel-ridic-skodovky/",
+      "title": "policistum na prostejovsku ujizdel ridic skodovky",
+      "duplicate_of": "https://tydenikpolicie.cz/policistum-na-zlinsku-ujizdel-ridic-skodovky-naboural-do-zaparkovaneho-auta/",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "834045c41e5a0542",
+      "section": "aktualne",
+      "sourceLabel": "Týdeník Policie"
+    },
+    {
+      "url": "https://tydenikpolicie.cz/pri-srazce-tri-aut-v-moste-zemreli-dva-lide/",
+      "title": "pri srazce tri aut v moste zemreli dva lide",
+      "duplicate_of": "https://tydenikpolicie.cz/policiste-hledaji-svedky-tragicke-nehody-pri-ktere-v-moste-zemreli-dva-lide/",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "741190d944c447d6",
+      "section": "aktualne",
+      "sourceLabel": "Týdeník Policie"
+    },
+    {
+      "url": "https://www.denik.cz/ze_sveta/tragedie-v-indii-nejmene-21-lidi-zahynulo-pri-nehode-autobusu.html",
+      "title": "tragedie v indii nejmene 21 lidi zahynulo pri nehode autobusu",
+      "duplicate_of": "https://www.seznamzpravy.cz/clanek/zahranicni-pri-vybuchu-tovarny-na-pyrotechniku-v-indii-zemrelo-nejmene-25-lidi-304426",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "54f7f14e09eceafb",
+      "section": "aktualne",
+      "sourceLabel": "Deník"
+    },
+    {
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-ukrajinska-vojenska-rozvedka-uvedla-ze-zasahla-dve-velke-ruske-vysadkove-lode-304409",
+      "title": "zahranicni ukrajinska vojenska rozvedka uvedla ze zasahla dve velke ruske vysadkove lode 304409",
+      "duplicate_of": "https://ct24.ceskatelevize.cz/clanek/svet/ukrajinska-vojenska-rozvedka-tvrdi-ze-zasahla-dve-velke-ruske-vysadkove-lode-372574",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "f63719816a3c12da",
+      "section": "aktualne",
+      "sourceLabel": "Seznam Zprávy"
+    },
     {
       "url": "https://www.denik.cz/regiony/pardubice-pozar-terorismus-20260420.html",
       "title": "Ultimátum vypršelo. Skupina zveřejnila údajné spisy z pardubické haly",
@@ -400,22 +440,92 @@
       "sourceLabel": "Seznam Zprávy"
     },
     {
-      "url": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/477237/online-belgie-senegal-0-0-bitva-dvou-ofenzivnich-tymu-kdo-postoupi-do-osmifinale-ms.html",
-      "title": "Belgie - Senegal 0:0. Bitva dvou ofenzivních týmů, kdo postoupí do osmifinále MS",
-      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/477237/online-belgie-senegal-0-1-bitva-dvou-ofenzivnich-tymu-prosadil-se-diarra.html",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-1-cervence-157653",
+      "title": "Soutěž k MS ve fotbale – 1. července",
+      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-2-cervence-157654",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "820034af8cfc51e4",
+      "topic_key": "8c5f0140b6348fab",
       "section": "sport",
-      "sourceLabel": "iSport"
+      "sourceLabel": "ČT sport"
+    },
+    {
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-30-cervna-157652",
+      "title": "Soutěž k MS ve fotbale – 30. června",
+      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-2-cervence-157654",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "8c5f0140b6348fab",
+      "section": "sport",
+      "sourceLabel": "ČT sport"
+    },
+    {
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-29-cervna-157651",
+      "title": "Soutěž k MS ve fotbale – 29. června",
+      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-2-cervence-157654",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "8c5f0140b6348fab",
+      "section": "sport",
+      "sourceLabel": "ČT sport"
+    },
+    {
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-27-cervna-157484",
+      "title": "Soutěž k MS ve fotbale – 27. června",
+      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-2-cervence-157654",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "8c5f0140b6348fab",
+      "section": "sport",
+      "sourceLabel": "ČT sport"
+    },
+    {
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-26-cervna-157480",
+      "title": "Soutěž k MS ve fotbale – 26. června",
+      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-2-cervence-157654",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "8c5f0140b6348fab",
+      "section": "sport",
+      "sourceLabel": "ČT sport"
+    },
+    {
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-25-cervna-157483",
+      "title": "Soutěž k MS ve fotbale – 25. června",
+      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-2-cervence-157654",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "8c5f0140b6348fab",
+      "section": "sport",
+      "sourceLabel": "ČT sport"
+    },
+    {
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-23-cervna-157482",
+      "title": "Soutěž k MS ve fotbale – 23. června",
+      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-2-cervence-157654",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "8c5f0140b6348fab",
+      "section": "sport",
+      "sourceLabel": "ČT sport"
+    },
+    {
+      "url": "https://www.idnes.cz/sport/tenis/wimbledon-2026.A260624_205318_tenis_ald",
+      "title": "Wimbledon 2026: program, výsledky, čeští tenisté, historie",
+      "duplicate_of": "https://isport.blesk.cz/clanek/tenis-wimbledon/476955/wimbledon-2026-program-a-vysledky-cechu-na-nejslavnejsim-tenisovem-grandslamu.html",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "5a527a0f41e5e55c",
+      "section": "sport",
+      "sourceLabel": "iDNES.cz"
     },
     {
       "url": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/477237/online-belgie-senegal-bitva-dvou-ofenzivnich-tymu-kdo-postoupi-do-osmifinale-ms.html",
       "title": "Belgie - Senegal. Bitva dvou ofenzivních týmů, kdo postoupí do osmifinále MS",
-      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/477237/online-belgie-senegal-0-1-bitva-dvou-ofenzivnich-tymu-prosadil-se-diarra.html",
+      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/477237/online-belgie-senegal-0-0-bitva-dvou-ofenzivnich-tymu-kdo-postoupi-do-osmifinale-ms.html",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "820034af8cfc51e4",
+      "topic_key": "76b2522b6fe9d453",
       "section": "sport",
       "sourceLabel": "iSport"
     },
@@ -426,46 +536,6 @@
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
       "topic_key": "19299a48baca6196",
-      "section": "sport",
-      "sourceLabel": "iSport"
-    },
-    {
-      "url": "https://www.idnes.cz/hokej/nhl/radko-gudas-florida-panthers-nova-smlouva.A260701_173615_nhl_drev",
-      "title": "Šest let pro Gudase. Na Floridě podepsal dlouholetou smlouvu, finančně slevil",
-      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-nhl/477266/dozivoti-pro-gudase-floride-podepsal-na-sest-let-je-to-parada-neskryval-jeho-otec.html",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "5510cb2eea6f1eff",
-      "section": "sport",
-      "sourceLabel": "iDNES.cz"
-    },
-    {
-      "url": "https://www.idnes.cz/sport/tenis/siniakova-nebude-ve-wimbledonu-obhajovat-titul-ve-smisene-ctyrhre.A260701_175715_tenis_ikuc",
-      "title": "Tenisté ji uháněli, Siniaková ale odmítla. Ve Wimbledonu nebude obhajovat titul",
-      "duplicate_of": "https://www.sport.cz/clanek/tenis-wimbledon-siniakova-nebude-ve-wimbledonu-obhajovat-titul-ve-smisene-ctyrhre-5496013",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "c5e711cc60486169",
-      "section": "sport",
-      "sourceLabel": "iDNES.cz"
-    },
-    {
-      "url": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/477236/online-anglie-dr-kongo-0-0-kane-a-spol-vstupuji-do-play-off-v-roli-velkeho-favorita.html",
-      "title": "Anglie - DR Kongo 0:0. Kane a spol. vstupují do play off v roli velkého favorita",
-      "duplicate_of": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/ms-ve-fotbale-2026-anglie-dr-kongo-online-vysledek.A260701_152015_ms-fotbal_tals",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "691948ef1ddfd8fd",
-      "section": "sport",
-      "sourceLabel": "iSport"
-    },
-    {
-      "url": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/477236/online-anglie-dr-kongo-kane-a-spol-vstupuji-do-play-off-ms-v-roli-velkeho-favorita.html",
-      "title": "Anglie - DR Kongo. Kane a spol. vstupují do play off MS v roli velkého favorita",
-      "duplicate_of": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/ms-ve-fotbale-2026-anglie-dr-kongo-online-vysledek.A260701_152015_ms-fotbal_tals",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "691948ef1ddfd8fd",
       "section": "sport",
       "sourceLabel": "iSport"
     },
@@ -500,22 +570,52 @@
       "sourceLabel": "Deník"
     },
     {
+      "url": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/476360/anglie-kongo-v-tv-kdo-vysila-slagr-play-off-ms-ve-fotbale-2026.html",
+      "title": "Anglie - Kongo v TV. Kdo vysílá šlágr play off MS ve fotbale 2026",
+      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/477236/online-anglie-dr-kongo-0-0-kane-a-spol-vstupuji-do-play-off-v-roli-velkeho-favorita.html",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "cb7aa051911e38a0",
+      "section": "sport",
+      "sourceLabel": "iSport"
+    },
+    {
+      "url": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/477236/online-anglie-dr-kongo-kane-a-spol-vstupuji-do-play-off-ms-v-roli-velkeho-favorita.html",
+      "title": "Anglie - DR Kongo. Kane a spol. vstupují do play off MS v roli velkého favorita",
+      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/477236/online-anglie-dr-kongo-0-0-kane-a-spol-vstupuji-do-play-off-v-roli-velkeho-favorita.html",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "cb7aa051911e38a0",
+      "section": "sport",
+      "sourceLabel": "iSport"
+    },
+    {
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/albion-v-roli-velkeho-favorita-proti-kongu-americane-chteji-pridat-druhou-vyhru-v-play-off-v-157709",
+      "title": "Albion v roli velkého favorita proti Kongu. Američané chtějí přidat druhou výhru v play-off v historii",
+      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/477236/online-anglie-dr-kongo-0-0-kane-a-spol-vstupuji-do-play-off-v-roli-velkeho-favorita.html",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "cb7aa051911e38a0",
+      "section": "sport",
+      "sourceLabel": "ČT sport"
+    },
+    {
+      "url": "https://www.idnes.cz/sport/tenis/wimbledon-grandslam-muchova-siniakova-bartunkova-krejcikova.A260701_113710_tenis_jrv",
+      "title": "Wimbledon ONLINE: Muchová postupuje, Siniakovou čeká derby s Bartůňkovou",
+      "duplicate_of": "https://isport.blesk.cz/clanek/tenis-wimbledon/477243/wimbledon-online-muchova-postupuje-siniakova-hraje-proti-bartunkove.html",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "70f5145f6516f19c",
+      "section": "sport",
+      "sourceLabel": "iDNES.cz"
+    },
+    {
       "url": "https://isport.blesk.cz/clanek/tenis-wimbledon/477243/wimbledon-online-muchova-postupuje-v-akci-krejcikova-siniakovou-ceka-ceske-derby.html",
       "title": "Wimbledon ONLINE: Muchová postupuje. V akci Krejčíková, Siniakovou čeká české derby",
       "duplicate_of": "https://isport.blesk.cz/clanek/tenis-wimbledon/477243/wimbledon-online-muchova-postupuje-siniakova-hraje-proti-bartunkove.html",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
       "topic_key": "70f5145f6516f19c",
-      "section": "sport",
-      "sourceLabel": "iSport"
-    },
-    {
-      "url": "https://isport.blesk.cz/clanek/tenis-wimbledon/476955/wimbledon-2026-program-a-vysledky-cechu-na-nejslavnejsim-tenisovem-grandslamu.html",
-      "title": "Wimbledon 2026: program a výsledky Čechů na nejslavnějším tenisovém grandslamu",
-      "duplicate_of": "https://www.idnes.cz/sport/tenis/wimbledon-2026.A260624_205318_tenis_ald",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "f40418fd6c20f990",
       "section": "sport",
       "sourceLabel": "iSport"
     },
@@ -540,26 +640,6 @@
       "sourceLabel": "Sport.cz"
     },
     {
-      "url": "https://sazeni.idnes.cz/fotbal/belgie-senegal-ms-fotbal.A260630_175848_sazeni-fotbal_pola",
-      "title": "Belgie - Senegal v TV: Kurzy a kde sledovat MS ve fotbale 2026 živě",
-      "duplicate_of": "https://sazeni.idnes.cz/fotbal/usa-bosna-hercegovina-ms-fotbal.A260701_110031_sazeni-fotbal_pola",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "728a999e2ec89595",
-      "section": "sport",
-      "sourceLabel": "iDNES.cz"
-    },
-    {
-      "url": "https://sazeni.idnes.cz/tenis/krejcikova-andrejevova-2-kolo-wimbledonu-2026.A260630_120243_sazeni-tenis_jure",
-      "title": "Krejčíková vs. Andrejevová: Kurzy a kde sledovat Wimbledon 2026 živě",
-      "duplicate_of": "https://sazeni.idnes.cz/fotbal/usa-bosna-hercegovina-ms-fotbal.A260701_110031_sazeni-fotbal_pola",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "728a999e2ec89595",
-      "section": "sport",
-      "sourceLabel": "iDNES.cz"
-    },
-    {
       "url": "https://www.idnes.cz/fotbal/prvni-liga/milan-petrzela-slovacko-konec.A260701_103407_fotbal_kazdt",
       "title": "Děkujeme za vše, Milánku. Slovácko se rozloučilo s rekordmanem Petrželou",
       "duplicate_of": "https://sport.ceskatelevize.cz/clanek/fotbal/slovacko-se-rozloucilo-s-ligovym-rekordmanem-petrzelou-157712",
@@ -578,66 +658,6 @@
       "topic_key": "921c9bc9bd53c8b9",
       "section": "sport",
       "sourceLabel": "iSport"
-    },
-    {
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-30-cervna-157652",
-      "title": "Soutěž k MS ve fotbale – 30. června",
-      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-1-cervence-157653",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "8c5f0140b6348fab",
-      "section": "sport",
-      "sourceLabel": "ČT sport"
-    },
-    {
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-29-cervna-157651",
-      "title": "Soutěž k MS ve fotbale – 29. června",
-      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-1-cervence-157653",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "8c5f0140b6348fab",
-      "section": "sport",
-      "sourceLabel": "ČT sport"
-    },
-    {
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-27-cervna-157484",
-      "title": "Soutěž k MS ve fotbale – 27. června",
-      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-1-cervence-157653",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "8c5f0140b6348fab",
-      "section": "sport",
-      "sourceLabel": "ČT sport"
-    },
-    {
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-26-cervna-157480",
-      "title": "Soutěž k MS ve fotbale – 26. června",
-      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-1-cervence-157653",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "8c5f0140b6348fab",
-      "section": "sport",
-      "sourceLabel": "ČT sport"
-    },
-    {
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-25-cervna-157483",
-      "title": "Soutěž k MS ve fotbale – 25. června",
-      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-1-cervence-157653",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "8c5f0140b6348fab",
-      "section": "sport",
-      "sourceLabel": "ČT sport"
-    },
-    {
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-23-cervna-157482",
-      "title": "Soutěž k MS ve fotbale – 23. června",
-      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/fotbal/soutez-k-ms-ve-fotbale-1-cervence-157653",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "8c5f0140b6348fab",
-      "section": "sport",
-      "sourceLabel": "ČT sport"
     },
     {
       "url": "https://isport.blesk.cz/clanek/fotbal-reprezentace-ms-fotbal-2026/476278/tabulky-ms-ve-fotbale-2026-jake-je-poradi-skupin-jak-si-vedli-cesi.html",
@@ -972,10 +992,10 @@
     {
       "url": "https://isport.blesk.cz/clanek/hokej-nhl/475287/colorado-poprve-v-play-off-prohralo-vladar-ma-po-sezone-carolina-uz-slavi-postup.html",
       "title": "Colorado poprvé v play off prohrálo. Vladař má po sezoně, Carolina už slaví postup",
-      "duplicate_of": "https://www.idnes.cz/hokej/nhl/nhl-play-off-philadelphia-colorado-vysledky-souhrn.A260510_065250_nhl_ipet",
+      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/hokej/vladarovi-a-phipadelphii-skoncila-sezona-colorado-poprve-v-play-off-prohralo-156689",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "ace1e8e8b708201c",
+      "topic_key": "e73df7f3fe8187b8",
       "section": "sport",
       "sourceLabel": "iSport"
     },
@@ -1150,22 +1170,12 @@
       "sourceLabel": "iDNES.cz"
     },
     {
-      "url": "https://isport.blesk.cz/clanek/hokej-nhl/475177/dostal-slavi-vyhru-o-nulu-prisel-sedm-sekund-pred-koncem-dobes-na-uvod-padl.html",
-      "title": "Dostál slaví výhru, o nulu přišel sedm sekund před koncem. Dobeš na úvod padl",
-      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-nhl/475229/dostal-prisel-o-nulu-sest-sekund-pred-koncem-pak-hovoril-s-idolem-je-cool-s-tebou-mluvit.html",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "b9addb7621f8e205",
-      "section": "sport",
-      "sourceLabel": "iSport"
-    },
-    {
       "url": "https://isport.blesk.cz/clanek/hokej-nhl/475177/dostal-slavi-vyhru-o-nulu-sest-sekund-pred-koncem-dobes-na-uvod-padl.html",
       "title": "Dostál slaví výhru, o nulu šest sekund před koncem. Dobeš na úvod padl",
-      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-nhl/475229/dostal-prisel-o-nulu-sest-sekund-pred-koncem-pak-hovoril-s-idolem-je-cool-s-tebou-mluvit.html",
+      "duplicate_of": "https://www.sport.cz/clanek/hokej-nhl-dobesovi-se-uvodni-souboj-s-buffalem-nepovedl-5448931",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "b9addb7621f8e205",
+      "topic_key": "7b1af66ad88af877",
       "section": "sport",
       "sourceLabel": "iSport"
     },
@@ -1322,10 +1332,10 @@
     {
       "url": "https://isport.blesk.cz/clanek/fotbal-zahranici-anglie-premier-league/475051/sestrihy-kinsky-se-raduje-tottenham-preskocil-west-ham-united-se-vraci-do-ligy-mistru.html",
       "title": "SESTŘIHY: Kinský se raduje, Tottenham přeskočil West Ham. United se vrací do Ligy mistrů",
-      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-zahranici-anglie-premier-league/475051/kinsky-vychytal-vitezstvi-tottenham-preskocil-west-ham-united-se-vraci-do-ligy-mistru.html",
+      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-zahranici-anglie-premier-league/475051/sestrihy-tottenham-s-kinskym-preskocil-west-ham-ztrata-cityzens-v-boji-o-titul.html",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "f249c569974bd856",
+      "topic_key": "6faa2b6f8214f141",
       "section": "sport",
       "sourceLabel": "iSport"
     },
@@ -1530,22 +1540,12 @@
       "sourceLabel": "iSport"
     },
     {
-      "url": "https://isport.blesk.cz/clanek/hokej-reprezentace-ms-v-hokeji-do-18-let/475024/online-cesko-u18-svedsko-u18-0-0-mladici-na-ms-bojuji-o-finale-tam-ceka-slovensko.html",
-      "title": "Česko U18 - Švédsko U18 0:0. Mladíci na MS bojují o finále, tam čeká Slovensko",
-      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-reprezentace-ms-v-hokeji-do-18-let/475024/online-cesko-u18-svedsko-u18-1-1-kdo-projde-do-finale-na-tomkuv-gol-prisla-odpoved.html",
+      "url": "https://isport.blesk.cz/clanek/hokej-reprezentace-ms-v-hokeji-do-18-let/474950/online-cesko-u18-finsko-u18-1-1-mladici-bojuji-o-semifinale-souper-srovnal.html",
+      "title": "Česko U18 - Finsko U18 1:1. Mladíci bojují o semifinále, soupeř srovnal",
+      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-reprezentace-ms-v-hokeji-do-18-let/474950/cesko-u18-finsko-u18-2-1-mladici-jsou-v-semifinale-ms-rozhodli-klaus-a-cifka.html",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "cccab3bb9c58ea3f",
-      "section": "sport",
-      "sourceLabel": "iSport"
-    },
-    {
-      "url": "https://isport.blesk.cz/clanek/hokej-reprezentace-ms-v-hokeji-do-18-let/475024/online-cesko-u18-svedsko-u18-mladici-na-ms-bojuji-o-postup-do-finale.html",
-      "title": "Česko U18 - Švédsko U18. Mladíci na MS bojují o postup do finále",
-      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-reprezentace-ms-v-hokeji-do-18-let/475024/online-cesko-u18-svedsko-u18-1-1-kdo-projde-do-finale-na-tomkuv-gol-prisla-odpoved.html",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "cccab3bb9c58ea3f",
+      "topic_key": "2bf538e857d58abd",
       "section": "sport",
       "sourceLabel": "iSport"
     },
@@ -1600,22 +1600,22 @@
       "sourceLabel": "iDNES.cz"
     },
     {
-      "url": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/301460/prestupy-v-extralize-online-v-pardubicich-konci-stalice-kometa-oznamila-deset-posil.html",
-      "title": "Přestupy v extralize ONLINE: V Pardubicích končí stálice. Kometa oznámila DESET posil",
-      "duplicate_of": "https://www.idnes.cz/hokej/extraliga/kometa-brno-libor-zabransky-posily-trener.A260501_095038_hokej_ivt",
+      "url": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/301460/prestupy-v-extralize-online-velky-navrat-do-vitkovic-v-pardubicich-konci-stalice.html",
+      "title": "Přestupy v extralize ONLINE: Velký návrat do Vítkovic, v Pardubicích končí stálice",
+      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/301460/prestupy-v-extralize-online-velky-navrat-do-vitkovic-olomouc-predstavila-trenera.html",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "94e72ddbb5bee9a2",
+      "topic_key": "5ed5e6db24e525e4",
       "section": "sport",
       "sourceLabel": "iSport"
     },
     {
       "url": "https://www.idnes.cz/hokej/reprezentace/ceske-hokejove-hry-2026.A260425_105231_ms-hokej-2026_ald",
       "title": "České hokejové hry 2026: Program, výsledky, Češi, kde sledovat",
-      "duplicate_of": "https://isport.blesk.cz/clanek/ostatni-cyklistika-giro-d-italia/474927/giro-2026-etapy-trasa-vysledky-cesi-a-kde-sledovat-zive.html",
+      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-reprezentace/474677/ceske-hokejove-hry-2026-program-a-vysledky-vstupenky-nominace-tymu.html",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "bc3b5f88e4e70590",
+      "topic_key": "4b487422d21c47ff",
       "section": "sport",
       "sourceLabel": "iDNES.cz"
     },
@@ -1680,12 +1680,22 @@
       "sourceLabel": "iSport"
     },
     {
-      "url": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/301460/prestupy-v-extralize-online-mlady-bek-jde-z-boleslavi-do-plzne-posily-pro-vitkovice.html",
-      "title": "Přestupy v extralize ONLINE: mladý bek jde z Boleslavi do Plzně, posily pro Vítkovice",
-      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/301460/prestupy-v-extralize-online-vitkovice-maji-utocniky-z-prvni-ligy-a-zamorske-juniorky.html",
+      "url": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/301460/prestupy-v-extralize-online-zkuseny-bek-do-boleslavi-nevahali-jsme-rekl-vlasak.html",
+      "title": "Přestupy v extralize ONLINE: Zkušený bek do Boleslavi. Neváhali jsme, řekl Vlasák",
+      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/301460/prestupy-v-extralize-online-mountfield-hk-vita-utocnika-zkuseny-bek-miri-do-boleslavi.html",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "893860d72acd660b",
+      "topic_key": "12a3b3eca364bec3",
+      "section": "sport",
+      "sourceLabel": "iSport"
+    },
+    {
+      "url": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/301460/prestupy-v-extralize-online-mlady-bek-jde-z-boleslavi-do-plzne-posily-pro-vitkovice.html",
+      "title": "Přestupy v extralize ONLINE: mladý bek jde z Boleslavi do Plzně, posily pro Vítkovice",
+      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/301460/prestupy-v-extralize-online-mountfield-hk-vita-utocnika-zkuseny-bek-miri-do-boleslavi.html",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "12a3b3eca364bec3",
       "section": "sport",
       "sourceLabel": "iSport"
     },
@@ -1812,10 +1822,10 @@
     {
       "url": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/474918/oslavy-titulu-online-zabery-primo-z-mistrovske-kabiny-kdo-bude-podle-sedlaka-tahounem.html",
       "title": "Oslavy titulu ONLINE: Záběry přímo z mistrovské kabiny! Kdo bude podle Sedláka tahounem",
-      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/474918/oslavy-titulu-online-podle-sedlaka-bude-tahounem-mandat-jak-reagoval-dedek-do-televize.html",
+      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/474918/oslavy-titulu-online-zabery-primo-z-mistrovske-kabiny-uz-se-vyrazi-do-pardubic.html",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "b7d7d5784ed4152c",
+      "topic_key": "0b67e37443aabbe0",
       "section": "sport",
       "sourceLabel": "iSport"
     },
@@ -1852,10 +1862,10 @@
     {
       "url": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/474910/online-trinec-pardubice-dynamo-muze-slavit-titul-prodlouzi-ocelari-serii.html",
       "title": "Třinec - Pardubice. Dynamo může slavit titul, prodlouží Oceláři sérii",
-      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/474910/online-trinec-pardubice-1-2-ocelari-otevreli-skore-ale-dynamo-rychle-otocilo.html",
+      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/474910/trinec-pardubice-4-5p-zlata-rana-cervenky-dynamo-se-dockalo-a-po-14-letech-slavi-titul.html",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "9fe8427980e448ac",
+      "topic_key": "459ddb6a930d83f6",
       "section": "sport",
       "sourceLabel": "iSport"
     },
@@ -2412,20 +2422,20 @@
     {
       "url": "https://www.sport.cz/clanek/basketbal-basketbaliste-denveru-a-new-yorku-ztratili-v-prvnim-kole-play-off-nba-vedeni-5440947",
       "title": "basketbal basketbaliste denveru a new yorku ztratili v prvnim kole play off nba vedeni 5440947",
-      "duplicate_of": "https://www.sport.cz/clanek/basketbal-basketbaliste-orlanda-a-phoenixu-si-v-predkole-zajistili-misto-v-play-off-nba-5438936",
+      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/basketbal/basketbaliste-denveru-a-new-yorku-ztratili-v-prvnim-kole-play-off-vedeni-156389",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "c3d46bcf5a7d8b01",
+      "topic_key": "c5d8b830d7309dd2",
       "section": "sport",
       "sourceLabel": "Sport.cz"
     },
     {
       "url": "https://www.sport.cz/clanek/basketbal-basketbaliste-lakers-ci-denveru-zahajili-play-off-nba-vitezne-5439974",
       "title": "basketbal basketbaliste lakers ci denveru zahajili play off nba vitezne 5439974",
-      "duplicate_of": "https://www.sport.cz/clanek/basketbal-basketbaliste-orlanda-a-phoenixu-si-v-predkole-zajistili-misto-v-play-off-nba-5438936",
+      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/basketbal/basketbaliste-denveru-a-new-yorku-ztratili-v-prvnim-kole-play-off-vedeni-156389",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "c3d46bcf5a7d8b01",
+      "topic_key": "c5d8b830d7309dd2",
       "section": "sport",
       "sourceLabel": "Sport.cz"
     },
@@ -2482,10 +2492,10 @@
     {
       "url": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/301460/prestupy-v-extralize-online-kometa-hlasi-zmeny-konci-sedm-hracu-vcetne-zkusenych-beku.html",
       "title": "prestupy v extralize online kometa hlasi zmeny konci sedm hracu vcetne zkusenych beku",
-      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/301460/prestupy-v-extralize-online-ve-varech-konci-asistent-i-pet-hracu-posila-mountfieldu.html",
+      "duplicate_of": "https://www.sport.cz/clanek/hokej-extraliga-kometa-zahajila-rekonstrukci-konci-sedm-hracu-vcetne-dlouholetych-beku-i-brankare-5440886",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "1bfa6807478852b1",
+      "topic_key": "3125398eb0f1e6d2",
       "section": "sport",
       "sourceLabel": "iSport"
     },
@@ -2732,10 +2742,10 @@
     {
       "url": "https://isport.blesk.cz/clanek/hokej-nhl/474473/skoncila-zakladni-cast-nhl-vejmelka-byl-po-dvou-tretinach-stridan-necas-dostal-volno.html",
       "title": "skoncila zakladni cast nhl vejmelka byl po dvou tretinach stridan necas dostal volno",
-      "duplicate_of": "https://isport.blesk.cz/clanek/hokej-nhl/474473/vejmelka-byl-po-dvou-tretinach-stridan-necas-dostal-volno-jak-vypada-pavouk-play-off-nhl.html",
+      "duplicate_of": "https://sport.ceskatelevize.cz/clanek/hokej/vejmelka-zakladni-cast-nhl-jako-brankar-s-nejvice-vyhrami-nezakoncil-156324",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "b2e64c2d7af8bcae",
+      "topic_key": "a9310cff940ccbe9",
       "section": "sport",
       "sourceLabel": "iSport"
     },
@@ -2860,42 +2870,12 @@
       "sourceLabel": "iSport"
     },
     {
-      "url": "https://isport.blesk.cz/clanek/fotbal-domaci-souteze-chance-narodni-liga/474438/online-zbrojovka-zizkov-0-0-sparta-b-hosti-artis-budejovice-proti-taborsku.html",
-      "title": "online zbrojovka zizkov 0 0 sparta b hosti artis budejovice proti taborsku",
-      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-domaci-souteze-chance-narodni-liga/474438/online-zbrojovka-zizkov-1-0-sparta-b-hosti-artis-budejovice-proti-taborsku.html",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "cc1ddd6a71d026cd",
-      "section": "sport",
-      "sourceLabel": "iSport"
-    },
-    {
-      "url": "https://isport.blesk.cz/clanek/fotbal-domaci-souteze-chance-narodni-liga/474438/online-sparta-b-artis-0-0-zbrojovka-hosti-zizkov-budejovice-proti-taborsku.html",
-      "title": "online sparta b artis 0 0 zbrojovka hosti zizkov budejovice proti taborsku",
-      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-domaci-souteze-chance-narodni-liga/474438/online-zbrojovka-zizkov-1-0-sparta-b-hosti-artis-budejovice-proti-taborsku.html",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "cc1ddd6a71d026cd",
-      "section": "sport",
-      "sourceLabel": "iSport"
-    },
-    {
-      "url": "https://isport.blesk.cz/clanek/fotbal-domaci-souteze-chance-narodni-liga/474438/online-sparta-b-artis-zbrojovka-hosti-zizkov-budejovice-proti-taborsku.html",
-      "title": "online sparta b artis zbrojovka hosti zizkov budejovice proti taborsku",
-      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-domaci-souteze-chance-narodni-liga/474438/online-zbrojovka-zizkov-1-0-sparta-b-hosti-artis-budejovice-proti-taborsku.html",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "cc1ddd6a71d026cd",
-      "section": "sport",
-      "sourceLabel": "iSport"
-    },
-    {
       "url": "https://isport.blesk.cz/clanek/fotbal-domaci-souteze-chance-narodni-liga/474438/online-zbrojovka-zizkov-becko-sparty-hosti-artis-budejovice-proti-taborsku.html",
       "title": "online zbrojovka zizkov becko sparty hosti artis budejovice proti taborsku",
-      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-domaci-souteze-chance-narodni-liga/474438/online-zbrojovka-zizkov-1-0-sparta-b-hosti-artis-budejovice-proti-taborsku.html",
+      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-domaci-souteze-chance-narodni-liga/474438/zbrojovka-zizkov-1-0-artis-porazil-rezervu-sparty-taborsko-poskocilo-na-druhe-misto.html",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "cc1ddd6a71d026cd",
+      "topic_key": "83389a6b3c7c66be",
       "section": "sport",
       "sourceLabel": "iSport"
     },
@@ -2920,22 +2900,12 @@
       "sourceLabel": "iSport"
     },
     {
-      "url": "https://isport.blesk.cz/clanek/fotbal-evropske-pohary-liga-mistru/474437/liga-mistru-online-bayern-real-2-2-divoka-prestrelka-v-mnichove-arsenal-hosti-sporting.html",
-      "title": "liga mistru online bayern real 2 2 divoka prestrelka v mnichove arsenal hosti sporting",
-      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-evropske-pohary-liga-mistru/474437/liga-mistru-online-bayern-real-2-3-divoka-prestrelka-v-mnichove-arsenal-hosti-sporting.html",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "ee85d81787ae6180",
-      "section": "sport",
-      "sourceLabel": "iSport"
-    },
-    {
       "url": "https://isport.blesk.cz/clanek/fotbal-evropske-pohary-liga-mistru/474437/liga-mistru-online-bayern-proti-realu-haji-naskok-v-boji-o-semifinale-arsenal-sporting.html",
       "title": "liga mistru online bayern proti realu haji naskok v boji o semifinale arsenal sporting",
-      "duplicate_of": "https://isport.blesk.cz/clanek/fotbal-evropske-pohary-liga-mistru/474437/liga-mistru-online-bayern-real-2-3-divoka-prestrelka-v-mnichove-arsenal-hosti-sporting.html",
+      "duplicate_of": "https://www.sport.cz/clanek/fotbal-liga-mistru-bitva-gigantu-vrcholi-bayern-haji-naskok-pred-realem-do-semifinale-ligy-mistru-ma-blize-i-arsenal-5437012",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "ee85d81787ae6180",
+      "topic_key": "d2b10568d457d270",
       "section": "sport",
       "sourceLabel": "iSport"
     },
@@ -3230,86 +3200,6 @@
       "sourceLabel": "iSport"
     },
     {
-      "url": "https://www.e15.cz/domaci/politika/vlada-zakazala-prezidentovi-cestu-na-summit-nato-pavel-se-obratil-na-ustavni-soud-1433770",
-      "title": "Vláda zakázala prezidentovi cestu na summit NATO. Pavel se obrátil na Ústavní soud",
-      "duplicate_of": "https://domaci.hn.cz/c1-67896460-prezident-tam-jezdil-vzdy-tak-at-jede-i-ted-ustavni-soud-naridil-ze-vlada-ma-vzit-pavla-do-ankary-na-summit-nato",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "5daeda0703f7b0b0",
-      "section": "krimi",
-      "sourceLabel": "E15"
-    },
-    {
-      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-pri-ukrajinskem-dronovem-utoku-na-moskevskou-oblast-zemreli-tri-lide-306344",
-      "title": "Při ukrajinském dronovém útoku na Rusko zahynuli podle úřadů čtyři lidé",
-      "duplicate_of": "https://www.seznamzpravy.cz/clanek/zahranicni-tri-lide-zahynuli-pri-ukrajinskem-utoku-v-rjazani-uvedl-gubernator-306229",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "c4ce0945e5ff4561",
-      "section": "krimi",
-      "sourceLabel": "Seznam Zprávy"
-    },
-    {
-      "url": "https://www.denik.cz/krimi/neznamy-zlodej-v-cernem-ukradl-v-jablonnem-lebku-svate-zdislavy-20260512.html",
-      "title": "Neznámý zloděj v černém ukradl z baziliky v Jablonném lebku svaté Zdislavy",
-      "duplicate_of": "https://domaci.hn.cz/c1-67876320-neznamy-pachatel-ukradl-z-baziliky-v-jablonnem-lebku-svate-zdislavy-jeji-historicka-hodnota-je-nevycislitelna",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "4e42c4a42be79526",
-      "section": "krimi",
-      "sourceLabel": "Deník"
-    },
-    {
-      "url": "https://www.novinky.cz/clanek/valka-na-ukrajine-primeri-po-rusku-nocni-utoky-zabily-pet-lidi-desitky-zranily-40576817",
-      "title": "Příměří po rusku: Noční útoky zabily pět lidí, desítky zranily",
-      "duplicate_of": "https://www.seznamzpravy.cz/clanek/zahranicni-ruske-utoky-na-zaporozi-a-kramatorsk-zabily-17-lidi-uvadi-ukrajinske-urady-305575",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "5e8c781d1c79f2ab",
-      "section": "krimi",
-      "sourceLabel": "Novinky"
-    },
-    {
-      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-policie-zadrzela-muze-jenz-v-londyne-pobodal-dva-zidy-slo-o-teroristicky-utok-305164",
-      "title": "Policie zadržela muže, jenž v Londýně pobodal dva židy, šlo o teroristický útok",
-      "duplicate_of": "https://www.seznamzpravy.cz/clanek/zahranicni-utocnik-ktery-v-londyne-pobodal-dva-zidy-byl-obvinen-z-pokusu-o-vrazdu-305278",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "47f805fd2da96800",
-      "section": "krimi",
-      "sourceLabel": "Seznam Zprávy"
-    },
-    {
-      "url": "https://www.denik.cz/krimi/soud-poslal-cimickeho-za-znasilneni-a-vydirani-znovu-na-pet-let-do-vezeni-202604.html",
-      "title": "Pět let vězení a zákaz činnosti. Cimický je vinný ze znásilnění, rozhodl soud",
-      "duplicate_of": "https://domaci.hn.cz/c1-67872180-cimicky-ma-jit-za-sexualni-utoky-a-vydirani-na-pet-let-do-vezeni-rozhodl-opet-soud",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "d33ab703a4c8a59d",
-      "section": "krimi",
-      "sourceLabel": "Deník"
-    },
-    {
-      "url": "https://www.e15.cz/zahranicni/geopolitika/trump-prodlouzil-primeri-s-iranem-podle-teheranu-budou-utoky-pokracovat-1432302",
-      "title": "trump prodlouzil primeri s iranem podle teheranu budou utoky pokracovat 1432302",
-      "duplicate_of": "https://www.seznamzpravy.cz/clanek/zahranicni-trump-oznamil-prodlouzeni-primeri-s-iranem-na-neurcito-304559",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "8a551a47081db310",
-      "section": "krimi",
-      "sourceLabel": "E15"
-    },
-    {
-      "url": "https://tydenikpolicie.cz/kriminaliste-patraji-po-totoznosti-mrtveho-muze-ktery-byl-nalezen-v-lese-na-tachovsku/",
-      "title": "kriminaliste patraji po totoznosti mrtveho muze ktery byl nalezen v lese na tachovsku",
-      "duplicate_of": "https://tydenikpolicie.cz/kriminaliste-stale-patraji-po-totoznosti-muze-jehoz-kosterni-ostatky-byly-nalezeny-pred-jedenacti-lety-v-lese-na-uherskohradistsku/",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "30f6aa344c787498",
-      "section": "krimi",
-      "sourceLabel": "Týdeník Policie"
-    },
-    {
       "url": "https://www.novinky.cz/clanek/ekonomika-podminky-ve-zpracovatelskem-prumyslu-se-v-cervnu-zlepsily-nejvice-od-dubna-2022-40586021",
       "title": "Podmínky ve zpracovatelském průmyslu se v červnu zlepšily nejvíce od dubna 2022",
       "duplicate_of": "https://profitonline.cz/podminky-v-ceskem-prumyslu-se-v-cervnu-zlepsily/",
@@ -3320,14 +3210,14 @@
       "sourceLabel": "Novinky"
     },
     {
-      "url": "https://ekonomickydenik.cz/sefem-dozorci-rady-cez-radim-fiala/",
-      "title": "Odměna pro SPD? Novým šéfem dozorčí rady ČEZ se stal Radim Fiala",
-      "duplicate_of": "https://archiv.hn.cz/c1-67899580-do-karet-managementu-cez-nejlepe-uvidi-radim-fiala-muze-jako-sef-dozorci-rady-prosadit-stranicky-cil-bdquo-zlevnit-elektrinu-ldquo",
+      "url": "https://byznys.hn.cz/c1-67895140-dusledky-vladnich-cistek-ve-statni-sprave-budeme-napravovat-celou-generaci",
+      "title": "Důsledky vládních čistek ve státní správě budeme napravovat celou generaci",
+      "duplicate_of": "https://ekonom.cz/c1-67899090-dusledky-vladnich-cistek-ve-statni-sprave-budeme-napravovat-celou-generaci",
       "duplicate_reason": "same_event_duplicate",
       "duplicate_confidence": 0.88,
-      "topic_key": "0486d04fcdf86fd0",
+      "topic_key": "c7cc85187b188d88",
       "section": "finance",
-      "sourceLabel": "Ekonomický deník"
+      "sourceLabel": "HN"
     },
     {
       "url": "https://www.penize.cz/podnikatelske-ucty/492525-fio-vylepsuje-nabidku-pro-podnikatele-pridava-letistni-salonky-zlevnuje-platebni-terminaly",
@@ -3338,16 +3228,6 @@
       "topic_key": "13abf2bb66d8fcc1",
       "section": "finance",
       "sourceLabel": "Peníze.cz"
-    },
-    {
-      "url": "https://ekonomickydenik.cz/cesi-vzali-statni-dluhopisy-utokem-mate-objednano-nezapomente-vcas-zaplatit/",
-      "title": "Češi vzali státní dluhopisy útokem: Máte objednáno? Nezapomeňte včas zaplatit",
-      "duplicate_of": "https://www.e15.cz/domaci/cesi-vzali-statni-dluhopisy-utokem-zajem-prekonal-ctyrnasobne-plan-1434012",
-      "duplicate_reason": "same_event_duplicate",
-      "duplicate_confidence": 0.88,
-      "topic_key": "f687f97f20b5eb48",
-      "section": "finance",
-      "sourceLabel": "Ekonomický deník"
     },
     {
       "url": "https://byznys.hn.cz/c1-67899490-zajem-o-dluhopisy-republiky-byl-ctyrnasobny-oproti-planu-lide-si-jich-objednali-za-80-miliard-korun",
@@ -3368,6 +3248,16 @@
       "topic_key": "b005e0bb995a30e0",
       "section": "finance",
       "sourceLabel": "Deník"
+    },
+    {
+      "url": "https://ekonomickydenik.cz/cesi-vzali-statni-dluhopisy-utokem-mate-objednano-nezapomente-vcas-zaplatit/",
+      "title": "Češi vzali státní dluhopisy útokem: Máte objednáno? Nezapomeňte včas zaplatit",
+      "duplicate_of": "https://www.e15.cz/domaci/cesi-vzali-statni-dluhopisy-utokem-zajem-prekonal-ctyrnasobne-plan-1434012",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "f687f97f20b5eb48",
+      "section": "finance",
+      "sourceLabel": "Ekonomický deník"
     },
     {
       "url": "https://www.idnes.cz/ekonomika/domaci/statni-rozpocet-pololeti.A260701_134825_ekonomika_ven",
@@ -3440,6 +3330,16 @@
       "sourceLabel": "iDNES.cz"
     },
     {
+      "url": "https://ekonomickydenik.cz/sefem-dozorci-rady-cez-radim-fiala/",
+      "title": "Odměna pro SPD? Novým šéfem dozorčí rady ČEZ se stal Radim Fiala",
+      "duplicate_of": "https://www.e15.cz/byznys/prumysl-a-energetika/radim-fiala-z-spd-povede-dozorci-radu-cez-funkce-ma-primy-vliv-na-vedeni-spolecnosti-1433964",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "5aab92790fcc44ef",
+      "section": "finance",
+      "sourceLabel": "Ekonomický deník"
+    },
+    {
       "url": "https://www.e15.cz/byznys/obri-uspech-ceske-strojirenske-skupiny-skoda-doda-svedum-tramvaje-za-6-5-miliardy-korun-1433960",
       "title": "Obří úspěch české strojírenské skupiny. Škoda dodá Švédům tramvaje za 6,5 miliardy korun",
       "duplicate_of": "https://byznys.hn.cz/c1-67898710-skoda-group-posiluje-na-severu-firma-doda-tramvaje-do-svedske-uppsaly-zakazka-muze-dosahnout-az-6-5-miliardy-korun",
@@ -3448,6 +3348,26 @@
       "topic_key": "743eab4cd306ca92",
       "section": "finance",
       "sourceLabel": "E15"
+    },
+    {
+      "url": "https://ekonom.cz/c1-67898650-plyn-bude-mit-ten-kdo-zaplati-vic-asie-opet-ohrozuje-ceny-evropskych-energii-rika-sef-velkeho-evropskeho-obchodnika",
+      "title": "Plyn bude mít ten, kdo zaplatí víc. Asie opět ohrožuje ceny evropských energií, říká šéf velkého evropského obchodníka",
+      "duplicate_of": "https://byznys.hn.cz/c1-67897240-plyn-bude-mit-ten-kdo-zaplati-vic-asie-opet-ohrozuje-ceny-evropskych-energii-rika-sef-velkeho-evropskeho-obchodnika",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "017cd5d9b444424a",
+      "section": "finance",
+      "sourceLabel": "Ekonom (HN)"
+    },
+    {
+      "url": "https://ekonom.cz/c1-67898610-cteni-na-leto-od-ekonomie-pres-historii-az-po-pravnikovo-mudrovani",
+      "title": "Čtení na léto. Od ekonomie přes historii až po právníkovo mudrování",
+      "duplicate_of": "https://byznys.hn.cz/c1-67895780-cteni-na-leto-od-ekonomie-pres-historii-az-po-pravnikovo-mudrovani",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "ff2ff98040f367d5",
+      "section": "finance",
+      "sourceLabel": "Ekonom (HN)"
     },
     {
       "url": "https://www.idnes.cz/ekonomika/zahranicni/trump-pohrozil-stoprocentnim-clem-zemim-ktere-zavedou-dan-z-digitalnich-sluzeb.A260626_213320_eko-zahranicni_ichuc",
@@ -4258,6 +4178,86 @@
       "topic_key": "647c08921ec2087c",
       "section": "finance",
       "sourceLabel": "E15"
+    },
+    {
+      "url": "https://www.e15.cz/domaci/politika/vlada-zakazala-prezidentovi-cestu-na-summit-nato-pavel-se-obratil-na-ustavni-soud-1433770",
+      "title": "Vláda zakázala prezidentovi cestu na summit NATO. Pavel se obrátil na Ústavní soud",
+      "duplicate_of": "https://domaci.hn.cz/c1-67896460-prezident-tam-jezdil-vzdy-tak-at-jede-i-ted-ustavni-soud-naridil-ze-vlada-ma-vzit-pavla-do-ankary-na-summit-nato",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "5daeda0703f7b0b0",
+      "section": "krimi",
+      "sourceLabel": "E15"
+    },
+    {
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-pri-ukrajinskem-dronovem-utoku-na-moskevskou-oblast-zemreli-tri-lide-306344",
+      "title": "Při ukrajinském dronovém útoku na Rusko zahynuli podle úřadů čtyři lidé",
+      "duplicate_of": "https://www.seznamzpravy.cz/clanek/zahranicni-pri-dronovem-utoku-na-trziste-v-sudanu-zahynulo-podle-afp-28-lidi-306541",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "59df13031e21bbc6",
+      "section": "krimi",
+      "sourceLabel": "Seznam Zprávy"
+    },
+    {
+      "url": "https://www.denik.cz/krimi/neznamy-zlodej-v-cernem-ukradl-v-jablonnem-lebku-svate-zdislavy-20260512.html",
+      "title": "Neznámý zloděj v černém ukradl z baziliky v Jablonném lebku svaté Zdislavy",
+      "duplicate_of": "https://domaci.hn.cz/c1-67876320-neznamy-pachatel-ukradl-z-baziliky-v-jablonnem-lebku-svate-zdislavy-jeji-historicka-hodnota-je-nevycislitelna",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "4e42c4a42be79526",
+      "section": "krimi",
+      "sourceLabel": "Deník"
+    },
+    {
+      "url": "https://www.novinky.cz/clanek/valka-na-ukrajine-primeri-po-rusku-nocni-utoky-zabily-pet-lidi-desitky-zranily-40576817",
+      "title": "Příměří po rusku: Noční útoky zabily pět lidí, desítky zranily",
+      "duplicate_of": "https://www.seznamzpravy.cz/clanek/zahranicni-ruske-utoky-na-zaporozi-a-kramatorsk-zabily-17-lidi-uvadi-ukrajinske-urady-305575",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "5e8c781d1c79f2ab",
+      "section": "krimi",
+      "sourceLabel": "Novinky"
+    },
+    {
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-policie-zadrzela-muze-jenz-v-londyne-pobodal-dva-zidy-slo-o-teroristicky-utok-305164",
+      "title": "Policie zadržela muže, jenž v Londýně pobodal dva židy, šlo o teroristický útok",
+      "duplicate_of": "https://www.seznamzpravy.cz/clanek/zahranicni-utocnik-ktery-v-londyne-pobodal-dva-zidy-byl-obvinen-z-pokusu-o-vrazdu-305278",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "47f805fd2da96800",
+      "section": "krimi",
+      "sourceLabel": "Seznam Zprávy"
+    },
+    {
+      "url": "https://www.denik.cz/krimi/soud-poslal-cimickeho-za-znasilneni-a-vydirani-znovu-na-pet-let-do-vezeni-202604.html",
+      "title": "Pět let vězení a zákaz činnosti. Cimický je vinný ze znásilnění, rozhodl soud",
+      "duplicate_of": "https://domaci.hn.cz/c1-67872180-cimicky-ma-jit-za-sexualni-utoky-a-vydirani-na-pet-let-do-vezeni-rozhodl-opet-soud",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "d33ab703a4c8a59d",
+      "section": "krimi",
+      "sourceLabel": "Deník"
+    },
+    {
+      "url": "https://www.e15.cz/zahranicni/geopolitika/trump-prodlouzil-primeri-s-iranem-podle-teheranu-budou-utoky-pokracovat-1432302",
+      "title": "trump prodlouzil primeri s iranem podle teheranu budou utoky pokracovat 1432302",
+      "duplicate_of": "https://www.seznamzpravy.cz/clanek/zahranicni-trump-oznamil-prodlouzeni-primeri-s-iranem-na-neurcito-304559",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "8a551a47081db310",
+      "section": "krimi",
+      "sourceLabel": "E15"
+    },
+    {
+      "url": "https://tydenikpolicie.cz/kriminaliste-patraji-po-totoznosti-mrtveho-muze-ktery-byl-nalezen-v-lese-na-tachovsku/",
+      "title": "kriminaliste patraji po totoznosti mrtveho muze ktery byl nalezen v lese na tachovsku",
+      "duplicate_of": "https://tydenikpolicie.cz/kriminaliste-stale-patraji-po-totoznosti-muze-jehoz-kosterni-ostatky-byly-nalezeny-pred-jedenacti-lety-v-lese-na-uherskohradistsku/",
+      "duplicate_reason": "same_event_duplicate",
+      "duplicate_confidence": 0.88,
+      "topic_key": "30f6aa344c787498",
+      "section": "krimi",
+      "sourceLabel": "Týdeník Policie"
     },
     {
       "url": "https://www.denik.cz/pocasi/do-ceska-dorazily-bourky-vitr-porazel-stromy-u-hranic-se-vytvorila-supercela/",
