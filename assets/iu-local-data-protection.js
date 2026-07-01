@@ -14,8 +14,27 @@ const LEGACY_TOOL_CONSENT_KEY = "iu:tool-local-storage-consent:v1";
 
 const STORAGE_USAGE_WARN_RATIO = 0.85;
 
+const DIALOG_PROMISE_KEY = "__iuLdpDialogPromise";
+
+function getDialogPromise() {
+  if (typeof window === "undefined") return null;
+  return window[DIALOG_PROMISE_KEY] || null;
+}
+
+function setDialogPromise(value) {
+  if (typeof window === "undefined") return;
+  if (value == null) {
+    try {
+      delete window[DIALOG_PROMISE_KEY];
+    } catch (_) {
+      window[DIALOG_PROMISE_KEY] = null;
+    }
+  } else {
+    window[DIALOG_PROMISE_KEY] = value;
+  }
+}
+
 let stylesInjected = false;
-let dialogPromise = null;
 
 const DIALOG_BODY =
   "InfoUzel ukládá vaše údaje pouze do tohoto zařízení.\n\n" +
@@ -379,9 +398,10 @@ export async function ensureLocalDataProtectionBeforeSave() {
     void maybeWarnStorageCapacity();
     return true;
   }
-  if (dialogPromise) return dialogPromise;
+  const existing = getDialogPromise();
+  if (existing) return existing;
 
-  dialogPromise = (async () => {
+  const pending = (async () => {
     const result = await showFirstSaveDialog();
     if (!result || result.action === "cancel") return false;
     markNoticeAccepted();
@@ -395,10 +415,11 @@ export async function ensureLocalDataProtectionBeforeSave() {
     } catch (_) {}
     return true;
   })().finally(() => {
-    dialogPromise = null;
+    setDialogPromise(null);
   });
 
-  return dialogPromise;
+  setDialogPromise(pending);
+  return pending;
 }
 
 /** @deprecated — alias pro starší importy */

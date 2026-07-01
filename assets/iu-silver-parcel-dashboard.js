@@ -168,10 +168,36 @@ try {
     }
   }
 
-  function writeList(arr) {
-    try {
-      localStorage.setItem(LS_KEY, JSON.stringify(arr));
-    } catch (_) {}
+  function writeList(arr, onWritten) {
+    var payload = JSON.stringify(arr);
+    function finish(ok) {
+      if (typeof onWritten === "function") onWritten(!!ok);
+    }
+    function store() {
+      try {
+        localStorage.setItem(LS_KEY, payload);
+        finish(true);
+      } catch (_) {
+        finish(false);
+      }
+    }
+    var ldp = window.iuLocalDataProtection;
+    if (
+      ldp &&
+      typeof ldp.isLocalDataProtectionNoticeAccepted === "function" &&
+      !ldp.isLocalDataProtectionNoticeAccepted() &&
+      typeof ldp.ensureLocalDataProtectionBeforeSave === "function"
+    ) {
+      void ldp.ensureLocalDataProtectionBeforeSave().then(function (ok) {
+        if (!ok) {
+          finish(false);
+          return;
+        }
+        store();
+      });
+      return;
+    }
+    store();
   }
 
   function removeParcelFromList(itemId) {
@@ -518,9 +544,11 @@ try {
             break;
           }
         }
-        writeList(list);
-        detailEditId = null;
-        render();
+        writeList(list, function (ok) {
+          if (!ok) return;
+          detailEditId = null;
+          render();
+        });
       });
       cancelB.addEventListener("click", function () {
         detailEditId = null;
@@ -848,25 +876,27 @@ try {
     };
 
     list.push(item);
-    writeList(list);
-    if (inp) inp.value = "";
-    syncMainSaveState();
+    writeList(list, function (ok) {
+      if (!ok) return;
+      if (inp) inp.value = "";
+      syncMainSaveState();
 
-    setTimeout(function () {
-      var fresh = readList();
-      for (var j = 0; j < fresh.length; j++) {
-        if (fresh[j].id === item.id) {
-          var rr = resolveEngine(fresh[j]);
-          fresh[j].lastCheckedAt = Date.now();
-          if (rr.detection) fresh[j].lastDetection = rr.detection;
-          break;
+      setTimeout(function () {
+        var fresh = readList();
+        for (var j = 0; j < fresh.length; j++) {
+          if (fresh[j].id === item.id) {
+            var rr = resolveEngine(fresh[j]);
+            fresh[j].lastCheckedAt = Date.now();
+            if (rr.detection) fresh[j].lastDetection = rr.detection;
+            break;
+          }
         }
-      }
-      writeList(fresh);
-      render();
-    }, 160);
+        writeList(fresh);
+        render();
+      }, 160);
 
-    render();
+      render();
+    });
   }
 
   function refreshAllFromEngine() {

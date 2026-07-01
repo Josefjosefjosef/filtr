@@ -78,6 +78,8 @@ async function main() {
       try {
         localStorage.removeItem(k);
         localStorage.removeItem("iu:tool-local-storage-consent:v1");
+        sessionStorage.removeItem(k);
+        sessionStorage.removeItem("iu:tool-local-storage-consent:v1");
       } catch (_) {}
     }, KEY);
 
@@ -111,6 +113,95 @@ async function main() {
     });
 
     if (!second.ok) fails.push(second.reason || "second call showed dialog again");
+
+    await page.evaluate((k) => {
+      try {
+        localStorage.removeItem(k);
+        localStorage.removeItem("iu:tool-local-storage-consent:v1");
+        localStorage.removeItem("iu:legal-confirm:contracts:v1");
+        localStorage.removeItem("iu:legal-confirm:invoice:v1");
+        sessionStorage.removeItem(k);
+        sessionStorage.removeItem("iu:tool-local-storage-consent:v1");
+      } catch (_) {}
+    }, KEY);
+
+    const cancelFlow = await page.evaluate(async () => {
+      const ldp = window.iuLocalDataProtection;
+      if (!ldp) return { ok: false, reason: "missing ldp for cancel test" };
+      const pending = ldp.ensureLocalDataProtectionBeforeSave();
+      await new Promise((r) => setTimeout(r, 400));
+      const visible = !!document.querySelector(".iu-ldp-backdrop");
+      if (!visible) return { ok: false, reason: "dialog not shown for cancel test" };
+      const ghost = document.querySelector(".iu-ldp-backdrop .iu-ldp-btn--ghost");
+      if (!ghost) return { ok: false, reason: "cancel button missing" };
+      ghost.click();
+      const ok = await pending;
+      const accepted = ldp.isLocalDataProtectionNoticeAccepted();
+      const stillOpen = !!document.querySelector(".iu-ldp-backdrop");
+      return {
+        ok: ok === false && !accepted && !stillOpen,
+        reason: ok ? "cancel returned true" : accepted ? "accepted after cancel" : stillOpen ? "backdrop still open" : "",
+      };
+    });
+    if (!cancelFlow.ok) fails.push(cancelFlow.reason || "cancel flow failed");
+
+    const guardCancel = await page.evaluate(async () => {
+      let mod;
+      try {
+        mod = await import("/assets/iu-tool-guard.js");
+      } catch (err) {
+        return { ok: false, reason: "import iu-tool-guard failed" };
+      }
+      if (!mod || typeof mod.guardProtectedAction !== "function") {
+        return { ok: false, reason: "guardProtectedAction export missing" };
+      }
+      let actionRan = false;
+      const pending = mod.guardProtectedAction("contract", async () => {
+        actionRan = true;
+      });
+      for (let i = 0; i < 40; i++) {
+        if (document.querySelector(".iu-ldp-backdrop")) break;
+        await new Promise((r) => setTimeout(r, 100));
+      }
+      const ldpVisible = !!document.querySelector(".iu-ldp-backdrop");
+      if (!ldpVisible) {
+        const accepted = window.iuLocalDataProtection && window.iuLocalDataProtection.isLocalDataProtectionNoticeAccepted();
+        return {
+          ok: false,
+          reason: accepted ? "already accepted before guard cancel" : "ldp dialog missing for guard cancel",
+        };
+      }
+      const ghost = document.querySelector(".iu-ldp-backdrop .iu-ldp-btn--ghost");
+      if (ghost) ghost.click();
+      await pending;
+      await new Promise((r) => setTimeout(r, 200));
+      const legalVisible = !!document.querySelector(".iu-tool-guard-backdrop");
+      return {
+        ok: !actionRan && !legalVisible,
+        reason: actionRan ? "action ran after ldp cancel" : legalVisible ? "legal dialog after ldp cancel" : "",
+      };
+    });
+    if (!guardCancel.ok) fails.push(guardCancel.reason || "guardProtectedAction cancel failed");
+
+    const parallel = await page.evaluate(async (k) => {
+      try {
+        localStorage.removeItem(k);
+        sessionStorage.removeItem(k);
+        localStorage.removeItem("iu:tool-local-storage-consent:v1");
+        sessionStorage.removeItem("iu:tool-local-storage-consent:v1");
+      } catch (_) {}
+      const ldp = window.iuLocalDataProtection;
+      const p1 = ldp.ensureLocalDataProtectionBeforeSave();
+      const p2 = ldp.ensureLocalDataProtectionBeforeSave();
+      await new Promise((r) => setTimeout(r, 300));
+      const backdrops = document.querySelectorAll(".iu-ldp-backdrop").length;
+      const btn = document.querySelector(".iu-ldp-backdrop .iu-ldp-btn--secondary");
+      if (btn) btn.click();
+      await Promise.all([p1, p2]);
+      await new Promise((r) => setTimeout(r, 200));
+      return { ok: backdrops === 1, reason: backdrops > 1 ? "parallel backdrops=" + backdrops : "" };
+    }, KEY);
+    if (!parallel.ok) fails.push(parallel.reason || "parallel dialog dedupe failed");
 
     const apiOk = await page.evaluate(() => {
       const ldp = window.iuLocalDataProtection;

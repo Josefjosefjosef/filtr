@@ -363,7 +363,8 @@ export function confirmClearForm() {
 }
 
 export async function guardProtectedAction(scope, actionFn) {
-  await ensureLocalStorageConsent();
+  const ldpOk = await ensureLocalStorageConsent();
+  if (!ldpOk) return;
   if (!isLegalConfirmValid(scope)) {
     const ok = await showLegalConfirmDialog(scope);
     if (!ok) return;
