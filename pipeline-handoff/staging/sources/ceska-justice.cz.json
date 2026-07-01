@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-07-01T09:20:17.528081Z",
+  "ingestedAt": "2026-07-01T11:01:09.875937Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bil manželku, dceru mlátil páskem a nutil ji k sebevraždě. S nižším trestem neuspěl",
+      "url": "https://www.ceska-justice.cz/2026/07/bil-manzelku-dceru-nizzsi-trest-nejvyssi-soud/",
+      "dt": "2026-07-01T09:51:23Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "bil",
+        "dceru",
+        "manželku",
+        "mlátil",
+        "neuspěl",
+        "nižším",
+        "nutil",
+        "páskem",
+        "sebevraždě",
+        "trestem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -242,34 +269,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vláda schválila 15 nových soudců. Každý stojí stát 3,3 milionu ročně, upozornil Tejc",
-      "url": "https://www.ceska-justice.cz/2026/06/vyber-soudcu-uspornejsi-15-novych-jmen/",
-      "dt": "2026-06-29T17:21:52Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "každý",
-        "milionu",
-        "nových",
-        "ročně",
-        "schválila",
-        "soudců",
-        "stojí",
-        "stát",
-        "tejc",
-        "upozornil",
-        "vláda"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 94012,
+      "bytes": 95698,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-07-01T09:03:50Z",
+        "raw_feed_latest_publishedAt": "2026-07-01T09:51:23Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -332,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bil manželku, dceru mlátil páskem a nutil ji k sebevraždě. S nižším trestem neuspěl",
+            "publishedAt": "2026-07-01T09:51:23Z"
+          },
           {
             "title": "Soud svěřil Viktorku rodičům na drogách. Tejc chce trest pro soudkyni",
             "publishedAt": "2026-07-01T09:03:50Z"
@@ -359,10 +362,6 @@
           {
             "title": "Rusko stupňuje tažení proti LGBT. Pracovníci gay baru dostali roky vězení",
             "publishedAt": "2026-06-30T08:01:38Z"
-          },
-          {
-            "title": "Maká, ministr, maká dobře. Babiš chválí šéfa justice Tejce a mluví o přísnějších trestech",
-            "publishedAt": "2026-06-30T04:50:00Z"
           }
         ]
       }
