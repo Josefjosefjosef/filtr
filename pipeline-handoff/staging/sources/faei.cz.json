@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-07-01T16:51:12.974586Z",
+  "ingestedAt": "2026-07-01T18:48:43.209657Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Cenové tlaky v eurozóně v červnu překvapivě polevily",
+      "url": "https://profitonline.cz/cenove-tlaky-v-eurozone-v-cervnu-prekvapive-polevily/",
+      "dt": "2026-07-01T17:10:43Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "cenové",
+        "eurozóně",
+        "polevily",
+        "překvapivě",
+        "tlaky",
+        "červnu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -273,28 +296,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Co může masivní propouštění ve VW znamenat pro německou ekonomiku?",
-      "url": "https://profitonline.cz/co-muze-masivni-propousteni-ve-vw-znamenat-pro-nemeckou-ekonomiku/",
-      "dt": "2026-06-29T20:10:11Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ekonomiku",
-        "masivní",
-        "německou",
-        "propouštění",
-        "znamenat"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -305,7 +306,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19405,
+      "bytes": 19392,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -342,7 +343,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-07-01T16:30:05Z",
+        "raw_feed_latest_publishedAt": "2026-07-01T17:10:43Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 9,
@@ -358,6 +359,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cenové tlaky v eurozóně v červnu překvapivě polevily",
+            "publishedAt": "2026-07-01T17:10:43Z"
+          },
           {
             "title": "Státní rozpočet je po prvním pololetí v horší kondici než loni i předloni",
             "publishedAt": "2026-07-01T16:30:05Z"
@@ -385,10 +390,6 @@
           {
             "title": "Region mírně oslabuje, koruna stabilní",
             "publishedAt": "2026-06-30T16:40:08Z"
-          },
-          {
-            "title": "Dovolená (2.): Kdo je největší stratég a komu stačí prodloužený víkend",
-            "publishedAt": "2026-06-30T10:00:59Z"
           }
         ]
       }

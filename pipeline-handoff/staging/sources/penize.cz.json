@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-07-01T16:51:12.974586Z",
+  "ingestedAt": "2026-07-01T18:48:43.209657Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Před velkou odstávkou Creditas přijde ještě malá. Začne dnes večer",
+      "url": "https://www.penize.cz/internetbanking/492551-pred-velkou-odstavkou-creditas-prijde-jeste-mala-zacne-dnes-vecer",
+      "dt": "2026-07-01T18:30:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "creditas",
+        "ještě",
+        "malá",
+        "odstávkou",
+        "přijde",
+        "velkou",
+        "večer",
+        "začne"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -480,35 +505,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nová značka i boj o mladé. Obchodní ředitel Košík.cz o konci limitů na nákupy a tajném trumfu",
-      "url": "https://www.penize.cz/nakupy/492350-nova-znacka-i-boj-o-mlade-obchodni-reditel-kosik-cz-o-konci-limitu-na-nakupy-i-tajnem-trumfu",
-      "dt": "2026-06-29T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "boj",
-        "konci",
-        "košík",
-        "limitů",
-        "mladé",
-        "nová",
-        "nákupy",
-        "obchodní",
-        "tajném",
-        "trumfu",
-        "značka",
-        "ředitel"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -519,7 +515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18466,
+      "bytes": 18231,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -556,7 +552,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-07-01T16:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-01T18:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 13,
@@ -572,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Před velkou odstávkou Creditas přijde ještě malá. Začne dnes večer",
+            "publishedAt": "2026-07-01T18:30:00Z"
+          },
           {
             "title": "Air Bank v noci dočasně vypne bankovnictví",
             "publishedAt": "2026-07-01T16:30:00Z"
@@ -599,10 +599,6 @@
           {
             "title": "About You zpřístupňuje své online tržiště českým prodejcům",
             "publishedAt": "2026-07-01T09:42:00Z"
-          },
-          {
-            "title": "Juchelka chce rychlé změny v superdávce. Už je nová kalkulačka",
-            "publishedAt": "2026-07-01T05:05:00Z"
           }
         ]
       }
