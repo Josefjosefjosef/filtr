@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-07-01T02:13:34.173572Z",
+  "ingestedAt": "2026-07-01T04:02:00.138846Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poslanci rozhodnou o omezení pravomocí prezidenta i rentě pro úspěšné sportovce",
+      "url": "https://www.idnes.cz/zpravy/domaci/snemovna-omezeni-pravomoci-prezidenta-renta-pro-uspesne-sportovce.A260701_042839_domaci_kop",
+      "dt": "2026-07-01T03:10:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "omezení",
+        "poslanci",
+        "pravomocí",
+        "prezidenta",
+        "rentě",
+        "rozhodnou",
+        "sportovce",
+        "úspěšné"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -30,31 +55,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ve státních institucích má být 65 procent českých potravin. Alespoň na papíru",
-      "url": "https://www.idnes.cz/ekonomika/domaci/potraviny-gastronomie-zemedelstvi-vlada-obchod.A260630_162128_ekonomika_drh",
-      "dt": "2026-06-30T22:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "alespoň",
-        "být",
-        "institucích",
-        "papíru",
-        "potravin",
-        "procent",
-        "státních",
-        "českých"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "aktualne",
       "contentType": "article",
       "title": "Test prostředků proti klíšťatům: repelenty fungují, bylinná kosmetika je k ničemu",
@@ -72,6 +72,31 @@
         "proti",
         "repelenty",
         "test"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ve státních institucích má být 65 procent českých potravin. Alespoň na papíru",
+      "url": "https://www.idnes.cz/ekonomika/domaci/potraviny-gastronomie-zemedelstvi-vlada-obchod.A260630_162128_ekonomika_drh",
+      "dt": "2026-06-30T22:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "alespoň",
+        "být",
+        "institucích",
+        "papíru",
+        "potravin",
+        "procent",
+        "státních",
+        "českých"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -761,31 +786,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Švédská vláda zpřísní tresty, kriminalita je před volbami klíčové téma",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/svedsko-kriminalita-trest-zprisneni-gangy-volby.A260630_150921_zahranicni_dtt",
-      "dt": "2026-06-30T13:27:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "klíčové",
-        "kriminalita",
-        "tresty",
-        "téma",
-        "vláda",
-        "volbami",
-        "zpřísní",
-        "švédská"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49017,
+      "bytes": 48739,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-06-30T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-01T03:10:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -851,15 +851,19 @@
         },
         "sample_titles": [
           {
+            "title": "Poslanci rozhodnou o omezení pravomocí prezidenta i rentě pro úspěšné sportovce",
+            "publishedAt": "2026-07-01T03:10:00Z"
+          },
+          {
             "title": "Ukrajinské drony kazí Rusům jejich dovolené. Cestování se mění v chaos",
             "publishedAt": "2026-06-30T22:00:00Z"
           },
           {
-            "title": "Ve státních institucích má být 65 procent českých potravin. Alespoň na papíru",
+            "title": "Test prostředků proti klíšťatům: repelenty fungují, bylinná kosmetika je k ničemu",
             "publishedAt": "2026-06-30T22:00:00Z"
           },
           {
-            "title": "Test prostředků proti klíšťatům: repelenty fungují, bylinná kosmetika je k ničemu",
+            "title": "Ve státních institucích má být 65 procent českých potravin. Alespoň na papíru",
             "publishedAt": "2026-06-30T22:00:00Z"
           },
           {
@@ -877,10 +881,6 @@
           {
             "title": "Čeští vojáci se budou čím dál víc učit od těch ukrajinských, naznačil šéf armády",
             "publishedAt": "2026-06-30T20:05:00Z"
-          },
-          {
-            "title": "Ženu v čele monarchie? To raději adopci. Japonci řešili vymírající císařskou rodinu",
-            "publishedAt": "2026-06-30T19:46:00Z"
           }
         ]
       }
