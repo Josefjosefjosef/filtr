@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-07-01T05:45:02.627585Z",
+  "ingestedAt": "2026-07-01T07:33:49.028596Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Microsoft údajně propustí až 5 500 lidí. Xbox čekají další rozsáhlé škrty. Ohroženo 5 studií - INDIAN",
+      "url": "https://indian-tv.cz/clanek/microsoft-udajne-propusti-az-5-500-zamestnancu-xbox-cekaji-9fstyd",
+      "dt": "2026-07-01T05:55:47Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "500",
+        "další",
+        "indian",
+        "lidí",
+        "microsoft",
+        "ohroženo",
+        "propustí",
+        "rozsáhlé",
+        "studií",
+        "xbox",
+        "údajně",
+        "čekají",
+        "škrty"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1052,33 +1082,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Frostpunk 2 rozšiřuje svůj ledový svět placeným DLC i velkou aktualizací - INDIAN",
-      "url": "https://indian-tv.cz/clanek/frostpunk-2-rozsiruje-svuj-ledovy-svet-placenym-dlc-q3wnob",
-      "dt": "2026-06-27T07:53:03Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "aktualizací",
-        "dlc",
-        "frostpunk",
-        "indian",
-        "ledový",
-        "placeným",
-        "rozšiřuje",
-        "svět",
-        "svůj",
-        "velkou"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1089,7 +1092,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 223892,
+      "bytes": 227205,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1126,7 +1129,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-01T05:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-01T05:55:47Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1141,6 +1144,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Microsoft údajně propustí až 5 500 lidí. Xbox čekají další rozsáhlé škrty. Ohroženo 5 studií - INDIAN",
+            "publishedAt": "2026-07-01T05:55:47Z"
+          },
           {
             "title": "Nejlepší místo pro hraní GTA 6 je PlayStation 5. Rockstar Games opomíjí Xbox Series X/S verzi - INDIAN",
             "publishedAt": "2026-07-01T05:45:00Z"
@@ -1168,10 +1175,6 @@
           {
             "title": "Potili jsme se při hraní DayZ Badlands. Čím nás zaujala vyprahlá Nasdara? - INDIAN",
             "publishedAt": "2026-06-30T14:30:00Z"
-          },
-          {
-            "title": "Podzim bude patřit velkým hrám. Připrav se s PlayStationem 5 už teď! - INDIAN",
-            "publishedAt": "2026-06-30T14:25:00Z"
           }
         ]
       }
