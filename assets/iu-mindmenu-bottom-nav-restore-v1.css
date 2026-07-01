@@ -200,4 +200,195 @@
     bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
     max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
   }
+
+  /* v2 — Rychlé odkazy / nástroje: clearance i mimo MindMenu gate (aside, tablet 901–1024, Moje fullscreen) */
+  body:is(
+    .iu-modal-open,
+    .iu-quickFeedOpen,
+    .iu-quickFeedMojeFullscreen,
+    .iu-financial-overlay-open,
+    .iu-financial-calculators-overlay-open,
+    .iu-legal-docs-overlay-open,
+    .iu-invoice-overlay-open,
+    .iu-ds-overlay-open,
+    .iu-ai-narrow-fullscreen,
+    .iu-parcels-overlay-open,
+    .iu-nakup-online-overlay-open
+  ) #iuMobileBottomNav.iu-mobileBottomNav {
+    z-index: 10200 !important;
+    pointer-events: auto !important;
+  }
+
+  body:is(.iu-quickFeedOpen, .iu-quickFeedMojeFullscreen, .iu-nakup-online-overlay-open) #iuQuickFeed:not([hidden]) {
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    inset: auto !important;
+    width: 100vw !important;
+    height: auto !important;
+    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+    min-height: 0 !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+  }
+
+  body:is(.iu-quickFeedOpen, .iu-quickFeedMojeFullscreen, .iu-nakup-online-overlay-open) #iuQuickFeed :is(
+    .iu-banking-scroll-host,
+    .iuQCard,
+    #iuQuickFeedMojeSluzbyBody,
+    .iu-nakup-online-fill,
+    .iu-nakup-online-outerCard,
+    .iu-nakup-online-feed,
+    .iuQGrid,
+    .iuQBody,
+    .iu-mojeSluzbyBanka,
+    .iu-health-card,
+    .bakalari-card
+  ) {
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    box-sizing: border-box !important;
+  }
+
+  body.iu-modal-open.iu-ds-overlay-open #iuDsPanel.iu-ds-panel[data-open="1"]:not([hidden]) {
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    width: 100vw !important;
+    max-width: none !important;
+    transform: none !important;
+    height: auto !important;
+    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    box-sizing: border-box !important;
+  }
+
+  body.iu-modal-open.iu-ds-overlay-open #iuDsPanel :is(.iu-ds-panelBody, .iu-datovka-scroll-host) {
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    box-sizing: border-box !important;
+  }
+
+  body:is(
+    .iu-financial-overlay-open,
+    .iu-financial-calculators-overlay-open,
+    .iu-legal-docs-overlay-open,
+    .iu-invoice-overlay-open
+  ) :is(
+    #iuFinancialCalcPanel.iu-financial-overlay-panel,
+    #iuLegalDocsPanel.iu-legal-overlay-panel,
+    #iuInvoicePanel.iu-invoice-overlay-panel
+  ):not([hidden]) {
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    inset: auto !important;
+    width: 100vw !important;
+    height: auto !important;
+    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  body.iu-modal-open #iuCustomButtonsPanel.iu-custom-buttons-overlay-panel:not([hidden]) {
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    inset: auto !important;
+    width: 100vw !important;
+    height: auto !important;
+    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  body:is(
+    .iu-financial-overlay-open,
+    .iu-financial-calculators-overlay-open,
+    .iu-legal-docs-overlay-open,
+    .iu-invoice-overlay-open,
+    .iu-modal-open
+  ) :is(
+    #iuFinancialCalcPanel .iu-financial-overlay-cardShell,
+    #iuLegalDocsPanel .iu-legal-overlay-cardShell,
+    #iuInvoicePanel .iu-invoice-overlay-cardShell,
+    #iuCustomButtonsPanel .iu-custom-buttons-overlay-cardShell
+  ) {
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    box-sizing: border-box !important;
+  }
+
+  body:is(
+    .iu-financial-overlay-open,
+    .iu-financial-calculators-overlay-open,
+    .iu-legal-docs-overlay-open,
+    .iu-invoice-overlay-open,
+    .iu-modal-open
+  ) :is(
+    #iuLegalDocsScrollHost,
+    #iuFinancialCalcScrollHost,
+    #iuInvoiceScrollHost,
+    #iuCustomButtonsScrollHost
+  ) {
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    box-sizing: border-box !important;
+  }
+
+  body.iu-ai-narrow-fullscreen #iu-aiPanel[data-open="1"]:not([hidden]) {
+    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    height: auto !important;
+    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+  }
+
+  body.iu-ai-narrow-fullscreen #iu-aiPanel :is(.iu-aiModal, .iu-ai-scroll-host, #iu-aiPanelCards) {
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    box-sizing: border-box !important;
+  }
+
+  body.iu-parcels-overlay-open #iuParcelsPopover.iu-parcels-modal.is-open {
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    height: auto !important;
+    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+  }
+
+  body.iu-parcels-overlay-open .iu-parcels-modal-content {
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    box-sizing: border-box !important;
+  }
+
+  body.iu-modal-open .iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed:not([hidden]) {
+    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+    box-sizing: border-box !important;
+  }
+
+  body.iu-modal-open .iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed .iu-quicktools-settings-scroll {
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    box-sizing: border-box !important;
+  }
+
+  body.iu-modal-open #iuDesktopParcelWatchOverlay.is-open:not([hidden]) {
+    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+  }
 }
