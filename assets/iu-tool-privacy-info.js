@@ -4,6 +4,9 @@
 (function iuToolPrivacyInfoModule() {
   "use strict";
 
+  var PRIVACY_BTN_LABEL = "ℹ Informace";
+  var PRIVACY_BTN_ARIA = "Informace o soukromí a bezpečnosti";
+
   var SHORT_TEXT_DEFAULT =
     "🔒 Veškeré údaje ukládáte dobrovolně pouze do svého zařízení. InfoUzel.cz je neodesílá na své servery ani k nim nemá přístup.";
 
@@ -266,42 +269,68 @@
     return SHORT_TEXTS[toolKey] || SHORT_TEXT_DEFAULT;
   }
 
-  function buildHeadBlockHtml(toolKey) {
+  function buildPrivacyBtnHtml(toolKey) {
     return (
       '<button type="button" class="iu-tool-privacy-btn" data-iu-tool-privacy-open="' +
       esc(toolKey) +
-      '" aria-haspopup="dialog">ⓘ Informace o soukromí a bezpečnosti</button>' +
-      '<p class="iu-tool-privacy-short" role="note">' +
-      esc(getShortText(toolKey)) +
-      "</p>"
+      '" aria-haspopup="dialog" aria-label="' +
+      esc(PRIVACY_BTN_ARIA) +
+      '">' +
+      esc(PRIVACY_BTN_LABEL) +
+      "</button>"
     );
   }
 
-  function mountInOverlayHeading(heading, toolKey) {
-    if (!heading || !toolKey || heading.getAttribute("data-iu-tool-privacy-mounted") === "1") return;
-    var titleNode = findTitleNode(heading);
-    if (!titleNode) return;
+  function buildHeadBlockHtml(toolKey) {
+    return buildPrivacyBtnHtml(toolKey);
+  }
 
+  function createPrivacyButton(toolKey) {
     var btn = document.createElement("button");
     btn.type = "button";
     btn.className = "iu-tool-privacy-btn";
     btn.setAttribute("data-iu-tool-privacy-open", toolKey);
     btn.setAttribute("aria-haspopup", "dialog");
-    btn.textContent = "ⓘ Informace o soukromí a bezpečnosti";
-    if (titleNode.nextSibling) {
-      titleNode.parentNode.insertBefore(btn, titleNode.nextSibling);
-    } else {
-      titleNode.parentNode.appendChild(btn);
-    }
+    btn.setAttribute("aria-label", PRIVACY_BTN_ARIA);
+    btn.textContent = PRIVACY_BTN_LABEL;
+    return btn;
+  }
 
-    var shortP = document.createElement("p");
-    shortP.className = "iu-tool-privacy-short";
-    shortP.setAttribute("role", "note");
-    shortP.textContent = getShortText(toolKey);
-    btn.parentNode.insertBefore(shortP, btn.nextSibling);
+  function removeLegacyPrivacyNodes(heading) {
+    if (!heading) return;
+    heading.querySelectorAll(".iu-tool-privacy-btn, .iu-tool-privacy-short").forEach(function (el) {
+      if (el && el.parentNode) el.parentNode.removeChild(el);
+    });
+  }
+
+  function mountCompactPrivacyRow(heading, toolKey) {
+    if (!heading || !toolKey) return;
+    removeLegacyPrivacyNodes(heading);
+    if (heading.getAttribute("data-iu-tool-privacy-mounted") === "1" && heading.querySelector(".iu-overlay-header-row .iu-tool-privacy-btn")) {
+      return;
+    }
+    var titleNode = findTitleNode(heading);
+    if (!titleNode) return;
+
+    var existingRow = heading.querySelector(".iu-overlay-header-row");
+    if (existingRow) {
+      if (!existingRow.querySelector(".iu-tool-privacy-btn")) {
+        existingRow.appendChild(createPrivacyButton(toolKey));
+      }
+    } else {
+      var row = document.createElement("div");
+      row.className = "iu-overlay-header-row";
+      titleNode.parentNode.insertBefore(row, titleNode);
+      row.appendChild(titleNode);
+      row.appendChild(createPrivacyButton(toolKey));
+    }
 
     heading.setAttribute("data-iu-tool-privacy-mounted", "1");
     heading.setAttribute("data-iu-tool-privacy-key", toolKey);
+  }
+
+  function mountInOverlayHeading(heading, toolKey) {
+    mountCompactPrivacyRow(heading, toolKey);
   }
 
   function renderModalBody(toolKey) {
@@ -413,20 +442,7 @@
   }
 
   function mountInHeading(heading, toolKey) {
-    if (!heading || !toolKey || heading.getAttribute("data-iu-tool-privacy-mounted") === "1") return;
-    var titleNode = findTitleNode(heading);
-    if (!titleNode) return;
-    var wrap = document.createElement("div");
-    wrap.innerHTML = buildHeadBlockHtml(toolKey);
-    var frag = document.createDocumentFragment();
-    while (wrap.firstChild) frag.appendChild(wrap.firstChild);
-    if (titleNode.nextSibling) {
-      titleNode.parentNode.insertBefore(frag, titleNode.nextSibling);
-    } else {
-      titleNode.parentNode.appendChild(frag);
-    }
-    heading.setAttribute("data-iu-tool-privacy-mounted", "1");
-    heading.setAttribute("data-iu-tool-privacy-key", toolKey);
+    mountCompactPrivacyRow(heading, toolKey);
   }
 
   function mountDatovkaHeading() {
@@ -472,6 +488,7 @@
 
   try {
     window.iuToolPrivacyShortText = getShortText;
+    window.iuToolPrivacyBtnHtml = buildPrivacyBtnHtml;
     window.iuToolPrivacyHeadBlockHtml = buildHeadBlockHtml;
     window.iuToolPrivacyMountInHeading = mountInHeading;
     window.iuToolPrivacyMountInOverlayHeading = mountInOverlayHeading;
