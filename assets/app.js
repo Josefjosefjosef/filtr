@@ -7662,10 +7662,35 @@ try {
     } catch (_) {}
   }
 
+  function iuQuickToolsHandleSettingsTriggerClick(e) {
+    const t = e.target;
+    if (!(t instanceof Element) || !t.closest) return false;
+    const trig = t.closest("[data-iu-quicktools-settings], .iu-quicktools-settings-trigger");
+    if (!trig) return false;
+    e.preventDefault();
+    e.stopPropagation();
+    const panel = document.getElementById("iuQuickToolsSettingsPanel");
+    if (!panel) return true;
+    if (panel.hidden) iuQuickToolsSettingsOpen();
+    else iuQuickToolsSettingsClose();
+    return true;
+  }
+
+  function iuQuickToolsBindToolsHostGearOnce(toolsHost) {
+    if (!toolsHost || toolsHost.__iuQtOverlayGearBound) return;
+    toolsHost.__iuQtOverlayGearBound = 1;
+    toolsHost.addEventListener("click", (e) => {
+      iuQuickToolsHandleSettingsTriggerClick(e);
+    });
+  }
+
   function iuArticleActionsEnsureOverlay() {
     try {
       const existing = document.getElementById("iuMyInfoUzelOverlay");
-      if (existing && existing.querySelector("[data-iu-manage-tabs]") && document.getElementById("iuMyInfoUzelToolsHost") && existing.querySelector(".iuMyInfoUzelOverlay__headRow")) return;
+      if (existing && existing.querySelector("[data-iu-manage-tabs]") && document.getElementById("iuMyInfoUzelToolsHost") && existing.querySelector(".iuMyInfoUzelOverlay__headRow")) {
+        iuQuickToolsBindToolsHostGearOnce(document.getElementById("iuMyInfoUzelToolsHost"));
+        return;
+      }
       if (existing) existing.remove();
       const overlay = document.createElement("div");
       overlay.id = "iuMyInfoUzelOverlay";
@@ -7712,22 +7737,7 @@ try {
         </div>
       `.trim();
       document.body.appendChild(overlay);
-      const toolsHost = overlay.querySelector("#iuMyInfoUzelToolsHost");
-      if (toolsHost && !toolsHost.__iuQtOverlayGearBound) {
-        toolsHost.__iuQtOverlayGearBound = 1;
-        toolsHost.addEventListener("click", (e) => {
-          const t = e.target;
-          if (!(t instanceof Element)) return;
-          const trig = t.closest("[data-iu-quicktools-settings], .iu-quicktools-settings-trigger");
-          if (!trig) return;
-          e.preventDefault();
-          e.stopPropagation();
-          const panel = document.getElementById("iuQuickToolsSettingsPanel");
-          if (!panel) return;
-          if (panel.hidden) iuQuickToolsSettingsOpen();
-          else iuQuickToolsSettingsClose();
-        });
-      }
+      iuQuickToolsBindToolsHostGearOnce(overlay.querySelector("#iuMyInfoUzelToolsHost"));
       const manageTabs = overlay.querySelector("[data-iu-manage-tabs]");
       if (manageTabs) iuArticleActionsInitManageTabs(manageTabs);
       overlay.addEventListener("click", (e) => {
@@ -7858,6 +7868,7 @@ try {
     if (!overlay) return;
     iuArticleActionsRefreshManagePanels();
     iuArticleActionsMountMindMenuInOverlay();
+    iuQuickToolsBindToolsHostGearOnce(document.getElementById("iuMyInfoUzelToolsHost"));
     overlay.hidden = false;
     document.body.classList.add("iu-myinfouzel-open");
     try {
@@ -24077,12 +24088,12 @@ function buildVideoAsArticleCard(it) {
     window.iuMindMenuPushHistoryEntryIfMobile = iuMindMenuPushHistoryEntryIfMobile;
   } catch (_) {}
 
-  // === MOJE SCHRÁNKY (MindMenu): min 1, max 6, controls follow last pill ===
+  // === MOJE SCHRÁNKY (MindMenu): min 1, max 10, controls follow last pill ===
   const MAILBOX_STORAGE_KEY = "iu_mailboxes_v1";
   const IU_MM_SOCIAL_DEFAULTS_FLAG = "iu_mm_social_defaults_v1";
   const IU_MAILBOX_DEFAULT_SOCIAL = ["facebook", "instagram", "x", "tiktok"];
   const IU_MAILBOX_MIN = 1;
-  const IU_MAILBOX_MAX = 6;
+  const IU_MAILBOX_MAX = 10;
   const IU_MAILBOX_LABEL_MAX = 25;
   const IU_MM_EDIT_INPUT_PLACEHOLDER = "Nastavit e-mail";
   const MAILBOX_PLACEHOLDERS = Array.from({ length: IU_MAILBOX_MAX }, () => IU_MM_EDIT_INPUT_PLACEHOLDER);
@@ -24154,7 +24165,7 @@ function buildVideoAsArticleCard(it) {
       const raw = items.slice(0, IU_MAILBOX_MAX);
       const validSocial = (s) => IU_MAILBOX_SOCIAL_OPTIONS.includes(s) ? s : null;
       let fixed = raw.map((it, i) => {
-        const slot = (typeof it?.slot === "number" && it.slot >= 1 && it.slot <= 6) ? it.slot : (i + 1);
+        const slot = (typeof it?.slot === "number" && it.slot >= 1 && it.slot <= IU_MAILBOX_MAX) ? it.slot : (i + 1);
         return {
           label: String(it?.label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX) || (MAILBOX_PLACEHOLDERS[i] || IU_MM_EDIT_INPUT_PLACEHOLDER),
           url: String(it?.url ?? "").trim(),
@@ -24191,7 +24202,7 @@ function buildVideoAsArticleCard(it) {
       if (migrated56) {
         try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) })); }catch{}
       }
-      const hadSlotMigration = raw.some((it, i) => typeof it?.slot !== "number" || it.slot < 1 || it.slot > 6);
+      const hadSlotMigration = raw.some((it, i) => typeof it?.slot !== "number" || it.slot < 1 || it.slot > IU_MAILBOX_MAX);
       if (hadSlotMigration) {
         try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) })); }catch{}
       }
@@ -24303,7 +24314,13 @@ function buildVideoAsArticleCard(it) {
       }
       if (!restored) {
         const used = new Set(items.map((x) => x.slot).filter((n) => typeof n === "number"));
-        const free = [1, 2, 3, 4, 5, 6].find((s) => !used.has(s));
+        let free = null;
+        for (let s = 1; s <= IU_MAILBOX_MAX; s++) {
+          if (!used.has(s)) {
+            free = s;
+            break;
+          }
+        }
         if (free != null) {
           const defaultSocial = free === 5 ? "linkedin" : free === 6 ? "youtube" : null;
           items.push({ label: "", url: "", social: defaultSocial, hidden: false, index: items.length, slot: free });
@@ -25736,16 +25753,7 @@ function buildVideoAsArticleCard(it) {
     if (window.__iuQuickToolsDocBound) return;
     window.__iuQuickToolsDocBound = 1;
     document.addEventListener("click", function(e) {
-      const t = e.target;
-      if (!t || !t.closest) return;
-      const trig = t.closest("[data-iu-quicktools-settings], .iu-quicktools-settings-trigger");
-      if (!trig) return;
-      const panel = document.getElementById("iuQuickToolsSettingsPanel");
-      if (!panel) return;
-      e.preventDefault();
-      e.stopPropagation();
-      if (panel.hidden) iuQuickToolsSettingsOpen();
-      else iuQuickToolsSettingsClose();
+      iuQuickToolsHandleSettingsTriggerClick(e);
     }, false);
   }
 
