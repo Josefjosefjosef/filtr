@@ -45,7 +45,7 @@ function isMobileTabletPanelContext() {
     if (typeof window.matchMedia !== "function") return false;
     if (!window.matchMedia("(max-width: 1024px)").matches) return false;
     const body = document.body;
-    if (!body || !body.classList.contains("iu-home")) return false;
+    if (!body) return false;
     if (body.classList.contains("iu-mobileMainVisible")) return false;
     if (body.classList.contains("iu-mobileGateOverlayOpen")) return false;
     if (body.getAttribute("data-iu-fc") === "0") return false;
@@ -440,13 +440,9 @@ async function renderPanelInner() {
     mobileMount.hidden = false;
     mobileMount.removeAttribute("hidden");
     mobileMount.removeAttribute("aria-hidden");
+    mobileMount.setAttribute("aria-busy", "true");
     mobileMount.style.visibility = "visible";
     mobileMount.removeAttribute("data-iu-info-panel-ready");
-    mobileMount.innerHTML = buildPanelHtml(getLoadingInfoPanelItems(), {
-      showNav: false,
-      panelId: MOBILE_PANEL_ID,
-      panelClass: "iuMobileInfoPanel",
-    });
   }
 
   ensureDetailPortal();
@@ -476,6 +472,7 @@ async function renderPanelInner() {
       panelClass: "iuMobileInfoPanel",
     });
     mobileMount.setAttribute("data-iu-info-panel-ready", "1");
+    mobileMount.removeAttribute("aria-busy");
   }
 
   ensureDetailPortal();
