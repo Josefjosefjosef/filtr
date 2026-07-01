@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-07-01T11:01:09.875937Z",
+  "ingestedAt": "2026-07-01T13:19:17.114137Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Babiš určuje prezidentovi, kdo přesně s ním může na summit. Večeře se Pavel nejspíš nezúčastní",
+      "url": "https://www.ceska-justice.cz/2026/07/babis-urcuje-prezidentovi-summit-vecere-pavel/",
+      "dt": "2026-07-01T11:38:02Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "babiš",
+        "nejspíš",
+        "nezúčastní",
+        "ním",
+        "pavel",
+        "prezidentovi",
+        "přesně",
+        "summit",
+        "určuje",
+        "večeře"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,35 +267,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Konec úvah o zálohování PET lahví, vláda má jiné řešení. Musí ale prokázat, že funguje",
-      "url": "https://www.ceska-justice.cz/2026/06/konec-zalohovani-pet-lahvi-jine-reseni/",
-      "dt": "2026-06-30T04:10:00Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "ale",
-        "funguje",
-        "jiné",
-        "konec",
-        "lahví",
-        "musí",
-        "pet",
-        "prokázat",
-        "vláda",
-        "zálohování",
-        "úvah",
-        "řešení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 95698,
+      "bytes": 88856,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-07-01T09:51:23Z",
+        "raw_feed_latest_publishedAt": "2026-07-01T11:38:02Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -331,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš určuje prezidentovi, kdo přesně s ním může na summit. Večeře se Pavel nejspíš nezúčastní",
+            "publishedAt": "2026-07-01T11:38:02Z"
+          },
           {
             "title": "Bil manželku, dceru mlátil páskem a nutil ji k sebevraždě. S nižším trestem neuspěl",
             "publishedAt": "2026-07-01T09:51:23Z"
@@ -358,10 +360,6 @@
           {
             "title": "Startuje předvolební kampaň. Letos s upravenými pravidly",
             "publishedAt": "2026-06-30T10:44:33Z"
-          },
-          {
-            "title": "Rusko stupňuje tažení proti LGBT. Pracovníci gay baru dostali roky vězení",
-            "publishedAt": "2026-06-30T08:01:38Z"
           }
         ]
       }
