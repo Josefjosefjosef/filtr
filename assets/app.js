@@ -5846,7 +5846,10 @@ try {
       const headerEl = iuBuildFeedSectionHeaderElement();
       iuFeedSectionHeaderEnsureAppended(feedEl, headerEl);
       try {
-        if (iuIsDesktopNavLayout()) {
+        if (
+          iuIsDesktopNavLayout() &&
+          String(feedEl.getAttribute("data-feed-switching") || "") !== "1"
+        ) {
           iuScrollToActiveSectionStartInstant();
           requestAnimationFrame(function () {
             try {
@@ -6124,11 +6127,11 @@ try {
         if (!fel || String(fel.getAttribute("data-feed-switching") || "") !== "1") return;
         if (String(fel.getAttribute("data-feed-switch-seq") || "") !== switchSeqAtStart) return;
         fel.removeAttribute("data-feed-switching");
+        sectionSwitchFirstBatchReleased = true;
+        iuFeedSectionSwitchScrollToStartIfArmed();
         if (!iuChunkShouldHoldFeedMinHeightP()) {
           iuFeedReleaseMinHeightIfAllowed(fel);
         }
-        sectionSwitchFirstBatchReleased = true;
-        iuFeedSectionSwitchScrollToStartIfArmed();
       } catch (_) {}
     }
     function iuRenderFeedStaleP() {
@@ -6776,7 +6779,11 @@ try {
     }
     try {
       iuFeedSectionHeaderReconcile(feedEl);
-      if (switchSeqAtStart && iuIsDesktopNavLayout()) {
+      if (
+        switchSeqAtStart &&
+        iuIsDesktopNavLayout() &&
+        String(feedEl.getAttribute("data-feed-switching") || "") !== "1"
+      ) {
         iuScrollToActiveSectionStartInstant();
         try {
           requestAnimationFrame(function () {
@@ -6806,10 +6813,10 @@ try {
       iuRenderFeedReleaseSectionSwitchIfReady();
       if (!sectionSwitchFirstBatchReleased) {
         feedEl.removeAttribute("data-feed-switching");
+        iuFeedSectionSwitchScrollToStartIfArmed();
         if (!iuChunkShouldHoldFeedMinHeightP()) {
           iuFeedReleaseMinHeightIfAllowed(feedEl);
         }
-        iuFeedSectionSwitchScrollToStartIfArmed();
       }
       const vkDone = iuFeedSectionHeaderResolveVisualKey();
       if (vkDone) feedEl.setAttribute("data-feed-visual-key", vkDone);
@@ -6822,10 +6829,10 @@ try {
           const finSeq = String(felFin.getAttribute("data-feed-switch-seq") || "");
           if (switchSeqAtStart && finSeq === switchSeqAtStart) {
             felFin.removeAttribute("data-feed-switching");
+            iuFeedSectionSwitchScrollToStartIfArmed();
             if (!iuChunkShouldHoldFeedMinHeightP()) {
               iuFeedReleaseMinHeightIfAllowed(felFin);
             }
-            iuFeedSectionSwitchScrollToStartIfArmed();
           }
         }
       } catch (_) {}
@@ -35611,11 +35618,6 @@ function buildVideoAsArticleCard(it) {
           } catch (_) {}
           try {
             iuFeedSectionSwitchInstantClear(feedSw);
-            try {
-              if (iuIsDesktopNavLayout() && window.__iuSectionSwitchScrollArm) {
-                iuScrollToActiveSectionStartInstant();
-              }
-            } catch (_) {}
           } catch (_) {}
           try {
             const vkFn =
