@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-01T00:17:52.181475Z",
-  "source_run_id": "28484457766",
+  "generatedAt": "2026-07-01T00:29:11.492197Z",
+  "source_run_id": "28484895402",
   "pipeline_phase": "fast_pool_publish",
   "pool_boundary": "post_event_dedupe_pre_section_limits",
   "clean_article_pool_definition": "Articles after RSS fetch, normalize, URL dedupe, title clustering, event-level dedupe, section classification, and quality/relevance checks; before release guards, PR creation, publish, and homepage selection.",
@@ -13,9 +13,9 @@
   "UNIQUE_ARTICLES_LOST_AFTER_EVENT_DEDUPE": "UNKNOWN_NOT_EXPORTED",
   "UNIQUE_ARTICLES_LOST_AFTER_SECTION_LIMITS": 0,
   "UNIQUE_ARTICLES_LOST_AFTER_HOMEPAGE_SELECTION_ESTIMATE": "UNKNOWN_NOT_EXPORTED",
-  "total_raw_items": 14,
-  "total_normalized": 14,
-  "total_after_url_dedupe": 14,
+  "total_raw_items": 21,
+  "total_normalized": 21,
+  "total_after_url_dedupe": 21,
   "total_after_event_dedupe": 19072,
   "total_publishable_pool": 19072,
   "total_clean_pool": 19072,
@@ -23,8 +23,8 @@
   "articles_full_count": 19072,
   "articles_final_count": 18236,
   "articles_json_count": 18236,
-  "cluster_count": 13,
-  "new_articles_built": 13,
+  "cluster_count": 19,
+  "new_articles_built": 19,
   "per_section_counts": {
     "sport": 5220,
     "aktualne": 6744,
@@ -134,7 +134,7 @@
   },
   "duplicate_counts": {
     "url_dedupe_dropped": 0,
-    "title_cluster_nonprimary_dropped": 1,
+    "title_cluster_nonprimary_dropped": 2,
     "event_dedupe_suppressed": 0
   },
   "event_cluster_counts": 0,
@@ -150,7 +150,7 @@
   "HOMEPAGE_DATA_SOURCE": "publishable_pool.json",
   "HOMEPAGE_READONLY_SELECTION": "YES",
   "PUBLISHABLE_POOL_SCHEMA_VERSION": 1,
-  "PUBLISHABLE_POOL_GENERATED_AT": "2026-07-01T00:17:52.181475Z",
+  "PUBLISHABLE_POOL_GENERATED_AT": "2026-07-01T00:29:11.492197Z",
   "fast_publish": {
     "new_articles_published": 3,
     "prev_pool_total": 19077,
