@@ -84,6 +84,7 @@ def _bucket_articles(articles: list[dict]) -> dict[str, list[dict]]:
             buckets["zpravy"].append(raw)
     feed_all.sort(key=_iso_sort_key, reverse=True)
     buckets["feed"] = feed_all
+    # feed bucket = server-side Přehled dne timeline (publishedAt desc, batched via chunks)
     for key in CHUNK_SECTION_KEYS:
         if key == "feed":
             continue

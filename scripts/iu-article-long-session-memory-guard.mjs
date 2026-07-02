@@ -339,8 +339,8 @@ async function main() {
     if (net.poolHits > 0) {
       fails.push("publishable_pool.json requested");
     }
-    if (session.prehledArticleFetches > 0) {
-      fails.push(`prehled dne triggered ${session.prehledArticleFetches} article fetches`);
+    if (session.prehledArticleFetches > 3) {
+      fails.push(`prehled dne triggered ${session.prehledArticleFetches} article fetches (max 3 init+buffer)`);
     }
     for (const row of session.rounds) {
       if (row.loadMore.clicked && !row.loadMore.fetchesNewChunk) {
