@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-07-02T13:20:17.285907Z",
+  "ingestedAt": "2026-07-02T15:06:15.120169Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Epic nabízí zdarma dvě pozitivně hodnocené hry",
+      "url": "https://zing.cz/article/epic-nabizi-zdarma-dve-pozitivne-hodnocene-hry",
+      "dt": "2026-07-02T15:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "dvě",
+        "epic",
+        "hodnocené",
+        "hry",
+        "nabízí",
+        "pozitivně",
+        "zdarma"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -949,26 +973,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Cozy novinky s Terry #60",
-      "url": "https://zing.cz/article/cozy-novinky-s-terry-60",
-      "dt": "2026-06-27T10:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "cozy",
-        "novinky",
-        "terry"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -979,7 +983,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125939,
+      "bytes": 125874,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1016,7 +1020,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-02T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-02T15:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1031,6 +1035,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Epic nabízí zdarma dvě pozitivně hodnocené hry",
+            "publishedAt": "2026-07-02T15:00:00Z"
+          },
           {
             "title": "Gothic 1 Remake se dočká oficiální češtiny pro PC i konzole",
             "publishedAt": "2026-07-02T12:00:00Z"
@@ -1058,10 +1066,6 @@
           {
             "title": "Červencová nabídka her v PlayStation Plus byla oficiálně představena",
             "publishedAt": "2026-07-01T16:00:00Z"
-          },
-          {
-            "title": "Sony vypne PlayStation Store hráčům na konzolích PS3 a PS Vita",
-            "publishedAt": "2026-07-01T14:00:00Z"
           }
         ]
       }
