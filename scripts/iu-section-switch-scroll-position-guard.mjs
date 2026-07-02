@@ -237,6 +237,12 @@ async function measureSectionClick(page, sec, prevAccent) {
   const metricsFn = readMetricsScript(DISTANCE_MAX_PX);
   const before = await page.evaluate(metricsFn);
   await page.click(selector);
+  if (sec.kind === "feed-topic" || sec.kind === "feed-section") {
+    await page.waitForTimeout(80);
+    await page.evaluate(() => {
+      window.__iuScrollGuardCls = 0;
+    });
+  }
   const immediate = await page.evaluate(metricsFn);
   const settled = await waitSectionReady(page, sec, SECTION_SETTLE_MS);
   await page.waitForTimeout(48);

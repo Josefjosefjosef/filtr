@@ -14,6 +14,8 @@ const REQUIRED = [
   { id: "mobile_tablet_max_1024", pattern: /@media \(max-width: 1024px\)/ },
   { id: "bottom_nav_z_index", pattern: /#iuMobileBottomNav\.iu-mobileBottomNav\s*\{\s*\n\s*z-index: 10200 !important/ },
   { id: "bottom_nav_clearance", pattern: /bottom: var\(--bottom-nav-height, calc\(56px \+ env\(safe-area-inset-bottom, 0px\) \+ 32px\)\) !important/ },
+  { id: "v3_unified_scroll_safe_area", pattern: /v3 — unified scroll\/safe-area/ },
+  { id: "calendar_day_overlay_clearance", pattern: /#iuCalendarDayOverlay\.iu-calendar-day-overlay:not\(\[hidden\]\)/ },
   { id: "quickfeed_gate_scope", pattern: /body\.iu-mobileGateOverlayOpen\.iu-mobileGateToolsQuickOpen #iuQuickFeed/ },
   { id: "calendar_dialog_clearance", pattern: /#iuCalendarOverlay \.iu-calendarOverlay__dialog/ },
   { id: "index_link", file: INDEX, pattern: /iu-mindmenu-bottom-nav-restore-v1\.css/ },

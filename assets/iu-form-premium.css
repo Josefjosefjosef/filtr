@@ -56,16 +56,9 @@
   display: none !important;
 }
 
-/* —— Krátké bezpečnostní shrnutí —— */
+/* —— Krátké bezpečnostní shrnutí (legacy — obsah je v modálním panelu ℹ Informace) —— */
 .iu-tool-privacy-short {
-  margin: 8px 0 0;
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: rgba(0, 60, 255, 0.04);
-  border: 1px solid rgba(0, 60, 255, 0.1);
-  font-size: 12px;
-  line-height: 1.45;
-  color: var(--iuFp-text-muted);
+  display: none !important;
 }
 
 /* —— Externí upozornění (kompaktní) —— */
