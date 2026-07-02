@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-07-02T06:52:51.172522Z",
+  "ingestedAt": "2026-07-02T09:27:41.630941Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Skvělá zombie akce Dying Light je za hubičku. V pěkné slevě je celá série",
+      "url": "https://www.idnes.cz/hry/novinky/dying-light-slevy.A260702_085315_bw-novinky_oz/foto",
+      "dt": "2026-07-02T08:29:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "akce",
+        "celá",
+        "dying",
+        "hubičku",
+        "light",
+        "pěkné",
+        "skvělá",
+        "slevě",
+        "série",
+        "zombie"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -730,32 +757,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "RECENZE: Hororová legenda The 7th Guest znovu zve do strašidelného domu",
-      "url": "https://www.idnes.cz/hry/recenze/the-7th-guest-remake-recenze-hry.A260618_074437_bw-recenze_oz",
-      "dt": "2026-06-21T22:00:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "7th",
-        "domu",
-        "guest",
-        "hororová",
-        "legenda",
-        "strašidelného",
-        "the",
-        "znovu",
-        "zve"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -766,7 +767,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 46212,
+      "bytes": 45975,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -803,7 +804,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-01T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-02T08:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -818,6 +819,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Skvělá zombie akce Dying Light je za hubičku. V pěkné slevě je celá série",
+            "publishedAt": "2026-07-02T08:29:00Z"
+          },
           {
             "title": "Jak dobře znáte nejlepší letošní horor Resident Evil?",
             "publishedAt": "2026-07-01T22:00:00Z"
@@ -845,10 +850,6 @@
           {
             "title": "Rhythm Paradise Groove",
             "publishedAt": "2026-07-01T07:30:48Z"
-          },
-          {
-            "title": "Skvělé slevy, včetně Kingdom Come 2. Poradíme, co kupovat v herním výprodeji",
-            "publishedAt": "2026-06-29T22:00:00Z"
           }
         ]
       }
