@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-07-02T22:19:55.682499Z",
+  "ingestedAt": "2026-07-02T23:28:13.703857Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "FOTBAL ONLINE: Ronaldova družina se tlačí za úvodním gólem, Chorvati se ale úspěšně brání",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-portugalsko-vyzve-chorvatsko-jedna-z-legend-se-bude-zrejme-navzdy-loucit-s-ms-5496629",
+      "dt": "2026-07-02T14:44:50Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ale",
+        "brání",
+        "chorvati",
+        "družina",
+        "fotbal",
+        "gólem",
+        "online",
+        "ronaldova",
+        "tlačí",
+        "úspěšně",
+        "úvodním"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -721,31 +749,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Portugalsko vyzve Chorvatsko, jedna z legend se bude zřejmě navždy loučit s MS",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-portugalsko-vyzve-chorvatsko-jedna-z-legend-se-bude-zrejme-navzdy-loucit-s-ms-5496629",
-      "dt": "2026-07-02T14:44:50Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "chorvatsko",
-        "jedna",
-        "legend",
-        "loučit",
-        "navždy",
-        "portugalsko",
-        "vyzve",
-        "zřejmě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -756,7 +759,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45230,
+      "bytes": 45427,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -809,6 +812,10 @@
         },
         "sample_titles": [
           {
+            "title": "FOTBAL ONLINE: Ronaldova družina se tlačí za úvodním gólem, Chorvati se ale úspěšně brání",
+            "publishedAt": "2026-07-02T14:44:50Z"
+          },
+          {
             "title": "Na Paříž nenavázal, přesto vidí posun. Kdo má přehnaná očekávání, ten náš sport nezná, tvrdil Menšík",
             "publishedAt": "2026-07-02T22:13:57Z"
           },
@@ -835,10 +842,6 @@
           {
             "title": "MS 2026: Program play off fotbalového šampionátu v USA, Kanadě a Mexiku",
             "publishedAt": "2026-06-29T03:09:00Z"
-          },
-          {
-            "title": "Fritz si ve druhém kole Wimbledonu smlsnul na krajanovi",
-            "publishedAt": "2026-07-02T12:59:47Z"
           }
         ]
       }
