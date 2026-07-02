@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-07-02T02:43:20.818407Z",
+  "ingestedAt": "2026-07-02T05:06:39.214570Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Kingdom Come zamíří na vaše stoly, chystá se oficiální deskovka",
+      "url": "https://zing.cz/article/kingdom-come-zamiri-na-vase-stoly-chysta-se-oficialni-deskovka",
+      "dt": "2026-07-02T04:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "chystá",
+        "come",
+        "deskovka",
+        "kingdom",
+        "oficiální",
+        "stoly",
+        "vaše",
+        "zamíří"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -948,29 +973,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "GTA 6 se nakonec má dočkat tradiční krabicovky s diskem",
-      "url": "https://zing.cz/article/gta-6-se-nakonec-ma-dockat-tradicni-krabicovky-s-diskem",
-      "dt": "2026-06-26T10:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "diskem",
-        "dočkat",
-        "gta",
-        "krabicovky",
-        "nakonec",
-        "tradiční"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -981,7 +983,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125926,
+      "bytes": 125903,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1018,7 +1020,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-01T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-02T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1033,6 +1035,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kingdom Come zamíří na vaše stoly, chystá se oficiální deskovka",
+            "publishedAt": "2026-07-02T04:00:00Z"
+          },
           {
             "title": "The Blood of Dawnwalker ukázal 8 minut dlouhý gameplay",
             "publishedAt": "2026-07-01T18:00:00Z"
@@ -1060,10 +1066,6 @@
           {
             "title": "Fanoušci dávají postupně dohromady interaktivní mapu GTA 6",
             "publishedAt": "2026-07-01T06:00:00Z"
-          },
-          {
-            "title": "Battlefield 6 je po celý týden na PC i konzolích k dispozici zdarma",
-            "publishedAt": "2026-07-01T04:00:00Z"
           }
         ]
       }
