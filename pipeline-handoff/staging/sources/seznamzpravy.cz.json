@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-07-02T20:42:16.226692Z",
+  "ingestedAt": "2026-07-02T22:19:55.682499Z",
   "items": [
     {
       "section": "aktualne",
@@ -29,23 +29,23 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
+      "section": "aktualne",
       "contentType": "article",
-      "title": "Vyrábí český papír ze sloního trusu. Nakupovala u nich i anglická královna",
-      "url": "https://www.seznamzpravy.cz/clanek/ekonomika-finance-vyrabi-cesky-papir-ze-sloniho-trusu-nakupovala-u-nich-i-anglicka-kralovna-309706",
-      "dt": "2026-07-02T07:45:00Z",
+      "title": "Máme vzít Itala jako Slováci? Reprezentace řeší kouče ze zahraničí",
+      "url": "https://www.seznamzpravy.cz/clanek/audio-podcast-mvp-fotbal-potrebuje-kouce-ze-zahranici-ale-pozor-na-slovenskou-cestu-309897",
+      "dt": "2026-07-02T13:00:00Z",
       "media_raw": "Seznam Zprávy / Domácí",
       "media_norm": "Seznam Zprávy",
       "tokens": [
-        "anglická",
-        "královna",
-        "nakupovala",
-        "nich",
-        "papír",
-        "sloního",
-        "trusu",
-        "vyrábí",
-        "český"
+        "itala",
+        "jako",
+        "kouče",
+        "máme",
+        "reprezentace",
+        "slováci",
+        "vzít",
+        "zahraničí",
+        "řeší"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -688,32 +688,6 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Máme vzít Itala jako Slováci? Reprezentace řeší kouče ze zahraničí",
-      "url": "https://www.seznamzpravy.cz/clanek/audio-podcast-mvp-fotbal-potrebuje-kouce-ze-zahranici-ale-pozor-na-slovenskou-cestu-309897",
-      "dt": "2026-07-02T13:00:00Z",
-      "media_raw": "Seznam Zprávy / Domácí",
-      "media_norm": "Seznam Zprávy",
-      "tokens": [
-        "itala",
-        "jako",
-        "kouče",
-        "máme",
-        "reprezentace",
-        "slováci",
-        "vzít",
-        "zahraničí",
-        "řeší"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_seznam_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
       "title": "Z výnosů emisních povolenek míří do Česka skoro 517 milionů eur",
       "url": "https://www.seznamzpravy.cz/clanek/domaci-zivot-v-cesku-z-vynosu-emisnich-povolenek-miri-do-ceska-skoro-517-milionu-eur-309894",
       "dt": "2026-07-02T12:07:28Z",
@@ -762,6 +736,32 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "seznamzpravy.cz",
       "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pilot, který narazil do mrakodrapu v Pekingu, měl podle úřadů psychické problémy",
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-pilot-ktery-narazil-do-mrakodrapu-v-pekingu-mel-podle-uradu-psychicke-problemy-309896",
+      "dt": "2026-07-02T11:53:12Z",
+      "media_raw": "Seznam Zprávy / Domácí",
+      "media_norm": "Seznam Zprávy",
+      "tokens": [
+        "mrakodrapu",
+        "měl",
+        "narazil",
+        "pekingu",
+        "pilot",
+        "podle",
+        "problémy",
+        "psychické",
+        "úřadů"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_seznam_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -772,7 +772,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/domaci",
-      "bytes": 46539,
+      "bytes": 46086,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -812,9 +812,9 @@
         "raw_feed_latest_publishedAt": "2026-07-02T20:33:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "finance": 4,
-          "sport": 2
+          "zpravy": 25,
+          "sport": 2,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -831,8 +831,8 @@
             "publishedAt": "2026-07-02T20:33:42Z"
           },
           {
-            "title": "Vyrábí český papír ze sloního trusu. Nakupovala u nich i anglická královna",
-            "publishedAt": "2026-07-02T07:45:00Z"
+            "title": "Máme vzít Itala jako Slováci? Reprezentace řeší kouče ze zahraničí",
+            "publishedAt": "2026-07-02T13:00:00Z"
           },
           {
             "title": "Nejméně 25 mrtvých po ruských útocích, Kyjev vyhlásí den smutku",

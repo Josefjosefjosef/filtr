@@ -1,9 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-07-02T20:42:16.226692Z",
+  "ingestedAt": "2026-07-02T22:19:55.682499Z",
   "items": [
     {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zákaz ruského plynu způsobí přílišnou závislost na USA, zní ze Španělska",
+      "url": "https://www.novinky.cz/clanek/ekonomika-zakaz-ruskeho-plynu-zpusobi-prilisnou-zavislost-na-usa-zni-ze-spanelska-40586247",
+      "dt": "2026-07-02T20:45:00Z",
+      "media_raw": "Novinky / Domácí",
+      "media_norm": "Novinky",
+      "tokens": [
+        "plynu",
+        "přílišnou",
+        "ruského",
+        "usa",
+        "zní",
+        "způsobí",
+        "zákaz",
+        "závislost",
+        "španělska"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_novinky_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "aktualne",
       "contentType": "article",
       "title": "„Odměnou“ mi bude bičování, že jdu s Motoristy, říká kandidát na primátora v Brně Kratochvíl",
@@ -740,28 +766,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "finance",
       "contentType": "article",
-      "title": "Sázet na klíčovou roli Singapuru při zásobování amerického námořnictva by se USA mohlo vymstít",
-      "url": "https://www.novinky.cz/clanek/zahranicni-svet-sazet-na-klicovou-roli-singapuru-pri-zasobovani-americkeho-namornictva-by-se-usa-mohlo-vymstit-40585913",
-      "dt": "2026-07-02T16:21:13Z",
-      "media_raw": "Novinky / Domácí",
+      "title": "Zákaz ruského plynu způsobí přílišnou závislost na USA, zní ze Španělska",
+      "url": "https://www.novinky.cz/clanek/ekonomika-zakaz-ruskeho-plynu-zpusobi-prilisnou-zavislost-na-usa-zni-ze-spanelska-40586247",
+      "dt": "2026-07-02T20:45:00Z",
+      "media_raw": "Novinky / Zahraniční",
       "media_norm": "Novinky",
       "tokens": [
-        "amerického",
-        "klíčovou",
-        "námořnictva",
-        "při",
-        "roli",
-        "singapuru",
-        "sázet",
+        "plynu",
+        "přílišnou",
+        "ruského",
         "usa",
-        "vymstít",
-        "zásobování"
+        "zní",
+        "způsobí",
+        "zákaz",
+        "závislost",
+        "španělska"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
-      "feedId": "zpr_novinky_domaci",
+      "feedId": "zpr_novinky_zahranicni",
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "novinky.cz",
       "_dt_serialized": true
@@ -1494,33 +1519,6 @@
         "zelenskyj",
         "útoku",
         "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_novinky_zahranicni",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Sázet na klíčovou roli Singapuru při zásobování amerického námořnictva by se USA mohlo vymstít",
-      "url": "https://www.novinky.cz/clanek/zahranicni-svet-sazet-na-klicovou-roli-singapuru-pri-zasobovani-americkeho-namornictva-by-se-usa-mohlo-vymstit-40585913",
-      "dt": "2026-07-02T16:21:13Z",
-      "media_raw": "Novinky / Zahraniční",
-      "media_norm": "Novinky",
-      "tokens": [
-        "amerického",
-        "klíčovou",
-        "námořnictva",
-        "při",
-        "roli",
-        "singapuru",
-        "sázet",
-        "usa",
-        "vymstít",
-        "zásobování"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1538,7 +1536,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/domaci",
-      "bytes": 48613,
+      "bytes": 48600,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1575,11 +1573,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-02T20:41:29Z",
+        "raw_feed_latest_publishedAt": "2026-07-02T20:45:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
-          "finance": 2
+          "finance": 3,
+          "zpravy": 27
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1591,6 +1589,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zákaz ruského plynu způsobí přílišnou závislost na USA, zní ze Španělska",
+            "publishedAt": "2026-07-02T20:45:00Z"
+          },
           {
             "title": "„Odměnou“ mi bude bičování, že jdu s Motoristy, říká kandidát na primátora v Brně Kratochvíl",
             "publishedAt": "2026-07-02T20:41:29Z"
@@ -1618,10 +1620,6 @@
           {
             "title": "Nový visutý most překlene řeku Labe, staví se u Hrabalova Kerska na Nymbursku",
             "publishedAt": "2026-07-02T19:11:43Z"
-          },
-          {
-            "title": "Rybám v Odře chyběl kyslík, hasiči jim čeřili vodu čerpadlem",
-            "publishedAt": "2026-07-02T18:56:30Z"
           }
         ]
       }
@@ -1633,7 +1631,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/zahranicni",
-      "bytes": 48613,
+      "bytes": 48600,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1670,11 +1668,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-02T20:41:29Z",
+        "raw_feed_latest_publishedAt": "2026-07-02T20:45:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
-          "finance": 2
+          "finance": 3,
+          "zpravy": 27
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1686,6 +1684,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zákaz ruského plynu způsobí přílišnou závislost na USA, zní ze Španělska",
+            "publishedAt": "2026-07-02T20:45:00Z"
+          },
           {
             "title": "„Odměnou“ mi bude bičování, že jdu s Motoristy, říká kandidát na primátora v Brně Kratochvíl",
             "publishedAt": "2026-07-02T20:41:29Z"
@@ -1713,10 +1715,6 @@
           {
             "title": "Nový visutý most překlene řeku Labe, staví se u Hrabalova Kerska na Nymbursku",
             "publishedAt": "2026-07-02T19:11:43Z"
-          },
-          {
-            "title": "Rybám v Odře chyběl kyslík, hasiči jim čeřili vodu čerpadlem",
-            "publishedAt": "2026-07-02T18:56:30Z"
           }
         ]
       }

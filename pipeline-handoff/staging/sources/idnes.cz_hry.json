@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-07-02T20:42:16.226692Z",
+  "ingestedAt": "2026-07-02T22:19:55.682499Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Stahujte zdarma ceněný klenot herní historie a parádní retro mlátičku",
+      "url": "https://www.idnes.cz/hry/novinky/hry-zdarma-tipy-i-have-no-mouth-and-i-must-scream-a-river-city-girls-2-epic-store-itch-io.A260702_121755_bw-novinky_oz/foto",
+      "dt": "2026-07-02T22:00:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "ceněný",
+        "herní",
+        "historie",
+        "klenot",
+        "mlátičku",
+        "parádní",
+        "retro",
+        "stahujte",
+        "zdarma"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -731,33 +757,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Nečekaná virální pecka. Online hra na schovávanou prodává milion kopií denně",
-      "url": "https://www.idnes.cz/hry/magazin/meccha-chameleon-viralni-hra-multiplayer.A260618_212151_bw-magazin_oma",
-      "dt": "2026-06-22T09:45:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "denně",
-        "hra",
-        "kopií",
-        "milion",
-        "nečekaná",
-        "online",
-        "pecka",
-        "prodává",
-        "schovávanou",
-        "virální"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -768,7 +767,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 46367,
+      "bytes": 46467,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -805,7 +804,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-02T14:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-02T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -820,6 +819,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stahujte zdarma ceněný klenot herní historie a parádní retro mlátičku",
+            "publishedAt": "2026-07-02T22:00:00Z"
+          },
           {
             "title": "PS Plus láká v červenci na Call of Duty, For the King II a CrossCode",
             "publishedAt": "2026-07-02T14:10:00Z"
@@ -847,10 +850,6 @@
           {
             "title": "Šok pro celý herní svět. PlayStation končí s hrami v krabičkách",
             "publishedAt": "2026-07-01T13:46:00Z"
-          },
-          {
-            "title": "Čekají nás piráti a krakatice. Tyto novinky budeme hrát v červenci",
-            "publishedAt": "2026-06-30T22:00:00Z"
           }
         ]
       }
