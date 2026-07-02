@@ -283,17 +283,29 @@ async function testLoadMore(page, networkLog, markIndex) {
     const btn = document.querySelector(".iuLoadMoreBtn");
     if (btn) btn.click();
   });
-  await page.waitForTimeout(5000);
-  const newReqs = networkLog.slice(Math.max(markIndex, beforeLen)).filter((n) => articlePattern(n.url));
-  const newChunks = newReqs.filter((n) => chunkLoadMorePattern(n.url));
-  const filteredAfter = await page.evaluate(() => {
-    const st = window.__iuFeedPipelineState || window.state || {};
-    return Array.isArray(st.filteredItems) ? st.filteredItems.length : null;
-  });
-  const metaAfter = await page.evaluate(() => {
-    const m = document.querySelector(".iuLoadMoreMeta");
-    return m ? m.textContent : null;
-  });
+  const deadline = Date.now() + 15000;
+  let newReqs = [];
+  let newChunks = [];
+  let filteredAfter = filteredBefore;
+  let metaAfter = metaBefore;
+  while (Date.now() < deadline) {
+    await page.waitForTimeout(500);
+    newReqs = networkLog.slice(Math.max(markIndex, beforeLen)).filter((n) => articlePattern(n.url));
+    newChunks = newReqs.filter((n) => chunkLoadMorePattern(n.url));
+    filteredAfter = await page.evaluate(() => {
+      const st = window.__iuFeedPipelineState || window.state || {};
+      return Array.isArray(st.filteredItems) ? st.filteredItems.length : null;
+    });
+    metaAfter = await page.evaluate(() => {
+      const m = document.querySelector(".iuLoadMoreMeta");
+      return m ? m.textContent : null;
+    });
+    const progressed =
+      newChunks.length > 0 ||
+      (filteredAfter != null && filteredBefore != null && filteredAfter > filteredBefore) ||
+      (metaBefore != null && metaAfter != null && metaBefore !== metaAfter);
+    if (progressed) break;
+  }
   const filteredUnchanged =
     filteredBefore != null && filteredAfter != null && filteredBefore === filteredAfter;
   const fetchesNew =
