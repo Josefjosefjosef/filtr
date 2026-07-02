@@ -17,18 +17,6 @@
     text-overflow: unset !important;
   }
 
-  /* —— Full-width privacy / lock summary boxes —— */
-  .iu-ds-panelHeaderMain .iu-tool-privacy-short,
-  .iuQHead .iu-tool-privacy-short,
-  .iu-legal-overlay-heading .iu-tool-privacy-short,
-  .iu-financial-overlay-heading .iu-tool-privacy-short,
-  .iu-invoice-overlay-heading .iu-tool-privacy-short {
-    width: 100% !important;
-    max-width: 100% !important;
-    align-self: stretch !important;
-    box-sizing: border-box !important;
-  }
-
   /* Legal hub disclaimer lives under privacy modal — not in main scroll */
   #iuLegalDocsScrollHost .iu-legal-disclaimer {
     display: none !important;
@@ -81,7 +69,13 @@
 
   #iuLegalDocsPanel .iu-legal-overlay-header,
   #iuFinancialCalcPanel .iu-financial-overlay-header,
-  #iuInvoicePanel .iu-invoice-overlay-header {
+  #iuInvoicePanel .iu-invoice-overlay-header,
+  #iuDsPanel.iu-ds-panel .iu-ds-panelHeader,
+  #iuQuickFeed .iuQHead:has(.iu-tool-privacy-btn) {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 8 !important;
+    background: #fff !important;
     flex: none !important;
   }
 
