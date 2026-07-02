@@ -352,7 +352,8 @@ function evaluateLegMetrics(leg, fails, scenarioId) {
   if (leg.load_more && leg.load_more.load_more_only_reveals_existing_data) {
     issues.push("load_more_only_reveals_existing_data=YES");
   }
-  if (leg.loaderMode && leg.loaderMode !== "chunk-v1") {
+  const okLoaderModes = new Set(["chunk-v1", "chunk-v1-manifest"]);
+  if (leg.loaderMode && !okLoaderModes.has(leg.loaderMode)) {
     issues.push("loaderMode=" + leg.loaderMode);
   }
 
