@@ -5846,7 +5846,10 @@ try {
       const headerEl = iuBuildFeedSectionHeaderElement();
       iuFeedSectionHeaderEnsureAppended(feedEl, headerEl);
       try {
-        if (iuIsDesktopNavLayout()) {
+        if (
+          iuIsDesktopNavLayout() &&
+          String(feedEl.getAttribute("data-feed-switching") || "") !== "1"
+        ) {
           iuScrollToActiveSectionStartInstant();
           requestAnimationFrame(function () {
             try {
@@ -6124,11 +6127,11 @@ try {
         if (!fel || String(fel.getAttribute("data-feed-switching") || "") !== "1") return;
         if (String(fel.getAttribute("data-feed-switch-seq") || "") !== switchSeqAtStart) return;
         fel.removeAttribute("data-feed-switching");
+        sectionSwitchFirstBatchReleased = true;
+        iuFeedSectionSwitchScrollToStartIfArmed();
         if (!iuChunkShouldHoldFeedMinHeightP()) {
           iuFeedReleaseMinHeightIfAllowed(fel);
         }
-        sectionSwitchFirstBatchReleased = true;
-        iuFeedSectionSwitchScrollToStartIfArmed();
       } catch (_) {}
     }
     function iuRenderFeedStaleP() {
@@ -6776,7 +6779,11 @@ try {
     }
     try {
       iuFeedSectionHeaderReconcile(feedEl);
-      if (switchSeqAtStart && iuIsDesktopNavLayout()) {
+      if (
+        switchSeqAtStart &&
+        iuIsDesktopNavLayout() &&
+        String(feedEl.getAttribute("data-feed-switching") || "") !== "1"
+      ) {
         iuScrollToActiveSectionStartInstant();
         try {
           requestAnimationFrame(function () {
@@ -6806,10 +6813,10 @@ try {
       iuRenderFeedReleaseSectionSwitchIfReady();
       if (!sectionSwitchFirstBatchReleased) {
         feedEl.removeAttribute("data-feed-switching");
+        iuFeedSectionSwitchScrollToStartIfArmed();
         if (!iuChunkShouldHoldFeedMinHeightP()) {
           iuFeedReleaseMinHeightIfAllowed(feedEl);
         }
-        iuFeedSectionSwitchScrollToStartIfArmed();
       }
       const vkDone = iuFeedSectionHeaderResolveVisualKey();
       if (vkDone) feedEl.setAttribute("data-feed-visual-key", vkDone);
@@ -6822,10 +6829,10 @@ try {
           const finSeq = String(felFin.getAttribute("data-feed-switch-seq") || "");
           if (switchSeqAtStart && finSeq === switchSeqAtStart) {
             felFin.removeAttribute("data-feed-switching");
+            iuFeedSectionSwitchScrollToStartIfArmed();
             if (!iuChunkShouldHoldFeedMinHeightP()) {
               iuFeedReleaseMinHeightIfAllowed(felFin);
             }
-            iuFeedSectionSwitchScrollToStartIfArmed();
           }
         }
       } catch (_) {}
@@ -25406,10 +25413,26 @@ function buildVideoAsArticleCard(it) {
 
   function iuCustomButtonsOverlayUseFullscreen() {
     try {
-      return !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
+      return !!(window.matchMedia && window.matchMedia("(max-width: 1024px)").matches);
     } catch (_) {
       return false;
     }
+  }
+
+  function iuCustomButtonsEnsureInBody() {
+    const panel = document.getElementById("iuCustomButtonsPanel");
+    const backdrop = document.getElementById("iuCustomButtonsBackdrop");
+    if (!panel || !backdrop) return false;
+    if (backdrop.parentElement === document.body && panel.parentElement === document.body) return true;
+    try {
+      const frag = document.createDocumentFragment();
+      frag.appendChild(backdrop);
+      frag.appendChild(panel);
+      document.body.appendChild(frag);
+    } catch (_) {
+      return false;
+    }
+    return true;
   }
 
   function iuCustomButtonsOverlayClose() {
@@ -25425,7 +25448,7 @@ function buildVideoAsArticleCard(it) {
       backdrop.hidden = true;
       backdrop.setAttribute("aria-hidden", "true");
     }
-    document.body.classList.remove("iu-custom-buttons-overlay-open");
+    document.body.classList.remove("iu-custom-buttons-overlay-open", "iu-modal-open");
     iuCustomButtonsHideDeleteConfirm();
     iuCustomButtonsResetForm();
   }
@@ -25520,6 +25543,7 @@ function buildVideoAsArticleCard(it) {
 
   function iuCustomButtonsOverlayOpen() {
     iuCustomButtonsEnsureMounted();
+    iuCustomButtonsEnsureInBody();
     const panel = document.getElementById("iuCustomButtonsPanel");
     const backdrop = document.getElementById("iuCustomButtonsBackdrop");
     if (!panel || !backdrop) return;
@@ -25537,11 +25561,17 @@ function buildVideoAsArticleCard(it) {
     } else {
       panel.classList.remove("iu-custom-buttons-overlay-panel--fullscreen");
     }
-    document.body.classList.add("iu-custom-buttons-overlay-open");
+    document.body.classList.add("iu-custom-buttons-overlay-open", "iu-modal-open");
     iuCustomButtonsRefreshList();
     iuCustomButtonsUpdateFormState();
     const nameInput = document.getElementById("iuCustomButtonsName");
-    if (nameInput) nameInput.focus();
+    if (nameInput) {
+      try {
+        requestAnimationFrame(function () {
+          try { nameInput.focus({ preventScroll: true }); } catch (_) { try { nameInput.focus(); } catch (_) {} }
+        });
+      } catch (_) {}
+    }
   }
 
   function iuCustomButtonsResetForm() {
@@ -30395,16 +30425,16 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       const qTitle = iuQfEscape(titles[keyNorm] || keyNorm);
-      var qPrivacyBlock = "";
+      var qPrivacyBtn = "";
       if ((keyNorm === "banka" || keyNorm === "bakalari" || keyNorm === "pojistovna") && typeof window.iuToolPrivacyHeadBlockHtml === "function") {
-        qPrivacyBlock = window.iuToolPrivacyHeadBlockHtml(keyNorm);
+        qPrivacyBtn = window.iuToolPrivacyHeadBlockHtml(keyNorm);
       }
       const qHead =
-        "<div class=\"iuQHead\"><div class=\"iuQHeadText\"><div class=\"iuQTitle\">" +
+        "<div class=\"iuQHead\"><div class=\"iuQHeadText\"><div class=\"iu-overlay-header-row\"><div class=\"iuQTitle\">" +
         qTitle +
         "</div>" +
-        qPrivacyBlock +
-        "</div><div class=\"iuQHeadActions\"><button class=\"iuQClose iu-overlayCloseBtn38\" type=\"button\" id=\"iuQCloseBtn\" aria-label=\"Zavřít\">×</button></div></div>";
+        qPrivacyBtn +
+        "</div></div><div class=\"iuQHeadActions\"><button class=\"iuQClose iu-overlayCloseBtn38\" type=\"button\" id=\"iuQCloseBtn\" aria-label=\"Zavřít\">×</button></div></div>";
       const qCard = "<div class=\"iuQCard\" id=\"iuQuickFeedMojeSluzbyBody\"></div>";
       const useMojeDesktopDsShell =
         (isBankingDesktop && keyNorm === "banka") ||
@@ -35619,11 +35649,6 @@ function buildVideoAsArticleCard(it) {
           } catch (_) {}
           try {
             iuFeedSectionSwitchInstantClear(feedSw);
-            try {
-              if (iuIsDesktopNavLayout() && window.__iuSectionSwitchScrollArm) {
-                iuScrollToActiveSectionStartInstant();
-              }
-            } catch (_) {}
           } catch (_) {}
           try {
             const vkFn =
@@ -37954,7 +37979,9 @@ function buildVideoAsArticleCard(it) {
     confirmOpen: false,
     confirmMessage: "",
     confirmAction: null,
-    overlayEventsBound: false
+    overlayEventsBound: false,
+    draftNewNote: null,
+    prevSelectedIdBeforeDraft: ""
   };
 
   function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
@@ -38119,6 +38146,65 @@ function buildVideoAsArticleCard(it) {
     return list.find((n)=>String(n.id) === key) || null;
   }
 
+  function isDraftNewNoteActive(){
+    return !!(state.draftNewNote && String(state.selectedId) === String(state.draftNewNote.id));
+  }
+
+  function getActiveNote(){
+    if (isDraftNewNoteActive()) return state.draftNewNote;
+    return getNoteById(state.selectedId);
+  }
+
+  function syncDraftFromDom(){
+    if (!state.draftNewNote) return null;
+    const titleEl = document.getElementById("iuNoteTitle");
+    const contentEl = document.getElementById("iuNoteContent");
+    if (titleEl) state.draftNewNote.title = String(titleEl.value || "").slice(0, MAX_TITLE);
+    if (contentEl) state.draftNewNote.content = String(contentEl.value || "").slice(0, MAX_CONTENT);
+    state.draftNewNote.updatedAt = Date.now();
+    return state.draftNewNote;
+  }
+
+  function discardDraftNewNote(){
+    state.draftNewNote = null;
+    state.prevSelectedIdBeforeDraft = "";
+  }
+
+  function commitDraftNewNote(){
+    if (!isDraftNewNoteActive()) return;
+    if (state.autosaveTimer){
+      try{ clearTimeout(state.autosaveTimer); }catch{}
+      state.autosaveTimer = null;
+    }
+    syncDraftFromDom();
+    const n = sanitizeNote(state.draftNewNote);
+    if (!n) return;
+    state.data.notes.unshift(n);
+    state.selectedId = n.id;
+    discardDraftNewNote();
+    sortNotesInPlace(state.data.notes);
+    saveNotes(state.data);
+    renderStatus("Uloženo " + fmtDate(state.lastSavedAt));
+    render();
+  }
+
+  function cancelDraftNewNote(){
+    if (!state.draftNewNote) return;
+    if (state.autosaveTimer){
+      try{ clearTimeout(state.autosaveTimer); }catch{}
+      state.autosaveTimer = null;
+    }
+    const prev = String(state.prevSelectedIdBeforeDraft || "").trim();
+    discardDraftNewNote();
+    if (prev && getNoteById(prev)) state.selectedId = prev;
+    else {
+      const first = searchNotes(state.searchQuery)[0];
+      state.selectedId = first ? first.id : "";
+    }
+    if (isNotesNarrowViewport()) setMobileMode(state.selectedId ? "detail" : "list");
+    render();
+  }
+
   function searchNotes(query){
     const q = foldCs(String(query || "")).trim();
     const list = state.data && Array.isArray(state.data.notes) ? state.data.notes : [];
@@ -38242,6 +38328,10 @@ function buildVideoAsArticleCard(it) {
     const back = t && t.closest ? t.closest("[data-iu-notes-back]") : null;
     if (back){
       e.preventDefault();
+      if (isDraftNewNoteActive()){
+        cancelDraftNewNote();
+        return;
+      }
       if (isNotesNarrowViewport() && state.mobileDetailOpen) flushNotesDetailToStoreSync();
       setMobileMode("list");
       if (isNotesNarrowViewport()) state.selectedId = "";
@@ -38256,9 +38346,16 @@ function buildVideoAsArticleCard(it) {
     const newBtn = t && t.closest ? t.closest("[data-iu-notes-new]") : null;
     if (newBtn){ e.preventDefault(); createNewAndSelect(); return; }
 
+    const draftSave = t && t.closest ? t.closest("[data-iu-notes-draft-save]") : null;
+    if (draftSave){ e.preventDefault(); commitDraftNewNote(); return; }
+
+    const draftCancel = t && t.closest ? t.closest("[data-iu-notes-draft-cancel]") : null;
+    if (draftCancel){ e.preventDefault(); cancelDraftNewNote(); return; }
+
     const viewBtn = t && t.closest ? t.closest("[data-iu-notes-view]") : null;
     if (viewBtn){
       e.preventDefault();
+      if (isDraftNewNoteActive()) cancelDraftNewNote();
       state.listView = String(viewBtn.getAttribute("data-iu-notes-view") || "main");
       const first = searchNotes(state.searchQuery)[0];
       if (isNotesNarrowViewport()){
@@ -38283,6 +38380,7 @@ function buildVideoAsArticleCard(it) {
     const pick = t && t.closest ? t.closest("[data-iu-note-id]") : null;
     if (pick){
       e.preventDefault();
+      if (isDraftNewNoteActive()) discardDraftNewNote();
       const id = String(pick.getAttribute("data-iu-note-id") || "");
       state.selectedId = id;
       setMobileMode("detail");
@@ -38454,6 +38552,7 @@ function buildVideoAsArticleCard(it) {
     const ov = getOverlay();
     if (!ov) return;
     hideNotesConfirm();
+    if (state.draftNewNote) discardDraftNewNote();
     setMobileMode("list");
     ov.hidden = true;
     ov.setAttribute("aria-hidden", "true");
@@ -38485,6 +38584,10 @@ function buildVideoAsArticleCard(it) {
       e.preventDefault();
       if (state.confirmOpen){
         hideNotesConfirm();
+        return;
+      }
+      if (isDraftNewNoteActive()){
+        cancelDraftNewNote();
         return;
       }
       if (isNotesNarrowViewport() && state.mobileDetailOpen){
@@ -38688,10 +38791,23 @@ function buildVideoAsArticleCard(it) {
       root.innerHTML = "";
       return;
     }
-    const note = getNoteById(state.selectedId);
+    const note = getActiveNote();
     if (!note){
       root.innerHTML = '<div class="iu-notesOverlay__empty iuNotesState--empty">Vyber poznámku vlevo, nebo vytvoř novou.</div>';
       return;
+    }
+    const draftMode = isDraftNewNoteActive();
+    let actionsHtml = "";
+    if (draftMode){
+      actionsHtml =
+        '<div class="iu-notesOverlay__draftActions">' +
+          '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-draft-save="1">Uložit</button>' +
+          '<button type="button" class="iu-notesOverlay__btn" data-iu-notes-draft-cancel="1">Zrušit</button>' +
+        "</div>";
+    } else if (state.listView === "trash"){
+      actionsHtml = '<button type="button" class="iu-notesOverlay__btn" data-iu-note-restore="' + esc(note.id) + '">Obnovit z koše</button>';
+    } else {
+      actionsHtml = '<button type="button" class="iu-notesOverlay__btn" data-iu-note-delete="' + esc(note.id) + '">Přesunout do koše</button>';
     }
     root.innerHTML =
       '<div class="iu-notesOverlay__form">' +
@@ -38706,19 +38822,18 @@ function buildVideoAsArticleCard(it) {
           '<input class="iu-notesOverlay__input" id="iuNoteTagInput" type="text" autocomplete="off" placeholder="#práce" />' +
         "</label>" +
         '<div class="iu-notesOverlay__itemMeta">' + (Array.isArray(note.tags) && note.tags.length ? esc(note.tags.join(" ")) : "Bez tagů") + "</div>" +
-        '<div class="iu-notesOverlay__actions">' +
-          (state.listView === "trash"
-            ? '<button type="button" class="iu-notesOverlay__btn" data-iu-note-restore="' + esc(note.id) + '">Obnovit z koše</button>'
-            : '<button type="button" class="iu-notesOverlay__btn" data-iu-note-delete="' + esc(note.id) + '">Přesunout do koše</button>') +
-        "</div>" +
+        '<div class="iu-notesOverlay__actions">' + actionsHtml + "</div>" +
       "</div>";
-    renderStatus(state.lastSavedAt ? ("Uloženo " + fmtDate(state.lastSavedAt)) : "");
+    renderStatus(draftMode ? "Nová poznámka — potvrďte Uložit nebo Zrušit" : (state.lastSavedAt ? ("Uloženo " + fmtDate(state.lastSavedAt)) : ""));
   }
 
   function render(){
     try{
       const ov = getOverlay();
-      if (ov) ov.setAttribute("data-iu-notes-list-tab", state.listView === "trash" ? "trash" : "main");
+      if (ov){
+        ov.setAttribute("data-iu-notes-list-tab", state.listView === "trash" ? "trash" : "main");
+        ov.setAttribute("data-iu-notes-draft-new", isDraftNewNoteActive() ? "1" : "0");
+      }
     }catch{}
     renderList();
     renderDetail();
@@ -38727,11 +38842,14 @@ function buildVideoAsArticleCard(it) {
   }
 
   function createNewAndSelect(){
+    if (state.autosaveTimer){
+      try{ clearTimeout(state.autosaveTimer); }catch{}
+      state.autosaveTimer = null;
+    }
+    state.prevSelectedIdBeforeDraft = String(state.selectedId || "");
     const n = createEmptyNote();
-    state.data.notes.unshift(sanitizeNote(n));
+    state.draftNewNote = sanitizeNote(n);
     state.selectedId = n.id;
-    sortNotesInPlace(state.data.notes);
-    saveNotes(state.data);
     setMobileMode("detail");
     render();
     const titleEl = document.getElementById("iuNoteTitle");
@@ -38741,7 +38859,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function onInputChanged(){
-    const note = getNoteById(state.selectedId);
+    const note = getActiveNote();
     if (!note) return;
     const titleEl = document.getElementById("iuNoteTitle");
     const contentEl = document.getElementById("iuNoteContent");
@@ -38750,6 +38868,10 @@ function buildVideoAsArticleCard(it) {
     note.title = nextTitle;
     note.content = nextContent;
     note.updatedAt = Date.now();
+    if (isDraftNewNoteActive()){
+      renderStatus("Nová poznámka — potvrďte Uložit nebo Zrušit");
+      return;
+    }
     scheduleAutosave();
     patchActiveListItemInDom();
   }
@@ -38757,6 +38879,7 @@ function buildVideoAsArticleCard(it) {
   /** Flush title/content from DOM into store immediately (avoids losing last keystrokes when leaving detail on narrow). */
   function flushNotesDetailToStoreSync(){
     try{
+      if (isDraftNewNoteActive()) return;
       if (state.autosaveTimer){
         try{ clearTimeout(state.autosaveTimer); }catch{}
         state.autosaveTimer = null;
@@ -38782,7 +38905,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function addTagToSelected(raw){
-    const note = getNoteById(state.selectedId);
+    const note = getActiveNote();
     if (!note) return;
     const next = normalizeTag(raw);
     if (!next) return;
@@ -38791,6 +38914,10 @@ function buildVideoAsArticleCard(it) {
     if (!has) list.push(next);
     note.tags = list;
     note.updatedAt = Date.now();
+    if (isDraftNewNoteActive()){
+      renderDetail();
+      return;
+    }
     sortNotesInPlace(state.data.notes);
     saveNotes(state.data);
     render();
@@ -39887,7 +40014,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__listScroll," +
     "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__detailScroll{min-height:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch}" +
     "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__viewRoot{min-height:320px!important;height:calc(100% - 42px)!important;overflow:auto!important}" +
-    "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__body{display:grid!important;grid-template-columns:300px minmax(0,1fr)!important;min-height:0!important;height:100%!important;overflow:hidden!important}" +
+    "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__body{display:grid!important;grid-template-columns:450px minmax(0,1fr)!important;min-height:0!important;height:100%!important;overflow:hidden!important}" +
     "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__dialog{width:100%!important;max-width:none!important;min-height:100vh!important;min-height:100dvh!important;height:100vh!important;height:100dvh!important;max-height:100dvh!important;margin:0!important;border-radius:0!important;box-shadow:none!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;box-sizing:border-box!important}" +
     "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__scroll{flex:1 1 auto!important;min-height:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch}" +
     "}";
