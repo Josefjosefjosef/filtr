@@ -396,10 +396,12 @@ export function iuChunkHasMoreOnServer(loader) {
 export function iuChunkVisibleArticleBudget(page, loader) {
   const p = Number(page) >= 1 ? Number(page) : 1;
   if (p <= 1) {
-    if (loader && loader.backgroundDone) return CLIENT_INITIAL_LIMIT;
     return CLIENT_INITIAL_RENDER_BATCH;
   }
-  return CLIENT_INITIAL_RENDER_BATCH + (p - 1) * CLIENT_LOAD_MORE_LIMIT;
+  return Math.min(
+    CLIENT_INITIAL_RENDER_BATCH + (p - 1) * CLIENT_LOAD_MORE_LIMIT,
+    CLIENT_INITIAL_LIMIT
+  );
 }
 
 export function iuChunkPoolShapedPayload(loader, articles, generatedAt) {

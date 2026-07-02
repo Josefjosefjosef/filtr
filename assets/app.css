@@ -3623,6 +3623,7 @@ button.iu-close-btn-38:focus-visible{
   gap: 14px 18px;
   margin: 0;
   text-align: left;
+  overflow-anchor: none;
 }
 
 
@@ -3891,6 +3892,12 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
    --iu-mobile-bottom-nav-safe-space, viewport-fit=cover v projects/index.html).
    DoplĹuje stĂˇvajĂ­cĂ­ konzumenty (#feed â‰¤767, tool hosty, gate panely, tasks/notes/kalendĂˇĹ™)
    o chybÄ›jĂ­cĂ­ scroll rooty â€” ĹľĂˇdnĂ© per-page hardcody. */
+@media (max-width: 900px) {
+  body:not(.iu-mobileMainVisible):not(.iu-mobileGateOverlayOpen) #iuMobileGateWrap{
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    box-sizing: border-box !important;
+  }
+}
 @media (max-width: 767px) {
   /* DomĹŻ/Silver: document scroll, poslednĂ­ prvek je #iuMobileGateWrap (leftContent hidden).
      !important: pĹ™ebĂ­jĂ­ reset `#iuMobileGateWrap.iu-mobileGateWrap{padding:0!important}` nĂ­Ĺľe. */
@@ -3900,10 +3907,16 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
   }
 }
 @media (min-width: 768px) and (max-width: 900px) {
-  /* Tablet: #feed v document flow (landscape / home) â€” stejnĂˇ rezerva jako portrait inner-scroll. */
+  /* Tablet: #feed v document flow (landscape / home) — stejná rezerva jako portrait inner-scroll. */
   body:not(.iu-mobileGateOverlayOpen) #feed{
     padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 20px));
     box-sizing: border-box;
+  }
+}
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
+  body:not(.iu-mobileGateOverlayOpen) #feed{
+    padding-bottom: calc(var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) + 16px) !important;
+    box-sizing: border-box !important;
   }
 }
 @media (max-width: 900px) {
@@ -4423,6 +4436,7 @@ body[data-iu-fc="1"] #feed > article.news-card ~ article.news-card{
   align-items: center;
   gap: 8px;
   padding: 18px 0 10px;
+  overflow-anchor: none;
 }
 .iuLoadMoreBtn{
   appearance: none;
