@@ -6301,7 +6301,15 @@ try {
   // Druhá render cesta je zakázaná.
   async function renderFeed(target, items) {
     try {
-      if (state.__iuChunkUserLoadMoreActive || iuLoadMoreStabilizeActiveP()) return;
+      if (state.__iuChunkUserLoadMoreActive || iuLoadMoreStabilizeActiveP()) {
+        try {
+          const fel = document.getElementById("feed");
+          if (fel && fel.querySelector("article.news-card")) {
+            fel.setAttribute("data-feed-ready", "true");
+          }
+        } catch (_) {}
+        return;
+      }
     } catch (_) {}
     iuBootTracePhase("renderFeed_start");
     let rfPassForTrace = 0;
@@ -10863,6 +10871,11 @@ function buildVideoAsArticleCard(it) {
   /** Silver tall preview cards: stejná navigační cesta jako „Navigace po webu“ — přímo persist + apply (ne syntetický peer.click() na <a>, který je na mobilu/WebKit nespolehlivý vs skutečný tap). */
   function iuMediaPreviewNavClick(mediaTopicKey) {
     const k = String(mediaTopicKey || "").trim().toLowerCase();
+    try {
+      state.__iuChunkUserLoadMoreActive = false;
+      state.__iuLoadMoreStabilizeUntil = 0;
+      state.__iuApplyFilterPendingOpts = null;
+    } catch (_) {}
     try{
       if (typeof window !== "undefined" && !iuIsProdHost()) window.__iuLastMediaPreviewNavKey = k;
     }catch(_){}

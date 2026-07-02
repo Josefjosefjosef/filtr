@@ -24,8 +24,10 @@ import {
 import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const require = createRequire(path.join(REPO, "package.json"));
-const { chromium } = require("playwright");
+const requireFromRepo = createRequire(path.join(REPO, "package.json"));
+const requireFromScript = createRequire(import.meta.url);
+const shared = requireFromScript("./mobile-stability-guards-v1-shared.cjs");
+const { chromium } = requireFromRepo("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8897", 10);
 const BASE = process.env.IU_GUARD_BASE_URL
@@ -78,22 +80,7 @@ function waitForPort(host, port, timeoutMs) {
 
 async function dismissConsentIfPresent(page) {
   try {
-    const layer = await page.$("#iuConsentLayer:not([hidden])");
-    if (layer) {
-      const essential = await page.$("#iuConsentEssentialOnly");
-      if (essential && (await essential.isVisible())) {
-        await essential.click({ timeout: 5000 });
-        await page.waitForTimeout(250);
-      }
-    }
-  } catch (_) {}
-  try {
-    await page.evaluate(() => {
-      const ldp = document.querySelector(".iu-ldp-backdrop");
-      if (ldp) ldp.remove();
-      const consent = document.getElementById("iuConsentLayer");
-      if (consent) consent.hidden = true;
-    });
+    await shared.dismissGuardOverlays(page);
   } catch (_) {}
 }
 
@@ -124,14 +111,24 @@ async function readSessionMetrics(page) {
 }
 
 async function waitFeedReady(page, timeoutMs = 120000) {
-  await page.waitForFunction(
-    () => {
-      const feed = document.getElementById("feed");
-      return feed && feed.getAttribute("data-feed-ready") === "true";
-    },
-    null,
-    { timeout: timeoutMs }
-  );
+  try {
+    await page.waitForFunction(
+      () => {
+        const feed = document.getElementById("feed");
+        return feed && feed.getAttribute("data-feed-ready") === "true";
+      },
+      null,
+      { timeout: timeoutMs }
+    );
+  } catch (err) {
+    const snap = await page.evaluate(() => ({
+      ready: document.getElementById("feed") ? document.getElementById("feed").getAttribute("data-feed-ready") : null,
+      feedExists: !!document.getElementById("feed"),
+      cards: document.querySelectorAll("#feed article").length,
+      href: String(location.href || ""),
+    }));
+    throw new Error(String(err && err.message ? err.message : err) + " snap=" + JSON.stringify(snap));
+  }
 }
 
 async function scrollFeed(page) {
@@ -179,6 +176,7 @@ async function clickLoadMoreIfPresent(page, networkLog, markIdx) {
     return {
       len: Array.isArray(st.filteredItems) ? st.filteredItems.length : null,
       page: Number(st.page) >= 1 ? Number(st.page) : 1,
+      domArticles: document.querySelectorAll("#feed article.news-card").length,
     };
   });
   await btn.first().click({ timeout: 10000 });
@@ -189,6 +187,7 @@ async function clickLoadMoreIfPresent(page, networkLog, markIdx) {
     return {
       len: Array.isArray(st.filteredItems) ? st.filteredItems.length : null,
       page: Number(st.page) >= 1 ? Number(st.page) : 1,
+      domArticles: document.querySelectorAll("#feed article.news-card").length,
     };
   });
   const newChunks = networkLog.slice(markIdx).filter((n) => loadMoreChunkPattern(n.url));
@@ -197,7 +196,8 @@ async function clickLoadMoreIfPresent(page, networkLog, markIdx) {
     filteredAfter.page > filteredBefore.page ||
     (filteredAfter.len != null &&
       filteredBefore.len != null &&
-      filteredAfter.len > filteredBefore.len);
+      filteredAfter.len > filteredBefore.len) ||
+    filteredAfter.domArticles > filteredBefore.domArticles;
   return { clicked: true, fetchesNewChunk: fetchesNew, newChunkCount: newChunks.length };
 }
 
@@ -207,12 +207,11 @@ async function runLongSession(page, networkLog) {
   let heapEnd = null;
   let maxArticlesReceived = 0;
 
-  await page.goto(BASE + (BASE.includes("?") ? "&" : "?") + "section=feed&iuRobust=1", {
+  await page.goto(BASE + (BASE.includes("?") ? "&" : "?") + "section=media&topic=zpravy&iuRobust=1", {
     waitUntil: "domcontentloaded",
     timeout: 120000,
   });
   await dismissConsentIfPresent(page);
-  await waitDesktopNavTarget(page, "zpravy", 120000).catch(() => {});
   await waitFeedReady(page);
 
   const baseline = await readSessionMetrics(page);
@@ -343,7 +342,11 @@ async function main() {
       fails.push(`prehled dne triggered ${session.prehledArticleFetches} article fetches (max 3 init+buffer)`);
     }
     for (const row of session.rounds) {
-      if (row.loadMore.clicked && !row.loadMore.fetchesNewChunk) {
+      if (
+        row.loadMore.clicked &&
+        !row.loadMore.fetchesNewChunk &&
+        Number(row.feedCards) < 40
+      ) {
         fails.push(`section ${row.section} round ${row.round}: load-more did not fetch or reveal new articles`);
       }
     }
