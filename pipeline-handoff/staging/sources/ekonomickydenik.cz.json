@@ -1,8 +1,63 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-07-02T15:06:15.120169Z",
+  "ingestedAt": "2026-07-02T19:02:57.058440Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zelená elektřina ušetřila Evropanům stovky miliard. Česko je ale na chvostu",
+      "url": "https://ekonomickydenik.cz/zelena-elektrina-usetrila-cesko-chvostu/",
+      "dt": "2026-07-02T16:20:35Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "ale",
+        "chvostu",
+        "elektřina",
+        "evropanům",
+        "miliard",
+        "stovky",
+        "ušetřila",
+        "zelená",
+        "česko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Babiš se pohádal s Jurečkou. Vláda svůj program plní, dokončila už 195 úkolů, tvrdí premiér",
+      "url": "https://ekonomickydenik.cz/babis-hadal-jureckou-vlada-program-195/",
+      "dt": "2026-07-02T15:12:29Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "195",
+        "babiš",
+        "dokončila",
+        "jurečkou",
+        "plní",
+        "pohádal",
+        "premiér",
+        "program",
+        "svůj",
+        "tvrdí",
+        "vláda",
+        "úkolů"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -729,60 +784,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vyzve Řehka oblíbeného senátora? Černochová: To, že zamíří do politiky, je jasné delší dobu",
-      "url": "https://ekonomickydenik.cz/vyzve-rehka-oblibeneho-senatora/",
-      "dt": "2026-07-01T04:10:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "delší",
-        "dobu",
-        "jasné",
-        "oblíbeného",
-        "politiky",
-        "senátora",
-        "vyzve",
-        "zamíří",
-        "černochová",
-        "řehka"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kdo dostane vodu jako první? Stát musí v době sucha určit priority",
-      "url": "https://ekonomickydenik.cz/kdo-dostane-vodu-stat-sucho-priority/",
-      "dt": "2026-06-30T18:20:01Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "době",
-        "dostane",
-        "jako",
-        "musí",
-        "priority",
-        "první",
-        "stát",
-        "sucha",
-        "určit",
-        "vodu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69198,
+      "bytes": 68563,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,12 +831,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-02T14:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-02T16:20:35Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 22,
-          "zpravy": 7,
-          "zdravi": 1
+          "zdravi": 2,
+          "finance": 21,
+          "zpravy": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -847,6 +848,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zelená elektřina ušetřila Evropanům stovky miliard. Česko je ale na chvostu",
+            "publishedAt": "2026-07-02T16:20:35Z"
+          },
+          {
+            "title": "Babiš se pohádal s Jurečkou. Vláda svůj program plní, dokončila už 195 úkolů, tvrdí premiér",
+            "publishedAt": "2026-07-02T15:12:29Z"
+          },
           {
             "title": "Evropský paradox. Globální chaos oslabuje skepsi vůči EU",
             "publishedAt": "2026-07-02T14:20:00Z"
@@ -870,14 +879,6 @@
           {
             "title": "„Piráti zkazili, na co sáhli,“ Babiš se zastal Mrázové v kauze bytů",
             "publishedAt": "2026-07-02T09:58:23Z"
-          },
-          {
-            "title": "Konec sporů o Android: Pokuta 100 miliard korun pro Google je definitivní",
-            "publishedAt": "2026-07-02T09:39:48Z"
-          },
-          {
-            "title": "Letiště Praha čeká změna v čele: Favoritem na nového šéfa je Radomír Lašák",
-            "publishedAt": "2026-07-02T08:50:34Z"
           }
         ]
       }
