@@ -30394,16 +30394,16 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       const qTitle = iuQfEscape(titles[keyNorm] || keyNorm);
-      var qPrivacyBlock = "";
+      var qPrivacyBtn = "";
       if ((keyNorm === "banka" || keyNorm === "bakalari" || keyNorm === "pojistovna") && typeof window.iuToolPrivacyHeadBlockHtml === "function") {
-        qPrivacyBlock = window.iuToolPrivacyHeadBlockHtml(keyNorm);
+        qPrivacyBtn = window.iuToolPrivacyHeadBlockHtml(keyNorm);
       }
       const qHead =
-        "<div class=\"iuQHead\"><div class=\"iuQHeadText\"><div class=\"iuQTitle\">" +
+        "<div class=\"iuQHead\"><div class=\"iuQHeadText\"><div class=\"iu-overlay-header-row\"><div class=\"iuQTitle\">" +
         qTitle +
         "</div>" +
-        qPrivacyBlock +
-        "</div><div class=\"iuQHeadActions\"><button class=\"iuQClose iu-overlayCloseBtn38\" type=\"button\" id=\"iuQCloseBtn\" aria-label=\"Zavřít\">×</button></div></div>";
+        qPrivacyBtn +
+        "</div></div><div class=\"iuQHeadActions\"><button class=\"iuQClose iu-overlayCloseBtn38\" type=\"button\" id=\"iuQCloseBtn\" aria-label=\"Zavřít\">×</button></div></div>";
       const qCard = "<div class=\"iuQCard\" id=\"iuQuickFeedMojeSluzbyBody\"></div>";
       const useMojeDesktopDsShell =
         (isBankingDesktop && keyNorm === "banka") ||

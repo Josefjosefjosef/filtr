@@ -1,49 +1,82 @@
-/* infoUzel.cz — jednotné informace o soukromí v nástrojích */
+/* infoUzel.cz — jednotná kompaktní hlavička overlayů + informační panel */
+
+.iu-overlay-header-row{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.iu-overlay-header-row > h1,
+.iu-overlay-header-row > h2,
+.iu-overlay-header-row > .iuQTitle,
+.iu-overlay-header-row > .iu-tool-privacy-title,
+.iu-overlay-header-row > [id$="Title"]{
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+}
 
 .iu-ds-panelHeader,
-.iuQHead{
-  align-items: flex-start;
+.iuQHead:has(.iu-tool-privacy-btn),
+.iu-financial-overlay-header,
+.iu-legal-overlay-header,
+.iu-invoice-overlay-header{
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  background: #fff;
+  align-items: center;
+}
+
+.iu-ds-panelHeader,
+.iuQHead:has(.iu-tool-privacy-btn){
+  gap: 10px;
 }
 
 .iu-ds-panelHeader .iuModalClose,
-.iuQHead .iuQHeadActions{
+.iuQHead:has(.iu-tool-privacy-btn) .iuQHeadActions{
   flex: 0 0 auto;
-  margin-top: 2px;
+  margin-top: 0;
 }
 
 .iu-tool-privacy-btn{
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin: 6px 0 0;
-  min-height: 40px;
-  padding: 8px 14px;
+  justify-content: center;
+  gap: 4px;
+  flex: 0 0 auto;
+  margin: 0;
+  min-height: 34px;
+  padding: 6px 12px;
   border: 1px solid rgba(0, 60, 255, 0.28);
-  border-radius: 10px;
+  border-radius: 999px;
   background: linear-gradient(180deg, #fff 0%, #f3f7ff 100%);
   color: #003cff;
   font-size: 12px;
   font-weight: 650;
-  line-height: 1.25;
+  line-height: 1.2;
   font-family: inherit;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 60, 255, 0.1);
+  box-shadow: 0 1px 6px rgba(0, 60, 255, 0.1);
   transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
   -webkit-tap-highlight-color: transparent;
-  max-width: 100%;
-  text-align: left;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .iu-tool-privacy-btn:hover{
   border-color: rgba(0, 60, 255, 0.42);
   background: linear-gradient(180deg, #fff 0%, #e8efff 100%);
-  box-shadow: 0 4px 14px rgba(0, 60, 255, 0.16);
+  box-shadow: 0 3px 10px rgba(0, 60, 255, 0.14);
   transform: translateY(-1px);
 }
 
 .iu-tool-privacy-btn:active{
   transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(0, 60, 255, 0.12);
+  box-shadow: 0 1px 4px rgba(0, 60, 255, 0.1);
 }
 
 .iu-tool-privacy-btn:focus-visible{
@@ -51,37 +84,20 @@
   box-shadow: 0 0 0 3px rgba(0, 60, 255, 0.18);
 }
 
-.iu-tool-privacy-desc{
+.iu-tool-privacy-desc,
+.iu-tool-privacy-short{
   display: none !important;
 }
 
-.iu-tool-privacy-short{
-  margin: 8px 0 0;
-  font-size: 12px;
-  line-height: 1.45;
-  color: rgba(15, 23, 42, 0.68);
-}
-
-.iu-tool-privacy-heading{
+.iu-tool-privacy-heading,
+.iuQHead .iuQHeadText,
+.iu-ds-panelHeaderMain,
+.iu-financial-overlay-heading,
+.iu-legal-overlay-heading,
+.iu-invoice-overlay-heading{
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  min-width: 0;
-  flex: 1 1 auto;
-}
-
-.iuQHead .iuQHeadText{
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  min-width: 0;
-  flex: 1 1 auto;
-}
-
-.iu-ds-panelHeaderMain{
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   min-width: 0;
   flex: 1 1 auto;
 }
@@ -92,25 +108,10 @@
   line-height: 1.25;
 }
 
-.iu-financial-overlay-heading .iu-tool-privacy-btn,
-.iu-legal-overlay-heading .iu-tool-privacy-btn,
-.iu-invoice-overlay-heading .iu-tool-privacy-btn,
-.iuQHead .iu-tool-privacy-btn,
-.iu-ds-panelHeaderMain .iu-tool-privacy-btn{
-  margin-top: 8px;
-}
-
-.iu-financial-overlay-heading .iu-tool-privacy-desc,
-.iu-legal-overlay-heading .iu-tool-privacy-desc,
-.iu-invoice-overlay-heading .iu-tool-privacy-desc{
-  margin-top: 8px;
-}
-
-.iu-financial-overlay-heading .iu-tool-privacy-short,
-.iu-legal-overlay-heading .iu-tool-privacy-short,
-.iu-invoice-overlay-heading .iu-tool-privacy-short{
-  margin-top: 6px;
-  margin-bottom: 2px;
+.iu-financial-overlay-heading[data-iu-tool-privacy-mounted="1"] .iu-financial-overlay-sub,
+.iu-legal-overlay-heading[data-iu-tool-privacy-mounted="1"] .iu-legal-overlay-sub,
+.iu-invoice-overlay-heading[data-iu-tool-privacy-mounted="1"] .iu-invoice-overlay-sub{
+  display: none !important;
 }
 
 /* Modální okno — vždy pod horní lištou, výška z dostupného viewportu, scroll uvnitř panelu */
@@ -268,39 +269,20 @@
 }
 
 @media (max-width: 1024px){
-  .iu-financial-overlay-heading,
-  .iu-legal-overlay-heading,
-  .iu-invoice-overlay-heading,
-  .iu-tool-privacy-heading,
-  .iuQHead .iuQHeadText,
-  .iu-ds-panelHeaderMain{
-    align-items: stretch;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
+  .iu-overlay-header-row > h1,
+  .iu-overlay-header-row > h2,
+  .iu-overlay-header-row > .iuQTitle,
+  .iu-overlay-header-row > .iu-tool-privacy-title,
+  .iu-overlay-header-row > [id$="Title"]{
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
   }
 
   .iu-tool-privacy-btn{
-    display: flex;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    justify-content: center;
-    text-align: center;
-    font-size: 13px;
-    padding: 8px 14px;
-  }
-
-  .iu-tool-privacy-short{
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    align-self: stretch;
-    padding: 10px 14px;
+    min-height: 36px;
+    padding: 7px 12px;
     font-size: 12px;
-    line-height: 1.45;
   }
 
   .iu-tool-privacy-modal{
@@ -323,8 +305,4 @@
       + 12px
     );
   }
-}
-
-.iu-invoice-overlay-heading[data-iu-tool-privacy-mounted="1"] .iu-invoice-overlay-sub{
-  display: none !important;
 }
