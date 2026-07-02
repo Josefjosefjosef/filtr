@@ -6187,6 +6187,16 @@ font-src 'self' data:;
             <button type="button" id="iuCalMonthQuickAddBtn" class="iu-calMonthFab" data-iu-cal-month-fab="1" hidden aria-label="Přidat událost"><span class="iu-calMonthFab__icon" aria-hidden="true">+</span><span class="iu-calMonthFab__text"> Přidat událost</span></button>
           </section>
           <aside class="iu-calendarOverlay__side" id="iuCalendarBridgeAside" hidden aria-hidden="true">
+            <div class="iu-calSidePanel" id="iuCalendarSidePanel">
+              <header class="iu-calSidePanel__head" id="iuCalendarSidePanelHead">
+                <div class="iu-calSidePanel__titleWrap">
+                  <div class="iu-calSidePanel__line1" id="iuCalSidePanelLine1"></div>
+                  <div class="iu-calSidePanel__line2" id="iuCalSidePanelLine2"></div>
+                </div>
+                <button type="button" class="iu-calSidePanel__close iu-close-btn-38" data-iu-cal-side-close="1" aria-label="Zavřít panel">×</button>
+              </header>
+              <div class="iu-calSidePanel__scroll" id="iuCalendarSidePanelScroll"></div>
+            </div>
             <form id="iuCalendarEventForm" class="iu-calendarOverlay__form iu-calendarOverlay__form--bridge" hidden aria-hidden="true">
               <input type="hidden" name="id" />
               <input type="hidden" name="date" />
@@ -7146,11 +7156,106 @@ font-src 'self' data:;
       }
     </style>
     <style id="iu-cal-ux-rebuild2-layer">
-      #iuCalendarOverlay.iu-calendarOverlay--calDayMode.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__body {
-        grid-template-columns: minmax(0, 1fr) !important;
+      @media (max-width: 1024px) {
+        #iuCalendarOverlay.iu-calendarOverlay--calDayMode.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__body {
+          grid-template-columns: minmax(0, 1fr) !important;
+        }
+        #iuCalendarOverlay.iu-calendarOverlay--calDayMode .iu-calendarOverlay__side {
+          display: none !important;
+        }
       }
-      #iuCalendarOverlay.iu-calendarOverlay--calDayMode .iu-calendarOverlay__side {
-        display: none !important;
+      @media (min-width: 1025px) {
+        #iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop.iu-calendarOverlay--sidePanelOpen .iu-calendarOverlay__body {
+          grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr) !important;
+        }
+        #iuCalendarOverlay.iu-calendarOverlay--sidePanelOpen .iu-calendarOverlay__side {
+          display: flex !important;
+          flex-direction: column;
+          min-height: 0;
+          overflow: hidden;
+          padding: 0;
+          border-left: 1px solid #d7dfeb;
+          background: #fff;
+        }
+        #iuCalendarOverlay .iu-calSidePanel {
+          display: flex;
+          flex-direction: column;
+          flex: 1 1 auto;
+          min-height: 0;
+          height: 100%;
+          box-sizing: border-box;
+        }
+        #iuCalendarOverlay .iu-calSidePanel__head {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 10px;
+          flex: 0 0 auto;
+          padding: 12px 12px 10px;
+          border-bottom: 1px solid #e2e8f0;
+          background: linear-gradient(180deg, rgba(236, 253, 245, 0.55), #fff);
+          box-sizing: border-box;
+        }
+        #iuCalendarOverlay .iu-calSidePanel__titleWrap {
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+        #iuCalendarOverlay .iu-calSidePanel__line1 {
+          font-size: 13px;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          color: rgba(20, 83, 45, 0.72);
+          line-height: 1.2;
+        }
+        #iuCalendarOverlay .iu-calSidePanel__line2 {
+          margin-top: 2px;
+          font-size: 17px;
+          font-weight: 800;
+          color: #0f172a;
+          line-height: 1.25;
+          letter-spacing: -0.02em;
+        }
+        #iuCalendarOverlay .iu-calSidePanel__close {
+          flex: 0 0 auto;
+        }
+        #iuCalendarOverlay .iu-calSidePanel__scroll {
+          flex: 1 1 auto;
+          min-height: 0;
+          overflow-x: hidden;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+          overscroll-behavior: contain;
+          box-sizing: border-box;
+        }
+        #iuCalendarOverlay .iu-calSidePanelSearch {
+          display: flex;
+          flex-direction: column;
+          min-height: 0;
+          height: 100%;
+          padding: 12px;
+          box-sizing: border-box;
+          gap: 8px;
+        }
+        #iuCalendarOverlay .iu-calSidePanelSearch .iu-calSearchOverlay__form {
+          flex: 0 0 auto;
+        }
+        #iuCalendarOverlay .iu-calSidePanelSearch .iu-calSearchOverlay__resultsWrap {
+          flex: 1 1 auto;
+          min-height: 120px;
+        }
+        #iuCalendarOverlay .iu-calSidePanelForm {
+          padding: 12px;
+          box-sizing: border-box;
+        }
+        #iuCalendarOverlay.iu-calendarOverlay--sidePanelOpen .iu-calendarOverlay__main {
+          min-width: 0;
+        }
+        #iuCalendarOverlay.iu-calendarOverlay--sidePanelOpen .iu-calendarOverlay__viewRoot[data-view="month"] {
+          flex: 1 1 auto;
+          min-height: 0;
+          overflow: auto;
+        }
       }
       #iuCalendarOverlay .iu-calWkRow {
         display: grid;
