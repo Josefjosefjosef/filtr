@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-07-02T09:27:41.630941Z",
+  "ingestedAt": "2026-07-02T11:27:04.963911Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dovolená (4.): V Turecku lze díky kurzu ušetřit tisíce korun. Co jinde?",
+      "url": "https://profitonline.cz/dovolena-4-v-turecku-lze-diky-kurzu-usetrit-tisice-korun-co-jinde/",
+      "dt": "2026-07-02T10:00:00Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dovolená",
+        "díky",
+        "jinde",
+        "korun",
+        "kurzu",
+        "lze",
+        "tisíce",
+        "turecku",
+        "ušetřit"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -269,30 +295,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dovolená (2.): Kdo je největší stratég a komu stačí prodloužený víkend",
-      "url": "https://profitonline.cz/dovolena-2-kdo-je-nejvetsi-strateg-a-komu-staci-prodlouzeny-vikend/",
-      "dt": "2026-06-30T10:00:59Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "dovolená",
-        "komu",
-        "největší",
-        "prodloužený",
-        "stačí",
-        "stratég",
-        "víkend"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +305,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19552,
+      "bytes": 19399,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,12 +342,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-07-02T08:00:52Z",
+        "raw_feed_latest_publishedAt": "2026-07-02T10:00:00Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
+          "finance": 8,
           "sport": 1,
-          "zpravy": 3,
-          "finance": 8
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -357,6 +359,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dovolená (4.): V Turecku lze díky kurzu ušetřit tisíce korun. Co jinde?",
+            "publishedAt": "2026-07-02T10:00:00Z"
+          },
           {
             "title": "Může fotbalové mistrovství světa vytáhnout Nike z krize?",
             "publishedAt": "2026-07-02T08:00:52Z"
@@ -384,10 +390,6 @@
           {
             "title": "Živnostník, který si nesníží paušální daň, si k vyššímu důchodu nepomůže",
             "publishedAt": "2026-07-01T10:00:58Z"
-          },
-          {
-            "title": "Zlato se chovalo jinak, než trh očekával. Na scéně je i nová tvář Fedu",
-            "publishedAt": "2026-07-01T08:00:37Z"
           }
         ]
       }
