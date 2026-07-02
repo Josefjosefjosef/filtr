@@ -70,6 +70,11 @@
     overscroll-behavior-y: contain;
     padding: 14px 14px calc(var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) + 10px);
   }
+  #iuCustomButtonsPanel.iu-custom-buttons-overlay-panel:not([hidden]) :is(input, textarea, select){
+    font-size: 16px !important;
+    line-height: 1.35 !important;
+    touch-action: manipulation;
+  }
 }
 
 /* Quick-link tile grid: uniform 2-col cells (mobil/tablet ≤1024px) */

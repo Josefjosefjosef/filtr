@@ -14,7 +14,7 @@
     --iu-miu-quick-h: 58px;
     --iu-miu-mailbox-h: 42px;
     --iu-miu-mailbox-pill-min: 25ch;
-    --iu-miu-mailbox-pill-w: min(100%, 26em);
+    --iu-miu-mailbox-pill-w: 25ch;
     width: min(1720px, calc(100vw - 40px)) !important;
     max-width: min(1720px, calc(100vw - 40px)) !important;
     max-height: calc(100vh - 24px) !important;
@@ -120,7 +120,7 @@
 
   .iuMyInfoUzelDashboard {
     display: grid;
-    grid-template-columns: minmax(300px, 36fr) minmax(248px, 28fr) minmax(260px, 36fr);
+    grid-template-columns: minmax(200px, 26fr) minmax(260px, 37fr) minmax(280px, 37fr);
     gap: 12px 16px;
     align-items: start;
     min-width: 0;
@@ -149,7 +149,7 @@
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.85),
       0 2px 12px rgba(11, 42, 74, 0.04);
-    margin-left: 10px;
+    margin-left: 0;
     padding: 14px 14px 16px;
   }
 
@@ -277,7 +277,7 @@
   .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row,
   .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row {
     display: grid !important;
-    grid-template-columns: minmax(0, 1fr) 36px 40px !important;
+    grid-template-columns: minmax(0, var(--iu-miu-mailbox-pill-w, 25ch)) 36px 40px !important;
     align-items: center !important;
     gap: 8px !important;
     width: 100% !important;
@@ -289,18 +289,20 @@
 
   .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill,
   .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill {
-    width: 100% !important;
-    max-width: var(--iu-miu-mailbox-pill-w) !important;
-    min-width: min(100%, var(--iu-miu-mailbox-pill-min)) !important;
+    width: var(--iu-miu-mailbox-pill-w, 25ch) !important;
+    max-width: var(--iu-miu-mailbox-pill-w, 25ch) !important;
+    min-width: var(--iu-miu-mailbox-pill-min, 25ch) !important;
     height: var(--iu-miu-mailbox-h) !important;
     min-height: var(--iu-miu-mailbox-h) !important;
     max-height: var(--iu-miu-mailbox-h) !important;
     border-radius: var(--iu-miu-radius) !important;
-    padding: 0 14px !important;
+    padding: 0 10px !important;
     font-size: 14px !important;
     font-weight: 500 !important;
     line-height: calc(var(--iu-miu-mailbox-h) - 2px) !important;
     box-sizing: border-box !important;
+    text-align: center !important;
+    justify-content: center !important;
   }
 
   .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill > *,
@@ -469,6 +471,32 @@
   .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-quicktools-settings-trigger:focus-visible {
     outline: 2px solid rgba(0, 60, 255, 0.45);
     outline-offset: 2px;
+  }
+
+  body.iu-myinfouzel-open .iu-quicktools-settings-backdrop:not([hidden]) {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 12100 !important;
+    background: rgba(15, 23, 42, 0.42) !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body.iu-myinfouzel-open .iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed:not([hidden]) {
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    width: min(400px, calc(100vw - 24px)) !important;
+    max-height: min(520px, 70vh) !important;
+    margin: 0 !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 12110 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  body.iu-myinfouzel-open.iu-quicktools-settings-mobile-open {
+    overflow: hidden !important;
   }
 
   .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__nav {
