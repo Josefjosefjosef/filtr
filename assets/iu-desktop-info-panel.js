@@ -9,7 +9,9 @@ import {
 } from "./iu-desktop-info-panel-data.js";
 
 const MOUNT_ID = "iuDesktopInfoPanelMount";
+const MOBILE_MOUNT_ID = "iuMobileInfoPanelMount";
 const PANEL_ID = "iuDesktopInfoPanel";
+const MOBILE_PANEL_ID = "iuMobileInfoPanel";
 const DETAIL_ID = "iuDesktopInfoPanelDetail";
 const MIND_MENU_BTN_ID = "iuMyInfoUzelOpenBtn";
 
@@ -33,6 +35,21 @@ function isDesktopPanelContext() {
     const body = document.body;
     if (!body || !body.classList.contains("iu-desktop-home-grid")) return false;
     return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+function isMobileTabletPanelContext() {
+  try {
+    if (typeof window.matchMedia !== "function") return false;
+    if (!window.matchMedia("(max-width: 1024px)").matches) return false;
+    const body = document.body;
+    if (!body) return false;
+    if (body.classList.contains("iu-mobileMainVisible")) return false;
+    if (body.classList.contains("iu-mobileGateOverlayOpen")) return false;
+    if (body.getAttribute("data-iu-fc") === "0") return false;
+    return Boolean(document.getElementById(MOBILE_MOUNT_ID));
   } catch (_) {
     return false;
   }
@@ -90,16 +107,26 @@ function buildDetailHtml() {
   );
 }
 
-function buildPanelHtml(items) {
+function buildPanelHtml(items, opts) {
+  const options = opts && typeof opts === "object" ? opts : {};
+  const panelId = options.panelId || PANEL_ID;
+  const panelClass = options.panelClass || "iuDesktopInfoPanel";
+  const showNav = options.showNav !== false;
   const segments = items.map(buildSegment).join("");
+  const navPrev = showNav
+    ? `<button type="button" class="iuDesktopInfoPanel__nav iuDesktopInfoPanel__nav--prev" data-iu-info-panel-nav="prev" aria-label="Předchozí informace" hidden>‹</button>`
+    : "";
+  const navNext = showNav
+    ? `<button type="button" class="iuDesktopInfoPanel__nav iuDesktopInfoPanel__nav--next" data-iu-info-panel-nav="next" aria-label="Další informace" hidden>›</button>`
+    : "";
   return (
-    `<section id="${PANEL_ID}" class="iuDesktopInfoPanel" aria-label="Rychlý přehled orientačních údajů">` +
+    `<section id="${panelId}" class="${panelClass} iuDesktopInfoPanel" aria-label="Rychlý přehled orientačních údajů">` +
     `<div class="iuDesktopInfoPanel__viewport">` +
-    `<button type="button" class="iuDesktopInfoPanel__nav iuDesktopInfoPanel__nav--prev" data-iu-info-panel-nav="prev" aria-label="Předchozí informace" hidden>‹</button>` +
+    navPrev +
     `<div class="iuDesktopInfoPanel__scroll" tabindex="0" role="region" aria-label="Rychlé informace">` +
     `<div class="iuDesktopInfoPanel__track">${segments}</div>` +
     `</div>` +
-    `<button type="button" class="iuDesktopInfoPanel__nav iuDesktopInfoPanel__nav--next" data-iu-info-panel-nav="next" aria-label="Další informace" hidden>›</button>` +
+    navNext +
     `</div>` +
     `<p class="iuDesktopInfoPanel__legal">${esc(IU_INFO_PANEL_DISCLAIMER)}</p>` +
     `</section>`
@@ -244,15 +271,26 @@ function bindPanelNav(panel) {
   requestAnimationFrame(() => updateNavState(panel));
 }
 
-function bindPanelEvents(items) {
-  const mount = document.getElementById(MOUNT_ID);
+function hideInfoPanelMount(mount) {
   if (!mount) return;
+  mount.hidden = true;
+  mount.setAttribute("hidden", "");
+  mount.setAttribute("aria-hidden", "true");
+  mount.style.visibility = "";
+  mount.innerHTML = "";
+  mount.removeAttribute("data-iu-info-panel-ready");
+}
+
+function bindPanelEvents(items) {
+  const mounts = [document.getElementById(MOUNT_ID), document.getElementById(MOBILE_MOUNT_ID)].filter(Boolean);
+  if (!mounts.length) return;
   panelItemsMap = {};
   items.forEach((item) => {
     panelItemsMap[item.id] = item;
   });
 
-  if (!mount.dataset.iuPanelEventsBound) {
+  mounts.forEach((mount) => {
+    if (mount.dataset.iuPanelEventsBound) return;
     mount.dataset.iuPanelEventsBound = "1";
     mount.addEventListener("click", (ev) => {
       const btn = ev.target && ev.target.closest ? ev.target.closest("[data-iu-info-panel-source]") : null;
@@ -261,7 +299,7 @@ function bindPanelEvents(items) {
       const id = btn.getAttribute("data-iu-info-panel-source");
       if (id && panelItemsMap[id]) openDetail(panelItemsMap[id], btn);
     });
-  }
+  });
 
   const dlg = ensureDetailPortal();
   if (dlg && !dlg.dataset.iuDetailBound) {
@@ -374,48 +412,71 @@ async function renderPanel() {
 }
 
 async function renderPanelInner() {
-  const mount = document.getElementById(MOUNT_ID);
-  if (!mount || !isDesktopPanelContext()) {
-    if (mount) {
-      mount.hidden = true;
-      mount.setAttribute("hidden", "");
-      mount.style.visibility = "";
-      mount.innerHTML = "";
-      mount.removeAttribute("data-iu-info-panel-ready");
-    }
-    return;
+  const desktopMount = document.getElementById(MOUNT_ID);
+  const mobileMount = document.getElementById(MOBILE_MOUNT_ID);
+  const desktopActive = isDesktopPanelContext();
+  const mobileActive = isMobileTabletPanelContext();
+
+  if (desktopMount && !desktopActive) {
+    hideInfoPanelMount(desktopMount);
+  }
+  if (mobileMount && !mobileActive) {
+    hideInfoPanelMount(mobileMount);
+  }
+  if (!desktopActive && !mobileActive) return;
+
+  if (desktopActive && desktopMount) {
+    applyCachedMindMenuGap();
+    desktopMount.hidden = false;
+    desktopMount.removeAttribute("hidden");
+    desktopMount.removeAttribute("aria-hidden");
+    desktopMount.style.visibility = "visible";
+    desktopMount.removeAttribute("data-iu-info-panel-ready");
+    desktopMount.innerHTML = buildPanelHtml(getLoadingInfoPanelItems(), { showNav: true, panelId: PANEL_ID });
+    initGapSync();
   }
 
-  applyCachedMindMenuGap();
-  mount.hidden = false;
-  mount.removeAttribute("hidden");
-  mount.removeAttribute("aria-hidden");
-  mount.style.visibility = "visible";
-  mount.removeAttribute("data-iu-info-panel-ready");
-  mount.innerHTML = buildPanelHtml(getLoadingInfoPanelItems());
-  initGapSync();
+  if (mobileActive && mobileMount) {
+    mobileMount.hidden = false;
+    mobileMount.removeAttribute("hidden");
+    mobileMount.removeAttribute("aria-hidden");
+    mobileMount.setAttribute("aria-busy", "true");
+    mobileMount.style.visibility = "visible";
+    mobileMount.removeAttribute("data-iu-info-panel-ready");
+  }
+
   ensureDetailPortal();
 
-  const panelEl = document.getElementById(PANEL_ID);
-  if (panelEl) bindPanelNav(panelEl);
+  const desktopPanelLoading = desktopActive ? document.getElementById(PANEL_ID) : null;
+  if (desktopPanelLoading) bindPanelNav(desktopPanelLoading);
 
   const items = await loadInfoPanelItems();
-  if (!mount.isConnected) return;
 
-  mount.innerHTML = buildPanelHtml(items);
+  if (desktopActive && desktopMount && desktopMount.isConnected) {
+    desktopMount.innerHTML = buildPanelHtml(items, { showNav: true, panelId: PANEL_ID });
+    syncPanelLayoutGaps();
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    syncPanelLayoutGaps();
+    desktopMount.setAttribute("data-iu-info-panel-ready", "1");
+    const panel = document.getElementById(PANEL_ID);
+    if (panel) {
+      bindPanelNav(panel);
+      updateNavState(panel);
+    }
+  }
+
+  if (mobileActive && mobileMount && mobileMount.isConnected) {
+    mobileMount.innerHTML = buildPanelHtml(items, {
+      showNav: false,
+      panelId: MOBILE_PANEL_ID,
+      panelClass: "iuMobileInfoPanel",
+    });
+    mobileMount.setAttribute("data-iu-info-panel-ready", "1");
+    mobileMount.removeAttribute("aria-busy");
+  }
+
   ensureDetailPortal();
   bindPanelEvents(items);
-
-  syncPanelLayoutGaps();
-  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-  syncPanelLayoutGaps();
-  mount.setAttribute("data-iu-info-panel-ready", "1");
-
-  const panel = document.getElementById(PANEL_ID);
-  if (panel) {
-    bindPanelNav(panel);
-    updateNavState(panel);
-  }
 }
 
 function initInfoPanel() {
@@ -434,10 +495,17 @@ function initInfoPanel() {
   setTimeout(run, 120);
 
   try {
-    const mq = window.matchMedia("(min-width: 1025px)");
-    const onMq = () => run();
-    if (mq.addEventListener) mq.addEventListener("change", onMq);
-    else if (mq.addListener) mq.addListener(onMq);
+    const mqDesktop = window.matchMedia("(min-width: 1025px)");
+    const onMqDesktop = () => run();
+    if (mqDesktop.addEventListener) mqDesktop.addEventListener("change", onMqDesktop);
+    else if (mqDesktop.addListener) mqDesktop.addListener(onMqDesktop);
+  } catch (_) {}
+
+  try {
+    const mqMobile = window.matchMedia("(max-width: 1024px)");
+    const onMqMobile = () => run();
+    if (mqMobile.addEventListener) mqMobile.addEventListener("change", onMqMobile);
+    else if (mqMobile.addListener) mqMobile.addListener(onMqMobile);
   } catch (_) {}
 
   window.addEventListener("iu:desktop-home-grid", run);

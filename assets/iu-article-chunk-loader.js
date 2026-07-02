@@ -105,6 +105,44 @@ export function iuChunkNavSectionFromUrl() {
   }
 }
 
+/** Hub /projects/ bootstraps zpravy articles; HomeCards titles ship in feed/init sectionPreviewItems only. */
+export function iuChunkHubBootstrapNeedsFeedSectionPreviewItems(sectionKey) {
+  if (String(sectionKey || "").trim().toLowerCase() !== "zpravy") return false;
+  try {
+    const p = new URLSearchParams(String(typeof location !== "undefined" ? location.search : ""));
+    let sec = (p.get("section") || "feed").trim().toLowerCase();
+    if (sec === "media") sec = "feed";
+    let topic = (p.get("topic") || "").trim().toLowerCase();
+    if (topic === "tech" || topic === "bydleni") topic = "zpravy";
+    return (sec === "feed" || sec === "media") && (!topic || topic === "all");
+  } catch (_) {
+    return true;
+  }
+}
+
+/** Fetch feed/init sectionPreviewItems when hub bootstrap used zpravy init (no extra article payload). */
+export async function iuChunkEnsureFeedSectionPreviewItems(loader, basePath, dataVer) {
+  if (!loader || loader.sectionPreviewItems) return loader ? loader.sectionPreviewItems : null;
+  if (!iuChunkHubBootstrapNeedsFeedSectionPreviewItems(loader.sectionKey)) return null;
+  try {
+    await iuChunkEnsureManifest(loader, basePath, dataVer);
+    const feedMeta = loader.manifest && loader.manifest.sections ? loader.manifest.sections.feed : null;
+    if (!feedMeta || !feedMeta.initChunk) return null;
+    const payload = await iuChunkFetchJson(
+      iuChunkFileUrl(basePath, feedMeta.initChunk, dataVer),
+      "feed_init_section_preview",
+    );
+    if (payload && payload.sectionPreviewItems && typeof payload.sectionPreviewItems === "object") {
+      loader.sectionPreviewItems = payload.sectionPreviewItems;
+      const edu = payload.sectionPreviewItems.vzdelavani;
+      if (Array.isArray(edu) && edu.length) {
+        loader.educationPreviewItems = edu.slice(0, 2);
+      }
+    }
+  } catch (_) {}
+  return loader.sectionPreviewItems;
+}
+
 export function iuChunkResolveSectionKey(nav) {
   const n = nav && typeof nav === "object" ? nav : {};
   const topic = String(n.mediaTopicKey || "").trim().toLowerCase();
@@ -269,7 +307,12 @@ export async function iuChunkLoadInitialSectionArticles(loader, basePath, dataVe
 export async function iuChunkLoadInitial(basePath, dataVer, sectionKey) {
   const loader = iuChunkCreateLoaderState(sectionKey);
   await iuChunkEnsureManifest(loader, basePath, dataVer);
-  const initialRows = await iuChunkLoadInitialSectionArticles(loader, basePath, dataVer);
+  const needsFeedPreview = iuChunkHubBootstrapNeedsFeedSectionPreviewItems(sectionKey);
+  await Promise.all([
+    iuChunkLoadInitialSectionArticles(loader, basePath, dataVer),
+    needsFeedPreview ? iuChunkEnsureFeedSectionPreviewItems(loader, basePath, dataVer) : Promise.resolve(),
+  ]);
+  const initialRows = loader.articles.slice();
   const meta = iuChunkSectionMeta(loader);
   return {
     loader,
