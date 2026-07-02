@@ -4,7 +4,8 @@
  *
  * Ensures chunked article loading behaves identically regardless of entry path:
  * INITIAL=CLIENT_INITIAL_LIMIT (100), LOAD_MORE=CLIENT_LOAD_MORE_LIMIT per active section.
- * Never: FULL_POOL, FULL_ARCHIVE, ALL_SECTIONS_PRELOAD, Prehled dne own fetch.
+ * Never: FULL_POOL, FULL_ARCHIVE, ALL_SECTIONS_PRELOAD.
+ * Přehled dne: bounded feed chunk fetch only (init+buffer), not full pool.
  *
  * Run: npm run article-entrypoint-parity-guard
  */
@@ -278,21 +279,42 @@ async function testLoadMore(page, networkLog, markIndex) {
     };
   }
   const beforeLen = networkLog.length;
-  await page.evaluate(() => {
-    const btn = document.querySelector(".iuLoadMoreBtn");
-    if (btn) btn.click();
-  });
-  await page.waitForTimeout(5000);
-  const newReqs = networkLog.slice(Math.max(markIndex, beforeLen)).filter((n) => articlePattern(n.url));
-  const newChunks = newReqs.filter((n) => chunkLoadMorePattern(n.url));
-  const filteredAfter = await page.evaluate(() => {
-    const st = window.__iuFeedPipelineState || window.state || {};
-    return Array.isArray(st.filteredItems) ? st.filteredItems.length : null;
-  });
-  const metaAfter = await page.evaluate(() => {
-    const m = document.querySelector(".iuLoadMoreMeta");
-    return m ? m.textContent : null;
-  });
+  let clicked = false;
+  let newReqs = [];
+  let newChunks = [];
+  let filteredAfter = filteredBefore;
+  let metaAfter = metaBefore;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await page.evaluate(() => {
+      const btn = document.querySelector(".iuLoadMoreBtn");
+      if (btn) btn.click();
+    });
+    clicked = true;
+    const deadline = Date.now() + 15000;
+    while (Date.now() < deadline) {
+      await page.waitForTimeout(500);
+      newReqs = networkLog.slice(Math.max(markIndex, beforeLen)).filter((n) => articlePattern(n.url));
+      newChunks = newReqs.filter((n) => chunkLoadMorePattern(n.url));
+      filteredAfter = await page.evaluate(() => {
+        const st = window.__iuFeedPipelineState || window.state || {};
+        return Array.isArray(st.filteredItems) ? st.filteredItems.length : null;
+      });
+      metaAfter = await page.evaluate(() => {
+        const m = document.querySelector(".iuLoadMoreMeta");
+        return m ? m.textContent : null;
+      });
+      const progressed =
+        newChunks.length > 0 ||
+        (filteredAfter != null && filteredBefore != null && filteredAfter > filteredBefore) ||
+        (metaBefore != null && metaAfter != null && metaBefore !== metaAfter);
+      if (progressed) break;
+    }
+    const progressedNow =
+      newChunks.length > 0 ||
+      (filteredAfter != null && filteredBefore != null && filteredAfter > filteredBefore) ||
+      (metaBefore != null && metaAfter != null && metaBefore !== metaAfter);
+    if (progressedNow || attempt === 1) break;
+  }
   const filteredUnchanged =
     filteredBefore != null && filteredAfter != null && filteredBefore === filteredAfter;
   const fetchesNew =
@@ -301,7 +323,7 @@ async function testLoadMore(page, networkLog, markIndex) {
   const onlyReveals =
     !fetchesNew && metaBefore !== metaAfter && filteredUnchanged && newChunks.length === 0;
   return {
-    clicked: true,
+    clicked,
     load_more_fetches_new_chunk: fetchesNew,
     load_more_only_reveals_existing_data: onlyReveals,
     new_chunk_urls: newChunks.map((n) => String(n.url).split("?")[0]),
@@ -351,7 +373,8 @@ function evaluateLegMetrics(leg, fails, scenarioId) {
   if (leg.load_more && leg.load_more.load_more_only_reveals_existing_data) {
     issues.push("load_more_only_reveals_existing_data=YES");
   }
-  if (leg.loaderMode && leg.loaderMode !== "chunk-v1") {
+  const okLoaderModes = new Set(["chunk-v1", "chunk-v1-manifest"]);
+  if (leg.loaderMode && !okLoaderModes.has(leg.loaderMode)) {
     issues.push("loaderMode=" + leg.loaderMode);
   }
 

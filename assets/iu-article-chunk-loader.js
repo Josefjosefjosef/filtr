@@ -97,7 +97,7 @@ export function iuChunkNavSectionFromUrl() {
     else if ((sec === "feed" || sec === "media") && topic && topic !== "all") mediaTopicKey = topic;
     else if (["hry", "kultura", "veda", "vzdelavani"].indexOf(sec) !== -1) mediaTopicKey = sec;
     let key = iuChunkResolveSectionKey({ mediaTopicKey, activeSection: sec });
-    /* Prehled dne / hub feed chunk is virtual on client — bootstrap from zpravy until user opens Prehled dne view. */
+    /* Hub cold start: zpravy init for LCP. Přehled dne uses feed chunk on demand (app.js). */
     if (key === "feed" && (!topic || topic === "all")) key = "zpravy";
     return key;
   } catch (_) {
