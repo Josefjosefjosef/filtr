@@ -279,32 +279,41 @@ async function testLoadMore(page, networkLog, markIndex) {
     };
   }
   const beforeLen = networkLog.length;
-  await page.evaluate(() => {
-    const btn = document.querySelector(".iuLoadMoreBtn");
-    if (btn) btn.click();
-  });
-  const deadline = Date.now() + 15000;
+  let clicked = false;
   let newReqs = [];
   let newChunks = [];
   let filteredAfter = filteredBefore;
   let metaAfter = metaBefore;
-  while (Date.now() < deadline) {
-    await page.waitForTimeout(500);
-    newReqs = networkLog.slice(Math.max(markIndex, beforeLen)).filter((n) => articlePattern(n.url));
-    newChunks = newReqs.filter((n) => chunkLoadMorePattern(n.url));
-    filteredAfter = await page.evaluate(() => {
-      const st = window.__iuFeedPipelineState || window.state || {};
-      return Array.isArray(st.filteredItems) ? st.filteredItems.length : null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await page.evaluate(() => {
+      const btn = document.querySelector(".iuLoadMoreBtn");
+      if (btn) btn.click();
     });
-    metaAfter = await page.evaluate(() => {
-      const m = document.querySelector(".iuLoadMoreMeta");
-      return m ? m.textContent : null;
-    });
-    const progressed =
+    clicked = true;
+    const deadline = Date.now() + 15000;
+    while (Date.now() < deadline) {
+      await page.waitForTimeout(500);
+      newReqs = networkLog.slice(Math.max(markIndex, beforeLen)).filter((n) => articlePattern(n.url));
+      newChunks = newReqs.filter((n) => chunkLoadMorePattern(n.url));
+      filteredAfter = await page.evaluate(() => {
+        const st = window.__iuFeedPipelineState || window.state || {};
+        return Array.isArray(st.filteredItems) ? st.filteredItems.length : null;
+      });
+      metaAfter = await page.evaluate(() => {
+        const m = document.querySelector(".iuLoadMoreMeta");
+        return m ? m.textContent : null;
+      });
+      const progressed =
+        newChunks.length > 0 ||
+        (filteredAfter != null && filteredBefore != null && filteredAfter > filteredBefore) ||
+        (metaBefore != null && metaAfter != null && metaBefore !== metaAfter);
+      if (progressed) break;
+    }
+    const progressedNow =
       newChunks.length > 0 ||
       (filteredAfter != null && filteredBefore != null && filteredAfter > filteredBefore) ||
       (metaBefore != null && metaAfter != null && metaBefore !== metaAfter);
-    if (progressed) break;
+    if (progressedNow || attempt === 1) break;
   }
   const filteredUnchanged =
     filteredBefore != null && filteredAfter != null && filteredBefore === filteredAfter;
@@ -314,7 +323,7 @@ async function testLoadMore(page, networkLog, markIndex) {
   const onlyReveals =
     !fetchesNew && metaBefore !== metaAfter && filteredUnchanged && newChunks.length === 0;
   return {
-    clicked: true,
+    clicked,
     load_more_fetches_new_chunk: fetchesNew,
     load_more_only_reveals_existing_data: onlyReveals,
     new_chunk_urls: newChunks.map((n) => String(n.url).split("?")[0]),
