@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-07-02T19:02:57.058440Z",
+  "ingestedAt": "2026-07-02T20:42:16.226692Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Babiš má dle Pavla podložit tvrzení o prezidentovi důkazy, nebo vzít slova zpět",
+      "url": "https://www.denik.cz/cesko/babis-ma-dle-pavla-podlozit-tvrzeni-o-prezidentovi-dukazy-nebo-vzit-slova-zpet/",
+      "dt": "2026-07-02T20:29:23Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "babiš",
+        "dle",
+        "důkazy",
+        "nebo",
+        "pavla",
+        "podložit",
+        "prezidentovi",
+        "slova",
+        "tvrzení",
+        "vzít",
+        "zpět"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -520,19 +548,19 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Bouzková a Lehečka jsou ve třetím kole Wimbledonu. Plíšková dostala lekci",
+      "title": "Lehečka, Nosková a Bouzková jsou ve 3. kole Wimbledonu. Menšík a Plíšková končí",
       "url": "https://www.denik.cz/tenis/wimbledon-marie-bouzkova-linda-noskova-karolina-pliskova-jiri-leheckajakub-mensik/",
       "dt": "2026-07-02T12:29:31Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
         "bouzková",
-        "dostala",
         "kole",
+        "končí",
         "lehečka",
-        "lekci",
+        "menšík",
+        "nosková",
         "plíšková",
-        "třetím",
         "wimbledonu"
       ],
       "feedCategory": "zpravy",
@@ -1005,32 +1033,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Prokuratura: Útoku na Nord Stream připravil Ukrajinec na příkaz státních orgánů",
-      "url": "https://www.denik.cz/evropa/prokuratura-utoku-na-nord-stream-pripravil-ukrajinec-na-prikaz-statnich-organu/",
-      "dt": "2026-07-02T09:21:37Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "nord",
-        "orgánů",
-        "prokuratura",
-        "připravil",
-        "příkaz",
-        "stream",
-        "státních",
-        "ukrajinec",
-        "útoku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1041,7 +1043,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.denik.cz/rss/vse.xml",
-      "bytes": 70027,
+      "bytes": 70028,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1078,7 +1080,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-02T18:30:02Z",
+        "raw_feed_latest_publishedAt": "2026-07-02T20:29:23Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "zpravy": 31,
@@ -1097,6 +1099,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš má dle Pavla podložit tvrzení o prezidentovi důkazy, nebo vzít slova zpět",
+            "publishedAt": "2026-07-02T20:29:23Z"
+          },
           {
             "title": "Rychlobruslařské ano. Sáblíková si vzala partnerku Zdráhalovou",
             "publishedAt": "2026-07-02T18:30:02Z"
@@ -1124,10 +1130,6 @@
           {
             "title": "Řidiči stále neví, jak utvořit záchranářskou uličku. Pokuta může přijít raz dva",
             "publishedAt": "2026-07-02T15:02:00Z"
-          },
-          {
-            "title": "Česká Petra v Českém ráji. Nechybí ani chodba, kde se dospělí plazí po čtyřech",
-            "publishedAt": "2026-07-02T15:00:00Z"
           }
         ]
       }
