@@ -3174,8 +3174,13 @@ try {
     return null;
   }
   function iuArticleAppendStabilityEnd(ctx) {
-    if (!ctx || ctx.awaitDone) return;
+    if (!ctx || ctx.awaitDone) return Promise.resolve();
     ctx.awaitDone = true;
+    if (ctx.released) return Promise.resolve();
+    return new Promise((resolve) => {
+      ctx.onReleased = resolve;
+      setTimeout(resolve, 16000);
+    });
   }
 
   /* Runs from begin(): the load-more chain re-renders the feed in async DOM batches. While the
@@ -3212,6 +3217,13 @@ try {
         window.removeEventListener("keydown", ctx.cancel, true);
       } catch (_) {}
       try {
+        const ref = iuArticleAppendStabilityFindRef(ctx);
+        if (ref) {
+          const d = ref.getBoundingClientRect().top - ctx.refTop;
+          if (Math.abs(d) > 1) iuAppendStabSetY(iuAppendStabGetY() + d);
+        }
+      } catch (_) {}
+      try {
         if (ctx.host) {
           if (ctx.prevMinHeight) ctx.host.style.setProperty("min-height", ctx.prevMinHeight, ctx.prevMinHeightPriority || "");
           else ctx.host.style.removeProperty("min-height");
@@ -3222,6 +3234,9 @@ try {
           window.__iuAppendStab.phase = "released";
           window.__iuAppendStab.releaseReason = String(reason || "");
         }
+      } catch (_) {}
+      try {
+        if (typeof ctx.onReleased === "function") ctx.onReleased();
       } catch (_) {}
     }
     function correct() {
@@ -6168,7 +6183,14 @@ try {
           ? Number(state.pageSize)
           : 100;
     const page = Number(state.page) >= 1 ? Number(state.page) : 1;
-    const articleBudget = chunkMode ? iuChunkVisibleArticleBudget(page, state.chunkLoader) : page * pageSize;
+    let articleBudget = chunkMode ? iuChunkVisibleArticleBudget(page, state.chunkLoader) : page * pageSize;
+    try {
+      const loadMoreCap = Number(state.__iuFeedVisibleBudgetOverride);
+      if (chunkMode && Number.isFinite(loadMoreCap) && loadMoreCap > 0) {
+        articleBudget = Math.min(Math.max(loadMoreCap, CLIENT_INITIAL_RENDER_BATCH), CLIENT_INITIAL_LIMIT);
+        state.__iuFeedVisibleBudgetOverride = 0;
+      }
+    } catch (_) {}
     const totalArticlesInFeed = iuCountFeedArticles(items);
     let visibleItems;
     let visibleCount;
@@ -6397,10 +6419,6 @@ try {
     }
     if (chunkAppendFrom > 0) {
       domPatchStarted = true;
-      try {
-        const oldLm = safeTarget.querySelector(".iuLoadMoreWrap");
-        if (oldLm) oldLm.remove();
-      } catch (_) {}
     }
     let renderedCount = 0;
     let pos = chunkAppendFrom;
@@ -6604,6 +6622,10 @@ try {
       }
     }
     if (loadMoreWrap) {
+      try {
+        const oldLm = safeTarget.querySelector(".iuLoadMoreWrap");
+        if (oldLm) oldLm.remove();
+      } catch (_) {}
       safeTarget.appendChild(loadMoreWrap);
     }
     if (auditRf) {
@@ -6730,6 +6752,7 @@ try {
             try {
               btn.disabled = true;
               btn.textContent = "Načítám…";
+              iuChunkClearBackgroundDeferHandlers();
               if (iuUseChunkedArticleLoader() && state.chunkLoader) {
                 const { added } = await iuChunkFetchLoadMore(state.chunkLoader, iuBasePath(), iuChunkDataVer());
                 if (added.length) {
@@ -6738,7 +6761,7 @@ try {
                     : visibleItems.length;
                   await iuChunkMergeArticlesIntoCache(added, state.loadRequestId);
                   state.__iuFeedAppendOnlyFrom = prevVisible;
-                  state.page = (Number(state.page) >= 1 ? Number(state.page) : 1) + 1;
+                  state.__iuFeedVisibleBudgetOverride = prevVisible + CLIENT_INITIAL_RENDER_BATCH;
                   await applyFilter({ resetPage: false, render: true });
                 }
                 return;
@@ -6756,7 +6779,9 @@ try {
             } catch (_) {
             } finally {
               iuLoadMoreReleasePinnedOrder();
-              iuArticleAppendStabilityEnd(appendStab);
+              try {
+                await iuArticleAppendStabilityEnd(appendStab);
+              } catch (_) {}
             }
             btn.disabled = false;
             btn.textContent = prevText;
@@ -18728,8 +18753,6 @@ function buildVideoAsArticleCard(it) {
     return null;
   }
 
-  const ARTICLE_RETRY_DELAYS = [2000, 6000];
-
   let loggedEmptyTitle = false;
   function normalizeArticleList(items) {
     return items.filter((it) => {
@@ -18780,188 +18803,6 @@ function buildVideoAsArticleCard(it) {
       }
     }
     return out;
-  }
-
-  async function fetchArticlesStatus(attempt = 1) {
-    const el = document.getElementById("dataStatusArticles");
-    if (!el) return;
-    try {
-      let data = null;
-      if (state.hasLoadedData && state.articlesRaw && !state.isLoadingData) {
-        data = state.articlesRaw;
-      } else {
-        const pair = await __iuFetchArticlesVideosPrimaryPair();
-        data = pair.articlesData;
-      }
-      if (!data) {
-        if (typeof window.__iuLoadArticlesJsonOnce === "function") {
-          try {
-            data = await Promise.race([
-              window.__iuLoadArticlesJsonOnce(),
-              new Promise((_, reject) => {
-                setTimeout(() => {
-                  const e = new Error("timeout");
-                  e.name = "AbortError";
-                  reject(e);
-                }, 9000);
-              }),
-            ]);
-          } catch (e) {
-            const msg = String(e && e.message ? e.message : e);
-            const httpMatch = msg.match(/^HTTP_(\d+)/);
-            if (httpMatch) {
-              el.textContent = `Články: chyba (${httpMatch[1]})`;
-              selfDiag.articlesState = "FAIL";
-              selfDiag.articlesCount = "-";
-              logSelfStatus();
-              return;
-            }
-            throw e;
-          }
-        } else {
-          const res = await timeoutFetch(iuHomepageFeedDataUrl(), { cache: "no-store" }, 9000);
-          if (!res.ok) {
-            el.textContent = `Články: chyba (${res.status})`;
-            selfDiag.articlesState = "FAIL";
-            selfDiag.articlesCount = "-";
-            logSelfStatus();
-            return;
-          }
-          data = await res.json();
-        }
-      }
-      const size = safeStringify(data).length;
-      debugLog("[DATA] size=", size);
-      const items = resolveArray(data, ["items", "articles"]);
-      const validItems = items ? normalizeArticleList(items) : [];
-      if (items && validItems.length < items.length) {
-        debugWarn("[DATA] filtered invalid items", items.length, "->", validItems.length);
-      }
-      if (!items) {
-        el.textContent = "Články: chyba formátu";
-        debugWarn("[DATA] articles schema unexpected", Object.keys(data || {}));
-        selfDiag.articlesState = "FAIL";
-        selfDiag.articlesCount = "-";
-        logSelfStatus();
-        return;
-      }
-      const updatedAtValue = data?.updatedAt ?? data?.updated_at ?? null;
-      const count = safeNumber(validItems.length);
-      const ageMinutes = updatedAtValue ? Math.floor((Date.now() - new Date(updatedAtValue).getTime()) / 60000) : 0;
-      if (!items.length || !count) {
-        el.textContent = "Články: prázdné";
-        selfDiag.articlesState = "EMPTY";
-        selfDiag.articlesCount = "0";
-        logSelfStatus();
-        updateLastArticlesInfo(count, updatedAtValue);
-        addTelemetryEvent("articles", `EMPTY count=${count}`);
-        return;
-      }
-      if (ageMinutes > 1440 && !firstLoadQuiet) {
-        el.textContent = "Články: zastaralé (24h+)";
-        debugWarn("[DATA] articles too old");
-      } else {
-        el.textContent = `Články: OK (${count})`;
-      }
-      selfDiag.articlesState = "OK";
-      selfDiag.articlesCount = String(count);
-      logSelfStatus();
-      updateLastArticlesInfo(count, updatedAtValue);
-      addTelemetryEvent("articles", `OK count=${count} updated=${updatedAtValue || "—"}`);
-      const firstItem = validItems[0] || {};
-      const firstTitle = firstItem.title || firstItem.headline || firstItem.name || "—";
-      debugLog("[SELF] firstTitle=", firstTitle);
-      const dates = validItems
-        .map((item) => item.publishedAt || item.date || item.published || "")
-        .map((value) => new Date(value))
-        .filter((d) => !Number.isNaN(d.getTime()))
-        .map((d) => d.getTime());
-      for (let i = 1; i < dates.length; i += 1) {
-        if (dates[i] > dates[i - 1]) {
-          debugWarn("[DATA] articles not sorted");
-          break;
-        }
-      }
-    } catch (err) {
-      el.textContent = "Články: chyba";
-      selfDiag.articlesState = "FAIL";
-      selfDiag.articlesCount = "-";
-      logSelfStatus();
-      if (attempt <= ARTICLE_RETRY_DELAYS.length) {
-        const delay = ARTICLE_RETRY_DELAYS[attempt - 1];
-        debugWarn("[RETRY] articles attempt", attempt);
-        el.textContent = `Články: retry (${attempt})`;
-        setTimeout(() => fetchArticlesStatus(attempt + 1), delay);
-      }
-      if (err?.name === "AbortError") {
-        addTelemetryEvent("timeout", "articles");
-        if (!firstLoadQuiet) {
-          el.textContent = "Články: timeout";
-        }
-      }
-      addTelemetryEvent("articles", `FAIL attempt=${attempt} err=${err && err.message ? err.message : "timeout"}`);
-    }
-  }
-
-  async function fetchVideosStatus() {
-    const el = document.getElementById("dataStatusVideos");
-    if (!el) return;
-    try {
-      const res = await timeoutFetch(iuDataUrl("videos.json"), { cache: "no-store" }, 9000);
-      if (res.status === 404) {
-        el.textContent = "Videa: není k dispozici";
-        selfDiag.videosState = "404";
-        selfDiag.videosCount = "-";
-        logSelfStatus();
-        addTelemetryEvent("videos", "404");
-        return;
-      }
-      if (!res.ok) {
-        el.textContent = `Videa: chyba (${res.status})`;
-        selfDiag.videosState = "FAIL";
-        selfDiag.videosCount = "-";
-        logSelfStatus();
-        addTelemetryEvent("videos", `FAIL status=${res.status}`);
-        return;
-      }
-      const data = await res.json();
-      const size = safeStringify(data).length;
-      debugLog("[DATA] size=", size);
-      const items = resolveArray(data, ["items", "videos"]);
-      if (!items) {
-        el.textContent = "Videa: chyba formátu";
-        debugWarn("[DATA] videos schema unexpected", Object.keys(data || {}));
-        selfDiag.videosState = "FAIL";
-        selfDiag.videosCount = "-";
-        logSelfStatus();
-        return;
-      }
-      if (!items.length) {
-        el.textContent = "Videa: prázdná";
-        selfDiag.videosState = "EMPTY";
-        selfDiag.videosCount = "0";
-        logSelfStatus();
-        addTelemetryEvent("videos", "EMPTY");
-        return;
-      }
-      el.textContent = `Videa: OK (${items.length})`;
-      selfDiag.videosState = "OK";
-      selfDiag.videosCount = String(items.length);
-      logSelfStatus();
-      addTelemetryEvent("videos", `OK count=${items.length}`);
-    } catch (err) {
-      el.textContent = "Videa: chyba";
-      selfDiag.videosState = "FAIL";
-      selfDiag.videosCount = "-";
-      logSelfStatus();
-      addTelemetryEvent("videos", "FAIL timeout");
-      if (err?.name === "AbortError") {
-        addTelemetryEvent("timeout", "videos");
-        if (!firstLoadQuiet) {
-          el.textContent = "Videa: timeout";
-        }
-      }
-    }
   }
 
   function isLatestLoadRequest(id) {
@@ -19338,6 +19179,14 @@ function buildVideoAsArticleCard(it) {
     const runExpand = async () => {
       if (!isLatestLoadRequest(requestToken) || !state.chunkLoader) return;
       if (state.chunkLoader.backgroundDone) return;
+      try {
+        if (window.__iuAppendStab && String(window.__iuAppendStab.phase || "") === "begin") {
+          state.__iuChunkBgDeferTimer = setTimeout(() => {
+            void runExpand();
+          }, 250);
+          return;
+        }
+      } catch (_) {}
       if (iuFeedSectionSwitchActiveP()) {
         state.__iuChunkBgDeferTimer = setTimeout(() => {
           void runExpand();

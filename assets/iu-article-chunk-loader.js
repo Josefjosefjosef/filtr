@@ -193,12 +193,31 @@ async function iuChunkFetchJson(url, label) {
   return res.json();
 }
 
+/** @type {{ url: string, manifest: object } | null} */
+let __iuChunkManifestGlobalCache = null;
+
 export async function iuChunkEnsureManifest(loader, basePath, dataVer) {
   if (loader.manifest) return loader.manifest;
-  const manifest = await iuChunkFetchJson(iuChunkManifestUrl(basePath, dataVer), "manifest");
+  const url = iuChunkManifestUrl(basePath, dataVer);
+  if (__iuChunkManifestGlobalCache && __iuChunkManifestGlobalCache.url === url && __iuChunkManifestGlobalCache.manifest) {
+    loader.manifest = __iuChunkManifestGlobalCache.manifest;
+    return loader.manifest;
+  }
+  try {
+    if (typeof window !== "undefined" && typeof window.__iuLoadArticlesJsonOnce === "function") {
+      const payload = await window.__iuLoadArticlesJsonOnce();
+      if (payload && payload._iuChunkManifest && typeof payload._iuChunkManifest === "object" && payload._iuChunkManifest.sections) {
+        __iuChunkManifestGlobalCache = { url, manifest: payload._iuChunkManifest };
+        loader.manifest = payload._iuChunkManifest;
+        return loader.manifest;
+      }
+    }
+  } catch (_) {}
+  const manifest = await iuChunkFetchJson(url, "manifest");
   if (!manifest || typeof manifest !== "object" || !manifest.sections) {
     throw new Error("CHUNK_MANIFEST_INVALID");
   }
+  __iuChunkManifestGlobalCache = { url, manifest };
   loader.manifest = manifest;
   return manifest;
 }
