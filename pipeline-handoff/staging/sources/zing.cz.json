@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-07-03T14:55:28.297992Z",
+  "ingestedAt": "2026-07-03T16:39:32.993579Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "GOG nabízí zdarma hru zasazenou do vesmíru",
+      "url": "https://zing.cz/article/gog-nabizi-zdarma-hru-zasazenou-do-vesmiru",
+      "dt": "2026-07-03T16:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "gog",
+        "hru",
+        "nabízí",
+        "vesmíru",
+        "zasazenou",
+        "zdarma"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -960,28 +983,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Úspěšný survival Enshrouded míří na PS5",
-      "url": "https://zing.cz/article/uspesny-survival-enshrouded-miri-na-ps5",
-      "dt": "2026-06-28T16:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "enshrouded",
-        "míří",
-        "ps5",
-        "survival",
-        "úspěšný"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -992,7 +993,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125940,
+      "bytes": 125923,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1029,7 +1030,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-03T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-03T16:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1044,6 +1045,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "GOG nabízí zdarma hru zasazenou do vesmíru",
+            "publishedAt": "2026-07-03T16:00:00Z"
+          },
           {
             "title": "Cyberpunk 2077 se zařadil mezi dvacet nejprodávanějších her všech dob",
             "publishedAt": "2026-07-03T14:00:00Z"
@@ -1071,10 +1076,6 @@
           {
             "title": "Druhoválečná série Company of Heroes se vrátí v netradičním spin-offu",
             "publishedAt": "2026-07-02T18:00:00Z"
-          },
-          {
-            "title": "Rozšíření pro DOOM: The Dark Ages odhalilo překvapivou herní dobu",
-            "publishedAt": "2026-07-02T16:00:00Z"
           }
         ]
       }
