@@ -126,7 +126,13 @@ async function auditViewport(browser, vp) {
   let buttonErrors = 0;
   const homeBtn = page.locator('[data-iu-bottom-nav="home"]');
   const mindBtn = page.locator('[data-iu-bottom-nav="mindmenu"]');
-  const hasBottomNav = (await homeBtn.count()) > 0;
+  const hasBottomNav =
+    (await homeBtn.count()) > 0 &&
+    (await homeBtn.isVisible().catch(() => false)) &&
+    (await homeBtn.evaluate((el) => {
+      const st = window.getComputedStyle(el);
+      return st.pointerEvents !== "none" && st.visibility !== "hidden" && st.display !== "none";
+    }).catch(() => false));
   if (hasBottomNav) {
     for (let i = 0; i < BUTTON_CLICKS; i++) {
       try {

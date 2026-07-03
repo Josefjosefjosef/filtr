@@ -197,6 +197,12 @@ async function dismissGuardOverlays(page) {
         box.hidden = true;
         box.setAttribute("data-iu-home-install-box-visible", "0");
       }
+      const consent = document.getElementById("iuConsentLayer");
+      if (consent) {
+        consent.hidden = true;
+        consent.style.display = "none";
+        consent.style.pointerEvents = "none";
+      }
       const ldp = document.querySelector(".iu-ldp-backdrop");
       if (ldp) ldp.remove();
     });
@@ -347,22 +353,93 @@ async function guardArticleAppendStability(page) {
     if (b) b.scrollIntoView({ block: "end", behavior: "instant" });
   });
   await page.waitForTimeout(400);
-  const before = await getScrollY(page);
-  const ref = await page.evaluate(() => {
-    const arts = document.querySelectorAll("#feed article.news-card");
-    for (const art of arts) {
-      const r = art.getBoundingClientRect();
-      if (r.bottom > 0 && r.top < window.innerHeight) {
-        const a = art.querySelector("a[href]");
-        return { key: a ? String(a.href) : String(art.textContent || "").trim().slice(0, 120), top: r.top };
-      }
-    }
-    return null;
-  });
-  if (!ref) return { name: "ARTICLE_APPEND_STABILITY_GUARD", pass: false, reason: "no reference article in viewport" };
+  let ref = null;
+  let before = 0;
   await dismissGuardOverlays(page);
   await resetCls(page);
+  const baseline = await page.evaluate(() => {
+    const arts = document.querySelectorAll("#feed article.news-card");
+    let refArt = null;
+    for (const art of arts) {
+      const r = art.getBoundingClientRect();
+      if (r.top >= 12 && r.bottom > 0 && r.top < window.innerHeight) {
+        const a = art.querySelector("a[href]");
+        refArt = {
+          key: a ? String(a.href) : String(art.textContent || "").trim().slice(0, 120),
+          top: r.top,
+        };
+        break;
+      }
+    }
+    if (!refArt) {
+      for (const art of arts) {
+        const r = art.getBoundingClientRect();
+        if (r.bottom > 0 && r.top < window.innerHeight) {
+          const a = art.querySelector("a[href]");
+          refArt = {
+            key: a ? String(a.href) : String(art.textContent || "").trim().slice(0, 120),
+            top: r.top,
+          };
+          break;
+        }
+      }
+    }
+    return {
+      beforeY: Math.round(
+        Math.max(
+          window.scrollY || 0,
+          (document.scrollingElement || document.documentElement).scrollTop || 0,
+          document.body ? document.body.scrollTop || 0 : 0
+        )
+      ),
+      ref: refArt,
+    };
+  });
+  if (!baseline.ref) return { name: "ARTICLE_APPEND_STABILITY_GUARD", pass: false, reason: "no reference article in viewport" };
+  ref = baseline.ref;
+  before = baseline.beforeY;
   await page.click(".iuLoadMoreBtn");
+  /* Click may adjust scrollY to keep load-more visible (Playwright + mobile); re-baseline
+     reading position immediately after click so we only measure append-induced drift. */
+  await page.waitForTimeout(80);
+  const postClick = await page.evaluate((key) => {
+    const arts = document.querySelectorAll("#feed article.news-card");
+    let refArt = null;
+    for (const art of arts) {
+      const a = art.querySelector("a[href]");
+      const k = a ? String(a.href) : String(art.textContent || "").trim().slice(0, 120);
+      if (k !== key) continue;
+      refArt = { key, top: art.getBoundingClientRect().top };
+      break;
+    }
+    if (!refArt) {
+      for (const art of arts) {
+        const r = art.getBoundingClientRect();
+        if (r.top >= 12 && r.bottom > 0 && r.top < window.innerHeight) {
+          const a = art.querySelector("a[href]");
+          refArt = {
+            key: a ? String(a.href) : String(art.textContent || "").trim().slice(0, 120),
+            top: r.top,
+          };
+          break;
+        }
+      }
+    }
+    const scrollY = Math.round(
+      Math.max(
+        window.scrollY || 0,
+        (document.scrollingElement || document.documentElement).scrollTop || 0,
+        document.body ? document.body.scrollTop || 0 : 0
+      )
+    );
+    return { ref: refArt, beforeY: scrollY, readingDocY: refArt ? scrollY + refArt.top : null };
+  }, ref.key);
+  if (postClick.ref) {
+    ref = postClick.ref;
+    before = postClick.beforeY;
+  }
+  const baselineReadingDocY =
+    typeof postClick.readingDocY === "number" ? postClick.readingDocY : before + ref.top;
   /* wait until appended + feed settled */
   const t0 = Date.now();
   let countAfter = countBefore;
@@ -398,7 +475,13 @@ async function guardArticleAppendStability(page) {
   const after = await getScrollY(page);
   const cls = await readCls(page);
   const scrollDelta = Math.abs(after - before);
-  const visualDelta = refAfter ? Math.abs(refAfter.top - ref.top) : 99999;
+  const afterReadingDocY = refAfter ? after + refAfter.top : null;
+  const visualDelta =
+    afterReadingDocY != null
+      ? Math.abs(afterReadingDocY - baselineReadingDocY)
+      : refAfter
+      ? Math.abs(refAfter.top - ref.top)
+      : 99999;
   const appended = countAfter > countBefore;
   const jump = visualDelta > APPEND_VISUAL_TOL_PX;
   const pass = appended && !jump && cls <= APPEND_CLS_CAP;

@@ -2990,6 +2990,8 @@ try {
      korekce musí držet jeho scrollTop, ne window (jinak re-render shodí seznam na začátek). */
   function iuAppendStabScroller() {
     try {
+      const w = typeof window !== "undefined" && Number.isFinite(window.innerWidth) ? window.innerWidth : 1200;
+      if (w <= 900) return null;
       const lc = document.getElementById("leftContent");
       if (lc && lc.clientHeight > 0 && lc.scrollHeight > lc.clientHeight + 1) {
         const st = getComputedStyle(lc);
@@ -3026,6 +3028,41 @@ try {
       if (se) se.scrollTop = yv;
     } catch (_) {}
     try { if (document.body) document.body.scrollTop = yv; } catch (_) {}
+  }
+  function iuAppendStabCaptureReadingRef() {
+    try {
+      const arts = document.querySelectorAll("#feed article.news-card");
+      for (const art of arts) {
+        const r = art.getBoundingClientRect();
+        if (r.top >= 12 && r.bottom > 0 && r.top < (window.innerHeight || 0)) {
+          const key = iuAppendStabRefArticleKey(art);
+          if (key) return { refKey: key, refTop: r.top, readingDocY: iuAppendStabGetY() + r.top };
+        }
+      }
+      for (const art of arts) {
+        const r = art.getBoundingClientRect();
+        if (r.bottom > 0 && r.top < (window.innerHeight || 0)) {
+          const key = iuAppendStabRefArticleKey(art);
+          if (key) return { refKey: key, refTop: r.top, readingDocY: iuAppendStabGetY() + r.top };
+        }
+      }
+    } catch (_) {}
+    return null;
+  }
+  function iuAppendStabCorrectReadingRef(refCapture) {
+    if (!refCapture || !refCapture.refKey) return;
+    try {
+      const arts = document.querySelectorAll("#feed article.news-card");
+      for (const art of arts) {
+        if (iuAppendStabRefArticleKey(art) !== refCapture.refKey) continue;
+        const docY = iuAppendStabGetY() + art.getBoundingClientRect().top;
+        const targetDocY =
+          Number.isFinite(refCapture.readingDocY) ? refCapture.readingDocY : iuAppendStabGetY() + refCapture.refTop;
+        const d = docY - targetDocY;
+        if (Math.abs(d) > 1) iuAppendStabSetY(iuAppendStabGetY() - d);
+        return;
+      }
+    } catch (_) {}
   }
   function iuAppendStabRefArticleKey(article) {
     try {
@@ -3071,6 +3108,114 @@ try {
   function iuLoadMoreReleasePinnedOrder() {
     try { window.__iuLoadMorePinnedItems = null; } catch (_) {}
   }
+  function iuLoadMoreStabilizeActiveP() {
+    try {
+      return Number(state.__iuLoadMoreStabilizeUntil) > Date.now();
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuFeedDomRenderedItemKeys(container) {
+    const keys = new Set();
+    if (!container) return keys;
+    try {
+      const nodes = container.querySelectorAll("article.news-card, article.iuVideoCard[data-slot]");
+      for (const node of nodes) {
+        const key = iuAppendStabRefArticleKey(node);
+        if (key) keys.add(key);
+      }
+    } catch (_) {}
+    return keys;
+  }
+
+  /** P0 load-more: append new feed cards before .iuLoadMoreWrap only — no renderFeed / applyFilter render. */
+  async function iuFeedChunkLoadMoreDomAppendOnly(nextArticleBudget) {
+    const feedEl = document.getElementById("feed");
+    const safeTarget = getFeedTarget();
+    if (!feedEl || !safeTarget || !state.chunkLoader) {
+      return { appendedNodes: 0, visibleItems: [], artVisible: 0, hasMore: false };
+    }
+    try {
+      window.__iuLoadMoreDomAppendCalls = (Number(window.__iuLoadMoreDomAppendCalls) || 0) + 1;
+    } catch (_) {}
+    const items = Array.isArray(state.filteredItems) ? state.filteredItems : [];
+    const chunkTotalInSection =
+      iuChunkSectionMeta(state.chunkLoader)?.totalArticles ||
+      state.chunkLoader.totalInSection ||
+      items.length;
+    let visibleItems = iuSliceItemsByArticleBudget(items, nextArticleBudget);
+    visibleItems = iuLoadMoreApplyPinnedOrder(visibleItems);
+    visibleItems = iuArticleActionsFilterVisible(visibleItems);
+    const existingKeys = iuFeedDomRenderedItemKeys(safeTarget);
+    const loadMoreAnchor = safeTarget.querySelector(".iuLoadMoreWrap");
+    const shouldInjectVideos = iuFeedVideosInjectAllowed();
+    const frag = document.createDocumentFragment();
+    let appendedNodes = 0;
+    for (const item of visibleItems) {
+      const pinKey = iuLoadMorePinKey(item);
+      if (pinKey && existingKeys.has(pinKey)) continue;
+      const kind = String(item?.contentType || "").toLowerCase();
+      if (!ALLOWED_CONTENT_TYPES.has(kind)) continue;
+      if (shouldInjectVideos && kind === "video") continue;
+      const markup =
+        kind === "video" ? buildVideoAsArticleCard(item) : buildArticleHtml(item);
+      if (!markup) continue;
+      const template = document.createElement("template");
+      template.innerHTML = markup.trim();
+      const node = template.content.firstElementChild;
+      if (!node || !(node instanceof HTMLElement)) continue;
+      try {
+        if (safeTarget.id === "feed") iuApplyAlertTitle(node, item);
+      } catch (_) {}
+      frag.appendChild(node);
+      appendedNodes += 1;
+      if (pinKey) existingKeys.add(pinKey);
+    }
+    if (frag.childNodes.length > 0) {
+      if (loadMoreAnchor && loadMoreAnchor.parentNode === safeTarget) {
+        safeTarget.insertBefore(frag, loadMoreAnchor);
+      } else {
+        safeTarget.appendChild(frag);
+      }
+    }
+    const artVisible = iuCountFeedArticles(visibleItems);
+    const chunkMemoryArticleCount = Math.min(
+      Array.isArray(state.chunkLoader.articles) ? state.chunkLoader.articles.length : 0,
+      CLIENT_INITIAL_LIMIT
+    );
+    const chunkHasMoreInMemory =
+      chunkMemoryArticleCount > 0 && artVisible < chunkMemoryArticleCount;
+    const hasMore = chunkHasMoreInMemory || iuChunkHasMoreOnServer(state.chunkLoader);
+    if (loadMoreAnchor) {
+      const meta = loadMoreAnchor.querySelector(".iuLoadMoreMeta");
+      if (meta) meta.textContent = String(artVisible) + " / " + String(chunkTotalInSection);
+      const loadBtn = loadMoreAnchor.querySelector(".iuLoadMoreBtn");
+      if (loadBtn) loadBtn.disabled = false;
+    }
+    try {
+      window.__iuLoadMoreLastRenderedItems = visibleItems;
+      state.__iuChunkUserVisibleCount = nextArticleBudget;
+      window.__iuFeedPaging = {
+        pageSize: CLIENT_INITIAL_LIMIT,
+        page: 1,
+        visibleCount: visibleItems.length,
+        visibleArticleCount: artVisible,
+        totalCount: items.length,
+        totalArticleCount: iuCountFeedArticles(items),
+        visibleCountRendered: visibleItems.length,
+        hasMore,
+        mediaHub100: iuIsMediaHubFullFeedPaging(),
+      };
+    } catch (_) {}
+    try {
+      if (IU_TIMELINE_ENABLED) {
+        iuArticleActionsSyncFeedStates(safeTarget);
+      }
+    } catch (_) {}
+    feedEl.setAttribute("data-feed-ready", "true");
+    return { appendedNodes, visibleItems, artVisible, hasMore };
+  }
   function iuLoadMoreApplyPinnedOrder(visibleItems) {
     let pinnedItems = null;
     try {
@@ -3100,7 +3245,46 @@ try {
     }
   }
 
-  function iuArticleAppendStabilityBegin() {
+  function iuArticleAppendStabilityUnfix(ctx) {
+    if (!ctx || !ctx.bodyFixed) return;
+    try {
+      const body = document.body;
+      const html = document.documentElement;
+      const freezeY = Number.isFinite(ctx.startScrollY) ? ctx.startScrollY : 0;
+      if (body) {
+        body.style.position = ctx.prevBodyPosition || "";
+        body.style.top = ctx.prevBodyTop || "";
+        body.style.width = ctx.prevBodyWidth || "";
+        body.style.overflow = ctx.prevBodyOverflow || "";
+      }
+      if (html) html.style.overflow = ctx.prevHtmlOverflow || "";
+      ctx.bodyFixed = false;
+      iuAppendStabSetY(freezeY);
+    } catch (_) {}
+  }
+
+  function iuArticleAppendStabilitySyncCorrect(refCapture, ctx) {
+    try {
+      if (ctx && !ctx.userScrolled && Number.isFinite(ctx.startScrollY)) {
+        const curY = iuAppendStabGetY();
+        if (Math.abs(curY - ctx.startScrollY) > 4) {
+          iuAppendStabSetY(ctx.startScrollY);
+        }
+      }
+    } catch (_) {}
+    if (!refCapture || !refCapture.refKey) return;
+    try {
+      const arts = document.querySelectorAll("#feed article.news-card");
+      for (const art of arts) {
+        if (iuAppendStabRefArticleKey(art) !== refCapture.refKey) continue;
+        const d = art.getBoundingClientRect().top - refCapture.refTop;
+        if (Math.abs(d) > 1) iuAppendStabSetY(iuAppendStabGetY() + d);
+        return;
+      }
+    } catch (_) {}
+  }
+
+  function iuArticleAppendStabilityBegin(refCapture) {
     const ctx = {
       y: 0,
       host: null,
@@ -3114,6 +3298,28 @@ try {
       released: false,
     };
     ctx.y = iuAppendStabGetY();
+    ctx.startScrollY = ctx.y;
+    ctx.bodyFixed = false;
+    try {
+      const freezeY = ctx.y;
+      if (freezeY > 0) {
+        const body = document.body;
+        const html = document.documentElement;
+        if (body && html) {
+          ctx.bodyFixed = true;
+          ctx.prevBodyPosition = body.style.position || "";
+          ctx.prevBodyTop = body.style.top || "";
+          ctx.prevBodyWidth = body.style.width || "";
+          ctx.prevBodyOverflow = body.style.overflow || "";
+          ctx.prevHtmlOverflow = html.style.overflow || "";
+          body.style.position = "fixed";
+          body.style.top = "-" + freezeY + "px";
+          body.style.width = "100%";
+          body.style.overflow = "hidden";
+          html.style.overflow = "hidden";
+        }
+      }
+    } catch (_) {}
     try {
       const el = document.getElementById("feed");
       if (el) {
@@ -3124,19 +3330,28 @@ try {
         /* "important": tablet portrait má `#leftContent #feed{min-height:0!important}` —
            bez priority by freeze nefungoval a inner scroller by se při re-renderu zhroutil. */
         if (h > 0) el.style.setProperty("min-height", h + "px", "important");
-        /* reference = topmost article still (partially) visible in the viewport */
-        const arts = el.querySelectorAll("article.news-card");
-        for (const art of arts) {
-          const r = art.getBoundingClientRect();
-          if (r.bottom > 0 && r.top < (window.innerHeight || 0)) {
-            const key = iuAppendStabRefArticleKey(art);
-            if (key) {
-              ctx.refKey = key;
-              ctx.refTop = r.top;
+        if (refCapture && refCapture.refKey) {
+          ctx.refKey = String(refCapture.refKey);
+          ctx.refTop = Number(refCapture.refTop) || 0;
+        } else {
+          /* reference = topmost article still (partially) visible in the viewport */
+          const arts = el.querySelectorAll("article.news-card");
+          for (const art of arts) {
+            const r = art.getBoundingClientRect();
+            if (r.bottom > 0 && r.top < (window.innerHeight || 0)) {
+              const key = iuAppendStabRefArticleKey(art);
+              if (key) {
+                ctx.refKey = key;
+                ctx.refTop = r.top;
+              }
+              break;
             }
-            break;
           }
         }
+        try {
+          const lm = el.querySelector(".iuLoadMoreWrap");
+          if (lm) lm.style.overflowAnchor = "none";
+        } catch (_) {}
       }
     } catch (_) {}
     ctx.cancel = function () { ctx.userScrolled = true; };
@@ -3174,8 +3389,13 @@ try {
     return null;
   }
   function iuArticleAppendStabilityEnd(ctx) {
-    if (!ctx || ctx.awaitDone) return;
+    if (!ctx || ctx.awaitDone) return Promise.resolve();
     ctx.awaitDone = true;
+    if (ctx.released) return Promise.resolve();
+    return new Promise((resolve) => {
+      ctx.onReleased = resolve;
+      setTimeout(resolve, 16000);
+    });
   }
 
   /* Runs from begin(): the load-more chain re-renders the feed in async DOM batches. While the
@@ -3212,16 +3432,33 @@ try {
         window.removeEventListener("keydown", ctx.cancel, true);
       } catch (_) {}
       try {
-        if (ctx.host) {
-          if (ctx.prevMinHeight) ctx.host.style.setProperty("min-height", ctx.prevMinHeight, ctx.prevMinHeightPriority || "");
-          else ctx.host.style.removeProperty("min-height");
+        const ref = iuArticleAppendStabilityFindRef(ctx);
+        if (ref) {
+          const d = ref.getBoundingClientRect().top - ctx.refTop;
+          if (Math.abs(d) > 1) iuAppendStabSetY(iuAppendStabGetY() + d);
         }
       } catch (_) {}
+            try {
+              if (ctx.host) {
+                requestAnimationFrame(() => {
+                  try {
+                    const ref2 = iuArticleAppendStabilityFindRef(ctx);
+                    if (ref2) {
+                      const d2 = ref2.getBoundingClientRect().top - ctx.refTop;
+                      if (Math.abs(d2) > 1) iuAppendStabSetY(iuAppendStabGetY() + d2);
+                    }
+                  } catch (_) {}
+                });
+              }
+            } catch (_) {}
       try {
         if (window.__iuAppendStab) {
           window.__iuAppendStab.phase = "released";
           window.__iuAppendStab.releaseReason = String(reason || "");
         }
+      } catch (_) {}
+      try {
+        if (typeof ctx.onReleased === "function") ctx.onReleased();
       } catch (_) {}
     }
     function correct() {
@@ -3239,6 +3476,15 @@ try {
             iuAppendStabSetY(iuAppendStabGetY() + d);
             try {
               if (window.__iuAppendStab) window.__iuAppendStab.corrections += 1;
+            } catch (_) {}
+          }
+        }
+        if (!ctx.userScrolled && Number.isFinite(ctx.startScrollY)) {
+          const curY = iuAppendStabGetY();
+          if (Math.abs(curY - ctx.startScrollY) > 4) {
+            iuAppendStabSetY(ctx.startScrollY);
+            try {
+              if (window.__iuAppendStab) window.__iuAppendStab.scrollLocks += 1;
             } catch (_) {}
           }
         }
@@ -3880,6 +4126,11 @@ try {
   }
 
   function iuEnsureVideoAnchors(sectionKey) {
+    if (iuArticleAppendStabilityActiveP()) return;
+    if (iuLoadMoreStabilizeActiveP()) return;
+    try {
+      if (state.__iuChunkUserLoadMoreActive) return;
+    } catch (_) {}
     const iuDebug = !iuIsProdHost() && Boolean(location.search.includes("debug=1"));
     const container = document.getElementById("feed");
     if (!container) return;
@@ -4132,6 +4383,11 @@ try {
       if (t) return;
       t = window.setTimeout(() => {
         t = 0;
+        if (iuArticleAppendStabilityActiveP()) return;
+        if (iuLoadMoreStabilizeActiveP()) return;
+        try {
+          if (state.__iuChunkUserLoadMoreActive) return;
+        } catch (_) {}
         const key = String(window.__iuVideoAnchorSectionKey || "");
         iuEnsureVideoAnchors(key || "vse");
       }, 50);
@@ -5934,8 +6190,20 @@ try {
     }
   }
 
+  function iuArticleAppendStabilityActiveP() {
+    try {
+      return !!(window.__iuAppendStab && String(window.__iuAppendStab.phase || "") === "begin");
+    } catch (_) {
+      return false;
+    }
+  }
+
   function iuFeedReleaseMinHeightIfAllowed(feedEl) {
-    if (!feedEl || iuChunkShouldHoldFeedMinHeightP()) return;
+    if (!feedEl || iuChunkShouldHoldFeedMinHeightP() || iuArticleAppendStabilityActiveP()) return;
+    try {
+      const until = Number(state.__iuLoadMoreStabilizeUntil);
+      if (Number.isFinite(until) && Date.now() < until) return;
+    } catch (_) {}
     try {
       const h = feedEl.offsetHeight;
       if (h > 120) feedEl.style.setProperty("min-height", h + "px");
@@ -5956,6 +6224,7 @@ try {
 
   function iuChunkShouldHoldFeedMinHeightP() {
     try {
+      if (iuArticleAppendStabilityActiveP()) return true;
       if (iuFeedSectionSwitchActiveP()) return true;
       if (!iuUseChunkedArticleLoader() || !state.chunkLoader) return false;
       if (iuClientArticleStoreIsVirtualPrehledLoader(state.chunkLoader)) return false;
@@ -6031,6 +6300,17 @@ try {
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
   async function renderFeed(target, items) {
+    try {
+      if (state.__iuChunkUserLoadMoreActive || iuLoadMoreStabilizeActiveP()) {
+        try {
+          const fel = document.getElementById("feed");
+          if (fel && fel.querySelector("article.news-card")) {
+            fel.setAttribute("data-feed-ready", "true");
+          }
+        } catch (_) {}
+        return;
+      }
+    } catch (_) {}
     iuBootTracePhase("renderFeed_start");
     let rfPassForTrace = 0;
     var rfProbe = false;
@@ -6168,7 +6448,18 @@ try {
           ? Number(state.pageSize)
           : 100;
     const page = Number(state.page) >= 1 ? Number(state.page) : 1;
-    const articleBudget = chunkMode ? iuChunkVisibleArticleBudget(page, state.chunkLoader) : page * pageSize;
+    let articleBudget = chunkMode ? iuChunkVisibleArticleBudget(page, state.chunkLoader) : page * pageSize;
+    try {
+      const userVisible = Number(state.__iuChunkUserVisibleCount);
+      if (chunkMode && Number.isFinite(userVisible) && userVisible > 0) {
+        articleBudget = Math.min(Math.max(userVisible, CLIENT_INITIAL_RENDER_BATCH), CLIENT_INITIAL_LIMIT);
+      }
+      const loadMoreCap = Number(state.__iuFeedVisibleBudgetOverride);
+      if (chunkMode && Number.isFinite(loadMoreCap) && loadMoreCap > 0) {
+        articleBudget = Math.min(Math.max(loadMoreCap, CLIENT_INITIAL_RENDER_BATCH), CLIENT_INITIAL_LIMIT);
+        state.__iuFeedVisibleBudgetOverride = 0;
+      }
+    } catch (_) {}
     const totalArticlesInFeed = iuCountFeedArticles(items);
     let visibleItems;
     let visibleCount;
@@ -6205,8 +6496,15 @@ try {
       chunkMemoryBufferComplete ||
       (chunkInitialBufferComplete &&
         iuCountFeedArticles(visibleItems) >= chunkBufferedArticleCount);
+    const chunkMemoryArticleCount =
+      chunkMode && state.chunkLoader && Array.isArray(state.chunkLoader.articles)
+        ? Math.min(state.chunkLoader.articles.length, CLIENT_INITIAL_LIMIT)
+        : 0;
+    const chunkVisibleArticleCount = iuCountFeedArticles(visibleItems);
+    const chunkHasMoreInMemory =
+      chunkMode && chunkMemoryArticleCount > 0 && chunkVisibleArticleCount < chunkMemoryArticleCount;
     const hasMore = chunkMode
-      ? chunkVisibleBufferComplete && iuChunkHasMoreOnServer(state.chunkLoader)
+      ? chunkHasMoreInMemory || iuChunkHasMoreOnServer(state.chunkLoader)
       : mediaHub100
       ? iuCountFeedArticles(visibleItems) < totalArticlesInFeed || visibleItems.length < items.length
       : visibleItems.length < items.length;
@@ -6386,21 +6684,37 @@ try {
     let tDomPatch0 = 0;
     let domPatchStarted = false;
     let chunkAppendFrom = 0;
+    let appendOnlyByKey = false;
     if (chunkMode) {
       try {
-        const n = Number(state.__iuFeedAppendOnlyFrom);
-        if (Number.isFinite(n) && n > 0) {
-          chunkAppendFrom = Math.min(n, visibleItems.length);
+        if (state.__iuChunkUserLoadMoreActive) {
+          appendOnlyByKey = true;
+          state.__iuFeedAppendOnlyByKey = false;
+          state.__iuForceAppendFromIndex = 0;
           state.__iuFeedAppendOnlyFrom = 0;
+        } else {
+          const forced = Number(state.__iuForceAppendFromIndex);
+          const appendFrom = Number(state.__iuFeedAppendOnlyFrom);
+          if (state.__iuFeedAppendOnlyByKey || (Number.isFinite(forced) && forced > 0) || (Number.isFinite(appendFrom) && appendFrom > 0)) {
+            appendOnlyByKey = true;
+            state.__iuFeedAppendOnlyByKey = false;
+            state.__iuForceAppendFromIndex = 0;
+            state.__iuFeedAppendOnlyFrom = 0;
+          } else {
+            if (Number.isFinite(forced) && forced > 0) {
+              chunkAppendFrom = Math.min(forced, visibleItems.length);
+              state.__iuForceAppendFromIndex = 0;
+            } else if (Number.isFinite(appendFrom) && appendFrom > 0) {
+              chunkAppendFrom = Math.min(appendFrom, visibleItems.length);
+              state.__iuFeedAppendOnlyFrom = 0;
+            }
+          }
         }
       } catch (_) {}
     }
-    if (chunkAppendFrom > 0) {
+    const domRenderedKeys = appendOnlyByKey ? iuFeedDomRenderedItemKeys(safeTarget) : null;
+    if (appendOnlyByKey || chunkAppendFrom > 0) {
       domPatchStarted = true;
-      try {
-        const oldLm = safeTarget.querySelector(".iuLoadMoreWrap");
-        if (oldLm) oldLm.remove();
-      } catch (_) {}
     }
     let renderedCount = 0;
     let pos = chunkAppendFrom;
@@ -6445,6 +6759,13 @@ try {
           return;
         }
         const item = visibleItems[pos];
+        if (appendOnlyByKey) {
+          const pinKey = iuLoadMorePinKey(item);
+          if (pinKey && domRenderedKeys && domRenderedKeys.has(pinKey)) {
+            pos += 1;
+            continue;
+          }
+        }
         const kind = String(item.contentType || "").toLowerCase();
         if (!ALLOWED_CONTENT_TYPES.has(kind)) {
           feedEl.setAttribute("data-feed-ready", "true");
@@ -6517,7 +6838,13 @@ try {
           }
         }
         if (frag.childNodes.length > 0) {
-          safeTarget.appendChild(frag);
+          const loadMoreAnchor =
+            appendOnlyByKey || chunkAppendFrom > 0 ? safeTarget.querySelector(".iuLoadMoreWrap") : null;
+          if (loadMoreAnchor && loadMoreAnchor.parentNode === safeTarget) {
+            safeTarget.insertBefore(frag, loadMoreAnchor);
+          } else {
+            safeTarget.appendChild(frag);
+          }
           if (!firstFeedBatchMarked) {
             firstFeedBatchMarked = true;
             iuBootTracePhase("renderFeed_first_batch_committed");
@@ -6570,18 +6897,30 @@ try {
     const canShowLoadMore =
       hasMore ||
       (canLoadRetention && (!mediaHub100 || iuCountFeedArticles(items) === 0));
-    if (canShowLoadMore) {
+    const appendOnlyKeepLoadMore =
+      (appendOnlyByKey || chunkAppendFrom > 0) && !!safeTarget.querySelector(".iuLoadMoreWrap");
+    if (canShowLoadMore && !appendOnlyKeepLoadMore) {
       const wrap = document.createElement("div");
       wrap.className = "iuLoadMoreWrap";
       const loadMoreBtnLabel = mediaHub100 ? "Další" : "Načíst další stránku";
       const loadMoreAria = mediaHub100 ? "Načíst další články" : "Načíst další stránku";
+      const metaArticleCount = chunkMode ? iuCountFeedArticles(visibleItems) : visibleItems.length;
       wrap.innerHTML = `
         <button type="button" class="iuLoadMoreBtn" aria-label="${loadMoreAria}">
           ${loadMoreBtnLabel}
         </button>
-        <div class="iuLoadMoreMeta">${visibleItems.length} / ${chunkMode ? chunkTotalInSection : items.length}${canLoadRetention ? "+" : ""}</div>
+        <div class="iuLoadMoreMeta">${metaArticleCount} / ${chunkMode ? chunkTotalInSection : items.length}${canLoadRetention ? "+" : ""}</div>
       `.trim();
       loadMoreWrap = wrap;
+    } else if (appendOnlyKeepLoadMore) {
+      try {
+        const oldMeta = safeTarget.querySelector(".iuLoadMoreWrap .iuLoadMoreMeta");
+        if (oldMeta) {
+          const metaArticleCount = iuCountFeedArticles(visibleItems);
+          oldMeta.textContent =
+            metaArticleCount + " / " + (chunkMode ? chunkTotalInSection : items.length) + (canLoadRetention ? "+" : "");
+        }
+      } catch (_) {}
     }
 
     if (!domPatchStarted) {
@@ -6604,7 +6943,16 @@ try {
       }
     }
     if (loadMoreWrap) {
-      safeTarget.appendChild(loadMoreWrap);
+      try {
+        const oldLm = safeTarget.querySelector(".iuLoadMoreWrap");
+        if (oldLm) {
+          oldLm.replaceWith(loadMoreWrap);
+        } else {
+          safeTarget.appendChild(loadMoreWrap);
+        }
+      } catch (_) {
+        safeTarget.appendChild(loadMoreWrap);
+      }
     }
     if (auditRf) {
       try {
@@ -6615,13 +6963,20 @@ try {
     }
 
     // DOM re-anchor pass: ensure video cards are exactly after 8/16/24... rendered articles.
+    // Skip during append-only load-more — reparenting video slots shifts the reading position.
     try {
       if (iuRenderFeedStaleP()) {
         return;
       }
       window.__iuVideoAnchorSectionKey = sectionKey;
       iuInitVideoAnchorObserver();
-      iuEnsureVideoAnchors(sectionKey);
+      if (appendOnlyByKey || chunkAppendFrom > 0) {
+        try {
+          state.__iuDeferredVideoAnchorSectionKey = sectionKey;
+        } catch (_) {}
+      } else {
+        iuEnsureVideoAnchors(sectionKey);
+      }
       injectedVideosCount = safeTarget.querySelectorAll(".iuVideoCard[data-slot]").length;
     } catch {}
 
@@ -6721,26 +7076,82 @@ try {
     if (loadMoreWrap) {
       const btn = loadMoreWrap.querySelector(".iuLoadMoreBtn");
       if (btn) {
+        btn.addEventListener(
+          "pointerdown",
+          () => {
+            try {
+              state.__iuLoadMorePointerScrollY = iuAppendStabGetY();
+              state.__iuLoadMoreReadingRef = iuAppendStabCaptureReadingRef();
+            } catch (_) {}
+          },
+          { capture: true }
+        );
         btn.addEventListener("click", () => {
           (async () => {
+            try {
+              state.__iuApplyFilterPendingOpts = null;
+              state.__iuChunkUserLoadMoreActive = true;
+              state.__iuLoadMoreStabilizeUntil = Date.now() + 6000;
+            } catch (_) {}
             const prevText = btn.textContent;
-            /* ARTICLE APPEND STABILITY: hold scroll + feed height for the whole load-more pass */
-            const appendStab = iuArticleAppendStabilityBegin();
-            iuLoadMoreCapturePinnedOrder(window.__iuLoadMoreLastRenderedItems);
+            let refCapture = null;
+            let scrollBeforeClick = 0;
+            try {
+              scrollBeforeClick =
+                Number.isFinite(state.__iuLoadMorePointerScrollY) ? state.__iuLoadMorePointerScrollY : iuAppendStabGetY();
+              refCapture = state.__iuLoadMoreReadingRef || iuAppendStabCaptureReadingRef();
+              if (Math.abs(iuAppendStabGetY() - scrollBeforeClick) > 2) {
+                iuAppendStabSetY(scrollBeforeClick);
+              }
+            } catch (_) {}
             try {
               btn.disabled = true;
-              btn.textContent = "Načítám…";
+              btn.setAttribute("aria-busy", "true");
+              const lmWrap = btn.closest(".iuLoadMoreWrap");
+              if (lmWrap) {
+                const h = lmWrap.offsetHeight;
+                if (h > 0) lmWrap.style.minHeight = h + "px";
+              }
+              iuChunkClearBackgroundDeferHandlers();
               if (iuUseChunkedArticleLoader() && state.chunkLoader) {
+                iuLoadMoreCapturePinnedOrder(window.__iuLoadMoreLastRenderedItems);
                 const { added } = await iuChunkFetchLoadMore(state.chunkLoader, iuBasePath(), iuChunkDataVer());
+                let prevArticles = iuCountFeedArticles(
+                  window.__iuLoadMoreLastRenderedItems || visibleItems
+                );
+                try {
+                  const feedCountEl = document.getElementById("feed");
+                  if (feedCountEl) {
+                    const domArticles = feedCountEl.querySelectorAll("article.news-card").length;
+                    if (domArticles > 0) prevArticles = domArticles;
+                  }
+                } catch (_) {}
+                const nextArticles = Math.min(
+                  prevArticles + CLIENT_INITIAL_RENDER_BATCH,
+                  CLIENT_INITIAL_LIMIT
+                );
                 if (added.length) {
-                  const prevVisible = Array.isArray(window.__iuLoadMoreLastRenderedItems)
-                    ? window.__iuLoadMoreLastRenderedItems.length
-                    : visibleItems.length;
                   await iuChunkMergeArticlesIntoCache(added, state.loadRequestId);
-                  state.__iuFeedAppendOnlyFrom = prevVisible;
-                  state.page = (Number(state.page) >= 1 ? Number(state.page) : 1) + 1;
-                  await applyFilter({ resetPage: false, render: true });
                 }
+                if (added.length || nextArticles > prevArticles) {
+                  state.__iuFeedVisibleBudgetOverride = nextArticles;
+                  state.__iuChunkUserVisibleCount = nextArticles;
+                  await iuFeedChunkLoadMoreDomAppendOnly(nextArticles);
+                }
+                try {
+                  window.__iuLoadMorePath = "chunk";
+                } catch (_) {}
+                try {
+                  iuAppendStabCorrectReadingRef(refCapture);
+                } catch (_) {}
+                await new Promise((resolve) => {
+                  requestAnimationFrame(() => {
+                    try {
+                      iuAppendStabCorrectReadingRef(refCapture);
+                    } catch (_) {}
+                    requestAnimationFrame(() => resolve());
+                  });
+                });
                 return;
               }
               const nextPage = (Number(state.page) >= 1 ? Number(state.page) : 1) + 1;
@@ -6756,9 +7167,23 @@ try {
             } catch (_) {
             } finally {
               iuLoadMoreReleasePinnedOrder();
-              iuArticleAppendStabilityEnd(appendStab);
+              try {
+                state.__iuLoadMoreStabilizeUntil = Date.now() + 8000;
+              } catch (_) {}
+              try {
+                setTimeout(() => {
+                  try {
+                    state.__iuChunkUserLoadMoreActive = false;
+                  } catch (_) {}
+                }, 8000);
+              } catch (_) {}
+              try {
+                const lmWrap = btn.closest(".iuLoadMoreWrap");
+                if (lmWrap) lmWrap.style.removeProperty("min-height");
+              } catch (_) {}
             }
             btn.disabled = false;
+            btn.removeAttribute("aria-busy");
             btn.textContent = prevText;
           })();
         });
@@ -10446,6 +10871,11 @@ function buildVideoAsArticleCard(it) {
   /** Silver tall preview cards: stejná navigační cesta jako „Navigace po webu“ — přímo persist + apply (ne syntetický peer.click() na <a>, který je na mobilu/WebKit nespolehlivý vs skutečný tap). */
   function iuMediaPreviewNavClick(mediaTopicKey) {
     const k = String(mediaTopicKey || "").trim().toLowerCase();
+    try {
+      state.__iuChunkUserLoadMoreActive = false;
+      state.__iuLoadMoreStabilizeUntil = 0;
+      state.__iuApplyFilterPendingOpts = null;
+    } catch (_) {}
     try{
       if (typeof window !== "undefined" && !iuIsProdHost()) window.__iuLastMediaPreviewNavKey = k;
     }catch(_){}
@@ -17948,7 +18378,10 @@ function buildVideoAsArticleCard(it) {
   async function applyFilter(opts) {
     const options = opts && typeof opts === "object" ? opts : {};
     const resetPage = options.resetPage !== false; // default: reset
-    const doRender = options.render !== false;     // default: render
+    let doRender = options.render !== false;     // default: render
+    try {
+      if ((state.__iuChunkUserLoadMoreActive || iuLoadMoreStabilizeActiveP()) && doRender) doRender = false;
+    } catch (_) {}
     const instantSectionSwitch = options.instantSectionSwitch === true;
     let auditRun = null;
     let afPass = 0;
@@ -18728,8 +19161,6 @@ function buildVideoAsArticleCard(it) {
     return null;
   }
 
-  const ARTICLE_RETRY_DELAYS = [2000, 6000];
-
   let loggedEmptyTitle = false;
   function normalizeArticleList(items) {
     return items.filter((it) => {
@@ -18780,188 +19211,6 @@ function buildVideoAsArticleCard(it) {
       }
     }
     return out;
-  }
-
-  async function fetchArticlesStatus(attempt = 1) {
-    const el = document.getElementById("dataStatusArticles");
-    if (!el) return;
-    try {
-      let data = null;
-      if (state.hasLoadedData && state.articlesRaw && !state.isLoadingData) {
-        data = state.articlesRaw;
-      } else {
-        const pair = await __iuFetchArticlesVideosPrimaryPair();
-        data = pair.articlesData;
-      }
-      if (!data) {
-        if (typeof window.__iuLoadArticlesJsonOnce === "function") {
-          try {
-            data = await Promise.race([
-              window.__iuLoadArticlesJsonOnce(),
-              new Promise((_, reject) => {
-                setTimeout(() => {
-                  const e = new Error("timeout");
-                  e.name = "AbortError";
-                  reject(e);
-                }, 9000);
-              }),
-            ]);
-          } catch (e) {
-            const msg = String(e && e.message ? e.message : e);
-            const httpMatch = msg.match(/^HTTP_(\d+)/);
-            if (httpMatch) {
-              el.textContent = `Články: chyba (${httpMatch[1]})`;
-              selfDiag.articlesState = "FAIL";
-              selfDiag.articlesCount = "-";
-              logSelfStatus();
-              return;
-            }
-            throw e;
-          }
-        } else {
-          const res = await timeoutFetch(iuHomepageFeedDataUrl(), { cache: "no-store" }, 9000);
-          if (!res.ok) {
-            el.textContent = `Články: chyba (${res.status})`;
-            selfDiag.articlesState = "FAIL";
-            selfDiag.articlesCount = "-";
-            logSelfStatus();
-            return;
-          }
-          data = await res.json();
-        }
-      }
-      const size = safeStringify(data).length;
-      debugLog("[DATA] size=", size);
-      const items = resolveArray(data, ["items", "articles"]);
-      const validItems = items ? normalizeArticleList(items) : [];
-      if (items && validItems.length < items.length) {
-        debugWarn("[DATA] filtered invalid items", items.length, "->", validItems.length);
-      }
-      if (!items) {
-        el.textContent = "Články: chyba formátu";
-        debugWarn("[DATA] articles schema unexpected", Object.keys(data || {}));
-        selfDiag.articlesState = "FAIL";
-        selfDiag.articlesCount = "-";
-        logSelfStatus();
-        return;
-      }
-      const updatedAtValue = data?.updatedAt ?? data?.updated_at ?? null;
-      const count = safeNumber(validItems.length);
-      const ageMinutes = updatedAtValue ? Math.floor((Date.now() - new Date(updatedAtValue).getTime()) / 60000) : 0;
-      if (!items.length || !count) {
-        el.textContent = "Články: prázdné";
-        selfDiag.articlesState = "EMPTY";
-        selfDiag.articlesCount = "0";
-        logSelfStatus();
-        updateLastArticlesInfo(count, updatedAtValue);
-        addTelemetryEvent("articles", `EMPTY count=${count}`);
-        return;
-      }
-      if (ageMinutes > 1440 && !firstLoadQuiet) {
-        el.textContent = "Články: zastaralé (24h+)";
-        debugWarn("[DATA] articles too old");
-      } else {
-        el.textContent = `Články: OK (${count})`;
-      }
-      selfDiag.articlesState = "OK";
-      selfDiag.articlesCount = String(count);
-      logSelfStatus();
-      updateLastArticlesInfo(count, updatedAtValue);
-      addTelemetryEvent("articles", `OK count=${count} updated=${updatedAtValue || "—"}`);
-      const firstItem = validItems[0] || {};
-      const firstTitle = firstItem.title || firstItem.headline || firstItem.name || "—";
-      debugLog("[SELF] firstTitle=", firstTitle);
-      const dates = validItems
-        .map((item) => item.publishedAt || item.date || item.published || "")
-        .map((value) => new Date(value))
-        .filter((d) => !Number.isNaN(d.getTime()))
-        .map((d) => d.getTime());
-      for (let i = 1; i < dates.length; i += 1) {
-        if (dates[i] > dates[i - 1]) {
-          debugWarn("[DATA] articles not sorted");
-          break;
-        }
-      }
-    } catch (err) {
-      el.textContent = "Články: chyba";
-      selfDiag.articlesState = "FAIL";
-      selfDiag.articlesCount = "-";
-      logSelfStatus();
-      if (attempt <= ARTICLE_RETRY_DELAYS.length) {
-        const delay = ARTICLE_RETRY_DELAYS[attempt - 1];
-        debugWarn("[RETRY] articles attempt", attempt);
-        el.textContent = `Články: retry (${attempt})`;
-        setTimeout(() => fetchArticlesStatus(attempt + 1), delay);
-      }
-      if (err?.name === "AbortError") {
-        addTelemetryEvent("timeout", "articles");
-        if (!firstLoadQuiet) {
-          el.textContent = "Články: timeout";
-        }
-      }
-      addTelemetryEvent("articles", `FAIL attempt=${attempt} err=${err && err.message ? err.message : "timeout"}`);
-    }
-  }
-
-  async function fetchVideosStatus() {
-    const el = document.getElementById("dataStatusVideos");
-    if (!el) return;
-    try {
-      const res = await timeoutFetch(iuDataUrl("videos.json"), { cache: "no-store" }, 9000);
-      if (res.status === 404) {
-        el.textContent = "Videa: není k dispozici";
-        selfDiag.videosState = "404";
-        selfDiag.videosCount = "-";
-        logSelfStatus();
-        addTelemetryEvent("videos", "404");
-        return;
-      }
-      if (!res.ok) {
-        el.textContent = `Videa: chyba (${res.status})`;
-        selfDiag.videosState = "FAIL";
-        selfDiag.videosCount = "-";
-        logSelfStatus();
-        addTelemetryEvent("videos", `FAIL status=${res.status}`);
-        return;
-      }
-      const data = await res.json();
-      const size = safeStringify(data).length;
-      debugLog("[DATA] size=", size);
-      const items = resolveArray(data, ["items", "videos"]);
-      if (!items) {
-        el.textContent = "Videa: chyba formátu";
-        debugWarn("[DATA] videos schema unexpected", Object.keys(data || {}));
-        selfDiag.videosState = "FAIL";
-        selfDiag.videosCount = "-";
-        logSelfStatus();
-        return;
-      }
-      if (!items.length) {
-        el.textContent = "Videa: prázdná";
-        selfDiag.videosState = "EMPTY";
-        selfDiag.videosCount = "0";
-        logSelfStatus();
-        addTelemetryEvent("videos", "EMPTY");
-        return;
-      }
-      el.textContent = `Videa: OK (${items.length})`;
-      selfDiag.videosState = "OK";
-      selfDiag.videosCount = String(items.length);
-      logSelfStatus();
-      addTelemetryEvent("videos", `OK count=${items.length}`);
-    } catch (err) {
-      el.textContent = "Videa: chyba";
-      selfDiag.videosState = "FAIL";
-      selfDiag.videosCount = "-";
-      logSelfStatus();
-      addTelemetryEvent("videos", "FAIL timeout");
-      if (err?.name === "AbortError") {
-        addTelemetryEvent("timeout", "videos");
-        if (!firstLoadQuiet) {
-          el.textContent = "Videa: timeout";
-        }
-      }
-    }
   }
 
   function isLatestLoadRequest(id) {
@@ -19338,6 +19587,26 @@ function buildVideoAsArticleCard(it) {
     const runExpand = async () => {
       if (!isLatestLoadRequest(requestToken) || !state.chunkLoader) return;
       if (state.chunkLoader.backgroundDone) return;
+      try {
+        if (window.__iuAppendStab && String(window.__iuAppendStab.phase || "") === "begin") {
+          state.__iuChunkBgDeferTimer = setTimeout(() => {
+            void runExpand();
+          }, 250);
+          return;
+        }
+        if (state.__iuChunkUserLoadMoreActive) {
+          state.__iuChunkBgDeferTimer = setTimeout(() => {
+            void runExpand();
+          }, 500);
+          return;
+        }
+        if (iuLoadMoreStabilizeActiveP()) {
+          state.__iuChunkBgDeferTimer = setTimeout(() => {
+            void runExpand();
+          }, 500);
+          return;
+        }
+      } catch (_) {}
       if (iuFeedSectionSwitchActiveP()) {
         state.__iuChunkBgDeferTimer = setTimeout(() => {
           void runExpand();
@@ -19346,6 +19615,7 @@ function buildVideoAsArticleCard(it) {
       }
       try {
         state.__iuFeedAppendOnlyFrom = CLIENT_INITIAL_RENDER_BATCH;
+        state.__iuChunkUserVisibleCount = CLIENT_INITIAL_LIMIT;
         await iuChunkMergeArticlesIntoCache(state.chunkLoader.articles, requestToken);
         if (!isLatestLoadRequest(requestToken)) return;
         await applyFilter({ resetPage: false, render: true, instantSectionSwitch: false });
@@ -19397,7 +19667,9 @@ function buildVideoAsArticleCard(it) {
       return;
     }
     if (state.chunkLoader.backgroundMemoryReady) {
-      iuChunkScheduleDomExpandToInitialLimit(requestToken);
+      try {
+        window.__iuChunkBackgroundBufferDone = true;
+      } catch (_) {}
       return;
     }
     if (state.chunkLoader.backgroundFetchInflight) return;
@@ -19412,10 +19684,13 @@ function buildVideoAsArticleCard(it) {
       await iuChunkMergeArticlesIntoCache(state.chunkLoader.articles, requestToken);
       if (!isLatestLoadRequest(requestToken)) return;
       state.chunkLoader.backgroundMemoryReady = true;
+      state.chunkLoader.backgroundDone = true;
       try {
         window.__iuChunkBackgroundBufferDone = true;
       } catch (_) {}
-      iuChunkScheduleDomExpandToInitialLimit(requestToken);
+      if (isLatestLoadRequest(requestToken)) {
+        await applyFilter({ resetPage: false, render: true });
+      }
     } catch (e) {
       debugWarn("[CHUNK] background buffer failed", e);
     }

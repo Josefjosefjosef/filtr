@@ -137,6 +137,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-mindmenu-bottom-nav-restore-guard
 
+      - name: Mobile/tablet stability guards (CLS + nav + media)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-mobile-stability-guards
+
       - name: Legal documents unified template guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-legal-documents-unified-template-guard

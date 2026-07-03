@@ -27,6 +27,7 @@ const BASE = process.env.IU_GUARD_BASE_URL
 const USE_LOCAL_SERVER = !process.env.IU_GUARD_BASE_URL;
 
 const MAX_LOAD_MORE_CLICKS = parseInt(process.env.IU_LOAD_MORE_STRESS_CLICKS || "9", 10);
+const CLIENT_ARTICLE_CAP = 100;
 const TARGET_SECTION = String(process.env.IU_LOAD_MORE_STRESS_SECTION || "zpravy").toLowerCase();
 const CLS_CAP = 0.55;
 
@@ -295,7 +296,14 @@ async function main() {
       if (clsGate && stepCls > CLS_CAP) fails.push(`click ${i + 1}: CLS ${stepCls} > ${CLS_CAP}`);
 
       if (!row.ok) {
-        if (!row.progressed) fails.push(`click ${i + 1}: load-more did not progress`);
+        if (!row.progressed) {
+          const metaLead = parseInt(String(row.after?.meta || "").split("/")[0], 10);
+          const atClientCap =
+            (row.after && Number(row.after.domArticles) >= CLIENT_ARTICLE_CAP) ||
+            (Number.isFinite(metaLead) && metaLead >= CLIENT_ARTICLE_CAP);
+          if (atClientCap) break;
+          fails.push(`click ${i + 1}: load-more did not progress`);
+        }
         if (row.chunkRequests > 1) fails.push(`click ${i + 1}: chunk requests ${row.chunkRequests} > 1`);
       }
     }

@@ -3623,6 +3623,7 @@ button.iu-close-btn-38:focus-visible{
   gap: 14px 18px;
   margin: 0;
   text-align: left;
+  overflow-anchor: none;
 }
 
 
@@ -3820,12 +3821,6 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
   font-weight: var(--iu-tl-meta-fw, inherit);
 }
 
-#feed.iuTimelineFeed article.iuPhotoArticle,
-#feed.iuTimelineFeed .iuPhotoArticle-thumb,
-#feed.iuTimelineFeed .iuPhotoArticle-img{
-  display: none !important;
-}
-
 #feed.iuTimelineFeed article.iuTimelineItem--video .iuVideoFrame{
   margin-bottom: 10px;
 }
@@ -3897,19 +3892,17 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
    --iu-mobile-bottom-nav-safe-space, viewport-fit=cover v projects/index.html).
    DoplĹuje stĂˇvajĂ­cĂ­ konzumenty (#feed â‰¤767, tool hosty, gate panely, tasks/notes/kalendĂˇĹ™)
    o chybÄ›jĂ­cĂ­ scroll rooty â€” ĹľĂˇdnĂ© per-page hardcody. */
-@media (max-width: 767px) {
-  /* DomĹŻ/Silver: document scroll, poslednĂ­ prvek je #iuMobileGateWrap (leftContent hidden).
-     !important: pĹ™ebĂ­jĂ­ reset `#iuMobileGateWrap.iu-mobileGateWrap{padding:0!important}` nĂ­Ĺľe. */
+@media (max-width: 900px) {
   body:not(.iu-mobileMainVisible):not(.iu-mobileGateOverlayOpen) #iuMobileGateWrap{
     padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
     box-sizing: border-box !important;
   }
 }
-@media (min-width: 768px) and (max-width: 900px) {
-  /* Tablet: #feed v document flow (landscape / home) â€” stejnĂˇ rezerva jako portrait inner-scroll. */
+@media (min-width: 768px) and (max-width: 900px),
+       (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
   body:not(.iu-mobileGateOverlayOpen) #feed{
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 20px));
-    box-sizing: border-box;
+    padding-bottom: calc(var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) + 16px) !important;
+    box-sizing: border-box !important;
   }
 }
 @media (max-width: 900px) {
@@ -4423,79 +4416,13 @@ body[data-iu-fc="1"] #feed > article.news-card ~ article.news-card{
   object-fit: cover;
 }
 
-/* Middle feed: illustrative photo article — image left, title + meta right */
-#feed > article.news-card.iuPhotoArticle{
-  contain-intrinsic-size: auto 96px;
-}
-
-#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-row{
-  display: grid;
-  grid-template-columns: minmax(0, 33fr) minmax(0, 67fr);
-  align-items: start;
-  gap: 12px;
-  min-height: 72px;
-}
-
-#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-thumb{
-  width: 100%;
-  max-width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.06);
-  position: relative;
-}
-
-#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-thumb img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-illustrativeLabel{
-  position: absolute;
-  left: 4px;
-  bottom: 4px;
-  padding: 1px 5px;
-  border-radius: 4px;
-  font-size: 10px;
-  line-height: 1.2;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.92);
-  background: rgba(11, 27, 43, 0.62);
-  pointer-events: none;
-}
-
-#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-thumb.iuPhotoArticle-thumb--empty{
-  display: none;
-}
-
-#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-img.iuPhotoArticle-img--failed{
-  display: none;
-}
-
-#feed > article.news-card.iuPhotoArticle .iuPhotoArticle-body{
-  min-width: 0;
-}
-
-#feed > article.news-card.iuPhotoArticle .news-title,
-#feed > article.news-card.iuPhotoArticle .news-titleLink{
-  margin-top: 0;
-}
-
-@media (max-width: 420px){
-  #feed > article.news-card.iuPhotoArticle .iuPhotoArticle-row{
-    gap: 10px;
-  }
-}
-
 .iuLoadMoreWrap{
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
   padding: 18px 0 10px;
+  overflow-anchor: none;
 }
 .iuLoadMoreBtn{
   appearance: none;

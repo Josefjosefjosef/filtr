@@ -122,6 +122,34 @@ async function preparePage(page) {
   }
 }
 
+async function dismissGuardOverlays(page) {
+  try {
+    const essential = await page.$("#iuConsentEssentialOnly");
+    if (essential && (await essential.isVisible())) {
+      await essential.click({ timeout: 5000 });
+      await page.waitForTimeout(250);
+    }
+  } catch (_) {}
+  try {
+    await page.evaluate(() => {
+      const box = document.getElementById("iuHomePremiumInstallBox");
+      if (box) {
+        box.hidden = true;
+        box.setAttribute("data-iu-home-install-box-visible", "0");
+        box.style.display = "none";
+        box.style.pointerEvents = "none";
+      }
+      const consent = document.getElementById("iuConsentLayer");
+      if (consent) {
+        consent.hidden = true;
+        consent.style.display = "none";
+        consent.style.pointerEvents = "none";
+      }
+      document.querySelectorAll(".iu-ldp-backdrop").forEach((el) => el.remove());
+    });
+  } catch (_) {}
+}
+
 async function scrollAllToBottom(page) {
   await page.evaluate(() => {
     function bottomOf(el) {
@@ -186,6 +214,7 @@ module.exports = {
   readCls,
   resetCls,
   preparePage,
+  dismissGuardOverlays,
   scrollAllToBottom,
   emitBanner,
   runStandalone,
