@@ -40707,10 +40707,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           "#iuCalendarOverlay.iu-calendarOverlay:not([hidden]){z-index:10024!important;align-items:stretch!important;justify-content:flex-start!important;padding:0!important}" +
           "#iuCalendarOverlay .iu-calendarOverlay__backdrop{position:fixed!important;inset:0!important}" +
           "#iuCalendarOverlay .iu-calendarOverlay__dialog{position:fixed!important;left:0!important;right:0!important;top:0!important;" +
-          "bottom:var(--bottom-nav-height,calc(56px + env(safe-area-inset-bottom,0px) + 36px))!important;" +
+          "bottom:var(--bottom-nav-height,calc(56px + env(safe-area-inset-bottom,0px) + 48px))!important;" +
           "width:100vw!important;max-width:100vw!important;min-height:0!important;height:auto!important;" +
-          "max-height:calc(100vh - var(--bottom-nav-height,calc(56px + env(safe-area-inset-bottom,0px) + 36px)))!important;" +
-          "max-height:calc(100dvh - var(--bottom-nav-height,calc(56px + env(safe-area-inset-bottom,0px) + 36px)))!important;" +
+          "max-height:calc(100vh - var(--bottom-nav-height,calc(56px + env(safe-area-inset-bottom,0px) + 48px)))!important;" +
+          "max-height:calc(100dvh - var(--bottom-nav-height,calc(56px + env(safe-area-inset-bottom,0px) + 48px)))!important;" +
           "margin:0!important;border-radius:0!important;overflow:hidden!important;display:flex!important;" +
           "flex-direction:column!important;box-sizing:border-box!important}" +
           "}";
