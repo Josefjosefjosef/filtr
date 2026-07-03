@@ -1,20 +1,20 @@
-/* infoUzel.cz — mobile/tablet (≤1024px): unified tool overlay headers + 15px bottom clearance + AI video layout.
+/* infoUzel.cz — mobile/tablet (≤1024px): unified tool overlay headers + bottom clearance + AI video layout.
    Reference header: #iuInvoicePanel .iu-invoice-overlay-header (Vytvořit fakturu).
    Desktop (min-width: 1025px) unchanged. */
 
 @media (max-width: 1024px) {
   :root {
+    --iu-mobile-bottom-nav-h: 56px;
+    --iu-mobile-bottom-safe: env(safe-area-inset-bottom, 0px);
+    --bottom-nav-height: calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 32px);
+    --iu-mobile-bottom-nav-safe-space: calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 12px + 40px);
     --iu-tool-overlay-header-bg: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
     --iu-tool-overlay-header-border: 1px solid rgba(15, 23, 42, 0.08);
     --iu-tool-overlay-header-pad-block: 12px;
     --iu-tool-overlay-header-pad-inline: 12px 12px 12px 16px;
     --iu-tool-overlay-header-pad-top: calc(12px + env(safe-area-inset-top, 0px));
     --iu-tool-overlay-bottom-gap: 15px;
-    --iu-tool-overlay-panel-bottom: calc(
-      var(--iu-mobile-bottom-nav-h, 56px)
-      + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px))
-      + 12px
-    );
+    --iu-tool-overlay-panel-bottom: var(--bottom-nav-height);
   }
 
   /* —— Part 0: Banka / Bakaláři / Zdravotní pojišťovna / Datové schránky — flush top, no bleed —— */
@@ -184,7 +184,7 @@
     min-height: 0 !important;
   }
 
-  /* —— Part 2: panel ends at nav top; scroll content 15px above nav —— */
+  /* —— Part 2: panel ends at nav top (unified --bottom-nav-height) —— */
   :is(
     body.iu-mobileGateOverlayOpen,
     body.iu-modal-open,
@@ -198,7 +198,10 @@
     body.iu-custom-buttons-overlay-open,
     body.iu-ai-narrow-fullscreen,
     body.iu-parcels-overlay-open,
-    body.iu-nakup-online-overlay-open
+    body.iu-nakup-online-overlay-open,
+    body.iu-calendarOverlay-open,
+    body.iu-tasksOverlay-open,
+    body.iu-notesOverlay-open
   ) :is(
     #iuFinancialCalcPanel.iu-financial-overlay-panel,
     #iuLegalDocsPanel.iu-legal-overlay-panel,
@@ -207,12 +210,36 @@
     #iuDsPanel.iu-ds-panel[data-open="1"],
     #iuQuickFeed,
     #iuParcelsPopover.iu-parcels-modal.is-open,
-    #iu-aiPanel[data-open="1"]
+    #iu-aiPanel[data-open="1"],
+    #iuCalendarOverlay.iu-calendarOverlay .iu-calendarOverlay__dialog,
+    #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dialog,
+    #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__dialog
   ):not([hidden]) {
     bottom: var(--iu-tool-overlay-panel-bottom) !important;
     max-height: calc(100dvh - var(--iu-tool-overlay-panel-bottom)) !important;
+    min-height: 0 !important;
+    height: auto !important;
   }
 
+  /* QuickFeed: override JS inline 100dvh fullscreen layer */
+  body:is(.iu-quickFeedOpen, .iu-quickFeedMojeFullscreen, .iu-mobileGateToolsQuickOpen)
+    #iuQuickFeed:not([hidden]) {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    inset: auto !important;
+    width: 100vw !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    box-sizing: border-box !important;
+  }
+
+  /* scroll hosts: 15px clearance above nav (panel already inset) */
   :is(
     #iuLegalDocsScrollHost,
     #iuFinancialCalcScrollHost,
@@ -222,15 +249,12 @@
     #iuDsPanel .iu-datovka-scroll-host,
     #iuQuickFeed .iu-banking-scroll-host,
     #iuQuickFeed .iuQBody,
-    #iuQuickFeed .iuQCard,
     #iuQuickFeed #iuQuickFeedMojeSluzbyBody,
     #iuQuickFeed .iu-nakup-online-fill,
     #iuQuickFeed .iu-nakup-online-outerCard,
     #iuQuickFeed .iu-nakup-online-feed,
     #iuQuickFeed .iuQGrid,
     #iuQuickFeed .iu-mojeSluzbyBanka,
-    #iuQuickFeed .iu-health-card,
-    #iuQuickFeed .bakalari-card,
     #iuParcelsPopover .iu-parcels-modal-content,
     #iu-aiPanel .iu-aiPanelBody,
     #iu-aiPanel #iu-aiPanelCards
@@ -238,6 +262,26 @@
     padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
     scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
     box-sizing: border-box !important;
+  }
+
+  /* Bakaláři / Zdravotní: karty podle obsahu — scroll clearance jen na scroll hostu, ne uvnitř karet */
+  body:is(.iu-quickFeedOpen, .iu-quickFeedMojeFullscreen, .iu-mobileGateToolsQuickOpen, .iu-modal-open)
+    #iuQuickFeed :is(.bakalari-card, .iu-health-card, .iuQCard) {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    flex: 0 0 auto !important;
+    padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+    contain-intrinsic-size: none !important;
+    content-visibility: visible !important;
+  }
+
+  body:is(.iu-quickFeedOpen, .iu-quickFeedMojeFullscreen, .iu-mobileGateToolsQuickOpen, .iu-modal-open)
+    #iuQuickFeed :is(.bakalari-root, .iu-health-root, .bakalari-cards-container) {
+    height: auto !important;
+    min-height: 0 !important;
+    flex: 0 0 auto !important;
   }
 
   :is(
@@ -254,7 +298,95 @@
     padding-bottom: 0 !important;
   }
 
-  /* —— Part 3: AI video previews — reliable 16:9 on mobile/tablet —— */
+  /* —— Part 3: Kalendář — scroll clearance jen na viewRoot, ne duplicitně na body/main —— */
+  body.iu-calendarOverlay-open #iuCalendarOverlay .iu-calendarOverlay__dialog {
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  body.iu-calendarOverlay-open #iuCalendarOverlay .iu-calendarOverlay__body {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding-bottom: 0 !important;
+  }
+
+  body.iu-calendarOverlay-open #iuCalendarOverlay .iu-calendarOverlay__main {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding-bottom: 0 !important;
+  }
+
+  body.iu-calendarOverlay-open #iuCalendarOverlay .iu-calendarOverlay__viewRoot {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+  }
+
+  body.iu-calendarOverlay-open #iuCalendarOverlay .iu-calendarOverlay__side {
+    padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+  }
+
+  body.iu-calendarOverlay-open #iuCalMonthActionBar.iu-calMonthActionBar {
+    margin-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+  }
+
+  /* —— Part 4: Poznámky — flex column, scroll uvnitř listScroll/detailScroll —— */
+  body.iu-notesOverlay-open #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__dialog {
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: var(--iu-notes-bg, #fff) !important;
+  }
+
+  body.iu-notesOverlay-open #iuNotesOverlay .iu-notesOverlay__body {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding-bottom: 0 !important;
+  }
+
+  body.iu-notesOverlay-open #iuNotesOverlay :is(
+    .iu-notesOverlay__list,
+    .iu-notesOverlay__detail
+  ) {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding-bottom: 0 !important;
+  }
+
+  body.iu-notesOverlay-open #iuNotesOverlay :is(
+    .iu-notesOverlay__listScroll,
+    .iu-notesOverlay__detailScroll
+  ) {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+  }
+
+  /* —— Part 5: AI video previews — reliable 16:9 on mobile/tablet —— */
   #iu-aiPanel .iuAiVideoGrid {
     display: grid !important;
     grid-template-columns: 1fr !important;

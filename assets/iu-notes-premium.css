@@ -601,7 +601,7 @@ body.iu-notesOverlay-open{overflow:hidden!important}
 
 #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__itemBtn{box-sizing:border-box;border-width:1px}
 
-@media (max-width:900px){
+@media (max-width:1024px){
   #iuNotesOverlay.iu-notesPremiumScope.iuNotesRoot{overflow:hidden!important}
 
   #iuNotesOverlay.iu-notesPremiumScope.iu-notesOverlay{
@@ -620,18 +620,17 @@ body.iu-notesOverlay-open{overflow:hidden!important}
   #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__dialog{
     width:100%;
     max-width:100%;
-    min-height:100dvh;
-    height:100dvh;
-    max-height:100dvh;
+    min-height:0;
+    height:auto;
+    max-height:none;
     border-radius:0;
     overflow-x:hidden;
-    overflow-y:auto;
+    overflow-y:hidden;
     display:flex;
     flex-direction:column;
     box-shadow:none;
     background:var(--iu-notes-bg);
     box-sizing:border-box;
-    -webkit-overflow-scrolling:touch;
   }
 
   #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__header{
@@ -730,18 +729,19 @@ body.iu-notesOverlay-open{overflow:hidden!important}
   }
 
   #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__detailScroll{
-    overflow:visible!important;
-    overflow-x:visible!important;
-    overflow-y:visible!important;
+    overflow:auto!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
     max-height:none!important;
     height:auto!important;
     min-height:0!important;
-    padding:12px 10px var(--iu-notes-bottom-nav-safe);
-    scroll-padding-bottom:var(--iu-notes-bottom-nav-safe);
+    flex:1 1 auto!important;
+    padding:12px 10px var(--iu-tool-overlay-bottom-gap,15px);
+    scroll-padding-bottom:var(--iu-tool-overlay-bottom-gap,15px);
   }
 
   #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__dialog{
-    scroll-padding-bottom:var(--iu-notes-bottom-nav-safe);
+    scroll-padding-bottom:var(--iu-tool-overlay-bottom-gap,15px);
     padding-bottom:env(safe-area-inset-bottom,0px);
   }
 

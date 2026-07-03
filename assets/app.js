@@ -30424,7 +30424,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   var __iuMojeQuickFeedFsProps = [
-    "position", "inset", "left", "top", "width", "height", "max-width", "max-height", "margin",
+    "position", "inset", "left", "top", "right", "bottom", "width", "height", "max-width", "max-height", "margin",
     "z-index", "overflow", "box-sizing", "background", "padding", "display"
   ];
   function iuApplyMojeQuickFeedFullscreenLayer(quick, on) {
@@ -30437,13 +30437,15 @@ function buildVideoAsArticleCard(it) {
         return;
       }
       quick.style.setProperty("position", "fixed", "important");
-      quick.style.setProperty("inset", "0", "important");
+      quick.style.removeProperty("inset");
       quick.style.setProperty("left", "0", "important");
       quick.style.setProperty("top", "0", "important");
+      quick.style.setProperty("right", "0", "important");
+      quick.style.setProperty("bottom", "var(--bottom-nav-height)", "important");
       quick.style.setProperty("width", "100vw", "important");
-      quick.style.setProperty("height", "100dvh", "important");
+      quick.style.setProperty("height", "auto", "important");
       quick.style.setProperty("max-width", "none", "important");
-      quick.style.setProperty("max-height", "none", "important");
+      quick.style.setProperty("max-height", "calc(100dvh - var(--bottom-nav-height))", "important");
       quick.style.setProperty("margin", "0", "important");
       quick.style.setProperty("z-index", "10075", "important");
       quick.style.setProperty("overflow", "auto", "important");
@@ -40320,7 +40322,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   "use strict";
   var ID = "iu-tools-overlay-fs-desktop";
   var CSS =
-    "@media(min-width:901px){" +
+    "@media(min-width:1025px){" +
     "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop:not([hidden])," +
     "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop.iuNotesRoot:not([hidden])," +
     "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop:not([hidden]){align-items:stretch!important;justify-content:stretch!important;overflow:hidden!important;z-index:12000!important}" +
