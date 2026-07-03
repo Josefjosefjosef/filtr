@@ -3898,25 +3898,11 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
     box-sizing: border-box !important;
   }
 }
-@media (max-width: 767px) {
-  /* DomĹŻ/Silver: document scroll, poslednĂ­ prvek je #iuMobileGateWrap (leftContent hidden).
-     !important: pĹ™ebĂ­jĂ­ reset `#iuMobileGateWrap.iu-mobileGateWrap{padding:0!important}` nĂ­Ĺľe. */
-  body:not(.iu-mobileMainVisible):not(.iu-mobileGateOverlayOpen) #iuMobileGateWrap{
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
-    box-sizing: border-box !important;
-  }
-}
-@media (min-width: 768px) and (max-width: 900px) {
-  /* Tablet: #feed v document flow (landscape / home) — stejná rezerva jako portrait inner-scroll. */
+@media (min-width: 768px) and (max-width: 900px),
+       (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
   body:not(.iu-mobileGateOverlayOpen) #feed{
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 20px));
+    padding-bottom: calc(var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) + 16px);
     box-sizing: border-box;
-  }
-}
-@media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
-  body:not(.iu-mobileGateOverlayOpen) #feed{
-    padding-bottom: calc(var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) + 16px) !important;
-    box-sizing: border-box !important;
   }
 }
 @media (max-width: 900px) {
