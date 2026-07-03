@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-07-03T04:40:02.074338Z",
+  "ingestedAt": "2026-07-03T06:17:52.223065Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Největší chyba začíná ještě doma. Na dovolenou vyrážíme už unavení, říká dopravní psycholog",
+      "url": "https://podcasty.hn.cz/c1-67899940-nejvetsi-chyba-zacina-jeste-doma-na-dovolenou-vyrazime-uz-unaveni-rika-dopravni-psycholog",
+      "dt": "2026-07-03T04:59:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN",
+      "tokens": [
+        "chyba",
+        "doma",
+        "dopravní",
+        "dovolenou",
+        "ještě",
+        "největší",
+        "psycholog",
+        "unavení",
+        "vyrážíme",
+        "začíná",
+        "říká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1152,33 +1180,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Chaos kolem novely stavebního zákona stavbu nezrychlí. Přinese právní nejistotu",
-      "url": "https://archiv.hn.cz/c1-67894880-chaos-kolem-novely-stavebniho-zakona-stavbu-nezrychli-prinese-pravni-nejistotu",
-      "dt": "2026-07-02T06:32:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN",
-      "tokens": [
-        "chaos",
-        "kolem",
-        "nejistotu",
-        "nezrychlí",
-        "novely",
-        "právní",
-        "přinese",
-        "stavbu",
-        "stavebního",
-        "zákona"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1189,7 +1190,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185571,
+      "bytes": 186048,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1226,10 +1227,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-02T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-03T04:59:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 38,
+          "zdravi": 1,
+          "finance": 37,
           "zpravy": 2
         },
         "drop_counts": {
@@ -1242,6 +1244,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Největší chyba začíná ještě doma. Na dovolenou vyrážíme už unavení, říká dopravní psycholog",
+            "publishedAt": "2026-07-03T04:59:00Z"
+          },
           {
             "title": "Týden s technologiemi: OpenAI nabízí Trumpově vládě pětiprocentní podíl, stejný by měly nabídnout i další AI firmy",
             "publishedAt": "2026-07-02T22:00:00Z"
@@ -1268,10 +1274,6 @@
           },
           {
             "title": "Buráky bez alergenů, pšenice bez lepku a plodiny, které přežijí vedra. Genové inženýrství otevírá cestu k&nbsp;řešení problémů světa",
-            "publishedAt": "2026-07-02T22:00:00Z"
-          },
-          {
-            "title": "Když teenageři riskují nejen s drogami. Proč z toho někdo &bdquo;vyroste&ldquo; a jiný skončí se závislostí? Vědci se zaměřili na mozek",
             "publishedAt": "2026-07-02T22:00:00Z"
           }
         ]

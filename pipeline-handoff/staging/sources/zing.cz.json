@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-07-03T04:40:02.074338Z",
+  "ingestedAt": "2026-07-03T06:17:52.223065Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Bývalá tvář PlayStationu kritizuje Steam Machine",
+      "url": "https://zing.cz/article/byvala-tvar-playstationu-kritizuje-steam-machine",
+      "dt": "2026-07-03T06:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "bývalá",
+        "kritizuje",
+        "machine",
+        "playstationu",
+        "steam",
+        "tvář"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -955,32 +978,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "PlayStation lidem maže stovky koupených filmů, digitální vlastnictví neexistuje",
-      "url": "https://zing.cz/article/playstation-lidem-maze-stovky-koupenych-filmu-digitalni-vlastnictvi-neexistuje",
-      "dt": "2026-06-27T18:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "digitální",
-        "filmů",
-        "koupených",
-        "lidem",
-        "maže",
-        "neexistuje",
-        "playstation",
-        "stovky",
-        "vlastnictví"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -991,7 +988,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125821,
+      "bytes": 125824,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1028,7 +1025,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-03T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-03T06:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1043,6 +1040,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bývalá tvář PlayStationu kritizuje Steam Machine",
+            "publishedAt": "2026-07-03T06:00:00Z"
+          },
           {
             "title": "Assassin's Creed Black Flag Resynced odhalil přesný čas vydání",
             "publishedAt": "2026-07-03T04:00:00Z"
@@ -1070,10 +1071,6 @@
           {
             "title": "Onimusha: Way of the Sword od Capcomu obdržela nové datum vydání",
             "publishedAt": "2026-07-02T08:00:00Z"
-          },
-          {
-            "title": "PlayStation 6 vyjde nejdříve v roce 2028, tvrdí analytická společnost",
-            "publishedAt": "2026-07-02T06:00:00Z"
           }
         ]
       }
