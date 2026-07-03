@@ -17,6 +17,72 @@
     );
   }
 
+  /* —— Part 0: Banka / Bakaláři / Zdravotní pojišťovna / Datové schránky — flush top, no bleed —— */
+  body:is(.iu-quickFeedOpen, .iu-quickFeedMojeFullscreen, .iu-mobileGateToolsQuickOpen)
+    #iuQuickFeed:is(.iu-banking-quickfeed-root, .iu-bakalari-quickfeed-root, .iu-pojistovna-quickfeed-root):not([hidden]) {
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  body.iu-modal-open.iu-ds-overlay-open #iuDsPanel.iu-ds-panel[data-open="1"]:not([hidden]) {
+    padding: 0 !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    background: #fff !important;
+  }
+
+  #iuQuickFeed:is(.iu-banking-quickfeed-root, .iu-bakalari-quickfeed-root, .iu-pojistovna-quickfeed-root) .iuQHead,
+  #iuQuickFeed:is(.iu-banking-quickfeed-root, .iu-bakalari-quickfeed-root, .iu-pojistovna-quickfeed-root) .iu-banking-ds-modal > .iuQHead {
+    margin: 0 !important;
+  }
+
+  #iuQuickFeed:is(.iu-banking-quickfeed-root, .iu-bakalari-quickfeed-root, .iu-pojistovna-quickfeed-root) .iu-banking-ds-modal,
+  #iuDsPanel.iu-ds-panel[data-open="1"] .iu-ds-modal {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+
+  #iuDsPanel.iu-ds-panel .iu-ds-panelHeader .iu-ds-panelHeaderMain .iu-tool-privacy-title,
+  #iuDsPanel.iu-ds-panel .iu-ds-panelHeader #iuDsPanelTitle {
+    font-size: 18px !important;
+    font-weight: 750 !important;
+    line-height: 1.25 !important;
+  }
+
+  #iuDsPanel.iu-ds-panel .iu-ds-panelHeader .iuModalClose.iu-ds-close,
+  #iuDsPanel.iu-ds-panel .iu-ds-panelHeader [data-iu-close].iu-ds-close {
+    box-sizing: border-box !important;
+    width: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
+    flex-shrink: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 10px !important;
+    background: #eef2f7 !important;
+    color: #0f172a !important;
+    font-size: 24px !important;
+    line-height: 1 !important;
+    font-family: inherit !important;
+    cursor: pointer !important;
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation !important;
+  }
+
+  #iuQuickFeed:is(.iu-banking-quickfeed-root, .iu-bakalari-quickfeed-root, .iu-pojistovna-quickfeed-root) .iuQHead .iuQTitle {
+    font-size: 18px !important;
+    font-weight: 750 !important;
+    line-height: 1.25 !important;
+  }
+
   /* —— Part 1: unified sticky opaque headers (invoice reference) —— */
   :is(
     #iuInvoicePanel .iu-invoice-overlay-header,
