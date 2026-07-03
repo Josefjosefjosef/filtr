@@ -40594,7 +40594,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   const CAL_PREMIUM_FIX_V2_CSS =
     "#iuCalendarDayOverlay.iu-calendar-day-overlay{touch-action:none;overscroll-behavior:none}" +
     "#iuCalendarDayOverlay .iu-calendar-day-content{touch-action:pan-y!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important}" +
-    ".iu-calBottomSheet__panel{max-height:min(92vh,820px)!important;max-height:min(92dvh,820px)!important}" +
     ".iu-calInline.iu-calInline--premiumV2{display:flex;flex-direction:column;gap:14px;padding:14px 16px 18px;border-radius:16px;border:1px solid rgba(21,128,61,.16);background:#fff;box-shadow:0 4px 18px rgba(15,23,42,.06);box-sizing:border-box;max-width:100%}" +
     ".iu-calInline--premiumV2 .iu-calInline__field{display:flex;flex-direction:column;gap:6px;width:100%;box-sizing:border-box}" +
     ".iu-calInline--premiumV2 .iu-calInline__field.is-hidden{display:none!important}" +
@@ -40626,7 +40625,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   const CAL_PREMIUM_FIX_V4_CSS =
     "#iuCalEventBottomSheet .iu-calBottomSheet__handle{margin:6px auto 2px}" +
     "#iuCalEventBottomSheet .iu-calBottomSheet__head{padding:2px 12px 4px}" +
-    "#iuCalEventBottomSheet .iu-calBottomSheet__scroll{padding:0 12px 6px;overflow-y:auto}" +
+    "#iuCalEventBottomSheet .iu-calBottomSheet__scroll{padding:0 12px 6px}" +
     "#iuCalEventBottomSheet .iu-calInline.iu-calInline--premiumV2{display:flex;flex-direction:column;gap:7px;padding:8px 10px 10px;border-radius:14px;box-shadow:0 2px 12px rgba(15,23,42,.05)}" +
     "#iuCalEventBottomSheet .iu-calInline--premiumV2 .iu-calInline__field{gap:3px}" +
     "#iuCalEventBottomSheet .iu-calInline--premiumV2 .iu-calInline__label{font-size:11px;line-height:1.2;letter-spacing:.03em}" +
@@ -40637,6 +40636,28 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "#iuCalEventBottomSheet .iu-calAllDayToggleRow__line{font-size:13px;line-height:1.15}" +
     "#iuCalEventBottomSheet .iu-calInline--premiumV2 .iu-calInline__actions{gap:6px;margin-top:0}" +
     "#iuCalEventBottomSheet .iu-calInline--premiumV2 .iu-calInline__btn{min-height:44px;padding:11px 14px;border-radius:12px;font-size:15px}";
+  const CAL_PREMIUM_FIX_V6_STYLE_ID = "iu-calendar-premium-fix-v6";
+  const CAL_PREMIUM_FIX_V6_CSS =
+    "@media (max-width:1024px){" +
+    "#iuCalEventBottomSheet:not([hidden]) .iu-calBottomSheet__panel{" +
+    "height:auto!important;" +
+    "max-height:calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom,0px) + 48px)) - var(--iu-calendar-action-bar-nav-gap,10px) - env(safe-area-inset-top,0px) - 8px)!important;" +
+    "margin-bottom:calc(var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom,0px) + 48px)) + var(--iu-calendar-action-bar-nav-gap,10px))!important;" +
+    "padding-bottom:calc(8px + env(safe-area-inset-bottom,0px))!important;" +
+    "flex:0 0 auto!important;" +
+    "}" +
+    "#iuCalEventBottomSheet:not([hidden]) .iu-calBottomSheet__scroll{" +
+    "flex:0 1 auto!important;" +
+    "min-height:0!important;" +
+    "max-height:calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom,0px) + 48px)) - var(--iu-calendar-action-bar-nav-gap,10px) - env(safe-area-inset-top,0px) - 52px)!important;" +
+    "overflow-x:hidden!important;" +
+    "overflow-y:auto!important;" +
+    "-webkit-overflow-scrolling:touch;" +
+    "overscroll-behavior-y:contain;" +
+    "padding-bottom:6px!important;" +
+    "scroll-padding-bottom:0!important;" +
+    "}" +
+    "}";
   const calScrollLock = {
     saved: false,
     bodyOverflow: "",
@@ -40739,6 +40760,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         st7.id = CAL_PREMIUM_FIX_V4_STYLE_ID;
         st7.textContent = CAL_PREMIUM_FIX_V4_CSS;
         document.head.appendChild(st7);
+      }
+      if (!document.getElementById(CAL_PREMIUM_FIX_V6_STYLE_ID)){
+        const st8 = document.createElement("style");
+        st8.id = CAL_PREMIUM_FIX_V6_STYLE_ID;
+        st8.textContent = CAL_PREMIUM_FIX_V6_CSS;
+        document.head.appendChild(st8);
       }
       /* P1 lazy mount: ensureCalPremiumDom() moved to ensureCalendarOverlayMounted()
          — premium overlay DOM is built on first calendar open, not at boot. */

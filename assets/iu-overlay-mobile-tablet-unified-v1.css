@@ -347,6 +347,31 @@
     margin-bottom: var(--iu-calendar-action-bar-nav-gap) !important;
   }
 
+  /* Kalendář — Nová událost bottom sheet: ukotvení odspodu, dynamická výška, 10px nad #iuMobileBottomNav u Zrušit. */
+  #iuCalEventBottomSheet.iu-calBottomSheet:not([hidden]) .iu-calBottomSheet__panel {
+    height: auto !important;
+    max-height: calc(
+      100dvh - var(--bottom-nav-height) - var(--iu-calendar-action-bar-nav-gap) - env(safe-area-inset-top, 0px) - 8px
+    ) !important;
+    margin-bottom: calc(var(--bottom-nav-height) + var(--iu-calendar-action-bar-nav-gap)) !important;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    flex: 0 0 auto !important;
+  }
+
+  #iuCalEventBottomSheet.iu-calBottomSheet:not([hidden]) .iu-calBottomSheet__scroll {
+    flex: 0 1 auto !important;
+    min-height: 0 !important;
+    max-height: calc(
+      100dvh - var(--bottom-nav-height) - var(--iu-calendar-action-bar-nav-gap) - env(safe-area-inset-top, 0px) - 52px
+    ) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    padding-bottom: 6px !important;
+    scroll-padding-bottom: 0 !important;
+  }
+
   /* —— Part 4: Poznámky — flex column, scroll uvnitř listScroll/detailScroll —— */
   body.iu-notesOverlay-open #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__dialog {
     overflow: hidden !important;

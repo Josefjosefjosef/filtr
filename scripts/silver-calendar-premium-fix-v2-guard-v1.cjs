@@ -24,7 +24,7 @@ const REQUIRED = [
   { id: "delete_confirm_text", pattern: /Opravdu chcete odstranit tuto událost\?/ },
   { id: "delete_confirm_yes", pattern: /Ano, odstranit/ },
   { id: "request_delete", pattern: /requestDeleteInlineEditor/ },
-  { id: "bottom_sheet_taller", pattern: /92dvh,820px/ },
+  { id: "bottom_sheet_taller", pattern: /iu-calendar-premium-fix-v6/ },
   { id: "vv_skip_bottom_sheet", pattern: /shouldUseCalBottomSheet\(\)\) return/ },
   { id: "scroll_preserve_iso", pattern: /data-iu-cal-rendered-iso/ },
   { id: "silver_all_day_two_lines", pattern: /iuSilverDraftAllDayLine">Celodenní/ },
