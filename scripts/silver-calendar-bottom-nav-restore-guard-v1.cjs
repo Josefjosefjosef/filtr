@@ -11,7 +11,7 @@ const REPORT = path.join(__dirname, "silver-calendar-bottom-nav-restore-guard-v1
 const REQUIRED = [
   { id: "restore_marker", pattern: /iu-calendar-bottom-nav-restore-v1/ },
   { id: "mobile_tablet_max_1024", pattern: /@media\(max-width:1024px\)\{[^}]*#iuCalendarOverlay\.iu-calendarOverlay:not\(\[hidden\]\)\{z-index:10024!important/s },
-  { id: "bottom_nav_clearance", pattern: /bottom:var\(--bottom-nav-height,calc\(56px \+ env\(safe-area-inset-bottom,0px\) \+ 36px\)\)!important/ },
+  { id: "bottom_nav_clearance", pattern: /bottom:var\(--bottom-nav-height,calc\(56px \+ env\(safe-area-inset-bottom,0px\) \+ 48px\)\)!important/ },
   { id: "month_search_fab", pattern: /Vyhledat událost/ },
   { id: "month_add_fab", pattern: /Přidat událost/ },
 ];

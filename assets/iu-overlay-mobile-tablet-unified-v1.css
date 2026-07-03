@@ -6,8 +6,8 @@
   :root {
     --iu-mobile-bottom-nav-h: 56px;
     --iu-mobile-bottom-safe: env(safe-area-inset-bottom, 0px);
-    /* ~91px visual nav band (56 + 12 label row + 23 chrome) — sync with projects/index.html max-width:900 */
-    --iu-mobile-bottom-nav-total-h: calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 36px);
+    /* ~104px visual nav band (56 + 12 label row + 36 chrome incl. Silver ring) — prod-measured 2026-07-03 */
+    --iu-mobile-bottom-nav-total-h: calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 48px);
     --bottom-nav-height: var(--iu-mobile-bottom-nav-total-h);
     --iu-mobile-bottom-nav-safe-space: calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 12px + 40px);
     --iu-tool-overlay-header-bg: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
