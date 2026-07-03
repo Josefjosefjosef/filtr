@@ -137,6 +137,15 @@ async function auditCalendarView(page, viewLabel) {
     const navRect = rect(bottomNav);
     const searchRect = rect(searchBtn);
     const addRect = rect(addBtn);
+    const btnBottom = Math.max(
+      searchRect ? searchRect.bottom : 0,
+      addRect ? addRect.bottom : 0
+    );
+    const gapToNavPx =
+      navRect && btnBottom > 0
+        ? Math.round((navRect.top - btnBottom) * 100) / 100
+        : null;
+    const gapOk = gapToNavPx != null && gapToNavPx >= 8 && gapToNavPx <= 12;
     const navButtons = bottomNav
       ? Array.from(bottomNav.querySelectorAll("[data-iu-bottom-nav]")).map((btn) => ({
           key: btn.getAttribute("data-iu-bottom-nav"),
@@ -175,6 +184,8 @@ async function auditCalendarView(page, viewLabel) {
       searchVisible,
       addVisible,
       buttonsNotOverlapped: navNotOverlappedByDialog && addNotOverlapped && searchNotOverlapped,
+      gapToNavPx,
+      gapOk,
       overflowX,
       navButtonCount: navButtons.filter((b) => b.visible).length,
     };
@@ -353,6 +364,7 @@ async function runGuard() {
   const monthNav = results.every((r) => r.month.navVisible && r.month.labelsOk && r.month.silverOk && r.month.navAboveOverlay);
   const yearNav = results.every((r) => r.year.navVisible && r.year.labelsOk && r.year.silverOk && r.year.navAboveOverlay);
   const buttonsOk = results.every((r) => r.month.buttonsNotOverlapped && r.year.buttonsNotOverlapped);
+  const gapOk = results.every((r) => r.month.gapOk && r.year.gapOk);
   const mobileOk = results.some((r) => r.label === "mobile" && r.month.navVisible && r.year.navVisible);
   const tabletOk = results.some((r) => r.label === "tablet" && r.month.navVisible && r.year.navVisible);
   const overflowX = results.some((r) => r.overflowX);
@@ -366,6 +378,7 @@ async function runGuard() {
     monthNav &&
     yearNav &&
     buttonsOk &&
+    gapOk &&
     mobileOk &&
     tabletOk &&
     !overflowX &&
@@ -381,6 +394,7 @@ async function runGuard() {
     monthNav,
     yearNav,
     buttonsOk,
+    gapOk,
     mobileOk,
     tabletOk,
     overflowX,

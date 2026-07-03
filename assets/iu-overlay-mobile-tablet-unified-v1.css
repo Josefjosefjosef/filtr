@@ -6,7 +6,9 @@
   :root {
     --iu-mobile-bottom-nav-h: 56px;
     --iu-mobile-bottom-safe: env(safe-area-inset-bottom, 0px);
-    --bottom-nav-height: calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 32px);
+    /* ~91px visual nav band (56 + 12 label row + 23 chrome) — sync with projects/index.html max-width:900 */
+    --iu-mobile-bottom-nav-total-h: calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 36px);
+    --bottom-nav-height: var(--iu-mobile-bottom-nav-total-h);
     --iu-mobile-bottom-nav-safe-space: calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 12px + 40px);
     --iu-tool-overlay-header-bg: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
     --iu-tool-overlay-header-border: 1px solid rgba(15, 23, 42, 0.08);
@@ -14,6 +16,7 @@
     --iu-tool-overlay-header-pad-inline: 12px 12px 12px 16px;
     --iu-tool-overlay-header-pad-top: calc(12px + env(safe-area-inset-top, 0px));
     --iu-tool-overlay-bottom-gap: 15px;
+    --iu-calendar-action-bar-nav-gap: 10px;
     --iu-tool-overlay-panel-bottom: var(--bottom-nav-height);
   }
 
@@ -330,8 +333,8 @@
     overflow-x: hidden !important;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
-    padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
-    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+    padding-bottom: 0 !important;
+    scroll-padding-bottom: 0 !important;
   }
 
   body.iu-calendarOverlay-open #iuCalendarOverlay .iu-calendarOverlay__side {
@@ -339,8 +342,9 @@
     scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
   }
 
+  /* Kalendář: 10px mezi spodní hranou FAB a horní hranou #iuMobileBottomNav (dialog už končí u --bottom-nav-height). */
   body.iu-calendarOverlay-open #iuCalMonthActionBar.iu-calMonthActionBar {
-    margin-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+    margin-bottom: var(--iu-calendar-action-bar-nav-gap) !important;
   }
 
   /* —— Part 4: Poznámky — flex column, scroll uvnitř listScroll/detailScroll —— */
