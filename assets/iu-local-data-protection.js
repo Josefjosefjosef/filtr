@@ -15,6 +15,60 @@ const LEGACY_TOOL_CONSENT_KEY = "iu:tool-local-storage-consent:v1";
 const STORAGE_USAGE_WARN_RATIO = 0.85;
 
 const DIALOG_PROMISE_KEY = "__iuLdpDialogPromise";
+const INFO_READONLY_PROMISE_KEY = "__iuLdpInfoDialogPromise";
+
+/** Odstraní všechny LDP backdrop vrstvy a body lock — jediný teardown bod. */
+function purgeLdpBackdrops() {
+  try {
+    document.querySelectorAll(".iu-ldp-backdrop").forEach((el) => {
+      try {
+        el.setAttribute("data-iu-ldp-closing", "1");
+        el.style.pointerEvents = "none";
+        el.remove();
+      } catch (_) {}
+    });
+  } catch (_) {}
+  try {
+    document.documentElement.classList.remove("iu-ldp-dialog-open");
+    document.body.classList.remove("iu-ldp-dialog-open");
+  } catch (_) {}
+}
+
+function setLdpDialogOpen(open) {
+  try {
+    document.documentElement.classList.toggle("iu-ldp-dialog-open", !!open);
+    document.body.classList.toggle("iu-ldp-dialog-open", !!open);
+  } catch (_) {}
+}
+
+function teardownLdpBackdrop(backdrop) {
+  try {
+    if (backdrop) {
+      backdrop.setAttribute("data-iu-ldp-closing", "1");
+      backdrop.style.pointerEvents = "none";
+      backdrop.remove();
+    }
+  } catch (_) {}
+  purgeLdpBackdrops();
+}
+
+function getInfoDialogPromise() {
+  if (typeof window === "undefined") return null;
+  return window[INFO_READONLY_PROMISE_KEY] || null;
+}
+
+function setInfoDialogPromise(value) {
+  if (typeof window === "undefined") return;
+  if (value == null) {
+    try {
+      delete window[INFO_READONLY_PROMISE_KEY];
+    } catch (_) {
+      window[INFO_READONLY_PROMISE_KEY] = null;
+    }
+  } else {
+    window[INFO_READONLY_PROMISE_KEY] = value;
+  }
+}
 
 function getDialogPromise() {
   if (typeof window === "undefined") return null;
@@ -113,6 +167,7 @@ function injectDialogStyles() {
   stylesInjected = true;
   const css =
     ".iu-ldp-backdrop{position:fixed;inset:0;z-index:10200;background:rgba(15,23,42,.56);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));box-sizing:border-box}" +
+    ".iu-ldp-backdrop[data-iu-ldp-closing],.iu-ldp-backdrop:not(:has(.iu-ldp-dialog)){display:none!important;pointer-events:none!important;visibility:hidden!important}" +
     ".iu-ldp-dialog{width:min(540px,100%);max-height:min(90vh,780px);display:flex;flex-direction:column;background:#fff;border-radius:18px;box-shadow:0 28px 56px rgba(0,0,0,.24);border:1px solid rgba(15,23,42,.1);overflow:hidden}" +
     ".iu-ldp-dialog__head{padding:20px 22px 0;flex-shrink:0}" +
     ".iu-ldp-dialog__title{margin:0;font-size:17px;font-weight:750;line-height:1.35;color:#0f172a}" +
@@ -131,13 +186,13 @@ function injectDialogStyles() {
 
 function showFirstSaveDialog() {
   injectDialogStyles();
-  try {
-    document.querySelectorAll(".iu-ldp-backdrop").forEach((el) => el.remove());
-  } catch (_) {}
+  purgeLdpBackdrops();
   return new Promise((resolve) => {
     const backdrop = document.createElement("div");
     backdrop.className = "iu-ldp-backdrop";
     backdrop.setAttribute("role", "presentation");
+    backdrop.setAttribute("data-iu-ldp-active", "1");
+    setLdpDialogOpen(true);
 
     const dialog = document.createElement("div");
     dialog.className = "iu-ldp-dialog";
@@ -176,9 +231,7 @@ function showFirstSaveDialog() {
     btnCancel.textContent = "Zrušit";
 
     function cleanup(result) {
-      try {
-        backdrop.remove();
-      } catch (_) {}
+      teardownLdpBackdrop(backdrop);
       document.removeEventListener("keydown", onKey);
       resolve(result);
     }
@@ -326,10 +379,16 @@ export function getLocalDataProtectionStatus() {
 
 export function showLocalDataProtectionInfoReadOnly() {
   injectDialogStyles();
-  return new Promise((resolve) => {
+  const existing = getInfoDialogPromise();
+  if (existing) return existing;
+
+  const pending = new Promise((resolve) => {
+    purgeLdpBackdrops();
     const backdrop = document.createElement("div");
     backdrop.className = "iu-ldp-backdrop";
     backdrop.setAttribute("role", "presentation");
+    backdrop.setAttribute("data-iu-ldp-active", "1");
+    setLdpDialogOpen(true);
 
     const dialog = document.createElement("div");
     dialog.className = "iu-ldp-dialog";
@@ -357,9 +416,7 @@ export function showLocalDataProtectionInfoReadOnly() {
     closeBtn.textContent = "Zavřít";
 
     function cleanup() {
-      try {
-        backdrop.remove();
-      } catch (_) {}
+      teardownLdpBackdrop(backdrop);
       document.removeEventListener("keydown", onKey);
       resolve();
     }
@@ -385,7 +442,12 @@ export function showLocalDataProtectionInfoReadOnly() {
     try {
       closeBtn.focus();
     } catch (_) {}
+  }).finally(() => {
+    setInfoDialogPromise(null);
   });
+
+  setInfoDialogPromise(pending);
+  return pending;
 }
 
 /**
@@ -470,6 +532,9 @@ export async function refreshDeviceStorageStatusPanel(root) {
 }
 
 if (typeof window !== "undefined") {
+  try {
+    document.addEventListener("iu:local-data-protection-accepted", () => purgeLdpBackdrops());
+  } catch (_) {}
   window.iuLocalDataProtection = {
     ensureLocalDataProtectionBeforeSave,
     ensureLocalStorageConsent,
@@ -477,6 +542,7 @@ if (typeof window !== "undefined") {
     isLocalStorageConsentGranted,
     canUseLocalStorage,
     showLocalDataProtectionInfoReadOnly,
+    purgeLdpBackdrops,
     getLocalDataProtectionStatus,
     refreshDeviceStorageStatusPanel,
     requestPersistentStorage,

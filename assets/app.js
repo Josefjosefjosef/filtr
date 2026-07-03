@@ -19688,6 +19688,13 @@ function buildVideoAsArticleCard(it) {
       try {
         window.__iuChunkBackgroundBufferDone = true;
       } catch (_) {}
+      if (!isLatestLoadRequest(requestToken)) return;
+      if (state.__iuChunkUserLoadMoreActive || iuLoadMoreStabilizeActiveP()) {
+        state.__iuChunkBgDeferTimer = setTimeout(() => {
+          void iuChunkScheduleBackgroundBuffer(requestToken);
+        }, 400);
+        return;
+      }
       if (isLatestLoadRequest(requestToken)) {
         await applyFilter({ resetPage: false, render: true });
       }
