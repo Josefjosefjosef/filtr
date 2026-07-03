@@ -159,11 +159,14 @@ async function waitForStressStart(page, timeoutMs = 120000) {
         (loader && (loader.backgroundDone || loader.backgroundMemoryReady)) ||
         window.__iuChunkBackgroundBufferDone
       );
+      const noInflight = !!(
+        loader && !loader.backgroundFetchInflight && !loader.loadMoreInflight
+      );
       const btn = document.querySelector(".iuLoadMoreBtn");
       const btnReady = !!(btn && !btn.disabled && btn.offsetParent !== null);
-      return { bgReady, btnReady };
+      return { bgReady, btnReady, noInflight };
     });
-    if (gate.btnReady && gate.bgReady && snap.articlesReceived >= 100) {
+    if (gate.btnReady && gate.bgReady && gate.noInflight && snap.articlesReceived >= 100) {
       return snap;
     }
     await page.waitForTimeout(300);

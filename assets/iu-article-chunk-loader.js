@@ -169,11 +169,32 @@ export function iuChunkCreateLoaderState(sectionKey) {
     backgroundMemoryReady: false,
     backgroundFetchInflight: false,
     loadMoreInflight: false,
+    _chunkFetchPromises: null,
+    _backgroundFetchPromise: null,
     articlesReceivedCount: 0,
     articlesParsedCount: 0,
     educationPreviewItems: [],
     sectionPreviewItems: null,
   };
+}
+
+function iuChunkFetchPromiseMap(loader) {
+  if (!loader._chunkFetchPromises) loader._chunkFetchPromises = new Map();
+  return loader._chunkFetchPromises;
+}
+
+async function iuChunkAwaitBackgroundFetch(loader, timeoutMs = 90000) {
+  if (!loader || !loader.backgroundFetchInflight) return;
+  if (loader._backgroundFetchPromise) {
+    try {
+      await loader._backgroundFetchPromise;
+    } catch (_) {}
+    return;
+  }
+  const deadline = Date.now() + timeoutMs;
+  while (loader.backgroundFetchInflight && Date.now() < deadline) {
+    await new Promise((resolve) => setTimeout(resolve, 25));
+  }
 }
 
 async function iuChunkFetchJson(url, label) {
@@ -300,7 +321,7 @@ export async function iuChunkFetchBufferChunk(loader, basePath, dataVer) {
   const meta = iuChunkSectionMeta(loader);
   if (!meta || !Array.isArray(meta.chunks) || !meta.chunks[0]) return [];
   loader.bufferChunkLoaded = true;
-  return iuChunkFetchRel(loader, meta.chunks[0], basePath, dataVer, "buffer_000", 0);
+  return iuChunkFetchChunkIndex(loader, 0, basePath, dataVer);
 }
 
 export async function iuChunkFetchChunkIndex(loader, chunkIndex, basePath, dataVer) {
@@ -309,7 +330,28 @@ export async function iuChunkFetchChunkIndex(loader, chunkIndex, basePath, dataV
     return [];
   }
   if (loader.loadedChunkIndexes.has(chunkIndex)) return [];
-  return iuChunkFetchRel(loader, meta.chunks[chunkIndex], basePath, dataVer, `chunk_${chunkIndex}`, chunkIndex);
+  const fetchMap = iuChunkFetchPromiseMap(loader);
+  const inflight = fetchMap.get(chunkIndex);
+  if (inflight) {
+    try {
+      await inflight;
+    } catch (_) {}
+    return [];
+  }
+  const promise = iuChunkFetchRel(
+    loader,
+    meta.chunks[chunkIndex],
+    basePath,
+    dataVer,
+    `chunk_${chunkIndex}`,
+    chunkIndex,
+  );
+  fetchMap.set(chunkIndex, promise);
+  try {
+    return await promise;
+  } finally {
+    fetchMap.delete(chunkIndex);
+  }
 }
 
 /** Phase 1: init chunk only (~CLIENT_INITIAL_RENDER) for fastest first paint. */
@@ -347,23 +389,33 @@ export async function iuChunkFetchBackgroundBuffer(loader, basePath, dataVer) {
     return loader && loader.articles ? loader.articles.slice(0, CLIENT_INITIAL_LIMIT) : [];
   }
   if (loader.backgroundFetchInflight) {
+    await iuChunkAwaitBackgroundFetch(loader);
     return loader.articles.slice(0, CLIENT_INITIAL_LIMIT);
   }
   loader.backgroundFetchInflight = true;
-  try {
+  const run = (async () => {
     if (loader.articles.length < CLIENT_INITIAL_LIMIT) {
       await iuChunkFetchBufferChunk(loader, basePath, dataVer);
     }
     iuChunkCapArticles(loader, true);
     loader.nextLoadMoreChunkIndex = loader.bufferChunkLoaded ? 1 : 0;
     return loader.articles.slice(0, CLIENT_INITIAL_LIMIT);
+  })();
+  loader._backgroundFetchPromise = run;
+  try {
+    return await run;
   } finally {
     loader.backgroundFetchInflight = false;
+    loader._backgroundFetchPromise = null;
   }
 }
 
 export async function iuChunkFetchLoadMore(loader, basePath, dataVer) {
-  if (!loader || loader.loadMoreInflight || loader._iuVirtualPrehledDne) {
+  if (!loader || loader._iuVirtualPrehledDne) {
+    return { added: [], chunkIndex: null };
+  }
+  await iuChunkAwaitBackgroundFetch(loader);
+  if (loader.loadMoreInflight) {
     return { added: [], chunkIndex: null };
   }
   loader.loadMoreInflight = true;
