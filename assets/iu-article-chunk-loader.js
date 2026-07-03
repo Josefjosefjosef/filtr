@@ -420,9 +420,14 @@ export async function iuChunkFetchLoadMore(loader, basePath, dataVer) {
   }
   loader.loadMoreInflight = true;
   try {
-    const idx = loader.nextLoadMoreChunkIndex;
     const meta = iuChunkSectionMeta(loader);
-    if (!meta || idx >= meta.chunkCount) return { added: [], chunkIndex: null };
+    if (!meta) return { added: [], chunkIndex: null };
+    let idx = Number(loader.nextLoadMoreChunkIndex) >= 0 ? Number(loader.nextLoadMoreChunkIndex) : 0;
+    while (idx < meta.chunkCount && loader.loadedChunkIndexes.has(idx)) {
+      idx += 1;
+    }
+    loader.nextLoadMoreChunkIndex = idx;
+    if (idx >= meta.chunkCount) return { added: [], chunkIndex: null };
     const before = loader.articles.length;
     await iuChunkFetchChunkIndex(loader, idx, basePath, dataVer);
     loader.nextLoadMoreChunkIndex = idx + 1;
