@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-03T01:32:12.950613Z",
+  "generatedAt": "2026-07-03T02:52:36.248993Z",
   "pipelineRunId": "28631539848",
   "commitSha": "b467b9a0bb0a5bbf00cb868c74d46022803b4a93",
   "branch": "main",
   "ingest_status": "INGEST_OK",
   "aggregate_status": "AGGREGATE_OK",
   "clean_pool_status": "CLEAN_POOL_CREATED",
-  "release_status": null,
-  "publish_status": null,
+  "release_status": "RELEASE_OK",
+  "publish_status": "PUBLISH_OK",
   "release_blocked_by": null,
   "release_blocked_reason": null,
   "guard_name": null,
@@ -17,6 +17,6 @@
   "articles_full_count": 18599,
   "articles_final_count": 18599,
   "ready_for_release_count": 18599,
-  "was_publish_attempted": false,
-  "was_pr_created": false
+  "was_publish_attempted": true,
+  "was_pr_created": true
 }
