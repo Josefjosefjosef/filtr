@@ -28107,7 +28107,7 @@ function buildVideoAsArticleCard(it) {
   <iframe
     src="${iuQfEscape(embedSrc)}"
     title="${iuQfEscape(title)}"
-    loading="lazy"
+    loading="eager"
     referrerpolicy="strict-origin-when-cross-origin"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowfullscreen></iframe>
@@ -32143,7 +32143,13 @@ function buildVideoAsArticleCard(it) {
         }
       } catch {}
       try {
-        if (typeof window.iuRenderAiVideos === "function") window.iuRenderAiVideos(aiPanel);
+        if (typeof window.iuRenderAiVideos === "function") {
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              try { window.iuRenderAiVideos(aiPanel); } catch (_) {}
+            });
+          });
+        }
       } catch (_) {}
     }
     try { window.iuAiPanelOpenSurface = openPanel; } catch (_) {}

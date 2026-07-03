@@ -1,0 +1,235 @@
+/* infoUzel.cz — mobile/tablet (≤1024px): unified tool overlay headers + 15px bottom clearance + AI video layout.
+   Reference header: #iuInvoicePanel .iu-invoice-overlay-header (Vytvořit fakturu).
+   Desktop (min-width: 1025px) unchanged. */
+
+@media (max-width: 1024px) {
+  :root {
+    --iu-tool-overlay-header-bg: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+    --iu-tool-overlay-header-border: 1px solid rgba(15, 23, 42, 0.08);
+    --iu-tool-overlay-header-pad-block: 12px;
+    --iu-tool-overlay-header-pad-inline: 12px 12px 12px 16px;
+    --iu-tool-overlay-header-pad-top: calc(12px + env(safe-area-inset-top, 0px));
+    --iu-tool-overlay-bottom-gap: 15px;
+    --iu-tool-overlay-panel-bottom: calc(
+      var(--iu-mobile-bottom-nav-h, 56px)
+      + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px))
+      + 12px
+    );
+  }
+
+  /* —— Part 1: unified sticky opaque headers (invoice reference) —— */
+  :is(
+    #iuInvoicePanel .iu-invoice-overlay-header,
+    #iuLegalDocsPanel .iu-legal-overlay-header,
+    #iuFinancialCalcPanel .iu-financial-overlay-header,
+    #iuCustomButtonsPanel .iu-custom-buttons-overlay-header,
+    #iuDsPanel.iu-ds-panel .iu-ds-panelHeader,
+    #iuQuickFeed .iuQHead,
+    #iuParcelsPopover .iu-parcels-modal-header,
+    #iu-aiPanel .iu-aiPanelHeader
+  ) {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    margin: 0 !important;
+    padding: var(--iu-tool-overlay-header-pad-top) 12px 12px 16px !important;
+    border-bottom: var(--iu-tool-overlay-header-border) !important;
+    flex: none !important;
+    min-width: 0 !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 8 !important;
+    background: var(--iu-tool-overlay-header-bg) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+
+  /* card shells: solid backdrop under sticky header (no bleed-through) */
+  :is(
+    #iuInvoicePanel .iu-invoice-overlay-cardShell,
+    #iuLegalDocsPanel .iu-legal-overlay-cardShell,
+    #iuFinancialCalcPanel .iu-financial-overlay-cardShell,
+    #iuCustomButtonsPanel .iu-custom-buttons-overlay-cardShell,
+    #iuDsPanel.iu-ds-panel .iu-ds-modal,
+    #iuQuickFeed .iu-banking-ds-modal,
+    #iuParcelsPopover .iu-parcels-modal-shell,
+    #iu-aiPanel .iu-aiModal
+  ) {
+    background: #fafafa !important;
+  }
+
+  #iu-aiPanel .iu-aiModal,
+  #iuQuickFeed .iu-banking-ds-modal,
+  #iuDsPanel.iu-ds-panel .iu-ds-modal {
+    background: #fff !important;
+  }
+
+  /* whole-page scroll hosts (Bakaláři-like) */
+  :is(
+    #iuLegalDocsPanel.iu-legal-overlay-panel:not([hidden]) .iu-legal-overlay-cardShell,
+    #iuFinancialCalcPanel.iu-financial-overlay-panel:not([hidden]) .iu-financial-overlay-cardShell,
+    #iuInvoicePanel.iu-invoice-overlay-panel:not([hidden]) .iu-invoice-overlay-cardShell,
+    #iuCustomButtonsPanel.iu-custom-buttons-overlay-panel:not([hidden]) .iu-custom-buttons-overlay-cardShell
+  ) {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    display: block !important;
+  }
+
+  :is(
+    #iuLegalDocsPanel .iu-legal-overlay-inner,
+    #iuFinancialCalcPanel .iu-financial-overlay-inner,
+    #iuInvoicePanel .iu-invoice-overlay-inner,
+    #iuCustomButtonsPanel .iu-custom-buttons-overlay-inner
+  ) {
+    display: block !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  :is(
+    #iuLegalDocsScrollHost.iu-legal-overlay-scrollHost,
+    #iuFinancialCalcScrollHost.iu-financial-overlay-scrollHost,
+    #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost,
+    #iuCustomButtonsScrollHost.iu-custom-buttons-overlay-scrollHost
+  ) {
+    flex: none !important;
+    overflow: visible !important;
+    min-height: 0 !important;
+  }
+
+  body.iu-modal-open #iuDsPanel.iu-ds-panel[data-open="1"]:not([hidden]) {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+
+  #iuDsPanel.iu-ds-panel .iu-ds-modal,
+  #iuDsPanel.iu-ds-panel .iu-ds-panelBody,
+  #iuDsPanel.iu-ds-panel .iu-datovka-scroll-host {
+    flex: none !important;
+    overflow: visible !important;
+    min-height: 0 !important;
+  }
+
+  /* —— Part 2: panel ends at nav top; scroll content 15px above nav —— */
+  :is(
+    body.iu-mobileGateOverlayOpen,
+    body.iu-modal-open,
+    body.iu-quickFeedOpen,
+    body.iu-quickFeedMojeFullscreen,
+    body.iu-financial-overlay-open,
+    body.iu-financial-calculators-overlay-open,
+    body.iu-legal-docs-overlay-open,
+    body.iu-invoice-overlay-open,
+    body.iu-ds-overlay-open,
+    body.iu-custom-buttons-overlay-open,
+    body.iu-ai-narrow-fullscreen,
+    body.iu-parcels-overlay-open,
+    body.iu-nakup-online-overlay-open
+  ) :is(
+    #iuFinancialCalcPanel.iu-financial-overlay-panel,
+    #iuLegalDocsPanel.iu-legal-overlay-panel,
+    #iuInvoicePanel.iu-invoice-overlay-panel,
+    #iuCustomButtonsPanel.iu-custom-buttons-overlay-panel,
+    #iuDsPanel.iu-ds-panel[data-open="1"],
+    #iuQuickFeed,
+    #iuParcelsPopover.iu-parcels-modal.is-open,
+    #iu-aiPanel[data-open="1"]
+  ):not([hidden]) {
+    bottom: var(--iu-tool-overlay-panel-bottom) !important;
+    max-height: calc(100dvh - var(--iu-tool-overlay-panel-bottom)) !important;
+  }
+
+  :is(
+    #iuLegalDocsScrollHost,
+    #iuFinancialCalcScrollHost,
+    #iuInvoiceScrollHost,
+    #iuCustomButtonsScrollHost,
+    #iuDsPanel .iu-ds-panelBody,
+    #iuDsPanel .iu-datovka-scroll-host,
+    #iuQuickFeed .iu-banking-scroll-host,
+    #iuQuickFeed .iuQBody,
+    #iuQuickFeed .iuQCard,
+    #iuQuickFeed #iuQuickFeedMojeSluzbyBody,
+    #iuQuickFeed .iu-nakup-online-fill,
+    #iuQuickFeed .iu-nakup-online-outerCard,
+    #iuQuickFeed .iu-nakup-online-feed,
+    #iuQuickFeed .iuQGrid,
+    #iuQuickFeed .iu-mojeSluzbyBanka,
+    #iuQuickFeed .iu-health-card,
+    #iuQuickFeed .bakalari-card,
+    #iuParcelsPopover .iu-parcels-modal-content,
+    #iu-aiPanel .iu-aiPanelBody,
+    #iu-aiPanel #iu-aiPanelCards
+  ) {
+    padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+    box-sizing: border-box !important;
+  }
+
+  :is(
+    #iuFinancialCalcPanel .iu-financial-overlay-cardShell,
+    #iuLegalDocsPanel .iu-legal-overlay-cardShell,
+    #iuInvoicePanel .iu-invoice-overlay-cardShell,
+    #iuCustomButtonsPanel .iu-custom-buttons-overlay-cardShell
+  ) {
+    padding-bottom: 0 !important;
+    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+  }
+
+  body.iu-ai-narrow-fullscreen #iu-aiPanel .iu-aiModal {
+    padding-bottom: 0 !important;
+  }
+
+  /* —— Part 3: AI video previews — reliable 16:9 on mobile/tablet —— */
+  #iu-aiPanel .iuAiVideoGrid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    min-width: 0 !important;
+  }
+
+  #iu-aiPanel .iuAiVideoItem {
+    min-width: 0 !important;
+  }
+
+  #iu-aiPanel .iuYtWrap {
+    position: relative !important;
+    width: 100% !important;
+    aspect-ratio: 16 / 9 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    border-radius: 10px !important;
+    background: #0b2a4a !important;
+    contain: layout style paint !important;
+  }
+
+  #iu-aiPanel .iuYtWrap iframe {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    border: 0 !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  body.iu-ai-narrow-fullscreen #iu-aiPanel .iu-aiPanelBody {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+}
