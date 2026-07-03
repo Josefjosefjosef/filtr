@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-07-03T01:06:09.911969Z",
+  "ingestedAt": "2026-07-03T02:56:08.890884Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Počet obětí zemětřesení ve Venezuele vzrostl na 2595, pátrání trvá",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/pocet-obeti-zemetreseni-ve-venezuele-vzrostl-na-2595-patrani-trva.A260703_035736_zahranicni_air",
+      "dt": "2026-07-03T02:25:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "2595",
+        "obětí",
+        "počet",
+        "pátrání",
+        "trvá",
+        "venezuele",
+        "vzrostl",
+        "zemětřesení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -760,31 +785,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Několikadenní bouřky a deště výrazně změnily mapu sucha v Česku",
-      "url": "https://www.idnes.cz/zpravy/domaci/pocasi-puda-bourky-deste-mapa-sucha-cesko-morava.A260702_150751_domaci_ikul",
-      "dt": "2026-07-02T13:49:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "bouřky",
-        "deště",
-        "mapu",
-        "několikadenní",
-        "sucha",
-        "výrazně",
-        "změnily",
-        "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49711,
+      "bytes": 49269,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-02T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-03T02:25:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -849,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Počet obětí zemětřesení ve Venezuele vzrostl na 2595, pátrání trvá",
+            "publishedAt": "2026-07-03T02:25:00Z"
+          },
           {
             "title": "Roztržka Meloniové a Trumpa není o fotce, ale o zradě, řekl v Rozstřelu Landovský",
             "publishedAt": "2026-07-02T22:00:00Z"
@@ -876,10 +880,6 @@
           {
             "title": "Indie zažila pátý nejsušší červen od začátku minulého století",
             "publishedAt": "2026-07-02T20:02:00Z"
-          },
-          {
-            "title": "Požár skládky v Indonésii vyhnal stovky lidí z jejich domovů",
-            "publishedAt": "2026-07-02T19:18:00Z"
           }
         ]
       }
