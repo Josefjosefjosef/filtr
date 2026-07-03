@@ -30327,12 +30327,21 @@ function buildVideoAsArticleCard(it) {
       const close = quick.querySelector(".iuQHeadActions #iuQCloseBtn, .iuQHeadActions .iuQClose");
       const secondary = quick.querySelector(".iuQHeadActions .iuAiShareBtn, .iuQHeadActions .iu-forward-btn, .iuQHeadActions .iuTrHeaderPreposlat");
       const bodyCard = quick.querySelector(".iuQCard");
+      var isCredentialQf =
+        quick.classList &&
+        (quick.classList.contains("iu-banking-quickfeed-root") ||
+          quick.classList.contains("iu-bakalari-quickfeed-root") ||
+          quick.classList.contains("iu-pojistovna-quickfeed-root"));
       if (head) {
-        head.style.setProperty("display", "grid");
-        head.style.setProperty("grid-template-columns", "minmax(0, 1fr) auto");
-        head.style.setProperty("align-items", "flex-start");
-        head.style.setProperty("gap", "8px");
-        head.style.setProperty("margin", "8px 0 12px");
+        if (isCredentialQf) {
+          head.style.setProperty("margin", "0");
+        } else {
+          head.style.setProperty("display", "grid");
+          head.style.setProperty("grid-template-columns", "minmax(0, 1fr) auto");
+          head.style.setProperty("align-items", "flex-start");
+          head.style.setProperty("gap", "8px");
+          head.style.setProperty("margin", "8px 0 12px");
+        }
       }
       if (title) {
         title.style.setProperty("min-width", "0");
@@ -30439,8 +30448,17 @@ function buildVideoAsArticleCard(it) {
       quick.style.setProperty("z-index", "10075", "important");
       quick.style.setProperty("overflow", "auto", "important");
       quick.style.setProperty("box-sizing", "border-box", "important");
-      quick.style.setProperty("background", "#eaf0f7", "important");
-      quick.style.setProperty("padding", "calc(env(safe-area-inset-top, 0px) + 8px) 8px 8px", "important");
+      quick.style.setProperty("background", "#fff", "important");
+      var isCredentialQfLayer =
+        quick.classList &&
+        (quick.classList.contains("iu-banking-quickfeed-root") ||
+          quick.classList.contains("iu-bakalari-quickfeed-root") ||
+          quick.classList.contains("iu-pojistovna-quickfeed-root"));
+      quick.style.setProperty(
+        "padding",
+        isCredentialQfLayer ? "0" : "calc(env(safe-area-inset-top, 0px) + 8px) 8px 8px",
+        "important"
+      );
       quick.style.setProperty("display", "block", "important");
     } catch (_) {}
   }
@@ -32315,8 +32333,7 @@ function buildVideoAsArticleCard(it) {
       "@media (max-width:1024px){" +
       "body.iu-modal-open #iuDsOverlay.iu-ds-overlay:not([hidden]){z-index:10039!important;position:fixed!important;inset:0!important;width:100%!important;height:100vh!important;height:100dvh!important;max-height:100dvh!important;box-sizing:border-box!important}" +
       "body.iu-modal-open #iuDsPanel.iu-ds-panel.iuSectionDS[data-open=\"1\"]:not([hidden]){position:fixed!important;inset:0!important;left:0!important;transform:none!important;display:block!important;width:100%!important;max-width:none!important;height:100vh!important;height:100dvh!important;max-height:100dvh!important;padding:0!important;margin:0!important;box-sizing:border-box!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain!important;z-index:10040!important}" +
-      "#iuDsPanel.iu-ds-panel .iu-ds-modal{display:block!important;width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;overflow:visible!important;border-radius:0!important;box-shadow:none!important}" +
-      "#iuDsPanel.iu-ds-panel .iu-ds-panelHeader{position:relative!important}" +
+      "#iuDsPanel.iu-ds-panel .iu-ds-modal{display:block!important;width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;overflow:visible!important;border-radius:0!important;box-shadow:none!important;background:#fff!important}" +
       "#iuDsPanel.iu-ds-panel .iu-ds-panelBody,#iuDsPanel.iu-ds-panel .iu-datovka-scroll-host{overflow:visible!important;min-height:0!important;touch-action:pan-y!important}" +
       ".iu-ds-profile .iu-ds-f-label,.iu-ds-profile .iu-ds-f-user,.iu-ds-profile .iu-ds-f-pass,.iu-ds-open-btn,#iuDsPanel .bakalari-btn,.iu-ds-add{font-size:16px!important}" +
       "}";
