@@ -203,6 +203,45 @@ async function main() {
     }, KEY);
     if (!parallel.ok) fails.push(parallel.reason || "parallel dialog dedupe failed");
 
+    const clickThrough = await page.evaluate(async () => {
+      try {
+        localStorage.removeItem(KEY);
+        sessionStorage.removeItem(KEY);
+        localStorage.removeItem("iu:tool-local-storage-consent:v1");
+      } catch (_) {}
+      const ldp = window.iuLocalDataProtection;
+      const pending = ldp.ensureLocalDataProtectionBeforeSave();
+      await new Promise((r) => setTimeout(r, 350));
+      const ghost = document.querySelector(".iu-ldp-backdrop .iu-ldp-btn--ghost");
+      if (ghost) ghost.click();
+      await pending;
+      await new Promise((r) => setTimeout(r, 200));
+      const backdropCount = document.querySelectorAll(".iu-ldp-backdrop").length;
+      const bodyLock = document.body.classList.contains("iu-ldp-dialog-open");
+      const cx = Math.round(window.innerWidth / 2);
+      const cy = Math.round(window.innerHeight / 2);
+      const hit = document.elementFromPoint(cx, cy);
+      const blockedByLdp = !!(hit && hit.closest && hit.closest(".iu-ldp-backdrop"));
+      if (typeof ldp.purgeLdpBackdrops === "function") ldp.purgeLdpBackdrops();
+      return {
+        ok: backdropCount === 0 && !bodyLock && !blockedByLdp,
+        backdropCount,
+        bodyLock,
+        blockedByLdp,
+      };
+    });
+    if (!clickThrough.ok) {
+      fails.push(
+        "backdrop blocks clicks after close (count=" +
+          clickThrough.backdropCount +
+          " bodyLock=" +
+          clickThrough.bodyLock +
+          " blocked=" +
+          clickThrough.blockedByLdp +
+          ")"
+      );
+    }
+
     const apiOk = await page.evaluate(() => {
       const ldp = window.iuLocalDataProtection;
       return !!(ldp && typeof ldp.getStorageEstimate === "function" && typeof ldp.isPersistentStorageSupported === "function");
