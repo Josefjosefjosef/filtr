@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-07-03T09:46:22.264507Z",
+  "ingestedAt": "2026-07-03T11:24:08.260752Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Do Chorvatska autem: Některá pravidla jsou tam mnohem přísnější",
+      "url": "https://ekonomickydenik.cz/do-chorvatska-autem-pravidla-prisnejsi/",
+      "dt": "2026-07-03T10:39:19Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "autem",
+        "chorvatska",
+        "mnohem",
+        "některá",
+        "pravidla",
+        "přísnější",
+        "tam"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -758,32 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zisk Agrofertu loni klesl. Důvodem byly dřívější velké prodeje",
-      "url": "https://ekonomickydenik.cz/zisk-agrofertu-klesl-duvodem-prodeje/",
-      "dt": "2026-07-01T10:01:59Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "agrofertu",
-        "byly",
-        "dřívější",
-        "důvodem",
-        "klesl",
-        "loni",
-        "prodeje",
-        "velké",
-        "zisk"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 68746,
+      "bytes": 68497,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,11 +829,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-03T09:30:13Z",
+        "raw_feed_latest_publishedAt": "2026-07-03T10:39:19Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 10,
           "finance": 19,
+          "zpravy": 10,
           "zdravi": 1
         },
         "drop_counts": {
@@ -848,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Do Chorvatska autem: Některá pravidla jsou tam mnohem přísnější",
+            "publishedAt": "2026-07-03T10:39:19Z"
+          },
           {
             "title": "Pět hodin ve frontě na letadlo. Nové kontroly musí skončit, volají aerolinky",
             "publishedAt": "2026-07-03T09:30:13Z"
@@ -875,10 +877,6 @@
           {
             "title": "Evropský paradox. Globální chaos oslabuje skepsi vůči EU",
             "publishedAt": "2026-07-02T14:20:00Z"
-          },
-          {
-            "title": "Po brutálním útoku na Kyjev nové sankce. Volá po nich šéfka evropské diplomacie",
-            "publishedAt": "2026-07-02T13:19:54Z"
           }
         ]
       }
