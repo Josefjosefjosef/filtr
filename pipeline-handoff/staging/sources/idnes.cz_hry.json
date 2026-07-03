@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-07-03T20:47:41.528716Z",
+  "ingestedAt": "2026-07-03T22:28:04.136201Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Sklízí, co zasel. Streamer, který zabil těhotnou přítelkyni, se ve vězení bojí",
+      "url": "https://www.idnes.cz/hry/novinky/streamer-gta-vrazda-tehotna-pritelkyne-strach.A260702_094646_bw-novinky_srp",
+      "dt": "2026-07-03T22:00:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "bojí",
+        "přítelkyni",
+        "sklízí",
+        "streamer",
+        "těhotnou",
+        "vězení",
+        "zabil",
+        "zasel"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -729,34 +754,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Valve chce ovládnout naše obýváky, cena Steam Machine je ovšem hodně vysoká",
-      "url": "https://www.idnes.cz/hry/novinky/steam-machine-cena-recenze-datum-vydani-reakce.A260623_100351_bw-novinky_oz",
-      "dt": "2026-06-23T09:36:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "cena",
-        "chce",
-        "hodně",
-        "machine",
-        "naše",
-        "obýváky",
-        "ovládnout",
-        "ovšem",
-        "steam",
-        "valve",
-        "vysoká"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -767,7 +764,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 46382,
+      "bytes": 46595,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -804,7 +801,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-03T12:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-03T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -819,6 +816,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sklízí, co zasel. Streamer, který zabil těhotnou přítelkyni, se ve vězení bojí",
+            "publishedAt": "2026-07-03T22:00:00Z"
+          },
           {
             "title": "První uživatel Steam Machine hlásí „červenou čáru smrti“",
             "publishedAt": "2026-07-03T12:42:00Z"
@@ -846,10 +847,6 @@
           {
             "title": "Ještě letos vyjde deskovka Kingdom Come, pracuje na ní designér Chvátil",
             "publishedAt": "2026-07-01T15:00:00Z"
-          },
-          {
-            "title": "Doom se vrací a s ním i krvelačný Slayer, známá monstra a klasické levely",
-            "publishedAt": "2026-07-01T14:00:00Z"
           }
         ]
       }
