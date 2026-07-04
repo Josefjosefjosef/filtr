@@ -108,6 +108,8 @@
     max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
     padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
     scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    border-radius: 0 !important;
+    box-shadow: none !important;
     box-sizing: border-box !important;
   }
 
@@ -274,6 +276,8 @@
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
     scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    border-radius: 0 !important;
+    box-shadow: none !important;
     box-sizing: border-box !important;
   }
 
