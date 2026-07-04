@@ -40,10 +40,16 @@
   }
 
   #iuQuickFeed:is(.iu-banking-quickfeed-root, .iu-bakalari-quickfeed-root, .iu-pojistovna-quickfeed-root) .iu-banking-ds-modal,
+  #iuDsPanel.iu-ds-panel[data-open="1"]:not([hidden]),
   #iuDsPanel.iu-ds-panel[data-open="1"] .iu-ds-modal {
     border-radius: 0 !important;
     box-shadow: none !important;
     background: #fff !important;
+  }
+
+  #iuDsPanel.iu-ds-panel .iu-ds-panelHeader {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
   }
 
   #iuDsPanel.iu-ds-panel .iu-ds-panelHeader .iu-ds-panelHeaderMain .iu-tool-privacy-title,
