@@ -331,11 +331,10 @@
   color: var(--iuFp-brand);
 }
 
-/* —— Overlay shells — prémiová hloubka —— */
+/* —— Overlay shells — prémiová hloubka (desktop inner card; ne #iuDsPanel outer host) —— */
 #iuInvoicePanel .iu-invoice-overlay-cardShell,
 #iuFinancialCalcPanel .iu-financial-overlay-cardShell,
 #iuLegalDocsPanel .iu-legal-overlay-cardShell,
-.iu-ds-panel,
 #iuQuickFeed .iu-banking-ds-modal {
   border-radius: 18px;
   box-shadow: var(--iuFp-shadow-elevated);
