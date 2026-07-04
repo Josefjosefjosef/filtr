@@ -28,8 +28,8 @@
 
   body.iu-mobileGateOverlayOpen.iu-mobileGateToolsQuickOpen #iuQuickFeed .iu-banking-scroll-host,
   body.iu-mobileGateOverlayOpen.iu-mobileGateToolsQuickOpen #iuQuickFeed .iuQBody {
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
-    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px) !important;
+    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px);
   }
 
   /* Kalendář — stejný stacking jako info-center / calendar guard */
@@ -106,16 +106,16 @@
     transform: none !important;
     height: auto !important;
     max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
-    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px) !important;
+    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px);
     border-radius: 0 !important;
     box-shadow: none !important;
     box-sizing: border-box !important;
   }
 
   body.iu-mobileGateOverlayOpen.iu-modal-open #iuDsPanel .iu-datovka-scroll-host {
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
-    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px) !important;
+    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px);
   }
 
   /* AI asistenti (narrow fullscreen) */
@@ -240,24 +240,22 @@
     overflow-x: hidden !important;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
-    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px) !important;
+    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px);
   }
 
+  /* Scroll clearance jen na scroll hostech — ne na formulářových kartách (Bakaláři / ZP / iuQCard). */
   body:is(.iu-quickFeedOpen, .iu-quickFeedMojeFullscreen, .iu-nakup-online-overlay-open) #iuQuickFeed :is(
     .iu-banking-scroll-host,
-    .iuQCard,
-    #iuQuickFeedMojeSluzbyBody,
     .iu-nakup-online-fill,
     .iu-nakup-online-outerCard,
     .iu-nakup-online-feed,
     .iuQGrid,
     .iuQBody,
-    .iu-mojeSluzbyBanka,
-    .iu-health-card,
-    .bakalari-card
+    .iu-mojeSluzbyBanka
   ) {
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
-    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px) !important;
+    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px);
     box-sizing: border-box !important;
   }
 
@@ -282,8 +280,8 @@
   }
 
   body.iu-modal-open.iu-ds-overlay-open #iuDsPanel :is(.iu-ds-panelBody, .iu-datovka-scroll-host) {
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
-    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px) !important;
+    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px);
     box-sizing: border-box !important;
   }
 

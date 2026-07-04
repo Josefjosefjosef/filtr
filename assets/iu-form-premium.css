@@ -508,6 +508,15 @@
   contain-intrinsic-size: auto 140px;
 }
 
+@media (max-width: 1024px) {
+  .bakalari-card,
+  .iu-health-card,
+  .iu-ds-form-block {
+    content-visibility: visible;
+    contain-intrinsic-size: none;
+  }
+}
+
 @media (max-width: 1023px) {
   #iuInvoicePanel .iu-inv-block,
   .bakalari-card,
