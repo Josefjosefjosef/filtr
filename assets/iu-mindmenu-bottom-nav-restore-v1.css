@@ -448,14 +448,36 @@
   }
 
   .iu-calBottomSheet:not([hidden]) .iu-calBottomSheet__panel {
-    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
-    padding-bottom: calc(var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) - env(safe-area-inset-bottom, 0px)) !important;
+    height: auto !important;
+    max-height: calc(
+      100dvh
+      - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px))
+      - var(--iu-calendar-action-bar-nav-gap, 10px)
+      - env(safe-area-inset-top, 0px)
+      - 8px
+    ) !important;
+    margin-bottom: calc(
+      var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px))
+      + var(--iu-calendar-action-bar-nav-gap, 10px)
+    ) !important;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
     box-sizing: border-box !important;
   }
 
   .iu-calBottomSheet:not([hidden]) .iu-calBottomSheet__scroll {
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
-    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px));
+    flex: 0 1 auto !important;
+    min-height: 0 !important;
+    max-height: calc(
+      100dvh
+      - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px))
+      - var(--iu-calendar-action-bar-nav-gap, 10px)
+      - env(safe-area-inset-top, 0px)
+      - 52px
+    ) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding-bottom: 6px !important;
+    scroll-padding-bottom: 0 !important;
     box-sizing: border-box !important;
   }
 
