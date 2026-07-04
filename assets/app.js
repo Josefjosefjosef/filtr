@@ -25419,11 +25419,16 @@ function buildVideoAsArticleCard(it) {
     return el;
   }
 
-  function iuQuickToolsApplyConfig() {
+  function iuQuickToolsApplyConfig(cfgOverride) {
     const grid = iuQuickToolsGetGrid();
     if (!grid) return;
-    const stored = loadQuickToolsConfig();
-    const cfg = stored ? sanitizeQuickToolsConfig(stored) : getDefaultQuickToolsConfig();
+    let cfg;
+    if (cfgOverride && typeof cfgOverride === "object") {
+      cfg = sanitizeQuickToolsConfig(cfgOverride);
+    } else {
+      const stored = loadQuickToolsConfig();
+      cfg = stored ? sanitizeQuickToolsConfig(stored) : getDefaultQuickToolsConfig();
+    }
     iuQuickToolsRenderCustomTiles(grid, cfg);
     const orderMap = {};
     cfg.order.forEach(function(id, i){ orderMap[id] = i; });
@@ -25598,6 +25603,8 @@ function buildVideoAsArticleCard(it) {
     resetQuickToolsConfig();
     var cfg = getDefaultQuickToolsConfig();
     iuQuickToolsSaveAndApply(cfg);
+    iuCustomButtonsRefreshList(cfg);
+    iuCustomButtonsResetForm();
   }
 
   function iuQuickToolsSettingsOnEsc(e) {
@@ -25693,7 +25700,7 @@ function buildVideoAsArticleCard(it) {
   function iuQuickToolsSaveAndApply(cfg) {
     cfg = sanitizeQuickToolsConfig(cfg || getDefaultQuickToolsConfig());
     saveQuickToolsConfig(cfg);
-    iuQuickToolsApplyConfig();
+    iuQuickToolsApplyConfig(cfg);
     iuQuickToolsSettingsRender(cfg);
   }
 
@@ -25705,10 +25712,20 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function iuCustomButtonsEnsureDeleteConfirmInBody() {
+    const dlg = document.getElementById("iuCustomButtonsDeleteConfirm");
+    if (!dlg) return null;
+    if (dlg.parentElement !== document.body) {
+      try { document.body.appendChild(dlg); } catch (_) {}
+    }
+    return dlg;
+  }
+
   function iuCustomButtonsEnsureInBody() {
     const panel = document.getElementById("iuCustomButtonsPanel");
     const backdrop = document.getElementById("iuCustomButtonsBackdrop");
     if (!panel || !backdrop) return false;
+    iuCustomButtonsEnsureDeleteConfirmInBody();
     if (backdrop.parentElement === document.body && panel.parentElement === document.body) return true;
     try {
       const frag = document.createDocumentFragment();
@@ -25896,12 +25913,17 @@ function buildVideoAsArticleCard(it) {
     err.hidden = !msg;
   }
 
-  function iuCustomButtonsRefreshList() {
+  function iuCustomButtonsRefreshList(cfgOverride) {
     const list = document.getElementById("iuCustomButtonsList");
     if (!list) return;
-    let cfg = loadQuickToolsConfig();
-    if (!cfg) cfg = getDefaultQuickToolsConfig();
-    cfg = sanitizeQuickToolsConfig(cfg);
+    let cfg = cfgOverride;
+    if (!cfg) {
+      cfg = loadQuickToolsConfig();
+      if (!cfg) cfg = getDefaultQuickToolsConfig();
+      cfg = sanitizeQuickToolsConfig(cfg);
+    } else {
+      cfg = sanitizeQuickToolsConfig(cfg);
+    }
     list.innerHTML = "";
     if (!(cfg.customButtons || []).length) {
       const empty = document.createElement("p");
@@ -25963,6 +25985,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuCustomButtonsShowDeleteConfirm(id) {
+    iuCustomButtonsEnsureDeleteConfirmInBody();
     const dlg = document.getElementById("iuCustomButtonsDeleteConfirm");
     if (!dlg) return;
     iuCustomButtonsPendingDeleteId = id;
@@ -26004,8 +26027,7 @@ function buildVideoAsArticleCard(it) {
     }
     iuQuickToolsSaveAndApply(cfg);
     iuCustomButtonsResetForm();
-    iuCustomButtonsRefreshList();
-    iuQuickToolsSettingsRender(cfg);
+    iuCustomButtonsRefreshList(cfg);
   }
 
   function iuCustomButtonsDeleteById(id) {
@@ -26022,8 +26044,7 @@ function buildVideoAsArticleCard(it) {
       if (tile) tile.remove();
     }
     iuQuickToolsSaveAndApply(cfg);
-    iuCustomButtonsRefreshList();
-    iuQuickToolsSettingsRender(cfg);
+    iuCustomButtonsRefreshList(cfg);
     iuCustomButtonsUpdateFormState();
   }
 
@@ -26132,7 +26153,8 @@ function buildVideoAsArticleCard(it) {
         iuQuickToolsSettingsClose();
         return;
       }
-      if (e.target && e.target.classList && e.target.classList.contains("iu-quicktools-settings-reset")) {
+      const resetBtn = e.target && e.target.closest ? e.target.closest(".iu-quicktools-settings-reset") : null;
+      if (resetBtn && panel.contains(resetBtn)) {
         e.preventDefault();
         e.stopPropagation();
         iuQuickToolsShowResetConfirm();
@@ -40492,7 +40514,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ".iu-custom-buttons-item-edit{border:1px solid rgba(31,75,153,.25);background:rgba(31,75,153,.08);color:#1f4b99}" +
     ".iu-custom-buttons-item-delete{border:1px solid rgba(185,28,28,.25);background:rgba(185,28,28,.08);color:#b91c1c}" +
     "#iuCustomButtonsDeleteConfirm[hidden]{display:none!important}" +
-    "#iuCustomButtonsDeleteConfirm:not([hidden]){position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}" +
+    "#iuCustomButtonsDeleteConfirm:not([hidden]){position:fixed;inset:0;z-index:10031;display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) 16px max(16px,env(safe-area-inset-bottom,0px));box-sizing:border-box}" +
+    "body.iu-myinfouzel-open #iuCustomButtonsDeleteConfirm:not([hidden]),body.iu-mobileGateOverlayOpen #iuCustomButtonsDeleteConfirm:not([hidden]){z-index:12210!important}" +
     ".iu-custom-buttons-deleteConfirm-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.48)}" +
     ".iu-custom-buttons-deleteConfirm-dialog{position:relative;z-index:1;width:min(360px,100%);background:#fff;border-radius:12px;padding:16px;box-shadow:0 12px 32px rgba(0,0,0,.18);box-sizing:border-box}" +
     ".iu-custom-buttons-deleteConfirm-dialog p{margin:0 0 14px;font-size:15px;line-height:1.4;color:#0b1f33}" +
