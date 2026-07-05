@@ -705,6 +705,12 @@ body.iu-notesOverlay-open{overflow:hidden!important}
     min-height:0!important;
     overflow:auto!important;
     -webkit-overflow-scrolling:touch;
+    padding:10px 10px var(--iu-tool-overlay-bottom-gap,15px);
+    scroll-padding-bottom:var(--iu-tool-overlay-bottom-gap,15px);
+  }
+
+  #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__items{
+    padding-bottom:var(--iu-tool-overlay-bottom-gap,15px);
   }
 
   #iuNotesOverlay.iu-notesPremiumScope .iu-notesOverlay__listHeader{gap:10px}
