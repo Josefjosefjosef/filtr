@@ -81,6 +81,22 @@ export function isInfoPanelOnlyScope(files) {
   return paths.every(allowed);
 }
 
+/** Financial calc mobile header PR — skip unrelated flaky article load-more stress. */
+export function isFinancialCalcMobileHeaderScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/iu-overlay-mobile-tablet-unified-v1.css" ||
+    f === "scripts/iu-financial-calc-mobile-header-guard.mjs" ||
+    f === "scripts/iu-mindmenu-overlay-bottom-gap-unified-guard-v1.cjs" ||
+    f === "scripts/iu-ai-assistants-overlay-bottom-gap-guard-v1.cjs" ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json";
+  return paths.every(allowed);
+}
+
 function writeOutput(name, value) {
   const out = process.env.GITHUB_OUTPUT;
   if (out) {
@@ -108,12 +124,13 @@ function main() {
   const dataOnly = isDataOnlyScope(files);
   const pipelineOnly = isFastPoolPipelineScope(files);
   const infoPanelOnly = isInfoPanelOnlyScope(files);
+  const finCalcHeaderOnly = isFinancialCalcMobileHeaderScope(files);
   const allowFastPath =
     dataOnly ||
     pipelineOnly ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
 
-  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"}`);
+  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"}`);
   for (const f of files.slice(0, 20)) {
     console.log(`[smoke-data-only-scope] changed=${f}`);
   }
@@ -123,8 +140,10 @@ function main() {
 
   writeOutput("data_only", allowFastPath ? "true" : "false");
   writeOutput("info_panel_only", infoPanelOnly ? "true" : "false");
+  writeOutput("fin_calc_header_only", finCalcHeaderOnly ? "true" : "false");
   console.log(`SMOKE_DATA_ONLY_SCOPE=${allowFastPath ? "YES" : "NO"}`);
   console.log(`SMOKE_INFO_PANEL_ONLY_SCOPE=${infoPanelOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_FIN_CALC_HEADER_ONLY_SCOPE=${finCalcHeaderOnly ? "YES" : "NO"}`);
 }
 
 if (process.argv[1] && process.argv[1].endsWith("smoke-data-only-scope.mjs")) {

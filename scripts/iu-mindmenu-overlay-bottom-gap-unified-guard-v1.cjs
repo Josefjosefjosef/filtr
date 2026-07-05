@@ -46,7 +46,7 @@ const REQUIRED = [
   {
     id: "index_cache_bust_unified",
     file: INDEX,
-    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=ai-assistants-overlay-bottom-gap-v1-20260705/,
+    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=financial-calc-mobile-header-v1-20260705/,
   },
 ];
 

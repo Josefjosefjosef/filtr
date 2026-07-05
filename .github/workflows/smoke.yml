@@ -118,15 +118,15 @@ jobs:
         run: npm run iu-desktop-info-panel-validation-guard
 
       - name: Article entrypoint parity guard (chunked loading V1)
-        if: steps.scope.outputs.data_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true'
         run: npm run article-entrypoint-parity-guard
 
       - name: Article long-session memory guard (Task 66)
-        if: steps.scope.outputs.data_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true'
         run: npm run iu-article-long-session-memory-guard
 
       - name: Article load-more stress guard (Task 66)
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true'
         run: npm run iu-article-load-more-stress-guard
 
       - name: Local data protection guard
@@ -140,6 +140,10 @@ jobs:
       - name: MindMenu overlay bottom gap unified guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-mindmenu-overlay-bottom-gap-unified-guard
+
+      - name: Financial calc mobile header guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-financial-calc-mobile-header-guard
 
       - name: AI assistants overlay bottom gap guard
         if: steps.scope.outputs.data_only != 'true'

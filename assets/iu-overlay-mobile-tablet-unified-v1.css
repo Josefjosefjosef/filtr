@@ -575,4 +575,87 @@
     padding-bottom: 0 !important;
     scroll-padding-bottom: 0 !important;
   }
+
+  /* —— Part 8: Finanční kalkulačky — dvouřádková hlavička (detail + hub), desktop beze změny —— */
+  #iuFinancialCalcPanel.iu-financial-overlay-panel:is(.iu-financial-overlay-panel--detail, .iu-financial-overlay-panel--hub)
+    .iu-financial-overlay-header {
+    display: grid !important;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+    align-items: center !important;
+    justify-items: stretch;
+    gap: 8px 10px !important;
+  }
+
+  #iuFinancialCalcPanel.iu-financial-overlay-panel--detail .iu-financial-overlay-header {
+    grid-template-areas:
+      "back info close"
+      "title title title";
+  }
+
+  #iuFinancialCalcPanel.iu-financial-overlay-panel--hub .iu-financial-overlay-header {
+    grid-template-columns: 1fr auto auto;
+    grid-template-areas:
+      ". info close"
+      "title title title";
+  }
+
+  #iuFinancialCalcPanel.iu-financial-overlay-panel:is(.iu-financial-overlay-panel--detail, .iu-financial-overlay-panel--hub)
+    .iu-financial-overlay-heading,
+  #iuFinancialCalcPanel.iu-financial-overlay-panel:is(.iu-financial-overlay-panel--detail, .iu-financial-overlay-panel--hub)
+    .iu-overlay-header-row {
+    display: contents !important;
+  }
+
+  #iuFinancialCalcPanel.iu-financial-overlay-panel--detail .iu-financial-overlay-backBtn:not([hidden]) {
+    grid-area: back;
+    justify-self: start;
+    margin-top: 0 !important;
+  }
+
+  #iuFinancialCalcPanel.iu-financial-overlay-panel:is(.iu-financial-overlay-panel--detail, .iu-financial-overlay-panel--hub)
+    .iu-tool-privacy-btn {
+    grid-area: info;
+    justify-self: center;
+    margin: 0 !important;
+  }
+
+  #iuFinancialCalcPanel.iu-financial-overlay-panel--hub .iu-tool-privacy-btn {
+    justify-self: start;
+  }
+
+  #iuFinancialCalcPanel.iu-financial-overlay-panel:is(.iu-financial-overlay-panel--detail, .iu-financial-overlay-panel--hub)
+    #iuFinancialCalcClose {
+    grid-area: close;
+    justify-self: end;
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    transform: none !important;
+    margin: 0 !important;
+  }
+
+  #iuFinancialCalcPanel.iu-financial-overlay-panel:is(.iu-financial-overlay-panel--detail, .iu-financial-overlay-panel--hub)
+    #iuFinancialCalcTitle {
+    grid-area: title;
+    width: 100%;
+    max-width: 100%;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    word-break: normal;
+    hyphens: auto;
+  }
+
+  #iuFinancialCalcPanel.iu-financial-overlay-panel--detail .iu-financial-overlay-sub {
+    display: none !important;
+  }
+
+  #iuFinancialCalcPanel.iu-financial-overlay-panel--hub .iu-financial-overlay-sub {
+    grid-area: title;
+    width: 100%;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+  }
 }
