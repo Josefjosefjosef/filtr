@@ -808,6 +808,12 @@ async function main() {
 
   copyPrevErrorsExcept(snapshot, prev, fetchedBuckets);
 
+  snapshot.bucketFetchedAt = {};
+  Object.keys(schedulerState.buckets || {}).forEach((bucket) => {
+    const lastFetchedAt = schedulerState.buckets[bucket] && schedulerState.buckets[bucket].lastFetchedAt;
+    if (lastFetchedAt) snapshot.bucketFetchedAt[bucket] = lastFetchedAt;
+  });
+
   writeSchedulerState(schedulerState);
 
   fs.mkdirSync(path.dirname(OUT), { recursive: true });

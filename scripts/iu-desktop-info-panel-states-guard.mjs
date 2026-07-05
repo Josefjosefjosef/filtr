@@ -71,6 +71,39 @@ assert(staleItem.state === "stale", "eur must be stale with old generatedAt");
 assert(staleItem.primaryValue.includes("nejsou aktuální"), "stale message");
 lines.push("STATE_STALE=PASS");
 
+const staleBucketMeta = {
+  generatedAt: new Date().toISOString(),
+  bucketFetchedAt: { cnb: "2020-01-01T00:00:00.000Z" },
+  errors: [],
+};
+const staleBucketEur = mergeInfoPanelItemForGuard(eur, {
+  isLive: true,
+  legalStatus: "verified_requires_attribution",
+  value: 25.12,
+  unit: "Kč",
+  secondaryValue: "beze změny",
+  trendDirection: "flat",
+  updatedAt: staleBucketMeta.bucketFetchedAt.cnb,
+}, staleBucketMeta);
+assert(staleBucketEur.state === "stale", "eur must be stale with old bucketFetchedAt");
+
+const freshCoinMeta = {
+  generatedAt: "2020-01-01T00:00:00.000Z",
+  bucketFetchedAt: { coingecko: new Date().toISOString() },
+  errors: [],
+};
+const freshBtc = mergeInfoPanelItemForGuard(bitcoin, {
+  isLive: true,
+  legalStatus: "verified_requires_attribution",
+  value: 2500000,
+  unit: "Kč",
+  secondaryValue: "beze změny",
+  trendDirection: "flat",
+  updatedAt: freshCoinMeta.bucketFetchedAt.coingecko,
+}, freshCoinMeta);
+assert(freshBtc.state === "live", "bitcoin must be live when coingecko bucket is fresh");
+lines.push("STATE_BUCKET_FRESHNESS=PASS");
+
 const errorEur = mergeInfoPanelItemForGuard(eur, null, errorMeta);
 const errorUsd = mergeInfoPanelItemForGuard(usd, null, errorMeta);
 assert(errorEur.state === "error", "eur must be error when cnb snapshot fails");

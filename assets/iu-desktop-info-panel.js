@@ -131,12 +131,16 @@ function buildPanelHtml(items, opts) {
   const panelId = options.panelId || PANEL_ID;
   const panelClass = options.panelClass || "iuDesktopInfoPanel";
   const showNav = options.showNav !== false;
+  const showScrollHint = options.showScrollHint === true;
   const segments = items.map(buildSegment).join("");
   const navPrev = showNav
     ? `<button type="button" class="iuDesktopInfoPanel__nav iuDesktopInfoPanel__nav--prev" data-iu-info-panel-nav="prev" aria-label="Předchozí informace" hidden>‹</button>`
     : "";
   const navNext = showNav
     ? `<button type="button" class="iuDesktopInfoPanel__nav iuDesktopInfoPanel__nav--next" data-iu-info-panel-nav="next" aria-label="Další informace" hidden>›</button>`
+    : "";
+  const scrollHint = showScrollHint
+    ? `<div class="iuDesktopInfoPanel__scrollHint" data-iu-info-panel-scroll-hint aria-hidden="true"><span class="iuDesktopInfoPanel__scrollHintChevron" aria-hidden="true">›</span></div>`
     : "";
   return (
     `<section id="${panelId}" class="${panelClass} iuDesktopInfoPanel" aria-label="Rychlý přehled orientačních údajů">` +
@@ -146,9 +150,9 @@ function buildPanelHtml(items, opts) {
     `<div class="iuDesktopInfoPanel__track">${segments}</div>` +
     `</div>` +
     navNext +
+    scrollHint +
     `</div>` +
     buildSourcesRow(items) +
-    `<p class="iuDesktopInfoPanel__legal">${esc(IU_INFO_PANEL_DISCLAIMER)}</p>` +
     `</section>`
   );
 }
@@ -284,6 +288,16 @@ function scrollPanelBy(panel, direction) {
   window.setTimeout(() => updateNavState(panel), 320);
 }
 
+function updateScrollHintState(panel) {
+  if (!panel) return;
+  const scroll = panel.querySelector(".iuDesktopInfoPanel__scroll");
+  const hint = panel.querySelector("[data-iu-info-panel-scroll-hint]");
+  if (!scroll || !hint) return;
+  const maxScroll = Math.max(0, scroll.scrollWidth - scroll.clientWidth);
+  const atEnd = scroll.scrollLeft >= maxScroll - 2;
+  hint.classList.toggle("iuDesktopInfoPanel__scrollHint--hidden", maxScroll <= 2 || atEnd);
+}
+
 function bindPanelNav(panel) {
   if (!panel || panel.dataset.iuNavBound === "1") return;
   panel.dataset.iuNavBound = "1";
@@ -296,10 +310,27 @@ function bindPanelNav(panel) {
     scrollPanelBy(panel, dir);
   });
   if (scroll) {
-    scroll.addEventListener("scroll", () => updateNavState(panel), { passive: true });
+    scroll.addEventListener(
+      "scroll",
+      () => {
+        updateNavState(panel);
+        updateScrollHintState(panel);
+      },
+      { passive: true }
+    );
   }
-  window.addEventListener("resize", () => updateNavState(panel), { passive: true });
-  requestAnimationFrame(() => updateNavState(panel));
+  window.addEventListener(
+    "resize",
+    () => {
+      updateNavState(panel);
+      updateScrollHintState(panel);
+    },
+    { passive: true }
+  );
+  requestAnimationFrame(() => {
+    updateNavState(panel);
+    updateScrollHintState(panel);
+  });
 }
 
 function hideInfoPanelMount(mount) {
@@ -474,6 +505,14 @@ async function renderPanelInner() {
     mobileMount.setAttribute("aria-busy", "true");
     mobileMount.style.visibility = "visible";
     mobileMount.removeAttribute("data-iu-info-panel-ready");
+    mobileMount.innerHTML = buildPanelHtml(getLoadingInfoPanelItems(), {
+      showNav: false,
+      panelId: MOBILE_PANEL_ID,
+      panelClass: "iuMobileInfoPanel",
+      showScrollHint: true,
+    });
+    const mobilePanelLoading = document.getElementById(MOBILE_PANEL_ID);
+    if (mobilePanelLoading) bindPanelNav(mobilePanelLoading);
   }
 
   ensureDetailPortal();
@@ -501,9 +540,15 @@ async function renderPanelInner() {
       showNav: false,
       panelId: MOBILE_PANEL_ID,
       panelClass: "iuMobileInfoPanel",
+      showScrollHint: true,
     });
     mobileMount.setAttribute("data-iu-info-panel-ready", "1");
     mobileMount.removeAttribute("aria-busy");
+    const mobilePanel = document.getElementById(MOBILE_PANEL_ID);
+    if (mobilePanel) {
+      bindPanelNav(mobilePanel);
+      updateScrollHintState(mobilePanel);
+    }
   }
 
   ensureDetailPortal();

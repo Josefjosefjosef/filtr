@@ -147,6 +147,15 @@ if (!legalDoc.includes("DataStat")) {
 if (!panelJs.includes("buildSourcesRow")) {
   failures.push("panel JS must render unified sources row");
 }
+if (panelJs.includes("iuDesktopInfoPanel__legal")) {
+  failures.push("panel JS must not render disclaimer on main panel (detail dialog only)");
+}
+if (!panelJs.includes("showScrollHint")) {
+  failures.push("panel JS must support mobile scroll hint");
+}
+if (!panelData.includes("bucketFetchedAt")) {
+  failures.push("data layer must use bucketFetchedAt for per-source freshness");
+}
 if (!panelJs.includes("getInfoPanelUserContent")) {
   failures.push("panel JS must use user-facing dialog content");
 }
@@ -173,6 +182,12 @@ if (!panelCss.includes("text-overflow: unset")) {
 const mobileCss = read("assets/iu-mobile-info-panel.css");
 if (!mobileCss.includes("max-height: none")) {
   failures.push("mobile panel CSS must use auto height (max-height none)");
+}
+if (!mobileCss.includes("iuDesktopInfoPanel__sources")) {
+  failures.push("mobile panel CSS must style sources row");
+}
+if (!mobileCss.includes("iuDesktopInfoPanel__scrollHint")) {
+  failures.push("mobile panel CSS must define horizontal scroll hint");
 }
 
 if (!fs.existsSync(path.join(ROOT, "projects/data/info_panel_snapshot.json"))) {

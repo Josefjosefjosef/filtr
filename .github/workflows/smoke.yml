@@ -117,6 +117,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-desktop-info-panel-validation-guard
 
+      - name: Info panel mobile polish guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-info-panel-mobile-polish-guard
+
       - name: Article entrypoint parity guard (chunked loading V1)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.custom_buttons_scroll_only != 'true'
         run: npm run article-entrypoint-parity-guard
