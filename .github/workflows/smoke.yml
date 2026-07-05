@@ -122,11 +122,11 @@ jobs:
         run: npm run iu-info-panel-mobile-polish-guard
 
       - name: Article entrypoint parity guard (chunked loading V1)
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.custom_buttons_scroll_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.custom_buttons_scroll_only != 'true'
         run: npm run article-entrypoint-parity-guard
 
       - name: Article long-session memory guard (Task 66)
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.custom_buttons_scroll_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.custom_buttons_scroll_only != 'true'
         run: npm run iu-article-long-session-memory-guard
 
       - name: Article load-more stress guard (Task 66)

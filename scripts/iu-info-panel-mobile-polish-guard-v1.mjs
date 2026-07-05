@@ -19,7 +19,7 @@ const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
 
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8896", 10);
+const PORT = parseInt(process.env.IU_GUARD_PORT || "8894", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const VIEWPORTS = [
   { name: "MOBILE", width: 390, height: 844 },
