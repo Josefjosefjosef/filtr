@@ -46,7 +46,7 @@ const REQUIRED = [
   {
     id: "index_cache_bust_unified",
     file: INDEX,
-    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=datovka-mobile-overlay-v1-20260705/,
+    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=custom-buttons-mobile-scroll-v1-20260705/,
   },
 ];
 

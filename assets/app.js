@@ -40486,7 +40486,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ".iu-custom-buttons-overlay-panel:not([hidden]){position:fixed;inset:0;z-index:10026;display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box;pointer-events:auto;overflow:hidden}" +
     ".iu-custom-buttons-overlay-panel:not([hidden]) .iu-custom-buttons-overlay-cardShell{pointer-events:auto;width:min(720px,calc(100vw - 24px));max-height:min(88dvh,820px);display:flex;flex-direction:column;min-height:0;box-sizing:border-box;overflow:hidden}" +
     ".iu-custom-buttons-overlay-panel--fullscreen:not([hidden]){padding:0;align-items:stretch;justify-content:stretch}" +
-    ".iu-custom-buttons-overlay-panel--fullscreen:not([hidden]) .iu-custom-buttons-overlay-cardShell{width:100%;max-width:none;max-height:none;height:100dvh;border-radius:0}" +
+    ".iu-custom-buttons-overlay-panel--fullscreen:not([hidden]) .iu-custom-buttons-overlay-cardShell{width:100%;max-width:none;max-height:100%;height:100%;border-radius:0}" +
     ".iu-custom-buttons-overlay-inner{display:flex;flex-direction:column;min-height:0;height:100%;background:rgba(255,255,255,.98);border:1px solid rgba(20,40,70,.12);border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.12),0 2px 10px rgba(0,0,0,.08);overflow:hidden}" +
     ".iu-custom-buttons-overlay-panel--fullscreen .iu-custom-buttons-overlay-inner{border-radius:0;border-left:0;border-right:0;box-shadow:none}" +
     ".iu-custom-buttons-overlay-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(20,40,70,.1);flex:0 0 auto}" +
