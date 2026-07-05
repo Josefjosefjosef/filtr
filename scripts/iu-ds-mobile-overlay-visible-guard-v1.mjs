@@ -46,7 +46,7 @@ function staticGate() {
     },
     {
       id: "index_cache_bust",
-      pass: /iu-overlay-mobile-tablet-unified-v1\.css\?v=datovka-mobile-overlay-v1-20260705/.test(index),
+      pass: /iu-overlay-mobile-tablet-unified-v1\.css\?v=custom-buttons-mobile-scroll-v1-20260705/.test(index),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);

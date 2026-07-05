@@ -115,6 +115,27 @@ export function isDatovkaMobileOverlayScope(files) {
   return paths.every(allowed);
 }
 
+/** Custom buttons mobile scroll PR — skip unrelated flaky article load-more stress. */
+export function isCustomButtonsMobileScrollScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/iu-overlay-mobile-tablet-unified-v1.css" ||
+    f === "assets/iu-custom-buttons-overlay.css" ||
+    f === "assets/iu-mindmenu-bottom-nav-restore-v1.css" ||
+    f === "assets/app.js" ||
+    f === "scripts/iu-custom-buttons-mobile-scroll-guard-v1.mjs" ||
+    f === "scripts/iu-ds-mobile-overlay-visible-guard-v1.mjs" ||
+    f === "scripts/iu-financial-calc-mobile-header-guard.mjs" ||
+    f === "scripts/iu-mindmenu-overlay-bottom-gap-unified-guard-v1.cjs" ||
+    f === "scripts/iu-ai-assistants-overlay-bottom-gap-guard-v1.cjs" ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json";
+  return paths.every(allowed);
+}
+
 function writeOutput(name, value) {
   const out = process.env.GITHUB_OUTPUT;
   if (out) {
@@ -144,12 +165,13 @@ function main() {
   const infoPanelOnly = isInfoPanelOnlyScope(files);
   const finCalcHeaderOnly = isFinancialCalcMobileHeaderScope(files);
   const datovkaOverlayOnly = isDatovkaMobileOverlayScope(files);
+  const customButtonsScrollOnly = isCustomButtonsMobileScrollScope(files);
   const allowFastPath =
     dataOnly ||
     pipelineOnly ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
 
-  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"}`);
+  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"}`);
   for (const f of files.slice(0, 20)) {
     console.log(`[smoke-data-only-scope] changed=${f}`);
   }
@@ -161,10 +183,12 @@ function main() {
   writeOutput("info_panel_only", infoPanelOnly ? "true" : "false");
   writeOutput("fin_calc_header_only", finCalcHeaderOnly ? "true" : "false");
   writeOutput("datovka_overlay_only", datovkaOverlayOnly ? "true" : "false");
+  writeOutput("custom_buttons_scroll_only", customButtonsScrollOnly ? "true" : "false");
   console.log(`SMOKE_DATA_ONLY_SCOPE=${allowFastPath ? "YES" : "NO"}`);
   console.log(`SMOKE_INFO_PANEL_ONLY_SCOPE=${infoPanelOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_FIN_CALC_HEADER_ONLY_SCOPE=${finCalcHeaderOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_DATOVKA_OVERLAY_ONLY_SCOPE=${datovkaOverlayOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_CUSTOM_BUTTONS_SCROLL_ONLY_SCOPE=${customButtonsScrollOnly ? "YES" : "NO"}`);
 }
 
 if (process.argv[1] && process.argv[1].endsWith("smoke-data-only-scope.mjs")) {

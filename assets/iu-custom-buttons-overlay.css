@@ -13,25 +13,29 @@
   }
   #iuCustomButtonsPanel.iu-custom-buttons-overlay-panel:not([hidden]){
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: var(--iu-tool-overlay-panel-bottom, var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px)));
     z-index: 10030;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    justify-content: stretch;
+    justify-content: flex-start;
     padding: 0;
     margin: 0;
     box-sizing: border-box;
     pointer-events: none;
+    overflow: hidden;
+    height: auto;
+    max-height: calc(100dvh - var(--iu-tool-overlay-panel-bottom, var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px))));
   }
   #iuCustomButtonsPanel.iu-custom-buttons-overlay-panel:not([hidden]) .iu-custom-buttons-overlay-cardShell{
     pointer-events: auto;
     width: 100%;
     max-width: none;
-    max-height: none;
-    height: 100vh;
-    height: 100svh;
-    height: 100dvh;
+    max-height: 100%;
+    height: 100%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -68,8 +72,8 @@
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
     overscroll-behavior-y: contain;
-    padding: 14px 14px var(--iu-tool-overlay-bottom-gap, 15px);
-    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px);
+    padding: 14px 14px calc(var(--iu-tool-overlay-bottom-gap, 15px) + env(safe-area-inset-bottom, 0px));
+    scroll-padding-bottom: calc(var(--iu-tool-overlay-bottom-gap, 15px) + env(safe-area-inset-bottom, 0px));
   }
   #iuCustomButtonsPanel.iu-custom-buttons-overlay-panel:not([hidden]) :is(input, textarea, select){
     font-size: 16px !important;

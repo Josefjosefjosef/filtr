@@ -184,17 +184,21 @@
   body.iu-mobileGateOverlayOpen #iuCustomButtonsPanel .iu-custom-buttons-overlay-cardShell {
     height: 100% !important;
     max-height: 100% !important;
-    overflow-y: auto !important;
+    overflow: hidden !important;
     padding-bottom: 0 !important;
-    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px);
+    scroll-padding-bottom: 0 !important;
   }
 
-  body.iu-mobileGateOverlayOpen #iuLegalDocsScrollHost,
-  body.iu-mobileGateOverlayOpen #iuFinancialCalcScrollHost,
-  body.iu-mobileGateOverlayOpen #iuInvoiceScrollHost,
   body.iu-mobileGateOverlayOpen #iuCustomButtonsScrollHost {
-    padding-bottom: 0 !important;
-    scroll-padding-bottom: 0;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    padding-bottom: calc(var(--iu-tool-overlay-bottom-gap, 15px) + env(safe-area-inset-bottom, 0px)) !important;
+    scroll-padding-bottom: calc(var(--iu-tool-overlay-bottom-gap, 15px) + env(safe-area-inset-bottom, 0px)) !important;
+    box-sizing: border-box !important;
   }
 
   /* Zásilky */
@@ -344,14 +348,22 @@
   ) :is(
     #iuFinancialCalcPanel .iu-financial-overlay-cardShell,
     #iuLegalDocsPanel .iu-legal-overlay-cardShell,
-    #iuInvoicePanel .iu-invoice-overlay-cardShell,
-    #iuCustomButtonsPanel .iu-custom-buttons-overlay-cardShell
+    #iuInvoicePanel .iu-invoice-overlay-cardShell
   ) {
     height: 100% !important;
     max-height: 100% !important;
     overflow-y: auto !important;
     padding-bottom: 0 !important;
     scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px);
+    box-sizing: border-box !important;
+  }
+
+  body:is(.iu-custom-buttons-overlay-open, .iu-modal-open) #iuCustomButtonsPanel .iu-custom-buttons-overlay-cardShell {
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+    padding-bottom: 0 !important;
+    scroll-padding-bottom: 0 !important;
     box-sizing: border-box !important;
   }
 
@@ -364,11 +376,22 @@
   ) :is(
     #iuLegalDocsScrollHost,
     #iuFinancialCalcScrollHost,
-    #iuInvoiceScrollHost,
-    #iuCustomButtonsScrollHost
+    #iuInvoiceScrollHost
   ) {
     padding-bottom: 0 !important;
     scroll-padding-bottom: 0;
+    box-sizing: border-box !important;
+  }
+
+  body:is(.iu-custom-buttons-overlay-open, .iu-modal-open) #iuCustomButtonsScrollHost {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    padding-bottom: calc(var(--iu-tool-overlay-bottom-gap, 15px) + env(safe-area-inset-bottom, 0px)) !important;
+    scroll-padding-bottom: calc(var(--iu-tool-overlay-bottom-gap, 15px) + env(safe-area-inset-bottom, 0px)) !important;
     box-sizing: border-box !important;
   }
 
