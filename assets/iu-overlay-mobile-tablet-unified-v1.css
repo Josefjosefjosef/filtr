@@ -16,6 +16,7 @@
     --iu-tool-overlay-header-pad-inline: 12px 12px 12px 16px;
     --iu-tool-overlay-header-pad-top: calc(12px + env(safe-area-inset-top, 0px));
     --iu-tool-overlay-bottom-gap: 15px;
+    --iu-ai-overlay-bottom-gap: 10px;
     --iu-calendar-action-bar-nav-gap: 10px;
     --iu-tool-overlay-panel-bottom: var(--bottom-nav-height);
   }
@@ -281,9 +282,7 @@
     #iuQuickFeed .iu-nakup-online-feed,
     #iuQuickFeed .iuQGrid,
     #iuQuickFeed .iu-mojeSluzbyBanka,
-    #iuParcelsPopover .iu-parcels-modal-content,
-    #iu-aiPanel .iu-aiPanelBody,
-    #iu-aiPanel #iu-aiPanelCards
+    #iuParcelsPopover .iu-parcels-modal-content
   ) {
     padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
     scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
@@ -483,15 +482,6 @@
     pointer-events: auto !important;
   }
 
-  body.iu-ai-narrow-fullscreen #iu-aiPanel .iu-aiPanelBody {
-    flex: 1 1 0 !important;
-    min-height: 0 !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
-  }
-
   /* —— Part 6: Úkoly — scroll clearance jen na scroll kontejneru —— */
   body.iu-tasksOverlay-open #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dialog {
     overflow: hidden !important;
@@ -513,6 +503,74 @@
   body.iu-tasksOverlay-open #iuTasksOverlay :is(
     .iu-tasksOverlay__list,
     .iu-tasksOverlay__form
+  ) {
+    padding-bottom: 0 !important;
+    scroll-padding-bottom: 0 !important;
+  }
+
+  /* —— Part 7: AI asistenti — panel nad nav, scroll jen na body, 10px gap —— */
+  body.iu-ai-narrow-fullscreen #iu-aiPanel[data-open="1"]:not([hidden]) {
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: var(--iu-tool-overlay-panel-bottom) !important;
+    inset: auto !important;
+    transform: none !important;
+    width: 100vw !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: calc(100dvh - var(--iu-tool-overlay-panel-bottom)) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+  }
+
+  body.iu-ai-narrow-fullscreen #iu-aiPanel .iu-aiModal {
+    width: 100% !important;
+    max-width: none !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: 100% !important;
+    margin: 0 !important;
+    padding-top: env(safe-area-inset-top, 0px) !important;
+    padding-right: env(safe-area-inset-right, 0px) !important;
+    padding-bottom: 0 !important;
+    padding-left: env(safe-area-inset-left, 0px) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+  }
+
+  body.iu-ai-narrow-fullscreen #iu-aiPanel .iu-aiPanelHeader {
+    flex: 0 0 auto !important;
+  }
+
+  body.iu-ai-narrow-fullscreen #iu-aiPanel .iu-aiPanelBody {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    padding-bottom: var(--iu-ai-overlay-bottom-gap) !important;
+    scroll-padding-bottom: var(--iu-ai-overlay-bottom-gap) !important;
+  }
+
+  body.iu-ai-narrow-fullscreen #iu-aiPanel :is(
+    #iu-aiPanelCards,
+    .iu-ai-scroll-host,
+    .iuSeoText,
+    .iuAiVideos
   ) {
     padding-bottom: 0 !important;
     scroll-padding-bottom: 0 !important;

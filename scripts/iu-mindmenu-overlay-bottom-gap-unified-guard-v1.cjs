@@ -41,12 +41,12 @@ const REQUIRED = [
   {
     id: "index_cache_bust_restore",
     file: INDEX,
-    pattern: /iu-mindmenu-bottom-nav-restore-v1\.css\?v=mindmenu-overlay-bottom-gap-unified-v1-20260705/,
+    pattern: /iu-mindmenu-bottom-nav-restore-v1\.css\?v=ai-assistants-overlay-bottom-gap-v1-20260705/,
   },
   {
     id: "index_cache_bust_unified",
     file: INDEX,
-    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=mindmenu-overlay-bottom-gap-unified-v1-20260705/,
+    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=ai-assistants-overlay-bottom-gap-v1-20260705/,
   },
 ];
 
