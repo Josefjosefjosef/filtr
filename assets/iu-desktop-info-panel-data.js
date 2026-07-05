@@ -48,11 +48,28 @@ function formatUpdatedAtLabel(raw, generatedAt) {
   return "";
 }
 
+function resolveSnapshotFreshnessAnchor(catalogItem, row, snapshotMeta) {
+  const bucket = catalogItem && catalogItem.fetchBucket;
+  if (snapshotMeta && snapshotMeta.bucketFetchedAt && bucket && snapshotMeta.bucketFetchedAt[bucket]) {
+    const bucketAt = Date.parse(snapshotMeta.bucketFetchedAt[bucket]);
+    if (Number.isFinite(bucketAt)) return bucketAt;
+  }
+  if (row && row.updatedAt) {
+    const rowAt = Date.parse(row.updatedAt);
+    if (Number.isFinite(rowAt)) return rowAt;
+  }
+  if (snapshotMeta && snapshotMeta.generatedAt) {
+    const genAt = Date.parse(snapshotMeta.generatedAt);
+    if (Number.isFinite(genAt)) return genAt;
+  }
+  return NaN;
+}
+
 function isSnapshotRowStale(catalogItem, row, snapshotMeta) {
   const maxAge = catalogItem.maxAgeMs > 0 ? catalogItem.maxAgeMs : DEFAULT_MAX_AGE_MS;
-  const genAt = snapshotMeta && snapshotMeta.generatedAt ? Date.parse(snapshotMeta.generatedAt) : NaN;
-  if (!Number.isFinite(genAt)) return true;
-  return Date.now() - genAt > maxAge;
+  const anchorAt = resolveSnapshotFreshnessAnchor(catalogItem, row, snapshotMeta);
+  if (!Number.isFinite(anchorAt)) return true;
+  return Date.now() - anchorAt > maxAge;
 }
 
 function snapshotErrorAffectsItem(catalogItem, errorId) {
