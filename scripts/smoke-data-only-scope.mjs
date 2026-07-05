@@ -89,6 +89,7 @@ export function isFinancialCalcMobileHeaderScope(files) {
     f === "assets/iu-overlay-mobile-tablet-unified-v1.css" ||
     f === "scripts/iu-financial-calc-mobile-header-guard.mjs" ||
     f === "scripts/iu-mindmenu-overlay-bottom-gap-unified-guard-v1.cjs" ||
+    f === "scripts/iu-ai-assistants-overlay-bottom-gap-guard-v1.cjs" ||
     f === "scripts/smoke-data-only-scope.mjs" ||
     f === ".github/workflows/smoke.yml" ||
     f === "projects/index.html" ||
