@@ -24,8 +24,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    min-height: 172px;
-    contain: layout style;
+    min-height: 188px;
   }
 
   /* Reserve grid row before JS reveals panel — avoids reload / section-switch CLS. */
@@ -33,7 +32,7 @@
     display: block !important;
     visibility: hidden;
     pointer-events: none;
-    min-height: 172px;
+    min-height: 188px;
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeStackSeparatorTallBefore {
@@ -54,9 +53,10 @@
     position: relative;
     width: 100%;
     max-width: 100%;
-    min-height: 128px;
+    min-height: 148px;
+    height: auto;
     box-sizing: border-box;
-    padding: 16px 44px 16px 16px;
+    padding: 16px 44px 14px 16px;
     border-radius: 20px;
     border: 1px solid var(--iu-brand-blue-a25, rgba(0, 60, 255, 0.22));
     background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
@@ -74,7 +74,7 @@
 
   .iuDesktopInfoPanel__scroll {
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: visible;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     margin: 0;
@@ -148,10 +148,11 @@
 
   .iuDesktopInfoPanel__segment {
     flex: 0 0 auto;
-    min-width: 132px;
-    max-width: 156px;
-    min-height: 88px;
-    padding: 4px 14px 6px;
+    min-width: 148px;
+    max-width: 196px;
+    min-height: 96px;
+    height: auto;
+    padding: 6px 14px 8px;
     border-right: 1px solid rgba(15, 23, 42, 0.08);
     box-sizing: border-box;
   }
@@ -193,13 +194,14 @@
     min-width: 0;
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.03em;
     color: #64748b;
-    text-transform: uppercase;
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    text-transform: none;
+    line-height: 1.3;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    word-break: break-word;
   }
 
   .iuDesktopInfoPanel__sourceBtn {
@@ -242,20 +244,22 @@
     margin: 0;
     font-size: 17px;
     font-weight: 800;
-    line-height: 1.15;
+    line-height: 1.2;
     min-height: 20px;
     color: #0f172a;
     letter-spacing: -0.01em;
-    white-space: nowrap;
+    white-space: normal;
+    word-break: break-word;
   }
 
   .iuDesktopInfoPanel__trend {
     margin: 4px 0 0;
     font-size: 11px;
     font-weight: 600;
-    line-height: 1.25;
+    line-height: 1.3;
     min-height: 14px;
-    white-space: nowrap;
+    white-space: normal;
+    word-break: break-word;
   }
 
   .iuDesktopInfoPanel__trend--up {
@@ -275,17 +279,33 @@
     margin: 4px 0 0;
     font-size: 9px;
     font-weight: 500;
-    line-height: 1.3;
+    line-height: 1.35;
     color: #94a3b8;
-    white-space: nowrap;
+    white-space: normal;
+    word-break: break-word;
   }
 
   .iuDesktopInfoPanel__time--loading {
     opacity: 0.5;
   }
 
+  .iuDesktopInfoPanel__sources {
+    margin: 8px 0 0;
+    padding: 0;
+    font-size: 10px;
+    line-height: 1.45;
+    color: #64748b;
+    font-weight: 600;
+    word-break: break-word;
+  }
+
+  .iuDesktopInfoPanel__sourcesLabel {
+    font-weight: 700;
+    color: #475569;
+  }
+
   .iuDesktopInfoPanel__legal {
-    margin: 10px 0 0;
+    margin: 6px 0 0;
     padding: 0;
     font-size: 10px;
     line-height: 1.4;
@@ -304,9 +324,8 @@
   }
 }
 
-/* Detail dialog — portaled to body, above HomeCards */
-@media (min-width: 1025px) {
-  .iuDesktopInfoPanelDetail {
+/* Detail dialog — portaled to body, above HomeCards (mobil + desktop) */
+.iuDesktopInfoPanelDetail {
     position: fixed;
     inset: 0;
     z-index: 10150;
@@ -342,7 +361,7 @@
 
   .iuDesktopInfoPanelDetail__head {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
     margin-bottom: 10px;
@@ -350,9 +369,12 @@
 
   .iuDesktopInfoPanelDetail__title {
     margin: 0;
+    flex: 1 1 auto;
+    min-width: 0;
     font-size: 16px;
     font-weight: 800;
     color: #0f172a;
+    line-height: 1.35;
   }
 
   .iuDesktopInfoPanelDetail__close {
@@ -360,10 +382,13 @@
     border: 0;
     background: #f1f5f9;
     color: #334155;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    margin-left: auto;
+    flex: 0 0 auto;
     border-radius: 10px;
-    font-size: 20px;
+    font-size: 22px;
     line-height: 1;
     cursor: pointer;
   }
@@ -371,6 +396,34 @@
   .iuDesktopInfoPanelDetail__close:focus-visible {
     outline: 2px solid var(--iu-brand-blue, #003cff);
     outline-offset: 2px;
+  }
+
+  .iuDesktopInfoPanelDetail__section {
+    margin: 0 0 14px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #334155;
+  }
+
+  .iuDesktopInfoPanelDetail__sectionTitle {
+    margin: 0 0 6px;
+    font-size: 13px;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  .iuDesktopInfoPanelDetail__section--meta {
+    padding-top: 8px;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+    font-size: 12px;
+  }
+
+  .iuDesktopInfoPanelDetail__section p {
+    margin: 0 0 8px;
+  }
+
+  .iuDesktopInfoPanelDetail__section p:last-child {
+    margin-bottom: 0;
   }
 
   .iuDesktopInfoPanelDetail__lead {
@@ -427,5 +480,19 @@
     font-size: 11px;
     line-height: 1.45;
     color: #64748b;
+  }
+
+@media (min-width: 1025px) {
+  .iuDesktopInfoPanelDetail {
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .iuDesktopInfoPanelDetail__card {
+    width: min(460px, 100%);
+    max-height: min(82vh, 560px);
+    border-radius: 16px;
+    padding: 16px 18px 18px;
   }
 }

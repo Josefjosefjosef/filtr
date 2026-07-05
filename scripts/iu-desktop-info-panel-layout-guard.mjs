@@ -144,6 +144,37 @@ if (!legalDoc.includes("DataStat")) {
   failures.push("legal review doc must document CSU DataStat sources");
 }
 
+if (!panelJs.includes("buildSourcesRow")) {
+  failures.push("panel JS must render unified sources row");
+}
+if (!panelJs.includes("getInfoPanelUserContent")) {
+  failures.push("panel JS must use user-facing dialog content");
+}
+if (IU_INFO_PANEL_CATALOG.some((item) => !item.title || !item.publishFrequency || !item.providerShortName)) {
+  failures.push("catalog items must include title, publishFrequency and providerShortName");
+}
+if (!fs.existsSync(path.join(ROOT, "assets/iu-info-panel-user-content.js"))) {
+  failures.push("missing assets/iu-info-panel-user-content.js");
+}
+if (!fs.existsSync(path.join(ROOT, "scripts/info_panel_scheduler.mjs"))) {
+  failures.push("missing scripts/info_panel_scheduler.mjs");
+}
+if (!fs.existsSync(path.join(ROOT, "projects/data/info_panel_scheduler_state.json"))) {
+  failures.push("missing projects/data/info_panel_scheduler_state.json");
+}
+
+if (!panelCss.includes("iuDesktopInfoPanel__sources")) {
+  failures.push("panel CSS must define unified sources row");
+}
+if (!panelCss.includes("text-overflow: unset")) {
+  failures.push("panel CSS must allow full label visibility (no ellipsis clipping)");
+}
+
+const mobileCss = read("assets/iu-mobile-info-panel.css");
+if (!mobileCss.includes("max-height: none")) {
+  failures.push("mobile panel CSS must use auto height (max-height none)");
+}
+
 if (!fs.existsSync(path.join(ROOT, "projects/data/info_panel_snapshot.json"))) {
   failures.push("missing projects/data/info_panel_snapshot.json");
 }

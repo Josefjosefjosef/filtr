@@ -62,6 +62,25 @@ export function isFastPoolPipelineScope(files) {
   );
 }
 
+/** Info panel refactor PRs — skip unrelated flaky article load-more stress. */
+export function isInfoPanelOnlyScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f.startsWith("assets/iu-desktop-info-panel") ||
+    f.startsWith("assets/iu-mobile-info-panel") ||
+    f === "assets/iu-info-panel-user-content.js" ||
+    f.startsWith("scripts/info_panel") ||
+    f === "scripts/build_info_panel_snapshot.mjs" ||
+    f.startsWith("scripts/iu-desktop-info-panel-") ||
+    f === ".github/workflows/update-info-panel-snapshot.yml" ||
+    f === ".github/workflows/smoke.yml" ||
+    f.startsWith("projects/data/info_panel_") ||
+    f === "projects/index.html" ||
+    f === "scripts/smoke-data-only-scope.mjs";
+  return paths.every(allowed);
+}
+
 function writeOutput(name, value) {
   const out = process.env.GITHUB_OUTPUT;
   if (out) {
@@ -88,12 +107,13 @@ function main() {
 
   const dataOnly = isDataOnlyScope(files);
   const pipelineOnly = isFastPoolPipelineScope(files);
+  const infoPanelOnly = isInfoPanelOnlyScope(files);
   const allowFastPath =
     dataOnly ||
     pipelineOnly ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
 
-  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"}`);
+  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"}`);
   for (const f of files.slice(0, 20)) {
     console.log(`[smoke-data-only-scope] changed=${f}`);
   }
@@ -102,7 +122,9 @@ function main() {
   }
 
   writeOutput("data_only", allowFastPath ? "true" : "false");
+  writeOutput("info_panel_only", infoPanelOnly ? "true" : "false");
   console.log(`SMOKE_DATA_ONLY_SCOPE=${allowFastPath ? "YES" : "NO"}`);
+  console.log(`SMOKE_INFO_PANEL_ONLY_SCOPE=${infoPanelOnly ? "YES" : "NO"}`);
 }
 
 if (process.argv[1] && process.argv[1].endsWith("smoke-data-only-scope.mjs")) {

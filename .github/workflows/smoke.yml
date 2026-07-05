@@ -126,7 +126,7 @@ jobs:
         run: npm run iu-article-long-session-memory-guard
 
       - name: Article load-more stress guard (Task 66)
-        if: steps.scope.outputs.data_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true'
         run: npm run iu-article-load-more-stress-guard
 
       - name: Local data protection guard
