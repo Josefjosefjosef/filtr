@@ -137,6 +137,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-mindmenu-bottom-nav-restore-guard
 
+      - name: Mobile form card + datovka safe-area guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run silver-mobile-form-card-ds-safe-area-guard
+
       - name: Mobile/tablet stability guards (CLS + nav + media)
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-mobile-stability-guards
