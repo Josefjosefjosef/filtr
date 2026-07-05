@@ -1,65 +1,65 @@
 {
-  "version": 3,
-  "generatedAt": "2026-06-30T14:40:01.814Z",
+  "version": 4,
+  "generatedAt": "2026-07-05T07:26:30.777Z",
   "catalogCount": 32,
   "items": {
     "eur_czk": {
-      "value": 24.26,
+      "value": 24.195,
       "unit": "Kč",
       "primaryLabel": "",
-      "secondaryValue": "beze změny",
-      "trendDirection": "flat",
-      "updatedAt": "30.06.2026",
+      "secondaryValue": "▼ 0.07",
+      "trendDirection": "down",
+      "updatedAt": "03.07.2026",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
     "usd_czk": {
-      "value": 21.287,
+      "value": 21.13,
       "unit": "Kč",
       "primaryLabel": "",
-      "secondaryValue": "beze změny",
-      "trendDirection": "flat",
-      "updatedAt": "30.06.2026",
+      "secondaryValue": "▼ 0.16",
+      "trendDirection": "down",
+      "updatedAt": "03.07.2026",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
     "bitcoin": {
-      "value": 1244978,
+      "value": 1326206,
       "unit": "Kč",
       "primaryLabel": "",
-      "secondaryValue": "▼ 1.22 %",
-      "trendDirection": "down",
-      "updatedAt": "2026-06-30T14:40:01.814Z",
+      "secondaryValue": "▲ 0.34 %",
+      "trendDirection": "up",
+      "updatedAt": "2026-07-05T07:26:30.777Z",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
     "gold": {
-      "value": 85901,
+      "value": 88014,
       "unit": "Kč",
       "primaryLabel": "PAX Gold",
-      "secondaryValue": "▲ 0.65 %",
+      "secondaryValue": "▲ 0.06 %",
       "trendDirection": "up",
-      "updatedAt": "2026-06-30T14:40:01.814Z",
+      "updatedAt": "2026-07-05T07:26:30.777Z",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
     "fuel": {
-      "value": 38.82,
+      "value": 38.77,
       "unit": "Kč/l",
       "primaryLabel": "Natural 95",
-      "secondaryValue": "▼ 1.10",
+      "secondaryValue": "▼ 0.05",
       "trendDirection": "down",
-      "updatedAt": "26. týden 2026",
+      "updatedAt": "27. týden 2026",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
     "transport": {
-      "value": 35.64,
+      "value": 35.06,
       "unit": "Kč/l",
       "primaryLabel": "Motorová nafta",
-      "secondaryValue": "▼ 2.18",
+      "secondaryValue": "▼ 0.58",
       "trendDirection": "down",
-      "updatedAt": "26. týden 2026",
+      "updatedAt": "27. týden 2026",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
@@ -324,5 +324,37 @@
       "legalStatus": "verified_requires_attribution"
     }
   },
-  "errors": []
+  "errors": [],
+  "scheduler": {
+    "checkedBuckets": [
+      "csu_fuel",
+      "cnb",
+      "csu_coicop",
+      "coingecko",
+      "csu_inflation",
+      "csu_labor_reg",
+      "csu_wage_q",
+      "csu_wage_y",
+      "csu_gdp",
+      "csu_industry",
+      "csu_construction",
+      "csu_retail",
+      "csu_agriculture",
+      "csu_employment",
+      "csu_population",
+      "csu_births",
+      "csu_deaths",
+      "csu_marriages",
+      "csu_divorces",
+      "csu_foreigners",
+      "csu_seniors",
+      "csu_migration",
+      "csu_education",
+      "csu_health",
+      "csu_crime",
+      "csu_elections",
+      "csu_environment"
+    ],
+    "skippedBuckets": []
+  }
 }

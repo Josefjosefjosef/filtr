@@ -23,12 +23,12 @@ jobs:
 
       - name: Commit snapshot if changed
         run: |
-          if git diff --quiet -- projects/data/info_panel_snapshot.json; then
+          if git diff --quiet -- projects/data/info_panel_snapshot.json projects/data/info_panel_scheduler_state.json; then
             echo "No snapshot changes"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add projects/data/info_panel_snapshot.json
+          git add projects/data/info_panel_snapshot.json projects/data/info_panel_scheduler_state.json
           git commit -m "chore: refresh info panel market snapshot"
           git push

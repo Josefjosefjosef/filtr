@@ -7,6 +7,13 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { IU_INFO_PANEL_CATALOG } from "../assets/iu-desktop-info-panel-catalog.js";
+import {
+  bucketContentHash,
+  bucketsDueForCheck,
+  readSchedulerState,
+  touchBucketCheck,
+  writeSchedulerState,
+} from "./info_panel_scheduler.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -695,44 +702,126 @@ function readPrevious() {
   }
 }
 
+const BUCKET_FETCHERS = {
+  cnb: fetchCnb,
+  coingecko: fetchCoinGecko,
+  csu_fuel: fetchCsuFuel,
+  csu_coicop: fetchCsuCoicop,
+  csu_inflation: fetchCsuInflation,
+  csu_labor_reg: fetchCsuLaborReg,
+  csu_wage_q: fetchCsuWageQuarterly,
+  csu_wage_y: fetchCsuWageYearly,
+  csu_gdp: fetchCsuGdp,
+  csu_industry: fetchCsuIndustry,
+  csu_construction: fetchCsuConstruction,
+  csu_retail: fetchCsuRetail,
+  csu_agriculture: fetchCsuAgriculture,
+  csu_employment: fetchCsuEmployment,
+  csu_population: fetchCsuPopulation,
+  csu_births: fetchCsuBirths,
+  csu_deaths: fetchCsuDeaths,
+  csu_marriages: fetchCsuMarriages,
+  csu_divorces: fetchCsuDivorces,
+  csu_foreigners: fetchCsuForeigners,
+  csu_seniors: fetchCsuSeniors,
+  csu_migration: fetchCsuMigration,
+  csu_education: fetchCsuEducation,
+  csu_health: fetchCsuHealth,
+  csu_crime: fetchCsuCrime,
+  csu_elections: fetchCsuElections,
+  csu_environment: fetchCsuEnvironment,
+};
+
+function copyPrevErrorsExcept(snapshot, prev, skipBuckets) {
+  if (!prev || !Array.isArray(prev.errors)) return;
+  prev.errors.forEach((err) => {
+    if (!err || !err.id) return;
+    if (skipBuckets.has(err.id)) return;
+    if (snapshot.errors.some((e) => e.id === err.id)) return;
+    snapshot.errors.push({ ...err });
+  });
+}
+
 async function main() {
   const prev = readPrevious();
   const generatedAt = new Date().toISOString();
-  const snapshot = { version: 3, generatedAt, catalogCount: IU_INFO_PANEL_CATALOG.length, items: {}, errors: [] };
+  const nowMs = Date.parse(generatedAt);
+  const schedulerState = readSchedulerState();
+  const dueBuckets = bucketsDueForCheck(nowMs, schedulerState);
+  const fetchedBuckets = new Set();
 
-  await fetchCnb(snapshot, prev);
-  await fetchCoinGecko(snapshot);
-  await fetchCsuFuel(snapshot);
-  await fetchCsuCoicop(snapshot);
-  await fetchCsuInflation(snapshot);
-  await fetchCsuLaborReg(snapshot);
-  await fetchCsuWageQuarterly(snapshot);
-  await fetchCsuWageYearly(snapshot);
-  await fetchCsuGdp(snapshot);
-  await fetchCsuIndustry(snapshot);
-  await fetchCsuConstruction(snapshot);
-  await fetchCsuRetail(snapshot);
-  await fetchCsuAgriculture(snapshot);
-  await fetchCsuEmployment(snapshot);
-  await fetchCsuPopulation(snapshot);
-  await fetchCsuBirths(snapshot);
-  await fetchCsuDeaths(snapshot);
-  await fetchCsuMarriages(snapshot);
-  await fetchCsuDivorces(snapshot);
-  await fetchCsuForeigners(snapshot);
-  await fetchCsuSeniors(snapshot);
-  await fetchCsuMigration(snapshot);
-  await fetchCsuEducation(snapshot);
-  await fetchCsuHealth(snapshot);
-  await fetchCsuCrime(snapshot);
-  await fetchCsuElections(snapshot);
-  await fetchCsuEnvironment(snapshot);
+  const snapshot = {
+    version: 4,
+    generatedAt,
+    catalogCount: IU_INFO_PANEL_CATALOG.length,
+    items: {},
+    errors: [],
+    scheduler: { checkedBuckets: dueBuckets, skippedBuckets: [] },
+  };
+
+  if (prev && prev.items) {
+    Object.keys(prev.items).forEach((id) => {
+      snapshot.items[id] = { ...prev.items[id] };
+    });
+  }
+  if (prev && Array.isArray(prev.errors)) {
+    snapshot.errors = prev.errors.map((e) => ({ ...e }));
+  }
+
+  for (const bucket of dueBuckets) {
+    const fetcher = BUCKET_FETCHERS[bucket];
+    if (!fetcher) continue;
+    fetchedBuckets.add(bucket);
+    touchBucketCheck(schedulerState, bucket, generatedAt, {});
+
+    const bucketIds = IU_INFO_PANEL_CATALOG.filter((c) => c.fetchBucket === bucket).map((c) => c.id);
+    const beforeItems = {};
+    bucketIds.forEach((id) => {
+      if (snapshot.items[id]) beforeItems[id] = { ...snapshot.items[id] };
+    });
+    const beforeErrorCount = snapshot.errors.length;
+    const prevHash = schedulerState.buckets[bucket] && schedulerState.buckets[bucket].contentHash;
+
+    await fetcher(snapshot, prev);
+    const newHash = bucketContentHash(snapshot.items, bucket);
+
+    if (prevHash && prevHash === newHash && prev) {
+      bucketIds.forEach((id) => {
+        if (beforeItems[id]) snapshot.items[id] = beforeItems[id];
+        else delete snapshot.items[id];
+      });
+      snapshot.errors = snapshot.errors.filter((err, idx) => idx < beforeErrorCount);
+      touchBucketCheck(schedulerState, bucket, generatedAt, {
+        lastFetchedAt: (schedulerState.buckets[bucket] && schedulerState.buckets[bucket].lastFetchedAt) || generatedAt,
+        contentHash: prevHash,
+        fetchSkipped: true,
+      });
+      snapshot.scheduler.skippedBuckets.push(bucket);
+    } else {
+      touchBucketCheck(schedulerState, bucket, generatedAt, {
+        lastFetchedAt: generatedAt,
+        contentHash: newHash,
+        fetchSkipped: false,
+      });
+    }
+  }
+
+  copyPrevErrorsExcept(snapshot, prev, fetchedBuckets);
+
+  writeSchedulerState(schedulerState);
 
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
   const tmp = OUT + ".tmp";
   fs.writeFileSync(tmp, JSON.stringify(snapshot, null, 2) + "\n", "utf8");
   fs.renameSync(tmp, OUT);
-  console.log("info_panel_snapshot_ok", OUT, Object.keys(snapshot.items).length, snapshot.errors.length);
+  console.log(
+    "info_panel_snapshot_ok",
+    OUT,
+    Object.keys(snapshot.items).length,
+    snapshot.errors.length,
+    "due=" + dueBuckets.length,
+    "skipped=" + snapshot.scheduler.skippedBuckets.length
+  );
 }
 
 main().catch((err) => {

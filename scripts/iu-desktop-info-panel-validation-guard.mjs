@@ -223,11 +223,12 @@ async function testSourceDialogs(page) {
       const text = body ? body.textContent || "" : "";
       const links = body ? body.querySelectorAll("a[href^='http']") : [];
       const hasProvider = text.includes("Poskytovatel");
-      const hasType = text.includes("Typ dat");
-      const hasLicense = text.includes("Licence");
+      const hasMeaning = text.includes("Co to znamená");
+      const hasImportance = text.includes("Proč je to důležité");
       const hasDisclaimer = text.includes("orientaci");
       const hasOfficial = Array.from(links).some((a) => /Oficiální zdroj/i.test(a.textContent || ""));
-      const hasTerms = Array.from(links).some((a) => /Podmínky/i.test(a.textContent || ""));
+      const closeBtn = d.querySelector(".iuDesktopInfoPanelDetail__close");
+      const closeOnRight = closeBtn && closeBtn.classList.contains("iuDesktopInfoPanelDetail__close");
       const dialogRole = d.getAttribute("role") === "dialog";
       const modal = d.getAttribute("aria-modal") === "true";
       const onBody = d.parentElement === document.body;
@@ -243,22 +244,22 @@ async function testSourceDialogs(page) {
       return {
         ok:
           hasProvider &&
-          hasType &&
-          hasLicense &&
+          hasMeaning &&
+          hasImportance &&
           hasDisclaimer &&
           hasOfficial &&
-          hasTerms &&
+          closeOnRight &&
           dialogRole &&
           modal &&
           onBody &&
           aboveHomecards &&
           zIndex >= 10100,
         hasProvider,
-        hasType,
-        hasLicense,
+        hasMeaning,
+        hasImportance,
         hasDisclaimer,
         hasOfficial,
-        hasTerms,
+        closeOnRight,
         dialogRole,
         modal,
         onBody,
@@ -475,7 +476,7 @@ async function main() {
       const btns = document.querySelectorAll("[data-iu-info-panel-source]");
       const labels = Array.from(btns).every((b) => {
         const al = b.getAttribute("aria-label") || "";
-        return al.includes("Zdroj dat");
+        return al.includes("Informace o ukazateli");
       });
       const scroll = document.querySelector(".iuDesktopInfoPanel__scroll");
       const scrollRegion = scroll && scroll.getAttribute("role") === "region";

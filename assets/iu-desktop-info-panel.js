@@ -7,6 +7,7 @@ import {
   getLoadingInfoPanelItems,
   loadInfoPanelItems,
 } from "./iu-desktop-info-panel-data.js";
+import { getInfoPanelUserContent } from "./iu-info-panel-user-content.js";
 
 const MOUNT_ID = "iuDesktopInfoPanelMount";
 const MOBILE_MOUNT_ID = "iuMobileInfoPanelMount";
@@ -67,7 +68,25 @@ function stateClass(state) {
   return "iuDesktopInfoPanel__segment--" + s;
 }
 
+function displayTitle(item) {
+  return item && (item.title || item.label) ? String(item.title || item.label) : "";
+}
+
+function buildSourcesRow(items) {
+  const names = [];
+  const seen = new Set();
+  items.forEach((item) => {
+    const key = item && item.providerShortName;
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    names.push(key);
+  });
+  if (!names.length) return "";
+  return `<p class="iuDesktopInfoPanel__sources"><span class="iuDesktopInfoPanel__sourcesLabel">Zdroje dat:</span> ${esc(names.join(" • "))}</p>`;
+}
+
 function buildSegment(item) {
+  const cardTitle = displayTitle(item);
   const primaryLine = item.primaryLabel
     ? `<span class="iuDesktopInfoPanel__primaryLabel">${esc(item.primaryLabel)}</span>`
     : "";
@@ -81,8 +100,8 @@ function buildSegment(item) {
     `<article class="iuDesktopInfoPanel__segment ${stateClass(item.state)}" data-iu-info-panel-id="${esc(item.id)}" data-iu-info-panel-state="${esc(item.state)}" data-iu-info-panel-live="${liveAttr}">` +
     `<div class="iuDesktopInfoPanel__segmentHead">` +
     `<span class="iuDesktopInfoPanel__icon" aria-hidden="true">${esc(item.icon)}</span>` +
-    `<span class="iuDesktopInfoPanel__label">${esc(item.label)}</span>` +
-    `<button type="button" class="iuDesktopInfoPanel__sourceBtn" data-iu-info-panel-source="${esc(item.id)}" aria-label="Zdroj dat: ${esc(item.label)}" title="Zdroj dat">ⓘ</button>` +
+    `<span class="iuDesktopInfoPanel__label">${esc(cardTitle)}</span>` +
+    `<button type="button" class="iuDesktopInfoPanel__sourceBtn" data-iu-info-panel-source="${esc(item.id)}" aria-label="Informace o ukazateli: ${esc(cardTitle)}" title="Informace o ukazateli">ⓘ</button>` +
     `</div>` +
     primaryLine +
     `<p class="iuDesktopInfoPanel__value">${esc(item.primaryValue)}</p>` +
@@ -99,7 +118,7 @@ function buildDetailHtml() {
     `<div class="iuDesktopInfoPanelDetail__card" role="document">` +
     `<header class="iuDesktopInfoPanelDetail__head">` +
     `<h3 id="${DETAIL_ID}Title" class="iuDesktopInfoPanelDetail__title"></h3>` +
-    `<button type="button" class="iuDesktopInfoPanelDetail__close" data-iu-info-panel-detail-close="button" aria-label="Zavřít">×</button>` +
+    `<button type="button" class="iuDesktopInfoPanelDetail__close" data-iu-info-panel-detail-close="button" aria-label="Zavřít dialog">×</button>` +
     `</header>` +
     `<div class="iuDesktopInfoPanelDetail__body"></div>` +
     `</div>` +
@@ -128,6 +147,7 @@ function buildPanelHtml(items, opts) {
     `</div>` +
     navNext +
     `</div>` +
+    buildSourcesRow(items) +
     `<p class="iuDesktopInfoPanel__legal">${esc(IU_INFO_PANEL_DISCLAIMER)}</p>` +
     `</section>`
   );
@@ -146,17 +166,6 @@ function ensureDetailPortal() {
   return dlg;
 }
 
-function legalStatusLabel(status) {
-  const map = {
-    verified_free_ok: "Ověřeno — lze použít",
-    verified_requires_attribution: "Ověřeno — vyžaduje uvedení zdroje",
-    verified_not_allowed: "Ověřeno — nelze použít",
-    pending_review: "Čeká na ověření",
-    placeholder_only: "Pouze placeholder",
-  };
-  return map[status] || String(status || "neuvedeno");
-}
-
 function openDetail(item, sourceBtn) {
   const dlg = ensureDetailPortal();
   if (!dlg || !item) return;
@@ -164,31 +173,53 @@ function openDetail(item, sourceBtn) {
   const title = dlg.querySelector(".iuDesktopInfoPanelDetail__title");
   const body = dlg.querySelector(".iuDesktopInfoPanelDetail__body");
   if (!title || !body) return;
-  title.textContent = item.label;
-  const updated = item.updatedAtDisplay
-    ? `Aktualizace: ${item.updatedAtDisplay}`
-    : "Aktualizace: zatím nejsou živá data";
-  const liveNote = item.isLive
-    ? "Údaj je orientační a pochází z ověřeného snapshotu."
-    : item.state === "stale"
-      ? "Údaj je starší než povolený limit — neprezentujeme ho jako aktuální."
-      : "Údaj zatím není zobrazen jako živé dato nebo se ověřuje zdroj.";
-  body.innerHTML =
-    `<p class="iuDesktopInfoPanelDetail__lead">${esc(liveNote)}</p>` +
-    `<dl class="iuDesktopInfoPanelDetail__dl">` +
-    `<dt>Poskytovatel</dt><dd>${esc(item.sourceName)}</dd>` +
-    `<dt>Typ dat</dt><dd>${esc(item.dataType)}</dd>` +
-    `<dt>${esc(updated)}</dt><dd>${esc(item.updateNote)}</dd>` +
-    `<dt>Stav ověření</dt><dd>${esc(legalStatusLabel(item.legalStatus))}</dd>` +
-    `<dt>Datum ověření</dt><dd>${esc(item.verificationDate || "—")}</dd>` +
-    `<dt>Licence / podmínky</dt><dd>${esc(item.licenseNote)}</dd>` +
-    `</dl>` +
+  const cardTitle = displayTitle(item);
+  title.textContent = cardTitle;
+  const user = getInfoPanelUserContent(item.id);
+  const updatedLine = item.updatedAtDisplay
+    ? `Poslední aktualizace: ${item.updatedAtDisplay}`
+    : "Poslední aktualizace: zatím nejsou k dispozici";
+  const freqLine = item.publishFrequencyLabel || item.updateNote || "Dle zdroje";
+  const providerLine = item.sourceName || "Oficiální zdroj";
+  const categoryLine = item.categoryLabel || "";
+
+  let html = "";
+  if (user) {
+    html +=
+      `<section class="iuDesktopInfoPanelDetail__section">` +
+      `<h4 class="iuDesktopInfoPanelDetail__sectionTitle">Co to znamená</h4>` +
+      `<p>${esc(user.meaning)}</p>` +
+      `</section>` +
+      `<section class="iuDesktopInfoPanelDetail__section">` +
+      `<h4 class="iuDesktopInfoPanelDetail__sectionTitle">Proč je to důležité</h4>` +
+      `<p>${esc(user.importance)}</p>` +
+      `</section>` +
+      `<section class="iuDesktopInfoPanelDetail__section">` +
+      `<h4 class="iuDesktopInfoPanelDetail__sectionTitle">Jak číst hodnoty</h4>` +
+      `<p><strong>Růst:</strong> ${esc(user.rise)}</p>` +
+      `<p><strong>Pokles:</strong> ${esc(user.fall)}</p>` +
+      `</section>` +
+      `<section class="iuDesktopInfoPanelDetail__section">` +
+      `<h4 class="iuDesktopInfoPanelDetail__sectionTitle">Dopad do běžného života</h4>` +
+      `<p>${esc(user.life)}</p>` +
+      `</section>`;
+  } else {
+    html += `<p class="iuDesktopInfoPanelDetail__lead">${esc(item.dataType || "Orientační ukazatel z ověřeného zdroje.")}</p>`;
+  }
+
+  html +=
+    `<section class="iuDesktopInfoPanelDetail__section iuDesktopInfoPanelDetail__section--meta">` +
+    (categoryLine ? `<p><strong>Kategorie:</strong> ${esc(categoryLine)}</p>` : "") +
+    `<p><strong>Poskytovatel:</strong> ${esc(providerLine)}</p>` +
+    `<p><strong>${esc(updatedLine)}</strong></p>` +
+    `<p><strong>Frekvence zveřejňování:</strong> ${esc(freqLine)}</p>` +
+    `</section>` +
     `<p class="iuDesktopInfoPanelDetail__links">` +
-    `<a href="${esc(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">Oficiální zdroj</a>` +
-    ` · ` +
-    `<a href="${esc(item.termsUrl)}" target="_blank" rel="noopener noreferrer">Podmínky použití</a>` +
+    `<a href="${esc(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">Otevřít oficiální zdroj</a>` +
     `</p>` +
     `<p class="iuDesktopInfoPanelDetail__note">${esc(IU_INFO_PANEL_DISCLAIMER)}</p>`;
+
+  body.innerHTML = html;
   dlg.hidden = false;
   dlg.removeAttribute("hidden");
   const closeBtn = dlg.querySelector(".iuDesktopInfoPanelDetail__close");
