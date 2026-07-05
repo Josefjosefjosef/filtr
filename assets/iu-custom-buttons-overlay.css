@@ -68,7 +68,8 @@
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
     overscroll-behavior-y: contain;
-    padding: 14px 14px calc(var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) + 10px);
+    padding: 14px 14px var(--iu-tool-overlay-bottom-gap, 15px);
+    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px);
   }
   #iuCustomButtonsPanel.iu-custom-buttons-overlay-panel:not([hidden]) :is(input, textarea, select){
     font-size: 16px !important;

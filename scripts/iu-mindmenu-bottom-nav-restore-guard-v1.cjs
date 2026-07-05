@@ -15,6 +15,8 @@ const REQUIRED = [
   { id: "bottom_nav_z_index", pattern: /#iuMobileBottomNav\.iu-mobileBottomNav\s*\{\s*\n\s*z-index: 10200 !important/ },
   { id: "bottom_nav_clearance", pattern: /bottom: var\(--bottom-nav-height, calc\(56px \+ env\(safe-area-inset-bottom, 0px\) \+ 32px\)\) !important/ },
   { id: "v3_unified_scroll_safe_area", pattern: /v3 — unified scroll\/safe-area/ },
+  { id: "tool_overlay_bottom_gap", pattern: /--iu-tool-overlay-bottom-gap/ },
+  { id: "no_safe_space_in_restore", antiOnly: true, pattern: /--iu-mobile-bottom-nav-safe-space/ },
   { id: "calendar_day_overlay_clearance", pattern: /#iuCalendarDayOverlay\.iu-calendar-day-overlay:not\(\[hidden\]\)/ },
   { id: "quickfeed_gate_scope", pattern: /body\.iu-mobileGateOverlayOpen\.iu-mobileGateToolsQuickOpen #iuQuickFeed/ },
   { id: "calendar_dialog_clearance", pattern: /#iuCalendarOverlay \.iu-calendarOverlay__dialog/ },
@@ -26,7 +28,9 @@ function main() {
   const css = fs.readFileSync(CSS, "utf8");
   const checks = REQUIRED.map((item) => {
     const src = item.file ? fs.readFileSync(item.file, "utf8") : css;
-    return { id: item.id, pass: item.pattern.test(src) };
+    const hit = item.pattern.test(src);
+    const pass = item.antiOnly ? !hit : hit;
+    return { id: item.id, pass };
   });
   const pass = checks.every((c) => c.pass);
   const report = {

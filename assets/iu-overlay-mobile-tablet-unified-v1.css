@@ -491,4 +491,30 @@
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
   }
+
+  /* —— Part 6: Úkoly — scroll clearance jen na scroll kontejneru —— */
+  body.iu-tasksOverlay-open #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dialog {
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  body.iu-tasksOverlay-open #iuTasksOverlay .iu-tasksOverlay__scroll {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+  }
+
+  body.iu-tasksOverlay-open #iuTasksOverlay :is(
+    .iu-tasksOverlay__list,
+    .iu-tasksOverlay__form
+  ) {
+    padding-bottom: 0 !important;
+    scroll-padding-bottom: 0 !important;
+  }
 }
