@@ -21443,7 +21443,7 @@ overflow:hidden !important;
     padding: calc(env(safe-area-inset-top, 0px) + 8px) 8px 8px !important;
   }
   /* MindMenu gate (#iuMobileGateContent z-index 10025) must not cover tool overlays opened from tools panel. */
-  body.iu-mobileGateOverlayOpen :is(#iuCalendarOverlay.iu-calendarOverlay,#iuTasksOverlay.iu-tasksPremiumScope,#iuNotesOverlay.iu-notesPremiumScope,#iuDsOverlay.iu-ds-overlay,#iu-aiOverlay,#iu-aiPanel,#iuFinancialCalcBackdrop,#iuFinancialCalcPanel,#iuInvoiceBackdrop,#iuInvoicePanel,#iuLegalDocsBackdrop,#iuLegalDocsPanel,#iuCustomButtonsBackdrop,#iuCustomButtonsPanel,#iuDesktopParcelWatchOverlay):not([hidden]),
+  body.iu-mobileGateOverlayOpen :is(#iuCalendarOverlay.iu-calendarOverlay,#iuTasksOverlay.iu-tasksPremiumScope,#iuNotesOverlay.iu-notesPremiumScope,#iuDsOverlay.iu-ds-overlay,#iuDsPanel.iu-ds-panel,#iu-aiOverlay,#iu-aiPanel,#iuFinancialCalcBackdrop,#iuFinancialCalcPanel,#iuInvoiceBackdrop,#iuInvoicePanel,#iuLegalDocsBackdrop,#iuLegalDocsPanel,#iuCustomButtonsBackdrop,#iuCustomButtonsPanel,#iuDesktopParcelWatchOverlay):not([hidden]),
   body.iu-mobileGateOverlayOpen #iu-mailbox-edit-overlay,
   body.iu-mobileGateOverlayOpen :is(.iu-quicktools-settings-backdrop,.iu-quicktools-settings-panel.iu-quicktools-settings-panel--mobileFixed):not([hidden]){
     z-index: 10030 !important;
