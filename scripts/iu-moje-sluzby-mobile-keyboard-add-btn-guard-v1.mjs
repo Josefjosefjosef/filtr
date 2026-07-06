@@ -14,6 +14,7 @@ const INDEX = path.join(REPO, "projects", "index.html");
 const CSS_BUST = "moje-sluzby-mobile-keyboard-add-btn-v1-20260706";
 const JS_BUSTS = [
   "moje-sluzby-mobile-keyboard-add-btn-v1-20260706",
+  "weather-artifact-utf8-eager-boot-v1-20260706",
   "legal-docs-preview-pc-v1-20260706",
   "tasks-desktop-two-panel-v1-20260706",
 ];

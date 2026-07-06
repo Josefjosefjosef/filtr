@@ -61,6 +61,7 @@ if (!tasksCss.includes("iu-tasksOverlay__body") || !tasksCss.includes("grid-temp
   failures.push("tasks premium CSS must define desktop two-column body grid");
 }
 const cacheBustOk =
+  indexHtml.includes("weather-artifact-utf8-eager-boot-v1-20260706") ||
   indexHtml.includes("legal-docs-preview-pc-v1-20260706") ||
   indexHtml.includes("tasks-desktop-two-panel-v1-20260706") ||
   indexHtml.includes("mindmenu-mailbox-row-pc-layout-v1-20260706") ||

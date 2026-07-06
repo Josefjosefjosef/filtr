@@ -211,6 +211,10 @@ if (!css.includes("/* === CALENDAR ACCENT HARD LOCK (DO NOT MODIFY) === */")) {
   fail("❌ assets/app.css must contain CALENDAR ACCENT HARD LOCK banner (anti-regression; EOF docs only — no duplicate rules)");
 }
 
+if (!css.includes('content: "\\2197"') || css.includes('content: "â†')) {
+  fail("❌ Chevron action indicator must use UTF-8 escape \\2197 (no mojibake)");
+}
+
 if (!/<span class="iuCalendarSummary__label">Kalendář:<\/span>/.test(html)) {
   fail("❌ Calendar label inner HTML must be exactly Kalendář: (single label span)");
 }
