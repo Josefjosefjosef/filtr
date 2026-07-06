@@ -18,7 +18,8 @@ const checks = [
   appJs.includes("iuWeatherBootPrefetchIfReady"),
   appJs.includes("removeAttribute(\"data-iu-action-indicator\")"),
   appJs.includes("fetch/render immediately when Počasí section opens"),
-  indexHtml.includes("weather-artifact-utf8-eager-boot-v1-20260706"),
+  indexHtml.includes("weather-artifact-utf8-eager-boot-v1-20260706") ||
+  indexHtml.includes("state-holiday-label-v1-20260706"),
 ];
 
 const pass = checks.every(Boolean);

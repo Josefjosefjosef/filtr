@@ -8747,7 +8747,9 @@ function buildVideoAsArticleCard(it) {
           if (!t) return "";
           if (t === "—") return "";
           if (/^svátek\s+má\s*[—-]?\s*$/i.test(t)) return "";
+          if (/^státní\s+svátek:\s*[—-]?\s*$/i.test(t)) return "";
           if (/^svátek\s+má\s+načítám/i.test(t)) return "";
+          if (/^státní\s+svátek:\s+načítám/i.test(t)) return "";
           return t;
         }catch{
           return "";
@@ -8940,16 +8942,80 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
-  function iuSetTopbarNameday(name){
+  const IU_CZ_FIXED_STATE_HOLIDAYS = new Set([
+    "01-01", "05-01", "05-08", "07-05", "07-06", "09-28", "10-28", "11-17", "12-24", "12-25", "12-26"
+  ]);
+  function iuPad2ForStateHoliday(n){ return String(n).padStart(2, "0"); }
+  function iuGetEasterDateForStateHoliday(year){
+    const a = year % 19;
+    const b = Math.floor(year / 100);
+    const c = year % 100;
+    const d = Math.floor(b / 4);
+    const e = b % 4;
+    const f = Math.floor((b + 8) / 25);
+    const g = Math.floor((b - f + 1) / 3);
+    const h = (19 * a + b - d - g + 15) % 30;
+    const i = Math.floor(c / 4);
+    const k = c % 4;
+    const l = (32 + 2 * e + 2 * i - h - k) % 7;
+    const m = Math.floor((a + 11 * h + 22 * l) / 451);
+    const month = Math.floor((h + l - 7 * m + 114) / 31);
+    const day = ((h + l - 7 * m + 114) % 31) + 1;
+    return new Date(year, month - 1, day);
+  }
+  function iuToDateOnlyForStateHoliday(d){
+    const x = d instanceof Date ? d : new Date(d);
+    return x.getFullYear() + "-" + iuPad2ForStateHoliday(x.getMonth() + 1) + "-" + iuPad2ForStateHoliday(x.getDate());
+  }
+  function iuAddDaysYmdForStateHoliday(dateStr, days){
+    const d = new Date(dateStr + "T00:00:00");
+    d.setDate(d.getDate() + days);
+    return iuToDateOnlyForStateHoliday(d);
+  }
+  /** Stejné pravidlo jako kalendář isHoliday — jen pro volbu popisku v topbar / Silver meta. */
+  function iuIsCzStateHolidayDate(refDate){
+    try{
+      const d = refDate instanceof Date ? refDate : new Date();
+      const mmdd = iuPad2ForStateHoliday(d.getMonth() + 1) + "-" + iuPad2ForStateHoliday(d.getDate());
+      if (IU_CZ_FIXED_STATE_HOLIDAYS.has(mmdd)) return true;
+      const year = d.getFullYear();
+      const easterIso = iuToDateOnlyForStateHoliday(iuGetEasterDateForStateHoliday(year));
+      const todayIso = iuToDateOnlyForStateHoliday(d);
+      return todayIso === iuAddDaysYmdForStateHoliday(easterIso, -2) || todayIso === iuAddDaysYmdForStateHoliday(easterIso, 1);
+    }catch{
+      return false;
+    }
+  }
+  /** Jmeniny → „svátek má “; státní svátek → „státní svátek: “ (Silver welcome meta). */
+  function iuNamedayMetaLabelPrefix(refDate){
+    return iuIsCzStateHolidayDate(refDate) ? "státní svátek: " : "svátek má ";
+  }
+  /** Jmeniny → „Svátek má “; státní svátek → „Státní svátek: “ (topbar skrytý anchor). */
+  function iuNamedayTopbarLabelPrefix(refDate){
+    const p = iuNamedayMetaLabelPrefix(refDate);
+    return p.charAt(0).toUpperCase() + p.slice(1);
+  }
+  /** Krátký popisek bez mezery za dvojtečkou — pill drží jméno / název svátku. */
+  function iuNamedayMetaLabelShort(refDate){
+    return iuIsCzStateHolidayDate(refDate) ? "státní svátek:" : "svátek má";
+  }
+  try{
+    window.__iuIsCzStateHolidayDate = iuIsCzStateHolidayDate;
+    window.__iuNamedayMetaLabelPrefix = iuNamedayMetaLabelPrefix;
+  }catch{}
+
+  function iuSetTopbarNameday(name, refDate){
     try{
       const el = document.getElementById("iuTopbarNameday");
       if (!el) return;
+      const d = refDate instanceof Date ? refDate : new Date();
+      const prefix = iuNamedayTopbarLabelPrefix(d);
       const clean = (name ?? "").toString().trim();
       if (clean) {
-        el.textContent = "Svátek má " + clean;
+        el.textContent = prefix + clean;
         el.hidden = false;
       } else {
-        el.textContent = "Svátek má —";
+        el.textContent = prefix + "—";
         el.hidden = false;
       }
     }catch{}
@@ -8987,12 +9053,11 @@ function buildVideoAsArticleCard(it) {
       function normalizeNameday(t){
         const s = String(t || "").trim();
         if(!s || s === "—") return "";
-        const m = s.match(/svátek\s+má\s+(.+)/i);
-        if (m && m[1]) return "Svátek má " + String(m[1]).trim();
-        const m2 = s.match(/svátek\s*:\s*(.+)/i);
-        if (m2 && m2[1]) return "Svátek má " + String(m2[1]).trim();
-        if (/^svátek\s+má\s*$/i.test(s)) return "";
-        return "Svátek má " + s;
+        const prefix = iuNamedayTopbarLabelPrefix(new Date());
+        const tail = iuParseNamedayTailFromRaw(s);
+        if (tail) return prefix + tail;
+        if (/^svátek\s+má\s*$/i.test(s) || /^státní\s+svátek:\s*$/i.test(s)) return "";
+        return prefix + s;
       }
 
       function sync(){
@@ -9001,7 +9066,7 @@ function buildVideoAsArticleCard(it) {
         try{
           const nRaw = (srcName && String(srcName.textContent || "").trim()) || "";
           const n = normalizeNameday(nRaw);
-          elName.textContent = n || "Svátek má —";
+          elName.textContent = n || iuNamedayTopbarLabelPrefix(new Date()) + "—";
         }catch{}
         try{
           const full = `${elDay.textContent} ${elDate.textContent}${elName.textContent ? " • " + elName.textContent : ""}`;
@@ -9015,11 +9080,17 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
-  /** Stejné pravidlo jako welcome meta: text za „svátek má …“. */
+  /** Stejné pravidlo jako welcome meta: text za „svátek má …“ / „státní svátek: …“. */
   function iuParseNamedayTailFromRaw(raw){
     if (!raw || raw === "—") return "";
     const t = String(raw).trim();
     if (!t) return "";
+    const mState = t.match(/^státní\s+svátek:\s*(.+)$/i);
+    if (mState && mState[1]) {
+      const name = String(mState[1]).trim();
+      if (!name || /^[—\-\s]+$/i.test(name)) return "";
+      return name;
+    }
     const m = t.match(/^svátek\s+má\s+(.+)$/i);
     if (m && m[1]) {
       const name = String(m[1]).trim();
@@ -9032,7 +9103,7 @@ function buildVideoAsArticleCard(it) {
       if (!name || /^[—\-\s]+$/i.test(name)) return "";
       return name;
     }
-    const rest = t.replace(/^svátek\s+má\s*/i, "").trim();
+    const rest = t.replace(/^(?:státní\s+svátek:|svátek\s+má)\s*/i, "").trim();
     if (!rest || /^[—\-\s]+$/i.test(rest)) return "";
     return rest;
   }
@@ -9909,14 +9980,16 @@ function buildVideoAsArticleCard(it) {
       }catch{}
       return null;
     }
-    function readNamedaySuffixForMeta(){
+    function readNamedaySuffixForMeta(refDate){
+      const d = refDate instanceof Date ? refDate : new Date();
+      const prefix = iuNamedayMetaLabelPrefix(d);
       try{
         const g =
           typeof window.__iuNamedaySuffixFromSource === "string"
             ? String(window.__iuNamedaySuffixFromSource || "").trim()
             : "";
         if (g && g !== "—" && g !== "-"){
-          return "svátek má " + g;
+          return prefix + g;
         }
       }catch{}
       const src = document.getElementById("iuDailyNameday");
@@ -9924,7 +9997,7 @@ function buildVideoAsArticleCard(it) {
       let raw = (src && String(src.textContent || "").trim()) || "";
       if (!raw) raw = (top && String(top.textContent || "").trim()) || "";
       const candidate = iuParseNamedayTailFromRaw(raw);
-      return candidate ? "svátek má " + candidate : "svátek má —";
+      return candidate ? prefix + candidate : prefix + "—";
     }
     /** Must match synchronous Silver welcome bootstrap in projects/index.html (first paint). */
     function daypartKeyFromHour(h){
@@ -10110,7 +10183,7 @@ function buildVideoAsArticleCard(it) {
         const wLower = w ? w.charAt(0).toLowerCase() + w.slice(1) : "";
         const dlong = fmtDateLong(refDate);
         /* P0: Nemazat window.__iuNamedaySuffixFromSource v welcome — vlastní iuDailyPanelInit; mazání způsobovalo závod a ořez plného textu. */
-        const nd = readNamedaySuffixForMeta();
+        const nd = readNamedaySuffixForMeta(refDate);
         const dlongParts = splitDlongCsParts(refDate);
         const datePartFallback = wLower + " " + dlong;
         let namePart = "—";
@@ -10163,7 +10236,7 @@ function buildVideoAsArticleCard(it) {
           ndCluster.className = "iuSilverWelcomeMetaSvatekCluster";
           const svatekLabel = doc.createElement("span");
           svatekLabel.className = "iuSilverWelcomeMetaSvatekLabel";
-          svatekLabel.textContent = "sv\u00E1tek m\u00E1";
+          svatekLabel.textContent = iuNamedayMetaLabelShort(refDate);
           ndCluster.appendChild(svatekLabel);
           const pillBtn = doc.createElement("button");
           pillBtn.className = "svatek-pill";
@@ -25152,7 +25225,7 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
       if (!_ndUrl) {
         try{ window.__iuNamedaySuffixFromSource = ""; }catch{}
-        if (elNameday) { elNameday.textContent = "Svátek má —"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
+        if (elNameday) { elNameday.textContent = iuNamedayTopbarLabelPrefix(new Date()) + "—"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
         try{ iuSetTopbarNameday(""); }catch{}
         return;
       }
@@ -25182,10 +25255,11 @@ function buildVideoAsArticleCard(it) {
           var ok = Boolean(nm) && nm !== "—" && nm !== "-";
           try{ window.__iuNamedaySuffixFromSource = ok ? nm : ""; }catch{}
           if (ok) {
-            if (elNameday) { elNameday.textContent = "Svátek má " + nm; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
+            var ndPrefix = iuNamedayTopbarLabelPrefix(new Date());
+            if (elNameday) { elNameday.textContent = ndPrefix + nm; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
             try{ iuSetTopbarNameday(nm); }catch{}
           } else {
-            if (elNameday) { elNameday.textContent = "Svátek má —"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
+            if (elNameday) { elNameday.textContent = iuNamedayTopbarLabelPrefix(new Date()) + "—"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
             try{ iuSetTopbarNameday(""); }catch{}
           }
           try{ if (typeof window.iuSilverWelcomeRefresh === "function") window.iuSilverWelcomeRefresh(); }catch{}
@@ -25194,7 +25268,7 @@ function buildVideoAsArticleCard(it) {
         })
         .catch(function(){
           try{ window.__iuNamedaySuffixFromSource = ""; }catch{}
-          if (elNameday) { elNameday.textContent = "Svátek má —"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
+          if (elNameday) { elNameday.textContent = iuNamedayTopbarLabelPrefix(new Date()) + "—"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
           try{ if (typeof iuSetTopbarNameday === "function") iuSetTopbarNameday(""); }catch{}
           try{ iuWeatherHideEmptyNameday(); }catch{}
         });

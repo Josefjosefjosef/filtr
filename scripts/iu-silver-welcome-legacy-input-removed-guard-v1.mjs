@@ -24,6 +24,7 @@ const CACHE_BUSTS = [
   "weather-artifact-utf8-eager-boot-v1-20260706",
   "legal-docs-preview-pc-v1-20260706",
   "tasks-desktop-two-panel-v1-20260706",
+  "state-holiday-label-v1-20260706",
 ];
 
 const VIEWPORTS = [
