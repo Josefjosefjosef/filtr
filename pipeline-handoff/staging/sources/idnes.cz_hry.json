@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-07-05T21:49:12.873604Z",
+  "ingestedAt": "2026-07-05T23:57:29.697366Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Pro mnohé hráče to byly životní zážitky. Tak šel čas se sérií Gothic",
+      "url": "https://www.idnes.cz/hry/magazin/gothic-serie-vyvoj-dily-minule-piranha-bytes.A260702_170111_bw-magazin_oma/foto",
+      "dt": "2026-07-05T22:00:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "byly",
+        "gothic",
+        "hráče",
+        "mnohé",
+        "sérií",
+        "tak",
+        "zážitky",
+        "čas",
+        "šel",
+        "životní"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -726,31 +753,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "RECENZE: Nový Star Fox je poctivá arkádová zábava, jaká už se dnes nevidí",
-      "url": "https://www.idnes.cz/hry/recenze/star-fox-recenze-switch-2.A260622_135233_bw-recenze_oz",
-      "dt": "2026-06-24T12:00:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "arkádová",
-        "fox",
-        "jaká",
-        "nevidí",
-        "nový",
-        "poctivá",
-        "star",
-        "zábava"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -761,7 +763,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 46515,
+      "bytes": 46617,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -798,7 +800,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-05T00:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-05T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -813,6 +815,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pro mnohé hráče to byly životní zážitky. Tak šel čas se sérií Gothic",
+            "publishedAt": "2026-07-05T22:00:00Z"
+          },
           {
             "title": "Máte už svého kandidáta na hru roku 2026?",
             "publishedAt": "2026-07-05T00:00:00Z"
@@ -840,10 +846,6 @@
           {
             "title": "PS Plus láká v červenci na Call of Duty, For the King II a CrossCode",
             "publishedAt": "2026-07-02T14:10:00Z"
-          },
-          {
-            "title": "Skvělá zombie akce Dying Light je za hubičku. V pěkné slevě je celá série",
-            "publishedAt": "2026-07-02T08:29:00Z"
           }
         ]
       }
