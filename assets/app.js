@@ -8946,10 +8946,10 @@ function buildVideoAsArticleCard(it) {
       if (!el) return;
       const clean = (name ?? "").toString().trim();
       if (clean) {
-        el.textContent = "Svátek má " + clean;
+        el.textContent = iuNamedayTopbarLine(clean);
         el.hidden = false;
       } else {
-        el.textContent = "Svátek má —";
+        el.textContent = "Sv\u00E1tek m\u00E1 —";
         el.hidden = false;
       }
     }catch{}
@@ -8989,6 +8989,8 @@ function buildVideoAsArticleCard(it) {
         if(!s || s === "—") return "";
         const m = s.match(/svátek\s+má\s+(.+)/i);
         if (m && m[1]) return "Svátek má " + String(m[1]).trim();
+        const mState = s.match(/státní\s+svátek\s*:\s*(.+)/i);
+        if (mState && mState[1]) return "Státní svátek: " + String(mState[1]).trim();
         const m2 = s.match(/svátek\s*:\s*(.+)/i);
         if (m2 && m2[1]) return "Svátek má " + String(m2[1]).trim();
         if (/^svátek\s+má\s*$/i.test(s)) return "";
@@ -9015,7 +9017,51 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
-  /** Stejné pravidlo jako welcome meta: text za „svátek má …“. */
+  /** České státní svátky — přesné názvy z projects/data/namedays.json (scripts/data/namedays-cz.json). */
+  const IU_CZ_STATE_HOLIDAY_DISPLAY_NAMES = new Set(
+    [
+      "Nový rok",
+      "Svátek práce",
+      "Den osvobození",
+      "Den vítězství",
+      "Cyril a Metoděj",
+      "Upálení mistra Jana Husa",
+      "Den vzniku samostatného československého státu",
+      "Boží hod vánoční",
+    ].map(function (s) {
+      return String(s).normalize("NFC").toLowerCase();
+    })
+  );
+
+  function iuIsCzechStateHolidayDisplayName(namePart) {
+    try {
+      const key = String(namePart || "")
+        .trim()
+        .normalize("NFC")
+        .toLowerCase();
+      if (!key || key === "—" || key === "-") return false;
+      return IU_CZ_STATE_HOLIDAY_DISPLAY_NAMES.has(key);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /** Popisek v #iuSilverWelcomeMeta (.iuSilverWelcomeMetaSvatekLabel). */
+  function iuNamedayMetaLabelPrefix(namePart) {
+    return iuIsCzechStateHolidayDisplayName(namePart) ? "st\u00E1tn\u00ED sv\u00E1tek:" : "sv\u00E1tek m\u00E1";
+  }
+
+  /** Celý řádek svátku (skrytý topbar / iuDailyNameday sync). */
+  function iuNamedayTopbarLine(namePart) {
+    const tail = String(namePart || "").trim();
+    if (!tail || tail === "—" || tail === "-") return "Sv\u00E1tek m\u00E1 —";
+    if (iuIsCzechStateHolidayDisplayName(tail)) {
+      return "St\u00E1tn\u00ED sv\u00E1tek: " + tail;
+    }
+    return "Sv\u00E1tek m\u00E1 " + tail;
+  }
+
+  /** Stejné pravidlo jako welcome meta: text za popiskem (svátek má / státní svátek:). */
   function iuParseNamedayTailFromRaw(raw){
     if (!raw || raw === "—") return "";
     const t = String(raw).trim();
@@ -9023,6 +9069,12 @@ function buildVideoAsArticleCard(it) {
     const m = t.match(/^svátek\s+má\s+(.+)$/i);
     if (m && m[1]) {
       const name = String(m[1]).trim();
+      if (!name || /^[—\-\s]+$/i.test(name)) return "";
+      return name;
+    }
+    const mState = t.match(/^státní\s+svátek\s*:\s*(.+)$/i);
+    if (mState && mState[1]) {
+      const name = String(mState[1]).trim();
       if (!name || /^[—\-\s]+$/i.test(name)) return "";
       return name;
     }
@@ -9916,7 +9968,7 @@ function buildVideoAsArticleCard(it) {
             ? String(window.__iuNamedaySuffixFromSource || "").trim()
             : "";
         if (g && g !== "—" && g !== "-"){
-          return "svátek má " + g;
+          return iuNamedayMetaLabelPrefix(g) + " " + g;
         }
       }catch{}
       const src = document.getElementById("iuDailyNameday");
@@ -9924,7 +9976,7 @@ function buildVideoAsArticleCard(it) {
       let raw = (src && String(src.textContent || "").trim()) || "";
       if (!raw) raw = (top && String(top.textContent || "").trim()) || "";
       const candidate = iuParseNamedayTailFromRaw(raw);
-      return candidate ? "svátek má " + candidate : "svátek má —";
+      return candidate ? iuNamedayMetaLabelPrefix(candidate) + " " + candidate : "svátek má —";
     }
     /** Must match synchronous Silver welcome bootstrap in projects/index.html (first paint). */
     function daypartKeyFromHour(h){
@@ -10163,7 +10215,7 @@ function buildVideoAsArticleCard(it) {
           ndCluster.className = "iuSilverWelcomeMetaSvatekCluster";
           const svatekLabel = doc.createElement("span");
           svatekLabel.className = "iuSilverWelcomeMetaSvatekLabel";
-          svatekLabel.textContent = "sv\u00E1tek m\u00E1";
+          svatekLabel.textContent = iuNamedayMetaLabelPrefix(namePart);
           ndCluster.appendChild(svatekLabel);
           const pillBtn = doc.createElement("button");
           pillBtn.className = "svatek-pill";
@@ -25155,7 +25207,7 @@ function buildVideoAsArticleCard(it) {
           var ok = Boolean(nm) && nm !== "—" && nm !== "-";
           try{ window.__iuNamedaySuffixFromSource = ok ? nm : ""; }catch{}
           if (ok) {
-            if (elNameday) { elNameday.textContent = "Svátek má " + nm; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
+            if (elNameday) { elNameday.textContent = iuNamedayTopbarLine(nm); elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
             try{ iuSetTopbarNameday(nm); }catch{}
           } else {
             if (elNameday) { elNameday.textContent = "Svátek má —"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
