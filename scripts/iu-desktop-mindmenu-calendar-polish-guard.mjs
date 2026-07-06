@@ -42,6 +42,9 @@ if (!appJs.includes("iu-calendarOverlay__side--layoutEmpty")) {
 if (!appJs.includes("grid-template-columns:minmax(0,1fr) 340px")) {
   failures.push("calendar desktop body grid must use fixed 340px side column");
 }
+if (indexHtml.includes("iu-calendarOverlay--sidePanelOpen") && indexHtml.includes("1.15fr")) {
+  failures.push("calendar sidePanelOpen must not override body grid with fractional columns");
+}
 if (!premiumCss.includes("iuMmManageTabs__tab.is-active") || !premiumCss.includes("data-iu-manage-action=\"unsave\"")) {
   failures.push("desktop premium CSS must enhance active tabs and Odebrat button");
 }
