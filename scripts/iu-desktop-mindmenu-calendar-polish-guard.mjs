@@ -15,7 +15,7 @@ function read(rel) {
 const failures = [];
 const appCss = read("assets/app.css");
 const appJs = read("assets/app.js");
-const premiumCss = read("assets/iu-desktop-home-premium.css");
+const tasksCss = read("assets/iu-tasks-premium.css");
 const indexHtml = read("projects/index.html");
 
 if (!/\.layout > aside\.accordionCol \.mindMenu \.iu-mailbox-row[\s\S]*display: grid !important/.test(appCss)) {
@@ -51,10 +51,17 @@ if (!appJs.includes("iu-calendarOverlay__side--layoutEmpty")) {
 if (!appJs.includes("grid-template-columns:minmax(0,1fr) 340px")) {
   failures.push("calendar desktop body grid must use fixed 340px side column");
 }
-if (!premiumCss.includes("iuMmManageTabs__tab.is-active") || !premiumCss.includes("data-iu-manage-action=\"unsave\"")) {
-  failures.push("desktop premium CSS must enhance active tabs and Odebrat button");
+if (!appJs.includes("iu-tasksOverlay__body{display:grid!important;grid-template-columns:450px minmax(0,1fr)!important")) {
+  failures.push("tasks desktop overlay must use 450px + detail two-column grid like notes");
+}
+if (!appJs.includes("iuTasksDetail") || !appJs.includes("isTasksDesktopTwoPanel")) {
+  failures.push("tasks overlay must split list and detail panels on desktop");
+}
+if (!tasksCss.includes("iu-tasksOverlay__body") || !tasksCss.includes("grid-template-columns:450px minmax(0,1fr)")) {
+  failures.push("tasks premium CSS must define desktop two-column body grid");
 }
 const cacheBustOk =
+  indexHtml.includes("tasks-desktop-two-panel-v1-20260706") ||
   indexHtml.includes("mindmenu-mailbox-row-pc-layout-v1-20260706") ||
   indexHtml.includes("desktop-mindmenu-calendar-polish-v1-20260706") ||
   indexHtml.includes("svatek-pill-responsive-wrap-v1-20260706");

@@ -27,7 +27,23 @@
   background:linear-gradient(165deg,var(--iu-tasks-bg) 0%,#f5f3ff 42%,#f0fdfa 100%);
   box-shadow:var(--iu-tasks-shadow),0 0 80px rgba(13,148,136,.06);
   border:1px solid var(--iu-tasks-border);
-  display:grid;grid-template-rows:auto auto 1fr;min-height:0
+  display:grid;grid-template-rows:auto 1fr;min-height:0
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__back{display:none}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__body{
+  display:grid;grid-template-columns:450px minmax(0,1fr);min-height:0;height:100%
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__list{
+  min-height:0;border-right:1px solid rgba(109,94,189,.14);
+  background:linear-gradient(180deg,rgba(255,255,255,.97) 0%,rgba(248,250,252,.92) 100%);
+  display:flex;flex-direction:column
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__detail{
+  min-height:0;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(248,250,252,.88))
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__detailScroll{
+  flex:1 1 auto;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 16px
 }
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__header{
   display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:14px 16px;
@@ -63,7 +79,7 @@
 }
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filters{
   display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px;border-bottom:1px solid rgba(109,94,189,.12);
-  background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(238,242,255,.55))
+  background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(238,242,255,.55));flex:0 0 auto
 }
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filter{
   border:1px solid rgba(15,118,110,.22);border-radius:999px;background:rgba(255,255,255,.75);color:#334155;padding:7px 14px;font-size:12px;font-weight:600;touch-action:manipulation;
@@ -75,9 +91,13 @@
   background:linear-gradient(135deg,rgba(13,148,136,.95) 0%,rgba(79,70,229,.9) 100%);color:#fff;border-color:rgba(165,243,252,.45);
   box-shadow:0 4px 16px rgba(13,148,136,.28),inset 0 1px 0 rgba(255,255,255,.2)
 }
-#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__scroll{
-  overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:12px 14px 16px;
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__scroll,
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__listScroll{
+  overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;flex:1 1 auto;padding:12px 14px 16px;
   background:linear-gradient(180deg,rgba(240,253,250,.65) 0%,rgba(238,242,255,.45) 55%,rgba(248,250,252,.9) 100%)
+}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow--selected .iu-taskRow__body{
+  box-shadow:var(--iu-tasks-focus);background:rgba(13,148,136,.06)
 }
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__list{
   list-style:none;margin:0;padding:0;padding-bottom:var(--iu-mobile-bottom-nav-safe-space,calc(56px + env(safe-area-inset-bottom,0px) + 52px));display:grid;gap:10px
@@ -169,6 +189,19 @@ body.iu-tasksOverlay-open{overflow:hidden!important}
 .dark #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dateIcon{color:#94a3b8}
 .dark #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__scroll{background:linear-gradient(180deg,rgba(15,23,42,.5),rgba(30,27,75,.25))}
 @media (max-width:900px){
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__body{
+    display:flex!important;flex-direction:column!important;flex:1 1 auto!important;min-height:0!important;overflow:visible!important;height:auto!important
+  }
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__list{
+    border-right:0;border-bottom:1px solid rgba(109,94,189,.14);flex:1 1 auto!important;min-height:0!important;max-height:none!important
+  }
+  #iuTasksOverlay.iu-tasksPremiumScope[data-iu-tasks-mode="list"] .iu-tasksOverlay__detail{display:none!important}
+  #iuTasksOverlay.iu-tasksPremiumScope[data-iu-tasks-mode="list"] .iu-tasksOverlay__list{
+    flex:1 1 auto!important;border-bottom:0!important
+  }
+  #iuTasksOverlay.iu-tasksPremiumScope[data-iu-tasks-mode="detail"] .iu-tasksOverlay__list{display:none!important}
+  #iuTasksOverlay.iu-tasksPremiumScope[data-iu-tasks-mode="detail"] .iu-tasksOverlay__detail{flex:1 1 auto!important}
+  #iuTasksOverlay.iu-tasksPremiumScope[data-iu-tasks-mode="detail"] .iu-tasksOverlay__back{display:inline-flex}
   #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow__time{font-size:16px;font-weight:800}
   #iuTasksOverlay.iu-tasksPremiumScope{align-items:stretch;justify-content:stretch;background:linear-gradient(180deg,var(--iu-tasks-bg) 0%,var(--iu-tasks-bg2) 100%)}
   #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dialog{
