@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Finanční kalkulačky — mobil/tablet dvouřádková hlavička (controls / title).
- * Run: npm run iu-financial-calc-mobile-header-guard
+ * Vzory smluv a plné moci — mobil/tablet dvouřádková hlavička (controls / title).
+ * Run: npm run iu-legal-documents-mobile-header-guard
  */
 import fs from "fs";
 import path from "path";
@@ -17,14 +17,15 @@ const { chromium } = require("playwright");
 
 const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.css");
 const INDEX = path.join(REPO, "projects", "index.html");
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8896", 10);
+const PORT = parseInt(process.env.IU_GUARD_PORT || "8897", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
+const CACHE_BUST = "legal-docs-mobile-header-unified-v1-20260706";
 
-const LONG_CALCS = [
-  { id: "budget", title: "Rozpočet domácnosti" },
-  { id: "discount", title: "Sleva / změna ceny" },
-  { id: "affordability", title: "Bonita / schvalitelnost" },
-  { id: "investment-growth", title: "Složené úročení / investiční růst" },
+const LONG_DOCS = [
+  { id: "kupni-movita", title: "Kupní smlouva – movitá věc", category: "smlouvy" },
+  { id: "najem-podnikani", title: "Nájemní smlouva – prostor sloužící podnikání", category: "smlouvy" },
+  { id: "plna-moc-zasilka", title: "Plná moc k převzetí zásilky / dokumentu", category: "plne_moci" },
+  { id: "predani-obecny", title: "Předávací protokol – obecný", category: "predavaci" },
 ];
 
 function staticGate() {
@@ -32,20 +33,20 @@ function staticGate() {
   const index = fs.readFileSync(INDEX, "utf8");
   const checks = [
     {
-      id: "part8_two_row_header",
-      pass: /Part 8: Finanční kalkulačky — dvouřádková hlavička/.test(unified),
+      id: "part9_two_row_header",
+      pass: /Part 9: Vzory smluv a plné moci — dvouřádková hlavička/.test(unified),
     },
     {
-      id: "detail_grid_areas",
-      pass: /iu-financial-overlay-panel--detail[\s\S]*grid-template-areas:[\s\S]*"back info close"/.test(unified),
+      id: "detail_category_grid_areas",
+      pass: /iu-legal-overlay-panel--detail[\s\S]*grid-template-areas:[\s\S]*"back info close"/.test(unified),
     },
     {
       id: "heading_display_contents",
-      pass: /iu-financial-overlay-heading,[\s\S]*display: contents !important/.test(unified),
+      pass: /iu-legal-overlay-heading,[\s\S]*display: contents !important/.test(unified),
     },
     {
       id: "index_cache_bust",
-      pass: /iu-overlay-mobile-tablet-unified-v1\.css\?v=legal-docs-mobile-header-unified-v1-20260706/.test(index),
+      pass: new RegExp(`iu-overlay-mobile-tablet-unified-v1\\.css\\?v=${CACHE_BUST}`).test(index),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
@@ -79,12 +80,26 @@ function rectsOverlap(a, b, pad = 2) {
   );
 }
 
+async function bootLegal(page) {
+  await page.evaluate(async () => {
+    if (typeof window.iuEnsureLegalDocsOverlayBoot === "function") {
+      await window.iuEnsureLegalDocsOverlayBoot();
+    }
+    if (typeof window.iuEnsureOverlayCss === "function") {
+      await window.iuEnsureOverlayCss("iu-legal-documents-overlay.css");
+    }
+    if (typeof window.iuToolPrivacyBoot === "function") {
+      window.iuToolPrivacyBoot();
+    }
+  });
+}
+
 async function measureHeader(page) {
   return page.evaluate(() => {
-    const header = document.querySelector("#iuFinancialCalcPanel .iu-financial-overlay-header");
-    const title = document.getElementById("iuFinancialCalcTitle");
-    const back = document.getElementById("iuFinancialCalcBack");
-    const close = document.getElementById("iuFinancialCalcClose");
+    const header = document.querySelector("#iuLegalDocsPanel .iu-legal-overlay-header");
+    const title = document.getElementById("iuLegalDocsTitle");
+    const back = document.getElementById("iuLegalDocsBack");
+    const close = document.getElementById("iuLegalDocsClose");
     const info = header ? header.querySelector(".iu-tool-privacy-btn") : null;
     if (!header || !title) return null;
     const pick = (el) => {
@@ -94,8 +109,18 @@ async function measureHeader(page) {
       return { top: r.top, left: r.left, right: r.right, bottom: r.bottom, width: r.width, height: r.height };
     };
     const headerStyle = window.getComputedStyle(header);
+    const panel = document.getElementById("iuLegalDocsPanel");
     return {
       headerDisplay: headerStyle.display,
+      panelMode: panel
+        ? panel.classList.contains("iu-legal-overlay-panel--detail")
+          ? "detail"
+          : panel.classList.contains("iu-legal-overlay-panel--category")
+            ? "category"
+            : panel.classList.contains("iu-legal-overlay-panel--hub")
+              ? "hub"
+              : "unknown"
+        : "unknown",
       header: pick(header),
       title: pick(title),
       back: pick(back),
@@ -106,25 +131,17 @@ async function measureHeader(page) {
   });
 }
 
-async function openCalculator(page, calcId) {
-  await page.evaluate(async (id) => {
-    if (typeof window.iuEnsureFinancialCalcOverlayBoot === "function") {
-      await window.iuEnsureFinancialCalcOverlayBoot();
+async function openHub(page) {
+  await bootLegal(page);
+  await page.evaluate(() => {
+    if (typeof window.iuLegalDocsOpenSurface === "function") {
+      window.iuLegalDocsOpenSurface();
     }
-    if (typeof window.iuEnsureOverlayCss === "function") {
-      await window.iuEnsureOverlayCss("iu-financial-overlay.css");
-    }
-    if (typeof window.iuToolPrivacyBoot === "function") {
-      window.iuToolPrivacyBoot();
-    }
-    if (typeof window.iuFinancialCalcOpenSurface === "function") {
-      window.iuFinancialCalcOpenSurface({ calculatorId: id });
-    }
-  }, calcId);
+  });
   await page.waitForFunction(
     () => {
-      const panel = document.getElementById("iuFinancialCalcPanel");
-      return panel && !panel.hasAttribute("hidden") && panel.classList.contains("iu-financial-overlay-panel--detail");
+      const panel = document.getElementById("iuLegalDocsPanel");
+      return panel && !panel.hasAttribute("hidden") && panel.classList.contains("iu-legal-overlay-panel--hub");
     },
     null,
     { timeout: 30000 },
@@ -132,13 +149,47 @@ async function openCalculator(page, calcId) {
   await page.waitForTimeout(400);
 }
 
-function validateLayout(row, viewportLabel) {
+async function openCategory(page, catId) {
+  await openHub(page);
+  await page.click(`[data-iu-legal-cat="${catId}"]`);
+  await page.waitForFunction(
+    (id) => {
+      const panel = document.getElementById("iuLegalDocsPanel");
+      return panel && panel.classList.contains("iu-legal-overlay-panel--category");
+    },
+    catId,
+    { timeout: 30000 },
+  );
+  await page.waitForTimeout(400);
+}
+
+async function openDocument(page, doc) {
+  await openCategory(page, doc.category);
+  await page.click(`[data-iu-legal-open-doc="${doc.id}"]`);
+  await page.waitForFunction(
+    (id) => {
+      const panel = document.getElementById("iuLegalDocsPanel");
+      const title = document.getElementById("iuLegalDocsTitle");
+      return (
+        panel &&
+        panel.classList.contains("iu-legal-overlay-panel--detail") &&
+        title &&
+        String(title.textContent || "").trim().length > 0
+      );
+    },
+    doc.id,
+    { timeout: 30000 },
+  );
+  await page.waitForTimeout(400);
+}
+
+function validateLayout(row, viewportLabel, expectGrid = true) {
   const fails = [];
   if (!row || !row.header || !row.title) {
     fails.push(`${viewportLabel}: header/title missing`);
     return fails;
   }
-  if (row.headerDisplay !== "grid") {
+  if (expectGrid && row.headerDisplay !== "grid") {
     fails.push(`${viewportLabel} ${row.titleText}: header display=${row.headerDisplay} expected grid`);
   }
   const controls = [row.back, row.info, row.close].filter(Boolean);
@@ -147,7 +198,9 @@ function validateLayout(row, viewportLabel) {
   }
   const controlBottom = Math.max(...controls.map((c) => c.bottom));
   if (row.title.top < controlBottom - 2) {
-    fails.push(`${viewportLabel} ${row.titleText}: title overlaps controls (title.top=${row.title.top}, controls.bottom=${controlBottom})`);
+    fails.push(
+      `${viewportLabel} ${row.titleText}: title overlaps controls (title.top=${row.title.top}, controls.bottom=${controlBottom})`,
+    );
   }
   for (const ctrl of controls) {
     if (rectsOverlap(row.title, ctrl)) {
@@ -167,22 +220,43 @@ function validateLayout(row, viewportLabel) {
 async function runViewport(page, viewport, label) {
   await page.setViewportSize(viewport);
   const fails = [];
-  for (const calc of LONG_CALCS) {
-    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
-    await openCalculator(page, calc.id);
-    const row = await measureHeader(page);
-    if (row && row.titleText !== calc.title) {
-      fails.push(`${label} ${calc.id}: title mismatch "${row.titleText}"`);
-    }
-    fails.push(...validateLayout(row, `${label}/${calc.id}`));
+
+  await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await openHub(page);
+  const hubRow = await measureHeader(page);
+  if (hubRow && hubRow.panelMode !== "hub") {
+    fails.push(`${label}/hub: expected hub mode got ${hubRow.panelMode}`);
   }
+  fails.push(...validateLayout(hubRow, `${label}/hub`));
+
+  await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await openCategory(page, "smlouvy");
+  const catRow = await measureHeader(page);
+  if (catRow && catRow.panelMode !== "category") {
+    fails.push(`${label}/category: expected category mode got ${catRow.panelMode}`);
+  }
+  fails.push(...validateLayout(catRow, `${label}/category`));
+
+  for (const doc of LONG_DOCS) {
+    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
+    await openDocument(page, doc);
+    const row = await measureHeader(page);
+    if (row && row.titleText !== doc.title) {
+      fails.push(`${label} ${doc.id}: title mismatch "${row.titleText}"`);
+    }
+    if (row && row.panelMode !== "detail") {
+      fails.push(`${label} ${doc.id}: expected detail mode got ${row.panelMode}`);
+    }
+    fails.push(...validateLayout(row, `${label}/${doc.id}`));
+  }
+
   return fails;
 }
 
 async function runDesktopRegression(page) {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
-  await openCalculator(page, "budget");
+  await openDocument(page, LONG_DOCS[0]);
   const row = await measureHeader(page);
   const fails = [];
   if (!row) {
@@ -198,11 +272,11 @@ async function runDesktopRegression(page) {
 async function main() {
   const staticResult = staticGate();
   if (!staticResult.pass) {
-    console.log("IU_FINANCIAL_CALC_MOBILE_HEADER_GUARD_STATIC_FAIL");
+    console.log("IU_LEGAL_DOCUMENTS_MOBILE_HEADER_GUARD_STATIC_FAIL");
     staticResult.fails.forEach((f) => console.error(f));
     process.exit(1);
   }
-  console.log("IU_FINANCIAL_CALC_MOBILE_HEADER_GUARD_STATIC_PASS");
+  console.log("IU_LEGAL_DOCUMENTS_MOBILE_HEADER_GUARD_STATIC_PASS");
 
   const server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {
     cwd: REPO,
@@ -231,11 +305,11 @@ async function main() {
   server.kill("SIGTERM");
 
   if (fails.length) {
-    console.log("IU_FINANCIAL_CALC_MOBILE_HEADER_GUARD_FAIL");
+    console.log("IU_LEGAL_DOCUMENTS_MOBILE_HEADER_GUARD_FAIL");
     fails.forEach((f) => console.error(f));
     process.exit(1);
   }
-  console.log("IU_FINANCIAL_CALC_MOBILE_HEADER_GUARD_PASS");
+  console.log("IU_LEGAL_DOCUMENTS_MOBILE_HEADER_GUARD_PASS");
 }
 
 main().catch((err) => {
