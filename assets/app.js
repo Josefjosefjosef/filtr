@@ -24264,6 +24264,12 @@ function buildVideoAsArticleCard(it) {
   function iuMindMenuOpenExternalUrl(rawUrl) {
     var url = iuMindMenuNormalizeExternalUrl(rawUrl);
     if (!url) return false;
+    try {
+      var now = Date.now();
+      var last = window.__iuMindMenuLastExternalOpen || null;
+      if (last && last.url === url && now - last.ts < 600) return true;
+      window.__iuMindMenuLastExternalOpen = { url: url, ts: now };
+    } catch (_) {}
     iuMindMenuArmReturnState();
     var opened = false;
     try {
@@ -24364,6 +24370,7 @@ function buildVideoAsArticleCard(it) {
         }
         var extA = t.closest("a[href]");
         if (!extA || !mm.contains(extA)) return;
+        if (extA.closest("section.iu-mmQuickLinks .iuTile[data-quicktool-custom='1']")) return;
         var href = String(extA.getAttribute("href") || "").trim();
         if (!href || !/^https?:\/\//i.test(href)) return;
         if (extA.closest("#iuQuickFeed, .iu-quicktools-settings-panel")) return;
@@ -25368,10 +25375,9 @@ function buildVideoAsArticleCard(it) {
         tile.setAttribute("data-quicktool-id", btn.id);
         tile.setAttribute("data-quicktool-custom", "1");
         tile.setAttribute("data-iu-ql-custom", "1");
-        const link = document.createElement("a");
+        const link = document.createElement("button");
+        link.type = "button";
         link.className = "iuTileLink";
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
         const text = document.createElement("span");
         text.className = "iuTileText";
         link.appendChild(text);
@@ -25382,7 +25388,8 @@ function buildVideoAsArticleCard(it) {
       const linkEl = tile.querySelector(".iuTileLink");
       const textEl = tile.querySelector(".iuTileText");
       if (linkEl) {
-        linkEl.href = btn.url;
+        linkEl.setAttribute("data-iu-custom-url", btn.url);
+        linkEl.removeAttribute("href");
         linkEl.setAttribute("aria-label", btn.label);
       }
       if (textEl) textEl.textContent = btn.label;
@@ -26257,8 +26264,29 @@ function buildVideoAsArticleCard(it) {
     return true;
   }
 
+  function iuQuickToolsBindCustomTileClickOnce() {
+    if (window.__iuQuickToolsCustomTileBound) return;
+    window.__iuQuickToolsCustomTileBound = 1;
+    document.addEventListener("click", function(e) {
+      var t = e.target;
+      if (t && t.nodeType === 3) t = t.parentElement;
+      if (!t || typeof t.closest !== "function") return;
+      var tile = t.closest(".iuTile[data-quicktool-custom='1']");
+      if (!tile) return;
+      var btn = t.closest(".iuTileLink");
+      if (!btn || !tile.contains(btn)) return;
+      var url = String(btn.getAttribute("data-iu-custom-url") || "").trim();
+      if (!url) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+      if (typeof iuMindMenuOpenExternalUrl === "function") iuMindMenuOpenExternalUrl(url);
+    }, true);
+  }
+
   function iuQuickToolsInit() {
     iuQuickToolsBindDocumentOnce();
+    iuQuickToolsBindCustomTileClickOnce();
     iuQuickToolsEnsureResetConfirm();
     iuQuickToolsApplyConfig();
     const panel = document.getElementById("iuQuickToolsSettingsPanel");
@@ -40354,7 +40382,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__backdrop{position:fixed!important;inset:0!important}" +
     "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__dialog," +
     "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__dialog{width:100%!important;max-width:none!important;height:100vh!important;height:100dvh!important;min-height:100vh!important;min-height:100dvh!important;max-height:none!important;margin:0!important;border-radius:0!important;box-shadow:none!important;display:grid!important;grid-template-rows:auto 1fr!important;overflow:hidden!important;box-sizing:border-box!important}" +
-    "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__body{display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(280px,0.85fr)!important;min-height:0!important;height:100%!important;overflow:hidden!important}" +
+    "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__body{display:grid!important;grid-template-columns:minmax(0,1fr) 340px!important;min-height:0!important;height:100%!important;overflow:hidden!important}" +
+    "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__main{min-width:0!important;max-width:100%!important;contain:layout style!important}" +
+    "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__side{min-width:340px!important;max-width:340px!important;width:340px!important;box-sizing:border-box!important;flex:0 0 340px!important}" +
+    "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__side.iu-calendarOverlay__side--layoutEmpty{visibility:hidden!important;pointer-events:none!important;overflow:hidden!important}" +
+    "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__side.iu-calendarOverlay__side--layoutEmpty>*{visibility:hidden!important}" +
     "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__main," +
     "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__side," +
     "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__listScroll," +
@@ -42732,12 +42764,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ov.classList.toggle("iu-calendarOverlay--calDayMode", mob && state.dayOpen);
     const side = document.getElementById("iuCalendarBridgeAside");
     if (side){
-      if (sideOpen){
-        side.removeAttribute("hidden");
-        side.setAttribute("aria-hidden", "false");
+      if (mob){
+        side.classList.remove("iu-calendarOverlay__side--layoutEmpty");
+        if (sideOpen){
+          side.removeAttribute("hidden");
+          side.setAttribute("aria-hidden", "false");
+        } else {
+          side.setAttribute("hidden", "");
+          side.setAttribute("aria-hidden", "true");
+        }
       } else {
-        side.setAttribute("hidden", "");
-        side.setAttribute("aria-hidden", "true");
+        side.removeAttribute("hidden");
+        side.setAttribute("aria-hidden", sideOpen ? "false" : "true");
+        side.classList.toggle("iu-calendarOverlay__side--layoutEmpty", !sideOpen);
       }
     }
   }
