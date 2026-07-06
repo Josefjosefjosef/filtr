@@ -149,6 +149,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-desktop-mindmenu-calendar-polish-guard
 
+      - name: Desktop partner banners removed guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-desktop-partner-banners-removed-guard
+
       - name: Financial calc mobile header guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-financial-calc-mobile-header-guard
