@@ -832,4 +832,22 @@
     overflow: visible !important;
     text-overflow: unset !important;
   }
+
+  /* Part 10: Datovka / Bakaláři / ZP — klávesnice + sjednocené „+ Přidat další“ */
+  body.iu-modal-open.iu-ds-overlay-open #iuDsPanel.iu-ds-panel.iuSectionDS[data-open="1"]:not([hidden]),
+  body:is(.iu-quickFeedOpen, .iu-quickFeedMojeFullscreen, .iu-mobileGateToolsQuickOpen, .iu-mobileGateOverlayOpen)
+    #iuQuickFeed:is(.iu-bakalari-quickfeed-root, .iu-pojistovna-quickfeed-root):not([hidden]) {
+    max-height: calc(100svh - var(--iu-tool-overlay-panel-bottom)) !important;
+  }
+
+  #iuDsPanel .iu-ds-add,
+  #iuQuickFeed .bakalari-add-another,
+  #iuQuickFeed .iu-health-add {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    align-self: stretch !important;
+    margin-top: 14px !important;
+    box-sizing: border-box !important;
+  }
 }

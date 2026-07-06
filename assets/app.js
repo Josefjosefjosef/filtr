@@ -17637,6 +17637,111 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
+  /**
+   * P0 Mobile/tablet (≤1024px): Datovka / Bakaláři / ZP — při otevřené klávesnici drží
+   * #iuMobileBottomNav na spodní hraně layout viewportu (visualViewport resize ji jinak posune nahoru).
+   */
+  function iuMojeSluzbyFormBottomNavKeyboardPinInit() {
+    try {
+      if (window.__iuMojeSluzbyFormBottomNavKeyboardPinInit) return;
+      window.__iuMojeSluzbyFormBottomNavKeyboardPinInit = 1;
+    } catch (_) {}
+    var mqTablet = null;
+    try {
+      mqTablet = window.matchMedia && window.matchMedia("(max-width: 1024px)");
+    } catch (_) {}
+    function isScopeActive() {
+      try {
+        if (mqTablet && !mqTablet.matches) return false;
+        var body = document.body;
+        if (!body) return false;
+        if (body.classList.contains("iu-ds-overlay-open")) return true;
+        if (
+          !body.classList.contains("iu-quickFeedOpen") &&
+          !body.classList.contains("iu-mobileGateToolsQuickOpen") &&
+          !body.classList.contains("iu-quickFeedMojeFullscreen")
+        ) {
+          return false;
+        }
+        var qf = document.getElementById("iuQuickFeed");
+        if (!qf || qf.hidden) return false;
+        return (
+          qf.classList.contains("iu-bakalari-quickfeed-root") ||
+          qf.classList.contains("iu-pojistovna-quickfeed-root")
+        );
+      } catch (_) {
+        return false;
+      }
+    }
+    function syncPin() {
+      try {
+        var nav = document.getElementById("iuMobileBottomNav");
+        if (!nav) return;
+        if (!isScopeActive()) {
+          nav.style.removeProperty("transform");
+          nav.style.removeProperty("-webkit-transform");
+          return;
+        }
+        var vv = window.visualViewport;
+        if (!vv) return;
+        var gap = Math.max(0, (window.innerHeight || 0) - vv.height - (vv.offsetTop || 0));
+        if (gap > 8) {
+          var ty = "translate3d(0," + gap + "px,0)";
+          nav.style.transform = ty;
+          nav.style.webkitTransform = ty;
+        } else {
+          nav.style.removeProperty("transform");
+          nav.style.removeProperty("-webkit-transform");
+        }
+      } catch (_) {}
+    }
+    var scheduled = 0;
+    function schedulePin() {
+      if (scheduled) return;
+      scheduled = 1;
+      try {
+        window.requestAnimationFrame(function () {
+          scheduled = 0;
+          syncPin();
+        });
+      } catch (_) {
+        scheduled = 0;
+        syncPin();
+      }
+    }
+    try {
+      var vv0 = window.visualViewport;
+      if (vv0 && typeof vv0.addEventListener === "function") {
+        vv0.addEventListener("resize", schedulePin, { passive: true });
+        vv0.addEventListener("scroll", schedulePin, { passive: true });
+      }
+    } catch (_) {}
+    try {
+      window.addEventListener("resize", schedulePin, { passive: true });
+      window.addEventListener("orientationchange", schedulePin, { passive: true });
+      document.addEventListener("focusin", schedulePin, { passive: true });
+      document.addEventListener("focusout", schedulePin, { passive: true });
+    } catch (_) {}
+    try {
+      if (mqTablet && typeof mqTablet.addEventListener === "function") {
+        mqTablet.addEventListener("change", schedulePin);
+      }
+    } catch (_) {}
+    try {
+      var mo = new MutationObserver(schedulePin);
+      mo.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+      var qf0 = document.getElementById("iuQuickFeed");
+      if (qf0) {
+        mo.observe(qf0, { attributes: true, attributeFilter: ["class", "hidden"] });
+      }
+      var dsPanel = document.getElementById("iuDsPanel");
+      if (dsPanel) {
+        mo.observe(dsPanel, { attributes: true, attributeFilter: ["data-open", "hidden"] });
+      }
+    } catch (_) {}
+    schedulePin();
+  }
+
   /** P0 Mobile layout: reorder — on mobile use gate (Silver first + 2-tab); on desktop restore. */
   function iuMobileLayoutReorder() {
     try {
@@ -26356,6 +26461,9 @@ function buildVideoAsArticleCard(it) {
       iuMobileBottomNavInit();
     } catch (_) {}
     try {
+      iuMojeSluzbyFormBottomNavKeyboardPinInit();
+    } catch (_) {}
+    try {
       iuWebNavDetailBackBarHostInstall();
     } catch (_) {}
     iuInitMobileFocusAccordion();
@@ -33052,9 +33160,7 @@ function buildVideoAsArticleCard(it) {
         iuDsPersist();
         iuDsRender();
         try {
-          const host = document.getElementById("iuDsProfileListHost");
-          const last = host ? host.querySelector(".iu-ds-profile:last-of-type .iu-ds-f-label") : null;
-          if (last) last.focus();
+          if (addBtn && typeof addBtn.blur === "function") addBtn.blur();
         } catch (_) {}
       });
     }
@@ -37459,7 +37565,7 @@ function buildVideoAsArticleCard(it) {
     var rootHtml = [
       "<div class=\"iu-mojeSluzbyBakalari bakalari-root\">",
       "  <div class=\"bakalari-cards-container\" data-bakalari-cards></div>",
-      "  <button type=\"button\" class=\"bakalari-add-another\" data-bakalari-add>Přidat další</button>",
+      "  <button type=\"button\" class=\"bakalari-add-another\" data-bakalari-add>+ Přidat další</button>",
       "  <div class=\"bakalari-global-feedback\" data-bakalari-global-feedback aria-live=\"polite\"></div>",
       "  <div class=\"bakalari-delete-layer\" hidden data-bakalari-delete-layer role=\"presentation\">",
       "    <div class=\"bakalari-delete-dialog\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"bakalari-delete-title\">",
@@ -37808,11 +37914,9 @@ function buildVideoAsArticleCard(it) {
         syncProfilesFromDom();
         profiles.push({ id: "bak_" + Date.now(), name: "", url: "", username: "", password: "", locked: false });
         renderAllCards();
-        var last = cardsEl.querySelector(".bakalari-card:last-of-type");
-        if (last) {
-          var u = last.querySelector("[data-field=\"url\"]");
-          if (u) try { u.focus(); } catch (_) {}
-        }
+        try {
+          if (addAnotherBtn && typeof addAnotherBtn.blur === "function") addAnotherBtn.blur();
+        } catch (_) {}
       });
     }
 
@@ -37855,7 +37959,7 @@ function buildVideoAsArticleCard(it) {
     var rootHtml = [
       "<div class=\"iu-health-root\" data-iu-health-root>",
       "  <div class=\"iu-health-cards\" data-iu-health-cards></div>",
-      "  <button type=\"button\" class=\"iu-health-add\" data-iu-health-add>Přidat další</button>",
+      "  <button type=\"button\" class=\"iu-health-add\" data-iu-health-add>+ Přidat další</button>",
       "  <div class=\"iu-health-global-feedback\" data-iu-health-global-feedback aria-live=\"polite\"></div>",
       "  <div class=\"iu-health-picker-layer\" hidden data-iu-health-picker-layer role=\"presentation\">",
       "    <div class=\"iu-health-picker-dialog\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"iu-health-picker-title\">",
@@ -38228,11 +38332,9 @@ function buildVideoAsArticleCard(it) {
         profiles.push(healthNewCardModel(prevCol));
         healthSaveCardsToStorage(profiles);
         renderAllCards();
-        var last = cardsEl.querySelector(".iu-health-card:last-of-type");
-        if (last) {
-          var tr = last.querySelector("[data-iu-health-provider-trigger]");
-          if (tr) try { tr.focus(); } catch (_) {}
-        }
+        try {
+          if (addAnotherBtn && typeof addAnotherBtn.blur === "function") addAnotherBtn.blur();
+        } catch (_) {}
       });
     }
 

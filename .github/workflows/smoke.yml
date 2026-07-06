@@ -165,6 +165,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-ds-mobile-overlay-visible-guard
 
+      - name: Moje sluzby mobile keyboard add btn guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-moje-sluzby-mobile-keyboard-add-btn-guard
+
       - name: Custom buttons mobile scroll guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-custom-buttons-mobile-scroll-guard
