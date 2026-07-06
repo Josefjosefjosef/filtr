@@ -51,6 +51,9 @@ if (!appJs.includes("iu-calendarOverlay__side--layoutEmpty")) {
 if (!appJs.includes("grid-template-columns:minmax(0,1fr) 340px")) {
   failures.push("calendar desktop body grid must use fixed 340px side column");
 }
+if (indexHtml.includes("iu-calendarOverlay--sidePanelOpen") && indexHtml.includes("1.15fr")) {
+  failures.push("calendar sidePanelOpen must not override body grid with fractional columns");
+}
 if (!appJs.includes("iu-tasksOverlay__body{display:grid!important;grid-template-columns:450px minmax(0,1fr)!important")) {
   failures.push("tasks desktop overlay must use 450px + detail two-column grid like notes");
 }
