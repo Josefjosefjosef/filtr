@@ -7790,7 +7790,7 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid,
 
 .layout{
   display: grid;
-  grid-template-columns: 1fr 360px;
+  grid-template-columns: 1fr var(--iu-right-rail-width, 392px);
   gap: 20px;
   align-items: start;
   width: 100%;
@@ -7813,9 +7813,10 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid,
 
 .layout > aside.accordionCol{
   grid-column: 2;
-  width: 360px;
-  min-width: 360px;
-  max-width: 360px;
+  width: var(--iu-right-rail-width, 392px);
+  min-width: var(--iu-right-rail-width, 392px);
+  max-width: var(--iu-right-rail-width, 392px);
+  flex: 0 0 var(--iu-right-rail-width, 392px);
   justify-self: stretch;
   overflow: visible;
   box-sizing: border-box;
@@ -8204,7 +8205,7 @@ html[data-iu-debug="1"] #feed > .news-card { outline: 2px solid green; }
     max-width: 1240px;
   }
   .layout{
-    grid-template-columns: minmax(817px, 1fr) 360px;
+    grid-template-columns: minmax(785px, 1fr) var(--iu-right-rail-width, 392px);
   }
 }
 
@@ -11567,9 +11568,14 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odka
 }
 }
 
+@media (max-width: 900px){
 .accordionCol .mindMenu .iu-mailbox-pill{
   width: var(--iu-mm-pill-w, 252px);
   flex: 0 0 var(--iu-mm-pill-w, 252px);
+}
+}
+
+.accordionCol .mindMenu .iu-mailbox-pill{
   height: 35px;
   border-radius: 999px;
   border: 1px solid rgba(20,40,70,0.18);
@@ -11588,12 +11594,17 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odka
   white-space: nowrap;
 }
 
+@media (max-width: 900px){
 .accordionCol .mindMenu .iu-mailbox-gear{
   width: 24px;
   height: 24px;
   border-radius: 10px;
   border: 1px solid rgba(20,40,70,0.12);
   background: rgba(255,255,255,0.75);
+}
+}
+
+.accordionCol .mindMenu .iu-mailbox-gear{
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -12798,6 +12809,8 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  contain: layout style;
+  isolation: isolate;
 }
 
 .layout > aside.accordionCol .mindMenu .iu-mailbox-gear{
@@ -21642,7 +21655,7 @@ body.iu-myinfouzel-open .iu-tool-privacy-modal:not([hidden]){z-index:12200!impor
 
 @media (min-width: 901px){
   :root{
-    --iu-right-rail-width: 360px;
+    --iu-right-rail-width: 392px;
   }
 
   .layout{
