@@ -1909,11 +1909,8 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=home-divider-spacing-8-4-20260628" />
     <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=home-divider-spacing-8-4-20260628" />
     <link rel="stylesheet" href="/assets/iu-home-premium-install-box.css?v=1" />
-    <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=pr5907-desktop-v2-20260618" />
+    <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=remove-partner-banners-v1-20260706" />
     <link rel="stylesheet" href="/assets/iu-desktop-parcel-watch-overlay.css?v=pr5907-desktop-parcel-premium-20260619" />
-    <link rel="preload" as="image" href="/assets/partners/partner-resistance-security-right-rail-v1.png" media="(min-width: 1025px)" />
-    <link rel="preload" as="video" href="/assets/partners/partner-iaf-petr-ondrus-right-rail-motion-v2.mp4" media="(min-width: 1025px)" type="video/mp4" />
-    <link rel="preload" as="image" href="/assets/partners/partner-iaf-petr-ondrus-right-rail-v1.png" media="(min-width: 1025px)" />
     <link rel="stylesheet" href="/assets/iu-desktop-home-premium.css?v=desktop-mindmenu-calendar-polish-v1-20260706" />
     <link rel="stylesheet" href="/assets/iu-desktop-info-panel.css?v=info-panel-polish-v1-20260705" />
     <link rel="stylesheet" href="/assets/iu-mobile-info-panel.css?v=info-panel-polish-v1-20260705" />
@@ -3747,44 +3744,6 @@ font-src 'self' data:;
                     </div>
                   </div>
                 </div>
-                <div id="iuDesktopRightRailPartnerResistance" class="iu-desktop-right-rail-partner" data-iu-desktop-right-rail-partner="resistance-security" aria-label="Partnerská reklama Resistance Security">
-                  <div class="iu-desktop-right-rail-partner__adHead" aria-hidden="true">
-                    <span class="iu-desktop-right-rail-partner__adPos">Mám zájem o reklamu</span>
-                    <span class="iu-desktop-right-rail-partner__adLabel">Reklama</span>
-                  </div>
-                  <a class="iu-desktop-right-rail-partner__link" href="https://resistancesro.cz/" target="_blank" rel="noopener noreferrer" aria-label="Resistance Security — ostraha majetku a osob (otevře se v novém panelu)">
-                    <img class="iu-desktop-right-rail-partner__img" src="/assets/partners/partner-resistance-security-right-rail-v1.png" alt="Resistance Security — ostraha majetku a osob" width="360" height="240" decoding="async" />
-                  </a>
-                </div>
-                <div id="iuDesktopRightRailPartnerIaf" class="iu-desktop-right-rail-partner" data-iu-desktop-right-rail-partner="iaf-petr-ondrus" aria-label="Partnerská reklama IAF Petr Ondruš">
-                  <div class="iu-desktop-right-rail-partner__adHead" aria-hidden="true">
-                    <span class="iu-desktop-right-rail-partner__adPos">Mám zájem o reklamu</span>
-                    <span class="iu-desktop-right-rail-partner__adLabel">Reklama</span>
-                  </div>
-                  <a class="iu-desktop-right-rail-partner__link" href="https://iamfighter.cz/?gad_source=1&amp;gad_campaignid=18700430809&amp;gbraid=0AAAAApAflWpfm0OOkHqJl3G4saG09pBsR&amp;gclid=Cj0KCQjwi8nRBhDhARIsAHZf_pZblB-VAPhv0GmewPaV2pEvVErBNyAJwQDBbRhlGh--NSYA0VA6gMMaAqejEALw_wcB" target="_blank" rel="noopener noreferrer" aria-label="IAF Petr Ondruš — MMA zápasy a trénink (otevře se v novém panelu)">
-                    <video class="iu-desktop-right-rail-partner__video" autoplay muted loop playsinline preload="metadata" width="1024" height="1536" aria-label="IAF Petr Ondruš — MMA zápasy a trénink">
-                      <source src="/assets/partners/partner-iaf-petr-ondrus-right-rail-motion-v2.mp4" type="video/mp4" />
-                    </video>
-                    <img class="iu-desktop-right-rail-partner__img iu-desktop-right-rail-partner__img--fallback" src="/assets/partners/partner-iaf-petr-ondrus-right-rail-v1.png" alt="IAF Petr Ondruš — MMA zápasy a trénink" width="1024" height="1536" decoding="async" aria-hidden="true" />
-                  </a>
-                </div>
-                <script>
-                (function () {
-                  var root = document.getElementById("iuDesktopRightRailPartnerIaf");
-                  if (!root || window.matchMedia("(max-width: 1024px)").matches) return;
-                  var link = root.querySelector(".iu-desktop-right-rail-partner__link");
-                  var video = root.querySelector(".iu-desktop-right-rail-partner__video");
-                  var fallback = root.querySelector(".iu-desktop-right-rail-partner__img--fallback");
-                  if (!link || !video || !fallback) return;
-                  function useFallback() {
-                    link.setAttribute("data-iaf-fallback-active", "1");
-                    video.hidden = true;
-                    fallback.removeAttribute("aria-hidden");
-                  }
-                  video.addEventListener("error", useFallback);
-                  if (video.error) useFallback();
-                })();
-                </script>
                 <template id="iuLazyOverlayTpl-weathergeo" data-iu-overlay-lazy="weathergeo">
                 <div id="iuSilverWeatherGeoOverlay" class="iuSilverWeatherGeoOverlay" role="dialog" aria-modal="true" aria-labelledby="iuSilverWeatherGeoOverlayTitle" aria-label="Souhlas s polohou pro počasí" hidden>
                   <div class="iuSilverWeatherGeoOverlay__backdrop" data-iu-silver-wx-geo-overlay-close></div>
