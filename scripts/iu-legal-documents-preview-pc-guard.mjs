@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+/**
+ * Guard: legal document preview portal must stack above MyInfoUzel overlays on PC.
+ */
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(__dirname, "..");
+
+const moduleJs = fs.readFileSync(path.join(root, "assets/iu-legal-documents-module.js"), "utf8");
+const overlayCss = fs.readFileSync(path.join(root, "assets/iu-legal-documents-overlay.css"), "utf8");
+const indexHtml = fs.readFileSync(path.join(root, "projects/index.html"), "utf8");
+const appJs = fs.readFileSync(path.join(root, "assets/app.js"), "utf8");
+
+const checks = [
+  moduleJs.includes("applyPreviewPortalOpenStyles"),
+  moduleJs.includes('layer.style.setProperty("z-index", "12250", "important")'),
+  moduleJs.includes('data-preview-open", "1")'),
+  overlayCss.includes("z-index: 12250 !important"),
+  overlayCss.includes("body.iu-myinfouzel-open #iuLegalDocsPreviewPortal"),
+  overlayCss.includes("body.iu-legal-docs-preview-open #iuLegalDocsPanel.iu-legal-overlay-panel:not([hidden])"),
+  indexHtml.includes("legal-docs-preview-pc-v1-20260706"),
+  appJs.includes("iu-legal-documents-module.js?v=legal-docs-preview-pc-v1-20260706"),
+];
+
+const pass = checks.every(Boolean);
+process.stdout.write(JSON.stringify({ pass, failedCount: checks.filter((c) => !c).length }) + "\n");
+if (!pass) process.exit(1);
