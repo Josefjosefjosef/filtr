@@ -15842,7 +15842,8 @@ function buildVideoAsArticleCard(it) {
         const phase = iuSilverWeatherComputePhase();
         try{
           if (line2){
-            line2.setAttribute("data-iu-action-indicator", "chevron");
+            if (phase === "loading") line2.removeAttribute("data-iu-action-indicator");
+            else line2.setAttribute("data-iu-action-indicator", "chevron");
           }
         }catch{}
         if (phase === "denied"){
@@ -23214,8 +23215,34 @@ function buildVideoAsArticleCard(it) {
 
     return job;
   }
+
+  function iuWeatherBootPrefetchIfReady(){
+    try{
+      if (window.__iuWeatherBootPrefetchStarted) return;
+      const hasLoc = !!(iuWeatherReadGpsSelected && iuWeatherReadGpsSelected()) ||
+        !!(iuWeatherReadManualLocation && iuWeatherReadManualLocation());
+      if (!hasLoc) return;
+      window.__iuWeatherBootPrefetchStarted = 1;
+      if (typeof iuWeatherEnsureState !== "function") return;
+      void iuWeatherEnsureState()
+        .then(function(){
+          try{
+            if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh();
+          }catch{}
+          try{
+            const sec = String((document.body && document.body.dataset && document.body.dataset.section) || "");
+            if (sec === "pocasi" && typeof window.iuWeatherLoadAndRender === "function") {
+              void window.iuWeatherLoadAndRender();
+            }
+          }catch{}
+        })
+        .catch(function(){});
+    }catch{}
+  }
+
   try{
     window.iuWeatherEnsureState = iuWeatherEnsureState;
+    window.iuWeatherBootPrefetchIfReady = iuWeatherBootPrefetchIfReady;
     window.iuWeatherRenderMapLayer = iuWeatherRenderMapLayer;
     window.iuWeatherGetDataSource = function iuWeatherGetDataSource(){
       try{
@@ -26441,6 +26468,8 @@ function buildVideoAsArticleCard(it) {
     installCLSObserver();
     renderSectionsBar();
     setSectionsFromHash();
+    try{ iuSilverWeatherInit(); }catch{}
+    try{ iuWeatherBootPrefetchIfReady(); }catch{}
     try{
       if (document.body && !document.body.classList.contains("iuTopbarFlushRight")) {
         document.body.classList.add("iuTopbarFlushRight");
@@ -26469,9 +26498,7 @@ function buildVideoAsArticleCard(it) {
     iuInitMobileFocusAccordion();
     iuInitFeedVideoPreviewEmbeds();
 
-    try{ iuSilverWeatherInit(); }catch{}
     try { initRightPanel(); } catch (e) { console.error("RightPanel init failed", e); if (typeof persistLastError === "function") persistLastError("RightPanel init failed"); }
-
     try{ iuUserAddressInit(); }catch{}
     try{ iuSilverWelcomeInit(); }catch{}
     try{ iuArticleActionsInit(); }catch{}
@@ -36146,35 +36173,20 @@ function buildVideoAsArticleCard(it) {
     // P0 mobile shell: iuApplyMobileMainShellFromSectionNav(section, nav) runs synchronously after showView
     // (see iuApplyMobileMainShellFromSectionNav) — do not duplicate here.
 
-    // Weather (UI-only): defer fetch/render so first paint is not blocked on non-feed Počasí.
+    // Weather (UI-only): fetch/render immediately when Počasí section opens (no idle defer).
     try{
       if (section === "pocasi") {
-        var ricWx =
-          typeof requestIdleCallback !== "undefined"
-            ? requestIdleCallback
-            : function (cb, opt) {
-                return setTimeout(function () {
-                  try {
-                    cb({ didTimeout: true, timeRemaining: function () { return 5; } });
-                  } catch (_) {}
-                }, opt && opt.timeout ? Math.min(opt.timeout, 40) : 1);
-              };
-        ricWx(
-          function () {
-            try{
-              const fn = (typeof window !== "undefined" && window.iuWeatherLoadAndRender);
-              if (typeof fn === "function") fn();
-            }catch{}
-            try{ iuWeatherHideEmptyNameday(); }catch{}
-            try{
-              const params = new URLSearchParams(location.search || "");
-              if (params.get("radarOpen") === "1") {
-                iuWeatherRadarEnsure();
-              }
-            }catch{}
-          },
-          { timeout: 450 }
-        );
+        try{
+          const fn = (typeof window !== "undefined" && window.iuWeatherLoadAndRender);
+          if (typeof fn === "function") fn();
+        }catch{}
+        try{ iuWeatherHideEmptyNameday(); }catch{}
+        try{
+          const params = new URLSearchParams(location.search || "");
+          if (params.get("radarOpen") === "1") {
+            iuWeatherRadarEnsure();
+          }
+        }catch{}
       }
     }catch{}
 

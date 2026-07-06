@@ -209,6 +209,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-legal-documents-preview-pc-guard
 
+      - name: Weather chevron UTF-8 guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-weather-chevron-utf8-guard
+
       - name: Travel article feed regression guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run travel-article-feed-regression-guard
