@@ -1,27 +1,24 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-07-06T01:44:38.431401Z",
+  "ingestedAt": "2026-07-06T03:33:43.792392Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Dvě minuty hrůzy v mexickém pekle. Angličané dvakrát udeřili",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-bitva-v-pekle-anglii-stoji-v-ceste-domaci-mexiko-5499967",
-      "dt": "2026-07-05T16:00:00Z",
+      "title": "Norsko slaví a sní: Můžeme vyhrát mistrovství světa",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-norsko-slavi-a-sni-muzeme-vyhrat-mistrovstvi-sveta-5500497",
+      "dt": "2026-07-06T03:23:38Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "angličané",
-        "dvakrát",
-        "dvě",
-        "fotbal",
-        "hrůzy",
-        "mexickém",
-        "minuty",
-        "online",
-        "pekle",
-        "udeřili"
+        "mistrovství",
+        "můžeme",
+        "norsko",
+        "slaví",
+        "sní",
+        "světa",
+        "vyhrát"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -48,6 +45,32 @@
         "výhru",
         "zabiják",
         "řídili"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Červená, dvě penalty. Anglie slaví postup po šíleném zápase s Mexikem",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-bitva-v-pekle-anglii-stoji-v-ceste-domaci-mexiko-5499967",
+      "dt": "2026-07-05T16:00:00Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "anglie",
+        "dvě",
+        "mexikem",
+        "penalty",
+        "postup",
+        "slaví",
+        "zápase",
+        "červená",
+        "šíleném"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -757,31 +780,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Čeští baseballisté před Pražským týdnem skončili pátí na turnaji v Haarlemu",
-      "url": "https://www.sport.cz/clanek/ostatni-cesti-baseballiste-pred-prazskym-tydnem-skoncili-pati-na-turnaji-v-haarlemu-5500169",
-      "dt": "2026-07-05T14:26:15Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "baseballisté",
-        "haarlemu",
-        "pražským",
-        "pátí",
-        "skončili",
-        "turnaji",
-        "týdnem",
-        "čeští"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45364,
+      "bytes": 45239,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-06T00:27:19Z",
+        "raw_feed_latest_publishedAt": "2026-07-06T03:23:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -845,12 +843,16 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Dvě minuty hrůzy v mexickém pekle. Angličané dvakrát udeřili",
-            "publishedAt": "2026-07-05T16:00:00Z"
+            "title": "Norsko slaví a sní: Můžeme vyhrát mistrovství světa",
+            "publishedAt": "2026-07-06T03:23:38Z"
           },
           {
             "title": "Brazílie na MS končí! Výhru Norů řídili skvělý brankář a zabiják Haaland",
             "publishedAt": "2026-07-05T11:52:50Z"
+          },
+          {
+            "title": "Červená, dvě penalty. Anglie slaví postup po šíleném zápase s Mexikem",
+            "publishedAt": "2026-07-05T16:00:00Z"
           },
           {
             "title": "Haaland slyší chválu ze všech stran: Nejlepší útočník na světě",
@@ -871,10 +873,6 @@
           {
             "title": "Maročan Sallámí skončil po šampionátu jako trenér jordánských fotbalistů",
             "publishedAt": "2026-07-05T20:09:33Z"
-          },
-          {
-            "title": "Kontroverzní odložení trestu na MS! Belgičané zuří, hvězdě USA měl pomoct i Trump",
-            "publishedAt": "2026-07-05T19:59:43Z"
           }
         ]
       }
