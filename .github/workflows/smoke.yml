@@ -89,6 +89,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-nameday-dative-guard
 
+      - name: State holiday welcome label guard (státní svátek vs svátek má)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-state-holiday-label-guard
+
       - name: Perf regression guards (flicker phases + 16 nav latency + calendar/Silver surface)
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-perf-regression-guards
