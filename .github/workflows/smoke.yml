@@ -169,6 +169,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run silver-quicktools-custom-buttons-guard
 
+      - name: Svatek pill responsive wrap guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-svatek-pill-responsive-wrap-guard
+
       - name: AI assistants overlay bottom gap guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-ai-assistants-overlay-bottom-gap-guard

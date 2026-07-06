@@ -146,13 +146,14 @@
     contain: layout style;
   }
 
-  /* â”€â”€ Welcome box: 3 rows (greet / date / svĂˇtek) â”€â”€ */
+  /* ── Welcome box: greet + date/svátek row (wrap pill only when needed) ── */
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMeta {
     display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-items: flex-start;
-    gap: 4px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0;
+    row-gap: 2px;
     width: 100%;
     min-width: 0;
     min-height: 0;
@@ -162,28 +163,17 @@
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaDateCluster {
-    display: block;
-    width: 100%;
+    display: inline;
+    width: auto;
     min-width: 0;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow: visible;
+    text-overflow: unset;
+    flex: 0 1 auto;
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekCluster {
-    display: inline-flex;
-    flex-direction: row;
-    flex-wrap: nowrap !important;
-    align-items: center;
-    gap: 0.35em;
-    width: auto;
-    max-width: none;
-    min-width: 0;
-    white-space: nowrap;
-  }
-
-  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekCluster::before {
-    content: none;
+    display: contents;
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekLabel {
