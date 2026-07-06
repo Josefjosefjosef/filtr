@@ -165,6 +165,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-custom-buttons-mobile-scroll-guard
 
+      - name: Quicktools custom buttons reset sync guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run silver-quicktools-custom-buttons-guard
+
       - name: AI assistants overlay bottom gap guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-ai-assistants-overlay-bottom-gap-guard
