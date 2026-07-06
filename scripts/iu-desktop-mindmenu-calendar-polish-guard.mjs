@@ -15,7 +15,7 @@ function read(rel) {
 const failures = [];
 const appCss = read("assets/app.css");
 const appJs = read("assets/app.js");
-const premiumCss = read("assets/iu-desktop-home-premium.css");
+const tasksCss = read("assets/iu-tasks-premium.css");
 const indexHtml = read("projects/index.html");
 
 if (!/\.layout > aside\.accordionCol \.mindMenu \.iu-mailbox-row[\s\S]*display: grid !important/.test(appCss)) {
@@ -23,6 +23,15 @@ if (!/\.layout > aside\.accordionCol \.mindMenu \.iu-mailbox-row[\s\S]*display: 
 }
 if (!/grid-template-columns: minmax\(0, 1fr\) 36px 40px/.test(appCss)) {
   failures.push("accordionCol mailbox row must use 3-column grid (input | gear | social)");
+}
+if (!/\.layout > aside\.accordionCol \.mindMenu \.iu-mailbox-row[\s\S]*gap: 5px !important/.test(appCss)) {
+  failures.push("desktop mailbox row must use 5px gap between input, gear, and social");
+}
+if (!/\.layout > aside\.accordionCol \.mindMenu \.iu-mailbox-gear[\s\S]*grid-column: 2/.test(appCss)) {
+  failures.push("desktop mailbox gear must be grid column 2 outside pill");
+}
+if (/\.mindMenu \.iu-mailbox-gear\{width:32px!important;[\s\S]*border:1px solid rgba\(15,23,42,\.1\)/.test(appCss) && !/@media \(max-width: 1024px\)\{[\s\S]*\.mindMenu \.iu-mailbox-gear\{width:32px!important;[\s\S]*border:1px solid rgba\(15,23,42,\.1\)/.test(appCss)) {
+  failures.push("mobile mailbox gear card styling must stay scoped to max-width 1024px");
 }
 if (!/flex-direction: column/.test(appCss) || !appCss.includes("#iuMailboxControls")) {
   failures.push("mailbox add/remove controls must stack vertically on desktop");
@@ -45,12 +54,23 @@ if (!appJs.includes("grid-template-columns:minmax(0,1fr) 340px")) {
 if (indexHtml.includes("iu-calendarOverlay--sidePanelOpen") && indexHtml.includes("1.15fr")) {
   failures.push("calendar sidePanelOpen must not override body grid with fractional columns");
 }
-if (!premiumCss.includes("iuMmManageTabs__tab.is-active") || !premiumCss.includes("data-iu-manage-action=\"unsave\"")) {
-  failures.push("desktop premium CSS must enhance active tabs and Odebrat button");
+if (!appJs.includes("iu-tasksOverlay__body{display:grid!important;grid-template-columns:450px minmax(0,1fr)!important")) {
+  failures.push("tasks desktop overlay must use 450px + detail two-column grid like notes");
+}
+if (!appJs.includes("iuTasksDetail") || !appJs.includes("isTasksDesktopTwoPanel")) {
+  failures.push("tasks overlay must split list and detail panels on desktop");
+}
+if (!tasksCss.includes("iu-tasksOverlay__body") || !tasksCss.includes("grid-template-columns:450px minmax(0,1fr)")) {
+  failures.push("tasks premium CSS must define desktop two-column body grid");
 }
 const cacheBustOk =
+  indexHtml.includes("weather-artifact-utf8-eager-boot-v1-20260706") ||
+  indexHtml.includes("legal-docs-preview-pc-v1-20260706") ||
+  indexHtml.includes("tasks-desktop-two-panel-v1-20260706") ||
+  indexHtml.includes("mindmenu-mailbox-row-pc-layout-v1-20260706") ||
   indexHtml.includes("desktop-mindmenu-calendar-polish-v1-20260706") ||
-  indexHtml.includes("svatek-pill-responsive-wrap-v1-20260706");
+  indexHtml.includes("svatek-pill-responsive-wrap-v1-20260706") ||
+  indexHtml.includes("state-holiday-label-v1-20260706");
 if (!cacheBustOk) {
   failures.push("index.html cache bust token missing");
 }

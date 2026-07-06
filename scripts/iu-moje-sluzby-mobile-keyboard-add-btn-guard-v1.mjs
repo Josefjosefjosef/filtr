@@ -12,7 +12,13 @@ const APP = path.join(REPO, "assets", "app.js");
 const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.css");
 const INDEX = path.join(REPO, "projects", "index.html");
 const CSS_BUST = "moje-sluzby-mobile-keyboard-add-btn-v1-20260706";
-const JS_BUST = "moje-sluzby-mobile-keyboard-add-btn-v1-20260706";
+const JS_BUSTS = [
+  "moje-sluzby-mobile-keyboard-add-btn-v1-20260706",
+  "weather-artifact-utf8-eager-boot-v1-20260706",
+  "legal-docs-preview-pc-v1-20260706",
+  "tasks-desktop-two-panel-v1-20260706",
+  "state-holiday-label-v1-20260706",
+];
 
 function chunkAfter(fnName, app) {
   const parts = app.split("function " + fnName);
@@ -84,7 +90,7 @@ function staticGate() {
     },
     {
       id: "index_app_cache_bust",
-      pass: new RegExp(`app\\.js\\?v=${JS_BUST}`).test(index),
+      pass: JS_BUSTS.some((bust) => new RegExp(`app\\.js\\?v=${bust}`).test(index)),
     },
   ];
 

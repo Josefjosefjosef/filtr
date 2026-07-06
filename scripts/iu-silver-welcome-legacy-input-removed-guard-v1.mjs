@@ -19,7 +19,13 @@ const APP = path.join(REPO, "assets", "app.js");
 const INDEX = path.join(REPO, "projects", "index.html");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8898", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
-const CACHE_BUST = "moje-sluzby-mobile-keyboard-add-btn-v1-20260706";
+const CACHE_BUSTS = [
+  "moje-sluzby-mobile-keyboard-add-btn-v1-20260706",
+  "weather-artifact-utf8-eager-boot-v1-20260706",
+  "legal-docs-preview-pc-v1-20260706",
+  "tasks-desktop-two-panel-v1-20260706",
+  "state-holiday-label-v1-20260706",
+];
 
 const VIEWPORTS = [
   { width: 390, height: 844, label: "mobile" },
@@ -50,7 +56,7 @@ function staticGate() {
     },
     {
       id: "index_app_cache_bust",
-      pass: new RegExp(`app\\.js\\?v=${CACHE_BUST}`).test(index),
+      pass: CACHE_BUSTS.some((bust) => new RegExp(`app\\.js\\?v=${bust}`).test(index)),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);

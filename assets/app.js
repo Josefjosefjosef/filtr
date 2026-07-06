@@ -8747,7 +8747,9 @@ function buildVideoAsArticleCard(it) {
           if (!t) return "";
           if (t === "—") return "";
           if (/^svátek\s+má\s*[—-]?\s*$/i.test(t)) return "";
+          if (/^státní\s+svátek:\s*[—-]?\s*$/i.test(t)) return "";
           if (/^svátek\s+má\s+načítám/i.test(t)) return "";
+          if (/^státní\s+svátek:\s+načítám/i.test(t)) return "";
           return t;
         }catch{
           return "";
@@ -8940,16 +8942,80 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
-  function iuSetTopbarNameday(name){
+  const IU_CZ_FIXED_STATE_HOLIDAYS = new Set([
+    "01-01", "05-01", "05-08", "07-05", "07-06", "09-28", "10-28", "11-17", "12-24", "12-25", "12-26"
+  ]);
+  function iuPad2ForStateHoliday(n){ return String(n).padStart(2, "0"); }
+  function iuGetEasterDateForStateHoliday(year){
+    const a = year % 19;
+    const b = Math.floor(year / 100);
+    const c = year % 100;
+    const d = Math.floor(b / 4);
+    const e = b % 4;
+    const f = Math.floor((b + 8) / 25);
+    const g = Math.floor((b - f + 1) / 3);
+    const h = (19 * a + b - d - g + 15) % 30;
+    const i = Math.floor(c / 4);
+    const k = c % 4;
+    const l = (32 + 2 * e + 2 * i - h - k) % 7;
+    const m = Math.floor((a + 11 * h + 22 * l) / 451);
+    const month = Math.floor((h + l - 7 * m + 114) / 31);
+    const day = ((h + l - 7 * m + 114) % 31) + 1;
+    return new Date(year, month - 1, day);
+  }
+  function iuToDateOnlyForStateHoliday(d){
+    const x = d instanceof Date ? d : new Date(d);
+    return x.getFullYear() + "-" + iuPad2ForStateHoliday(x.getMonth() + 1) + "-" + iuPad2ForStateHoliday(x.getDate());
+  }
+  function iuAddDaysYmdForStateHoliday(dateStr, days){
+    const d = new Date(dateStr + "T00:00:00");
+    d.setDate(d.getDate() + days);
+    return iuToDateOnlyForStateHoliday(d);
+  }
+  /** Stejné pravidlo jako kalendář isHoliday — jen pro volbu popisku v topbar / Silver meta. */
+  function iuIsCzStateHolidayDate(refDate){
+    try{
+      const d = refDate instanceof Date ? refDate : new Date();
+      const mmdd = iuPad2ForStateHoliday(d.getMonth() + 1) + "-" + iuPad2ForStateHoliday(d.getDate());
+      if (IU_CZ_FIXED_STATE_HOLIDAYS.has(mmdd)) return true;
+      const year = d.getFullYear();
+      const easterIso = iuToDateOnlyForStateHoliday(iuGetEasterDateForStateHoliday(year));
+      const todayIso = iuToDateOnlyForStateHoliday(d);
+      return todayIso === iuAddDaysYmdForStateHoliday(easterIso, -2) || todayIso === iuAddDaysYmdForStateHoliday(easterIso, 1);
+    }catch{
+      return false;
+    }
+  }
+  /** Jmeniny → „svátek má “; státní svátek → „státní svátek: “ (Silver welcome meta). */
+  function iuNamedayMetaLabelPrefix(refDate){
+    return iuIsCzStateHolidayDate(refDate) ? "státní svátek: " : "svátek má ";
+  }
+  /** Jmeniny → „Svátek má “; státní svátek → „Státní svátek: “ (topbar skrytý anchor). */
+  function iuNamedayTopbarLabelPrefix(refDate){
+    const p = iuNamedayMetaLabelPrefix(refDate);
+    return p.charAt(0).toUpperCase() + p.slice(1);
+  }
+  /** Krátký popisek bez mezery za dvojtečkou — pill drží jméno / název svátku. */
+  function iuNamedayMetaLabelShort(refDate){
+    return iuIsCzStateHolidayDate(refDate) ? "státní svátek:" : "svátek má";
+  }
+  try{
+    window.__iuIsCzStateHolidayDate = iuIsCzStateHolidayDate;
+    window.__iuNamedayMetaLabelPrefix = iuNamedayMetaLabelPrefix;
+  }catch{}
+
+  function iuSetTopbarNameday(name, refDate){
     try{
       const el = document.getElementById("iuTopbarNameday");
       if (!el) return;
+      const d = refDate instanceof Date ? refDate : new Date();
+      const prefix = iuNamedayTopbarLabelPrefix(d);
       const clean = (name ?? "").toString().trim();
       if (clean) {
-        el.textContent = "Svátek má " + clean;
+        el.textContent = prefix + clean;
         el.hidden = false;
       } else {
-        el.textContent = "Svátek má —";
+        el.textContent = prefix + "—";
         el.hidden = false;
       }
     }catch{}
@@ -8987,12 +9053,11 @@ function buildVideoAsArticleCard(it) {
       function normalizeNameday(t){
         const s = String(t || "").trim();
         if(!s || s === "—") return "";
-        const m = s.match(/svátek\s+má\s+(.+)/i);
-        if (m && m[1]) return "Svátek má " + String(m[1]).trim();
-        const m2 = s.match(/svátek\s*:\s*(.+)/i);
-        if (m2 && m2[1]) return "Svátek má " + String(m2[1]).trim();
-        if (/^svátek\s+má\s*$/i.test(s)) return "";
-        return "Svátek má " + s;
+        const prefix = iuNamedayTopbarLabelPrefix(new Date());
+        const tail = iuParseNamedayTailFromRaw(s);
+        if (tail) return prefix + tail;
+        if (/^svátek\s+má\s*$/i.test(s) || /^státní\s+svátek:\s*$/i.test(s)) return "";
+        return prefix + s;
       }
 
       function sync(){
@@ -9001,7 +9066,7 @@ function buildVideoAsArticleCard(it) {
         try{
           const nRaw = (srcName && String(srcName.textContent || "").trim()) || "";
           const n = normalizeNameday(nRaw);
-          elName.textContent = n || "Svátek má —";
+          elName.textContent = n || iuNamedayTopbarLabelPrefix(new Date()) + "—";
         }catch{}
         try{
           const full = `${elDay.textContent} ${elDate.textContent}${elName.textContent ? " • " + elName.textContent : ""}`;
@@ -9015,11 +9080,17 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
-  /** Stejné pravidlo jako welcome meta: text za „svátek má …“. */
+  /** Stejné pravidlo jako welcome meta: text za „svátek má …“ / „státní svátek: …“. */
   function iuParseNamedayTailFromRaw(raw){
     if (!raw || raw === "—") return "";
     const t = String(raw).trim();
     if (!t) return "";
+    const mState = t.match(/^státní\s+svátek:\s*(.+)$/i);
+    if (mState && mState[1]) {
+      const name = String(mState[1]).trim();
+      if (!name || /^[—\-\s]+$/i.test(name)) return "";
+      return name;
+    }
     const m = t.match(/^svátek\s+má\s+(.+)$/i);
     if (m && m[1]) {
       const name = String(m[1]).trim();
@@ -9032,7 +9103,7 @@ function buildVideoAsArticleCard(it) {
       if (!name || /^[—\-\s]+$/i.test(name)) return "";
       return name;
     }
-    const rest = t.replace(/^svátek\s+má\s*/i, "").trim();
+    const rest = t.replace(/^(?:státní\s+svátek:|svátek\s+má)\s*/i, "").trim();
     if (!rest || /^[—\-\s]+$/i.test(rest)) return "";
     return rest;
   }
@@ -9909,14 +9980,16 @@ function buildVideoAsArticleCard(it) {
       }catch{}
       return null;
     }
-    function readNamedaySuffixForMeta(){
+    function readNamedaySuffixForMeta(refDate){
+      const d = refDate instanceof Date ? refDate : new Date();
+      const prefix = iuNamedayMetaLabelPrefix(d);
       try{
         const g =
           typeof window.__iuNamedaySuffixFromSource === "string"
             ? String(window.__iuNamedaySuffixFromSource || "").trim()
             : "";
         if (g && g !== "—" && g !== "-"){
-          return "svátek má " + g;
+          return prefix + g;
         }
       }catch{}
       const src = document.getElementById("iuDailyNameday");
@@ -9924,7 +9997,7 @@ function buildVideoAsArticleCard(it) {
       let raw = (src && String(src.textContent || "").trim()) || "";
       if (!raw) raw = (top && String(top.textContent || "").trim()) || "";
       const candidate = iuParseNamedayTailFromRaw(raw);
-      return candidate ? "svátek má " + candidate : "svátek má —";
+      return candidate ? prefix + candidate : prefix + "—";
     }
     /** Must match synchronous Silver welcome bootstrap in projects/index.html (first paint). */
     function daypartKeyFromHour(h){
@@ -10110,7 +10183,7 @@ function buildVideoAsArticleCard(it) {
         const wLower = w ? w.charAt(0).toLowerCase() + w.slice(1) : "";
         const dlong = fmtDateLong(refDate);
         /* P0: Nemazat window.__iuNamedaySuffixFromSource v welcome — vlastní iuDailyPanelInit; mazání způsobovalo závod a ořez plného textu. */
-        const nd = readNamedaySuffixForMeta();
+        const nd = readNamedaySuffixForMeta(refDate);
         const dlongParts = splitDlongCsParts(refDate);
         const datePartFallback = wLower + " " + dlong;
         let namePart = "—";
@@ -10163,7 +10236,7 @@ function buildVideoAsArticleCard(it) {
           ndCluster.className = "iuSilverWelcomeMetaSvatekCluster";
           const svatekLabel = doc.createElement("span");
           svatekLabel.className = "iuSilverWelcomeMetaSvatekLabel";
-          svatekLabel.textContent = "sv\u00E1tek m\u00E1";
+          svatekLabel.textContent = iuNamedayMetaLabelShort(refDate);
           ndCluster.appendChild(svatekLabel);
           const pillBtn = doc.createElement("button");
           pillBtn.className = "svatek-pill";
@@ -15842,7 +15915,8 @@ function buildVideoAsArticleCard(it) {
         const phase = iuSilverWeatherComputePhase();
         try{
           if (line2){
-            line2.setAttribute("data-iu-action-indicator", "chevron");
+            if (phase === "loading") line2.removeAttribute("data-iu-action-indicator");
+            else line2.setAttribute("data-iu-action-indicator", "chevron");
           }
         }catch{}
         if (phase === "denied"){
@@ -23214,8 +23288,34 @@ function buildVideoAsArticleCard(it) {
 
     return job;
   }
+
+  function iuWeatherBootPrefetchIfReady(){
+    try{
+      if (window.__iuWeatherBootPrefetchStarted) return;
+      const hasLoc = !!(iuWeatherReadGpsSelected && iuWeatherReadGpsSelected()) ||
+        !!(iuWeatherReadManualLocation && iuWeatherReadManualLocation());
+      if (!hasLoc) return;
+      window.__iuWeatherBootPrefetchStarted = 1;
+      if (typeof iuWeatherEnsureState !== "function") return;
+      void iuWeatherEnsureState()
+        .then(function(){
+          try{
+            if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh();
+          }catch{}
+          try{
+            const sec = String((document.body && document.body.dataset && document.body.dataset.section) || "");
+            if (sec === "pocasi" && typeof window.iuWeatherLoadAndRender === "function") {
+              void window.iuWeatherLoadAndRender();
+            }
+          }catch{}
+        })
+        .catch(function(){});
+    }catch{}
+  }
+
   try{
     window.iuWeatherEnsureState = iuWeatherEnsureState;
+    window.iuWeatherBootPrefetchIfReady = iuWeatherBootPrefetchIfReady;
     window.iuWeatherRenderMapLayer = iuWeatherRenderMapLayer;
     window.iuWeatherGetDataSource = function iuWeatherGetDataSource(){
       try{
@@ -25125,7 +25225,7 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
       if (!_ndUrl) {
         try{ window.__iuNamedaySuffixFromSource = ""; }catch{}
-        if (elNameday) { elNameday.textContent = "Svátek má —"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
+        if (elNameday) { elNameday.textContent = iuNamedayTopbarLabelPrefix(new Date()) + "—"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
         try{ iuSetTopbarNameday(""); }catch{}
         return;
       }
@@ -25155,10 +25255,11 @@ function buildVideoAsArticleCard(it) {
           var ok = Boolean(nm) && nm !== "—" && nm !== "-";
           try{ window.__iuNamedaySuffixFromSource = ok ? nm : ""; }catch{}
           if (ok) {
-            if (elNameday) { elNameday.textContent = "Svátek má " + nm; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
+            var ndPrefix = iuNamedayTopbarLabelPrefix(new Date());
+            if (elNameday) { elNameday.textContent = ndPrefix + nm; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
             try{ iuSetTopbarNameday(nm); }catch{}
           } else {
-            if (elNameday) { elNameday.textContent = "Svátek má —"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
+            if (elNameday) { elNameday.textContent = iuNamedayTopbarLabelPrefix(new Date()) + "—"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
             try{ iuSetTopbarNameday(""); }catch{}
           }
           try{ if (typeof window.iuSilverWelcomeRefresh === "function") window.iuSilverWelcomeRefresh(); }catch{}
@@ -25167,7 +25268,7 @@ function buildVideoAsArticleCard(it) {
         })
         .catch(function(){
           try{ window.__iuNamedaySuffixFromSource = ""; }catch{}
-          if (elNameday) { elNameday.textContent = "Svátek má —"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
+          if (elNameday) { elNameday.textContent = iuNamedayTopbarLabelPrefix(new Date()) + "—"; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
           try{ if (typeof iuSetTopbarNameday === "function") iuSetTopbarNameday(""); }catch{}
           try{ iuWeatherHideEmptyNameday(); }catch{}
         });
@@ -26441,6 +26542,8 @@ function buildVideoAsArticleCard(it) {
     installCLSObserver();
     renderSectionsBar();
     setSectionsFromHash();
+    try{ iuSilverWeatherInit(); }catch{}
+    try{ iuWeatherBootPrefetchIfReady(); }catch{}
     try{
       if (document.body && !document.body.classList.contains("iuTopbarFlushRight")) {
         document.body.classList.add("iuTopbarFlushRight");
@@ -26469,9 +26572,7 @@ function buildVideoAsArticleCard(it) {
     iuInitMobileFocusAccordion();
     iuInitFeedVideoPreviewEmbeds();
 
-    try{ iuSilverWeatherInit(); }catch{}
     try { initRightPanel(); } catch (e) { console.error("RightPanel init failed", e); if (typeof persistLastError === "function") persistLastError("RightPanel init failed"); }
-
     try{ iuUserAddressInit(); }catch{}
     try{ iuSilverWelcomeInit(); }catch{}
     try{ iuArticleActionsInit(); }catch{}
@@ -36146,35 +36247,20 @@ function buildVideoAsArticleCard(it) {
     // P0 mobile shell: iuApplyMobileMainShellFromSectionNav(section, nav) runs synchronously after showView
     // (see iuApplyMobileMainShellFromSectionNav) — do not duplicate here.
 
-    // Weather (UI-only): defer fetch/render so first paint is not blocked on non-feed Počasí.
+    // Weather (UI-only): fetch/render immediately when Počasí section opens (no idle defer).
     try{
       if (section === "pocasi") {
-        var ricWx =
-          typeof requestIdleCallback !== "undefined"
-            ? requestIdleCallback
-            : function (cb, opt) {
-                return setTimeout(function () {
-                  try {
-                    cb({ didTimeout: true, timeRemaining: function () { return 5; } });
-                  } catch (_) {}
-                }, opt && opt.timeout ? Math.min(opt.timeout, 40) : 1);
-              };
-        ricWx(
-          function () {
-            try{
-              const fn = (typeof window !== "undefined" && window.iuWeatherLoadAndRender);
-              if (typeof fn === "function") fn();
-            }catch{}
-            try{ iuWeatherHideEmptyNameday(); }catch{}
-            try{
-              const params = new URLSearchParams(location.search || "");
-              if (params.get("radarOpen") === "1") {
-                iuWeatherRadarEnsure();
-              }
-            }catch{}
-          },
-          { timeout: 450 }
-        );
+        try{
+          const fn = (typeof window !== "undefined" && window.iuWeatherLoadAndRender);
+          if (typeof fn === "function") fn();
+        }catch{}
+        try{ iuWeatherHideEmptyNameday(); }catch{}
+        try{
+          const params = new URLSearchParams(location.search || "");
+          if (params.get("radarOpen") === "1") {
+            iuWeatherRadarEnsure();
+          }
+        }catch{}
       }
     }catch{}
 
@@ -39529,6 +39615,7 @@ function buildVideoAsArticleCard(it) {
   "use strict";
 
   const TASKS_STORE_KEY = "iu.tasks.mvp.v1";
+  const TASKS_OVERLAY_DOM_VERSION = "2";
   const LEGACY_SILVER_KEY = "iu.infoUzel.silverTasks.v1";
   const SCHEMA_VERSION = 1;
   const MAX_TASKS = 500;
@@ -39753,14 +39840,54 @@ function buildVideoAsArticleCard(it) {
 
   function getOverlay(){ return document.getElementById("iuTasksOverlay"); }
 
+  function isTasksNarrowViewport(){
+    try{
+      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) return true;
+      const iw = Number(window.innerWidth || document.documentElement.clientWidth || 0);
+      return iw <= 900;
+    }catch{
+      return (window.innerWidth || 0) <= 900;
+    }
+  }
+
+  function isTasksDesktopTwoPanel(){
+    return !isTasksNarrowViewport();
+  }
+
+  function setTasksMobileMode(mode){
+    const ov = getOverlay();
+    if (!ov) return;
+    ov.setAttribute("data-iu-tasks-mode", String(mode || "") === "form" ? "detail" : "list");
+  }
+
+  function syncTasksMobileChrome(){
+    const ov = getOverlay();
+    if (!ov) return;
+    if (isTasksNarrowViewport()) setTasksMobileMode(state.panelMode);
+    else ov.removeAttribute("data-iu-tasks-mode");
+  }
+
+  function ensureTasksOverlayDomFresh(){
+    const ov = getOverlay();
+    if (!ov) return;
+    if (String(ov.getAttribute("data-iu-tasks-dom-version") || "") === TASKS_OVERLAY_DOM_VERSION) return;
+    try{ ov.remove(); }catch{}
+    state.overlayMounted = false;
+    mountOverlay();
+  }
+
   function mountOverlay(){
-    if (state.overlayMounted) return;
+    if (state.overlayMounted){
+      ensureTasksOverlayDomFresh();
+      return;
+    }
     state.overlayMounted = true;
     const ov = document.createElement("div");
     ov.id = "iuTasksOverlay";
     ov.className = "iu-tasksOverlay iu-tools-overlay-fullscreen-desktop iu-tasksPremiumScope";
     ov.hidden = true;
     ov.setAttribute("aria-hidden", "true");
+    ov.setAttribute("data-iu-tasks-dom-version", TASKS_OVERLAY_DOM_VERSION);
     ov.innerHTML =
       '<div class="iu-tasksOverlay__backdrop" data-iu-tasks-close="1" aria-hidden="true"></div>' +
       '<div class="iu-tasksOverlay__dialog" role="dialog" aria-modal="true" aria-labelledby="iuTasksHeading">' +
@@ -39770,17 +39897,25 @@ function buildVideoAsArticleCard(it) {
             '<p class="iu-tasksOverlay__sub">Co je potřeba udělat</p>' +
           "</div>" +
           '<div class="iu-tasksOverlay__actions">' +
+            '<button type="button" class="iu-tasksOverlay__back" data-iu-tasks-back="1" aria-label="Zpět">Zpět</button>' +
             '<button type="button" class="iu-tasksOverlay__btn iu-tasksOverlay__btn--primary" data-iu-tasks-new="1" data-iu-tasks-primary-cta="1">+ Nový úkol</button>' +
             '<button type="button" class="iu-tasksOverlay__close" data-iu-tasks-close="1" aria-label="Zavřít úkoly">×</button>' +
           "</div>" +
         "</div>" +
-        '<div class="iu-tasksOverlay__filters" id="iuTasksFilters" role="tablist" aria-label="Filtry úkolů">' +
-          '<button type="button" class="iu-tasksOverlay__filter" data-iu-tasks-filter="all" role="tab">Vše</button>' +
-          '<button type="button" class="iu-tasksOverlay__filter" data-iu-tasks-filter="today" role="tab">Dnes</button>' +
-          '<button type="button" class="iu-tasksOverlay__filter" data-iu-tasks-filter="done" role="tab">Hotové</button>' +
-        "</div>" +
-        '<div class="iu-tasksOverlay__scroll" id="iuTasksScroll">' +
-          '<div id="iuTasksMain"></div>' +
+        '<div class="iu-tasksOverlay__body">' +
+          '<aside class="iu-tasksOverlay__list" aria-label="Seznam úkolů">' +
+            '<div class="iu-tasksOverlay__filters" id="iuTasksFilters" role="tablist" aria-label="Filtry úkolů">' +
+              '<button type="button" class="iu-tasksOverlay__filter" data-iu-tasks-filter="all" role="tab">Vše</button>' +
+              '<button type="button" class="iu-tasksOverlay__filter" data-iu-tasks-filter="today" role="tab">Dnes</button>' +
+              '<button type="button" class="iu-tasksOverlay__filter" data-iu-tasks-filter="done" role="tab">Hotové</button>' +
+            "</div>" +
+            '<div class="iu-tasksOverlay__listScroll iu-tasksOverlay__scroll" id="iuTasksScroll">' +
+              '<div id="iuTasksMain"></div>' +
+            "</div>" +
+          "</aside>" +
+          '<section class="iu-tasksOverlay__detail" aria-label="Detail úkolu">' +
+            '<div class="iu-tasksOverlay__detailScroll" id="iuTasksDetail"></div>' +
+          "</section>" +
         "</div>" +
       "</div>";
     document.body.appendChild(ov);
@@ -39804,6 +39939,7 @@ function buildVideoAsArticleCard(it) {
     const filters = document.getElementById("iuTasksFilters");
     if (filters) filters.hidden = false;
     if (!root) return;
+    if (!isTasksDesktopTwoPanel() && state.panelMode === "form") return;
 
     const allTasks = state.data && Array.isArray(state.data.tasks) ? state.data.tasks : [];
     const filterOnly = getFilterOnlyTasks();
@@ -39846,12 +39982,13 @@ function buildVideoAsArticleCard(it) {
       const dm = dueMeta(t.dueAt, t.status);
       const prc = priorityClass(t.priority);
       const doneCls = t.status === "done" ? " iu-taskRow--done" : "";
+      const selectedCls = isTasksDesktopTwoPanel() && String(state.editingId || "") === String(t.id || "") ? " iu-taskRow--selected" : "";
       const ariaCheck = t.status === "done" ? "true" : "false";
       const timeHtml = t.dueTime
         ? '<span class="iu-taskRow__time" aria-label="Čas">' + esc(t.dueTime) + "</span>"
         : "";
       parts.push(
-        '<li class="iu-taskRow' + doneCls + " " + prc + '" data-iu-task-id="' + esc(t.id) + '">' +
+        '<li class="iu-taskRow' + doneCls + selectedCls + " " + prc + '" data-iu-task-id="' + esc(t.id) + '">' +
           '<button type="button" class="iu-taskRow__check" data-iu-task-checkbox="' + esc(t.id) + '" aria-label="Označit jako hotovo" aria-checked="' + ariaCheck + '" role="checkbox">' + (t.status === "done" ? "✓" : "") + "</button>" +
           '<button type="button" class="iu-taskRow__body" data-iu-task-open="' + esc(t.id) + '">' +
             '<span class="iu-taskRow__content">' +
@@ -39870,10 +40007,21 @@ function buildVideoAsArticleCard(it) {
     root.innerHTML = parts.join("");
   }
 
+  function renderDetailEmpty(){
+    const root = document.getElementById("iuTasksDetail");
+    if (!root) return;
+    root.innerHTML =
+      '<div class="iu-tasksOverlay__empty" data-iu-tasks-detail-empty="1">' +
+        '<p class="iu-tasksOverlay__emptyTitle">Vyberte úkol vlevo</p>' +
+        '<p class="iu-tasksOverlay__emptySub">Nebo vytvořte nový úkol tlačítkem nahoře.</p>' +
+      "</div>";
+  }
+
   function renderFormView(){
     const filters = document.getElementById("iuTasksFilters");
-    if (filters) filters.hidden = true;
-    const root = document.getElementById("iuTasksMain");
+    const desktop = isTasksDesktopTwoPanel();
+    if (filters) filters.hidden = isTasksNarrowViewport() && state.panelMode === "form";
+    const root = desktop ? document.getElementById("iuTasksDetail") : document.getElementById("iuTasksMain");
     if (!root) return;
 
     const isEdit = !!state.editingId;
@@ -39926,14 +40074,23 @@ function buildVideoAsArticleCard(it) {
     const ov = getOverlay();
     if (!ov) return;
     setFilterButtons();
-    if (state.panelMode === "form") renderFormView();
-    else renderListView();
+    if (isTasksDesktopTwoPanel()){
+      renderListView();
+      if (state.panelMode === "form") renderFormView();
+      else renderDetailEmpty();
+    } else if (state.panelMode === "form") {
+      renderFormView();
+    } else {
+      renderListView();
+    }
+    syncTasksMobileChrome();
   }
 
   function openCreate(){
     state.panelMode = "form";
     state.editingId = "";
     render();
+    if (isTasksNarrowViewport()) setTasksMobileMode("form");
     const ti = document.getElementById("iuTaskTitle");
     if (ti) try{ ti.focus({ preventScroll: true }); ti.select(); }catch{}
   }
@@ -39942,6 +40099,7 @@ function buildVideoAsArticleCard(it) {
     state.panelMode = "form";
     state.editingId = String(id || "");
     render();
+    if (isTasksNarrowViewport()) setTasksMobileMode("form");
     const ti = document.getElementById("iuTaskTitle");
     if (ti) try{ ti.focus({ preventScroll: true }); }catch{}
   }
@@ -39950,6 +40108,7 @@ function buildVideoAsArticleCard(it) {
     state.panelMode = "list";
     state.editingId = "";
     render();
+    if (isTasksNarrowViewport()) setTasksMobileMode("list");
   }
 
   function readForm(){
@@ -40053,11 +40212,22 @@ function buildVideoAsArticleCard(it) {
       return;
     }
     state.returnFocusEl = originEl && typeof originEl.focus === "function" ? originEl : document.activeElement;
-    state.panelMode = "list";
-    state.editingId = "";
     state.searchQuery = "";
     if (state.searchTimer){ try{ clearTimeout(state.searchTimer); }catch{} state.searchTimer = null; }
     loadTasks();
+    if (isTasksDesktopTwoPanel()){
+      const rows = getFilteredSorted();
+      if (rows.length){
+        state.panelMode = "form";
+        state.editingId = String(rows[0].id || "");
+      } else {
+        state.panelMode = "list";
+        state.editingId = "";
+      }
+    } else {
+      state.panelMode = "list";
+      state.editingId = "";
+    }
     ov.hidden = false;
     ov.setAttribute("aria-hidden", "false");
     document.body.classList.add("iu-tasksOverlay-open");
@@ -40135,7 +40305,7 @@ function buildVideoAsArticleCard(it) {
       }
 
       const filt = t && t.closest ? t.closest("[data-iu-tasks-filter]") : null;
-      if (filt && state.panelMode === "list"){
+      if (filt && (isTasksDesktopTwoPanel() || state.panelMode === "list")){
         e.preventDefault();
         const k = String(filt.getAttribute("data-iu-tasks-filter") || "all");
         if (k === "all" || k === "today" || k === "done") state.filter = k;
@@ -40164,6 +40334,13 @@ function buildVideoAsArticleCard(it) {
         return;
       }
 
+      const backBtn = t && t.closest ? t.closest("[data-iu-tasks-back]") : null;
+      if (backBtn){
+        e.preventDefault();
+        backToList();
+        return;
+      }
+
       const cancel = t && t.closest ? t.closest("[data-iu-tasks-cancel]") : null;
       if (cancel){
         e.preventDefault();
@@ -40188,7 +40365,7 @@ function buildVideoAsArticleCard(it) {
       }
 
       const openB = t && t.closest ? t.closest("[data-iu-task-open]") : null;
-      if (openB && state.panelMode === "list"){
+      if (openB && (isTasksDesktopTwoPanel() || state.panelMode === "list")){
         e.preventDefault();
         const id = String(openB.getAttribute("data-iu-task-open") || "");
         if (id) openEdit(id);
@@ -40473,8 +40650,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__detailScroll{min-height:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch}" +
     "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__viewRoot{min-height:320px!important;height:calc(100% - 42px)!important;overflow:auto!important}" +
     "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__body{display:grid!important;grid-template-columns:450px minmax(0,1fr)!important;min-height:0!important;height:100%!important;overflow:hidden!important}" +
-    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__dialog{width:100%!important;max-width:none!important;min-height:100vh!important;min-height:100dvh!important;height:100vh!important;height:100dvh!important;max-height:100dvh!important;margin:0!important;border-radius:0!important;box-shadow:none!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;box-sizing:border-box!important}" +
-    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__scroll{flex:1 1 auto!important;min-height:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch}" +
+    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__dialog{width:100%!important;max-width:none!important;min-height:100vh!important;min-height:100dvh!important;height:100vh!important;height:100dvh!important;max-height:100dvh!important;margin:0!important;border-radius:0!important;box-shadow:none!important;display:grid!important;grid-template-rows:auto 1fr!important;overflow:hidden!important;box-sizing:border-box!important}" +
+    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__body{display:grid!important;grid-template-columns:450px minmax(0,1fr)!important;min-height:0!important;height:100%!important;overflow:hidden!important}" +
+    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__listScroll," +
+    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__detailScroll{min-height:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch}" +
     "}";
   try{
     if (document.getElementById(ID)) return;
@@ -78288,7 +78467,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (typeof window.iuLegalDocsOpenSurface === "function") return Promise.resolve();
     } catch (_) {}
     if (legalPromise) return legalPromise;
-    legalPromise = import("./iu-legal-documents-module.js")
+    legalPromise = import("./iu-legal-documents-module.js?v=legal-docs-preview-pc-v1-20260706")
       .then(function (m) {
         try {
           m.initIuLegalDocumentsOverlay({});

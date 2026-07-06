@@ -11538,6 +11538,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odka
   gap: var(--iu-mm-rowGap, 6px);
 }
 
+
+@media (max-width: 900px){
 .accordionCol .mindMenu .iu-mailbox-row{
   display: flex;
   align-items: center;
@@ -11548,6 +11550,21 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odka
   line-height: 1.15;
   margin: 0;
   transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+}
+
+@media (min-width: 901px){
+.accordionCol .mindMenu .iu-mailbox-row{
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 36px 40px !important;
+  align-items: center;
+  justify-content: stretch;
+  gap: 5px !important;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 !important;
+  margin: 0;
+}
 }
 
 .accordionCol .mindMenu .iu-mailbox-pill{
@@ -12752,24 +12769,26 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 
 .layout > aside.accordionCol .mindMenu .iu-mailbox-row{
   display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 36px 40px;
+  grid-template-columns: minmax(0, 1fr) 36px 40px !important;
   align-items: center;
   justify-content: stretch;
   width: 100%;
   min-height: 40px;
-  gap: 8px;
-  padding: 0;
+  gap: 5px !important;
+  padding: 0 !important;
   margin: 0;
 }
 
 .layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
+  grid-column: 1;
   width: auto !important;
   flex: unset !important;
   min-width: 0;
   max-width: 100%;
-  line-height: 35px;
+  height: 35px !important;
+  line-height: 35px !important;
   border: 1px solid rgba(20, 40, 70, 0.18);
-  border-radius: 999px;
+  border-radius: 999px !important;
   background-color: rgba(255, 255, 255, 0.62) !important;
   background-image: none !important;
   box-shadow: none !important;
@@ -12782,12 +12801,13 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 }
 
 .layout > aside.accordionCol .mindMenu .iu-mailbox-gear{
+  grid-column: 2;
   flex: unset;
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  min-height: 32px;
-  margin-left: 0;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  margin: 0 !important;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
@@ -12801,6 +12821,7 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 }
 
 .layout > aside.accordionCol .mindMenu .iu-pill-social-slot{
+  grid-column: 3;
   margin-left: 0;
 }
 
@@ -13849,11 +13870,18 @@ section.iu-mojeSluzby{
   column-gap: var(--iu-mm-gap, 10px);
 }
 
-.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem,
+.accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem {
+  margin: 0;
+  padding-block: var(--iu-mm-py, 6px);
+  padding-inline: var(--iu-mm-px, 10px);
+}
+
+@media (max-width: 900px){
 .accordionCol .mindMenu .iu-mailbox-row {
   margin: 0;
   padding-block: var(--iu-mm-py, 6px);
   padding-inline: var(--iu-mm-px, 10px);
+}
 }
 
 .accordionCol .mindMenu .iu-mmQuickLinks .iuIconTile {
@@ -16203,7 +16231,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 .iu-silver-actionRow[data-iu-action-indicator="chevron"]::after{
-  content: "â†—";
+  content: "\2197";
   position: absolute;
   right: 0;
   top: 0;
@@ -23125,13 +23153,15 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
 .mindMenu,.mindMenu-scroll-wrapper{background:linear-gradient(165deg,rgba(240,247,255,.55),rgba(245,243,255,.42) 45%,rgba(238,252,251,.48))}
 #iuMobileGatePanelTools .mindMenu,#iuMobileGatePanelTools .mindMenu-scroll-wrapper,.iuMyInfoUzelMindMenuHost .mindMenu,.iuMyInfoUzelMindMenuHost .mindMenu-scroll-wrapper{background:transparent}
 .mindMenu .iu-mailbox-list{width:100%}
+@media (max-width: 1024px){
 .mindMenu .iu-mailbox-row{display:grid!important;grid-template-columns:minmax(12.5em,1fr) 36px 40px;align-items:center!important;justify-content:stretch!important;gap:8px;width:100%!important;min-height:40px;padding:0;margin:0}
 .mindMenu .iu-mailbox-pill{width:auto!important;flex:unset!important;min-width:0!important;max-width:none!important;height:38px;line-height:38px;padding:0 14px;border-radius:12px;border:1px solid rgba(0,60,255,.16);background:linear-gradient(135deg,#fff,rgba(239,246,255,.92));box-shadow:0 2px 8px rgba(11,42,74,.07);font-size:14px;font-weight:600;color:#0B2A4A;text-align:left;justify-content:flex-start!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:box-shadow .22s ease,border-color .22s ease,transform .22s ease}
+.mindMenu .iu-mailbox-gear{width:32px!important;height:32px!important;min-width:32px!important;min-height:32px!important;margin:0!important;border-radius:10px;border:1px solid rgba(15,23,42,.1);background:rgba(255,255,255,.88);box-shadow:0 1px 4px rgba(11,42,74,.06)}
+.mindMenu .iu-pill-social-slot{margin:0!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}
+}
 .mindMenu .iu-mailbox-pill--plain,.mindMenu .iu-mailbox-list>.iu-mailbox-row:nth-child(n) .iu-mailbox-pill--plain{background:#fff!important;border-color:rgba(15,23,42,.12)!important;color:#0B2A4A!important}
 .mindMenu .iu-mailbox-pill.iu-mailbox-pill--placeholder,.mindMenu .iu-mailbox-list>.iu-mailbox-row:nth-child(n) .iu-mailbox-pill.iu-mailbox-pill--placeholder{color:rgba(107,114,128,.78)!important}
 #iu-mailbox-edit-overlay input::placeholder,.iu-custom-buttons-field input::placeholder{color:rgba(107,114,128,.78);opacity:1}
-.mindMenu .iu-mailbox-gear{width:32px!important;height:32px!important;min-width:32px!important;min-height:32px!important;margin:0!important;border-radius:10px;border:1px solid rgba(15,23,42,.1);background:rgba(255,255,255,.88);box-shadow:0 1px 4px rgba(11,42,74,.06)}
-.mindMenu .iu-pill-social-slot{margin:0!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}
 .mindMenu .iu-mailbox-list>.iu-mailbox-row:nth-child(6n+1) .iu-mailbox-pill:not(.iu-mailbox-pill--plain){background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-color:rgba(59,130,246,.28);color:#1e3a8a}
 .mindMenu .iu-mailbox-list>.iu-mailbox-row:nth-child(6n+2) .iu-mailbox-pill:not(.iu-mailbox-pill--plain){background:linear-gradient(135deg,#ccfbf1,#99f6e4);border-color:rgba(20,184,166,.28);color:#115e59}
 .mindMenu .iu-mailbox-list>.iu-mailbox-row:nth-child(6n+3) .iu-mailbox-pill:not(.iu-mailbox-pill--plain){background:linear-gradient(135deg,#dcfce7,#bbf7d0);border-color:rgba(34,197,94,.26);color:#166534}
