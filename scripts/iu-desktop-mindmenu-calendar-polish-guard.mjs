@@ -66,7 +66,8 @@ const cacheBustOk =
   indexHtml.includes("tasks-desktop-two-panel-v1-20260706") ||
   indexHtml.includes("mindmenu-mailbox-row-pc-layout-v1-20260706") ||
   indexHtml.includes("desktop-mindmenu-calendar-polish-v1-20260706") ||
-  indexHtml.includes("svatek-pill-responsive-wrap-v1-20260706");
+  indexHtml.includes("svatek-pill-responsive-wrap-v1-20260706") ||
+  indexHtml.includes("state-holiday-label-v1-20260706");
 if (!cacheBustOk) {
   failures.push("index.html cache bust token missing");
 }
