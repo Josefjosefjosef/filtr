@@ -39,7 +39,7 @@ const REQUIRED = [
   {
     id: "index_cache_bust_unified",
     file: INDEX,
-    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=financial-calc-hub-single-row-v1-20260706/,
+    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=moje-sluzby-mobile-keyboard-add-btn-v1-20260706/,
   },
   {
     id: "index_cache_bust_restore",

@@ -19,7 +19,7 @@ const APP = path.join(REPO, "assets", "app.js");
 const INDEX = path.join(REPO, "projects", "index.html");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8898", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
-const CACHE_BUST = "silver-welcome-legacy-input-removed-v1-20260706";
+const CACHE_BUST = "moje-sluzby-mobile-keyboard-add-btn-v1-20260706";
 
 const VIEWPORTS = [
   { width: 390, height: 844, label: "mobile" },
