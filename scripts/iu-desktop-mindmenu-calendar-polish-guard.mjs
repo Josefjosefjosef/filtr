@@ -45,7 +45,10 @@ if (!appJs.includes("grid-template-columns:minmax(0,1fr) 340px")) {
 if (!premiumCss.includes("iuMmManageTabs__tab.is-active") || !premiumCss.includes("data-iu-manage-action=\"unsave\"")) {
   failures.push("desktop premium CSS must enhance active tabs and Odebrat button");
 }
-if (!indexHtml.includes("desktop-mindmenu-calendar-polish-v1-20260706")) {
+const cacheBustOk =
+  indexHtml.includes("desktop-mindmenu-calendar-polish-v1-20260706") ||
+  indexHtml.includes("svatek-pill-responsive-wrap-v1-20260706");
+if (!cacheBustOk) {
   failures.push("index.html cache bust token missing");
 }
 
