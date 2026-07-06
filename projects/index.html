@@ -537,7 +537,7 @@ font-src 'self' data:;
     <!-- P0 LCP fast path: feed section header (hub) je JS-injected v app.js (renderFeed) — preload scanner ho nevidí; preload jen ≥768px (mobile LCP = silver-hero, feed skrytý pre-gate). -->
     <link rel="preload" as="image" href="/assets/images/section-prehled-dne.webp" type="image/webp" fetchpriority="high" media="(min-width: 768px)" />
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
-    <link rel="stylesheet" href="/assets/app.css?v=desktop-mindmenu-calendar-polish-v1-20260706" />
+    <link rel="stylesheet" href="/assets/app.css?v=svatek-pill-responsive-wrap-v1-20260706" />
     <style id="iuDesktopLayoutV3PostAppCss">
       /* Desktop Layout V3 — post app.css (beats assets/app.css 2-column .layout !important). */
       @media (max-width: 900px) {
@@ -1678,11 +1678,12 @@ font-src 'self' data:;
     <style id="iuSvatekPillOverlayCss">
       /* P0: svátek pill + premium overlay — projects/index.html (mimo app.css css_debt_guard). */
       #iuSilverWelcomeCard{--male-color:var(--iuNamedayMaleAccent);--female-color:var(--iuNamedayFemaleAccent);--iuSvatekPremiumBlue1:#5B6CFF;--iuSvatekPremiumBlue2:#7B5FFF;--iuSvatekPremiumTeal1:#2DD4BF;--iuSvatekPremiumTeal2:#059669}
-      .iuSilverWelcomeMeta{display:flex;flex-wrap:nowrap;align-items:baseline;column-gap:0}
-      .iuSilverWelcomeMetaDateCluster,.iuSilverWelcomeMetaSvatekCluster{min-width:0}
-      .iuSilverWelcomeMetaSvatekCluster{display:inline-flex;flex-wrap:nowrap;align-items:center;white-space:nowrap;max-width:100%}
-      .iuSilverWelcomeMetaSvatekCluster::before{content:" · "}
+      .iuSilverWelcomeMeta{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:0;row-gap:2px;width:100%;min-width:0;white-space:normal}
+      .iuSilverWelcomeMetaDateCluster,.iuSilverWelcomeMetaSvatekLabel,.svatek-pill{min-width:0}
+      .iuSilverWelcomeMetaDateCluster{flex:0 1 auto;white-space:nowrap}
+      .iuSilverWelcomeMetaSvatekCluster{display:contents}
       .iuSilverWelcomeMetaSvatekLabel{flex:0 0 auto;white-space:nowrap}
+      .iuSilverWelcomeMetaSvatekLabel::before{content:" · "}
       #svatekOverlay.iuSvatekOverlayRoot{--iuSvatekPremiumBlue1:#5B6CFF;--iuSvatekPremiumBlue2:#7B5FFF;--iuSvatekPremiumTeal1:#2DD4BF;--iuSvatekPremiumTeal2:#059669}
       #svatekOverlay.iuSvatekOverlayRoot{z-index:99988;background:rgba(15,30,45,.52);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:16px;box-sizing:border-box}
       #svatekOverlay .iuSvatekOverlayCard{width:100%;max-width:340px;height:auto!important;max-height:none!important;min-height:min-content;overflow:visible!important;padding:0;position:relative;contain:none!important;border-radius:20px;border:1px solid rgba(123,95,255,.22);background:linear-gradient(165deg,#fff 0%,#f8f9ff 55%,#f3f0ff 100%);box-shadow:0 20px 48px rgba(35,45,120,.22),0 0 0 1px rgba(255,255,255,.65) inset,0 0 32px rgba(91,108,255,.12)}
@@ -1911,7 +1912,7 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-home-premium-install-box.css?v=1" />
     <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=remove-partner-banners-v1-20260706" />
     <link rel="stylesheet" href="/assets/iu-desktop-parcel-watch-overlay.css?v=pr5907-desktop-parcel-premium-20260619" />
-    <link rel="stylesheet" href="/assets/iu-desktop-home-premium.css?v=desktop-mindmenu-calendar-polish-v1-20260706" />
+    <link rel="stylesheet" href="/assets/iu-desktop-home-premium.css?v=svatek-pill-responsive-wrap-v1-20260706" />
     <link rel="stylesheet" href="/assets/iu-desktop-info-panel.css?v=info-panel-polish-v1-20260705" />
     <link rel="stylesheet" href="/assets/iu-mobile-info-panel.css?v=info-panel-polish-v1-20260705" />
     <link rel="stylesheet" href="/assets/iu-myinfouzel-premium-overlay.css?v=pc-mailboxes-layout-v4-20260701" />
