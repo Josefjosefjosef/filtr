@@ -827,16 +827,28 @@
 .iu-legal-preview-portal{
   position: fixed;
   inset: 0;
-  z-index: 10140;
+  z-index: 12250;
   display: flex;
   flex-direction: column;
   background: rgb(241, 245, 249);
 }
-.iu-legal-preview-portal[hidden]{
+.iu-legal-preview-portal[hidden],
+.iu-legal-preview-portal.iu-inv-guard-hidden:not(.iu-legal-preview-portal--open):not([data-preview-open="1"]){
   display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
 }
-.iu-legal-preview-portal--open{
+.iu-legal-preview-portal--open,
+.iu-legal-preview-portal[data-preview-open="1"]{
   display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 12250 !important;
+}
+body.iu-myinfouzel-open #iuLegalDocsPreviewPortal.iu-legal-preview-portal--open:not([hidden]),
+body.iu-myinfouzel-open #iuLegalDocsPreviewPortal[data-preview-open="1"]:not([hidden]){
+  z-index: 12250 !important;
 }
 .iu-legal-previewToolbar{
   flex: 0 0 auto;
@@ -919,7 +931,8 @@
   padding: 20px 16px 32px;
   -webkit-overflow-scrolling: touch;
 }
-body.iu-legal-docs-preview-open #iuLegalDocsPanel .iu-legal-overlay-cardShell{
+body.iu-legal-docs-preview-open #iuLegalDocsPanel.iu-legal-overlay-panel:not([hidden]),
+body.iu-legal-docs-preview-open #iuLegalDocsBackdrop.iu-legal-overlay-backdrop:not([hidden]){
   visibility: hidden;
   pointer-events: none;
 }

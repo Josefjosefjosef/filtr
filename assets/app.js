@@ -78381,7 +78381,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (typeof window.iuLegalDocsOpenSurface === "function") return Promise.resolve();
     } catch (_) {}
     if (legalPromise) return legalPromise;
-    legalPromise = import("./iu-legal-documents-module.js")
+    legalPromise = import("./iu-legal-documents-module.js?v=legal-docs-preview-pc-v1-20260706")
       .then(function (m) {
         try {
           m.initIuLegalDocumentsOverlay({});

@@ -397,15 +397,51 @@ export function initIuLegalDocumentsOverlay(deps) {
     return el;
   }
 
+  function applyPreviewPortalOpenStyles(layer) {
+    if (!layer) return;
+    try {
+      if (layer.parentElement !== document.body) document.body.appendChild(layer);
+    } catch (_) {}
+    layer.hidden = false;
+    layer.removeAttribute("hidden");
+    layer.classList.remove("iu-inv-guard-hidden");
+    layer.classList.add("iu-legal-preview-portal--open");
+    layer.setAttribute("data-preview-open", "1");
+    try {
+      layer.style.setProperty("position", "fixed", "important");
+      layer.style.setProperty("inset", "0", "important");
+      layer.style.setProperty("z-index", "12250", "important");
+      layer.style.setProperty("display", "flex", "important");
+      layer.style.setProperty("flex-direction", "column", "important");
+      layer.style.setProperty("visibility", "visible", "important");
+      layer.style.setProperty("opacity", "1", "important");
+      layer.style.setProperty("pointer-events", "auto", "important");
+      layer.style.setProperty("width", "100%", "important");
+      layer.style.setProperty("height", "100%", "important");
+      layer.style.setProperty("max-height", "100dvh", "important");
+    } catch (_) {}
+  }
+
+  function applyPreviewPortalCloseStyles(layer) {
+    if (!layer) return;
+    layer.classList.remove("iu-legal-preview-portal--open");
+    layer.removeAttribute("data-preview-open");
+    layer.hidden = true;
+    layer.setAttribute("hidden", "");
+    layer.classList.add("iu-inv-guard-hidden");
+    const host = layer.querySelector("[data-iu-legal-preview-host]");
+    if (host) host.innerHTML = "";
+    try {
+      layer.style.setProperty("display", "none", "important");
+    } catch (_) {}
+  }
+
   function openPreviewPortal(html) {
     const layer = ensurePreviewPortalHost();
     const host = layer.querySelector("[data-iu-legal-preview-host]");
     if (!host) return;
     host.innerHTML = html;
-    layer.hidden = false;
-    layer.removeAttribute("hidden");
-    layer.classList.remove("iu-inv-guard-hidden");
-    layer.classList.add("iu-legal-preview-portal--open");
+    applyPreviewPortalOpenStyles(layer);
     try {
       document.body.classList.add("iu-legal-docs-preview-open");
     } catch (_) {}
@@ -414,12 +450,7 @@ export function initIuLegalDocumentsOverlay(deps) {
   function closePreviewPortal() {
     const layer = previewPortalHost || document.getElementById("iuLegalDocsPreviewPortal");
     if (!layer) return;
-    layer.hidden = true;
-    layer.setAttribute("hidden", "");
-    layer.classList.add("iu-inv-guard-hidden");
-    layer.classList.remove("iu-legal-preview-portal--open");
-    const host = layer.querySelector("[data-iu-legal-preview-host]");
-    if (host) host.innerHTML = "";
+    applyPreviewPortalCloseStyles(layer);
     try {
       document.body.classList.remove("iu-legal-docs-preview-open");
     } catch (_) {}

@@ -21,6 +21,7 @@ const PORT = parseInt(process.env.IU_GUARD_PORT || "8898", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const CACHE_BUSTS = [
   "moje-sluzby-mobile-keyboard-add-btn-v1-20260706",
+  "legal-docs-preview-pc-v1-20260706",
   "tasks-desktop-two-panel-v1-20260706",
 ];
 
