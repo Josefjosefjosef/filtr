@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-07-06T05:18:21.933237Z",
+  "ingestedAt": "2026-07-06T07:00:37.273376Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Counter-Strike: Global Offensive zažívá na Steamu překvapivý návrat",
+      "url": "https://zing.cz/article/counter-strike-global-offensive-zaziva-na-steamu-prekvapivy-navrat",
+      "dt": "2026-07-06T06:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "counter",
+        "global",
+        "návrat",
+        "offensive",
+        "překvapivý",
+        "steamu",
+        "strike",
+        "zažívá"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -942,30 +967,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "AC IV: Black Flag Resynced odhaluje zobrazovací režimy pro konzole",
-      "url": "https://zing.cz/article/ac-iv-black-flag-resynced-odhaluje-zobrazovaci-rezimy-pro-konzole",
-      "dt": "2026-06-30T10:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "black",
-        "flag",
-        "konzole",
-        "odhaluje",
-        "resynced",
-        "režimy",
-        "zobrazovací"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -976,7 +977,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125732,
+      "bytes": 125645,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1013,7 +1014,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-06T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-06T06:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1028,6 +1029,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Counter-Strike: Global Offensive zažívá na Steamu překvapivý návrat",
+            "publishedAt": "2026-07-06T06:00:00Z"
+          },
           {
             "title": "Resonance: A Plague Tale Legacy bylo úspěšně dokončeno",
             "publishedAt": "2026-07-06T04:00:00Z"
@@ -1055,10 +1060,6 @@
           {
             "title": "Konec her na fyzických discích přichází. Co rozhodnutí PlayStationu přinese?",
             "publishedAt": "2026-07-04T18:00:00Z"
-          },
-          {
-            "title": "PlayStation Store poodhaluje, o čem bude příběh Persona 6",
-            "publishedAt": "2026-07-04T16:00:00Z"
           }
         ]
       }
