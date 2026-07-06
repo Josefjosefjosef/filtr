@@ -12,7 +12,7 @@ const APP = path.join(REPO, "assets", "app.js");
 const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.css");
 const INDEX = path.join(REPO, "projects", "index.html");
 const CSS_BUST = "moje-sluzby-mobile-keyboard-add-btn-v1-20260706";
-const JS_BUST = "moje-sluzby-mobile-keyboard-add-btn-v1-20260706";
+const JS_BUST = "state-holiday-meta-label-v1-20260706";
 
 function chunkAfter(fnName, app) {
   const parts = app.split("function " + fnName);
