@@ -39529,6 +39529,7 @@ function buildVideoAsArticleCard(it) {
   "use strict";
 
   const TASKS_STORE_KEY = "iu.tasks.mvp.v1";
+  const TASKS_OVERLAY_DOM_VERSION = "2";
   const LEGACY_SILVER_KEY = "iu.infoUzel.silverTasks.v1";
   const SCHEMA_VERSION = 1;
   const MAX_TASKS = 500;
@@ -39753,14 +39754,54 @@ function buildVideoAsArticleCard(it) {
 
   function getOverlay(){ return document.getElementById("iuTasksOverlay"); }
 
+  function isTasksNarrowViewport(){
+    try{
+      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) return true;
+      const iw = Number(window.innerWidth || document.documentElement.clientWidth || 0);
+      return iw <= 900;
+    }catch{
+      return (window.innerWidth || 0) <= 900;
+    }
+  }
+
+  function isTasksDesktopTwoPanel(){
+    return !isTasksNarrowViewport();
+  }
+
+  function setTasksMobileMode(mode){
+    const ov = getOverlay();
+    if (!ov) return;
+    ov.setAttribute("data-iu-tasks-mode", String(mode || "") === "form" ? "detail" : "list");
+  }
+
+  function syncTasksMobileChrome(){
+    const ov = getOverlay();
+    if (!ov) return;
+    if (isTasksNarrowViewport()) setTasksMobileMode(state.panelMode);
+    else ov.removeAttribute("data-iu-tasks-mode");
+  }
+
+  function ensureTasksOverlayDomFresh(){
+    const ov = getOverlay();
+    if (!ov) return;
+    if (String(ov.getAttribute("data-iu-tasks-dom-version") || "") === TASKS_OVERLAY_DOM_VERSION) return;
+    try{ ov.remove(); }catch{}
+    state.overlayMounted = false;
+    mountOverlay();
+  }
+
   function mountOverlay(){
-    if (state.overlayMounted) return;
+    if (state.overlayMounted){
+      ensureTasksOverlayDomFresh();
+      return;
+    }
     state.overlayMounted = true;
     const ov = document.createElement("div");
     ov.id = "iuTasksOverlay";
     ov.className = "iu-tasksOverlay iu-tools-overlay-fullscreen-desktop iu-tasksPremiumScope";
     ov.hidden = true;
     ov.setAttribute("aria-hidden", "true");
+    ov.setAttribute("data-iu-tasks-dom-version", TASKS_OVERLAY_DOM_VERSION);
     ov.innerHTML =
       '<div class="iu-tasksOverlay__backdrop" data-iu-tasks-close="1" aria-hidden="true"></div>' +
       '<div class="iu-tasksOverlay__dialog" role="dialog" aria-modal="true" aria-labelledby="iuTasksHeading">' +
@@ -39770,17 +39811,25 @@ function buildVideoAsArticleCard(it) {
             '<p class="iu-tasksOverlay__sub">Co je potřeba udělat</p>' +
           "</div>" +
           '<div class="iu-tasksOverlay__actions">' +
+            '<button type="button" class="iu-tasksOverlay__back" data-iu-tasks-back="1" aria-label="Zpět">Zpět</button>' +
             '<button type="button" class="iu-tasksOverlay__btn iu-tasksOverlay__btn--primary" data-iu-tasks-new="1" data-iu-tasks-primary-cta="1">+ Nový úkol</button>' +
             '<button type="button" class="iu-tasksOverlay__close" data-iu-tasks-close="1" aria-label="Zavřít úkoly">×</button>' +
           "</div>" +
         "</div>" +
-        '<div class="iu-tasksOverlay__filters" id="iuTasksFilters" role="tablist" aria-label="Filtry úkolů">' +
-          '<button type="button" class="iu-tasksOverlay__filter" data-iu-tasks-filter="all" role="tab">Vše</button>' +
-          '<button type="button" class="iu-tasksOverlay__filter" data-iu-tasks-filter="today" role="tab">Dnes</button>' +
-          '<button type="button" class="iu-tasksOverlay__filter" data-iu-tasks-filter="done" role="tab">Hotové</button>' +
-        "</div>" +
-        '<div class="iu-tasksOverlay__scroll" id="iuTasksScroll">' +
-          '<div id="iuTasksMain"></div>' +
+        '<div class="iu-tasksOverlay__body">' +
+          '<aside class="iu-tasksOverlay__list" aria-label="Seznam úkolů">' +
+            '<div class="iu-tasksOverlay__filters" id="iuTasksFilters" role="tablist" aria-label="Filtry úkolů">' +
+              '<button type="button" class="iu-tasksOverlay__filter" data-iu-tasks-filter="all" role="tab">Vše</button>' +
+              '<button type="button" class="iu-tasksOverlay__filter" data-iu-tasks-filter="today" role="tab">Dnes</button>' +
+              '<button type="button" class="iu-tasksOverlay__filter" data-iu-tasks-filter="done" role="tab">Hotové</button>' +
+            "</div>" +
+            '<div class="iu-tasksOverlay__listScroll iu-tasksOverlay__scroll" id="iuTasksScroll">' +
+              '<div id="iuTasksMain"></div>' +
+            "</div>" +
+          "</aside>" +
+          '<section class="iu-tasksOverlay__detail" aria-label="Detail úkolu">' +
+            '<div class="iu-tasksOverlay__detailScroll" id="iuTasksDetail"></div>' +
+          "</section>" +
         "</div>" +
       "</div>";
     document.body.appendChild(ov);
@@ -39804,6 +39853,7 @@ function buildVideoAsArticleCard(it) {
     const filters = document.getElementById("iuTasksFilters");
     if (filters) filters.hidden = false;
     if (!root) return;
+    if (!isTasksDesktopTwoPanel() && state.panelMode === "form") return;
 
     const allTasks = state.data && Array.isArray(state.data.tasks) ? state.data.tasks : [];
     const filterOnly = getFilterOnlyTasks();
@@ -39846,12 +39896,13 @@ function buildVideoAsArticleCard(it) {
       const dm = dueMeta(t.dueAt, t.status);
       const prc = priorityClass(t.priority);
       const doneCls = t.status === "done" ? " iu-taskRow--done" : "";
+      const selectedCls = isTasksDesktopTwoPanel() && String(state.editingId || "") === String(t.id || "") ? " iu-taskRow--selected" : "";
       const ariaCheck = t.status === "done" ? "true" : "false";
       const timeHtml = t.dueTime
         ? '<span class="iu-taskRow__time" aria-label="Čas">' + esc(t.dueTime) + "</span>"
         : "";
       parts.push(
-        '<li class="iu-taskRow' + doneCls + " " + prc + '" data-iu-task-id="' + esc(t.id) + '">' +
+        '<li class="iu-taskRow' + doneCls + selectedCls + " " + prc + '" data-iu-task-id="' + esc(t.id) + '">' +
           '<button type="button" class="iu-taskRow__check" data-iu-task-checkbox="' + esc(t.id) + '" aria-label="Označit jako hotovo" aria-checked="' + ariaCheck + '" role="checkbox">' + (t.status === "done" ? "✓" : "") + "</button>" +
           '<button type="button" class="iu-taskRow__body" data-iu-task-open="' + esc(t.id) + '">' +
             '<span class="iu-taskRow__content">' +
@@ -39870,10 +39921,21 @@ function buildVideoAsArticleCard(it) {
     root.innerHTML = parts.join("");
   }
 
+  function renderDetailEmpty(){
+    const root = document.getElementById("iuTasksDetail");
+    if (!root) return;
+    root.innerHTML =
+      '<div class="iu-tasksOverlay__empty" data-iu-tasks-detail-empty="1">' +
+        '<p class="iu-tasksOverlay__emptyTitle">Vyberte úkol vlevo</p>' +
+        '<p class="iu-tasksOverlay__emptySub">Nebo vytvořte nový úkol tlačítkem nahoře.</p>' +
+      "</div>";
+  }
+
   function renderFormView(){
     const filters = document.getElementById("iuTasksFilters");
-    if (filters) filters.hidden = true;
-    const root = document.getElementById("iuTasksMain");
+    const desktop = isTasksDesktopTwoPanel();
+    if (filters) filters.hidden = isTasksNarrowViewport() && state.panelMode === "form";
+    const root = desktop ? document.getElementById("iuTasksDetail") : document.getElementById("iuTasksMain");
     if (!root) return;
 
     const isEdit = !!state.editingId;
@@ -39926,14 +39988,23 @@ function buildVideoAsArticleCard(it) {
     const ov = getOverlay();
     if (!ov) return;
     setFilterButtons();
-    if (state.panelMode === "form") renderFormView();
-    else renderListView();
+    if (isTasksDesktopTwoPanel()){
+      renderListView();
+      if (state.panelMode === "form") renderFormView();
+      else renderDetailEmpty();
+    } else if (state.panelMode === "form") {
+      renderFormView();
+    } else {
+      renderListView();
+    }
+    syncTasksMobileChrome();
   }
 
   function openCreate(){
     state.panelMode = "form";
     state.editingId = "";
     render();
+    if (isTasksNarrowViewport()) setTasksMobileMode("form");
     const ti = document.getElementById("iuTaskTitle");
     if (ti) try{ ti.focus({ preventScroll: true }); ti.select(); }catch{}
   }
@@ -39942,6 +40013,7 @@ function buildVideoAsArticleCard(it) {
     state.panelMode = "form";
     state.editingId = String(id || "");
     render();
+    if (isTasksNarrowViewport()) setTasksMobileMode("form");
     const ti = document.getElementById("iuTaskTitle");
     if (ti) try{ ti.focus({ preventScroll: true }); }catch{}
   }
@@ -39950,6 +40022,7 @@ function buildVideoAsArticleCard(it) {
     state.panelMode = "list";
     state.editingId = "";
     render();
+    if (isTasksNarrowViewport()) setTasksMobileMode("list");
   }
 
   function readForm(){
@@ -40053,11 +40126,22 @@ function buildVideoAsArticleCard(it) {
       return;
     }
     state.returnFocusEl = originEl && typeof originEl.focus === "function" ? originEl : document.activeElement;
-    state.panelMode = "list";
-    state.editingId = "";
     state.searchQuery = "";
     if (state.searchTimer){ try{ clearTimeout(state.searchTimer); }catch{} state.searchTimer = null; }
     loadTasks();
+    if (isTasksDesktopTwoPanel()){
+      const rows = getFilteredSorted();
+      if (rows.length){
+        state.panelMode = "form";
+        state.editingId = String(rows[0].id || "");
+      } else {
+        state.panelMode = "list";
+        state.editingId = "";
+      }
+    } else {
+      state.panelMode = "list";
+      state.editingId = "";
+    }
     ov.hidden = false;
     ov.setAttribute("aria-hidden", "false");
     document.body.classList.add("iu-tasksOverlay-open");
@@ -40135,7 +40219,7 @@ function buildVideoAsArticleCard(it) {
       }
 
       const filt = t && t.closest ? t.closest("[data-iu-tasks-filter]") : null;
-      if (filt && state.panelMode === "list"){
+      if (filt && (isTasksDesktopTwoPanel() || state.panelMode === "list")){
         e.preventDefault();
         const k = String(filt.getAttribute("data-iu-tasks-filter") || "all");
         if (k === "all" || k === "today" || k === "done") state.filter = k;
@@ -40164,6 +40248,13 @@ function buildVideoAsArticleCard(it) {
         return;
       }
 
+      const backBtn = t && t.closest ? t.closest("[data-iu-tasks-back]") : null;
+      if (backBtn){
+        e.preventDefault();
+        backToList();
+        return;
+      }
+
       const cancel = t && t.closest ? t.closest("[data-iu-tasks-cancel]") : null;
       if (cancel){
         e.preventDefault();
@@ -40188,7 +40279,7 @@ function buildVideoAsArticleCard(it) {
       }
 
       const openB = t && t.closest ? t.closest("[data-iu-task-open]") : null;
-      if (openB && state.panelMode === "list"){
+      if (openB && (isTasksDesktopTwoPanel() || state.panelMode === "list")){
         e.preventDefault();
         const id = String(openB.getAttribute("data-iu-task-open") || "");
         if (id) openEdit(id);
@@ -40473,8 +40564,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__detailScroll{min-height:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch}" +
     "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__viewRoot{min-height:320px!important;height:calc(100% - 42px)!important;overflow:auto!important}" +
     "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__body{display:grid!important;grid-template-columns:450px minmax(0,1fr)!important;min-height:0!important;height:100%!important;overflow:hidden!important}" +
-    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__dialog{width:100%!important;max-width:none!important;min-height:100vh!important;min-height:100dvh!important;height:100vh!important;height:100dvh!important;max-height:100dvh!important;margin:0!important;border-radius:0!important;box-shadow:none!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;box-sizing:border-box!important}" +
-    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__scroll{flex:1 1 auto!important;min-height:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch}" +
+    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__dialog{width:100%!important;max-width:none!important;min-height:100vh!important;min-height:100dvh!important;height:100vh!important;height:100dvh!important;max-height:100dvh!important;margin:0!important;border-radius:0!important;box-shadow:none!important;display:grid!important;grid-template-rows:auto 1fr!important;overflow:hidden!important;box-sizing:border-box!important}" +
+    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__body{display:grid!important;grid-template-columns:450px minmax(0,1fr)!important;min-height:0!important;height:100%!important;overflow:hidden!important}" +
+    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__listScroll," +
+    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__detailScroll{min-height:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch}" +
     "}";
   try{
     if (document.getElementById(ID)) return;
