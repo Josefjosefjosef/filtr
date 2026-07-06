@@ -9590,13 +9590,23 @@ function buildVideoAsArticleCard(it) {
     iuUserAddressSyncWelcomeAddressSlot();
   }
 
-  /** Viz app.css .iu-address-slot-empty — bez :empty (CSS debt guard); capture + prázdný slot drží řádek, saved + prázdný = hidden. */
+  /** Viz app.css .iu-address-slot-empty — bez :empty (CSS debt guard); capture slot je vždy skrytý. */
   function iuUserAddressSyncWelcomeAddressSlot(){
     try{
       const slot = document.getElementById("iuSilverWelcomeAddressSlot");
       const headline = document.getElementById("iuSilverWelcomeHeadline");
       if (!slot || !headline) return;
       const mode = String(headline.getAttribute("data-iu-user-address") || "");
+      if (mode === "capture") {
+        try{
+          while (slot.firstChild) slot.removeChild(slot.firstChild);
+        }catch{}
+        try{
+          slot.classList.add("iu-address-slot-empty");
+          slot.setAttribute("hidden", "");
+        }catch{}
+        return;
+      }
       const hasInput = !!slot.querySelector("input");
       const isEmpty = !String(slot.textContent || "").trim() && !hasInput;
       if (mode === "saved"){
@@ -9615,79 +9625,24 @@ function buildVideoAsArticleCard(it) {
         return;
       }
       try{
-        slot.removeAttribute("hidden");
+        while (slot.firstChild) slot.removeChild(slot.firstChild);
       }catch{}
-      if (mode === "capture" && isEmpty) {
-        try{
-          slot.classList.add("iu-address-slot-empty");
-        }catch{}
-      } else {
-        try{
-          slot.classList.remove("iu-address-slot-empty");
-        }catch{}
-      }
+      try{
+        slot.classList.add("iu-address-slot-empty");
+        slot.setAttribute("hidden", "");
+      }catch{}
     }catch{}
   }
 
+  /** Legacy welcome capture input removed — oslovení jen přes Silver composer („Napiš Silverovi…"). */
   function iuUserAddressBuildCaptureSlotIfNeeded(){
     try{
-      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) return;
-    }catch{}
-    try{
-      if (iuUserAddressReadStoredBase()) return;
       const slot = document.getElementById("iuSilverWelcomeAddressSlot");
-      if (!slot || slot.firstChild) return;
-      const doc = slot.ownerDocument;
-      const inp = doc.createElement("input");
-      inp.type = "text";
-      inp.className = "iuSilverWelcomeAddressInput";
-      inp.setAttribute("data-iu-user-address-input", "1");
-      inp.setAttribute("autocomplete", "off");
-      inp.setAttribute("spellcheck", "false");
-      inp.setAttribute("aria-label", "Oslovení");
-      inp.placeholder = IU_USER_ADDRESS_PLACEHOLDER;
-      inp.setAttribute("size", "34");
-      const btn = doc.createElement("button");
-      btn.type = "button";
-      btn.className = "iuSilverWelcomeAddressSubmit";
-      btn.setAttribute("data-iu-user-address-submit", "1");
-      btn.setAttribute("aria-label", "Uložit oslovení");
-      const svg = doc.createElementNS("http://www.w3.org/2000/svg", "svg");
-      svg.setAttribute("viewBox", "0 0 24 24");
-      svg.setAttribute("aria-hidden", "true");
-      svg.setAttribute("width", "16");
-      svg.setAttribute("height", "16");
-      const p = doc.createElementNS("http://www.w3.org/2000/svg", "path");
-      p.setAttribute("fill", "currentColor");
-      p.setAttribute("d", "M12 4 18 12h-4v8h-4v-8H6l6-8z");
-      svg.appendChild(p);
-      btn.appendChild(svg);
-
-      function submitCapture(){
-        try{
-          const v = iuNormalizeUserAddressInput(String(inp.value || ""));
-          if (!v) return;
-          iuUserAddressSetCore(v, { explicit: true });
-        }catch{}
+      if (slot) {
+        while (slot.firstChild) slot.removeChild(slot.firstChild);
       }
-
-      btn.addEventListener("click", function (e){
-        try{
-          e.preventDefault();
-        }catch{}
-        submitCapture();
-      });
-      inp.addEventListener("keydown", function (e){
-        if (!e || e.key !== "Enter") return;
-        try{
-          e.preventDefault();
-        }catch{}
-        submitCapture();
-      });
-      slot.appendChild(inp);
-      slot.appendChild(btn);
-      iuUserAddressSyncWelcomeAddressSlot();
     }catch{}
+    iuUserAddressSyncWelcomeAddressSlot();
   }
 
   function iuUserAddressSetCore(callForm, opts){

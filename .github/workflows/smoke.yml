@@ -177,6 +177,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-svatek-pill-responsive-wrap-guard
 
+      - name: Silver welcome legacy input removed guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-silver-welcome-legacy-input-removed-guard
+
       - name: AI assistants overlay bottom gap guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-ai-assistants-overlay-bottom-gap-guard
