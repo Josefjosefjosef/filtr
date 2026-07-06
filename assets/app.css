@@ -11613,6 +11613,21 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odka
   text-decoration:underline;
 }
 
+@media (min-width: 901px){
+  body .layout > aside.accordionCol .iuMailboxControls,
+  body .layout > aside.accordionCol #iuMailboxControls{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  body .layout > aside.accordionCol .iuMailboxControls span,
+  body .layout > aside.accordionCol #iuMailboxControls span{
+    display: block;
+    margin: 0;
+  }
+}
+
 .accordionCol .mindMenu .iu-mailbox-row .iu-mailbox-pill{
   transition: box-shadow 180ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 180ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 180ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform;
@@ -12736,18 +12751,22 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 }
 
 .layout > aside.accordionCol .mindMenu .iu-mailbox-row{
-  display: flex;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 36px 40px;
   align-items: center;
-  justify-content: center;
+  justify-content: stretch;
   width: 100%;
-  min-height: 35px;
-  gap: 0;
+  min-height: 40px;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
 }
 
 .layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
-  width: var(--iu-mm-pill-w, 252px);
-  flex: 0 0 var(--iu-mm-pill-w, 252px);
+  width: auto !important;
+  flex: unset !important;
   min-width: 0;
+  max-width: 100%;
   line-height: 35px;
   border: 1px solid rgba(20, 40, 70, 0.18);
   border-radius: 999px;
@@ -12763,12 +12782,12 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 }
 
 .layout > aside.accordionCol .mindMenu .iu-mailbox-gear{
-  flex: 0 0 auto;
+  flex: unset;
   width: 32px;
   height: 32px;
   min-width: 32px;
   min-height: 32px;
-  margin-left: 5px;
+  margin-left: 0;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
@@ -12782,7 +12801,7 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
 }
 
 .layout > aside.accordionCol .mindMenu .iu-pill-social-slot{
-  margin-left: 10px;
+  margin-left: 0;
 }
 
 @media (prefers-reduced-motion: no-preference){
