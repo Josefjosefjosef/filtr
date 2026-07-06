@@ -157,6 +157,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-financial-calc-mobile-header-guard
 
+      - name: Legal documents mobile header guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-legal-documents-mobile-header-guard
+
       - name: Datovka mobile overlay visible guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-ds-mobile-overlay-visible-guard
