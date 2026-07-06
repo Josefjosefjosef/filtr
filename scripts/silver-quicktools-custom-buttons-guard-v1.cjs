@@ -43,6 +43,26 @@ const REQUIRED = [
     file: APP,
     pattern: /function iuQuickToolsPerformReset\(\)[\s\S]*iuCustomButtonsRefreshList\(cfg\)/,
   },
+  {
+    id: "get_all_grids_helper",
+    file: APP,
+    pattern: /function iuQuickToolsGetAllGrids\(\)/,
+  },
+  {
+    id: "apply_config_syncs_all_grids",
+    file: APP,
+    pattern: /function iuQuickToolsApplyConfig\(cfgOverride\)[\s\S]*iuQuickToolsGetAllGrids\(\)[\s\S]*forEach/,
+  },
+  {
+    id: "tools_host_grid_selector",
+    file: APP,
+    pattern: /#iuMyInfoUzelToolsHost section\.iu-mmQuickLinks \.iu-mmQuickGrid/,
+  },
+  {
+    id: "delete_by_id_all_grids",
+    file: APP,
+    pattern: /function iuCustomButtonsDeleteById\(id\)[\s\S]*iuQuickToolsGetAllGrids\(\)\.forEach/,
+  },
 ];
 
 function main() {
