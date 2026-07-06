@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-07-06T21:10:54.641161Z",
+  "ingestedAt": "2026-07-06T23:04:45.892250Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Rusové ve hrách nejsou vždy jen padouši. Poznáte ty nejslavnější?",
+      "url": "https://www.idnes.cz/hry/rusove-ve-hrach-nejsou-vzdy-jen-padousi-poznate-ty-nejslavnejsi.Q220307_214641_bonusweb_srp",
+      "dt": "2026-07-06T22:00:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "hrách",
+        "jen",
+        "nejslavnější",
+        "nejsou",
+        "padouši",
+        "poznáte",
+        "rusové",
+        "vždy"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -727,32 +752,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Je už mezi nimi letošní vítěz? Toto jsou nejlepší hry první poloviny roku",
-      "url": "https://www.idnes.cz/hry/magazin/nejlepsi-hry-prvni-polovina-2026-metacritic-recenze.A260624_134046_bw-magazin_oma/foto",
-      "dt": "2026-06-24T22:00:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "hry",
-        "letošní",
-        "nejlepší",
-        "nimi",
-        "poloviny",
-        "první",
-        "roku",
-        "toto",
-        "vítěz"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -763,7 +762,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 46617,
+      "bytes": 46075,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -800,7 +799,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-05T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-06T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -815,6 +814,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rusové ve hrách nejsou vždy jen padouši. Poznáte ty nejslavnější?",
+            "publishedAt": "2026-07-06T22:00:00Z"
+          },
           {
             "title": "Pro mnohé hráče to byly životní zážitky. Tak šel čas se sérií Gothic",
             "publishedAt": "2026-07-05T22:00:00Z"
@@ -842,10 +845,6 @@
           {
             "title": "Stahujte zdarma ceněný klenot herní historie a parádní retro mlátičku",
             "publishedAt": "2026-07-02T22:00:00Z"
-          },
-          {
-            "title": "PS Plus láká v červenci na Call of Duty, For the King II a CrossCode",
-            "publishedAt": "2026-07-02T14:10:00Z"
           }
         ]
       }
