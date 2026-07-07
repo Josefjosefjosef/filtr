@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-07-07T05:52:14.447161Z",
+  "ingestedAt": "2026-07-07T07:34:38.144640Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "S autem blokujícím provoz měl jen popojet na parkoviště. Místo toho zamířil opilý řidič do ulic",
+      "url": "https://tydenikpolicie.cz/s-autem-blokujicim-provoz-mel-jen-popojet-na-parkoviste-misto-toho-zamiril-opily-ridic-do-ulic/",
+      "dt": "2026-07-07T06:29:58Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "autem",
+        "blokujícím",
+        "jen",
+        "místo",
+        "měl",
+        "opilý",
+        "parkoviště",
+        "popojet",
+        "provoz",
+        "toho",
+        "ulic",
+        "zamířil",
+        "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -239,36 +269,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Mladík v Dolní Lomné přejel do protisměru a vjel s autem na chodník, kde srazil cyklistu. Ten na místě zemřel",
-      "url": "https://tydenikpolicie.cz/mladik-v-dolni-lomne-prejel-do-protismeru-a-vjel-s-autem-na-chodnik-kde-srazil-cyklistu-ten-na-miste-zemrel/",
-      "dt": "2026-07-06T14:00:23Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "autem",
-        "chodník",
-        "cyklistu",
-        "dolní",
-        "lomné",
-        "mladík",
-        "místě",
-        "protisměru",
-        "přejel",
-        "srazil",
-        "ten",
-        "vjel",
-        "zemřel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16279,
+      "bytes": 16277,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-07-07T02:02:29Z",
+        "raw_feed_latest_publishedAt": "2026-07-07T06:29:58Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -331,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "S autem blokujícím provoz měl jen popojet na parkoviště. Místo toho zamířil opilý řidič do ulic",
+            "publishedAt": "2026-07-07T06:29:58Z"
+          },
           {
             "title": "Intimní videohovor se rázem změnil ve vydírání. Neznámý pachatel požadoval po muži z Českokrumlovska desítky tisíc korun",
             "publishedAt": "2026-07-07T02:02:29Z"
@@ -358,10 +362,6 @@
           {
             "title": "Při požáru domu v Trutnově zemřel člověk",
             "publishedAt": "2026-07-06T14:40:44Z"
-          },
-          {
-            "title": "Požár rodinného domu v Brně-Bystrci si vyžádal vyhlášení druhého stupně poplachu",
-            "publishedAt": "2026-07-06T14:38:04Z"
           }
         ]
       }
