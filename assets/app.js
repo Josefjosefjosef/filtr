@@ -40019,9 +40019,9 @@ function buildVideoAsArticleCard(it) {
 
   function renderFormView(){
     const filters = document.getElementById("iuTasksFilters");
-    const desktop = isTasksDesktopTwoPanel();
     if (filters) filters.hidden = isTasksNarrowViewport() && state.panelMode === "form";
-    const root = desktop ? document.getElementById("iuTasksDetail") : document.getElementById("iuTasksMain");
+    /* P0 mobile/tablet: form lives in detail panel (list hidden in detail mode); iuTasksMain would stay display:none. */
+    const root = document.getElementById("iuTasksDetail");
     if (!root) return;
 
     const isEdit = !!state.editingId;
@@ -40168,6 +40168,7 @@ function buildVideoAsArticleCard(it) {
     state.panelMode = "list";
     state.editingId = "";
     render();
+    if (isTasksNarrowViewport()) setTasksMobileMode("list");
   }
 
   function toggleDone(id){
@@ -40194,6 +40195,7 @@ function buildVideoAsArticleCard(it) {
     state.panelMode = "list";
     state.editingId = "";
     render();
+    if (isTasksNarrowViewport()) setTasksMobileMode("list");
   }
 
   function openOverlay(originEl){
