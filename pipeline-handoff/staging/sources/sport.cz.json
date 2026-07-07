@@ -1,24 +1,48 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-07-07T00:46:58.900650Z",
+  "ingestedAt": "2026-07-07T02:29:20.410099Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Blesková odpověď! Belgičané znovu vedou",
+      "title": "Belgičané zhatili americký sen a postupují do čtvrtfinále MS",
       "url": "https://www.sport.cz/clanek/fotbal-ms-usa-mohou-proti-belgii-dosahnout-historickeho-milniku-5500593",
       "dt": "2026-07-06T16:00:00Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "americký",
         "belgičané",
-        "blesková",
-        "fotbal",
-        "odpověď",
-        "online",
-        "vedou",
-        "znovu"
+        "postupují",
+        "sen",
+        "zhatili",
+        "čtvrtfinále"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Úlet španělské hvězdy. Po výlevu na dlouholetého parťáka se strhla mela",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-ulet-spanelske-hvezdy-po-vylevu-na-spoluhrace-se-strhla-mela-5501392",
+      "dt": "2026-07-07T00:53:27Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dlouholetého",
+        "hvězdy",
+        "mela",
+        "parťáka",
+        "strhla",
+        "výlevu",
+        "úlet",
+        "španělské"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -743,31 +767,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pittsburgh uzavřel nové kontrakty s útočníkem Činachovem a brankářem Šilovsem",
-      "url": "https://www.sport.cz/clanek/hokej-nhl-pittsburgh-uzavrel-nove-kontrakty-s-utocnikem-cinachovem-a-brankarem-silovsem-5500673",
-      "dt": "2026-07-06T12:42:25Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "brankářem",
-        "kontrakty",
-        "nové",
-        "pittsburgh",
-        "uzavřel",
-        "útočníkem",
-        "činachovem",
-        "šilovsem"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -778,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45620,
+      "bytes": 45072,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -815,7 +814,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-06T23:18:21Z",
+        "raw_feed_latest_publishedAt": "2026-07-07T00:53:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -832,8 +831,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Blesková odpověď! Belgičané znovu vedou",
+            "title": "Belgičané zhatili americký sen a postupují do čtvrtfinále MS",
             "publishedAt": "2026-07-06T16:00:00Z"
+          },
+          {
+            "title": "Úlet španělské hvězdy. Po výlevu na dlouholetého parťáka se strhla mela",
+            "publishedAt": "2026-07-07T00:53:27Z"
           },
           {
             "title": "Španělé překonali rekord fotbalového mistrovství světa",
@@ -858,10 +861,6 @@
           {
             "title": "PŘEHLEDNĚ PAVOUK MS: Španělé postupují, znovu neinkasovali. Zkázu zažívají celky z amerického kontinentu",
             "publishedAt": "2026-07-06T17:06:03Z"
-          },
-          {
-            "title": "MS 2026: Program play off fotbalového šampionátu v USA, Kanadě a Mexiku",
-            "publishedAt": "2026-06-29T03:09:00Z"
           }
         ]
       }

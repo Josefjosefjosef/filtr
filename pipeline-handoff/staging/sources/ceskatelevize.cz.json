@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-07-07T00:46:58.900650Z",
+  "ingestedAt": "2026-07-07T02:29:20.410099Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Ankaře začíná summit NATO, letí Babiš i Pavel",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/v-ankare-zacina-summit-nato-leti-babis-i-pavel-375308",
+      "dt": "2026-07-07T01:23:55Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "ankaře",
+        "babiš",
+        "letí",
+        "nato",
+        "pavel",
+        "summit",
+        "začíná"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -722,30 +746,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na jihu Francie rozsáhle hoří, tisíce lidí se evakuují",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/na-jihu-francie-rozsahle-hori-tisice-lidi-se-evakuuji-375281",
-      "dt": "2026-07-05T17:51:36Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "evakuují",
-        "francie",
-        "hoří",
-        "jihu",
-        "lidí",
-        "rozsáhle",
-        "tisíce"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -756,7 +756,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41385,
+      "bytes": 41293,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -793,7 +793,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-06T23:56:13Z",
+        "raw_feed_latest_publishedAt": "2026-07-07T01:23:55Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -809,6 +809,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Ankaře začíná summit NATO, letí Babiš i Pavel",
+            "publishedAt": "2026-07-07T01:23:55Z"
+          },
           {
             "title": "Kanada chce zakoupit až dvanáct ponorek od německé společnosti",
             "publishedAt": "2026-07-06T23:56:13Z"
@@ -836,10 +840,6 @@
           {
             "title": "SOUHRN: Zásadní události pondělí 6. července",
             "publishedAt": "2026-07-06T16:29:21Z"
-          },
-          {
-            "title": "Kanada a Evropa do obrany investují kolem čtyř procent HDP, prohlásil před summitem Rutte",
-            "publishedAt": "2026-07-06T14:48:55Z"
           }
         ]
       }
