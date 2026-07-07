@@ -20,6 +20,7 @@ const INDEX = path.join(REPO, "projects", "index.html");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8898", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const CACHE_BUSTS = [
+  "ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707",
   "ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707",
   "legal-docs-hub-header-single-row-v1-20260707",
   "ds-mobile-scroll-bottom-clearance-v1-20260707",

@@ -17234,6 +17234,19 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   
 }
 
+.iuSilverWelcomeMetaSvatekCluster{
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.iuSilverWelcomeMetaSvatekCluster--stateHoliday{
+  flex-wrap: wrap;
+}
+
 .silver-welcome-stack--evening .iuSilverWelcomeHeadline{
   color: rgba(255, 255, 255, 0.96);
 }
@@ -17345,7 +17358,15 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   }
   #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekCluster,
   #iuMobileSilverSlot #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekCluster {
-    display: contents;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    flex: 0 1 auto;
+    max-width: 100%;
+  }
+  #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekCluster--stateHoliday,
+  #iuMobileSilverSlot #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekCluster--stateHoliday {
+    flex-wrap: wrap;
   }
   #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekLabel,
   #iuMobileSilverSlot #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekLabel {

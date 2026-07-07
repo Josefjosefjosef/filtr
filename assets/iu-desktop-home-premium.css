@@ -173,7 +173,15 @@
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekCluster {
-    display: contents;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    flex: 0 1 auto;
+    max-width: 100%;
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekCluster--stateHoliday {
+    flex-wrap: wrap;
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekLabel {

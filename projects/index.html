@@ -1679,9 +1679,10 @@ font-src 'self' data:;
       /* P0: svátek pill + premium overlay — projects/index.html (mimo app.css css_debt_guard). */
       #iuSilverWelcomeCard{--male-color:var(--iuNamedayMaleAccent);--female-color:var(--iuNamedayFemaleAccent);--iuSvatekPremiumBlue1:#5B6CFF;--iuSvatekPremiumBlue2:#7B5FFF;--iuSvatekPremiumTeal1:#2DD4BF;--iuSvatekPremiumTeal2:#059669}
       .iuSilverWelcomeMeta{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:0;row-gap:2px;width:100%;min-width:0;white-space:normal}
-      .iuSilverWelcomeMetaDateCluster,.iuSilverWelcomeMetaSvatekLabel,.svatek-pill{min-width:0}
+      .iuSilverWelcomeMetaDateCluster,.iuSilverWelcomeMetaSvatekCluster,.svatek-pill{min-width:0}
       .iuSilverWelcomeMetaDateCluster{flex:0 1 auto;white-space:nowrap}
-      .iuSilverWelcomeMetaSvatekCluster{display:contents}
+      .iuSilverWelcomeMetaSvatekCluster{display:inline-flex;flex-wrap:nowrap;align-items:baseline;flex:0 1 auto;max-width:100%}
+      .iuSilverWelcomeMetaSvatekCluster--stateHoliday{flex-wrap:wrap}
       .iuSilverWelcomeMetaSvatekLabel{flex:0 0 auto;white-space:nowrap}
       .iuSilverWelcomeMetaSvatekLabel::before{content:" · "}
       #svatekOverlay.iuSvatekOverlayRoot{--iuSvatekPremiumBlue1:#5B6CFF;--iuSvatekPremiumBlue2:#7B5FFF;--iuSvatekPremiumTeal1:#2DD4BF;--iuSvatekPremiumTeal2:#059669}
@@ -1713,8 +1714,6 @@ font-src 'self' data:;
       #iuSilverWelcomeCard .iuSilverWelcomeMeta .svatek-name{font-weight:700}
       #iuSilverWelcomeCard .iuSilverWelcomeMeta .svatek-name.gender-male{color:var(--male-color)}
       #iuSilverWelcomeCard .iuSilverWelcomeMeta .svatek-name.gender-female{color:var(--female-color)}
-      #iuSilverWelcomeCard .iuSilverWelcomeMeta .svatek-name.gender-male~.svatek-icon{color:var(--male-color)}
-      #iuSilverWelcomeCard .iuSilverWelcomeMeta .svatek-name.gender-female~.svatek-icon{color:var(--female-color)}
       .silver-welcome-stack--evening #iuSilverWelcomeCard .iuSilverWelcomeMeta .svatek-name:not(.gender-male):not(.gender-female){color:rgba(255,255,255,.96)}
     </style>
     <style id="iuNamedayWishPremiumCss">
@@ -1912,7 +1911,7 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-home-premium-install-box.css?v=1" />
     <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=remove-partner-banners-v1-20260706" />
     <link rel="stylesheet" href="/assets/iu-desktop-parcel-watch-overlay.css?v=pr5907-desktop-parcel-premium-20260619" />
-    <link rel="stylesheet" href="/assets/iu-desktop-home-premium.css?v=svatek-pill-responsive-wrap-v1-20260706" />
+    <link rel="stylesheet" href="/assets/iu-desktop-home-premium.css?v=svatek-pill-inline-layout-v1-20260707" />
     <link rel="stylesheet" href="/assets/iu-desktop-section-close-v1.css?v=desktop-left-rail-section-close-v1-20260707" />
     <link rel="stylesheet" href="/assets/iu-desktop-info-panel.css?v=info-panel-polish-v1-20260705" />
     <link rel="stylesheet" href="/assets/iu-mobile-info-panel.css?v=info-panel-polish-v1-20260705" />
@@ -5601,7 +5600,7 @@ font-src 'self' data:;
     <script defer src="/assets/iu-affiliate-catalog.js?v=affiliate-disclosure-title-remove-v56-20260629"></script>
     <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-v1"></script>
     <script defer src="/assets/iu-tool-privacy-info.js?v=unified-overlay-header-v73-20260701"></script>
-    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707"></script>
+    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707"></script>
     <script defer src="/assets/iu-desktop-section-close-v1.js?v=desktop-left-rail-section-close-v1-20260707"></script>
     <script type="module" src="/assets/iu-desktop-info-panel.js?v=info-panel-polish-v1-20260705"></script>
     <script>
