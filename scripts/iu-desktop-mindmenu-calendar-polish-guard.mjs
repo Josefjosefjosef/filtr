@@ -91,6 +91,7 @@ const cacheBustOk =
   indexHtml.includes("mindmenu-mailbox-row-pc-layout-v1-20260706") ||
   indexHtml.includes("desktop-mindmenu-calendar-polish-v1-20260706") ||
   indexHtml.includes("svatek-pill-responsive-wrap-v1-20260706") ||
+  indexHtml.includes("svatek-pill-inline-layout-v1-20260707") ||
   indexHtml.includes("state-holiday-label-v1-20260706") ||
   indexHtml.includes("ds-mobile-scroll-bottom-clearance-v1-20260707") ||
   indexHtml.includes("legal-docs-hub-header-single-row-v1-20260707") ||

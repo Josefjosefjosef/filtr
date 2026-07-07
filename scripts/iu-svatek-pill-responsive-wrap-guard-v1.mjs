@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Guard: svátek pill wraps to new line only when row lacks space (flex-wrap + display:contents).
+ * Guard: svátek pill — label+pill stay inline for namedays; state holidays may wrap when long.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -11,6 +11,7 @@ const ROOT = path.join(__dirname, "..");
 const INDEX = path.join(ROOT, "projects", "index.html");
 const APP_CSS = path.join(ROOT, "assets", "app.css");
 const DHP_CSS = path.join(ROOT, "assets", "iu-desktop-home-premium.css");
+const APP_JS = path.join(ROOT, "assets", "app.js");
 
 const CHECKS = [
   {
@@ -19,9 +20,14 @@ const CHECKS = [
     pattern: /\.iuSilverWelcomeMeta\{display:flex;flex-wrap:wrap/,
   },
   {
-    id: "index_svatek_cluster_contents",
+    id: "index_svatek_cluster_inline_flex",
     file: INDEX,
-    pattern: /\.iuSilverWelcomeMetaSvatekCluster\{display:contents\}/,
+    pattern: /\.iuSilverWelcomeMetaSvatekCluster\{display:inline-flex;flex-wrap:nowrap/,
+  },
+  {
+    id: "index_svatek_cluster_state_holiday_wrap",
+    file: INDEX,
+    pattern: /\.iuSilverWelcomeMetaSvatekCluster--stateHoliday\{flex-wrap:wrap\}/,
   },
   {
     id: "index_svatek_label_before_sep",
@@ -29,14 +35,25 @@ const CHECKS = [
     pattern: /\.iuSilverWelcomeMetaSvatekLabel::before\{content:" · "\}/,
   },
   {
+    id: "index_no_svatek_icon_css",
+    file: INDEX,
+    pattern: /\.svatek-icon/,
+    invert: true,
+  },
+  {
     id: "app_css_meta_wrap",
     file: APP_CSS,
     pattern: /\.iuSilverWelcomeMeta\{[\s\S]*?flex-wrap:\s*wrap/,
   },
   {
-    id: "app_css_mobile_no_nowrap_force",
+    id: "app_css_cluster_inline_flex",
     file: APP_CSS,
-    pattern: /@media \(max-width: 768px\)[\s\S]*?\.iuSilverWelcomeMeta[\s\S]*?flex-wrap:\s*wrap[\s\S]*?display:\s*contents/,
+    pattern: /\.iuSilverWelcomeMetaSvatekCluster\{[\s\S]*?display:\s*inline-flex[\s\S]*?flex-wrap:\s*nowrap/,
+  },
+  {
+    id: "app_css_mobile_cluster_inline_flex",
+    file: APP_CSS,
+    pattern: /@media \(max-width: 768px\)[\s\S]*?\.iuSilverWelcomeMetaSvatekCluster[\s\S]*?display:\s*inline-flex[\s\S]*?flex-wrap:\s*nowrap/,
   },
   {
     id: "dhp_desktop_row_wrap",
@@ -44,16 +61,29 @@ const CHECKS = [
     pattern: /body\.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard \.iuSilverWelcomeMeta \{[\s\S]*?flex-direction:\s*row[\s\S]*?flex-wrap:\s*wrap/,
   },
   {
-    id: "dhp_desktop_svatek_contents",
+    id: "dhp_desktop_svatek_inline_flex",
     file: DHP_CSS,
-    pattern: /body\.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard \.iuSilverWelcomeMetaSvatekCluster \{[\s\S]*?display:\s*contents/,
+    pattern: /body\.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard \.iuSilverWelcomeMetaSvatekCluster \{[\s\S]*?display:\s*inline-flex[\s\S]*?flex-wrap:\s*nowrap/,
+  },
+  {
+    id: "js_state_holiday_cluster_class",
+    file: APP_JS,
+    pattern: /iuSilverWelcomeMetaSvatekCluster--stateHoliday/,
+  },
+  {
+    id: "js_no_svatek_icon_element",
+    file: APP_JS,
+    pattern: /spanIcon\.className\s*=\s*"svatek-icon"/,
+    invert: true,
   },
 ];
 
 function main() {
   const checks = CHECKS.map((item) => {
     const src = fs.readFileSync(item.file, "utf8");
-    return { id: item.id, pass: item.pattern.test(src) };
+    const hit = item.pattern.test(src);
+    const pass = item.invert ? !hit : hit;
+    return { id: item.id, pass };
   });
   const pass = checks.every((c) => c.pass);
   const out = { pass, failed: checks.filter((c) => !c.pass).map((c) => c.id) };

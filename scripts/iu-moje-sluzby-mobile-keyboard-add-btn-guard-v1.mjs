@@ -13,6 +13,7 @@ const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.c
 const INDEX = path.join(REPO, "projects", "index.html");
 const CSS_BUST = "legal-docs-hub-header-single-row-v1-20260707";
 const JS_BUSTS = [
+  "ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707",
   "ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707",
   "legal-docs-hub-header-single-row-v1-20260707",
   "ds-mobile-scroll-bottom-clearance-v1-20260707",
