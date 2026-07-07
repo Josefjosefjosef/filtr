@@ -1,8 +1,55 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-07-06T23:04:45.892250Z",
+  "ingestedAt": "2026-07-07T00:46:58.900650Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "FOTBAL ONLINE: Blesková odpověď! Belgičané znovu vedou",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-usa-mohou-proti-belgii-dosahnout-historickeho-milniku-5500593",
+      "dt": "2026-07-06T16:00:00Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "belgičané",
+        "blesková",
+        "fotbal",
+        "odpověď",
+        "online",
+        "vedou",
+        "znovu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Španělé překonali rekord fotbalového mistrovství světa",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-spanele-prekonali-rekord-fotbaloveho-mistrovstvi-sveta-5501389",
+      "dt": "2026-07-06T23:18:21Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "fotbalového",
+        "mistrovství",
+        "překonali",
+        "rekord",
+        "světa",
+        "španělé"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -493,29 +540,6 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "USA mohou proti Belgii dosáhnout historického milníku",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-usa-mohou-proti-belgii-dosahnout-historickeho-milniku-5500593",
-      "dt": "2026-07-06T16:00:00Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "belgii",
-        "dosáhnout",
-        "historického",
-        "milníku",
-        "proti",
-        "usa"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
       "title": "Klopp pálí do Trumpa a šéfa FIFA: Nelezte nám do zelí! O fotbale nevíte nic",
       "url": "https://www.sport.cz/clanek/fotbal-ms-klopp-pali-do-trumpa-a-sefa-fifa-nelezte-nam-do-zeli-o-fotbale-nevite-nic-5500594",
       "dt": "2026-07-06T15:47:35Z",
@@ -744,35 +768,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Neobvyklý trest pro Sainze po Silverstonu. Za chybu při výjezdu safety caru přišel o pět míst",
-      "url": "https://www.sport.cz/clanek/moto-formule-1-neobvykly-trest-pro-sainze-po-silverstonu-za-chybu-pri-vyjezdu-safety-caru-prisel-o-pet-mist-5500614",
-      "dt": "2026-07-06T12:10:45Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "caru",
-        "chybu",
-        "míst",
-        "neobvyklý",
-        "pět",
-        "při",
-        "přišel",
-        "safety",
-        "sainze",
-        "silverstonu",
-        "trest",
-        "výjezdu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -783,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45654,
+      "bytes": 45620,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -820,12 +815,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-06T22:17:05Z",
+        "raw_feed_latest_publishedAt": "2026-07-06T23:18:21Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 28,
-          "zdravi": 1,
-          "zpravy": 1
+          "sport": 29,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -837,6 +831,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "FOTBAL ONLINE: Blesková odpověď! Belgičané znovu vedou",
+            "publishedAt": "2026-07-06T16:00:00Z"
+          },
+          {
+            "title": "Španělé překonali rekord fotbalového mistrovství světa",
+            "publishedAt": "2026-07-06T23:18:21Z"
+          },
           {
             "title": "Ronaldo v slzách. Loučí se kuriózní statistikou i extrémně rozdílnými názory expertů",
             "publishedAt": "2026-07-06T22:17:05Z"
@@ -860,14 +862,6 @@
           {
             "title": "MS 2026: Program play off fotbalového šampionátu v USA, Kanadě a Mexiku",
             "publishedAt": "2026-06-29T03:09:00Z"
-          },
-          {
-            "title": "Nechutná dohra. Politička z Paraguaye zesměšňovala Mbappého, ten se rázně ozývá",
-            "publishedAt": "2026-07-06T19:58:52Z"
-          },
-          {
-            "title": "Češi sice zvládli v Brně neskutečné drama s Estonci, o postup ale přišli",
-            "publishedAt": "2026-07-06T08:46:37Z"
           }
         ]
       }
