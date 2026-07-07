@@ -321,11 +321,13 @@
   .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row .iu-mailbox-gear,
   .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row .iu-mailbox-gear {
     grid-column: 2;
-    width: 32px !important;
-    height: 32px !important;
-    min-width: 32px !important;
-    min-height: 32px !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
     margin: 0 !important;
+    justify-self: stretch;
+    align-self: center;
     border-radius: 0 !important;
     border: 0 !important;
     background: transparent !important;

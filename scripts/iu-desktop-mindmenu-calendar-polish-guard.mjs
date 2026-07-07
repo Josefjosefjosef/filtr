@@ -87,6 +87,7 @@ const cacheBustOk =
   indexHtml.includes("legal-docs-preview-pc-v1-20260706") ||
   indexHtml.includes("tasks-desktop-two-panel-v1-20260706") ||
   indexHtml.includes("mindmenu-mailbox-pc-pill-gear-gap-v1-20260707") ||
+  indexHtml.includes("mindmenu-mailbox-gear-track-v1-20260707") ||
   indexHtml.includes("mindmenu-mailbox-row-pc-layout-v1-20260706") ||
   indexHtml.includes("desktop-mindmenu-calendar-polish-v1-20260706") ||
   indexHtml.includes("svatek-pill-responsive-wrap-v1-20260706") ||
