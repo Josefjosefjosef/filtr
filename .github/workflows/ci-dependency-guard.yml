@@ -2,8 +2,9 @@
 name: CI dependency guard
 
 on:
-  schedule:
-    - cron: "17 6 * * 1"
+  # TEMP PAUSED 2026-07-07: schedule disabled during PR batch — uncomment to re-enable
+  # schedule:
+  #   - cron: "17 6 * * 1"
   workflow_dispatch:
 
 jobs:

@@ -31,15 +31,16 @@ name: Articles watchdog cron fallback
 
 on:
   workflow_dispatch: {}
-  schedule:
-    - cron: "2-59/5 * * * *"
-  workflow_run:
-    workflows:
-      - "Update articles fast pool"
-      - "Update articles data"
-      - "Pages publish from main data"
-      - "Deploy articles watchdog"
-    types: [completed]
+  # TEMP PAUSED 2026-07-07: schedule + workflow_run chain disabled during PR batch — uncomment to re-enable
+  # schedule:
+  #   - cron: "2-59/5 * * * *"
+  # workflow_run:
+  #   workflows:
+  #     - "Update articles fast pool"
+  #     - "Update articles data"
+  #     - "Pages publish from main data"
+  #     - "Deploy articles watchdog"
+  #   types: [completed]
 
 permissions:
   contents: read

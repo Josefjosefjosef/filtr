@@ -9,8 +9,9 @@ permissions:
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "*/15 * * * *"  # každých 15 minut
+  # TEMP PAUSED 2026-07-07: schedule disabled during PR batch — uncomment to re-enable
+  # schedule:
+  #   - cron: "*/15 * * * *"  # každých 15 minut
 
 jobs:
   update:

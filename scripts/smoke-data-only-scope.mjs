@@ -44,6 +44,17 @@ export function isDataOnlyScope(files) {
   return paths.every((f) => f.startsWith("projects/data/"));
 }
 
+/** CI-only workflow edits — no UI surface; skip Playwright guards. */
+export function isWorkflowOnlyScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f.startsWith(".github/workflows/") ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === "scripts/smoke_data_only_scope_proof.mjs";
+  return paths.every(allowed);
+}
+
 /** CI-only fast pool workflow edits — no UI surface; skip Playwright guards. */
 export function isFastPoolPipelineScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
@@ -163,6 +174,7 @@ function main() {
   }
 
   const dataOnly = isDataOnlyScope(files);
+  const workflowOnly = isWorkflowOnlyScope(files);
   const pipelineOnly = isFastPoolPipelineScope(files);
   const infoPanelOnly = isInfoPanelOnlyScope(files);
   const finCalcHeaderOnly = isFinancialCalcMobileHeaderScope(files);
@@ -170,10 +182,11 @@ function main() {
   const customButtonsScrollOnly = isCustomButtonsMobileScrollScope(files);
   const allowFastPath =
     dataOnly ||
+    workflowOnly ||
     pipelineOnly ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
 
-  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"}`);
+  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"}`);
   for (const f of files.slice(0, 20)) {
     console.log(`[smoke-data-only-scope] changed=${f}`);
   }
