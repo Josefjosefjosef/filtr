@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-07-07T07:34:38.144640Z",
+  "ingestedAt": "2026-07-07T09:37:10.382127Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Game Pass údajně ani vzdáleně nesplnil cíle z hlediska počtu předplatitelů",
+      "url": "https://zing.cz/article/game-pass-si-ma-predplacet-asi-30-milionu-uzivatelu-microsoft-cilil-na-d",
+      "dt": "2026-07-07T08:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "cíle",
+        "game",
+        "hlediska",
+        "nesplnil",
+        "pass",
+        "počtu",
+        "předplatitelů",
+        "vzdáleně",
+        "údajně"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -956,31 +982,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Týden na Steamu v duchu nového fenoménu a návratu oceňovaných her",
-      "url": "https://zing.cz/article/tyden-na-steamu-v-duchu-noveho-fenomenu-a-navratu-ocenovanych-her",
-      "dt": "2026-07-01T10:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "duchu",
-        "fenoménu",
-        "her",
-        "nového",
-        "návratu",
-        "oceňovaných",
-        "steamu",
-        "týden"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -991,7 +992,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125757,
+      "bytes": 125800,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1028,7 +1029,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-07T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-07T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1043,6 +1044,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Game Pass údajně ani vzdáleně nesplnil cíle z hlediska počtu předplatitelů",
+            "publishedAt": "2026-07-07T08:00:00Z"
+          },
           {
             "title": "Restart Xboxu zasáhl také Bethesdu a její studia",
             "publishedAt": "2026-07-07T06:00:00Z"
@@ -1070,10 +1075,6 @@
           {
             "title": "Jerk Gustafsson oživil značku Wolfenstein, nyní povede studio Arkane",
             "publishedAt": "2026-07-06T10:00:00Z"
-          },
-          {
-            "title": "Cyberpunk 2077 hraje na Steamu nejvíce hráčů za poslední tři roky",
-            "publishedAt": "2026-07-06T08:00:00Z"
           }
         ]
       }
