@@ -100,22 +100,23 @@
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    bottom: var(--iu-mobile-bottom-nav-safe-space, var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px))) !important;
     width: 100vw !important;
     max-width: none !important;
     transform: none !important;
     height: auto !important;
-    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
-    padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px) !important;
-    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px);
+    max-height: calc(100dvh - var(--iu-mobile-bottom-nav-safe-space, var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px)))) !important;
+    padding-bottom: 0 !important;
+    scroll-padding-bottom: calc(var(--iu-tool-overlay-bottom-gap, 15px) + env(safe-area-inset-bottom, 0px));
     border-radius: 0 !important;
     box-shadow: none !important;
     box-sizing: border-box !important;
   }
 
-  body.iu-mobileGateOverlayOpen.iu-modal-open #iuDsPanel .iu-datovka-scroll-host {
-    padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px) !important;
-    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px);
+  body.iu-mobileGateOverlayOpen.iu-modal-open #iuDsPanel :is(.iu-ds-panelBody, .iu-datovka-scroll-host) {
+    padding-bottom: calc(var(--iu-tool-overlay-bottom-gap, 15px) + env(safe-area-inset-bottom, 0px)) !important;
+    scroll-padding-bottom: calc(var(--iu-tool-overlay-bottom-gap, 15px) + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box !important;
   }
 
   /* AI asistenti (narrow fullscreen) */
@@ -288,25 +289,25 @@
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    bottom: var(--iu-mobile-bottom-nav-safe-space, var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px))) !important;
     width: 100vw !important;
     max-width: none !important;
     transform: none !important;
     height: auto !important;
-    max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 32px))) !important;
+    max-height: calc(100dvh - var(--iu-mobile-bottom-nav-safe-space, var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px)))) !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
-    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px);
+    scroll-padding-bottom: calc(var(--iu-tool-overlay-bottom-gap, 15px) + env(safe-area-inset-bottom, 0px));
     border-radius: 0 !important;
     box-shadow: none !important;
     box-sizing: border-box !important;
   }
 
   body.iu-modal-open.iu-ds-overlay-open #iuDsPanel :is(.iu-ds-panelBody, .iu-datovka-scroll-host) {
-    padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px) !important;
-    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap, 15px);
+    padding-bottom: var(--iu-ds-scroll-bottom-clearance, calc(var(--iu-tool-overlay-bottom-gap, 15px) + env(safe-area-inset-bottom, 0px))) !important;
+    scroll-padding-bottom: var(--iu-ds-scroll-bottom-clearance, calc(var(--iu-tool-overlay-bottom-gap, 15px) + env(safe-area-inset-bottom, 0px))) !important;
     box-sizing: border-box !important;
   }
 

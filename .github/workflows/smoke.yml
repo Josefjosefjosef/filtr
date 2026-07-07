@@ -169,6 +169,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-ds-mobile-overlay-visible-guard
 
+      - name: Datovka mobile scroll bottom clearance guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-ds-mobile-scroll-bottom-clearance-guard
+
       - name: Moje sluzby mobile keyboard add btn guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-moje-sluzby-mobile-keyboard-add-btn-guard

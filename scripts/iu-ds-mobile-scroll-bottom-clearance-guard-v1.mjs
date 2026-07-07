@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 /**
- * Datová schránka — mobil/tablet overlay visible above backdrop (MindMenu gate path).
- * Run: npm run iu-ds-mobile-overlay-visible-guard
+ * Datová schránka — mobil/tablet: poslední prvek musí být nad spodní navigací po scrollu na konec.
  */
-import fs from "fs";
-import path from "path";
-import http from "http";
-import { fileURLToPath } from "url";
-import { createRequire } from "module";
+import fs from "node:fs";
+import path from "node:path";
+import http from "node:http";
+import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
 import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -15,8 +14,9 @@ const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
 
 const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.css");
+const RESTORE = path.join(REPO, "assets", "iu-mindmenu-bottom-nav-restore-v1.css");
 const INDEX = path.join(REPO, "projects", "index.html");
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8897", 10);
+const PORT = parseInt(process.env.IU_GUARD_PORT || "8898", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 
 const VIEWPORTS = [
@@ -26,23 +26,30 @@ const VIEWPORTS = [
 
 function staticGate() {
   const unified = fs.readFileSync(UNIFIED, "utf8");
+  const restore = fs.readFileSync(RESTORE, "utf8");
   const index = fs.readFileSync(INDEX, "utf8");
-  const dsBlock = unified.match(
-    /body\.iu-modal-open\.iu-ds-overlay-open #iuDsPanel\.iu-ds-panel\.iuSectionDS\[data-open="1"\]:not\(\[hidden\]\)\s*\{[\s\S]*?\}/
-  );
-  const block = dsBlock ? dsBlock[0] : "";
   const checks = [
     {
-      id: "ds_panel_fixed_top",
-      pass: /position:\s*fixed !important/.test(block) && /top:\s*0 !important/.test(block),
+      id: "unified_ds_scroll_clearance_token",
+      pass: /--iu-ds-scroll-bottom-clearance:/.test(unified),
     },
     {
-      id: "ds_panel_no_inset_auto_reset",
-      pass: block.length > 0 && !/inset:\s*auto !important/.test(block),
+      id: "unified_ds_panel_body_clearance",
+      pass: /body\.iu-modal-open\.iu-ds-overlay-open #iuDsPanel :is\(\.iu-ds-panelBody, \.iu-datovka-scroll-host\)[\s\S]*--iu-ds-scroll-bottom-clearance/.test(
+        unified
+      ),
     },
     {
-      id: "ds_panel_z_above_backdrop",
-      pass: /z-index:\s*10040 !important/.test(block),
+      id: "unified_mobile_nav_safe_space_bottom",
+      pass: /@media \(max-width: 900px\)[\s\S]*iu-ds-overlay-open[\s\S]*--iu-mobile-bottom-nav-safe-space/.test(
+        unified
+      ),
+    },
+    {
+      id: "restore_ds_panel_body_safe_area",
+      pass: /body\.iu-modal-open\.iu-ds-overlay-open #iuDsPanel :is\(\.iu-ds-panelBody, \.iu-datovka-scroll-host\)[\s\S]*env\(safe-area-inset-bottom/.test(
+        restore
+      ),
     },
     {
       id: "index_cache_bust",
@@ -81,42 +88,39 @@ async function openDatovkaViaGate(page) {
     const btn = document.querySelector('[data-iuq="datovka"]');
     if (btn) btn.click();
   });
-  await page.waitForTimeout(800);
+  await page.waitForTimeout(900);
 }
 
-async function measureOpen(page) {
+async function measureBottomClearance(page) {
+  await page.evaluate(() => {
+    const panel = document.getElementById("iuDsPanel");
+    if (panel) panel.scrollTop = panel.scrollHeight;
+    const body = panel ? panel.querySelector(".iu-ds-panelBody") : null;
+    if (body) body.scrollTop = body.scrollHeight;
+  });
+  await page.waitForTimeout(200);
   return page.evaluate(() => {
-    function cs(el) {
-      if (!el) return null;
-      const st = window.getComputedStyle(el);
-      const r = el.getBoundingClientRect();
-      return {
-        hidden: el.hidden,
-        dataOpen: el.dataset ? el.dataset.open : null,
-        display: st.display,
-        visibility: st.visibility,
-        position: st.position,
-        top: st.top,
-        zIndex: st.zIndex,
-        rect: { w: r.width, h: r.height, top: r.top, left: r.left },
-      };
-    }
-    const panel = cs(document.getElementById("iuDsPanel"));
-    const overlay = cs(document.getElementById("iuDsOverlay"));
-    const panelInViewport =
-      panel &&
-      !panel.hidden &&
-      panel.dataOpen === "1" &&
-      panel.display !== "none" &&
-      panel.visibility !== "hidden" &&
-      panel.rect.h > 40 &&
-      panel.rect.top >= -2 &&
-      panel.rect.top < 120;
-    const panelAboveOverlay =
-      panelInViewport &&
-      overlay &&
-      Number(panel.zIndex) >= Number(overlay.zIndex);
-    return { panel, overlay, panelInViewport, panelAboveOverlay };
+    const nav = document.getElementById("iuMobileBottomNav");
+    const addBtn = document.getElementById("iuDsAddBtn");
+    const panel = document.getElementById("iuDsPanel");
+    const navRect = nav ? nav.getBoundingClientRect() : null;
+    const addRect = addBtn ? addBtn.getBoundingClientRect() : null;
+    const panelRect = panel ? panel.getBoundingClientRect() : null;
+    const navVisible = !!(nav && navRect && navRect.height > 0 && getComputedStyle(nav).display !== "none");
+    const gapPx =
+      navVisible && addRect && navRect ? Math.round(navRect.top - addRect.bottom) : null;
+    const pass =
+      !!addRect &&
+      addRect.height > 0 &&
+      (!navVisible || (gapPx !== null && gapPx >= 4));
+    return {
+      pass,
+      navVisible,
+      gapPx,
+      addBottom: addRect ? Math.round(addRect.bottom) : null,
+      navTop: navRect ? Math.round(navRect.top) : null,
+      panelBottom: panelRect ? Math.round(panelRect.bottom) : null,
+    };
   });
 }
 
@@ -129,30 +133,11 @@ async function runViewport(browser, vp) {
   const page = await context.newPage();
   await page.goto(BASE, { waitUntil: "load", timeout: 60000 });
   await page.waitForFunction(() => document.querySelectorAll("*").length > 1500, { timeout: 30000 });
-  await page.waitForTimeout(2000);
-
+  await page.waitForTimeout(1500);
   await openDatovkaViaGate(page);
-  const first = await measureOpen(page);
-
-  await page.evaluate(() => {
-    const b = document.querySelector("#iuDsPanel .iu-ds-close");
-    if (b) b.click();
-  });
-  await page.waitForTimeout(400);
-
-  await openDatovkaViaGate(page);
-  const reopen = await measureOpen(page);
-
+  const measure = await measureBottomClearance(page);
   await context.close();
-  return {
-    viewport: vp.name,
-    first_open_in_viewport: first.panelInViewport,
-    first_open_above_backdrop: first.panelAboveOverlay,
-    reopen_in_viewport: reopen.panelInViewport,
-    reopen_above_backdrop: reopen.panelAboveOverlay,
-    first,
-    reopen,
-  };
+  return { viewport: vp.name, ...measure };
 }
 
 async function main() {
@@ -196,25 +181,8 @@ async function main() {
   await browser.close();
   server.close();
 
-  const pass = results.every(
-    (r) =>
-      r.first_open_in_viewport &&
-      r.first_open_above_backdrop &&
-      r.reopen_in_viewport &&
-      r.reopen_above_backdrop
-  );
-
-  console.log(
-    JSON.stringify(
-      {
-        result: pass ? "PASS" : "FAIL",
-        static: staticResult,
-        viewports: results,
-      },
-      null,
-      2
-    )
-  );
+  const pass = results.every((r) => r.pass);
+  console.log(JSON.stringify({ result: pass ? "PASS" : "FAIL", static: staticResult, viewports: results }, null, 2));
   process.exit(pass ? 0 : 1);
 }
 

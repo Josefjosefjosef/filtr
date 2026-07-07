@@ -11,8 +11,9 @@ const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const APP = path.join(REPO, "assets", "app.js");
 const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.css");
 const INDEX = path.join(REPO, "projects", "index.html");
-const CSS_BUST = "moje-sluzby-mobile-keyboard-add-btn-v1-20260706";
+const CSS_BUST = "ds-mobile-scroll-bottom-clearance-v1-20260707";
 const JS_BUSTS = [
+  "ds-mobile-scroll-bottom-clearance-v1-20260707",
   "moje-sluzby-mobile-keyboard-add-btn-v1-20260706",
   "weather-artifact-utf8-eager-boot-v1-20260706",
   "legal-docs-preview-pc-v1-20260706",

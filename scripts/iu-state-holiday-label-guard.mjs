@@ -75,7 +75,8 @@ const sourceChecks = [
   appJs.includes("iuNamedayTopbarLabelPrefix(new Date())"),
   appJs.includes("státní\\s+svátek:\\s*(.+)"),
   !/svatekLabel\.textContent\s*=\s*"sv\\u00E1tek m\\u00E1"/.test(appJs),
-  indexHtml.includes("state-holiday-label-v1-20260706"),
+  indexHtml.includes("state-holiday-label-v1-20260706") ||
+  indexHtml.includes("ds-mobile-scroll-bottom-clearance-v1-20260707"),
 ];
 
 const stateHolidayDates2026 = [
