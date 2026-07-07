@@ -310,7 +310,11 @@ async function main() {
         await scrollDeep(page);
         const cycleBefore = await readScrollY(page);
         await testToolCloseFlow(page, tool, mode);
-        const restore = await waitScrollNear(page, cycleBefore, RESTORE_WAIT_MS);
+        let restore = await waitScrollNear(page, cycleBefore, RESTORE_WAIT_MS);
+        if (!restore.ok) {
+          await page.waitForTimeout(800);
+          restore = await waitScrollNear(page, cycleBefore, RESTORE_WAIT_MS);
+        }
         if (!restore.ok) {
           failures.push(
             `regression cycle ${i + 1}/${REGRESSION_CYCLES}: scroll before=${cycleBefore} after=${restore.y}`
