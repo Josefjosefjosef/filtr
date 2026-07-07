@@ -39,7 +39,7 @@ const REQUIRED = [
   {
     id: "index_cache_bust_unified",
     file: INDEX,
-    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=ds-mobile-scroll-bottom-clearance-v1-20260707/,
+    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=legal-docs-hub-header-single-row-v1-20260707/,
   },
   {
     id: "index_cache_bust_restore",

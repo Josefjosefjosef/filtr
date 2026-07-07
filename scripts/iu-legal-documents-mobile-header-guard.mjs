@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Vzory smluv a plné moci — mobil/tablet dvouřádková hlavička (controls / title).
+ * Vzory smluv a plné moci — mobil/tablet hlavička: hub jednořádková, category+detail dvouřádková.
  * Run: npm run iu-legal-documents-mobile-header-guard
  */
 import fs from "fs";
@@ -19,7 +19,8 @@ const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.c
 const INDEX = path.join(REPO, "projects", "index.html");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8897", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
-const CACHE_BUST = "ds-mobile-scroll-bottom-clearance-v1-20260707";
+const CACHE_BUST = "legal-docs-hub-header-single-row-v1-20260707";
+const HUB_TITLE = "Vzory smluv a plné moci";
 
 const LONG_DOCS = [
   { id: "kupni-movita", title: "Kupní smlouva – movitá věc", category: "smlouvy" },
@@ -33,12 +34,12 @@ function staticGate() {
   const index = fs.readFileSync(INDEX, "utf8");
   const checks = [
     {
-      id: "part9_two_row_header",
-      pass: /Part 9: Vzory smluv a plné moci — dvouřádková hlavička/.test(unified),
+      id: "part9_hub_single_row",
+      pass: /iu-legal-overlay-panel--hub[\s\S]*grid-template-areas:\s*"title info close"/.test(unified),
     },
     {
-      id: "detail_category_grid_areas",
-      pass: /iu-legal-overlay-panel--detail[\s\S]*grid-template-areas:[\s\S]*"back info close"/.test(unified),
+      id: "category_detail_two_row_grid_areas",
+      pass: /iu-legal-overlay-panel--category[\s\S]*grid-template-areas:[\s\S]*"back info close"/.test(unified),
     },
     {
       id: "heading_display_contents",
@@ -183,7 +184,55 @@ async function openDocument(page, doc) {
   await page.waitForTimeout(400);
 }
 
-function validateLayout(row, viewportLabel, expectGrid = true) {
+function sameRow(a, b, tolerance = 4) {
+  if (!a || !b) return false;
+  const aMid = (a.top + a.bottom) / 2;
+  const bMid = (b.top + b.bottom) / 2;
+  return Math.abs(aMid - bMid) <= tolerance;
+}
+
+function validateHubSingleRow(row, viewportLabel) {
+  const fails = [];
+  if (!row || !row.header || !row.title) {
+    fails.push(`${viewportLabel}/hub: header/title missing`);
+    return fails;
+  }
+  if (row.panelMode !== "hub") {
+    fails.push(`${viewportLabel}/hub: expected hub mode got ${row.panelMode}`);
+  }
+  if (row.headerDisplay !== "grid") {
+    fails.push(`${viewportLabel}/hub: header display=${row.headerDisplay} expected grid`);
+  }
+  if (row.titleText !== HUB_TITLE) {
+    fails.push(`${viewportLabel}/hub: title mismatch "${row.titleText}"`);
+  }
+  const info = row.info;
+  const close = row.close;
+  if (!info || !close) {
+    fails.push(`${viewportLabel}/hub: info or close missing`);
+    return fails;
+  }
+  if (!sameRow(row.title, info) || !sameRow(row.title, close) || !sameRow(info, close)) {
+    fails.push(`${viewportLabel}/hub: controls not on single row`);
+  }
+  if (row.title.left > info.left + 2) {
+    fails.push(`${viewportLabel}/hub: title must be left of info`);
+  }
+  if (info.right > close.left + 2) {
+    fails.push(`${viewportLabel}/hub: info must be left of close`);
+  }
+  if (close.right > row.header.right + 2) {
+    fails.push(`${viewportLabel}/hub: close exceeds header`);
+  }
+  const rowBottom = Math.max(row.title.bottom, info.bottom, close.bottom);
+  const rowTop = Math.min(row.title.top, info.top, close.top);
+  if (row.header.height > (rowBottom - rowTop) * 1.85) {
+    fails.push(`${viewportLabel}/hub: header too tall for single row (${row.header.height})`);
+  }
+  return fails;
+}
+
+function validateCategoryDetailTwoRow(row, viewportLabel, expectGrid = true) {
   const fails = [];
   if (!row || !row.header || !row.title) {
     fails.push(`${viewportLabel}: header/title missing`);
@@ -214,6 +263,9 @@ function validateLayout(row, viewportLabel, expectGrid = true) {
   if (row.title.left < row.header.left - 2 || row.title.right > row.header.right + 2) {
     fails.push(`${viewportLabel} ${row.titleText}: title exceeds header width`);
   }
+  if (row.title.top <= controlBottom - 2) {
+    fails.push(`${viewportLabel} ${row.titleText}: title must be on second row`);
+  }
   return fails;
 }
 
@@ -227,7 +279,7 @@ async function runViewport(page, viewport, label) {
   if (hubRow && hubRow.panelMode !== "hub") {
     fails.push(`${label}/hub: expected hub mode got ${hubRow.panelMode}`);
   }
-  fails.push(...validateLayout(hubRow, `${label}/hub`));
+  fails.push(...validateHubSingleRow(hubRow, label));
 
   await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
   await openCategory(page, "smlouvy");
@@ -235,7 +287,7 @@ async function runViewport(page, viewport, label) {
   if (catRow && catRow.panelMode !== "category") {
     fails.push(`${label}/category: expected category mode got ${catRow.panelMode}`);
   }
-  fails.push(...validateLayout(catRow, `${label}/category`));
+  fails.push(...validateCategoryDetailTwoRow(catRow, `${label}/category`));
 
   for (const doc of LONG_DOCS) {
     await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
@@ -247,7 +299,7 @@ async function runViewport(page, viewport, label) {
     if (row && row.panelMode !== "detail") {
       fails.push(`${label} ${doc.id}: expected detail mode got ${row.panelMode}`);
     }
-    fails.push(...validateLayout(row, `${label}/${doc.id}`));
+    fails.push(...validateCategoryDetailTwoRow(row, `${label}/${doc.id}`));
   }
 
   return fails;
@@ -256,15 +308,25 @@ async function runViewport(page, viewport, label) {
 async function runDesktopRegression(page) {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await openHub(page);
+  const hubRow = await measureHeader(page);
+  const fails = [];
+  if (!hubRow) {
+    fails.push("desktop/hub: layout missing");
+    return fails;
+  }
+  if (hubRow.headerDisplay === "grid") {
+    fails.push(`desktop/hub: header must not use mobile grid (display=${hubRow.headerDisplay})`);
+  }
+  await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
   await openDocument(page, LONG_DOCS[0]);
   const row = await measureHeader(page);
-  const fails = [];
   if (!row) {
-    fails.push("desktop: layout missing");
+    fails.push("desktop/detail: layout missing");
     return fails;
   }
   if (row.headerDisplay === "grid") {
-    fails.push(`desktop: header must not use mobile grid (display=${row.headerDisplay})`);
+    fails.push(`desktop/detail: header must not use mobile grid (display=${row.headerDisplay})`);
   }
   return fails;
 }
