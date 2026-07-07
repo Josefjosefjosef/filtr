@@ -1,24 +1,24 @@
 {
   "schema": "css_debt_guard_v1",
-  "duplicate_selector_groups": 297,
-  "duplicate_rule_occurrences_in_groups": 800,
+  "duplicate_selector_groups": 299,
+  "duplicate_rule_occurrences_in_groups": 804,
   "classification_counts": {
-    "breakpoint_specific": 177,
-    "risky_layout_coupled": 96,
+    "breakpoint_specific": 178,
+    "risky_layout_coupled": 97,
     "intentional_cascade_candidate": 23,
     "identical_duplicate": 1
   },
   "debt_verdict_counts": {
-    "intentional_non_debt": 104,
-    "risk_now": 192,
+    "intentional_non_debt": 103,
+    "risk_now": 195,
     "unresolved_needs_review": 1
   },
   "debt_occurrence_counts": {
-    "intentional_non_debt": 300,
-    "risk_now": 498,
+    "intentional_non_debt": 297,
+    "risk_now": 505,
     "unresolved_needs_review": 2
   },
-  "app_css_bytes": 693941,
+  "app_css_bytes": 696982,
   "css_size_guard_budget_bytes": 4096,
   "risk_zone_duplicate_groups": [
     {
@@ -226,6 +226,18 @@
       "classification": "risky_layout_coupled"
     },
     {
+      "selector_normalized": ".accordionCol .mindMenu .iu-mailbox-gear",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".accordionCol .mindMenu .iu-mailbox-pill",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".accordionCol .mindMenu .iu-mailbox-row",
+      "classification": "breakpoint_specific"
+    },
+    {
       "selector_normalized": ".accordionCol .mindMenu .iu-mailboxes",
       "classification": "risky_layout_coupled"
     },
@@ -240,6 +252,10 @@
     {
       "selector_normalized": ".accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickGrid",
       "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ".accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem",
+      "classification": "risky_layout_coupled"
     },
     {
       "selector_normalized": ".accordionCol .mindMenu .iu-mmQuickLinks .iu-mmQuickItem span:last-of-type",

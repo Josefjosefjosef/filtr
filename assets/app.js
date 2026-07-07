@@ -316,6 +316,9 @@ try {
     iuSrSaveQueued = false;
     if (iuSrOverlayLockP()) return; /* overlay locks background scroll — never overwrite with 0 */
     if (iuSrRestoreState) return;   /* don't persist transient positions during an active restore */
+    try {
+      if (typeof window !== "undefined" && window.__iuDesktopSectionCloseRestoring) return;
+    } catch (_) {}
     var m = iuSrReadMap();
     m[iuSrRouteKey()] = { y: iuSrGetY(), p: iuSrFeedPage(), t: Date.now() };
     iuSrWriteMap(m);
@@ -36344,6 +36347,102 @@ function buildVideoAsArticleCard(it) {
   try { window.iuMenuForwardNavScrollAfterApply = iuMenuForwardNavScrollAfterApply; } catch (e) {}
   try { window.iuMobileTabletMenuForwardScrollSyncIfArmed = iuMobileTabletMenuForwardScrollSyncIfArmed; } catch (e) {}
   try { window.iuDesktopPreviewNavScrollAfterOpen = iuDesktopPreviewNavScrollAfterOpen; } catch (e) {}
+  try { window.iuGetMainScrollTop = iuGetMainScrollTop; } catch (e) {}
+  try { window.iuSetMainScrollTop = iuSetMainScrollTop; } catch (e) {}
+
+  var iuDesktopSectionCloseRestoreState = null;
+  function iuDesktopSectionCloseScrollRestoreFinish() {
+    iuDesktopSectionCloseRestoreState = null;
+    try { window.__iuScrollRestorePendingNav = null; } catch (_) {}
+    try { window.__iuDesktopSectionCloseRestoring = false; } catch (_) {}
+  }
+  function iuDesktopSectionCloseScrollRestoreTick() {
+    if (!iuDesktopSectionCloseRestoreState) return;
+    var st = iuDesktopSectionCloseRestoreState;
+    var target = st.y;
+    var now = Date.now();
+    var maxY = 0;
+    var currentY = 0;
+    try {
+      var root = iuGetMainScrollElement();
+      var doc = root || document.scrollingElement || document.documentElement;
+      var viewH = window.innerHeight || 0;
+      maxY = doc ? Math.max(0, doc.scrollHeight - viewH) : 0;
+      currentY = iuGetMainScrollTop();
+      if (maxY >= target - 2 && Math.abs(currentY - target) > 2) {
+        iuSetMainScrollTop(target);
+        currentY = iuGetMainScrollTop();
+      }
+      if (Math.abs(currentY - target) <= 2) {
+        iuDesktopSectionCloseScrollRestoreFinish();
+        return;
+      }
+    } catch (_) {}
+    var feedReady = true;
+    try {
+      var feedEl = document.getElementById("feed");
+      feedReady = !feedEl || String(feedEl.getAttribute("data-feed-ready") || "") === "true";
+    } catch (_) {}
+    if (now > st.until) {
+      if (maxY >= target - 2) {
+        iuSetMainScrollTop(target);
+        iuDesktopSectionCloseScrollRestoreFinish();
+        return;
+      }
+      if (now < st.hardUntil) {
+        st.until = now + 1500;
+      } else {
+        iuSetMainScrollTop(target);
+        iuDesktopSectionCloseScrollRestoreFinish();
+        return;
+      }
+    }
+    try { requestAnimationFrame(iuDesktopSectionCloseScrollRestoreTick); } catch (_) {
+      iuDesktopSectionCloseScrollRestoreFinish();
+    }
+  }
+  function iuDesktopSectionCloseScrollRestoreBegin(targetY) {
+    var yv = Math.max(0, Math.round(Number(targetY) || 0));
+    var now = Date.now();
+    iuDesktopSectionCloseRestoreState = { y: yv, until: now + 12000, hardUntil: now + 30000 };
+    try { requestAnimationFrame(iuDesktopSectionCloseScrollRestoreTick); } catch (_) { iuDesktopSectionCloseScrollRestoreTick(); }
+    try {
+      var feed = document.getElementById("feed");
+      if (feed && !feed.__iuDesktopCloseRestoreObs) {
+        feed.__iuDesktopCloseRestoreObs = true;
+        new MutationObserver(function () {
+          try {
+            if (String(feed.getAttribute("data-feed-ready") || "") === "true") {
+              iuDesktopSectionCloseScrollRestoreTick();
+            }
+          } catch (_) {}
+        }).observe(feed, { attributes: true, attributeFilter: ["data-feed-ready"] });
+      }
+    } catch (_) {}
+  }
+  function iuDesktopSectionCloseApply(snap) {
+    if (!snap || !snap.href) return;
+    var restoreY = Math.max(0, Math.round(Number(snap.scrollY) || 0));
+    try { window.__iuSectionSwitchScrollArm = false; } catch (_) {}
+    try { window.__iuDesktopSectionCloseRestoring = true; } catch (_) {}
+    try {
+      window.__iuScrollRestorePendingNav = {
+        y: restoreY,
+        page: Number(snap.page) > 1 ? Number(snap.page) : 1,
+        key: "desktop-close",
+      };
+    } catch (_) {}
+    try { history.replaceState(null, "", String(snap.href)); } catch (_) {}
+    applySectionFromURL();
+    applyPanelFromUrl();
+    try {
+      if (typeof window.iuDesktopSectionCloseOnSectionClosed === "function") {
+        window.iuDesktopSectionCloseOnSectionClosed();
+      }
+    } catch (_) {}
+    iuDesktopSectionCloseScrollRestoreBegin(restoreY);
+  }
+  try { window.iuDesktopSectionCloseApply = iuDesktopSectionCloseApply; } catch (e) {}
 
   function initNavRouter(){
     iuStripProjectsNavParamsForHomeLanding();
@@ -36406,6 +36505,11 @@ function buildVideoAsArticleCard(it) {
       if (e.target.closest && e.target.closest('[data-iuq="ai"]')) return;
       const item = e.target && e.target.closest ? e.target.closest('.iu-leftNavItem') : null;
       if (!item) return;
+      try {
+        if (iuIsDesktopNavLayout() && typeof window.iuDesktopSectionCloseHandleNavClick === "function") {
+          if (window.iuDesktopSectionCloseHandleNavClick(item, e)) return;
+        }
+      } catch (_) {}
       try{
         const href = String(item.getAttribute("href") || "").trim();
         const rail = String(item.getAttribute("data-rail") || "").trim().toLowerCase();
@@ -36431,6 +36535,11 @@ function buildVideoAsArticleCard(it) {
       }
       try {
         iuPreApplyTabletToolShellBeforeNav(accentEarly, mediaTopic);
+      } catch (_) {}
+      try {
+        if (iuIsDesktopNavLayout() && typeof window.iuDesktopSectionCloseBeforeOpen === "function") {
+          window.iuDesktopSectionCloseBeforeOpen(item);
+        }
       } catch (_) {}
       if (typeof window.iuNavRailHideOverlaysFast === "function") {
         window.iuNavRailHideOverlaysFast();
@@ -36461,6 +36570,11 @@ function buildVideoAsArticleCard(it) {
           iuDesktopPreviewNavScrollAfterOpen();
         } else {
           try { iuMenuForwardNavScrollAfterApply(); } catch (_) {}
+        }
+      } catch (_) {}
+      try {
+        if (iuIsDesktopNavLayout() && typeof window.iuDesktopSectionCloseAfterOpen === "function") {
+          window.iuDesktopSectionCloseAfterOpen();
         }
       } catch (_) {}
       try {
