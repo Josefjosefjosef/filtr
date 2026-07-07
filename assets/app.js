@@ -10237,6 +10237,9 @@ function buildVideoAsArticleCard(it) {
           }
           const ndCluster = doc.createElement("span");
           ndCluster.className = "iuSilverWelcomeMetaSvatekCluster";
+          if (iuIsCzStateHolidayDate(refDate)) {
+            ndCluster.classList.add("iuSilverWelcomeMetaSvatekCluster--stateHoliday");
+          }
           const svatekLabel = doc.createElement("span");
           svatekLabel.className = "iuSilverWelcomeMetaSvatekLabel";
           svatekLabel.textContent = iuNamedayMetaLabelShort(refDate);
@@ -10255,13 +10258,6 @@ function buildVideoAsArticleCard(it) {
           }
           spanName.appendChild(doc.createTextNode(namePart));
           pillBtn.appendChild(spanName);
-          if (namedayGender === "male" || namedayGender === "female") {
-            const spanIcon = doc.createElement("span");
-            spanIcon.className = "svatek-icon";
-            spanIcon.setAttribute("aria-hidden", "true");
-            spanIcon.appendChild(doc.createTextNode("\uD83C\uDF89"));
-            pillBtn.appendChild(spanIcon);
-          }
           ndCluster.appendChild(pillBtn);
           /* Jedna DOM výměna — žádný mezikrok s prázdným meta (reload flash / CLS). */
           metaEl.replaceChildren(dateCluster, ndCluster);
