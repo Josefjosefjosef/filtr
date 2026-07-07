@@ -16,6 +16,7 @@ const failures = [];
 const appCss = read("assets/app.css");
 const appJs = read("assets/app.js");
 const tasksCss = read("assets/iu-tasks-premium.css");
+const overlayCss = read("assets/iu-myinfouzel-premium-overlay.css");
 const indexHtml = read("projects/index.html");
 
 if (!/\.layout > aside\.accordionCol \.mindMenu \.iu-mailbox-row[\s\S]*display: grid !important/.test(appCss)) {
@@ -63,10 +64,29 @@ if (!appJs.includes("iuTasksDetail") || !appJs.includes("isTasksDesktopTwoPanel"
 if (!tasksCss.includes("iu-tasksOverlay__body") || !tasksCss.includes("grid-template-columns:450px minmax(0,1fr)")) {
   failures.push("tasks premium CSS must define desktop two-column body grid");
 }
+if (!/\.iuMyInfoUzelMindMenuHost \.mindMenu \.iu-mailbox-row[\s\S]*grid-template-columns: minmax\(0, 1fr\) 36px 40px/.test(overlayCss)) {
+  failures.push("MyInfoUzel PC mailbox row must use 1fr pill + gear + social grid");
+}
+if (!/\.iuMyInfoUzelMindMenuHost \.mindMenu \.iu-mailbox-row[\s\S]*gap: 5px !important/.test(overlayCss)) {
+  failures.push("MyInfoUzel PC mailbox row must use 5px gap");
+}
+if (!/\.iuMyInfoUzelMindMenuHost \.mindMenu \.iu-mailbox-pill[\s\S]*min-width: 0 !important/.test(overlayCss)) {
+  failures.push("MyInfoUzel PC mailbox pill must shrink with min-width 0");
+}
+if (!/\.iuMyInfoUzelMindMenuHost \.mindMenu \.iu-mailbox-row \.iu-mailbox-gear[\s\S]*background: transparent !important/.test(overlayCss)) {
+  failures.push("MyInfoUzel PC mailbox gear must stay visually outside pill");
+}
+if (!/grid-template-columns: minmax\(300px, 38fr\)/.test(overlayCss)) {
+  failures.push("MyInfoUzel dashboard must widen emails column on PC");
+}
+if (!/contain: layout style/.test(appCss) || !/isolation: isolate/.test(appCss)) {
+  failures.push("desktop accordionCol mailbox pill must contain background inside grid cell");
+}
 const cacheBustOk =
   indexHtml.includes("weather-artifact-utf8-eager-boot-v1-20260706") ||
   indexHtml.includes("legal-docs-preview-pc-v1-20260706") ||
   indexHtml.includes("tasks-desktop-two-panel-v1-20260706") ||
+  indexHtml.includes("mindmenu-mailbox-pc-pill-gear-gap-v1-20260707") ||
   indexHtml.includes("mindmenu-mailbox-row-pc-layout-v1-20260706") ||
   indexHtml.includes("desktop-mindmenu-calendar-polish-v1-20260706") ||
   indexHtml.includes("svatek-pill-responsive-wrap-v1-20260706") ||

@@ -13,8 +13,6 @@
     --iu-miu-icon-size: 70px;
     --iu-miu-quick-h: 58px;
     --iu-miu-mailbox-h: 42px;
-    --iu-miu-mailbox-pill-min: 25ch;
-    --iu-miu-mailbox-pill-w: 25ch;
     width: min(1720px, calc(100vw - 40px)) !important;
     max-width: min(1720px, calc(100vw - 40px)) !important;
     max-height: calc(100vh - 24px) !important;
@@ -120,7 +118,7 @@
 
   .iuMyInfoUzelDashboard {
     display: grid;
-    grid-template-columns: minmax(200px, 26fr) minmax(260px, 37fr) minmax(280px, 37fr);
+    grid-template-columns: minmax(300px, 38fr) minmax(220px, 31fr) minmax(220px, 31fr);
     gap: 12px 16px;
     align-items: start;
     min-width: 0;
@@ -277,9 +275,9 @@
   .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row,
   .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row {
     display: grid !important;
-    grid-template-columns: minmax(0, var(--iu-miu-mailbox-pill-w, 25ch)) 36px 40px !important;
+    grid-template-columns: minmax(0, 1fr) 36px 40px !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 5px !important;
     width: 100% !important;
     max-width: 100% !important;
     min-height: var(--iu-miu-mailbox-h) !important;
@@ -289,9 +287,10 @@
 
   .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill,
   .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill {
-    width: var(--iu-miu-mailbox-pill-w, 25ch) !important;
-    max-width: var(--iu-miu-mailbox-pill-w, 25ch) !important;
-    min-width: var(--iu-miu-mailbox-pill-min, 25ch) !important;
+    grid-column: 1;
+    width: auto !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
     height: var(--iu-miu-mailbox-h) !important;
     min-height: var(--iu-miu-mailbox-h) !important;
     max-height: var(--iu-miu-mailbox-h) !important;
@@ -303,11 +302,17 @@
     box-sizing: border-box !important;
     text-align: center !important;
     justify-content: center !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    contain: layout style;
+    isolation: isolate;
   }
 
   .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill > *,
   .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-pill > * {
-    max-width: var(--iu-miu-mailbox-pill-min);
+    max-width: 100%;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -315,14 +320,26 @@
 
   .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row .iu-mailbox-gear,
   .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row .iu-mailbox-gear {
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px !important;
-    min-height: 36px !important;
-    border-radius: var(--iu-miu-radius) !important;
+    grid-column: 2;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
+  }
+
+  .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row .iu-pill-social-slot,
+  .iuMyInfoUzelOverlay .iuMyInfoUzelMindMenuHost .mindMenu .iu-mailbox-row .iu-pill-social-slot {
+    grid-column: 3;
+    margin: 0 !important;
   }
 
   .iuMyInfoUzelMindMenuHost .iuMailboxControls {
