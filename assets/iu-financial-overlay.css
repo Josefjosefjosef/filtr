@@ -575,6 +575,13 @@
     top: 50%;
     transform: translateY(-50%);
   }
+  body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage.iu-financial-overlay-panel--hub .iu-financial-overlay-header .iu-tool-privacy-btn{
+    position: absolute;
+    top: 50%;
+    right: calc(12px + 38px + 10px);
+    transform: translateY(-50%);
+    z-index: 1;
+  }
   body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage .iu-financial-calculators-list .iu-financial-overlay-hubGrid{
     display: flex;
     flex-direction: column;
