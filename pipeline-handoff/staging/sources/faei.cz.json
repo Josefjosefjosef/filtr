@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-07-07T02:29:20.410099Z",
+  "ingestedAt": "2026-07-07T04:09:55.538009Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "„Pět kapek.“ Ombudsman odhalil praxi v nelegálních domovech pro seniory",
+      "url": "https://profitonline.cz/pet-kapek-ombudsman-odhalil-praxi-v-nelegalnich-domovech-pro-seniory/",
+      "dt": "2026-07-07T04:00:39Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "domovech",
+        "kapek",
+        "nelegálních",
+        "odhalil",
+        "ombudsman",
+        "praxi",
+        "pět",
+        "seniory"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -268,29 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Týden na akciových trzích: Akciovým trhům se dařilo",
-      "url": "https://profitonline.cz/tyden-na-akciovych-trzich-akciovym-trhum-se-darilo/",
-      "dt": "2026-07-03T17:30:47Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "akciových",
-        "akciovým",
-        "dařilo",
-        "trhům",
-        "trzích",
-        "týden"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -301,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19159,
+      "bytes": 19195,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -338,11 +340,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-07-06T10:00:04Z",
+        "raw_feed_latest_publishedAt": "2026-07-07T04:00:39Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "zpravy": 2,
           "finance": 9,
+          "zpravy": 2,
           "zdravi": 1
         },
         "drop_counts": {
@@ -355,6 +357,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Pět kapek.“ Ombudsman odhalil praxi v nelegálních domovech pro seniory",
+            "publishedAt": "2026-07-07T04:00:39Z"
+          },
           {
             "title": "Ústavní soud Babišovi pomohl. Dal mu klacek na prezidenta Pavla",
             "publishedAt": "2026-07-06T10:00:04Z"
@@ -382,10 +388,6 @@
           {
             "title": "Americké čtvrt tisíciletí je i české ekonomické téma",
             "publishedAt": "2026-07-04T16:00:18Z"
-          },
-          {
-            "title": "Japonská měna klesla na nejslabší úroveň za poslední desetiletí",
-            "publishedAt": "2026-07-04T15:00:09Z"
           }
         ]
       }
