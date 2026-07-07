@@ -3,8 +3,9 @@ name: Nightly Health Report
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 6 * * *"
+  # TEMP PAUSED 2026-07-07: schedule disabled during PR batch — uncomment to re-enable
+  # schedule:
+  #   - cron: "0 6 * * *"
 
 permissions:
   contents: read
