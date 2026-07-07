@@ -316,6 +316,9 @@ try {
     iuSrSaveQueued = false;
     if (iuSrOverlayLockP()) return; /* overlay locks background scroll — never overwrite with 0 */
     if (iuSrRestoreState) return;   /* don't persist transient positions during an active restore */
+    try {
+      if (typeof window !== "undefined" && window.__iuDesktopSectionCloseRestoring) return;
+    } catch (_) {}
     var m = iuSrReadMap();
     m[iuSrRouteKey()] = { y: iuSrGetY(), p: iuSrFeedPage(), t: Date.now() };
     iuSrWriteMap(m);
@@ -36348,34 +36351,60 @@ function buildVideoAsArticleCard(it) {
   try { window.iuSetMainScrollTop = iuSetMainScrollTop; } catch (e) {}
 
   var iuDesktopSectionCloseRestoreState = null;
+  function iuDesktopSectionCloseScrollRestoreFinish() {
+    iuDesktopSectionCloseRestoreState = null;
+    try { window.__iuScrollRestorePendingNav = null; } catch (_) {}
+    try { window.__iuDesktopSectionCloseRestoring = false; } catch (_) {}
+  }
   function iuDesktopSectionCloseScrollRestoreTick() {
     if (!iuDesktopSectionCloseRestoreState) return;
-    var target = iuDesktopSectionCloseRestoreState.y;
-    if (Date.now() > iuDesktopSectionCloseRestoreState.until) {
-      iuSetMainScrollTop(target);
-      iuDesktopSectionCloseRestoreState = null;
-      try { window.__iuScrollRestorePendingNav = null; } catch (_) {}
-      return;
-    }
+    var st = iuDesktopSectionCloseRestoreState;
+    var target = st.y;
+    var now = Date.now();
+    var maxY = 0;
+    var currentY = 0;
     try {
       var root = iuGetMainScrollElement();
       var doc = root || document.scrollingElement || document.documentElement;
       var viewH = window.innerHeight || 0;
-      var maxY = doc ? Math.max(0, doc.scrollHeight - viewH) : 0;
-      if (maxY >= target - 2 && Math.abs(iuGetMainScrollTop() - target) > 2) {
+      maxY = doc ? Math.max(0, doc.scrollHeight - viewH) : 0;
+      currentY = iuGetMainScrollTop();
+      if (maxY >= target - 2 && Math.abs(currentY - target) > 2) {
         iuSetMainScrollTop(target);
+        currentY = iuGetMainScrollTop();
       }
-      if (Math.abs(iuGetMainScrollTop() - target) <= 2) {
-        iuDesktopSectionCloseRestoreState = null;
-        try { window.__iuScrollRestorePendingNav = null; } catch (_) {}
+      if (Math.abs(currentY - target) <= 2) {
+        iuDesktopSectionCloseScrollRestoreFinish();
         return;
       }
     } catch (_) {}
-    try { requestAnimationFrame(iuDesktopSectionCloseScrollRestoreTick); } catch (_) { iuDesktopSectionCloseRestoreState = null; }
+    var feedReady = true;
+    try {
+      var feedEl = document.getElementById("feed");
+      feedReady = !feedEl || String(feedEl.getAttribute("data-feed-ready") || "") === "true";
+    } catch (_) {}
+    if (now > st.until) {
+      if (maxY >= target - 2) {
+        iuSetMainScrollTop(target);
+        iuDesktopSectionCloseScrollRestoreFinish();
+        return;
+      }
+      if (now < st.hardUntil) {
+        st.until = now + 1500;
+      } else {
+        iuSetMainScrollTop(target);
+        iuDesktopSectionCloseScrollRestoreFinish();
+        return;
+      }
+    }
+    try { requestAnimationFrame(iuDesktopSectionCloseScrollRestoreTick); } catch (_) {
+      iuDesktopSectionCloseScrollRestoreFinish();
+    }
   }
   function iuDesktopSectionCloseScrollRestoreBegin(targetY) {
     var yv = Math.max(0, Math.round(Number(targetY) || 0));
-    iuDesktopSectionCloseRestoreState = { y: yv, until: Date.now() + 12000 };
+    var now = Date.now();
+    iuDesktopSectionCloseRestoreState = { y: yv, until: now + 12000, hardUntil: now + 30000 };
     try { requestAnimationFrame(iuDesktopSectionCloseScrollRestoreTick); } catch (_) { iuDesktopSectionCloseScrollRestoreTick(); }
     try {
       var feed = document.getElementById("feed");
@@ -36393,10 +36422,12 @@ function buildVideoAsArticleCard(it) {
   }
   function iuDesktopSectionCloseApply(snap) {
     if (!snap || !snap.href) return;
+    var restoreY = Math.max(0, Math.round(Number(snap.scrollY) || 0));
     try { window.__iuSectionSwitchScrollArm = false; } catch (_) {}
+    try { window.__iuDesktopSectionCloseRestoring = true; } catch (_) {}
     try {
       window.__iuScrollRestorePendingNav = {
-        y: Math.round(Number(snap.scrollY) || 0),
+        y: restoreY,
         page: Number(snap.page) > 1 ? Number(snap.page) : 1,
         key: "desktop-close",
       };
@@ -36409,7 +36440,7 @@ function buildVideoAsArticleCard(it) {
         window.iuDesktopSectionCloseOnSectionClosed();
       }
     } catch (_) {}
-    iuDesktopSectionCloseScrollRestoreBegin(Math.max(0, Math.round(Number(snap.scrollY) || 0)));
+    iuDesktopSectionCloseScrollRestoreBegin(restoreY);
   }
   try { window.iuDesktopSectionCloseApply = iuDesktopSectionCloseApply; } catch (e) {}
 

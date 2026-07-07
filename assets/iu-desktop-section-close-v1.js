@@ -390,7 +390,7 @@
 
   try {
     document.addEventListener(
-      "click",
+      "pointerdown",
       function (e) {
         if (!isDesktop()) return;
         var btn =
@@ -402,6 +402,24 @@
         e.stopPropagation();
         if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
         closeDesktopSection();
+      },
+      true
+    );
+  } catch (_) {}
+
+  try {
+    document.addEventListener(
+      "click",
+      function (e) {
+        if (!isDesktop()) return;
+        var btn =
+          e.target && e.target.closest
+            ? e.target.closest("[data-iu-desktop-section-close]")
+            : null;
+        if (!btn) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
       },
       true
     );

@@ -31,7 +31,7 @@ const RESTORE_TOL_PX = parseInt(process.env.IU_DESKTOP_CLOSE_RESTORE_TOL || "8",
 const SCROLL_BEFORE_MIN = 900;
 const REGRESSION_CYCLES = parseInt(process.env.IU_DESKTOP_CLOSE_CYCLES || "20", 10);
 const SETTLE_MS = parseInt(process.env.IU_DESKTOP_CLOSE_SETTLE_MS || "15000", 10);
-const RESTORE_WAIT_MS = parseInt(process.env.IU_DESKTOP_CLOSE_RESTORE_WAIT_MS || "15000", 10);
+const RESTORE_WAIT_MS = parseInt(process.env.IU_DESKTOP_CLOSE_RESTORE_WAIT_MS || "32000", 10);
 const FEED_READY_WAIT_MS = parseInt(process.env.IU_DESKTOP_CLOSE_FEED_READY_MS || "30000", 10);
 
 const LEFT_RAIL_TOOLS = [
