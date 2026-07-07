@@ -29,6 +29,7 @@ const CACHE_BUSTS = [
   "legal-docs-preview-pc-v1-20260706",
   "tasks-desktop-two-panel-v1-20260706",
   "state-holiday-label-v1-20260706",
+  "bakalari-card-count-persist-v1-20260707",
 ];
 
 const VIEWPORTS = [
