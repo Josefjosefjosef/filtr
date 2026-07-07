@@ -21,7 +21,8 @@ const checks = [
   indexHtml.includes("weather-artifact-utf8-eager-boot-v1-20260706") ||
   indexHtml.includes("state-holiday-label-v1-20260706") ||
   indexHtml.includes("ds-mobile-scroll-bottom-clearance-v1-20260707") ||
-  indexHtml.includes("legal-docs-hub-header-single-row-v1-20260707"),
+  indexHtml.includes("legal-docs-hub-header-single-row-v1-20260707") ||
+  indexHtml.includes("desktop-left-rail-section-close-v1-20260707"),
 ];
 
 const pass = checks.every(Boolean);

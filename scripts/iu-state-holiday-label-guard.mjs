@@ -77,7 +77,8 @@ const sourceChecks = [
   !/svatekLabel\.textContent\s*=\s*"sv\\u00E1tek m\\u00E1"/.test(appJs),
   indexHtml.includes("state-holiday-label-v1-20260706") ||
   indexHtml.includes("ds-mobile-scroll-bottom-clearance-v1-20260707") ||
-  indexHtml.includes("legal-docs-hub-header-single-row-v1-20260707"),
+  indexHtml.includes("legal-docs-hub-header-single-row-v1-20260707") ||
+  indexHtml.includes("desktop-left-rail-section-close-v1-20260707"),
 ];
 
 const stateHolidayDates2026 = [

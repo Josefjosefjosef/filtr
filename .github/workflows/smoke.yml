@@ -109,6 +109,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-section-switch-scroll-position-guard
 
+      - name: Desktop left-rail section close guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-desktop-section-close-guard
+
       - name: Desktop HomeCards feed width alignment guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run desktop-homecards-feed-width-alignment-guard

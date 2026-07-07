@@ -1,0 +1,48 @@
+/* PC-only: left-rail section close controls (≥901px). Mobile/tablet unchanged. */
+@media (min-width: 901px) {
+  .iuDesktopSectionCloseBtn {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-weight: 700;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.88;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .iuDesktopSectionCloseBtn:hover,
+  .iuDesktopSectionCloseBtn:focus-visible {
+    opacity: 1;
+  }
+
+  .iuDesktopSectionCloseFooter {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 20px 0 0;
+    padding: 12px 0 4px;
+  }
+
+  .iuDesktopSectionCloseBar.iuSectionHeader {
+    margin-bottom: 12px;
+  }
+
+  #iuTvProgramView .iuTvPgHero__inner .iuDesktopSectionCloseBtn {
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .iuDesktopSectionCloseBtn,
+  .iuDesktopSectionCloseFooter,
+  .iuDesktopSectionCloseBar {
+    display: none !important;
+  }
+}
