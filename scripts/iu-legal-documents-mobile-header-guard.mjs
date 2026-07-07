@@ -19,7 +19,7 @@ const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.c
 const INDEX = path.join(REPO, "projects", "index.html");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8897", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
-const CACHE_BUST = "moje-sluzby-mobile-keyboard-add-btn-v1-20260706";
+const CACHE_BUST = "ds-mobile-scroll-bottom-clearance-v1-20260707";
 
 const LONG_DOCS = [
   { id: "kupni-movita", title: "Kupní smlouva – movitá věc", category: "smlouvy" },

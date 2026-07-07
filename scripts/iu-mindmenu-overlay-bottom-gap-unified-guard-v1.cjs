@@ -10,12 +10,24 @@ const CUSTOM = path.join(__dirname, "..", "assets", "iu-custom-buttons-overlay.c
 const INDEX = path.join(__dirname, "..", "projects", "index.html");
 const REPORT = path.join(__dirname, "iu-mindmenu-overlay-bottom-gap-unified-guard-v1-report.json");
 
+function restoreNoSafeSpaceOnCards(src) {
+  const stripped = src.replace(/#iuDsPanel[\s\S]*?\n  \}/g, "");
+  return !/(?:\.bakalari-card|#iuQuickFeed \.iuQBody|\.iu-banking-scroll-host)[\s\S]*--iu-mobile-bottom-nav-safe-space/.test(
+    stripped
+  );
+}
+
 const REQUIRED = [
   {
-    id: "restore_no_safe_space",
+    id: "restore_no_safe_space_on_cards",
     file: RESTORE,
     pattern: /--iu-tool-overlay-bottom-gap/,
-    antiPattern: /--iu-mobile-bottom-nav-safe-space/,
+    custom: restoreNoSafeSpaceOnCards,
+  },
+  {
+    id: "restore_ds_panel_uses_safe_space",
+    file: RESTORE,
+    pattern: /#iuDsPanel[\s\S]*--iu-mobile-bottom-nav-safe-space/,
   },
   {
     id: "restore_quickfeed_gate_bottom_gap",
@@ -41,12 +53,12 @@ const REQUIRED = [
   {
     id: "index_cache_bust_restore",
     file: INDEX,
-    pattern: /iu-mindmenu-bottom-nav-restore-v1\.css\?v=ai-assistants-overlay-bottom-gap-v1-20260705/,
+    pattern: /iu-mindmenu-bottom-nav-restore-v1\.css\?v=ds-mobile-scroll-bottom-clearance-v1-20260707/,
   },
   {
     id: "index_cache_bust_unified",
     file: INDEX,
-    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=moje-sluzby-mobile-keyboard-add-btn-v1-20260706/,
+    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=ds-mobile-scroll-bottom-clearance-v1-20260707/,
   },
 ];
 
@@ -56,6 +68,9 @@ function main() {
     let pass = item.pattern.test(src);
     if (pass && item.antiPattern) {
       pass = !item.antiPattern.test(src);
+    }
+    if (pass && item.custom) {
+      pass = item.custom(src);
     }
     return { id: item.id, pass };
   });

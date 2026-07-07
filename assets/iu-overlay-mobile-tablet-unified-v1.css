@@ -17,6 +17,7 @@
     --iu-tool-overlay-header-pad-top: calc(12px + env(safe-area-inset-top, 0px));
     --iu-tool-overlay-bottom-gap: 15px;
     --iu-ai-overlay-bottom-gap: 10px;
+    --iu-ds-scroll-bottom-clearance: calc(var(--iu-tool-overlay-bottom-gap) + env(safe-area-inset-bottom, 0px));
     --iu-calendar-action-bar-nav-gap: 10px;
     --iu-tool-overlay-panel-bottom: var(--bottom-nav-height);
   }
@@ -197,9 +198,23 @@
     max-height: calc(100dvh - var(--iu-tool-overlay-panel-bottom)) !important;
     min-height: 0 !important;
     padding-bottom: 0 !important;
-    scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+    scroll-padding-bottom: var(--iu-ds-scroll-bottom-clearance) !important;
     box-sizing: border-box !important;
     z-index: 10040 !important;
+  }
+
+  @media (max-width: 900px) {
+    body.iu-modal-open.iu-ds-overlay-open #iuDsPanel.iu-ds-panel.iuSectionDS[data-open="1"]:not([hidden]) {
+      bottom: var(--iu-mobile-bottom-nav-safe-space, var(--iu-tool-overlay-panel-bottom)) !important;
+      max-height: calc(100dvh - var(--iu-mobile-bottom-nav-safe-space, var(--iu-tool-overlay-panel-bottom))) !important;
+    }
+  }
+
+  @media (min-width: 901px) and (max-width: 1024px) {
+    body.iu-modal-open.iu-ds-overlay-open #iuDsPanel.iu-ds-panel.iuSectionDS[data-open="1"]:not([hidden]) {
+      bottom: 0 !important;
+      max-height: 100dvh !important;
+    }
   }
 
   /* Vlastní tlačítka: scroll uvnitř #iuCustomButtonsScrollHost (form + seznam), ne cardShell */
@@ -345,6 +360,12 @@
   ) {
     padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
     scroll-padding-bottom: var(--iu-tool-overlay-bottom-gap) !important;
+    box-sizing: border-box !important;
+  }
+
+  body.iu-modal-open.iu-ds-overlay-open #iuDsPanel :is(.iu-ds-panelBody, .iu-datovka-scroll-host) {
+    padding-bottom: var(--iu-ds-scroll-bottom-clearance) !important;
+    scroll-padding-bottom: var(--iu-ds-scroll-bottom-clearance) !important;
     box-sizing: border-box !important;
   }
 
