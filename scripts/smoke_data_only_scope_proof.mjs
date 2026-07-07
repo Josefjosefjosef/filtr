@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { isDataOnlyScope, isFastPoolPipelineScope } from "./smoke-data-only-scope.mjs";
+import { isDataOnlyScope, isFastPoolPipelineScope, isWorkflowOnlyScope } from "./smoke-data-only-scope.mjs";
 
 let failed = 0;
 function assert(cond, msg) {
@@ -15,6 +15,8 @@ assert(!isDataOnlyScope(["assets/app.js"]), "assets not data-only");
 assert(!isDataOnlyScope(["projects/data/x.json", "assets/app.js"]), "mixed not data-only");
 assert(!isDataOnlyScope([]), "empty not data-only");
 assert(isFastPoolPipelineScope([".github/workflows/update-articles-fast-pool.yml"]), "fast pool workflow-only is pipeline scope");
+assert(isWorkflowOnlyScope([".github/workflows/update-weather.yml", ".github/workflows/pages-publish-from-main-data.yml"]), "multi workflow-only is workflow scope");
+assert(!isWorkflowOnlyScope([".github/workflows/smoke.yml", "assets/app.js"]), "mixed workflow+assets not workflow scope");
 assert(isFastPoolPipelineScope(["package.json", "projects/data/publishable_pool.json"]), "data + package.json is pipeline scope");
 assert(!isFastPoolPipelineScope([".github/workflows/update-articles-fast-pool.yml", "assets/app.js"]), "mixed workflow+assets not pipeline scope");
 
