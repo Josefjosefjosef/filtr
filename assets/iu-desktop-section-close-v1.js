@@ -250,10 +250,119 @@
     if (!root) return;
     ensureTopCloseButton(root);
     ensureBottomCloseButton(root);
+    scrollOpenedSectionToStartOnce();
+  }
+
+  function getTopbarStackOffsetPx() {
+    try {
+      var cs = getComputedStyle(document.documentElement);
+      var v = parseFloat(cs.getPropertyValue("--topbarStackH"));
+      if (Number.isFinite(v) && v > 0) return v;
+    } catch (_) {}
+    return 68;
+  }
+
+  function getSectionScrollAnchorEl() {
+    var root = findVisibleSectionRoot();
+    if (!root) return null;
+    try {
+      var fst = getComputedStyle(root);
+      if (fst.display === "none" || fst.visibility === "hidden") return null;
+    } catch (_) {}
+    var header = findSectionHeader(root);
+    if (header) {
+      try {
+        var hr = header.getBoundingClientRect();
+        if (hr.height > 0 && hr.bottom > 0) return header;
+      } catch (_) {}
+    }
+    var closeTop = root.querySelector('[data-iu-desktop-section-close="top"]');
+    if (closeTop) {
+      try {
+        var cr = closeTop.getBoundingClientRect();
+        if (cr.height > 0 && cr.bottom > 0) return closeTop;
+      } catch (_) {}
+    }
+    var bar = root.querySelector(".iuDesktopSectionCloseBar");
+    if (bar) {
+      try {
+        var br = bar.getBoundingClientRect();
+        if (br.height > 0 && br.bottom > 0) return bar;
+      } catch (_) {}
+    }
+    return null;
+  }
+
+  function shouldScrollOpenedSectionToStart() {
+    if (!isDesktop() || !sectionOpenFromLeftRail()) return false;
+    try {
+      if (window.__iuDesktopSectionCloseRestoring) return false;
+      if (window.__iuScrollRestorePendingNav) return false;
+    } catch (_) {}
+    return true;
+  }
+
+  function scrollOpenedSectionToStartOnce() {
+    if (!shouldScrollOpenedSectionToStart()) return false;
+    var anchor = getSectionScrollAnchorEl();
+    if (!anchor) return false;
+    try {
+      if (typeof window.iuDesktopHomeSectionTopGapSync === "function") {
+        window.iuDesktopHomeSectionTopGapSync();
+      }
+    } catch (_) {}
+    try {
+      var sticky = getTopbarStackOffsetPx();
+      var rect = anchor.getBoundingClientRect();
+      var current = getScrollY();
+      var target = Math.max(0, Math.round(rect.top + current - sticky));
+      if (typeof window.iuSetMainScrollTop === "function") {
+        window.iuSetMainScrollTop(target);
+      } else {
+        window.scrollTo(0, target);
+        try {
+          document.documentElement.scrollTop = target;
+          if (document.body) document.body.scrollTop = target;
+        } catch (_) {}
+      }
+      return true;
+    } catch (_) {}
+    return false;
+  }
+
+  function scheduleScrollOpenedSectionToStart() {
+    if (!shouldScrollOpenedSectionToStart()) return;
+    var left = 72;
+    var step = function () {
+      if (!shouldScrollOpenedSectionToStart()) return;
+      if (scrollOpenedSectionToStartOnce()) return;
+      left -= 1;
+      if (left > 0) {
+        try {
+          requestAnimationFrame(step);
+        } catch (_) {}
+      }
+    };
+    scrollOpenedSectionToStartOnce();
+    try {
+      requestAnimationFrame(step);
+    } catch (_) {
+      scrollOpenedSectionToStartOnce();
+    }
+    try {
+      setTimeout(scrollOpenedSectionToStartOnce, 0);
+      setTimeout(scrollOpenedSectionToStartOnce, 120);
+      setTimeout(scrollOpenedSectionToStartOnce, 500);
+      setTimeout(scrollOpenedSectionToStartOnce, 900);
+      setTimeout(scrollOpenedSectionToStartOnce, 1400);
+      setTimeout(scrollOpenedSectionToStartOnce, 2200);
+      setTimeout(scrollOpenedSectionToStartOnce, 3500);
+    } catch (_) {}
   }
 
   function scheduleEnsureCloseButtons() {
     ensureCloseButtons();
+    scheduleScrollOpenedSectionToStart();
     try {
       requestAnimationFrame(ensureCloseButtons);
     } catch (_) {
@@ -428,6 +537,7 @@
   try {
     document.addEventListener("iu:section-view-mounted", function () {
       scheduleEnsureCloseButtons();
+      scheduleScrollOpenedSectionToStart();
     });
   } catch (_) {}
 
@@ -437,9 +547,16 @@
       feedEl.__iuDesktopCloseObs = true;
       new MutationObserver(function () {
         if (!isDesktop()) return;
-        if (feedEl.getAttribute("data-feed-ready") === "true") scheduleEnsureCloseButtons();
+        if (feedEl.getAttribute("data-feed-ready") === "true") {
+          scheduleEnsureCloseButtons();
+          scheduleScrollOpenedSectionToStart();
+        }
       }).observe(feedEl, { attributes: true, attributeFilter: ["data-feed-ready", "hidden"] });
     }
+  } catch (_) {}
+
+  try {
+    window.iuDesktopSectionCloseScrollToSectionStart = scheduleScrollOpenedSectionToStart;
   } catch (_) {}
 
   try {
