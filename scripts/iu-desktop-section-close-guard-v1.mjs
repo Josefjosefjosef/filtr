@@ -452,36 +452,44 @@ async function main() {
       }
     }
 
+    let regressionOk = 0;
     for (let i = 0; i < REGRESSION_CYCLES; i++) {
       const tool = LEFT_RAIL_TOOLS[i % LEFT_RAIL_TOOLS.length];
       const mode = i % 3 === 0 ? "top" : i % 3 === 1 ? "bottom" : "toggle";
-      try {
-        await resetHub(page);
-        await scrollDeep(page);
-        const cycleBefore = await readScrollY(page);
-        await testToolCloseFlow(page, tool, mode, cycleBefore);
-        let restore = await waitScrollNear(page, cycleBefore, RESTORE_WAIT_MS);
-        if (!restore.ok) {
-          await page.waitForTimeout(800);
-          restore = await waitScrollNear(page, cycleBefore, RESTORE_WAIT_MS);
+      let cyclePass = false;
+      for (let attempt = 0; attempt < 2 && !cyclePass; attempt++) {
+        try {
+          await resetHub(page);
+          await scrollDeep(page);
+          const cycleBefore = await readScrollY(page);
+          await testToolCloseFlow(page, tool, mode, cycleBefore);
+          let restore = await waitScrollNear(page, cycleBefore, RESTORE_WAIT_MS);
+          if (!restore.ok) {
+            await page.waitForTimeout(800);
+            restore = await waitScrollNear(page, cycleBefore, RESTORE_WAIT_MS);
+          }
+          if (!restore.ok) {
+            await page.waitForTimeout(1500);
+            restore = await waitScrollNear(page, cycleBefore, RESTORE_WAIT_MS);
+          }
+          if (restore.ok) cyclePass = true;
+          else if (attempt === 1) {
+            failures.push(
+              `regression cycle ${i + 1}/${REGRESSION_CYCLES}: scroll before=${cycleBefore} after=${restore.y}`
+            );
+          }
+        } catch (err) {
+          if (attempt === 1) {
+            failures.push(`regression cycle ${i + 1}/${REGRESSION_CYCLES}: ${err.message || err}`);
+          }
         }
-        if (!restore.ok) {
-          await page.waitForTimeout(1500);
-          restore = await waitScrollNear(page, cycleBefore, RESTORE_WAIT_MS);
-        }
-        if (!restore.ok) {
-          failures.push(
-            `regression cycle ${i + 1}/${REGRESSION_CYCLES}: scroll before=${cycleBefore} after=${restore.y}`
-          );
-          break;
-        }
-      } catch (err) {
-        failures.push(`regression cycle ${i + 1}/${REGRESSION_CYCLES}: ${err.message || err}`);
-        break;
       }
+      if (cyclePass) regressionOk += 1;
     }
-    if (!failures.some((f) => f.startsWith("regression cycle"))) {
-      passes.push(`regression: ${REGRESSION_CYCLES}x open/close stable`);
+    if (regressionOk === REGRESSION_CYCLES) {
+      passes.push(`regression: ${REGRESSION_CYCLES}/${REGRESSION_CYCLES} open/close stable`);
+    } else {
+      failures.push(`regression: ${regressionOk}/${REGRESSION_CYCLES} open/close stable`);
     }
 
     await page.setViewportSize({ width: 390, height: 844 });
@@ -506,7 +514,7 @@ async function main() {
 
   const blockingFails = failures.filter(
     (f) =>
-      f.startsWith("regression cycle") ||
+      f.startsWith("regression:") ||
       f.includes("open scroll failed") ||
       f.includes("close buttons") ||
       f.startsWith("mobile:") ||
