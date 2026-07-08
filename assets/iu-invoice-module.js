@@ -633,8 +633,8 @@ export function initIuInvoiceOverlay(deps) {
 
   try {
     const cssLink = document.querySelector('link[href*="iu-invoice-overlay.css"]');
-    if (cssLink && String(cssLink.href || "").indexOf("iu-invoice-root-cause-v1") === -1) {
-      cssLink.href = "/assets/iu-invoice-overlay.css?v=iu-invoice-root-cause-v1";
+    if (cssLink && String(cssLink.href || "").indexOf("invoice-preview-pc-v1") === -1) {
+      cssLink.href = "/assets/iu-invoice-overlay.css?v=invoice-preview-pc-v1-20260708";
     }
   } catch (_) {}
 
@@ -918,7 +918,7 @@ export function initIuInvoiceOverlay(deps) {
     try {
       layer.style.setProperty("position", "fixed", "important");
       layer.style.setProperty("inset", "0", "important");
-      layer.style.setProperty("z-index", "10100", "important");
+      layer.style.setProperty("z-index", "12250", "important");
       layer.style.setProperty("display", "flex", "important");
       layer.style.setProperty("flex-direction", "column", "important");
       layer.style.setProperty("visibility", "visible", "important");
