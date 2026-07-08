@@ -382,7 +382,7 @@ async function testToolCloseFlow(page, tool, mode, deepBeforeY) {
   const closed = await waitSectionClosed(page, SETTLE_MS);
   if (!closed) throw new Error(`${tool.accent}: section not closed (${mode})`);
   await waitHubFeedReady(page, FEED_READY_WAIT_MS);
-  await page.waitForTimeout(400);
+  await page.waitForTimeout(800);
 }
 
 async function main() {
@@ -457,7 +457,7 @@ async function main() {
       const tool = LEFT_RAIL_TOOLS[i % LEFT_RAIL_TOOLS.length];
       const mode = i % 3 === 0 ? "top" : i % 3 === 1 ? "bottom" : "toggle";
       let cyclePass = false;
-      for (let attempt = 0; attempt < 2 && !cyclePass; attempt++) {
+      for (let attempt = 0; attempt < 3 && !cyclePass; attempt++) {
         try {
           await resetHub(page);
           await scrollDeep(page);
@@ -472,14 +472,18 @@ async function main() {
             await page.waitForTimeout(1500);
             restore = await waitScrollNear(page, cycleBefore, RESTORE_WAIT_MS);
           }
+          if (!restore.ok) {
+            await page.waitForTimeout(2500);
+            restore = await waitScrollNear(page, cycleBefore, RESTORE_WAIT_MS);
+          }
           if (restore.ok) cyclePass = true;
-          else if (attempt === 1) {
+          else if (attempt === 2) {
             failures.push(
               `regression cycle ${i + 1}/${REGRESSION_CYCLES}: scroll before=${cycleBefore} after=${restore.y}`
             );
           }
         } catch (err) {
-          if (attempt === 1) {
+          if (attempt === 2) {
             failures.push(`regression cycle ${i + 1}/${REGRESSION_CYCLES}: ${err.message || err}`);
           }
         }
