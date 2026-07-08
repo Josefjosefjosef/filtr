@@ -144,6 +144,12 @@ async function measureViewport(page, width, zoom) {
 
     const panelRect = panel ? panel.getBoundingClientRect() : null;
     const homeRect = homecards ? homecards.getBoundingClientRect() : null;
+    const mindBtnRect = mindBtn ? mindBtn.getBoundingClientRect() : null;
+    const welcomeCard = document.getElementById("iuSilverWelcomeCard");
+    const welcomeCardRect = welcomeCard ? welcomeCard.getBoundingClientRect() : null;
+    const welcomeCardPadLeft = welcomeCard
+      ? parseFloat(getComputedStyle(welcomeCard).paddingLeft) || 0
+      : 0;
     const leftRect = leftNav ? leftNav.getBoundingClientRect() : null;
 
     const segments = panel ? panel.querySelectorAll(".iuDesktopInfoPanel__segment") : [];
@@ -173,6 +179,17 @@ async function measureViewport(page, width, zoom) {
       panelWidth: panelRect ? Math.round(panelRect.width) : 0,
       homecardsWidth: homeRect ? Math.round(homeRect.width) : 0,
       widthAligned: panelRect && homeRect ? Math.abs(panelRect.width - homeRect.width) <= 2 : false,
+      mindBtnRight: mindBtnRect ? Math.round(mindBtnRect.right) : null,
+      homecardsRight: homeRect ? Math.round(homeRect.right) : null,
+      mindMenuRightAligned:
+        mindBtnRect && homeRect ? Math.abs(mindBtnRect.right - homeRect.right) <= 2 : false,
+      mindBtnLeft: mindBtnRect ? Math.round(mindBtnRect.left) : null,
+      welcomeCardLeft: welcomeCardRect ? Math.round(welcomeCardRect.left) : null,
+      mindMenuLeftAligned:
+        mindBtnRect && welcomeCardRect
+          ? Math.abs(mindBtnRect.left - (welcomeCardRect.left + welcomeCardPadLeft)) <=
+              Math.max(2, Math.round(4 * zoomFactor))
+          : false,
       leftNavLeft: leftRect ? Math.round(leftRect.left) : null,
       welcomeVisible: !!(welcome && welcome.offsetParent !== null),
       weatherVisible: !!(weather && weather.offsetParent !== null),
@@ -442,6 +459,8 @@ async function main() {
           m.gapOk &&
           m.mindMenuGapOk &&
           m.widthAligned &&
+          m.mindMenuRightAligned &&
+          m.mindMenuLeftAligned &&
           !m.segmentOverlap &&
           m.scrollbarHidden &&
           m.hasNavButtons &&
