@@ -27,6 +27,7 @@ const LCP_MAX_MS = parseInt(process.env.IU_INFO_PANEL_LCP_MAX_MS || "4500", 10);
 const GAP_TARGET_PX = 30;
 const GAP_TOLERANCE_PX = 4;
 const MINDMENU_GAP_TARGET_PX = 30;
+const MINDMENU_ZPRAVY_RIGHT_TOL_PX = 1;
 const CATALOG_COUNT = IU_INFO_PANEL_CATALOG_COUNT;
 
 function runStaticGuard(scriptName) {
@@ -113,7 +114,7 @@ async function measureViewport(page, width, zoom) {
   );
   await page.waitForTimeout(120);
 
-  return page.evaluate(({ gapTarget, gapTol, zoomFactor, mindMenuGapTarget }) => {
+  return page.evaluate(({ gapTarget, gapTol, zoomFactor, mindMenuGapTarget, mindMenuZpravyRightTolPx }) => {
     const doc = document.documentElement;
     const body = document.body;
     const panel = document.getElementById("iuDesktopInfoPanel");
@@ -145,6 +146,16 @@ async function measureViewport(page, width, zoom) {
     const panelRect = panel ? panel.getBoundingClientRect() : null;
     const homeRect = homecards ? homecards.getBoundingClientRect() : null;
     const mindBtnRect = mindBtn ? mindBtn.getBoundingClientRect() : null;
+    const zpravyMount = document.getElementById("iuNewsPreviewCardMount");
+    const zpravyEl = zpravyMount
+      ? zpravyMount.querySelector(".iuNewsPreviewCard, button") || zpravyMount.firstElementChild
+      : null;
+    const zpravyRect = zpravyEl ? zpravyEl.getBoundingClientRect() : null;
+    const sportMount = document.getElementById("iuSportPreviewCardMount");
+    const sportEl = sportMount
+      ? sportMount.querySelector(".box-sport, button") || sportMount.firstElementChild
+      : null;
+    const sportRect = sportEl ? sportEl.getBoundingClientRect() : null;
     const welcomeCard = document.getElementById("iuSilverWelcomeCard");
     const welcomeCardRect = welcomeCard ? welcomeCard.getBoundingClientRect() : null;
     const welcomeCardPadLeft = welcomeCard
@@ -179,10 +190,27 @@ async function measureViewport(page, width, zoom) {
       panelWidth: panelRect ? Math.round(panelRect.width) : 0,
       homecardsWidth: homeRect ? Math.round(homeRect.width) : 0,
       widthAligned: panelRect && homeRect ? Math.abs(panelRect.width - homeRect.width) <= 2 : false,
-      mindBtnRight: mindBtnRect ? Math.round(mindBtnRect.right) : null,
+      mindBtnRight: mindBtnRect ? Math.round(mindBtnRect.right * 10) / 10 : null,
       homecardsRight: homeRect ? Math.round(homeRect.right) : null,
-      mindMenuRightAligned:
-        mindBtnRect && homeRect ? Math.abs(mindBtnRect.right - homeRect.right) <= 2 : false,
+      zpravyRight: zpravyRect ? Math.round(zpravyRect.right * 10) / 10 : null,
+      sportLeft: sportRect ? Math.round(sportRect.left * 10) / 10 : null,
+      mindMenuZpravyRightDelta:
+        mindBtnRect && zpravyRect ? Math.round((mindBtnRect.right - zpravyRect.right) * 10) / 10 : null,
+      mindMenuZpravyRightAligned:
+        mindBtnRect && zpravyRect
+          ? Math.abs(mindBtnRect.right - zpravyRect.right) <= mindMenuZpravyRightTolPx * zoomFactor
+          : false,
+      mindMenuNotFullRowAligned:
+        mindBtnRect && homeRect && zpravyRect
+          ? !(
+              Math.abs(mindBtnRect.right - homeRect.right) <= mindMenuZpravyRightTolPx * zoomFactor &&
+              Math.abs(mindBtnRect.right - zpravyRect.right) > mindMenuZpravyRightTolPx * zoomFactor
+            )
+          : false,
+      mindMenuNotOverSport:
+        mindBtnRect && sportRect
+          ? mindBtnRect.right <= sportRect.left + mindMenuZpravyRightTolPx * zoomFactor
+          : true,
       mindBtnLeft: mindBtnRect ? Math.round(mindBtnRect.left) : null,
       welcomeCardLeft: welcomeCardRect ? Math.round(welcomeCardRect.left) : null,
       mindMenuLeftAligned:
@@ -201,7 +229,13 @@ async function measureViewport(page, width, zoom) {
       cls: Number(window.__iuInfoPanelCls || 0),
       lcpMs: Number(window.__iuInfoPanelLcp || 0),
     };
-  }, { gapTarget: GAP_TARGET_PX, gapTol: GAP_TOLERANCE_PX, zoomFactor: zoom, mindMenuGapTarget: MINDMENU_GAP_TARGET_PX });
+  }, {
+    gapTarget: GAP_TARGET_PX,
+    gapTol: GAP_TOLERANCE_PX,
+    zoomFactor: zoom,
+    mindMenuGapTarget: MINDMENU_GAP_TARGET_PX,
+    mindMenuZpravyRightTolPx: MINDMENU_ZPRAVY_RIGHT_TOL_PX,
+  });
 }
 
 async function testSourceDialogs(page) {
@@ -459,7 +493,9 @@ async function main() {
           m.gapOk &&
           m.mindMenuGapOk &&
           m.widthAligned &&
-          m.mindMenuRightAligned &&
+          m.mindMenuZpravyRightAligned &&
+          m.mindMenuNotFullRowAligned &&
+          m.mindMenuNotOverSport &&
           m.mindMenuLeftAligned &&
           !m.segmentOverlap &&
           m.scrollbarHidden &&
