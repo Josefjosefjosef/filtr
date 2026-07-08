@@ -31623,6 +31623,12 @@ function buildVideoAsArticleCard(it) {
     const quick = document.getElementById("iuQuickFeed");
     if (stage) stage.setAttribute("data-iu-view", "articles");
     if (quick) {
+      try {
+        if (quick.classList.contains("iu-bakalari-quickfeed-root") && typeof window.iuBakalariPersistOpenCards === "function") {
+          window.iuBakalariPersistOpenCards();
+        }
+        window.iuBakalariPersistOpenCards = null;
+      } catch (_) {}
       try { iuApplyMojeQuickFeedFullscreenLayer(quick, false); } catch (_) {}
       try { iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, false); } catch (_) {}
       try { quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online-single-column", "iu-banking-quickfeed-root", "iu-bakalari-quickfeed-root", "iu-pojistovna-quickfeed-root", "iu-wordpdf-quickfeed-root", "iu-grocery-quickfeed-root"); } catch (_) {}
@@ -37376,15 +37382,14 @@ function buildVideoAsArticleCard(it) {
           password: String(p.password || ""),
           locked: p.locked === true
         };
-      }).filter(function (p) { return !isBakalariProfileEmpty(p); });
+      }).slice(0, BAKALARI_MAX_CARDS);
     } catch (_) {}
     return [];
   }
 
   function setBakalariProfilesToStorage(arr) {
-    var list = Array.isArray(arr) ? arr : [];
-    var cleaned = list.filter(function (p) { return p && !isBakalariProfileEmpty(p); });
-    try { localStorage.setItem(BAKALARI_PROFILES_KEY, JSON.stringify(cleaned)); } catch (_) {}
+    var list = Array.isArray(arr) ? arr.slice(0, BAKALARI_MAX_CARDS) : [];
+    try { localStorage.setItem(BAKALARI_PROFILES_KEY, JSON.stringify(list)); } catch (_) {}
   }
 
   function openBakalariUrlSafe(urlRaw) {
@@ -37861,8 +37866,7 @@ function buildVideoAsArticleCard(it) {
 
     function persistAllFromDom() {
       syncProfilesFromDom();
-      var cleaned = profiles.filter(function (p) { return !isBakalariProfileEmpty(p); });
-      setBakalariProfilesToStorage(cleaned);
+      setBakalariProfilesToStorage(profiles);
     }
 
     function updateAddButtonState() {
@@ -38109,12 +38113,20 @@ function buildVideoAsArticleCard(it) {
         if (n >= BAKALARI_MAX_CARDS) return;
         syncProfilesFromDom();
         profiles.push({ id: "bak_" + Date.now(), name: "", url: "", username: "", password: "", locked: false });
+        setBakalariProfilesToStorage(profiles);
         renderAllCards();
         try {
           if (addAnotherBtn && typeof addAnotherBtn.blur === "function") addAnotherBtn.blur();
         } catch (_) {}
       });
     }
+
+    try {
+      window.iuBakalariPersistOpenCards = function () {
+        if (!container || !container.isConnected) return;
+        persistAllFromDom();
+      };
+    } catch (_) {}
 
     renderAllCards();
   }

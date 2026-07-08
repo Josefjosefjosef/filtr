@@ -23,7 +23,8 @@ const checks = [
   indexHtml.includes("ds-mobile-scroll-bottom-clearance-v1-20260707") ||
   indexHtml.includes("legal-docs-hub-header-single-row-v1-20260707") ||
   indexHtml.includes("desktop-left-rail-section-close-v1-20260707") ||
-  indexHtml.includes("svatek-pill-inline-layout-v1-20260707"),
+  indexHtml.includes("svatek-pill-inline-layout-v1-20260707") ||
+  indexHtml.includes("bakalari-card-count-persist-v1-20260707"),
 ];
 
 const pass = checks.every(Boolean);
