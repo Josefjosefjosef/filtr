@@ -17523,6 +17523,16 @@ function buildVideoAsArticleCard(it) {
       if (iuElIsVisiblyOpen(tasks) && tryClick(".iu-tasksOverlay__close[data-iu-tasks-close=\"1\"]", tasks)) return true;
     } catch (_) {}
     try {
+      var cbPanel = document.getElementById("iuCustomButtonsPanel");
+      if (iuElIsVisiblyOpen(cbPanel) && String(cbPanel.dataset.open || "") === "1") {
+        if (typeof window.iuCustomButtonsOverlayClose === "function") {
+          window.iuCustomButtonsOverlayClose();
+          return true;
+        }
+        if (tryClick("#iuCustomButtonsClose", document)) return true;
+      }
+    } catch (_) {}
+    try {
       var nw = document.getElementById("iuNamedayWishOverlay");
       if (iuElIsVisiblyOpen(nw)) {
         if (tryClick("#iuNamedayWishCard .iu-overlay-close", nw)) return true;
@@ -31692,6 +31702,8 @@ function buildVideoAsArticleCard(it) {
       if (legPanel && vis(legPanel) && String(legPanel.dataset.open || "") === "1") ids.push("legal");
       const invPanel = document.getElementById("iuInvoicePanel");
       if (invPanel && vis(invPanel) && String(invPanel.dataset.open || "") === "1") ids.push("invoice");
+      const cbPanel = document.getElementById("iuCustomButtonsPanel");
+      if (cbPanel && vis(cbPanel) && String(cbPanel.dataset.open || "") === "1") ids.push("custombuttons");
       const desktopParcelOv = document.getElementById("iuDesktopParcelWatchOverlay");
       if (desktopParcelOv && desktopParcelOv.classList.contains("is-open") && !desktopParcelOv.hidden) ids.push("desktop-parcel");
     } catch (_) {}
@@ -31832,6 +31844,9 @@ function buildVideoAsArticleCard(it) {
           document.body.classList.remove("iu-invoice-overlay-open");
         } catch (_) {}
       }
+      if (typeof window.iuCustomButtonsOverlayClose === "function") {
+        try { window.iuCustomButtonsOverlayClose(); } catch (_) {}
+      }
       try {
         if (typeof window.iuDesktopParcelWatchOverlayClose === "function") window.iuDesktopParcelWatchOverlayClose();
         else {
@@ -31855,7 +31870,7 @@ function buildVideoAsArticleCard(it) {
         try { el.classList.remove("is-open", "active"); } catch (_) {}
       });
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-grocery-desktop-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-invoice-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open", "iu-pojistovna-desktop-overlay-open", "iu-wordpdf-desktop-overlay-open");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-grocery-desktop-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-invoice-overlay-open", "iu-custom-buttons-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open", "iu-pojistovna-desktop-overlay-open", "iu-wordpdf-desktop-overlay-open");
     } catch (_) {}
   }
 
