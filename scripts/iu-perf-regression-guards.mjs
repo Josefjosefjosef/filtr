@@ -278,6 +278,10 @@ async function runCalendarSilverSurface(page) {
   const phrase = "Ulož zítra v 11 schůzka zubař";
   await page.fill("#iuSilverHomeInput", phrase);
   await page.click("#iuSilverHomeSend");
+  try {
+    await page.waitForSelector("#iuSilverHomeDesktopActionMenu:not([hidden])", { timeout: 2500 });
+    await page.click('[data-iu-silver-desktop-action="silver"]');
+  } catch (_) {}
   await page.waitForSelector("#iuSilverChatOverlay:not([hidden])", { timeout: 60000 });
   /**
    * Phrase "Ulož zítra v 11 schůzka zubař" may route either to:
