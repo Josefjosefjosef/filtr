@@ -193,6 +193,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-custom-buttons-overlay-polish-guard
 
+      - name: Silver PC top input action menu guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-silver-pc-top-input-action-menu-guard
+
       - name: Quicktools custom buttons reset sync guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run silver-quicktools-custom-buttons-guard

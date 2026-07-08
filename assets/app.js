@@ -77537,7 +77537,152 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     window.__iuSilverOpenQuickTemplateEmptyDirect = iuSilverOpenQuickTemplateEmptyDirect;
   } catch (_) {}
 
-  function handleHomeSubmit() {
+  var iuSilverHomeDesktopActionMenuState = {
+    open: false,
+    query: "",
+    bound: false,
+  };
+
+  function iuSilverHomeDesktopActionMenuEnabled() {
+    if (iuSilverIsNarrowSilverComposerV1()) return false;
+    try {
+      var host = document.getElementById("iuTopbarSilverComposerHost");
+      var input = document.getElementById("iuSilverHomeInput");
+      if (!host || !input || !host.contains(input)) return false;
+      return document.body.classList.contains("iu-desktop-silver-composer-topbar");
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuSilverHomeDesktopActionMenuEl() {
+    return document.getElementById("iuSilverHomeDesktopActionMenu");
+  }
+
+  function iuSilverHomeDesktopActionMenuHide() {
+    var menu = iuSilverHomeDesktopActionMenuEl();
+    if (!menu) return;
+    iuSilverHomeDesktopActionMenuState.open = false;
+    iuSilverHomeDesktopActionMenuState.query = "";
+    try {
+      menu.hidden = true;
+    } catch (_) {}
+    try {
+      menu.setAttribute("aria-hidden", "true");
+    } catch (_) {}
+  }
+
+  function iuSilverHomeDesktopActionExternalUrl(kind, query) {
+    var enc = encodeURIComponent(String(query || "").trim());
+    if (!enc) return null;
+    if (kind === "google") return "https://www.google.com/search?q=" + enc;
+    if (kind === "seznam") return "https://search.seznam.cz/?q=" + enc;
+    if (kind === "youtube") return "https://www.youtube.com/results?search_query=" + enc;
+    if (kind === "googlemaps") return "https://www.google.com/maps/search/?api=1&query=" + enc;
+    if (kind === "mapycz") return "https://mapy.cz/hledat?q=" + enc;
+    return null;
+  }
+
+  function iuSilverHomeDesktopActionRunExternal(kind) {
+    var q = iuSilverHomeDesktopActionMenuState.query;
+    var url = iuSilverHomeDesktopActionExternalUrl(kind, q);
+    if (!url) return;
+    iuSilverHomeDesktopActionMenuHide();
+    var input = document.getElementById("iuSilverHomeInput");
+    if (input) {
+      try {
+        input.value = "";
+      } catch (_) {}
+      try {
+        if (typeof window.__iuSilverSyncHomeUxEmptyState === "function") window.__iuSilverSyncHomeUxEmptyState();
+      } catch (_) {}
+      try {
+        if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
+      } catch (_) {}
+    }
+    try {
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (_) {}
+  }
+
+  function iuSilverHomeDesktopActionMenuEnsureBound() {
+    if (iuSilverHomeDesktopActionMenuState.bound) return;
+    var menu = iuSilverHomeDesktopActionMenuEl();
+    if (!menu) return;
+    iuSilverHomeDesktopActionMenuState.bound = true;
+    var items = menu.querySelectorAll("[data-iu-silver-desktop-action]");
+    for (var i = 0; i < items.length; i++) {
+      (function (btn) {
+        btn.addEventListener("click", function (e) {
+          try {
+            e.preventDefault();
+            e.stopPropagation();
+          } catch (_) {}
+          var kind = String(btn.getAttribute("data-iu-silver-desktop-action") || "");
+          if (kind === "silver") {
+            iuSilverHomeDesktopActionMenuHide();
+            handleHomeSubmitExecute();
+            return;
+          }
+          iuSilverHomeDesktopActionRunExternal(kind);
+        });
+      })(items[i]);
+    }
+    document.addEventListener("mousedown", function (e) {
+      if (!iuSilverHomeDesktopActionMenuState.open) return;
+      var menuEl = iuSilverHomeDesktopActionMenuEl();
+      var input = document.getElementById("iuSilverHomeInput");
+      var send = document.getElementById("iuSilverHomeSend");
+      var t = e.target;
+      if (!menuEl || !t) return;
+      if (menuEl.contains(t) || (input && input.contains(t)) || (send && send.contains(t))) return;
+      iuSilverHomeDesktopActionMenuHide();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (!iuSilverHomeDesktopActionMenuState.open) return;
+      if (e.key === "Escape") {
+        try {
+          e.preventDefault();
+        } catch (_) {}
+        iuSilverHomeDesktopActionMenuHide();
+      }
+    });
+    try {
+      var mqDesk = window.matchMedia("(max-width: 1024px)");
+      var onDeskMq = function () {
+        if (!iuSilverHomeDesktopActionMenuEnabled()) iuSilverHomeDesktopActionMenuHide();
+      };
+      if (typeof mqDesk.addEventListener === "function") mqDesk.addEventListener("change", onDeskMq);
+      else if (typeof mqDesk.addListener === "function") mqDesk.addListener(onDeskMq);
+    } catch (_) {}
+  }
+
+  function iuSilverHomeDesktopActionMenuShow(query) {
+    var q = String(query || "").trim().slice(0, SILVER_HOME_INPUT_MAX);
+    if (!q) {
+      iuSilverHomeDesktopActionMenuHide();
+      return;
+    }
+    if (!iuSilverHomeDesktopActionMenuEnabled()) return;
+    iuSilverHomeDesktopActionMenuEnsureBound();
+    var menu = iuSilverHomeDesktopActionMenuEl();
+    if (!menu) return;
+    iuSilverHomeDesktopActionMenuState.open = true;
+    iuSilverHomeDesktopActionMenuState.query = q;
+    try {
+      menu.hidden = false;
+    } catch (_) {}
+    try {
+      menu.setAttribute("aria-hidden", "false");
+    } catch (_) {}
+  }
+
+  try {
+    window.__iuSilverHomeDesktopActionMenuEnabled = iuSilverHomeDesktopActionMenuEnabled;
+    window.__iuSilverHomeDesktopActionMenuHide = iuSilverHomeDesktopActionMenuHide;
+  } catch (_) {}
+
+  function handleHomeSubmitExecute() {
     const input = document.getElementById("iuSilverHomeInput") || document.querySelector("#silver-slot .silver-input");
     if (!input) return;
     try {
@@ -77600,6 +77745,30 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         if (eng && typeof eng.iuSilverConversationSyncFromTurn === "function") eng.iuSilverConversationSyncFromTurn(turn, first);
       } catch (_) {}
     }
+  }
+
+  function handleHomeSubmit() {
+    const input = document.getElementById("iuSilverHomeInput") || document.querySelector("#silver-slot .silver-input");
+    if (!input) return;
+    try {
+      if (typeof window.iuSilverGuidedOnHomeSendBefore === "function") window.iuSilverGuidedOnHomeSendBefore(input);
+    } catch (_) {}
+    clampSilverHomeInput(input);
+    const raw = String(input.value || "");
+    if (!iuSilverHomeInputHasRealText(raw)) {
+      if (iuSilverIsNarrowSilverComposerV1()) {
+        try {
+          if (typeof window.__iuSilverResetHomeTemplateMode === "function") window.__iuSilverResetHomeTemplateMode();
+        } catch (_) {}
+      }
+      iuSilverHomeDesktopActionMenuHide();
+      return;
+    }
+    if (iuSilverHomeDesktopActionMenuEnabled()) {
+      iuSilverHomeDesktopActionMenuShow(raw.trim().slice(0, SILVER_HOME_INPUT_MAX));
+      return;
+    }
+    handleHomeSubmitExecute();
   }
 
   function handleComposerSubmit() {
@@ -78131,7 +78300,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       } catch (_) {}
       var templateMode = narrow && empty && !focused;
       try {
-        inp.setAttribute("placeholder", narrow ? "" : String(inp.getAttribute("data-iu-silver-home-placeholder-desktop") || "Napiš Silverovi…"));
+        inp.setAttribute("placeholder", narrow ? "" : String(inp.getAttribute("data-iu-silver-home-placeholder-desktop") || "Napiš Silverovi nebo hledej na internetu…"));
       } catch (_) {}
       try {
         wrap.classList.toggle("iuSilverHomeInputFieldWrap--empty", empty);
