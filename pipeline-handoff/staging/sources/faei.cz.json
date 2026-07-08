@@ -1,8 +1,55 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-07-08T06:47:31.723481Z",
+  "ingestedAt": "2026-07-08T10:47:27.126777Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "David proti Goliášovi. Jak česká firma zaplatila za obranu i své konkurenci",
+      "url": "https://profitonline.cz/david-proti-goliasovi-jak-ceska-firma-zaplatila-za-obranu-i-sve-konkurenci/",
+      "dt": "2026-07-08T10:00:56Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "david",
+        "firma",
+        "goliášovi",
+        "konkurenci",
+        "obranu",
+        "proti",
+        "své",
+        "zaplatila",
+        "česká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Bitcoin minulý týden posiloval",
+      "url": "https://profitonline.cz/bitcoin-minuly-tyden-posiloval/",
+      "dt": "2026-07-08T08:00:06Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "bitcoin",
+        "minulý",
+        "posiloval",
+        "týden"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -241,53 +288,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Ústavní soud Babišovi pomohl. Dal mu klacek na prezidenta Pavla",
-      "url": "https://profitonline.cz/ustavni-soud-babisovi-pomohl-dal-mu-klacek-na-prezidenta-pavla/",
-      "dt": "2026-07-06T10:00:04Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "babišovi",
-        "dal",
-        "klacek",
-        "pavla",
-        "pomohl",
-        "prezidenta",
-        "soud",
-        "ústavní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "AI revoluce a poučení z tulipománie a dalších bublin",
-      "url": "https://profitonline.cz/ai-revoluce-a-pouceni-z-tulipomanie-a-dalsich-bublin/",
-      "dt": "2026-07-06T07:00:15Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "bublin",
-        "dalších",
-        "poučení",
-        "revoluce",
-        "tulipománie"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,7 +298,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19015,
+      "bytes": 18793,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -335,11 +335,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-07-08T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-08T10:00:56Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "zpravy": 2,
-          "finance": 9,
+          "finance": 10,
+          "zpravy": 1,
           "zdravi": 1
         },
         "drop_counts": {
@@ -352,6 +352,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "David proti Goliášovi. Jak česká firma zaplatila za obranu i své konkurenci",
+            "publishedAt": "2026-07-08T10:00:56Z"
+          },
+          {
+            "title": "Bitcoin minulý týden posiloval",
+            "publishedAt": "2026-07-08T08:00:06Z"
+          },
           {
             "title": "Gareth Pearson generálním ředitelem McDonald’s pro Česko a Slovensko",
             "publishedAt": "2026-07-08T06:00:00Z"
@@ -375,14 +383,6 @@
           {
             "title": "Akcie ČEZ prý do roka zhodnotí o 25 %, tvrdí francouzsko-německá banka",
             "publishedAt": "2026-07-07T20:20:27Z"
-          },
-          {
-            "title": "Rusko ve válce s Ukrajinou doplácí na svou rozlohu. Je moc velké",
-            "publishedAt": "2026-07-07T10:00:09Z"
-          },
-          {
-            "title": "Investice do AI už tlačí na ceny elektroniky pro spotřebitele",
-            "publishedAt": "2026-07-07T08:00:29Z"
           }
         ]
       }
