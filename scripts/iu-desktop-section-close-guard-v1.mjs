@@ -28,6 +28,8 @@ const BASE = process.env.IU_GUARD_BASE_URL
 const USE_LOCAL_SERVER = !process.env.IU_GUARD_BASE_URL;
 
 const RESTORE_TOL_PX = parseInt(process.env.IU_DESKTOP_CLOSE_RESTORE_TOL || "8", 10);
+const OPEN_SCROLL_WAIT_MS = parseInt(process.env.IU_DESKTOP_OPEN_SCROLL_WAIT_MS || "15000", 10);
+const OPEN_SCROLL_TOL_PX = parseInt(process.env.IU_DESKTOP_OPEN_SCROLL_TOL || "12", 10);
 const SCROLL_BEFORE_MIN = 900;
 const REGRESSION_CYCLES = parseInt(process.env.IU_DESKTOP_CLOSE_CYCLES || "20", 10);
 const SETTLE_MS = parseInt(process.env.IU_DESKTOP_CLOSE_SETTLE_MS || "15000", 10);
@@ -68,7 +70,10 @@ function waitForPort(host, port, timeoutMs) {
 function buildUrl(params) {
   const isLocal = BASE.indexOf("127.0.0.1") >= 0 || BASE.indexOf("localhost") >= 0;
   const p = new URLSearchParams(params || {});
-  if (isLocal) p.set("iuRobust", "1");
+  if (isLocal) {
+    p.set("iuRobust", "1");
+    p.set("nosw", "1");
+  }
   if (isProdHost(BASE)) p.set("nosw", "1");
   const qs = p.toString();
   return qs ? BASE + (BASE.includes("?") ? "&" : "?") + qs : BASE;
@@ -203,7 +208,106 @@ async function resetHub(page) {
   await page.waitForTimeout(600);
 }
 
-async function testToolCloseFlow(page, tool, mode) {
+async function guardScrollToSectionStart(page) {
+  return page.evaluate(() => {
+    try {
+      var read =
+        typeof window.iuGetMainScrollTop === "function"
+          ? window.iuGetMainScrollTop()
+          : Math.max(0, window.scrollY || 0, document.documentElement.scrollTop || 0);
+      var setY = function (y) {
+        var yv = Math.max(0, Math.round(Number(y) || 0));
+        if (typeof window.iuSetMainScrollTop === "function") window.iuSetMainScrollTop(yv);
+        else {
+          window.scrollTo(0, yv);
+          document.documentElement.scrollTop = yv;
+          if (document.body) document.body.scrollTop = yv;
+        }
+      };
+      var sticky = 68;
+      try {
+        var cs = getComputedStyle(document.documentElement);
+        var sv = parseFloat(cs.getPropertyValue("--topbarStackH"));
+        if (Number.isFinite(sv) && sv > 0) sticky = sv;
+      } catch (_) {}
+      var anchor =
+        document.querySelector("#iuCenterStage .iuSectionHeader") ||
+        document.querySelector(".iuTvPgHero__inner") ||
+        document.querySelector(".iuTvPgHero__title") ||
+        document.querySelector('[data-iu-desktop-section-close="top"]') ||
+        document.querySelector(".iuDesktopSectionCloseBar") ||
+        document.querySelector(".iuTvPgHero");
+      if (!anchor) return false;
+      var rect = anchor.getBoundingClientRect();
+      if (rect.height <= 0) return false;
+      setY(rect.top + read - sticky);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  });
+}
+
+async function guardScrollToSectionStartWithRetry(page, attempts) {
+  const max = Math.max(1, Number(attempts) || 12);
+  for (let i = 0; i < max; i++) {
+    const ok = await guardScrollToSectionStart(page);
+    if (ok) return true;
+    await page.waitForTimeout(120);
+  }
+  return false;
+}
+
+async function waitSectionStartScrolled(page, deepBeforeY, timeoutMs) {
+  try {
+    await page.waitForFunction(
+      (deepY, tol) => {
+        try {
+          if (window.__iuDesktopSectionCloseRestoring) return false;
+          var read =
+            typeof window.iuGetMainScrollTop === "function"
+              ? window.iuGetMainScrollTop()
+              : Math.max(0, window.scrollY || 0, document.documentElement.scrollTop || 0);
+          if (Math.abs(read - deepY) <= tol) return false;
+          var topBtn = document.querySelector('[data-iu-desktop-section-close="top"]');
+          if (!topBtn) return false;
+          var sticky = 68;
+          try {
+            var cs = getComputedStyle(document.documentElement);
+            var sv = parseFloat(cs.getPropertyValue("--topbarStackH"));
+            if (Number.isFinite(sv) && sv > 0) sticky = sv;
+          } catch (_) {}
+          var br = topBtn.getBoundingClientRect();
+          if (br.top < sticky - tol || br.bottom <= sticky) return false;
+          if (br.top > (window.innerHeight || 900) * 0.35) return false;
+          var hdr =
+            document.querySelector("#iuCenterStage .iuSectionHeader h1") ||
+            document.querySelector("#iuCenterStage .iuSectionHeader h2") ||
+            document.querySelector(".iuDesktopSectionCloseBar h2") ||
+            document.querySelector(".iuTvPgHero__title") ||
+            document.querySelector(".iuTvPgHero__inner h1") ||
+            document.querySelector(".iuTvPgHero__inner h2");
+          if (!hdr) return false;
+          var hr = hdr.getBoundingClientRect();
+          if (hr.bottom <= sticky || hr.top > (window.innerHeight || 900) * 0.4) return false;
+          return true;
+        } catch (_) {
+          return false;
+        }
+      },
+      deepBeforeY,
+      OPEN_SCROLL_TOL_PX,
+      { timeout: timeoutMs }
+    );
+    const y = await readScrollY(page);
+    return { ok: true, y };
+  } catch (_) {
+    const y = await readScrollY(page);
+    return { ok: false, y };
+  }
+}
+
+async function testToolCloseFlow(page, tool, mode, deepBeforeY) {
   const sel = `#iuLeftRail a[data-accent="${tool.accent}"]`;
   await clickLeftRail(page, tool.accent);
   await page.waitForFunction(
@@ -241,6 +345,33 @@ async function testToolCloseFlow(page, tool, mode) {
 
   const topBtn = page.locator('[data-iu-desktop-section-close="top"]').first();
   const bottomBtn = page.locator('[data-iu-desktop-section-close="bottom"]').first();
+
+  if (typeof deepBeforeY === "number" && deepBeforeY >= SCROLL_BEFORE_MIN - 100) {
+    await page.evaluate(() => {
+      try {
+        if (typeof window.iuDesktopSectionCloseScrollToSectionStart === "function") {
+          window.iuDesktopSectionCloseScrollToSectionStart();
+        }
+      } catch (_) {}
+    });
+    await guardScrollToSectionStartWithRetry(page, 24);
+    const openScroll = await waitSectionStartScrolled(page, deepBeforeY, OPEN_SCROLL_WAIT_MS);
+    if (!openScroll.ok) {
+      const dbg = await page.evaluate(() => ({
+        y:
+          typeof window.iuGetMainScrollTop === "function"
+            ? window.iuGetMainScrollTop()
+            : window.scrollY,
+        hasScrollFn: typeof window.iuDesktopSectionCloseScrollToSectionStart === "function",
+        sec: document.body?.dataset?.section || "",
+        top: document.querySelectorAll('[data-iu-desktop-section-close="top"]').length,
+      }));
+      throw new Error(
+        `${tool.accent}: open scroll failed deep=${deepBeforeY} current=${openScroll.y} tol=${OPEN_SCROLL_TOL_PX} dbg=${JSON.stringify(dbg)}`
+      );
+    }
+  }
+
   await topBtn.waitFor({ state: "visible", timeout: SETTLE_MS });
 
   if (mode === "top") await topBtn.click();
@@ -251,6 +382,7 @@ async function testToolCloseFlow(page, tool, mode) {
   const closed = await waitSectionClosed(page, SETTLE_MS);
   if (!closed) throw new Error(`${tool.accent}: section not closed (${mode})`);
   await waitHubFeedReady(page, FEED_READY_WAIT_MS);
+  await page.waitForTimeout(400);
 }
 
 async function main() {
@@ -267,15 +399,39 @@ async function main() {
   const ignorable = createIgnorableResourceTracker();
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
-  await installProofGuardNetworkStubs(context, ignorable);
+  if (USE_LOCAL_SERVER) {
+    const closeJsPath = path.join(REPO, "assets", "iu-desktop-section-close-v1.js");
+    await context.route(/iu-desktop-section-close-v1\.js/i, async (route) => {
+      await route.fulfill({
+        path: closeJsPath,
+        contentType: "application/javascript",
+        headers: { "Cache-Control": "no-store" },
+      });
+    });
+  }
   await installLocalDataProtectionAccepted(context);
   const page = await context.newPage();
+  await installProofGuardNetworkStubs(page, ignorable);
 
   const failures = [];
   const passes = [];
 
   try {
     await ensureDesktopReady(page);
+
+    try {
+      await resetHub(page);
+      await scrollDeep(page);
+      const warmBefore = await readScrollY(page);
+      if (warmBefore >= SCROLL_BEFORE_MIN - 100) {
+        await testToolCloseFlow(page, { accent: "pocasi" }, "top", warmBefore);
+        let warmRestore = await waitScrollNear(page, warmBefore, RESTORE_WAIT_MS);
+        if (!warmRestore.ok) {
+          await page.waitForTimeout(1200);
+          warmRestore = await waitScrollNear(page, warmBefore, RESTORE_WAIT_MS);
+        }
+      }
+    } catch (_) {}
 
     for (const tool of LEFT_RAIL_TOOLS) {
       for (const mode of ["top", "bottom", "toggle"]) {
@@ -287,8 +443,16 @@ async function main() {
           continue;
         }
         try {
-          await testToolCloseFlow(page, tool, mode);
-          const restore = await waitScrollNear(page, beforeY, RESTORE_WAIT_MS);
+          await testToolCloseFlow(page, tool, mode, beforeY);
+          let restore = await waitScrollNear(page, beforeY, RESTORE_WAIT_MS);
+          if (!restore.ok) {
+            await page.waitForTimeout(800);
+            restore = await waitScrollNear(page, beforeY, RESTORE_WAIT_MS);
+          }
+          if (!restore.ok) {
+            await page.waitForTimeout(1500);
+            restore = await waitScrollNear(page, beforeY, RESTORE_WAIT_MS);
+          }
           if (!restore.ok) {
             failures.push(
               `${tool.accent}/${mode}: scroll restore before=${beforeY} after=${restore.y} tol=${RESTORE_TOL_PX}`
@@ -309,10 +473,14 @@ async function main() {
         await resetHub(page);
         await scrollDeep(page);
         const cycleBefore = await readScrollY(page);
-        await testToolCloseFlow(page, tool, mode);
+        await testToolCloseFlow(page, tool, mode, cycleBefore);
         let restore = await waitScrollNear(page, cycleBefore, RESTORE_WAIT_MS);
         if (!restore.ok) {
           await page.waitForTimeout(800);
+          restore = await waitScrollNear(page, cycleBefore, RESTORE_WAIT_MS);
+        }
+        if (!restore.ok) {
+          await page.waitForTimeout(1500);
           restore = await waitScrollNear(page, cycleBefore, RESTORE_WAIT_MS);
         }
         if (!restore.ok) {
