@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-07-09T20:49:14.053442Z",
+  "ingestedAt": "2026-07-09T22:47:10.586643Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Tyto dvě pěkné hry vás vyjdou na nula korun. U jedné se skvěle relaxuje",
+      "url": "https://www.idnes.cz/hry/novinky/hry-zdarma-nova-lands-tattoo-tycoon.A260708_130358_bw-novinky_oz/foto",
+      "dt": "2026-07-09T22:00:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "dvě",
+        "hry",
+        "jedné",
+        "korun",
+        "nula",
+        "pěkné",
+        "relaxuje",
+        "skvěle",
+        "tyto",
+        "vyjdou",
+        "vás"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -734,31 +762,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Ceny pamětí raketově porostou i nadále. Zdražuje to i výrobu PlayStationu 6",
-      "url": "https://www.idnes.cz/hry/novinky/cena-pameti-vyhled-playstation-6-vyrobni-cena.A260629_094658_bw-novinky_oz",
-      "dt": "2026-06-29T09:38:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "ceny",
-        "nadále",
-        "pamětí",
-        "playstationu",
-        "porostou",
-        "raketově",
-        "výrobu",
-        "zdražuje"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -769,7 +772,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 44015,
+      "bytes": 43882,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -806,7 +809,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-09T09:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-09T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -821,6 +824,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tyto dvě pěkné hry vás vyjdou na nula korun. U jedné se skvěle relaxuje",
+            "publishedAt": "2026-07-09T22:00:00Z"
+          },
           {
             "title": "Těžký přešlap Microsoftu: propustil skoro celé studio id Software",
             "publishedAt": "2026-07-09T09:30:00Z"
@@ -847,10 +854,6 @@
           },
           {
             "title": "Tyto hry na PlayStation 5 se letos prodávají nejlépe",
-            "publishedAt": "2026-07-07T22:00:00Z"
-          },
-          {
-            "title": "Kteří hrdinové vás při počítačových hrách vytáčeli k smrti? Nám pila krev tato pětice",
             "publishedAt": "2026-07-07T22:00:00Z"
           }
         ]

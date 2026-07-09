@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-07-09T20:49:14.053442Z",
+  "ingestedAt": "2026-07-09T22:47:10.586643Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Volkswagen ohlásil omezení výroby, k propouštění se nevyjádřil",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/volkswagen-ohlasil-omezeni-vyroby-k-propousteni-se-nevyjadril-375420",
+      "dt": "2026-07-09T20:54:24Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "nevyjádřil",
+        "ohlásil",
+        "omezení",
+        "propouštění",
+        "volkswagen",
+        "výroby"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -720,33 +743,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kabinet vyhodnocoval 978 úkolů, ministři jich dokončili 195, prohlásil Babiš",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/babisova-vlada-vyhodnocuje-plneni-programoveho-prohlaseni-za-prvni-pololeti-375387",
-      "dt": "2026-07-09T06:07:18Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "195",
-        "978",
-        "babiš",
-        "dokončili",
-        "jich",
-        "kabinet",
-        "ministři",
-        "prohlásil",
-        "vyhodnocoval",
-        "úkolů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -757,7 +753,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41982,
+      "bytes": 42027,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -794,12 +790,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-09T20:04:23Z",
+        "raw_feed_latest_publishedAt": "2026-07-09T20:54:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "other": 7,
-          "finance": 1
+          "finance": 2,
+          "zpravy": 21,
+          "other": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -811,6 +807,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Volkswagen ohlásil omezení výroby, k propouštění se nevyjádřil",
+            "publishedAt": "2026-07-09T20:54:24Z"
+          },
           {
             "title": "Ruské útoky v červnu na Ukrajině zabily nejméně 265 civilistů, řekla představitelka OSN",
             "publishedAt": "2026-07-09T20:04:23Z"
@@ -838,10 +838,6 @@
           {
             "title": "SOUHRN: Zásadní události čtvrtka 9. července",
             "publishedAt": "2026-07-09T16:29:00Z"
-          },
-          {
-            "title": "Počet vojáků USA v Polsku se má vrátit na deset tisíc, uvedl náměstek ministra obrany",
-            "publishedAt": "2026-07-09T16:02:34Z"
           }
         ]
       }
