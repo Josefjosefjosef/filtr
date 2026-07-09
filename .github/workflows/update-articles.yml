@@ -45,11 +45,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          if [ "${{ github.event.sender.login }}" = "github-actions[bot]" ]; then
-            echo "proceed=false" >> "$GITHUB_OUTPUT"
-            echo "[pipeline-gate] TEMP PAUSED 2026-07-07: bot auto-dispatch blocked (manual workflow_dispatch OK)"
-            exit 0
-          fi
           REPO="${{ github.repository }}"
           RUN_ID="${{ github.run_id }}"
           OTHER=$(gh run list --workflow update-articles.yml --repo "$REPO" --status in_progress --json databaseId --jq ".[] | select(.databaseId != ${RUN_ID}) | .databaseId" 2>/dev/null | head -n1 || true)

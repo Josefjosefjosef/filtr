@@ -9,15 +9,14 @@ name: Pages publish from main data
 
 on:
   workflow_dispatch: {}
-  # TEMP PAUSED 2026-07-07: schedule + workflow_run chain disabled during PR batch — uncomment to re-enable
-  # schedule:
-  #   - cron: "*/5 * * * *"
-  # workflow_run:
-  #   workflows:
-  #     - Pages deploy after data PR merge
-  #     - After-merge articles freshness (prod)
-  #   types:
-  #     - completed
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_run:
+    workflows:
+      - Pages deploy after data PR merge
+      - After-merge articles freshness (prod)
+    types:
+      - completed
 
 permissions:
   actions: write
