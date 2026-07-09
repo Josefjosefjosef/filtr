@@ -65,6 +65,22 @@ function staticGate() {
       id: "app_cache_bust",
       pass: /app\.js\?v=[^"]*silver-pc-top-input-action-menu-v1-20260708/.test(index),
     },
+    {
+      id: "menu_overflow_unclip",
+      pass: index.includes("silver-pc-action-menu-overflow-v1-20260709"),
+    },
+    {
+      id: "menu_stack_pointer",
+      pass: index.includes("silver-pc-action-menu-fixed-topbar-v1-20260709"),
+    },
+    {
+      id: "js_menu_fixed_topbar",
+      pass: /function iuSilverHomeDesktopActionMenuPositionTopbar\(/.test(app),
+    },
+    {
+      id: "app_cache_bust_fixed",
+      pass: /app\.js\?v=[^"]*silver-pc-action-menu-fixed-topbar-v1-20260709/.test(index),
+    },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
   return { pass: fails.length === 0, fails, checks };
@@ -225,6 +241,29 @@ async function readMenuState(page) {
         )
       : [];
     const host = document.getElementById("iuTopbarSilverComposerHost");
+    const shell = document.querySelector("#iuTopbarSilverComposerHost .iuSilverHomeComposerShell");
+    const shellRect = shell ? shell.getBoundingClientRect() : null;
+    const menuRect = menu ? menu.getBoundingClientRect() : null;
+    let menuHitTest = { ok: false, reason: "no_menu" };
+    if (menu && !menu.hidden) {
+      const probeItem = menu.querySelector('[data-iu-silver-desktop-action="google"]') || menu.querySelector("[data-iu-silver-desktop-action]");
+      if (probeItem) {
+        const r = probeItem.getBoundingClientRect();
+        if (r.width >= 8 && r.height >= 8) {
+          const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+          const ok = !!(hit && (probeItem === hit || probeItem.contains(hit) || menu.contains(hit)));
+          menuHitTest = {
+            ok,
+            reason: ok ? "hit" : "clipped_or_covered",
+            hitTag: hit ? String(hit.tagName || "") : "",
+          };
+        } else {
+          menuHitTest = { ok: false, reason: "zero_rect" };
+        }
+      } else {
+        menuHitTest = { ok: false, reason: "no_item" };
+      }
+    }
     return {
       placeholder: input ? input.getAttribute("placeholder") || "" : "",
       placeholderDesktop: input ? input.getAttribute("data-iu-silver-home-placeholder-desktop") || "" : "",
@@ -235,6 +274,8 @@ async function readMenuState(page) {
       desktopTopbar: document.body.classList.contains("iu-desktop-silver-composer-topbar"),
       inputInTopbar: !!(host && input && host.contains(input)),
       narrow: window.matchMedia("(max-width: 1024px)").matches,
+      menuBelowShell: !!(shellRect && menuRect && menuRect.top >= shellRect.bottom - 2),
+      menuHitTest,
     };
   });
 }
@@ -277,7 +318,7 @@ async function runPcProof(browser) {
   await page.keyboard.press("Enter");
   await page.waitForTimeout(400);
   let state = await readMenuState(page);
-  const enterMenuOpen = state.menuHidden === false;
+  const enterMenuOpen = state.menuHidden === false && !!state.menuHitTest?.ok;
   const silverNotImmediate = !state.overlayOpen;
 
   await page.keyboard.press("Escape");
@@ -288,7 +329,7 @@ async function runPcProof(browser) {
   await page.click("#iuSilverHomeSend");
   await page.waitForTimeout(400);
   state = await readMenuState(page);
-  const arrowMenuOpen = !state.menuHidden;
+  const arrowMenuOpen = !state.menuHidden && !!state.menuHitTest?.ok;
   const orderOk = JSON.stringify(state.itemActions) === JSON.stringify(ACTION_ORDER);
   const placeholderOk = state.placeholderDesktop === PLACEHOLDER || state.placeholder === PLACEHOLDER;
 
@@ -345,6 +386,7 @@ async function runPcProof(browser) {
     orderOk,
     openResult,
     preSubmit,
+    menuHitTest: state.menuHitTest,
     placeholder: placeholderOk ? PLACEHOLDER : state.placeholder,
   };
 }

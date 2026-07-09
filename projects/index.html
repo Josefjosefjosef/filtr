@@ -1073,6 +1073,16 @@ font-src 'self' data:;
           background: #fff;
           box-shadow: 0 10px 28px rgba(15, 23, 42, 0.14);
         }
+        /* silver-pc-action-menu-overflow-v1-20260709: dropdown must escape topbar composer clip */
+        body.iu-desktop-silver-composer-topbar #iuTopbarSilverComposerHost .iuSilverHomeInputRow.iuSilverHomeComposerShell,
+        body.iu-desktop-silver-composer-topbar #iuTopbarSilverComposerHost .iuSilverHomeInputSendRow,
+        body.iu-desktop-silver-composer-topbar #iuTopbarSilverComposerHost .iuSilverHomeInputFieldWrap{
+          overflow: visible !important;
+        }
+        /* silver-pc-action-menu-fixed-topbar-v1-20260709: JS sets position:fixed; keep menu above silver cards */
+        body.iu-desktop-silver-composer-topbar #iuSilverHomeDesktopActionMenu:not([hidden]){
+          z-index: 10060 !important;
+        }
         body.iu-desktop-silver-composer-topbar .iuSilverHomeDesktopActionMenuItem,
         body.iu-desktop-silver-composer-topbar button.iuSilverHomeDesktopActionMenuItem{
           display: flex;
@@ -5663,7 +5673,7 @@ font-src 'self' data:;
     <script defer src="/assets/iu-affiliate-catalog.js?v=affiliate-disclosure-title-remove-v56-20260629"></script>
     <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-v1"></script>
     <script defer src="/assets/iu-tool-privacy-info.js?v=unified-overlay-header-v73-20260701"></script>
-    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v1-20260709"></script>
+    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v1-20260709-silver-pc-action-menu-fixed-topbar-v1-20260709"></script>
     <script defer src="/assets/iu-desktop-section-close-v1.js?v=desktop-left-rail-section-close-v1-20260707"></script>
     <script type="module" src="/assets/iu-desktop-info-panel.js?v=info-panel-freshness-period-v1-20260709"></script>
     <script>

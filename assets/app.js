@@ -77626,6 +77626,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     try {
       menu.setAttribute("aria-hidden", "true");
     } catch (_) {}
+    try {
+      menu.style.position = "";
+      menu.style.top = "";
+      menu.style.left = "";
+      menu.style.right = "";
+      menu.style.width = "";
+      menu.style.zIndex = "";
+    } catch (_) {}
   }
 
   function iuSilverHomeDesktopActionExternalUrl(kind, query) {
@@ -77713,6 +77721,21 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     } catch (_) {}
   }
 
+  function iuSilverHomeDesktopActionMenuPositionTopbar(menu) {
+    if (!menu) return;
+    try {
+      var wrap = document.querySelector("#iuTopbarSilverComposerHost .iuSilverHomeInputFieldWrap");
+      if (!wrap) return;
+      var rect = wrap.getBoundingClientRect();
+      menu.style.position = "fixed";
+      menu.style.top = String(Math.round(rect.bottom + 4)) + "px";
+      menu.style.left = String(Math.round(rect.left)) + "px";
+      menu.style.width = String(Math.round(rect.width)) + "px";
+      menu.style.right = "auto";
+      menu.style.zIndex = "10060";
+    } catch (_) {}
+  }
+
   function iuSilverHomeDesktopActionMenuShow(query) {
     var q = String(query || "").trim().slice(0, SILVER_HOME_INPUT_MAX);
     if (!q) {
@@ -77731,6 +77754,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     try {
       menu.setAttribute("aria-hidden", "false");
     } catch (_) {}
+    iuSilverHomeDesktopActionMenuPositionTopbar(menu);
   }
 
   try {
