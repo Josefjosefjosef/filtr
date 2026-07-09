@@ -26,6 +26,36 @@ const SNAPSHOT_URL = "/projects/data/info_panel_snapshot.json";
 const LIVE_OK = new Set(["verified_free_ok", "verified_requires_attribution"]);
 const DEFAULT_MAX_AGE_MS = 48 * HOUR_MS;
 
+const CZ_MONTHS = {
+  leden: 1,
+  unor: 2,
+  únor: 2,
+  brezen: 3,
+  březen: 3,
+  duben: 4,
+  kveten: 5,
+  květen: 5,
+  cerven: 6,
+  červen: 6,
+  cervenec: 7,
+  červenec: 7,
+  srpen: 8,
+  zari: 9,
+  září: 9,
+  rijen: 10,
+  říjen: 10,
+  listopad: 11,
+  prosinec: 12,
+};
+
+function normalizeText(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
 function formatNumber(n) {
   if (typeof n !== "number" || !Number.isFinite(n)) return "";
   if (n >= 1000) {
@@ -34,29 +64,90 @@ function formatNumber(n) {
   return n.toLocaleString("cs-CZ", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+function formatIsoTimestampLabel(raw) {
+  try {
+    const d = new Date(raw);
+    if (!Number.isNaN(d.getTime())) {
+      return d.toLocaleString("cs-CZ", { dateStyle: "short", timeStyle: "short" });
+    }
+  } catch (_) {}
+  return "";
+}
+
 function formatUpdatedAtLabel(raw, generatedAt) {
   const s = String(raw || "").trim();
-  if (s) return s;
+  if (s) {
+    if (/^\d{4}-\d{2}-\d{2}T/.test(s)) {
+      const formatted = formatIsoTimestampLabel(s);
+      if (formatted) return formatted;
+    }
+    return s;
+  }
   if (generatedAt) {
-    try {
-      const d = new Date(generatedAt);
-      if (!Number.isNaN(d.getTime())) {
-        return d.toLocaleString("cs-CZ", { dateStyle: "short", timeStyle: "short" });
-      }
-    } catch (_) {}
+    const formatted = formatIsoTimestampLabel(generatedAt);
+    if (formatted) return formatted;
   }
   return "";
 }
 
-function resolveSnapshotFreshnessAnchor(catalogItem, row, snapshotMeta) {
+/** Publication period label → sortable key (higher = newer). Not a wall-clock timestamp. */
+export function infoPanelPeriodSortKey(period) {
+  const s = String(period || "").trim();
+  const czWeek = s.match(/(\d{1,2})\.\s*t[yý]den\s*(\d{4})/i);
+  if (czWeek) return parseInt(czWeek[2], 10) * 100 + parseInt(czWeek[1], 10);
+  const czMonth = s.match(/^([a-záčďéěíňóřšťúůýž]+)\s+(\d{4})$/i);
+  if (czMonth) {
+    const m = CZ_MONTHS[normalizeText(czMonth[1])] || CZ_MONTHS[czMonth[1].toLowerCase()] || 0;
+    if (m) return parseInt(czMonth[2], 10) * 100 + m;
+  }
+  const schoolYear = s.match(/^(\d{4})\/(\d{4})$/);
+  if (schoolYear) return parseInt(schoolYear[1], 10) * 100 + 99;
+  const czQuarter = s.match(/(\d)\.\s*ctvrtlet[ií]\s*(\d{4})/i);
+  if (czQuarter) return parseInt(czQuarter[2], 10) * 100 + parseInt(czQuarter[1], 10);
+  const w = s.match(/(\d{4})[-\s]?W(\d{1,2})/i);
+  if (w) return parseInt(w[1], 10) * 100 + parseInt(w[2], 10);
+  const m = s.match(/(\d{4})[-\s]?M(\d{1,2})/i);
+  if (m) return parseInt(m[1], 10) * 100 + parseInt(m[2], 10);
+  const date = s.match(/(\d{2})\.(\d{2})\.(\d{4})/);
+  if (date) return parseInt(date[3], 10) * 10000 + parseInt(date[2], 10) * 100 + parseInt(date[1], 10);
+  const y = s.match(/^(\d{4})$/);
+  if (y) return parseInt(y[1], 10) * 100;
+  return 0;
+}
+
+function parseCzechDailyDate(period) {
+  const m = String(period || "").trim().match(/(\d{2})\.(\d{2})\.(\d{4})/);
+  if (!m) return null;
+  const day = parseInt(m[1], 10);
+  const month = parseInt(m[2], 10);
+  const year = parseInt(m[3], 10);
+  if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+  const d = new Date(year, month - 1, day, 12, 0, 0, 0);
+  if (d.getFullYear() !== year || d.getMonth() !== month - 1 || d.getDate() !== day) return null;
+  return d;
+}
+
+function countBusinessDaysBetween(startDate, endDate) {
+  if (!startDate || !endDate) return Number.POSITIVE_INFINITY;
+  const start = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+  const end = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+  if (end <= start) return 0;
+  let count = 0;
+  const cursor = new Date(start);
+  cursor.setDate(cursor.getDate() + 1);
+  while (cursor <= end) {
+    const day = cursor.getDay();
+    if (day !== 0 && day !== 6) count += 1;
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return count;
+}
+
+function resolveSnapshotFetchAnchor(catalogItem, snapshotMeta) {
   const bucket = catalogItem && catalogItem.fetchBucket;
   if (snapshotMeta && snapshotMeta.bucketFetchedAt && bucket && snapshotMeta.bucketFetchedAt[bucket]) {
     const bucketAt = Date.parse(snapshotMeta.bucketFetchedAt[bucket]);
     if (Number.isFinite(bucketAt)) return bucketAt;
-  }
-  if (row && row.updatedAt) {
-    const rowAt = Date.parse(row.updatedAt);
-    if (Number.isFinite(rowAt)) return rowAt;
   }
   if (snapshotMeta && snapshotMeta.generatedAt) {
     const genAt = Date.parse(snapshotMeta.generatedAt);
@@ -65,11 +156,60 @@ function resolveSnapshotFreshnessAnchor(catalogItem, row, snapshotMeta) {
   return NaN;
 }
 
-function isSnapshotRowStale(catalogItem, row, snapshotMeta) {
-  const maxAge = catalogItem.maxAgeMs > 0 ? catalogItem.maxAgeMs : DEFAULT_MAX_AGE_MS;
-  const anchorAt = resolveSnapshotFreshnessAnchor(catalogItem, row, snapshotMeta);
+function maxBusinessDaysForDaily(maxAgeMs) {
+  const days = Math.max(2, Math.round((maxAgeMs > 0 ? maxAgeMs : 2 * DAY_MS) / DAY_MS));
+  return Math.max(5, days + 3);
+}
+
+function isDailyDataPeriodStale(catalogItem, row) {
+  const dataDate = parseCzechDailyDate(row && row.updatedAt);
+  if (!dataDate) {
+    return false;
+  }
+  const maxBusinessDays = maxBusinessDaysForDaily(catalogItem.maxAgeMs);
+  return countBusinessDaysBetween(dataDate, new Date()) > maxBusinessDays;
+}
+
+function isFetchAnchorStale(maxAgeMs, anchorAt) {
   if (!Number.isFinite(anchorAt)) return true;
+  const maxAge = maxAgeMs > 0 ? maxAgeMs : DEFAULT_MAX_AGE_MS;
   return Date.now() - anchorAt > maxAge;
+}
+
+function isSnapshotRowStale(catalogItem, row, snapshotMeta) {
+  if (!row) return true;
+
+  const freq = String(catalogItem.publishFrequency || "monthly").toLowerCase();
+  const maxAge = catalogItem.maxAgeMs > 0 ? catalogItem.maxAgeMs : DEFAULT_MAX_AGE_MS;
+  const fetchAnchor = resolveSnapshotFetchAnchor(catalogItem, snapshotMeta);
+
+  if (freq === "hourly") {
+    if (!isFetchAnchorStale(maxAge, fetchAnchor)) return false;
+    if (typeof row.value === "number") return false;
+    return true;
+  }
+
+  if (freq === "daily") {
+    if (!isFetchAnchorStale(maxAge, fetchAnchor)) return false;
+    if (parseCzechDailyDate(row && row.updatedAt) && !isDailyDataPeriodStale(catalogItem, row)) {
+      return false;
+    }
+    return true;
+  }
+
+  if (
+    freq === "weekly" ||
+    freq === "monthly" ||
+    freq === "quarterly" ||
+    freq === "annual" ||
+    freq === "event"
+  ) {
+    if (typeof row.value === "number") return false;
+    if (!Number.isFinite(fetchAnchor)) return true;
+    return isFetchAnchorStale(maxAge, fetchAnchor);
+  }
+
+  return isFetchAnchorStale(maxAge, fetchAnchor);
 }
 
 function snapshotErrorAffectsItem(catalogItem, errorId) {
