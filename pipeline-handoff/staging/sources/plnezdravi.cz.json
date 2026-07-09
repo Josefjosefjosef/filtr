@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-07-09T05:26:15.810632Z",
+  "ingestedAt": "2026-07-09T07:23:28.858998Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Praktičtí lékaři mohou předepisovat více léků",
+      "url": "https://www.plnezdravi.cz/prakticti-lekari-mohou-predepisovat-vice-leku/",
+      "dt": "2026-07-09T07:00:05Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "lékaři",
+        "léků",
+        "praktičtí",
+        "předepisovat"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -448,33 +469,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Techniky liposukce břicha a cena: VASER, laser, water-jet nebo klasika?",
-      "url": "https://www.plnezdravi.cz/techniky-liposukce-bricha-a-cena-vaser-laser-water-jet-nebo-klasika/",
-      "dt": "2026-06-24T14:51:50Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "břicha",
-        "cena",
-        "jet",
-        "klasika",
-        "laser",
-        "liposukce",
-        "nebo",
-        "techniky",
-        "vaser",
-        "water"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -485,7 +479,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 134038,
+      "bytes": 131318,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -522,7 +516,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-07-08T07:00:55Z",
+        "raw_feed_latest_publishedAt": "2026-07-09T07:00:05Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -537,6 +531,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Praktičtí lékaři mohou předepisovat více léků",
+            "publishedAt": "2026-07-09T07:00:05Z"
+          },
           {
             "title": "Ultrazvukové náplasti měří krevní tlak bez manžety",
             "publishedAt": "2026-07-08T07:00:55Z"
@@ -564,10 +562,6 @@
           {
             "title": "Chytré domácnosti hlídají pacienty s demencí",
             "publishedAt": "2026-07-03T07:00:39Z"
-          },
-          {
-            "title": "Virtuální realita efektivně tlumí bolesti",
-            "publishedAt": "2026-07-02T07:00:17Z"
           }
         ]
       }

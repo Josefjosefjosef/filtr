@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-07-09T05:26:15.810632Z",
+  "ingestedAt": "2026-07-09T07:23:28.858998Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Co se to děje ve vlacích přes Česko? Lidé spí v uličkách, ČD varují před 4 spoji",
+      "url": "https://www.denik.cz/doprava/doprava-cesko-preplnene-vlaky-fotky-spanele-spici-v-ulickach-vozu-ceske-drahy-varuji-ctyri-spoje/",
+      "dt": "2026-07-09T06:16:44Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "děje",
+        "lidé",
+        "spoji",
+        "spí",
+        "uličkách",
+        "varují",
+        "vlacích",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "KVÍZ: Běž, Forreste, běž! Tom Hanks slaví 70 let. Poznáte jeho filmy?",
+      "url": "https://www.denik.cz/kultura/kviz-tom-hanks/",
+      "dt": "2026-07-09T06:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "běž",
+        "filmy",
+        "forreste",
+        "hanks",
+        "jeho",
+        "kvíz",
+        "let",
+        "poznáte",
+        "slaví",
+        "tom"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -975,59 +1027,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pákistánský nákladní letoun se ztratil u Karáčí. Úřady po něm pátrají",
-      "url": "https://www.denik.cz/svet/pakistansky-nakladni-letoun-se-ztratil-u-karaci-urady-po-nem-patraji/",
-      "dt": "2026-07-08T10:48:47Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "karáčí",
-        "letoun",
-        "nákladní",
-        "něm",
-        "pákistánský",
-        "pátrají",
-        "ztratil",
-        "úřady"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Evropu zaplaví další vlna veder. Některým zemím přitom chybí krizový plán",
-      "url": "https://www.denik.cz/pocasi/pocasi-vlna-veder-se-vrati-evropa-cesko-tepelna-kupole/",
-      "dt": "2026-07-08T10:17:53Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chybí",
-        "další",
-        "evropu",
-        "krizový",
-        "některým",
-        "plán",
-        "přitom",
-        "veder",
-        "vlna",
-        "zaplaví",
-        "zemím"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1038,7 +1037,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.denik.cz/rss/vse.xml",
-      "bytes": 70341,
+      "bytes": 70076,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1075,12 +1074,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-09T05:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-09T06:16:44Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 29,
+          "zpravy": 28,
+          "other": 4,
           "zdravi": 3,
-          "other": 3,
           "sport": 3,
           "cestovani": 2
         },
@@ -1094,6 +1093,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Co se to děje ve vlacích přes Česko? Lidé spí v uličkách, ČD varují před 4 spoji",
+            "publishedAt": "2026-07-09T06:16:44Z"
+          },
+          {
+            "title": "KVÍZ: Běž, Forreste, běž! Tom Hanks slaví 70 let. Poznáte jeho filmy?",
+            "publishedAt": "2026-07-09T06:00:00Z"
+          },
           {
             "title": "Nová pravidla pro ukrajinská auta: Nedodržení zákona se bude trestat pokutou",
             "publishedAt": "2026-07-09T05:04:00Z"
@@ -1117,14 +1124,6 @@
           {
             "title": "Ženy po padesátce trápí otoky. Jednoduché způsoby, jak se jich zbavit",
             "publishedAt": "2026-07-09T04:00:00Z"
-          },
-          {
-            "title": "Vypadá jako norský fjord, leží ale v Chorvatsku. Limský záliv láká i na ústřice",
-            "publishedAt": "2026-07-09T03:30:00Z"
-          },
-          {
-            "title": "Mužům ubývá testosteron. Za 50 let klesla hladina téměř o polovinu, uvádí studie",
-            "publishedAt": "2026-07-09T03:20:00Z"
           }
         ]
       }
