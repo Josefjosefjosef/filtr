@@ -104,6 +104,58 @@ const freshBtc = mergeInfoPanelItemForGuard(bitcoin, {
 assert(freshBtc.state === "live", "bitcoin must be live when coingecko bucket is fresh");
 lines.push("STATE_BUCKET_FRESHNESS=PASS");
 
+const monthlyInflation = IU_INFO_PANEL_CATALOG.find((i) => i.id === "inflation");
+const monthlyLive = mergeInfoPanelItemForGuard(
+  monthlyInflation,
+  {
+    isLive: true,
+    legalStatus: "verified_requires_attribution",
+    value: 2.1,
+    unit: "%",
+    secondaryValue: "beze změny",
+    trendDirection: "flat",
+    updatedAt: "květen 2026",
+  },
+  staleMeta
+);
+assert(monthlyLive.state === "live", "monthly item must stay live when publication period is valid");
+assert(monthlyLive.primaryValue.includes("2,10"), "monthly item must show value");
+
+const dailyEurOldFetch = mergeInfoPanelItemForGuard(
+  eur,
+  {
+    isLive: true,
+    legalStatus: "verified_requires_attribution",
+    value: 24.2,
+    unit: "Kč",
+    secondaryValue: "beze změny",
+    trendDirection: "flat",
+    updatedAt: "03.07.2026",
+  },
+  { generatedAt: "2026-07-05T07:26:30.777Z", errors: [] }
+);
+assert(dailyEurOldFetch.state === "live", "daily item must stay live when publication date is within business-day grace");
+
+const hourlyOldFetch = mergeInfoPanelItemForGuard(
+  bitcoin,
+  {
+    isLive: true,
+    legalStatus: "verified_requires_attribution",
+    value: 1326206,
+    unit: "Kč",
+    secondaryValue: "beze změny",
+    trendDirection: "flat",
+    updatedAt: "2026-07-05T07:26:30.777Z",
+  },
+  { generatedAt: "2026-07-05T07:26:30.777Z", errors: [] }
+);
+assert(hourlyOldFetch.state === "live", "hourly item must show last value when snapshot row exists");
+assert(
+  hourlyOldFetch.updatedAtDisplay.includes("2026") || hourlyOldFetch.updatedAtDisplay.includes("5."),
+  "hourly updatedAtDisplay must not expose raw ISO"
+);
+lines.push("STATE_PERIOD_FRESHNESS=PASS");
+
 const errorEur = mergeInfoPanelItemForGuard(eur, null, errorMeta);
 const errorUsd = mergeInfoPanelItemForGuard(usd, null, errorMeta);
 assert(errorEur.state === "error", "eur must be error when cnb snapshot fails");

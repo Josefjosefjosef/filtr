@@ -49,7 +49,7 @@ function staticGate() {
     },
     {
       id: "bucket_freshness_anchor",
-      pass: panelData.includes("bucketFetchedAt") && panelData.includes("resolveSnapshotFreshnessAnchor"),
+      pass: panelData.includes("bucketFetchedAt") && panelData.includes("resolveSnapshotFetchAnchor"),
     },
     {
       id: "snapshot_exports_bucket_fetched_at",
@@ -69,7 +69,7 @@ function staticGate() {
     },
     {
       id: "cache_bust",
-      pass: indexHtml.includes("info-panel-polish-v1-20260705"),
+      pass: indexHtml.includes("info-panel-freshness-period-v1-20260709"),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
@@ -120,7 +120,7 @@ function unitGate() {
     },
     staleCoinMeta
   );
-  if (staleGold.state !== "stale") fails.push("gold_bucket_stale");
+  if (staleGold.state !== "live") fails.push("gold_bucket_shows_last_value");
 
   const freshEur = mergeInfoPanelItemForGuard(
     eur,

@@ -377,7 +377,7 @@ async function testMockedStates(context) {
       eur &&
       eur.getAttribute("data-iu-info-panel-state") === "stale" &&
       fuel &&
-      fuel.getAttribute("data-iu-info-panel-state") === "stale"
+      fuel.getAttribute("data-iu-info-panel-state") === "live"
     );
   });
 
