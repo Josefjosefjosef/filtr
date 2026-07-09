@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-07-09T09:20:58.712307Z",
+  "ingestedAt": "2026-07-09T11:08:47.232834Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Těžký přešlap Microsoftu: propustil skoro celé studio id Software",
+      "url": "https://www.idnes.cz/hry/novinky/id-software-xbox-reset-propousteni.A260709_100448_bw-novinky_oz",
+      "dt": "2026-07-09T09:30:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "celé",
+        "microsoftu",
+        "propustil",
+        "přešlap",
+        "skoro",
+        "software",
+        "studio",
+        "těžký"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -734,27 +759,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Nejtemnější Fallout má na svědomí fanoušek",
-      "url": "https://www.idnes.cz/hry/magazin/fallout-forgotten-valley-modifikace-new-vegas.A260626_132326_bw-magazin_oz/foto",
-      "dt": "2026-06-28T22:00:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "fallout",
-        "fanoušek",
-        "nejtemnější",
-        "svědomí"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -765,7 +769,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 44075,
+      "bytes": 44015,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -802,7 +806,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-09T01:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-09T09:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -817,6 +821,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Těžký přešlap Microsoftu: propustil skoro celé studio id Software",
+            "publishedAt": "2026-07-09T09:30:00Z"
+          },
           {
             "title": "Ani legendární Mario nestačil. Mobilní Mario Kart po sedmi letech skončí",
             "publishedAt": "2026-07-09T01:00:00Z"
@@ -844,10 +852,6 @@
           {
             "title": "Kteří hrdinové vás při počítačových hrách vytáčeli k smrti? Nám pila krev tato pětice",
             "publishedAt": "2026-07-07T22:00:00Z"
-          },
-          {
-            "title": "Assassin’s Creed Black Flag Resynced",
-            "publishedAt": "2026-07-08T08:45:31Z"
           }
         ]
       }
