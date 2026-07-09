@@ -177,6 +177,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-ds-mobile-scroll-bottom-clearance-guard
 
+      - name: Datovka mobile delete confirm anchor guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-ds-mobile-delete-confirm-anchor-guard
+
       - name: Moje sluzby mobile keyboard add btn guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-moje-sluzby-mobile-keyboard-add-btn-guard

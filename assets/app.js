@@ -32563,9 +32563,54 @@ function buildVideoAsArticleCard(it) {
     return true;
   }
 
+  function iuDsDeleteConfirmModalParent() {
+    const panel = document.getElementById("iuDsPanel");
+    return panel ? panel.querySelector(".iu-ds-modal") : null;
+  }
+
+  function iuDsIsMobileTabletViewport() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(max-width: 1024px)").matches);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuDsRestoreDeleteConfirmToModal() {
+    const el = iuDsDeleteConfirmEl();
+    const modal = iuDsDeleteConfirmModalParent();
+    if (!el || !modal) return;
+    const hosts = document.querySelectorAll(".iu-ds-profile--deleteConfirmHost");
+    for (let i = 0; i < hosts.length; i++) {
+      hosts[i].classList.remove("iu-ds-profile--deleteConfirmHost");
+    }
+    if (el.parentElement !== modal) modal.appendChild(el);
+  }
+
+  function iuDsAttachDeleteConfirmToProfile(profileId) {
+    const el = iuDsDeleteConfirmEl();
+    if (!el || !profileId) return;
+    if (!iuDsIsMobileTabletViewport()) {
+      iuDsRestoreDeleteConfirmToModal();
+      return;
+    }
+    const card = document.querySelector('.iu-ds-profile[data-profile-id="' + String(profileId) + '"]');
+    if (!card) {
+      iuDsRestoreDeleteConfirmToModal();
+      return;
+    }
+    const hosts = document.querySelectorAll(".iu-ds-profile--deleteConfirmHost");
+    for (let i = 0; i < hosts.length; i++) {
+      hosts[i].classList.remove("iu-ds-profile--deleteConfirmHost");
+    }
+    card.classList.add("iu-ds-profile--deleteConfirmHost");
+    if (el.parentElement !== card) card.appendChild(el);
+  }
+
   function iuDsCloseDeleteConfirm() {
     const el = iuDsDeleteConfirmEl();
     if (el) el.setAttribute("hidden", "");
+    iuDsRestoreDeleteConfirmToModal();
     iuDsPendingDeleteId = null;
     iuDsDeleteActionBusy = false;
   }
@@ -32574,13 +32619,20 @@ function buildVideoAsArticleCard(it) {
     const el = iuDsDeleteConfirmEl();
     if (!el || !profileId) return;
     iuDsPendingDeleteId = String(profileId);
+    iuDsAttachDeleteConfirmToProfile(iuDsPendingDeleteId);
     el.removeAttribute("hidden");
     try {
       const cancel = document.getElementById("iuDsDeleteConfirmCancel");
       const ok = document.getElementById("iuDsDeleteConfirmOk");
       if (cancel) cancel.disabled = false;
       if (ok) ok.disabled = false;
-      if (cancel && typeof cancel.focus === "function") cancel.focus();
+      if (cancel && typeof cancel.focus === "function") {
+        try {
+          cancel.focus({ preventScroll: true });
+        } catch (_) {
+          cancel.focus();
+        }
+      }
     } catch (_) {}
   }
 
@@ -32621,7 +32673,11 @@ function buildVideoAsArticleCard(it) {
       ".iu-ds-deleteConfirm__ok{border:0;background:#b91c1c;color:#fff}" +
       ".iu-ds-deleteConfirm__ok:hover:not(:disabled){filter:brightness(1.08)}" +
       ".iu-ds-deleteConfirm__ok:active:not(:disabled){transform:scale(.97);filter:brightness(.9)}" +
-      ".iu-ds-deleteConfirm__ok:disabled,.iu-ds-deleteConfirm__cancel:disabled{opacity:.55;cursor:not-allowed}";
+      ".iu-ds-deleteConfirm__ok:disabled,.iu-ds-deleteConfirm__cancel:disabled{opacity:.55;cursor:not-allowed}" +
+      "@media (max-width:1024px){" +
+      ".iu-ds-profile--deleteConfirmHost{position:relative;isolation:isolate}" +
+      ".iu-ds-profile--deleteConfirmHost>.iu-ds-deleteConfirm{position:absolute;inset:0;z-index:8;border-radius:14px;min-height:100%}" +
+      "}";
     try {
       document.head.appendChild(s);
     } catch (_) {}
