@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-07-09T11:08:47.232834Z",
+  "ingestedAt": "2026-07-09T13:24:18.127682Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Velkolepé finále se blíží. Třetí Duna obdržela novou ukázku",
+      "url": "https://zing.cz/article/velkolepe-finale-se-blizi-treti-duna-obdrzela-novou-ukazku",
+      "dt": "2026-07-09T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "blíží",
+        "duna",
+        "finále",
+        "novou",
+        "obdržela",
+        "třetí",
+        "ukázku",
+        "velkolepé"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -972,29 +997,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "GOG nabízí zdarma hru zasazenou do vesmíru",
-      "url": "https://zing.cz/article/gog-nabizi-zdarma-hru-zasazenou-do-vesmiru",
-      "dt": "2026-07-03T16:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "gog",
-        "hru",
-        "nabízí",
-        "vesmíru",
-        "zasazenou",
-        "zdarma"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1005,7 +1007,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126402,
+      "bytes": 126404,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1042,7 +1044,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-09T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-09T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1057,6 +1059,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Velkolepé finále se blíží. Třetí Duna obdržela novou ukázku",
+            "publishedAt": "2026-07-09T10:00:00Z"
+          },
           {
             "title": "Simulátor života s příměsí Cyberpunku 2077? Nivalis odhalil datum vydání",
             "publishedAt": "2026-07-09T08:00:00Z"
@@ -1084,10 +1090,6 @@
           {
             "title": "Víc než jen upírský Zaklínač. The Blood of Dawnwalker ukázal pořádný gameplay",
             "publishedAt": "2026-07-08T12:00:00Z"
-          },
-          {
-            "title": "Na Steamu nadále dominuje nejprodávanější hra letošního roku",
-            "publishedAt": "2026-07-08T10:00:00Z"
           }
         ]
       }
