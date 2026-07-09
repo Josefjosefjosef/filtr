@@ -2,9 +2,8 @@ name: CI - Data Freshness
 
 on:
   workflow_dispatch:
-  # TEMP PAUSED 2026-07-07: schedule disabled during PR batch — uncomment to re-enable
-  # schedule:
-  #   - cron: "*/15 * * * *"
+  schedule:
+    - cron: "*/15 * * * *"
   push:
     paths:
       - ".github/workflows/ci-data-freshness.yml"

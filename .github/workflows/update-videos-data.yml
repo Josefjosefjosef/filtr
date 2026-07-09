@@ -13,9 +13,8 @@ permissions:
 
 on:
   workflow_dispatch: {}
-  # TEMP PAUSED 2026-07-07: schedule disabled during PR batch — uncomment to re-enable
-  # schedule:
-  #   - cron: "30 */1 * * *"
+  schedule:
+    - cron: "30 */1 * * *"
 
 env:
   AUTOMATION_BRANCH: automation/update-videos-data

@@ -4,9 +4,8 @@ name: CI - Articles aggregator infra guard
 
 on:
   workflow_dispatch: {}
-  # TEMP PAUSED 2026-07-07: schedule disabled during PR batch — uncomment to re-enable
-  # schedule:
-  #   - cron: "15 */6 * * *"
+  schedule:
+    - cron: "15 */6 * * *"
   push:
     branches: [main]
     paths:

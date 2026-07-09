@@ -2,9 +2,8 @@
 name: Articles nightly full rebuild
 
 on:
-  # TEMP PAUSED 2026-07-07: schedule disabled during PR batch — uncomment to re-enable
-  # schedule:
-  #   - cron: "0 2 * * *"
+  schedule:
+    - cron: "0 2 * * *"
   workflow_dispatch: {}
 
 permissions:

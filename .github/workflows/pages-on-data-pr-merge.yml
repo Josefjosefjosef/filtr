@@ -8,11 +8,10 @@ name: Pages deploy after data PR merge
 
 on:
   workflow_dispatch: {}
-  # TEMP PAUSED 2026-07-07: auto Pages dispatch after data PR merge disabled during PR batch — uncomment to re-enable
-  # pull_request_target:
-  #   types: [closed]
-  #   branches:
-  #     - main
+  pull_request_target:
+    types: [closed]
+    branches:
+      - main
 
 permissions:
   actions: write
