@@ -708,12 +708,22 @@
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuMyInfoUzelOpenBtn {
     margin: 10px 0 0 0;
     width: calc(
-      100% + var(--iu-dhp-hero-col-gap, 6px) + var(--iu-dhp-weather-col-w, 340px) +
-        var(--iuSilverStackPadX, 12px)
+      50% +
+        (
+          (
+              var(--iu-dhp-weather-col-w, 340px) + var(--iu-dhp-hero-col-gap, 6px) +
+                (var(--iuSilverStackPadX, 12px) * 2) - var(--iu-dhp-homecard-gap, 10px)
+            ) / 2
+        ) - var(--iuSilverStackPadX, 12px)
     );
     max-width: calc(
-      100% + var(--iu-dhp-hero-col-gap, 6px) + var(--iu-dhp-weather-col-w, 340px) +
-        var(--iuSilverStackPadX, 12px)
+      50% +
+        (
+          (
+              var(--iu-dhp-weather-col-w, 340px) + var(--iu-dhp-hero-col-gap, 6px) +
+                (var(--iuSilverStackPadX, 12px) * 2) - var(--iu-dhp-homecard-gap, 10px)
+            ) / 2
+        ) - var(--iuSilverStackPadX, 12px)
     );
     min-width: 0;
     flex-shrink: 0;
