@@ -41,6 +41,10 @@ function staticGate() {
       pass: app.includes('IU_MM_EDIT_INPUT_PLACEHOLDER = "Nastavit e-mail"'),
     },
     {
+      id: "init_does_not_assign_email_placeholder",
+      pass: !/if \(cbName\) cbName\.placeholder = mmPh/.test(app),
+    },
+    {
       id: "bottom_back_closes_custom_buttons",
       pass: /function closeTopMostOpenOverlayForBottomBack\(\)[\s\S]*iuCustomButtonsPanel[\s\S]*iuCustomButtonsOverlayClose/.test(app),
     },
