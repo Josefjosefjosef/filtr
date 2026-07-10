@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-07-10T02:20:29.784148Z",
+  "ingestedAt": "2026-07-10T13:53:35.624889Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Studio Ubisoft Barcelona „oslavilo“ úspěšný start Assassin’s Creed propouštěním",
+      "url": "https://www.idnes.cz/hry/novinky/assassin-s-creed-black-flag-resynced-ubisoft-barcelona-propousteni.A260710_092955_bw-novinky_oz",
+      "dt": "2026-07-10T08:36:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "assassin",
+        "barcelona",
+        "creed",
+        "oslavilo",
+        "propouštěním",
+        "start",
+        "studio",
+        "ubisoft",
+        "úspěšný"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -244,7 +270,7 @@
       "contentType": "article",
       "title": "Assassin’s Creed Black Flag Resynced",
       "url": "https://www.idnes.cz/hry/assassin-s-creed-black-flag-resynced.G260707_231534_oma",
-      "dt": "2026-07-08T08:45:31Z",
+      "dt": "2026-07-10T08:26:55Z",
       "media_raw": "iDNES / Bonusweb",
       "media_norm": "iDNES",
       "tokens": [
@@ -736,32 +762,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Skvělé slevy, včetně Kingdom Come 2. Poradíme, co kupovat v herním výprodeji",
-      "url": "https://www.idnes.cz/hry/magazin/steam-summer-sale-2026-tipy-vyprodej-sleva.A260628_222207_bw-magazin_oma/foto",
-      "dt": "2026-06-29T22:00:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "come",
-        "herním",
-        "kingdom",
-        "kupovat",
-        "poradíme",
-        "skvělé",
-        "slevy",
-        "výprodeji",
-        "včetně"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -772,7 +772,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 43882,
+      "bytes": 43861,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -809,7 +809,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-09T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-10T08:36:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -824,6 +824,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Studio Ubisoft Barcelona „oslavilo“ úspěšný start Assassin’s Creed propouštěním",
+            "publishedAt": "2026-07-10T08:36:00Z"
+          },
           {
             "title": "Tyto dvě pěkné hry vás vyjdou na nula korun. U jedné se skvěle relaxuje",
             "publishedAt": "2026-07-09T22:00:00Z"
@@ -851,10 +855,6 @@
           {
             "title": "RECENZE: Vynucená jistota od Ubisoftu. Vylepšený Black Flag vás znovu pohltí",
             "publishedAt": "2026-07-08T10:00:00Z"
-          },
-          {
-            "title": "Tyto hry na PlayStation 5 se letos prodávají nejlépe",
-            "publishedAt": "2026-07-07T22:00:00Z"
           }
         ]
       }
