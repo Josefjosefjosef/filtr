@@ -24,11 +24,24 @@ const VIEWPORTS = [
   { name: "TABLET", width: 768, height: 1024 },
 ];
 
-const PROFILES = [
-  { id: "iu_ds_guard_a", label: "Profil A", username: "user-a", password: "pass-a", locked: true },
-  { id: "iu_ds_guard_b", label: "Profil B", username: "user-b", password: "pass-b", locked: true },
-  { id: "iu_ds_guard_c", label: "Profil C", username: "user-c", password: "pass-c", locked: true },
-];
+const PROFILE_COUNT = 10;
+
+function buildProfiles() {
+  const rows = [];
+  for (let i = 0; i < PROFILE_COUNT; i++) {
+    const suffix = String(i + 1).padStart(2, "0");
+    rows.push({
+      id: "iu_ds_guard_" + suffix,
+      label: "Profil " + suffix,
+      username: "user-" + suffix,
+      password: "pass-" + suffix,
+      locked: true,
+    });
+  }
+  return rows;
+}
+
+const PROFILES = buildProfiles();
 
 function staticGate() {
   const app = fs.readFileSync(APP, "utf8");
@@ -37,6 +50,14 @@ function staticGate() {
     {
       id: "attach_helper",
       pass: /function iuDsAttachDeleteConfirmToProfile\(profileId\)/.test(app),
+    },
+    {
+      id: "ensure_mount_helper",
+      pass: /function iuDsEnsureDeleteConfirmMounted\(\)/.test(app),
+    },
+    {
+      id: "close_before_render",
+      pass: /iuDsCloseDeleteConfirm\(\);\s*\n\s*iuDsRender\(\);/.test(app),
     },
     {
       id: "mobile_host_class",
@@ -48,7 +69,7 @@ function staticGate() {
     },
     {
       id: "cache_bust",
-      pass: /ds-mobile-delete-confirm-anchor-v1-20260709/.test(index),
+      pass: /ds-mobile-delete-confirm-anchor-v2-20260710/.test(index),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
@@ -106,12 +127,19 @@ async function seedProfiles(page) {
       createdAt: t,
       updatedAt: t,
     }));
-    localStorage.setItem(
-      "infouzel_datovka_profiles_v1",
-      JSON.stringify({ v: 1, profiles })
-    );
+    localStorage.setItem("infouzel_datovka_profiles_v1", JSON.stringify({ v: 1, profiles }));
     localStorage.setItem("iu_local_data_protection_accepted_v1", "1");
   }, PROFILES);
+}
+
+async function scrollCardIntoView(page, profileId) {
+  await page.evaluate((id) => {
+    const card = document.querySelector('.iu-ds-profile[data-profile-id="' + id + '"]');
+    if (card && typeof card.scrollIntoView === "function") {
+      card.scrollIntoView({ block: "center", behavior: "instant" });
+    }
+  }, profileId);
+  await page.waitForTimeout(250);
 }
 
 async function clickDeleteOnProfile(page, profileId) {
@@ -148,18 +176,33 @@ async function measureConfirmAnchor(page, profileId) {
       ok: parentIsCard && boxInsideCard,
       parentIsCard,
       boxInsideCard,
-      cardTop: Math.round(cardRect.top),
-      boxTop: Math.round(boxRect.top),
+      confirmExists: true,
     };
   }, profileId);
 }
 
-async function closeConfirm(page) {
+async function closeConfirmCancel(page) {
   await page.evaluate(() => {
     const cancel = document.getElementById("iuDsDeleteConfirmCancel");
     if (cancel) cancel.click();
   });
   await page.waitForTimeout(250);
+}
+
+async function confirmDelete(page) {
+  return page.evaluate(() => {
+    const before = document.querySelectorAll(".iu-ds-profile").length;
+    const ok = document.getElementById("iuDsDeleteConfirmOk");
+    if (!ok) return { ok: false, reason: "ok_missing" };
+    ok.click();
+    const after = document.querySelectorAll(".iu-ds-profile").length;
+    const confirmExists = !!document.getElementById("iuDsDeleteConfirm");
+    return { ok: true, before, after, confirmExists, removedOne: after === before - 1 };
+  });
+}
+
+async function countProfiles(page) {
+  return page.evaluate(() => document.querySelectorAll(".iu-ds-profile").length);
 }
 
 async function runViewport(browser, vp) {
@@ -176,31 +219,103 @@ async function runViewport(browser, vp) {
   await page.waitForTimeout(1500);
   await openDatovka(page);
 
-  const cases = [];
-  for (const profile of PROFILES) {
-    await page.evaluate((id) => {
-      const card = document.querySelector('.iu-ds-profile[data-profile-id="' + id + '"]');
-      if (card && typeof card.scrollIntoView === "function") {
-        card.scrollIntoView({ block: "center", behavior: "instant" });
-      }
-    }, profile.id);
-    await page.waitForTimeout(350);
-    const click = await clickDeleteOnProfile(page, profile.id);
-    const anchor = await measureConfirmAnchor(page, profile.id);
-    cases.push({
-      profileId: profile.id,
+  const openCases = [];
+  const sampleIds = [
+    PROFILES[0].id,
+    PROFILES[1].id,
+    PROFILES[Math.floor(PROFILES.length / 2)].id,
+    PROFILES[PROFILES.length - 2].id,
+    PROFILES[PROFILES.length - 1].id,
+  ];
+
+  for (const profileId of PROFILES.map((p) => p.id)) {
+    await scrollCardIntoView(page, profileId);
+    const click = await clickDeleteOnProfile(page, profileId);
+    const anchor = await measureConfirmAnchor(page, profileId);
+    openCases.push({
+      profileId,
       click,
       anchor,
       pass: !!(click.ok && anchor.ok && (click.scrollDelta || 0) <= 2),
     });
-    await closeConfirm(page);
+    await closeConfirmCancel(page);
+  }
+
+  const cancelCase = [];
+  const cancelTarget = PROFILES[3].id;
+  await scrollCardIntoView(page, cancelTarget);
+  const cancelClick = await clickDeleteOnProfile(page, cancelTarget);
+  const cancelOpen = await measureConfirmAnchor(page, cancelTarget);
+  const beforeCancelCount = await countProfiles(page);
+  await closeConfirmCancel(page);
+  const afterCancelCount = await countProfiles(page);
+  cancelCase.push({
+    profileId: cancelTarget,
+    pass:
+      cancelClick.ok &&
+      cancelOpen.ok &&
+      beforeCancelCount === afterCancelCount &&
+      afterCancelCount === PROFILE_COUNT,
+  });
+
+  const deleteCases = [];
+  const deleteTargets = [PROFILES[9].id, PROFILES[5].id, PROFILES[0].id];
+  for (const targetId of deleteTargets) {
+    const existsBefore = await page.evaluate((id) => {
+      return !!document.querySelector('.iu-ds-profile[data-profile-id="' + id + '"]');
+    }, targetId);
+    if (!existsBefore) {
+      deleteCases.push({ profileId: targetId, pass: false, reason: "already_deleted" });
+      continue;
+    }
+    await scrollCardIntoView(page, targetId);
+    const click = await clickDeleteOnProfile(page, targetId);
+    const anchor = await measureConfirmAnchor(page, targetId);
+    const confirmed = await confirmDelete(page);
+    await page.waitForTimeout(350);
+    const stillGone = await page.evaluate((id) => {
+      return !document.querySelector('.iu-ds-profile[data-profile-id="' + id + '"]');
+    }, targetId);
+    const remaining = await page.evaluate(() => {
+      const cards = Array.from(document.querySelectorAll(".iu-ds-profile"));
+      return cards.length ? cards[0].getAttribute("data-profile-id") : null;
+    });
+    let reopenOk = false;
+    if (remaining) {
+      await scrollCardIntoView(page, remaining);
+      const reopen = await clickDeleteOnProfile(page, remaining);
+      const reopenAnchor = await measureConfirmAnchor(page, remaining);
+      reopenOk = reopen.ok && reopenAnchor.ok;
+      await closeConfirmCancel(page);
+    }
+    deleteCases.push({
+      profileId: targetId,
+      pass:
+        click.ok &&
+        anchor.ok &&
+        confirmed.ok &&
+        confirmed.confirmExists &&
+        confirmed.removedOne &&
+        stillGone &&
+        reopenOk,
+    });
   }
 
   await context.close();
+  const pass =
+    openCases.every((c) => c.pass) &&
+    cancelCase.every((c) => c.pass) &&
+    deleteCases.every((c) => c.pass);
+
   return {
     viewport: vp.name,
-    pass: cases.every((c) => c.pass),
-    cases,
+    pass,
+    profileCount: PROFILE_COUNT,
+    openCases: openCases.filter((c) => sampleIds.includes(c.profileId)),
+    openCasesTotal: openCases.length,
+    openCasesPass: openCases.filter((c) => c.pass).length,
+    cancelCase,
+    deleteCases,
   };
 }
 
