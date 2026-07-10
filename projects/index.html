@@ -577,7 +577,7 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-silver-premium-draft.css?v=silver-note-text-gap-20260626" />
     <!-- P0 perf: overlay CSS non-blocking (media=print onload swap) — open guards in iuOverlayCssDeferGuard below app.js -->
     <link rel="preload" as="style" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" />
-    <link rel="stylesheet" href="/assets/iu-tasks-premium.css?v=tasks-mobile-form-filter-v1-20260707" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-tasks-premium.css?v=tasks-mobile-filter-stable-v2-20260710" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-notes-premium.css?v=mindmenu-overlay-bottom-gap-unified-v1-20260705" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-info-center.css?v=info-center-v2-6-close-nav-20260609" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
@@ -1053,6 +1053,71 @@ font-src 'self' data:;
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
+      }
+      .iuSilverHomeDesktopActionMenu{
+        display: none !important;
+      }
+      @media (min-width: 1025px){
+        body.iu-desktop-silver-composer-topbar .iuSilverHomeDesktopActionMenu:not([hidden]){
+          display: block !important;
+          position: absolute;
+          top: calc(100% + 4px);
+          left: 0;
+          right: 0;
+          z-index: 12050;
+          margin: 0;
+          padding: 4px;
+          box-sizing: border-box;
+          border-radius: 10px;
+          border: 1px solid rgba(15, 23, 42, 0.12);
+          background: #fff;
+          box-shadow: 0 10px 28px rgba(15, 23, 42, 0.14);
+        }
+        /* silver-pc-action-menu-overflow-v1-20260709: dropdown must escape topbar composer clip */
+        body.iu-desktop-silver-composer-topbar #iuTopbarSilverComposerHost .iuSilverHomeInputRow.iuSilverHomeComposerShell,
+        body.iu-desktop-silver-composer-topbar #iuTopbarSilverComposerHost .iuSilverHomeInputSendRow,
+        body.iu-desktop-silver-composer-topbar #iuTopbarSilverComposerHost .iuSilverHomeInputFieldWrap{
+          overflow: visible !important;
+        }
+        /* silver-pc-action-menu-fixed-topbar-v1-20260709: JS sets position:fixed; keep menu above silver cards */
+        body.iu-desktop-silver-composer-topbar #iuSilverHomeDesktopActionMenu:not([hidden]){
+          z-index: 10060 !important;
+        }
+        body.iu-desktop-silver-composer-topbar .iuSilverHomeDesktopActionMenuItem,
+        body.iu-desktop-silver-composer-topbar button.iuSilverHomeDesktopActionMenuItem{
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          width: 100%;
+          min-height: 36px;
+          margin: 0;
+          padding: 7px 10px;
+          border: 0;
+          border-radius: 8px;
+          background: transparent;
+          color: rgba(15, 23, 42, 0.92);
+          font: inherit;
+          font-size: 14px;
+          font-weight: 600;
+          line-height: 1.2;
+          text-align: left;
+          cursor: pointer;
+          box-sizing: border-box;
+        }
+        body.iu-desktop-silver-composer-topbar .iuSilverHomeDesktopActionMenuItem:hover,
+        body.iu-desktop-silver-composer-topbar .iuSilverHomeDesktopActionMenuItem:focus-visible{
+          background: rgba(15, 23, 42, 0.06);
+          outline: none;
+        }
+        body.iu-desktop-silver-composer-topbar .iuSilverHomeDesktopActionMenuItemGlyph{
+          flex: 0 0 auto;
+          width: 1.25em;
+          text-align: center;
+        }
+        body.iu-desktop-silver-composer-topbar .iuSilverHomeDesktopActionMenuItemLabel{
+          flex: 1 1 auto;
+          min-width: 0;
+        }
       }
       .iuSilverHomeInputUx,
       .iuSilverHomeQueryTicker{
@@ -1911,7 +1976,7 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-home-premium-install-box.css?v=1" />
     <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=remove-partner-banners-v1-20260706" />
     <link rel="stylesheet" href="/assets/iu-desktop-parcel-watch-overlay.css?v=pr5907-desktop-parcel-premium-20260619" />
-    <link rel="stylesheet" href="/assets/iu-desktop-home-premium.css?v=desktop-mindmenu-btn-width-v1-20260708" />
+    <link rel="stylesheet" href="/assets/iu-desktop-home-premium.css?v=desktop-mindmenu-btn-zpravy-align-v1-20260708" />
     <link rel="stylesheet" href="/assets/iu-desktop-section-close-v1.css?v=desktop-left-rail-section-close-v1-20260707" />
     <link rel="stylesheet" href="/assets/iu-desktop-info-panel.css?v=info-panel-polish-v1-20260705" />
     <link rel="stylesheet" href="/assets/iu-mobile-info-panel.css?v=info-panel-polish-v1-20260705" />
@@ -2644,7 +2709,15 @@ font-src 'self' data:;
                                               <button type="button" class="iuSilverHomeInputUxPrefixBtn" data-iu-silver-home-prefix="notes" aria-label="Do poznámek"><span class="iuSilverHomeInputUxEmoji" aria-hidden="true">📝</span><span class="iuSilverHomeInputUxPrefixLabel">Do poznámek:</span></button><span class="iuSilverHomeInputUxSample"> Heslo k Wi-Fi je 1234</span>
                                             </div>
                                           </div>
-                                          <textarea id="iuSilverHomeInput" class="silver-input iuSilverHomeInput" rows="1" inputmode="text" autocomplete="off" maxlength="450" placeholder="" aria-label="Dej mi pokyn" data-iu-silver-home-input="1" data-iu-silver-home-placeholder-desktop="Napiš Silverovi…"></textarea>
+                                          <textarea id="iuSilverHomeInput" class="silver-input iuSilverHomeInput" rows="1" inputmode="text" autocomplete="off" maxlength="450" placeholder="" aria-label="Dej mi pokyn" data-iu-silver-home-input="1" data-iu-silver-home-placeholder-desktop="Napiš Silverovi nebo hledej na internetu…"></textarea>
+                                          <div id="iuSilverHomeDesktopActionMenu" class="iuSilverHomeDesktopActionMenu" hidden role="menu" aria-label="Akce pro zadaný text">
+                                            <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="silver"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">🤖</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Silver</span></button>
+                                            <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="google"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">🔍</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Vyhledat na Googlu</span></button>
+                                            <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="seznam"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">🔎</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Vyhledat na Seznamu</span></button>
+                                            <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="youtube"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">▶️</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Vyhledat na YouTube</span></button>
+                                            <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="googlemaps"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">📍</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Otevřít v Google Maps</span></button>
+                                            <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="mapycz"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">🗺️</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Otevřít v Mapy.cz</span></button>
+                                          </div>
                                         </div>
                                         <button type="button" class="iuSilverHomeSend" id="iuSilverHomeSend" aria-label="Odeslat">
                                           <svg class="iuSilverHomeSendIcon iuSilverHomeSendIcon--mic" viewBox="0 0 24 24" aria-hidden="true" width="20" height="20" focusable="false"><path fill="currentColor" d="M12 14a3 3 0 003-3V5a3 3 0 10-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.92V20H7v2h10v-2h-4v-2.08A7 7 0 0119 11h-2z"/></svg>
@@ -3868,11 +3941,11 @@ font-src 'self' data:;
                               <input type="hidden" id="iuCustomButtonsEditId" value="">
                               <div class="iu-custom-buttons-field">
                                 <label for="iuCustomButtonsName">Název tlačítka</label>
-                                <input type="text" id="iuCustomButtonsName" name="name" autocomplete="off" maxlength="80" placeholder="Nastavit e-mail" required>
+                                <input type="text" id="iuCustomButtonsName" name="name" autocomplete="off" maxlength="80" required>
                               </div>
                               <div class="iu-custom-buttons-field">
                                 <label for="iuCustomButtonsUrl">Odkaz (URL)</label>
-                                <input type="url" id="iuCustomButtonsUrl" name="url" autocomplete="off" inputmode="url" placeholder="Nastavit e-mail" required>
+                                <input type="url" id="iuCustomButtonsUrl" name="url" autocomplete="off" inputmode="url" required>
                               </div>
                               <p id="iuCustomButtonsFormError" class="iu-custom-buttons-formError" hidden role="alert"></p>
                               <p id="iuCustomButtonsLimitMsg" class="iu-custom-buttons-limitMsg" hidden role="status">Dosáhli jste maxima 20 vlastních tlačítek. Pro přidání dalšího nejdříve některé odstraňte.</p>
@@ -5600,9 +5673,9 @@ font-src 'self' data:;
     <script defer src="/assets/iu-affiliate-catalog.js?v=affiliate-disclosure-title-remove-v56-20260629"></script>
     <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-v1"></script>
     <script defer src="/assets/iu-tool-privacy-info.js?v=unified-overlay-header-v73-20260701"></script>
-    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707"></script>
+    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v1-20260709-silver-pc-action-menu-fixed-topbar-v1-20260709"></script>
     <script defer src="/assets/iu-desktop-section-close-v1.js?v=desktop-left-rail-section-close-v1-20260707"></script>
-    <script type="module" src="/assets/iu-desktop-info-panel.js?v=info-panel-polish-v1-20260705"></script>
+    <script type="module" src="/assets/iu-desktop-info-panel.js?v=info-panel-freshness-period-v1-20260709"></script>
     <script>
     (function iuOverlayCssDeferGuard(){
       "use strict";

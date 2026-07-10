@@ -177,6 +177,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-ds-mobile-scroll-bottom-clearance-guard
 
+      - name: Datovka mobile delete confirm anchor guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-ds-mobile-delete-confirm-anchor-guard
+
       - name: Moje sluzby mobile keyboard add btn guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-moje-sluzby-mobile-keyboard-add-btn-guard
@@ -188,6 +192,14 @@ jobs:
       - name: Custom buttons mobile scroll guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-custom-buttons-mobile-scroll-guard
+
+      - name: Custom buttons overlay polish guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-custom-buttons-overlay-polish-guard
+
+      - name: Silver PC top input action menu guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-silver-pc-top-input-action-menu-guard
 
       - name: Quicktools custom buttons reset sync guard
         if: steps.scope.outputs.data_only != 'true'
