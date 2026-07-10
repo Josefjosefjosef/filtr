@@ -26069,12 +26069,19 @@ function buildVideoAsArticleCard(it) {
     iuCustomButtonsRefreshList();
     iuCustomButtonsUpdateFormState();
     const nameInput = document.getElementById("iuCustomButtonsName");
+    const urlInput = document.getElementById("iuCustomButtonsUrl");
     if (nameInput) {
+      nameInput.placeholder = "";
+      nameInput.removeAttribute("placeholder");
       try {
         requestAnimationFrame(function () {
           try { nameInput.focus({ preventScroll: true }); } catch (_) { try { nameInput.focus(); } catch (_) {} }
         });
       } catch (_) {}
+    }
+    if (urlInput) {
+      urlInput.placeholder = "";
+      urlInput.removeAttribute("placeholder");
     }
   }
 
@@ -26085,6 +26092,16 @@ function buildVideoAsArticleCard(it) {
     if (form) form.reset();
     if (editId) editId.value = "";
     if (err) { err.hidden = true; err.textContent = ""; }
+    const nameInput = document.getElementById("iuCustomButtonsName");
+    const urlInput = document.getElementById("iuCustomButtonsUrl");
+    if (nameInput) {
+      nameInput.placeholder = "";
+      nameInput.removeAttribute("placeholder");
+    }
+    if (urlInput) {
+      urlInput.placeholder = "";
+      urlInput.removeAttribute("placeholder");
+    }
     iuCustomButtonsUpdateFormState();
   }
 
@@ -26279,11 +26296,6 @@ function buildVideoAsArticleCard(it) {
     });
 
     iuCustomButtonsBindPanel();
-    const mmPh = IU_MM_EDIT_INPUT_PLACEHOLDER;
-    const cbName = document.getElementById("iuCustomButtonsName");
-    const cbUrl = document.getElementById("iuCustomButtonsUrl");
-    if (cbName) cbName.placeholder = mmPh;
-    if (cbUrl) cbUrl.placeholder = mmPh;
   }
 
   function iuQuickToolsBindDocumentOnce() {
