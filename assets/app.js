@@ -32628,6 +32628,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuDsOpenDeleteConfirm(profileId) {
+    iuDsEnsureDeleteConfirmMounted();
     const el = iuDsDeleteConfirmEl();
     if (!el || !profileId) return;
     iuDsPendingDeleteId = String(profileId);
@@ -32823,8 +32824,8 @@ function buildVideoAsArticleCard(it) {
       });
       iuDsPersist();
       iuDsEnsureAtLeastOneProfileIfEmpty();
-      iuDsRender();
       iuDsCloseDeleteConfirm();
+      iuDsRender();
     });
     wrap.addEventListener("click", function (e) {
       e.stopPropagation();
@@ -33256,7 +33257,19 @@ function buildVideoAsArticleCard(it) {
     return card;
   }
 
+  function iuDsEnsureDeleteConfirmMounted() {
+    if (iuDsDeleteConfirmEl()) return;
+    iuDsMountDeleteConfirm();
+  }
+
   function iuDsRender() {
+    try {
+      if (iuDsDeleteConfirmIsOpen()) {
+        iuDsCloseDeleteConfirm();
+      } else {
+        iuDsRestoreDeleteConfirmToModal();
+      }
+    } catch (_) {}
     const host = document.getElementById("iuDsProfileListHost");
     if (!host) return;
     host.textContent = "";
