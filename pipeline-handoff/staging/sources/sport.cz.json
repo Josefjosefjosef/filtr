@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-07-09T22:47:10.586643Z",
+  "ingestedAt": "2026-07-10T00:33:58.680814Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Mbappé nedal penaltu, přesto táhl Francii a nahání Messiho. Má neuvěřitelnou mentalitu, chválil Dembélé",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-mbappe-nedal-penaltu-presto-tahl-francii-a-nahani-messiho-ma-neuveritelnou-mentalitu-chvalil-dembele-5503307",
+      "dt": "2026-07-10T00:30:13Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chválil",
+        "dembélé",
+        "francii",
+        "mbappé",
+        "mentalitu",
+        "messiho",
+        "nahání",
+        "nedal",
+        "neuvěřitelnou",
+        "penaltu",
+        "přesto",
+        "táhl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -740,35 +769,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Co se změnilo? Nejlepší atlet světa návrat Rusů nechápe. V Asii ale mají jiný názor",
-      "url": "https://www.sport.cz/clanek/atletika-co-se-zmenilo-nejlepsi-atlet-sveta-navrat-rusu-nechape-v-asii-ale-maji-jiny-nazor-5502651",
-      "dt": "2026-07-09T12:32:45Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ale",
-        "asii",
-        "atlet",
-        "jiný",
-        "mají",
-        "nechápe",
-        "nejlepší",
-        "návrat",
-        "názor",
-        "rusů",
-        "světa",
-        "změnilo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +779,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45139,
+      "bytes": 45359,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,7 +816,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-09T22:04:46Z",
+        "raw_feed_latest_publishedAt": "2026-07-10T00:30:13Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -833,6 +833,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mbappé nedal penaltu, přesto táhl Francii a nahání Messiho. Má neuvěřitelnou mentalitu, chválil Dembélé",
+            "publishedAt": "2026-07-10T00:30:13Z"
+          },
           {
             "title": "PŘEHLEDNĚ PAVOUK MS: Africký sen o historicky první medaili se ani letos nesplní",
             "publishedAt": "2026-07-08T12:33:55Z"
@@ -860,10 +864,6 @@
           {
             "title": "Smíšenou čtyřhru ve Wimbledonu vyhráli Arévalo s Ostapenkovou",
             "publishedAt": "2026-07-09T19:57:22Z"
-          },
-          {
-            "title": "Kousková začala golfový major Evian Championship jen ranou nad par",
-            "publishedAt": "2026-07-09T17:44:20Z"
           }
         ]
       }
