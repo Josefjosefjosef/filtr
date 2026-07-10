@@ -245,6 +245,20 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-legal-documents-preview-pc-guard
 
+      - name: Invoice preview PC guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-invoice-preview-pc-guard
+
+      - name: Invoice preview open proof
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-invoice-preview-open-proof
+
+      - name: Invoice preview open proof (MyInfoUzel stacking)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-invoice-preview-open-proof
+        env:
+          IU_INVOICE_PREVIEW_MYINFOUZEL: "1"
+
       - name: Weather chevron UTF-8 guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-weather-chevron-utf8-guard

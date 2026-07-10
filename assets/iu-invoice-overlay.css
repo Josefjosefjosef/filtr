@@ -542,6 +542,11 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   visibility: visible !important;
   opacity: 1 !important;
   pointer-events: auto !important;
+  z-index: 12250 !important;
+}
+body.iu-myinfouzel-open #iuInvoicePreviewPortal.iu-invoice-preview-portal--open:not([hidden]),
+body.iu-myinfouzel-open #iuInvoicePreviewPortal[data-preview-open="1"]:not([hidden]){
+  z-index: 12250 !important;
 }
 @media (max-width: 1024px){
   #iuInvoicePreviewPortal.iu-invoice-preview-portal--open,
@@ -567,6 +572,11 @@ body.iu-invoice-preview-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
   }
 }
 @media (min-width: 1025px){
+  body.iu-invoice-preview-open #iuInvoicePanel.iu-invoice-overlay-panel:not([hidden]),
+  body.iu-invoice-preview-open #iuInvoiceBackdrop.iu-invoice-overlay-backdrop:not([hidden]){
+    visibility: hidden;
+    pointer-events: none;
+  }
   .iu-inv-previewLayer.iu-invoice-preview-portal:not([hidden]){
     position: fixed;
     inset: 0;
