@@ -32,12 +32,17 @@ const CHECKS = [
   {
     id: "css_filter_compact_max1024",
     file: TASKS_CSS,
-    pattern: /@media \(max-width:1024px\)[\s\S]*?\.iu-tasksOverlay__filter[\s\S]*?padding-top:4px;padding-bottom:4px/,
+    pattern: /@media \(max-width:1024px\)[\s\S]*?\.iu-tasksOverlay__filter,\s*\n\s*#iuTasksOverlay\.iu-tasksPremiumScope \.iu-tasksOverlay__filter\.is-active[\s\S]*?height:14px[\s\S]*?max-height:14px/,
+  },
+  {
+    id: "css_filter_row_compact_max1024",
+    file: TASKS_CSS,
+    pattern: /@media \(max-width:1024px\)[\s\S]*?\.iu-tasksOverlay__filters[\s\S]*?padding:4px 14px[\s\S]*?height:fit-content/,
   },
   {
     id: "index_tasks_css_cache_bust",
     file: INDEX,
-    pattern: /iu-tasks-premium\.css\?v=tasks-mobile-form-filter-v1-20260707/,
+    pattern: /iu-tasks-premium\.css\?v=tasks-mobile-filter-stable-v2-20260710/,
   },
 ];
 
