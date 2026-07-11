@@ -675,8 +675,7 @@
   }
   :is(body.iu-home, body.iu-desktop-home-grid) .iuMyInfoUzelOpenBtn__label {
     flex: 1 1 auto;
-    flex-shrink: 0;
-    min-width: max-content;
+    min-width: 0;
     text-align: left;
     white-space: nowrap;
     overflow: visible;
@@ -689,6 +688,7 @@
     justify-content: flex-end;
     gap: 5px;
     flex: 0 0 auto;
+    flex-shrink: 0;
     font-size: 13px;
     line-height: 1;
     opacity: 0.95;
@@ -707,6 +707,7 @@
   }
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuMyInfoUzelOpenBtn {
     margin: 10px 0 0 0;
+    overflow: visible;
     width: calc(
       50% +
         (

@@ -33,10 +33,10 @@
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__body{
   display:grid;grid-template-columns:450px minmax(0,1fr);min-height:0;height:100%
 }
-#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__list{
+#iuTasksOverlay.iu-tasksPremiumScope aside.iu-tasksOverlay__list{
   min-height:0;border-right:1px solid rgba(109,94,189,.14);
   background:linear-gradient(180deg,rgba(255,255,255,.97) 0%,rgba(248,250,252,.92) 100%);
-  display:flex;flex-direction:column
+  display:flex;flex-direction:column;align-items:stretch
 }
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__detail{
   min-height:0;display:flex;flex-direction:column;
@@ -99,7 +99,7 @@
 #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow--selected .iu-taskRow__body{
   box-shadow:var(--iu-tasks-focus);background:rgba(13,148,136,.06)
 }
-#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__list{
+#iuTasksOverlay.iu-tasksPremiumScope ul.iu-tasksOverlay__list{
   list-style:none;margin:0;padding:0;padding-bottom:var(--iu-mobile-bottom-nav-safe-space,calc(56px + env(safe-area-inset-bottom,0px) + 52px));display:grid;gap:10px
 }
 #iuTasksOverlay.iu-tasksPremiumScope .iu-taskRow{
@@ -233,5 +233,19 @@ body.iu-tasksOverlay-open{overflow:hidden!important}
   }
   #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filter:active{
     transform:none
+  }
+}
+@media (min-width:1025px){
+  #iuTasksOverlay.iu-tasksPremiumScope aside.iu-tasksOverlay__list{
+    display:flex!important;flex-direction:column!important;align-items:stretch!important
+  }
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filters{
+    display:flex!important;flex-wrap:wrap!important;align-items:center!important;align-content:center!important;
+    flex:0 0 auto!important;height:auto!important;min-height:0!important
+  }
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filter,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filter.is-active{
+    display:inline-flex!important;align-items:center!important;justify-content:center!important;align-self:center!important;
+    box-sizing:border-box!important;line-height:1.2!important;height:auto!important;min-height:0!important;max-height:none!important
   }
 }

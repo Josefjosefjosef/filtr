@@ -42,7 +42,7 @@ const CHECKS = [
   {
     id: "index_tasks_css_cache_bust",
     file: INDEX,
-    pattern: /iu-tasks-premium\.css\?v=tasks-mobile-filter-stable-v2-20260710/,
+      pattern: /iu-tasks-premium\.css\?v=pc-browser-compat-v1-20260711/,
   },
 ];
 
