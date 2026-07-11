@@ -15,7 +15,7 @@ import {
   formatBackupFilename,
   userMessageForError,
   errorCodeFrom,
-} from "./iu-user-data-backup-core.mjs";
+} from "./iu-user-data-backup-core.js";
 
 function createStorageAdapter() {
   return {

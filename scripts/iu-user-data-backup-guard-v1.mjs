@@ -19,15 +19,15 @@ import {
   storageSnapshotsEqual,
   assertSafeJsonValue,
   userMessageForError,
-} from "../assets/iu-user-data-backup-core.mjs";
+} from "../assets/iu-user-data-backup-core.js";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
 
 const INDEX = path.join(REPO, "projects", "index.html");
-const CORE = path.join(REPO, "assets", "iu-user-data-backup-core.mjs");
-const UI = path.join(REPO, "assets", "iu-user-data-backup-ui-v1.mjs");
+const CORE = path.join(REPO, "assets", "iu-user-data-backup-core.js");
+const UI = path.join(REPO, "assets", "iu-user-data-backup-v1.js");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8944", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const CYCLES = 5;
@@ -168,7 +168,7 @@ function staticGate() {
     { id: "tile_data_mgmt", pass: /data-iu-info-section="data-management"/.test(index) },
     { id: "export_btn", pass: /id="iuDataMgmtExportBtn"/.test(index) },
     { id: "import_btn", pass: /id="iuDataMgmtImportBtn"/.test(index) },
-    { id: "script_ui", pass: /iu-user-data-backup-ui-v1\.mjs/.test(index) },
+    { id: "script_ui", pass: /iu-user-data-backup-v1\.js/.test(index) },
     { id: "info_center_bump", pass: /info-center-data-mgmt-v1-20260711/.test(index) },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
