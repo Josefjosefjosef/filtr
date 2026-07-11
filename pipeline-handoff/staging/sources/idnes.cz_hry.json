@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-07-11T20:56:26.743811Z",
+  "ingestedAt": "2026-07-11T22:44:25.079542Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Legendární břídil Uwe Boll je zpět. Podívejte se, které herní značky zpackal",
+      "url": "https://www.idnes.cz/hry/magazin/uwe-boll-herni-filmy-kariera.A260708_020059_bw-magazin_srp/foto",
+      "dt": "2026-07-11T22:00:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "boll",
+        "břídil",
+        "herní",
+        "legendární",
+        "podívejte",
+        "uwe",
+        "značky",
+        "zpackal",
+        "zpět"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -743,31 +769,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Šok pro celý herní svět. PlayStation končí s hrami v krabičkách",
-      "url": "https://www.idnes.cz/hry/novinky/playstation-sony-fyzicke-edice-konec-leden-2028.A260701_145844_bw-novinky_oma",
-      "dt": "2026-07-01T13:46:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "celý",
-        "herní",
-        "hrami",
-        "končí",
-        "krabičkách",
-        "playstation",
-        "svět",
-        "šok"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -778,7 +779,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 44512,
+      "bytes": 44693,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -815,7 +816,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-11T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-11T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -830,6 +831,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Legendární břídil Uwe Boll je zpět. Podívejte se, které herní značky zpackal",
+            "publishedAt": "2026-07-11T22:00:00Z"
+          },
           {
             "title": "Fallout: vývojem nové hry bylo pověřeno studio Obsidian",
             "publishedAt": "2026-07-11T03:00:00Z"
@@ -857,10 +862,6 @@
           {
             "title": "Za půl roku je jich až moc. Letošních propadáků je víc, než bychom čekali",
             "publishedAt": "2026-07-08T22:00:00Z"
-          },
-          {
-            "title": "VIDEO: Bitvy na moři, parkour. Užijte si deset minut z nového Assassin’s Creed",
-            "publishedAt": "2026-07-08T10:00:00Z"
           }
         ]
       }
