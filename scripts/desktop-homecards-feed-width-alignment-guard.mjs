@@ -8,7 +8,6 @@ import path from "path";
 import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
-import { clickDesktopNav } from "./guards/desktop-nav-targets.mjs";
 import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -90,7 +89,15 @@ async function main() {
 
     const sectionResults = [];
     for (const sec of SECTIONS) {
-      await clickDesktopNav(page, sec.accent);
+      await page.goto(`${BASE}?section=${encodeURIComponent(sec.accent)}&iuRobust=1`, {
+        waitUntil: "domcontentloaded",
+        timeout: 60000,
+      });
+      await page.waitForFunction(
+        (ac) => String(document.body?.dataset?.section || "").toLowerCase() === String(ac || "").toLowerCase(),
+        sec.accent,
+        { timeout: 30000 }
+      );
       await page.waitForTimeout(500);
       const row = await page.evaluate(
         ({ selector, tolerancePx }) => {
