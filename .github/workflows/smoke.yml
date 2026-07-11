@@ -249,6 +249,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-legal-documents-preview-pc-guard
 
+      - name: Legal tool-guard layering guard (mobile/tablet above bottom nav)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-legal-tool-guard-layering-guard
+
       - name: Invoice preview PC guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-invoice-preview-pc-guard

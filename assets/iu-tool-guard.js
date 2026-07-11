@@ -66,7 +66,11 @@ function injectDialogStyles() {
     ".iu-tool-guard-termsPanel__head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 18px;border-bottom:1px solid rgba(15,23,42,.08)}" +
     ".iu-tool-guard-termsPanel__title{margin:0;font-size:15px;font-weight:700;color:#0f172a}" +
     ".iu-tool-guard-termsPanel__body{padding:18px;font-size:14px;line-height:1.55;color:#0f172a;white-space:pre-wrap}" +
-    ".iu-tool-guard-termsPanel__actions{padding:0 18px 16px;display:flex;justify-content:flex-end;gap:8px}";
+    ".iu-tool-guard-termsPanel__actions{padding:0 18px 16px;display:flex;justify-content:flex-end;gap:8px}" +
+    "@media (max-width:1024px){" +
+    ".iu-tool-guard-backdrop{z-index:10250!important;padding:max(12px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) max(12px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}" +
+    ".iu-tool-guard-termsOverlay{z-index:10260!important;padding:max(12px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) max(12px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}" +
+    "}";
   const el = document.createElement("style");
   el.setAttribute("data-iu-tool-guard", "1");
   el.textContent = css;
