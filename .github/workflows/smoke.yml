@@ -113,6 +113,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-desktop-section-close-guard
 
+      - name: Desktop left-rail new window guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-desktop-left-rail-new-window-guard
+
       - name: Desktop HomeCards feed width alignment guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run desktop-homecards-feed-width-alignment-guard

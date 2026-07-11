@@ -269,7 +269,23 @@
   function closeDesktopSection() {
     if (!isDesktop()) return;
     var snap = window.__iuDesktopSectionCloseSnap;
-    if (!snap || !snap.href) return;
+    if (!snap || !snap.href) {
+      try {
+        var u = new URL(String(location.href || ""));
+        u.searchParams.delete("section");
+        u.searchParams.delete("topic");
+        u.searchParams.delete("mode");
+        u.searchParams.delete("panel");
+        snap = {
+          scrollY: getSavedHomeScrollY(),
+          page: getSavedHomeFeedPage(),
+          href: u.toString(),
+          openKey: currentNavKeyFromUrl(),
+        };
+      } catch (_) {
+        return;
+      }
+    }
     window.__iuDesktopSectionCloseSnap = null;
     removeCloseButtons();
     cancelRestore();

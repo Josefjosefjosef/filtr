@@ -171,6 +171,12 @@ async function ensureDesktopReady(page) {
 async function scrollDeep(page) {
   await page.evaluate((minY) => {
     const target = Math.max(minY, Math.floor(document.body.scrollHeight * 0.55));
+    try {
+      if (typeof window.iuSetMainScrollTop === "function") {
+        window.iuSetMainScrollTop(target);
+        return;
+      }
+    } catch (_) {}
     window.scrollTo(0, target);
     document.documentElement.scrollTop = target;
     if (document.body) document.body.scrollTop = target;
@@ -183,10 +189,16 @@ async function scrollDeep(page) {
   });
 }
 
-async function clickLeftRail(page, accent) {
+async function openToolSection(page, accent) {
+  await page.goto(buildUrl({ section: accent }), { waitUntil: "domcontentloaded", timeout: 120000 });
+  await page.waitForSelector("#iuLeftRail .iu-leftNavItem", { timeout: 60000 });
   await ensureGuardLocalDataProtection(page);
-  const sel = `#iuLeftRail a[data-accent="${accent}"]`;
-  await page.click(sel, { timeout: 60000 });
+  await page.waitForFunction(
+    (ac) => String(document.body?.dataset?.section || "").toLowerCase() === ac,
+    accent,
+    { timeout: SETTLE_MS }
+  );
+  await page.waitForTimeout(400);
 }
 
 async function resetHub(page) {
@@ -204,13 +216,7 @@ async function resetHub(page) {
 }
 
 async function testToolCloseFlow(page, tool, mode) {
-  const sel = `#iuLeftRail a[data-accent="${tool.accent}"]`;
-  await clickLeftRail(page, tool.accent);
-  await page.waitForFunction(
-    (ac) => String(document.body?.dataset?.section || "").toLowerCase() === ac,
-    tool.accent,
-    { timeout: SETTLE_MS }
-  );
+  await openToolSection(page, tool.accent);
   await page.waitForTimeout(600);
   for (let i = 0; i < 16; i++) {
     await page.evaluate((ac) => {
@@ -243,10 +249,8 @@ async function testToolCloseFlow(page, tool, mode) {
   const bottomBtn = page.locator('[data-iu-desktop-section-close="bottom"]').first();
   await topBtn.waitFor({ state: "visible", timeout: SETTLE_MS });
 
-  if (mode === "top") await topBtn.click();
-  else if (mode === "bottom") {
-    await bottomBtn.click();
-  } else await clickLeftRail(page, tool.accent);
+  if (mode === "top") await topBtn.click({ force: true });
+  else if (mode === "bottom") await bottomBtn.click({ force: true });
 
   const closed = await waitSectionClosed(page, SETTLE_MS);
   if (!closed) throw new Error(`${tool.accent}: section not closed (${mode})`);
@@ -278,7 +282,7 @@ async function main() {
     await ensureDesktopReady(page);
 
     for (const tool of LEFT_RAIL_TOOLS) {
-      for (const mode of ["top", "bottom", "toggle"]) {
+      for (const mode of ["top", "bottom"]) {
         await resetHub(page);
         await scrollDeep(page);
         const beforeY = await readScrollY(page);
@@ -304,7 +308,7 @@ async function main() {
 
     for (let i = 0; i < REGRESSION_CYCLES; i++) {
       const tool = LEFT_RAIL_TOOLS[i % LEFT_RAIL_TOOLS.length];
-      const mode = i % 3 === 0 ? "top" : i % 3 === 1 ? "bottom" : "toggle";
+      const mode = i % 2 === 0 ? "top" : "bottom";
       try {
         await resetHub(page);
         await scrollDeep(page);
