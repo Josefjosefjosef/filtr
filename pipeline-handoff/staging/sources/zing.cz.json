@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-07-11T12:20:44.576879Z",
+  "ingestedAt": "2026-07-11T14:04:09.285261Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Destiny 2 rozdává poslední dárek. Získejte emblem zdarma",
+      "url": "https://zing.cz/article/destiny-2-rozdava-posledni-darek-ziskejte-emblem-zdarma",
+      "dt": "2026-07-11T14:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "destiny",
+        "dárek",
+        "emblem",
+        "poslední",
+        "rozdává",
+        "zdarma",
+        "získejte"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -988,31 +1012,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Předplatitelé služby PS Plus Premium si mohou zdarma vyzkoušet oceňovanou hru",
-      "url": "https://zing.cz/article/predplatitele-sluzby-ps-plus-premium-si-mohou-zdarma-vyzkouset-ocenovanou-hru",
-      "dt": "2026-07-06T18:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "hru",
-        "oceňovanou",
-        "plus",
-        "premium",
-        "předplatitelé",
-        "služby",
-        "vyzkoušet",
-        "zdarma"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1023,7 +1022,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126767,
+      "bytes": 126833,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1060,7 +1059,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-11T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-11T14:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1075,6 +1074,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Destiny 2 rozdává poslední dárek. Získejte emblem zdarma",
+            "publishedAt": "2026-07-11T14:00:00Z"
+          },
           {
             "title": "Cozy novinky s Terry #62",
             "publishedAt": "2026-07-11T10:00:00Z"
@@ -1102,10 +1105,6 @@
           {
             "title": "Budoucnost autorů Dishonored je nejistá, Arkane ale zatím nekončí",
             "publishedAt": "2026-07-10T10:00:00Z"
-          },
-          {
-            "title": "Velkolepý návrat z trojské války slibuje tu nejlepší filmovou podívanou roku",
-            "publishedAt": "2026-07-10T08:30:00Z"
           }
         ]
       }
