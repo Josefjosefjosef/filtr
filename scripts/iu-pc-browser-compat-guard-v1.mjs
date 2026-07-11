@@ -17,7 +17,7 @@ const { chromium } = require("playwright");
 const TASKS_CSS = path.join(REPO, "assets", "iu-tasks-premium.css");
 const HOME_CSS = path.join(REPO, "assets", "iu-desktop-home-premium.css");
 const INDEX = path.join(REPO, "projects", "index.html");
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8903", 10);
+const PORT = parseInt(process.env.IU_GUARD_PORT || "8931", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 
 function staticGate() {
