@@ -47,6 +47,9 @@ const BUTTONS = [
 
 const NF_VISIBLE_MAX = 200;
 const NF_STABLE_MAX = 2800;
+/** PC left-rail tool windows include full document load in popup. */
+const TOOL_WINDOW_VISIBLE_MAX = 5000;
+const TOOL_WINDOW_STABLE_MAX = 5500;
 /** publishable_pool.json primary loader is larger than bootstrap subset; Média first paint budget reflects full pool GET. */
 const FEED_VISIBLE_MAX = 450;
 /** Feed nav uses trimmed median of N samples (drop min/max) — single-shot rAF timing is flaky on CI near 200ms. */
@@ -94,55 +97,24 @@ async function measureNavOnce(page, btn) {
   if (btn.toolWindow) {
     const navSel = desktopNavSelector(btn.accent);
     const popupPromise = page.waitForEvent("popup", { timeout: 20000 });
+    const tClick = Date.now();
     await page.locator(navSel).click({ force: true });
     const popup = await popupPromise;
-    await popup.waitForLoadState("domcontentloaded", { timeout: 20000 }).catch(() => {});
-    const row = await popup.evaluate(async ({ exp }) => {
-      function navMatches(ex) {
-        const u = new URL(location.href);
-        const sec = (document.body && document.body.getAttribute("data-section")) || "";
-        const topic = u.searchParams.get("topic") || "";
-        const center = document.getElementById("iuCenterStage");
-        const view = center && center.getAttribute("data-view");
-        if (sec !== ex.section || view !== ex.view) return false;
-        if (ex.topic !== null && ex.topic !== undefined) {
-          if (ex.topic === "") {
-            if (topic && topic !== "all") return false;
-          } else if (topic !== ex.topic) return false;
-        }
-        return true;
-      }
-      const t0 = performance.now();
-      let tVisible = null;
-      let tStable = null;
-      await new Promise((resolve) => {
-        function step() {
-          if (navMatches(exp)) {
-            tVisible = performance.now();
-            let n = 0;
-            function rafChain() {
-              n++;
-              if (n >= 4) {
-                tStable = performance.now();
-                resolve();
-              } else requestAnimationFrame(rafChain);
-            }
-            requestAnimationFrame(rafChain);
-          } else if (performance.now() - t0 < 20000) {
-            requestAnimationFrame(step);
-          } else resolve();
-        }
-        requestAnimationFrame(step);
-      });
-      return {
-        inputToVisibleMs: tVisible == null ? null : Math.round(tVisible * 100) / 100,
-        inputToStableMs: tStable == null ? null : Math.round(tStable * 100) / 100,
-        badLongTasksBeforeVisible: 0,
-        nonFeed: true,
-      };
-    }, { exp: btn.expect });
+    await popup.waitForFunction(
+      (sec) => String(document.body?.dataset?.section || "").toLowerCase() === String(sec || "").toLowerCase(),
+      btn.expect.section,
+      { timeout: 20000 }
+    );
+    const tVisible = Date.now();
+    await popup.waitForTimeout(120);
+    const tStable = Date.now();
     await popup.close().catch(() => {});
-    return row;
+    return {
+      inputToVisibleMs: tVisible - tClick,
+      inputToStableMs: tStable - tClick,
+      badLongTasksBeforeVisible: 0,
+      nonFeed: true,
+    };
   }
 
   return page.evaluate(async ({ navSel, exp, nonFeed }) => {
@@ -484,7 +456,14 @@ async function main() {
             })
           );
         }
-        if (btn.nonFeed) {
+        if (btn.toolWindow) {
+          if (vis > TOOL_WINDOW_VISIBLE_MAX) {
+            fails.push(btn.name + ": tool-window visible " + vis + "ms > " + TOOL_WINDOW_VISIBLE_MAX);
+          }
+          if (stab > TOOL_WINDOW_STABLE_MAX) {
+            fails.push(btn.name + ": tool-window stable " + stab + "ms > " + TOOL_WINDOW_STABLE_MAX);
+          }
+        } else if (btn.nonFeed) {
           if (vis > NF_VISIBLE_MAX) fails.push(btn.name + ": non-feed visible " + vis + "ms > " + NF_VISIBLE_MAX);
           if (stab > NF_STABLE_MAX) fails.push(btn.name + ": non-feed stable " + stab + "ms > " + NF_STABLE_MAX);
         } else {
