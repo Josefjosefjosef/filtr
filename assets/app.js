@@ -36604,6 +36604,11 @@ function buildVideoAsArticleCard(it) {
       const item = e.target && e.target.closest ? e.target.closest('.iu-leftNavItem') : null;
       if (!item) return;
       try {
+        if (typeof window.iuDesktopLeftRailNewWindowHandleClick === "function") {
+          if (window.iuDesktopLeftRailNewWindowHandleClick(item, e)) return;
+        }
+      } catch (_) {}
+      try {
         if (iuIsDesktopNavLayout() && typeof window.iuDesktopSectionCloseHandleNavClick === "function") {
           if (window.iuDesktopSectionCloseHandleNavClick(item, e)) return;
         }

@@ -27,12 +27,12 @@ const SKIP_CALENDAR = process.env.IU_PERF_GUARDS_SKIP_CALENDAR === "1";
 const SKIP_UI = process.env.IU_PERF_GUARDS_SKIP_UI === "1";
 
 const BUTTONS = [
-  { name: "Počasí & Radar", accent: "pocasi", nonFeed: true, expect: { section: "pocasi", view: "pocasi", topic: null } },
-  { name: "Mapy & Navigace", accent: "mapy", nonFeed: true, expect: { section: "mapy", view: "mapy", topic: null } },
-  { name: "Jízdní řády", accent: "jr", nonFeed: true, expect: { section: "jr", view: "jr", topic: null } },
-  { name: "TV program", accent: "tvprogram", nonFeed: true, expect: { section: "tvprogram", view: "tvprogram", topic: null } },
-  { name: "TV online", accent: "tvonline", nonFeed: true, expect: { section: "tvonline", view: "tvonline", topic: null } },
-  { name: "Rádia", accent: "radio", nonFeed: true, expect: { section: "radio", view: "radio", topic: null } },
+  { name: "Počasí & Radar", accent: "pocasi", nonFeed: true, toolWindow: true, expect: { section: "pocasi", view: "pocasi", topic: null } },
+  { name: "Mapy & Navigace", accent: "mapy", nonFeed: true, toolWindow: true, expect: { section: "mapy", view: "mapy", topic: null } },
+  { name: "Jízdní řády", accent: "jr", nonFeed: true, toolWindow: true, expect: { section: "jr", view: "jr", topic: null } },
+  { name: "TV program", accent: "tvprogram", nonFeed: true, toolWindow: true, expect: { section: "tvprogram", view: "tvprogram", topic: null } },
+  { name: "TV online", accent: "tvonline", nonFeed: true, toolWindow: true, expect: { section: "tvonline", view: "tvonline", topic: null } },
+  { name: "Rádia", accent: "radio", nonFeed: true, toolWindow: true, expect: { section: "radio", view: "radio", topic: null } },
   { name: "Média", accent: "media", nonFeed: false, expect: { section: "feed", view: "media", topic: "" } },
   { name: "Zprávy", accent: "zpravy", nonFeed: false, expect: { section: "feed", view: "media", topic: "zpravy" } },
   { name: "Sport", accent: "sport", nonFeed: false, expect: { section: "feed", view: "media", topic: "sport" } },
@@ -47,6 +47,9 @@ const BUTTONS = [
 
 const NF_VISIBLE_MAX = 200;
 const NF_STABLE_MAX = 2800;
+/** PC left-rail tool windows include full document load in popup. */
+const TOOL_WINDOW_VISIBLE_MAX = 5000;
+const TOOL_WINDOW_STABLE_MAX = 5500;
 /** publishable_pool.json primary loader is larger than bootstrap subset; Média first paint budget reflects full pool GET. */
 const FEED_VISIBLE_MAX = 450;
 /** Feed nav uses trimmed median of N samples (drop min/max) — single-shot rAF timing is flaky on CI near 200ms. */
@@ -90,6 +93,29 @@ async function measureNavOnce(page, btn) {
   await page.goto(BASE + "?iuRobust=1", { waitUntil: "domcontentloaded", timeout: 60000 });
   await waitDesktopNavTarget(page, btn.accent);
   await page.waitForTimeout(350);
+
+  if (btn.toolWindow) {
+    const navSel = desktopNavSelector(btn.accent);
+    const popupPromise = page.waitForEvent("popup", { timeout: 20000 });
+    const tClick = Date.now();
+    await page.locator(navSel).click({ force: true });
+    const popup = await popupPromise;
+    await popup.waitForFunction(
+      (sec) => String(document.body?.dataset?.section || "").toLowerCase() === String(sec || "").toLowerCase(),
+      btn.expect.section,
+      { timeout: 20000 }
+    );
+    const tVisible = Date.now();
+    await popup.waitForTimeout(120);
+    const tStable = Date.now();
+    await popup.close().catch(() => {});
+    return {
+      inputToVisibleMs: tVisible - tClick,
+      inputToStableMs: tStable - tClick,
+      badLongTasksBeforeVisible: 0,
+      nonFeed: true,
+    };
+  }
 
   return page.evaluate(async ({ navSel, exp, nonFeed }) => {
     function navMatches(ex) {
@@ -430,7 +456,14 @@ async function main() {
             })
           );
         }
-        if (btn.nonFeed) {
+        if (btn.toolWindow) {
+          if (vis > TOOL_WINDOW_VISIBLE_MAX) {
+            fails.push(btn.name + ": tool-window visible " + vis + "ms > " + TOOL_WINDOW_VISIBLE_MAX);
+          }
+          if (stab > TOOL_WINDOW_STABLE_MAX) {
+            fails.push(btn.name + ": tool-window stable " + stab + "ms > " + TOOL_WINDOW_STABLE_MAX);
+          }
+        } else if (btn.nonFeed) {
           if (vis > NF_VISIBLE_MAX) fails.push(btn.name + ": non-feed visible " + vis + "ms > " + NF_VISIBLE_MAX);
           if (stab > NF_STABLE_MAX) fails.push(btn.name + ": non-feed stable " + stab + "ms > " + NF_STABLE_MAX);
         } else {
