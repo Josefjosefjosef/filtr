@@ -215,24 +215,35 @@ body.iu-tasksOverlay-open{overflow:hidden!important}
 }
 @media (max-width:1024px){
   #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filters{
-    padding:4px 14px;
+    padding:8px 14px;
     align-items:center;
-    height:fit-content
+    height:fit-content;
+    flex:0 0 auto
   }
   #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filter,
   #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filter.is-active{
     box-sizing:border-box;
-    height:14px;
-    min-height:14px;
-    max-height:14px;
-    padding:0 14px;
-    line-height:1;
+    min-height:36px;
+    height:auto;
+    max-height:none;
+    padding:8px 14px;
+    line-height:1.2;
     display:inline-flex;
     align-items:center;
     justify-content:center
   }
   #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__filter:active{
     transform:none
+  }
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__listScroll,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__scroll{
+    padding-top:8px;
+    padding-left:14px;
+    padding-right:14px
+  }
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__listToolbar{
+    padding:0 0 8px;
+    min-height:0
   }
 }
 @media (min-width:1025px){
