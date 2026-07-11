@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-07-11T08:05:54.553342Z",
+  "ingestedAt": "2026-07-11T09:44:48.355923Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Šluknov vykoupí byty v lokalitě Slunečnice a zahájí intervenci",
+      "url": "https://www.zdravezpravy.cz/2026/07/11/sluknov-vykoupi-byty-v-lokalite-slunecnice-a-zahaji-intervenci/",
+      "dt": "2026-07-11T08:48:40Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "byty",
+        "intervenci",
+        "lokalitě",
+        "slunečnice",
+        "vykoupí",
+        "zahájí",
+        "šluknov"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -473,32 +497,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Právo na zapomnění: Když stát trestá samoregulaci, byznys mu přestane věřit",
-      "url": "https://www.zdravezpravy.cz/2026/07/02/pravo-na-zapomneni-kdyz-stat-tresta-samoregulaci-byznys-mu-prestane-verit/",
-      "dt": "2026-07-02T09:06:09Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "byznys",
-        "když",
-        "právo",
-        "přestane",
-        "samoregulaci",
-        "stát",
-        "trestá",
-        "věřit",
-        "zapomnění"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -509,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 216948,
+      "bytes": 215330,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -546,11 +544,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-07-10T15:18:47Z",
+        "raw_feed_latest_publishedAt": "2026-07-11T08:48:40Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zdravi": 19,
-          "finance": 1
+          "zdravi": 20
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -562,6 +559,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šluknov vykoupí byty v lokalitě Slunečnice a zahájí intervenci",
+            "publishedAt": "2026-07-11T08:48:40Z"
+          },
           {
             "title": "Defibrilátor sem, defibrilátor tam! Kauza FNOL pokračuje",
             "publishedAt": "2026-07-10T15:18:47Z"
@@ -589,10 +590,6 @@
           {
             "title": "Šebelová ze STANu vetovala peníze do zdravotnictví. Žene ho tak do dalších dluhů",
             "publishedAt": "2026-07-08T14:38:43Z"
-          },
-          {
-            "title": "Kliniku úrazové chirurgie v Masarykově nemocnici nově vede Lubomír Kopp",
-            "publishedAt": "2026-07-08T13:05:14Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-07-11T08:05:54.553342Z",
+  "ingestedAt": "2026-07-11T09:44:48.355923Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ukrajina drtí ruskou flotilu. Desítky tankerů zasáhly v noci drony",
+      "url": "https://ekonomickydenik.cz/ukrajina-drti-ruskou-flotilu-tankery-drony/",
+      "dt": "2026-07-11T09:12:21Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "desítky",
+        "drony",
+        "drtí",
+        "flotilu",
+        "noci",
+        "ruskou",
+        "tankerů",
+        "ukrajina",
+        "zasáhly"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -782,32 +808,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "NATO má 2 měsíce. Putin může změnit pravidla hry na Ukrajině, varuje Pavel",
-      "url": "https://ekonomickydenik.cz/nato-2-mesice-putin-ukrajina-pavel/",
-      "dt": "2026-07-09T08:46:32Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "hry",
-        "měsíce",
-        "nato",
-        "pavel",
-        "pravidla",
-        "putin",
-        "ukrajině",
-        "varuje",
-        "změnit"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -818,7 +818,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74154,
+      "bytes": 73973,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -855,7 +855,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-11T08:00:44Z",
+        "raw_feed_latest_publishedAt": "2026-07-11T09:12:21Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 20,
@@ -873,6 +873,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ukrajina drtí ruskou flotilu. Desítky tankerů zasáhly v noci drony",
+            "publishedAt": "2026-07-11T09:12:21Z"
+          },
           {
             "title": "Kolik bere kolega? Zajímá to stále více Čechů. Pomoci má chystaná novinka",
             "publishedAt": "2026-07-11T08:00:44Z"
@@ -900,10 +904,6 @@
           {
             "title": "140 milionů na zbraně pro Ukrajinu. Česko peníze poslalo a nelze to vzít zpět, zlobí se Okamura",
             "publishedAt": "2026-07-10T14:48:29Z"
-          },
-          {
-            "title": "Miliardové ztráty kvůli dispečerům. Šéf Ryanairu chce akci Leyenové",
-            "publishedAt": "2026-07-10T13:49:25Z"
           }
         ]
       }
