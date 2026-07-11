@@ -579,7 +579,7 @@ font-src 'self' data:;
     <link rel="preload" as="style" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" />
     <link rel="stylesheet" href="/assets/iu-tasks-premium.css?v=mobile-tablet-tasks-filter-layout-v1-20260711" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-notes-premium.css?v=mindmenu-overlay-bottom-gap-unified-v1-20260705" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
-    <link rel="stylesheet" href="/assets/iu-info-center.css?v=info-center-v2-6-close-nav-20260609" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-info-center.css?v=info-center-data-mgmt-v1-20260711" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <style id="iuFeedNewsSplitCss">
       /*
@@ -5807,7 +5807,8 @@ font-src 'self' data:;
     })();
     </script>
     <script defer src="/assets/iu-consent.js?v=consent-v1-20260609"></script>
-    <script defer src="/assets/iu-info-center.js?v=info-center-ldp-v1-4-20260630"></script>
+    <script defer src="/assets/iu-info-center.js?v=info-center-data-mgmt-v1-20260711"></script>
+    <script type="module" src="/assets/iu-user-data-backup-ui-v1.mjs?v=user-data-backup-v1-20260711"></script>
     <script defer src="/assets/iu-home-premium-install-box.js?v=1"></script>
     <script defer src="/assets/iu-consent-layer.js?v=consent-layer-v1-20260609"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=parcel-navigate-address-v62-20260629"></script>
@@ -6357,6 +6358,10 @@ font-src 'self' data:;
                 <span class="iuInfoCenter__tileIcon" aria-hidden="true">🛡️</span>
                 <span class="iuInfoCenter__tileLabel">Ukládání a ochrana vašich dat</span>
               </button>
+              <button type="button" class="iuInfoCenter__tile" data-iu-info-section="data-management">
+                <span class="iuInfoCenter__tileIcon" aria-hidden="true">💾</span>
+                <span class="iuInfoCenter__tileLabel">Správa dat</span>
+              </button>
               <button type="button" class="iuInfoCenter__tile" data-iu-info-section="data-sources">
                 <span class="iuInfoCenter__tileIcon" aria-hidden="true">📡</span>
                 <span class="iuInfoCenter__tileLabel">Zdroje dat</span>
@@ -6625,7 +6630,7 @@ font-src 'self' data:;
               <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy-settings">Správa souhlasu a nastavení soukromí →</button></p>
               <h3 class="iuInfoCenter__h3">Jak používáme údaje a nastavení</h3>
               <p class="iuInfoCenter__p">InfoUzel používá pouze údaje a nastavení nezbytné pro provoz webu a funkcí, které si uživatel zvolí.</p>
-              <p class="iuInfoCenter__p">U nástrojů fungujících local-first (poznámky, úkoly, kalendář, faktury a právní dokumenty) zůstává obsah standardně uložen v zařízení uživatele.</p>
+              <p class="iuInfoCenter__p">U nástrojů fungujících local-first (poznámky, úkoly, kalendář, faktury a právní dokumenty) zůstává obsah standardně uložen v zařízení uživatele. Zálohu obsahu si můžete kdykoli stáhnout v sekci <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-management">Správa dat</button> — export probíhá lokálně v prohlížeči a soubor se neodesílá provozovateli.</p>
               <p class="iuInfoCenter__p">Podrobnosti o ukládání dat naleznete v sekci <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-storage">Jak funguje ukládání dat</button>.</p>
               <h3 class="iuInfoCenter__h3">Provozní a bezpečnostní logy u hostingu</h3>
               <p class="iuInfoCenter__p">Při běžném provozu webu mohou hosting (GitHub Pages) a případně CDN/workery (Cloudflare) zpracovávat:</p>
@@ -6768,7 +6773,7 @@ font-src 'self' data:;
                 <li>odinstalujete PWA nebo aplikaci,</li>
                 <li>dojde k technické chybě zařízení.</li>
               </ul>
-              <p class="iuInfoCenter__p">Důležité dokumenty a faktury proto pravidelně <strong>exportujte nebo stáhněte</strong> mimo prohlížeč.</p>
+              <p class="iuInfoCenter__p">Důležité dokumenty a faktury proto pravidelně <strong>exportujte nebo stáhněte</strong> mimo prohlížeč. V iCentru v sekci <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-management">Správa dat</button> můžete stáhnout zálohu svého uloženého obsahu do souboru <code>.iubackup</code> a později ji obnovit.</p>
               <h3 class="iuInfoCenter__h3">PWA (ikona na ploše)</h3>
               <p class="iuInfoCenter__p">Instalace InfoUzel jako aplikace usnadní přístup, ale <strong>sama o sobě neznamená zálohu dat</strong>. Data zůstávají v tomto zařízení a prohlížeči.</p>
               <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="pwa">Jak vytvořit ikonu na plochu →</button></p>
@@ -6787,6 +6792,56 @@ font-src 'self' data:;
               <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
             </div>
           </article>
+
+          <article id="iuInfoCenterDetailDataManagement" class="iuInfoCenter__detail" data-iu-info-section="data-management" hidden>
+            <div class="iuInfoCenter__detailInner">
+              <p class="iuInfoCenter__lead">Stáhněte si záložní kopii svého uloženého obsahu nebo obnovte dříve vytvořenou zálohu. Operace probíhá lokálně v prohlížeči — soubor se neodesílá na server.</p>
+              <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
+                Záloha může obsahovat osobní údaje a další citlivý obsah, který jste si v InfoUzelu uložili. Uchovávejte stažený soubor na bezpečném místě. Stažením se vaše data z InfoUzelu <strong>nesmažou ani nepřesunou</strong>.
+              </div>
+              <section class="iuPrivacySettings__card" aria-labelledby="iuDataMgmtExportHeading">
+                <h3 class="iuPrivacySettings__cardTitle" id="iuDataMgmtExportHeading">Stáhnout obsah</h3>
+                <p class="iuInfoCenter__p">Stáhněte si záložní kopii svého uloženého obsahu. Vaše data zůstanou po stažení v InfoUzelu beze změny.</p>
+                <p class="iuInfoCenter__p iuDataMgmt__meta"><strong>Poslední úspěšný export na tomto zařízení:</strong> <span id="iuDataMgmtLastExport">—</span></p>
+                <div class="iuPrivacySettings__saveRow">
+                  <button type="button" class="iuPrivacySettings__saveBtn" id="iuDataMgmtExportBtn">Stáhnout obsah</button>
+                </div>
+              </section>
+              <section class="iuPrivacySettings__card" aria-labelledby="iuDataMgmtImportHeading">
+                <h3 class="iuPrivacySettings__cardTitle" id="iuDataMgmtImportHeading">Nahrát obsah</h3>
+                <p class="iuInfoCenter__p">Nahrajte dříve vytvořenou zálohu InfoUzelu a obnovte svůj uložený obsah.</p>
+                <div class="iuPrivacySettings__saveRow">
+                  <button type="button" class="iuPrivacySettings__saveBtn iuDataMgmt__importBtn" id="iuDataMgmtImportBtn">Nahrát obsah</button>
+                </div>
+                <input type="file" id="iuDataMgmtImportFile" class="iuDataMgmt__fileInput" accept=".iubackup,application/json" hidden />
+              </section>
+              <p class="iuInfoCenter__p iuDataMgmt__statusWrap" aria-live="polite" aria-atomic="true"><span id="iuDataMgmtStatus"></span></p>
+              <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-storage">🛡️ Ukládání a ochrana vašich dat →</button></p>
+              <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy">Ochrana soukromí a data →</button></p>
+              <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
+            </div>
+          </article>
+
+          <div id="iuDataMgmtImportConfirm" class="iuDataMgmtConfirm" role="dialog" aria-modal="true" aria-labelledby="iuDataMgmtImportConfirmTitle" hidden aria-hidden="true">
+            <div class="iuDataMgmtConfirm__scrim" data-iu-data-mgmt-close="1"></div>
+            <div class="iuDataMgmtConfirm__panel">
+              <header class="iuDataMgmtConfirm__head">
+                <h3 class="iuDataMgmtConfirm__title" id="iuDataMgmtImportConfirmTitle">Potvrdit obnovení zálohy</h3>
+                <button type="button" class="iu-overlayCloseBtn38 iu-close-btn-38" id="iuDataMgmtImportConfirmClose" aria-label="Zavřít">×</button>
+              </header>
+              <div class="iuDataMgmtConfirm__body">
+                <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
+                  Obnovení zálohy může nahradit současná uložená data v InfoUzelu. Před pokračováním bude vytvořena bezpečnostní kopie současného stavu.
+                </div>
+                <p class="iuInfoCenter__p" id="iuDataMgmtImportSummary"></p>
+                <div id="iuDataMgmtImportModules"></div>
+              </div>
+              <footer class="iuDataMgmtConfirm__foot">
+                <button type="button" class="iuDataMgmtConfirm__btn iuDataMgmtConfirm__btn--ghost" id="iuDataMgmtImportCancelBtn">Zrušit</button>
+                <button type="button" class="iuDataMgmtConfirm__btn iuDataMgmtConfirm__btn--primary" id="iuDataMgmtImportApplyBtn">Obnovit zálohu</button>
+              </footer>
+            </div>
+          </div>
 
           <article id="iuInfoCenterDetailDeviceStorage" class="iuInfoCenter__detail" data-iu-info-section="device-storage" hidden>
             <div class="iuInfoCenter__detailInner">
