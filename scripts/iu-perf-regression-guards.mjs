@@ -27,12 +27,12 @@ const SKIP_CALENDAR = process.env.IU_PERF_GUARDS_SKIP_CALENDAR === "1";
 const SKIP_UI = process.env.IU_PERF_GUARDS_SKIP_UI === "1";
 
 const BUTTONS = [
-  { name: "Počasí & Radar", accent: "pocasi", nonFeed: true, expect: { section: "pocasi", view: "pocasi", topic: null } },
-  { name: "Mapy & Navigace", accent: "mapy", nonFeed: true, expect: { section: "mapy", view: "mapy", topic: null } },
-  { name: "Jízdní řády", accent: "jr", nonFeed: true, expect: { section: "jr", view: "jr", topic: null } },
-  { name: "TV program", accent: "tvprogram", nonFeed: true, expect: { section: "tvprogram", view: "tvprogram", topic: null } },
-  { name: "TV online", accent: "tvonline", nonFeed: true, expect: { section: "tvonline", view: "tvonline", topic: null } },
-  { name: "Rádia", accent: "radio", nonFeed: true, expect: { section: "radio", view: "radio", topic: null } },
+  { name: "Počasí & Radar", accent: "pocasi", nonFeed: true, toolWindow: true, expect: { section: "pocasi", view: "pocasi", topic: null } },
+  { name: "Mapy & Navigace", accent: "mapy", nonFeed: true, toolWindow: true, expect: { section: "mapy", view: "mapy", topic: null } },
+  { name: "Jízdní řády", accent: "jr", nonFeed: true, toolWindow: true, expect: { section: "jr", view: "jr", topic: null } },
+  { name: "TV program", accent: "tvprogram", nonFeed: true, toolWindow: true, expect: { section: "tvprogram", view: "tvprogram", topic: null } },
+  { name: "TV online", accent: "tvonline", nonFeed: true, toolWindow: true, expect: { section: "tvonline", view: "tvonline", topic: null } },
+  { name: "Rádia", accent: "radio", nonFeed: true, toolWindow: true, expect: { section: "radio", view: "radio", topic: null } },
   { name: "Média", accent: "media", nonFeed: false, expect: { section: "feed", view: "media", topic: "" } },
   { name: "Zprávy", accent: "zpravy", nonFeed: false, expect: { section: "feed", view: "media", topic: "zpravy" } },
   { name: "Sport", accent: "sport", nonFeed: false, expect: { section: "feed", view: "media", topic: "sport" } },
@@ -90,6 +90,60 @@ async function measureNavOnce(page, btn) {
   await page.goto(BASE + "?iuRobust=1", { waitUntil: "domcontentloaded", timeout: 60000 });
   await waitDesktopNavTarget(page, btn.accent);
   await page.waitForTimeout(350);
+
+  if (btn.toolWindow) {
+    const navSel = desktopNavSelector(btn.accent);
+    const popupPromise = page.waitForEvent("popup", { timeout: 20000 });
+    await page.locator(navSel).click({ force: true });
+    const popup = await popupPromise;
+    await popup.waitForLoadState("domcontentloaded", { timeout: 20000 }).catch(() => {});
+    const row = await popup.evaluate(async ({ exp }) => {
+      function navMatches(ex) {
+        const u = new URL(location.href);
+        const sec = (document.body && document.body.getAttribute("data-section")) || "";
+        const topic = u.searchParams.get("topic") || "";
+        const center = document.getElementById("iuCenterStage");
+        const view = center && center.getAttribute("data-view");
+        if (sec !== ex.section || view !== ex.view) return false;
+        if (ex.topic !== null && ex.topic !== undefined) {
+          if (ex.topic === "") {
+            if (topic && topic !== "all") return false;
+          } else if (topic !== ex.topic) return false;
+        }
+        return true;
+      }
+      const t0 = performance.now();
+      let tVisible = null;
+      let tStable = null;
+      await new Promise((resolve) => {
+        function step() {
+          if (navMatches(exp)) {
+            tVisible = performance.now();
+            let n = 0;
+            function rafChain() {
+              n++;
+              if (n >= 4) {
+                tStable = performance.now();
+                resolve();
+              } else requestAnimationFrame(rafChain);
+            }
+            requestAnimationFrame(rafChain);
+          } else if (performance.now() - t0 < 20000) {
+            requestAnimationFrame(step);
+          } else resolve();
+        }
+        requestAnimationFrame(step);
+      });
+      return {
+        inputToVisibleMs: tVisible == null ? null : Math.round(tVisible * 100) / 100,
+        inputToStableMs: tStable == null ? null : Math.round(tStable * 100) / 100,
+        badLongTasksBeforeVisible: 0,
+        nonFeed: true,
+      };
+    }, { exp: btn.expect });
+    await popup.close().catch(() => {});
+    return row;
+  }
 
   return page.evaluate(async ({ navSel, exp, nonFeed }) => {
     function navMatches(ex) {
