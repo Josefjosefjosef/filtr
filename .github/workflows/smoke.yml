@@ -117,6 +117,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-desktop-left-rail-new-window-guard
 
+      - name: Desktop calendar all-day toggle guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-desktop-calendar-allday-toggle-guard
+
       - name: Desktop HomeCards feed width alignment guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run desktop-homecards-feed-width-alignment-guard
