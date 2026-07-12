@@ -12,13 +12,19 @@ import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
 import {
   BACKUP_FORMAT,
   BACKUP_VERSION,
+  BACKUP_FILE_EXT,
+  BACKUP_FILE_EXT_LEGACY,
   exportBackupJson,
   parseBackupJson,
+  parseAndVerifyBackupText,
+  normalizeBackupText,
+  validateBackupStructure,
   verifyBackupIntegrity,
   applyBackupReplaceMode,
   storageSnapshotsEqual,
   assertSafeJsonValue,
   userMessageForError,
+  formatBackupFilename,
 } from "../assets/iu-user-data-backup-core.js";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -156,6 +162,85 @@ async function runUnitTests() {
     fail("user_messages", e);
   }
 
+  try {
+    const storage = createMockStorage({
+      "iu.notes.store.v1": JSON.stringify({ schemaVersion: 1, notes: [{ id: "n1", title: "Český 🎉", body: "test" }] }),
+    });
+    const json = await exportBackupJson(storage, "v1", subtle);
+    const withBom = `\uFEFF${json}`;
+    const verified = await parseAndVerifyBackupText(withBom, subtle);
+    if (verified.format !== BACKUP_FORMAT) throw new Error("bom import failed");
+    pass("import_utf8_bom");
+  } catch (e) {
+    fail("import_utf8_bom", e);
+  }
+
+  try {
+    const storage = createMockStorage({
+      "iu.notes.store.v1": JSON.stringify({ schemaVersion: 1, notes: [{ id: "n1", title: "Round", body: "" }] }),
+      "iu.tasks.mvp.v1": JSON.stringify({ schemaVersion: 1, tasks: [{ id: "t1", title: "Task" }] }),
+    });
+    const json = await exportBackupJson(storage, "v1", subtle);
+    const wiped = createMockStorage({});
+    const backup = await parseAndVerifyBackupText(json, subtle);
+    await applyBackupReplaceMode(wiped, {}, backup);
+    const notes = JSON.parse(wiped.getItem("iu.notes.store.v1") || "{}");
+    const tasks = JSON.parse(wiped.getItem("iu.tasks.mvp.v1") || "{}");
+    if (!notes.notes?.length || !tasks.tasks?.length) throw new Error("round trip data missing");
+    pass("round_trip");
+  } catch (e) {
+    fail("round_trip", e);
+  }
+
+  try {
+    const name = formatBackupFilename(new Date("2026-07-12T10:15:00Z"));
+    if (!name.endsWith(BACKUP_FILE_EXT)) throw new Error("filename ext");
+    if (!name.startsWith("InfoUzel-zaloha-")) throw new Error("filename prefix");
+    pass("export_filename_json");
+  } catch (e) {
+    fail("export_filename_json", e);
+  }
+
+  try {
+    const storage = createMockStorage({
+      "iu.notes.store.v1": JSON.stringify({ schemaVersion: 1, notes: [{ id: "x", title: "x" }] }),
+    });
+    let json = await exportBackupJson(storage, "v1", subtle);
+    const parsed = JSON.parse(json);
+    parsed.modules.notes.entries["iu.notes.store.v1"] = JSON.stringify({ schemaVersion: 1, notes: [] });
+    json = JSON.stringify(parsed);
+    try {
+      await parseAndVerifyBackupText(json, subtle);
+      fail("checksum_tamper", "expected throw");
+    } catch (e) {
+      if (!String(e.message).includes("CHECKSUM")) throw e;
+      pass("checksum_tamper");
+    }
+  } catch (e) {
+    fail("checksum_tamper", e);
+  }
+
+  try {
+    validateBackupStructure(parseBackupJson('{"format":"other","backupVersion":1,"createdAt":"2026-01-01T00:00:00.000Z","modules":{}}'));
+    fail("reject_wrong_format", "expected throw");
+  } catch (e) {
+    if (String(e.message).includes("WRONG_FORMAT")) pass("reject_wrong_format");
+    else fail("reject_wrong_format", e);
+  }
+
+  try {
+    const legacyExt = `.json content test${BACKUP_FILE_EXT_LEGACY}`;
+    if (!legacyExt.endsWith(BACKUP_FILE_EXT_LEGACY)) throw new Error("legacy ext");
+    const storage = createMockStorage({
+      "iu.notes.store.v1": JSON.stringify({ schemaVersion: 1, notes: [{ id: "l", title: "legacy" }] }),
+    });
+    const json = await exportBackupJson(storage, "legacy", subtle);
+    await parseAndVerifyBackupText(normalizeBackupText(json), subtle);
+    pass("legacy_backup_content");
+  } catch (e) {
+    fail("legacy_backup_content", e);
+  }
+
   const fails = results.filter((r) => !r.pass);
   return { pass: fails.length === 0, results, fails: fails.map((f) => f.id) };
 }
@@ -169,7 +254,7 @@ function staticGate() {
     { id: "export_btn", pass: /id="iuDataMgmtExportBtn"/.test(index) },
     { id: "import_btn", pass: /id="iuDataMgmtImportBtn"/.test(index) },
     { id: "script_ui", pass: /iu-user-data-backup-v1\.js/.test(index) },
-    { id: "info_center_bump", pass: /info-center-data-mgmt-v1-20260711/.test(index) },
+    { id: "script_ui_bump", pass: /user-data-backup-v1-20260712/.test(index) },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
   return { pass: fails.length === 0, fails, checks };
@@ -284,19 +369,40 @@ async function runPlaywright() {
     };
   });
 
+  const importRoundTrip = await page.evaluate(async () => {
+    const notes = JSON.stringify({
+      schemaVersion: 1,
+      notes: [{ id: "pw1", title: "Playwright import", body: "diakritika", tags: [], createdAt: 1, updatedAt: 1 }],
+    });
+    localStorage.setItem("iu.notes.store.v1", notes);
+    const json = await window.iuUserDataBackupExportJson();
+    localStorage.removeItem("iu.notes.store.v1");
+    if (localStorage.getItem("iu.notes.store.v1")) return { pass: false, reason: "not cleared" };
+    await window.iuUserDataBackupParseAndVerify(json);
+    return { pass: true, hasFormat: json.includes("infouzel-backup") };
+  });
+
   await browser.close();
   server.close();
 
   const exportFails = cycles.filter((c) => !c.exportOk || !c.unchanged);
+
   return {
-    pass: exportFails.length === 0 && ui.panelVisible && ui.exportBtn && ui.importBtn,
+    pass:
+      exportFails.length === 0 &&
+      ui.panelVisible &&
+      ui.exportBtn &&
+      ui.importBtn &&
+      importRoundTrip.pass,
     cycles,
     ui,
+    importRoundTrip,
     fails: [
       ...exportFails.map((c) => `cycle_${c.cycle}`),
       ...(ui.panelVisible ? [] : ["panel_visible"]),
       ...(ui.exportBtn ? [] : ["export_btn_dom"]),
       ...(ui.importBtn ? [] : ["import_btn_dom"]),
+      ...(importRoundTrip.pass ? [] : ["import_round_trip"]),
     ],
   };
 }

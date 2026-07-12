@@ -5808,7 +5808,7 @@ font-src 'self' data:;
     </script>
     <script defer src="/assets/iu-consent.js?v=consent-v1-20260609"></script>
     <script defer src="/assets/iu-info-center.js?v=info-center-data-mgmt-v1-20260711"></script>
-    <script type="module" src="/assets/iu-user-data-backup-v1.js?v=user-data-backup-v1-20260711"></script>
+    <script type="module" src="/assets/iu-user-data-backup-v1.js?v=user-data-backup-v1-20260712"></script>
     <script defer src="/assets/iu-home-premium-install-box.js?v=1"></script>
     <script defer src="/assets/iu-consent-layer.js?v=consent-layer-v1-20260609"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=parcel-navigate-address-v62-20260629"></script>
@@ -6773,7 +6773,7 @@ font-src 'self' data:;
                 <li>odinstalujete PWA nebo aplikaci,</li>
                 <li>dojde k technické chybě zařízení.</li>
               </ul>
-              <p class="iuInfoCenter__p">Důležité dokumenty a faktury proto pravidelně <strong>exportujte nebo stáhněte</strong> mimo prohlížeč. V iCentru v sekci <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-management">Správa dat</button> můžete stáhnout zálohu svého uloženého obsahu do souboru <code>.iubackup</code> a později ji obnovit.</p>
+              <p class="iuInfoCenter__p">Důležité dokumenty a faktury proto pravidelně <strong>exportujte nebo stáhněte</strong> mimo prohlížeč. V iCentru v sekci <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-management">Správa dat</button> můžete stáhnout zálohu svého uloženého obsahu do souboru <code>.json</code> (nebo starší <code>.iubackup</code>) a později ji obnovit.</p>
               <h3 class="iuInfoCenter__h3">PWA (ikona na ploše)</h3>
               <p class="iuInfoCenter__p">Instalace InfoUzel jako aplikace usnadní přístup, ale <strong>sama o sobě neznamená zálohu dat</strong>. Data zůstávají v tomto zařízení a prohlížeči.</p>
               <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="pwa">Jak vytvořit ikonu na plochu →</button></p>
@@ -6813,7 +6813,7 @@ font-src 'self' data:;
                 <div class="iuPrivacySettings__saveRow">
                   <button type="button" class="iuPrivacySettings__saveBtn iuDataMgmt__importBtn" id="iuDataMgmtImportBtn">Nahrát obsah</button>
                 </div>
-                <input type="file" id="iuDataMgmtImportFile" class="iuDataMgmt__fileInput" accept=".iubackup,application/json" hidden />
+                <input type="file" id="iuDataMgmtImportFile" class="iuDataMgmt__fileInput" accept=".json,.iubackup,application/json,text/plain,text/json" hidden />
               </section>
               <p class="iuInfoCenter__p iuDataMgmt__statusWrap" aria-live="polite" aria-atomic="true"><span id="iuDataMgmtStatus"></span></p>
               <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-storage">🛡️ Ukládání a ochrana vašich dat →</button></p>
