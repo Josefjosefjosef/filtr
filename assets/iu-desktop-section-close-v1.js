@@ -93,6 +93,17 @@
     }
   }
 
+  function isToolWindowContext() {
+    try {
+      if (typeof window.iuDesktopLeftRailNewWindowIsToolWindow === "function") {
+        return !!window.iuDesktopLeftRailNewWindowIsToolWindow();
+      }
+      if (document.documentElement.getAttribute("data-iu-tool-window") === "1") return true;
+      if (document.body && document.body.getAttribute("data-iu-tool-window") === "1") return true;
+    } catch (_) {}
+    return false;
+  }
+
   function cancelRestore() {
     restoreState = null;
   }
@@ -239,6 +250,10 @@
 
   function ensureCloseButtons() {
     if (!isDesktop()) {
+      removeCloseButtons();
+      return;
+    }
+    if (isToolWindowContext()) {
       removeCloseButtons();
       return;
     }
