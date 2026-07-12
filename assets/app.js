@@ -41092,6 +41092,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ".iu-calAllDaySwitch.is-on .iu-calAllDaySwitch__thumb{transform:translateX(20px)}" +
     ".iu-calAllDaySwitch:focus-visible{outline:2px solid #16a34a;outline-offset:2px;border-radius:999px}" +
     ".iu-calAllDaySection{margin:0 0 10px;padding:0;box-sizing:border-box}" +
+    ".iu-calAllDayDraft{margin:0 0 10px;padding:0;box-sizing:border-box}" +
     ".iu-calAllDaySection__head{font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:rgba(20,83,45,.72);margin:0 0 6px;padding:0 4px}" +
     ".iu-calAllDaySection__list{display:grid;gap:6px}" +
     ".iu-calAllDayChip{display:flex;align-items:flex-start;gap:8px;width:100%;margin:0;padding:10px 12px;border-radius:12px;border:1px solid rgba(21,128,61,.2);background:linear-gradient(180deg,rgba(236,253,245,.95),#fff);color:#0f172a;text-align:left;cursor:pointer;box-sizing:border-box;box-shadow:0 2px 8px rgba(21,128,61,.08);-webkit-tap-highlight-color:transparent;touch-action:manipulation}" +
@@ -42211,6 +42212,54 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     render();
   }
 
+  function syncInlineFormFromDom(root){
+    if (!state.inline) return;
+    const hosts = [];
+    if (root && root.querySelector) hosts.push(root);
+    else {
+      const side = document.getElementById("iuCalendarSidePanelScroll");
+      const main = document.getElementById("iuCalendarViewRoot");
+      if (side) hosts.push(side);
+      if (main) hosts.push(main);
+    }
+    for (let hi = 0; hi < hosts.length; hi++){
+      const ir = hosts[hi].querySelector("[data-iu-cal-inline-root]");
+      if (!ir) continue;
+      ir.querySelectorAll("[data-iu-cal-inline-field]").forEach((inp)=>{
+        const f = inp.getAttribute("data-iu-cal-inline-field");
+        const v = inp.value || "";
+        if (f === "title") state.inline.title = v;
+        else if (f === "address") state.inline.address = v;
+        else if (f === "note") state.inline.note = v;
+        else if (f === "date") state.inline.date = String(v).slice(0, 10);
+      });
+      break;
+    }
+  }
+
+  function refreshInlineAllDayUi(inlineRoot){
+    if (!inlineRoot || !state.inline) return;
+    const allDay = !!state.inline.allDay;
+    const btn = inlineRoot.querySelector("[data-iu-cal-inline-all-day]");
+    if (btn){
+      btn.classList.toggle("is-on", allDay);
+      btn.setAttribute("aria-checked", allDay ? "true" : "false");
+    }
+    const timeField = inlineRoot.querySelector(".iu-calInline__field--time");
+    if (timeField){
+      timeField.classList.toggle("is-hidden", allDay);
+      if (allDay){
+        timeField.setAttribute("hidden", "");
+        timeField.setAttribute("aria-hidden", "true");
+      } else {
+        timeField.removeAttribute("hidden");
+        timeField.removeAttribute("aria-hidden");
+      }
+    }
+    const timeBtn = inlineRoot.querySelector("[data-iu-cal-inline-time-open]");
+    if (timeBtn) timeBtn.classList.toggle("is-hidden", allDay);
+  }
+
   function buildInlineEditorHtml(){
     const inl = state.inline;
     if (!inl) return "";
@@ -42309,7 +42358,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const nearestId = nearestFutureEventIdOnDate(iso);
     const skipBannerInsideHours = isCalMobileLayout() && state.dayOpen;
     const allDayHtml = renderAllDaySectionHTML(iso);
-    let html = (skipBannerInsideHours ? "" : renderDayHolidayBannerHTML(iso)) + allDayHtml + '<div class="iu-calDayHoursRoot">';
+    const inl0 = state.inline;
+    const showAllDayDraft =
+      inl0 &&
+      inl0.allDay &&
+      !shouldUseCalBottomSheet() &&
+      !isCalDesktopSideFormOnly();
+    const allDayDraftHtml = showAllDayDraft
+      ? '<div class="iu-calAllDayDraft" data-iu-cal-all-day-draft="1">' + buildInlineEditorHtml() + "</div>"
+      : "";
+    let html = (skipBannerInsideHours ? "" : renderDayHolidayBannerHTML(iso)) + allDayHtml + allDayDraftHtml + '<div class="iu-calDayHoursRoot">';
     for (let slotH = 1; slotH <= 23; slotH++){
       const label = pad(slotH) + ":00";
       const evsAll = getEventsInHourSlot(iso, slotH);
@@ -42317,7 +42375,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const editingId = inl && inl.mode === "edit" ? String(inl.id || "") : "";
       const evs = evsAll.filter((ev)=> !editingId || ev.id !== editingId);
       const eventCount = evs.length;
-      const showInline = inl && inl.slotHour === slotH && !shouldUseCalBottomSheet() && !isCalDesktopSideFormOnly();
+      const showInline = inl && !inl.allDay && inl.slotHour === slotH && !shouldUseCalBottomSheet() && !isCalDesktopSideFormOnly();
       const showHourLabel = eventCount === 0 && !showInline;
       const evHtml = evs.map((ev)=> buildTimelineEventHtml(ev, nearestId)).join("");
       const inlineHtml = showInline ? buildInlineEditorHtml() : "";
@@ -42873,6 +42931,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (allDayBtn){
       allDayBtn.addEventListener("click", (ev)=>{
         ev.preventDefault();
+        ev.stopPropagation();
+        syncInlineFormFromDom(root);
         if (!state.inline) return;
         state.inline.allDay = !state.inline.allDay;
         if (state.inline.allDay){
@@ -42881,6 +42941,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           state.inline.slotHour = eventSlotHour({ time: state.inline.time, date: state.inline.date });
         }
         if (shouldUseCalBottomSheet()) syncCalBottomSheet();
+        else if (isCalDesktopSideFormOnly()) refreshInlineAllDayUi(inlineRoot);
         else render();
       });
     }
