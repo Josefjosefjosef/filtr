@@ -62,12 +62,19 @@ html[data-iu-tool-window="1"] #newsList > #iuCenterStage {
   grid-column: 1 / -1 !important;
   grid-row: auto !important;
   width: 100% !important;
-  max-width: 100% !important;
+  max-width: 600px !important;
   min-width: 0 !important;
-  margin: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
   padding: 0 16px 24px !important;
   box-sizing: border-box !important;
   scroll-margin-top: calc(var(--topbarStackH, 72px) + 4px) !important;
+}
+
+html[data-iu-tool-window="1"] .iuDesktopSectionCloseBtn,
+html[data-iu-tool-window="1"] .iuDesktopSectionCloseFooter,
+html[data-iu-tool-window="1"] .iuDesktopSectionCloseBar {
+  display: none !important;
 }
 
 html[data-iu-tool-window="1"] #feed.iuTimelineFeed {
