@@ -78,6 +78,24 @@ async function openCalendarOverlay(page) {
   await page.waitForTimeout(400);
 }
 
+async function fillInlineTestFields(page, title, address) {
+  await page.evaluate(
+    ({ titleVal, addressVal }) => {
+      const root = document.querySelector("[data-iu-cal-inline-root]");
+      if (!root) throw new Error("inline root missing");
+      const titleIn = root.querySelector('[data-iu-cal-inline-field="title"]');
+      const addressIn = root.querySelector('[data-iu-cal-inline-field="address"]');
+      if (!titleIn || !addressIn) throw new Error("inline fields missing");
+      titleIn.value = titleVal;
+      addressIn.value = addressVal;
+      titleIn.dispatchEvent(new Event("input", { bubbles: true }));
+      addressIn.dispatchEvent(new Event("input", { bubbles: true }));
+    },
+    { titleVal: title, addressVal: address }
+  );
+  await page.waitForTimeout(150);
+}
+
 async function readInlineFormState(page) {
   return page.evaluate(() => {
     const root = document.querySelector("[data-iu-cal-inline-root]");
@@ -111,8 +129,7 @@ async function testDaySlotAllDayToggle(page) {
   const slot = page.locator("[data-iu-cal-slot-empty]").first();
   await slot.click({ force: true, timeout: 30000 });
   await page.waitForSelector("[data-iu-cal-inline-root]", { timeout: 30000 });
-  await page.fill('[data-iu-cal-inline-field="title"]', "Test celodenni A");
-  await page.fill('[data-iu-cal-inline-field="address"]', "Praha 1");
+  await fillInlineTestFields(page, "Test celodenni A", "Praha 1");
   for (let i = 0; i < TOGGLE_CYCLES; i++) {
     await page.locator("[data-iu-cal-inline-all-day]").click({ force: true, timeout: 10000 });
     await page.waitForTimeout(120);
@@ -156,8 +173,7 @@ async function testMonthFabAllDayToggle(page) {
   }, { timeout: 30000 });
   await page.locator("#iuCalMonthActionBar [data-iu-cal-month-fab]").click({ force: true, timeout: 10000 });
   await page.waitForSelector("[data-iu-cal-inline-root]", { timeout: 30000 });
-  await page.fill('[data-iu-cal-inline-field="title"]', "Test celodenni B");
-  await page.fill('[data-iu-cal-inline-field="address"]', "Brno 2");
+  await fillInlineTestFields(page, "Test celodenni B", "Brno 2");
   for (let i = 0; i < TOGGLE_CYCLES; i++) {
     await page.locator("[data-iu-cal-inline-all-day]").click({ force: true, timeout: 10000 });
     await page.waitForTimeout(120);
