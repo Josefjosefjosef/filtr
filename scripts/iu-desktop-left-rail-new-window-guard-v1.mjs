@@ -158,8 +158,11 @@ async function assertPopupLayout(popup, accent) {
     var spacerRect = spacer ? spacer.getBoundingClientRect() : null;
     var stage = document.getElementById("iuCenterStage");
     var stageRect = stage ? stage.getBoundingClientRect() : null;
+    var stageStyle = stage ? getComputedStyle(stage) : null;
     var feed = document.getElementById("feed");
     var feedDisplay = feed ? getComputedStyle(feed).display : "";
+    var closeCount = document.querySelectorAll("[data-iu-desktop-section-close]").length;
+    var vw = window.innerWidth || 0;
     return {
       sec: sec,
       topbarH: topRect ? Math.round(topRect.height) : 0,
@@ -167,6 +170,11 @@ async function assertPopupLayout(popup, accent) {
       leftRailHidden: leftRail ? getComputedStyle(leftRail).display === "none" : true,
       accordionHidden: accordion ? getComputedStyle(accordion).display === "none" : true,
       stageTop: stageRect ? Math.round(stageRect.top) : 0,
+      stageWidth: stageRect ? Math.round(stageRect.width) : 0,
+      stageLeft: stageRect ? Math.round(stageRect.left) : 0,
+      stageRight: stageRect ? Math.round(vw - stageRect.right) : 0,
+      stageMaxWidth: stageStyle ? String(stageStyle.maxWidth || "") : "",
+      closeCount: closeCount,
       feedHidden: feedDisplay === "none",
       href: location.href,
       expected: ac,
@@ -187,6 +195,20 @@ async function assertPopupLayout(popup, accent) {
   if (!layout.accordionHidden) throw new Error(`${accent}: right rail visible in tool window`);
   if (layout.stageTop < layout.spacerH - 4) {
     throw new Error(`${accent}: center stage under topbar overlap stageTop=${layout.stageTop} spacer=${layout.spacerH}`);
+  }
+  if (layout.closeCount > 0) {
+    throw new Error(`${accent}: tool window must not show Zavřít controls count=${layout.closeCount}`);
+  }
+  if (layout.stageWidth > 600) {
+    throw new Error(`${accent}: center stage wider than 600px w=${layout.stageWidth}`);
+  }
+  if (Math.abs(layout.stageLeft - layout.stageRight) > 16) {
+    throw new Error(
+      `${accent}: center stage not centered left=${layout.stageLeft} right=${layout.stageRight}`
+    );
+  }
+  if (!layout.stageMaxWidth.includes("600")) {
+    throw new Error(`${accent}: center stage max-width expected 600px got=${layout.stageMaxWidth}`);
   }
 }
 
