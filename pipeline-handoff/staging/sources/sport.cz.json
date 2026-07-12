@@ -1,24 +1,73 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-07-12T02:17:51.650182Z",
+  "ingestedAt": "2026-07-12T04:03:08.434378Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Argentina drží vedení, čtvrtfinále má pod kontrolou",
+      "title": "Messiho zlatý sen žije. Argentina udolala oslabené Švýcary až v prodloužení",
       "url": "https://www.sport.cz/clanek/fotbal-ms-2026-ctvrtfinale-argentina-svycarsko-online-5503692",
       "dt": "2026-07-11T17:01:35Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "argentina",
-        "drží",
-        "fotbal",
-        "kontrolou",
-        "online",
-        "vedení",
-        "čtvrtfinále"
+        "messiho",
+        "oslabené",
+        "prodloužení",
+        "sen",
+        "udolala",
+        "zlatý",
+        "švýcary",
+        "žije"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Smolný návrat. McGregor se opět zranil",
+      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-smolny-navrat-mcgregor-se-opet-zranil-5504268",
+      "dt": "2026-07-12T03:43:48Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "mcgregor",
+        "návrat",
+        "opět",
+        "smolný",
+        "zranil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Anglický sen žije! Norsko zlomil dvougólový hrdina Bellingham",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-haaland-proti-kaneovi-treti-ctvrtfinale-ms-nabidne-souboj-dvou-golovych-masin-5503675",
+      "dt": "2026-07-11T10:00:23Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "anglický",
+        "bellingham",
+        "dvougólový",
+        "hrdina",
+        "norsko",
+        "sen",
+        "zlomil",
+        "žije"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -98,31 +147,6 @@
         "skandál",
         "tvrdí",
         "šílenost"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Anglický sen žije! Norsko zlomil dvougólový hrdina Bellingham",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-haaland-proti-kaneovi-treti-ctvrtfinale-ms-nabidne-souboj-dvou-golovych-masin-5503675",
-      "dt": "2026-07-11T10:00:23Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "anglický",
-        "bellingham",
-        "dvougólový",
-        "hrdina",
-        "norsko",
-        "sen",
-        "zlomil",
-        "žije"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -742,32 +766,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Smutek v Jihoafrické republice. Zemřel hráč, který nastoupil na MS proti českému týmu",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-smutek-v-jihoafricke-republice-zemrel-hrac-ktery-nastoupil-na-ms-proti-ceskemu-tymu-5503685",
-      "dt": "2026-07-11T13:39:29Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hráč",
-        "jihoafrické",
-        "nastoupil",
-        "proti",
-        "republice",
-        "smutek",
-        "týmu",
-        "zemřel",
-        "českému"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -778,7 +776,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45496,
+      "bytes": 44759,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -815,7 +813,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-12T01:40:25Z",
+        "raw_feed_latest_publishedAt": "2026-07-12T03:43:48Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -831,8 +829,16 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Argentina drží vedení, čtvrtfinále má pod kontrolou",
+            "title": "Messiho zlatý sen žije. Argentina udolala oslabené Švýcary až v prodloužení",
             "publishedAt": "2026-07-11T17:01:35Z"
+          },
+          {
+            "title": "Smolný návrat. McGregor se opět zranil",
+            "publishedAt": "2026-07-12T03:43:48Z"
+          },
+          {
+            "title": "Anglický sen žije! Norsko zlomil dvougólový hrdina Bellingham",
+            "publishedAt": "2026-07-11T10:00:23Z"
           },
           {
             "title": "Proč spadne jak hruška? Zásahy VAR budí emoce, soptí i Haalandův otec",
@@ -847,20 +853,12 @@
             "publishedAt": "2026-07-12T00:12:01Z"
           },
           {
-            "title": "Anglický sen žije! Norsko zlomil dvougólový hrdina Bellingham",
-            "publishedAt": "2026-07-11T10:00:23Z"
-          },
-          {
             "title": "Rušno v Německu. Bitka na závěr, Vémola hlásí návrat",
             "publishedAt": "2026-07-11T21:59:29Z"
           },
           {
             "title": "Jak uviděla trofeje, měla jasno. Beru si tu velkou, líčila šampionka Nosková. S Kájou snad zůstaneme kamarádky",
             "publishedAt": "2026-07-11T21:22:41Z"
-          },
-          {
-            "title": "Zemřel bývalý argentinský fotbalista, jehož vyloučení na MS změnilo pravidla",
-            "publishedAt": "2026-07-11T21:00:07Z"
           }
         ]
       }
