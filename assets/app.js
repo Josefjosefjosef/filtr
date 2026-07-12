@@ -7442,13 +7442,6 @@ try {
   const IU_READ_ARTICLES_MAX = 2500;
   const IU_HIDE_UNDO_MS = 5000;
 
-  function iuReadArticlesIsMobileTabletViewport() {
-    try {
-      return !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
-    } catch (_) {}
-    return false;
-  }
-
   function iuTimelineCompactViewportMatches() {
     try {
       return !!(window.matchMedia && window.matchMedia("(max-width: 1024px)").matches);
@@ -7551,23 +7544,25 @@ try {
     return iuReadArticlesGetIdSet().has(id);
   }
 
-  function iuReadArticlesMarkRead(articleId) {
+  function iuReadArticlesMarkRead(articleId, articleEl) {
     const id = String(articleId || "").trim();
-    if (!id || !iuReadArticlesIsMobileTabletViewport()) return;
+    if (!id) return;
     const set = iuReadArticlesGetIdSet();
-    if (set.has(id)) return;
-    set.add(id);
-    const arr = Array.from(set);
-    iuArticleActionsWriteJson(
-      IU_READ_ARTICLES_KEY,
-      arr.length > IU_READ_ARTICLES_MAX ? arr.slice(arr.length - IU_READ_ARTICLES_MAX) : arr
-    );
+    if (!set.has(id)) {
+      set.add(id);
+      const arr = Array.from(set);
+      iuArticleActionsWriteJson(
+        IU_READ_ARTICLES_KEY,
+        arr.length > IU_READ_ARTICLES_MAX ? arr.slice(arr.length - IU_READ_ARTICLES_MAX) : arr
+      );
+    }
+    if (articleEl) iuReadArticlesApplyToArticle(articleEl, true);
   }
 
-  function iuReadArticlesApplyToArticle(articleEl) {
-    if (!articleEl || !iuReadArticlesIsMobileTabletViewport()) return;
+  function iuReadArticlesApplyToArticle(articleEl, knownRead) {
+    if (!articleEl) return;
     const id = String(articleEl.getAttribute("data-iu-article-id") || "").trim();
-    const isRead = id && iuReadArticlesIsRead(id);
+    const isRead = knownRead === true ? true : !!(id && iuReadArticlesIsRead(id));
     articleEl.classList.toggle("iuTimelineItem--read", !!isRead);
     const left = articleEl.querySelector(".iuTimelineLeft");
     if (!left) return;
@@ -7587,7 +7582,7 @@ try {
 
   function iuReadArticlesSyncFeed(feedRoot) {
     try {
-      if (!feedRoot || !iuReadArticlesIsMobileTabletViewport()) return;
+      if (!feedRoot) return;
       feedRoot.querySelectorAll("article.iuTimelineItem[data-feed-type='article']").forEach(function (art) {
         iuReadArticlesApplyToArticle(art);
       });
@@ -8394,12 +8389,11 @@ try {
       const t = e.target;
       if (!(t instanceof Element)) return;
       const titleLink = t.closest("article.iuTimelineItem[data-feed-type='article'] .news-titleLink");
-      if (titleLink && iuReadArticlesIsMobileTabletViewport()) {
+      if (titleLink) {
         const articleEl = titleLink.closest("article.iuTimelineItem");
         const id = articleEl ? String(articleEl.getAttribute("data-iu-article-id") || "").trim() : "";
-        if (id) {
-          iuReadArticlesMarkRead(id);
-          iuReadArticlesApplyToArticle(articleEl);
+        if (id && articleEl) {
+          iuReadArticlesMarkRead(id, articleEl);
         }
         return;
       }
