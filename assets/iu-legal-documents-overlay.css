@@ -679,6 +679,7 @@
   display: flex;
   align-items: center;
   flex: 1 1 auto;
+  min-width: 0;
   padding: 6px 12px;
   background: var(--iu-brand-blue-a08);
   color: var(--iu-brand-blue-dark);
@@ -686,12 +687,16 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .iu-legal-doc-paper__sectionBody{
   font-family: "Segoe UI", system-ui, sans-serif;
   font-size: 13px;
   line-height: 1.65;
   color: #1F2937;
+  overflow-wrap: anywhere;
   word-break: break-word;
 }
 .iu-legal-doc-paper__fieldLabel{

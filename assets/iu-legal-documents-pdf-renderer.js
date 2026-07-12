@@ -154,14 +154,93 @@ function shouldKeepVisualBlock(block) {
   return true;
 }
 
+function isNumberedSectionStartLine(line) {
+  return SECTION_HEADING_RE.test(String(line || "").trim());
+}
+
+function isSectionStartLine(line) {
+  const trimmed = String(line || "").trim();
+  return isNumberedSectionStartLine(trimmed) || isStructuralSectionHeading(trimmed);
+}
+
+function parseDocumentSectionsFromText(visualText) {
+  const lines = String(visualText || "").split("\n");
+  const titleLines = [];
+  const sections = [];
+  let mode = "title";
+  let current = null;
+
+  function pushCurrent() {
+    if (!current) return;
+    sections.push({
+      num: current.num || "",
+      heading: current.heading || "",
+      body: current.bodyLines.join("\n").trim(),
+      isSignatures: /^podpisy$/i.test(current.heading || ""),
+      isPlaceDate: /^místo a datum$/i.test(current.heading || ""),
+    });
+    current = null;
+  }
+
+  lines.forEach((line) => {
+    const trimmed = String(line || "").trim();
+    if (mode === "title") {
+      if (isSectionStartLine(trimmed)) {
+        mode = "body";
+        pushCurrent();
+        const numbered = parseSectionHeading(trimmed);
+        current = {
+          num: numbered ? numbered.num : "",
+          heading: numbered ? numbered.heading : trimmed,
+          bodyLines: [],
+        };
+        return;
+      }
+      titleLines.push(line);
+      return;
+    }
+
+    if (isSectionStartLine(trimmed)) {
+      pushCurrent();
+      const numbered = parseSectionHeading(trimmed);
+      current = {
+        num: numbered ? numbered.num : "",
+        heading: numbered ? numbered.heading : trimmed,
+        bodyLines: [],
+      };
+      return;
+    }
+
+    if (current) current.bodyLines.push(line);
+  });
+
+  pushCurrent();
+
+  const title = String(titleLines[0] || "").trim();
+  const subtitle = titleLines.slice(1).join("\n").trim();
+  return { title, subtitle, sections };
+}
+
 /** Vizuální výstup/PDF: vynechá celé sekce bez uživatelských dat (bez úpravy zdrojového textu). */
 export function filterEmptySectionsForVisualOutput(plainText) {
   const text = String(plainText || "");
   if (!text.trim()) return text;
-  return text
-    .split(/\n\n/)
-    .filter(shouldKeepVisualBlock)
-    .join("\n\n");
+  const parsed = parseDocumentSectionsFromText(text);
+  const kept = parsed.sections.filter((section) => {
+    const block = section.heading
+      ? (section.num ? `${section.num}. ${section.heading}` : section.heading) + "\n\n" + section.body
+      : section.body;
+    return shouldKeepVisualBlock(block);
+  });
+  const parts = [];
+  if (parsed.title) {
+    parts.push(parsed.subtitle ? `${parsed.title}\n${parsed.subtitle}` : parsed.title);
+  }
+  kept.forEach((section) => {
+    const head = section.num ? `${section.num}. ${section.heading}` : section.heading;
+    parts.push(section.body ? `${head}\n\n${section.body}` : head);
+  });
+  return parts.join("\n\n");
 }
 
 function parseSectionHeading(firstLine) {
@@ -179,35 +258,16 @@ function parseSectionHeading(firstLine) {
 /** @param {string} plainText */
 export function parseLegalDocumentVisualStructure(plainText) {
   const visualText = filterEmptySectionsForVisualOutput(plainText);
-  const blocks = visualText ? visualText.split(/\n\n/) : [];
-  if (!blocks.length) {
+  const parsed = parseDocumentSectionsFromText(visualText);
+  if (!parsed.title && !parsed.sections.length) {
     return { title: "", subtitle: "", sections: [], sourceText: visualText };
   }
-
-  const titleLines = blocks[0].split("\n");
-  const title = String(titleLines[0] || "").trim();
-  const subtitle = titleLines.length > 1 ? titleLines.slice(1).join("\n").trim() : "";
-  const sections = [];
-
-  for (let i = 1; i < blocks.length; i++) {
-    const block = String(blocks[i] || "");
-    const lines = block.split("\n");
-    const firstLine = lines[0];
-    const parsed = parseSectionHeading(firstLine);
-    if (parsed) {
-      sections.push({
-        num: parsed.num,
-        heading: parsed.heading,
-        body: lines.slice(1).join("\n"),
-        isSignatures: /^podpisy$/i.test(parsed.heading),
-        isPlaceDate: /^místo a datum$/i.test(parsed.heading),
-      });
-    } else {
-      sections.push({ num: "", heading: "", body: block, isFreeBlock: true });
-    }
-  }
-
-  return { title, subtitle, sections, sourceText: visualText };
+  return {
+    title: parsed.title,
+    subtitle: parsed.subtitle,
+    sections: parsed.sections,
+    sourceText: visualText,
+  };
 }
 
 /** Logo z desktop top baru — stejná značka .iuBrand, bez nového assetu. */
@@ -420,22 +480,43 @@ function isFieldLabelLine(line) {
   if (isPlaceholderOnlyLine(s)) return false;
   if (/^_{5,}/.test(s)) return false;
   if (/^(podpisy|místo a datum|závěrečná)/i.test(s)) return false;
-  return s.length <= 80;
+  return s.length <= 120;
+}
+
+/** Náhled/PDF: pomocný text v závorkách z názvu pruhu (formulářové popisky beze změny). */
+export function stripParentheticalForBarTitle(text) {
+  return String(text || "")
+    .replace(/\s*\([^)]*\)/g, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
 }
 
 function splitBodyIntoLabeledParts(body) {
-  const parts = String(body || "").split(/\n\n+/);
+  const chunks = String(body || "").split(/\n\n+/);
   const result = [];
-  parts.forEach((part) => {
-    const lines = part.split("\n");
-    const first = String(lines[0] || "").trim();
-    if (!first || first.indexOf(":") >= 0) return;
-    const rest = lines.slice(1).join("\n").trim();
-    if (!rest || isPlaceholderOnlyLine(rest)) return;
-    if (isFieldLabelLine(first)) {
-      result.push({ label: first, content: rest });
+  for (let c = 0; c < chunks.length; c += 1) {
+    const chunk = String(chunks[c] || "").trim();
+    if (!chunk) continue;
+    const chunkLines = chunk.split("\n");
+    const first = String(chunkLines[0] || "").trim();
+    if (!first || first.indexOf(":") >= 0) continue;
+
+    if (chunkLines.length === 1 && isFieldLabelLine(first)) {
+      const nextChunk = c + 1 < chunks.length ? String(chunks[c + 1] || "").trim() : "";
+      if (nextChunk && !isPlaceholderOnlyLine(nextChunk)) {
+        result.push({ label: first, content: nextChunk });
+        c += 1;
+      }
+      continue;
     }
-  });
+
+    if (isFieldLabelLine(first)) {
+      const rest = chunkLines.slice(1).join("\n").trim();
+      if (rest && !isPlaceholderOnlyLine(rest)) {
+        result.push({ label: first, content: rest });
+      }
+    }
+  }
   return result;
 }
 
@@ -443,8 +524,8 @@ function formatPlainContentHtml(text) {
   return escHtml(String(text || "")).replace(/\n/g, "<br>");
 }
 
-/** iu-legal-documents-unified-template-v1: jednotné modré pruhy pro všechny hlavní sekce (vč. stran). */
-function resolveSectionBarSegments(section) {
+/** iu-legal-documents-unified-template-v1: jednotné modré pruhy pro každou vyplňovanou část (vč. stran). */
+export function resolveSectionBarSegments(section) {
   const segments = [];
   const body = String((section && section.body) || "");
   const heading = String((section && section.heading) || "").trim();
@@ -453,7 +534,7 @@ function resolveSectionBarSegments(section) {
   if (section && section.isSignatures) {
     segments.push({
       num,
-      heading: heading || "Podpisy",
+      heading: stripParentheticalForBarTitle(heading || "Podpisy"),
       content: "",
       isSignatures: true,
       rawBody: body,
@@ -463,23 +544,22 @@ function resolveSectionBarSegments(section) {
 
   const labeled = splitBodyIntoLabeledParts(body);
   if (labeled.length) {
-    labeled.forEach((part) => {
+    labeled.forEach((part, idx) => {
       let barNum = "";
-      let barHeading = part.label;
-      if (labeled.length === 1 && heading) {
+      if (labeled.length === 1 && num) {
         barNum = num;
-        barHeading = heading;
-      } else if (labeled.length === 1 && !heading) {
-        barNum = num;
-        barHeading = part.label;
       }
-      segments.push({ num: barNum, heading: barHeading, content: part.content });
+      segments.push({
+        num: barNum,
+        heading: stripParentheticalForBarTitle(part.label),
+        content: part.content,
+      });
     });
     return segments;
   }
 
   if (heading) {
-    segments.push({ num, heading, content: body });
+    segments.push({ num, heading: stripParentheticalForBarTitle(heading), content: body });
     return segments;
   }
   if (body.trim()) {
@@ -491,7 +571,11 @@ function resolveSectionBarSegments(section) {
 function resolveFreeBlockBarSegments(body) {
   const labeled = splitBodyIntoLabeledParts(body);
   if (!labeled.length) return [];
-  return labeled.map((part) => ({ num: "", heading: part.label, content: part.content }));
+  return labeled.map((part) => ({
+    num: "",
+    heading: stripParentheticalForBarTitle(part.label),
+    content: part.content,
+  }));
 }
 
 function formatFieldContentHtml(text) {
@@ -540,6 +624,22 @@ function buildSectionBodyVisualHtml(section, partyMeta) {
   return html;
 }
 
+function pdfLineBlockHeight(doc, line, maxW) {
+  const trimmed = String(line || "").trim();
+  if (!trimmed) return 2.4;
+  doc.setFontSize(10);
+  const colonIdx = trimmed.indexOf(":");
+  if (colonIdx > 0 && colonIdx < 48) {
+    const label = trimmed.slice(0, colonIdx + 1);
+    const value = trimmed.slice(colonIdx + 1).trimStart();
+    const labelW = doc.getTextWidth(label + " ");
+    const valueLines = value ? doc.splitTextToSize(value, Math.max(20, maxW - labelW)) : [""];
+    return Math.max(4.8, valueLines.length * 4.8);
+  }
+  const wrapped = doc.splitTextToSize(String(line || ""), maxW);
+  return Math.max(4.8, wrapped.length * 4.8);
+}
+
 function buildSectionBodyPdfItems(section, doc, maxW) {
   const items = [];
   const segments = resolveSectionBarSegments(section);
@@ -555,8 +655,15 @@ function buildSectionBodyPdfItems(section, doc, maxW) {
       items.push({ type: "sectionBar", num: seg.num, heading: seg.heading, heightMm: 8.5 });
     }
     if (seg.content) {
-      const contentLines = plainTextToLayoutLines(doc, seg.content, maxW);
-      contentLines.forEach((line) => items.push({ type: "line", text: line, heightMm: 4.8 }));
+      String(seg.content || "")
+        .split("\n")
+        .forEach((line) => {
+          items.push({
+            type: "line",
+            text: line,
+            heightMm: pdfLineBlockHeight(doc, line, maxW),
+          });
+        });
     }
   });
   return items;
@@ -564,7 +671,7 @@ function buildSectionBodyPdfItems(section, doc, maxW) {
 
 function buildSectionBarHtml(num, heading) {
   const numLabel = num ? String(num) + "." : "";
-  const title = String(heading || "").trim().toUpperCase();
+  const title = stripParentheticalForBarTitle(String(heading || "")).toUpperCase();
   return (
     '<div class="iu-legal-doc-paper__sectionBar" data-iu-legal-doc-visual-only="1" aria-hidden="true">' +
     '<span class="iu-legal-doc-paper__sectionNum">' +
@@ -722,16 +829,36 @@ export function verifyLegalDocumentPreviewContent(sourceText, previewHtml) {
 }
 
 /** Zachová původní odstavce (\n) — bez přepisování textu. */
+function breakLongUnspacedToken(token, maxChars) {
+  const s = String(token || "");
+  const limit = Math.max(8, maxChars || 24);
+  if (s.length <= limit) return s;
+  const chunks = [];
+  for (let i = 0; i < s.length; i += limit) {
+    chunks.push(s.slice(i, i + limit));
+  }
+  return chunks.join("\u200b");
+}
+
 export function plainTextToLayoutLines(doc, plainText, maxW) {
   const text = String(plainText || "");
   const sourceLines = text.split("\n");
   const out = [];
+  const approxChars = Math.max(12, Math.floor(maxW / 2.1));
   sourceLines.forEach((line) => {
     if (!line) {
       out.push("");
       return;
     }
-    const wrapped = doc.splitTextToSize(line, maxW);
+    const prepared = String(line)
+      .split(/(\s+)/)
+      .map((part) => {
+        if (!part || /^\s+$/.test(part)) return part;
+        if (part.length > approxChars && !/\s/.test(part)) return breakLongUnspacedToken(part, approxChars);
+        return part;
+      })
+      .join("");
+    const wrapped = doc.splitTextToSize(prepared, maxW);
     wrapped.forEach((wl) => out.push(String(wl)));
   });
   return out;
@@ -911,19 +1038,26 @@ function drawSectionBarInPdf(doc, marginX, pageW, y, num, heading) {
   const boxW = 7;
   const barTop = y - 4.2;
   const textY = barTop + barH / 2 + 1.1;
+  const titleStripW = pageW - marginX * 2 - boxW - 5;
+  const titleText = stripParentheticalForBarTitle(String(heading || "")).toUpperCase();
   doc.setFillColor(rgb[0], rgb[1], rgb[2]);
   doc.rect(marginX, barTop, boxW, barH, "F");
-  doc.setFontSize(7.5);
   doc.setFont(doc.getFont().fontName, "bold");
   doc.setTextColor(255, 255, 255);
+  let numFontSize = 7.5;
+  doc.setFontSize(numFontSize);
   const numLabel = num ? String(num) + "." : "•";
   doc.text(numLabel, marginX + boxW / 2, textY, { align: "center" });
   doc.setFillColor(230, 238, 255);
   doc.rect(marginX + boxW, barTop, pageW - marginX * 2 - boxW, barH, "F");
-  doc.setFontSize(7.5);
-  doc.setFont(doc.getFont().fontName, "bold");
   doc.setTextColor(dark[0], dark[1], dark[2]);
-  doc.text(String(heading || "").trim().toUpperCase(), marginX + boxW + 2.5, textY);
+  let titleFontSize = 7.5;
+  doc.setFontSize(titleFontSize);
+  while (titleFontSize > 5.5 && doc.getTextWidth(titleText) > titleStripW) {
+    titleFontSize -= 0.4;
+    doc.setFontSize(titleFontSize);
+  }
+  doc.text(titleText, marginX + boxW + 2.5, textY);
   return barTop + barH + 1.5;
 }
 
@@ -983,8 +1117,15 @@ function buildPdfRenderQueue(structure, doc, maxW) {
       if (segments.length) {
         segments.forEach((seg) => {
           queue.push({ type: "sectionBar", num: seg.num, heading: seg.heading, heightMm: 8.5 });
-          const contentLines = plainTextToLayoutLines(doc, seg.content, maxW);
-          contentLines.forEach((line) => queue.push({ type: "line", text: line, heightMm: 4.8 }));
+          String(seg.content || "")
+            .split("\n")
+            .forEach((line) => {
+              queue.push({
+                type: "line",
+                text: line,
+                heightMm: pdfLineBlockHeight(doc, line, maxW),
+              });
+            });
         });
         queue.push({ type: "gap", heightMm: 2.5 });
         return;
@@ -999,6 +1140,17 @@ function buildPdfRenderQueue(structure, doc, maxW) {
     queue.push({ type: "gap", heightMm: 2.5 });
   });
   return queue;
+}
+
+function bundleHeightForPdfItem(queue, index) {
+  const item = queue[index];
+  if (!item) return 0;
+  let need = itemHeightForPdf(item);
+  if (item.type === "sectionBar") {
+    const next = queue[index + 1];
+    if (next) need += itemHeightForPdf(next);
+  }
+  return need;
 }
 
 function paginatePdfQueue(queue, topY, bottomY, titleBlock) {
@@ -1019,43 +1171,60 @@ function paginatePdfQueue(queue, topY, bottomY, titleBlock) {
       subtitle: titleBlock.subtitle,
     };
     const need = itemHeightForPdf(titleItem);
+    if (y + need > bottomY && current.length) flush();
     current.push(titleItem);
     y += need;
   }
 
-  queue.forEach((item) => {
-    const need = itemHeightForPdf(item);
+  for (let i = 0; i < queue.length; i += 1) {
+    const item = queue[i];
+    const need = bundleHeightForPdfItem(queue, i);
     if (y + need > bottomY && current.length) flush();
     current.push(item);
-    y += need;
-  });
+    y += itemHeightForPdf(item);
+  }
 
   if (current.length) pages.push(current);
   if (!pages.length) pages.push([]);
   return pages;
 }
 
-function drawBodyLineInPdf(doc, marginX, y, line, partyMeta) {
+function drawBodyLineInPdf(doc, marginX, y, line, partyMeta, maxW) {
   const text = String(line || "");
   const trimmed = text.trim();
   if (!trimmed) return y + 2.4;
   const fontName = doc.getFont().fontName;
   doc.setFontSize(10);
   doc.setTextColor(17, 24, 39);
+  const contentW = maxW || doc.internal.pageSize.getWidth() - marginX * 2;
   const colonIdx = trimmed.indexOf(":");
   if (colonIdx > 0 && colonIdx < 48) {
     const label = trimmed.slice(0, colonIdx + 1);
     const value = trimmed.slice(colonIdx + 1).trimStart();
     doc.setFont(fontName, "bold");
-    doc.text(label, marginX, y);
     const labelW = doc.getTextWidth(label + " ");
     doc.setFont(fontName, "normal");
-    if (value) doc.text(value, marginX + labelW, y);
-    return y + 4.8;
+    const valueLines = value ? doc.splitTextToSize(value, Math.max(20, contentW - labelW)) : [""];
+    valueLines.forEach((valueLine, idx) => {
+      if (idx === 0) {
+        doc.setFont(fontName, "bold");
+        doc.text(label, marginX, y);
+        doc.setFont(fontName, "normal");
+        if (valueLine) doc.text(String(valueLine), marginX + labelW, y);
+      } else {
+        doc.text(String(valueLine), marginX + labelW, y);
+      }
+      y += 4.8;
+    });
+    return y;
   }
   doc.setFont(fontName, "normal");
-  doc.text(text, marginX, y);
-  return y + 4.8;
+  const wrapped = doc.splitTextToSize(text, contentW);
+  wrapped.forEach((wl) => {
+    doc.text(String(wl), marginX, y);
+    y += 4.8;
+  });
+  return y;
 }
 
 function renderPdfQueuePage(doc, pageW, marginX, topY, bottomY, queue, partyMeta) {
@@ -1095,8 +1264,8 @@ function renderPdfQueuePage(doc, pageW, marginX, topY, bottomY, queue, partyMeta
       y += item.heightMm || 2.5;
       return;
     }
-    if (y + 4.8 > bottomY) return;
-    y = drawBodyLineInPdf(doc, marginX, y, item.text, partyMeta);
+    if (y + (item.heightMm || 4.8) > bottomY) return;
+    y = drawBodyLineInPdf(doc, marginX, y, item.text, partyMeta, pageW - marginX * 2);
   });
   return y;
 }
