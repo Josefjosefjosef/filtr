@@ -11,7 +11,8 @@ const REPORT = path.join(__dirname, "iu-legal-documents-unified-template-guard-v
 
 const REQUIRED = [
   { id: "unified_template_marker", file: RENDERER, pattern: /iu-legal-documents-unified-template-v1/ },
-  { id: "resolve_section_bar_segments", file: RENDERER, pattern: /function resolveSectionBarSegments\(/ },
+  { id: "strip_parenthetical_bar_title", file: RENDERER, pattern: /function stripParentheticalForBarTitle|export function stripParentheticalForBarTitle/ },
+  { id: "resolve_section_bar_segments_export", file: RENDERER, pattern: /export function resolveSectionBarSegments\(/ },
   { id: "format_field_content_html", file: RENDERER, pattern: /function formatFieldContentHtml\(/ },
   { id: "place_date_section_class", file: RENDERER, pattern: /iu-legal-doc-paper__section--placeDate/ },
   { id: "mobile_template_marker", file: CSS, pattern: /iu-legal-documents-mobile-template-v1/ },
