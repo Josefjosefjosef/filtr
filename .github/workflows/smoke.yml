@@ -221,6 +221,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-pc-browser-compat-guard
 
+      - name: User data backup guard (iCentrum export/import)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-user-data-backup-guard
+
       - name: Financial calc PC hub info close gap guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-financial-calc-pc-hub-info-close-gap-guard

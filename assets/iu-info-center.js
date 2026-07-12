@@ -14,12 +14,13 @@
     "privacy-settings": "Nastavení soukromí",
     privacy: "Ochrana soukromí a data",
     "data-storage": "Ukládání a ochrana vašich dat",
+    "data-management": "Správa dat",
     "device-storage": "Ukládání dat v zařízení",
     "data-sources": "Zdroje dat",
     contact: "Provozovatel a kontakt"
   };
 
-  var DOC_VERSION = "1.4";
+  var DOC_VERSION = "1.5";
 
   function qs(sel, root) {
     return (root || document).querySelector(sel);
