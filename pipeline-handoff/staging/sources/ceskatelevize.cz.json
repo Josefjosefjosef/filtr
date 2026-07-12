@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-07-11T22:44:25.079542Z",
+  "ingestedAt": "2026-07-12T00:25:48.466843Z",
   "items": [
     {
       "section": "veda",
@@ -783,6 +783,32 @@
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "Írán oznámil uzavření Hormuzského průlivu, USA ohlásily nové útoky na Írán",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/iran-oznamil-uzavreni-hormuzskeho-prulivu-az-do-odvolani-pise-afp-375483",
+      "dt": "2026-07-11T23:39:00Z",
+      "media_raw": "ČT24 / Svět",
+      "media_norm": "ČT24",
+      "tokens": [
+        "hormuzského",
+        "nové",
+        "ohlásily",
+        "oznámil",
+        "průlivu",
+        "usa",
+        "uzavření",
+        "írán",
+        "útoky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_svet",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "Česko dostane z EU méně peněz, vláda bude diskutovat o jejich zacílení",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/cesko-dostane-z-eu-mene-penez-vlada-bude-diskutovat-o-jejich-zacileni-375473",
       "dt": "2026-07-11T18:39:10Z",
@@ -1510,30 +1536,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V USA vyšetřují zastřelení Mexičana agenty ICE v Houstonu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/v-usa-vysetruji-zastreleni-mexicana-agenty-ice-v-houstonu-375456",
-      "dt": "2026-07-10T18:31:47Z",
-      "media_raw": "ČT24 / Svět",
-      "media_norm": "ČT24",
-      "tokens": [
-        "agenty",
-        "houstonu",
-        "ice",
-        "mexičana",
-        "usa",
-        "vyšetřují",
-        "zastřelení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_svet",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1638,7 +1640,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43374,
+      "bytes": 43051,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1675,7 +1677,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-11T18:39:10Z",
+        "raw_feed_latest_publishedAt": "2026-07-11T23:39:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1692,6 +1694,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Írán oznámil uzavření Hormuzského průlivu, USA ohlásily nové útoky na Írán",
+            "publishedAt": "2026-07-11T23:39:00Z"
+          },
           {
             "title": "Česko dostane z EU méně peněz, vláda bude diskutovat o jejich zacílení",
             "publishedAt": "2026-07-11T18:39:10Z"
@@ -1719,10 +1725,6 @@
           {
             "title": "SOUHRN: Zásadní události soboty 11. července",
             "publishedAt": "2026-07-11T16:29:00Z"
-          },
-          {
-            "title": "Pavel věří, že se jeho vztahy s Babišem uklidní",
-            "publishedAt": "2026-07-11T16:17:04Z"
           }
         ]
       }

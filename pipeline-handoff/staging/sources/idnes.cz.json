@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-07-11T22:44:25.079542Z",
+  "ingestedAt": "2026-07-12T00:25:48.466843Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Írán uzavřel Hormuzský průliv, USA oznámily další útoky na Írán",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/iran-uzavrel-hormuzsky-pruliv-usa-oznamily-dalsi-utoky-na-iran.A260712_013338_zahranicni_air",
+      "dt": "2026-07-11T23:59:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "další",
+        "hormuzský",
+        "oznámily",
+        "průliv",
+        "usa",
+        "uzavřel",
+        "írán",
+        "útoky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -774,33 +799,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Běželi v Pamploně s býky, třináct lidí je zraněných. Jeden dostal rohem do obličeje",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/pamplona-byci-svatek-spanelsko-beh-zraneni-tradice-nemocnice.A260711_133134_zahranicni_svm",
-      "dt": "2026-07-11T11:43:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "býky",
-        "běželi",
-        "dostal",
-        "jeden",
-        "lidí",
-        "obličeje",
-        "pamploně",
-        "rohem",
-        "třináct",
-        "zraněných"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -811,7 +809,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49761,
+      "bytes": 49289,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -848,7 +846,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-11T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-11T23:59:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -865,6 +863,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Írán uzavřel Hormuzský průliv, USA oznámily další útoky na Írán",
+            "publishedAt": "2026-07-11T23:59:00Z"
+          },
           {
             "title": "Život v podnájmu, svatba v parku a děti ze zkumavky. Jak vypadá nový americký sen",
             "publishedAt": "2026-07-11T22:00:00Z"
@@ -892,10 +894,6 @@
           {
             "title": "Vary vyhrál film Padlé ovoce. Čestné ceny převzali Vášáryová, Binocheová a Wright",
             "publishedAt": "2026-07-11T18:27:38Z"
-          },
-          {
-            "title": "Polsko si připomíná volyňský masakr. Tusk slíbil postavit zeď padlých na Ukrajině",
-            "publishedAt": "2026-07-11T18:09:00Z"
           }
         ]
       }

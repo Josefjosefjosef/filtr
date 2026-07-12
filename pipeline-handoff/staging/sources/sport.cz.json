@@ -1,28 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-07-11T22:44:25.079542Z",
+  "ingestedAt": "2026-07-12T00:25:48.466843Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Čtvrtfinále vrcholí! Angličané měli znovu kliku, Norové trefili břevno",
+      "title": "Skandál, naprostá šílenost! Norové tvrdí, že gól Anglie neměl z netradičního důvodu platit",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-skandal-naprosta-silenost-norove-tvrdi-ze-gol-anglie-nemel-z-netradicniho-duvodu-platit-5504105",
+      "dt": "2026-07-12T00:12:01Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "anglie",
+        "důvodu",
+        "gól",
+        "naprostá",
+        "neměl",
+        "netradičního",
+        "norové",
+        "platit",
+        "skandál",
+        "tvrdí",
+        "šílenost"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Anglický sen žije! Norsko zlomil dvougólový hrdina Bellingham",
       "url": "https://www.sport.cz/clanek/fotbal-ms-haaland-proti-kaneovi-treti-ctvrtfinale-ms-nabidne-souboj-dvou-golovych-masin-5503675",
       "dt": "2026-07-11T10:00:23Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "angličané",
-        "břevno",
-        "fotbal",
-        "kliku",
-        "měli",
-        "norové",
-        "online",
-        "trefili",
-        "vrcholí",
-        "znovu",
-        "čtvrtfinále"
+        "anglický",
+        "bellingham",
+        "dvougólový",
+        "hrdina",
+        "norsko",
+        "sen",
+        "zlomil",
+        "žije"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -750,31 +775,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Slzy v očích. Trojnásobný mistr světa Woffinden oznámil, že končí",
-      "url": "https://www.sport.cz/clanek/moto-motocykly-slzy-v-ocich-trojnasobny-mistr-sveta-woffinden-oznamil-ze-konci-5503679",
-      "dt": "2026-07-11T13:52:03Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "končí",
-        "mistr",
-        "oznámil",
-        "očích",
-        "slzy",
-        "světa",
-        "trojnásobný",
-        "woffinden"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45785,
+      "bytes": 45446,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,7 +822,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-11T21:59:29Z",
+        "raw_feed_latest_publishedAt": "2026-07-12T00:12:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -838,7 +838,11 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Čtvrtfinále vrcholí! Angličané měli znovu kliku, Norové trefili břevno",
+            "title": "Skandál, naprostá šílenost! Norové tvrdí, že gól Anglie neměl z netradičního důvodu platit",
+            "publishedAt": "2026-07-12T00:12:01Z"
+          },
+          {
+            "title": "Anglický sen žije! Norsko zlomil dvougólový hrdina Bellingham",
             "publishedAt": "2026-07-11T10:00:23Z"
           },
           {
@@ -864,10 +868,6 @@
           {
             "title": "Italský fotbal má z krize vyvést obrovská legenda",
             "publishedAt": "2026-07-11T20:19:48Z"
-          },
-          {
-            "title": "Poločasový křik mladé Češky probudil. Po nepovedeném začátku sahaly po obratu",
-            "publishedAt": "2026-07-11T20:10:33Z"
           }
         ]
       }
