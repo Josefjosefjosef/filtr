@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "sourceBatchKey": "zdrave.cz",
+  "ingestedAt": "2026-07-12T11:04:11.971098Z",
+  "items": [],
+  "feedReports": [
+    {
+      "feed": "https://www.zdrave.cz/rss/",
+      "source": "Zdravě.cz",
+      "topic": "zdravi",
+      "httpStatus": 0,
+      "contentType": "",
+      "finalUrl": "https://www.zdrave.cz/rss/",
+      "bytes": 0,
+      "reason": "fetch_timeout",
+      "bozo": false,
+      "bozoException": "",
+      "itemsParsed": 0,
+      "itemsKept": 0,
+      "accepted": 0,
+      "status": "BOZO",
+      "bozo_but_used": false,
+      "registryId": "zdr_zdrave",
+      "registryGroup": [
+        {
+          "id": "zdr_zdrave",
+          "label": "Zdravě.cz",
+          "domain": "zdrave.cz",
+          "entry_type": "rss",
+          "section_primary": "zdravi",
+          "section_secondary": [],
+          "interval_min": 180,
+          "display_weight": 0.75,
+          "active": true,
+          "blocked": false,
+          "official_only": true,
+          "fetch_mode": "rss_or_official_rubric_only",
+          "per_domain_cooldown_min": 12,
+          "slot_offset_min": 12,
+          "max_items_per_fetch": 40,
+          "last_fetch_at": null,
+          "last_success_at": null,
+          "error_streak": 0,
+          "backoff_multiplier": 1.0,
+          "feed_url": "https://www.zdrave.cz/rss/",
+          "topic": "zdravi"
+        }
+      ]
+    }
+  ]
+}

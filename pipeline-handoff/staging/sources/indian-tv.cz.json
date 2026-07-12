@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-07-12T09:13:11.436364Z",
+  "ingestedAt": "2026-07-12T11:04:11.971098Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Leon Kennedy měl hlášku, která mohla být legendární. Capcom ji ale z Resident Evil Requiem vystřihl - INDIAN",
+      "url": "https://indian-tv.cz/clanek/leon-kennedy-mel-hlasku-ktera-mohla-byt-legendarni-capcom-pexqka",
+      "dt": "2026-07-12T09:20:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "ale",
+        "být",
+        "capcom",
+        "evil",
+        "hlášku",
+        "indian",
+        "kennedy",
+        "legendární",
+        "leon",
+        "měl",
+        "requiem",
+        "resident",
+        "vystřihl"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1112,34 +1142,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Game Pass ztrácí předplatitele a ukončení exkluzivit nenaplnilo očekávání vedení Xboxu - INDIAN",
-      "url": "https://indian-tv.cz/clanek/game-pass-ztraci-predplatitele-4mdh51",
-      "dt": "2026-07-07T12:22:56Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "exkluzivit",
-        "game",
-        "indian",
-        "nenaplnilo",
-        "očekávání",
-        "pass",
-        "předplatitele",
-        "ukončení",
-        "vedení",
-        "xboxu",
-        "ztrácí"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1150,7 +1152,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 226774,
+      "bytes": 226633,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1187,7 +1189,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-12T08:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-12T09:20:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1202,6 +1204,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Leon Kennedy měl hlášku, která mohla být legendární. Capcom ji ale z Resident Evil Requiem vystřihl - INDIAN",
+            "publishedAt": "2026-07-12T09:20:00Z"
+          },
           {
             "title": "Ruská ruleta dorazila na Xbox. V Buckshot Roulette hrajete zvrácenou hru s jediným cílem - INDIAN",
             "publishedAt": "2026-07-12T08:35:00Z"
@@ -1229,10 +1235,6 @@
           {
             "title": "Stále máme potřebné lidi na tvorbu her i technologií, vzkazuje id Software - INDIAN",
             "publishedAt": "2026-07-10T18:58:14Z"
-          },
-          {
-            "title": "V id Software si hráli s nápady na hru ze série Perfect Dark, Gun Fu gangsterku nebo western s roboty - INDIAN",
-            "publishedAt": "2026-07-10T16:00:00Z"
           }
         ]
       }

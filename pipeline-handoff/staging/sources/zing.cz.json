@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-07-12T09:13:11.436364Z",
+  "ingestedAt": "2026-07-12T11:04:11.971098Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Dojmy z hraní Moonlight Peaks",
+      "url": "https://zing.cz/article/dojmy-z-hrani-moonlight-peaks",
+      "dt": "2026-07-12T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "dojmy",
+        "hraní",
+        "moonlight",
+        "peaks"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -988,29 +1009,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Nintendo Switch v Evropě po necelé dekádě skončí",
-      "url": "https://zing.cz/article/nintendo-switch-v-evrope-po-necele-dekade-skonci",
-      "dt": "2026-07-07T10:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "dekádě",
-        "evropě",
-        "necelé",
-        "nintendo",
-        "skončí",
-        "switch"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1021,7 +1019,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126832,
+      "bytes": 126634,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1058,7 +1056,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-12T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-12T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1073,6 +1071,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dojmy z hraní Moonlight Peaks",
+            "publishedAt": "2026-07-12T10:00:00Z"
+          },
           {
             "title": "Tvůrci klipů Gorillaz a traileru na Hades 2 chystají svou první hru",
             "publishedAt": "2026-07-12T09:00:00Z"
@@ -1100,10 +1102,6 @@
           {
             "title": "Vyzkoušejte si zdarma na Steamu tři žánrově pestré hry",
             "publishedAt": "2026-07-10T18:00:00Z"
-          },
-          {
-            "title": "Hráči na Steamu bombardují negativními recenzemi novou sportovní hru od EA",
-            "publishedAt": "2026-07-10T16:00:00Z"
           }
         ]
       }
