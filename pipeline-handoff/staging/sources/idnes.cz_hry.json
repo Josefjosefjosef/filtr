@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-07-13T08:27:19.157967Z",
+  "ingestedAt": "2026-07-13T11:09:54.517899Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Černý samuraj může závidět, z pirátského Assassin’s Creed je obrovský hit",
+      "url": "https://www.idnes.cz/hry/novinky/assassin-s-creed-black-flag-resynced-prodeje.A260713_094003_bw-novinky_oz",
+      "dt": "2026-07-13T09:20:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "assassin",
+        "creed",
+        "hit",
+        "obrovský",
+        "pirátského",
+        "samuraj",
+        "závidět",
+        "černý"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -375,7 +400,7 @@
       "contentType": "article",
       "title": "Assassin’s Creed Black Flag Resynced",
       "url": "https://www.idnes.cz/hry/assassin-s-creed-black-flag-resynced.G260707_231534_oma",
-      "dt": "2026-07-10T08:26:55Z",
+      "dt": "2026-07-13T08:56:07Z",
       "media_raw": "iDNES / Bonusweb",
       "media_norm": "iDNES",
       "tokens": [
@@ -744,32 +769,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Ještě letos vyjde deskovka Kingdom Come, pracuje na ní designér Chvátil",
-      "url": "https://www.idnes.cz/hry/novinky/deskovka-kingdom-come-deliverance-deskova-hra.A260630_103152_bw-novinky_oz",
-      "dt": "2026-07-01T15:00:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "chvátil",
-        "come",
-        "designér",
-        "deskovka",
-        "ještě",
-        "kingdom",
-        "letos",
-        "pracuje",
-        "vyjde"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -780,7 +779,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 44679,
+      "bytes": 44730,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -817,7 +816,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-12T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-13T09:20:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -832,6 +831,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Černý samuraj může závidět, z pirátského Assassin’s Creed je obrovský hit",
+            "publishedAt": "2026-07-13T09:20:00Z"
+          },
           {
             "title": "Měly vydělávat pohádkové peníze, ale dnes už si na tyto hry nikdo nevzpomene",
             "publishedAt": "2026-07-12T22:00:00Z"
@@ -859,10 +862,6 @@
           {
             "title": "Těžký přešlap Microsoftu: propustil skoro celé studio id Software",
             "publishedAt": "2026-07-09T09:30:00Z"
-          },
-          {
-            "title": "Ani legendární Mario nestačil. Mobilní Mario Kart po sedmi letech skončí",
-            "publishedAt": "2026-07-09T01:00:00Z"
           }
         ]
       }

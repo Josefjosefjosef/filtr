@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-07-13T08:27:19.157967Z",
+  "ingestedAt": "2026-07-13T11:09:54.517899Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dachser na konci roku nasadí do provozu vodíkový tahač nové generace",
+      "url": "https://profitonline.cz/dachser-na-konci-roku-nasadi-do-provozu-vodikovy-tahac-nove-generace/",
+      "dt": "2026-07-13T10:00:28Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dachser",
+        "generace",
+        "konci",
+        "nasadí",
+        "nové",
+        "provozu",
+        "roku",
+        "tahač",
+        "vodíkový"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -273,31 +299,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Napřed jí ztuhly prsty, že je neohnula. Pak už nemohla vstát z postele",
-      "url": "https://profitonline.cz/napred-ji-ztuhly-prsty-ze-je-neohnula-pak-uz-nemohla-vstat-z-postele/",
-      "dt": "2026-07-11T10:00:42Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "napřed",
-        "nemohla",
-        "neohnula",
-        "pak",
-        "postele",
-        "prsty",
-        "vstát",
-        "ztuhly"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -308,7 +309,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19637,
+      "bytes": 19761,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -345,7 +346,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-07-13T08:00:44Z",
+        "raw_feed_latest_publishedAt": "2026-07-13T10:00:28Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 9,
@@ -362,6 +363,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dachser na konci roku nasadí do provozu vodíkový tahač nové generace",
+            "publishedAt": "2026-07-13T10:00:28Z"
+          },
           {
             "title": "Šéfové Fedu (1.): Pět dekád rozhodnutí, která změnila finanční trhy",
             "publishedAt": "2026-07-13T08:00:44Z"
@@ -389,10 +394,6 @@
           {
             "title": "Saxo Bank: Investorský výhled na třetí čtvrtletí 2026",
             "publishedAt": "2026-07-12T07:00:23Z"
-          },
-          {
-            "title": "Novinky v osobních financích: Levnější hypotéky jsou zatím v nedohlednu",
-            "publishedAt": "2026-07-12T04:00:54Z"
           }
         ]
       }
