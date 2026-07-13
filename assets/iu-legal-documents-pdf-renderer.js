@@ -25,6 +25,11 @@ const PDF_FONT = "IULegalNoto";
 const PDF_FONT_FILE = "IULegalNoto-normal.ttf";
 const PDF_FOOTER_RESERVE_MM = 24;
 const PDF_HEADER_RESERVE_MM = 32;
+/** Výška modrého pruhu sekce v PDF (mm). */
+const PDF_SECTION_BAR_H_MM = 6.5;
+/** Mezera mezi spodkem modrého pruhu a prvním řádkem obsahu v PDF (mm). */
+export const PDF_SECTION_BAR_BODY_GAP_MM = 4.5;
+const PDF_SECTION_BAR_TOTAL_MM = PDF_SECTION_BAR_H_MM + PDF_SECTION_BAR_BODY_GAP_MM;
 const PLACEHOLDER_ONLY_LINE_RE = /^[\.·…\s_,\-]+$/;
 const SECTION_HEADING_RE = /^(\d+)\.\s+(.+)$/;
 const SIGNATURE_LINE_RE = /^_{5,}/;
@@ -646,13 +651,13 @@ function buildSectionBodyPdfItems(section, doc, maxW) {
   segments.forEach((seg) => {
     if (seg.isSignatures) {
       if (seg.heading) {
-        items.push({ type: "sectionBar", num: seg.num, heading: seg.heading, heightMm: 8.5 });
+        items.push({ type: "sectionBar", num: seg.num, heading: seg.heading, heightMm: PDF_SECTION_BAR_TOTAL_MM });
       }
       items.push({ type: "signatureBlock", body: seg.rawBody, heightMm: 20 });
       return;
     }
     if (seg.heading) {
-      items.push({ type: "sectionBar", num: seg.num, heading: seg.heading, heightMm: 8.5 });
+      items.push({ type: "sectionBar", num: seg.num, heading: seg.heading, heightMm: PDF_SECTION_BAR_TOTAL_MM });
     }
     if (seg.content) {
       String(seg.content || "")
@@ -669,14 +674,11 @@ function buildSectionBodyPdfItems(section, doc, maxW) {
   return items;
 }
 
-function buildSectionBarHtml(num, heading) {
-  const numLabel = num ? String(num) + "." : "";
+function buildSectionBarHtml(_num, heading) {
   const title = stripParentheticalForBarTitle(String(heading || "")).toUpperCase();
   return (
     '<div class="iu-legal-doc-paper__sectionBar" data-iu-legal-doc-visual-only="1" aria-hidden="true">' +
-    '<span class="iu-legal-doc-paper__sectionNum">' +
-    escHtml(numLabel) +
-    "</span>" +
+    '<span class="iu-legal-doc-paper__sectionNum" aria-hidden="true"></span>' +
     '<span class="iu-legal-doc-paper__sectionTitle">' +
     escHtml(title) +
     "</span>" +
@@ -1031,34 +1033,29 @@ function drawDocumentFooterBlock(doc, pageW, pageH, marginX) {
   });
 }
 
-function drawSectionBarInPdf(doc, marginX, pageW, y, num, heading) {
+function drawSectionBarInPdf(doc, marginX, pageW, y, _num, heading) {
   const rgb = hexToRgb(IU_LEGAL_DOC_GREEN);
   const dark = hexToRgb(IU_LEGAL_DOC_GREEN_DARK);
-  const barH = 6.5;
+  const barH = PDF_SECTION_BAR_H_MM;
   const boxW = 7;
-  const barTop = y - 4.2;
+  const barTop = y;
   const textY = barTop + barH / 2 + 1.1;
   const titleStripW = pageW - marginX * 2 - boxW - 5;
   const titleText = stripParentheticalForBarTitle(String(heading || "")).toUpperCase();
   doc.setFillColor(rgb[0], rgb[1], rgb[2]);
   doc.rect(marginX, barTop, boxW, barH, "F");
-  doc.setFont(doc.getFont().fontName, "bold");
-  doc.setTextColor(255, 255, 255);
-  let numFontSize = 7.5;
-  doc.setFontSize(numFontSize);
-  const numLabel = num ? String(num) + "." : "•";
-  doc.text(numLabel, marginX + boxW / 2, textY, { align: "center" });
   doc.setFillColor(230, 238, 255);
   doc.rect(marginX + boxW, barTop, pageW - marginX * 2 - boxW, barH, "F");
   doc.setTextColor(dark[0], dark[1], dark[2]);
   let titleFontSize = 7.5;
+  doc.setFont(doc.getFont().fontName, "bold");
   doc.setFontSize(titleFontSize);
   while (titleFontSize > 5.5 && doc.getTextWidth(titleText) > titleStripW) {
     titleFontSize -= 0.4;
     doc.setFontSize(titleFontSize);
   }
   doc.text(titleText, marginX + boxW + 2.5, textY);
-  return barTop + barH + 1.5;
+  return barTop + barH + PDF_SECTION_BAR_BODY_GAP_MM;
 }
 
 function drawCenteredTitleInPdf(doc, pageW, marginX, y, title, subtitle) {
@@ -1097,7 +1094,7 @@ function itemHeightForPdf(item) {
           : item.type === "titleBlock"
             ? "titleBlock"
             : "text");
-  if (kind === "sectionBar") return 8;
+  if (kind === "sectionBar") return PDF_SECTION_BAR_TOTAL_MM;
   if (kind === "signature") return 20;
   if (kind === "gap") return 2;
   if (kind === "titleBlock") {
@@ -1116,7 +1113,7 @@ function buildPdfRenderQueue(structure, doc, maxW) {
       const segments = resolveFreeBlockBarSegments(section.body);
       if (segments.length) {
         segments.forEach((seg) => {
-          queue.push({ type: "sectionBar", num: seg.num, heading: seg.heading, heightMm: 8.5 });
+          queue.push({ type: "sectionBar", num: seg.num, heading: seg.heading, heightMm: PDF_SECTION_BAR_TOTAL_MM });
           String(seg.content || "")
             .split("\n")
             .forEach((line) => {

@@ -4,7 +4,11 @@
  */
 export const BACKUP_FORMAT = "infouzel-backup";
 export const BACKUP_VERSION = 1;
-export const BACKUP_FILE_EXT = ".iubackup";
+/** Primary extension for newly exported backups (JSON payload). */
+export const BACKUP_FILE_EXT = ".json";
+/** Legacy/custom extension still accepted on import. */
+export const BACKUP_FILE_EXT_LEGACY = ".iubackup";
+export const BACKUP_FILE_ACCEPT = ".json,.iubackup,application/json,text/plain,text/json";
 export const MAX_IMPORT_BYTES = 50 * 1024 * 1024;
 export const MAX_JSON_DEPTH = 32;
 export const MAX_STRING_LEN = 5 * 1024 * 1024;
@@ -87,17 +91,72 @@ export function assertSafeJsonValue(val, depth = 0) {
 /**
  * @param {string} raw
  */
-export function parseBackupJson(raw) {
+export function normalizeBackupText(raw) {
   if (typeof raw !== "string") throw new Error("BACKUP_INVALID");
-  if (raw.length > MAX_IMPORT_BYTES) throw new Error("BACKUP_TOO_LARGE");
+  let text = raw;
+  if (text.charCodeAt(0) === 0xfeff) text = text.slice(1);
+  return text.trim();
+}
+
+/**
+ * @param {string | null | undefined} name
+ */
+export function isAcceptedBackupFilename(name) {
+  const lower = String(name || "").trim().toLowerCase();
+  if (!lower) return true;
+  return lower.endsWith(BACKUP_FILE_EXT) || lower.endsWith(BACKUP_FILE_EXT_LEGACY);
+}
+
+/**
+ * @param {Blob} file
+ */
+export async function readBackupFileText(file) {
+  if (!file) throw new Error("BACKUP_INVALID");
+  const size = typeof file.size === "number" ? file.size : 0;
+  if (size > MAX_IMPORT_BYTES) throw new Error("BACKUP_TOO_LARGE");
+  let text = "";
+  try {
+    if (typeof file.text === "function") {
+      text = await file.text();
+    } else {
+      const buf = await file.arrayBuffer();
+      text = new TextDecoder("utf-8", { fatal: false }).decode(buf);
+    }
+  } catch {
+    throw new Error("BACKUP_READ_FAILED");
+  }
+  if (text.length > MAX_IMPORT_BYTES) throw new Error("BACKUP_TOO_LARGE");
+  return normalizeBackupText(text);
+}
+
+/**
+ * @param {string} raw
+ */
+export function parseBackupJson(raw) {
+  const text = normalizeBackupText(raw);
+  if (text.length > MAX_IMPORT_BYTES) throw new Error("BACKUP_TOO_LARGE");
   let parsed;
   try {
-    parsed = JSON.parse(raw);
+    parsed = JSON.parse(text);
   } catch {
     throw new Error("BACKUP_INVALID_JSON");
   }
   assertSafeJsonValue(parsed, 0);
   return parsed;
+}
+
+/**
+ * @param {ReturnType<typeof validateBackupStructure>} backup
+ */
+export function buildIntegrityPayload(backup) {
+  return {
+    format: backup.format,
+    backupVersion: backup.backupVersion,
+    createdAt: backup.createdAt,
+    appVersion: typeof backup.appVersion === "string" ? backup.appVersion : "",
+    encrypted: typeof backup.encrypted === "boolean" ? backup.encrypted : false,
+    modules: backup.modules,
+  };
 }
 
 /**
@@ -196,6 +255,7 @@ export async function computeIntegrityChecksum(payload, subtle) {
  * @param {unknown} value
  */
 export function stableStringify(value) {
+  if (value === undefined) return "null";
   if (value === null || typeof value !== "object") return JSON.stringify(value);
   if (Array.isArray(value)) return `[${value.map((v) => stableStringify(v)).join(",")}]`;
   const keys = Object.keys(value).sort();
@@ -217,17 +277,7 @@ export async function buildBackupObject(storage, appVersion, subtle) {
     encrypted: false,
     modules,
   };
-  const integrity = await computeIntegrityChecksum(
-    {
-      format: body.format,
-      backupVersion: body.backupVersion,
-      createdAt: body.createdAt,
-      appVersion: body.appVersion,
-      encrypted: body.encrypted,
-      modules: body.modules,
-    },
-    subtle
-  );
+  const integrity = await computeIntegrityChecksum(buildIntegrityPayload(body), subtle);
   return { ...body, integrity };
 }
 
@@ -281,19 +331,19 @@ export async function verifyBackupIntegrity(backup, subtle) {
   if (!b.integrity || typeof b.integrity !== "object") throw new Error("BACKUP_INTEGRITY_MISSING");
   const expected = b.integrity.checksum;
   if (expected === "unavailable") return b;
-  const computed = await computeIntegrityChecksum(
-    {
-      format: b.format,
-      backupVersion: b.backupVersion,
-      createdAt: b.createdAt,
-      appVersion: b.appVersion,
-      encrypted: b.encrypted,
-      modules: b.modules,
-    },
-    subtle
-  );
+  const computed = await computeIntegrityChecksum(buildIntegrityPayload(b), subtle);
   if (computed.checksum !== expected) throw new Error("BACKUP_CHECKSUM_MISMATCH");
   return b;
+}
+
+/**
+ * Parse, validate structure, and verify integrity in one step.
+ * @param {string} raw
+ * @param {SubtleCrypto | undefined} subtle
+ */
+export async function parseAndVerifyBackupText(raw, subtle) {
+  const parsed = parseBackupJson(raw);
+  return verifyBackupIntegrity(parsed, subtle);
 }
 
 /**
@@ -418,6 +468,7 @@ export function userMessageForError(code) {
   const map = {
     BACKUP_INVALID: "Vybraný soubor není platná záloha InfoUzelu.",
     BACKUP_INVALID_JSON: "Soubor nelze přečíst — obsah není platný formát zálohy.",
+    BACKUP_READ_FAILED: "Soubor není možné přečíst.",
     BACKUP_TOO_LARGE: "Soubor je příliš velký.",
     BACKUP_WRONG_FORMAT: "Soubor není záloha InfoUzelu.",
     BACKUP_INVALID_VERSION: "Záloha má neplatnou verzi.",

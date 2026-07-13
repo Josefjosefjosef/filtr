@@ -22436,6 +22436,19 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   box-sizing: border-box;
 }
 
+.iu-calendar-day-pinned {
+  flex: 0 0 auto;
+  min-height: 0;
+  overflow: visible;
+  padding: 0 12px 8px;
+  box-sizing: border-box;
+}
+
+.iu-calendar-day-pinned[hidden] {
+  display: none !important;
+  padding: 0;
+}
+
 .iu-day-close {
   width: 38px;
   height: 38px;

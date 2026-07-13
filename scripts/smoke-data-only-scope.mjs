@@ -116,11 +116,17 @@ export function isDatovkaMobileOverlayScope(files) {
   if (!paths.length) return false;
   const allowed = (f) =>
     f === "assets/iu-overlay-mobile-tablet-unified-v1.css" ||
+    f === "assets/iu-mindmenu-bottom-nav-restore-v1.css" ||
     f === "assets/app.css" ||
     f === "scripts/iu-ds-mobile-overlay-visible-guard-v1.mjs" ||
+    f === "scripts/iu-ds-mobile-overlay-nav-flush-guard-v1.mjs" ||
+    f === "scripts/iu-ds-mobile-scroll-bottom-clearance-guard-v1.mjs" ||
     f === "scripts/iu-financial-calc-mobile-header-guard.mjs" ||
     f === "scripts/iu-mindmenu-overlay-bottom-gap-unified-guard-v1.cjs" ||
+    f === "scripts/iu-mindmenu-bottom-nav-restore-guard-v1.cjs" ||
     f === "scripts/iu-ai-assistants-overlay-bottom-gap-guard-v1.cjs" ||
+    f === "scripts/iu-legal-documents-mobile-header-guard.mjs" ||
+    f === "scripts/iu-moje-sluzby-mobile-keyboard-add-btn-guard-v1.mjs" ||
     f === "scripts/smoke-data-only-scope.mjs" ||
     f === ".github/workflows/smoke.yml" ||
     f === "projects/index.html" ||
@@ -142,6 +148,83 @@ export function isCustomButtonsMobileScrollScope(files) {
     f === "scripts/iu-financial-calc-mobile-header-guard.mjs" ||
     f === "scripts/iu-mindmenu-overlay-bottom-gap-unified-guard-v1.cjs" ||
     f === "scripts/iu-ai-assistants-overlay-bottom-gap-guard-v1.cjs" ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json";
+  return paths.every(allowed);
+}
+
+/** Desktop article read mark PR — skip unrelated flaky article load-more stress. */
+export function isDesktopArticleReadMarkOnlyScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/app.js" ||
+    f === "assets/app.css" ||
+    f === "scripts/iu-desktop-article-read-mark-guard-v1.mjs" ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === "package.json";
+  return paths.every(allowed);
+}
+
+/** PC svátek label→pill 4px gap — skip unrelated flaky article / info-panel guards. */
+export function isPcSvatekLabelPillGapOnlyScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/iu-desktop-home-premium.css" ||
+    f.startsWith("scripts/iu-svatek-pill-") ||
+    f === "scripts/iu-pc-browser-compat-guard-v1.mjs" ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json";
+  return paths.every(allowed);
+}
+
+/** Calendar all-day pinned block + 3/day limit — skip unrelated flaky guards. */
+export function isCalendarAllDayPinnedLimitScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/app.js" ||
+    f === "assets/app.css" ||
+    f.startsWith("scripts/iu-calendar-allday-") ||
+    f === "scripts/iu-desktop-calendar-allday-toggle-guard-v1.mjs" ||
+    f.startsWith("scripts/silver-calendar-premium-") ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json";
+  return paths.every(allowed);
+}
+
+/** Legal document section bar spacing PR — skip unrelated flaky article / info-panel guards. */
+export function isLegalDocSectionBarOnlyScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/iu-legal-documents-pdf-renderer.js" ||
+    f === "assets/iu-legal-documents-overlay.css" ||
+    f === "assets/iu-legal-documents-mobile-template-v1.css" ||
+    f.startsWith("scripts/iu-legal-documents-") ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json";
+  return paths.every(allowed);
+}
+
+/** User data backup PR — skip unrelated flaky article load-more / entrypoint guards. */
+export function isUserDataBackupOnlyScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/iu-user-data-backup-core.js" ||
+    f === "assets/iu-user-data-backup-v1.js" ||
+    f.startsWith("scripts/iu-user-data-backup-") ||
     f === "scripts/smoke-data-only-scope.mjs" ||
     f === ".github/workflows/smoke.yml" ||
     f === "projects/index.html" ||
@@ -180,13 +263,18 @@ function main() {
   const finCalcHeaderOnly = isFinancialCalcMobileHeaderScope(files);
   const datovkaOverlayOnly = isDatovkaMobileOverlayScope(files);
   const customButtonsScrollOnly = isCustomButtonsMobileScrollScope(files);
+  const userDataBackupOnly = isUserDataBackupOnlyScope(files);
+  const legalDocSectionBarOnly = isLegalDocSectionBarOnlyScope(files);
+  const pcSvatekLabelPillGapOnly = isPcSvatekLabelPillGapOnlyScope(files);
+  const calendarAllDayPinnedLimitOnly = isCalendarAllDayPinnedLimitScope(files);
+  const desktopArticleReadMarkOnly = isDesktopArticleReadMarkOnlyScope(files);
   const allowFastPath =
     dataOnly ||
     workflowOnly ||
     pipelineOnly ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
 
-  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"}`);
+  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"} desktop_article_read_mark_only=${desktopArticleReadMarkOnly ? "YES" : "NO"}`);
   for (const f of files.slice(0, 20)) {
     console.log(`[smoke-data-only-scope] changed=${f}`);
   }
@@ -199,11 +287,21 @@ function main() {
   writeOutput("fin_calc_header_only", finCalcHeaderOnly ? "true" : "false");
   writeOutput("datovka_overlay_only", datovkaOverlayOnly ? "true" : "false");
   writeOutput("custom_buttons_scroll_only", customButtonsScrollOnly ? "true" : "false");
+  writeOutput("user_data_backup_only", userDataBackupOnly ? "true" : "false");
+  writeOutput("legal_doc_section_bar_only", legalDocSectionBarOnly ? "true" : "false");
+  writeOutput("pc_svatek_label_pill_gap_only", pcSvatekLabelPillGapOnly ? "true" : "false");
+  writeOutput("calendar_allday_pinned_limit_only", calendarAllDayPinnedLimitOnly ? "true" : "false");
+  writeOutput("desktop_article_read_mark_only", desktopArticleReadMarkOnly ? "true" : "false");
   console.log(`SMOKE_DATA_ONLY_SCOPE=${allowFastPath ? "YES" : "NO"}`);
   console.log(`SMOKE_INFO_PANEL_ONLY_SCOPE=${infoPanelOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_FIN_CALC_HEADER_ONLY_SCOPE=${finCalcHeaderOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_DATOVKA_OVERLAY_ONLY_SCOPE=${datovkaOverlayOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_CUSTOM_BUTTONS_SCROLL_ONLY_SCOPE=${customButtonsScrollOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_USER_DATA_BACKUP_ONLY_SCOPE=${userDataBackupOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_LEGAL_DOC_SECTION_BAR_ONLY_SCOPE=${legalDocSectionBarOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_PC_SVATEK_LABEL_PILL_GAP_ONLY_SCOPE=${pcSvatekLabelPillGapOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_CALENDAR_ALLDAY_PINNED_LIMIT_ONLY_SCOPE=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_DESKTOP_ARTICLE_READ_MARK_ONLY_SCOPE=${desktopArticleReadMarkOnly ? "YES" : "NO"}`);
 }
 
 if (process.argv[1] && process.argv[1].endsWith("smoke-data-only-scope.mjs")) {

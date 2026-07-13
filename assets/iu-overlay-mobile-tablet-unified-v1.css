@@ -203,20 +203,6 @@
     z-index: 10040 !important;
   }
 
-  @media (max-width: 900px) {
-    body.iu-modal-open.iu-ds-overlay-open #iuDsPanel.iu-ds-panel.iuSectionDS[data-open="1"]:not([hidden]) {
-      bottom: var(--iu-mobile-bottom-nav-safe-space, var(--iu-tool-overlay-panel-bottom)) !important;
-      max-height: calc(100dvh - var(--iu-mobile-bottom-nav-safe-space, var(--iu-tool-overlay-panel-bottom))) !important;
-    }
-  }
-
-  @media (min-width: 901px) and (max-width: 1024px) {
-    body.iu-modal-open.iu-ds-overlay-open #iuDsPanel.iu-ds-panel.iuSectionDS[data-open="1"]:not([hidden]) {
-      bottom: 0 !important;
-      max-height: 100dvh !important;
-    }
-  }
-
   /* Vlastní tlačítka: scroll uvnitř #iuCustomButtonsScrollHost (form + seznam), ne cardShell */
   body.iu-custom-buttons-overlay-open #iuCustomButtonsPanel.iu-custom-buttons-overlay-panel:not([hidden]) {
     position: fixed !important;

@@ -17,7 +17,11 @@ const REQUIRED = [
   { id: "place_date_section_class", file: RENDERER, pattern: /iu-legal-doc-paper__section--placeDate/ },
   { id: "mobile_template_marker", file: CSS, pattern: /iu-legal-documents-mobile-template-v1/ },
   { id: "mobile_max_1024", file: CSS, pattern: /@media \(max-width: 1024px\)/ },
+  { id: "pdf_section_bar_body_gap", file: RENDERER, pattern: /PDF_SECTION_BAR_BODY_GAP_MM/ },
+  { id: "empty_section_num_html", file: RENDERER, pattern: /sectionNum" aria-hidden="true"><\/span>/ },
+  { id: "section_body_padding_top", file: path.join(__dirname, "..", "assets", "iu-legal-documents-overlay.css"), pattern: /\.iu-legal-doc-paper__sectionBody\{[^}]*padding-top:\s*4px/ },
   { id: "index_css_link", file: INDEX, pattern: /iu-legal-documents-mobile-template-v1\.css/ },
+  { id: "index_css_bump", file: INDEX, pattern: /legal-docs-mobile-template-v1-20260713/ },
 ];
 
 function main() {

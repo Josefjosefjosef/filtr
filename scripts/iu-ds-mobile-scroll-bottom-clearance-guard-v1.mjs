@@ -40,10 +40,14 @@ function staticGate() {
       ),
     },
     {
-      id: "unified_mobile_nav_safe_space_bottom",
-      pass: /@media \(max-width: 900px\)[\s\S]*iu-ds-overlay-open[\s\S]*--iu-mobile-bottom-nav-safe-space/.test(
+      id: "unified_ds_panel_bottom_nav_height",
+      pass: /body\.iu-modal-open\.iu-ds-overlay-open #iuDsPanel\.iu-ds-panel\.iuSectionDS\[data-open="1"\]:not\(\[hidden\]\)[\s\S]*--iu-tool-overlay-panel-bottom/.test(
         unified
       ),
+    },
+    {
+      id: "unified_no_mobile_safe_space_panel_override",
+      pass: !/@media \(max-width: 900px\)[\s\S]*iu-ds-overlay-open[\s\S]*--iu-mobile-bottom-nav-safe-space/.test(unified),
     },
     {
       id: "restore_ds_panel_body_safe_area",
@@ -53,7 +57,7 @@ function staticGate() {
     },
     {
       id: "index_cache_bust",
-      pass: /iu-overlay-mobile-tablet-unified-v1\.css\?v=legal-docs-hub-header-single-row-v1-20260707/.test(index),
+      pass: /iu-overlay-mobile-tablet-unified-v1\.css\?v=ds-mobile-overlay-nav-flush-v1-20260713/.test(index),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
