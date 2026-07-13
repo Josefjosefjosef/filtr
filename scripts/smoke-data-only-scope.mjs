@@ -225,6 +225,7 @@ export function isLegalDocsFormStateOnlyScope(files) {
     f === "assets/iu-legal-documents-module.js" ||
     f === "assets/app.js" ||
     f.startsWith("scripts/iu-legal-documents-") ||
+    f.startsWith("scripts/iu-legal-") ||
     f === "scripts/smoke-data-only-scope.mjs" ||
     f === ".github/workflows/smoke.yml" ||
     f === "package.json";
