@@ -2,12 +2,11 @@
  * InfoUzel.cz — iCentrum „Správa dat“ UI (export / import).
  */
 import {
-  BACKUP_FILE_EXT,
   LAST_EXPORT_KEY,
   CALENDAR_IDB,
   exportBackupJson,
-  parseBackupJson,
-  verifyBackupIntegrity,
+  readBackupFileText,
+  parseAndVerifyBackupText,
   getBackupPreview,
   applyBackupReplaceMode,
   collectAllModules,
@@ -325,13 +324,8 @@ function initUserDataBackupUi() {
     setBusy(importBtn, true, "Ověřuji zálohu…");
     announce(statusLive, "Probíhá ověřování zálohy…");
     try {
-      const name = String(file.name || "").toLowerCase();
-      if (!name.endsWith(BACKUP_FILE_EXT)) {
-        throw new Error("BACKUP_INVALID");
-      }
-      const text = await file.text();
-      const parsed = parseBackupJson(text);
-      const verified = await verifyBackupIntegrity(parsed, getSubtle());
+      const text = await readBackupFileText(file);
+      const verified = await parseAndVerifyBackupText(text, getSubtle());
       pendingBackup = verified;
       const preview = getBackupPreview(verified);
       openConfirmDialog(preview);
@@ -341,6 +335,11 @@ function initUserDataBackupUi() {
       announce(statusLive, userMessageForError(errorCodeFrom(err)) || "Vybraný soubor není platná záloha.");
     } finally {
       setBusy(importBtn, false);
+      try {
+        fileInput.value = "";
+      } catch {
+        /* ignore */
+      }
     }
   });
 
@@ -418,6 +417,7 @@ function initUserDataBackupUi() {
 function exposeBackupGlobals() {
   window.iuUserDataBackupCollectSnapshot = () => collectAllModules(createStorageAdapter());
   window.iuUserDataBackupExportJson = () => exportBackupJson(createStorageAdapter(), readAppVersion(), getSubtle());
+  window.iuUserDataBackupParseAndVerify = (text) => parseAndVerifyBackupText(text, getSubtle());
 }
 
 exposeBackupGlobals();
