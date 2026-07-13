@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Datová schránka — mobil/tablet: poslední prvek musí být nad spodní navigací po scrollu na konec.
+ * Datová schránka — mobil/tablet: spodní hrana panelu musí navazovat na horní hranu spodní navigace (bez mezery).
+ * Run: npm run iu-ds-mobile-overlay-nav-flush-guard
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -16,8 +17,9 @@ const { chromium } = require("playwright");
 const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.css");
 const RESTORE = path.join(REPO, "assets", "iu-mindmenu-bottom-nav-restore-v1.css");
 const INDEX = path.join(REPO, "projects", "index.html");
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8898", 10);
+const PORT = parseInt(process.env.IU_GUARD_PORT || "8899", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
+const CACHE_BUST = "ds-mobile-overlay-nav-flush-v1-20260713";
 
 const VIEWPORTS = [
   { name: "MOBILE", width: 390, height: 844 },
@@ -28,36 +30,44 @@ function staticGate() {
   const unified = fs.readFileSync(UNIFIED, "utf8");
   const restore = fs.readFileSync(RESTORE, "utf8");
   const index = fs.readFileSync(INDEX, "utf8");
+  const dsBlock = unified.match(
+    /body\.iu-modal-open\.iu-ds-overlay-open #iuDsPanel\.iu-ds-panel\.iuSectionDS\[data-open="1"\]:not\(\[hidden\]\)\s*\{[\s\S]*?\}/
+  );
+  const block = dsBlock ? dsBlock[0] : "";
   const checks = [
     {
-      id: "unified_ds_scroll_clearance_token",
-      pass: /--iu-ds-scroll-bottom-clearance:/.test(unified),
-    },
-    {
-      id: "unified_ds_panel_body_clearance",
-      pass: /body\.iu-modal-open\.iu-ds-overlay-open #iuDsPanel :is\(\.iu-ds-panelBody, \.iu-datovka-scroll-host\)[\s\S]*--iu-ds-scroll-bottom-clearance/.test(
-        unified
-      ),
-    },
-    {
       id: "unified_ds_panel_bottom_nav_height",
-      pass: /body\.iu-modal-open\.iu-ds-overlay-open #iuDsPanel\.iu-ds-panel\.iuSectionDS\[data-open="1"\]:not\(\[hidden\]\)[\s\S]*--iu-tool-overlay-panel-bottom/.test(
-        unified
-      ),
+      pass: /--iu-tool-overlay-panel-bottom/.test(block),
     },
     {
       id: "unified_no_mobile_safe_space_panel_override",
       pass: !/@media \(max-width: 900px\)[\s\S]*iu-ds-overlay-open[\s\S]*--iu-mobile-bottom-nav-safe-space/.test(unified),
     },
     {
-      id: "restore_ds_panel_body_safe_area",
-      pass: /body\.iu-modal-open\.iu-ds-overlay-open #iuDsPanel :is\(\.iu-ds-panelBody, \.iu-datovka-scroll-host\)[\s\S]*env\(safe-area-inset-bottom/.test(
+      id: "unified_no_tablet_bottom_zero_override",
+      pass: !/@media \(min-width: 901px\) and \(max-width: 1024px\)[\s\S]*iu-ds-overlay-open[\s\S]*bottom:\s*0 !important/.test(
+        unified
+      ),
+    },
+    {
+      id: "restore_ds_panel_bottom_nav_height",
+      pass: /body\.iu-modal-open\.iu-ds-overlay-open #iuDsPanel\.iu-ds-panel\[data-open="1"\]:not\(\[hidden\]\)[\s\S]*--bottom-nav-height/.test(
         restore
       ),
     },
     {
-      id: "index_cache_bust",
-      pass: /iu-overlay-mobile-tablet-unified-v1\.css\?v=ds-mobile-overlay-nav-flush-v1-20260713/.test(index),
+      id: "restore_ds_panel_no_safe_space_anchor",
+      pass: !/body\.iu-modal-open\.iu-ds-overlay-open #iuDsPanel\.iu-ds-panel\[data-open="1"\]:not\(\[hidden\]\)[\s\S]*--iu-mobile-bottom-nav-safe-space/.test(
+        restore
+      ),
+    },
+    {
+      id: "index_cache_bust_unified",
+      pass: new RegExp(`iu-overlay-mobile-tablet-unified-v1\\.css\\?v=${CACHE_BUST}`).test(index),
+    },
+    {
+      id: "index_cache_bust_restore",
+      pass: new RegExp(`iu-mindmenu-bottom-nav-restore-v1\\.css\\?v=${CACHE_BUST}`).test(index),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
@@ -95,35 +105,34 @@ async function openDatovkaViaGate(page) {
   await page.waitForTimeout(900);
 }
 
-async function measureBottomClearance(page) {
-  await page.evaluate(() => {
-    const panel = document.getElementById("iuDsPanel");
-    if (panel) panel.scrollTop = panel.scrollHeight;
-    const body = panel ? panel.querySelector(".iu-ds-panelBody") : null;
-    if (body) body.scrollTop = body.scrollHeight;
-  });
-  await page.waitForTimeout(200);
+async function measurePanelNavFlush(page) {
   return page.evaluate(() => {
     const nav = document.getElementById("iuMobileBottomNav");
-    const addBtn = document.getElementById("iuDsAddBtn");
     const panel = document.getElementById("iuDsPanel");
     const navRect = nav ? nav.getBoundingClientRect() : null;
-    const addRect = addBtn ? addBtn.getBoundingClientRect() : null;
     const panelRect = panel ? panel.getBoundingClientRect() : null;
     const navVisible = !!(nav && navRect && navRect.height > 0 && getComputedStyle(nav).display !== "none");
+    const panelOpen =
+      panel &&
+      !panel.hidden &&
+      panel.dataset.open === "1" &&
+      getComputedStyle(panel).display !== "none" &&
+      panelRect &&
+      panelRect.height > 40;
     const gapPx =
-      navVisible && addRect && navRect ? Math.round(navRect.top - addRect.bottom) : null;
+      navVisible && panelRect && navRect ? Math.round(navRect.top - panelRect.bottom) : null;
     const pass =
-      !!addRect &&
-      addRect.height > 0 &&
-      (!navVisible || (gapPx !== null && gapPx >= 4));
+      panelOpen &&
+      navVisible &&
+      gapPx !== null &&
+      Math.abs(gapPx) <= 1;
     return {
       pass,
       navVisible,
+      panelOpen,
       gapPx,
-      addBottom: addRect ? Math.round(addRect.bottom) : null,
-      navTop: navRect ? Math.round(navRect.top) : null,
       panelBottom: panelRect ? Math.round(panelRect.bottom) : null,
+      navTop: navRect ? Math.round(navRect.top) : null,
     };
   });
 }
@@ -139,7 +148,7 @@ async function runViewport(browser, vp) {
   await page.waitForFunction(() => document.querySelectorAll("*").length > 1500, { timeout: 30000 });
   await page.waitForTimeout(1500);
   await openDatovkaViaGate(page);
-  const measure = await measureBottomClearance(page);
+  const measure = await measurePanelNavFlush(page);
   await context.close();
   return { viewport: vp.name, ...measure };
 }

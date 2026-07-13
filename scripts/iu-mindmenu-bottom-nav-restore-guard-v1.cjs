@@ -22,7 +22,7 @@ const REQUIRED = [
   { id: "v3_unified_scroll_safe_area", pattern: /v3 — unified scroll\/safe-area/ },
   { id: "tool_overlay_bottom_gap", pattern: /--iu-tool-overlay-bottom-gap/ },
   { id: "no_safe_space_in_restore", custom: restoreNoSafeSpaceOutsideDsPanel },
-  { id: "ds_panel_uses_safe_space", pattern: /#iuDsPanel[\s\S]*--iu-mobile-bottom-nav-safe-space/ },
+  { id: "ds_panel_uses_bottom_nav_height", pattern: /#iuDsPanel[\s\S]*--bottom-nav-height/ },
   { id: "calendar_day_overlay_clearance", pattern: /#iuCalendarDayOverlay\.iu-calendar-day-overlay:not\(\[hidden\]\)/ },
   { id: "quickfeed_gate_scope", pattern: /body\.iu-mobileGateOverlayOpen\.iu-mobileGateToolsQuickOpen #iuQuickFeed/ },
   { id: "calendar_dialog_clearance", pattern: /#iuCalendarOverlay \.iu-calendarOverlay__dialog/ },

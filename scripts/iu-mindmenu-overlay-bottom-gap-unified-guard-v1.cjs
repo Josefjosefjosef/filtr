@@ -25,9 +25,9 @@ const REQUIRED = [
     custom: restoreNoSafeSpaceOnCards,
   },
   {
-    id: "restore_ds_panel_uses_safe_space",
+    id: "restore_ds_panel_uses_bottom_nav_height",
     file: RESTORE,
-    pattern: /#iuDsPanel[\s\S]*--iu-mobile-bottom-nav-safe-space/,
+    pattern: /#iuDsPanel[\s\S]*--bottom-nav-height/,
   },
   {
     id: "restore_quickfeed_gate_bottom_gap",
@@ -53,12 +53,12 @@ const REQUIRED = [
   {
     id: "index_cache_bust_restore",
     file: INDEX,
-    pattern: /iu-mindmenu-bottom-nav-restore-v1\.css\?v=ds-mobile-scroll-bottom-clearance-v1-20260707/,
+    pattern: /iu-mindmenu-bottom-nav-restore-v1\.css\?v=ds-mobile-overlay-nav-flush-v1-20260713/,
   },
   {
     id: "index_cache_bust_unified",
     file: INDEX,
-    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=legal-docs-hub-header-single-row-v1-20260707/,
+    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=ds-mobile-overlay-nav-flush-v1-20260713/,
   },
 ];
 

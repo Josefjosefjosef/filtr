@@ -11,8 +11,9 @@ const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const APP = path.join(REPO, "assets", "app.js");
 const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.css");
 const INDEX = path.join(REPO, "projects", "index.html");
-const CSS_BUST = "legal-docs-hub-header-single-row-v1-20260707";
+const CSS_BUST = "ds-mobile-overlay-nav-flush-v1-20260713";
 const JS_BUSTS = [
+  "ds-mobile-overlay-nav-flush-v1-20260713",
   "ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707",
   "ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707",
   "legal-docs-hub-header-single-row-v1-20260707",

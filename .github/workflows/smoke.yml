@@ -134,7 +134,7 @@ jobs:
         run: npm run iu-desktop-info-panel-layout-guard
 
       - name: Desktop info panel validation guard
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.pc_svatek_label_pill_gap_only != 'true' && steps.scope.outputs.calendar_allday_pinned_limit_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.pc_svatek_label_pill_gap_only != 'true' && steps.scope.outputs.calendar_allday_pinned_limit_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true'
         run: npm run iu-desktop-info-panel-validation-guard
 
       - name: Info panel mobile polish guard
@@ -184,6 +184,10 @@ jobs:
       - name: Datovka mobile overlay visible guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-ds-mobile-overlay-visible-guard
+
+      - name: Datovka mobile overlay nav flush guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-ds-mobile-overlay-nav-flush-guard
 
       - name: Datovka mobile scroll bottom clearance guard
         if: steps.scope.outputs.data_only != 'true'
