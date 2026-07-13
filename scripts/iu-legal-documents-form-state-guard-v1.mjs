@@ -315,7 +315,17 @@ async function main() {
       try {
         fails.push(...(await testDocument(page, doc)));
       } catch (err) {
-        fails.push(`${doc.id}: ${String(err && err.message ? err.message : err)}`);
+        const msg = String(err && err.message ? err.message : err);
+        if (/Execution context was destroyed/i.test(msg)) {
+          try {
+            fails.push(...(await testDocument(page, doc)));
+            continue;
+          } catch (err2) {
+            fails.push(`${doc.id}: ${String(err2 && err2.message ? err2.message : err2)}`);
+            continue;
+          }
+        }
+        fails.push(`${doc.id}: ${msg}`);
       }
     }
     try {
