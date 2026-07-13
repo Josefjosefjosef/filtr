@@ -5684,7 +5684,7 @@ font-src 'self' data:;
     <script defer src="/assets/iu-affiliate-catalog.js?v=affiliate-disclosure-title-remove-v56-20260629"></script>
     <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-v1"></script>
     <script defer src="/assets/iu-tool-privacy-info.js?v=unified-overlay-header-v73-20260701"></script>
-    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711"></script>
+    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713"></script>
     <script defer src="/assets/iu-desktop-section-close-v1.js?v=desktop-tool-window-no-close-v1-20260712"></script>
     <script defer src="/assets/iu-desktop-left-rail-new-window-v1.js?v=pc-left-rail-new-window-v1-20260711"></script>
     <script type="module" src="/assets/iu-desktop-info-panel.js?v=info-panel-freshness-period-v1-20260709"></script>
@@ -6243,6 +6243,7 @@ font-src 'self' data:;
                 </div>
                 <button type="button" class="iu-calSidePanel__close iu-close-btn-38" data-iu-cal-side-close="1" aria-label="Zavřít panel">×</button>
               </header>
+              <div class="iu-calSidePanel__pinned" id="iuCalendarSidePanelPinned" data-iu-cal-day-pinned-host="1" hidden aria-hidden="true"></div>
               <div class="iu-calSidePanel__scroll" id="iuCalendarSidePanelScroll"></div>
             </div>
             <form id="iuCalendarEventForm" class="iu-calendarOverlay__form iu-calendarOverlay__form--bridge" hidden aria-hidden="true">
@@ -6268,6 +6269,7 @@ font-src 'self' data:;
         </div>
         <button type="button" class="iu-day-close" aria-label="Zavřít">×</button>
       </div>
+      <div class="iu-calendar-day-pinned" data-iu-cal-day-pinned-host="1" hidden aria-hidden="true"></div>
       <div class="iu-calendar-day-content"></div>
     </div>
     </template>
@@ -7317,6 +7319,16 @@ font-src 'self' data:;
         }
         #iuCalendarOverlay .iu-calSidePanel__close {
           flex: 0 0 auto;
+        }
+        #iuCalendarOverlay .iu-calSidePanel__pinned {
+          flex: 0 0 auto;
+          min-height: 0;
+          overflow: visible;
+          padding: 0 12px 8px;
+          box-sizing: border-box;
+        }
+        #iuCalendarOverlay .iu-calSidePanel__pinned[hidden] {
+          display: none !important;
         }
         #iuCalendarOverlay .iu-calSidePanel__scroll {
           flex: 1 1 auto;

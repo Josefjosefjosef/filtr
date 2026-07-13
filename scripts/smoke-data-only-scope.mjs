@@ -164,6 +164,23 @@ export function isPcSvatekLabelPillGapOnlyScope(files) {
   return paths.every(allowed);
 }
 
+/** Calendar all-day pinned block + 3/day limit — skip unrelated flaky guards. */
+export function isCalendarAllDayPinnedLimitScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/app.js" ||
+    f === "assets/app.css" ||
+    f.startsWith("scripts/iu-calendar-allday-") ||
+    f === "scripts/iu-desktop-calendar-allday-toggle-guard-v1.mjs" ||
+    f.startsWith("scripts/silver-calendar-premium-") ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json";
+  return paths.every(allowed);
+}
+
 /** Legal document section bar spacing PR — skip unrelated flaky article / info-panel guards. */
 export function isLegalDocSectionBarOnlyScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
@@ -229,13 +246,14 @@ function main() {
   const userDataBackupOnly = isUserDataBackupOnlyScope(files);
   const legalDocSectionBarOnly = isLegalDocSectionBarOnlyScope(files);
   const pcSvatekLabelPillGapOnly = isPcSvatekLabelPillGapOnlyScope(files);
+  const calendarAllDayPinnedLimitOnly = isCalendarAllDayPinnedLimitScope(files);
   const allowFastPath =
     dataOnly ||
     workflowOnly ||
     pipelineOnly ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
 
-  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"}`);
+  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"}`);
   for (const f of files.slice(0, 20)) {
     console.log(`[smoke-data-only-scope] changed=${f}`);
   }
@@ -251,6 +269,7 @@ function main() {
   writeOutput("user_data_backup_only", userDataBackupOnly ? "true" : "false");
   writeOutput("legal_doc_section_bar_only", legalDocSectionBarOnly ? "true" : "false");
   writeOutput("pc_svatek_label_pill_gap_only", pcSvatekLabelPillGapOnly ? "true" : "false");
+  writeOutput("calendar_allday_pinned_limit_only", calendarAllDayPinnedLimitOnly ? "true" : "false");
   console.log(`SMOKE_DATA_ONLY_SCOPE=${allowFastPath ? "YES" : "NO"}`);
   console.log(`SMOKE_INFO_PANEL_ONLY_SCOPE=${infoPanelOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_FIN_CALC_HEADER_ONLY_SCOPE=${finCalcHeaderOnly ? "YES" : "NO"}`);
@@ -259,6 +278,7 @@ function main() {
   console.log(`SMOKE_USER_DATA_BACKUP_ONLY_SCOPE=${userDataBackupOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_LEGAL_DOC_SECTION_BAR_ONLY_SCOPE=${legalDocSectionBarOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_PC_SVATEK_LABEL_PILL_GAP_ONLY_SCOPE=${pcSvatekLabelPillGapOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_CALENDAR_ALLDAY_PINNED_LIMIT_ONLY_SCOPE=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"}`);
 }
 
 if (process.argv[1] && process.argv[1].endsWith("smoke-data-only-scope.mjs")) {
