@@ -31,7 +31,7 @@ function staticGate() {
     { id: "mindmenu_label_minwidth0", pass: /\.iuMyInfoUzelOpenBtn__label[\s\S]*min-width: 0;/.test(home) },
     { id: "mindmenu_icons_noshrink", pass: /\.iuMyInfoUzelOpenBtn__icons[\s\S]*flex-shrink: 0;/.test(home) },
     { id: "tasks_cache_bust", pass: /iu-tasks-premium\.css\?v=mobile-tablet-tasks-filter-layout-v1-20260711/.test(index) },
-    { id: "home_cache_bust", pass: /iu-desktop-home-premium\.css\?v=pc-browser-compat-mindmenu-v1-20260711/.test(index) },
+    { id: "home_cache_bust", pass: /iu-desktop-home-premium\.css\?v=pc-svatek-label-pill-gap-4px-20260713/.test(index) },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
   return { pass: fails.length === 0, fails, checks };
