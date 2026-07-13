@@ -106,7 +106,7 @@ jobs:
         run: npm run iu-section-switch-instant-response-guard
 
       - name: Section switch scroll position guard
-        if: steps.scope.outputs.data_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.pc_svatek_label_pill_gap_only != 'true'
         run: npm run iu-section-switch-scroll-position-guard
 
       - name: Desktop left-rail section close guard
