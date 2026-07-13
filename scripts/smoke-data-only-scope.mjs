@@ -125,6 +125,8 @@ export function isDatovkaMobileOverlayScope(files) {
     f === "scripts/iu-mindmenu-overlay-bottom-gap-unified-guard-v1.cjs" ||
     f === "scripts/iu-mindmenu-bottom-nav-restore-guard-v1.cjs" ||
     f === "scripts/iu-ai-assistants-overlay-bottom-gap-guard-v1.cjs" ||
+    f === "scripts/iu-legal-documents-mobile-header-guard.mjs" ||
+    f === "scripts/iu-moje-sluzby-mobile-keyboard-add-btn-guard-v1.mjs" ||
     f === "scripts/smoke-data-only-scope.mjs" ||
     f === ".github/workflows/smoke.yml" ||
     f === "projects/index.html" ||

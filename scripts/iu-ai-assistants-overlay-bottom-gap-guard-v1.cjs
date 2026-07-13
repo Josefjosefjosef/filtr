@@ -39,12 +39,12 @@ const REQUIRED = [
   {
     id: "index_cache_bust_unified",
     file: INDEX,
-    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=legal-docs-hub-header-single-row-v1-20260707/,
+    pattern: /iu-overlay-mobile-tablet-unified-v1\.css\?v=ds-mobile-overlay-nav-flush-v1-20260713/,
   },
   {
     id: "index_cache_bust_restore",
     file: INDEX,
-    pattern: /iu-mindmenu-bottom-nav-restore-v1\.css\?v=ds-mobile-scroll-bottom-clearance-v1-20260707/,
+    pattern: /iu-mindmenu-bottom-nav-restore-v1\.css\?v=ds-mobile-overlay-nav-flush-v1-20260713/,
   },
 ];
 
