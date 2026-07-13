@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-07-13T20:31:45.973161Z",
+  "ingestedAt": "2026-07-13T23:28:50.569823Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Chcete Laru Croft v životní velikosti? Tyto herní rarity jsou na prodej",
+      "url": "https://www.idnes.cz/hry/magazin/ebay-vzacne-herni-predmety-sberatelske-figurky-hry.A260712_153154_bw-magazin_oma/foto",
+      "dt": "2026-07-13T22:00:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "chcete",
+        "croft",
+        "herní",
+        "laru",
+        "prodej",
+        "rarity",
+        "tyto",
+        "velikosti",
+        "životní"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -745,30 +771,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "RECENZE: Rhythm Paradise Groove prověří váš cit pro rytmus",
-      "url": "https://www.idnes.cz/hry/recenze/rhythm-paradise-groove-recenze.A260630_134034_bw-recenze_oz",
-      "dt": "2026-07-01T22:00:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "cit",
-        "groove",
-        "paradise",
-        "prověří",
-        "rhythm",
-        "rytmus",
-        "váš"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 44730,
+      "bytes": 44913,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,7 +818,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-13T09:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-13T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -831,6 +833,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chcete Laru Croft v životní velikosti? Tyto herní rarity jsou na prodej",
+            "publishedAt": "2026-07-13T22:00:00Z"
+          },
           {
             "title": "Černý samuraj může závidět, z pirátského Assassin’s Creed je obrovský hit",
             "publishedAt": "2026-07-13T09:20:00Z"
@@ -858,10 +864,6 @@
           {
             "title": "Tyto dvě pěkné hry vás vyjdou na nula korun. U jedné se skvěle relaxuje",
             "publishedAt": "2026-07-09T22:00:00Z"
-          },
-          {
-            "title": "Těžký přešlap Microsoftu: propustil skoro celé studio id Software",
-            "publishedAt": "2026-07-09T09:30:00Z"
           }
         ]
       }
