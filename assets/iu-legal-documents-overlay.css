@@ -660,7 +660,7 @@
   display: flex;
   align-items: stretch;
   min-height: 28px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   border-radius: 2px;
   overflow: hidden;
 }
@@ -670,10 +670,10 @@
   justify-content: center;
   flex: 0 0 32px;
   background: var(--iu-brand-blue);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1;
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+  user-select: none;
 }
 .iu-legal-doc-paper__sectionTitle{
   display: flex;
@@ -698,6 +698,8 @@
   color: #1F2937;
   overflow-wrap: anywhere;
   word-break: break-word;
+  padding-top: 4px;
+  margin-top: 0;
 }
 .iu-legal-doc-paper__fieldLabel{
   font-weight: 700;

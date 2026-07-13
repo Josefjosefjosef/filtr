@@ -149,6 +149,22 @@ export function isCustomButtonsMobileScrollScope(files) {
   return paths.every(allowed);
 }
 
+/** Legal document section bar spacing PR — skip unrelated flaky article / info-panel guards. */
+export function isLegalDocSectionBarOnlyScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/iu-legal-documents-pdf-renderer.js" ||
+    f === "assets/iu-legal-documents-overlay.css" ||
+    f === "assets/iu-legal-documents-mobile-template-v1.css" ||
+    f.startsWith("scripts/iu-legal-documents-") ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json";
+  return paths.every(allowed);
+}
+
 /** User data backup PR — skip unrelated flaky article load-more / entrypoint guards. */
 export function isUserDataBackupOnlyScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
@@ -196,13 +212,14 @@ function main() {
   const datovkaOverlayOnly = isDatovkaMobileOverlayScope(files);
   const customButtonsScrollOnly = isCustomButtonsMobileScrollScope(files);
   const userDataBackupOnly = isUserDataBackupOnlyScope(files);
+  const legalDocSectionBarOnly = isLegalDocSectionBarOnlyScope(files);
   const allowFastPath =
     dataOnly ||
     workflowOnly ||
     pipelineOnly ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
 
-  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"}`);
+  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"}`);
   for (const f of files.slice(0, 20)) {
     console.log(`[smoke-data-only-scope] changed=${f}`);
   }
@@ -216,12 +233,14 @@ function main() {
   writeOutput("datovka_overlay_only", datovkaOverlayOnly ? "true" : "false");
   writeOutput("custom_buttons_scroll_only", customButtonsScrollOnly ? "true" : "false");
   writeOutput("user_data_backup_only", userDataBackupOnly ? "true" : "false");
+  writeOutput("legal_doc_section_bar_only", legalDocSectionBarOnly ? "true" : "false");
   console.log(`SMOKE_DATA_ONLY_SCOPE=${allowFastPath ? "YES" : "NO"}`);
   console.log(`SMOKE_INFO_PANEL_ONLY_SCOPE=${infoPanelOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_FIN_CALC_HEADER_ONLY_SCOPE=${finCalcHeaderOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_DATOVKA_OVERLAY_ONLY_SCOPE=${datovkaOverlayOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_CUSTOM_BUTTONS_SCROLL_ONLY_SCOPE=${customButtonsScrollOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_USER_DATA_BACKUP_ONLY_SCOPE=${userDataBackupOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_LEGAL_DOC_SECTION_BAR_ONLY_SCOPE=${legalDocSectionBarOnly ? "YES" : "NO"}`);
 }
 
 if (process.argv[1] && process.argv[1].endsWith("smoke-data-only-scope.mjs")) {
