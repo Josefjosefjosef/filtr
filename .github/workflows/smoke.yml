@@ -146,15 +146,15 @@ jobs:
         run: npm run iu-info-panel-mobile-polish-guard
 
       - name: Article entrypoint parity guard (chunked loading V1)
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.custom_buttons_scroll_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.pc_svatek_label_pill_gap_only != 'true' && steps.scope.outputs.calendar_allday_pinned_limit_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.custom_buttons_scroll_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.pc_svatek_label_pill_gap_only != 'true' && steps.scope.outputs.calendar_allday_pinned_limit_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run article-entrypoint-parity-guard
 
       - name: Article long-session memory guard (Task 66)
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.custom_buttons_scroll_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.pc_svatek_label_pill_gap_only != 'true' && steps.scope.outputs.calendar_allday_pinned_limit_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.custom_buttons_scroll_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.pc_svatek_label_pill_gap_only != 'true' && steps.scope.outputs.calendar_allday_pinned_limit_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-article-long-session-memory-guard
 
       - name: Article load-more stress guard (Task 66)
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.custom_buttons_scroll_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.pc_svatek_label_pill_gap_only != 'true' && steps.scope.outputs.calendar_allday_pinned_limit_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true' && steps.scope.outputs.legal_docs_form_state_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.custom_buttons_scroll_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.pc_svatek_label_pill_gap_only != 'true' && steps.scope.outputs.calendar_allday_pinned_limit_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true' && steps.scope.outputs.legal_docs_form_state_only != 'true'
         run: npm run iu-article-load-more-stress-guard
 
       - name: Local data protection guard
@@ -212,6 +212,10 @@ jobs:
       - name: Custom buttons mobile scroll guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-custom-buttons-mobile-scroll-guard
+
+      - name: Quicktools mobile visibility guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-quicktools-mobile-visibility-guard
 
       - name: Custom buttons overlay polish guard
         if: steps.scope.outputs.data_only != 'true'
