@@ -66,9 +66,19 @@ const CHECKS = [
     pattern: /body\.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard \.iuSilverWelcomeMetaSvatekCluster \{[\s\S]*?display:\s*inline-flex[\s\S]*?flex-wrap:\s*nowrap/,
   },
   {
+    id: "dhp_desktop_svatek_cluster_gap_4px",
+    file: DHP_CSS,
+    pattern: /body\.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard \.iuSilverWelcomeMetaSvatekCluster \{[\s\S]*?gap:\s*4px/,
+  },
+  {
     id: "js_state_holiday_cluster_class",
     file: APP_JS,
     pattern: /iuSilverWelcomeMetaSvatekCluster--stateHoliday/,
+  },
+  {
+    id: "index_dhp_css_bump",
+    file: INDEX,
+    pattern: /pc-svatek-label-pill-gap-4px-20260713/,
   },
   {
     id: "js_no_svatek_icon_element",
