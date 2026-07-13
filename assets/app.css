@@ -3674,6 +3674,7 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
   --iu-tl-title-fw: inherit;
   --iu-tl-title-lh: clamp(1.28, calc(1.28 + (100vw - 680px) * 0.04 / 345), 1.32);
   --iu-tl-read-title: currentColor;
+  --iu-tl-read-mark: #16a34a;
   --iu-tl-clock-color: #0B2A4A;
   --iu-tl-rel-color: var(--iu-meta, #6b7280);
   --iu-tl-meta-color: inherit;
@@ -3804,7 +3805,25 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
   color: var(--iu-tl-read-title);
 }
 #feed.iuTimelineFeed .iuTimelineReadMark{
-  display: none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-end;
+  width:100%;
+  margin-top:1px;
+  font-size:11px;
+  line-height:1;
+  font-weight:700;
+  color:var(--iu-tl-read-mark);
+}
+@media (min-width: 901px){
+  #feed.iuTimelineFeed{
+    --iu-tl-read-title:rgba(11,42,74,.87);
+    --iu-tl-read-mark:#16a34a;
+  }
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed{
+    --iu-tl-read-title:rgba(240,248,255,.82);
+    --iu-tl-read-mark:#4ade80;
+  }
 }
 
 #feed.iuTimelineFeed .iuTimelineRight .iu-meta-line{
@@ -23267,17 +23286,6 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
     height:32px;
     padding:0;
     justify-content:center;
-  }
-  #feed.iuTimelineFeed .iuTimelineReadMark{
-    display:inline-flex;
-    align-items:center;
-    justify-content:flex-end;
-    width:100%;
-    margin-top:1px;
-    font-size:11px;
-    line-height:1;
-    font-weight:700;
-    color:var(--iu-tl-read-mark);
   }
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"],[data-section="travel"],[data-section="kultura"],[data-section="veda"],[data-section="vzdelavani"]) #feed.iuTimelineFeed{
     --iu-tl-clock-color:rgba(226,232,240,.94);
