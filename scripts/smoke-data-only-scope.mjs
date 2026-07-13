@@ -156,6 +156,7 @@ export function isPcSvatekLabelPillGapOnlyScope(files) {
   const allowed = (f) =>
     f === "assets/iu-desktop-home-premium.css" ||
     f.startsWith("scripts/iu-svatek-pill-") ||
+    f === "scripts/iu-pc-browser-compat-guard-v1.mjs" ||
     f === "scripts/smoke-data-only-scope.mjs" ||
     f === ".github/workflows/smoke.yml" ||
     f === "projects/index.html" ||
