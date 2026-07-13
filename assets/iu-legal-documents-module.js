@@ -117,6 +117,8 @@ function partyBlock(doc, prefix, heading) {
 function readFormState(root, doc) {
   const state = createEmptyFormState(doc);
   root.querySelectorAll("[data-iu-legal-path]").forEach((el) => {
+    const partyFields = el.closest("[data-iu-legal-pg]");
+    if (partyFields && partyFields.hidden) return;
     const path = el.getAttribute("data-iu-legal-path") || "";
     const segs = path.split(".");
     if (segs.length < 2) return;

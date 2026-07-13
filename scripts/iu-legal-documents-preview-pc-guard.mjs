@@ -22,7 +22,7 @@ const checks = [
   overlayCss.includes("body.iu-myinfouzel-open #iuLegalDocsPreviewPortal"),
   overlayCss.includes("body.iu-legal-docs-preview-open #iuLegalDocsPanel.iu-legal-overlay-panel:not([hidden])"),
   indexHtml.includes("legal-docs-preview-pc-v1-20260713"),
-  appJs.includes("iu-legal-documents-module.js?v=legal-docs-tool-guard-layering-v1-20260711"),
+  appJs.includes("iu-legal-documents-module.js?v=legal-docs-form-state-hidden-panel-v1-20260713"),
 ];
 
 const pass = checks.every(Boolean);
