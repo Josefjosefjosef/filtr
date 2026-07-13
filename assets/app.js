@@ -41096,7 +41096,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ".iu-calAllDaySection__head{font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:rgba(20,83,45,.72);margin:0 0 6px;padding:0 4px}" +
     ".iu-calAllDaySection__list{display:grid;gap:6px}" +
     ".iu-calAllDayChip{display:flex;align-items:flex-start;gap:8px;width:100%;margin:0;padding:10px 12px;border-radius:12px;border:1px solid rgba(21,128,61,.2);background:linear-gradient(180deg,rgba(236,253,245,.95),#fff);color:#0f172a;text-align:left;cursor:pointer;box-sizing:border-box;box-shadow:0 2px 8px rgba(21,128,61,.08);-webkit-tap-highlight-color:transparent;touch-action:manipulation}" +
-    ".iu-calAllDayChip__title{font-size:14px;font-weight:700;line-height:1.3;word-break:break-word}" +
+    ".iu-calAllDayChip__title{font-size:14px;font-weight:700;line-height:1.3;word-break:break-word;overflow-wrap:anywhere}" +
+    ".iu-calDayPinnedBlock{flex:0 0 auto;box-sizing:border-box}" +
+    ".iu-calInline__notice{margin:0 0 8px;padding:10px 12px;border-radius:12px;background:rgba(254,226,226,.95);border:1px solid rgba(185,28,28,.35);color:#991b1b;font-size:14px;font-weight:700;line-height:1.35;word-break:break-word;overflow-wrap:anywhere}" +
     ".iu-calAllDayChip:active{transform:translateY(1px)}" +
     ".iu-calBottomSheet{position:fixed;inset:0;z-index:10150;display:flex;flex-direction:column;justify-content:flex-end;pointer-events:none}" +
     ".iu-calBottomSheet:not([hidden]){pointer-events:auto}" +
@@ -41214,6 +41216,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   const MAX_ATTACHMENTS = 4;
   const MAX_IMAGE_EDGE = 1600;
   const MAX_IMAGE_BYTES = 420000;
+  const CAL_ALL_DAY_MAX_PER_DATE = 3;
+  const CAL_ALL_DAY_LIMIT_MSG = "Pro jeden den lze uložit maximálně 3 celodenní události.";
   const ALLOWED_VIEWS = new Set(["month", "year"]);
   const FOCUSABLE_SELECTOR = 'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])';
 
@@ -41242,7 +41246,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     searchQuery: "",
     searchResults: [],
     premiumUiBound: false,
-    sidePanelSearchBound: false
+    sidePanelSearchBound: false,
+    calInlineNotice: ""
   };
 
   function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
@@ -41494,13 +41499,24 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function renderDesktopSidePanel(){
     if (!isCalDesktopTwoPanel()) return;
     const scroll = document.getElementById("iuCalendarSidePanelScroll");
+    const pinned = document.getElementById("iuCalendarSidePanelPinned");
     if (!scroll) return;
     if (!isCalSidePanelOpen()){
       scroll.innerHTML = "";
+      if (pinned){
+        pinned.innerHTML = "";
+        pinned.hidden = true;
+        pinned.setAttribute("aria-hidden", "true");
+      }
       updateSidePanelHeader("", "");
       return;
     }
     if (state.searchOpen){
+      if (pinned){
+        pinned.innerHTML = "";
+        pinned.hidden = true;
+        pinned.setAttribute("aria-hidden", "true");
+      }
       updateSidePanelHeader("Kalendář", "Vyhledat událost");
       scroll.innerHTML = buildSidePanelSearchHtml();
       const els = getCalSearchElements();
@@ -41523,6 +41539,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return;
     }
     if (isCalDesktopSideFormOnly()){
+      if (pinned){
+        pinned.innerHTML = "";
+        pinned.hidden = true;
+        pinned.setAttribute("aria-hidden", "true");
+      }
       updateSidePanelHeader("Kalendář", "Přidat událost");
       scroll.innerHTML = '<div class="iu-calSidePanelForm">' + buildInlineEditorHtml() + "</div>";
       bindCalendarInlineEditorRoot(scroll, String(state.inline.date || state.selectedDate || "").slice(0, 10));
@@ -41533,14 +41554,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const iso = String(state.selectedDate || "").slice(0, 10);
       const head = formatCalMobileDayHeading(iso);
       updateSidePanelHeader(head.line1, head.line2);
-      scroll.innerHTML = renderDayHourlyTimelineHTML(iso);
-      bindDayTimelineUi(scroll, iso);
-      bindCalendarInlineEditorRoot(scroll, iso);
-      try{
-        requestAnimationFrame(()=>{
-          requestAnimationFrame(()=>{ scrollCalendarDayToNow(); });
-        });
-      }catch{}
+      syncDayViewPinnedAndHours(iso);
     }
   }
 
@@ -41578,6 +41592,36 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function getAllDayEventsForDate(date){
     return getEventsForDate(date).filter(isEventAllDay).sort(compareEvents);
+  }
+
+  function countAllDayEventsForDate(date, excludeId){
+    const ex = String(excludeId || "").trim();
+    return getAllDayEventsForDate(date).filter((ev)=> !ex || ev.id !== ex).length;
+  }
+
+  function canAddAllDayForDate(date, excludeId){
+    return countAllDayEventsForDate(date, excludeId) < CAL_ALL_DAY_MAX_PER_DATE;
+  }
+
+  function setCalInlineNotice(msg){
+    state.calInlineNotice = String(msg || "").trim();
+    if (shouldUseCalBottomSheet()) syncCalBottomSheet();
+    else if (isCalDesktopSideFormOnly()){
+      const scroll = document.getElementById("iuCalendarSidePanelScroll");
+      if (scroll){
+        scroll.innerHTML = '<div class="iu-calSidePanelForm">' + buildInlineEditorHtml() + "</div>";
+        bindCalendarInlineEditorRoot(scroll, String(state.inline && state.inline.date || state.selectedDate || "").slice(0, 10));
+      }
+    } else if (state.mobileDayOverlayOpen || (state.dayOpen && isCalDesktopTwoPanel())){
+      syncDayViewPinnedAndHours(String(state.inline && state.inline.date || state.selectedDate || "").slice(0, 10), { preserveHourScroll: true });
+    } else {
+      render();
+    }
+  }
+
+  function clearCalInlineNotice(){
+    if (!state.calInlineNotice) return;
+    state.calInlineNotice = "";
   }
 
   function captureCalScrollLockSnapshot(){
@@ -42282,6 +42326,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         "</div>";
     }
     const timeHidden = allDay ? " is-hidden" : "";
+    const noticeBlock = state.calInlineNotice
+      ? '<div class="iu-calInline__notice" role="alert" data-iu-cal-inline-notice="1">' +
+        esc(state.calInlineNotice) +
+        "</div>"
+      : "";
     const timeBlock =
       '<div class="iu-calInline__field iu-calInline__field--time' +
       timeHidden +
@@ -42316,6 +42365,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       '<textarea class="iu-calInline__txt" data-iu-cal-inline-field="note" placeholder="Poznámka" maxlength="1000">' +
       esc(inl.note) +
       "</textarea></div>" +
+      noticeBlock +
       '<div class="iu-calInline__actions iu-calInline__actions--stack">' +
       '<button type="button" class="iu-calInline__btn iu-calInline__btn--save" data-iu-cal-inline-save="1">Uložit</button>' +
       '<button type="button" class="iu-calInline__btn iu-calInline__btn--cancel" data-iu-cal-inline-cancel="1">Zrušit</button>' +
@@ -42354,20 +42404,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return '<div class="iu-calDayHolidayBanner" role="status">' + esc(nm) + "</div>";
   }
 
-  function renderDayHourlyTimelineHTML(iso){
-    const nearestId = nearestFutureEventIdOnDate(iso);
-    const skipBannerInsideHours = isCalMobileLayout() && state.dayOpen;
-    const allDayHtml = renderAllDaySectionHTML(iso);
+  function renderDayAllDayDraftHTML(iso){
     const inl0 = state.inline;
     const showAllDayDraft =
       inl0 &&
       inl0.allDay &&
       !shouldUseCalBottomSheet() &&
       !isCalDesktopSideFormOnly();
-    const allDayDraftHtml = showAllDayDraft
-      ? '<div class="iu-calAllDayDraft" data-iu-cal-all-day-draft="1">' + buildInlineEditorHtml() + "</div>"
-      : "";
-    let html = (skipBannerInsideHours ? "" : renderDayHolidayBannerHTML(iso)) + allDayHtml + allDayDraftHtml + '<div class="iu-calDayHoursRoot">';
+    if (!showAllDayDraft) return "";
+    return '<div class="iu-calAllDayDraft" data-iu-cal-all-day-draft="1">' + buildInlineEditorHtml() + "</div>";
+  }
+
+  function renderDayPinnedBlockHTML(iso){
+    const skipBannerInsideHours = isCalMobileLayout() && state.dayOpen;
+    const holiday = skipBannerInsideHours ? "" : renderDayHolidayBannerHTML(iso);
+    const allDayHtml = renderAllDaySectionHTML(iso);
+    const draftHtml = renderDayAllDayDraftHTML(iso);
+    const combined = holiday + allDayHtml + draftHtml;
+    if (!combined.trim()) return "";
+    return '<div class="iu-calDayPinnedBlock" data-iu-cal-day-pinned-block="1">' + combined + "</div>";
+  }
+
+  function renderDayHoursOnlyHTML(iso){
+    const skipBannerInsideHours = isCalMobileLayout() && state.dayOpen;
+    const nearestId = nearestFutureEventIdOnDate(iso);
+    let html = (skipBannerInsideHours ? renderDayHolidayBannerHTML(iso) : "") + '<div class="iu-calDayHoursRoot">';
     for (let slotH = 1; slotH <= 23; slotH++){
       const label = pad(slotH) + ":00";
       const evsAll = getEventsInHourSlot(iso, slotH);
@@ -42410,6 +42471,56 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
     html += "</div>";
     return html;
+  }
+
+  function syncDayViewPinnedAndHours(iso, opts){
+    const opt = opts || {};
+    const pinnedHtml = renderDayPinnedBlockHTML(iso);
+    const hoursHtml = renderDayHoursOnlyHTML(iso);
+    const mobPinned = document.querySelector("#iuCalendarDayOverlay [data-iu-cal-day-pinned-host]");
+    const mobScroll = document.querySelector("#iuCalendarDayOverlay .iu-calendar-day-content");
+    const deskPinned = document.getElementById("iuCalendarSidePanelPinned");
+    const deskScroll = document.getElementById("iuCalendarSidePanelScroll");
+    const hosts = [];
+    if (state.mobileDayOverlayOpen && mobPinned && mobScroll){
+      hosts.push({ pinned: mobPinned, scroll: mobScroll });
+    } else if (state.dayOpen && isCalDesktopTwoPanel() && deskPinned && deskScroll){
+      hosts.push({ pinned: deskPinned, scroll: deskScroll });
+    }
+    for (let hi = 0; hi < hosts.length; hi++){
+      const h = hosts[hi];
+      if (h.pinned){
+        h.pinned.innerHTML = pinnedHtml;
+        const hasPinned = !!pinnedHtml.trim();
+        h.pinned.hidden = !hasPinned;
+        h.pinned.setAttribute("aria-hidden", hasPinned ? "false" : "true");
+        if (hasPinned){
+          bindDayTimelineUi(h.pinned, iso);
+          bindCalendarInlineEditorRoot(h.pinned, iso);
+        }
+      }
+      if (h.scroll){
+        const prevScroll = opt.preserveHourScroll ? h.scroll.scrollTop || 0 : 0;
+        const prevIso = h.scroll.getAttribute("data-iu-cal-rendered-iso") || "";
+        const isoChanged = prevIso !== iso;
+        h.scroll.setAttribute("data-iu-cal-rendered-iso", iso);
+        h.scroll.innerHTML = hoursHtml;
+        bindDayTimelineUi(h.scroll, iso);
+        bindCalendarInlineEditorRoot(h.scroll, iso);
+        try{
+          requestAnimationFrame(()=>{
+            requestAnimationFrame(()=>{
+              if (!opt.preserveHourScroll && (isoChanged || prevScroll === 0)) scrollCalendarDayToNow();
+              else if (opt.preserveHourScroll) h.scroll.scrollTop = prevScroll;
+            });
+          });
+        }catch{}
+      }
+    }
+  }
+
+  function renderDayHourlyTimelineHTML(iso){
+    return renderDayPinnedBlockHTML(iso) + renderDayHoursOnlyHTML(iso);
   }
 
   function closeTimeWheel(){
@@ -42523,6 +42634,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const ir = searchRoot ? searchRoot.querySelector("[data-iu-cal-inline-root]") : null;
       if (!ir || !ir.getBoundingClientRect) return;
       const dayContent = document.querySelector("#iuCalendarDayOverlay .iu-calendar-day-content");
+      const pinnedHost = document.querySelector("#iuCalendarDayOverlay [data-iu-cal-day-pinned-host]");
+      if (pinnedHost && pinnedHost.contains(ir)){
+        return;
+      }
       if (dayContent && dayContent.contains(ir)){
         ir.scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
         return;
@@ -42571,6 +42686,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     state.inline = null;
     state.currentEditId = "";
     state.bottomSheetOpen = false;
+    clearCalInlineNotice();
     setMessage("");
     render();
     restoreCalendarScrollGuard();
@@ -42579,15 +42695,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   async function saveInlineEditor(){
     const inl = state.inline;
     if (!inl) return;
+    const inlineRoot = document.querySelector("[data-iu-cal-inline-root]");
+    let syncRoot = null;
+    if (inlineRoot){
+      syncRoot = inlineRoot.closest(
+        "[data-iu-cal-bs-scroll], #iuCalendarSidePanelScroll, .iu-calendar-day-content, [data-iu-cal-day-pinned-host]"
+      );
+    }
+    if (syncRoot) syncInlineFormFromDom(syncRoot);
     const title = String(inl.title || "").trim();
-    if (!title){ setMessage("Vyplňte název."); return; }
+    if (!title){ setCalInlineNotice("Vyplňte název."); return; }
     const id = inl.mode === "edit" ? String(inl.id || "") : "";
     const prevEv = id ? state.data.events.find((e)=>e.id === id) : null;
     const allDay = !!inl.allDay;
+    const dateStr = String(inl.date || state.selectedDate || "").slice(0, 10);
+    if (allDay){
+      const excludeId = id;
+      if (!canAddAllDayForDate(dateStr, excludeId)){
+        setCalInlineNotice(CAL_ALL_DAY_LIMIT_MSG);
+        return;
+      }
+    }
     const timeVal = allDay ? "00:00" : String(inl.time || "09:00");
     const base = sanitizeEvent({
       id: id || uid("evt"),
-      date: String(inl.date || state.selectedDate || "").slice(0, 10),
+      date: dateStr,
       time: timeVal,
       allDay,
       title,
@@ -42599,7 +42731,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       createdAt: id && prevEv ? prevEv.createdAt : Date.now(),
       updatedAt: Date.now()
     });
-    if (!base){ setMessage("Neplatná data."); return; }
+    if (!base){ setCalInlineNotice("Neplatná data."); return; }
     const idx = state.data.events.findIndex((e)=>e.id === base.id);
     if (idx >= 0) state.data.events[idx] = base;
     else state.data.events.push(base);
@@ -42609,6 +42741,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     state.currentEditId = base.id;
     state.selectedDate = base.date;
     state.cursorDate = base.date;
+    clearCalInlineNotice();
     await writeStore();
     setMessage("");
     render();
@@ -42934,6 +43067,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         ev.stopPropagation();
         syncInlineFormFromDom(root);
         if (!state.inline) return;
+        const turningOn = !state.inline.allDay;
+        if (turningOn){
+          const excludeId = state.inline.mode === "edit" ? String(state.inline.id || "") : "";
+          const dateStr = String(state.inline.date || state.selectedDate || "").slice(0, 10);
+          if (!canAddAllDayForDate(dateStr, excludeId)){
+            setCalInlineNotice(CAL_ALL_DAY_LIMIT_MSG);
+            return;
+          }
+        }
+        clearCalInlineNotice();
         state.inline.allDay = !state.inline.allDay;
         if (state.inline.allDay){
           state.inline.slotHour = -1;
@@ -43192,23 +43335,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const overlay = document.getElementById("iuCalendarDayOverlay");
     if (!overlay || !dateObj) return;
     const iso = toDateOnly(dateObj);
-    const area = overlay.querySelector(".iu-calendar-day-content");
-    if (!area) return;
-    const prevScroll = area.scrollTop || 0;
-    const prevIso = area.getAttribute("data-iu-cal-rendered-iso") || "";
-    const isoChanged = prevIso !== iso;
-    area.setAttribute("data-iu-cal-rendered-iso", iso);
-    area.innerHTML = renderDayHourlyTimelineHTML(iso);
-    bindDayTimelineUi(area, iso);
-    bindCalendarInlineEditorRoot(area, iso);
-    try{
-      requestAnimationFrame(()=>{
-        requestAnimationFrame(()=>{
-          if (isoChanged || prevScroll === 0) scrollCalendarDayToNow();
-          else area.scrollTop = prevScroll;
-        });
-      });
-    }catch{}
+    fillDayHeader(dateObj);
+    syncDayViewPinnedAndHours(iso);
   }
 
   function closeDayOverlay(){
@@ -43643,6 +43771,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         openOverlay(originEl && typeof originEl.focus === "function" ? originEl : document.activeElement);
       },
       calendarCreateEvent: async function(payload){
+        const dateStr = String(payload && payload.date || "").slice(0, 10);
+        const allDay = !!(payload && payload.allDay);
+        if (allDay && !canAddAllDayForDate(dateStr, "")){
+          return { ok: false, reason: "all_day_limit" };
+        }
         const ev = sanitizeEvent({
           ...payload,
           id: uid("evt"),
