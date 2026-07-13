@@ -46,7 +46,7 @@ function staticGate() {
     },
     {
       id: "index_cache_bust",
-      pass: /iu-overlay-mobile-tablet-unified-v1\.css\?v=legal-docs-hub-header-single-row-v1-20260707/.test(index),
+      pass: /iu-overlay-mobile-tablet-unified-v1\.css\?v=ds-mobile-overlay-nav-flush-v1-20260713/.test(index),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);

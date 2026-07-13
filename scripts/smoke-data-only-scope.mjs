@@ -116,8 +116,11 @@ export function isDatovkaMobileOverlayScope(files) {
   if (!paths.length) return false;
   const allowed = (f) =>
     f === "assets/iu-overlay-mobile-tablet-unified-v1.css" ||
+    f === "assets/iu-mindmenu-bottom-nav-restore-v1.css" ||
     f === "assets/app.css" ||
     f === "scripts/iu-ds-mobile-overlay-visible-guard-v1.mjs" ||
+    f === "scripts/iu-ds-mobile-overlay-nav-flush-guard-v1.mjs" ||
+    f === "scripts/iu-ds-mobile-scroll-bottom-clearance-guard-v1.mjs" ||
     f === "scripts/iu-financial-calc-mobile-header-guard.mjs" ||
     f === "scripts/iu-mindmenu-overlay-bottom-gap-unified-guard-v1.cjs" ||
     f === "scripts/iu-ai-assistants-overlay-bottom-gap-guard-v1.cjs" ||
