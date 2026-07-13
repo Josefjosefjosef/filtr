@@ -109,6 +109,10 @@ for (const doc of IU_LEGAL_DOCUMENTS) {
   }
 
   const previewHtml = buildLegalDocumentPreviewHtml(doc.title, filledText);
+  if (/class="iu-legal-doc-paper__sectionNum"[^>]*>\s*\d/.test(previewHtml)) {
+    failures += 1;
+    failureLines.push(`${doc.id}: section bar square must not contain numbering`);
+  }
   const barCount = (previewHtml.match(/iu-legal-doc-paper__sectionBar/g) || []).length;
   const minBars = doc.partyMode === "one" ? 2 : 3;
   if (barCount < minBars) {
