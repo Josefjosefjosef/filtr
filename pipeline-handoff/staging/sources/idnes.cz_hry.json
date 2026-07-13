@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-07-12T11:04:11.971098Z",
+  "ingestedAt": "2026-07-13T05:22:27.373722Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Měly vydělávat pohádkové peníze, ale dnes už si na tyto hry nikdo nevzpomene",
+      "url": "https://www.idnes.cz/hry/magazin/zapomenute-propadaky-hry.A260710_125347_bw-magazin_oz/foto",
+      "dt": "2026-07-12T22:00:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "ale",
+        "hry",
+        "měly",
+        "nevzpomene",
+        "nikdo",
+        "peníze",
+        "pohádkové",
+        "tyto",
+        "vydělávat"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -744,32 +770,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Doom se vrací a s ním i krvelačný Slayer, známá monstra a klasické levely",
-      "url": "https://www.idnes.cz/hry/preview/doom-the-dark-ages-revelations-preview.A260630_092055_bw-preview_oz",
-      "dt": "2026-07-01T14:00:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "doom",
-        "klasické",
-        "krvelačný",
-        "levely",
-        "monstra",
-        "ním",
-        "slayer",
-        "vrací",
-        "známá"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -780,7 +780,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 44689,
+      "bytes": 44679,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -817,7 +817,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-11T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-12T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -832,6 +832,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Měly vydělávat pohádkové peníze, ale dnes už si na tyto hry nikdo nevzpomene",
+            "publishedAt": "2026-07-12T22:00:00Z"
+          },
           {
             "title": "Legendární břídil Uwe Boll je zpět. Většina jeho filmů je naprostý odpad",
             "publishedAt": "2026-07-11T22:00:00Z"
@@ -859,10 +863,6 @@
           {
             "title": "Ani legendární Mario nestačil. Mobilní Mario Kart po sedmi letech skončí",
             "publishedAt": "2026-07-09T01:00:00Z"
-          },
-          {
-            "title": "Za půl roku je jich až moc. Letošních propadáků je víc, než bychom čekali",
-            "publishedAt": "2026-07-08T22:00:00Z"
           }
         ]
       }

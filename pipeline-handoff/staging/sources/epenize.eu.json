@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-07-12T11:04:11.971098Z",
+  "ingestedAt": "2026-07-13T05:22:27.373722Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Vance šíří konspirace o vraždě Charlieho Kirka, Trump mladší ho uzemnil fakty",
+      "url": "https://www.epenize.eu/vance-siri-konspirace-o-vrazde-charlieho-kirka-trump-mladsi-ho-uzemnil-fakty/",
+      "dt": "2026-07-12T23:00:39Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "charlieho",
+        "fakty",
+        "kirka",
+        "konspirace",
+        "mladší",
+        "trump",
+        "uzemnil",
+        "vance",
+        "vraždě",
+        "šíří"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Okamura pózoval s velvyslancem Ugandy. Ten by měl vidět chirurgy z dovozu",
+      "url": "https://www.epenize.eu/okamura-pozoval-s-velvyslancem-ugandy-ten-by-mel-videt-chirurgy-z-dovozu/",
+      "dt": "2026-07-12T10:57:16Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "chirurgy",
+        "dovozu",
+        "měl",
+        "okamura",
+        "pózoval",
+        "ten",
+        "ugandy",
+        "velvyslancem",
+        "vidět"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -472,57 +525,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Plaga by neznámkoval výchovy. Vtipálek, reaguje učitel",
-      "url": "https://www.epenize.eu/plaga-by-neznamkoval-vychovy-vtipalek-reaguje-ucitel/",
-      "dt": "2026-07-05T07:00:50Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "neznámkoval",
-        "plaga",
-        "reaguje",
-        "učitel",
-        "vtipálek",
-        "výchovy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Lituji vlastních slov, straší mě: Legendární stratég vidí v Trumpově Americe systémovou korupci",
-      "url": "https://www.epenize.eu/lituji-vlastnich-slov-strasi-me-legendarni-strateg-vidi-v-trumpove-americe-systemovou-korupci/",
-      "dt": "2026-07-04T23:00:23Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "americe",
-        "korupci",
-        "legendární",
-        "lituji",
-        "slov",
-        "stratég",
-        "straší",
-        "systémovou",
-        "trumpově",
-        "vidí",
-        "vlastních"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -533,7 +535,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 109428,
+      "bytes": 109425,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -570,12 +572,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-07-12T08:33:45Z",
+        "raw_feed_latest_publishedAt": "2026-07-12T23:00:39Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 17,
-          "sport": 1,
-          "zdravi": 2
+          "zpravy": 1,
+          "zdravi": 2,
+          "finance": 16,
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -587,6 +590,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vance šíří konspirace o vraždě Charlieho Kirka, Trump mladší ho uzemnil fakty",
+            "publishedAt": "2026-07-12T23:00:39Z"
+          },
+          {
+            "title": "Okamura pózoval s velvyslancem Ugandy. Ten by měl vidět chirurgy z dovozu",
+            "publishedAt": "2026-07-12T10:57:16Z"
+          },
           {
             "title": "Nová doba. Nacher si určuje, nač se ho bude redaktor ptát",
             "publishedAt": "2026-07-12T08:33:45Z"
@@ -610,14 +621,6 @@
           {
             "title": "Mistrovství světa v pokrytectví. Černochová komentuje Babiše chlubícího se muniční iniciativou",
             "publishedAt": "2026-07-10T07:08:50Z"
-          },
-          {
-            "title": "Putinův kamarád? Václav Klaus tvrdil, že Zelenskyj nechce ukončit válku",
-            "publishedAt": "2026-07-10T06:20:01Z"
-          },
-          {
-            "title": "Vzteklý prezident na summitu: Trump v Turecku urážel spojence a vyděsil celý svět",
-            "publishedAt": "2026-07-09T23:00:30Z"
           }
         ]
       }
