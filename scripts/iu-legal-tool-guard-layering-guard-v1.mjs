@@ -17,7 +17,7 @@ const TOOL_GUARD = path.join(REPO, "assets", "iu-tool-guard.js");
 const APP_JS = path.join(REPO, "assets", "app.js");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8946", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
-const MODULE_BUST = "legal-docs-tool-guard-layering-v1-20260711";
+const MODULE_BUST = "legal-docs-form-state-hidden-panel-v1-20260713";
 const SAMPLE_DOC = { id: "kupni-movita", category: "smlouvy" };
 
 function staticGate() {

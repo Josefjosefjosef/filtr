@@ -269,6 +269,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-legal-documents-audit-guard
 
+      - name: Legal documents form state guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-legal-documents-form-state-guard
+
       - name: Legal documents preview PC guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-legal-documents-preview-pc-guard
