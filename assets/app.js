@@ -38745,7 +38745,8 @@ function buildVideoAsArticleCard(it) {
     confirmAction: null,
     overlayEventsBound: false,
     draftNewNote: null,
-    prevSelectedIdBeforeDraft: ""
+    prevSelectedIdBeforeDraft: "",
+    draftCommitInFlight: false
   };
 
   function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
@@ -38776,6 +38777,67 @@ function buildVideoAsArticleCard(it) {
     }catch{ return false; }
   }
 
+  /** First non-empty line index + trimmed line text. */
+  function noteFirstNonEmptyLine(body){
+    const lines = String(body ?? "").split(/\r?\n/);
+    for (let i = 0; i < lines.length; i++){
+      const tr = String(lines[i]).trim();
+      if (tr) return { line: tr, index: i };
+    }
+    return { line: "", index: -1 };
+  }
+
+  /** Merge legacy title+content into one editable body (cases A–E). */
+  function noteMergeLegacyToBody(title, content){
+    const tRaw = String(title ?? "");
+    const cRaw = String(content ?? "");
+    const tTrim = tRaw.trim();
+    const cTrim = cRaw.trim();
+    if (!tTrim && cTrim) return cRaw;
+    if (!tTrim && !cTrim) return "";
+    if (!cTrim) return tRaw;
+    if (tTrim === cTrim) return tTrim;
+    const cFirstLine = cRaw.split(/\r?\n/)[0] || "";
+    if (cFirstLine.trim() === tTrim) return cRaw;
+    return tTrim + "\n\n" + cRaw;
+  }
+
+  function noteBodyFromNote(note){
+    if (!note) return "";
+    return noteMergeLegacyToBody(note.title, note.content);
+  }
+
+  /** Split unified body into storage fields: content = full text, title = first non-empty line. */
+  function noteSplitUnifiedBody(rawBody){
+    const body = String(rawBody ?? "").slice(0, MAX_CONTENT);
+    const hit = noteFirstNonEmptyLine(body);
+    if (hit.index < 0) return { ok: false, reason: "empty" };
+    return { ok: true, title: hit.line.slice(0, MAX_TITLE), content: body };
+  }
+
+  function applyUnifiedBodyToNote(note, rawBody){
+    const split = noteSplitUnifiedBody(rawBody);
+    if (!split.ok) return split;
+    note.title = split.title;
+    note.content = split.content;
+    return split;
+  }
+
+  /** Card heading + preview (no duplicate first line in preview). */
+  function noteCardHeadingAndPreview(note){
+    const body = noteBodyFromNote(note);
+    const hit = noteFirstNonEmptyLine(body);
+    if (hit.index < 0) return { heading: "Bez názvu", preview: "" };
+    const rest = body.split(/\r?\n/).slice(hit.index + 1);
+    const previewParts = rest.map((x) => String(x).trim()).filter(Boolean);
+    return { heading: hit.line, preview: previewParts.join(" ") };
+  }
+
+  function readUnifiedBodyFromDom(){
+    const bodyEl = document.getElementById("iuNoteBody");
+    return bodyEl ? String(bodyEl.value ?? "") : "";
+  }
+
   /** Reinforce mobile/tablet layout (scroll split, no detail scroll, 16px inputs, close position) — survives cascade issues. Desktop: no-op. */
   function applyNotesMobileUiGuards(){
     if (!isNotesNarrowViewport()) return;
@@ -38803,11 +38865,9 @@ function buildVideoAsArticleCard(it) {
         closeBtn.style.removeProperty("margin-left");
         closeBtn.style.removeProperty("z-index");
       }
-      const ti = document.getElementById("iuNoteTitle");
-      const tc = document.getElementById("iuNoteContent");
+      const tb = document.getElementById("iuNoteBody");
       const ttag = document.getElementById("iuNoteTagInput");
-      if (ti){ ti.style.setProperty("font-size", "16px", "important"); ti.style.setProperty("line-height", "1.35", "important"); }
-      if (tc){ tc.style.setProperty("font-size", "16px", "important"); tc.style.setProperty("line-height", "1.35", "important"); }
+      if (tb){ tb.style.setProperty("font-size", "16px", "important"); tb.style.setProperty("line-height", "1.35", "important"); }
       if (ttag){ ttag.style.setProperty("font-size", "16px", "important"); ttag.style.setProperty("line-height", "1.35", "important"); }
     }catch{}
   }
@@ -38921,10 +38981,7 @@ function buildVideoAsArticleCard(it) {
 
   function syncDraftFromDom(){
     if (!state.draftNewNote) return null;
-    const titleEl = document.getElementById("iuNoteTitle");
-    const contentEl = document.getElementById("iuNoteContent");
-    if (titleEl) state.draftNewNote.title = String(titleEl.value || "").slice(0, MAX_TITLE);
-    if (contentEl) state.draftNewNote.content = String(contentEl.value || "").slice(0, MAX_CONTENT);
+    applyUnifiedBodyToNote(state.draftNewNote, readUnifiedBodyFromDom());
     state.draftNewNote.updatedAt = Date.now();
     return state.draftNewNote;
   }
@@ -38936,20 +38993,31 @@ function buildVideoAsArticleCard(it) {
 
   function commitDraftNewNote(){
     if (!isDraftNewNoteActive()) return;
-    if (state.autosaveTimer){
-      try{ clearTimeout(state.autosaveTimer); }catch{}
-      state.autosaveTimer = null;
+    if (state.draftCommitInFlight) return;
+    state.draftCommitInFlight = true;
+    try{
+      if (state.autosaveTimer){
+        try{ clearTimeout(state.autosaveTimer); }catch{}
+        state.autosaveTimer = null;
+      }
+      syncDraftFromDom();
+      const split = noteSplitUnifiedBody(noteBodyFromNote(state.draftNewNote));
+      if (!split.ok){
+        renderStatus("Zadejte text poznámky.");
+        return;
+      }
+      const n = sanitizeNote(state.draftNewNote);
+      if (!n) return;
+      state.data.notes.unshift(n);
+      state.selectedId = n.id;
+      discardDraftNewNote();
+      sortNotesInPlace(state.data.notes);
+      saveNotes(state.data);
+      renderStatus("Uloženo " + fmtDate(state.lastSavedAt));
+      render();
+    }finally{
+      state.draftCommitInFlight = false;
     }
-    syncDraftFromDom();
-    const n = sanitizeNote(state.draftNewNote);
-    if (!n) return;
-    state.data.notes.unshift(n);
-    state.selectedId = n.id;
-    discardDraftNewNote();
-    sortNotesInPlace(state.data.notes);
-    saveNotes(state.data);
-    renderStatus("Uloženo " + fmtDate(state.lastSavedAt));
-    render();
   }
 
   function cancelDraftNewNote(){
@@ -38975,10 +39043,9 @@ function buildVideoAsArticleCard(it) {
     const inTrash = state.listView === "trash";
     const scoped = list.filter((n)=>!!n.deleted === inTrash);
     const filtered = !q ? scoped.slice() : scoped.filter((n)=>{
-      const t = foldCs(String(n.title || ""));
-      const c = foldCs(String(n.content || ""));
+      const body = foldCs(noteBodyFromNote(n));
       const tags = Array.isArray(n.tags) ? n.tags.map((x)=>foldCs(String(x || ""))).join(" ") : "";
-      return t.includes(q) || c.includes(q) || tags.includes(q);
+      return body.includes(q) || tags.includes(q);
     });
     sortNotesInPlace(filtered);
     return filtered;
@@ -39486,9 +39553,9 @@ function buildVideoAsArticleCard(it) {
     if (!listEl) return;
     const btn = listEl.querySelector('[data-iu-note-id="' + id + '"]');
     if (!btn) return;
-    const title = String(note.title || "").trim() || "Bez názvu";
-    const content = String(note.content || "");
-    const prevLine = content.split(/\r?\n/).map((x)=>String(x || "").trim()).filter(Boolean)[0] || "";
+    const card = noteCardHeadingAndPreview(note);
+    const title = card.heading;
+    const prevLine = card.preview;
     const titleEl = btn.querySelector(".iu-notesOverlay__itemTitle");
     if (titleEl) titleEl.textContent = title;
     let previewEl = btn.querySelector("[data-iu-note-preview]");
@@ -39517,9 +39584,9 @@ function buildVideoAsArticleCard(it) {
     }
     listEl.innerHTML = items.map((n)=>{
       const active = String(n.id) === String(state.selectedId);
-      const title = String(n.title || "").trim() || "Bez názvu";
-      const content = String(n.content || "");
-      const prevLine = content.split(/\r?\n/).map((x)=>String(x || "").trim()).filter(Boolean)[0] || "";
+      const card = noteCardHeadingAndPreview(n);
+      const title = card.heading;
+      const prevLine = card.preview;
       const meta = (n.updatedAt ? ("Upraveno: " + fmtDate(n.updatedAt)) : "");
       const pinned = !!n.pinned;
       const todayU = isNoteUpdatedToday(n.updatedAt);
@@ -39573,14 +39640,12 @@ function buildVideoAsArticleCard(it) {
     } else {
       actionsHtml = '<button type="button" class="iu-notesOverlay__btn" data-iu-note-delete="' + esc(note.id) + '">Přesunout do koše</button>';
     }
+    const unifiedBody = esc(noteBodyFromNote(note));
     root.innerHTML =
       '<div class="iu-notesOverlay__form">' +
         '<div class="iu-notesOverlay__status" id="iuNotesStatus"></div>' +
-        '<label class="iu-notesOverlay__label">Název' +
-          '<input class="iu-notesOverlay__input" id="iuNoteTitle" type="text" maxlength="' + MAX_TITLE + '" value="' + esc(note.title || "") + '" placeholder="Nová poznámka" autocomplete="off" />' +
-        "</label>" +
-        '<label class="iu-notesOverlay__label">Obsah' +
-          '<textarea class="iu-notesOverlay__textarea" id="iuNoteContent" rows="5" maxlength="' + MAX_CONTENT + '">' + esc(note.content || "") + "</textarea>" +
+        '<label class="iu-notesOverlay__label">Poznámka' +
+          '<textarea class="iu-notesOverlay__textarea" id="iuNoteBody" rows="8" maxlength="' + MAX_CONTENT + '" placeholder="Napište poznámku…">' + unifiedBody + "</textarea>" +
         "</label>" +
         '<label class="iu-notesOverlay__label">Tagy' +
           '<input class="iu-notesOverlay__input" id="iuNoteTagInput" type="text" autocomplete="off" placeholder="#práce" />' +
@@ -39616,21 +39681,17 @@ function buildVideoAsArticleCard(it) {
     state.selectedId = n.id;
     setMobileMode("detail");
     render();
-    const titleEl = document.getElementById("iuNoteTitle");
-    if (titleEl) {
-      try{ titleEl.focus({ preventScroll: true }); titleEl.select(); }catch{}
+    const bodyEl = document.getElementById("iuNoteBody");
+    if (bodyEl) {
+      try{ bodyEl.focus({ preventScroll: true }); bodyEl.select(); }catch{}
     }
   }
 
   function onInputChanged(){
     const note = getActiveNote();
     if (!note) return;
-    const titleEl = document.getElementById("iuNoteTitle");
-    const contentEl = document.getElementById("iuNoteContent");
-    const nextTitle = titleEl ? String(titleEl.value || "").slice(0, MAX_TITLE) : String(note.title || "");
-    const nextContent = contentEl ? String(contentEl.value || "").slice(0, MAX_CONTENT) : String(note.content || "");
-    note.title = nextTitle;
-    note.content = nextContent;
+    const split = applyUnifiedBodyToNote(note, readUnifiedBodyFromDom());
+    if (!split.ok && !isDraftNewNoteActive()) return;
     note.updatedAt = Date.now();
     if (isDraftNewNoteActive()){
       renderStatus("Nová poznámka — potvrďte Uložit nebo Zrušit");
@@ -39650,11 +39711,10 @@ function buildVideoAsArticleCard(it) {
       }
       const note = getNoteById(state.selectedId);
       if (!note) return;
-      const titleEl = document.getElementById("iuNoteTitle");
-      const contentEl = document.getElementById("iuNoteContent");
-      if (!titleEl || !contentEl) return;
-      note.title = String(titleEl.value || "").slice(0, MAX_TITLE);
-      note.content = String(contentEl.value || "").slice(0, MAX_CONTENT);
+      const bodyEl = document.getElementById("iuNoteBody");
+      if (!bodyEl) return;
+      const split = applyUnifiedBodyToNote(note, bodyEl.value);
+      if (!split.ok) return;
       note.updatedAt = Date.now();
       sortNotesInPlace(state.data.notes);
       saveNotes(state.data);
@@ -39716,7 +39776,7 @@ function buildVideoAsArticleCard(it) {
       if (!t || !t.id) return;
       const ov = getOverlay();
       if (!ov || ov.hidden) return;
-      if (t.id === "iuNoteTitle" || t.id === "iuNoteContent"){
+      if (t.id === "iuNoteBody"){
         onInputChanged();
         return;
       }
@@ -39776,7 +39836,11 @@ function buildVideoAsArticleCard(it) {
       saveNotes: function(data){ return saveNotes(data); },
       createEmptyNote: function(){ return createEmptyNote(); },
       getNoteById: function(id){ return getNoteById(id); },
-      searchNotes: function(q){ return searchNotes(q); }
+      searchNotes: function(q){ return searchNotes(q); },
+      noteMergeLegacyToBody: noteMergeLegacyToBody,
+      noteSplitUnifiedBody: noteSplitUnifiedBody,
+      noteCardHeadingAndPreview: noteCardHeadingAndPreview,
+      noteBodyFromNote: noteBodyFromNote
     };
     window.iuNotesService = {
       openOverlay: function(originEl){ openOverlay(originEl || document.activeElement); },
@@ -39787,11 +39851,14 @@ function buildVideoAsArticleCard(it) {
         try{
           loadNotes();
           const o = opts && typeof opts === "object" ? opts : {};
-          const text = String(o.text || "").trim();
-          if (!text) return { ok: false, reason: "empty" };
+          const text = String(o.text ?? "");
+          const split = noteSplitUnifiedBody(text);
+          if (!split.ok) return { ok: false, reason: "empty" };
           const n = createEmptyNote();
-          n.title = text.slice(0, MAX_TITLE);
-          n.content = text.slice(0, MAX_CONTENT);
+          n.title = split.title;
+          n.content = split.content;
+          if (Number.isFinite(Number(o.createdTs))) n.createdAt = Number(o.createdTs);
+          if (Number.isFinite(Number(o.createdTs))) n.updatedAt = Number(o.createdTs);
           state.data.notes.unshift(sanitizeNote(n));
           sortNotesInPlace(state.data.notes);
           saveNotes(state.data);
@@ -39805,17 +39872,22 @@ function buildVideoAsArticleCard(it) {
           loadNotes();
           const o = payload && typeof payload === "object" ? payload : {};
           let title = String(o.title || "").trim().slice(0, MAX_TITLE);
-          if (!title) title = "Poznámka";
           const lines = [];
           if (o.date) lines.push("Datum: " + String(o.date));
           if (o.time) lines.push("Čas: " + String(o.time));
           if (o.note) lines.push(String(o.note));
           if (o.location) lines.push("Místo: " + String(o.location));
-          let content = lines.join("\n").trim().slice(0, MAX_CONTENT);
-          if (!content && o.rawInput) content = String(o.rawInput).trim().slice(0, MAX_CONTENT);
+          let contentPart = lines.join("\n").trim().slice(0, MAX_CONTENT);
+          if (!contentPart && o.rawInput) contentPart = String(o.rawInput).trim().slice(0, MAX_CONTENT);
+          let unified = "";
+          if (!title && contentPart) unified = contentPart;
+          else if (!title && !contentPart) title = "Poznámka";
+          if (!unified) unified = noteMergeLegacyToBody(title, contentPart);
+          const split = noteSplitUnifiedBody(unified);
+          if (!split.ok) return { ok: false, reason: "empty" };
           const n = createEmptyNote();
-          n.title = title;
-          n.content = content;
+          n.title = split.title;
+          n.content = split.content;
           const tagList = Array.isArray(n.tags) ? n.tags.slice() : [];
           if (!tagList.some((x)=>String(x || "").toLowerCase() === "#silver")) tagList.push("#silver");
           n.tags = tagList;
@@ -76595,7 +76667,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       return {
         id: "",
-        text: String(d.silverNoteText || "").trim(),
+        text: String(d.silverNoteText || ""),
         createdAt: iso,
         source: "silver",
         status: "active"
@@ -78213,7 +78285,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     chatState.saveBusy = true;
     try {
       const res = svc.notesSaveSilverDraft({
-        text: String(d.silverNoteText || "").trim(),
+        text: String(d.silverNoteText || ""),
         createdTs: d.silverNoteCreatedTs || Date.now()
       });
       if (res && res.ok && res.note) {
@@ -78342,7 +78414,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       chatState.saveBusy = true;
       try {
         const resN = nsvc.notesSaveSilverDraft({
-          text: String(nd.silverNoteText || "").trim(),
+          text: String(nd.silverNoteText || ""),
           createdTs: nd.silverNoteCreatedTs || Date.now()
         });
         if (resN && resN.ok && resN.note) {
@@ -78436,7 +78508,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           const nsvc2 = window.iuNotesService;
           if (nsvc2 && typeof nsvc2.notesSaveSilverDraft === "function") {
             const res2 = nsvc2.notesSaveSilverDraft({
-              text: String(compD.silverNoteText || "").trim(),
+              text: String(compD.silverNoteText || ""),
               createdTs: compD.silverNoteCreatedTs || Date.now()
             });
             if (res2 && res2.ok && res2.note) noteAlso = " Poznámka je též uložena.";
