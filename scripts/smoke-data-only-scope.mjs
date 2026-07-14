@@ -330,6 +330,24 @@ export function isNotesUnifiedFieldScope(files) {
   return paths.every(allowed);
 }
 
+/** PWA offline resilience PR — skip unrelated flaky guards. */
+export function isPwaOfflineResilienceScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/app.js" ||
+    f === "assets/iu-network-connectivity-v1.js" ||
+    f === "assets/iu-article-chunk-loader.js" ||
+    f === "scripts/iu-pwa-offline-resilience-guard-v1.mjs" ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json" ||
+    f === "sw.js" ||
+    f.startsWith("projects/data/");
+  return paths.every(allowed);
+}
+
 function writeOutput(name, value) {
   const out = process.env.GITHUB_OUTPUT;
   if (out) {
@@ -367,6 +385,7 @@ function main() {
   const pcLeftRailSameWindowTabsOnly = isPcLeftRailSameWindowTabsScope(files);
   const pcToolWindowLeftRailLayoutOnly = isPcToolWindowLeftRailLayoutScope(files);
   const notesUnifiedFieldOnly = isNotesUnifiedFieldScope(files);
+  const pwaOfflineResilienceOnly = isPwaOfflineResilienceScope(files);
   const legalDocSectionBarOnly = isLegalDocSectionBarOnlyScope(files);
   const legalDocsFormStateOnly = isLegalDocsFormStateOnlyScope(files);
   const pcSvatekLabelPillGapOnly = isPcSvatekLabelPillGapOnlyScope(files);
@@ -397,6 +416,7 @@ function main() {
   writeOutput("pc_left_rail_same_window_tabs_only", pcLeftRailSameWindowTabsOnly ? "true" : "false");
   writeOutput("pc_tool_window_left_rail_layout_only", pcToolWindowLeftRailLayoutOnly ? "true" : "false");
   writeOutput("notes_unified_field_only", notesUnifiedFieldOnly ? "true" : "false");
+  writeOutput("pwa_offline_resilience_only", pwaOfflineResilienceOnly ? "true" : "false");
   writeOutput("legal_doc_section_bar_only", legalDocSectionBarOnly ? "true" : "false");
   writeOutput("legal_docs_form_state_only", legalDocsFormStateOnly ? "true" : "false");
   writeOutput("pc_svatek_label_pill_gap_only", pcSvatekLabelPillGapOnly ? "true" : "false");

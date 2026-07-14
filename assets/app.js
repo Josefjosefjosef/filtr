@@ -19885,6 +19885,17 @@ function buildVideoAsArticleCard(it) {
       emptyBox.style.display = "block";
       emptyBox.innerHTML = "<p>Načítám data…</p>";
     }
+    var loadDataWatchdog = window.setTimeout(function () {
+      try {
+        if (!state.isLoadingData || state.hasLoadedData) return;
+        if (emptyBox) {
+          emptyBox.style.display = "block";
+          emptyBox.innerHTML =
+            "<p>Připojení není dostupné. Zobrazuji poslední uložená data, nebo zkuste stránku obnovit.</p>";
+        }
+        setStatus("Stav dat: offline / timeout");
+      } catch (_) {}
+    }, 14000);
     const preferredEntry = getPreferredPairForLoadData();
     const baseArticleUrls = [iuHomepageFeedDataUrl()];
     const baseVideoUrls = [iuDataUrl("videos.json")];
@@ -20684,11 +20695,26 @@ function buildVideoAsArticleCard(it) {
       }, delay);
     } finally {
       try {
+        clearTimeout(loadDataWatchdog);
+      } catch (_) {}
+      try {
         state.__iuLoadDataMainApplyFilterDone = true;
       } catch (_) {}
       state.isLoadingData = false;
     }
   }
+
+  try {
+    if (window.iuNetwork && typeof window.iuNetwork.onReconnect === "function") {
+      window.iuNetwork.onReconnect(function () {
+        try {
+          if (document.visibilityState !== "visible") return;
+          if (state.isLoadingData) return;
+          loadData({ forceRefresh: true });
+        } catch (_) {}
+      });
+    }
+  } catch (_) {}
 
   let iuRefreshTimer = null;
   function startAutoRefresh() {
@@ -24436,6 +24462,21 @@ function buildVideoAsArticleCard(it) {
   function iuMindMenuOpenExternalUrl(rawUrl) {
     var url = iuMindMenuNormalizeExternalUrl(rawUrl);
     if (!url) return false;
+    if (window.iuNetwork && typeof window.iuNetwork.openExternalUrl === "function") {
+      iuMindMenuArmReturnState();
+      if (typeof navigator !== "undefined" && navigator.onLine === false) {
+        try {
+          window.iuNetwork.showOfflineHint("Tuto stránku bez internetu nelze otevřít.");
+          window.iuNetwork.restoreAppShellAfterReturn();
+        } catch (_) {}
+        return false;
+      }
+      void window.iuNetwork.openExternalUrl(url).then(function (res) {
+        if (res && res.reason === "offline") return false;
+        return !!(res && res.ok);
+      });
+      return true;
+    }
     try {
       var now = Date.now();
       var last = window.__iuMindMenuLastExternalOpen || null;
@@ -24443,6 +24484,11 @@ function buildVideoAsArticleCard(it) {
       window.__iuMindMenuLastExternalOpen = { url: url, ts: now };
     } catch (_) {}
     iuMindMenuArmReturnState();
+    try {
+      if (window.iuNetwork && typeof window.iuNetwork.restoreAppShellAfterReturn === "function") {
+        window.iuNetwork.restoreAppShellAfterReturn();
+      }
+    } catch (_) {}
     var opened = false;
     try {
       if (/^mailto:/i.test(url) || /^tel:/i.test(url)) {
@@ -37152,7 +37198,11 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
     mainBtn.classList.add("iu-clickable-feedback", "iu-pressed");
     window.setTimeout(function () {
-      window.open(u, "_blank", "noopener,noreferrer");
+      if (window.iuNetwork && typeof window.iuNetwork.openExternalUrl === "function") {
+        void window.iuNetwork.openExternalUrl(u);
+      } else {
+        window.open(u, "_blank", "noopener,noreferrer");
+      }
       window.setTimeout(function () {
         mainBtn.classList.remove("iu-clickable-feedback", "iu-pressed");
         mainBtn.removeAttribute("data-iu-ib-opening");
