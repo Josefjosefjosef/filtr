@@ -277,6 +277,22 @@ export function isDataMgmtRestoreOverlayMobileScope(files) {
   return paths.every(allowed);
 }
 
+/** PC left-rail same-window tabs PR — skip unrelated flaky guards. */
+export function isPcLeftRailSameWindowTabsScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/iu-desktop-left-rail-new-window-v1.js" ||
+    f === "scripts/iu-desktop-left-rail-new-window-guard-v1.mjs" ||
+    f === "scripts/iu-perf-regression-guards.mjs" ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json" ||
+    f.startsWith("projects/data/");
+  return paths.every(allowed);
+}
+
 function writeOutput(name, value) {
   const out = process.env.GITHUB_OUTPUT;
   if (out) {
@@ -311,6 +327,7 @@ function main() {
   const quicktoolsMobileVisibilityOnly = isQuicktoolsMobileVisibilityScope(files);
   const userDataBackupOnly = isUserDataBackupOnlyScope(files);
   const dataMgmtRestoreOverlayMobileOnly = isDataMgmtRestoreOverlayMobileScope(files);
+  const pcLeftRailSameWindowTabsOnly = isPcLeftRailSameWindowTabsScope(files);
   const legalDocSectionBarOnly = isLegalDocSectionBarOnlyScope(files);
   const legalDocsFormStateOnly = isLegalDocsFormStateOnlyScope(files);
   const pcSvatekLabelPillGapOnly = isPcSvatekLabelPillGapOnlyScope(files);
@@ -322,7 +339,7 @@ function main() {
     pipelineOnly ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
 
-  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} quicktools_mobile_visibility_only=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} data_mgmt_restore_overlay_mobile_only=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} legal_docs_form_state_only=${legalDocsFormStateOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"} desktop_article_read_mark_only=${desktopArticleReadMarkOnly ? "YES" : "NO"}`);
+  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} quicktools_mobile_visibility_only=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} data_mgmt_restore_overlay_mobile_only=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"} pc_left_rail_same_window_tabs_only=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} legal_docs_form_state_only=${legalDocsFormStateOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"} desktop_article_read_mark_only=${desktopArticleReadMarkOnly ? "YES" : "NO"}`);
   for (const f of files.slice(0, 20)) {
     console.log(`[smoke-data-only-scope] changed=${f}`);
   }
@@ -338,6 +355,7 @@ function main() {
   writeOutput("quicktools_mobile_visibility_only", quicktoolsMobileVisibilityOnly ? "true" : "false");
   writeOutput("user_data_backup_only", userDataBackupOnly ? "true" : "false");
   writeOutput("data_mgmt_restore_overlay_mobile_only", dataMgmtRestoreOverlayMobileOnly ? "true" : "false");
+  writeOutput("pc_left_rail_same_window_tabs_only", pcLeftRailSameWindowTabsOnly ? "true" : "false");
   writeOutput("legal_doc_section_bar_only", legalDocSectionBarOnly ? "true" : "false");
   writeOutput("legal_docs_form_state_only", legalDocsFormStateOnly ? "true" : "false");
   writeOutput("pc_svatek_label_pill_gap_only", pcSvatekLabelPillGapOnly ? "true" : "false");
@@ -351,6 +369,7 @@ function main() {
   console.log(`SMOKE_QUICKTOOLS_MOBILE_VISIBILITY_ONLY_SCOPE=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_USER_DATA_BACKUP_ONLY_SCOPE=${userDataBackupOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_DATA_MGMT_RESTORE_OVERLAY_MOBILE_ONLY_SCOPE=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_PC_LEFT_RAIL_SAME_WINDOW_TABS_ONLY_SCOPE=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_LEGAL_DOC_SECTION_BAR_ONLY_SCOPE=${legalDocSectionBarOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_LEGAL_DOCS_FORM_STATE_ONLY_SCOPE=${legalDocsFormStateOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_PC_SVATEK_LABEL_PILL_GAP_ONLY_SCOPE=${pcSvatekLabelPillGapOnly ? "YES" : "NO"}`);
