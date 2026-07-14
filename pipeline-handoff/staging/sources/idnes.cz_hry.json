@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-07-14T10:36:55.209640Z",
+  "ingestedAt": "2026-07-14T12:29:28.739717Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Slayer v Doom: The Dark Ages - Revelations",
+      "url": "https://www.idnes.cz/hry/slayer-v-doom-the-dark-ages-revelations.G260714_142451_oz",
+      "dt": "2026-07-14T12:26:01Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "ages",
+        "dark",
+        "doom",
+        "revelations",
+        "slayer",
+        "the"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -745,33 +768,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Skvělá zombie akce Dying Light je za hubičku. V pěkné slevě je celá série",
-      "url": "https://www.idnes.cz/hry/novinky/dying-light-slevy.A260702_085315_bw-novinky_oz/foto",
-      "dt": "2026-07-02T08:29:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "akce",
-        "celá",
-        "dying",
-        "hubičku",
-        "light",
-        "pěkné",
-        "skvělá",
-        "slevě",
-        "série",
-        "zombie"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -782,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 45096,
+      "bytes": 44475,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -819,7 +815,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-14T00:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-14T12:26:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -834,6 +830,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slayer v Doom: The Dark Ages - Revelations",
+            "publishedAt": "2026-07-14T12:26:01Z"
+          },
           {
             "title": "Už jsou k mání první češtiny pro Assassin’s Creed Black Flag Resynced",
             "publishedAt": "2026-07-14T00:30:00Z"
@@ -861,10 +861,6 @@
           {
             "title": "Dal tvář milionovému českému hitu, ale další práci shání jen těžko",
             "publishedAt": "2026-07-10T22:00:00Z"
-          },
-          {
-            "title": "Studio Ubisoft Barcelona „oslavilo“ úspěšný start Assassin’s Creed propouštěním",
-            "publishedAt": "2026-07-10T08:36:00Z"
           }
         ]
       }
