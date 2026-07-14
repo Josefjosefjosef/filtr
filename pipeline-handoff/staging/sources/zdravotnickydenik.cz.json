@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-07-14T14:30:49.206563Z",
+  "ingestedAt": "2026-07-14T15:49:12.206007Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Výpadek kritického léku na rakovinu prsu v Česku: Ministerstvo oznámilo, kdy se vrátí do lékáren",
+      "url": "https://www.zdravotnickydenik.cz/2026/07/vypadek-lek-rakovina-prsu-ministerstvo/",
+      "dt": "2026-07-14T15:08:23Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "kritického",
+        "léku",
+        "lékáren",
+        "ministerstvo",
+        "oznámilo",
+        "prsu",
+        "rakovinu",
+        "vrátí",
+        "výpadek",
+        "česku"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -249,33 +276,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Vedra zabíjela i kousek od českých hranic: Počet úmrtí u sousedů vystřelil o 32 procent",
-      "url": "https://www.zdravotnickydenik.cz/2026/07/vedra-nemecko-umrti/",
-      "dt": "2026-07-14T08:40:24Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "hranic",
-        "kousek",
-        "počet",
-        "procent",
-        "sousedů",
-        "vedra",
-        "vystřelil",
-        "zabíjela",
-        "úmrtí",
-        "českých"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -286,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 74625,
+      "bytes": 75998,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -323,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-07-14T14:22:13Z",
+        "raw_feed_latest_publishedAt": "2026-07-14T15:08:23Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -338,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výpadek kritického léku na rakovinu prsu v Česku: Ministerstvo oznámilo, kdy se vrátí do lékáren",
+            "publishedAt": "2026-07-14T15:08:23Z"
+          },
           {
             "title": "SÚKL spouští novinku: Inovační kancelář pomůže dostat moderní technologie do nemocnic dříve",
             "publishedAt": "2026-07-14T14:22:13Z"
@@ -365,10 +369,6 @@
           {
             "title": "Útok hackerů ochromil péči o pacienty. Nymburská nemocnice teď ukázala astronomický účet",
             "publishedAt": "2026-07-14T09:53:54Z"
-          },
-          {
-            "title": "Stěhování v centru Prahy: Ministr pro sport a zdraví odhalil, kam se přesouvá jeho úřad",
-            "publishedAt": "2026-07-14T09:36:40Z"
           }
         ]
       }

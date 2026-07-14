@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-07-14T14:30:49.206563Z",
+  "ingestedAt": "2026-07-14T15:49:12.206007Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Bilance běžného účtu platební bilance se květnu prohloubila",
+      "url": "https://profitonline.cz/bilance-bezneho-uctu-platebni-bilance-se-kvetnu-prohloubila/",
+      "dt": "2026-07-14T15:00:59Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "bilance",
+        "běžného",
+        "květnu",
+        "platební",
+        "prohloubila",
+        "účtu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -268,31 +291,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ruský oligarcha pro The Economist: Zlomené Rusko by bylo světu nebezpečné",
-      "url": "https://profitonline.cz/rusky-oligarcha-pro-the-economist-zlomene-rusko-by-bylo-svetu-nebezpecne/",
-      "dt": "2026-07-13T04:00:23Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "economist",
-        "nebezpečné",
-        "oligarcha",
-        "rusko",
-        "ruský",
-        "světu",
-        "the",
-        "zlomené"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +301,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19068,
+      "bytes": 19107,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,11 +338,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-07-14T12:00:10Z",
+        "raw_feed_latest_publishedAt": "2026-07-14T15:00:59Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 11,
-          "sport": 1
+          "finance": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -356,6 +353,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bilance běžného účtu platební bilance se květnu prohloubila",
+            "publishedAt": "2026-07-14T15:00:59Z"
+          },
           {
             "title": "Česko exportérem zlata",
             "publishedAt": "2026-07-14T12:00:10Z"
@@ -383,10 +384,6 @@
           {
             "title": "Příměří skončilo. Trh s ropou čelí prudkému nárůstu cen",
             "publishedAt": "2026-07-13T15:40:27Z"
-          },
-          {
-            "title": "Malé obce mají smůlu, zákon zvýhodňuje velké bytové domy",
-            "publishedAt": "2026-07-13T12:00:35Z"
           }
         ]
       }
