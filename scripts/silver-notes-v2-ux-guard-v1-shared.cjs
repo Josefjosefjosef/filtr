@@ -246,7 +246,7 @@ async function runViewportChecks(page, vp, noteCount) {
 
   await page.locator(".iu-notesOverlay__itemTrash").first().click({ timeout: 5000 }).catch(() => {});
   await page.waitForTimeout(250);
-  const detailAfterTrashClick = await page.evaluate(() => !!document.getElementById("iuNoteContent"));
+  const detailAfterTrashClick = await page.evaluate(() => !!document.getElementById("iuNoteBody"));
   await dismissNotesConfirm(page);
 
   let emptyTrashConfirmText = "";

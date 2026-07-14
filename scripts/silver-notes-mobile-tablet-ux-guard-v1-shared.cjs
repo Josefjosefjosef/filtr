@@ -108,7 +108,7 @@ async function openFirstNoteDetail(page) {
     const btn = document.querySelector(".iu-notesOverlay__itemBtn[data-iu-note-id]");
     if (btn && typeof btn.click === "function") btn.click();
   });
-  await page.waitForFunction(() => !!document.getElementById("iuNoteContent"), null, { timeout: 6000 }).catch(() => {});
+  await page.waitForFunction(() => !!document.getElementById("iuNoteBody"), null, { timeout: 6000 }).catch(() => {});
   await page.waitForTimeout(300);
 }
 
@@ -276,7 +276,7 @@ async function runViewport(page, vp) {
   await page.waitForTimeout(300);
 
   const detail = await page.evaluate(() => {
-    const ta = document.getElementById("iuNoteContent");
+    const ta = document.getElementById("iuNoteBody");
     const st = ta ? getComputedStyle(ta) : null;
     const minH = st ? parseFloat(st.minHeight) || 0 : 0;
     return {

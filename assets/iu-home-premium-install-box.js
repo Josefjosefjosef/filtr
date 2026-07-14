@@ -146,7 +146,7 @@
   function noteHasSavedContent() {
     var ov = document.getElementById("iuNotesOverlay");
     if (!ov || ov.hidden) return false;
-    var ta = ov.querySelector("#iuNoteContent, .iu-notesOverlay__textarea");
+    var ta = ov.querySelector("#iuNoteBody, .iu-notesOverlay__textarea");
     return !!(ta && String(ta.value || "").trim());
   }
 
