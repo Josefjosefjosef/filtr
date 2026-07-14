@@ -1,22 +1,42 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-07-14T01:18:51.163333Z",
+  "ingestedAt": "2026-07-14T03:09:57.768526Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Armáda USA oznámila další vlnu úderů na Írán. SAE hlásí dva zasažené tankery",
+      "title": "Zájem o investiční byty klesá",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/zajem-o-investicni-byty-klesa-375531",
+      "dt": "2026-07-14T03:01:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "byty",
+        "investiční",
+        "klesá",
+        "zájem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "USA dokončily další vlnu úderů na Írán. SAE hlásí dva zasažené tankery",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/americka-armada-oznamila-dalsi-vlnu-uderu-na-iran-ktery-hlasi-exploze-375540",
       "dt": "2026-07-13T22:31:58Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24",
       "tokens": [
-        "armáda",
         "další",
+        "dokončily",
         "dva",
         "hlásí",
-        "oznámila",
         "sae",
         "tankery",
         "usa",
@@ -731,29 +751,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Čelákovicích se kvůli požáru zbortil sklad elektrokoloběžek",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/stredocesky-kraj/v-celakovicich-se-kvuli-pozaru-zbortila-hala-375505",
-      "dt": "2026-07-13T05:11:42Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "elektrokoloběžek",
-        "kvůli",
-        "požáru",
-        "sklad",
-        "zbortil",
-        "čelákovicích"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -764,7 +761,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41610,
+      "bytes": 41032,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -801,7 +798,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-13T22:31:58Z",
+        "raw_feed_latest_publishedAt": "2026-07-14T03:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -818,7 +815,11 @@
         },
         "sample_titles": [
           {
-            "title": "Armáda USA oznámila další vlnu úderů na Írán. SAE hlásí dva zasažené tankery",
+            "title": "Zájem o investiční byty klesá",
+            "publishedAt": "2026-07-14T03:01:00Z"
+          },
+          {
+            "title": "USA dokončily další vlnu úderů na Írán. SAE hlásí dva zasažené tankery",
             "publishedAt": "2026-07-13T22:31:58Z"
           },
           {
@@ -844,10 +845,6 @@
           {
             "title": "Devět evropských zemí založilo s Ukrajinou koalici antibalistické obrany",
             "publishedAt": "2026-07-13T16:39:22Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události pondělí 13. července",
-            "publishedAt": "2026-07-13T16:27:00Z"
           }
         ]
       }
