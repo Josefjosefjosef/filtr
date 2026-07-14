@@ -94,7 +94,7 @@ jobs:
         run: npm run iu-state-holiday-label-guard
 
       - name: Perf regression guards (flicker phases + 16 nav latency + calendar/Silver surface)
-        if: steps.scope.outputs.data_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.pc_left_rail_same_window_tabs_only != 'true'
         run: npm run iu-perf-regression-guards
 
       - name: Reload / section switch / scroll stability guard
