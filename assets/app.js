@@ -8318,6 +8318,13 @@ try {
     iuArticleActionsRestoreMindMenuFromOverlay();
   }
 
+  try {
+    if (typeof window !== "undefined") {
+      window.iuArticleActionsOpenOverlay = iuArticleActionsOpenOverlay;
+      window.iuArticleActionsCloseOverlay = iuArticleActionsCloseOverlay;
+    }
+  } catch (_) {}
+
   function iuArticleActionsEnsureMindMenuSections() {
     try {
       const mindMenu = document.getElementById("iuMindMenuView") || document.querySelector(".mindMenu");

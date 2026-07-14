@@ -186,7 +186,6 @@
   window.iuDesktopLeftRailNewWindowIsToolWindow = isToolWindowContext;
   window.iuDesktopLeftRailNewWindowHandleClick = function (item, e) {
     if (!isPcWide()) return false;
-    if (isToolWindowContext()) return false;
     if (!isLeftRailToolItem(item)) return false;
 
     try {
@@ -196,7 +195,9 @@
     } catch (_) {}
 
     var accent = String(item.getAttribute("data-accent") || "").trim().toLowerCase();
-    armParentScrollRestore(getScrollY());
+    if (!isToolWindowContext()) {
+      armParentScrollRestore(getScrollY());
+    }
     return openToolTab(accent);
   };
 
