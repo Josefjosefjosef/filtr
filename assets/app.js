@@ -7000,6 +7000,7 @@ try {
         };
         iuArticleActionsSyncFeedStates(safeTarget);
         try {
+          iuArticleActionsEnsureFeedBound();
           iuArticleActionsInit();
         } catch (_) {}
         iuTimelineEnsureCompactAxisObserver(safeTarget);
@@ -7529,13 +7530,34 @@ try {
   }
 
   function iuReadArticlesGetIdSet() {
+    try {
+      if (window.__iuReadArticlesMemSet instanceof Set) return window.__iuReadArticlesMemSet;
+    } catch (_) {}
     const set = new Set();
     const list = iuArticleActionsReadJson(IU_READ_ARTICLES_KEY);
     for (const row of list) {
       const id = String(row || "").trim();
       if (id) set.add(id);
     }
+    try {
+      window.__iuReadArticlesMemSet = set;
+    } catch (_) {}
     return set;
+  }
+
+  function iuReadArticlesPersistSet(set) {
+    const arr = Array.from(set || []);
+    const payload =
+      arr.length > IU_READ_ARTICLES_MAX ? arr.slice(arr.length - IU_READ_ARTICLES_MAX) : arr;
+    try {
+      window.__iuReadArticlesMemSet = set instanceof Set ? set : new Set(payload);
+    } catch (_) {}
+    try {
+      localStorage.setItem(IU_READ_ARTICLES_KEY, JSON.stringify(payload));
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   function iuReadArticlesIsRead(articleId) {
@@ -7550,11 +7572,7 @@ try {
     const set = iuReadArticlesGetIdSet();
     if (!set.has(id)) {
       set.add(id);
-      const arr = Array.from(set);
-      iuArticleActionsWriteJson(
-        IU_READ_ARTICLES_KEY,
-        arr.length > IU_READ_ARTICLES_MAX ? arr.slice(arr.length - IU_READ_ARTICLES_MAX) : arr
-      );
+      iuReadArticlesPersistSet(set);
     }
     if (articleEl) iuReadArticlesApplyToArticle(articleEl, true);
   }
@@ -8399,17 +8417,55 @@ try {
     } catch (_) {}
   }
 
+  function iuArticleActionsResolveEventTargetEl(e) {
+    try {
+      let t = e && e.target;
+      if (t && t.nodeType === 3 && t.parentElement) t = t.parentElement;
+      return t instanceof Element ? t : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function iuArticleActionsFeedTitleLinkFromTarget(t) {
+    try {
+      if (!(t instanceof Element)) return null;
+      const feed = document.getElementById("feed");
+      if (!feed || !feed.contains(t)) return null;
+      return t.closest("article.iuTimelineItem[data-feed-type='article'] .news-titleLink");
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function iuArticleActionsMarkReadFromTitleLink(titleLink) {
+    try {
+      if (!titleLink) return;
+      const articleEl = titleLink.closest("article.iuTimelineItem");
+      const id = articleEl ? String(articleEl.getAttribute("data-iu-article-id") || "").trim() : "";
+      if (!id || !articleEl) return;
+      try {
+        if (typeof window.iuScrollRestoreSaveNow === "function") window.iuScrollRestoreSaveNow();
+      } catch (_) {}
+      iuReadArticlesMarkRead(id, articleEl);
+    } catch (_) {}
+  }
+
+  function iuArticleActionsOnFeedTitlePointerDown(e) {
+    try {
+      const t = iuArticleActionsResolveEventTargetEl(e);
+      const titleLink = iuArticleActionsFeedTitleLinkFromTarget(t);
+      if (titleLink) iuArticleActionsMarkReadFromTitleLink(titleLink);
+    } catch (_) {}
+  }
+
   function iuArticleActionsOnFeedClick(e) {
     try {
-      const t = e.target;
-      if (!(t instanceof Element)) return;
-      const titleLink = t.closest("article.iuTimelineItem[data-feed-type='article'] .news-titleLink");
+      const t = iuArticleActionsResolveEventTargetEl(e);
+      if (!t) return;
+      const titleLink = iuArticleActionsFeedTitleLinkFromTarget(t);
       if (titleLink) {
-        const articleEl = titleLink.closest("article.iuTimelineItem");
-        const id = articleEl ? String(articleEl.getAttribute("data-iu-article-id") || "").trim() : "";
-        if (id && articleEl) {
-          iuReadArticlesMarkRead(id, articleEl);
-        }
+        iuArticleActionsMarkReadFromTitleLink(titleLink);
         return;
       }
       const undoBtn = t.closest("[data-iu-action='hide-undo']");
@@ -8435,15 +8491,22 @@ try {
     } catch (_) {}
   }
 
+  function iuArticleActionsEnsureFeedBound() {
+    try {
+      if (window.__iuArticleActionsFeedDocBound) return;
+      window.__iuArticleActionsFeedDocBound = 1;
+      document.addEventListener("pointerdown", iuArticleActionsOnFeedTitlePointerDown, true);
+      document.addEventListener("click", iuArticleActionsOnFeedClick, true);
+      const feed = document.getElementById("feed");
+      if (feed) feed.__iuArticleActionsBound = 1;
+    } catch (_) {}
+  }
+
   function iuArticleActionsInit() {
     try {
+      iuArticleActionsEnsureFeedBound();
       if (window.__iuArticleActionsInit) return;
       window.__iuArticleActionsInit = 1;
-      const feed = document.getElementById("feed");
-      if (feed && !feed.__iuArticleActionsBound) {
-        feed.__iuArticleActionsBound = 1;
-        feed.addEventListener("click", iuArticleActionsOnFeedClick);
-      }
       iuArticleActionsEnsureOverlay();
       iuArticleActionsEnsureMindMenuSections();
       iuArticleActionsEnsureDesktopButton();
@@ -27619,6 +27682,12 @@ function buildVideoAsArticleCard(it) {
   document.addEventListener("visibilitychange", () => {
     debugLog("[VIS]", document.visibilityState);
     if (document.visibilityState === "visible") {
+      try {
+        if (typeof window.iuScrollRestoreSaveNow === "function") window.iuScrollRestoreSaveNow();
+      } catch (_) {}
+      try {
+        iuReadArticlesSyncFeed(document.getElementById("feed"));
+      } catch (_) {}
       if (!(document.body && document.body.classList && document.body.classList.contains("iu-home"))) {
         if (iuFeedDataIsStaleForVisibilityRefresh()) {
           try {
@@ -27632,6 +27701,9 @@ function buildVideoAsArticleCard(it) {
         }
         startAutoRefresh();
       }
+      try {
+        if (typeof window.iuScrollRestoreRequest === "function") window.iuScrollRestoreRequest();
+      } catch (_) {}
     } else if (iuRefreshTimer) {
       clearInterval(iuRefreshTimer);
       iuRefreshTimer = null;
@@ -27662,6 +27734,12 @@ function buildVideoAsArticleCard(it) {
     }
     try {
       startAutoRefresh();
+    } catch (_) {}
+    try {
+      iuReadArticlesSyncFeed(document.getElementById("feed"));
+    } catch (_) {}
+    try {
+      if (typeof window.iuScrollRestoreRequest === "function") window.iuScrollRestoreRequest();
     } catch (_) {}
   });
 
@@ -37221,9 +37299,15 @@ function buildVideoAsArticleCard(it) {
         if (!ev.persisted) return;
         try{
           iuStripProjectsNavParamsForHomeLanding();
-          applySectionFromURL();
-          applyPanelFromUrl();
         }catch(_){}
+        /* P0 bfcache: DOM + feed state preserved — do not re-apply section (would reset scroll/page). */
+        try {
+          iuReadArticlesSyncFeed(document.getElementById("feed"));
+        } catch (_) {}
+        try {
+          if (typeof window.iuScrollRestoreRequest === "function") window.iuScrollRestoreRequest();
+        } catch (_) {}
+        try { applyPanelFromUrl(); } catch (_){}
       });
     }catch(_){}
 

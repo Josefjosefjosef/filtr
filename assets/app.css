@@ -3701,6 +3701,12 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
   border-top: none !important;
 }
 
+@media (max-width: 1024px){
+  #feed.iuTimelineFeed > article.news-card.iuTimelineItem ~ article.news-card.iuTimelineItem{
+    margin-top: 22px !important;
+  }
+}
+
 #feed.iuTimelineFeed .iuTimelineRow{
   display: grid;
   grid-template-columns: 72px 28px minmax(0, 1fr) auto;
@@ -3814,6 +3820,9 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
   line-height:1;
   font-weight:700;
   color:var(--iu-tl-read-mark);
+  min-width:11px;
+  min-height:11px;
+  flex-shrink:0;
 }
 @media (min-width: 901px){
   #feed.iuTimelineFeed{
