@@ -42,7 +42,11 @@ const STATIC_TOOLS = [
 
 function auditStaticOpenImplementation() {
   const srcPath = path.join(REPO, "assets", "iu-desktop-left-rail-new-window-v1.js");
+  const shellPath = path.join(REPO, "assets", "iu-desktop-tool-window-shell-v1.css");
+  const railPath = path.join(REPO, "assets", "iu-desktop-tool-window-left-rail-v1.js");
   const src = fs.readFileSync(srcPath, "utf8");
+  const shell = fs.readFileSync(shellPath, "utf8");
+  const rail = fs.readFileSync(railPath, "utf8");
   const fails = [];
   if (src.includes("popup=yes")) fails.push("popup=yes still present");
   if (/window\.open\([^)]*,[^,]+,[^)]*(width|height|left|top)/.test(src)) {
@@ -50,6 +54,9 @@ function auditStaticOpenImplementation() {
   }
   if (src.includes("openWindows")) fails.push("named window reuse map still present");
   if (!src.includes('window.open(targetUrl, "_blank"')) fails.push('expected window.open(..., "_blank", ...)');
+  if (!shell.includes("#newsList > #iuLeftRail")) fails.push("tool shell must show left rail");
+  if (!shell.includes("iuToolWindowRightReserve")) fails.push("tool shell must reserve right column");
+  if (!rail.includes("iuToolWindowMindMenuBtn")) fails.push("tool rail must inject MindMenu button");
   return fails;
 }
 
@@ -166,6 +173,10 @@ async function assertToolTabLayout(toolTab, accent) {
     var topbar = document.getElementById("topbarWrap");
     var spacer = document.querySelector(".iuTopbarFlowSpacer");
     var leftRail = document.getElementById("iuLeftRail");
+    var leftRailRect = leftRail ? leftRail.getBoundingClientRect() : null;
+    var leftRailStyle = leftRail ? getComputedStyle(leftRail) : null;
+    var mindBtn = document.getElementById("iuToolWindowMindMenuBtn");
+    var reserve = document.getElementById("iuToolWindowRightReserve");
     var accordion = document.querySelector(".layout > aside.accordionCol");
     var sec = String(document.body?.dataset?.section || "").toLowerCase();
     var topRect = topbar ? topbar.getBoundingClientRect() : null;
@@ -177,16 +188,22 @@ async function assertToolTabLayout(toolTab, accent) {
     var feedDisplay = feed ? getComputedStyle(feed).display : "";
     var closeCount = document.querySelectorAll("[data-iu-desktop-section-close]").length;
     var vw = window.innerWidth || 0;
+    var railRight = leftRailRect ? Math.round(leftRailRect.right) : 0;
+    var gap = stageRect ? Math.round(stageRect.left - railRight) : 0;
     return {
       sec: sec,
       topbarH: topRect ? Math.round(topRect.height) : 0,
       spacerH: spacerRect ? Math.round(spacerRect.height) : 0,
-      leftRailHidden: leftRail ? getComputedStyle(leftRail).display === "none" : true,
+      leftRailHidden: leftRail ? leftRailStyle.display === "none" : true,
+      leftRailW: leftRailRect ? Math.round(leftRailRect.width) : 0,
+      mindBtnVisible: !!(mindBtn && getComputedStyle(mindBtn).display !== "none"),
+      reservePresent: !!reserve,
       accordionHidden: accordion ? getComputedStyle(accordion).display === "none" : true,
       stageTop: stageRect ? Math.round(stageRect.top) : 0,
       stageWidth: stageRect ? Math.round(stageRect.width) : 0,
       stageLeft: stageRect ? Math.round(stageRect.left) : 0,
       stageRight: stageRect ? Math.round(vw - stageRect.right) : 0,
+      railStageGap: gap,
       stageMaxWidth: stageStyle ? String(stageStyle.maxWidth || "") : "",
       closeCount: closeCount,
       feedHidden: feedDisplay === "none",
@@ -205,7 +222,12 @@ async function assertToolTabLayout(toolTab, accent) {
   }
   if (layout.topbarH < 48) throw new Error(`${accent}: topbar too short h=${layout.topbarH}`);
   if (layout.spacerH < 48) throw new Error(`${accent}: topbar spacer too short h=${layout.spacerH}`);
-  if (!layout.leftRailHidden) throw new Error(`${accent}: left rail visible in tool tab`);
+  if (layout.leftRailHidden) throw new Error(`${accent}: left rail hidden in tool tab`);
+  if (layout.leftRailW < 120 || layout.leftRailW > 150) {
+    throw new Error(`${accent}: left rail width unexpected w=${layout.leftRailW}`);
+  }
+  if (!layout.mindBtnVisible) throw new Error(`${accent}: MindMenu button missing in tool tab left rail`);
+  if (!layout.reservePresent) throw new Error(`${accent}: right reserve column missing`);
   if (!layout.accordionHidden) throw new Error(`${accent}: right rail visible in tool tab`);
   if (layout.stageTop < layout.spacerH - 4) {
     throw new Error(`${accent}: center stage under topbar overlap stageTop=${layout.stageTop} spacer=${layout.spacerH}`);
@@ -216,10 +238,11 @@ async function assertToolTabLayout(toolTab, accent) {
   if (layout.stageWidth > 600) {
     throw new Error(`${accent}: center stage wider than 600px w=${layout.stageWidth}`);
   }
-  if (Math.abs(layout.stageLeft - layout.stageRight) > 16) {
-    throw new Error(
-      `${accent}: center stage not centered left=${layout.stageLeft} right=${layout.stageRight}`
-    );
+  if (layout.railStageGap < 8 || layout.railStageGap > 40) {
+    throw new Error(`${accent}: rail/stage gap unexpected gap=${layout.railStageGap}`);
+  }
+  if (layout.stageRight < 80) {
+    throw new Error(`${accent}: missing free right reserve right=${layout.stageRight}`);
   }
   if (!layout.stageMaxWidth.includes("600")) {
     throw new Error(`${accent}: center stage max-width expected 600px got=${layout.stageMaxWidth}`);
@@ -316,6 +339,61 @@ async function testButtonCycle(page, button, cycleIndex) {
   }
 }
 
+async function assertHomepageUnchanged(page) {
+  const home = await page.evaluate(() => {
+    var mindInRail = !!document.querySelector("#iuLeftRail #iuToolWindowMindMenuBtn");
+    var centerMindBtn = !!document.getElementById("iuMyInfoUzelOpenBtn");
+    var rail = document.getElementById("iuLeftRail");
+    var railRect = rail ? rail.getBoundingClientRect() : null;
+    return {
+      mindInRail: mindInRail,
+      centerMindBtn: centerMindBtn,
+      leftRailW: railRect ? Math.round(railRect.width) : 0,
+      toolWindowFlag: document.documentElement.getAttribute("data-iu-tool-window") === "1",
+    };
+  });
+  if (home.toolWindowFlag) throw new Error("homepage must not be tool window");
+  if (home.mindInRail) throw new Error("homepage left rail must not contain tool MindMenu button");
+  if (home.leftRailW < 120 || home.leftRailW > 150) {
+    throw new Error(`homepage left rail width unexpected w=${home.leftRailW}`);
+  }
+}
+
+async function testChainTabsFromToolWindow(page) {
+  const pocasiTab = await openLeftRailToolTab(page, "pocasi");
+  const tvPromise = pocasiTab.context().waitForEvent("page", { timeout: SETTLE_MS });
+  await pocasiTab.locator('#iuLeftRail a[data-accent="tvprogram"]').click({ force: true, timeout: 60000 });
+  const tvTab = await tvPromise;
+  await tvTab.waitForLoadState("domcontentloaded", { timeout: SETTLE_MS }).catch(() => {});
+  await assertToolTabLayout(tvTab, "tvprogram");
+  await tvTab.close();
+  await pocasiTab.close();
+  await page.waitForTimeout(120);
+}
+
+async function testMindMenuInToolWindow(page) {
+  const toolTab = await openLeftRailToolTab(page, "mapy");
+  await toolTab.waitForSelector("#iuToolWindowMindMenuBtn", { timeout: SETTLE_MS });
+  await toolTab.locator("#iuToolWindowMindMenuBtn").click({ force: true, timeout: 60000 });
+  await toolTab.waitForFunction(
+    () => {
+      var overlay = document.getElementById("iuMyInfoUzelOverlay");
+      return !!overlay && overlay.hidden === false && document.body.classList.contains("iu-myinfouzel-open");
+    },
+    { timeout: SETTLE_MS }
+  );
+  await toolTab.locator(".iuMyInfoUzelOverlay__close").click({ force: true, timeout: 60000 });
+  await toolTab.waitForFunction(
+    () => {
+      var overlay = document.getElementById("iuMyInfoUzelOverlay");
+      return !overlay || overlay.hidden === true;
+    },
+    { timeout: SETTLE_MS }
+  );
+  await toolTab.close();
+  await page.waitForTimeout(120);
+}
+
 async function main() {
   let serverProc = null;
   if (USE_LOCAL_SERVER) {
@@ -342,6 +420,8 @@ async function main() {
 
   try {
     await ensureParentReady(page);
+    await assertHomepageUnchanged(page);
+    passes.push("homepage unchanged");
     inventory = await discoverLeftRailButtons(page);
 
     for (const button of inventory) {
@@ -367,6 +447,20 @@ async function main() {
       } catch (err) {
         failures.push(`mapy external link tab: ${err && err.message ? err.message : String(err)}`);
       }
+    }
+
+    try {
+      await testChainTabsFromToolWindow(page);
+      passes.push("chain tabs from tool window");
+    } catch (err) {
+      failures.push(`chain tabs from tool window: ${err && err.message ? err.message : String(err)}`);
+    }
+
+    try {
+      await testMindMenuInToolWindow(page);
+      passes.push("mindmenu in tool window");
+    } catch (err) {
+      failures.push(`mindmenu in tool window: ${err && err.message ? err.message : String(err)}`);
     }
   } finally {
     await browser.close().catch(() => {});

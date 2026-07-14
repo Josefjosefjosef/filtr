@@ -1,5 +1,5 @@
 /**
- * Tool window shell (?iu_window=tool): PC top bar + single section only.
+ * Tool tab shell (?iu_window=tool): PC top bar + left rail + section content + free right column.
  */
 html[data-iu-tool-window="1"],
 body[data-iu-tool-window="1"] {
@@ -25,7 +25,6 @@ html[data-iu-tool-window="1"] .iuTopbarFlowSpacer {
   width: 100% !important;
 }
 
-html[data-iu-tool-window="1"] #iuLeftRail,
 html[data-iu-tool-window="1"] .layout > aside.accordionCol,
 html[data-iu-tool-window="1"] .mainCol > aside.accordionCol,
 html[data-iu-tool-window="1"] #iuSilverTopCardsStack,
@@ -35,40 +34,9 @@ html[data-iu-tool-window="1"] #iuMobileMainBackBar,
 html[data-iu-tool-window="1"] #iuHomeView,
 html[data-iu-tool-window="1"] .iuDesktopHomeSectionGrid,
 html[data-iu-tool-window="1"] .iuNewsPreviewRow,
-html[data-iu-tool-window="1"] .iuDesktopPreviewCardsRow {
+html[data-iu-tool-window="1"] .iuDesktopPreviewCardsRow,
+html[data-iu-tool-window="1"] #iuMobileMindMenuFlow {
   display: none !important;
-}
-
-html[data-iu-tool-window="1"] .layout {
-  display: block !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-html[data-iu-tool-window="1"] .mainCol,
-html[data-iu-tool-window="1"] #leftContent,
-html[data-iu-tool-window="1"] #newsList {
-  display: block !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-html[data-iu-tool-window="1"] #newsList > #iuCenterStage {
-  grid-column: 1 / -1 !important;
-  grid-row: auto !important;
-  width: 100% !important;
-  max-width: 600px !important;
-  min-width: 0 !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  padding: 0 16px 24px !important;
-  box-sizing: border-box !important;
-  scroll-margin-top: calc(var(--topbarStackH, 72px) + 4px) !important;
 }
 
 html[data-iu-tool-window="1"] .iuDesktopSectionCloseBtn,
@@ -86,6 +54,172 @@ html[data-iu-tool-window="1"] #leftStickyHeader {
   top: 0 !important;
   z-index: 1000 !important;
   width: 100% !important;
+}
+
+@media (min-width: 901px) {
+  html[data-iu-tool-window="1"] .layout {
+    display: grid !important;
+    grid-template-columns: var(--iuLeftRailW, 136px) minmax(0, 600px) minmax(0, 1fr) !important;
+    column-gap: 20px !important;
+    row-gap: 0 !important;
+    align-items: start !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  html[data-iu-tool-window="1"] #leftStickyHeader {
+    grid-column: 1 / -1 !important;
+    grid-row: 1 !important;
+  }
+
+  html[data-iu-tool-window="1"] .mainCol,
+  html[data-iu-tool-window="1"] #leftContent,
+  html[data-iu-tool-window="1"] #newsList {
+    display: contents !important;
+  }
+
+  html[data-iu-tool-window="1"] #newsList > #iuLeftRail {
+    display: block !important;
+    visibility: visible !important;
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+    margin-top: 20px !important;
+    padding-top: 0 !important;
+    align-self: start !important;
+    position: sticky !important;
+    top: calc(var(--topbarStackH, 72px) + 8px) !important;
+    max-height: calc(100vh - var(--topbarStackH, 72px) - 16px) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior-y: contain !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  html[data-iu-tool-window="1"] #newsList > #iuLeftRail .iuLeftRailSectionTitle:first-child {
+    display: none !important;
+  }
+
+  html[data-iu-tool-window="1"] #newsList > #iuLeftRail .iu-leftNav {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  html[data-iu-tool-window="1"] #newsList > #iuCenterStage {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 600px !important;
+    min-width: 0 !important;
+    margin: 20px 0 24px !important;
+    padding: 0 16px 24px !important;
+    box-sizing: border-box !important;
+    align-self: start !important;
+    scroll-margin-top: calc(var(--topbarStackH, 72px) + 4px) !important;
+  }
+
+  html[data-iu-tool-window="1"] .iuToolWindowRightReserve {
+    grid-column: 3 !important;
+    grid-row: 2 !important;
+    min-height: 1px !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    pointer-events: none !important;
+  }
+
+  html[data-iu-tool-window="1"] .iuToolWindowMindMenuBtn {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    min-height: 72px;
+    margin: 0 0 10px !important;
+    padding: 8px 6px 10px !important;
+    border: 0;
+    border-radius: 12px;
+    background: var(--iu-brand-blue, #003cff);
+    color: #fff !important;
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    box-shadow: 0 8px 18px rgba(0, 60, 255, 0.18);
+  }
+
+  html[data-iu-tool-window="1"] .iuToolWindowMindMenuBtn:hover,
+  html[data-iu-tool-window="1"] .iuToolWindowMindMenuBtn:focus-visible {
+    background: #002bcc;
+    outline: 2px solid rgba(0, 60, 255, 0.35);
+    outline-offset: 2px;
+  }
+
+  html[data-iu-tool-window="1"] .iuToolWindowMindMenuBtn__label {
+    display: block;
+    width: 100%;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: center;
+    white-space: normal;
+    color: #fff !important;
+  }
+
+  html[data-iu-tool-window="1"] .iuToolWindowMindMenuBtn__icons {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 12px;
+    line-height: 1;
+    opacity: 0.95;
+  }
+}
+
+@media (max-width: 900px) {
+  html[data-iu-tool-window="1"] .layout {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  html[data-iu-tool-window="1"] .mainCol,
+  html[data-iu-tool-window="1"] #leftContent,
+  html[data-iu-tool-window="1"] #newsList {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  html[data-iu-tool-window="1"] #iuLeftRail {
+    display: none !important;
+  }
+
+  html[data-iu-tool-window="1"] #newsList > #iuCenterStage {
+    width: 100% !important;
+    max-width: 600px !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 0 16px 24px !important;
+    box-sizing: border-box !important;
+    scroll-margin-top: calc(var(--topbarStackH, 72px) + 4px) !important;
+  }
+
+  html[data-iu-tool-window="1"] .iuToolWindowRightReserve {
+    display: none !important;
+  }
 }
 
 .iuDesktopLeftRailPopupBlocked {
