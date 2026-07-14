@@ -13,7 +13,8 @@
 // 2026-06-11: P1 perf fix #7 — IU_SW_DEPLOY_RELOAD se NEposílá při první instalaci SW (cold load se načítal 2×)
 // 2026-06-28: PWA brand blue iU icons — bump app shell cache for new favicon/manifest references
 // 2026-06-29: PWA icon final tuning v54 — larger optically centered iU + infoUzel.cz short_name
-const CACHE_VERSION = "2026-06-29-pwa-icon-final-v54";
+// 2026-07-14: PWA offline resilience — iu-network-connectivity-v1.js in app shell precache
+const CACHE_VERSION = "2026-07-14-pwa-offline-resilience-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
@@ -58,6 +59,7 @@ function getAppShellUrls() {
     `${BASE}assets/iu-invoice-overlay.css`,
     `${BASE}assets/iu-custom-buttons-overlay.css`,
     `${BASE}assets/app-crash-shield.js`,
+    `${BASE}assets/iu-network-connectivity-v1.js`,
     `${BASE}assets/app.js`,
     `${BASE}sw.js`
   ];

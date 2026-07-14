@@ -205,13 +205,25 @@ async function iuChunkFetchJson(url, label) {
       else if (String(url).indexOf("publishable_pool.json") !== -1) c.publishable_pool = (c.publishable_pool | 0) + 1;
     }
   } catch (_) {}
-  const res = await fetch(url, {
-    cache: "no-store",
-    credentials: "same-origin",
-    headers: { "cache-control": "no-cache" },
-  });
-  if (!res.ok) throw new Error(`HTTP_${res.status}_${label || "chunk"}`);
-  return res.json();
+  const ctrl = new AbortController();
+  const timeoutMs = 9000;
+  const t = setTimeout(() => {
+    try {
+      ctrl.abort();
+    } catch (_) {}
+  }, timeoutMs);
+  try {
+    const res = await fetch(url, {
+      cache: "no-store",
+      credentials: "same-origin",
+      headers: { "cache-control": "no-cache" },
+      signal: ctrl.signal,
+    });
+    if (!res.ok) throw new Error(`HTTP_${res.status}_${label || "chunk"}`);
+    return res.json();
+  } finally {
+    clearTimeout(t);
+  }
 }
 
 /** @type {{ url: string, manifest: object } | null} */
