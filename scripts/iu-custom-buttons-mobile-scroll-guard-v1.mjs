@@ -45,7 +45,7 @@ function staticGate() {
     },
     {
       id: "index_cache_bust",
-      pass: /custom-buttons-mobile-scroll-v1-20260705/.test(index),
+      pass: /quicktools-mobile-visibility-v1-20260714/.test(index),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
