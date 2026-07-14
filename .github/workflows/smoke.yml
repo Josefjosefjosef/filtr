@@ -122,7 +122,7 @@ jobs:
         run: npm run iu-desktop-calendar-allday-toggle-guard
 
       - name: Desktop article read mark guard
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.legal_docs_form_state_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.legal_docs_form_state_only != 'true' && steps.scope.outputs.data_mgmt_restore_overlay_mobile_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true'
         run: npm run iu-desktop-article-read-mark-guard
 
       - name: Calendar all-day pinned block + limit guard
