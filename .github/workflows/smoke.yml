@@ -138,7 +138,7 @@ jobs:
         run: npm run iu-desktop-info-panel-layout-guard
 
       - name: Desktop info panel validation guard
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.pc_svatek_label_pill_gap_only != 'true' && steps.scope.outputs.calendar_allday_pinned_limit_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true' && steps.scope.outputs.legal_docs_form_state_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.pc_svatek_label_pill_gap_only != 'true' && steps.scope.outputs.calendar_allday_pinned_limit_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true' && steps.scope.outputs.legal_docs_form_state_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true'
         run: npm run iu-desktop-info-panel-validation-guard
 
       - name: Info panel mobile polish guard
