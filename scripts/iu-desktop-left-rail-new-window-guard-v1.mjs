@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
- * PC (≥1025px) left-rail → standalone tool window + top bar shell guard.
+ * PC (≥1025px) left-rail → new tab in same browser window + top bar shell guard.
  * Run: npm run iu-desktop-left-rail-new-window-guard
  * Prod: IU_GUARD_BASE_URL=https://infouzel.cz/projects/ npm run iu-desktop-left-rail-new-window-guard
  */
 import { createRequire } from "module";
+import fs from "fs";
 import path from "path";
 import { spawn } from "child_process";
 import http from "http";
@@ -32,12 +33,25 @@ const RESTORE_TOL_PX = parseInt(process.env.IU_LEFT_RAIL_WINDOW_SCROLL_TOL || "1
 
 const STATIC_TOOLS = [
   { accent: "pocasi", label: "Počasí" },
-  { accent: "mapy", label: "Mapy" },
+  { accent: "mapy", label: "Mapy", externalLink: 'a.iuRadioChip[href*="google.com/maps"]' },
   { accent: "jr", label: "Jízdní řády" },
   { accent: "tvprogram", label: "TV program" },
   { accent: "tvonline", label: "TV online" },
   { accent: "radio", label: "Rádia" },
 ];
+
+function auditStaticOpenImplementation() {
+  const srcPath = path.join(REPO, "assets", "iu-desktop-left-rail-new-window-v1.js");
+  const src = fs.readFileSync(srcPath, "utf8");
+  const fails = [];
+  if (src.includes("popup=yes")) fails.push("popup=yes still present");
+  if (/window\.open\([^)]*,[^,]+,[^)]*(width|height|left|top)/.test(src)) {
+    fails.push("window.open with popup dimension features still present");
+  }
+  if (src.includes("openWindows")) fails.push("named window reuse map still present");
+  if (!src.includes('window.open(targetUrl, "_blank"')) fails.push('expected window.open(..., "_blank", ...)');
+  return fails;
+}
 
 function isProdHost(base) {
   return /infouzel\.cz/i.test(base);
@@ -141,14 +155,14 @@ async function scrollParentForCycle(page, cycleIndex) {
   await page.waitForTimeout(250);
 }
 
-async function assertPopupLayout(popup, accent) {
-  await popup.waitForSelector("#topbarWrap.topbar-new.iuTopbar", { timeout: SETTLE_MS });
-  await popup.waitForFunction(
+async function assertToolTabLayout(toolTab, accent) {
+  await toolTab.waitForSelector("#topbarWrap.topbar-new.iuTopbar", { timeout: SETTLE_MS });
+  await toolTab.waitForFunction(
     () => document.documentElement.getAttribute("data-iu-tool-window") === "1",
     { timeout: SETTLE_MS }
   );
 
-  const layout = await popup.evaluate((ac) => {
+  const layout = await toolTab.evaluate((ac) => {
     var topbar = document.getElementById("topbarWrap");
     var spacer = document.querySelector(".iuTopbarFlowSpacer");
     var leftRail = document.getElementById("iuLeftRail");
@@ -182,22 +196,22 @@ async function assertPopupLayout(popup, accent) {
   }, accent);
 
   if (layout.sec !== accent && !(accent.indexOf("aff-") === 0 && layout.sec === accent)) {
-    throw new Error(`${accent}: popup section mismatch got=${layout.sec}`);
+    throw new Error(`${accent}: tool tab section mismatch got=${layout.sec}`);
   }
   if (!layout.href.includes("iu_window=tool") || !layout.href.includes("section=" + encodeURIComponent(accent).replace(/%20/g, "+"))) {
     if (!layout.href.includes("section=" + accent)) {
-      throw new Error(`${accent}: popup URL missing section/iu_window (${layout.href})`);
+      throw new Error(`${accent}: tool tab URL missing section/iu_window (${layout.href})`);
     }
   }
   if (layout.topbarH < 48) throw new Error(`${accent}: topbar too short h=${layout.topbarH}`);
   if (layout.spacerH < 48) throw new Error(`${accent}: topbar spacer too short h=${layout.spacerH}`);
-  if (!layout.leftRailHidden) throw new Error(`${accent}: left rail visible in tool window`);
-  if (!layout.accordionHidden) throw new Error(`${accent}: right rail visible in tool window`);
+  if (!layout.leftRailHidden) throw new Error(`${accent}: left rail visible in tool tab`);
+  if (!layout.accordionHidden) throw new Error(`${accent}: right rail visible in tool tab`);
   if (layout.stageTop < layout.spacerH - 4) {
     throw new Error(`${accent}: center stage under topbar overlap stageTop=${layout.stageTop} spacer=${layout.spacerH}`);
   }
   if (layout.closeCount > 0) {
-    throw new Error(`${accent}: tool window must not show Zavřít controls count=${layout.closeCount}`);
+    throw new Error(`${accent}: tool tab must not show Zavřít controls count=${layout.closeCount}`);
   }
   if (layout.stageWidth > 600) {
     throw new Error(`${accent}: center stage wider than 600px w=${layout.stageWidth}`);
@@ -210,6 +224,34 @@ async function assertPopupLayout(popup, accent) {
   if (!layout.stageMaxWidth.includes("600")) {
     throw new Error(`${accent}: center stage max-width expected 600px got=${layout.stageMaxWidth}`);
   }
+}
+
+async function openLeftRailToolTab(page, accent) {
+  const sel = `#iuLeftRail a[data-accent="${accent}"]`;
+  await page.waitForSelector(sel, { timeout: 60000 });
+  const tabPromise = page.context().waitForEvent("page", { timeout: SETTLE_MS });
+  await page.locator(sel).click({ force: true, timeout: 60000 });
+  const toolTab = await tabPromise;
+  await toolTab.waitForLoadState("domcontentloaded", { timeout: SETTLE_MS }).catch(() => {});
+  await assertToolTabLayout(toolTab, accent);
+  return toolTab;
+}
+
+async function testExternalLinkInToolTab(page, button) {
+  if (!button.externalLink) return;
+  const toolTab = await openLeftRailToolTab(page, button.accent);
+  await toolTab.waitForSelector(button.externalLink, { timeout: SETTLE_MS });
+  const extPromise = page.context().waitForEvent("page", { timeout: SETTLE_MS });
+  await toolTab.locator(button.externalLink).first().click({ timeout: 60000 });
+  const extTab = await extPromise;
+  await extTab.waitForLoadState("domcontentloaded", { timeout: SETTLE_MS }).catch(() => {});
+  const extUrl = extTab.url();
+  if (!/google\.com\/maps/i.test(extUrl)) {
+    throw new Error(`${button.accent}: external tab URL unexpected (${extUrl})`);
+  }
+  await extTab.close();
+  await toolTab.close();
+  await page.waitForTimeout(120);
 }
 
 async function testButtonCycle(page, button, cycleIndex) {
@@ -229,15 +271,15 @@ async function testButtonCycle(page, button, cycleIndex) {
   const sel = `#iuLeftRail a[data-accent="${button.accent}"]`;
   await page.waitForSelector(sel, { timeout: 60000 });
 
-  const popupPromise = page.waitForEvent("popup", { timeout: SETTLE_MS });
+  const tabPromise = page.context().waitForEvent("page", { timeout: SETTLE_MS });
   await page.locator(sel).click({ force: true, timeout: 60000 });
-  const popup = await popupPromise;
+  const toolTab = await tabPromise;
 
-  await popup.waitForLoadState("domcontentloaded", { timeout: SETTLE_MS }).catch(() => {});
-  await assertPopupLayout(popup, button.accent);
+  await toolTab.waitForLoadState("domcontentloaded", { timeout: SETTLE_MS }).catch(() => {});
+  await assertToolTabLayout(toolTab, button.accent);
 
   if (cycleIndex === 2) {
-    await popup.evaluate(() => {
+    await toolTab.evaluate(() => {
       try {
         var btn = document.querySelector("#topbarWrap .iuBrand");
         if (btn) btn.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
@@ -245,7 +287,7 @@ async function testButtonCycle(page, button, cycleIndex) {
     });
   }
 
-  await popup.close();
+  await toolTab.close();
   await page.waitForTimeout(120);
   await page.evaluate((y) => {
     try {
@@ -295,6 +337,8 @@ async function main() {
   const failures = [];
   const passes = [];
   let inventory = [];
+  const staticFails = auditStaticOpenImplementation();
+  if (staticFails.length) failures.push(...staticFails.map((f) => "static: " + f));
 
   try {
     await ensureParentReady(page);
@@ -309,6 +353,19 @@ async function main() {
         } catch (err) {
           failures.push(`${tag}: ${err && err.message ? err.message : String(err)}`);
         }
+      }
+    }
+
+    const mapyBtn = inventory.find((b) => b.accent === "mapy") || { accent: "mapy", externalLink: STATIC_TOOLS.find((t) => t.accent === "mapy")?.externalLink };
+    if (mapyBtn) {
+      try {
+        await testExternalLinkInToolTab(page, {
+          accent: "mapy",
+          externalLink: 'a.iuRadioChip[href*="google.com/maps"]',
+        });
+        passes.push("mapy external link tab");
+      } catch (err) {
+        failures.push(`mapy external link tab: ${err && err.message ? err.message : String(err)}`);
       }
     }
   } finally {

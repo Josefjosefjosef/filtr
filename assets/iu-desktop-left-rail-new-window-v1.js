@@ -1,6 +1,6 @@
 /**
- * infoUzel.cz — PC (≥1025px): left-rail tools open in a standalone browser window
- * with the full functional desktop top bar + section shell (?iu_window=tool).
+ * infoUzel.cz — PC (≥1025px): left-rail tools open in a new tab of the same
+ * browser window with the full functional desktop top bar + section shell (?iu_window=tool).
  */
 (function iuDesktopLeftRailNewWindowV1() {
   "use strict";
@@ -11,7 +11,6 @@
   var PC_MQ = "(min-width: 1025px)";
   var WINDOW_PARAM = "iu_window";
   var WINDOW_VALUE = "tool";
-  var openWindows = Object.create(null);
 
   function isPcWide() {
     try {
@@ -62,30 +61,6 @@
     url.searchParams.set("section", normalizeAccent(accent));
     url.searchParams.set(WINDOW_PARAM, WINDOW_VALUE);
     return url.toString();
-  }
-
-  function windowNameForAccent(accent) {
-    return "iu_tool_" + String(accent || "section").replace(/[^a-z0-9_-]+/gi, "_");
-  }
-
-  function desktopWindowFeatures() {
-    var sw = window.screen && window.screen.availWidth ? window.screen.availWidth : 1280;
-    var sh = window.screen && window.screen.availHeight ? window.screen.availHeight : 900;
-    var w = Math.max(960, Math.min(1400, Math.floor(sw * 0.88)));
-    var h = Math.max(640, Math.min(960, Math.floor(sh * 0.88)));
-    var left = Math.max(0, Math.floor((sw - w) / 2));
-    var top = Math.max(0, Math.floor((sh - h) / 2));
-    return (
-      "popup=yes,width=" +
-      w +
-      ",height=" +
-      h +
-      ",left=" +
-      left +
-      ",top=" +
-      top +
-      ",menubar=no,toolbar=no,location=yes,status=no,scrollbars=yes,resizable=yes"
-    );
   }
 
   function getScrollY() {
@@ -150,9 +125,9 @@
     });
   } catch (_) {}
 
-  function showPopupBlockedNotice() {
+  function showTabBlockedNotice() {
     var msg =
-      "Prohlížeč zablokoval nové okno. Povolte vyskakovací okna pro infoUzel.cz a zkuste to znovu.";
+      "Prohlížeč zablokoval novou kartu. Povolte vyskakovací okna pro infoUzel.cz a zkuste to znovu.";
     try {
       if (typeof window.iuToast === "function") {
         window.iuToast(msg, { duration: 8000 });
@@ -179,34 +154,22 @@
     } catch (_) {}
   }
 
-  function openToolWindow(accent) {
+  function openToolTab(accent) {
     var key = normalizeAccent(accent);
-    var existing = openWindows[key];
-    try {
-      if (existing && !existing.closed) {
-        existing.focus();
-        return true;
-      }
-    } catch (_) {}
-    delete openWindows[key];
-
     var targetUrl = buildToolWindowUrl(key);
-    var name = windowNameForAccent(key);
-    var features = desktopWindowFeatures();
-    var child = null;
+    var tab = null;
     try {
-      child = window.open(targetUrl, name, features);
+      tab = window.open(targetUrl, "_blank", "noopener,noreferrer");
     } catch (_) {
-      child = null;
+      tab = null;
     }
-    if (!child || child.closed) {
-      showPopupBlockedNotice();
+    if (!tab) {
+      showTabBlockedNotice();
       return true;
     }
     try {
-      child.opener = null;
+      tab.opener = null;
     } catch (_) {}
-    openWindows[key] = child;
     return true;
   }
 
@@ -234,7 +197,7 @@
 
     var accent = String(item.getAttribute("data-accent") || "").trim().toLowerCase();
     armParentScrollRestore(getScrollY());
-    return openToolWindow(accent);
+    return openToolTab(accent);
   };
 
   markToolWindowShellEarly();

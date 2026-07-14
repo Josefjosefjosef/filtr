@@ -47,7 +47,7 @@ const BUTTONS = [
 
 const NF_VISIBLE_MAX = 200;
 const NF_STABLE_MAX = 2800;
-/** PC left-rail tool windows include full document load in popup. */
+/** PC left-rail tool tabs include full document load in new browser tab. */
 const TOOL_WINDOW_VISIBLE_MAX = 5000;
 const TOOL_WINDOW_STABLE_MAX = 5500;
 /** publishable_pool.json primary loader is larger than bootstrap subset; Média first paint budget reflects full pool GET. */
@@ -96,19 +96,20 @@ async function measureNavOnce(page, btn) {
 
   if (btn.toolWindow) {
     const navSel = desktopNavSelector(btn.accent);
-    const popupPromise = page.waitForEvent("popup", { timeout: 20000 });
+    const tabPromise = page.context().waitForEvent("page", { timeout: 20000 });
     const tClick = Date.now();
     await page.locator(navSel).click({ force: true });
-    const popup = await popupPromise;
-    await popup.waitForFunction(
+    const toolTab = await tabPromise;
+    await toolTab.waitForLoadState("domcontentloaded", { timeout: 20000 }).catch(() => {});
+    await toolTab.waitForFunction(
       (sec) => String(document.body?.dataset?.section || "").toLowerCase() === String(sec || "").toLowerCase(),
       btn.expect.section,
       { timeout: 20000 }
     );
     const tVisible = Date.now();
-    await popup.waitForTimeout(120);
+    await toolTab.waitForTimeout(120);
     const tStable = Date.now();
-    await popup.close().catch(() => {});
+    await toolTab.close().catch(() => {});
     return {
       inputToVisibleMs: tVisible - tClick,
       inputToStableMs: tStable - tClick,
