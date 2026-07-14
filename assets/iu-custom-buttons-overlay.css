@@ -132,4 +132,8 @@
     box-shadow: none !important;
     box-sizing: border-box !important;
   }
+  :is(#iuMobileGatePanelTools,#iuMindMenuView) .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile[hidden],
+  body :is(.layout > aside.accordionCol,.accordionCol) .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > .iuTile[hidden]{
+    display: none !important;
+  }
 }
