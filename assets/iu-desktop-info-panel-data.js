@@ -7,6 +7,10 @@ import {
   IU_INFO_PANEL_ORDER_IDS,
   IU_INFO_PANEL_EXCLUDED,
 } from "./iu-desktop-info-panel-catalog.js";
+import {
+  isCnbPublicationBehindExpected,
+  parseCzechDailyDate,
+} from "./iu-cnb-exchange-utils.js";
 
 export {
   IU_INFO_PANEL_CATALOG,
@@ -115,16 +119,8 @@ export function infoPanelPeriodSortKey(period) {
   return 0;
 }
 
-function parseCzechDailyDate(period) {
-  const m = String(period || "").trim().match(/(\d{2})\.(\d{2})\.(\d{4})/);
-  if (!m) return null;
-  const day = parseInt(m[1], 10);
-  const month = parseInt(m[2], 10);
-  const year = parseInt(m[3], 10);
-  if (month < 1 || month > 12 || day < 1 || day > 31) return null;
-  const d = new Date(year, month - 1, day, 12, 0, 0, 0);
-  if (d.getFullYear() !== year || d.getMonth() !== month - 1 || d.getDate() !== day) return null;
-  return d;
+function parseCzechDailyDateLocal(period) {
+  return parseCzechDailyDate(period);
 }
 
 function countBusinessDaysBetween(startDate, endDate) {
@@ -162,12 +158,20 @@ function maxBusinessDaysForDaily(maxAgeMs) {
 }
 
 function isDailyDataPeriodStale(catalogItem, row) {
-  const dataDate = parseCzechDailyDate(row && row.updatedAt);
+  if (catalogItem && catalogItem.fetchBucket === "cnb") {
+    return isCnbPublicationBehindExpected(row && row.updatedAt);
+  }
+  const dataDate = parseCzechDailyDateLocal(row && row.updatedAt);
   if (!dataDate) {
     return false;
   }
   const maxBusinessDays = maxBusinessDaysForDaily(catalogItem.maxAgeMs);
   return countBusinessDaysBetween(dataDate, new Date()) > maxBusinessDays;
+}
+
+function isCnbSnapshotRowStale(row) {
+  if (!row || typeof row.value !== "number") return true;
+  return isCnbPublicationBehindExpected(row.updatedAt);
 }
 
 function isFetchAnchorStale(maxAgeMs, anchorAt) {
@@ -190,8 +194,11 @@ function isSnapshotRowStale(catalogItem, row, snapshotMeta) {
   }
 
   if (freq === "daily") {
+    if (catalogItem.fetchBucket === "cnb") {
+      return isCnbSnapshotRowStale(row);
+    }
     if (!isFetchAnchorStale(maxAge, fetchAnchor)) return false;
-    if (parseCzechDailyDate(row && row.updatedAt) && !isDailyDataPeriodStale(catalogItem, row)) {
+    if (parseCzechDailyDateLocal(row && row.updatedAt) && !isDailyDataPeriodStale(catalogItem, row)) {
       return false;
     }
     return true;
@@ -238,8 +245,10 @@ function mergeItem(catalogItem, snapRow, snapshotMeta) {
   const base = { ...catalogItem };
   const canLive = LIVE_OK.has(catalogItem.legalStatus);
   const row = snapRow && typeof snapRow === "object" ? snapRow : null;
+  const hasNumericRow = !!(row && typeof row.value === "number" && row.isLive);
   const snapshotFailed =
     canLive &&
+    !hasNumericRow &&
     snapshotMeta &&
     snapshotMeta.errors &&
     snapshotMeta.errors.some((e) => e && snapshotErrorAffectsItem(catalogItem, e.id));
@@ -316,10 +325,14 @@ export function getLoadingInfoPanelItems() {
   }));
 }
 
-export async function loadInfoPanelItems() {
+export async function loadInfoPanelItems(options) {
+  const forceReload = !!(options && options.forceReload);
   let snapshot = { items: {}, generatedAt: "", errors: [] };
   try {
-    const res = await fetch(SNAPSHOT_URL, { cache: "no-cache" });
+    const res = await fetch(SNAPSHOT_URL, {
+      cache: "no-cache",
+      headers: forceReload ? { "Cache-Control": "no-cache", Pragma: "no-cache" } : undefined,
+    });
     if (res.ok) snapshot = await res.json();
   } catch (_) {}
 

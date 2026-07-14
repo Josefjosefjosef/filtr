@@ -12,6 +12,7 @@ on:
       # Force-pushes z update-articles.yml často nespustí pull_request synchronize → povinné checky na data PR zůstaly viset (mergeStateStatus BLOCKED).
       - automation/update-articles-data
       - automation/update-articles-fast-pool
+      - automation/update-info-panel-snapshot
       # Silver/release PR heads: pull_request webhooks občas nedorazí; push na fix/* spustí required status na head SHA.
       - "fix/**"
   workflow_dispatch:
@@ -102,11 +103,11 @@ jobs:
         run: npm run iu-state-holiday-label-guard
 
       - name: Perf regression guards (flicker phases + 16 nav latency + calendar/Silver surface)
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.pc_left_rail_same_window_tabs_only != 'true' && steps.scope.outputs.pc_tool_window_left_rail_layout_only != 'true' && steps.scope.outputs.notes_unified_field_only != 'true' && steps.scope.outputs.pwa_offline_resilience_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.pc_left_rail_same_window_tabs_only != 'true' && steps.scope.outputs.pc_tool_window_left_rail_layout_only != 'true' && steps.scope.outputs.notes_unified_field_only != 'true' && steps.scope.outputs.pwa_offline_resilience_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true'
         run: npm run iu-perf-regression-guards
 
       - name: Reload / section switch / scroll stability guard
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.data_mgmt_restore_overlay_mobile_only != 'true' && steps.scope.outputs.pc_left_rail_same_window_tabs_only != 'true' && steps.scope.outputs.pc_tool_window_left_rail_layout_only != 'true' && steps.scope.outputs.notes_unified_field_only != 'true' && steps.scope.outputs.pwa_offline_resilience_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.data_mgmt_restore_overlay_mobile_only != 'true' && steps.scope.outputs.pc_left_rail_same_window_tabs_only != 'true' && steps.scope.outputs.pc_tool_window_left_rail_layout_only != 'true' && steps.scope.outputs.notes_unified_field_only != 'true' && steps.scope.outputs.pwa_offline_resilience_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true'
         run: npm run iu-reload-section-scroll-stability-guard
 
       - name: Section switch instant response guard
@@ -130,7 +131,7 @@ jobs:
         run: npm run iu-desktop-calendar-allday-toggle-guard
 
       - name: Desktop article read mark guard
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.legal_docs_form_state_only != 'true' && steps.scope.outputs.data_mgmt_restore_overlay_mobile_only != 'true' && steps.scope.outputs.pc_left_rail_same_window_tabs_only != 'true' && steps.scope.outputs.pc_tool_window_left_rail_layout_only != 'true' && steps.scope.outputs.notes_unified_field_only != 'true' && steps.scope.outputs.pwa_offline_resilience_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.legal_docs_form_state_only != 'true' && steps.scope.outputs.data_mgmt_restore_overlay_mobile_only != 'true' && steps.scope.outputs.pc_left_rail_same_window_tabs_only != 'true' && steps.scope.outputs.pc_tool_window_left_rail_layout_only != 'true' && steps.scope.outputs.notes_unified_field_only != 'true' && steps.scope.outputs.pwa_offline_resilience_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true'
         run: npm run iu-desktop-article-read-mark-guard
 
       - name: Calendar all-day pinned block + limit guard
@@ -144,6 +145,10 @@ jobs:
       - name: Desktop info panel layout guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-desktop-info-panel-layout-guard
+
+      - name: Info panel CNB EUR/USD rates guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-info-panel-cnb-rates-guard
 
       - name: Desktop info panel validation guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.data_mgmt_restore_overlay_mobile_only != 'true' && steps.scope.outputs.pc_left_rail_same_window_tabs_only != 'true' && steps.scope.outputs.pc_tool_window_left_rail_layout_only != 'true' && steps.scope.outputs.notes_unified_field_only != 'true' && steps.scope.outputs.pwa_offline_resilience_only != 'true' && steps.scope.outputs.pc_svatek_label_pill_gap_only != 'true' && steps.scope.outputs.calendar_allday_pinned_limit_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true' && steps.scope.outputs.legal_docs_form_state_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true'

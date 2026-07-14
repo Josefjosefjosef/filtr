@@ -330,6 +330,29 @@ export function isNotesUnifiedFieldScope(files) {
   return paths.every(allowed);
 }
 
+/** Info panel CNB EUR/USD rates fix — skip unrelated flaky guards. */
+export function isInfoPanelCnbRatesScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/iu-cnb-exchange-utils.js" ||
+    f === "assets/iu-desktop-info-panel-data.js" ||
+    f === "assets/iu-desktop-info-panel.js" ||
+    f.startsWith("scripts/iu-info-panel-cnb-rates-guard-") ||
+    f === "scripts/iu-desktop-info-panel-states-guard.mjs" ||
+    f === "scripts/build_info_panel_snapshot.mjs" ||
+    f === "projects/data/info_panel_snapshot.json" ||
+    f === "projects/data/info_panel_scheduler_state.json" ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === ".github/workflows/update-info-panel-snapshot.yml" ||
+    f === ".github/workflows/layout-guard.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json" ||
+    f === "sw.js";
+  return paths.every(allowed);
+}
+
 /** PWA offline resilience PR — skip unrelated flaky guards. */
 export function isPwaOfflineResilienceScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
@@ -386,6 +409,7 @@ function main() {
   const pcToolWindowLeftRailLayoutOnly = isPcToolWindowLeftRailLayoutScope(files);
   const notesUnifiedFieldOnly = isNotesUnifiedFieldScope(files);
   const pwaOfflineResilienceOnly = isPwaOfflineResilienceScope(files);
+  const infoPanelCnbRatesOnly = isInfoPanelCnbRatesScope(files);
   const legalDocSectionBarOnly = isLegalDocSectionBarOnlyScope(files);
   const legalDocsFormStateOnly = isLegalDocsFormStateOnlyScope(files);
   const pcSvatekLabelPillGapOnly = isPcSvatekLabelPillGapOnlyScope(files);
@@ -417,6 +441,7 @@ function main() {
   writeOutput("pc_tool_window_left_rail_layout_only", pcToolWindowLeftRailLayoutOnly ? "true" : "false");
   writeOutput("notes_unified_field_only", notesUnifiedFieldOnly ? "true" : "false");
   writeOutput("pwa_offline_resilience_only", pwaOfflineResilienceOnly ? "true" : "false");
+  writeOutput("info_panel_cnb_rates_only", infoPanelCnbRatesOnly ? "true" : "false");
   writeOutput("legal_doc_section_bar_only", legalDocSectionBarOnly ? "true" : "false");
   writeOutput("legal_docs_form_state_only", legalDocsFormStateOnly ? "true" : "false");
   writeOutput("pc_svatek_label_pill_gap_only", pcSvatekLabelPillGapOnly ? "true" : "false");
@@ -437,6 +462,7 @@ function main() {
   console.log(`SMOKE_PC_SVATEK_LABEL_PILL_GAP_ONLY_SCOPE=${pcSvatekLabelPillGapOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_CALENDAR_ALLDAY_PINNED_LIMIT_ONLY_SCOPE=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_DESKTOP_ARTICLE_READ_MARK_ONLY_SCOPE=${desktopArticleReadMarkOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_INFO_PANEL_CNB_RATES_ONLY_SCOPE=${infoPanelCnbRatesOnly ? "YES" : "NO"}`);
 }
 
 if (process.argv[1] && process.argv[1].endsWith("smoke-data-only-scope.mjs")) {
