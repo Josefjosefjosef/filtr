@@ -98,7 +98,7 @@ jobs:
         run: npm run iu-perf-regression-guards
 
       - name: Reload / section switch / scroll stability guard
-        if: steps.scope.outputs.data_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.data_mgmt_restore_overlay_mobile_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true'
         run: npm run iu-reload-section-scroll-stability-guard
 
       - name: Section switch instant response guard
