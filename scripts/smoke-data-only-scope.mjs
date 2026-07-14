@@ -272,7 +272,8 @@ export function isDataMgmtRestoreOverlayMobileScope(files) {
     f === "scripts/smoke-data-only-scope.mjs" ||
     f === ".github/workflows/smoke.yml" ||
     f === "projects/index.html" ||
-    f === "package.json";
+    f === "package.json" ||
+    f.startsWith("projects/data/");
   return paths.every(allowed);
 }
 
