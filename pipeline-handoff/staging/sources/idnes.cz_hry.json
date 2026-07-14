@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/hry",
-  "ingestedAt": "2026-07-14T12:29:28.739717Z",
+  "ingestedAt": "2026-07-14T14:30:49.206563Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Slovenský nástupce Jagged Alliance? Ghost Justice je slibná strategie",
+      "url": "https://www.idnes.cz/hry/novinky/ghost-justice-tahova-takticka-strategie.A260714_122907_bw-novinky_oz",
+      "dt": "2026-07-14T13:00:00Z",
+      "media_raw": "iDNES / Bonusweb",
+      "media_norm": "iDNES",
+      "tokens": [
+        "alliance",
+        "ghost",
+        "jagged",
+        "justice",
+        "nástupce",
+        "slibná",
+        "slovenský",
+        "strategie"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rubric",
+      "feedId": "hry_idnes_bonusweb",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/hry",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -742,32 +767,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/hry",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "PS Plus láká v červenci na Call of Duty, For the King II a CrossCode",
-      "url": "https://www.idnes.cz/hry/novinky/ps-plus-cervenec-2026-hry-zdarma.A260702_151503_bw-novinky_oz",
-      "dt": "2026-07-02T14:10:00Z",
-      "media_raw": "iDNES / Bonusweb",
-      "media_norm": "iDNES",
-      "tokens": [
-        "call",
-        "crosscode",
-        "duty",
-        "for",
-        "king",
-        "láká",
-        "plus",
-        "the",
-        "červenci"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rubric",
-      "feedId": "hry_idnes_bonusweb",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/hry",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -778,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=bonusweb",
-      "bytes": 44475,
+      "bytes": 44126,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -815,7 +814,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-14T12:26:01Z",
+        "raw_feed_latest_publishedAt": "2026-07-14T13:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -830,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slovenský nástupce Jagged Alliance? Ghost Justice je slibná strategie",
+            "publishedAt": "2026-07-14T13:00:00Z"
+          },
           {
             "title": "Slayer v Doom: The Dark Ages - Revelations",
             "publishedAt": "2026-07-14T12:26:01Z"
@@ -857,10 +860,6 @@
           {
             "title": "Fallout: vývojem nové hry bylo pověřeno studio Obsidian",
             "publishedAt": "2026-07-11T03:00:00Z"
-          },
-          {
-            "title": "Dal tvář milionovému českému hitu, ale další práci shání jen těžko",
-            "publishedAt": "2026-07-10T22:00:00Z"
           }
         ]
       }
