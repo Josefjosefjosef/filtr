@@ -19885,6 +19885,10 @@ function buildVideoAsArticleCard(it) {
       emptyBox.style.display = "block";
       emptyBox.innerHTML = "<p>Načítám data…</p>";
     }
+    var loadDataWatchdogMs = 14000;
+    try {
+      if (typeof navigator !== "undefined" && navigator.onLine === false) loadDataWatchdogMs = 600;
+    } catch (_) {}
     var loadDataWatchdog = window.setTimeout(function () {
       try {
         if (!state.isLoadingData || state.hasLoadedData) return;
@@ -19895,7 +19899,7 @@ function buildVideoAsArticleCard(it) {
         }
         setStatus("Stav dat: offline / timeout");
       } catch (_) {}
-    }, 14000);
+    }, loadDataWatchdogMs);
     const preferredEntry = getPreferredPairForLoadData();
     const baseArticleUrls = [iuHomepageFeedDataUrl()];
     const baseVideoUrls = [iuDataUrl("videos.json")];
@@ -20706,11 +20710,35 @@ function buildVideoAsArticleCard(it) {
 
   try {
     if (window.iuNetwork && typeof window.iuNetwork.onReconnect === "function") {
-      window.iuNetwork.onReconnect(function () {
+      window.iuNetwork.onReconnect(function iuNetworkControlledReconnect() {
         try {
           if (document.visibilityState !== "visible") return;
-          if (state.isLoadingData) return;
-          loadData({ forceRefresh: true });
+        } catch (_) {}
+        try {
+          if (window.iuNetwork && typeof window.iuNetwork.hideOfflineHint === "function") {
+            window.iuNetwork.hideOfflineHint();
+          }
+        } catch (_) {}
+        try {
+          if (typeof window.iuUpdateNameday === "function") window.iuUpdateNameday();
+        } catch (_) {}
+        try {
+          if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh();
+        } catch (_) {}
+        try {
+          if (typeof window.iuWeatherHistoryReconnect === "function") window.iuWeatherHistoryReconnect();
+        } catch (_) {}
+        try {
+          if (typeof window.iuSilverCalendarSummaryRefresh === "function") window.iuSilverCalendarSummaryRefresh();
+        } catch (_) {}
+        try {
+          if (typeof window.iuSilverTasksSummaryRefresh === "function") window.iuSilverTasksSummaryRefresh();
+        } catch (_) {}
+        try {
+          if (typeof window.iuSilverWelcomeRefresh === "function") window.iuSilverWelcomeRefresh();
+        } catch (_) {}
+        try {
+          if (!state.isLoadingData) loadData({ forceRefresh: true });
         } catch (_) {}
       });
     }
@@ -21394,6 +21422,11 @@ function buildVideoAsArticleCard(it) {
 
   // Expose init for router/diagnostics (safe: function remains idempotent).
   try{ window.iuInitWeatherHistory = iuInitWeatherHistory; }catch{}
+  function iuWeatherHistoryReconnect(){
+    try{ delete window.__iu_weatherHistoryInit; }catch{ window.__iu_weatherHistoryInit = 0; }
+    try{ iuInitWeatherHistory(); }catch{}
+  }
+  try{ window.iuWeatherHistoryReconnect = iuWeatherHistoryReconnect; }catch{}
 
   function iuWeatherNorm(s){
     try{
@@ -24464,17 +24497,7 @@ function buildVideoAsArticleCard(it) {
     if (!url) return false;
     if (window.iuNetwork && typeof window.iuNetwork.openExternalUrl === "function") {
       iuMindMenuArmReturnState();
-      if (typeof navigator !== "undefined" && navigator.onLine === false) {
-        try {
-          window.iuNetwork.showOfflineHint("Tuto stránku bez internetu nelze otevřít.");
-          window.iuNetwork.restoreAppShellAfterReturn();
-        } catch (_) {}
-        return false;
-      }
-      void window.iuNetwork.openExternalUrl(url).then(function (res) {
-        if (res && res.reason === "offline") return false;
-        return !!(res && res.ok);
-      });
+      void window.iuNetwork.openExternalUrl(url);
       return true;
     }
     try {
@@ -24601,6 +24624,7 @@ function buildVideoAsArticleCard(it) {
 
   try {
     window.iuMindMenuOpenExternalUrl = iuMindMenuOpenExternalUrl;
+    window.iuMindMenuArmReturnState = iuMindMenuArmReturnState;
     window.iuMindMenuRestoreIfArmed = iuMindMenuRestoreIfArmed;
     window.iuMindMenuSyncGateFromHistory = iuMindMenuSyncGateFromHistory;
     window.iuMindMenuPushHistoryEntryIfMobile = iuMindMenuPushHistoryEntryIfMobile;
@@ -25251,6 +25275,38 @@ function buildVideoAsArticleCard(it) {
     window.__iu_daily_timer = setInterval(tick, 60000);
 
     // NAME DAY (Svátky)
+    function iuNamedayTodayKey(refDate){
+      const d = refDate || new Date();
+      const m = d.getMonth() + 1;
+      const day = d.getDate();
+      return (m < 10 ? "0" : "") + m + "-" + (day < 10 ? "0" : "") + day;
+    }
+    function iuApplyCachedNameday(refDate){
+      try {
+        const raw = localStorage.getItem("iu:nameday:cache:v1");
+        if (!raw) return false;
+        const c = JSON.parse(raw);
+        const key = iuNamedayTodayKey(refDate);
+        if (!c || c.key !== key || !c.name) return false;
+        const nm = String(c.name).trim();
+        if (!nm || nm === "—" || nm === "-") return false;
+        try{ window.__iuNamedaySuffixFromSource = nm; }catch{}
+        const ndPrefix = iuNamedayTopbarLabelPrefix(refDate || new Date());
+        if (elNameday) { elNameday.textContent = ndPrefix + nm; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
+        try{ iuSetTopbarNameday(nm); }catch{}
+        try{ iuWeatherHideEmptyNameday(); }catch{}
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
+    function iuCacheNameday(name, refDate){
+      try {
+        const nm = String(name || "").trim();
+        if (!nm || nm === "—" || nm === "-") return;
+        localStorage.setItem("iu:nameday:cache:v1", JSON.stringify({ key: iuNamedayTodayKey(refDate), name: nm, ts: Date.now() }));
+      } catch (_) {}
+    }
     function updateNameday(){
       if (!IU_ENABLE_NAMEDAY) return;
       /* P1 lazy mount (pocasi): topbar svátek must update even while the
@@ -25270,6 +25326,14 @@ function buildVideoAsArticleCard(it) {
         elNameday.setAttribute("aria-hidden","true");
       }
       try{ iuWeatherHideEmptyNameday(); }catch{}
+      iuApplyCachedNameday(new Date());
+      var offlineNow = false;
+      try { offlineNow = navigator.onLine === false; } catch (_) {}
+      if (offlineNow) {
+        try{ if (typeof window.iuSilverWelcomeRefresh === "function") window.iuSilverWelcomeRefresh(); }catch{}
+        try{ if (typeof window.iuSilverCalendarSummaryRefresh === "function") window.iuSilverCalendarSummaryRefresh(); }catch{}
+        return;
+      }
       /* Same-origin relative path (not origin + absolute) — WebKit/Playwright can reject absolute /projects/data/* with "access control checks"; mirror /filtr/projects vs /projects like iuDailyPanelInit peers. */
       var _ndUrl = "";
       try {
@@ -25311,6 +25375,7 @@ function buildVideoAsArticleCard(it) {
           var ok = Boolean(nm) && nm !== "—" && nm !== "-";
           try{ window.__iuNamedaySuffixFromSource = ok ? nm : ""; }catch{}
           if (ok) {
+            iuCacheNameday(nm, new Date());
             var ndPrefix = iuNamedayTopbarLabelPrefix(new Date());
             if (elNameday) { elNameday.textContent = ndPrefix + nm; elNameday.hidden = true; elNameday.setAttribute("aria-hidden","true"); }
             try{ iuSetTopbarNameday(nm); }catch{}
@@ -25330,6 +25395,7 @@ function buildVideoAsArticleCard(it) {
         });
     }
     updateNameday();
+    try { window.iuUpdateNameday = updateNameday; } catch (_) {}
     (function scheduleNamedayMidnight(){
       const toNext001 = function(){
         const n = new Date();
@@ -38986,16 +39052,21 @@ function buildVideoAsArticleCard(it) {
   function saveNotes(data){
     const norm = normalizeStore(data) || { schemaVersion: SCHEMA_VERSION, notes: [] };
     state.data = norm;
+    function emitNotesChanged(){
+      try{ window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: STORE_KEY } })); }catch{}
+    }
     if (!isLocalDataProtectionNoticeAccepted()) {
       void ensureLocalDataProtectionBeforeSave().then(function (ok) {
         if (!ok) return;
         try { localStorage.setItem(STORE_KEY, JSON.stringify(norm)); } catch {}
         state.lastSavedAt = Date.now();
+        emitNotesChanged();
       });
       return norm;
     }
     try{ localStorage.setItem(STORE_KEY, JSON.stringify(norm)); }catch{}
     state.lastSavedAt = Date.now();
+    emitNotesChanged();
     return norm;
   }
 
@@ -39879,6 +39950,16 @@ function buildVideoAsArticleCard(it) {
     }
     bindUi();
 
+    try {
+      window.addEventListener("iu-local-store-changed", function (ev) {
+        try {
+          if (!ev || !ev.detail || ev.detail.key !== STORE_KEY) return;
+          loadNotes();
+          if (state.overlayMounted) render();
+        } catch (_) {}
+      });
+    } catch (_) {}
+
     window.iuNotesStorage = {
       storeKey: STORE_KEY,
       schemaVersion: SCHEMA_VERSION,
@@ -39912,6 +39993,10 @@ function buildVideoAsArticleCard(it) {
           state.data.notes.unshift(sanitizeNote(n));
           sortNotesInPlace(state.data.notes);
           saveNotes(state.data);
+          try {
+            loadNotes();
+            if (state.overlayMounted) render();
+          } catch (_) {}
           return { ok: true, note: n };
         }catch(err){
           return { ok: false, reason: String(err && err.message ? err.message : err) };
@@ -39944,6 +40029,10 @@ function buildVideoAsArticleCard(it) {
           state.data.notes.unshift(sanitizeNote(n));
           sortNotesInPlace(state.data.notes);
           saveNotes(state.data);
+          try {
+            loadNotes();
+            if (state.overlayMounted) render();
+          } catch (_) {}
           return { ok: true, note: n };
         }catch(err){
           return { ok: false, reason: String(err && err.message ? err.message : err) };
@@ -40126,16 +40215,21 @@ function buildVideoAsArticleCard(it) {
   function saveTasks(data){
     const copy = { schemaVersion: SCHEMA_VERSION, tasks: (data.tasks || []).map(sanitizeTask).filter(Boolean).slice(0, MAX_TASKS) };
     state.data = copy;
+    function emitTasksChanged(){
+      try{ window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: TASKS_STORE_KEY } })); }catch{}
+    }
     if (!isLocalDataProtectionNoticeAccepted()) {
       void ensureLocalDataProtectionBeforeSave().then(function (ok) {
         if (!ok) return;
         try { localStorage.setItem(TASKS_STORE_KEY, JSON.stringify(copy)); } catch {}
+        emitTasksChanged();
       });
       return;
     }
     try{
       localStorage.setItem(TASKS_STORE_KEY, JSON.stringify(copy));
     }catch{}
+    emitTasksChanged();
   }
 
   function sortTasksInPlace(arr){
@@ -40783,6 +40877,11 @@ function buildVideoAsArticleCard(it) {
     tasks.unshift(item);
     state.data.tasks = tasks.slice(0, MAX_TASKS);
     saveTasks(state.data);
+    try {
+      loadTasks();
+      const ov = getOverlay();
+      if (ov && !ov.hidden) render();
+    } catch (_) {}
     return { ok: true, task: item };
   }
 
@@ -40794,6 +40893,16 @@ function buildVideoAsArticleCard(it) {
     /* Hydrate in-memory store from localStorage before exposing tasksGetSnapshot (summary box, etc.). */
     loadTasks();
     bindUi();
+    try {
+      window.addEventListener("iu-local-store-changed", function (ev) {
+        try {
+          if (!ev || !ev.detail || ev.detail.key !== TASKS_STORE_KEY) return;
+          loadTasks();
+          const ov = getOverlay();
+          if (ov && !ov.hidden) render();
+        } catch (_) {}
+      });
+    } catch (_) {}
     window.iuTasksService = {
       tasksCreateFromSilver: tasksCreateFromSilver,
       openOverlay: function(el){ openOverlay(el || document.activeElement); },
@@ -42045,6 +42154,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         });
       }catch{}
     }
+    try{
+      window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: STORE_KEY } }));
+    }catch{}
     try{
       queueMicrotask(()=>{
         try{
@@ -43834,6 +43946,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     await initStorage();
     await readStore();
     bindUi();
+    try {
+      window.addEventListener("iu-local-store-changed", function (ev) {
+        try {
+          if (!ev || !ev.detail || ev.detail.key !== STORE_KEY) return;
+          void readStore().then(function () {
+            try { render(); } catch (_) {}
+          });
+        } catch (_) {}
+      });
+    } catch (_) {}
     /* Eager-DOM fallback (no template in HTML): bind direct UI right away,
        same as the previous boot path. With the template this is a no-op and
        binding happens on first open (ensureCalendarOverlayMounted). */
