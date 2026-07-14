@@ -9749,10 +9749,32 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     visibility: visible !important;
     opacity: 1 !important;
   }
-  #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid{
+  #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby){
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    align-self: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid,
+  #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid{
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    justify-items: stretch !important;
+    align-self: stretch !important;
+    box-sizing: border-box !important;
+  }
+  #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile{
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    justify-self: stretch !important;
   }
   #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks .iuTile{
     min-width: 0 !important;
@@ -11298,6 +11320,12 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
   max-width: 100%;
   row-gap: var(--iu-rr-rowGap, 8px);
   column-gap: var(--iu-mm-gap, 10px);
+}
+
+.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid{
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 .accordionCol .mindMenu .iu-mmQuickLinks .iu-mmSectionHead{
@@ -12869,12 +12897,25 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   }
 }
 
-section.iu-mmQuickLinks,
 section.iu-mindmenu,
 .iu-right-rail {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+section.iu-mmQuickLinks:not(.iu-mojeSluzby) {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid {
+  align-self: stretch !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 @media (max-width: 900px){
@@ -14781,6 +14822,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
 @media (max-width: 768px) {
   body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid {
     grid-template-columns: 1fr !important;
+  }
+  #iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid,
+  #iuMobileGatePanelTools .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid .iu-mmQuickItem {
