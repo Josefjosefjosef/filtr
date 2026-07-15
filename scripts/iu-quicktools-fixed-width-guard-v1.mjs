@@ -17,7 +17,7 @@ const { chromium } = require("playwright");
 
 const CUSTOM = path.join(REPO, "assets", "iu-custom-buttons-overlay.css");
 const INDEX = path.join(REPO, "projects", "index.html");
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8905", 10);
+const PORT = parseInt(process.env.IU_GUARD_PORT || "8912", 10);
 const BASE = process.env.IU_GUARD_BASE_URL
   ? String(process.env.IU_GUARD_BASE_URL).replace(/\/?$/, "/")
   : `http://127.0.0.1:${PORT}/projects/`;
