@@ -82,42 +82,104 @@
   }
 }
 
-/* Quick-link tile grid: uniform 2-col cells (mobil/tablet ≤1024px) */
+/* Quick-link tile grid: fixed 2-col tracks — stable tile width regardless of visible count */
+#iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby),
+#iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby),
+#iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby),
+#iuMyInfoUzelToolsHost section.iu-mmQuickLinks:not(.iu-mojeSluzby),
+body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby){
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  align-self: stretch !important;
+  align-items: stretch !important;
+  box-sizing: border-box !important;
+}
+#iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid,
+#iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid,
+#iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid,
+#iuMyInfoUzelToolsHost section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid,
+body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid{
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  grid-auto-flow: row !important;
+  justify-items: stretch !important;
+  align-items: stretch !important;
+  align-self: stretch !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 100% !important;
+  flex: 0 0 100% !important;
+  box-sizing: border-box !important;
+}
+#iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
+#iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
+#iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
+#iuMyInfoUzelToolsHost section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
+body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile{
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  justify-self: stretch !important;
+  align-self: stretch !important;
+  grid-column: auto !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+#iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink,
+#iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink,
+#iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink,
+#iuMyInfoUzelToolsHost section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink,
+body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink{
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  flex: 1 1 auto !important;
+  box-sizing: border-box !important;
+}
+#iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile[hidden],
+#iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile[hidden],
+#iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile[hidden],
+#iuMyInfoUzelToolsHost section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile[hidden],
+body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile[hidden]{
+  display: none !important;
+}
+
 @media (max-width: 1024px){
-  :is(#iuMobileGatePanelTools,#iuMindMenuView) .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid,
-  body :is(.layout > aside.accordionCol,.accordionCol) .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid{
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    justify-items: stretch !important;
-    align-items: stretch !important;
+  #iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid,
+  #iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid,
+  #iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid,
+  #iuMyInfoUzelToolsHost section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid,
+  body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid{
     gap: 10px 12px !important;
     min-height: 0 !important;
   }
-  :is(#iuMobileGatePanelTools,#iuMindMenuView) .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile,
-  body :is(.layout > aside.accordionCol,.accordionCol) .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > .iuTile{
-    width: 100% !important;
-    min-width: 0 !important;
-    justify-self: stretch !important;
-    align-self: stretch !important;
-    grid-column: auto !important;
+  #iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
+  #iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
+  #iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
+  #iuMyInfoUzelToolsHost section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
+  body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile{
     height: 96px !important;
     min-height: 96px !important;
     max-height: 96px !important;
-    box-sizing: border-box !important;
-    display: flex !important;
-    flex-direction: column !important;
   }
-  :is(#iuMobileGatePanelTools,#iuMindMenuView) .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink,
-  body :is(.layout > aside.accordionCol,.accordionCol) .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink{
-    width: 100% !important;
-    height: 100% !important;
-    min-height: 100% !important;
+  #iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink,
+  #iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink,
+  #iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink,
+  #iuMyInfoUzelToolsHost section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink,
+  body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink{
     max-height: none !important;
-    flex: 1 1 auto !important;
-    box-sizing: border-box !important;
   }
-  :is(#iuMobileGatePanelTools,#iuMindMenuView) .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText,
-  body :is(.layout > aside.accordionCol,.accordionCol) .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText{
+  #iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText,
+  #iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText,
+  #iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText,
+  #iuMyInfoUzelToolsHost section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText,
+  body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText{
     width: 100% !important;
     height: auto !important;
     min-height: 0 !important;
@@ -132,8 +194,10 @@
     box-shadow: none !important;
     box-sizing: border-box !important;
   }
-  :is(#iuMobileGatePanelTools,#iuMindMenuView) .mindMenu section.iu-mmQuickLinks .iu-mmQuickGrid > .iuTile[hidden],
-  body :is(.layout > aside.accordionCol,.accordionCol) .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > .iuTile[hidden]{
-    display: none !important;
+}
+
+@media (min-width: 1025px){
+  body .accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid{
+    gap: 10px 12px !important;
   }
 }
