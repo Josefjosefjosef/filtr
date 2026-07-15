@@ -57,6 +57,15 @@ function auditStaticOpenImplementation() {
   if (!shell.includes("#newsList > #iuLeftRail")) fails.push("tool shell must show left rail");
   if (!shell.includes("iuToolWindowRightReserve")) fails.push("tool shell must reserve right column");
   if (!rail.includes("iuToolWindowMindMenuBtn")) fails.push("tool rail must inject MindMenu button");
+  if (/overflow-y:\s*auto/.test(shell) && /#newsList\s*>\s*#iuLeftRail[\s\S]*?overflow-y:\s*auto/.test(shell)) {
+    fails.push("tool shell left rail must not use overflow-y auto");
+  }
+  if (/position:\s*sticky/.test(shell) && /#newsList\s*>\s*#iuLeftRail[\s\S]*?position:\s*sticky/.test(shell)) {
+    fails.push("tool shell left rail must not use position sticky");
+  }
+  if (/max-height:\s*calc\(100vh/.test(shell) && /#newsList\s*>\s*#iuLeftRail[\s\S]*?max-height:\s*calc\(100vh/.test(shell)) {
+    fails.push("tool shell left rail must not use viewport max-height");
+  }
   return fails;
 }
 
@@ -162,7 +171,110 @@ async function scrollParentForCycle(page, cycleIndex) {
   await page.waitForTimeout(250);
 }
 
-async function assertToolTabLayout(toolTab, accent) {
+async function readHomeNavMetrics(page) {
+  return page.evaluate(() => {
+    var mindHome = document.getElementById("iuMyInfoUzelOpenBtn");
+    var firstItem = document.querySelector("#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent]");
+    var itemRect = firstItem ? firstItem.getBoundingClientRect() : null;
+    var itemStyle = firstItem ? getComputedStyle(firstItem) : null;
+    var mindRect = mindHome ? mindHome.getBoundingClientRect() : null;
+    return {
+      itemW: itemRect ? Math.round(itemRect.width) : 0,
+      itemH: itemRect ? Math.round(itemRect.height) : 0,
+      itemMinH: itemStyle ? String(itemStyle.minHeight || "") : "",
+      railW: (function () {
+        var rail = document.getElementById("iuLeftRail");
+        return rail ? Math.round(rail.getBoundingClientRect().width) : 0;
+      })(),
+      mindHomeW: mindRect ? Math.round(mindRect.width) : 0,
+    };
+  });
+}
+
+async function readToolRailMetrics(toolTab) {
+  return toolTab.evaluate(() => {
+    var rail = document.getElementById("iuLeftRail");
+    var railRect = rail ? rail.getBoundingClientRect() : null;
+    var railStyle = rail ? getComputedStyle(rail) : null;
+    var nav = rail ? rail.querySelector(".iu-leftNav") : null;
+    var navStyle = nav ? getComputedStyle(nav) : null;
+    var mindBtn = document.getElementById("iuToolWindowMindMenuBtn");
+    var mindRect = mindBtn ? mindBtn.getBoundingClientRect() : null;
+    var mindStyle = mindBtn ? getComputedStyle(mindBtn) : null;
+    var firstItem = document.querySelector("#iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent]");
+    var itemRect = firstItem ? firstItem.getBoundingClientRect() : null;
+    var itemStyle = firstItem ? getComputedStyle(firstItem) : null;
+    var stage = document.getElementById("iuCenterStage");
+    var contentTop = null;
+    if (stage) {
+      var kids = stage.querySelectorAll("[id$='View']:not([hidden])");
+      for (var i = 0; i < kids.length; i++) {
+        var view = kids[i];
+        if (getComputedStyle(view).display === "none") continue;
+        var probe = view.querySelector("h1, h2, .iuSectionHeader, .iuRadioChip, button, p, div");
+        if (probe) {
+          contentTop = Math.round(probe.getBoundingClientRect().top);
+          break;
+        }
+        contentTop = Math.round(view.getBoundingClientRect().top);
+        break;
+      }
+    }
+    return {
+      railW: railRect ? Math.round(railRect.width) : 0,
+      railOverflowY: railStyle ? String(railStyle.overflowY || "") : "",
+      railMaxHeight: railStyle ? String(railStyle.maxHeight || "") : "",
+      railPosition: railStyle ? String(railStyle.position || "") : "",
+      navOverflowY: navStyle ? String(navStyle.overflowY || "") : "",
+      mindW: mindRect ? Math.round(mindRect.width) : 0,
+      mindH: mindRect ? Math.round(mindRect.height) : 0,
+      mindTop: mindRect ? Math.round(mindRect.top) : 0,
+      mindMinH: mindStyle ? String(mindStyle.minHeight || "") : "",
+      itemW: itemRect ? Math.round(itemRect.width) : 0,
+      itemH: itemRect ? Math.round(itemRect.height) : 0,
+      itemMinH: itemStyle ? String(itemStyle.minHeight || "") : "",
+      contentTop: contentTop,
+      docScrollH: Math.max(document.body.scrollHeight || 0, document.documentElement.scrollHeight || 0),
+      viewportH: window.innerHeight || 0,
+    };
+  });
+}
+
+function assertNavParity(homeMetrics, toolMetrics, accent) {
+  if (Math.abs(homeMetrics.itemW - toolMetrics.itemW) > 4) {
+    throw new Error(`${accent}: nav item width mismatch home=${homeMetrics.itemW} tool=${toolMetrics.itemW}`);
+  }
+  if (Math.abs(homeMetrics.itemH - toolMetrics.itemH) > 8) {
+    throw new Error(`${accent}: nav item height mismatch home=${homeMetrics.itemH} tool=${toolMetrics.itemH}`);
+  }
+  if (Math.abs(homeMetrics.railW - toolMetrics.railW) > 4) {
+    throw new Error(`${accent}: rail width mismatch home=${homeMetrics.railW} tool=${toolMetrics.railW}`);
+  }
+  if (Math.abs(toolMetrics.mindW - toolMetrics.itemW) > 4) {
+    throw new Error(`${accent}: MindMenu width mismatch mind=${toolMetrics.mindW} item=${toolMetrics.itemW}`);
+  }
+  if (toolMetrics.railOverflowY === "auto" || toolMetrics.railOverflowY === "scroll") {
+    throw new Error(`${accent}: left rail has internal scroll overflow-y=${toolMetrics.railOverflowY}`);
+  }
+  if (toolMetrics.navOverflowY === "auto" || toolMetrics.navOverflowY === "scroll") {
+    throw new Error(`${accent}: left nav has internal scroll overflow-y=${toolMetrics.navOverflowY}`);
+  }
+  if (toolMetrics.railPosition === "sticky" || toolMetrics.railPosition === "fixed") {
+    throw new Error(`${accent}: left rail must not be sticky/fixed position=${toolMetrics.railPosition}`);
+  }
+  if (toolMetrics.railMaxHeight && toolMetrics.railMaxHeight !== "none" && !toolMetrics.railMaxHeight.includes("999999")) {
+    throw new Error(`${accent}: left rail max-height limited maxHeight=${toolMetrics.railMaxHeight}`);
+  }
+  if (toolMetrics.mindTop > 0 && toolMetrics.contentTop != null) {
+    if (Math.abs(toolMetrics.contentTop - toolMetrics.mindTop) > 12) {
+      throw new Error(
+        `${accent}: content top misaligned mindTop=${toolMetrics.mindTop} contentTop=${toolMetrics.contentTop}`
+      );
+    }
+  }
+}
+
+async function assertToolTabLayout(toolTab, accent, homeMetrics) {
   await toolTab.waitForSelector("#topbarWrap.topbar-new.iuTopbar", { timeout: SETTLE_MS });
   await toolTab.waitForFunction(
     () => document.documentElement.getAttribute("data-iu-tool-window") === "1",
@@ -247,22 +359,28 @@ async function assertToolTabLayout(toolTab, accent) {
   if (!layout.stageMaxWidth.includes("600")) {
     throw new Error(`${accent}: center stage max-width expected 600px got=${layout.stageMaxWidth}`);
   }
+
+  const toolMetrics = await readToolRailMetrics(toolTab);
+  if (homeMetrics) assertNavParity(homeMetrics, toolMetrics, accent);
+  if (toolMetrics.docScrollH <= toolMetrics.viewportH + 40) {
+    throw new Error(`${accent}: document should exceed viewport for scroll test h=${toolMetrics.docScrollH} vh=${toolMetrics.viewportH}`);
+  }
 }
 
-async function openLeftRailToolTab(page, accent) {
+async function openLeftRailToolTab(page, accent, homeMetrics) {
   const sel = `#iuLeftRail a[data-accent="${accent}"]`;
   await page.waitForSelector(sel, { timeout: 60000 });
   const tabPromise = page.context().waitForEvent("page", { timeout: SETTLE_MS });
   await page.locator(sel).click({ force: true, timeout: 60000 });
   const toolTab = await tabPromise;
   await toolTab.waitForLoadState("domcontentloaded", { timeout: SETTLE_MS }).catch(() => {});
-  await assertToolTabLayout(toolTab, accent);
+  await assertToolTabLayout(toolTab, accent, homeMetrics);
   return toolTab;
 }
 
-async function testExternalLinkInToolTab(page, button) {
+async function testExternalLinkInToolTab(page, button, homeMetrics) {
   if (!button.externalLink) return;
-  const toolTab = await openLeftRailToolTab(page, button.accent);
+  const toolTab = await openLeftRailToolTab(page, button.accent, homeMetrics);
   await toolTab.waitForSelector(button.externalLink, { timeout: SETTLE_MS });
   const extPromise = page.context().waitForEvent("page", { timeout: SETTLE_MS });
   await toolTab.locator(button.externalLink).first().click({ timeout: 60000 });
@@ -277,7 +395,7 @@ async function testExternalLinkInToolTab(page, button) {
   await page.waitForTimeout(120);
 }
 
-async function testButtonCycle(page, button, cycleIndex) {
+async function testButtonCycle(page, button, cycleIndex, homeMetrics) {
   await scrollParentForCycle(page, cycleIndex);
   const before = await page.evaluate(() => ({
     href: location.href,
@@ -299,7 +417,7 @@ async function testButtonCycle(page, button, cycleIndex) {
   const toolTab = await tabPromise;
 
   await toolTab.waitForLoadState("domcontentloaded", { timeout: SETTLE_MS }).catch(() => {});
-  await assertToolTabLayout(toolTab, button.accent);
+  await assertToolTabLayout(toolTab, button.accent, homeMetrics);
 
   if (cycleIndex === 2) {
     await toolTab.evaluate(() => {
@@ -359,20 +477,20 @@ async function assertHomepageUnchanged(page) {
   }
 }
 
-async function testChainTabsFromToolWindow(page) {
-  const pocasiTab = await openLeftRailToolTab(page, "pocasi");
+async function testChainTabsFromToolWindow(page, homeMetrics) {
+  const pocasiTab = await openLeftRailToolTab(page, "pocasi", homeMetrics);
   const tvPromise = pocasiTab.context().waitForEvent("page", { timeout: SETTLE_MS });
   await pocasiTab.locator('#iuLeftRail a[data-accent="tvprogram"]').click({ force: true, timeout: 60000 });
   const tvTab = await tvPromise;
   await tvTab.waitForLoadState("domcontentloaded", { timeout: SETTLE_MS }).catch(() => {});
-  await assertToolTabLayout(tvTab, "tvprogram");
+  await assertToolTabLayout(tvTab, "tvprogram", homeMetrics);
   await tvTab.close();
   await pocasiTab.close();
   await page.waitForTimeout(120);
 }
 
-async function testMindMenuInToolWindow(page) {
-  const toolTab = await openLeftRailToolTab(page, "mapy");
+async function testMindMenuInToolWindow(page, homeMetrics) {
+  const toolTab = await openLeftRailToolTab(page, "mapy", homeMetrics);
   await toolTab.waitForSelector("#iuToolWindowMindMenuBtn", { timeout: SETTLE_MS });
   await toolTab.locator("#iuToolWindowMindMenuBtn").click({ force: true, timeout: 60000 });
   await toolTab.waitForFunction(
@@ -422,13 +540,15 @@ async function main() {
     await ensureParentReady(page);
     await assertHomepageUnchanged(page);
     passes.push("homepage unchanged");
+    const homeMetrics = await readHomeNavMetrics(page);
+    passes.push("home nav metrics");
     inventory = await discoverLeftRailButtons(page);
 
     for (const button of inventory) {
       for (let c = 0; c < CYCLES_PER_BUTTON; c++) {
         const tag = `${button.accent} cycle ${c + 1}/${CYCLES_PER_BUTTON}`;
         try {
-          await testButtonCycle(page, button, c);
+          await testButtonCycle(page, button, c, homeMetrics);
           passes.push(tag);
         } catch (err) {
           failures.push(`${tag}: ${err && err.message ? err.message : String(err)}`);
@@ -442,7 +562,7 @@ async function main() {
         await testExternalLinkInToolTab(page, {
           accent: "mapy",
           externalLink: 'a.iuRadioChip[href*="google.com/maps"]',
-        });
+        }, homeMetrics);
         passes.push("mapy external link tab");
       } catch (err) {
         failures.push(`mapy external link tab: ${err && err.message ? err.message : String(err)}`);
@@ -450,14 +570,14 @@ async function main() {
     }
 
     try {
-      await testChainTabsFromToolWindow(page);
+      await testChainTabsFromToolWindow(page, homeMetrics);
       passes.push("chain tabs from tool window");
     } catch (err) {
       failures.push(`chain tabs from tool window: ${err && err.message ? err.message : String(err)}`);
     }
 
     try {
-      await testMindMenuInToolWindow(page);
+      await testMindMenuInToolWindow(page, homeMetrics);
       passes.push("mindmenu in tool window");
     } catch (err) {
       failures.push(`mindmenu in tool window: ${err && err.message ? err.message : String(err)}`);

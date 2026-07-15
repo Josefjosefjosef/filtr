@@ -344,6 +344,26 @@ export function isJrSectionHeaderLineColorScope(files) {
   return paths.every(allowed);
 }
 
+/** Quicktools fixed tile width PR — skip unrelated flaky guards. */
+export function isQuicktoolsFixedWidthScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/iu-custom-buttons-overlay.css" ||
+    f === "assets/iu-myinfouzel-premium-overlay.css" ||
+    f === "assets/app.css" ||
+    f === "assets/app.js" ||
+    f === "scripts/iu-quicktools-fixed-width-guard-v1.mjs" ||
+    f === "scripts/iu-quicktools-mobile-visibility-guard-v1.mjs" ||
+    f === "scripts/iu-custom-buttons-mobile-scroll-guard-v1.mjs" ||
+    f === "scripts/iu-desktop-article-read-mark-guard-v1.mjs" ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json";
+  return paths.every(allowed);
+}
+
 /** PWA offline resilience PR — skip unrelated flaky guards. */
 export function isPwaOfflineResilienceScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
@@ -394,6 +414,7 @@ function main() {
   const datovkaOverlayOnly = isDatovkaMobileOverlayScope(files);
   const customButtonsScrollOnly = isCustomButtonsMobileScrollScope(files);
   const quicktoolsMobileVisibilityOnly = isQuicktoolsMobileVisibilityScope(files);
+  const quicktoolsFixedWidthOnly = isQuicktoolsFixedWidthScope(files);
   const userDataBackupOnly = isUserDataBackupOnlyScope(files);
   const dataMgmtRestoreOverlayMobileOnly = isDataMgmtRestoreOverlayMobileScope(files);
   const pcLeftRailSameWindowTabsOnly = isPcLeftRailSameWindowTabsScope(files);
@@ -426,6 +447,7 @@ function main() {
   writeOutput("datovka_overlay_only", datovkaOverlayOnly ? "true" : "false");
   writeOutput("custom_buttons_scroll_only", customButtonsScrollOnly ? "true" : "false");
   writeOutput("quicktools_mobile_visibility_only", quicktoolsMobileVisibilityOnly ? "true" : "false");
+  writeOutput("quicktools_fixed_width_only", quicktoolsFixedWidthOnly ? "true" : "false");
   writeOutput("user_data_backup_only", userDataBackupOnly ? "true" : "false");
   writeOutput("data_mgmt_restore_overlay_mobile_only", dataMgmtRestoreOverlayMobileOnly ? "true" : "false");
   writeOutput("pc_left_rail_same_window_tabs_only", pcLeftRailSameWindowTabsOnly ? "true" : "false");
@@ -444,6 +466,7 @@ function main() {
   console.log(`SMOKE_DATOVKA_OVERLAY_ONLY_SCOPE=${datovkaOverlayOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_CUSTOM_BUTTONS_SCROLL_ONLY_SCOPE=${customButtonsScrollOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_QUICKTOOLS_MOBILE_VISIBILITY_ONLY_SCOPE=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_QUICKTOOLS_FIXED_WIDTH_ONLY_SCOPE=${quicktoolsFixedWidthOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_USER_DATA_BACKUP_ONLY_SCOPE=${userDataBackupOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_DATA_MGMT_RESTORE_OVERLAY_MOBILE_ONLY_SCOPE=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_PC_LEFT_RAIL_SAME_WINDOW_TABS_ONLY_SCOPE=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"}`);
