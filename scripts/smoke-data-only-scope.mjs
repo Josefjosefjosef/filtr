@@ -174,6 +174,13 @@ export function isQuicktoolsMobileVisibilityScope(files) {
 export function isDesktopArticleReadMarkOnlyScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
   if (!paths.length) return false;
+  const hasFeature = paths.some(
+    (f) =>
+      f === "assets/app.js" ||
+      f === "assets/app.css" ||
+      f === "scripts/iu-desktop-article-read-mark-guard-v1.mjs"
+  );
+  if (!hasFeature) return false;
   const allowed = (f) =>
     f === "assets/app.js" ||
     f === "assets/app.css" ||
@@ -335,6 +342,14 @@ export function isNotesUnifiedFieldScope(files) {
 export function isInfoPanelCnbRatesScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
   if (!paths.length) return false;
+  const hasFeature = paths.some(
+    (f) =>
+      f === "assets/iu-cnb-exchange-utils.js" ||
+      f.startsWith("scripts/iu-info-panel-cnb-rates-guard-") ||
+      f === "projects/data/info_panel_snapshot.json" ||
+      f === ".github/workflows/update-info-panel-snapshot.yml"
+  );
+  if (!hasFeature) return false;
   const allowed = (f) =>
     f === "assets/iu-cnb-exchange-utils.js" ||
     f === "assets/iu-desktop-info-panel-data.js" ||
@@ -359,6 +374,9 @@ export function isInfoPanelCnbRatesScope(files) {
 export function isJrSectionHeaderLineColorScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
   if (!paths.length) return false;
+  // Require JR-specific guard script — app.css alone is shared with other UI scopes.
+  const hasJrGuard = paths.some((f) => f.startsWith("scripts/iu-jr-section-header-line-guard-"));
+  if (!hasJrGuard) return false;
   const allowed = (f) =>
     f === "assets/app.css" ||
     f.startsWith("scripts/iu-jr-section-header-line-guard-") ||
@@ -373,6 +391,13 @@ export function isJrSectionHeaderLineColorScope(files) {
 export function isQuicktoolsFixedWidthScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
   if (!paths.length) return false;
+  const hasFeature = paths.some(
+    (f) =>
+      f === "scripts/iu-quicktools-fixed-width-guard-v1.mjs" ||
+      f === "assets/iu-custom-buttons-overlay.css" ||
+      f === "assets/iu-myinfouzel-premium-overlay.css"
+  );
+  if (!hasFeature) return false;
   const allowed = (f) =>
     f === "assets/iu-custom-buttons-overlay.css" ||
     f === "assets/iu-myinfouzel-premium-overlay.css" ||
