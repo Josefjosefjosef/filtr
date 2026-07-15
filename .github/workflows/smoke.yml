@@ -79,7 +79,7 @@ jobs:
         run: npm run iu-pwa-offline-resilience-guard
 
       - name: Silver mobile layout guard (checkout localhost)
-        if: steps.scope.outputs.data_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true'
         run: node scripts/run_silver_layout_guard_against_checkout.cjs
 
       - name: Weather outside-temp emphasis guard
