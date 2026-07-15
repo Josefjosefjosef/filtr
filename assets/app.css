@@ -3701,12 +3701,6 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
   border-top: none !important;
 }
 
-@media (max-width: 1024px){
-  #feed.iuTimelineFeed > article.news-card.iuTimelineItem ~ article.news-card.iuTimelineItem{
-    margin-top: 22px !important;
-  }
-}
-
 #feed.iuTimelineFeed .iuTimelineRow{
   display: grid;
   grid-template-columns: 72px 28px minmax(0, 1fr) auto;
@@ -23049,6 +23043,9 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
 @media (max-width:1024px){
   body[data-iu-fc="1"] #feed.iuTimelineFeed{
     padding-top:0;
+  }
+  #feed.iuTimelineFeed > article.news-card.iuTimelineItem ~ article.news-card.iuTimelineItem{
+    margin-top:22px !important;
   }
   #feed > picture.iu-feed-section-header-picture,
   #feed > img.iu-feed-section-header-img,
