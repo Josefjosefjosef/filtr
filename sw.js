@@ -13,8 +13,8 @@
 // 2026-06-11: P1 perf fix #7 — IU_SW_DEPLOY_RELOAD se NEposílá při první instalaci SW (cold load se načítal 2×)
 // 2026-06-28: PWA brand blue iU icons — bump app shell cache for new favicon/manifest references
 // 2026-06-29: PWA icon final tuning v54 — larger optically centered iU + infoUzel.cz short_name
-// 2026-07-14: PWA offline resilience — iu-network-connectivity-v1.js in app shell precache
-const CACHE_VERSION = "2026-07-14-pwa-offline-resilience-v1";
+// 2026-07-14: PWA offline completion — reconnect refresh, sync external opens
+const CACHE_VERSION = "2026-07-14-pwa-offline-completion-v2";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
@@ -34,6 +34,7 @@ const MAX_STALE_MS = {
   articles: 10 * 60 * 1000,
   videos: 10 * 60 * 1000,
   probe: 10 * 60 * 1000,
+  info_panel: 7 * 24 * 60 * 60 * 1000,
   meta: 30 * 60 * 1000,
 };
 const DATA_FETCH_TIMEOUT_MS = 5500;
@@ -42,6 +43,7 @@ function getDataRequestType(pathname) {
   if (pathname.includes("publishable_pool.json")) return "articles";
   if (pathname.includes("articles.json")) return "articles";
   if (pathname.includes("videos.json")) return "videos";
+  if (pathname.includes("info_panel_snapshot.json")) return "info_panel";
   if (pathname.endsWith("probe.txt")) return "probe";
   return "meta";
 }

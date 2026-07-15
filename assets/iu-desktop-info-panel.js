@@ -465,15 +465,15 @@ function syncTopGap() {
   } catch (_) {}
 }
 
-async function renderPanel() {
+async function renderPanel(options) {
   if (activeRender) return activeRender;
-  activeRender = renderPanelInner().finally(() => {
+  activeRender = renderPanelInner(options).finally(() => {
     activeRender = null;
   });
   return activeRender;
 }
 
-async function renderPanelInner() {
+async function renderPanelInner(options) {
   const desktopMount = document.getElementById(MOUNT_ID);
   const mobileMount = document.getElementById(MOBILE_MOUNT_ID);
   const desktopActive = isDesktopPanelContext();
@@ -520,7 +520,7 @@ async function renderPanelInner() {
   const desktopPanelLoading = desktopActive ? document.getElementById(PANEL_ID) : null;
   if (desktopPanelLoading) bindPanelNav(desktopPanelLoading);
 
-  const items = await loadInfoPanelItems();
+  const items = await loadInfoPanelItems(options);
 
   if (desktopActive && desktopMount && desktopMount.isConnected) {
     desktopMount.innerHTML = buildPanelHtml(items, { showNav: true, panelId: PANEL_ID });
@@ -559,16 +559,36 @@ function initInfoPanel() {
   if (window.__iuDesktopInfoPanelInit) return;
   window.__iuDesktopInfoPanelInit = 1;
 
-  const run = () => {
-    renderPanel().catch(() => {});
+  let lastPanelRefreshAt = 0;
+  const PANEL_REFRESH_MIN_MS = 5 * 60 * 1000;
+
+  const run = (options) => {
+    renderPanel(options).catch(() => {});
+  };
+
+  const schedulePanelRefresh = (force) => {
+    const now = Date.now();
+    if (!force && now - lastPanelRefreshAt < PANEL_REFRESH_MIN_MS) return;
+    lastPanelRefreshAt = now;
+    run({ forceReload: true });
   };
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", run, { once: true });
+    document.addEventListener("DOMContentLoaded", () => run(), { once: true });
   } else {
     run();
   }
-  setTimeout(run, 120);
+  setTimeout(() => run(), 120);
+
+  try {
+    window.addEventListener("online", () => schedulePanelRefresh(true));
+  } catch (_) {}
+
+  try {
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") schedulePanelRefresh(false);
+    });
+  } catch (_) {}
 
   try {
     const mqDesktop = window.matchMedia("(min-width: 1025px)");

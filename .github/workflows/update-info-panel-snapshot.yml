@@ -1,18 +1,40 @@
 name: Update info panel snapshot
 
+concurrency:
+  group: update-info-panel-snapshot
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
 on:
   schedule:
     - cron: "15 * * * *"
   workflow_dispatch:
 
-permissions:
-  contents: write
+env:
+  AUTOMATION_BRANCH: automation/update-info-panel-snapshot
+  PR_TITLE: "chore(data): refresh info panel market snapshot"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Sync main ref
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
 
       - uses: actions/setup-node@v4
         with:
@@ -21,14 +43,147 @@ jobs:
       - name: Build info panel snapshot
         run: node scripts/build_info_panel_snapshot.mjs
 
-      - name: Commit snapshot if changed
+      - name: Validate snapshot output
         run: |
-          if git diff --quiet -- projects/data/info_panel_snapshot.json projects/data/info_panel_scheduler_state.json; then
-            echo "No snapshot changes"
+          set -euo pipefail
+          test -s projects/data/info_panel_snapshot.json
+          node -e "
+          const fs=require('fs');
+          const snap=JSON.parse(fs.readFileSync('projects/data/info_panel_snapshot.json','utf8'));
+          const eur=snap.items&&snap.items.eur_czk;
+          const usd=snap.items&&snap.items.usd_czk;
+          if(!eur||typeof eur.value!=='number'){console.error('missing eur_czk');process.exit(1)}
+          if(!usd||typeof usd.value!=='number'){console.error('missing usd_czk');process.exit(1)}
+          if(!/^\d{2}\.\d{2}\.\d{4}$/.test(String(eur.updatedAt||''))){console.error('bad eur updatedAt');process.exit(1)}
+          console.log('CNB_EUR='+eur.value,'CNB_USD='+usd.value,'CNB_DATE='+eur.updatedAt);
+          "
+
+      - name: No-diff gate (snapshot files only)
+        id: no_diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet HEAD -- projects/data/info_panel_snapshot.json projects/data/info_panel_scheduler_state.json; then
+            { echo "data_changed=false"; echo "commit_skipped=true"; } >> "$GITHUB_OUTPUT"
+            echo "[DATA] No snapshot changes — skip commit/PR"
             exit 0
           fi
+          { echo "data_changed=true"; echo "commit_skipped=false"; } >> "$GITHUB_OUTPUT"
+          echo "[DATA] Snapshot changed — will open/update PR"
+
+      - name: Commit to automation branch and push
+        if: steps.no_diff.outputs.data_changed == 'true'
+        id: commit_push
+        shell: bash
+        run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          _snap="${RUNNER_TEMP}/info_panel_snapshot.json"
+          _sched="${RUNNER_TEMP}/info_panel_scheduler_state.json"
+          cp projects/data/info_panel_snapshot.json "$_snap"
+          cp projects/data/info_panel_scheduler_state.json "$_sched"
+
+          git fetch origin main
+          git checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
+          cp "$_snap" projects/data/info_panel_snapshot.json
+          cp "$_sched" projects/data/info_panel_scheduler_state.json
+
           git add projects/data/info_panel_snapshot.json projects/data/info_panel_scheduler_state.json
-          git commit -m "chore: refresh info panel market snapshot"
-          git push
+          git diff --cached --quiet && { echo "[DATA] Nothing to commit"; exit 0; }
+
+          git commit -m "${{ env.PR_TITLE }}"
+          git push --force origin "HEAD:${{ env.AUTOMATION_BRANCH }}"
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch required checks
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          REF="${{ env.AUTOMATION_BRANCH }}"
+          REPO="${{ github.repository }}"
+          gh workflow run smoke.yml --ref "$REF" --repo "$REPO"
+          gh workflow run layout-guard.yml --ref "$REF" --repo "$REPO"
+          gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
+          echo "[CHECKS] Dispatched on $REF"
+
+      - name: Create or update PR
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BRANCH="${{ env.AUTOMATION_BRANCH }}"
+          EXISTING=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number' 2>/dev/null || true)
+          if [ -n "$EXISTING" ]; then
+            echo "pr_number=$EXISTING" >> "$GITHUB_OUTPUT"
+            echo "pr_url=https://github.com/${{ github.repository }}/pull/$EXISTING" >> "$GITHUB_OUTPUT"
+            echo "[PR] Updated existing PR #$EXISTING"
+            exit 0
+          fi
+          gh pr create --base main --head "$BRANCH" \
+            --title "${{ env.PR_TITLE }}" \
+            --body "Auto-update from Update info panel snapshot workflow. Data-only change (info_panel_snapshot.json + scheduler state)."
+          NUM=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number')
+          echo "pr_number=$NUM" >> "$GITHUB_OUTPUT"
+          echo "pr_url=https://github.com/${{ github.repository }}/pull/$NUM" >> "$GITHUB_OUTPUT"
+          echo "[PR] Created PR #$NUM"
+
+      - name: Merge latest main into PR head if behind (unblock auto-merge)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          gh api --method PUT "repos/${{ github.repository }}/pulls/${NUM}/update-branch" || echo "[SYNC] update-branch skipped"
+
+      - name: Diff scope check (data-only → allow auto-merge)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
+        id: scope
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+          echo "[SCOPE] Changed files:"
+          echo "$CHANGED"
+          DATA_ONLY=true
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            case "$f" in
+              projects/data/info_panel_snapshot.json|projects/data/info_panel_scheduler_state.json) ;;
+              *) DATA_ONLY=false; break ;;
+            esac
+          done <<< "$CHANGED"
+          if [ "$DATA_ONLY" = true ]; then
+            echo "data_only=true" >> "$GITHUB_OUTPUT"
+            echo "[SCOPE] data-only — auto-merge allowed"
+          else
+            echo "data_only=false" >> "$GITHUB_OUTPUT"
+            echo "[SCOPE] non-data change — auto-merge disabled"
+          fi
+
+      - name: Enable auto-merge (squash) when data-only
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          gh pr merge "$NUM" --auto --squash
+          echo "[AUTO-MERGE] Enabled for PR #$NUM"
+
+      - name: Deploy summary
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "[DEPLOY] data_changed=${{ steps.no_diff.outputs.data_changed }}"

@@ -177,6 +177,7 @@ export function isDesktopArticleReadMarkOnlyScope(files) {
   const allowed = (f) =>
     f === "assets/app.js" ||
     f === "assets/app.css" ||
+    f === "projects/index.html" ||
     f === "scripts/iu-desktop-article-read-mark-guard-v1.mjs" ||
     f === "scripts/smoke-data-only-scope.mjs" ||
     f === ".github/workflows/smoke.yml" ||
@@ -330,6 +331,64 @@ export function isNotesUnifiedFieldScope(files) {
   return paths.every(allowed);
 }
 
+/** Info panel CNB EUR/USD rates fix — skip unrelated flaky guards. */
+export function isInfoPanelCnbRatesScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/iu-cnb-exchange-utils.js" ||
+    f === "assets/iu-desktop-info-panel-data.js" ||
+    f === "assets/iu-desktop-info-panel.js" ||
+    f.startsWith("scripts/iu-info-panel-cnb-rates-guard-") ||
+    f === "scripts/iu-info-panel-mobile-polish-guard-v1.mjs" ||
+    f === "scripts/iu-desktop-info-panel-states-guard.mjs" ||
+    f === "scripts/build_info_panel_snapshot.mjs" ||
+    f === "projects/data/info_panel_snapshot.json" ||
+    f === "projects/data/info_panel_scheduler_state.json" ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === ".github/workflows/update-info-panel-snapshot.yml" ||
+    f === ".github/workflows/layout-guard.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json" ||
+    f === "sw.js";
+  return paths.every(allowed);
+}
+
+/** Jízdní řády section header line orange accent — skip unrelated flaky guards. */
+export function isJrSectionHeaderLineColorScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/app.css" ||
+    f.startsWith("scripts/iu-jr-section-header-line-guard-") ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json";
+  return paths.every(allowed);
+}
+
+/** Quicktools fixed tile width PR — skip unrelated flaky guards. */
+export function isQuicktoolsFixedWidthScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/iu-custom-buttons-overlay.css" ||
+    f === "assets/iu-myinfouzel-premium-overlay.css" ||
+    f === "assets/app.css" ||
+    f === "assets/app.js" ||
+    f === "scripts/iu-quicktools-fixed-width-guard-v1.mjs" ||
+    f === "scripts/iu-quicktools-mobile-visibility-guard-v1.mjs" ||
+    f === "scripts/iu-custom-buttons-mobile-scroll-guard-v1.mjs" ||
+    f === "scripts/iu-desktop-article-read-mark-guard-v1.mjs" ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json";
+  return paths.every(allowed);
+}
+
 /** PWA offline resilience PR — skip unrelated flaky guards. */
 export function isPwaOfflineResilienceScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
@@ -380,12 +439,15 @@ function main() {
   const datovkaOverlayOnly = isDatovkaMobileOverlayScope(files);
   const customButtonsScrollOnly = isCustomButtonsMobileScrollScope(files);
   const quicktoolsMobileVisibilityOnly = isQuicktoolsMobileVisibilityScope(files);
+  const quicktoolsFixedWidthOnly = isQuicktoolsFixedWidthScope(files);
   const userDataBackupOnly = isUserDataBackupOnlyScope(files);
   const dataMgmtRestoreOverlayMobileOnly = isDataMgmtRestoreOverlayMobileScope(files);
   const pcLeftRailSameWindowTabsOnly = isPcLeftRailSameWindowTabsScope(files);
   const pcToolWindowLeftRailLayoutOnly = isPcToolWindowLeftRailLayoutScope(files);
   const notesUnifiedFieldOnly = isNotesUnifiedFieldScope(files);
   const pwaOfflineResilienceOnly = isPwaOfflineResilienceScope(files);
+  const infoPanelCnbRatesOnly = isInfoPanelCnbRatesScope(files);
+  const jrSectionHeaderLineColorOnly = isJrSectionHeaderLineColorScope(files);
   const legalDocSectionBarOnly = isLegalDocSectionBarOnlyScope(files);
   const legalDocsFormStateOnly = isLegalDocsFormStateOnlyScope(files);
   const pcSvatekLabelPillGapOnly = isPcSvatekLabelPillGapOnlyScope(files);
@@ -397,7 +459,7 @@ function main() {
     pipelineOnly ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
 
-  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} quicktools_mobile_visibility_only=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} data_mgmt_restore_overlay_mobile_only=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"} pc_left_rail_same_window_tabs_only=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"} pc_tool_window_left_rail_layout_only=${pcToolWindowLeftRailLayoutOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} legal_docs_form_state_only=${legalDocsFormStateOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"} desktop_article_read_mark_only=${desktopArticleReadMarkOnly ? "YES" : "NO"}`);
+  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} quicktools_mobile_visibility_only=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} data_mgmt_restore_overlay_mobile_only=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"} pc_left_rail_same_window_tabs_only=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"} pc_tool_window_left_rail_layout_only=${pcToolWindowLeftRailLayoutOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} legal_docs_form_state_only=${legalDocsFormStateOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"} desktop_article_read_mark_only=${desktopArticleReadMarkOnly ? "YES" : "NO"} jr_section_header_line_color_only=${jrSectionHeaderLineColorOnly ? "YES" : "NO"} info_panel_cnb_rates_only=${infoPanelCnbRatesOnly ? "YES" : "NO"}`);
   for (const f of files.slice(0, 20)) {
     console.log(`[smoke-data-only-scope] changed=${f}`);
   }
@@ -411,12 +473,15 @@ function main() {
   writeOutput("datovka_overlay_only", datovkaOverlayOnly ? "true" : "false");
   writeOutput("custom_buttons_scroll_only", customButtonsScrollOnly ? "true" : "false");
   writeOutput("quicktools_mobile_visibility_only", quicktoolsMobileVisibilityOnly ? "true" : "false");
+  writeOutput("quicktools_fixed_width_only", quicktoolsFixedWidthOnly ? "true" : "false");
   writeOutput("user_data_backup_only", userDataBackupOnly ? "true" : "false");
   writeOutput("data_mgmt_restore_overlay_mobile_only", dataMgmtRestoreOverlayMobileOnly ? "true" : "false");
   writeOutput("pc_left_rail_same_window_tabs_only", pcLeftRailSameWindowTabsOnly ? "true" : "false");
   writeOutput("pc_tool_window_left_rail_layout_only", pcToolWindowLeftRailLayoutOnly ? "true" : "false");
   writeOutput("notes_unified_field_only", notesUnifiedFieldOnly ? "true" : "false");
   writeOutput("pwa_offline_resilience_only", pwaOfflineResilienceOnly ? "true" : "false");
+  writeOutput("info_panel_cnb_rates_only", infoPanelCnbRatesOnly ? "true" : "false");
+  writeOutput("jr_section_header_line_color_only", jrSectionHeaderLineColorOnly ? "true" : "false");
   writeOutput("legal_doc_section_bar_only", legalDocSectionBarOnly ? "true" : "false");
   writeOutput("legal_docs_form_state_only", legalDocsFormStateOnly ? "true" : "false");
   writeOutput("pc_svatek_label_pill_gap_only", pcSvatekLabelPillGapOnly ? "true" : "false");
@@ -428,6 +493,7 @@ function main() {
   console.log(`SMOKE_DATOVKA_OVERLAY_ONLY_SCOPE=${datovkaOverlayOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_CUSTOM_BUTTONS_SCROLL_ONLY_SCOPE=${customButtonsScrollOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_QUICKTOOLS_MOBILE_VISIBILITY_ONLY_SCOPE=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_QUICKTOOLS_FIXED_WIDTH_ONLY_SCOPE=${quicktoolsFixedWidthOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_USER_DATA_BACKUP_ONLY_SCOPE=${userDataBackupOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_DATA_MGMT_RESTORE_OVERLAY_MOBILE_ONLY_SCOPE=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_PC_LEFT_RAIL_SAME_WINDOW_TABS_ONLY_SCOPE=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"}`);
@@ -437,6 +503,8 @@ function main() {
   console.log(`SMOKE_PC_SVATEK_LABEL_PILL_GAP_ONLY_SCOPE=${pcSvatekLabelPillGapOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_CALENDAR_ALLDAY_PINNED_LIMIT_ONLY_SCOPE=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_DESKTOP_ARTICLE_READ_MARK_ONLY_SCOPE=${desktopArticleReadMarkOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_INFO_PANEL_CNB_RATES_ONLY_SCOPE=${infoPanelCnbRatesOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_JR_SECTION_HEADER_LINE_COLOR_ONLY_SCOPE=${jrSectionHeaderLineColorOnly ? "YES" : "NO"}`);
 }
 
 if (process.argv[1] && process.argv[1].endsWith("smoke-data-only-scope.mjs")) {

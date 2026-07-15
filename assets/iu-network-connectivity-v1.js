@@ -77,6 +77,14 @@
     }
   }
 
+  function hideOfflineHint() {
+    var el = document.getElementById("iuNetworkOfflineHint");
+    if (!el) return;
+    try {
+      el.style.opacity = "0";
+    } catch (_) {}
+  }
+
   function showOfflineHint(message) {
     var msg = String(message || "Tuto stránku bez internetu nelze otevřít.");
     if (!document.body) return;
@@ -87,16 +95,14 @@
       el.setAttribute("role", "status");
       el.setAttribute("aria-live", "polite");
       el.style.cssText =
-        "position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:10030;max-width:min(92vw,420px);padding:10px 14px;border-radius:12px;background:rgba(20,24,32,.92);color:#fff;font:14px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.25);pointer-events:none;opacity:0;transition:opacity .2s ease;text-align:center";
+        "position:fixed;left:50%;bottom:calc(var(--iu-mobile-bottom-nav-h, 56px) + env(safe-area-inset-bottom, 0px) + 12px);transform:translateX(-50%);z-index:10030;max-width:min(92vw, 420px);padding:10px 14px;border-radius:12px;background:rgba(20,24,32,.92);color:#fff;font:14px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.25);pointer-events:none;opacity:0;transition:opacity .2s ease;text-align:center";
       document.body.appendChild(el);
     }
     el.textContent = msg;
     el.style.opacity = "1";
     clearTimeout(hintTimer);
     hintTimer = setTimeout(function () {
-      try {
-        el.style.opacity = "0";
-      } catch (_) {}
+      hideOfflineHint();
     }, 3200);
   }
 
@@ -110,21 +116,10 @@
     return false;
   }
 
-  function restoreAppShellAfterReturn() {
-    if (!shouldRestoreShell()) return;
-    try {
-      if (typeof window.iuForceCloseAllOverlays === "function") window.iuForceCloseAllOverlays();
-    } catch (_) {}
-    try {
-      if (typeof window.iuSetViewportLock === "function") window.iuSetViewportLock(false);
-    } catch (_) {}
+  function clearShellErrorUiOnly() {
     try {
       document.documentElement.classList.remove("iu-modal-open");
-      document.body.classList.remove(
-        "iu-modal-open",
-        "iu-custom-buttons-overlay-open",
-        "iu-mindmenu-open"
-      );
+      document.body.classList.remove("iu-modal-open", "iu-custom-buttons-overlay-open");
       document.documentElement.style.overflow = "";
       document.documentElement.style.pointerEvents = "";
       document.body.style.overflow = "";
@@ -139,8 +134,32 @@
         } catch (_) {}
       });
     } catch (_) {}
+  }
+
+  function invokeReturnNavigationRestore() {
+    try {
+      if (typeof window.iuMindMenuRestoreIfArmed === "function") window.iuMindMenuRestoreIfArmed();
+    } catch (_) {}
+    try {
+      if (typeof window.iuMindMenuSyncGateFromHistory === "function") window.iuMindMenuSyncGateFromHistory();
+    } catch (_) {}
+    try {
+      if (typeof window.iuMobileWebNavSyncFromHistory === "function") window.iuMobileWebNavSyncFromHistory();
+    } catch (_) {}
+  }
+
+  function restoreAppShellAfterReturn() {
+    if (!shouldRestoreShell()) return;
+    clearShellErrorUiOnly();
     try {
       sessionStorage.removeItem(EXTERNAL_ARMED_KEY);
+    } catch (_) {}
+    invokeReturnNavigationRestore();
+  }
+
+  function armExternalReturn() {
+    try {
+      sessionStorage.setItem(EXTERNAL_ARMED_KEY, "1");
     } catch (_) {}
   }
 
@@ -156,26 +175,9 @@
     return true;
   }
 
-  async function openExternalUrl(rawUrl, opts) {
-    var url = normalizeExternalUrl(rawUrl);
-    if (!url) return { ok: false, reason: "empty" };
-    var skipProbe = !!(opts && opts.skipProbe);
-    var isMailTel = /^mailto:/i.test(url) || /^tel:/i.test(url);
-    if (!skipProbe && !isMailTel) {
-      var reachable = await probeReachability();
-      if (!reachable) {
-        showOfflineHint("Tuto stránku bez internetu nelze otevřít.");
-        try {
-          sessionStorage.setItem(EXTERNAL_ARMED_KEY, "1");
-        } catch (_) {}
-        restoreAppShellAfterReturn();
-        return { ok: false, reason: "offline" };
-      }
-    }
-    restoreAppShellAfterReturn();
-    try {
-      sessionStorage.setItem(EXTERNAL_ARMED_KEY, "1");
-    } catch (_) {}
+  function openExternalSync(url, isMailTel) {
+    armExternalReturn();
+    clearShellErrorUiOnly();
     try {
       var now = Date.now();
       var last = window.__iuMindMenuLastExternalOpen || null;
@@ -197,6 +199,20 @@
       } catch (_a) {}
     }
     return { ok: !!opened, reason: opened ? "opened" : "blocked" };
+  }
+
+  function openExternalUrl(rawUrl, opts) {
+    var url = normalizeExternalUrl(rawUrl);
+    if (!url) return Promise.resolve({ ok: false, reason: "empty" });
+    var isMailTel = /^mailto:/i.test(url) || /^tel:/i.test(url);
+    if (!isMailTel && isLikelyOfflineSignal()) {
+      showOfflineHint("Tuto stránku bez internetu nelze otevřít.");
+      armExternalReturn();
+      clearShellErrorUiOnly();
+      invokeReturnNavigationRestore();
+      return Promise.resolve({ ok: false, reason: "offline" });
+    }
+    return Promise.resolve(openExternalSync(url, isMailTel));
   }
 
   async function fetchJson(url, opts) {
@@ -271,7 +287,7 @@
       reconnectTimer = setTimeout(async function () {
         var ok = await probeReachability();
         if (!ok) return;
-        showOfflineHint("Připojení bylo obnoveno.");
+        hideOfflineHint();
         reconnectCallbacks.forEach(function (fn) {
           try {
             fn();
@@ -289,8 +305,10 @@
   window.iuNetwork = {
     probeReachability: probeReachability,
     openExternalUrl: openExternalUrl,
+    openExternalSync: openExternalSync,
     restoreAppShellAfterReturn: restoreAppShellAfterReturn,
     showOfflineHint: showOfflineHint,
+    hideOfflineHint: hideOfflineHint,
     fetchJson: fetchJson,
     onReconnect: onReconnect,
     invalidateProbe: invalidateProbe,

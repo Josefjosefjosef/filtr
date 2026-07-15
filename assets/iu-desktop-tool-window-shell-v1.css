@@ -90,13 +90,17 @@ html[data-iu-tool-window="1"] #leftStickyHeader {
     margin-top: 20px !important;
     padding-top: 0 !important;
     align-self: start !important;
-    position: sticky !important;
-    top: calc(var(--topbarStackH, 72px) + 8px) !important;
-    max-height: calc(100vh - var(--topbarStackH, 72px) - 16px) !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    overscroll-behavior-y: contain !important;
-    -webkit-overflow-scrolling: touch;
+    position: static !important;
+    top: auto !important;
+    width: var(--iuLeftRailW, 136px) !important;
+    min-width: var(--iuLeftRailW, 136px) !important;
+    max-width: var(--iuLeftRailW, 136px) !important;
+    flex: 0 0 var(--iuLeftRailW, 136px) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    overscroll-behavior: auto !important;
   }
 
   html[data-iu-tool-window="1"] #newsList > #iuLeftRail .iuLeftRailSectionTitle:first-child {
@@ -106,6 +110,17 @@ html[data-iu-tool-window="1"] #leftStickyHeader {
   html[data-iu-tool-window="1"] #newsList > #iuLeftRail .iu-leftNav {
     padding-top: 0 !important;
     margin-top: 0 !important;
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+  }
+
+  html[data-iu-tool-window="1"] #newsList > #iuLeftRail .iu-leftNav .iu-leftNavItem,
+  html[data-iu-tool-window="1"] #newsList > #iuLeftRail .iuToolWindowMindMenuBtn {
+    flex-shrink: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   html[data-iu-tool-window="1"] #newsList > #iuCenterStage {
@@ -120,6 +135,34 @@ html[data-iu-tool-window="1"] #leftStickyHeader {
     box-sizing: border-box !important;
     align-self: start !important;
     scroll-margin-top: calc(var(--topbarStackH, 72px) + 4px) !important;
+  }
+
+  html[data-iu-tool-window="1"] #iuCenterStage :is(
+    #iuWeatherView,
+    #iuMapyView,
+    #iuMapsView,
+    #iuJrEmptyView,
+    #iuRadioView,
+    #iuTvOnlineView,
+    #iuTvProgramView,
+    #iuAffiliateView,
+    #iuHolidaysView
+  ) {
+    padding-top: 0 !important;
+  }
+
+  html[data-iu-tool-window="1"] #iuCenterStage :is(
+    #iuWeatherView,
+    #iuMapyView,
+    #iuMapsView,
+    #iuJrEmptyView,
+    #iuRadioView,
+    #iuTvOnlineView,
+    #iuTvProgramView,
+    #iuAffiliateView,
+    #iuHolidaysView
+  ) > :first-child {
+    margin-top: 0 !important;
   }
 
   html[data-iu-tool-window="1"] .iuToolWindowRightReserve {
@@ -140,17 +183,18 @@ html[data-iu-tool-window="1"] #leftStickyHeader {
     justify-content: center;
     gap: 6px;
     width: 100%;
-    min-height: 72px;
-    margin: 0 0 10px !important;
-    padding: 8px 6px 10px !important;
+    min-height: 74px;
+    margin: 0 0 6px !important;
+    padding: 10px !important;
     border: 0;
-    border-radius: 12px;
+    border-radius: 10px;
     background: var(--iu-brand-blue, #003cff);
     color: #fff !important;
     text-decoration: none;
     cursor: pointer;
     box-sizing: border-box;
     box-shadow: 0 8px 18px rgba(0, 60, 255, 0.18);
+    flex-shrink: 0 !important;
   }
 
   html[data-iu-tool-window="1"] .iuToolWindowMindMenuBtn:hover,
