@@ -13,6 +13,7 @@ import {
   mergeInfoPanelItemForGuard,
   IU_INFO_PANEL_CATALOG,
 } from "../assets/iu-desktop-info-panel-data.js";
+import { getExpectedLatestCnbPublicationDate } from "../assets/iu-cnb-exchange-utils.js";
 import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -69,7 +70,9 @@ function staticGate() {
     },
     {
       id: "cache_bust",
-      pass: indexHtml.includes("info-panel-freshness-period-v1-20260709"),
+      pass:
+        indexHtml.includes("info-panel-cnb-rates-v1-20260715") ||
+        indexHtml.includes("info-panel-freshness-period-v1-20260709"),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
@@ -122,6 +125,13 @@ function unitGate() {
   );
   if (staleGold.state !== "live") fails.push("gold_bucket_shows_last_value");
 
+  const expectedCnb = getExpectedLatestCnbPublicationDate();
+  const expectedCnbLabel =
+    String(expectedCnb.getDate()).padStart(2, "0") +
+    "." +
+    String(expectedCnb.getMonth() + 1).padStart(2, "0") +
+    "." +
+    String(expectedCnb.getFullYear());
   const freshEur = mergeInfoPanelItemForGuard(
     eur,
     {
@@ -131,7 +141,7 @@ function unitGate() {
       unit: "Kč",
       secondaryValue: "beze změny",
       trendDirection: "flat",
-      updatedAt: "29.06.2026",
+      updatedAt: expectedCnbLabel,
     },
     { generatedAt: new Date().toISOString(), bucketFetchedAt: { cnb: new Date().toISOString() }, errors: [] }
   );

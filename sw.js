@@ -34,6 +34,7 @@ const MAX_STALE_MS = {
   articles: 10 * 60 * 1000,
   videos: 10 * 60 * 1000,
   probe: 10 * 60 * 1000,
+  info_panel: 7 * 24 * 60 * 60 * 1000,
   meta: 30 * 60 * 1000,
 };
 const DATA_FETCH_TIMEOUT_MS = 5500;
@@ -42,6 +43,7 @@ function getDataRequestType(pathname) {
   if (pathname.includes("publishable_pool.json")) return "articles";
   if (pathname.includes("articles.json")) return "articles";
   if (pathname.includes("videos.json")) return "videos";
+  if (pathname.includes("info_panel_snapshot.json")) return "info_panel";
   if (pathname.endsWith("probe.txt")) return "probe";
   return "meta";
 }

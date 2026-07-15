@@ -7,6 +7,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { IU_INFO_PANEL_CATALOG } from "../assets/iu-desktop-info-panel-catalog.js";
+import { CNB_DAILY_RATES_URL, parseCnbRatesText } from "../assets/iu-cnb-exchange-utils.js";
 import {
   bucketContentHash,
   bucketsDueForCheck,
@@ -19,8 +20,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const OUT = path.join(ROOT, "projects", "data", "info_panel_snapshot.json");
 
-const CNB_URL =
-  "https://www.cnb.cz/cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.txt";
+const CNB_URL = CNB_DAILY_RATES_URL;
 const COINGECKO_URL =
   "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,pax-gold&vs_currencies=czk&include_24hr_change=true";
 const CSU_BASE = "https://data.csu.gov.cz/api/dotaz/v1/data/vybery";
@@ -34,25 +34,7 @@ function normalizeText(value) {
 }
 
 function parseCnbRates(text) {
-  const lines = String(text || "")
-    .split(/\r?\n/)
-    .map((l) => l.trim())
-    .filter(Boolean);
-  if (lines.length < 2) throw new Error("cnb_empty");
-  const headerDate = lines[0].split("#")[0].trim();
-  const out = { date: headerDate, EUR: null, USD: null };
-  for (let i = 2; i < lines.length; i++) {
-    const parts = lines[i].split("|");
-    if (parts.length < 5) continue;
-    const code = String(parts[3] || "").trim();
-    const raw = String(parts[4] || "").trim().replace(",", ".");
-    const val = parseFloat(raw);
-    if (!Number.isFinite(val)) continue;
-    if (code === "EUR") out.EUR = val;
-    if (code === "USD") out.USD = val;
-  }
-  if (!out.EUR || !out.USD) throw new Error("cnb_missing_codes");
-  return out;
+  return parseCnbRatesText(text);
 }
 
 function parseCsvRecords(text) {
@@ -238,8 +220,21 @@ function pushError(snapshot, id, err) {
 }
 
 async function fetchCnb(snapshot, prev) {
+  const startedAt = new Date().toISOString();
   try {
-    const cnb = parseCnbRates(await fetchText(CNB_URL));
+    const rawText = await fetchText(CNB_URL);
+    const cnb = parseCnbRates(rawText);
+    console.log(
+      "cnb_fetch_ok",
+      JSON.stringify({
+        startedAt,
+        source: CNB_URL,
+        listDate: cnb.date,
+        listNumber: cnb.listNumber,
+        eur: cnb.EUR,
+        usd: cnb.USD,
+      })
+    );
     const prevEur = prev && prev.items && prev.items.eur_czk ? prev.items.eur_czk.value : null;
     const prevUsd = prev && prev.items && prev.items.usd_czk ? prev.items.usd_czk.value : null;
     const eurTrend = trendFromDelta(prevEur != null ? cnb.EUR - prevEur : null);
@@ -264,7 +259,18 @@ async function fetchCnb(snapshot, prev) {
       isLive: true,
       legalStatus: "verified_requires_attribution",
     };
+    snapshot.errors = snapshot.errors.filter((err) => err && err.id !== "cnb");
   } catch (err) {
+    console.error(
+      "cnb_fetch_fail",
+      JSON.stringify({
+        startedAt,
+        source: CNB_URL,
+        message: String(err && err.message ? err.message : err),
+        keptPrevious:
+          !!(prev && prev.items && prev.items.eur_czk && prev.items.usd_czk),
+      })
+    );
     pushError(snapshot, "cnb", err);
   }
 }

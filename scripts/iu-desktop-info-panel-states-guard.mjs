@@ -8,6 +8,7 @@ import {
   getLoadingInfoPanelItems,
   mergeInfoPanelItemForGuard,
 } from "../assets/iu-desktop-info-panel-data.js";
+import { getExpectedLatestCnbPublicationDate } from "../assets/iu-cnb-exchange-utils.js";
 
 const failures = [];
 const lines = [];
@@ -15,6 +16,18 @@ const lines = [];
 function assert(cond, msg) {
   if (!cond) failures.push(msg);
 }
+
+function formatCzechDailyDate(date) {
+  return (
+    String(date.getDate()).padStart(2, "0") +
+    "." +
+    String(date.getMonth() + 1).padStart(2, "0") +
+    "." +
+    String(date.getFullYear())
+  );
+}
+
+const expectedCnbDateLabel = formatCzechDailyDate(getExpectedLatestCnbPublicationDate());
 
 const fuel = IU_INFO_PANEL_CATALOG.find((i) => i.id === "fuel");
 const eur = IU_INFO_PANEL_CATALOG.find((i) => i.id === "eur_czk");
@@ -53,9 +66,9 @@ const liveItem = mergeInfoPanelItemForGuard(eur, {
   unit: "Kč",
   secondaryValue: "beze změny",
   trendDirection: "flat",
-  updatedAt: "29.06.2026",
+  updatedAt: expectedCnbDateLabel,
 }, freshMeta);
-assert(liveItem.state === "live", "eur must be live with fresh snapshot");
+assert(liveItem.state === "live", "eur must be live with current CNB publication date");
 assert(liveItem.isLive === true, "eur live flag");
 
 const staleItem = mergeInfoPanelItemForGuard(eur, {
@@ -83,9 +96,9 @@ const staleBucketEur = mergeInfoPanelItemForGuard(eur, {
   unit: "Kč",
   secondaryValue: "beze změny",
   trendDirection: "flat",
-  updatedAt: staleBucketMeta.bucketFetchedAt.cnb,
+  updatedAt: "01.01.2020",
 }, staleBucketMeta);
-assert(staleBucketEur.state === "stale", "eur must be stale with old bucketFetchedAt");
+assert(staleBucketEur.state === "stale", "eur must be stale when CNB publication date is behind expected");
 
 const freshCoinMeta = {
   generatedAt: "2020-01-01T00:00:00.000Z",
@@ -130,11 +143,26 @@ const dailyEurOldFetch = mergeInfoPanelItemForGuard(
     unit: "Kč",
     secondaryValue: "beze změny",
     trendDirection: "flat",
-    updatedAt: "03.07.2026",
+    updatedAt: expectedCnbDateLabel,
   },
   { generatedAt: "2026-07-05T07:26:30.777Z", errors: [] }
 );
-assert(dailyEurOldFetch.state === "live", "daily item must stay live when publication date is within business-day grace");
+assert(dailyEurOldFetch.state === "live", "CNB item stays live when publication date matches expected even if fetch anchor is old");
+
+const dailyEurBehindExpected = mergeInfoPanelItemForGuard(
+  eur,
+  {
+    isLive: true,
+    legalStatus: "verified_requires_attribution",
+    value: 24.2,
+    unit: "Kč",
+    secondaryValue: "beze změny",
+    trendDirection: "flat",
+    updatedAt: "03.07.2026",
+  },
+  { generatedAt: new Date().toISOString(), errors: [] }
+);
+assert(dailyEurBehindExpected.state === "stale", "CNB item must be stale when publication date is behind expected");
 
 const hourlyOldFetch = mergeInfoPanelItemForGuard(
   bitcoin,
@@ -158,8 +186,24 @@ lines.push("STATE_PERIOD_FRESHNESS=PASS");
 
 const errorEur = mergeInfoPanelItemForGuard(eur, null, errorMeta);
 const errorUsd = mergeInfoPanelItemForGuard(usd, null, errorMeta);
-assert(errorEur.state === "error", "eur must be error when cnb snapshot fails");
-assert(errorUsd.state === "error", "usd must be error when cnb snapshot fails");
+assert(errorEur.state === "error", "eur must be error when cnb snapshot fails without row");
+assert(errorUsd.state === "error", "usd must be error when cnb snapshot fails without row");
+
+const preservedEur = mergeInfoPanelItemForGuard(
+  eur,
+  {
+    isLive: true,
+    legalStatus: "verified_requires_attribution",
+    value: 24.285,
+    unit: "Kč",
+    secondaryValue: "beze změny",
+    trendDirection: "flat",
+    updatedAt: expectedCnbDateLabel,
+  },
+  errorMeta
+);
+assert(preservedEur.state === "live", "eur keeps last value when cnb fetch fails but row exists");
+lines.push("STATE_CNB_FALLBACK=PASS");
 lines.push("STATE_ERROR=PASS");
 
 const fuelAfterCnbError = mergeInfoPanelItemForGuard(fuel, {

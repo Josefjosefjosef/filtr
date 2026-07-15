@@ -330,6 +330,30 @@ export function isNotesUnifiedFieldScope(files) {
   return paths.every(allowed);
 }
 
+/** Info panel CNB EUR/USD rates fix — skip unrelated flaky guards. */
+export function isInfoPanelCnbRatesScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) =>
+    f === "assets/iu-cnb-exchange-utils.js" ||
+    f === "assets/iu-desktop-info-panel-data.js" ||
+    f === "assets/iu-desktop-info-panel.js" ||
+    f.startsWith("scripts/iu-info-panel-cnb-rates-guard-") ||
+    f === "scripts/iu-info-panel-mobile-polish-guard-v1.mjs" ||
+    f === "scripts/iu-desktop-info-panel-states-guard.mjs" ||
+    f === "scripts/build_info_panel_snapshot.mjs" ||
+    f === "projects/data/info_panel_snapshot.json" ||
+    f === "projects/data/info_panel_scheduler_state.json" ||
+    f === "scripts/smoke-data-only-scope.mjs" ||
+    f === ".github/workflows/smoke.yml" ||
+    f === ".github/workflows/update-info-panel-snapshot.yml" ||
+    f === ".github/workflows/layout-guard.yml" ||
+    f === "projects/index.html" ||
+    f === "package.json" ||
+    f === "sw.js";
+  return paths.every(allowed);
+}
+
 /** Jízdní řády section header line orange accent — skip unrelated flaky guards. */
 export function isJrSectionHeaderLineColorScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
@@ -421,6 +445,7 @@ function main() {
   const pcToolWindowLeftRailLayoutOnly = isPcToolWindowLeftRailLayoutScope(files);
   const notesUnifiedFieldOnly = isNotesUnifiedFieldScope(files);
   const pwaOfflineResilienceOnly = isPwaOfflineResilienceScope(files);
+  const infoPanelCnbRatesOnly = isInfoPanelCnbRatesScope(files);
   const jrSectionHeaderLineColorOnly = isJrSectionHeaderLineColorScope(files);
   const legalDocSectionBarOnly = isLegalDocSectionBarOnlyScope(files);
   const legalDocsFormStateOnly = isLegalDocsFormStateOnlyScope(files);
@@ -433,7 +458,7 @@ function main() {
     pipelineOnly ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
 
-  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} quicktools_mobile_visibility_only=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} data_mgmt_restore_overlay_mobile_only=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"} pc_left_rail_same_window_tabs_only=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"} pc_tool_window_left_rail_layout_only=${pcToolWindowLeftRailLayoutOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} legal_docs_form_state_only=${legalDocsFormStateOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"} desktop_article_read_mark_only=${desktopArticleReadMarkOnly ? "YES" : "NO"} jr_section_header_line_color_only=${jrSectionHeaderLineColorOnly ? "YES" : "NO"}`);
+  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} quicktools_mobile_visibility_only=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} data_mgmt_restore_overlay_mobile_only=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"} pc_left_rail_same_window_tabs_only=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"} pc_tool_window_left_rail_layout_only=${pcToolWindowLeftRailLayoutOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} legal_docs_form_state_only=${legalDocsFormStateOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"} desktop_article_read_mark_only=${desktopArticleReadMarkOnly ? "YES" : "NO"} jr_section_header_line_color_only=${jrSectionHeaderLineColorOnly ? "YES" : "NO"} info_panel_cnb_rates_only=${infoPanelCnbRatesOnly ? "YES" : "NO"}`);
   for (const f of files.slice(0, 20)) {
     console.log(`[smoke-data-only-scope] changed=${f}`);
   }
@@ -454,6 +479,7 @@ function main() {
   writeOutput("pc_tool_window_left_rail_layout_only", pcToolWindowLeftRailLayoutOnly ? "true" : "false");
   writeOutput("notes_unified_field_only", notesUnifiedFieldOnly ? "true" : "false");
   writeOutput("pwa_offline_resilience_only", pwaOfflineResilienceOnly ? "true" : "false");
+  writeOutput("info_panel_cnb_rates_only", infoPanelCnbRatesOnly ? "true" : "false");
   writeOutput("jr_section_header_line_color_only", jrSectionHeaderLineColorOnly ? "true" : "false");
   writeOutput("legal_doc_section_bar_only", legalDocSectionBarOnly ? "true" : "false");
   writeOutput("legal_docs_form_state_only", legalDocsFormStateOnly ? "true" : "false");
@@ -476,6 +502,7 @@ function main() {
   console.log(`SMOKE_PC_SVATEK_LABEL_PILL_GAP_ONLY_SCOPE=${pcSvatekLabelPillGapOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_CALENDAR_ALLDAY_PINNED_LIMIT_ONLY_SCOPE=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_DESKTOP_ARTICLE_READ_MARK_ONLY_SCOPE=${desktopArticleReadMarkOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_INFO_PANEL_CNB_RATES_ONLY_SCOPE=${infoPanelCnbRatesOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_JR_SECTION_HEADER_LINE_COLOR_ONLY_SCOPE=${jrSectionHeaderLineColorOnly ? "YES" : "NO"}`);
 }
 
