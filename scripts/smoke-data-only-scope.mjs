@@ -177,6 +177,7 @@ export function isDesktopArticleReadMarkOnlyScope(files) {
   const allowed = (f) =>
     f === "assets/app.js" ||
     f === "assets/app.css" ||
+    f === "projects/index.html" ||
     f === "scripts/iu-desktop-article-read-mark-guard-v1.mjs" ||
     f === "scripts/smoke-data-only-scope.mjs" ||
     f === ".github/workflows/smoke.yml" ||
