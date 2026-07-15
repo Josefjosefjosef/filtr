@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-07-15T02:45:01.865895Z",
+  "ingestedAt": "2026-07-15T04:29:35.715736Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Hradby aut u koupališť a nádrží často blokují záchranáře, ti bojují o každý metr",
+      "url": "https://www.idnes.cz/ostrava/zpravy/zachranari-blokovani-sanitek-koupiliste-karvinske-more-parkovani.A260714_951732_ostrava-zpravy_dmk",
+      "dt": "2026-07-15T04:13:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "aut",
+        "blokují",
+        "bojují",
+        "hradby",
+        "každý",
+        "koupališť",
+        "metr",
+        "nádrží",
+        "záchranáře",
+        "často"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poslanci rozhodnou o EET a s ním o obnovení slev na studenty či školkovného",
+      "url": "https://www.idnes.cz/zpravy/domaci/snemovna-elektronicka-evidence-trzeb-obnoveni-danovych-slev-na-studenty-skolkovne.A260715_042248_domaci_kop",
+      "dt": "2026-07-15T03:42:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES",
+      "tokens": [
+        "eet",
+        "ním",
+        "obnovení",
+        "poslanci",
+        "rozhodnou",
+        "slev",
+        "studenty",
+        "školkovného"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -745,60 +797,6 @@
       "sourceDisplayWeight": 1.1,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Z vřelých vztahů musí těžit byznys, vzkázal Macinka v Izraeli. A vtipkoval o vězení",
-      "url": "https://www.idnes.cz/zpravy/domaci/macinka-izrael-cesta-byznys-sa-ar.A260714_151542_zahranicni_rtn",
-      "dt": "2026-07-14T16:10:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "byznys",
-        "izraeli",
-        "macinka",
-        "musí",
-        "těžit",
-        "vtipkoval",
-        "vzkázal",
-        "vztahů",
-        "vězení",
-        "vřelých"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nový šéf Fedu slíbil zkrotit inflaci. Centrální banku čekají změny",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/novy-sef-fed-inflace-zmeny.A260714_174559_eko-zahranicni_mikp",
-      "dt": "2026-07-14T16:02:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES",
-      "tokens": [
-        "banku",
-        "centrální",
-        "fedu",
-        "inflaci",
-        "nový",
-        "slíbil",
-        "zkrotit",
-        "změny",
-        "čekají",
-        "šéf"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -809,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50173,
+      "bytes": 49444,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -846,11 +844,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-15T02:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-15T04:13:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 8
+          "zpravy": 23,
+          "finance": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -862,6 +860,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hradby aut u koupališť a nádrží často blokují záchranáře, ti bojují o každý metr",
+            "publishedAt": "2026-07-15T04:13:00Z"
+          },
+          {
+            "title": "Poslanci rozhodnou o EET a s ním o obnovení slev na studenty či školkovného",
+            "publishedAt": "2026-07-15T03:42:00Z"
+          },
           {
             "title": "eDoklady umožňují rychlé a bezpečné ověření totožnosti. Jak to funguje?",
             "publishedAt": "2026-07-15T02:00:00Z"
@@ -885,14 +891,6 @@
           {
             "title": "Češi si ve financích věří, nejistotu ale cítí při investování, zjistil průzkum",
             "publishedAt": "2026-07-14T22:00:00Z"
-          },
-          {
-            "title": "K ISS se připojila vesmírná loď Sojuz s rusko-americkou posádkou",
-            "publishedAt": "2026-07-14T21:23:00Z"
-          },
-          {
-            "title": "Armáda USA obnovila blokádu íránských přístavů, v akci na 20 lodí a stovky letounů",
-            "publishedAt": "2026-07-14T20:50:00Z"
           }
         ]
       }

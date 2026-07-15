@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-07-15T02:45:01.865895Z",
+  "ingestedAt": "2026-07-15T04:29:35.715736Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Antonelli není nový Senna, brzdí nadšení Wolff. Potřebuje čas, varuje",
+      "url": "https://www.sport.cz/clanek/moto-formule-1-antonelli-neni-novy-senna-brzdi-nadseni-wolff-potrebuje-cas-varuje-5504667",
+      "dt": "2026-07-15T04:03:23Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "antonelli",
+        "brzdí",
+        "nadšení",
+        "nový",
+        "potřebuje",
+        "senna",
+        "varuje",
+        "wolff",
+        "čas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -734,28 +760,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Komplikace pro Spartu, klíčový záložník se zranil",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-komplikace-pro-spartu-klicovy-zaloznik-se-zranil-5504651",
-      "dt": "2026-07-14T10:43:57Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "klíčový",
-        "komplikace",
-        "spartu",
-        "zranil",
-        "záložník"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -766,7 +770,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46340,
+      "bytes": 46411,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -803,7 +807,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-14T22:18:01Z",
+        "raw_feed_latest_publishedAt": "2026-07-15T04:03:23Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -819,6 +823,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Antonelli není nový Senna, brzdí nadšení Wolff. Potřebuje čas, varuje",
+            "publishedAt": "2026-07-15T04:03:23Z"
+          },
           {
             "title": "Nadšený trenér Španělska: Jsme nejlepší na světě!",
             "publishedAt": "2026-07-14T22:18:01Z"
@@ -846,10 +854,6 @@
           {
             "title": "MS 2026: Program play off fotbalového šampionátu v USA, Kanadě a Mexiku",
             "publishedAt": "2026-06-29T03:09:00Z"
-          },
-          {
-            "title": "Tour de France 2026: Program, etapy a celá trasa legendárního cyklistického závodu",
-            "publishedAt": "2026-07-13T04:07:00Z"
           }
         ]
       }
