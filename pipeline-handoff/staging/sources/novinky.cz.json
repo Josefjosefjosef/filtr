@@ -1,11 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-07-15T21:47:40.364991Z",
+  "ingestedAt": "2026-07-15T23:32:29.386078Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "Vyplnila formulář na internetu. Podvodníci ji připravili o čtvrt milionu",
+      "url": "https://www.novinky.cz/clanek/internet-a-pc-bezpecnost-vyplnila-formular-na-internetu-podvodnici-ji-pripravili-o-ctvrt-milionu-40588234",
+      "dt": "2026-07-15T22:55:00Z",
+      "media_raw": "Novinky / Domácí",
+      "media_norm": "Novinky",
+      "tokens": [
+        "formulář",
+        "internetu",
+        "milionu",
+        "podvodníci",
+        "připravili",
+        "vyplnila",
+        "čtvrt"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_novinky_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "Stavba silnice přes Český ráj se o pár let odsouvá. Začne znovu proces EIA",
       "url": "https://www.novinky.cz/clanek/domaci-zpravy-liberecky-kraj-stavba-silnice-pres-cesky-raj-se-o-par-let-odsouva-zacne-znovu-proces-eia-40588227",
       "dt": "2026-07-15T21:30:34Z",
@@ -732,25 +756,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
+      "section": "aktualne",
       "contentType": "article",
-      "title": "Ruský ropný export po moři utrpěl prudký pokles",
-      "url": "https://www.novinky.cz/clanek/ekonomika-rusky-ropny-export-po-mori-utrpel-prudky-pokles-40588290",
-      "dt": "2026-07-15T14:15:32Z",
-      "media_raw": "Novinky / Domácí",
+      "title": "Vyplnila formulář na internetu. Podvodníci ji připravili o čtvrt milionu",
+      "url": "https://www.novinky.cz/clanek/internet-a-pc-bezpecnost-vyplnila-formular-na-internetu-podvodnici-ji-pripravili-o-ctvrt-milionu-40588234",
+      "dt": "2026-07-15T22:55:00Z",
+      "media_raw": "Novinky / Zahraniční",
       "media_norm": "Novinky",
       "tokens": [
-        "export",
-        "moři",
-        "pokles",
-        "prudký",
-        "ropný",
-        "ruský",
-        "utrpěl"
+        "formulář",
+        "internetu",
+        "milionu",
+        "podvodníci",
+        "připravili",
+        "vyplnila",
+        "čtvrt"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
-      "feedId": "zpr_novinky_domaci",
+      "feedId": "zpr_novinky_zahranicni",
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "novinky.cz",
       "_dt_serialized": true
@@ -1475,30 +1499,6 @@
         "tragickou",
         "ulice",
         "zažila"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_novinky_zahranicni",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ruský ropný export po moři utrpěl prudký pokles",
-      "url": "https://www.novinky.cz/clanek/ekonomika-rusky-ropny-export-po-mori-utrpel-prudky-pokles-40588290",
-      "dt": "2026-07-15T14:15:32Z",
-      "media_raw": "Novinky / Zahraniční",
-      "media_norm": "Novinky",
-      "tokens": [
-        "export",
-        "moři",
-        "pokles",
-        "prudký",
-        "ropný",
-        "ruský",
-        "utrpěl"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1516,7 +1516,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/domaci",
-      "bytes": 49677,
+      "bytes": 49666,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1553,11 +1553,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-15T21:30:34Z",
+        "raw_feed_latest_publishedAt": "2026-07-15T22:55:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
-          "finance": 2
+          "zpravy": 29,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1569,6 +1569,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vyplnila formulář na internetu. Podvodníci ji připravili o čtvrt milionu",
+            "publishedAt": "2026-07-15T22:55:00Z"
+          },
           {
             "title": "Stavba silnice přes Český ráj se o pár let odsouvá. Začne znovu proces EIA",
             "publishedAt": "2026-07-15T21:30:34Z"
@@ -1596,10 +1600,6 @@
           {
             "title": "Francie schválila právo na asistovanou sebevraždu",
             "publishedAt": "2026-07-15T18:22:20Z"
-          },
-          {
-            "title": "Kozorožec v italských Alpách srazil turistku z dvacetimetrového svahu. Zachraňoval ji vrtulník",
-            "publishedAt": "2026-07-15T18:32:00Z"
           }
         ]
       }
@@ -1611,7 +1611,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/zahranicni",
-      "bytes": 49677,
+      "bytes": 49666,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1648,11 +1648,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-15T21:30:34Z",
+        "raw_feed_latest_publishedAt": "2026-07-15T22:55:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
-          "finance": 2
+          "zpravy": 29,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1664,6 +1664,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vyplnila formulář na internetu. Podvodníci ji připravili o čtvrt milionu",
+            "publishedAt": "2026-07-15T22:55:00Z"
+          },
           {
             "title": "Stavba silnice přes Český ráj se o pár let odsouvá. Začne znovu proces EIA",
             "publishedAt": "2026-07-15T21:30:34Z"
@@ -1691,10 +1695,6 @@
           {
             "title": "Francie schválila právo na asistovanou sebevraždu",
             "publishedAt": "2026-07-15T18:22:20Z"
-          },
-          {
-            "title": "Kozorožec v italských Alpách srazil turistku z dvacetimetrového svahu. Zachraňoval ji vrtulník",
-            "publishedAt": "2026-07-15T18:32:00Z"
           }
         ]
       }
