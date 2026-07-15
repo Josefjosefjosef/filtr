@@ -32,7 +32,17 @@ function auditStatic() {
   if (!netJs.includes("openExternalUrl")) fails.push("network:missing openExternalUrl");
   if (!netJs.includes("restoreAppShellAfterReturn")) fails.push("network:missing restoreAppShellAfterReturn");
   if (!netJs.includes("probeReachability")) fails.push("network:missing probeReachability");
+  if (!netJs.includes("hideOfflineHint")) fails.push("network:missing hideOfflineHint");
+  if (!netJs.includes("openExternalSync")) fails.push("network:missing openExternalSync");
   if (!netJs.includes("AbortController")) fails.push("network:missing AbortController usage in module");
+  if (!netJs.includes("--iu-mobile-bottom-nav-h")) fails.push("network:offline hint missing bottom nav offset");
+  if (netJs.includes('"iu-mindmenu-open"')) fails.push("network:restore must not remove iu-mindmenu-open");
+  if (!appJs.includes("iuUpdateNameday")) fails.push("app:missing iuUpdateNameday export");
+  if (!appJs.includes("iu:nameday:cache:v1")) fails.push("app:missing nameday cache");
+  if (!appJs.includes("loadDataWatchdogMs")) fails.push("app:missing loadDataWatchdogMs offline fast path");
+  if (!appJs.includes("iuWeatherHistoryReconnect")) fails.push("app:missing iuWeatherHistoryReconnect");
+  if (!appJs.includes("iu-local-store-changed")) fails.push("app:missing local store changed event");
+  if (!appJs.includes("iuNetworkControlledReconnect")) fails.push("app:missing controlled reconnect");
   if (!appJs.includes("iuNetwork.openExternalUrl")) fails.push("app:missing iuNetwork integration");
   if (!appJs.includes("loadDataWatchdog")) fails.push("app:missing loadDataWatchdog");
   if (!html.includes("iu-network-connectivity-v1.js")) fails.push("index:missing network script");
