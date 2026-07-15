@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-07-15T04:29:35.715736Z",
+  "ingestedAt": "2026-07-15T06:10:51.641470Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Konec závislosti na Číně a Indii? EU schvaluje zásadní normu, která ochrání zdraví pacientů",
+      "url": "https://www.zdravotnickydenik.cz/2026/07/zavislost-na-cine-a-indii-eu-akt-o-kritickych-lecivech/",
+      "dt": "2026-07-15T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "indii",
+        "konec",
+        "normu",
+        "ochrání",
+        "pacientů",
+        "schvaluje",
+        "zdraví",
+        "zásadní",
+        "závislosti",
+        "číně"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -250,32 +277,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Padesátkrát více jedu na hmyz, než je limit. Inspekce odhalila nebezpečný špenát",
-      "url": "https://www.zdravotnickydenik.cz/2026/07/padesatkrat-vice-jedu-na-hmyz-nez-je-limit-inspekce-odhalila-nebezpecny-spenat/",
-      "dt": "2026-07-14T09:22:06Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "hmyz",
-        "inspekce",
-        "jedu",
-        "limit",
-        "nebezpečný",
-        "než",
-        "odhalila",
-        "padesátkrát",
-        "špenát"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -286,7 +287,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 77538,
+      "bytes": 80017,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -323,7 +324,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-07-14T15:08:23Z",
+        "raw_feed_latest_publishedAt": "2026-07-15T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -338,6 +339,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec závislosti na Číně a Indii? EU schvaluje zásadní normu, která ochrání zdraví pacientů",
+            "publishedAt": "2026-07-15T05:00:00Z"
+          },
           {
             "title": "Výpadek kritického léku na rakovinu prsu v Česku: Ministerstvo oznámilo, kdy se vrátí do lékáren",
             "publishedAt": "2026-07-14T15:08:23Z"
@@ -365,10 +370,6 @@
           {
             "title": "Máte na zahradě bazén? V parných dnech riskujete zdraví, experti radí, jak zkontrolovat vodu",
             "publishedAt": "2026-07-14T10:25:46Z"
-          },
-          {
-            "title": "Útok hackerů ochromil péči o pacienty. Nymburská nemocnice teď ukázala astronomický účet",
-            "publishedAt": "2026-07-14T09:53:54Z"
           }
         ]
       }
