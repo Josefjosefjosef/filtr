@@ -8493,6 +8493,7 @@ try {
 
   function iuArticleActionsEnsureFeedBound() {
     try {
+      // Document-level capture: bind once even if #feed appears later (PR #7498).
       if (window.__iuArticleActionsFeedDocBound) return;
       window.__iuArticleActionsFeedDocBound = 1;
       document.addEventListener("pointerdown", iuArticleActionsOnFeedTitlePointerDown, true);

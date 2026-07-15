@@ -174,6 +174,13 @@ export function isQuicktoolsMobileVisibilityScope(files) {
 export function isDesktopArticleReadMarkOnlyScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
   if (!paths.length) return false;
+  const hasFeature = paths.some(
+    (f) =>
+      f === "assets/app.js" ||
+      f === "assets/app.css" ||
+      f === "scripts/iu-desktop-article-read-mark-guard-v1.mjs"
+  );
+  if (!hasFeature) return false;
   const allowed = (f) =>
     f === "assets/app.js" ||
     f === "assets/app.css" ||
