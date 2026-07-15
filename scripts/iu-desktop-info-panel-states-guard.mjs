@@ -8,6 +8,7 @@ import {
   getLoadingInfoPanelItems,
   mergeInfoPanelItemForGuard,
 } from "../assets/iu-desktop-info-panel-data.js";
+import { getExpectedLatestCnbPublicationDate } from "../assets/iu-cnb-exchange-utils.js";
 
 const failures = [];
 const lines = [];
@@ -15,6 +16,18 @@ const lines = [];
 function assert(cond, msg) {
   if (!cond) failures.push(msg);
 }
+
+function formatCzechDailyDate(date) {
+  return (
+    String(date.getDate()).padStart(2, "0") +
+    "." +
+    String(date.getMonth() + 1).padStart(2, "0") +
+    "." +
+    String(date.getFullYear())
+  );
+}
+
+const expectedCnbDateLabel = formatCzechDailyDate(getExpectedLatestCnbPublicationDate());
 
 const fuel = IU_INFO_PANEL_CATALOG.find((i) => i.id === "fuel");
 const eur = IU_INFO_PANEL_CATALOG.find((i) => i.id === "eur_czk");
@@ -53,7 +66,7 @@ const liveItem = mergeInfoPanelItemForGuard(eur, {
   unit: "Kč",
   secondaryValue: "beze změny",
   trendDirection: "flat",
-  updatedAt: "14.07.2026",
+  updatedAt: expectedCnbDateLabel,
 }, freshMeta);
 assert(liveItem.state === "live", "eur must be live with current CNB publication date");
 assert(liveItem.isLive === true, "eur live flag");
@@ -130,7 +143,7 @@ const dailyEurOldFetch = mergeInfoPanelItemForGuard(
     unit: "Kč",
     secondaryValue: "beze změny",
     trendDirection: "flat",
-    updatedAt: "14.07.2026",
+    updatedAt: expectedCnbDateLabel,
   },
   { generatedAt: "2026-07-05T07:26:30.777Z", errors: [] }
 );
@@ -185,7 +198,7 @@ const preservedEur = mergeInfoPanelItemForGuard(
     unit: "Kč",
     secondaryValue: "beze změny",
     trendDirection: "flat",
-    updatedAt: "14.07.2026",
+    updatedAt: expectedCnbDateLabel,
   },
   errorMeta
 );

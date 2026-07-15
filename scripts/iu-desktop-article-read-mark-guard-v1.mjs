@@ -58,6 +58,23 @@ function buildUrl(params) {
   return qs ? BASE + (BASE.includes("?") ? "&" : "?") + qs : BASE;
 }
 
+async function installFeedTitleClickGuard(page) {
+  await page.evaluate(() => {
+    if (window.__iuGuardFeedTitleClickGuard) return;
+    window.__iuGuardFeedTitleClickGuard = 1;
+    document.addEventListener(
+      "click",
+      (e) => {
+        const t = e.target;
+        const el = t && t.nodeType === 3 && t.parentElement ? t.parentElement : t;
+        if (!el || typeof el.closest !== "function") return;
+        const a = el.closest("#feed a.news-titleLink");
+        if (a) e.preventDefault();
+      },
+      true
+    );
+  });
+}
 async function waitFeedArticles(page, timeoutMs) {
   await page.waitForFunction(
     () => {
@@ -73,7 +90,7 @@ async function waitFeedArticles(page, timeoutMs) {
 
 async function findUnreadArticle(page) {
   return page.evaluate(() => {
-    const arts = document.querySelectorAll("article.iuTimelineItem[data-feed-type='article']");
+    const arts = document.getElementById("feed").querySelectorAll("article.iuTimelineItem[data-feed-type='article']");
     for (let i = 0; i < arts.length; i++) {
       const art = arts[i];
       if (art.querySelector(".iuTimelineReadMark")) continue;
@@ -87,10 +104,16 @@ async function findUnreadArticle(page) {
 
 async function readArticleState(page, articleId) {
   return page.evaluate((id) => {
-    const art = document.querySelector(
-      'article.iuTimelineItem[data-feed-type="article"][data-iu-article-id="' + id + '"]'
-    );
+    const arts = document.getElementById("feed").querySelectorAll('article.iuTimelineItem[data-feed-type="article"]');
+    let art = null;
+    for (let i = 0; i < arts.length; i++) {
+      if (String(arts[i].getAttribute("data-iu-article-id") || "").trim() === id) {
+        art = arts[i];
+        break;
+      }
+    }
     const mark = art ? art.querySelector(".iuTimelineReadMark") : null;
+    const clock = art ? art.querySelector(".iuTimelineClock") : null;
     let stored = false;
     try {
       const raw = localStorage.getItem("iuReadArticles_v1");
@@ -99,6 +122,7 @@ async function readArticleState(page, articleId) {
     } catch (_) {}
     const cs = mark ? getComputedStyle(mark) : null;
     const rect = mark ? mark.getBoundingClientRect() : null;
+    const clockRect = clock ? clock.getBoundingClientRect() : null;
     const markVisible =
       !!mark &&
       mark.textContent.trim() === "✓" &&
@@ -109,18 +133,24 @@ async function readArticleState(page, articleId) {
       !!rect &&
       rect.width > 0 &&
       rect.height > 0;
+    const markUnderTime =
+      !!rect &&
+      !!clockRect &&
+      rect.top >= clockRect.bottom - 1 &&
+      rect.left <= clockRect.right + 2;
     return {
       hasArt: !!art,
       hasReadClass: !!(art && art.classList.contains("iuTimelineItem--read")),
       markVisible,
+      markUnderTime,
       stored,
     };
   }, articleId);
 }
 
 async function markFirstUnreadArticleByTitleClick(page) {
-  const id = await page.evaluate(() => {
-    const arts = document.querySelectorAll("article.iuTimelineItem[data-feed-type='article']");
+  return page.evaluate(() => {
+    const arts = document.getElementById("feed").querySelectorAll("article.iuTimelineItem[data-feed-type='article']");
     for (let i = 0; i < arts.length; i++) {
       const art = arts[i];
       if (art.querySelector(".iuTimelineReadMark")) continue;
@@ -128,26 +158,27 @@ async function markFirstUnreadArticleByTitleClick(page) {
       if (!articleId) continue;
       const link = art.querySelector(".news-titleLink");
       if (!link) continue;
-      link.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+      link.dispatchEvent(
+        new PointerEvent("pointerdown", { bubbles: true, cancelable: true, view: window, composed: true })
+      );
       return articleId;
     }
     return null;
   });
-  if (!id) return null;
-  return id;
 }
 
 async function testDesktopReadMark(page) {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto(buildUrl(), { waitUntil: "domcontentloaded", timeout: 120000 });
   await ensureGuardLocalDataProtection(page);
+  await installFeedTitleClickGuard(page);
   await waitFeedArticles(page, 90000);
   const articleId = await markFirstUnreadArticleByTitleClick(page);
   if (!articleId) throw new Error("desktop: no unread article found");
-  await page.waitForTimeout(300);
   const st = await readArticleState(page, articleId);
   if (!st.hasArt) throw new Error("desktop: article node missing after click");
   if (!st.markVisible) throw new Error("desktop: green read mark not visible");
+  if (!st.markUnderTime) throw new Error("desktop: read mark not under article time");
   if (!st.hasReadClass) throw new Error("desktop: iuTimelineItem--read class missing");
   if (!st.stored) throw new Error("desktop: article id not stored in localStorage");
   await page.reload({ waitUntil: "domcontentloaded", timeout: 120000 });
@@ -161,6 +192,7 @@ async function testDesktopSaveDoesNotMark(page) {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto(buildUrl(), { waitUntil: "domcontentloaded", timeout: 120000 });
   await ensureGuardLocalDataProtection(page);
+  await installFeedTitleClickGuard(page);
   await waitFeedArticles(page, 90000);
   const target = await findUnreadArticle(page);
   if (!target) throw new Error("desktop-save: no unread article found");
@@ -177,46 +209,93 @@ async function testDesktopSaveDoesNotMark(page) {
 
 async function testMobileReadMarkRegression(page) {
   await page.setViewportSize({ width: 768, height: 900 });
-  await page.goto(buildUrl(), { waitUntil: "domcontentloaded", timeout: 120000 });
+  await page.goto(buildUrl({ section: "media", topic: "zpravy" }), { waitUntil: "domcontentloaded", timeout: 120000 });
   await ensureGuardLocalDataProtection(page);
+  await installFeedTitleClickGuard(page);
   await waitFeedArticles(page, 90000);
-  const result = await page.evaluate(() => {
-    const arts = document.querySelectorAll("article.iuTimelineItem[data-feed-type='article']");
-    for (let i = 0; i < arts.length; i++) {
-      const art = arts[i];
-      if (art.querySelector(".iuTimelineReadMark")) continue;
-      const articleId = String(art.getAttribute("data-iu-article-id") || "").trim();
-      if (!articleId) continue;
-      const link = art.querySelector(".news-titleLink");
-      if (!link) continue;
-      link.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
-      const artAfter = document.querySelector(
-        'article.iuTimelineItem[data-feed-type="article"][data-iu-article-id="' + articleId + '"]'
-      );
-      const mark = artAfter ? artAfter.querySelector(".iuTimelineReadMark") : null;
-      const cs = mark ? getComputedStyle(mark) : null;
-      let stored = false;
-      try {
-        const raw = localStorage.getItem("iuReadArticles_v1");
-        const list = raw ? JSON.parse(raw) : [];
-        stored = Array.isArray(list) && list.indexOf(articleId) >= 0;
-      } catch (_) {}
-      return {
-        articleId,
-        hasReadClass: !!(artAfter && artAfter.classList.contains("iuTimelineItem--read")),
-        hasMark: !!mark,
-        markDisplay: cs ? cs.display : null,
-        stored,
-      };
-    }
-    return { error: "no unread article" };
-  });
-  if (result.error) throw new Error("mobile: " + result.error);
+  const articleId = await markFirstUnreadArticleByTitleClick(page);
+  if (!articleId) throw new Error("mobile: no unread article found");
+  const result = await readArticleState(page, articleId);
   if (!result.hasReadClass) throw new Error("mobile regression: iuTimelineItem--read missing");
-  if (!result.hasMark) throw new Error("mobile regression: read mark node missing");
-  if (result.markDisplay === "none") throw new Error("mobile regression: read mark display none");
+  if (!result.markVisible) throw new Error("mobile regression: read mark not visible");
   if (!result.stored) throw new Error("mobile regression: article id not stored");
   return "mobile-read-mark";
+}
+
+async function measureArticleGapPx(page) {
+  return page.evaluate(() => {
+    const feed = document.getElementById("feed");
+    if (!feed) return null;
+    const arts = feed.querySelectorAll("article.iuTimelineItem[data-feed-type='article']");
+    if (arts.length < 2) return null;
+    const mt = parseFloat(getComputedStyle(arts[1]).marginTop);
+    if (!Number.isFinite(mt)) return null;
+    return Math.round(mt);
+  });
+}
+
+async function testMobileArticleGap22(page) {
+  await page.setViewportSize({ width: 768, height: 900 });
+  await page.goto(buildUrl({ section: "media", topic: "zpravy" }), { waitUntil: "domcontentloaded", timeout: 120000 });
+  await ensureGuardLocalDataProtection(page);
+  await waitFeedArticles(page, 90000);
+  const gap = await measureArticleGapPx(page);
+  if (gap == null) throw new Error("mobile-gap: fewer than 2 articles");
+  if (Math.abs(gap - 22) > 1) throw new Error("mobile-gap: expected 22px got " + gap);
+  return "mobile-gap-22";
+}
+
+async function testTabletArticleGap22(page) {
+  await page.setViewportSize({ width: 960, height: 900 });
+  await page.goto(buildUrl({ section: "media", topic: "zpravy" }), { waitUntil: "domcontentloaded", timeout: 120000 });
+  await ensureGuardLocalDataProtection(page);
+  await waitFeedArticles(page, 90000);
+  const gap = await measureArticleGapPx(page);
+  if (gap == null) throw new Error("tablet-gap: fewer than 2 articles");
+  if (Math.abs(gap - 22) > 1) throw new Error("tablet-gap: expected 22px got " + gap);
+  return "tablet-gap-22";
+}
+
+async function testDesktopArticleGapUnchanged(page) {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto(buildUrl({ section: "media", topic: "zpravy" }), { waitUntil: "domcontentloaded", timeout: 120000 });
+  await ensureGuardLocalDataProtection(page);
+  await waitFeedArticles(page, 90000);
+  const gap = await measureArticleGapPx(page);
+  if (gap == null) throw new Error("desktop-gap: fewer than 2 articles");
+  if (Math.abs(gap - 0) > 1) throw new Error("desktop-gap: expected unchanged 0px sibling margin got " + gap);
+  return "desktop-gap-unchanged";
+}
+
+async function testReturnKeepsScrollAndSection(page) {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  const url = buildUrl({ section: "media", topic: "zpravy" });
+  await page.goto(url, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await ensureGuardLocalDataProtection(page);
+  await waitFeedArticles(page, 90000);
+  await page.evaluate(() => {
+    window.scrollTo(0, 900);
+    if (typeof window.iuScrollRestoreSaveNow === "function") window.iuScrollRestoreSaveNow();
+  });
+  const before = await page.evaluate(() => ({
+    y: Math.round(window.scrollY || 0),
+    section: new URLSearchParams(location.search).get("section"),
+    count: document.querySelectorAll("#feed article.iuTimelineItem[data-feed-type='article']").length,
+  }));
+  await page.evaluate(() => {
+    window.scrollTo(0, 0);
+    if (typeof window.iuScrollRestoreRequest === "function") window.iuScrollRestoreRequest();
+  });
+  await page.waitForTimeout(800);
+  const after = await page.evaluate(() => ({
+    y: Math.round(window.scrollY || 0),
+    section: new URLSearchParams(location.search).get("section"),
+    count: document.querySelectorAll("#feed article.iuTimelineItem[data-feed-type='article']").length,
+  }));
+  if (after.section !== before.section) throw new Error("return: section changed");
+  if (after.count < before.count) throw new Error("return: article count dropped");
+  if (Math.abs(after.y - before.y) > 24) throw new Error("return: scroll position lost");
+  return "return-scroll-section";
 }
 
 async function main() {
@@ -236,7 +315,15 @@ async function main() {
   const failures = [];
 
   try {
-    for (const fn of [testDesktopReadMark, testDesktopSaveDoesNotMark, testMobileReadMarkRegression]) {
+    for (const fn of [
+      testDesktopReadMark,
+      testDesktopSaveDoesNotMark,
+      testMobileReadMarkRegression,
+      testMobileArticleGap22,
+      testTabletArticleGap22,
+      testDesktopArticleGapUnchanged,
+      testReturnKeepsScrollAndSection,
+    ]) {
       const ctx = await browser.newContext();
       await installProofGuardNetworkStubs(ctx, ignorable);
       await installLocalDataProtectionAccepted(ctx);

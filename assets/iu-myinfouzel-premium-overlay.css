@@ -372,11 +372,33 @@
     opacity: 0.35;
   }
 
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks:not(.iu-mojeSluzby) {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
   .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px 12px;
     margin-top: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    justify-items: stretch !important;
+    align-self: stretch !important;
+    box-sizing: border-box !important;
+  }
+
+  .iuMyInfoUzelToolsHost section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    justify-self: stretch !important;
   }
 
   .iuMyInfoUzelToolsHost section.iu-mmQuickLinks .iu-mmQuickGrid,
