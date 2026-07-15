@@ -3699,6 +3699,7 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
 
 #feed.iuTimelineFeed > article.news-card.iuTimelineItem ~ article.news-card.iuTimelineItem{
   border-top: none !important;
+  margin-top: var(--iu-tl-item-gap, 0px) !important;
 }
 
 #feed.iuTimelineFeed .iuTimelineRow{
@@ -23044,9 +23045,6 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
   body[data-iu-fc="1"] #feed.iuTimelineFeed{
     padding-top:0;
   }
-  #feed.iuTimelineFeed > article.news-card.iuTimelineItem ~ article.news-card.iuTimelineItem{
-    margin-top:22px !important;
-  }
   #feed > picture.iu-feed-section-header-picture,
   #feed > img.iu-feed-section-header-img,
   #feed > .iu-feed-section-header-video-wrap{
@@ -23062,6 +23060,7 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
   }
   #feed.iuTimelineFeed{
     --iu-tl-actions-gap: 5px;
+    --iu-tl-item-gap: 22px;
     --iu-tl-action-icon-gap: 5px;
     --iu-tl-action-min: 36px;
     --iu-tl-action-save-h: 32px;
