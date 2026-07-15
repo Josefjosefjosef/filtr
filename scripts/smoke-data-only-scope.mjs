@@ -336,9 +336,13 @@ export function isQuicktoolsFixedWidthScope(files) {
   if (!paths.length) return false;
   const allowed = (f) =>
     f === "assets/iu-custom-buttons-overlay.css" ||
+    f === "assets/iu-myinfouzel-premium-overlay.css" ||
+    f === "assets/app.css" ||
     f === "assets/app.js" ||
     f === "scripts/iu-quicktools-fixed-width-guard-v1.mjs" ||
     f === "scripts/iu-quicktools-mobile-visibility-guard-v1.mjs" ||
+    f === "scripts/iu-custom-buttons-mobile-scroll-guard-v1.mjs" ||
+    f === "scripts/iu-desktop-article-read-mark-guard-v1.mjs" ||
     f === "scripts/smoke-data-only-scope.mjs" ||
     f === ".github/workflows/smoke.yml" ||
     f === "projects/index.html" ||
