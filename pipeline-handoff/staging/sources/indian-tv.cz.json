@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-07-15T13:45:58.613648Z",
+  "ingestedAt": "2026-07-15T15:56:13.383084Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Kdyby ADHD byla hra, byl by to Denshattack! - INDIAN",
+      "url": "https://indian-tv.cz/recenze/kdyby-adhd-byla-hra-byl-by-to-denshattack-s8clzv",
+      "dt": "2026-07-15T15:29:58Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "adhd",
+        "denshattack",
+        "hra",
+        "indian",
+        "kdyby"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1111,36 +1133,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Take-Two Interactive příští měsíc zveřejní finanční výsledky. Dojde i na Grand Theft Auto VI? - INDIAN",
-      "url": "https://indian-tv.cz/clanek/take-two-interactive-pristi-mesic-zverejni-financni-t7yvsq",
-      "dt": "2026-07-10T15:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "auto",
-        "dojde",
-        "finanční",
-        "grand",
-        "indian",
-        "interactive",
-        "měsíc",
-        "příští",
-        "take",
-        "theft",
-        "two",
-        "výsledky",
-        "zveřejní"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1151,7 +1143,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 205467,
+      "bytes": 204208,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1188,7 +1180,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-15T12:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-15T15:29:58Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1203,6 +1195,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdyby ADHD byla hra, byl by to Denshattack! - INDIAN",
+            "publishedAt": "2026-07-15T15:29:58Z"
+          },
           {
             "title": "Resident Evil Requiem má dostat velké příběhové DLC. Dorazit má až po remaku Veronicy - INDIAN",
             "publishedAt": "2026-07-15T12:40:00Z"
@@ -1230,10 +1226,6 @@
           {
             "title": "Microsoft se snažil získat značku Ryse, ale Crytek odmítl. Práce na dalších dílech byly zastaveny - INDIAN",
             "publishedAt": "2026-07-15T06:25:00Z"
-          },
-          {
-            "title": "Více Janů, více problémů - recenze The Alters: Last Variable - INDIAN",
-            "publishedAt": "2026-07-14T14:44:21Z"
           }
         ]
       }
