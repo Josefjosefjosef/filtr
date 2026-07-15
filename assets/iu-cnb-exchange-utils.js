@@ -74,9 +74,9 @@ function czechFixedHolidayKeys(year) {
   return new Set([
     year * 10000 + 101,
     year * 10000 + 501,
-    year * 10000 + 805,
+    year * 10000 + 508,
     year * 10000 + 705,
-    year * 10000 + 607,
+    year * 10000 + 706,
     year * 10000 + 928,
     year * 10000 + 1028,
     year * 10000 + 1117,

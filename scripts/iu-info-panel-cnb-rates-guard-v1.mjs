@@ -11,6 +11,7 @@ import {
   getExpectedLatestCnbPublicationDate,
   isCnbPublicationBehindExpected,
   isCnbNonTradingDay,
+  isCzechBankHoliday,
   parseCnbRatesText,
   parseCzechDailyDate,
 } from "../assets/iu-cnb-exchange-utils.js";
@@ -85,6 +86,17 @@ async function main() {
 
   assert(!isCnbPublicationBehindExpected(parsed.date), "live CNB date must not be behind expected");
   assert(isCnbPublicationBehindExpected("03.07.2026", new Date(2026, 6, 15, 12, 0, 0, 0)), "old July 3 must be behind on July 15");
+
+  // Fixed CZ bank holidays use YYYYMMDD keys (MM*100+DD) — catch MMDD transposition.
+  assert(isCzechBankHoliday(new Date(2026, 4, 8, 12, 0, 0, 0)), "1 May Victory Day / 8 May must be holiday");
+  assert(isCzechBankHoliday(new Date(2026, 6, 5, 12, 0, 0, 0)), "5 July must be holiday");
+  assert(isCzechBankHoliday(new Date(2026, 6, 6, 12, 0, 0, 0)), "6 July must be holiday");
+  assert(isCzechBankHoliday(new Date(2026, 0, 1, 12, 0, 0, 0)), "1 January must be holiday");
+  assert(isCzechBankHoliday(new Date(2026, 3, 3, 12, 0, 0, 0)), "Good Friday 2026 must be holiday");
+  assert(isCzechBankHoliday(new Date(2026, 3, 6, 12, 0, 0, 0)), "Easter Monday 2026 must be holiday");
+  const jul6Evening = new Date(2026, 6, 6, 17, 0, 0, 0);
+  const expectedJul6 = getExpectedLatestCnbPublicationDate(jul6Evening);
+  assert(expectedJul6.getDate() === 3 && expectedJul6.getMonth() === 6, "6 July holiday evening expects Fri 3 July board");
 
   const liveRow = {
     isLive: true,
