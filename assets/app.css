@@ -23065,6 +23065,7 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
   }
   #feed.iuTimelineFeed{
     --iu-tl-actions-gap: 5px;
+    /* Mobile/tablet article spacing: 22px (PR #7498); desktop keeps default. */
     --iu-tl-item-gap: 22px;
     --iu-tl-action-icon-gap: 5px;
     --iu-tl-action-min: 36px;

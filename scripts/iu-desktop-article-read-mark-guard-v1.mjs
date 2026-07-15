@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
  * PC (≥901px): opened article shows green read checkmark under relative time.
+ * Also covers mobile/tablet 22px gap + return scroll/section (PR #7498).
  * Run: npm run iu-desktop-article-read-mark-guard
  * Prod: IU_GUARD_BASE_URL=https://infouzel.cz/projects/ npm run iu-desktop-article-read-mark-guard
  */
