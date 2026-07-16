@@ -57,6 +57,13 @@ function auditStaticOpenImplementation() {
   if (!shell.includes("#newsList > #iuLeftRail")) fails.push("tool shell must show left rail");
   if (!shell.includes("iuToolWindowRightReserve")) fails.push("tool shell must reserve right column");
   if (!rail.includes("iuToolWindowMindMenuBtn")) fails.push("tool rail must inject MindMenu button");
+  if (!/min-width:\s*1025px[\s\S]*#topbarWrap\.topbar-new\.iuTopbar[\s\S]*--iuTopbarHeight/.test(shell)) {
+    fails.push("tool shell must lock PC topbar height to --iuTopbarHeight");
+  }
+  if (/html\[data-iu-tool-window="1"\] #topbarWrap\.topbar-new\.iuTopbar[\s\S]{0,220}height:\s*auto\s*!important/.test(shell) &&
+      !/@media\s*\(\s*max-width:\s*1024px\s*\)[\s\S]*height:\s*auto\s*!important/.test(shell)) {
+    fails.push("tool shell must not leave height:auto on PC topbar outside max-width:1024");
+  }
   if (/overflow-y:\s*auto/.test(shell) && /#newsList\s*>\s*#iuLeftRail[\s\S]*?overflow-y:\s*auto/.test(shell)) {
     fails.push("tool shell left rail must not use overflow-y auto");
   }
@@ -178,6 +185,12 @@ async function readHomeNavMetrics(page) {
     var itemRect = firstItem ? firstItem.getBoundingClientRect() : null;
     var itemStyle = firstItem ? getComputedStyle(firstItem) : null;
     var mindRect = mindHome ? mindHome.getBoundingClientRect() : null;
+    var topbar = document.getElementById("topbarWrap");
+    var topRect = topbar ? topbar.getBoundingClientRect() : null;
+    var spacer = document.querySelector(".iuTopbarFlowSpacer");
+    var spacerRect = spacer ? spacer.getBoundingClientRect() : null;
+    var root = getComputedStyle(document.documentElement);
+    var tokenH = parseInt(String(root.getPropertyValue("--iuTopbarHeight") || "72").trim(), 10);
     return {
       itemW: itemRect ? Math.round(itemRect.width) : 0,
       itemH: itemRect ? Math.round(itemRect.height) : 0,
@@ -187,6 +200,9 @@ async function readHomeNavMetrics(page) {
         return rail ? Math.round(rail.getBoundingClientRect().width) : 0;
       })(),
       mindHomeW: mindRect ? Math.round(mindRect.width) : 0,
+      topbarH: topRect ? Math.round(topRect.height) : 0,
+      spacerH: spacerRect ? Math.round(spacerRect.height) : 0,
+      tokenH: Number.isFinite(tokenH) ? tokenH : 72,
     };
   });
 }
@@ -334,6 +350,24 @@ async function assertToolTabLayout(toolTab, accent, homeMetrics) {
   }
   if (layout.topbarH < 48) throw new Error(`${accent}: topbar too short h=${layout.topbarH}`);
   if (layout.spacerH < 48) throw new Error(`${accent}: topbar spacer too short h=${layout.spacerH}`);
+  if (homeMetrics && homeMetrics.topbarH > 0) {
+    if (Math.abs(layout.topbarH - homeMetrics.topbarH) > 1) {
+      throw new Error(
+        `${accent}: topbar height mismatch home=${homeMetrics.topbarH} tool=${layout.topbarH}`
+      );
+    }
+    if (Math.abs(layout.spacerH - homeMetrics.spacerH) > 1) {
+      throw new Error(
+        `${accent}: topbar spacer mismatch home=${homeMetrics.spacerH} tool=${layout.spacerH}`
+      );
+    }
+  } else if (homeMetrics && homeMetrics.tokenH > 0) {
+    if (Math.abs(layout.topbarH - homeMetrics.tokenH) > 1) {
+      throw new Error(
+        `${accent}: topbar height mismatch token=${homeMetrics.tokenH} tool=${layout.topbarH}`
+      );
+    }
+  }
   if (layout.leftRailHidden) throw new Error(`${accent}: left rail hidden in tool tab`);
   if (layout.leftRailW < 120 || layout.leftRailW > 150) {
     throw new Error(`${accent}: left rail width unexpected w=${layout.leftRailW}`);

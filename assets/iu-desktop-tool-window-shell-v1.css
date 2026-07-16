@@ -12,17 +12,37 @@ html[data-iu-tool-window="1"] .iuTopbarFlowSpacer {
   display: flex !important;
   visibility: visible !important;
   pointer-events: auto !important;
-  height: auto !important;
-  min-height: 0 !important;
-  max-height: none !important;
   overflow: visible !important;
 }
 
+/* Flow spacer stays homepage-tall on all tool tabs (matches --iuTopbarHeight). */
 html[data-iu-tool-window="1"] .iuTopbarFlowSpacer {
-  flex: 0 0 72px !important;
-  min-height: 72px !important;
-  height: 72px !important;
+  flex: 0 0 var(--iuTopbarHeight, 72px) !important;
+  height: var(--iuTopbarHeight, 72px) !important;
+  min-height: var(--iuTopbarHeight, 72px) !important;
+  max-height: var(--iuTopbarHeight, 72px) !important;
   width: 100% !important;
+}
+
+/* ≤1024: undo mobile height:0 hide for sticky header / topbar only (mobile/tablet unchanged). */
+@media (max-width: 1024px) {
+  html[data-iu-tool-window="1"] #leftStickyHeader,
+  html[data-iu-tool-window="1"] #topbarWrap.topbar-new.iuTopbar {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+}
+
+/* PC ≥1025: lock visible top bar to homepage --iuTopbarHeight (72px). */
+@media (min-width: 1025px) {
+  html[data-iu-tool-window="1"] #topbarWrap.topbar-new.iuTopbar,
+  html[data-iu-tool-window="1"] header#topbarWrap.topbar-new.iuTopbar {
+    height: var(--iuTopbarHeight, 72px) !important;
+    min-height: var(--iuTopbarHeight, 72px) !important;
+    max-height: var(--iuTopbarHeight, 72px) !important;
+    box-sizing: border-box !important;
+  }
 }
 
 html[data-iu-tool-window="1"] .layout > aside.accordionCol,
