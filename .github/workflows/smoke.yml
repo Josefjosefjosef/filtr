@@ -147,15 +147,15 @@ jobs:
         run: npm run iu-desktop-article-read-mark-guard
 
       - name: Calendar all-day pinned block + limit guard
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.pwa_offline_resilience_only != 'true' && steps.scope.outputs.pc_tool_window_left_rail_layout_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.pwa_offline_resilience_only != 'true' && steps.scope.outputs.pc_tool_window_left_rail_layout_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-calendar-allday-pinned-limit-guard
 
       - name: Jízdní řády section header line color guard
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-jr-section-header-line-guard
 
       - name: Desktop HomeCards feed width alignment guard
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run desktop-homecards-feed-width-alignment-guard
 
       - name: Desktop info panel layout guard
