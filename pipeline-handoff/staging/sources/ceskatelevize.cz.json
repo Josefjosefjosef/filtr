@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-07-16T20:07:22.786428Z",
+  "ingestedAt": "2026-07-16T22:07:06.858612Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Při napadení v pražské ubytovně zahynul člověk, útočníka policie zastřelila",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/hlavni-mesto-praha/pri-napadeni-v-prazske-ubytovne-zahynul-clovek-utocnika-policie-eliminovala-375658",
+      "dt": "2026-07-16T20:51:56Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "napadení",
+        "policie",
+        "pražské",
+        "při",
+        "ubytovně",
+        "zahynul",
+        "zastřelila",
+        "útočníka",
+        "člověk"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -730,31 +756,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "USA zřejmě zruší střídání času. Který zůstane, je stále otázkou",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/usa-zrejme-zrusi-stridani-casu-ktery-zustane-je-stale-otazkou-375614",
-      "dt": "2026-07-16T05:01:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "otázkou",
-        "stále",
-        "střídání",
-        "usa",
-        "zruší",
-        "zřejmě",
-        "zůstane",
-        "času"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -765,7 +766,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41885,
+      "bytes": 41987,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -802,7 +803,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-16T19:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-16T20:51:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -818,6 +819,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Při napadení v pražské ubytovně zahynul člověk, útočníka policie zastřelila",
+            "publishedAt": "2026-07-16T20:51:56Z"
+          },
           {
             "title": "Pátý večer v řadě. Armáda USA oznámila další vlnu úderů na Írán",
             "publishedAt": "2026-07-16T19:32:00Z"
@@ -845,10 +850,6 @@
           {
             "title": "Vědce v Lotyšsku znepokojuje možné ohrožení akademické svobody",
             "publishedAt": "2026-07-16T15:17:00Z"
-          },
-          {
-            "title": "Knoflíčky, hrnky i nábojnice. Archeologové zkoumají bývalý tábor pro Romy",
-            "publishedAt": "2026-07-16T14:46:57Z"
           }
         ]
       }

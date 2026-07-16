@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-07-16T20:07:22.786428Z",
+  "ingestedAt": "2026-07-16T22:07:06.858612Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Na výplet letounu by se hodil cvičený pavouk. Terapeutický Albatros D.V",
+      "url": "https://www.idnes.cz/technet/technika/pribeh-meho-modelu-2026-albatros-d-5.A260715_140119_tec_technika_alv",
+      "dt": "2026-07-16T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES",
+      "tokens": [
+        "albatros",
+        "cvičený",
+        "hodil",
+        "letounu",
+        "pavouk",
+        "terapeutický",
+        "výplet"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -744,32 +768,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Univerzita pošle do vesmíru sinice. Zjišťuje, zda by mohly uživit astronauty",
-      "url": "https://www.idnes.cz/brno/zpravy/mendelova-univerzita-space-rider-sinice-vesmir-brno-experiment-astronauti-kosmicky-vyzkum.A260708_105305_brno-zpravy_icer",
-      "dt": "2026-07-08T09:36:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES",
-      "tokens": [
-        "astronauty",
-        "mohly",
-        "pošle",
-        "sinice",
-        "univerzita",
-        "uživit",
-        "vesmíru",
-        "zda",
-        "zjišťuje"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -780,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46387,
+      "bytes": 46599,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -817,7 +815,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-16T11:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-16T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 30
@@ -832,6 +830,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na výplet letounu by se hodil cvičený pavouk. Terapeutický Albatros D.V",
+            "publishedAt": "2026-07-16T22:00:00Z"
+          },
           {
             "title": "Model legendární F-15ky chtěl občas hodit proti zdi, ale trpělivost se vyplatila",
             "publishedAt": "2026-07-16T11:00:00Z"
@@ -858,10 +860,6 @@
           },
           {
             "title": "S dětmi na měsíc na venkov? Pracovna v batohu po vzoru digitálních nomádů",
-            "publishedAt": "2026-07-14T22:00:00Z"
-          },
-          {
-            "title": "Jsou vám lodě málo? Modelář vytvořil celý japonský přístav Kure",
             "publishedAt": "2026-07-14T22:00:00Z"
           }
         ]
