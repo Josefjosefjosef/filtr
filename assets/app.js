@@ -41608,8 +41608,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ".iu-calInline--premiumV2 .iu-calInline__btn--save{border:1px solid #14532d;background:linear-gradient(180deg,#15803d,#166534);color:#fff;box-shadow:0 4px 14px rgba(22,101,52,.22)}" +
     ".iu-calInline--premiumV2 .iu-calInline__btn--cancel{border:1px solid rgba(100,116,139,.45);background:#f8fafc;color:#334155}" +
     ".iu-calInline--premiumV2 .iu-calInline__btn--delete{border:1px solid rgba(185,28,28,.35);background:#fff;color:#b91c1c}" +
-    ".iu-calDeleteConfirm{position:fixed;inset:0;z-index:10180;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;background:rgba(8,14,22,.45);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}" +
+    /* P0 PC: must sit above #iuCalendarOverlay under body.iu-myinfouzel-open (z-index 12100). */
+    ".iu-calDeleteConfirm{position:fixed;inset:0;z-index:12350;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;background:rgba(8,14,22,.45);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}" +
     ".iu-calDeleteConfirm[hidden]{display:none!important}" +
+    "body.iu-myinfouzel-open #iuCalDeleteConfirm:not([hidden]),body.iu-calendarOverlay-open #iuCalDeleteConfirm:not([hidden]){z-index:12350!important}" +
     ".iu-calDeleteConfirm__panel{width:100%;max-width:400px;padding:22px 20px;border-radius:18px;background:#fff;box-shadow:0 16px 48px rgba(15,23,42,.18);box-sizing:border-box;display:flex;flex-direction:column;gap:16px}" +
     ".iu-calDeleteConfirm__text{margin:0;font-size:17px;font-weight:700;line-height:1.4;color:#0f172a;text-align:center}" +
     ".iu-calDeleteConfirm__actions{display:flex;flex-direction:column;gap:10px;width:100%}" +
@@ -42132,7 +42134,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const bsOpen = !!(bs && !bs.hidden && state.bottomSheetOpen);
     const searchOv = document.getElementById("iuCalEventSearchOverlay");
     const searchOpen = !!(state.searchOpen && !isCalDesktopTwoPanel() && searchOv && !searchOv.hidden);
-    const modalLock = bsOpen || searchOpen;
+    const dc = document.getElementById("iuCalDeleteConfirm");
+    const deleteConfirmOpen = !!(dc && !dc.hidden);
+    const modalLock = bsOpen || searchOpen || deleteConfirmOpen;
     try{
       if (modalLock){
         captureCalScrollLockSnapshot();
@@ -42154,6 +42158,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function openCalDeleteConfirm(){
     const dc = document.getElementById("iuCalDeleteConfirm");
     if (!dc) return;
+    try{
+      /* Keep confirm as a body-level peer so it can sit above #iuCalendarOverlay (MyInfoUzel z-index 12100). */
+      if (dc.parentNode !== document.body) document.body.appendChild(dc);
+    }catch{}
     dc.hidden = false;
     dc.setAttribute("aria-hidden", "false");
     captureCalScrollLockSnapshot();
@@ -42511,6 +42519,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const daySurfaceOpen = !!(dayOv && !dayOv.hidden && isCalMobileLayout());
     const ov = getOverlay();
     if (e.key === "Escape"){
+      const delConfirm = document.getElementById("iuCalDeleteConfirm");
+      if (delConfirm && !delConfirm.hidden){
+        e.preventDefault();
+        restoreCalendarScrollGuard();
+        return;
+      }
       const searchOv = document.getElementById("iuCalEventSearchOverlay");
       if (state.searchOpen && isCalDesktopTwoPanel()){
         e.preventDefault();
@@ -42555,6 +42569,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return;
     }
     if (e.key !== "Tab") return;
+    const delConfirmTab = document.getElementById("iuCalDeleteConfirm");
+    if (delConfirmTab && !delConfirmTab.hidden){
+      const dclist = Array.from(delConfirmTab.querySelectorAll(FOCUSABLE_SELECTOR)).filter((el)=>!el.disabled && el.offsetParent !== null);
+      if (dclist.length){
+        const first = dclist[0];
+        const last = dclist[dclist.length - 1];
+        if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+        else if (!dclist.includes(document.activeElement)){ e.preventDefault(); first.focus(); }
+      }
+      return;
+    }
     if (daySurfaceOpen && dayOv){
       const list = Array.from(dayOv.querySelectorAll(FOCUSABLE_SELECTOR)).filter((el)=>!el.disabled && el.offsetParent !== null);
       if (!list.length) return;
@@ -43464,10 +43490,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       dc.addEventListener("click", (ev)=>{
         const yes = ev.target && ev.target.closest ? ev.target.closest("[data-iu-cal-delete-confirm-yes]") : null;
         const cancel = ev.target && ev.target.closest ? ev.target.closest("[data-iu-cal-delete-confirm-cancel]") : null;
+        const panel = ev.target && ev.target.closest ? ev.target.closest(".iu-calDeleteConfirm__panel") : null;
         if (yes){
           ev.preventDefault();
           void deleteInlineEditor();
         } else if (cancel){
+          ev.preventDefault();
+          restoreCalendarScrollGuard();
+        } else if (!panel){
           ev.preventDefault();
           restoreCalendarScrollGuard();
         }
