@@ -15,7 +15,7 @@
 // 2026-06-29: PWA icon final tuning v54 — larger optically centered iU + infoUzel.cz short_name
 // 2026-07-14: PWA offline completion — reconnect refresh, sync external opens
 // 2026-07-16: PWA offline menu/articles/images — durable last-good feed+img caches, tool modules precache
-const CACHE_VERSION = "2026-07-16-pwa-offline-menu-articles-v2";
+const CACHE_VERSION = "2026-07-16-pwa-offline-menu-articles-v3";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
@@ -470,9 +470,10 @@ self.addEventListener("activate", (event) => {
         return caches.delete(key);
       })
     );
-    /* Re-warm tool modules + default images into a fresh shell after versioned wipe. */
-    await warmOfflineAssets();
     await self.clients.claim();
+    /* Do NOT await warm here — blocking activate on many image fetches freezes
+       first paint / Playwright guards (desktop section-close hung >3min). */
+    event.waitUntil(warmOfflineAssets());
     if (hadPreviousDeploy) {
       try {
         const clients = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
