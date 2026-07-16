@@ -41677,6 +41677,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   const CAL_ALL_DAY_LIMIT_MSG = "Pro jeden den lze uložit maximálně 3 celodenní události.";
   const ALLOWED_VIEWS = new Set(["month", "year"]);
   const FOCUSABLE_SELECTOR = 'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])';
+  let iuCalStoreWriteEpoch = 0;
 
   const CZ_FIXED_HOLIDAYS = new Set([
     "01-01","05-01","05-08","07-05","07-06","09-28","10-28","11-17","12-24","12-25","12-26"
@@ -42386,7 +42387,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }catch{}
     }
     try{
-      window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: STORE_KEY } }));
+      iuCalStoreWriteEpoch += 1;
+      const writeEpoch = iuCalStoreWriteEpoch;
+      window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: STORE_KEY, source: "iu-calendar-self", epoch: writeEpoch } }));
     }catch{}
     try{
       queueMicrotask(()=>{
@@ -44203,6 +44206,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       window.addEventListener("iu-local-store-changed", function (ev) {
         try {
           if (!ev || !ev.detail || ev.detail.key !== STORE_KEY) return;
+          /* Ignore echo from this tab's writeStore — otherwise rapid calendarCreateEvent races. */
+          if (ev.detail.source === "iu-calendar-self") return;
           void readStore().then(function () {
             try { render(); } catch (_) {}
           });
