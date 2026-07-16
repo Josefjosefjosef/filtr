@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-07-16T01:25:39.611430Z",
+  "ingestedAt": "2026-07-16T03:17:15.608501Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Auditoři radili pražským hřbitovům: zakázka bez soutěže a milionové dodatky",
+      "url": "https://www.seznamzpravy.cz/clanek/domaci-kauzy-auditori-radili-prazskym-hrbitovum-zakazka-bez-souteze-a-milionove-dodatky-310268",
+      "dt": "2026-07-16T03:00:00Z",
+      "media_raw": "Seznam Zprávy / Domácí",
+      "media_norm": "Seznam Zprávy",
+      "tokens": [
+        "auditoři",
+        "dodatky",
+        "hřbitovům",
+        "milionové",
+        "pražským",
+        "radili",
+        "soutěže",
+        "zakázka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_seznam_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -729,31 +754,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "seznamzpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Sníží to šance Ukrajiny na EU?“ Sítě baví Zelenského souboj s víčkem",
-      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-snizi-to-sance-ukrajiny-na-eu-site-bavi-zelenskeho-souboj-s-vickem-311077",
-      "dt": "2026-07-15T13:39:35Z",
-      "media_raw": "Seznam Zprávy / Domácí",
-      "media_norm": "Seznam Zprávy",
-      "tokens": [
-        "baví",
-        "sníží",
-        "souboj",
-        "sítě",
-        "ukrajiny",
-        "víčkem",
-        "zelenského",
-        "šance"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_seznam_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -764,7 +764,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/domaci",
-      "bytes": 44286,
+      "bytes": 43827,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -801,7 +801,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-15T21:28:06Z",
+        "raw_feed_latest_publishedAt": "2026-07-16T03:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -818,6 +818,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Auditoři radili pražským hřbitovům: zakázka bez soutěže a milionové dodatky",
+            "publishedAt": "2026-07-16T03:00:00Z"
+          },
           {
             "title": "Kandidát na šéfa tajných služeb USA odmítl říct, kdo vyhrál volby v roce 2020",
             "publishedAt": "2026-07-15T21:28:06Z"
@@ -845,10 +849,6 @@
           {
             "title": "Francouzský parlament schválil zákon, který umožní asistované sebevraždy",
             "publishedAt": "2026-07-15T19:01:57Z"
-          },
-          {
-            "title": "Po převrácení lodi u břehů Libye se pohřešuje nejméně 50 migrantů",
-            "publishedAt": "2026-07-15T18:30:19Z"
           }
         ]
       }
