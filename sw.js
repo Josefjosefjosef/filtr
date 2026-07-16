@@ -15,7 +15,7 @@
 // 2026-06-29: PWA icon final tuning v54 — larger optically centered iU + infoUzel.cz short_name
 // 2026-07-14: PWA offline completion — reconnect refresh, sync external opens
 // 2026-07-16: PWA offline menu/articles/images — durable last-good feed+img caches, tool modules precache
-const CACHE_VERSION = "2026-07-16-pwa-offline-menu-articles-v3";
+const CACHE_VERSION = "2026-07-16-pwa-offline-menu-articles-v4";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
@@ -111,19 +111,25 @@ async function warmOfflineAssets() {
   try {
     const shell = await caches.open(APP_SHELL_CACHE);
     const img = await caches.open(IMG_OFFLINE_CACHE);
-    await Promise.all(
-      getOfflineWarmUrls().map(async (raw) => {
-        const url = normalizeUrl(raw);
-        try {
-          const res = await fetch(url, { cache: "no-store" });
-          if (!res || !res.ok) return;
-          if (String(url).includes("/assets/images/")) {
-            await img.put(new Request(url), res.clone());
-          }
-          await shell.put(new Request(url), res.clone());
-        } catch (_) {}
-      })
-    );
+    const warmOne = async (raw) => {
+      const url = normalizeUrl(raw);
+      try {
+        const ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+        const timer = ctrl ? setTimeout(() => { try { ctrl.abort(); } catch (_) {} }, 4000) : null;
+        const res = await fetch(url, { cache: "no-store", signal: ctrl ? ctrl.signal : undefined });
+        if (timer) clearTimeout(timer);
+        if (!res || !res.ok) return;
+        if (String(url).includes("/assets/images/")) {
+          await img.put(new Request(url), res.clone());
+        }
+        await shell.put(new Request(url), res.clone());
+      } catch (_) {}
+    };
+    /* Cap concurrency so background warm cannot saturate the worker. */
+    const urls = getOfflineWarmUrls();
+    for (let i = 0; i < urls.length; i += 4) {
+      await Promise.all(urls.slice(i, i + 4).map(warmOne));
+    }
   } catch (_) {}
 }
 
@@ -471,9 +477,12 @@ self.addEventListener("activate", (event) => {
       })
     );
     await self.clients.claim();
-    /* Do NOT await warm here — blocking activate on many image fetches freezes
-       first paint / Playwright guards (desktop section-close hung >3min). */
-    event.waitUntil(warmOfflineAssets());
+    /* Fire-and-forget only — never event.waitUntil(warm…).
+       A hung warm fetch would keep activate "activating" and freeze navigations
+       (desktop section-close / Playwright). */
+    try {
+      warmOfflineAssets();
+    } catch (_) {}
     if (hadPreviousDeploy) {
       try {
         const clients = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
