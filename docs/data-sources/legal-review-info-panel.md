@@ -29,8 +29,10 @@ Detail API DataStat: [datastat-info-panel.md](./datastat-info-panel.md)
 | Zdroj | Verdikt | Poznámka |
 |-------|---------|----------|
 | ČNB devizové kurzy | ✅ POVOLENO S PODMÍNKAMI | Povinná atribuce ČNB |
-| CoinGecko (BTC, PAX Gold) | ✅ POVOLENO S PODMÍNKAMI | Orientační tržní ceny |
-| ČSÚ DataStat (32 ukazatelů) | ✅ POVOLENO S PODMÍNKAMI | Povinná atribuce ČSÚ |
+| CoinGecko (BTC, PAX Gold) | ✅ POVOLENO S PODMÍNKAMI | Orientační tržní ceny; follow-up re-check terms |
+| ČSÚ DataStat (ostatní ukazatele) | ✅ POVOLENO S PODMÍNKAMI | Povinná atribuce ČSÚ |
+| MPSV Portál otevřených dat (PNO, uchazeči, VPM) | ✅ POVOLENO S PODMÍNKAMI | Od 2025 oficiální měsíční zdroj; atribuce MPSV/ÚP |
+| ČSÚ WREG01CT4 jako „aktuální MPSV“ | ❌ NEPOUŽÍVAT | Archivní roční řada; ČSÚ přesměrovává na MPSV portal |
 | CHMU / povodně / sucho / požáry | ❌ NEPOUŽÍVAT | Chybí embed API |
 | Dopravní omezení (live) | ❌ NEPOUŽÍVAT | Chybí ověřené API |
 | Vlaky / letecká doprava (live) | ❌ NEPOUŽÍVAT | COICOP nemá samostatné indexy |
@@ -57,7 +59,7 @@ Detail API DataStat: [datastat-info-panel.md](./datastat-info-panel.md)
 | # | Karta | DataStat kód | Periodicita |
 |---|-------|--------------|-------------|
 | 16 | Inflace | CEN0101HT02 | měsíčně |
-| 17 | Nezaměstnanost | WREG01CT4 | ročně |
+| 17 | Nezaměstnanost | MPSV evid_pno_up_agr_frz_odata | měsíčně |
 | 18 | Průměrná mzda | WPRACECRQT3 | čtvrtletně |
 | 19 | Průměrná hrubá mzda | WREG0303 | ročně |
 | 21 | HDP | WNUC01T01 | čtvrtletně |
@@ -70,9 +72,9 @@ Detail API DataStat: [datastat-info-panel.md](./datastat-info-panel.md)
 
 | # | Karta | DataStat kód |
 |---|-------|--------------|
-| 26 | Volná pracovní místa | WREG01CT4 |
+| 26 | Volná pracovní místa | MPSV vm_stav_vm_stat_agr_frz_odata_vp |
 | 27 | Zaměstnanost | WVSPSAT1 |
-| 28 | Registrovaná nezaměstnanost | WREG01CT4 |
+| 28 | Registrovaná nezaměstnanost | MPSV evid_pno_up_agr_frz_odata |
 
 ### Obyvatelstvo (29–36)
 

@@ -209,7 +209,9 @@ function isSnapshotRowStale(catalogItem, row, snapshotMeta) {
     freq === "monthly" ||
     freq === "quarterly" ||
     freq === "annual" ||
-    freq === "event"
+    freq === "school_year" ||
+    freq === "event" ||
+    freq === "semi_annual"
   ) {
     if (typeof row.value === "number") return false;
     if (!Number.isFinite(fetchAnchor)) return true;
@@ -234,7 +236,7 @@ function snapshotErrorAffectsItem(catalogItem, errorId) {
     (catalogItem.id === "unemployment" ||
       catalogItem.id === "job_vacancies" ||
       catalogItem.id === "registered_unemployment") &&
-    id === "csu_labor_reg"
+    (id === "mpsv_labor" || id === "csu_labor_reg")
   ) {
     return true;
   }

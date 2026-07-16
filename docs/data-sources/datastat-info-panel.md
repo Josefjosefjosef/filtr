@@ -26,7 +26,7 @@
 | Natural 95 / nafta | CENPHMTT01 | týdenní |
 | Energie (COICOP) | CEN0101ET03 | měsíční |
 | Inflace | CEN0101HT02 | měsíční |
-| Nezaměstnanost / volná místa / reg. nezam. | WREG01CT4 | roční |
+| Nezaměstnanost / volná místa / uchazeči | *(přesunuto)* MPSV portal API | měsíční | viz [info-panel-audit-2026-07.md](./info-panel-audit-2026-07.md) |
 | Průměrná mzda (Q) | WPRACECRQT3 | čtvrtletní |
 | Hrubá mzda (rok) | WREG0303 | roční |
 | HDP | WNUC01T01 | čtvrtletní |

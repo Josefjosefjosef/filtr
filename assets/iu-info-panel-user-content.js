@@ -83,10 +83,11 @@ export const IU_INFO_PANEL_USER_CONTENT = {
     life: "Sledujte ji u úspor, vyjednávání o platu a plánování rodinného rozpočtu.",
   },
   unemployment: {
-    meaning: "Podíl nezaměstnaných osob v evidenci úřadu práce vůči aktivnímu obyvatelstvu.",
-    importance: "Ukazuje, jak snadno lidé nacházejí práci a jak je silná ekonomika.",
-    rise: "Růst nezaměstnanosti znamená více lidí bez práce a často nižší jistotu zaměstnání.",
-    fall: "Pokles znamená více pracovních příležitostí a silnější trh práce.",
+    meaning:
+      "Podíl nezaměstnaných osob (PNO) dle metodiky MPSV: dosažitelní uchazeči o zaměstnání ve věku 15–64 let vůči obyvatelstvu ve stejném věku. Nejde o obecnou míru nezaměstnanosti ČSÚ z VŠPS.",
+    importance: "Ukazuje registrovanou nezaměstnanost z evidence Úřadu práce a sílu nabídky práce.",
+    rise: "Růst podílu znamená více dosažitelných uchazečů vůči produktivnímu obyvatelstvu.",
+    fall: "Pokles znamená relativně méně registrovaných dosažitelných uchazečů.",
     life: "Důležité při hledání práce, změně kariéry nebo podnikání v daném odvětví.",
   },
   avg_wage: {
