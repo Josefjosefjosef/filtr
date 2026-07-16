@@ -35,7 +35,12 @@ function auditStatic() {
   if (!netJs.includes("hideOfflineHint")) fails.push("network:missing hideOfflineHint");
   if (!netJs.includes("openExternalSync")) fails.push("network:missing openExternalSync");
   if (!netJs.includes("AbortController")) fails.push("network:missing AbortController usage in module");
-  if (!netJs.includes("--iu-mobile-bottom-nav-h")) fails.push("network:offline hint missing bottom nav offset");
+  if (!netJs.includes("--iu-mobile-bottom-nav-safe-space") && !netJs.includes("--iu-mobile-bottom-nav-h")) {
+    fails.push("network:offline hint missing bottom nav offset");
+  }
+  if (!netJs.includes("Tuto stránku nelze bez připojení k internetu otevřít.")) {
+    fails.push("network:missing exact offline external message");
+  }
   if (netJs.includes('"iu-mindmenu-open"')) fails.push("network:restore must not remove iu-mindmenu-open");
   if (!appJs.includes("iuUpdateNameday")) fails.push("app:missing iuUpdateNameday export");
   if (!appJs.includes("iu:nameday:cache:v1")) fails.push("app:missing nameday cache");
@@ -45,6 +50,13 @@ function auditStatic() {
   if (!appJs.includes("iuNetworkControlledReconnect")) fails.push("app:missing controlled reconnect");
   if (!appJs.includes("iuNetwork.openExternalUrl")) fails.push("app:missing iuNetwork integration");
   if (!appJs.includes("loadDataWatchdog")) fails.push("app:missing loadDataWatchdog");
+  if (!sw.includes("FEED_OFFLINE_CACHE")) fails.push("sw:missing FEED_OFFLINE_CACHE");
+  if (!sw.includes("IMG_OFFLINE_CACHE")) fails.push("sw:missing IMG_OFFLINE_CACHE");
+  if (!sw.includes("iu-financial-calculators-module.js")) fails.push("sw:missing financial module precache");
+  if (!sw.includes("iu-invoice-module.js")) fails.push("sw:missing invoice module precache");
+  if (!appJs.includes("iuTasksRestoreSearchFocus")) fails.push("app:missing tasks search focus restore");
+  if (!appJs.includes('section === "kultura"')) fails.push("app:missing kultura notes early-return");
+  if (!appJs.includes("iuOfflinePaging")) fails.push("app:missing offline paging guard");
   if (!html.includes("iu-network-connectivity-v1.js")) fails.push("index:missing network script");
   if (!sw.includes("iu-network-connectivity-v1.js")) fails.push("sw:missing network precache");
   if (!chunk.includes("AbortController")) fails.push("chunk:missing AbortController timeout");

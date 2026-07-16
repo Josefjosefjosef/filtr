@@ -95,7 +95,7 @@
       el.setAttribute("role", "status");
       el.setAttribute("aria-live", "polite");
       el.style.cssText =
-        "position:fixed;left:50%;bottom:calc(var(--iu-mobile-bottom-nav-h, 56px) + env(safe-area-inset-bottom, 0px) + 12px);transform:translateX(-50%);z-index:10030;max-width:min(92vw, 420px);padding:10px 14px;border-radius:12px;background:rgba(20,24,32,.92);color:#fff;font:14px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.25);pointer-events:none;opacity:0;transition:opacity .2s ease;text-align:center";
+        "position:fixed;left:50%;bottom:calc(var(--iu-mobile-bottom-nav-safe-space, var(--bottom-nav-height, calc(var(--iu-mobile-bottom-nav-h, 56px) + env(safe-area-inset-bottom, 0px) + 40px))) + 12px);transform:translateX(-50%);z-index:10030;max-width:min(92vw, 420px);padding:10px 14px;border-radius:12px;background:rgba(20,24,32,.92);color:#fff;font:14px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.25);pointer-events:none;opacity:0;transition:opacity .2s ease;text-align:center";
       document.body.appendChild(el);
     }
     el.textContent = msg;
@@ -206,7 +206,7 @@
     if (!url) return Promise.resolve({ ok: false, reason: "empty" });
     var isMailTel = /^mailto:/i.test(url) || /^tel:/i.test(url);
     if (!isMailTel && isLikelyOfflineSignal()) {
-      showOfflineHint("Tuto stránku bez internetu nelze otevřít.");
+      showOfflineHint("Tuto stránku nelze bez připojení k internetu otevřít.");
       armExternalReturn();
       clearShellErrorUiOnly();
       invokeReturnNavigationRestore();
@@ -285,7 +285,20 @@
       invalidateProbe();
       clearTimeout(reconnectTimer);
       reconnectTimer = setTimeout(async function () {
-        var ok = await probeReachability();
+        var ok = false;
+        for (var attempt = 0; attempt < 3; attempt++) {
+          ok = await probeReachability({ timeoutMs: 2800 });
+          if (ok) break;
+          await new Promise(function (resolve) {
+            setTimeout(resolve, 350 * (attempt + 1));
+          });
+        }
+        /* Soft restore: if browser reports online but probe is flaky, still refresh UI. */
+        if (!ok) {
+          try {
+            if (navigator.onLine === true) ok = true;
+          } catch (_) {}
+        }
         if (!ok) return;
         hideOfflineHint();
         reconnectCallbacks.forEach(function (fn) {

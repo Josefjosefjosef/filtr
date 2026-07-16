@@ -14,10 +14,16 @@
 // 2026-06-28: PWA brand blue iU icons — bump app shell cache for new favicon/manifest references
 // 2026-06-29: PWA icon final tuning v54 — larger optically centered iU + infoUzel.cz short_name
 // 2026-07-14: PWA offline completion — reconnect refresh, sync external opens
-const CACHE_VERSION = "2026-07-14-pwa-offline-completion-v2";
+// 2026-07-16: PWA offline menu/articles/images — durable last-good feed+img caches, tool modules precache
+const CACHE_VERSION = "2026-07-16-pwa-offline-menu-articles-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
+/** Durable across SW version bumps — last-good article chunks/manifest for offline UI. */
+const FEED_OFFLINE_CACHE = "iu-feed-offline-v1";
+/** Durable same-origin image cache (defaults + previously loaded /assets/images/*). */
+const IMG_OFFLINE_CACHE = "iu-img-offline-v1";
+const IMG_OFFLINE_MAX_ENTRIES = 120;
 
 // TTL pro JSON data (v sekundách)
 const TTL = {
@@ -63,6 +69,36 @@ function getAppShellUrls() {
     `${BASE}assets/app-crash-shield.js`,
     `${BASE}assets/iu-network-connectivity-v1.js`,
     `${BASE}assets/app.js`,
+    // Offline-local tools (dynamic import graph) — must open without network after first install/update
+    `${BASE}assets/iu-financial-calculators-module.js`,
+    `${BASE}assets/iu-financial-calculators-engine.js`,
+    `${BASE}assets/iu-financial-calculators-cta.js`,
+    `${BASE}assets/iu-invoice-module.js`,
+    `${BASE}assets/iu-invoice-engine.js`,
+    `${BASE}assets/iu-invoice-pdf-renderer.js`,
+    `${BASE}assets/iu-invoice-raster-renderer.js`,
+    `${BASE}assets/iu-tool-guard.js`,
+    `${BASE}assets/iu-legal-documents-module.js`,
+    // Same-origin default thumbs + section headers (HomeCards / article fallbacks)
+    `${BASE}assets/images/news-default.jpg`,
+    `${BASE}assets/images/sport-default.jpg`,
+    `${BASE}assets/images/finance-default.jpg`,
+    `${BASE}assets/images/culture-default.jpg`,
+    `${BASE}assets/images/kultura-default.jpg`,
+    `${BASE}assets/images/zdravi-default.jpg`,
+    `${BASE}assets/images/cestovani-default.jpg`,
+    `${BASE}assets/images/hry-default.jpg`,
+    `${BASE}assets/images/veda-default.jpg`,
+    `${BASE}assets/images/vzdelavani-default.jpg`,
+    `${BASE}assets/images/section-zpravy.jpg`,
+    `${BASE}assets/images/section-sport.jpg`,
+    `${BASE}assets/images/section-finance.jpg`,
+    `${BASE}assets/images/section-zdravi.jpg`,
+    `${BASE}assets/images/section-kultura-akce.jpg`,
+    `${BASE}assets/images/section-cestovani.jpg`,
+    `${BASE}assets/images/section-hry.jpg`,
+    `${BASE}assets/images/section-veda-historie.jpg`,
+    `${BASE}assets/images/section-vzdelavani.jpg`,
     `${BASE}sw.js`
   ];
 }
@@ -198,18 +234,58 @@ async function networkFirstNoStore(request, offlineFallback) {
   });
 }
 
+function feedOfflineCacheKey(request) {
+  try {
+    const u = new URL(request.url);
+    return new Request(u.origin + u.pathname);
+  } catch (_) {
+    return request;
+  }
+}
+
+async function putFeedOfflineLastGood(request, response) {
+  try {
+    if (!response || !response.ok) return;
+    const ct = String(response.headers.get("content-type") || "");
+    if (ct && !/json|javascript|text\/plain/i.test(ct) && !request.url.endsWith(".json")) return;
+    const cache = await caches.open(FEED_OFFLINE_CACHE);
+    await cache.put(feedOfflineCacheKey(request), response.clone());
+  } catch (_) {}
+}
+
+async function matchFeedOfflineLastGood(request) {
+  try {
+    const cache = await caches.open(FEED_OFFLINE_CACHE);
+    return (await cache.match(feedOfflineCacheKey(request))) || null;
+  } catch (_) {
+    return null;
+  }
+}
+
+/**
+ * Online: network-only (no-store) — never serve stale as fresh.
+ * Offline: last-good JSON from FEED_OFFLINE_CACHE when available.
+ */
 async function handleProjectsFeedDataPassthrough(event, pathname) {
-  const doFetch = () =>
-    fetch(event.request, { cache: "no-store" });
+  const doFetch = () => fetch(event.request, { cache: "no-store" });
 
   try {
     const r = await doFetch();
-    if (r.ok) return r;
+    if (r.ok) {
+      event.waitUntil(putFeedOfflineLastGood(event.request, r));
+      return r;
+    }
   } catch (_) {}
   try {
     const r = await doFetch();
-    if (r.ok) return r;
+    if (r.ok) {
+      event.waitUntil(putFeedOfflineLastGood(event.request, r));
+      return r;
+    }
   } catch (_) {}
+
+  const lastGood = await matchFeedOfflineLastGood(event.request);
+  if (lastGood) return lastGood;
 
   if (pathname.endsWith("articles.json") || pathname.endsWith("publishable_pool.json")) return seedResponse(pathname);
   if (pathname.endsWith("videos.json")) return seedResponse(pathname);
@@ -353,7 +429,22 @@ self.addEventListener("activate", (event) => {
     const hadPreviousDeploy =
       IU_HAD_ACTIVE_SW_AT_INSTALL ||
       keys.some((key) => key.indexOf("iu-") === 0 && !key.endsWith(CACHE_VERSION));
-    await Promise.all(keys.map((key) => caches.delete(key)));
+    /* Keep current version caches + durable offline last-good (feed/images).
+       Do not wipe user offline article/image caches on every SW bump. */
+    const keep = new Set([
+      APP_SHELL_CACHE,
+      DATA_CACHE,
+      DATA_META_CACHE,
+      FEED_OFFLINE_CACHE,
+      IMG_OFFLINE_CACHE,
+    ]);
+    await Promise.all(
+      keys.map((key) => {
+        if (keep.has(key)) return Promise.resolve();
+        if (String(key).indexOf("iu-") === 0) return caches.delete(key);
+        return Promise.resolve();
+      })
+    );
     await self.clients.claim();
     if (hadPreviousDeploy) {
       try {
@@ -429,6 +520,84 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // Same-origin images: cache-first with network update; keep last-good offline.
+  if (
+    url.origin === self.location.origin &&
+    path.includes("/assets/images/") &&
+    event.request.method === "GET"
+  ) {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(IMG_OFFLINE_CACHE);
+        const cacheKey = new Request(url.origin + url.pathname);
+        const cached = await cache.match(cacheKey);
+        try {
+          const fresh = await fetch(event.request, { cache: "no-store" });
+          if (fresh && fresh.ok) {
+            event.waitUntil(
+              (async () => {
+                try {
+                  await cache.put(cacheKey, fresh.clone());
+                  const keys = await cache.keys();
+                  if (keys.length > IMG_OFFLINE_MAX_ENTRIES) {
+                    const overflow = keys.length - IMG_OFFLINE_MAX_ENTRIES;
+                    for (let i = 0; i < overflow; i++) {
+                      await cache.delete(keys[i]);
+                    }
+                  }
+                } catch (_) {}
+              })()
+            );
+            return fresh;
+          }
+        } catch (_) {}
+        if (cached) return cached;
+        return new Response("", { status: 503, statusText: "Offline", headers: { "Cache-Control": "no-store" } });
+      })()
+    );
+    return;
+  }
+
+  // Cross-origin preview thumbs (HomeCards / remote article images): cache previously seen images.
+  if (
+    event.request.method === "GET" &&
+    (event.request.destination === "image" ||
+      /\.(?:png|jpe?g|gif|webp|avif|svg)(?:$|\?)/i.test(path)) &&
+    url.origin !== self.location.origin
+  ) {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(IMG_OFFLINE_CACHE);
+        const cacheKey = event.request;
+        const cached = await cache.match(cacheKey);
+        try {
+          const fresh = await fetch(event.request, { mode: event.request.mode || "no-cors" });
+          /* Cache opaque (status 0) and ok responses — both usable offline for <img>. */
+          if (fresh && (fresh.ok || fresh.type === "opaque")) {
+            event.waitUntil(
+              (async () => {
+                try {
+                  await cache.put(cacheKey, fresh.clone());
+                  const keys = await cache.keys();
+                  if (keys.length > IMG_OFFLINE_MAX_ENTRIES) {
+                    const overflow = keys.length - IMG_OFFLINE_MAX_ENTRIES;
+                    for (let i = 0; i < overflow; i++) {
+                      await cache.delete(keys[i]);
+                    }
+                  }
+                } catch (_) {}
+              })()
+            );
+            return fresh;
+          }
+        } catch (_) {}
+        if (cached) return cached;
+        return new Response("", { status: 503, statusText: "Offline", headers: { "Cache-Control": "no-store" } });
+      })()
+    );
+    return;
+  }
+
   // CSS/JS assets: stale-while-revalidate, cache key bez query stringu.
   // Důvod: stabilní ?v=... + Cache First by jinak mohl držet staré CSS/JS donekonečna.
   if (
@@ -475,7 +644,22 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (path.includes("/assets/app.js")) {
-    event.respondWith(fetch(event.request, { cache: "no-store" }));
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(APP_SHELL_CACHE);
+        const cacheKey = new Request(url.origin + url.pathname);
+        try {
+          const res = await fetch(event.request, { cache: "no-store" });
+          if (res && res.ok) {
+            event.waitUntil(cache.put(cacheKey, res.clone()).catch(() => {}));
+            return res;
+          }
+        } catch (_) {}
+        const cached = (await cache.match(cacheKey)) || (await caches.match(event.request));
+        if (cached) return cached;
+        return new Response("", { status: 503, statusText: "Offline", headers: { "Cache-Control": "no-store" } });
+      })()
+    );
     return;
   }
 
