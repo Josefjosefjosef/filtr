@@ -88,7 +88,13 @@ async function seedButtons(page) {
 }
 
 async function openViaGate(page) {
-  await page.evaluate(() => document.getElementById("iuMobileGateTabTools")?.click());
+  await page.evaluate(() => {
+    const tab = document.getElementById("iuMobileGateTabTools");
+    const panel = document.getElementById("iuMobileGatePanelTools");
+    if (!tab) return;
+    if (panel && !panel.hidden) return;
+    tab.click();
+  });
   await page.waitForTimeout(500);
   await page.evaluate(() => document.querySelector('[data-iu-action="custom-buttons"]')?.click());
   await page.waitForTimeout(800);

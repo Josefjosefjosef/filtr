@@ -38,7 +38,14 @@ const DEFAULT_ORDER = [
 ];
 
 async function openMobileToolsPanel(page, gridSel) {
-  await page.evaluate(() => document.getElementById("iuMobileGateTabTools")?.click());
+  /* Tools tab toggles closed when already active (history/hash restore after reload). */
+  await page.evaluate(() => {
+    const tab = document.getElementById("iuMobileGateTabTools");
+    const panel = document.getElementById("iuMobileGatePanelTools");
+    if (!tab) return;
+    if (panel && !panel.hidden) return;
+    tab.click();
+  });
   await page.waitForTimeout(500);
   await page.waitForSelector(gridSel, { timeout: 30000 });
   await page.evaluate((gridSel) => {
