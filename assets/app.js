@@ -41745,6 +41745,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   const CAL_ALL_DAY_LIMIT_MSG = "Pro jeden den lze uložit maximálně 3 celodenní události.";
   const ALLOWED_VIEWS = new Set(["month", "year"]);
   const FOCUSABLE_SELECTOR = 'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])';
+  /* Skip same-tab reload after our own writeStore (rapid creates were racing readStore). */
   let iuCalStoreWriteEpoch = 0;
 
   const CZ_FIXED_HOLIDAYS = new Set([
@@ -42454,9 +42455,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         });
       }catch{}
     }
+    iuCalStoreWriteEpoch += 1;
+    const writeEpoch = iuCalStoreWriteEpoch;
     try{
-      iuCalStoreWriteEpoch += 1;
-      const writeEpoch = iuCalStoreWriteEpoch;
       window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: STORE_KEY, source: "iu-calendar-self", epoch: writeEpoch } }));
     }catch{}
     try{
