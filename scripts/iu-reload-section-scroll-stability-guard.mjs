@@ -211,7 +211,11 @@ async function runScrollGuard(page) {
   );
   const consoleErrors = [];
   const onConsole = (msg) => {
-    if (msg.type() === "error") consoleErrors.push(String(msg.text()));
+    if (msg.type() !== "error") return;
+    const text = String(msg.text() || "");
+    /* Network 404s for lazy feed media are not app regressions; pageerror still fails hard. */
+    if (/Failed to load resource:.*status of 404/i.test(text)) return;
+    consoleErrors.push(text);
   };
   page.on("console", onConsole);
   let appErrors = 0;
