@@ -80,14 +80,16 @@ export function isInfoPanelOnlyScope(files) {
   const allowed = (f) =>
     f.startsWith("assets/iu-desktop-info-panel") ||
     f.startsWith("assets/iu-mobile-info-panel") ||
-    f === "assets/iu-info-panel-user-content.js" ||
+    f.startsWith("assets/iu-info-panel-") ||
     f.startsWith("scripts/info_panel") ||
     f === "scripts/build_info_panel_snapshot.mjs" ||
+    f === "scripts/mpsv_labor_open_data.mjs" ||
     f.startsWith("scripts/iu-desktop-info-panel-") ||
-    f === "scripts/iu-info-panel-mobile-polish-guard-v1.mjs" ||
+    f.startsWith("scripts/iu-info-panel-") ||
     f === ".github/workflows/update-info-panel-snapshot.yml" ||
     f === ".github/workflows/smoke.yml" ||
     f.startsWith("projects/data/info_panel_") ||
+    f.startsWith("docs/data-sources/") ||
     f === "projects/index.html" ||
     f === "package.json" ||
     f === "scripts/smoke-data-only-scope.mjs";
