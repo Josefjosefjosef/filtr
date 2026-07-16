@@ -37,6 +37,37 @@ function csuItem(fields) {
   };
 }
 
+const MPSV_PROVIDER = "Ministerstvo práce a sociálních věcí / Úřad práce ČR";
+const MPSV_PORTAL = "https://data.mpsv.cz/portal";
+const MPSV_DOCS = "https://data.mpsv.cz/portal/datove-sady/trh-prace/statistiky-nezamestnanosti";
+const MPSV_TERMS = "https://data.gov.cz/podm%C3%ADnky-u%C5%BEit%C3%AD/";
+const MPSV_PNO_API =
+  "https://data.mpsv.cz/portal/api/reports/by-table/evid_pno_up_agr_frz_odata/data/json";
+const MPSV_VPM_API =
+  "https://data.mpsv.cz/portal/api/reports/by-table/vm_stav_vm_stat_agr_frz_odata_vp/data/csv?fileName=volna_mista_posledni_data";
+
+function mpsvItem(fields) {
+  const group = fields.group || "labor";
+  const publishFrequency = fields.publishFrequency || "monthly";
+  return {
+    legalStatus: "verified_requires_attribution",
+    verificationDate: "2026-07-16",
+    sourceName: MPSV_PROVIDER,
+    providerShortName: "MPSV",
+    termsUrl: MPSV_TERMS,
+    portalUrl: MPSV_PORTAL,
+    docsUrl: MPSV_DOCS,
+    categoryLabel: IU_INFO_PANEL_GROUP_LABELS[group] || group,
+    publishFrequency,
+    publishFrequencyLabel: IU_INFO_PANEL_FREQUENCY_LABELS[publishFrequency] || publishFrequency,
+    checkStrategy: "period_and_hash",
+    isPeriodicSnapshot: true,
+    fetchBucket: "mpsv_labor",
+    ...fields,
+    title: fields.title || fields.label,
+  };
+}
+
 /** Pořadí karet dle specifikace (bez položek bez ověřeného zdroje). */
 export const IU_INFO_PANEL_CATALOG = [
   csuItem({
@@ -223,7 +254,7 @@ export const IU_INFO_PANEL_CATALOG = [
     fetchBucket: "csu_inflation",
     vyberCode: "CEN0101HT02",
   }),
-  csuItem({
+  mpsvItem({
     id: "unemployment",
     order: 17,
     group: "economy",
@@ -232,15 +263,16 @@ export const IU_INFO_PANEL_CATALOG = [
     icon: "📉",
     primaryLabel: "Evidence ÚP",
     unit: "%",
-    publishFrequency: "annual",
-    maxAgeMs: 400 * DAY_MS,
-    sourceUrl: "https://data.csu.gov.cz/api/dotaz/v1/data/vybery/WREG01CT4?format=CSV",
-    licenseNote: "Registrovaná nezaměstnanost ÚP — oficiální statistika ČSÚ.",
-    dataType: "Podíl nezaměstnaných osob v evidenci úřadu práce",
-    updateNote: "Roční publikace registrované nezaměstnanosti",
-    staleNote: "Starší než 400 dní od generace snapshotu",
-    fetchBucket: "csu_labor_reg",
-    vyberCode: "WREG01CT4",
+    publishFrequency: "monthly",
+    maxAgeMs: 45 * DAY_MS,
+    sourceUrl: MPSV_PNO_API,
+    licenseNote:
+      "Podíl nezaměstnaných osob (PNO): dosažitelní uchazeči 15–64 / obyvatelstvo 15–64 dle metodiky MPSV. Nezaměňovat s obecnou mírou nezaměstnanosti ČSÚ (VŠPS).",
+    dataType: "Podíl registrovaných dosažitelných uchazečů o zaměstnání na obyvatelstvu 15–64 let (MPSV)",
+    updateNote: "Měsíční publikace ÚP ČR / MPSV (Portál otevřených dat)",
+    staleNote: "Starší než 45 dní od generace snapshotu",
+    methodologyNote:
+      "Ukazatel vychází z evidence Úřadu práce. Vyjadřuje podíl dosažitelných uchazečů o zaměstnání ve věku 15–64 let na obyvatelstvu ve stejném věku.",
   }),
   csuItem({
     id: "avg_wage",
@@ -375,7 +407,7 @@ export const IU_INFO_PANEL_CATALOG = [
     fetchBucket: "csu_agriculture",
     vyberCode: "CEN02031T03",
   }),
-  csuItem({
+  mpsvItem({
     id: "job_vacancies",
     order: 26,
     group: "labor",
@@ -384,15 +416,13 @@ export const IU_INFO_PANEL_CATALOG = [
     icon: "💼",
     primaryLabel: "Evidence ÚP",
     unit: "",
-    publishFrequency: "annual",
-    maxAgeMs: 400 * DAY_MS,
-    sourceUrl: "https://data.csu.gov.cz/api/dotaz/v1/data/vybery/WREG01CT4?format=CSV",
-    licenseNote: "Volná pracovní místa v evidenci úřadu práce — ČSÚ.",
-    dataType: "Počet volných pracovních míst v evidenci ÚP",
-    updateNote: "Roční publikace registrované nezaměstnanosti",
-    staleNote: "Starší než 400 dní od generace snapshotu",
-    fetchBucket: "csu_labor_reg",
-    vyberCode: "WREG01CT4",
+    publishFrequency: "monthly",
+    maxAgeMs: 45 * DAY_MS,
+    sourceUrl: MPSV_VPM_API,
+    licenseNote: "Volná pracovní místa v evidenci ÚP — otevřená data MPSV (agregace celostátní).",
+    dataType: "Počet volných pracovních míst v evidenci ÚP (stav k rozhodnému datu)",
+    updateNote: "Měsíční publikace ÚP ČR / MPSV",
+    staleNote: "Starší než 45 dní od generace snapshotu",
   }),
   csuItem({
     id: "employment",
@@ -413,7 +443,7 @@ export const IU_INFO_PANEL_CATALOG = [
     fetchBucket: "csu_employment",
     vyberCode: "WVSPSAT1",
   }),
-  csuItem({
+  mpsvItem({
     id: "registered_unemployment",
     order: 28,
     group: "labor",
@@ -422,15 +452,13 @@ export const IU_INFO_PANEL_CATALOG = [
     icon: "📉",
     primaryLabel: "Evidence ÚP",
     unit: "",
-    publishFrequency: "annual",
-    maxAgeMs: 400 * DAY_MS,
-    sourceUrl: "https://data.csu.gov.cz/api/dotaz/v1/data/vybery/WREG01CT4?format=CSV",
-    licenseNote: "Uchazeči o zaměstnání v evidenci úřadu práce — ČSÚ.",
-    dataType: "Počet uchazečů o zaměstnání v evidenci ÚP",
-    updateNote: "Roční publikace registrované nezaměstnanosti",
-    staleNote: "Starší než 400 dní od generace snapshotu",
-    fetchBucket: "csu_labor_reg",
-    vyberCode: "WREG01CT4",
+    publishFrequency: "monthly",
+    maxAgeMs: 45 * DAY_MS,
+    sourceUrl: MPSV_PNO_API,
+    licenseNote: "Uchazeči o zaměstnání v evidenci ÚP — otevřená data MPSV (celostátní součet).",
+    dataType: "Počet uchazečů o zaměstnání v evidenci ÚP (celkem)",
+    updateNote: "Měsíční publikace ÚP ČR / MPSV",
+    staleNote: "Starší než 45 dní od generace snapshotu",
   }),
   csuItem({
     id: "population",
