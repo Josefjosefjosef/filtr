@@ -71,6 +71,7 @@ function staticGate() {
     {
       id: "cache_bust",
       pass:
+        indexHtml.includes("info-panel-mpsv-audit-v1-20260716") ||
         indexHtml.includes("info-panel-cnb-rates-v1-20260715") ||
         indexHtml.includes("info-panel-freshness-period-v1-20260709"),
     },
