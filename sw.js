@@ -15,7 +15,7 @@
 // 2026-06-29: PWA icon final tuning v54 — larger optically centered iU + infoUzel.cz short_name
 // 2026-07-14: PWA offline completion — reconnect refresh, sync external opens
 // 2026-07-16: PWA offline menu/articles/images — durable last-good feed+img caches, tool modules precache
-const CACHE_VERSION = "2026-07-16-pwa-offline-menu-articles-v1";
+const CACHE_VERSION = "2026-07-16-pwa-offline-menu-articles-v2";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
@@ -69,7 +69,13 @@ function getAppShellUrls() {
     `${BASE}assets/app-crash-shield.js`,
     `${BASE}assets/iu-network-connectivity-v1.js`,
     `${BASE}assets/app.js`,
-    // Offline-local tools (dynamic import graph) — must open without network after first install/update
+    `${BASE}sw.js`
+  ];
+}
+
+/** Offline tool modules + default section images — warmed after activate (not in install addAll). */
+function getOfflineWarmUrls() {
+  return [
     `${BASE}assets/iu-financial-calculators-module.js`,
     `${BASE}assets/iu-financial-calculators-engine.js`,
     `${BASE}assets/iu-financial-calculators-cta.js`,
@@ -79,7 +85,6 @@ function getAppShellUrls() {
     `${BASE}assets/iu-invoice-raster-renderer.js`,
     `${BASE}assets/iu-tool-guard.js`,
     `${BASE}assets/iu-legal-documents-module.js`,
-    // Same-origin default thumbs + section headers (HomeCards / article fallbacks)
     `${BASE}assets/images/news-default.jpg`,
     `${BASE}assets/images/sport-default.jpg`,
     `${BASE}assets/images/finance-default.jpg`,
@@ -99,8 +104,27 @@ function getAppShellUrls() {
     `${BASE}assets/images/section-hry.jpg`,
     `${BASE}assets/images/section-veda-historie.jpg`,
     `${BASE}assets/images/section-vzdelavani.jpg`,
-    `${BASE}sw.js`
   ];
+}
+
+async function warmOfflineAssets() {
+  try {
+    const shell = await caches.open(APP_SHELL_CACHE);
+    const img = await caches.open(IMG_OFFLINE_CACHE);
+    await Promise.all(
+      getOfflineWarmUrls().map(async (raw) => {
+        const url = normalizeUrl(raw);
+        try {
+          const res = await fetch(url, { cache: "no-store" });
+          if (!res || !res.ok) return;
+          if (String(url).includes("/assets/images/")) {
+            await img.put(new Request(url), res.clone());
+          }
+          await shell.put(new Request(url), res.clone());
+        } catch (_) {}
+      })
+    );
+  } catch (_) {}
 }
 
 // ✅ FIX: BASE je path-only ("/" nebo "/filtr/"), vždy s trailing slash
@@ -426,25 +450,28 @@ self.addEventListener("activate", (event) => {
        první instalaci — cold load se kvůli broadcastu načítal 2× (LCP +1.7-3.9 s).
        Update detekce: starý SW byl aktivní při install NEBO existují iu-* cache
        z jiné CACHE_VERSION (fallback, kdyby SW instance mezi install/activate padla). */
+    /* Durable offline caches omit CACHE_VERSION on purpose. Exclude them from
+       deploy detection — otherwise IU_SW_DEPLOY_RELOAD fires after the first
+       feed/image write and breaks tab UI (Playwright + installed PWA). */
+    const durableCaches = new Set([FEED_OFFLINE_CACHE, IMG_OFFLINE_CACHE]);
     const hadPreviousDeploy =
       IU_HAD_ACTIVE_SW_AT_INSTALL ||
-      keys.some((key) => key.indexOf("iu-") === 0 && !key.endsWith(CACHE_VERSION));
-    /* Keep current version caches + durable offline last-good (feed/images).
-       Do not wipe user offline article/image caches on every SW bump. */
-    const keep = new Set([
-      APP_SHELL_CACHE,
-      DATA_CACHE,
-      DATA_META_CACHE,
-      FEED_OFFLINE_CACHE,
-      IMG_OFFLINE_CACHE,
-    ]);
+      keys.some((key) => {
+        if (durableCaches.has(key)) return false;
+        return key.indexOf("iu-") === 0 && !key.endsWith(CACHE_VERSION);
+      });
+    /* Keep ONLY durable last-good feed/images across SW bumps.
+       Always drop versioned app/data shell caches (including current) so
+       activate matches main: CSS/JS come from network, not a half-filled
+       install precache — keeping APP_SHELL here broke mobile Tools tab. */
     await Promise.all(
       keys.map((key) => {
-        if (keep.has(key)) return Promise.resolve();
-        if (String(key).indexOf("iu-") === 0) return caches.delete(key);
-        return Promise.resolve();
+        if (durableCaches.has(key)) return Promise.resolve();
+        return caches.delete(key);
       })
     );
+    /* Re-warm tool modules + default images into a fresh shell after versioned wipe. */
+    await warmOfflineAssets();
     await self.clients.claim();
     if (hadPreviousDeploy) {
       try {
@@ -598,6 +625,27 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  /* app.js: network-first (must run before generic CSS/JS SWR). */
+  if (path.includes("/assets/app.js")) {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(APP_SHELL_CACHE);
+        const cacheKey = new Request(url.origin + url.pathname);
+        try {
+          const res = await fetch(event.request, { cache: "no-store" });
+          if (res && res.ok) {
+            event.waitUntil(cache.put(cacheKey, res.clone()).catch(() => {}));
+            return res;
+          }
+        } catch (_) {}
+        const cached = (await cache.match(cacheKey)) || (await caches.match(event.request));
+        if (cached) return cached;
+        return new Response("", { status: 503, statusText: "Offline", headers: { "Cache-Control": "no-store" } });
+      })()
+    );
+    return;
+  }
+
   // CSS/JS assets: stale-while-revalidate, cache key bez query stringu.
   // Důvod: stabilní ?v=... + Cache First by jinak mohl držet staré CSS/JS donekonečna.
   if (
@@ -640,26 +688,6 @@ self.addEventListener("fetch", (event) => {
 
   if (path.includes("/assets/iu-pwa-version-check.js")) {
     event.respondWith(fetch(event.request, { cache: "no-store" }));
-    return;
-  }
-
-  if (path.includes("/assets/app.js")) {
-    event.respondWith(
-      (async () => {
-        const cache = await caches.open(APP_SHELL_CACHE);
-        const cacheKey = new Request(url.origin + url.pathname);
-        try {
-          const res = await fetch(event.request, { cache: "no-store" });
-          if (res && res.ok) {
-            event.waitUntil(cache.put(cacheKey, res.clone()).catch(() => {}));
-            return res;
-          }
-        } catch (_) {}
-        const cached = (await cache.match(cacheKey)) || (await caches.match(event.request));
-        if (cached) return cached;
-        return new Response("", { status: 503, statusText: "Offline", headers: { "Cache-Control": "no-store" } });
-      })()
-    );
     return;
   }
 
