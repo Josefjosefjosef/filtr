@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Build same-origin snapshot for PC info panel V4.
- * Sources: ČNB, CoinGecko, ČSÚ DataStat (vybery CSV).
+ * Sources: ČNB, CoinGecko, ČSÚ DataStat (vybery CSV), MPSV open data (labour).
  */
 import fs from "fs";
 import path from "path";
@@ -9,12 +9,17 @@ import { fileURLToPath } from "url";
 import { IU_INFO_PANEL_CATALOG } from "../assets/iu-desktop-info-panel-catalog.js";
 import { CNB_DAILY_RATES_URL, parseCnbRatesText } from "../assets/iu-cnb-exchange-utils.js";
 import {
+  trendFromComparablePair,
+  trendFromPercentPoint,
+} from "../assets/iu-info-panel-change-utils.js";
+import {
   bucketContentHash,
   bucketsDueForCheck,
   readSchedulerState,
   touchBucketCheck,
   writeSchedulerState,
 } from "./info_panel_scheduler.mjs";
+import { fetchMpsvNationalLaborSeries } from "./mpsv_labor_open_data.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -168,35 +173,27 @@ function findLatestCsuRows(records, rowMatch) {
   return rows;
 }
 
-function trendFromDelta(delta, pct) {
-  if (delta == null && pct == null) return { direction: "flat", text: "beze změny" };
-  const d = typeof delta === "number" ? delta : typeof pct === "number" ? pct : 0;
-  if (Math.abs(d) < 0.0001) return { direction: "flat", text: "beze změny" };
-  const sign = d > 0 ? "▲" : "▼";
-  const abs = Math.abs(d);
-  if (typeof pct === "number" && typeof delta !== "number") {
-    return { direction: d > 0 ? "up" : "down", text: `${sign} ${abs.toFixed(2)} %` };
-  }
-  return { direction: d > 0 ? "up" : "down", text: `${sign} ${abs.toFixed(2)}` };
-}
-
-function trendFromPair(current, prev) {
-  if (!current || !prev) return trendFromDelta(null, null);
-  return trendFromDelta(current.value - prev.value);
-}
-
 function putItem(snapshot, id, row, options = {}) {
   const prev = options.prev || null;
-  const trend = options.trend || trendFromPair(row, prev);
+  const unit = options.unit || "";
+  const trend =
+    options.trend ||
+    trendFromComparablePair(row, prev, {
+      unit,
+      indicatorId: id,
+      kind: options.changeKind,
+    });
   snapshot.items[id] = {
     value: options.round ? Math.round(row.value) : row.value,
-    unit: options.unit || "",
+    unit,
     primaryLabel: options.primaryLabel || "",
     secondaryValue: trend.text,
     trendDirection: trend.direction,
     updatedAt: row.period,
     isLive: true,
-    legalStatus: "verified_requires_attribution",
+    legalStatus: options.legalStatus || "verified_requires_attribution",
+    sourceName: options.sourceName || undefined,
+    referencePeriod: row.period || undefined,
   };
 }
 
@@ -235,10 +232,22 @@ async function fetchCnb(snapshot, prev) {
         usd: cnb.USD,
       })
     );
-    const prevEur = prev && prev.items && prev.items.eur_czk ? prev.items.eur_czk.value : null;
-    const prevUsd = prev && prev.items && prev.items.usd_czk ? prev.items.usd_czk.value : null;
-    const eurTrend = trendFromDelta(prevEur != null ? cnb.EUR - prevEur : null);
-    const usdTrend = trendFromDelta(prevUsd != null ? cnb.USD - prevUsd : null);
+    const prevEurRow =
+      prev && prev.items && prev.items.eur_czk && typeof prev.items.eur_czk.value === "number"
+        ? { value: prev.items.eur_czk.value }
+        : null;
+    const prevUsdRow =
+      prev && prev.items && prev.items.usd_czk && typeof prev.items.usd_czk.value === "number"
+        ? { value: prev.items.usd_czk.value }
+        : null;
+    const eurTrend = trendFromComparablePair({ value: cnb.EUR }, prevEurRow, {
+      unit: "Kč",
+      indicatorId: "eur_czk",
+    });
+    const usdTrend = trendFromComparablePair({ value: cnb.USD }, prevUsdRow, {
+      unit: "Kč",
+      indicatorId: "usd_czk",
+    });
     snapshot.items.eur_czk = {
       value: cnb.EUR,
       unit: "Kč",
@@ -286,8 +295,8 @@ async function fetchCoinGecko(snapshot) {
     const gold = json && json["pax-gold"];
     if (!btc || typeof btc.czk !== "number") throw new Error("coingecko_btc_missing");
     if (!gold || typeof gold.czk !== "number") throw new Error("coingecko_gold_missing");
-    const btcTrend = trendFromDelta(null, btc.czk_24h_change);
-    const goldTrend = trendFromDelta(null, gold.czk_24h_change);
+    const btcTrend = trendFromPercentPoint(btc.czk_24h_change);
+    const goldTrend = trendFromPercentPoint(gold.czk_24h_change);
     snapshot.items.bitcoin = {
       value: Math.round(btc.czk),
       unit: "Kč",
@@ -375,27 +384,75 @@ async function fetchCsuInflation(snapshot) {
   }
 }
 
-async function fetchCsuLaborReg(snapshot) {
+async function fetchMpsvLabor(snapshot, prev) {
   try {
-    const records = await fetchCsuCsv("WREG01CT4");
-    const unemploymentRows = findLatestCsuRows(records, (row, header) => {
-      if (!isCzechTotal(row, header)) return false;
-      return /podil nezamestnan/.test(normalizeText(row[0])) && /celkem/.test(normalizeText(row[0]));
+    const labor = await fetchMpsvNationalLaborSeries();
+    const attribution = labor.source.attribution;
+    const srcName = labor.source.provider;
+
+    const prevVacRaw =
+      prev && prev.items && prev.items.job_vacancies && typeof prev.items.job_vacancies.value === "number"
+        ? prev.items.job_vacancies
+        : null;
+    const prevVacPeriod = prevVacRaw ? String(prevVacRaw.updatedAt || "") : "";
+    const currVacPeriod = String(labor.latest.job_vacancies.period || "");
+    const prevVacComparable =
+      prevVacRaw &&
+      prevVacPeriod &&
+      currVacPeriod &&
+      prevVacPeriod !== currVacPeriod &&
+      // Nepoužívat archivní roční ČSÚ 2023 jako „předchozí měsíc“.
+      !/^\d{4}$/.test(prevVacPeriod.trim()) &&
+      periodSortKey(prevVacPeriod) > 0 &&
+      Math.abs(periodSortKey(currVacPeriod) - periodSortKey(prevVacPeriod)) <= 2
+        ? { value: prevVacRaw.value, period: prevVacPeriod }
+        : null;
+
+    putItem(snapshot, "unemployment", labor.latest.unemployment, {
+      unit: "%",
+      primaryLabel: "Podíl nezaměstnaných",
+      prev: labor.previous.unemployment,
+      changeKind: "percentage_points",
+      sourceName: srcName,
+      legalStatus: "verified_requires_attribution",
     });
-    const vacancyRows = findLatestCsuRows(records, (row) => /volna pracovni mista/.test(normalizeText(row[0])));
-    const registeredRows = findLatestCsuRows(records, (row, header) => {
-      if (!isCzechTotal(row, header)) return false;
-      const label = normalizeText(row[0]);
-      return /uchazeci o zamestnani/.test(label) && /celkem/.test(label) && !/dosazitel/.test(label);
+    putItem(snapshot, "registered_unemployment", labor.latest.registered_unemployment, {
+      unit: "",
+      primaryLabel: "Uchazeči ÚP",
+      prev: labor.previous.registered_unemployment,
+      changeKind: "absolute",
+      round: true,
+      sourceName: srcName,
+      legalStatus: "verified_requires_attribution",
     });
-    if (!unemploymentRows.length) throw new Error("csu_unemployment_missing");
-    if (!vacancyRows.length) throw new Error("csu_vacancies_missing");
-    if (!registeredRows.length) throw new Error("csu_registered_unemployment_missing");
-    putItem(snapshot, "unemployment", unemploymentRows[0], { unit: "%", primaryLabel: "Podíl nezaměstnaných", prev: unemploymentRows[1] });
-    putItem(snapshot, "job_vacancies", vacancyRows[0], { unit: "", primaryLabel: "Evidence ÚP", prev: vacancyRows[1], round: true });
-    putItem(snapshot, "registered_unemployment", registeredRows[0], { unit: "", primaryLabel: "Uchazeči ÚP", prev: registeredRows[1], round: true });
+    putItem(snapshot, "job_vacancies", labor.latest.job_vacancies, {
+      unit: "",
+      primaryLabel: "Evidence ÚP",
+      prev: labor.previous.job_vacancies || prevVacComparable,
+      changeKind: "absolute",
+      round: true,
+      sourceName: srcName,
+      legalStatus: "verified_requires_attribution",
+    });
+
+    snapshot.items.unemployment.attribution = attribution;
+    snapshot.items.registered_unemployment.attribution = attribution;
+    snapshot.items.job_vacancies.attribution = attribution;
+    snapshot.errors = snapshot.errors.filter(
+      (err) => err && err.id !== "mpsv_labor" && err.id !== "csu_labor_reg"
+    );
+    console.log(
+      "mpsv_labor_ok",
+      JSON.stringify({
+        period: labor.latest.unemployment.period,
+        pno: labor.latest.unemployment.value,
+        seekers: labor.latest.registered_unemployment.value,
+        vacancies: labor.latest.job_vacancies.value,
+        vacPrevComparable: !!prevVacComparable,
+      })
+    );
   } catch (err) {
-    pushError(snapshot, "csu_labor_reg", err);
+    pushError(snapshot, "mpsv_labor", err);
   }
 }
 
@@ -714,7 +771,7 @@ const BUCKET_FETCHERS = {
   csu_fuel: fetchCsuFuel,
   csu_coicop: fetchCsuCoicop,
   csu_inflation: fetchCsuInflation,
-  csu_labor_reg: fetchCsuLaborReg,
+  mpsv_labor: fetchMpsvLabor,
   csu_wage_q: fetchCsuWageQuarterly,
   csu_wage_y: fetchCsuWageYearly,
   csu_gdp: fetchCsuGdp,

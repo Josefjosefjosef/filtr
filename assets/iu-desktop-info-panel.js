@@ -215,6 +215,11 @@ function openDetail(item, sourceBtn) {
     `<section class="iuDesktopInfoPanelDetail__section iuDesktopInfoPanelDetail__section--meta">` +
     (categoryLine ? `<p><strong>Kategorie:</strong> ${esc(categoryLine)}</p>` : "") +
     `<p><strong>Poskytovatel:</strong> ${esc(providerLine)}</p>` +
+    (item.methodologyNote
+      ? `<p><strong>Metodika:</strong> ${esc(item.methodologyNote)}</p>`
+      : item.licenseNote
+        ? `<p><strong>Poznámka ke zdroji:</strong> ${esc(item.licenseNote)}</p>`
+        : "") +
     `<p><strong>${esc(updatedLine)}</strong></p>` +
     `<p><strong>Frekvence zveřejňování:</strong> ${esc(freqLine)}</p>` +
     `</section>` +

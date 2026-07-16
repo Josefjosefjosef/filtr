@@ -20,7 +20,7 @@ export const BUCKET_SCHEDULE = {
   csu_fuel: { checkIntervalMs: DAY_MS, label: "daily" },
   csu_coicop: { checkIntervalMs: DAY_MS, label: "daily" },
   csu_inflation: { checkIntervalMs: DAY_MS, label: "daily" },
-  csu_labor_reg: { checkIntervalMs: DAY_MS, label: "daily" },
+  mpsv_labor: { checkIntervalMs: DAY_MS, label: "daily" },
   csu_wage_q: { checkIntervalMs: DAY_MS, label: "daily" },
   csu_wage_y: { checkIntervalMs: DAY_MS, label: "daily" },
   csu_gdp: { checkIntervalMs: DAY_MS, label: "daily" },
