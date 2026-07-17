@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-07-17T10:44:49.922766Z",
+  "ingestedAt": "2026-07-17T12:47:08.381160Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Steam odhalil termíny výprodejů pro první polovinu roku 2027",
+      "url": "https://zing.cz/article/steam-odhalil-terminy-vyprodeju-pro-prvni-polovinu-roku-2027",
+      "dt": "2026-07-17T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "2027",
+        "odhalil",
+        "polovinu",
+        "první",
+        "roku",
+        "steam",
+        "termíny",
+        "výprodejů"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -974,31 +999,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Nová kompetitivní PvPvE hra na styl Battlerite míří do bety",
-      "url": "https://zing.cz/article/nova-kompetitivni-pvpve-hra-na-styl-battlerite-miri-do-bety",
-      "dt": "2026-07-12T08:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "battlerite",
-        "bety",
-        "hra",
-        "kompetitivní",
-        "míří",
-        "nová",
-        "pvpve",
-        "styl"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1009,7 +1009,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126437,
+      "bytes": 126395,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1046,7 +1046,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-07-17T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-07-17T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1061,6 +1061,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Steam odhalil termíny výprodejů pro první polovinu roku 2027",
+            "publishedAt": "2026-07-17T10:00:00Z"
+          },
           {
             "title": "Metro 2039 se v hratelné podobě ukáže na letošním Gamescomu",
             "publishedAt": "2026-07-17T06:00:00Z"
@@ -1088,10 +1092,6 @@
           {
             "title": "Epic nabízí zdarma dvě výborně hodnocené hry",
             "publishedAt": "2026-07-16T15:00:00Z"
-          },
-          {
-            "title": "Titanfall 2 se překvapivě dočkal české lokalizace",
-            "publishedAt": "2026-07-16T14:00:00Z"
           }
         ]
       }
