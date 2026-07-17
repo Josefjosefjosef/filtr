@@ -3189,12 +3189,22 @@ try {
     );
     const chunkHasMoreInMemory =
       chunkMemoryArticleCount > 0 && artVisible < chunkMemoryArticleCount;
-    const hasMore = chunkHasMoreInMemory || iuChunkHasMoreOnServer(state.chunkLoader);
+    let iuOfflinePaging = false;
+    try {
+      iuOfflinePaging = typeof navigator !== "undefined" && navigator.onLine === false;
+    } catch (_) {
+      iuOfflinePaging = false;
+    }
+    const hasMore = chunkHasMoreInMemory || (!iuOfflinePaging && iuChunkHasMoreOnServer(state.chunkLoader));
     if (loadMoreAnchor) {
       const meta = loadMoreAnchor.querySelector(".iuLoadMoreMeta");
-      if (meta) meta.textContent = String(artVisible) + " / " + String(chunkTotalInSection);
+      if (meta) {
+        const localTotal = iuCountFeedArticles(items) || items.length;
+        const displayTotal = iuOfflinePaging ? localTotal : chunkTotalInSection;
+        meta.textContent = String(artVisible) + " / " + String(displayTotal);
+      }
       const loadBtn = loadMoreAnchor.querySelector(".iuLoadMoreBtn");
-      if (loadBtn) loadBtn.disabled = false;
+      if (loadBtn) loadBtn.disabled = !hasMore;
     }
     try {
       window.__iuLoadMoreLastRenderedItems = visibleItems;
@@ -6506,14 +6516,27 @@ try {
     const chunkVisibleArticleCount = iuCountFeedArticles(visibleItems);
     const chunkHasMoreInMemory =
       chunkMode && chunkMemoryArticleCount > 0 && chunkVisibleArticleCount < chunkMemoryArticleCount;
+    let iuOfflinePaging = false;
+    try {
+      iuOfflinePaging = typeof navigator !== "undefined" && navigator.onLine === false;
+    } catch (_) {
+      iuOfflinePaging = false;
+    }
     const hasMore = chunkMode
-      ? chunkHasMoreInMemory || iuChunkHasMoreOnServer(state.chunkLoader)
+      ? chunkHasMoreInMemory || (!iuOfflinePaging && iuChunkHasMoreOnServer(state.chunkLoader))
       : mediaHub100
       ? iuCountFeedArticles(visibleItems) < totalArticlesInFeed || visibleItems.length < items.length
       : visibleItems.length < items.length;
-    const chunkTotalInSection =
-      chunkMode && state.chunkLoader
+    /* Offline: never advertise remote manifest totals (e.g. 1/20772) — only locally held rows. */
+    const chunkTotalInSection = iuOfflinePaging
+      ? iuCountFeedArticles(items) || items.length
+      : chunkMode && state.chunkLoader
         ? iuChunkSectionMeta(state.chunkLoader)?.totalArticles || state.chunkLoader.totalInSection || items.length
+        : items.length;
+    const loadMoreDisplayTotal = iuOfflinePaging
+      ? iuCountFeedArticles(items) || items.length
+      : chunkMode
+        ? chunkTotalInSection
         : items.length;
     // debug/gate-friendly snapshot (read-only)
     try{
@@ -6893,6 +6916,7 @@ try {
     // "Load more" button (no infinite auto-load)
     let loadMoreWrap = null;
     const canLoadRetention =
+      !iuOfflinePaging &&
       !chunkMode &&
       (Boolean(state.retentionIsLoading) ||
         (Array.isArray(state.retentionDays) && state.retentionCursor < state.retentionDays.length));
@@ -6912,7 +6936,7 @@ try {
         <button type="button" class="iuLoadMoreBtn" aria-label="${loadMoreAria}">
           ${loadMoreBtnLabel}
         </button>
-        <div class="iuLoadMoreMeta">${metaArticleCount} / ${chunkMode ? chunkTotalInSection : items.length}${canLoadRetention ? "+" : ""}</div>
+        <div class="iuLoadMoreMeta">${metaArticleCount} / ${loadMoreDisplayTotal}${!iuOfflinePaging && canLoadRetention ? "+" : ""}</div>
       `.trim();
       loadMoreWrap = wrap;
     } else if (appendOnlyKeepLoadMore) {
@@ -6921,7 +6945,7 @@ try {
         if (oldMeta) {
           const metaArticleCount = iuCountFeedArticles(visibleItems);
           oldMeta.textContent =
-            metaArticleCount + " / " + (chunkMode ? chunkTotalInSection : items.length) + (canLoadRetention ? "+" : "");
+            metaArticleCount + " / " + loadMoreDisplayTotal + (!iuOfflinePaging && canLoadRetention ? "+" : "");
         }
       } catch (_) {}
     }
@@ -35198,6 +35222,21 @@ function buildVideoAsArticleCard(it) {
     try{
       const section = String(document.body?.dataset?.section || "").trim().toLowerCase();
       if (!section) return;
+      /* Article verticals (Kultura / Akce, Hry, …): never mount section notes into #feed.
+         Offline fallback used to resolve kultura → #feed and show the old notes block. */
+      if (
+        section === "kultura" ||
+        section === "kultura-akce" ||
+        section === "hry" ||
+        section === "veda" ||
+        section === "vzdelavani" ||
+        section === "media" ||
+        section === "feed" ||
+        section === "travel" ||
+        section === "cestovani"
+      ) {
+        return;
+      }
       /* P0 Mapy & Navigace: žádný dynamický section-level .iuNotesHost v #iuMapyView (per HTML cleanup + proof). */
       if (section === "mapy" || section === "maps") return;
       /* P0 Jízdní řády: žádný section-level notes host (žádné dynamické vložení po otevření sekce). */
@@ -35241,10 +35280,9 @@ function buildVideoAsArticleCard(it) {
         return;
       }
 
-      // map URL section -> storage key + view element
+      // map URL section -> storage key + view element (no article verticals — they use #feed)
       const map = {
         mapy:    { key: "mapy",     view: () => document.getElementById("iuMapyView") || document.getElementById("iuMapsView"), accentVar: "--iuNavAccent-mapy", label: "Mapy & Navigace" },
-        kultura: { key: "kultura",  view: () => document.getElementById("iuKulturaView") || document.getElementById("feed"), accentVar: "--iuNavAccent-kultura", label: "Kultura / Akce" },
       };
 
       const cfg = map[section];
@@ -40605,11 +40643,37 @@ function buildVideoAsArticleCard(it) {
     const filterOnly = getFilterOnlyTasks();
     const rows = getFilteredSorted();
     const sq = String(state.searchQuery || "").trim();
+    let restoreSearchFocus = false;
+    let restoreSelStart = 0;
+    let restoreSelEnd = 0;
+    try {
+      const prevSearch = document.getElementById("iuTasksSearch");
+      if (prevSearch && document.activeElement === prevSearch) {
+        restoreSearchFocus = true;
+        restoreSelStart = typeof prevSearch.selectionStart === "number" ? prevSearch.selectionStart : String(prevSearch.value || "").length;
+        restoreSelEnd = typeof prevSearch.selectionEnd === "number" ? prevSearch.selectionEnd : restoreSelStart;
+      }
+    } catch (_) {}
 
     const searchBar =
       '<div class="iu-tasksOverlay__listToolbar" id="iuTasksSearchWrap">' +
         '<input class="iu-tasksOverlay__search" id="iuTasksSearch" type="search" placeholder="Hledat úkol" autocomplete="off" value="' + esc(state.searchQuery || "") + '" aria-label="Hledat úkol" />' +
       "</div>";
+
+    function iuTasksRestoreSearchFocus(){
+      if (!restoreSearchFocus) return;
+      try {
+        const inp = document.getElementById("iuTasksSearch");
+        if (!inp) return;
+        inp.focus({ preventScroll: true });
+        if (typeof inp.setSelectionRange === "function") {
+          const len = String(inp.value || "").length;
+          const a = Math.max(0, Math.min(restoreSelStart, len));
+          const b = Math.max(0, Math.min(restoreSelEnd, len));
+          inp.setSelectionRange(a, b);
+        }
+      } catch (_) {}
+    }
 
     if (!allTasks.length){
       root.innerHTML =
@@ -40626,6 +40690,7 @@ function buildVideoAsArticleCard(it) {
         searchBar +
         '<p class="iu-tasksOverlay__hint" data-iu-tasks-filter-empty="1">Žádný úkol v tomto výběru. ' +
         '<button type="button" class="iu-tasksOverlay__btn" data-iu-tasks-filter-all="1">Zobrazit vše</button></p>';
+      iuTasksRestoreSearchFocus();
       return;
     }
 
@@ -40633,6 +40698,7 @@ function buildVideoAsArticleCard(it) {
       root.innerHTML =
         searchBar +
         '<p class="iu-tasksOverlay__hint" data-iu-tasks-search-empty="1">Nebyl nalezen žádný úkol</p>';
+      iuTasksRestoreSearchFocus();
       return;
     }
 
@@ -40665,6 +40731,7 @@ function buildVideoAsArticleCard(it) {
     }
     parts.push("</ul>");
     root.innerHTML = parts.join("");
+    iuTasksRestoreSearchFocus();
   }
 
   function renderDetailEmpty(){
@@ -41050,10 +41117,11 @@ function buildVideoAsArticleCard(it) {
       const ov = getOverlay();
       if (!ov || ov.hidden) return;
       const next = String(t.value || "");
+      /* Keep query in state immediately so remounted input keeps value + focus. */
+      state.searchQuery = next;
       if (state.searchTimer){ try{ clearTimeout(state.searchTimer); }catch{} state.searchTimer = null; }
       state.searchTimer = setTimeout(function(){
         state.searchTimer = null;
-        state.searchQuery = next;
         render();
       }, 200);
     });
@@ -41677,6 +41745,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   const CAL_ALL_DAY_LIMIT_MSG = "Pro jeden den lze uložit maximálně 3 celodenní události.";
   const ALLOWED_VIEWS = new Set(["month", "year"]);
   const FOCUSABLE_SELECTOR = 'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])';
+  /* Skip same-tab reload after our own writeStore (rapid creates were racing readStore). */
   let iuCalStoreWriteEpoch = 0;
 
   const CZ_FIXED_HOLIDAYS = new Set([
@@ -42386,9 +42455,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         });
       }catch{}
     }
+    iuCalStoreWriteEpoch += 1;
+    const writeEpoch = iuCalStoreWriteEpoch;
     try{
-      iuCalStoreWriteEpoch += 1;
-      const writeEpoch = iuCalStoreWriteEpoch;
       window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: STORE_KEY, source: "iu-calendar-self", epoch: writeEpoch } }));
     }catch{}
     try{
@@ -79573,6 +79642,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         try {
           console.warn("[iu] financial calculators overlay import failed", e);
         } catch (_) {}
+        try {
+          if (typeof navigator !== "undefined" && navigator.onLine === false && window.iuNetwork && typeof window.iuNetwork.showOfflineHint === "function") {
+            window.iuNetwork.showOfflineHint("Finanční kalkulačky zatím nejsou v této instalaci offline. Zapněte internet jednou, aby se modul stáhl.");
+          }
+        } catch (_) {}
       });
     return finPromise;
   }
@@ -79620,6 +79694,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         invPromise = null;
         try {
           console.warn("[iu] invoice overlay import failed", e);
+        } catch (_) {}
+        try {
+          if (typeof navigator !== "undefined" && navigator.onLine === false && window.iuNetwork && typeof window.iuNetwork.showOfflineHint === "function") {
+            window.iuNetwork.showOfflineHint("Generátor faktur zatím není v této instalaci offline. Zapněte internet jednou, aby se modul stáhl.");
+          }
         } catch (_) {}
       });
     return invPromise;

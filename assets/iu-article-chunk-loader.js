@@ -397,6 +397,23 @@ export async function iuChunkLoadInitial(basePath, dataVer, sectionKey) {
 
 /** Phase 2: buffer chunk (+70) until CLIENT_INITIAL_LIMIT — runs after first paint. */
 export async function iuChunkFetchBackgroundBuffer(loader, basePath, dataVer) {
+  /* Test-only hook: Playwright guards may set window.__IU_GUARD_PAUSE_BG_PRELOAD via
+     addInitScript. Never set from production UI/URL. Skips buffer prefetch so load-more
+     must perform a real chunk fetch under deterministic conditions. */
+  try {
+    if (typeof window !== "undefined" && window.__IU_GUARD_PAUSE_BG_PRELOAD === true) {
+      if (loader) {
+        loader.backgroundDone = true;
+        loader.backgroundMemoryReady = true;
+        loader.backgroundFetchInflight = false;
+        loader._backgroundFetchPromise = null;
+      }
+      try {
+        window.__iuChunkBackgroundBufferDone = true;
+      } catch (_) {}
+      return loader && loader.articles ? loader.articles.slice(0, CLIENT_INITIAL_LIMIT) : [];
+    }
+  } catch (_) {}
   if (!loader || loader.backgroundDone) {
     return loader && loader.articles ? loader.articles.slice(0, CLIENT_INITIAL_LIMIT) : [];
   }

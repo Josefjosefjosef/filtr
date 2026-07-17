@@ -76,31 +76,44 @@ function todayIso() {
 
 async function testPinnedAndLimit(page) {
   await page.setViewportSize({ width: 1280, height: 720 });
+  await page.addInitScript(() => {
+    try {
+      localStorage.removeItem("iu.calendar.store.v1");
+    } catch (_) {}
+    try {
+      indexedDB.deleteDatabase("iu.calendar.idb");
+    } catch (_) {}
+  });
   await page.goto(buildUrl(), { waitUntil: "domcontentloaded", timeout: 120000 });
   await page.waitForFunction(
     () => window.iuCalendarService && typeof window.iuCalendarService.calendarCreateEvent === "function",
     { timeout: 90000 }
   );
   const iso = todayIso();
-  await page.evaluate(async (dateIso) => {
+  const seeded = await page.evaluate(async (dateIso) => {
     const svc = window.iuCalendarService;
-    const existing = svc.calendarGetEventsSnapshot().filter((ev) => ev.date === dateIso && ev.allDay);
-    for (let i = 0; i < existing.length; i++) {
-      /* keep existing — limit test uses remaining slots */
+    const results = [];
+    for (let j = 0; j < 3; j++) {
+      results.push(
+        await svc.calendarCreateEvent({
+          date: dateIso,
+          time: "00:00",
+          allDay: true,
+          title: "Guard AD " + (j + 1),
+          note: "",
+          address: "",
+          type: "personal",
+        })
+      );
     }
-    const need = Math.max(0, 3 - existing.length);
-    for (let j = 0; j < need; j++) {
-      await svc.calendarCreateEvent({
-        date: dateIso,
-        time: "00:00",
-        allDay: true,
-        title: "Guard AD " + (j + 1),
-        note: "",
-        address: "",
-        type: "personal",
-      });
-    }
+    const allDayCount = svc
+      .calendarGetEventsSnapshot()
+      .filter((ev) => ev.date === dateIso && ev.allDay).length;
+    return { results, allDayCount, dateIso };
   }, iso);
+  if (!seeded || seeded.allDayCount !== 3) {
+    throw new Error("failed to seed 3 all-day events: " + JSON.stringify(seeded));
+  }
   const fourth = await page.evaluate(async (dateIso) => {
     return window.iuCalendarService.calendarCreateEvent({
       date: dateIso,
@@ -113,7 +126,7 @@ async function testPinnedAndLimit(page) {
     });
   }, iso);
   if (!fourth || fourth.ok !== false || fourth.reason !== "all_day_limit") {
-    throw new Error("fourth all-day event was not rejected");
+    throw new Error("fourth all-day event was not rejected: " + JSON.stringify(fourth));
   }
   await page.evaluate(() => {
     window.iuCalendarService.calendarOpenTodayDayView();

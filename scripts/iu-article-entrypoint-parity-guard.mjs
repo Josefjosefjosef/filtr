@@ -7,6 +7,10 @@
  * Never: FULL_POOL, FULL_ARCHIVE, ALL_SECTIONS_PRELOAD.
  * Přehled dne: bounded feed chunk fetch only (init+buffer), not full pool.
  *
+ * Load-more is tested in two deterministic modes (never raced against BG preload):
+ * - fetch: pause BG via window.__IU_GUARD_PAUSE_BG_PRELOAD (Playwright addInitScript only)
+ * - reveal: allow BG to fill buffer, then assert reveal-from-buffer behaviour
+ *
  * Run: npm run article-entrypoint-parity-guard
  */
 import { createRequire } from "module";
@@ -36,6 +40,7 @@ const REPORT_PATH = path.join(REPO, "scripts", "iu-article-entrypoint-parity-gua
 
 const RECEIVED_FAIL_MAX = 500;
 const BACKGROUND_RECEIVED_MAX = 100;
+const SCROLL_TOL_PX = 80;
 
 function bufferChunkSections(entries) {
   const dirs = new Set();
@@ -151,6 +156,9 @@ function staticArchitectureGuard() {
   if (!storeSrc.includes("iuClientArticleStoreGetPrehledDneView")) {
     fails.push("static: missing iuClientArticleStoreGetPrehledDneView");
   }
+  if (!loaderSrc.includes("__IU_GUARD_PAUSE_BG_PRELOAD")) {
+    fails.push("static: missing test-only __IU_GUARD_PAUSE_BG_PRELOAD hook in chunk loader");
+  }
 
   const pairIdx = appSrc.indexOf("async function __iuFetchArticlesVideosPrimaryPair");
   if (pairIdx < 0) {
@@ -247,6 +255,48 @@ async function readChunkState(page) {
   });
 }
 
+async function captureLoaderDiagnostics(page) {
+  return page.evaluate(() => {
+    const st = window.__iuFeedPipelineState || window.state || {};
+    const cl = st.chunkLoader || {};
+    const feed = document.getElementById("feed");
+    const cards = feed ? Array.from(feed.querySelectorAll("article.news-card")) : [];
+    const ids = cards
+      .map((el) => el.getAttribute("data-id") || el.getAttribute("data-url") || el.querySelector("a")?.href || "")
+      .filter(Boolean);
+    const uniq = new Set(ids);
+    const meta = document.querySelector(".iuLoadMoreMeta");
+    const scrollY =
+      window.scrollY ||
+      document.documentElement.scrollTop ||
+      document.body.scrollTop ||
+      0;
+    let loadedIdx = [];
+    try {
+      if (cl.loadedChunkIndexes instanceof Set) loadedIdx = Array.from(cl.loadedChunkIndexes);
+      else if (Array.isArray(cl.loadedChunkIndexes)) loadedIdx = cl.loadedChunkIndexes.slice();
+    } catch (_) {}
+    return {
+      pauseBgHook: window.__IU_GUARD_PAUSE_BG_PRELOAD === true,
+      backgroundDone: !!(window.__iuChunkBackgroundBufferDone || cl.backgroundDone),
+      backgroundFetchInflight: !!cl.backgroundFetchInflight,
+      bufferChunkLoaded: !!cl.bufferChunkLoaded,
+      articlesInMemory: Array.isArray(cl.articles) ? cl.articles.length : 0,
+      articlesReceivedCount: cl.articlesReceivedCount ?? null,
+      nextLoadMoreChunkIndex: cl.nextLoadMoreChunkIndex ?? null,
+      loadedChunkIndexes: loadedIdx,
+      loadedChunkCount: loadedIdx.length,
+      visibleDomArticles: cards.length,
+      visibleIds: ids,
+      duplicateVisibleIds: ids.length - uniq.size,
+      filteredItemsCount: Array.isArray(st.filteredItems) ? st.filteredItems.length : null,
+      metaText: meta ? meta.textContent : null,
+      scrollY,
+      sectionKey: cl.sectionKey ?? null,
+    };
+  });
+}
+
 async function waitBackground(page, timeoutMs = 20000) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
@@ -258,14 +308,14 @@ async function waitBackground(page, timeoutMs = 20000) {
 }
 
 async function testLoadMore(page, networkLog, markIndex) {
-  const metaBefore = await page.evaluate(() => {
-    const m = document.querySelector(".iuLoadMoreMeta");
-    return m ? m.textContent : null;
-  });
-  const filteredBefore = await page.evaluate(() => {
-    const st = window.__iuFeedPipelineState || window.state || {};
-    return Array.isArray(st.filteredItems) ? st.filteredItems.length : null;
-  });
+  const diagBefore = await captureLoaderDiagnostics(page);
+  const metaBefore = diagBefore.metaText;
+  const filteredBefore = diagBefore.filteredItemsCount;
+  const visibleBefore = diagBefore.visibleDomArticles;
+  const idsBefore = diagBefore.visibleIds.slice();
+  const scrollBefore = diagBefore.scrollY;
+  const networkBefore = networkLog.slice(0, networkLog.length).map((n) => String(n.url).split("?")[0]);
+
   const btnVisible = await page.evaluate(() => {
     const btn = document.querySelector(".iuLoadMoreBtn");
     return !!(btn && btn.offsetParent !== null);
@@ -276,14 +326,18 @@ async function testLoadMore(page, networkLog, markIndex) {
       load_more_fetches_new_chunk: false,
       load_more_only_reveals_existing_data: false,
       skip: "no load-more button",
+      diagnostics_before: diagBefore,
     };
   }
+
   const beforeLen = networkLog.length;
   let clicked = false;
   let newReqs = [];
   let newChunks = [];
   let filteredAfter = filteredBefore;
   let metaAfter = metaBefore;
+  let diagAfter = diagBefore;
+
   for (let attempt = 0; attempt < 2; attempt++) {
     await page.evaluate(() => {
       const btn = document.querySelector(".iuLoadMoreBtn");
@@ -295,46 +349,65 @@ async function testLoadMore(page, networkLog, markIndex) {
       await page.waitForTimeout(500);
       newReqs = networkLog.slice(Math.max(markIndex, beforeLen)).filter((n) => articlePattern(n.url));
       newChunks = newReqs.filter((n) => chunkLoadMorePattern(n.url));
-      filteredAfter = await page.evaluate(() => {
-        const st = window.__iuFeedPipelineState || window.state || {};
-        return Array.isArray(st.filteredItems) ? st.filteredItems.length : null;
-      });
-      metaAfter = await page.evaluate(() => {
-        const m = document.querySelector(".iuLoadMoreMeta");
-        return m ? m.textContent : null;
-      });
+      diagAfter = await captureLoaderDiagnostics(page);
+      filteredAfter = diagAfter.filteredItemsCount;
+      metaAfter = diagAfter.metaText;
       const progressed =
         newChunks.length > 0 ||
-        (filteredAfter != null && filteredBefore != null && filteredAfter > filteredBefore) ||
+        (diagAfter.visibleDomArticles != null && visibleBefore != null && diagAfter.visibleDomArticles > visibleBefore) ||
         (metaBefore != null && metaAfter != null && metaBefore !== metaAfter);
       if (progressed) break;
     }
     const progressedNow =
       newChunks.length > 0 ||
-      (filteredAfter != null && filteredBefore != null && filteredAfter > filteredBefore) ||
+      (diagAfter.visibleDomArticles != null && visibleBefore != null && diagAfter.visibleDomArticles > visibleBefore) ||
       (metaBefore != null && metaAfter != null && metaBefore !== metaAfter);
     if (progressedNow || attempt === 1) break;
   }
-  const filteredUnchanged =
-    filteredBefore != null && filteredAfter != null && filteredBefore === filteredAfter;
-  const fetchesNew =
-    newChunks.length > 0 ||
-    (filteredAfter != null && filteredBefore != null && filteredAfter > filteredBefore);
-  const onlyReveals =
-    !fetchesNew && metaBefore !== metaAfter && filteredUnchanged && newChunks.length === 0;
+
+  const networkAfter = networkLog.map((n) => String(n.url).split("?")[0]);
+  const networkAfterClick = networkLog
+    .slice(beforeLen)
+    .map((n) => String(n.url).split("?")[0]);
+
+  const visibleAfter = diagAfter.visibleDomArticles;
+  const visibleGrew = visibleAfter != null && visibleBefore != null && visibleAfter > visibleBefore;
+  const idsAfter = diagAfter.visibleIds || [];
+  const prefixUnchanged = idsBefore.every((id, i) => idsAfter[i] === id);
+  const scrollDelta = Math.abs((diagAfter.scrollY || 0) - (scrollBefore || 0));
+
+  const fetchesNew = newChunks.length > 0;
+  const onlyReveals = !fetchesNew && visibleGrew;
+  const uniqueChunkUrls = [...new Set(newChunks.map((n) => String(n.url).split("?")[0]))];
+
   return {
     clicked,
     load_more_fetches_new_chunk: fetchesNew,
     load_more_only_reveals_existing_data: onlyReveals,
-    new_chunk_urls: newChunks.map((n) => String(n.url).split("?")[0]),
+    new_chunk_urls: uniqueChunkUrls,
     metaBefore,
     metaAfter,
+    visible_before: visibleBefore,
+    visible_after: visibleAfter,
+    visible_grew: visibleGrew,
+    duplicate_visible_ids_after: diagAfter.duplicateVisibleIds,
+    prefix_ids_unchanged: prefixUnchanged,
+    scroll_before: scrollBefore,
+    scroll_after: diagAfter.scrollY,
+    scroll_delta_px: scrollDelta,
+    scroll_stable: scrollDelta <= SCROLL_TOL_PX,
+    network_requests_before_click: networkBefore,
+    network_requests_after_click: networkAfterClick,
+    network_requests_total: networkAfter,
+    diagnostics_before: diagBefore,
+    diagnostics_after: diagAfter,
   };
 }
 
 function evaluateLegMetrics(leg, fails, scenarioId) {
   const prefix = scenarioId + (leg.leg ? ":" + leg.leg : "");
   const issues = [];
+  const mode = leg.load_more_mode || "fetch";
 
   if (leg.publishable_pool_requested) {
     issues.push("publishable_pool_requested=YES");
@@ -367,12 +440,69 @@ function evaluateLegMetrics(leg, fails, scenarioId) {
         BACKGROUND_RECEIVED_MAX
     );
   }
-  if (leg.load_more && leg.load_more.clicked && !leg.load_more.skipped && !leg.load_more.load_more_fetches_new_chunk) {
-    issues.push("load_more_fetches_new_chunk=NO");
+
+  const lm = leg.load_more;
+  if (lm && lm.clicked && !lm.skipped) {
+    if (mode === "fetch") {
+      if (!leg.background_preload_completed) {
+        issues.push("fetch_mode_background_preload=NO");
+      }
+      if (
+        !leg.diagnostics_pre_click ||
+        !(leg.diagnostics_pre_click.articlesInMemory > leg.diagnostics_pre_click.visibleDomArticles)
+      ) {
+        issues.push("fetch_mode_buffer_not_ahead_of_visible=YES");
+      }
+      if (!lm.load_more_fetches_new_chunk) {
+        issues.push("load_more_fetches_new_chunk=NO");
+      }
+      if (!lm.new_chunk_urls || lm.new_chunk_urls.length === 0) {
+        issues.push("load_more_network_chunk_missing=YES");
+      }
+      if (!lm.visible_grew) {
+        issues.push("load_more_visible_grew=NO");
+      }
+      if (lm.duplicate_visible_ids_after > 0) {
+        issues.push("load_more_duplicate_ids=" + lm.duplicate_visible_ids_after);
+      }
+      if (lm.prefix_ids_unchanged === false) {
+        issues.push("load_more_prefix_ids_rewritten=YES");
+      }
+      if (lm.scroll_stable === false) {
+        issues.push("load_more_scroll_unstable_delta=" + lm.scroll_delta_px);
+      }
+      if (lm.metaBefore === lm.metaAfter) {
+        issues.push("load_more_meta_unchanged=YES");
+      }
+    } else if (mode === "reveal") {
+      if (!leg.background_preload_completed) {
+        issues.push("reveal_mode_background_preload=NO");
+      }
+      if (
+        !leg.diagnostics_pre_click ||
+        !(leg.diagnostics_pre_click.articlesInMemory > leg.diagnostics_pre_click.visibleDomArticles)
+      ) {
+        issues.push("reveal_mode_buffer_not_ahead_of_visible=YES");
+      }
+      if (!lm.visible_grew) {
+        issues.push("reveal_mode_visible_grew=NO");
+      }
+      if (lm.duplicate_visible_ids_after > 0) {
+        issues.push("reveal_mode_duplicate_ids=" + lm.duplicate_visible_ids_after);
+      }
+      if (lm.prefix_ids_unchanged === false) {
+        issues.push("reveal_mode_prefix_ids_rewritten=YES");
+      }
+      if (lm.scroll_stable === false) {
+        issues.push("reveal_mode_scroll_unstable_delta=" + lm.scroll_delta_px);
+      }
+      if (lm.metaBefore === lm.metaAfter) {
+        issues.push("reveal_mode_meta_unchanged=YES");
+      }
+      /* network fetch is optional in reveal mode — do not require or forbid it */
+    }
   }
-  if (leg.load_more && leg.load_more.load_more_only_reveals_existing_data) {
-    issues.push("load_more_only_reveals_existing_data=YES");
-  }
+
   const okLoaderModes = new Set(["chunk-v1", "chunk-v1-manifest"]);
   if (leg.loaderMode && !okLoaderModes.has(leg.loaderMode)) {
     issues.push("loaderMode=" + leg.loaderMode);
@@ -385,6 +515,19 @@ function evaluateLegMetrics(leg, fails, scenarioId) {
 }
 
 async function attachNetwork(page, networkLog) {
+  page.on("request", (req) => {
+    try {
+      const url = req.url();
+      if (!articlePattern(url)) return;
+      networkLog.push({
+        url,
+        status: "request",
+        transferBytes: 0,
+        t: Date.now(),
+        phase: "request",
+      });
+    } catch (_) {}
+  });
   page.on("response", async (res) => {
     try {
       const url = res.url();
@@ -399,12 +542,14 @@ async function attachNetwork(page, networkLog) {
         status: res.status(),
         transferBytes: bodyLen,
         t: Date.now(),
+        phase: "response",
       });
     } catch (_) {}
   });
 }
 
 async function measureLeg(page, networkLog, legStartIdx, legLabel, expectedSection, opts = {}) {
+  const loadMoreMode = opts.loadMoreMode || "fetch";
   await waitFeedReadyForSection(page, expectedSection);
   await dismissConsentIfPresent(page);
   const initialState = await captureInitialSnapshot(page, expectedSection, legStartIdx, networkLog);
@@ -423,7 +568,12 @@ async function measureLeg(page, networkLog, legStartIdx, legLabel, expectedSecti
   };
 
   const bgStartIdx = networkLog.length;
-  const bgDone = await waitBackground(page);
+  let bgDone = false;
+  /* Both fetch and reveal wait for real background buffer completion so the
+     page is in a production-like state. Fetch mode then requires a network
+     chunk on load-more; reveal mode requires visible growth (network optional).
+     Optional pauseBg (addInitScript) is reserved for explicit scenario.pauseBg. */
+  bgDone = await waitBackground(page, loadMoreMode === "fetch" && opts.pauseBg ? 8000 : 20000);
   const bgState = await readChunkState(page);
   const bgNetwork = networkLog.slice(legStartIdx);
   const bgArticleNetwork = bgNetwork.filter((n) => articlePattern(n.url));
@@ -438,12 +588,43 @@ async function measureLeg(page, networkLog, legStartIdx, legLabel, expectedSecti
   if (bufferDirsLower.length >= 3) backgroundPreloadsAllSections = true;
   else if (bufferDirsLower.length > 1 && !bufferDirsLower.includes(expSection)) backgroundPreloadsAllSections = true;
 
-  const loadMore = opts.testLoadMore === false
-    ? { skipped: true, clicked: false, load_more_fetches_new_chunk: true, load_more_only_reveals_existing_data: false }
-    : await testLoadMore(page, networkLog, bgStartIdx);
+  const diagnosticsPreClick = await captureLoaderDiagnostics(page);
+
+  {
+    const deadline = Date.now() + 15000;
+    while (Date.now() < deadline) {
+      const d = await captureLoaderDiagnostics(page);
+      Object.assign(diagnosticsPreClick, d);
+      if (d.articlesInMemory > d.visibleDomArticles && d.backgroundDone) break;
+      await page.waitForTimeout(200);
+    }
+  }
+
+  if (opts.pauseBg && loadMoreMode === "fetch" && opts.testLoadMore !== false) {
+    await page.evaluate(() => {
+      const st = window.__iuFeedPipelineState || window.state || {};
+      const cl = st.chunkLoader;
+      if (!cl) return;
+      const cur = Number(cl.nextLoadMoreChunkIndex);
+      cl.nextLoadMoreChunkIndex = Number.isFinite(cur) && cur > 1 ? cur : 1;
+      cl.bufferChunkLoaded = false;
+    });
+    Object.assign(diagnosticsPreClick, await captureLoaderDiagnostics(page));
+  }
+
+  const loadMore =
+    opts.testLoadMore === false
+      ? {
+          skipped: true,
+          clicked: false,
+          load_more_fetches_new_chunk: true,
+          load_more_only_reveals_existing_data: false,
+        }
+      : await testLoadMore(page, networkLog, bgStartIdx);
 
   return {
     leg: legLabel,
+    load_more_mode: loadMoreMode,
     ...initial,
     background_preload_completed: bgDone,
     after_background_article_count_received: bgState.articlesReceived,
@@ -452,12 +633,20 @@ async function measureLeg(page, networkLog, legStartIdx, legLabel, expectedSecti
     url_topic: urlTopic,
     chunk_sections_after_background: chunkSectionDirs(bgArticleNetwork),
     buffer_chunk_sections: bufferDirs,
+    diagnostics_pre_click: diagnosticsPreClick,
     load_more: loadMore,
   };
 }
 
 async function runScenario(browser, scenario) {
+  const loadMoreMode = scenario.loadMoreMode || "fetch";
+  const pauseBg = scenario.pauseBg === true;
   const context = await bootstrapGuardContext(browser, { viewport: { width: 1440, height: 900 } });
+  if (pauseBg) {
+    await context.addInitScript(() => {
+      window.__IU_GUARD_PAUSE_BG_PRELOAD = true;
+    });
+  }
   const page = await context.newPage();
   const networkLog = [];
   await attachNetwork(page, networkLog);
@@ -466,11 +655,12 @@ async function runScenario(browser, scenario) {
   } catch (_) {}
 
   const legs = [];
+  const legOpts = { loadMoreMode, pauseBg };
 
   if (scenario.kind === "direct") {
     await page.goto(withGuardParams(scenario.url), { waitUntil: "domcontentloaded", timeout: 120000 });
     await dismissConsentIfPresent(page);
-    legs.push(await measureLeg(page, networkLog, 0, scenario.target, scenario.target));
+    legs.push(await measureLeg(page, networkLog, 0, scenario.target, scenario.target, legOpts));
   } else if (scenario.kind === "chain") {
     await page.goto(withGuardParams(BASE), { waitUntil: "domcontentloaded", timeout: 120000 });
     await dismissConsentIfPresent(page);
@@ -478,7 +668,9 @@ async function runScenario(browser, scenario) {
       const hop = scenario.hops[i];
       const mark = networkLog.length;
       await clickRail(page, hop);
-      legs.push(await measureLeg(page, networkLog, mark, hop, hop, { testLoadMore: false }));
+      legs.push(
+        await measureLeg(page, networkLog, mark, hop, hop, { testLoadMore: false, loadMoreMode: "fetch" })
+      );
     }
   } else if (scenario.kind === "homepage_then_menu") {
     await page.goto(withGuardParams(BASE), { waitUntil: "domcontentloaded", timeout: 120000 });
@@ -489,7 +681,7 @@ async function runScenario(browser, scenario) {
     }
     const mark = networkLog.length;
     await clickRail(page, scenario.target);
-    legs.push(await measureLeg(page, networkLog, mark, scenario.target, scenario.target));
+    legs.push(await measureLeg(page, networkLog, mark, scenario.target, scenario.target, legOpts));
   } else if (scenario.kind === "menu") {
     await page.goto(withGuardParams(BASE), { waitUntil: "domcontentloaded", timeout: 120000 });
     await dismissConsentIfPresent(page);
@@ -505,11 +697,11 @@ async function runScenario(browser, scenario) {
         { timeout: 30000 }
       )
       .catch(() => {});
-    legs.push(await measureLeg(page, networkLog, mark, scenario.target, scenario.target));
+    legs.push(await measureLeg(page, networkLog, mark, scenario.target, scenario.target, legOpts));
   }
 
   await context.close();
-  return { id: scenario.id, category: scenario.category, legs };
+  return { id: scenario.id, category: scenario.category, loadMoreMode, legs };
 }
 
 const SCENARIOS = [
@@ -519,15 +711,17 @@ const SCENARIOS = [
     kind: "homepage_then_menu",
     target: "zpravy",
     waitHomeReady: true,
+    loadMoreMode: "fetch",
   },
-  { id: "B", category: "menu_entry", kind: "menu", target: "zpravy" },
-  { id: "C", category: "menu_entry", kind: "menu", target: "sport" },
+  { id: "B", category: "menu_entry", kind: "menu", target: "zpravy", loadMoreMode: "fetch" },
+  { id: "C", category: "menu_entry", kind: "menu", target: "sport", loadMoreMode: "fetch" },
   {
     id: "D",
     category: "direct_url_entry",
     kind: "direct",
     url: withGuardParams(BASE + "?section=feed&topic=zpravy"),
     target: "zpravy",
+    loadMoreMode: "fetch",
   },
   {
     id: "E",
@@ -535,12 +729,22 @@ const SCENARIOS = [
     kind: "direct",
     url: withGuardParams(BASE + "?section=feed&topic=sport"),
     target: "sport",
+    loadMoreMode: "fetch",
   },
   {
     id: "F",
     category: "internal_navigation",
     kind: "chain",
     hops: ["zpravy", "sport", "finance"],
+    loadMoreMode: "fetch",
+  },
+  {
+    id: "G",
+    category: "load_more_reveal",
+    kind: "direct",
+    url: withGuardParams(BASE + "?section=feed&topic=zpravy"),
+    target: "zpravy",
+    loadMoreMode: "reveal",
   },
 ];
 
@@ -552,11 +756,12 @@ function buildResultBlock(report) {
     "menu_entry_pass=" + (report.menu_entry_pass ? "YES" : "NO"),
     "direct_url_entry_pass=" + (report.direct_url_entry_pass ? "YES" : "NO"),
     "internal_navigation_pass=" + (report.internal_navigation_pass ? "YES" : "NO"),
+    "load_more_reveal_pass=" + (report.load_more_reveal_pass ? "YES" : "NO"),
     "",
     "publishable_pool_requested_anywhere=" + (report.publishable_pool_requested_anywhere ? "YES" : "NO"),
     "all_sections_preloaded_anywhere=" + (report.all_sections_preloaded_anywhere ? "YES" : "NO"),
-    "load_more_fetches_chunk_everywhere=" + (report.load_more_fetches_chunk_everywhere ? "YES" : "NO"),
-    "load_more_reveals_cache_anywhere=" + (report.load_more_reveals_cache_anywhere ? "YES" : "NO"),
+    "load_more_fetches_chunk_on_fetch_modes=" + (report.load_more_fetches_chunk_on_fetch_modes ? "YES" : "NO"),
+    "load_more_reveal_mode_pass=" + (report.load_more_reveal_mode_pass ? "YES" : "NO"),
     "",
     "guard_added=" + (report.guard_added ? "YES" : "NO"),
     "ci_blocks_regression=" + (report.ci_blocks_regression ? "YES" : "NO"),
@@ -617,20 +822,23 @@ async function main() {
     menu_entry: scenarioResults.filter((s) => s.category === "menu_entry").every((s) => s.pass),
     direct_url_entry: scenarioResults.filter((s) => s.category === "direct_url_entry").every((s) => s.pass),
     internal_navigation: scenarioResults.filter((s) => s.category === "internal_navigation").every((s) => s.pass),
+    load_more_reveal: scenarioResults.filter((s) => s.category === "load_more_reveal").every((s) => s.pass),
   };
 
   const allLegs = scenarioResults.flatMap((s) => s.legs);
   const publishablePoolAnywhere = allLegs.some((l) => l.publishable_pool_requested);
   const allSectionsPreloadedAnywhere = allLegs.some((l) => l.background_preloads_all_sections);
-  const loadMoreFetchEverywhere = allLegs.every(
+  const fetchLegs = allLegs.filter((l) => l.load_more_mode === "fetch");
+  const revealLegs = allLegs.filter((l) => l.load_more_mode === "reveal");
+  const loadMoreFetchOnFetchModes = fetchLegs.every(
     (l) =>
       !l.load_more ||
       l.load_more.skipped ||
       !l.load_more.clicked ||
       l.load_more.load_more_fetches_new_chunk
   );
-  const loadMoreRevealsAnywhere = allLegs.some(
-    (l) => l.load_more && l.load_more.load_more_only_reveals_existing_data
+  const loadMoreRevealModePass = revealLegs.every(
+    (l) => l.load_more && l.load_more.clicked && l.load_more.visible_grew
   );
 
   let gitClean = true;
@@ -651,10 +859,11 @@ async function main() {
     menu_entry_pass: byCategory.menu_entry,
     direct_url_entry_pass: byCategory.direct_url_entry,
     internal_navigation_pass: byCategory.internal_navigation,
+    load_more_reveal_pass: byCategory.load_more_reveal,
     publishable_pool_requested_anywhere: publishablePoolAnywhere,
     all_sections_preloaded_anywhere: allSectionsPreloadedAnywhere,
-    load_more_fetches_chunk_everywhere: loadMoreFetchEverywhere,
-    load_more_reveals_cache_anywhere: loadMoreRevealsAnywhere,
+    load_more_fetches_chunk_on_fetch_modes: loadMoreFetchOnFetchModes,
+    load_more_reveal_mode_pass: loadMoreRevealModePass,
     guard_added: true,
     ci_blocks_regression: true,
     git_status_clean: gitClean,
@@ -664,7 +873,20 @@ async function main() {
   };
 
   fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2) + "\n", "utf8");
-  console.log(JSON.stringify({ scenarios: scenarioResults.map((s) => ({ id: s.id, pass: s.pass, legs: s.legs })) }, null, 2));
+  console.log(
+    JSON.stringify(
+      {
+        scenarios: scenarioResults.map((s) => ({
+          id: s.id,
+          pass: s.pass,
+          loadMoreMode: s.loadMoreMode,
+          legs: s.legs,
+        })),
+      },
+      null,
+      2
+    )
+  );
   console.log(buildResultBlock(report));
 
   if (!finalPass) {
