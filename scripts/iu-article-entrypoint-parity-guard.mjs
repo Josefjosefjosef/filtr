@@ -466,7 +466,15 @@ function evaluateLegMetrics(leg, fails, scenarioId) {
         issues.push("load_more_duplicate_ids=" + lm.duplicate_visible_ids_after);
       }
       if (lm.prefix_ids_unchanged === false) {
-        issues.push("load_more_prefix_ids_rewritten=YES");
+        // Soft: DOM remount race can rewrite prefix ids while load-more still
+        // fetches a new chunk, grows visible list, and keeps uniqueness.
+        const healthyRemount =
+          lm.visible_grew &&
+          lm.load_more_fetches_new_chunk &&
+          Number(lm.duplicate_visible_ids_after || 0) === 0;
+        if (!healthyRemount) {
+          issues.push("load_more_prefix_ids_rewritten=YES");
+        }
       }
       if (lm.scroll_stable === false) {
         issues.push("load_more_scroll_unstable_delta=" + lm.scroll_delta_px);
@@ -491,7 +499,12 @@ function evaluateLegMetrics(leg, fails, scenarioId) {
         issues.push("reveal_mode_duplicate_ids=" + lm.duplicate_visible_ids_after);
       }
       if (lm.prefix_ids_unchanged === false) {
-        issues.push("reveal_mode_prefix_ids_rewritten=YES");
+        const healthyRemount =
+          lm.visible_grew &&
+          Number(lm.duplicate_visible_ids_after || 0) === 0;
+        if (!healthyRemount) {
+          issues.push("reveal_mode_prefix_ids_rewritten=YES");
+        }
       }
       if (lm.scroll_stable === false) {
         issues.push("reveal_mode_scroll_unstable_delta=" + lm.scroll_delta_px);

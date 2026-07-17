@@ -7,6 +7,30 @@ V PowerShellu přesměrování `>` zapisuje text typicky jako UTF-16LE s BOM (za
 
 ---
 
+## 0) Safe `version.json` preview (P0 — ArgumentOutOfRangeException)
+
+**BUG:** Po `-replace` se řetězec zkrátí, ale `Substring(0, Min(120, $vj.Length))` používá **původní** délku → `ArgumentOutOfRangeException`.
+
+**Správně:**
+```powershell
+powershell -NoProfile -File .\scripts\iu-prod-verify-safe.ps1
+# nebo:
+npm run iu-prod-version-json-safe-probe
+```
+
+Ruční bezpečný preview:
+```powershell
+$vj = (Invoke-WebRequest -UseBasicParsing -Uri "https://infouzel.cz/projects/version.json").Content
+$c = (($vj | ForEach-Object { $_ }) -replace "\s+"," ").Trim()
+$n = [Math]::Min(120, $c.Length)
+$preview = if ($n -gt 0) { $c.Substring(0, $n) } else { "" }
+Write-Output "VERSION_JSON_PREVIEW=$preview"
+```
+
+Výstup je **diagnostický** (`DIAG_VERDICT=…UNVERIFIED` / informational) — **nesmí** sám o sobě rozhodovat GREEN/RED release.
+
+---
+
 ## 1) Stáhni produkční soubory (UTF-8)
 
 ### Varianta A (doporučená): curl.exe s -o
