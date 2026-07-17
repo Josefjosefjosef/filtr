@@ -21,8 +21,16 @@
 ## Cross-browser
 
 - Chromium: CI smoke + layout-guard
-- Feature matrix: `npm run iu-pre-aggregator-cross-browser-feature-guard` (static + Chromium runtime probes)
-- Firefox/WebKit: best-effort pokud Playwright browsery instalované; jinak SKIP_REPORTED (ne FAIL)
+- Feature matrix: `npm run iu-pre-aggregator-cross-browser-feature-guard` (static + Chromium/Firefox/WebKit runtime probes)
+- Full WebKit acceptance: `npm run iu-pre-aggregator-webkit-acceptance` (layout, nav, storage, export/import, offline/online)
+- Firefox: Playwright runtime probe in feature guard
+- Physical Safari macOS / iOS / iPadOS PWA: not available in this environment — documented recommendation before aggregator cutover (see `09-webkit-safari-databot-verify.md`)
+
+## Post-tag verification (2026-07-17)
+
+- Playwright WebKit binary installed; full WebKit acceptance **PASS**
+- Feature guard WebKit probe **PASS** (no longer SKIP)
+- Physical Safari/iOS: documented NOT_RUN + recommendation
 
 ## Safe prod version probe
 
