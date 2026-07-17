@@ -90,7 +90,7 @@ function waitForPort(host, port, timeoutMs) {
 }
 
 async function measureNavOnce(page, btn) {
-  await page.goto(BASE + "?iuRobust=1", { waitUntil: "domcontentloaded", timeout: 60000 });
+  await page.goto(BASE + "?iuRobust=1&iuInfoSystem=off", { waitUntil: "domcontentloaded", timeout: 60000 });
   await waitDesktopNavTarget(page, btn.accent);
   await page.waitForTimeout(350);
 
@@ -211,7 +211,7 @@ async function measureNavOnce(page, btn) {
 }
 
 async function runFlickerPhaseGuard(page) {
-  await page.goto(BASE + "?iuFlickerGuard=1", { waitUntil: "domcontentloaded", timeout: 60000 });
+  await page.goto(BASE + "?iuFlickerGuard=1&iuInfoSystem=off", { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForTimeout(600);
 
   return page.evaluate(() => {
@@ -290,7 +290,7 @@ async function runFlickerPhaseGuard(page) {
 }
 
 async function runCalendarSilverSurface(page) {
-  await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 60000 });
+  await page.goto(BASE + "?iuInfoSystem=off", { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForFunction(() => typeof window.iuSilverCalendarEngine !== "undefined", null, { timeout: 120000 });
 
   const summary = await page.evaluate(() => {
@@ -360,7 +360,7 @@ async function runCalendarSilverSurface(page) {
 }
 
 async function runDesktopUiSanity(page) {
-  await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 60000 });
+  await page.goto(BASE + "?iuInfoSystem=off", { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForSelector("#feed a.iuCardTitle", { timeout: 120000 }).catch(() => {});
   await page.waitForTimeout(500);
   return page.evaluate(() => {
