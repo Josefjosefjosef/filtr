@@ -60,7 +60,7 @@ async function main() {
     });
     const page = await context.newPage();
 
-    await page.goto(BASE + "?section=media&iuRobust=1", {
+    await page.goto(BASE + "?section=media&iuRobust=1&iuInfoSystem=off", {
       waitUntil: "domcontentloaded",
       timeout: 60000,
     });
@@ -89,7 +89,7 @@ async function main() {
 
     const sectionResults = [];
     for (const sec of SECTIONS) {
-      await page.goto(`${BASE}?section=${encodeURIComponent(sec.accent)}&iuRobust=1`, {
+      await page.goto(`${BASE}?section=${encodeURIComponent(sec.accent)}&iuRobust=1&iuInfoSystem=off`, {
         waitUntil: "domcontentloaded",
         timeout: 60000,
       });

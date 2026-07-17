@@ -84,7 +84,8 @@ function startServer() {
 
 /** Projects global hub: wait for Silver tall viewport (mount targets exist) before preview assertions. */
 async function gotoProjectsMediaForSmoke(page) {
-  await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
+  // Legacy HomeCards probes: force info-system off so cutover CSS does not hide preview cards.
+  await gotoDomContentLoaded(page, `${BASE}/projects/?section=media&iuInfoSystem=off`);
   // Locator re-resolves after DOM swaps; page.waitForSelector can time out when the same id is
   // detach/replaced during Silver shell paint — CI logs showed "visible" + 20s timeout on #iuSilverTallScrollViewport.
   const tallViewport = page.locator("#iuSilverTallScrollViewport").first();
@@ -99,6 +100,31 @@ async function gotoProjectsMediaForSmoke(page) {
     { timeout: 10000 }
   );
   await page.waitForTimeout(600);
+}
+
+async function smokePrehledDneCutover(page) {
+  await gotoDomContentLoaded(page, `${BASE}/projects/?section=media&iuInfoSystem=cutover`);
+  await page.waitForSelector(".iuPrehledDne", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
+  const probe = await page.evaluate(() => {
+    const root = document.querySelector(".iuPrehledDne");
+    const items = document.querySelectorAll(".iuPrehledDne__item");
+    const imgs = document.querySelectorAll(".iuPrehledDne img, .iuPrehledDne__card img");
+    const split = document.getElementById("iuFeedNewsSplit");
+    const splitHidden = !split || getComputedStyle(split).display === "none";
+    const news = document.querySelector('[data-iu-news-preview-card="1"]');
+    const newsHidden = !news || getComputedStyle(news).display === "none";
+    return {
+      ok: !!(root && items.length > 0 && imgs.length === 0 && splitHidden && newsHidden),
+      items: items.length,
+      imgs: imgs.length,
+      splitHidden,
+      newsHidden,
+      cutover: document.documentElement.classList.contains("iu-info-system-cutover"),
+    };
+  });
+  if (!probe || !probe.ok) {
+    fail(`Prehled dne cutover smoke failed: ${JSON.stringify(probe)}`);
+  }
 }
 
 /** Retries when client navigation races domcontentloaded (same-URL interrupt can recur on the retry goto). */
@@ -183,6 +209,10 @@ async function runSmoke() {
     }
 
     // Click test on /projects/?section=media
+    await gotoProjectsMediaForSmoke(page);
+
+    // Info-system v1 cutover: Přehled dne replaces commercial HomeCards in default mode.
+    await smokePrehledDneCutover(page);
     await gotoProjectsMediaForSmoke(page);
 
     try {
