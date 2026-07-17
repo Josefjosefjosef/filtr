@@ -428,7 +428,7 @@ async function runSmoke() {
     }
 
     // Počasí historical inline video must teardown (no background audio) when leaving the section
-    await gotoDomContentLoaded(page, `${BASE}/projects/?section=pocasi`);
+    await gotoDomContentLoaded(page, `${BASE}/projects/?section=pocasi&iuInfoSystem=off`);
     await page.waitForFunction(
       () => document.body && document.body.dataset && document.body.dataset.section === "pocasi",
       { timeout: PREVIEW_SELECTOR_TIMEOUT_MS }
@@ -771,7 +771,7 @@ async function runSmoke() {
         }
       } catch (_) {}
     });
-    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
+    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media&iuInfoSystem=off`);
     await gotoProjectsMediaForSmoke(page);
     await page.waitForSelector("#iuSilverParcelWatchInput", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     await page.waitForFunction(
@@ -1258,7 +1258,7 @@ async function runSmoke() {
     }
 
     // Route reset: panel/radarOpen stripped on reload; section/topic/mode may persist (media nav deep links)
-    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media&panel=services`);
+    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media&panel=services&iuInfoSystem=off`);
     await page.waitForTimeout(500);
     await page.reload({ waitUntil: "domcontentloaded" });
     await page.waitForTimeout(500);
