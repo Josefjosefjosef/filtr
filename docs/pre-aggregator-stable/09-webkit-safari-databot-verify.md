@@ -59,7 +59,7 @@ Cross-browser feature guard po instalaci binary: Chromium + Firefox + **WebKit P
 | Jobs | pipeline_gate, cancel_concurrency_zombies, ingest, aggregate, article_data_release, pipeline_operational_closeout — všechny `success` |
 | Closeout | `PIPELINE_OVERALL_STATUS=PIPELINE_SUCCESS` · `PIPELINE_ALERT_LEVEL=GREEN` · `PIPELINE_OPERATIONAL_CLOSEOUT=PASS` |
 
-Data PR z běhu: **#7561** (`automation/update-articles-data`) — auto-merge enabled; wait-for-merge v běhu skončil soft-timeoutem po ~13 min (`[CLOSEOUT] WARN: timeout waiting for merge`) protože required `smoke` ještě běžel. To **není** selhání ingest/aggregate/publish; Pages catch-up je přes cron `pages-publish-from-main-data` po merge.
+Data PR z běhu: **#7561** (`automation/update-articles-data`) — auto-merge enabled; wait-for-merge v běhu skončil soft-timeoutem po ~13 min (`[CLOSEOUT] WARN: timeout waiting for merge`) protože required `smoke` ještě běžel. PR **#7561 byl následně sloučen** `2026-07-17T12:57:04Z` (pipeline data dorazila na `main`; Pages catch-up přes chain).
 
 Souběžné `update-articles` během ověřovacího běhu: **žádné duplicitní** — další run `29581381056` startoval až po closeoutu (`2026-07-17T12:45:08Z`).
 
@@ -86,7 +86,7 @@ Fast-pool: po resume opakovaně `success`.
 
 ## 6) Navazující ověřovací PR
 
-Docs + testovací skript WebKit acceptance (bez změny runtime aplikace). Stabilizační tag zůstává na `5647bb3f…`.
+**PR #7562** — docs + testovací skript WebKit acceptance (bez změny runtime aplikace). Stabilizační tag zůstává na `5647bb3f…`.
 
 ## 7) Čistý pracovní strom
 
