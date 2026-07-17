@@ -373,6 +373,13 @@ html.iu-info-system-cutover #iuSilverTallScrollViewport {
   grid-template-columns: none !important;
 }
 
+/* Hide legacy commercial article timeline on cutover (Přehled dne is the product). */
+html.iu-info-system-cutover #feed.iuTimelineFeed,
+html.iu-info-system-cutover #feed .news-card,
+html.iu-info-system-cutover #feed .iuArticleCard {
+  display: none !important;
+}
+
 @media (min-width: 1025px) {
   .iuPrehledDne__panel {
     padding: 16px 18px;

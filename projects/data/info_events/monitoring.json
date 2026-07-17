@@ -1,0 +1,191 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-07-17T20:51:27.450Z",
+  "cutover": {
+    "version": "1.0.0",
+    "cutoverAt": "2026-07-17T21:00:00Z",
+    "mode": "cutover",
+    "commercialAggregationActive": false,
+    "commercialUiActive": false,
+    "infoSystemActive": true,
+    "reason": "Atomické přepnutí na Přehled dne — komerční mediální agregace deaktivována v produkčním UI a jobech.",
+    "rollback": {
+      "tag": "pre-aggregator-stable-20260717",
+      "commit": "5647bb3fe365a12feb4bb4d2830c6957de73c853",
+      "queryOff": "?iuInfoSystem=off"
+    }
+  },
+  "sources": [
+    {
+      "id": "policie-cr",
+      "label": "Policie České republiky",
+      "url": "https://www.policie.cz/",
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "productionActive": true,
+      "probe": {
+        "ok": true,
+        "status": 200
+      }
+    },
+    {
+      "id": "hzs-cr",
+      "label": "Hasičský záchranný sbor ČR",
+      "url": "https://www.hzscr.cz/",
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "productionActive": true,
+      "probe": {
+        "ok": true,
+        "status": 200
+      }
+    },
+    {
+      "id": "chmi",
+      "label": "Český hydrometeorologický ústav",
+      "url": "https://www.chmi.cz/",
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "productionActive": true,
+      "probe": {
+        "ok": true,
+        "status": 200
+      }
+    },
+    {
+      "id": "mdcr",
+      "label": "Ministerstvo dopravy",
+      "url": "https://www.mdcr.cz/",
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "productionActive": true,
+      "probe": {
+        "ok": true,
+        "status": 200
+      }
+    },
+    {
+      "id": "szdc",
+      "label": "Správa železnic",
+      "url": "https://www.spravazeleznic.cz/",
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "productionActive": true,
+      "probe": {
+        "ok": true,
+        "status": 200
+      }
+    },
+    {
+      "id": "mzcr",
+      "label": "Ministerstvo zdravotnictví",
+      "url": "https://www.mzcr.cz/",
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "productionActive": true,
+      "probe": {
+        "ok": true,
+        "status": 200
+      }
+    },
+    {
+      "id": "sukl",
+      "label": "Státní ústav pro kontrolu léčiv",
+      "url": "https://www.sukl.cz/",
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "productionActive": true,
+      "probe": {
+        "ok": true,
+        "status": 200
+      }
+    },
+    {
+      "id": "vlada",
+      "label": "Úřad vlády ČR",
+      "url": "https://vlada.gov.cz/",
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "productionActive": true,
+      "probe": {
+        "ok": true,
+        "status": 200
+      }
+    },
+    {
+      "id": "portal-gov",
+      "label": "Portál veřejné správy",
+      "url": "https://portal.gov.cz/",
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "productionActive": true,
+      "probe": {
+        "ok": true,
+        "status": 200
+      }
+    },
+    {
+      "id": "ct24",
+      "label": "ČT24",
+      "url": "https://ct24.ceskatelevize.cz/",
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "productionActive": true,
+      "probe": {
+        "ok": true,
+        "status": 200
+      }
+    },
+    {
+      "id": "irozhlas",
+      "label": "iROZHLAS",
+      "url": "https://www.irozhlas.cz/",
+      "legalStatus": "approved",
+      "technicalStatus": "down",
+      "productionActive": true,
+      "probe": {
+        "ok": false,
+        "status": 403
+      }
+    },
+    {
+      "id": "avcr",
+      "label": "Akademie věd ČR",
+      "url": "https://www.avcr.cz/",
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "productionActive": true,
+      "probe": {
+        "ok": true,
+        "status": 200
+      }
+    },
+    {
+      "id": "mkcr",
+      "label": "Ministerstvo kultury",
+      "url": "https://www.mkcr.cz/",
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "productionActive": true,
+      "probe": {
+        "ok": true,
+        "status": 200
+      }
+    },
+    {
+      "id": "msmt",
+      "label": "MŠMT",
+      "url": "https://www.msmt.cz/",
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "productionActive": true,
+      "probe": {
+        "ok": true,
+        "status": 200
+      }
+    }
+  ],
+  "feedItemCount": 18,
+  "dedupeGroups": 15,
+  "commercialAggregationActive": false
+}

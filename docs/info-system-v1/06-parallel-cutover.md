@@ -1,20 +1,19 @@
 # Paralelní provoz a cutover
 
-## Paralelní provoz
+## Rozhodnutí
 
-`?iuInfoSystem=parallel` — Přehled dne běží vedle legacy HomeCards.
+48hodinový paralelní provoz **nebyl** součástí tohoto nasazení (dle zadání).
 
-## Atomické přepnutí
+Provedeno **jednorázové atomické přepnutí** (`cutover_state.json`: `commercialAggregationActive=false`, `infoSystemActive=true`).
 
-Výchozí cutover ON. Po ověření (CI + produkční smoke) legacy HomeCards zůstávají v DOM pro zpětnou kompatibilitu guardů, ale jsou CSS/JS skryté a neovládají hlavní produkt.
+## Kill switch staré agregace
 
-## 48h paralelní provoz
+- `update-articles.yml` / `update-articles-fast-pool.yml` — pipeline gate SKIP při cutover
+- Cloudflare articles-watchdog — `decideWatchdog` → `skip_cutover`
+- UI — HomeCards + komerční `#feed` skryty CSS cutoverem
 
-Pro produkční cutover je doporučen 48h běh v `parallel` na staging/canary. Seed feed v tomto PR umožňuje okamžité ověření; provozní metrika se doplní po nasazení.
+## Rollback
 
-| Metrika | Seed / CI |
-|---------|-----------|
-| Feed load | PASS |
-| Filtry nezávislé | PASS |
-| Dedup groupKey | PASS |
-| Žádné fotky/perexy | PASS |
+- `?iuInfoSystem=off`
+- tag `pre-aggregator-stable-20260717` (`5647bb3f…`)
+- obnovit `commercialAggregationActive: true` v cutover_state + redeploy watchdog

@@ -7,6 +7,7 @@ export type WorkflowRunLite = { status: string; event?: string; created_at?: str
 export type WatchdogDecision =
   | { action: "skip_fresh"; ageMinutes: number; staleAfterMinutes: number }
   | { action: "skip_busy"; ageMinutes: number; busyStatuses: string[] }
+  | { action: "skip_cutover"; ageMinutes: number; reason: string }
   | { action: "dispatch"; ageMinutes: number; reason: string };
 
 /** Queued runs older than this are treated as dead (GitHub concurrency zombie). */
@@ -57,9 +58,19 @@ export function decideWatchdog(input: {
   nowMs: number;
   runs: WorkflowRunLite[];
   queuedStaleMinutes?: number;
+  commercialAggregationActive?: boolean;
 }): WatchdogDecision {
   const { staleAfterMinutes, nowMs, runs } = input;
   const queuedStaleMinutes = input.queuedStaleMinutes ?? DEFAULT_QUEUED_STALE_MINUTES;
+  if (input.commercialAggregationActive === false) {
+    const ms = parseIsoToMs(input.generatedAtIso ?? undefined);
+    const ageMin = ms !== null ? ageMinutes(nowMs, ms) : NaN;
+    return {
+      action: "skip_cutover",
+      ageMinutes: ageMin,
+      reason: "info_system_cutover_commercial_aggregation_disabled",
+    };
+  }
   const ms = parseIsoToMs(input.generatedAtIso ?? undefined);
   const blocking = runs.filter((r) => isBlockingRun(r, nowMs, queuedStaleMinutes));
   const busyStatuses = blocking.map((r) => r.status);

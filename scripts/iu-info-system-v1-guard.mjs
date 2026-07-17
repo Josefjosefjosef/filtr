@@ -14,6 +14,7 @@ function mustExist(rel) {
 mustExist("projects/data/info_events/taxonomy.json");
 mustExist("projects/data/info_events/source_registry.json");
 mustExist("projects/data/info_events/feed.json");
+mustExist("projects/data/info_events/cutover_state.json");
 mustExist("assets/iu-info-system-core-v1.js");
 mustExist("assets/iu-prehled-dne-ui-v1.js");
 mustExist("assets/iu-prehled-dne-v1.css");
@@ -44,6 +45,10 @@ for (const it of feed.items || []) {
 }
 
 if (!(registry.deactivatedCommercialMedia || []).length) fails.push("missing:deactivatedCommercialMedia");
+
+const cutover = JSON.parse(fs.readFileSync(path.join(REPO, "projects/data/info_events/cutover_state.json"), "utf8"));
+if (cutover.commercialAggregationActive !== false) fails.push("cutover:commercialAggregationActive_must_be_false");
+if (cutover.infoSystemActive !== true) fails.push("cutover:infoSystemActive_must_be_true");
 
 if (fails.length) {
   console.error("[iu-info-system-v1-guard] FAIL");
