@@ -28,6 +28,7 @@ Viz `00-inventory.md` — **GROUP_A_OPEN=0**.
 3. Cross-browser feature detection guard (Chromium+Firefox PASS; WebKit SKIP missing binary).
 4. Dokumentace baseline, rollback, aggregator map, PWA scénáře, screenshots.
 5. Stabilization matrix runner.
+6. Harden `iu-article-load-more-stress-guard` (soft-stop u client cap−1 + settle polling) — CI flake stuck at meta 99/N.
 
 ## Cleanup
 
