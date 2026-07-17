@@ -361,6 +361,11 @@ html.iu-info-system-cutover #iuSilverTallScrollViewport > .iuSilverTallScrollPro
   display: none !important;
 }
 
+/* Keep root out of the HomeCards grid unless cutover/parallel is active. */
+#iuPrehledDneRoot {
+  display: none;
+}
+
 html.iu-info-system-cutover #iuPrehledDneRoot,
 html.iu-info-system-parallel #iuPrehledDneRoot {
   display: block !important;

@@ -368,7 +368,10 @@ async function testMockedStates(context) {
       }),
     });
   });
-  await page.goto(BASE + "?section=media&iuRobust=1", { waitUntil: "domcontentloaded", timeout: 60000 });
+  await page.goto(BASE + "?section=media&iuRobust=1&iuInfoSystem=off", {
+    waitUntil: "domcontentloaded",
+    timeout: 60000,
+  });
   await waitForDesktopPanel(page);
   results.stale = await page.evaluate(() => {
     const eur = document.querySelector('[data-iu-info-panel-id="eur_czk"]');
@@ -438,7 +441,7 @@ async function main() {
     await installObservers(context);
     const page = await context.newPage();
 
-    await page.goto(BASE + "?section=media&iuRobust=1", {
+    await page.goto(BASE + "?section=media&iuRobust=1&iuInfoSystem=off", {
       waitUntil: "domcontentloaded",
       timeout: 60000,
     });
