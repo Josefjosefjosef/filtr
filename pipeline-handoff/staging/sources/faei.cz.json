@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-07-17T18:49:46.252427Z",
+  "ingestedAt": "2026-07-17T20:47:24.683708Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Týden na akciových trzích: Geopolitické napětí brzdí optimismus",
+      "url": "https://profitonline.cz/tyden-na-akciovych-trzich-geopoliticke-napeti-brzdi-optimismus/",
+      "dt": "2026-07-17T20:00:18Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "akciových",
+        "brzdí",
+        "geopolitické",
+        "napětí",
+        "optimismus",
+        "trzích",
+        "týden"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -265,29 +289,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "České finalistky si ve Wimbledonu rozdělily 153 milionů",
-      "url": "https://profitonline.cz/ceske-finalistky-si-ve-wimbledonu-rozdelily-153-milionu/",
-      "dt": "2026-07-15T20:05:11Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "153",
-        "finalistky",
-        "milionů",
-        "rozdělily",
-        "wimbledonu",
-        "české"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,7 +299,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18722,
+      "bytes": 19022,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -335,11 +336,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-07-17T12:00:11Z",
+        "raw_feed_latest_publishedAt": "2026-07-17T20:00:18Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 8,
-          "zpravy": 3,
+          "finance": 9,
+          "zpravy": 2,
           "sport": 1
         },
         "drop_counts": {
@@ -352,6 +353,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Týden na akciových trzích: Geopolitické napětí brzdí optimismus",
+            "publishedAt": "2026-07-17T20:00:18Z"
+          },
           {
             "title": "Jak funguje EET 2.0? Otestovali jsme ji na vlastní prsty",
             "publishedAt": "2026-07-17T12:00:11Z"
@@ -379,10 +384,6 @@
           {
             "title": "Tržby PepsiCo překročily 24 miliard dolarů, ale trh poslal akcie dolů",
             "publishedAt": "2026-07-16T10:00:20Z"
-          },
-          {
-            "title": "Šéfové Fedu (4.): Ben Bernanke – ze záporáka finančního světa nositelem Nobelovy ceny",
-            "publishedAt": "2026-07-16T08:00:14Z"
           }
         ]
       }
