@@ -88,6 +88,11 @@ function startStaticServer(port) {
 function clsInitScript() {
   return `(function(){
     try{
+      // Legacy media HomeCards + article feed must stay visible for these guards
+      // after info-system cutover (production default hides commercial aggregation).
+      window.__IU_INFO_SYSTEM_CUTOVER__ = false;
+    }catch(_){}
+    try{
       window.__iuMsCls = 0;
       window.__iuMsClsReset = function(){ window.__iuMsCls = 0; };
       var po = new PerformanceObserver(function(list){
@@ -100,6 +105,13 @@ function clsInitScript() {
       po.observe({ type: "layout-shift", buffered: true });
     }catch(_){}
   })();`;
+}
+
+/** Append iuInfoSystem=off so legacy media rail/feed remain measurable under cutover. */
+function withLegacyMediaParams(urlPath) {
+  const p = String(urlPath || "/projects/");
+  if (/[?&]iuInfoSystem=/.test(p)) return p;
+  return p + (p.indexOf("?") >= 0 ? "&" : "?") + "iuInfoSystem=off";
 }
 
 async function readCls(page) {
@@ -211,6 +223,7 @@ module.exports = {
   envBaseUrl,
   startStaticServer,
   clsInitScript,
+  withLegacyMediaParams,
   readCls,
   resetCls,
   preparePage,

@@ -15,9 +15,9 @@ const REPORT = "scripts/bottom-navigation-visibility-guard-v1-report.json";
 const TOLERANCE_PX = 2;
 
 const SCREENS = [
-  { id: "home", path: "/projects/" },
-  { id: "media_zpravy", path: "/projects/?section=media&topic=zpravy" },
-  { id: "media_sport", path: "/projects/?section=media&topic=sport" },
+  { id: "home", path: shared.withLegacyMediaParams("/projects/") },
+  { id: "media_zpravy", path: shared.withLegacyMediaParams("/projects/?section=media&topic=zpravy") },
+  { id: "media_sport", path: shared.withLegacyMediaParams("/projects/?section=media&topic=sport") },
 ];
 
 const VIEWPORTS = [
@@ -80,6 +80,7 @@ async function runGuard(baseUrl) {
   try {
     for (const vp of VIEWPORTS) {
       const ctx = await browser.newContext({ viewport: { width: vp.w, height: vp.h } });
+      await ctx.addInitScript(shared.clsInitScript());
       try {
         for (const screen of SCREENS) {
           const page = await ctx.newPage();
