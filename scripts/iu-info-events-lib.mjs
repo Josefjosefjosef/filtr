@@ -7,7 +7,23 @@ import crypto from "crypto";
 export const IU_INFO_EVENTS_UA = "InfoUzelInfoEvents/1.1 (+https://infouzel.cz)";
 
 const LISTING_PATH_RE =
-  /^\/(aktuality|novinky|tiskove-zpravy|tiskove_zpravy|press|rss|rss\.aspx|feed|zpravodajstvi|media-centrum|informacni-servis)\/?$/i;
+  /^\/(aktuality|novinky|tiskove-zpravy|tiskove_zpravy|press|rss|rss\.aspx|feed|zpravodajstvi|media-centrum|informacni-servis|cnb-news|pro-media)\/?$/i;
+
+export function canonicalizeUrl(url) {
+  const n = normalizeItemUrl(url);
+  if (!n) return "";
+  try {
+    const u = new URL(n);
+    u.hash = "";
+    u.hostname = u.hostname.replace(/^www\./, "").toLowerCase();
+    let path = u.pathname || "/";
+    if (path.length > 1) path = path.replace(/\/+$/, "");
+    u.pathname = path || "/";
+    return u.toString();
+  } catch {
+    return n;
+  }
+}
 
 export function stripHtml(s) {
   return String(s || "")
@@ -166,24 +182,41 @@ export function mapGroupToSection(group) {
   return { sectionId: "cesko-svet", subsectionId: "ekonomika-cr" };
 }
 
-export async function fetchText(url, timeoutMs = 15000) {
-  const res = await fetch(url, {
-    headers: {
-      "User-Agent": IU_INFO_EVENTS_UA,
-      Accept: "application/rss+xml, application/atom+xml, application/xml, text/xml, text/html;q=0.8, */*;q=0.5",
-    },
-    redirect: "follow",
-    signal: AbortSignal.timeout(timeoutMs),
-  });
-  const text = await res.text();
-  return { ok: res.ok, status: res.status, text, finalUrl: res.url || url };
+export async function fetchText(url, timeoutMs = 15000, retries = 2) {
+  let lastErr = null;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const t0 = Date.now();
+    try {
+      const res = await fetch(url, {
+        headers: {
+          "User-Agent": IU_INFO_EVENTS_UA,
+          Accept: "application/rss+xml, application/atom+xml, application/xml, text/xml, text/html;q=0.8, */*;q=0.5",
+        },
+        redirect: "follow",
+        signal: AbortSignal.timeout(timeoutMs),
+      });
+      const text = await res.text();
+      return {
+        ok: res.ok,
+        status: res.status,
+        text,
+        finalUrl: res.url || url,
+        ms: Date.now() - t0,
+        attempts: attempt + 1,
+      };
+    } catch (e) {
+      lastErr = e;
+      if (attempt < retries) await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
+    }
+  }
+  throw lastErr || new Error("fetch failed");
 }
 
 const HTML_NAV_TITLE_RE =
   /^(přejít|prejit|skoč|skoc|menu|přihlásit|prihlasit|odhlásit|odhlasit|hledat|search|cookie|přijmout|prijmout|odmítnout|odmitnout|více|vice|zpět|zpet|domů|domu|mapa webu|rss|english|deutsch|facebook|twitter|instagram|linkedin|youtube|členové|clenove|ministerstvo|základní|zakladni|organizační|organizacni|kontakt|úvod|uvod)\b/i;
 
 const HTML_ARTICLE_PATH_RE =
-  /(\d{5,})|\/(clanek|aktualit|aktualita|novinka|tiskov|press|zprava|zpravy|news|mediaservice|detail|dokument)|\.aspx(?:\?|$)|\/\d{4}\/\d{2}\//i;
+  /(\d{5,})|\/(-\/)|\/(clanek|aktualit|aktualita|novinka|tiskov|press|zprava|zpravy|news|mediaservice|detail|dokument)|\.aspx(?:\?|$)|\/\d{4}\/\d{2}\/|\.xml$/i;
 
 const HTML_REJECT_PATH_RE =
   /\/(login|auth|c\/portal|o-serveru|ochrana-osobnich|cookies?|mapa-webu|sitemap|rss\.aspx|feed)(\/|$)/i;
@@ -191,6 +224,7 @@ const HTML_REJECT_PATH_RE =
 /** Extract article-like anchors from an HTML listing page (official press lists). */
 export function extractHtmlListItems(html, pageUrl, opts = {}) {
   const max = Number(opts.max || 40);
+  const pathInclude = opts.pathInclude ? new RegExp(opts.pathInclude, "i") : null;
   const hrefRe = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
   const out = [];
   const seen = new Set();
@@ -205,11 +239,14 @@ export function extractHtmlListItems(html, pageUrl, opts = {}) {
       const u = new URL(href);
       const path = u.pathname || "/";
       if (HTML_REJECT_PATH_RE.test(path)) continue;
-      if (!HTML_ARTICLE_PATH_RE.test(path + u.search)) continue;
+      if (pathInclude) {
+        if (!pathInclude.test(path + u.search)) continue;
+      } else if (!HTML_ARTICLE_PATH_RE.test(path + u.search)) {
+        continue;
+      }
       const hu = opts.homeUrl ? new URL(opts.homeUrl).hostname.replace(/^www\./, "") : "";
       const iu = u.hostname.replace(/^www\./, "");
       if (hu && iu !== hu && !iu.endsWith("." + hu) && !hu.endsWith("." + iu)) continue;
-      // Drop links that only point back to the listing page itself
       const listPath = new URL(pageUrl).pathname.replace(/\/+$/, "") || "/";
       const itemPath = path.replace(/\/+$/, "") || "/";
       if (itemPath === listPath) continue;
@@ -224,10 +261,107 @@ export function extractHtmlListItems(html, pageUrl, opts = {}) {
   return out.slice(0, max);
 }
 
+/** List CAP XML files from CHMI opendata directory index (with mtime when present). */
+export function listCapXmlFromIndex(html, indexUrl) {
+  const months = {
+    Jan: 0,
+    Feb: 1,
+    Mar: 2,
+    Apr: 3,
+    May: 4,
+    Jun: 5,
+    Jul: 6,
+    Aug: 7,
+    Sep: 8,
+    Oct: 9,
+    Nov: 10,
+    Dec: 11,
+  };
+  function parseApacheDate(s) {
+    // 01-Jul-2026 08:43
+    const m = String(s || "").match(/^(\d{2})-([A-Za-z]{3})-(\d{4})\s+(\d{2}):(\d{2})$/);
+    if (!m) return 0;
+    const mon = months[m[2]];
+    if (mon == null) return 0;
+    return Date.UTC(Number(m[3]), mon, Number(m[1]), Number(m[4]), Number(m[5]));
+  }
+  const out = [];
+  const re =
+    /<a\s+href=["']([^"']+\.xml)["'][^>]*>[^<]*<\/a>\s*(\d{2}-[A-Za-z]{3}-\d{4}\s+\d{2}:\d{2})?/gi;
+  let m;
+  while ((m = re.exec(String(html || "")))) {
+    const abs = normalizeItemUrl(m[1], indexUrl);
+    if (!abs || !/\.xml$/i.test(abs)) continue;
+    out.push({ url: abs, mtime: m[2] ? parseApacheDate(m[2]) : 0 });
+  }
+  if (!out.length) {
+    const re2 = /href=["']([^"']+\.xml)["']/gi;
+    while ((m = re2.exec(String(html || "")))) {
+      const abs = normalizeItemUrl(m[1], indexUrl);
+      if (abs && /\.xml$/i.test(abs)) out.push({ url: abs, mtime: 0 });
+    }
+  }
+  out.sort((a, b) => (b.mtime || 0) - (a.mtime || 0));
+  return out;
+}
+
+/**
+ * Parse one CAP bulletin into feed-ready raw items.
+ * Uses the CAP XML file URL as concrete original document (not portal homepage).
+ */
+export function extractCapBulletinItems(xml, fileUrl, opts = {}) {
+  const max = Number(opts.max || 8);
+  const sent = ((String(xml || "").match(/<sent>([^<]+)<\/sent>/i) || [])[1] || "").trim();
+  const identifier = ((String(xml || "").match(/<identifier>([^<]+)<\/identifier>/i) || [])[1] || "").trim();
+  const infos = String(xml || "").split(/<info[\s>]/i).slice(1);
+  const seen = new Set();
+  const out = [];
+  for (const block of infos) {
+    if (out.length >= max) break;
+    const chunk = block.split(/<\/info>/i)[0] || "";
+    const lang = ((chunk.match(/<language>([^<]*)<\/language>/i) || [])[1] || "").trim().toLowerCase();
+    if (lang && !lang.startsWith("cs") && !lang.startsWith("cz")) continue;
+    const event = stripHtml((chunk.match(/<event>([^<]*)<\/event>/i) || [])[1] || "");
+    const severity = ((chunk.match(/<severity>([^<]*)<\/severity>/i) || [])[1] || "").trim();
+    const area = stripHtml((chunk.match(/<areaDesc>([^<]*)<\/areaDesc>/i) || [])[1] || "");
+    if (!event) continue;
+    if (/^žádn|^no warning|^no outlook|^minor (heat|cold) warning/i.test(event)) continue;
+    if (/^None$/i.test(severity)) continue;
+    if (!/Extreme|Severe|Moderate/i.test(severity)) continue;
+    const areaShort = area.split("(")[0].trim() || area;
+    const key = foldCs(event + "|" + areaShort + "|" + severity);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const title = `Výstraha ČHMÚ: ${event}${areaShort ? " — " + areaShort : ""}`;
+    // Concrete official CAP document URL (unique per event via query, same resource)
+    const link = normalizeItemUrl(fileUrl) + (identifier ? `?id=${encodeURIComponent(identifier.slice(-24))}&e=${encodeURIComponent(foldCs(event).slice(0, 40))}` : "");
+    out.push({
+      title,
+      link,
+      pubDate: sent,
+      severity,
+      area: areaShort,
+      identifier,
+    });
+  }
+  // Fallback: one bulletin item if no active severe events
+  if (!out.length && fileUrl) {
+    out.push({
+      title: `Bulletin výstrah ČHMÚ (CAP)${sent ? " — " + sent.slice(0, 16).replace("T", " ") : ""}`,
+      link: normalizeItemUrl(fileUrl),
+      pubDate: sent,
+      severity: "Unknown",
+      area: "Česká republika",
+      identifier,
+    });
+  }
+  return out;
+}
+
 export function dedupeByUrlAndGroup(items) {
   const byUrl = new Map();
   for (const it of items) {
-    const u = String(it.url || "").toLowerCase();
+    const u = canonicalizeUrl(it.canonicalUrl || it.url || "").toLowerCase() || String(it.url || "").toLowerCase();
     if (!u) continue;
     const prev = byUrl.get(u);
     if (!prev) {
@@ -238,6 +372,5 @@ export function dedupeByUrlAndGroup(items) {
     const et = Date.parse(it.updatedAt || it.publishedAt || 0) || 0;
     if (et >= pt) byUrl.set(u, it);
   }
-  // Secondary: same groupKey keep newest as primary; others become link members via UI clustering
   return Array.from(byUrl.values());
 }
