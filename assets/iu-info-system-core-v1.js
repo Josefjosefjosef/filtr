@@ -1,9 +1,10 @@
 /**
- * InfoUzel.cz — shared info-system data layer (Přehled dne v1)
+ * InfoUzel.cz — shared info-system data layer (Přehled dne v2)
+ * Backend prepares datasets; frontend is local-first and never fetches source sites.
  * Displays only: time, title, real source, place, status, importance, origin URL.
  * Never images, perex, or article body.
  */
-const IU_INFO_SYSTEM_VERSION = "1.0.0";
+const IU_INFO_SYSTEM_VERSION = "2.0.0";
 const LS_READ = "iu.infoEvents.read.v1";
 const LS_SAVED = "iu.infoEvents.saved.v1";
 const LS_HIDDEN = "iu.infoEvents.hidden.v1";
@@ -72,13 +73,58 @@ async function fetchJson(url) {
   return res.json();
 }
 
-async function loadInfoSystemData() {
+function eventSortAt(ev) {
+  return ev && (ev.sortAt || ev.publishedAtSource || ev.firstSeenByInfoUzel || ev.publishedAt || ev.updatedAt || "");
+}
+
+async function loadInfoSystemData(opts) {
+  const o = opts || {};
+  // Manifest first (atomic publish pointer); tolerate missing for rollback to v1 layout
+  let manifest = null;
+  let metadata = null;
+  try {
+    manifest = await fetchJson(iuInfoDataUrl("manifest.json"));
+  } catch (_) {
+    manifest = null;
+  }
+  try {
+    metadata = await fetchJson(iuInfoDataUrl("metadata.json"));
+  } catch (_) {
+    metadata = null;
+  }
+
   const [taxonomy, registry, feed] = await Promise.all([
     fetchJson(iuInfoDataUrl("taxonomy.json")),
     fetchJson(iuInfoDataUrl("source_registry.json")),
     fetchJson(iuInfoDataUrl("feed.json")),
   ]);
-  return { taxonomy, registry, feed, loadedAt: new Date().toISOString() };
+
+  // Optional lane datasets (frontend still never talks to source websites)
+  let laneItems = null;
+  const laneIds = Array.isArray(o.lanes) ? o.lanes.map(String) : [];
+  if (laneIds.length && manifest) {
+    const parts = await Promise.all(
+      laneIds.map((id) => fetchJson(iuInfoDataUrl(`lanes/${id}.json`)).catch(() => null))
+    );
+    laneItems = [];
+    for (const part of parts) {
+      if (part && Array.isArray(part.items)) laneItems.push(...part.items);
+    }
+  }
+
+  const effectiveFeed =
+    laneItems && laneItems.length
+      ? Object.assign({}, feed, { items: laneItems, itemCount: laneItems.length, fromLanes: laneIds })
+      : feed;
+
+  return {
+    taxonomy,
+    registry,
+    metadata,
+    manifest,
+    feed: effectiveFeed,
+    loadedAt: new Date().toISOString(),
+  };
 }
 
 function defaultPrefs() {
@@ -87,6 +133,9 @@ function defaultPrefs() {
     eventTypes: [],
     sourceGroups: [],
     sourceIds: [],
+    orgTypes: [],
+    lanes: [],
+    connectorTypes: [],
     statuses: [],
     localityQuery: "",
     localities: [],
@@ -239,14 +288,31 @@ function filterEvents(events, filters) {
   if (f.unreadOnly) list = list.filter((ev) => !read.has(String(ev.id)));
   if (f.savedOnly) list = list.filter((ev) => saved.has(String(ev.id)));
 
+  // Personalization dimensions prepared in metadata (orgType, lane, region, …)
+  if (f.orgTypes && f.orgTypes.length) {
+    const set = new Set(f.orgTypes.map(String));
+    list = list.filter((ev) => set.has(String(ev.orgType || "")));
+  }
+  if (f.lanes && f.lanes.length) {
+    const set = new Set(f.lanes.map(String));
+    list = list.filter((ev) => set.has(String(ev.lane || "")));
+  }
+  if (f.connectorTypes && f.connectorTypes.length) {
+    const set = new Set(f.connectorTypes.map(String));
+    list = list.filter((ev) => set.has(String(ev.connectorType || "")));
+  }
+
   const clustered = dedupeCluster(list);
   const mode = String(f.sortMode || "nejdulezitejsi");
   clustered.sort((a, b) => {
     if (mode === "nejnovejsi") {
-      return (Date.parse(b.publishedAt || 0) || 0) - (Date.parse(a.publishedAt || 0) || 0);
+      return (Date.parse(eventSortAt(b) || 0) || 0) - (Date.parse(eventSortAt(a) || 0) || 0);
     }
     if (mode === "posledni-aktualizace") {
-      return (Date.parse(b.updatedAt || b.publishedAt || 0) || 0) - (Date.parse(a.updatedAt || a.publishedAt || 0) || 0);
+      return (
+        (Date.parse(b.lastUpdatedBySource || b.updatedAt || eventSortAt(b) || 0) || 0) -
+        (Date.parse(a.lastUpdatedBySource || a.updatedAt || eventSortAt(a) || 0) || 0)
+      );
     }
     if (mode === "nejvetsi-dopad") {
       return Number(b.impact || 0) - Number(a.impact || 0);
@@ -263,7 +329,7 @@ function filterEvents(events, filters) {
     }
     const di = Number(b.importance || 0) - Number(a.importance || 0);
     if (di) return di;
-    return (Date.parse(b.updatedAt || b.publishedAt || 0) || 0) - (Date.parse(a.updatedAt || a.publishedAt || 0) || 0);
+    return (Date.parse(eventSortAt(b) || 0) || 0) - (Date.parse(eventSortAt(a) || 0) || 0);
   });
   return clustered;
 }
@@ -295,6 +361,7 @@ const IUInfoSystem = {
   isSaved,
   isHidden,
   iuInfoDataUrl,
+  eventSortAt,
 };
 
 try {

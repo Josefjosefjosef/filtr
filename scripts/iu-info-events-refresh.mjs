@@ -24,6 +24,21 @@ import {
   normalizeItemUrl,
   stripHtml,
 } from "./iu-info-events-lib.mjs";
+import {
+  IU_INFO_EVENTS_V2,
+  applyChronology,
+  atomicPublishInfoEvents,
+  buildConnectorGroups,
+  buildPersonalizationMeta,
+  defaultPeriodicityMin,
+  loadPreviousFirstSeen,
+  regionalAdapterSpec,
+  resolveConnectorType,
+  resolveLane,
+  resolveOrgType,
+  splitIntoLanes,
+  validateStagingFeed,
+} from "./iu-info-events-v2.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIR = path.join(REPO, "projects", "data", "info_events");
@@ -33,6 +48,7 @@ const MAX_AGE_HOURS = Number(process.env.IU_INFO_EVENTS_MAX_AGE_HOURS || "120");
 const PER_FEED_CAP = Number(process.env.IU_INFO_EVENTS_PER_FEED_CAP || "25");
 const PER_SOURCE_CAP = Number(process.env.IU_INFO_EVENTS_PER_SOURCE_CAP || "40");
 const CAP_FILES_MAX = Number(process.env.IU_INFO_EVENTS_CAP_FILES_MAX || "6");
+const ONLY_GROUP = String(process.env.IU_INFO_EVENTS_GROUP || "").trim().toLowerCase();
 
 function readJson(name) {
   return JSON.parse(fs.readFileSync(path.join(DIR, name), "utf8"));
@@ -67,7 +83,9 @@ function buildItem(entry, raw, nowIso, extra = {}) {
   const title = stripHtml(raw.title);
   if (!title || !url) return null;
   if (!isConcreteItemUrl(url, home)) return null;
-  const publishedAt = toIso(raw.pubDate) || nowIso;
+  const sourcePub = toIso(raw.pubDate);
+  const hasSourcePubDate = !!sourcePub;
+  const publishedAt = sourcePub || nowIso;
   const ageH = (Date.parse(nowIso) - Date.parse(publishedAt)) / 3600000;
   if (Number.isFinite(ageH) && ageH > MAX_AGE_HOURS) return null;
   const sec = mapGroupToSection(entry.defaultSectionGroup || entry.group);
@@ -77,6 +95,9 @@ function buildItem(entry, raw, nowIso, extra = {}) {
     raw.area
       ? { level: "kraj", name: raw.area }
       : entry.defaultRegion || { level: "cr", name: "Česká republika" };
+  const lane = resolveLane(entry);
+  const connectorType = resolveConnectorType(entry);
+  const orgType = resolveOrgType(entry);
   return {
     id: makeItemId(entry.id, canonical || url, publishedAt),
     title,
@@ -93,10 +114,15 @@ function buildItem(entry, raw, nowIso, extra = {}) {
     importance,
     impact: importance,
     region,
+    lane,
+    connectorType,
+    orgType,
+    publishedAtSource: hasSourcePubDate ? sourcePub : null,
     publishedAt,
     updatedAt: nowIso,
+    _hasSourcePubDate: hasSourcePubDate,
     groupKey: makeGroupKey(title, publishedAt),
-    tags: [entry.group].concat(extra.tags || []).filter(Boolean),
+    tags: [entry.group, lane, connectorType].concat(extra.tags || []).filter(Boolean),
     links: [],
   };
 }
@@ -272,15 +298,25 @@ async function main() {
   const nowIso = new Date().toISOString();
   const registry = readJson("source_registry.json");
   const cutover = readJson("cutover_state.json");
+  const firstSeenMap = loadPreviousFirstSeen(DIR);
   const collected = [];
   const ingestReport = [];
   let sourceErrors = 0;
+  const runStarted = Date.now();
 
   for (const entry of registry.entries || []) {
+    // Enrich registry architecture fields for all approved entries
+    entry.lane = resolveLane(entry);
+    entry.connectorType = resolveConnectorType(entry);
+    entry.orgType = resolveOrgType(entry);
+    entry.periodicityMin = defaultPeriodicityMin(entry);
+
     if (!entry.productionActive || !entry.productionApproved) continue;
     if (entry.legalStatus !== "approved") continue;
+    if (ONLY_GROUP && resolveLane(entry) !== ONLY_GROUP) continue;
 
     let keptTotal = 0;
+    const srcStarted = Date.now();
     try {
       if (entry.capIndexUrl) {
         keptTotal += await ingestCapIndex(entry, entry.capIndexUrl, nowIso, collected, ingestReport);
@@ -315,6 +351,7 @@ async function main() {
         ok: false,
         status: 0,
         reason: "source_isolated_error:" + String(e && e.message ? e.message : e),
+        lane: resolveLane(entry),
       });
     }
 
@@ -334,12 +371,19 @@ async function main() {
       structureChange: "none",
       lastProbeStatus: probe.status,
       lastProbeAt: nowIso,
+      lastAttemptAt: nowIso,
       lastSuccessAt: keptTotal > 0 ? nowIso : entry.monitoring && entry.monitoring.lastSuccessAt,
       lastError: keptTotal > 0 ? null : "no_items_kept",
       itemsKept: keptTotal,
+      itemsNew: keptTotal,
+      runMs: Date.now() - srcStarted,
       responseMs: probe.ms,
+      dataAgeHours: null,
+      lane: resolveLane(entry),
+      connectorType: resolveConnectorType(entry),
+      periodicityMin: entry.periodicityMin,
       connector: entry.capIndexUrl
-        ? "cap"
+        ? "opendata-cap"
         : entry.feedUrl || (entry.feedUrls && entry.feedUrls.length)
           ? "rss"
           : entry.htmlListUrl || (entry.htmlListUrls && entry.htmlListUrls.length)
@@ -352,10 +396,17 @@ async function main() {
   let items = dedupeByUrlAndGroup(collected);
   const removedDupes = beforeDedupe - items.length;
 
+  // Chronology: source publish time preferred; else firstSeenByInfoUzel
+  items = items.map((it) => {
+    const chron = applyChronology(it, nowIso, firstSeenMap);
+    delete chron._hasSourcePubDate;
+    return chron;
+  });
+
   items.sort((a, b) => {
     const di = Number(b.importance || 0) - Number(a.importance || 0);
     if (di) return di;
-    return (Date.parse(b.publishedAt || 0) || 0) - (Date.parse(a.publishedAt || 0) || 0);
+    return (Date.parse(b.sortAt || b.publishedAt || 0) || 0) - (Date.parse(a.sortAt || a.publishedAt || 0) || 0);
   });
 
   const perSource = new Map();
@@ -374,29 +425,60 @@ async function main() {
   items = items.filter((it) => isConcreteItemUrl(it.url, null) && isConcreteItemUrl(it.originalUrl || it.url, null));
   const droppedHome = beforeHome - items.length;
 
+  const lanes = splitIntoLanes(items);
+  const laneCounts = {};
+  for (const [lid, arr] of Object.entries(lanes)) laneCounts[lid] = arr.length;
+
   const feed = {
-    version: "1.2.0",
+    version: IU_INFO_EVENTS_V2,
     generatedAt: nowIso,
     connector: "iu-info-events-refresh",
+    architecture: "v2-pipeline",
     itemCount: items.length,
     maxAgeHours: MAX_AGE_HOURS,
+    onlyGroup: ONLY_GROUP || null,
+    laneCounts,
     items,
+  };
+
+  const metadata = {
+    version: IU_INFO_EVENTS_V2,
+    generatedAt: nowIso,
+    architecture: {
+      backendOnlyFetch: true,
+      frontendLocalFirst: true,
+      frontendMustNotFetchSourceSites: true,
+      atomicPublish: true,
+      splitDatasets: true,
+    },
+    connectorPreference: ["api", "opendata", "rss", "atom", "xml", "json", "html"],
+    connectorGroups: buildConnectorGroups(),
+    personalization: buildPersonalizationMeta(),
+    regionalAdapter: regionalAdapterSpec(),
+    chronology: {
+      fields: ["publishedAtSource", "firstSeenByInfoUzel", "lastUpdatedBySource", "lastProcessedAt", "sortAt"],
+      sortRule: "prefer publishedAtSource; else firstSeenByInfoUzel",
+    },
   };
 
   const failedConnectors = ingestReport.filter((r) => !r.ok);
   const monitoring = {
-    version: "1.2.0",
+    version: IU_INFO_EVENTS_V2,
     generatedAt: nowIso,
     cutover,
+    runMs: Date.now() - runStarted,
+    onlyGroup: ONLY_GROUP || null,
     feedItemCount: items.length,
     droppedHomepageUrls: droppedHome,
     removedDuplicates: removedDupes,
     sourceErrors,
+    laneCounts,
     failedConnectors: failedConnectors.map((r) => ({
       id: r.id,
       reason: r.reason || "fail",
       status: r.status,
       mode: r.mode || null,
+      lane: r.lane || null,
     })),
     ingest: ingestReport,
     sources: (registry.entries || [])
@@ -405,6 +487,10 @@ async function main() {
         id: e.id,
         label: e.label,
         url: e.url,
+        lane: e.lane || resolveLane(e),
+        connectorType: e.connectorType || resolveConnectorType(e),
+        orgType: e.orgType || resolveOrgType(e),
+        periodicityMin: e.periodicityMin || defaultPeriodicityMin(e),
         feedUrl: e.feedUrl || (e.feedUrls && e.feedUrls[0]) || null,
         capIndexUrl: e.capIndexUrl || null,
         legalStatus: e.legalStatus,
@@ -417,6 +503,8 @@ async function main() {
       .filter((e) => !e.productionActive)
       .map((e) => ({
         id: e.id,
+        lane: e.lane || resolveLane(e),
+        connectorType: e.connectorType || resolveConnectorType(e),
         connectorStatus: e.connectorStatus || "NO_STABLE_ITEM_SOURCE",
         blocker: e.blocker || e.notes || "",
       })),
@@ -424,17 +512,54 @@ async function main() {
     commercialAggregationActive: !!cutover.commercialAggregationActive,
   };
 
-  writeJson("source_registry.json", registry);
-  writeJson("feed.json", feed);
-  writeJson("monitoring.json", monitoring);
+  registry.version = IU_INFO_EVENTS_V2;
+  registry.generatedAt = nowIso;
+
+  // Atomic publish: stage lanes + feed + metadata + monitoring + registry, then promote
+  const files = {
+    "feed.json": feed,
+    "metadata.json": metadata,
+    "monitoring.json": monitoring,
+    "source_registry.json": registry,
+  };
+  for (const [lid, arr] of Object.entries(lanes)) {
+    files[`lanes/${lid}.json`] = {
+      version: IU_INFO_EVENTS_V2,
+      lane: lid,
+      generatedAt: nowIso,
+      itemCount: arr.length,
+      items: arr,
+    };
+  }
+
+  try {
+    const manifest = atomicPublishInfoEvents(
+      DIR,
+      {
+        generationId: nowIso.replace(/[:.]/g, "-"),
+        generatedAt: nowIso,
+        itemCount: items.length,
+        laneCounts,
+        files,
+      },
+      validateStagingFeed
+    );
+    console.log("[iu-info-events-refresh] atomicPublish generationId=" + manifest.generationId);
+  } catch (e) {
+    console.error("[iu-info-events-refresh] ATOMIC_PUBLISH_FAIL", e && e.message ? e.message : e);
+    console.log("RESULT=FAIL");
+    process.exit(1);
+  }
 
   const activeConnectors = ingestReport.filter((r) => r.ok && (r.kept || 0) > 0).length;
+  console.log("[iu-info-events-refresh] architecture=v2");
   console.log("[iu-info-events-refresh] sourcesActive=" + monitoring.sources.length);
   console.log("[iu-info-events-refresh] connectorsWithItems=" + activeConnectors);
   console.log("[iu-info-events-refresh] feedItems=" + feed.itemCount);
   console.log("[iu-info-events-refresh] droppedHomepageUrls=" + droppedHome);
   console.log("[iu-info-events-refresh] removedDuplicates=" + removedDupes);
   console.log("[iu-info-events-refresh] failedConnectors=" + failedConnectors.length);
+  console.log("[iu-info-events-refresh] lanes=" + JSON.stringify(laneCounts));
   console.log("[iu-info-events-refresh] commercialAggregationActive=" + monitoring.commercialAggregationActive);
   if (failedConnectors.length) {
     for (const f of failedConnectors.slice(0, 12)) {
