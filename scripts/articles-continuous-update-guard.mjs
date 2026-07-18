@@ -330,7 +330,22 @@ async function checkReleaseBlockedStreak() {
   return { ok: true, streak };
 }
 
+function isCommercialAggregationActive() {
+  try {
+    const p = path.join(root, "projects", "data", "info_events", "cutover_state.json");
+    if (!fs.existsSync(p)) return true;
+    const j = JSON.parse(fs.readFileSync(p, "utf8"));
+    return j.commercialAggregationActive !== false;
+  } catch (_) {
+    return true;
+  }
+}
+
 async function checkZombies(nowMs) {
+  if (!isCommercialAggregationActive()) {
+    log("zombie_guard SKIP (info-system cutover: commercialAggregationActive=false)");
+    return { ok: true, skipped: true };
+  }
   log(`zombie_guard queued_stale=${QUEUED_STALE_MIN}m in_progress_stale=${IN_PROGRESS_STALE_MIN}m`);
   const [owner, repo] = GITHUB_REPOSITORY.split("/");
   const wf = encodeURIComponent(UPDATE_WORKFLOW);
