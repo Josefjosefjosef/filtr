@@ -113,6 +113,18 @@ function renderItem(ev, taxonomy) {
         ${(ev.tags || []).slice(0, 3).map((t) => `<span class="iuPrehledDne__pill">${esc(t)}</span>`).join("")}
         ${ev._clusterSize > 1 ? `<span class="iuPrehledDne__pill">skupina ${esc(ev._clusterSize)}</span>` : ""}
       </div>
+      ${
+        Array.isArray(ev._clusterLinks) && ev._clusterLinks.length > 1
+          ? `<div class="iuPrehledDne__origins">${ev._clusterLinks
+              .map(
+                (l) =>
+                  `<a class="iuPrehledDne__origin" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(
+                    l.label || "Zdroj"
+                  )}</a>`
+              )
+              .join("")}</div>`
+          : ""
+      }
       <div class="iuPrehledDne__actions">
         <button type="button" data-act="save">${saved ? "Uloženo" : "Uložit"}</button>
         <button type="button" data-act="hide">Skrýt</button>
