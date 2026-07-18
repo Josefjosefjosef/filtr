@@ -1,6 +1,6 @@
 {
   "version": 4,
-  "generatedAt": "2026-07-18T16:13:21.989Z",
+  "generatedAt": "2026-07-18T17:16:53.104Z",
   "catalogCount": 32,
   "items": {
     "eur_czk": {
@@ -24,22 +24,22 @@
       "legalStatus": "verified_requires_attribution"
     },
     "bitcoin": {
-      "value": 1356069,
+      "value": 1361111,
       "unit": "Kč",
       "primaryLabel": "",
-      "secondaryValue": "▲ 1,76 %",
+      "secondaryValue": "▲ 0,53 %",
       "trendDirection": "up",
-      "updatedAt": "2026-07-18T15:15:09.086Z",
+      "updatedAt": "2026-07-18T17:16:53.104Z",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
     "gold": {
-      "value": 84891,
+      "value": 84903,
       "unit": "Kč",
       "primaryLabel": "PAX Gold",
-      "secondaryValue": "▲ 0,30 %",
+      "secondaryValue": "▲ 0,01 %",
       "trendDirection": "up",
-      "updatedAt": "2026-07-18T15:15:09.086Z",
+      "updatedAt": "2026-07-18T17:16:53.104Z",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
@@ -360,14 +360,19 @@
   },
   "errors": [],
   "scheduler": {
-    "checkedBuckets": [],
-    "skippedBuckets": []
+    "checkedBuckets": [
+      "cnb",
+      "coingecko"
+    ],
+    "skippedBuckets": [
+      "cnb"
+    ]
   },
   "bucketFetchedAt": {
     "csu_fuel": "2026-07-18T05:37:19.442Z",
     "cnb": "2026-07-17T14:53:14.169Z",
     "csu_coicop": "2026-07-16T00:27:30.151Z",
-    "coingecko": "2026-07-18T15:15:09.086Z",
+    "coingecko": "2026-07-18T17:16:53.104Z",
     "csu_inflation": "2026-07-16T00:27:30.151Z",
     "mpsv_labor": "2026-07-16T00:27:30.151Z",
     "csu_wage_q": "2026-07-16T00:27:30.151Z",
