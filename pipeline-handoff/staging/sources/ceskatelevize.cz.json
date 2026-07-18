@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-07-17T22:40:49.195768Z",
+  "ingestedAt": "2026-07-18T00:18:13.125711Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Írán tvrdí, že u Hormuzského průlivu začaly hořet dva tankery kvůli minám",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/iran-tvrdi-ze-u-hormuzskeho-prulivu-zacaly-horet-dva-tankery-kvuli-minam-375701",
+      "dt": "2026-07-17T22:58:39Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24",
+      "tokens": [
+        "dva",
+        "hormuzského",
+        "hořet",
+        "kvůli",
+        "minám",
+        "průlivu",
+        "tankery",
+        "tvrdí",
+        "začaly",
+        "írán"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -726,34 +753,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zadržení Číňana a Čecha spolu souvisí, míní Votápek. Svoboda: Vyřeší to verdikt soudu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/zadrzeni-cinana-a-cecha-spolu-souvisi-mini-votapek-svoboda-vyresi-to-verdikt-soudu-375659",
-      "dt": "2026-07-17T07:00:35Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24",
-      "tokens": [
-        "míní",
-        "soudu",
-        "souvisí",
-        "spolu",
-        "svoboda",
-        "verdikt",
-        "votápek",
-        "vyřeší",
-        "zadržení",
-        "čecha",
-        "číňana"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -764,7 +763,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41591,
+      "bytes": 40875,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -801,7 +800,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-07-17T22:30:45Z",
+        "raw_feed_latest_publishedAt": "2026-07-17T22:58:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -818,6 +817,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Írán tvrdí, že u Hormuzského průlivu začaly hořet dva tankery kvůli minám",
+            "publishedAt": "2026-07-17T22:58:39Z"
+          },
           {
             "title": "USA oznámily další vlnu úderů na Írán, tamní média hlásí výbuchy",
             "publishedAt": "2026-07-17T22:30:45Z"
@@ -845,10 +848,6 @@
           {
             "title": "Vláda chce rozšířit věkově podmíněné valorizace penzí, opozice plošnost nechápe",
             "publishedAt": "2026-07-17T18:40:21Z"
-          },
-          {
-            "title": "Okamura počítá s cestou do Číny, opozice to kritizuje kvůli zadržení českého občana",
-            "publishedAt": "2026-07-17T18:35:07Z"
           }
         ]
       }
