@@ -163,14 +163,30 @@ async function dismissGuardOverlays(page) {
 }
 
 async function scrollAllToBottom(page) {
-  await page.evaluate(() => {
+  await page.evaluate(async () => {
     function bottomOf(el) {
       if (!el) return;
-      try { el.scrollTop = el.scrollHeight; } catch (_) {}
+      try {
+        el.scrollTop = el.scrollHeight;
+      } catch (_) {}
     }
-    try { window.scrollTo(0, document.documentElement.scrollHeight); } catch (_) {}
-    bottomOf(document.getElementById("leftContent"));
-    bottomOf(document.getElementById("feed"));
+    const roots = [
+      document.scrollingElement,
+      document.documentElement,
+      document.body,
+      document.getElementById("leftContent"),
+      document.getElementById("feed"),
+      document.getElementById("iuMobileGateWrap"),
+      document.getElementById("iuCenterStage"),
+      document.querySelector(".iu-mobileSilverSlot"),
+    ];
+    for (let pass = 0; pass < 8; pass++) {
+      try {
+        window.scrollTo(0, Math.max(document.documentElement.scrollHeight, document.body.scrollHeight));
+      } catch (_) {}
+      for (const el of roots) bottomOf(el);
+      await new Promise((r) => setTimeout(r, 80));
+    }
   });
 }
 

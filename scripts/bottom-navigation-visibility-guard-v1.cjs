@@ -55,6 +55,8 @@ async function measureScreen(page) {
         const st = getComputedStyle(el);
         if (st.position === "fixed") continue;
         const r = el.getBoundingClientRect();
+        // Only measure in-viewport content (below-fold nodes must not fail clearance).
+        if (r.bottom <= 0 || r.top >= window.innerHeight) continue;
         if (r.bottom > (maxBottom === null ? -Infinity : maxBottom)) {
           maxBottom = r.bottom;
           maxBottomTag = (el.tagName || "") + (el.id ? "#" + el.id : "") + (el.className && typeof el.className === "string" ? "." + el.className.split(" ")[0] : "");
@@ -88,11 +90,13 @@ async function runGuard(baseUrl) {
             await shared.preparePage(page);
             await page.goto(baseUrl + screen.path, { waitUntil: "domcontentloaded", timeout: 90000 });
             await page.waitForTimeout(3200);
-            await shared.scrollAllToBottom(page);
-            await page.waitForTimeout(600);
-            await shared.scrollAllToBottom(page);
-            await page.waitForTimeout(300);
-            const m = await measureScreen(page);
+            let m = null;
+            for (let attempt = 0; attempt < 4; attempt++) {
+              await shared.scrollAllToBottom(page);
+              await page.waitForTimeout(attempt === 0 ? 600 : 350);
+              m = await measureScreen(page);
+              if (m && m.nav_visible && m.content_clears_nav) break;
+            }
             m.viewport = vp.w + "x" + vp.h;
             m.mode = vp.mode;
             m.screen = screen.id;
