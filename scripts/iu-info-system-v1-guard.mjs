@@ -3,7 +3,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { isConcreteItemUrl } from "./iu-info-events-lib.mjs";
+import { canonicalizeUrl, isConcreteItemUrl } from "./iu-info-events-lib.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const fails = [];
@@ -33,29 +33,58 @@ if (!Array.isArray(feed.items) || feed.items.length < 50) fails.push("feed:items
 const active = (registry.entries || []).filter((e) => e.productionApproved && e.productionActive);
 if (active.length < 15) fails.push("registry:active_min_15");
 
+const STATUS_OK = new Set([
+  "PRODUCTION_ACTIVE",
+  "TECHNICALLY_BLOCKED",
+  "LEGALLY_BLOCKED",
+  "NO_STABLE_ITEM_SOURCE",
+  "REQUIRES_MANUAL_LEGAL_REVIEW",
+  "REJECTED",
+]);
+
 for (const e of registry.entries || []) {
   if (e.productionApproved && e.productionActive) {
     if (e.legalStatus !== "approved") fails.push(`legal:${e.id}`);
     if (!e.monitoring) fails.push(`monitoring:${e.id}`);
-    const hasConnector = !!(e.feedUrl || (e.feedUrls && e.feedUrls.length) || e.htmlListUrl || (e.htmlListUrls && e.htmlListUrls.length));
+    const hasConnector = !!(
+      e.feedUrl ||
+      (e.feedUrls && e.feedUrls.length) ||
+      e.htmlListUrl ||
+      (e.htmlListUrls && e.htmlListUrls.length) ||
+      e.capIndexUrl
+    );
     if (!hasConnector) fails.push(`connector_missing:${e.id}`);
+    if (e.connectorStatus && e.connectorStatus !== "PRODUCTION_ACTIVE") fails.push(`active_bad_status:${e.id}`);
+  } else if (e.productionApproved === true && e.productionActive === false) {
+    if (!STATUS_OK.has(String(e.connectorStatus || ""))) fails.push(`pending_status:${e.id}`);
+    if (!e.blocker && !e.notes) fails.push(`pending_blocker:${e.id}`);
   }
 }
 
 const homeBySource = new Map((registry.entries || []).map((e) => [e.id, e.url]));
 const banned = [/perex/i, /image/i, /thumbnail/i, /photo/i, /bodyHtml/i, /contentHtml/i];
 let homepageHits = 0;
+const seenCanonical = new Map();
 for (const it of feed.items || []) {
   for (const k of Object.keys(it)) {
     if (banned.some((re) => re.test(k))) fails.push(`banned_field:${it.id}:${k}`);
   }
   if (it.image || it.perex || it.body || it.thumbnail) fails.push(`content_leak:${it.id}`);
   const url = String(it.url || "");
+  const original = String(it.originalUrl || it.url || "");
+  if (!url) fails.push(`empty_url:${it.id}`);
   if (!/^https?:\/\//i.test(url)) fails.push(`bad_url:${it.id}`);
+  if (original && !/^https?:\/\//i.test(original)) fails.push(`bad_original:${it.id}`);
   const home = homeBySource.get(it.sourceId) || null;
-  if (!isConcreteItemUrl(url, home)) {
+  if (!isConcreteItemUrl(url, home) || (original && !isConcreteItemUrl(original, home))) {
     homepageHits += 1;
     fails.push(`homepage_or_listing_url:${it.id}`);
+  }
+  const can = canonicalizeUrl(it.canonicalUrl || url);
+  if (can) {
+    const prev = seenCanonical.get(can);
+    if (prev && prev !== it.id) fails.push(`dup_canonical:${it.id}:${prev}`);
+    else seenCanonical.set(can, it.id);
   }
 }
 if (homepageHits) fails.push(`homepage_urls_count:${homepageHits}`);
@@ -68,8 +97,8 @@ if (cutover.infoSystemActive !== true) fails.push("cutover:infoSystemActive_must
 
 if (fails.length) {
   console.error("[iu-info-system-v1-guard] FAIL");
-  for (const f of fails.slice(0, 40)) console.error(" -", f);
-  if (fails.length > 40) console.error(" - … +" + (fails.length - 40));
+  for (const f of fails.slice(0, 50)) console.error(" -", f);
+  if (fails.length > 50) console.error(" - … +" + (fails.length - 50));
   console.log("RESULT=FAIL");
   process.exit(1);
 }

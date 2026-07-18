@@ -1,12 +1,12 @@
 {
-  "version": "1.1.0",
-  "generatedAt": "2026-07-18T07:42:54.755Z",
+  "version": "1.2.0",
+  "generatedAt": "2026-07-18T19:36:46.027Z",
   "entries": [
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -14,7 +14,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 80,
+        "responseMs": 32,
         "connector": "rss"
       },
       "id": "policie-cr",
@@ -29,13 +33,14 @@
         "https://www.policie.cz/rss.aspx?typ=aktuality"
       ],
       "defaultSectionGroup": "policie",
-      "notes": "Oficiální RSS PČR (celostátní + tiskové)."
+      "notes": "Oficiální RSS PČR (celostátní + tiskové).",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -43,7 +48,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 60,
+        "responseMs": 39,
         "connector": "rss"
       },
       "id": "hzs-cr",
@@ -57,36 +66,14 @@
         "https://www.hzscr.cz/rss.aspx?clid=1"
       ],
       "defaultSectionGroup": "hzs",
-      "notes": "Oficiální RSS HZS ČR."
+      "notes": "Oficiální RSS HZS ČR.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 15,
-      "lastAuditAt": "2026-07-18T07:40:13.994Z",
-      "productionApproved": true,
-      "productionActive": false,
-      "monitoring": {
-        "availability": "ok",
-        "freshness": "unknown",
-        "structureChange": "none",
-        "lastProbeStatus": 0,
-        "lastProbeAt": "2026-07-18T07:40:13.994Z"
-      },
-      "id": "chmi",
-      "label": "Český hydrometeorologický ústav",
-      "institution": "ČHMÚ",
-      "group": "pocasi",
-      "url": "https://www.chmi.cz/",
-      "htmlListUrl": "https://portal.chmi.cz/aktualni-situace/vystava",
-      "defaultSectionGroup": "pocasi",
-      "notes": "Veřejnoprávní meteorologický ústav; HTML listing (RSS nestabilní)."
-    },
-    {
-      "legalStatus": "approved",
-      "technicalStatus": "ok",
-      "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -94,7 +81,42 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 28,
+        "responseMs": 126,
+        "connector": "cap"
+      },
+      "id": "chmi",
+      "label": "Český hydrometeorologický ústav",
+      "institution": "ČHMÚ",
+      "group": "pocasi",
+      "url": "https://www.chmi.cz/",
+      "htmlListUrl": null,
+      "defaultSectionGroup": "pocasi",
+      "notes": "CAP XML bulletiny (opendata.chmi.cz), konkrétní URL = CAP dokument.",
+      "capIndexUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": null
+    },
+    {
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "periodicityMin": 30,
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
+      "productionApproved": true,
+      "productionActive": true,
+      "monitoring": {
+        "availability": "ok",
+        "freshness": "ok",
+        "structureChange": "none",
+        "lastProbeStatus": 200,
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 20,
+        "responseMs": 52,
         "connector": "rss"
       },
       "id": "mvcr",
@@ -104,13 +126,14 @@
       "url": "https://www.mvcr.cz/",
       "feedUrl": "https://www.mvcr.cz/rss.aspx",
       "defaultSectionGroup": "ministerstva",
-      "notes": "Oficiální RSS MV ČR."
+      "notes": "Oficiální RSS MV ČR.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -118,7 +141,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 5,
+        "responseMs": 132,
         "connector": "rss"
       },
       "id": "mfcr",
@@ -128,13 +155,14 @@
       "url": "https://www.mfcr.cz/",
       "feedUrl": "https://www.mfcr.cz/cs/rss/tiskove-zpravy",
       "defaultSectionGroup": "ministerstva",
-      "notes": "Oficiální RSS tiskových zpráv MF ČR."
+      "notes": "Oficiální RSS tiskových zpráv MF ČR.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -142,7 +170,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 6,
+        "responseMs": 87,
         "connector": "rss"
       },
       "id": "mzcr",
@@ -152,13 +184,14 @@
       "url": "https://mzd.gov.cz/",
       "feedUrl": "https://mzd.gov.cz/feed/",
       "defaultSectionGroup": "zdravotnictvi",
-      "notes": "Oficiální feed MZ ČR."
+      "notes": "Oficiální feed MZ ČR.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:40:13.994Z",
+      "lastAuditAt": "2026-07-18T19:36:46.027Z",
       "productionApproved": true,
       "productionActive": false,
       "monitoring": {
@@ -175,13 +208,15 @@
       "url": "https://md.gov.cz/",
       "htmlListUrl": "https://md.gov.cz/Media/Tiskove-zpravy",
       "defaultSectionGroup": "doprava",
-      "notes": "Schváleno; konektor čeká na stabilní listing/RSS."
+      "notes": "md.gov.cz / mdcr.cz tiskové zprávy vrací 404; není veřejný RSS/Atom s konkrétními item URL.",
+      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
+      "blocker": "md.gov.cz / mdcr.cz tiskové zprávy vrací 404; není veřejný RSS/Atom s konkrétními item URL."
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -189,7 +224,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 11,
+        "responseMs": 619,
         "connector": "html-list"
       },
       "id": "szdc",
@@ -199,34 +238,45 @@
       "url": "https://www.spravazeleznic.cz/",
       "htmlListUrl": "https://www.spravazeleznic.cz/press/tiskove-zpravy",
       "defaultSectionGroup": "doprava",
-      "notes": "HTML listing tiskových zpráv."
+      "notes": "HTML listing tiskových zpráv.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:40:13.994Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
-      "productionActive": false,
+      "productionActive": true,
       "monitoring": {
         "availability": "ok",
-        "freshness": "unknown",
+        "freshness": "ok",
         "structureChange": "none",
-        "lastProbeStatus": 0,
-        "lastProbeAt": "2026-07-18T07:40:13.994Z"
+        "lastProbeStatus": 200,
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 5,
+        "responseMs": 111,
+        "connector": "html-list"
       },
       "id": "rsd",
       "label": "Ředitelství silnic a dálnic",
       "institution": "ŘSD",
       "group": "doprava",
       "url": "https://www.rsd.cz/",
-      "notes": "Schváleno; veřejný RSS/HTML listing zatím nestabilní."
+      "notes": "HTML položky z oficiálního webu ŘSD (/-/ články).",
+      "htmlListUrl": "https://www.rsd.cz/",
+      "htmlPathInclude": "/-/",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "defaultSectionGroup": "doprava",
+      "blocker": null
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:40:13.994Z",
+      "lastAuditAt": "2026-07-18T19:36:46.027Z",
       "productionApproved": true,
       "productionActive": false,
       "monitoring": {
@@ -241,13 +291,15 @@
       "institution": "NDIC",
       "group": "doprava",
       "url": "https://www.dopravniinfo.cz/",
-      "notes": "Schváleno; veřejný feed s konkrétními URL zatím nestabilní."
+      "notes": "dopravniinfo.cz je SPA bez veřejného RSS/XML item feedu s konkrétními URL událostí (HTML bez položek).",
+      "connectorStatus": "TECHNICALLY_BLOCKED",
+      "blocker": "dopravniinfo.cz je SPA bez veřejného RSS/XML item feedu s konkrétními URL událostí (HTML bez položek)."
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -255,7 +307,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 27,
+        "responseMs": 275,
         "connector": "rss"
       },
       "id": "sukl",
@@ -269,21 +325,25 @@
         "https://sukl.gov.cz/rss"
       ],
       "defaultSectionGroup": "zdravotnictvi",
-      "notes": "Oficiální RSS SÚKL."
+      "notes": "Oficiální RSS SÚKL.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
         "availability": "ok",
-        "freshness": "unknown",
+        "freshness": "stale_or_empty",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastError": "no_items_kept",
+        "itemsKept": 0,
+        "responseMs": 139,
         "connector": "rss"
       },
       "id": "szpi",
@@ -293,13 +353,14 @@
       "url": "https://www.szpi.gov.cz/",
       "feedUrl": "https://www.szpi.gov.cz/rss.aspx",
       "defaultSectionGroup": "zdravotnictvi",
-      "notes": "Oficiální RSS SZPI."
+      "notes": "Oficiální RSS SZPI.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -307,7 +368,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 3,
+        "responseMs": 59,
         "connector": "rss"
       },
       "id": "svs",
@@ -317,13 +382,14 @@
       "url": "https://www.svscr.cz/",
       "feedUrl": "https://www.svscr.cz/rss",
       "defaultSectionGroup": "zdravotnictvi",
-      "notes": "Oficiální RSS SVS."
+      "notes": "Oficiální RSS SVS.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -331,7 +397,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 5,
+        "responseMs": 760,
         "connector": "rss"
       },
       "id": "coi",
@@ -341,13 +411,14 @@
       "url": "https://www.coi.cz/",
       "feedUrl": "https://www.coi.cz/rss",
       "defaultSectionGroup": "stat",
-      "notes": "Oficiální RSS ČOI."
+      "notes": "Oficiální RSS ČOI.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -355,7 +426,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 5,
+        "responseMs": 1384,
         "connector": "rss"
       },
       "id": "szu",
@@ -365,13 +440,14 @@
       "url": "https://szu.cz/",
       "feedUrl": "https://szu.cz/feed/",
       "defaultSectionGroup": "zdravotnictvi",
-      "notes": "Oficiální feed SZÚ."
+      "notes": "Oficiální feed SZÚ.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -379,7 +455,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 6,
+        "responseMs": 20,
         "connector": "rss"
       },
       "id": "eru",
@@ -393,13 +473,14 @@
         "https://eru.gov.cz/rss.xml"
       ],
       "defaultSectionGroup": "stat",
-      "notes": "Oficiální RSS ERÚ."
+      "notes": "Oficiální RSS ERÚ.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -407,7 +488,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 10,
+        "responseMs": 531,
         "connector": "rss"
       },
       "id": "ctu",
@@ -417,13 +502,14 @@
       "url": "https://www.ctu.cz/",
       "feedUrl": "https://www.ctu.cz/rss.xml",
       "defaultSectionGroup": "stat",
-      "notes": "Oficiální RSS ČTÚ."
+      "notes": "Oficiální RSS ČTÚ.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -431,7 +517,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 2,
+        "responseMs": 81,
         "connector": "html-list"
       },
       "id": "vlada",
@@ -441,13 +531,14 @@
       "url": "https://vlada.gov.cz/",
       "htmlListUrl": "https://vlada.gov.cz/cz/media-centrum/aktualne/",
       "defaultSectionGroup": "verejna-sprava",
-      "notes": "HTML listing aktualit Úřadu vlády."
+      "notes": "HTML listing aktualit Úřadu vlády.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:40:13.994Z",
+      "lastAuditAt": "2026-07-18T19:36:46.027Z",
       "productionApproved": true,
       "productionActive": false,
       "monitoring": {
@@ -462,13 +553,15 @@
       "institution": "Portál VS",
       "group": "verejna-sprava",
       "url": "https://portal.gov.cz/",
-      "notes": "Schváleno; konkrétní item URL listing zatím nestabilní."
+      "notes": "portal.gov.cz nemá stabilní veřejný listing/RSS konkrétních aktualit (404/500 na známých cestách).",
+      "connectorStatus": "TECHNICALLY_BLOCKED",
+      "blocker": "portal.gov.cz nemá stabilní veřejný listing/RSS konkrétních aktualit (404/500 na známých cestách)."
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -476,7 +569,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 25,
+        "responseMs": 28,
         "connector": "html-list"
       },
       "id": "nukib",
@@ -486,13 +583,14 @@
       "url": "https://nukib.gov.cz/",
       "htmlListUrl": "https://nukib.gov.cz/cs/infoservis/aktuality/",
       "defaultSectionGroup": "kyber",
-      "notes": "HTML listing aktualit NÚKIB."
+      "notes": "HTML listing aktualit NÚKIB.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:40:13.994Z",
+      "lastAuditAt": "2026-07-18T19:36:46.027Z",
       "productionApproved": true,
       "productionActive": false,
       "monitoring": {
@@ -507,13 +605,15 @@
       "institution": "ČNB",
       "group": "stat",
       "url": "https://www.cnb.cz/",
-      "notes": "Schváleno; veřejný RSS s konkrétními URL zatím nestabilní."
+      "notes": "Veřejné stránky ČNB neposkytují stabilní RSS/Atom; HTML aktuality jsou převážně navigační sekce bez konkrétních TZ URL.",
+      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
+      "blocker": "Veřejné stránky ČNB neposkytují stabilní RSS/Atom; HTML aktuality jsou převážně navigační sekce bez konkrétních TZ URL."
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:40:13.994Z",
+      "lastAuditAt": "2026-07-18T19:36:46.027Z",
       "productionApproved": true,
       "productionActive": false,
       "monitoring": {
@@ -528,13 +628,15 @@
       "institution": "ČSÚ",
       "group": "stat",
       "url": "https://csu.gov.cz/",
-      "notes": "Schváleno; listing zatím vrací spíše navigaci než články."
+      "notes": "ČSÚ katalog/HTML vrací filtry a navigaci, ne stabilní seznam konkrétních tiskových zpráv s item URL.",
+      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
+      "blocker": "ČSÚ katalog/HTML vrací filtry a navigaci, ne stabilní seznam konkrétních tiskových zpráv s item URL."
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:40:13.994Z",
+      "lastAuditAt": "2026-07-18T19:36:46.027Z",
       "productionApproved": true,
       "productionActive": false,
       "monitoring": {
@@ -550,13 +652,15 @@
       "group": "stat",
       "url": "https://www.cssz.cz/",
       "htmlListUrl": "https://www.cssz.cz/web/cz/aktuality",
-      "notes": "Schváleno; HTML listing potřebuje přesnější selektor."
+      "notes": "CSSZ aktuality jsou v portálové aplikaci bez použitelného RSS; HTML selektor neextrahuje konkrétní články.",
+      "connectorStatus": "TECHNICALLY_BLOCKED",
+      "blocker": "CSSZ aktuality jsou v portálové aplikaci bez použitelného RSS; HTML selektor neextrahuje konkrétní články."
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:40:13.994Z",
+      "lastAuditAt": "2026-07-18T19:36:46.027Z",
       "productionApproved": true,
       "productionActive": false,
       "monitoring": {
@@ -571,13 +675,15 @@
       "institution": "Úřad práce",
       "group": "stat",
       "url": "https://www.uradprace.cz/",
-      "notes": "Schváleno; veřejný feed nestabilní."
+      "notes": "uradprace.cz fetch selhává / není dostupný veřejný feed s konkrétními item URL.",
+      "connectorStatus": "TECHNICALLY_BLOCKED",
+      "blocker": "uradprace.cz fetch selhává / není dostupný veřejný feed s konkrétními item URL."
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:40:13.994Z",
+      "lastAuditAt": "2026-07-18T19:36:46.027Z",
       "productionApproved": true,
       "productionActive": false,
       "monitoring": {
@@ -592,13 +698,15 @@
       "institution": "Registr smluv",
       "group": "verejna-sprava",
       "url": "https://smlouvy.gov.cz/",
-      "notes": "Schváleno; vyhledávání není RSS feed jednotlivých dokumentů."
+      "notes": "Registr smluv je vyhledávací rozhraní, ne chronologický feed konkrétních dokumentů vhodný pro Přehled dne.",
+      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
+      "blocker": "Registr smluv je vyhledávací rozhraní, ne chronologický feed konkrétních dokumentů vhodný pro Přehled dne."
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:40:13.994Z",
+      "lastAuditAt": "2026-07-18T19:36:46.027Z",
       "productionApproved": true,
       "productionActive": false,
       "monitoring": {
@@ -613,13 +721,15 @@
       "institution": "eSbírka",
       "group": "verejna-sprava",
       "url": "https://www.e-sbirka.cz/",
-      "notes": "Schváleno; veřejný item feed zatím nestabilní."
+      "notes": "eSbírka nemá veřejný item feed nových předpisů s přímými URL vhodnými pro automatický přehled.",
+      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
+      "blocker": "eSbírka nemá veřejný item feed nových předpisů s přímými URL vhodnými pro automatický přehled."
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -627,7 +737,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 25,
+        "responseMs": 213,
         "connector": "rss"
       },
       "id": "ct24",
@@ -637,13 +751,14 @@
       "url": "https://ct24.ceskatelevize.cz/",
       "feedUrl": "https://ct24.ceskatelevize.cz/rss/hlavni-zpravy",
       "defaultSectionGroup": "verejnopravni-media",
-      "notes": "Veřejnoprávní RSS ČT24."
+      "notes": "Veřejnoprávní RSS ČT24.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -651,7 +766,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 150,
+        "responseMs": 34,
         "connector": "rss"
       },
       "id": "irozhlas",
@@ -670,13 +789,14 @@
         "https://www.irozhlas.cz/rss/irozhlas/section/sport"
       ],
       "defaultSectionGroup": "verejnopravni-media",
-      "notes": "Veřejnoprávní RSS iROZHLAS (hlavní + sekce)."
+      "notes": "Veřejnoprávní RSS iROZHLAS (hlavní + sekce).",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -684,7 +804,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 8,
+        "responseMs": 324,
         "connector": "html-list"
       },
       "id": "avcr",
@@ -694,13 +818,14 @@
       "url": "https://www.avcr.cz/",
       "htmlListUrl": "https://www.avcr.cz/cs/o-nas/aktuality/",
       "defaultSectionGroup": "veda",
-      "notes": "HTML listing aktualit AV ČR."
+      "notes": "HTML listing aktualit AV ČR.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:40:13.994Z",
+      "lastAuditAt": "2026-07-18T19:36:46.027Z",
       "productionApproved": true,
       "productionActive": false,
       "monitoring": {
@@ -715,13 +840,15 @@
       "institution": "MK ČR",
       "group": "kultura",
       "url": "https://mk.gov.cz/",
-      "notes": "Schváleno; veřejný RSS zatím nestabilní."
+      "notes": "MK ČR /novinky-a-media/ neposkytuje stabilní seznam konkrétních aktualit (převážně navigace).",
+      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
+      "blocker": "MK ČR /novinky-a-media/ neposkytuje stabilní seznam konkrétních aktualit (převážně navigace)."
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:40:13.994Z",
+      "lastAuditAt": "2026-07-18T19:36:46.027Z",
       "productionApproved": true,
       "productionActive": false,
       "monitoring": {
@@ -737,13 +864,15 @@
       "group": "skoly",
       "url": "https://msmt.gov.cz/",
       "htmlListUrl": "https://msmt.gov.cz/ministerstvo/novinar",
-      "notes": "Schváleno; HTML listing zatím nízká kvalita selektoru."
+      "notes": "MŠMT novinářská sekce nemá RSS; HTML listing nevrací spolehlivé konkrétní články.",
+      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
+      "blocker": "MŠMT novinářská sekce nemá RSS; HTML listing nevrací spolehlivé konkrétní články."
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -751,7 +880,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 7,
+        "responseMs": 1256,
         "connector": "rss"
       },
       "id": "khs-praha",
@@ -761,13 +894,14 @@
       "url": "https://www.hygpraha.cz/",
       "feedUrl": "https://www.hygpraha.cz/rss",
       "defaultSectionGroup": "hygiena",
-      "notes": "Oficiální RSS HS HMP."
+      "notes": "Oficiální RSS HS HMP.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "monitoring": {
@@ -775,7 +909,11 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 6,
+        "responseMs": 1058,
         "connector": "rss"
       },
       "id": "khs-stc",
@@ -785,51 +923,74 @@
       "url": "https://www.khsstc.cz/",
       "feedUrl": "https://www.khsstc.cz/rss",
       "defaultSectionGroup": "hygiena",
-      "notes": "Oficiální RSS KHS Středočeský kraj."
+      "notes": "Oficiální RSS KHS Středočeský kraj.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:40:13.994Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
-      "productionActive": false,
+      "productionActive": true,
       "monitoring": {
         "availability": "ok",
-        "freshness": "unknown",
+        "freshness": "ok",
         "structureChange": "none",
-        "lastProbeStatus": 0,
-        "lastProbeAt": "2026-07-18T07:40:13.994Z"
+        "lastProbeStatus": 200,
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 54,
+        "responseMs": 26,
+        "connector": "html-list"
       },
       "id": "mpo",
       "label": "Ministerstvo průmyslu a obchodu",
       "institution": "MPO",
       "group": "ministerstva",
       "url": "https://www.mpo.gov.cz/",
-      "htmlListUrl": "https://www.mpo.gov.cz/cz/rozcestnik/pro-media/tiskove-zpravy/",
-      "notes": "Schváleno; HTML listing vyžaduje přesnější selektor."
+      "htmlListUrl": "https://www.mpo.gov.cz/cz/rozcestnik/pro-media/tiskove-zpravy/stranka-669",
+      "notes": "HTML listing tiskových zpráv MPO.",
+      "htmlListUrls": [
+        "https://www.mpo.gov.cz/cz/rozcestnik/pro-media/tiskove-zpravy/",
+        "https://www.mpo.gov.cz/cz/rozcestnik/pro-media/tiskove-zpravy/stranka-669"
+      ],
+      "htmlPathInclude": "tiskove-zpravy/",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "defaultSectionGroup": "ministerstva",
+      "blocker": null
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-18T07:40:13.994Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
-      "productionActive": false,
+      "productionActive": true,
       "monitoring": {
         "availability": "ok",
-        "freshness": "unknown",
+        "freshness": "ok",
         "structureChange": "none",
-        "lastProbeStatus": 0,
-        "lastProbeAt": "2026-07-18T07:40:13.994Z"
+        "lastProbeStatus": 200,
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 9,
+        "responseMs": 131,
+        "connector": "html-list"
       },
       "id": "mze",
       "label": "Ministerstvo zemědělství",
       "institution": "MZe",
       "group": "ministerstva",
       "url": "https://eagri.cz/",
-      "htmlListUrl": "https://eagri.cz/public/web/mze/tiskovy-servis/tiskove-zpravy/",
-      "notes": "Schváleno; konektor pending."
+      "htmlListUrl": "https://eagri.cz/public/portal/mze/tiskovy-servis/tiskove-zpravy",
+      "notes": "HTML listing tiskových zpráv eAGRI s konkrétními URL.",
+      "htmlPathInclude": "tiskove-zpravy/",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "defaultSectionGroup": "ministerstva",
+      "blocker": null
     },
     {
       "id": "khs-plzen",
@@ -841,19 +1002,134 @@
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 60,
-      "lastAuditAt": "2026-07-18T07:43:00.221Z",
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
       "productionApproved": true,
       "productionActive": true,
       "defaultSectionGroup": "hygiena",
       "monitoring": {
         "availability": "ok",
-        "freshness": "unknown",
+        "freshness": "stale_or_empty",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-18T07:43:00.221Z",
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastError": "no_items_kept",
+        "itemsKept": 0,
+        "responseMs": 231,
         "connector": "rss"
       },
-      "notes": "Oficiální RSS KHS Plzeňský kraj."
+      "notes": "Oficiální RSS KHS Plzeňský kraj.",
+      "connectorStatus": "PRODUCTION_ACTIVE"
+    },
+    {
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "periodicityMin": 60,
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
+      "productionApproved": true,
+      "monitoring": {
+        "availability": "ok",
+        "freshness": "ok",
+        "structureChange": "none",
+        "lastProbeStatus": 200,
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 20,
+        "responseMs": 188,
+        "connector": "html-list"
+      },
+      "id": "kraj-pardubicky",
+      "label": "Pardubický kraj",
+      "institution": "Pardubický kraj",
+      "group": "verejna-sprava",
+      "url": "https://www.pardubickykraj.cz/",
+      "htmlListUrl": "https://www.pardubickykraj.cz/aktuality",
+      "htmlListUrls": null,
+      "htmlPathInclude": "aktuality/",
+      "productionActive": true,
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "defaultSectionGroup": "verejna-sprava",
+      "defaultRegion": {
+        "level": "kraj",
+        "name": "Pardubický kraj"
+      },
+      "notes": "Regionální HTML listing s konkrétními URL položek.",
+      "blocker": null
+    },
+    {
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "periodicityMin": 60,
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
+      "productionApproved": true,
+      "monitoring": {
+        "availability": "ok",
+        "freshness": "ok",
+        "structureChange": "none",
+        "lastProbeStatus": 200,
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 30,
+        "responseMs": 321,
+        "connector": "html-list"
+      },
+      "id": "kraj-zlinsky",
+      "label": "Zlínský kraj",
+      "institution": "Zlínský kraj",
+      "group": "verejna-sprava",
+      "url": "https://zlinskykraj.cz/",
+      "htmlListUrl": "https://zlinskykraj.cz/tiskove-zpravy",
+      "htmlListUrls": [
+        "https://zlinskykraj.cz/tiskove-zpravy",
+        "https://zlinskykraj.cz/aktuality"
+      ],
+      "htmlPathInclude": "(tiskove-zpravy|aktuality)/",
+      "productionActive": true,
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "defaultSectionGroup": "verejna-sprava",
+      "defaultRegion": {
+        "level": "kraj",
+        "name": "Zlínský kraj"
+      },
+      "notes": "Regionální HTML listing s konkrétními URL položek.",
+      "blocker": null
+    },
+    {
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "periodicityMin": 60,
+      "lastAuditAt": "2026-07-18T19:38:01.328Z",
+      "productionApproved": true,
+      "monitoring": {
+        "availability": "ok",
+        "freshness": "ok",
+        "structureChange": "none",
+        "lastProbeStatus": 200,
+        "lastProbeAt": "2026-07-18T19:38:01.328Z",
+        "lastSuccessAt": "2026-07-18T19:38:01.328Z",
+        "lastError": null,
+        "itemsKept": 25,
+        "responseMs": 1068,
+        "connector": "html-list"
+      },
+      "id": "kraj-liberecky",
+      "label": "Liberecký kraj",
+      "institution": "Liberecký kraj",
+      "group": "verejna-sprava",
+      "url": "https://www.kraj-lbc.cz/",
+      "htmlListUrl": "https://www.kraj-lbc.cz/aktuality",
+      "htmlListUrls": null,
+      "htmlPathInclude": "aktuality/",
+      "productionActive": true,
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "defaultSectionGroup": "verejna-sprava",
+      "defaultRegion": {
+        "level": "kraj",
+        "name": "Liberecký kraj"
+      },
+      "notes": "Regionální HTML listing s konkrétními URL položek.",
+      "blocker": null
     }
   ],
   "deactivatedCommercialMedia": [
