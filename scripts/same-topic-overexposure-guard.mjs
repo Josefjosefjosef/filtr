@@ -201,7 +201,10 @@ function main() {
   }
   const doc = JSON.parse(fs.readFileSync(articlesPath, "utf8"));
   const arts = Array.isArray(doc.articles) ? doc.articles : [];
-  const evaluation = evaluateSameTopicOverexposure(arts);
+  const nowMsEnv = Number(process.env.SAME_EVENT_NOW_MS || "");
+  const evaluation = evaluateSameTopicOverexposure(arts, {
+    nowMs: Number.isFinite(nowMsEnv) && nowMsEnv > 0 ? nowMsEnv : undefined,
+  });
 
   for (const summary of evaluation.sectionSummaries) {
     log(

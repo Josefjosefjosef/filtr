@@ -30,7 +30,7 @@ async function runGuard(baseUrl) {
         try {
           await shared.preparePage(page);
           await page.setViewportSize({ width: vp.w, height: vp.h });
-          await page.goto(baseUrl + "/projects/?section=media&topic=" + topic, {
+          await page.goto(baseUrl + shared.withLegacyMediaParams("/projects/?section=media&topic=" + topic), {
             waitUntil: "domcontentloaded",
             timeout: 90000,
           });

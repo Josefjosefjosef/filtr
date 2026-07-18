@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "cutoverAt": "2026-07-17T21:00:00Z",
+  "mode": "cutover",
+  "commercialAggregationActive": false,
+  "commercialUiActive": false,
+  "infoSystemActive": true,
+  "reason": "Atomické přepnutí na Přehled dne — komerční mediální agregace deaktivována v produkčním UI a jobech.",
+  "rollback": {
+    "tag": "pre-aggregator-stable-20260717",
+    "commit": "5647bb3fe365a12feb4bb4d2830c6957de73c853",
+    "queryOff": "?iuInfoSystem=off"
+  }
+}

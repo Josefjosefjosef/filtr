@@ -140,7 +140,22 @@ async function checkWatchdogHealth() {
   }
 }
 
+function isCommercialAggregationActive() {
+  try {
+    const p = path.join(root, "projects", "data", "info_events", "cutover_state.json");
+    if (!fs.existsSync(p)) return true;
+    const j = JSON.parse(fs.readFileSync(p, "utf8"));
+    return j.commercialAggregationActive !== false;
+  } catch (_) {
+    return true;
+  }
+}
+
 async function checkDeadlockGuard(nowMs) {
+  if (!isCommercialAggregationActive()) {
+    log("deadlock_guard SKIP (info-system cutover: commercialAggregationActive=false)");
+    return { ok: true, skipped: true };
+  }
   log(`deadlock_guard workflow=${UPDATE_WORKFLOW} queued_stale_min=${QUEUED_STALE_MIN}`);
   const [owner, repo] = GITHUB_REPOSITORY.split("/");
   const wf = encodeURIComponent(UPDATE_WORKFLOW);

@@ -62,6 +62,7 @@ export type LaneDeps = {
   fetchWorkflowRuns: (workflowFile: string) => Promise<GhRun[]>;
   cancelStaleQueuedRuns: (workflowFile: string, queuedStaleMinutes: number) => Promise<number>;
   dispatchWorkflow: (workflowFile: string) => Promise<void>;
+  fetchCommercialAggregationActive?: () => Promise<boolean>;
   nowMs?: number;
 };
 
@@ -98,11 +99,15 @@ export async function runLane(
     generatedMs !== null ? (nowMs - generatedMs) / 60_000 : null;
 
   const runs = await deps.fetchWorkflowRuns(config.workflowFile);
+  const commercialAggregationActive = deps.fetchCommercialAggregationActive
+    ? await deps.fetchCommercialAggregationActive()
+    : true;
   const decision = decideWatchdog({
     generatedAtIso,
     staleAfterMinutes: config.staleAfterMinutes,
     nowMs,
     runs: runs.map(toRunLite),
+    commercialAggregationActive,
   });
 
   const telemetry: LaneTelemetry = {
@@ -112,10 +117,10 @@ export async function runLane(
     stale_after_minutes: config.staleAfterMinutes,
     generated_at: generatedAtIso,
     stale_minutes: staleMinutes,
-    dispatch_attempted: true,
+    dispatch_attempted: decision.action === "dispatch",
     dispatched: false,
     skipped_busy: decision.action === "skip_busy",
-    skipped_not_stale: decision.action === "skip_fresh",
+    skipped_not_stale: decision.action === "skip_fresh" || decision.action === "skip_cutover",
     decision,
     blocking_run_ids: blockingRunIds(runs, nowMs),
     zombie_queued_cancelled: zombieCancelled,

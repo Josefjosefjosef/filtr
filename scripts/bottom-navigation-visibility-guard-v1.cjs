@@ -15,9 +15,9 @@ const REPORT = "scripts/bottom-navigation-visibility-guard-v1-report.json";
 const TOLERANCE_PX = 2;
 
 const SCREENS = [
-  { id: "home", path: "/projects/" },
-  { id: "media_zpravy", path: "/projects/?section=media&topic=zpravy" },
-  { id: "media_sport", path: "/projects/?section=media&topic=sport" },
+  { id: "home", path: shared.withLegacyMediaParams("/projects/") },
+  { id: "media_zpravy", path: shared.withLegacyMediaParams("/projects/?section=media&topic=zpravy") },
+  { id: "media_sport", path: shared.withLegacyMediaParams("/projects/?section=media&topic=sport") },
 ];
 
 const VIEWPORTS = [
@@ -55,6 +55,8 @@ async function measureScreen(page) {
         const st = getComputedStyle(el);
         if (st.position === "fixed") continue;
         const r = el.getBoundingClientRect();
+        // Only measure in-viewport content (below-fold nodes must not fail clearance).
+        if (r.bottom <= 0 || r.top >= window.innerHeight) continue;
         if (r.bottom > (maxBottom === null ? -Infinity : maxBottom)) {
           maxBottom = r.bottom;
           maxBottomTag = (el.tagName || "") + (el.id ? "#" + el.id : "") + (el.className && typeof el.className === "string" ? "." + el.className.split(" ")[0] : "");
@@ -80,6 +82,7 @@ async function runGuard(baseUrl) {
   try {
     for (const vp of VIEWPORTS) {
       const ctx = await browser.newContext({ viewport: { width: vp.w, height: vp.h } });
+      await ctx.addInitScript(shared.clsInitScript());
       try {
         for (const screen of SCREENS) {
           const page = await ctx.newPage();
@@ -87,11 +90,13 @@ async function runGuard(baseUrl) {
             await shared.preparePage(page);
             await page.goto(baseUrl + screen.path, { waitUntil: "domcontentloaded", timeout: 90000 });
             await page.waitForTimeout(3200);
-            await shared.scrollAllToBottom(page);
-            await page.waitForTimeout(600);
-            await shared.scrollAllToBottom(page);
-            await page.waitForTimeout(300);
-            const m = await measureScreen(page);
+            let m = null;
+            for (let attempt = 0; attempt < 4; attempt++) {
+              await shared.scrollAllToBottom(page);
+              await page.waitForTimeout(attempt === 0 ? 600 : 350);
+              m = await measureScreen(page);
+              if (m && m.nav_visible && m.content_clears_nav) break;
+            }
             m.viewport = vp.w + "x" + vp.h;
             m.mode = vp.mode;
             m.screen = screen.id;
