@@ -68,6 +68,7 @@ function kyivClusterArticles() {
       ...process.env,
       ARTICLES_JSON_PATH: articlesPath,
       SAME_TOPIC_POLICY: "PUBLISH_ALWAYS",
+      SAME_EVENT_NOW_MS: String(NOW),
     },
     encoding: "utf8",
   });
@@ -94,6 +95,7 @@ function kyivClusterArticles() {
       ...process.env,
       ARTICLES_JSON_PATH: articlesPath,
       SAME_TOPIC_POLICY: "STRICT",
+      SAME_EVENT_NOW_MS: String(NOW),
     },
     encoding: "utf8",
   });

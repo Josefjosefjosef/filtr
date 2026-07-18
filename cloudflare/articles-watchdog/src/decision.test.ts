@@ -117,6 +117,21 @@ describe("decideWatchdog", () => {
     if (d.action === "dispatch") expect(d.reason).toBe("stale_data");
   });
 
+  it("skip_cutover when commercial aggregation disabled", () => {
+    const gen = new Date(base - 20 * 60_000).toISOString();
+    const d = decideWatchdog({
+      generatedAtIso: gen,
+      staleAfterMinutes: 10,
+      nowMs: base,
+      runs: [],
+      commercialAggregationActive: false,
+    });
+    expect(d.action).toBe("skip_cutover");
+    if (d.action === "skip_cutover") {
+      expect(d.reason).toBe("info_system_cutover_commercial_aggregation_disabled");
+    }
+  });
+
   it("isBlockingRun ignores ancient queued", () => {
     const now = Date.parse("2026-04-06T12:00:00.000Z");
     const created = "2026-04-05T08:00:00.000Z";

@@ -1,0 +1,395 @@
+/* InfoUzel Přehled dne v1 — control panel + timeline (no images/perex) */
+:root {
+  --iu-pd-accent: #5b6cff;
+  --iu-pd-accent-2: #2563eb;
+  --iu-pd-card: #ffffff;
+  --iu-pd-text: rgba(15, 30, 45, 0.96);
+  --iu-pd-muted: rgba(71, 85, 105, 0.92);
+  --iu-pd-line: rgba(15, 35, 55, 0.1);
+  --iu-pd-shadow: 0 8px 24px rgba(35, 45, 120, 0.1);
+  --iu-pd-radius: 16px;
+}
+
+.iuPrehledDne {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 4px 2px 12px;
+  color: var(--iu-pd-text);
+  font-family: inherit;
+}
+
+.iuPrehledDne__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+.iuPrehledDne__lead {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--iu-pd-muted);
+  line-height: 1.4;
+}
+
+.iuPrehledDne__panel {
+  background: var(--iu-pd-card);
+  border: 1px solid var(--iu-pd-line);
+  border-radius: var(--iu-pd-radius);
+  box-shadow: var(--iu-pd-shadow);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.iuPrehledDne__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.iuPrehledDne__label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--iu-pd-muted);
+  width: 100%;
+}
+
+.iuPrehledDne__chip {
+  appearance: none;
+  border: 1px solid rgba(91, 108, 255, 0.22);
+  background: rgba(248, 250, 255, 0.95);
+  color: var(--iu-pd-text);
+  border-radius: 999px;
+  min-height: 40px;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.12s ease;
+}
+
+.iuPrehledDne__chip:hover {
+  border-color: rgba(91, 108, 255, 0.45);
+  background: rgba(91, 108, 255, 0.08);
+}
+
+.iuPrehledDne__chip.is-active {
+  background: linear-gradient(135deg, rgba(91, 108, 255, 0.16), rgba(37, 99, 235, 0.12));
+  border-color: rgba(91, 108, 255, 0.55);
+  color: var(--iu-pd-accent-2);
+  box-shadow: 0 0 0 1px rgba(91, 108, 255, 0.15);
+}
+
+.iuPrehledDne__input,
+.iuPrehledDne__select {
+  min-height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--iu-pd-line);
+  padding: 10px 12px;
+  font-size: 1rem;
+  width: min(100%, 320px);
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.iuPrehledDne__suggest {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: min(100%, 320px);
+  background: #fff;
+  border: 1px solid var(--iu-pd-line);
+  border-radius: 12px;
+  box-shadow: var(--iu-pd-shadow);
+  overflow: hidden;
+}
+
+.iuPrehledDne__suggest button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 12px 14px;
+  min-height: 44px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.iuPrehledDne__suggest button:hover {
+  background: rgba(91, 108, 255, 0.08);
+}
+
+.iuPrehledDne__activeTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.iuPrehledDne__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 10px 6px 12px;
+  border-radius: 999px;
+  background: rgba(91, 108, 255, 0.1);
+  color: var(--iu-pd-accent-2);
+  font-weight: 600;
+  font-size: 0.88rem;
+  border: 1px solid rgba(91, 108, 255, 0.2);
+}
+
+.iuPrehledDne__tag button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: inherit;
+  min-width: 28px;
+  min-height: 28px;
+}
+
+.iuPrehledDne__newBanner {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(91, 108, 255, 0.14), rgba(37, 99, 235, 0.1));
+  border: 1px solid rgba(91, 108, 255, 0.28);
+  font-weight: 650;
+}
+
+.iuPrehledDne__newBanner.is-visible {
+  display: flex;
+}
+
+.iuPrehledDne__newBanner button {
+  min-height: 40px;
+  border-radius: 12px;
+  border: 0;
+  padding: 8px 14px;
+  background: var(--iu-pd-accent);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.iuPrehledDne__timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.iuPrehledDne__item {
+  display: grid;
+  grid-template-columns: 64px 18px minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px 0;
+  position: relative;
+}
+
+.iuPrehledDne__timeCol {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.iuPrehledDne__time {
+  font-weight: 750;
+  font-size: 0.92rem;
+}
+
+.iuPrehledDne__rel {
+  font-size: 0.72rem;
+  color: var(--iu-pd-muted);
+}
+
+.iuPrehledDne__readMark {
+  display: none;
+  color: #16a34a;
+  font-size: 0.95rem;
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.iuPrehledDne__item.is-read .iuPrehledDne__readMark {
+  display: block;
+}
+
+.iuPrehledDne__axis {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.iuPrehledDne__axis::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: -10px;
+  width: 2px;
+  background: rgba(15, 35, 55, 0.12);
+}
+
+.iuPrehledDne__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--iu-pd-dot, var(--iu-pd-accent));
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--iu-pd-dot, var(--iu-pd-accent)) 45%, transparent);
+  position: relative;
+  z-index: 1;
+  margin-top: 4px;
+}
+
+.iuPrehledDne__dot--alert {
+  width: 16px;
+  height: 16px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--iu-pd-dot, #dc2626) 55%, transparent);
+  animation: iuPdPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes iuPdPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+.iuPrehledDne__card {
+  background: var(--iu-pd-card);
+  border: 1px solid var(--iu-pd-line);
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(35, 45, 120, 0.06);
+  padding: 12px 12px 10px;
+  min-width: 0;
+}
+
+.iuPrehledDne__cardTitle {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.iuPrehledDne__cardTitle:hover {
+  color: var(--iu-pd-accent-2);
+}
+
+.iuPrehledDne__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  font-size: 0.82rem;
+  color: var(--iu-pd-muted);
+  margin-bottom: 8px;
+}
+
+.iuPrehledDne__pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(15, 35, 55, 0.05);
+  font-weight: 600;
+}
+
+.iuPrehledDne__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.iuPrehledDne__actions button {
+  min-height: 40px;
+  min-width: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--iu-pd-line);
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 650;
+  padding: 8px 12px;
+}
+
+.iuPrehledDne__empty {
+  padding: 24px 12px;
+  text-align: center;
+  color: var(--iu-pd-muted);
+}
+
+/* Cutover: hide legacy news HomeCards + commercial media heading */
+html.iu-info-system-cutover #iuFeedNewsSplit,
+html.iu-info-system-cutover #iuNewsPreviewCardMount,
+html.iu-info-system-cutover #iuSportPreviewCardMount,
+html.iu-info-system-cutover #iuFinancePreviewCardMount,
+html.iu-info-system-cutover #iuHealthPreviewCardMount,
+html.iu-info-system-cutover #iuTravelPreviewCardMount,
+html.iu-info-system-cutover #iuGamesPreviewCardMount,
+html.iu-info-system-cutover #iuCulturePreviewCardMount,
+html.iu-info-system-cutover #iuScienceHistoryPreviewCardMount,
+html.iu-info-system-cutover #iuEducationPreviewCardMount,
+html.iu-info-system-cutover #iuPrehledDnePreviewCardMount,
+html.iu-info-system-cutover .iuNewsPreviewCard,
+html.iu-info-system-cutover .box-prehled-dne,
+html.iu-info-system-cutover #iuSilverTallScrollViewport > .iuSilverTallScrollPlaceholder,
+html.iu-info-system-cutover #iuSilverTallScrollViewport > .iuSilverTallScrollProbeLines {
+  display: none !important;
+}
+
+/* Keep root out of the HomeCards grid unless cutover/parallel is active. */
+#iuPrehledDneRoot {
+  display: none;
+}
+
+html.iu-info-system-cutover #iuPrehledDneRoot,
+html.iu-info-system-parallel #iuPrehledDneRoot {
+  display: block !important;
+  width: 100%;
+  min-width: 0;
+}
+
+html.iu-info-system-cutover #iuSilverTallScrollViewport {
+  display: block !important;
+  grid-template-columns: none !important;
+}
+
+/* Hide legacy commercial article timeline on cutover (Přehled dne is the product). */
+html.iu-info-system-cutover #feed.iuTimelineFeed,
+html.iu-info-system-cutover #feed .news-card,
+html.iu-info-system-cutover #feed .iuArticleCard {
+  display: none !important;
+}
+
+@media (min-width: 1025px) {
+  .iuPrehledDne__panel {
+    padding: 16px 18px;
+  }
+  .iuPrehledDne__item {
+    grid-template-columns: 72px 20px minmax(0, 1fr);
+  }
+}

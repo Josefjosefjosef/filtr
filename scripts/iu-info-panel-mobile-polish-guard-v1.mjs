@@ -230,7 +230,7 @@ async function runViewport(browser, vp) {
     hasTouch: true,
   });
   const page = await context.newPage();
-  await page.goto(BASE + "?section=media", { waitUntil: "domcontentloaded", timeout: 60000 });
+  await page.goto(BASE + "?section=media&iuInfoSystem=off", { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForFunction(() => document.querySelectorAll("*").length > 1500, { timeout: 30000 });
   await waitForMobilePanel(page);
   const metrics = await measureViewport(page, vp.name);

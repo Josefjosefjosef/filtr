@@ -195,6 +195,11 @@ async function installOpenMeteoRejectRoute(page, status) {
 async function installLocalDataProtectionAccepted(context) {
   if (!context || typeof context.addInitScript !== "function") return;
   await context.addInitScript(() => {
+    // Legacy HomeCards / media rail remain visible for desktop-nav + layout guards
+    // after info-system cutover (production default hides commercial aggregation).
+    try {
+      window.__IU_INFO_SYSTEM_CUTOVER__ = false;
+    } catch (_) {}
     try {
       localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
       localStorage.setItem("iu:local-data-protection:notice-accepted-at:v1", String(Date.now()));

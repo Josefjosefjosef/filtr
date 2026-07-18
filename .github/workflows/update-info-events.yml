@@ -1,0 +1,59 @@
+name: Update info events
+
+# Production connector for Přehled dne (public/official sources only).
+# Does not touch commercial article aggregation.
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "*/30 * * * *"
+
+concurrency:
+  group: update-info-events-v1
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Refresh info events + monitoring
+        run: node scripts/iu-info-events-refresh.mjs
+
+      - name: Guard
+        run: node scripts/iu-info-system-v1-guard.mjs
+
+      - name: Commit data if changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add projects/data/info_events
+          if git diff --cached --quiet; then
+            echo "NO_CHANGES"
+            exit 0
+          fi
+          BRANCH="automation/update-info-events"
+          git checkout -B "$BRANCH"
+          git commit -m "chore(data): refresh info events feed and monitoring"
+          git push -u origin "$BRANCH" --force
+          EXISTING=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number // empty')
+          if [ -z "$EXISTING" ]; then
+            gh pr create --title "chore(data): refresh info events feed and monitoring" --body "Automated refresh of projects/data/info_events (Přehled dne)." --base main --head "$BRANCH"
+          fi
+          NUM=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number')
+          gh pr merge "$NUM" --squash --auto || true

@@ -162,6 +162,19 @@ async function dispatchWorkflowFile(env: Env, workflowFile: string): Promise<voi
   }
 }
 
+async function fetchCommercialAggregationActiveFromProd(): Promise<boolean> {
+  try {
+    const url = "https://infouzel.cz/projects/data/info_events/cutover_state.json";
+    const res = await fetch(url, { headers: { "cache-control": "no-cache" } });
+    if (!res.ok) return true;
+    const json = (await res.json()) as { commercialAggregationActive?: boolean };
+    if (json && json.commercialAggregationActive === false) return false;
+    return true;
+  } catch {
+    return true;
+  }
+}
+
 function makeLaneDeps(env: Env): LaneDeps {
   return {
     fetchGeneratedAt: (url) => fetchGeneratedAtFromUrl(url),
@@ -169,6 +182,7 @@ function makeLaneDeps(env: Env): LaneDeps {
     cancelStaleQueuedRuns: (workflowFile, queuedStaleMinutes) =>
       cancelStaleQueuedRunsForFile(env, workflowFile, queuedStaleMinutes),
     dispatchWorkflow: (workflowFile) => dispatchWorkflowFile(env, workflowFile),
+    fetchCommercialAggregationActive: () => fetchCommercialAggregationActiveFromProd(),
   };
 }
 
