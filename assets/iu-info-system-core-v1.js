@@ -1,9 +1,11 @@
 /**
- * InfoUzel.cz — shared info-system data layer (Přehled dne v4)
+ * InfoUzel.cz — shared info-system data layer (Přehled dne v5 UI slim)
  * Backend prepares datasets; frontend is local-first and never fetches source sites.
- * V4: saved views, regional personalization, local alerts model, indexed filter/perf.
+ * V4 data model kept; V5 forces chronological feed + prefs/views migration.
  */
-const IU_INFO_SYSTEM_VERSION = "4.0.0";
+const IU_INFO_SYSTEM_VERSION = "5.0.0";
+const LS_SCHEMA_VERSION = 5;
+const LS_SCHEMA = "iu.infoEvents.schema.v1";
 const LS_READ = "iu.infoEvents.read.v1";
 const LS_SAVED = "iu.infoEvents.saved.v1";
 const LS_HIDDEN = "iu.infoEvents.hidden.v1";
@@ -12,6 +14,7 @@ const LS_VIEWS = "iu.infoEvents.views.v1";
 const LS_ALERTS = "iu.infoEvents.alerts.v1";
 const LS_ALERT_STATE = "iu.infoEvents.alertState.v1";
 const LS_SCROLL = "iu.infoEvents.scroll.v1";
+const LS_VIEW_BASELINE = "iu.infoEvents.viewBaseline.v1";
 
 const _timeCache = new Map();
 const _filterMemo = { key: "", result: null, index: null, itemsRef: null };
@@ -191,7 +194,7 @@ function defaultPrefs() {
     localityQuery: "",
     localities: [],
     searchQuery: "",
-    sortMode: "nejdulezitejsi",
+    sortMode: "nejnovejsi",
     timeRangeHours: 0,
     importanceMin: 0,
     activeOnly: false,
@@ -203,16 +206,18 @@ function defaultPrefs() {
   };
 }
 
-function normalizePrefs(raw) {
+/** Strip UI-removed filter dimensions; keep backend/alert fields out of user prefs. */
+function sanitizeUserPrefs(raw) {
   const merged = Object.assign(defaultPrefs(), raw || {});
   merged.sections = asStringArray(merged.sections);
-  merged.eventTypes = asStringArray(merged.eventTypes);
+  // Event-type / lifecycle filters removed from user UI (Krok 13)
+  merged.eventTypes = [];
+  merged.statuses = [];
   merged.sourceGroups = asStringArray(merged.sourceGroups);
   merged.sourceIds = asStringArray(merged.sourceIds);
   merged.orgTypes = asStringArray(merged.orgTypes);
   merged.lanes = asStringArray(merged.lanes);
   merged.connectorTypes = asStringArray(merged.connectorTypes);
-  merged.statuses = asStringArray(merged.statuses);
   merged.regionLevels = asStringArray(merged.regionLevels);
   merged.institutions = asStringArray(merged.institutions);
   merged.favoriteSourceIds = asStringArray(merged.favoriteSourceIds);
@@ -224,16 +229,71 @@ function normalizePrefs(raw) {
   merged.homeObec = String(merged.homeObec || "");
   merged.searchQuery = String(merged.searchQuery || "");
   merged.activeViewId = String(merged.activeViewId || "");
-  merged.timeRangeHours = Number(merged.timeRangeHours) || 0;
+  // Feed window is server-side 96h; no user time-range control
+  merged.timeRangeHours = 0;
   merged.importanceMin = Number(merged.importanceMin) || 0;
   merged.regionalDoprava = !!merged.regionalDoprava;
   merged.regionalKrize = !!merged.regionalKrize;
   merged.regionalZdravi = !!merged.regionalZdravi;
   merged.myRegionOnly = !!merged.myRegionOnly;
+  merged.activeOnly = false;
+  merged.newOnly = false;
+  merged.unreadOnly = !!merged.unreadOnly;
+  merged.savedOnly = !!merged.savedOnly;
+  merged.favoritesOnly = !!merged.favoritesOnly;
+  // Always chronological (Krok 14)
+  merged.sortMode = "nejnovejsi";
+  if (!Array.isArray(merged.localities)) merged.localities = [];
+  merged.localityQuery = String(merged.localityQuery || "");
   return merged;
 }
 
+function normalizePrefs(raw) {
+  return sanitizeUserPrefs(raw);
+}
+
+function readSchemaVersion() {
+  try {
+    return Number(localStorage.getItem(LS_SCHEMA) || 0) || 0;
+  } catch (_) {
+    return 0;
+  }
+}
+
+function writeSchemaVersion(v) {
+  try {
+    localStorage.setItem(LS_SCHEMA, String(v));
+  } catch (_) {}
+}
+
+/** Idempotent V4 → V5 local prefs/views migration. */
+function migrateLocalStateOnce() {
+  const ver = readSchemaVersion();
+  if (ver >= LS_SCHEMA_VERSION) return { migrated: false, from: ver, to: ver };
+  try {
+    const rawPrefs = localStorage.getItem(LS_PREFS);
+    if (rawPrefs) {
+      const cleaned = sanitizeUserPrefs(JSON.parse(rawPrefs) || {});
+      localStorage.setItem(LS_PREFS, JSON.stringify(cleaned));
+    }
+    const store = readJsonObj(LS_VIEWS, { views: [] });
+    const views = Array.isArray(store.views) ? store.views : [];
+    const nextViews = views.map((v) =>
+      Object.assign({}, v, {
+        prefs: sanitizeUserPrefs(v.prefs || {}),
+      })
+    );
+    writeJsonObj(LS_VIEWS, { views: nextViews, updatedAt: new Date().toISOString(), schemaVersion: LS_SCHEMA_VERSION });
+    writeSchemaVersion(LS_SCHEMA_VERSION);
+    return { migrated: true, from: ver, to: LS_SCHEMA_VERSION };
+  } catch (_) {
+    writeSchemaVersion(LS_SCHEMA_VERSION);
+    return { migrated: false, from: ver, to: LS_SCHEMA_VERSION, error: true };
+  }
+}
+
 function getPrefs() {
+  migrateLocalStateOnce();
   try {
     const raw = localStorage.getItem(LS_PREFS);
     if (!raw) return defaultPrefs();
@@ -241,6 +301,77 @@ function getPrefs() {
   } catch (_) {
     return defaultPrefs();
   }
+}
+
+function filterFingerprint(prefs) {
+  const f = normalizePrefs(prefs || {});
+  return JSON.stringify({
+    sections: f.sections,
+    lanes: f.lanes,
+    sourceGroups: f.sourceGroups,
+    sourceIds: f.sourceIds,
+    orgTypes: f.orgTypes,
+    institutions: f.institutions,
+    regionLevels: f.regionLevels,
+    localities: f.localities,
+    localityQuery: f.localityQuery,
+    homeKraj: f.homeKraj,
+    homeOkres: f.homeOkres,
+    homeObec: f.homeObec,
+    myRegionOnly: f.myRegionOnly,
+    unreadOnly: f.unreadOnly,
+    savedOnly: f.savedOnly,
+    favoritesOnly: f.favoritesOnly,
+    searchQuery: f.searchQuery,
+  });
+}
+
+function getViewBaseline() {
+  try {
+    return normalizePrefs(JSON.parse(localStorage.getItem(LS_VIEW_BASELINE) || "null") || {});
+  } catch (_) {
+    return defaultPrefs();
+  }
+}
+
+function setViewBaseline(prefs) {
+  try {
+    localStorage.setItem(LS_VIEW_BASELINE, JSON.stringify(normalizePrefs(prefs || {})));
+  } catch (_) {}
+}
+
+/**
+ * Count temporary filters beyond the active saved-view baseline.
+ * Quick toggles unread/saved count when they differ from baseline.
+ */
+function countTemporaryFilters(prefs, baseline) {
+  const p = normalizePrefs(prefs || {});
+  const b = normalizePrefs(baseline || getViewBaseline());
+  let n = 0;
+  const arrDiff = (a, c) => {
+    const aa = asStringArray(a).slice().sort().join("\0");
+    const bb = asStringArray(c).slice().sort().join("\0");
+    return aa !== bb;
+  };
+  if (arrDiff(p.sections, b.sections)) n += 1;
+  if (arrDiff(p.lanes, b.lanes)) n += 1;
+  if (arrDiff(p.sourceGroups, b.sourceGroups)) n += 1;
+  if (arrDiff(p.sourceIds, b.sourceIds)) n += 1;
+  if (arrDiff(p.orgTypes, b.orgTypes)) n += 1;
+  if (arrDiff(p.institutions, b.institutions)) n += 1;
+  if (arrDiff(p.regionLevels, b.regionLevels)) n += 1;
+  const locA = JSON.stringify(p.localities || []) + "|" + String(p.localityQuery || "");
+  const locB = JSON.stringify(b.localities || []) + "|" + String(b.localityQuery || "");
+  if (locA !== locB) n += 1;
+  if (String(p.homeKraj) !== String(b.homeKraj) || String(p.homeOkres) !== String(b.homeOkres) || String(p.homeObec) !== String(b.homeObec)) {
+    n += 1;
+  }
+  if (!!p.myRegionOnly !== !!b.myRegionOnly) n += 1;
+  if (!!p.unreadOnly !== !!b.unreadOnly) n += 1;
+  if (!!p.savedOnly !== !!b.savedOnly) n += 1;
+  if (!!p.favoritesOnly !== !!b.favoritesOnly) n += 1;
+  if (String(p.searchQuery || "") !== String(b.searchQuery || "")) n += 1;
+  return n;
 }
 
 function setPrefs(prefs) {
@@ -304,18 +435,20 @@ function toggleFavoriteInPrefs(prefs, key, id) {
 function builtinViews() {
   return [
     { id: "muj-prehled", label: "Můj přehled", builtin: true, prefs: {} },
-    { id: "doprava", label: "Doprava", builtin: true, prefs: { lanes: ["doprava"] } },
-    { id: "bezpecnost", label: "Bezpečnost", builtin: true, prefs: { lanes: ["bezpecnost"] } },
-    { id: "pocasi", label: "Počasí", builtin: true, prefs: { lanes: ["pocasi"] } },
-    { id: "ekonomika", label: "Ekonomika", builtin: true, prefs: { lanes: ["ekonomika"], sections: ["stat"] } },
-    { id: "muj-kraj", label: "Můj kraj", builtin: true, prefs: { myRegionOnly: true, regionLevels: ["kraj", "okres", "mesto", "obec"] } },
+    { id: "doprava", label: "Doprava", builtin: true, prefs: { sections: ["doprava"] } },
+    { id: "muj-kraj", label: "Můj region", builtin: true, prefs: { myRegionOnly: true } },
+    { id: "ministerstva", label: "Ministerstva", builtin: true, prefs: { lanes: ["ministerstva"] } },
+    { id: "bezpecnost", label: "Bezpečnost", builtin: true, prefs: { sections: ["bezpecnost"] } },
+    { id: "pocasi", label: "Počasí", builtin: true, prefs: { sections: ["pocasi"] } },
+    { id: "ekonomika", label: "Ekonomika", builtin: true, prefs: { lanes: ["ekonomika"] } },
     { id: "prace", label: "Práce", builtin: true, prefs: { sections: ["stat"], orgTypes: ["government", "agency"] } },
-    { id: "skolstvi", label: "Školství", builtin: true, prefs: { lanes: ["skoly-kultura"], sections: ["veda"] } },
-    { id: "zdravi", label: "Zdraví", builtin: true, prefs: { lanes: ["zdravotnictvi"], sections: ["zdravi"] } },
+    { id: "skolstvi", label: "Školství", builtin: true, prefs: { sections: ["veda"] } },
+    { id: "zdravi", label: "Zdraví", builtin: true, prefs: { sections: ["zdravi"] } },
   ];
 }
 
 function listViews() {
+  migrateLocalStateOnce();
   const custom = readJsonObj(LS_VIEWS, { views: [] });
   const customs = Array.isArray(custom.views) ? custom.views : [];
   return builtinViews().concat(
@@ -337,8 +470,24 @@ function saveView(label, prefs) {
   const entry = { id, label: name, prefs: normalizePrefs(prefs || getPrefs()), savedAt: new Date().toISOString() };
   views.push(entry);
   if (views.length > 24) views.splice(0, views.length - 24);
-  writeJsonObj(LS_VIEWS, { views, updatedAt: new Date().toISOString() });
+  writeJsonObj(LS_VIEWS, { views, updatedAt: new Date().toISOString(), schemaVersion: LS_SCHEMA_VERSION });
   return entry;
+}
+
+/** Overwrite an existing custom view (conscious action). */
+function updateView(viewId, prefs) {
+  const k = String(viewId || "");
+  if (!k || k.indexOf("custom-") !== 0) return null;
+  const store = readJsonObj(LS_VIEWS, { views: [] });
+  const views = Array.isArray(store.views) ? store.views : [];
+  const idx = views.findIndex((v) => String(v.id) === k);
+  if (idx < 0) return null;
+  views[idx] = Object.assign({}, views[idx], {
+    prefs: normalizePrefs(prefs || getPrefs()),
+    savedAt: new Date().toISOString(),
+  });
+  writeJsonObj(LS_VIEWS, { views, updatedAt: new Date().toISOString(), schemaVersion: LS_SCHEMA_VERSION });
+  return views[idx];
 }
 
 function deleteView(id) {
@@ -346,7 +495,7 @@ function deleteView(id) {
   if (!k || k.indexOf("custom-") !== 0) return false;
   const store = readJsonObj(LS_VIEWS, { views: [] });
   const views = (Array.isArray(store.views) ? store.views : []).filter((v) => String(v.id) !== k);
-  writeJsonObj(LS_VIEWS, { views, updatedAt: new Date().toISOString() });
+  writeJsonObj(LS_VIEWS, { views, updatedAt: new Date().toISOString(), schemaVersion: LS_SCHEMA_VERSION });
   return true;
 }
 
@@ -373,8 +522,11 @@ function applyView(viewId, basePrefs) {
     next.myRegionOnly = true;
   }
   if (view.id === "muj-prehled") {
-    return normalizePrefs(Object.assign({}, home, { activeViewId: view.id }));
+    const muj = normalizePrefs(Object.assign({}, home, { activeViewId: view.id }));
+    setViewBaseline(muj);
+    return muj;
   }
+  setViewBaseline(next);
   return next;
 }
 
@@ -661,7 +813,8 @@ function filterEvents(events, filters, opts) {
     }
     if (secSet && !secSet.has(String(ev.sectionId))) {
       const ids = (ev.sectionIds || []).map(String);
-      if (!ids.some((id) => secSet.has(id))) continue;
+      const lane = String(ev.lane || "");
+      if (!ids.some((id) => secSet.has(id)) && !secSet.has(lane)) continue;
     }
     if (typeSet && !typeSet.has(String(ev.eventType)) && !typeSet.has(String(ev.status))) continue;
     if (statusSet && !statusSet.has(String(ev.status))) continue;
@@ -717,36 +870,8 @@ function filterEvents(events, filters, opts) {
   }
 
   const clustered = dedupeCluster(list);
-  const mode = String(f.sortMode || "nejdulezitejsi");
-  clustered.sort((a, b) => {
-    if (mode === "oblibene" || mode === "nejdulezitejsi" || mode === "nejblizsi-region") {
-      const db = favoriteBoost(b, f) - favoriteBoost(a, f);
-      if (db) return db;
-    }
-    if (mode === "nejnovejsi") return parseTime(eventSortAt(b)) - parseTime(eventSortAt(a));
-    if (mode === "posledni-aktualizace") {
-      return (
-        parseTime(b.lastUpdatedBySource || b.updatedAt || eventSortAt(b)) -
-        parseTime(a.lastUpdatedBySource || a.updatedAt || eventSortAt(a))
-      );
-    }
-    if (mode === "nejvetsi-dopad") return Number(b.impact || 0) - Number(a.impact || 0);
-    if (mode === "nejblizsi-region") {
-      const rank = (ev) => {
-        const lv = String((ev.region && ev.region.level) || "cr");
-        if (lv === "obec" || lv === "mesto") return 0;
-        if (lv === "okres") return 1;
-        if (lv === "kraj") return 2;
-        return 3;
-      };
-      const dr = rank(a) - rank(b);
-      if (dr) return dr;
-    }
-    if (mode === "oblibene") return parseTime(eventSortAt(b)) - parseTime(eventSortAt(a));
-    const di = Number(b.importance || 0) - Number(a.importance || 0);
-    if (di) return di;
-    return parseTime(eventSortAt(b)) - parseTime(eventSortAt(a));
-  });
+  // V5: feed is always chronological by published_at (eventSortAt prefers publishedAtSource)
+  clustered.sort((a, b) => parseTime(eventSortAt(b)) - parseTime(eventSortAt(a)));
 
   _filterMemo.key = memoKey;
   _filterMemo.result = clustered;
@@ -870,9 +995,16 @@ const IUInfoSystem = {
   favoriteBoost,
   listViews,
   saveView,
+  updateView,
   deleteView,
   applyView,
   builtinViews,
+  migrateLocalStateOnce,
+  getViewBaseline,
+  setViewBaseline,
+  countTemporaryFilters,
+  filterFingerprint,
+  sanitizeUserPrefs,
   getAlertConfig,
   setAlertConfig,
   getAlertState,
@@ -913,8 +1045,15 @@ export {
   favoriteBoost,
   listViews,
   saveView,
+  updateView,
   deleteView,
   applyView,
+  migrateLocalStateOnce,
+  getViewBaseline,
+  setViewBaseline,
+  countTemporaryFilters,
+  filterFingerprint,
+  sanitizeUserPrefs,
   getAlertConfig,
   setAlertConfig,
   getAlertState,

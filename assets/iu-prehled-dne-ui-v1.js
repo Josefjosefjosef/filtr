@@ -1,9 +1,8 @@
 /**
- * InfoUzel.cz — Přehled dne UI v4 (pohledy, regiony, lokální upozornění, výkon)
- * Control panel + timeline. No redesign. Local-first prefs/views/alerts.
+ * InfoUzel.cz — Přehled dne UI v5 (štíhlý frontend, bohatý backend)
+ * Saved views V4 + migrace, jednotný panel Filtry, pevná chronologie, local-first.
  */
 import {
-  IUInfoSystem,
   applyCutoverDom,
   loadInfoSystemData,
   filterEvents,
@@ -19,6 +18,7 @@ import {
   toggleFavoriteInPrefs,
   listViews,
   saveView,
+  updateView,
   deleteView,
   applyView,
   getAlertConfig,
@@ -30,51 +30,43 @@ import {
   dismissAllAlerts,
   getScrollState,
   setScrollState,
-} from "./iu-info-system-core-v1.js";
+  getViewBaseline,
+  setViewBaseline,
+  countTemporaryFilters,
+  migrateLocalStateOnce,
+} from "./iu-info-system-core-v1.js?v=info-system-v5-ui-slim-20260719";
 
 const PAGE_SIZE = 50;
 
-const LANE_OPTIONS = [
+const MAIN_TOPICS = [
   { id: "doprava", label: "Doprava" },
-  { id: "pocasi", label: "Počasí" },
   { id: "bezpecnost", label: "Bezpečnost" },
+  { id: "pocasi", label: "Počasí" },
+  { id: "stat", label: "Stát" },
+];
+
+const MORE_TOPICS = [
+  { id: "cesko-svet", label: "Česko a svět" },
+  { id: "zdravi", label: "Zdraví" },
+  { id: "veda", label: "Věda" },
+  { id: "kultura", label: "Kultura" },
+  { id: "sport", label: "Sport" },
+];
+
+const ALL_TOPICS = MAIN_TOPICS.concat(MORE_TOPICS);
+
+const SOURCE_GROUP_OPTIONS = [
   { id: "ministerstva", label: "Ministerstva" },
-  { id: "ekonomika", label: "Ekonomika" },
+  { id: "doprava", label: "Doprava" },
+  { id: "policie", label: "Bezpečnostní složky" },
+  { id: "hzs", label: "HZS" },
   { id: "zdravotnictvi", label: "Zdravotnictví" },
-  { id: "skoly-kultura", label: "Školství a kultura" },
-  { id: "regionalni", label: "Regiony" },
   { id: "verejnopravni-media", label: "Veřejnoprávní média" },
-  { id: "ostatni", label: "Ostatní" },
-];
-
-const ORG_OPTIONS = [
-  { id: "government", label: "Stát / ministerstva" },
-  { id: "security", label: "Bezpečnost" },
-  { id: "meteo", label: "Počasí" },
-  { id: "transport", label: "Doprava" },
-  { id: "health", label: "Zdravotnictví" },
-  { id: "public-media", label: "Veřejnoprávní média" },
-  { id: "education-science", label: "Školství a věda" },
-  { id: "culture", label: "Kultura" },
-  { id: "agency", label: "Agentury" },
-  { id: "cyber", label: "Kyber" },
-  { id: "public", label: "Veřejné" },
-];
-
-const REGION_LEVEL_OPTIONS = [
-  { id: "cr", label: "ČR" },
-  { id: "kraj", label: "Kraje" },
-  { id: "okres", label: "Okresy" },
-  { id: "mesto", label: "Města" },
-  { id: "obec", label: "Obce" },
-];
-
-const TIME_RANGE_OPTIONS = [
-  { id: 0, label: "Celé období" },
-  { id: 6, label: "6 h" },
-  { id: 24, label: "24 h" },
-  { id: 72, label: "3 dny" },
-  { id: 168, label: "7 dní" },
+  { id: "samospravy", label: "Kraje a samosprávy" },
+  { id: "skoly", label: "Školství a věda" },
+  { id: "kultura", label: "Kultura" },
+  { id: "veda", label: "Věda a výzkum" },
+  { id: "verejna-sprava", label: "Veřejná správa" },
 ];
 
 const BUILTIN_LOCALITIES = [
@@ -127,6 +119,10 @@ function fmtRel(iso) {
   return `před ${d} d`;
 }
 
+function publishIso(ev) {
+  return ev.publishedAtSource || ev.sortAt || ev.firstSeenByInfoUzel || ev.publishedAt || ev.updatedAt || "";
+}
+
 function sectionColor(taxonomy, sectionId) {
   const sec = (taxonomy.sections || []).find((s) => s.id === sectionId);
   return (sec && sec.color) || "#5B6CFF";
@@ -153,59 +149,74 @@ function toggleInArray(arr, id) {
   return Array.from(set);
 }
 
-function chipRow(items, attr, activeIds) {
-  const active = new Set((activeIds || []).map(String));
-  return (items || [])
-    .map((it) => {
-      const on = active.has(String(it.id));
-      return `<button type="button" class="iuPrehledDne__chip${on ? " is-active" : ""}" ${attr}="${esc(it.id)}">${esc(
-        it.label
-      )}</button>`;
-    })
-    .join("");
+function statusLabelForItem(ev) {
+  const st = String(ev.status || "");
+  const et = String(ev.eventType || "");
+  if (st === "prave-probihajici" || et === "prave-probihajici") return "Právě probíhá";
+  if (st === "planovane" || et === "planovane") {
+    if (ev.validFrom) {
+      try {
+        const d = new Date(ev.validFrom);
+        if (!Number.isNaN(d.getTime())) {
+          return "Plánováno od " + d.toLocaleDateString("cs-CZ", { day: "numeric", month: "numeric" });
+        }
+      } catch (_) {}
+    }
+    return "Plánováno";
+  }
+  if (st === "ukoncene" || et === "ukoncene") return "Ukončeno";
+  if (st === "aktualizovano") {
+    const u = ev.lastUpdatedBySource || ev.updatedAt;
+    return u ? "Aktualizováno " + fmtRel(u) : "Aktualizováno";
+  }
+  if (et === "mimoradne" || Number(ev.importance) >= 5) return "Mimořádné";
+  if (ev.validTo && (st === "aktivni" || et === "vystraha")) {
+    try {
+      const d = new Date(ev.validTo);
+      if (!Number.isNaN(d.getTime())) {
+        return "Platnost do " + d.toLocaleTimeString("cs-CZ", { hour: "2-digit", minute: "2-digit" });
+      }
+    } catch (_) {}
+    return "Aktivní výstraha";
+  }
+  // Běžná tisková zpráva: žádný štítek Aktivní / Publikováno
+  return "";
 }
 
-function renderActiveTags(prefs) {
-  const tags = [];
-  if (prefs.homeKraj) tags.push({ kind: "homeKraj", id: "homeKraj", label: `Kraj: ${prefs.homeKraj}` });
-  if (prefs.homeOkres) tags.push({ kind: "homeOkres", id: "homeOkres", label: `Okres: ${prefs.homeOkres}` });
-  if (prefs.homeObec) tags.push({ kind: "homeObec", id: "homeObec", label: `Obec: ${prefs.homeObec}` });
-  (prefs.localities || []).forEach((l) => tags.push({ kind: "loc", id: l.name || l, label: `Lokalita: ${l.name || l}` }));
-  if (prefs.localityQuery) tags.push({ kind: "q", id: "q", label: `Lokalita: ${prefs.localityQuery}` });
-  if (prefs.searchQuery) tags.push({ kind: "search", id: "search", label: `Hledat: ${prefs.searchQuery}` });
-  (prefs.sections || []).forEach((id) => tags.push({ kind: "sec", id, label: id }));
-  (prefs.eventTypes || []).forEach((id) => tags.push({ kind: "type", id, label: `Typ: ${id}` }));
-  (prefs.sourceGroups || []).forEach((id) => tags.push({ kind: "src", id, label: id }));
-  (prefs.lanes || []).forEach((id) => {
-    const lab = (LANE_OPTIONS.find((x) => x.id === id) || {}).label || id;
-    tags.push({ kind: "lane", id, label: lab });
-  });
-  (prefs.orgTypes || []).forEach((id) => {
-    const lab = (ORG_OPTIONS.find((x) => x.id === id) || {}).label || id;
-    tags.push({ kind: "org", id, label: lab });
-  });
-  (prefs.regionLevels || []).forEach((id) => {
-    const lab = (REGION_LEVEL_OPTIONS.find((x) => x.id === id) || {}).label || id;
-    tags.push({ kind: "level", id, label: lab });
-  });
-  (prefs.sourceIds || []).forEach((id) => tags.push({ kind: "sid", id, label: `Zdroj: ${id}` }));
-  (prefs.favoriteSourceIds || []).forEach((id) => tags.push({ kind: "favsrc", id, label: `★ ${id}` }));
-  (prefs.favoriteLanes || []).forEach((id) => tags.push({ kind: "favlane", id, label: `★ ${id}` }));
-  (prefs.favoriteRegions || []).forEach((id) => tags.push({ kind: "favreg", id, label: `★ ${id}` }));
-  if (prefs.timeRangeHours) tags.push({ kind: "time", id: String(prefs.timeRangeHours), label: `${prefs.timeRangeHours} h` });
-  if (prefs.activeOnly) tags.push({ kind: "flag", id: "activeOnly", label: "Aktivní" });
-  if (prefs.newOnly) tags.push({ kind: "flag", id: "newOnly", label: "Nové" });
-  if (prefs.unreadOnly) tags.push({ kind: "flag", id: "unreadOnly", label: "Nepřečtené" });
-  if (prefs.savedOnly) tags.push({ kind: "flag", id: "savedOnly", label: "Uložené" });
-  if (prefs.favoritesOnly) tags.push({ kind: "flag", id: "favoritesOnly", label: "Jen oblíbené" });
-  if (prefs.myRegionOnly) tags.push({ kind: "flag", id: "myRegionOnly", label: "Můj region" });
-  if (!tags.length) return "";
-  return `<div class="iuPrehledDne__activeTags">${tags
-    .map(
-      (t) =>
-        `<span class="iuPrehledDne__tag" data-kind="${esc(t.kind)}" data-id="${esc(t.id)}">${esc(t.label)}<button type="button" aria-label="Odstranit">×</button></span>`
-    )
-    .join("")}</div>`;
+function formatSourcesLine(ev) {
+  const pubs = Array.isArray(ev.sourcePublications) ? ev.sourcePublications : [];
+  const labels = [];
+  const seen = new Set();
+  const push = (lab) => {
+    const t = String(lab || "").trim();
+    if (!t || seen.has(t)) return;
+    seen.add(t);
+    labels.push(t);
+  };
+  push(ev.sourceLabel || ev.sourceId);
+  for (const p of pubs) push(p.sourceLabel || p.sourceId);
+  if (Array.isArray(ev._clusterLinks)) {
+    for (const l of ev._clusterLinks) push(l.label);
+  }
+  if (labels.length <= 1) return labels[0] || "Zdroj";
+  if (labels.length === 2) return labels[0] + " + " + labels[1];
+  return labels[0] + " • další " + (labels.length - 1) + " zdroje";
+}
+
+function localitySummary(prefs) {
+  const locs = prefs.localities || [];
+  const fav = prefs.favoriteRegions || [];
+  if (prefs.myRegionOnly && prefs.homeKraj) {
+    const parts = [prefs.homeKraj, prefs.homeOkres, prefs.homeObec].filter(Boolean);
+    return parts.join(", ") || prefs.homeKraj;
+  }
+  if (locs.length === 1) return locs[0].name || String(locs[0]);
+  if (locs.length > 1) return locs.length + " sledované regiony";
+  if (prefs.localityQuery) return prefs.localityQuery;
+  if (fav.length === 1) return fav[0];
+  if (fav.length > 1) return fav.length + " sledované regiony";
+  if (prefs.homeKraj) return prefs.homeKraj;
+  return "Celá ČR";
 }
 
 function renderItem(ev, taxonomy, prefs) {
@@ -213,17 +224,7 @@ function renderItem(ev, taxonomy, prefs) {
   const alert = String(ev.eventType) === "mimoradne" || Number(ev.importance) >= 5;
   const read = isRead(ev.id);
   const saved = isSaved(ev.id);
-  const favSrc = (prefs.favoriteSourceIds || []).includes(String(ev.sourceId));
-  const laneLabel = (LANE_OPTIONS.find((x) => x.id === ev.lane) || {}).label || "";
-  const statusLabel = ({
-    aktivni: "Aktivní",
-    publikovano: "Publikováno",
-    planovane: "Plánováno",
-    "prave-probihajici": "Probíhá",
-    ukoncene: "Ukončeno",
-    archivovano: "Archiv",
-    aktualizovano: "Aktualizováno",
-  })[String(ev.status || "")] || String(ev.status || ev.eventType || "");
+  const statusLabel = statusLabelForItem(ev);
   const pubs = Array.isArray(ev.sourcePublications) ? ev.sourcePublications : [];
   const clusterLinks =
     Array.isArray(ev._clusterLinks) && ev._clusterLinks.length > 1
@@ -231,49 +232,55 @@ function renderItem(ev, taxonomy, prefs) {
       : pubs.length > 1
         ? pubs.map((p) => ({ label: p.sourceLabel || p.sourceId, url: p.url }))
         : [];
+  const region = (ev.region && ev.region.name) || "";
+  const sourcesLine = formatSourcesLine(ev);
   return `
-  <li class="iuPrehledDne__item${read ? " is-read" : ""}${favSrc ? " is-fav" : ""}" data-id="${esc(ev.id)}" style="--iu-pd-dot:${esc(color)}">
+  <li class="iuPrehledDne__item${read ? " is-read" : ""}" data-id="${esc(ev.id)}" style="--iu-pd-dot:${esc(color)}">
     <div class="iuPrehledDne__timeCol">
-      <div class="iuPrehledDne__time">${esc(fmtTime(ev.sortAt || ev.publishedAtSource || ev.firstSeenByInfoUzel || ev.publishedAt || ev.updatedAt))}</div>
-      <div class="iuPrehledDne__rel">${esc(fmtRel(ev.sortAt || ev.publishedAtSource || ev.firstSeenByInfoUzel || ev.publishedAt || ev.updatedAt))}</div>
+      <div class="iuPrehledDne__time">${esc(fmtTime(publishIso(ev)))}</div>
+      <div class="iuPrehledDne__rel">${esc(fmtRel(publishIso(ev)))}</div>
       <div class="iuPrehledDne__readMark" aria-label="Přečteno">✓</div>
     </div>
     <div class="iuPrehledDne__axis"><span class="iuPrehledDne__dot${alert ? " iuPrehledDne__dot--alert" : ""}"></span></div>
     <article class="iuPrehledDne__card">
       <a class="iuPrehledDne__cardTitle" href="${esc(ev.url)}" target="_blank" rel="noopener noreferrer">${esc(ev.title)}</a>
       <div class="iuPrehledDne__meta">
-        <span class="iuPrehledDne__pill">${esc(ev.sourceLabel || ev.sourceId)}</span>
-        <span class="iuPrehledDne__pill">${esc((ev.region && ev.region.name) || "ČR")}</span>
+        <span class="iuPrehledDne__pill">${esc(sourcesLine)}</span>
+        ${region ? `<span class="iuPrehledDne__pill">${esc(region)}</span>` : ""}
         ${statusLabel ? `<span class="iuPrehledDne__pill">${esc(statusLabel)}</span>` : ""}
-        ${laneLabel ? `<span class="iuPrehledDne__pill">${esc(laneLabel)}</span>` : ""}
-        ${ev._clusterSize > 1 || pubs.length > 1 ? `<span class="iuPrehledDne__pill">${esc(Math.max(ev._clusterSize || 1, pubs.length))} zdrojů</span>` : ""}
-        ${favSrc ? `<span class="iuPrehledDne__pill iuPrehledDne__pill--fav">★</span>` : ""}
       </div>
       ${
         clusterLinks.length > 1
-          ? `<div class="iuPrehledDne__origins">${clusterLinks
-              .map(
-                (l) =>
-                  `<a class="iuPrehledDne__origin" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(
-                    l.label || "Zdroj"
-                  )}</a>`
-              )
-              .join(" · ")}</div>`
+          ? `<div class="iuPrehledDne__origins" hidden data-origins>
+              ${clusterLinks
+                .map(
+                  (l) =>
+                    `<a class="iuPrehledDne__origin" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(
+                      l.label || "Zdroj"
+                    )} — otevřít originál</a>`
+                )
+                .join("")}
+            </div>
+            <button type="button" class="iuPrehledDne__linkish" data-act="toggle-origins">Zobrazit všechny zdroje</button>`
           : ""
       }
       <div class="iuPrehledDne__actions">
         <button type="button" data-act="save">${saved ? "Uloženo" : "Uložit"}</button>
-        <button type="button" data-act="fav-source" data-source="${esc(ev.sourceId)}">${favSrc ? "★ Zdroj" : "☆ Zdroj"}</button>
         <button type="button" data-act="hide">Skrýt</button>
       </div>
     </article>
   </li>`;
 }
 
+function chip(active, attrs, label) {
+  return `<button type="button" class="iuPrehledDne__chip${active ? " is-active" : ""}" ${attrs}>${esc(label)}</button>`;
+}
+
 async function mountPrehledDne(rootEl) {
   const root = rootEl || ensureRoot();
   if (!root) return null;
   applyCutoverDom();
+  migrateLocalStateOnce();
 
   let data;
   try {
@@ -288,12 +295,24 @@ async function mountPrehledDne(rootEl) {
   const registry = data.registry || { entries: [] };
   const items = (data.feed && data.feed.items) || [];
   let prefs = getPrefs();
+  if (!prefs.activeViewId) {
+    prefs = applyView("muj-prehled", prefs);
+    setPrefs(prefs);
+  } else if (!localStorage.getItem("iu.infoEvents.viewBaseline.v1")) {
+    setViewBaseline(prefs);
+  }
+
   let alertCfg = getAlertConfig();
   let pendingNew = [];
   let renderedSnapshot = items.slice();
   let visibleCount = PAGE_SIZE;
   let feedIndex = buildFeedIndex(renderedSnapshot);
   let alertPending = (getAlertState().pending || []).slice();
+  let sheetOpen = false;
+  let sheetFocus = ""; // "temata" | "lokalita" | ""
+  let draft = null;
+  let preserveScroll = false;
+  let lastScrollY = 0;
 
   const byId = new Map((registry.entries || []).map((e) => [e.id, e]));
   for (const it of items) {
@@ -308,15 +327,105 @@ async function mountPrehledDne(rootEl) {
     .filter((e) => e.productionActive)
     .map((e) => ({ id: e.id, label: e.label || e.id, institution: e.institution || e.label || e.id }));
 
-  const sortModes = (taxonomy.sortModes || []).slice();
-  if (!sortModes.some((m) => m.id === "oblibene")) {
-    sortModes.push({ id: "oblibene", label: "Oblíbené první" });
+  function captureScroll() {
+    const vp = document.getElementById("iuSilverTallScrollViewport");
+    lastScrollY = vp ? Number(vp.scrollTop) || 0 : 0;
+  }
+
+  function restoreScroll() {
+    const vp = document.getElementById("iuSilverTallScrollViewport");
+    if (vp && preserveScroll) vp.scrollTop = lastScrollY;
+    preserveScroll = false;
   }
 
   function runAlerts() {
     const evaled = evaluateLocalAlerts(renderedSnapshot, prefs, alertCfg, getAlertState());
     setAlertState(evaled.state);
     alertPending = evaled.pending || [];
+  }
+
+  function tempFilterCount() {
+    return countTemporaryFilters(prefs, getViewBaseline());
+  }
+
+  function topicActive(id) {
+    return (prefs.sections || []).includes(id);
+  }
+
+  function allTopicsActive() {
+    return !(prefs.sections || []).length;
+  }
+
+  function renderSheet(p) {
+    const groups = SOURCE_GROUP_OPTIONS.map((g) =>
+      chip((p.sourceGroups || []).includes(g.id), `data-draft-group="${esc(g.id)}"`, g.label)
+    ).join("");
+    const topics = ALL_TOPICS.map((t) => chip((p.sections || []).includes(t.id), `data-draft-sec="${esc(t.id)}"`, t.label)).join(
+      ""
+    );
+    const srcOpts = activeSources
+      .map(
+        (s) =>
+          `<option value="${esc(s.id)}"${(p.sourceIds || []).includes(s.id) ? " selected" : ""}>${esc(s.label)}</option>`
+      )
+      .join("");
+    const favRegs = (p.favoriteRegions || []).map((r) => chip(true, `data-draft-favreg="${esc(r)}"`, r)).join("");
+    return `
+    <div class="iuPrehledDne__sheet" id="iuPrehledDneSheet" role="dialog" aria-modal="true" aria-label="Filtry">
+      <div class="iuPrehledDne__sheetBackdrop" data-act="sheet-dismiss"></div>
+      <div class="iuPrehledDne__sheetPanel">
+        <div class="iuPrehledDne__sheetHead">
+          <strong>Filtry</strong>
+          <button type="button" class="iuPrehledDne__chip" data-act="sheet-dismiss" aria-label="Zavřít">Zavřít</button>
+        </div>
+        <div class="iuPrehledDne__sheetBody">
+          <section class="iuPrehledDne__sheetSec" id="iuPrehledDneSheetTemata" data-sheet-sec="temata">
+            <h3>Témata</h3>
+            <div class="iuPrehledDne__row">
+              ${chip(!(p.sections || []).length, 'data-draft-sec=""', "Vše")}
+              ${topics}
+            </div>
+          </section>
+          <section class="iuPrehledDne__sheetSec" data-sheet-sec="zdroje">
+            <h3>Zdroje a instituce</h3>
+            <div class="iuPrehledDne__row">${groups}</div>
+            <label class="iuPrehledDne__fieldLabel" for="iuPrehledDneDraftSource">Konkrétní instituce</label>
+            <input class="iuPrehledDne__input" id="iuPrehledDneDraftSourceQ" type="search" placeholder="Hledat instituci…" autocomplete="off" />
+            <select class="iuPrehledDne__select" id="iuPrehledDneDraftSource" multiple size="6">${srcOpts}</select>
+            <button type="button" class="iuPrehledDne__chip${p.favoritesOnly ? " is-active" : ""}" data-draft-toggle="favorites">Jen oblíbené zdroje</button>
+          </section>
+          <section class="iuPrehledDne__sheetSec" id="iuPrehledDneSheetLokalita" data-sheet-sec="lokalita">
+            <h3>Lokalita</h3>
+            <div class="iuPrehledDne__row">
+              <button type="button" class="iuPrehledDne__chip${!p.localityQuery && !(p.localities || []).length && !p.myRegionOnly ? " is-active" : ""}" data-act="draft-cr">Celá ČR</button>
+              <button type="button" class="iuPrehledDne__chip${p.myRegionOnly ? " is-active" : ""}" data-draft-toggle="myRegion">Moje uložené regiony</button>
+            </div>
+            <input class="iuPrehledDne__input" id="iuPrehledDneDraftLoc" type="search" placeholder="kraj, okres, město, obec" value="${esc(
+              p.localityQuery || ""
+            )}" autocomplete="off" />
+            <ul class="iuPrehledDne__suggest" id="iuPrehledDneDraftSuggest" hidden></ul>
+            <div class="iuPrehledDne__row">
+              <input class="iuPrehledDne__input" id="iuPrehledDneDraftKraj" type="text" placeholder="Kraj" value="${esc(p.homeKraj || "")}" />
+              <input class="iuPrehledDne__input" id="iuPrehledDneDraftOkres" type="text" placeholder="Okres" value="${esc(p.homeOkres || "")}" />
+              <input class="iuPrehledDne__input" id="iuPrehledDneDraftObec" type="text" placeholder="Obec" value="${esc(p.homeObec || "")}" />
+            </div>
+            ${favRegs ? `<div class="iuPrehledDne__row"><span class="iuPrehledDne__muted">Oblíbené:</span>${favRegs}</div>` : ""}
+          </section>
+          <section class="iuPrehledDne__sheetSec" data-sheet-sec="zobrazit">
+            <h3>Zobrazit pouze</h3>
+            <div class="iuPrehledDne__row">
+              ${chip(!!p.unreadOnly, 'data-draft-toggle="unread"', "Nepřečtené")}
+              ${chip(!!p.savedOnly, 'data-draft-toggle="saved"', "Uložené")}
+              ${chip(!!p.favoritesOnly, 'data-draft-toggle="favorites"', "Jen oblíbené")}
+            </div>
+          </section>
+        </div>
+        <div class="iuPrehledDne__sheetFoot">
+          <button type="button" class="iuPrehledDne__chip" data-act="sheet-reset">Resetovat změny</button>
+          <button type="button" class="iuPrehledDne__chip is-active" data-act="sheet-apply">Použít filtry</button>
+        </div>
+      </div>
+    </div>`;
   }
 
   function paint() {
@@ -327,62 +436,31 @@ async function mountPrehledDne(rootEl) {
     });
     const shown = filtered.slice(0, visibleCount);
     const more = filtered.length - shown.length;
-    const filterMs = Math.round((typeof performance !== "undefined" ? performance.now() : Date.now()) - t0);
-
+    const totalActive = renderedSnapshot.length;
+    const nTemp = tempFilterCount();
     const views = listViews();
-    const viewChips = views
+    const primaryViews = views.filter((v) =>
+      ["muj-prehled", "doprava", "muj-kraj", "ministerstva"].includes(v.id) || !v.builtin
+    );
+    const viewChips = primaryViews
       .map((v) => {
         const on = String(prefs.activeViewId || "") === String(v.id);
-        return `<button type="button" class="iuPrehledDne__chip${on ? " is-active" : ""}" data-view="${esc(v.id)}">${esc(
-          v.label
-        )}${v.builtin ? "" : ""}</button>`;
+        return chip(on, `data-view="${esc(v.id)}"`, v.label);
       })
       .join("");
 
-    const sectionChips = chipRow(taxonomy.sections || [], "data-sec", prefs.sections);
-    const typeChips = chipRow(
-      (taxonomy.eventTypes || []).filter((t) => !["neprectene", "ulozene"].includes(t.id)),
-      "data-type",
-      prefs.eventTypes
-    );
-    const laneChips = chipRow(LANE_OPTIONS, "data-lane", prefs.lanes);
-    const orgChips = chipRow(ORG_OPTIONS, "data-org", prefs.orgTypes);
-    const levelChips = chipRow(REGION_LEVEL_OPTIONS, "data-level", prefs.regionLevels);
-    const favLaneChips = chipRow(LANE_OPTIONS, "data-fav-lane", prefs.favoriteLanes);
+    const topicChips =
+      chip(allTopicsActive(), 'data-topic=""', "Vše") +
+      MAIN_TOPICS.map((t) => chip(topicActive(t.id), `data-topic="${esc(t.id)}"`, t.label)).join("") +
+      chip(false, 'data-act="open-more-topics"', "Více");
 
-    const sortOpts = sortModes
-      .map((m) => `<option value="${esc(m.id)}"${prefs.sortMode === m.id ? " selected" : ""}>${esc(m.label)}</option>`)
-      .join("");
-    const groupOpts = [`<option value="">Všechny skupiny zdrojů</option>`]
-      .concat(
-        (taxonomy.sourceGroups || []).map(
-          (g) =>
-            `<option value="${esc(g.id)}"${(prefs.sourceGroups || [])[0] === g.id ? " selected" : ""}>${esc(g.label)}</option>`
-        )
-      )
-      .join("");
-    const sourceOpts = [`<option value="">Všechny zdroje</option>`]
-      .concat(
-        activeSources.map(
-          (s) =>
-            `<option value="${esc(s.id)}"${(prefs.sourceIds || [])[0] === s.id ? " selected" : ""}>${esc(s.label)}</option>`
-        )
-      )
-      .join("");
-    const timeOpts = TIME_RANGE_OPTIONS.map(
-      (t) =>
-        `<option value="${esc(t.id)}"${Number(prefs.timeRangeHours) === Number(t.id) ? " selected" : ""}>${esc(t.label)}</option>`
-    ).join("");
+    const filtersLabel = nTemp > 0 ? `Filtry (${nTemp})` : "Filtry";
+    const countText =
+      nTemp > 0 || (prefs.sections || []).length || prefs.unreadOnly || prefs.savedOnly || prefs.favoritesOnly || prefs.myRegionOnly
+        ? `Zobrazeno ${filtered.length} z ${totalActive} informací za posledních 96 hodin`
+        : `${totalActive} informací za posledních 96 hodin`;
 
-    const alertRules = (alertCfg.rules || [])
-      .map(
-        (r) =>
-          `<button type="button" class="iuPrehledDne__chip${r.enabled ? " is-active" : ""}" data-alert-rule="${esc(r.id)}">${esc(
-            r.label || r.id
-          )}</button>`
-      )
-      .join("");
-
+    const dirty = nTemp > 0 && String(prefs.activeViewId || "").indexOf("custom-") === 0;
     const alertList =
       alertCfg.enabled && alertPending.length
         ? `<div class="iuPrehledDne__alerts" id="iuPrehledDneAlerts">
@@ -391,11 +469,10 @@ async function mountPrehledDne(rootEl) {
               <button type="button" data-act="dismiss-all-alerts">Označit vše</button>
             </div>
             <ul>${alertPending
-              .slice(0, 8)
+              .slice(0, 6)
               .map(
                 (a) =>
                   `<li><a href="${esc(a.url)}" target="_blank" rel="noopener noreferrer">${esc(a.title)}</a>
-                  <span class="iuPrehledDne__pill">${esc(a.ruleLabel || a.ruleId)}</span>
                   <button type="button" data-act="dismiss-alert" data-id="${esc(a.itemId)}">×</button></li>`
               )
               .join("")}</ul>
@@ -403,76 +480,42 @@ async function mountPrehledDne(rootEl) {
         : "";
 
     root.innerHTML = `
-    <section class="iuPrehledDne" aria-label="Přehled dne">
-      <h2 class="iuPrehledDne__title">Přehled dne</h2>
-      <p class="iuPrehledDne__lead">Osobní přehled ověřených informací — pohledy, regiony a lokální upozornění (bez server push).</p>
+    <section class="iuPrehledDne iuPrehledDne--slim" aria-label="Přehled dne" data-iu-ui="v5-slim">
+      <header class="iuPrehledDne__head">
+        <h2 class="iuPrehledDne__title">Přehled dne</h2>
+        <p class="iuPrehledDne__lead">Ověřené informace z veřejných a veřejnoprávních zdrojů.</p>
+      </header>
       <div class="iuPrehledDne__newBanner" id="iuPrehledDneNewBanner" role="status">
         <span>Přibyly nové informace.</span>
         <button type="button" data-act="accept-new">Zobrazit</button>
       </div>
       ${alertList}
-      <div class="iuPrehledDne__panel">
-        <div class="iuPrehledDne__row"><span class="iuPrehledDne__label">Pohledy</span>
-          ${viewChips}
-          <button type="button" class="iuPrehledDne__chip" data-act="save-view">Uložit pohled</button>
-          ${
-            String(prefs.activeViewId || "").indexOf("custom-") === 0
-              ? `<button type="button" class="iuPrehledDne__chip" data-act="delete-view">Smazat pohled</button>`
-              : ""
-          }
-        </div>
-        <div class="iuPrehledDne__row">
-          <span class="iuPrehledDne__label">Můj region</span>
-          <input class="iuPrehledDne__input" id="iuPrehledDneHomeKraj" type="text" placeholder="Kraj" value="${esc(prefs.homeKraj || "")}" />
-          <input class="iuPrehledDne__input" id="iuPrehledDneHomeOkres" type="text" placeholder="Okres" value="${esc(prefs.homeOkres || "")}" />
-          <input class="iuPrehledDne__input" id="iuPrehledDneHomeObec" type="text" placeholder="Obec" value="${esc(prefs.homeObec || "")}" />
-          <button type="button" class="iuPrehledDne__chip${prefs.myRegionOnly ? " is-active" : ""}" data-toggle="myRegion">Jen můj region</button>
-          <button type="button" class="iuPrehledDne__chip${prefs.regionalDoprava ? " is-active" : ""}" data-toggle="regDop">Regionální doprava</button>
-          <button type="button" class="iuPrehledDne__chip${prefs.regionalKrize ? " is-active" : ""}" data-toggle="regKrize">Regionální krize</button>
-          <button type="button" class="iuPrehledDne__chip${prefs.regionalZdravi ? " is-active" : ""}" data-toggle="regZdravi">Regionální zdraví</button>
-        </div>
-        <div class="iuPrehledDne__row"><span class="iuPrehledDne__label">Témata</span>
-          <button type="button" class="iuPrehledDne__chip${!(prefs.sections || []).length ? " is-active" : ""}" data-sec="">Vše</button>
-          ${sectionChips}
-        </div>
-        <div class="iuPrehledDne__row"><span class="iuPrehledDne__label">Skupiny</span>
-          <button type="button" class="iuPrehledDne__chip${!(prefs.lanes || []).length ? " is-active" : ""}" data-lane="">Vše</button>
-          ${laneChips}
-        </div>
-        <div class="iuPrehledDne__row"><span class="iuPrehledDne__label">Typ organizace</span>${orgChips}</div>
-        <div class="iuPrehledDne__row"><span class="iuPrehledDne__label">Typ informací</span>${typeChips}</div>
-        <div class="iuPrehledDne__row"><span class="iuPrehledDne__label">Úroveň regionu</span>${levelChips}</div>
-        <div class="iuPrehledDne__row">
-          <span class="iuPrehledDne__label">Hledání a lokalita</span>
-          <input class="iuPrehledDne__input" id="iuPrehledDneSearch" type="search" placeholder="Hledat v titulku / zdroji" value="${esc(prefs.searchQuery || "")}" autocomplete="off" />
-          <input class="iuPrehledDne__input" id="iuPrehledDneLoc" type="search" placeholder="kraj, okres, město, obec" value="${esc(prefs.localityQuery || "")}" autocomplete="off" />
-          <ul class="iuPrehledDne__suggest" id="iuPrehledDneSuggest" hidden></ul>
-          <button type="button" class="iuPrehledDne__chip" data-act="fav-region">★ Region</button>
-        </div>
-        <div class="iuPrehledDne__row">
-          <span class="iuPrehledDne__label">Zdroje, čas a řazení</span>
-          <select class="iuPrehledDne__select" id="iuPrehledDneGroup">${groupOpts}</select>
-          <select class="iuPrehledDne__select" id="iuPrehledDneSource">${sourceOpts}</select>
-          <select class="iuPrehledDne__select" id="iuPrehledDneTime">${timeOpts}</select>
-          <select class="iuPrehledDne__select" id="iuPrehledDneSort">${sortOpts}</select>
-        </div>
-        <div class="iuPrehledDne__row">
-          <span class="iuPrehledDne__label">Rychlé filtry</span>
-          <button type="button" class="iuPrehledDne__chip${prefs.activeOnly ? " is-active" : ""}" data-toggle="active">Aktivní</button>
-          <button type="button" class="iuPrehledDne__chip${prefs.newOnly ? " is-active" : ""}" data-toggle="new">Nové</button>
-          <button type="button" class="iuPrehledDne__chip${prefs.unreadOnly ? " is-active" : ""}" data-toggle="unread">Nepřečtené</button>
-          <button type="button" class="iuPrehledDne__chip${prefs.savedOnly ? " is-active" : ""}" data-toggle="saved">Uložené</button>
-          <button type="button" class="iuPrehledDne__chip${prefs.favoritesOnly ? " is-active" : ""}" data-toggle="favorites">Jen oblíbené</button>
-        </div>
-        <div class="iuPrehledDne__row"><span class="iuPrehledDne__label">Oblíbené skupiny</span>${favLaneChips}</div>
-        <div class="iuPrehledDne__row">
-          <span class="iuPrehledDne__label">Lokální upozornění</span>
-          <button type="button" class="iuPrehledDne__chip${alertCfg.enabled ? " is-active" : ""}" data-toggle="alerts">Zapnout</button>
-          ${alertRules}
-        </div>
-        ${renderActiveTags(prefs)}
-        <div class="iuPrehledDne__count" aria-live="polite">Zobrazeno ${esc(shown.length)} z ${esc(filtered.length)} · feed ${esc(renderedSnapshot.length)} · filtr ${esc(filterMs)} ms</div>
+      <div class="iuPrehledDne__scrollRow" role="toolbar" aria-label="Uložené pohledy">
+        ${viewChips}
+        <button type="button" class="iuPrehledDne__chip iuPrehledDne__chip--plus" data-act="save-view" aria-label="Vytvořit nový pohled">+</button>
+        ${
+          dirty
+            ? `<button type="button" class="iuPrehledDne__chip" data-act="update-view">Uložit změny pohledu</button>`
+            : ""
+        }
+        ${
+          String(prefs.activeViewId || "").indexOf("custom-") === 0
+            ? `<button type="button" class="iuPrehledDne__chip" data-act="delete-view">Smazat</button>`
+            : ""
+        }
       </div>
+      <div class="iuPrehledDne__scrollRow" role="toolbar" aria-label="Hlavní témata">
+        ${topicChips}
+      </div>
+      <button type="button" class="iuPrehledDne__locality" data-act="open-locality" aria-label="Nastavení lokality">
+        <span aria-hidden="true">📍</span> ${esc(localitySummary(prefs))}
+      </button>
+      <div class="iuPrehledDne__quick" role="toolbar" aria-label="Rychlé ovládání">
+        ${chip(nTemp > 0, 'data-act="open-filters"', filtersLabel)}
+        ${chip(!!prefs.unreadOnly, 'data-toggle="unread"', "Nepřečtené")}
+        ${chip(!!prefs.savedOnly, 'data-toggle="saved"', "Uložené")}
+      </div>
+      <div class="iuPrehledDne__count" aria-live="polite">${esc(countText)}</div>
       <ul class="iuPrehledDne__timeline" id="iuPrehledDneTimeline">
         ${shown.length ? shown.map((ev) => renderItem(ev, taxonomy, prefs)).join("") : `<li class="iuPrehledDne__empty">Žádné položky pro zvolené filtry.</li>`}
       </ul>
@@ -483,93 +526,121 @@ async function mountPrehledDne(rootEl) {
             )} (${esc(more)} zbývá)</button></div>`
           : ""
       }
+      ${sheetOpen && draft ? renderSheet(draft) : ""}
     </section>`;
 
-    wire(filtered.length);
-    try {
-      const sc = getScrollState();
-      if (sc && sc.viewId === String(prefs.activeViewId || "") && Number(sc.y) > 0) {
-        const vp = document.getElementById("iuSilverTallScrollViewport");
-        if (vp) vp.scrollTop = Number(sc.y) || 0;
-      }
-    } catch (_) {}
+    wire();
+    if (preserveScroll) restoreScroll();
+    else {
+      try {
+        const sc = getScrollState();
+        if (sc && sc.viewId === String(prefs.activeViewId || "") && Number(sc.y) > 0) {
+          const vp = document.getElementById("iuSilverTallScrollViewport");
+          if (vp) vp.scrollTop = Number(sc.y) || 0;
+        }
+      } catch (_) {}
+    }
+    if (sheetOpen && sheetFocus) {
+      const el = root.querySelector(
+        sheetFocus === "lokalita" ? "#iuPrehledDneSheetLokalita" : "#iuPrehledDneSheetTemata"
+      );
+      if (el && el.scrollIntoView) el.scrollIntoView({ block: "start" });
+    }
+    void t0;
   }
 
-  function persist() {
+  function persist(opts) {
+    const o = opts || {};
     setPrefs(prefs);
-    visibleCount = PAGE_SIZE;
+    if (!o.keepPage) visibleCount = PAGE_SIZE;
+    if (!o.keepScroll) {
+      preserveScroll = false;
+      try {
+        const vp = document.getElementById("iuSilverTallScrollViewport");
+        if (vp) vp.scrollTop = 0;
+      } catch (_) {}
+    } else {
+      captureScroll();
+      preserveScroll = true;
+    }
     paint();
   }
 
-  function wire(totalFiltered) {
+  function openSheet(focus) {
+    captureScroll();
+    preserveScroll = true;
+    sheetOpen = true;
+    sheetFocus = focus || "";
+    draft = Object.assign({}, prefs, {
+      sections: (prefs.sections || []).slice(),
+      lanes: (prefs.lanes || []).slice(),
+      sourceGroups: (prefs.sourceGroups || []).slice(),
+      sourceIds: (prefs.sourceIds || []).slice(),
+      localities: (prefs.localities || []).slice(),
+      favoriteRegions: (prefs.favoriteRegions || []).slice(),
+    });
+    paint();
+  }
+
+  function closeSheet(apply) {
+    if (apply && draft) {
+      prefs = Object.assign({}, prefs, draft);
+      // temporary change — do not rewrite baseline / saved view
+      sheetOpen = false;
+      draft = null;
+      sheetFocus = "";
+      persist({ keepScroll: false });
+      return;
+    }
+    sheetOpen = false;
+    draft = null;
+    sheetFocus = "";
+    preserveScroll = true;
+    paint();
+  }
+
+  function resetDraftOrPrefs() {
+    const baseline = getViewBaseline();
+    if (sheetOpen && draft) {
+      draft = Object.assign({}, baseline, {
+        sections: (baseline.sections || []).slice(),
+        lanes: (baseline.lanes || []).slice(),
+        sourceGroups: (baseline.sourceGroups || []).slice(),
+        sourceIds: (baseline.sourceIds || []).slice(),
+        localities: (baseline.localities || []).slice(),
+        favoriteRegions: (baseline.favoriteRegions || []).slice(),
+        unreadOnly: !!baseline.unreadOnly,
+        savedOnly: !!baseline.savedOnly,
+        favoritesOnly: !!baseline.favoritesOnly,
+        myRegionOnly: !!baseline.myRegionOnly,
+        localityQuery: baseline.localityQuery || "",
+        homeKraj: baseline.homeKraj || "",
+        homeOkres: baseline.homeOkres || "",
+        homeObec: baseline.homeObec || "",
+        activeViewId: prefs.activeViewId,
+      });
+      paint();
+      return;
+    }
+    prefs = Object.assign({}, baseline, { activeViewId: prefs.activeViewId });
+    persist();
+  }
+
+  function wire() {
     root.querySelectorAll("[data-view]").forEach((btn) => {
       btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-view");
-        prefs = applyView(id, prefs);
+        prefs = applyView(btn.getAttribute("data-view"), prefs);
         persist();
       });
     });
-    const saveViewBtn = root.querySelector('[data-act="save-view"]');
-    if (saveViewBtn) {
-      saveViewBtn.addEventListener("click", () => {
-        const name = window.prompt("Název pohledu", "Můj pohled");
-        if (!name) return;
-        const entry = saveView(name, prefs);
-        if (entry) {
-          prefs.activeViewId = entry.id;
-          persist();
+    root.querySelectorAll("[data-topic]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-topic") || "";
+        if (!id) prefs.sections = [];
+        else {
+          // exclusive quick topic (temporary deviation from view)
+          prefs.sections = [id];
         }
-      });
-    }
-    const delViewBtn = root.querySelector('[data-act="delete-view"]');
-    if (delViewBtn) {
-      delViewBtn.addEventListener("click", () => {
-        if (deleteView(prefs.activeViewId)) {
-          prefs.activeViewId = "";
-          persist();
-        }
-      });
-    }
-    root.querySelectorAll("[data-sec]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-sec") || "";
-        prefs.sections = id ? toggleInArray(prefs.sections, id) : [];
-        prefs.activeViewId = "";
-        persist();
-      });
-    });
-    root.querySelectorAll("[data-type]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        prefs.eventTypes = toggleInArray(prefs.eventTypes, btn.getAttribute("data-type"));
-        prefs.activeViewId = "";
-        persist();
-      });
-    });
-    root.querySelectorAll("[data-lane]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-lane") || "";
-        prefs.lanes = id ? toggleInArray(prefs.lanes, id) : [];
-        prefs.activeViewId = "";
-        persist();
-      });
-    });
-    root.querySelectorAll("[data-org]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        prefs.orgTypes = toggleInArray(prefs.orgTypes, btn.getAttribute("data-org"));
-        prefs.activeViewId = "";
-        persist();
-      });
-    });
-    root.querySelectorAll("[data-level]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        prefs.regionLevels = toggleInArray(prefs.regionLevels, btn.getAttribute("data-level"));
-        prefs.activeViewId = "";
-        persist();
-      });
-    });
-    root.querySelectorAll("[data-fav-lane]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        prefs = toggleFavoriteInPrefs(prefs, "favoriteLanes", btn.getAttribute("data-fav-lane"));
         persist();
       });
     });
@@ -578,156 +649,146 @@ async function mountPrehledDne(rootEl) {
         const t = btn.getAttribute("data-toggle");
         if (t === "unread") prefs.unreadOnly = !prefs.unreadOnly;
         if (t === "saved") prefs.savedOnly = !prefs.savedOnly;
-        if (t === "active") prefs.activeOnly = !prefs.activeOnly;
-        if (t === "new") prefs.newOnly = !prefs.newOnly;
-        if (t === "favorites") prefs.favoritesOnly = !prefs.favoritesOnly;
-        if (t === "myRegion") prefs.myRegionOnly = !prefs.myRegionOnly;
-        if (t === "regDop") prefs.regionalDoprava = !prefs.regionalDoprava;
-        if (t === "regKrize") prefs.regionalKrize = !prefs.regionalKrize;
-        if (t === "regZdravi") prefs.regionalZdravi = !prefs.regionalZdravi;
-        if (t === "alerts") {
-          alertCfg.enabled = !alertCfg.enabled;
-          setAlertConfig(alertCfg);
-          runAlerts();
-        }
-        persist();
+        persist({ keepScroll: false });
       });
     });
-    root.querySelectorAll("[data-alert-rule]").forEach((btn) => {
+    const openFilters = root.querySelector('[data-act="open-filters"]');
+    if (openFilters) openFilters.addEventListener("click", () => openSheet(""));
+    const openMore = root.querySelector('[data-act="open-more-topics"]');
+    if (openMore) openMore.addEventListener("click", () => openSheet("temata"));
+    const openLoc = root.querySelector('[data-act="open-locality"]');
+    if (openLoc) openLoc.addEventListener("click", () => openSheet("lokalita"));
+
+    const saveViewBtn = root.querySelector('[data-act="save-view"]');
+    if (saveViewBtn) {
+      saveViewBtn.addEventListener("click", () => {
+        const name = window.prompt("Název nového pohledu", "Můj pohled");
+        if (!name) return;
+        const entry = saveView(name, prefs);
+        if (entry) {
+          prefs.activeViewId = entry.id;
+          setViewBaseline(prefs);
+          persist();
+        }
+      });
+    }
+    const updViewBtn = root.querySelector('[data-act="update-view"]');
+    if (updViewBtn) {
+      updViewBtn.addEventListener("click", () => {
+        if (updateView(prefs.activeViewId, prefs)) {
+          setViewBaseline(prefs);
+          persist({ keepScroll: true });
+        }
+      });
+    }
+    const delViewBtn = root.querySelector('[data-act="delete-view"]');
+    if (delViewBtn) {
+      delViewBtn.addEventListener("click", () => {
+        if (deleteView(prefs.activeViewId)) {
+          prefs = applyView("muj-prehled", prefs);
+          persist();
+        }
+      });
+    }
+
+    root.querySelectorAll('[data-act="sheet-dismiss"]').forEach((b) =>
+      b.addEventListener("click", () => closeSheet(false))
+    );
+    const applyBtn = root.querySelector('[data-act="sheet-apply"]');
+    if (applyBtn) applyBtn.addEventListener("click", () => closeSheet(true));
+    const resetBtn = root.querySelector('[data-act="sheet-reset"]');
+    if (resetBtn) resetBtn.addEventListener("click", () => resetDraftOrPrefs());
+    const draftCr = root.querySelector('[data-act="draft-cr"]');
+    if (draftCr && draft) {
+      draftCr.addEventListener("click", () => {
+        draft.localities = [];
+        draft.localityQuery = "";
+        draft.myRegionOnly = false;
+        paint();
+      });
+    }
+    root.querySelectorAll("[data-draft-sec]").forEach((btn) => {
       btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-alert-rule");
-        alertCfg.rules = (alertCfg.rules || []).map((r) =>
-          String(r.id) === String(id) ? Object.assign({}, r, { enabled: !r.enabled }) : r
-        );
-        if (!alertCfg.enabled) alertCfg.enabled = true;
-        setAlertConfig(alertCfg);
-        runAlerts();
+        if (!draft) return;
+        const id = btn.getAttribute("data-draft-sec") || "";
+        draft.sections = id ? toggleInArray(draft.sections, id) : [];
         paint();
       });
     });
-    ["iuPrehledDneHomeKraj", "iuPrehledDneHomeOkres", "iuPrehledDneHomeObec"].forEach((id) => {
-      const el = root.querySelector("#" + id);
-      if (!el) return;
-      el.addEventListener("change", () => {
-        if (id.endsWith("Kraj")) prefs.homeKraj = el.value.trim();
-        if (id.endsWith("Okres")) prefs.homeOkres = el.value.trim();
-        if (id.endsWith("Obec")) prefs.homeObec = el.value.trim();
-        persist();
+    root.querySelectorAll("[data-draft-group]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (!draft) return;
+        draft.sourceGroups = toggleInArray(draft.sourceGroups, btn.getAttribute("data-draft-group"));
+        paint();
       });
     });
-    const searchEl = root.querySelector("#iuPrehledDneSearch");
-    if (searchEl) {
-      let searchTimer = null;
-      searchEl.addEventListener("input", () => {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(() => {
-          prefs.searchQuery = searchEl.value;
-          prefs.activeViewId = "";
-          persist();
-        }, 180);
+    root.querySelectorAll("[data-draft-toggle]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (!draft) return;
+        const t = btn.getAttribute("data-draft-toggle");
+        if (t === "unread") draft.unreadOnly = !draft.unreadOnly;
+        if (t === "saved") draft.savedOnly = !draft.savedOnly;
+        if (t === "favorites") draft.favoritesOnly = !draft.favoritesOnly;
+        if (t === "myRegion") draft.myRegionOnly = !draft.myRegionOnly;
+        paint();
+      });
+    });
+    const draftSource = root.querySelector("#iuPrehledDneDraftSource");
+    if (draftSource && draft) {
+      draftSource.addEventListener("change", () => {
+        draft.sourceIds = Array.from(draftSource.selectedOptions).map((o) => o.value);
       });
     }
-    const sortEl = root.querySelector("#iuPrehledDneSort");
-    if (sortEl) {
-      sortEl.addEventListener("change", () => {
-        prefs.sortMode = sortEl.value;
-        persist();
+    const draftSourceQ = root.querySelector("#iuPrehledDneDraftSourceQ");
+    if (draftSourceQ && draftSource) {
+      draftSourceQ.addEventListener("input", () => {
+        const q = String(draftSourceQ.value || "")
+          .trim()
+          .toLowerCase();
+        Array.from(draftSource.options).forEach((opt) => {
+          opt.hidden = q ? !String(opt.textContent || "").toLowerCase().includes(q) : false;
+        });
       });
     }
-    const groupEl = root.querySelector("#iuPrehledDneGroup");
-    if (groupEl) {
-      groupEl.addEventListener("change", () => {
-        prefs.sourceGroups = groupEl.value ? [groupEl.value] : [];
-        prefs.activeViewId = "";
-        persist();
+    ["iuPrehledDneDraftKraj", "iuPrehledDneDraftOkres", "iuPrehledDneDraftObec"].forEach((id) => {
+      const el = root.querySelector("#" + id);
+      if (!el || !draft) return;
+      el.addEventListener("change", () => {
+        if (id.endsWith("Kraj")) draft.homeKraj = el.value.trim();
+        if (id.endsWith("Okres")) draft.homeOkres = el.value.trim();
+        if (id.endsWith("Obec")) draft.homeObec = el.value.trim();
       });
-    }
-    const sourceEl = root.querySelector("#iuPrehledDneSource");
-    if (sourceEl) {
-      sourceEl.addEventListener("change", () => {
-        prefs.sourceIds = sourceEl.value ? [sourceEl.value] : [];
-        prefs.activeViewId = "";
-        persist();
-      });
-    }
-    const timeEl = root.querySelector("#iuPrehledDneTime");
-    if (timeEl) {
-      timeEl.addEventListener("change", () => {
-        prefs.timeRangeHours = Number(timeEl.value) || 0;
-        persist();
-      });
-    }
-    const loc = root.querySelector("#iuPrehledDneLoc");
-    const sug = root.querySelector("#iuPrehledDneSuggest");
-    if (loc && sug) {
-      loc.addEventListener("input", () => {
-        const q = loc.value;
-        prefs.localityQuery = q;
-        const hits = localitySuggest(q, BUILTIN_LOCALITIES);
+    });
+    const dloc = root.querySelector("#iuPrehledDneDraftLoc");
+    const dsug = root.querySelector("#iuPrehledDneDraftSuggest");
+    if (dloc && dsug && draft) {
+      dloc.addEventListener("input", () => {
+        draft.localityQuery = dloc.value;
+        const hits = localitySuggest(dloc.value, BUILTIN_LOCALITIES);
         if (!hits.length) {
-          sug.hidden = true;
-          sug.innerHTML = "";
+          dsug.hidden = true;
+          dsug.innerHTML = "";
           return;
         }
-        sug.hidden = false;
-        sug.innerHTML = hits
-          .map((h) => `<li><button type="button" data-loc="${esc(h.name)}">${esc(h.name)}</button></li>`)
+        dsug.hidden = false;
+        dsug.innerHTML = hits
+          .map((h) => `<li><button type="button" data-dloc="${esc(h.name)}">${esc(h.name)}</button></li>`)
           .join("");
-        sug.querySelectorAll("[data-loc]").forEach((b) => {
+        dsug.querySelectorAll("[data-dloc]").forEach((b) => {
           b.addEventListener("click", () => {
-            const name = b.getAttribute("data-loc");
-            prefs.localities = [{ name }];
-            prefs.localityQuery = name;
-            loc.value = name;
-            sug.hidden = true;
-            persist();
+            const name = b.getAttribute("data-dloc");
+            const cur = Array.isArray(draft.localities) ? draft.localities.slice() : [];
+            if (!cur.some((x) => String(x.name || x) === name)) cur.push({ name });
+            draft.localities = cur;
+            draft.localityQuery = name;
+            dloc.value = name;
+            dsug.hidden = true;
+            paint();
           });
         });
       });
-      loc.addEventListener("change", () => {
-        prefs.localityQuery = loc.value;
-        persist();
-      });
     }
-    const favRegBtn = root.querySelector('[data-act="fav-region"]');
-    if (favRegBtn) {
-      favRegBtn.addEventListener("click", () => {
-        const name = String(
-          prefs.localityQuery || prefs.homeKraj || (prefs.localities[0] && prefs.localities[0].name) || ""
-        ).trim();
-        if (!name) return;
-        prefs = toggleFavoriteInPrefs(prefs, "favoriteRegions", name);
-        persist();
-      });
-    }
-    root.querySelectorAll(".iuPrehledDne__tag button").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const tag = btn.closest(".iuPrehledDne__tag");
-        const kind = tag.getAttribute("data-kind");
-        const id = tag.getAttribute("data-id");
-        if (kind === "sec") prefs.sections = (prefs.sections || []).filter((x) => x !== id);
-        if (kind === "type") prefs.eventTypes = (prefs.eventTypes || []).filter((x) => x !== id);
-        if (kind === "src") prefs.sourceGroups = (prefs.sourceGroups || []).filter((x) => x !== id);
-        if (kind === "lane") prefs.lanes = (prefs.lanes || []).filter((x) => x !== id);
-        if (kind === "org") prefs.orgTypes = (prefs.orgTypes || []).filter((x) => x !== id);
-        if (kind === "level") prefs.regionLevels = (prefs.regionLevels || []).filter((x) => x !== id);
-        if (kind === "sid") prefs.sourceIds = (prefs.sourceIds || []).filter((x) => x !== id);
-        if (kind === "favsrc") prefs.favoriteSourceIds = (prefs.favoriteSourceIds || []).filter((x) => x !== id);
-        if (kind === "favlane") prefs.favoriteLanes = (prefs.favoriteLanes || []).filter((x) => x !== id);
-        if (kind === "favreg") prefs.favoriteRegions = (prefs.favoriteRegions || []).filter((x) => x !== id);
-        if (kind === "time") prefs.timeRangeHours = 0;
-        if (kind === "flag") prefs[id] = false;
-        if (kind === "homeKraj") prefs.homeKraj = "";
-        if (kind === "homeOkres") prefs.homeOkres = "";
-        if (kind === "homeObec") prefs.homeObec = "";
-        if (kind === "search") prefs.searchQuery = "";
-        if (kind === "loc" || kind === "q") {
-          prefs.localities = [];
-          prefs.localityQuery = "";
-        }
-        persist();
-      });
-    });
+
     root.querySelectorAll(".iuPrehledDne__item").forEach((li) => {
       const id = li.getAttribute("data-id");
       const title = li.querySelector(".iuPrehledDne__cardTitle");
@@ -745,23 +806,48 @@ async function mountPrehledDne(rootEl) {
             const on = toggleSaved(id);
             b.textContent = on ? "Uloženo" : "Uložit";
           }
-          if (act === "fav-source") {
-            const sid = b.getAttribute("data-source");
-            prefs = toggleFavoriteInPrefs(prefs, "favoriteSourceIds", sid);
-            setPrefs(prefs);
-            paint();
-          }
           if (act === "hide") {
             hideItem(id);
-            paint();
+            persist({ keepScroll: true, keepPage: true });
+          }
+          if (act === "toggle-origins") {
+            const box = li.querySelector("[data-origins]");
+            if (box) {
+              box.hidden = !box.hidden;
+              b.textContent = box.hidden ? "Zobrazit všechny zdroje" : "Skrýt zdroje";
+            }
           }
         });
       });
     });
+
+    const moreBtn = root.querySelector('[data-act="more"]');
+    if (moreBtn) {
+      moreBtn.addEventListener("click", () => {
+        visibleCount += PAGE_SIZE;
+        preserveScroll = true;
+        captureScroll();
+        paint();
+      });
+    }
+    const acceptNew = root.querySelector('[data-act="accept-new"]');
+    if (acceptNew) {
+      acceptNew.addEventListener("click", () => {
+        if (!pendingNew.length) return;
+        renderedSnapshot = pendingNew.concat(renderedSnapshot);
+        feedIndex = buildFeedIndex(renderedSnapshot);
+        pendingNew = [];
+        const ban = root.querySelector("#iuPrehledDneNewBanner");
+        if (ban) ban.classList.remove("is-visible");
+        persist();
+      });
+    }
     root.querySelectorAll('[data-act="dismiss-alert"]').forEach((b) => {
       b.addEventListener("click", () => {
         dismissAlert(b.getAttribute("data-id"));
-        alertPending = getAlertState().pending || [];
+        alertPending = (getAlertState().pending || []).slice();
+        preserveScroll = true;
+        captureScroll();
         paint();
       });
     });
@@ -770,89 +856,72 @@ async function mountPrehledDne(rootEl) {
       dismissAll.addEventListener("click", () => {
         dismissAllAlerts();
         alertPending = [];
+        preserveScroll = true;
+        captureScroll();
         paint();
       });
     }
-    const moreBtn = root.querySelector('[data-act="more"]');
-    if (moreBtn) {
-      moreBtn.addEventListener("click", () => {
-        visibleCount = Math.min(totalFiltered || 0, visibleCount + PAGE_SIZE);
-        paint();
-      });
+
+    // Escape closes sheet without apply
+    if (sheetOpen) {
+      const onKey = (ev) => {
+        if (ev.key === "Escape") {
+          document.removeEventListener("keydown", onKey);
+          closeSheet(false);
+        }
+      };
+      document.addEventListener("keydown", onKey);
     }
-    const banner = root.querySelector("#iuPrehledDneNewBanner");
-    const accept = root.querySelector('[data-act="accept-new"]');
-    if (banner && pendingNew.length) banner.classList.add("is-visible");
-    if (accept) {
-      accept.addEventListener("click", () => {
-        renderedSnapshot = pendingNew.concat(renderedSnapshot);
-        feedIndex = buildFeedIndex(renderedSnapshot);
-        pendingNew = [];
-        banner.classList.remove("is-visible");
-        runAlerts();
-        paint();
-      });
-    }
+  }
+
+  function onScroll() {
+    try {
+      const vp = document.getElementById("iuSilverTallScrollViewport");
+      if (!vp) return;
+      setScrollState({ viewId: String(prefs.activeViewId || ""), y: vp.scrollTop || 0 });
+    } catch (_) {}
+  }
+
+  const vp = document.getElementById("iuSilverTallScrollViewport");
+  if (vp) {
+    vp.removeEventListener("scroll", onScroll);
+    vp.addEventListener("scroll", onScroll, { passive: true });
   }
 
   runAlerts();
   paint();
 
-  const vp = document.getElementById("iuSilverTallScrollViewport");
-  let scrollTimer = null;
-  function onScroll() {
-    clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(() => {
-      try {
-        setScrollState({ viewId: String(prefs.activeViewId || ""), y: vp ? vp.scrollTop : 0 });
-      } catch (_) {}
-    }, 200);
-  }
-  if (vp) vp.addEventListener("scroll", onScroll, { passive: true });
-
-  const timer = setInterval(async () => {
-    try {
-      const fresh = await loadInfoSystemData();
-      const freshItems = (fresh.feed && fresh.feed.items) || [];
-      const known = new Set(renderedSnapshot.map((x) => x.id).concat(pendingNew.map((x) => x.id)));
-      const neu = freshItems.filter((x) => x && !known.has(x.id));
-      if (neu.length) {
-        pendingNew = neu.concat(pendingNew);
-        const banner = root.querySelector("#iuPrehledDneNewBanner");
-        if (banner) banner.classList.add("is-visible");
-        runAlerts();
-      }
-    } catch (_) {}
-  }, 120000);
-
-  const api = {
-    root,
-    refresh: paint,
-    destroy: () => {
-      clearInterval(timer);
-      if (vp) vp.removeEventListener("scroll", onScroll);
-    },
-    prefs,
-  };
+  // Soft poll for new items without resetting prefs
   try {
-    window.IUPrehledDne = Object.assign({ mountPrehledDne }, api);
+    setInterval(async () => {
+      try {
+        const next = await loadInfoSystemData();
+        const nextItems = (next.feed && next.feed.items) || [];
+        const known = new Set(renderedSnapshot.map((x) => x.id).concat(pendingNew.map((x) => x.id)));
+        const fresh = nextItems.filter((x) => x && x.id && !known.has(x.id));
+        if (!fresh.length) return;
+        pendingNew = fresh.concat(pendingNew).slice(0, 80);
+        const ban = root.querySelector("#iuPrehledDneNewBanner");
+        if (ban) ban.classList.add("is-visible");
+      } catch (_) {}
+    }, 120000);
   } catch (_) {}
-  return api;
+
+  return root;
 }
 
 function boot() {
-  applyCutoverDom();
-  if (!IUInfoSystem.isCutoverEnabled() && !IUInfoSystem.isParallelMode()) return;
-  const root = ensureRoot();
-  if (!root) return;
-  mountPrehledDne(root);
+  const bootNow = () => {
+    const root = document.getElementById("iuPrehledDneRoot") || ensureRoot();
+    if (!root) return;
+    if (root.getAttribute("data-iu-mounted") === "1") return;
+    root.setAttribute("data-iu-mounted", "1");
+    mountPrehledDne(root);
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bootNow);
+  else bootNow();
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", boot, { once: true });
-} else {
-  boot();
-}
+boot();
 
 export { mountPrehledDne, boot };
-export default { mountPrehledDne, boot };
