@@ -168,6 +168,41 @@ export function makeItemId(sourceId, url, publishedAt) {
   return `ie-${sourceId}-${h}`;
 }
 
+/**
+ * Parse Czech / ISO dates into ISO string. Returns "" if invalid / unreasonable.
+ * Prefers DD.MM.YYYY[+time], then ISO/RFC.
+ */
+export function parsePublishDateToIso(raw, opts = {}) {
+  const nowMs = Number(opts.nowMs) || Date.now();
+  const s = String(raw || "").trim();
+  if (!s) return "";
+  let ms = 0;
+  const cz = s.match(
+    /^(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})(?:\s+[–-]?\s*|\s+|T)(\d{1,2}):(\d{2})(?::(\d{2}))?/
+  );
+  const czDateOnly = s.match(/^(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})\b/);
+  if (cz) {
+    ms = Date.UTC(Number(cz[3]), Number(cz[2]) - 1, Number(cz[1]), Number(cz[4]), Number(cz[5]), Number(cz[6] || 0));
+    // Interpret as Europe/Prague roughly: store as local-wall → ISO via Date with local components
+    ms = new Date(Number(cz[3]), Number(cz[2]) - 1, Number(cz[1]), Number(cz[4]), Number(cz[5]), Number(cz[6] || 0)).getTime();
+  } else if (czDateOnly) {
+    ms = new Date(Number(czDateOnly[3]), Number(czDateOnly[2]) - 1, Number(czDateOnly[1]), 12, 0, 0).getTime();
+  } else {
+    ms = Date.parse(s);
+  }
+  if (!Number.isFinite(ms) || ms <= 0) return "";
+  // Reject absurd future (> 48h) and ancient past (> 10y)
+  if (ms > nowMs + 48 * 3600000) return "";
+  if (ms < nowMs - 10 * 365 * 24 * 3600000) return "";
+  return new Date(ms).toISOString();
+}
+
+/** Extract leading DD.MM.YYYY from titles (e.g. Správa železnic listings). */
+export function extractTitleLeadingDate(title) {
+  const m = String(title || "").match(/^(\d{1,2}\.\s*\d{1,2}\.\s*\d{4})\b/);
+  return m ? m[1] : "";
+}
+
 export function mapGroupToSection(group) {
   const g = String(group || "");
   if (g === "policie" || g === "hzs" || g === "kyber") return { sectionId: "bezpecnost", subsectionId: g === "hzs" ? "hasici" : g === "kyber" ? "varovani" : "policie" };
@@ -256,7 +291,14 @@ export function extractHtmlListItems(html, pageUrl, opts = {}) {
     const key = href.toLowerCase();
     if (seen.has(key)) continue;
     seen.add(key);
-    out.push({ title, link: href, pubDate: "" });
+    const titleDate = extractTitleLeadingDate(title);
+    const pubDate = titleDate ? parsePublishDateToIso(titleDate) : "";
+    out.push({
+      title,
+      link: href,
+      pubDate: pubDate || "",
+      timeSourceHint: pubDate ? "title_date" : "",
+    });
   }
   return out.slice(0, max);
 }
@@ -328,6 +370,8 @@ export function extractCapBulletinItems(xml, fileUrl, opts = {}) {
     if (/^žádn|^no warning|^no outlook|^minor (heat|cold) warning/i.test(event)) continue;
     if (/^None$/i.test(severity)) continue;
     if (!/Extreme|Severe|Moderate/i.test(severity)) continue;
+    const onset = ((chunk.match(/<onset>([^<]+)<\/onset>/i) || [])[1] || "").trim();
+    const expires = ((chunk.match(/<expires>([^<]+)<\/expires>/i) || [])[1] || "").trim();
     const areaShort = area.split("(")[0].trim() || area;
     const key = foldCs(event + "|" + areaShort + "|" + severity);
     if (seen.has(key)) continue;
@@ -342,6 +386,9 @@ export function extractCapBulletinItems(xml, fileUrl, opts = {}) {
       severity,
       area: areaShort,
       identifier,
+      validFrom: onset || sent,
+      validTo: expires || "",
+      lifecycleHint: "warning",
     });
   }
   // Fallback: one bulletin item if no active severe events
@@ -359,18 +406,70 @@ export function extractCapBulletinItems(xml, fileUrl, opts = {}) {
 }
 
 export function dedupeByUrlAndGroup(items) {
+  // Exact technical duplicate = same canonical URL. Keep newest update; preserve
+  // sourcePublications from all sources that shared the URL (rare cross-feed).
   const byUrl = new Map();
   for (const it of items) {
     const u = canonicalizeUrl(it.canonicalUrl || it.url || "").toLowerCase() || String(it.url || "").toLowerCase();
     if (!u) continue;
     const prev = byUrl.get(u);
     if (!prev) {
-      byUrl.set(u, it);
+      byUrl.set(u, Object.assign({}, it, {
+        sourcePublications: [
+          {
+            sourceId: it.sourceId,
+            sourceLabel: it.sourceLabel,
+            sourceGroup: it.sourceGroup || it.group || "",
+            url: it.url,
+            publishedAtSource: it.publishedAtSource || null,
+            lane: it.lane || null,
+            sectionId: it.sectionId || null,
+          },
+        ],
+      }));
       continue;
+    }
+    const pubs = Array.isArray(prev.sourcePublications) ? prev.sourcePublications.slice() : [];
+    const sid = String(it.sourceId || "");
+    if (sid && !pubs.some((p) => String(p.sourceId) === sid)) {
+      pubs.push({
+        sourceId: it.sourceId,
+        sourceLabel: it.sourceLabel,
+        sourceGroup: it.sourceGroup || it.group || "",
+        url: it.url,
+        publishedAtSource: it.publishedAtSource || null,
+        lane: it.lane || null,
+        sectionId: it.sectionId || null,
+      });
     }
     const pt = Date.parse(prev.updatedAt || prev.publishedAt || 0) || 0;
     const et = Date.parse(it.updatedAt || it.publishedAt || 0) || 0;
-    if (et >= pt) byUrl.set(u, it);
+    const winner = et >= pt ? it : prev;
+    byUrl.set(
+      u,
+      Object.assign({}, winner, {
+        sourcePublications: pubs,
+        region: mergeRegions(prev.region, it.region),
+        sectionIds: uniqueStrings([prev.sectionId, it.sectionId].concat(prev.sectionIds || []).concat(it.sectionIds || [])),
+      })
+    );
   }
   return Array.from(byUrl.values());
+}
+
+function uniqueStrings(arr) {
+  return Array.from(new Set((arr || []).map(String).filter(Boolean)));
+}
+
+function mergeRegions(a, b) {
+  if (!a) return b || null;
+  if (!b) return a;
+  const rank = (r) => {
+    const lv = String((r && r.level) || "cr");
+    if (lv === "obec" || lv === "mesto") return 0;
+    if (lv === "okres") return 1;
+    if (lv === "kraj") return 2;
+    return 3;
+  };
+  return rank(b) < rank(a) ? b : a;
 }

@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "generatedAt": "2026-07-19T07:53:04.376Z",
+  "generatedAt": "2026-07-19T09:57:08.852Z",
   "architecture": {
     "backendOnlyFetch": true,
     "frontendLocalFirst": true,
@@ -270,9 +270,33 @@
       "firstSeenByInfoUzel",
       "lastUpdatedBySource",
       "lastProcessedAt",
-      "sortAt"
+      "sortAt",
+      "validFrom",
+      "validTo",
+      "resolvedAt",
+      "timeSource",
+      "timeConfidence"
     ],
-    "sortRule": "prefer publishedAtSource; else firstSeenByInfoUzel"
+    "sortRule": "prefer publishedAtSource; else firstSeenByInfoUzel (display only)",
+    "activeWindowHours": 96,
+    "activeWindowRule": "include by publishedAtSource within window; long-lived via validTo/status",
+    "neverRejuvenateByFirstSeen": true
   },
-  "uiPersonalization": "v4"
+  "dataQuality": {
+    "itemCount": 170,
+    "fallbackTime": 0,
+    "lowConfidence": 0,
+    "futureTime": 0,
+    "missingUrl": 0,
+    "missingInstitution": 0,
+    "missingGroup": 0,
+    "techArtifactsInTags": 0,
+    "multiSourcePublications": 0,
+    "invalidLifecycle": 0,
+    "suspiciousSameCaptureBatch": 59,
+    "blockers": [],
+    "warnings": [
+      "suspicious_backfill_batch"
+    ]
+  }
 }

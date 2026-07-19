@@ -180,6 +180,37 @@ if (!Array.isArray(monitoring.outageHistory)) fails.push("monitoring:outageHisto
 if (!/enrichMonitoringV3/.test(fs.readFileSync(path.join(REPO, "scripts/iu-info-events-v2.mjs"), "utf8"))) {
   fails.push("v2:enrichMonitoringV3_missing");
 }
+const v2src = fs.readFileSync(path.join(REPO, "scripts/iu-info-events-v2.mjs"), "utf8");
+if (!/isInActiveFeedWindow|timeConfidence|neverRejuvenateByFirstSeen|buildDataQualityMetrics/.test(v2src)) {
+  fails.push("v2:chrono_96h_quality_missing");
+}
+const libsrc = fs.readFileSync(path.join(REPO, "scripts/iu-info-events-lib.mjs"), "utf8");
+if (!/parsePublishDateToIso|extractTitleLeadingDate|sourcePublications/.test(libsrc)) {
+  fails.push("lib:publish_date_dedup_missing");
+}
+const refreshsrc = fs.readFileSync(path.join(REPO, "scripts/iu-info-events-refresh.mjs"), "utf8");
+if (!/MAX_AGE_HOURS \|\| \"96\"|activeWindowHours|publikovano/.test(refreshsrc)) {
+  fails.push("refresh:96h_lifecycle_missing");
+}
+if (!/sourcePublications|laneLabel|Publikováno/.test(ui)) {
+  fails.push("ui:clean_meta_missing");
+}
+
+// Feed chronology / metadata quality (enforced after regeneration publishes dataQuality)
+let fallback = 0;
+let techTags = 0;
+const TECH = /^(html|rss|atom|opendata|api|xml|json|html-list|none)$/i;
+for (const it of feed.items || []) {
+  if (String(it.timeConfidence || "") === "fallback" || !it.publishedAtSource) fallback += 1;
+  for (const t of it.tags || []) if (TECH.test(String(t))) techTags += 1;
+}
+if (feed.dataQuality) {
+  if (techTags > 0) fails.push("feed:tech_tags_in_user_tags:" + techTags);
+  if (Number(feed.maxAgeHours || feed.activeWindowHours || 0) > 96) fails.push("feed:maxAgeHours_gt_96");
+  if (Array.isArray(feed.dataQuality.blockers) && feed.dataQuality.blockers.includes("tech_tags_in_user_fields")) {
+    fails.push("monitoring:tech_tags_blocker");
+  }
+}
 
 if (fails.length) {
   console.error("[iu-info-system-v1-guard] FAIL");

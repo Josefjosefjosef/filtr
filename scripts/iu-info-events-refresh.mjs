@@ -23,6 +23,8 @@ import {
   mapGroupToSection,
   normalizeItemUrl,
   stripHtml,
+  parsePublishDateToIso,
+  extractTitleLeadingDate,
 } from "./iu-info-events-lib.mjs";
 import {
   IU_INFO_EVENTS_V2,
@@ -30,8 +32,10 @@ import {
   atomicPublishInfoEvents,
   buildConnectorGroups,
   buildPersonalizationMeta,
+  buildDataQualityMetrics,
   defaultPeriodicityMin,
   enrichMonitoringV3,
+  isInActiveFeedWindow,
   loadPreviousFirstSeen,
   regionalAdapterSpec,
   resolveConnectorType,
@@ -45,7 +49,7 @@ const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIR = path.join(REPO, "projects", "data", "info_events");
 
 const MAX_ITEMS = Number(process.env.IU_INFO_EVENTS_MAX_ITEMS || "300");
-const MAX_AGE_HOURS = Number(process.env.IU_INFO_EVENTS_MAX_AGE_HOURS || "120");
+const MAX_AGE_HOURS = Number(process.env.IU_INFO_EVENTS_MAX_AGE_HOURS || "96");
 const PER_FEED_CAP = Number(process.env.IU_INFO_EVENTS_PER_FEED_CAP || "25");
 const PER_SOURCE_CAP = Number(process.env.IU_INFO_EVENTS_PER_SOURCE_CAP || "40");
 const CAP_FILES_MAX = Number(process.env.IU_INFO_EVENTS_CAP_FILES_MAX || "6");
@@ -60,9 +64,7 @@ function writeJson(name, obj) {
 }
 
 function toIso(raw) {
-  const t = Date.parse(String(raw || ""));
-  if (Number.isFinite(t)) return new Date(t).toISOString();
-  return "";
+  return parsePublishDateToIso(raw) || "";
 }
 
 function scoreImportance(title, group, severity) {
@@ -78,19 +80,57 @@ function scoreImportance(title, group, severity) {
   return n;
 }
 
+function resolveLifecycle(entry, raw, importance) {
+  if (raw.lifecycleHint === "warning" || entry.group === "pocasi" || entry.capIndexUrl) {
+    return { eventType: "mimoradne", status: "aktivni", lifecycle: "prave-probihajici" };
+  }
+  if (entry.group === "doprava" && /výluka|uzavír|omezení|nehod/i.test(String(raw.title || ""))) {
+    return { eventType: "prave-probihajici", status: "aktivni", lifecycle: "prave-probihajici" };
+  }
+  if (importance >= 5) {
+    return { eventType: "mimoradne", status: "publikovano", lifecycle: "publikovano" };
+  }
+  // Ordinary press / articles are published info — not "active events"
+  return { eventType: "aktualni", status: "publikovano", lifecycle: "publikovano" };
+}
+
 function buildItem(entry, raw, nowIso, extra = {}) {
   const home = entry.url || "";
   const url = normalizeItemUrl(raw.link, raw.base || entry.url || "");
   const title = stripHtml(raw.title);
   if (!title || !url) return null;
   if (!isConcreteItemUrl(url, home)) return null;
-  const sourcePub = toIso(raw.pubDate);
+
+  let timeSourceHint = String(raw.timeSourceHint || "");
+  let sourcePub = toIso(raw.pubDate);
+  if (!sourcePub) {
+    const titleDate = extractTitleLeadingDate(title);
+    if (titleDate) {
+      sourcePub = parsePublishDateToIso(titleDate);
+      if (sourcePub) timeSourceHint = "title_date";
+    }
+  } else if (!timeSourceHint) {
+    timeSourceHint = entry.capIndexUrl
+      ? "opendata_cap_sent"
+      : entry.feedUrl || (entry.feedUrls && entry.feedUrls.length)
+        ? "rss_pub_date"
+        : "source_pub_date";
+  }
+
   const hasSourcePubDate = !!sourcePub;
-  const publishedAt = sourcePub || nowIso;
-  const ageH = (Date.parse(nowIso) - Date.parse(publishedAt)) / 3600000;
-  if (Number.isFinite(ageH) && ageH > MAX_AGE_HOURS) return null;
-  const sec = mapGroupToSection(entry.defaultSectionGroup || entry.group);
+  const validFrom = toIso(raw.validFrom) || null;
+  const validTo = toIso(raw.validTo) || null;
   const importance = scoreImportance(title, entry.group, raw.severity);
+  const life = resolveLifecycle(entry, raw, importance);
+
+  // Age gate ONLY on reliable publishedAtSource — never invent "now" to pass the window.
+  if (hasSourcePubDate) {
+    const ageH = (Date.parse(nowIso) - Date.parse(sourcePub)) / 3600000;
+    const stillValid = validTo && Date.parse(validTo) >= Date.parse(nowIso);
+    if (Number.isFinite(ageH) && ageH > MAX_AGE_HOURS && !stillValid) return null;
+  }
+
+  const sec = mapGroupToSection(entry.defaultSectionGroup || entry.group);
   const canonical = canonicalizeUrl(url);
   const region =
     raw.area
@@ -99,19 +139,22 @@ function buildItem(entry, raw, nowIso, extra = {}) {
   const lane = resolveLane(entry);
   const connectorType = resolveConnectorType(entry);
   const orgType = resolveOrgType(entry);
+  const idSeed = sourcePub || canonical || url;
   return {
-    id: makeItemId(entry.id, canonical || url, publishedAt),
+    id: makeItemId(entry.id, canonical || url, idSeed),
     title,
     sourceId: entry.id,
     sourceLabel: entry.label || entry.id,
-    sourceName: entry.label || entry.id,
+    sourceName: entry.institution || entry.label || entry.id,
+    sourceGroup: entry.group || "",
     url,
     originalUrl: url,
     canonicalUrl: canonical || url,
     sectionId: entry.defaultSectionId || sec.sectionId,
     subsectionId: entry.defaultSubsectionId || sec.subsectionId,
-    eventType: importance >= 5 ? "mimoradne" : "prave-probihajici",
-    status: "aktivni",
+    eventType: life.eventType,
+    status: life.status,
+    lifecycle: life.lifecycle,
     importance,
     impact: importance,
     region,
@@ -119,11 +162,16 @@ function buildItem(entry, raw, nowIso, extra = {}) {
     connectorType,
     orgType,
     publishedAtSource: hasSourcePubDate ? sourcePub : null,
-    publishedAt,
+    publishedAt: hasSourcePubDate ? sourcePub : null,
     updatedAt: nowIso,
+    validFrom,
+    validTo,
+    resolvedAt: null,
+    timeSourceHint,
     _hasSourcePubDate: hasSourcePubDate,
-    groupKey: makeGroupKey(title, publishedAt),
-    tags: [entry.group, lane, connectorType].concat(extra.tags || []).filter(Boolean),
+    groupKey: makeGroupKey(title, sourcePub || "unknown"),
+    // User-facing tags only — never connector/parser technical ids
+    tags: extra.tags ? extra.tags.filter((t) => t && !/^(html|rss|atom|opendata|api|xml|json|html-list|none)$/i.test(t)) : [],
     links: [],
   };
 }
@@ -397,17 +445,50 @@ async function main() {
   let items = dedupeByUrlAndGroup(collected);
   const removedDupes = beforeDedupe - items.length;
 
-  // Chronology: source publish time preferred; else firstSeenByInfoUzel
+  // Chronology: source publish time preferred; never invent publish = now
   items = items.map((it) => {
     const chron = applyChronology(it, nowIso, firstSeenMap);
     delete chron._hasSourcePubDate;
+    delete chron.timeSourceHint;
     return chron;
   });
+
+  const beforeWindow = items.length;
+  const windowDropped = [];
+  items = items.filter((it) => {
+    const w = isInActiveFeedWindow(it, nowIso, MAX_AGE_HOURS);
+    if (!w.ok) {
+      windowDropped.push({ id: it.id, sourceId: it.sourceId, reason: w.reason });
+      return false;
+    }
+    return true;
+  });
+  const droppedOutsideWindow = beforeWindow - items.length;
+
+  // Guard: large first-seen-only batch → exclude fallback items from active feed
+  const fallbackItems = items.filter((it) => it.timeConfidence === "fallback" || !it.publishedAtSource);
+  if (fallbackItems.length >= 20) {
+    const keepIds = new Set();
+    // Keep only CAP/long-lived or already-known captures
+    for (const it of items) {
+      if (it.publishedAtSource) keepIds.add(it.id);
+      else if (it.validTo) keepIds.add(it.id);
+      else if (!it.isNewCapture) keepIds.add(it.id);
+    }
+    const beforeFb = items.length;
+    items = items.filter((it) => keepIds.has(it.id));
+    console.log(
+      "[iu-info-events-refresh] backfill_guard dropped_fallback=" +
+        (beforeFb - items.length) +
+        " kept=" +
+        items.length
+    );
+  }
 
   items.sort((a, b) => {
     const di = Number(b.importance || 0) - Number(a.importance || 0);
     if (di) return di;
-    return (Date.parse(b.sortAt || b.publishedAt || 0) || 0) - (Date.parse(a.sortAt || a.publishedAt || 0) || 0);
+    return (Date.parse(b.publishedAtSource || b.sortAt || 0) || 0) - (Date.parse(a.publishedAtSource || a.sortAt || 0) || 0);
   });
 
   const perSource = new Map();
@@ -426,6 +507,8 @@ async function main() {
   items = items.filter((it) => isConcreteItemUrl(it.url, null) && isConcreteItemUrl(it.originalUrl || it.url, null));
   const droppedHome = beforeHome - items.length;
 
+  const dataQuality = buildDataQualityMetrics(items, { nowIso });
+
   const lanes = splitIntoLanes(items);
   const laneCounts = {};
   for (const [lid, arr] of Object.entries(lanes)) laneCounts[lid] = arr.length;
@@ -437,8 +520,10 @@ async function main() {
     architecture: "v2-pipeline",
     itemCount: items.length,
     maxAgeHours: MAX_AGE_HOURS,
+    activeWindowHours: MAX_AGE_HOURS,
     onlyGroup: ONLY_GROUP || null,
     laneCounts,
+    dataQuality,
     items,
   };
 
@@ -457,9 +542,24 @@ async function main() {
     personalization: buildPersonalizationMeta(),
     regionalAdapter: regionalAdapterSpec(),
     chronology: {
-      fields: ["publishedAtSource", "firstSeenByInfoUzel", "lastUpdatedBySource", "lastProcessedAt", "sortAt"],
-      sortRule: "prefer publishedAtSource; else firstSeenByInfoUzel",
+      fields: [
+        "publishedAtSource",
+        "firstSeenByInfoUzel",
+        "lastUpdatedBySource",
+        "lastProcessedAt",
+        "sortAt",
+        "validFrom",
+        "validTo",
+        "resolvedAt",
+        "timeSource",
+        "timeConfidence",
+      ],
+      sortRule: "prefer publishedAtSource; else firstSeenByInfoUzel (display only)",
+      activeWindowHours: MAX_AGE_HOURS,
+      activeWindowRule: "include by publishedAtSource within window; long-lived via validTo/status",
+      neverRejuvenateByFirstSeen: true,
     },
+    dataQuality,
   };
 
   const failedConnectors = ingestReport.filter((r) => !r.ok);
@@ -516,6 +616,8 @@ async function main() {
         blocker: e.blocker || e.notes || "",
       })),
     dedupeGroups: new Set(items.map((i) => i.groupKey).filter(Boolean)).size,
+    droppedOutsideActiveWindow: droppedOutsideWindow,
+    dataQuality,
     commercialAggregationActive: !!cutover.commercialAggregationActive,
   };
   const monitoring = enrichMonitoringV3(monitoringBase, prevMonitoring, nowIso);
@@ -564,9 +666,12 @@ async function main() {
   console.log("[iu-info-events-refresh] sourcesActive=" + monitoring.sources.length);
   console.log("[iu-info-events-refresh] connectorsWithItems=" + activeConnectors);
   console.log("[iu-info-events-refresh] feedItems=" + feed.itemCount);
+  console.log("[iu-info-events-refresh] maxAgeHours=" + MAX_AGE_HOURS);
+  console.log("[iu-info-events-refresh] droppedOutsideWindow=" + droppedOutsideWindow);
   console.log("[iu-info-events-refresh] droppedHomepageUrls=" + droppedHome);
   console.log("[iu-info-events-refresh] removedDuplicates=" + removedDupes);
   console.log("[iu-info-events-refresh] failedConnectors=" + failedConnectors.length);
+  console.log("[iu-info-events-refresh] dataQuality=" + JSON.stringify(dataQuality));
   console.log("[iu-info-events-refresh] lanes=" + JSON.stringify(laneCounts));
   console.log("[iu-info-events-refresh] commercialAggregationActive=" + monitoring.commercialAggregationActive);
   if (failedConnectors.length) {
