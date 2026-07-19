@@ -124,6 +124,8 @@ function isIgnorableGuardResourceUrl(url) {
   if (/\/favicon\.ico/i.test(u)) return true;
   if (/\/assets\/partners\//i.test(u)) return true;
   if (/section-zpravy-header-video/i.test(u)) return true;
+  // Day articles JSON may lag when Update articles is paused / not yet published.
+  if (/\/projects\/data\/articles\/\d{4}-\d{2}-\d{2}\.json(?:\?|$)/i.test(u)) return true;
   return false;
 }
 
