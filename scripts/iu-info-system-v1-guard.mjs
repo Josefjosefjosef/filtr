@@ -217,6 +217,15 @@ if (feed.dataQuality) {
     fails.push("monitoring:tech_tags_blocker");
   }
 }
+if (!/Client-side 96h safety|96 \* 3600000/.test(core)) {
+  fails.push("core:client_96h_safety_missing");
+}
+if (!fs.existsSync(path.join(REPO, "docs/info-system-v1/09-data-stabilization-evidence.json"))) {
+  fails.push("docs:evidence_json_missing");
+}
+if (!fs.existsSync(path.join(REPO, "scripts/iu-info-events-data-stab-evidence-guard.mjs"))) {
+  fails.push("scripts:evidence_guard_missing");
+}
 
 if (fails.length) {
   console.error("[iu-info-system-v1-guard] FAIL");
