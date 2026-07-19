@@ -4,7 +4,7 @@
  * V4 data model kept; V5 forces chronological feed + prefs/views migration.
  */
 const IU_INFO_SYSTEM_VERSION = "5.0.0";
-const LS_SCHEMA_VERSION = 5;
+const LS_SCHEMA_VERSION = 6;
 const LS_SCHEMA = "iu.infoEvents.schema.v1";
 const LS_READ = "iu.infoEvents.read.v1";
 const LS_SAVED = "iu.infoEvents.saved.v1";
@@ -266,7 +266,7 @@ function writeSchemaVersion(v) {
   } catch (_) {}
 }
 
-/** Idempotent V4 → V5 local prefs/views migration. */
+/** Idempotent local prefs migration (V4/V5 → V6 clean concept). Preserves read/saved/hidden/scroll. */
 function migrateLocalStateOnce() {
   const ver = readSchemaVersion();
   if (ver >= LS_SCHEMA_VERSION) return { migrated: false, from: ver, to: ver };
@@ -274,6 +274,9 @@ function migrateLocalStateOnce() {
     const rawPrefs = localStorage.getItem(LS_PREFS);
     if (rawPrefs) {
       const cleaned = sanitizeUserPrefs(JSON.parse(rawPrefs) || {});
+      // V6: display toggles are session-only — never persist unread/saved feed modes
+      cleaned.unreadOnly = false;
+      cleaned.savedOnly = false;
       localStorage.setItem(LS_PREFS, JSON.stringify(cleaned));
     }
     const store = readJsonObj(LS_VIEWS, { views: [] });
@@ -406,6 +409,12 @@ function toggleSaved(id) {
 function hideItem(id) {
   const s = readJsonSet(LS_HIDDEN);
   s.add(String(id));
+  writeJsonSet(LS_HIDDEN, s);
+}
+
+function unhideItem(id) {
+  const s = readJsonSet(LS_HIDDEN);
+  s.delete(String(id));
   writeJsonSet(LS_HIDDEN, s);
 }
 
@@ -759,7 +768,7 @@ function filterEvents(events, filters, opts) {
   const o = opts || {};
   const f = normalizePrefs(filters || {});
   const items = events || [];
-  const memoKey = prefsFingerprint(f) + "|" + items.length + "|" + (o.generationId || "");
+  const memoKey = prefsFingerprint(f) + "|" + items.length + "|" + (o.generationId || "") + "|" + String(o.hiddenMode || "exclude");
   if (!o.skipMemo && _filterMemo.itemsRef === items && _filterMemo.key === memoKey && _filterMemo.result) {
     return _filterMemo.result;
   }
@@ -802,7 +811,12 @@ function filterEvents(events, filters, opts) {
       if (seen.has(id)) continue;
       seen.add(id);
     }
-    if (hidden.has(id)) continue;
+    const hiddenMode = String(o.hiddenMode || "exclude");
+    if (hiddenMode === "only") {
+      if (!hidden.has(id)) continue;
+    } else if (hiddenMode !== "include") {
+      if (hidden.has(id)) continue;
+    }
     if (groupSet && !groupSet.has(String(ev.sourceGroup || ""))) {
       const pubs = ev.sourcePublications || [];
       if (!pubs.some((p) => groupSet.has(String(p.sourceGroup || "")))) continue;
@@ -1006,6 +1020,7 @@ const IUInfoSystem = {
   markRead,
   toggleSaved,
   hideItem,
+  unhideItem,
   isRead,
   isSaved,
   isHidden,
@@ -1056,6 +1071,7 @@ export {
   markRead,
   toggleSaved,
   hideItem,
+  unhideItem,
   isRead,
   isSaved,
   isHidden,
