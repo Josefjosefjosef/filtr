@@ -273,7 +273,7 @@ function renderItem(ev) {
   const hiddenMode = state.viewMode === "hidden";
   const read = isRead(id);
   return (
-    `<article class="iuPdCard${read ? " is-read" : ""}" data-id="${esc(id)}">` +
+    `<article class="iuPdCard iuPrehledDne__item iuPrehledDne__card${read ? " is-read" : ""}" data-id="${esc(id)}">` +
     `<div class="iuPdCard__time">${esc(fmtTime(publishIso(ev)))}</div>` +
     `<div class="iuPdCard__body">` +
     `<a class="iuPdCard__title" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(title)}</a>` +
