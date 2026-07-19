@@ -42,6 +42,9 @@ jobs:
       - name: Guard
         run: node scripts/iu-info-system-v1-guard.mjs
 
+      - name: Prehled dne settings v6 guard
+        run: node scripts/iu-prehled-dne-settings-v6-guard.mjs
+
       - name: Commit data if changed
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

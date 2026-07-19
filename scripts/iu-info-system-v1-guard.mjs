@@ -161,8 +161,14 @@ if (!/evaluateLocalAlerts|iu\.infoEvents\.alerts\.v1|pushServer/.test(core)) {
 if (!/buildFeedIndex|memo|homeKraj|myRegionOnly/.test(core)) {
   fails.push("core:v4_perf_region_missing");
 }
-if (!/data-iu-ui=\"v6-clean\"|open-settings|settings-save|data-mode=\"hidden\"|unhide/.test(ui)) {
+if (!/data-iu-ui=\"v6-clean\"|open-settings|settings-close|data-mode=\"hidden\"|unhide/.test(ui)) {
   fails.push("ui:v6_clean_shell_missing");
+}
+if (/settings-save|Uložit nastavení|settings-cancel|Další instituce|label:\s*\"Kraje\"/.test(ui)) {
+  fails.push("ui:settings_v6_regression_markers");
+}
+if (!/iuPdBtn--settings|persistDraft|activeSection|standaloneSources/.test(ui)) {
+  fails.push("ui:settings_v6_autosave_structure_missing");
 }
 if (/data-view=|save-view|iuPrehledDneSheet|data-iu-ui=\"v5-slim\"|Hledat instituci|Moje uložené regiony|open-filters|open-more-topics/.test(ui)) {
   fails.push("ui:legacy_v5_chrome_still_present");

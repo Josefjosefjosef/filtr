@@ -1,7 +1,7 @@
 /**
- * InfoUzel.cz — Přehled dne UI v6 (čistý koncept)
+ * InfoUzel.cz — Přehled dne UI v6 (settings fix: autosave, structure, scroll)
  * Hlavní stránka: Můj přehled/Nastavení + Zobrazit (Vše/Uložené/Nepřečtené/Skryté) + feed.
- * Nastavení: jedna stránka (overlay/modal) — Témata, Zdroje, Lokalita.
+ * Nastavení: jeden overlay/modal — hlavní 3 lišty, jedna otevřená sekce, autosave.
  */
 import {
   applyCutoverDom,
@@ -20,10 +20,17 @@ import {
   getScrollState,
   setScrollState,
   migrateLocalStateOnce,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-clean-20260719";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-settings-fix-20260720";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-clean-20260719";
+const CACHE_BUST = "info-system-v6-settings-fix-20260720";
+const NONE_SENTINEL = "__none__";
+const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
+const SECTION_LABELS = {
+  temata: "Témata",
+  zdroje: "Zdroje a instituce",
+  lokalita: "Lokalita",
+};
 
 const TOPICS = [
   { id: "doprava", label: "Doprava" },
@@ -37,19 +44,13 @@ const TOPICS = [
   { id: "veda", label: "Věda" },
 ];
 
-/** Top-level source group UI → registry group ids (and optional lane filters). */
+/** Named source groups only (geographic kraj filter and catch-all bucket removed). */
 const SOURCE_GROUPS = [
   { id: "ministerstva", label: "Ministerstva", groups: ["ministerstva"] },
   { id: "policie", label: "Policie", groups: ["policie"] },
   { id: "hzs", label: "HZS", groups: ["hzs"] },
   { id: "chmi", label: "ČHMÚ", groups: ["pocasi"], sourceIds: ["chmi"] },
   { id: "verejnopravni-media", label: "Veřejnoprávní média", groups: ["verejnopravni-media"] },
-  { id: "kraje", label: "Kraje", lanes: ["regionalni"], groups: ["verejna-sprava"] },
-  {
-    id: "dalsi",
-    label: "Další instituce",
-    groups: ["doprava", "zdravotnictvi", "stat", "verejna-sprava", "kyber", "veda", "hygiena"],
-  },
 ];
 
 const CZ_KRAJE = [
@@ -107,12 +108,17 @@ const state = {
   /** @type {'home'|'all'|'saved'|'unread'|'hidden'} */
   viewMode: "home",
   settingsOpen: false,
-  openSections: { temata: true, zdroje: false, lokalita: false },
+  /** @type {null|'temata'|'zdroje'|'lokalita'} */
+  activeSection: null,
   openSourceGroups: {},
   page: 1,
   cityQuery: "",
   citySuggest: [],
   localitiesCache: null,
+  feedScrollY: 0,
+  settingsOpener: null,
+  saveError: "",
+  persistSeq: 0,
 };
 
 function esc(s) {
@@ -151,46 +157,70 @@ function ensureRoot() {
   return root;
 }
 
-function toggleInArray(arr, id) {
-  const set = new Set(arr || []);
-  const k = String(id);
-  if (set.has(k)) set.delete(k);
-  else set.add(k);
-  return Array.from(set);
+function feedViewport() {
+  return document.getElementById("iuSilverTallScrollViewport");
 }
 
-function importanceLabel(ev) {
-  const n = Number(ev.importance || 0);
-  if (!n) return "";
-  if (n >= 5) return "Velmi vysoká";
-  if (n >= 4) return "Vysoká";
-  if (n >= 3) return "Střední";
-  return "Běžná";
+function captureFeedScroll() {
+  const vp = feedViewport();
+  if (vp) state.feedScrollY = vp.scrollTop || 0;
+}
+
+function restoreFeedScroll() {
+  const vp = feedViewport();
+  if (!vp) return;
+  const y = Number(state.feedScrollY) || 0;
+  try {
+    vp.scrollTop = y;
+  } catch (_) {}
+}
+
+function setBodyScrollLock(on) {
+  try {
+    document.documentElement.classList.toggle("iu-pd-settings-open", !!on);
+    document.body.classList.toggle("iu-pd-settings-open", !!on);
+  } catch (_) {}
+}
+
+function isMinistryEntry(e) {
+  if (!e) return false;
+  if (String(e.group || "") === "ministerstva") return true;
+  if (/ministerstvo/i.test(String(e.label || ""))) return true;
+  if (/ministerstvo/i.test(String(e.institution || ""))) return true;
+  return false;
 }
 
 function activeSources(registry) {
   return (registry.entries || []).filter((e) => e && e.productionActive && e.productionApproved !== false);
 }
 
-function sourcesForGroup(registry, groupDef) {
+function sourcesForNamedGroup(registry, groupDef) {
   const all = activeSources(registry);
   const gset = new Set(groupDef.groups || []);
-  const laneSet = new Set(groupDef.lanes || []);
   const idSet = new Set(groupDef.sourceIds || []);
+  if (groupDef.id === "ministerstva") {
+    return all.filter((e) => isMinistryEntry(e) || idSet.has(e.id));
+  }
   return all.filter((e) => {
     if (idSet.size && idSet.has(e.id)) return true;
-    if (groupDef.id === "kraje") {
-      return laneSet.has(String(e.lane || "")) || /^kraj-/i.test(String(e.id || ""));
-    }
-    if (groupDef.id === "dalsi") {
-      const primary = new Set(["ministerstva", "policie", "hzs", "pocasi", "verejnopravni-media"]);
-      if (primary.has(String(e.group || ""))) return false;
-      if (String(e.lane || "") === "regionalni" || /^kraj-/i.test(String(e.id || ""))) return false;
-      return gset.has(String(e.group || ""));
-    }
-    if (gset.has(String(e.group || ""))) return true;
-    return false;
+    if (isMinistryEntry(e)) return false;
+    return gset.has(String(e.group || ""));
   });
+}
+
+function standaloneSources(registry) {
+  const all = activeSources(registry);
+  const claimed = new Set();
+  for (const g of SOURCE_GROUPS) {
+    for (const e of sourcesForNamedGroup(registry, g)) claimed.add(e.id);
+  }
+  return all
+    .filter((e) => !claimed.has(e.id))
+    .sort((a, b) => String(a.label || a.id).localeCompare(String(b.label || b.id), "cs"));
+}
+
+function allSelectableSourceIds(registry) {
+  return activeSources(registry).map((e) => String(e.id));
 }
 
 function clonePrefs(p) {
@@ -262,6 +292,15 @@ function filteredList() {
   return filterEvents(items, f, opts);
 }
 
+function importanceLabel(ev) {
+  const n = Number(ev.importance || 0);
+  if (!n) return "";
+  if (n >= 5) return "Velmi vysoká";
+  if (n >= 4) return "Vysoká";
+  if (n >= 3) return "Střední";
+  return "Běžná";
+}
+
 function renderItem(ev) {
   const id = String(ev.id || "");
   const url = String(ev.url || ev.originalUrl || "#");
@@ -292,130 +331,33 @@ function renderItem(ev) {
 }
 
 function topicsAllState(draft) {
-  return !draft.sections || draft.sections.length === 0;
+  const secs = draft.sections || [];
+  return secs.length === 0;
 }
 
-function checkRow(name, value, label, checked, attrs) {
+function topicsNoneState(draft) {
+  const secs = draft.sections || [];
+  return secs.length === 1 && secs[0] === NONE_SENTINEL;
+}
+
+function sourcesAllState(draft) {
+  const groups = draft.sourceGroups || [];
+  const ids = (draft.sourceIds || []).filter((x) => x !== NONE_SENTINEL);
+  return groups.length === 0 && (draft.sourceIds || []).length === 0;
+}
+
+function sourcesNoneState(draft) {
+  const groups = draft.sourceGroups || [];
+  const ids = draft.sourceIds || [];
+  return groups.length === 0 && ids.length === 1 && ids[0] === NONE_SENTINEL;
+}
+
+function checkRow(name, value, label, checked, attrs, indeterminate) {
+  const ind = indeterminate ? " data-indeterminate=\"1\"" : "";
   return (
     `<label class="iuPdCheck">` +
-    `<input type="checkbox" name="${esc(name)}" value="${esc(value)}" ${checked ? "checked" : ""} ${attrs || ""} />` +
+    `<input type="checkbox" name="${esc(name)}" value="${esc(value)}" ${checked ? "checked" : ""} ${attrs || ""}${ind} />` +
     `<span>${esc(label)}</span></label>`
-  );
-}
-
-function renderSettingsBody() {
-  const draft = state.draft || clonePrefs(state.prefs);
-  const registry = (state.data && state.data.registry) || { entries: [] };
-  const secOpen = state.openSections;
-
-  const topicsAll = !draft.sections || draft.sections.length === 0;
-  const topicsHtml =
-    checkRow("topic-all", "all", "Vše", topicsAll, 'data-draft-act="topics-all"') +
-    TOPICS.map((t) =>
-      checkRow("topic", t.id, t.label, !topicsAll && (draft.sections || []).includes(t.id), `data-draft-act="topic" data-id="${esc(t.id)}"`)
-    ).join("");
-
-  const selectedGroups = new Set(draft.sourceGroups || []);
-  const selectedIds = new Set(draft.sourceIds || []);
-  const sourcesAll = selectedGroups.size === 0 && selectedIds.size === 0;
-
-  const sourcesHtml = SOURCE_GROUPS.map((g) => {
-    const entries = sourcesForGroup(registry, g);
-    const groupChecked =
-      sourcesAll ||
-      (g.groups || []).some((x) => selectedGroups.has(x)) ||
-      (g.sourceIds || []).some((x) => selectedIds.has(x)) ||
-      (g.id === "kraje" && selectedGroups.has("verejna-sprava") && (draft.lanes || []).includes("regionalni"));
-    const open = !!state.openSourceGroups[g.id];
-    const kids = entries
-      .map((e) =>
-        checkRow(
-          "source-id",
-          e.id,
-          e.label || e.id,
-          sourcesAll || selectedIds.has(e.id) || (g.groups || []).some((x) => selectedGroups.has(x)),
-          `data-draft-act="source-id" data-id="${esc(e.id)}" data-group="${esc(g.id)}"`
-        )
-      )
-      .join("");
-    return (
-      `<div class="iuPdSourceGroup" data-sg="${esc(g.id)}">` +
-      `<div class="iuPdSourceGroup__head">` +
-      checkRow("source-group", g.id, g.label, groupChecked && !sourcesAll ? true : sourcesAll, `data-draft-act="source-group" data-id="${esc(g.id)}"`) +
-      `<button type="button" class="iuPdLink" data-act="toggle-sg" data-id="${esc(g.id)}" aria-expanded="${open ? "true" : "false"}">${open ? "Skrýt" : "Rozbalit"}</button>` +
-      `</div>` +
-      (open ? `<div class="iuPdSourceGroup__body">${kids || `<p class="iuPdMuted">Žádné aktivní zdroje v této skupině.</p>`}</div>` : "") +
-      `</div>`
-    );
-  }).join("");
-
-  const wholeCr = !draft.myRegionOnly && !(draft.localities || []).length && !draft.homeKraj && !draft.homeOkres && !draft.homeObec && !draft.localityQuery;
-  const selKraje = asLocList(draft, "kraj");
-  const selOkresy = asLocList(draft, "okres");
-  const selCities = asLocList(draft, "mesto");
-
-  const okresOptions = [];
-  for (const k of selKraje.length ? selKraje : CZ_KRAJE) {
-    for (const o of CZ_OKRESY[k] || []) okresOptions.push({ kraj: k, okres: o });
-  }
-
-  const localityHtml =
-    checkRow("loc-cr", "cr", "Celá ČR", wholeCr, 'data-draft-act="loc-cr"') +
-    `<div class="iuPdSubhead">Kraje</div>` +
-    `<div class="iuPdChecks iuPdChecks--grid">` +
-    CZ_KRAJE.map((k) =>
-      checkRow("kraj", k, k, selKraje.includes(k), `data-draft-act="loc-kraj" data-id="${esc(k)}"`)
-    ).join("") +
-    `</div>` +
-    `<div class="iuPdSubhead">Okresy</div>` +
-    `<div class="iuPdChecks iuPdChecks--grid">` +
-    (okresOptions.length
-      ? okresOptions
-          .map((o) =>
-            checkRow("okres", o.okres, o.okres, selOkresy.includes(o.okres), `data-draft-act="loc-okres" data-id="${esc(o.okres)}"`)
-          )
-          .join("")
-      : `<p class="iuPdMuted">Nejdříve vyberte kraj, nebo ponechte Celá ČR.</p>`) +
-    `</div>` +
-    `<div class="iuPdSubhead">Město / Obec</div>` +
-    `<input class="iuPdInput" type="search" autocomplete="off" placeholder="Začněte psát (např. pra)" value="${esc(state.cityQuery)}" data-act="city-q" />` +
-    (state.citySuggest.length
-      ? `<ul class="iuPdSuggest">${state.citySuggest
-          .map((s) => `<li><button type="button" data-act="city-add" data-name="${esc(s.name)}">${esc(s.name)}</button></li>`)
-          .join("")}</ul>`
-      : "") +
-    (selCities.length
-      ? `<div class="iuPdChips">${selCities
-          .map((c) => `<button type="button" class="iuPdChip" data-act="city-remove" data-name="${esc(c)}">${esc(c)} ×</button>`)
-          .join("")}</div>`
-      : "");
-
-  return (
-    `<div class="iuPdSettings__scroll">` +
-    accordion("temata", "Témata", secOpen.temata, `<div class="iuPdChecks">${topicsHtml}</div>`) +
-    accordion(
-      "zdroje",
-      "Zdroje a instituce",
-      secOpen.zdroje,
-      `<div class="iuPdChecks">${checkRow("source-all", "all", "Vše", sourcesAll, 'data-draft-act="sources-all"')}${sourcesHtml}</div>`
-    ) +
-    accordion("lokalita", "Lokalita", secOpen.lokalita, localityHtml) +
-    `</div>` +
-    `<div class="iuPdSettings__foot">` +
-    `<button type="button" class="iuPdBtn iuPdBtn--primary" data-act="settings-save">Uložit nastavení</button>` +
-    `<button type="button" class="iuPdBtn iuPdBtn--ghost" data-act="settings-cancel">Zrušit</button>` +
-    `</div>`
-  );
-}
-
-function accordion(id, title, open, body) {
-  return (
-    `<section class="iuPdAcc${open ? " is-open" : ""}" data-acc="${esc(id)}">` +
-    `<button type="button" class="iuPdAcc__toggle" data-act="toggle-acc" data-id="${esc(id)}" aria-expanded="${open ? "true" : "false"}">` +
-    `<span>${esc(title)}</span><span class="iuPdAcc__chev" aria-hidden="true"></span>` +
-    `</button>` +
-    (open ? `<div class="iuPdAcc__body">${body}</div>` : "") +
-    `</section>`
   );
 }
 
@@ -462,26 +404,234 @@ function setLocList(draft, level, names) {
   }
 }
 
-function paint() {
-  const root = ensureRoot();
-  if (!root) return;
-  const list = filteredList();
-  const pageItems = list.slice(0, state.page * PAGE_SIZE);
-  const mode = state.viewMode;
-  const settings = state.settingsOpen
-    ? `<div class="iuPdSettings" id="iuPdSettings" role="dialog" aria-modal="true" aria-label="Nastavení přehledu">` +
-      `<div class="iuPdSettings__backdrop" data-act="settings-cancel"></div>` +
-      `<div class="iuPdSettings__panel">` +
-      `<header class="iuPdSettings__head"><h2>Můj přehled / Nastavení</h2>` +
-      `<button type="button" class="iuPdIconBtn" data-act="settings-cancel" aria-label="Zavřít">×</button></header>` +
-      renderSettingsBody() +
-      `</div></div>`
+function groupSelectionState(draft, groupDef, registry) {
+  const entries = sourcesForNamedGroup(registry, groupDef);
+  const ids = entries.map((e) => String(e.id));
+  if (!ids.length) return { checked: false, indeterminate: false };
+  if (sourcesAllState(draft)) return { checked: true, indeterminate: false };
+  if (sourcesNoneState(draft)) return { checked: false, indeterminate: false };
+  const selectedIds = new Set((draft.sourceIds || []).filter((x) => x !== NONE_SENTINEL));
+  const selectedGroups = new Set(draft.sourceGroups || []);
+  const byGroup = (groupDef.groups || []).some((g) => selectedGroups.has(g));
+  let n = 0;
+  for (const id of ids) if (selectedIds.has(id) || byGroup) n += 1;
+  if (byGroup || n === ids.length) return { checked: true, indeterminate: false };
+  if (n > 0) return { checked: false, indeterminate: true };
+  return { checked: false, indeterminate: false };
+}
+
+function sourceIdChecked(draft, id, groupDef, registry) {
+  if (sourcesAllState(draft)) return true;
+  if (sourcesNoneState(draft)) return false;
+  const selectedIds = new Set((draft.sourceIds || []).filter((x) => x !== NONE_SENTINEL));
+  if (selectedIds.has(id)) return true;
+  const st = groupSelectionState(draft, groupDef, registry);
+  if (st.checked && !st.indeterminate) {
+    const selectedGroups = new Set(draft.sourceGroups || []);
+    if ((groupDef.groups || []).some((g) => selectedGroups.has(g))) return true;
+  }
+  return false;
+}
+
+function expandExplicitSourceIds(draft, registry) {
+  if (sourcesAllState(draft)) return allSelectableSourceIds(registry);
+  if (sourcesNoneState(draft)) return [];
+  const selectedIds = new Set((draft.sourceIds || []).filter((x) => x !== NONE_SENTINEL));
+  const selectedGroups = new Set(draft.sourceGroups || []);
+  for (const g of SOURCE_GROUPS) {
+    if ((g.groups || []).some((x) => selectedGroups.has(x))) {
+      for (const e of sourcesForNamedGroup(registry, g)) selectedIds.add(String(e.id));
+    }
+  }
+  return Array.from(selectedIds);
+}
+
+function renderTopicsBody(draft) {
+  const all = topicsAllState(draft);
+  const none = topicsNoneState(draft);
+  const selected = new Set((draft.sections || []).filter((x) => x !== NONE_SENTINEL));
+  const partial = !all && !none && selected.size > 0 && selected.size < TOPICS.length;
+  return (
+    `<div class="iuPdChecks" data-iu-pd-sec="temata">` +
+    checkRow("topic-all", "all", "Vše", all, 'data-draft-act="topics-all"', partial) +
+    TOPICS.map((t) =>
+      checkRow("topic", t.id, t.label, all ? true : !none && selected.has(t.id), `data-draft-act="topic" data-id="${esc(t.id)}"`)
+    ).join("") +
+    `</div>`
+  );
+}
+
+function renderSourcesBody(draft) {
+  const registry = (state.data && state.data.registry) || { entries: [] };
+  const all = sourcesAllState(draft);
+  const none = sourcesNoneState(draft);
+  const explicit = expandExplicitSourceIds(draft, registry);
+  const allIds = allSelectableSourceIds(registry);
+  const partial = !all && !none && explicit.length > 0 && explicit.length < allIds.length;
+
+  const groupsHtml = SOURCE_GROUPS.map((g) => {
+    const entries = sourcesForNamedGroup(registry, g);
+    const st = groupSelectionState(draft, g, registry);
+    const open = !!state.openSourceGroups[g.id];
+    const kids = entries
+      .map((e) =>
+        checkRow(
+          "source-id",
+          e.id,
+          e.label || e.id,
+          sourceIdChecked(draft, String(e.id), g, registry),
+          `data-draft-act="source-id" data-id="${esc(e.id)}" data-group="${esc(g.id)}"`
+        )
+      )
+      .join("");
+    return (
+      `<div class="iuPdSourceGroup" data-sg="${esc(g.id)}">` +
+      `<div class="iuPdSourceGroup__head">` +
+      checkRow(
+        "source-group",
+        g.id,
+        g.label,
+        st.checked,
+        `data-draft-act="source-group" data-id="${esc(g.id)}" aria-controls="iuPdSgBody-${esc(g.id)}"`,
+        st.indeterminate
+      ) +
+      `<button type="button" class="iuPdLink" data-act="toggle-sg" data-id="${esc(g.id)}" aria-expanded="${open ? "true" : "false"}" aria-controls="iuPdSgBody-${esc(g.id)}">${open ? "Skrýt" : "Rozbalit"}</button>` +
+      `</div>` +
+      (open
+        ? `<div class="iuPdSourceGroup__body" id="iuPdSgBody-${esc(g.id)}">${kids || `<p class="iuPdMuted">Žádné aktivní zdroje v této skupině.</p>`}</div>`
+        : `<div class="iuPdSourceGroup__body" id="iuPdSgBody-${esc(g.id)}" hidden></div>`) +
+      `</div>`
+    );
+  }).join("");
+
+  const standalones = standaloneSources(registry);
+  const standHtml = standalones
+    .map((e) => {
+      const checked = all ? true : none ? false : (draft.sourceIds || []).includes(e.id);
+      return checkRow(
+        "source-id",
+        e.id,
+        e.label || e.id,
+        checked,
+        `data-draft-act="source-id" data-id="${esc(e.id)}" data-group="standalone"`
+      );
+    })
+    .join("");
+
+  return (
+    `<div class="iuPdChecks" data-iu-pd-sec="zdroje">` +
+    checkRow("source-all", "all", "Vše", all, 'data-draft-act="sources-all"', partial) +
+    groupsHtml +
+    (standHtml ? `<div class="iuPdSubhead">Samostatné instituce</div>${standHtml}` : "") +
+    `</div>`
+  );
+}
+
+function renderLocalityBody(draft) {
+  const wholeCr =
+    !draft.myRegionOnly &&
+    !(draft.localities || []).length &&
+    !draft.homeKraj &&
+    !draft.homeOkres &&
+    !draft.homeObec &&
+    !draft.localityQuery;
+  const selKraje = asLocList(draft, "kraj");
+  const selOkresy = asLocList(draft, "okres");
+  const selCities = asLocList(draft, "mesto");
+  const okresOptions = [];
+  for (const k of selKraje.length ? selKraje : []) {
+    for (const o of CZ_OKRESY[k] || []) okresOptions.push({ kraj: k, okres: o });
+  }
+
+  return (
+    `<div class="iuPdLocality" data-iu-pd-sec="lokalita">` +
+    checkRow("loc-cr", "cr", "Celá ČR", wholeCr, 'data-draft-act="loc-cr"') +
+    `<div class="iuPdSubhead">Kraje</div>` +
+    `<div class="iuPdChecks iuPdChecks--grid">` +
+    CZ_KRAJE.map((k) => checkRow("kraj", k, k, selKraje.includes(k), `data-draft-act="loc-kraj" data-id="${esc(k)}"`)).join("") +
+    `</div>` +
+    `<div class="iuPdSubhead">Okresy</div>` +
+    `<div class="iuPdChecks iuPdChecks--grid">` +
+    (okresOptions.length
+      ? okresOptions
+          .map((o) =>
+            checkRow("okres", o.okres, o.okres, selOkresy.includes(o.okres), `data-draft-act="loc-okres" data-id="${esc(o.okres)}"`)
+          )
+          .join("")
+      : `<p class="iuPdMuted">Nejdříve vyberte kraj, nebo ponechte Celá ČR.</p>`) +
+    `</div>` +
+    `<div class="iuPdSubhead">Město / Obec</div>` +
+    `<input class="iuPdInput" type="search" autocomplete="off" placeholder="Začněte psát (např. pra)" value="${esc(state.cityQuery)}" data-act="city-q" />` +
+    (state.citySuggest.length
+      ? `<ul class="iuPdSuggest">${state.citySuggest
+          .map((s) => `<li><button type="button" data-act="city-add" data-name="${esc(s.name)}">${esc(s.name)}</button></li>`)
+          .join("")}</ul>`
+      : "") +
+    (selCities.length
+      ? `<div class="iuPdChips">${selCities
+          .map((c) => `<button type="button" class="iuPdChip" data-act="city-remove" data-name="${esc(c)}">${esc(c)} ×</button>`)
+          .join("")}</div>`
+      : "") +
+    `</div>`
+  );
+}
+
+function renderSettingsBody() {
+  const draft = state.draft || clonePrefs(state.prefs);
+  const active = state.activeSection;
+  const err = state.saveError
+    ? `<div class="iuPdSettings__toast" role="status">${esc(state.saveError)}</div>`
     : "";
 
-  root.innerHTML =
+  if (!active) {
+    return (
+      `<div class="iuPdSettings__scroll" id="iuPdSettingsScroll" data-iu-pd-settings-main="1">` +
+      err +
+      `<div class="iuPdSettings__menu" data-iu-pd-menu="1">` +
+      SECTION_ORDER.map(
+        (id) =>
+          `<button type="button" class="iuPdAcc__toggle iuPdSettings__rail" data-act="open-section" data-id="${esc(id)}" aria-expanded="false">` +
+          `<span>${esc(SECTION_LABELS[id])}</span><span class="iuPdAcc__chev" aria-hidden="true"></span>` +
+          `</button>`
+      ).join("") +
+      `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block iuPdSettings__closeBtn" data-act="settings-close">Zavřít</button>` +
+      `</div></div>`
+    );
+  }
+
+  const body =
+    active === "temata" ? renderTopicsBody(draft) : active === "zdroje" ? renderSourcesBody(draft) : renderLocalityBody(draft);
+
+  return (
+    `<div class="iuPdSettings__scroll" id="iuPdSettingsScroll" data-iu-pd-settings-section="${esc(active)}">` +
+    err +
+    `<div class="iuPdSettings__sectionHead">` +
+    `<button type="button" class="iuPdBtn iuPdBtn--ghost" data-act="back-section">Zpět</button>` +
+    `<h3 class="iuPdSettings__sectionTitle">${esc(SECTION_LABELS[active] || "")}</h3>` +
+    `</div>` +
+    `<div class="iuPdSettings__sectionBody">${body}</div>` +
+    `</div>`
+  );
+}
+
+function renderSettingsOverlay() {
+  return (
+    `<div class="iuPdSettings" id="iuPdSettings" role="dialog" aria-modal="true" aria-label="Nastavení přehledu" data-iu-pd-settings="1">` +
+    `<div class="iuPdSettings__backdrop" data-act="settings-close"></div>` +
+    `<div class="iuPdSettings__panel">` +
+    `<header class="iuPdSettings__head"><h2>Můj přehled / Nastavení</h2>` +
+    `<button type="button" class="iuPdIconBtn" data-act="settings-close" aria-label="Zavřít">×</button></header>` +
+    renderSettingsBody() +
+    `</div></div>`
+  );
+}
+
+function homeShellHtml(listHtml, countLabel, moreHtml) {
+  const mode = state.viewMode;
+  return (
     `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
     `<div class="iuPd__top">` +
-    `<button type="button" class="iuPdBtn iuPdBtn--primary iuPdBtn--block" data-act="open-settings">Můj přehled / Nastavení</button>` +
+    `<button type="button" class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-act="open-settings">Můj přehled / Nastavení</button>` +
     `</div>` +
     `<div class="iuPd__show">` +
     `<div class="iuPd__label">Zobrazit</div>` +
@@ -491,15 +641,218 @@ function paint() {
     `<button type="button" class="iuPdToggle${mode === "unread" ? " is-active" : ""}" data-act="mode" data-mode="unread">Nepřečtené</button>` +
     `<button type="button" class="iuPdToggle${mode === "hidden" ? " is-active" : ""}" data-act="mode" data-mode="hidden">Skryté</button>` +
     `</div></div>` +
-    `<div class="iuPd__count">${list.length} položek · okno 96 h</div>` +
-    `<div class="iuPdFeed" id="iuPrehledDneTimeline">` +
-    (pageItems.length ? pageItems.map(renderItem).join("") : `<p class="iuPdEmpty">Žádné položky pro toto zobrazení.</p>`) +
-    `</div>` +
-    (pageItems.length < list.length
+    `<div class="iuPd__count" id="iuPdCount">${esc(countLabel)}</div>` +
+    `<div class="iuPdFeed" id="iuPrehledDneTimeline">${listHtml}</div>` +
+    `<div id="iuPdMoreWrap">${moreHtml}</div>` +
+    `</section>`
+  );
+}
+
+function removeSettingsHost() {
+  const host = document.getElementById("iuPdSettings");
+  if (host && host.parentNode) host.parentNode.removeChild(host);
+}
+
+function mountSettingsOverlay() {
+  removeSettingsHost();
+  if (!state.settingsOpen) return null;
+  const wrap = document.createElement("div");
+  wrap.innerHTML = renderSettingsOverlay();
+  const node = wrap.firstElementChild;
+  if (!node) return null;
+  document.body.appendChild(node);
+  applyIndeterminateFlags(node);
+  return node;
+}
+
+function applyIndeterminateFlags(root) {
+  const scope = root || document;
+  scope.querySelectorAll("input[type=checkbox][data-indeterminate]").forEach((el) => {
+    try {
+      el.indeterminate = el.getAttribute("data-indeterminate") === "1";
+    } catch (_) {}
+  });
+}
+
+function resetSettingsScroll() {
+  const el = document.getElementById("iuPdSettingsScroll");
+  if (!el) return;
+  try {
+    el.scrollTop = 0;
+  } catch (_) {}
+  requestAnimationFrame(() => {
+    try {
+      const again = document.getElementById("iuPdSettingsScroll");
+      if (again) again.scrollTop = 0;
+      const panel = document.querySelector(".iuPdSettings__panel");
+      if (panel) panel.scrollTop = 0;
+    } catch (_) {}
+  });
+}
+
+function updateFeedDom() {
+  const root = ensureRoot();
+  if (!root) return;
+  const list = filteredList();
+  const pageItems = list.slice(0, state.page * PAGE_SIZE);
+  const count = root.querySelector("#iuPdCount");
+  const feed = root.querySelector("#iuPrehledDneTimeline");
+  const moreWrap = root.querySelector("#iuPdMoreWrap");
+  if (count) count.textContent = `${list.length} položek · okno 96 h`;
+  if (feed) {
+    feed.innerHTML = pageItems.length
+      ? pageItems.map(renderItem).join("")
+      : `<p class="iuPdEmpty">Žádné položky pro toto zobrazení.</p>`;
+  }
+  if (moreWrap) {
+    moreWrap.innerHTML =
+      pageItems.length < list.length
+        ? `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block" data-act="more">Načíst další</button>`
+        : "";
+  }
+}
+
+function paint(opts) {
+  const options = opts || {};
+  const root = ensureRoot();
+  if (!root) return;
+  const list = filteredList();
+  const pageItems = list.slice(0, state.page * PAGE_SIZE);
+  const listHtml = pageItems.length
+    ? pageItems.map(renderItem).join("")
+    : `<p class="iuPdEmpty">Žádné položky pro toto zobrazení.</p>`;
+  const moreHtml =
+    pageItems.length < list.length
       ? `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block" data-act="more">Načíst další</button>`
-      : "") +
-    settings +
-    `</section>`;
+      : "";
+  root.innerHTML = homeShellHtml(listHtml, `${list.length} položek · okno 96 h`, moreHtml);
+  applyIndeterminateFlags(root);
+  if (state.settingsOpen) mountSettingsOverlay();
+  else removeSettingsHost();
+  setBodyScrollLock(state.settingsOpen);
+  if (state.settingsOpen && options.resetSettingsScroll) resetSettingsScroll();
+  if (!state.settingsOpen) restoreFeedScroll();
+}
+
+function paintSettingsOnly(opts) {
+  const options = opts || {};
+  if (!state.settingsOpen) {
+    removeSettingsHost();
+    paint(options);
+    wire();
+    return;
+  }
+  const scrollEl = document.getElementById("iuPdSettingsScroll");
+  const prev = scrollEl ? scrollEl.scrollTop : 0;
+  let host = document.getElementById("iuPdSettings");
+  if (!host || host.parentElement !== document.body) {
+    host = mountSettingsOverlay();
+  }
+  if (!host) {
+    paint(options);
+    wire();
+    return;
+  }
+  const panel = host.querySelector(".iuPdSettings__panel");
+  if (!panel) {
+    mountSettingsOverlay();
+    wire();
+    if (options.resetSettingsScroll) resetSettingsScroll();
+    return;
+  }
+  panel.innerHTML =
+    `<header class="iuPdSettings__head"><h2>Můj přehled / Nastavení</h2>` +
+    `<button type="button" class="iuPdIconBtn" data-act="settings-close" aria-label="Zavřít">×</button></header>` +
+    renderSettingsBody();
+  applyIndeterminateFlags(panel);
+  const nextScroll = document.getElementById("iuPdSettingsScroll");
+  if (nextScroll) {
+    nextScroll.scrollTop = options.resetSettingsScroll ? 0 : prev;
+  }
+  if (options.resetSettingsScroll) resetSettingsScroll();
+}
+
+function showSaveError(msg) {
+  state.saveError = msg || "Změnu se nepodařilo uložit. Zkuste to znovu.";
+  paintSettingsOnly({ resetSettingsScroll: false });
+  wire();
+}
+
+function clearSaveError() {
+  if (state.saveError) state.saveError = "";
+}
+
+function persistDraft() {
+  const seq = ++state.persistSeq;
+  const snapshot = clonePrefs(state.draft);
+  snapshot.unreadOnly = false;
+  snapshot.savedOnly = false;
+  const ok = setPrefs(snapshot);
+  if (seq !== state.persistSeq) return true;
+  if (!ok) {
+    state.draft = clonePrefs(getPrefs());
+    showSaveError("Změnu se nepodařilo uložit. Obnoven poslední uložený stav.");
+    return false;
+  }
+  try {
+    const readBack = getPrefs();
+    state.prefs = readBack;
+    state.draft = clonePrefs(readBack);
+    clearSaveError();
+    updateFeedDom();
+    return true;
+  } catch (_) {
+    state.draft = clonePrefs(getPrefs());
+    showSaveError("Změnu se nepodařilo ověřit. Obnoven poslední uložený stav.");
+    return false;
+  }
+}
+
+function closeSettings() {
+  state.settingsOpen = false;
+  state.activeSection = null;
+  state.draft = null;
+  state.cityQuery = "";
+  state.citySuggest = [];
+  state.saveError = "";
+  removeSettingsHost();
+  setBodyScrollLock(false);
+  paint();
+  wire();
+  restoreFeedScroll();
+  const opener = state.settingsOpener;
+  state.settingsOpener = null;
+  if (opener && typeof opener.focus === "function") {
+    try {
+      opener.focus();
+    } catch (_) {}
+  }
+}
+
+function openSettings(opener) {
+  captureFeedScroll();
+  state.settingsOpener = opener || null;
+  state.settingsOpen = true;
+  state.activeSection = null;
+  state.draft = clonePrefs(state.prefs || getPrefs());
+  state.cityQuery = "";
+  state.citySuggest = [];
+  state.saveError = "";
+  state.openSourceGroups = {};
+  paint({ resetSettingsScroll: true });
+  wire();
+  resetSettingsScroll();
+  const closeBtn = document.querySelector('#iuPdSettings [data-act="settings-close"].iuPdIconBtn');
+  if (closeBtn && typeof closeBtn.focus === "function") {
+    try {
+      closeBtn.focus({ preventScroll: true });
+    } catch (_) {
+      try {
+        closeBtn.focus();
+      } catch (_2) {}
+    }
+  }
+  resetSettingsScroll();
 }
 
 function syncDraftFromEvent(ev) {
@@ -509,66 +862,56 @@ function syncDraftFromEvent(ev) {
   if (!act) return;
   const id = ev.target.getAttribute("data-id") || "";
   const checked = !!ev.target.checked;
+  const registry = (state.data && state.data.registry) || { entries: [] };
 
   if (act === "topics-all") {
-    draft.sections = [];
+    draft.sections = checked ? [] : [NONE_SENTINEL];
   } else if (act === "topic") {
-    let secs = (draft.sections || []).slice();
     if (topicsAllState(draft)) {
-      // was "all" — start from full set then toggle this one off/on
-      secs = TOPICS.map((t) => t.id);
-    }
-    if (checked) {
-      if (!secs.includes(id)) secs.push(id);
+      draft.sections = TOPICS.map((t) => t.id).filter((x) => x !== id);
+    } else if (topicsNoneState(draft)) {
+      draft.sections = checked ? [id] : [NONE_SENTINEL];
     } else {
-      secs = secs.filter((x) => x !== id);
+      let secs = (draft.sections || []).filter((x) => x !== NONE_SENTINEL);
+      if (checked) {
+        if (!secs.includes(id)) secs.push(id);
+      } else {
+        secs = secs.filter((x) => x !== id);
+      }
+      if (secs.length === TOPICS.length) draft.sections = [];
+      else if (!secs.length) draft.sections = [NONE_SENTINEL];
+      else draft.sections = secs;
     }
-    if (secs.length === TOPICS.length) secs = [];
-    draft.sections = secs;
   } else if (act === "sources-all") {
     draft.sourceGroups = [];
-    draft.sourceIds = [];
+    draft.sourceIds = checked ? [] : [NONE_SENTINEL];
     draft.lanes = (draft.lanes || []).filter((l) => l !== "regionalni");
   } else if (act === "source-group") {
     const def = SOURCE_GROUPS.find((g) => g.id === id);
     if (!def) return;
-    const registry = (state.data && state.data.registry) || { entries: [] };
-    const wasAll = !(draft.sourceGroups || []).length && !(draft.sourceIds || []).length;
-    if (wasAll && !checked) {
-      // Leave "all" mode: select every group except this one
-      draft.sourceGroups = [];
-      draft.sourceIds = [];
-      draft.lanes = [];
-      for (const g of SOURCE_GROUPS) {
-        if (g.id === id) continue;
-        for (const gg of g.groups || []) {
-          if (!draft.sourceGroups.includes(gg)) draft.sourceGroups.push(gg);
-        }
-        for (const sid of g.sourceIds || []) {
-          if (!draft.sourceIds.includes(sid)) draft.sourceIds.push(sid);
-        }
-        if (g.id === "kraje") draft.lanes.push("regionalni");
-      }
-    } else if (checked) {
-      for (const g of def.groups || []) {
-        if (!draft.sourceGroups.includes(g)) draft.sourceGroups.push(g);
-      }
-      if (def.id === "kraje" && !draft.lanes.includes("regionalni")) draft.lanes.push("regionalni");
-      for (const sid of def.sourceIds || []) {
-        if (!draft.sourceIds.includes(sid)) draft.sourceIds.push(sid);
-      }
+    const childIds = sourcesForNamedGroup(registry, def).map((e) => String(e.id));
+    let ids = expandExplicitSourceIds(draft, registry);
+    if (checked) {
+      ids = Array.from(new Set(ids.concat(childIds)));
     } else {
-      draft.sourceGroups = (draft.sourceGroups || []).filter((g) => !(def.groups || []).includes(g));
-      draft.sourceIds = (draft.sourceIds || []).filter((s) => !(def.sourceIds || []).includes(s));
-      if (def.id === "kraje") draft.lanes = (draft.lanes || []).filter((l) => l !== "regionalni");
-      const entries = sourcesForGroup(registry, def);
-      const ids = new Set(entries.map((e) => e.id));
-      draft.sourceIds = (draft.sourceIds || []).filter((s) => !ids.has(s));
+      const drop = new Set(childIds);
+      ids = ids.filter((x) => !drop.has(x));
     }
+    draft.sourceGroups = [];
+    if (!ids.length) draft.sourceIds = [NONE_SENTINEL];
+    else if (ids.length === allSelectableSourceIds(registry).length) draft.sourceIds = [];
+    else draft.sourceIds = ids;
   } else if (act === "source-id") {
-    draft.sourceIds = checked
-      ? Array.from(new Set((draft.sourceIds || []).concat(id)))
-      : (draft.sourceIds || []).filter((x) => x !== id);
+    let ids = expandExplicitSourceIds(draft, registry);
+    if (checked) {
+      if (!ids.includes(id)) ids.push(id);
+    } else {
+      ids = ids.filter((x) => x !== id);
+    }
+    draft.sourceGroups = [];
+    if (!ids.length) draft.sourceIds = [NONE_SENTINEL];
+    else if (ids.length === allSelectableSourceIds(registry).length) draft.sourceIds = [];
+    else draft.sourceIds = ids;
   } else if (act === "loc-cr") {
     if (checked) {
       draft.localities = [];
@@ -577,12 +920,13 @@ function syncDraftFromEvent(ev) {
       draft.homeObec = "";
       draft.localityQuery = "";
       draft.myRegionOnly = false;
+    } else {
+      draft.myRegionOnly = true;
     }
   } else if (act === "loc-kraj") {
     let kraje = asLocList(draft, "kraj");
     kraje = checked ? Array.from(new Set(kraje.concat(id))) : kraje.filter((x) => x !== id);
     setLocList(draft, "kraj", kraje);
-    // drop okresy not in selected kraje
     const allowed = new Set();
     for (const k of kraje) for (const o of CZ_OKRESY[k] || []) allowed.add(o);
     setLocList(
@@ -595,8 +939,14 @@ function syncDraftFromEvent(ev) {
     okresy = checked ? Array.from(new Set(okresy.concat(id))) : okresy.filter((x) => x !== id);
     setLocList(draft, "okres", okresy);
   }
-  paint();
+
+  const scrollEl = document.getElementById("iuPdSettingsScroll");
+  const prevScroll = scrollEl ? scrollEl.scrollTop : 0;
+  if (!persistDraft()) return;
+  paintSettingsOnly({ resetSettingsScroll: false });
   wire();
+  const again = document.getElementById("iuPdSettingsScroll");
+  if (again) again.scrollTop = prevScroll;
 }
 
 async function ensureLocalities() {
@@ -625,11 +975,10 @@ async function ensureLocalities() {
 
 function wire() {
   const root = ensureRoot();
-  if (!root || root.__iuPdWiredV6) {
-    // rebind each paint (innerHTML wipes listeners)
-  }
-  root.onclick = async (ev) => {
-    const t = ev.target.closest("[data-act],[data-draft-act]");
+  if (!root) return;
+
+  const clickHandler = async (ev) => {
+    const t = ev.target && ev.target.closest ? ev.target.closest("[data-act],[data-draft-act]") : null;
     if (!t) return;
     if (t.matches("input[type=checkbox][data-draft-act]")) {
       syncDraftFromEvent({ target: t });
@@ -638,47 +987,38 @@ function wire() {
     const act = t.getAttribute("data-act");
     if (!act) return;
     if (act === "open-settings") {
-      state.settingsOpen = true;
-      state.draft = clonePrefs(state.prefs);
-      state.cityQuery = "";
-      state.citySuggest = [];
-      paint();
-      wire();
+      openSettings(t);
       return;
     }
-    if (act === "settings-cancel") {
-      state.settingsOpen = false;
-      state.draft = null;
-      paint();
-      wire();
+    if (act === "settings-close") {
+      closeSettings();
       return;
     }
-    if (act === "settings-save") {
-      const next = clonePrefs(state.draft || state.prefs);
-      next.unreadOnly = false;
-      next.savedOnly = false;
-      setPrefs(next);
-      state.prefs = getPrefs();
-      state.settingsOpen = false;
-      state.draft = null;
-      state.viewMode = "home";
-      state.page = 1;
-      paint();
-      wire();
-      return;
-    }
-    if (act === "toggle-acc") {
+    if (act === "open-section") {
       const id = t.getAttribute("data-id");
-      state.openSections[id] = !state.openSections[id];
-      paint();
+      if (!SECTION_ORDER.includes(id)) return;
+      state.activeSection = id;
+      paintSettingsOnly({ resetSettingsScroll: true });
       wire();
+      resetSettingsScroll();
+      return;
+    }
+    if (act === "back-section") {
+      state.activeSection = null;
+      paintSettingsOnly({ resetSettingsScroll: true });
+      wire();
+      resetSettingsScroll();
       return;
     }
     if (act === "toggle-sg") {
       const id = t.getAttribute("data-id");
       state.openSourceGroups[id] = !state.openSourceGroups[id];
-      paint();
+      const scrollEl = document.getElementById("iuPdSettingsScroll");
+      const prev = scrollEl ? scrollEl.scrollTop : 0;
+      paintSettingsOnly({ resetSettingsScroll: false });
       wire();
+      const again = document.getElementById("iuPdSettingsScroll");
+      if (again) again.scrollTop = prev;
       return;
     }
     if (act === "mode") {
@@ -729,8 +1069,13 @@ function wire() {
       setLocList(state.draft, "mesto", cities);
       state.cityQuery = "";
       state.citySuggest = [];
-      paint();
+      const scrollEl = document.getElementById("iuPdSettingsScroll");
+      const prev = scrollEl ? scrollEl.scrollTop : 0;
+      if (!persistDraft()) return;
+      paintSettingsOnly({ resetSettingsScroll: false });
       wire();
+      const again = document.getElementById("iuPdSettingsScroll");
+      if (again) again.scrollTop = prev;
       return;
     }
     if (act === "city-remove") {
@@ -740,37 +1085,52 @@ function wire() {
         "mesto",
         asLocList(state.draft, "mesto").filter((x) => x !== name)
       );
-      paint();
+      const scrollEl = document.getElementById("iuPdSettingsScroll");
+      const prev = scrollEl ? scrollEl.scrollTop : 0;
+      if (!persistDraft()) return;
+      paintSettingsOnly({ resetSettingsScroll: false });
       wire();
+      const again = document.getElementById("iuPdSettingsScroll");
+      if (again) again.scrollTop = prev;
       return;
     }
   };
 
-  root.oninput = async (ev) => {
+  root.onclick = clickHandler;
+  const settingsHost = document.getElementById("iuPdSettings");
+  if (settingsHost) settingsHost.onclick = clickHandler;
+
+  const inputHandler = async (ev) => {
     const t = ev.target;
     if (!t || t.getAttribute("data-act") !== "city-q") return;
     state.cityQuery = t.value || "";
     const locs = await ensureLocalities();
     state.citySuggest = localitySuggest(state.cityQuery, locs).slice(0, 8);
-    // soft update suggest list only
-    const box = root.querySelector(".iuPdSuggest");
-    const input = root.querySelector('[data-act="city-q"]');
+    const scope = document.getElementById("iuPdSettings") || root;
+    const box = scope.querySelector(".iuPdSuggest");
+    const input = scope.querySelector('[data-act="city-q"]');
     if (input) input.value = state.cityQuery;
     if (state.citySuggest.length) {
       const html = `<ul class="iuPdSuggest">${state.citySuggest
         .map((s) => `<li><button type="button" data-act="city-add" data-name="${esc(s.name)}">${esc(s.name)}</button></li>`)
         .join("")}</ul>`;
       if (box) box.outerHTML = html;
-      else input.insertAdjacentHTML("afterend", html);
+      else if (input) input.insertAdjacentHTML("afterend", html);
     } else if (box) box.remove();
   };
+  root.oninput = inputHandler;
+  if (settingsHost) settingsHost.oninput = inputHandler;
 
   document.onkeydown = (ev) => {
     if (ev.key === "Escape" && state.settingsOpen) {
-      state.settingsOpen = false;
-      state.draft = null;
-      paint();
-      wire();
+      if (state.activeSection) {
+        state.activeSection = null;
+        paintSettingsOnly({ resetSettingsScroll: true });
+        wire();
+        resetSettingsScroll();
+      } else {
+        closeSettings();
+      }
     }
   };
 }
@@ -780,10 +1140,9 @@ async function boot() {
   applyCutoverDom();
   const root = ensureRoot();
   if (!root) return;
-  // Stable first shell without forcing large vh (MindMenu layout guard regression).
   root.innerHTML =
     `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
-    `<div class="iuPd__top"><div class="iuPdBtn iuPdBtn--primary iuPdBtn--block" style="opacity:0.35;pointer-events:none">Můj přehled / Nastavení</div></div>` +
+    `<div class="iuPd__top"><div class="iuPdBtn iuPdBtn--settings iuPdBtn--block" style="opacity:0.35;pointer-events:none">Můj přehled / Nastavení</div></div>` +
     `<div class="iuPd__show"><div class="iuPd__label">Zobrazit</div><div class="iuPd__toggles" aria-hidden="true">` +
     `<span class="iuPdToggle">Vše</span><span class="iuPdToggle">Uložené</span><span class="iuPdToggle">Nepřečtené</span><span class="iuPdToggle">Skryté</span>` +
     `</div></div>` +
@@ -800,7 +1159,7 @@ async function boot() {
     wire();
     if (scroll && Number(scroll.y) > 0) {
       try {
-        const vp = document.getElementById("iuSilverTallScrollViewport");
+        const vp = feedViewport();
         if (vp) vp.scrollTop = Number(scroll.y);
       } catch (_) {}
     }
@@ -808,7 +1167,7 @@ async function boot() {
       "beforeunload",
       () => {
         try {
-          const vp = document.getElementById("iuSilverTallScrollViewport");
+          const vp = feedViewport();
           setScrollState({ viewId: "prehled-v6", y: vp ? vp.scrollTop : 0 });
         } catch (_) {}
       },

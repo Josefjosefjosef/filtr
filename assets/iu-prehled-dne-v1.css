@@ -727,6 +727,24 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   border-color: var(--iu-pd-accent-2);
   color: #fff;
 }
+.iuPdBtn--settings {
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  border-color: #15803d;
+  color: #fff;
+}
+.iuPdBtn--settings:hover,
+.iuPdBtn--settings:focus-visible {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  border-color: #16a34a;
+  color: #fff;
+  outline: 2px solid rgba(22, 163, 74, 0.45);
+  outline-offset: 2px;
+}
+.iuPdBtn--settings:active {
+  background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+  border-color: #166534;
+  color: #fff;
+}
 .iuPdBtn--ghost { background: rgba(248, 250, 252, 0.95); }
 .iuPdBtn--ghost.is-on {
   border-color: rgba(37, 99, 235, 0.45);
@@ -760,41 +778,97 @@ html.iu-info-system-cutover #feed .iuArticleCard {
 .iuPdCard__pill--imp { color: #9a3412; background: rgba(251, 146, 60, 0.18); }
 .iuPdCard__actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .iuPdCard__actions .iuPdBtn { min-height: 36px; font-size: 0.85rem; padding: 6px 12px; }
+html.iu-pd-settings-open,
+html.iu-pd-settings-open body {
+  overflow: hidden !important;
+}
+html.iu-pd-settings-open #iuSilverTallScrollViewport {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
 .iuPdSettings {
-  position: fixed; inset: 0; z-index: 12000;
-  display: flex; align-items: stretch; justify-content: center;
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  max-height: 100dvh;
+  overflow: hidden;
 }
 .iuPdSettings__backdrop { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.45); }
 .iuPdSettings__panel {
   position: relative; z-index: 1; display: flex; flex-direction: column;
-  width: 100%; max-width: 100%; height: 100%; background: #fff; box-shadow: var(--iu-pd-shadow);
+  width: 100%; max-width: 100%; height: 100%; max-height: 100%;
+  min-height: 0;
+  background: #fff; box-shadow: var(--iu-pd-shadow);
+  overscroll-behavior: contain;
+  overflow: hidden;
 }
 .iuPdSettings__head {
+  flex: 0 0 auto;
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: 14px 16px; border-bottom: 1px solid var(--iu-pd-line);
 }
 .iuPdSettings__head h2 { margin: 0; font-size: 1.1rem; }
 .iuPdIconBtn { min-width: 42px; border-radius: 12px; font-size: 1.4rem; line-height: 1; }
-.iuPdSettings__scroll { flex: 1; overflow: auto; padding: 12px 16px 20px; -webkit-overflow-scrolling: touch; }
-.iuPdSettings__foot {
-  display: flex; flex-wrap: wrap; gap: 10px;
-  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
-  border-top: 1px solid var(--iu-pd-line); background: #fff;
+.iuPdSettings__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  padding: 12px 16px 16px;
 }
-.iuPdSettings__foot .iuPdBtn { flex: 1 1 140px; }
-.iuPdAcc { border: 1px solid var(--iu-pd-line); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+.iuPdSettings__menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-content: flex-start;
+}
+.iuPdSettings__rail {
+  width: 100%;
+  border: 1px solid var(--iu-pd-line);
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.95);
+}
+.iuPdSettings__closeBtn {
+  margin-top: 2px;
+}
+.iuPdSettings__sectionHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.iuPdSettings__sectionTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 750;
+}
+.iuPdSettings__sectionBody { padding-bottom: 8px; }
+.iuPdSettings__toast {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(185, 28, 28, 0.28);
+  background: rgba(254, 226, 226, 0.9);
+  color: #991b1b;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
 .iuPdAcc__toggle {
   width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
   min-height: 48px; padding: 10px 14px; border: 0; background: rgba(248, 250, 252, 0.95);
   font-size: 1rem; font-weight: 700; cursor: pointer; text-align: left; border-radius: 0;
+  color: var(--iu-pd-text);
 }
 .iuPdAcc__chev::before { content: "▸"; color: var(--iu-pd-muted); }
-.iuPdAcc.is-open .iuPdAcc__chev::before { content: "▾"; }
-.iuPdAcc__body { padding: 12px 14px 14px; border-top: 1px solid var(--iu-pd-line); }
 .iuPdChecks { display: flex; flex-direction: column; gap: 8px; }
 .iuPdChecks--grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
-.iuPdCheck { display: flex; align-items: flex-start; gap: 10px; min-height: 40px; font-size: 0.95rem; cursor: pointer; }
-.iuPdCheck input { margin-top: 4px; width: 18px; height: 18px; }
+.iuPdCheck { display: flex; align-items: flex-start; gap: 10px; min-height: 44px; font-size: 0.95rem; cursor: pointer; }
+.iuPdCheck input { margin-top: 4px; width: 18px; height: 18px; flex: 0 0 auto; }
 .iuPdSubhead {
   margin: 14px 0 8px; font-size: 0.82rem; font-weight: 700; color: var(--iu-pd-muted);
   text-transform: uppercase; letter-spacing: 0.03em;
@@ -815,11 +889,45 @@ html.iu-info-system-cutover #feed .iuArticleCard {
 .iuPdSuggest li:last-child button { border-bottom: 0; }
 .iuPdChips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .iuPdChip { background: rgba(37, 99, 235, 0.12); border-color: rgba(37, 99, 235, 0.28); color: var(--iu-pd-accent-2); }
-@media (min-width: 768px) {
-  .iuPdSettings { align-items: center; padding: 24px; }
+/* Mobile/tablet: stay above fixed bottom nav + safe area */
+@media (max-width: 1024px) {
+  .iuPdSettings {
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: var(
+      --bottom-nav-height,
+      calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 32px)
+    ) !important;
+    width: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: 0 !important;
+    align-items: stretch !important;
+  }
   .iuPdSettings__panel {
-    width: min(920px, 96vw); height: min(860px, 92vh); max-height: 92vh;
-    border-radius: 16px; overflow: hidden;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+  }
+  .iuPdSettings__scroll {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+}
+@media (min-width: 1025px) {
+  .iuPdSettings {
+    inset: 0;
+    align-items: center;
+    padding: 24px;
+    max-height: 100dvh;
+  }
+  .iuPdSettings__panel {
+    width: min(920px, 96vw);
+    height: min(860px, 92vh);
+    max-height: 92vh;
+    border-radius: 16px;
+    overflow: hidden;
   }
   .iuPdChecks--grid { grid-template-columns: 1fr 1fr; }
 }
