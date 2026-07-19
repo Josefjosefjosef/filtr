@@ -90,8 +90,12 @@ export function buildConnectorGroups() {
 
 export function buildPersonalizationMeta() {
   return {
-    version: "3.0.0",
+    version: "4.0.0",
     localStorageKey: "iu.infoEvents.prefs.v1",
+    viewsKey: "iu.infoEvents.views.v1",
+    alertsKey: "iu.infoEvents.alerts.v1",
+    alertStateKey: "iu.infoEvents.alertState.v1",
+    scrollKey: "iu.infoEvents.scroll.v1",
     filterDimensions: [
       { id: "institution", path: "sourceName", label: "Instituce" },
       { id: "sourceId", path: "sourceId", label: "Zdroj" },
@@ -100,19 +104,35 @@ export function buildPersonalizationMeta() {
       { id: "connectorType", path: "connectorType", label: "Typ konektoru" },
       { id: "regionLevel", path: "region.level", label: "Úroveň regionu" },
       { id: "regionName", path: "region.name", label: "Region" },
+      { id: "homeKraj", path: "local.homeKraj", label: "Domovský kraj" },
+      { id: "homeOkres", path: "local.homeOkres", label: "Domovský okres" },
+      { id: "homeObec", path: "local.homeObec", label: "Domovská obec" },
       { id: "sectionId", path: "sectionId", label: "Téma" },
       { id: "subsectionId", path: "subsectionId", label: "Podtéma" },
       { id: "eventType", path: "eventType", label: "Typ události" },
       { id: "importance", path: "importance", label: "Priorita" },
       { id: "timeRange", path: "sortAt", type: "range", label: "Časové období" },
+      { id: "searchQuery", path: "title", label: "Fulltext" },
       { id: "activeOnly", path: "status", label: "Pouze aktivní" },
       { id: "newOnly", path: "firstSeenByInfoUzel", label: "Pouze nové" },
       { id: "unreadOnly", path: "local.read", label: "Pouze nepřečtené" },
       { id: "savedOnly", path: "local.saved", label: "Pouze uložené" },
       { id: "favorites", path: "local.favorites", label: "Oblíbené" },
+      { id: "savedViews", path: "local.views", label: "Uložené pohledy" },
+      { id: "localAlerts", path: "local.alerts", label: "Lokální upozornění" },
     ],
     favoriteDimensions: ["favoriteSourceIds", "favoriteLanes", "favoriteRegions", "favoriteInstitutions"],
-    note: "UI personalizace V3 — preference pouze localStorage, bez redesignu feedu.",
+    regionalPersonalization: ["homeKraj", "homeOkres", "homeObec", "myRegionOnly", "regionalDoprava", "regionalKrize", "regionalZdravi"],
+    localAlerts: {
+      pushServer: false,
+      note: "Pouze lokální vyhodnocení v prohlížeči — bez server push.",
+    },
+    performance: {
+      indexedFilter: true,
+      pageSize: 50,
+      memoizedFilter: true,
+    },
+    note: "UI personalizace V4 — pohledy, regiony, lokální upozornění, výkon při tisících položek.",
   };
 }
 

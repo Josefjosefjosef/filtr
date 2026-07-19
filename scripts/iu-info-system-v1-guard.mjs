@@ -48,6 +48,12 @@ if ((metadata.personalization.filterDimensions || []).length < 12) {
 if (!String(metadata.personalization.localStorageKey || "").includes("iu.infoEvents.prefs")) {
   fails.push("metadata:personalization_localStorageKey");
 }
+if (!String(metadata.personalization.viewsKey || "").includes("views")) {
+  fails.push("metadata:viewsKey");
+}
+if (!metadata.personalization.localAlerts || metadata.personalization.localAlerts.pushServer !== false) {
+  fails.push("metadata:localAlerts_no_push");
+}
 if (!Array.isArray(metadata.connectorGroups) || metadata.connectorGroups.length < 5) {
   fails.push("metadata:connectorGroups");
 }
@@ -146,8 +152,20 @@ if (!/favoriteSourceIds|favoriteLanes|favoriteRegions/.test(core)) {
 if (!/timeRangeHours|activeOnly|newOnly|favoritesOnly/.test(core)) {
   fails.push("core:smart_filters_missing");
 }
+if (!/listViews|saveView|applyView|iu\.infoEvents\.views\.v1/.test(core)) {
+  fails.push("core:saved_views_missing");
+}
+if (!/evaluateLocalAlerts|iu\.infoEvents\.alerts\.v1|pushServer/.test(core)) {
+  fails.push("core:local_alerts_missing");
+}
+if (!/buildFeedIndex|memo|homeKraj|myRegionOnly/.test(core)) {
+  fails.push("core:v4_perf_region_missing");
+}
 if (!/data-lane|data-org|data-fav-lane|iuPrehledDneTime/.test(ui)) {
   fails.push("ui:personalization_controls_missing");
+}
+if (!/data-view|save-view|iuPrehledDneHomeKraj|data-alert-rule|iuPrehledDneSearch/.test(ui)) {
+  fails.push("ui:v4_views_alerts_missing");
 }
 if (!/iu\.infoEvents\.prefs\.v1/.test(core)) {
   fails.push("core:prefs_localstorage_key");
