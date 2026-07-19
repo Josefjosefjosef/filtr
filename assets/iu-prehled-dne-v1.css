@@ -493,3 +493,204 @@ html.iu-info-system-cutover #feed .iuArticleCard {
     grid-template-columns: 72px 20px minmax(0, 1fr);
   }
 }
+
+/* —— V5 slim shell —— */
+.iuPrehledDne--slim {
+  gap: 8px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+}
+
+.iuPrehledDne--slim .iuPrehledDne__lead {
+  font-size: 0.88rem;
+  max-width: 42rem;
+}
+
+.iuPrehledDne__scrollRow {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  padding: 2px 0 6px;
+  margin: 0 -2px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.iuPrehledDne__scrollRow .iuPrehledDne__chip {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  min-height: 36px;
+  padding: 6px 12px;
+  font-size: 0.86rem;
+}
+
+.iuPrehledDne__chip--plus {
+  min-width: 40px;
+  font-weight: 800;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.iuPrehledDne__locality {
+  appearance: none;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--iu-pd-line);
+  background: #fff;
+  border-radius: 12px;
+  min-height: 44px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: var(--iu-pd-text);
+  cursor: pointer;
+}
+
+.iuPrehledDne__quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.iuPrehledDne--slim .iuPrehledDne__count {
+  font-size: 0.86rem;
+  color: var(--iu-pd-muted);
+  margin: 2px 0 4px;
+}
+
+.iuPrehledDne__linkish {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--iu-pd-accent-2);
+  font-weight: 650;
+  font-size: 0.86rem;
+  padding: 4px 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.iuPrehledDne__origins {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 4px 0;
+}
+
+.iuPrehledDne__fieldLabel {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--iu-pd-muted);
+  margin: 8px 0 4px;
+}
+
+.iuPrehledDne__muted {
+  font-size: 0.8rem;
+  color: var(--iu-pd-muted);
+}
+
+.iuPrehledDne__newBanner {
+  display: none;
+}
+.iuPrehledDne__newBanner.is-visible {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(91, 108, 255, 0.1);
+  border: 1px solid rgba(91, 108, 255, 0.25);
+  font-size: 0.9rem;
+}
+
+/* Bottom sheet */
+.iuPrehledDne__sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.iuPrehledDne__sheetBackdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.iuPrehledDne__sheetPanel {
+  position: relative;
+  max-height: min(88vh, 720px);
+  background: #fff;
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -8px 32px rgba(15, 23, 42, 0.18);
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  z-index: 1;
+}
+
+.iuPrehledDne__sheetHead,
+.iuPrehledDne__sheetFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--iu-pd-line);
+}
+
+.iuPrehledDne__sheetFoot {
+  border-bottom: 0;
+  border-top: 1px solid var(--iu-pd-line);
+}
+
+.iuPrehledDne__sheetBody {
+  overflow: auto;
+  padding: 8px 14px 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.iuPrehledDne__sheetSec {
+  margin-bottom: 16px;
+}
+
+.iuPrehledDne__sheetSec h3 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  font-weight: 750;
+}
+
+.iuPrehledDne__sheet .iuPrehledDne__select[multiple] {
+  width: 100%;
+  max-width: none;
+  min-height: 140px;
+}
+
+@media (min-width: 900px) {
+  .iuPrehledDne__sheet {
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+  }
+  .iuPrehledDne__sheetPanel {
+    width: min(720px, 100%);
+    max-height: min(86vh, 800px);
+    border-radius: 18px;
+  }
+  .iuPrehledDne__sheetBody {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 18px;
+  }
+  .iuPrehledDne__sheetSec[data-sheet-sec="temata"],
+  .iuPrehledDne__sheetSec[data-sheet-sec="zobrazit"] {
+    grid-column: 1 / -1;
+  }
+}
+

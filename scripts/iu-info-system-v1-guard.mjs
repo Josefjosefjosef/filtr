@@ -161,11 +161,17 @@ if (!/evaluateLocalAlerts|iu\.infoEvents\.alerts\.v1|pushServer/.test(core)) {
 if (!/buildFeedIndex|memo|homeKraj|myRegionOnly/.test(core)) {
   fails.push("core:v4_perf_region_missing");
 }
-if (!/data-lane|data-org|data-fav-lane|iuPrehledDneTime/.test(ui)) {
-  fails.push("ui:personalization_controls_missing");
+if (!/data-view|save-view|countTemporaryFilters|iuPrehledDneSheet|data-iu-ui=\"v5-slim\"/.test(ui)) {
+  fails.push("ui:v5_slim_shell_missing");
 }
-if (!/data-view|save-view|iuPrehledDneHomeKraj|data-alert-rule|iuPrehledDneSearch/.test(ui)) {
-  fails.push("ui:v4_views_alerts_missing");
+if (!/open-filters|open-more-topics|open-locality|sheet-apply|sheet-reset/.test(ui)) {
+  fails.push("ui:v5_filters_panel_missing");
+}
+if (/Typ informací|Úroveň regionu|Oblíbené skupiny|id=\"iuPrehledDneSort\"|id=\"iuPrehledDneTime\"/.test(ui)) {
+  fails.push("ui:removed_controls_still_present");
+}
+if (!/migrateLocalStateOnce|sanitizeUserPrefs|nejnovejsi|viewBaseline/.test(core)) {
+  fails.push("core:v5_migration_chrono_missing");
 }
 if (!/iu\.infoEvents\.prefs\.v1/.test(core)) {
   fails.push("core:prefs_localstorage_key");
@@ -192,8 +198,8 @@ const refreshsrc = fs.readFileSync(path.join(REPO, "scripts/iu-info-events-refre
 if (!/MAX_AGE_HOURS \|\| \"96\"|activeWindowHours|publikovano/.test(refreshsrc)) {
   fails.push("refresh:96h_lifecycle_missing");
 }
-if (!/sourcePublications|laneLabel|Publikováno/.test(ui)) {
-  fails.push("ui:clean_meta_missing");
+if (!/sourcePublications|Právě probíhá|další .* zdroje|Zobrazit všechny zdroje/.test(ui)) {
+  fails.push("ui:clean_meta_multisource_missing");
 }
 
 // Feed chronology / metadata quality (enforced after regeneration publishes dataQuality)
