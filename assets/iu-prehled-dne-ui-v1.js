@@ -780,14 +780,14 @@ async function boot() {
   applyCutoverDom();
   const root = ensureRoot();
   if (!root) return;
-  // Reserve stable viewport height before data arrives (CLS guard).
+  // Stable first shell without forcing large vh (MindMenu layout guard regression).
   root.innerHTML =
-    `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean" style="min-height:72vh">` +
+    `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
     `<div class="iuPd__top"><div class="iuPdBtn iuPdBtn--primary iuPdBtn--block" style="opacity:0.35;pointer-events:none">Můj přehled / Nastavení</div></div>` +
     `<div class="iuPd__show"><div class="iuPd__label">Zobrazit</div><div class="iuPd__toggles" aria-hidden="true">` +
     `<span class="iuPdToggle">Vše</span><span class="iuPdToggle">Uložené</span><span class="iuPdToggle">Nepřečtené</span><span class="iuPdToggle">Skryté</span>` +
     `</div></div>` +
-    `<div class="iuPdFeed" style="min-height:48vh" aria-busy="true"></div>` +
+    `<div class="iuPdFeed" aria-busy="true"></div>` +
     `</section>`;
   try {
     const data = await loadInfoSystemData({});
@@ -815,7 +815,7 @@ async function boot() {
       { once: true }
     );
   } catch (err) {
-    root.innerHTML = `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean" style="min-height:72vh"><p class="iuPdEmpty">Přehled dne se nepodařilo načíst.</p></section>`;
+    root.innerHTML = `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean"><p class="iuPdEmpty">Přehled dne se nepodařilo načíst.</p></section>`;
     console.error("[iu-prehled-dne]", err);
   }
 }
