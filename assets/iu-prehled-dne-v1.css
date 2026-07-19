@@ -16,10 +16,12 @@
   gap: 14px;
   width: 100%;
   min-width: 0;
+  min-height: 72vh;
   box-sizing: border-box;
   padding: 4px 2px 20px;
   color: var(--iu-pd-text);
   font-family: inherit;
+  contain: layout;
 }
 
 .iuPd__label {
@@ -86,6 +88,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-height: 48vh;
 }
 
 .iuPdCard {
