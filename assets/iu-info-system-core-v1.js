@@ -1,10 +1,10 @@
 /**
- * InfoUzel.cz — shared info-system data layer (Přehled dne v2)
+ * InfoUzel.cz — shared info-system data layer (Přehled dne v3)
  * Backend prepares datasets; frontend is local-first and never fetches source sites.
  * Displays only: time, title, real source, place, status, importance, origin URL.
  * Never images, perex, or article body.
  */
-const IU_INFO_SYSTEM_VERSION = "2.0.0";
+const IU_INFO_SYSTEM_VERSION = "3.0.0";
 const LS_READ = "iu.infoEvents.read.v1";
 const LS_SAVED = "iu.infoEvents.saved.v1";
 const LS_HIDDEN = "iu.infoEvents.hidden.v1";
@@ -44,6 +44,11 @@ function writeJsonSet(key, set) {
   } catch (_) {}
 }
 
+function asStringArray(v) {
+  if (!Array.isArray(v)) return [];
+  return v.map(String).filter(Boolean);
+}
+
 function isCutoverEnabled() {
   try {
     const q = new URLSearchParams(location.search || "");
@@ -79,7 +84,6 @@ function eventSortAt(ev) {
 
 async function loadInfoSystemData(opts) {
   const o = opts || {};
-  // Manifest first (atomic publish pointer); tolerate missing for rollback to v1 layout
   let manifest = null;
   let metadata = null;
   try {
@@ -99,7 +103,6 @@ async function loadInfoSystemData(opts) {
     fetchJson(iuInfoDataUrl("feed.json")),
   ]);
 
-  // Optional lane datasets (frontend still never talks to source websites)
   let laneItems = null;
   const laneIds = Array.isArray(o.lanes) ? o.lanes.map(String) : [];
   if (laneIds.length && manifest) {
@@ -137,11 +140,22 @@ function defaultPrefs() {
     lanes: [],
     connectorTypes: [],
     statuses: [],
+    regionLevels: [],
+    institutions: [],
+    favoriteSourceIds: [],
+    favoriteLanes: [],
+    favoriteRegions: [],
+    favoriteInstitutions: [],
     localityQuery: "",
     localities: [],
     sortMode: "nejdulezitejsi",
+    timeRangeHours: 0,
+    importanceMin: 0,
+    activeOnly: false,
+    newOnly: false,
     unreadOnly: false,
     savedOnly: false,
+    favoritesOnly: false,
   };
 }
 
@@ -149,7 +163,24 @@ function getPrefs() {
   try {
     const raw = localStorage.getItem(LS_PREFS);
     if (!raw) return defaultPrefs();
-    return Object.assign(defaultPrefs(), JSON.parse(raw) || {});
+    const merged = Object.assign(defaultPrefs(), JSON.parse(raw) || {});
+    merged.sections = asStringArray(merged.sections);
+    merged.eventTypes = asStringArray(merged.eventTypes);
+    merged.sourceGroups = asStringArray(merged.sourceGroups);
+    merged.sourceIds = asStringArray(merged.sourceIds);
+    merged.orgTypes = asStringArray(merged.orgTypes);
+    merged.lanes = asStringArray(merged.lanes);
+    merged.connectorTypes = asStringArray(merged.connectorTypes);
+    merged.statuses = asStringArray(merged.statuses);
+    merged.regionLevels = asStringArray(merged.regionLevels);
+    merged.institutions = asStringArray(merged.institutions);
+    merged.favoriteSourceIds = asStringArray(merged.favoriteSourceIds);
+    merged.favoriteLanes = asStringArray(merged.favoriteLanes);
+    merged.favoriteRegions = asStringArray(merged.favoriteRegions);
+    merged.favoriteInstitutions = asStringArray(merged.favoriteInstitutions);
+    merged.timeRangeHours = Number(merged.timeRangeHours) || 0;
+    merged.importanceMin = Number(merged.importanceMin) || 0;
+    return merged;
   } catch (_) {
     return defaultPrefs();
   }
@@ -194,6 +225,17 @@ function isHidden(id) {
   return readJsonSet(LS_HIDDEN).has(String(id));
 }
 
+function toggleFavoriteInPrefs(prefs, key, id) {
+  const next = Object.assign(defaultPrefs(), prefs || {});
+  const set = new Set(asStringArray(next[key]));
+  const k = String(id || "");
+  if (!k) return next;
+  if (set.has(k)) set.delete(k);
+  else set.add(k);
+  next[key] = Array.from(set);
+  return next;
+}
+
 function localitySuggest(query, localities) {
   const q = String(query || "").trim().toLowerCase();
   if (!q || q.length < 2) return [];
@@ -208,6 +250,52 @@ function localitySuggest(query, localities) {
     }
   }
   return out;
+}
+
+function institutionOf(ev) {
+  return String((ev && (ev.sourceName || ev.sourceLabel || ev.institution || "")) || "");
+}
+
+function isActiveEvent(ev) {
+  const st = String((ev && ev.status) || "").toLowerCase();
+  const et = String((ev && ev.eventType) || "").toLowerCase();
+  if (st === "ukoncene" || et === "ukoncene") return false;
+  return (
+    st === "aktivni" ||
+    st === "prave-probihajici" ||
+    et === "aktivni" ||
+    et === "prave-probihajici" ||
+    et === "mimoradne" ||
+    et === "aktualni"
+  );
+}
+
+function isNewEvent(ev, hours) {
+  const h = Number(hours) > 0 ? Number(hours) : 24;
+  const t = Date.parse((ev && (ev.firstSeenByInfoUzel || eventSortAt(ev))) || 0) || 0;
+  if (!t) return false;
+  return Date.now() - t <= h * 3600000;
+}
+
+function favoriteBoost(ev, f) {
+  let b = 0;
+  if (!ev || !f) return 0;
+  if (f.favoriteSourceIds && f.favoriteSourceIds.length && f.favoriteSourceIds.includes(String(ev.sourceId))) {
+    b += 120;
+  }
+  if (f.favoriteLanes && f.favoriteLanes.length && f.favoriteLanes.includes(String(ev.lane || ""))) {
+    b += 70;
+  }
+  const regionName = String((ev.region && ev.region.name) || "");
+  if (f.favoriteRegions && f.favoriteRegions.length && regionName) {
+    const rn = regionName.toLowerCase();
+    if (f.favoriteRegions.some((r) => rn.includes(String(r).toLowerCase()))) b += 50;
+  }
+  const inst = institutionOf(ev).toLowerCase();
+  if (f.favoriteInstitutions && f.favoriteInstitutions.length && inst) {
+    if (f.favoriteInstitutions.some((x) => inst.includes(String(x).toLowerCase()))) b += 40;
+  }
+  return b;
 }
 
 function dedupeCluster(events) {
@@ -229,8 +317,8 @@ function dedupeCluster(events) {
     if (ev.url) prev.links.push({ label: ev.sourceLabel || "Zdroj", url: ev.url });
     const pi = Number(prev.primary.importance || 0);
     const ei = Number(ev.importance || 0);
-    const pt = Date.parse(prev.primary.updatedAt || prev.primary.publishedAt || 0) || 0;
-    const et = Date.parse(ev.updatedAt || ev.publishedAt || 0) || 0;
+    const pt = Date.parse(eventSortAt(prev.primary) || prev.primary.updatedAt || 0) || 0;
+    const et = Date.parse(eventSortAt(ev) || ev.updatedAt || 0) || 0;
     if (ei > pi || (ei === pi && et > pt)) prev.primary = ev;
   }
   return Array.from(map.values()).map((c) =>
@@ -242,69 +330,95 @@ function dedupeCluster(events) {
   );
 }
 
+/**
+ * Fast filter pipeline: Set membership only, single pass, then cluster + sort.
+ * Prepared for growth beyond hundreds of items without redesign.
+ */
 function filterEvents(events, filters) {
   const f = Object.assign(defaultPrefs(), filters || {});
   const hidden = readJsonSet(LS_HIDDEN);
   const read = readJsonSet(LS_READ);
   const saved = readJsonSet(LS_SAVED);
-  let list = (events || []).filter((ev) => ev && !hidden.has(String(ev.id)));
 
-  if (f.sections && f.sections.length) {
-    const set = new Set(f.sections.map(String));
-    list = list.filter((ev) => set.has(String(ev.sectionId)));
-  }
-  if (f.eventTypes && f.eventTypes.length) {
-    const set = new Set(f.eventTypes.map(String));
-    list = list.filter((ev) => set.has(String(ev.eventType)) || set.has(String(ev.status)));
-  }
-  if (f.statuses && f.statuses.length) {
-    const set = new Set(f.statuses.map(String));
-    list = list.filter((ev) => set.has(String(ev.status)));
-  }
-  if (f.sourceGroups && f.sourceGroups.length) {
-    const set = new Set(f.sourceGroups.map(String));
-    list = list.filter((ev) => set.has(String(ev.sourceGroup || "")));
-  }
-  if (f.sourceIds && f.sourceIds.length) {
-    const set = new Set(f.sourceIds.map(String));
-    list = list.filter((ev) => set.has(String(ev.sourceId)));
-  }
+  const secSet = f.sections && f.sections.length ? new Set(f.sections.map(String)) : null;
+  const typeSet = f.eventTypes && f.eventTypes.length ? new Set(f.eventTypes.map(String)) : null;
+  const statusSet = f.statuses && f.statuses.length ? new Set(f.statuses.map(String)) : null;
+  const groupSet = f.sourceGroups && f.sourceGroups.length ? new Set(f.sourceGroups.map(String)) : null;
+  const sourceSet = f.sourceIds && f.sourceIds.length ? new Set(f.sourceIds.map(String)) : null;
+  const orgSet = f.orgTypes && f.orgTypes.length ? new Set(f.orgTypes.map(String)) : null;
+  const laneSet = f.lanes && f.lanes.length ? new Set(f.lanes.map(String)) : null;
+  const connSet = f.connectorTypes && f.connectorTypes.length ? new Set(f.connectorTypes.map(String)) : null;
+  const levelSet = f.regionLevels && f.regionLevels.length ? new Set(f.regionLevels.map(String)) : null;
+  const instSet = f.institutions && f.institutions.length ? new Set(f.institutions.map((x) => String(x).toLowerCase())) : null;
+  const favSrc = f.favoriteSourceIds && f.favoriteSourceIds.length ? new Set(f.favoriteSourceIds.map(String)) : null;
+  const favLane = f.favoriteLanes && f.favoriteLanes.length ? new Set(f.favoriteLanes.map(String)) : null;
+  const favReg = f.favoriteRegions && f.favoriteRegions.length ? f.favoriteRegions.map((x) => String(x).toLowerCase()) : null;
+  const favInst = f.favoriteInstitutions && f.favoriteInstitutions.length ? f.favoriteInstitutions.map((x) => String(x).toLowerCase()) : null;
+
   const locQ = String(f.localityQuery || "").trim().toLowerCase();
-  if (locQ) {
-    list = list.filter((ev) => {
+  const locNames =
+    f.localities && f.localities.length ? f.localities.map((x) => String(x.name || x).toLowerCase()) : null;
+  const rangeMs = Number(f.timeRangeHours) > 0 ? Number(f.timeRangeHours) * 3600000 : 0;
+  const now = Date.now();
+  const importanceMin = Number(f.importanceMin) || 0;
+
+  let list = [];
+  for (const ev of events || []) {
+    if (!ev || hidden.has(String(ev.id))) continue;
+    if (secSet && !secSet.has(String(ev.sectionId))) continue;
+    if (typeSet && !typeSet.has(String(ev.eventType)) && !typeSet.has(String(ev.status))) continue;
+    if (statusSet && !statusSet.has(String(ev.status))) continue;
+    if (groupSet && !groupSet.has(String(ev.sourceGroup || ""))) continue;
+    if (sourceSet && !sourceSet.has(String(ev.sourceId))) continue;
+    if (orgSet && !orgSet.has(String(ev.orgType || ""))) continue;
+    if (laneSet && !laneSet.has(String(ev.lane || ""))) continue;
+    if (connSet && !connSet.has(String(ev.connectorType || ""))) continue;
+    if (levelSet && !levelSet.has(String((ev.region && ev.region.level) || "cr"))) continue;
+    if (instSet) {
+      const inst = institutionOf(ev).toLowerCase();
+      if (![...instSet].some((x) => inst.includes(x) || x.includes(inst))) continue;
+    }
+    if (locQ) {
       const name = String((ev.region && ev.region.name) || "").toLowerCase();
       const level = String((ev.region && ev.region.level) || "").toLowerCase();
-      return name.includes(locQ) || level === locQ || locQ === "čr" || locQ === "cr";
-    });
-  }
-  if (f.localities && f.localities.length) {
-    const names = f.localities.map((x) => String(x.name || x).toLowerCase());
-    list = list.filter((ev) => {
+      if (!(name.includes(locQ) || level === locQ || locQ === "čr" || locQ === "cr")) continue;
+    }
+    if (locNames) {
       const name = String((ev.region && ev.region.name) || "").toLowerCase();
-      if (!name) return names.some((n) => n === "čr" || n === "cr" || n === "cesko");
-      return names.some((n) => name.includes(n) || n.includes(name));
-    });
-  }
-  if (f.unreadOnly) list = list.filter((ev) => !read.has(String(ev.id)));
-  if (f.savedOnly) list = list.filter((ev) => saved.has(String(ev.id)));
-
-  // Personalization dimensions prepared in metadata (orgType, lane, region, …)
-  if (f.orgTypes && f.orgTypes.length) {
-    const set = new Set(f.orgTypes.map(String));
-    list = list.filter((ev) => set.has(String(ev.orgType || "")));
-  }
-  if (f.lanes && f.lanes.length) {
-    const set = new Set(f.lanes.map(String));
-    list = list.filter((ev) => set.has(String(ev.lane || "")));
-  }
-  if (f.connectorTypes && f.connectorTypes.length) {
-    const set = new Set(f.connectorTypes.map(String));
-    list = list.filter((ev) => set.has(String(ev.connectorType || "")));
+      const ok = !name
+        ? locNames.some((n) => n === "čr" || n === "cr" || n === "cesko")
+        : locNames.some((n) => name.includes(n) || n.includes(name));
+      if (!ok) continue;
+    }
+    if (rangeMs) {
+      const t = Date.parse(eventSortAt(ev) || 0) || 0;
+      if (!t || now - t > rangeMs) continue;
+    }
+    if (importanceMin && Number(ev.importance || 0) < importanceMin) continue;
+    if (f.activeOnly && !isActiveEvent(ev)) continue;
+    if (f.newOnly && !isNewEvent(ev, 24)) continue;
+    if (f.unreadOnly && read.has(String(ev.id))) continue;
+    if (f.savedOnly && !saved.has(String(ev.id))) continue;
+    if (f.favoritesOnly) {
+      const regionName = String((ev.region && ev.region.name) || "").toLowerCase();
+      const inst = institutionOf(ev).toLowerCase();
+      const hit =
+        (favSrc && favSrc.has(String(ev.sourceId))) ||
+        (favLane && favLane.has(String(ev.lane || ""))) ||
+        (favReg && favReg.some((r) => regionName.includes(r))) ||
+        (favInst && favInst.some((x) => inst.includes(x)));
+      if (!hit) continue;
+    }
+    list.push(ev);
   }
 
   const clustered = dedupeCluster(list);
   const mode = String(f.sortMode || "nejdulezitejsi");
   clustered.sort((a, b) => {
+    if (mode === "oblibene" || mode === "nejdulezitejsi") {
+      const db = favoriteBoost(b, f) - favoriteBoost(a, f);
+      if (db) return db;
+    }
     if (mode === "nejnovejsi") {
       return (Date.parse(eventSortAt(b) || 0) || 0) - (Date.parse(eventSortAt(a) || 0) || 0);
     }
@@ -326,6 +440,9 @@ function filterEvents(events, filters) {
         return 3;
       };
       return rank(a) - rank(b);
+    }
+    if (mode === "oblibene") {
+      return (Date.parse(eventSortAt(b) || 0) || 0) - (Date.parse(eventSortAt(a) || 0) || 0);
     }
     const di = Number(b.importance || 0) - Number(a.importance || 0);
     if (di) return di;
@@ -360,6 +477,8 @@ const IUInfoSystem = {
   isRead,
   isSaved,
   isHidden,
+  toggleFavoriteInPrefs,
+  favoriteBoost,
   iuInfoDataUrl,
   eventSortAt,
 };
@@ -386,6 +505,9 @@ export {
   isRead,
   isSaved,
   isHidden,
+  toggleFavoriteInPrefs,
+  favoriteBoost,
+  eventSortAt,
 };
 
 export default IUInfoSystem;

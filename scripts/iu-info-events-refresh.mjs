@@ -31,6 +31,7 @@ import {
   buildConnectorGroups,
   buildPersonalizationMeta,
   defaultPeriodicityMin,
+  enrichMonitoringV3,
   loadPreviousFirstSeen,
   regionalAdapterSpec,
   resolveConnectorType,
@@ -462,7 +463,13 @@ async function main() {
   };
 
   const failedConnectors = ingestReport.filter((r) => !r.ok);
-  const monitoring = {
+  let prevMonitoring = null;
+  try {
+    prevMonitoring = readJson("monitoring.json");
+  } catch {
+    prevMonitoring = null;
+  }
+  const monitoringBase = {
     version: IU_INFO_EVENTS_V2,
     generatedAt: nowIso,
     cutover,
@@ -511,6 +518,7 @@ async function main() {
     dedupeGroups: new Set(items.map((i) => i.groupKey).filter(Boolean)).size,
     commercialAggregationActive: !!cutover.commercialAggregationActive,
   };
+  const monitoring = enrichMonitoringV3(monitoringBase, prevMonitoring, nowIso);
 
   registry.version = IU_INFO_EVENTS_V2;
   registry.generatedAt = nowIso;
