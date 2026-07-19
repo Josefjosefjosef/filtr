@@ -99,8 +99,8 @@ function renderItem(ev, taxonomy) {
   return `
   <li class="iuPrehledDne__item${read ? " is-read" : ""}" data-id="${esc(ev.id)}" style="--iu-pd-dot:${esc(color)}">
     <div class="iuPrehledDne__timeCol">
-      <div class="iuPrehledDne__time">${esc(fmtTime(ev.publishedAt || ev.updatedAt))}</div>
-      <div class="iuPrehledDne__rel">${esc(fmtRel(ev.publishedAt || ev.updatedAt))}</div>
+      <div class="iuPrehledDne__time">${esc(fmtTime(ev.sortAt || ev.publishedAtSource || ev.firstSeenByInfoUzel || ev.publishedAt || ev.updatedAt))}</div>
+      <div class="iuPrehledDne__rel">${esc(fmtRel(ev.sortAt || ev.publishedAtSource || ev.firstSeenByInfoUzel || ev.publishedAt || ev.updatedAt))}</div>
       <div class="iuPrehledDne__readMark" aria-label="Přečteno">✓</div>
     </div>
     <div class="iuPrehledDne__axis"><span class="iuPrehledDne__dot${alert ? " iuPrehledDne__dot--alert" : ""}"></span></div>

@@ -1,10 +1,15 @@
 name: Update info events
 
-# Production connector for Přehled dne (public/official sources only).
-# Does not touch commercial article aggregation.
+# Production connector for Přehled dne V2 (public/official sources only).
+# Backend-only fetch → atomic publish of split datasets. Does not touch commercial aggregation.
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      group:
+        description: "Optional lane/group only (doprava|pocasi|bezpecnost|…); empty = full refresh"
+        required: false
+        default: ""
   schedule:
     - cron: "*/30 * * * *"
 
@@ -19,7 +24,7 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,7 +34,9 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Refresh info events + monitoring
+      - name: Refresh info events + atomic publish
+        env:
+          IU_INFO_EVENTS_GROUP: ${{ github.event.inputs.group || '' }}
         run: node scripts/iu-info-events-refresh.mjs
 
       - name: Guard
@@ -53,7 +60,7 @@ jobs:
           git push -u origin "$BRANCH" --force
           EXISTING=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number // empty')
           if [ -z "$EXISTING" ]; then
-            gh pr create --title "chore(data): refresh info events feed and monitoring" --body "Automated refresh of projects/data/info_events (Přehled dne)." --base main --head "$BRANCH"
+            gh pr create --title "chore(data): refresh info events feed and monitoring" --body "Automated refresh of projects/data/info_events (Přehled dne V2)." --base main --head "$BRANCH"
           fi
           NUM=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number')
           gh pr merge "$NUM" --squash --auto || true

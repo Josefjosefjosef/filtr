@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "2.0.0",
+  "generationId": "2026-07-18T22-26-57-066Z",
+  "generatedAt": "2026-07-18T22:26:57.066Z",
+  "publishedAt": "2026-07-18T22:27:22.411Z",
+  "itemCount": 300,
+  "lanes": [
+    {
+      "id": "doprava",
+      "path": "lanes/doprava.json",
+      "itemCount": 16
+    },
+    {
+      "id": "pocasi",
+      "path": "lanes/pocasi.json",
+      "itemCount": 21
+    },
+    {
+      "id": "bezpecnost",
+      "path": "lanes/bezpecnost.json",
+      "itemCount": 65
+    },
+    {
+      "id": "ministerstva",
+      "path": "lanes/ministerstva.json",
+      "itemCount": 60
+    },
+    {
+      "id": "ekonomika",
+      "path": "lanes/ekonomika.json",
+      "itemCount": 1
+    },
+    {
+      "id": "zdravotnictvi",
+      "path": "lanes/zdravotnictvi.json",
+      "itemCount": 11
+    },
+    {
+      "id": "skoly-kultura",
+      "path": "lanes/skoly-kultura.json",
+      "itemCount": 8
+    },
+    {
+      "id": "regionalni",
+      "path": "lanes/regionalni.json",
+      "itemCount": 57
+    },
+    {
+      "id": "verejnopravni-media",
+      "path": "lanes/verejnopravni-media.json",
+      "itemCount": 61
+    },
+    {
+      "id": "ostatni",
+      "path": "lanes/ostatni.json",
+      "itemCount": 0
+    }
+  ],
+  "datasets": {
+    "feed": "feed.json",
+    "taxonomy": "taxonomy.json",
+    "sourceRegistry": "source_registry.json",
+    "metadata": "metadata.json",
+    "monitoring": "monitoring.json",
+    "cutover": "cutover_state.json",
+    "previousFeed": "feed.prev.json"
+  },
+  "rollback": {
+    "previousFeed": "feed.prev.json",
+    "note": "Při chybě dalšího publish zůstává feed.prev.json + poslední validní manifest."
+  },
+  "frontend": {
+    "localFirst": true,
+    "sourceWebFetchForbidden": true,
+    "load": [
+      "manifest.json",
+      "taxonomy.json",
+      "source_registry.json",
+      "metadata.json",
+      "feed.json"
+    ],
+    "optionalLanes": "lanes/{id}.json"
+  }
+}

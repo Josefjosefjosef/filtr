@@ -1,0 +1,193 @@
+{
+  "version": "2.0.0",
+  "generatedAt": "2026-07-18T22:26:57.066Z",
+  "architecture": {
+    "backendOnlyFetch": true,
+    "frontendLocalFirst": true,
+    "frontendMustNotFetchSourceSites": true,
+    "atomicPublish": true,
+    "splitDatasets": true
+  },
+  "connectorPreference": [
+    "api",
+    "opendata",
+    "rss",
+    "atom",
+    "xml",
+    "json",
+    "html"
+  ],
+  "connectorGroups": [
+    {
+      "id": "doprava",
+      "label": "doprava",
+      "independent": true,
+      "defaultCronHint": "*/15 * * * *"
+    },
+    {
+      "id": "pocasi",
+      "label": "pocasi",
+      "independent": true,
+      "defaultCronHint": "*/15 * * * *"
+    },
+    {
+      "id": "bezpecnost",
+      "label": "bezpecnost",
+      "independent": true,
+      "defaultCronHint": "*/15 * * * *"
+    },
+    {
+      "id": "ministerstva",
+      "label": "ministerstva",
+      "independent": true,
+      "defaultCronHint": "*/30 * * * *"
+    },
+    {
+      "id": "ekonomika",
+      "label": "ekonomika",
+      "independent": true,
+      "defaultCronHint": "*/30 * * * *"
+    },
+    {
+      "id": "zdravotnictvi",
+      "label": "zdravotnictvi",
+      "independent": true,
+      "defaultCronHint": "*/30 * * * *"
+    },
+    {
+      "id": "skoly-kultura",
+      "label": "skoly-kultura",
+      "independent": true,
+      "defaultCronHint": "*/30 * * * *"
+    },
+    {
+      "id": "regionalni",
+      "label": "regionalni",
+      "independent": true,
+      "defaultCronHint": "0 * * * *"
+    },
+    {
+      "id": "verejnopravni-media",
+      "label": "verejnopravni-media",
+      "independent": true,
+      "defaultCronHint": "*/30 * * * *"
+    },
+    {
+      "id": "ostatni",
+      "label": "ostatni",
+      "independent": true,
+      "defaultCronHint": "*/30 * * * *"
+    }
+  ],
+  "personalization": {
+    "version": "2.0.0",
+    "filterDimensions": [
+      {
+        "id": "institution",
+        "path": "sourceName",
+        "label": "Instituce"
+      },
+      {
+        "id": "sourceId",
+        "path": "sourceId",
+        "label": "Zdroj"
+      },
+      {
+        "id": "orgType",
+        "path": "orgType",
+        "label": "Typ organizace"
+      },
+      {
+        "id": "lane",
+        "path": "lane",
+        "label": "Skupina"
+      },
+      {
+        "id": "connectorType",
+        "path": "connectorType",
+        "label": "Typ konektoru"
+      },
+      {
+        "id": "regionLevel",
+        "path": "region.level",
+        "label": "Úroveň regionu"
+      },
+      {
+        "id": "regionName",
+        "path": "region.name",
+        "label": "Region"
+      },
+      {
+        "id": "sectionId",
+        "path": "sectionId",
+        "label": "Téma"
+      },
+      {
+        "id": "subsectionId",
+        "path": "subsectionId",
+        "label": "Podtéma"
+      },
+      {
+        "id": "eventType",
+        "path": "eventType",
+        "label": "Typ události"
+      },
+      {
+        "id": "importance",
+        "path": "importance",
+        "label": "Priorita"
+      },
+      {
+        "id": "timeRange",
+        "path": "sortAt",
+        "type": "range",
+        "label": "Časové období"
+      }
+    ],
+    "note": "Datová architektura filtrů — UI personalizace se napojí později bez redesignu feedu."
+  },
+  "regionalAdapter": {
+    "type": "html-list",
+    "description": "Škálovatelný adaptér pro kraje/města/obce — konfigurace, ne stovky kopií kódu.",
+    "requiredFields": [
+      "id",
+      "label",
+      "url",
+      "htmlListUrl",
+      "htmlPathInclude",
+      "defaultRegion"
+    ],
+    "optionalFields": [
+      "periodicityMin",
+      "lane",
+      "orgType",
+      "feedUrl"
+    ],
+    "example": {
+      "id": "kraj-example",
+      "label": "Příklad kraj",
+      "url": "https://example.cz/",
+      "htmlListUrl": "https://example.cz/aktuality",
+      "htmlPathInclude": "aktuality/",
+      "defaultRegion": {
+        "level": "kraj",
+        "name": "Příklad"
+      },
+      "lane": "regionalni",
+      "connectorType": "html",
+      "productionActive": true,
+      "productionApproved": true,
+      "legalStatus": "approved"
+    }
+  },
+  "chronology": {
+    "fields": [
+      "publishedAtSource",
+      "firstSeenByInfoUzel",
+      "lastUpdatedBySource",
+      "lastProcessedAt",
+      "sortAt"
+    ],
+    "sortRule": "prefer publishedAtSource; else firstSeenByInfoUzel"
+  }
+}
