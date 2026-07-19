@@ -153,7 +153,7 @@ if (!/timeRangeHours|activeOnly|newOnly|favoritesOnly/.test(core)) {
   fails.push("core:smart_filters_missing");
 }
 if (!/listViews|saveView|applyView|iu\.infoEvents\.views\.v1/.test(core)) {
-  fails.push("core:saved_views_missing");
+  fails.push("core:saved_views_storage_missing");
 }
 if (!/evaluateLocalAlerts|iu\.infoEvents\.alerts\.v1|pushServer/.test(core)) {
   fails.push("core:local_alerts_missing");
@@ -161,17 +161,17 @@ if (!/evaluateLocalAlerts|iu\.infoEvents\.alerts\.v1|pushServer/.test(core)) {
 if (!/buildFeedIndex|memo|homeKraj|myRegionOnly/.test(core)) {
   fails.push("core:v4_perf_region_missing");
 }
-if (!/data-view|save-view|countTemporaryFilters|iuPrehledDneSheet|data-iu-ui=\"v5-slim\"/.test(ui)) {
-  fails.push("ui:v5_slim_shell_missing");
+if (!/data-iu-ui=\"v6-clean\"|open-settings|settings-save|data-mode=\"hidden\"|unhide/.test(ui)) {
+  fails.push("ui:v6_clean_shell_missing");
 }
-if (!/open-filters|open-more-topics|open-locality|sheet-apply|sheet-reset/.test(ui)) {
-  fails.push("ui:v5_filters_panel_missing");
+if (/data-view=|save-view|iuPrehledDneSheet|data-iu-ui=\"v5-slim\"|Hledat instituci|Moje uložené regiony|open-filters|open-more-topics/.test(ui)) {
+  fails.push("ui:legacy_v5_chrome_still_present");
 }
-if (/Typ informací|Úroveň regionu|Oblíbené skupiny|id=\"iuPrehledDneSort\"|id=\"iuPrehledDneTime\"/.test(ui)) {
+if (/Typ informací|Úroveň regionu|Oblíbené skupiny|id=\"iuPrehledDneSort\"|id=\"iuPrehledDneTime\"|Otevřít článek/.test(ui)) {
   fails.push("ui:removed_controls_still_present");
 }
-if (!/migrateLocalStateOnce|sanitizeUserPrefs|nejnovejsi|viewBaseline/.test(core)) {
-  fails.push("core:v5_migration_chrono_missing");
+if (!/migrateLocalStateOnce|sanitizeUserPrefs|nejnovejsi|LS_SCHEMA_VERSION = 6|unhideItem|hiddenMode/.test(core)) {
+  fails.push("core:v6_migration_unhide_missing");
 }
 if (!/iu\.infoEvents\.prefs\.v1/.test(core)) {
   fails.push("core:prefs_localstorage_key");
@@ -198,8 +198,8 @@ const refreshsrc = fs.readFileSync(path.join(REPO, "scripts/iu-info-events-refre
 if (!/MAX_AGE_HOURS \|\| \"96\"|activeWindowHours|publikovano/.test(refreshsrc)) {
   fails.push("refresh:96h_lifecycle_missing");
 }
-if (!/sourcePublications|Právě probíhá|další .* zdroje|Zobrazit všechny zdroje/.test(ui)) {
-  fails.push("ui:clean_meta_multisource_missing");
+if (!/sourcePublications|Právě probíhá|další .* zdroje|Zobrazit všechny zdroje|iuPdCard__title|data-act=\"open-title\"/.test(ui)) {
+  fails.push("ui:clean_meta_or_title_open_missing");
 }
 
 // Feed chronology / metadata quality (enforced after regeneration publishes dataQuality)

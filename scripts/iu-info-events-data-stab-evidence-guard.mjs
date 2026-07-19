@@ -183,13 +183,30 @@ function ok(cond, msg) {
   ok(prefs.eventTypes.length === 0, "regen:eventTypes_cleared");
   ok(prefs.sortMode === "nejnovejsi", "regen:sort_chrono");
   ok(prefs.sections[0] === "doprava", "regen:sections_kept");
-  ok(prefs.unreadOnly === true, "regen:unread_kept");
+  ok(prefs.unreadOnly === false, "regen:unread_session_only");
   ok(JSON.parse(localStorage.getItem("iu.infoEvents.read.v1")).includes("keep-me"), "localfirst:read_kept");
   ok(JSON.parse(localStorage.getItem("iu.infoEvents.saved.v1")).includes("saved-1"), "localfirst:saved_kept");
   ok(JSON.parse(localStorage.getItem("iu.infoEvents.scroll.v1")).y === 420, "localfirst:scroll_kept");
   const views = IU.listViews();
   const custom = views.find((v) => v.id === "custom-x");
   ok(!!custom && custom.prefs.eventTypes.length === 0, "localfirst:view_migrated");
+  ok(typeof IU.unhideItem === "function", "core:unhideItem");
+  const hid = [
+    {
+      id: "hid1",
+      title: "hidden",
+      publishedAtSource: new Date(tNow - 5 * 3600000).toISOString(),
+      status: "publikovano",
+      timeConfidence: "high",
+      sectionId: "stat",
+      sourceId: "x",
+      url: "https://example.test/hid",
+    },
+  ];
+  IU.hideItem("hid1");
+  ok(IU.filterEvents(hid, {}, { hiddenMode: "only" }).length === 1, "hidden:only");
+  IU.unhideItem("hid1");
+  ok(IU.filterEvents(hid, {}, { hiddenMode: "exclude" }).length === 1, "hidden:restored");
 }
 
 // --- Evidence docs ---
