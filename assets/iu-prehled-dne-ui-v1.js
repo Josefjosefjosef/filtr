@@ -20,10 +20,10 @@ import {
   getScrollState,
   setScrollState,
   migrateLocalStateOnce,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-settings-fix-20260720";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-settings-fix-20260720b";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-settings-fix-20260720";
+const CACHE_BUST = "info-system-v6-settings-fix-20260720b";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -690,6 +690,22 @@ function resetSettingsScroll() {
   });
 }
 
+function restoreSettingsScroll(y) {
+  const target = Math.max(0, Number(y) || 0);
+  const apply = () => {
+    const el = document.getElementById("iuPdSettingsScroll");
+    if (!el) return;
+    try {
+      el.scrollTop = target;
+    } catch (_) {}
+  };
+  apply();
+  requestAnimationFrame(() => {
+    apply();
+    requestAnimationFrame(apply);
+  });
+}
+
 function updateFeedDom() {
   const root = ensureRoot();
   if (!root) return;
@@ -945,8 +961,7 @@ function syncDraftFromEvent(ev) {
   if (!persistDraft()) return;
   paintSettingsOnly({ resetSettingsScroll: false });
   wire();
-  const again = document.getElementById("iuPdSettingsScroll");
-  if (again) again.scrollTop = prevScroll;
+  restoreSettingsScroll(prevScroll);
 }
 
 async function ensureLocalities() {
@@ -1017,8 +1032,7 @@ function wire() {
       const prev = scrollEl ? scrollEl.scrollTop : 0;
       paintSettingsOnly({ resetSettingsScroll: false });
       wire();
-      const again = document.getElementById("iuPdSettingsScroll");
-      if (again) again.scrollTop = prev;
+      restoreSettingsScroll(prev);
       return;
     }
     if (act === "mode") {
@@ -1074,8 +1088,7 @@ function wire() {
       if (!persistDraft()) return;
       paintSettingsOnly({ resetSettingsScroll: false });
       wire();
-      const again = document.getElementById("iuPdSettingsScroll");
-      if (again) again.scrollTop = prev;
+      restoreSettingsScroll(prev);
       return;
     }
     if (act === "city-remove") {
@@ -1090,8 +1103,7 @@ function wire() {
       if (!persistDraft()) return;
       paintSettingsOnly({ resetSettingsScroll: false });
       wire();
-      const again = document.getElementById("iuPdSettingsScroll");
-      if (again) again.scrollTop = prev;
+      restoreSettingsScroll(prev);
       return;
     }
   };
