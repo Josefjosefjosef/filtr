@@ -33,6 +33,10 @@ Preferované konektory: API → Open Data → RSS/Atom → XML/JSON → HTML.
 
 Konfigurovatelný HTML/RSS adaptér (`metadata.regionalAdapter`) — nové kraje/města přidáváme konfigurací v registru, ne kopií skriptů.
 
-## Personalizace
+## Personalizace (V3)
 
-`metadata.personalization.filterDimensions` připravuje filtry (instituce, zdroj, orgType, region, lane, téma, priorita, čas). UI redesign se nedělá v této etapě.
+- Preference: `localStorage` klíč `iu.infoEvents.prefs.v1` (local-first).
+- UI: chip filtry pro témata, lane skupiny, orgType, region level, zdroj, časové okno, aktivní/nové/nepřečtené/uložené.
+- Oblíbené: zdroje, lane skupiny, regiony — ovlivňují řazení (boost) a filtr „Jen oblíbené“.
+- Monitoring V3: `datasetAges`, `alerts` (stale / structure), `outageHistory`.
+- Bez redakčního výběru: chronologie + originální odkazy beze změny.

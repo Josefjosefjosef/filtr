@@ -90,7 +90,8 @@ export function buildConnectorGroups() {
 
 export function buildPersonalizationMeta() {
   return {
-    version: IU_INFO_EVENTS_V2,
+    version: "3.0.0",
+    localStorageKey: "iu.infoEvents.prefs.v1",
     filterDimensions: [
       { id: "institution", path: "sourceName", label: "Instituce" },
       { id: "sourceId", path: "sourceId", label: "Zdroj" },
@@ -104,9 +105,97 @@ export function buildPersonalizationMeta() {
       { id: "eventType", path: "eventType", label: "Typ události" },
       { id: "importance", path: "importance", label: "Priorita" },
       { id: "timeRange", path: "sortAt", type: "range", label: "Časové období" },
+      { id: "activeOnly", path: "status", label: "Pouze aktivní" },
+      { id: "newOnly", path: "firstSeenByInfoUzel", label: "Pouze nové" },
+      { id: "unreadOnly", path: "local.read", label: "Pouze nepřečtené" },
+      { id: "savedOnly", path: "local.saved", label: "Pouze uložené" },
+      { id: "favorites", path: "local.favorites", label: "Oblíbené" },
     ],
-    note: "Datová architektura filtrů — UI personalizace se napojí později bez redesignu feedu.",
+    favoriteDimensions: ["favoriteSourceIds", "favoriteLanes", "favoriteRegions", "favoriteInstitutions"],
+    note: "UI personalizace V3 — preference pouze localStorage, bez redesignu feedu.",
   };
+}
+
+/** Enrich monitoring with dataset ages, stale alerts, structure change, outage history. */
+export function enrichMonitoringV3(monitoring, prevMonitoring, nowIso) {
+  const prev = prevMonitoring && typeof prevMonitoring === "object" ? prevMonitoring : {};
+  const prevById = new Map();
+  for (const s of prev.sources || []) {
+    if (s && s.id) prevById.set(String(s.id), s);
+  }
+  const prevOutages = Array.isArray(prev.outageHistory) ? prev.outageHistory.slice(-80) : [];
+  const outageHistory = prevOutages.slice();
+  const alerts = [];
+  const clock = Date.parse(nowIso || "") || Date.now();
+  const datasetAges = {
+    feedGeneratedAt: monitoring.generatedAt || nowIso,
+    feedAgeHours: null,
+    lanes: monitoring.laneCounts || {},
+  };
+  const genMs = Date.parse(monitoring.generatedAt || nowIso) || clock;
+  datasetAges.feedAgeHours = Math.max(0, Math.round(((clock - genMs) / 3600000) * 10) / 10);
+
+  const sources = (monitoring.sources || []).map((s) => {
+    const mon = Object.assign({}, s.monitoring || {});
+    const prevS = prevById.get(String(s.id));
+    const prevMon = (prevS && prevS.monitoring) || {};
+    const lastSuccess = Date.parse(mon.lastSuccessAt || "") || 0;
+    const period = Number(s.periodicityMin || mon.periodicityMin || 60);
+    const staleAfterMs = Math.max(period, 30) * 3 * 60000;
+    let dataAgeHours = mon.dataAgeHours;
+    if (lastSuccess) {
+      dataAgeHours = Math.max(0, Math.round(((clock - lastSuccess) / 3600000) * 10) / 10);
+    }
+    let structureChange = mon.structureChange || "none";
+    const prevKept = Number(prevMon.itemsKept || 0);
+    const kept = Number(mon.itemsKept || 0);
+    if (prevKept >= 5 && kept === 0) {
+      structureChange = "possible_empty_or_structure_change";
+      alerts.push({
+        type: "structure_change",
+        sourceId: s.id,
+        at: nowIso,
+        detail: `itemsKept ${prevKept} → ${kept}`,
+      });
+    }
+    const availability = mon.availability || "unknown";
+    const isStale = !!(lastSuccess && clock - lastSuccess > staleAfterMs);
+    if (availability !== "ok" || isStale) {
+      const alertType = availability !== "ok" ? "connector_down" : "stale_source";
+      alerts.push({
+        type: alertType,
+        sourceId: s.id,
+        at: nowIso,
+        detail:
+          availability !== "ok"
+            ? `availability=${availability}`
+            : `lastSuccessAt=${mon.lastSuccessAt || "null"} periodMin=${period}`,
+      });
+      if (availability !== "ok") {
+        outageHistory.push({
+          sourceId: s.id,
+          at: nowIso,
+          status: mon.lastProbeStatus || 0,
+          reason: mon.lastError || availability,
+        });
+      }
+    }
+    return Object.assign({}, s, {
+      monitoring: Object.assign({}, mon, {
+        dataAgeHours,
+        structureChange,
+        stale: isStale || kept === 0,
+      }),
+    });
+  });
+
+  return Object.assign({}, monitoring, {
+    version: "3.0.0",
+    datasetAges,
+    alerts: alerts.slice(0, 40),
+    outageHistory: outageHistory.slice(-100),
+    sources,
+  });
 }
 
 export function regionalAdapterSpec() {

@@ -42,6 +42,12 @@ if (!metadata.architecture || metadata.architecture.frontendMustNotFetchSourceSi
 if (!metadata.personalization || !Array.isArray(metadata.personalization.filterDimensions)) {
   fails.push("metadata:personalization");
 }
+if ((metadata.personalization.filterDimensions || []).length < 12) {
+  fails.push("metadata:personalization_dims_min_12");
+}
+if (!String(metadata.personalization.localStorageKey || "").includes("iu.infoEvents.prefs")) {
+  fails.push("metadata:personalization_localStorageKey");
+}
 if (!Array.isArray(metadata.connectorGroups) || metadata.connectorGroups.length < 5) {
   fails.push("metadata:connectorGroups");
 }
@@ -127,11 +133,34 @@ if (cutover.infoSystemActive !== true) fails.push("cutover:infoSystemActive_must
 
 // Frontend must not fetch source sites (static check)
 const core = fs.readFileSync(path.join(REPO, "assets/iu-info-system-core-v1.js"), "utf8");
+const ui = fs.readFileSync(path.join(REPO, "assets/iu-prehled-dne-ui-v1.js"), "utf8");
 if (!/frontendMustNotFetchSourceSites|local-first|localFirst/i.test(core)) {
   fails.push("core:local_first_contract");
 }
 if (/fetch\(\s*['`]https?:\/\/(?!infouzel|josefjosefjosef\.github)/i.test(core)) {
   fails.push("core:forbidden_source_fetch_pattern");
+}
+if (!/favoriteSourceIds|favoriteLanes|favoriteRegions/.test(core)) {
+  fails.push("core:favorites_prefs_missing");
+}
+if (!/timeRangeHours|activeOnly|newOnly|favoritesOnly/.test(core)) {
+  fails.push("core:smart_filters_missing");
+}
+if (!/data-lane|data-org|data-fav-lane|iuPrehledDneTime/.test(ui)) {
+  fails.push("ui:personalization_controls_missing");
+}
+if (!/iu\.infoEvents\.prefs\.v1/.test(core)) {
+  fails.push("core:prefs_localstorage_key");
+}
+
+const monitoring = JSON.parse(fs.readFileSync(path.join(DIR, "monitoring.json"), "utf8"));
+if (!monitoring.datasetAges || typeof monitoring.datasetAges.feedAgeHours !== "number") {
+  fails.push("monitoring:datasetAges");
+}
+if (!Array.isArray(monitoring.alerts)) fails.push("monitoring:alerts");
+if (!Array.isArray(monitoring.outageHistory)) fails.push("monitoring:outageHistory");
+if (!/enrichMonitoringV3/.test(fs.readFileSync(path.join(REPO, "scripts/iu-info-events-v2.mjs"), "utf8"))) {
+  fails.push("v2:enrichMonitoringV3_missing");
 }
 
 if (fails.length) {

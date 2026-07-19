@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "generatedAt": "2026-07-18T22:26:57.066Z",
+  "generatedAt": "2026-07-19T02:15:24.261Z",
   "architecture": {
     "backendOnlyFetch": true,
     "frontendLocalFirst": true,
@@ -80,7 +80,8 @@
     }
   ],
   "personalization": {
-    "version": "2.0.0",
+    "version": "3.0.0",
+    "localStorageKey": "iu.infoEvents.prefs.v1",
     "filterDimensions": [
       {
         "id": "institution",
@@ -142,9 +143,40 @@
         "path": "sortAt",
         "type": "range",
         "label": "Časové období"
+      },
+      {
+        "id": "activeOnly",
+        "path": "status",
+        "label": "Pouze aktivní"
+      },
+      {
+        "id": "newOnly",
+        "path": "firstSeenByInfoUzel",
+        "label": "Pouze nové"
+      },
+      {
+        "id": "unreadOnly",
+        "path": "local.read",
+        "label": "Pouze nepřečtené"
+      },
+      {
+        "id": "savedOnly",
+        "path": "local.saved",
+        "label": "Pouze uložené"
+      },
+      {
+        "id": "favorites",
+        "path": "local.favorites",
+        "label": "Oblíbené"
       }
     ],
-    "note": "Datová architektura filtrů — UI personalizace se napojí později bez redesignu feedu."
+    "favoriteDimensions": [
+      "favoriteSourceIds",
+      "favoriteLanes",
+      "favoriteRegions",
+      "favoriteInstitutions"
+    ],
+    "note": "UI personalizace V3 — preference pouze localStorage, bez redesignu feedu."
   },
   "regionalAdapter": {
     "type": "html-list",
@@ -189,5 +221,6 @@
       "sortAt"
     ],
     "sortRule": "prefer publishedAtSource; else firstSeenByInfoUzel"
-  }
+  },
+  "uiPersonalization": "v3"
 }
