@@ -1,12 +1,13 @@
 /**
- * InfoUzel.cz — Přehled dne UI v3 (personalizace + inteligentní filtry)
- * Control panel + timeline. No internal pages. No images/perex. Local-first prefs.
+ * InfoUzel.cz — Přehled dne UI v4 (pohledy, regiony, lokální upozornění, výkon)
+ * Control panel + timeline. No redesign. Local-first prefs/views/alerts.
  */
 import {
   IUInfoSystem,
   applyCutoverDom,
   loadInfoSystemData,
   filterEvents,
+  buildFeedIndex,
   getPrefs,
   setPrefs,
   markRead,
@@ -16,9 +17,22 @@ import {
   isSaved,
   localitySuggest,
   toggleFavoriteInPrefs,
+  listViews,
+  saveView,
+  deleteView,
+  applyView,
+  getAlertConfig,
+  setAlertConfig,
+  getAlertState,
+  setAlertState,
+  evaluateLocalAlerts,
+  dismissAlert,
+  dismissAllAlerts,
+  getScrollState,
+  setScrollState,
 } from "./iu-info-system-core-v1.js";
 
-const PAGE_SIZE = 60;
+const PAGE_SIZE = 50;
 
 const LANE_OPTIONS = [
   { id: "doprava", label: "Doprava" },
@@ -75,10 +89,15 @@ const BUILTIN_LOCALITIES = [
   { name: "Jihomoravský kraj", level: "kraj" },
   { name: "Středočeský kraj", level: "kraj" },
   { name: "Královéhradecký kraj", level: "kraj" },
-  { name: "Jihomoravský kraj", level: "kraj" },
   { name: "Moravskoslezský kraj", level: "kraj" },
   { name: "Ústecký kraj", level: "kraj" },
   { name: "Plzeňský kraj", level: "kraj" },
+  { name: "Liberecký kraj", level: "kraj" },
+  { name: "Olomoucký kraj", level: "kraj" },
+  { name: "Zlínský kraj", level: "kraj" },
+  { name: "Jihočeský kraj", level: "kraj" },
+  { name: "Karlovarský kraj", level: "kraj" },
+  { name: "Vysočina", level: "kraj" },
 ];
 
 function esc(s) {
@@ -148,8 +167,12 @@ function chipRow(items, attr, activeIds) {
 
 function renderActiveTags(prefs) {
   const tags = [];
+  if (prefs.homeKraj) tags.push({ kind: "homeKraj", id: "homeKraj", label: `Kraj: ${prefs.homeKraj}` });
+  if (prefs.homeOkres) tags.push({ kind: "homeOkres", id: "homeOkres", label: `Okres: ${prefs.homeOkres}` });
+  if (prefs.homeObec) tags.push({ kind: "homeObec", id: "homeObec", label: `Obec: ${prefs.homeObec}` });
   (prefs.localities || []).forEach((l) => tags.push({ kind: "loc", id: l.name || l, label: `Lokalita: ${l.name || l}` }));
   if (prefs.localityQuery) tags.push({ kind: "q", id: "q", label: `Lokalita: ${prefs.localityQuery}` });
+  if (prefs.searchQuery) tags.push({ kind: "search", id: "search", label: `Hledat: ${prefs.searchQuery}` });
   (prefs.sections || []).forEach((id) => tags.push({ kind: "sec", id, label: id }));
   (prefs.eventTypes || []).forEach((id) => tags.push({ kind: "type", id, label: `Typ: ${id}` }));
   (prefs.sourceGroups || []).forEach((id) => tags.push({ kind: "src", id, label: id }));
@@ -175,6 +198,7 @@ function renderActiveTags(prefs) {
   if (prefs.unreadOnly) tags.push({ kind: "flag", id: "unreadOnly", label: "Nepřečtené" });
   if (prefs.savedOnly) tags.push({ kind: "flag", id: "savedOnly", label: "Uložené" });
   if (prefs.favoritesOnly) tags.push({ kind: "flag", id: "favoritesOnly", label: "Jen oblíbené" });
+  if (prefs.myRegionOnly) tags.push({ kind: "flag", id: "myRegionOnly", label: "Můj region" });
   if (!tags.length) return "";
   return `<div class="iuPrehledDne__activeTags">${tags
     .map(
@@ -248,9 +272,12 @@ async function mountPrehledDne(rootEl) {
   const registry = data.registry || { entries: [] };
   const items = (data.feed && data.feed.items) || [];
   let prefs = getPrefs();
+  let alertCfg = getAlertConfig();
   let pendingNew = [];
   let renderedSnapshot = items.slice();
   let visibleCount = PAGE_SIZE;
+  let feedIndex = buildFeedIndex(renderedSnapshot);
+  let alertPending = (getAlertState().pending || []).slice();
 
   const byId = new Map((registry.entries || []).map((e) => [e.id, e]));
   for (const it of items) {
@@ -270,10 +297,31 @@ async function mountPrehledDne(rootEl) {
     sortModes.push({ id: "oblibene", label: "Oblíbené první" });
   }
 
+  function runAlerts() {
+    const evaled = evaluateLocalAlerts(renderedSnapshot, prefs, alertCfg, getAlertState());
+    setAlertState(evaled.state);
+    alertPending = evaled.pending || [];
+  }
+
   function paint() {
-    const filtered = filterEvents(renderedSnapshot, prefs);
+    const t0 = typeof performance !== "undefined" ? performance.now() : Date.now();
+    const filtered = filterEvents(renderedSnapshot, prefs, {
+      index: feedIndex,
+      generationId: (data.manifest && data.manifest.generationId) || "",
+    });
     const shown = filtered.slice(0, visibleCount);
     const more = filtered.length - shown.length;
+    const filterMs = Math.round((typeof performance !== "undefined" ? performance.now() : Date.now()) - t0);
+
+    const views = listViews();
+    const viewChips = views
+      .map((v) => {
+        const on = String(prefs.activeViewId || "") === String(v.id);
+        return `<button type="button" class="iuPrehledDne__chip${on ? " is-active" : ""}" data-view="${esc(v.id)}">${esc(
+          v.label
+        )}${v.builtin ? "" : ""}</button>`;
+      })
+      .join("");
 
     const sectionChips = chipRow(taxonomy.sections || [], "data-sec", prefs.sections);
     const typeChips = chipRow(
@@ -310,15 +358,63 @@ async function mountPrehledDne(rootEl) {
         `<option value="${esc(t.id)}"${Number(prefs.timeRangeHours) === Number(t.id) ? " selected" : ""}>${esc(t.label)}</option>`
     ).join("");
 
+    const alertRules = (alertCfg.rules || [])
+      .map(
+        (r) =>
+          `<button type="button" class="iuPrehledDne__chip${r.enabled ? " is-active" : ""}" data-alert-rule="${esc(r.id)}">${esc(
+            r.label || r.id
+          )}</button>`
+      )
+      .join("");
+
+    const alertList =
+      alertCfg.enabled && alertPending.length
+        ? `<div class="iuPrehledDne__alerts" id="iuPrehledDneAlerts">
+            <div class="iuPrehledDne__alertsHead">
+              <strong>Lokální upozornění (${esc(alertPending.length)})</strong>
+              <button type="button" data-act="dismiss-all-alerts">Označit vše</button>
+            </div>
+            <ul>${alertPending
+              .slice(0, 8)
+              .map(
+                (a) =>
+                  `<li><a href="${esc(a.url)}" target="_blank" rel="noopener noreferrer">${esc(a.title)}</a>
+                  <span class="iuPrehledDne__pill">${esc(a.ruleLabel || a.ruleId)}</span>
+                  <button type="button" data-act="dismiss-alert" data-id="${esc(a.itemId)}">×</button></li>`
+              )
+              .join("")}</ul>
+          </div>`
+        : "";
+
     root.innerHTML = `
     <section class="iuPrehledDne" aria-label="Přehled dne">
       <h2 class="iuPrehledDne__title">Přehled dne</h2>
-      <p class="iuPrehledDne__lead">Ověřené informace z veřejných a veřejnoprávních zdrojů — přizpůsobitelné filtry, bez fotek a perexů.</p>
+      <p class="iuPrehledDne__lead">Osobní přehled ověřených informací — pohledy, regiony a lokální upozornění (bez server push).</p>
       <div class="iuPrehledDne__newBanner" id="iuPrehledDneNewBanner" role="status">
         <span>Přibyly nové informace.</span>
         <button type="button" data-act="accept-new">Zobrazit</button>
       </div>
+      ${alertList}
       <div class="iuPrehledDne__panel">
+        <div class="iuPrehledDne__row"><span class="iuPrehledDne__label">Pohledy</span>
+          ${viewChips}
+          <button type="button" class="iuPrehledDne__chip" data-act="save-view">Uložit pohled</button>
+          ${
+            String(prefs.activeViewId || "").indexOf("custom-") === 0
+              ? `<button type="button" class="iuPrehledDne__chip" data-act="delete-view">Smazat pohled</button>`
+              : ""
+          }
+        </div>
+        <div class="iuPrehledDne__row">
+          <span class="iuPrehledDne__label">Můj region</span>
+          <input class="iuPrehledDne__input" id="iuPrehledDneHomeKraj" type="text" placeholder="Kraj" value="${esc(prefs.homeKraj || "")}" />
+          <input class="iuPrehledDne__input" id="iuPrehledDneHomeOkres" type="text" placeholder="Okres" value="${esc(prefs.homeOkres || "")}" />
+          <input class="iuPrehledDne__input" id="iuPrehledDneHomeObec" type="text" placeholder="Obec" value="${esc(prefs.homeObec || "")}" />
+          <button type="button" class="iuPrehledDne__chip${prefs.myRegionOnly ? " is-active" : ""}" data-toggle="myRegion">Jen můj region</button>
+          <button type="button" class="iuPrehledDne__chip${prefs.regionalDoprava ? " is-active" : ""}" data-toggle="regDop">Regionální doprava</button>
+          <button type="button" class="iuPrehledDne__chip${prefs.regionalKrize ? " is-active" : ""}" data-toggle="regKrize">Regionální krize</button>
+          <button type="button" class="iuPrehledDne__chip${prefs.regionalZdravi ? " is-active" : ""}" data-toggle="regZdravi">Regionální zdraví</button>
+        </div>
         <div class="iuPrehledDne__row"><span class="iuPrehledDne__label">Témata</span>
           <button type="button" class="iuPrehledDne__chip${!(prefs.sections || []).length ? " is-active" : ""}" data-sec="">Vše</button>
           ${sectionChips}
@@ -331,10 +427,11 @@ async function mountPrehledDne(rootEl) {
         <div class="iuPrehledDne__row"><span class="iuPrehledDne__label">Typ informací</span>${typeChips}</div>
         <div class="iuPrehledDne__row"><span class="iuPrehledDne__label">Úroveň regionu</span>${levelChips}</div>
         <div class="iuPrehledDne__row">
-          <span class="iuPrehledDne__label">Lokalita</span>
+          <span class="iuPrehledDne__label">Hledání a lokalita</span>
+          <input class="iuPrehledDne__input" id="iuPrehledDneSearch" type="search" placeholder="Hledat v titulku / zdroji" value="${esc(prefs.searchQuery || "")}" autocomplete="off" />
           <input class="iuPrehledDne__input" id="iuPrehledDneLoc" type="search" placeholder="kraj, okres, město, obec" value="${esc(prefs.localityQuery || "")}" autocomplete="off" />
           <ul class="iuPrehledDne__suggest" id="iuPrehledDneSuggest" hidden></ul>
-          <button type="button" class="iuPrehledDne__chip${(prefs.favoriteRegions || []).includes(String(prefs.localityQuery || "")) ? " is-active" : ""}" data-act="fav-region" title="Označit lokalitu jako oblíbenou">★ Region</button>
+          <button type="button" class="iuPrehledDne__chip" data-act="fav-region">★ Region</button>
         </div>
         <div class="iuPrehledDne__row">
           <span class="iuPrehledDne__label">Zdroje, čas a řazení</span>
@@ -352,10 +449,15 @@ async function mountPrehledDne(rootEl) {
           <button type="button" class="iuPrehledDne__chip${prefs.favoritesOnly ? " is-active" : ""}" data-toggle="favorites">Jen oblíbené</button>
         </div>
         <div class="iuPrehledDne__row"><span class="iuPrehledDne__label">Oblíbené skupiny</span>${favLaneChips}</div>
+        <div class="iuPrehledDne__row">
+          <span class="iuPrehledDne__label">Lokální upozornění</span>
+          <button type="button" class="iuPrehledDne__chip${alertCfg.enabled ? " is-active" : ""}" data-toggle="alerts">Zapnout</button>
+          ${alertRules}
+        </div>
         ${renderActiveTags(prefs)}
-        <div class="iuPrehledDne__count" aria-live="polite">Zobrazeno ${esc(shown.length)} z ${esc(filtered.length)} (celkem ve feedu ${esc(renderedSnapshot.length)})</div>
+        <div class="iuPrehledDne__count" aria-live="polite">Zobrazeno ${esc(shown.length)} z ${esc(filtered.length)} · feed ${esc(renderedSnapshot.length)} · filtr ${esc(filterMs)} ms</div>
       </div>
-      <ul class="iuPrehledDne__timeline">
+      <ul class="iuPrehledDne__timeline" id="iuPrehledDneTimeline">
         ${shown.length ? shown.map((ev) => renderItem(ev, taxonomy, prefs)).join("") : `<li class="iuPrehledDne__empty">Žádné položky pro zvolené filtry.</li>`}
       </ul>
       ${
@@ -368,6 +470,13 @@ async function mountPrehledDne(rootEl) {
     </section>`;
 
     wire(filtered.length);
+    try {
+      const sc = getScrollState();
+      if (sc && sc.viewId === String(prefs.activeViewId || "") && Number(sc.y) > 0) {
+        const vp = document.getElementById("iuSilverTallScrollViewport");
+        if (vp) vp.scrollTop = Number(sc.y) || 0;
+      }
+    } catch (_) {}
   }
 
   function persist() {
@@ -377,16 +486,46 @@ async function mountPrehledDne(rootEl) {
   }
 
   function wire(totalFiltered) {
+    root.querySelectorAll("[data-view]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-view");
+        prefs = applyView(id, prefs);
+        persist();
+      });
+    });
+    const saveViewBtn = root.querySelector('[data-act="save-view"]');
+    if (saveViewBtn) {
+      saveViewBtn.addEventListener("click", () => {
+        const name = window.prompt("Název pohledu", "Můj pohled");
+        if (!name) return;
+        const entry = saveView(name, prefs);
+        if (entry) {
+          prefs.activeViewId = entry.id;
+          persist();
+        }
+      });
+    }
+    const delViewBtn = root.querySelector('[data-act="delete-view"]');
+    if (delViewBtn) {
+      delViewBtn.addEventListener("click", () => {
+        if (deleteView(prefs.activeViewId)) {
+          prefs.activeViewId = "";
+          persist();
+        }
+      });
+    }
     root.querySelectorAll("[data-sec]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const id = btn.getAttribute("data-sec") || "";
         prefs.sections = id ? toggleInArray(prefs.sections, id) : [];
+        prefs.activeViewId = "";
         persist();
       });
     });
     root.querySelectorAll("[data-type]").forEach((btn) => {
       btn.addEventListener("click", () => {
         prefs.eventTypes = toggleInArray(prefs.eventTypes, btn.getAttribute("data-type"));
+        prefs.activeViewId = "";
         persist();
       });
     });
@@ -394,18 +533,21 @@ async function mountPrehledDne(rootEl) {
       btn.addEventListener("click", () => {
         const id = btn.getAttribute("data-lane") || "";
         prefs.lanes = id ? toggleInArray(prefs.lanes, id) : [];
+        prefs.activeViewId = "";
         persist();
       });
     });
     root.querySelectorAll("[data-org]").forEach((btn) => {
       btn.addEventListener("click", () => {
         prefs.orgTypes = toggleInArray(prefs.orgTypes, btn.getAttribute("data-org"));
+        prefs.activeViewId = "";
         persist();
       });
     });
     root.querySelectorAll("[data-level]").forEach((btn) => {
       btn.addEventListener("click", () => {
         prefs.regionLevels = toggleInArray(prefs.regionLevels, btn.getAttribute("data-level"));
+        prefs.activeViewId = "";
         persist();
       });
     });
@@ -423,9 +565,52 @@ async function mountPrehledDne(rootEl) {
         if (t === "active") prefs.activeOnly = !prefs.activeOnly;
         if (t === "new") prefs.newOnly = !prefs.newOnly;
         if (t === "favorites") prefs.favoritesOnly = !prefs.favoritesOnly;
+        if (t === "myRegion") prefs.myRegionOnly = !prefs.myRegionOnly;
+        if (t === "regDop") prefs.regionalDoprava = !prefs.regionalDoprava;
+        if (t === "regKrize") prefs.regionalKrize = !prefs.regionalKrize;
+        if (t === "regZdravi") prefs.regionalZdravi = !prefs.regionalZdravi;
+        if (t === "alerts") {
+          alertCfg.enabled = !alertCfg.enabled;
+          setAlertConfig(alertCfg);
+          runAlerts();
+        }
         persist();
       });
     });
+    root.querySelectorAll("[data-alert-rule]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-alert-rule");
+        alertCfg.rules = (alertCfg.rules || []).map((r) =>
+          String(r.id) === String(id) ? Object.assign({}, r, { enabled: !r.enabled }) : r
+        );
+        if (!alertCfg.enabled) alertCfg.enabled = true;
+        setAlertConfig(alertCfg);
+        runAlerts();
+        paint();
+      });
+    });
+    ["iuPrehledDneHomeKraj", "iuPrehledDneHomeOkres", "iuPrehledDneHomeObec"].forEach((id) => {
+      const el = root.querySelector("#" + id);
+      if (!el) return;
+      el.addEventListener("change", () => {
+        if (id.endsWith("Kraj")) prefs.homeKraj = el.value.trim();
+        if (id.endsWith("Okres")) prefs.homeOkres = el.value.trim();
+        if (id.endsWith("Obec")) prefs.homeObec = el.value.trim();
+        persist();
+      });
+    });
+    const searchEl = root.querySelector("#iuPrehledDneSearch");
+    if (searchEl) {
+      let searchTimer = null;
+      searchEl.addEventListener("input", () => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+          prefs.searchQuery = searchEl.value;
+          prefs.activeViewId = "";
+          persist();
+        }, 180);
+      });
+    }
     const sortEl = root.querySelector("#iuPrehledDneSort");
     if (sortEl) {
       sortEl.addEventListener("change", () => {
@@ -437,6 +622,7 @@ async function mountPrehledDne(rootEl) {
     if (groupEl) {
       groupEl.addEventListener("change", () => {
         prefs.sourceGroups = groupEl.value ? [groupEl.value] : [];
+        prefs.activeViewId = "";
         persist();
       });
     }
@@ -444,6 +630,7 @@ async function mountPrehledDne(rootEl) {
     if (sourceEl) {
       sourceEl.addEventListener("change", () => {
         prefs.sourceIds = sourceEl.value ? [sourceEl.value] : [];
+        prefs.activeViewId = "";
         persist();
       });
     }
@@ -489,7 +676,9 @@ async function mountPrehledDne(rootEl) {
     const favRegBtn = root.querySelector('[data-act="fav-region"]');
     if (favRegBtn) {
       favRegBtn.addEventListener("click", () => {
-        const name = String(prefs.localityQuery || (prefs.localities[0] && prefs.localities[0].name) || "").trim();
+        const name = String(
+          prefs.localityQuery || prefs.homeKraj || (prefs.localities[0] && prefs.localities[0].name) || ""
+        ).trim();
         if (!name) return;
         prefs = toggleFavoriteInPrefs(prefs, "favoriteRegions", name);
         persist();
@@ -512,6 +701,10 @@ async function mountPrehledDne(rootEl) {
         if (kind === "favreg") prefs.favoriteRegions = (prefs.favoriteRegions || []).filter((x) => x !== id);
         if (kind === "time") prefs.timeRangeHours = 0;
         if (kind === "flag") prefs[id] = false;
+        if (kind === "homeKraj") prefs.homeKraj = "";
+        if (kind === "homeOkres") prefs.homeOkres = "";
+        if (kind === "homeObec") prefs.homeObec = "";
+        if (kind === "search") prefs.searchQuery = "";
         if (kind === "loc" || kind === "q") {
           prefs.localities = [];
           prefs.localityQuery = "";
@@ -549,10 +742,25 @@ async function mountPrehledDne(rootEl) {
         });
       });
     });
+    root.querySelectorAll('[data-act="dismiss-alert"]').forEach((b) => {
+      b.addEventListener("click", () => {
+        dismissAlert(b.getAttribute("data-id"));
+        alertPending = getAlertState().pending || [];
+        paint();
+      });
+    });
+    const dismissAll = root.querySelector('[data-act="dismiss-all-alerts"]');
+    if (dismissAll) {
+      dismissAll.addEventListener("click", () => {
+        dismissAllAlerts();
+        alertPending = [];
+        paint();
+      });
+    }
     const moreBtn = root.querySelector('[data-act="more"]');
     if (moreBtn) {
       moreBtn.addEventListener("click", () => {
-        visibleCount = Math.min((totalFiltered || 0), visibleCount + PAGE_SIZE);
+        visibleCount = Math.min(totalFiltered || 0, visibleCount + PAGE_SIZE);
         paint();
       });
     }
@@ -562,14 +770,29 @@ async function mountPrehledDne(rootEl) {
     if (accept) {
       accept.addEventListener("click", () => {
         renderedSnapshot = pendingNew.concat(renderedSnapshot);
+        feedIndex = buildFeedIndex(renderedSnapshot);
         pendingNew = [];
         banner.classList.remove("is-visible");
+        runAlerts();
         paint();
       });
     }
   }
 
+  runAlerts();
   paint();
+
+  const vp = document.getElementById("iuSilverTallScrollViewport");
+  let scrollTimer = null;
+  function onScroll() {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      try {
+        setScrollState({ viewId: String(prefs.activeViewId || ""), y: vp ? vp.scrollTop : 0 });
+      } catch (_) {}
+    }, 200);
+  }
+  if (vp) vp.addEventListener("scroll", onScroll, { passive: true });
 
   const timer = setInterval(async () => {
     try {
@@ -581,11 +804,20 @@ async function mountPrehledDne(rootEl) {
         pendingNew = neu.concat(pendingNew);
         const banner = root.querySelector("#iuPrehledDneNewBanner");
         if (banner) banner.classList.add("is-visible");
+        runAlerts();
       }
     } catch (_) {}
   }, 120000);
 
-  const api = { root, refresh: paint, destroy: () => clearInterval(timer), prefs };
+  const api = {
+    root,
+    refresh: paint,
+    destroy: () => {
+      clearInterval(timer);
+      if (vp) vp.removeEventListener("scroll", onScroll);
+    },
+    prefs,
+  };
   try {
     window.IUPrehledDne = Object.assign({ mountPrehledDne }, api);
   } catch (_) {}

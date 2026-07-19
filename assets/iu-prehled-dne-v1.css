@@ -436,6 +436,55 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   box-shadow: 0 0 0 1px rgba(91, 108, 255, 0.18), var(--iu-pd-shadow);
 }
 
+.iuPrehledDne__alerts {
+  border: 1px solid rgba(91, 108, 255, 0.28);
+  background: linear-gradient(135deg, rgba(91, 108, 255, 0.1), rgba(37, 99, 235, 0.06));
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.iuPrehledDne__alertsHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.iuPrehledDne__alertsHead button,
+.iuPrehledDne__alerts li button {
+  min-height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(91, 108, 255, 0.28);
+  background: #fff;
+  cursor: pointer;
+  font-weight: 650;
+  padding: 6px 10px;
+}
+
+.iuPrehledDne__alerts ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.iuPrehledDne__alerts li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.iuPrehledDne__alerts a {
+  color: var(--iu-pd-accent-2);
+  font-weight: 650;
+  text-decoration: none;
+  flex: 1 1 200px;
+}
+
 @media (min-width: 1025px) {
   .iuPrehledDne__panel {
     padding: 16px 18px;
