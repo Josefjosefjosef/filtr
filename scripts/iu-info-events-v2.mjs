@@ -218,6 +218,72 @@ export function enrichMonitoringV3(monitoring, prevMonitoring, nowIso) {
   });
 }
 
+/** Data-quality metrics for chronology / metadata / dedup (informational + blockers). */
+export function buildDataQualityMetrics(items, opts = {}) {
+  const list = items || [];
+  const now = Date.parse(opts.nowIso || "") || Date.now();
+  let fallbackTime = 0;
+  let lowConfidence = 0;
+  let futureTime = 0;
+  let missingUrl = 0;
+  let missingInstitution = 0;
+  let missingGroup = 0;
+  let techArtifacts = 0;
+  let multiSource = 0;
+  let invalidLifecycle = 0;
+  let sameBatchTime = 0;
+  const timeBuckets = new Map();
+  const TECH_RE = /^(html|rss|atom|opendata|api|xml|json|html-list|none)$/i;
+  for (const it of list) {
+    if (!it) continue;
+    if (String(it.timeConfidence || "") === "fallback" || !it.publishedAtSource) fallbackTime += 1;
+    if (String(it.timeConfidence || "") === "low" || String(it.timeConfidence || "") === "fallback") lowConfidence += 1;
+    const pub = Date.parse(it.publishedAtSource || "") || 0;
+    if (pub && pub > now + 48 * 3600000) futureTime += 1;
+    if (!it.url && !it.originalUrl) missingUrl += 1;
+    if (!it.sourceLabel && !it.sourceName && !it.sourceId) missingInstitution += 1;
+    if (!it.sourceGroup && !(it.sourcePublications && it.sourcePublications[0] && it.sourcePublications[0].sourceGroup)) {
+      missingGroup += 1;
+    }
+    for (const t of it.tags || []) {
+      if (TECH_RE.test(String(t))) techArtifacts += 1;
+    }
+    if (Array.isArray(it.sourcePublications) && it.sourcePublications.length > 1) multiSource += 1;
+    const st = String(it.status || "");
+    const lc = String(it.lifecycle || "");
+    if (st && !/^(aktivni|ukoncene|planovane|publikovano|prave-probihajici|archivovano|aktualizovano)$/i.test(st) && !lc) {
+      invalidLifecycle += 1;
+    }
+    const bucket = String(it.firstSeenByInfoUzel || "").slice(0, 16);
+    if (bucket) timeBuckets.set(bucket, (timeBuckets.get(bucket) || 0) + 1);
+  }
+  for (const n of timeBuckets.values()) {
+    if (n >= 25) sameBatchTime += n;
+  }
+  return {
+    itemCount: list.length,
+    fallbackTime,
+    lowConfidence,
+    futureTime,
+    missingUrl,
+    missingInstitution,
+    missingGroup,
+    techArtifactsInTags: techArtifacts,
+    multiSourcePublications: multiSource,
+    invalidLifecycle,
+    suspiciousSameCaptureBatch: sameBatchTime,
+    blockers: [
+      futureTime > 0 ? "future_published_at" : null,
+      missingUrl > 0 ? "missing_url" : null,
+      techArtifacts > 0 ? "tech_tags_in_user_fields" : null,
+    ].filter(Boolean),
+    warnings: [
+      fallbackTime > list.length * 0.4 ? "high_fallback_ratio" : null,
+      sameBatchTime > 40 ? "suspicious_backfill_batch" : null,
+    ].filter(Boolean),
+  };
+}
+
 export function regionalAdapterSpec() {
   return {
     type: "html-list",
@@ -248,7 +314,8 @@ export function loadPreviousFirstSeen(dir) {
     for (const it of feed.items || []) {
       const key = canonicalizeUrl(it.canonicalUrl || it.url || "").toLowerCase();
       if (!key) continue;
-      const first = it.firstSeenByInfoUzel || it.publishedAt || it.updatedAt;
+      // Never seed firstSeen from publishedAt — that polluted chronology (RSS firstSeen === publish).
+      const first = it.firstSeenByInfoUzel;
       if (first) map.set(key, first);
     }
   } catch {
@@ -257,23 +324,71 @@ export function loadPreviousFirstSeen(dir) {
   return map;
 }
 
+/**
+ * Chronology fields:
+ * - publishedAtSource = real source publish time (or null)
+ * - firstSeenByInfoUzel = first capture by InfoUzel
+ * - sortAt = publishedAtSource || firstSeen (display/sort fallback only)
+ * - publishedAt mirrors publishedAtSource when known; never invents "now"
+ * - timeSource / timeConfidence for auditability
+ */
 export function applyChronology(item, nowIso, firstSeenMap) {
   const key = canonicalizeUrl(item.canonicalUrl || item.url || "").toLowerCase();
   const hasSourceTime = !!(item._hasSourcePubDate && item.publishedAtSource);
   const sourcePub = hasSourceTime ? String(item.publishedAtSource) : null;
   const prevFirst = key ? firstSeenMap.get(key) : null;
+  const isNewCapture = !prevFirst;
   const firstSeen = prevFirst || nowIso;
-  const lastUpdatedBySource = sourcePub || item.lastUpdatedBySource || null;
+  const lastUpdatedBySource =
+    item.lastUpdatedBySource ||
+    (item.validTo ? null : sourcePub) ||
+    null;
+  const timeSource =
+    item.timeSource ||
+    (hasSourceTime ? item.timeSourceHint || "source_pub_date" : "first_seen_fallback");
+  const timeConfidence = hasSourceTime
+    ? item.timeSourceHint === "title_date"
+      ? "medium"
+      : "high"
+    : "fallback";
   const sortAt = sourcePub || firstSeen;
   return Object.assign({}, item, {
     publishedAtSource: sourcePub,
     firstSeenByInfoUzel: firstSeen,
-    lastUpdatedBySource: lastUpdatedBySource || firstSeen,
+    lastUpdatedBySource: lastUpdatedBySource || sourcePub || firstSeen,
     lastProcessedAt: nowIso,
     sortAt,
-    publishedAt: sortAt,
+    publishedAt: sourcePub || null,
     updatedAt: nowIso,
+    timeSource,
+    timeConfidence,
+    isNewCapture,
+    isHistoricalBackfill: !hasSourceTime || (sourcePub && Date.parse(nowIso) - Date.parse(sourcePub) > 96 * 3600000),
   });
+}
+
+/** Active 96h window: prefer publishedAtSource; long-lived events via validTo/status. */
+export function isInActiveFeedWindow(item, nowIso, maxAgeHours = 96) {
+  const now = Date.parse(nowIso) || Date.now();
+  const validTo = Date.parse(item && item.validTo ? item.validTo : "") || 0;
+  const validFrom = Date.parse(item && item.validFrom ? item.validFrom : "") || 0;
+  const status = String((item && item.status) || "").toLowerCase();
+  const lifecycle = String((item && item.lifecycle) || "").toLowerCase();
+  if (validTo && validTo >= now && status !== "ukoncene" && lifecycle !== "archivovano") {
+    return { ok: true, reason: "valid_active_event" };
+  }
+  if (lifecycle === "prave-probihajici" && validFrom && validFrom <= now && (!validTo || validTo >= now)) {
+    return { ok: true, reason: "ongoing_event" };
+  }
+  const pub = item && (item.publishedAtSource || (item.timeConfidence !== "fallback" ? item.publishedAt : null));
+  if (!pub) {
+    return { ok: false, reason: "no_reliable_published_at" };
+  }
+  const ageH = (now - Date.parse(pub)) / 3600000;
+  if (!Number.isFinite(ageH)) return { ok: false, reason: "bad_published_at" };
+  if (ageH < -48) return { ok: false, reason: "published_in_future" };
+  if (ageH > maxAgeHours) return { ok: false, reason: "older_than_window" };
+  return { ok: true, reason: "within_window" };
 }
 
 export function splitIntoLanes(items) {

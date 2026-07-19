@@ -651,11 +651,20 @@ function filterEvents(events, filters, opts) {
       seen.add(id);
     }
     if (hidden.has(id)) continue;
-    if (secSet && !secSet.has(String(ev.sectionId))) continue;
+    if (groupSet && !groupSet.has(String(ev.sourceGroup || ""))) {
+      const pubs = ev.sourcePublications || [];
+      if (!pubs.some((p) => groupSet.has(String(p.sourceGroup || "")))) continue;
+    }
+    if (sourceSet && !sourceSet.has(String(ev.sourceId))) {
+      const pubs = ev.sourcePublications || [];
+      if (!pubs.some((p) => sourceSet.has(String(p.sourceId)))) continue;
+    }
+    if (secSet && !secSet.has(String(ev.sectionId))) {
+      const ids = (ev.sectionIds || []).map(String);
+      if (!ids.some((id) => secSet.has(id))) continue;
+    }
     if (typeSet && !typeSet.has(String(ev.eventType)) && !typeSet.has(String(ev.status))) continue;
     if (statusSet && !statusSet.has(String(ev.status))) continue;
-    if (groupSet && !groupSet.has(String(ev.sourceGroup || ""))) continue;
-    if (sourceSet && !sourceSet.has(String(ev.sourceId))) continue;
     if (orgSet && !orgSet.has(String(ev.orgType || ""))) continue;
     if (laneSet && !laneSet.has(String(ev.lane || ""))) continue;
     if (connSet && !connSet.has(String(ev.connectorType || ""))) continue;
@@ -764,6 +773,9 @@ function evaluateLocalAlerts(events, prefs, config, state) {
     if (!rule || !rule.enabled) continue;
     for (const ev of events || []) {
       if (!ev || seen.has(String(ev.id)) || pendingIds.has(String(ev.id))) continue;
+      // Never alert on historical backfill / fallback-time imports
+      if (ev.isHistoricalBackfill || ev.timeConfidence === "fallback" || !ev.publishedAtSource) continue;
+      if (ev.isNewCapture === false) continue;
       if (rule.lanes && rule.lanes.length && !rule.lanes.includes(String(ev.lane || ""))) continue;
       if (rule.eventTypes && rule.eventTypes.length) {
         const et = String(ev.eventType || "");

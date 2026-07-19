@@ -214,6 +214,23 @@ function renderItem(ev, taxonomy, prefs) {
   const read = isRead(ev.id);
   const saved = isSaved(ev.id);
   const favSrc = (prefs.favoriteSourceIds || []).includes(String(ev.sourceId));
+  const laneLabel = (LANE_OPTIONS.find((x) => x.id === ev.lane) || {}).label || "";
+  const statusLabel = ({
+    aktivni: "Aktivní",
+    publikovano: "Publikováno",
+    planovane: "Plánováno",
+    "prave-probihajici": "Probíhá",
+    ukoncene: "Ukončeno",
+    archivovano: "Archiv",
+    aktualizovano: "Aktualizováno",
+  })[String(ev.status || "")] || String(ev.status || ev.eventType || "");
+  const pubs = Array.isArray(ev.sourcePublications) ? ev.sourcePublications : [];
+  const clusterLinks =
+    Array.isArray(ev._clusterLinks) && ev._clusterLinks.length > 1
+      ? ev._clusterLinks
+      : pubs.length > 1
+        ? pubs.map((p) => ({ label: p.sourceLabel || p.sourceId, url: p.url }))
+        : [];
   return `
   <li class="iuPrehledDne__item${read ? " is-read" : ""}${favSrc ? " is-fav" : ""}" data-id="${esc(ev.id)}" style="--iu-pd-dot:${esc(color)}">
     <div class="iuPrehledDne__timeCol">
@@ -227,22 +244,21 @@ function renderItem(ev, taxonomy, prefs) {
       <div class="iuPrehledDne__meta">
         <span class="iuPrehledDne__pill">${esc(ev.sourceLabel || ev.sourceId)}</span>
         <span class="iuPrehledDne__pill">${esc((ev.region && ev.region.name) || "ČR")}</span>
-        <span class="iuPrehledDne__pill">${esc(ev.status || ev.eventType || "")}</span>
-        ${ev.lane ? `<span class="iuPrehledDne__pill">${esc(ev.lane)}</span>` : ""}
-        ${(ev.tags || []).slice(0, 2).map((t) => `<span class="iuPrehledDne__pill">${esc(t)}</span>`).join("")}
-        ${ev._clusterSize > 1 ? `<span class="iuPrehledDne__pill">skupina ${esc(ev._clusterSize)}</span>` : ""}
+        ${statusLabel ? `<span class="iuPrehledDne__pill">${esc(statusLabel)}</span>` : ""}
+        ${laneLabel ? `<span class="iuPrehledDne__pill">${esc(laneLabel)}</span>` : ""}
+        ${ev._clusterSize > 1 || pubs.length > 1 ? `<span class="iuPrehledDne__pill">${esc(Math.max(ev._clusterSize || 1, pubs.length))} zdrojů</span>` : ""}
         ${favSrc ? `<span class="iuPrehledDne__pill iuPrehledDne__pill--fav">★</span>` : ""}
       </div>
       ${
-        Array.isArray(ev._clusterLinks) && ev._clusterLinks.length > 1
-          ? `<div class="iuPrehledDne__origins">${ev._clusterLinks
+        clusterLinks.length > 1
+          ? `<div class="iuPrehledDne__origins">${clusterLinks
               .map(
                 (l) =>
                   `<a class="iuPrehledDne__origin" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(
                     l.label || "Zdroj"
                   )}</a>`
               )
-              .join("")}</div>`
+              .join(" · ")}</div>`
           : ""
       }
       <div class="iuPrehledDne__actions">
