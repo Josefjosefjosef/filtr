@@ -118,11 +118,15 @@ export function extractFeedItems(xml) {
       decodeXmlEntities((chunk.match(/<link[^>]*>([\s\S]*?)<\/link>/i) || [])[1] || "").trim() ||
       decodeXmlEntities((chunk.match(/<link[^>]*href=["']([^"']+)["']/i) || [])[1] || "").trim() ||
       decodeXmlEntities((chunk.match(/<guid[^>]*>([\s\S]*?)<\/guid>/i) || [])[1] || "").trim();
-    const pub =
-      ((chunk.match(/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i) || [])[1] || "").trim() ||
-      ((chunk.match(/<dc:date[^>]*>([\s\S]*?)<\/dc:date>/i) || [])[1] || "").trim() ||
-      ((chunk.match(/<published[^>]*>([\s\S]*?)<\/published>/i) || [])[1] || "").trim();
-    items.push({ title, link, pubDate: pub });
+    const pubDate = ((chunk.match(/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i) || [])[1] || "").trim();
+    const dcDate = ((chunk.match(/<dc:date[^>]*>([\s\S]*?)<\/dc:date>/i) || [])[1] || "").trim();
+    const published = ((chunk.match(/<published[^>]*>([\s\S]*?)<\/published>/i) || [])[1] || "").trim();
+    const pub = pubDate || dcDate || published;
+    let timeSourceHint = "";
+    if (pubDate) timeSourceHint = "rss_pub_date";
+    else if (dcDate) timeSourceHint = "rss_dc_date";
+    else if (published) timeSourceHint = "rss_published";
+    items.push({ title, link, pubDate: pub, timeSourceHint, feedFormat: "rss" });
   }
   if (items.length === 0) {
     const entries = String(xml || "").split(/<entry[\s>]/i).slice(1);
@@ -130,10 +134,11 @@ export function extractFeedItems(xml) {
       const chunk = block.split(/<\/entry>/i)[0] || block;
       const title = stripHtml((chunk.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1] || "");
       const link = decodeXmlEntities((chunk.match(/<link[^>]*href=["']([^"']+)["']/i) || [])[1] || "").trim();
-      const pub =
-        ((chunk.match(/<published[^>]*>([\s\S]*?)<\/published>/i) || [])[1] || "").trim() ||
-        ((chunk.match(/<updated[^>]*>([\s\S]*?)<\/updated>/i) || [])[1] || "").trim();
-      items.push({ title, link, pubDate: pub });
+      const published = ((chunk.match(/<published[^>]*>([\s\S]*?)<\/published>/i) || [])[1] || "").trim();
+      const updated = ((chunk.match(/<updated[^>]*>([\s\S]*?)<\/updated>/i) || [])[1] || "").trim();
+      const pub = published || updated;
+      const timeSourceHint = published ? "atom_published" : updated ? "atom_updated" : "";
+      items.push({ title, link, pubDate: pub, timeSourceHint, feedFormat: "atom" });
     }
   }
   return items;

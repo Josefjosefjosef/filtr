@@ -1,0 +1,59 @@
+{
+  "auditedAt": "2026-07-19T20:00:00.000Z",
+  "baselineCommit": "5647bb3fe365a12feb4bb4d2830c6957de73c853",
+  "baselineTag": "pre-aggregator-stable-20260717",
+  "mainAtAudit": "41829ebf5e421b5ee9c1d73f5d33785e2926d357",
+  "priorStabilizationPr": 7614,
+  "priorUiPr": 7615,
+  "verdict": "PHASE_0_AUDIT_ONLY_NOT_FULL_ARCHITECTURE",
+  "productionPath": "github_actions_refresh_to_static_json_pages",
+  "notProductionPath": [
+    "postgresql",
+    "postgis",
+    "public_api",
+    "sse",
+    "raw_ingest_storage",
+    "admin_audit_ui"
+  ],
+  "registrySnapshot": {
+    "entries": 39,
+    "PRODUCTION_ACTIVE": 28,
+    "NO_STABLE_ITEM_SOURCE": 7,
+    "TECHNICALLY_BLOCKED": 4
+  },
+  "requirements": [
+    { "id": "4.1_legal_card_per_distribution", "status": "partially_implemented" },
+    { "id": "4.2_legal_status_enum", "status": "partially_implemented" },
+    { "id": "4.3_legal_audit_39_fields", "status": "documentation_only" },
+    { "id": "4.5_atom_time_source_distinct", "status": "partially_implemented", "note": "parser labels atom_published/atom_updated; needs refresh to appear in prod feed" },
+    { "id": "5_source_registry_gatekeeper_json", "status": "implemented_and_proven" },
+    { "id": "5_full_registry_schema_tables", "status": "not_implemented" },
+    { "id": "6_terms_change_monitor", "status": "not_implemented" },
+    { "id": "7_complete_source_map", "status": "partially_implemented" },
+    { "id": "11_raw_ingest", "status": "not_implemented" },
+    { "id": "12_postgresql_postgis_sot", "status": "not_implemented" },
+    { "id": "13_source_item_canonical_event", "status": "not_implemented" },
+    { "id": "14_localization_full", "status": "partially_implemented" },
+    { "id": "15_taxonomy", "status": "partially_implemented" },
+    { "id": "16_lifecycle", "status": "partially_implemented" },
+    { "id": "17_multilevel_dedup", "status": "partially_implemented" },
+    { "id": "18_filters_via_links", "status": "partially_implemented" },
+    { "id": "19_public_api", "status": "not_implemented" },
+    { "id": "20_sse_delta", "status": "not_implemented" },
+    { "id": "21_local_first", "status": "implemented_and_proven" },
+    { "id": "22_offline_new_arch", "status": "partially_implemented" },
+    { "id": "25_admin_audit_ui", "status": "not_implemented" },
+    { "id": "26_monitoring_extended", "status": "partially_implemented" },
+    { "id": "28_remove_old_media_system", "status": "partially_implemented" },
+    { "id": "33_physical_devices", "status": "not_implemented" },
+    { "id": "96h_rule", "status": "implemented_and_proven" },
+    { "id": "baseline_preserved", "status": "implemented_and_proven" }
+  ],
+  "acceptanceCriteriaMet": [1],
+  "acceptanceCriteriaBlockedOrUnmet": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+  "notes": [
+    "Criterion 21 local-first is met for current LS model; listed unmet only where tied to new architecture APIs.",
+    "Do not treat PR #7614 as full architecture completion.",
+    "No 48h public parallel run. Shadow ingest only after Phase 1+ foundations."
+  ]
+}
