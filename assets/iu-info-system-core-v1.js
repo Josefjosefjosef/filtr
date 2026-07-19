@@ -835,6 +835,24 @@ function filterEvents(events, filters, opts) {
       const t = parseTime(eventSortAt(ev));
       if (!t || now - t > rangeMs) continue;
     }
+    // Client-side 96h safety (mirrors backend isInActiveFeedWindow) for stale published feeds
+    {
+      const maxAgeMs = 96 * 3600000;
+      const validTo = parseTime(ev.validTo);
+      const validFrom = parseTime(ev.validFrom);
+      const status = String(ev.status || "").toLowerCase();
+      const lifecycleOk =
+        (validTo && validTo >= now && status !== "ukoncene" && status !== "archivovano") ||
+        (status === "prave-probihajici" && validFrom && validFrom <= now && (!validTo || validTo >= now)) ||
+        (status === "aktivni" && validTo && validTo >= now) ||
+        status === "planovane";
+      const pubT = parseTime(ev.publishedAtSource || (ev.timeConfidence !== "fallback" ? ev.publishedAt : null));
+      if (!lifecycleOk) {
+        if (!pubT) continue;
+        if (now - pubT > maxAgeMs) continue;
+        if (pubT - now > 48 * 3600000) continue;
+      }
+    }
     if (importanceMin && Number(ev.importance || 0) < importanceMin) continue;
     if (f.activeOnly && !isActiveEvent(ev)) continue;
     if (f.newOnly && !isNewEvent(ev, 24)) continue;

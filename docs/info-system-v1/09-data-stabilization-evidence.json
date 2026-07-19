@@ -1,0 +1,1594 @@
+{
+  "auditedAt": "2026-07-19T14:14:46.384Z",
+  "productionFeed": {
+    "generatedAt": "2026-07-19T12:10:33.316Z",
+    "itemCount": 140,
+    "maxAgeHours": 96
+  },
+  "monitoring": {
+    "failedConnectors": [
+      {
+        "id": "rsd",
+        "reason": "fetch failed",
+        "status": 0,
+        "mode": "html",
+        "lane": null
+      },
+      {
+        "id": "ct24",
+        "reason": "not_feed",
+        "status": 403,
+        "mode": null,
+        "lane": null
+      }
+    ],
+    "alerts": [
+      {
+        "type": "structure_change",
+        "sourceId": "rsd",
+        "at": "2026-07-19T12:10:33.316Z",
+        "detail": "itemsKept 5 → 0"
+      },
+      {
+        "type": "connector_down",
+        "sourceId": "rsd",
+        "at": "2026-07-19T12:10:33.316Z",
+        "detail": "availability=down"
+      },
+      {
+        "type": "stale_source",
+        "sourceId": "eru",
+        "at": "2026-07-19T12:10:33.316Z",
+        "detail": "lastSuccessAt=2026-07-18T22:26:57.066Z periodMin=30"
+      },
+      {
+        "type": "structure_change",
+        "sourceId": "ct24",
+        "at": "2026-07-19T12:10:33.316Z",
+        "detail": "itemsKept 25 → 0"
+      },
+      {
+        "type": "stale_source",
+        "sourceId": "ct24",
+        "at": "2026-07-19T12:10:33.316Z",
+        "detail": "lastSuccessAt=2026-07-19T09:57:08.852Z periodMin=30"
+      },
+      {
+        "type": "connector_down",
+        "sourceId": "irozhlas",
+        "at": "2026-07-19T12:10:33.316Z",
+        "detail": "availability=down"
+      }
+    ],
+    "droppedOutsideActiveWindow": 136,
+    "dataQuality": {
+      "itemCount": 140,
+      "fallbackTime": 0,
+      "lowConfidence": 0,
+      "futureTime": 0,
+      "missingUrl": 0,
+      "missingInstitution": 0,
+      "missingGroup": 0,
+      "techArtifactsInTags": 0,
+      "multiSourcePublications": 0,
+      "invalidLifecycle": 0,
+      "suspiciousSameCaptureBatch": 52,
+      "blockers": [],
+      "warnings": [
+        "suspicious_backfill_batch"
+      ]
+    },
+    "feedItemCount": 140
+  },
+  "registry": {
+    "total": 39,
+    "productionActive": 28,
+    "pending": 11,
+    "pendingIds": [
+      {
+        "id": "mdcr",
+        "status": "NO_STABLE_ITEM_SOURCE"
+      },
+      {
+        "id": "ndic",
+        "status": "TECHNICALLY_BLOCKED"
+      },
+      {
+        "id": "portal-gov",
+        "status": "TECHNICALLY_BLOCKED"
+      },
+      {
+        "id": "cnb",
+        "status": "NO_STABLE_ITEM_SOURCE"
+      },
+      {
+        "id": "csu",
+        "status": "NO_STABLE_ITEM_SOURCE"
+      },
+      {
+        "id": "cssz",
+        "status": "TECHNICALLY_BLOCKED"
+      },
+      {
+        "id": "urad-prace",
+        "status": "TECHNICALLY_BLOCKED"
+      },
+      {
+        "id": "registr-smluv",
+        "status": "NO_STABLE_ITEM_SOURCE"
+      },
+      {
+        "id": "esbirka",
+        "status": "NO_STABLE_ITEM_SOURCE"
+      },
+      {
+        "id": "mkcr",
+        "status": "NO_STABLE_ITEM_SOURCE"
+      },
+      {
+        "id": "msmt",
+        "status": "NO_STABLE_ITEM_SOURCE"
+      }
+    ]
+  },
+  "auditedSources": [
+    {
+      "sourceId": "irozhlas",
+      "kind": "rss+verejnopravni",
+      "inActiveFeedCount": 40,
+      "sample": {
+        "id": "ie-irozhlas-ba3b25eae5b4",
+        "eventId": "ie-irozhlas-ba3b25eae5b4",
+        "sourceId": "irozhlas",
+        "institution": "iROZHLAS",
+        "sourceGroup": "verejnopravni-media",
+        "url": "https://www.irozhlas.cz/zpravy-domov/meteorologove-varuji-pred-silnymi-bourkami-zprisnili-vystrahu-pro-jihovychod-a_2607191215_pik",
+        "published_at": "2026-07-19T10:10:00.000Z",
+        "first_seen_at": "2026-07-19T12:10:33.316Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": null,
+        "valid_to": null,
+        "resolved_at": null,
+        "time_source": "rss_pub_date",
+        "time_confidence": "high",
+        "lifecycle": "publikovano",
+        "region": "Česká republika",
+        "regionLevel": "cr",
+        "category": "cesko-svet",
+        "lane": "verejnopravni-media",
+        "connectorType": "rss",
+        "tags": [],
+        "sourcePublications": [
+          {
+            "sourceId": "irozhlas",
+            "sourceLabel": "iROZHLAS",
+            "sourceGroup": "verejnopravni-media",
+            "url": "https://www.irozhlas.cz/zpravy-domov/meteorologove-varuji-pred-silnymi-bourkami-zprisnili-vystrahu-pro-jihovychod-a_2607191215_pik",
+            "publishedAt": "2026-07-19T10:10:00.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 7233316,
+        "age_hours_published": 4.079550277777778
+      },
+      "samples": [
+        {
+          "id": "ie-irozhlas-ba3b25eae5b4",
+          "eventId": "ie-irozhlas-ba3b25eae5b4",
+          "sourceId": "irozhlas",
+          "institution": "iROZHLAS",
+          "sourceGroup": "verejnopravni-media",
+          "url": "https://www.irozhlas.cz/zpravy-domov/meteorologove-varuji-pred-silnymi-bourkami-zprisnili-vystrahu-pro-jihovychod-a_2607191215_pik",
+          "published_at": "2026-07-19T10:10:00.000Z",
+          "first_seen_at": "2026-07-19T12:10:33.316Z",
+          "updated_at": "2026-07-19T12:10:33.316Z",
+          "valid_from": null,
+          "valid_to": null,
+          "resolved_at": null,
+          "time_source": "rss_pub_date",
+          "time_confidence": "high",
+          "lifecycle": "publikovano",
+          "region": "Česká republika",
+          "regionLevel": "cr",
+          "category": "cesko-svet",
+          "lane": "verejnopravni-media",
+          "connectorType": "rss",
+          "tags": [],
+          "sourcePublications": [
+            {
+              "sourceId": "irozhlas",
+              "sourceLabel": "iROZHLAS",
+              "sourceGroup": "verejnopravni-media",
+              "url": "https://www.irozhlas.cz/zpravy-domov/meteorologove-varuji-pred-silnymi-bourkami-zprisnili-vystrahu-pro-jihovychod-a_2607191215_pik",
+              "publishedAt": "2026-07-19T10:10:00.000Z"
+            }
+          ],
+          "published_vs_first_seen_diff_ms": 7233316,
+          "age_hours_published": 4.079550277777778
+        },
+        {
+          "id": "ie-irozhlas-cb403c679baa",
+          "eventId": "ie-irozhlas-cb403c679baa",
+          "sourceId": "irozhlas",
+          "institution": "iROZHLAS",
+          "sourceGroup": "verejnopravni-media",
+          "url": "https://www.irozhlas.cz/zpravy-svet/online-rusko-opet-utocilo-na-kyjev-jeho-udery-si-vyzadaly-nejmene-jednu-obet-a_2607190620_pik",
+          "published_at": "2026-07-19T04:20:00.000Z",
+          "first_seen_at": "2026-07-19T09:57:08.852Z",
+          "updated_at": "2026-07-19T12:10:33.316Z",
+          "valid_from": null,
+          "valid_to": null,
+          "resolved_at": null,
+          "time_source": "rss_pub_date",
+          "time_confidence": "high",
+          "lifecycle": "publikovano",
+          "region": "Česká republika",
+          "regionLevel": "cr",
+          "category": "cesko-svet",
+          "lane": "verejnopravni-media",
+          "connectorType": "rss",
+          "tags": [],
+          "sourcePublications": [
+            {
+              "sourceId": "irozhlas",
+              "sourceLabel": "iROZHLAS",
+              "sourceGroup": "verejnopravni-media",
+              "url": "https://www.irozhlas.cz/zpravy-svet/online-rusko-opet-utocilo-na-kyjev-jeho-udery-si-vyzadaly-nejmene-jednu-obet-a_2607190620_pik",
+              "publishedAt": "2026-07-19T04:20:00.000Z"
+            }
+          ],
+          "published_vs_first_seen_diff_ms": 20228852,
+          "age_hours_published": 9.912883611111111
+        },
+        {
+          "id": "ie-irozhlas-fbbf7e2785b7",
+          "eventId": "ie-irozhlas-fbbf7e2785b7",
+          "sourceId": "irozhlas",
+          "institution": "iROZHLAS",
+          "sourceGroup": "verejnopravni-media",
+          "url": "https://www.irozhlas.cz/sport/fotbal/fotbal-portugalsko-boavista-dluhy-zanik-insolvence_2607172232_lbk",
+          "published_at": "2026-07-17T20:32:00.000Z",
+          "first_seen_at": "2026-07-17T20:32:00.000Z",
+          "updated_at": "2026-07-19T12:10:33.316Z",
+          "valid_from": null,
+          "valid_to": null,
+          "resolved_at": null,
+          "time_source": "rss_pub_date",
+          "time_confidence": "high",
+          "lifecycle": "publikovano",
+          "region": "Česká republika",
+          "regionLevel": "cr",
+          "category": "cesko-svet",
+          "lane": "verejnopravni-media",
+          "connectorType": "rss",
+          "tags": [],
+          "sourcePublications": [
+            {
+              "sourceId": "irozhlas",
+              "sourceLabel": "iROZHLAS",
+              "sourceGroup": "verejnopravni-media",
+              "url": "https://www.irozhlas.cz/sport/fotbal/fotbal-portugalsko-boavista-dluhy-zanik-insolvence_2607172232_lbk",
+              "publishedAt": "2026-07-17T20:32:00.000Z"
+            }
+          ],
+          "published_vs_first_seen_diff_ms": 0,
+          "age_hours_published": 41.71288361111111
+        }
+      ],
+      "registry": {
+        "id": "irozhlas",
+        "label": "iROZHLAS",
+        "connectorStatus": "PRODUCTION_ACTIVE",
+        "connectorType": "rss",
+        "lane": "verejnopravni-media",
+        "group": "verejnopravni-media",
+        "productionActive": true,
+        "monitoring": {
+          "lastSuccessAt": "2026-07-19T12:10:33.316Z",
+          "itemsKept": 148,
+          "lastError": null,
+          "availability": "down"
+        }
+      },
+      "absentReason": null
+    },
+    {
+      "sourceId": "nukib",
+      "kind": "html+kyber",
+      "inActiveFeedCount": 0,
+      "sample": null,
+      "samples": [],
+      "registry": {
+        "id": "nukib",
+        "label": "Národní úřad pro kybernetickou a informační bezpečnost",
+        "connectorStatus": "PRODUCTION_ACTIVE",
+        "connectorType": "html",
+        "lane": "bezpecnost",
+        "group": "kyber",
+        "productionActive": true,
+        "monitoring": {
+          "lastSuccessAt": "2026-07-19T12:10:33.316Z",
+          "itemsKept": 25,
+          "lastError": null,
+          "availability": "ok"
+        }
+      },
+      "absentReason": "Connector returned 25 items but none remain in active 96h feed (correct exclusion of historical backfill / outside window)"
+    },
+    {
+      "sourceId": "mze",
+      "kind": "html+ministerstvo",
+      "inActiveFeedCount": 0,
+      "sample": null,
+      "samples": [],
+      "registry": {
+        "id": "mze",
+        "label": "Ministerstvo zemědělství",
+        "connectorStatus": "PRODUCTION_ACTIVE",
+        "connectorType": "html",
+        "lane": "ministerstva",
+        "group": "ministerstva",
+        "productionActive": true,
+        "monitoring": {
+          "lastSuccessAt": "2026-07-19T12:10:33.316Z",
+          "itemsKept": 9,
+          "lastError": null,
+          "availability": "ok"
+        }
+      },
+      "absentReason": "Connector returned 9 items but none remain in active 96h feed (correct exclusion of historical backfill / outside window)"
+    },
+    {
+      "sourceId": "szdc",
+      "kind": "html+title_date+doprava",
+      "inActiveFeedCount": 1,
+      "sample": {
+        "id": "ie-szdc-6c5c217743ed",
+        "eventId": "ie-szdc-6c5c217743ed",
+        "sourceId": "szdc",
+        "institution": "Správa železnic",
+        "sourceGroup": "doprava",
+        "url": "https://www.spravazeleznic.cz/-/na-provoz-mezi-prahou-a-milovicemi-dohlizi-etcs-vlaky-zrychli-na-160-km-h",
+        "published_at": "2026-07-16T12:00:00.000Z",
+        "first_seen_at": "2026-07-18T19:38:01.328Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": null,
+        "valid_to": null,
+        "resolved_at": null,
+        "time_source": "title_date",
+        "time_confidence": "medium",
+        "lifecycle": "publikovano",
+        "region": "Česká republika",
+        "regionLevel": "cr",
+        "category": "doprava",
+        "lane": "doprava",
+        "connectorType": "html",
+        "tags": [],
+        "sourcePublications": [
+          {
+            "sourceId": "szdc",
+            "sourceLabel": "Správa železnic",
+            "sourceGroup": "doprava",
+            "url": "https://www.spravazeleznic.cz/-/na-provoz-mezi-prahou-a-milovicemi-dohlizi-etcs-vlaky-zrychli-na-160-km-h",
+            "publishedAt": "2026-07-16T12:00:00.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 200281328,
+        "age_hours_published": 74.24621694444444
+      },
+      "samples": [
+        {
+          "id": "ie-szdc-6c5c217743ed",
+          "eventId": "ie-szdc-6c5c217743ed",
+          "sourceId": "szdc",
+          "institution": "Správa železnic",
+          "sourceGroup": "doprava",
+          "url": "https://www.spravazeleznic.cz/-/na-provoz-mezi-prahou-a-milovicemi-dohlizi-etcs-vlaky-zrychli-na-160-km-h",
+          "published_at": "2026-07-16T12:00:00.000Z",
+          "first_seen_at": "2026-07-18T19:38:01.328Z",
+          "updated_at": "2026-07-19T12:10:33.316Z",
+          "valid_from": null,
+          "valid_to": null,
+          "resolved_at": null,
+          "time_source": "title_date",
+          "time_confidence": "medium",
+          "lifecycle": "publikovano",
+          "region": "Česká republika",
+          "regionLevel": "cr",
+          "category": "doprava",
+          "lane": "doprava",
+          "connectorType": "html",
+          "tags": [],
+          "sourcePublications": [
+            {
+              "sourceId": "szdc",
+              "sourceLabel": "Správa železnic",
+              "sourceGroup": "doprava",
+              "url": "https://www.spravazeleznic.cz/-/na-provoz-mezi-prahou-a-milovicemi-dohlizi-etcs-vlaky-zrychli-na-160-km-h",
+              "publishedAt": "2026-07-16T12:00:00.000Z"
+            }
+          ],
+          "published_vs_first_seen_diff_ms": 200281328,
+          "age_hours_published": 74.24621694444444
+        }
+      ],
+      "registry": {
+        "id": "szdc",
+        "label": "Správa železnic",
+        "connectorStatus": "PRODUCTION_ACTIVE",
+        "connectorType": "html",
+        "lane": "doprava",
+        "group": "doprava",
+        "productionActive": true,
+        "monitoring": {
+          "lastSuccessAt": "2026-07-19T12:10:33.316Z",
+          "itemsKept": 2,
+          "lastError": null,
+          "availability": "ok"
+        }
+      },
+      "absentReason": null
+    },
+    {
+      "sourceId": "kraj-liberecky",
+      "kind": "html+regional",
+      "inActiveFeedCount": 0,
+      "sample": null,
+      "samples": [],
+      "registry": {
+        "id": "kraj-liberecky",
+        "label": "Liberecký kraj",
+        "connectorStatus": "PRODUCTION_ACTIVE",
+        "connectorType": "html",
+        "lane": "regionalni",
+        "group": "verejna-sprava",
+        "productionActive": true,
+        "monitoring": {
+          "lastSuccessAt": "2026-07-19T12:10:33.316Z",
+          "itemsKept": 25,
+          "lastError": null,
+          "availability": "ok"
+        }
+      },
+      "absentReason": "Connector returned 25 items but none remain in active 96h feed (correct exclusion of historical backfill / outside window)"
+    },
+    {
+      "sourceId": "kraj-zlinsky",
+      "kind": "html+regional",
+      "inActiveFeedCount": 0,
+      "sample": null,
+      "samples": [],
+      "registry": {
+        "id": "kraj-zlinsky",
+        "label": "Zlínský kraj",
+        "connectorStatus": "PRODUCTION_ACTIVE",
+        "connectorType": "html",
+        "lane": "regionalni",
+        "group": "verejna-sprava",
+        "productionActive": true,
+        "monitoring": {
+          "lastSuccessAt": "2026-07-19T12:10:33.316Z",
+          "itemsKept": 30,
+          "lastError": null,
+          "availability": "ok"
+        }
+      },
+      "absentReason": "Connector returned 30 items but none remain in active 96h feed (correct exclusion of historical backfill / outside window)"
+    },
+    {
+      "sourceId": "mfcr",
+      "kind": "rss+resort",
+      "inActiveFeedCount": 1,
+      "sample": {
+        "id": "ie-mfcr-3278dd8f91ca",
+        "eventId": "ie-mfcr-3278dd8f91ca",
+        "sourceId": "mfcr",
+        "institution": "Ministerstvo financí ČR",
+        "sourceGroup": "ministerstva",
+        "url": "https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/obcane-koupili-dluhopisy-republiky-v-hodnote-74-mi-64586",
+        "published_at": "2026-07-16T08:00:00.000Z",
+        "first_seen_at": "2026-07-19T09:57:08.852Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": null,
+        "valid_to": null,
+        "resolved_at": null,
+        "time_source": "rss_pub_date",
+        "time_confidence": "high",
+        "lifecycle": "publikovano",
+        "region": "Česká republika",
+        "regionLevel": "cr",
+        "category": "stat",
+        "lane": "ministerstva",
+        "connectorType": "rss",
+        "tags": [],
+        "sourcePublications": [
+          {
+            "sourceId": "mfcr",
+            "sourceLabel": "Ministerstvo financí ČR",
+            "sourceGroup": "ministerstva",
+            "url": "https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/obcane-koupili-dluhopisy-republiky-v-hodnote-74-mi-64586",
+            "publishedAt": "2026-07-16T08:00:00.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 266228852,
+        "age_hours_published": 78.24621694444444
+      },
+      "samples": [
+        {
+          "id": "ie-mfcr-3278dd8f91ca",
+          "eventId": "ie-mfcr-3278dd8f91ca",
+          "sourceId": "mfcr",
+          "institution": "Ministerstvo financí ČR",
+          "sourceGroup": "ministerstva",
+          "url": "https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/obcane-koupili-dluhopisy-republiky-v-hodnote-74-mi-64586",
+          "published_at": "2026-07-16T08:00:00.000Z",
+          "first_seen_at": "2026-07-19T09:57:08.852Z",
+          "updated_at": "2026-07-19T12:10:33.316Z",
+          "valid_from": null,
+          "valid_to": null,
+          "resolved_at": null,
+          "time_source": "rss_pub_date",
+          "time_confidence": "high",
+          "lifecycle": "publikovano",
+          "region": "Česká republika",
+          "regionLevel": "cr",
+          "category": "stat",
+          "lane": "ministerstva",
+          "connectorType": "rss",
+          "tags": [],
+          "sourcePublications": [
+            {
+              "sourceId": "mfcr",
+              "sourceLabel": "Ministerstvo financí ČR",
+              "sourceGroup": "ministerstva",
+              "url": "https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/obcane-koupili-dluhopisy-republiky-v-hodnote-74-mi-64586",
+              "publishedAt": "2026-07-16T08:00:00.000Z"
+            }
+          ],
+          "published_vs_first_seen_diff_ms": 266228852,
+          "age_hours_published": 78.24621694444444
+        }
+      ],
+      "registry": {
+        "id": "mfcr",
+        "label": "Ministerstvo financí ČR",
+        "connectorStatus": "PRODUCTION_ACTIVE",
+        "connectorType": "rss",
+        "lane": "ministerstva",
+        "group": "ministerstva",
+        "productionActive": true,
+        "monitoring": {
+          "lastSuccessAt": "2026-07-19T12:10:33.316Z",
+          "itemsKept": 1,
+          "lastError": null,
+          "availability": "ok"
+        }
+      },
+      "absentReason": null
+    },
+    {
+      "sourceId": "mpo",
+      "kind": "html+resort",
+      "inActiveFeedCount": 0,
+      "sample": null,
+      "samples": [],
+      "registry": {
+        "id": "mpo",
+        "label": "Ministerstvo průmyslu a obchodu",
+        "connectorStatus": "PRODUCTION_ACTIVE",
+        "connectorType": "html",
+        "lane": "ministerstva",
+        "group": "ministerstva",
+        "productionActive": true,
+        "monitoring": {
+          "lastSuccessAt": "2026-07-19T12:10:33.316Z",
+          "itemsKept": 54,
+          "lastError": null,
+          "availability": "ok"
+        }
+      },
+      "absentReason": "Connector returned 54 items but none remain in active 96h feed (correct exclusion of historical backfill / outside window)"
+    },
+    {
+      "sourceId": "policie-cr",
+      "kind": "rss+security",
+      "inActiveFeedCount": 20,
+      "sample": {
+        "id": "ie-policie-cr-d1021167b93c",
+        "eventId": "ie-policie-cr-d1021167b93c",
+        "sourceId": "policie-cr",
+        "institution": "Policie České republiky",
+        "sourceGroup": "policie",
+        "url": "https://policie.gov.cz/clanek/bezpecnostni-opatreni-u-hudebniho-festivalu-v-ostrave-bez-mimoradne-udalosti.aspx",
+        "published_at": "2026-07-19T11:34:00.000Z",
+        "first_seen_at": "2026-07-19T12:10:33.316Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": null,
+        "valid_to": null,
+        "resolved_at": null,
+        "time_source": "rss_pub_date",
+        "time_confidence": "high",
+        "lifecycle": "publikovano",
+        "region": "Česká republika",
+        "regionLevel": "cr",
+        "category": "bezpecnost",
+        "lane": "bezpecnost",
+        "connectorType": "rss",
+        "tags": [],
+        "sourcePublications": [
+          {
+            "sourceId": "policie-cr",
+            "sourceLabel": "Policie České republiky",
+            "sourceGroup": "policie",
+            "url": "https://policie.gov.cz/clanek/bezpecnostni-opatreni-u-hudebniho-festivalu-v-ostrave-bez-mimoradne-udalosti.aspx",
+            "publishedAt": "2026-07-19T11:34:00.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 2193316,
+        "age_hours_published": 2.679550277777778
+      },
+      "samples": [
+        {
+          "id": "ie-policie-cr-d1021167b93c",
+          "eventId": "ie-policie-cr-d1021167b93c",
+          "sourceId": "policie-cr",
+          "institution": "Policie České republiky",
+          "sourceGroup": "policie",
+          "url": "https://policie.gov.cz/clanek/bezpecnostni-opatreni-u-hudebniho-festivalu-v-ostrave-bez-mimoradne-udalosti.aspx",
+          "published_at": "2026-07-19T11:34:00.000Z",
+          "first_seen_at": "2026-07-19T12:10:33.316Z",
+          "updated_at": "2026-07-19T12:10:33.316Z",
+          "valid_from": null,
+          "valid_to": null,
+          "resolved_at": null,
+          "time_source": "rss_pub_date",
+          "time_confidence": "high",
+          "lifecycle": "publikovano",
+          "region": "Česká republika",
+          "regionLevel": "cr",
+          "category": "bezpecnost",
+          "lane": "bezpecnost",
+          "connectorType": "rss",
+          "tags": [],
+          "sourcePublications": [
+            {
+              "sourceId": "policie-cr",
+              "sourceLabel": "Policie České republiky",
+              "sourceGroup": "policie",
+              "url": "https://policie.gov.cz/clanek/bezpecnostni-opatreni-u-hudebniho-festivalu-v-ostrave-bez-mimoradne-udalosti.aspx",
+              "publishedAt": "2026-07-19T11:34:00.000Z"
+            }
+          ],
+          "published_vs_first_seen_diff_ms": 2193316,
+          "age_hours_published": 2.679550277777778
+        },
+        {
+          "id": "ie-policie-cr-e0041f690722",
+          "eventId": "ie-policie-cr-e0041f690722",
+          "sourceId": "policie-cr",
+          "institution": "Policie České republiky",
+          "sourceGroup": "policie",
+          "url": "https://policie.gov.cz/clanek/nehoda-na-zeleznicnim-prejezdu-ve-smrzovce.aspx",
+          "published_at": "2026-07-17T10:28:00.000Z",
+          "first_seen_at": "2026-07-17T10:28:00.000Z",
+          "updated_at": "2026-07-19T12:10:33.316Z",
+          "valid_from": null,
+          "valid_to": null,
+          "resolved_at": null,
+          "time_source": "rss_pub_date",
+          "time_confidence": "high",
+          "lifecycle": "publikovano",
+          "region": "Česká republika",
+          "regionLevel": "cr",
+          "category": "bezpecnost",
+          "lane": "bezpecnost",
+          "connectorType": "rss",
+          "tags": [],
+          "sourcePublications": [
+            {
+              "sourceId": "policie-cr",
+              "sourceLabel": "Policie České republiky",
+              "sourceGroup": "policie",
+              "url": "https://policie.gov.cz/clanek/nehoda-na-zeleznicnim-prejezdu-ve-smrzovce.aspx",
+              "publishedAt": "2026-07-17T10:28:00.000Z"
+            }
+          ],
+          "published_vs_first_seen_diff_ms": 0,
+          "age_hours_published": 51.77955027777778
+        },
+        {
+          "id": "ie-policie-cr-44bce455e3a6",
+          "eventId": "ie-policie-cr-44bce455e3a6",
+          "sourceId": "policie-cr",
+          "institution": "Policie České republiky",
+          "sourceGroup": "policie",
+          "url": "https://policie.gov.cz/clanek/patrani-po-svedcich-smrtelne-dopravni-nehody.aspx",
+          "published_at": "2026-07-17T09:26:00.000Z",
+          "first_seen_at": "2026-07-17T09:26:00.000Z",
+          "updated_at": "2026-07-19T12:10:33.316Z",
+          "valid_from": null,
+          "valid_to": null,
+          "resolved_at": null,
+          "time_source": "rss_pub_date",
+          "time_confidence": "high",
+          "lifecycle": "publikovano",
+          "region": "Česká republika",
+          "regionLevel": "cr",
+          "category": "bezpecnost",
+          "lane": "bezpecnost",
+          "connectorType": "rss",
+          "tags": [],
+          "sourcePublications": [
+            {
+              "sourceId": "policie-cr",
+              "sourceLabel": "Policie České republiky",
+              "sourceGroup": "policie",
+              "url": "https://policie.gov.cz/clanek/patrani-po-svedcich-smrtelne-dopravni-nehody.aspx",
+              "publishedAt": "2026-07-17T09:26:00.000Z"
+            }
+          ],
+          "published_vs_first_seen_diff_ms": 0,
+          "age_hours_published": 52.81288361111111
+        }
+      ],
+      "registry": {
+        "id": "policie-cr",
+        "label": "Policie České republiky",
+        "connectorStatus": "PRODUCTION_ACTIVE",
+        "connectorType": "rss",
+        "lane": "bezpecnost",
+        "group": "policie",
+        "productionActive": true,
+        "monitoring": {
+          "lastSuccessAt": "2026-07-19T12:10:33.316Z",
+          "itemsKept": 80,
+          "lastError": null,
+          "availability": "ok"
+        }
+      },
+      "absentReason": null
+    },
+    {
+      "sourceId": "chmi",
+      "kind": "opendata-cap+api",
+      "inActiveFeedCount": 17,
+      "sample": {
+        "id": "ie-chmi-79b3808a416c",
+        "eventId": "ie-chmi-79b3808a416c",
+        "sourceId": "chmi",
+        "institution": "Český hydrometeorologický ústav",
+        "sourceGroup": "pocasi",
+        "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_191203.xml?id=20343.XOCZ50_OKPR_000264&e=silne+bourky",
+        "published_at": "2026-07-19T12:03:43.000Z",
+        "first_seen_at": "2026-07-19T12:10:33.316Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": "2026-07-19T13:30:00.000Z",
+        "valid_to": "2026-07-19T16:00:00.000Z",
+        "resolved_at": null,
+        "time_source": "opendata_cap_sent",
+        "time_confidence": "high",
+        "lifecycle": "aktivni",
+        "region": "Středočeský kraj",
+        "regionLevel": "kraj",
+        "category": "pocasi",
+        "lane": "pocasi",
+        "connectorType": "opendata",
+        "tags": [
+          "cap",
+          "vystraha"
+        ],
+        "sourcePublications": [
+          {
+            "sourceId": "chmi",
+            "sourceLabel": "Český hydrometeorologický ústav",
+            "sourceGroup": "pocasi",
+            "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_191203.xml?id=20343.XOCZ50_OKPR_000264&e=silne+bourky",
+            "publishedAt": "2026-07-19T12:03:43.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 410316,
+        "age_hours_published": 2.1842725
+      },
+      "samples": [
+        {
+          "id": "ie-chmi-79b3808a416c",
+          "eventId": "ie-chmi-79b3808a416c",
+          "sourceId": "chmi",
+          "institution": "Český hydrometeorologický ústav",
+          "sourceGroup": "pocasi",
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_191203.xml?id=20343.XOCZ50_OKPR_000264&e=silne+bourky",
+          "published_at": "2026-07-19T12:03:43.000Z",
+          "first_seen_at": "2026-07-19T12:10:33.316Z",
+          "updated_at": "2026-07-19T12:10:33.316Z",
+          "valid_from": "2026-07-19T13:30:00.000Z",
+          "valid_to": "2026-07-19T16:00:00.000Z",
+          "resolved_at": null,
+          "time_source": "opendata_cap_sent",
+          "time_confidence": "high",
+          "lifecycle": "aktivni",
+          "region": "Středočeský kraj",
+          "regionLevel": "kraj",
+          "category": "pocasi",
+          "lane": "pocasi",
+          "connectorType": "opendata",
+          "tags": [
+            "cap",
+            "vystraha"
+          ],
+          "sourcePublications": [
+            {
+              "sourceId": "chmi",
+              "sourceLabel": "Český hydrometeorologický ústav",
+              "sourceGroup": "pocasi",
+              "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_191203.xml?id=20343.XOCZ50_OKPR_000264&e=silne+bourky",
+              "publishedAt": "2026-07-19T12:03:43.000Z"
+            }
+          ],
+          "published_vs_first_seen_diff_ms": 410316,
+          "age_hours_published": 2.1842725
+        },
+        {
+          "id": "ie-chmi-0c4e970e5984",
+          "eventId": "ie-chmi-0c4e970e5984",
+          "sourceId": "chmi",
+          "institution": "Český hydrometeorologický ústav",
+          "sourceGroup": "pocasi",
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_191203.xml?id=20343.XOCZ50_OKPR_000264&e=velmi+silne+bourky",
+          "published_at": "2026-07-19T12:03:43.000Z",
+          "first_seen_at": "2026-07-19T12:10:33.316Z",
+          "updated_at": "2026-07-19T12:10:33.316Z",
+          "valid_from": "2026-07-19T12:02:28.000Z",
+          "valid_to": "2026-07-19T13:30:00.000Z",
+          "resolved_at": null,
+          "time_source": "opendata_cap_sent",
+          "time_confidence": "high",
+          "lifecycle": "aktivni",
+          "region": "Jihočeský kraj",
+          "regionLevel": "kraj",
+          "category": "pocasi",
+          "lane": "pocasi",
+          "connectorType": "opendata",
+          "tags": [
+            "cap",
+            "vystraha"
+          ],
+          "sourcePublications": [
+            {
+              "sourceId": "chmi",
+              "sourceLabel": "Český hydrometeorologický ústav",
+              "sourceGroup": "pocasi",
+              "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_191203.xml?id=20343.XOCZ50_OKPR_000264&e=velmi+silne+bourky",
+              "publishedAt": "2026-07-19T12:03:43.000Z"
+            }
+          ],
+          "published_vs_first_seen_diff_ms": 410316,
+          "age_hours_published": 2.1842725
+        },
+        {
+          "id": "ie-chmi-366f6a97776f",
+          "eventId": "ie-chmi-366f6a97776f",
+          "sourceId": "chmi",
+          "institution": "Český hydrometeorologický ústav",
+          "sourceGroup": "pocasi",
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_191203.xml?id=20343.XOCZ50_OKPR_000264&e=riziko+pozaru",
+          "published_at": "2026-07-19T12:03:43.000Z",
+          "first_seen_at": "2026-07-19T12:10:33.316Z",
+          "updated_at": "2026-07-19T12:10:33.316Z",
+          "valid_from": "2026-07-19T12:02:28.000Z",
+          "valid_to": null,
+          "resolved_at": null,
+          "time_source": "opendata_cap_sent",
+          "time_confidence": "high",
+          "lifecycle": "aktivni",
+          "region": "Jihomoravský kraj",
+          "regionLevel": "kraj",
+          "category": "pocasi",
+          "lane": "pocasi",
+          "connectorType": "opendata",
+          "tags": [
+            "cap",
+            "vystraha"
+          ],
+          "sourcePublications": [
+            {
+              "sourceId": "chmi",
+              "sourceLabel": "Český hydrometeorologický ústav",
+              "sourceGroup": "pocasi",
+              "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_191203.xml?id=20343.XOCZ50_OKPR_000264&e=riziko+pozaru",
+              "publishedAt": "2026-07-19T12:03:43.000Z"
+            }
+          ],
+          "published_vs_first_seen_diff_ms": 410316,
+          "age_hours_published": 2.1842725
+        }
+      ],
+      "registry": {
+        "id": "chmi",
+        "label": "Český hydrometeorologický ústav",
+        "connectorStatus": "PRODUCTION_ACTIVE",
+        "connectorType": "opendata",
+        "lane": "pocasi",
+        "group": "pocasi",
+        "productionActive": true,
+        "monitoring": {
+          "lastSuccessAt": "2026-07-19T12:10:33.316Z",
+          "itemsKept": 25,
+          "lastError": null,
+          "availability": "ok"
+        }
+      },
+      "absentReason": null
+    },
+    {
+      "sourceId": "hzs-cr",
+      "kind": "rss",
+      "inActiveFeedCount": 14,
+      "sample": {
+        "id": "ie-hzs-cr-6aec532e0cfd",
+        "eventId": "ie-hzs-cr-6aec532e0cfd",
+        "sourceId": "hzs-cr",
+        "institution": "Hasičský záchranný sbor ČR",
+        "sourceGroup": "hzs",
+        "url": "https://hzscr.gov.cz/clanek/vazna-dopravni-nehoda-dvou-autobusu-u-lechovic-zamestnala-devet-hasicskych-jednotek.aspx",
+        "published_at": "2026-07-18T15:59:00.000Z",
+        "first_seen_at": "2026-07-18T15:59:00.000Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": null,
+        "valid_to": null,
+        "resolved_at": null,
+        "time_source": "rss_pub_date",
+        "time_confidence": "high",
+        "lifecycle": "publikovano",
+        "region": "Česká republika",
+        "regionLevel": "cr",
+        "category": "bezpecnost",
+        "lane": "bezpecnost",
+        "connectorType": "rss",
+        "tags": [],
+        "sourcePublications": [
+          {
+            "sourceId": "hzs-cr",
+            "sourceLabel": "Hasičský záchranný sbor ČR",
+            "sourceGroup": "hzs",
+            "url": "https://hzscr.gov.cz/clanek/vazna-dopravni-nehoda-dvou-autobusu-u-lechovic-zamestnala-devet-hasicskych-jednotek.aspx",
+            "publishedAt": "2026-07-18T15:59:00.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 0,
+        "age_hours_published": 22.26288361111111
+      },
+      "samples": [
+        {
+          "id": "ie-hzs-cr-6aec532e0cfd",
+          "eventId": "ie-hzs-cr-6aec532e0cfd",
+          "sourceId": "hzs-cr",
+          "institution": "Hasičský záchranný sbor ČR",
+          "sourceGroup": "hzs",
+          "url": "https://hzscr.gov.cz/clanek/vazna-dopravni-nehoda-dvou-autobusu-u-lechovic-zamestnala-devet-hasicskych-jednotek.aspx",
+          "published_at": "2026-07-18T15:59:00.000Z",
+          "first_seen_at": "2026-07-18T15:59:00.000Z",
+          "updated_at": "2026-07-19T12:10:33.316Z",
+          "valid_from": null,
+          "valid_to": null,
+          "resolved_at": null,
+          "time_source": "rss_pub_date",
+          "time_confidence": "high",
+          "lifecycle": "publikovano",
+          "region": "Česká republika",
+          "regionLevel": "cr",
+          "category": "bezpecnost",
+          "lane": "bezpecnost",
+          "connectorType": "rss",
+          "tags": [],
+          "sourcePublications": [
+            {
+              "sourceId": "hzs-cr",
+              "sourceLabel": "Hasičský záchranný sbor ČR",
+              "sourceGroup": "hzs",
+              "url": "https://hzscr.gov.cz/clanek/vazna-dopravni-nehoda-dvou-autobusu-u-lechovic-zamestnala-devet-hasicskych-jednotek.aspx",
+              "publishedAt": "2026-07-18T15:59:00.000Z"
+            }
+          ],
+          "published_vs_first_seen_diff_ms": 0,
+          "age_hours_published": 22.26288361111111
+        },
+        {
+          "id": "ie-hzs-cr-dc20167d1752",
+          "eventId": "ie-hzs-cr-dc20167d1752",
+          "sourceId": "hzs-cr",
+          "institution": "Hasičský záchranný sbor ČR",
+          "sourceGroup": "hzs",
+          "url": "https://hzscr.gov.cz/clanek/posileni-preshranicni-spoluprace-mezi-ceskou-republikou-a-rakouskem-pro-efektivnejsi-ochranu-pred-pozary-a-jinymi-mimoradnymi-udalostmi-rozvoj-spolecnych-strategii-a-vymena-know-how-firefighterscoop.aspx",
+          "published_at": "2026-07-17T09:08:00.000Z",
+          "first_seen_at": "2026-07-17T09:08:00.000Z",
+          "updated_at": "2026-07-19T12:10:33.316Z",
+          "valid_from": null,
+          "valid_to": null,
+          "resolved_at": null,
+          "time_source": "rss_pub_date",
+          "time_confidence": "high",
+          "lifecycle": "publikovano",
+          "region": "Česká republika",
+          "regionLevel": "cr",
+          "category": "bezpecnost",
+          "lane": "bezpecnost",
+          "connectorType": "rss",
+          "tags": [],
+          "sourcePublications": [
+            {
+              "sourceId": "hzs-cr",
+              "sourceLabel": "Hasičský záchranný sbor ČR",
+              "sourceGroup": "hzs",
+              "url": "https://hzscr.gov.cz/clanek/posileni-preshranicni-spoluprace-mezi-ceskou-republikou-a-rakouskem-pro-efektivnejsi-ochranu-pred-pozary-a-jinymi-mimoradnymi-udalostmi-rozvoj-spolecnych-strategii-a-vymena-know-how-firefighterscoop.aspx",
+              "publishedAt": "2026-07-17T09:08:00.000Z"
+            }
+          ],
+          "published_vs_first_seen_diff_ms": 0,
+          "age_hours_published": 53.11288361111111
+        },
+        {
+          "id": "ie-hzs-cr-6b39ab8140f4",
+          "eventId": "ie-hzs-cr-6b39ab8140f4",
+          "sourceId": "hzs-cr",
+          "institution": "Hasičský záchranný sbor ČR",
+          "sourceGroup": "hzs",
+          "url": "https://hzscr.gov.cz/clanek/bourky-zamestnaly-jihomoravske-hasice-vyjizdeli-ke-185-udalostem.aspx",
+          "published_at": "2026-07-15T23:30:00.000Z",
+          "first_seen_at": "2026-07-15T23:30:00.000Z",
+          "updated_at": "2026-07-19T12:10:33.316Z",
+          "valid_from": null,
+          "valid_to": null,
+          "resolved_at": null,
+          "time_source": "rss_pub_date",
+          "time_confidence": "high",
+          "lifecycle": "publikovano",
+          "region": "Česká republika",
+          "regionLevel": "cr",
+          "category": "bezpecnost",
+          "lane": "bezpecnost",
+          "connectorType": "rss",
+          "tags": [],
+          "sourcePublications": [
+            {
+              "sourceId": "hzs-cr",
+              "sourceLabel": "Hasičský záchranný sbor ČR",
+              "sourceGroup": "hzs",
+              "url": "https://hzscr.gov.cz/clanek/bourky-zamestnaly-jihomoravske-hasice-vyjizdeli-ke-185-udalostem.aspx",
+              "publishedAt": "2026-07-15T23:30:00.000Z"
+            }
+          ],
+          "published_vs_first_seen_diff_ms": 0,
+          "age_hours_published": 86.74621694444444
+        }
+      ],
+      "registry": {
+        "id": "hzs-cr",
+        "label": "Hasičský záchranný sbor ČR",
+        "connectorStatus": "PRODUCTION_ACTIVE",
+        "connectorType": "rss",
+        "lane": "bezpecnost",
+        "group": "hzs",
+        "productionActive": true,
+        "monitoring": {
+          "lastSuccessAt": "2026-07-19T12:10:33.316Z",
+          "itemsKept": 42,
+          "lastError": null,
+          "availability": "ok"
+        }
+      },
+      "absentReason": null
+    }
+  ],
+  "chronology": {
+    "itemsWithPublishedNeFirstSeen": 15,
+    "itemsWithApproxSameTimes": 70,
+    "examplesDiff": [
+      {
+        "id": "ie-sukl-58d2742cd149",
+        "eventId": "ie-sukl-58d2742cd149",
+        "sourceId": "sukl",
+        "institution": "Státní ústav pro kontrolu léčiv",
+        "sourceGroup": "zdravotnictvi",
+        "url": "https://sukl.gov.cz/zavady-v-jakosti/opatreni-pri-zavadach-v-jakosti-leciv-a-registracni-opatreni-stahovani-pozastaveni/levosimendan-fmk-stahovani-az-z-urovne-zdravotnickych-zarizeni/",
+        "published_at": "2026-07-15T12:26:53.000Z",
+        "first_seen_at": "2026-07-19T09:57:08.852Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": null,
+        "valid_to": null,
+        "resolved_at": null,
+        "time_source": "rss_pub_date",
+        "time_confidence": "high",
+        "lifecycle": "publikovano",
+        "region": "Česká republika",
+        "regionLevel": "cr",
+        "category": "zdravi",
+        "lane": "zdravotnictvi",
+        "connectorType": "rss",
+        "tags": [],
+        "sourcePublications": [
+          {
+            "sourceId": "sukl",
+            "sourceLabel": "Státní ústav pro kontrolu léčiv",
+            "sourceGroup": "zdravotnictvi",
+            "url": "https://sukl.gov.cz/zavady-v-jakosti/opatreni-pri-zavadach-v-jakosti-leciv-a-registracni-opatreni-stahovani-pozastaveni/levosimendan-fmk-stahovani-az-z-urovne-zdravotnickych-zarizeni/",
+            "publishedAt": "2026-07-15T12:26:53.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 336615852,
+        "age_hours_published": 97.79816138888889
+      },
+      {
+        "id": "ie-khs-praha-149e47894cea",
+        "eventId": "ie-khs-praha-149e47894cea",
+        "sourceId": "khs-praha",
+        "institution": "Hygienická stanice hl. m. Prahy",
+        "sourceGroup": "hygiena",
+        "url": "https://www.hygpraha.cz/o-zloutence-a-v-poradu-dobre-rano-stredni-cechy/",
+        "published_at": "2026-07-15T13:44:37.000Z",
+        "first_seen_at": "2026-07-19T09:57:08.852Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": null,
+        "valid_to": null,
+        "resolved_at": null,
+        "time_source": "rss_pub_date",
+        "time_confidence": "high",
+        "lifecycle": "publikovano",
+        "region": "Česká republika",
+        "regionLevel": "cr",
+        "category": "zdravi",
+        "lane": "zdravotnictvi",
+        "connectorType": "rss",
+        "tags": [],
+        "sourcePublications": [
+          {
+            "sourceId": "khs-praha",
+            "sourceLabel": "Hygienická stanice hl. m. Prahy",
+            "sourceGroup": "hygiena",
+            "url": "https://www.hygpraha.cz/o-zloutence-a-v-poradu-dobre-rano-stredni-cechy/",
+            "publishedAt": "2026-07-15T13:44:37.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 331951852,
+        "age_hours_published": 96.50260583333333
+      },
+      {
+        "id": "ie-szu-fb531a313a71",
+        "eventId": "ie-szu-fb531a313a71",
+        "sourceId": "szu",
+        "institution": "Státní zdravotní ústav",
+        "sourceGroup": "zdravotnictvi",
+        "url": "https://szu.gov.cz/aktuality/proc-byva-v-lete-vice-pripadu-alimentarnich-onemocneni-a-jak-na-prevenci/",
+        "published_at": "2026-07-16T06:10:51.000Z",
+        "first_seen_at": "2026-07-19T09:57:08.852Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": null,
+        "valid_to": null,
+        "resolved_at": null,
+        "time_source": "rss_pub_date",
+        "time_confidence": "high",
+        "lifecycle": "publikovano",
+        "region": "Česká republika",
+        "regionLevel": "cr",
+        "category": "zdravi",
+        "lane": "zdravotnictvi",
+        "connectorType": "rss",
+        "tags": [],
+        "sourcePublications": [
+          {
+            "sourceId": "szu",
+            "sourceLabel": "Státní zdravotní ústav",
+            "sourceGroup": "zdravotnictvi",
+            "url": "https://szu.gov.cz/aktuality/proc-byva-v-lete-vice-pripadu-alimentarnich-onemocneni-a-jak-na-prevenci/",
+            "publishedAt": "2026-07-16T06:10:51.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 272777852,
+        "age_hours_published": 80.06538361111112
+      },
+      {
+        "id": "ie-khs-stc-f2b58d0a93e2",
+        "eventId": "ie-khs-stc-f2b58d0a93e2",
+        "sourceId": "khs-stc",
+        "institution": "KHS Středočeského kraje",
+        "sourceGroup": "hygiena",
+        "url": "https://khsstc.cz/pozvanka-ke-zkouskam-znalosti-hub-v-roce-2026/",
+        "published_at": "2026-07-16T06:54:00.000Z",
+        "first_seen_at": "2026-07-19T09:57:08.852Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": null,
+        "valid_to": null,
+        "resolved_at": null,
+        "time_source": "rss_pub_date",
+        "time_confidence": "high",
+        "lifecycle": "publikovano",
+        "region": "Česká republika",
+        "regionLevel": "cr",
+        "category": "zdravi",
+        "lane": "zdravotnictvi",
+        "connectorType": "rss",
+        "tags": [],
+        "sourcePublications": [
+          {
+            "sourceId": "khs-stc",
+            "sourceLabel": "KHS Středočeského kraje",
+            "sourceGroup": "hygiena",
+            "url": "https://khsstc.cz/pozvanka-ke-zkouskam-znalosti-hub-v-roce-2026/",
+            "publishedAt": "2026-07-16T06:54:00.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 270188852,
+        "age_hours_published": 79.34621694444445
+      },
+      {
+        "id": "ie-szu-d0520ccf7f89",
+        "eventId": "ie-szu-d0520ccf7f89",
+        "sourceId": "szu",
+        "institution": "Státní zdravotní ústav",
+        "sourceGroup": "zdravotnictvi",
+        "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pocet-pripadu-boreliozy-roste-stoji-za-tim-zmena-hlaseni-i-delsi-klistova-sezona-375611",
+        "published_at": "2026-07-16T07:15:08.000Z",
+        "first_seen_at": "2026-07-19T09:57:08.852Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": null,
+        "valid_to": null,
+        "resolved_at": null,
+        "time_source": "rss_pub_date",
+        "time_confidence": "high",
+        "lifecycle": "publikovano",
+        "region": "Česká republika",
+        "regionLevel": "cr",
+        "category": "zdravi",
+        "lane": "zdravotnictvi",
+        "connectorType": "rss",
+        "tags": [],
+        "sourcePublications": [
+          {
+            "sourceId": "szu",
+            "sourceLabel": "Státní zdravotní ústav",
+            "sourceGroup": "zdravotnictvi",
+            "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pocet-pripadu-boreliozy-roste-stoji-za-tim-zmena-hlaseni-i-delsi-klistova-sezona-375611",
+            "publishedAt": "2026-07-16T07:15:08.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 268920852,
+        "age_hours_published": 78.99399472222223
+      },
+      {
+        "id": "ie-ctu-f230c786a3db",
+        "eventId": "ie-ctu-f230c786a3db",
+        "sourceId": "ctu",
+        "institution": "Český telekomunikační úřad",
+        "sourceGroup": "stat",
+        "url": "https://ctu.gov.cz/zverejneni-informace-poskytnute-na-zadost-podle-zakona-c.-1061999-sb.-o-svobodnem-pristupu-k-142",
+        "published_at": "2026-07-16T07:29:22.000Z",
+        "first_seen_at": "2026-07-19T09:57:08.852Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": null,
+        "valid_to": null,
+        "resolved_at": null,
+        "time_source": "rss_pub_date",
+        "time_confidence": "high",
+        "lifecycle": "publikovano",
+        "region": "Česká republika",
+        "regionLevel": "cr",
+        "category": "stat",
+        "lane": "ekonomika",
+        "connectorType": "rss",
+        "tags": [],
+        "sourcePublications": [
+          {
+            "sourceId": "ctu",
+            "sourceLabel": "Český telekomunikační úřad",
+            "sourceGroup": "stat",
+            "url": "https://ctu.gov.cz/zverejneni-informace-poskytnute-na-zadost-podle-zakona-c.-1061999-sb.-o-svobodnem-pristupu-k-142",
+            "publishedAt": "2026-07-16T07:29:22.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 268066852,
+        "age_hours_published": 78.7567725
+      },
+      {
+        "id": "ie-mfcr-3278dd8f91ca",
+        "eventId": "ie-mfcr-3278dd8f91ca",
+        "sourceId": "mfcr",
+        "institution": "Ministerstvo financí ČR",
+        "sourceGroup": "ministerstva",
+        "url": "https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/obcane-koupili-dluhopisy-republiky-v-hodnote-74-mi-64586",
+        "published_at": "2026-07-16T08:00:00.000Z",
+        "first_seen_at": "2026-07-19T09:57:08.852Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": null,
+        "valid_to": null,
+        "resolved_at": null,
+        "time_source": "rss_pub_date",
+        "time_confidence": "high",
+        "lifecycle": "publikovano",
+        "region": "Česká republika",
+        "regionLevel": "cr",
+        "category": "stat",
+        "lane": "ministerstva",
+        "connectorType": "rss",
+        "tags": [],
+        "sourcePublications": [
+          {
+            "sourceId": "mfcr",
+            "sourceLabel": "Ministerstvo financí ČR",
+            "sourceGroup": "ministerstva",
+            "url": "https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/obcane-koupili-dluhopisy-republiky-v-hodnote-74-mi-64586",
+            "publishedAt": "2026-07-16T08:00:00.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 266228852,
+        "age_hours_published": 78.24621694444444
+      },
+      {
+        "id": "ie-coi-984b59385be2",
+        "eventId": "ie-coi-984b59385be2",
+        "sourceId": "coi",
+        "institution": "Česká obchodní inspece",
+        "sourceGroup": "stat",
+        "url": "https://coi.gov.cz/ceska-obchodni-inspekce-odhalila-nebezpecnou-hracku-s-nadlimitnim-obsahem-olova-a-kadmia-zakazala-jeji-distribuci/",
+        "published_at": "2026-07-16T08:03:23.000Z",
+        "first_seen_at": "2026-07-19T09:57:08.852Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": null,
+        "valid_to": null,
+        "resolved_at": null,
+        "time_source": "rss_pub_date",
+        "time_confidence": "high",
+        "lifecycle": "publikovano",
+        "region": "Česká republika",
+        "regionLevel": "cr",
+        "category": "stat",
+        "lane": "ekonomika",
+        "connectorType": "rss",
+        "tags": [],
+        "sourcePublications": [
+          {
+            "sourceId": "coi",
+            "sourceLabel": "Česká obchodní inspece",
+            "sourceGroup": "stat",
+            "url": "https://coi.gov.cz/ceska-obchodni-inspekce-odhalila-nebezpecnou-hracku-s-nadlimitnim-obsahem-olova-a-kadmia-zakazala-jeji-distribuci/",
+            "publishedAt": "2026-07-16T08:03:23.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 266025852,
+        "age_hours_published": 78.18982805555555
+      }
+    ]
+  },
+  "timeParsers": {
+    "distribution": {
+      "opendata_cap_sent": 17,
+      "rss_pub_date": 122,
+      "title_date": 1
+    },
+    "confidence": {
+      "high": 139,
+      "medium": 1
+    },
+    "examples": {
+      "rss_pub_date": {
+        "id": "ie-policie-cr-d1021167b93c",
+        "eventId": "ie-policie-cr-d1021167b93c",
+        "sourceId": "policie-cr",
+        "institution": "Policie České republiky",
+        "sourceGroup": "policie",
+        "url": "https://policie.gov.cz/clanek/bezpecnostni-opatreni-u-hudebniho-festivalu-v-ostrave-bez-mimoradne-udalosti.aspx",
+        "published_at": "2026-07-19T11:34:00.000Z",
+        "first_seen_at": "2026-07-19T12:10:33.316Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": null,
+        "valid_to": null,
+        "resolved_at": null,
+        "time_source": "rss_pub_date",
+        "time_confidence": "high",
+        "lifecycle": "publikovano",
+        "region": "Česká republika",
+        "regionLevel": "cr",
+        "category": "bezpecnost",
+        "lane": "bezpecnost",
+        "connectorType": "rss",
+        "tags": [],
+        "sourcePublications": [
+          {
+            "sourceId": "policie-cr",
+            "sourceLabel": "Policie České republiky",
+            "sourceGroup": "policie",
+            "url": "https://policie.gov.cz/clanek/bezpecnostni-opatreni-u-hudebniho-festivalu-v-ostrave-bez-mimoradne-udalosti.aspx",
+            "publishedAt": "2026-07-19T11:34:00.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 2193316,
+        "age_hours_published": 2.679550277777778
+      },
+      "atom_updated": null,
+      "api_published_at": null,
+      "jsonld_date_published": null,
+      "meta_article_published_time": null,
+      "detail_page_date": null,
+      "listing_page_date": null,
+      "title_date": {
+        "id": "ie-szdc-6c5c217743ed",
+        "eventId": "ie-szdc-6c5c217743ed",
+        "sourceId": "szdc",
+        "institution": "Správa železnic",
+        "sourceGroup": "doprava",
+        "url": "https://www.spravazeleznic.cz/-/na-provoz-mezi-prahou-a-milovicemi-dohlizi-etcs-vlaky-zrychli-na-160-km-h",
+        "published_at": "2026-07-16T12:00:00.000Z",
+        "first_seen_at": "2026-07-18T19:38:01.328Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": null,
+        "valid_to": null,
+        "resolved_at": null,
+        "time_source": "title_date",
+        "time_confidence": "medium",
+        "lifecycle": "publikovano",
+        "region": "Česká republika",
+        "regionLevel": "cr",
+        "category": "doprava",
+        "lane": "doprava",
+        "connectorType": "html",
+        "tags": [],
+        "sourcePublications": [
+          {
+            "sourceId": "szdc",
+            "sourceLabel": "Správa železnic",
+            "sourceGroup": "doprava",
+            "url": "https://www.spravazeleznic.cz/-/na-provoz-mezi-prahou-a-milovicemi-dohlizi-etcs-vlaky-zrychli-na-160-km-h",
+            "publishedAt": "2026-07-16T12:00:00.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 200281328,
+        "age_hours_published": 74.24621694444444
+      },
+      "opendata_cap_sent": {
+        "id": "ie-chmi-79b3808a416c",
+        "eventId": "ie-chmi-79b3808a416c",
+        "sourceId": "chmi",
+        "institution": "Český hydrometeorologický ústav",
+        "sourceGroup": "pocasi",
+        "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_191203.xml?id=20343.XOCZ50_OKPR_000264&e=silne+bourky",
+        "published_at": "2026-07-19T12:03:43.000Z",
+        "first_seen_at": "2026-07-19T12:10:33.316Z",
+        "updated_at": "2026-07-19T12:10:33.316Z",
+        "valid_from": "2026-07-19T13:30:00.000Z",
+        "valid_to": "2026-07-19T16:00:00.000Z",
+        "resolved_at": null,
+        "time_source": "opendata_cap_sent",
+        "time_confidence": "high",
+        "lifecycle": "aktivni",
+        "region": "Středočeský kraj",
+        "regionLevel": "kraj",
+        "category": "pocasi",
+        "lane": "pocasi",
+        "connectorType": "opendata",
+        "tags": [
+          "cap",
+          "vystraha"
+        ],
+        "sourcePublications": [
+          {
+            "sourceId": "chmi",
+            "sourceLabel": "Český hydrometeorologický ústav",
+            "sourceGroup": "pocasi",
+            "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_191203.xml?id=20343.XOCZ50_OKPR_000264&e=silne+bourky",
+            "publishedAt": "2026-07-19T12:03:43.000Z"
+          }
+        ],
+        "published_vs_first_seen_diff_ms": 410316,
+        "age_hours_published": 2.1842725
+      },
+      "first_seen_fallback": null
+    }
+  },
+  "window96h": {
+    "near95hExamples": [],
+    "over96hInActiveFeed": [
+      {
+        "id": "ie-khs-praha-149e47894cea",
+        "sourceId": "khs-praha",
+        "ageH": 96.50260583333333,
+        "status": "publikovano",
+        "valid_to": null,
+        "why": "BOUNDARY_OR_BUG"
+      },
+      {
+        "id": "ie-hzs-cr-874815867512",
+        "sourceId": "hzs-cr",
+        "ageH": 96.86288361111112,
+        "status": "publikovano",
+        "valid_to": null,
+        "why": "BOUNDARY_OR_BUG"
+      },
+      {
+        "id": "ie-hzs-cr-fba873bec815",
+        "sourceId": "hzs-cr",
+        "ageH": 97.19621694444444,
+        "status": "publikovano",
+        "valid_to": null,
+        "why": "BOUNDARY_OR_BUG"
+      },
+      {
+        "id": "ie-sukl-58d2742cd149",
+        "sourceId": "sukl",
+        "ageH": 97.79816138888889,
+        "status": "publikovano",
+        "valid_to": null,
+        "why": "BOUNDARY_OR_BUG"
+      }
+    ],
+    "longActiveExamples": [],
+    "endedExamples": []
+  },
+  "deduplication": {
+    "multiSourcePublicationsCount": 0,
+    "multiSourceExamples": [],
+    "clusterSizeGt1": 0,
+    "exactUrlDuplicatesInFeed": [
+      {
+        "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_191203.xml",
+        "ids": [
+          "ie-chmi-79b3808a416c",
+          "ie-chmi-0c4e970e5984",
+          "ie-chmi-366f6a97776f"
+        ]
+      },
+      {
+        "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_190941.xml",
+        "ids": [
+          "ie-chmi-e0f60720b82f",
+          "ie-chmi-6787ceb09423",
+          "ie-chmi-3962e0e89c2d"
+        ]
+      },
+      {
+        "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_190823.xml",
+        "ids": [
+          "ie-chmi-19732af25b91",
+          "ie-chmi-172ac72548e3",
+          "ie-chmi-2155785f734f"
+        ]
+      },
+      {
+        "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_180845.xml",
+        "ids": [
+          "ie-chmi-5215f16176e1",
+          "ie-chmi-7b974b6d108f"
+        ]
+      },
+      {
+        "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_171839.xml",
+        "ids": [
+          "ie-chmi-5675885f97c9",
+          "ie-chmi-d2b9e43398dc",
+          "ie-chmi-e2439a4a99d5"
+        ]
+      },
+      {
+        "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_171757.xml",
+        "ids": [
+          "ie-chmi-eff456db9732",
+          "ie-chmi-0f34496960bf",
+          "ie-chmi-3a386d8875b9"
+        ]
+      }
+    ],
+    "filterCountsBySourceId": {
+      "policie": 20,
+      "irozhlas": 40,
+      "szdc": 1,
+      "chmi": 17
+    }
+  },
+  "metadata": {
+    "techArtifactHits": 0,
+    "techArtifactSamples": []
+  },
+  "acceptance": {
+    "chronologySeparated": true,
+    "noFallbackInFeed": true,
+    "noTechArtifacts": true,
+    "qualityBlockersEmpty": true,
+    "pendingUnchanged": true
+  }
+}

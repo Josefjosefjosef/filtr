@@ -34,7 +34,7 @@ import {
   setViewBaseline,
   countTemporaryFilters,
   migrateLocalStateOnce,
-} from "./iu-info-system-core-v1.js?v=info-system-v5-ui-slim-20260719";
+} from "./iu-info-system-core-v1.js?v=info-system-v5-data-evidence-20260719";
 
 const PAGE_SIZE = 50;
 
