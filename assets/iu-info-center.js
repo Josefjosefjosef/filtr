@@ -17,6 +17,7 @@
     "data-management": "Správa dat",
     "device-storage": "Ukládání dat v zařízení",
     "data-sources": "Zdroje dat",
+    stats: "Statistiky a transparentnost",
     contact: "Provozovatel a kontakt"
   };
 

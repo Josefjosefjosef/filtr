@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>InfoUzel Analytics — administrace</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self' https:; connect-src 'self' https://infouzel-analytics.josef-zmrhal.workers.dev; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; base-uri 'self'; object-src 'none';" />
+    <style>
+      :root { --bg:#0b1220; --card:#121a2b; --text:#e2e8f0; --muted:#94a3b8; --line:#1e293b; --accent:#38bdf8; --safe: env(safe-area-inset-bottom,0px); }
+      * { box-sizing: border-box; }
+      body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--text); padding:16px 16px calc(40px + var(--safe)); }
+      main { max-width:1100px; margin:0 auto; }
+      h1 { font-size:1.4rem; margin:0 0 8px; }
+      .muted { color:var(--muted); }
+      .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px; margin:0 0 14px; }
+      input, button, select { font:inherit; border-radius:8px; border:1px solid var(--line); background:#0f172a; color:var(--text); padding:8px 10px; }
+      button { background:#0369a1; border-color:#0284c7; cursor:pointer; }
+      .row { display:flex; flex-wrap:wrap; gap:8px; align-items:end; margin:0 0 12px; }
+      label { display:grid; gap:4px; font-size:0.8rem; color:var(--muted); }
+      table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+      th, td { text-align:left; padding:7px 6px; border-bottom:1px solid var(--line); vertical-align:top; }
+      .err { color:#f87171; }
+      .ok { color:#34d399; }
+      pre { white-space:pre-wrap; word-break:break-word; font-size:0.8rem; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>InfoUzel Analytics — administrace</h1>
+      <p class="muted">Agregovaná data only. Bez IP, fingerprintu a obsahu osobních modulů. Dynamické kampaně/placementy — žádné pevné sloty.</p>
+
+      <div class="card">
+        <div class="row">
+          <label>Admin token
+            <input id="token" type="password" autocomplete="off" placeholder="Bearer token" style="min-width:220px" />
+          </label>
+          <label>Od
+            <input id="from" type="date" />
+          </label>
+          <label>Do
+            <input id="to" type="date" />
+          </label>
+          <button type="button" id="btnLoad">Načíst přehled</button>
+          <button type="button" id="btnAds">Report reklam</button>
+          <button type="button" id="btnExport">Export JSON</button>
+        </div>
+        <div class="row">
+          <label>campaign_id <input id="campaign" /></label>
+          <label>placement_id <input id="placement" /></label>
+          <label>section_id <input id="section" /></label>
+          <label>slot_type
+            <select id="slot">
+              <option value="">(vše)</option>
+              <option>banner</option>
+              <option>sponsored_article</option>
+              <option>native</option>
+              <option>video</option>
+              <option>partner_box</option>
+              <option>recommended</option>
+              <option>affiliate</option>
+              <option>premium_partnership</option>
+              <option>other</option>
+            </select>
+          </label>
+          <label>device
+            <select id="device">
+              <option value="">(vše)</option>
+              <option>mobile</option>
+              <option>tablet</option>
+              <option>pc</option>
+              <option>unknown</option>
+            </select>
+          </label>
+        </div>
+        <p id="status" class="muted">Token se ukládá jen v sessionStorage tohoto prohlížeče.</p>
+      </div>
+
+      <div class="card">
+        <h2>Přehled</h2>
+        <pre id="overview">—</pre>
+      </div>
+      <div class="card">
+        <h2>Dynamické reklamní reporty</h2>
+        <div id="adsTable" class="muted">—</div>
+      </div>
+      <p><a href="/projects/statistiky/" style="color:var(--accent)">← Veřejné statistiky</a></p>
+    </main>
+    <script>
+      (function () {
+        var BASE = "https://infouzel-analytics.josef-zmrhal.workers.dev";
+        function $(id) { return document.getElementById(id); }
+        function token() { return ($("token").value || "").trim(); }
+        try {
+          var saved = sessionStorage.getItem("iu.analytics.adminToken");
+          if (saved) $("token").value = saved;
+        } catch (_) {}
+        $("token").addEventListener("change", function () {
+          try { sessionStorage.setItem("iu.analytics.adminToken", token()); } catch (_) {}
+        });
+        function authHeaders() {
+          return { Authorization: "Bearer " + token() };
+        }
+        function qs() {
+          var p = new URLSearchParams();
+          if ($("from").value) p.set("from", $("from").value);
+          if ($("to").value) p.set("to", $("to").value);
+          return p.toString();
+        }
+        function adQs() {
+          var p = new URLSearchParams();
+          if ($("from").value) p.set("from", $("from").value);
+          if ($("to").value) p.set("to", $("to").value);
+          if ($("campaign").value) p.set("campaign_id", $("campaign").value.trim());
+          if ($("placement").value) p.set("placement_id", $("placement").value.trim());
+          if ($("section").value) p.set("section_id", $("section").value.trim());
+          if ($("slot").value) p.set("slot_type", $("slot").value);
+          if ($("device").value) p.set("device_category", $("device").value);
+          return p.toString();
+        }
+        var last = null;
+        $("btnLoad").onclick = function () {
+          $("status").textContent = "Načítám…";
+          fetch(BASE + "/v1/admin/overview?" + qs(), { headers: authHeaders(), cache: "no-store" })
+            .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+            .then(function (x) {
+              if (!x.ok) throw new Error((x.j && x.j.error) || "unauthorized");
+              last = x.j;
+              $("overview").textContent = JSON.stringify(
+                {
+                  today: x.j.today,
+                  yesterday: x.j.yesterday,
+                  month: x.j.month,
+                  devices: x.j.devices,
+                  ingestAudit: x.j.ingestAudit,
+                  performance: x.j.performance,
+                  errors: x.j.errors,
+                  adsSample: (x.j.ads || []).slice(0, 20),
+                },
+                null,
+                2
+              );
+              $("status").innerHTML = '<span class="ok">OK</span>';
+            })
+            .catch(function (e) {
+              $("status").innerHTML = '<span class="err">' + String(e.message || e) + "</span>";
+            });
+        };
+        $("btnAds").onclick = function () {
+          fetch(BASE + "/v1/ads/report?" + adQs(), { headers: authHeaders(), cache: "no-store" })
+            .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+            .then(function (x) {
+              if (!x.ok) throw new Error((x.j && x.j.error) || "unauthorized");
+              last = x.j;
+              var rows = x.j.rows || [];
+              var html =
+                "<p>Imprese: <b>" +
+                x.j.totals.impressions +
+                "</b> · Validní kliky: <b>" +
+                x.j.totals.valid_clicks +
+                "</b> · Podezřelé: <b>" +
+                x.j.totals.suspicious_clicks +
+                "</b> · CTR: <b>" +
+                x.j.totals.ctr +
+                "</b></p>";
+              html +=
+                "<table><thead><tr><th>day</th><th>campaign</th><th>placement</th><th>section</th><th>slot</th><th>device</th><th>imp</th><th>valid</th><th>sus</th><th>ctr</th></tr></thead><tbody>";
+              html += rows
+                .map(function (r) {
+                  return (
+                    "<tr><td>" +
+                    r.day +
+                    "</td><td>" +
+                    r.campaign_id +
+                    "</td><td>" +
+                    r.placement_id +
+                    "</td><td>" +
+                    r.section_id +
+                    "</td><td>" +
+                    r.slot_type +
+                    "</td><td>" +
+                    r.device_category +
+                    "</td><td>" +
+                    r.impressions +
+                    "</td><td>" +
+                    r.valid_clicks +
+                    "</td><td>" +
+                    r.suspicious_clicks +
+                    "</td><td>" +
+                    r.ctr +
+                    "</td></tr>"
+                  );
+                })
+                .join("");
+              html += "</tbody></table>";
+              $("adsTable").innerHTML = html || "—";
+              $("status").innerHTML = '<span class="ok">Report OK</span>';
+            })
+            .catch(function (e) {
+              $("status").innerHTML = '<span class="err">' + String(e.message || e) + "</span>";
+            });
+        };
+        $("btnExport").onclick = function () {
+          if (!last) return;
+          var blob = new Blob([JSON.stringify(last, null, 2)], { type: "application/json" });
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "iu-analytics-report.json";
+          a.click();
+        };
+      })();
+    </script>
+  </body>
+</html>

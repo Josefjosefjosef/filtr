@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Statistiky a transparentnost — infoUzel.cz</title>
+    <meta
+      name="description"
+      content="Anonymní agregované statistiky InfoUzel.cz. Nesledujeme osoby, nevytváříme reklamní profily."
+    />
+    <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self' https:; connect-src 'self' https://infouzel-analytics.josef-zmrhal.workers.dev; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; base-uri 'self'; object-src 'none';" />
+    <style>
+      :root {
+        --bg: #eef4f8;
+        --card: #ffffff;
+        --text: #0f172a;
+        --muted: #64748b;
+        --line: #e2e8f0;
+        --ok: #0f766e;
+        --accent: #0369a1;
+        --nav: 64px;
+        --safe-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        color: var(--text);
+        background: linear-gradient(180deg, #e5eef6 0%, var(--bg) 45%, #fff 100%);
+        line-height: 1.5;
+        padding-bottom: calc(var(--nav) + var(--safe-bottom) + 24px);
+      }
+      main { max-width: 920px; margin: 0 auto; padding: 20px 16px 40px; }
+      h1 { font-size: 1.65rem; margin: 0 0 8px; }
+      h2 { font-size: 1.15rem; margin: 0 0 10px; }
+      .lead { color: var(--muted); margin: 0 0 20px; }
+      .grid { display: grid; gap: 12px; grid-template-columns: 1fr; }
+      @media (min-width: 720px) { .grid { grid-template-columns: 1fr 1fr 1fr; } }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px 16px;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+      }
+      .card.full { grid-column: 1 / -1; }
+      .stat { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+      .label { color: var(--muted); font-size: 0.85rem; }
+      .codex li { margin: 0 0 6px; }
+      .ok { color: var(--ok); font-weight: 650; }
+      .bars { display: grid; gap: 8px; }
+      .bar-row { display: grid; grid-template-columns: 88px 1fr 48px; gap: 8px; align-items: center; font-size: 0.9rem; }
+      .bar-track { height: 10px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+      .bar-fill { height: 100%; background: linear-gradient(90deg, #0284c7, #0f766e); }
+      .muted { color: var(--muted); }
+      .err { color: #b91c1c; }
+      .links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+      .links a { color: var(--accent); }
+      table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+      th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+      @media (max-width: 1024px) {
+        main { padding-bottom: calc(80px + var(--safe-bottom)); }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Statistiky a transparentnost</h1>
+      <p class="lead">
+        InfoUzel měří pouze anonymní agregované statistiky. Nesledujeme jednotlivé osoby a nevytváříme reklamní
+        profily. Veřejný přehled nezobrazuje detailní reklamní reporty ani interní obchodní data.
+      </p>
+
+      <div class="grid" id="iuStatsCards" aria-live="polite">
+        <div class="card"><div class="label">Dnes (návštěvy)</div><div class="stat" id="sToday">—</div></div>
+        <div class="card"><div class="label">Včera</div><div class="stat" id="sYday">—</div></div>
+        <div class="card"><div class="label">Tento měsíc</div><div class="stat" id="sMonth">—</div></div>
+        <div class="card full">
+          <h2>Vývoj návštěvnosti</h2>
+          <div class="bars" id="sSeries"></div>
+        </div>
+        <div class="card">
+          <h2>Zařízení</h2>
+          <div id="sDevices" class="muted">Načítám…</div>
+        </div>
+        <div class="card">
+          <h2>Soukromé nástroje</h2>
+          <p class="muted" id="sPrivate">Anonymní souhrn — bez rozpadu na Silver, Finance, Poznámky, Kalendář, Dokumenty, Datové schránky, Bakaláře ani zdravotní pojišťovnu.</p>
+        </div>
+        <div class="card full">
+          <h2>Nejnavštěvovanější veřejné sekce</h2>
+          <div id="sSections" class="muted">Načítám…</div>
+        </div>
+        <div class="card full">
+          <h2>Kodex anonymity</h2>
+          <ul class="codex">
+            <li><span class="ok">✓</span> Nesledujeme jednotlivé osoby.</li>
+            <li><span class="ok">✓</span> Nevytváříme reklamní profily.</li>
+            <li><span class="ok">✓</span> Neprodáváme data.</li>
+            <li><span class="ok">✓</span> Nepředáváme analytická data třetím stranám.</li>
+            <li><span class="ok">✓</span> Nepoužíváme externí analytické skripty.</li>
+            <li><span class="ok">✓</span> Neukládáme obsah osobních modulů.</li>
+            <li><span class="ok">✓</span> Měříme pouze anonymní agregované statistiky.</li>
+            <li><span class="ok">✓</span> Ochrana proti podvodům neslouží ke sledování uživatelů.</li>
+            <li><span class="ok">✓</span> Reklamní statistiky jsou měřeny anonymně a agregovaně.</li>
+            <li><span class="ok">✓</span> Reklamní pozice mohou vznikat dynamicky podle objednávky, ale nikdy bez profilování lidí.</li>
+          </ul>
+        </div>
+        <div class="card full">
+          <h2>Audit ochrany soukromí</h2>
+          <table>
+            <tbody>
+              <tr><th>Právní audit</th><td id="aLegal">Čeká na dokončení.</td></tr>
+              <tr><th>Bezpečnostní audit</th><td id="aSec">Čeká na dokončení.</td></tr>
+              <tr><th>Audit anonymizace</th><td id="aAnon">Čeká na dokončení.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="links">
+        <a href="/projects/?section=media">← Zpět na InfoUzel</a>
+        <a href="/projects/statistiky/admin/">Administrace (chráněná)</a>
+        <a href="/projects/zdroje-a-licence/">Zdroje a licence</a>
+      </div>
+    </main>
+    <script>
+      (function () {
+        var ENDPOINT = "https://infouzel-analytics.josef-zmrhal.workers.dev/v1/public/stats";
+        function el(id) { return document.getElementById(id); }
+        function num(v) { return String(Number(v || 0)); }
+        fetch(ENDPOINT, { credentials: "omit", cache: "no-store" })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            el("sToday").textContent = num(d.today && d.today.visits);
+            el("sYday").textContent = num(d.yesterday && d.yesterday.visits);
+            el("sMonth").textContent = num(d.month && d.month.visits);
+            el("sPrivate").textContent =
+              "Soukromé nástroje – anonymní souhrn: " +
+              num(d.privateToolsSummary && d.privateToolsSummary.opens) +
+              " otevření (měsíc). Bez rozpadu na konkrétní osobní moduly.";
+
+            var series = d.series || [];
+            var max = 1;
+            series.forEach(function (row) { max = Math.max(max, Number(row.visits || 0)); });
+            el("sSeries").innerHTML = series.length
+              ? series
+                  .slice(-14)
+                  .map(function (row) {
+                    var v = Number(row.visits || 0);
+                    var pct = Math.round((v / max) * 100);
+                    return (
+                      '<div class="bar-row"><span>' +
+                      String(row.day).slice(5) +
+                      '</span><div class="bar-track"><div class="bar-fill" style="width:' +
+                      pct +
+                      '%"></div></div><span>' +
+                      v +
+                      "</span></div>"
+                    );
+                  })
+                  .join("")
+              : '<p class="muted">Zatím nejsou k dispozici agregovaná data (nebo ještě nebyl udělen souhlas žádným návštěvníkem).</p>';
+
+            var devices = d.devices || [];
+            el("sDevices").innerHTML = devices.length
+              ? "<ul>" +
+                devices
+                  .map(function (x) {
+                    return "<li>" + x.device_category + ": " + num(x.visits) + "</li>";
+                  })
+                  .join("") +
+                "</ul>"
+              : "—";
+
+            var secs = d.topPublicSections || [];
+            el("sSections").innerHTML = secs.length
+              ? "<ul>" +
+                secs
+                  .map(function (x) {
+                    return "<li>" + x.section_id + ": " + num(x.views) + "</li>";
+                  })
+                  .join("") +
+                "</ul>"
+              : "—";
+
+            if (d.auditStatus) {
+              el("aLegal").textContent = d.auditStatus.legal || "Čeká na dokončení.";
+              el("aSec").textContent = d.auditStatus.security || "Čeká na dokončení.";
+              el("aAnon").textContent = d.auditStatus.anonymization || "Čeká na dokončení.";
+            }
+          })
+          .catch(function () {
+            el("sToday").textContent = "0";
+            el("sSeries").innerHTML =
+              '<p class="err">Veřejné API zatím není dostupné. Po nasazení Cloudflare Workeru se statistiky načtou automaticky.</p>';
+          });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+# InfoUzel Analytics — serverless anonymous aggregate stats (Workers + D1).
+# Site hosting remains GitHub Pages; this Worker is the analytics backend only.
+# Deploy: npm ci && npx wrangler d1 migrations apply / deploy
+# Secret: ADMIN_TOKEN
+name = "infouzel-analytics"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+
+[observability]
+enabled = true
+
+[vars]
+PUBLIC_CACHE_SECONDS = "300"
+CORS_ALLOW_ORIGIN = "*"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "iu-analytics"
+# Replaced by deploy workflow after `wrangler d1 create` (or keep existing id).
+database_id = "00000000-0000-0000-0000-000000000001"
