@@ -753,18 +753,36 @@ html.iu-info-system-cutover #feed .iuArticleCard {
 }
 .iuPdBtn--block { width: 100%; }
 .iuPd__count, .iuPdMuted, .iuPdEmpty { color: var(--iu-pd-muted); font-size: 0.9rem; }
-.iuPdFeed { display: flex; flex-direction: column; gap: 10px; min-height: 120px; }
-.iuPdCard {
+.iuPdFeed.iuPrehledDne__timeline,
+.iuPdFeed {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 120px;
+  position: relative;
+}
+/* Outer item = timeline row (no card chrome); card chrome stays on .iuPrehledDne__card */
+.iuPdFeed > .iuPrehledDne__item.iuPdCard,
+.iuPdCard.iuPrehledDne__item {
   display: grid;
-  grid-template-columns: 72px 1fr;
+  grid-template-columns: 64px 18px minmax(0, 1fr);
   gap: 10px;
-  background: var(--iu-pd-card);
-  border: 1px solid var(--iu-pd-line);
-  border-radius: var(--iu-pd-radius);
-  padding: 12px;
+  padding: 10px 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 .iuPdCard.is-read { opacity: 0.78; }
 .iuPdCard__time { font-size: 0.78rem; color: var(--iu-pd-muted); line-height: 1.3; }
+.iuPrehledDne__item .iuPdCard__time.iuPrehledDne__time {
+  font-weight: 750;
+  font-size: 0.92rem;
+  color: var(--iu-pd-text);
+}
 .iuPdCard__title {
   display: block; color: var(--iu-pd-text); text-decoration: none;
   font-weight: 700; font-size: 1.02rem; line-height: 1.35; margin-bottom: 6px;
@@ -776,8 +794,26 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   background: rgba(148, 163, 184, 0.14); border-radius: 999px; padding: 3px 8px;
 }
 .iuPdCard__pill--imp { color: #9a3412; background: rgba(251, 146, 60, 0.18); }
-.iuPdCard__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.iuPdCard__actions,
+.iuPrehledDne__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 4px;
+}
 .iuPdCard__actions .iuPdBtn { min-height: 36px; font-size: 0.85rem; padding: 6px 12px; }
+.iuPrehledDne__item:last-child .iuPrehledDne__axis::before {
+  bottom: 4px;
+}
+@media (max-width: 640px) {
+  .iuPdFeed > .iuPrehledDne__item.iuPdCard,
+  .iuPdCard.iuPrehledDne__item {
+    grid-template-columns: 52px 14px minmax(0, 1fr);
+    gap: 8px;
+  }
+}
 html.iu-pd-settings-open,
 html.iu-pd-settings-open body {
   overflow: hidden !important;

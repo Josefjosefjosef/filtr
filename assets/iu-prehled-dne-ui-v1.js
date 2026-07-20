@@ -1,7 +1,8 @@
 /**
- * InfoUzel.cz — Přehled dne UI v6 (settings fix: autosave, structure, scroll)
+ * InfoUzel.cz — Přehled dne UI v6 (timeline axis restore + actions align)
  * Hlavní stránka: Můj přehled/Nastavení + Zobrazit (Vše/Uložené/Nepřečtené/Skryté) + feed.
  * Nastavení: jeden overlay/modal — hlavní 3 lišty, jedna otevřená sekce, autosave.
+ * Feed: svislá časová osa + puntíky; Uložit/Skrýt zarovnané vpravo.
  */
 import {
   applyCutoverDom,
@@ -20,10 +21,10 @@ import {
   getScrollState,
   setScrollState,
   migrateLocalStateOnce,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-settings-fix-20260720b";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-timeline-restore-20260720";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-settings-fix-20260720b";
+const CACHE_BUST = "info-system-v6-timeline-restore-20260720";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -301,6 +302,12 @@ function importanceLabel(ev) {
   return "Běžná";
 }
 
+function sectionColor(sectionId) {
+  const taxonomy = (state.data && state.data.taxonomy) || {};
+  const sec = (taxonomy.sections || []).find((s) => s && s.id === sectionId);
+  return (sec && sec.color) || "#5B6CFF";
+}
+
 function renderItem(ev) {
   const id = String(ev.id || "");
   const url = String(ev.url || ev.originalUrl || "#");
@@ -311,22 +318,28 @@ function renderItem(ev) {
   const saved = isSaved(id);
   const hiddenMode = state.viewMode === "hidden";
   const read = isRead(id);
+  const color = sectionColor(ev.sectionId);
+  const alert = String(ev.eventType || "") === "mimoradne" || Number(ev.importance) >= 5;
   return (
-    `<article class="iuPdCard iuPrehledDne__item iuPrehledDne__card${read ? " is-read" : ""}" data-id="${esc(id)}">` +
-    `<div class="iuPdCard__time">${esc(fmtTime(publishIso(ev)))}</div>` +
-    `<div class="iuPdCard__body">` +
-    `<a class="iuPdCard__title" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(title)}</a>` +
-    `<div class="iuPdCard__meta">` +
-    (src ? `<span class="iuPdCard__pill">${esc(src)}</span>` : "") +
-    (region ? `<span class="iuPdCard__pill">${esc(region)}</span>` : "") +
-    (imp ? `<span class="iuPdCard__pill iuPdCard__pill--imp">${esc(imp)}</span>` : "") +
+    `<li class="iuPdCard iuPrehledDne__item${read ? " is-read" : ""}" data-id="${esc(id)}" style="--iu-pd-dot:${esc(color)}">` +
+    `<div class="iuPrehledDne__timeCol">` +
+    `<div class="iuPdCard__time iuPrehledDne__time">${esc(fmtTime(publishIso(ev)))}</div>` +
+    `<div class="iuPrehledDne__readMark" aria-label="Přečteno">✓</div>` +
     `</div>` +
-    `<div class="iuPdCard__actions">` +
+    `<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot${alert ? " iuPrehledDne__dot--alert" : ""}"></span></div>` +
+    `<article class="iuPrehledDne__card iuPdCard__body">` +
+    `<a class="iuPdCard__title iuPrehledDne__cardTitle" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(title)}</a>` +
+    `<div class="iuPdCard__meta iuPrehledDne__meta">` +
+    (src ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(src)}</span>` : "") +
+    (region ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(region)}</span>` : "") +
+    (imp ? `<span class="iuPdCard__pill iuPdCard__pill--imp iuPrehledDne__pill">${esc(imp)}</span>` : "") +
+    `</div>` +
+    `<div class="iuPdCard__actions iuPrehledDne__actions">` +
     (hiddenMode
       ? `<button type="button" class="iuPdBtn iuPdBtn--ghost" data-act="unhide" data-id="${esc(id)}">Obnovit</button>`
       : `<button type="button" class="iuPdBtn iuPdBtn--ghost${saved ? " is-on" : ""}" data-act="save" data-id="${esc(id)}">${saved ? "Uloženo" : "Uložit"}</button>` +
         `<button type="button" class="iuPdBtn iuPdBtn--ghost" data-act="hide" data-id="${esc(id)}">Skrýt</button>`) +
-    `</div></div></article>`
+    `</div></article></li>`
   );
 }
 
@@ -642,7 +655,7 @@ function homeShellHtml(listHtml, countLabel, moreHtml) {
     `<button type="button" class="iuPdToggle${mode === "hidden" ? " is-active" : ""}" data-act="mode" data-mode="hidden">Skryté</button>` +
     `</div></div>` +
     `<div class="iuPd__count" id="iuPdCount">${esc(countLabel)}</div>` +
-    `<div class="iuPdFeed" id="iuPrehledDneTimeline">${listHtml}</div>` +
+    `<ul class="iuPdFeed iuPrehledDne__timeline" id="iuPrehledDneTimeline">${listHtml}</ul>` +
     `<div id="iuPdMoreWrap">${moreHtml}</div>` +
     `</section>`
   );
@@ -718,7 +731,7 @@ function updateFeedDom() {
   if (feed) {
     feed.innerHTML = pageItems.length
       ? pageItems.map(renderItem).join("")
-      : `<p class="iuPdEmpty">Žádné položky pro toto zobrazení.</p>`;
+      : `<li class="iuPdEmpty iuPrehledDne__empty">Žádné položky pro toto zobrazení.</li>`;
   }
   if (moreWrap) {
     moreWrap.innerHTML =
@@ -736,7 +749,7 @@ function paint(opts) {
   const pageItems = list.slice(0, state.page * PAGE_SIZE);
   const listHtml = pageItems.length
     ? pageItems.map(renderItem).join("")
-    : `<p class="iuPdEmpty">Žádné položky pro toto zobrazení.</p>`;
+    : `<li class="iuPdEmpty iuPrehledDne__empty">Žádné položky pro toto zobrazení.</li>`;
   const moreHtml =
     pageItems.length < list.length
       ? `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block" data-act="more">Načíst další</button>`
