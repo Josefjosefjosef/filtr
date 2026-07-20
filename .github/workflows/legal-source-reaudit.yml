@@ -1,0 +1,22 @@
+name: Legal source terms reaudit
+on:
+  schedule:
+    - cron: "20 4 * * 1"
+  workflow_dispatch: {}
+jobs:
+  reaudit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Legal reaudit (report only)
+        run: node scripts/iu-info-events-legal-reaudit.mjs
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: legal-reaudit-report
+          path: docs/info-system-v1/15-legal-reaudit-last-report.json
+          if-no-files-found: ignore

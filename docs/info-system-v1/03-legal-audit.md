@@ -12,15 +12,13 @@ PASS pro produkční zobrazení Přehledu dne **pouze** pro zdroje se stavem `AP
 - komerční provoz webu včetně reklamy je posuzován explicitně,
 - kombinování schválených zdrojů v agregovaném feedu je součástí produktu.
 
-## Aktivní zdroje (po legal gate)
+## Aktivní zdroje (po legal gate phase-2)
 
-Oficiální instituce schválené jako `APPROVED_WITH_SPECIFIC_CONDITIONS` (link-only) + ČHMÚ CAP jako `APPROVED_OPEN_DATA` (interim).  
-Aktuální seznam: `productionActive=true` ∩ `canPublishFromSource()=ok`.
+Produkčně aktivní je pouze zdroj s doloženou konkrétní licencí (aktuálně **ČHMÚ — CC BY 4.0**).  
+Ostatní interim schválení z phase-1 jsou `LICENSE_UNCLEAR` / review — viz `14-legal-phase2-decisions.md`.
 
-## Pozastaveno 2026-07-20
+## Pozastaveno / mimo produkci
 
-- **ČT24**, **iROZHLAS** — `LEGAL_REVIEW_REQUIRED` (veřejnoprávní média bez doložené open licence pro komerční agregaci).
-
-## Deaktivované komerční zdroje (UI + legal REJECTED)
-
-Seznam Zprávy, Novinky, iDNES, Aktuálně, Deník, Blesk, HN, E15, Sport.cz, iSport — důvod: komerční média bez open licence / smlouvy; InfoUzel nepoužívá placené licence.
+- **ČT24**, **iROZHLAS** — `LEGAL_REVIEW_REQUIRED`
+- Oficiální RSS/tiskové zdroje bez doložené licence distribuce — `LICENSE_UNCLEAR`
+- Komerční média — `REJECTED`

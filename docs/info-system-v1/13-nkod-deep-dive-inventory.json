@@ -1,0 +1,1477 @@
+{
+  "generatedAt": "2026-07-20T09:43:40.826Z",
+  "source": "data.gov.cz SPARQL",
+  "querySummaries": [
+    {
+      "id": "weather-alerts",
+      "rowCount": 80,
+      "datasetCount": 36
+    },
+    {
+      "id": "transport",
+      "rowCount": 100,
+      "datasetCount": 32
+    },
+    {
+      "id": "safety-gov",
+      "rowCount": 71,
+      "datasetCount": 27
+    },
+    {
+      "id": "health-consumer",
+      "rowCount": 80,
+      "datasetCount": 45
+    },
+    {
+      "id": "contracts-budgets",
+      "rowCount": 80,
+      "datasetCount": 40
+    }
+  ],
+  "datasets": [
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/360ff6d559563c61b6764bfcaa7bfb72",
+      "title": "Předpověď počasí pro pohoří ČR na dva dny",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/weather/forecast/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/57158d0d0a34dbb2d3420a5e5095c9ca",
+      "title": "Předpověď počasí pro ČR na 4. den",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/weather/forecast/now/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/1ee55d15ea8f4a947c83828ca16edd1b",
+      "title": "Předpověď meteorologické situace pro území ČR na 8 dní",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/weather/forecast/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/fee45a6ba8a62c53fc32964c88229e7b",
+      "title": "Předpověď počasí pro kraje na zítra",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/weather/forecast/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/3e805339ddee730edca2aee1b19723fb",
+      "title": "Předpověď počasí pro kraje na 2. až 4. den",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/weather/forecast/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/8761170cf21d4b7b1f81d3a65ed94473",
+      "title": "Historická meteorologická data měřená v síti stanic ČHMÚ ve formátu csv",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/climate/historical_csv/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/1fefa3451a7fc19084568f70f51483e8",
+      "title": "Předpověď počasí pro ČR na dnes",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/weather/forecast/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/df7e5ebf8daba1e9b453938b128f308b",
+      "title": "Předpověď počasí pro ČR na 3. den",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/weather/forecast/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/093ebcbdf19b4e8f854e6f27d5555d77",
+      "title": "Předpověď kvality ovzduší",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/weather/forecast/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/5f409643c92c03bebb77ddc710961e0f",
+      "title": "Předpověď počasí pro ČR na 6 až 8. den",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/weather/forecast/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/a3854898bfeec0570681f8ae13787f64",
+      "title": "Předpověď počasí pro ČR na 5. den",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/weather/forecast/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R59",
+      "title": "Data Povodňového informačního systému (POVIS2)",
+      "publisher": "Ministerstvo životního prostředí",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/e5a1c6a1babd80330ccfa0026487fe5c",
+      "title": "Předpověď počasí pro ČR na noc",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/weather/forecast/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/5046a23dc5806a0e4eaa797a0ac61b7e",
+      "title": "Předpověď počasí pro ČR na zítřek",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/weather/forecast/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/aa4d383e98cc8ddf0a6cfb52a240ee26",
+      "title": "Předpověď počasí pro kraje na dnešek",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/weather/forecast/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/1f814704f8cf6c575f953109dbaf147f",
+      "title": "Předpověď počasí pro kraje na noc",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/weather/forecast/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/ef1968038432683347750e90934f35a9",
+      "title": "Předpověď počasí pro ČR na 2. den",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/weather/forecast/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/70883858/7d9756c396a12542db9162331943f54a",
+      "title": "Bonita klimatu z hlediska znečištění ovzduší",
+      "publisher": "Institut plánování a rozvoje hlavního města Prahy",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 7,
+      "sampleAccessURL": "https://lkod-iprpraha.hub.arcgis.com/api/download/v1/items/96e882bdfdf448c5b0031f5303118801/kml?layers=0"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00164801/e3c6d7a0f6de850581740c6d797b165a",
+      "title": "Autorizované osoby podle zákona o ochraně ovzduší",
+      "publisher": "Ministerstvo životního prostředí",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://data.mzp.cz/datasets/dataset/isao/mzp_autorizovane_osoby_ovzdusi.csv"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/62eea8620c12a72e05763018c2f6680f",
+      "title": "Meteorologická data měřená v síti stanic ČHMÚ za aktuální rok",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/climate/recent/data/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00025593/0e8668552e05bff1045273e948519b1c",
+      "title": "Rozlivy povodní 2024",
+      "publisher": "Český statistický úřad",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 6,
+      "sampleAccessURL": "https://geodata.csu.gov.cz/as/data/distribuce/Hosted/Vymezeni_rozlivu_povodne_2024/FeatureServer/0/geojson.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/824571401b7fd483eaaebd5c5c214826",
+      "title": "Historická meteorologická data měřená v síti stanic ČHMÚ v denním kroku ve formátu csv, teplota vzduchu",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/climate/historical_csv/data/daily/temperature"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/73ecc7ef25f3c6da5a0ca3ba82df1082",
+      "title": "Pole koncentrací látek znečišťující ovzduší (2018–2023)",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 8,
+      "sampleAccessURL": "https://geoportal.gov.cz/atom/CHMU/chmu_imise_epsg4258_2022.gpkg"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/e9f431df0c3f104db5aaefedef31f35d",
+      "title": "Kvalita ovzduší – předběžné údaje",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/air_quality/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00075370/52ec72fc65b0f522f9c1bf227724ec3b",
+      "title": "Čidla ovzduší - Envitech",
+      "publisher": "Statutární město Plzeň",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 6,
+      "sampleAccessURL": "https://opendata.plzen.eu/public/opendata/download-file/432"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/02795281/ea028a46d51bcbb7dff9aefe2dd72c2c",
+      "title": "Stav ovzduší – AMS ČHMÚ - API",
+      "publisher": "Operátor ICT, a.s.",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://api.golemio.cz"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00075370/7c4ac0a087404b0e4a9cbd10388e72d3",
+      "title": "Čidla ovzduší - AGDATA",
+      "publisher": "Statutární město Plzeň",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 3,
+      "sampleAccessURL": "https://opendata.plzen.eu/public/opendata/agdata-unitlv"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/a33a372427dfe8e36b702966becdcb39",
+      "title": "Meteorologická data měřená v síti stanic ČHMÚ za aktuální rok v intervalu 1 hodina",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/meteorology/climate/recent/data/1hour"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/11cbd94fe1cf59ef8a59454f7e78e035",
+      "title": "GIS datové sady Českého hydrometeorologického ústavu",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://opendata.chmi.cz/hydrology/product/data/gis_layer/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/45a2b349d961f050f79ebbb33ac663e6",
+      "title": "GIS datové sady – hydrologická bilance množství vody v ČR",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://opendata.chmi.cz/hydrology/product/data/gis_layer/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/2d09f0590be20565ee49d64ad148dcb8",
+      "title": "Kvalita ovzduší – aktuální hodinové údaje",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.chmi.cz/air_quality/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00075370/1bf60cc2c3287f45f3ffcfa4a7d550df",
+      "title": "Povodeň 2002",
+      "publisher": "Statutární město Plzeň",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 7,
+      "sampleAccessURL": "https://opendata.plzen.eu/public/opendata/download-file/243"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/285cb27e06512348e9e00c208f0a8ede",
+      "title": "INSPIRE – Síť stanic sledování množství povrchových vod ve správě Českého hydrometeorologického ústavu",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 8,
+      "sampleAccessURL": "https://geoportal.gov.cz/atom/CHMU/CZ_CHMI_SurfaceWaterBodyStation_2024_epsg4258.gpkg"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/e0ae9c83c9ec48b96da509b80bfc6912",
+      "title": "Množství podzemních vod – aktuální hydrologické údaje",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://opendata.chmi.cz/hydrology/groundwater/characteristic/metadata/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00020699/9b596d03dd10af94988212afbb552efc",
+      "title": "Riziko přívalové povodně",
+      "publisher": "Český hydrometeorologický ústav",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://opendata.chmi.cz/hydrology/product/data/flash_flood/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/70883858/4c684ebc135b094a99896a57e08d46e6",
+      "title": "Vyjmenované stacionární zdroje znečišťování ovzduší - REZZO 1",
+      "publisher": "Institut plánování a rozvoje hlavního města Prahy",
+      "queryBucket": "weather-alerts",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://lkod-iprpraha.hub.arcgis.com/api/download/v1/items/d2382afbf9454951ab71a0a89c762d15/csv?layers=0"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/17e5105150367f71c6448c65998d9c13",
+      "title": "Spotřební daň z piva - Doprava, export dle měsíců a zemí",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "transport",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://data.mf.gov.cz/katalog/cs/file/2193/download?token=4_wIeVQV"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R73",
+      "title": "Rejstřík podnikatelů v silniční dopravě",
+      "publisher": "Ministerstvo dopravy",
+      "queryBucket": "transport",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R154",
+      "title": "Portál dopravy",
+      "publisher": "Ministerstvo dopravy",
+      "queryBucket": "transport",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R175",
+      "title": "Seznam pomůcek pro plavbu a dopravního značení",
+      "publisher": "Ministerstvo dopravy",
+      "queryBucket": "transport",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R82",
+      "title": "Informační systém veřejné dopravy",
+      "publisher": "Ministerstvo dopravy",
+      "queryBucket": "transport",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R137",
+      "title": "Data o dopravných proudech z IS elektronické dálniční známky",
+      "publisher": "Státní fond dopravní infrastruktury",
+      "queryBucket": "transport",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00164801/0bfb8ccf96210d84b987f1d3103b2c07",
+      "title": "Seznam dopravců odpadů",
+      "publisher": "Ministerstvo životního prostředí",
+      "queryBucket": "transport",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://data.mzp.cz/isoh2/OpenData/HF10/Dopravci.xml"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00266094/29a6680128cab4417211d5a888cd6258",
+      "title": "Územní plán města Mostu - Koridory dopravní a technické infrastruktury",
+      "publisher": "Statutární město Most",
+      "queryBucket": "transport",
+      "distributionCount": 7,
+      "sampleAccessURL": "https://opendata.mesto-most.cz/api/download/v1/items/acfbda9822504895bfc6a2c381fa16d1/shapefile?layers=17"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1042/subjekty-a-objekty-údajů/1042-17",
+      "title": "1042-17: Koncese k provozování silniční dopravy",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "transport",
+      "distributionCount": 3,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1401/subjekty-a-objekty-údajů/1401-3",
+      "title": "1401-3: Provozovatel drážní dopravy na dráze celostátní a regionální",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "transport",
+      "distributionCount": 3,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1046/subjekty-a-objekty-údajů/1046-39",
+      "title": "1046-39: Dopravně psychologické vyšetření",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "transport",
+      "distributionCount": 3,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1042/subjekty-a-objekty-údajů/1042-22",
+      "title": "1042-22: Fyzická osoba evidovaná v Rejstříku podnikatelů v silniční dopravě",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "transport",
+      "distributionCount": 3,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1042/subjekty-a-objekty-údajů/1042-18",
+      "title": "1042-18: Způsobilost k řízení dopravní činnosti",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "transport",
+      "distributionCount": 3,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1042/subjekty-a-objekty-údajů/1042-6",
+      "title": "1042-6: Zahraniční podnikatel v silniční dopravě",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "transport",
+      "distributionCount": 3,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1042/subjekty-a-objekty-údajů/1042-10",
+      "title": "1042-10: Podnikatel v silniční dopravě jako právnická osoba",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "transport",
+      "distributionCount": 3,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1042/subjekty-a-objekty-údajů/1042-1",
+      "title": "1042-1: Podnikatel v silniční dopravě s velkými vozidly",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "transport",
+      "distributionCount": 3,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1042/subjekty-a-objekty-údajů/1042-11",
+      "title": "1042-11: Podnikatel v silniční dopravě jako podnikající fyzická osoba",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "transport",
+      "distributionCount": 3,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1401/subjekty-a-objekty-údajů/1401-2",
+      "title": "1401-2: Provozovatel drážní dopravy",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "transport",
+      "distributionCount": 3,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1042/subjekty-a-objekty-údajů/1042-9",
+      "title": "1042-9: Podnikatel v silniční dopravě",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "transport",
+      "distributionCount": 3,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1042/subjekty-a-objekty-údajů/1042-3",
+      "title": "1042-3: Podnikatel v silniční dopravě s malými vozidly",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "transport",
+      "distributionCount": 3,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1042",
+      "title": "A1042: Silniční doprava",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "transport",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1401",
+      "title": "A1401: Provozování dráhy a provozování drážní dopravy",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "transport",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/70883858/e9076ec4f441b690b892cb8baaac744b",
+      "title": "Hluková mapa automobilové dopravy - den",
+      "publisher": "Institut plánování a rozvoje hlavního města Prahy",
+      "queryBucket": "transport",
+      "distributionCount": 7,
+      "sampleAccessURL": "https://mp.iprpraha.cz/arcgis/rest/services/Hosted/HM_CUR_HM_EKOLA_ADP_PASMA_DEN_P/FeatureServer/0"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/44992785/53fee3b4f23a01638dd89dbbdfdee037",
+      "title": "Zastávky MHD",
+      "publisher": "Statutární město Brno",
+      "queryBucket": "transport",
+      "distributionCount": 10,
+      "sampleAccessURL": "https://data.brno.cz/api/download/v1/items/747a824783044377b6d07a8060e7769d/csv?layers=0"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00064581/39d3311e3d84da1357cb2cc74b27ed2b",
+      "title": "Dopravní přestupky MHMP 2019",
+      "publisher": "HLAVNÍ MĚSTO PRAHA",
+      "queryBucket": "transport",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata-storage.praha.eu/DSC_dopravni_prestupky/2019/dopravni_prestupky_2019.csv"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00266094/f433402cf6413cf59e77f4a2a5ed56da",
+      "title": "Intenzita automobilové dopravy",
+      "publisher": "Statutární město Most",
+      "queryBucket": "transport",
+      "distributionCount": 7,
+      "sampleAccessURL": "https://opendata.mesto-most.cz/api/download/v1/items/24eb66961e534890ac0ad30f283d4a3f/csv?layers=66"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/70883858/0ec3e7cd0666c24dcb874662c4ba2102",
+      "title": "Cyklistická doprava - značky",
+      "publisher": "Institut plánování a rozvoje hlavního města Prahy",
+      "queryBucket": "transport",
+      "distributionCount": 7,
+      "sampleAccessURL": "https://lkod-iprpraha.hub.arcgis.com/api/download/v1/items/519cbdad40d242cbb765ea71f0392fb2/shapefile?layers=0"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00025593/b375a837d30ca8aeda17294630109f82",
+      "title": "Sčítání 2021 - Vyjíždějící do školy podle hlavního dopravního prostředku",
+      "publisher": "Český statistický úřad",
+      "queryBucket": "transport",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://csu.gov.cz/docs/107508/aea09150-aee1-71dc-42fc-282c870a2f65/sldb2021_vyjizdka_skola_prostredek_pohlavi.csv"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00025712/e8fe63da672cd776c9cf3bf2ba25e727",
+      "title": "INSPIRE téma Dopravní sítě - železniční doprava (TN_RAIL)",
+      "publisher": "Český úřad zeměměřický a katastrální",
+      "queryBucket": "transport",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://atom.cuzk.cz/TN-RAIL/TN-RAIL.xml"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00845451/a6d69626bceefb9c2089445e2034ccc4",
+      "title": "Zastávky MHD",
+      "publisher": "Statutární město Ostrava",
+      "queryBucket": "transport",
+      "distributionCount": 4,
+      "sampleAccessURL": "https://mapy.ostrava.cz/opendata/data/opendata/zastavky_MHD_JTSK_gml.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00845451/e00f7b733814f35dabd5c421180b432a",
+      "title": "Počet dopravních přestupků v jednotlivých měsících_2016",
+      "publisher": "Statutární město Ostrava",
+      "queryBucket": "transport",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.ostrava.cz/pocet-prestupku-v-mesicich/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00845451/451bc91949c020803e9908c5e2df815a",
+      "title": "Počet dopravních přestupků v jednotlivých měsících 2017",
+      "publisher": "Statutární město Ostrava",
+      "queryBucket": "transport",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.ostrava.cz/pocet-prestupku-v-mesicich/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R42",
+      "title": "Počty zachycených kybernetických incidentů",
+      "publisher": "Město Kroměříž",
+      "queryBucket": "safety-gov",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R105",
+      "title": "Počty zachycených kybernetických incidentů - Město Rájec-Jestřebí",
+      "publisher": "Město Rájec - Jestřebí",
+      "queryBucket": "safety-gov",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R43",
+      "title": "Počty zachycených kybernetických incidentů",
+      "publisher": "Město Rájec - Jestřebí",
+      "queryBucket": "safety-gov",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R144",
+      "title": "Informační systém krizového řízení (ISKŘ)",
+      "publisher": "MV - generální ředitelství HZS ČR",
+      "queryBucket": "safety-gov",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R60",
+      "title": "Počty zachycených kybernetických incidentů",
+      "publisher": "Město Brumov-Bylnice",
+      "queryBucket": "safety-gov",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R103",
+      "title": "Kyberbezpečnostní incidenty - Chropyně",
+      "publisher": "Město Chropyně",
+      "queryBucket": "safety-gov",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R58",
+      "title": "Počty zachycených kybernetických incidentů",
+      "publisher": "Město Uherské Hradiště",
+      "queryBucket": "safety-gov",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R55",
+      "title": "Počty zachycených kybernetických incidentů",
+      "publisher": "Město Bučovice",
+      "queryBucket": "safety-gov",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R57",
+      "title": "Počty zachycených kybernetických incidentů",
+      "publisher": "Město Krnov",
+      "queryBucket": "safety-gov",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R106",
+      "title": "Počty zachycených kybernetických incidentů - Město Krnov",
+      "publisher": "Město Krnov",
+      "queryBucket": "safety-gov",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R41",
+      "title": "Počty zachycených kybernetických incidentů",
+      "publisher": "město Otrokovice",
+      "queryBucket": "safety-gov",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R51",
+      "title": "Počty zachycených kybernetických incidentů",
+      "publisher": "Město Holešov",
+      "queryBucket": "safety-gov",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/70891168/eb56f79d8e09a2f3df3363df24c0b1f6",
+      "title": "Služebny Policie ČR v Karlovarském kraji",
+      "publisher": "Karlovarský kraj",
+      "queryBucket": "safety-gov",
+      "distributionCount": 4,
+      "sampleAccessURL": "https://www.datazapad.cz/api/download/v1/items/2082ece6991c467295d15718759c5054/geojson?layers=0"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00064581/013499750b46f8c0d65ff4c92bd5d425",
+      "title": "Měsíční zprávy o činnosti Městské policie hl. m. Prahy za rok 2024 podle útvarů",
+      "publisher": "HLAVNÍ MĚSTO PRAHA",
+      "queryBucket": "safety-gov",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://mppraha.info/opendata/cinnost/2024OR.json"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/70889546/ac8fe38b229d5119fbc773ad01a5aa2e",
+      "title": "Stanice a pracoviště hasičského záchranného sboru",
+      "publisher": "Královéhradecký kraj",
+      "queryBucket": "safety-gov",
+      "distributionCount": 11,
+      "sampleAccessURL": "https://www.datakhk.cz/api/download/v1/items/3ff2f49c7f454870baf51628403ace6e/geoPackage?layers=0"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00064581/2d6fd2c0a02024268942c908332dd93f",
+      "title": "Faktury Městské policie hl. m. Prahy za rok 2024",
+      "publisher": "HLAVNÍ MĚSTO PRAHA",
+      "queryBucket": "safety-gov",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://mppraha.info/opendata/faktury/faktury_2024.json"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00064581/ef5699759bf9bd9e888fed590ce8d966",
+      "title": "Měsíční zprávy o činnosti Městské policie hl. m. Prahy za rok 2024",
+      "publisher": "HLAVNÍ MĚSTO PRAHA",
+      "queryBucket": "safety-gov",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://mppraha.info/opendata/cinnost/2024.json"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/70883858/65f6a5fe934dcfb8f0ba48b42bddab22",
+      "title": "Objekty Městské policie Praha (body)",
+      "publisher": "Institut plánování a rozvoje hlavního města Prahy",
+      "queryBucket": "safety-gov",
+      "distributionCount": 7,
+      "sampleAccessURL": "https://lkod-iprpraha.hub.arcgis.com/api/download/v1/items/87f9881dab2847c09d6b1da7090d0f6c/shapefile?layers=0"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/60461373/1444863595",
+      "title": "Motivace k dobrovolnictví a řešení krizí v zemích V4",
+      "publisher": "Vysoká škola chemicko-technologická v Praze",
+      "queryBucket": "safety-gov",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://business.vscht.cz/uploads/files/Volunteering/Data-export.xlsx"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/44992785/bd10ab1171ba42aea2fa2f46cbef59f1",
+      "title": "Hranice revírů městské policie",
+      "publisher": "Statutární město Brno",
+      "queryBucket": "safety-gov",
+      "distributionCount": 10,
+      "sampleAccessURL": "https://data.brno.cz/api/download/v1/items/9bd1e979d32d479d8e8fa2368599495c/featureCollection?layers=8"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/70889546/96da6eb7f9e0705d385602321311c7ad",
+      "title": "Služebny Policie ČR",
+      "publisher": "Královéhradecký kraj",
+      "queryBucket": "safety-gov",
+      "distributionCount": 11,
+      "sampleAccessURL": "https://services6.arcgis.com/ogJAiK65nXL1mXAW/arcgis/rest/services/Slu%C5%BEebny_Policie_%C4%8CR/FeatureServer/0"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/05800226/994708867",
+      "title": "Úřední deska Národní úřad pro kybernetickou a informační bezpečnost",
+      "publisher": "Národní úřad pro kybernetickou a informační bezpečnost",
+      "queryBucket": "safety-gov",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://www.nukib.cz/download/urednideska.json"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00064581/7e29819e0523b91e17d636a05256de35",
+      "title": "Měsíční zprávy o činnosti Městské policie hl. m. Prahy za rok 2023",
+      "publisher": "HLAVNÍ MĚSTO PRAHA",
+      "queryBucket": "safety-gov",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://mppraha.info/opendata/cinnost/2023.json"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00064581/9debdbeff0f173fc8b4f72134ec04903",
+      "title": "Objednávky Městské policie hl. m. Prahy za rok 2023",
+      "publisher": "HLAVNÍ MĚSTO PRAHA",
+      "queryBucket": "safety-gov",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://mppraha.info/opendata/objednavky/objednavky.json"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00064581/708818b5ac7975be89de63ff9424c3e7",
+      "title": "Objednávky Městské policie hl. m. Prahy za rok 2024",
+      "publisher": "HLAVNÍ MĚSTO PRAHA",
+      "queryBucket": "safety-gov",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://mppraha.info/opendata/objednavky/objednavky_2024.json"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/70883858/8cb8ff4a51e36b80b29d703ab5ded2d4",
+      "title": "Okrsky Městské policie Praha",
+      "publisher": "Institut plánování a rozvoje hlavního města Prahy",
+      "queryBucket": "safety-gov",
+      "distributionCount": 7,
+      "sampleAccessURL": "https://lkod-iprpraha.hub.arcgis.com/api/download/v1/items/6fa5c5189b664394a4c39b645ec13619/kml?layers=0"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00064581/0d987304abe2c9a8985aa772cd1479fb",
+      "title": "Faktury Městské policie hl. m. Prahy za rok 2023",
+      "publisher": "HLAVNÍ MĚSTO PRAHA",
+      "queryBucket": "safety-gov",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://mppraha.info/opendata/faktury/faktury_2023.json"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/aefd135655fefa1e7071076559f255bd",
+      "title": "Spotřební daň z vína - import výrobků uvedených pod KN 2204, 2205 a 2206",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "health-consumer",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://data.mf.gov.cz/katalog/cs/file/2234/download?token=WaLmyRM1"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R152",
+      "title": "IT Služby pro elektronizaci zdravotnictví MZd",
+      "publisher": "Ministerstvo zdravotnictví",
+      "queryBucket": "health-consumer",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R34",
+      "title": "Klientský portál Státní veterinární správy (SVS) ",
+      "publisher": "Státní veterinární správa",
+      "queryBucket": "health-consumer",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R80",
+      "title": "Úřední deska SZPI",
+      "publisher": "Státní zemědělská a potravinářská inspekce",
+      "queryBucket": "health-consumer",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R127",
+      "title": "Potraviny na pranýři",
+      "publisher": "Státní zemědělská a potravinářská inspekce",
+      "queryBucket": "health-consumer",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R140",
+      "title": "Antimikrobní léčivé přípravky ve veterinární medicíně",
+      "publisher": "Ústav pro státní kontrolu veterinárních biopreparátů a léčiv",
+      "queryBucket": "health-consumer",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/podněty-na-data-k-otevření/R9",
+      "title": "Seznam provozovatelů potravinářských podniků",
+      "publisher": "Ministerstvo zemědělství",
+      "queryBucket": "health-consumer",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00024341/e44abc54554d19ddb0cd3aebc4c0b25a",
+      "title": "Pacienti v centrech duševního zdraví",
+      "publisher": "Ministerstvo zdravotnictví",
+      "queryBucket": "health-consumer",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://datanzis.uzis.gov.cz/data/OIS-04-NISDZ/OIS-04-19/Otevrena-data-OIS-04-19-pacienti-centra-dusevniho-zdravi.csv"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00024341/2fefa9f7be5e790df203be70546b877d",
+      "title": "Hromadně vyráběné léčivé přípravky v rámci veřejného zdravotního pojištění – 2. úroveň ATC",
+      "publisher": "Ministerstvo zdravotnictví",
+      "queryBucket": "health-consumer",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://datanzis.uzis.gov.cz/data/NR-04-NRHZS/NR-04-96/Otevrena-data-NR-04-96-hromadne-vyrabene-lecive-pripravky-2-uroven-atc.csv.gz"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00024341/f3e44e4794628ccd9b3dbe718fb48dbf",
+      "title": "Hromadně vyráběné léčivé přípravky v rámci veřejného zdravotního pojištění – 3. úroveň ATC",
+      "publisher": "Ministerstvo zdravotnictví",
+      "queryBucket": "health-consumer",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://datanzis.uzis.gov.cz/data/NR-04-NRHZS/NR-04-95/Otevrena-data-NR-04-95-hromadne-vyrabene-lecive-pripravky-3-uroven-atc.csv.gz"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00024341/60cf06c758e9898d6705a11f79b5e9d9",
+      "title": "Využívání sociálních a zdravotních služeb",
+      "publisher": "Ministerstvo zdravotnictví",
+      "queryBucket": "health-consumer",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://datanzis.uzis.gov.cz/data/OIS-06-SZ-DATA/OIS-06-01/Otevrena-data-OIS-06-01-vyuzivani-socialnich-zdravotnich-sluzeb.csv"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00024341/36fd1e02d86f52c6d9fbd3d7e833a38d",
+      "title": "Hromadně vyráběné léčivé přípravky v rámci veřejného zdravotního pojištění – 1. úroveň ATC",
+      "publisher": "Ministerstvo zdravotnictví",
+      "queryBucket": "health-consumer",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://datanzis.uzis.gov.cz/data/NR-04-NRHZS/NR-04-97/Otevrena-data-NR-04-97-hromadne-vyrabene-lecive-pripravky-1-uroven-atc.csv.gz"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00164801/220cd205baf9b8ac12c523f9d25f1402",
+      "title": "Kolektivní systémy pro vybrané plastové výrobky",
+      "publisher": "Ministerstvo životního prostředí",
+      "queryBucket": "health-consumer",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://data.mzp.cz/isoh2/OpenData/HF11/KS.xml"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00025593/ab72830efe2aa35820cf0af40cf060c4",
+      "title": "Harmonizovaný index spotřebitelských cen (HICP) - od 2026",
+      "publisher": "Český statistický úřad",
+      "queryBucket": "health-consumer",
+      "distributionCount": 3,
+      "sampleAccessURL": "https://data.csu.gov.cz/opendata/sady/CEN0101M/distribuce/csv"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/223d287b58542b6194de55e850805dfb",
+      "title": "Spotřební daň z vína - export výrobků uvedených pod KN 2204, 2205 a 2206",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "health-consumer",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://data.mf.gov.cz/katalog/cs/file/2233/download?token=uQ3rGtB4"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00024341/af69c8293086ce020441264c671f3cb7",
+      "title": "Výkony zdravotní péče dle skupiny hlavní diagnózy, odbornosti a pojišťovny",
+      "publisher": "Ministerstvo zdravotnictví",
+      "queryBucket": "health-consumer",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://datanzis.uzis.gov.cz/data/NR-04-NRHZS/NR-04-98/Otevrena-data-NR-04-98-vykony-diagnoza-odbornost-pojistovna.csv.gz"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00023817/22f56f0b1f8c65574173227fa931bd5d",
+      "title": "Souhrnné informace o dodávkách léčivých přípravků na trh v ČR za rok 2026, verze 2",
+      "publisher": "Státní ústav pro kontrolu léčiv",
+      "queryBucket": "health-consumer",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://opendata.sukl.cz/soubory/NKOD/REG13/NKOD_REG13_2026_V2.csv"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00025593/60dfc90973cc89e96e128cbf84797384",
+      "title": "Zdravotní pojišťovny - čtvrtletní data ",
+      "publisher": "Český statistický úřad",
+      "queryBucket": "health-consumer",
+      "distributionCount": 3,
+      "sampleAccessURL": "https://data.csu.gov.cz/opendata/sady/FIN02Q/distribuce/csv"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00024341/b286c9a0a952183cb0153b60b04ea01a",
+      "title": "Hromadně vyráběné léčivé přípravky dle SÚKL kódu – noví pacienti",
+      "publisher": "Ministerstvo zdravotnictví",
+      "queryBucket": "health-consumer",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://datanzis.uzis.gov.cz/data/NR-04-NRHZS/NR-04-93/Otevrena-data-NR-04-93-hromadne-vyrabene-lecive-pripravky-sukl-novi-pacienti.csv.gz"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/70892156/b749858d9737656905e484da1b3617a5",
+      "title": "Počet žáků se zdravotním postižením na území Ústeckého kraje",
+      "publisher": "Ústecký kraj",
+      "queryBucket": "health-consumer",
+      "distributionCount": 1,
+      "sampleAccessURL": "https://drive.portabo.eu/s/AoaoRWOrQ1Y7eXv/download"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1341/subjekty-a-objekty-údajů/1341-17",
+      "title": "1341-17: Zdravotní pojišťovna",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1804/subjekty-a-objekty-údajů/1804-2",
+      "title": "1804-2: Průkaz osoby se zdravotním postižením",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A4003/subjekty-a-objekty-údajů/4003-5",
+      "title": "4003-5: Zdravotnická dokumentace",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1341/subjekty-a-objekty-údajů/1341-22",
+      "title": "1341-22: Stav účasti na zdravotním pojištění",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1086/subjekty-a-objekty-údajů/1086-1",
+      "title": "1086-1: Poskytovatel zdravotních služeb  fyzická osoba",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1341/subjekty-a-objekty-údajů/1341-23",
+      "title": "1341-23: Účast na zdravotním pojištění",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1086/subjekty-a-objekty-údajů/1086-3",
+      "title": "1086-3: Fyzická osoba oprávněná provádět hodnocení kvality a bezpečí zdravotní péče",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1086/subjekty-a-objekty-údajů/1086-2",
+      "title": "1086-2: Poskytovatel zdravotních služeb právnická osoba",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A385/subjekty-a-objekty-údajů/385-19",
+      "title": "385-19: Záloha na pojistné na zdravotní pojištění",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1341/subjekty-a-objekty-údajů/1341-63",
+      "title": "1341-63: Evidence Zaměstnavatele u Zdravotní pojišťovny",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A385/subjekty-a-objekty-údajů/385-16",
+      "title": "385-16: Přehled o příjmech a výdajích podán zdravotní pojišťovně",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1804/subjekty-a-objekty-údajů/1804-1",
+      "title": "1804-1: Osoba se zdravotním postižením",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1341/subjekty-a-objekty-údajů/1341-38",
+      "title": "1341-38: Poskytovatel zdravotní služby - pracoviště",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1341/subjekty-a-objekty-údajů/1341-39",
+      "title": "1341-39: Poskytovatel zdravotní služby - zařízení",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A4003/subjekty-a-objekty-údajů/4003-1",
+      "title": "4003-1: Poskytovatel zdravotních služeb",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A4003/subjekty-a-objekty-údajů/4003-4",
+      "title": "4003-4: Zdravotní služby",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1086/subjekty-a-objekty-údajů/1086-31",
+      "title": "1086-31: Poskytovatel zdravotních služeb",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A4003/subjekty-a-objekty-údajů/4003-3",
+      "title": "4003-3: Zdravotnické zařízení",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1341/subjekty-a-objekty-údajů/1341-18",
+      "title": "1341-18: Stav zdravotního pojištění",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1341/subjekty-a-objekty-údajů/1341-15",
+      "title": "1341-15: Pojištěnec veřejného zdravotního pojištění",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1341/subjekty-a-objekty-údajů/1341-16",
+      "title": "1341-16: Registrace u zdravotní pojišťovny",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.gov.cz/dga-žádost-o-přístup/"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A476",
+      "title": "A476: Ochrana veřejného zdraví",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1086",
+      "title": "A1086: Zdravotní služby",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1341",
+      "title": "A1341: Zdravotní pojištění",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/inventární-seznam/agendy/A1804",
+      "title": "A1804: Dávky pro osoby se zdravotním postižením",
+      "publisher": "Digitální a informační agentura",
+      "queryBucket": "health-consumer",
+      "distributionCount": 0,
+      "sampleAccessURL": null
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/603fa11f101bb35d9c979c32c1184e36",
+      "title": "FIN 2-04 U - Plnění rozpočtu KAP, OSS a SF (2010 - 2014) - období 12/2014",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinU/2014_12_Data_CSUIS_FINU.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/8f3be895930b39ebce3d8fffaa5460d8",
+      "title": "FIN 2-04 U - Plnění rozpočtu KAP, OSS a SF (2010 - 2014) - období 06/2013",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/52efd18ff1e3f4a55388912cd2bd41d5",
+      "title": "FIN 2-04 U - Plnění rozpočtu KAP, OSS a SF (2010 - 2014) - období 09/2013",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinU/2013_09_Data_CSUIS_FINU.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/dc08e76ca622ef3f0eb7408704290020",
+      "title": "FIN 2-04 U - Plnění rozpočtu KAP, OSS a SF (2010 - 2014) - období 03/2014",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinU/2014_03_Data_CSUIS_FINU.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/76556582afff61dd91eabd8cf37a8fdb",
+      "title": "Fin 2-12 M Plnění rozpočtů městských částí a Magistrátu hlavního města Prahy - období 12/2023",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinMMC/2023_12_Data_CSUIS_FINMMC.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/1bde16d0b7581323d15f157a3e7affa8",
+      "title": "FIN 2-04 U - Plnění rozpočtu KAP, OSS a SF (2010 - 2014) - období 12/2010",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinU/2010_12_Data_CSUIS_FINU.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/ca0705a968bd39462469a3ffc0bacb39",
+      "title": "FIN 2-04 U - Plnění rozpočtu KAP, OSS a SF (2010 - 2014) - období 12/2013",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/6eca47653ffb83696dd6a6fc724e72a3",
+      "title": "FIN 2-04 U - Plnění rozpočtu KAP, OSS a SF (2010 - 2014) - období 12/2011",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinU/2011_12_Data_CSUIS_FINU.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/f9e06d391325b61670602899e652e084",
+      "title": "Fin 2-12 M Plnění rozpočtů městských částí a Magistrátu hlavního města Prahy - období 12/2024",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/5bbcd9f7164b7ffa65a4b52232b8708a",
+      "title": "FIN 2-04 U - Plnění rozpočtu KAP, OSS a SF (2010 - 2014) - období 09/2014",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinU/2014_09_Data_CSUIS_FINU.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/8aa28a9176388684769fe138f306aba3",
+      "title": "FIN 2-04 U - Plnění rozpočtu KAP, OSS a SF (2010 - 2014) - období 12/2012",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinU/2012_12_Data_CSUIS_FINU.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/636902164251efaba6d298f78716f95f",
+      "title": "Převody výnosů do rozpočtů a fondů",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.mf.gov.cz/katalog/cs/file/2356/download?token=ql9KxPDX"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/3b48c7fd98f6de349c764b416b85ea42",
+      "title": "Přehled převodů odvodů za porušení rozpočtové kázně do státních fondů",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.mf.gov.cz/katalog/cs/file/2102/download?token=TajAYV38"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/6d424ee6f5c97572d46c407b3a5e9277",
+      "title": "Převody daní a odvodů do rozpočtů a fondů",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://data.mf.gov.cz/katalog/cs/file/2351/download?token=VZ_CmjxF"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/bf31511cc4e626bad40f19c8bd3e0b3f",
+      "title": "FIN 1-12 OSS - Plnění rozpočtu KAP a OSS - období 02/2026",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/01d9f344eaedcb6fc08632942363049c",
+      "title": "FIN 2-12 M - Plnění rozpočtu ÚSC - období 03/2014",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/0249a97adb1cd5869e9af60560873a8e",
+      "title": "FIN 1-12 SF - Plnění rozpočtu SF - období 08/2025",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/047dbf5cad2eefb3152a50688b2ed59a",
+      "title": "FIN 1-12 SF - Plnění rozpočtu SF - období 01/2023",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/0792954d1b4834bb3378ce26a780fa7b",
+      "title": "FIN 1-12 SF - Plnění rozpočtu SF - období 01/2025",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/07a0e2ddb1c1448cd2bad2c166b9dd5c",
+      "title": "FIN 1-12 OSS - Plnění rozpočtu KAP a OSS - období 10/2023",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/07f8b125b393a32e03ecc34396789929",
+      "title": "FIN 1-12 OSS - Plnění rozpočtu KAP a OSS - období 04/2025",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinOSS/2025_04_Data_CSUIS_MISRIS.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/08b04ae3b2d5802faf1cd5f668ee4538",
+      "title": "FIN 1-12 SF - Plnění rozpočtu SF - období 09/2021",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinSF/2021_09_Data_CSUIS_FINSF.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/09987157702370f8fd247021b4a2d1d3",
+      "title": "FIN 1-12 OSS - Plnění rozpočtu KAP a OSS - období 08/2021",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinOSS/2021_08_Data_CSUIS_MISRIS.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/0b7cb268edaed87eb37df4acf47e8454",
+      "title": "FIN 1-12 SF - Plnění rozpočtu SF - období 07/2022",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinSF/2022_07_Data_CSUIS_FINSF.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/0bcc97b89cbfa4f9670a12aa499d4c68",
+      "title": "FIN 1-12 OSS - Plnění rozpočtu KAP a OSS - období 11/2018",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinOSS/2018_11_Data_CSUIS_MISRIS.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/0c0b88a44da4005cabcae77593e93604",
+      "title": "FIN 2-12 M - Plnění rozpočtu ÚSC - období 03/2022",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/0c27deccd0df1cc8b40432600fb7b96d",
+      "title": "FIN 1-12 OSS - Plnění rozpočtu KAP a OSS - období 06/2022",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinOSS/2022_06_Data_CSUIS_MISRIS.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/0d77bd61638a08f055a6de7fbab619e2",
+      "title": "FIN 2-12 M - Plnění rozpočtu ÚSC - období 02/2025",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/0e5811ab9589175c7e6f23d5c65b619e",
+      "title": "FIN 1-12 OSS - Plnění rozpočtu KAP a OSS - období 02/2018",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/0ed140ae69c9ea85dcb7af5fac56f10e",
+      "title": "FIN 1-12 SF - Plnění rozpočtu SF - období 10/2018",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/104677eb9ee216f72f81aa256f965622",
+      "title": "FIN 2-12 M - Plnění rozpočtu ÚSC - období 10/2021",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/10766419c5ec18edf3b763ada90fc60d",
+      "title": "FIN 1-12 OSS - Plnění rozpočtu KAP a OSS - období 02/2023",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/10fa64ca3193bec4ff38e906ccd2b860",
+      "title": "FIN 2-12 M - Plnění rozpočtu ÚSC - období 03/2019",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinM/2019_03_Data_CSUIS_FINM.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/1106766459d15e82221f903e35c588d7",
+      "title": "FIN 1-12 OSS - Plnění rozpočtu KAP a OSS - období 02/2022",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/1247815da169b2983c13de045de9e924",
+      "title": "FIN 1-12 OSS - Plnění rozpočtu KAP a OSS - období 05/2019",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/130b31b99b443445b75cb9dc8d847a6a",
+      "title": "FIN 1-12 SF - Plnění rozpočtu SF - období 08/2023",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinSF/2023_08_Data_CSUIS_FINSF.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/13312393cce97ee2c6b331be5571e5e3",
+      "title": "FIN 2-12 M - Plnění rozpočtu ÚSC - období 04/2024",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinM/2024_04_Data_CSUIS_FINM.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/1341b186141fc266e911308972782851",
+      "title": "FIN 1-12 OSS - Plnění rozpočtu KAP a OSS - období 06/2018",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinOSS/2018_06_Data_CSUIS_MISRIS.zip"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/1386a114f5baa5501c039e84731c6b29",
+      "title": "FIN 1-12 OSS - Plnění rozpočtu KAP a OSS - období 10/2025",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    },
+    {
+      "nkodDatasetUrl": "https://data.gov.cz/zdroj/datové-sady/00006947/14e9c775032092bd5716d11c1ea4c9f7",
+      "title": "FIN 1-12 OSS - Plnění rozpočtu KAP a OSS - období 12/2019",
+      "publisher": "Ministerstvo financí",
+      "queryBucket": "contracts-budgets",
+      "distributionCount": 2,
+      "sampleAccessURL": "https://monitor.statnipokladna.gov.cz/api/monitorws"
+    }
+  ],
+  "stats": {
+    "uniqueDatasets": 180,
+    "buckets": 5
+  }
+}

@@ -9,7 +9,9 @@ Každý aktivní zdroj má: legalStatus, technicalStatus, periodicityMin, lastAu
 
 Pending schválené zdroje mají `productionActive: false` + povinné `connectorStatus` (`TECHNICALLY_BLOCKED` | `NO_STABLE_ITEM_SOURCE` | `LEGALLY_BLOCKED` | `REQUIRES_MANUAL_LEGAL_REVIEW` | `REJECTED`) a `blocker`.
 
-Produkční ingest (`iu-info-events-refresh.mjs`) navíc vyžaduje záznam v právním registru se stavem `APPROVED_*` a flagy komerčního použití, reklamy, automatizace, ukládání, zobrazení, úprav a kombinování.
+Produkční ingest (`iu-info-events-refresh.mjs`) navíc vyžaduje záznam v právním registru se stavem `APPROVED_*`, **HTTPS `licenseUrl`**, externí evidence, `fieldAllowlist`, platný `reauditDue` a flagy komerčního použití, reklamy, automatizace, ukládání, zobrazení, úprav, normalizace a kombinování (phase-2 hard gate).
+
+Veřejný přehled schválených zdrojů: `/projects/zdroje-a-licence/`.
 
 Refresh: `node scripts/iu-info-events-refresh.mjs` (cron `*/30` přes `.github/workflows/update-info-events.yml`).
 

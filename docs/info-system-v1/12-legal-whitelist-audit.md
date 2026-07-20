@@ -1,8 +1,17 @@
 # Právní whitelist audit — datové zdroje Přehledu dne
 
 **Datum:** 2026-07-20  
-**Verze registru:** `projects/data/info_events/legal_source_registry.json` v1.0.0  
+**Verze registru:** `projects/data/info_events/legal_source_registry.json` **v2.0.0 (phase-2)**  
 **Produkt:** InfoUzel.cz jako **komerční** web s možností reklamy a agregace více zdrojů.
+
+## Phase-2 (dokončení důkazů)
+
+- Odstraněna interim `APPROVED_WITH_SPECIFIC_CONDITIONS` bez `licenseUrl` / externích důkazů.
+- Produkčně aktivní zůstává pouze doložený **ČHMÚ (CC BY 4.0)** — viz `14-legal-phase2-decisions.md`.
+- NKOD deep-dive inventář: `13-nkod-deep-dive-inventory.json` (180 datasetů, status `DISCOVERED`).
+- Hard gate vyžaduje: `licenseUrl`, externí evidence, `fieldAllowlist`, platný `reauditDue`.
+- Veřejná stránka: `/projects/zdroje-a-licence/`.
+- Týdenní reaudit: `scripts/iu-info-events-legal-reaudit.mjs` + workflow `legal-source-reaudit.yml`.
 
 ## Cíl
 

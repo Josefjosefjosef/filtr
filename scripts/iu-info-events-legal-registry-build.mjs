@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Builds projects/data/info_events/legal_source_registry.json from curated audit rows.
+ * Builds projects/data/info_events/legal_source_registry.json (phase-2).
+ * Only APPROVED_* rows with concrete licenseUrl + external evidence may stay production-active.
  * Run: node scripts/iu-info-events-legal-registry-build.mjs
  */
 import fs from "fs";
@@ -11,9 +12,11 @@ import { APPROVED_STATUSES, ALL_STATUSES } from "./iu-info-events-legal-registry
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(REPO, "projects/data/info_events/legal_source_registry.json");
 const SRC = path.join(REPO, "projects/data/info_events/source_registry.json");
+const NKOD_INV = path.join(REPO, "docs/info-system-v1/13-nkod-deep-dive-inventory.json");
 
-const NOW = "2026-07-20T02:00:00.000Z";
-const REAUDIT_DUE = "2026-10-20T00:00:00.000Z";
+const NOW = "2026-07-20T10:00:00.000Z";
+const REAUDIT_DUE = "2026-10-18T00:00:00.000Z";
+const RECORD_VERSION = "2026-07-20.phase2.1";
 
 const ATTR = {
   gov_link_only: {
@@ -31,271 +34,277 @@ const ATTR = {
   media_pending: {
     id: "attr-media-pending-v1",
     display: "sources-page",
-    template: "Veřejnoprávní zdroj {institution} — právní režim RSS/titulků vyžaduje dokončení licence audit.",
+    template: "Veřejnoprávní zdroj {institution} — právní režim RSS/titulků vyžaduje dokončení licence auditu.",
   },
   rejected_commercial: {
     id: "attr-rejected-commercial-v1",
     display: "sources-page",
-    template: "Komerční médiím není přebírán obsah. Záznam je evidován pouze jako REJECTED.",
+    template: "Komerční médium není přebírán obsah. Záznam je evidován pouze jako REJECTED.",
   },
 };
 
-/** Shared rights profile for official CZ public-body notices under link-only product model. */
-function govLinkOnly(overrides) {
+const LINK_ONLY_FIELDS = [
+  "id",
+  "sourceId",
+  "title",
+  "url",
+  "originalUrl",
+  "publishedAt",
+  "sourceLabel",
+  "region",
+  "importance",
+  "eventType",
+  "sectionId",
+];
+
+function baseRights(extra) {
   return Object.assign(
     {
-      status: "APPROVED_WITH_SPECIFIC_CONDITIONS",
-      licenseLabel: "Oficiální veřejné oznámení / tisková informace (link-only produktový režim)",
-      licenseUrl: "",
-      termsUrl: "",
-      nkodUrl: "",
-      commercialUseAllowed: true,
-      adSupportedUseAllowed: true,
-      automationAllowed: true,
-      storageAllowed: true,
-      cacheAllowed: true,
-      redistributionAllowed: false,
-      publicDisplayAllowed: true,
-      modificationAllowed: true,
-      combinationAllowed: true,
-      derivedDatabaseAllowed: true,
-      shareAlike: false,
-      shareAlikeCompatibleWithInfoUzel: true,
-      copyrightCleared: "partial-link-only",
-      databaseRightsCleared: "partial-link-only",
-      thirdPartyContentRisk: "low-if-link-only",
-      personalDataRisk: "review-fields",
-      paidLicenseRequired: false,
-      attributionRequired: true,
-      attributionTemplateId: "attr-gov-link-only-v1",
-      specificConditions: [
-        "Pouze odkaz + název položky + identifikace zdroje (žádné tělo, perex, fotografie, video).",
-        "Původní URL musí zůstat veřejně dostupná.",
-        "Atribuce instituce u položky a v centrální sekci Zdroje a licence.",
-        "Kombinování s jinými schválenými zdroji v agregovaném feedu je povoleno v rámci metadat/indexu InfoUzel.",
-        "Komerční provoz webu včetně reklamy je povolen za podmínky link-only režimu a absence licenčního NC/non-commercial zákazu.",
-        "Opakovaný audit licence a podmínek do data reauditDue.",
-      ],
-      evidence: ["docs/info-system-v1/03-legal-audit.md", "docs/info-system-v1/12-legal-whitelist-audit.md"],
-      legalNotes:
-        "Interim produkční schválení pro link-only agregaci oficiálních oznámení veřejných subjektů. Plné URL licence/NKOD doplnit při dalším auditu každé distribuce.",
-      reauditDue: REAUDIT_DUE,
-    },
-    overrides || {}
-  );
-}
-
-function openData(overrides) {
-  return Object.assign(
-    govLinkOnly({
-      status: "APPROVED_OPEN_DATA",
-      attributionTemplateId: "attr-open-data-by-v1",
-      copyrightCleared: "open-data-claimed",
-      databaseRightsCleared: "open-data-claimed",
-      redistributionAllowed: true,
-      legalNotes: "Otevřená data / oficiální open-data distribuce. Ověřit konkrétní licenci distribuce v NKOD při reauditu.",
-    }),
-    overrides || {}
-  );
-}
-
-function review(overrides) {
-  return Object.assign(
-    {
-      status: "LEGAL_REVIEW_REQUIRED",
-      licenseLabel: "Neověřeno",
-      licenseUrl: "",
-      termsUrl: "",
-      nkodUrl: "",
       commercialUseAllowed: false,
       adSupportedUseAllowed: false,
+      sponsoredContentContextAllowed: false,
+      affiliateContextAllowed: false,
       automationAllowed: false,
       storageAllowed: false,
       cacheAllowed: false,
       redistributionAllowed: false,
       publicDisplayAllowed: false,
       modificationAllowed: false,
+      normalizationAllowed: false,
+      metadataEnrichmentAllowed: false,
       combinationAllowed: false,
+      aggregationAllowed: false,
+      derivativesAllowed: false,
+      crossSourceDisplayAllowed: false,
+      databaseCreationAllowed: false,
       derivedDatabaseAllowed: false,
       shareAlike: false,
-      shareAlikeCompatibleWithInfoUzel: false,
+      shareAlikeCompatibleWithInfoUzel: true,
+      odblOrShareAlikeRisk: false,
+      paidLicenseRequired: false,
+      attributionRequired: true,
+      suspended: false,
+      copyrightStatus: "unknown",
+      databaseRightsStatus: "unknown",
+      extractionAllowed: false,
+      reuseAllowed: false,
+      systematicExtractionAllowed: false,
+      archiveAllowed: false,
       copyrightCleared: "unknown",
       databaseRightsCleared: "unknown",
       thirdPartyContentRisk: "unknown",
       personalDataRisk: "unknown",
-      paidLicenseRequired: false,
-      attributionRequired: true,
-      attributionTemplateId: "attr-media-pending-v1",
+      fieldAllowlist: [],
+      transformations: ["normalized-metadata-link-only"],
       specificConditions: [],
       evidence: [],
-      legalNotes: "Bez jednoznačného doložení licence a komerčního oprávnění nelze schválit pro produkční agregaci.",
+      conditionsEvidenceUrl: "",
+      licenseUrl: "",
+      termsUrl: "",
+      nkodUrl: "",
+      catalogUrl: "",
+      distributionUrl: "",
+      documentationUrl: "",
+      contact: "",
+      format: "",
+      fetchMethod: "",
+      updatePeriodicityMin: 60,
+      technicalLimits: "",
+      datasetId: "",
+      distributionId: "",
+      datasetLabel: "",
+      licenseLabel: "",
+      legalNotes: "",
+      rationale: "",
+      firstReviewedAt: NOW,
+      lastReviewedAt: NOW,
       reauditDue: REAUDIT_DUE,
+      recordVersion: RECORD_VERSION,
+      attributionTemplateId: "attr-gov-link-only-v1",
+      productionSourceActive: false,
     },
-    overrides || {}
+    extra || {}
   );
 }
 
-function rejected(status, overrides) {
-  return Object.assign(review({ status, commercialUseAllowed: false, attributionTemplateId: "attr-rejected-commercial-v1" }), overrides || {});
+/** ČHMÚ open data — CC BY 4.0 (documented on chmi.cz FAQ + opendata portal). */
+function chmiApproved(src) {
+  return baseRights({
+    status: "APPROVED_CC_BY",
+    licenseLabel: "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+    licenseUrl: "https://creativecommons.org/licenses/by/4.0/",
+    termsUrl: "https://www.chmi.cz/o-chmu/produkty-a-sluzby/data-a-vyhodnoceni",
+    nkodUrl: "https://data.gov.cz/datov%C3%A9-sady?poskytovatel=%C4%8Cesk%C3%BD%20hydrometeorologick%C3%BD%20%C3%BAstav",
+    catalogUrl: "https://opendata.chmi.cz/",
+    distributionUrl: "https://opendata.chmi.cz/",
+    documentationUrl: "https://www.chmi.cz/o-chmu/produkty-a-sluzby/data-a-vyhodnoceni",
+    contact: "https://www.chmi.cz/",
+    format: "JSON/CSV/CAP-feed",
+    fetchMethod: "https-get",
+    datasetId: "chmi-opendata-national-hydromet-db",
+    distributionId: "chmi-opendata-portal-primary",
+    datasetLabel: "Národní databáze hydrometeorologických údajů a produktů / výstrahy",
+    commercialUseAllowed: true,
+    adSupportedUseAllowed: true,
+    sponsoredContentContextAllowed: true,
+    affiliateContextAllowed: true,
+    automationAllowed: true,
+    storageAllowed: true,
+    cacheAllowed: true,
+    redistributionAllowed: true,
+    publicDisplayAllowed: true,
+    modificationAllowed: true,
+    normalizationAllowed: true,
+    metadataEnrichmentAllowed: true,
+    combinationAllowed: true,
+    aggregationAllowed: true,
+    derivativesAllowed: true,
+    crossSourceDisplayAllowed: true,
+    databaseCreationAllowed: true,
+    derivedDatabaseAllowed: true,
+    shareAlike: false,
+    odblOrShareAlikeRisk: false,
+    copyrightStatus: "licensed-cc-by-4.0",
+    databaseRightsStatus: "covered-by-stated-cc-by-terms",
+    extractionAllowed: true,
+    reuseAllowed: true,
+    systematicExtractionAllowed: true,
+    archiveAllowed: true,
+    copyrightCleared: "yes-cc-by-4.0",
+    databaseRightsCleared: "yes-per-provider-terms",
+    thirdPartyContentRisk: "low-open-data-fields",
+    personalDataRisk: "low-no-personal-fields-in-allowlist",
+    fieldAllowlist: LINK_ONLY_FIELDS.slice(),
+    attributionTemplateId: "attr-open-data-by-v1",
+    productionSourceActive: true,
+    evidence: [
+      {
+        url: "https://www.chmi.cz/-/jak-mohu-pou%C5%BE%C3%ADvat-otev%C5%99en%C3%A1-data-%C4%8Dhm%C3%BA-",
+        kind: "provider-faq-license",
+        checkedAt: NOW,
+        note: "ČHMÚ FAQ: otevřená data bezplatně při respektování CC BY 4.0",
+      },
+      {
+        url: "https://www.chmi.cz/o-chmu/produkty-a-sluzby/data-a-vyhodnoceni",
+        kind: "provider-open-data-hub",
+        checkedAt: NOW,
+        note: "Oficiální rozcestník otevřených dat + odkaz na opendata.chmi.cz a NKOD metadata",
+      },
+      {
+        url: "https://creativecommons.org/licenses/by/4.0/",
+        kind: "license-text",
+        checkedAt: NOW,
+        note: "Plné znění CC BY 4.0",
+      },
+      {
+        url: "https://opendata.chmi.cz/",
+        kind: "distribution-portal",
+        checkedAt: NOW,
+        note: "Národní databáze hydrometeorologických údajů a produktů",
+      },
+    ],
+    conditionsEvidenceUrl: "https://www.chmi.cz/o-chmu/produkty-a-sluzby/data-a-vyhodnoceni",
+    specificConditions: [
+      "Povinná atribuce ČHMÚ dle CC BY 4.0.",
+      "Produktový režim InfoUzel: link-only / vybraná metadata dle fieldAllowlist (bez fotografií a dlouhých textů třetích stran).",
+      "Kombinování s jinými schválenými zdroji ve společném feedu je povoleno.",
+    ],
+    rationale:
+      "Phase-2: konkrétní CC BY 4.0 doložena z oficiálního FAQ ČHMÚ a open-data hubu; komerční použití a reklama jsou v rámci CC BY přípustné.",
+    legalNotes: "Nezaměňovat placené posudkové služby ČHMÚ s otevřenými daty na opendata.chmi.cz.",
+    productionSourceActive: true,
+  });
 }
 
-/** Per-source curated audit rows (keyed by source registry id). */
-const AUDIT = {
-  chmi: openData({
-    datasetId: "chmi-cap-warnings",
-    distributionId: "chmi-opendata-cap-xml",
-    datasetLabel: "Výstrahy ČHMÚ (CAP)",
-    licenseLabel: "Otevřená data ČHMÚ / CAP (ověřit konkrétní licenci distribuce)",
-    termsUrl: "https://opendata.chmi.cz/",
-    nkodUrl: "",
-    licenseUrl: "",
+/** Official body without distribution-level open license proof — cannot stay production-active. */
+function unclearLicense(src, note) {
+  return baseRights({
+    status: "LICENSE_UNCLEAR",
+    licenseLabel: "Nepodložená interim licence (phase-1 APPROVED_WITH_SPECIFIC_CONDITIONS zrušeno)",
+    datasetId: "pending-" + src.id,
+    distributionId: "pending-" + src.id + "-primary",
+    datasetLabel: src.label || src.id,
+    catalogUrl: src.homeUrl || src.url || "",
+    distributionUrl: src.feedUrl || src.homeUrl || "",
+    documentationUrl: src.homeUrl || "",
+    fieldAllowlist: LINK_ONLY_FIELDS.slice(),
+    evidence: [
+      "docs/info-system-v1/12-legal-whitelist-audit.md",
+      "docs/info-system-v1/14-legal-phase2-decisions.md",
+    ],
+    rationale:
+      note ||
+      "Phase-2: chybí konkrétní licenseUrl/termsUrl u distribuce používané ingestem (RSS/tiskové zprávy ≠ doložená open-data licence).",
     legalNotes:
-      "CAP XML z opendata.chmi.cz je oficiální open-data kanál. Doplnit přesný SPDX/CC záznam a NKOD URL při reauditu. Kombinování výstrah s regionálními metadaty je součástí produktu.",
-  }),
-  "policie-cr": govLinkOnly({
-    datasetId: "policie-tiskove-zpravy",
-    distributionId: "policie-rss",
-    datasetLabel: "Tiskové zprávy Policie ČR",
-  }),
-  "hzs-cr": govLinkOnly({
-    datasetId: "hzs-aktuality",
-    distributionId: "hzs-rss",
-    datasetLabel: "Aktuality HZS ČR",
-  }),
-  nukib: govLinkOnly({
-    datasetId: "nukib-aktuality",
-    distributionId: "nukib-html-list",
-    datasetLabel: "Aktuality NÚKIB",
-  }),
-  mvcr: govLinkOnly({ datasetId: "mvcr-aktuality", distributionId: "mvcr-rss", datasetLabel: "Aktuality MV ČR" }),
-  mfcr: govLinkOnly({ datasetId: "mfcr-aktuality", distributionId: "mfcr-rss", datasetLabel: "Aktuality MF ČR" }),
-  mzcr: govLinkOnly({ datasetId: "mzcr-aktuality", distributionId: "mzcr-rss", datasetLabel: "Aktuality MZ ČR" }),
-  mpo: govLinkOnly({ datasetId: "mpo-aktuality", distributionId: "mpo-rss", datasetLabel: "Aktuality MPO" }),
-  mze: govLinkOnly({ datasetId: "mze-aktuality", distributionId: "mze-rss", datasetLabel: "Aktuality MZe" }),
-  mdcr: review({
-    status: "TECHNICAL_REVIEW_REQUIRED",
-    datasetId: "mdcr-aktuality",
-    distributionId: "mdcr-pending",
-    datasetLabel: "Aktuality MD ČR",
-    legalNotes: "Technicky bez stabilního item source. Právní režim oficiálních oznámení očekáván obdobný gov link-only po technické opravě.",
-  }),
-  szdc: govLinkOnly({ datasetId: "szdc-aktuality", distributionId: "szdc-html", datasetLabel: "Aktuality Správy železnic" }),
-  rsd: govLinkOnly({ datasetId: "rsd-aktuality", distributionId: "rsd-html", datasetLabel: "Aktuality ŘSD" }),
-  ndic: review({
-    status: "TECHNICAL_REVIEW_REQUIRED",
-    datasetId: "ndic-traffic",
-    distributionId: "ndic-pending",
-    datasetLabel: "Dopravní informace NDIC",
-    legalNotes: "Technicky blokováno. Před schválením ověřit licenci JSDI/NDIC, rate limity a zákaz redistribuce.",
-  }),
-  sukl: govLinkOnly({ datasetId: "sukl-aktuality", distributionId: "sukl-rss", datasetLabel: "Aktuality SÚKL" }),
-  szpi: govLinkOnly({ datasetId: "szpi-aktuality", distributionId: "szpi-rss", datasetLabel: "Aktuality SZPI" }),
-  svs: govLinkOnly({ datasetId: "svs-aktuality", distributionId: "svs-rss", datasetLabel: "Aktuality SVS" }),
-  szu: govLinkOnly({ datasetId: "szu-aktuality", distributionId: "szu-rss", datasetLabel: "Aktuality SZÚ" }),
-  coi: govLinkOnly({ datasetId: "coi-aktuality", distributionId: "coi-rss", datasetLabel: "Aktuality ČOI" }),
-  eru: govLinkOnly({ datasetId: "eru-aktuality", distributionId: "eru-rss", datasetLabel: "Aktuality ERÚ" }),
-  ctu: govLinkOnly({ datasetId: "ctu-aktuality", distributionId: "ctu-rss", datasetLabel: "Aktuality ČTÚ" }),
-  vlada: govLinkOnly({ datasetId: "vlada-aktuality", distributionId: "vlada-html", datasetLabel: "Aktuality Úřadu vlády" }),
-  "portal-gov": review({
-    status: "TECHNICAL_REVIEW_REQUIRED",
-    datasetId: "portal-gov",
-    distributionId: "portal-gov-pending",
-    datasetLabel: "Portál veřejné správy",
-  }),
-  cnb: review({
-    status: "TECHNICAL_REVIEW_REQUIRED",
-    datasetId: "cnb-data",
-    distributionId: "cnb-pending",
-    datasetLabel: "Data ČNB",
-    legalNotes: "Odděleně ověřit podmínky ČNB API/dat (často otevřená, ale specifická pravidla atribuce a redistribuce).",
-  }),
-  csu: review({
-    status: "TECHNICAL_REVIEW_REQUIRED",
-    datasetId: "csu-opendata",
-    distributionId: "csu-pending",
-    datasetLabel: "Data ČSÚ",
-    legalNotes: "ČSÚ open data obvykle s atribucí — po technickém napojení schválit jako APPROVED_OPEN_DATA / CC BY dle konkrétní sady.",
-  }),
-  cssz: review({ status: "TECHNICAL_REVIEW_REQUIRED", datasetId: "cssz", distributionId: "cssz-pending", datasetLabel: "ČSSZ" }),
-  "urad-prace": review({
-    status: "TECHNICAL_REVIEW_REQUIRED",
-    datasetId: "urad-prace",
-    distributionId: "urad-prace-pending",
-    datasetLabel: "Úřad práce",
-  }),
-  "registr-smluv": review({
-    status: "LEGAL_COMPATIBILITY_REVIEW_REQUIRED",
-    datasetId: "registr-smluv",
-    distributionId: "registr-smluv-opendata",
-    datasetLabel: "Registr smluv",
-    legalNotes: "Veřejný registr — ověřit open-data licenci, osobní údaje ve smlouvách a rozsah redistribuce.",
-    personalDataRisk: "high",
-  }),
-  esbirka: review({
-    status: "LEGAL_COMPATIBILITY_REVIEW_REQUIRED",
-    datasetId: "esbirka",
-    distributionId: "esbirka-pending",
-    datasetLabel: "eSbírka",
-    legalNotes: "Legislativní texty — ověřit podmínky e-Sbírky / e-Legislativy před agregací.",
-  }),
-  ct24: review({
-    status: "LEGAL_REVIEW_REQUIRED",
-    datasetId: "ct24-rss",
-    distributionId: "ct24-rss",
-    datasetLabel: "ČT24 RSS",
-    termsUrl: "https://www.ceskatelevize.cz/",
-    attributionTemplateId: "attr-media-pending-v1",
-    legalNotes:
-      "Veřejnoprávní médium. RSS/titulky/fotografie/videa nejsou automaticky otevřená data. Bez výslovné licence nebo smluvního oprávnění nesmí být v produkčním whitelistu. Dočasně vypnuto z produkčního ingestu.",
-    thirdPartyContentRisk: "high",
-  }),
-  irozhlas: review({
-    status: "LEGAL_REVIEW_REQUIRED",
-    datasetId: "irozhlas-rss",
-    distributionId: "irozhlas-rss",
-    datasetLabel: "iROZHLAS RSS",
-    termsUrl: "https://www.irozhlas.cz/",
-    attributionTemplateId: "attr-media-pending-v1",
-    legalNotes:
-      "Veřejnoprávní médium (ČRo). Bez výslovné open licence / oprávnění k agregaci titulků na komerčním webu s reklamou — LEGAL_REVIEW_REQUIRED. Dočasně vypnuto z produkčního ingestu.",
-    thirdPartyContentRisk: "high",
-  }),
-  avcr: govLinkOnly({ datasetId: "avcr-aktuality", distributionId: "avcr-html", datasetLabel: "Aktuality AV ČR" }),
-  mkcr: review({ status: "TECHNICAL_REVIEW_REQUIRED", datasetId: "mkcr", distributionId: "mkcr-pending", datasetLabel: "MK ČR" }),
-  msmt: review({ status: "TECHNICAL_REVIEW_REQUIRED", datasetId: "msmt", distributionId: "msmt-pending", datasetLabel: "MŠMT" }),
-  "khs-praha": govLinkOnly({
-    datasetId: "khs-praha",
-    distributionId: "khs-praha-rss",
-    datasetLabel: "Aktuality Hygienické stanice hl. m. Prahy",
-  }),
-  "khs-stc": govLinkOnly({
-    datasetId: "khs-stc",
-    distributionId: "khs-stc-rss",
-    datasetLabel: "Aktuality KHS Středočeského kraje",
-  }),
-  "khs-plzen": govLinkOnly({
-    datasetId: "khs-plzen",
-    distributionId: "khs-plzen-rss",
-    datasetLabel: "Aktuality KHS Plzeňského kraje",
-  }),
-  "kraj-pardubicky": govLinkOnly({
-    datasetId: "kraj-pardubicky-aktuality",
-    distributionId: "kraj-pardubicky-html",
-    datasetLabel: "Aktuality Pardubického kraje",
-  }),
-  "kraj-zlinsky": govLinkOnly({
-    datasetId: "kraj-zlinsky-aktuality",
-    distributionId: "kraj-zlinsky-html",
-    datasetLabel: "Aktuality Zlínského kraje",
-  }),
-  "kraj-liberecky": govLinkOnly({
-    datasetId: "kraj-liberecky-aktuality",
-    distributionId: "kraj-liberecky-html",
-    datasetLabel: "Aktuality Libereckého kraje",
-  }),
-};
+      "Zdroj byl v phase-1 interim schválen link-only. Bez dohledatelné licence konkrétní distribuce nesmí zůstat produkčně aktivní.",
+    productionSourceActive: false,
+    attributionTemplateId: "attr-gov-link-only-v1",
+  });
+}
 
-const COMMERCIAL_REJECTED = [
+function reviewPublicMedia(src) {
+  return baseRights({
+    status: "LEGAL_REVIEW_REQUIRED",
+    licenseLabel: "Veřejnoprávní médium — licence RSS/titulků nedoložena",
+    termsUrl: src.homeUrl || "",
+    datasetId: "pending-" + src.id,
+    distributionId: "pending-" + src.id + "-rss",
+    datasetLabel: src.label || src.id,
+    catalogUrl: src.homeUrl || "",
+    distributionUrl: src.feedUrl || "",
+    fieldAllowlist: LINK_ONLY_FIELDS.slice(),
+    evidence: ["docs/info-system-v1/12-legal-whitelist-audit.md"],
+    rationale: "Veřejnoprávní charakter neznamená otevřenou licenci; produkce zakázána do doložení oprávnění.",
+    productionSourceActive: false,
+    attributionTemplateId: "attr-media-pending-v1",
+  });
+}
+
+function rejectedCommercial(id, label) {
+  return baseRights({
+    status: "REJECTED",
+    sourceId: id,
+    institution: label,
+    providerLabel: label,
+    licenseLabel: "Komerční médium — bez open licence / souhlasu",
+    datasetId: "rejected-" + id,
+    distributionId: "rejected-" + id,
+    datasetLabel: label,
+    fieldAllowlist: [],
+    evidence: ["docs/info-system-v1/12-legal-whitelist-audit.md"],
+    rationale: "Komerční média nejsou přebírána bez výslovné open licence nebo bezplatného API souhlasu.",
+    attributionTemplateId: "attr-rejected-commercial-v1",
+    productionSourceActive: false,
+  });
+}
+
+function techReview(src, note) {
+  return baseRights({
+    status: "TECHNICAL_REVIEW_REQUIRED",
+    datasetId: "pending-" + src.id,
+    distributionId: "pending-" + src.id,
+    datasetLabel: src.label || src.id,
+    catalogUrl: src.homeUrl || "",
+    rationale: note || "Technický konektor / přístup vyžaduje dokončení před právním schválením produkce.",
+    productionSourceActive: false,
+  });
+}
+
+function compatReview(src, note) {
+  return baseRights({
+    status: "LEGAL_COMPATIBILITY_REVIEW_REQUIRED",
+    datasetId: "pending-" + src.id,
+    distributionId: "pending-" + src.id,
+    datasetLabel: src.label || src.id,
+    catalogUrl: src.homeUrl || "",
+    odblOrShareAlikeRisk: true,
+    shareAlikeCompatibleWithInfoUzel: false,
+    rationale: note || "Možný ShareAlike/ODbL nebo databázový konflikt — vyžaduje oddělený legal compat review.",
+    productionSourceActive: false,
+  });
+}
+
+const COMMERCIAL = [
   ["seznamzpravy", "Seznam Zprávy"],
   ["novinky", "Novinky.cz"],
   ["idnes", "iDNES.cz"],
@@ -308,235 +317,190 @@ const COMMERCIAL_REJECTED = [
   ["isport", "iSport.cz"],
 ];
 
-const NKOD_DISCOVERED = [
-  {
-    id: "nkod-disc-rsd-closures",
-    title: "Uzavírky a omezení (ŘSD / JSDI kandidát)",
-    domain: "doprava",
+/** Per-source legal decision map (phase-2). */
+const AUDIT = {
+  chmi: (s) => chmiApproved(s),
+  "policie-cr": (s) => unclearLicense(s),
+  "hzs-cr": (s) => unclearLicense(s),
+  mvcr: (s) => unclearLicense(s),
+  mzcr: (s) => unclearLicense(s),
+  mze: (s) => unclearLicense(s),
+  mfcr: (s) => unclearLicense(s),
+  mpo: (s) => unclearLicense(s),
+  nukib: (s) => unclearLicense(s),
+  coi: (s) => unclearLicense(s),
+  ctu: (s) => unclearLicense(s),
+  eru: (s) => unclearLicense(s),
+  sukl: (s) => unclearLicense(s),
+  svs: (s) => unclearLicense(s),
+  szpi: (s) => unclearLicense(s),
+  szu: (s) => unclearLicense(s),
+  rsd: (s) => unclearLicense(s, "ŘSD/dopravní info — chybí doložená open licence konkrétní RSS/API distribuce."),
+  szdc: (s) => unclearLicense(s),
+  vlada: (s) => unclearLicense(s),
+  avcr: (s) => unclearLicense(s),
+  "khs-praha": (s) => unclearLicense(s),
+  "khs-stc": (s) => unclearLicense(s),
+  "khs-plzen": (s) => unclearLicense(s),
+  "kraj-liberecky": (s) => unclearLicense(s),
+  "kraj-pardubicky": (s) => unclearLicense(s),
+  "kraj-zlinsky": (s) => unclearLicense(s),
+  ct24: (s) => reviewPublicMedia(s),
+  irozhlas: (s) => reviewPublicMedia(s),
+  ndic: (s) => techReview(s, "NDIC konektor — nejdřív technický přístup, poté licence distribuce."),
+  esbirka: (s) => techReview(s),
+  "registr-smluv": (s) =>
+    baseRights({
+      status: "PERSONAL_DATA_REVIEW_REQUIRED",
+      datasetId: "pending-registr-smluv",
+      distributionId: "pending-registr-smluv",
+      datasetLabel: s.label || s.id,
+      personalDataRisk: "high",
+      rationale: "Registr smluv může obsahovat osobní/identifikační údaje smluvních stran — GDPR review před publikací.",
+      productionSourceActive: false,
+    }),
+  cnb: (s) => techReview(s),
+  cssz: (s) => techReview(s),
+  csu: (s) => techReview(s),
+  mdcr: (s) => techReview(s),
+  mkcr: (s) => techReview(s),
+  msmt: (s) => techReview(s),
+  "portal-gov": (s) => techReview(s),
+  "urad-prace": (s) => techReview(s),
+};
+
+function loadNkodDiscovery() {
+  if (!fs.existsSync(NKOD_INV)) return [];
+  const inv = JSON.parse(fs.readFileSync(NKOD_INV, "utf8"));
+  return (inv.datasets || []).slice(0, 120).map((d, i) => ({
+    id: "nkod-phase2-" + String(i + 1).padStart(4, "0"),
     status: "DISCOVERED",
-    nkodSearchHint: "uzavírky ŘSD NDIC JSDI",
-    notes: "Vyhledat v NKOD konkrétní distribuci, licenci a podmínky redistribuce.",
-  },
-  {
-    id: "nkod-disc-chmi-hydro",
-    title: "Hydrologie / povodně ČHMÚ",
-    domain: "pocasi",
-    status: "DISCOVERED",
-    nkodSearchHint: "ČHMÚ hydrologie povodně open data",
-    notes: "Doplnit k CAP další hydrologické sady.",
-  },
-  {
-    id: "nkod-disc-ruian",
-    title: "RÚIAN",
-    domain: "stat",
-    status: "DISCOVERED",
-    nkodSearchHint: "RÚIAN ČÚZK",
-    notes: "Geografický základ lokalit — ověřit licenci a databázová práva.",
-  },
-  {
-    id: "nkod-disc-registr-smluv",
-    title: "Registr smluv open data",
-    domain: "stat",
-    status: "DISCOVERED",
-    nkodSearchHint: "registr smluv dataset",
-    notes: "GDPR a osobní údaje ve smlouvách.",
-  },
-  {
-    id: "nkod-disc-ares",
-    title: "ARES",
-    domain: "stat",
-    status: "DISCOVERED",
-    nkodSearchHint: "ARES open data",
-    notes: "Podmínky MF/ARES API.",
-  },
-  {
-    id: "nkod-disc-idos-gtfs",
-    title: "GTFS / IDS kandidáti",
-    domain: "doprava",
-    status: "DISCOVERED",
-    nkodSearchHint: "GTFS jízdní řády IDS",
-    notes: "Každý dopravce/IDS zvlášť — licence se liší.",
-  },
-];
+    title: d.title,
+    publisher: d.publisher,
+    nkodDatasetUrl: d.nkodDatasetUrl,
+    sampleAccessURL: d.sampleAccessURL,
+    queryBucket: d.queryBucket,
+    distributionCount: d.distributionCount,
+    note: "Phase-2 SPARQL discovery — licence musí být ověřena na úrovni konkrétní distribuce před APPROVED_*.",
+    discoveredAt: inv.generatedAt || NOW,
+  }));
+}
 
 function main() {
-  const src = JSON.parse(fs.readFileSync(SRC, "utf8"));
+  const registry = JSON.parse(fs.readFileSync(SRC, "utf8"));
   const entries = [];
-  let recordSeq = 1;
+  let approved = 0;
+  let suspended = 0;
+  let rejected = 0;
+  let unclear = 0;
 
-  for (const s of src.entries || []) {
-    const row = AUDIT[s.id];
-    if (!row) {
-      throw new Error("Missing legal audit row for source id=" + s.id);
-    }
-    entries.push({
-      id: "legal-" + s.id,
-      sourceId: s.id,
-      institution: s.institution || s.label,
-      providerLabel: s.label,
-      group: s.group,
-      lane: s.lane,
-      catalogUrl: s.url || "",
-      distributionUrl: s.feedUrl || (s.feedUrls && s.feedUrls[0]) || s.htmlListUrl || s.capIndexUrl || "",
-      documentationUrl: s.url || "",
-      contact: "",
-      format: s.connectorType || "",
-      fetchMethod: s.connectorType || "",
-      updatePeriodicityMin: s.periodicityMin || null,
-      firstReviewedAt: NOW,
-      lastReviewedAt: NOW,
-      recordVersion: "2026-07-20.1",
-      datasetId: row.datasetId,
-      distributionId: row.distributionId,
-      datasetLabel: row.datasetLabel,
-      status: row.status,
-      licenseLabel: row.licenseLabel,
-      licenseUrl: row.licenseUrl || "",
-      termsUrl: row.termsUrl || "",
-      nkodUrl: row.nkodUrl || "",
-      commercialUseAllowed: row.commercialUseAllowed,
-      adSupportedUseAllowed: row.adSupportedUseAllowed,
-      automationAllowed: row.automationAllowed,
-      storageAllowed: row.storageAllowed,
-      cacheAllowed: row.cacheAllowed,
-      redistributionAllowed: row.redistributionAllowed,
-      publicDisplayAllowed: row.publicDisplayAllowed,
-      modificationAllowed: row.modificationAllowed,
-      combinationAllowed: row.combinationAllowed,
-      derivedDatabaseAllowed: row.derivedDatabaseAllowed,
-      shareAlike: row.shareAlike,
-      shareAlikeCompatibleWithInfoUzel: row.shareAlikeCompatibleWithInfoUzel,
-      copyrightCleared: row.copyrightCleared,
-      databaseRightsCleared: row.databaseRightsCleared,
-      thirdPartyContentRisk: row.thirdPartyContentRisk,
-      personalDataRisk: row.personalDataRisk,
-      paidLicenseRequired: row.paidLicenseRequired,
-      attributionRequired: row.attributionRequired,
-      attributionTemplateId: row.attributionTemplateId,
-      specificConditions: row.specificConditions || [],
-      technicalLimits: {
-        rateLimit: null,
-        maxCacheHours: null,
-        identifyClient: false,
-        notes: s.notes || "",
+  for (const src of registry.entries || []) {
+    const fn = AUDIT[src.id];
+    if (!fn) throw new Error("AUDIT missing for sourceId=" + src.id);
+    const legal = fn(src);
+    const row = Object.assign(
+      {
+        id: "legal-" + src.id,
+        sourceId: src.id,
+        institution: src.label || src.id,
+        providerLabel: src.label || src.id,
+        group: src.group || "",
+        lane: src.lane || "",
       },
-      evidence: row.evidence || [],
-      legalNotes: row.legalNotes || "",
-      rationale: row.legalNotes || "",
-      reauditDue: row.reauditDue || REAUDIT_DUE,
-      productionSourceActive: !!s.productionActive,
-    });
-    recordSeq += 1;
+      legal
+    );
+    // Sync production flags on source registry
+    const canApprove = APPROVED_STATUSES.includes(row.status) && row.productionSourceActive === true;
+    if (canApprove) {
+      src.productionActive = true;
+      src.productionApproved = true;
+      src.legalStatus = "approved";
+      approved += 1;
+    } else {
+      src.productionActive = false;
+      // keep productionApproved false when not legally clear
+      if (row.status.startsWith("REJECTED")) {
+        src.productionApproved = false;
+        src.legalStatus = "rejected";
+        rejected += 1;
+      } else if (row.status === "SUSPENDED") {
+        src.productionApproved = false;
+        src.legalStatus = "suspended";
+        suspended += 1;
+      } else {
+        src.productionApproved = false;
+        src.legalStatus = "review";
+        if (row.status === "LICENSE_UNCLEAR") unclear += 1;
+      }
+    }
+    if (!ALL_STATUSES.includes(row.status)) throw new Error("bad status " + row.status);
+    entries.push(row);
   }
 
-  for (const [id, label] of COMMERCIAL_REJECTED) {
-    const row = rejected("REJECTED", {
-      datasetId: id + "-articles",
-      distributionId: id + "-blocked",
-      datasetLabel: label + " (komerční média)",
-      legalNotes:
-        "Komerční mediální obsah: bez výslovné open licence / smlouvy se nepřipouští systematické přebírání titulků, perexů, fotek ani RSS databáze. InfoUzel nepoužívá placené licence.",
-      paidLicenseRequired: true,
-    });
-    entries.push({
-      id: "legal-media-" + id,
-      sourceId: id,
-      institution: label,
-      providerLabel: label,
-      group: "commercial-media",
-      lane: "ostatni",
-      catalogUrl: "",
-      distributionUrl: "",
-      documentationUrl: "",
-      contact: "",
-      format: "n/a",
-      fetchMethod: "forbidden",
-      updatePeriodicityMin: null,
-      firstReviewedAt: NOW,
-      lastReviewedAt: NOW,
-      recordVersion: "2026-07-20.1",
-      datasetId: row.datasetId,
-      distributionId: row.distributionId,
-      datasetLabel: row.datasetLabel,
-      status: row.status,
-      licenseLabel: "Komerční / neposkytnuto",
-      licenseUrl: "",
-      termsUrl: "",
-      nkodUrl: "",
-      commercialUseAllowed: false,
-      adSupportedUseAllowed: false,
-      automationAllowed: false,
-      storageAllowed: false,
-      cacheAllowed: false,
-      redistributionAllowed: false,
-      publicDisplayAllowed: false,
-      modificationAllowed: false,
-      combinationAllowed: false,
-      derivedDatabaseAllowed: false,
-      shareAlike: false,
-      shareAlikeCompatibleWithInfoUzel: false,
-      copyrightCleared: "no",
-      databaseRightsCleared: "no",
-      thirdPartyContentRisk: "high",
-      personalDataRisk: "unknown",
-      paidLicenseRequired: true,
-      attributionRequired: false,
-      attributionTemplateId: row.attributionTemplateId,
-      specificConditions: [],
-      technicalLimits: { rateLimit: null, maxCacheHours: null, identifyClient: false, notes: "" },
-      evidence: ["docs/info-system-v1/03-legal-audit.md"],
-      legalNotes: row.legalNotes,
-      rationale: row.legalNotes,
-      reauditDue: REAUDIT_DUE,
-      productionSourceActive: false,
-    });
+  for (const [id, label] of COMMERCIAL) {
+    const row = Object.assign({ id: "legal-" + id, sourceId: id, institution: label, providerLabel: label, group: "commercial-media", lane: "rejected" }, rejectedCommercial(id, label));
+    entries.push(row);
+    rejected += 1;
   }
 
-  const approved = entries.filter((e) => APPROVED_STATUSES.includes(e.status));
-  const blocked = entries.filter((e) => !APPROVED_STATUSES.includes(e.status));
-
+  const nkodDiscovery = loadNkodDiscovery();
   const out = {
-    version: "1.0.0",
+    version: "2.0.0",
     generatedAt: NOW,
-    schema: "iu-info-events-legal-source-registry-v1",
+    schema: "iu-info-events-legal-source-registry-v2",
+    phase: 2,
     productModel: {
-      name: "InfoUzel Přehled dne",
-      commercial: true,
-      advertisingSupported: true,
-      contentMode: "link-only-official-notices",
-      forbids: ["article-body", "perex", "photos", "video", "commercial-media-scraping", "paid-licenses"],
-      preservesUiStructure: true,
+      commercialSite: true,
+      advertisingAllowed: true,
+      sponsoredContentAllowed: true,
+      aggregationModel: "link-only-official-open-data",
     },
     gate: {
       enforceHard: true,
+      phase2EvidenceRequired: true,
       allowedStatuses: APPROVED_STATUSES.slice(),
       requiredFlags: [
         "commercialUseAllowed",
         "adSupportedUseAllowed",
+        "sponsoredContentContextAllowed",
         "automationAllowed",
         "storageAllowed",
+        "cacheAllowed",
         "publicDisplayAllowed",
         "modificationAllowed",
+        "normalizationAllowed",
+        "metadataEnrichmentAllowed",
         "combinationAllowed",
+        "aggregationAllowed",
+        "crossSourceDisplayAllowed",
       ],
+      requireLicenseUrl: true,
+      requireExternalEvidence: true,
+      requireFieldAllowlist: true,
+      requireFreshReaudit: true,
       publishRequiresLegalProvenanceOnItem: true,
     },
     attributionTemplates: ATTR,
     statusEnum: ALL_STATUSES.slice(),
-    nkodDiscovery: NKOD_DISCOVERED,
+    nkodDiscovery,
     stats: {
       entries: entries.length,
-      approved: approved.length,
-      notApproved: blocked.length,
-      commercialRejected: COMMERCIAL_REJECTED.length,
-      nkodDiscovered: NKOD_DISCOVERED.length,
+      approved,
+      notApproved: entries.length - approved,
+      licenseUnclear: unclear,
+      rejected,
+      suspended,
+      nkodDiscovered: nkodDiscovery.length,
+      productionActiveSources: (registry.entries || []).filter((e) => e.productionActive).length,
     },
     entries,
   };
 
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2) + "\n", "utf8");
-  console.log("[legal-registry-build] wrote", path.relative(REPO, OUT));
-  console.log("[legal-registry-build] approved=", approved.length, "notApproved=", blocked.length);
+  fs.writeFileSync(SRC, JSON.stringify(registry, null, 2) + "\n", "utf8");
+  console.log("[legal-registry-build] phase2 entries=" + entries.length + " approved=" + approved + " nkod=" + nkodDiscovery.length);
+  console.log("[legal-registry-build] wrote " + path.relative(REPO, OUT));
+  console.log("[legal-registry-build] synced " + path.relative(REPO, SRC));
 }
 
 main();
