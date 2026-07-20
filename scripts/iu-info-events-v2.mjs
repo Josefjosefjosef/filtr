@@ -495,8 +495,10 @@ export function atomicPublishInfoEvents(dir, payload, validateFn) {
 export function validateStagingFeed(stagingDir) {
   try {
     const feed = JSON.parse(fs.readFileSync(path.join(stagingDir, "feed.json"), "utf8"));
-    if (!Array.isArray(feed.items) || feed.items.length < 50) {
-      return { ok: false, error: "feed.items < 50" };
+    // Phase-2 legal whitelist may leave only a few publishable sources (e.g. CHMI-only).
+    // Keep a small floor so empty/corrupt publishes still abort.
+    if (!Array.isArray(feed.items) || feed.items.length < 5) {
+      return { ok: false, error: "feed.items < 5" };
     }
     for (const it of feed.items.slice(0, 20)) {
       if (!it.url || !it.sortAt) return { ok: false, error: "missing url/sortAt on sample item" };
