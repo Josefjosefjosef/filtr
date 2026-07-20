@@ -380,7 +380,10 @@ function countTemporaryFilters(prefs, baseline) {
 function setPrefs(prefs) {
   try {
     localStorage.setItem(LS_PREFS, JSON.stringify(normalizePrefs(prefs || {})));
-  } catch (_) {}
+    return true;
+  } catch (_) {
+    return false;
+  }
 }
 
 function prefsFingerprint(f) {
