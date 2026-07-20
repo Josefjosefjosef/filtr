@@ -15,10 +15,12 @@
 // 2026-06-29: PWA icon final tuning v54 — larger optically centered iU + infoUzel.cz short_name
 // 2026-07-14: PWA offline completion — reconnect refresh, sync external opens
 // 2026-07-16: PWA offline menu/articles/images — durable last-good feed+img caches, tool modules precache
-const CACHE_VERSION = "2026-07-16-pwa-offline-menu-articles-v4";
+// 2026-07-20: Prehled dne settings/timeline — network-first for info-system modules (SWR + stripped ?v=
+//             kept stale iu-prehled-dne-ui after #7622 for installed PWAs)
+const CACHE_VERSION = "2026-07-20-prehled-settings-sw-network-first-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
-const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata pro TTL
+const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
 /** Durable across SW version bumps — last-good article chunks/manifest for offline UI. */
 const FEED_OFFLINE_CACHE = "iu-feed-offline-v1";
 /** Durable same-origin image cache (defaults + previously loaded /assets/images/*). */
@@ -637,6 +639,32 @@ self.addEventListener("fetch", (event) => {
 
   /* app.js: network-first (must run before generic CSS/JS SWR). */
   if (path.includes("/assets/app.js")) {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(APP_SHELL_CACHE);
+        const cacheKey = new Request(url.origin + url.pathname);
+        try {
+          const res = await fetch(event.request, { cache: "no-store" });
+          if (res && res.ok) {
+            event.waitUntil(cache.put(cacheKey, res.clone()).catch(() => {}));
+            return res;
+          }
+        } catch (_) {}
+        const cached = (await cache.match(cacheKey)) || (await caches.match(event.request));
+        if (cached) return cached;
+        return new Response("", { status: 503, statusText: "Offline", headers: { "Cache-Control": "no-store" } });
+      })()
+    );
+    return;
+  }
+
+  /* Prehled dne / info-system modules: network-first.
+     Generic SWR below keys by pathname only (strips ?v=), so a pre-#7622 cached
+     iu-prehled-dne-ui-v1.js could keep serving old settings UI to installed PWAs. */
+  if (
+    path.includes("/assets/iu-prehled-dne-") ||
+    path.includes("/assets/iu-info-system-core-v1.js")
+  ) {
     event.respondWith(
       (async () => {
         const cache = await caches.open(APP_SHELL_CACHE);
