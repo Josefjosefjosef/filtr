@@ -22,7 +22,7 @@ const { chromium } = require("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8967", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/?section=media`;
-const CACHE_BUST = "info-system-v6-timeline-restore-20260720";
+const CACHE_BUST = "info-system-v6-sw-network-first-20260720";
 const fails = [];
 
 function must(cond, id) {
@@ -62,6 +62,10 @@ function staticGate() {
   must(/\.iuPdBtn--settings/.test(css), "css:green_btn");
   must(/iuPrehledDne__axis::before/.test(css) && /\.iuPrehledDne__dot\b/.test(css), "css:timeline_axis");
   must(/\.iuPdCard__actions[\s\S]*justify-content:\s*flex-end/.test(css), "css:actions_right");
+
+  const sw = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8");
+  must(/iu-prehled-dne-/.test(sw) && /network-first/i.test(sw), "sw:prehled_network_first");
+  must(/2026-07-20-prehled-settings-sw-network-first-v1/.test(sw), "sw:cache_version_bump");
   must(/#16a34a|#15803d/.test(css), "css:green_color");
   must(/iu-pd-settings-open/.test(css), "css:body_lock");
   must(/--bottom-nav-height/.test(css), "css:bottom_nav");
@@ -151,6 +155,13 @@ async function runPlaywright() {
       const context = await bootstrapGuardContext(browser, { viewport: { width: vp.width, height: vp.height } });
       const page = await bootstrapGuardPage(context);
       await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 60000 });
+      await page.evaluate(() => {
+        try {
+          // Guard bootstrap sets __IU_INFO_SYSTEM_CUTOVER__=false for legacy HomeCards
+          // layout tests; Prehled dne settings require production cutover ON.
+          window.__IU_INFO_SYSTEM_CUTOVER__ = true;
+        } catch (_) {}
+      });
       await page.waitForFunction(() => !!document.querySelector('[data-act="open-settings"]'), { timeout: 45000 });
       await page.evaluate(() => {
         document.documentElement.classList.add("iu-info-system-cutover");
@@ -163,6 +174,9 @@ async function runPlaywright() {
         if (vpEl) {
           vpEl.style.display = "block";
           vpEl.hidden = false;
+        }
+        if (window.IUInfoSystem && typeof window.IUInfoSystem.applyCutoverDom === "function") {
+          window.IUInfoSystem.applyCutoverDom();
         }
       });
       await page.waitForTimeout(200);

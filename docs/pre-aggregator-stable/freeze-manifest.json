@@ -1,14 +1,14 @@
 {
-  "freezeId": "info-system-v6-settings-fix-20260720b",
+  "freezeId": "info-system-v6-sw-network-first-20260720",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
-  "createdAt": "2026-07-20T01:35:00Z",
-  "note": "Intentional freeze bump: Prehled dne settings autosave/structure/scroll fix + cache-bust.",
+  "createdAt": "2026-07-20T08:15:00Z",
+  "note": "Intentional freeze bump: SW network-first for Prehled dne/info-system assets + CACHE_VERSION so installed PWAs stop serving stale settings UI after #7622.",
   "files": {
-    "projects/index.html": "de30014144f529d44dab4174d39e8e6d320c186085e42007eb0b18101b2bcd33",
+    "projects/index.html": "8e081ccaf79f99a395cead8a93a740fe51ae74a086173e73a8a2147215d2a94e",
     "assets/app.css": "5f4442f5fec55cf6ec94b2dbcdf469247b8b7fedc0b1629df148e6d9373a6963",
     "assets/app.js": "5990b0f04d454e5f3da202bdd74323c51cfe33dd36998236ff98ffa5885f9232",
-    "sw.js": "12d95a38a66998f417776a57d2ba1591c4d6f74e11299cf53aded3e30a4c56b6",
-    "projects/version.json": "cc5819cba07d59281e7700d43498ac52334586964f0b11bb769080fec8624bfd",
+    "sw.js": "9fa800ebad83ba50cf9724360ed53bef2ed928a72b0d4db652d73c3d59f97c14",
+    "projects/version.json": "86f19968e55b3573c201cabf86d99d98439d5744a0106317ff25957b93c80771",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "88893a74879f2f63e40ab7cf2bb8d6c6b1480952f03521c909650cbefdfc9d67",
     "assets/iu-user-data-backup-v1.js": "ab0b92b94c1d2f22897943881671c635f1a1bc79b2c130ad1b0436c80e8d3730",
@@ -19,13 +19,13 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-07-16-pwa-offline-menu-articles-v4\"",
+      "CACHE_VERSION = \"2026-07-20-prehled-settings-sw-network-first-v1\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v1\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "warmOfflineAssets"
     ],
     "projects/version.json": [
-      "pwa-offline-menu-articles-v4-20260716"
+      "pwa-prehled-settings-sw-network-first-v1-20260720"
     ]
   }
 }

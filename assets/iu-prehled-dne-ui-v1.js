@@ -21,10 +21,10 @@ import {
   getScrollState,
   setScrollState,
   migrateLocalStateOnce,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-timeline-restore-20260720";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-sw-network-first-20260720";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-timeline-restore-20260720";
+const CACHE_BUST = "info-system-v6-sw-network-first-20260720";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
