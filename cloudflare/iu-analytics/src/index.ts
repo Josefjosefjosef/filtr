@@ -1,14 +1,12 @@
 import { applyEvent, rejectEvent } from "./aggregate";
 import { privacyGuard, todayUtc } from "./privacy";
+import { createStore } from "./store";
 import { Env } from "./types";
 
 function json(data: unknown, status = 200, extra: HeadersInit = {}): Response {
   return new Response(JSON.stringify(data), {
     status,
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      ...extra,
-    },
+    headers: { "content-type": "application/json; charset=utf-8", ...extra },
   });
 }
 
@@ -33,16 +31,14 @@ function corsHeaders(env: Env, req: Request): HeadersInit {
 
 function withCors(env: Env, req: Request, res: Response): Response {
   const h = new Headers(res.headers);
-  const c = corsHeaders(env, req);
-  for (const [k, v] of Object.entries(c)) h.set(k, String(v));
+  for (const [k, v] of Object.entries(corsHeaders(env, req))) h.set(k, String(v));
   return new Response(res.body, { status: res.status, headers: h });
 }
 
 function requireAdmin(env: Env, req: Request): boolean {
   const token = env.ADMIN_TOKEN || "";
   if (!token) return false;
-  const auth = req.headers.get("Authorization") || "";
-  return auth === "Bearer " + token;
+  return (req.headers.get("Authorization") || "") === "Bearer " + token;
 }
 
 function daysAgo(n: number): string {
@@ -51,93 +47,66 @@ function daysAgo(n: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-async function ensureSchema(db: D1Database): Promise<void> {
-  // Idempotent bootstrap for fresh D1 (migrations applied in CI; this is a safety net).
-  await db.batch([
-    db.prepare(`CREATE TABLE IF NOT EXISTS daily_traffic (
-      day TEXT NOT NULL, device_category TEXT NOT NULL,
-      visits INTEGER NOT NULL DEFAULT 0, page_views INTEGER NOT NULL DEFAULT 0,
-      public_section_views INTEGER NOT NULL DEFAULT 0, private_tools_opens INTEGER NOT NULL DEFAULT 0,
-      updated_at TEXT NOT NULL, PRIMARY KEY (day, device_category))`),
-    db.prepare(`CREATE TABLE IF NOT EXISTS daily_sections (
-      day TEXT NOT NULL, section_id TEXT NOT NULL, views INTEGER NOT NULL DEFAULT 0,
-      updated_at TEXT NOT NULL, PRIMARY KEY (day, section_id))`),
-    db.prepare(`CREATE TABLE IF NOT EXISTS daily_performance (
-      day TEXT NOT NULL, metric_name TEXT NOT NULL, sample_count INTEGER NOT NULL DEFAULT 0,
-      value_sum REAL NOT NULL DEFAULT 0, updated_at TEXT NOT NULL, PRIMARY KEY (day, metric_name))`),
-    db.prepare(`CREATE TABLE IF NOT EXISTS daily_errors (
-      day TEXT NOT NULL, error_code TEXT NOT NULL, count INTEGER NOT NULL DEFAULT 0,
-      updated_at TEXT NOT NULL, PRIMARY KEY (day, error_code))`),
-    db.prepare(`CREATE TABLE IF NOT EXISTS daily_ads (
-      day TEXT NOT NULL, campaign_id TEXT NOT NULL, placement_id TEXT NOT NULL,
-      section_id TEXT NOT NULL DEFAULT '', slot_type TEXT NOT NULL DEFAULT 'unknown',
-      device_category TEXT NOT NULL, impressions INTEGER NOT NULL DEFAULT 0,
-      clicks INTEGER NOT NULL DEFAULT 0, valid_clicks INTEGER NOT NULL DEFAULT 0,
-      suspicious_clicks INTEGER NOT NULL DEFAULT 0, updated_at TEXT NOT NULL,
-      PRIMARY KEY (day, campaign_id, placement_id, section_id, slot_type, device_category))`),
-    db.prepare(`CREATE TABLE IF NOT EXISTS campaign_meta (
-      campaign_id TEXT PRIMARY KEY, campaign_name TEXT, advertiser_name TEXT,
-      placement_label TEXT, start_date TEXT, end_date TEXT, status TEXT,
-      pricing_model TEXT, notes TEXT, updated_at TEXT NOT NULL)`),
-    db.prepare(`CREATE TABLE IF NOT EXISTS ingest_audit (
-      day TEXT NOT NULL, accepted INTEGER NOT NULL DEFAULT 0, rejected INTEGER NOT NULL DEFAULT 0,
-      suspicious INTEGER NOT NULL DEFAULT 0, updated_at TEXT NOT NULL, PRIMARY KEY (day))`),
-  ]);
-}
-
-async function publicStats(env: Env, from: string, to: string) {
-  const traffic = await env.DB.prepare(
-    `SELECT day,
-            SUM(visits) AS visits,
-            SUM(page_views) AS page_views,
-            SUM(public_section_views) AS public_section_views,
-            SUM(private_tools_opens) AS private_tools_opens
-     FROM daily_traffic WHERE day >= ? AND day <= ?
-     GROUP BY day ORDER BY day ASC`
-  )
-    .bind(from, to)
-    .all();
-
-  const devices = await env.DB.prepare(
-    `SELECT device_category, SUM(visits) AS visits, SUM(page_views) AS page_views
-     FROM daily_traffic WHERE day >= ? AND day <= ?
-     GROUP BY device_category`
-  )
-    .bind(from, to)
-    .all();
-
-  const sections = await env.DB.prepare(
-    `SELECT section_id, SUM(views) AS views
-     FROM daily_sections WHERE day >= ? AND day <= ?
-     GROUP BY section_id ORDER BY views DESC LIMIT 12`
-  )
-    .bind(from, to)
-    .all();
+async function publicStats(store: ReturnType<typeof createStore>, from: string, to: string) {
+  const blob = await store.readRange(from, to);
+  const byDay: Record<string, { day: string; visits: number; page_views: number; public_section_views: number; private_tools_opens: number }> = {};
+  for (const row of Object.values(blob.traffic)) {
+    const cur = byDay[row.day] || {
+      day: row.day,
+      visits: 0,
+      page_views: 0,
+      public_section_views: 0,
+      private_tools_opens: 0,
+    };
+    cur.visits += row.visits;
+    cur.page_views += row.page_views;
+    cur.public_section_views += row.public_section_views;
+    cur.private_tools_opens += row.private_tools_opens;
+    byDay[row.day] = cur;
+  }
+  const series = Object.values(byDay).sort((a, b) => a.day.localeCompare(b.day));
+  const devicesMap: Record<string, { device_category: string; visits: number; page_views: number }> = {};
+  for (const row of Object.values(blob.traffic)) {
+    const cur = devicesMap[row.device_category] || {
+      device_category: row.device_category,
+      visits: 0,
+      page_views: 0,
+    };
+    cur.visits += row.visits;
+    cur.page_views += row.page_views;
+    devicesMap[row.device_category] = cur;
+  }
+  const sectionMap: Record<string, { section_id: string; views: number }> = {};
+  for (const row of Object.values(blob.sections)) {
+    const cur = sectionMap[row.section_id] || { section_id: row.section_id, views: 0 };
+    cur.views += row.views;
+    sectionMap[row.section_id] = cur;
+  }
+  const topPublicSections = Object.values(sectionMap)
+    .sort((a, b) => b.views - a.views)
+    .slice(0, 12);
 
   const today = todayUtc();
   const yesterday = daysAgo(1);
   const monthStart = today.slice(0, 8) + "01";
-
-  const sumDay = async (day: string) => {
-    const row = await env.DB.prepare(
-      `SELECT COALESCE(SUM(visits),0) AS visits, COALESCE(SUM(page_views),0) AS page_views
-       FROM daily_traffic WHERE day = ?`
-    )
-      .bind(day)
-      .first<{ visits: number; page_views: number }>();
-    return row || { visits: 0, page_views: 0 };
+  const sumFor = (day: string) => {
+    const row = byDay[day];
+    return { visits: row?.visits || 0, page_views: row?.page_views || 0 };
   };
-
-  const month = await env.DB.prepare(
-    `SELECT COALESCE(SUM(visits),0) AS visits, COALESCE(SUM(page_views),0) AS page_views,
-            COALESCE(SUM(private_tools_opens),0) AS private_tools_opens
-     FROM daily_traffic WHERE day >= ? AND day <= ?`
-  )
-    .bind(monthStart, today)
-    .first();
+  let monthVisits = 0;
+  let monthViews = 0;
+  let monthPrivate = 0;
+  for (const row of series) {
+    if (row.day >= monthStart && row.day <= today) {
+      monthVisits += row.visits;
+      monthViews += row.page_views;
+      monthPrivate += row.private_tools_opens;
+    }
+  }
 
   return {
     generatedAt: new Date().toISOString(),
+    storageMode: store.mode,
     privacy: {
       tracksIndividuals: false,
       createsAdProfiles: false,
@@ -149,15 +118,15 @@ async function publicStats(env: Env, from: string, to: string) {
       storesFullUserAgent: false,
       storesFingerprints: false,
     },
-    today: await sumDay(today),
-    yesterday: await sumDay(yesterday),
-    month: month || { visits: 0, page_views: 0, private_tools_opens: 0 },
-    series: traffic.results || [],
-    devices: devices.results || [],
-    topPublicSections: sections.results || [],
+    today: sumFor(today),
+    yesterday: sumFor(yesterday),
+    month: { visits: monthVisits, page_views: monthViews, private_tools_opens: monthPrivate },
+    series,
+    devices: Object.values(devicesMap),
+    topPublicSections,
     privateToolsSummary: {
       label: "Soukromé nástroje – anonymní souhrn",
-      opens: Number((month && (month as { private_tools_opens?: number }).private_tools_opens) || 0),
+      opens: monthPrivate,
     },
     auditStatus: {
       legal: "Čeká na dokončení.",
@@ -167,84 +136,39 @@ async function publicStats(env: Env, from: string, to: string) {
   };
 }
 
-async function handleIngest(env: Env, req: Request): Promise<Response> {
+async function handleIngest(env: Env, req: Request, store: ReturnType<typeof createStore>): Promise<Response> {
   let body: unknown;
   try {
     body = await req.json();
   } catch {
     return json({ ok: false, error: "invalid_json" }, 400);
   }
-
   const events = Array.isArray(body)
     ? body
     : body && typeof body === "object" && Array.isArray((body as { events?: unknown }).events)
       ? (body as { events: unknown[] }).events
       : [body];
-
   if (events.length > 20) return json({ ok: false, error: "batch_too_large" }, 400);
 
   const ua = req.headers.get("user-agent");
-  // Never persist IP. CF may see it transitively; we do not write it to D1.
   let accepted = 0;
   let rejected = 0;
   let suspicious = 0;
-
   for (const ev of events) {
     const guarded = privacyGuard(ev, ua);
     if (!guarded.ok) {
       rejected += 1;
-      await rejectEvent(env.DB, todayUtc());
+      await rejectEvent(store, todayUtc());
       continue;
     }
-    const applied = await applyEvent(env.DB, guarded.event);
+    const applied = await applyEvent(store, guarded.event);
     if (applied.suspicious) suspicious += 1;
     else accepted += 1;
   }
-
-  return json({ ok: true, accepted, rejected, suspicious });
+  return json({ ok: true, accepted, rejected, suspicious, storageMode: store.mode });
 }
 
-async function adminOverview(env: Env, from: string, to: string) {
-  const pub = await publicStats(env, from, to);
-  const ads = await env.DB.prepare(
-    `SELECT day, campaign_id, placement_id, section_id, slot_type, device_category,
-            impressions, clicks, valid_clicks, suspicious_clicks,
-            CASE WHEN impressions > 0 THEN ROUND(1.0 * valid_clicks / impressions, 4) ELSE 0 END AS ctr
-     FROM daily_ads WHERE day >= ? AND day <= ?
-     ORDER BY day DESC, impressions DESC LIMIT 500`
-  )
-    .bind(from, to)
-    .all();
-  const audit = await env.DB.prepare(
-    `SELECT * FROM ingest_audit WHERE day >= ? AND day <= ? ORDER BY day DESC`
-  )
-    .bind(from, to)
-    .all();
-  const errors = await env.DB.prepare(
-    `SELECT error_code, SUM(count) AS count FROM daily_errors
-     WHERE day >= ? AND day <= ? GROUP BY error_code ORDER BY count DESC LIMIT 50`
-  )
-    .bind(from, to)
-    .all();
-  const perf = await env.DB.prepare(
-    `SELECT metric_name, SUM(sample_count) AS samples, SUM(value_sum) AS value_sum,
-            CASE WHEN SUM(sample_count) > 0 THEN SUM(value_sum)/SUM(sample_count) ELSE 0 END AS avg_value
-     FROM daily_performance WHERE day >= ? AND day <= ?
-     GROUP BY metric_name`
-  )
-    .bind(from, to)
-    .all();
-
-  return {
-    ...pub,
-    ads: ads.results || [],
-    ingestAudit: audit.results || [],
-    errors: errors.results || [],
-    performance: perf.results || [],
-  };
-}
-
-async function adReport(env: Env, url: URL) {
+async function adReport(store: ReturnType<typeof createStore>, url: URL) {
   const from = url.searchParams.get("from") || daysAgo(30);
   const to = url.searchParams.get("to") || todayUtc();
   const campaign_id = url.searchParams.get("campaign_id");
@@ -252,69 +176,34 @@ async function adReport(env: Env, url: URL) {
   const section_id = url.searchParams.get("section_id");
   const slot_type = url.searchParams.get("slot_type");
   const device_category = url.searchParams.get("device_category");
-
-  let sql = `SELECT day, campaign_id, placement_id, section_id, slot_type, device_category,
-                    impressions, clicks, valid_clicks, suspicious_clicks,
-                    CASE WHEN impressions > 0 THEN ROUND(1.0 * valid_clicks / impressions, 4) ELSE 0 END AS ctr
-             FROM daily_ads WHERE day >= ? AND day <= ?`;
-  const binds: string[] = [from, to];
-  if (campaign_id) {
-    sql += ` AND campaign_id = ?`;
-    binds.push(campaign_id);
-  }
-  if (placement_id) {
-    sql += ` AND placement_id = ?`;
-    binds.push(placement_id);
-  }
-  if (section_id) {
-    sql += ` AND section_id = ?`;
-    binds.push(section_id);
-  }
-  if (slot_type) {
-    sql += ` AND slot_type = ?`;
-    binds.push(slot_type);
-  }
-  if (device_category) {
-    sql += ` AND device_category = ?`;
-    binds.push(device_category);
-  }
-  sql += ` ORDER BY day ASC LIMIT 2000`;
-
-  const rows = await env.DB.prepare(sql)
-    .bind(...binds)
-    .all();
-
-  const totals = await env.DB.prepare(
-    `SELECT COALESCE(SUM(impressions),0) AS impressions,
-            COALESCE(SUM(clicks),0) AS clicks,
-            COALESCE(SUM(valid_clicks),0) AS valid_clicks,
-            COALESCE(SUM(suspicious_clicks),0) AS suspicious_clicks
-     FROM daily_ads WHERE day >= ? AND day <= ?
-     ${campaign_id ? "AND campaign_id = ?" : ""}
-     ${placement_id ? "AND placement_id = ?" : ""}`
-  )
-    .bind(...binds.slice(0, 2 + (campaign_id ? 1 : 0) + (placement_id ? 1 : 0)))
-    .first<{
-      impressions: number;
-      clicks: number;
-      valid_clicks: number;
-      suspicious_clicks: number;
-    }>();
-
-  const imp = Number(totals?.impressions || 0);
-  const valid = Number(totals?.valid_clicks || 0);
-
+  const blob = await store.readRange(from, to);
+  let rows = Object.values(blob.ads);
+  if (campaign_id) rows = rows.filter((r) => r.campaign_id === campaign_id);
+  if (placement_id) rows = rows.filter((r) => r.placement_id === placement_id);
+  if (section_id) rows = rows.filter((r) => r.section_id === section_id);
+  if (slot_type) rows = rows.filter((r) => r.slot_type === slot_type);
+  if (device_category) rows = rows.filter((r) => r.device_category === device_category);
+  rows = rows
+    .map((r) => ({
+      ...r,
+      ctr: r.impressions > 0 ? Math.round((r.valid_clicks / r.impressions) * 10000) / 10000 : 0,
+    }))
+    .sort((a, b) => a.day.localeCompare(b.day));
+  const impressions = rows.reduce((s, r) => s + r.impressions, 0);
+  const clicks = rows.reduce((s, r) => s + r.clicks, 0);
+  const valid = rows.reduce((s, r) => s + r.valid_clicks, 0);
+  const sus = rows.reduce((s, r) => s + r.suspicious_clicks, 0);
   return {
     generatedAt: new Date().toISOString(),
     filters: { from, to, campaign_id, placement_id, section_id, slot_type, device_category },
     totals: {
-      impressions: imp,
-      clicks: Number(totals?.clicks || 0),
+      impressions,
+      clicks,
       valid_clicks: valid,
-      suspicious_clicks: Number(totals?.suspicious_clicks || 0),
-      ctr: imp > 0 ? Math.round((valid / imp) * 10000) / 10000 : 0,
+      suspicious_clicks: sus,
+      ctr: impressions > 0 ? Math.round((valid / impressions) * 10000) / 10000 : 0,
     },
-    rows: rows.results || [],
+    rows: rows.slice(0, 2000),
   };
 }
 
@@ -322,20 +211,11 @@ export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url);
     const path = url.pathname.replace(/\/+$/, "") || "/";
-
     if (req.method === "OPTIONS") {
       return withCors(env, req, new Response(null, { status: 204 }));
     }
 
-    try {
-      if (env.DB) await ensureSchema(env.DB);
-    } catch (e) {
-      return withCors(
-        env,
-        req,
-        json({ ok: false, error: "db_init_failed", detail: String(e) }, 500)
-      );
-    }
+    const store = createStore(env);
 
     if (path === "/health" || path === "/") {
       return withCors(
@@ -345,6 +225,7 @@ export default {
           ok: true,
           service: "infouzel-analytics",
           mode: "aggregate-only",
+          storageMode: store.mode,
           storesIp: false,
           storesFingerprint: false,
           storesFullUserAgent: false,
@@ -353,48 +234,59 @@ export default {
     }
 
     if (path === "/v1/ingest" && req.method === "POST") {
-      const res = await handleIngest(env, req);
-      return withCors(env, req, res);
+      return withCors(env, req, await handleIngest(env, req, store));
     }
 
     if (path === "/v1/public/stats" && req.method === "GET") {
       const from = url.searchParams.get("from") || daysAgo(30);
       const to = url.searchParams.get("to") || todayUtc();
-      const data = await publicStats(env, from, to);
+      const data = await publicStats(store, from, to);
       const cacheSec = String(env.PUBLIC_CACHE_SECONDS || "300");
       return withCors(
         env,
         req,
-        json(data, 200, {
-          "cache-control": `public, max-age=${cacheSec}, s-maxage=${cacheSec}`,
-        })
+        json(data, 200, { "cache-control": `public, max-age=${cacheSec}, s-maxage=${cacheSec}` })
       );
     }
 
     if (path === "/v1/admin/overview" && req.method === "GET") {
-      if (!requireAdmin(env, req)) {
-        return withCors(env, req, json({ ok: false, error: "unauthorized" }, 401));
-      }
+      if (!requireAdmin(env, req)) return withCors(env, req, json({ ok: false, error: "unauthorized" }, 401));
       const from = url.searchParams.get("from") || daysAgo(30);
       const to = url.searchParams.get("to") || todayUtc();
-      const data = await adminOverview(env, from, to);
+      const pub = await publicStats(store, from, to);
+      const blob = await store.readRange(from, to);
+      const ads = Object.values(blob.ads)
+        .map((r) => ({
+          ...r,
+          ctr: r.impressions > 0 ? Math.round((r.valid_clicks / r.impressions) * 10000) / 10000 : 0,
+        }))
+        .sort((a, b) => b.day.localeCompare(a.day))
+        .slice(0, 500);
       return withCors(
         env,
         req,
-        json(data, 200, { "cache-control": "no-store" })
+        json(
+          {
+            ...pub,
+            ads,
+            ingestAudit: Object.values(blob.audit).sort((a, b) => b.day.localeCompare(a.day)),
+            errors: Object.values(blob.errors),
+            performance: Object.values(blob.performance).map((p) => ({
+              metric_name: p.metric_name,
+              samples: p.sample_count,
+              value_sum: p.value_sum,
+              avg_value: p.sample_count > 0 ? p.value_sum / p.sample_count : 0,
+            })),
+          },
+          200,
+          { "cache-control": "no-store" }
+        )
       );
     }
 
     if (path === "/v1/ads/report" && req.method === "GET") {
-      if (!requireAdmin(env, req)) {
-        return withCors(env, req, json({ ok: false, error: "unauthorized" }, 401));
-      }
-      const data = await adReport(env, url);
-      return withCors(
-        env,
-        req,
-        json(data, 200, { "cache-control": "no-store" })
-      );
+      if (!requireAdmin(env, req)) return withCors(env, req, json({ ok: false, error: "unauthorized" }, 401));
+      return withCors(env, req, json(await adReport(store, url), 200, { "cache-control": "no-store" }));
     }
 
     return withCors(env, req, json({ ok: false, error: "not_found" }, 404));
