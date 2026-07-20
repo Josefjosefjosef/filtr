@@ -13,6 +13,8 @@
 
 InfoUzel zobrazuje jen čas, název, skutečný zdroj, místo, stav, důležitost a odkaz na originál. Bez fotek, perexů a převzatého obsahu.
 
+Produkční zdroje musí projít právním whitelistem (`legal_source_registry.json`) — viz `12-legal-whitelist-audit.md`.
+
 ## Rollback
 
 1. `?iuInfoSystem=off` nebo `window.__IU_INFO_SYSTEM_CUTOVER__ = false`

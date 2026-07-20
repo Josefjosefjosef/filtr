@@ -44,6 +44,11 @@ import {
   splitIntoLanes,
   validateStagingFeed,
 } from "./iu-info-events-v2.mjs";
+import {
+  attachLegalProvenance,
+  canPublishFromSource,
+  loadLegalRegistry,
+} from "./iu-info-events-legal-registry-lib.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIR = path.join(REPO, "projects", "data", "info_events");
@@ -347,6 +352,7 @@ async function main() {
   const nowIso = new Date().toISOString();
   const registry = readJson("source_registry.json");
   const cutover = readJson("cutover_state.json");
+  const legalRegistry = loadLegalRegistry(REPO);
   const firstSeenMap = loadPreviousFirstSeen(DIR);
   const collected = [];
   const ingestReport = [];
@@ -362,6 +368,18 @@ async function main() {
 
     if (!entry.productionActive || !entry.productionApproved) continue;
     if (entry.legalStatus !== "approved") continue;
+    const legalGate = canPublishFromSource(entry, legalRegistry);
+    if (!legalGate.ok) {
+      ingestReport.push({
+        id: entry.id,
+        ok: false,
+        reason: "legal_gate:" + legalGate.reason,
+        mode: "legal-whitelist",
+        lane: entry.lane || resolveLane(entry),
+      });
+      sourceErrors += 1;
+      continue;
+    }
     if (ONLY_GROUP && resolveLane(entry) !== ONLY_GROUP) continue;
 
     let keptTotal = 0;
@@ -450,7 +468,15 @@ async function main() {
     const chron = applyChronology(it, nowIso, firstSeenMap);
     delete chron._hasSourcePubDate;
     delete chron.timeSourceHint;
-    return chron;
+    const src = (registry.entries || []).find((e) => e && e.id === chron.sourceId);
+    const legalGate = canPublishFromSource(src, legalRegistry);
+    return attachLegalProvenance(chron, src, legalGate.legal || null);
+  });
+
+  // Drop any item whose source is no longer legally publishable (stale in-memory mix)
+  items = items.filter((it) => {
+    const src = (registry.entries || []).find((e) => e && e.id === it.sourceId);
+    return canPublishFromSource(src, legalRegistry).ok;
   });
 
   const beforeWindow = items.length;
