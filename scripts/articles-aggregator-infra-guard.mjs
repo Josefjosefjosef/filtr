@@ -83,6 +83,10 @@ async function ghApi(pathname) {
 }
 
 async function checkStaleArticles(nowMs) {
+  if (!isCommercialAggregationActive()) {
+    log("stale_article_guard SKIP (info-system cutover: commercialAggregationActive=false)");
+    return { ok: true, skipped: true };
+  }
   log(`stale_article_guard url=${ARTICLES_JSON_URL} limit_hours=${MAX_GENERATED_AGE_H}`);
   const res = await fetch(ARTICLES_JSON_URL, {
     headers: { Accept: "application/json", "Cache-Control": "no-cache" },
@@ -282,6 +286,10 @@ async function checkCancelledDeployGuard(nowMs) {
 }
 
 function runFreshnessGuard() {
+  if (!isCommercialAggregationActive()) {
+    log("freshness_guard SKIP (info-system cutover: commercialAggregationActive=false)");
+    return true;
+  }
   log("freshness_guard delegating to articles-aggregator-freshness-guard.mjs");
   const script = path.join(root, "scripts", "articles-aggregator-freshness-guard.mjs");
   const res = spawnSync(process.execPath, [script], {
