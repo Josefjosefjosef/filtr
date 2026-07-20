@@ -77,13 +77,13 @@ function staticGate() {
   must(index.includes("iu-prehled-dne-v1.css?v=" + CACHE_BUST), "index:css_cache_bust");
   must(index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "index:js_cache_bust");
 
-  const active = (registry.entries || []).filter((e) => e && e.productionActive && e.productionApproved !== false);
-  const ministries = active.filter(
+  const allEntries = registry.entries || [];
+  const ministries = allEntries.filter(
     (e) => String(e.group || "") === "ministerstva" || /ministerstvo/i.test(String(e.label || ""))
   );
   must(ministries.some((e) => e.id === "mzcr"), "registry:mzcr_is_ministry_by_label");
   must(ministries.length >= 5, "registry:ministries_min_5");
-  const mzcrDup = active.filter((e) => /ministerstvo zdravotnictví/i.test(String(e.label || "")));
+  const mzcrDup = allEntries.filter((e) => /ministerstvo zdravotnictví/i.test(String(e.label || "")));
   must(mzcrDup.length === 1, "registry:mzcr_not_duplicate");
 
   return { pass: fails.length === 0, fails: fails.slice() };

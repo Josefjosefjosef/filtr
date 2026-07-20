@@ -470,7 +470,7 @@ async function main() {
     delete chron.timeSourceHint;
     const src = (registry.entries || []).find((e) => e && e.id === chron.sourceId);
     const legalGate = canPublishFromSource(src, legalRegistry);
-    return attachLegalProvenance(chron, src, legalGate.legal || null);
+    return attachLegalProvenance(chron, src, legalGate.legal || null, legalRegistry);
   });
 
   // Drop any item whose source is no longer legally publishable (stale in-memory mix)

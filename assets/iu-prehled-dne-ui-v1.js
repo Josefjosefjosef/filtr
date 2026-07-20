@@ -191,12 +191,18 @@ function isMinistryEntry(e) {
   return false;
 }
 
-function activeSources(registry) {
-  return (registry.entries || []).filter((e) => e && e.productionActive && e.productionApproved !== false);
+/** Sources shown in Nastavení (taxonomy). Includes legally paused official bodies so structure stays stable. */
+function settingsCatalogSources(registry) {
+  return (registry.entries || []).filter((e) => {
+    if (!e) return false;
+    const st = String(e.legalStatus || "");
+    if (st === "rejected") return false;
+    return true;
+  });
 }
 
 function sourcesForNamedGroup(registry, groupDef) {
-  const all = activeSources(registry);
+  const all = settingsCatalogSources(registry);
   const gset = new Set(groupDef.groups || []);
   const idSet = new Set(groupDef.sourceIds || []);
   if (groupDef.id === "ministerstva") {
@@ -210,7 +216,7 @@ function sourcesForNamedGroup(registry, groupDef) {
 }
 
 function standaloneSources(registry) {
-  const all = activeSources(registry);
+  const all = settingsCatalogSources(registry);
   const claimed = new Set();
   for (const g of SOURCE_GROUPS) {
     for (const e of sourcesForNamedGroup(registry, g)) claimed.add(e.id);
@@ -221,7 +227,7 @@ function standaloneSources(registry) {
 }
 
 function allSelectableSourceIds(registry) {
-  return activeSources(registry).map((e) => String(e.id));
+  return settingsCatalogSources(registry).map((e) => String(e.id));
 }
 
 function clonePrefs(p) {

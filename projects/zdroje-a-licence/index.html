@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Zdroje a licence — infoUzel.cz</title>
+    <meta
+      name="description"
+      content="Produkčně používané datové zdroje Přehledu dne, jejich licence a atribuce."
+    />
+    <style>
+      :root {
+        --bg: #f6f8fb;
+        --card: #ffffff;
+        --text: #0f172a;
+        --muted: #64748b;
+        --line: #e2e8f0;
+        --accent: #0f766e;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: linear-gradient(180deg, #eef7f5 0%, var(--bg) 40%, #fff 100%);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      main {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 24px 16px 64px;
+      }
+      h1 { font-size: 1.75rem; margin: 0 0 8px; }
+      .lead { color: var(--muted); margin: 0 0 24px; }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 16px;
+        margin: 0 0 14px;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+      }
+      .card h2 { margin: 0 0 8px; font-size: 1.1rem; }
+      .meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
+      .pill {
+        font-size: 0.78rem;
+        font-weight: 650;
+        color: var(--accent);
+        background: rgba(15, 118, 110, 0.1);
+        border-radius: 999px;
+        padding: 4px 10px;
+      }
+      dl { margin: 0; display: grid; gap: 8px; }
+      dt { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+      dd { margin: 0; word-break: break-word; }
+      a { color: #0e7490; }
+      .err { color: #b91c1c; }
+      .foot { margin-top: 28px; color: var(--muted); font-size: 0.9rem; }
+      @media (min-width: 768px) {
+        main { padding: 40px 24px 80px; }
+        h1 { font-size: 2rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Zdroje a licence</h1>
+      <p class="lead">
+        Přehled produkčně používaných zdrojů pro Přehled dne na infoUzel.cz. Zobrazujeme pouze schválené
+        zdroje s doloženou licencí pro komerční provoz webu s reklamou.
+      </p>
+      <div id="iuLegalSourcesRoot" aria-live="polite">Načítám registr…</div>
+      <p class="foot">
+        Interní právní poznámky a provozní detaily se na této stránce nezveřejňují. Poslední kontrola se
+        načítá z produkčního registru.
+      </p>
+    </main>
+    <script type="module">
+      const root = document.getElementById("iuLegalSourcesRoot");
+      const APPROVED = new Set([
+        "APPROVED_CC0",
+        "APPROVED_CC_BY",
+        "APPROVED_OPEN_DATA",
+        "APPROVED_WITH_ATTRIBUTION",
+        "APPROVED_WITH_SPECIFIC_CONDITIONS",
+      ]);
+      try {
+        const res = await fetch("../data/info_events/legal_source_registry.json", { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const legal = await res.json();
+        const tpls = legal.attributionTemplates || {};
+        const rows = (legal.entries || []).filter(
+          (e) => e && e.productionSourceActive === true && APPROVED.has(e.status)
+        );
+        if (!rows.length) {
+          root.innerHTML = "<p class=\"err\">Momentálně není publikován žádný produkčně schválený zdroj.</p>";
+        } else {
+          root.innerHTML = rows
+            .map((e) => {
+              let attr = "";
+              for (const v of Object.values(tpls)) {
+                if (v && v.id === e.attributionTemplateId) {
+                  attr = String(v.template || "")
+                    .replace("{institution}", e.institution || "")
+                    .replace("{datasetLabel}", e.datasetLabel || "")
+                    .replace("{licenseLabel}", e.licenseLabel || "")
+                    .replace("{licenseUrl}", e.licenseUrl || "")
+                    .replace("{sourceUrl}", e.distributionUrl || e.catalogUrl || "");
+                }
+              }
+              const mods = Array.isArray(e.transformations) ? e.transformations.join(", ") : "normalizace metadat";
+              return (
+                "<article class=\"card\">" +
+                "<h2>" +
+                escapeHtml(e.institution || e.sourceId) +
+                "</h2>" +
+                "<div class=\"meta\">" +
+                "<span class=\"pill\">" +
+                escapeHtml(e.status) +
+                "</span>" +
+                "<span class=\"pill\">" +
+                escapeHtml(e.licenseLabel || "licence") +
+                "</span>" +
+                "</div>" +
+                "<dl>" +
+                "<div><dt>Datová sada</dt><dd>" +
+                escapeHtml(e.datasetLabel || "—") +
+                "</dd></div>" +
+                "<div><dt>Účel</dt><dd>Informační položky v Přehledu dne (link-only / schválená metadata)</dd></div>" +
+                "<div><dt>Původní zdroj</dt><dd>" +
+                linkOrDash(e.distributionUrl || e.catalogUrl) +
+                "</dd></div>" +
+                "<div><dt>Licence</dt><dd>" +
+                linkOrDash(e.licenseUrl, e.licenseLabel) +
+                "</dd></div>" +
+                "<div><dt>Atribuce</dt><dd>" +
+                escapeHtml(attr || "—") +
+                "</dd></div>" +
+                "<div><dt>Úpravy</dt><dd>" +
+                escapeHtml(mods) +
+                "</dd></div>" +
+                "<div><dt>Poslední právní ověření</dt><dd>" +
+                escapeHtml(e.lastReviewedAt || "—") +
+                "</dd></div>" +
+                "</dl></article>"
+              );
+            })
+            .join("");
+        }
+      } catch (err) {
+        root.innerHTML = "<p class=\"err\">Registr se nepodařilo načíst.</p>";
+        console.error(err);
+      }
+      function escapeHtml(s) {
+        return String(s || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\"/g, "&quot;");
+      }
+      function linkOrDash(url, label) {
+        if (!url) return "—";
+        return "<a href=\"" + escapeHtml(url) + "\" rel=\"noopener noreferrer\" target=\"_blank\">" + escapeHtml(label || url) + "</a>";
+      }
+    </script>
+  </body>
+</html>

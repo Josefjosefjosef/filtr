@@ -43,6 +43,22 @@ export const ALL_STATUSES = Object.freeze([
   "REMOVED",
 ]);
 
+const REQUIRED_FLAGS = Object.freeze([
+  "commercialUseAllowed",
+  "adSupportedUseAllowed",
+  "sponsoredContentContextAllowed",
+  "automationAllowed",
+  "storageAllowed",
+  "cacheAllowed",
+  "publicDisplayAllowed",
+  "modificationAllowed",
+  "normalizationAllowed",
+  "metadataEnrichmentAllowed",
+  "combinationAllowed",
+  "aggregationAllowed",
+  "crossSourceDisplayAllowed",
+]);
+
 export function loadLegalRegistry(repoRoot = REPO) {
   const p = path.join(repoRoot, "projects/data/info_events/legal_source_registry.json");
   return JSON.parse(fs.readFileSync(p, "utf8"));
@@ -62,14 +78,36 @@ export function legalEntryBySourceId(legal, sourceId) {
   return (legal.entries || []).find((e) => e && String(e.sourceId) === id) || null;
 }
 
+function isHttpsUrl(v) {
+  try {
+    const u = new URL(String(v || ""));
+    return u.protocol === "https:";
+  } catch (_) {
+    return false;
+  }
+}
+
+function hasExternalEvidence(legal) {
+  const ev = Array.isArray(legal.evidence) ? legal.evidence : [];
+  return ev.some((e) => {
+    if (typeof e === "string") return isHttpsUrl(e);
+    if (e && typeof e === "object") return isHttpsUrl(e.url);
+    return false;
+  });
+}
+
+function reauditOk(legal, nowMs = Date.now()) {
+  if (legal.suspended === true) return false;
+  const due = Date.parse(String(legal.reauditDue || ""));
+  if (!Number.isFinite(due)) return false;
+  return due >= nowMs;
+}
+
 /**
- * Production ingest allowed only when:
- * - source.productionActive && productionApproved && legalStatus==="approved" (existing gate)
- * - AND legal registry entry exists with APPROVED_* status
- * - AND commercialUseAllowed / adSupportedUseAllowed / combinationAllowed are true
- * - AND hardGate enabled (default true)
+ * Production ingest allowed only when source registry + legal registry pass hard gate.
+ * Phase-2: requires concrete licenseUrl, evidence URL(s), field allowlist, fresh reaudit.
  */
-export function canPublishFromSource(sourceEntry, legalRegistry) {
+export function canPublishFromSource(sourceEntry, legalRegistry, nowMs = Date.now()) {
   const gate = (legalRegistry && legalRegistry.gate) || {};
   const hard = gate.enforceHard !== false;
   if (!sourceEntry) return { ok: false, reason: "missing_source" };
@@ -80,26 +118,61 @@ export function canPublishFromSource(sourceEntry, legalRegistry) {
   if (!legal) {
     return { ok: false, reason: hard ? "missing_legal_entry" : "missing_legal_entry_soft" };
   }
+  if (legal.suspended === true) return { ok: false, reason: "suspended" };
   if (!isApprovedStatus(legal.status)) {
     return { ok: false, reason: "legal_status_not_approved:" + legal.status };
   }
-  if (legal.commercialUseAllowed !== true) return { ok: false, reason: "commercial_use_not_allowed" };
-  if (legal.adSupportedUseAllowed !== true) return { ok: false, reason: "ad_supported_use_not_allowed" };
-  if (legal.combinationAllowed !== true) return { ok: false, reason: "combination_not_allowed" };
-  if (legal.automationAllowed !== true) return { ok: false, reason: "automation_not_allowed" };
-  if (legal.storageAllowed !== true) return { ok: false, reason: "storage_not_allowed" };
-  if (legal.publicDisplayAllowed !== true) return { ok: false, reason: "public_display_not_allowed" };
-  if (legal.modificationAllowed !== true) return { ok: false, reason: "modification_not_allowed" };
+  for (const flag of REQUIRED_FLAGS) {
+    if (legal[flag] !== true) return { ok: false, reason: "flag_false:" + flag };
+  }
   if (legal.paidLicenseRequired === true) return { ok: false, reason: "paid_license_required" };
   if (legal.shareAlike === true && legal.shareAlikeCompatibleWithInfoUzel !== true) {
     return { ok: false, reason: "sharealike_incompatible" };
+  }
+  if (legal.odblOrShareAlikeRisk === true && legal.shareAlikeCompatibleWithInfoUzel !== true) {
+    return { ok: false, reason: "odbl_sharealike_risk" };
+  }
+  if (!isHttpsUrl(legal.licenseUrl)) return { ok: false, reason: "missing_license_url" };
+  if (!isHttpsUrl(legal.termsUrl)) return { ok: false, reason: "missing_terms_url" };
+  if (!hasExternalEvidence(legal)) return { ok: false, reason: "missing_external_evidence" };
+  if (!Array.isArray(legal.fieldAllowlist) || legal.fieldAllowlist.length < 2) {
+    return { ok: false, reason: "missing_field_allowlist" };
+  }
+  if (!legal.datasetId || !legal.distributionId) return { ok: false, reason: "missing_dataset_distribution_ids" };
+  if (!reauditOk(legal, nowMs)) return { ok: false, reason: "reaudit_expired_or_missing" };
+  if (String(legal.status) === "APPROVED_WITH_SPECIFIC_CONDITIONS") {
+    const cond = Array.isArray(legal.specificConditions) ? legal.specificConditions : [];
+    if (cond.length < 1) return { ok: false, reason: "specific_conditions_empty" };
+    if (!isHttpsUrl(legal.conditionsEvidenceUrl) && !hasExternalEvidence(legal)) {
+      return { ok: false, reason: "specific_conditions_unproven" };
+    }
   }
   if (!hard) return { ok: true, reason: "soft_pass", legal };
   return { ok: true, reason: "approved", legal };
 }
 
-export function attachLegalProvenance(item, sourceEntry, legalEntry) {
+export function renderAttribution(legalEntry, item, templates) {
+  const tpls = templates || {};
+  const id = legalEntry && legalEntry.attributionTemplateId;
+  let tpl = null;
+  for (const v of Object.values(tpls)) {
+    if (v && v.id === id) tpl = v;
+  }
+  if (!tpl || !tpl.template) return "";
+  const map = {
+    institution: (legalEntry && (legalEntry.institution || legalEntry.providerLabel)) || "",
+    datasetLabel: (legalEntry && legalEntry.datasetLabel) || "",
+    licenseLabel: (legalEntry && legalEntry.licenseLabel) || "",
+    licenseUrl: (legalEntry && legalEntry.licenseUrl) || "",
+    sourceUrl: (item && (item.url || item.originalUrl)) || (legalEntry && legalEntry.distributionUrl) || "",
+    provider: (legalEntry && legalEntry.providerLabel) || "",
+  };
+  return String(tpl.template).replace(/\{([a-zA-Z]+)\}/g, (_, k) => (map[k] != null ? String(map[k]) : ""));
+}
+
+export function attachLegalProvenance(item, sourceEntry, legalEntry, legalRegistry) {
   const out = Object.assign({}, item || {});
+  const templates = (legalRegistry && legalRegistry.attributionTemplates) || {};
   out.legal = {
     providerId: sourceEntry && sourceEntry.id,
     datasetId: legalEntry && legalEntry.datasetId,
@@ -107,11 +180,28 @@ export function attachLegalProvenance(item, sourceEntry, legalEntry) {
     legalRecordVersion: legalEntry && legalEntry.recordVersion,
     approvalStatus: legalEntry && legalEntry.status,
     attributionTemplateId: legalEntry && legalEntry.attributionTemplateId,
+    attributionText: renderAttribution(legalEntry, out, templates),
     fetchedAt: out.fetchedAt || out.firstSeenByInfoUzel || new Date().toISOString(),
     sourceUrl: out.url || out.originalUrl || "",
-    modifications: "normalized-metadata-link-only",
+    modifications: Array.isArray(legalEntry && legalEntry.transformations)
+      ? legalEntry.transformations
+      : ["normalized-metadata-link-only"],
+    fieldAllowlist: (legalEntry && legalEntry.fieldAllowlist) || [],
   };
   return out;
 }
 
-export { LEGAL_PATH, SOURCE_PATH, REPO };
+export function applyFieldAllowlist(item, legalEntry) {
+  const allow = new Set((legalEntry && legalEntry.fieldAllowlist) || []);
+  if (!allow.size) return null;
+  const out = {};
+  for (const k of allow) {
+    if (item && Object.prototype.hasOwnProperty.call(item, k)) out[k] = item[k];
+  }
+  // Always keep id/sourceId for pipeline integrity when present
+  if (item && item.id != null) out.id = item.id;
+  if (item && item.sourceId != null) out.sourceId = item.sourceId;
+  return out;
+}
+
+export { LEGAL_PATH, SOURCE_PATH, REPO, REQUIRED_FLAGS };
