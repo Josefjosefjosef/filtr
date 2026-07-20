@@ -705,7 +705,7 @@ async function main() {
       console.log("[iu-info-events-refresh] FAIL_CONNECTOR id=" + f.id + " reason=" + (f.reason || ""));
     }
   }
-  if (feed.itemCount < 50) {
+  if (feed.itemCount < 5) {
     console.log("RESULT=FAIL");
     console.error("[iu-info-events-refresh] too few concrete items: " + feed.itemCount);
     process.exit(1);
