@@ -20,8 +20,8 @@ Own, serverless, privacy-conservative analytics for InfoUzel.cz.
 | CI/CD | GitHub Actions |
 | Website hosting | **GitHub Pages** (existing production) |
 | Analytics backend | **Cloudflare Workers** |
-| Aggregate DB | **Cloudflare D1** |
-| Public stats cache | Cloudflare Cache / `Cache-Control` on `/v1/public/stats` |
+| Aggregate DB | Cloudflare Cache API (default) / optional D1 when token has D1:Edit |
+| Public stats cache | `Cache-Control` on `/v1/public/stats` |
 
 The product site remains on GitHub Pages. Cloudflare Pages is not required for this phase; Workers+D1 provide the serverless analytics backend that scales independently.
 
