@@ -167,6 +167,9 @@ if (!/buildFeedIndex|memo|homeKraj|myRegionOnly/.test(core)) {
 if (!/data-iu-ui=\"v6-clean\"|open-settings|settings-close|data-mode=\"hidden\"|unhide/.test(ui)) {
   fails.push("ui:v6_clean_shell_missing");
 }
+if (!/iuPrehledDne__axis|iuPrehledDne__dot|iu-pd-dot/.test(ui)) {
+  fails.push("ui:timeline_axis_missing");
+}
 if (/settings-save|Uložit nastavení|settings-cancel|Další instituce|label:\s*\"Kraje\"/.test(ui)) {
   fails.push("ui:settings_v6_regression_markers");
 }

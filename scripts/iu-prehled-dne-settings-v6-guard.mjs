@@ -22,7 +22,7 @@ const { chromium } = require("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8967", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/?section=media`;
-const CACHE_BUST = "info-system-v6-settings-fix-20260720b";
+const CACHE_BUST = "info-system-v6-timeline-restore-20260720";
 const fails = [];
 
 function must(cond, id) {
@@ -55,8 +55,13 @@ function staticGate() {
   must(/standaloneSources/.test(ui), "ui:standalone_sources");
   must(/document\.body\.appendChild|mountSettingsOverlay/.test(ui), "ui:settings_body_portal");
   must(/SECTION_ORDER/.test(ui) && /temata/.test(ui) && /zdroje/.test(ui) && /lokalita/.test(ui), "ui:section_order");
+  must(/iuPrehledDne__axis/.test(ui) && /iuPrehledDne__dot/.test(ui), "ui:timeline_axis_markup");
+  must(/sectionColor|iu-pd-dot/.test(ui), "ui:timeline_dot_color");
+  must(/iuPrehledDne__timeline/.test(ui), "ui:timeline_list");
 
   must(/\.iuPdBtn--settings/.test(css), "css:green_btn");
+  must(/iuPrehledDne__axis::before/.test(css) && /\.iuPrehledDne__dot\b/.test(css), "css:timeline_axis");
+  must(/\.iuPdCard__actions[\s\S]*justify-content:\s*flex-end/.test(css), "css:actions_right");
   must(/#16a34a|#15803d/.test(css), "css:green_color");
   must(/iu-pd-settings-open/.test(css), "css:body_lock");
   must(/--bottom-nav-height/.test(css), "css:bottom_nav");
