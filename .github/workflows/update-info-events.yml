@@ -42,6 +42,9 @@ jobs:
       - name: Guard
         run: node scripts/iu-info-system-v1-guard.mjs
 
+      - name: Legal whitelist guard
+        run: node scripts/iu-info-events-legal-whitelist-guard.mjs
+
       - name: Prehled dne settings v6 guard
         run: node scripts/iu-prehled-dne-settings-v6-guard.mjs
 

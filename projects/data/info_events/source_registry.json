@@ -926,9 +926,9 @@
       "legalStatus": "approved",
       "technicalStatus": "ok",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-19T16:05:47.109Z",
+      "lastAuditAt": "2026-07-20T02:00:00.000Z",
       "productionApproved": true,
-      "productionActive": true,
+      "productionActive": false,
       "monitoring": {
         "availability": "ok",
         "freshness": "stale_or_empty",
@@ -955,19 +955,20 @@
       "url": "https://ct24.ceskatelevize.cz/",
       "feedUrl": "https://ct24.ceskatelevize.cz/rss/hlavni-zpravy",
       "defaultSectionGroup": "verejnopravni-media",
-      "notes": "Veřejnoprávní RSS ČT24.",
-      "connectorStatus": "PRODUCTION_ACTIVE",
+      "notes": "Veřejnoprávní RSS ČT24. Suspended 2026-07-20 pending legal whitelist (LEGAL_REVIEW_REQUIRED).",
+      "connectorStatus": "REQUIRES_MANUAL_LEGAL_REVIEW",
       "lane": "verejnopravni-media",
       "connectorType": "rss",
-      "orgType": "public-media"
+      "orgType": "public-media",
+      "blocker": "LEGAL_REVIEW_REQUIRED: veřejnoprávní RSS bez doložené open licence / oprávnění ke komerční agregaci na webu s reklamou"
     },
     {
       "legalStatus": "approved",
       "technicalStatus": "down",
       "periodicityMin": 30,
-      "lastAuditAt": "2026-07-19T16:05:47.109Z",
+      "lastAuditAt": "2026-07-20T02:00:00.000Z",
       "productionApproved": true,
-      "productionActive": true,
+      "productionActive": false,
       "monitoring": {
         "availability": "down",
         "freshness": "ok",
@@ -1003,11 +1004,12 @@
         "https://www.irozhlas.cz/rss/irozhlas/section/sport"
       ],
       "defaultSectionGroup": "verejnopravni-media",
-      "notes": "Veřejnoprávní RSS iROZHLAS (hlavní + sekce).",
-      "connectorStatus": "PRODUCTION_ACTIVE",
+      "notes": "Veřejnoprávní RSS iROZHLAS (hlavní + sekce). Suspended 2026-07-20 pending legal whitelist (LEGAL_REVIEW_REQUIRED).",
+      "connectorStatus": "REQUIRES_MANUAL_LEGAL_REVIEW",
       "lane": "verejnopravni-media",
       "connectorType": "rss",
-      "orgType": "public-media"
+      "orgType": "public-media",
+      "blocker": "LEGAL_REVIEW_REQUIRED: veřejnoprávní RSS bez doložené open licence / oprávnění ke komerční agregaci na webu s reklamou"
     },
     {
       "legalStatus": "approved",

@@ -25,6 +25,9 @@ mustExist("assets/iu-prehled-dne-v1.css");
 mustExist("scripts/iu-info-events-lib.mjs");
 mustExist("scripts/iu-info-events-refresh.mjs");
 mustExist("scripts/iu-info-events-v2.mjs");
+mustExist("projects/data/info_events/legal_source_registry.json");
+mustExist("scripts/iu-info-events-legal-registry-lib.mjs");
+mustExist("docs/info-system-v1/12-legal-whitelist-audit.md");
 
 const taxonomy = JSON.parse(fs.readFileSync(path.join(DIR, "taxonomy.json"), "utf8"));
 const registry = JSON.parse(fs.readFileSync(path.join(DIR, "source_registry.json"), "utf8"));
@@ -181,6 +184,41 @@ if (!/migrateLocalStateOnce|sanitizeUserPrefs|nejnovejsi|LS_SCHEMA_VERSION = 6|u
 }
 if (!/iu\.infoEvents\.prefs\.v1/.test(core)) {
   fails.push("core:prefs_localstorage_key");
+}
+
+// Legal whitelist registry + publish gate contract
+{
+  const legalPath = path.join(DIR, "legal_source_registry.json");
+  if (!fs.existsSync(legalPath)) {
+    fails.push("missing:legal_source_registry");
+  } else {
+    const legal = JSON.parse(fs.readFileSync(legalPath, "utf8"));
+    if (!legal.gate || legal.gate.enforceHard !== true) fails.push("legal:gate_enforceHard");
+    const approved = new Set([
+      "APPROVED_CC0",
+      "APPROVED_CC_BY",
+      "APPROVED_OPEN_DATA",
+      "APPROVED_WITH_ATTRIBUTION",
+      "APPROVED_WITH_SPECIFIC_CONDITIONS",
+    ]);
+    const byId = new Map((legal.entries || []).map((e) => [e.sourceId, e]));
+    for (const e of registry.entries || []) {
+      if (!(e.productionActive && e.productionApproved && e.legalStatus === "approved")) continue;
+      const L = byId.get(e.id);
+      if (!L) fails.push("legal:missing_entry:" + e.id);
+      else if (!approved.has(L.status)) fails.push("legal:active_not_approved:" + e.id + ":" + L.status);
+      else if (L.commercialUseAllowed !== true || L.adSupportedUseAllowed !== true || L.combinationAllowed !== true) {
+        fails.push("legal:active_flags:" + e.id);
+      }
+    }
+    for (const id of ["ct24", "irozhlas"]) {
+      const e = (registry.entries || []).find((x) => x.id === id);
+      if (e && e.productionActive) fails.push("legal:public_media_active:" + id);
+    }
+  }
+  if (!/canPublishFromSource|loadLegalRegistry/.test(fs.readFileSync(path.join(REPO, "scripts/iu-info-events-refresh.mjs"), "utf8"))) {
+    fails.push("refresh:legal_gate_missing");
+  }
 }
 
 const monitoring = JSON.parse(fs.readFileSync(path.join(DIR, "monitoring.json"), "utf8"));
