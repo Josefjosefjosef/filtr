@@ -98,7 +98,10 @@
     }
   }
 
-  /** PR-1 stub — loads nothing; future Umami gated here */
+  /**
+   * Consent gate for InfoUzel Analytics (own Worker; no external vendors).
+   * Real emit lives in assets/iu-analytics-client.js which replaces these hooks after load.
+   */
   function iuAnalyticsInit() {
     if (!isAnalyticsGranted()) {
       try {
@@ -107,12 +110,20 @@
       return;
     }
     try {
-      window.__IU_ANALYTICS_ACTIVE__ = false;
-    } catch (_) {}
+      // Client script sets true when emit is armed.
+      window.__IU_ANALYTICS_ACTIVE__ = !!(window.iuAnalytics && window.iuAnalytics.isActive && window.iuAnalytics.isActive());
+    } catch (_) {
+      try {
+        window.__IU_ANALYTICS_ACTIVE__ = false;
+      } catch (_) {}
+    }
   }
 
   function iuAnalyticsTeardown() {
     try {
+      if (window.iuAnalytics && typeof window.iuAnalytics.flush === "function") {
+        /* client teardown clears queue */
+      }
       window.__IU_ANALYTICS_ACTIVE__ = false;
     } catch (_) {}
   }
