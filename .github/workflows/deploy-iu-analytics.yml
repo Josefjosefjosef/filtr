@@ -63,7 +63,7 @@ jobs:
           BASE="https://infouzel-analytics.josef-zmrhal.workers.dev"
           # workers.dev can 404 for a few seconds right after publish
           ok=0
-          for i in 1 2 3 4 5 6 7 8 9 10; do
+          for _ in 1 2 3 4 5 6 7 8 9 10; do
             if curl -fsS "$BASE/health" >/tmp/iu-analytics-health.json; then
               ok=1
               break
