@@ -18,12 +18,21 @@ Own, serverless, privacy-conservative analytics for InfoUzel.cz.
 |-------|------------|
 | Source | GitHub (`Josefjosefjosef/filtr`) |
 | CI/CD | GitHub Actions |
-| Website hosting | **GitHub Pages** (existing production) |
+| Website hosting | **GitHub Pages** |
 | Analytics backend | **Cloudflare Workers** |
-| Aggregate DB | Workers KV (preferred) / Cache API fallback / optional D1 when token has D1:Edit |
-| Public stats cache | `Cache-Control` on `/v1/public/stats` (~60s) |
+| Aggregate DB (source of truth) | **Cloudflare D1** (`iu-analytics`, binding `DB`) |
+| Public response cache | HTTP `Cache-Control` on `GET /v1/public/stats` (~60s) only |
+| Admin / ads APIs | `Cache-Control: no-store` |
 
-The product site remains on GitHub Pages. Cloudflare Pages is not required for this phase; Workers + KV/Cache provide the serverless analytics backend that scales independently.
+Cloudflare Cache API and Workers KV are **not** used as durable aggregate stores.  
+Cache-as-database and KV-as-database fallbacks were removed after cutover.
+
+### D1 cutover
+
+- Previous probe/test aggregates lived only in ephemeral Cache API colos.
+- Those values are **not** migrated into D1 (not reliable historical truth).
+- D1 starts clean from the production cutover deploy that first reports `storageMode: "d1"`.
+- Days are stored as **UTC** calendar dates (`YYYY-MM-DD`). Public dashboard uses the same day keys (no local TZ rewrite in v1).
 
 ## Data flow
 
@@ -34,20 +43,51 @@ Frontend (assets/iu-analytics-client.js)
   → Cloudflare Worker POST /v1/ingest
   → Privacy Guard (server allowlist, crawler reject, forbidden keys)
   → Anti Fraud Guard (burst heuristics; no IP persistence)
-  → Aggregation → Workers KV (or Cache API fallback)
-  → GET /v1/public/stats → public dashboard
-  → GET /v1/admin/overview + /v1/ads/report → admin / advertiser reports
+  → Aggregation → Cloudflare D1 (atomic UPSERT counters)
+  → GET /v1/public/stats (optional short HTTP cache) → public dashboard
+  → GET /v1/admin/overview + /v1/ads/report → admin / advertiser reports (no-store)
 ```
+
+## Schema & migrations
+
+Versioned SQL: `cloudflare/iu-analytics/migrations/0001_init.sql`
+
+Tables (aggregate only):
+
+- `daily_traffic` — visits / page_views / public_section_views / private_tools_opens by day + device
+- `daily_sections` — public section views
+- `daily_ads` — dynamic campaign/placement/section/slot/device counters + valid/suspicious clicks
+- `daily_performance` — anonymous metric sums
+- `daily_errors` — allowlisted error_code counts
+- `ingest_audit` — accepted / rejected / suspicious counts
+- `campaign_meta` — optional advertiser labels (admin only; never on public page)
+- `storage_meta` — cutover markers
+
+Indexes cover day ranges, campaign/placement/section filters, and section popularity.
+
+## Health & D1 failure mode
+
+`GET /health` returns `storageMode: "d1"` and `ok: true` only after a live `SELECT 1` against the bound D1 database.
+
+If the D1 binding is missing or unreachable:
+
+- health → `503`, `storageMode: "unavailable"`
+- ingest / public / admin → `503` (no silent Cache fallback as a database)
 
 ## APIs
 
 | API | Path | Auth | Cache |
 |-----|------|------|-------|
 | Health | `GET /health` | none | none |
-| Ingest | `POST /v1/ingest` | none (consent enforced client-side; server validates payload) | no-store |
-| Public stats | `GET /v1/public/stats` | none | public, ~60s |
+| Ingest | `POST /v1/ingest` | none (consent client-side; server validates) | no-store |
+| Public stats | `GET /v1/public/stats` | none | public, ~60s HTTP only |
 | Admin overview | `GET /v1/admin/overview` | Bearer `ADMIN_TOKEN` | no-store |
 | Ad reporting | `GET /v1/ads/report` | Bearer `ADMIN_TOKEN` | no-store |
+
+### CTR
+
+`ctr = valid_clicks / impressions` as a **ratio** in `[0, 1]` (four decimal places).  
+UI may display it as a percentage by multiplying by 100. Division by zero → `0`.
 
 ## Allowlisted events
 
@@ -58,22 +98,17 @@ Ad fields only: `campaign_id`, `placement_id`, `section_id`, `slot_type`, `devic
 ## Dynamic ads model
 
 Tables are keyed by free-form `campaign_id` + `placement_id` (+ section/slot/device/day).  
-Adding a new placement does **not** require schema or architecture changes.  
-Supported slot_type vocabulary includes banner, sponsored_article, native, video, partner_box, recommended, affiliate, premium_partnership, other.
+Adding a new placement does **not** require schema or architecture changes.
 
 ## Privacy & legal posture
 
 - Consent voluntary, informed, withdrawable; not a condition of using the site
 - Default: analytics denied
-- Revocation immediately stops client emit (`iuAnalyticsTeardown`)
-- IP may exist transiently in Cloudflare edge logs (infrastructure), but is **never written to the analytics store (KV/Cache/D1)**
-- Any future IP-hash anti-abuse mechanism must be separate, disabled, and legally reviewed first
+- Revocation immediately stops client emit (`iuAnalyticsTeardown`) and clears the outbound queue
+- IP may exist transiently in Cloudflare edge logs (infrastructure), but is **never written to D1**
 - Public dashboard never shows campaign commercial detail
 - Audits section shows honest “Čeká na dokončení.” until real audits exist
-
-## Scale target
-
-Worker + KV/Cache aggregate upserts are designed for 100k–1M daily visits without architecture change. Horizontal scaling is Cloudflare’s; write path is O(1) upserts per event type. D1 remains optional when the API token gains D1:Edit.
+- Admin token: Worker secret + optional browser `sessionStorage` only (never localStorage / URL / repo)
 
 ## Deploy
 
@@ -82,21 +117,25 @@ cloudflare/iu-analytics/
 .github/workflows/deploy-iu-analytics.yml
 ```
 
-Secrets: `CLOUDFLARE_API_TOKEN`, worker secret `ADMIN_TOKEN`.
+Required secret: `CLOUDFLARE_API_TOKEN` with **Account → D1 → Edit** and Workers Scripts Edit.  
+Optional override: `CLOUDFLARE_D1_API_TOKEN` (same scopes) if the primary token must stay Workers-only.  
+Optional: `IU_ANALYTICS_ADMIN_TOKEN` → Worker secret `ADMIN_TOKEN`.
+
+Deploy steps: create/list D1 `iu-analytics` → apply migrations → deploy Worker → probe `storageMode=d1` + ingest roundtrip.
 
 ## Frontend surfaces
 
 - Public: `/projects/statistiky/`
 - Admin: `/projects/statistiky/admin/`
 - InfoCentrum tile: Statistiky a transparentnost
-- Consent layer / privacy settings link to public stats
-- Client: `/assets/iu-analytics-client.js` (loaded after consent module)
+- Client: `/assets/iu-analytics-client.js` (after consent module)
 
-## Guards
+## Guards & tests
 
 - `scripts/iu-analytics-privacy-guard.mjs` — static + behavioral privacy contracts
-- Worker unit tests: `cloudflare/iu-analytics/test/privacy.test.ts`
+- `scripts/iu-analytics-consent-e2e.mjs` — production consent grant/revoke E2E (Playwright)
+- Worker unit tests: `cloudflare/iu-analytics/test/*.test.ts` (privacy + D1 store mock)
 
 ## Out of scope (protected)
 
-Does not modify the info-events aggregator (`projects/data/info_events/**`, `scripts/iu-info-events-*`, `assets/iu-prehled*`, `assets/iu-info-system*`).
+Does not modify the info-events aggregator (`projects/data/info_events/**`, `scripts/iu-info-events-*`, `assets/iu-prehled*`, `assets/iu-info-system*`, PR #7617).

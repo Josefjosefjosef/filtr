@@ -27,6 +27,15 @@ const privacyTs = fs.readFileSync(path.join(ROOT, "cloudflare/iu-analytics/src/p
 const indexTs = fs.readFileSync(path.join(ROOT, "cloudflare/iu-analytics/src/index.ts"), "utf8");
 const schema = fs.readFileSync(path.join(ROOT, "cloudflare/iu-analytics/schema.sql"), "utf8");
 const arch = fs.readFileSync(path.join(ROOT, "docs/InfoUzel-Analytics-Architecture.md"), "utf8");
+const storeTs = fs.readFileSync(path.join(ROOT, "cloudflare/iu-analytics/src/store.ts"), "utf8");
+const migration = fs.readFileSync(path.join(ROOT, "cloudflare/iu-analytics/migrations/0001_init.sql"), "utf8");
+if (!/createD1Store/.test(storeTs)) fail("store:missing_d1_impl");
+if (/createCacheStore|createKvStore/.test(storeTs)) fail("store:cache_or_kv_store_must_be_removed");
+if (!/daily_traffic/.test(migration) || !/daily_ads/.test(migration)) fail("migration:missing_core_tables");
+if (!/CREATE INDEX IF NOT EXISTS idx_ads_campaign/.test(migration)) fail("migration:missing_ad_indexes");
+if (!/d1_binding_missing|d1_unreachable/.test(indexTs)) fail("worker:missing_d1_failure_mode");
+if (!/Cloudflare D1/.test(arch)) fail("docs:d1_source_of_truth_missing");
+if (/Cache API fallback|Workers KV \(preferred\)/.test(arch)) fail("docs:stale_cache_kv_primary_claim");
 
 if (!/iu-analytics-client\.js/.test(index)) fail("index:missing_analytics_client");
 if (!/infouzel-analytics\.josef-zmrhal\.workers\.dev/.test(index)) fail("index:csp_missing_worker");

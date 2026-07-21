@@ -1,8 +1,8 @@
 # InfoUzel Analytics — serverless anonymous aggregate stats (Workers).
 # Site hosting: GitHub Pages. Analytics backend: Cloudflare Workers.
-# Storage: Workers KV (preferred, durable) → Cache API fallback → optional D1 later.
-# Deploy: npm ci && npx wrangler deploy
-# Secret: ADMIN_TOKEN (optional until set)
+# Source of truth: Cloudflare D1 (binding DB). HTTP Cache-Control only for public GET.
+# Deploy workflow injects real database_id + applies migrations before wrangler deploy.
+# Secret: ADMIN_TOKEN
 name = "infouzel-analytics"
 main = "src/index.ts"
 compatibility_date = "2024-11-01"
@@ -14,8 +14,9 @@ enabled = true
 PUBLIC_CACHE_SECONDS = "60"
 CORS_ALLOW_ORIGIN = "*"
 
-# Binding id is injected by deploy workflow (Ensure KV namespace step).
-# Local / missing id → Worker falls back to Cache API store.
-# [[kv_namespaces]]
-# binding = "ANALYTICS_KV"
-# id = "REPLACE_AT_DEPLOY"
+# Placeholder id replaced by deploy workflow after D1 create/list.
+[[d1_databases]]
+binding = "DB"
+database_name = "iu-analytics"
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
