@@ -117,8 +117,9 @@ cloudflare/iu-analytics/
 .github/workflows/deploy-iu-analytics.yml
 ```
 
-Required secret: `CLOUDFLARE_API_TOKEN` with **Account → D1 → Edit** and Workers Scripts Edit.  
-Optional override: `CLOUDFLARE_D1_API_TOKEN` (same scopes) if the primary token must stay Workers-only.  
+Required secret: `CLOUDFLARE_API_TOKEN` with **Account → D1 → Edit** and **Workers Scripts → Edit**.  
+Account API tokens that cannot call User `/memberships` require `account_id` in `wrangler.toml` (and `CLOUDFLARE_ACCOUNT_ID` in CI).  
+Optional override: `CLOUDFLARE_D1_API_TOKEN`.  
 Optional: `IU_ANALYTICS_ADMIN_TOKEN` → Worker secret `ADMIN_TOKEN`.
 
 Deploy steps: create/list D1 `iu-analytics` → apply migrations → deploy Worker → probe `storageMode=d1` + ingest roundtrip.
