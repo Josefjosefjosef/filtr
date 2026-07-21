@@ -130,6 +130,7 @@ Deploy steps: create/list D1 `iu-analytics` → apply migrations → deploy Work
 - Admin: `/projects/statistiky/admin/`
 - InfoCentrum tile: Statistiky a transparentnost
 - Client: `/assets/iu-analytics-client.js` (after consent module)
+- Client flush prefers `navigator.sendBeacon`; if it returns `false` or throws, falls back to `fetch` so events are not silently dropped
 
 ## Guards & tests
 
