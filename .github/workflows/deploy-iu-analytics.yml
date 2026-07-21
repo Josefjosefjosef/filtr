@@ -60,7 +60,21 @@ jobs:
       - name: Probe health + public stats
         run: |
           set -euo pipefail
-          curl -fsS "https://infouzel-analytics.josef-zmrhal.workers.dev/health"
+          BASE="https://infouzel-analytics.josef-zmrhal.workers.dev"
+          # workers.dev can 404 for a few seconds right after publish
+          ok=0
+          for _ in 1 2 3 4 5 6 7 8 9 10; do
+            if curl -fsS "$BASE/health" >/tmp/iu-analytics-health.json; then
+              ok=1
+              break
+            fi
+            sleep 3
+          done
+          if [ "$ok" != "1" ]; then
+            echo "health probe failed after retries"
+            exit 1
+          fi
+          cat /tmp/iu-analytics-health.json
           echo ""
-          curl -fsS "https://infouzel-analytics.josef-zmrhal.workers.dev/v1/public/stats" | head -c 2000
+          curl -fsS "$BASE/v1/public/stats" | head -c 2000
           echo ""
