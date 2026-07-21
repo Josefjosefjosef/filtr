@@ -65,15 +65,18 @@ async function publicStats(store: ReturnType<typeof createStore>, from: string, 
     byDay[row.day] = cur;
   }
   const series = Object.values(byDay).sort((a, b) => a.day.localeCompare(b.day));
-  const devicesMap: Record<string, { device_category: string; visits: number; page_views: number }> = {};
+  const devicesMap: Record<string, { device_category: string; visits: number; page_views: number; activity: number }> = {};
   for (const row of Object.values(blob.traffic)) {
     const cur = devicesMap[row.device_category] || {
       device_category: row.device_category,
       visits: 0,
       page_views: 0,
+      activity: 0,
     };
     cur.visits += row.visits;
     cur.page_views += row.page_views;
+    cur.activity +=
+      row.visits + row.page_views + row.public_section_views + row.private_tools_opens;
     devicesMap[row.device_category] = cur;
   }
   const sectionMap: Record<string, { section_id: string; views: number }> = {};
@@ -122,7 +125,9 @@ async function publicStats(store: ReturnType<typeof createStore>, from: string, 
     yesterday: sumFor(yesterday),
     month: { visits: monthVisits, page_views: monthViews, private_tools_opens: monthPrivate },
     series,
-    devices: Object.values(devicesMap),
+    devices: Object.values(devicesMap)
+      .filter((d) => d.activity > 0)
+      .map(({ device_category, visits, page_views }) => ({ device_category, visits, page_views })),
     topPublicSections,
     privateToolsSummary: {
       label: "Soukromé nástroje – anonymní souhrn",

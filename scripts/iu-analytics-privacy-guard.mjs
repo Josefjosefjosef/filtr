@@ -19,6 +19,7 @@ function fail(m) {
 
 const client = fs.readFileSync(path.join(ROOT, "assets/iu-analytics-client.js"), "utf8");
 const consent = fs.readFileSync(path.join(ROOT, "assets/iu-consent.js"), "utf8");
+const appJs = fs.readFileSync(path.join(ROOT, "assets/app.js"), "utf8");
 const index = fs.readFileSync(path.join(ROOT, "projects/index.html"), "utf8");
 const publicPage = fs.readFileSync(path.join(ROOT, "projects/statistiky/index.html"), "utf8");
 const adminPage = fs.readFileSync(path.join(ROOT, "projects/statistiky/admin/index.html"), "utf8");
@@ -34,6 +35,17 @@ if (!/data-iu-info-section=\"stats\"/.test(index)) fail("index:missing_stats_sec
 
 if (!/isAnalyticsGranted/.test(client)) fail("client:missing_consent_gate");
 if (!/ad_impression/.test(client) || !/ad_click/.test(client)) fail("client:missing_ad_events");
+if (!/privateToolsOpen/.test(client)) fail("client:missing_private_tools_api");
+if ((appJs.match(/iuAnalytics\.privateToolsOpen/g) || []).length < 4) {
+  fail("app:private_tools_open_not_wired");
+}
+if (!/sTodayViews|Dnes \(zobrazení\)/.test(publicPage)) fail("public:missing_page_views_tile");
+if (!/sessionStorage\.getItem\(\"iu\.analytics\.adminToken\"\)/.test(adminPage)) {
+  fail("admin:token_must_use_sessionStorage");
+}
+if (/localStorage\.setItem\(\"iu\.analytics\.adminToken\"/.test(adminPage)) {
+  fail("admin:token_must_not_use_localStorage");
+}
 if (/google-analytics|googletagmanager|gtag\(|facebook\.net|hotjar|clarity|plausible\.io|matomo/i.test(client)) {
   fail("client:external_vendor_forbidden");
 }
@@ -114,7 +126,8 @@ try {
       localStorage.setItem("iu:consent:layer:dismissed:v1", "1");
     } catch (_) {}
   });
-  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.reload({ waitUntil: "load", timeout: 20000 });
+  await page.waitForFunction(() => !!(window.iuConsent && window.iuAnalytics), null, { timeout: 10000 });
   await page.waitForTimeout(800);
   if (posts.length) fail("behavior:emit_without_consent");
 
@@ -152,7 +165,7 @@ try {
   });
   if (!dyn) fail("behavior:dynamic_ad_events_failed");
 
-  await page.goto(`http://127.0.0.1:${PORT}/projects/statistiky/`, { waitUntil: "domcontentloaded" });
+  await page.goto(`http://127.0.0.1:${PORT}/projects/statistiky/`, { waitUntil: "load", timeout: 20000 });
   const title = await page.title();
   if (!/Statistiky/.test(title)) fail("behavior:public_page_title");
   const hasCodex = await page.locator("text=Nesledujeme jednotlivé osoby").count();

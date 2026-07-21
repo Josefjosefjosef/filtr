@@ -54,9 +54,13 @@ export async function applyEvent(
       valid_clicks: valid,
       suspicious_clicks: sus,
     });
-    if (event.type === "ad_click" && suspiciousClickVsImpressions(after.impressions - (imp ? 0 : 0), after.clicks)) {
-      // Already counted; if ratio impossible, mark another suspicious via audit only
+    if (
+      event.type === "ad_click" &&
+      !suspicious &&
+      suspiciousClickVsImpressions(after.impressions, after.clicks)
+    ) {
       suspicious = true;
+      await store.bumpAd(day, keys, { valid_clicks: -valid, suspicious_clicks: 1 });
     }
   }
 

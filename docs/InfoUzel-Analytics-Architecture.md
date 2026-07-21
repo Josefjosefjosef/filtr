@@ -20,10 +20,10 @@ Own, serverless, privacy-conservative analytics for InfoUzel.cz.
 | CI/CD | GitHub Actions |
 | Website hosting | **GitHub Pages** (existing production) |
 | Analytics backend | **Cloudflare Workers** |
-| Aggregate DB | Cloudflare Cache API (default) / optional D1 when token has D1:Edit |
-| Public stats cache | `Cache-Control` on `/v1/public/stats` |
+| Aggregate DB | Workers KV (preferred) / Cache API fallback / optional D1 when token has D1:Edit |
+| Public stats cache | `Cache-Control` on `/v1/public/stats` (~60s) |
 
-The product site remains on GitHub Pages. Cloudflare Pages is not required for this phase; Workers+D1 provide the serverless analytics backend that scales independently.
+The product site remains on GitHub Pages. Cloudflare Pages is not required for this phase; Workers + KV/Cache provide the serverless analytics backend that scales independently.
 
 ## Data flow
 
@@ -34,7 +34,7 @@ Frontend (assets/iu-analytics-client.js)
   → Cloudflare Worker POST /v1/ingest
   → Privacy Guard (server allowlist, crawler reject, forbidden keys)
   → Anti Fraud Guard (burst heuristics; no IP persistence)
-  → Aggregation → Cloudflare D1
+  → Aggregation → Workers KV (or Cache API fallback)
   → GET /v1/public/stats → public dashboard
   → GET /v1/admin/overview + /v1/ads/report → admin / advertiser reports
 ```
@@ -45,7 +45,7 @@ Frontend (assets/iu-analytics-client.js)
 |-----|------|------|-------|
 | Health | `GET /health` | none | none |
 | Ingest | `POST /v1/ingest` | none (consent enforced client-side; server validates payload) | no-store |
-| Public stats | `GET /v1/public/stats` | none | public, ~300s |
+| Public stats | `GET /v1/public/stats` | none | public, ~60s |
 | Admin overview | `GET /v1/admin/overview` | Bearer `ADMIN_TOKEN` | no-store |
 | Ad reporting | `GET /v1/ads/report` | Bearer `ADMIN_TOKEN` | no-store |
 
@@ -66,14 +66,14 @@ Supported slot_type vocabulary includes banner, sponsored_article, native, video
 - Consent voluntary, informed, withdrawable; not a condition of using the site
 - Default: analytics denied
 - Revocation immediately stops client emit (`iuAnalyticsTeardown`)
-- IP may exist transiently in Cloudflare edge logs (infrastructure), but is **never written to D1**
+- IP may exist transiently in Cloudflare edge logs (infrastructure), but is **never written to the analytics store (KV/Cache/D1)**
 - Any future IP-hash anti-abuse mechanism must be separate, disabled, and legally reviewed first
 - Public dashboard never shows campaign commercial detail
 - Audits section shows honest “Čeká na dokončení.” until real audits exist
 
 ## Scale target
 
-Worker + D1 aggregate upserts are designed for 100k–1M daily visits without architecture change. Horizontal scaling is Cloudflare’s; write path is O(1) upserts per event type.
+Worker + KV/Cache aggregate upserts are designed for 100k–1M daily visits without architecture change. Horizontal scaling is Cloudflare’s; write path is O(1) upserts per event type. D1 remains optional when the API token gains D1:Edit.
 
 ## Deploy
 

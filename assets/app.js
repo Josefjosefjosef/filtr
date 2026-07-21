@@ -32239,6 +32239,11 @@ function buildVideoAsArticleCard(it) {
 
   function iuOpenOverlay(targetId, extra) {
     const t = String(targetId || "").trim().toLowerCase();
+    try {
+      if (window.iuAnalytics && typeof window.iuAnalytics.privateToolsOpen === "function") {
+        window.iuAnalytics.privateToolsOpen();
+      }
+    } catch (_) {}
     iuForceCloseAllOverlays();
     iuActiveOverlay = t;
     try {
@@ -39688,6 +39693,11 @@ function buildVideoAsArticleCard(it) {
     mountOverlay(); /* lazy mount on first open (covers DOM-version refresh too) */
     const ov = getOverlay();
     if (!ov) return;
+    try {
+      if (window.iuAnalytics && typeof window.iuAnalytics.privateToolsOpen === "function") {
+        window.iuAnalytics.privateToolsOpen();
+      }
+    } catch (_) {}
     state.returnFocusEl = originEl || document.activeElement;
     setMobileMode("list");
     if (isNotesNarrowViewport()){
@@ -40940,6 +40950,11 @@ function buildVideoAsArticleCard(it) {
       }catch{}
       return;
     }
+    try {
+      if (window.iuAnalytics && typeof window.iuAnalytics.privateToolsOpen === "function") {
+        window.iuAnalytics.privateToolsOpen();
+      }
+    } catch (_) {}
     state.returnFocusEl = originEl && typeof originEl.focus === "function" ? originEl : document.activeElement;
     state.searchQuery = "";
     if (state.searchTimer){ try{ clearTimeout(state.searchTimer); }catch{} state.searchTimer = null; }
@@ -42517,6 +42532,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     try{ ensureCalendarOverlayMounted(); }catch{}
     const ov = getOverlay();
     if (!ov) return;
+    try {
+      if (window.iuAnalytics && typeof window.iuAnalytics.privateToolsOpen === "function") {
+        window.iuAnalytics.privateToolsOpen();
+      }
+    } catch (_) {}
     state.returnFocusEl = originEl || document.activeElement;
     try{
       if (typeof window.__iuSilverCalOverlayOpened === "function"){
