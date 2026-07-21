@@ -1,5 +1,5 @@
 /**
- * Aggregate store: prefer D1 when bound; otherwise Cloudflare Cache API.
+ * Aggregate store: prefer Workers KV when bound; else Cache API; optional D1 stub.
  * Never stores IP / UA / fingerprints — only aggregate counters.
  */
 
@@ -12,7 +12,7 @@ export type TrafficRow = {
   private_tools_opens: number;
 };
 
-type StoreBlob = {
+export type StoreBlob = {
   traffic: Record<string, TrafficRow>;
   sections: Record<string, { day: string; section_id: string; views: number }>;
   ads: Record<
@@ -59,7 +59,7 @@ async function cachePut(cache: Cache, key: string, blob: StoreBlob): Promise<voi
 }
 
 export type AnalyticsStore = {
-  mode: "d1" | "cache";
+  mode: "kv" | "d1" | "cache";
   bumpTraffic: (
     day: string,
     device: string,
@@ -83,45 +83,83 @@ export type AnalyticsStore = {
   readRange: (from: string, to: string) => Promise<StoreBlob>;
 };
 
-export function createStore(env: { DB?: D1Database }): AnalyticsStore {
-  if (env.DB) {
-    // D1 path kept for when account token has D1:Edit — bind DB in wrangler.toml.
-    return createD1Store(env.DB);
-  }
+type StoreEnv = { DB?: D1Database; ANALYTICS_KV?: KVNamespace };
+
+export function createStore(env: StoreEnv): AnalyticsStore {
+  if (env.ANALYTICS_KV) return createKvStore(env.ANALYTICS_KV);
+  if (env.DB) return createD1Store(env.DB);
   return createCacheStore();
 }
 
-function createCacheStore(): AnalyticsStore {
-  const cache = caches.default;
-  const keyForDay = (day: string) => "v1:" + day;
+function applyTraffic(
+  b: StoreBlob,
+  day: string,
+  device: string,
+  delta: Partial<Pick<TrafficRow, "visits" | "page_views" | "public_section_views" | "private_tools_opens">>
+) {
+  const id = day + "|" + device;
+  const cur = b.traffic[id] || {
+    day,
+    device_category: device,
+    visits: 0,
+    page_views: 0,
+    public_section_views: 0,
+    private_tools_opens: 0,
+  };
+  cur.visits += delta.visits || 0;
+  cur.page_views += delta.page_views || 0;
+  cur.public_section_views += delta.public_section_views || 0;
+  cur.private_tools_opens += delta.private_tools_opens || 0;
+  b.traffic[id] = cur;
+}
 
+function applyAd(
+  b: StoreBlob,
+  day: string,
+  keys: {
+    campaign_id: string;
+    placement_id: string;
+    section_id: string;
+    slot_type: string;
+    device_category: string;
+  },
+  delta: { impressions?: number; clicks?: number; valid_clicks?: number; suspicious_clicks?: number }
+): { impressions: number; clicks: number } {
+  const id = [day, keys.campaign_id, keys.placement_id, keys.section_id, keys.slot_type, keys.device_category].join(
+    "|"
+  );
+  const cur = b.ads[id] || {
+    day,
+    ...keys,
+    impressions: 0,
+    clicks: 0,
+    valid_clicks: 0,
+    suspicious_clicks: 0,
+  };
+  cur.impressions = Math.max(0, cur.impressions + (delta.impressions || 0));
+  cur.clicks = Math.max(0, cur.clicks + (delta.clicks || 0));
+  cur.valid_clicks = Math.max(0, cur.valid_clicks + (delta.valid_clicks || 0));
+  cur.suspicious_clicks = Math.max(0, cur.suspicious_clicks + (delta.suspicious_clicks || 0));
+  b.ads[id] = cur;
+  return { impressions: cur.impressions, clicks: cur.clicks };
+}
+
+function createMutableStore(
+  mode: AnalyticsStore["mode"],
+  readDay: (day: string) => Promise<StoreBlob>,
+  writeDay: (day: string, blob: StoreBlob) => Promise<void>
+): AnalyticsStore {
   async function mutate(day: string, fn: (b: StoreBlob) => void): Promise<StoreBlob> {
-    const k = keyForDay(day);
-    const blob = await cacheGet(cache, k);
+    const blob = await readDay(day);
     fn(blob);
-    await cachePut(cache, k, blob);
+    await writeDay(day, blob);
     return blob;
   }
 
   return {
-    mode: "cache",
+    mode,
     async bumpTraffic(day, device, delta) {
-      await mutate(day, (b) => {
-        const id = day + "|" + device;
-        const cur = b.traffic[id] || {
-          day,
-          device_category: device,
-          visits: 0,
-          page_views: 0,
-          public_section_views: 0,
-          private_tools_opens: 0,
-        };
-        cur.visits += delta.visits || 0;
-        cur.page_views += delta.page_views || 0;
-        cur.public_section_views += delta.public_section_views || 0;
-        cur.private_tools_opens += delta.private_tools_opens || 0;
-        b.traffic[id] = cur;
-      });
+      await mutate(day, (b) => applyTraffic(b, day, device, delta));
     },
     async bumpSection(day, sectionId, n = 1) {
       await mutate(day, (b) => {
@@ -134,21 +172,7 @@ function createCacheStore(): AnalyticsStore {
     async bumpAd(day, keys, delta) {
       let out = { impressions: 0, clicks: 0 };
       await mutate(day, (b) => {
-        const id = [day, keys.campaign_id, keys.placement_id, keys.section_id, keys.slot_type, keys.device_category].join("|");
-        const cur = b.ads[id] || {
-          day,
-          ...keys,
-          impressions: 0,
-          clicks: 0,
-          valid_clicks: 0,
-          suspicious_clicks: 0,
-        };
-        cur.impressions += delta.impressions || 0;
-        cur.clicks += delta.clicks || 0;
-        cur.valid_clicks += delta.valid_clicks || 0;
-        cur.suspicious_clicks += delta.suspicious_clicks || 0;
-        b.ads[id] = cur;
-        out = { impressions: cur.impressions, clicks: cur.clicks };
+        out = applyAd(b, day, keys, delta);
       });
       return out;
     },
@@ -182,7 +206,7 @@ function createCacheStore(): AnalyticsStore {
       const end = new Date(to + "T00:00:00Z");
       for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
         const day = d.toISOString().slice(0, 10);
-        const blob = await cacheGet(cache, keyForDay(day));
+        const blob = await readDay(day);
         Object.assign(out.traffic, blob.traffic);
         Object.assign(out.sections, blob.sections);
         Object.assign(out.ads, blob.ads);
@@ -195,14 +219,36 @@ function createCacheStore(): AnalyticsStore {
   };
 }
 
-function createD1Store(db: D1Database): AnalyticsStore {
-  // Minimal D1 adapter — full SQL path remains in aggregate.ts for migrations;
-  // when DB is bound, index uses applyEvent SQL. This stub marks mode only.
+function createKvStore(kv: KVNamespace): AnalyticsStore {
+  const keyForDay = (day: string) => "iu-analytics:v1:" + day;
+  return createMutableStore(
+    "kv",
+    async (day) => {
+      const raw = await kv.get(keyForDay(day), "json");
+      if (!raw || typeof raw !== "object") return emptyBlob();
+      return raw as StoreBlob;
+    },
+    async (day, blob) => {
+      await kv.put(keyForDay(day), JSON.stringify(blob));
+    }
+  );
+}
+
+function createCacheStore(): AnalyticsStore {
+  const cache = caches.default;
+  const keyForDay = (day: string) => "v1:" + day;
+  return createMutableStore(
+    "cache",
+    (day) => cacheGet(cache, keyForDay(day)),
+    (day, blob) => cachePut(cache, keyForDay(day), blob)
+  );
+}
+
+function createD1Store(_db: D1Database): AnalyticsStore {
+  // Placeholder until CLOUDFLARE_API_TOKEN has D1:Edit and schema is migrated.
   return {
     mode: "d1",
-    async bumpTraffic() {
-      /* handled by aggregate.ts when DB present */
-    },
+    async bumpTraffic() {},
     async bumpSection() {},
     async bumpAd() {
       return { impressions: 0, clicks: 0 };

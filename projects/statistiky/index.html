@@ -50,7 +50,10 @@
       .codex li { margin: 0 0 6px; }
       .ok { color: var(--ok); font-weight: 650; }
       .bars { display: grid; gap: 8px; }
-      .bar-row { display: grid; grid-template-columns: 88px 1fr 48px; gap: 8px; align-items: center; font-size: 0.9rem; }
+      .bar-row { display: grid; grid-template-columns: 72px minmax(0, 1fr) 48px; gap: 8px; align-items: center; font-size: 0.9rem; }
+      @media (max-width: 420px) {
+        .bar-row { grid-template-columns: 56px minmax(0, 1fr) 40px; font-size: 0.8rem; gap: 6px; }
+      }
       .bar-track { height: 10px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
       .bar-fill { height: 100%; background: linear-gradient(90deg, #0284c7, #0f766e); }
       .muted { color: var(--muted); }
@@ -74,8 +77,11 @@
 
       <div class="grid" id="iuStatsCards" aria-live="polite">
         <div class="card"><div class="label">Dnes (návštěvy)</div><div class="stat" id="sToday">—</div></div>
-        <div class="card"><div class="label">Včera</div><div class="stat" id="sYday">—</div></div>
-        <div class="card"><div class="label">Tento měsíc</div><div class="stat" id="sMonth">—</div></div>
+        <div class="card"><div class="label">Dnes (zobrazení)</div><div class="stat" id="sTodayViews">—</div></div>
+        <div class="card"><div class="label">Včera (návštěvy)</div><div class="stat" id="sYday">—</div></div>
+        <div class="card"><div class="label">Tento měsíc (návštěvy)</div><div class="stat" id="sMonth">—</div></div>
+        <div class="card"><div class="label">Tento měsíc (zobrazení)</div><div class="stat" id="sMonthViews">—</div></div>
+        <div class="card"><div class="label">Soukromé nástroje (měsíc)</div><div class="stat" id="sPrivateNum">—</div></div>
         <div class="card full">
           <h2>Vývoj návštěvnosti</h2>
           <div class="bars" id="sSeries"></div>
@@ -134,8 +140,11 @@
           .then(function (r) { return r.json(); })
           .then(function (d) {
             el("sToday").textContent = num(d.today && d.today.visits);
+            el("sTodayViews").textContent = num(d.today && d.today.page_views);
             el("sYday").textContent = num(d.yesterday && d.yesterday.visits);
             el("sMonth").textContent = num(d.month && d.month.visits);
+            el("sMonthViews").textContent = num(d.month && d.month.page_views);
+            el("sPrivateNum").textContent = num(d.month && d.month.private_tools_opens);
             el("sPrivate").textContent =
               "Soukromé nástroje – anonymní souhrn: " +
               num(d.privateToolsSummary && d.privateToolsSummary.opens) +
@@ -143,20 +152,25 @@
 
             var series = d.series || [];
             var max = 1;
-            series.forEach(function (row) { max = Math.max(max, Number(row.visits || 0)); });
+            series.forEach(function (row) {
+              max = Math.max(max, Number(row.visits || 0), Number(row.page_views || 0));
+            });
             el("sSeries").innerHTML = series.length
               ? series
                   .slice(-14)
                   .map(function (row) {
                     var v = Number(row.visits || 0);
+                    var pv = Number(row.page_views || 0);
                     var pct = Math.round((v / max) * 100);
                     return (
                       '<div class="bar-row"><span>' +
                       String(row.day).slice(5) +
                       '</span><div class="bar-track"><div class="bar-fill" style="width:' +
                       pct +
-                      '%"></div></div><span>' +
+                      '%"></div></div><span title="návštěvy / zobrazení">' +
                       v +
+                      "/" +
+                      pv +
                       "</span></div>"
                     );
                   })
@@ -168,7 +182,15 @@
               ? "<ul>" +
                 devices
                   .map(function (x) {
-                    return "<li>" + x.device_category + ": " + num(x.visits) + "</li>";
+                    return (
+                      "<li>" +
+                      x.device_category +
+                      ": " +
+                      num(x.visits) +
+                      " návštěv / " +
+                      num(x.page_views) +
+                      " zobrazení</li>"
+                    );
                   })
                   .join("") +
                 "</ul>"

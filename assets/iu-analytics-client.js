@@ -13,6 +13,7 @@
   var flushTimer = null;
   var active = false;
   var pageViewSent = false;
+  var techErrorSent = false;
 
   function granted() {
     try {
@@ -131,6 +132,16 @@
     } catch (_) {}
   }
 
+  function maybeTechErrorHook() {
+    if (window.__IU_ANALYTICS_ERR_HOOK__) return;
+    window.__IU_ANALYTICS_ERR_HOOK__ = true;
+    window.addEventListener("error", function () {
+      if (techErrorSent || !active || !granted()) return;
+      techErrorSent = true;
+      track("technical_error", { error_code: "client_js_error" });
+    });
+  }
+
   function init() {
     if (!granted()) {
       active = false;
@@ -141,6 +152,7 @@
     active = true;
     window.__IU_ANALYTICS_ACTIVE__ = true;
     sendPageViewOnce();
+    maybeTechErrorHook();
     setTimeout(maybePerf, 2500);
   }
 

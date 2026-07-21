@@ -52,12 +52,56 @@ jobs:
           fi
           printf '%s' "$IU_ANALYTICS_ADMIN_TOKEN" | npx wrangler secret put ADMIN_TOKEN
 
+      - name: Ensure KV namespace (durable aggregates)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          TITLE="IU_ANALYTICS_AGGREGATES"
+          LIST_JSON="$(npx wrangler kv namespace list --json 2>/tmp/iu-kv-list.err || true)"
+          ID=""
+          if echo "$LIST_JSON" | grep -q '"id"'; then
+            ID="$(printf '%s' "$LIST_JSON" | node -e "
+              let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
+                try {
+                  const arr=JSON.parse(s);
+                  const hit=(arr||[]).find(x=>x&&x.title==='IU_ANALYTICS_AGGREGATES');
+                  process.stdout.write(hit&&hit.id?String(hit.id):'');
+                } catch { process.stdout.write(''); }
+              });
+            ")"
+          fi
+          if [ -z "$ID" ]; then
+            CREATE_JSON="$(npx wrangler kv namespace create "$TITLE" --json 2>/tmp/iu-kv-create.err || true)"
+            ID="$(printf '%s' "$CREATE_JSON" | node -e "
+              let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
+                try {
+                  const j=JSON.parse(s);
+                  process.stdout.write(j&&j.id?String(j.id):'');
+                } catch { process.stdout.write(''); }
+              });
+            ")"
+          fi
+          if [ -z "$ID" ]; then
+            echo "WARN: KV namespace unavailable — Worker will use Cache API fallback"
+            if [ -f /tmp/iu-kv-list.err ]; then cat /tmp/iu-kv-list.err || true; fi
+            if [ -f /tmp/iu-kv-create.err ]; then cat /tmp/iu-kv-create.err || true; fi
+            exit 0
+          fi
+          echo "Using KV id=$ID"
+          {
+            echo ""
+            echo "[[kv_namespaces]]"
+            echo "binding = \"ANALYTICS_KV\""
+            echo "id = \"$ID\""
+          } >> wrangler.toml
+
       - name: Deploy worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: npx wrangler deploy
 
-      - name: Probe health + public stats
+      - name: Probe health + public stats + ingest
         run: |
           set -euo pipefail
           BASE="https://infouzel-analytics.josef-zmrhal.workers.dev"
@@ -75,6 +119,14 @@ jobs:
             exit 1
           fi
           cat /tmp/iu-analytics-health.json
+          echo ""
+          curl -fsS -X POST "$BASE/v1/ingest" \
+            -H "content-type: application/json" \
+            -H "origin: https://infouzel.cz" \
+            -H "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36" \
+            --data '{"events":[{"type":"page_view","section_id":"deploy_probe","device_category":"pc"}]}' \
+            >/tmp/iu-analytics-ingest.json
+          cat /tmp/iu-analytics-ingest.json
           echo ""
           curl -fsS "$BASE/v1/public/stats" | head -c 2000
           echo ""
