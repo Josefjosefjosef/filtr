@@ -30,7 +30,7 @@ export const ALLOWED_SLOT_TYPES = [
 export type SlotType = (typeof ALLOWED_SLOT_TYPES)[number];
 
 export type Env = {
-  DB: D1Database;
+  DB?: D1Database;
   ADMIN_TOKEN?: string;
   PUBLIC_CACHE_SECONDS?: string;
   CORS_ALLOW_ORIGIN?: string;
