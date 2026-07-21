@@ -1,6 +1,6 @@
 import { applyEvent, rejectEvent } from "./aggregate";
 import { privacyGuard, todayUtc } from "./privacy";
-import { createStore } from "./store";
+import { AnalyticsStore, createStore } from "./store";
 import { Env } from "./types";
 
 function json(data: unknown, status = 200, extra: HeadersInit = {}): Response {
@@ -47,7 +47,7 @@ function daysAgo(n: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-async function publicStats(store: ReturnType<typeof createStore>, from: string, to: string) {
+async function publicStats(store: AnalyticsStore, from: string, to: string) {
   const blob = await store.readRange(from, to);
   const byDay: Record<string, { day: string; visits: number; page_views: number; public_section_views: number; private_tools_opens: number }> = {};
   for (const row of Object.values(blob.traffic)) {
@@ -141,7 +141,7 @@ async function publicStats(store: ReturnType<typeof createStore>, from: string, 
   };
 }
 
-async function handleIngest(env: Env, req: Request, store: ReturnType<typeof createStore>): Promise<Response> {
+async function handleIngest(env: Env, req: Request, store: AnalyticsStore): Promise<Response> {
   let body: unknown;
   try {
     body = await req.json();
@@ -173,7 +173,7 @@ async function handleIngest(env: Env, req: Request, store: ReturnType<typeof cre
   return json({ ok: true, accepted, rejected, suspicious, storageMode: store.mode });
 }
 
-async function adReport(store: ReturnType<typeof createStore>, url: URL) {
+async function adReport(store: AnalyticsStore, url: URL) {
   const from = url.searchParams.get("from") || daysAgo(30);
   const to = url.searchParams.get("to") || todayUtc();
   const campaign_id = url.searchParams.get("campaign_id");
@@ -223,75 +223,126 @@ export default {
     const store = createStore(env);
 
     if (path === "/health" || path === "/") {
-      return withCors(
-        env,
-        req,
-        json({
-          ok: true,
-          service: "infouzel-analytics",
-          mode: "aggregate-only",
-          storageMode: store.mode,
-          storesIp: false,
-          storesFingerprint: false,
-          storesFullUserAgent: false,
-        })
-      );
-    }
-
-    if (path === "/v1/ingest" && req.method === "POST") {
-      return withCors(env, req, await handleIngest(env, req, store));
-    }
-
-    if (path === "/v1/public/stats" && req.method === "GET") {
-      const from = url.searchParams.get("from") || daysAgo(30);
-      const to = url.searchParams.get("to") || todayUtc();
-      const data = await publicStats(store, from, to);
-      const cacheSec = String(env.PUBLIC_CACHE_SECONDS || "300");
-      return withCors(
-        env,
-        req,
-        json(data, 200, { "cache-control": `public, max-age=${cacheSec}, s-maxage=${cacheSec}` })
-      );
-    }
-
-    if (path === "/v1/admin/overview" && req.method === "GET") {
-      if (!requireAdmin(env, req)) return withCors(env, req, json({ ok: false, error: "unauthorized" }, 401));
-      const from = url.searchParams.get("from") || daysAgo(30);
-      const to = url.searchParams.get("to") || todayUtc();
-      const pub = await publicStats(store, from, to);
-      const blob = await store.readRange(from, to);
-      const ads = Object.values(blob.ads)
-        .map((r) => ({
-          ...r,
-          ctr: r.impressions > 0 ? Math.round((r.valid_clicks / r.impressions) * 10000) / 10000 : 0,
-        }))
-        .sort((a, b) => b.day.localeCompare(a.day))
-        .slice(0, 500);
+      if (!store) {
+        return withCors(
+          env,
+          req,
+          json(
+            {
+              ok: false,
+              service: "infouzel-analytics",
+              mode: "aggregate-only",
+              storageMode: "unavailable",
+              error: "d1_binding_missing",
+              storesIp: false,
+              storesFingerprint: false,
+              storesFullUserAgent: false,
+            },
+            503
+          )
+        );
+      }
+      const alive = await store.ping();
       return withCors(
         env,
         req,
         json(
           {
-            ...pub,
-            ads,
-            ingestAudit: Object.values(blob.audit).sort((a, b) => b.day.localeCompare(a.day)),
-            errors: Object.values(blob.errors),
-            performance: Object.values(blob.performance).map((p) => ({
-              metric_name: p.metric_name,
-              samples: p.sample_count,
-              value_sum: p.value_sum,
-              avg_value: p.sample_count > 0 ? p.value_sum / p.sample_count : 0,
-            })),
+            ok: alive,
+            service: "infouzel-analytics",
+            mode: "aggregate-only",
+            storageMode: alive ? "d1" : "unavailable",
+            error: alive ? undefined : "d1_unreachable",
+            storesIp: false,
+            storesFingerprint: false,
+            storesFullUserAgent: false,
           },
-          200,
-          { "cache-control": "no-store" }
+          alive ? 200 : 503
         )
       );
     }
 
+    if (!store) {
+      return withCors(
+        env,
+        req,
+        json({ ok: false, error: "d1_binding_missing", storageMode: "unavailable" }, 503)
+      );
+    }
+
+    if (path === "/v1/ingest" && req.method === "POST") {
+      try {
+        return withCors(env, req, await handleIngest(env, req, store));
+      } catch {
+        return withCors(env, req, json({ ok: false, error: "d1_write_failed", storageMode: "d1" }, 503));
+      }
+    }
+
+    if (path === "/v1/public/stats" && req.method === "GET") {
+      try {
+        const from = url.searchParams.get("from") || daysAgo(30);
+        const to = url.searchParams.get("to") || todayUtc();
+        const data = await publicStats(store, from, to);
+        const cacheSec = String(env.PUBLIC_CACHE_SECONDS || "60");
+        return withCors(
+          env,
+          req,
+          json(data, 200, {
+            // HTTP response cache only — not a durable store
+            "cache-control": `public, max-age=${cacheSec}, s-maxage=${cacheSec}`,
+          })
+        );
+      } catch {
+        return withCors(env, req, json({ ok: false, error: "d1_read_failed", storageMode: "d1" }, 503));
+      }
+    }
+
+    if (path === "/v1/admin/overview" && req.method === "GET") {
+      if (!requireAdmin(env, req)) return withCors(env, req, json({ ok: false, error: "unauthorized" }, 401));
+      try {
+        const from = url.searchParams.get("from") || daysAgo(30);
+        const to = url.searchParams.get("to") || todayUtc();
+        const pub = await publicStats(store, from, to);
+        const blob = await store.readRange(from, to);
+        const ads = Object.values(blob.ads)
+          .map((r) => ({
+            ...r,
+            ctr: r.impressions > 0 ? Math.round((r.valid_clicks / r.impressions) * 10000) / 10000 : 0,
+          }))
+          .sort((a, b) => b.day.localeCompare(a.day))
+          .slice(0, 500);
+        return withCors(
+          env,
+          req,
+          json(
+            {
+              ...pub,
+              ads,
+              ingestAudit: Object.values(blob.audit).sort((a, b) => b.day.localeCompare(a.day)),
+              errors: Object.values(blob.errors),
+              performance: Object.values(blob.performance).map((p) => ({
+                metric_name: p.metric_name,
+                samples: p.sample_count,
+                value_sum: p.value_sum,
+                avg_value: p.sample_count > 0 ? p.value_sum / p.sample_count : 0,
+              })),
+            },
+            200,
+            { "cache-control": "no-store" }
+          )
+        );
+      } catch {
+        return withCors(env, req, json({ ok: false, error: "d1_read_failed", storageMode: "d1" }, 503));
+      }
+    }
+
     if (path === "/v1/ads/report" && req.method === "GET") {
       if (!requireAdmin(env, req)) return withCors(env, req, json({ ok: false, error: "unauthorized" }, 401));
-      return withCors(env, req, json(await adReport(store, url), 200, { "cache-control": "no-store" }));
+      try {
+        return withCors(env, req, json(await adReport(store, url), 200, { "cache-control": "no-store" }));
+      } catch {
+        return withCors(env, req, json({ ok: false, error: "d1_read_failed", storageMode: "d1" }, 503));
+      }
     }
 
     return withCors(env, req, json({ ok: false, error: "not_found" }, 404));

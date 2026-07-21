@@ -1,7 +1,7 @@
-# Deploy InfoUzel Analytics (Cloudflare Worker)
+# Deploy InfoUzel Analytics (Cloudflare Worker + D1)
 #
 # Required repo secrets:
-#   CLOUDFLARE_API_TOKEN — Workers Scripts Edit (same as articles-watchdog)
+#   CLOUDFLARE_API_TOKEN — must include Account D1:Edit (+ Workers Scripts Edit)
 # Optional:
 #   IU_ANALYTICS_ADMIN_TOKEN — Bearer for admin/ad report APIs
 name: Deploy IU Analytics
@@ -21,7 +21,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     defaults:
       run:
         working-directory: cloudflare/iu-analytics
@@ -40,9 +40,70 @@ jobs:
       - name: Unit tests
         run: npm test
 
+      - name: Ensure D1 database + apply migrations
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_D1_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          NAME="iu-analytics"
+          if [ -n "${{ secrets.CLOUDFLARE_D1_API_TOKEN }}" ]; then
+            echo "Using CLOUDFLARE_D1_API_TOKEN override for D1 ops"
+          fi
+          set +e
+          LIST_JSON="$(npx wrangler d1 list --json 2>/tmp/d1-list.err)"
+          LIST_EC=$?
+          set -e
+          if [ "$LIST_EC" != "0" ]; then
+            echo "BLOCKER: CLOUDFLARE_API_TOKEN cannot list D1 (need Account → D1 → Edit)."
+            if [ -f /tmp/d1-list.err ]; then sed -E 's/[A-Za-z0-9_-]{20,}/[REDACTED]/g' /tmp/d1-list.err | head -n 30 || true; fi
+            exit 1
+          fi
+          ID="$(printf '%s' "$LIST_JSON" | node -e "
+            let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
+              try {
+                const arr=JSON.parse(s);
+                const hit=(arr||[]).find(x=>x&&x.name==='iu-analytics');
+                const id=hit&&(hit.uuid||hit.id||'');
+                process.stdout.write(id?String(id):'');
+              } catch { process.stdout.write(''); }
+            });
+          ")"
+          if [ -z "$ID" ]; then
+            set +e
+            CREATE_OUT="$(npx wrangler d1 create "$NAME" 2>/tmp/d1-create.err)"
+            CREATE_EC=$?
+            set -e
+            if [ "$CREATE_EC" != "0" ]; then
+              echo "BLOCKER: CLOUDFLARE_API_TOKEN cannot create D1 (need Account → D1 → Edit)."
+              if [ -f /tmp/d1-create.err ]; then sed -E 's/[A-Za-z0-9_-]{20,}/[REDACTED]/g' /tmp/d1-create.err | head -n 40 || true; fi
+              exit 1
+            fi
+            ID="$(printf '%s' "$CREATE_OUT" | node -e "
+              let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
+                const m=s.match(/database_id\s*=\s*\"([0-9a-fA-F-]{36})\"/) || s.match(/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/);
+                process.stdout.write(m&&m[1]?m[1]:'');
+              });
+            ")"
+          fi
+          if [ -z "$ID" ]; then
+            echo "BLOCKER: could not resolve D1 database_id for iu-analytics"
+            exit 1
+          fi
+          echo "D1_ID_RESOLVED=yes"
+          export ID
+          ID="$ID" node -e "
+            const fs=require('fs');
+            let t=fs.readFileSync('wrangler.toml','utf8');
+            t=t.replace(/database_id = \"[^\"]+\"/, 'database_id = \"'+process.env.ID+'\"');
+            fs.writeFileSync('wrangler.toml',t);
+            console.log('wrangler.toml database_id patched');
+          "
+          npx wrangler d1 migrations apply "$NAME" --remote
+          echo "D1_MIGRATIONS_APPLIED=yes"
+
       - name: Put ADMIN_TOKEN secret (optional)
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_D1_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
           IU_ANALYTICS_ADMIN_TOKEN: ${{ secrets.IU_ANALYTICS_ADMIN_TOKEN }}
         run: |
           set -euo pipefail
@@ -52,62 +113,17 @@ jobs:
           fi
           printf '%s' "$IU_ANALYTICS_ADMIN_TOKEN" | npx wrangler secret put ADMIN_TOKEN
 
-      - name: Ensure KV namespace (durable aggregates)
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: |
-          set -euo pipefail
-          TITLE="IU_ANALYTICS_AGGREGATES"
-          LIST_JSON="$(npx wrangler kv namespace list --json 2>/tmp/iu-kv-list.err || true)"
-          ID=""
-          if echo "$LIST_JSON" | grep -q '"id"'; then
-            ID="$(printf '%s' "$LIST_JSON" | node -e "
-              let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
-                try {
-                  const arr=JSON.parse(s);
-                  const hit=(arr||[]).find(x=>x&&x.title==='IU_ANALYTICS_AGGREGATES');
-                  process.stdout.write(hit&&hit.id?String(hit.id):'');
-                } catch { process.stdout.write(''); }
-              });
-            ")"
-          fi
-          if [ -z "$ID" ]; then
-            CREATE_JSON="$(npx wrangler kv namespace create "$TITLE" --json 2>/tmp/iu-kv-create.err || true)"
-            ID="$(printf '%s' "$CREATE_JSON" | node -e "
-              let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
-                try {
-                  const j=JSON.parse(s);
-                  process.stdout.write(j&&j.id?String(j.id):'');
-                } catch { process.stdout.write(''); }
-              });
-            ")"
-          fi
-          if [ -z "$ID" ]; then
-            echo "WARN: KV namespace unavailable — Worker will use Cache API fallback"
-            if [ -f /tmp/iu-kv-list.err ]; then cat /tmp/iu-kv-list.err || true; fi
-            if [ -f /tmp/iu-kv-create.err ]; then cat /tmp/iu-kv-create.err || true; fi
-            exit 0
-          fi
-          echo "Using KV id=$ID"
-          {
-            echo ""
-            echo "[[kv_namespaces]]"
-            echo "binding = \"ANALYTICS_KV\""
-            echo "id = \"$ID\""
-          } >> wrangler.toml
-
       - name: Deploy worker
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_D1_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
         run: npx wrangler deploy
 
-      - name: Probe health + public stats + ingest
+      - name: Probe health must be storageMode=d1 + ingest roundtrip
         run: |
           set -euo pipefail
           BASE="https://infouzel-analytics.josef-zmrhal.workers.dev"
-          # workers.dev can 404 for a few seconds right after publish
           ok=0
-          for _ in 1 2 3 4 5 6 7 8 9 10; do
+          for _ in 1 2 3 4 5 6 7 8 9 10 11 12; do
             if curl -fsS "$BASE/health" >/tmp/iu-analytics-health.json; then
               ok=1
               break
@@ -120,13 +136,38 @@ jobs:
           fi
           cat /tmp/iu-analytics-health.json
           echo ""
+          node -e "
+            const j=JSON.parse(require('fs').readFileSync('/tmp/iu-analytics-health.json','utf8'));
+            if (!j.ok || j.storageMode !== 'd1') {
+              console.error('FAIL: expected ok:true storageMode:d1, got', j);
+              process.exit(1);
+            }
+            console.log('HEALTH_D1_OK');
+          "
+          MARK="d1_cutover_$(date -u +%Y%m%d%H%M%S)"
           curl -fsS -X POST "$BASE/v1/ingest" \
             -H "content-type: application/json" \
             -H "origin: https://infouzel.cz" \
             -H "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36" \
-            --data '{"events":[{"type":"page_view","section_id":"deploy_probe","device_category":"pc"}]}' \
+            --data "{\"events\":[{\"type\":\"page_view\",\"section_id\":\"$MARK\",\"device_category\":\"pc\"}]}" \
             >/tmp/iu-analytics-ingest.json
           cat /tmp/iu-analytics-ingest.json
           echo ""
-          curl -fsS "$BASE/v1/public/stats" | head -c 2000
+          node -e "
+            const j=JSON.parse(require('fs').readFileSync('/tmp/iu-analytics-ingest.json','utf8'));
+            if (!j.ok || j.storageMode !== 'd1' || Number(j.accepted||0) < 1) {
+              console.error('FAIL ingest', j);
+              process.exit(1);
+            }
+            console.log('INGEST_D1_OK');
+          "
+          sleep 2
+          curl -fsS "$BASE/v1/public/stats?nocache=$(date +%s)" >/tmp/iu-analytics-stats.json
+          head -c 2000 /tmp/iu-analytics-stats.json
           echo ""
+          node -e "
+            const j=JSON.parse(require('fs').readFileSync('/tmp/iu-analytics-stats.json','utf8'));
+            if (j.storageMode !== 'd1') { console.error('FAIL public storageMode', j.storageMode); process.exit(1); }
+            if (!(j.today && Number(j.today.visits) >= 1)) { console.error('FAIL expected visits>=1', j.today); process.exit(1); }
+            console.log('PUBLIC_D1_OK');
+          "

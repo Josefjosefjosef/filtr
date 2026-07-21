@@ -31,7 +31,6 @@ export type SlotType = (typeof ALLOWED_SLOT_TYPES)[number];
 
 export type Env = {
   DB?: D1Database;
-  ANALYTICS_KV?: KVNamespace;
   ADMIN_TOKEN?: string;
   PUBLIC_CACHE_SECONDS?: string;
   CORS_ALLOW_ORIGIN?: string;

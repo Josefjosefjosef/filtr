@@ -1,5 +1,6 @@
 /**
- * Aggregate store: prefer Workers KV when bound; else Cache API; optional D1 stub.
+ * Aggregate store — Cloudflare D1 is the only production source of truth.
+ * HTTP Cache-Control on public GET is allowed; Cache API / KV must not store aggregates.
  * Never stores IP / UA / fingerprints — only aggregate counters.
  */
 
@@ -35,31 +36,13 @@ export type StoreBlob = {
   audit: Record<string, { day: string; accepted: number; rejected: number; suspicious: number }>;
 };
 
-function emptyBlob(): StoreBlob {
+export function emptyBlob(): StoreBlob {
   return { traffic: {}, sections: {}, ads: {}, performance: {}, errors: {}, audit: {} };
 }
 
-async function cacheGet(cache: Cache, key: string): Promise<StoreBlob> {
-  const res = await cache.match(new Request("https://iu-analytics.internal/" + key));
-  if (!res) return emptyBlob();
-  try {
-    return (await res.json()) as StoreBlob;
-  } catch {
-    return emptyBlob();
-  }
-}
-
-async function cachePut(cache: Cache, key: string, blob: StoreBlob): Promise<void> {
-  await cache.put(
-    new Request("https://iu-analytics.internal/" + key),
-    new Response(JSON.stringify(blob), {
-      headers: { "content-type": "application/json", "cache-control": "max-age=31536000" },
-    })
-  );
-}
-
 export type AnalyticsStore = {
-  mode: "kv" | "d1" | "cache";
+  mode: "d1";
+  ping: () => Promise<boolean>;
   bumpTraffic: (
     day: string,
     device: string,
@@ -83,181 +66,233 @@ export type AnalyticsStore = {
   readRange: (from: string, to: string) => Promise<StoreBlob>;
 };
 
-type StoreEnv = { DB?: D1Database; ANALYTICS_KV?: KVNamespace };
+type StoreEnv = { DB?: D1Database };
 
-export function createStore(env: StoreEnv): AnalyticsStore {
-  if (env.ANALYTICS_KV) return createKvStore(env.ANALYTICS_KV);
-  if (env.DB) return createD1Store(env.DB);
-  return createCacheStore();
+export function createStore(env: StoreEnv): AnalyticsStore | null {
+  if (!env.DB) return null;
+  return createD1Store(env.DB);
 }
 
-function applyTraffic(
-  b: StoreBlob,
-  day: string,
-  device: string,
-  delta: Partial<Pick<TrafficRow, "visits" | "page_views" | "public_section_views" | "private_tools_opens">>
-) {
-  const id = day + "|" + device;
-  const cur = b.traffic[id] || {
-    day,
-    device_category: device,
-    visits: 0,
-    page_views: 0,
-    public_section_views: 0,
-    private_tools_opens: 0,
-  };
-  cur.visits += delta.visits || 0;
-  cur.page_views += delta.page_views || 0;
-  cur.public_section_views += delta.public_section_views || 0;
-  cur.private_tools_opens += delta.private_tools_opens || 0;
-  b.traffic[id] = cur;
+function nowIso(): string {
+  return new Date().toISOString();
 }
 
-function applyAd(
-  b: StoreBlob,
-  day: string,
-  keys: {
-    campaign_id: string;
-    placement_id: string;
-    section_id: string;
-    slot_type: string;
-    device_category: string;
-  },
-  delta: { impressions?: number; clicks?: number; valid_clicks?: number; suspicious_clicks?: number }
-): { impressions: number; clicks: number } {
-  const id = [day, keys.campaign_id, keys.placement_id, keys.section_id, keys.slot_type, keys.device_category].join(
-    "|"
-  );
-  const cur = b.ads[id] || {
-    day,
-    ...keys,
-    impressions: 0,
-    clicks: 0,
-    valid_clicks: 0,
-    suspicious_clicks: 0,
-  };
-  cur.impressions = Math.max(0, cur.impressions + (delta.impressions || 0));
-  cur.clicks = Math.max(0, cur.clicks + (delta.clicks || 0));
-  cur.valid_clicks = Math.max(0, cur.valid_clicks + (delta.valid_clicks || 0));
-  cur.suspicious_clicks = Math.max(0, cur.suspicious_clicks + (delta.suspicious_clicks || 0));
-  b.ads[id] = cur;
-  return { impressions: cur.impressions, clicks: cur.clicks };
-}
-
-function createMutableStore(
-  mode: AnalyticsStore["mode"],
-  readDay: (day: string) => Promise<StoreBlob>,
-  writeDay: (day: string, blob: StoreBlob) => Promise<void>
-): AnalyticsStore {
-  async function mutate(day: string, fn: (b: StoreBlob) => void): Promise<StoreBlob> {
-    const blob = await readDay(day);
-    fn(blob);
-    await writeDay(day, blob);
-    return blob;
-  }
-
-  return {
-    mode,
-    async bumpTraffic(day, device, delta) {
-      await mutate(day, (b) => applyTraffic(b, day, device, delta));
-    },
-    async bumpSection(day, sectionId, n = 1) {
-      await mutate(day, (b) => {
-        const id = day + "|" + sectionId;
-        const cur = b.sections[id] || { day, section_id: sectionId, views: 0 };
-        cur.views += n;
-        b.sections[id] = cur;
-      });
-    },
-    async bumpAd(day, keys, delta) {
-      let out = { impressions: 0, clicks: 0 };
-      await mutate(day, (b) => {
-        out = applyAd(b, day, keys, delta);
-      });
-      return out;
-    },
-    async bumpPerf(day, metric, value) {
-      await mutate(day, (b) => {
-        const id = day + "|" + metric;
-        const cur = b.performance[id] || { day, metric_name: metric, sample_count: 0, value_sum: 0 };
-        cur.sample_count += 1;
-        cur.value_sum += value;
-        b.performance[id] = cur;
-      });
-    },
-    async bumpError(day, code) {
-      await mutate(day, (b) => {
-        const id = day + "|" + code;
-        const cur = b.errors[id] || { day, error_code: code, count: 0 };
-        cur.count += 1;
-        b.errors[id] = cur;
-      });
-    },
-    async bumpAudit(day, field) {
-      await mutate(day, (b) => {
-        const cur = b.audit[day] || { day, accepted: 0, rejected: 0, suspicious: 0 };
-        cur[field] += 1;
-        b.audit[day] = cur;
-      });
-    },
-    async readRange(from, to) {
-      const out = emptyBlob();
-      const start = new Date(from + "T00:00:00Z");
-      const end = new Date(to + "T00:00:00Z");
-      for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
-        const day = d.toISOString().slice(0, 10);
-        const blob = await readDay(day);
-        Object.assign(out.traffic, blob.traffic);
-        Object.assign(out.sections, blob.sections);
-        Object.assign(out.ads, blob.ads);
-        Object.assign(out.performance, blob.performance);
-        Object.assign(out.errors, blob.errors);
-        Object.assign(out.audit, blob.audit);
-      }
-      return out;
-    },
-  };
-}
-
-function createKvStore(kv: KVNamespace): AnalyticsStore {
-  const keyForDay = (day: string) => "iu-analytics:v1:" + day;
-  return createMutableStore(
-    "kv",
-    async (day) => {
-      const raw = await kv.get(keyForDay(day), "json");
-      if (!raw || typeof raw !== "object") return emptyBlob();
-      return raw as StoreBlob;
-    },
-    async (day, blob) => {
-      await kv.put(keyForDay(day), JSON.stringify(blob));
-    }
-  );
-}
-
-function createCacheStore(): AnalyticsStore {
-  const cache = caches.default;
-  const keyForDay = (day: string) => "v1:" + day;
-  return createMutableStore(
-    "cache",
-    (day) => cacheGet(cache, keyForDay(day)),
-    (day, blob) => cachePut(cache, keyForDay(day), blob)
-  );
-}
-
-function createD1Store(_db: D1Database): AnalyticsStore {
-  // Placeholder until CLOUDFLARE_API_TOKEN has D1:Edit and schema is migrated.
+export function createD1Store(db: D1Database): AnalyticsStore {
   return {
     mode: "d1",
-    async bumpTraffic() {},
-    async bumpSection() {},
-    async bumpAd() {
-      return { impressions: 0, clicks: 0 };
+
+    async ping() {
+      try {
+        const row = await db.prepare("SELECT 1 AS ok").first<{ ok: number }>();
+        return !!(row && Number(row.ok) === 1);
+      } catch {
+        return false;
+      }
     },
-    async bumpPerf() {},
-    async bumpError() {},
-    async bumpAudit() {},
-    async readRange() {
-      return emptyBlob();
+
+    async bumpTraffic(day, device, delta) {
+      const visits = delta.visits || 0;
+      const page_views = delta.page_views || 0;
+      const public_section_views = delta.public_section_views || 0;
+      const private_tools_opens = delta.private_tools_opens || 0;
+      await db
+        .prepare(
+          `INSERT INTO daily_traffic (day, device_category, visits, page_views, public_section_views, private_tools_opens, updated_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?)
+           ON CONFLICT(day, device_category) DO UPDATE SET
+             visits = visits + excluded.visits,
+             page_views = page_views + excluded.page_views,
+             public_section_views = public_section_views + excluded.public_section_views,
+             private_tools_opens = private_tools_opens + excluded.private_tools_opens,
+             updated_at = excluded.updated_at`
+        )
+        .bind(day, device, visits, page_views, public_section_views, private_tools_opens, nowIso())
+        .run();
+    },
+
+    async bumpSection(day, sectionId, n = 1) {
+      await db
+        .prepare(
+          `INSERT INTO daily_sections (day, section_id, views, updated_at)
+           VALUES (?, ?, ?, ?)
+           ON CONFLICT(day, section_id) DO UPDATE SET
+             views = views + excluded.views,
+             updated_at = excluded.updated_at`
+        )
+        .bind(day, sectionId, n, nowIso())
+        .run();
+    },
+
+    async bumpAd(day, keys, delta) {
+      const impressions = delta.impressions || 0;
+      const clicks = delta.clicks || 0;
+      const valid_clicks = delta.valid_clicks || 0;
+      const suspicious_clicks = delta.suspicious_clicks || 0;
+      await db
+        .prepare(
+          `INSERT INTO daily_ads (
+             day, campaign_id, placement_id, section_id, slot_type, device_category,
+             impressions, clicks, valid_clicks, suspicious_clicks, updated_at
+           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+           ON CONFLICT(day, campaign_id, placement_id, section_id, slot_type, device_category) DO UPDATE SET
+             impressions = CASE WHEN impressions + excluded.impressions < 0 THEN 0 ELSE impressions + excluded.impressions END,
+             clicks = CASE WHEN clicks + excluded.clicks < 0 THEN 0 ELSE clicks + excluded.clicks END,
+             valid_clicks = CASE WHEN valid_clicks + excluded.valid_clicks < 0 THEN 0 ELSE valid_clicks + excluded.valid_clicks END,
+             suspicious_clicks = CASE WHEN suspicious_clicks + excluded.suspicious_clicks < 0 THEN 0 ELSE suspicious_clicks + excluded.suspicious_clicks END,
+             updated_at = excluded.updated_at`
+        )
+        .bind(
+          day,
+          keys.campaign_id,
+          keys.placement_id,
+          keys.section_id,
+          keys.slot_type,
+          keys.device_category,
+          impressions,
+          clicks,
+          valid_clicks,
+          suspicious_clicks,
+          nowIso()
+        )
+        .run();
+
+      const row = await db
+        .prepare(
+          `SELECT impressions, clicks FROM daily_ads
+           WHERE day = ? AND campaign_id = ? AND placement_id = ? AND section_id = ?
+             AND slot_type = ? AND device_category = ?`
+        )
+        .bind(
+          day,
+          keys.campaign_id,
+          keys.placement_id,
+          keys.section_id,
+          keys.slot_type,
+          keys.device_category
+        )
+        .first<{ impressions: number; clicks: number }>();
+      return { impressions: Number(row?.impressions || 0), clicks: Number(row?.clicks || 0) };
+    },
+
+    async bumpPerf(day, metric, value) {
+      await db
+        .prepare(
+          `INSERT INTO daily_performance (day, metric_name, sample_count, value_sum, updated_at)
+           VALUES (?, ?, 1, ?, ?)
+           ON CONFLICT(day, metric_name) DO UPDATE SET
+             sample_count = sample_count + 1,
+             value_sum = value_sum + excluded.value_sum,
+             updated_at = excluded.updated_at`
+        )
+        .bind(day, metric, value, nowIso())
+        .run();
+    },
+
+    async bumpError(day, code) {
+      await db
+        .prepare(
+          `INSERT INTO daily_errors (day, error_code, count, updated_at)
+           VALUES (?, ?, 1, ?)
+           ON CONFLICT(day, error_code) DO UPDATE SET
+             count = count + 1,
+             updated_at = excluded.updated_at`
+        )
+        .bind(day, code, nowIso())
+        .run();
+    },
+
+    async bumpAudit(day, field) {
+      const accepted = field === "accepted" ? 1 : 0;
+      const rejected = field === "rejected" ? 1 : 0;
+      const suspicious = field === "suspicious" ? 1 : 0;
+      await db
+        .prepare(
+          `INSERT INTO ingest_audit (day, accepted, rejected, suspicious, updated_at)
+           VALUES (?, ?, ?, ?, ?)
+           ON CONFLICT(day) DO UPDATE SET
+             accepted = accepted + excluded.accepted,
+             rejected = rejected + excluded.rejected,
+             suspicious = suspicious + excluded.suspicious,
+             updated_at = excluded.updated_at`
+        )
+        .bind(day, accepted, rejected, suspicious, nowIso())
+        .run();
+    },
+
+    async readRange(from, to) {
+      const out = emptyBlob();
+      const traffic = await db
+        .prepare(
+          `SELECT day, device_category, visits, page_views, public_section_views, private_tools_opens
+           FROM daily_traffic WHERE day >= ? AND day <= ?`
+        )
+        .bind(from, to)
+        .all<TrafficRow>();
+      for (const row of traffic.results || []) {
+        out.traffic[row.day + "|" + row.device_category] = row;
+      }
+
+      const sections = await db
+        .prepare(`SELECT day, section_id, views FROM daily_sections WHERE day >= ? AND day <= ?`)
+        .bind(from, to)
+        .all<{ day: string; section_id: string; views: number }>();
+      for (const row of sections.results || []) {
+        out.sections[row.day + "|" + row.section_id] = row;
+      }
+
+      const ads = await db
+        .prepare(
+          `SELECT day, campaign_id, placement_id, section_id, slot_type, device_category,
+                  impressions, clicks, valid_clicks, suspicious_clicks
+           FROM daily_ads WHERE day >= ? AND day <= ?`
+        )
+        .bind(from, to)
+        .all<{
+          day: string;
+          campaign_id: string;
+          placement_id: string;
+          section_id: string;
+          slot_type: string;
+          device_category: string;
+          impressions: number;
+          clicks: number;
+          valid_clicks: number;
+          suspicious_clicks: number;
+        }>();
+      for (const row of ads.results || []) {
+        const id = [row.day, row.campaign_id, row.placement_id, row.section_id, row.slot_type, row.device_category].join(
+          "|"
+        );
+        out.ads[id] = row;
+      }
+
+      const performance = await db
+        .prepare(
+          `SELECT day, metric_name, sample_count, value_sum FROM daily_performance WHERE day >= ? AND day <= ?`
+        )
+        .bind(from, to)
+        .all<{ day: string; metric_name: string; sample_count: number; value_sum: number }>();
+      for (const row of performance.results || []) {
+        out.performance[row.day + "|" + row.metric_name] = row;
+      }
+
+      const errors = await db
+        .prepare(`SELECT day, error_code, count FROM daily_errors WHERE day >= ? AND day <= ?`)
+        .bind(from, to)
+        .all<{ day: string; error_code: string; count: number }>();
+      for (const row of errors.results || []) {
+        out.errors[row.day + "|" + row.error_code] = row;
+      }
+
+      const audit = await db
+        .prepare(`SELECT day, accepted, rejected, suspicious FROM ingest_audit WHERE day >= ? AND day <= ?`)
+        .bind(from, to)
+        .all<{ day: string; accepted: number; rejected: number; suspicious: number }>();
+      for (const row of audit.results || []) {
+        out.audit[row.day] = row;
+      }
+
+      return out;
     },
   };
 }
