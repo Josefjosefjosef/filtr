@@ -17,7 +17,8 @@
 // 2026-07-16: PWA offline menu/articles/images — durable last-good feed+img caches, tool modules precache
 // 2026-07-20: Prehled dne settings/timeline — network-first for info-system modules (SWR + stripped ?v=
 //             kept stale iu-prehled-dne-ui after #7622 for installed PWAs)
-const CACHE_VERSION = "2026-07-20-prehled-settings-sw-network-first-v1";
+// 2026-07-21: Cross-origin passthrough (analytics Worker ingest) — SW must not re-fetch with a different UA
+const CACHE_VERSION = "2026-07-21-sw-cross-origin-passthrough-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
@@ -876,7 +877,14 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Ostatní: Network First (vždy platná Response — nikdy undefined)
+  // Cross-origin (non-image): never intercept. Image GET is handled above.
+  // Important for InfoUzel Analytics ingest — SW fetch() can use a different UA than the page
+  // (e.g. Playwright UA override vs HeadlessChrome), which would fail the Worker crawler guard.
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
+  // Ostatní same-origin: Network First (vždy platná Response — nikdy undefined)
   event.respondWith(
     (async () => {
       try {
