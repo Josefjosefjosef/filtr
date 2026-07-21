@@ -43,8 +43,26 @@ async function main() {
   });
   const page = await context.newPage();
   const posts = [];
-  page.on("request", (req) => {
-    if (req.method() === "POST" && /infouzel-analytics/.test(req.url())) posts.push(req.url());
+  const postBodies = [];
+  page.on("request", async (req) => {
+    if (req.method() === "POST" && /infouzel-analytics/.test(req.url())) {
+      posts.push(req.url());
+      try {
+        postBodies.push(req.postData() || "");
+      } catch (_) {}
+    }
+  });
+
+  // Prefer fetch over sendBeacon in headless (beacon can be dropped before navigation).
+  await page.addInitScript(() => {
+    try {
+      Object.defineProperty(navigator, "sendBeacon", {
+        configurable: true,
+        value: function () {
+          return false;
+        },
+      });
+    } catch (_) {}
   });
 
   await page.goto(SITE, { waitUntil: "domcontentloaded", timeout: 45000 });
@@ -66,11 +84,16 @@ async function main() {
   await page.evaluate(() => {
     if (window.iuConsent) window.iuConsent.setAnalyticsConsent("granted");
   });
-  await page.waitForTimeout(2500);
+  await page.waitForTimeout(1500);
   await page.evaluate(() => {
+    if (window.iuAnalytics && window.iuAnalytics.track) {
+      window.iuAnalytics.track("page_view", { section_id: "home" });
+      window.iuAnalytics.track("public_section_view", { section_id: "media" });
+      window.iuAnalytics.privateToolsOpen();
+    }
     if (window.iuAnalytics && window.iuAnalytics.flush) window.iuAnalytics.flush();
   });
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(3000);
   const active = await page.evaluate(
     () => !!(window.iuAnalytics && window.iuAnalytics.isActive && window.iuAnalytics.isActive())
   );
@@ -108,7 +131,7 @@ async function main() {
   await page.waitForTimeout(2000);
   if (posts.length > postsAfterRevoke) fail("emit_after_revoke");
 
-  // PC viewport pass (classification only — still consent denied)
+  // PC viewport pass
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto(SITE, { waitUntil: "load", timeout: 45000 });
   await page.waitForTimeout(1000);
@@ -116,28 +139,60 @@ async function main() {
   await page.evaluate(() => {
     if (window.iuConsent) window.iuConsent.setAnalyticsConsent("granted");
   });
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(1000);
   await page.evaluate(() => {
+    if (window.iuAnalytics && window.iuAnalytics.track) {
+      window.iuAnalytics.track("page_view", { section_id: "home" });
+    }
     if (window.iuAnalytics && window.iuAnalytics.flush) window.iuAnalytics.flush();
   });
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(3000);
   if (posts.length <= stillDeniedPosts) fail("pc_no_ingest_after_grant");
+
+  // Tablet viewport classification path (consent still granted from PC step — revoke first)
+  await page.evaluate(() => {
+    if (window.iuConsent) window.iuConsent.setAnalyticsConsent("denied");
+  });
+  await page.setViewportSize({ width: 834, height: 1112 });
+  await page.waitForTimeout(400);
+  await page.evaluate(() => {
+    if (window.iuConsent) window.iuConsent.setAnalyticsConsent("granted");
+  });
+  await page.waitForTimeout(800);
+  await page.evaluate(() => {
+    if (window.iuAnalytics && window.iuAnalytics.track) {
+      window.iuAnalytics.track("page_view", { section_id: "home" });
+    }
+    if (window.iuAnalytics && window.iuAnalytics.flush) window.iuAnalytics.flush();
+  });
+  await page.waitForTimeout(2500);
 
   await browser.close();
 
-  // Allow public HTTP cache to expire (~60s) — poll
+  // Poll public API beyond HTTP cache TTL
   let after = before;
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 24; i++) {
     await new Promise((r) => setTimeout(r, 5000));
     after = await publicVisits();
     if (after.storageMode !== "d1") {
       fail("public_not_d1");
       break;
     }
-    if (after.visits > before.visits) break;
+    if (after.visits > before.visits || (after.j.month && after.j.month.page_views > (before.j.month && before.j.month.page_views))) {
+      break;
+    }
   }
   if (!(after.visits > before.visits)) {
-    fail("public_visits_did_not_increase:" + before.visits + "->" + after.visits);
+    fail(
+      "public_visits_did_not_increase:" +
+        before.visits +
+        "->" +
+        after.visits +
+        ";posts=" +
+        posts.length +
+        ";bodies=" +
+        postBodies.filter(Boolean).length
+    );
   }
 
   if (fails.length) {

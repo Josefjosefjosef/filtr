@@ -81,10 +81,17 @@
     var batch = queue.splice(0, 20);
     try {
       var body = JSON.stringify({ events: batch });
-      if (navigator.sendBeacon) {
-        var blob = new Blob([body], { type: "application/json" });
-        navigator.sendBeacon(ENDPOINT, blob);
-      } else {
+      // sendBeacon may exist but return false (quota / blocked / stub) — always fall back to fetch.
+      var sent = false;
+      if (typeof navigator.sendBeacon === "function") {
+        try {
+          var blob = new Blob([body], { type: "application/json" });
+          sent = !!navigator.sendBeacon(ENDPOINT, blob);
+        } catch (_) {
+          sent = false;
+        }
+      }
+      if (!sent) {
         fetch(ENDPOINT, {
           method: "POST",
           headers: { "content-type": "application/json" },
