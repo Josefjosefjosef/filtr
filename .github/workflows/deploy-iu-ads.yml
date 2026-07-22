@@ -106,8 +106,9 @@ jobs:
         run: |
           set -euo pipefail
           URL="https://infouzel-ads.josef-zmrhal.workers.dev/health"
+          # workers.dev can return CF 1042 briefly after first publish; allow ~90s.
           attempt=1
-          while [ "$attempt" -le 5 ]; do
+          while [ "$attempt" -le 18 ]; do
             echo "HEALTH_ATTEMPT=$attempt"
             CODE="$(curl -sS -o /tmp/iu-ads-health.json -w "%{http_code}" "$URL" || true)"
             if [ "$CODE" = "200" ]; then
@@ -117,6 +118,7 @@ jobs:
                 const fs=require('fs');
                 const j=JSON.parse(fs.readFileSync('/tmp/iu-ads-health.json','utf8'));
                 if(j.service!=='infouzel-ads') process.exit(2);
+                if(j.ok!==true) process.exit(7);
                 if(j.safeMode!==true) process.exit(3);
                 if(j.publicDeliveryEnabled!==false) process.exit(4);
                 if(j.personalizedAds!==false) process.exit(5);
@@ -125,6 +127,7 @@ jobs:
               "
               exit 0
             fi
+            echo "HEALTH_HTTP=$CODE"
             attempt=$((attempt + 1))
             sleep 5
           done
