@@ -193,9 +193,23 @@ async function readPdfExport(page) {
   });
 }
 
+/** Tolerate SPA/hash redirects that interrupt the initial goto (Playwright race). */
+async function gotoProjectsStable(page) {
+  try {
+    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
+  } catch (err) {
+    const msg = String(err && err.message ? err.message : err);
+    if (!msg.includes("interrupted by another navigation")) throw err;
+    await page.waitForLoadState("domcontentloaded", { timeout: 60000 });
+  }
+  if (!String(page.url() || "").includes("/projects")) {
+    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
+  }
+}
+
 async function testDocument(page, doc) {
   const fails = [];
-  await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await gotoProjectsStable(page);
   await openDocument(page, doc);
 
   const fill = await fillVisibleFields(page);
@@ -242,7 +256,7 @@ async function testDocument(page, doc) {
 async function testZivnostPanel(page) {
   const doc = { id: "kupni-movita", category: "smlouvy" };
   const fails = [];
-  await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await gotoProjectsStable(page);
   await openDocument(page, doc);
   await page.selectOption('[data-iu-legal-party-type="partyA"]', "zivnost");
   await page.waitForTimeout(200);
