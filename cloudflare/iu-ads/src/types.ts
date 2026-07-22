@@ -9,6 +9,8 @@ export type Env = {
   ADS_ADMIN_API_ENABLED?: string;
   ADS_CLIENT_API_ENABLED?: string;
   CORS_ALLOW_ORIGIN?: string;
+  /** Worker secret for short-lived private object access signatures (Etapa 1+). */
+  ADS_R2_SIGNING_SECRET?: string;
 };
 
 /** Fields forever forbidden on Public Ad Delivery responses. */
