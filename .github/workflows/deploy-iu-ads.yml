@@ -171,9 +171,10 @@ jobs:
           while [ "$attempt" -le 18 ]; do
             echo "HEALTH_ATTEMPT=$attempt"
             CODE="$(curl -sS -o /tmp/iu-ads-health.json -w "%{http_code}" "$URL" || true)"
+            echo "HEALTH_HTTP=$CODE"
             if [ "$CODE" = "200" ]; then
-              echo "HEALTH_HTTP=200"
               cat /tmp/iu-ads-health.json
+              set +e
               node -e "
                 const fs=require('fs');
                 const j=JSON.parse(fs.readFileSync('/tmp/iu-ads-health.json','utf8'));
@@ -184,15 +185,34 @@ jobs:
                 if(j.personalizedAds!==false) process.exit(5);
                 if(j.storageMode!=='d1') process.exit(6);
                 if(!j.r2 || j.r2.privateDocumentsPublicUrl!==false) process.exit(8);
-                if(!j.r2.creativesBound || !j.r2.documentsBound) process.exit(9);
+                if(!j.r2.creativesBound || !j.r2.documentsBound || j.r2.ready!==true) process.exit(9);
                 console.log('HEALTH_GATE=PASS');
               "
-              exit 0
+              GATE_EC=$?
+              set -e
+              if [ "$GATE_EC" = "0" ]; then
+                exit 0
+              fi
+              echo "HEALTH_GATE_RETRY exit=$GATE_EC (possible edge propagation)"
             fi
-            echo "HEALTH_HTTP=$CODE"
             attempt=$((attempt + 1))
             sleep 5
           done
           echo "HEALTH_GATE=FAIL code=$CODE"
           cat /tmp/iu-ads-health.json || true
           exit 1
+
+      # Optional: set Worker secret from GitHub Actions secret (never echoed).
+      # If absent, /v1/objects/get returns signing_not_configured until secret is put.
+      - name: Ensure ADS_R2_SIGNING_SECRET (optional)
+        env:
+          ADS_R2_SIGNING_SECRET: ${{ secrets.ADS_R2_SIGNING_SECRET }}
+        run: |
+          set -euo pipefail
+          if [ -z "${ADS_R2_SIGNING_SECRET:-}" ]; then
+            echo "ADS_R2_SIGNING_SECRET_STATUS=MISSING_GITHUB_SECRET"
+            echo "MANUAL_STEP=Add GitHub Actions secret ADS_R2_SIGNING_SECRET (random 32+ bytes), then re-run Deploy IU Ads — or: npx wrangler secret put ADS_R2_SIGNING_SECRET"
+            exit 0
+          fi
+          printf '%s' "$ADS_R2_SIGNING_SECRET" | npx wrangler secret put ADS_R2_SIGNING_SECRET
+          echo "ADS_R2_SIGNING_SECRET_STATUS=PUT_OK"

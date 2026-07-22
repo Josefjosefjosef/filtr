@@ -8,7 +8,7 @@
 | `ADS_CLIENT_SESSION_SECRET` | Worker secret | 7 | Client RO session HMAC |
 | `ADS_PASSWORD_PEPPER` | Worker secret | 2 | Password hash pepper |
 | `ADS_CODE_PEPPER` | Worker secret | 7 | Client access code hash pepper |
-| `ADS_R2_SIGNING_SECRET` | Worker secret | 1 | Short-lived private object access |
+| `ADS_R2_SIGNING_SECRET` | GitHub Actions → Worker secret | 1 | Short-lived private object access; deploy puts via wrangler if GitHub secret set |
 | `ADS_BACKUP_ENCRYPTION_KEY` | Worker/CI secret | 9 | Backup encryption |
 | Analytics `ADMIN_TOKEN` | Analytics Worker only | — | Must NOT authorize Ads Admin API |
 
