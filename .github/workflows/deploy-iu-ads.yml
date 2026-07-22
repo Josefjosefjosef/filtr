@@ -1,0 +1,130 @@
+# Deploy InfoUzel Ads (Cloudflare Worker + D1 iu-ads)
+#
+# Required repo secrets:
+#   CLOUDFLARE_API_TOKEN — Account D1:Edit + Workers Scripts Edit
+# Etapa 0/1: fail-closed feature flags; no public ads until later stages.
+name: Deploy IU Ads
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - "cloudflare/iu-ads/**"
+      - ".github/workflows/deploy-iu-ads.yml"
+
+concurrency:
+  group: deploy-iu-ads
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: cloudflare/iu-ads
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: cloudflare/iu-ads/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Ensure D1 database + apply migrations
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_D1_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
+        run: |
+          set -euo pipefail
+          NAME="iu-ads"
+          set +e
+          LIST_JSON="$(npx wrangler d1 list --json 2>/tmp/d1-list.err)"
+          LIST_EC=$?
+          set -e
+          if [ "$LIST_EC" != "0" ]; then
+            echo "BLOCKER: CLOUDFLARE_API_TOKEN cannot list D1"
+            if [ -f /tmp/d1-list.err ]; then sed -E 's/[A-Za-z0-9_-]{20,}/[REDACTED]/g' /tmp/d1-list.err | head -n 40 || true; fi
+            exit 1
+          fi
+          ID="$(printf '%s' "$LIST_JSON" | node -e "
+            let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
+              try {
+                const arr=JSON.parse(s);
+                const hit=(arr||[]).find(x=>x&&x.name==='iu-ads');
+                const id=hit&&(hit.uuid||hit.id||'');
+                process.stdout.write(id?String(id):'');
+              } catch { process.stdout.write(''); }
+            });
+          ")"
+          if [ -z "$ID" ]; then
+            set +e
+            CREATE_OUT="$(npx wrangler d1 create "$NAME" 2>/tmp/d1-create.err)"
+            CREATE_EC=$?
+            set -e
+            if [ "$CREATE_EC" != "0" ]; then
+              echo "BLOCKER: cannot create D1 iu-ads"
+              if [ -f /tmp/d1-create.err ]; then sed -E 's/[A-Za-z0-9_-]{20,}/[REDACTED]/g' /tmp/d1-create.err | head -n 40 || true; fi
+              exit 1
+            fi
+            ID="$(printf '%s' "$CREATE_OUT" | node -e "
+              let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
+                const m=s.match(/database_id\s*=\s*\"([0-9a-fA-F-]{36})\"/) || s.match(/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/);
+                process.stdout.write(m&&m[1]?m[1]:'');
+              });
+            ")"
+          fi
+          if [ -z "$ID" ]; then
+            echo "BLOCKER: could not resolve D1 database_id for iu-ads"
+            exit 1
+          fi
+          echo "D1_ID_RESOLVED=yes"
+          export ID
+          ID="$ID" node -e "
+            const fs=require('fs');
+            let t=fs.readFileSync('wrangler.toml','utf8');
+            t=t.replace(/database_id = \"[^\"]+\"/, 'database_id = \"'+process.env.ID+'\"');
+            fs.writeFileSync('wrangler.toml',t);
+          "
+          npx wrangler d1 migrations apply iu-ads --remote
+
+      - name: Deploy Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
+        run: npx wrangler deploy
+
+      - name: Health probe
+        run: |
+          set -euo pipefail
+          URL="https://infouzel-ads.josef-zmrhal.workers.dev/health"
+          for i in 1 2 3 4 5; do
+            CODE="$(curl -sS -o /tmp/iu-ads-health.json -w "%{http_code}" "$URL" || true)"
+            if [ "$CODE" = "200" ]; then
+              echo "HEALTH_HTTP=200"
+              cat /tmp/iu-ads-health.json
+              node -e "
+                const fs=require('fs');
+                const j=JSON.parse(fs.readFileSync('/tmp/iu-ads-health.json','utf8'));
+                if(j.service!=='infouzel-ads') process.exit(2);
+                if(j.safeMode!==true) process.exit(3);
+                if(j.publicDeliveryEnabled!==false) process.exit(4);
+                if(j.personalizedAds!==false) process.exit(5);
+                if(j.storageMode!=='d1') process.exit(6);
+                console.log('HEALTH_GATE=PASS');
+              "
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "HEALTH_GATE=FAIL code=$CODE"
+          cat /tmp/iu-ads-health.json || true
+          exit 1
