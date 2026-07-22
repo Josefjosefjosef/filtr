@@ -106,7 +106,9 @@ jobs:
         run: |
           set -euo pipefail
           URL="https://infouzel-ads.josef-zmrhal.workers.dev/health"
-          for i in 1 2 3 4 5; do
+          attempt=1
+          while [ "$attempt" -le 5 ]; do
+            echo "HEALTH_ATTEMPT=$attempt"
             CODE="$(curl -sS -o /tmp/iu-ads-health.json -w "%{http_code}" "$URL" || true)"
             if [ "$CODE" = "200" ]; then
               echo "HEALTH_HTTP=200"
@@ -123,6 +125,7 @@ jobs:
               "
               exit 0
             fi
+            attempt=$((attempt + 1))
             sleep 5
           done
           echo "HEALTH_GATE=FAIL code=$CODE"
