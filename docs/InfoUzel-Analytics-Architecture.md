@@ -84,6 +84,15 @@ If the D1 binding is missing or unreachable:
 | Admin overview | `GET /v1/admin/overview` | Bearer `ADMIN_TOKEN` | no-store |
 | Ad reporting | `GET /v1/ads/report` | Bearer `ADMIN_TOKEN` | no-store |
 
+### Test ad campaigns
+
+Campaign IDs matching the prefix `test_` / `test-` / `test.` (e.g. `test_verify_c1`) are **verification-only**.
+
+- Default `GET /v1/ads/report` (no `campaign_id`) **excludes** them from rows and business totals.
+- Explicit `campaign_id=test_…` still returns that verification campaign for audit.
+- `include_test=1` includes all campaigns (including test prefixes) in an unfiltered report.
+- Public stats never expose ad campaigns.
+
 ### CTR
 
 `ctr = valid_clicks / impressions` as a **ratio** in `[0, 1]` (four decimal places).  
