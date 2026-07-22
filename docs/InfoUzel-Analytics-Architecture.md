@@ -131,6 +131,7 @@ Deploy steps: create/list D1 `iu-analytics` → apply migrations → deploy Work
 - InfoCentrum tile: Statistiky a transparentnost
 - Client: `/assets/iu-analytics-client.js` (after consent module)
 - Client flush prefers `navigator.sendBeacon`; if it returns `false` or throws, falls back to `fetch` so events are not silently dropped
+- Service Worker must not intercept cross-origin Analytics ingest (`sw.js` passthrough) so the Worker receives the page User-Agent (crawler guard)
 
 ## Guards & tests
 

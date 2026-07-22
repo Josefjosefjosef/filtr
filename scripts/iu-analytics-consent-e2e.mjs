@@ -11,7 +11,10 @@ import path from "node:path";
 const require = createRequire(path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "package.json"));
 const { chromium } = require("playwright");
 
-const SITE = process.env.IU_ANALYTICS_E2E_SITE || "https://infouzel.cz/projects/";
+// Default uses ?nosw=1 so Playwright UA overrides reach the Worker (installed SW can
+// otherwise re-fetch ingest with HeadlessChrome and trip the crawler guard). Production
+// browsers share one UA between page and SW; cross-origin SW passthrough is also required.
+const SITE = process.env.IU_ANALYTICS_E2E_SITE || "https://infouzel.cz/projects/?nosw=1";
 const WORKER = process.env.IU_ANALYTICS_E2E_WORKER || "https://infouzel-analytics.josef-zmrhal.workers.dev";
 const fails = [];
 function fail(m) {
