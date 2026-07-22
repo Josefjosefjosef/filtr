@@ -1,14 +1,15 @@
 # InfoUzel Ads — implementation STATUS
 
-**Current stage:** Etapa 0 (foundation) — in progress on branch `feat/ads-system-etapa-0-foundation`  
-**Baseline main:** `150f6b7763241768a481b5ba312ab8b380ea9c59`  
-**Safe mode:** ON · Public delivery: OFF · Admin API: OFF · Client API: OFF
+**Current stage:** Etapa 0 (foundation) — MERGED (#7668 → `a31ea9e958`) · Etapa 1 next  
+**Baseline main (start):** `150f6b7763241768a481b5ba312ab8b380ea9c59`  
+**Safe mode:** ON · Public delivery: OFF · Admin API: OFF · Client API: OFF  
+**Prod health:** `https://infouzel-ads.josef-zmrhal.workers.dev/health` → `ok=true` `storageMode=d1` `safeMode=true`
 
 ## Stage checklist
 
 | Etapa | Stav |
 |-------|------|
-| 0 Audit + architektura + migrační základ | in_progress |
+| 0 Audit + architektura + migrační základ | done (#7668) |
 | 1 Infra/data (D1 remote, R2, deploy prod) | pending |
 | 2 Auth / users / roles / audit | pending |
 | 3 Obchod + dokumenty | pending |
