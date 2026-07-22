@@ -27,7 +27,16 @@
 8. GitHub → repo Settings → Secrets → Actions → New repository secret:
    - Name: `CLOUDFLARE_ADS_API_TOKEN`
    - Value: (token value — never paste into chat/logs/repo)
-9. Spusť workflow: **Probe IU Ads R2** (workflow_dispatch), pak **Deploy IU Ads**
+9. Spusť workflow: **Deploy IU Ads** (workflow_dispatch)
+
+### Pokud deploy hlásí `code: 10042`
+
+Token je v pořádku, ale na Cloudflare účtu **není aktivované R2**:
+
+1. Otevři https://dash.cloudflare.com/ → účet InfoUzel → **R2**
+2. Klikni **Activate R2** / Purchase (free tier stačí; může vyžadovat platební metodu i při $0)
+3. Ověř, že dashboard umožní „Create bucket“
+4. Napiš agentovi „R2 aktivováno“ → znovu **Deploy IU Ads**
 
 This token does **not** replace Analytics deploy secrets.
 

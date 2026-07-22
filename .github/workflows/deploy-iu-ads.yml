@@ -125,8 +125,14 @@ jobs:
             if [ "$LIST_EC" != "0" ]; then
               echo "BLOCKER: R2 list failed for $NAME"
               if [ -f /tmp/r2-list.err ]; then sed -E 's/[A-Za-z0-9_-]{20,}/[REDACTED]/g' /tmp/r2-list.err | head -n 40 || true; fi
-              echo "LIKELY_MISSING_PERMISSION=Account.Workers_R2_Storage.Edit"
-              echo "REQUIRED_SECRET=CLOUDFLARE_ADS_API_TOKEN"
+              if grep -Fq "10042" /tmp/r2-list.err 2>/dev/null; then
+                echo "BLOCKER_CODE=10042"
+                echo "BLOCKER_CAUSE=R2_NOT_ENABLED_ON_ACCOUNT"
+                echo "MANUAL_STEP=Cloudflare Dashboard → R2 → Activate/Purchase R2 (free tier OK) for account 577868e9aac9c289e9323100f68fad16, then re-run Deploy IU Ads"
+              elif grep -qiE 'Authentication|Unauthorized|10000|permission|not authorized' /tmp/r2-list.err 2>/dev/null; then
+                echo "LIKELY_MISSING_PERMISSION=Account.Workers_R2_Storage.Edit"
+                echo "REQUIRED_SECRET=CLOUDFLARE_ADS_API_TOKEN"
+              fi
               exit 1
             fi
             if printf '%s' "$LIST_OUT" | grep -Fq "$NAME"; then
@@ -140,7 +146,13 @@ jobs:
             if [ "$CREATE_EC" != "0" ]; then
               echo "BLOCKER: cannot create R2 bucket $NAME"
               if [ -f /tmp/r2-create.err ]; then sed -E 's/[A-Za-z0-9_-]{20,}/[REDACTED]/g' /tmp/r2-create.err | head -n 40 || true; fi
-              echo "LIKELY_MISSING_PERMISSION=Account.Workers_R2_Storage.Edit"
+              if grep -Fq "10042" /tmp/r2-create.err 2>/dev/null; then
+                echo "BLOCKER_CODE=10042"
+                echo "BLOCKER_CAUSE=R2_NOT_ENABLED_ON_ACCOUNT"
+                echo "MANUAL_STEP=Cloudflare Dashboard → R2 → Activate R2 for this account, then re-run Deploy IU Ads"
+              else
+                echo "LIKELY_MISSING_PERMISSION=Account.Workers_R2_Storage.Edit"
+              fi
               exit 1
             fi
             echo "R2_BUCKET_CREATED=$NAME"
