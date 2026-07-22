@@ -18,7 +18,7 @@
 // 2026-07-20: Prehled dne settings/timeline — network-first for info-system modules (SWR + stripped ?v=
 //             kept stale iu-prehled-dne-ui after #7622 for installed PWAs)
 // 2026-07-21: Cross-origin passthrough (analytics Worker ingest) — SW must not re-fetch with a different UA
-const CACHE_VERSION = "2026-07-21-sw-cross-origin-passthrough-v1";
+const CACHE_VERSION = "2026-07-21-prehled-settings-sw-network-first-v1-cross-origin-passthrough";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL

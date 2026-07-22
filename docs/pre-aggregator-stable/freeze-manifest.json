@@ -2,14 +2,14 @@
   "freezeId": "info-system-v7-sw-cross-origin-passthrough-20260721",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-07-21T23:50:00Z",
-  "note": "Freeze bump: SW cross-origin passthrough so Analytics ingest keeps page UA (Playwright/headless). Aggregator/prehled assets unchanged.",
+  "updatedAt": "2026-07-22T01:10:00Z",
+  "note": "Freeze bump: SW cross-origin passthrough for Analytics ingest UA. Aggregator/prehled assets unchanged.",
   "files": {
     "projects/index.html": "97f83cf74a18cf3838f57cb8a2fe515e67c2448d1b189a7193bf3090baf50095",
     "assets/app.css": "5f4442f5fec55cf6ec94b2dbcdf469247b8b7fedc0b1629df148e6d9373a6963",
     "assets/app.js": "1493737245d34e1cc89c22017bde811b4b79c82cabcbbfa1f184acc4848b9c89",
-    "sw.js": "8305c23a1a576719ca5e5cc9d2c993fe5200d46f91a09d82b7d54fbd5b71a24e",
-    "projects/version.json": "59e0e7edc9a0c650d966c94f03654d091800f6263d8e945f58347e7e701f956b",
+    "sw.js": "517620d34f6f47850b581c57babdb79258aa95ec82312e74514ea53f573f66f7",
+    "projects/version.json": "1dc55493161e563a117fb655117029786c13642034fd5c1cb2a32c989ee7f7c0",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "88893a74879f2f63e40ab7cf2bb8d6c6b1480952f03521c909650cbefdfc9d67",
     "assets/iu-user-data-backup-v1.js": "ab0b92b94c1d2f22897943881671c635f1a1bc79b2c130ad1b0436c80e8d3730",
@@ -20,13 +20,13 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-07-21-sw-cross-origin-passthrough-v1\"",
+      "CACHE_VERSION = \"2026-07-21-prehled-settings-sw-network-first-v1-cross-origin-passthrough\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v1\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "warmOfflineAssets"
     ],
     "projects/version.json": [
-      "pwa-sw-cross-origin-passthrough-v1-20260721"
+      "pwa-prehled-settings-sw-network-first-v1-cross-origin-passthrough-20260721"
     ]
   }
 }
