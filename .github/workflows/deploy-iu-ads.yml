@@ -202,17 +202,27 @@ jobs:
           cat /tmp/iu-ads-health.json || true
           exit 1
 
-      # Optional: set Worker secret from GitHub Actions secret (never echoed).
-      # If absent, /v1/objects/get returns signing_not_configured until secret is put.
-      - name: Ensure ADS_R2_SIGNING_SECRET (optional)
+      # Worker secret for signed private object access (never echoed).
+      # Prefer GitHub Actions secret; otherwise generate once per deploy so /v1/objects/get is live.
+      - name: Ensure ADS_R2_SIGNING_SECRET
         env:
           ADS_R2_SIGNING_SECRET: ${{ secrets.ADS_R2_SIGNING_SECRET }}
         run: |
           set -euo pipefail
-          if [ -z "${ADS_R2_SIGNING_SECRET:-}" ]; then
-            echo "ADS_R2_SIGNING_SECRET_STATUS=MISSING_GITHUB_SECRET"
-            echo "MANUAL_STEP=Add GitHub Actions secret ADS_R2_SIGNING_SECRET (random 32+ bytes), then re-run Deploy IU Ads — or: npx wrangler secret put ADS_R2_SIGNING_SECRET"
-            exit 0
+          if [ -n "${ADS_R2_SIGNING_SECRET:-}" ]; then
+            echo "ADS_R2_SIGNING_SECRET_SOURCE=GITHUB_SECRET"
+          else
+            ADS_R2_SIGNING_SECRET="$(openssl rand -hex 32)"
+            echo "ADS_R2_SIGNING_SECRET_SOURCE=GENERATED"
           fi
           printf '%s' "$ADS_R2_SIGNING_SECRET" | npx wrangler secret put ADS_R2_SIGNING_SECRET
           echo "ADS_R2_SIGNING_SECRET_STATUS=PUT_OK"
+          # Verify endpoint is no longer signing_not_configured (invalid sig → 403)
+          CODE="$(curl -sS -o /tmp/iu-ads-obj.json -w "%{http_code}" "https://infouzel-ads.josef-zmrhal.workers.dev/v1/objects/get?key=probe&bucket=DOCUMENTS&exp=1&sig=invalid" || true)"
+          BODY="$(cat /tmp/iu-ads-obj.json || true)"
+          echo "OBJECTS_GET_HTTP=$CODE"
+          if echo "$BODY" | grep -Fq "signing_not_configured"; then
+            echo "BLOCKER: ADS_R2_SIGNING_SECRET not active on Worker"
+            exit 1
+          fi
+          echo "OBJECTS_GET_SIGNING=CONFIGURED"
