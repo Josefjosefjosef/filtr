@@ -84,6 +84,15 @@ If the D1 binding is missing or unreachable:
 | Admin overview | `GET /v1/admin/overview` | Bearer `ADMIN_TOKEN` | no-store |
 | Ad reporting | `GET /v1/ads/report` | Bearer `ADMIN_TOKEN` | no-store |
 
+### Test ad campaigns
+
+Campaign IDs matching the prefix `test_` / `test-` / `test.` (e.g. `test_verify_c1`) are **verification-only**.
+
+- Default `GET /v1/ads/report` (no `campaign_id`) **excludes** them from rows and business totals.
+- Explicit `campaign_id=test_…` still returns that verification campaign for audit.
+- `include_test=1` includes all campaigns (including test prefixes) in an unfiltered report.
+- Public stats never expose ad campaigns.
+
 ### CTR
 
 `ctr = valid_clicks / impressions` as a **ratio** in `[0, 1]` (four decimal places).  
@@ -131,6 +140,7 @@ Deploy steps: create/list D1 `iu-analytics` → apply migrations → deploy Work
 - InfoCentrum tile: Statistiky a transparentnost
 - Client: `/assets/iu-analytics-client.js` (after consent module)
 - Client flush prefers `navigator.sendBeacon`; if it returns `false` or throws, falls back to `fetch` so events are not silently dropped
+- Worker CORS echoes a concrete `Access-Control-Allow-Origin` and sets `Access-Control-Allow-Credentials: true` (required for `sendBeacon` + `application/json` preflight)
 - Service Worker must not intercept cross-origin Analytics ingest (`sw.js` passthrough) so the Worker receives the page User-Agent (crawler guard)
 
 ## Guards & tests

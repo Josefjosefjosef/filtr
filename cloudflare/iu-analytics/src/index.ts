@@ -1,4 +1,5 @@
 import { applyEvent, rejectEvent } from "./aggregate";
+import { isTestAdCampaignId } from "./ads-policy";
 import { privacyGuard, todayUtc } from "./privacy";
 import { AnalyticsStore, createStore } from "./store";
 import { Env } from "./types";
@@ -20,13 +21,19 @@ function corsHeaders(env: Env, req: Request): HeadersInit {
     /^https:\/\/[a-z0-9-]+\.pages\.dev$/i.test(origin) ||
     /^http:\/\/127\.0\.0\.1:\d+$/i.test(origin) ||
     /^http:\/\/localhost:\d+$/i.test(origin);
-  return {
-    "access-control-allow-origin": ok ? origin || allow : "https://infouzel.cz",
+  // sendBeacon(JSON) always uses credentials mode "include"; browsers require ACAC + concrete ACAO.
+  const acao = ok ? origin || allow : "https://infouzel.cz";
+  const headers: Record<string, string> = {
+    "access-control-allow-origin": acao,
     "access-control-allow-methods": "GET, POST, OPTIONS",
     "access-control-allow-headers": "content-type, authorization",
     "access-control-max-age": "86400",
     vary: "Origin",
   };
+  if (acao && acao !== "*") {
+    headers["access-control-allow-credentials"] = "true";
+  }
+  return headers;
 }
 
 function withCors(env: Env, req: Request, res: Response): Response {
@@ -181,8 +188,14 @@ async function adReport(store: AnalyticsStore, url: URL) {
   const section_id = url.searchParams.get("section_id");
   const slot_type = url.searchParams.get("slot_type");
   const device_category = url.searchParams.get("device_category");
+  const includeTest = url.searchParams.get("include_test") === "1";
   const blob = await store.readRange(from, to);
   let rows = Object.values(blob.ads);
+  // Business default: drop test_* campaigns unless include_test=1 or an explicit campaign_id is requested
+  // (explicit campaign_id allows admins to inspect a known verification campaign).
+  if (!includeTest && !campaign_id) {
+    rows = rows.filter((r) => !isTestAdCampaignId(r.campaign_id));
+  }
   if (campaign_id) rows = rows.filter((r) => r.campaign_id === campaign_id);
   if (placement_id) rows = rows.filter((r) => r.placement_id === placement_id);
   if (section_id) rows = rows.filter((r) => r.section_id === section_id);
@@ -200,7 +213,12 @@ async function adReport(store: AnalyticsStore, url: URL) {
   const sus = rows.reduce((s, r) => s + r.suspicious_clicks, 0);
   return {
     generatedAt: new Date().toISOString(),
-    filters: { from, to, campaign_id, placement_id, section_id, slot_type, device_category },
+    filters: { from, to, campaign_id, placement_id, section_id, slot_type, device_category, include_test: includeTest },
+    testDataPolicy: {
+      excludesTestCampaignPrefixByDefault: true,
+      testCampaignPrefix: "test_",
+      includeTestParam: includeTest,
+    },
     totals: {
       impressions,
       clicks,
