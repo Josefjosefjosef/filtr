@@ -1,0 +1,33 @@
+# InfoUzel Ads — business/admin Worker (SEPARATE from Analytics).
+# Source of truth for campaigns/clients/docs: Cloudflare D1 iu-ads.
+# Analytics remains anonymized in infouzel-analytics / iu-analytics.
+# Secrets: see secrets.contract.md (never commit values).
+name = "infouzel-ads"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+account_id = "577868e9aac9c289e9323100f68fad16"
+
+[observability]
+enabled = true
+
+[vars]
+ADS_SAFE_MODE = "true"
+ADS_PUBLIC_DELIVERY_ENABLED = "false"
+ADS_ADMIN_API_ENABLED = "false"
+ADS_CLIENT_API_ENABLED = "false"
+CORS_ALLOW_ORIGIN = "https://infouzel.cz"
+
+# Placeholder id replaced by deploy workflow after D1 create/list.
+[[d1_databases]]
+binding = "DB"
+database_name = "iu-ads"
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+# R2 buckets created in Etapa 1 (manual if token lacks R2). Placeholders kept commented until ready.
+# [[r2_buckets]]
+# binding = "CREATIVES"
+# bucket_name = "iu-ads-creatives"
+# [[r2_buckets]]
+# binding = "DOCUMENTS"
+# bucket_name = "iu-ads-documents"
