@@ -140,6 +140,7 @@ Deploy steps: create/list D1 `iu-analytics` → apply migrations → deploy Work
 - InfoCentrum tile: Statistiky a transparentnost
 - Client: `/assets/iu-analytics-client.js` (after consent module)
 - Client flush prefers `navigator.sendBeacon`; if it returns `false` or throws, falls back to `fetch` so events are not silently dropped
+- Worker CORS echoes a concrete `Access-Control-Allow-Origin` and sets `Access-Control-Allow-Credentials: true` (required for `sendBeacon` + `application/json` preflight)
 - Service Worker must not intercept cross-origin Analytics ingest (`sw.js` passthrough) so the Worker receives the page User-Agent (crawler guard)
 
 ## Guards & tests

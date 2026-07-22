@@ -21,13 +21,19 @@ function corsHeaders(env: Env, req: Request): HeadersInit {
     /^https:\/\/[a-z0-9-]+\.pages\.dev$/i.test(origin) ||
     /^http:\/\/127\.0\.0\.1:\d+$/i.test(origin) ||
     /^http:\/\/localhost:\d+$/i.test(origin);
-  return {
-    "access-control-allow-origin": ok ? origin || allow : "https://infouzel.cz",
+  // sendBeacon(JSON) always uses credentials mode "include"; browsers require ACAC + concrete ACAO.
+  const acao = ok ? origin || allow : "https://infouzel.cz";
+  const headers: Record<string, string> = {
+    "access-control-allow-origin": acao,
     "access-control-allow-methods": "GET, POST, OPTIONS",
     "access-control-allow-headers": "content-type, authorization",
     "access-control-max-age": "86400",
     vary: "Origin",
   };
+  if (acao && acao !== "*") {
+    headers["access-control-allow-credentials"] = "true";
+  }
+  return headers;
 }
 
 function withCors(env: Env, req: Request, res: Response): Response {
