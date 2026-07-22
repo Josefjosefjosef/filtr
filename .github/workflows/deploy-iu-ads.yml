@@ -217,12 +217,19 @@ jobs:
           fi
           printf '%s' "$ADS_R2_SIGNING_SECRET" | npx wrangler secret put ADS_R2_SIGNING_SECRET
           echo "ADS_R2_SIGNING_SECRET_STATUS=PUT_OK"
-          # Verify endpoint is no longer signing_not_configured (invalid sig → 403)
-          CODE="$(curl -sS -o /tmp/iu-ads-obj.json -w "%{http_code}" "https://infouzel-ads.josef-zmrhal.workers.dev/v1/objects/get?key=probe&bucket=DOCUMENTS&exp=1&sig=invalid" || true)"
-          BODY="$(cat /tmp/iu-ads-obj.json || true)"
-          echo "OBJECTS_GET_HTTP=$CODE"
-          if echo "$BODY" | grep -Fq "signing_not_configured"; then
-            echo "BLOCKER: ADS_R2_SIGNING_SECRET not active on Worker"
-            exit 1
-          fi
-          echo "OBJECTS_GET_SIGNING=CONFIGURED"
+          # Verify endpoint is no longer signing_not_configured (invalid sig → 403/400; may need edge wait)
+          attempt=1
+          while [ "$attempt" -le 18 ]; do
+            CODE="$(curl -sS -o /tmp/iu-ads-obj.json -w "%{http_code}" "https://infouzel-ads.josef-zmrhal.workers.dev/v1/objects/get?key=probe&bucket=DOCUMENTS&exp=1&sig=invalid" || true)"
+            BODY="$(cat /tmp/iu-ads-obj.json || true)"
+            echo "OBJECTS_GET_ATTEMPT=$attempt HTTP=$CODE"
+            if ! echo "$BODY" | grep -Fq "signing_not_configured"; then
+              echo "OBJECTS_GET_SIGNING=CONFIGURED"
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+            sleep 5
+          done
+          echo "BLOCKER: ADS_R2_SIGNING_SECRET not active on Worker after retries"
+          cat /tmp/iu-ads-obj.json || true
+          exit 1
