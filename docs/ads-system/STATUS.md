@@ -1,38 +1,29 @@
 # InfoUzel Ads — implementation STATUS
 
-**Current stage:** Etapa 1 (infra + R2) — in progress  
+**Current stage:** Etapa 1 (infra + R2) — **blocked on R2 token** · PR #7680  
 **Etapa 0:** MERGED (#7668 → `a31ea9e958`)  
-**PR #7674:** MERGED (`b5e15ff40c`) health probe retries  
-**Safe mode:** ON · Public delivery: OFF · Admin API: OFF · Client API: OFF  
-**Prod health (Etapa 0 baseline):** `ok=true` `storageMode=d1` `safeMode=true`
+**PR #7674:** MERGED (`b5e15ff40c`)  
+**Safe mode:** ON · Public delivery: OFF  
+
+## R2 blocker (ověřeno 2026-07-22)
+
+Deploy run `29955044596` (branch Etapa 1):
+- `TOKEN_SOURCE=CLOUDFLARE_API_TOKEN_FALLBACK` (secret `CLOUDFLARE_ADS_API_TOKEN` neexistuje)
+- D1 migrace `0002_r2_access_audit.sql` applied ✅
+- R2 list → Cloudflare API `Authentication error [code: 10000]`
+- `LIKELY_MISSING_PERMISSION=Account.Workers_R2_Storage.Edit`
+
+**Jediný manuální krok:** vytvořit GitHub secret `CLOUDFLARE_ADS_API_TOKEN` dle `cloudflare/iu-ads/secrets.contract.md`, pak spustit **Deploy IU Ads**.
 
 ## Stage checklist
 
 | Etapa | Stav |
 |-------|------|
-| 0 Audit + architektura + migrační základ | done (#7668) |
-| 1 Infra/data (D1 remote, R2, deploy prod) | in_progress |
-| 2 Auth / users / roles / audit | pending |
-| 3 Obchod + dokumenty | pending |
-| 4 Kampaně / umístění / kreativy | pending |
-| 5 Public engine | pending |
-| 6 Měření / reporty | pending |
-| 7 Klientské kódy + portál | pending |
-| 8 Admin UI dokončení | pending |
-| 9 Backup / security / closeout | pending |
-
-## Etapa 1 focus
-
-- Prefer `CLOUDFLARE_ADS_API_TOKEN` (R2+D1+Workers Scripts Edit)
-- R2 buckets: `iu-ads-creatives`, `iu-ads-documents`
-- Private docs via signed Worker access only
-- Migration `0002_r2_access_audit.sql`
-- Keep SAFE_MODE / publicDeliveryEnabled=false
+| 0 | done (#7668) |
+| 1 | code ready (#7680), waiting on R2 token |
+| 2–9 | pending |
 
 ## Guards
 
-- PR #7617 OID must remain unchanged by ads work
+- PR #7617 OID `9be3e372…` unchanged
 - `stash@{0}` `iu-v3-wip-unrelated-cnb` preserved
-- Analytics health unchanged
-
-Chapter matrix: [01-traceability-matrix.md](./01-traceability-matrix.md)
