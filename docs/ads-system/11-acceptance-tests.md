@@ -77,6 +77,20 @@ Každý test má být dohledatelný z `01-traceability-matrix.json`.
 | E6-T8 | Integration: both stats routes return `503 stats_not_configured` when `ANALYTICS_ADMIN_REPORT_URL` is empty or `ANALYTICS_ADMIN_TOKEN` is unset | `test/admin-stats.test.ts` |
 | E6-T9 | Schema isolation (carried over): `iu-ads` migrations (incl. `0007`) still define no `daily_*`/`ingest_audit` tables — `ANALYTICS_ONLY_TABLES` check in `test/isolation.test.ts` | `test/isolation.test.ts` |
 
+## Etapa 7 (implemented now)
+
+| ID | Test | Gate |
+|----|------|------|
+| E7-T1 | Unit: client code hash is deterministic SHA-256+pepper, never equals plaintext; different pepper → different hash | `test/client-portal.test.ts` |
+| E7-T2 | Unit: `resolveCodeStatus` marks past `expires_at` as `expired`; audit redaction strips `access_code`/`code_hash` | `test/client-portal.test.ts` |
+| E7-T3 | Integration: issue returns plaintext once; DB + list + audit never contain plaintext; `sales` denied (`403`); campaign must belong to client | `test/client-portal.test.ts` |
+| E7-T4 | Integration: regen revokes old + returns new plaintext once; revoke blocks status; sessions revoked | `test/client-portal.test.ts` |
+| E7-T5 | Integration: client login uniform `invalid_credentials`; cookie HttpOnly/Secure/SameSite=Strict; expired/revoked codes rejected | `test/client-portal.test.ts` |
+| E7-T6 | Integration: brute-force lockout (5 failures on same `IU-XXXX` prefix → `429 locked_out` even for correct code) | `test/client-portal.test.ts` |
+| E7-T7 | Integration: cross-token reject — client cookie fails `requireAdminSession`; admin cookie fails `requireClientSession`; admin token as access code fails | `test/client-portal.test.ts` |
+| E7-T8 | Integration: report scoped to code campaigns; hides `note_internal`/price/`r2_key`/internal docs; other client's campaign → `403`; logout invalidates session | `test/client-portal.test.ts` |
+| E7-T9 | RBAC: `ads_manager` has `codes.read`/`codes.write`; isolation guard still PASS | `test/rbac.test.ts`, `scripts/iu-ads-isolation-guard.mjs` |
+
 ## Pozdější etapy (katalog)
 
-Auth/hash/brute-force/session; RBAC; client code hash/once/expire/regen/isolation; no empty box; collision; auto start/stop; limits; creative MIME; dangerous URL; audit no secrets; client report full; PDF/CSV/JSON export; mobile/tablet/PC; privacy/analytics/repo/layout guards; produkční E2E.
+Admin UI/ops (Etapa 8); backup/security/E2E (Etapa 9); client portal frontend UI; PDF export; `client_report_snapshots` persistence; produkční E2E.

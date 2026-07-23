@@ -59,7 +59,7 @@ To activate the admin surface in a given environment:
    Etapa 2 does not include an email/SMS delivery integration — the raw token is intentionally never
    returned by the API. Wire an actual delivery channel before relying on self-service reset in production.
 
-## Etapa 6 — measurement/reporting (manual, per environment)
+## Etapa 6 — enabling measurement/reporting (manual, per environment)
 
 `ANALYTICS_ADMIN_REPORT_URL` (a `system_settings` row, not a wrangler var) ships **empty** by
 default, so `/v1/admin/stats/*` fails closed with `503 stats_not_configured` until both of the
@@ -72,6 +72,20 @@ following are set out-of-band:
 2. Update the `ANALYTICS_ADMIN_REPORT_URL` row in the `iu-ads` D1 `system_settings` table to the
    Analytics Worker's base URL (e.g. `https://infouzel-analytics.<account>.workers.dev`) — direct
    D1 write, same operational pattern as other `system_settings` tunables (no public write endpoint).
+
+## Etapa 7 — enabling Client portal API (manual, per environment)
+
+`ADS_CLIENT_API_ENABLED` stays `false` in the committed `wrangler.toml` defaults (fail-closed).
+To activate the client surface in a given environment:
+
+1. `npx wrangler secret put ADS_CLIENT_SESSION_SECRET` — high-entropy random value, **different**
+   from `ADS_SESSION_SECRET` (cross-token rejection depends on this separation).
+2. `npx wrangler secret put ADS_CODE_PEPPER` — separate high-entropy pepper for access-code hashes
+   (SHA-256 + pepper; never store plaintext codes).
+3. Flip `ADS_CLIENT_API_ENABLED=true` only via environment override / `wrangler deploy --var` —
+   never change the checked-in default.
+4. `safeMode` does **not** gate the client surface (it only gates Public Ad Delivery), matching Admin API.
+5. Issue codes via Admin `POST /v1/admin/codes` (`codes.write`) — plaintext shown once at issue/regen.
 
 ## Rules
 

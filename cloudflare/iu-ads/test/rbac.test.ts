@@ -83,6 +83,8 @@ describe("RBAC Etapa 3 extension — documents/rights/complaints/exports/finance
   it("ads_manager gets rights.read/rights.write (campaign activation prerequisite) but no business/finance perms", () => {
     expect(hasPermission(["ads_manager"], "rights.read")).toBe(true);
     expect(hasPermission(["ads_manager"], "rights.write")).toBe(true);
+    expect(hasPermission(["ads_manager"], "codes.read")).toBe(true);
+    expect(hasPermission(["ads_manager"], "codes.write")).toBe(true);
     expect(hasPermission(["ads_manager"], "documents.write")).toBe(false);
     expect(hasPermission(["ads_manager"], "finance.read")).toBe(false);
     expect(hasPermission(["ads_manager"], "complaints.write")).toBe(false);

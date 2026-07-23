@@ -52,8 +52,52 @@ Query parametry (Etapa 5): `?device=pc|mobile|tablet` (bez platné hodnoty → `
 
 ## Client Report (read-only)
 
-Vrací pouze `client_visible` pole kampaní ve scope kódu + povolené dokumenty.  
-Kap. 38.1–38.14 — implementace Etapa 7; kontrakt rezervován zde.
+Vrací pouze kampaně ve scope `client_code_campaigns` + dokumenty s `visibility` ∈
+{`client_visible`,`public`}. Nikdy: price*, email, phone, `note_internal`, `code_hash`/`access_code`,
+`r2_key`, ico/dic.
+
+## Etapa 7 — Client codes + portal (kap. 36–38)
+
+### Admin codes
+
+Gate: `ADS_ADMIN_API_ENABLED` + admin session secrets (stejné jako Etapa 2–6) + RBAC
+`codes.read`/`codes.write` (`main_admin`/`ads_manager`; `read_only` jen read; `sales` nemá).
+Pro issue/regen také `ADS_CODE_PEPPER`. Hash: deterministické SHA-256(pepper\|code) — plaintext
+jen v response issue/regen, nikdy v DB ani audit.
+
+| Route | Method | Perm | Notes |
+|-------|--------|------|-------|
+| `/v1/admin/codes` | GET | `codes.read` | Filtr `?client_id=`, `?status=active\|revoked\|expired`; bez plaintext |
+| `/v1/admin/codes` | POST | `codes.write` | Body: `client_id`, `campaign_ids[]`, volitelně `expires_at`; response `{code, access_code}` (plaintext jednou) |
+| `/v1/admin/codes/:id` | GET | `codes.read` | Metadata + `campaign_ids` |
+| `/v1/admin/codes/:id/regen` | POST | `codes.write` | Revokuje starý kód (+ sessions), vydá nový plaintext jednou |
+| `/v1/admin/codes/:id/revoke` | POST | `codes.write` | `status=revoked`, revokuje sessions; `409 already_revoked` |
+
+### Client auth
+
+Gate: `ADS_CLIENT_API_ENABLED` **and** `ADS_CLIENT_SESSION_SECRET` + `ADS_CODE_PEPPER`
+(`503 auth_not_configured` / `client_api_disabled`). `safeMode` **neblokuje** client surface
+(stejně jako Admin — safeMode jen Public Delivery). Cookie: `HttpOnly; Secure; SameSite=Strict`,
+HMAC `ADS_CLIENT_SESSION_SECRET` (oddělený od admin secret → cross-token reject).
+
+| Route | Method | Auth | Notes |
+|-------|--------|------|-------|
+| `/v1/client/auth/login` | POST | access code | Uniform `invalid_credentials`; brute-force lockout (`client_login_attempts`, prefix bucket); body `access_code` |
+| `/v1/client/auth/logout` | POST | client session | Revokuje session, clear cookie |
+| `/v1/client/auth/me` | GET | client session | `client_id` + `campaign_ids` scope |
+
+**Cross-reject:** client cookie na `/v1/admin/*` = fail; admin cookie jako client session = fail;
+admin token jako `access_code` = `invalid_credentials`.
+
+### Client report
+
+| Route | Method | Auth | Notes |
+|-------|--------|------|-------|
+| `/v1/client/report` | GET | client session | JSON report: scoped campaigns (client-visible fields), placements, creatives (bez `r2_key`), `client_visible`/`public` documents, analytics stats (allowlist) pokud nakonfigurováno; filtr `?campaign_id=` mimo scope → `403` |
+| `/v1/client/report/export` | GET | client session | `?format=json\|csv` (PDF → `501 pdf_export_deferred`); respektuje `client_export_enabled` |
+
+Snapshot persistence (`client_report_snapshots`, 38.13) a PDF export jsou **deferred** (Worker vrací
+`snapshot.persisted=false`). Frontend client portal UI není v tomto PR — viz STATUS gap.
 
 ## Admin API
 

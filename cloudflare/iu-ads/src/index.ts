@@ -77,6 +77,15 @@ import {
 } from "./admin-creatives";
 import { handlePreviewCampaign } from "./admin-preview";
 import { handleGetCampaignStats, handleGetStatsSummary } from "./admin-stats";
+import {
+  handleGetCode,
+  handleIssueCode,
+  handleListCodes,
+  handleRegenCode,
+  handleRevokeCode,
+} from "./admin-codes";
+import { handleClientLogin, handleClientLogout, handleClientMe } from "./client-auth";
+import { handleClientReport, handleClientReportExport } from "./client-report";
 import { isDeviceCategory, selectPublicAds } from "./delivery-engine";
 import { resolveFeatureFlags, isPublicDeliveryActive } from "./feature-flags";
 import { emptyPublicDelivery, sanitizePublicAds, assertNoForbiddenPublicKeys } from "./isolation";
@@ -130,7 +139,7 @@ export default {
           service: "infouzel-ads",
           mode: "ads-business",
           storageMode: dbOk ? "d1" : env.DB ? "unavailable" : "unbound",
-          schemaVersion: "0007",
+          schemaVersion: "0008",
           safeMode: flags.safeMode,
           publicDeliveryEnabled: flags.publicDeliveryEnabled,
           adminApiEnabled: flags.adminApiEnabled,
@@ -352,14 +361,37 @@ export default {
       const statsCampaignMatch = path.match(/^\/v1\/admin\/stats\/campaigns\/([^/]+)$/);
       if (statsCampaignMatch && method === "GET") return handleGetCampaignStats(request, env, url, statsCampaignMatch[1]);
 
+      // Etapa 7 — client access codes (kap. 36): issue/list/regen/revoke (hash-only storage).
+      if (path === "/v1/admin/codes" && method === "GET") return handleListCodes(request, env, url);
+      if (path === "/v1/admin/codes" && method === "POST") return handleIssueCode(request, env);
+      const codeRegenMatch = path.match(/^\/v1\/admin\/codes\/([^/]+)\/regen$/);
+      if (codeRegenMatch && method === "POST") return handleRegenCode(request, env, codeRegenMatch[1]);
+      const codeRevokeMatch = path.match(/^\/v1\/admin\/codes\/([^/]+)\/revoke$/);
+      if (codeRevokeMatch && method === "POST") return handleRevokeCode(request, env, codeRevokeMatch[1]);
+      const codeIdMatch = path.match(/^\/v1\/admin\/codes\/([^/]+)$/);
+      if (codeIdMatch && method === "GET") return handleGetCode(request, env, codeIdMatch[1]);
+
       return json({ error: "not_found" }, 404);
     }
 
+    // Client portal (Etapa 7, kap. 37–38). Gate: ADS_CLIENT_API_ENABLED + session/code secrets.
+    // safeMode only gates Public Ad Delivery — same rule as Admin API.
     if (path.startsWith("/v1/client")) {
-      if (!flags.clientApiEnabled || flags.safeMode) {
-        return json({ error: "client_api_disabled", safeMode: flags.safeMode }, 503);
+      if (!flags.clientApiEnabled) {
+        return json({ error: "client_api_disabled" }, 503);
       }
-      return json({ error: "not_implemented" }, 501);
+      if (!env.ADS_CLIENT_SESSION_SECRET || !env.ADS_CODE_PEPPER) {
+        return json({ error: "auth_not_configured" }, 503);
+      }
+
+      const method = request.method;
+      if (path === "/v1/client/auth/login" && method === "POST") return handleClientLogin(request, env);
+      if (path === "/v1/client/auth/logout" && method === "POST") return handleClientLogout(request, env);
+      if (path === "/v1/client/auth/me" && method === "GET") return handleClientMe(request, env);
+      if (path === "/v1/client/report" && method === "GET") return handleClientReport(request, env, url);
+      if (path === "/v1/client/report/export" && method === "GET") return handleClientReportExport(request, env, url);
+
+      return json({ error: "not_found" }, 404);
     }
 
     return json({ error: "not_found" }, 404);
