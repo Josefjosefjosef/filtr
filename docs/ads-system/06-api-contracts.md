@@ -252,6 +252,41 @@ každý řádek i souhrn je znovu sestaven pole po poli z explicitního allowlis
 `clicks`, `valid_clicks`, `suspicious_clicks`, `ctr`), takže neočekávané pole z Analytics (vč.
 případného PII) nikdy neprojde na admin klienta.
 
+## Etapa 8 — Admin ops (kap. 5, 6, 16–19)
+
+Gate: stejné jako Etapa 2–7 (`ADS_ADMIN_API_ENABLED` + session secrets). Schema `0009`
+(indexes + alert tunables only; `alerts` table already in `0001`). Minimal Worker shell:
+`GET /admin` (ungated HTML docs only — live API still requires admin gate).
+
+| Route | Method | Perm | Notes |
+|-------|--------|------|-------|
+| `/v1/admin/nav` | GET | session | Role-filtered menu contract (kap. 5); `dashboard`/`search` always; other items require matching `*.read` |
+| `/v1/admin/dashboard` | GET | session | Role-scoped widgets only (omit if role lacks read): `campaigns_by_status`, `open_inquiries`, `open_orders`, `reservations_upcoming`, `unpaid_invoices`, `open_alerts`, `recent_audit` — counts/aggregates, no PII dumps |
+| `/v1/admin/search?q=` | GET | session | Cross-entity search (clients/campaigns/invoices/documents metadata) role-scoped; **never** `code_hash`/`password_hash`/`access_code`/`r2_key`/secrets; `q` min 2 / max 120 |
+| `/v1/admin/calendar?from=&to=` | GET | `campaigns.read` **or** `placements.read` | Timeline: campaign windows + reservations; exclusive collisions flagged via `collision.ts`; ISO `from`/`to` required |
+| `/v1/admin/alerts` | GET | `alerts.read` | Filtry: `status`, `alert_type`, `limit`, `offset` |
+| `/v1/admin/alerts/:id` | GET | `alerts.read` | Single alert |
+| `/v1/admin/alerts/:id/ack` | POST | `alerts.write` | `new` → `read`; `409 already_resolved` |
+| `/v1/admin/alerts/:id/resolve` | POST | `alerts.write` | → `resolved` + `resolved_at`; `409 already_resolved` |
+| `/v1/admin/alerts/generate` | POST | `alerts.write` | Best-effort seed: `campaign_ending_soon`, `rights_missing`; response notes `cron: deferred_to_etapa_9` |
+
+### List filters (kap. 17) — consistent query params
+
+Shared helpers: `admin-list-filters.ts` (`clampLimit`/`clampOffset`/`likeContains`/`parseCommonListFilters`).
+
+| List | Filters |
+|------|---------|
+| `/v1/admin/clients` | `q`, `limit`, `offset` |
+| `/v1/admin/campaigns` | `status`, `client_id`, `q` (title/evidence_code/id), `limit`, `offset` |
+| `/v1/admin/inquiries` / `orders` / `contracts` / `invoices` | `status`, `client_id`, (`q` on invoices), `limit`, `offset` |
+| `/v1/admin/documents` | `client_id`, `campaign_id`, `doc_type`, `visibility`, `q`, `limit`, `offset` |
+| `/v1/admin/reservations` | `placement_id`, `campaign_id`, `status`, `from`, `to`, `limit` |
+| `/v1/admin/creatives` | `client_id`, `campaign_id`, `review_status`, `limit` |
+| `/v1/admin/alerts` | `status`, `alert_type`, `limit`, `offset` |
+
+**Deferred:** full public-site admin UI (same pattern as E5 inject / E7 portal UI). Cron for alert
+generation → Etapa 9.
+
 ## Open questions resolved
 
 - Analytics report zůstává na Analytics Worker (`/v1/ads/report`).

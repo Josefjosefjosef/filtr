@@ -22,3 +22,10 @@ Inzerent nemá e-mail/heslo do admin. Přístup jen přes klientský kód → RO
 ## Session cookies (admin)
 
 `Secure`, `HttpOnly`, `SameSite=Strict` (nebo `Lax` pokud cross-subdomain vyžaduje — zdokumentovat odchylku).
+
+## Etapa 8 — alerts
+
+| Permission | main_admin | ads_manager | sales | read_only |
+|------------|------------|-------------|-------|-----------|
+| `alerts.read` | yes | yes | yes | yes |
+| `alerts.write` (ack/resolve/generate) | yes | yes | yes | no |

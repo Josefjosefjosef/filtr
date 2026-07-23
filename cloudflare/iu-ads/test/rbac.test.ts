@@ -85,9 +85,19 @@ describe("RBAC Etapa 3 extension — documents/rights/complaints/exports/finance
     expect(hasPermission(["ads_manager"], "rights.write")).toBe(true);
     expect(hasPermission(["ads_manager"], "codes.read")).toBe(true);
     expect(hasPermission(["ads_manager"], "codes.write")).toBe(true);
+    expect(hasPermission(["ads_manager"], "alerts.read")).toBe(true);
+    expect(hasPermission(["ads_manager"], "alerts.write")).toBe(true);
     expect(hasPermission(["ads_manager"], "documents.write")).toBe(false);
     expect(hasPermission(["ads_manager"], "finance.read")).toBe(false);
     expect(hasPermission(["ads_manager"], "complaints.write")).toBe(false);
+  });
+
+  it("Etapa 8 alerts permissions: sales can write, read_only cannot", () => {
+    expect(hasPermission(["sales"], "alerts.read")).toBe(true);
+    expect(hasPermission(["sales"], "alerts.write")).toBe(true);
+    expect(hasPermission(["read_only"], "alerts.read")).toBe(true);
+    expect(hasPermission(["read_only"], "alerts.write")).toBe(false);
+    expect(hasPermission(["main_admin"], "alerts.write")).toBe(true);
   });
 
   it("read_only gets read-only access to every new Etapa 3 surface and no write access anywhere", () => {
