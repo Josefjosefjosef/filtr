@@ -1,6 +1,6 @@
 /**
- * Admin alerts lifecycle (Etapa 8, kap. 19). CRUD-lite: list/get/ack/resolve + optional
- * best-effort generate (campaign ending soon, missing rights). Cron wiring deferred to Etapa 9.
+ * Admin alerts lifecycle (Etapa 8, kap. 19). CRUD-lite: list/get/ack/resolve + generate.
+ * Etapa 9: Cron calls `generateAlertsBatch` via Worker `scheduled` handler.
  */
 import { buildAuditEntry } from "./audit";
 import { insertAuditLog, json, newId, requireAdminPermission } from "./admin-auth";
@@ -163,37 +163,45 @@ export async function handleResolveAlert(request: Request, env: Env, alertId: st
   return json({ alert: after ? serializeAlert(after) : null });
 }
 
-/**
- * Best-effort seed rules (no Cron required). Idempotent-ish: skips when an open alert of the
- * same type already exists for the object. Cron scheduling deferred to Etapa 9.
- */
-export async function handleGenerateAlerts(request: Request, env: Env): Promise<Response> {
-  const guard = await requireAdminPermission(request, env, "alerts.write");
-  if (!guard.ok) return guard.response;
-  if (!env.DB) return json({ error: "auth_not_configured" }, 503);
+export type GenerateAlertsResult = {
+  created: number;
+  ending_days: number;
+  rules: readonly string[];
+};
 
-  const endingDays = await loadSettingInt(env.DB, "ALERT_CAMPAIGN_ENDING_DAYS", 7);
+/**
+ * Best-effort seed rules. Idempotent-ish: skips when an open alert of the same type
+ * already exists for the object. Used by Admin POST and by Cron `scheduled`.
+ */
+export async function generateAlertsBatch(
+  db: D1Database,
+  actorUserId: string
+): Promise<GenerateAlertsResult> {
+  const endingDays = await loadSettingInt(db, "ALERT_CAMPAIGN_ENDING_DAYS", 7);
   const nowIso = new Date().toISOString();
   const untilIso = new Date(Date.now() + endingDays * 86400000).toISOString();
   let created = 0;
 
-  const ending = await env.DB.prepare(
-    "SELECT campaign_id, title, end_at FROM campaigns WHERE status IN ('active','scheduled') AND end_at IS NOT NULL AND end_at >= ? AND end_at <= ?"
-  )
+  const ending = await db
+    .prepare(
+      "SELECT campaign_id, title, end_at FROM campaigns WHERE status IN ('active','scheduled') AND end_at IS NOT NULL AND end_at >= ? AND end_at <= ?"
+    )
     .bind(nowIso, untilIso)
     .all<{ campaign_id: string; title: string; end_at: string }>();
 
   for (const camp of ending.results || []) {
-    const existing = await env.DB.prepare(
-      "SELECT alert_id FROM alerts WHERE alert_type = 'campaign_ending_soon' AND object_id = ? AND status IN ('new','read') LIMIT 1"
-    )
+    const existing = await db
+      .prepare(
+        "SELECT alert_id FROM alerts WHERE alert_type = 'campaign_ending_soon' AND object_id = ? AND status IN ('new','read') LIMIT 1"
+      )
       .bind(camp.campaign_id)
       .first();
     if (existing) continue;
     const alertId = newId("alt");
-    await env.DB.prepare(
-      "INSERT INTO alerts (alert_id, alert_type, status, object_type, object_id, assignee_user_id, message, created_at, resolved_at) VALUES (?,?,?,?,?,?,?,?,NULL)"
-    )
+    await db
+      .prepare(
+        "INSERT INTO alerts (alert_id, alert_type, status, object_type, object_id, assignee_user_id, message, created_at, resolved_at) VALUES (?,?,?,?,?,?,?,?,NULL)"
+      )
       .bind(
         alertId,
         "campaign_ending_soon",
@@ -208,23 +216,27 @@ export async function handleGenerateAlerts(request: Request, env: Env): Promise<
     created += 1;
   }
 
-  const missingRights = await env.DB.prepare(
-    `SELECT c.campaign_id, c.title FROM campaigns c
+  const missingRights = await db
+    .prepare(
+      `SELECT c.campaign_id, c.title FROM campaigns c
      WHERE c.status IN ('active','scheduled','approved')
        AND NOT EXISTS (SELECT 1 FROM rights_confirmations rc WHERE rc.campaign_id = c.campaign_id)`
-  ).all<{ campaign_id: string; title: string }>();
+    )
+    .all<{ campaign_id: string; title: string }>();
 
   for (const camp of missingRights.results || []) {
-    const existing = await env.DB.prepare(
-      "SELECT alert_id FROM alerts WHERE alert_type = 'rights_missing' AND object_id = ? AND status IN ('new','read') LIMIT 1"
-    )
+    const existing = await db
+      .prepare(
+        "SELECT alert_id FROM alerts WHERE alert_type = 'rights_missing' AND object_id = ? AND status IN ('new','read') LIMIT 1"
+      )
       .bind(camp.campaign_id)
       .first();
     if (existing) continue;
     const alertId = newId("alt");
-    await env.DB.prepare(
-      "INSERT INTO alerts (alert_id, alert_type, status, object_type, object_id, assignee_user_id, message, created_at, resolved_at) VALUES (?,?,?,?,?,?,?,?,NULL)"
-    )
+    await db
+      .prepare(
+        "INSERT INTO alerts (alert_id, alert_type, status, object_type, object_id, assignee_user_id, message, created_at, resolved_at) VALUES (?,?,?,?,?,?,?,?,NULL)"
+      )
       .bind(
         alertId,
         "rights_missing",
@@ -240,10 +252,10 @@ export async function handleGenerateAlerts(request: Request, env: Env): Promise<
   }
 
   await insertAuditLog(
-    env.DB,
+    db,
     buildAuditEntry({
       auditId: newId("aud"),
-      actorUserId: guard.userId,
+      actorUserId,
       operation: "alerts_generated",
       objectType: "alert",
       objectId: "batch",
@@ -253,9 +265,38 @@ export async function handleGenerateAlerts(request: Request, env: Env): Promise<
     })
   );
 
-  return json({
+  return {
     created,
+    ending_days: endingDays,
     rules: ["campaign_ending_soon", "rights_missing"],
-    cron: "deferred_to_etapa_9",
+  };
+}
+
+export async function handleGenerateAlerts(request: Request, env: Env): Promise<Response> {
+  const guard = await requireAdminPermission(request, env, "alerts.write");
+  if (!guard.ok) return guard.response;
+  if (!env.DB) return json({ error: "auth_not_configured" }, 503);
+
+  const result = await generateAlertsBatch(env.DB, guard.userId);
+  return json({
+    created: result.created,
+    rules: result.rules,
+    cron: "wired_etapa_9",
   });
+}
+
+/** Cron entrypoint (Etapa 9). Honours ALERT_CRON_ENABLED system_setting (default on). */
+export async function runAlertsCron(env: Env): Promise<GenerateAlertsResult | { skipped: true; reason: string }> {
+  if (!env.DB) return { skipped: true, reason: "db_unbound" };
+  try {
+    const row = await env.DB.prepare("SELECT value FROM system_settings WHERE key = ?")
+      .bind("ALERT_CRON_ENABLED")
+      .first<{ value: string }>();
+    if (row && String(row.value).toLowerCase() === "false") {
+      return { skipped: true, reason: "ALERT_CRON_ENABLED=false" };
+    }
+  } catch {
+    /* fail-open for cron enable flag — still attempt generate */
+  }
+  return generateAlertsBatch(env.DB, "system:cron");
 }

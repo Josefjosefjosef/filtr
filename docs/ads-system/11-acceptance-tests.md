@@ -102,8 +102,32 @@ Každý test má být dohledatelný z `01-traceability-matrix.json`.
 | E8-T5 | Nav filtering: `ads_manager` lacks users/clients; `sales` lacks users/codes | `test/admin-ops.test.ts` |
 | E8-T6 | RBAC `alerts.read`/`alerts.write`; migration `0009` indexes-only + schema bump; isolation guard PASS | `test/rbac.test.ts`, `test/isolation.test.ts`, guard |
 
+## Etapa 9 (implemented now — Worker closeout; ads stay OFF)
+
+| ID | Test | Gate |
+|----|------|------|
+| E9-T1 | Unit: backup inventory redacts `password_hash`/`access_code`/secret key names; `assertNoForbiddenBackupKeys` | `test/backup-security.test.ts` |
+| E9-T2 | Unit: restore drill hash round-trip PASS; mismatch → fail; leaky inventory → fail | `test/backup-security.test.ts` |
+| E9-T3 | Unit: AES-GCM encrypt/decrypt with backup key material; retention selects expired ids | `test/backup-security.test.ts` |
+| E9-T4 | Unit: privacy fail-closed seed + wrangler defaults keep public delivery inactive | `test/backup-security.test.ts` |
+| E9-T5 | Integration: `main_admin` create+drill backup; `ads_manager` → `403`; prune deletes expired only | `test/backup-security-admin.test.ts` |
+| E9-T6 | Cron: `runAlertsCron` seeds alerts; `ALERT_CRON_ENABLED=false` skips | `test/backup-security-admin.test.ts` |
+| E9-T7 | Migration `0010` settings/indexes only; isolation guard PASS; schemaVersion health `0010` | `test/isolation.test.ts`, guard, `/health` |
+| E9-T8 | Kap. 14 checklist documented with PASS evidence pointers (ads remain OFF) | `03-security-threat-model.md` |
+
+## Deferred / remaining gaps (honest)
+
+| Gap | Status |
+|-----|--------|
+| E5 public-site frontend inject (`assets/` / `projects/index.html`) | **deferred** — Worker delivery exists, fail-closed |
+| E7 client portal HTML/JS UI | **deferred** — Worker API exists, fail-closed |
+| E8 full public-site admin UI | **deferred** — Worker `/admin` shell + APIs only |
+| PDF export / `client_report_snapshots` (38.13) | **deferred** |
+| Kap. 35 future extensions | `deferred_by_spec` |
+| Production ads ON (SAFE_MODE off + public delivery on) | **operator action later** — not Etapa 9 |
+| Full D1/R2 cold restore in CF | **operator runbook** (`09-backup-restore.md`); automated drill is inventory hash round-trip |
+| Optional `iu-ads-backups` R2 binding | **operator** — not in committed wrangler defaults |
+
 ## Pozdější etapy (katalog)
 
-Backup/security/E2E (Etapa 9); public-site admin UI; client portal frontend UI; PDF export;
-`client_report_snapshots` persistence; alert Cron; produkční E2E; kap. 14 go-live checklist
-(SAFE_MODE stays ON until then).
+UI inject / portal / public-site admin; PDF snapshots; produkční ads ON po explicitním operator go-live.

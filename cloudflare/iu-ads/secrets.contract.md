@@ -9,7 +9,7 @@
 | `ADS_PASSWORD_PEPPER` | Worker secret | 2 | Mixed into PBKDF2 password hashes (`password.ts`); missing → `/v1/admin/*` returns `503 auth_not_configured` |
 | `ADS_CODE_PEPPER` | Worker secret | 7 | Client access code hash pepper |
 | `ADS_R2_SIGNING_SECRET` | GitHub Actions → Worker secret | 1 | Short-lived private object access; deploy puts via wrangler if GitHub secret set |
-| `ADS_BACKUP_ENCRYPTION_KEY` | Worker/CI secret | 9 | Backup encryption |
+| `ADS_BACKUP_ENCRYPTION_KEY` | Worker/CI secret | 9 | AES-GCM key material for optional encrypted backup inventory (R2 `BACKUPS`); missing → manifests stay `manifest_only` (still hashed) |
 | `ANALYTICS_ADMIN_TOKEN` | Worker secret (`infouzel-ads`) | 6 | Server-side bearer token this Worker sends to Analytics' `/v1/ads/report`; a value **copied from** (not derived from, not equal to any Ads-side auth secret) Analytics' own `ADMIN_TOKEN`; never sent to or readable by the browser; missing → `503 stats_not_configured` |
 | Analytics `ADMIN_TOKEN` | Analytics Worker only | — | Must NOT authorize Ads Admin API |
 
@@ -86,6 +86,17 @@ To activate the client surface in a given environment:
    never change the checked-in default.
 4. `safeMode` does **not** gate the client surface (it only gates Public Ad Delivery), matching Admin API.
 5. Issue codes via Admin `POST /v1/admin/codes` (`codes.write`) — plaintext shown once at issue/regen.
+
+## Etapa 9 — backup encryption (optional, per environment)
+
+1. Create R2 bucket `iu-ads-backups` in the Cloudflare dashboard (separate from creatives/documents).
+2. Add a deploy-time / environment-specific `[[r2_buckets]]` binding `BACKUPS` → `iu-ads-backups`
+   (do **not** commit this into the fail-closed default `wrangler.toml` unless the bucket is guaranteed).
+3. `npx wrangler secret put ADS_BACKUP_ENCRYPTION_KEY` — high-entropy random value; never reuse
+   session/password/code peppers.
+4. With Admin API enabled for an operator session, `POST /v1/admin/backups` stores an encrypted
+   inventory object; without binding/key the API still writes a D1 `manifest_only` row + content hash.
+5. Full D1 SQL export/restore remains the operator runbook in `docs/ads-system/09-backup-restore.md`.
 
 ## Rules
 

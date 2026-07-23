@@ -4,6 +4,8 @@ export type Env = {
   DB?: D1Database;
   CREATIVES?: R2Bucket;
   DOCUMENTS?: R2Bucket;
+  /** Optional Etapa 9 encrypted backup bucket (`iu-ads-backups`). Unbound → manifest_only. */
+  BACKUPS?: R2Bucket;
   ADS_SAFE_MODE?: string;
   ADS_PUBLIC_DELIVERY_ENABLED?: string;
   ADS_ADMIN_API_ENABLED?: string;
@@ -11,6 +13,8 @@ export type Env = {
   CORS_ALLOW_ORIGIN?: string;
   /** Worker secret for short-lived private object access signatures (Etapa 1+). */
   ADS_R2_SIGNING_SECRET?: string;
+  /** Worker secret (Etapa 9): AES key material for backup inventory encryption. */
+  ADS_BACKUP_ENCRYPTION_KEY?: string;
   /** Worker secret: HMAC key for signed admin session cookies (Etapa 2). */
   ADS_SESSION_SECRET?: string;
   /** Worker secret: pepper mixed into admin password hashes (Etapa 2). */

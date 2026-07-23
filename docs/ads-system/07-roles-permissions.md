@@ -29,3 +29,10 @@ Inzerent nemá e-mail/heslo do admin. Přístup jen přes klientský kód → RO
 |------------|------------|-------------|-------|-----------|
 | `alerts.read` | yes | yes | yes | yes |
 | `alerts.write` (ack/resolve/generate) | yes | yes | yes | no |
+
+## Etapa 9 — backups (kap. 34)
+
+| Permission | main_admin | ads_manager | sales | read_only |
+|------------|------------|-------------|-------|-----------|
+| `backups.read` | yes | no | no | no |
+| `backups.write` (create/drill/prune) | yes | no | no | no |
