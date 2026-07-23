@@ -185,6 +185,29 @@ Implementováno pouze:
 - `GET /v1/public/ads/delivery` — pokud flag off → `{"ads":[],"enabled":false}` (fail-closed)
 - Admin/Client routes → `503` nebo `404` dokud flag off (ne unikají data)
 
+## Etapa 6 — Measurement/reporting (Analytics join)
+
+Gate: stejné jako Etapa 2–5 (`ADS_ADMIN_API_ENABLED` + `ADS_SESSION_SECRET`/`ADS_PASSWORD_PEPPER`) +
+RBAC `stats.read` (`main_admin`/`ads_manager`/`read_only`; `sales` nemá `stats.read`, viz `rbac.ts`).
+Tato etapa nepřidává žádnou tabulku do `iu-ads` — agregáty zůstávají výhradně na Analytics Workeru
+(`daily_ads`); `iu-ads` je jen read-only klient jeho existujícího `/v1/ads/report`.
+
+| Route | Method | Perm | Notes |
+|-------|--------|------|-------|
+| `/v1/admin/stats/summary` | GET | `stats.read` | Filtry: `from`, `to`, `campaign_id`, `placement_id`, `section_id`, `slot_type`, `device_category`; test kampaně (`STATS_TEST_CAMPAIGN_PREFIX`, default `test`) vždy vyloučeny z `rows`/`totals`, i pokud by je Analytics omylem vrátil |
+| `/v1/admin/stats/campaigns/:id` | GET | `stats.read` | Kombinuje `campaigns` metadata (`campaign_id`/`evidence_code`/`title`/`status` — **žádná cena**) s allowlistovaným Analytics reportem pro dané `campaign_id`; test kampaň (i podle `:id`) → `404` (fail-closed, nikoli přepínatelné přes parametr) |
+
+`analytics-client.ts` (`fetchAdsReport`) volá Analytics Worker `GET /v1/ads/report` server-side,
+autentizováno `ANALYTICS_ADMIN_TOKEN` (samostatný Worker secret — nikdy sdílený s Ads Admin API
+auth ani s Analytics' vlastním `ADMIN_TOKEN` use-casem, viz `secrets.contract.md`). Base URL je
+`system_settings.ANALYTICS_ADMIN_REPORT_URL` (výchozí prázdné → fail-closed). Chybějící konfigurace,
+nedostupný upstream, non-2xx odpověď nebo neplatný JSON → vždy `503` (`stats_not_configured` /
+`stats_upstream_unreachable` / `stats_upstream_error`), nikdy částečný/neallowlistovaný výstup —
+každý řádek i souhrn je znovu sestaven pole po poli z explicitního allowlistu
+(`day`, `campaign_id`, `placement_id`, `section_id`, `slot_type`, `device_category`, `impressions`,
+`clicks`, `valid_clicks`, `suspicious_clicks`, `ctr`), takže neočekávané pole z Analytics (vč.
+případného PII) nikdy neprojde na admin klienta.
+
 ## Open questions resolved
 
 - Analytics report zůstává na Analytics Worker (`/v1/ads/report`).

@@ -10,6 +10,7 @@
 | `ADS_CODE_PEPPER` | Worker secret | 7 | Client access code hash pepper |
 | `ADS_R2_SIGNING_SECRET` | GitHub Actions → Worker secret | 1 | Short-lived private object access; deploy puts via wrangler if GitHub secret set |
 | `ADS_BACKUP_ENCRYPTION_KEY` | Worker/CI secret | 9 | Backup encryption |
+| `ANALYTICS_ADMIN_TOKEN` | Worker secret (`infouzel-ads`) | 6 | Server-side bearer token this Worker sends to Analytics' `/v1/ads/report`; a value **copied from** (not derived from, not equal to any Ads-side auth secret) Analytics' own `ADMIN_TOKEN`; never sent to or readable by the browser; missing → `503 stats_not_configured` |
 | Analytics `ADMIN_TOKEN` | Analytics Worker only | — | Must NOT authorize Ads Admin API |
 
 ## `CLOUDFLARE_ADS_API_TOKEN` — manuální vytvoření
@@ -57,6 +58,20 @@ To activate the admin surface in a given environment:
 6. Password reset **request** creates a hashed, time-limited token row in `admin_password_resets`, but
    Etapa 2 does not include an email/SMS delivery integration — the raw token is intentionally never
    returned by the API. Wire an actual delivery channel before relying on self-service reset in production.
+
+## Etapa 6 — measurement/reporting (manual, per environment)
+
+`ANALYTICS_ADMIN_REPORT_URL` (a `system_settings` row, not a wrangler var) ships **empty** by
+default, so `/v1/admin/stats/*` fails closed with `503 stats_not_configured` until both of the
+following are set out-of-band:
+
+1. `npx wrangler secret put ANALYTICS_ADMIN_TOKEN` — paste the **same value** as the Analytics
+   Worker's own `ADMIN_TOKEN` secret (that is what Analytics' `/v1/ads/report` checks). Store it
+   under this Ads-side name; never reuse `ADS_SESSION_SECRET`/`ADS_PASSWORD_PEPPER`/etc. for it,
+   and never let this token double as an Ads Admin API credential.
+2. Update the `ANALYTICS_ADMIN_REPORT_URL` row in the `iu-ads` D1 `system_settings` table to the
+   Analytics Worker's base URL (e.g. `https://infouzel-analytics.<account>.workers.dev`) — direct
+   D1 write, same operational pattern as other `system_settings` tunables (no public write endpoint).
 
 ## Rules
 

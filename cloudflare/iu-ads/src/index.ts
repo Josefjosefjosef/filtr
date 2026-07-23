@@ -76,6 +76,7 @@ import {
   handleUploadCreative,
 } from "./admin-creatives";
 import { handlePreviewCampaign } from "./admin-preview";
+import { handleGetCampaignStats, handleGetStatsSummary } from "./admin-stats";
 import { isDeviceCategory, selectPublicAds } from "./delivery-engine";
 import { resolveFeatureFlags, isPublicDeliveryActive } from "./feature-flags";
 import { emptyPublicDelivery, sanitizePublicAds, assertNoForbiddenPublicKeys } from "./isolation";
@@ -129,7 +130,7 @@ export default {
           service: "infouzel-ads",
           mode: "ads-business",
           storageMode: dbOk ? "d1" : env.DB ? "unavailable" : "unbound",
-          schemaVersion: "0006",
+          schemaVersion: "0007",
           safeMode: flags.safeMode,
           publicDeliveryEnabled: flags.publicDeliveryEnabled,
           adminApiEnabled: flags.adminApiEnabled,
@@ -345,6 +346,11 @@ export default {
       if (creativeIdMatch && method === "GET") return handleGetCreative(request, env, creativeIdMatch[1]);
 
       if (path === "/v1/admin/preview" && method === "POST") return handlePreviewCampaign(request, env);
+
+      // Etapa 6 — measurement/reporting (kap. 20): read-only join against Analytics' aggregate report.
+      if (path === "/v1/admin/stats/summary" && method === "GET") return handleGetStatsSummary(request, env, url);
+      const statsCampaignMatch = path.match(/^\/v1\/admin\/stats\/campaigns\/([^/]+)$/);
+      if (statsCampaignMatch && method === "GET") return handleGetCampaignStats(request, env, url, statsCampaignMatch[1]);
 
       return json({ error: "not_found" }, 404);
     }
