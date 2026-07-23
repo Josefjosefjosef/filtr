@@ -16,6 +16,17 @@ export type Env = {
   /** Worker secret: pepper mixed into admin password hashes (Etapa 2). */
   ADS_PASSWORD_PEPPER?: string;
   /**
+   * Worker secret (Etapa 7): HMAC key for signed client RO session cookies.
+   * Deliberately separate from `ADS_SESSION_SECRET` — a client session must never validate as
+   * an admin session (and vice versa). Missing → client API `503 auth_not_configured`.
+   */
+  ADS_CLIENT_SESSION_SECRET?: string;
+  /**
+   * Worker secret (Etapa 7): pepper mixed into deterministic client access-code hashes
+   * (SHA-256 + pepper; never store plaintext). Missing → client code issue/login `503`.
+   */
+  ADS_CODE_PEPPER?: string;
+  /**
    * Worker secret (Etapa 6): bearer token for server-side calls to the Analytics Worker's
    * `/v1/ads/report`. Deliberately a separate secret from Analytics' own `ADMIN_TOKEN` config —
    * it must never be reused as (or derived from) any Ads Admin API auth secret, and vice versa

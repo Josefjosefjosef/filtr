@@ -100,6 +100,16 @@ describe("schema isolation from analytics aggregates", () => {
     expect(sql.includes("create table if not exists campaigns")).toBe(true);
   });
 
+  it("etapa 7 migration 0008 adds client_login_attempts without analytics tables", () => {
+    const sql = readFileSync(join(root, "migrations", "0008_client_codes.sql"), "utf8").toLowerCase();
+    for (const table of ANALYTICS_ONLY_TABLES) {
+      expect(sql.includes("create table if not exists " + table)).toBe(false);
+      expect(sql.includes("create table " + table)).toBe(false);
+    }
+    expect(sql.includes("client_login_attempts")).toBe(true);
+    expect(sql.includes("'0008'")).toBe(true);
+  });
+
   it("traceability matrix covers chapters 1-48", () => {
     const matrixPath = join(root, "..", "..", "docs", "ads-system", "01-traceability-matrix.json");
     const matrix = JSON.parse(readFileSync(matrixPath, "utf8")) as {

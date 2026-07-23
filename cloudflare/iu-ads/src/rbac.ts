@@ -85,6 +85,9 @@ const ROLE_PERMISSIONS: Record<RoleCode, readonly Permission[]> = {
     "placements.write",
     "creatives.read",
     "creatives.write",
+    // Etapa 7 (kap. 36): issue/list/regen/revoke client access codes for scoped portal access.
+    "codes.read",
+    "codes.write",
     "stats.read",
     "rights.read",
     "rights.write",

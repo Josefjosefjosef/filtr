@@ -1,7 +1,7 @@
 # InfoUzel Ads — implementation STATUS
 
-**Current stage:** Etapa 1 **DONE** · Etapa 2 **DONE** (#7684 merged) · Etapa 3 **DONE** (#7687 merged) · Etapa 4 **DONE** (#7689 merged) · Etapa 5 **DONE** (#7690 merged) · Etapa 6 in progress (measurement/reporting)  
-**Safe mode:** ON · Public delivery: OFF · Admin API default: OFF  
+**Current stage:** Etapa 1 **DONE** · Etapa 2 **DONE** (#7684) · Etapa 3 **DONE** (#7687) · Etapa 4 **DONE** (#7689) · Etapa 5 **DONE** (#7690) · Etapa 6 **DONE** (#7693) · Etapa 7 in progress (client codes + portal)  
+**Safe mode:** ON · Public delivery: OFF · Admin API default: OFF · Client API default: OFF  
 
 ## Etapa 1 closeout
 
@@ -69,37 +69,45 @@ Since `ADS_PUBLIC_DELIVERY_ENABLED=false` in production, this has **zero user-fa
 right vehicle for this — it touches `assets/`/`projects/index.html`, which are exactly the paths the
 after-merge STOP-SHIP guard flags for extra scrutiny, and the full UI smoke suite (`layout-guard` +
 dozens of Playwright guards) has a materially higher flake/duration profile than the Worker-only
-changes shipped so far (Etapa 5's own smoke run needed ~2 rebuilds/≈75 CI minutes to go green). Given
-that risk/benefit and that Etapa 6 does not depend on it, this gap is **deferred and documented here**
-rather than bundled into Etapa 6; Etapa 6 proceeds Worker-only as explicitly permitted for this case.
+changes shipped so far. Gap remains **deferred**.
 
-## Etapa 6 — measurement/reporting (in progress)
+## Etapa 6 closeout — measurement/reporting
 
+- PR [#7693](https://github.com/Josefjosefjosef/filtr/pull/7693) **MERGED** (replaced stuck #7692) — `34949264a8`
 - Migration `0007_measurement_settings.sql`: `system_settings` only (no new tables — impression/click
-  aggregates remain exclusively on the Analytics Worker's `daily_ads`, never mirrored into `iu-ads`,
-  per `ANALYTICS_ONLY_TABLES` in `isolation.ts`); `schemaVersion` → `0007`
-- New settings: `ANALYTICS_ADMIN_REPORT_URL` (base URL of `infouzel-analytics`, empty by default —
-  fail-closed), `STATS_TEST_CAMPAIGN_PREFIX` (default `test`, defense-in-depth mirror of Analytics'
-  own `isTestAdCampaignId`)
-- New: `analytics-client.ts` (`fetchAdsReport` — server-side fetch to the Analytics Worker's existing
-  `/v1/ads/report`, authenticated with a new, separate `ANALYTICS_ADMIN_TOKEN` Worker secret; missing
-  config → `503 stats_not_configured`; every row/total is rebuilt field-by-field from an explicit
-  allowlist, so unexpected upstream fields can never leak through)
-- New: `admin-stats.ts` (`GET /v1/admin/stats/summary`, `GET /v1/admin/stats/campaigns/:id`) — RBAC
-  `stats.read` (already granted to `main_admin`/`ads_manager`/`read_only`; `sales` denied); test
-  campaigns are excluded from every response, even by explicit `campaign_id` (`404`, fail-closed);
-  campaign-stats response never includes price/email/contact/document/code fields (only
-  `campaign_id`/`evidence_code`/`title`/`status` metadata joined with allowlisted analytics rows)
-- No Analytics schema change: reuses the `/v1/ads/report` endpoint that already existed before this
-  stage (`cloudflare/iu-analytics/src/index.ts`) — Etapa 6 only adds an Ads-side server-to-server
-  client and two new Ads Admin API routes
-- Tests: 19 new (`test/analytics-client.test.ts`, `test/admin-stats.test.ts`) → 176 passing total
-  (was 157)
-- **Wrangler defaults unchanged**: public delivery / admin API / client API flags all still fail-closed;
-  `ANALYTICS_ADMIN_REPORT_URL` ships empty (operator must set it out-of-band, same pattern as other
-  `system_settings`), so `/v1/admin/stats/*` returns `503 stats_not_configured` until configured
-- Not yet done: admin UI for stats (Etapa 8), Cron-driven pre-aggregation/caching of the report call
-  (currently request-driven, same pattern as Etapa 5's scheduler)
+  aggregates remain exclusively on the Analytics Worker's `daily_ads`, never mirrored into `iu-ads`);
+  `schemaVersion` → `0007`
+- New: `analytics-client.ts` (`fetchAdsReport`), `admin-stats.ts` (`GET /v1/admin/stats/summary`,
+  `GET /v1/admin/stats/campaigns/:id`) — RBAC `stats.read`; allowlist rebuild; test campaigns excluded
+- **Production proof (post-merge Deploy IU Ads SUCCESS):** `schemaVersion=0007`, `safeMode=true`,
+  `publicDeliveryEnabled=false`, `clientApiEnabled=false`
+- Tests: 19 new → 176 passing total (was 157)
+- **Wrangler defaults unchanged** (fail-closed); `ANALYTICS_ADMIN_REPORT_URL` ships empty
+
+## Etapa 7 — client codes + portal (in progress)
+
+- Migration `0008_client_codes.sql`: `client_login_attempts` table (not in `0001`) + indexes on
+  existing `client_access_codes` / `client_code_campaigns` / `client_sessions` + client session/lockout
+  tunables; `schemaVersion` → `0008`. No analytics tables.
+- New: `admin-codes.ts` (issue/list/regen/revoke — hash-only SHA-256+`ADS_CODE_PEPPER`, plaintext
+  once at issue/regen, scope via `client_code_campaigns`, audit redacted), `client-auth.ts` (code →
+  RO session, brute-force prefix lockout, uniform errors, cookie HMAC `ADS_CLIENT_SESSION_SECRET`),
+  `client-report.ts` (scoped JSON report + CSV export stub; `client_visible` documents only;
+  analytics allowlist join when configured)
+- RBAC: `ads_manager` gains `codes.read`/`codes.write` (matrix kap. 36)
+- Wired: `/v1/admin/codes*`, `/v1/client/auth/*`, `/v1/client/report`, `/v1/client/report/export`;
+  health `schemaVersion: "0008"` + existing `clientApiEnabled` flag
+- **Wrangler defaults unchanged**: `ADS_CLIENT_API_ENABLED=false` (and safe/public/admin flags still
+  fail-closed) — client portal ships dark until secrets + flag flipped out-of-band
+- Tests: 12 new in `test/client-portal.test.ts` (+ rbac assertion) → 188 passing total (was 176)
+
+### Known gap — client portal frontend UI (kap. 36–38 UI)
+
+Worker API for codes + RO portal report exists and is fail-closed, but **no InfoCentrum / client
+portal HTML/JS** is included in this PR (explicit Worker-only preference, same pattern as Etapa 5
+frontend inject gap). PDF export and `client_report_snapshots` persistence (38.13) are also deferred.
+A later UI PR can consume these endpoints once `ADS_CLIENT_API_ENABLED` is enabled in a non-prod
+environment.
 
 ## Stage checklist
 
@@ -111,8 +119,9 @@ rather than bundled into Etapa 6; Etapa 6 proceeds Worker-only as explicitly per
 | 3 | **done** (#7687 → `a863f7921f`) — business/documents |
 | 4 | **done** (#7689 → `ba8c970adf`) — campaigns/placements/creatives |
 | 5 | **done** (#7690 → `d4341b0547`) — public delivery engine (flags still OFF; frontend inject gap documented above) |
-| 6 | in progress — measurement/reporting (Analytics join) |
-| 7–9 | pending |
+| 6 | **done** (#7693 → `34949264a8`) — measurement/reporting (prod `schemaVersion=0007`) |
+| 7 | in progress — client codes + portal API |
+| 8–9 | pending |
 
 ## Guards
 
