@@ -36,6 +36,16 @@ export const PERMISSIONS = [
   "codes.read",
   "codes.write",
   "stats.read",
+  // Etapa 3 (kap. 22,24,25,30,31): business documents/rights/complaints/exports/finance.
+  "documents.read",
+  "documents.write",
+  "rights.read",
+  "rights.write",
+  "complaints.read",
+  "complaints.write",
+  "exports.read",
+  "exports.write",
+  "finance.read",
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
 
@@ -53,10 +63,17 @@ const READ_ONLY_PERMISSIONS: readonly Permission[] = [
   "creatives.read",
   "codes.read",
   "stats.read",
+  // Etapa 3: read-only access to the new business/documents surfaces.
+  "documents.read",
+  "rights.read",
+  "complaints.read",
+  "exports.read",
+  "finance.read",
 ];
 
-/** kap. 4/7: main_admin = vše; ads_manager = kampaně/kreativy/umístění/statistiky (ne uživatelé/systém);
- *  sales = klienti/poptávky/objednávky/smlouvy (aktivace jen se schválením); read_only = jen čtení. */
+/** kap. 4/7: main_admin = vše; ads_manager = kampaně/kreativy/umístění/statistiky/autorská práva
+ *  (ne uživatelé/systém); sales = klienti/poptávky/objednávky/smlouvy/faktury/dokumenty/reklamace/export
+ *  (aktivace jen se schválením); read_only = jen čtení. */
 const ROLE_PERMISSIONS: Record<RoleCode, readonly Permission[]> = {
   main_admin: ALL_PERMISSIONS,
   ads_manager: [
@@ -67,6 +84,8 @@ const ROLE_PERMISSIONS: Record<RoleCode, readonly Permission[]> = {
     "creatives.read",
     "creatives.write",
     "stats.read",
+    "rights.read",
+    "rights.write",
   ],
   sales: [
     "clients.read",
@@ -78,7 +97,15 @@ const ROLE_PERMISSIONS: Record<RoleCode, readonly Permission[]> = {
     "contracts.read",
     "contracts.write",
     "invoices.read",
+    "invoices.write",
     "campaigns.read",
+    "documents.read",
+    "documents.write",
+    "complaints.read",
+    "complaints.write",
+    "exports.read",
+    "exports.write",
+    "finance.read",
   ],
   read_only: READ_ONLY_PERMISSIONS,
 };
@@ -116,13 +143,14 @@ export const ROLE_CATALOG: readonly RoleCatalogEntry[] = [
   {
     role_code: "ads_manager",
     title_cs: "Správce reklam",
-    description: "Kampaně, kreativy, umístění, statistiky; ne uživatelé/systém",
+    description: "Kampaně, kreativy, umístění, statistiky, autorská práva; ne uživatelé/systém",
     permissions: [...ROLE_PERMISSIONS.ads_manager],
   },
   {
     role_code: "sales",
     title_cs: "Obchodník",
-    description: "Klienti, poptávky, objednávky, smlouvy; aktivace reklamy jen se schválením",
+    description:
+      "Klienti, poptávky, objednávky, smlouvy, faktury, dokumenty, reklamace, export; aktivace reklamy jen se schválením",
     permissions: [...ROLE_PERMISSIONS.sales],
   },
   {
