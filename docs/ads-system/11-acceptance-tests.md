@@ -51,6 +51,18 @@ Každý test má být dohledatelný z `01-traceability-matrix.json`.
 | E4-T7 | Unit + integration: creative MIME/magic-byte validation (accepts PNG, rejects SVG/oversized/disguised-HTML); upload never leaks `r2_key`; approve/reject only from `pending` (`409 already_reviewed` otherwise); `read_only` denied upload; `/access` returns a short-lived signed path, never a permanent R2 URL, and records `object_access_audit` | `test/creatives.test.ts` |
 | E4-T8 | Integration (fake D1): preview returns `published:false` and a signed (never permanent) creative path; performs **zero** side-effect DB writes (excluding the shared session `last_seen_at` touch); 404 for unknown campaign without any write; works with no approved creative yet | `test/preview.test.ts` |
 
+## Etapa 5 (implemented now)
+
+| ID | Test | Gate |
+|----|------|------|
+| E5-T1 | Unit: `shouldAutoActivate`/`shouldAutoEnd` pure predicates — scheduled→active only once `start_at<=now`, active→ended only once `end_at<=now`, no-op otherwise | `test/scheduler.test.ts` |
+| E5-T2 | Integration (fake D1): `runAutoScheduler` auto-activates a `scheduled` campaign with a `rights_confirmations` row, writes `campaign_status_events`+`audit_logs`; **never** auto-activates one missing the rights confirmation (fail-closed, kap. 30); auto-ends an `active` campaign past `end_at`; ignores draft/paused/cancelled/archived | `test/scheduler.test.ts` |
+| E5-T3 | Unit+integration: `selectPublicAds` fail-closed — `[]` with no `DB`, no `ADS_R2_SIGNING_SECRET`, `EMERGENCY_PAUSE_ALL=true`, or if that setting can't be read | `test/delivery-engine.test.ts` |
+| E5-T4 | Integration (fake D1): delivered ad passes `assertNoForbiddenPublicKeys`/`sanitizePublicAds` (allowlist shape only); `creative.cdn_url` is a signed `/v1/objects/get` Worker path, never `r2.cloudflarestorage.com` | `test/delivery-engine.test.ts` |
+| E5-T5 | Integration (fake D1): unapproved (`pending`/`rejected`) creatives are never delivered; wrong `device_category` filtered out; `section_id=null` (global) placements match any requested section, section-scoped placements only match on exact `section`; non-`active` campaign/placement excluded; `start_at`/`end_at` window re-checked in application code | `test/delivery-engine.test.ts` |
+| E5-T6 | Integration (fake D1): `exclusive` `collision_mode` keeps only the lowest-`priority` candidate per placement/device/section; `shared` mode serves every eligible match | `test/delivery-engine.test.ts` |
+| E5-T7 | Integration (fake D1): a `scheduled` campaign auto-promoted by `runAutoScheduler` is delivered in the same request; one correctly skipped (missing rights confirmation) is not; one auto-ended is no longer delivered | `test/delivery-engine.test.ts` |
+
 ## Pozdější etapy (katalog)
 
 Auth/hash/brute-force/session; RBAC; client code hash/once/expire/regen/isolation; no empty box; collision; auto start/stop; limits; creative MIME; dangerous URL; audit no secrets; client report full; PDF/CSV/JSON export; mobile/tablet/PC; privacy/analytics/repo/layout guards; produkční E2E.

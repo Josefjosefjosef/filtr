@@ -76,10 +76,11 @@ import {
   handleUploadCreative,
 } from "./admin-creatives";
 import { handlePreviewCampaign } from "./admin-preview";
+import { isDeviceCategory, selectPublicAds } from "./delivery-engine";
 import { resolveFeatureFlags, isPublicDeliveryActive } from "./feature-flags";
 import { emptyPublicDelivery, sanitizePublicAds, assertNoForbiddenPublicKeys } from "./isolation";
 import { parseAccessQuery, verifyObjectAccess } from "./signed-access";
-import type { Env, PublicDeliveryResponse } from "./types";
+import type { Env, PublicAd, PublicDeliveryResponse } from "./types";
 
 const NO_STORE = { "Cache-Control": "no-store", "Content-Type": "application/json; charset=utf-8" };
 
@@ -128,7 +129,7 @@ export default {
           service: "infouzel-ads",
           mode: "ads-business",
           storageMode: dbOk ? "d1" : env.DB ? "unavailable" : "unbound",
-          schemaVersion: "0005",
+          schemaVersion: "0006",
           safeMode: flags.safeMode,
           publicDeliveryEnabled: flags.publicDeliveryEnabled,
           adminApiEnabled: flags.adminApiEnabled,
@@ -159,7 +160,17 @@ export default {
         const headers = { ...NO_STORE, ...corsHeaders(env) };
         return new Response(JSON.stringify(body), { status: 200, headers });
       }
-      body.ads = sanitizePublicAds([]);
+      const deviceParam = url.searchParams.get("device");
+      let rawAds: PublicAd[] = [];
+      if (isDeviceCategory(deviceParam)) {
+        try {
+          rawAds = await selectPublicAds(env, url.origin, { device: deviceParam, section: url.searchParams.get("section") });
+        } catch {
+          // Delivery engine failures must never surface as a 500 or a partial leak — fail closed to no ads.
+          rawAds = [];
+        }
+      }
+      body.ads = sanitizePublicAds(rawAds);
       const leaks = assertNoForbiddenPublicKeys(body);
       if (leaks.length) return json({ error: "isolation_violation", leaks }, 500);
       const headers = { ...NO_STORE, ...corsHeaders(env) };
