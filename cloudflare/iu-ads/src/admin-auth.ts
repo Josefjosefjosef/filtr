@@ -10,7 +10,7 @@ import {
   validatePasswordStrength,
   verifyPassword,
 } from "./password";
-import { isRoleCode, type RoleCode } from "./rbac";
+import { hasPermission, isRoleCode, type Permission, type RoleCode } from "./rbac";
 import {
   DEFAULT_SESSION_COOKIE_NAME,
   DEFAULT_SESSION_TTL_SECONDS,
@@ -199,6 +199,27 @@ export async function requireAdminSession(request: Request, env: Env): Promise<S
     ok: true,
     context: { userId: userRow.user_id, email: userRow.email, displayName: userRow.display_name, roles },
   };
+}
+
+export type PermissionGuardResult =
+  | { ok: true; userId: string; roles: RoleCode[] }
+  | { ok: false; response: Response };
+
+/**
+ * Shared session+RBAC guard reused by business/documents modules (Etapa 3) so every
+ * mutation is authenticated and permission-checked the same way as admin-users.ts/admin-audit.ts.
+ */
+export async function requireAdminPermission(
+  request: Request,
+  env: Env,
+  permission: Permission
+): Promise<PermissionGuardResult> {
+  const session = await requireAdminSession(request, env);
+  if (!session.ok) return { ok: false, response: json({ error: session.error }, session.status) };
+  if (!hasPermission(session.context.roles, permission)) {
+    return { ok: false, response: json({ error: "forbidden" }, 403) };
+  }
+  return { ok: true, userId: session.context.userId, roles: session.context.roles };
 }
 
 export async function handleLogin(request: Request, env: Env): Promise<Response> {

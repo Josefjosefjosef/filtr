@@ -15,6 +15,41 @@ import {
   handleSetUserRoles,
   handleUpdateUser,
 } from "./admin-users";
+import {
+  handleCreateClient,
+  handleCreateClientContact,
+  handleDeleteClientContact,
+  handleGetClient,
+  handleListClients,
+  handleUpdateClient,
+  handleUpdateClientContact,
+} from "./admin-clients";
+import {
+  handleConvertInquiryToOrder,
+  handleCreateInquiry,
+  handleGetInquiry,
+  handleListInquiries,
+  handleUpdateInquiry,
+} from "./admin-inquiries";
+import { handleCreateOrder, handleGetOrder, handleListOrders, handleUpdateOrder } from "./admin-orders";
+import { handleCreateContract, handleGetContract, handleListContracts, handleUpdateContract } from "./admin-contracts";
+import { handleCreateInvoice, handleGetInvoice, handleListInvoices, handleUpdateInvoice } from "./admin-invoices";
+import {
+  handleGetDocument,
+  handleGetDocumentAccess,
+  handleListDocuments,
+  handleUpdateDocument,
+  handleUploadDocument,
+} from "./admin-documents";
+import { handleCreateRightsConfirmation, handleGetRightsConfirmation, handleListRightsConfirmations } from "./admin-rights";
+import {
+  handleCreateComplaint,
+  handleGetComplaint,
+  handleListComplaints,
+  handleUpdateComplaint,
+} from "./admin-complaints";
+import { handleCreateExportJob, handleGetExportJob, handleListExportJobs } from "./admin-exports";
+import { handleFinanceSummary } from "./admin-finance";
 import { resolveFeatureFlags, isPublicDeliveryActive } from "./feature-flags";
 import { emptyPublicDelivery, sanitizePublicAds, assertNoForbiddenPublicKeys } from "./isolation";
 import { parseAccessQuery, verifyObjectAccess } from "./signed-access";
@@ -67,7 +102,7 @@ export default {
           service: "infouzel-ads",
           mode: "ads-business",
           storageMode: dbOk ? "d1" : env.DB ? "unavailable" : "unbound",
-          schemaVersion: "0003",
+          schemaVersion: "0004",
           safeMode: flags.safeMode,
           publicDeliveryEnabled: flags.publicDeliveryEnabled,
           adminApiEnabled: flags.adminApiEnabled,
@@ -163,6 +198,74 @@ export default {
       if (path === "/v1/admin/audit" && method === "GET") return handleListAuditLogs(request, env, url);
       const auditIdMatch = path.match(/^\/v1\/admin\/audit\/([^/]+)$/);
       if (auditIdMatch && method === "GET") return handleGetAuditLog(request, env, auditIdMatch[1]);
+
+      // Etapa 3 — business + documents (kap. 15,22,24-31).
+      if (path === "/v1/admin/clients" && method === "GET") return handleListClients(request, env, url);
+      if (path === "/v1/admin/clients" && method === "POST") return handleCreateClient(request, env);
+      const clientContactMatch = path.match(/^\/v1\/admin\/clients\/([^/]+)\/contacts\/([^/]+)$/);
+      if (clientContactMatch && method === "PATCH") {
+        return handleUpdateClientContact(request, env, clientContactMatch[1], clientContactMatch[2]);
+      }
+      if (clientContactMatch && method === "DELETE") {
+        return handleDeleteClientContact(request, env, clientContactMatch[1], clientContactMatch[2]);
+      }
+      const clientContactsMatch = path.match(/^\/v1\/admin\/clients\/([^/]+)\/contacts$/);
+      if (clientContactsMatch && method === "POST") return handleCreateClientContact(request, env, clientContactsMatch[1]);
+      const clientIdMatch = path.match(/^\/v1\/admin\/clients\/([^/]+)$/);
+      if (clientIdMatch && method === "GET") return handleGetClient(request, env, clientIdMatch[1]);
+      if (clientIdMatch && method === "PATCH") return handleUpdateClient(request, env, clientIdMatch[1]);
+
+      if (path === "/v1/admin/inquiries" && method === "GET") return handleListInquiries(request, env, url);
+      if (path === "/v1/admin/inquiries" && method === "POST") return handleCreateInquiry(request, env);
+      const inquiryConvertMatch = path.match(/^\/v1\/admin\/inquiries\/([^/]+)\/convert$/);
+      if (inquiryConvertMatch && method === "POST") return handleConvertInquiryToOrder(request, env, inquiryConvertMatch[1]);
+      const inquiryIdMatch = path.match(/^\/v1\/admin\/inquiries\/([^/]+)$/);
+      if (inquiryIdMatch && method === "GET") return handleGetInquiry(request, env, inquiryIdMatch[1]);
+      if (inquiryIdMatch && method === "PATCH") return handleUpdateInquiry(request, env, inquiryIdMatch[1]);
+
+      if (path === "/v1/admin/orders" && method === "GET") return handleListOrders(request, env, url);
+      if (path === "/v1/admin/orders" && method === "POST") return handleCreateOrder(request, env);
+      const orderIdMatch = path.match(/^\/v1\/admin\/orders\/([^/]+)$/);
+      if (orderIdMatch && method === "GET") return handleGetOrder(request, env, orderIdMatch[1]);
+      if (orderIdMatch && method === "PATCH") return handleUpdateOrder(request, env, orderIdMatch[1]);
+
+      if (path === "/v1/admin/contracts" && method === "GET") return handleListContracts(request, env, url);
+      if (path === "/v1/admin/contracts" && method === "POST") return handleCreateContract(request, env);
+      const contractIdMatch = path.match(/^\/v1\/admin\/contracts\/([^/]+)$/);
+      if (contractIdMatch && method === "GET") return handleGetContract(request, env, contractIdMatch[1]);
+      if (contractIdMatch && method === "PATCH") return handleUpdateContract(request, env, contractIdMatch[1]);
+
+      if (path === "/v1/admin/invoices" && method === "GET") return handleListInvoices(request, env, url);
+      if (path === "/v1/admin/invoices" && method === "POST") return handleCreateInvoice(request, env);
+      const invoiceIdMatch = path.match(/^\/v1\/admin\/invoices\/([^/]+)$/);
+      if (invoiceIdMatch && method === "GET") return handleGetInvoice(request, env, invoiceIdMatch[1]);
+      if (invoiceIdMatch && method === "PATCH") return handleUpdateInvoice(request, env, invoiceIdMatch[1]);
+
+      if (path === "/v1/admin/documents" && method === "GET") return handleListDocuments(request, env, url);
+      if (path === "/v1/admin/documents" && method === "POST") return handleUploadDocument(request, env);
+      const documentAccessMatch = path.match(/^\/v1\/admin\/documents\/([^/]+)\/access$/);
+      if (documentAccessMatch && method === "GET") return handleGetDocumentAccess(request, env, documentAccessMatch[1]);
+      const documentIdMatch = path.match(/^\/v1\/admin\/documents\/([^/]+)$/);
+      if (documentIdMatch && method === "GET") return handleGetDocument(request, env, documentIdMatch[1]);
+      if (documentIdMatch && method === "PATCH") return handleUpdateDocument(request, env, documentIdMatch[1]);
+
+      if (path === "/v1/admin/rights" && method === "GET") return handleListRightsConfirmations(request, env, url);
+      if (path === "/v1/admin/rights" && method === "POST") return handleCreateRightsConfirmation(request, env);
+      const rightsIdMatch = path.match(/^\/v1\/admin\/rights\/([^/]+)$/);
+      if (rightsIdMatch && method === "GET") return handleGetRightsConfirmation(request, env, rightsIdMatch[1]);
+
+      if (path === "/v1/admin/complaints" && method === "GET") return handleListComplaints(request, env, url);
+      if (path === "/v1/admin/complaints" && method === "POST") return handleCreateComplaint(request, env);
+      const complaintIdMatch = path.match(/^\/v1\/admin\/complaints\/([^/]+)$/);
+      if (complaintIdMatch && method === "GET") return handleGetComplaint(request, env, complaintIdMatch[1]);
+      if (complaintIdMatch && method === "PATCH") return handleUpdateComplaint(request, env, complaintIdMatch[1]);
+
+      if (path === "/v1/admin/exports" && method === "GET") return handleListExportJobs(request, env, url);
+      if (path === "/v1/admin/exports" && method === "POST") return handleCreateExportJob(request, env);
+      const exportIdMatch = path.match(/^\/v1\/admin\/exports\/([^/]+)$/);
+      if (exportIdMatch && method === "GET") return handleGetExportJob(request, env, exportIdMatch[1]);
+
+      if (path === "/v1/admin/finance/summary" && method === "GET") return handleFinanceSummary(request, env, url);
 
       return json({ error: "not_found" }, 404);
     }

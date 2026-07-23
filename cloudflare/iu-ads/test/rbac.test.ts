@@ -56,3 +56,63 @@ describe("RBAC hardcoded role -> permission map", () => {
     expect(ROLE_CODES).toContain("read_only");
   });
 });
+
+describe("RBAC Etapa 3 extension — documents/rights/complaints/exports/finance", () => {
+  it("main_admin gets every new Etapa 3 permission automatically (ALL_PERMISSIONS)", () => {
+    expect(hasPermission(["main_admin"], "documents.write")).toBe(true);
+    expect(hasPermission(["main_admin"], "rights.write")).toBe(true);
+    expect(hasPermission(["main_admin"], "complaints.write")).toBe(true);
+    expect(hasPermission(["main_admin"], "exports.write")).toBe(true);
+    expect(hasPermission(["main_admin"], "finance.read")).toBe(true);
+  });
+
+  it("sales gets invoices.write plus documents/complaints/exports/finance (business surfaces)", () => {
+    expect(hasPermission(["sales"], "invoices.read")).toBe(true);
+    expect(hasPermission(["sales"], "invoices.write")).toBe(true);
+    expect(hasPermission(["sales"], "documents.read")).toBe(true);
+    expect(hasPermission(["sales"], "documents.write")).toBe(true);
+    expect(hasPermission(["sales"], "complaints.read")).toBe(true);
+    expect(hasPermission(["sales"], "complaints.write")).toBe(true);
+    expect(hasPermission(["sales"], "exports.read")).toBe(true);
+    expect(hasPermission(["sales"], "exports.write")).toBe(true);
+    expect(hasPermission(["sales"], "finance.read")).toBe(true);
+    // Rights confirmation stays with ads_manager/main_admin — sales does not gate campaign activation.
+    expect(hasPermission(["sales"], "rights.write")).toBe(false);
+  });
+
+  it("ads_manager gets rights.read/rights.write (campaign activation prerequisite) but no business/finance perms", () => {
+    expect(hasPermission(["ads_manager"], "rights.read")).toBe(true);
+    expect(hasPermission(["ads_manager"], "rights.write")).toBe(true);
+    expect(hasPermission(["ads_manager"], "documents.write")).toBe(false);
+    expect(hasPermission(["ads_manager"], "finance.read")).toBe(false);
+    expect(hasPermission(["ads_manager"], "complaints.write")).toBe(false);
+  });
+
+  it("read_only gets read-only access to every new Etapa 3 surface and no write access anywhere", () => {
+    expect(hasPermission(["read_only"], "documents.read")).toBe(true);
+    expect(hasPermission(["read_only"], "rights.read")).toBe(true);
+    expect(hasPermission(["read_only"], "complaints.read")).toBe(true);
+    expect(hasPermission(["read_only"], "exports.read")).toBe(true);
+    expect(hasPermission(["read_only"], "finance.read")).toBe(true);
+    expect(hasPermission(["read_only"], "documents.write")).toBe(false);
+    expect(hasPermission(["read_only"], "rights.write")).toBe(false);
+    expect(hasPermission(["read_only"], "complaints.write")).toBe(false);
+    expect(hasPermission(["read_only"], "exports.write")).toBe(false);
+  });
+
+  it("PERMISSIONS catalog contains all nine new Etapa 3 permission strings", () => {
+    for (const perm of [
+      "documents.read",
+      "documents.write",
+      "rights.read",
+      "rights.write",
+      "complaints.read",
+      "complaints.write",
+      "exports.read",
+      "exports.write",
+      "finance.read",
+    ] as const) {
+      expect(hasPermission(["main_admin"], perm)).toBe(true);
+    }
+  });
+});

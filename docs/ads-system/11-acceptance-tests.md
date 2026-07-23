@@ -26,6 +26,18 @@ Každý test má být dohledatelný z `01-traceability-matrix.json`.
 | E2-T7 | Unit: audit redaction strips password/token/session/code_hash from before/after JSON | `test/audit.test.ts` |
 | E2-T8 | Admin API gate: `ADS_ADMIN_API_ENABLED=false` → `503`; secrets missing → `503 auth_not_configured`; safeMode alone never blocks admin routes | manual/health + `index.ts` review |
 
+## Etapa 3 (implemented now)
+
+| ID | Test | Gate |
+|----|------|------|
+| E3-T1 | Unit: document visibility values + `filterDocumentForVisibility` hides `internal_only` from client/public scope, fails closed on unknown value | `test/visibility.test.ts` |
+| E3-T2 | Unit: `buildSignedDocumentAccess` always returns a short-lived `/v1/objects/get` path (never a raw/public R2 URL), signature verifies, TTL clamped to `MAX_SIGNED_URL_TTL_SECONDS` | `test/visibility.test.ts` |
+| E3-T3 | Unit: document upload validation accepts PDF, rejects HTML/JS-disguised content and oversized files; `contentHashHex`/`extForMime` helpers | `test/documents.test.ts` |
+| E3-T4 | Integration (fake D1+R2): admin-documents upload + `/access` — `public` visibility document still only returns a signed path; `object_access_audit` row written; non-`documents.write` role gets 403 | `test/documents.test.ts` |
+| E3-T5 | Integration (fake D1): inquiry→order conversion creates a `draft` order, marks inquiry `converted`, rejects double-convert (409) and missing-client (400); requires both `inquiries.write` and `orders.write` (403 for `ads_manager`); 401 without session | `test/business-crud.test.ts` |
+| E3-T6 | Unit: RBAC Etapa 3 extension — `sales` gets `invoices.write` + documents/complaints/exports/finance.read; `ads_manager` gets `rights.*`; `read_only` gets all new `*.read`; `main_admin` unaffected (already `ALL_PERMISSIONS`) | `test/rbac.test.ts` |
+| E3-T7 | Admin API gate unchanged: all Etapa 3 routes still behind `ADS_ADMIN_API_ENABLED` + session + RBAC via `requireAdminPermission` (index.ts review) | manual/index.ts review |
+
 ## Pozdější etapy (katalog)
 
 Auth/hash/brute-force/session; RBAC; client code hash/once/expire/regen/isolation; no empty box; collision; auto start/stop; limits; creative MIME; dangerous URL; audit no secrets; client report full; PDF/CSV/JSON export; mobile/tablet/PC; privacy/analytics/repo/layout guards; produkční E2E.

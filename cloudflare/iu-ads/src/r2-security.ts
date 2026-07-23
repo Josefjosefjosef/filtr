@@ -102,3 +102,29 @@ export function buildObjectKey(parts: {
   const id = parts.id.replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 64) || "obj";
   return parts.kind + "/" + id + "/v" + String(parts.version) + "." + ext;
 }
+
+/** SHA-256 hex digest of uploaded object bytes — stored for integrity checks (kap. 22). */
+export async function contentHashHex(bytes: Uint8Array): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  const u8 = new Uint8Array(digest);
+  let s = "";
+  for (let i = 0; i < u8.length; i++) s += u8[i].toString(16).padStart(2, "0");
+  return s;
+}
+
+const MIME_EXT: Record<string, string> = {
+  "application/pdf": "pdf",
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/webp": "webp",
+  "image/gif": "gif",
+  "text/plain": "txt",
+  "application/json": "json",
+};
+
+/** Best-effort extension for object keys — never derived from a user-controlled filename directly. */
+export function extForMime(mime: string, fallbackFilename?: string): string {
+  if (MIME_EXT[mime]) return MIME_EXT[mime];
+  const fromName = String(fallbackFilename || "").match(/\.([a-z0-9]{1,8})$/i);
+  return fromName ? fromName[1].toLowerCase() : "bin";
+}
