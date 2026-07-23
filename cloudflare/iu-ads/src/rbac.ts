@@ -79,6 +79,8 @@ const ROLE_PERMISSIONS: Record<RoleCode, readonly Permission[]> = {
   ads_manager: [
     "campaigns.read",
     "campaigns.write",
+    // Etapa 4 (kap. 4/7/13): ads_manager may move a campaign into approved/scheduled/active.
+    "campaigns.activate",
     "placements.read",
     "placements.write",
     "creatives.read",
