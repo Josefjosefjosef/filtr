@@ -4,9 +4,9 @@
 |--------------|-------|-------|-------|
 | `CLOUDFLARE_ADS_API_TOKEN` | GitHub Actions | 1 | **Preferred** least-privilege ads deploy token |
 | `CLOUDFLARE_API_TOKEN` | GitHub Actions | 0/1 | Fallback only if ads token missing |
-| `ADS_SESSION_SECRET` | Worker secret | 2 | Admin session HMAC |
+| `ADS_SESSION_SECRET` | Worker secret | 2 | Admin session cookie HMAC key (wired in `session.ts`); missing → `/v1/admin/*` returns `503 auth_not_configured` |
 | `ADS_CLIENT_SESSION_SECRET` | Worker secret | 7 | Client RO session HMAC |
-| `ADS_PASSWORD_PEPPER` | Worker secret | 2 | Password hash pepper |
+| `ADS_PASSWORD_PEPPER` | Worker secret | 2 | Mixed into PBKDF2 password hashes (`password.ts`); missing → `/v1/admin/*` returns `503 auth_not_configured` |
 | `ADS_CODE_PEPPER` | Worker secret | 7 | Client access code hash pepper |
 | `ADS_R2_SIGNING_SECRET` | GitHub Actions → Worker secret | 1 | Short-lived private object access; deploy puts via wrangler if GitHub secret set |
 | `ADS_BACKUP_ENCRYPTION_KEY` | Worker/CI secret | 9 | Backup encryption |
@@ -39,6 +39,24 @@ Token je v pořádku, ale na Cloudflare účtu **není aktivované R2**:
 4. Napiš agentovi „R2 aktivováno“ → znovu **Deploy IU Ads**
 
 This token does **not** replace Analytics deploy secrets.
+
+## Etapa 2 — enabling Admin API (manual, per environment)
+
+`ADS_ADMIN_API_ENABLED` stays `false` in the committed `wrangler.toml` defaults (fail-closed).
+To activate the admin surface in a given environment:
+
+1. `npx wrangler secret put ADS_SESSION_SECRET` — paste a high-entropy random value (never commit).
+2. `npx wrangler secret put ADS_PASSWORD_PEPPER` — paste a separate high-entropy random value.
+3. Set `ADS_ADMIN_API_ENABLED = "true"` via `wrangler secret put` is not applicable for vars; use an
+   environment-specific `wrangler.toml` override or `wrangler deploy --var ADS_ADMIN_API_ENABLED:true`
+   — never flip the checked-in default.
+4. `safeMode` does **not** gate the admin surface — it only gates Public Ad Delivery. Admin API gating is:
+   `ADS_ADMIN_API_ENABLED` (feature flag) **and** both secrets present (`auth_not_configured` otherwise).
+5. First `main_admin` user must be seeded out-of-band (direct D1 insert with a `password.ts`-generated
+   hash) — there is no public self-registration endpoint.
+6. Password reset **request** creates a hashed, time-limited token row in `admin_password_resets`, but
+   Etapa 2 does not include an email/SMS delivery integration — the raw token is intentionally never
+   returned by the API. Wire an actual delivery channel before relying on self-service reset in production.
 
 ## Rules
 

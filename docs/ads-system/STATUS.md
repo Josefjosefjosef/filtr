@@ -1,9 +1,27 @@
 # InfoUzel Ads — implementation STATUS
 
-**Current stage:** Etapa 1 COMPLETE (infra + R2) — awaiting merge #7680 after GREEN CI  
+**Current stage:** Etapa 2 (auth/users/roles/audit) implemented on `feat/ads-system-etapa-2-auth` — PR open, awaiting GREEN CI + merge  
+**Etapa 1:** COMPLETE (infra + R2) — awaiting merge #7680 after GREEN CI  
 **Etapa 0:** MERGED (#7668 → `a31ea9e958`)  
 **PR #7674:** MERGED (`b5e15ff40c`)  
-**Safe mode:** ON · Public delivery: OFF  
+**Safe mode:** ON · Public delivery: OFF · Admin API: OFF (`ADS_ADMIN_API_ENABLED=false` default)
+
+## Etapa 2 implementation (2026-07-23)
+
+- Migration `0003_admin_auth.sql`: session/reset/user-role indexes + `system_settings` tunables
+  (`ADMIN_SESSION_TTL_SECONDS`, lockout/reset/password-policy knobs). `SCHEMA_VERSION` → `0003`.
+- New modules: `password.ts` (PBKDF2+pepper), `session.ts` (HMAC-signed HttpOnly/Secure/SameSite=Strict
+  cookie), `rbac.ts` (hardcoded role→permission map), `audit.ts` (redaction), `admin-auth.ts`,
+  `admin-users.ts`, `admin-audit.ts`.
+- Routes: `/v1/admin/auth/{login,logout,me,password-reset/request,password-reset/confirm,password/change}`,
+  `/v1/admin/users` (GET/POST), `/v1/admin/users/:id` (GET/PATCH), `/v1/admin/users/:id/roles` (PUT),
+  `/v1/admin/roles` (GET), `/v1/admin/audit` (GET), `/v1/admin/audit/:id` (GET).
+- Gate fixed: Admin API is blocked by `ADS_ADMIN_API_ENABLED` and missing secrets
+  (`503 auth_not_configured`) — **not** by `safeMode` (safeMode only gates Public Ad Delivery).
+- Client routes (`/v1/client/*`) unchanged — still `503` until Etapa 7.
+- Tests: 44 total (31 new for Etapa 2) — `npm test` green in `cloudflare/iu-ads`.
+- Known gap (documented, not blocking): password-reset token delivery (email/SMS) is out of Etapa 2
+  scope — request endpoint creates a hashed, time-limited token row but never returns the raw token.  
 
 ## Etapa 1 production proof (2026-07-22)
 
@@ -23,7 +41,8 @@ Deploy run `29962508435` SUCCESS:
 |-------|------|
 | 0 | done |
 | 1 | prod verified; merge #7680 when CI green |
-| 2–9 | next |
+| 2 | implemented + tested on `feat/ads-system-etapa-2-auth`; PR open, not yet merged/deployed |
+| 3–9 | next |
 
 ## Guards
 

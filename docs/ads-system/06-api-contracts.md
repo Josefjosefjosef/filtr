@@ -55,6 +55,30 @@ Kap. 38.1–38.14 — implementace Etapa 7; kontrakt rezervován zde.
 
 CRUD dle RBAC pro všechny entity z DB modelu. Každá mutace → `audit_logs`.
 
+## Etapa 2 — Admin auth/users/roles/audit
+
+Gate: `ADS_ADMIN_API_ENABLED` (feature flag) **and** `ADS_SESSION_SECRET` + `ADS_PASSWORD_PEPPER` present.
+`safeMode` does **not** gate this surface (it only gates Public Ad Delivery) — see `03-security-threat-model.md`.
+Missing secrets while the flag is on → `503 {"error":"auth_not_configured"}`.
+
+| Route | Method | Auth | Perm | Notes |
+|-------|--------|------|------|-------|
+| `/v1/admin/auth/login` | POST | none (credentials) | — | Uniform `invalid_credentials`; brute-force lockout (`admin_login_attempts`) |
+| `/v1/admin/auth/logout` | POST | session cookie | — | Revokes session, clears cookie |
+| `/v1/admin/auth/me` | GET | session cookie | — | Returns user + roles |
+| `/v1/admin/auth/password-reset/request` | POST | none | — | Always `{"ok":true}` (no enumeration); token delivery channel deferred |
+| `/v1/admin/auth/password-reset/confirm` | POST | reset token | — | Consumes token once, revokes existing sessions |
+| `/v1/admin/auth/password/change` | POST | session cookie | — | Requires current password |
+| `/v1/admin/users` | GET/POST | session cookie | `users.read`/`users.write` | main_admin only |
+| `/v1/admin/users/:id` | GET/PATCH | session cookie | `users.read`/`users.write` | main_admin only |
+| `/v1/admin/users/:id/roles` | PUT | session cookie | `users.write` | Replaces role assignment set |
+| `/v1/admin/roles` | GET | session cookie | `users.read` | Hardcoded role/permission catalog |
+| `/v1/admin/audit` | GET | session cookie | `audit.read` | Filters: `object_type`, `object_id`, `actor_user_id`, `limit`, `offset` |
+| `/v1/admin/audit/:id` | GET | session cookie | `audit.read` | Single entry |
+
+Session cookie: `HttpOnly`, `Secure`, `SameSite=Strict`, HMAC-signed (`ADS_SESSION_SECRET`), name from
+`system_settings.ADMIN_SESSION_COOKIE_NAME` (default `iu_ads_admin_session`).
+
 ## Etapa 0 scaffold
 
 Implementováno pouze:

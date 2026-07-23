@@ -1,3 +1,20 @@
+import {
+  handleLogin,
+  handleLogout,
+  handleMe,
+  handlePasswordChange,
+  handlePasswordResetConfirm,
+  handlePasswordResetRequest,
+} from "./admin-auth";
+import { handleGetAuditLog, handleListAuditLogs } from "./admin-audit";
+import {
+  handleCreateUser,
+  handleGetUser,
+  handleListRoles,
+  handleListUsers,
+  handleSetUserRoles,
+  handleUpdateUser,
+} from "./admin-users";
 import { resolveFeatureFlags, isPublicDeliveryActive } from "./feature-flags";
 import { emptyPublicDelivery, sanitizePublicAds, assertNoForbiddenPublicKeys } from "./isolation";
 import { parseAccessQuery, verifyObjectAccess } from "./signed-access";
@@ -50,7 +67,7 @@ export default {
           service: "infouzel-ads",
           mode: "ads-business",
           storageMode: dbOk ? "d1" : env.DB ? "unavailable" : "unbound",
-          schemaVersion: "0002",
+          schemaVersion: "0003",
           safeMode: flags.safeMode,
           publicDeliveryEnabled: flags.publicDeliveryEnabled,
           adminApiEnabled: flags.adminApiEnabled,
@@ -107,11 +124,47 @@ export default {
       return new Response(obj.body, { status: 200, headers });
     }
 
+    // Admin API gate: safeMode only blocks public delivery — never the admin surface.
     if (path.startsWith("/v1/admin")) {
-      if (!flags.adminApiEnabled || flags.safeMode) {
-        return json({ error: "admin_api_disabled", safeMode: flags.safeMode }, 503);
+      if (!flags.adminApiEnabled) {
+        return json({ error: "admin_api_disabled" }, 503);
       }
-      return json({ error: "not_implemented" }, 501);
+      if (!env.ADS_SESSION_SECRET || !env.ADS_PASSWORD_PEPPER) {
+        return json({ error: "auth_not_configured" }, 503);
+      }
+
+      const method = request.method;
+
+      if (path === "/v1/admin/auth/login" && method === "POST") return handleLogin(request, env);
+      if (path === "/v1/admin/auth/logout" && method === "POST") return handleLogout(request, env);
+      if (path === "/v1/admin/auth/me" && method === "GET") return handleMe(request, env);
+      if (path === "/v1/admin/auth/password-reset/request" && method === "POST") {
+        return handlePasswordResetRequest(request, env);
+      }
+      if (path === "/v1/admin/auth/password-reset/confirm" && method === "POST") {
+        return handlePasswordResetConfirm(request, env);
+      }
+      if (path === "/v1/admin/auth/password/change" && method === "POST") {
+        return handlePasswordChange(request, env);
+      }
+
+      if (path === "/v1/admin/users" && method === "GET") return handleListUsers(request, env);
+      if (path === "/v1/admin/users" && method === "POST") return handleCreateUser(request, env);
+
+      const userRolesMatch = path.match(/^\/v1\/admin\/users\/([^/]+)\/roles$/);
+      if (userRolesMatch && method === "PUT") return handleSetUserRoles(request, env, userRolesMatch[1]);
+
+      const userIdMatch = path.match(/^\/v1\/admin\/users\/([^/]+)$/);
+      if (userIdMatch && method === "GET") return handleGetUser(request, env, userIdMatch[1]);
+      if (userIdMatch && method === "PATCH") return handleUpdateUser(request, env, userIdMatch[1]);
+
+      if (path === "/v1/admin/roles" && method === "GET") return handleListRoles(request, env);
+
+      if (path === "/v1/admin/audit" && method === "GET") return handleListAuditLogs(request, env, url);
+      const auditIdMatch = path.match(/^\/v1\/admin\/audit\/([^/]+)$/);
+      if (auditIdMatch && method === "GET") return handleGetAuditLog(request, env, auditIdMatch[1]);
+
+      return json({ error: "not_found" }, 404);
     }
 
     if (path.startsWith("/v1/client")) {

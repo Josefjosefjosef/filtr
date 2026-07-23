@@ -11,6 +11,10 @@ export type Env = {
   CORS_ALLOW_ORIGIN?: string;
   /** Worker secret for short-lived private object access signatures (Etapa 1+). */
   ADS_R2_SIGNING_SECRET?: string;
+  /** Worker secret: HMAC key for signed admin session cookies (Etapa 2). */
+  ADS_SESSION_SECRET?: string;
+  /** Worker secret: pepper mixed into admin password hashes (Etapa 2). */
+  ADS_PASSWORD_PEPPER?: string;
 };
 
 /** Fields forever forbidden on Public Ad Delivery responses. */
@@ -63,4 +67,41 @@ export type PublicDeliveryResponse = {
   ads: PublicAd[];
   enabled: boolean;
   safeMode: boolean;
+};
+
+/** Admin auth/users/roles/audit (Etapa 2). */
+
+export type AdminUserRow = {
+  user_id: string;
+  email: string;
+  password_hash: string;
+  display_name: string;
+  is_active: number;
+  force_password_change: number;
+  last_login_at: string | null;
+  created_at: string;
+  updated_at: string;
+  deactivated_at: string | null;
+};
+
+export type AdminSessionRow = {
+  session_id: string;
+  user_id: string;
+  token_hash: string;
+  created_at: string;
+  expires_at: string;
+  revoked_at: string | null;
+  last_seen_at: string | null;
+};
+
+export type AdminUserPublic = {
+  user_id: string;
+  email: string;
+  display_name: string;
+  is_active: boolean;
+  force_password_change: boolean;
+  roles: string[];
+  last_login_at: string | null;
+  created_at: string;
+  updated_at: string;
 };
