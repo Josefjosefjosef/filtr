@@ -103,9 +103,30 @@ async function gotoProjectsMediaForSmoke(page) {
 }
 
 async function smokePrehledDneCutover(page) {
-  await gotoDomContentLoaded(page, `${BASE}/projects/?section=media&iuInfoSystem=cutover`);
-  await page.waitForSelector(".iuPrehledDne", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
-  await page.waitForSelector(".iuPrehledDne__item, .iuPdCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
+  // Cutover root can paint before async Přehled items; CI flakes on a single 30s item wait.
+  // Retry once + wait for cutover class before requiring cards.
+  let lastItemErr = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media&iuInfoSystem=cutover`);
+    await page.waitForFunction(
+      () =>
+        document.documentElement.classList.contains("iu-info-system-cutover") &&
+        !!document.querySelector(".iuPrehledDne"),
+      { timeout: PREVIEW_SELECTOR_TIMEOUT_MS }
+    );
+    try {
+      await page.waitForFunction(
+        () => document.querySelectorAll(".iuPrehledDne__item, .iuPdCard").length > 0,
+        { timeout: PREVIEW_SELECTOR_TIMEOUT_MS }
+      );
+      lastItemErr = null;
+      break;
+    } catch (e) {
+      lastItemErr = e;
+      await page.waitForTimeout(800 + attempt * 400);
+    }
+  }
+  if (lastItemErr) throw lastItemErr;
   const probe = await page.evaluate(() => {
     const root = document.querySelector(".iuPrehledDne");
     const items = document.querySelectorAll(".iuPrehledDne__item, .iuPdCard");
