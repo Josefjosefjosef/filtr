@@ -63,6 +63,20 @@ Každý test má být dohledatelný z `01-traceability-matrix.json`.
 | E5-T6 | Integration (fake D1): `exclusive` `collision_mode` keeps only the lowest-`priority` candidate per placement/device/section; `shared` mode serves every eligible match | `test/delivery-engine.test.ts` |
 | E5-T7 | Integration (fake D1): a `scheduled` campaign auto-promoted by `runAutoScheduler` is delivered in the same request; one correctly skipped (missing rights confirmation) is not; one auto-ended is no longer delivered | `test/delivery-engine.test.ts` |
 
+## Etapa 6 (implemented now)
+
+| ID | Test | Gate |
+|----|------|------|
+| E6-T1 | Unit: `fetchAdsReport` fail-closed — missing `ANALYTICS_ADMIN_REPORT_URL` setting, missing `ANALYTICS_ADMIN_TOKEN` secret, or no `DB` binding → `503 stats_not_configured`; never calls `fetch` in those cases | `test/analytics-client.test.ts` |
+| E6-T2 | Unit: `fetchAdsReport` upstream failures — network error → `503 stats_upstream_unreachable`; non-2xx or invalid JSON → `503 stats_upstream_error` | `test/analytics-client.test.ts` |
+| E6-T3 | Unit: `fetchAdsReport` sends `Authorization: Bearer <ANALYTICS_ADMIN_TOKEN>` and forwards filter params (`campaign_id`/`from`/`to`/`device_category`/etc.) in the query string to `<base>/v1/ads/report` | `test/analytics-client.test.ts` |
+| E6-T4 | Unit: `fetchAdsReport` rebuilds every row/total from an explicit allowlist — upstream fields like `price_cents`/`email`/`client_code` never survive, even if Analytics ever emitted them by mistake | `test/analytics-client.test.ts` |
+| E6-T5 | Integration (fake D1 + mocked fetch): `/v1/admin/stats/summary` and `/v1/admin/stats/campaigns/:id` require `stats.read` — `401` no session, `403` for `sales` (no `stats.read`), `200` for `ads_manager`/`read_only` | `test/admin-stats.test.ts` |
+| E6-T6 | Integration: test campaigns (`STATS_TEST_CAMPAIGN_PREFIX`, default `test`) are excluded from every stats response — `campaigns/:id` returns `404` for a `test_*` id even though the campaign exists in D1; `summary` strips `test_*` rows even if Analytics forgot to filter them; an explicit `campaign_id=test_*` on `summary` short-circuits without even calling Analytics | `test/admin-stats.test.ts` |
+| E6-T7 | Integration: `/v1/admin/stats/campaigns/:id` response never contains `price`/`email`/`client_code` (or any non-allowlisted field) even if the upstream report includes them; `campaign` object is limited to `campaign_id`/`evidence_code`/`title`/`status` | `test/admin-stats.test.ts` |
+| E6-T8 | Integration: both stats routes return `503 stats_not_configured` when `ANALYTICS_ADMIN_REPORT_URL` is empty or `ANALYTICS_ADMIN_TOKEN` is unset | `test/admin-stats.test.ts` |
+| E6-T9 | Schema isolation (carried over): `iu-ads` migrations (incl. `0007`) still define no `daily_*`/`ingest_audit` tables — `ANALYTICS_ONLY_TABLES` check in `test/isolation.test.ts` | `test/isolation.test.ts` |
+
 ## Pozdější etapy (katalog)
 
 Auth/hash/brute-force/session; RBAC; client code hash/once/expire/regen/isolation; no empty box; collision; auto start/stop; limits; creative MIME; dangerous URL; audit no secrets; client report full; PDF/CSV/JSON export; mobile/tablet/PC; privacy/analytics/repo/layout guards; produkční E2E.

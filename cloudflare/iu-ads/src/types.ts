@@ -15,6 +15,13 @@ export type Env = {
   ADS_SESSION_SECRET?: string;
   /** Worker secret: pepper mixed into admin password hashes (Etapa 2). */
   ADS_PASSWORD_PEPPER?: string;
+  /**
+   * Worker secret (Etapa 6): bearer token for server-side calls to the Analytics Worker's
+   * `/v1/ads/report`. Deliberately a separate secret from Analytics' own `ADMIN_TOKEN` config —
+   * it must never be reused as (or derived from) any Ads Admin API auth secret, and vice versa
+   * (see secrets.contract.md, 03-security-threat-model.md). Missing → 503 stats_not_configured.
+   */
+  ANALYTICS_ADMIN_TOKEN?: string;
 };
 
 /** Fields forever forbidden on Public Ad Delivery responses. */
