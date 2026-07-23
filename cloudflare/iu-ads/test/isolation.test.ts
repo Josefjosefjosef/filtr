@@ -110,6 +110,17 @@ describe("schema isolation from analytics aggregates", () => {
     expect(sql.includes("'0008'")).toBe(true);
   });
 
+  it("etapa 8 migration 0009 adds alert indexes without new analytics tables", () => {
+    const sql = readFileSync(join(root, "migrations", "0009_admin_ops.sql"), "utf8").toLowerCase();
+    for (const table of ANALYTICS_ONLY_TABLES) {
+      expect(sql.includes("create table if not exists " + table)).toBe(false);
+      expect(sql.includes("create table " + table)).toBe(false);
+    }
+    expect(sql.includes("idx_alerts_type_status")).toBe(true);
+    expect(sql.includes("'0009'")).toBe(true);
+    expect(sql.includes("create table")).toBe(false);
+  });
+
   it("traceability matrix covers chapters 1-48", () => {
     const matrixPath = join(root, "..", "..", "docs", "ads-system", "01-traceability-matrix.json");
     const matrix = JSON.parse(readFileSync(matrixPath, "utf8")) as {

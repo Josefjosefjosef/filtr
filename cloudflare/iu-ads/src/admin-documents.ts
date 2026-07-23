@@ -83,6 +83,7 @@ export async function handleListDocuments(request: Request, env: Env, url: URL):
   const campaignId = url.searchParams.get("campaign_id");
   const docType = url.searchParams.get("doc_type");
   const visibility = url.searchParams.get("visibility");
+  const q = (url.searchParams.get("q") || "").trim();
   const limit = clampLimit(url.searchParams.get("limit"));
   const offset = clampOffset(url.searchParams.get("offset"));
 
@@ -103,6 +104,11 @@ export async function handleListDocuments(request: Request, env: Env, url: URL):
   if (visibility) {
     conditions.push("visibility = ?");
     params.push(visibility);
+  }
+  if (q) {
+    conditions.push("(title LIKE ? OR document_id LIKE ?)");
+    const like = "%" + q + "%";
+    params.push(like, like);
   }
   const where = conditions.length ? "WHERE " + conditions.join(" AND ") : "";
   params.push(limit, offset);

@@ -103,9 +103,60 @@ async function gotoProjectsMediaForSmoke(page) {
 }
 
 async function smokePrehledDneCutover(page) {
-  await gotoDomContentLoaded(page, `${BASE}/projects/?section=media&iuInfoSystem=cutover`);
-  await page.waitForSelector(".iuPrehledDne", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
-  await page.waitForSelector(".iuPrehledDne__item, .iuPdCard", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
+  // Shell paints `.iuPrehledDne` before feed.json hydrate; waiting only for the shell flakes.
+  // Wait for feed fetch + items (or explicit empty/error) with one reload retry.
+  let lastItemErr = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    // Clear sticky prefs from earlier smoke steps so filters cannot zero the feed.
+    await page.evaluate(() => {
+      try {
+        const keys = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && /^iu\.infoEvents\./.test(k)) keys.push(k);
+        }
+        keys.forEach((k) => localStorage.removeItem(k));
+      } catch (_) {}
+    }).catch(() => {});
+    const feedRespPromise = page
+      .waitForResponse(
+        (r) => /\/projects\/data\/info_events\/feed\.json(?:\?|$)/.test(r.url()) && r.ok(),
+        { timeout: PREVIEW_SELECTOR_TIMEOUT_MS }
+      )
+      .catch(() => null);
+    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media&iuInfoSystem=cutover`);
+    await page.waitForFunction(
+      () =>
+        document.documentElement.classList.contains("iu-info-system-cutover") &&
+        !!document.querySelector(".iuPrehledDne"),
+      { timeout: PREVIEW_SELECTOR_TIMEOUT_MS }
+    );
+    const feedResp = await feedRespPromise;
+    try {
+      await page.waitForFunction(
+        () => {
+          const items = document.querySelectorAll(".iuPrehledDne__item, .iuPdCard");
+          if (items.length > 0) return true;
+          // Settled empty/error states (do not keep waiting forever after hydrate failed).
+          return !!document.querySelector(".iuPdEmpty, .iuPrehledDne__empty");
+        },
+        { timeout: PREVIEW_SELECTOR_TIMEOUT_MS }
+      );
+      const items = await page.locator(".iuPrehledDne__item, .iuPdCard").count();
+      if (items > 0) {
+        lastItemErr = null;
+        break;
+      }
+      const emptyText = await page.locator(".iuPdEmpty, .iuPrehledDne__empty").first().textContent().catch(() => "");
+      lastItemErr = new Error(
+        `Prehled dne hydrated with zero cards (feedHttp=${feedResp ? feedResp.status() : "none"}; empty=${JSON.stringify(String(emptyText || "").trim())})`
+      );
+    } catch (e) {
+      lastItemErr = e;
+    }
+    await page.waitForTimeout(800 + attempt * 400);
+  }
+  if (lastItemErr) throw lastItemErr;
   const probe = await page.evaluate(() => {
     const root = document.querySelector(".iuPrehledDne");
     const items = document.querySelectorAll(".iuPrehledDne__item, .iuPdCard");

@@ -1,6 +1,6 @@
 # InfoUzel Ads — implementation STATUS
 
-**Current stage:** Etapa 1 **DONE** · Etapa 2 **DONE** (#7684) · Etapa 3 **DONE** (#7687) · Etapa 4 **DONE** (#7689) · Etapa 5 **DONE** (#7690) · Etapa 6 **DONE** (#7693) · Etapa 7 in progress (client codes + portal)  
+**Current stage:** Etapa 1 **DONE** · Etapa 2 **DONE** (#7684) · Etapa 3 **DONE** (#7687) · Etapa 4 **DONE** (#7689) · Etapa 5 **DONE** (#7690) · Etapa 6 **DONE** (#7693) · Etapa 7 **DONE** (#7695) · Etapa 8 in progress (admin ops)  
 **Safe mode:** ON · Public delivery: OFF · Admin API default: OFF · Client API default: OFF  
 
 ## Etapa 1 closeout
@@ -84,8 +84,9 @@ changes shipped so far. Gap remains **deferred**.
 - Tests: 19 new → 176 passing total (was 157)
 - **Wrangler defaults unchanged** (fail-closed); `ANALYTICS_ADMIN_REPORT_URL` ships empty
 
-## Etapa 7 — client codes + portal (in progress)
+## Etapa 7 closeout — client codes + portal
 
+- PR [#7695](https://github.com/Josefjosefjosef/filtr/pull/7695) **MERGED** — `f909f7b7d40a46068d1e03f64baa5c0decce5c0d`
 - Migration `0008_client_codes.sql`: `client_login_attempts` table (not in `0001`) + indexes on
   existing `client_access_codes` / `client_code_campaigns` / `client_sessions` + client session/lockout
   tunables; `schemaVersion` → `0008`. No analytics tables.
@@ -97,17 +98,37 @@ changes shipped so far. Gap remains **deferred**.
 - RBAC: `ads_manager` gains `codes.read`/`codes.write` (matrix kap. 36)
 - Wired: `/v1/admin/codes*`, `/v1/client/auth/*`, `/v1/client/report`, `/v1/client/report/export`;
   health `schemaVersion: "0008"` + existing `clientApiEnabled` flag
+- **Production proof (post-merge Deploy IU Ads SUCCESS):** `schemaVersion=0008`, `safeMode=true`,
+  `publicDeliveryEnabled=false`, `adminApiEnabled=false`, `clientApiEnabled=false`
+- Tests: 12 new in `test/client-portal.test.ts` (+ rbac assertion) → **189** passing total (was 176)
 - **Wrangler defaults unchanged**: `ADS_CLIENT_API_ENABLED=false` (and safe/public/admin flags still
   fail-closed) — client portal ships dark until secrets + flag flipped out-of-band
-- Tests: 12 new in `test/client-portal.test.ts` (+ rbac assertion) → 188 passing total (was 176)
 
 ### Known gap — client portal frontend UI (kap. 36–38 UI)
 
 Worker API for codes + RO portal report exists and is fail-closed, but **no InfoCentrum / client
-portal HTML/JS** is included in this PR (explicit Worker-only preference, same pattern as Etapa 5
+portal HTML/JS** is included (explicit Worker-only preference, same pattern as Etapa 5
 frontend inject gap). PDF export and `client_report_snapshots` persistence (38.13) are also deferred.
 A later UI PR can consume these endpoints once `ADS_CLIENT_API_ENABLED` is enabled in a non-prod
 environment.
+
+## Etapa 8 — admin ops (kap. 5, 6, 16–19) — in progress
+
+- Migration `0009_admin_ops.sql`: alert indexes + tunables only (`alerts` already in `0001`);
+  `schemaVersion` → `0009`
+- New: `admin-nav.ts`, `admin-dashboard.ts`, `admin-search.ts`, `admin-calendar.ts`,
+  `admin-alerts.ts`, `admin-list-filters.ts`; minimal Worker shell `GET /admin`
+- RBAC: `alerts.read` / `alerts.write` (main_admin/ads_manager/sales write; read_only read)
+- List filter consistency: `q` on campaigns/documents/invoices; `status`/`from`/`to` on reservations
+- **Wrangler defaults unchanged** (SAFE_MODE / public / admin / client all fail-closed)
+- Tests: 14 new in `test/admin-ops.test.ts` (+ rbac/isolation) → **205** passing
+- Cron for alert generate deferred to Etapa 9 (`POST /v1/admin/alerts/generate` is on-demand)
+
+### Known gap — public-site admin UI (kap. 5/6 UI)
+
+Worker APIs + minimal `/admin` shell ship in this etapa. Full InfoUzel public-site admin HTML/JS
+(under `assets/` / `projects/index.html`) is **deferred** — same STOP-SHIP / UI-smoke risk pattern
+as E5 inject and E7 portal UI.
 
 ## Stage checklist
 
@@ -120,8 +141,9 @@ environment.
 | 4 | **done** (#7689 → `ba8c970adf`) — campaigns/placements/creatives |
 | 5 | **done** (#7690 → `d4341b0547`) — public delivery engine (flags still OFF; frontend inject gap documented above) |
 | 6 | **done** (#7693 → `34949264a8`) — measurement/reporting (prod `schemaVersion=0007`) |
-| 7 | in progress — client codes + portal API |
-| 8–9 | pending |
+| 7 | **done** (#7695 → `f909f7b7d4`) — client codes + portal API (prod `schemaVersion=0008`) |
+| 8 | in progress — admin ops APIs (nav/dashboard/search/calendar/alerts) |
+| 9 | pending — backup/security/E2E closeout (do **not** flip production ads ON) |
 
 ## Guards
 

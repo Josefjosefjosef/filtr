@@ -77,7 +77,7 @@ Každý test má být dohledatelný z `01-traceability-matrix.json`.
 | E6-T8 | Integration: both stats routes return `503 stats_not_configured` when `ANALYTICS_ADMIN_REPORT_URL` is empty or `ANALYTICS_ADMIN_TOKEN` is unset | `test/admin-stats.test.ts` |
 | E6-T9 | Schema isolation (carried over): `iu-ads` migrations (incl. `0007`) still define no `daily_*`/`ingest_audit` tables — `ANALYTICS_ONLY_TABLES` check in `test/isolation.test.ts` | `test/isolation.test.ts` |
 
-## Etapa 7 (implemented now)
+## Etapa 7 (implemented — #7695)
 
 | ID | Test | Gate |
 |----|------|------|
@@ -91,6 +91,19 @@ Každý test má být dohledatelný z `01-traceability-matrix.json`.
 | E7-T8 | Integration: report scoped to code campaigns; hides `note_internal`/price/`r2_key`/internal docs; other client's campaign → `403`; logout invalidates session | `test/client-portal.test.ts` |
 | E7-T9 | RBAC: `ads_manager` has `codes.read`/`codes.write`; isolation guard still PASS | `test/rbac.test.ts`, `scripts/iu-ads-isolation-guard.mjs` |
 
+## Etapa 8 (implemented now)
+
+| ID | Test | Gate |
+|----|------|------|
+| E8-T1 | Dashboard widgets omit surfaces the role cannot read (`ads_manager` no invoices/inquiries/audit; `sales` has inquiries/invoices) | `test/admin-ops.test.ts` |
+| E8-T2 | Search never returns `code_hash`/`password_hash`/`access_code`/`r2_key`; role-scoped entity set | `test/admin-ops.test.ts` |
+| E8-T3 | Calendar requires `from`/`to`; exclusive overlapping reservations flagged `has_collision` | `test/admin-ops.test.ts` |
+| E8-T4 | Alert lifecycle: ack → read, resolve → resolved, double-resolve → `409`; `read_only` cannot ack | `test/admin-ops.test.ts` |
+| E8-T5 | Nav filtering: `ads_manager` lacks users/clients; `sales` lacks users/codes | `test/admin-ops.test.ts` |
+| E8-T6 | RBAC `alerts.read`/`alerts.write`; migration `0009` indexes-only + schema bump; isolation guard PASS | `test/rbac.test.ts`, `test/isolation.test.ts`, guard |
+
 ## Pozdější etapy (katalog)
 
-Admin UI/ops (Etapa 8); backup/security/E2E (Etapa 9); client portal frontend UI; PDF export; `client_report_snapshots` persistence; produkční E2E.
+Backup/security/E2E (Etapa 9); public-site admin UI; client portal frontend UI; PDF export;
+`client_report_snapshots` persistence; alert Cron; produkční E2E; kap. 14 go-live checklist
+(SAFE_MODE stays ON until then).

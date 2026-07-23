@@ -46,6 +46,9 @@ export const PERMISSIONS = [
   "exports.read",
   "exports.write",
   "finance.read",
+  // Etapa 8 (kap. 19): admin alerts lifecycle.
+  "alerts.read",
+  "alerts.write",
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
 
@@ -69,6 +72,8 @@ const READ_ONLY_PERMISSIONS: readonly Permission[] = [
   "complaints.read",
   "exports.read",
   "finance.read",
+  // Etapa 8: alerts are readable by read_only; mutations require alerts.write.
+  "alerts.read",
 ];
 
 /** kap. 4/7: main_admin = vše; ads_manager = kampaně/kreativy/umístění/statistiky/autorská práva
@@ -91,6 +96,9 @@ const ROLE_PERMISSIONS: Record<RoleCode, readonly Permission[]> = {
     "stats.read",
     "rights.read",
     "rights.write",
+    // Etapa 8: ops alerts for campaign/rights issues.
+    "alerts.read",
+    "alerts.write",
   ],
   sales: [
     "clients.read",
@@ -111,6 +119,9 @@ const ROLE_PERMISSIONS: Record<RoleCode, readonly Permission[]> = {
     "exports.read",
     "exports.write",
     "finance.read",
+    // Etapa 8: sales can ack/resolve business-facing alerts.
+    "alerts.read",
+    "alerts.write",
   ],
   read_only: READ_ONLY_PERMISSIONS,
 };

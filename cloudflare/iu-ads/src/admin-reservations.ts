@@ -43,6 +43,9 @@ export async function handleListReservations(request: Request, env: Env, url: UR
 
   const placementId = url.searchParams.get("placement_id");
   const campaignId = url.searchParams.get("campaign_id");
+  const status = url.searchParams.get("status");
+  const from = url.searchParams.get("from");
+  const to = url.searchParams.get("to");
   const limit = clampLimit(url.searchParams.get("limit"));
 
   const conditions: string[] = [];
@@ -54,6 +57,18 @@ export async function handleListReservations(request: Request, env: Env, url: UR
   if (campaignId) {
     conditions.push("campaign_id = ?");
     params.push(campaignId);
+  }
+  if (status) {
+    conditions.push("status = ?");
+    params.push(status);
+  }
+  if (from) {
+    conditions.push("end_at > ?");
+    params.push(from);
+  }
+  if (to) {
+    conditions.push("start_at < ?");
+    params.push(to);
   }
   const where = conditions.length ? "WHERE " + conditions.join(" AND ") : "";
   params.push(limit);

@@ -24,7 +24,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          # Full history clones hang/timeout on this large repo; scope script fetches main --depth=64.
+          fetch-depth: 64
 
       - name: Detect data-only scope (fast pool / data PR fast path)
         id: scope

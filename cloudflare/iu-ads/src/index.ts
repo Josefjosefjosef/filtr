@@ -84,6 +84,17 @@ import {
   handleRegenCode,
   handleRevokeCode,
 } from "./admin-codes";
+import { handleGetAdminDashboard } from "./admin-dashboard";
+import { handleAdminSearch } from "./admin-search";
+import { handleGetAdminCalendar } from "./admin-calendar";
+import {
+  handleAckAlert,
+  handleGenerateAlerts,
+  handleGetAlert,
+  handleListAlerts,
+  handleResolveAlert,
+} from "./admin-alerts";
+import { handleGetAdminNav } from "./admin-nav";
 import { handleClientLogin, handleClientLogout, handleClientMe } from "./client-auth";
 import { handleClientReport, handleClientReportExport } from "./client-report";
 import { isDeviceCategory, selectPublicAds } from "./delivery-engine";
@@ -93,6 +104,42 @@ import { parseAccessQuery, verifyObjectAccess } from "./signed-access";
 import type { Env, PublicAd, PublicDeliveryResponse } from "./types";
 
 const NO_STORE = { "Cache-Control": "no-store", "Content-Type": "application/json; charset=utf-8" };
+const ADMIN_SHELL_HTML = `<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>InfoUzel Ads — Admin ops shell</title>
+  <style>
+    :root { color-scheme: light; --bg:#f6f3ee; --ink:#1c2420; --accent:#0f6b5c; --line:#d5cfc4; }
+    body { margin:0; font:15px/1.45 "Segoe UI", system-ui, sans-serif; background:linear-gradient(160deg,#efe8dc,#f7f5f1 45%,#e7f0ec); color:var(--ink); }
+    main { max-width:720px; margin:0 auto; padding:2.5rem 1.25rem 4rem; }
+    h1 { font-size:1.6rem; letter-spacing:-0.02em; margin:0 0 .35rem; }
+    p { margin:.35rem 0 1rem; max-width:42rem; }
+    code, pre { font-family: ui-monospace, Consolas, monospace; }
+    ul { padding-left:1.1rem; }
+    li { margin:.35rem 0; }
+    .note { border-left:3px solid var(--accent); padding:.5rem .85rem; background:rgba(255,255,255,.55); }
+    a { color:var(--accent); }
+  </style>
+</head>
+<body>
+<main>
+  <h1>InfoUzel Ads — Admin ops</h1>
+  <p class="note">Minimal Worker-served shell (Etapa 8). Full public-site admin UI is deferred.
+  Production stays fail-closed: <code>ADS_ADMIN_API_ENABLED=false</code> until flipped out-of-band.</p>
+  <p>Role-scoped Admin API surfaces (session cookie required when API enabled):</p>
+  <ul>
+    <li><code>GET /v1/admin/nav</code> — menu contract (kap. 5)</li>
+    <li><code>GET /v1/admin/dashboard</code> — aggregate widgets (kap. 6)</li>
+    <li><code>GET /v1/admin/search?q=</code> — cross-entity search, no secrets (kap. 16)</li>
+    <li><code>GET /v1/admin/calendar?from=&amp;to=</code> — timeline + collisions (kap. 18)</li>
+    <li><code>GET/POST /v1/admin/alerts*</code> — list/ack/resolve/generate (kap. 19)</li>
+  </ul>
+  <p>Health: <a href="/health"><code>/health</code></a> · schemaVersion <code>0009</code></p>
+</main>
+</body>
+</html>`;
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), { status, headers: NO_STORE });
@@ -139,7 +186,7 @@ export default {
           service: "infouzel-ads",
           mode: "ads-business",
           storageMode: dbOk ? "d1" : env.DB ? "unavailable" : "unbound",
-          schemaVersion: "0008",
+          schemaVersion: "0009",
           safeMode: flags.safeMode,
           publicDeliveryEnabled: flags.publicDeliveryEnabled,
           adminApiEnabled: flags.adminApiEnabled,
@@ -160,6 +207,20 @@ export default {
         },
         dbOk ? 200 : 503
       );
+    }
+
+    // Minimal Worker-served admin shell (Etapa 8). Not gated by ADS_ADMIN_API_ENABLED —
+    // it only documents endpoints; live API calls still require the admin gate + session.
+    if (path === "/admin" || path === "/admin/index.html") {
+      if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
+      return new Response(ADMIN_SHELL_HTML, {
+        status: 200,
+        headers: {
+          "Cache-Control": "no-store",
+          "Content-Type": "text/html; charset=utf-8",
+          "X-Content-Type-Options": "nosniff",
+        },
+      });
     }
 
     if (path === "/v1/public/ads/delivery") {
@@ -370,6 +431,20 @@ export default {
       if (codeRevokeMatch && method === "POST") return handleRevokeCode(request, env, codeRevokeMatch[1]);
       const codeIdMatch = path.match(/^\/v1\/admin\/codes\/([^/]+)$/);
       if (codeIdMatch && method === "GET") return handleGetCode(request, env, codeIdMatch[1]);
+
+      // Etapa 8 — admin ops (kap. 5, 6, 16–19): nav / dashboard / search / calendar / alerts.
+      if (path === "/v1/admin/nav" && method === "GET") return handleGetAdminNav(request, env);
+      if (path === "/v1/admin/dashboard" && method === "GET") return handleGetAdminDashboard(request, env);
+      if (path === "/v1/admin/search" && method === "GET") return handleAdminSearch(request, env, url);
+      if (path === "/v1/admin/calendar" && method === "GET") return handleGetAdminCalendar(request, env, url);
+      if (path === "/v1/admin/alerts" && method === "GET") return handleListAlerts(request, env, url);
+      if (path === "/v1/admin/alerts/generate" && method === "POST") return handleGenerateAlerts(request, env);
+      const alertAckMatch = path.match(/^\/v1\/admin\/alerts\/([^/]+)\/ack$/);
+      if (alertAckMatch && method === "POST") return handleAckAlert(request, env, alertAckMatch[1]);
+      const alertResolveMatch = path.match(/^\/v1\/admin\/alerts\/([^/]+)\/resolve$/);
+      if (alertResolveMatch && method === "POST") return handleResolveAlert(request, env, alertResolveMatch[1]);
+      const alertIdMatch = path.match(/^\/v1\/admin\/alerts\/([^/]+)$/);
+      if (alertIdMatch && method === "GET") return handleGetAlert(request, env, alertIdMatch[1]);
 
       return json({ error: "not_found" }, 404);
     }

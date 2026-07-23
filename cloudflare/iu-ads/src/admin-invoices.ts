@@ -80,6 +80,7 @@ export async function handleListInvoices(request: Request, env: Env, url: URL): 
 
   const status = url.searchParams.get("status");
   const clientId = url.searchParams.get("client_id");
+  const q = (url.searchParams.get("q") || "").trim();
   const limit = clampLimit(url.searchParams.get("limit"));
   const offset = clampOffset(url.searchParams.get("offset"));
 
@@ -92,6 +93,11 @@ export async function handleListInvoices(request: Request, env: Env, url: URL): 
   if (clientId) {
     conditions.push("client_id = ?");
     params.push(clientId);
+  }
+  if (q) {
+    conditions.push("(invoice_number LIKE ? OR IFNULL(variable_symbol,'') LIKE ? OR invoice_id LIKE ?)");
+    const like = "%" + q + "%";
+    params.push(like, like, like);
   }
   const where = conditions.length ? "WHERE " + conditions.join(" AND ") : "";
   params.push(limit, offset);
