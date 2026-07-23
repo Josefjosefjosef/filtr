@@ -46,6 +46,10 @@ Zakázaná pole ve Public response: price*, contact*, email, phone, document*, c
 
 Prázdný výsledek = `{"ads":[]}` — frontend **nevkládá** box.
 
+Query parametry (Etapa 5): `?device=pc|mobile|tablet` (bez platné hodnoty → `ads:[]`, žádný 400) a volitelně
+`?section=<section_id>`. Umístění bez `section_id` (globální — header/sidebar) se vrací nezávisle na
+`section`; umístění se zadaným `section_id` se vrací jen při shodě.
+
 ## Client Report (read-only)
 
 Vrací pouze `client_visible` pole kampaní ve scope kódu + povolené dokumenty.  
@@ -139,6 +143,39 @@ zůstává vypnuté (`ADS_PUBLIC_DELIVERY_ENABLED=false`) — tato etapa nepřip
 
 `campaigns.activate` (kap. 4/7/13): drží ho `main_admin` a `ads_manager`; `sales` nemá ani `campaigns.write`, takže
 nemůže kampaň posunout do žádného stavu — aktivace vyžaduje schválení mimo obchodní roli.
+
+## Etapa 5 — Public delivery engine
+
+Gate: `isPublicDeliveryActive(flags)` (`ADS_PUBLIC_DELIVERY_ENABLED=true` **and** `ADS_SAFE_MODE=false`) —
+wrangler defaults keep both fail-closed (`ADS_SAFE_MODE=true`, `ADS_PUBLIC_DELIVERY_ENABLED=false`), so
+this stage ships the real engine **without** flipping either production flag.
+
+`delivery-engine.ts` (`selectPublicAds`) implements kap. 1,8,9,14,43:
+
+- Selects `campaign_placements.status='active'` joined to an `campaigns.status='active'` campaign and an
+  approved (`creatives.review_status='approved'`) creative matching the requested `device_category`
+  (or `universal`); unapproved/rejected creatives are never delivered.
+- Re-checks the `start_at`/`end_at` window on both the campaign and the placement in application code
+  as defense-in-depth on top of the status field.
+- `EMERGENCY_PAUSE_ALL` (`system_settings`, kap. 14) forces `ads:[]` whenever `'true'`, independent of
+  the feature flags; if the setting can't be read, delivery fails closed (treated as paused).
+- `collision_mode='exclusive'` placement types keep only the lowest-`priority` candidate per
+  placement/device/section (kap. 11 semantics reapplied at delivery time); `shared` types may serve
+  every eligible match.
+- Every `creative.cdn_url` is a short-lived signed `/v1/objects/get` Worker path (`signed-access.ts`),
+  TTL from `PUBLIC_DELIVERY_CACHE_TTL_SECONDS` (`system_settings`) — **never** a permanent public R2
+  URL, matching `08-r2-plan.md` even once a creative is `approved`.
+- `label` falls back to `ADS_LABEL_DEFAULT` (`system_settings`) when a campaign's `label_type` is empty.
+
+`scheduler.ts` (`runAutoScheduler`, kap. 14) runs once per delivery request (best-effort — its errors
+never block or widen delivery):
+
+- `scheduled` → `active` once `start_at <= now`, but only if a `rights_confirmations` row already
+  exists for the campaign (same fail-closed gate `admin-campaigns.ts` enforces manually, kap. 30) and
+  the transition is legal in `campaign-state.ts`'s graph; otherwise the campaign is skipped, not forced.
+- `active` → `ended` once `end_at <= now`.
+- Every transition writes a `campaign_status_events` row (`actor_user_id: null`, `reason: "auto_start"`
+  or `"auto_end"`) and an `audit_logs` entry, exactly like a manual transition.
 
 ## Etapa 0 scaffold
 
