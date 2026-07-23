@@ -65,12 +65,16 @@ Etapa 1 je **produkčně hotová** (D1 + R2 + bindings + signed access + fail-cl
 - `adminApiEnabled=false`
 - `clientApiEnabled=false`
 
-## Merge stav
+## Merge stav (CLOSED)
 
-- Ostatní required checks: GREEN (layout-guard, repo-guard, actionlint, pr-health-report-audit)
-- Smoke: dlouhý / flaky (CLS tablet flake, hang na left-rail) — **auto-merge** nastaven na #7680
-- Jediný zbývající krok pro uzavření Etapy 1 v gitu: dokončení/ GREEN Smoke → auto-merge
+| Item | Value |
+|------|-------|
+| Smoke | `29971819226` SUCCESS |
+| Merged at | 2026-07-23T02:25:51Z |
+| Merge commit | `4cb14e47b9c822b18be254af67bef9a5d04e67c3` |
+| Deploy main | `29974385373` SUCCESS |
+| Data Bot pause | not required (bots stayed active) |
 
 ## Navazující práce
 
-- Etapa 2 PR: https://github.com/Josefjosefjosef/filtr/pull/7684 (`feat/ads-system-etapa-2-auth`) — 44 unit testů PASS lokálně
+- Etapa 2 PR: https://github.com/Josefjosefjosef/filtr/pull/7684 (`feat/ads-system-etapa-2-auth`)
