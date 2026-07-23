@@ -1,7 +1,12 @@
-# Deploy InfoUzel Ads (Cloudflare Worker + D1 iu-ads)
+# Deploy InfoUzel Ads (Cloudflare Worker + D1 iu-ads + R2)
 #
-# Required repo secrets:
-#   CLOUDFLARE_API_TOKEN — Account D1:Edit + Workers Scripts Edit
+# Preferred secret (least privilege for ads infra):
+#   CLOUDFLARE_ADS_API_TOKEN — Account D1:Edit + Workers Scripts:Edit + Workers R2 Storage:Edit
+# Fallback (existing):
+#   CLOUDFLARE_API_TOKEN — used only if CLOUDFLARE_ADS_API_TOKEN is absent
+# Optional Worker secret (set separately via wrangler secret put):
+#   ADS_R2_SIGNING_SECRET
+#
 # Etapa 0/1: fail-closed feature flags; no public ads until later stages.
 name: Deploy IU Ads
 
@@ -20,10 +25,13 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: cloudflare/iu-ads
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_ADS_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
     steps:
       - uses: actions/checkout@v5
 
@@ -39,10 +47,19 @@ jobs:
       - name: Unit tests
         run: npm test
 
+      - name: Token source (no values)
+        run: |
+          set -euo pipefail
+          if [ -n "${{ secrets.CLOUDFLARE_ADS_API_TOKEN }}" ]; then
+            echo "TOKEN_SOURCE=CLOUDFLARE_ADS_API_TOKEN"
+          elif [ -n "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "TOKEN_SOURCE=CLOUDFLARE_API_TOKEN_FALLBACK"
+          else
+            echo "TOKEN_SOURCE=MISSING"
+            exit 1
+          fi
+
       - name: Ensure D1 database + apply migrations
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_D1_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
         run: |
           set -euo pipefail
           NAME="iu-ads"
@@ -51,7 +68,7 @@ jobs:
           LIST_EC=$?
           set -e
           if [ "$LIST_EC" != "0" ]; then
-            echo "BLOCKER: CLOUDFLARE_API_TOKEN cannot list D1"
+            echo "BLOCKER: cannot list D1"
             if [ -f /tmp/d1-list.err ]; then sed -E 's/[A-Za-z0-9_-]{20,}/[REDACTED]/g' /tmp/d1-list.err | head -n 40 || true; fi
             exit 1
           fi
@@ -96,24 +113,68 @@ jobs:
           "
           npx wrangler d1 migrations apply iu-ads --remote
 
+      - name: Ensure R2 buckets
+        run: |
+          set -euo pipefail
+          ensure_bucket() {
+            local NAME="$1"
+            set +e
+            LIST_OUT="$(npx wrangler r2 bucket list 2>/tmp/r2-list.err)"
+            LIST_EC=$?
+            set -e
+            if [ "$LIST_EC" != "0" ]; then
+              echo "BLOCKER: R2 list failed for $NAME"
+              if [ -f /tmp/r2-list.err ]; then sed -E 's/[A-Za-z0-9_-]{20,}/[REDACTED]/g' /tmp/r2-list.err | head -n 40 || true; fi
+              if grep -Fq "10042" /tmp/r2-list.err 2>/dev/null; then
+                echo "BLOCKER_CODE=10042"
+                echo "BLOCKER_CAUSE=R2_NOT_ENABLED_ON_ACCOUNT"
+                echo "MANUAL_STEP=Cloudflare Dashboard → R2 → Activate/Purchase R2 (free tier OK) for account 577868e9aac9c289e9323100f68fad16, then re-run Deploy IU Ads"
+              elif grep -qiE 'Authentication|Unauthorized|10000|permission|not authorized' /tmp/r2-list.err 2>/dev/null; then
+                echo "LIKELY_MISSING_PERMISSION=Account.Workers_R2_Storage.Edit"
+                echo "REQUIRED_SECRET=CLOUDFLARE_ADS_API_TOKEN"
+              fi
+              exit 1
+            fi
+            if printf '%s' "$LIST_OUT" | grep -Fq "$NAME"; then
+              echo "R2_BUCKET_EXISTS=$NAME"
+              return 0
+            fi
+            set +e
+            npx wrangler r2 bucket create "$NAME" 2>/tmp/r2-create.err
+            CREATE_EC=$?
+            set -e
+            if [ "$CREATE_EC" != "0" ]; then
+              echo "BLOCKER: cannot create R2 bucket $NAME"
+              if [ -f /tmp/r2-create.err ]; then sed -E 's/[A-Za-z0-9_-]{20,}/[REDACTED]/g' /tmp/r2-create.err | head -n 40 || true; fi
+              if grep -Fq "10042" /tmp/r2-create.err 2>/dev/null; then
+                echo "BLOCKER_CODE=10042"
+                echo "BLOCKER_CAUSE=R2_NOT_ENABLED_ON_ACCOUNT"
+                echo "MANUAL_STEP=Cloudflare Dashboard → R2 → Activate R2 for this account, then re-run Deploy IU Ads"
+              else
+                echo "LIKELY_MISSING_PERMISSION=Account.Workers_R2_Storage.Edit"
+              fi
+              exit 1
+            fi
+            echo "R2_BUCKET_CREATED=$NAME"
+          }
+          ensure_bucket "iu-ads-creatives"
+          ensure_bucket "iu-ads-documents"
+
       - name: Deploy Worker
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
         run: npx wrangler deploy
 
       - name: Health probe
         run: |
           set -euo pipefail
           URL="https://infouzel-ads.josef-zmrhal.workers.dev/health"
-          # workers.dev can return CF 1042 briefly after first publish; allow ~90s.
           attempt=1
           while [ "$attempt" -le 18 ]; do
             echo "HEALTH_ATTEMPT=$attempt"
             CODE="$(curl -sS -o /tmp/iu-ads-health.json -w "%{http_code}" "$URL" || true)"
+            echo "HEALTH_HTTP=$CODE"
             if [ "$CODE" = "200" ]; then
-              echo "HEALTH_HTTP=200"
               cat /tmp/iu-ads-health.json
+              set +e
               node -e "
                 const fs=require('fs');
                 const j=JSON.parse(fs.readFileSync('/tmp/iu-ads-health.json','utf8'));
@@ -123,14 +184,52 @@ jobs:
                 if(j.publicDeliveryEnabled!==false) process.exit(4);
                 if(j.personalizedAds!==false) process.exit(5);
                 if(j.storageMode!=='d1') process.exit(6);
+                if(!j.r2 || j.r2.privateDocumentsPublicUrl!==false) process.exit(8);
+                if(!j.r2.creativesBound || !j.r2.documentsBound || j.r2.ready!==true) process.exit(9);
                 console.log('HEALTH_GATE=PASS');
               "
-              exit 0
+              GATE_EC=$?
+              set -e
+              if [ "$GATE_EC" = "0" ]; then
+                exit 0
+              fi
+              echo "HEALTH_GATE_RETRY exit=$GATE_EC (possible edge propagation)"
             fi
-            echo "HEALTH_HTTP=$CODE"
             attempt=$((attempt + 1))
             sleep 5
           done
           echo "HEALTH_GATE=FAIL code=$CODE"
           cat /tmp/iu-ads-health.json || true
+          exit 1
+
+      # Worker secret for signed private object access (never echoed).
+      # Prefer GitHub Actions secret; otherwise generate once per deploy so /v1/objects/get is live.
+      - name: Ensure ADS_R2_SIGNING_SECRET
+        env:
+          ADS_R2_SIGNING_SECRET: ${{ secrets.ADS_R2_SIGNING_SECRET }}
+        run: |
+          set -euo pipefail
+          if [ -n "${ADS_R2_SIGNING_SECRET:-}" ]; then
+            echo "ADS_R2_SIGNING_SECRET_SOURCE=GITHUB_SECRET"
+          else
+            ADS_R2_SIGNING_SECRET="$(openssl rand -hex 32)"
+            echo "ADS_R2_SIGNING_SECRET_SOURCE=GENERATED"
+          fi
+          printf '%s' "$ADS_R2_SIGNING_SECRET" | npx wrangler secret put ADS_R2_SIGNING_SECRET
+          echo "ADS_R2_SIGNING_SECRET_STATUS=PUT_OK"
+          # Verify endpoint is no longer signing_not_configured (invalid sig → 403/400; may need edge wait)
+          attempt=1
+          while [ "$attempt" -le 18 ]; do
+            CODE="$(curl -sS -o /tmp/iu-ads-obj.json -w "%{http_code}" "https://infouzel-ads.josef-zmrhal.workers.dev/v1/objects/get?key=probe&bucket=DOCUMENTS&exp=1&sig=invalid" || true)"
+            BODY="$(cat /tmp/iu-ads-obj.json || true)"
+            echo "OBJECTS_GET_ATTEMPT=$attempt HTTP=$CODE"
+            if ! echo "$BODY" | grep -Fq "signing_not_configured"; then
+              echo "OBJECTS_GET_SIGNING=CONFIGURED"
+              exit 0
+            fi
+            attempt=$((attempt + 1))
+            sleep 5
+          done
+          echo "BLOCKER: ADS_R2_SIGNING_SECRET not active on Worker after retries"
+          cat /tmp/iu-ads-obj.json || true
           exit 1

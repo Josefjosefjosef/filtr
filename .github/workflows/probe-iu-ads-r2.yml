@@ -1,0 +1,90 @@
+# Probe Cloudflare R2 capability for InfoUzel Ads (never echoes token values)
+name: Probe IU Ads R2
+
+on:
+  workflow_dispatch: {}
+
+concurrency:
+  group: probe-iu-ads-r2
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: cloudflare/iu-ads
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: cloudflare/iu-ads/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Probe R2 list (safe)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_ADS_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "R2_PROBE=NO_TOKEN"
+            echo "MISSING_SECRET=CLOUDFLARE_ADS_API_TOKEN_or_CLOUDFLARE_API_TOKEN"
+            exit 1
+          fi
+          echo "TOKEN_PRESENT=yes"
+          if [ -n "${{ secrets.CLOUDFLARE_ADS_API_TOKEN }}" ]; then
+            echo "TOKEN_SOURCE=CLOUDFLARE_ADS_API_TOKEN"
+          else
+            echo "TOKEN_SOURCE=CLOUDFLARE_API_TOKEN_FALLBACK"
+          fi
+          set +e
+          LIST_OUT="$(npx wrangler r2 bucket list 2>/tmp/r2-list.err)"
+          LIST_EC=$?
+          set -e
+          if [ "$LIST_EC" != "0" ]; then
+            echo "R2_LIST=FAIL"
+            if [ -f /tmp/r2-list.err ]; then
+              sed -E 's/[A-Za-z0-9_-]{20,}/[REDACTED]/g' /tmp/r2-list.err | head -n 40 || true
+            fi
+            if grep -qiE 'Authentication|Unauthorized|403|10000|permission|not authorized|r2' /tmp/r2-list.err 2>/dev/null; then
+              echo "LIKELY_MISSING_PERMISSION=Account.Workers_R2_Storage.Edit"
+            fi
+            echo "R2_PROBE=FAIL"
+            exit 1
+          fi
+          echo "R2_LIST=OK"
+          printf '%s\n' "$LIST_OUT" | node -e "
+            let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
+              const names=new Set();
+              try {
+                const j=JSON.parse(s);
+                const arr=Array.isArray(j)?j:(j.buckets||j.result||[]);
+                for (const b of arr) {
+                  const n=b&&(b.name||b.Name);
+                  if (n) names.add(String(n));
+                }
+              } catch {
+                for (const line of s.split(/\r?\n/)) {
+                  const t=line.trim();
+                  if (!t) continue;
+                  const first=t.split(/\s+/)[0];
+                  if (first && first.startsWith('iu-ads-')) names.add(first);
+                }
+              }
+              const all=[...names].sort();
+              const iu=all.filter(n=>n.startsWith('iu-ads-'));
+              console.log('BUCKET_COUNT_TOTAL='+all.length);
+              console.log('IU_ADS_BUCKETS='+(iu.join(',')||'none'));
+              console.log('HAS_CREATIVES='+(names.has('iu-ads-creatives')?'yes':'no'));
+              console.log('HAS_DOCUMENTS='+(names.has('iu-ads-documents')?'yes':'no'));
+              console.log('HAS_BACKUPS='+(names.has('iu-ads-backups')?'yes':'no'));
+            });
+          "
+          echo "R2_PROBE=PASS"

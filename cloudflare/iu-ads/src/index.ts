@@ -1,5 +1,6 @@
 import { resolveFeatureFlags, isPublicDeliveryActive } from "./feature-flags";
 import { emptyPublicDelivery, sanitizePublicAds, assertNoForbiddenPublicKeys } from "./isolation";
+import { parseAccessQuery, verifyObjectAccess } from "./signed-access";
 import type { Env, PublicDeliveryResponse } from "./types";
 
 const NO_STORE = { "Cache-Control": "no-store", "Content-Type": "application/json; charset=utf-8" };
@@ -40,18 +41,26 @@ export default {
 
     if (path === "/health" || path === "/") {
       const dbOk = await pingDb(env);
-      const ok = dbOk || !env.DB; // local unit without binding still reports service identity
+      const creativesBound = !!env.CREATIVES;
+      const documentsBound = !!env.DOCUMENTS;
+      const r2Ok = creativesBound && documentsBound;
       return json(
         {
           ok: dbOk,
           service: "infouzel-ads",
           mode: "ads-business",
           storageMode: dbOk ? "d1" : env.DB ? "unavailable" : "unbound",
-          schemaVersion: "0001",
+          schemaVersion: "0002",
           safeMode: flags.safeMode,
           publicDeliveryEnabled: flags.publicDeliveryEnabled,
           adminApiEnabled: flags.adminApiEnabled,
           clientApiEnabled: flags.clientApiEnabled,
+          r2: {
+            creativesBound,
+            documentsBound,
+            ready: r2Ok,
+            privateDocumentsPublicUrl: false,
+          },
           storesIp: false,
           storesFingerprint: false,
           storesFullUserAgent: false,
@@ -59,7 +68,6 @@ export default {
           retargeting: false,
           profiling: false,
           contextualAdsOnly: true,
-          note: ok && !dbOk ? "D1 not bound yet — Etapa 1" : undefined,
         },
         dbOk ? 200 : 503
       );
@@ -73,12 +81,30 @@ export default {
         const headers = { ...NO_STORE, ...corsHeaders(env) };
         return new Response(JSON.stringify(body), { status: 200, headers });
       }
-      // Etapa 5 will populate ads from D1; keep allowlist sanitizer in path.
       body.ads = sanitizePublicAds([]);
       const leaks = assertNoForbiddenPublicKeys(body);
       if (leaks.length) return json({ error: "isolation_violation", leaks }, 500);
       const headers = { ...NO_STORE, ...corsHeaders(env) };
       return new Response(JSON.stringify(body), { status: 200, headers });
+    }
+
+    // Private document / creative stream — signed query only; never permanent public R2 URL.
+    if (path === "/v1/objects/get") {
+      if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
+      if (!env.ADS_R2_SIGNING_SECRET) return json({ error: "signing_not_configured" }, 503);
+      const access = parseAccessQuery(url);
+      if (!access) return json({ error: "invalid_access" }, 400);
+      const verified = await verifyObjectAccess(env.ADS_R2_SIGNING_SECRET, access);
+      if (!verified.ok) return json({ error: "access_denied", reason: verified.reason }, 403);
+      const bucket = access.bucket === "DOCUMENTS" ? env.DOCUMENTS : env.CREATIVES;
+      if (!bucket) return json({ error: "bucket_unbound" }, 503);
+      const obj = await bucket.get(access.objectKey);
+      if (!obj) return json({ error: "not_found" }, 404);
+      const headers = new Headers();
+      headers.set("Cache-Control", "no-store");
+      headers.set("X-Content-Type-Options", "nosniff");
+      if (obj.httpMetadata?.contentType) headers.set("Content-Type", obj.httpMetadata.contentType);
+      return new Response(obj.body, { status: 200, headers });
     }
 
     if (path.startsWith("/v1/admin")) {

@@ -1,36 +1,31 @@
 # InfoUzel Ads — implementation STATUS
 
-**Current stage:** Etapa 0 (foundation) — MERGED (#7668 → `a31ea9e958`) · Etapa 1 next  
-**Baseline main (start):** `150f6b7763241768a481b5ba312ab8b380ea9c59`  
-**Safe mode:** ON · Public delivery: OFF · Admin API: OFF · Client API: OFF  
-**Prod health:** `https://infouzel-ads.josef-zmrhal.workers.dev/health` → `ok=true` `storageMode=d1` `safeMode=true`
+**Current stage:** Etapa 1 COMPLETE (infra + R2) — awaiting merge #7680 after GREEN CI  
+**Etapa 0:** MERGED (#7668 → `a31ea9e958`)  
+**PR #7674:** MERGED (`b5e15ff40c`)  
+**Safe mode:** ON · Public delivery: OFF  
+
+## Etapa 1 production proof (2026-07-22)
+
+Deploy run `29962508435` SUCCESS:
+- `TOKEN_SOURCE=CLOUDFLARE_ADS_API_TOKEN`
+- D1 `iu-ads` OK · schema `0002`
+- R2 buckets: `iu-ads-creatives`, `iu-ads-documents` (no r2.dev / no public domain)
+- Bindings: `CREATIVES` + `DOCUMENTS`
+- `ADS_R2_SIGNING_SECRET` PUT_OK (generated or from GitHub secret)
+- Health: `r2.ready=true`, `privateDocumentsPublicUrl=false`, `safeMode=true`, `publicDeliveryEnabled=false`
+- `/v1/objects/get` → HMAC gate active (`access_denied` not `signing_not_configured`)
+- `/v1/public/ads/delivery` → `{"ads":[],"enabled":false,"safeMode":true}`
 
 ## Stage checklist
 
 | Etapa | Stav |
 |-------|------|
-| 0 Audit + architektura + migrační základ | done (#7668) |
-| 1 Infra/data (D1 remote, R2, deploy prod) | pending |
-| 2 Auth / users / roles / audit | pending |
-| 3 Obchod + dokumenty | pending |
-| 4 Kampaně / umístění / kreativy | pending |
-| 5 Public engine | pending |
-| 6 Měření / reporty | pending |
-| 7 Klientské kódy + portál | pending |
-| 8 Admin UI dokončení | pending |
-| 9 Backup / security / closeout | pending |
+| 0 | done |
+| 1 | prod verified; merge #7680 when CI green |
+| 2–9 | next |
 
-## Etapa 0 artefakty
+## Guards
 
-- `docs/ads-system/*` — audit, matrix 1–48, architecture, security, isolation, API, R2, backup, tests
-- `cloudflare/iu-ads/` — Worker scaffold, migration 0001, fail-closed flags, isolation tests
-- `.github/workflows/deploy-iu-ads.yml` — deploy + D1 ensure + health gate
-- `scripts/iu-ads-isolation-guard.mjs`
-
-## Guards (re-check each stage)
-
-- PR #7617 OID must remain unchanged by ads work
+- PR #7617 OID `9be3e372…` unchanged
 - `stash@{0}` `iu-v3-wip-unrelated-cnb` preserved
-- Analytics health unchanged; no rewrite of `cloudflare/iu-analytics` in Etapa 0
-
-Chapter matrix detail: [01-traceability-matrix.md](./01-traceability-matrix.md)

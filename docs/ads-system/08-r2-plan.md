@@ -1,21 +1,28 @@
-# R2 plan — InfoUzel Ads
+# R2 plan — InfoUzel Ads (Etapa 1)
 
 ## Buckets
 
 | Bucket | Binding | Viditelnost | Účel |
 |--------|---------|-------------|------|
-| `iu-ads-creatives` | `CREATIVES` | Schválené objekty přes CDN / signed krátkodobé URL | Bannery, náhledy |
-| `iu-ads-documents` | `DOCUMENTS` | Pouze signed URL (krátká TTL) | Smlouvy, faktury, exporty, práva |
-| `iu-ads-backups` | `BACKUPS` (Etapa 9) | Oddělené oprávnění | Šifrované zálohy |
+| `iu-ads-creatives` | `CREATIVES` | Servírování jen přes Worker / později CDN schválených objektů | Bannery, náhledy |
+| `iu-ads-documents` | `DOCUMENTS` | Pouze signed Worker URL (`/v1/objects/get`) | Smlouvy, faktury, exporty |
+| `iu-ads-backups` | (Etapa 9) | Oddělené oprávnění | Šifrované zálohy |
 
 ## Pravidla
 
-- Soukromé dokumenty **nikdy** trvalá veřejná URL.
-- Metadata + hash + visibility flags v D1 `documents` / `creatives`.
-- Upload: MIME, magic bytes, size, dimensions, no JS/HTML executable, malware scan hooks.
-- Creative public delivery až po `approved`.
+- Soukromé dokumenty **nikdy** trvalá veřejná URL ani public bucket listing.
+- Metadata + hash + visibility flags v D1 (`documents` / `creatives` / `object_access_audit`).
+- Upload validace: MIME, magic bytes, size, no JS/HTML/SVG executable.
+- Creative public delivery až po `approved` (Etapa 4/5).
+- Signed access TTL default 300s (`R2_SIGNED_URL_TTL_SECONDS`).
 
-## Manuální blokátor
+## Token
 
-Vytvoření R2 bucketů + bindingů vyžaduje Cloudflare účet s R2 oprávněním.  
-Etapa 0 připraví wrangler placeholders; Etapa 1 dokončí binding po vytvoření bucketů (minimální manuální krok uživatele, pokud token nestačí).
+Preferovaný GitHub secret: `CLOUDFLARE_ADS_API_TOKEN`  
+Oprávnění: Account → Workers R2 Storage Edit + D1 Edit + Workers Scripts Edit  
+Účet: pouze `577868e9aac9c289e9323100f68fad16`  
+Viz `cloudflare/iu-ads/secrets.contract.md`.
+
+## Probe
+
+Workflow: `.github/workflows/probe-iu-ads-r2.yml` (workflow_dispatch) — vypíše jen PASS/FAIL a přítomnost bucketů, nikdy token.

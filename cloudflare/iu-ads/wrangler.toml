@@ -24,10 +24,11 @@ database_name = "iu-ads"
 database_id = "00000000-0000-0000-0000-000000000000"
 migrations_dir = "migrations"
 
-# R2 buckets created in Etapa 1 (manual if token lacks R2). Placeholders kept commented until ready.
-# [[r2_buckets]]
-# binding = "CREATIVES"
-# bucket_name = "iu-ads-creatives"
-# [[r2_buckets]]
-# binding = "DOCUMENTS"
-# bucket_name = "iu-ads-documents"
+# Etapa 1: separate public-approved creatives vs private documents.
+[[r2_buckets]]
+binding = "CREATIVES"
+bucket_name = "iu-ads-creatives"
+
+[[r2_buckets]]
+binding = "DOCUMENTS"
+bucket_name = "iu-ads-documents"
