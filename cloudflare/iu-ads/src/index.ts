@@ -50,6 +50,32 @@ import {
 } from "./admin-complaints";
 import { handleCreateExportJob, handleGetExportJob, handleListExportJobs } from "./admin-exports";
 import { handleFinanceSummary } from "./admin-finance";
+import {
+  handleCreateCampaign,
+  handleGetCampaign,
+  handleListCampaigns,
+  handleTransitionCampaign,
+  handleUpdateCampaign,
+} from "./admin-campaigns";
+import {
+  handleCreateCampaignPlacement,
+  handleCreatePlacementType,
+  handleGetPlacementType,
+  handleListCampaignPlacements,
+  handleListPlacementTypes,
+  handleUpdateCampaignPlacement,
+  handleUpdatePlacementType,
+} from "./admin-placements";
+import { handleCancelReservation, handleCreateReservation, handleGetReservation, handleListReservations } from "./admin-reservations";
+import {
+  handleApproveCreative,
+  handleGetCreative,
+  handleGetCreativeAccess,
+  handleListCreatives,
+  handleRejectCreative,
+  handleUploadCreative,
+} from "./admin-creatives";
+import { handlePreviewCampaign } from "./admin-preview";
 import { resolveFeatureFlags, isPublicDeliveryActive } from "./feature-flags";
 import { emptyPublicDelivery, sanitizePublicAds, assertNoForbiddenPublicKeys } from "./isolation";
 import { parseAccessQuery, verifyObjectAccess } from "./signed-access";
@@ -102,7 +128,7 @@ export default {
           service: "infouzel-ads",
           mode: "ads-business",
           storageMode: dbOk ? "d1" : env.DB ? "unavailable" : "unbound",
-          schemaVersion: "0004",
+          schemaVersion: "0005",
           safeMode: flags.safeMode,
           publicDeliveryEnabled: flags.publicDeliveryEnabled,
           adminApiEnabled: flags.adminApiEnabled,
@@ -266,6 +292,48 @@ export default {
       if (exportIdMatch && method === "GET") return handleGetExportJob(request, env, exportIdMatch[1]);
 
       if (path === "/v1/admin/finance/summary" && method === "GET") return handleFinanceSummary(request, env, url);
+
+      // Etapa 4 — campaigns/placements/reservations/creatives (kap. 7,10,11,12,13,21,43).
+      if (path === "/v1/admin/campaigns" && method === "GET") return handleListCampaigns(request, env, url);
+      if (path === "/v1/admin/campaigns" && method === "POST") return handleCreateCampaign(request, env);
+      const campaignTransitionMatch = path.match(/^\/v1\/admin\/campaigns\/([^/]+)\/transition$/);
+      if (campaignTransitionMatch && method === "POST") return handleTransitionCampaign(request, env, campaignTransitionMatch[1]);
+      const campaignPlacementItemMatch = path.match(/^\/v1\/admin\/campaigns\/([^/]+)\/placements\/([^/]+)$/);
+      if (campaignPlacementItemMatch && method === "PATCH") {
+        return handleUpdateCampaignPlacement(request, env, campaignPlacementItemMatch[1], campaignPlacementItemMatch[2]);
+      }
+      const campaignPlacementsMatch = path.match(/^\/v1\/admin\/campaigns\/([^/]+)\/placements$/);
+      if (campaignPlacementsMatch && method === "GET") return handleListCampaignPlacements(request, env, campaignPlacementsMatch[1]);
+      if (campaignPlacementsMatch && method === "POST") return handleCreateCampaignPlacement(request, env, campaignPlacementsMatch[1]);
+      const campaignIdMatch = path.match(/^\/v1\/admin\/campaigns\/([^/]+)$/);
+      if (campaignIdMatch && method === "GET") return handleGetCampaign(request, env, campaignIdMatch[1]);
+      if (campaignIdMatch && method === "PATCH") return handleUpdateCampaign(request, env, campaignIdMatch[1]);
+
+      if (path === "/v1/admin/placement-types" && method === "GET") return handleListPlacementTypes(request, env, url);
+      if (path === "/v1/admin/placement-types" && method === "POST") return handleCreatePlacementType(request, env);
+      const placementTypeIdMatch = path.match(/^\/v1\/admin\/placement-types\/([^/]+)$/);
+      if (placementTypeIdMatch && method === "GET") return handleGetPlacementType(request, env, placementTypeIdMatch[1]);
+      if (placementTypeIdMatch && method === "PATCH") return handleUpdatePlacementType(request, env, placementTypeIdMatch[1]);
+
+      if (path === "/v1/admin/reservations" && method === "GET") return handleListReservations(request, env, url);
+      if (path === "/v1/admin/reservations" && method === "POST") return handleCreateReservation(request, env);
+      const reservationCancelMatch = path.match(/^\/v1\/admin\/reservations\/([^/]+)\/cancel$/);
+      if (reservationCancelMatch && method === "POST") return handleCancelReservation(request, env, reservationCancelMatch[1]);
+      const reservationIdMatch = path.match(/^\/v1\/admin\/reservations\/([^/]+)$/);
+      if (reservationIdMatch && method === "GET") return handleGetReservation(request, env, reservationIdMatch[1]);
+
+      if (path === "/v1/admin/creatives" && method === "GET") return handleListCreatives(request, env, url);
+      if (path === "/v1/admin/creatives" && method === "POST") return handleUploadCreative(request, env);
+      const creativeAccessMatch = path.match(/^\/v1\/admin\/creatives\/([^/]+)\/access$/);
+      if (creativeAccessMatch && method === "GET") return handleGetCreativeAccess(request, env, creativeAccessMatch[1]);
+      const creativeApproveMatch = path.match(/^\/v1\/admin\/creatives\/([^/]+)\/approve$/);
+      if (creativeApproveMatch && method === "POST") return handleApproveCreative(request, env, creativeApproveMatch[1]);
+      const creativeRejectMatch = path.match(/^\/v1\/admin\/creatives\/([^/]+)\/reject$/);
+      if (creativeRejectMatch && method === "POST") return handleRejectCreative(request, env, creativeRejectMatch[1]);
+      const creativeIdMatch = path.match(/^\/v1\/admin\/creatives\/([^/]+)$/);
+      if (creativeIdMatch && method === "GET") return handleGetCreative(request, env, creativeIdMatch[1]);
+
+      if (path === "/v1/admin/preview" && method === "POST") return handlePreviewCampaign(request, env);
 
       return json({ error: "not_found" }, 404);
     }

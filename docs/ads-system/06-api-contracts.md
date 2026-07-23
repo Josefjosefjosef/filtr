@@ -113,6 +113,33 @@ Každá mutace → `audit_logs` (redigováno přes `audit.ts`). Session+RBAC gua
 Dokument `visibility` (`internal_only`\|`client_visible`\|`public`) řídí jen **kdo** může vidět metadata/žádat o přístup —
 vždy jde o krátkodobý signed přístup (`visibility.ts` → `signed-access.ts`), nikdy o permanentní public URL (viz `08-r2-plan.md`).
 
+## Etapa 4 — Campaigns/placements/creatives
+
+Gate: stejné jako Etapa 2/3 (`ADS_ADMIN_API_ENABLED` + `ADS_SESSION_SECRET`/`ADS_PASSWORD_PEPPER`). Public delivery
+zůstává vypnuté (`ADS_PUBLIC_DELIVERY_ENABLED=false`) — tato etapa nepřipojuje žádný veřejný výstup.
+
+| Route | Method | Perm | Notes |
+|-------|--------|------|-------|
+| `/v1/admin/campaigns` | GET/POST | `campaigns.read`/`campaigns.write` | POST vytvoří `status: "draft"`; `evidence_code` auto-generován pokud chybí; `target_url` validován přes `url-safety.ts` |
+| `/v1/admin/campaigns/:id` | GET/PATCH | `campaigns.read`/`campaigns.write` | PATCH nikdy neumí měnit `status` (`use_transition_endpoint`) |
+| `/v1/admin/campaigns/:id/transition` | POST | `campaigns.write` (+ `campaigns.activate` pro approved/scheduled/active) | State machine (`campaign-state.ts`); 409 `invalid_transition` mimo graf; 403 `campaigns_activate_required`; 409 `rights_confirmation_required` při vstupu do `active` bez `rights_confirmations`; zapisuje `campaign_status_events` |
+| `/v1/admin/placement-types` | GET/POST | `placements.read`/`placements.write` | Katalog typů umístění (kap. 10) |
+| `/v1/admin/placement-types/:id` | GET/PATCH | `placements.read`/`placements.write` | |
+| `/v1/admin/campaigns/:id/placements` | GET/POST | `placements.read`/`placements.write` | Umístění konkrétní kampaně (`campaign_placements`) |
+| `/v1/admin/campaigns/:id/placements/:placementId` | PATCH | `placements.write` | status/priority/window update |
+| `/v1/admin/reservations` | GET/POST | `placements.read`/`placements.write` | POST kontroluje kolizi (`collision.ts`) proti `placement_types.collision_mode`; `exclusive` overlap → `409 reservation_collision` |
+| `/v1/admin/reservations/:id` | GET | `placements.read` | |
+| `/v1/admin/reservations/:id/cancel` | POST | `placements.write` | Uvolní okno (status → `cancelled`) |
+| `/v1/admin/creatives` | GET/POST | `creatives.read`/`creatives.write` | POST = JSON upload (`content_base64`), validace přes `r2-security.ts` (purpose `creative`); response **nikdy** neobsahuje `r2_key`; `review_status` vždy začíná `pending` |
+| `/v1/admin/creatives/:id` | GET | `creatives.read` | |
+| `/v1/admin/creatives/:id/access` | GET | `creatives.read` | Krátkodobá signed cesta (`/v1/objects/get?bucket=CREATIVES&...`) — nikdy trvalá public R2 URL; zapisuje `object_access_audit` |
+| `/v1/admin/creatives/:id/approve` | POST | `creatives.write` | Jen z `pending`; jinak `409 already_reviewed` |
+| `/v1/admin/creatives/:id/reject` | POST | `creatives.write` | Jen z `pending`; volitelný `reason` |
+| `/v1/admin/preview` | POST | `campaigns.read` | Náhled umístění/kreativy bez publikace (`published: false`); **žádný** DB zápis (žádný `audit_logs`/`object_access_audit` řádek) — kap. 21 |
+
+`campaigns.activate` (kap. 4/7/13): drží ho `main_admin` a `ads_manager`; `sales` nemá ani `campaigns.write`, takže
+nemůže kampaň posunout do žádného stavu — aktivace vyžaduje schválení mimo obchodní roli.
+
 ## Etapa 0 scaffold
 
 Implementováno pouze:
