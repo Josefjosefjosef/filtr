@@ -487,6 +487,31 @@ export async function handlePasswordResetConfirm(request: Request, env: Env): Pr
   return json({ ok: true });
 }
 
+export async function handleLogoutAllSessions(request: Request, env: Env): Promise<Response> {
+  const session = await requireAdminSession(request, env);
+  if (!session.ok) return json({ error: session.error }, session.status);
+  if (!env.DB) return json({ error: "auth_not_configured" }, 503);
+  const nowIso = new Date().toISOString();
+  await env.DB.prepare("UPDATE admin_sessions SET revoked_at = ? WHERE user_id = ? AND revoked_at IS NULL")
+    .bind(nowIso, session.context.userId)
+    .run();
+  await insertAuditLog(
+    env.DB,
+    buildAuditEntry({
+      auditId: newId("aud"),
+      actorUserId: session.context.userId,
+      operation: "sessions_revoked_all",
+      objectType: "admin_user",
+      objectId: session.context.userId,
+      result: "success",
+    })
+  );
+  const settings = await loadAdminSettings(env.DB);
+  const headers = new Headers({ "Content-Type": "application/json", "Cache-Control": "no-store" });
+  headers.append("Set-Cookie", buildExpiredSessionCookie(settings.sessionCookieName));
+  return new Response(JSON.stringify({ ok: true }), { status: 200, headers });
+}
+
 export async function handlePasswordChange(request: Request, env: Env): Promise<Response> {
   const session = await requireAdminSession(request, env);
   if (!session.ok) return json({ error: session.error }, session.status);

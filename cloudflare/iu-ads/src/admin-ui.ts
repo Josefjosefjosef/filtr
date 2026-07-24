@@ -61,6 +61,20 @@ export const ADMIN_SHELL_HTML = `<!DOCTYPE html>
 <div id="gate-banner" class="banner warn" hidden></div>
 <section id="login-view">
   <main>
+    <div class="card" id="activate-card" hidden>
+      <h3>Aktivace hlavního administrátora</h3>
+      <p class="muted">Jednorázový odkaz. Nastavte vlastní silné heslo (min. 12 znaků). Token se po použití zneplatní.</p>
+      <form id="activate-form">
+        <input type="hidden" id="activate-token"/>
+        <label for="activate-pass">Nové heslo</label>
+        <input id="activate-pass" type="password" autocomplete="new-password" required minlength="12"/>
+        <label for="activate-pass2">Potvrzení hesla</label>
+        <input id="activate-pass2" type="password" autocomplete="new-password" required minlength="12"/>
+        <div class="row"><button class="btn" type="submit">Nastavit heslo a aktivovat</button></div>
+        <p id="activate-err" class="err" hidden></p>
+        <p id="activate-ok" class="ok" hidden></p>
+      </form>
+    </div>
     <div class="card">
       <h2>Přihlášení</h2>
       <p class="muted">Session cookie (HttpOnly, Secure, SameSite=Strict). Hesla se nelogují.</p>

@@ -1,61 +1,109 @@
-# Internal Admin/Client API bootstrap (public delivery stays OFF)
+# Bezpečné první přihlášení hlavního administrátora (veřejné reklamy zůstanou OFF)
 
-This runbook enables **Admin API** and/or **Client API** without enabling public ad delivery.
+Tento runbook **nezapíná** veřejné doručování reklam (`SAFE_MODE=true`, `publicDeliveryEnabled=false`).
 
-Committed `wrangler.toml` defaults remain:
+Heslo, pepper, session secret ani aktivační token **nikdy** neposílejte do Cursoru, chatu, CI logu ani do gitu.
 
-- `ADS_SAFE_MODE = "true"`
-- `ADS_PUBLIC_DELIVERY_ENABLED = "false"`
-- `ADS_ADMIN_API_ENABLED = "false"`
-- `ADS_CLIENT_API_ENABLED = "false"`
+---
 
-## Prerequisites (GitHub Actions secrets — values never in git/chat)
+## Co vznikne
 
-Create these repository secrets if missing (Settings → Secrets → Actions):
+1. Worker secrets pro autentizaci (z GitHub Actions secrets).
+2. Právě jeden účet s rolí `main_admin`.
+3. Jednorázový aktivační odkaz (soukromý artifact, 1 den) — heslo si nastavíte v prohlížeči.
+4. Admin + Client API ON, veřejné reklamy OFF.
 
-| Secret | Purpose |
-|--------|---------|
-| `ADS_SESSION_SECRET` | Admin session HMAC |
-| `ADS_PASSWORD_PEPPER` | Password hash pepper |
-| `ADS_CLIENT_SESSION_SECRET` | Client session HMAC (≠ admin) |
-| `ADS_CODE_PEPPER` | Access-code hash pepper |
-| `ADS_BACKUP_ENCRYPTION_KEY` | Optional encrypted backups |
+Opakovaný běh při existujícím `main_admin` / `BOOTSTRAP_COMPLETED=1` **selže** (záměrně).
 
-Deploy workflow puts them via `wrangler secret put` when present (`SECRET_PUT=…=OK` / `SKIPPED_MISSING_GITHUB_SECRET`).
+---
 
-## Enable Admin + Client APIs (runtime vars only)
+## Krok za krokem (pro netechnického správce)
 
-1. GitHub → Actions → **Deploy IU Ads** → Run workflow
-2. Set:
-   - `enable_admin_api` = **true**
-   - `enable_client_api` = **true**
-3. Confirm health JSON after deploy:
-   - `safeMode=true`
-   - `publicDeliveryEnabled=false`
-   - `adminApiEnabled=true`
-   - `clientApiEnabled=true`
-4. Confirm public delivery still empty: `GET /v1/public/ads/delivery` → `ads:[]`
+### A) Vytvořte 4 povinné GitHub secrets
 
-## Seed first `main_admin` (no self-registration)
+1. Otevřete GitHub repozitář **filtr**.
+2. Klikněte **Settings** → **Secrets and variables** → **Actions**.
+3. Pro každou položku níže: **New repository secret** → Name → Value → **Add secret**.
 
-```powershell
-cd cloudflare/iu-ads
-$env:ADS_PASSWORD_PEPPER = '<same pepper as Worker secret>'
-node .\scripts\iu-ads-hash-password.mjs
-# paste password when prompted; stdout prints ONLY pbkdf2$… hash
-```
+| Name | Jak bezpečně vytvořit Value (lokálně, mimo chat) |
+|------|--------------------------------------------------|
+| `ADS_SESSION_SECRET` | PowerShell: `[Convert]::ToBase64String((1..48 \| ForEach-Object { Get-Random -Maximum 256 }) -as [byte[]])` |
+| `ADS_PASSWORD_PEPPER` | Stejný příkaz znovu (jiná hodnota!). |
+| `ADS_CLIENT_SESSION_SECRET` | Stejný příkaz znovu (jiná hodnota!). |
+| `ADS_CODE_PEPPER` | Stejný příkaz znovu (jiná hodnota!). |
+| `ADS_BACKUP_ENCRYPTION_KEY` | Volitelné; stejný příkaz (jiná hodnota) — pro šifrované produkční zálohy. |
 
-Then insert via D1 (replace placeholders; never commit the hash/password):
+Alternativa (Git Bash / WSL): `openssl rand -base64 48`
 
-```sql
-INSERT INTO admin_users (user_id, email, password_hash, display_name, is_active, force_password_change, created_at, updated_at)
-VALUES ('usr_main_1', 'admin@example.com', '<HASH>', 'Main Admin', 1, 0, datetime('now'), datetime('now'));
-INSERT INTO admin_user_roles (user_id, role_code, assigned_at, assigned_by)
-VALUES ('usr_main_1', 'main_admin', datetime('now'), 'bootstrap');
-```
+**Pravidla:** každá hodnota jiná; nikam nekopírujte kromě GitHub secret pole; neukládejte do Variables (jen Secrets).
 
-Use `npx wrangler d1 execute iu-ads --remote --command "…"`.
+Cloudflare tokeny `CLOUDFLARE_ADS_API_TOKEN` / `CLOUDFLARE_API_TOKEN` už musí existovat (deploy).
 
-## Single blocker if secrets missing
+### B) Spusťte bootstrap workflow
 
-**MANUAL_STEP:** Create GitHub Actions secrets `ADS_SESSION_SECRET` + `ADS_PASSWORD_PEPPER` (+ client secrets if enabling Client API), seed first `main_admin` via the hash script + D1 insert above, then re-run **Deploy IU Ads** with `enable_admin_api` / `enable_client_api` true.
+1. **Actions** → vlevo **Bootstrap IU Ads Main Admin**.
+2. **Run workflow**.
+3. Do pole **admin_email** zadejte e-mail hlavního administrátora (heslo sem **nepatří**).
+4. Volitelně upravte zobrazované jméno / TTL (výchozí 3600 s).
+5. Nechte **enable_apis_after** zapnuté.
+6. Klikněte **Run workflow**.
+
+Úspěch v logu: `BOOTSTRAP_STATUS=SUCCESS`, `HEALTH_GATE=PASS`, `PUBLIC_ADS=still_OFF`.  
+Selhání `MISSING_SECRET=…` → vraťte se ke kroku A.
+
+### C) Nastavte vlastní heslo (aktivační odkaz)
+
+1. Otevřete právě doběhlý běh workflow.
+2. Dole **Artifacts** → stáhněte `iu-ads-main-admin-activation`.
+3. Rozbalte a otevřete `activation-url.txt` (soukromé okno prohlížeče).
+4. Otevře se `/admin` s formulářem aktivace.
+5. Zadejte **vlastní silné heslo** (min. 12 znaků) + potvrzení → **Nastavit heslo a aktivovat**.
+6. Přihlaste se stejným e-mailem a novým heslem.
+7. Smažte stažený soubor / ZIP. Artifact sám vyprší za 1 den.
+
+Heslo **není** v GitHubu, Cloudflare ani v repozitáři. Po použití je token neplatný.
+
+### D) První přihlášení
+
+Otevřete: https://infouzel-ads.josef-zmrhal.workers.dev/admin
+
+Úspěch = vidíte Admin menu (ne `auth_not_configured`).
+
+V UI: **Účet** (změna hesla), **Odhlásit**, **Odhlásit všechny relace**.
+
+### E) Co po úspěchu NEmazat / mazat
+
+| Položka | Akce |
+|---------|------|
+| `ADS_*` GitHub secrets | **Ponechat** (trvalé Worker auth). |
+| Stažený `activation-url.txt` | **Smazat** lokálně. |
+| Veřejné reklamy | **Nezapínat** (Kap. 14 = samostatný lidský gate). |
+
+Dočasný GitHub secret s heslem se **nevytváří** — heslo je jen ve vašem prohlížeči.
+
+---
+
+## Co workflow dělá (technicky)
+
+1. Ověří přítomnost GitHub secrets (jména, ne hodnoty).
+2. `wrangler secret put` do Workeru (stdout bez hodnot).
+3. Odmítne, pokud už existuje `main_admin` nebo `BOOTSTRAP_COMPLETED=1`.
+4. Generuje SQL (jen hashe) + aktivační URL do artifactu.
+5. Aplikuje SQL na remote D1 + audit `main_admin_bootstrap_created`.
+6. Deploy s Admin/Client API ON, public delivery OFF.
+7. Health gate: `safeMode=true`, `publicDeliveryEnabled=false`, `adminApiEnabled=true`.
+
+Skript: `cloudflare/iu-ads/scripts/iu-ads-bootstrap-main-admin.mjs`  
+Workflow: `.github/workflows/bootstrap-iu-ads-main-admin.yml`
+
+---
+
+## Legacy (jen nouze — nepoužívejte jako první volbu)
+
+Lokální hash + ruční D1 insert: `scripts/iu-ads-hash-password.mjs`. Preferujte workflow výše.
+
+---
+
+## Jediný manuální blokátor před prvním loginem
+
+**MANUAL_STEP:** vytvořit GitHub Actions secrets (krok A) → spustit **Bootstrap IU Ads Main Admin** (krok B) → aktivovat heslo z artifactu (krok C) → přihlásit na `/admin` (krok D).

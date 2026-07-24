@@ -1,6 +1,7 @@
 import {
   handleLogin,
   handleLogout,
+  handleLogoutAllSessions,
   handleMe,
   handlePasswordChange,
   handlePasswordResetConfirm,
@@ -258,6 +259,9 @@ export default {
 
       if (path === "/v1/admin/auth/login" && method === "POST") return handleLogin(request, env);
       if (path === "/v1/admin/auth/logout" && method === "POST") return handleLogout(request, env);
+      if (path === "/v1/admin/auth/sessions/revoke-all" && method === "POST") {
+        return handleLogoutAllSessions(request, env);
+      }
       if (path === "/v1/admin/auth/me" && method === "GET") return handleMe(request, env);
       if (path === "/v1/admin/auth/password-reset/request" && method === "POST") {
         return handlePasswordResetRequest(request, env);

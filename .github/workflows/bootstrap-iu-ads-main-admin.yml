@@ -1,0 +1,229 @@
+# Bootstrap first InfoUzel Ads main_admin (public ads stay OFF)
+#
+# Manual-only. Creates Worker auth secrets (from GitHub secrets), seeds exactly one
+# main_admin with a one-time activation URL written ONLY to a short-lived private artifact.
+# Never prints passwords, tokens, peppers, or hashes to logs.
+name: Bootstrap IU Ads Main Admin
+
+on:
+  workflow_dispatch:
+    inputs:
+      admin_email:
+        description: "E-mail prvního hlavního administrátora (nebude heslo)."
+        type: string
+        required: true
+      admin_display_name:
+        description: "Zobrazované jméno (volitelné)."
+        type: string
+        required: false
+        default: "Hlavní administrátor"
+      activation_ttl_seconds:
+        description: "Platnost aktivačního odkazu v sekundách (300–86400)."
+        type: string
+        required: false
+        default: "3600"
+      enable_apis_after:
+        description: "Po bootstrapu nastavit Admin+Client API ON (public delivery zůstane OFF)."
+        type: boolean
+        required: false
+        default: true
+
+concurrency:
+  group: bootstrap-iu-ads-main-admin
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      actions: write
+    defaults:
+      run:
+        working-directory: cloudflare/iu-ads
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_ADS_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
+      ADS_SESSION_SECRET: ${{ secrets.ADS_SESSION_SECRET }}
+      ADS_PASSWORD_PEPPER: ${{ secrets.ADS_PASSWORD_PEPPER }}
+      ADS_CLIENT_SESSION_SECRET: ${{ secrets.ADS_CLIENT_SESSION_SECRET }}
+      ADS_CODE_PEPPER: ${{ secrets.ADS_CODE_PEPPER }}
+      ADS_BACKUP_ENCRYPTION_KEY: ${{ secrets.ADS_BACKUP_ENCRYPTION_KEY }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: cloudflare/iu-ads/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Require auth secrets present (names only)
+        run: |
+          set -euo pipefail
+          missing=0
+          for name in ADS_SESSION_SECRET ADS_PASSWORD_PEPPER ADS_CLIENT_SESSION_SECRET ADS_CODE_PEPPER; do
+            # Indirect expansion without printing values
+            eval "val=\${$name:-}"
+            if [ -z "$val" ]; then
+              echo "MISSING_SECRET=$name"
+              missing=1
+            else
+              echo "SECRET_PRESENT=$name"
+            fi
+          done
+          if [ -n "${ADS_BACKUP_ENCRYPTION_KEY:-}" ]; then
+            echo "SECRET_PRESENT=ADS_BACKUP_ENCRYPTION_KEY"
+          else
+            echo "SECRET_OPTIONAL_MISSING=ADS_BACKUP_ENCRYPTION_KEY"
+          fi
+          if [ "$missing" != "0" ]; then
+            echo "BLOCKER: create the missing GitHub Actions repository secrets, then re-run this workflow."
+            echo "MANUAL_STEP=Repo Settings → Secrets and variables → Actions → New repository secret"
+            exit 1
+          fi
+
+      - name: Put Worker secrets (values never echoed)
+        run: |
+          set -euo pipefail
+          put_secret() {
+            local name="$1"
+            local val="$2"
+            printf '%s' "$val" | npx wrangler secret put "$name"
+            echo "SECRET_PUT=${name}=OK"
+          }
+          put_secret ADS_SESSION_SECRET "$ADS_SESSION_SECRET"
+          put_secret ADS_PASSWORD_PEPPER "$ADS_PASSWORD_PEPPER"
+          put_secret ADS_CLIENT_SESSION_SECRET "$ADS_CLIENT_SESSION_SECRET"
+          put_secret ADS_CODE_PEPPER "$ADS_CODE_PEPPER"
+          if [ -n "${ADS_BACKUP_ENCRYPTION_KEY:-}" ]; then
+            put_secret ADS_BACKUP_ENCRYPTION_KEY "$ADS_BACKUP_ENCRYPTION_KEY"
+          fi
+
+      - name: Refuse if main_admin already exists
+        run: |
+          set -euo pipefail
+          OUT="$(npx wrangler d1 execute iu-ads --remote --json --command "SELECT COUNT(*) AS cnt FROM admin_user_roles WHERE role_code = 'main_admin';" )"
+          CNT="$(printf '%s' "$OUT" | node -e "
+            let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
+              try {
+                const j=JSON.parse(s);
+                const rows=(Array.isArray(j)?j:[j]);
+                let cnt=0;
+                for (const block of rows) {
+                  const r=(block&&block.results)||[];
+                  if (r[0] && r[0].cnt!=null) cnt=Number(r[0].cnt);
+                }
+                process.stdout.write(String(cnt||0));
+              } catch { process.stdout.write('ERR'); }
+            });
+          ")"
+          echo "MAIN_ADMIN_COUNT=$CNT"
+          if [ "$CNT" = "ERR" ]; then
+            echo "BLOCKER: could not query admin_user_roles"
+            exit 1
+          fi
+          if [ "$CNT" != "0" ]; then
+            echo "BLOCKER: main_admin already exists — bootstrap refused (idempotent lock)."
+            exit 1
+          fi
+          LOCK="$(npx wrangler d1 execute iu-ads --remote --json --command "SELECT value FROM system_settings WHERE key = 'BOOTSTRAP_COMPLETED';" || true)"
+          if printf '%s' "$LOCK" | grep -Fq '"value":"1"'; then
+            echo "BLOCKER: BOOTSTRAP_COMPLETED=1 — bootstrap refused."
+            exit 1
+          fi
+          echo "BOOTSTRAP_PRECHECK=OK"
+
+      - name: Generate bootstrap SQL + activation artifact file
+        env:
+          BOOTSTRAP_ADMIN_EMAIL: ${{ inputs.admin_email }}
+          BOOTSTRAP_ADMIN_DISPLAY_NAME: ${{ inputs.admin_display_name }}
+          BOOTSTRAP_ACTIVATION_TTL_SECONDS: ${{ inputs.activation_ttl_seconds }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/iu-ads-bootstrap"
+          # Restrictive umask for generated files
+          umask 077
+          node ./scripts/iu-ads-bootstrap-main-admin.mjs \
+            --sql-out "$RUNNER_TEMP/iu-ads-bootstrap/bootstrap.sql" \
+            --activation-out "$RUNNER_TEMP/iu-ads-bootstrap/activation-url.txt"
+          # Prove SQL contains hashes/markers but not the activation query token pattern in logs:
+          if grep -Eq 'activate=' "$RUNNER_TEMP/iu-ads-bootstrap/bootstrap.sql"; then
+            echo "BLOCKER: activation token leaked into SQL file"
+            exit 1
+          fi
+          echo "BOOTSTRAP_FILES=READY"
+
+      - name: Apply bootstrap SQL to remote D1
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute iu-ads --remote --file="$RUNNER_TEMP/iu-ads-bootstrap/bootstrap.sql"
+          echo "BOOTSTRAP_D1_APPLY=OK"
+
+      - name: Upload private activation artifact (not logged)
+        uses: actions/upload-artifact@v4
+        with:
+          name: iu-ads-main-admin-activation
+          path: ${{ runner.temp }}/iu-ads-bootstrap/activation-url.txt
+          if-no-files-found: error
+          retention-days: 1
+          overwrite: true
+
+      - name: Deploy Worker with Admin/Client ON, public delivery OFF
+        if: ${{ inputs.enable_apis_after }}
+        run: |
+          set -euo pipefail
+          npx wrangler deploy \
+            --var ADS_SAFE_MODE:true \
+            --var ADS_PUBLIC_DELIVERY_ENABLED:false \
+            --var ADS_ADMIN_API_ENABLED:true \
+            --var ADS_CLIENT_API_ENABLED:true
+          echo "DEPLOY_VAR_ADMIN_API=true"
+          echo "DEPLOY_VAR_CLIENT_API=true"
+          echo "DEPLOY_VAR_PUBLIC_DELIVERY=false"
+
+      - name: Health gate (public ads must stay OFF)
+        run: |
+          set -euo pipefail
+          URL="https://infouzel-ads.josef-zmrhal.workers.dev/health"
+          attempt=1
+          while [ "$attempt" -le 18 ]; do
+            CODE="$(curl -sS -o /tmp/iu-ads-health.json -w "%{http_code}" "$URL" || true)"
+            if [ "$CODE" = "200" ]; then
+              node -e "
+                const fs=require('fs');
+                const j=JSON.parse(fs.readFileSync('/tmp/iu-ads-health.json','utf8'));
+                if(j.ok!==true) process.exit(2);
+                if(j.safeMode!==true) process.exit(3);
+                if(j.publicDeliveryEnabled!==false) process.exit(4);
+                if(j.adminApiEnabled!==true) process.exit(5);
+                if(j.clientApiEnabled!==true) process.exit(7);
+                if(j.r2 && j.r2.privateDocumentsPublicUrl!==false) process.exit(6);
+                console.log('HEALTH_GATE=PASS');
+              "
+              exit 0
+            fi
+            attempt=$((attempt+1))
+            sleep 5
+          done
+          echo "HEALTH_GATE=FAIL"
+          cat /tmp/iu-ads-health.json || true
+          exit 1
+
+      - name: Success instructions (no secrets)
+        run: |
+          set -euo pipefail
+          cat <<'EOF'
+          BOOTSTRAP_STATUS=SUCCESS
+          NEXT_1=GitHub → Actions run → Artifacts → download iu-ads-main-admin-activation
+          NEXT_2=Open activation-url.txt in a private browser window
+          NEXT_3=Set your own strong password (min 12 chars)
+          NEXT_4=Sign in at /admin with your email + new password
+          NEXT_5=Delete the downloaded activation file
+          NEXT_6=Artifact auto-expires in 1 day
+          PUBLIC_ADS=still_OFF
+          EOF
