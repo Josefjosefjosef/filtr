@@ -29,6 +29,11 @@ export const ADMIN_UI_SCRIPT = String.raw`
       reservation_collision:"Kolize rezervace.",
       evidence_code_taken:"Evidenční číslo už existuje.",
       invalid_body:"Neplatné tělo požadavku.",
+      invalid_request:"Neplatný požadavek.",
+      invalid_current_password:"Současné heslo je nesprávné.",
+      invalid_display_name:"Display name je povinné.",
+      client_id_required:"client_id je povinné.",
+      campaign_ids_required:"campaign_ids jsou povinné.",
       client_not_found:"Klient nenalezen.",
       already_reviewed:"Kreativa už byla posouzena."
     };
@@ -186,7 +191,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     el("pw-go").onclick=async function(){
       el("pw-err").hidden=true; el("pw-ok").hidden=true;
       var r=await api("/v1/admin/auth/password/change",{method:"POST",body:JSON.stringify({
-        current_password:val("pw-cur"), new_password:val("pw-new")
+        currentPassword:val("pw-cur"), newPassword:val("pw-new")
       })});
       el("pw-cur").value=""; el("pw-new").value="";
       if(!r.res.ok){ el("pw-err").textContent=apiError(r.body); el("pw-err").hidden=false; return; }
@@ -294,21 +299,19 @@ export const ADMIN_UI_SCRIPT = String.raw`
       inp("e-target","Cílová URL","text",camp.target_url||"")+
       inp("e-start","start_at","text",camp.start_at||"")+
       inp("e-end","end_at","text",camp.end_at||"")+
-      inp("e-imp","impression_limit","number",camp.impression_limit!=null?camp.impression_limit:"")+
-      inp("e-clk","click_limit","number",camp.click_limit!=null?camp.click_limit:"")+
       inp("e-budget","budget_limit_cents","number",camp.budget_limit_cents!=null?camp.budget_limit_cents:"")+
-      '</div><div class="row"><button class="btn" type="button" id="e-save">Uložit</button></div>'+
+      '</div><p class="muted">impression_limit/click_limit se nastavují při vytvoření (PATCH je zatím neukládá).</p>'+
+      '<div class="row"><button class="btn" type="button" id="e-save">Uložit</button></div>'+
       '<h4>Přechod stavu (aktuálně: '+esc(camp.status)+')</h4><div class="row" id="e-trans"></div>'+
       '<p id="e-err" class="err" hidden></p></div>';
     el("e-save").onclick=async function(){
       el("e-err").hidden=true;
+      // PATCH handler persists title/target/window/budget; impression_limit/click_limit are create-time only.
       var body={
         title:val("e-title").trim(),
         target_url:val("e-target").trim()||null,
         start_at:val("e-start").trim()||null,
         end_at:val("e-end").trim()||null,
-        impression_limit:numOrNull("e-imp"),
-        click_limit:numOrNull("e-clk"),
         budget_limit_cents:numOrNull("e-budget")
       };
       var u=await api("/v1/admin/campaigns/"+encodeURIComponent(id),{method:"PATCH",body:JSON.stringify(body)});
@@ -435,10 +438,18 @@ export const ADMIN_UI_SCRIPT = String.raw`
       };
     });
     Array.prototype.forEach.call(document.querySelectorAll("[data-ap]"),function(b){
-      b.onclick=async function(){ await api("/v1/admin/creatives/"+encodeURIComponent(b.getAttribute("data-ap"))+"/approve",{method:"POST",body:"{}"}); render(); };
+      b.onclick=async function(){
+        var r=await api("/v1/admin/creatives/"+encodeURIComponent(b.getAttribute("data-ap"))+"/approve",{method:"POST",body:"{}"});
+        if(!r.res.ok){ el("cr-err").textContent=apiError(r.body); el("cr-err").hidden=false; return; }
+        state.flash="Kreativa schválena."; render();
+      };
     });
     Array.prototype.forEach.call(document.querySelectorAll("[data-rj]"),function(b){
-      b.onclick=async function(){ await api("/v1/admin/creatives/"+encodeURIComponent(b.getAttribute("data-rj"))+"/reject",{method:"POST",body:JSON.stringify({reason:"rejected_via_admin_ui"})}); render(); };
+      b.onclick=async function(){
+        var r=await api("/v1/admin/creatives/"+encodeURIComponent(b.getAttribute("data-rj"))+"/reject",{method:"POST",body:JSON.stringify({reason:"rejected_via_admin_ui"})});
+        if(!r.res.ok){ el("cr-err").textContent=apiError(r.body); el("cr-err").hidden=false; return; }
+        state.flash="Kreativa zamítnuta."; render();
+      };
     });
   }
 
@@ -521,7 +532,12 @@ export const ADMIN_UI_SCRIPT = String.raw`
       };
     });
     Array.prototype.forEach.call(document.querySelectorAll("[data-rev]"),function(b){
-      b.onclick=async function(){ await api("/v1/admin/codes/"+encodeURIComponent(b.getAttribute("data-rev"))+"/revoke",{method:"POST",body:"{}"}); render(); };
+      b.onclick=async function(){
+        var r=await api("/v1/admin/codes/"+encodeURIComponent(b.getAttribute("data-rev"))+"/revoke",{method:"POST",body:"{}"});
+        if(!r.res.ok){ state.flash=apiError(r.body); }
+        else state.flash="Kód zneplatněn.";
+        render();
+      };
     });
   }
 
@@ -540,7 +556,11 @@ export const ADMIN_UI_SCRIPT = String.raw`
       el("bu-msg").textContent=r.res.ok?JSON.stringify(r.body):apiError(r.body);
       if(r.res.ok) render();
     };
-    el("bu-prune").onclick=async function(){ await api("/v1/admin/backups/prune",{method:"POST",body:"{}"}); render(); };
+    el("bu-prune").onclick=async function(){
+      var r=await api("/v1/admin/backups/prune",{method:"POST",body:"{}"});
+      el("bu-msg").textContent=r.res.ok?JSON.stringify(r.body):apiError(r.body);
+      if(r.res.ok) render();
+    };
     Array.prototype.forEach.call(document.querySelectorAll("[data-drill]"),function(b){
       b.onclick=async function(){
         var r=await api("/v1/admin/backups/"+encodeURIComponent(b.getAttribute("data-drill"))+"/drill",{method:"POST",body:"{}"});
@@ -580,12 +600,24 @@ export const ADMIN_UI_SCRIPT = String.raw`
           return '<button type="button" class="linkish" data-ack="'+esc(a.alert_id)+'">Ack</button> '+
             '<button type="button" class="linkish" data-res="'+esc(a.alert_id)+'">Resolve</button>';
         })+'<div class="row"><button class="btn secondary" type="button" id="al-gen">Generate</button></div></div>');
-        el("al-gen").onclick=async function(){ await api("/v1/admin/alerts/generate",{method:"POST",body:"{}"}); render(); };
+        el("al-gen").onclick=async function(){
+          var r=await api("/v1/admin/alerts/generate",{method:"POST",body:"{}"});
+          if(!r.res.ok){ state.flash=apiError(r.body); }
+          render();
+        };
         Array.prototype.forEach.call(document.querySelectorAll("[data-ack]"),function(b){
-          b.onclick=async function(){ await api("/v1/admin/alerts/"+encodeURIComponent(b.getAttribute("data-ack"))+"/ack",{method:"POST",body:"{}"}); render(); };
+          b.onclick=async function(){
+            var r=await api("/v1/admin/alerts/"+encodeURIComponent(b.getAttribute("data-ack"))+"/ack",{method:"POST",body:"{}"});
+            if(!r.res.ok){ state.flash=apiError(r.body); }
+            render();
+          };
         });
         Array.prototype.forEach.call(document.querySelectorAll("[data-res]"),function(b){
-          b.onclick=async function(){ await api("/v1/admin/alerts/"+encodeURIComponent(b.getAttribute("data-res"))+"/resolve",{method:"POST",body:"{}"}); render(); };
+          b.onclick=async function(){
+            var r=await api("/v1/admin/alerts/"+encodeURIComponent(b.getAttribute("data-res"))+"/resolve",{method:"POST",body:"{}"});
+            if(!r.res.ok){ state.flash=apiError(r.body); }
+            render();
+          };
         });
       } else if(v==="campaigns") return renderCampaigns();
       else if(v==="clients") return renderClients();
@@ -728,15 +760,17 @@ export const ADMIN_UI_SCRIPT = String.raw`
         if(!us.res.ok){ panel('<p class="err">'+esc(apiError(us.body))+'</p>'); return; }
         var users=(us.body&&us.body.users)||[];
         panel('<div class="card"><h2>Uživatelé</h2>'+listTable(users,[["user_id","ID"],["email","E-mail"],["is_active","Aktivní"],["force_password_change","Force PW"]])+
-          '</div><div class="card"><h3>Nový uživatel</h3>'+inp("us-email","E-mail")+inp("us-name","Display name (volitelné)")+inp("us-pass","Dočasné heslo","password")+
+          '</div><div class="card"><h3>Nový uživatel</h3>'+inp("us-email","E-mail *")+inp("us-name","Display name *")+inp("us-pass","Dočasné heslo *","password")+
           sel("us-role","Role",["main_admin","ads_manager","sales","read_only"],"read_only")+
           '<div class="row"><button class="btn" type="button" id="us-go">Vytvořit</button></div><p id="us-err" class="err" hidden></p></div>');
         el("us-go").onclick=async function(){
-          var body={email:val("us-email").trim(),password:val("us-pass"),roles:[val("us-role")]};
-          if(val("us-name").trim()) body.display_name=val("us-name").trim();
+          el("us-err").hidden=true;
+          var displayName=val("us-name").trim();
+          if(!displayName){ el("us-err").textContent="Display name je povinné."; el("us-err").hidden=false; return; }
+          var body={email:val("us-email").trim(),display_name:displayName,password:val("us-pass"),roles:[val("us-role")]};
           var r=await api("/v1/admin/users",{method:"POST",body:JSON.stringify(body)});
           if(!r.res.ok){ el("us-err").textContent=apiError(r.body); el("us-err").hidden=false; return; }
-          el("us-pass").value=""; render();
+          el("us-pass").value=""; state.flash="Uživatel vytvořen."; render();
         };
       } else {
         var entry=state.nav.find(function(n){return n.id===v;});
