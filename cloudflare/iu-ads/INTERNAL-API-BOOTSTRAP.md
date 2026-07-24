@@ -43,13 +43,15 @@ Cloudflare tokeny `CLOUDFLARE_ADS_API_TOKEN` / `CLOUDFLARE_API_TOKEN` už musí 
 
 1. **Actions** → vlevo **Bootstrap IU Ads Main Admin**.
 2. **Run workflow**.
-3. Do pole **admin_email** zadejte e-mail hlavního administrátora (heslo sem **nepatří**).
-4. Volitelně upravte zobrazované jméno / TTL (výchozí 3600 s).
-5. Nechte **enable_apis_after** zapnuté.
-6. Klikněte **Run workflow**.
+3. **run_mode** = `bootstrap` (nebo nejdřív `precheck_only` jen pro kontrolu D1 bez seedu).
+4. Do pole **admin_email** zadejte e-mail hlavního administrátora (heslo sem **nepatří**; u `precheck_only` může zůstat prázdné).
+5. Volitelně upravte zobrazované jméno / TTL (výchozí 3600 s).
+6. Nechte **enable_apis_after** zapnuté.
+7. Klikněte **Run workflow**.
 
-Úspěch v logu: `BOOTSTRAP_STATUS=SUCCESS`, `HEALTH_GATE=PASS`, `PUBLIC_ADS=still_OFF`.  
-Selhání `MISSING_SECRET=…` → vraťte se ke kroku A.
+Úspěch v logu: `D1_ID_RESOLVED=yes`, `BOOTSTRAP_PRECHECK=OK`, `BOOTSTRAP_STATUS=SUCCESS`, `HEALTH_GATE=PASS`, `PUBLIC_ADS=still_OFF`.  
+Selhání `MISSING_SECRET=…` → vraťte se ke kroku A.  
+Selhání `D1_QUERY_FAILED` / `TABLE_MISSING` → fail-closed (nekontinuje seed).
 
 ### C) Nastavte vlastní heslo (aktivační odkaz)
 

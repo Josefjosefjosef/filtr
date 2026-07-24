@@ -3,15 +3,27 @@
 # Manual-only. Creates Worker auth secrets (from GitHub secrets), seeds exactly one
 # main_admin with a one-time activation URL written ONLY to a short-lived private artifact.
 # Never prints passwords, tokens, peppers, or hashes to logs.
+#
+# Root cause fix: committed wrangler.toml uses placeholder database_id; this workflow
+# resolves the real iu-ads D1 id (same account as Deploy) before any remote execute.
 name: Bootstrap IU Ads Main Admin
 
 on:
   workflow_dispatch:
     inputs:
-      admin_email:
-        description: "E-mail prvního hlavního administrátora (nebude heslo)."
-        type: string
+      run_mode:
+        description: "bootstrap = seed first main_admin; precheck_only = read-only D1 state (no seed)."
+        type: choice
         required: true
+        default: bootstrap
+        options:
+          - bootstrap
+          - precheck_only
+      admin_email:
+        description: "E-mail prvního hlavního administrátora (povinné pro bootstrap; neheslo)."
+        type: string
+        required: false
+        default: ""
       admin_display_name:
         description: "Zobrazované jméno (volitelné)."
         type: string
@@ -50,6 +62,7 @@ jobs:
       ADS_CLIENT_SESSION_SECRET: ${{ secrets.ADS_CLIENT_SESSION_SECRET }}
       ADS_CODE_PEPPER: ${{ secrets.ADS_CODE_PEPPER }}
       ADS_BACKUP_ENCRYPTION_KEY: ${{ secrets.ADS_BACKUP_ENCRYPTION_KEY }}
+      RUN_MODE: ${{ inputs.run_mode }}
     steps:
       - uses: actions/checkout@v5
 
@@ -62,12 +75,27 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Token source (names only)
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "TOKEN_SOURCE=MISSING"
+            echo "BLOCKER: need CLOUDFLARE_ADS_API_TOKEN (preferred) or CLOUDFLARE_API_TOKEN"
+            exit 1
+          fi
+          if [ -n "${{ secrets.CLOUDFLARE_ADS_API_TOKEN }}" ]; then
+            echo "TOKEN_SOURCE=CLOUDFLARE_ADS_API_TOKEN"
+          else
+            echo "TOKEN_SOURCE=CLOUDFLARE_API_TOKEN_FALLBACK"
+          fi
+          echo "CLOUDFLARE_ACCOUNT_ID_SET=577868e9aac9c289e9323100f68fad16"
+
       - name: Require auth secrets present (names only)
+        if: ${{ inputs.run_mode == 'bootstrap' }}
         run: |
           set -euo pipefail
           missing=0
           for name in ADS_SESSION_SECRET ADS_PASSWORD_PEPPER ADS_CLIENT_SESSION_SECRET ADS_CODE_PEPPER; do
-            # Indirect expansion without printing values
             eval "val=\${$name:-}"
             if [ -z "$val" ]; then
               echo "MISSING_SECRET=$name"
@@ -88,6 +116,7 @@ jobs:
           fi
 
       - name: Put Worker secrets (values never echoed)
+        if: ${{ inputs.run_mode == 'bootstrap' }}
         run: |
           set -euo pipefail
           put_secret() {
@@ -104,41 +133,166 @@ jobs:
             put_secret ADS_BACKUP_ENCRYPTION_KEY "$ADS_BACKUP_ENCRYPTION_KEY"
           fi
 
-      - name: Refuse if main_admin already exists
+      - name: Resolve real D1 database_id for iu-ads
         run: |
           set -euo pipefail
-          OUT="$(npx wrangler d1 execute iu-ads --remote --json --command "SELECT COUNT(*) AS cnt FROM admin_user_roles WHERE role_code = 'main_admin';" )"
-          CNT="$(printf '%s' "$OUT" | node -e "
-            let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
-              try {
-                const j=JSON.parse(s);
-                const rows=(Array.isArray(j)?j:[j]);
-                let cnt=0;
-                for (const block of rows) {
-                  const r=(block&&block.results)||[];
-                  if (r[0] && r[0].cnt!=null) cnt=Number(r[0].cnt);
-                }
-                process.stdout.write(String(cnt||0));
-              } catch { process.stdout.write('ERR'); }
-            });
-          ")"
-          echo "MAIN_ADMIN_COUNT=$CNT"
-          if [ "$CNT" = "ERR" ]; then
-            echo "BLOCKER: could not query admin_user_roles"
+          # Committed wrangler.toml uses placeholder 00000000-… — remote execute fails without patch.
+          # Same account/list approach as Deploy IU Ads; NEVER create DB here (fail-closed).
+          set +e
+          LIST_JSON="$(npx wrangler d1 list --json 2>/tmp/d1-list.err)"
+          LIST_EC=$?
+          set -e
+          if [ "$LIST_EC" != "0" ]; then
+            echo "STATUS=D1_QUERY_FAILED"
+            echo "BLOCKER: cannot list D1 databases"
+            if [ -f /tmp/d1-list.err ]; then sed -E 's/[A-Za-z0-9_-]{20,}/[REDACTED]/g' /tmp/d1-list.err | head -n 40 || true; fi
             exit 1
           fi
-          if [ "$CNT" != "0" ]; then
+          ID="$(printf '%s' "$LIST_JSON" | node -e "
+            let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
+              try {
+                const arr=JSON.parse(s);
+                const hit=(arr||[]).find(x=>x&&x.name==='iu-ads');
+                const id=hit&&(hit.uuid||hit.id||'');
+                process.stdout.write(id?String(id):'');
+              } catch { process.stdout.write(''); }
+            });
+          ")"
+          if [ -z "$ID" ]; then
+            echo "STATUS=D1_QUERY_FAILED"
+            echo "BLOCKER: D1 database named iu-ads not found in account 577868e9aac9c289e9323100f68fad16"
+            exit 1
+          fi
+          echo "D1_NAME=iu-ads"
+          echo "D1_ID_RESOLVED=yes"
+          export ID
+          ID="$ID" node -e "
+            const fs=require('fs');
+            let t=fs.readFileSync('wrangler.toml','utf8');
+            if (!/database_id = \"[^\"]+\"/.test(t)) { console.error('BLOCKER: wrangler.toml missing database_id'); process.exit(2); }
+            t=t.replace(/database_id = \"[^\"]+\"/, 'database_id = \"'+process.env.ID+'\"');
+            fs.writeFileSync('wrangler.toml',t);
+            console.log('D1_ID_PATCHED=yes');
+          "
+
+      - name: Refuse if main_admin already exists (fail-closed)
+        run: |
+          set -euo pipefail
+          run_eval() {
+            local kind="$1"
+            local sql="$2"
+            local stdout_file="$3"
+            local stderr_file="$4"
+            set +e
+            npx wrangler d1 execute iu-ads --remote --json --command "$sql" >"$stdout_file" 2>"$stderr_file"
+            local ec=$?
+            set -e
+            node ./scripts/iu-ads-bootstrap-precheck.mjs evaluate \
+              --kind "$kind" \
+              --exit-code "$ec" \
+              --stdout-file "$stdout_file" \
+              --stderr-file "$stderr_file"
+          }
+
+          echo "PRECHECK_SCHEMA_START"
+          SCHEMA_OUT="$(run_eval schema_probe "SELECT COUNT(*) AS cnt FROM sqlite_master WHERE type='table' AND name='admin_user_roles';" /tmp/d1-schema.out /tmp/d1-schema.err)"
+          printf '%s\n' "$SCHEMA_OUT"
+          SCHEMA_STATUS="$(printf '%s\n' "$SCHEMA_OUT" | sed -n 's/^STATUS=//p' | head -n1)"
+          if [ "$SCHEMA_STATUS" != "OK" ]; then
+            echo "BLOCKER: admin_user_roles schema probe failed ($SCHEMA_STATUS)"
+            exit 1
+          fi
+
+          echo "PRECHECK_USERS_START"
+          USERS_OUT="$(run_eval users_count "SELECT COUNT(*) AS cnt FROM admin_users;" /tmp/d1-users.out /tmp/d1-users.err)"
+          printf '%s\n' "$USERS_OUT"
+          USERS_STATUS="$(printf '%s\n' "$USERS_OUT" | sed -n 's/^STATUS=//p' | head -n1)"
+          USERS_COUNT="$(printf '%s\n' "$USERS_OUT" | sed -n 's/^COUNT=//p' | head -n1)"
+          echo "ADMIN_USERS_COUNT=${USERS_COUNT:-unknown}"
+          if [ "$USERS_STATUS" != "OK" ]; then
+            echo "BLOCKER: admin_users count query failed ($USERS_STATUS)"
+            exit 1
+          fi
+
+          echo "PRECHECK_MAIN_ADMIN_START"
+          MAIN_OUT="$(run_eval main_admin_count "SELECT COUNT(*) AS cnt FROM admin_user_roles WHERE role_code = 'main_admin';" /tmp/d1-main.out /tmp/d1-main.err)"
+          printf '%s\n' "$MAIN_OUT"
+          MAIN_STATUS="$(printf '%s\n' "$MAIN_OUT" | sed -n 's/^STATUS=//p' | head -n1)"
+          MAIN_COUNT="$(printf '%s\n' "$MAIN_OUT" | sed -n 's/^COUNT=//p' | head -n1)"
+          echo "MAIN_ADMIN_COUNT=${MAIN_COUNT:-unknown}"
+
+          echo "PRECHECK_LOCK_START"
+          LOCK_OUT="$(run_eval bootstrap_lock "SELECT value FROM system_settings WHERE key = 'BOOTSTRAP_COMPLETED';" /tmp/d1-lock.out /tmp/d1-lock.err)"
+          printf '%s\n' "$LOCK_OUT"
+          LOCK_STATUS="$(printf '%s\n' "$LOCK_OUT" | sed -n 's/^STATUS=//p' | head -n1)"
+
+          # Hard infrastructure failures always fail-closed (both modes).
+          for pair in "SCHEMA:$SCHEMA_STATUS" "USERS:$USERS_STATUS" "MAIN:$MAIN_STATUS" "LOCK:$LOCK_STATUS"; do
+            name="${pair%%:*}"
+            st="${pair#*:}"
+            case "$st" in
+              D1_QUERY_FAILED|TABLE_MISSING|JSON_INVALID|AMBIGUOUS)
+                echo "BLOCKER: $name precheck failed ($st) — fail-closed."
+                exit 1
+                ;;
+            esac
+          done
+
+          if [ "$RUN_MODE" = "precheck_only" ]; then
+            if [ "$MAIN_STATUS" = "MAIN_ADMIN_EXISTS" ] || [ "${MAIN_COUNT:-}" != "0" ]; then
+              echo "VERDICT=MAIN_ADMIN_EXISTS"
+            elif [ "$LOCK_STATUS" = "BOOTSTRAP_COMPLETED" ]; then
+              echo "VERDICT=BOOTSTRAP_COMPLETED"
+            else
+              echo "VERDICT=READY_FOR_BOOTSTRAP"
+            fi
+            echo "BOOTSTRAP_PRECHECK=REPORTED"
+            exit 0
+          fi
+
+          # bootstrap mode: refuse existing main_admin / lock; never continue without COUNT=0.
+          if [ "$MAIN_STATUS" = "MAIN_ADMIN_EXISTS" ]; then
             echo "BLOCKER: main_admin already exists — bootstrap refused (idempotent lock)."
             exit 1
           fi
-          LOCK="$(npx wrangler d1 execute iu-ads --remote --json --command "SELECT value FROM system_settings WHERE key = 'BOOTSTRAP_COMPLETED';" || true)"
-          if printf '%s' "$LOCK" | grep -Fq '"value":"1"'; then
+          if [ "$MAIN_STATUS" != "OK" ] || [ "$MAIN_COUNT" != "0" ]; then
+            echo "BLOCKER: main_admin precheck not clear (STATUS=$MAIN_STATUS COUNT=${MAIN_COUNT:-}) — fail-closed."
+            exit 1
+          fi
+          if [ "$LOCK_STATUS" = "BOOTSTRAP_COMPLETED" ]; then
             echo "BLOCKER: BOOTSTRAP_COMPLETED=1 — bootstrap refused."
             exit 1
           fi
+          if [ "$LOCK_STATUS" != "OK" ]; then
+            echo "BLOCKER: bootstrap lock precheck failed ($LOCK_STATUS) — fail-closed."
+            exit 1
+          fi
+
           echo "BOOTSTRAP_PRECHECK=OK"
+          echo "PREVIOUS_FAILED_RUN_SEEDED=no_evidence (prior run stopped before SQL generate/apply)"
+
+      - name: Stop after precheck_only
+        if: ${{ inputs.run_mode == 'precheck_only' }}
+        run: |
+          set -euo pipefail
+          echo "RUN_MODE=precheck_only"
+          echo "PRECHECK_ONLY=SUCCESS"
+          echo "NO_MUTATION=seed_skipped"
+          echo "PUBLIC_ADS=still_OFF"
+
+      - name: Validate bootstrap email
+        if: ${{ inputs.run_mode == 'bootstrap' }}
+        run: |
+          set -euo pipefail
+          EMAIL='${{ inputs.admin_email }}'
+          if [ -z "$EMAIL" ]; then
+            echo "BLOCKER: admin_email is required for run_mode=bootstrap"
+            exit 1
+          fi
+          echo "BOOTSTRAP_EMAIL_PRESENT=1"
 
       - name: Generate bootstrap SQL + activation artifact file
+        if: ${{ inputs.run_mode == 'bootstrap' }}
         env:
           BOOTSTRAP_ADMIN_EMAIL: ${{ inputs.admin_email }}
           BOOTSTRAP_ADMIN_DISPLAY_NAME: ${{ inputs.admin_display_name }}
@@ -146,12 +300,10 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/iu-ads-bootstrap"
-          # Restrictive umask for generated files
           umask 077
           node ./scripts/iu-ads-bootstrap-main-admin.mjs \
             --sql-out "$RUNNER_TEMP/iu-ads-bootstrap/bootstrap.sql" \
             --activation-out "$RUNNER_TEMP/iu-ads-bootstrap/activation-url.txt"
-          # Prove SQL contains hashes/markers but not the activation query token pattern in logs:
           if grep -Eq 'activate=' "$RUNNER_TEMP/iu-ads-bootstrap/bootstrap.sql"; then
             echo "BLOCKER: activation token leaked into SQL file"
             exit 1
@@ -159,12 +311,14 @@ jobs:
           echo "BOOTSTRAP_FILES=READY"
 
       - name: Apply bootstrap SQL to remote D1
+        if: ${{ inputs.run_mode == 'bootstrap' }}
         run: |
           set -euo pipefail
           npx wrangler d1 execute iu-ads --remote --file="$RUNNER_TEMP/iu-ads-bootstrap/bootstrap.sql"
           echo "BOOTSTRAP_D1_APPLY=OK"
 
       - name: Upload private activation artifact (not logged)
+        if: ${{ inputs.run_mode == 'bootstrap' }}
         uses: actions/upload-artifact@v4
         with:
           name: iu-ads-main-admin-activation
@@ -174,7 +328,7 @@ jobs:
           overwrite: true
 
       - name: Deploy Worker with Admin/Client ON, public delivery OFF
-        if: ${{ inputs.enable_apis_after }}
+        if: ${{ inputs.run_mode == 'bootstrap' && inputs.enable_apis_after }}
         run: |
           set -euo pipefail
           npx wrangler deploy \
@@ -187,6 +341,7 @@ jobs:
           echo "DEPLOY_VAR_PUBLIC_DELIVERY=false"
 
       - name: Health gate (public ads must stay OFF)
+        if: ${{ inputs.run_mode == 'bootstrap' }}
         run: |
           set -euo pipefail
           URL="https://infouzel-ads.josef-zmrhal.workers.dev/health"
@@ -215,6 +370,7 @@ jobs:
           exit 1
 
       - name: Success instructions (no secrets)
+        if: ${{ inputs.run_mode == 'bootstrap' }}
         run: |
           set -euo pipefail
           cat <<'EOF'
