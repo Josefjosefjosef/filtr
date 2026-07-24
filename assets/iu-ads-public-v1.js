@@ -120,6 +120,18 @@
   }
 
   function run() {
+    try {
+      var host = (global.location && global.location.hostname) || "";
+      // Skip network on local CI / non-prod hosts to avoid CSP/CORS console noise.
+      // Production Pages host: infouzel.cz (and www).
+      if (!/(^|\.)infouzel\.cz$/i.test(host)) {
+        var rootSkip = pickRoot();
+        if (rootSkip) clearAds(rootSkip);
+        return;
+      }
+    } catch (_) {
+      return;
+    }
     var root = pickRoot();
     if (!root) return;
     var device = detectDevice();
