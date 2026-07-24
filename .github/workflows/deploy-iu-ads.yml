@@ -8,10 +8,20 @@
 #   ADS_R2_SIGNING_SECRET
 #
 # Etapa 0/1: fail-closed feature flags; no public ads until later stages.
+# Optional workflow_dispatch can enable Admin/Client API vars WITHOUT flipping public delivery.
 name: Deploy IU Ads
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      enable_admin_api:
+        description: "Set ADS_ADMIN_API_ENABLED=true for this deploy only (committed wrangler default stays false). Does NOT enable public ads."
+        type: boolean
+        default: false
+      enable_client_api:
+        description: "Set ADS_CLIENT_API_ENABLED=true for this deploy only (committed wrangler default stays false). Does NOT enable public ads."
+        type: boolean
+        default: false
   push:
     branches: [main]
     paths:
@@ -161,8 +171,55 @@ jobs:
           ensure_bucket "iu-ads-documents"
           ensure_bucket "iu-ads-backups"
 
+      - name: Put optional auth secrets (names only; values never echoed)
+        env:
+          ADS_SESSION_SECRET: ${{ secrets.ADS_SESSION_SECRET }}
+          ADS_PASSWORD_PEPPER: ${{ secrets.ADS_PASSWORD_PEPPER }}
+          ADS_CLIENT_SESSION_SECRET: ${{ secrets.ADS_CLIENT_SESSION_SECRET }}
+          ADS_CODE_PEPPER: ${{ secrets.ADS_CODE_PEPPER }}
+          ADS_BACKUP_ENCRYPTION_KEY: ${{ secrets.ADS_BACKUP_ENCRYPTION_KEY }}
+        run: |
+          set -euo pipefail
+          put_if_set() {
+            local name="$1"
+            local val="$2"
+            if [ -n "${val:-}" ]; then
+              printf '%s' "$val" | npx wrangler secret put "$name"
+              echo "SECRET_PUT=${name}=OK"
+            else
+              echo "SECRET_PUT=${name}=SKIPPED_MISSING_GITHUB_SECRET"
+            fi
+          }
+          put_if_set ADS_SESSION_SECRET "${ADS_SESSION_SECRET:-}"
+          put_if_set ADS_PASSWORD_PEPPER "${ADS_PASSWORD_PEPPER:-}"
+          put_if_set ADS_CLIENT_SESSION_SECRET "${ADS_CLIENT_SESSION_SECRET:-}"
+          put_if_set ADS_CODE_PEPPER "${ADS_CODE_PEPPER:-}"
+          put_if_set ADS_BACKUP_ENCRYPTION_KEY "${ADS_BACKUP_ENCRYPTION_KEY:-}"
+
       - name: Deploy Worker
-        run: npx wrangler deploy
+        env:
+          ENABLE_ADMIN_API: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_admin_api || false }}
+          ENABLE_CLIENT_API: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_client_api || false }}
+        run: |
+          set -euo pipefail
+          # Committed wrangler.toml defaults stay false. Optional dispatch flips runtime vars only.
+          # NEVER flip ADS_PUBLIC_DELIVERY_ENABLED / ADS_SAFE_MODE here.
+          EXTRA_VARS=(--var ADS_SAFE_MODE:true --var ADS_PUBLIC_DELIVERY_ENABLED:false)
+          if [ "${ENABLE_ADMIN_API}" = "true" ]; then
+            EXTRA_VARS+=(--var ADS_ADMIN_API_ENABLED:true)
+            echo "DEPLOY_VAR_ADMIN_API=true"
+          else
+            EXTRA_VARS+=(--var ADS_ADMIN_API_ENABLED:false)
+            echo "DEPLOY_VAR_ADMIN_API=false"
+          fi
+          if [ "${ENABLE_CLIENT_API}" = "true" ]; then
+            EXTRA_VARS+=(--var ADS_CLIENT_API_ENABLED:true)
+            echo "DEPLOY_VAR_CLIENT_API=true"
+          else
+            EXTRA_VARS+=(--var ADS_CLIENT_API_ENABLED:false)
+            echo "DEPLOY_VAR_CLIENT_API=false"
+          fi
+          npx wrangler deploy "${EXTRA_VARS[@]}"
 
       - name: Health probe
         run: |
@@ -187,7 +244,10 @@ jobs:
                 if(j.storageMode!=='d1') process.exit(6);
                 if(!j.r2 || j.r2.privateDocumentsPublicUrl!==false) process.exit(8);
                 if(!j.r2.creativesBound || !j.r2.documentsBound || j.r2.ready!==true) process.exit(9);
-                console.log('HEALTH_GATE=PASS');
+                // Public delivery must stay OFF regardless of admin/client API enable.
+                if(j.adminApiEnabled!==true && j.adminApiEnabled!==false) process.exit(10);
+                if(j.clientApiEnabled!==true && j.clientApiEnabled!==false) process.exit(11);
+                console.log('HEALTH_GATE=PASS adminApiEnabled='+j.adminApiEnabled+' clientApiEnabled='+j.clientApiEnabled);
               "
               GATE_EC=$?
               set -e
