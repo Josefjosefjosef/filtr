@@ -48,7 +48,7 @@ import {
   handleListComplaints,
   handleUpdateComplaint,
 } from "./admin-complaints";
-import { handleCreateExportJob, handleGetExportJob, handleListExportJobs } from "./admin-exports";
+import { handleCreateExportJob, handleDownloadExportJob, handleGetExportJob, handleListExportJobs } from "./admin-exports";
 import { handleFinanceSummary } from "./admin-finance";
 import {
   handleCreateCampaign,
@@ -348,6 +348,8 @@ export default {
 
       if (path === "/v1/admin/exports" && method === "GET") return handleListExportJobs(request, env, url);
       if (path === "/v1/admin/exports" && method === "POST") return handleCreateExportJob(request, env);
+      const exportDownloadMatch = path.match(/^\/v1\/admin\/exports\/([^/]+)\/download$/);
+      if (exportDownloadMatch && method === "GET") return handleDownloadExportJob(request, env, exportDownloadMatch[1]);
       const exportIdMatch = path.match(/^\/v1\/admin\/exports\/([^/]+)$/);
       if (exportIdMatch && method === "GET") return handleGetExportJob(request, env, exportIdMatch[1]);
 

@@ -1,49 +1,44 @@
-# InfoUzel Ads — Gap closeout matrix (chapters 1–48)
+# InfoUzel Ads — Honest gap closeout matrix (chapters 1–48)
 
-**As of:** closeout PRs after Etapa 9 (`#7702`) + BACKUPS (`#7705`) + admin/client UI + public inject  
-**Prod flags (committed defaults):** `safeMode=true`, `publicDeliveryEnabled=false`, `adminApiEnabled=false`, `clientApiEnabled=false`  
-**Human release gate:** production ads ON remains an explicit operator action (Kap. 14). Technical complete ≠ ads ON.
+**As of:** after PR #7711 (Admin/Client UI) merged + Deploy IU Ads; follow-up #7714 in flight  
+**Prod flags (live health):** `safeMode=true`, `publicDeliveryEnabled=false`, `adminApiEnabled=false`, `clientApiEnabled=false`  
+**Human release gate:** production ads ON remains an explicit operator action (Kap. 14).
 
-Legend: **I**=implemented · **T**=tested · **D**=deployed · **P**=prod-verified · **R**=remaining
+Legend: **DONE** · **PARTIAL** · **BLOCKED** · **DEFERRED** · **GUARD**
 
-| Kap | Title (short) | I | T | D | P | Evidence | Remaining |
-|-----|---------------|---|---|---|---|----------|-----------|
-| 1 | Public web + label + no empty boxes | Y | Y | Y | partial | Worker delivery + `assets/iu-ads-public-v1.js` inject; empty→zero DOM | Ads ON = human gate |
-| 2 | Standalone admin | Y | Y | Y | Y | `GET /admin` SPA-lite | — |
-| 3 | Internal login | Y | Y | Y | Y | Admin auth APIs + UI form | API enable out-of-band |
-| 4 | Users/roles | Y | Y | Y | Y | Admin users/RBAC | — |
-| 5 | Admin main menu | Y | Y | Y | Y | `/v1/admin/nav` + SPA nav | — |
-| 6 | Dashboard | Y | Y | Y | Y | `/v1/admin/dashboard` + UI | — |
-| 7 | New campaign form | Y | Y | Y | Y | List + minimal create stub in `/admin` | Deep multi-step wizard not required for closeout |
-| 8 | Devices PC/mobile/tablet | Y | Y | Y | Y | Engine + inject device detect | — |
-| 9 | Dynamic engine | Y | Y | Y | Y | `delivery-engine` + route tests | Public ON = human gate |
-| 10 | Placement catalog | Y | Y | Y | Y | Admin API + SPA JSON panel | — |
-| 11 | Reservations/collisions | Y | Y | Y | Y | Reservation/collision tests + calendar UI | — |
-| 12 | Creatives | Y | Y | Y | Y | Creative APIs + SPA panel | — |
-| 13 | Campaign states | Y | Y | Y | Y | State machine tests | — |
-| 14 | Auto start/stop + privacy | Y | Y | Y | Y | Scheduler + kap.14 checklist; ads OFF | **Human release gate for ads ON** |
-| 15 | Clients | Y | Y | Y | Y | Clients API + SPA list/create | — |
-| 16 | Search | Y | Y | Y | Y | Search API + UI | — |
-| 17 | Filters | Y | Y | Y | Y | List filters module | — |
-| 18 | Calendar | Y | Y | Y | Y | Calendar API + UI | — |
-| 19 | Alerts | Y | Y | Y | Y | Alerts API/cron + UI ack | — |
-| 20–31 | Business docs/orders/etc. | Y | Y | Y | Y | Etapa 3–8 APIs | Depth notes in STATUS where SPA shows JSON panels |
-| 32 | InfoCentrum Reklama entry | Y | Y | Y | Y | Minimal safe link to Worker `/client` + reklama note | — |
-| 33–34 | Backup/security | Y | Y | Y | Y | Backup APIs + `BACKUPS` bound | Encryption key secret optional |
-| 35 | Future extensions | — | — | — | — | Spec | **`deferred_by_spec`** |
-| 36–37 | Client codes/auth | Y | Y | Y | Y | Client auth APIs | API enable out-of-band |
-| 38 | Client report portal | Y | Y | Y | Y | `/client` SPA-lite + exports | PDF snapshot deferred |
-| 39–45 | Ops/measurement/isolation | Y | Y | Y | Y | Etapa 6–9 | — |
-| 46 | Active guard #7617 | — | — | — | — | PR open | **`active_guard` — never touch** |
-| 47–48 | Acceptance/closeout | Y | Y | Y | Y | This matrix + STATUS | Human gate residual |
+| Kap | Title (short) | Status | Evidence | Remaining |
+|-----|---------------|--------|----------|-----------|
+| 1 | Public web + label + no empty boxes | PARTIAL | Inject + delivery fail-closed; prod `ads:[]` | Ads ON = Kap.14 human gate |
+| 2 | Standalone admin | DONE | Deployed `/admin` full SPA (#7711) | — |
+| 3 | Internal login | PARTIAL | UI + APIs; live login → `admin_api_disabled` | Enable Admin API + seed main_admin |
+| 4 | Users/roles | PARTIAL | RBAC + UI; needs API ON | Enable Admin API |
+| 5 | Admin main menu | DONE | `/v1/admin/nav` + SPA (gated) | — |
+| 6 | Dashboard | DONE | API + UI widgets | API ON for live data |
+| 7 | New campaign form | DONE | Full create form in `/admin` (#7711) | Live create needs API ON |
+| 8 | Devices PC/mobile/tablet | DONE | Engine + inject | — |
+| 9 | Dynamic engine | PARTIAL | Engine OFF in prod | Kap.14 |
+| 10–13 | Placements/reservations/creatives/states | DONE | APIs + UI + unit tests | Live ops need API ON |
+| 14 | Auto start/stop + privacy | PARTIAL | Scheduler + checklist; ads OFF | **Human release gate** |
+| 15–19 | Clients/search/filters/calendar/alerts | DONE | APIs + UI | API ON |
+| 20–31 | Business/docs/orders/finance | PARTIAL | APIs + UI; some SPA depth JSON | Live E2E after API ON |
+| 32 | InfoCentrum Reklama entry | DONE | Link to `/client` | — |
+| 33–34 | Backup/security | PARTIAL | APIs + `backupsBound=true`; unit drill | Prod backup+isolated restore proof after API ON; optional encryption key |
+| 35 | Future extensions | DEFERRED | Spec | `deferred_by_spec` |
+| 36–37 | Client codes/auth | PARTIAL | APIs + UI; live → `client_api_disabled` | Enable Client API |
+| 38 | Client report portal | PARTIAL | Tabbed `/client` (#7711); PDF deferred | API ON; PDF still deferred |
+| 39–45 | Ops/measurement/isolation | PARTIAL | Unit coverage; signed-access e2e in #7714 | Prod E2E after API ON |
+| 46 | Active guard #7617 | GUARD | OID `9be3e372025c0c148a7cdf30a40c6047a28597fe` | **Never touch** |
+| 47–48 | Acceptance/closeout | PARTIAL | This honest matrix | Close only when PARTIAL rows cleared except Kap.14/35/46 |
 
-## Residual (only)
+## Residual blockers (honest)
 
-1. **Human release gate** — flip SAFE_MODE / public delivery (and optionally admin/client API) out-of-band; never in committed defaults.
-2. **Kap. 35** — `deferred_by_spec`.
-3. **Kap. 46 / PR #7617** — `active_guard` OID must remain untouched.
-4. **Optional:** `ADS_BACKUP_ENCRYPTION_KEY` secret put (without it: `manifest_only`).
+1. **Kap. 14 human gate** — public ads ON (not done here).
+2. **Admin/Client API enable** — requires GitHub secrets + Deploy IU Ads workflow_dispatch (`enable_admin_api` / `enable_client_api`) + D1-seeded `main_admin` (`INTERNAL-API-BOOTSTRAP.md`).
+3. **Kap. 35** — deferred by spec.
+4. **Kap. 46 / PR #7617** — active guard; OID unchanged.
+5. **Prod E2E** (roles, creatives, docs, codes, backup drill, exports download) — blocked until (2).
+6. **Optional** `ADS_BACKUP_ENCRYPTION_KEY` — without it backups stay `manifest_only`.
 
-## Statement
+## Statement (honest)
 
-**Technically complete. Activation awaits human release gate.**
+**PR #7711 alone is NOT full-system completion.** Admin/Client UIs are deployed fail-closed; public delivery remains OFF. Remaining work is internal API enable + production proofs + honest closeout of PARTIAL chapters (except Kap.14/35/46).
