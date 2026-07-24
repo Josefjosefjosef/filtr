@@ -25,4 +25,4 @@ Produkční aktivní reklama až po splnění checklistu kap. 14 pokynů (auth, 
 ## Etapa 9 note
 
 v1 Worker closeout = schema `0010` + backup manifests/drill + security checklist evidence + alerts Cron.
-UI gaps (public inject, client portal UI, public-site admin UI) remain deferred.
+UI gaps (public inject, client portal UI, public-site admin UI) closed in closeout PRs; production ads ON remains human release gate.

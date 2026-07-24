@@ -1,0 +1,35 @@
+/* InfoUzel public ads — collapses to zero when empty (no CLS reservation). */
+.iu-ads-root {
+  display: none;
+  margin: 0;
+  padding: 0;
+  min-height: 0;
+  height: auto;
+}
+.iu-ads-root:not([aria-hidden="true"]) {
+  display: block;
+}
+.iu-ad {
+  display: block;
+  margin: 0.5rem 0;
+  padding: 0;
+  max-width: 100%;
+}
+.iu-ad__label {
+  display: inline-block;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #5c675f;
+  margin: 0 0 0.25rem;
+}
+.iu-ad__link {
+  display: inline-block;
+  max-width: 100%;
+  line-height: 0;
+}
+.iu-ad__img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: top;
+}
