@@ -137,7 +137,9 @@ describe("bootstrap workflow safety markers", () => {
     expect(wf).toContain("iu-ads-main-admin-activation");
     expect(wf).toContain("retention-days: 1");
     expect(wf).toContain("main_admin already exists");
+    expect(wf).toContain("Resolve real D1 database_id");
     expect(wf).toContain("ADS_PUBLIC_DELIVERY_ENABLED:false");
     expect(wf).toContain("BOOTSTRAP_STATUS=SUCCESS");
+    expect(wf).toContain("precheck_only");
   });
 });
