@@ -119,12 +119,12 @@ Každý test má být dohledatelný z `01-traceability-matrix.json`.
 
 | Gap | Status |
 |-----|--------|
-| E5 public-site frontend inject (`assets/` / `projects/index.html`) | **deferred** — Worker delivery exists, fail-closed |
-| E7 client portal HTML/JS UI | **deferred** — Worker API exists, fail-closed |
-| E8 full public-site admin UI | **deferred** — Worker `/admin` shell + APIs only |
+| E5 public-site frontend inject (`assets/` / `projects/index.html`) | **deferred** — next closeout PR |
+| E7 client portal HTML/JS UI | **done** — Worker `GET /client` SPA-lite |
+| E8 full public-site admin UI | **done** — Worker `GET /admin` SPA-lite (list + minimal create depth) |
 | PDF export / `client_report_snapshots` (38.13) | **deferred** |
 | Kap. 35 future extensions | `deferred_by_spec` |
-| Production ads ON (SAFE_MODE off + public delivery on) | **operator action later** — not Etapa 9 |
+| Production ads ON (SAFE_MODE off + public delivery on) | **human release gate** |
 | Full D1/R2 cold restore in CF | **operator runbook** (`09-backup-restore.md`); automated drill is inventory hash round-trip |
 | `iu-ads-backups` R2 binding | **committed** — Deploy ensures bucket; health `r2.backupsBound=true` |
 | `ADS_BACKUP_ENCRYPTION_KEY` secret | **operator** — without key, manifests stay `manifest_only` |

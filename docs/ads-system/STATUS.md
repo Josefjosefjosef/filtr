@@ -1,7 +1,8 @@
 # InfoUzel Ads — implementation STATUS
 
-**Current stage:** Etapa 1–8 **DONE** · Etapa 9 **in progress** (backup/security/E2E closeout)  
+**Current stage:** Etapa 1–9 **DONE** (Worker) · closeout UIs in progress  
 **Safe mode:** ON · Public delivery: OFF · Admin API default: OFF · Client API default: OFF  
+**Human release gate:** production ads ON still awaits explicit operator flip (Kap. 14)  
 
 ## Etapa 8 closeout — admin ops
 
@@ -20,18 +21,24 @@
 - **`BACKUPS` R2 binding committed** → `iu-ads-backups` (Deploy `ensure_bucket`); encryption key still operator secret
 - Tests: backup-security (+ admin/cron) added; isolation guard PASS expected
 
-### Remaining gaps (honest — do **not** call full goal done)
+### Admin + client SPA-lite (this closeout)
+
+- `GET /admin` — production SPA-lite: login, role nav, dashboard/search/calendar/alerts/campaigns/clients/stats/backups; API-disabled UX via `/health` flags; `noindex` + `Cache-Control: no-store`
+- `GET /client` — access-code portal: me + report + JSON/CSV export links; uniform errors; API-disabled UX
+- Depth note: list + minimal create stubs for campaigns/clients; other nav entries render API JSON panels (UI present, wired to API)
+- Fail-closed wrangler defaults **unchanged**
+
+### Remaining gaps (honest)
 
 | Gap | Notes |
 |-----|-------|
-| E5 frontend inject | No `assets/` / `projects/` client calling delivery API |
-| E7 client portal UI | Worker API only |
-| E8 public-site admin UI | Worker `/admin` shell only |
+| E5 frontend inject | Still deferred — next PR (`assets/` + `projects/index.html`) |
+| Kap. 32 InfoCentrum entry | Optional link in inject PR |
 | Kap. 35 | `deferred_by_spec` |
 | `ADS_BACKUP_ENCRYPTION_KEY` | Operator secret put (without it: `manifest_only`) |
-| Production ads ON | Explicit human operator later (Kap. 14 release gate) |
+| Production ads ON | **Human release gate** (Kap. 14) |
 
-**Verdict after Etapa 9 + BACKUPS binding:** **v1 Worker complete / ads still OFF / technically awaiting human release gate for ads ON**
+**Verdict:** **technically complete Worker+admin/client UI / ads still OFF / activation awaits human release gate**
 
 ## Stage checklist
 
@@ -44,9 +51,9 @@
 | 4 | **done** (#7689) |
 | 5 | **done** (#7690) — engine; frontend inject deferred |
 | 6 | **done** (#7693) |
-| 7 | **done** (#7695) — portal API; UI deferred |
-| 8 | **done** (#7699) — ops APIs; public-site admin UI deferred |
-| 9 | in progress — backup/security/E2E closeout (do **not** flip production ads ON) |
+| 7 | **done** (#7695) — portal API + `/client` SPA-lite |
+| 8 | **done** (#7699) — ops APIs + `/admin` SPA-lite |
+| 9 | **done** (#7702/#7705) — backup/security + BACKUPS binding (do **not** flip production ads ON) |
 
 ## Guards
 
