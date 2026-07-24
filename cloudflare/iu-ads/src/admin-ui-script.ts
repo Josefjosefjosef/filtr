@@ -30,6 +30,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
       evidence_code_taken:"Evidenční číslo už existuje.",
       invalid_body:"Neplatné tělo požadavku.",
       invalid_request:"Neplatný požadavek.",
+      invalid_or_expired_token:"Neplatný nebo expirovaný aktivační token.",
       invalid_current_password:"Současné heslo je nesprávné.",
       invalid_display_name:"Display name je povinné.",
       client_id_required:"client_id je povinné.",
@@ -69,8 +70,10 @@ export const ADMIN_UI_SCRIPT = String.raw`
     if(on){
       ha.innerHTML='<span class="muted">'+esc(state.me&&(state.me.email||state.me.user_id)||"")+
         '</span> <button class="btn secondary" type="button" id="btn-account">Účet</button>'+
-        ' <button class="btn secondary" type="button" id="btn-logout">Odhlásit</button>';
+        ' <button class="btn secondary" type="button" id="btn-logout">Odhlásit</button>'+
+        ' <button class="btn secondary" type="button" id="btn-logout-all">Odhlásit všechny relace</button>';
       el("btn-logout").onclick=logout;
+      el("btn-logout-all").onclick=logoutAll;
       el("btn-account").onclick=function(){ state.view="account"; renderNavActive(); render(); };
     } else ha.innerHTML="";
   }
@@ -120,6 +123,41 @@ export const ADMIN_UI_SCRIPT = String.raw`
     await api("/v1/admin/auth/logout", { method:"POST", body:"{}" });
     state.me=null; state.nav=[]; setLoggedIn(false);
   }
+  async function logoutAll(){
+    await api("/v1/admin/auth/sessions/revoke-all", { method:"POST", body:"{}" });
+    state.me=null; state.nav=[]; setLoggedIn(false);
+  }
+  (function setupActivation(){
+    try{
+      var params=new URLSearchParams(window.location.search||"");
+      var token=params.get("activate")||"";
+      var emailHint=params.get("email")||"";
+      if(!token) return;
+      var card=el("activate-card");
+      if(!card) return;
+      card.hidden=false;
+      el("activate-token").value=token;
+      if(emailHint && el("email")) el("email").value=emailHint;
+      if(emailHint && el("reset-email")) el("reset-email").value=emailHint;
+      el("activate-form").addEventListener("submit", async function(ev){
+        ev.preventDefault();
+        var err=el("activate-err"); var ok=el("activate-ok");
+        err.hidden=true; ok.hidden=true;
+        var p1=el("activate-pass").value;
+        var p2=el("activate-pass2").value;
+        if(p1!==p2){ err.textContent="Hesla se neshodují."; err.hidden=false; return; }
+        var r=await api("/v1/admin/auth/password-reset/confirm",{method:"POST",body:JSON.stringify({token:token,newPassword:p1})});
+        el("activate-pass").value=""; el("activate-pass2").value="";
+        if(!r.res.ok){ err.textContent=apiError(r.body); err.hidden=false; return; }
+        ok.textContent="Heslo nastaveno. Nyní se přihlaste e-mailem a novým heslem.";
+        ok.hidden=false;
+        try{
+          var clean=window.location.pathname;
+          window.history.replaceState({}, "", clean);
+        }catch(_){}
+      });
+    }catch(_){}
+  })();
   el("login-form").addEventListener("submit", async function(ev){
     ev.preventDefault();
     var err=el("login-err"); err.hidden=true;

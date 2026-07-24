@@ -20,8 +20,10 @@ describe("admin + client SPA shells", () => {
     expect(res.headers.get("X-Robots-Tag") || "").toContain("noindex");
     const html = await res.text();
     expect(html).toContain('id="login-form"');
+    expect(html).toContain('id="activate-card"');
     expect(html).toContain('id="email"');
     expect(html).toContain("/v1/admin/auth/login");
+    expect(html).toContain("/v1/admin/auth/password-reset/confirm");
     expect(html).toContain('name="robots" content="noindex,nofollow"');
   });
 
