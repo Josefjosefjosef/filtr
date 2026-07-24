@@ -35,6 +35,7 @@ export const ADMIN_NAV_CATALOG: readonly NavEntry[] = [
   { id: "stats", label_cs: "Statistiky", href: "/v1/admin/stats/summary", permission: "stats.read" },
   { id: "finance", label_cs: "Finance", href: "/v1/admin/finance/summary", permission: "finance.read" },
   { id: "exports", label_cs: "Exporty", href: "/v1/admin/exports", permission: "exports.read" },
+  { id: "backups", label_cs: "Zálohy", href: "/v1/admin/backups", permission: "backups.read" },
   { id: "audit", label_cs: "Audit", href: "/v1/admin/audit", permission: "audit.read" },
   { id: "users", label_cs: "Uživatelé", href: "/v1/admin/users", permission: "users.read" },
 ];

@@ -93,7 +93,15 @@ import {
   handleGetAlert,
   handleListAlerts,
   handleResolveAlert,
+  runAlertsCron,
 } from "./admin-alerts";
+import {
+  handleBackupDrill,
+  handleCreateBackup,
+  handleGetBackup,
+  handleListBackups,
+  handlePruneBackups,
+} from "./admin-backup";
 import { handleGetAdminNav } from "./admin-nav";
 import { handleClientLogin, handleClientLogout, handleClientMe } from "./client-auth";
 import { handleClientReport, handleClientReportExport } from "./client-report";
@@ -126,17 +134,19 @@ const ADMIN_SHELL_HTML = `<!DOCTYPE html>
 <body>
 <main>
   <h1>InfoUzel Ads — Admin ops</h1>
-  <p class="note">Minimal Worker-served shell (Etapa 8). Full public-site admin UI is deferred.
-  Production stays fail-closed: <code>ADS_ADMIN_API_ENABLED=false</code> until flipped out-of-band.</p>
+  <p class="note">Minimal Worker-served shell (Etapa 8–9). Full public-site admin UI is deferred.
+  Production stays fail-closed: <code>ADS_ADMIN_API_ENABLED=false</code> until flipped out-of-band.
+  Ads remain OFF (<code>ADS_SAFE_MODE=true</code>, public delivery false).</p>
   <p>Role-scoped Admin API surfaces (session cookie required when API enabled):</p>
   <ul>
     <li><code>GET /v1/admin/nav</code> — menu contract (kap. 5)</li>
     <li><code>GET /v1/admin/dashboard</code> — aggregate widgets (kap. 6)</li>
     <li><code>GET /v1/admin/search?q=</code> — cross-entity search, no secrets (kap. 16)</li>
     <li><code>GET /v1/admin/calendar?from=&amp;to=</code> — timeline + collisions (kap. 18)</li>
-    <li><code>GET/POST /v1/admin/alerts*</code> — list/ack/resolve/generate (kap. 19)</li>
+    <li><code>GET/POST /v1/admin/alerts*</code> — list/ack/resolve/generate (kap. 19; Cron every 6h)</li>
+    <li><code>GET/POST /v1/admin/backups*</code> — manifests + restore drill (kap. 34; main_admin)</li>
   </ul>
-  <p>Health: <a href="/health"><code>/health</code></a> · schemaVersion <code>0009</code></p>
+  <p>Health: <a href="/health"><code>/health</code></a> · schemaVersion <code>0010</code></p>
 </main>
 </body>
 </html>`;
@@ -186,7 +196,7 @@ export default {
           service: "infouzel-ads",
           mode: "ads-business",
           storageMode: dbOk ? "d1" : env.DB ? "unavailable" : "unbound",
-          schemaVersion: "0009",
+          schemaVersion: "0010",
           safeMode: flags.safeMode,
           publicDeliveryEnabled: flags.publicDeliveryEnabled,
           adminApiEnabled: flags.adminApiEnabled,
@@ -194,6 +204,7 @@ export default {
           r2: {
             creativesBound,
             documentsBound,
+            backupsBound: !!env.BACKUPS,
             ready: r2Ok,
             privateDocumentsPublicUrl: false,
           },
@@ -446,6 +457,15 @@ export default {
       const alertIdMatch = path.match(/^\/v1\/admin\/alerts\/([^/]+)$/);
       if (alertIdMatch && method === "GET") return handleGetAlert(request, env, alertIdMatch[1]);
 
+      // Etapa 9 — backup manifests + restore drill (kap. 34); main_admin via backups.*.
+      if (path === "/v1/admin/backups" && method === "GET") return handleListBackups(request, env, url);
+      if (path === "/v1/admin/backups" && method === "POST") return handleCreateBackup(request, env);
+      if (path === "/v1/admin/backups/prune" && method === "POST") return handlePruneBackups(request, env);
+      const backupDrillMatch = path.match(/^\/v1\/admin\/backups\/([^/]+)\/drill$/);
+      if (backupDrillMatch && method === "POST") return handleBackupDrill(request, env, backupDrillMatch[1]);
+      const backupIdMatch = path.match(/^\/v1\/admin\/backups\/([^/]+)$/);
+      if (backupIdMatch && method === "GET") return handleGetBackup(request, env, backupIdMatch[1]);
+
       return json({ error: "not_found" }, 404);
     }
 
@@ -470,5 +490,14 @@ export default {
     }
 
     return json({ error: "not_found" }, 404);
+  },
+
+  async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+    ctx.waitUntil(
+      runAlertsCron(env).then((result) => {
+        // Structured log only — never secrets.
+        console.log("iu-ads alerts cron", JSON.stringify(result));
+      })
+    );
   },
 };

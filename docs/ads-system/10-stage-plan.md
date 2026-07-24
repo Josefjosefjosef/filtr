@@ -13,10 +13,16 @@ Každá etapa: větev z čistého `main` → PR → GREEN CI → merge → deplo
 | 6 | Měření/reporty | Napojení Analytics, interní stats |
 | 7 | Klientské kódy + portál | Full report 38.x |
 | 8 | Admin UI dokončení | Menu, dashboard, filtry, kalendář, alerts |
-| 9 | Backup/security/E2E closeout | Restore drill, pen test, matrix 100% |
+| 9 | Backup/security/E2E closeout | Restore drill, kap.14 checklist (ads stay OFF), matrix Worker-complete |
 
 Kapitola 35 (budoucí rozšíření) není součástí povinného v1 scope — explicitně `deferred_by_spec`.
 
 ## Safe mode
 
-Produkční aktivní reklama až po splnění checklistu kap. 14 pokynů (auth, audit, approvals, URL, privacy, auto-end, emergency pause).
+Produkční aktivní reklama až po splnění checklistu kap. 14 pokynů (auth, audit, approvals, URL, privacy, auto-end, emergency pause)
+**a** explicitním human operator flip flags — Etapa 9 dodává checklist + guards, **ne** produkční ads ON.
+
+## Etapa 9 note
+
+v1 Worker closeout = schema `0010` + backup manifests/drill + security checklist evidence + alerts Cron.
+UI gaps (public inject, client portal UI, public-site admin UI) remain deferred.

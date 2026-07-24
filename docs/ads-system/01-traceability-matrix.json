@@ -49,7 +49,7 @@
       "perm": "session+role",
       "test": "auth-required,noindex",
       "doc": "02-architecture.md#admin",
-      "status": "planned"
+      "status": "in_progress"
     },
     {
       "id": "3",
@@ -61,7 +61,7 @@
       "perm": "unauthenticated-login-only",
       "test": "password-hash,brute-force,session",
       "doc": "07-roles-permissions.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "4",
@@ -73,7 +73,7 @@
       "perm": "main_admin",
       "test": "rbac-server",
       "doc": "07-roles-permissions.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "5",
@@ -121,7 +121,7 @@
       "perm": "role",
       "test": "device-category-only",
       "doc": "04-data-isolation.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "9",
@@ -181,7 +181,7 @@
       "perm": "role+approval",
       "test": "state-machine",
       "doc": "05-database-model.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "14",
@@ -193,7 +193,7 @@
       "perm": "system",
       "test": "auto-start-stop-limits",
       "doc": "02-architecture.md#engine",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "15",
@@ -205,7 +205,7 @@
       "perm": "sales|main_admin",
       "test": "code-once-hash",
       "doc": "05-database-model.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "16",
@@ -265,7 +265,7 @@
       "perm": "role",
       "test": "analytics-join,test-exclude",
       "doc": "02-architecture.md#analytics-link",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "21",
@@ -277,7 +277,7 @@
       "perm": "ads_manager+",
       "test": "preview-not-publish",
       "doc": "06-api-contracts.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "22",
@@ -289,7 +289,7 @@
       "perm": "role",
       "test": "visibility-flags",
       "doc": "08-r2-plan.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "23",
@@ -301,7 +301,7 @@
       "perm": "main_admin|read",
       "test": "no-secrets-in-audit",
       "doc": "03-security-threat-model.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "24",
@@ -313,7 +313,7 @@
       "perm": "role",
       "test": "export-scope",
       "doc": "06-api-contracts.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "25",
@@ -325,7 +325,7 @@
       "perm": "sales|main_admin",
       "test": "no-margin-to-client",
       "doc": "05-database-model.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "26",
@@ -337,7 +337,7 @@
       "perm": "sales|main_admin",
       "test": "inquiry-convert",
       "doc": "05-database-model.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "27",
@@ -349,7 +349,7 @@
       "perm": "sales|main_admin",
       "test": "order-fields",
       "doc": "05-database-model.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "28",
@@ -361,7 +361,7 @@
       "perm": "sales|main_admin",
       "test": "contract-not-legal-final",
       "doc": "05-database-model.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "29",
@@ -373,7 +373,7 @@
       "perm": "sales|main_admin",
       "test": "invoice-states",
       "doc": "05-database-model.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "30",
@@ -385,7 +385,7 @@
       "perm": "role",
       "test": "rights-required-active",
       "doc": "05-database-model.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "31",
@@ -397,7 +397,7 @@
       "perm": "role",
       "test": "complaint-lifecycle",
       "doc": "05-database-model.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "32",
@@ -421,7 +421,7 @@
       "perm": "system",
       "test": "privacy-guard,no-profiling",
       "doc": "03-security-threat-model.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "34",
@@ -433,7 +433,7 @@
       "perm": "main_admin/system",
       "test": "restore-drill",
       "doc": "09-backup-restore.md",
-      "status": "planned"
+      "status": "done"
     },
     {
       "id": "35",
@@ -493,7 +493,7 @@
       "perm": "server",
       "test": "visibility-matrix",
       "doc": "04-data-isolation.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "40",
@@ -505,7 +505,7 @@
       "perm": "token-separation",
       "test": "cross-token-reject",
       "doc": "06-api-contracts.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "41",
@@ -517,7 +517,7 @@
       "perm": "n/a",
       "test": "migration-idempotent",
       "doc": "05-database-model.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "42",
@@ -529,7 +529,7 @@
       "perm": "secrets",
       "test": "health,deploy",
       "doc": "02-architecture.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "43",
@@ -541,7 +541,7 @@
       "perm": "role",
       "test": "url-validation",
       "doc": "03-security-threat-model.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "44",
@@ -553,7 +553,7 @@
       "perm": "consent",
       "test": "privacy-guard",
       "doc": "04-data-isolation.md",
-      "status": "planned"
+      "status": "in_progress"
     },
     {
       "id": "45",
@@ -589,7 +589,7 @@
       "perm": "n/a",
       "test": "docs-match-reality",
       "doc": "README.md",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "48",

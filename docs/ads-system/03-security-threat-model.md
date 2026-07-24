@@ -48,3 +48,35 @@ Nikdy: password, plaintext client code, full token, keys, sensitive headers.
 - Client code / client session → Admin API = 401/403
 - Admin session → Client Report jako client = 401/403
 - Public Delivery nesmí vracet ceny, kontakty, dokumenty, kódy
+
+Evidence: `test/client-portal.test.ts` (E7-T7).
+
+## Kap. 14 — go-live / security checklist (docs + automated guards)
+
+**Status:** checklist **PASS** for Worker/automated evidence. **Production ads remain OFF** until an explicit human operator flips flags out-of-band (not part of Etapa 9 merge).
+
+| # | Control | Evidence | Result |
+|---|---------|----------|--------|
+| 1 | Admin auth: PBKDF2+pepper, session HMAC, lockout | `test/auth-crypto.test.ts`, `test/session.test.ts`, `test/bruteforce.test.ts` | PASS |
+| 2 | RBAC server-side | `test/rbac.test.ts` | PASS |
+| 3 | Audit redaction (no password/token/code) | `test/audit.test.ts`, client portal audit | PASS |
+| 4 | URL safety (`javascript:`/`data:` reject) | `test/url-safety.test.ts` | PASS |
+| 5 | Creative/document MIME / no JS HTML | `test/creatives.test.ts`, `test/documents.test.ts`, `test/r2-security.test.ts` | PASS |
+| 6 | Cross-token reject (admin ≠ client ≠ analytics) | `test/client-portal.test.ts` E7-T7 | PASS |
+| 7 | Privacy flags contextual-only | `0001` seed + `test/backup-security.test.ts` + `/health` fields | PASS |
+| 8 | Emergency pause fail-closed | `test/delivery-engine.test.ts`, `test/public-delivery-route.test.ts` | PASS |
+| 9 | Rights confirmation before `active` | `test/campaigns.test.ts`, `test/scheduler.test.ts` | PASS |
+| 10 | Auto start/end scheduler | `test/scheduler.test.ts` | PASS |
+| 11 | Test campaign exclusion from stats | `test/admin-stats.test.ts` E6-T6 | PASS |
+| 12 | Public delivery allowlist / no forbidden keys | `test/isolation.test.ts`, `test/delivery-engine.test.ts` | PASS |
+| 13 | Backup redaction + restore drill | `test/backup-security.test.ts`, `test/backup-security-admin.test.ts` | PASS |
+| 14 | Committed defaults fail-closed (safeMode ON, delivery/admin/client OFF) | `wrangler.toml` + feature-flag tests | PASS |
+
+### Explicitly NOT done by this checklist
+
+- Flipping `ADS_SAFE_MODE=false` or `ADS_PUBLIC_DELIVERY_ENABLED=true` in production
+- Enabling Admin/Client API in committed defaults
+- Public-site frontend inject (E5 gap)
+- Client portal HTML UI (E7 gap)
+- Full InfoUzel public-site admin UI (E8 gap)
+- Declaring “production ads ON”

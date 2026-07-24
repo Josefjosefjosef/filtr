@@ -268,7 +268,7 @@ Gate: stejné jako Etapa 2–7 (`ADS_ADMIN_API_ENABLED` + session secrets). Sche
 | `/v1/admin/alerts/:id` | GET | `alerts.read` | Single alert |
 | `/v1/admin/alerts/:id/ack` | POST | `alerts.write` | `new` → `read`; `409 already_resolved` |
 | `/v1/admin/alerts/:id/resolve` | POST | `alerts.write` | → `resolved` + `resolved_at`; `409 already_resolved` |
-| `/v1/admin/alerts/generate` | POST | `alerts.write` | Best-effort seed: `campaign_ending_soon`, `rights_missing`; response notes `cron: deferred_to_etapa_9` |
+| `/v1/admin/alerts/generate` | POST | `alerts.write` | Best-effort seed: `campaign_ending_soon`, `rights_missing`; also wired to Worker Cron `0 */6 * * *` (`cron: wired_etapa_9`) |
 
 ### List filters (kap. 17) — consistent query params
 
@@ -284,8 +284,22 @@ Shared helpers: `admin-list-filters.ts` (`clampLimit`/`clampOffset`/`likeContain
 | `/v1/admin/creatives` | `client_id`, `campaign_id`, `review_status`, `limit` |
 | `/v1/admin/alerts` | `status`, `alert_type`, `limit`, `offset` |
 
-**Deferred:** full public-site admin UI (same pattern as E5 inject / E7 portal UI). Cron for alert
-generation → Etapa 9.
+## Etapa 9 — Backup / security closeout (kap. 14, 34)
+
+Gate: Admin API + session + RBAC `backups.read`/`backups.write` (**main_admin only**). Schema `0010`
+(indexes + retention / emergency-pause / alert-cron tunables; `backup_manifests` already in `0001`).
+
+| Route | Method | Perm | Notes |
+|-------|--------|------|-------|
+| `/v1/admin/backups` | GET | `backups.read` | List manifests |
+| `/v1/admin/backups` | POST | `backups.write` | Redacted inventory + SHA-256 manifest; optional encrypted R2 if `BACKUPS`+key bound; else `manifest_only` |
+| `/v1/admin/backups/:id` | GET | `backups.read` | Metadata only |
+| `/v1/admin/backups/:id/drill` | POST | `backups.write` | Hash round-trip restore drill; `409` on fail |
+| `/v1/admin/backups/prune` | POST | `backups.write` | Delete D1 manifests past `BACKUP_RETENTION_DAYS` |
+
+**Wrangler defaults unchanged** (safeMode ON, public/admin/client OFF). Cron triggers alert generate only.
+
+**Deferred UI:** public-site admin UI; E5 inject; E7 portal UI. Kap. 35 remains `deferred_by_spec`. Production ads ON = human operator later.
 
 ## Open questions resolved
 

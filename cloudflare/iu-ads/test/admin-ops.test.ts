@@ -601,7 +601,7 @@ describe("admin-ops — alert lifecycle (kap. 19)", () => {
     expect(res.status).toBe(200);
     const body = (await res.json()) as { created: number; cron: string };
     expect(body.created).toBeGreaterThanOrEqual(1);
-    expect(body.cron).toBe("deferred_to_etapa_9");
+    expect(body.cron).toBe("wired_etapa_9");
   });
 });
 

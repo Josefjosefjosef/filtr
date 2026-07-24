@@ -32,3 +32,8 @@ bucket_name = "iu-ads-creatives"
 [[r2_buckets]]
 binding = "DOCUMENTS"
 bucket_name = "iu-ads-documents"
+
+# Alert generation Cron (Etapa 9). Does not flip public delivery / safe mode.
+# Optional BACKUPS R2 binding (`iu-ads-backups`) is operator-added — see docs/ads-system/09-backup-restore.md.
+[triggers]
+crons = ["0 */6 * * *"]

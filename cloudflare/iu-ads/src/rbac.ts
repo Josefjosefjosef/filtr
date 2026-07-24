@@ -49,6 +49,9 @@ export const PERMISSIONS = [
   // Etapa 8 (kap. 19): admin alerts lifecycle.
   "alerts.read",
   "alerts.write",
+  // Etapa 9 (kap. 34): backup manifests — main_admin only.
+  "backups.read",
+  "backups.write",
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
 
