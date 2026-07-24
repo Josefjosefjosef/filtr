@@ -7,7 +7,7 @@ Klienti, kampaně, dokumenty meta, statistiky (export z Analytics agregátů odd
 ## Požadavky
 
 - Šifrování at-rest (záloha) — AES-256-GCM když je nastaven `ADS_BACKUP_ENCRYPTION_KEY` + R2 `BACKUPS`
-- Oddělení od produkce (`iu-ads-backups`) — bucket se **nevazuje** v committed `wrangler.toml` (aby deploy nespadl); operator přidá binding out-of-band
+- Oddělení od produkce (`iu-ads-backups`) — binding `BACKUPS` je committed v `wrangler.toml`; Deploy IU Ads `ensure_bucket` vytváří bucket; šifrování stále vyžaduje secret `ADS_BACKUP_ENCRYPTION_KEY`
 - Verzování + retenční politika — `BACKUP_RETENTION_DAYS` (default `30`) + `POST /v1/admin/backups/prune`
 - Pravidelný restore drill (Etapa 9) — `POST /v1/admin/backups/:id/drill` + unit round-trip
 - Žádná plaintext hesla ani klientské kódy — `backup.ts` redakce + `assertNoForbiddenBackupKeys`
@@ -39,7 +39,7 @@ Klienti, kampaně, dokumenty meta, statistiky (export z Analytics agregátů odd
 1. **D1 export (prod):**  
    `npx wrangler d1 export iu-ads --remote --output=%TEMP%\iu-ads-d1-export.sql`
 2. **R2 creatives/documents:** Cloudflare dashboard → R2 → bucket → copy objects to cold storage / second account; never make documents public.
-3. **Optional encrypted inventory:** create R2 bucket `iu-ads-backups`, add `[[r2_buckets]] binding = "BACKUPS"` via deploy override, `npx wrangler secret put ADS_BACKUP_ENCRYPTION_KEY`, then `POST /v1/admin/backups` with Admin API enabled.
+3. **Encrypted inventory:** Deploy ensures `iu-ads-backups` + `BACKUPS` binding; put `ADS_BACKUP_ENCRYPTION_KEY` via `npx wrangler secret put`, then `POST /v1/admin/backups` with Admin API enabled. Without the key, manifests stay `manifest_only`.
 4. **Restore drill (staging):** import SQL into a **non-prod** D1 database; verify `SCHEMA_VERSION`, spot-check campaign/client counts; run Worker against staging; confirm `/health` + admin login; **do not** flip `ADS_SAFE_MODE` / public delivery on prod as part of drill.
 5. **Retention:** `POST /v1/admin/backups/prune` (or cron/operator schedule); purge aged R2 objects manually if using `iu-ads-backups`.
 

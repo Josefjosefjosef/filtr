@@ -4,7 +4,7 @@ export type Env = {
   DB?: D1Database;
   CREATIVES?: R2Bucket;
   DOCUMENTS?: R2Bucket;
-  /** Optional Etapa 9 encrypted backup bucket (`iu-ads-backups`). Unbound → manifest_only. */
+  /** Encrypted backup bucket (`iu-ads-backups`). Bound in wrangler; without encryption key → manifest_only. */
   BACKUPS?: R2Bucket;
   ADS_SAFE_MODE?: string;
   ADS_PUBLIC_DELIVERY_ENABLED?: string;

@@ -159,6 +159,7 @@ jobs:
           }
           ensure_bucket "iu-ads-creatives"
           ensure_bucket "iu-ads-documents"
+          ensure_bucket "iu-ads-backups"
 
       - name: Deploy Worker
         run: npx wrangler deploy
