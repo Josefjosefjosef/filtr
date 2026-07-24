@@ -16,7 +16,8 @@
 - Alerts Cron: Worker `scheduled` + wrangler `crons = ["0 */6 * * *"]` → `runAlertsCron`
 - Kap. 14 checklist documented with PASS evidence pointers (`03-security-threat-model.md`) — **ads stay OFF**
 - Restore drill: automated inventory hash round-trip; full CF D1/R2 restore = operator runbook (`09-backup-restore.md`)
-- **Wrangler defaults unchanged** (SAFE_MODE / public / admin / client fail-closed); no committed `BACKUPS` R2 binding
+- **Wrangler defaults unchanged** (SAFE_MODE / public / admin / client fail-closed)
+- **`BACKUPS` R2 binding committed** → `iu-ads-backups` (Deploy `ensure_bucket`); encryption key still operator secret
 - Tests: backup-security (+ admin/cron) added; isolation guard PASS expected
 
 ### Remaining gaps (honest — do **not** call full goal done)
@@ -27,9 +28,10 @@
 | E7 client portal UI | Worker API only |
 | E8 public-site admin UI | Worker `/admin` shell only |
 | Kap. 35 | `deferred_by_spec` |
-| Production ads ON | Explicit human operator later |
+| `ADS_BACKUP_ENCRYPTION_KEY` | Operator secret put (without it: `manifest_only`) |
+| Production ads ON | Explicit human operator later (Kap. 14 release gate) |
 
-**Verdict after Etapa 9 merge:** **v1 Worker complete / ads still OFF**
+**Verdict after Etapa 9 + BACKUPS binding:** **v1 Worker complete / ads still OFF / technically awaiting human release gate for ads ON**
 
 ## Stage checklist
 

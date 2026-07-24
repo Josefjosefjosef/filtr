@@ -89,14 +89,12 @@ To activate the client surface in a given environment:
 
 ## Etapa 9 — backup encryption (optional, per environment)
 
-1. Create R2 bucket `iu-ads-backups` in the Cloudflare dashboard (separate from creatives/documents).
-2. Add a deploy-time / environment-specific `[[r2_buckets]]` binding `BACKUPS` → `iu-ads-backups`
-   (do **not** commit this into the fail-closed default `wrangler.toml` unless the bucket is guaranteed).
-3. `npx wrangler secret put ADS_BACKUP_ENCRYPTION_KEY` — high-entropy random value; never reuse
-   session/password/code peppers.
-4. With Admin API enabled for an operator session, `POST /v1/admin/backups` stores an encrypted
-   inventory object; without binding/key the API still writes a D1 `manifest_only` row + content hash.
-5. Full D1 SQL export/restore remains the operator runbook in `docs/ads-system/09-backup-restore.md`.
+1. R2 bucket `iu-ads-backups` is created by Deploy IU Ads (`ensure_bucket`) and bound as `BACKUPS` in committed `wrangler.toml`.
+2. `npx wrangler secret put ADS_BACKUP_ENCRYPTION_KEY` — high-entropy random value; never reuse
+   session/password/code peppers. Without this secret, backup manifests stay `manifest_only`.
+3. With Admin API enabled for an operator session, `POST /v1/admin/backups` stores an encrypted
+   inventory object; without the encryption key the API still writes a D1 `manifest_only` row + content hash.
+4. Full D1 SQL export/restore remains the operator runbook in `docs/ads-system/09-backup-restore.md`.
 
 ## Rules
 

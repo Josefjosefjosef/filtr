@@ -6,7 +6,7 @@
 |--------|---------|-------------|------|
 | `iu-ads-creatives` | `CREATIVES` | Servírování jen přes Worker / později CDN schválených objektů | Bannery, náhledy |
 | `iu-ads-documents` | `DOCUMENTS` | Pouze signed Worker URL (`/v1/objects/get`) | Smlouvy, faktury, exporty |
-| `iu-ads-backups` | `BACKUPS` (optional, operator) | Oddělené oprávnění; **not** in committed wrangler | Šifrované inventory objekty (Etapa 9) |
+| `iu-ads-backups` | `BACKUPS` | Oddělené oprávnění; committed in `wrangler.toml`; deploy ensures bucket | Šifrované inventory objekty (Etapa 9+) |
 
 ## Pravidla
 

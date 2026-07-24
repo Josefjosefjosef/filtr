@@ -126,7 +126,8 @@ Každý test má být dohledatelný z `01-traceability-matrix.json`.
 | Kap. 35 future extensions | `deferred_by_spec` |
 | Production ads ON (SAFE_MODE off + public delivery on) | **operator action later** — not Etapa 9 |
 | Full D1/R2 cold restore in CF | **operator runbook** (`09-backup-restore.md`); automated drill is inventory hash round-trip |
-| Optional `iu-ads-backups` R2 binding | **operator** — not in committed wrangler defaults |
+| `iu-ads-backups` R2 binding | **committed** — Deploy ensures bucket; health `r2.backupsBound=true` |
+| `ADS_BACKUP_ENCRYPTION_KEY` secret | **operator** — without key, manifests stay `manifest_only` |
 
 ## Pozdější etapy (katalog)
 
