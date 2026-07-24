@@ -733,21 +733,25 @@ export const ADMIN_UI_SCRIPT = String.raw`
       } else if(v==="exports"){
         var ex=await api("/v1/admin/exports",{method:"GET",headers:{}});
         var jobs=(ex.res.ok&&ex.body&&ex.body.exports)||[];
-        panel('<div class="card"><h2>Exporty</h2>'+listTable(jobs,[["export_id","ID"],["status","Stav"],["scope_type","Scope"],["scope_id","Scope ID"],["created_at","Vytvořeno"]])+
-          '</div><div class="card"><h3>Nový export job</h3>'+
-          sel("ex-scope","scope_type",["client","campaign","invoices","audit"],"client")+
-          inp("ex-sid","scope_id (volitelné)")+
+        panel('<div class="card"><h2>Exporty</h2>'+listTable(jobs,[["export_id","ID"],["status","Stav"],["scope_type","Scope"],["scope_id","Scope ID"],["created_at","Vytvořeno"]],function(j){
+          return j.status==="completed"?'<a class="linkish" href="/v1/admin/exports/'+esc(j.export_id)+'/download">Stáhnout</a>':"";
+        })+
+          '</div><div class="card"><h3>Nový export (materializovaný JSON/CSV)</h3>'+
+          sel("ex-scope","scope_type",["client","campaign","invoices","audit","order"],"client")+
+          sel("ex-fmt","format",["json","csv"],"json")+
+          inp("ex-sid","scope_id (povinné pro campaign/order)")+
           inp("ex-from","period_from ISO (volitelné)")+
           inp("ex-to","period_to ISO (volitelné)")+
-          '<div class="row"><button class="btn" type="button" id="ex-go">Zařadit</button></div>'+
-          '<p id="ex-err" class="err" hidden></p><p class="muted">Heavy PDF/CSV generation je deferred — job vzniká jako queued.</p></div>');
+          '<div class="row"><button class="btn" type="button" id="ex-go">Vytvořit a materializovat</button></div>'+
+          '<p id="ex-err" class="err" hidden></p><p class="muted">Testovací kampaně (test_/IU_TEST_/EV-TEST) jsou vyloučeny z obchodních součtů. CSV escaping proti injection.</p></div>');
         el("ex-go").onclick=async function(){
-          var body={ scope_type:val("ex-scope") };
+          var body={ scope_type:val("ex-scope"), format:val("ex-fmt") };
           if(val("ex-sid").trim()) body.scope_id=val("ex-sid").trim();
           if(val("ex-from").trim()) body.period_from=val("ex-from").trim();
           if(val("ex-to").trim()) body.period_to=val("ex-to").trim();
           var r=await api("/v1/admin/exports",{method:"POST",body:JSON.stringify(body)});
           if(!r.res.ok){ el("ex-err").textContent=apiError(r.body); el("ex-err").hidden=false; return; }
+          state.flash="Export hotov: "+((r.body&&r.body.export&&r.body.export.export_id)||"");
           render();
         };
       } else if(v==="audit"){
