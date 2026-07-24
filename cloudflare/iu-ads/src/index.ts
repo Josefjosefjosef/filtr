@@ -103,8 +103,10 @@ import {
   handlePruneBackups,
 } from "./admin-backup";
 import { handleGetAdminNav } from "./admin-nav";
+import { ADMIN_SHELL_HTML } from "./admin-ui";
 import { handleClientLogin, handleClientLogout, handleClientMe } from "./client-auth";
 import { handleClientReport, handleClientReportExport } from "./client-report";
+import { CLIENT_SHELL_HTML } from "./client-ui";
 import { isDeviceCategory, selectPublicAds } from "./delivery-engine";
 import { resolveFeatureFlags, isPublicDeliveryActive } from "./feature-flags";
 import { emptyPublicDelivery, sanitizePublicAds, assertNoForbiddenPublicKeys } from "./isolation";
@@ -112,45 +114,12 @@ import { parseAccessQuery, verifyObjectAccess } from "./signed-access";
 import type { Env, PublicAd, PublicDeliveryResponse } from "./types";
 
 const NO_STORE = { "Cache-Control": "no-store", "Content-Type": "application/json; charset=utf-8" };
-const ADMIN_SHELL_HTML = `<!DOCTYPE html>
-<html lang="cs">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>InfoUzel Ads — Admin ops shell</title>
-  <style>
-    :root { color-scheme: light; --bg:#f6f3ee; --ink:#1c2420; --accent:#0f6b5c; --line:#d5cfc4; }
-    body { margin:0; font:15px/1.45 "Segoe UI", system-ui, sans-serif; background:linear-gradient(160deg,#efe8dc,#f7f5f1 45%,#e7f0ec); color:var(--ink); }
-    main { max-width:720px; margin:0 auto; padding:2.5rem 1.25rem 4rem; }
-    h1 { font-size:1.6rem; letter-spacing:-0.02em; margin:0 0 .35rem; }
-    p { margin:.35rem 0 1rem; max-width:42rem; }
-    code, pre { font-family: ui-monospace, Consolas, monospace; }
-    ul { padding-left:1.1rem; }
-    li { margin:.35rem 0; }
-    .note { border-left:3px solid var(--accent); padding:.5rem .85rem; background:rgba(255,255,255,.55); }
-    a { color:var(--accent); }
-  </style>
-</head>
-<body>
-<main>
-  <h1>InfoUzel Ads — Admin ops</h1>
-  <p class="note">Minimal Worker-served shell (Etapa 8–9). Full public-site admin UI is deferred.
-  Production stays fail-closed: <code>ADS_ADMIN_API_ENABLED=false</code> until flipped out-of-band.
-  Ads remain OFF (<code>ADS_SAFE_MODE=true</code>, public delivery false).</p>
-  <p>Role-scoped Admin API surfaces (session cookie required when API enabled):</p>
-  <ul>
-    <li><code>GET /v1/admin/nav</code> — menu contract (kap. 5)</li>
-    <li><code>GET /v1/admin/dashboard</code> — aggregate widgets (kap. 6)</li>
-    <li><code>GET /v1/admin/search?q=</code> — cross-entity search, no secrets (kap. 16)</li>
-    <li><code>GET /v1/admin/calendar?from=&amp;to=</code> — timeline + collisions (kap. 18)</li>
-    <li><code>GET/POST /v1/admin/alerts*</code> — list/ack/resolve/generate (kap. 19; Cron every 6h)</li>
-    <li><code>GET/POST /v1/admin/backups*</code> — manifests + restore drill (kap. 34; main_admin)</li>
-  </ul>
-  <p>Health: <a href="/health"><code>/health</code></a> · schemaVersion <code>0010</code></p>
-</main>
-</body>
-</html>`;
-
+const HTML_NO_STORE = {
+  "Cache-Control": "no-store",
+  "Content-Type": "text/html; charset=utf-8",
+  "X-Content-Type-Options": "nosniff",
+  "X-Robots-Tag": "noindex, nofollow",
+};
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), { status, headers: NO_STORE });
 }
@@ -220,18 +189,16 @@ export default {
       );
     }
 
-    // Minimal Worker-served admin shell (Etapa 8). Not gated by ADS_ADMIN_API_ENABLED —
-    // it only documents endpoints; live API calls still require the admin gate + session.
+    // Admin SPA-lite shell. Always GET-able; live API calls still require ADS_ADMIN_API_ENABLED + session.
     if (path === "/admin" || path === "/admin/index.html") {
       if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
-      return new Response(ADMIN_SHELL_HTML, {
-        status: 200,
-        headers: {
-          "Cache-Control": "no-store",
-          "Content-Type": "text/html; charset=utf-8",
-          "X-Content-Type-Options": "nosniff",
-        },
-      });
+      return new Response(ADMIN_SHELL_HTML, { status: 200, headers: HTML_NO_STORE });
+    }
+
+    // Client portal SPA-lite. Always GET-able; live API calls still require ADS_CLIENT_API_ENABLED + secrets.
+    if (path === "/client" || path === "/client/index.html") {
+      if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
+      return new Response(CLIENT_SHELL_HTML, { status: 200, headers: HTML_NO_STORE });
     }
 
     if (path === "/v1/public/ads/delivery") {
