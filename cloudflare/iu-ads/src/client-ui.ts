@@ -36,8 +36,10 @@ export const CLIENT_SHELL_HTML = `<!DOCTYPE html>
     .widget-k{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
     .widget-v{font-size:1.05rem;margin-top:.2rem;word-break:break-word}
     pre.json{white-space:pre-wrap;word-break:break-word;font:12px/1.4 ui-monospace,Consolas,monospace;background:#f7f4ee;padding:.75rem;border-radius:8px;max-height:360px;overflow:auto}
-    #login-view,#app-view{display:none}
-    #login-view.show,#app-view.show{display:block}
+    #login-view{display:block}
+    #app-view{display:none}
+    #login-view:not(.show){display:none}
+    #app-view.show{display:block}
     @media (max-width:640px){main{padding:1rem}}
   </style>
 </head>
@@ -47,13 +49,14 @@ export const CLIENT_SHELL_HTML = `<!DOCTYPE html>
   <div id="header-actions"></div>
 </header>
 <div id="gate-banner" class="banner" hidden></div>
-<section id="login-view">
+<section id="login-view" class="show">
   <main>
     <div class="card">
       <h2>Přístupový kód</h2>
-      <p class="muted">Zadejte kód od administrátora. Chybové zprávy jsou jednotné (bez enumerace).</p>
+      <p class="muted">Zadejte klientský přístupový kód, který vám vydal provozovatel <strong>InfoUzel Ads</strong> (Media Uzel s.r.o.). Kód slouží jen k prohlížení vašich kampaní a dokumentů — není to heslo do administrace.</p>
+      <p class="muted">Pokud kód nemáte, požádejte svého obchodního kontaktu u InfoUzel Ads o vydání nebo obnovení kódu.</p>
       <form id="login-form">
-        <label for="access_code">Přístupový kód</label>
+        <label for="access_code">Klientský kód</label>
         <input id="access_code" name="access_code" type="password" autocomplete="one-time-code" required/>
         <div class="row"><button class="btn" type="submit">Přihlásit</button></div>
         <p id="login-err" class="err" hidden></p>
@@ -246,11 +249,22 @@ export const CLIENT_SHELL_HTML = `<!DOCTYPE html>
     setLoggedIn(true); await renderApp();
   });
   (async function boot(){
-    var h=await api("/health",{method:"GET",headers:{}});
-    state.health=h.body; showGate(h.body);
-    var me=await api("/v1/client/auth/me",{method:"GET",headers:{}});
-    if(me.res.ok){ state.me=me.body; setLoggedIn(true); await renderApp(); }
-    else setLoggedIn(false);
+    try{
+      setLoggedIn(false);
+      var h=await api("/health",{method:"GET",headers:{}});
+      state.health=h.body; showGate(h.body);
+      var me=await api("/v1/client/auth/me",{method:"GET",headers:{}});
+      if(me.res.ok){ state.me=me.body; setLoggedIn(true); await renderApp(); }
+      else setLoggedIn(false);
+    }catch(err){
+      setLoggedIn(false);
+      var b=el("gate-banner");
+      if(b){
+        b.hidden=false;
+        b.className="banner";
+        b.textContent="Klientský portál je dočasně nedostupný. Zkuste obnovit stránku. Přihlašovací formulář zůstává k dispozici.";
+      }
+    }
   })();
 })();
 </script>

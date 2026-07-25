@@ -256,6 +256,18 @@
   line-height: 1.3;
   letter-spacing: -0.01em;
 }
+.iuInfoCenter__tileHint{
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: rgba(40, 48, 44, 0.72);
+}
+a.iuInfoCenter__tile{
+  text-decoration: none;
+  color: inherit;
+}
 
 /* Hero tile — PWA (dominantní) */
 .iuInfoCenter__tile--hero{

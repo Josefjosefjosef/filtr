@@ -82,10 +82,28 @@ export async function handleGetCampaignStats(request: Request, env: Env, url: UR
   const from = url.searchParams.get("from") || undefined;
   const to = url.searchParams.get("to") || undefined;
   const result = await fetchAdsReport(env, { campaign_id: campaignId, from, to });
-  if (!result.ok) return json({ error: result.error }, result.status);
+  if (!result.ok) {
+    if (result.error === "stats_not_configured") {
+      return json({
+        configured: false,
+        campaign: {
+          campaign_id: campaign.campaign_id,
+          evidence_code: campaign.evidence_code,
+          title: campaign.title,
+          status: campaign.status,
+        },
+        filters: { from: from || null, to: to || null },
+        totals: EMPTY_TOTALS,
+        rows: [],
+        message_cs: "Napojení na InfoUzel Analytics zatím není nakonfigurováno. Žádná osobní data se nesbírají.",
+      });
+    }
+    return json({ error: result.error }, result.status);
+  }
 
   const rows = excludeTestRows(result.rows, testPrefix);
   return json({
+    configured: true,
     campaign: {
       campaign_id: campaign.campaign_id,
       evidence_code: campaign.evidence_code,
@@ -135,8 +153,20 @@ export async function handleGetStatsSummary(request: Request, env: Env, url: URL
     device_category,
     campaign_id: campaignIdParam,
   });
-  if (!result.ok) return json({ error: result.error }, result.status);
+  if (!result.ok) {
+    if (result.error === "stats_not_configured") {
+      return json({
+        configured: false,
+        filters,
+        totals: EMPTY_TOTALS,
+        rows: [],
+        message_cs:
+          "Napojení na InfoUzel Analytics zatím není nakonfigurováno (chybí URL nebo token). Zobrazuje se prázdný stav — ne technická chyba pro obsluhu.",
+      });
+    }
+    return json({ error: result.error }, result.status);
+  }
 
   const rows = excludeTestRows(result.rows, testPrefix);
-  return json({ filters, totals: sumRows(rows), rows });
+  return json({ configured: true, filters, totals: sumRows(rows), rows });
 }

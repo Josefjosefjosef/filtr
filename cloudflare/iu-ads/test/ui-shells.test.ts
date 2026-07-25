@@ -58,12 +58,28 @@ describe("admin + client SPA shells", () => {
     const html = await res.text();
     expect(html).toContain('id="login-form"');
     expect(html).toContain('id="access_code"');
+    expect(html).toContain('id="login-view" class="show"');
+    expect(html).toContain("InfoUzel Ads");
+    expect(html).toContain("provozovatel");
     expect(html).toContain("/v1/client/auth/login");
     expect(html).toContain("/v1/client/report");
     expect(html).toContain('name="robots" content="noindex,nofollow"');
     expect(html).toContain("Kampaně");
     expect(html).toContain("Export JSON");
     expect(html).toContain("Export CSV");
+    expect(html).toContain("try{");
+  });
+
+  it("admin shell renders Czech dashboard/calendar/finance/stats helpers (no raw JSON widgets)", async () => {
+    const html = await (await worker.fetch(new Request("https://ads.test/admin"), env)).text();
+    expect(html).toContain("Aktivní kampaně");
+    expect(html).toContain("Neuhrazené faktury");
+    expect(html).toContain("formatKc");
+    expect(html).toContain("calendarHtml");
+    expect(html).toContain("financeHtml");
+    expect(html).toContain("statsHtml");
+    expect(html).toContain("configured===false");
+    expect(html).toContain("Žádné záznamy");
   });
 
   it("shells contain no hardcoded secrets or credential literals", () => {

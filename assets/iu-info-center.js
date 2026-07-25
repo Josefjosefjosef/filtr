@@ -231,6 +231,10 @@
 
     tiles.forEach(function (tile) {
       tile.addEventListener("click", function (e) {
+        if (tile.getAttribute("data-iu-info-external")) {
+          // External link (e.g. Ads client portal) — do not intercept.
+          return;
+        }
         try {
           e.preventDefault();
         } catch (_) {}

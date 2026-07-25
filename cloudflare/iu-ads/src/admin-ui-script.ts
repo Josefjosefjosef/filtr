@@ -211,18 +211,143 @@ export const ADMIN_UI_SCRIPT = String.raw`
   function val(id){ var n=el(id); return n ? n.value : ""; }
   function numOrNull(id){ var v=val(id).trim(); if(v==="") return null; var n=Number(v); return isFinite(n)?n:null; }
   function csvArr(id){ var v=val(id).trim(); if(!v) return []; return v.split(/[,;\s]+/).map(function(x){return x.trim();}).filter(Boolean); }
+  function formatKc(cents){
+    var n=Number(cents);
+    if(!isFinite(n)) n=0;
+    var kc=Math.round(n)/100;
+    try{ return kc.toLocaleString("cs-CZ",{minimumFractionDigits:0,maximumFractionDigits:2})+" Kč"; }
+    catch(_){ return String(kc)+" Kč"; }
+  }
+  function formatCsDate(iso){
+    if(!iso) return "—";
+    var t=new Date(iso).getTime();
+    if(!isFinite(t)) return String(iso);
+    try{ return new Date(t).toLocaleString("cs-CZ",{day:"numeric",month:"numeric",year:"numeric",hour:"2-digit",minute:"2-digit"}); }
+    catch(_){ return String(iso); }
+  }
+  function auditLabel(op){
+    var map={
+      main_admin_bootstrap_created:"Vytvoření hlavního administrátora",
+      password_reset_confirmed:"Potvrzení resetu/aktivace hesla",
+      login_success:"Úspěšné přihlášení",
+      login_failed:"Neúspěšné přihlášení",
+      logout:"Odhlášení",
+      logout_all_sessions:"Odhlášení všech relací",
+      password_changed:"Změna hesla",
+      user_created:"Vytvoření uživatele",
+      user_updated:"Úprava uživatele",
+      roles_set:"Nastavení rolí",
+      campaign_created:"Vytvoření kampaně",
+      campaign_updated:"Úprava kampaně",
+      client_code_issued:"Vydání klientského kódu",
+      client_code_revoked:"Deaktivace klientského kódu",
+      backup_created:"Vytvoření zálohy",
+      export_created:"Vytvoření exportu"
+    };
+    return map[op]||op||"—";
+  }
   function widgetsHtml(w){
-    if(!w||typeof w!=="object") return '<pre class="json">'+esc(JSON.stringify(w,null,2))+'</pre>';
-    return '<div class="widgets">'+Object.keys(w).map(function(k){
-      var v=w[k];
-      var text = (v!==null && typeof v==="object") ? JSON.stringify(v) : String(v);
-      return '<div class="widget"><div class="widget-k">'+esc(k)+'</div><div class="widget-v">'+esc(text)+'</div></div>';
-    }).join("")+'</div>';
+    if(!w||typeof w!=="object") return '<p class="muted empty">Žádné záznamy</p>';
+    var cards=[];
+    function push(label,value){ cards.push('<div class="widget"><div class="widget-k">'+esc(label)+'</div><div class="widget-v">'+esc(value)+'</div></div>'); }
+    if(w.campaigns_by_status && typeof w.campaigns_by_status==="object"){
+      var active=Number(w.campaigns_by_status.active||w.campaigns_by_status.running||0)||0;
+      var total=0; Object.keys(w.campaigns_by_status).forEach(function(k){ total+=Number(w.campaigns_by_status[k])||0; });
+      push("Aktivní kampaně", String(active));
+      push("Kampaně celkem", String(total));
+    }
+    if(typeof w.open_inquiries==="number") push("Otevřené poptávky", String(w.open_inquiries));
+    if(typeof w.open_orders==="number") push("Otevřené objednávky", String(w.open_orders));
+    if(w.reservations_upcoming && typeof w.reservations_upcoming==="object"){
+      push("Rezervace v příštích "+String(w.reservations_upcoming.days||14)+" dnech", String(w.reservations_upcoming.count||0));
+    }
+    if(w.unpaid_invoices && typeof w.unpaid_invoices==="object"){
+      push("Neuhrazené faktury", String(w.unpaid_invoices.count||0)+" · "+formatKc(w.unpaid_invoices.total_cents||0));
+    }
+    if(typeof w.open_alerts==="number") push("Otevřená upozornění", String(w.open_alerts));
+    if(w.recent_audit && typeof w.recent_audit==="object"){
+      push("Auditní události za "+String(w.recent_audit.hours||24)+" h", String(w.recent_audit.count||0));
+    }
+    if(!cards.length){
+      Object.keys(w).forEach(function(k){
+        var v=w[k];
+        if(v!==null && typeof v==="object") return;
+        push(k, String(v));
+      });
+    }
+    if(!cards.length) return '<p class="muted empty">Žádné záznamy</p>';
+    return '<div class="widgets">'+cards.join("")+'</div>';
+  }
+  function financeHtml(body){
+    var summary=(body&&body.summary)||{};
+    var currencies=Object.keys(summary);
+    if(!currencies.length) return '<p class="muted empty">Žádné faktury v zvoleném období.</p>';
+    return currencies.map(function(cur){
+      var s=summary[cur]||{};
+      return '<div class="widgets">'+
+        '<div class="widget"><div class="widget-k">Fakturováno ('+esc(cur)+')</div><div class="widget-v">'+esc(formatKc(s.invoiced_cents||0))+'</div></div>'+
+        '<div class="widget"><div class="widget-k">Uhrazeno</div><div class="widget-v">'+esc(formatKc(s.paid_cents||0))+'</div></div>'+
+        '<div class="widget"><div class="widget-k">Neuhrazeno</div><div class="widget-v">'+esc(formatKc(s.outstanding_cents||0))+'</div></div>'+
+        '</div>'+
+        '<div class="table-wrap" style="margin-top:.75rem"><table><thead><tr><th>Stav</th><th>Počet</th><th>Částka</th></tr></thead><tbody>'+
+        Object.keys(s.by_status||{}).map(function(st){
+          var row=s.by_status[st];
+          return '<tr><td>'+esc(st)+'</td><td>'+esc(row.count)+'</td><td>'+esc(formatKc(row.total_cents))+'</td></tr>';
+        }).join("")+
+        '</tbody></table></div>';
+    }).join("");
+  }
+  function statsHtml(body){
+    if(!body) return '<p class="muted empty">Žádné záznamy</p>';
+    if(body.configured===false){
+      return '<p class="muted empty">'+esc(body.message_cs||"Analytics není napojeno — prázdný stav.")+'</p>'+
+        '<div class="widgets">'+
+        '<div class="widget"><div class="widget-k">Imprese</div><div class="widget-v">0</div></div>'+
+        '<div class="widget"><div class="widget-k">Kliknutí</div><div class="widget-v">0</div></div>'+
+        '<div class="widget"><div class="widget-k">Platná kliknutí</div><div class="widget-v">0</div></div>'+
+        '<div class="widget"><div class="widget-k">CTR</div><div class="widget-v">0</div></div>'+
+        '</div>';
+    }
+    var t=body.totals||{};
+    var rows=body.rows||[];
+    return '<div class="widgets">'+
+      '<div class="widget"><div class="widget-k">Imprese</div><div class="widget-v">'+esc(t.impressions||0)+'</div></div>'+
+      '<div class="widget"><div class="widget-k">Kliknutí</div><div class="widget-v">'+esc(t.clicks||0)+'</div></div>'+
+      '<div class="widget"><div class="widget-k">Platná kliknutí</div><div class="widget-v">'+esc(t.valid_clicks||0)+'</div></div>'+
+      '<div class="widget"><div class="widget-k">Podezřelá kliknutí</div><div class="widget-v">'+esc(t.suspicious_clicks||0)+'</div></div>'+
+      '<div class="widget"><div class="widget-k">CTR</div><div class="widget-v">'+esc(t.ctr||0)+'</div></div>'+
+      '</div>'+
+      (rows.length?listTable(rows,[["campaign_id","Kampaň"],["date","Datum"],["impressions","Imp"],["clicks","Kliky"],["valid_clicks","Platné"],["device_category","Zařízení"],["section_id","Sekce"]]):
+        '<p class="muted empty">Žádné záznamy pro zvolené období.</p>');
+  }
+  function calendarHtml(body){
+    var items=(body&&body.items)||[];
+    if(!items.length) return '<p class="muted empty">Žádné záznamy</p>';
+    var rows=items.map(function(it){
+      var kind=it.kind==="campaign"?"Kampaň":(it.kind==="reservation"?"Rezervace":(it.kind||"—"));
+      var title=it.title||it.placement_id||it.reservation_id||it.campaign_id||"—";
+      return {
+        kind:kind,
+        title:title,
+        campaign_id:it.campaign_id||"",
+        start_at:formatCsDate(it.start_at),
+        end_at:formatCsDate(it.end_at),
+        status:it.status||"",
+        collision:it.has_collision?"Ano":""
+      };
+    });
+    return listTable(rows,[["kind","Typ"],["title","Název / umístění"],["campaign_id","Kampaň"],["start_at","Od"],["end_at","Do"],["status","Stav"],["collision","Kolize"]]);
   }
 
   async function renderAccount(){
-    panel('<div class="card"><h2>Účet</h2><pre class="json">'+esc(JSON.stringify({user:state.me,roles:state.roles},null,2))+
-      '</pre></div><div class="card"><h3>Změna hesla</h3>'+
+    var u=state.me||{};
+    panel('<div class="card"><h2>Účet</h2>'+
+      '<p><strong>E-mail:</strong> '+esc(u.email||"—")+'</p>'+
+      '<p><strong>Jméno:</strong> '+esc(u.display_name||u.displayName||"—")+'</p>'+
+      '<p><strong>Role:</strong> '+esc((state.roles||[]).join(", ")||"—")+'</p>'+
+      '<p><strong>Aktivní:</strong> '+esc(u.is_active===false||u.is_active===0?"ne":"ano")+'</p>'+
+      '<p class="muted">Force PW: '+(u.force_password_change?"ano":"ne")+'</p>'+
+      '</div><div class="card"><h3>Změna hesla</h3>'+
       inp("pw-cur","Současné heslo","password","","autocomplete=\"current-password\" required")+
       inp("pw-new","Nové heslo","password","","autocomplete=\"new-password\" required")+
       '<div class="row"><button class="btn" type="button" id="pw-go">Změnit heslo</button></div><p id="pw-err" class="err" hidden></p><p id="pw-ok" class="ok" hidden></p></div>');
@@ -624,12 +749,22 @@ export const ADMIN_UI_SCRIPT = String.raw`
           el("q-out").innerHTML = r.res.ok ? '<pre class="json">'+esc(JSON.stringify(r.body,null,2))+'</pre>' : '<p class="err">'+esc(apiError(r.body))+'</p>';
         };
       } else if(v==="calendar"){
-        var now=new Date(); var to=new Date(now.getTime()+30*864e5);
-        var cal=await api("/v1/admin/calendar?from="+encodeURIComponent(now.toISOString())+"&to="+encodeURIComponent(to.toISOString()),{method:"GET",headers:{}});
-        if(!cal.res.ok){ panel('<p class="err">'+esc(apiError(cal.body))+'</p>'); return; }
-        var items=(cal.body&&cal.body.items)||(cal.body&&cal.body.events)||[];
-        panel('<div class="card"><h2>Kalendář (30 dní)</h2>'+listTable(items,[["reservation_id","Rezervace"],["campaign_id","Kampaň"],["placement_id","Umístění"],["start_at","Od"],["end_at","Do"],["has_collision","Kolize"]])+
-          '<pre class="json">'+esc(JSON.stringify(cal.body,null,2))+'</pre></div>');
+        var now=new Date(); var toDef=new Date(now.getTime()+30*864e5);
+        panel('<div class="card"><h2>Kalendář</h2>'+
+          '<div class="grid2">'+
+          inp("cal-from","Od (ISO)", "text", now.toISOString())+
+          inp("cal-to","Do (ISO)", "text", toDef.toISOString())+
+          '</div><div class="row"><button class="btn" type="button" id="cal-go">Načíst období</button></div>'+
+          '<div id="cal-out"><p class="muted">Načítám…</p></div></div>');
+        async function loadCal(){
+          var from=val("cal-from").trim()||now.toISOString();
+          var to=val("cal-to").trim()||toDef.toISOString();
+          var cal=await api("/v1/admin/calendar?from="+encodeURIComponent(from)+"&to="+encodeURIComponent(to),{method:"GET",headers:{}});
+          if(!cal.res.ok){ el("cal-out").innerHTML='<p class="err">'+esc(apiError(cal.body))+'</p>'; return; }
+          el("cal-out").innerHTML=calendarHtml(cal.body);
+        }
+        el("cal-go").onclick=loadCal;
+        await loadCal();
       } else if(v==="alerts"){
         var al=await api("/v1/admin/alerts",{method:"GET",headers:{}});
         if(!al.res.ok){ panel('<p class="err">'+esc(apiError(al.body))+'</p>'); return; }
@@ -694,7 +829,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
       });
       else if(v==="invoices") return renderSimpleCrud({
         title:"Faktury", listPath:"/v1/admin/invoices", listKey:"invoices", createPath:"/v1/admin/invoices",
-        cols:[["invoice_id","ID"],["invoice_number","Číslo"],["status","Stav"],["client_id","Klient"],["total_cents","Total cents"]],
+        cols:[["invoice_id","ID"],["invoice_number","Číslo"],["status","Stav"],["client_id","Klient"],["total_cents","Částka (cents)"]],
         fields:[
           {id:"in-client",key:"client_id",label:"client_id *"},
           {id:"in-total",key:"total_cents",label:"total_cents",type:"number",asNumber:true},
@@ -704,8 +839,22 @@ export const ADMIN_UI_SCRIPT = String.raw`
       else if(v==="placements"){
         var pt=await api("/v1/admin/placement-types",{method:"GET",headers:{}});
         if(!pt.res.ok){ panel('<p class="err">'+esc(apiError(pt.body))+'</p>'); return; }
-        var types=(pt.body&&pt.body.placement_types)||[];
-        panel('<div class="card"><h2>Typy umístění</h2>'+listTable(types,[["placement_type_id","ID"],["slot_type","Slot"],["collision_mode","Kolize"],["label","Label"]])+'</div>');
+        var types=((pt.body&&pt.body.placement_types)||[]).map(function(t){
+          return {
+            name_cs:t.name_cs||"—",
+            placement_type_id:t.placement_type_id,
+            technical_type:t.technical_type||"",
+            section_id:t.section_id||"",
+            collision_mode:t.collision_mode||"",
+            devices:Array.isArray(t.devices)?t.devices.join(", "):"",
+            anchor:t.anchor||"",
+            is_active:t.is_active?"ano":"ne"
+          };
+        });
+        panel('<div class="card"><h2>Umístění</h2>'+
+          (types.length?listTable(types,[["name_cs","Název"],["placement_type_id","Interní ID"],["technical_type","Typ"],["section_id","Sekce"],["devices","Zařízení"],["collision_mode","Kolize"],["anchor","Kotva"],["is_active","Aktivní"]]):
+            '<p class="muted empty">Žádné záznamy</p>')+
+          '</div>');
       } else if(v==="reservations"){
         var rv=await api("/v1/admin/reservations",{method:"GET",headers:{}});
         if(!rv.res.ok){ panel('<p class="err">'+esc(apiError(rv.body))+'</p>'); return; }
@@ -759,15 +908,30 @@ export const ADMIN_UI_SCRIPT = String.raw`
       });
       else if(v==="stats"){
         var st=await api("/v1/admin/stats/summary",{method:"GET",headers:{}});
-        panel('<div class="card"><h2>Statistiky</h2>'+(st.res.ok?'<pre class="json">'+esc(JSON.stringify(st.body,null,2))+'</pre>':'<p class="err">'+esc(apiError(st.body))+'</p>')+
-          inp("st-id","campaign_id detail")+'<div class="row"><button class="btn secondary" type="button" id="st-go">Načíst kampaň</button></div><div id="st-out"></div></div>');
+        panel('<div class="card"><h2>Statistiky</h2>'+(st.res.ok?statsHtml(st.body):'<p class="err">'+esc(apiError(st.body))+'</p>')+
+          '<hr style="border:0;border-top:1px solid var(--line);margin:1rem 0"/>'+
+          inp("st-id","Detail kampaně (campaign_id)")+'<div class="row"><button class="btn secondary" type="button" id="st-go">Načíst kampaň</button></div><div id="st-out"></div></div>');
         el("st-go").onclick=async function(){
-          var r=await api("/v1/admin/stats/campaigns/"+encodeURIComponent(val("st-id").trim()),{method:"GET",headers:{}});
-          el("st-out").innerHTML=r.res.ok?'<pre class="json">'+esc(JSON.stringify(r.body,null,2))+'</pre>':'<p class="err">'+esc(apiError(r.body))+'</p>';
+          var id=val("st-id").trim();
+          if(!id){ el("st-out").innerHTML='<p class="muted">Zadejte campaign_id.</p>'; return; }
+          var r=await api("/v1/admin/stats/campaigns/"+encodeURIComponent(id),{method:"GET",headers:{}});
+          el("st-out").innerHTML=r.res.ok?statsHtml(r.body):'<p class="err">'+esc(apiError(r.body))+'</p>';
         };
       } else if(v==="finance"){
-        var fi=await api("/v1/admin/finance/summary",{method:"GET",headers:{}});
-        panel('<div class="card"><h2>Finance</h2>'+(fi.res.ok?'<pre class="json">'+esc(JSON.stringify(fi.body,null,2))+'</pre>':'<p class="err">'+esc(apiError(fi.body))+'</p>')+'</div>');
+        panel('<div class="card"><h2>Finance</h2>'+
+          '<div class="grid2">'+inp("fi-client","Klient (client_id, volitelné)")+inp("fi-from","Od (ISO, volitelné)")+inp("fi-to","Do (ISO, volitelné)")+'</div>'+
+          '<div class="row"><button class="btn" type="button" id="fi-go">Filtrovat</button></div><div id="fi-out"><p class="muted">Načítám…</p></div></div>');
+        async function loadFi(){
+          var q=[];
+          if(val("fi-client").trim()) q.push("client_id="+encodeURIComponent(val("fi-client").trim()));
+          if(val("fi-from").trim()) q.push("from="+encodeURIComponent(val("fi-from").trim()));
+          if(val("fi-to").trim()) q.push("to="+encodeURIComponent(val("fi-to").trim()));
+          var fi=await api("/v1/admin/finance/summary"+(q.length?"?"+q.join("&"):""),{method:"GET",headers:{}});
+          if(!fi.res.ok){ el("fi-out").innerHTML='<p class="err">'+esc(apiError(fi.body))+'</p>'; return; }
+          el("fi-out").innerHTML=financeHtml(fi.body);
+        }
+        el("fi-go").onclick=loadFi;
+        await loadFi();
       } else if(v==="exports"){
         var ex=await api("/v1/admin/exports",{method:"GET",headers:{}});
         var jobs=(ex.res.ok&&ex.body&&ex.body.exports)||[];
@@ -795,8 +959,20 @@ export const ADMIN_UI_SCRIPT = String.raw`
       } else if(v==="audit"){
         var au=await api("/v1/admin/audit?limit=50",{method:"GET",headers:{}});
         if(!au.res.ok){ panel('<p class="err">'+esc(apiError(au.body))+'</p>'); return; }
-        var logs=(au.body&&au.body.entries)||(au.body&&au.body.audit_logs)||[];
-        panel('<div class="card"><h2>Audit</h2>'+listTable(logs,[["audit_id","ID"],["operation","Operace"],["object_type","Objekt"],["actor_user_id","Actor"],["created_at","Čas"]])+'</div>');
+        var logs=((au.body&&au.body.entries)||(au.body&&au.body.audit_logs)||[]).map(function(row){
+          return {
+            operation_cs:auditLabel(row.operation),
+            operation:row.operation,
+            object_type:row.object_type||"",
+            object_id:row.object_id||"",
+            actor:row.actor_user_id||row.actor||"",
+            created_at:formatCsDate(row.created_at)
+          };
+        });
+        panel('<div class="card"><h2>Audit</h2>'+
+          (logs.length?listTable(logs,[["operation_cs","Operace"],["object_type","Objekt"],["object_id","ID objektu"],["actor","Uživatel"],["created_at","Čas"]]):
+            '<p class="muted empty">Žádné záznamy</p>')+
+          '<p class="muted">Citlivé hodnoty (hesla, tokeny, sessions) se v auditu nezobrazují.</p></div>');
       } else if(v==="users"){
         var us=await api("/v1/admin/users",{method:"GET",headers:{}});
         if(!us.res.ok){ panel('<p class="err">'+esc(apiError(us.body))+'</p>'); return; }

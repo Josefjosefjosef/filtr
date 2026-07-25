@@ -74,6 +74,16 @@ if (!/Čeká na dokončení/.test(publicPage)) fail("public:missing_honest_audit
 if (/campaign_name|advertiser_name|ADMIN_TOKEN/.test(publicPage)) fail("public:must_not_expose_admin_meta");
 if (!/campaign_id|placement_id|slot_type|valid_clicks|suspicious/.test(adminPage)) fail("admin:missing_dynamic_ad_filters");
 
+// Public Statistiky must NOT advertise the Bearer-token admin UI.
+if (/Administrace \(chráněná\)/.test(publicPage)) fail("public:must_not_link_protected_admin");
+if (/statistiky\/admin\//.test(publicPage)) fail("public:must_not_href_analytics_admin");
+
+// Informační centrum: dedicated Ads client portal tile (external /client).
+if (!/Reklama a klientský portál/.test(index)) fail("index:missing_ads_client_tile");
+if (!/data-iu-info-external=\"ads-client\"/.test(index)) fail("index:missing_ads_client_external_marker");
+if (!/infouzel-ads\.josef-zmrhal\.workers\.dev\/client/.test(index)) fail("index:missing_ads_client_href");
+if (/infouzel-ads\.josef-zmrhal\.workers\.dev\/admin/.test(index)) fail("index:must_not_link_ads_admin");
+
 if (!/FORBIDDEN_KEYS/.test(privacyTs)) fail("worker:missing_forbidden_keys");
 if (!/storesIp:\s*false/.test(indexTs) && !/storesIpInAnalyticsDb:\s*false/.test(indexTs)) {
   fail("worker:missing_no_ip_claim");
