@@ -37,6 +37,20 @@ function wrangler(args, opts = {}) {
   });
 }
 
+function resolveAdsDatabaseId() {
+  const list = wrangler(["d1", "list", "--json"]);
+  const arr = JSON.parse(list);
+  const hit = (arr || []).find((x) => x && x.name === "iu-ads");
+  const id = hit && (hit.uuid || hit.id || "");
+  if (!id) throw new Error("iu_ads_d1_id_missing");
+  const tomlPath = join(WORK, "wrangler.toml");
+  let toml = readFileSync(tomlPath, "utf8");
+  toml = toml.replace(/database_id\s*=\s*"[0-9a-f-]{36}"/i, 'database_id = "' + id + '"');
+  writeFileSync(tomlPath, toml, "utf8");
+  console.log("D1_RESOLVED=iu-ads");
+  return id;
+}
+
 function sha256Hex(s) {
   return createHash("sha256").update(s).digest("hex");
 }
@@ -77,6 +91,9 @@ function main() {
     fail("ADS_BACKUP_ENCRYPTION_KEY_missing");
     process.exit(1);
   }
+
+  resolveAdsDatabaseId();
+  pass("d1_id_resolved");
 
   const prodBefore = {
     clients: prodCount("clients"),
@@ -211,10 +228,14 @@ function main() {
     console.log("CONTENT_HASH=" + contentHash.slice(0, 12) + "…");
     pass("integrity_documented");
   } finally {
-    // Always attempt to delete isolated D1.
+    // Always attempt to delete isolated D1 by name (never touches iu-ads).
     try {
       if (TEMP_NAME) {
-        wrangler(["d1", "delete", TEMP_NAME, "--skip-confirmation"]);
+        try {
+          wrangler(["d1", "delete", TEMP_NAME, "--skip-confirmation"]);
+        } catch (_) {
+          wrangler(["d1", "delete", TEMP_NAME, "-y"]);
+        }
         pass("temp_d1_deleted");
       }
     } catch (e) {

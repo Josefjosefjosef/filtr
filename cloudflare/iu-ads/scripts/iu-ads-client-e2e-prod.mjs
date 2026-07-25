@@ -11,7 +11,7 @@
  */
 import { createHash, randomBytes } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { writeFileSync, unlinkSync } from "node:fs";
+import { writeFileSync, unlinkSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -49,6 +49,25 @@ function generateCode() {
     groups.push(part);
   }
   return { plaintext: "IU-" + groups.join("-"), prefix: groups[0] };
+}
+
+function resolveAdsDatabaseId() {
+  const out = execFileSync("npx", ["wrangler", "d1", "list", "--json"], {
+    cwd: join(process.cwd()),
+    env: process.env,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  const arr = JSON.parse(out);
+  const hit = (arr || []).find((x) => x && x.name === "iu-ads");
+  const id = hit && (hit.uuid || hit.id || "");
+  if (!id) throw new Error("iu_ads_d1_id_missing");
+  const tomlPath = join(process.cwd(), "wrangler.toml");
+  let toml = readFileSync(tomlPath, "utf8");
+  toml = toml.replace(/database_id\s*=\s*"[0-9a-f-]{36}"/i, 'database_id = "' + id + '"');
+  writeFileSync(tomlPath, toml, "utf8");
+  console.log("D1_RESOLVED=iu-ads");
+  return id;
 }
 
 function d1(sql) {
@@ -134,6 +153,9 @@ async function main() {
   else pass("publicDelivery_off");
   if (health.body.clientApiEnabled !== true) fail("clientApi");
   else pass("clientApi_on");
+
+  resolveAdsDatabaseId();
+  pass("d1_id_resolved");
 
   const beforeClients = d1Query("SELECT COUNT(*) AS c FROM clients");
   const beforeCount = Number((((beforeClients[0] || {}).results || [])[0] || {}).c || 0);
@@ -345,7 +367,8 @@ async function main() {
 }
 
 main().catch((e) => {
-  console.log("FAIL uncaught");
+  const msg = String(e && e.message ? e.message : e).replace(/[A-Za-z0-9_-]{24,}/g, "[REDACTED]");
+  console.log("FAIL uncaught:" + msg.slice(0, 200));
   console.log("RESULT=FAIL");
   process.exit(1);
 });
