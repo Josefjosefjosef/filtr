@@ -91,7 +91,7 @@ async function main() {
   const baseUrl =
     argValue("--base-url") ||
     process.env.BOOTSTRAP_ADMIN_BASE_URL ||
-    "https://infouzel-ads.josef-zmrhal.workers.dev/admin";
+    "https://ads.infouzel.cz/admin";
   const ttlSec = Number(process.env.BOOTSTRAP_ACTIVATION_TTL_SECONDS || argValue("--ttl") || "3600");
 
   if (!pepper) {

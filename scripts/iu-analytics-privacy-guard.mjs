@@ -84,9 +84,12 @@ if (!/Reklama a klientský portál/.test(infoCenterJs)) fail("info_center:missin
 if (!/data-iu-info-external/.test(infoCenterJs) || !/ads-client/.test(infoCenterJs)) {
   fail("info_center:missing_ads_client_external_marker");
 }
-if (!/infouzel-ads\.josef-zmrhal\.workers\.dev\/client/.test(infoCenterJs)) fail("info_center:missing_ads_client_href");
-if (/infouzel-ads\.josef-zmrhal\.workers\.dev\/admin/.test(infoCenterJs)) fail("info_center:must_not_link_ads_admin");
-if (/infouzel-ads\.josef-zmrhal\.workers\.dev\/admin/.test(index)) fail("index:must_not_link_ads_admin");
+if (!/https:\/\/ads\.infouzel\.cz\/client/.test(infoCenterJs)) fail("info_center:missing_ads_client_href");
+if (!/https:\/\/ads\.infouzel\.cz/.test(index)) fail("index:csp_missing_ads_official");
+if (/infouzel-ads\.josef-zmrhal/.test(infoCenterJs)) fail("info_center:must_not_use_personal_ads_host");
+if (/infouzel-ads\.josef-zmrhal/.test(index)) fail("index:must_not_use_personal_ads_host");
+if (/ads\.infouzel\.cz\/admin/.test(infoCenterJs)) fail("info_center:must_not_link_ads_admin");
+if (/ads\.infouzel\.cz\/admin/.test(index)) fail("index:must_not_link_ads_admin");
 
 if (!/FORBIDDEN_KEYS/.test(privacyTs)) fail("worker:missing_forbidden_keys");
 if (!/storesIp:\s*false/.test(indexTs) && !/storesIpInAnalyticsDb:\s*false/.test(indexTs)) {
@@ -220,9 +223,10 @@ try {
   if (!adsCount) fail("behavior:missing_ads_client_tile");
   else {
     const href = await adsTile.first().getAttribute("href");
-    if (!/infouzel-ads\.josef-zmrhal\.workers\.dev\/client/.test(String(href || ""))) {
+    if (!/https:\/\/ads\.infouzel\.cz\/client/.test(String(href || ""))) {
       fail("behavior:ads_client_tile_bad_href");
     }
+    if (/josef-zmrhal/i.test(String(href || ""))) fail("behavior:ads_client_tile_personal_host");
     if (/\/admin/.test(String(href || ""))) fail("behavior:ads_client_tile_points_admin");
   }
 

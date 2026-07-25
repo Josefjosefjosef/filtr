@@ -4,7 +4,7 @@ Legenda: **DONE** = implementováno + otestováno unit/integračně; **PROD** = 
 
 | Kap. | Téma | Stav | Důkaz / poznámka |
 |------|------|------|------------------|
-| 1 | Oddělený Ads Worker | DONE | `cloudflare/iu-ads`, health `infouzel-ads` |
+| 1 | Oddělený Ads Worker | DONE | `cloudflare/iu-ads`, health `https://ads.infouzel.cz` |
 | 2 | SAFE_MODE / public OFF | DONE+PROD | health: safeMode=true, publicDeliveryEnabled=false |
 | 3 | D1 schema + migrations | DONE | schema 0010 |
 | 4 | R2 creatives/docs/backups | DONE+PROD | health r2.ready |

@@ -67,7 +67,7 @@ Heslo **není** v GitHubu, Cloudflare ani v repozitáři. Po použití je token 
 
 ### D) První přihlášení
 
-Otevřete: https://infouzel-ads.josef-zmrhal.workers.dev/admin
+Otevřete: https://ads.infouzel.cz/admin
 
 Úspěch = vidíte Admin menu (ne `auth_not_configured`).
 

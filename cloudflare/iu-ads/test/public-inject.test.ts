@@ -125,7 +125,7 @@ describe("public inject empty-box guard", () => {
           format: "banner",
           width: 300,
           height: 100,
-          cdn_url: "https://infouzel-ads.josef-zmrhal.workers.dev/v1/objects/get?x=1",
+          cdn_url: "https://ads.infouzel.cz/v1/objects/get?x=1",
         },
       },
     ]);

@@ -7,7 +7,7 @@
   "use strict";
 
   var DELIVERY_URL =
-    "https://infouzel-ads.josef-zmrhal.workers.dev/v1/public/ads/delivery";
+    "https://ads.infouzel.cz/v1/public/ads/delivery";
   var ROOT_ATTR = "data-iu-ads-root";
   var AD_CLASS = "iu-ad";
 

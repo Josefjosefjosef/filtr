@@ -229,7 +229,7 @@ export function assertDeployTarget(actual, expected) {
 export const EXPECTED_ADS_TARGET = Object.freeze({
   workerName: "infouzel-ads",
   accountId: "577868e9aac9c289e9323100f68fad16",
-  urlHost: "infouzel-ads.josef-zmrhal.workers.dev",
+  urlHost: "ads.infouzel.cz",
   secretName: "ADS_BOOTSTRAP_TOKEN",
   apiTokenEnv: "CLOUDFLARE_ADS_API_TOKEN",
 });

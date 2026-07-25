@@ -7,15 +7,16 @@
  * Required env (GitHub Actions secrets / job env):
  *   CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, ADS_CODE_PEPPER
  * Optional:
- *   ADS_BASE_URL (default https://infouzel-ads.josef-zmrhal.workers.dev)
+ *   ADS_BASE_URL (default https://ads.infouzel.cz)
  */
 import { createHash, randomBytes } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { writeFileSync, unlinkSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { ADS_PUBLIC_ORIGIN } from "../public-origin.mjs";
 
-const BASE = process.env.ADS_BASE_URL || "https://infouzel-ads.josef-zmrhal.workers.dev";
+const BASE = process.env.ADS_BASE_URL || ADS_PUBLIC_ORIGIN;
 const PEPPER = process.env.ADS_CODE_PEPPER || "";
 const ACCOUNT = process.env.CLOUDFLARE_ACCOUNT_ID || "577868e9aac9c289e9323100f68fad16";
 const RUN = "e2e" + Date.now().toString(36);
