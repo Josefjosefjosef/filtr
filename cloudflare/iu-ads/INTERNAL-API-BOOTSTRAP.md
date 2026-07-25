@@ -88,14 +88,15 @@ Dočasný GitHub secret s heslem se **nevytváří** — heslo je jen ve vašem 
 ## Co workflow dělá (technicky)
 
 1. Ověří přítomnost GitHub secrets (jména, ne hodnoty).
-2. `wrangler secret put` do Workeru (stdout bez hodnot).
-3. Odmítne, pokud už existuje `main_admin` nebo `BOOTSTRAP_COMPLETED=1`.
-4. Generuje SQL (jen hashe) + aktivační URL do artifactu.
-5. Aplikuje SQL na remote D1 + audit `main_admin_bootstrap_created`.
-6. Deploy s Admin/Client API ON, public delivery OFF.
-7. Health gate: `safeMode=true`, `publicDeliveryEnabled=false`, `adminApiEnabled=true`.
+2. `wrangler secret put` auth secrets do Workeru (stdout bez hodnot).
+3. Resolve reálného D1 `database_id` (placeholder v `wrangler.toml` nestačí).
+4. Odmítne, pokud už existuje `main_admin`, `BOOTSTRAP_COMPLETED=1`, nebo nekonzistentní D1.
+5. Nasadí Worker a atomicky založí `main_admin` přes `POST /v1/internal/bootstrap/main-admin` (D1 `batch()`, bez SQL `BEGIN TRANSACTION`).
+6. Aktivační URL jen do privátního artifactu (ne do logu); smaže ephemeral `ADS_BOOTSTRAP_TOKEN`.
+7. Health gate: `safeMode=true`, `publicDeliveryEnabled=false`, Admin/Client API ON.
 
-Skript: `cloudflare/iu-ads/scripts/iu-ads-bootstrap-main-admin.mjs`  
+Skript (inspection-only SQL, bez BEGIN): `cloudflare/iu-ads/scripts/iu-ads-bootstrap-main-admin.mjs`  
+Worker bootstrap: `cloudflare/iu-ads/src/admin-bootstrap.ts`  
 Workflow: `.github/workflows/bootstrap-iu-ads-main-admin.yml`
 
 ---

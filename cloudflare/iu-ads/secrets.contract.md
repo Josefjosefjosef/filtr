@@ -4,6 +4,7 @@
 |--------------|-------|-------|-------|
 | `CLOUDFLARE_ADS_API_TOKEN` | GitHub Actions | 1 | **Preferred** least-privilege ads deploy token |
 | `CLOUDFLARE_API_TOKEN` | GitHub Actions | 0/1 | Fallback only if ads token missing |
+| `ADS_BOOTSTRAP_TOKEN` | Worker secret (ephemeral) | bootstrap | One-time bearer for `POST /v1/internal/bootstrap/main-admin`; put by Bootstrap workflow, deleted after success; never commit |
 | `ADS_SESSION_SECRET` | Worker secret | 2 | Admin session cookie HMAC key (wired in `session.ts`); missing → `/v1/admin/*` returns `503 auth_not_configured` |
 | `ADS_CLIENT_SESSION_SECRET` | Worker secret | 7 | Client RO session HMAC |
 | `ADS_PASSWORD_PEPPER` | Worker secret | 2 | Mixed into PBKDF2 password hashes (`password.ts`); missing → `/v1/admin/*` returns `503 auth_not_configured` |

@@ -1,3 +1,4 @@
+import { handleBootstrapMainAdmin } from "./admin-bootstrap";
 import {
   handleLogin,
   handleLogout,
@@ -244,6 +245,12 @@ export default {
       headers.set("X-Content-Type-Options", "nosniff");
       if (obj.httpMetadata?.contentType) headers.set("Content-Type", obj.httpMetadata.contentType);
       return new Response(obj.body, { status: 200, headers });
+    }
+
+    // One-time main_admin bootstrap (Worker D1 batch). Requires ADS_BOOTSTRAP_TOKEN.
+    // Outside /v1/admin so it does not depend on ADS_ADMIN_API_ENABLED.
+    if (path === "/v1/internal/bootstrap/main-admin") {
+      return handleBootstrapMainAdmin(request, env);
     }
 
     // Admin API gate: safeMode only blocks public delivery — never the admin surface.

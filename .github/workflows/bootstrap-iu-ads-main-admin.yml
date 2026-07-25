@@ -226,6 +226,41 @@ jobs:
           printf '%s\n' "$LOCK_OUT"
           LOCK_STATUS="$(printf '%s\n' "$LOCK_OUT" | sed -n 's/^STATUS=//p' | head -n1)"
 
+          # Consistency probes (counts only — no tokens/hashes).
+          echo "PRECHECK_CONSISTENCY_START"
+          set +e
+          npx wrangler d1 execute iu-ads --remote --json --command "SELECT COUNT(*) AS cnt FROM admin_password_resets WHERE used_at IS NULL;" >/tmp/d1-unused.out 2>/tmp/d1-unused.err
+          EC_U=$?
+          npx wrangler d1 execute iu-ads --remote --json --command "SELECT COUNT(*) AS cnt FROM admin_user_roles r LEFT JOIN admin_users u ON u.user_id = r.user_id WHERE u.user_id IS NULL;" >/tmp/d1-orphan.out 2>/tmp/d1-orphan.err
+          EC_O=$?
+          npx wrangler d1 execute iu-ads --remote --json --command "SELECT COUNT(*) AS cnt FROM admin_users u LEFT JOIN admin_user_roles r ON r.user_id = u.user_id WHERE r.user_id IS NULL;" >/tmp/d1-norole.out 2>/tmp/d1-norole.err
+          EC_N=$?
+          set -e
+          UNUSED_OUT="$(node ./scripts/iu-ads-bootstrap-precheck.mjs evaluate --kind users_count --exit-code "$EC_U" --stdout-file /tmp/d1-unused.out --stderr-file /tmp/d1-unused.err)"
+          ORPHAN_OUT="$(node ./scripts/iu-ads-bootstrap-precheck.mjs evaluate --kind users_count --exit-code "$EC_O" --stdout-file /tmp/d1-orphan.out --stderr-file /tmp/d1-orphan.err)"
+          NOROLE_OUT="$(node ./scripts/iu-ads-bootstrap-precheck.mjs evaluate --kind users_count --exit-code "$EC_N" --stdout-file /tmp/d1-norole.out --stderr-file /tmp/d1-norole.err)"
+          UNUSED_STATUS="$(printf '%s\n' "$UNUSED_OUT" | sed -n 's/^STATUS=//p' | head -n1)"
+          ORPHAN_STATUS="$(printf '%s\n' "$ORPHAN_OUT" | sed -n 's/^STATUS=//p' | head -n1)"
+          NOROLE_STATUS="$(printf '%s\n' "$NOROLE_OUT" | sed -n 's/^STATUS=//p' | head -n1)"
+          UNUSED_COUNT="$(printf '%s\n' "$UNUSED_OUT" | sed -n 's/^COUNT=//p' | head -n1)"
+          ORPHAN_COUNT="$(printf '%s\n' "$ORPHAN_OUT" | sed -n 's/^COUNT=//p' | head -n1)"
+          NOROLE_COUNT="$(printf '%s\n' "$NOROLE_OUT" | sed -n 's/^COUNT=//p' | head -n1)"
+          echo "UNUSED_RESETS_COUNT=${UNUSED_COUNT:-unknown}"
+          echo "ORPHAN_ROLES_COUNT=${ORPHAN_COUNT:-unknown}"
+          echo "USERS_WITHOUT_ROLES_COUNT=${NOROLE_COUNT:-unknown}"
+          if [ "$UNUSED_STATUS" != "OK" ] || [ "$ORPHAN_STATUS" != "OK" ] || [ "$NOROLE_STATUS" != "OK" ]; then
+            echo "BLOCKER: consistency probe query failed — fail-closed."
+            exit 1
+          fi
+          if [ "${ORPHAN_COUNT:-}" != "0" ] || [ "${NOROLE_COUNT:-}" != "0" ]; then
+            echo "BLOCKER: inconsistent D1 state (orphan roles or users without roles) — fail-closed."
+            exit 1
+          fi
+          if [ "${USERS_COUNT:-}" = "0" ] && [ "${UNUSED_COUNT:-}" != "0" ]; then
+            echo "BLOCKER: unused activation resets without users — fail-closed."
+            exit 1
+          fi
+
           # Hard infrastructure failures always fail-closed (both modes).
           for pair in "SCHEMA:$SCHEMA_STATUS" "USERS:$USERS_STATUS" "MAIN:$MAIN_STATUS" "LOCK:$LOCK_STATUS"; do
             name="${pair%%:*}"
@@ -267,9 +302,13 @@ jobs:
             echo "BLOCKER: bootstrap lock precheck failed ($LOCK_STATUS) — fail-closed."
             exit 1
           fi
+          if [ "${USERS_COUNT:-}" != "0" ]; then
+            echo "BLOCKER: admin_users not empty — fail-closed."
+            exit 1
+          fi
 
           echo "BOOTSTRAP_PRECHECK=OK"
-          echo "PREVIOUS_FAILED_RUN_SEEDED=no_evidence (prior run stopped before SQL generate/apply)"
+          echo "PREVIOUS_FAILED_RUN_SEEDED=no (D1 empty; prior SQL txn apply aborted by D1)"
 
       - name: Stop after precheck_only
         if: ${{ inputs.run_mode == 'precheck_only' }}
@@ -291,44 +330,20 @@ jobs:
           fi
           echo "BOOTSTRAP_EMAIL_PRESENT=1"
 
-      - name: Generate bootstrap SQL + activation artifact file
+      - name: Put ephemeral ADS_BOOTSTRAP_TOKEN (never logged)
         if: ${{ inputs.run_mode == 'bootstrap' }}
-        env:
-          BOOTSTRAP_ADMIN_EMAIL: ${{ inputs.admin_email }}
-          BOOTSTRAP_ADMIN_DISPLAY_NAME: ${{ inputs.admin_display_name }}
-          BOOTSTRAP_ACTIVATION_TTL_SECONDS: ${{ inputs.activation_ttl_seconds }}
+        id: boot_token
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/iu-ads-bootstrap"
           umask 077
-          node ./scripts/iu-ads-bootstrap-main-admin.mjs \
-            --sql-out "$RUNNER_TEMP/iu-ads-bootstrap/bootstrap.sql" \
-            --activation-out "$RUNNER_TEMP/iu-ads-bootstrap/activation-url.txt"
-          if grep -Eq 'activate=' "$RUNNER_TEMP/iu-ads-bootstrap/bootstrap.sql"; then
-            echo "BLOCKER: activation token leaked into SQL file"
-            exit 1
-          fi
-          echo "BOOTSTRAP_FILES=READY"
+          TOKEN="$(openssl rand -hex 32)"
+          printf '%s' "$TOKEN" > "$RUNNER_TEMP/iu-ads-bootstrap-token.txt"
+          printf '%s' "$TOKEN" | npx wrangler secret put ADS_BOOTSTRAP_TOKEN
+          echo "SECRET_PUT=ADS_BOOTSTRAP_TOKEN=OK"
+          # Expose to later steps via file only (GitHub env could leak in debug logs if echoed).
 
-      - name: Apply bootstrap SQL to remote D1
+      - name: Deploy Worker (APIs ON, public OFF) before atomic bootstrap
         if: ${{ inputs.run_mode == 'bootstrap' }}
-        run: |
-          set -euo pipefail
-          npx wrangler d1 execute iu-ads --remote --file="$RUNNER_TEMP/iu-ads-bootstrap/bootstrap.sql"
-          echo "BOOTSTRAP_D1_APPLY=OK"
-
-      - name: Upload private activation artifact (not logged)
-        if: ${{ inputs.run_mode == 'bootstrap' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: iu-ads-main-admin-activation
-          path: ${{ runner.temp }}/iu-ads-bootstrap/activation-url.txt
-          if-no-files-found: error
-          retention-days: 1
-          overwrite: true
-
-      - name: Deploy Worker with Admin/Client ON, public delivery OFF
-        if: ${{ inputs.run_mode == 'bootstrap' && inputs.enable_apis_after }}
         run: |
           set -euo pipefail
           npx wrangler deploy \
@@ -339,6 +354,137 @@ jobs:
           echo "DEPLOY_VAR_ADMIN_API=true"
           echo "DEPLOY_VAR_CLIENT_API=true"
           echo "DEPLOY_VAR_PUBLIC_DELIVERY=false"
+
+      - name: Atomic Worker bootstrap via D1 batch (no SQL BEGIN)
+        if: ${{ inputs.run_mode == 'bootstrap' }}
+        env:
+          BOOTSTRAP_ADMIN_EMAIL: ${{ inputs.admin_email }}
+          BOOTSTRAP_ADMIN_DISPLAY_NAME: ${{ inputs.admin_display_name }}
+          BOOTSTRAP_ACTIVATION_TTL_SECONDS: ${{ inputs.activation_ttl_seconds }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/iu-ads-bootstrap"
+          umask 077
+          TOKEN="$(cat "$RUNNER_TEMP/iu-ads-bootstrap-token.txt")"
+          BODY_FILE="$RUNNER_TEMP/iu-ads-bootstrap/request.json"
+          RESP_FILE="$RUNNER_TEMP/iu-ads-bootstrap/response.json"
+          BODY_FILE="$BODY_FILE" node -e "
+            const fs=require('fs');
+            const email=process.env.BOOTSTRAP_ADMIN_EMAIL||'';
+            const displayName=process.env.BOOTSTRAP_ADMIN_DISPLAY_NAME||'Hlavni administrator';
+            const ttl=Number(process.env.BOOTSTRAP_ACTIVATION_TTL_SECONDS||'3600');
+            fs.writeFileSync(process.env.BODY_FILE, JSON.stringify({email, displayName, ttlSeconds:ttl}));
+          "
+          # Call Worker; never print response body (contains activationUrl).
+          set +e
+          HTTP="$(curl -sS -o "$RESP_FILE" -w "%{http_code}" \
+            -X POST "https://infouzel-ads.josef-zmrhal.workers.dev/v1/internal/bootstrap/main-admin" \
+            -H "Authorization: Bearer ${TOKEN}" \
+            -H "Content-Type: application/json" \
+            --data-binary @"$BODY_FILE")"
+          CURL_EC=$?
+          set -e
+          unset TOKEN
+          rm -f "$RUNNER_TEMP/iu-ads-bootstrap-token.txt"
+          echo "BOOTSTRAP_HTTP=$HTTP"
+          if [ "$CURL_EC" != "0" ] || [ "$HTTP" != "200" ]; then
+            echo "BLOCKER: worker bootstrap failed (http=$HTTP curl_ec=$CURL_EC)"
+            # Safe error field only — never dump full body (may contain activationUrl on partial bugs).
+            node -e "
+              const fs=require('fs');
+              try {
+                const j=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));
+                console.log('BOOTSTRAP_ERROR='+String(j.error||'unknown'));
+              } catch { console.log('BOOTSTRAP_ERROR=unparseable_or_empty'); }
+            " "$RESP_FILE"
+            exit 1
+          fi
+          node -e "
+            const fs=require('fs');
+            const j=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));
+            if(j.ok!==true) process.exit(2);
+            if(typeof j.activationUrl!=='string' || j.activationUrl.indexOf('activate=')<0) process.exit(3);
+            if(typeof j.email!=='string' || !j.email) process.exit(4);
+            // Write artifact without printing URL
+            const lines=[
+              '# InfoUzel Ads — jednorázový aktivační odkaz (NECOMMITOVAT, NESDÍLET)',
+              '# Platnost do: '+(j.expiresAt||''),
+              '# Po nastavení hesla odkaz přestane platit.',
+              '',
+              j.activationUrl,
+              ''
+            ];
+            fs.writeFileSync(process.argv[2], lines.join('\\n'), {mode:0o600});
+            // Scrub activationUrl from response file before any accidental log
+            delete j.activationUrl;
+            fs.writeFileSync(process.argv[1], JSON.stringify({ok:true,email:j.email,userIdPrefix:j.userIdPrefix,expiresAt:j.expiresAt}));
+            console.log('BOOTSTRAP_WORKER=OK');
+            console.log('BOOTSTRAP_EMAIL_SET=1');
+            console.log('BOOTSTRAP_USER_ID_PREFIX='+String(j.userIdPrefix||''));
+            console.log('BOOTSTRAP_ACTIVATION_ARTIFACT=WRITTEN');
+          " "$RESP_FILE" "$RUNNER_TEMP/iu-ads-bootstrap/activation-url.txt"
+
+      - name: Read-back D1 after Worker bootstrap
+        if: ${{ inputs.run_mode == 'bootstrap' }}
+        run: |
+          set -euo pipefail
+          run_eval() {
+            local kind="$1"
+            local sql="$2"
+            local stdout_file="$3"
+            local stderr_file="$4"
+            set +e
+            npx wrangler d1 execute iu-ads --remote --json --command "$sql" >"$stdout_file" 2>"$stderr_file"
+            local ec=$?
+            set -e
+            node ./scripts/iu-ads-bootstrap-precheck.mjs evaluate \
+              --kind "$kind" \
+              --exit-code "$ec" \
+              --stdout-file "$stdout_file" \
+              --stderr-file "$stderr_file"
+          }
+          MAIN_OUT="$(run_eval main_admin_count "SELECT COUNT(*) AS cnt FROM admin_user_roles WHERE role_code = 'main_admin';" /tmp/rb-main.out /tmp/rb-main.err)"
+          USERS_OUT="$(run_eval users_count "SELECT COUNT(*) AS cnt FROM admin_users;" /tmp/rb-users.out /tmp/rb-users.err)"
+          LOCK_OUT="$(run_eval bootstrap_lock "SELECT value FROM system_settings WHERE key = 'BOOTSTRAP_COMPLETED';" /tmp/rb-lock.out /tmp/rb-lock.err)"
+          printf '%s\n' "$MAIN_OUT"
+          printf '%s\n' "$USERS_OUT"
+          printf '%s\n' "$LOCK_OUT"
+          MAIN_STATUS="$(printf '%s\n' "$MAIN_OUT" | sed -n 's/^STATUS=//p' | head -n1)"
+          MAIN_COUNT="$(printf '%s\n' "$MAIN_OUT" | sed -n 's/^COUNT=//p' | head -n1)"
+          USERS_COUNT="$(printf '%s\n' "$USERS_OUT" | sed -n 's/^COUNT=//p' | head -n1)"
+          LOCK_STATUS="$(printf '%s\n' "$LOCK_OUT" | sed -n 's/^STATUS=//p' | head -n1)"
+          echo "READBACK_MAIN_ADMIN_COUNT=${MAIN_COUNT:-}"
+          echo "READBACK_ADMIN_USERS_COUNT=${USERS_COUNT:-}"
+          if [ "$MAIN_STATUS" != "MAIN_ADMIN_EXISTS" ] || [ "$MAIN_COUNT" != "1" ] || [ "$USERS_COUNT" != "1" ] || [ "$LOCK_STATUS" != "BOOTSTRAP_COMPLETED" ]; then
+            echo "BLOCKER: read-back inconsistent — fail-closed (no SUCCESS)."
+            rm -f "$RUNNER_TEMP/iu-ads-bootstrap/activation-url.txt"
+            exit 1
+          fi
+          echo "READBACK=OK"
+
+      - name: Delete ephemeral ADS_BOOTSTRAP_TOKEN
+        if: ${{ inputs.run_mode == 'bootstrap' }}
+        run: |
+          set -euo pipefail
+          set +e
+          echo y | npx wrangler secret delete ADS_BOOTSTRAP_TOKEN
+          DEL_EC=$?
+          set -e
+          if [ "$DEL_EC" != "0" ]; then
+            echo "BLOCKER: could not delete ADS_BOOTSTRAP_TOKEN — rotate/delete manually"
+            exit 1
+          fi
+          echo "SECRET_DELETE=ADS_BOOTSTRAP_TOKEN=OK"
+
+      - name: Upload private activation artifact (not logged)
+        if: ${{ inputs.run_mode == 'bootstrap' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: iu-ads-main-admin-activation
+          path: ${{ runner.temp }}/iu-ads-bootstrap/activation-url.txt
+          if-no-files-found: error
+          retention-days: 1
+          overwrite: true
 
       - name: Health gate (public ads must stay OFF)
         if: ${{ inputs.run_mode == 'bootstrap' }}
@@ -375,6 +521,7 @@ jobs:
           set -euo pipefail
           cat <<'EOF'
           BOOTSTRAP_STATUS=SUCCESS
+          ATOMICITY=d1_worker_batch
           NEXT_1=GitHub → Actions run → Artifacts → download iu-ads-main-admin-activation
           NEXT_2=Open activation-url.txt in a private browser window
           NEXT_3=Set your own strong password (min 12 chars)
