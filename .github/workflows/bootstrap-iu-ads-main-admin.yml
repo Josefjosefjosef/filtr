@@ -330,33 +330,114 @@ jobs:
           fi
           echo "BOOTSTRAP_EMAIL_PRESENT=1"
 
-      - name: Put ephemeral ADS_BOOTSTRAP_TOKEN (never logged)
+      # ROOT CAUSE (run 30141405605): secret put ADS_BOOTSTRAP_TOKEN then wrangler deploy
+      # created a new Worker version that did not bind the ephemeral secret → 503
+      # bootstrap_token_not_configured. Safe order: deploy FIRST, then secret put
+      # (secret put deploys a version with the binding), readiness, then call. Never
+      # deploy again until after token delete.
+      - name: Deploy Worker (APIs ON, public OFF) before bootstrap token
+        if: ${{ inputs.run_mode == 'bootstrap' }}
+        id: boot_deploy
+        run: |
+          set -euo pipefail
+          echo "DEPLOY_TARGET_WORKER=infouzel-ads"
+          echo "DEPLOY_TARGET_ACCOUNT=577868e9aac9c289e9323100f68fad16"
+          echo "DEPLOY_TARGET_URL=https://infouzel-ads.josef-zmrhal.workers.dev"
+          npx wrangler deploy \
+            --name infouzel-ads \
+            --var ADS_SAFE_MODE:true \
+            --var ADS_PUBLIC_DELIVERY_ENABLED:false \
+            --var ADS_ADMIN_API_ENABLED:true \
+            --var ADS_CLIENT_API_ENABLED:true
+          echo "WORKER_DEPLOY=SUCCESS"
+          echo "DEPLOY_VAR_ADMIN_API=true"
+          echo "DEPLOY_VAR_CLIENT_API=true"
+          echo "DEPLOY_VAR_PUBLIC_DELIVERY=false"
+
+      - name: Put ephemeral ADS_BOOTSTRAP_TOKEN after deploy (never logged)
         if: ${{ inputs.run_mode == 'bootstrap' }}
         id: boot_token
         run: |
           set -euo pipefail
           umask 077
           TOKEN="$(openssl rand -hex 32)"
+          echo "::add-mask::$TOKEN"
           printf '%s' "$TOKEN" > "$RUNNER_TEMP/iu-ads-bootstrap-token.txt"
-          printf '%s' "$TOKEN" | npx wrangler secret put ADS_BOOTSTRAP_TOKEN
-          echo "SECRET_PUT=ADS_BOOTSTRAP_TOKEN=OK"
-          # Expose to later steps via file only (GitHub env could leak in debug logs if echoed).
+          chmod 600 "$RUNNER_TEMP/iu-ads-bootstrap-token.txt"
+          set +e
+          printf '%s' "$TOKEN" | npx wrangler secret put ADS_BOOTSTRAP_TOKEN --name infouzel-ads
+          PUT_EC=$?
+          set -e
+          unset TOKEN
+          if [ "$PUT_EC" != "0" ]; then
+            echo "BOOTSTRAP_SECRET_PUT=FAIL"
+            echo "BLOCKER: wrangler secret put ADS_BOOTSTRAP_TOKEN failed (exit=$PUT_EC)"
+            exit 1
+          fi
+          echo "BOOTSTRAP_SECRET_PUT=SUCCESS"
+          set +e
+          npx wrangler secret list --name infouzel-ads --format json >"$RUNNER_TEMP/iu-ads-secret-list.json"
+          LIST_EC=$?
+          set -e
+          if [ "$LIST_EC" != "0" ]; then
+            echo "BLOCKER: wrangler secret list failed after put"
+            exit 1
+          fi
+          node ./scripts/iu-ads-bootstrap-token-flow.mjs secret-list-has \
+            "$RUNNER_TEMP/iu-ads-secret-list.json" ADS_BOOTSTRAP_TOKEN
+          rm -f "$RUNNER_TEMP/iu-ads-secret-list.json"
+          # Do NOT wrangler deploy after this put — that was the production failure mode.
 
-      - name: Deploy Worker (APIs ON, public OFF) before atomic bootstrap
+      - name: Bootstrap readiness (binding present; value never logged)
         if: ${{ inputs.run_mode == 'bootstrap' }}
+        id: boot_ready
         run: |
           set -euo pipefail
-          npx wrangler deploy \
-            --var ADS_SAFE_MODE:true \
-            --var ADS_PUBLIC_DELIVERY_ENABLED:false \
-            --var ADS_ADMIN_API_ENABLED:true \
-            --var ADS_CLIENT_API_ENABLED:true
-          echo "DEPLOY_VAR_ADMIN_API=true"
-          echo "DEPLOY_VAR_CLIENT_API=true"
-          echo "DEPLOY_VAR_PUBLIC_DELIVERY=false"
+          PROBE_URL="https://infouzel-ads.josef-zmrhal.workers.dev/v1/internal/bootstrap/main-admin"
+          PROBE_BODY='{"email":"readiness-probe@invalid.example"}'
+          # Fixed non-secret probe string (not the ephemeral token). Expect 401 when configured.
+          PROBE_BEARER="iu-ads-bootstrap-readiness-probe"
+          echo "::add-mask::$PROBE_BEARER"
+          attempt=1
+          while [ "$attempt" -le 24 ]; do
+            RESP_FILE="$RUNNER_TEMP/iu-ads-bootstrap-ready-$attempt.json"
+            set +e
+            HTTP="$(curl -sS -o "$RESP_FILE" -w "%{http_code}" \
+              -X POST "$PROBE_URL" \
+              -H "Authorization: Bearer ${PROBE_BEARER}" \
+              -H "Content-Type: application/json" \
+              --data "$PROBE_BODY")"
+            CURL_EC=$?
+            set -e
+            if [ "$CURL_EC" = "0" ]; then
+              set +e
+              node ./scripts/iu-ads-bootstrap-token-flow.mjs classify-readiness "$HTTP" "$RESP_FILE"
+              CLS_EC=$?
+              set -e
+              rm -f "$RESP_FILE"
+              if [ "$CLS_EC" = "0" ]; then
+                echo "BOOTSTRAP_READINESS=READY"
+                exit 0
+              fi
+              if [ "$CLS_EC" = "2" ]; then
+                echo "BOOTSTRAP_READINESS=NOT_READY attempt=$attempt"
+              else
+                echo "BOOTSTRAP_READINESS=UNKNOWN attempt=$attempt http=$HTTP"
+              fi
+            else
+              echo "BOOTSTRAP_READINESS=CURL_FAIL attempt=$attempt curl_ec=$CURL_EC"
+              rm -f "$RESP_FILE"
+            fi
+            attempt=$((attempt+1))
+            sleep 5
+          done
+          echo "BOOTSTRAP_READINESS=TIMEOUT"
+          echo "BLOCKER: ADS_BOOTSTRAP_TOKEN binding not observable before endpoint call"
+          exit 1
 
       - name: Atomic Worker bootstrap via D1 batch (no SQL BEGIN)
         if: ${{ inputs.run_mode == 'bootstrap' }}
+        id: boot_call
         env:
           BOOTSTRAP_ADMIN_EMAIL: ${{ inputs.admin_email }}
           BOOTSTRAP_ADMIN_DISPLAY_NAME: ${{ inputs.admin_display_name }}
@@ -366,6 +447,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/iu-ads-bootstrap"
           umask 077
           TOKEN="$(cat "$RUNNER_TEMP/iu-ads-bootstrap-token.txt")"
+          echo "::add-mask::$TOKEN"
           BODY_FILE="$RUNNER_TEMP/iu-ads-bootstrap/request.json"
           RESP_FILE="$RUNNER_TEMP/iu-ads-bootstrap/response.json"
           BODY_FILE="$BODY_FILE" node -e "
@@ -385,11 +467,9 @@ jobs:
           CURL_EC=$?
           set -e
           unset TOKEN
-          rm -f "$RUNNER_TEMP/iu-ads-bootstrap-token.txt"
           echo "BOOTSTRAP_HTTP=$HTTP"
-          if [ "$CURL_EC" != "0" ] || [ "$HTTP" != "200" ]; then
+          if [ "$CURL_EC" != "0" ] || { [ "$HTTP" != "200" ] && [ "$HTTP" != "201" ]; }; then
             echo "BLOCKER: worker bootstrap failed (http=$HTTP curl_ec=$CURL_EC)"
-            # Safe error field only — never dump full body (may contain activationUrl on partial bugs).
             node -e "
               const fs=require('fs');
               try {
@@ -397,6 +477,7 @@ jobs:
                 console.log('BOOTSTRAP_ERROR='+String(j.error||'unknown'));
               } catch { console.log('BOOTSTRAP_ERROR=unparseable_or_empty'); }
             " "$RESP_FILE"
+            rm -f "$RUNNER_TEMP/iu-ads-bootstrap-token.txt"
             exit 1
           fi
           node -e "
@@ -405,7 +486,6 @@ jobs:
             if(j.ok!==true) process.exit(2);
             if(typeof j.activationUrl!=='string' || j.activationUrl.indexOf('activate=')<0) process.exit(3);
             if(typeof j.email!=='string' || !j.email) process.exit(4);
-            // Write artifact without printing URL
             const lines=[
               '# InfoUzel Ads — jednorázový aktivační odkaz (NECOMMITOVAT, NESDÍLET)',
               '# Platnost do: '+(j.expiresAt||''),
@@ -415,7 +495,6 @@ jobs:
               ''
             ];
             fs.writeFileSync(process.argv[2], lines.join('\\n'), {mode:0o600});
-            // Scrub activationUrl from response file before any accidental log
             delete j.activationUrl;
             fs.writeFileSync(process.argv[1], JSON.stringify({ok:true,email:j.email,userIdPrefix:j.userIdPrefix,expiresAt:j.expiresAt}));
             console.log('BOOTSTRAP_WORKER=OK');
@@ -423,9 +502,11 @@ jobs:
             console.log('BOOTSTRAP_USER_ID_PREFIX='+String(j.userIdPrefix||''));
             console.log('BOOTSTRAP_ACTIVATION_ARTIFACT=WRITTEN');
           " "$RESP_FILE" "$RUNNER_TEMP/iu-ads-bootstrap/activation-url.txt"
+          rm -f "$RUNNER_TEMP/iu-ads-bootstrap-token.txt"
 
       - name: Read-back D1 after Worker bootstrap
         if: ${{ inputs.run_mode == 'bootstrap' }}
+        id: boot_readback
         run: |
           set -euo pipefail
           run_eval() {
@@ -456,28 +537,16 @@ jobs:
           echo "READBACK_MAIN_ADMIN_COUNT=${MAIN_COUNT:-}"
           echo "READBACK_ADMIN_USERS_COUNT=${USERS_COUNT:-}"
           if [ "$MAIN_STATUS" != "MAIN_ADMIN_EXISTS" ] || [ "$MAIN_COUNT" != "1" ] || [ "$USERS_COUNT" != "1" ] || [ "$LOCK_STATUS" != "BOOTSTRAP_COMPLETED" ]; then
+            echo "BOOTSTRAP_READBACK=INCONSISTENT"
             echo "BLOCKER: read-back inconsistent — fail-closed (no SUCCESS)."
             rm -f "$RUNNER_TEMP/iu-ads-bootstrap/activation-url.txt"
             exit 1
           fi
+          echo "BOOTSTRAP_READBACK=CONSISTENT"
           echo "READBACK=OK"
 
-      - name: Delete ephemeral ADS_BOOTSTRAP_TOKEN
-        if: ${{ inputs.run_mode == 'bootstrap' }}
-        run: |
-          set -euo pipefail
-          set +e
-          echo y | npx wrangler secret delete ADS_BOOTSTRAP_TOKEN
-          DEL_EC=$?
-          set -e
-          if [ "$DEL_EC" != "0" ]; then
-            echo "BLOCKER: could not delete ADS_BOOTSTRAP_TOKEN — rotate/delete manually"
-            exit 1
-          fi
-          echo "SECRET_DELETE=ADS_BOOTSTRAP_TOKEN=OK"
-
       - name: Upload private activation artifact (not logged)
-        if: ${{ inputs.run_mode == 'bootstrap' }}
+        if: ${{ inputs.run_mode == 'bootstrap' && success() }}
         uses: actions/upload-artifact@v4
         with:
           name: iu-ads-main-admin-activation
@@ -486,8 +555,46 @@ jobs:
           retention-days: 1
           overwrite: true
 
+      - name: Delete ephemeral ADS_BOOTSTRAP_TOKEN (always after put; does not hide prior failure)
+        if: ${{ always() && inputs.run_mode == 'bootstrap' && steps.boot_token.outcome == 'success' }}
+        id: boot_cleanup
+        run: |
+          set -euo pipefail
+          set +e
+          echo y | npx wrangler secret delete ADS_BOOTSTRAP_TOKEN --name infouzel-ads
+          DEL_EC=$?
+          set -e
+          if [ "$DEL_EC" != "0" ]; then
+            echo "BOOTSTRAP_SECRET_DELETE=FAIL"
+            echo "BLOCKER: could not delete ADS_BOOTSTRAP_TOKEN — rotate/delete manually"
+            # Still exit non-zero; prior bootstrap failure remains visible in job log.
+            exit 1
+          fi
+          echo "BOOTSTRAP_SECRET_DELETE=SUCCESS"
+          rm -f "$RUNNER_TEMP/iu-ads-bootstrap-token.txt"
+
+      - name: Verify bootstrap endpoint unusable after token delete
+        if: ${{ always() && inputs.run_mode == 'bootstrap' && steps.boot_cleanup.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          RESP_FILE="$RUNNER_TEMP/iu-ads-bootstrap-post-delete.json"
+          set +e
+          HTTP="$(curl -sS -o "$RESP_FILE" -w "%{http_code}" \
+            -X POST "https://infouzel-ads.josef-zmrhal.workers.dev/v1/internal/bootstrap/main-admin" \
+            -H "Authorization: Bearer post-delete-probe" \
+            -H "Content-Type: application/json" \
+            --data '{"email":"post-delete@invalid.example"}')"
+          CURL_EC=$?
+          set -e
+          if [ "$CURL_EC" != "0" ]; then
+            echo "BLOCKER: post-delete probe curl failed"
+            exit 1
+          fi
+          node ./scripts/iu-ads-bootstrap-token-flow.mjs classify-post-delete "$HTTP" "$RESP_FILE"
+          rm -f "$RESP_FILE"
+
       - name: Health gate (public ads must stay OFF)
-        if: ${{ inputs.run_mode == 'bootstrap' }}
+        if: ${{ inputs.run_mode == 'bootstrap' && success() }}
         run: |
           set -euo pipefail
           URL="https://infouzel-ads.josef-zmrhal.workers.dev/health"
@@ -516,7 +623,7 @@ jobs:
           exit 1
 
       - name: Success instructions (no secrets)
-        if: ${{ inputs.run_mode == 'bootstrap' }}
+        if: ${{ inputs.run_mode == 'bootstrap' && success() }}
         run: |
           set -euo pipefail
           cat <<'EOF'
