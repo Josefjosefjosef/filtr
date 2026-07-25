@@ -220,8 +220,10 @@ jobs:
 
       - name: Deploy Worker
         env:
-          ENABLE_ADMIN_API: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_admin_api || false }}
-          ENABLE_CLIENT_API: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_client_api || false }}
+          # Push to main keeps Admin/Client API ON (ops default). Public delivery stays OFF.
+          # workflow_dispatch still honors the checkboxes (can temporarily disable for drills).
+          ENABLE_ADMIN_API: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.enable_admin_api) }}
+          ENABLE_CLIENT_API: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.enable_client_api) }}
         run: |
           set -euo pipefail
           # Committed wrangler.toml defaults stay false. Optional dispatch flips runtime vars only.
