@@ -159,11 +159,13 @@
   function initNavigation() {
     var overlay = document.getElementById("iuTopbarInfoOverlay");
     if (!overlay || overlay.getAttribute("data-iu-info-center-v2") !== "1") return;
-    if (overlay.getAttribute("data-iu-info-center-v2-inited") === "1") return;
-    overlay.setAttribute("data-iu-info-center-v2-inited", "1");
-
+    // Allow re-init after lazy template mount; only skip duplicate listener wiring via flag.
+    var already = overlay.getAttribute("data-iu-info-center-v2-inited") === "1";
     var menu = document.getElementById("iuInfoCenterMenu");
     ensureAdsClientTile(menu);
+    if (already) return;
+    overlay.setAttribute("data-iu-info-center-v2-inited", "1");
+
     var titleEl = document.getElementById("iuTopbarInfoOverlayTitle");
     var backBtn = document.getElementById("iuInfoCenterBack");
     var details = qsa(".iuInfoCenter__detail", overlay);
