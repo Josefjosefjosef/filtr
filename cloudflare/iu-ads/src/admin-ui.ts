@@ -47,9 +47,15 @@ export const ADMIN_SHELL_HTML = `<!DOCTYPE html>
     #login-view.show,#app-view.show{display:block}
     @media (max-width:860px){
       .layout{grid-template-columns:1fr}
-      nav{border-right:0;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:.25rem;max-height:none}
-      nav button{width:auto}
+      nav{
+        border-right:0;border-bottom:1px solid var(--line);
+        display:flex;flex-wrap:wrap;gap:.25rem;max-height:none;
+        position:sticky;top:64px;z-index:4;background:rgba(255,253,249,.96);
+        max-height:42vh;overflow:auto;-webkit-overflow-scrolling:touch
+      }
+      nav button{width:auto;flex:1 1 auto;min-width:42%}
       .grid2{grid-template-columns:1fr}
+      main{padding:1rem}
     }
   </style>
 </head>

@@ -209,6 +209,17 @@ class FakeD1 {
         });
       return { results };
     }
+    if (sql.includes("FROM invoices WHERE due_at IS NOT NULL")) {
+      const [from, to] = params;
+      const results = this.invoices.filter((inv) => {
+        if (!inv.due_at) return false;
+        return String(inv.due_at) >= String(from) && String(inv.due_at) <= String(to);
+      });
+      return { results };
+    }
+    if (sql.includes("FROM client_access_codes WHERE expires_at IS NOT NULL")) {
+      return { results: [] };
+    }
 
     if (sql.includes("FROM alerts ") && sql.includes("ORDER BY created_at")) {
       let rows = [...this.alerts.values()];

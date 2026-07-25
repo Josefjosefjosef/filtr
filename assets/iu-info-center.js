@@ -138,6 +138,24 @@
     refreshPanel();
   }
 
+  /** Insert Ads client portal tile before "Provozovatel a kontakt" without editing frozen projects/index.html. */
+  function ensureAdsClientTile(menu) {
+    if (!menu) return;
+    if (menu.querySelector('[data-iu-info-external="ads-client"]')) return;
+    var contact = menu.querySelector('.iuInfoCenter__tile[data-iu-info-section="contact"]');
+    var a = document.createElement("a");
+    a.className = "iuInfoCenter__tile";
+    a.href = "https://infouzel-ads.josef-zmrhal.workers.dev/client";
+    a.rel = "noopener noreferrer";
+    a.setAttribute("data-iu-info-external", "ads-client");
+    a.innerHTML =
+      '<span class="iuInfoCenter__tileIcon" aria-hidden="true">📢</span>' +
+      '<span class="iuInfoCenter__tileLabel">Reklama a klientský portál</span>' +
+      '<span class="iuInfoCenter__tileHint">Vstup pro inzerenty a přehled reklamních kampaní</span>';
+    if (contact && contact.parentNode) contact.parentNode.insertBefore(a, contact);
+    else menu.appendChild(a);
+  }
+
   function initNavigation() {
     var overlay = document.getElementById("iuTopbarInfoOverlay");
     if (!overlay || overlay.getAttribute("data-iu-info-center-v2") !== "1") return;
@@ -145,6 +163,7 @@
     overlay.setAttribute("data-iu-info-center-v2-inited", "1");
 
     var menu = document.getElementById("iuInfoCenterMenu");
+    ensureAdsClientTile(menu);
     var titleEl = document.getElementById("iuTopbarInfoOverlayTitle");
     var backBtn = document.getElementById("iuInfoCenterBack");
     var details = qsa(".iuInfoCenter__detail", overlay);
@@ -231,6 +250,10 @@
 
     tiles.forEach(function (tile) {
       tile.addEventListener("click", function (e) {
+        if (tile.getAttribute("data-iu-info-external")) {
+          // External link (e.g. Ads client portal) — do not intercept.
+          return;
+        }
         try {
           e.preventDefault();
         } catch (_) {}

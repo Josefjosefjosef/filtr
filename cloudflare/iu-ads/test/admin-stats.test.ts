@@ -220,19 +220,25 @@ describe("admin-stats — no PII / price leakage and 503 fail-closed", () => {
     );
   });
 
-  it("503 stats_not_configured when ANALYTICS_ADMIN_REPORT_URL setting is empty", async () => {
+  it("empty configured=false when ANALYTICS_ADMIN_REPORT_URL setting is empty", async () => {
     db.settings.set("ANALYTICS_ADMIN_REPORT_URL", "");
     const request = await buildSessionRequest(db, { userId: "usr_am", roles: ["ads_manager"], url: "https://worker.test/v1/admin/stats/summary" });
     const res = await handleGetStatsSummary(request, env, new URL(request.url));
-    expect(res.status).toBe(503);
+    expect(res.status).toBe(200);
     const body = (await res.json()) as any;
-    expect(body.error).toBe("stats_not_configured");
+    expect(body.configured).toBe(false);
+    expect(body.rows).toEqual([]);
+    expect(body.totals.impressions).toBe(0);
+    expect(body.error).toBeUndefined();
   });
 
-  it("503 stats_not_configured when ANALYTICS_ADMIN_TOKEN secret is missing", async () => {
+  it("empty configured=false when ANALYTICS_ADMIN_TOKEN secret is missing", async () => {
     const envNoToken = { ...env, ANALYTICS_ADMIN_TOKEN: undefined } as Env;
     const request = await buildSessionRequest(db, { userId: "usr_am", roles: ["ads_manager"], url: "https://worker.test/v1/admin/stats/campaigns/cmp_1" });
     const res = await handleGetCampaignStats(request, envNoToken, new URL(request.url), "cmp_1");
-    expect(res.status).toBe(503);
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as any;
+    expect(body.configured).toBe(false);
+    expect(body.rows).toEqual([]);
   });
 });

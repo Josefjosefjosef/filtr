@@ -178,6 +178,7 @@ jobs:
           ADS_CLIENT_SESSION_SECRET: ${{ secrets.ADS_CLIENT_SESSION_SECRET }}
           ADS_CODE_PEPPER: ${{ secrets.ADS_CODE_PEPPER }}
           ADS_BACKUP_ENCRYPTION_KEY: ${{ secrets.ADS_BACKUP_ENCRYPTION_KEY }}
+          ANALYTICS_ADMIN_TOKEN: ${{ secrets.ANALYTICS_ADMIN_TOKEN }}
         run: |
           set -euo pipefail
           put_if_set() {
@@ -195,6 +196,27 @@ jobs:
           put_if_set ADS_CLIENT_SESSION_SECRET "${ADS_CLIENT_SESSION_SECRET:-}"
           put_if_set ADS_CODE_PEPPER "${ADS_CODE_PEPPER:-}"
           put_if_set ADS_BACKUP_ENCRYPTION_KEY "${ADS_BACKUP_ENCRYPTION_KEY:-}"
+          put_if_set ANALYTICS_ADMIN_TOKEN "${ANALYTICS_ADMIN_TOKEN:-}"
+
+      - name: Ensure Analytics report URL in D1 (names only; no tokens)
+        run: |
+          set -euo pipefail
+          # Fail-closed stats need ANALYTICS_ADMIN_REPORT_URL + Worker secret ANALYTICS_ADMIN_TOKEN.
+          # URL is a public Worker host — safe to set from CI. Never print secrets.
+          URL="https://infouzel-analytics.josef-zmrhal.workers.dev"
+          NOW="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          set +e
+          npx wrangler d1 execute iu-ads --remote --command \
+            "INSERT INTO system_settings (key, value, updated_at) VALUES ('ANALYTICS_ADMIN_REPORT_URL', '${URL}', '${NOW}') ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated_at=excluded.updated_at;"
+          EC=$?
+          set -e
+          if [ "$EC" != "0" ]; then
+            echo "ANALYTICS_URL_SET=FAIL"
+            echo "BLOCKER: could not upsert ANALYTICS_ADMIN_REPORT_URL"
+            exit 1
+          fi
+          echo "ANALYTICS_URL_SET=OK"
+          echo "ANALYTICS_URL_HOST=infouzel-analytics.josef-zmrhal.workers.dev"
 
       - name: Deploy Worker
         env:
