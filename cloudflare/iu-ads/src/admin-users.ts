@@ -51,6 +51,21 @@ async function toPublicUser(db: D1Database, row: AdminUserDbRow) {
   };
 }
 
+/** Count active users who currently hold main_admin (used to protect the last one). */
+async function countActiveMainAdmins(db: D1Database): Promise<number> {
+  const res = await db
+    .prepare(
+      "SELECT COUNT(*) AS c FROM admin_user_roles r INNER JOIN admin_users u ON u.user_id = r.user_id WHERE r.role_code = 'main_admin' AND u.is_active = 1"
+    )
+    .first<{ c: number }>();
+  return Number(res?.c || 0);
+}
+
+async function userHasMainAdmin(db: D1Database, userId: string): Promise<boolean> {
+  const roles = await loadUserRoles(db, userId);
+  return roles.includes("main_admin");
+}
+
 export async function handleListUsers(request: Request, env: Env): Promise<Response> {
   const guard = await requireUsersPermission(request, env, "users.read");
   if (!guard.ok) return guard.response;
@@ -166,6 +181,13 @@ export async function handleUpdateUser(request: Request, env: Env, userId: strin
   const isActive = typeof body.is_active === "boolean" ? (body.is_active ? 1 : 0) : before.is_active;
   const forcePasswordChange =
     typeof body.force_password_change === "boolean" ? (body.force_password_change ? 1 : 0) : before.force_password_change;
+
+  // Never deactivate the last active main_admin.
+  if (isActive === 0 && before.is_active === 1 && (await userHasMainAdmin(env.DB, userId))) {
+    const mainCount = await countActiveMainAdmins(env.DB);
+    if (mainCount <= 1) return json({ error: "last_main_admin" }, 409);
+  }
+
   const nowIso = new Date().toISOString();
   const deactivatedAt = isActive === 0 && before.is_active === 1 ? nowIso : isActive === 1 ? null : undefined;
 
@@ -229,10 +251,22 @@ export async function handleSetUserRoles(request: Request, env: Env, userId: str
   if (!userRow) return json({ error: "not_found" }, 404);
 
   const before = await loadUserRoles(env.DB, userId);
+  const nextRoles = roles as RoleCode[];
+  const removingMain = before.includes("main_admin") && !nextRoles.includes("main_admin");
+  if (removingMain) {
+    const active = await env.DB.prepare("SELECT is_active FROM admin_users WHERE user_id = ?")
+      .bind(userId)
+      .first<{ is_active: number }>();
+    if (active && active.is_active === 1) {
+      const mainCount = await countActiveMainAdmins(env.DB);
+      if (mainCount <= 1) return json({ error: "last_main_admin" }, 409);
+    }
+  }
+
   const nowIso = new Date().toISOString();
 
   await env.DB.prepare("DELETE FROM admin_user_roles WHERE user_id = ?").bind(userId).run();
-  for (const role of roles as RoleCode[]) {
+  for (const role of nextRoles) {
     await env.DB.prepare(
       "INSERT OR IGNORE INTO admin_user_roles (user_id, role_code, assigned_at, assigned_by) VALUES (?,?,?,?)"
     )
@@ -249,12 +283,12 @@ export async function handleSetUserRoles(request: Request, env: Env, userId: str
       objectType: "admin_user",
       objectId: userId,
       before: { roles: before },
-      after: { roles },
+      after: { roles: nextRoles },
       result: "success",
     })
   );
 
-  return json({ user_id: userId, roles });
+  return json({ user_id: userId, roles: nextRoles });
 }
 
 export async function handleListRoles(request: Request, env: Env): Promise<Response> {

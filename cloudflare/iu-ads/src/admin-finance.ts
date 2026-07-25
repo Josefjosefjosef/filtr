@@ -49,21 +49,31 @@ export async function handleFinanceSummary(request: Request, env: Env, url: URL)
     .all<InvoiceAggRow>();
 
   const rows = res.results || [];
-  const byCurrency: Record<
-    string,
-    { invoiced_cents: number; paid_cents: number; outstanding_cents: number; by_status: Record<string, { count: number; total_cents: number }> }
-  > = {};
+  const emptyCurrency = () => ({
+    invoiced_cents: 0,
+    paid_cents: 0,
+    outstanding_cents: 0,
+    overdue_cents: 0,
+    by_status: {} as Record<string, { count: number; total_cents: number }>,
+  });
+  const byCurrency: Record<string, ReturnType<typeof emptyCurrency>> = {};
 
   for (const row of rows) {
     const currency = row.currency || "CZK";
     if (!byCurrency[currency]) {
-      byCurrency[currency] = { invoiced_cents: 0, paid_cents: 0, outstanding_cents: 0, by_status: {} };
+      byCurrency[currency] = emptyCurrency();
     }
     const totalCents = row.total_cents || 0;
     byCurrency[currency].by_status[row.status] = { count: row.count, total_cents: totalCents };
     if (row.status !== "cancelled") byCurrency[currency].invoiced_cents += totalCents;
     if (row.status === "paid") byCurrency[currency].paid_cents += totalCents;
     if (OUTSTANDING_STATUSES.has(row.status)) byCurrency[currency].outstanding_cents += totalCents;
+    if (row.status === "overdue") byCurrency[currency].overdue_cents += totalCents;
+  }
+
+  // Always expose a stable CZK shape so Admin UI never renders an empty {} summary.
+  if (!Object.keys(byCurrency).length) {
+    byCurrency.CZK = emptyCurrency();
   }
 
   return json({ summary: byCurrency, filters: { client_id: clientId, from, to } });

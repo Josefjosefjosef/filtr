@@ -78,10 +78,14 @@ if (!/campaign_id|placement_id|slot_type|valid_clicks|suspicious/.test(adminPage
 if (/Administrace \(chráněná\)/.test(publicPage)) fail("public:must_not_link_protected_admin");
 if (/statistiky\/admin\//.test(publicPage)) fail("public:must_not_href_analytics_admin");
 
-// Informační centrum: dedicated Ads client portal tile (external /client).
-if (!/Reklama a klientský portál/.test(index)) fail("index:missing_ads_client_tile");
-if (!/data-iu-info-external=\"ads-client\"/.test(index)) fail("index:missing_ads_client_external_marker");
-if (!/infouzel-ads\.josef-zmrhal\.workers\.dev\/client/.test(index)) fail("index:missing_ads_client_href");
+// Informační centrum: Ads client tile is injected by iu-info-center.js (projects/index.html is freeze-locked).
+const infoCenterJs = fs.readFileSync(path.join(ROOT, "assets/iu-info-center.js"), "utf8");
+if (!/Reklama a klientský portál/.test(infoCenterJs)) fail("info_center:missing_ads_client_tile");
+if (!/data-iu-info-external/.test(infoCenterJs) || !/ads-client/.test(infoCenterJs)) {
+  fail("info_center:missing_ads_client_external_marker");
+}
+if (!/infouzel-ads\.josef-zmrhal\.workers\.dev\/client/.test(infoCenterJs)) fail("info_center:missing_ads_client_href");
+if (/infouzel-ads\.josef-zmrhal\.workers\.dev\/admin/.test(infoCenterJs)) fail("info_center:must_not_link_ads_admin");
 if (/infouzel-ads\.josef-zmrhal\.workers\.dev\/admin/.test(index)) fail("index:must_not_link_ads_admin");
 
 if (!/FORBIDDEN_KEYS/.test(privacyTs)) fail("worker:missing_forbidden_keys");
@@ -183,6 +187,35 @@ try {
     );
   });
   if (!dyn) fail("behavior:dynamic_ad_events_failed");
+
+  await page.goto(`http://127.0.0.1:${PORT}/projects/`, { waitUntil: "domcontentloaded", timeout: 20000 });
+  await page.evaluate(() => {
+    try {
+      localStorage.setItem("iu:consent:layer:dismissed:v1", "1");
+    } catch (_) {}
+  });
+  // Open Informační centrum and assert Ads client tile (JS-injected, freeze-safe).
+  const infoBtn = page.locator("#iuTopbarInfoBtn, [data-iu-open-info-center], button:has-text('Informační')").first();
+  try {
+    await infoBtn.click({ timeout: 5000 });
+  } catch (_) {
+    await page.evaluate(() => {
+      var o = document.getElementById("iuTopbarInfoOverlay");
+      if (o) o.hidden = false;
+      if (window.iuInfoCenter && typeof window.iuInfoCenter.open === "function") window.iuInfoCenter.open();
+    });
+  }
+  await page.waitForTimeout(400);
+  const adsTile = page.locator('[data-iu-info-external="ads-client"]');
+  const adsCount = await adsTile.count();
+  if (!adsCount) fail("behavior:missing_ads_client_tile");
+  else {
+    const href = await adsTile.first().getAttribute("href");
+    if (!/infouzel-ads\.josef-zmrhal\.workers\.dev\/client/.test(String(href || ""))) {
+      fail("behavior:ads_client_tile_bad_href");
+    }
+    if (/\/admin/.test(String(href || ""))) fail("behavior:ads_client_tile_points_admin");
+  }
 
   await page.goto(`http://127.0.0.1:${PORT}/projects/statistiky/`, { waitUntil: "load", timeout: 20000 });
   const title = await page.title();

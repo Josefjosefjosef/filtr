@@ -21,21 +21,21 @@ Legenda: **DONE** = implementováno + otestováno unit/integračně; **PROD** = 
 | 15 | Kampaně | DONE | full create form |
 | 16 | Umístění / typy | DONE | seed + `name_cs` v UI |
 | 17 | Rezervace / kolize | DONE | `collision.ts` + UI |
-| 18 | Kalendář | DONE | uživatelský přehled 30 dní, bez raw JSON |
+| 18 | Kalendář | DONE | kampaně, rezervace, splatnosti faktur, expirace kódů; bez raw JSON |
 | 19 | Kreativy | DONE | upload/review API + UI |
 | 20 | Statistikistiky (Ads↔Analytics) | DONE | soft empty state; URL+token wiring v Deploy |
 | 21 | Klientské kódy | DONE | hash-only, once-show |
 | 22 | Client portal | DONE | login vždy viditelný; boot try/catch |
 | 23 | Client report / izolace | DONE | scope filters |
-| 24 | Dokumenty + signed access | DONE | `signed-access-e2e` tests |
-| 25 | Finance | DONE | Kč widgety + filtry |
+| 24 | Dokumenty + signed access | DONE | e2e + path-traversal `bad_key` |
+| 25 | Finance | DONE | Kč widgety; zeroed CZK summary; overdue |
 | 26 | Exporty CSV/JSON | DONE | CSV injection escape |
 | 27 | Zálohy | DONE | encrypt when key set; drill endpoint |
-| 28 | Restore drill (izolovaný) | PARTIAL | drill API existuje; plný izolovaný D1 restore v CI je provozní runbook |
+| 28 | Restore drill (izolovaný) | PARTIAL | drill API + unit hash check; izolovaný D1 restore = provozní runbook (ne prod D1) |
 | 29 | Alerts | DONE | generate/ack/resolve |
 | 30 | Dashboard | DONE | čitelné karty CZ |
 | 31 | Search | PARTIAL | endpoint + UI; stále techničtější výstup |
-| 32 | Users admin | DONE | create + roles guards |
+| 32 | Users admin | DONE | create + roles; `last_main_admin` 409 |
 | 33 | Password reset / change | DONE+PROD | aktivace + login ověřeny |
 | 34 | Anti-bruteforce | DONE | tests |
 | 35 | Public inject fail-soft | DONE+PROD | adNodes=0 when OFF |

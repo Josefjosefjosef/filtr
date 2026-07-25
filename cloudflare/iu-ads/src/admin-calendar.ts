@@ -156,11 +156,77 @@ export async function handleGetAdminCalendar(request: Request, env: Env, url: UR
     }
   }
 
+  const invoices: Array<{
+    kind: "invoice_due";
+    invoice_id: string;
+    invoice_number: string;
+    client_id: string;
+    status: string;
+    start_at: string;
+    end_at: string;
+    title: string;
+  }> = [];
+
+  if (hasPermission(roles, "invoices.read") || hasPermission(roles, "finance.read")) {
+    const res = await env.DB.prepare(
+      "SELECT invoice_id, invoice_number, client_id, status, due_at FROM invoices WHERE due_at IS NOT NULL AND due_at >= ? AND due_at <= ? ORDER BY due_at ASC"
+    )
+      .bind(from, to)
+      .all<{ invoice_id: string; invoice_number: string; client_id: string; status: string; due_at: string }>();
+    for (const row of res.results || []) {
+      if (!row.due_at) continue;
+      invoices.push({
+        kind: "invoice_due",
+        invoice_id: row.invoice_id,
+        invoice_number: row.invoice_number,
+        client_id: row.client_id,
+        status: row.status,
+        start_at: row.due_at,
+        end_at: row.due_at,
+        title: "Splatnost " + (row.invoice_number || row.invoice_id),
+      });
+    }
+  }
+
+  const codeExpiries: Array<{
+    kind: "code_expiry";
+    code_id: string;
+    client_id: string;
+    status: string;
+    start_at: string;
+    end_at: string;
+    title: string;
+  }> = [];
+
+  if (hasPermission(roles, "codes.read")) {
+    const res = await env.DB.prepare(
+      "SELECT code_id, client_id, status, expires_at FROM client_access_codes WHERE expires_at IS NOT NULL AND expires_at >= ? AND expires_at <= ? ORDER BY expires_at ASC"
+    )
+      .bind(from, to)
+      .all<{ code_id: string; client_id: string; status: string; expires_at: string }>();
+    for (const row of res.results || []) {
+      if (!row.expires_at) continue;
+      codeExpiries.push({
+        kind: "code_expiry",
+        code_id: row.code_id,
+        client_id: row.client_id,
+        status: row.status,
+        start_at: row.expires_at,
+        end_at: row.expires_at,
+        title: "Expirace klientského kódu",
+      });
+    }
+  }
+
   return json({
     from,
     to,
     campaigns,
     reservations,
-    items: [...campaigns, ...reservations].sort((a, b) => a.start_at.localeCompare(b.start_at)),
+    invoices,
+    code_expiries: codeExpiries,
+    items: [...campaigns, ...reservations, ...invoices, ...codeExpiries].sort((a, b) =>
+      a.start_at.localeCompare(b.start_at)
+    ),
   });
 }

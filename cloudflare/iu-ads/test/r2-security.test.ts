@@ -104,4 +104,15 @@ describe("signed private object access", () => {
     });
     expect(bad.ok).toBe(false);
   });
+
+  it("rejects path traversal and absolute keys (bad_key)", async () => {
+    const secret = "test-signing-secret-not-for-prod";
+    const exp = Math.floor(Date.now() / 1000) + 120;
+    for (const objectKey of ["../etc/passwd", "/document/doc_1/v1.pdf", "document/../../secret.pdf"]) {
+      const sig = await signObjectAccess(secret, { objectKey, bucket: "DOCUMENTS", exp });
+      const res = await verifyObjectAccess(secret, { objectKey, bucket: "DOCUMENTS", exp, sig });
+      expect(res.ok).toBe(false);
+      if (!res.ok) expect(res.reason).toBe("bad_key");
+    }
+  });
 });

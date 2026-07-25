@@ -281,20 +281,27 @@ export const ADMIN_UI_SCRIPT = String.raw`
   function financeHtml(body){
     var summary=(body&&body.summary)||{};
     var currencies=Object.keys(summary);
-    if(!currencies.length) return '<p class="muted empty">Žádné faktury v zvoleném období.</p>';
+    if(!currencies.length){
+      summary={CZK:{invoiced_cents:0,paid_cents:0,outstanding_cents:0,overdue_cents:0,by_status:{}}};
+      currencies=["CZK"];
+    }
     return currencies.map(function(cur){
       var s=summary[cur]||{};
+      var statusKeys=Object.keys(s.by_status||{});
       return '<div class="widgets">'+
         '<div class="widget"><div class="widget-k">Fakturováno ('+esc(cur)+')</div><div class="widget-v">'+esc(formatKc(s.invoiced_cents||0))+'</div></div>'+
         '<div class="widget"><div class="widget-k">Uhrazeno</div><div class="widget-v">'+esc(formatKc(s.paid_cents||0))+'</div></div>'+
         '<div class="widget"><div class="widget-k">Neuhrazeno</div><div class="widget-v">'+esc(formatKc(s.outstanding_cents||0))+'</div></div>'+
+        '<div class="widget"><div class="widget-k">Po splatnosti</div><div class="widget-v">'+esc(formatKc(s.overdue_cents||0))+'</div></div>'+
         '</div>'+
-        '<div class="table-wrap" style="margin-top:.75rem"><table><thead><tr><th>Stav</th><th>Počet</th><th>Částka</th></tr></thead><tbody>'+
-        Object.keys(s.by_status||{}).map(function(st){
-          var row=s.by_status[st];
-          return '<tr><td>'+esc(st)+'</td><td>'+esc(row.count)+'</td><td>'+esc(formatKc(row.total_cents))+'</td></tr>';
-        }).join("")+
-        '</tbody></table></div>';
+        (statusKeys.length
+          ? '<div class="table-wrap" style="margin-top:.75rem"><table><thead><tr><th>Stav</th><th>Počet</th><th>Částka</th></tr></thead><tbody>'+
+            statusKeys.map(function(st){
+              var row=s.by_status[st];
+              return '<tr><td>'+esc(st)+'</td><td>'+esc(row.count)+'</td><td>'+esc(formatKc(row.total_cents))+'</td></tr>';
+            }).join("")+
+            '</tbody></table></div>'
+          : '<p class="muted empty" style="margin-top:.75rem">Žádné faktury v zvoleném období.</p>');
     }).join("");
   }
   function statsHtml(body){
@@ -323,20 +330,21 @@ export const ADMIN_UI_SCRIPT = String.raw`
   function calendarHtml(body){
     var items=(body&&body.items)||[];
     if(!items.length) return '<p class="muted empty">Žádné záznamy</p>';
+    var kindLabel={campaign:"Kampaň",reservation:"Rezervace",invoice_due:"Splatnost faktury",code_expiry:"Expirace klientského kódu"};
     var rows=items.map(function(it){
-      var kind=it.kind==="campaign"?"Kampaň":(it.kind==="reservation"?"Rezervace":(it.kind||"—"));
-      var title=it.title||it.placement_id||it.reservation_id||it.campaign_id||"—";
+      var kind=kindLabel[it.kind]||it.kind||"—";
+      var title=it.title||it.placement_id||it.reservation_id||it.invoice_number||it.campaign_id||"—";
       return {
         kind:kind,
         title:title,
-        campaign_id:it.campaign_id||"",
+        ref:it.campaign_id||it.invoice_id||it.code_id||it.reservation_id||"",
         start_at:formatCsDate(it.start_at),
         end_at:formatCsDate(it.end_at),
         status:it.status||"",
         collision:it.has_collision?"Ano":""
       };
     });
-    return listTable(rows,[["kind","Typ"],["title","Název / umístění"],["campaign_id","Kampaň"],["start_at","Od"],["end_at","Do"],["status","Stav"],["collision","Kolize"]]);
+    return listTable(rows,[["kind","Typ"],["title","Název"],["ref","Odkaz"],["start_at","Od"],["end_at","Do"],["status","Stav"],["collision","Kolize"]]);
   }
 
   async function renderAccount(){
