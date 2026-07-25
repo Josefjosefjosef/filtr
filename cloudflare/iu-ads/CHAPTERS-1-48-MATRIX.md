@@ -30,11 +30,11 @@ Legenda: **DONE** = implementováno + otestováno unit/integračně; **PROD** = 
 | 24 | Dokumenty + signed access | DONE | e2e + path-traversal `bad_key` |
 | 25 | Finance | DONE | Kč widgety; zeroed CZK summary; overdue |
 | 26 | Exporty CSV/JSON | DONE | CSV injection escape |
-| 27 | Zálohy | DONE | encrypt when key set; drill endpoint |
-| 28 | Restore drill (izolovaný) | PARTIAL | drill API + unit hash check; izolovaný D1 restore = provozní runbook (ne prod D1) |
+| 27 | Zálohy | DONE | encrypt when key set; R2 rehydrate on drill |
+| 28 | Restore drill (izolovaný) | DONE | unit isolated drill + workflow `iu-ads-isolated-restore-drill` (temp D1, prod untouched) |
 | 29 | Alerts | DONE | generate/ack/resolve |
 | 30 | Dashboard | DONE | čitelné karty CZ |
-| 31 | Search | PARTIAL | endpoint + UI; stále techničtější výstup |
+| 31 | Search | DONE | tabulka + filtr entity; orders/contracts/codes; bez JSON |
 | 32 | Users admin | DONE | create + roles; `last_main_admin` 409 |
 | 33 | Password reset / change | DONE+PROD | aktivace + login ověřeny |
 | 34 | Anti-bruteforce | DONE | tests |
@@ -50,7 +50,7 @@ Legenda: **DONE** = implementováno + otestováno unit/integračně; **PROD** = 
 | 44 | Rate limits | DONE | auth + codes |
 | 45 | CI / Deploy workflows | DONE | Deploy IU Ads + guards |
 | 46 | Docs / secrets contract | DONE | `secrets.contract.md` |
-| 47 | E2E Admin/Client prod | PARTIAL | Admin login prod ověřen uživatelem; Client E2E vyžaduje test kód (manuální) |
+| 47 | E2E Admin/Client prod | DONE | Client E2E workflow `iu-ads-client-e2e-prod` (IU_TEST_ seed/cleanup; no code print) |
 | 48 | Kap. matice / closeout | DONE | tento dokument |
 
 **Jediný zbývající lidský release gate:** kapitola 14 — veřejné produkční doručování reklam.

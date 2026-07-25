@@ -78,8 +78,10 @@ describe("admin + client SPA shells", () => {
     expect(html).toContain("calendarHtml");
     expect(html).toContain("financeHtml");
     expect(html).toContain("statsHtml");
+    expect(html).toContain("searchHtml");
     expect(html).toContain("configured===false");
     expect(html).toContain("Žádné záznamy");
+    expect(html).not.toMatch(/Vyhledávání[\s\S]*JSON\.stringify\(r\.body/);
   });
 
   it("shells contain no hardcoded secrets or credential literals", () => {

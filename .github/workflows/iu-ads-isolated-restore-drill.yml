@@ -1,0 +1,39 @@
+# Isolated restore drill — temporary D1 only; never restores into production iu-ads.
+name: IU Ads Isolated Restore Drill
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: iu-ads-restore-drill
+  cancel-in-progress: false
+
+jobs:
+  restore-drill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: cloudflare/iu-ads
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_ADS_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
+      ADS_BACKUP_ENCRYPTION_KEY: ${{ secrets.ADS_BACKUP_ENCRYPTION_KEY }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: cloudflare/iu-ads/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Secrets present (names only)
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN}" ]; then echo "MISSING=CLOUDFLARE_API_TOKEN"; exit 1; fi
+          if [ -z "${ADS_BACKUP_ENCRYPTION_KEY}" ]; then echo "MISSING=ADS_BACKUP_ENCRYPTION_KEY"; exit 1; fi
+          echo "SECRETS=OK"
+      - name: Isolated restore drill
+        run: node scripts/iu-ads-isolated-restore-drill.mjs

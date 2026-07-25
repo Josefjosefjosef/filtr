@@ -19,8 +19,19 @@ const FORBIDDEN_SEARCH_KEYS = [
   "content_hash",
 ] as const;
 
-type SearchHit = {
-  entity: string;
+const ENTITY_FILTERS = [
+  "client",
+  "campaign",
+  "order",
+  "contract",
+  "invoice",
+  "document",
+  "code",
+] as const;
+type EntityFilter = (typeof ENTITY_FILTERS)[number];
+
+export type SearchHit = {
+  entity: EntityFilter;
   id: string;
   label: string;
   meta?: Record<string, string | null>;
@@ -49,6 +60,15 @@ function assertNoSecrets(payload: unknown): string[] {
   return leaks;
 }
 
+function parseEntityFilter(raw: string | null): EntityFilter | "all" {
+  if (!raw || raw === "all") return "all";
+  return (ENTITY_FILTERS as readonly string[]).includes(raw) ? (raw as EntityFilter) : "all";
+}
+
+function wants(entity: EntityFilter, filter: EntityFilter | "all"): boolean {
+  return filter === "all" || filter === entity;
+}
+
 export async function handleAdminSearch(request: Request, env: Env, url: URL): Promise<Response> {
   const session = await requireAdminSession(request, env);
   if (!session.ok) return json({ error: session.error }, session.status);
@@ -59,15 +79,16 @@ export async function handleAdminSearch(request: Request, env: Env, url: URL): P
   if (q.length > 120) return json({ error: "query_too_long", max: 120 }, 400);
 
   const limit = clampLimit(url.searchParams.get("limit"), 20, 50);
+  const entity = parseEntityFilter(url.searchParams.get("entity"));
   const pattern = likeContains(q);
   const roles = session.context.roles;
   const results: SearchHit[] = [];
 
-  if (hasPermission(roles, "clients.read")) {
+  if (wants("client", entity) && hasPermission(roles, "clients.read")) {
     const res = await env.DB.prepare(
-      "SELECT client_id, company_name, ico FROM clients WHERE company_name LIKE ? OR IFNULL(ico,'') LIKE ? ORDER BY company_name ASC LIMIT ?"
+      "SELECT client_id, company_name, ico FROM clients WHERE company_name LIKE ? OR IFNULL(ico,'') LIKE ? OR client_id LIKE ? ORDER BY company_name ASC LIMIT ?"
     )
-      .bind(pattern, pattern, limit)
+      .bind(pattern, pattern, pattern, limit)
       .all<{ client_id: string; company_name: string; ico: string | null }>();
     for (const row of res.results || []) {
       results.push({
@@ -79,7 +100,7 @@ export async function handleAdminSearch(request: Request, env: Env, url: URL): P
     }
   }
 
-  if (hasPermission(roles, "campaigns.read")) {
+  if (wants("campaign", entity) && hasPermission(roles, "campaigns.read")) {
     const res = await env.DB.prepare(
       "SELECT campaign_id, title, evidence_code, status FROM campaigns WHERE title LIKE ? OR evidence_code LIKE ? OR campaign_id LIKE ? ORDER BY updated_at DESC LIMIT ?"
     )
@@ -95,7 +116,39 @@ export async function handleAdminSearch(request: Request, env: Env, url: URL): P
     }
   }
 
-  if (hasPermission(roles, "invoices.read")) {
+  if (wants("order", entity) && hasPermission(roles, "orders.read")) {
+    const res = await env.DB.prepare(
+      "SELECT order_id, order_number, status, client_id FROM orders WHERE order_number LIKE ? OR order_id LIKE ? ORDER BY created_at DESC LIMIT ?"
+    )
+      .bind(pattern, pattern, limit)
+      .all<{ order_id: string; order_number: string; status: string; client_id: string }>();
+    for (const row of res.results || []) {
+      results.push({
+        entity: "order",
+        id: row.order_id,
+        label: row.order_number,
+        meta: { status: row.status, client_id: row.client_id },
+      });
+    }
+  }
+
+  if (wants("contract", entity) && hasPermission(roles, "contracts.read")) {
+    const res = await env.DB.prepare(
+      "SELECT contract_id, contract_number, status, client_id FROM contracts WHERE contract_number LIKE ? OR contract_id LIKE ? ORDER BY created_at DESC LIMIT ?"
+    )
+      .bind(pattern, pattern, limit)
+      .all<{ contract_id: string; contract_number: string; status: string; client_id: string }>();
+    for (const row of res.results || []) {
+      results.push({
+        entity: "contract",
+        id: row.contract_id,
+        label: row.contract_number,
+        meta: { status: row.status, client_id: row.client_id },
+      });
+    }
+  }
+
+  if (wants("invoice", entity) && hasPermission(roles, "invoices.read")) {
     const res = await env.DB.prepare(
       "SELECT invoice_id, invoice_number, status, client_id FROM invoices WHERE invoice_number LIKE ? OR IFNULL(variable_symbol,'') LIKE ? OR invoice_id LIKE ? ORDER BY created_at DESC LIMIT ?"
     )
@@ -111,7 +164,7 @@ export async function handleAdminSearch(request: Request, env: Env, url: URL): P
     }
   }
 
-  if (hasPermission(roles, "documents.read")) {
+  if (wants("document", entity) && hasPermission(roles, "documents.read")) {
     const res = await env.DB.prepare(
       "SELECT document_id, title, doc_type, visibility, status FROM documents WHERE title LIKE ? OR document_id LIKE ? ORDER BY updated_at DESC LIMIT ?"
     )
@@ -133,7 +186,37 @@ export async function handleAdminSearch(request: Request, env: Env, url: URL): P
     }
   }
 
-  const body = { q, results, count: results.length };
+  // Codes: search by prefix / code_id / client_id only — never by plaintext or hash.
+  if (wants("code", entity) && hasPermission(roles, "codes.read")) {
+    const res = await env.DB.prepare(
+      "SELECT code_id, client_id, code_prefix, status, expires_at FROM client_access_codes WHERE IFNULL(code_prefix,'') LIKE ? OR code_id LIKE ? OR client_id LIKE ? ORDER BY created_at DESC LIMIT ?"
+    )
+      .bind(pattern, pattern, pattern, limit)
+      .all<{
+        code_id: string;
+        client_id: string;
+        code_prefix: string | null;
+        status: string;
+        expires_at: string | null;
+      }>();
+    for (const row of res.results || []) {
+      results.push({
+        entity: "code",
+        id: row.code_id,
+        label: row.code_prefix ? "Kód " + row.code_prefix + "…" : row.code_id,
+        meta: { client_id: row.client_id, status: row.status, expires_at: row.expires_at },
+      });
+    }
+  }
+
+  const body = {
+    q,
+    entity,
+    results,
+    count: results.length,
+    empty: results.length === 0,
+    entities: ENTITY_FILTERS,
+  };
   const leaks = assertNoSecrets(body);
   if (leaks.length) return json({ error: "isolation_violation", leaks }, 500);
   return json(body);
