@@ -12,13 +12,14 @@ on:
   workflow_dispatch:
     inputs:
       run_mode:
-        description: "bootstrap = seed first main_admin; precheck_only = read-only D1 state (no seed)."
+        description: "bootstrap = seed; precheck_only = read-only D1; cleanup_bootstrap_token = delete leftover ADS_BOOTSTRAP_TOKEN only (no seed)."
         type: choice
         required: true
         default: bootstrap
         options:
           - bootstrap
           - precheck_only
+          - cleanup_bootstrap_token
       admin_email:
         description: "E-mail prvního hlavního administrátora (povinné pro bootstrap; neheslo)."
         type: string
@@ -134,6 +135,7 @@ jobs:
           fi
 
       - name: Resolve real D1 database_id for iu-ads
+        if: ${{ inputs.run_mode == 'bootstrap' || inputs.run_mode == 'precheck_only' }}
         run: |
           set -euo pipefail
           # Committed wrangler.toml uses placeholder 00000000-… — remote execute fails without patch.
@@ -176,6 +178,7 @@ jobs:
           "
 
       - name: Refuse if main_admin already exists (fail-closed)
+        if: ${{ inputs.run_mode == 'bootstrap' || inputs.run_mode == 'precheck_only' }}
         run: |
           set -euo pipefail
           run_eval() {
@@ -318,6 +321,79 @@ jobs:
           echo "PRECHECK_ONLY=SUCCESS"
           echo "NO_MUTATION=seed_skipped"
           echo "PUBLIC_ADS=still_OFF"
+
+      - name: Delete leftover ADS_BOOTSTRAP_TOKEN (cleanup_bootstrap_token only)
+        if: ${{ inputs.run_mode == 'cleanup_bootstrap_token' }}
+        id: stale_cleanup
+        run: |
+          set -euo pipefail
+          set +e
+          npx wrangler secret list --name infouzel-ads --format json >"$RUNNER_TEMP/iu-ads-secret-list.json"
+          LIST_EC=$?
+          set -e
+          if [ "$LIST_EC" != "0" ]; then
+            echo "BLOCKER: wrangler secret list failed"
+            exit 1
+          fi
+          set +e
+          node ./scripts/iu-ads-bootstrap-token-flow.mjs secret-list-has \
+            "$RUNNER_TEMP/iu-ads-secret-list.json" ADS_BOOTSTRAP_TOKEN
+          HAS_EC=$?
+          set -e
+          rm -f "$RUNNER_TEMP/iu-ads-secret-list.json"
+          if [ "$HAS_EC" != "0" ]; then
+            echo "BOOTSTRAP_SECRET_DELETE=ALREADY_ABSENT"
+          else
+            set +e
+            echo y | npx wrangler secret delete ADS_BOOTSTRAP_TOKEN --name infouzel-ads
+            DEL_EC=$?
+            set -e
+            if [ "$DEL_EC" != "0" ]; then
+              echo "BOOTSTRAP_SECRET_DELETE=FAIL"
+              echo "BLOCKER: could not delete ADS_BOOTSTRAP_TOKEN"
+              exit 1
+            fi
+            echo "BOOTSTRAP_SECRET_DELETE=SUCCESS"
+          fi
+
+      - name: Verify bootstrap endpoint unusable after cleanup_bootstrap_token
+        if: ${{ inputs.run_mode == 'cleanup_bootstrap_token' }}
+        run: |
+          set -euo pipefail
+          RESP_FILE="$RUNNER_TEMP/iu-ads-cleanup-probe.json"
+          attempt=1
+          while [ "$attempt" -le 24 ]; do
+            set +e
+            HTTP="$(curl -sS -o "$RESP_FILE" -w "%{http_code}" \
+              -X POST "https://infouzel-ads.josef-zmrhal.workers.dev/v1/internal/bootstrap/main-admin" \
+              -H "Authorization: Bearer cleanup-probe" \
+              -H "Content-Type: application/json" \
+              --data '{"email":"cleanup@invalid.example"}')"
+            CURL_EC=$?
+            set -e
+            if [ "$CURL_EC" = "0" ]; then
+              set +e
+              node ./scripts/iu-ads-bootstrap-token-flow.mjs classify-post-delete "$HTTP" "$RESP_FILE"
+              CLS_EC=$?
+              set -e
+              rm -f "$RESP_FILE"
+              if [ "$CLS_EC" = "0" ]; then
+                echo "BOOTSTRAP_TOKEN_GONE=CONFIRMED"
+                echo "CLEANUP_BOOTSTRAP_TOKEN=SUCCESS"
+                echo "NO_MUTATION=d1_untouched"
+                echo "PUBLIC_ADS=still_OFF"
+                exit 0
+              fi
+              echo "BOOTSTRAP_TOKEN_STILL_PRESENT attempt=$attempt http=$HTTP"
+            else
+              echo "CLEANUP_PROBE_CURL_FAIL attempt=$attempt"
+              rm -f "$RESP_FILE"
+            fi
+            attempt=$((attempt+1))
+            sleep 5
+          done
+          echo "BLOCKER: ADS_BOOTSTRAP_TOKEN still observable after delete"
+          exit 1
 
       - name: Validate bootstrap email
         if: ${{ inputs.run_mode == 'bootstrap' }}
