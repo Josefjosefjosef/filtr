@@ -30,6 +30,8 @@ export type Env = {
    * (SHA-256 + pepper; never store plaintext). Missing → client code issue/login `503`.
    */
   ADS_CODE_PEPPER?: string;
+  /** One-time Worker secret for POST /v1/internal/bootstrap/main-admin (workflow-only; delete after success). */
+  ADS_BOOTSTRAP_TOKEN?: string;
   /**
    * Worker secret (Etapa 6): bearer token for server-side calls to the Analytics Worker's
    * `/v1/ads/report`. Deliberately a separate secret from Analytics' own `ADMIN_TOKEN` config —

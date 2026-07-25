@@ -32,7 +32,8 @@ describe("iu-ads-bootstrap-main-admin.mjs", () => {
     try {
       expect(result.status).toBe(0);
       const stdout = String(result.stdout || "");
-      expect(stdout).toContain("BOOTSTRAP_STATUS=READY_FOR_D1_APPLY");
+      expect(stdout).toContain("BOOTSTRAP_STATUS=READY_FOR_WORKER_BATCH");
+      expect(stdout).toContain("BOOTSTRAP_SQL_TXN=none");
       expect(stdout).not.toMatch(/activate=/i);
       expect(stdout).not.toContain("pbkdf2$");
       expect(stdout).not.toContain("test-pepper");
@@ -44,6 +45,9 @@ describe("iu-ads-bootstrap-main-admin.mjs", () => {
       expect(sql).toContain("BOOTSTRAP_COMPLETED");
       expect(sql).toContain("main_admin_bootstrap_created");
       expect(sql).not.toMatch(/activate=/);
+      expect(sql.toUpperCase()).not.toMatch(/\bBEGIN\b/);
+      expect(sql.toUpperCase()).not.toMatch(/\bCOMMIT\b/);
+      expect(sql.toUpperCase()).not.toMatch(/\bSAVEPOINT\b/);
 
       const act = readFileSync(activationOut, "utf8");
       expect(act).toMatch(/activate=[0-9a-f]{64}/i);
@@ -141,5 +145,8 @@ describe("bootstrap workflow safety markers", () => {
     expect(wf).toContain("ADS_PUBLIC_DELIVERY_ENABLED:false");
     expect(wf).toContain("BOOTSTRAP_STATUS=SUCCESS");
     expect(wf).toContain("precheck_only");
+    expect(wf).toContain("/v1/internal/bootstrap/main-admin");
+    expect(wf).toContain("d1_worker_batch");
+    expect(wf).not.toContain("wrangler d1 execute iu-ads --remote --file=");
   });
 });

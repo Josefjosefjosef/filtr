@@ -1,18 +1,11 @@
 #!/usr/bin/env node
 /**
- * Safe first main_admin bootstrap helper (CI / operator machine).
+ * Legacy SQL generator for main_admin bootstrap — DEPRECATED for remote apply.
+ * Cloudflare D1 remote execute rejects BEGIN TRANSACTION / SAVEPOINT.
+ * Production path: Worker POST /v1/internal/bootstrap/main-admin + D1 batch().
  *
- * - Never prints activation token, password, pepper, or hash to stdout.
- * - Writes SQL (hashed only) to --sql-out.
- * - Writes one-time activation URL to --activation-out (artifact only).
- * - Creates unusable random password hash; user sets password via /admin?activate=…
- *
- * Env:
- *   ADS_PASSWORD_PEPPER (required)
- *   BOOTSTRAP_ADMIN_EMAIL (required) — or --email
- *   BOOTSTRAP_ADMIN_DISPLAY_NAME (optional)
- *   BOOTSTRAP_ACTIVATION_TTL_SECONDS (optional, default 3600)
- *   BOOTSTRAP_ADMIN_BASE_URL (optional, default production Worker /admin)
+ * This script still validates email/TTL and can emit SQL WITHOUT explicit transactions
+ * for offline inspection only. It refuses to write files containing BEGIN/COMMIT/SAVEPOINT.
  */
 import { webcrypto } from "node:crypto";
 import { writeFileSync } from "node:fs";
@@ -45,6 +38,13 @@ function normalizeEmail(email) {
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function assertNoExplicitTxn(sql) {
+  const upper = String(sql || "").toUpperCase();
+  if (/\bBEGIN\b/.test(upper) || /\bCOMMIT\b/.test(upper) || /\bROLLBACK\b/.test(upper) || /\bSAVEPOINT\b/.test(upper)) {
+    throw new Error("unsupported_explicit_sql_transaction");
+  }
 }
 
 async function hashPassword(password, pepper) {
@@ -118,17 +118,16 @@ async function main() {
   const nowIso = now.toISOString();
   const expiresIso = new Date(now.getTime() + ttlSec * 1000).toISOString();
 
-  // Unusable random password — login only after activation sets a real password.
   const throwawayPassword = randomToken() + "A1!" + randomToken();
   const passwordHash = await hashPassword(throwawayPassword, pepper);
   const activationToken = randomToken();
   const tokenHash = await hashOpaqueToken(activationToken);
 
-  // Guard against re-bootstrap is enforced by the workflow query before apply.
-  // SQL itself still sets BOOTSTRAP_COMPLETED so a second apply is detectable.
+  // NO BEGIN/COMMIT — D1 remote execute rejects explicit SQL transactions.
+  // Production must use Worker batch bootstrap; this SQL is inspection-only.
   const sql = [
-    "-- iu-ads safe main_admin bootstrap (generated; contains hashes only, never plaintext secrets)",
-    "BEGIN TRANSACTION;",
+    "-- iu-ads bootstrap SQL (INSPECTION ONLY — do not wrangler d1 execute remotely)",
+    "-- Prefer Worker POST /v1/internal/bootstrap/main-admin with D1 batch().",
     "INSERT INTO admin_users (user_id, email, password_hash, display_name, is_active, force_password_change, created_at, updated_at)",
     "VALUES (" +
       [
@@ -166,9 +165,10 @@ async function main() {
       sqlQuote(nowIso) +
       ")",
     "  ON CONFLICT(key) DO UPDATE SET value = '1', updated_at = excluded.updated_at;",
-    "COMMIT;",
     "",
   ].join("\n");
+
+  assertNoExplicitTxn(sql);
 
   const activationUrl =
     baseUrl.replace(/\/$/, "") +
@@ -181,10 +181,8 @@ async function main() {
   writeFileSync(
     activationOut,
     [
-      "# InfoUzel Ads — jednorázový aktivační odkaz (NECOMMITOVAT, NESDÍLET)",
+      "# InfoUzel Ads — inspection-only activation sample (production uses Worker bootstrap response)",
       "# Platnost do: " + expiresIso,
-      "# Po nastavení hesla odkaz přestane platit.",
-      "# Otevřete v prohlížeči, nastavte vlastní silné heslo (min. 12 znaků).",
       "",
       activationUrl,
       "",
@@ -192,13 +190,14 @@ async function main() {
     { encoding: "utf8", mode: 0o600 }
   );
 
-  // Safe status only — no secrets.
   console.log("BOOTSTRAP_SQL_WRITTEN=1");
+  console.log("BOOTSTRAP_SQL_TXN=none");
+  console.log("BOOTSTRAP_REMOTE_APPLY=deprecated_use_worker_batch");
   console.log("BOOTSTRAP_ACTIVATION_FILE_WRITTEN=1");
   console.log("BOOTSTRAP_ADMIN_EMAIL_SET=1");
   console.log("BOOTSTRAP_USER_ID_PREFIX=" + userId.slice(0, 8));
   console.log("BOOTSTRAP_ACTIVATION_EXPIRES_AT=" + expiresIso);
-  console.log("BOOTSTRAP_STATUS=READY_FOR_D1_APPLY");
+  console.log("BOOTSTRAP_STATUS=READY_FOR_WORKER_BATCH");
 }
 
 main().catch((err) => {
