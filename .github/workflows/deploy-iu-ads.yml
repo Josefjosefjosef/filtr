@@ -248,8 +248,9 @@ jobs:
       - name: Health probe (official domain)
         run: |
           set -euo pipefail
-          # Prefer official Ads origin. workers_dev=false removes public workers.dev route after deploy.
+          # Prefer official Ads origin. workers.dev remains temporarily (workers_dev=true) as rollback path only.
           URL="https://ads.infouzel.cz/health"
+          LEGACY_URL="https://infouzel-ads.josef-zmrhal.workers.dev/health"
           attempt=1
           while [ "$attempt" -le 30 ]; do
             echo "HEALTH_ATTEMPT=$attempt"
@@ -276,6 +277,9 @@ jobs:
               GATE_EC=$?
               set -e
               if [ "$GATE_EC" = "0" ]; then
+                # Informational: legacy workers.dev may still answer while workers_dev=true (not publicized).
+                LEGACY_CODE="$(curl -sS -o /tmp/iu-ads-health-legacy.json -w "%{http_code}" "$LEGACY_URL" || true)"
+                echo "LEGACY_WORKERS_DEV_HTTP=$LEGACY_CODE (rollback path only; not for public links)"
                 exit 0
               fi
               echo "HEALTH_GATE_RETRY exit=$GATE_EC (possible edge/DNS/TLS propagation)"
