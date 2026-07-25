@@ -145,7 +145,7 @@
     var contact = menu.querySelector('.iuInfoCenter__tile[data-iu-info-section="contact"]');
     var a = document.createElement("a");
     a.className = "iuInfoCenter__tile";
-    a.href = "https://infouzel-ads.josef-zmrhal.workers.dev/client";
+    a.href = "https://ads.infouzel.cz/client";
     a.rel = "noopener noreferrer";
     a.setAttribute("data-iu-info-external", "ads-client");
     a.innerHTML =

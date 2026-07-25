@@ -365,7 +365,7 @@ jobs:
           while [ "$attempt" -le 24 ]; do
             set +e
             HTTP="$(curl -sS -o "$RESP_FILE" -w "%{http_code}" \
-              -X POST "https://infouzel-ads.josef-zmrhal.workers.dev/v1/internal/bootstrap/main-admin" \
+              -X POST "https://ads.infouzel.cz/v1/internal/bootstrap/main-admin" \
               -H "Authorization: Bearer cleanup-probe" \
               -H "Content-Type: application/json" \
               --data '{"email":"cleanup@invalid.example"}')"
@@ -418,7 +418,7 @@ jobs:
           set -euo pipefail
           echo "DEPLOY_TARGET_WORKER=infouzel-ads"
           echo "DEPLOY_TARGET_ACCOUNT=577868e9aac9c289e9323100f68fad16"
-          echo "DEPLOY_TARGET_URL=https://infouzel-ads.josef-zmrhal.workers.dev"
+          echo "DEPLOY_TARGET_URL=https://ads.infouzel.cz"
           npx wrangler deploy \
             --name infouzel-ads \
             --var ADS_SAFE_MODE:true \
@@ -469,7 +469,7 @@ jobs:
         id: boot_ready
         run: |
           set -euo pipefail
-          PROBE_URL="https://infouzel-ads.josef-zmrhal.workers.dev/v1/internal/bootstrap/main-admin"
+          PROBE_URL="https://ads.infouzel.cz/v1/internal/bootstrap/main-admin"
           PROBE_BODY='{"email":"readiness-probe@invalid.example"}'
           # Fixed non-secret probe string (not the ephemeral token). Expect 401 when configured.
           PROBE_BEARER="iu-ads-bootstrap-readiness-probe"
@@ -536,7 +536,7 @@ jobs:
           # Call Worker; never print response body (contains activationUrl).
           set +e
           HTTP="$(curl -sS -o "$RESP_FILE" -w "%{http_code}" \
-            -X POST "https://infouzel-ads.josef-zmrhal.workers.dev/v1/internal/bootstrap/main-admin" \
+            -X POST "https://ads.infouzel.cz/v1/internal/bootstrap/main-admin" \
             -H "Authorization: Bearer ${TOKEN}" \
             -H "Content-Type: application/json" \
             --data-binary @"$BODY_FILE")"
@@ -656,7 +656,7 @@ jobs:
           RESP_FILE="$RUNNER_TEMP/iu-ads-bootstrap-post-delete.json"
           set +e
           HTTP="$(curl -sS -o "$RESP_FILE" -w "%{http_code}" \
-            -X POST "https://infouzel-ads.josef-zmrhal.workers.dev/v1/internal/bootstrap/main-admin" \
+            -X POST "https://ads.infouzel.cz/v1/internal/bootstrap/main-admin" \
             -H "Authorization: Bearer post-delete-probe" \
             -H "Content-Type: application/json" \
             --data '{"email":"post-delete@invalid.example"}')"
@@ -673,7 +673,7 @@ jobs:
         if: ${{ inputs.run_mode == 'bootstrap' && success() }}
         run: |
           set -euo pipefail
-          URL="https://infouzel-ads.josef-zmrhal.workers.dev/health"
+          URL="https://ads.infouzel.cz/health"
           attempt=1
           while [ "$attempt" -le 18 ]; do
             CODE="$(curl -sS -o /tmp/iu-ads-health.json -w "%{http_code}" "$URL" || true)"
