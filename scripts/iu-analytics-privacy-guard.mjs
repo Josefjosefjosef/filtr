@@ -194,18 +194,27 @@ try {
       localStorage.setItem("iu:consent:layer:dismissed:v1", "1");
     } catch (_) {}
   });
-  // Open Informační centrum and assert Ads client tile (JS-injected, freeze-safe).
-  const infoBtn = page.locator("#iuTopbarInfoBtn, [data-iu-open-info-center], button:has-text('Informační')").first();
+  // Open Informační centrum (lazy-mounted overlay) and assert Ads client tile.
+  await page.evaluate(() => {
+    try {
+      var trigger =
+        document.getElementById("iuTopbarInfoBtn") ||
+        document.getElementById("iuSilverWelcomeInfoBtn") ||
+        document.querySelector("[data-iu-mobile-gate-info-btn]");
+      if (trigger) trigger.click();
+    } catch (_) {}
+  });
+  await page.waitForTimeout(300);
+  await page.evaluate(() => {
+    try {
+      if (typeof window.iuInfoCenterOpenSection === "function") window.iuInfoCenterOpenSection("menu");
+    } catch (_) {}
+  });
   try {
-    await infoBtn.click({ timeout: 5000 });
+    await page.waitForSelector('[data-iu-info-external="ads-client"]', { timeout: 12000 });
   } catch (_) {
-    await page.evaluate(() => {
-      var o = document.getElementById("iuTopbarInfoOverlay");
-      if (o) o.hidden = false;
-      if (window.iuInfoCenter && typeof window.iuInfoCenter.open === "function") window.iuInfoCenter.open();
-    });
+    fail("behavior:missing_ads_client_tile");
   }
-  await page.waitForTimeout(400);
   const adsTile = page.locator('[data-iu-info-external="ads-client"]');
   const adsCount = await adsTile.count();
   if (!adsCount) fail("behavior:missing_ads_client_tile");

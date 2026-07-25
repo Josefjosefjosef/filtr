@@ -9,6 +9,7 @@ import { clampLimit, clampOffset } from "./admin-list-filters";
 import {
   assertNoForbiddenBackupKeys,
   buildBackupInventory,
+  decryptBackupPayload,
   encryptBackupPayload,
   inventoryCanonicalJson,
   runRestoreDrill,
@@ -220,9 +221,29 @@ export async function handleBackupDrill(request: Request, env: Env, backupId: st
   if (!row) return json({ error: "not_found" }, 404);
 
   let inventory = inventoryCache.get(backupId);
+  let source: "cache" | "r2" | "rebuild" = inventory ? "cache" : "rebuild";
+
+  // Cold isolate: rehydrate encrypted inventory from private BACKUPS R2 (never public URL).
+  if (!inventory && env.BACKUPS && row.encryption === "aes-256-gcm" && env.ADS_BACKUP_ENCRYPTION_KEY) {
+    try {
+      const obj = await env.BACKUPS.get(row.r2_key);
+      if (obj) {
+        const ciphertextB64 = await obj.text();
+        const plain = await decryptBackupPayload(ciphertextB64, env.ADS_BACKUP_ENCRYPTION_KEY);
+        inventory = JSON.parse(plain) as BackupInventory;
+        inventoryCache.set(backupId, inventory);
+        source = "r2";
+      }
+    } catch {
+      inventory = undefined;
+      source = "rebuild";
+    }
+  }
+
   if (!inventory) {
     // Rebuild — may hash-mismatch if DB mutated; still useful for leak checks.
     inventory = await collectInventory(env.DB, row.created_at);
+    source = "rebuild";
   }
 
   const drill = await runRestoreDrill(
@@ -243,8 +264,14 @@ export async function handleBackupDrill(request: Request, env: Env, backupId: st
     })
   );
 
-  if (!drill.ok) return json({ ok: false, drill }, 409);
-  return json({ ok: true, drill, backup: serializeBackup(row) });
+  if (!drill.ok) return json({ ok: false, drill, source }, 409);
+  return json({
+    ok: true,
+    drill,
+    source,
+    backup: serializeBackup(row),
+    inventory_tables: inventory.tables.map((t) => ({ name: t.name, count: t.count })),
+  });
 }
 
 /** Prune expired manifests per BACKUP_RETENTION_DAYS (D1 rows only; R2 objects left for operator). */

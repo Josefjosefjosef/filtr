@@ -177,6 +177,15 @@ class FakeD1 {
         }));
       return { results };
     }
+    if (sql.includes("FROM orders WHERE order_number LIKE")) {
+      return { results: [] };
+    }
+    if (sql.includes("FROM contracts WHERE contract_number LIKE")) {
+      return { results: [] };
+    }
+    if (sql.includes("FROM client_access_codes WHERE IFNULL(code_prefix")) {
+      return { results: [] };
+    }
     if (sql.includes("FROM documents WHERE title LIKE")) {
       const like = String(params[0]).replace(/%/g, "").toLowerCase();
       const results = this.documents

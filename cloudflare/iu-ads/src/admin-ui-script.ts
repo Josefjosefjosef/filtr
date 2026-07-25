@@ -740,6 +740,26 @@ export const ADMIN_UI_SCRIPT = String.raw`
     });
   }
 
+  function searchHtml(body){
+    var rows=(body&&body.results)||[];
+    if(!rows.length) return '<p class="muted empty">Žádné záznamy</p>';
+    var entityLabel={client:"Klient",campaign:"Kampaň",order:"Objednávka",contract:"Smlouva",invoice:"Faktura",document:"Dokument",code:"Klientský kód"};
+    var mapped=rows.map(function(hit){
+      var meta=hit.meta||{};
+      var metaBits=[];
+      Object.keys(meta).forEach(function(k){
+        if(meta[k]!=null && String(meta[k]).length) metaBits.push(k+": "+meta[k]);
+      });
+      return {
+        entity:entityLabel[hit.entity]||hit.entity||"—",
+        label:hit.label||"—",
+        id:hit.id||"",
+        meta:metaBits.join(" · ")||"—"
+      };
+    });
+    return listTable(mapped,[["entity","Typ"],["label","Název"],["id","ID"],["meta","Detaily"]]);
+  }
+
   async function render(){
     var v=state.view;
     panel('<p class="muted">Načítám…</p>');
@@ -750,11 +770,19 @@ export const ADMIN_UI_SCRIPT = String.raw`
         if(!d.res.ok){ panel('<p class="err">'+esc(apiError(d.body))+'</p>'); return; }
         panel('<div class="card"><h2>Dashboard</h2>'+widgetsHtml(d.body&&d.body.widgets||d.body)+'</div>');
       } else if(v==="search"){
-        panel('<div class="card"><h2>Vyhledávání</h2>'+inp("q","Dotaz")+
-          '<div class="row"><button class="btn" type="button" id="go-q">Hledat</button></div><div id="q-out"></div></div>');
+        panel('<div class="card"><h2>Vyhledávání</h2>'+
+          '<div class="grid2">'+inp("q","Dotaz (min. 2 znaky)")+
+          sel("q-ent","Typ",["all","client","campaign","order","contract","invoice","document","code"],"all")+
+          '</div>'+
+          '<div class="row"><button class="btn" type="button" id="go-q">Hledat</button></div>'+
+          '<div id="q-out"><p class="muted empty">Zadejte dotaz a stiskněte Hledat.</p></div></div>');
         el("go-q").onclick=async function(){
-          var r=await api("/v1/admin/search?q="+encodeURIComponent(val("q").trim()),{method:"GET",headers:{}});
-          el("q-out").innerHTML = r.res.ok ? '<pre class="json">'+esc(JSON.stringify(r.body,null,2))+'</pre>' : '<p class="err">'+esc(apiError(r.body))+'</p>';
+          var q=val("q").trim();
+          if(q.length<2){ el("q-out").innerHTML='<p class="muted empty">Zadejte alespoň 2 znaky.</p>'; return; }
+          var ent=val("q-ent")||"all";
+          var r=await api("/v1/admin/search?q="+encodeURIComponent(q)+"&entity="+encodeURIComponent(ent),{method:"GET",headers:{}});
+          if(!r.res.ok){ el("q-out").innerHTML='<p class="err">'+esc(apiError(r.body))+'</p>'; return; }
+          el("q-out").innerHTML=searchHtml(r.body);
         };
       } else if(v==="calendar"){
         var now=new Date(); var toDef=new Date(now.getTime()+30*864e5);
