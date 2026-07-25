@@ -21,22 +21,22 @@ on:
           - precheck_only
           - cleanup_bootstrap_token
       admin_email:
-        description: "E-mail prvnĂ­ho hlavnĂ­ho administrĂˇtora (povinnĂ© pro bootstrap; neheslo)."
+        description: "E-mail prvního hlavního administrátora (povinné pro bootstrap; neheslo)."
         type: string
         required: false
         default: ""
       admin_display_name:
-        description: "ZobrazovanĂ© jmĂ©no (volitelnĂ©)."
+        description: "Zobrazované jméno (volitelné)."
         type: string
         required: false
-        default: "HlavnĂ­ administrĂˇtor"
+        default: "Hlavní administrátor"
       activation_ttl_seconds:
-        description: "Platnost aktivaÄŤnĂ­ho odkazu v sekundĂˇch (300â€“86400)."
+        description: "Platnost aktivačního odkazu v sekundách (300–86400)."
         type: string
         required: false
         default: "3600"
       enable_apis_after:
-        description: "Po bootstrapu nastavit Admin+Client API ON (public delivery zĹŻstane OFF)."
+        description: "Po bootstrapu nastavit Admin+Client API ON (public delivery zůstane OFF)."
         type: boolean
         required: false
         default: true
@@ -112,7 +112,7 @@ jobs:
           fi
           if [ "$missing" != "0" ]; then
             echo "BLOCKER: create the missing GitHub Actions repository secrets, then re-run this workflow."
-            echo "MANUAL_STEP=Repo Settings â†’ Secrets and variables â†’ Actions â†’ New repository secret"
+            echo "MANUAL_STEP=Repo Settings → Secrets and variables → Actions → New repository secret"
             exit 1
           fi
 
@@ -138,7 +138,7 @@ jobs:
         if: ${{ inputs.run_mode == 'bootstrap' || inputs.run_mode == 'precheck_only' }}
         run: |
           set -euo pipefail
-          # Committed wrangler.toml uses placeholder 00000000-â€¦ â€” remote execute fails without patch.
+          # Committed wrangler.toml uses placeholder 00000000-… — remote execute fails without patch.
           # Same account/list approach as Deploy IU Ads; NEVER create DB here (fail-closed).
           set +e
           LIST_JSON="$(npx wrangler d1 list --json 2>/tmp/d1-list.err)"
@@ -229,7 +229,7 @@ jobs:
           printf '%s\n' "$LOCK_OUT"
           LOCK_STATUS="$(printf '%s\n' "$LOCK_OUT" | sed -n 's/^STATUS=//p' | head -n1)"
 
-          # Consistency probes (counts only â€” no tokens/hashes).
+          # Consistency probes (counts only — no tokens/hashes).
           echo "PRECHECK_CONSISTENCY_START"
           set +e
           npx wrangler d1 execute iu-ads --remote --json --command "SELECT COUNT(*) AS cnt FROM admin_password_resets WHERE used_at IS NULL;" >/tmp/d1-unused.out 2>/tmp/d1-unused.err
@@ -252,15 +252,15 @@ jobs:
           echo "ORPHAN_ROLES_COUNT=${ORPHAN_COUNT:-unknown}"
           echo "USERS_WITHOUT_ROLES_COUNT=${NOROLE_COUNT:-unknown}"
           if [ "$UNUSED_STATUS" != "OK" ] || [ "$ORPHAN_STATUS" != "OK" ] || [ "$NOROLE_STATUS" != "OK" ]; then
-            echo "BLOCKER: consistency probe query failed â€” fail-closed."
+            echo "BLOCKER: consistency probe query failed — fail-closed."
             exit 1
           fi
           if [ "${ORPHAN_COUNT:-}" != "0" ] || [ "${NOROLE_COUNT:-}" != "0" ]; then
-            echo "BLOCKER: inconsistent D1 state (orphan roles or users without roles) â€” fail-closed."
+            echo "BLOCKER: inconsistent D1 state (orphan roles or users without roles) — fail-closed."
             exit 1
           fi
           if [ "${USERS_COUNT:-}" = "0" ] && [ "${UNUSED_COUNT:-}" != "0" ]; then
-            echo "BLOCKER: unused activation resets without users â€” fail-closed."
+            echo "BLOCKER: unused activation resets without users — fail-closed."
             exit 1
           fi
 
@@ -270,7 +270,7 @@ jobs:
             st="${pair#*:}"
             case "$st" in
               D1_QUERY_FAILED|TABLE_MISSING|JSON_INVALID|AMBIGUOUS)
-                echo "BLOCKER: $name precheck failed ($st) â€” fail-closed."
+                echo "BLOCKER: $name precheck failed ($st) — fail-closed."
                 exit 1
                 ;;
             esac
@@ -290,23 +290,23 @@ jobs:
 
           # bootstrap mode: refuse existing main_admin / lock; never continue without COUNT=0.
           if [ "$MAIN_STATUS" = "MAIN_ADMIN_EXISTS" ]; then
-            echo "BLOCKER: main_admin already exists â€” bootstrap refused (idempotent lock)."
+            echo "BLOCKER: main_admin already exists — bootstrap refused (idempotent lock)."
             exit 1
           fi
           if [ "$MAIN_STATUS" != "OK" ] || [ "$MAIN_COUNT" != "0" ]; then
-            echo "BLOCKER: main_admin precheck not clear (STATUS=$MAIN_STATUS COUNT=${MAIN_COUNT:-}) â€” fail-closed."
+            echo "BLOCKER: main_admin precheck not clear (STATUS=$MAIN_STATUS COUNT=${MAIN_COUNT:-}) — fail-closed."
             exit 1
           fi
           if [ "$LOCK_STATUS" = "BOOTSTRAP_COMPLETED" ]; then
-            echo "BLOCKER: BOOTSTRAP_COMPLETED=1 â€” bootstrap refused."
+            echo "BLOCKER: BOOTSTRAP_COMPLETED=1 — bootstrap refused."
             exit 1
           fi
           if [ "$LOCK_STATUS" != "OK" ]; then
-            echo "BLOCKER: bootstrap lock precheck failed ($LOCK_STATUS) â€” fail-closed."
+            echo "BLOCKER: bootstrap lock precheck failed ($LOCK_STATUS) — fail-closed."
             exit 1
           fi
           if [ "${USERS_COUNT:-}" != "0" ]; then
-            echo "BLOCKER: admin_users not empty â€” fail-closed."
+            echo "BLOCKER: admin_users not empty — fail-closed."
             exit 1
           fi
 
@@ -407,7 +407,7 @@ jobs:
           echo "BOOTSTRAP_EMAIL_PRESENT=1"
 
       # ROOT CAUSE (run 30141405605): secret put ADS_BOOTSTRAP_TOKEN then wrangler deploy
-      # created a new Worker version that did not bind the ephemeral secret â†’ 503
+      # created a new Worker version that did not bind the ephemeral secret → 503
       # bootstrap_token_not_configured. Safe order: deploy FIRST, then secret put
       # (secret put deploys a version with the binding), readiness, then call. Never
       # deploy again until after token delete.
@@ -462,7 +462,7 @@ jobs:
           node ./scripts/iu-ads-bootstrap-token-flow.mjs secret-list-has \
             "$RUNNER_TEMP/iu-ads-secret-list.json" ADS_BOOTSTRAP_TOKEN
           rm -f "$RUNNER_TEMP/iu-ads-secret-list.json"
-          # Do NOT wrangler deploy after this put â€” that was the production failure mode.
+          # Do NOT wrangler deploy after this put — that was the production failure mode.
 
       - name: Bootstrap readiness (binding present; value never logged)
         if: ${{ inputs.run_mode == 'bootstrap' }}
@@ -563,9 +563,9 @@ jobs:
             if(typeof j.activationUrl!=='string' || j.activationUrl.indexOf('activate=')<0) process.exit(3);
             if(typeof j.email!=='string' || !j.email) process.exit(4);
             const lines=[
-              '# InfoUzel Ads â€” jednorĂˇzovĂ˝ aktivaÄŤnĂ­ odkaz (NECOMMITOVAT, NESDĂŤLET)',
+              '# InfoUzel Ads — jednorázový aktivační odkaz (NECOMMITOVAT, NESDÍLET)',
               '# Platnost do: '+(j.expiresAt||''),
-              '# Po nastavenĂ­ hesla odkaz pĹ™estane platit.',
+              '# Po nastavení hesla odkaz přestane platit.',
               '',
               j.activationUrl,
               ''
@@ -614,7 +614,7 @@ jobs:
           echo "READBACK_ADMIN_USERS_COUNT=${USERS_COUNT:-}"
           if [ "$MAIN_STATUS" != "MAIN_ADMIN_EXISTS" ] || [ "$MAIN_COUNT" != "1" ] || [ "$USERS_COUNT" != "1" ] || [ "$LOCK_STATUS" != "BOOTSTRAP_COMPLETED" ]; then
             echo "BOOTSTRAP_READBACK=INCONSISTENT"
-            echo "BLOCKER: read-back inconsistent â€” fail-closed (no SUCCESS)."
+            echo "BLOCKER: read-back inconsistent — fail-closed (no SUCCESS)."
             rm -f "$RUNNER_TEMP/iu-ads-bootstrap/activation-url.txt"
             exit 1
           fi
@@ -642,7 +642,7 @@ jobs:
           set -e
           if [ "$DEL_EC" != "0" ]; then
             echo "BOOTSTRAP_SECRET_DELETE=FAIL"
-            echo "BLOCKER: could not delete ADS_BOOTSTRAP_TOKEN â€” rotate/delete manually"
+            echo "BLOCKER: could not delete ADS_BOOTSTRAP_TOKEN — rotate/delete manually"
             # Still exit non-zero; prior bootstrap failure remains visible in job log.
             exit 1
           fi
@@ -705,7 +705,7 @@ jobs:
           cat <<'EOF'
           BOOTSTRAP_STATUS=SUCCESS
           ATOMICITY=d1_worker_batch
-          NEXT_1=GitHub â†’ Actions run â†’ Artifacts â†’ download iu-ads-main-admin-activation
+          NEXT_1=GitHub → Actions run → Artifacts → download iu-ads-main-admin-activation
           NEXT_2=Open activation-url.txt in a private browser window
           NEXT_3=Set your own strong password (min 12 chars)
           NEXT_4=Sign in at /admin with your email + new password
