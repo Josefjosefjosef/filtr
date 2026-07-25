@@ -137,20 +137,20 @@ function main() {
 
     const now = new Date().toISOString();
     const seedSql =
-      "INSERT INTO system_settings (key, value, updated_at) VALUES ('SCHEMA_VERSION','0010','" +
+      "INSERT OR IGNORE INTO system_settings (key, value, updated_at) VALUES ('SCHEMA_VERSION','0010','" +
       now +
       "');\n" +
-      "INSERT INTO clients (client_id, company_name, created_at, updated_at) VALUES ('drill_cli','Drill Client','" +
+      "INSERT OR REPLACE INTO clients (client_id, company_name, created_at, updated_at) VALUES ('drill_cli','Drill Client','" +
       now +
       "','" +
       now +
       "');\n" +
-      "INSERT INTO campaigns (campaign_id, evidence_code, client_id, title, status, created_at, updated_at) VALUES ('drill_cmp','EV-DRILL-1','drill_cli','Drill Campaign','draft','" +
+      "INSERT OR REPLACE INTO campaigns (campaign_id, evidence_code, client_id, title, status, created_at, updated_at) VALUES ('drill_cmp','EV-DRILL-1','drill_cli','Drill Campaign','draft','" +
       now +
       "','" +
       now +
       "');\n" +
-      "INSERT INTO invoices (invoice_id, client_id, invoice_number, status, currency, total_cents, created_at, updated_at) VALUES ('drill_inv','drill_cli','DRILL-1','issued','CZK',100,'" +
+      "INSERT OR REPLACE INTO invoices (invoice_id, client_id, invoice_number, status, currency, total_cents, created_at, updated_at) VALUES ('drill_inv','drill_cli','DRILL-1','issued','CZK',100,'" +
       now +
       "','" +
       now +
@@ -198,7 +198,7 @@ function main() {
     if (restored.schemaVersion !== "0010") fail("schema_version");
     else pass("schema_version");
 
-    // Wipe fixture rows in isolated DB only (simulate restore target wipe + re-verify empty then re-seed counts via inventory).
+    // Wipe fixture rows in isolated DB only (simulate restore target wipe).
     wrangler([
       "d1",
       "execute",
@@ -210,8 +210,7 @@ function main() {
     if (tempCount("clients") !== 0) fail("wipe_incomplete");
     else pass("isolated_wipe");
 
-    // Re-seed from inventory counts (structural restore of fixture, not production data).
-    wrangler(["d1", "execute", TEMP_NAME, "--remote", "--file", join(WORK, "schema.sql")]);
+    // Re-seed fixture from inventory (structural restore — not production data). Tables remain.
     const reseed = join(mkdtempSync(join(tmpdir(), "iu-drill-")), "reseed.sql");
     writeFileSync(reseed, seedSql, "utf8");
     wrangler(["d1", "execute", TEMP_NAME, "--remote", "--file", reseed]);
