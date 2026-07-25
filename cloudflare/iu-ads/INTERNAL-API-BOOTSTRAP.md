@@ -88,14 +88,17 @@ Dočasný GitHub secret s heslem se **nevytváří** — heslo je jen ve vašem 
 ## Co workflow dělá (technicky)
 
 1. Ověří přítomnost GitHub secrets (jména, ne hodnoty).
-2. `wrangler secret put` auth secrets do Workeru (stdout bez hodnot).
+2. `wrangler secret put` trvalé auth secrets do Workeru `infouzel-ads` (stdout bez hodnot).
 3. Resolve reálného D1 `database_id` (placeholder v `wrangler.toml` nestačí).
 4. Odmítne, pokud už existuje `main_admin`, `BOOTSTRAP_COMPLETED=1`, nebo nekonzistentní D1.
-5. Nasadí Worker a atomicky založí `main_admin` přes `POST /v1/internal/bootstrap/main-admin` (D1 `batch()`, bez SQL `BEGIN TRANSACTION`).
-6. Aktivační URL jen do privátního artifactu (ne do logu); smaže ephemeral `ADS_BOOTSTRAP_TOKEN`.
-7. Health gate: `safeMode=true`, `publicDeliveryEnabled=false`, Admin/Client API ON.
+5. **Nejdřív** `wrangler deploy` (Admin/Client API ON, public OFF).
+6. Teprve potom ephemeral `ADS_BOOTSTRAP_TOKEN` přes `wrangler secret put` (secret put nasadí verzi *s* bindingem). **Nikdy** hned poté znovu `deploy` — to v produkci shodilo binding (`bootstrap_token_not_configured`).
+7. Readiness: probe se špatným Bearerem musí vrátit `401 unauthorized` (ne `503 bootstrap_token_not_configured`).
+8. Atomický seed přes `POST /v1/internal/bootstrap/main-admin` (D1 `batch()`, bez SQL `BEGIN TRANSACTION`); token jen v `Authorization` hlavičce.
+9. D1 read-back → privátní artifact → `secret delete ADS_BOOTSTRAP_TOKEN` (i při selhání po put) → ověření, že endpoint je znovu nepoužitelný → health gate.
 
 Skript (inspection-only SQL, bez BEGIN): `cloudflare/iu-ads/scripts/iu-ads-bootstrap-main-admin.mjs`  
+Token/readiness helpers: `cloudflare/iu-ads/scripts/iu-ads-bootstrap-token-flow.mjs`  
 Worker bootstrap: `cloudflare/iu-ads/src/admin-bootstrap.ts`  
 Workflow: `.github/workflows/bootstrap-iu-ads-main-admin.yml`
 
