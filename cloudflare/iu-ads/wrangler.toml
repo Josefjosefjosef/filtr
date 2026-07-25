@@ -8,9 +8,8 @@ compatibility_date = "2024-11-01"
 account_id = "577868e9aac9c289e9323100f68fad16"
 
 # Official public origin: https://ads.infouzel.cz
-# Keep workers_dev=true during cutover until custom domain health is proven in prod;
-# then set workers_dev=false (do not leave personal *.workers.dev as the public Ads URL).
-workers_dev = true
+# Personal *.workers.dev must not be the public Ads surface.
+workers_dev = false
 
 [[routes]]
 pattern = "ads.infouzel.cz"
