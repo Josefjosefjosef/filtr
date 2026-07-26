@@ -2,7 +2,14 @@
 /**
  * Deploy-time only (pages.yml): publish app shell at site root and replace
  * legacy /projects/*.html entrypoints with client redirects that preserve query/hash.
+ *
+ * Also publishes public PWA assets at root:
+ *   /manifest.json, /icons/*
+ * Legacy copies under /projects/icons and /projects/manifest.json remain for
+ * older clients until Cloudflare 301 Worker is live.
+ *
  * Does NOT rename projects/data — JSON feeds stay at /projects/data/*.
+ * Does NOT move projects/version.json (PWA probe contract stays /projects/version.json).
  */
 import { cpSync, mkdirSync, rmSync, writeFileSync, readFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -55,6 +62,25 @@ for (const name of ["statistiky", "zdroje-a-licence"]) {
   cpSync(from, to, { recursive: true });
   console.log("ROOT_COPY=" + name);
 }
+
+const iconsFrom = join(ROOT, "projects", "icons");
+const iconsTo = join(ROOT, "icons");
+if (!existsSync(iconsFrom)) {
+  console.error("BLOCKER: missing", iconsFrom);
+  process.exit(1);
+}
+rmSync(iconsTo, { recursive: true, force: true });
+cpSync(iconsFrom, iconsTo, { recursive: true });
+console.log("ROOT_COPY=icons");
+
+const manFrom = join(ROOT, "projects", "manifest.json");
+const manTo = join(ROOT, "manifest.json");
+if (!existsSync(manFrom)) {
+  console.error("BLOCKER: missing", manFrom);
+  process.exit(1);
+}
+writeFileSync(manTo, readFileSync(manFrom));
+console.log("ROOT_COPY=manifest.json");
 
 writeRedirect("projects/index.html", "/");
 writeRedirect("projects/statistiky/index.html", "/statistiky/");

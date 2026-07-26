@@ -45,12 +45,16 @@ function serveFile(urlPath) {
     decodedPath = String(urlPath || "").split("?")[0];
   }
   // Prod-like: app shell is at `/` (pages.yml copies projects/index.html → index.html).
-  let filePath = path.join(
-    ROOT,
+  // Root PWA assets: map /icons and /manifest.json to projects/ copies (local checkout).
+  let relPath =
     decodedPath === "/" || decodedPath === ""
       ? path.join("projects", "index.html")
-      : decodedPath.replace(/^\//, "").replace(/\/$/, "") || "index.html"
-  );
+      : decodedPath === "/manifest.json"
+        ? path.join("projects", "manifest.json")
+        : decodedPath.startsWith("/icons/")
+          ? path.join("projects", "icons", decodedPath.slice("/icons/".length))
+          : decodedPath.replace(/^\//, "").replace(/\/$/, "") || "index.html";
+  let filePath = path.join(ROOT, relPath);
   if (urlPath && urlPath !== "/" && !urlPath.startsWith("/projects") && !urlPath.startsWith("/statistiky") && !urlPath.startsWith("/zdroje-a-licence")) {
     const lastSeg = (urlPath.split("?")[0] || "").split("/").filter(Boolean).pop() || "";
     if (!path.extname(lastSeg)) {

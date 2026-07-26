@@ -588,6 +588,32 @@ try {
         .register("/sw.js", { scope: "/" })
         .then(function (reg) {
           try {
+            /* Drop legacy /projects/ SW scopes so only root scope=/ controls the app. */
+            navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all(
+                (regs || []).map(function (r) {
+                  try {
+                    var scopePath = "";
+                    try {
+                      scopePath = new URL(r.scope).pathname || "";
+                    } catch (eScope) {
+                      scopePath = String(r.scope || "");
+                    }
+                    if (
+                      scopePath === "/projects/" ||
+                      scopePath === "/projects" ||
+                      scopePath.indexOf("/projects/") === 0 ||
+                      scopePath.indexOf("/filtr/projects") === 0
+                    ) {
+                      return r.unregister();
+                    }
+                  } catch (eUn) {}
+                  return Promise.resolve();
+                })
+              );
+            }).catch(function () {});
+          } catch (eLegacy) {}
+          try {
             reg.addEventListener("updatefound", function () {
               var nw = reg.installing;
               if (!nw) return;

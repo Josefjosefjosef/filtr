@@ -110,8 +110,12 @@ jobs:
           BASE_URL="${{ steps.deployment.outputs.page_url }}"
           echo "Base URL: ${BASE_URL}"
           curl -sL "${BASE_URL}" | grep -oE "/assets/app\\.[a-f0-9]+\\.(css|js)" | head -n 5 || true
-          # Legacy hub must bounce to root (client redirect; GH Pages has no native 301).
+          # Root PWA assets (manifest/icons) must exist without /projects/.
+          curl -sI "${BASE_URL}manifest.json" | head -n 5 || true
+          curl -sI "${BASE_URL}icons/favicon-32.png" | head -n 5 || true
+          # Legacy hub: client shim until CF Worker 301 is live (GH Pages has no native 301).
           curl -sL "${BASE_URL}projects/" | grep -oE "/assets/app\\.[a-f0-9]+\\.(css|js)" | head -n 5 || true
+          curl -sL "${BASE_URL}" | grep -E 'href="/projects/(manifest|icons)' && echo "FAIL public projects PWA href" && exit 1 || echo "OK_NO_PROJECTS_PWA_HREF"
 
       - name: Pages deploy telemetry (summary)
         if: always()

@@ -1,15 +1,15 @@
 {
-  "freezeId": "app-root-url-drop-projects-20260726",
+  "freezeId": "app-root-pwa-assets-redirects-20260726",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-07-26T01:01:18Z",
-  "note": "Freeze bump: public app hub at / (drop /projects/ from public URLs); data remains /projects/data/; PWA start_url/scope=/",
+  "updatedAt": "2026-07-26T07:40:00Z",
+  "note": "Freeze bump: root /manifest.json + /icons/*; SW bump; legacy /projects SW unregister; CF 301 Worker for /projects HTML",
   "files": {
-    "projects/index.html": "7be9f2e40d82df7f132634f2563a5bdc706e8feb17c61627b6c3bc8381df9fb9",
+    "projects/index.html": "cbfca24515febc84a73bbfad4872558400865aeee26c458a03566cf54bf642dd",
     "assets/app.css": "5f4442f5fec55cf6ec94b2dbcdf469247b8b7fedc0b1629df148e6d9373a6963",
-    "assets/app.js": "01d430bd0a60495b770462ccd1ac47d7b0ed31bdd294295b4e7266aa51b614cd",
-    "sw.js": "18307ab1f315974e2910ae03da56eb4bb4e407aab99b9fe58fc4c3e79aec8fd3",
-    "projects/version.json": "4ce114307ca8cf9d1fe36019402168673029c2100a53da05e5530b05f069774c",
+    "assets/app.js": "6f9b5d2753b28647ec70192281ed478e15a8976b3f85d28fd348fb4f7cdf4d8b",
+    "sw.js": "63e6a5043e99d82bc2ec53d7041984d271eae92c8fb407908aef690037cebe85",
+    "projects/version.json": "ea6774e772cb964eb632825d49485179b5a4e2d00a910b31574ad1cbf67d606e",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
     "assets/iu-user-data-backup-v1.js": "ab0b92b94c1d2f22897943881671c635f1a1bc79b2c130ad1b0436c80e8d3730",
@@ -20,13 +20,13 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-07-26-app-root-url-drop-projects-v1\"",
+      "CACHE_VERSION = \"2026-07-26-app-root-pwa-assets-redirects-v1\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v1\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "warmOfflineAssets"
     ],
     "projects/version.json": [
-      "pwa-app-root-url-drop-projects-v1-20260726"
+      "pwa-app-root-pwa-assets-redirects-v1-20260726"
     ]
   }
 }

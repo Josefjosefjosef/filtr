@@ -49,6 +49,10 @@ const CONTENT_TYPES = {
 function resolveFile(urlPath) {
   let rel = urlPath.replace(/^\/+/, "");
   if (rel === "") rel = "index.html";
+  if (rel === "manifest.json") rel = path.join("projects", "manifest.json");
+  if (rel === "icons" || rel.startsWith("icons" + path.sep) || rel.startsWith("icons/")) {
+    rel = path.join("projects", rel.replace(/\//g, path.sep));
+  }
   let filePath = path.join(ROOT, rel);
   const resolved = path.resolve(filePath);
   if (!resolved.startsWith(path.resolve(ROOT))) return null;
