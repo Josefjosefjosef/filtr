@@ -3,15 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <meta name="iu-build" content="pwa-offline-menu-articles-v4-20260716" />
+    <meta name="iu-build" content="pwa-app-root-url-drop-projects-v1-20260726" />
     <meta name="iu-data-ver" content="iu-data-ver-placeholder" />
-    <!-- iu-build: pwa-offline-menu-articles-v4-20260716 -->
+    <!-- iu-build: pwa-app-root-url-drop-projects-v1-20260726 -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <!-- P0 PWA: inline bootstrap — must run without external JS (CDN max-age can stale-checker block Home Screen). -->
     <script>
-    (function(){if(window.__iuPwaInlineBoot)return;window.__iuPwaInlineBoot=1;try{var p=String(location.pathname||"");if(p!=="/projects/"&&p!=="/projects"&&p.indexOf("/projects/")!==0)return;var V="/projects/version.json",RF="iu:pwa:ver:reloaded-for",RT="iu:pwa:ver:reload-ts",RA="iu:pwa:ver:reload-attempts",SD="iu:pwa:sw-deploy-reload",CD=3e4,MX=3,ck=0;function b(){try{return(document.querySelector('meta[name="iu-build"]')||{}).getAttribute("content")||""}catch(_){return""}}function sk(sv,bv){if(!sv||sv===bv)return 1;try{var n=Date.now(),lt=parseInt(sessionStorage.getItem(RT)||"0",10),rf=sessionStorage.getItem(RF)||"",at=parseInt(sessionStorage.getItem(RA)||"0",10);if(rf===sv){if(at>=MX)return 1;if(!isNaN(lt)&&n-lt<CD)return 1}else if(!isNaN(lt)&&n-lt<3e3)return 1}catch(_){}return 0}function mk(sv){try{var pr=sessionStorage.getItem(RF)||"",at=parseInt(sessionStorage.getItem(RA)||"0",10);if(pr!==sv)at=0;sessionStorage.setItem(RF,sv);sessionStorage.setItem(RT,String(Date.now()));sessionStorage.setItem(RA,String(at+1))}catch(_){}}function rl(){try{requestAnimationFrame(function(){location.reload()})}catch(_){location.reload()}}async function go(){if(ck)return;ck=1;try{var bv=b();if(!bv)return;var r=await fetch(V+"?t="+Date.now(),{cache:"no-store",credentials:"same-origin",headers:{"cache-control":"no-cache"}});if(!r.ok)return;var d=await r.json();var sv=d&&d.version?String(d.version).trim():"";if(sk(sv,bv))return;mk(sv);rl()}catch(_){}finally{ck=0}}function sc(){setTimeout(go,0)}function swUp(){try{if(!navigator.serviceWorker)return;navigator.serviceWorker.getRegistration().then(function(rg){if(rg)rg.update()});navigator.serviceWorker.addEventListener("message",function(ev){if(!ev||!ev.data||ev.data.type!=="IU_SW_DEPLOY_RELOAD")return;try{if(sessionStorage.getItem(SD)==="1")return;sessionStorage.setItem(SD,"1")}catch(_){}rl()})}catch(_){}}sc();swUp();window.addEventListener("pageshow",function(ev){sc();swUp();if(ev&&ev.persisted)sc()});document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"){sc();swUp()}})}catch(_){}})();
+    (function(){if(window.__iuPwaInlineBoot)return;window.__iuPwaInlineBoot=1;try{var p=String(location.pathname||"");if(!(p==="/"||p==="/index.html"||p==="/projects/"||p==="/projects"||p.indexOf("/projects/")===0||p.indexOf("/filtr/")===0))return;var V="/projects/version.json",RF="iu:pwa:ver:reloaded-for",RT="iu:pwa:ver:reload-ts",RA="iu:pwa:ver:reload-attempts",SD="iu:pwa:sw-deploy-reload",CD=3e4,MX=3,ck=0;function b(){try{return(document.querySelector('meta[name="iu-build"]')||{}).getAttribute("content")||""}catch(_){return""}}function sk(sv,bv){if(!sv||sv===bv)return 1;try{var n=Date.now(),lt=parseInt(sessionStorage.getItem(RT)||"0",10),rf=sessionStorage.getItem(RF)||"",at=parseInt(sessionStorage.getItem(RA)||"0",10);if(rf===sv){if(at>=MX)return 1;if(!isNaN(lt)&&n-lt<CD)return 1}else if(!isNaN(lt)&&n-lt<3e3)return 1}catch(_){}return 0}function mk(sv){try{var pr=sessionStorage.getItem(RF)||"",at=parseInt(sessionStorage.getItem(RA)||"0",10);if(pr!==sv)at=0;sessionStorage.setItem(RF,sv);sessionStorage.setItem(RT,String(Date.now()));sessionStorage.setItem(RA,String(at+1))}catch(_){}}function rl(){try{requestAnimationFrame(function(){location.reload()})}catch(_){location.reload()}}async function go(){if(ck)return;ck=1;try{var bv=b();if(!bv)return;var r=await fetch(V+"?t="+Date.now(),{cache:"no-store",credentials:"same-origin",headers:{"cache-control":"no-cache"}});if(!r.ok)return;var d=await r.json();var sv=d&&d.version?String(d.version).trim():"";if(sk(sv,bv))return;mk(sv);rl()}catch(_){}finally{ck=0}}function sc(){setTimeout(go,0)}function swUp(){try{if(!navigator.serviceWorker)return;navigator.serviceWorker.getRegistration().then(function(rg){if(rg)rg.update()});navigator.serviceWorker.addEventListener("message",function(ev){if(!ev||!ev.data||ev.data.type!=="IU_SW_DEPLOY_RELOAD")return;try{if(sessionStorage.getItem(SD)==="1")return;sessionStorage.setItem(SD,"1")}catch(_){}rl()})}catch(_){}}sc();swUp();window.addEventListener("pageshow",function(ev){sc();swUp();if(ev&&ev.persisted)sc()});document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"){sc();swUp()}})}catch(_){}})();
     </script>
     <script>
     (function(){
@@ -19,7 +19,7 @@
       window.__iuSilverWxEarlyBoot=1;
       try{
         var p=String(location.pathname||"");
-        if(p!=="/projects/"&&p!=="/projects"&&p.indexOf("/projects/")!==0)return;
+        if(!(p==="/"||p==="/index.html"||p==="/projects/"||p==="/projects"||p.indexOf("/projects/")===0||p.indexOf("/filtr/")===0))return;
         var gps=localStorage.getItem("iuWeatherGpsSelectedV1");
         var man=localStorage.getItem("iu_manual_location");
         var has=!!(gps||man);
@@ -31,8 +31,8 @@
     </script>
     <script src="/assets/iu-pwa-version-check.js?v=pwa-ver-check-v3"></script>
     <title>infoUzel.cz</title>
-    <meta name="description" content="infoUzel.cz — přehled zpráv, počasí, kalendáře a nástrojů na jednom místě. Veřejná sekce /projects/ s rychlými odkazy a přehledem obsahu." />
-    <link rel="canonical" href="https://infouzel.cz/projects/" />
+    <meta name="description" content="infoUzel.cz — přehled zpráv, počasí, kalendáře a nástrojů na jednom místě. Rychlé odkazy, zprávy, počasí a nástroje na jednom místě." />
+    <link rel="canonical" href="https://infouzel.cz/" />
     <meta name="theme-color" content="#003CFF" />
     <meta name="apple-mobile-web-app-title" content="infoUzel.cz" />
     <link rel="icon" href="/favicon.svg?v=pwa-icon-final-v54-20260629" type="image/svg+xml" sizes="any" />
@@ -2136,11 +2136,7 @@ font-src 'self' data:;
         if (!window.matchMedia("(min-width: 1025px)").matches) return;
         var p = String(location.pathname || "").replace(/\\/g, "/");
         var hub =
-          p === "/projects/" ||
-          p === "/projects" ||
-          p.indexOf("/projects/") === 0 ||
-          p === "/filtr/projects" ||
-          p === "/filtr/projects/";
+          p === "/" || p === "/index.html" || p === "/projects/" || p === "/projects" || p.indexOf("/projects/") === 0 || p.indexOf("/filtr/") === 0;
         if (!hub) return;
         document.body.classList.add("iu-desktop-home-grid");
       } catch (e) {}
@@ -2296,7 +2292,7 @@ font-src 'self' data:;
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                           </button>
                           <div class="iuBrandBlock">
-                            <a class="iuBrand" href="/projects/" aria-label="infoUzel.cz – homepage">
+                            <a class="iuBrand" href="/" aria-label="infoUzel.cz – homepage">
                               <span class="iuBrand__info">info</span><span class="iuBrand__uzel">Uzel</span><span class="iuBrand__cz">.cz</span>
                             </a>
                             <span class="iuBrandSubtitle" aria-hidden="true"><span class="iuBrandSubtitle__menu">Zprávy • Služby • Nástroje</span><span class="iuBrandSubtitle__sep"> • </span><span class="iuBrandSubtitle__silver">Silver</span><span class="iuBrandSubtitle__tail"> – váš osobní asistent pro každý den</span></span>
@@ -6562,7 +6558,7 @@ font-src 'self' data:;
               </div>
               <h3 class="iuInfoCenter__h3">C) Anonymní statistiky návštěvnosti (volitelné)</h3>
               <p class="iuInfoCenter__p">Statistiky jsou <strong>vypnuté</strong>, dokud nezvolíte <strong>Povolit anonymní statistiky</strong> v liště soukromí nebo nezapnete volbu v Nastavení soukromí. Volba <strong>Pouze nezbytné</strong> statistiky nezapíná.</p>
-              <p class="iuInfoCenter__p">Po zapnutí pomáhají zjistit počet návštěv, vytížení webu, technické chyby a využití sekcí — bez reklamního profilování. Veřejný přehled: <a class="iuInfoCenter__link" href="/projects/statistiky/">Statistiky a transparentnost</a>.</p>
+              <p class="iuInfoCenter__p">Po zapnutí pomáhají zjistit počet návštěv, vytížení webu, technické chyby a využití sekcí — bez reklamního profilování. Veřejný přehled: <a class="iuInfoCenter__link" href="/statistiky/">Statistiky a transparentnost</a>.</p>
               <p class="iuInfoCenter__p">Souhlas se statistikami <strong>není</strong> odvozen z pokračování v prohlížení ani z používání nástrojů.</p>
               <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy-settings">Upravit v Nastavení soukromí →</button>
               <h3 class="iuInfoCenter__h3">D) Třetí strany (mimo naše statistiky)</h3>
@@ -6700,7 +6696,7 @@ font-src 'self' data:;
                   <li>nepoužíváme cílenou reklamní profilaci</li>
                 </ul>
               </div>
-              <p class="iuInfoCenter__p">Pokud povolíte statistiky, ukládáme pouze <strong>agregované a anonymizované</strong> údaje o návštěvnosti — nikoli texty z vašich nástrojů. Viz <a class="iuInfoCenter__link" href="/projects/statistiky/">Statistiky a transparentnost</a> a sekce Cookies.</p>
+              <p class="iuInfoCenter__p">Pokud povolíte statistiky, ukládáme pouze <strong>agregované a anonymizované</strong> údaje o návštěvnosti — nikoli texty z vašich nástrojů. Viz <a class="iuInfoCenter__link" href="/statistiky/">Statistiky a transparentnost</a> a sekce Cookies.</p>
               <p class="iuInfoCenter__p">Na serveru jsou dostupné veřejné statické soubory (články, videa, metadata) generované pipeline — ne osobní data uživatelů.</p>
               <h3 class="iuInfoCenter__h3">4. Jak může uživatel data smazat nebo změnit souhlas</h3>
               <ul class="iuInfoCenter__ul">
@@ -6905,9 +6901,9 @@ font-src 'self' data:;
                 <li>Soukromé nástroje se ve veřejném přehledu zobrazují jen jako anonymní souhrn.</li>
                 <li>Detailní reklamní reporty nejsou veřejné.</li>
               </ul>
-              <p class="iuInfoCenter__p"><a class="iuInfoCenter__link" href="/projects/statistiky/">Otevřít Statistiky a transparentnost →</a></p>
+              <p class="iuInfoCenter__p"><a class="iuInfoCenter__link" href="/statistiky/">Otevřít Statistiky a transparentnost →</a></p>
               <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy-settings">Upravit souhlas v Nastavení soukromí →</button></p>
-              <footer class="iuInfoCenter__meta">InfoUzel Analytics · Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · <a class="iuInfoCenter__link" href="/projects/statistiky/">Statistiky</a></footer>
+              <footer class="iuInfoCenter__meta">InfoUzel Analytics · Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · <a class="iuInfoCenter__link" href="/statistiky/">Statistiky</a></footer>
             </div>
           </article>
 
@@ -6926,7 +6922,7 @@ font-src 'self' data:;
               <h3 class="iuInfoCenter__h3">Kontakt pro dotazy k ochraně soukromí</h3>
               <p class="iuInfoCenter__p">Dotazy k provozu webu, ochraně soukromí a uplatnění práv směřujte na <a class="iuInfoCenter__link" href="mailto:info@infouzel.cz">info@infouzel.cz</a>. U GDPR žádostí se snažíme odpovědět do 30 dnů.</p>
               <p class="iuInfoCenter__p">Provozovatel není pověřencem pro ochranu osobních údajů (DPO), pokud právní povinnost jeho jmenování nevznikne.</p>
-              <p class="iuInfoCenter__p"><a class="iuInfoCenter__link" href="/projects/statistiky/">Statistiky a transparentnost</a> · <a class="iuInfoCenter__link" href="/projects/zdroje-a-licence/">Zdroje a licence</a></p>
+              <p class="iuInfoCenter__p"><a class="iuInfoCenter__link" href="/statistiky/">Statistiky a transparentnost</a> · <a class="iuInfoCenter__link" href="/zdroje-a-licence/">Zdroje a licence</a></p>
               <h3 class="iuInfoCenter__h3">Bezpečnost a hlášení problémů</h3>
               <p class="iuInfoCenter__p">Pokud zjistíte bezpečnostní zranitelnost webu, podezření na zneužití nebo problém s ochranou osobních údajů u dat, která u provozovatele existují (e-mail, budoucí statistiky, provoz hostingu), napište na <a class="iuInfoCenter__link" href="mailto:info@infouzel.cz">info@infouzel.cz</a> s předmětem „Bezpečnost / GDPR“.</p>
               <p class="iuInfoCenter__p">U obsahu uloženého pouze ve vašem prohlížeči (poznámky, úkoly, kalendář) nám obvykle nelze pomoci se smazáním ze serveru — postupujte dle sekce <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-storage">Jak funguje ukládání dat</button>.</p>
@@ -6942,7 +6938,7 @@ font-src 'self' data:;
     <aside id="iuConsentLayer" class="iuConsentLayer" role="region" aria-label="Volba soukromí a anonymní statistiky" hidden>
       <div class="iuConsentLayer__panel">
         <h2 class="iuConsentLayer__title">Soukromí a anonymní statistiky</h2>
-        <p class="iuConsentLayer__text">Anonymní statistiky nám pomáhají pochopit návštěvnost a zlepšovat InfoUzel.cz. Neslouží k identifikaci konkrétních osob. Více v Informačním centru a na stránce <a class="iuConsentLayer__inlineLink" href="/projects/statistiky/">Statistiky a transparentnost</a>.<button type="button" class="iuConsentLayer__infoBtn" id="iuConsentInfoBtn" aria-label="Otevřít Informační centrum"><span class="iuConsentLayer__infoGlyph" aria-hidden="true">i</span></button></p>
+        <p class="iuConsentLayer__text">Anonymní statistiky nám pomáhají pochopit návštěvnost a zlepšovat InfoUzel.cz. Neslouží k identifikaci konkrétních osob. Více v Informačním centru a na stránce <a class="iuConsentLayer__inlineLink" href="/statistiky/">Statistiky a transparentnost</a>.<button type="button" class="iuConsentLayer__infoBtn" id="iuConsentInfoBtn" aria-label="Otevřít Informační centrum"><span class="iuConsentLayer__infoGlyph" aria-hidden="true">i</span></button></p>
         <div class="iuConsentLayer__actions">
           <button type="button" class="iuConsentLayer__btn iuConsentLayer__btn--essential" id="iuConsentEssentialOnly">Povolit pouze nezbytné</button>
           <button type="button" class="iuConsentLayer__btn iuConsentLayer__btn--primary" id="iuConsentAllowStats">Povolit anonymní statistiky</button>

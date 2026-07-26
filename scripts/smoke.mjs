@@ -21,8 +21,8 @@ const BASE = `http://127.0.0.1:${PORT}`;
 
 /** Preview cards mount async after app init + Silver tall shell; CI runners need headroom (not a weaker assertion). */
 const PREVIEW_SELECTOR_TIMEOUT_MS = 30000;
-/** Root `index.html` → `/projects/` redirect must settle before the next navigation (avoid racing `?section=media`). */
-const ROOT_REDIRECT_TIMEOUT_MS = 20000;
+/** Hub at `/` must paint Silver shell before follow-up navigations. */
+const ROOT_HUB_READY_TIMEOUT_MS = 20000;
 /** `page.goto` — large `app.js` / client nav can delay `domcontentloaded` on cold runs (match preview-tier headroom). */
 const GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS = 30000;
 
@@ -44,8 +44,14 @@ function serveFile(urlPath) {
   } catch (_) {
     decodedPath = String(urlPath || "").split("?")[0];
   }
-  let filePath = path.join(ROOT, (decodedPath === "/" || decodedPath === "") ? "index.html" : decodedPath.replace(/^\//, "").replace(/\/$/, "") || "index.html");
-  if (urlPath && urlPath !== "/" && !urlPath.startsWith("/projects")) {
+  // Prod-like: app shell is at `/` (pages.yml copies projects/index.html → index.html).
+  let filePath = path.join(
+    ROOT,
+    decodedPath === "/" || decodedPath === ""
+      ? path.join("projects", "index.html")
+      : decodedPath.replace(/^\//, "").replace(/\/$/, "") || "index.html"
+  );
+  if (urlPath && urlPath !== "/" && !urlPath.startsWith("/projects") && !urlPath.startsWith("/statistiky") && !urlPath.startsWith("/zdroje-a-licence")) {
     const lastSeg = (urlPath.split("?")[0] || "").split("/").filter(Boolean).pop() || "";
     if (!path.extname(lastSeg)) {
       const p = path.join(ROOT, urlPath.replace(/^\//, "").split("/")[0]);
@@ -85,7 +91,7 @@ function startServer() {
 /** Projects global hub: wait for Silver tall viewport (mount targets exist) before preview assertions. */
 async function gotoProjectsMediaForSmoke(page) {
   // Legacy HomeCards probes: force info-system off so cutover CSS does not hide preview cards.
-  await gotoDomContentLoaded(page, `${BASE}/projects/?section=media&iuInfoSystem=off`);
+  await gotoDomContentLoaded(page, `${BASE}/?section=media&iuInfoSystem=off`);
   // Locator re-resolves after DOM swaps; page.waitForSelector can time out when the same id is
   // detach/replaced during Silver shell paint — CI logs showed "visible" + 20s timeout on #iuSilverTallScrollViewport.
   const tallViewport = page.locator("#iuSilverTallScrollViewport").first();
@@ -124,7 +130,7 @@ async function smokePrehledDneCutover(page) {
         { timeout: PREVIEW_SELECTOR_TIMEOUT_MS }
       )
       .catch(() => null);
-    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media&iuInfoSystem=cutover`);
+    await gotoDomContentLoaded(page, `${BASE}/?section=media&iuInfoSystem=cutover`);
     await page.waitForFunction(
       () =>
         document.documentElement.classList.contains("iu-info-system-cutover") &&
@@ -242,8 +248,10 @@ async function runSmoke() {
 
     const urls = [
       `${BASE}/`,
+      `${BASE}/?section=media`,
+      `${BASE}/?debug=1`,
+      // Legacy hub path must still serve the app from git source (prod deploy redirects /projects/ → /).
       `${BASE}/projects/?section=media`,
-      `${BASE}/projects/?debug=1`,
     ];
 
     for (const url of urls) {
@@ -251,19 +259,20 @@ async function runSmoke() {
       // Playwright may return null when navigation commits without a main-frame Response (client redirect / race).
       const st = res ? res.status() : null;
       if (st !== null && st >= 400) fail(`HTTP ${st} for ${url}`);
-      // Root index.html runs location.replace("/projects/") after parse; domcontentloaded can return
-      // before that navigation commits — next goto would race and interrupt (?section=media) with /projects/.
+      // Prod hub is site root — wait for app shell.
       if (url === `${BASE}/`) {
         try {
-          await page.waitForURL((u) => u.pathname.includes("/projects"), { timeout: ROOT_REDIRECT_TIMEOUT_MS });
+          await page.waitForSelector("#iuSilverTallScrollViewport, .iuBrand, body.iu-home", {
+            timeout: ROOT_HUB_READY_TIMEOUT_MS,
+          });
         } catch (e) {
-          fail(`Root redirect did not settle on /projects/: ${e && e.message ? e.message : String(e)}`);
+          fail(`Root hub did not become ready: ${e && e.message ? e.message : String(e)}`);
         }
       }
       await page.waitForTimeout(500);
     }
 
-    // Click test on /projects/?section=media
+    // Click test on /?section=media
     await gotoProjectsMediaForSmoke(page);
 
     // Info-system v1 cutover: Přehled dne replaces commercial HomeCards in default mode.
@@ -483,7 +492,7 @@ async function runSmoke() {
     }
 
     // Počasí historical inline video must teardown (no background audio) when leaving the section
-    await gotoDomContentLoaded(page, `${BASE}/projects/?section=pocasi&iuInfoSystem=off`);
+    await gotoDomContentLoaded(page, `${BASE}/?section=pocasi&iuInfoSystem=off`);
     await page.waitForFunction(
       () => document.body && document.body.dataset && document.body.dataset.section === "pocasi",
       { timeout: PREVIEW_SELECTOR_TIMEOUT_MS }
@@ -585,7 +594,8 @@ async function runSmoke() {
     await page.waitForFunction(
       () => {
         const feed = document.getElementById("feed");
-        return feed && feed.getAttribute("data-feed-ready") === "true";
+        if (!feed || feed.getAttribute("data-feed-ready") !== "true") return false;
+        return feed.querySelectorAll("article").length >= 1;
       },
       { timeout: 60000 }
     );
@@ -826,7 +836,7 @@ async function runSmoke() {
         }
       } catch (_) {}
     });
-    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media&iuInfoSystem=off`);
+    await gotoDomContentLoaded(page, `${BASE}/?section=media&iuInfoSystem=off`);
     await gotoProjectsMediaForSmoke(page);
     await page.waitForSelector("#iuSilverParcelWatchInput", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
     await page.waitForFunction(
@@ -1313,7 +1323,7 @@ async function runSmoke() {
     }
 
     // Route reset: panel/radarOpen stripped on reload; section/topic/mode may persist (media nav deep links)
-    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media&panel=services&iuInfoSystem=off`);
+    await gotoDomContentLoaded(page, `${BASE}/?section=media&panel=services&iuInfoSystem=off`);
     await page.waitForTimeout(500);
     await page.reload({ waitUntil: "domcontentloaded" });
     await page.waitForTimeout(500);
@@ -1324,7 +1334,9 @@ async function runSmoke() {
     } catch (e) {
       fail(`Route reset: invalid URL ${finalUrl}`);
     }
-    if (!u.pathname.includes("/projects")) fail(`Route reset: expected /projects path, got ${finalUrl}`);
+    if (!(u.pathname === "/" || u.pathname.includes("/projects"))) {
+      fail(`Route reset: expected hub path / or /projects, got ${finalUrl}`);
+    }
     if (u.searchParams.has("panel") || u.searchParams.has("radarOpen")) {
       fail(`Route reset: stripped overlay params still present: ${finalUrl}`);
     }

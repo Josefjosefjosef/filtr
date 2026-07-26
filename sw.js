@@ -18,7 +18,7 @@
 // 2026-07-20: Prehled dne settings/timeline — network-first for info-system modules (SWR + stripped ?v=
 //             kept stale iu-prehled-dne-ui after #7622 for installed PWAs)
 // 2026-07-21: Cross-origin passthrough (analytics Worker ingest) — SW must not re-fetch with a different UA
-const CACHE_VERSION = "2026-07-21-prehled-settings-sw-network-first-v1-cross-origin-passthrough";
+const CACHE_VERSION = "2026-07-26-app-root-url-drop-projects-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
@@ -233,12 +233,20 @@ function isProjectsVersionProbePath(pathname) {
   return pathname === "/projects/version.json";
 }
 
-/** /projects/ HTML — network-first for all GET (iOS/Android home-screen may skip navigate mode). */
+/** App hub HTML — network-first for all GET (iOS/Android home-screen may skip navigate mode). */
 function isProjectsHtmlPath(pathname) {
   return (
+    pathname === "/" ||
+    pathname === "/index.html" ||
+    pathname === "/filtr/" ||
+    pathname === "/filtr" ||
+    pathname === "/filtr/index.html" ||
     pathname === "/projects/" ||
     pathname === "/projects" ||
-    pathname === "/projects/index.html"
+    pathname === "/projects/index.html" ||
+    pathname === "/filtr/projects/" ||
+    pathname === "/filtr/projects" ||
+    pathname === "/filtr/projects/index.html"
   );
 }
 

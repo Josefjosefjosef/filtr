@@ -25,16 +25,18 @@
     (function () {
       try {
         var p = String(location.pathname || "").replace(/\\/g, "/");
+        /* Fallback only when GitHub Pages deploy transform is absent.
+           Production artifact replaces this file with projects/index.html (app at /).
+           In raw git checkout, send users to /projects/ where the app shell still lives. */
         var target = "/projects/";
         if (p === target || p.indexOf("/projects/") === 0) return;
+        var suffix = String(location.search || "") + String(location.hash || "");
         var host = String(location.hostname || "").toLowerCase();
-        /* P0: prod canonical host is apex — relative replace to /projects/ on www costs an extra full
-           navigation (www/projects → apex) after this shell; jump straight to apex /projects/ (one less document). */
         if (host === "www.infouzel.cz") {
-          location.replace("https://infouzel.cz/projects/");
+          location.replace("https://infouzel.cz/projects/" + suffix);
           return;
         }
-        location.replace(target);
+        location.replace(target + suffix);
       } catch (e) {}
     })();
   </script>

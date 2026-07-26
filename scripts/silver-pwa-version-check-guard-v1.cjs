@@ -91,7 +91,7 @@ function runStaticChecks() {
   }
   checks.push("html:no-defer-only-checker");
 
-  const headerPaths = ["/projects/", "/projects/version.json", "/sw.js", "/assets/iu-pwa-version-check.js"];
+  const headerPaths = ["/", "/projects/", "/projects/version.json", "/sw.js", "/assets/iu-pwa-version-check.js"];
   for (const hp of headerPaths) {
     const err = assertIncludes(headers, hp, "_headers");
     if (err) return err;
@@ -122,10 +122,14 @@ function runStaticChecks() {
   checks.push("version:meta-sync");
 
   const manifest = JSON.parse(read("projects/manifest.json"));
-  if (manifest.start_url !== "/projects/") {
-    return fail("manifest start_url must be /projects/");
+  if (manifest.start_url !== "/") {
+    return fail("manifest start_url must be /");
+  }
+  if (manifest.scope !== "/") {
+    return fail("manifest scope must be /");
   }
   checks.push("manifest:start_url");
+  checks.push("manifest:scope");
 
   return { pass: true, checks, inline, manifest };
 }
@@ -153,7 +157,7 @@ async function runInlineLogicProof(inlineSource) {
       setTimeout,
       clearTimeout,
       requestAnimationFrame: (fn) => { fn(); return 1; },
-      location: { pathname: "/projects/", reload: () => { reloadCount += 1; } },
+      location: { pathname: "/", reload: () => { reloadCount += 1; } },
       document: {
         visibilityState: "visible",
         addEventListener(type, fn) {

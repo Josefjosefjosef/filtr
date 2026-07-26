@@ -79,7 +79,16 @@ export function iuUseChunkedArticleLoader() {
   if (iuChunkFullPoolForced() || iuChunkBootstrapOptIn() || iuChunkKillSwitchOff()) return false;
   try {
     const p = String(typeof location !== "undefined" && location.pathname ? location.pathname : "").replace(/\\/g, "/");
-    return p === "/projects/" || p === "/projects" || p.indexOf("/projects/") === 0 || p === "/filtr/projects" || p === "/filtr/projects/";
+    if (p === "/" || p === "/index.html") return true;
+    if (p === "/filtr/" || p === "/filtr" || p === "/filtr/index.html") return true;
+    return (
+      p === "/projects/" ||
+      p === "/projects" ||
+      p.indexOf("/projects/") === 0 ||
+      p === "/filtr/projects" ||
+      p === "/filtr/projects/" ||
+      p.indexOf("/filtr/projects/") === 0
+    );
   } catch (_) {
     return false;
   }

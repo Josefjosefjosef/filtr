@@ -52,7 +52,10 @@ import {
 var iuIsProjectsRoute = function iuIsProjectsRoute(){
   try{
     var p = (typeof location !== "undefined" && location && location.pathname ? String(location.pathname) : "").replace(/\\/g, '/');
-    return p === '/projects/' || p === '/projects' || p.indexOf('/projects/') === 0 || p === '/filtr/projects' || p === '/filtr/projects/';
+    /* Public hub is site root (/); /projects/ remains legacy hub path (redirected in prod). Data stays under /projects/data/. */
+    if (p === '/' || p === '/index.html') return true;
+    if (p === '/filtr/' || p === '/filtr' || p === '/filtr/index.html') return true;
+    return p === '/projects/' || p === '/projects' || p.indexOf('/projects/') === 0 || p === '/filtr/projects' || p === '/filtr/projects/' || p.indexOf('/filtr/projects/') === 0;
   }catch(e){
     return false;
   }
@@ -476,7 +479,7 @@ try {
         typeof location !== "undefined" && location && location.pathname
           ? String(location.pathname)
           : "";
-      if (p !== "/projects/" && p !== "/projects" && p.indexOf("/projects/") !== 0) {
+      if (typeof iuIsProjectsRoute === "function" ? !iuIsProjectsRoute() : (p !== "/" && p !== "/projects/" && p !== "/projects" && p.indexOf("/projects/") !== 0)) {
         onContinue();
         return;
       }
@@ -562,8 +565,7 @@ try {
 
   function iuEnsureServiceWorkerController() {
     try {
-      var p = (typeof location !== "undefined" && location && location.pathname) ? String(location.pathname) : "";
-      if (p !== "/projects/" && p !== "/projects" && p.indexOf("/projects/") !== 0) return;
+      if (typeof iuIsProjectsRoute === "function" ? !iuIsProjectsRoute() : true) return;
       if (!("serviceWorker" in navigator)) return;
       try {
         if (typeof window !== "undefined" && !Object.prototype.hasOwnProperty.call(window, "__iuSwHadControllerBeforeRegister")) {
@@ -8085,13 +8087,7 @@ try {
       const body = document.body;
       if (!body) return false;
       if (body.classList.contains("iu-home") || body.classList.contains("iu-desktop-home-grid")) return true;
-      const p = typeof location !== "undefined" && location.pathname ? String(location.pathname) : "";
-      const hub =
-        p === "/projects/" ||
-        p === "/projects" ||
-        p.indexOf("/projects/") === 0 ||
-        p === "/filtr/projects" ||
-        p === "/filtr/projects/";
+      const hub = typeof iuIsProjectsRoute === "function" ? iuIsProjectsRoute() : false;
       if (!hub) return false;
       const section = new URLSearchParams(String(location.search || "")).get("section");
       return !String(section || "").trim();
@@ -11478,13 +11474,7 @@ function buildVideoAsArticleCard(it) {
         try{ iuDesktopHomeSectionTopGapSync(); }catch(_){}
         return;
       }
-      const p = typeof location !== "undefined" && location && location.pathname ? String(location.pathname) : "";
-      const hub =
-        p === "/projects/" ||
-        p === "/projects" ||
-        p.indexOf("/projects/") === 0 ||
-        p === "/filtr/projects" ||
-        p === "/filtr/projects/";
+      const hub = typeof iuIsProjectsRoute === "function" ? iuIsProjectsRoute() : false;
       const mq = typeof window.matchMedia === "function" ? window.matchMedia("(min-width: 1025px)") : null;
       const ok = !!(hub && mq && mq.matches);
       if (ok) body.classList.add("iu-desktop-home-grid");

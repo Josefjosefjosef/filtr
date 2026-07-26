@@ -57,7 +57,7 @@
   }
 
   function buildToolWindowUrl(accent) {
-    var url = new URL("/projects/", location.origin);
+    var url = new URL("/", location.origin);
     url.searchParams.set("section", normalizeAccent(accent));
     url.searchParams.set(WINDOW_PARAM, WINDOW_VALUE);
     return url.toString();

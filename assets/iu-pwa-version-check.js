@@ -17,8 +17,10 @@
 
   function isProjectsRoute() {
     try {
-      var p = String(location.pathname || "");
-      return p === "/projects/" || p === "/projects" || p.indexOf("/projects/") === 0;
+      var p = String(location.pathname || "").replace(/\\/g, "/");
+      if (p === "/" || p === "/index.html") return true;
+      if (p === "/filtr/" || p === "/filtr" || p === "/filtr/index.html") return true;
+      return p === "/projects/" || p === "/projects" || p.indexOf("/projects/") === 0 || p.indexOf("/filtr/projects") === 0;
     } catch (_) {
       return false;
     }

@@ -65,7 +65,7 @@ function staticGate() {
 
   const sw = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8");
   must(/iu-prehled-dne-/.test(sw) && /network-first/i.test(sw), "sw:prehled_network_first");
-  must(/2026-07-21-prehled-settings-sw-network-first-v1-cross-origin-passthrough/.test(sw), "sw:cache_version_bump");
+  must(/2026-07-26-app-root-url-drop-projects-v1|2026-07-21-prehled-settings-sw-network-first-v1-cross-origin-passthrough/.test(sw), "sw:cache_version_bump");
   must(/#16a34a|#15803d/.test(css), "css:green_color");
   must(/iu-pd-settings-open/.test(css), "css:body_lock");
   must(/--bottom-nav-height/.test(css), "css:bottom_nav");
