@@ -1,8 +1,22 @@
-# Cloudflare — skutečný HTTP 301 pro legacy `/projects/*` (zóna `infouzel.cz`)
+## Stav deploye (2026-07-26)
 
-GitHub Pages **neumí** serverový 301. Trvalé přesměrování zajišťuje Worker
-`infouzel-site-redirects` (automatický deploy z `.github/workflows/deploy-iu-site-redirects.yml`)
-nebo ruční **Redirect Rules** níže.
+Worker skript `infouzel-site-redirects` se **uploadnul**, ale připojení `[[routes]]` na zónu selhalo:
+
+`Authentication error [code: 10000]` při `PUT /zones/.../workers/routes`
+
+Příčina: `CLOUDFLARE_API_TOKEN` nemá oprávnění **Workers Routes** (Edit) pro zónu `infouzel.cz`.
+
+### Co udělat teď (vlastník účtu)
+
+**Varianta A — doplnit token a znovu deploy**
+1. Dashboard → My Profile → API Tokens → Edit token used as `CLOUDFLARE_API_TOKEN`.
+2. Přidej: Account → Workers Scripts → Edit (už je), Zone → Workers Routes → Edit, Zone → Zone → Read (zóna `infouzel.cz`).
+3. Spusť: Actions → **Deploy IU site redirects** → Run workflow.
+4. Ověř: `curl.exe -sI https://infouzel.cz/projects/` → `HTTP/1.1 301` + `Location: https://infouzel.cz/`.
+
+**Varianta B — ruční Redirect Rules** (níže v tomto dokumentu) — bez změny tokenu.
+
+Do té doby zůstává klientský HTML shim (HTTP 200 + `location.replace`), root `/manifest.json` a `/icons/*` už jsou live.
 
 ## Co Worker / pravidla dělají
 
