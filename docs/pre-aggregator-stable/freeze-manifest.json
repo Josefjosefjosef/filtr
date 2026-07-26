@@ -1,15 +1,15 @@
 {
-  "freezeId": "info-system-v7-sw-cross-origin-passthrough-20260721",
+  "freezeId": "app-root-url-drop-projects-20260726",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-07-25T19:55:44Z",
-  "note": "Freeze bump: Ads public URL cutover to https://ads.infouzel.cz (remove personal workers.dev Ads host from CSP+iCentrum).",
+  "updatedAt": "2026-07-26T01:01:18Z",
+  "note": "Freeze bump: public app hub at / (drop /projects/ from public URLs); data remains /projects/data/; PWA start_url/scope=/",
   "files": {
-    "projects/index.html": "a72e20b997d927d8cc94dd0ddd3973846f46d119e7cf3ba13fa8bdfb214ba9b1",
+    "projects/index.html": "7be9f2e40d82df7f132634f2563a5bdc706e8feb17c61627b6c3bc8381df9fb9",
     "assets/app.css": "5f4442f5fec55cf6ec94b2dbcdf469247b8b7fedc0b1629df148e6d9373a6963",
-    "assets/app.js": "1493737245d34e1cc89c22017bde811b4b79c82cabcbbfa1f184acc4848b9c89",
-    "sw.js": "517620d34f6f47850b581c57babdb79258aa95ec82312e74514ea53f573f66f7",
-    "projects/version.json": "1dc55493161e563a117fb655117029786c13642034fd5c1cb2a32c989ee7f7c0",
+    "assets/app.js": "01d430bd0a60495b770462ccd1ac47d7b0ed31bdd294295b4e7266aa51b614cd",
+    "sw.js": "18307ab1f315974e2910ae03da56eb4bb4e407aab99b9fe58fc4c3e79aec8fd3",
+    "projects/version.json": "4ce114307ca8cf9d1fe36019402168673029c2100a53da05e5530b05f069774c",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "88893a74879f2f63e40ab7cf2bb8d6c6b1480952f03521c909650cbefdfc9d67",
     "assets/iu-user-data-backup-v1.js": "ab0b92b94c1d2f22897943881671c635f1a1bc79b2c130ad1b0436c80e8d3730",
@@ -20,13 +20,13 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-07-21-prehled-settings-sw-network-first-v1-cross-origin-passthrough\"",
+      "CACHE_VERSION = \"2026-07-26-app-root-url-drop-projects-v1\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v1\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "warmOfflineAssets"
     ],
     "projects/version.json": [
-      "pwa-prehled-settings-sw-network-first-v1-cross-origin-passthrough-20260721"
+      "pwa-app-root-url-drop-projects-v1-20260726"
     ]
   }
 }

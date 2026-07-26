@@ -110,8 +110,19 @@ try {
   const server = http.createServer((req, res) => {
     const u = new URL(req.url || "/", "http://127.0.0.1");
     let file = path.join(ROOT, decodeURIComponent(u.pathname.replace(/^\//, "") || "projects/index.html"));
-    if (u.pathname === "/" || u.pathname === "/projects/" || u.pathname === "/projects") {
+    if (
+      u.pathname === "/" ||
+      u.pathname === "/index.html" ||
+      u.pathname === "/projects/" ||
+      u.pathname === "/projects"
+    ) {
       file = path.join(ROOT, "projects/index.html");
+    }
+    if (u.pathname === "/statistiky" || u.pathname === "/statistiky/") {
+      file = path.join(ROOT, "projects/statistiky/index.html");
+    }
+    if (u.pathname === "/zdroje-a-licence" || u.pathname === "/zdroje-a-licence/") {
+      file = path.join(ROOT, "projects/zdroje-a-licence/index.html");
     }
     if (fs.existsSync(file) && fs.statSync(file).isDirectory()) {
       const idx = path.join(file, "index.html");
@@ -145,7 +156,7 @@ try {
     if (/infouzel-analytics/.test(req.url()) && req.method() === "POST") posts.push(req.url());
   });
 
-  await page.goto(`http://127.0.0.1:${PORT}/projects/`, { waitUntil: "domcontentloaded", timeout: 20000 });
+  await page.goto(`http://127.0.0.1:${PORT}/`, { waitUntil: "domcontentloaded", timeout: 20000 });
   await page.evaluate(() => {
     try {
       localStorage.setItem("iu:consent:analytics:v1", "denied");
@@ -191,7 +202,7 @@ try {
   });
   if (!dyn) fail("behavior:dynamic_ad_events_failed");
 
-  await page.goto(`http://127.0.0.1:${PORT}/projects/`, { waitUntil: "domcontentloaded", timeout: 20000 });
+  await page.goto(`http://127.0.0.1:${PORT}/`, { waitUntil: "domcontentloaded", timeout: 20000 });
   await page.evaluate(() => {
     try {
       localStorage.setItem("iu:consent:layer:dismissed:v1", "1");
@@ -230,7 +241,7 @@ try {
     if (/\/admin/.test(String(href || ""))) fail("behavior:ads_client_tile_points_admin");
   }
 
-  await page.goto(`http://127.0.0.1:${PORT}/projects/statistiky/`, { waitUntil: "load", timeout: 20000 });
+  await page.goto(`http://127.0.0.1:${PORT}/statistiky/`, { waitUntil: "load", timeout: 20000 });
   const title = await page.title();
   if (!/Statistiky/.test(title)) fail("behavior:public_page_title");
   const hasCodex = await page.locator("text=Nesledujeme jednotlivé osoby").count();
