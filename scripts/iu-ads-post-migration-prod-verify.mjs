@@ -53,17 +53,62 @@ async function verifyShell(pathSuffix, label) {
   else fail(label + "_xcto");
   if (hasHdr(r.headers, "x-robots-tag")) pass(label + "_xrobots");
   else fail(label + "_xrobots");
-  // Ads shells are Worker HTML; CSP may be absent (document honestly)
+  if (hasHdr(r.headers, "x-frame-options") && /sameorigin/i.test(r.headers["x-frame-options"])) {
+    pass(label + "_xfo_sameorigin");
+  } else fail(label + "_xfo_sameorigin");
+  if (hasHdr(r.headers, "referrer-policy")) pass(label + "_referrer_policy");
+  else fail(label + "_referrer_policy");
+  if (hasHdr(r.headers, "strict-transport-security")) {
+    const hsts = r.headers["strict-transport-security"];
+    console.log(label + "_HSTS=" + hsts);
+    if (/max-age=31536000/i.test(hsts) && /includeSubDomains/i.test(hsts)) pass(label + "_hsts_value");
+    else fail(label + "_hsts_value");
+    if (/\bpreload\b/i.test(hsts)) fail(label + "_hsts_preload_not_approved");
+    else pass(label + "_hsts_no_preload");
+  } else {
+    fail(label + "_hsts_missing");
+  }
+  if (hasHdr(r.headers, "permissions-policy")) {
+    const pp = r.headers["permissions-policy"];
+    console.log(label + "_PERMISSIONS_POLICY=" + pp);
+    if (/camera=\(\)/.test(pp) && /geolocation=\(\)/.test(pp) && /interest-cohort=\(\)/.test(pp)) {
+      pass(label + "_permissions_policy");
+    } else fail(label + "_permissions_policy");
+  } else {
+    fail(label + "_permissions_policy_missing");
+  }
   if (hasHdr(r.headers, "content-security-policy")) {
     const csp = r.headers["content-security-policy"];
     console.log(label + "_CSP_PRESENT=yes");
+    console.log(label + "_CSP=" + csp);
     if (/infouzel-ads\.josef-zmrhal/i.test(csp)) fail(label + "_csp_personal_ads");
     else pass(label + "_csp_no_personal_ads");
     if (/\*/.test(csp) && /script-src[^;]*\*/.test(csp)) fail(label + "_csp_script_star");
     else pass(label + "_csp_no_script_star");
+    if (/default-src\s+'self'/.test(csp)) pass(label + "_csp_default_self");
+    else fail(label + "_csp_default_self");
+    if (/object-src\s+'none'/.test(csp)) pass(label + "_csp_object_none");
+    else fail(label + "_csp_object_none");
+    if (/frame-ancestors\s+'self'/.test(csp)) pass(label + "_csp_frame_ancestors_self");
+    else fail(label + "_csp_frame_ancestors_self");
+    if (/base-uri\s+'self'/.test(csp)) pass(label + "_csp_base_uri_self");
+    else fail(label + "_csp_base_uri_self");
+    if (/form-action\s+'self'/.test(csp)) pass(label + "_csp_form_action_self");
+    else fail(label + "_csp_form_action_self");
+    if (/script-src\s+'nonce-[^']+'/.test(csp)) pass(label + "_csp_script_nonce");
+    else fail(label + "_csp_script_nonce");
+    if (/style-src\s+'nonce-[^']+'/.test(csp)) pass(label + "_csp_style_nonce");
+    else fail(label + "_csp_style_nonce");
+    if (/unsafe-eval/.test(csp)) fail(label + "_csp_unsafe_eval");
+    else pass(label + "_csp_no_unsafe_eval");
+    if (/unsafe-inline/.test(csp)) fail(label + "_csp_unsafe_inline");
+    else pass(label + "_csp_no_unsafe_inline");
+    const nonce = (csp.match(/script-src\s+'nonce-([^']+)'/) || [])[1] || "";
+    if (nonce && r.body.includes('nonce="' + nonce + '"')) pass(label + "_csp_nonce_in_html");
+    else fail(label + "_csp_nonce_in_html");
   } else {
     console.log(label + "_CSP_PRESENT=no");
-    pass(label + "_csp_absent_documented");
+    fail(label + "_csp_missing");
   }
 }
 

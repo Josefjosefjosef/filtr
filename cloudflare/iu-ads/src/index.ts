@@ -105,23 +105,18 @@ import {
   handlePruneBackups,
 } from "./admin-backup";
 import { handleGetAdminNav } from "./admin-nav";
-import { ADMIN_SHELL_HTML } from "./admin-ui";
+import { buildAdminShellHtml } from "./admin-ui";
 import { handleClientLogin, handleClientLogout, handleClientMe } from "./client-auth";
 import { handleClientReport, handleClientReportExport } from "./client-report";
-import { CLIENT_SHELL_HTML } from "./client-ui";
+import { buildClientShellHtml } from "./client-ui";
 import { isDeviceCategory, selectPublicAds } from "./delivery-engine";
 import { resolveFeatureFlags, isPublicDeliveryActive } from "./feature-flags";
 import { emptyPublicDelivery, sanitizePublicAds, assertNoForbiddenPublicKeys } from "./isolation";
 import { parseAccessQuery, verifyObjectAccess } from "./signed-access";
+import { finalizeSecurityHeaders, generateNonce, htmlSecurityHeaders } from "./security-headers";
 import type { Env, PublicAd, PublicDeliveryResponse } from "./types";
 
 const NO_STORE = { "Cache-Control": "no-store", "Content-Type": "application/json; charset=utf-8" };
-const HTML_NO_STORE = {
-  "Cache-Control": "no-store",
-  "Content-Type": "text/html; charset=utf-8",
-  "X-Content-Type-Options": "nosniff",
-  "X-Robots-Tag": "noindex, nofollow",
-};
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), { status, headers: NO_STORE });
 }
@@ -148,6 +143,20 @@ function corsHeaders(env: Env): HeadersInit {
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+    return finalizeSecurityHeaders(request, await handleFetch(request, env));
+  },
+
+  async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+    ctx.waitUntil(
+      runAlertsCron(env).then((result) => {
+        // Structured log only — never secrets.
+        console.log("iu-ads alerts cron", JSON.stringify(result));
+      })
+    );
+  },
+};
+
+async function handleFetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     const path = url.pathname.replace(/\/+$/, "") || "/";
     const flags = resolveFeatureFlags(env);
@@ -194,13 +203,21 @@ export default {
     // Admin SPA-lite shell. Always GET-able; live API calls still require ADS_ADMIN_API_ENABLED + session.
     if (path === "/admin" || path === "/admin/index.html") {
       if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
-      return new Response(ADMIN_SHELL_HTML, { status: 200, headers: HTML_NO_STORE });
+      const nonce = generateNonce();
+      return new Response(buildAdminShellHtml(nonce), {
+        status: 200,
+        headers: htmlSecurityHeaders(request, nonce),
+      });
     }
 
     // Client portal SPA-lite. Always GET-able; live API calls still require ADS_CLIENT_API_ENABLED + secrets.
     if (path === "/client" || path === "/client/index.html") {
       if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
-      return new Response(CLIENT_SHELL_HTML, { status: 200, headers: HTML_NO_STORE });
+      const nonce = generateNonce();
+      return new Response(buildClientShellHtml(nonce), {
+        status: 200,
+        headers: htmlSecurityHeaders(request, nonce),
+      });
     }
 
     if (path === "/v1/public/ads/delivery") {
@@ -470,14 +487,4 @@ export default {
     }
 
     return json({ error: "not_found" }, 404);
-  },
-
-  async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
-    ctx.waitUntil(
-      runAlertsCron(env).then((result) => {
-        // Structured log only — never secrets.
-        console.log("iu-ads alerts cron", JSON.stringify(result));
-      })
-    );
-  },
-};
+}

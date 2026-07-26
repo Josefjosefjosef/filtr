@@ -295,13 +295,13 @@ export const ADMIN_UI_SCRIPT = String.raw`
         '<div class="widget"><div class="widget-k">Po splatnosti</div><div class="widget-v">'+esc(formatKc(s.overdue_cents||0))+'</div></div>'+
         '</div>'+
         (statusKeys.length
-          ? '<div class="table-wrap" style="margin-top:.75rem"><table><thead><tr><th>Stav</th><th>Počet</th><th>Částka</th></tr></thead><tbody>'+
+          ? '<div class="table-wrap mt"><table><thead><tr><th>Stav</th><th>Počet</th><th>Částka</th></tr></thead><tbody>'+
             statusKeys.map(function(st){
               var row=s.by_status[st];
               return '<tr><td>'+esc(st)+'</td><td>'+esc(row.count)+'</td><td>'+esc(formatKc(row.total_cents))+'</td></tr>';
             }).join("")+
             '</tbody></table></div>'
-          : '<p class="muted empty" style="margin-top:.75rem">Žádné faktury v zvoleném období.</p>');
+          : '<p class="muted empty mt">Žádné faktury v zvoleném období.</p>');
     }).join("");
   }
   function statsHtml(body){
@@ -945,7 +945,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
       else if(v==="stats"){
         var st=await api("/v1/admin/stats/summary",{method:"GET",headers:{}});
         panel('<div class="card"><h2>Statistiky</h2>'+(st.res.ok?statsHtml(st.body):'<p class="err">'+esc(apiError(st.body))+'</p>')+
-          '<hr style="border:0;border-top:1px solid var(--line);margin:1rem 0"/>'+
+          '<hr class="soft"/>'+
           inp("st-id","Detail kampaně (campaign_id)")+'<div class="row"><button class="btn secondary" type="button" id="st-go">Načíst kampaň</button></div><div id="st-out"></div></div>');
         el("st-go").onclick=async function(){
           var id=val("st-id").trim();
