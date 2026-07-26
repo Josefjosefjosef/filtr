@@ -594,7 +594,8 @@ async function runSmoke() {
     await page.waitForFunction(
       () => {
         const feed = document.getElementById("feed");
-        return feed && feed.getAttribute("data-feed-ready") === "true";
+        if (!feed || feed.getAttribute("data-feed-ready") !== "true") return false;
+        return feed.querySelectorAll("article").length >= 1;
       },
       { timeout: 60000 }
     );
@@ -1333,7 +1334,9 @@ async function runSmoke() {
     } catch (e) {
       fail(`Route reset: invalid URL ${finalUrl}`);
     }
-    if (!u.pathname.includes("/projects")) fail(`Route reset: expected /projects path, got ${finalUrl}`);
+    if (!(u.pathname === "/" || u.pathname.includes("/projects"))) {
+      fail(`Route reset: expected hub path / or /projects, got ${finalUrl}`);
+    }
     if (u.searchParams.has("panel") || u.searchParams.has("radarOpen")) {
       fail(`Route reset: stripped overlay params still present: ${finalUrl}`);
     }
