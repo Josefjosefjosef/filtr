@@ -51,7 +51,10 @@ export function isWorkflowOnlyScope(files) {
   const allowed = (f) =>
     f.startsWith(".github/workflows/") ||
     f === "scripts/smoke-data-only-scope.mjs" ||
-    f === "scripts/smoke_data_only_scope_proof.mjs";
+    f === "scripts/smoke_data_only_scope_proof.mjs" ||
+    // Ads post-migration verify / Admin E2E tooling (no app UI surface)
+    f === "scripts/iu-ads-post-migration-prod-verify.mjs" ||
+    f.startsWith("cloudflare/iu-ads/scripts/");
   return paths.every(allowed);
 }
 
