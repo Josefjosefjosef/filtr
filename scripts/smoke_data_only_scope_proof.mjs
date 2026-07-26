@@ -16,6 +16,15 @@ assert(!isDataOnlyScope(["projects/data/x.json", "assets/app.js"]), "mixed not d
 assert(!isDataOnlyScope([]), "empty not data-only");
 assert(isFastPoolPipelineScope([".github/workflows/update-articles-fast-pool.yml"]), "fast pool workflow-only is pipeline scope");
 assert(isWorkflowOnlyScope([".github/workflows/update-weather.yml", ".github/workflows/pages-publish-from-main-data.yml"]), "multi workflow-only is workflow scope");
+assert(
+  isWorkflowOnlyScope([
+    ".github/workflows/iu-ads-admin-e2e-prod.yml",
+    ".github/workflows/iu-ads-post-migration-prod-verify.yml",
+    "cloudflare/iu-ads/scripts/iu-ads-admin-e2e-prod.mjs",
+    "scripts/iu-ads-post-migration-prod-verify.mjs",
+  ]),
+  "Ads E2E/verify tooling is workflow-only scope"
+);
 assert(!isWorkflowOnlyScope([".github/workflows/smoke.yml", "assets/app.js"]), "mixed workflow+assets not workflow scope");
 assert(isFastPoolPipelineScope(["package.json", "projects/data/publishable_pool.json"]), "data + package.json is pipeline scope");
 assert(!isFastPoolPipelineScope([".github/workflows/update-articles-fast-pool.yml", "assets/app.js"]), "mixed workflow+assets not pipeline scope");
