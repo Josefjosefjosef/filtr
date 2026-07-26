@@ -98,6 +98,21 @@ async function verifyCors() {
   // Worker always echoes configured allowlist origin (not request origin) — so evil should NOT get evil reflected
   if (denyOrigin === "https://evil.example") fail("cors_reflects_evil");
   else pass("cors_no_evil_reflect");
+  // Note: fixed allowlist Origin is still returned for unknown origins; browser blocks credentialed cross-origin
+  // when request Origin !== ACAO. Documented: Worker does not dynamically deny via omitting ACAO.
+  console.log("CORS_MODEL=fixed_allowlist_origin=" + (denyOrigin || "(empty)"));
+
+  const nullOrigin = await fetch(ADS + "/v1/public/ads/delivery?device=mobile", {
+    method: "OPTIONS",
+    headers: {
+      Origin: "null",
+      "Access-Control-Request-Method": "GET",
+    },
+  });
+  const nullAcao = nullOrigin.headers.get("access-control-allow-origin") || "";
+  if (nullAcao === "null") fail("cors_allows_null_origin");
+  else pass("cors_null_origin_not_reflected");
+
   // Positive GET with Origin
   const getOk = await fetch(ADS + "/v1/public/ads/delivery?device=mobile", {
     headers: { Origin: "https://infouzel.cz" },
