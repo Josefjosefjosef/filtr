@@ -21,6 +21,8 @@
       try {
         var p = String(location.pathname || "").replace(/\\/g, "/");
         return (
+          p === "/" ||
+          p === "/index.html" ||
           p === "/projects/" ||
           p === "/projects" ||
           p === "/projects/index.html"
