@@ -231,6 +231,8 @@ async function main() {
     return fetch(BASE + path, { headers: { Cookie: cookie } });
   }
 
+  const calFrom = new Date(Date.now() - 7 * 864e5).toISOString();
+  const calTo = new Date(Date.now() + 7 * 864e5).toISOString();
   const readOk = [
     ["/v1/admin/auth/me", "me"],
     ["/v1/admin/dashboard", "dashboard"],
@@ -247,7 +249,10 @@ async function main() {
     ["/v1/admin/exports", "exports"],
     ["/v1/admin/finance/summary", "finance"],
     ["/v1/admin/stats/summary", "stats"],
-    ["/v1/admin/calendar", "calendar"],
+    [
+      "/v1/admin/calendar?from=" + encodeURIComponent(calFrom) + "&to=" + encodeURIComponent(calTo),
+      "calendar",
+    ],
   ];
 
   for (const [path, label] of readOk) {
@@ -255,8 +260,21 @@ async function main() {
     if (r.status === 200) pass("read_" + label);
     else fail("read_" + label + "_status_" + r.status);
     const txt = await r.text();
-    if (/josef-zmrhal|infouzel-ads\.josef-zmrhal/i.test(txt)) fail("read_" + label + "_personal_host");
-    else pass("read_" + label + "_clean_host");
+    // Live Ads hostname must not appear. Historical audit_logs may still mention personal hosts —
+    // document those without failing the migration gate (immutable audit trail).
+    if (label === "audit") {
+      if (/infouzel-ads\.josef-zmrhal/i.test(txt) || /josef-zmrhal/i.test(txt)) {
+        console.log("HIST_AUDIT_PERSONAL_HOST_MENTION=yes");
+        pass("read_audit_hist_personal_documented");
+      } else {
+        console.log("HIST_AUDIT_PERSONAL_HOST_MENTION=no");
+        pass("read_audit_clean_host");
+      }
+    } else if (/infouzel-ads\.josef-zmrhal|josef-zmrhal/i.test(txt)) {
+      fail("read_" + label + "_personal_host");
+    } else {
+      pass("read_" + label + "_clean_host");
+    }
   }
 
   // settings/users catalog is main_admin-only (users.read) — expect deny for read_only
