@@ -106,8 +106,12 @@ async function verifyCors() {
   if (getOk.status === 200 && getOrigin === "https://infouzel.cz") pass("cors_get_allow_infouzel");
   else fail("cors_get_allow");
   const body = await getOk.json().catch(() => ({}));
-  if (body && body.publicDeliveryEnabled === false) pass("public_delivery_still_off");
-  else fail("public_delivery_flag");
+  // Delivery payload shape: { ads:[], enabled:false, safeMode:true } when freeze is on
+  if (body && body.enabled === false && body.safeMode === true && Array.isArray(body.ads) && body.ads.length === 0) {
+    pass("public_delivery_still_off");
+  } else {
+    fail("public_delivery_flag");
+  }
 }
 
 async function verifyLegacy() {
