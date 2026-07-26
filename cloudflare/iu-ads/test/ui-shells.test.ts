@@ -12,12 +12,15 @@ const env = {
 } as Env;
 
 describe("admin + client SPA shells", () => {
-  it("GET /admin returns HTML 200 with login markers and noindex", async () => {
+  it("GET /admin returns HTML 200 with login markers, noindex, and security headers", async () => {
     const res = await worker.fetch(new Request("https://ads.test/admin"), env);
     expect(res.status).toBe(200);
     expect(res.headers.get("Content-Type") || "").toContain("text/html");
     expect(res.headers.get("Cache-Control")).toBe("no-store");
     expect(res.headers.get("X-Robots-Tag") || "").toContain("noindex");
+    expect(res.headers.get("Content-Security-Policy") || "").toContain("default-src 'self'");
+    expect(res.headers.get("Strict-Transport-Security") || "").toContain("max-age=31536000");
+    expect(res.headers.get("Permissions-Policy") || "").toContain("camera=()");
     const html = await res.text();
     expect(html).toContain('id="login-form"');
     expect(html).toContain('id="activate-card"');
@@ -50,11 +53,13 @@ describe("admin + client SPA shells", () => {
     expect(html).toContain("declared_mime");
   });
 
-  it("GET /client returns HTML 200 with access-code login and portal tabs", async () => {
+  it("GET /client returns HTML 200 with access-code login, portal tabs, and security headers", async () => {
     const res = await worker.fetch(new Request("https://ads.test/client"), env);
     expect(res.status).toBe(200);
     expect(res.headers.get("Content-Type") || "").toContain("text/html");
     expect(res.headers.get("Cache-Control")).toBe("no-store");
+    expect(res.headers.get("Content-Security-Policy") || "").toContain("frame-ancestors 'self'");
+    expect(res.headers.get("X-Frame-Options")).toBe("SAMEORIGIN");
     const html = await res.text();
     expect(html).toContain('id="login-form"');
     expect(html).toContain('id="access_code"');

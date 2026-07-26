@@ -1,15 +1,17 @@
 /**
  * Client portal SPA (Worker-served). Access-code login; uniform errors; no secrets in markup.
  * Public delivery remains independent — this shell only talks to /v1/client/* (gated by ADS_CLIENT_API_ENABLED).
+ * CSP: per-response nonce on <style> and <script> (see security-headers.ts).
  */
-export const CLIENT_SHELL_HTML = `<!DOCTYPE html>
+export function buildClientShellHtml(nonce: string): string {
+  return `<!DOCTYPE html>
 <html lang="cs">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="robots" content="noindex,nofollow"/>
   <title>InfoUzel Ads — Klientský portál</title>
-  <style>
+  <style nonce="${nonce}">
     :root{--bg:#f3f0e9;--ink:#1a221e;--muted:#5c675f;--accent:#0f6b5c;--line:#d6d0c4;--card:#fffdf9;--danger:#9b2c2c;--ok:#1b6b3a}
     *{box-sizing:border-box}
     body{margin:0;font:15px/1.45 "Segoe UI",system-ui,sans-serif;background:linear-gradient(165deg,#ebe4d8,#f7f5f1 40%,#e6f0eb);color:var(--ink);min-height:100vh}
@@ -70,7 +72,7 @@ export const CLIENT_SHELL_HTML = `<!DOCTYPE html>
     <div id="panel"></div>
   </main>
 </section>
-<script>
+<script nonce="${nonce}">
 (function(){
   "use strict";
   var state={health:null,me:null,report:null,view:"overview",flash:null};
@@ -270,3 +272,7 @@ export const CLIENT_SHELL_HTML = `<!DOCTYPE html>
 </script>
 </body>
 </html>`;
+}
+
+/** Static snapshot for contract tests (nonce value is irrelevant for string markers). */
+export const CLIENT_SHELL_HTML = buildClientShellHtml("test-nonce");

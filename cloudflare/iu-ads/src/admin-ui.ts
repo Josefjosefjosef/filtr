@@ -1,17 +1,19 @@
 /**
  * Production admin SPA (Worker-served HTML + script). No secrets/hardcoded credentials.
  * API remains fail-closed behind ADS_ADMIN_API_ENABLED; shell is always GET-able.
+ * CSP: per-response nonce on <style> and <script> (see security-headers.ts).
  */
 import { ADMIN_UI_SCRIPT } from "./admin-ui-script";
 
-export const ADMIN_SHELL_HTML = `<!DOCTYPE html>
+export function buildAdminShellHtml(nonce: string): string {
+  return `<!DOCTYPE html>
 <html lang="cs">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="robots" content="noindex,nofollow"/>
   <title>InfoUzel Ads — Admin</title>
-  <style>
+  <style nonce="${nonce}">
     :root{--bg:#f4f1ea;--ink:#1a221e;--muted:#5c675f;--accent:#0f6b5c;--line:#d6d0c4;--card:#fffdf9;--danger:#9b2c2c;--ok:#1b6b3a}
     *{box-sizing:border-box}
     body{margin:0;font:15px/1.45 "Segoe UI",system-ui,sans-serif;background:linear-gradient(165deg,#ebe4d8,#f7f5f1 42%,#e4efe9);color:var(--ink);min-height:100vh}
@@ -35,6 +37,9 @@ export const ADMIN_SHELL_HTML = `<!DOCTYPE html>
     button.btn.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}
     button.linkish{border:0;background:transparent;color:var(--accent);cursor:pointer;font:inherit;padding:0;text-decoration:underline}
     .table-wrap{overflow:auto}
+    .table-wrap.mt{margin-top:.75rem}
+    .empty.mt{margin-top:.75rem}
+    hr.soft{border:0;border-top:1px solid var(--line);margin:1rem 0}
     table{width:100%;border-collapse:collapse;font-size:.92rem}
     th,td{text-align:left;padding:.45rem .35rem;border-bottom:1px solid var(--line);vertical-align:top}
     pre.json{white-space:pre-wrap;word-break:break-word;font:12px/1.4 ui-monospace,Consolas,monospace;background:#f7f4ee;padding:.75rem;border-radius:8px;max-height:420px;overflow:auto}
@@ -111,8 +116,12 @@ export const ADMIN_SHELL_HTML = `<!DOCTYPE html>
     <main id="panel"></main>
   </div>
 </section>
-<script>
+<script nonce="${nonce}">
 ${ADMIN_UI_SCRIPT}
 </script>
 </body>
 </html>`;
+}
+
+/** Static snapshot for contract tests (nonce value is irrelevant for string markers). */
+export const ADMIN_SHELL_HTML = buildAdminShellHtml("test-nonce");
