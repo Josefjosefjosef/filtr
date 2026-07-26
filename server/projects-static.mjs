@@ -26,6 +26,9 @@ function serveStatic(urlPath) {
     u = decodeURIComponent(u);
   } catch (_) {}
   if (u === "/" || u === "/projects" || u === "/projects/") u = "/projects/index.html";
+  // Local checkout mirrors Pages publish: root PWA assets live under projects/.
+  if (u === "/manifest.json") u = "/projects/manifest.json";
+  if (u.startsWith("/icons/")) u = "/projects/icons/" + u.slice("/icons/".length);
   const fp = path.resolve(path.join(ROOT, u.replace(/^\//, "").split("/").join(path.sep)));
   if (!fp.startsWith(path.resolve(ROOT)) || !fs.existsSync(fp) || fs.statSync(fp).isDirectory()) return null;
   return fs.readFileSync(fp);
