@@ -49,11 +49,18 @@ if ((appJs.match(/iuAnalytics\.privateToolsOpen/g) || []).length < 4) {
   fail("app:private_tools_open_not_wired");
 }
 if (!/sTodayViews|Dnes \(zobrazení\)/.test(publicPage)) fail("public:missing_page_views_tile");
-if (!/sessionStorage\.getItem\(\"iu\.analytics\.adminToken\"\)/.test(adminPage)) {
-  fail("admin:token_must_use_sessionStorage");
+// LF-003: admin Bearer must stay in page memory only — never Web Storage.
+if (!/memoryToken/.test(adminPage)) {
+  fail("admin:token_must_use_memory_only");
+}
+if (/sessionStorage\.setItem\(\"iu\.analytics\.adminToken\"/.test(adminPage)) {
+  fail("admin:token_must_not_persist_sessionStorage");
 }
 if (/localStorage\.setItem\(\"iu\.analytics\.adminToken\"/.test(adminPage)) {
   fail("admin:token_must_not_use_localStorage");
+}
+if (!/sessionStorage\.removeItem\(\"iu\.analytics\.adminToken\"/.test(adminPage)) {
+  fail("admin:must_clear_legacy_sessionStorage_token");
 }
 if (/google-analytics|googletagmanager|gtag\(|facebook\.net|hotjar|clarity|plausible\.io|matomo/i.test(client)) {
   fail("client:external_vendor_forbidden");
