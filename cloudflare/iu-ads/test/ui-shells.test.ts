@@ -73,6 +73,10 @@ describe("admin + client SPA shells", () => {
     expect(html).toContain("Export JSON");
     expect(html).toContain("Export CSV");
     expect(html).toContain("try{");
+    const script = html.match(/<script nonce="[^"]+">([\s\S]*?)<\/script>/);
+    expect(script).toBeTruthy();
+    expect(() => new Function(script![1])).not.toThrow();
+    expect(script![1]).toContain('"\\""');
   });
 
   it("admin shell renders Czech dashboard/calendar/finance/stats helpers (no raw JSON widgets)", async () => {
