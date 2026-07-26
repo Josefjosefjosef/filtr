@@ -1,0 +1,14 @@
+{
+  "name": "infouzel-site-redirects",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250320.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0",
+    "wrangler": "^3.99.0"
+  }
+}

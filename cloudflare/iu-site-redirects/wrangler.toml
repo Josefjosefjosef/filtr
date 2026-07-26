@@ -1,0 +1,19 @@
+# Permanent redirects for legacy /projects/* public HTML/PWA paths → root.
+# Does NOT redirect /projects/data/* or /projects/version.json (stable data contract).
+# Deploy after Pages publishes /icons and /manifest.json.
+name = "infouzel-site-redirects"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+account_id = "577868e9aac9c289e9323100f68fad16"
+workers_dev = false
+
+[[routes]]
+pattern = "infouzel.cz/projects*"
+zone_name = "infouzel.cz"
+
+[[routes]]
+pattern = "www.infouzel.cz/projects*"
+zone_name = "infouzel.cz"
+
+[observability]
+enabled = true

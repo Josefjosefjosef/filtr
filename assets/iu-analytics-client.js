@@ -110,8 +110,9 @@
       var sec = u.searchParams.get("section") || "";
       if (sec) return sanitizeId(sec) || "home";
       var path = (u.pathname || "").replace(/\/+$/, "");
-      if (/\/projects\/statistiky/i.test(path)) return "statistiky";
-      if (/\/projects\/zdroje-a-licence/i.test(path)) return "zdroje-a-licence";
+      // Root and legacy /projects/* map to the same section_id (no dual counting).
+      if (/\/statistiky$/i.test(path)) return "statistiky";
+      if (/\/zdroje-a-licence$/i.test(path)) return "zdroje-a-licence";
       if (/\/projects\/?$/i.test(path) || path === "" || path === "/") return "home";
       return "public";
     } catch (_) {
