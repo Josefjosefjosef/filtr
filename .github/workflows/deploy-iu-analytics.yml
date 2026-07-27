@@ -1,7 +1,9 @@
 # Deploy InfoUzel Analytics (Cloudflare Worker + D1)
 #
-# Required repo secrets:
-#   CLOUDFLARE_API_TOKEN — must include Account D1:Edit (+ Workers Scripts Edit)
+# Required repo secrets (first match wins for D1 + Workers Scripts):
+#   CLOUDFLARE_D1_API_TOKEN — preferred dedicated D1+Workers token
+#   CLOUDFLARE_ADS_API_TOKEN — Account D1:Edit + Workers Scripts:Edit (same account; proven on Ads deploy)
+#   CLOUDFLARE_API_TOKEN — fallback (must include Account D1:Edit + Workers Scripts Edit)
 # Optional:
 #   IU_ANALYTICS_ADMIN_TOKEN — Bearer for admin/ad report APIs
 name: Deploy IU Analytics
@@ -27,6 +29,9 @@ jobs:
     defaults:
       run:
         working-directory: cloudflare/iu-analytics
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_D1_API_TOKEN || secrets.CLOUDFLARE_ADS_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
     steps:
       - uses: actions/checkout@v5
 
@@ -42,16 +47,24 @@ jobs:
       - name: Unit tests
         run: npm test
 
+      - name: Token source (no values)
+        run: |
+          set -euo pipefail
+          if [ -n "${{ secrets.CLOUDFLARE_D1_API_TOKEN }}" ]; then
+            echo "TOKEN_SOURCE=CLOUDFLARE_D1_API_TOKEN"
+          elif [ -n "${{ secrets.CLOUDFLARE_ADS_API_TOKEN }}" ]; then
+            echo "TOKEN_SOURCE=CLOUDFLARE_ADS_API_TOKEN"
+          elif [ -n "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "TOKEN_SOURCE=CLOUDFLARE_API_TOKEN_FALLBACK"
+          else
+            echo "TOKEN_SOURCE=MISSING"
+            exit 1
+          fi
+
       - name: Ensure D1 database + apply migrations
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_D1_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
         run: |
           set -euo pipefail
           NAME="iu-analytics"
-          if [ -n "${{ secrets.CLOUDFLARE_D1_API_TOKEN }}" ]; then
-            echo "Using CLOUDFLARE_D1_API_TOKEN override for D1 ops"
-          fi
           echo "ACCOUNT_SCOPED=yes"
           set +e
           LIST_JSON="$(npx wrangler d1 list --json 2>/tmp/d1-list.err)"
@@ -107,8 +120,6 @@ jobs:
 
       - name: Put ADMIN_TOKEN secret (optional)
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_D1_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
           IU_ANALYTICS_ADMIN_TOKEN: ${{ secrets.IU_ANALYTICS_ADMIN_TOKEN }}
         run: |
           set -euo pipefail
@@ -119,9 +130,6 @@ jobs:
           printf '%s' "$IU_ANALYTICS_ADMIN_TOKEN" | npx wrangler secret put ADMIN_TOKEN
 
       - name: Deploy worker
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_D1_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
         run: npx wrangler deploy
 
       - name: Probe health must be storageMode=d1 + ingest roundtrip
@@ -175,5 +183,15 @@ jobs:
             const j=JSON.parse(require('fs').readFileSync('/tmp/iu-analytics-stats.json','utf8'));
             if (j.storageMode !== 'd1') { console.error('FAIL public storageMode', j.storageMode); process.exit(1); }
             if (!(j.today && Number(j.today.visits) >= 1)) { console.error('FAIL expected visits>=1', j.today); process.exit(1); }
+            const a=j.auditStatus||{};
+            if (!String(a.security||'').includes('Bearer')) {
+              console.error('FAIL ANA-002 expected deployed auditStatus security text', a);
+              process.exit(1);
+            }
+            if (!String(a.legal||'') || !String(a.anonymization||'')) {
+              console.error('FAIL ANA-002 missing auditStatus fields', a);
+              process.exit(1);
+            }
             console.log('PUBLIC_D1_OK');
+            console.log('ANA_002_OK');
           "
