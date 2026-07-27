@@ -29,6 +29,15 @@ function esc(s) {
     .replace(/"/g, "&quot;");
 }
 
+/** Allow only http(s) for detail links — HTML attr escape does not block javascript: (SEC-FE-004). */
+function safeHttpUrl(url) {
+  try {
+    const u = new URL(String(url || ""), "https://infouzel.cz");
+    if (u.protocol === "http:" || u.protocol === "https:") return u.href;
+  } catch (_) {}
+  return "";
+}
+
 function isDesktopPanelContext() {
   try {
     if (typeof window.matchMedia !== "function") return false;
@@ -224,7 +233,9 @@ function openDetail(item, sourceBtn) {
     `<p><strong>Frekvence zveřejňování:</strong> ${esc(freqLine)}</p>` +
     `</section>` +
     `<p class="iuDesktopInfoPanelDetail__links">` +
-    `<a href="${esc(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">Otevřít oficiální zdroj</a>` +
+    (safeHttpUrl(item.sourceUrl)
+      ? `<a href="${esc(safeHttpUrl(item.sourceUrl))}" target="_blank" rel="noopener noreferrer">Otevřít oficiální zdroj</a>`
+      : "") +
     `</p>` +
     `<p class="iuDesktopInfoPanelDetail__note">${esc(IU_INFO_PANEL_DISCLAIMER)}</p>`;
 

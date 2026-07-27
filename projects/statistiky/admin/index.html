@@ -74,7 +74,7 @@
             </select>
           </label>
         </div>
-        <p id="status" class="muted">Token se ukládá jen v sessionStorage tohoto prohlížeče.</p>
+        <p id="status" class="muted">Token zůstává jen v paměti této stránky (ne v sessionStorage). Po obnovení stránky ho zadej znovu.</p>
       </div>
 
       <div class="card">
@@ -90,14 +90,40 @@
     <script>
       (function () {
         var BASE = "https://infouzel-analytics.josef-zmrhal.workers.dev";
+        /** In-memory only — never persist admin Bearer to Web Storage (LF-003). */
+        var memoryToken = "";
         function $(id) { return document.getElementById(id); }
-        function token() { return ($("token").value || "").trim(); }
+        function esc(s) {
+          return String(s == null ? "" : s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+        }
+        function token() {
+          return ($("token").value || memoryToken || "").trim();
+        }
+        function setStatus(kind, message) {
+          var el = $("status");
+          el.replaceChildren();
+          if (!message) {
+            el.textContent = "";
+            return;
+          }
+          var span = document.createElement("span");
+          span.className = kind === "ok" ? "ok" : kind === "err" ? "err" : "muted";
+          span.textContent = String(message);
+          el.appendChild(span);
+        }
         try {
-          var saved = sessionStorage.getItem("iu.analytics.adminToken");
-          if (saved) $("token").value = saved;
+          sessionStorage.removeItem("iu.analytics.adminToken");
         } catch (_) {}
+        $("token").addEventListener("input", function () {
+          memoryToken = ($("token").value || "").trim();
+        });
         $("token").addEventListener("change", function () {
-          try { sessionStorage.setItem("iu.analytics.adminToken", token()); } catch (_) {}
+          memoryToken = ($("token").value || "").trim();
         });
         function authHeaders() {
           return { Authorization: "Bearer " + token() };
@@ -121,7 +147,7 @@
         }
         var last = null;
         $("btnLoad").onclick = function () {
-          $("status").textContent = "Načítám…";
+          setStatus("muted", "Načítám…");
           fetch(BASE + "/v1/admin/overview?" + qs(), { headers: authHeaders(), cache: "no-store" })
             .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
             .then(function (x) {
@@ -141,10 +167,10 @@
                 null,
                 2
               );
-              $("status").innerHTML = '<span class="ok">OK</span>';
+              setStatus("ok", "OK");
             })
             .catch(function (e) {
-              $("status").innerHTML = '<span class="err">' + String(e.message || e) + "</span>";
+              setStatus("err", String(e.message || e));
             });
         };
         $("btnAds").onclick = function () {
@@ -154,15 +180,16 @@
               if (!x.ok) throw new Error((x.j && x.j.error) || "unauthorized");
               last = x.j;
               var rows = x.j.rows || [];
+              var totals = x.j.totals || {};
               var html =
                 "<p>Imprese: <b>" +
-                x.j.totals.impressions +
+                esc(totals.impressions) +
                 "</b> · Validní kliky: <b>" +
-                x.j.totals.valid_clicks +
+                esc(totals.valid_clicks) +
                 "</b> · Podezřelé: <b>" +
-                x.j.totals.suspicious_clicks +
+                esc(totals.suspicious_clicks) +
                 "</b> · CTR: <b>" +
-                x.j.totals.ctr +
+                esc(totals.ctr) +
                 "</b></p>";
               html +=
                 "<table><thead><tr><th>day</th><th>campaign</th><th>placement</th><th>section</th><th>slot</th><th>device</th><th>imp</th><th>valid</th><th>sus</th><th>ctr</th></tr></thead><tbody>";
@@ -170,35 +197,35 @@
                 .map(function (r) {
                   return (
                     "<tr><td>" +
-                    r.day +
+                    esc(r.day) +
                     "</td><td>" +
-                    r.campaign_id +
+                    esc(r.campaign_id) +
                     "</td><td>" +
-                    r.placement_id +
+                    esc(r.placement_id) +
                     "</td><td>" +
-                    r.section_id +
+                    esc(r.section_id) +
                     "</td><td>" +
-                    r.slot_type +
+                    esc(r.slot_type) +
                     "</td><td>" +
-                    r.device_category +
+                    esc(r.device_category) +
                     "</td><td>" +
-                    r.impressions +
+                    esc(r.impressions) +
                     "</td><td>" +
-                    r.valid_clicks +
+                    esc(r.valid_clicks) +
                     "</td><td>" +
-                    r.suspicious_clicks +
+                    esc(r.suspicious_clicks) +
                     "</td><td>" +
-                    r.ctr +
+                    esc(r.ctr) +
                     "</td></tr>"
                   );
                 })
                 .join("");
               html += "</tbody></table>";
               $("adsTable").innerHTML = html || "—";
-              $("status").innerHTML = '<span class="ok">Report OK</span>';
+              setStatus("ok", "Report OK");
             })
             .catch(function (e) {
-              $("status").innerHTML = '<span class="err">' + String(e.message || e) + "</span>";
+              setStatus("err", String(e.message || e));
             });
         };
         $("btnExport").onclick = function () {

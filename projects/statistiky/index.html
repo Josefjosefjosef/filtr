@@ -135,6 +135,14 @@
         var ENDPOINT = "https://infouzel-analytics.josef-zmrhal.workers.dev/v1/public/stats";
         function el(id) { return document.getElementById(id); }
         function num(v) { return String(Number(v || 0)); }
+        function esc(s) {
+          return String(s == null ? "" : s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+        }
         fetch(ENDPOINT, { credentials: "omit", cache: "no-store" })
           .then(function (r) { return r.json(); })
           .then(function (d) {
@@ -163,13 +171,13 @@
                     var pct = Math.round((v / max) * 100);
                     return (
                       '<div class="bar-row"><span>' +
-                      String(row.day).slice(5) +
+                      esc(String(row.day).slice(5)) +
                       '</span><div class="bar-track"><div class="bar-fill" style="width:' +
-                      pct +
+                      esc(pct) +
                       '%"></div></div><span title="návštěvy / zobrazení">' +
-                      v +
+                      esc(v) +
                       "/" +
-                      pv +
+                      esc(pv) +
                       "</span></div>"
                     );
                   })
@@ -183,11 +191,11 @@
                   .map(function (x) {
                     return (
                       "<li>" +
-                      x.device_category +
+                      esc(x.device_category) +
                       ": " +
-                      num(x.visits) +
+                      esc(num(x.visits)) +
                       " návštěv / " +
-                      num(x.page_views) +
+                      esc(num(x.page_views)) +
                       " zobrazení</li>"
                     );
                   })
@@ -200,7 +208,7 @@
               ? "<ul>" +
                 secs
                   .map(function (x) {
-                    return "<li>" + x.section_id + ": " + num(x.views) + "</li>";
+                    return "<li>" + esc(x.section_id) + ": " + esc(num(x.views)) + "</li>";
                   })
                   .join("") +
                 "</ul>"

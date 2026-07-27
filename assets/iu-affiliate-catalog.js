@@ -686,6 +686,23 @@
     catalogById[IU_AFFILIATE_CATALOG[ci].id] = IU_AFFILIATE_CATALOG[ci];
   }
 
+  /**
+   * Defense-in-depth for SVG→innerHTML (SEC-FE-007): same-origin sprite is trusted,
+   * but strip script/handlers/javascript: so a compromised asset cannot XSS.
+   */
+  function sanitizeInlineSvgMarkup(raw) {
+    var txt = String(raw || "");
+    if (!txt) return "";
+    if (!/<svg[\s>]/i.test(txt)) return "";
+    txt = txt.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+    txt = txt.replace(/<\/?foreignObject\b[^>]*>/gi, "");
+    txt = txt.replace(/\son[a-z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "");
+    txt = txt.replace(/javascript\s*:/gi, "");
+    txt = txt.replace(/data\s*:\s*text\/html/gi, "");
+    txt = txt.replace(/xlink:href\s*=\s*("|')\s*javascript:[^"']*\1/gi, "");
+    return txt.replace("<svg ", '<svg id="iuAffInlineSprite" ').replace(/<svg>/i, '<svg id="iuAffInlineSprite">');
+  }
+
   function ensureAffiliateInlineSprite(done) {
     if (document.getElementById("iuAffInlineSprite")) {
       if (typeof done === "function") done();
@@ -705,8 +722,11 @@
       xhr.open("GET", "/assets/icons/iu-sprite.svg", false);
       xhr.send(null);
       if (xhr.status >= 200 && xhr.status < 300 && xhr.responseText) {
-        host.innerHTML = xhr.responseText.replace("<svg ", '<svg id="iuAffInlineSprite" ');
-        loaded = !!document.getElementById("iuAffInlineSprite");
+        var safeSync = sanitizeInlineSvgMarkup(xhr.responseText);
+        if (safeSync) {
+          host.innerHTML = safeSync;
+          loaded = !!document.getElementById("iuAffInlineSprite");
+        }
       }
     } catch (_) {}
     if (loaded) {
@@ -720,7 +740,9 @@
         })
         .then(function (txt) {
           if (!txt) return;
-          host.innerHTML = txt.replace("<svg ", '<svg id="iuAffInlineSprite" ');
+          var safeAsync = sanitizeInlineSvgMarkup(txt);
+          if (!safeAsync) return;
+          host.innerHTML = safeAsync;
           if (typeof done === "function") done();
         })
         .catch(function () {});
