@@ -539,6 +539,7 @@ font-src 'self' data:;
     </style>
     <!-- P0 LCP fast path: feed section header (hub) je JS-injected v app.js (renderFeed) — preload scanner ho nevidí; preload jen ≥768px (mobile LCP = silver-hero, feed skrytý pre-gate). -->
     <link rel="preload" as="image" href="/assets/images/section-prehled-dne.webp" type="image/webp" fetchpriority="high" media="(min-width: 768px)" />
+    <link rel="preload" as="image" href="/assets/images/iu-silver-hero-v4.webp" type="image/webp" fetchpriority="high" media="(max-width: 1024px)" />
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
     <link rel="stylesheet" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716" />
     <style id="iuDesktopLayoutV3PostAppCss">
@@ -2473,6 +2474,7 @@ font-src 'self' data:;
                               <div class="iu-hero-topRow">
                                 <div class="iu-hero-figure" aria-hidden="true">
                                   <picture>
+                                    <source media="(max-width: 1024px)" type="image/webp" srcset="/assets/images/iu-silver-hero-v4.webp" />
                                     <source media="(max-width: 1024px)" srcset="/assets/images/iu-silver-hero-v4.png" />
                                     <source type="image/webp" srcset="/assets/images/silver-hero-lg.webp" />
                                     <img class="iu-hero-figureImg" src="/assets/images/silver-hero.png" alt="Silver" width="134" height="140" decoding="async" fetchpriority="high" />
@@ -3799,20 +3801,23 @@ font-src 'self' data:;
               <div id="iuMobileMindMenuFlow" class="iu-mobileMindMenuFlow" aria-label="MindMenu a nástroje"></div>
               <aside class="accordionCol" aria-label="Postranní panel">
                 <div id="iuDesktopQrBanner" class="iu-desktop-qr-banner" data-iu-desktop-qr-banner="1" aria-label="QR kód pro přidání infoUzel.cz na plochu">
-                  <img class="iu-desktop-qr-banner__img" src="/assets/images/silver-desktop-qr-banner2.png" alt="QR kód — přidejte infoUzel.cz na plochu" width="360" height="480" decoding="async" />
+                  <picture>
+                    <source type="image/webp" srcset="/assets/images/silver-desktop-qr-banner2.webp" />
+                    <img class="iu-desktop-qr-banner__img" src="/assets/images/silver-desktop-qr-banner2.png" alt="QR kód — přidejte infoUzel.cz na plochu" width="360" height="480" decoding="async" loading="lazy" />
+                  </picture>
                 </div>
                 <div id="iuDesktopRightRailCards" class="iu-desktop-right-rail-banners" data-iu-desktop-right-rail-cards="1" aria-label="Desktop postranní bannery">
                   <button type="button" id="iuDesktopParcelBanner" class="iu-desktop-right-rail-banner" data-iu-desktop-parcel-banner="1" aria-label="Vyhledej mi zásilku">
-                    <img class="iu-desktop-right-rail-banner__img" src="/assets/IMAGES%20PC/iu-parcel-tracking-banner.png" alt="Vyhledej mi zásilku" width="360" height="120" decoding="async" />
+                    <img class="iu-desktop-right-rail-banner__img" src="/assets/IMAGES%20PC/iu-parcel-tracking-banner.png" alt="Vyhledej mi zásilku" width="360" height="120" decoding="async" loading="lazy" />
                   </button>
                   <button type="button" id="iuDesktopFinanceBanner" class="iu-desktop-right-rail-banner" data-iuq="fincalc" data-iu-desktop-right-rail-banner="1" aria-label="Osobní finance a kalkulačky">
-                    <img class="iu-desktop-right-rail-banner__img" src="/assets/IMAGES%20PC/iu-personal-finance-calculators-banner.png" alt="Osobní finance a kalkulačky" width="360" height="120" decoding="async" />
+                    <img class="iu-desktop-right-rail-banner__img" src="/assets/IMAGES%20PC/iu-personal-finance-calculators-banner.png" alt="Osobní finance a kalkulačky" width="360" height="120" decoding="async" loading="lazy" />
                   </button>
                   <button type="button" id="iuDesktopLegalDocsBanner" class="iu-desktop-right-rail-banner" data-iuq="legaldocs" data-iu-desktop-right-rail-banner="1" aria-label="Vzory smluv a plné moci">
-                    <img class="iu-desktop-right-rail-banner__img" src="/assets/IMAGES%20PC/iu-contracts-power-of-attorney-banner.png" alt="Vzory smluv a plné moci" width="360" height="120" decoding="async" />
+                    <img class="iu-desktop-right-rail-banner__img" src="/assets/IMAGES%20PC/iu-contracts-power-of-attorney-banner.png" alt="Vzory smluv a plné moci" width="360" height="120" decoding="async" loading="lazy" />
                   </button>
                   <button type="button" id="iuDesktopInvoiceBanner" class="iu-desktop-right-rail-banner" data-iuq="faktura" data-iu-desktop-right-rail-banner="1" aria-label="Vytvořit fakturu">
-                    <img class="iu-desktop-right-rail-banner__img" src="/assets/IMAGES%20PC/iu-invoice-generator-banner.png" alt="Vytvořit fakturu" width="360" height="120" decoding="async" />
+                    <img class="iu-desktop-right-rail-banner__img" src="/assets/IMAGES%20PC/iu-invoice-generator-banner.png" alt="Vytvořit fakturu" width="360" height="120" decoding="async" loading="lazy" />
                   </button>
                 </div>
                 <div id="iuDesktopParcelWatchOverlay" class="iu-desktop-parcel-watch-overlay" hidden aria-hidden="true">
