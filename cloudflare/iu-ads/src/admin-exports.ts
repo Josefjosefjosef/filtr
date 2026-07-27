@@ -65,7 +65,7 @@ function isTestCampaign(row: Record<string, unknown>): boolean {
 /** CSV injection: quote cells that look like formulas / need escaping. */
 export function csvEscape(value: unknown): string {
   const s = value == null ? "" : String(value);
-  const needsQuote = /[",\n\r]/.test(s) || /^[=+\-@]/.test(s);
+  const needsQuote = /[",\n\r\t]/.test(s) || /^[=+\-@\t\r]/.test(s);
   if (!needsQuote) return s;
   return '"' + s.replace(/"/g, '""') + '"';
 }

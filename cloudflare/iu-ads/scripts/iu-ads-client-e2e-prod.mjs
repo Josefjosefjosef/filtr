@@ -107,6 +107,13 @@ function d1Query(sql) {
   return JSON.parse(out);
 }
 
+function csvEscapeLocal(value) {
+  const s = value == null ? "" : String(value);
+  const needsQuote = /[",\n\r\t]/.test(s) || /^[=+\-@\t\r]/.test(s);
+  if (!needsQuote) return s;
+  return '"' + s.replace(/"/g, '""') + '"';
+}
+
 async function http(path, opts = {}) {
   const headers = Object.assign({ "content-type": "application/json" }, opts.headers || {});
   const res = await fetch(BASE + path, {
@@ -120,11 +127,18 @@ async function http(path, opts = {}) {
   try {
     body = text ? JSON.parse(text) : null;
   } catch {
-    body = { raw_len: text.length };
+    body = { raw_len: text.length, raw: opts.rawText ? text : undefined };
   }
   // Strip Set-Cookie values from any diagnostic object — never log them.
   const setCookie = res.headers.getSetCookie ? res.headers.getSetCookie() : [];
-  return { status: res.status, body, cookieCount: setCookie.length, setCookie };
+  return {
+    status: res.status,
+    body,
+    cookieCount: setCookie.length,
+    setCookie,
+    contentType: res.headers.get("content-type") || "",
+    text: opts.rawText ? text : "",
+  };
 }
 
 function cookieHeader(setCookie) {
@@ -268,6 +282,26 @@ async function main() {
   const exp = await http("/v1/client/report/export?format=json", { headers: { Cookie: cookie } });
   if (exp.status === 200) pass("export_json");
   else fail("export_status_" + exp.status);
+
+  const csv = await http("/v1/client/report/export?format=csv", {
+    headers: { Cookie: cookie },
+    rawText: true,
+  });
+  const csvCt = String(csv.contentType || "");
+  const csvBody = String(csv.text || "");
+  if (csv.status === 200 && /text\/csv/i.test(csvCt) && csvBody.indexOf("day,campaign_id,placement_id") === 0) {
+    pass("export_csv");
+  } else {
+    fail("export_csv_status_" + csv.status + "_ct_" + csvCt.slice(0, 40));
+  }
+  const formulaSamples = ["=CMD()", "+1+1", "-1+1", "@sum", "\tTAB", "\rCR"];
+  let formulaOk = true;
+  for (const sample of formulaSamples) {
+    const escaped = csvEscapeLocal(sample);
+    if (!escaped.startsWith('"') || !escaped.endsWith('"')) formulaOk = false;
+  }
+  if (formulaOk) pass("export_csv_formula_escape");
+  else fail("export_csv_formula_escape");
 
   const logout = await http("/v1/client/auth/logout", {
     method: "POST",

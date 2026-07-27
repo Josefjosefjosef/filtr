@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Offline — infoUzel.cz</title>
+    <style>
+      :root {
+        --bg0: #e5eef6;
+        --bg1: #f2f6fa;
+        --text: #0f172a;
+        --muted: #64748b;
+        --accent: #0369a1;
+        --card: #ffffff;
+        --line: #dbe4ee;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        color: var(--text);
+        background: linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 100%);
+      }
+      main {
+        max-width: 28rem;
+        margin: 0 auto;
+        padding: 2.5rem 1.25rem calc(2rem + env(safe-area-inset-bottom, 0px));
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 1.25rem 1.35rem;
+        box-shadow: 0 8px 24px rgba(15, 35, 55, 0.06);
+      }
+      h1 {
+        margin: 0 0 0.5rem;
+        font-size: 1.35rem;
+        letter-spacing: -0.02em;
+      }
+      p {
+        margin: 0 0 0.85rem;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .brand {
+        font-weight: 750;
+        color: var(--accent);
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+      }
+      button {
+        appearance: none;
+        border: 0;
+        border-radius: 10px;
+        background: var(--accent);
+        color: #fff;
+        font: inherit;
+        font-weight: 650;
+        padding: 0.7rem 1rem;
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.55;
+        cursor: default;
+      }
+      .hint {
+        margin-top: 0.85rem;
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="card">
+        <div class="brand">infoUzel.cz</div>
+        <h1>Jste offline</h1>
+        <p>
+          Tato stránka není dostupná bez připojení k internetu. Lokální nástroje (například faktury
+          a kalkulačky), které jste už dříve otevřeli, mohou fungovat z mezipaměti aplikace.
+        </p>
+        <p>Aktuální online data (zprávy, počasí, statistiky) teď nejsou k dispozici.</p>
+        <button type="button" id="iuOfflineRetry">Zkusit znovu</button>
+        <p class="hint" id="iuOfflineHint">Po obnovení připojení se stránka může sama obnovit.</p>
+      </div>
+    </main>
+    <script>
+      (function () {
+        var btn = document.getElementById("iuOfflineRetry");
+        var hint = document.getElementById("iuOfflineHint");
+        function go() {
+          try {
+            location.reload();
+          } catch (_) {}
+        }
+        if (btn) btn.addEventListener("click", go);
+        window.addEventListener("online", function () {
+          if (hint) hint.textContent = "Připojení obnoveno — obnovuji…";
+          go();
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -52,8 +52,11 @@ function auditStatic() {
   if (!appJs.includes("loadDataWatchdog")) fails.push("app:missing loadDataWatchdog");
   if (!sw.includes("FEED_OFFLINE_CACHE")) fails.push("sw:missing FEED_OFFLINE_CACHE");
   if (!sw.includes("IMG_OFFLINE_CACHE")) fails.push("sw:missing IMG_OFFLINE_CACHE");
+  if (!sw.includes("OFFLINE_DOC_CACHE")) fails.push("sw:missing OFFLINE_DOC_CACHE");
+  if (!sw.includes("offlineNavigationFallback")) fails.push("sw:missing offlineNavigationFallback");
   if (!sw.includes("iu-financial-calculators-module.js")) fails.push("sw:missing financial module precache");
   if (!sw.includes("iu-invoice-module.js")) fails.push("sw:missing invoice module precache");
+  if (!fs.existsSync(path.join(REPO, "offline.html"))) fails.push("missing offline.html");
   if (!appJs.includes("iuTasksRestoreSearchFocus")) fails.push("app:missing tasks search focus restore");
   if (!appJs.includes('section === "kultura"')) fails.push("app:missing kultura notes early-return");
   if (!appJs.includes("iuOfflinePaging")) fails.push("app:missing offline paging guard");

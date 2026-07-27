@@ -6,6 +6,7 @@
  * Never return price internals, email/phone, internal notes, code hashes, r2_key.
  */
 import { fetchAdsReport, type AdsReportRow } from "./analytics-client";
+import { csvEscape } from "./admin-exports";
 import { json } from "./admin-auth";
 import { requireClientSession, type ClientSessionContext } from "./client-auth";
 import { filterDocumentForVisibility } from "./visibility";
@@ -356,14 +357,14 @@ export async function handleClientReportExport(request: Request, env: Env, url: 
     for (const row of report.stats.rows) {
       lines.push(
         [
-          row.day,
-          row.campaign_id,
-          row.placement_id,
-          row.impressions,
-          row.clicks,
-          row.valid_clicks,
-          row.suspicious_clicks,
-          row.ctr,
+          csvEscape(row.day),
+          csvEscape(row.campaign_id),
+          csvEscape(row.placement_id),
+          csvEscape(row.impressions),
+          csvEscape(row.clicks),
+          csvEscape(row.valid_clicks),
+          csvEscape(row.suspicious_clicks),
+          csvEscape(row.ctr),
         ].join(",")
       );
     }

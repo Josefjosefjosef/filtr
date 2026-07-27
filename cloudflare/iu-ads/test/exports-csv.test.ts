@@ -8,6 +8,8 @@ describe("export CSV safety", () => {
     expect(csvEscape("+1+1")).toBe('"+1+1"');
     expect(csvEscape("-1+1")).toBe('"-1+1"');
     expect(csvEscape("@sum")).toBe('"@sum"');
+    expect(csvEscape("\tCMD()")).toBe('"\tCMD()"');
+    expect(csvEscape("\rCMD()")).toBe('"\rCMD()"');
     expect(csvEscape('say "hi"')).toBe('"say ""hi"""');
     expect(csvEscape("a,b")).toBe('"a,b"');
   });
