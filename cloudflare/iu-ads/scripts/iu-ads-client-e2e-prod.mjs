@@ -21,11 +21,13 @@ const PEPPER = process.env.ADS_CODE_PEPPER || "";
 const ACCOUNT = process.env.CLOUDFLARE_ACCOUNT_ID || "577868e9aac9c289e9323100f68fad16";
 const RUN = "e2e" + Date.now().toString(36);
 const CLIENT_ID = "IU_TEST_cli_" + RUN;
-const CAMPAIGN_ID = "test_" + RUN;
+/* Leading "=" proves live CSV formula escaping on production (must be quoted). */
+const CAMPAIGN_ID = "=test_" + RUN;
 const EVIDENCE = "EV-TEST-" + RUN;
 const CODE_ID = "IU_TEST_code_" + RUN;
 const DOC_ID = "IU_TEST_doc_" + RUN;
 const NOW = new Date().toISOString();
+const FORMULA_PLACEMENTS = ["=CMD()", "+1+1", "-1+1", "@sum", "\tTAB", "\rCR"];
 
 const fails = [];
 function pass(m) {
@@ -267,7 +269,9 @@ async function main() {
   else {
     const campaigns = (report.body && report.body.campaigns) || [];
     const docs = (report.body && report.body.documents) || [];
-    const onlyOwn = campaigns.every((c) => c.campaign_id === CAMPAIGN_ID || String(c.campaign_id || "").startsWith("test_"));
+    const onlyOwn = campaigns.every(
+      (c) => c.campaign_id === CAMPAIGN_ID || String(c.campaign_id || "").startsWith("test_") || String(c.campaign_id || "").startsWith("=test_")
+    );
     const hasDoc = docs.some((d) => d.document_id === DOC_ID);
     const leakedOther = JSON.stringify(report.body || {}).includes("cli_2") || JSON.stringify(report.body || {}).includes("cmp_2");
     if (onlyOwn && !leakedOther) pass("report_isolation");
@@ -289,19 +293,43 @@ async function main() {
   });
   const csvCt = String(csv.contentType || "");
   const csvBody = String(csv.text || "");
-  if (csv.status === 200 && /text\/csv/i.test(csvCt) && csvBody.indexOf("day,campaign_id,placement_id") === 0) {
+  const csvCharsetOk = /charset\s*=\s*utf-8/i.test(csvCt);
+  if (csv.status === 200 && /text\/csv/i.test(csvCt) && csvCharsetOk && csvBody.indexOf("day,campaign_id,placement_id") === 0) {
     pass("export_csv");
   } else {
     fail("export_csv_status_" + csv.status + "_ct_" + csvCt.slice(0, 40));
   }
-  const formulaSamples = ["=CMD()", "+1+1", "-1+1", "@sum", "\tTAB", "\rCR"];
+  const expectedQuotedCampaign = csvEscapeLocal(CAMPAIGN_ID);
+  if (csvBody.indexOf(expectedQuotedCampaign) !== -1) {
+    pass("export_csv_formula_campaign_quoted");
+  } else {
+    fail("export_csv_formula_campaign_not_quoted");
+  }
   let formulaOk = true;
-  for (const sample of formulaSamples) {
+  for (const sample of FORMULA_PLACEMENTS) {
     const escaped = csvEscapeLocal(sample);
     if (!escaped.startsWith('"') || !escaped.endsWith('"')) formulaOk = false;
   }
   if (formulaOk) pass("export_csv_formula_escape");
   else fail("export_csv_formula_escape");
+
+  // Prove account Worker metadata + live CSV quoting (=test_… must appear quoted).
+  try {
+    const meta = await fetch(
+      "https://api.cloudflare.com/client/v4/accounts/" + ACCOUNT + "/workers/scripts/infouzel-ads",
+      { headers: { Authorization: "Bearer " + process.env.CLOUDFLARE_API_TOKEN } }
+    );
+    const metaJson = await meta.json().catch(() => ({}));
+    const modified = metaJson && metaJson.result && (metaJson.result.modified_on || metaJson.result.created_on || "");
+    if (meta.status === 200 && modified) {
+      console.log("WORKER_SCRIPT_MODIFIED_ON=" + String(modified));
+      pass("worker_script_metadata");
+    } else {
+      fail("worker_script_metadata_status_" + meta.status);
+    }
+  } catch (e) {
+    fail("worker_script_probe_error");
+  }
 
   const logout = await http("/v1/client/auth/logout", {
     method: "POST",

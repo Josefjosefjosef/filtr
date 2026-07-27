@@ -11,9 +11,12 @@ account_id = "577868e9aac9c289e9323100f68fad16"
 # Personal *.workers.dev must not be the public Ads surface.
 workers_dev = false
 
-[[routes]]
-pattern = "ads.infouzel.cz"
-custom_domain = true
+# Custom domain ads.infouzel.cz is attached once in Cloudflare Dashboard
+# (Workers → infouzel-ads → Domains & Routes). Do NOT declare [[routes]] here:
+# CLOUDFLARE_ADS_API_TOKEN is scoped for Workers Scripts / D1 / R2 and intentionally
+# lacks Zone Workers Routes Edit. Re-declaring routes made every deploy fail with
+# Cloudflare API 10000 on /zones/.../workers/routes AFTER a successful script upload.
+# Script uploads still update the Worker served by the existing custom domain.
 
 [observability]
 enabled = true

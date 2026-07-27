@@ -245,6 +245,21 @@ jobs:
           fi
           npx wrangler deploy "${EXTRA_VARS[@]}"
 
+      - name: Deployment proof (version metadata, no secrets)
+        run: |
+          set -euo pipefail
+          echo "DEPLOY_PROOF_HOST=ads.infouzel.cz"
+          set +e
+          npx wrangler deployments list 2>/tmp/iu-ads-deployments.err | head -n 40
+          LIST_EC=$?
+          set -e
+          if [ "$LIST_EC" != "0" ]; then
+            echo "DEPLOYMENTS_LIST=FAIL"
+            if [ -f /tmp/iu-ads-deployments.err ]; then sed -E 's/[A-Za-z0-9_-]{20,}/[REDACTED]/g' /tmp/iu-ads-deployments.err | head -n 20 || true; fi
+            exit 1
+          fi
+          echo "DEPLOYMENTS_LIST=OK"
+
       - name: Health probe (official domain)
         run: |
           set -euo pipefail
