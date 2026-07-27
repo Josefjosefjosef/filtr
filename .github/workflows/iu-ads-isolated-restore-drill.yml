@@ -1,6 +1,10 @@
 # Isolated restore drill — temporary D1 only; never restores into production iu-ads.
 name: IU Ads Isolated Restore Drill
 
+permissions:
+  contents: read
+
+
 on:
   workflow_dispatch:
   workflow_call:

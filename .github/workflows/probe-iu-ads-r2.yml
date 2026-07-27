@@ -1,6 +1,10 @@
 # Probe Cloudflare R2 capability for InfoUzel Ads (never echoes token values)
 name: Probe IU Ads R2
 
+permissions:
+  contents: read
+
+
 on:
   workflow_dispatch: {}
 

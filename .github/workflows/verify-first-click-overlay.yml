@@ -1,5 +1,9 @@
 name: Verify first-click overlay (prod)
 
+permissions:
+  contents: read
+
+
 on:
   workflow_dispatch:
   push:

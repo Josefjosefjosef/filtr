@@ -1,6 +1,10 @@
 # CI dependency guard — verify Dependabot config and workflow structure (no production code changes)
 name: CI dependency guard
 
+permissions:
+  contents: read
+
+
 on:
   schedule:
     - cron: "17 6 * * 1"

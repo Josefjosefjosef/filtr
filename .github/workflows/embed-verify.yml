@@ -1,6 +1,11 @@
 # One-off / manual: hard verify 8× IU_AI_VIDEOS embed real play. No production code.
 name: Embed verify (8× YouTube)
 
+permissions:
+  contents: read
+  actions: write
+
+
 on:
   workflow_dispatch:
 
