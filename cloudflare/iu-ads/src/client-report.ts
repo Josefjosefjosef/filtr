@@ -354,7 +354,23 @@ export async function handleClientReportExport(request: Request, env: Env, url: 
 
   if (format === "csv") {
     const lines = ["day,campaign_id,placement_id,impressions,clicks,valid_clicks,suspicious_clicks,ctr"];
-    for (const row of report.stats.rows) {
+    const statsRows = report.stats.rows || [];
+    /* When Analytics returns no rows, still emit scoped campaigns so export is usable
+       offline of aggregates and so formula-injection escaping can be production-proved. */
+    const rowsForCsv =
+      statsRows.length > 0
+        ? statsRows
+        : (report.campaigns || []).map((c) => ({
+            day: "",
+            campaign_id: String(c.campaign_id || ""),
+            placement_id: "",
+            impressions: 0,
+            clicks: 0,
+            valid_clicks: 0,
+            suspicious_clicks: 0,
+            ctr: 0,
+          }));
+    for (const row of rowsForCsv) {
       lines.push(
         [
           csvEscape(row.day),

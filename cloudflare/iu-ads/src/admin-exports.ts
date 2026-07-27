@@ -55,6 +55,7 @@ function isTestCampaign(row: Record<string, unknown>): boolean {
   const title = String(row.title || "");
   return (
     id.startsWith("test_") ||
+    id.startsWith("=test_") ||
     id.startsWith("IU_TEST_") ||
     evidence.startsWith("EV-TEST") ||
     title.includes("IU_TEST_") ||
