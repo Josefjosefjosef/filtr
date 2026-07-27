@@ -130,6 +130,22 @@ function esc(s) {
     .replace(/"/g, "&quot;");
 }
 
+/** http(s) only — HTML escape is not a URL scheme allowlist. */
+function safeHttpUrl(url) {
+  try {
+    const u = new URL(String(url || ""), "https://infouzel.cz");
+    if (u.protocol === "http:" || u.protocol === "https:") return u.href;
+  } catch (_) {}
+  return "";
+}
+
+function safeCssColor(color) {
+  const s = String(color || "").trim();
+  if (/^#[0-9A-Fa-f]{3,8}$/.test(s)) return s;
+  if (/^[a-zA-Z]{1,32}$/.test(s)) return s;
+  return "#5B6CFF";
+}
+
 function fmtTime(iso) {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "—";
@@ -316,7 +332,7 @@ function sectionColor(sectionId) {
 
 function renderItem(ev) {
   const id = String(ev.id || "");
-  const url = String(ev.url || ev.originalUrl || "#");
+  const url = safeHttpUrl(ev.url || ev.originalUrl);
   const title = String(ev.title || "Bez názvu");
   const src = String(ev.sourceLabel || ev.sourceId || "");
   const region = ev.region && ev.region.name ? String(ev.region.name) : "";
@@ -324,8 +340,11 @@ function renderItem(ev) {
   const saved = isSaved(id);
   const hiddenMode = state.viewMode === "hidden";
   const read = isRead(id);
-  const color = sectionColor(ev.sectionId);
+  const color = safeCssColor(sectionColor(ev.sectionId));
   const alert = String(ev.eventType || "") === "mimoradne" || Number(ev.importance) >= 5;
+  const titleMarkup = url
+    ? `<a class="iuPdCard__title iuPrehledDne__cardTitle" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(title)}</a>`
+    : `<span class="iuPdCard__title iuPrehledDne__cardTitle" data-act="open-title">${esc(title)}</span>`;
   return (
     `<li class="iuPdCard iuPrehledDne__item${read ? " is-read" : ""}" data-id="${esc(id)}" style="--iu-pd-dot:${esc(color)}">` +
     `<div class="iuPrehledDne__timeCol">` +
@@ -334,7 +353,7 @@ function renderItem(ev) {
     `</div>` +
     `<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot${alert ? " iuPrehledDne__dot--alert" : ""}"></span></div>` +
     `<article class="iuPrehledDne__card iuPdCard__body">` +
-    `<a class="iuPdCard__title iuPrehledDne__cardTitle" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(title)}</a>` +
+    titleMarkup +
     `<div class="iuPdCard__meta iuPrehledDne__meta">` +
     (src ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(src)}</span>` : "") +
     (region ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(region)}</span>` : "") +
