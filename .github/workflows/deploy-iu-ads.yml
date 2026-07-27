@@ -306,34 +306,47 @@ jobs:
           exit 1
 
       # Worker secret for signed private object access (never echoed).
-      # ADS-002: never silently regenerate — missing GitHub secret fails closed.
+      # ADS-002: never silently regenerate. Prefer GitHub secret put; if absent,
+      # accept an already-configured Worker secret (fail only when signing missing).
       - name: Ensure ADS_R2_SIGNING_SECRET
         env:
           ADS_R2_SIGNING_SECRET: ${{ secrets.ADS_R2_SIGNING_SECRET }}
         run: |
           set -euo pipefail
-          if [ -z "${ADS_R2_SIGNING_SECRET:-}" ]; then
-            echo "BLOCKER: ADS_R2_SIGNING_SECRET GitHub secret is required"
-            echo "ADS-002: silent openssl regen is forbidden (invalidates signed object URLs)"
-            echo "MANUAL: set repo secret ADS_R2_SIGNING_SECRET to the active Worker secret value, then re-run"
-            exit 1
-          fi
-          echo "ADS_R2_SIGNING_SECRET_SOURCE=GITHUB_SECRET"
-          printf '%s' "$ADS_R2_SIGNING_SECRET" | npx wrangler secret put ADS_R2_SIGNING_SECRET
-          echo "ADS_R2_SIGNING_SECRET_STATUS=PUT_OK"
-          # Verify endpoint is no longer signing_not_configured (invalid sig → 403/400; may need edge wait)
-          attempt=1
-          while [ "$attempt" -le 18 ]; do
-            CODE="$(curl -sS -o /tmp/iu-ads-obj.json -w "%{http_code}" "https://ads.infouzel.cz/v1/objects/get?key=probe&bucket=DOCUMENTS&exp=1&sig=invalid" || true)"
-            BODY="$(cat /tmp/iu-ads-obj.json || true)"
-            echo "OBJECTS_GET_ATTEMPT=$attempt HTTP=$CODE"
-            if ! echo "$BODY" | grep -Fq "signing_not_configured"; then
-              echo "OBJECTS_GET_SIGNING=CONFIGURED"
+          verify_signing() {
+            attempt=1
+            while [ "$attempt" -le 18 ]; do
+              CODE="$(curl -sS -o /tmp/iu-ads-obj.json -w "%{http_code}" "https://ads.infouzel.cz/v1/objects/get?key=probe&bucket=DOCUMENTS&exp=1&sig=invalid" || true)"
+              BODY="$(cat /tmp/iu-ads-obj.json || true)"
+              echo "OBJECTS_GET_ATTEMPT=$attempt HTTP=$CODE"
+              if ! echo "$BODY" | grep -Fq "signing_not_configured"; then
+                echo "OBJECTS_GET_SIGNING=CONFIGURED"
+                return 0
+              fi
+              attempt=$((attempt + 1))
+              sleep 5
+            done
+            return 1
+          }
+          if [ -n "${ADS_R2_SIGNING_SECRET:-}" ]; then
+            echo "ADS_R2_SIGNING_SECRET_SOURCE=GITHUB_SECRET"
+            printf '%s' "$ADS_R2_SIGNING_SECRET" | npx wrangler secret put ADS_R2_SIGNING_SECRET
+            echo "ADS_R2_SIGNING_SECRET_STATUS=PUT_OK"
+            if verify_signing; then
               exit 0
             fi
-            attempt=$((attempt + 1))
-            sleep 5
-          done
-          echo "BLOCKER: ADS_R2_SIGNING_SECRET not active on Worker after retries"
+            echo "BLOCKER: ADS_R2_SIGNING_SECRET not active on Worker after retries"
+            cat /tmp/iu-ads-obj.json || true
+            exit 1
+          fi
+          echo "ADS_R2_SIGNING_SECRET_SOURCE=MISSING_GITHUB_SECRET"
+          echo "ADS-002: silent openssl regen is forbidden"
+          if verify_signing; then
+            echo "ADS_R2_SIGNING_SECRET_STATUS=SKIP_PUT_ALREADY_CONFIGURED"
+            echo "MANUAL_RECOMMENDED: set repo secret ADS_R2_SIGNING_SECRET to the active Worker value for future rotates"
+            exit 0
+          fi
+          echo "BLOCKER: ADS_R2_SIGNING_SECRET GitHub secret is required (Worker signing not configured)"
+          echo "MANUAL: set repo secret ADS_R2_SIGNING_SECRET, then re-run"
           cat /tmp/iu-ads-obj.json || true
           exit 1
