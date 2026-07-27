@@ -18,7 +18,8 @@
 // 2026-07-20: Prehled dne settings/timeline — network-first for info-system modules (SWR + stripped ?v=
 //             kept stale iu-prehled-dne-ui after #7622 for installed PWAs)
 // 2026-07-21: Cross-origin passthrough (analytics Worker ingest) — SW must not re-fetch with a different UA
-const CACHE_VERSION = "2026-07-26-app-root-pwa-assets-redirects-v1";
+// 2026-07-27: Offline nav fallback — never bare 503 for navigations; durable offline.html + last-good public HTML
+const CACHE_VERSION = "2026-07-27-pwa-offline-nav-fallback-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
@@ -27,6 +28,10 @@ const FEED_OFFLINE_CACHE = "iu-feed-offline-v1";
 /** Durable same-origin image cache (defaults + previously loaded /assets/images/*). */
 const IMG_OFFLINE_CACHE = "iu-img-offline-v1";
 const IMG_OFFLINE_MAX_ENTRIES = 120;
+/** Durable approved offline HTML document (survives activate shell wipe). */
+const OFFLINE_DOC_CACHE = "iu-offline-doc-v1";
+/** Durable last-good public app HTML for offline navigation (never admin/auth). */
+const HTML_LAST_GOOD_CACHE = "iu-html-last-good-v1";
 
 // TTL pro JSON data (v sekundách)
 const TTL = {
@@ -86,6 +91,8 @@ function getOfflineWarmUrls() {
     `${BASE}assets/iu-invoice-engine.js`,
     `${BASE}assets/iu-invoice-pdf-renderer.js`,
     `${BASE}assets/iu-invoice-raster-renderer.js`,
+    `${BASE}assets/iu-brand-colors.js`,
+    `${BASE}assets/iu-local-data-protection.js`,
     `${BASE}assets/iu-tool-guard.js`,
     `${BASE}assets/iu-legal-documents-module.js`,
     `${BASE}assets/images/news-default.jpg`,
@@ -114,6 +121,10 @@ async function warmOfflineAssets() {
   try {
     const shell = await caches.open(APP_SHELL_CACHE);
     const img = await caches.open(IMG_OFFLINE_CACHE);
+    try {
+      const offlineRes = await fetch(offlineDocumentUrl(), { cache: "no-store" });
+      if (offlineRes && offlineRes.ok) await putOfflineDocument(offlineRes);
+    } catch (_) {}
     const warmOne = async (raw) => {
       const url = normalizeUrl(raw);
       try {
@@ -250,6 +261,152 @@ function isProjectsHtmlPath(pathname) {
   );
 }
 
+function offlineDocumentUrl() {
+  return normalizeUrl(`${BASE}offline.html`);
+}
+
+/** Never cache admin/auth/private HTML shells. */
+function isUnsafeHtmlCachePath(pathname) {
+  const p = String(pathname || "").toLowerCase();
+  if (p.includes("/admin")) return true;
+  if (p.includes("/statistiky/admin")) return true;
+  if (p.includes("/client")) return true;
+  if (p.includes("/login")) return true;
+  if (p.includes("/auth")) return true;
+  return false;
+}
+
+function isPublicLastGoodHtmlPath(pathname) {
+  if (isUnsafeHtmlCachePath(pathname)) return false;
+  /* Only real app shells — never legacy /projects redirect stubs (offline loop risk). */
+  return (
+    pathname === "/" ||
+    pathname === "/index.html" ||
+    pathname === "/filtr/" ||
+    pathname === "/filtr" ||
+    pathname === "/filtr/index.html" ||
+    pathname === "/offline.html" ||
+    pathname === "/filtr/offline.html"
+  );
+}
+
+function responseHasSetCookie(response) {
+  try {
+    if (typeof response.headers.getSetCookie === "function") {
+      const list = response.headers.getSetCookie();
+      if (Array.isArray(list) && list.length) return true;
+    }
+  } catch (_) {}
+  try {
+    return !!response.headers.get("Set-Cookie");
+  } catch (_) {
+    return false;
+  }
+}
+
+async function putOfflineDocument(response) {
+  try {
+    if (!response || !response.ok) return;
+    const ct = String(response.headers.get("content-type") || "");
+    if (ct && !ct.includes("text/html")) return;
+    const cache = await caches.open(OFFLINE_DOC_CACHE);
+    await cache.put(offlineDocumentUrl(), response.clone());
+  } catch (_) {}
+}
+
+async function matchOfflineDocument() {
+  try {
+    const cache = await caches.open(OFFLINE_DOC_CACHE);
+    const key = offlineDocumentUrl();
+    return (await cache.match(key)) || (await cache.match(new Request(key))) || null;
+  } catch (_) {
+    return null;
+  }
+}
+
+async function putLastGoodPublicHtml(request, response) {
+  try {
+    if (!response || response.status !== 200) return;
+    if (responseHasSetCookie(response)) return;
+    const u = new URL(request.url);
+    if (!isPublicLastGoodHtmlPath(u.pathname)) return;
+    const ct = String(response.headers.get("content-type") || "");
+    if (ct && !ct.includes("text/html")) return;
+    const cache = await caches.open(HTML_LAST_GOOD_CACHE);
+    await cache.put(new Request(u.origin + u.pathname), response.clone());
+  } catch (_) {}
+}
+
+async function matchLastGoodPublicHtml(request) {
+  try {
+    const u = new URL(request.url);
+    const cache = await caches.open(HTML_LAST_GOOD_CACHE);
+    const exact = await cache.match(new Request(u.origin + u.pathname));
+    if (exact) return exact;
+    const root = await cache.match(new Request(u.origin + "/"));
+    if (root) return root;
+    return (await cache.match(new Request(u.origin + "/index.html"))) || null;
+  } catch (_) {
+    return null;
+  }
+}
+
+function syntheticOfflineHtmlResponse() {
+  const html =
+    "<!doctype html><html lang=\"cs\"><head><meta charset=\"utf-8\"/>" +
+    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>" +
+    "<title>Offline — infoUzel.cz</title>" +
+    "<style>body{margin:0;font-family:system-ui,sans-serif;background:#e5eef6;color:#0f172a}" +
+    "main{max-width:28rem;margin:0 auto;padding:2rem 1.25rem}.card{background:#fff;border:1px solid #dbe4ee;" +
+    "border-radius:16px;padding:1.25rem}h1{font-size:1.25rem;margin:0 0 .5rem}p{color:#64748b;line-height:1.5}" +
+    "button{border:0;border-radius:10px;background:#0369a1;color:#fff;padding:.7rem 1rem;font:inherit}</style>" +
+    "</head><body><main><div class=\"card\"><strong style=\"color:#0369a1\">infoUzel.cz</strong>" +
+    "<h1>Jste offline</h1><p>Internet není dostupný. Aktuální online data teď nejsou k dispozici.</p>" +
+    "<button type=\"button\" id=\"r\">Zkusit znovu</button></div></main>" +
+    "<script>(function(){var b=document.getElementById(\"r\");" +
+    "function go(){try{location.reload()}catch(e){}}" +
+    "if(b)b.addEventListener(\"click\",go);window.addEventListener(\"online\",go);})();</script>" +
+    "</body></html>";
+  return new Response(html, {
+    status: 200,
+    statusText: "OK",
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-store",
+      "X-IU-Offline-Fallback": "synthetic",
+    },
+  });
+}
+
+/**
+ * Navigation offline order: exact cache → last-good public HTML → offline.html → synthetic 200.
+ * Never return an unmanaged empty 503 when SW can serve a fallback document.
+ */
+async function offlineNavigationFallback(request) {
+  try {
+    const exact = await caches.match(request);
+    if (exact) return exact;
+  } catch (_) {}
+  try {
+    const lastGood = await matchLastGoodPublicHtml(request);
+    if (lastGood) return lastGood;
+  } catch (_) {}
+  try {
+    const offlineDoc = await matchOfflineDocument();
+    if (offlineDoc) {
+      const headers = new Headers(offlineDoc.headers);
+      headers.set("Cache-Control", "no-store");
+      headers.set("X-IU-Offline-Fallback", "offline.html");
+      return new Response(offlineDoc.body, {
+        status: 200,
+        statusText: "OK",
+        headers,
+      });
+    }
+  } catch (_) {}
+  return syntheticOfflineHtmlResponse();
+}
+
 async function networkFirstNoStore(request, offlineFallback) {
   try {
     const res = await fetch(request, { cache: "no-store" });
@@ -257,16 +414,19 @@ async function networkFirstNoStore(request, offlineFallback) {
       const hdrs = new Headers(res.headers);
       hdrs.set("Cache-Control", "no-cache, no-store, must-revalidate");
       hdrs.set("Pragma", "no-cache");
-      return new Response(res.body, {
+      const out = new Response(res.body, {
         status: res.status,
         statusText: res.statusText,
         headers: hdrs,
       });
+      try {
+        putLastGoodPublicHtml(request, out.clone());
+      } catch (_) {}
+      return out;
     }
   } catch (_) {}
   if (offlineFallback) {
-    const cached = await caches.match(request);
-    if (cached) return cached;
+    return offlineNavigationFallback(request);
   }
   return new Response("", {
     status: 503,
@@ -443,18 +603,25 @@ async function handleDataRequest(event) {
    aktivuje tentýž SW instance hned po install). */
 let IU_HAD_ACTIVE_SW_AT_INSTALL = false;
 
-// Install: cache App Shell
+// Install: cache App Shell + durable offline.html
 self.addEventListener("install", (event) => {
   try {
     IU_HAD_ACTIVE_SW_AT_INSTALL = !!(self.registration && self.registration.active);
   } catch (_) {}
   event.waitUntil(
-    caches.open(APP_SHELL_CACHE).then((cache) => {
-      const urls = getAppShellUrls().map(url => normalizeUrl(url));
-      return cache.addAll(urls).catch((err) => {
-        console.warn("[SW] App Shell cache failed:", err);
-      });
-    })
+    (async () => {
+      try {
+        const cache = await caches.open(APP_SHELL_CACHE);
+        const urls = getAppShellUrls().map((url) => normalizeUrl(url));
+        await cache.addAll(urls).catch((err) => {
+          console.warn("[SW] App Shell cache failed:", err);
+        });
+      } catch (_) {}
+      try {
+        const offlineRes = await fetch(offlineDocumentUrl(), { cache: "no-store" });
+        if (offlineRes && offlineRes.ok) await putOfflineDocument(offlineRes);
+      } catch (_) {}
+    })()
   );
   self.skipWaiting();
 });
@@ -470,14 +637,19 @@ self.addEventListener("activate", (event) => {
     /* Durable offline caches omit CACHE_VERSION on purpose. Exclude them from
        deploy detection — otherwise IU_SW_DEPLOY_RELOAD fires after the first
        feed/image write and breaks tab UI (Playwright + installed PWA). */
-    const durableCaches = new Set([FEED_OFFLINE_CACHE, IMG_OFFLINE_CACHE]);
+    const durableCaches = new Set([
+      FEED_OFFLINE_CACHE,
+      IMG_OFFLINE_CACHE,
+      OFFLINE_DOC_CACHE,
+      HTML_LAST_GOOD_CACHE,
+    ]);
     const hadPreviousDeploy =
       IU_HAD_ACTIVE_SW_AT_INSTALL ||
       keys.some((key) => {
         if (durableCaches.has(key)) return false;
         return key.indexOf("iu-") === 0 && !key.endsWith(CACHE_VERSION);
       });
-    /* Keep ONLY durable last-good feed/images across SW bumps.
+    /* Keep durable last-good feed/images + offline.html + public HTML shells.
        Always drop versioned app/data shell caches (including current) so
        activate matches main: CSS/JS come from network, not a half-filled
        install precache — keeping APP_SHELL here broke mobile Tools tab. */
@@ -543,7 +715,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // P0: HTML dokumenty (navigace) — network-first; cache jen při výpadku sítě (offline fallback)
+  // P0: HTML dokumenty (navigace) — network-first; offline → last-good / offline.html / synthetic 200
   if (
     event.request.method === "GET" &&
     url.origin === self.location.origin &&
@@ -553,15 +725,19 @@ self.addEventListener("fetch", (event) => {
       (async () => {
         try {
           const res = await fetch(event.request, { cache: "no-store" });
+          if (res && res.ok) {
+            try {
+              putLastGoodPublicHtml(event.request, res.clone());
+            } catch (_) {}
+            if (path === "/offline.html" || path.endsWith("/offline.html")) {
+              try {
+                putOfflineDocument(res.clone());
+              } catch (_) {}
+            }
+          }
           return res;
         } catch (_) {
-          const cached = await caches.match(event.request);
-          if (cached) return cached;
-          return new Response("", {
-            status: 503,
-            statusText: "Offline",
-            headers: { "Cache-Control": "no-store" },
-          });
+          return offlineNavigationFallback(event.request);
         }
       })()
     );
