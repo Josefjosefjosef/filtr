@@ -19,7 +19,7 @@ class FakeD1 {
 
 function buildEnv(overrides: Partial<Env> = {}): { env: Env; db: FakeD1 } {
   const db = new FakeD1();
-  db.settings.set("ANALYTICS_ADMIN_REPORT_URL", "https://infouzel-analytics.example.workers.dev");
+  db.settings.set("ANALYTICS_ADMIN_REPORT_URL", "https://infouzel-analytics.josef-zmrhal.workers.dev");
   const env: Env = { DB: db as unknown as D1Database, ANALYTICS_ADMIN_TOKEN: "sep-analytics-secret", ...overrides };
   return { env, db };
 }
@@ -36,6 +36,13 @@ describe("fetchAdsReport — fail-closed configuration", () => {
 
   it("503 stats_not_configured when ANALYTICS_ADMIN_TOKEN secret is missing", async () => {
     const { env } = buildEnv({ ANALYTICS_ADMIN_TOKEN: undefined });
+    const res = await fetchAdsReport(env, {});
+    expect(res).toEqual({ ok: false, status: 503, error: "stats_not_configured" });
+  });
+
+  it("503 stats_not_configured when ANALYTICS_ADMIN_REPORT_URL host is not allowlisted (BE-003)", async () => {
+    const { env, db } = buildEnv();
+    db.settings.set("ANALYTICS_ADMIN_REPORT_URL", "https://evil.example/steal");
     const res = await fetchAdsReport(env, {});
     expect(res).toEqual({ ok: false, status: 503, error: "stats_not_configured" });
   });
@@ -86,7 +93,7 @@ describe("fetchAdsReport — success path", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [urlArg, initArg] = fetchMock.mock.calls[0];
     const url = new URL(String(urlArg));
-    expect(url.origin + url.pathname).toBe("https://infouzel-analytics.example.workers.dev/v1/ads/report");
+    expect(url.origin + url.pathname).toBe("https://infouzel-analytics.josef-zmrhal.workers.dev/v1/ads/report");
     expect(url.searchParams.get("campaign_id")).toBe("cmp_1");
     expect(url.searchParams.get("from")).toBe("2026-01-01");
     expect(url.searchParams.get("to")).toBe("2026-01-31");

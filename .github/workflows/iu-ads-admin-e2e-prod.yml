@@ -1,6 +1,10 @@
 # Production Admin E2E for InfoUzel Ads (never prints passwords/tokens/cookies).
 name: IU Ads Admin E2E (prod)
 
+permissions:
+  contents: read
+
+
 on:
   workflow_dispatch:
   workflow_call:

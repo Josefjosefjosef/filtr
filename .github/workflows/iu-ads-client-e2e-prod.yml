@@ -1,6 +1,10 @@
 # Production Client E2E for InfoUzel Ads (never prints codes/tokens).
 name: IU Ads Client E2E (prod)
 
+permissions:
+  contents: read
+
+
 on:
   workflow_dispatch:
   workflow_call:

@@ -1,5 +1,9 @@
 name: Health Check (weather + namedays)
 
+permissions:
+  contents: read
+
+
 on:
   workflow_dispatch:
   schedule:

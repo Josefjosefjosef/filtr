@@ -42,10 +42,18 @@ function withCors(env: Env, req: Request, res: Response): Response {
   return new Response(res.body, { status: res.status, headers: h });
 }
 
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
 function requireAdmin(env: Env, req: Request): boolean {
   const token = env.ADMIN_TOKEN || "";
   if (!token) return false;
-  return (req.headers.get("Authorization") || "") === "Bearer " + token;
+  const auth = req.headers.get("Authorization") || "";
+  return timingSafeEqual(auth, "Bearer " + token);
 }
 
 function daysAgo(n: number): string {
@@ -141,9 +149,9 @@ async function publicStats(store: AnalyticsStore, from: string, to: string) {
       opens: monthPrivate,
     },
     auditStatus: {
-      legal: "Čeká na dokončení.",
-      security: "Čeká na dokončení.",
-      anonymization: "Čeká na dokončení.",
+      legal: "Veřejné agregáty bez osobních údajů; monetizace podléhá samostatnému právnímu review.",
+      security: "Admin API chráněno Bearer tokenem; veřejný endpoint vrací jen agregáty.",
+      anonymization: "Neukládáme IP ani fingerprint; UA jen kategorie zařízení.",
     },
   };
 }

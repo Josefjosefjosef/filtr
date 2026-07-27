@@ -12,6 +12,16 @@ import type { Env } from "./types";
 
 const REPORT_FETCH_TIMEOUT_MS = 8000;
 
+/** BE-003: SSRF guard — only known Analytics Worker hosts may be called with the admin token. */
+const ALLOWED_ANALYTICS_REPORT_HOSTS = new Set([
+  "infouzel-analytics.josef-zmrhal.workers.dev",
+]);
+
+function isAllowedAnalyticsReportUrl(url: URL): boolean {
+  if (url.protocol !== "https:") return false;
+  return ALLOWED_ANALYTICS_REPORT_HOSTS.has(url.hostname.toLowerCase());
+}
+
 const ALLOWED_ROW_STRING_KEYS = ["day", "campaign_id", "placement_id", "section_id", "slot_type", "device_category"] as const;
 const ALLOWED_ROW_NUMBER_KEYS = ["impressions", "clicks", "valid_clicks", "suspicious_clicks"] as const;
 
@@ -107,6 +117,9 @@ export async function fetchAdsReport(env: Env, params: AdsReportParams): Promise
   try {
     target = new URL(baseUrl + "/v1/ads/report");
   } catch {
+    return { ok: false, status: 503, error: "stats_not_configured" };
+  }
+  if (!isAllowedAnalyticsReportUrl(target)) {
     return { ok: false, status: 503, error: "stats_not_configured" };
   }
   for (const [key, value] of Object.entries(params)) {

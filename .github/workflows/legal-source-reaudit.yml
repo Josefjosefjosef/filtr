@@ -1,4 +1,9 @@
 name: Legal source terms reaudit
+
+permissions:
+  contents: read
+  actions: write
+
 on:
   schedule:
     - cron: "20 4 * * 1"

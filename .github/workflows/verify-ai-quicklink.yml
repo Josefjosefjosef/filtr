@@ -1,6 +1,10 @@
 # Production proof: AI quicklink no URL change, CLS=0. Tooling only.
 name: Verify AI quicklink (no URL)
 
+permissions:
+  contents: read
+
+
 on:
   workflow_dispatch:
 

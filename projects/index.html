@@ -40,6 +40,7 @@
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=pwa-root-icons-v1-20260726" sizes="180x180" />
 
     <meta name="robots" content="index,follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
 
     <meta http-equiv="Content-Security-Policy"
     content="
@@ -47,6 +48,7 @@ default-src 'self' https:;
 base-uri 'self';
 object-src 'none';
 form-action 'self';
+upgrade-insecure-requests;
 connect-src 'self' https://api.open-meteo.com https://infouzel-analytics.josef-zmrhal.workers.dev https://ads.infouzel.cz;
 frame-src https://www.youtube.com https://www.youtube-nocookie.com;
 img-src 'self' data: blob: https://i.ytimg.com https:;

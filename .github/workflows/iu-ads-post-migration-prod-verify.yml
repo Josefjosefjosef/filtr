@@ -1,6 +1,10 @@
 # Ads post-migration production verification (CORS/CSP/iCentrum/DOM/legacy).
 name: IU Ads Post-Migration Prod Verify
 
+permissions:
+  contents: read
+
+
 on:
   workflow_dispatch:
 
