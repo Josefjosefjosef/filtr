@@ -29,7 +29,7 @@ class FakeD1 {
   adminSessions = new Map<string, Row>();
   campaigns = new Map<string, Row>();
   settings = new Map<string, string>([
-    ["ANALYTICS_ADMIN_REPORT_URL", "https://infouzel-analytics.example.workers.dev"],
+    ["ANALYTICS_ADMIN_REPORT_URL", "https://infouzel-analytics.josef-zmrhal.workers.dev"],
     ["STATS_TEST_CAMPAIGN_PREFIX", "test"],
   ]);
 
