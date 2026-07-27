@@ -7477,8 +7477,12 @@ try {
       const labelFromArticle = String(it?.sourceLabel || "").trim();
       const primaryNameRaw = String(primary.name || "").trim();
       displayName = labelFromArticle || primaryNameRaw || displayName;
-      const primaryUrl = normalizeArticleUrl(primary.url) || primary.url;
-      return `<div class="iu-meta-line"><span class="iu-meta-src">Zdroj: <a class="iu-meta-link" href="${escapeHtml(primaryUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayName)}</a></span></div>`;
+      const primaryUrlRaw = normalizeArticleUrl(primary.url) || primary.url;
+      const primaryUrl = safeUrl(primaryUrlRaw);
+      if (primaryUrl) {
+        return `<div class="iu-meta-line"><span class="iu-meta-src">Zdroj: <a class="iu-meta-link" href="${escapeHtml(primaryUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayName)}</a></span></div>`;
+      }
+      return `<div class="iu-meta-line"><span class="iu-meta-src">Zdroj: ${escapeHtml(displayName)}</span></div>`;
     }
     if (!displayName) return "";
     return `<div class="iu-meta-line"><span class="iu-meta-src">Zdroj: ${escapeHtml(displayName)}</span></div>`;
@@ -8038,7 +8042,8 @@ try {
         if (!id) return "";
         const title = String(row?.title || row?.topic || row?.name || "").trim() || "(bez názvu)";
         const source = String(row?.source || "").trim();
-        const url = String(row?.url || id).trim();
+        const urlRaw = String(row?.url || id).trim();
+        const url = safeUrl(urlRaw);
         const time = iuArticleActionsFormatListTime(row?.timestamp || row?.followedAt);
         let action = "";
         if (kind === "saved") {
@@ -8048,7 +8053,10 @@ try {
         } else {
           action = `<button type="button" class="iuMyInfoUzelItemBtn" data-iu-manage-action="restore" data-iu-article-id="${escapeHtml(id)}">Obnovit</button>`;
         }
-        return `<li class="iuMyInfoUzelItem"><a class="iuMyInfoUzelItemLink" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a><span class="iuMyInfoUzelItemMeta">${escapeHtml(source)}${time ? " · " + escapeHtml(time) : ""}</span>${action}</li>`;
+        const titleMarkup = url
+          ? `<a class="iuMyInfoUzelItemLink" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>`
+          : `<span class="iuMyInfoUzelItemLink">${escapeHtml(title)}</span>`;
+        return `<li class="iuMyInfoUzelItem">${titleMarkup}<span class="iuMyInfoUzelItemMeta">${escapeHtml(source)}${time ? " · " + escapeHtml(time) : ""}</span>${action}</li>`;
       })
       .filter(Boolean)
       .join("");
@@ -8631,8 +8639,11 @@ try {
 
     const dateText = fmtDate(iuArticleUserVisibleTimeIso(it));
     const datePart = dateText ? `<span class="iu-meta-date">${escapeHtml(dateText)}</span>` : "";
-    const primaryUrl = normalizeArticleUrl(primary.url) || primary.url;
-    const primaryPart = `<span class="iu-meta-src">Zdroj: <a class="iu-meta-link" href="${escapeHtml(primaryUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayName)}</a></span>`;
+    const primaryUrlRaw = normalizeArticleUrl(primary.url) || primary.url;
+    const primaryUrl = safeUrl(primaryUrlRaw);
+    const primaryPart = primaryUrl
+      ? `<span class="iu-meta-src">Zdroj: <a class="iu-meta-link" href="${escapeHtml(primaryUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayName)}</a></span>`
+      : `<span class="iu-meta-src">Zdroj: ${escapeHtml(displayName)}</span>`;
 
     const sep = datePart ? `<span class="iu-meta-sep"> | </span>` : "";
 
@@ -8656,8 +8667,9 @@ try {
       return "";
     }
     linkUrl = normalizeArticleUrl(linkUrl);
-    const titleMarkup = linkUrl
-      ? `<a class="news-titleLink iuCardTitle" href="${escapeHtml(linkUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>`
+    const safeLink = safeUrl(linkUrl);
+    const titleMarkup = safeLink
+      ? `<a class="news-titleLink iuCardTitle" href="${escapeHtml(safeLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>`
       : `<span class="news-titleLink iuCardTitle">${escapeHtml(title)}</span>`;
 
     const suspiciousFlag = it?.suspiciousTitle
@@ -32695,14 +32707,25 @@ function buildVideoAsArticleCard(it) {
   function renderAiCards(container, items){
     if (!container || !Array.isArray(items) || items.length === 0) return;
     const esc = (s) => String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const safeHttp = (u) => {
+      try {
+        const parsed = new URL(String(u || ""), "https://infouzel.cz");
+        if (parsed.protocol === "http:" || parsed.protocol === "https:") return parsed.href;
+      } catch (_) {}
+      return "";
+    };
     container.innerHTML = items.map(it => {
-      const c = it.color || "#1F4B99";
-      return `<div class="iu-aiItem" style="--aiColor:${c}">
+      const c = /^#[0-9A-Fa-f]{3,8}$/.test(String(it.color || "")) ? String(it.color) : "#1F4B99";
+      const href = safeHttp(it.url);
+      const openLink = href
+        ? `<a href="${esc(href)}" target="_blank" rel="noopener noreferrer">Otevřít</a>`
+        : `<span>Otevřít</span>`;
+      return `<div class="iu-aiItem" style="--aiColor:${esc(c)}">
         <div>
           <strong>${esc(it.name)}</strong>
           <p>${esc(it.desc || "")}</p>
         </div>
-        <a href="${esc(it.url || "#")}" target="_blank" rel="noopener">Otevřít</a>
+        ${openLink}
       </div>`;
     }).join("");
   }
