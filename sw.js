@@ -96,6 +96,8 @@ function getOfflineWarmUrls() {
     `${BASE}assets/iu-tool-guard.js`,
     `${BASE}assets/iu-legal-documents-module.js`,
     `${BASE}assets/iu-silver-p0-engine.js`,
+    `${BASE}assets/iu-pdf-convert-module.js`,
+    `${BASE}assets/iu-invoice-pdf-legacy-export.js`,
     `${BASE}assets/images/news-default.jpg`,
     `${BASE}assets/images/sport-default.jpg`,
     `${BASE}assets/images/finance-default.jpg`,
