@@ -5958,7 +5958,18 @@ try {
   }
 
   /** Feed-only: sekční obrázek nad prvním článkem (mapování podle URL / mediaTopicKey / hash sekcí — ne podle titulku). */
-  const IU_FEED_SECTION_HEADER_WEBP = new Set(["section-prehled-dne.jpg", "section-zpravy.jpg"]);
+  const IU_FEED_SECTION_HEADER_WEBP = new Set([
+    "section-prehled-dne.jpg",
+    "section-zpravy.jpg",
+    "section-sport.jpg",
+    "section-finance.jpg",
+    "section-zdravi.jpg",
+    "section-cestovani.jpg",
+    "section-hry.jpg",
+    "section-kultura-akce.jpg",
+    "section-veda-historie.jpg",
+    "section-vzdelavani.jpg",
+  ]);
 
   const IU_FEED_SECTION_HEADER_ASSETS = Object.freeze({
     hub: "section-prehled-dne.jpg",
