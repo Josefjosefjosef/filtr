@@ -614,6 +614,9 @@ function installInvoiceLauncherDelegation(openSurfaceFn) {
 
 export function initIuInvoiceOverlay(deps) {
   try {
+    if (typeof window.iuEnsureInvoicePdfLegacyExport === "function") void window.iuEnsureInvoicePdfLegacyExport();
+  } catch (_) {}
+  try {
     if (typeof window !== "undefined" && window.__iuInvoiceOverlayInitialized) {
       if (typeof window.iuInvoiceOpenSurface === "function" && typeof window.iuInvoiceCloseSurface === "function") {
         return { open: window.iuInvoiceOpenSurface, close: window.iuInvoiceCloseSurface };
