@@ -44765,7 +44765,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     } catch (_) {}
     if (p) return p;
-    p = import("./iu-silver-p0-engine.js?v=silver-p0-lazy-v1-20260728")
+    p = import("./iu-silver-p0-engine.js?v=silver-p0-lazy-v1a-20260728")
       .then(function () {
         try {
           window.__iuSilverP0EngineReady = 1;
@@ -44791,8 +44791,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function shouldPrefetch(t) {
     try {
       if (!t || !t.closest) return false;
-      if (t.closest("#iuSilverHeroPremium, #iuSilverHeroInputHost, #iuMobileSilverSlot, #silver-slot, .iuSilverHomeInputWrap, #iuSilverChatOverlay, .iuSilverQuickPanel, [data-iu-silver-hero-premium]")) return true;
-      if (t.closest(".iu-hero-quickBtn, #iuHeroQuickCal, #iuHeroQuickTasks, #iuHeroQuickNotes")) return true;
+      /* Narrow: do not prefetch on whole Silver slot (weather/cards) — that pulls 1.55MB during Lighthouse. */
+      if (t.closest("#iuSilverHomeInput, #iuSilverHomeSend, #iuSilverComposerInput, #iuSilverComposerSend, .iuSilverHomeInput, .iuSilverHomeSend")) return true;
+      if (t.closest("#iuHeroQuickCal, #iuHeroQuickTasks, #iuHeroQuickNotes, [data-iu-silver-open-chat]")) return true;
       return false;
     } catch (_) {
       return false;
@@ -44808,10 +44809,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   try {
     document.addEventListener("pointerdown", onPrefetchEvent, true);
     document.addEventListener("focusin", onPrefetchEvent, true);
-    document.addEventListener("keydown", onPrefetchEvent, true);
   } catch (_) {}
 
-  /* No idle auto-import: keep homepage start free of the ~1.55MB engine until Silver interaction. */
+  /* No idle auto-import; no document keydown prefetch (avoids LH TBT from engine parse). */
 
   /* First submit before engine lands: hold the event, load, re-click. */
   try {
