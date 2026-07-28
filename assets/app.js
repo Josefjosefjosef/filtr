@@ -27062,11 +27062,20 @@ function buildVideoAsArticleCard(it) {
     try{ iuNewsPreviewInit(); }catch{}
     try{ iuSilverCalendarSummaryInit(); }catch{}
     try{ iuSilverTasksSummaryInit(); }catch{}
-    try{ iuDesktopMindMenuSilverSummaryHoverInit(); }catch{}
-    try{ iuNamedayWishInit(); }catch{}
-    try{ iuSvatekOverlayInit(); }catch{}
+    function iuPerfIdleDefer(fn) {
+      try {
+        if (typeof requestIdleCallback === "function") {
+          requestIdleCallback(function () { try { fn(); } catch (_) {} }, { timeout: 4500 });
+          return;
+        }
+      } catch (_) {}
+      try { setTimeout(function () { try { fn(); } catch (_) {} }, 1400); } catch (_) {}
+    }
+    iuPerfIdleDefer(function () { try { iuDesktopMindMenuSilverSummaryHoverInit(); } catch (_) {} });
+    iuPerfIdleDefer(function () { try { iuNamedayWishInit(); } catch (_) {} });
+    iuPerfIdleDefer(function () { try { iuSvatekOverlayInit(); } catch (_) {} });
+    iuPerfIdleDefer(function () { try { iuSilverSpeechBubbleInit(); } catch (_) {} });
     try{ iuSilverHeroQuickActionsInit(); }catch{}
-    try{ iuSilverSpeechBubbleInit(); }catch{}
 
     if (btnToggleDebug) {
       btnToggleDebug.addEventListener("click", () => {
