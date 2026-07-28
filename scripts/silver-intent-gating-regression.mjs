@@ -26,11 +26,10 @@ function expandExpectedShorthand(expected) {
   if (!table[e]) throw new Error("Unknown expected shorthand: " + e);
   return table[e];
 }
+import { createRequire } from "module";
+const __iuRequire = createRequire(import.meta.url);
 function readSilverEngineFromApp() {
-  const app = fs.readFileSync(path.join(ROOT, "assets", "app.js"), "utf8");
-  const m = app.match(/\/\* IU_SILVER_P0_ENGINE_START \*\/([\s\S]*?)\/\* IU_SILVER_P0_ENGINE_END \*\//);
-  if (!m) throw new Error("IU_SILVER_P0_ENGINE_START/END markers missing in assets/app.js");
-  return m[1].trim();
+  return __iuRequire("./iu-read-silver-p0-engine.cjs").readSilverP0EngineSource();
 }
 const SILVER = readSilverEngineFromApp();
 

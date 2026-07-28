@@ -11,11 +11,7 @@ const vm = require("vm");
 const REPO = path.resolve(__dirname, "..");
 
 function readSilverEngineFromApp() {
-  const appPath = path.join(REPO, "assets", "app.js");
-  const app = fs.readFileSync(appPath, "utf8");
-  const m = app.match(/\/\* IU_SILVER_P0_ENGINE_START \*\/([\s\S]*?)\/\* IU_SILVER_P0_ENGINE_END \*\//);
-  if (!m) throw new Error("IU_SILVER_P0_ENGINE markers missing");
-  return m[1].trim();
+  return require("./iu-read-silver-p0-engine.cjs").readSilverP0EngineSource();
 }
 
 function loadEngine() {
