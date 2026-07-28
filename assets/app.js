@@ -5958,7 +5958,7 @@ try {
   }
 
   /** Feed-only: sekční obrázek nad prvním článkem (mapování podle URL / mediaTopicKey / hash sekcí — ne podle titulku). */
-  const IU_FEED_SECTION_HEADER_WEBP = new Set(["section-prehled-dne.jpg"]);
+  const IU_FEED_SECTION_HEADER_WEBP = new Set(["section-prehled-dne.jpg", "section-zpravy.jpg"]);
 
   const IU_FEED_SECTION_HEADER_ASSETS = Object.freeze({
     hub: "section-prehled-dne.jpg",
@@ -6084,14 +6084,20 @@ try {
     video.setAttribute("loop", "");
     video.setAttribute("autoplay", "");
     video.setAttribute("playsinline", "");
-    video.preload = "auto";
+    // P0 perf: do not download 12MB+ MP4 during cold load / LCP. Poster paints first; source attaches when visible.
+    video.preload = "none";
+    video.setAttribute("preload", "none");
     video.setAttribute("width", String(IU_FEED_SECTION_HEADER_IMG_REF_W));
     video.setAttribute("height", String(IU_FEED_SECTION_HEADER_IMG_REF_H));
+    if (videoSpec.fallback) {
+      try {
+        video.setAttribute("poster", base + videoSpec.fallback);
+      } catch (_) {}
+    }
 
     const source = document.createElement("source");
-    source.src = base + videoSpec.video;
     source.type = "video/mp4";
-    video.appendChild(source);
+    // src attached lazily below — avoids eager network for offscreen / non-critical paint.
 
     let fallbackActivated = false;
     function activateVideoFallback() {
@@ -6112,12 +6118,89 @@ try {
     video.addEventListener("error", activateVideoFallback, { once: true });
     source.addEventListener("error", activateVideoFallback, { once: true });
 
+    let sourceAttached = false;
+    function attachVideoSourceAndPlay() {
+      if (sourceAttached || fallbackActivated) return;
+      sourceAttached = true;
+      try {
+        source.setAttribute("src", base + videoSpec.video);
+        source.src = base + videoSpec.video;
+        if (!source.parentNode) video.appendChild(source);
+        const tryPlay = function () {
+          try {
+            const playPromise = video.play();
+            if (playPromise && typeof playPromise.catch === "function") {
+              playPromise.catch(function () {});
+            }
+          } catch (_) {}
+        };
+        video.addEventListener("loadeddata", tryPlay, { once: true });
+        video.addEventListener("canplay", tryPlay, { once: true });
+        try {
+          video.load();
+        } catch (_) {}
+        tryPlay();
+      } catch (_) {
+        activateVideoFallback();
+      }
+    }
+
+    function scheduleAttachWhenVisible() {
+      function startWhenConnected(attempt) {
+        if (!wrap.isConnected) {
+          if ((attempt || 0) > 80) {
+            attachVideoSourceAndPlay();
+            return;
+          }
+          setTimeout(function () {
+            startWhenConnected((attempt || 0) + 1);
+          }, 50);
+          return;
+        }
+        try {
+          if (typeof IntersectionObserver === "function") {
+            const io = new IntersectionObserver(
+              function (entries) {
+                for (let i = 0; i < entries.length; i++) {
+                  if (entries[i] && entries[i].isIntersecting) {
+                    try {
+                      io.disconnect();
+                    } catch (_) {}
+                    attachVideoSourceAndPlay();
+                    return;
+                  }
+                }
+              },
+              { root: null, rootMargin: "200px 0px", threshold: 0.01 }
+            );
+            io.observe(wrap);
+            // If already in view, some engines need a tick before first callback.
+            setTimeout(function () {
+              try {
+                const r = wrap.getBoundingClientRect();
+                if (r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < (window.innerHeight || 800) + 200) {
+                  try {
+                    io.disconnect();
+                  } catch (_) {}
+                  attachVideoSourceAndPlay();
+                }
+              } catch (_) {}
+            }, 0);
+            return;
+          }
+        } catch (_) {}
+        attachVideoSourceAndPlay();
+      }
+      startWhenConnected(0);
+    }
+
     wrap.appendChild(video);
     try {
       if (visualKey) wrap.setAttribute("data-feed-visual-key", visualKey);
       wrap.setAttribute("data-feed-header-file", videoSpec.video);
       wrap.setAttribute("data-feed-header-fallback", videoSpec.fallback || "");
     } catch (_) {}
+    scheduleAttachWhenVisible();
     return wrap;
   }
 

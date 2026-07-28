@@ -49,6 +49,15 @@
     box-sizing: border-box;
   }
 
+  #iuDesktopRightRailCards .iu-desktop-right-rail-banner picture {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    line-height: 0;
+    margin: 0;
+    padding: 0;
+  }
+
   #iuDesktopRightRailCards .iu-desktop-right-rail-banner__img {
     display: block;
     width: 100%;
@@ -62,6 +71,7 @@
     pointer-events: none;
     user-select: none;
     vertical-align: top;
+    aspect-ratio: 360 / 120;
   }
 
 }
