@@ -16,6 +16,7 @@ const { chromium } = require("playwright");
 
 const INDEX = path.join(REPO, "projects", "index.html");
 const APP = path.join(REPO, "assets", "app.js");
+const SILVER_ENGINE = path.join(REPO, "assets", "iu-silver-p0-engine.js");
 const PORT = parseInt(process.env.IU_SILVER_PC_ACTION_MENU_GUARD_PORT || process.env.IU_GUARD_PORT || "8927", 10);
 const USE_LOCAL_SERVER = process.env.IU_SILVER_PC_ACTION_MENU_GUARD_PROD !== "1";
 const BASE = USE_LOCAL_SERVER
@@ -27,7 +28,10 @@ const ACTION_ORDER = ["silver", "google", "seznam", "youtube", "googlemaps", "ma
 
 function staticGate() {
   const index = fs.readFileSync(INDEX, "utf8");
-  const app = fs.readFileSync(APP, "utf8");
+  const app =
+    fs.readFileSync(APP, "utf8") +
+    "\n" +
+    (fs.existsSync(SILVER_ENGINE) ? fs.readFileSync(SILVER_ENGINE, "utf8") : "");
   const checks = [
     {
       id: "placeholder_desktop",
@@ -184,13 +188,23 @@ async function verifyLocalServerContent() {
   }
   const appRes = await fetch(`http://127.0.0.1:${PORT}/assets/app.js`);
   const appTxt = await appRes.text();
-  if (appTxt.indexOf("iuSilverHomeDesktopActionMenuShow") < 0) {
-    throw new Error("stale app.js from guard server");
+  const engRes = await fetch(`http://127.0.0.1:${PORT}/assets/iu-silver-p0-engine.js`);
+  const engTxt = await engRes.text();
+  const hasMenu =
+    appTxt.indexOf("iuSilverHomeDesktopActionMenuShow") >= 0 ||
+    engTxt.indexOf("iuSilverHomeDesktopActionMenuShow") >= 0;
+  if (!hasMenu || appTxt.indexOf("iuEnsureSilverP0Engine") < 0) {
+    throw new Error("stale app.js / silver engine from guard server");
   }
 }
 
 async function waitDesktopTopbar(page) {
   page.setDefaultTimeout(120000);
+  await page.evaluate(async () => {
+    try {
+      if (typeof window.iuEnsureSilverP0Engine === "function") await window.iuEnsureSilverP0Engine();
+    } catch (_) {}
+  });
   await page.waitForFunction(
     () => {
       const host = document.getElementById("iuTopbarSilverComposerHost");
@@ -297,6 +311,11 @@ async function runPcProof(browser) {
       const res = await fetch("/assets/app.js?iuGuardProbe=1");
       const txt = await res.text();
       appHasMenu = txt.indexOf("iuSilverHomeDesktopActionMenuShow") >= 0;
+      if (!appHasMenu) {
+        const eng = await fetch("/assets/iu-silver-p0-engine.js?iuGuardProbe=1");
+        const engTxt = await eng.text();
+        appHasMenu = engTxt.indexOf("iuSilverHomeDesktopActionMenuShow") >= 0;
+      }
     } catch (_) {}
     let enabled = false;
     try {
