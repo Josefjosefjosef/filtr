@@ -74,9 +74,19 @@ function readTemp(name) {
   return fs.readFileSync(p);
 }
 
-function readCsvFlexible(preferredPaths) {
+/** ČÚZK UI_* CSVs are Windows-1250; ČSÚ CISORP exports are UTF-8. */
+function decodeBuffer(buf, encoding) {
+  const enc = String(encoding || "utf8").toLowerCase();
+  if (enc === "utf8" || enc === "utf-8") return buf.toString("utf8");
+  if (enc === "windows-1250" || enc === "cp1250") {
+    return new TextDecoder("windows-1250").decode(buf);
+  }
+  return buf.toString(enc);
+}
+
+function readCsvFlexible(preferredPaths, encoding = "utf8") {
   for (const p of preferredPaths) {
-    if (fs.existsSync(p)) return fs.readFileSync(p, "utf8");
+    if (fs.existsSync(p)) return decodeBuffer(fs.readFileSync(p), encoding);
   }
   throw new Error("missing_csv:" + preferredPaths.join("|"));
 }
@@ -85,22 +95,22 @@ function main() {
   const cisorpRows = parseCsv(readTemp("cisorp65.csv").toString("utf8"));
   const krajRows = parseCsv(readTemp("cisorp65_kraj.csv").toString("utf8"));
   const uiOrp = parseCsv(
-    readCsvFlexible([
-      path.join(TEMP, "ui_orp_ok", "UI_ORP.csv"),
-      path.join(TEMP, "UI_ORP.csv"),
-    ])
+    readCsvFlexible(
+      [path.join(TEMP, "ui_orp_ok", "UI_ORP.csv"), path.join(TEMP, "UI_ORP.csv")],
+      "windows-1250"
+    )
   );
   const uiOkres = parseCsv(
-    readCsvFlexible([
-      path.join(TEMP, "ui_okres_ok", "UI_OKRES.csv"),
-      path.join(TEMP, "UI_OKRES.csv"),
-    ])
+    readCsvFlexible(
+      [path.join(TEMP, "ui_okres_ok", "UI_OKRES.csv"), path.join(TEMP, "UI_OKRES.csv")],
+      "windows-1250"
+    )
   );
   const uiVusc = parseCsv(
-    readCsvFlexible([
-      path.join(TEMP, "ui_vusc_ok", "UI_VUSC.csv"),
-      path.join(TEMP, "UI_VUSC.csv"),
-    ])
+    readCsvFlexible(
+      [path.join(TEMP, "ui_vusc_ok", "UI_VUSC.csv"), path.join(TEMP, "UI_VUSC.csv")],
+      "windows-1250"
+    )
   );
 
   const orpByRuian = new Map(uiOrp.map((r) => [String(r.KOD), r]));

@@ -13,6 +13,8 @@ import { processCapDocuments, tryAcquireLock, releaseLock, applyConditionalResul
 import { revisionsToFeed } from "./chmi-cap-v2/normalize-feed.mjs";
 import { migrateUserStatesDryRun } from "./chmi-cap-v2/migrate-ids.mjs";
 import { createGeoRegistry } from "./chmi-cap-v2/geo-registry.mjs";
+import { createFixtureDiscovery, resolveDiscoveryAdapter } from "./chmi-cap-v2/discovery-adapter.mjs";
+import { shouldResetUnreadOnRevision } from "./chmi-cap-v2/unread-rules.mjs";
 import { CHMI_PUBLIC_ALERTS_URL } from "./chmi-cap-v2/config.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -117,8 +119,12 @@ function read(name) {
   // full CISORP registry
   const reg = createGeoRegistry();
   ok("registry_orp_complete", (reg.counts && reg.counts.orp) === 206, JSON.stringify(reg.counts));
+  ok("registry_okres_complete", (reg.counts && reg.counts.okres) === 78, JSON.stringify(reg.counts));
+  ok("registry_kraj_complete", (reg.counts && reg.counts.kraj) === 14, JSON.stringify(reg.counts));
+  ok("registry_utf8_kraj", /Jihomoravsk[ýy] kraj/.test((reg.get("kraj", "CZ064") && reg.get("kraj", "CZ064").name) || ""), (reg.get("kraj", "CZ064") && reg.get("kraj", "CZ064").name) || "");
   ok("registry_alias_praha_1100", !!reg.get("orp", "1100") && reg.get("orp", "1100").code === "1000", "alias");
   ok("registry_brno_6203", !!reg.get("orp", "6203") && /brno/i.test(reg.get("orp", "6203").name), "brno");
+  ok("registry_brno_parent_okres", !!(reg.get("orp", "6203") && reg.get("orp", "6203").parentId), (reg.get("orp", "6203") && reg.get("orp", "6203").parentId) || "");
 
   // shadow must not publish
   const pub = atomicPublishDecision({
@@ -201,6 +207,38 @@ function read(name) {
   const alert = parseCapAlertXml(xml);
   const id = buildCapIdentity(alert);
   ok("unknown_msgType_no_lifecycle", id.appliesLifecycle === false && id.msgTypeKnown === false, JSON.stringify(id));
+}
+
+// --- discovery adapter isolation (fixture; no network) ---
+{
+  const files = [{ name: "alert-new.xml", xml: read("alert-new.xml") }];
+  const disc = createFixtureDiscovery(files);
+  ok("discovery_type_fixture", disc.type === "fixture", disc.type);
+  const latest = await disc.listLatest();
+  ok("discovery_list", latest.length === 1, String(latest.length));
+  const body = await disc.fetchBody("alert-new.xml");
+  ok("discovery_fetch_body", !!body.body && body.status === 200, String(body.status));
+  const resolved = resolveDiscoveryAdapter(
+    { mode: "shadow", userAgent: "test" },
+    { kind: "fixture", files }
+  );
+  ok("discovery_resolve_fixture", resolved.type === "fixture", resolved.type);
+  ok("discovery_not_html_api", resolved.role !== "html_api", resolved.role || "none");
+}
+
+// --- unread reset rules ---
+{
+  ok("unread_new", shouldResetUnreadOnRevision({ change_type: "new" }) === true, "new");
+  ok("unread_area_expand", shouldResetUnreadOnRevision({ changeType: "area_expand" }) === true, "expand");
+  ok("unread_minor_no", shouldResetUnreadOnRevision({ changeType: "area_reduce" }) === false, "reduce");
+}
+
+// --- lightweight parse performance budget (fixtures) ---
+{
+  const t0 = Date.now();
+  for (let i = 0; i < 50; i++) parseCapAlertXml(read("alert-new.xml"));
+  const ms = Date.now() - t0;
+  ok("perf_parse_50_under_2s", ms < 2000, String(ms));
 }
 
 if (fails.length) {

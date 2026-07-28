@@ -205,29 +205,62 @@ export async function runChmiCapV2Sync(opts = {}) {
       });
     }
 
-    // Merge diagnostics into monitoring.json (read-only ops)
+    // Merge diagnostics into monitoring.json (ops / admin)
     const monitoring = readJson(path.join(DIR, "monitoring.json"), {});
-    monitoring.chmiCapV2 = {
+    const prevDiag = monitoring.chmiCapV2 || {};
+    const history = Array.isArray(prevDiag.runHistory) ? prevDiag.runHistory.slice() : [];
+    const expiredCount = feedItems.filter((i) => i.status === "ukonceno").length;
+    const cancelledCount =
+      feedItems.filter((i) => i.status === "zruseno").length || diagnostics.parser?.cancel || 0;
+    const snapshot = {
       mode: config.mode,
       lastRunAt: started,
-      lastSuccessAt: state.sync.last_success_at,
-      lastChangedAt: state.sync.last_changed_at,
-      status: diagnostics.status === "healthy" ? state.sync.status || processResult?.status || "healthy" : diagnostics.status,
+      lastSuccessAt: state.sync.last_success_at || (diagnostics.status !== "failed" ? started : prevDiag.lastSuccessAt || null),
+      lastChangedAt: state.sync.last_changed_at || prevDiag.lastChangedAt || null,
+      lastError: diagnostics.error || state.sync.last_error || null,
+      status:
+        diagnostics.status === "healthy"
+          ? state.sync.status || processResult?.status || "healthy"
+          : diagnostics.status,
       etag: state.sync.etag,
       lastModified: state.sync.lastModified,
-      consecutiveErrors: state.sync.consecutive_errors,
-      backoffUntil: state.sync.backoff_until,
-      activeCount: feedItems.filter((i) => i.status === "aktivni").length || prevChmi.filter((i) => i.status === "aktivni").length,
-      cancelledCount: diagnostics.parser?.cancel || 0,
+      consecutiveErrors: state.sync.consecutive_errors || 0,
+      backoffUntil: state.sync.backoff_until || null,
+      activeCount:
+        feedItems.filter((i) => i.status === "aktivni").length ||
+        prevChmi.filter((i) => i.status === "aktivni").length,
+      cancelledCount,
+      expiredCount,
       updateCount: diagnostics.parser?.update || 0,
       alertCount: diagnostics.parser?.alert || 0,
+      cancelMsgCount: diagnostics.parser?.cancel || 0,
       quarantineCount: diagnostics.parser?.quarantine || 0,
-      discoveryType: diagnostics.discovery?.type,
+      validCount: diagnostics.parser?.valid || 0,
+      rejectedCount: diagnostics.parser?.rejected || 0,
+      discoveryType: diagnostics.discovery?.type || null,
+      discoveryRole: diagnostics.discovery?.role || null,
       publish: decision.publish,
       publishReason: decision.reason,
       runMs: Date.now() - t0,
       registryVersion: createGeoRegistry().version,
+      lastSnapshotAt: decision.publish ? started : prevDiag.lastSnapshotAt || null,
+      audit: {
+        http: diagnostics.http || [],
+        publish: diagnostics.publish,
+        parser: diagnostics.parser,
+      },
     };
+    history.unshift({
+      at: started,
+      status: snapshot.status,
+      mode: snapshot.mode,
+      publish: snapshot.publish,
+      runMs: snapshot.runMs,
+      error: snapshot.lastError,
+      activeCount: snapshot.activeCount,
+    });
+    snapshot.runHistory = history.slice(0, 48);
+    monitoring.chmiCapV2 = snapshot;
     writeJson(path.join(DIR, "monitoring.json"), monitoring);
 
     state.lastRun = { at: started, ok: true, mode: config.mode, publish: decision.publish };

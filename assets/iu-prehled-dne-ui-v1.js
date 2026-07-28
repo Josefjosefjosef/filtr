@@ -22,6 +22,8 @@ import {
   setScrollState,
   migrateLocalStateOnce,
   migrateChmiCapV2UserStates,
+  rollbackChmiCapV2UserStates,
+  iuInfoDataUrl,
 } from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-cap-v2-20260729";
 
 const PAGE_SIZE = 50;
@@ -1218,6 +1220,47 @@ async function boot() {
     state.data = data;
     try {
       migrateChmiCapV2UserStates((data.feed && data.feed.items) || []);
+    } catch (_) {}
+    // Optional ops diagnostics (no UI change unless ?iu_chmi_diag=1)
+    try {
+      if (typeof location !== "undefined" && /(?:^|[?&])iu_chmi_diag=1(?:&|$)/.test(location.search || "")) {
+        const mon = await fetch(iuInfoDataUrl("monitoring.json"), { cache: "no-store" }).then((r) =>
+          r.ok ? r.json() : null
+        );
+        const d = mon && mon.chmiCapV2;
+        if (d) {
+          const bar = document.createElement("pre");
+          bar.className = "iuPdDiag";
+          bar.setAttribute("data-iu-chmi-diag", "1");
+          bar.style.cssText = "font:12px/1.4 ui-monospace,monospace;padding:8px 12px;margin:0;background:#0b1220;color:#cde;white-space:pre-wrap";
+          bar.textContent = JSON.stringify(
+            {
+              mode: d.mode,
+              status: d.status,
+              lastRunAt: d.lastRunAt,
+              lastSuccessAt: d.lastSuccessAt,
+              lastSnapshotAt: d.lastSnapshotAt,
+              lastError: d.lastError,
+              active: d.activeCount,
+              cancelled: d.cancelledCount,
+              expired: d.expiredCount,
+              alert: d.alertCount,
+              update: d.updateCount,
+              cancelMsg: d.cancelMsgCount,
+              quarantine: d.quarantineCount,
+              discovery: d.discoveryType,
+              publish: d.publish,
+              runMs: d.runMs,
+              registry: d.registryVersion,
+              rollbackFn: typeof rollbackChmiCapV2UserStates === "function",
+            },
+            null,
+            2
+          );
+          const host = root.querySelector(".iuPrehledDne") || root;
+          host.insertBefore(bar, host.firstChild);
+        }
+      }
     } catch (_) {}
     state.index = buildFeedIndex((data.feed && data.feed.items) || []);
     state.prefs = getPrefs();

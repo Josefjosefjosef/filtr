@@ -601,18 +601,20 @@ async function main() {
     dataQuality,
     chmiCapV2: (() => {
       const cfg = getChmiCapV2Config(process.env);
+      const active = cfg.mode === "active";
       return {
         mode: cfg.mode,
         enabled: cfg.enabled,
         shadow: cfg.shadow,
         legacyProductionPath: isLegacyProductionPath(cfg),
-        productionPublishV2: false,
+        productionPublishV2: active,
+        intervalMinutes: 15,
         note:
           cfg.mode === "off"
             ? "CAP v2 flag off — legacy CHMI CAP ingest unchanged"
             : cfg.mode === "shadow"
               ? "CAP v2 shadow only — does not replace production snapshot; run scripts/chmi-cap-v2-shadow-run.mjs for fixture audit"
-              : "CAP v2 active reserved — production publish of v2 remains gated until rollout approval",
+              : "CAP v2 active — production CHMI items published by update-chmi-cap-v2 (15 min, max 1 bulletin)",
       };
     })(),
   };

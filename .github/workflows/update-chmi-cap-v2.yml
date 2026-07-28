@@ -40,8 +40,8 @@ jobs:
 
       - name: Sync CHMI CAP v2
         env:
-          IU_CHMI_CAP_V2_MODE: ${{ github.event.inputs.mode || 'active' }}
-          IU_CHMI_CAP_V2_DISCOVERY: opendata_newest_file
+          IU_CHMI_CAP_V2_MODE: ${{ github.event.inputs.mode || vars.IU_CHMI_CAP_V2_MODE || 'active' }}
+          IU_CHMI_CAP_V2_DISCOVERY: ${{ vars.IU_CHMI_CAP_V2_DISCOVERY || 'opendata_newest_file' }}
           IU_CHMI_CAP_V2_MAX_FILES: "1"
         run: node scripts/chmi-cap-v2-prod-sync.mjs
 
