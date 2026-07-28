@@ -21,10 +21,11 @@ import {
   getScrollState,
   setScrollState,
   migrateLocalStateOnce,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-sw-network-first-20260720";
+  migrateChmiCapV2UserStates,
+} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-cap-v2-20260729";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-sw-network-first-20260720";
+const CACHE_BUST = "info-system-v6-chmi-cap-v2-20260729";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -1215,6 +1216,9 @@ async function boot() {
   try {
     const data = await loadInfoSystemData({});
     state.data = data;
+    try {
+      migrateChmiCapV2UserStates((data.feed && data.feed.items) || []);
+    } catch (_) {}
     state.index = buildFeedIndex((data.feed && data.feed.items) || []);
     state.prefs = getPrefs();
     state.page = 1;

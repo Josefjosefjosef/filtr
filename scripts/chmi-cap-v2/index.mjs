@@ -11,3 +11,4 @@ export * from "./sync-core.mjs";
 export * from "./normalize-feed.mjs";
 export * from "./migrate-ids.mjs";
 export * from "./discovery-adapter.mjs";
+export * from "./unread-rules.mjs";

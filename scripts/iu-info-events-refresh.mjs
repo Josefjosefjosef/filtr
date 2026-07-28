@@ -387,7 +387,19 @@ async function main() {
     const srcStarted = Date.now();
     try {
       if (entry.capIndexUrl) {
-        keptTotal += await ingestCapIndex(entry, entry.capIndexUrl, nowIso, collected, ingestReport);
+        const chmiV2 = getChmiCapV2Config(process.env);
+        if (entry.id === "chmi" && chmiV2.mode === "active") {
+          ingestReport.push({
+            id: entry.id,
+            ok: true,
+            kept: 0,
+            reason: "delegated_to_chmi_cap_v2_active",
+            mode: "cap-v2-delegated",
+            ms: 0,
+          });
+        } else {
+          keptTotal += await ingestCapIndex(entry, entry.capIndexUrl, nowIso, collected, ingestReport);
+        }
       }
 
       const feedUrls = []

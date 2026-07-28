@@ -1,0 +1,69 @@
+name: Update CHMI CAP v2
+
+# Conservative CAP v2 sync (15 min). Feature flag via env.
+# Default MODE=active after merge of CAP v2 rollout; set to off/shadow via repository variable if needed.
+# Does NOT use 5-minute interval. Does NOT crawl full CAP archive (max 1 newest bulletin).
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "off | shadow | active"
+        required: false
+        default: "active"
+  schedule:
+    - cron: "*/15 * * * *"
+
+concurrency:
+  group: update-chmi-cap-v2
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: CAP v2 guard (fixtures)
+        run: npm run iu-chmi-cap-v2-guard
+
+      - name: Sync CHMI CAP v2
+        env:
+          IU_CHMI_CAP_V2_MODE: ${{ github.event.inputs.mode || 'active' }}
+          IU_CHMI_CAP_V2_DISCOVERY: opendata_newest_file
+          IU_CHMI_CAP_V2_MAX_FILES: "1"
+        run: node scripts/chmi-cap-v2-prod-sync.mjs
+
+      - name: Commit data if changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add projects/data/info_events || true
+          if git diff --cached --quiet; then
+            echo "NO_CHANGES"
+            exit 0
+          fi
+          BRANCH="automation/update-chmi-cap-v2"
+          git checkout -B "$BRANCH"
+          git commit -m "chore(data): refresh CHMI CAP v2 snapshot"
+          git push -u origin "$BRANCH" --force
+          EXISTING=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number // empty')
+          if [ -z "$EXISTING" ]; then
+            gh pr create --title "chore(data): refresh CHMI CAP v2 snapshot" --body "Automated CHMI CAP v2 sync (15 min, max 1 bulletin, conditional GET)." --base main --head "$BRANCH"
+          fi
+          NUM=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number')
+          gh pr merge "$NUM" --squash --auto || true

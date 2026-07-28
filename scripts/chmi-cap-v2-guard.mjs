@@ -12,6 +12,7 @@ import { buildCapIdentity, parseCapReferences } from "./chmi-cap-v2/identity.mjs
 import { processCapDocuments, tryAcquireLock, releaseLock, applyConditionalResult, atomicPublishDecision, suspiciousDrop, createSyncState } from "./chmi-cap-v2/sync-core.mjs";
 import { revisionsToFeed } from "./chmi-cap-v2/normalize-feed.mjs";
 import { migrateUserStatesDryRun } from "./chmi-cap-v2/migrate-ids.mjs";
+import { createGeoRegistry } from "./chmi-cap-v2/geo-registry.mjs";
 import { CHMI_PUBLIC_ALERTS_URL } from "./chmi-cap-v2/config.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -63,7 +64,7 @@ function read(name) {
   ok("parse_identifier", !!alert.identifier, "identifier");
   ok("parse_msgType_Alert", alert.msgType === "Alert", alert.msgType);
   ok("czech_info_preferred", alert.infos.length === 1 && /^cs/i.test(alert.infos[0].language), JSON.stringify(alert.selectedLanguages));
-  ok("geocode_cisorp", alert.infos[0].areas[0].geocodes[0].value === "6201", "geocode");
+  ok("geocode_cisorp", alert.infos[0].areas[0].geocodes[0].value === "6203", "geocode");
   ok("fields_description", !!alert.infos[0].description, "description");
   ok("fields_instruction", !!alert.infos[0].instruction, "instruction");
 }
@@ -111,7 +112,13 @@ function read(name) {
   ok("feed_stable_ids", feed.every((i) => String(i.id).startsWith("ie-chmi-v2-")), "bad id");
   ok("feed_precise_orp", feed.some((i) => i.region && i.region.precise === true && i.region.level === "orp"), "no precise");
   ok("feed_no_false_whole_kraj", !feed.some((i) => i.region && i.region.precise && i.region.level === "kraj" && !(i.region.orpIds || []).length), "false kraj");
-  ok("parallel_same_orp_two_items", feed.filter((i) => i.region && i.region.orpCode === "6201").length >= 2, "merged hazards");
+  ok("parallel_same_orp_two_items", feed.filter((i) => i.region && i.region.orpCode === "6203").length >= 2, "merged hazards");
+
+  // full CISORP registry
+  const reg = createGeoRegistry();
+  ok("registry_orp_complete", (reg.counts && reg.counts.orp) === 206, JSON.stringify(reg.counts));
+  ok("registry_alias_praha_1100", !!reg.get("orp", "1100") && reg.get("orp", "1100").code === "1000", "alias");
+  ok("registry_brno_6203", !!reg.get("orp", "6203") && /brno/i.test(reg.get("orp", "6203").name), "brno");
 
   // shadow must not publish
   const pub = atomicPublishDecision({

@@ -267,6 +267,113 @@ function writeSchemaVersion(v) {
 }
 
 /** Idempotent local prefs migration (V4/V5 → V6 clean concept). Preserves read/saved/hidden/scroll. */
+const LS_CHMI_V2_MIG = "iu.infoEvents.chmiCapV2.mig.v1";
+const LS_CHMI_V2_BACKUP = "iu.infoEvents.chmiCapV2.backup.v1";
+
+/**
+ * Map legacy ie-chmi-* states onto ie-chmi-v2-* when feed contains capV2 items.
+ * Certain matches only; ambiguous kept on legacy ids. Reversible via backup key.
+ */
+function migrateChmiCapV2UserStates(events) {
+  const items = Array.isArray(events) ? events : [];
+  const v2 = items.filter((e) => e && e.capV2 && String(e.id || "").startsWith("ie-chmi-v2-"));
+  if (!v2.length) return { migrated: false, reason: "no_v2_items" };
+  try {
+    if (localStorage.getItem(LS_CHMI_V2_MIG) === "done") return { migrated: false, reason: "already" };
+  } catch (_) {}
+
+  const read = readJsonSet(LS_READ);
+  const saved = readJsonSet(LS_SAVED);
+  const hidden = readJsonSet(LS_HIDDEN);
+  const legacyIds = [...read, ...saved, ...hidden].filter((id) => String(id).startsWith("ie-chmi-") && !String(id).startsWith("ie-chmi-v2-"));
+  if (!legacyIds.length) {
+    try {
+      localStorage.setItem(LS_CHMI_V2_MIG, "done");
+    } catch (_) {}
+    return { migrated: false, reason: "no_legacy_states" };
+  }
+
+  const byLegacyTitle = new Map();
+  for (const e of items) {
+    if (!e || !String(e.id || "").startsWith("ie-chmi-") || String(e.id).startsWith("ie-chmi-v2-")) continue;
+    byLegacyTitle.set(String(e.id), e);
+  }
+
+  function fold(s) {
+    return String(s || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  }
+
+  const audit = [];
+  const backup = {
+    read: [...read],
+    saved: [...saved],
+    hidden: [...hidden],
+    at: new Date().toISOString(),
+  };
+
+  function mapOne(id, set) {
+    const legacy = byLegacyTitle.get(id);
+    if (!legacy) return;
+    const lt = fold(legacy.title);
+    const lr = fold(legacy.region && legacy.region.name);
+    const candidates = v2.filter((v) => {
+      const vt = fold(v.title);
+      const vr = fold(v.region && v.region.name);
+      return (lt && vt && (vt.includes(lt.slice(0, 40)) || lt.includes(vt.slice(0, 40)))) || (lr && vr && (vr.includes(lr) || lr.includes(vr)));
+    });
+    if (candidates.length === 1) {
+      set.delete(id);
+      set.add(String(candidates[0].id));
+      audit.push({ from: id, to: candidates[0].id, confidence: "certain" });
+    } else {
+      audit.push({ from: id, to: null, confidence: candidates.length ? "ambiguous" : "none" });
+    }
+  }
+
+  for (const id of legacyIds) {
+    if (read.has(id)) mapOne(id, read);
+    if (saved.has(id)) mapOne(id, saved);
+    if (hidden.has(id)) mapOne(id, hidden);
+  }
+
+  // unread resets for significant capV2 updates
+  for (const e of v2) {
+    if (e.capV2 && e.capV2.significantUnreadReset && read.has(String(e.id))) {
+      read.delete(String(e.id));
+      audit.push({ from: e.id, to: null, confidence: "unread_reset" });
+    }
+  }
+
+  try {
+    localStorage.setItem(LS_CHMI_V2_BACKUP, JSON.stringify(backup));
+    writeJsonSet(LS_READ, read);
+    writeJsonSet(LS_SAVED, saved);
+    writeJsonSet(LS_HIDDEN, hidden);
+    localStorage.setItem(LS_CHMI_V2_MIG, "done");
+  } catch (_) {
+    return { migrated: false, reason: "storage_error", audit };
+  }
+  return { migrated: true, audit, backup: true };
+}
+
+function rollbackChmiCapV2UserStates() {
+  try {
+    const raw = localStorage.getItem(LS_CHMI_V2_BACKUP);
+    if (!raw) return { ok: false, reason: "no_backup" };
+    const b = JSON.parse(raw);
+    writeJsonSet(LS_READ, new Set(b.read || []));
+    writeJsonSet(LS_SAVED, new Set(b.saved || []));
+    writeJsonSet(LS_HIDDEN, new Set(b.hidden || []));
+    localStorage.removeItem(LS_CHMI_V2_MIG);
+    return { ok: true };
+  } catch (_) {
+    return { ok: false, reason: "rollback_error" };
+  }
+}
+
 function migrateLocalStateOnce() {
   const ver = readSchemaVersion();
   if (ver >= LS_SCHEMA_VERSION) return { migrated: false, from: ver, to: ver };
@@ -1054,6 +1161,8 @@ const IUInfoSystem = {
   applyView,
   builtinViews,
   migrateLocalStateOnce,
+  migrateChmiCapV2UserStates,
+  rollbackChmiCapV2UserStates,
   getViewBaseline,
   setViewBaseline,
   countTemporaryFilters,
@@ -1104,6 +1213,8 @@ export {
   deleteView,
   applyView,
   migrateLocalStateOnce,
+  migrateChmiCapV2UserStates,
+  rollbackChmiCapV2UserStates,
   getViewBaseline,
   setViewBaseline,
   countTemporaryFilters,
