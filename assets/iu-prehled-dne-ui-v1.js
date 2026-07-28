@@ -330,9 +330,16 @@ function sectionColor(sectionId) {
   return (sec && sec.color) || "#5B6CFF";
 }
 
+function chmiPublicDetailUrl(ev) {
+  // CAP v2 items always open the public CHMI page (never technical XML).
+  if (ev && ev.capV2) return "https://vystrahy-cr.chmi.cz/";
+  return "";
+}
+
 function renderItem(ev) {
   const id = String(ev.id || "");
-  const url = safeHttpUrl(ev.url || ev.originalUrl);
+  const forced = chmiPublicDetailUrl(ev);
+  const url = safeHttpUrl(forced || ev.url || ev.originalUrl);
   const title = String(ev.title || "Bez názvu");
   const src = String(ev.sourceLabel || ev.sourceId || "");
   const region = ev.region && ev.region.name ? String(ev.region.name) : "";
@@ -342,6 +349,8 @@ function renderItem(ev) {
   const read = isRead(id);
   const color = safeCssColor(sectionColor(ev.sectionId));
   const alert = String(ev.eventType || "") === "mimoradne" || Number(ev.importance) >= 5;
+  const capActive = !!(ev.capV2 && ev.capV2.badgeActive);
+  const capEnded = !!(ev.capV2 && (ev.status === "ukonceno" || ev.status === "zruseno"));
   const titleMarkup = url
     ? `<a class="iuPdCard__title iuPrehledDne__cardTitle" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(title)}</a>`
     : `<span class="iuPdCard__title iuPrehledDne__cardTitle" data-act="open-title">${esc(title)}</span>`;
@@ -351,8 +360,13 @@ function renderItem(ev) {
     `<div class="iuPdCard__time iuPrehledDne__time">${esc(fmtTime(publishIso(ev)))}</div>` +
     `<div class="iuPrehledDne__readMark" aria-label="Přečteno">✓</div>` +
     `</div>` +
-    `<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot${alert ? " iuPrehledDne__dot--alert" : ""}"></span></div>` +
+    `<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot${alert || capActive ? " iuPrehledDne__dot--alert" : ""}"></span></div>` +
     `<article class="iuPrehledDne__card iuPdCard__body">` +
+    (capActive
+      ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge" role="status" aria-label="Aktivní výstraha">🔴 VÝSTRAHA</span>`
+      : capEnded
+        ? `<span class="iuPdCard__warnBadge iuPdCard__warnBadge--ended iuPrehledDne__warnBadge" role="status">${esc(ev.status === "zruseno" ? "Zrušeno" : "Ukončeno")}</span>`
+        : "") +
     titleMarkup +
     `<div class="iuPdCard__meta iuPrehledDne__meta">` +
     (src ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(src)}</span>` : "") +

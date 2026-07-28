@@ -600,9 +600,19 @@ function regionNeedlesFromPrefs(f) {
 
 function regionMatches(ev, needles) {
   if (!needles || !needles.length) return true;
-  const name = String((ev.region && ev.region.name) || "").toLowerCase();
-  if (!name) return needles.some((n) => n === "čr" || n === "cr" || n === "cesko");
-  return needles.some((n) => name.includes(n) || n.includes(name));
+  const r = ev && ev.region ? ev.region : null;
+  const parts = [];
+  if (r) {
+    if (r.name) parts.push(String(r.name));
+    if (r.orpName) parts.push(String(r.orpName));
+    if (r.okresName) parts.push(String(r.okresName));
+    if (r.krajName) parts.push(String(r.krajName));
+    if (Array.isArray(r.orpIds)) parts.push(...r.orpIds.map(String));
+    if (Array.isArray(r.krajIds)) parts.push(...r.krajIds.map(String));
+  }
+  const hay = parts.join(" ").toLowerCase();
+  if (!hay) return needles.some((n) => n === "čr" || n === "cr" || n === "cesko");
+  return needles.some((n) => hay.includes(n) || parts.some((p) => String(p).toLowerCase().includes(n) || n.includes(String(p).toLowerCase())));
 }
 
 function localitySuggest(query, localities) {
@@ -897,7 +907,15 @@ function filterEvents(events, filters, opts) {
         " " +
         String((ev.region && ev.region.name) || "") +
         " " +
-        String(ev.lane || "")
+        String((ev.region && ev.region.krajName) || "") +
+        " " +
+        String((ev.region && ev.region.okresName) || "") +
+        " " +
+        String((ev.region && ev.region.orpName) || "") +
+        " " +
+        String(ev.lane || "") +
+        " " +
+        String((ev.capV2 && ev.capV2.searchText) || "")
       ).toLowerCase();
       if (!hay.includes(searchQ)) continue;
     }

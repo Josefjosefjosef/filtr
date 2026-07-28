@@ -26,6 +26,7 @@ import {
   parsePublishDateToIso,
   extractTitleLeadingDate,
 } from "./iu-info-events-lib.mjs";
+import { getChmiCapV2Config, isLegacyProductionPath } from "./chmi-cap-v2/config.mjs";
 import {
   IU_INFO_EVENTS_V2,
   applyChronology,
@@ -586,6 +587,22 @@ async function main() {
       neverRejuvenateByFirstSeen: true,
     },
     dataQuality,
+    chmiCapV2: (() => {
+      const cfg = getChmiCapV2Config(process.env);
+      return {
+        mode: cfg.mode,
+        enabled: cfg.enabled,
+        shadow: cfg.shadow,
+        legacyProductionPath: isLegacyProductionPath(cfg),
+        productionPublishV2: false,
+        note:
+          cfg.mode === "off"
+            ? "CAP v2 flag off — legacy CHMI CAP ingest unchanged"
+            : cfg.mode === "shadow"
+              ? "CAP v2 shadow only — does not replace production snapshot; run scripts/chmi-cap-v2-shadow-run.mjs for fixture audit"
+              : "CAP v2 active reserved — production publish of v2 remains gated until rollout approval",
+      };
+    })(),
   };
 
   const failedConnectors = ingestReport.filter((r) => !r.ok);
