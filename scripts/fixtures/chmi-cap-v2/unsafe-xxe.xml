@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>bad</identifier>
+  <sender>chmi@chmi.cz</sender>
+  <sent>2026-07-29T10:00:00+02:00</sent>
+  <status>Actual</status>
+  <msgType>Alert</msgType>
+  <scope>Public</scope>
+  <info>
+    <language>cs</language>
+    <category>Met</category>
+    <event>XXE</event>
+    <urgency>Immediate</urgency>
+    <severity>Minor</severity>
+    <certainty>Unlikely</certainty>
+    <headline>&xxe;</headline>
+    <area><areaDesc>x</areaDesc></area>
+  </info>
+</alert>
