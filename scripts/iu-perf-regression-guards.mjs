@@ -291,7 +291,19 @@ async function runFlickerPhaseGuard(page) {
 
 async function runCalendarSilverSurface(page) {
   await page.goto(BASE + "?iuInfoSystem=off", { waitUntil: "domcontentloaded", timeout: 60000 });
-  await page.waitForFunction(() => typeof window.iuSilverCalendarEngine !== "undefined", null, { timeout: 120000 });
+  await page.evaluate(async () => {
+    try {
+      if (typeof window.iuEnsureSilverP0Engine === "function") await window.iuEnsureSilverP0Engine();
+    } catch (_) {}
+  });
+  await page.waitForFunction(
+    () =>
+      typeof window.iuSilverCalendarEngine !== "undefined" &&
+      window.iuSilverCalendarEngine &&
+      typeof window.iuSilverCalendarEngine.processUserTurn === "function",
+    null,
+    { timeout: 120000 }
+  );
 
   const summary = await page.evaluate(() => {
     const line = document.getElementById("iuSilverCalendarSummaryLine1");

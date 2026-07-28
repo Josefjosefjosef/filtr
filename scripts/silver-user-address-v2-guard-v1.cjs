@@ -79,8 +79,8 @@ function loadUserAddressRuntime(app, store) {
 
 function loadSalutationEngine(app, store) {
   const rt = loadUserAddressRuntime(app, store);
-  const SILVER = app.match(/\/\* IU_SILVER_P0_ENGINE_START \*\/([\s\S]*?)\/\* IU_SILVER_P0_ENGINE_END \*\//);
-  if (!SILVER) throw new Error("P0 engine missing");
+  const SILVER_BODY = require("./iu-read-silver-p0-engine.cjs").readSilverP0EngineSource();
+  if (!SILVER_BODY) throw new Error("P0 engine missing");
   const foldM = app.match(/function iuFoldCsShared\(value\)\s*\{[\s\S]*?\n\}/);
   const blockM = app.match(/\/\* IU_USER_ADDRESS_V2_START \*\/([\s\S]*?)\/\* IU_USER_ADDRESS_V2_END \*\//);
   const ctx = buildVmCtx(store);
@@ -88,7 +88,7 @@ function loadSalutationEngine(app, store) {
   vm.createContext(ctx);
   vm.runInContext(foldM[0] + "\n" + blockM[1] + "\niuUserAddressInit();\n", ctx);
   vm.runInContext(
-    SILVER[1].trim().replace(/document\.readyState/g, '"complete"').replace(/document\.addEventListener\([^)]+\)/g, "void 0"),
+    SILVER_BODY.replace(/document\.readyState/g, '"complete"').replace(/document\.addEventListener\([^)]+\)/g, "void 0"),
     ctx
   );
   return {

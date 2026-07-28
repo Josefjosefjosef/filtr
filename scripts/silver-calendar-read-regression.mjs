@@ -10,11 +10,10 @@ import vm from "vm";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const CORPUS = JSON.parse(fs.readFileSync(path.join(__dirname, "silver-calendar-read-corpus.json"), "utf8"));
+import { createRequire } from "module";
+const __iuRequire = createRequire(import.meta.url);
 function readSilverEngineFromApp() {
-  const app = fs.readFileSync(path.join(ROOT, "assets", "app.js"), "utf8");
-  const m = app.match(/\/\* IU_SILVER_P0_ENGINE_START \*\/([\s\S]*?)\/\* IU_SILVER_P0_ENGINE_END \*\//);
-  if (!m) throw new Error("IU_SILVER_P0_ENGINE_START/END markers missing in assets/app.js");
-  return m[1].trim();
+  return __iuRequire("./iu-read-silver-p0-engine.cjs").readSilverP0EngineSource();
 }
 const SILVER = readSilverEngineFromApp();
 

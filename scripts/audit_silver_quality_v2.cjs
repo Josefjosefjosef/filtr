@@ -16,11 +16,7 @@ const REPORT_JSON = path.join(__dirname, "silver-quality-v2-report.json");
 const FIXED_NOW = new Date(FIXED_NOW_ISO);
 
 function readSilverEngineFromApp() {
-  const appPath = path.join(REPO, "assets", "app.js");
-  const app = fs.readFileSync(appPath, "utf8");
-  const m = app.match(/\/\* IU_SILVER_P0_ENGINE_START \*\/([\s\S]*?)\/\* IU_SILVER_P0_ENGINE_END \*\//);
-  if (!m) throw new Error("IU_SILVER_P0_ENGINE markers missing");
-  return m[1].trim();
+  return require("./iu-read-silver-p0-engine.cjs").readSilverP0EngineSource();
 }
 
 function loadEngine() {

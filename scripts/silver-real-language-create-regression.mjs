@@ -12,11 +12,10 @@ const ROOT = path.resolve(__dirname, "..");
 
 const INACTIVE = /zat[ií]m\s+ne(n[ií]|jsou)|nen[ií]\s+aktivn[ií]|Tato\s+[cč][áa]st\s+zat[ií]m/i;
 
+import { createRequire } from "module";
+const __iuRequire = createRequire(import.meta.url);
 function readSilverEngineFromApp() {
-  const app = fs.readFileSync(path.join(ROOT, "assets", "app.js"), "utf8");
-  const m = app.match(/\/\* IU_SILVER_P0_ENGINE_START \*\/([\s\S]*?)\/\* IU_SILVER_P0_ENGINE_END \*\//);
-  if (!m) throw new Error("IU_SILVER_P0_ENGINE_START/END markers missing in assets/app.js");
-  return m[1].trim();
+  return __iuRequire("./iu-read-silver-p0-engine.cjs").readSilverP0EngineSource();
 }
 
 const SILVER = readSilverEngineFromApp();
@@ -232,7 +231,10 @@ function run() {
   const prahaOneOk = /Praha\s*1/i.test(titleP + " " + locP) && timeP === "18:00" && String(d.date || "").slice(0, 10) === tom;
   step("praha_calendar_title_loc_time", prahaOneOk, { title: titleP, location: locP, time: timeP, date: String(d.date || "").slice(0, 10) });
 
-  const appJs = fs.readFileSync(path.join(ROOT, "assets", "app.js"), "utf8");
+  const appJs =
+    fs.readFileSync(path.join(ROOT, "assets", "app.js"), "utf8") +
+    "\n" +
+    fs.readFileSync(path.join(ROOT, "assets", "iu-silver-p0-engine.js"), "utf8");
   const notesFutureDisabled = /iuSilverNotesFutureCandidate\s*\([^)]*\)\s*\{[\s\S]{0,200}return\s+false/.test(appJs);
   const rootCause =
     "iuSilverNotesFutureCandidate returned true whenever iuSilverHasExplicitNotesTarget && iuSilverHasWriteVerb, so real phrases with „do poznámek“ + „ulož“ bypassed NOTE_BODY and hit FUTURE_NOTES → future_target_not_supported_yet. Narrow iuSilverTryParseExplicitNoteCreate patterns also missed „ulož mi do poznámek“, suffix „… ulož do poznámek“, singular „do poznámky“, and „Silver …“ prefixes.";

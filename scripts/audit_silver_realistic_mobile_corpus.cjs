@@ -58,25 +58,7 @@ const FAIL_CATS = new Set([
 ]);
 
 function readSilverEngineFromApp() {
-  const appPath = path.join(REPO, "assets", "app.js");
-  const app = fs.readFileSync(appPath, "utf8");
-  const m = app.match(/\/\* IU_SILVER_P0_ENGINE_START \*\/([\s\S]*?)\/\* IU_SILVER_P0_ENGINE_END \*\//);
-  if (!m) throw new Error("IU_SILVER_P0_ENGINE markers missing");
-  let leaf = "";
-  const leafPath = path.join(REPO, "assets", "silver-runtime-debug-leaf.js");
-  if (fs.existsSync(leafPath)) {
-    leaf = fs
-      .readFileSync(leafPath, "utf8")
-      .replace(/^import\s+[\s\S]*?from\s+[^;]+;\s*/gm, "")
-      .replace(/^export\s+function\s+iuSilverHashSafeLabelV1/gm, "function iuSilverHashSafeLabelLeafV1")
-      .replace(/^export\s+function\s+iuSilverReplayChecksumV1/gm, "function iuSilverReplayChecksumLeafV1")
-      .replace(
-        /^export\s+function\s+iuSilverExpandRuntimeDebugMetaV1/gm,
-        "function iuSilverExpandRuntimeDebugMetaLeafV1"
-      )
-      .trim();
-  }
-  return (leaf ? leaf + "\n" : "") + m[1].trim();
+  return require("./iu-read-silver-p0-engine.cjs").readSilverP0EngineSource();
 }
 
 function loadEngine() {

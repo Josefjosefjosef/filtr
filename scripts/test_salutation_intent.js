@@ -1,13 +1,16 @@
 /**
  * Silver salutation intent proof (Node).
  * Run: node scripts/test_salutation_intent.js
- * Logika musí odpovídat IU_SILVER_P0_ENGINE_START v assets/app.js (viz IU_SILVER_SALUTATION_SYNC_TAG).
+ * Logika musí odpovídat IU_SILVER_P0_ENGINE_START (viz IU_SILVER_SALUTATION_SYNC_TAG).
  */
 const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
-const APP = fs.readFileSync(path.join(ROOT, "assets", "app.js"), "utf8");
+const APP =
+  fs.readFileSync(path.join(ROOT, "assets", "app.js"), "utf8") +
+  "\n" +
+  fs.readFileSync(path.join(ROOT, "assets", "iu-silver-p0-engine.js"), "utf8");
 
 const SYNC = "IU_SILVER_SALUTATION_SYNC_V1=2026-05-30a";
 const PREF_KEY = "iuSilver.salutationPreference.v1";
