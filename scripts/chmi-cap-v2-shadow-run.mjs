@@ -1,12 +1,12 @@
 /**
- * Shadow runner: process local fixtures, write audit under projects/data/info_events/chmi_cap_v2/
- * Shadow audit written under scripts/fixtures/chmi-cap-v2/_shadow_out/ (not production feed).
+ * Shadow runner: process local fixtures, write audit under %TEMP% (never production feed).
  *
  *   node scripts/chmi-cap-v2-shadow-run.mjs
  *   IU_CHMI_CAP_V2_MODE=shadow node scripts/chmi-cap-v2-shadow-run.mjs
  */
 import fs from "fs";
 import path from "path";
+import os from "os";
 import { fileURLToPath } from "url";
 import { getChmiCapV2Config } from "./chmi-cap-v2/config.mjs";
 import { processCapDocuments, atomicPublishDecision } from "./chmi-cap-v2/sync-core.mjs";
@@ -14,7 +14,7 @@ import { revisionsToFeed } from "./chmi-cap-v2/normalize-feed.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const FIX = path.join(__dirname, "fixtures", "chmi-cap-v2");
-const OUT = path.join(FIX, "_shadow_out");
+const OUT = path.join(process.env.TEMP || process.env.TMPDIR || os.tmpdir(), "iu-chmi-cap-v2-shadow-out");
 
 const config = getChmiCapV2Config(process.env);
 if (config.mode === "off") {
@@ -72,7 +72,7 @@ const audit = {
   },
   registryVersion: result.registryVersion,
   itemCount: feed.length,
-  note: "Shadow audit only — production feed.json not modified.",
+  note: "Shadow audit only — production feed.json not modified. Output is under %TEMP%.",
 };
 
 fs.writeFileSync(path.join(OUT, "shadow_audit.json"), JSON.stringify(audit, null, 2) + "\n", "utf8");
