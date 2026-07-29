@@ -5,10 +5,12 @@
   "commercialAggregationActive": false,
   "commercialUiActive": false,
   "infoSystemActive": true,
-  "reason": "Atomické přepnutí na Přehled dne — komerční mediální agregace deaktivována v produkčním UI a jobech.",
+  "reason": "Strukturální odstranění současných mediálních zdrojů — registry prázdný, produkční articles vyřazeny, engine + ČHMÚ zachovány. commercialAggregationActive zůstává false.",
   "rollback": {
     "tag": "pre-aggregator-stable-20260717",
     "commit": "5647bb3fe365a12feb4bb4d2830c6957de73c853",
-    "queryOff": "?iuInfoSystem=off"
-  }
+    "queryOff": "?iuInfoSystem=off",
+    "note": "Code/data rollback must NOT auto-enable media sync. Re-activation requires dedicated PR + deny-list update."
+  },
+  "structuralRemovalAt": "2026-07-29T00:00:00Z"
 }
