@@ -1,8 +1,19 @@
 /**
  * Normalize CAP v2 hazards → info-events compatible feed items.
  */
+import path from "path";
+import { fileURLToPath } from "url";
 import { CHMI_ATTRIBUTION, CHMI_PUBLIC_ALERTS_URL } from "./config.mjs";
 import { foldCs, makeGroupKey } from "../iu-info-events-lib.mjs";
+import {
+  attachLegalProvenance,
+  canPublishFromSource,
+  loadLegalRegistry,
+  loadSourceRegistry,
+} from "../iu-info-events-legal-registry-lib.mjs";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DEFAULT_REPO = path.resolve(__dirname, "../..");
 
 function importanceFromSeverity(sev) {
   const s = String(sev || "");
@@ -21,6 +32,25 @@ function activeFromRevision(revision, nowMs = Date.now()) {
     if (!exp || exp > nowMs) return true;
   }
   return false;
+}
+
+function attachChmiLegal(item, opts = {}) {
+  const repo = opts.repoRoot || DEFAULT_REPO;
+  const legalRegistry = opts.legalRegistry || loadLegalRegistry(repo);
+  const sourceRegistry = opts.sourceRegistry || loadSourceRegistry(repo);
+  const src = (sourceRegistry.entries || []).find((e) => e && e.id === "chmi") || null;
+  const gate = canPublishFromSource(src, legalRegistry);
+  if (!gate.ok || !gate.legal) {
+    return {
+      ...item,
+      legal: {
+        attributionText: opts.attribution || CHMI_ATTRIBUTION,
+        license: "CC BY 4.0",
+        sourceName: "Český hydrometeorologický ústav",
+      },
+    };
+  }
+  return attachLegalProvenance(item, src, gate.legal, legalRegistry);
 }
 
 /**
@@ -134,6 +164,7 @@ export function revisionToFeedItems(revision, opts = {}) {
         significantUnreadReset: !!(revision.change && revision.change.significantUnreadReset),
       },
     });
+    items[items.length - 1] = attachChmiLegal(items[items.length - 1], opts);
   }
   return items;
 }
