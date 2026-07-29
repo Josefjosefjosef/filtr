@@ -17,7 +17,19 @@ ROOT = Path(__file__).resolve().parent.parent
 ART = ROOT / "projects" / "data" / "articles.json"
 BOOT = ROOT / "projects" / "data" / "articles" / "bootstrap.json"
 INDEX = ROOT / "projects" / "data" / "articles" / "index.json"
+CUTOVER = ROOT / "projects" / "data" / "info_events" / "cutover_state.json"
 BOOTSTRAP_HARD_CAP = 1100
+
+
+def commercial_aggregation_active() -> bool:
+    """False after info-system cutover / structural media removal."""
+    if not CUTOVER.exists():
+        return True
+    try:
+        j = json.loads(CUTOVER.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return True
+    return j.get("commercialAggregationActive") is not False
 
 
 def canonicalize_url(url: str) -> str:
@@ -119,8 +131,26 @@ def main() -> int:
         return 1
 
     arts = main_payload.get("articles")
-    if not isinstance(arts, list) or len(arts) == 0:
-        errors.append("articles.json: articles must be non-empty array")
+    if not isinstance(arts, list):
+        errors.append("articles.json: articles must be an array")
+    elif len(arts) == 0:
+        if commercial_aggregation_active():
+            errors.append("articles.json: articles must be non-empty array")
+        else:
+            # Structural media removal: empty articles.json is intentional.
+            print("[validate_articles_bootstrap] OK empty (commercialAggregationActive=false)")
+            if INDEX.exists():
+                try:
+                    idx = json.loads(INDEX.read_text(encoding="utf-8"))
+                except json.JSONDecodeError as e:
+                    errors.append(f"articles/index.json invalid JSON: {e}")
+                    _print(errors)
+                    return 1
+                if "generatedAt" not in idx or not isinstance(idx.get("days"), list):
+                    errors.append("articles/index.json must keep {generatedAt, days[]} shape")
+                    _print(errors)
+                    return 1
+            return 0 if not errors else (_print(errors) or 1)
 
     if boot.get("schemaVersion") != 1:
         errors.append("bootstrap: schemaVersion must be 1")
@@ -133,7 +163,8 @@ def main() -> int:
     if not isinstance(barts, list):
         errors.append("bootstrap: articles must be array")
     elif len(barts) == 0:
-        errors.append("bootstrap: articles must be non-empty")
+        if commercial_aggregation_active():
+            errors.append("bootstrap: articles must be non-empty")
     elif len(barts) > BOOTSTRAP_HARD_CAP:
         errors.append(f"bootstrap: articles.length {len(barts)} > {BOOTSTRAP_HARD_CAP}")
 
