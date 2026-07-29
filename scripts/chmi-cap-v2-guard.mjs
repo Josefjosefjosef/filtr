@@ -113,6 +113,16 @@ function read(name) {
   ok("feed_no_xml_url", feed.every((i) => !/\.xml/i.test(i.url)), "xml url leaked");
   ok("feed_stable_ids", feed.every((i) => String(i.id).startsWith("ie-chmi-v2-")), "bad id");
   ok(
+    "feed_title_no_chmi_prefix",
+    feed.every((i) => !/^\s*Výstraha\s+ČHMÚ\s*:/i.test(String(i.title || ""))),
+    feed.map((i) => i.title).slice(0, 3).join(" | ")
+  );
+  ok(
+    "feed_title_keeps_event",
+    feed.some((i) => /sucho|bouř|vítr|déšť|mráz|povod/i.test(String(i.title || ""))),
+    feed[0] && feed[0].title
+  );
+  ok(
     "feed_legal_provenance",
     feed.every((i) => i.legal && i.legal.approvalStatus && i.legal.distributionId),
     JSON.stringify(feed[0] && feed[0].legal)

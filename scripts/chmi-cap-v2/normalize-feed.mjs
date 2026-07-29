@@ -114,7 +114,7 @@ export function revisionToFeedItems(revision, opts = {}) {
 
     items.push({
       id: itemId,
-      title: `Výstraha ČHMÚ: ${title}`,
+      title: title,
       sourceId: "chmi",
       sourceLabel: "ČHMÚ",
       sourceGroup: "pocasi",
@@ -157,7 +157,20 @@ export function revisionToFeedItems(revision, opts = {}) {
         certainty: h.certainty,
         badgeActive: active && !cancelled,
         searchText: foldCs(
-          [title, h.event, h.description, h.instruction, region.name, primary && primary.krajName, "ČHMÚ", "Český hydrometeorologický ústav", h.severity, h.urgency, h.certainty]
+          [
+            "Výstraha ČHMÚ",
+            title,
+            h.event,
+            h.description,
+            h.instruction,
+            region.name,
+            primary && primary.krajName,
+            "ČHMÚ",
+            "Český hydrometeorologický ústav",
+            h.severity,
+            h.urgency,
+            h.certainty,
+          ]
             .filter(Boolean)
             .join(" ")
         ),

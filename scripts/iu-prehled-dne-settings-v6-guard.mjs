@@ -22,7 +22,7 @@ const { chromium } = require("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8967", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/?section=media`;
-const CACHE_BUST = "info-system-v6-sw-network-first-20260720";
+const CACHE_BUST = "info-system-v6-chmi-badge-20260729";
 const fails = [];
 
 function must(cond, id) {

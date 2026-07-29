@@ -808,6 +808,9 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   border: 1px solid rgba(185, 28, 28, 0.35);
   max-width: 100%;
   line-height: 1.35;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
 }
 .iuPdCard__warnBadge--ended {
   color: #374151;
