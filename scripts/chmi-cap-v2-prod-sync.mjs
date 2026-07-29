@@ -7,7 +7,9 @@
  *   active  — replace sourceId=chmi items in info_events feed atomically
  *
  * Interval: separate GHA workflow every 15 minutes (not 5).
- * Discovery: pluggable adapter (default opendata_newest_file, max 1 bulletin).
+ * Discovery: pluggable adapter (default opendata_newest_file).
+ * Completeness: fetch top N bulletins, keep per-URL item cache on 304,
+ * publish union of active hazards across concurrent CAP product streams.
  */
 import fs from "fs";
 import path from "path";
@@ -24,8 +26,9 @@ import {
   suspiciousDrop,
   tryAcquireLock,
 } from "./chmi-cap-v2/sync-core.mjs";
-import { revisionsToFeed } from "./chmi-cap-v2/normalize-feed.mjs";
+import { mergeFeedItemsById, revisionsToFeed } from "./chmi-cap-v2/normalize-feed.mjs";
 import { createGeoRegistry } from "./chmi-cap-v2/geo-registry.mjs";
+import { latestRevisionForThread } from "./chmi-cap-v2/revisions.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(__dirname, "..");
@@ -56,8 +59,40 @@ function loadState() {
     lock: createLockState(),
     knownUrls: [],
     endpointMeta: {},
+    /** @type {Record<string, { items: object[], sent: string|null, updatedAt: string, sourceUrl: string }>} */
+    bulletinCache: {},
     lastRun: null,
   });
+}
+
+function completenessMetrics(items, processResult) {
+  const active = (items || []).filter((i) => i && i.status === "aktivni");
+  let totalAreas = 0;
+  let mappedAreas = 0;
+  let unmappedAreas = 0;
+  const events = new Set();
+  for (const i of active) {
+    const g = i.capV2 && i.capV2.geo ? i.capV2.geo : null;
+    totalAreas += (g && g.totalAreas) || (i.region && i.region.orpIds && i.region.orpIds.length) || 0;
+    mappedAreas += (g && g.mappedAreas) || (i.region && i.region.orpIds && i.region.orpIds.length) || 0;
+    unmappedAreas += (g && g.unmappedAreas) || 0;
+    if (i.capV2 && i.capV2.event) events.add(i.capV2.event);
+    else if (i.title) events.add(String(i.title).split(" — ")[0]);
+  }
+  const infoBlocks = processResult
+    ? processResult.report.revisions.reduce((n, r) => n + ((r.hazards && r.hazards.length) || 0), 0)
+    : null;
+  return {
+    capMessages: processResult ? processResult.report.loaded : null,
+    infoBlocks,
+    logicalAlerts: active.length,
+    uniqueEvents: [...events],
+    totalAreas,
+    mappedAreas,
+    unmappedAreas,
+    mappingCoveragePercent: mappedAreas + unmappedAreas === 0 ? 100 : Math.round((100 * mappedAreas) / (mappedAreas + unmappedAreas)),
+    publishedActive: active.length,
+  };
 }
 
 export async function runChmiCapV2Sync(opts = {}) {
@@ -99,22 +134,33 @@ export async function runChmiCapV2Sync(opts = {}) {
     const discovery = resolveDiscoveryAdapter(config, {
       kind: process.env.IU_CHMI_CAP_V2_DISCOVERY || (config.mode === "shadow" && opts.fixtureFiles ? "fixture" : "opendata_newest_file"),
       files: opts.fixtureFiles,
-      maxFiles: Number(process.env.IU_CHMI_CAP_V2_MAX_FILES || "1"),
+      maxFiles: Number(process.env.IU_CHMI_CAP_V2_MAX_FILES || "15"),
       urls: state.knownUrls,
       userAgent: config.userAgent,
     });
-    diagnostics.discovery = { type: discovery.type, role: discovery.role || null };
+    diagnostics.discovery = {
+      type: discovery.type,
+      role: discovery.role || null,
+      maxFiles: Number(process.env.IU_CHMI_CAP_V2_MAX_FILES || "15"),
+    };
 
     const latest = await discovery.listLatest();
     if (!latest.length) throw Object.assign(new Error("discovery_empty"), { code: "DISCOVERY_EMPTY" });
 
+    if (!state.bulletinCache || typeof state.bulletinCache !== "object") state.bulletinCache = {};
+
     const docs = [];
+    const latestUrls = new Set();
     for (const item of latest) {
       const url = item.url;
+      latestUrls.add(url);
       const meta = state.endpointMeta[url] || {};
-      const resp = await discovery.fetchBody(url, { etag: meta.etag, lastModified: meta.lastModified });
+      const haveCache = !!(state.bulletinCache[url] && Array.isArray(state.bulletinCache[url].items));
+      // Cold cache miss: force full GET so concurrent streams are not lost after deploy.
+      const conditional = haveCache ? { etag: meta.etag, lastModified: meta.lastModified } : {};
+      const resp = await discovery.fetchBody(url, conditional);
       const applied = applyConditionalResult(resp, state.sync, { nowIso: new Date().toISOString() });
-      diagnostics.http.push({ url, status: resp.status, action: applied.action });
+      diagnostics.http.push({ url, status: resp.status, action: applied.action, cacheHit: haveCache && applied.action !== "process" });
       if (applied.action === "process" && applied.body) {
         state.endpointMeta[url] = {
           etag: state.sync.etag,
@@ -126,15 +172,38 @@ export async function runChmiCapV2Sync(opts = {}) {
       }
     }
 
+    // Drop cache entries that fell out of the newest-N window
+    for (const cachedUrl of Object.keys(state.bulletinCache)) {
+      if (!latestUrls.has(cachedUrl)) delete state.bulletinCache[cachedUrl];
+    }
+
     let feedItems = [];
     let processResult = null;
     if (docs.length) {
+      for (const doc of docs) {
+        const one = processCapDocuments([doc], {
+          config,
+          registry: createGeoRegistry(),
+          receivedAt: started,
+        });
+        const tids = [...new Set(one.report.revisions.map((r) => r.alert_thread_id))];
+        const revs = tids.map((tid) => latestRevisionForThread(one.store, tid)).filter(Boolean);
+        const items = revisionsToFeed(revs, { nowIso: started });
+        state.bulletinCache[doc.sourceUrl] = {
+          items,
+          sent: revs[0] ? revs[0].sent : null,
+          updatedAt: started,
+          sourceUrl: doc.sourceUrl,
+          msgType: revs[0] ? revs[0].msgType : null,
+          hazardCount: revs.reduce((n, r) => n + ((r.hazards && r.hazards.length) || 0), 0),
+        };
+      }
+
       processResult = processCapDocuments(docs, {
         config,
         registry: createGeoRegistry(),
         receivedAt: started,
       });
-      feedItems = revisionsToFeed(processResult.report.revisions, { nowIso: started });
       diagnostics.parser = {
         loaded: processResult.report.loaded,
         valid: processResult.report.valid,
@@ -165,20 +234,41 @@ export async function runChmiCapV2Sync(opts = {}) {
       diagnostics.status = state.sync.status || "not_modified";
     }
 
+    // Union active items across newest-N bulletin cache (304 hits keep prior cache entries)
+    const union = [];
+    for (const url of latest.map((x) => x.url)) {
+      const cached = state.bulletinCache[url];
+      if (cached && Array.isArray(cached.items)) union.push(...cached.items);
+    }
+    feedItems = mergeFeedItemsById(union).filter((i) => i && i.status === "aktivni");
+
     const prevFeed = readJson(path.join(DIR, "feed.json"), { items: [] });
     const prevChmi = (prevFeed.items || []).filter((i) => String(i.sourceId) === "chmi");
-    const candidateItems = feedItems.length
+    const completeness = completenessMetrics(feedItems, processResult);
+    diagnostics.completeness = completeness;
+    if (completeness.unmappedAreas > 0) {
+      diagnostics.status = "degraded";
+      diagnostics.error = diagnostics.error || "unmapped_areas";
+    }
+
+    const validationOk =
+      !processResult ||
+      (processResult.report.rejected === 0 && (processResult.report.valid > 0 || feedItems.length > 0));
+
+    // Publish when we have a rebuilt active set (including cache-only 304 runs after cold fill)
+    const shouldReplaceChmi = feedItems.length > 0 || docs.length > 0;
+    const candidateItems = shouldReplaceChmi
       ? (prevFeed.items || []).filter((i) => String(i.sourceId) !== "chmi").concat(feedItems)
       : null;
 
     const decision = atomicPublishDecision({
       mode: shouldPublishV2(config) ? "active" : "shadow",
-      validationOk: !processResult || (processResult.report.valid > 0 && processResult.report.rejected === 0),
-      suspicious: processResult ? suspiciousDrop(prevChmi.length, feedItems.filter((i) => i.status === "aktivni").length) : false,
+      validationOk: validationOk,
+      suspicious: processResult ? suspiciousDrop(prevChmi.filter((i) => i.status === "aktivni").length, feedItems.length) : false,
       candidateSnapshot: candidateItems ? { items: candidateItems, chmiItems: feedItems } : null,
       lastKnownGood: { items: prevFeed.items || [], chmiItems: prevChmi },
     });
-    diagnostics.publish = { publish: decision.publish, reason: decision.reason };
+    diagnostics.publish = { publish: decision.publish, reason: decision.reason, completeness };
 
     if (decision.publish && candidateItems) {
       const nextFeed = {
@@ -239,6 +329,17 @@ export async function runChmiCapV2Sync(opts = {}) {
       rejectedCount: diagnostics.parser?.rejected || 0,
       discoveryType: diagnostics.discovery?.type || null,
       discoveryRole: diagnostics.discovery?.role || null,
+      discoveryMaxFiles: diagnostics.discovery?.maxFiles || null,
+      completeness: diagnostics.completeness || null,
+      lastCapSent: (() => {
+        let best = null;
+        for (const url of Object.keys(state.bulletinCache || {})) {
+          const s = state.bulletinCache[url] && state.bulletinCache[url].sent;
+          if (s && (!best || String(s) > String(best))) best = s;
+        }
+        return best;
+      })(),
+      bulletinCacheSize: Object.keys(state.bulletinCache || {}).length,
       publish: decision.publish,
       publishReason: decision.reason,
       runMs: Date.now() - t0,

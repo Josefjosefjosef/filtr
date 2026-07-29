@@ -1,8 +1,8 @@
 name: Update CHMI CAP v2
 
-# Conservative CAP v2 sync (15 min). Feature flag via env.
-# Default MODE=active after merge of CAP v2 rollout; set to off/shadow via repository variable if needed.
-# Does NOT use 5-minute interval. Does NOT crawl full CAP archive (max 1 newest bulletin).
+# CAP v2 sync every 15 min. Completeness: top N concurrent bulletins (default 15),
+# per-URL bulletin cache, union of active hazards. Feature flag via env/vars.
+# Does NOT crawl the full CAP archive.
 
 on:
   workflow_dispatch:
@@ -21,11 +21,16 @@ concurrency:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
+
+env:
+  AUTOMATION_BRANCH: automation/update-chmi-cap-v2
+  PR_TITLE: "chore(data): refresh CHMI CAP v2 snapshot"
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -44,28 +49,105 @@ jobs:
         env:
           IU_CHMI_CAP_V2_MODE: ${{ github.event.inputs.mode || vars.IU_CHMI_CAP_V2_MODE || 'active' }}
           IU_CHMI_CAP_V2_DISCOVERY: ${{ vars.IU_CHMI_CAP_V2_DISCOVERY || 'opendata_newest_file' }}
-          IU_CHMI_CAP_V2_MAX_FILES: "1"
+          IU_CHMI_CAP_V2_MAX_FILES: ${{ vars.IU_CHMI_CAP_V2_MAX_FILES || '15' }}
         run: node scripts/chmi-cap-v2-prod-sync.mjs
 
       - name: Commit data if changed
+        id: commit_push
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add projects/data/info_events || true
+          git add projects/data/info_events
           if git diff --cached --quiet; then
             echo "NO_CHANGES"
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          BRANCH="automation/update-chmi-cap-v2"
+          BRANCH="${{ env.AUTOMATION_BRANCH }}"
           git checkout -B "$BRANCH"
-          git commit -m "chore(data): refresh CHMI CAP v2 snapshot"
+          git commit -m "${{ env.PR_TITLE }}"
           git push -u origin "$BRANCH" --force
-          EXISTING=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number // empty')
-          if [ -z "$EXISTING" ]; then
-            gh pr create --title "chore(data): refresh CHMI CAP v2 snapshot" --body "Automated CHMI CAP v2 sync (15 min, max 1 bulletin, conditional GET)." --base main --head "$BRANCH"
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch required checks
+        if: steps.commit_push.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          REF="${{ env.AUTOMATION_BRANCH }}"
+          REPO="${{ github.repository }}"
+          gh workflow run smoke.yml --ref "$REF" --repo "$REPO"
+          gh workflow run layout-guard.yml --ref "$REF" --repo "$REPO"
+          gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
+          echo "[CHECKS] Dispatched smoke, layout-guard, repo-guard on $REF"
+
+      - name: Create or update PR
+        if: steps.commit_push.outputs.pushed == 'true'
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BRANCH="${{ env.AUTOMATION_BRANCH }}"
+          EXISTING=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number' 2>/dev/null || true)
+          if [ -n "$EXISTING" ]; then
+            echo "pr_number=$EXISTING" >> "$GITHUB_OUTPUT"
+            echo "[PR] Updated existing PR #$EXISTING"
+            exit 0
           fi
-          NUM=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number')
-          gh pr merge "$NUM" --squash --auto || true
+          gh pr create --base main --head "$BRANCH" \
+            --title "${{ env.PR_TITLE }}" \
+            --body "Automated CHMI CAP v2 sync (15 min). Completeness: top-N concurrent bulletins, union of active hazards, conditional GET with per-URL bulletin cache."
+          NUM=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number')
+          echo "pr_number=$NUM" >> "$GITHUB_OUTPUT"
+          echo "[PR] Created PR #$NUM"
+
+      - name: Merge latest main into PR head if behind (unblock auto-merge)
+        if: steps.commit_push.outputs.pushed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          gh api --method PUT "repos/${{ github.repository }}/pulls/${NUM}/update-branch" || echo "[SYNC] update-branch skipped"
+
+      - name: Diff scope check (data-only → allow auto-merge)
+        if: steps.commit_push.outputs.pushed == 'true'
+        id: scope
+        run: |
+          set -euo pipefail
+          CHANGED=$(git diff --name-only origin/main...HEAD 2>/dev/null || git diff --name-only main...HEAD)
+          echo "[SCOPE] Changed files:"
+          echo "$CHANGED"
+          DATA_ONLY=true
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            case "$f" in
+              projects/data/info_events/*) ;;
+              *) DATA_ONLY=false; break ;;
+            esac
+          done <<< "$CHANGED"
+          if [ "$DATA_ONLY" = true ]; then
+            echo "data_only=true" >> "$GITHUB_OUTPUT"
+            echo "[SCOPE] data-only — auto-merge allowed"
+          else
+            echo "data_only=false" >> "$GITHUB_OUTPUT"
+            echo "[SCOPE] non-data change — auto-merge disabled"
+          fi
+
+      - name: Enable auto-merge (squash) when data-only
+        if: steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          gh pr merge "$NUM" --auto --squash
+          echo "[AUTO-MERGE] Enabled for PR #$NUM"
