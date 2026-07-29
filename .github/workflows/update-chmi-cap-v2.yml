@@ -191,10 +191,10 @@ jobs:
             if [ "$PENDING" = "0" ] && { [ "$MS" = "CLEAN" ] || [ "$MS" = "HAS_HOOKS" ] || [ "$MS" = "UNSTABLE" ]; }; then
               echo "[WAIT] checks ready (mergeState=$MS)"
               # Give auto-merge a moment to land
-              for j in $(seq 1 12); do
+              for _try in $(seq 1 12); do
                 ST=$(gh pr view "$NUM" --json state -q .state)
                 if [ "$ST" = "MERGED" ]; then
-                  echo "[WAIT] auto-merge completed"
+                  echo "[WAIT] auto-merge completed (try=$_try)"
                   exit 0
                 fi
                 sleep 10
