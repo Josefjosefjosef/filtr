@@ -1,15 +1,15 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Scroll restore + article append stability guard (replay regression protection).
  *
  * Guards:
- *  - SCROLL_RESTORE_GUARD          homepage → sekce → Back ⇒ homepage scroll obnoven
- *  - SECTION_SCROLL_RESTORE_GUARD  sekce A (scroll) → sekce B → Back ⇒ scroll sekce A obnoven
- *  - ARTICLE_APPEND_STABILITY_GUARD "Načíst další" ⇒ scroll pozice beze změny (no jump)
- *  - MINDMENU_SCROLL_GUARD         MindMenu overlay → Back ⇒ scroll zachován
- *  - HOME_BUTTON_RESET_GUARD       Domů (bottom nav) ⇒ scroll reset na začátek
+ *  - SCROLL_RESTORE_GUARD          homepage â†’ sekce â†’ Back â‡’ homepage scroll obnoven
+ *  - SECTION_SCROLL_RESTORE_GUARD  sekce A (scroll) â†’ sekce B â†’ Back â‡’ scroll sekce A obnoven
+ *  - ARTICLE_APPEND_STABILITY_GUARD "NaÄŤĂ­st dalĹˇĂ­" â‡’ scroll pozice beze zmÄ›ny (no jump)
+ *  - MINDMENU_SCROLL_GUARD         MindMenu overlay â†’ Back â‡’ scroll zachovĂˇn
+ *  - HOME_BUTTON_RESET_GUARD       DomĹŻ (bottom nav) â‡’ scroll reset na zaÄŤĂˇtek
  *
- * Viewporty: mobile (390x844) + tablet (820x1180). CLS + console/app errors měřeny.
+ * Viewporty: mobile (390x844) + tablet (820x1180). CLS + console/app errors mÄ›Ĺ™eny.
  *
  * Run: npm run iu-scroll-restore-guard
  * Prod: IU_GUARD_BASE_URL=https://infouzel.cz/projects/ npm run iu-scroll-restore-guard
@@ -19,6 +19,7 @@ import path from "path";
 import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 import {
   installProofGuardNetworkStubs,
   createIgnorableResourceTracker,
@@ -158,7 +159,7 @@ async function waitScrollNear(page, target, tol, timeoutMs) {
 }
 
 async function spaNavigate(page, search) {
-  /* Mirrors the left-rail click path: pushState → arm section-switch scroll → applySectionFromURL. */
+  /* Mirrors the left-rail click path: pushState â†’ arm section-switch scroll â†’ applySectionFromURL. */
   await page.evaluate((qs) => {
     const u = new URL(window.location.href);
     u.search = qs;
@@ -238,7 +239,7 @@ async function waitBootSettled(page) {
   await page.waitForTimeout(400);
 }
 
-/** GUARD 1: homepage (scrolled) → sekce → browser Back ⇒ homepage scroll restored. */
+/** GUARD 1: homepage (scrolled) â†’ sekce â†’ browser Back â‡’ homepage scroll restored. */
 async function guardHomeScrollRestore(page) {
   await openEntry(page, {});
   const maxY = await getMaxScrollY(page);
@@ -265,8 +266,8 @@ async function guardHomeScrollRestore(page) {
   };
 }
 
-/** GUARD 2: sekce A (scrolled) → sekce B → Back ⇒ sekce A scroll restored.
- *  Real flow: home → sekce A via SPA nav (cold section URL on tablet renders a hidden feed). */
+/** GUARD 2: sekce A (scrolled) â†’ sekce B â†’ Back â‡’ sekce A scroll restored.
+ *  Real flow: home â†’ sekce A via SPA nav (cold section URL on tablet renders a hidden feed). */
 async function guardSectionScrollRestore(page) {
   await openEntry(page, {});
   await spaNavigate(page, "?section=feed&topic=zpravy");
@@ -307,7 +308,7 @@ async function guardSectionScrollRestore(page) {
   };
 }
 
-/** GUARD 3: load more ⇒ reading position visually unchanged, articles appended below.
+/** GUARD 3: load more â‡’ reading position visually unchanged, articles appended below.
  *  Primary metric = viewport offset of the reference article the user is reading
  *  (robust against scroll-anchoring scrollY adjustments which are not visual jumps). */
 async function guardArticleAppendStability(page) {
@@ -334,7 +335,7 @@ async function guardArticleAppendStability(page) {
   }
   const sectionMaxY = await getMaxScrollY(page);
   if (sectionMaxY < 300) {
-    /* Pre-existing tablet-portrait layout quirk: feed view has no scrollable range —
+    /* Pre-existing tablet-portrait layout quirk: feed view has no scrollable range â€”
        no reading position can exist, scroll jump is not measurable. */
     return {
       name: "ARTICLE_APPEND_STABILITY_GUARD",
@@ -345,7 +346,7 @@ async function guardArticleAppendStability(page) {
     };
   }
   const countBefore = await page.evaluate(() => document.querySelectorAll("#feed article.news-card").length);
-  /* real UX: user scrolls until the load-more button is visible at the bottom and taps it —
+  /* real UX: user scrolls until the load-more button is visible at the bottom and taps it â€”
      baseline must be taken with the button already in the viewport so the trusted page.click()
      does not auto-scroll (trusted input also mirrors real-user CLS hadRecentInput accounting) */
   await page.evaluate(() => {
@@ -452,7 +453,7 @@ async function guardArticleAppendStability(page) {
     if (countAfter > countBefore && settled) break;
     await page.waitForTimeout(150);
   }
-  /* stabilizační okno append-stability vrstvy: poll dokud se reference nesrovná (max 4s) */
+  /* stabilizaÄŤnĂ­ okno append-stability vrstvy: poll dokud se reference nesrovnĂˇ (max 4s) */
   const readRefTop = async () =>
     page.evaluate((key) => {
       const arts = document.querySelectorAll("#feed article.news-card");
@@ -499,14 +500,14 @@ async function guardArticleAppendStability(page) {
     reason: pass
       ? ""
       : !appended
-      ? "no articles appended (" + countBefore + "→" + countAfter + ")"
+      ? "no articles appended (" + countBefore + "â†’" + countAfter + ")"
       : jump
       ? "reading position jumped " + (visualDelta === 99999 ? "(reference article lost)" : visualDelta + "px")
       : "CLS " + cls + " > " + APPEND_CLS_CAP,
   };
 }
 
-/** GUARD 4: MindMenu overlay → Back ⇒ main scroll preserved. */
+/** GUARD 4: MindMenu overlay â†’ Back â‡’ main scroll preserved. */
 async function guardMindMenuScroll(page) {
   await openEntry(page, {});
   const btnVisible = await page.evaluate(() => {
@@ -539,7 +540,7 @@ async function guardMindMenuScroll(page) {
   };
 }
 
-/** GUARD 5: Domů (home) ⇒ scroll reset to top (exception must keep working). */
+/** GUARD 5: DomĹŻ (home) â‡’ scroll reset to top (exception must keep working). */
 async function guardHomeButtonReset(page) {
   await openEntry(page, { section: "feed", topic: "zpravy" });
   await waitFeedReady(page, FEED_READY_WAIT_MS);
@@ -553,7 +554,7 @@ async function guardHomeButtonReset(page) {
   if (btnVisible) {
     await page.click('[data-iu-bottom-nav="home"]');
   } else {
-    /* desktop-like viewport fallback: same hub reset entry point as Domů */
+    /* desktop-like viewport fallback: same hub reset entry point as DomĹŻ */
     await page.evaluate(() => {
       if (typeof window.iuProjectsHubNavigateHardResetFromHomeOrBack === "function") {
         window.iuProjectsHubNavigateHardResetFromHomeOrBack();
@@ -580,7 +581,7 @@ async function guardHomeButtonReset(page) {
    replay flow, i.e. unrelated to the scroll-restore/append change). The feed render mirrors
    persistLastError() to console.error("[ERR]", ...): one item in the current articles data makes
    buildArticleHtml/buildVideoAsArticleCard return falsy markup on the back-to-home re-render.
-   Data/content pipeline is out of scope for this guard — any OTHER console error still fails. */
+   Data/content pipeline is out of scope for this guard â€” any OTHER console error still fails. */
 const KNOWN_PREEXISTING_CONSOLE_ERRORS = [
   "[ERR] Invariant breach: builder returned falsy markup",
 ];
@@ -650,6 +651,7 @@ async function runViewport(browser, vp) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("iu-scroll-restore-guard");
   let server = null;
   if (USE_LOCAL_SERVER) {
     server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {

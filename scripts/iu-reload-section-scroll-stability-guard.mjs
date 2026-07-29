@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Reload CLS + section switch header/content stability + scroll sanity (Playwright, local server).
  * Run: npm run iu-reload-section-scroll-stability-guard
@@ -8,6 +8,7 @@ import path from "path";
 import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 import {
   clickDesktopNav,
 } from "./guards/desktop-nav-targets.mjs";
@@ -292,6 +293,7 @@ async function runBrowserSuite(browserType, name) {
 const BROWSERS_ALL = process.env.IU_STABILITY_GUARD_BROWSERS === "all";
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("iu-reload-section-scroll-stability-guard");
   const server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {
     cwd: REPO,
     env: { ...process.env, PORT: String(PORT) },

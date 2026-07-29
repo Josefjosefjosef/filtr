@@ -1,6 +1,6 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
- * Travel article feed regression guard — post PR #5993 hotfix.
+ * Travel article feed regression guard â€” post PR #5993 hotfix.
  * Ensures section=travel shows cestovani article feed (not blank), poradna stays removed.
  *
  * Run: npm run travel-article-feed-regression-guard
@@ -11,6 +11,7 @@ import path from "path";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
 import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -133,7 +134,7 @@ async function probeTravelSection(page) {
     const stOut = window.__iuFeedPipelineState || {};
     const poradnaLabels = Array.from(document.querySelectorAll("button, a, [role=button]"))
       .map((el) => String(el.textContent || "").trim())
-      .filter((t) => /cestovn[ií]\s*poradna/i.test(t));
+      .filter((t) => /cestovn[iĂ­]\s*poradna/i.test(t));
     const overflowX = document.documentElement.scrollWidth > document.documentElement.clientWidth + 2;
     return {
       url,
@@ -240,6 +241,7 @@ async function runViewport(browser, vp) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("iu-travel-article-feed-regression-guard");
   const fails = [];
   let server = null;
   if (USE_LOCAL_SERVER) {

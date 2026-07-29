@@ -19,12 +19,13 @@
 //             kept stale iu-prehled-dne-ui after #7622 for installed PWAs)
 // 2026-07-21: Cross-origin passthrough (analytics Worker ingest) — SW must not re-fetch with a different UA
 // 2026-07-27: Offline nav fallback — never bare 503 for navigations; durable offline.html + last-good public HTML
-const CACHE_VERSION = "2026-07-27-pwa-offline-nav-fallback-v1";
+// 2026-07-29: Media sources removed — bust app/data caches + durable feed last-good so old media JSON cannot return offline
+const CACHE_VERSION = "2026-07-29-media-sources-removed-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
-/** Durable across SW version bumps — last-good article chunks/manifest for offline UI. */
-const FEED_OFFLINE_CACHE = "iu-feed-offline-v1";
+/** Durable across SW version bumps — last-good feed chunks/manifest for offline UI (v2 after media wipe). */
+const FEED_OFFLINE_CACHE = "iu-feed-offline-v2";
 /** Durable same-origin image cache (defaults + previously loaded /assets/images/*). */
 const IMG_OFFLINE_CACHE = "iu-img-offline-v1";
 const IMG_OFFLINE_MAX_ENTRIES = 120;

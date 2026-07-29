@@ -1,0 +1,53 @@
+# Guard against accidental return of removed media sources.
+name: CI - Removed media regression guard
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - "config/sources.json"
+      - "config/removed_media_deny_list.json"
+      - "projects/data/source_registry.json"
+      - "projects/data/articles.json"
+      - "projects/data/publishable_pool.json"
+      - "projects/data/article_feed_chunks/**"
+      - "projects/data/info_events/cutover_state.json"
+      - "assets/iu-sources.js"
+      - "scripts/feeds_youtube.json"
+      - "scripts/removed-media-regression-guard.mjs"
+      - ".github/workflows/ci-removed-media-regression-guard.yml"
+  pull_request:
+    paths:
+      - "config/sources.json"
+      - "config/removed_media_deny_list.json"
+      - "projects/data/source_registry.json"
+      - "projects/data/articles.json"
+      - "projects/data/publishable_pool.json"
+      - "projects/data/article_feed_chunks/**"
+      - "projects/data/info_events/cutover_state.json"
+      - "assets/iu-sources.js"
+      - "scripts/feeds_youtube.json"
+      - "scripts/removed-media-regression-guard.mjs"
+      - ".github/workflows/ci-removed-media-regression-guard.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-removed-media-regression-guard
+  cancel-in-progress: true
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+
+      - name: Removed media regression guard
+        run: node scripts/removed-media-regression-guard.mjs

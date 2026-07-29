@@ -26,6 +26,21 @@ const ROOT_HUB_READY_TIMEOUT_MS = 20000;
 /** `page.goto` — large `app.js` / client nav can delay `domcontentloaded` on cold runs (match preview-tier headroom). */
 const GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS = 30000;
 
+function mediaArticlesPublished() {
+  try {
+    const cut = JSON.parse(
+      fs.readFileSync(path.join(ROOT, "projects/data/info_events/cutover_state.json"), "utf8")
+    );
+    if (cut.commercialAggregationActive === false) return false;
+  } catch (_) {}
+  try {
+    const arts = JSON.parse(fs.readFileSync(path.join(ROOT, "projects/data/articles.json"), "utf8"));
+    return Array.isArray(arts.articles) && arts.articles.length > 0;
+  } catch (_) {
+    return false;
+  }
+}
+
 let server = null;
 let failed = false;
 const errors = [];
@@ -595,29 +610,33 @@ async function runSmoke() {
     if (afterTravelClick.indexOf("section=travel") === -1) {
       fail(`Travel preview click did not set section=travel: ${afterTravelClick}`);
     }
-    await page.waitForFunction(
-      () => {
+    if (mediaArticlesPublished()) {
+      await page.waitForFunction(
+        () => {
+          const feed = document.getElementById("feed");
+          if (!feed || feed.getAttribute("data-feed-ready") !== "true") return false;
+          return feed.querySelectorAll("article").length >= 1;
+        },
+        { timeout: 60000 }
+      );
+      const travelFeedAfterClick = await page.evaluate(() => {
         const feed = document.getElementById("feed");
-        if (!feed || feed.getAttribute("data-feed-ready") !== "true") return false;
-        return feed.querySelectorAll("article").length >= 1;
-      },
-      { timeout: 60000 }
-    );
-    const travelFeedAfterClick = await page.evaluate(() => {
-      const feed = document.getElementById("feed");
-      const fc = document.body ? document.body.getAttribute("data-iu-fc") : null;
-      const cs = feed ? window.getComputedStyle(feed) : null;
-      const visible = !!(feed && cs && cs.display !== "none" && feed.offsetHeight > 20);
-      const articleCount = feed ? feed.querySelectorAll("article").length : 0;
-      const poradna = Array.from(document.querySelectorAll("button, a"))
-        .some((el) => /cestovn[ií]\s*poradna/i.test(String(el.textContent || "")));
-      return { fc, visible, articleCount, poradna, travelView: !!document.getElementById("iuTravelView") };
-    });
-    if (travelFeedAfterClick.fc !== "1" || !travelFeedAfterClick.visible || travelFeedAfterClick.articleCount < 1) {
-      fail(`Travel section article feed missing after preview click: ${JSON.stringify(travelFeedAfterClick)}`);
-    }
-    if (travelFeedAfterClick.poradna || travelFeedAfterClick.travelView) {
-      fail(`Travel poradna must stay removed: ${JSON.stringify(travelFeedAfterClick)}`);
+        const fc = document.body ? document.body.getAttribute("data-iu-fc") : null;
+        const cs = feed ? window.getComputedStyle(feed) : null;
+        const visible = !!(feed && cs && cs.display !== "none" && feed.offsetHeight > 20);
+        const articleCount = feed ? feed.querySelectorAll("article").length : 0;
+        const poradna = Array.from(document.querySelectorAll("button, a"))
+          .some((el) => /cestovn[ií]\s*poradna/i.test(String(el.textContent || "")));
+        return { fc, visible, articleCount, poradna, travelView: !!document.getElementById("iuTravelView") };
+      });
+      if (travelFeedAfterClick.fc !== "1" || !travelFeedAfterClick.visible || travelFeedAfterClick.articleCount < 1) {
+        fail(`Travel section article feed missing after preview click: ${JSON.stringify(travelFeedAfterClick)}`);
+      }
+      if (travelFeedAfterClick.poradna || travelFeedAfterClick.travelView) {
+        fail(`Travel poradna must stay removed: ${JSON.stringify(travelFeedAfterClick)}`);
+      }
+    } else {
+      console.log("[smoke] SKIP travel article feed assert (media articles removed / cutover)");
     }
 
     await gotoProjectsMediaForSmoke(page);

@@ -1,6 +1,6 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
- * Desktop HomeCards vs open section width alignment (≥1025px, body.iu-desktop-home-grid).
+ * Desktop HomeCards vs open section width alignment (â‰Ą1025px, body.iu-desktop-home-grid).
  * Run: npm run desktop-homecards-feed-width-alignment-guard
  */
 import { createRequire } from "module";
@@ -9,6 +9,7 @@ import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
 import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -46,6 +47,7 @@ function waitForPort(host, port, timeoutMs) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("desktop-homecards-feed-width-alignment-guard");
   const server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {
     cwd: REPO,
     stdio: "ignore",

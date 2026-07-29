@@ -70,8 +70,10 @@ async function measureScreen(page) {
       nav_top: Number(navTop.toFixed(2)),
       max_content_bottom: maxBottom === null ? null : Number(maxBottom.toFixed(2)),
       max_content_el: maxBottomTag,
-      content_clears_nav: maxBottom === null ? false : maxBottom <= navTop + tolerance,
+      // Empty feed/section: no in-viewport content cannot collide with bottom nav.
+      content_clears_nav: maxBottom === null ? true : maxBottom <= navTop + tolerance,
       scroll_bottom_reached: scrollBottomReached,
+      empty_content: maxBottom === null,
     };
   }, TOLERANCE_PX);
 }

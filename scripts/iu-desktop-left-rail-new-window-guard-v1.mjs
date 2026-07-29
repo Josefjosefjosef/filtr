@@ -1,6 +1,6 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
- * PC (≥1025px) left-rail → new tab in same browser window + top bar shell guard.
+ * PC (â‰Ą1025px) left-rail â†’ new tab in same browser window + top bar shell guard.
  * Run: npm run iu-desktop-left-rail-new-window-guard
  * Prod: IU_GUARD_BASE_URL=https://infouzel.cz/projects/ npm run iu-desktop-left-rail-new-window-guard
  */
@@ -10,6 +10,7 @@ import path from "path";
 import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 import {
   installProofGuardNetworkStubs,
   createIgnorableResourceTracker,
@@ -32,12 +33,12 @@ const SETTLE_MS = parseInt(process.env.IU_LEFT_RAIL_WINDOW_SETTLE_MS || "20000",
 const RESTORE_TOL_PX = parseInt(process.env.IU_LEFT_RAIL_WINDOW_SCROLL_TOL || "12", 10);
 
 const STATIC_TOOLS = [
-  { accent: "pocasi", label: "Počasí" },
+  { accent: "pocasi", label: "PoÄŤasĂ­" },
   { accent: "mapy", label: "Mapy", externalLink: 'a.iuRadioChip[href*="google.com/maps"]' },
-  { accent: "jr", label: "Jízdní řády" },
+  { accent: "jr", label: "JĂ­zdnĂ­ Ĺ™Ăˇdy" },
   { accent: "tvprogram", label: "TV program" },
   { accent: "tvonline", label: "TV online" },
-  { accent: "radio", label: "Rádia" },
+  { accent: "radio", label: "RĂˇdia" },
 ];
 
 function auditStaticOpenImplementation() {
@@ -379,7 +380,7 @@ async function assertToolTabLayout(toolTab, accent, homeMetrics) {
     throw new Error(`${accent}: center stage under topbar overlap stageTop=${layout.stageTop} spacer=${layout.spacerH}`);
   }
   if (layout.closeCount > 0) {
-    throw new Error(`${accent}: tool tab must not show Zavřít controls count=${layout.closeCount}`);
+    throw new Error(`${accent}: tool tab must not show ZavĹ™Ă­t controls count=${layout.closeCount}`);
   }
   if (layout.stageWidth > 600) {
     throw new Error(`${accent}: center stage wider than 600px w=${layout.stageWidth}`);
@@ -547,6 +548,7 @@ async function testMindMenuInToolWindow(page, homeMetrics) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("iu-desktop-left-rail-new-window-guard-v1");
   let serverProc = null;
   if (USE_LOCAL_SERVER) {
     serverProc = spawn("npx", ["serve", REPO, "-l", String(PORT)], {

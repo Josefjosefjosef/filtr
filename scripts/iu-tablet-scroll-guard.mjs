@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Tablet portrait scroll blocker guard (replay regression protection).
  *
@@ -8,11 +8,11 @@
  * scroller whenever the mobile main shell (body.iu-mobileMainVisible) is visible.
  *
  * Guards:
- *  - TABLET_SCROLL_GUARD        homepage → sekce → Back ⇒ effective scroll range > 0 everywhere
- *  - TABLET_SECTION_SCROLL_GUARD sekce ⇒ scroll až dolů (effective scroller reaches bottom)
- *  - TABLET_SCROLL_LOCK_GUARD   body/html/#leftContent nezůstávají overflow:hidden bez modalu
+ *  - TABLET_SCROLL_GUARD        homepage â†’ sekce â†’ Back â‡’ effective scroll range > 0 everywhere
+ *  - TABLET_SECTION_SCROLL_GUARD sekce â‡’ scroll aĹľ dolĹŻ (effective scroller reaches bottom)
+ *  - TABLET_SCROLL_LOCK_GUARD   body/html/#leftContent nezĹŻstĂˇvajĂ­ overflow:hidden bez modalu
  *
- * Viewport: tablet portrait (820x1180). Console/app errors měřeny.
+ * Viewport: tablet portrait (820x1180). Console/app errors mÄ›Ĺ™eny.
  *
  * Run: npm run iu-tablet-scroll-guard
  * Prod: IU_GUARD_BASE_URL=https://infouzel.cz/projects/ npm run iu-tablet-scroll-guard
@@ -22,6 +22,7 @@ import path from "path";
 import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 import {
   installProofGuardNetworkStubs,
   createIgnorableResourceTracker,
@@ -45,7 +46,7 @@ const MIN_SCROLL_RANGE_PX = 300;
 const VIEWPORT = { name: "tablet-portrait", width: 820, height: 1180, isMobile: true, hasTouch: true };
 
 /* Known PRE-EXISTING app console errors (data/content pipeline; proven on a clean main worktree
-   in iu-scroll-restore-guard — see KNOWN_PREEXISTING_CONSOLE_ERRORS there). */
+   in iu-scroll-restore-guard â€” see KNOWN_PREEXISTING_CONSOLE_ERRORS there). */
 const KNOWN_PREEXISTING_CONSOLE_ERRORS = [
   "[ERR] Invariant breach: builder returned falsy markup",
 ];
@@ -183,7 +184,7 @@ async function spaNavigate(page, search) {
   }, search);
 }
 
-/** GUARD 1: homepage → sekce → Back ⇒ effective scroll range > 0 in every state. */
+/** GUARD 1: homepage â†’ sekce â†’ Back â‡’ effective scroll range > 0 in every state. */
 async function guardTabletScroll(page) {
   await openEntry(page, {});
   const home1 = await scrollerState(page);
@@ -213,7 +214,7 @@ async function guardTabletScroll(page) {
   };
 }
 
-/** GUARD 2: otevřená sekce ⇒ scroll až dolů funguje (effective scroller reaches bottom). */
+/** GUARD 2: otevĹ™enĂˇ sekce â‡’ scroll aĹľ dolĹŻ funguje (effective scroller reaches bottom). */
 async function guardTabletSectionScroll(page) {
   await openEntry(page, { section: "feed", topic: "sport" });
   await waitFeedReady(page, FEED_READY_WAIT_MS);
@@ -222,7 +223,7 @@ async function guardTabletSectionScroll(page) {
   if (st.effectiveMax < MIN_SCROLL_RANGE_PX) {
     return { name: "TABLET_SECTION_SCROLL_GUARD", pass: false, sectionMax: st.effectiveMax, reason: "section not scrollable (max=" + st.effectiveMax + ")" };
   }
-  /* lazy images / async batches change scrollHeight while scrolling — keep pushing to the
+  /* lazy images / async batches change scrollHeight while scrolling â€” keep pushing to the
      bottom until the position stabilizes, then compare against the FINAL max */
   let down = { scroller: "?", y: 0 };
   let finalMax = st.effectiveMax;
@@ -255,11 +256,11 @@ async function guardTabletSectionScroll(page) {
   };
 }
 
-/** GUARD 3: body/html/#leftContent nezůstávají overflow:hidden bez aktivního modalu. */
+/** GUARD 3: body/html/#leftContent nezĹŻstĂˇvajĂ­ overflow:hidden bez aktivnĂ­ho modalu. */
 async function guardTabletScrollLock(page) {
   const lockSnapshot = () =>
     page.evaluate(() => {
-      /* deterministic modal markers only — generic [role=dialog] matches the always-mounted
+      /* deterministic modal markers only â€” generic [role=dialog] matches the always-mounted
          consent dialog and would vacuously skip every check */
       const modalOpen = !!(
         document.body.classList.contains("iu-mobileGateOverlayOpen") ||
@@ -284,7 +285,7 @@ async function guardTabletScrollLock(page) {
     if (s.modalOpen) return;
     if (s.htmlOverflowY === "hidden") violations.push(label + ": html overflow-y hidden");
     if (s.bodyOverflowY === "hidden") violations.push(label + ": body overflow-y hidden");
-    /* #leftContent smí být hidden jen mimo section shell (home hub layout it clips decoratively) */
+    /* #leftContent smĂ­ bĂ˝t hidden jen mimo section shell (home hub layout it clips decoratively) */
     if (s.mainVisible && s.lcOverflowY === "hidden") violations.push(label + ": #leftContent overflow-y hidden in section shell");
   };
 
@@ -296,7 +297,7 @@ async function guardTabletScrollLock(page) {
   await page.waitForTimeout(500);
   check("section", await lockSnapshot());
 
-  /* MindMenu open → close ⇒ no stuck lock (fresh home entry, same as MINDMENU_SCROLL_GUARD) */
+  /* MindMenu open â†’ close â‡’ no stuck lock (fresh home entry, same as MINDMENU_SCROLL_GUARD) */
   await openEntry(page, {});
   const mmVisible = await page.evaluate(() => {
     const b = document.querySelector('[data-iu-bottom-nav="mindmenu"]');
@@ -328,6 +329,7 @@ async function guardTabletScrollLock(page) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("iu-tablet-scroll-guard");
   let server = null;
   if (USE_LOCAL_SERVER) {
     server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {

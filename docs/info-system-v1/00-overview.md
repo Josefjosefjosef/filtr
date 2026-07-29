@@ -5,9 +5,11 @@
 - Společná datová vrstva: `projects/data/info_events/`
 - UI: `assets/iu-prehled-dne-ui-v1.js` + `assets/iu-prehled-dne-v1.css`
 - Core: `assets/iu-info-system-core-v1.js`
-- Výchozí režim: **cutover** (HomeCards komerčních médií skryty)
+- Výchozí režim: **cutover** (legacy mediální HomeCards skryty)
+- **2026-07-29:** současné mediální zdroje strukturálně odstraněny (registry + articles data);
+  univerzální engine zachován; deny-list `config/removed_media_deny_list.json`
 - Paralelní režim: `?iuInfoSystem=parallel`
-- Vypnutí: `?iuInfoSystem=off`
+- Vypnutí legacy UI: `?iuInfoSystem=off` (neobnovuje media sync)
 
 ## Princip
 

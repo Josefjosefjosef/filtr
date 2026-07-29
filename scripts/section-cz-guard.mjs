@@ -86,21 +86,38 @@ must(
 
 const registryPath = path.join(root, "projects", "data", "source_registry.json");
 const registryRaw = fs.readFileSync(registryPath, "utf8");
-must(/"topic":\s*"hry"/.test(registryRaw), "source_registry.json must include hry topic");
-must(/"topic":\s*"kultura"/.test(registryRaw), "source_registry.json must include kultura topic");
-must(/"topic":\s*"veda"/.test(registryRaw), "source_registry.json must include veda topic");
-must(/"topic":\s*"vzdelavani"/.test(registryRaw), "source_registry.json must include vzdelavani topic");
+let commercialActive = true;
 try {
-  const reg = JSON.parse(registryRaw);
-  const feedArr = Array.isArray(reg.entries) ? reg.entries : [];
-  const n = (t) =>
-    feedArr.filter((x) => x && !x.blocked && x.active !== false && String(x.topic || "") === t).length;
-  must(n("hry") >= 3, "source_registry.json must list at least 3 active feeds for topic hry");
-  must(n("kultura") >= 3, "source_registry.json must list at least 3 active feeds for topic kultura");
-  must(n("veda") >= 3, "source_registry.json must list at least 3 active feeds for topic veda");
-  must(n("vzdelavani") >= 3, "source_registry.json must list at least 3 active feeds for topic vzdelavani");
-} catch (e) {
-  must(false, "source_registry.json must be valid JSON: " + String(e && e.message));
+  const cut = JSON.parse(
+    fs.readFileSync(path.join(root, "projects", "data", "info_events", "cutover_state.json"), "utf8")
+  );
+  commercialActive = cut.commercialAggregationActive !== false;
+} catch (_) {}
+
+if (commercialActive) {
+  must(/"topic":\s*"hry"/.test(registryRaw), "source_registry.json must include hry topic");
+  must(/"topic":\s*"kultura"/.test(registryRaw), "source_registry.json must include kultura topic");
+  must(/"topic":\s*"veda"/.test(registryRaw), "source_registry.json must include veda topic");
+  must(/"topic":\s*"vzdelavani"/.test(registryRaw), "source_registry.json must include vzdelavani topic");
+  try {
+    const reg = JSON.parse(registryRaw);
+    const feedArr = Array.isArray(reg.entries) ? reg.entries : [];
+    const n = (t) =>
+      feedArr.filter((x) => x && !x.blocked && x.active !== false && String(x.topic || "") === t).length;
+    must(n("hry") >= 3, "source_registry.json must list at least 3 active feeds for topic hry");
+    must(n("kultura") >= 3, "source_registry.json must list at least 3 active feeds for topic kultura");
+    must(n("veda") >= 3, "source_registry.json must list at least 3 active feeds for topic veda");
+    must(n("vzdelavani") >= 3, "source_registry.json must list at least 3 active feeds for topic vzdelavani");
+  } catch (e) {
+    must(false, "source_registry.json must be valid JSON: " + String(e && e.message));
+  }
+} else {
+  try {
+    JSON.parse(registryRaw);
+    console.log("[section-cz-guard] SKIP active feed counts (commercialAggregationActive=false)");
+  } catch (e) {
+    must(false, "source_registry.json must be valid JSON: " + String(e && e.message));
+  }
 }
 
 const scan = appJs + idx + registryRaw;
