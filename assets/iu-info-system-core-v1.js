@@ -711,15 +711,31 @@ function regionMatches(ev, needles) {
   const parts = [];
   if (r) {
     if (r.name) parts.push(String(r.name));
+    if (r.summary) parts.push(String(r.summary));
     if (r.orpName) parts.push(String(r.orpName));
     if (r.okresName) parts.push(String(r.okresName));
     if (r.krajName) parts.push(String(r.krajName));
+    if (Array.isArray(r.orpNames)) parts.push(...r.orpNames.map(String));
+    if (Array.isArray(r.okresNames)) parts.push(...r.okresNames.map(String));
+    if (Array.isArray(r.krajNames)) parts.push(...r.krajNames.map(String));
+    if (Array.isArray(r.areaDescs)) parts.push(...r.areaDescs.map(String));
     if (Array.isArray(r.orpIds)) parts.push(...r.orpIds.map(String));
+    if (Array.isArray(r.orpCodes)) parts.push(...r.orpCodes.map(String));
     if (Array.isArray(r.krajIds)) parts.push(...r.krajIds.map(String));
   }
+  const capSearch = ev && ev.capV2 && ev.capV2.searchText ? String(ev.capV2.searchText) : "";
+  if (capSearch) parts.push(capSearch);
   const hay = parts.join(" ").toLowerCase();
   if (!hay) return needles.some((n) => n === "čr" || n === "cr" || n === "cesko");
-  return needles.some((n) => hay.includes(n) || parts.some((p) => String(p).toLowerCase().includes(n) || n.includes(String(p).toLowerCase())));
+  return needles.some((n) => {
+    const nn = String(n || "").toLowerCase();
+    if (!nn) return false;
+    if (hay.includes(nn)) return true;
+    return parts.some((p) => {
+      const pp = String(p).toLowerCase();
+      return pp.includes(nn) || nn.includes(pp);
+    });
+  });
 }
 
 function localitySuggest(query, localities) {

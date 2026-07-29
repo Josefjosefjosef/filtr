@@ -13,7 +13,7 @@ import { processCapDocuments, tryAcquireLock, releaseLock, applyConditionalResul
 import { revisionsToFeed } from "./chmi-cap-v2/normalize-feed.mjs";
 import { migrateUserStatesDryRun } from "./chmi-cap-v2/migrate-ids.mjs";
 import { createGeoRegistry } from "./chmi-cap-v2/geo-registry.mjs";
-import { createFixtureDiscovery, resolveDiscoveryAdapter } from "./chmi-cap-v2/discovery-adapter.mjs";
+import { createFixtureDiscovery, resolveDiscoveryAdapter, selectLatestPerProductStream, capProductKeyFromUrl } from "./chmi-cap-v2/discovery-adapter.mjs";
 import { shouldResetUnreadOnRevision } from "./chmi-cap-v2/unread-rules.mjs";
 import { CHMI_PUBLIC_ALERTS_URL } from "./chmi-cap-v2/config.mjs";
 
@@ -141,6 +141,47 @@ function read(name) {
   ok("registry_brno_6203", !!reg.get("orp", "6203") && /brno/i.test(reg.get("orp", "6203").name), "brno");
   ok("registry_brno_parent_okres", !!(reg.get("orp", "6203") && reg.get("orp", "6203").parentId), (reg.get("orp", "6203") && reg.get("orp", "6203").parentId) || "");
 
+  // Completeness: multi info + multi area + no drought-only whitelist + all ORPs preserved
+  {
+    const multi = processCapDocuments([{ xml: read("alert-multi-events-areas.xml") }]);
+    ok("multi_info_parsed", multi.report.revisions[0] && (multi.report.revisions[0].hazards || []).length >= 3, String((multi.report.revisions[0] || {}).hazards && multi.report.revisions[0].hazards.length));
+    const multiFeed = revisionsToFeed(multi.report.revisions);
+    ok("multi_events_published", multiFeed.length >= 3, String(multiFeed.length));
+    ok(
+      "no_silent_zadna_filter_only",
+      multiFeed.every((i) => !/^žádn/i.test(String((i.capV2 && i.capV2.event) || i.title || ""))),
+      multiFeed.map((i) => i.title).join("|")
+    );
+    ok(
+      "heat_and_drought_both",
+      multiFeed.some((i) => /teplot/i.test(i.title || "")) && multiFeed.some((i) => /such/i.test(i.title || "")),
+      multiFeed.map((i) => i.title).join("|")
+    );
+    const heat = multiFeed.find((i) => /Vysoké teploty/i.test(i.title || ""));
+    ok("multi_area_orp_ids", heat && (heat.region.orpIds || []).length >= 3, heat && JSON.stringify(heat.region.orpIds));
+    ok("multi_area_orp_names", heat && (heat.region.orpNames || []).length >= 3, heat && JSON.stringify(heat.region.orpNames));
+    ok(
+      "title_not_single_town_only",
+      heat && /dalších|ORP|kraj/i.test(String(heat.region.summary || heat.title || "")),
+      heat && (heat.region.summary || heat.title)
+    );
+    ok("description_published", heat && String(heat.description || "").length > 0, heat && heat.description);
+    ok(
+      "city_filter_haystack_plzen",
+      heat && String(heat.capV2.searchText || "").includes("plzen"),
+      heat && heat.capV2.searchText
+    );
+    const mapped = heat && heat.capV2 && heat.capV2.geo ? heat.capV2.geo.mappedAreas : 0;
+    ok("geo_mapped_areas", mapped >= 3, String(mapped));
+  }
+
+  // No hard-coded max-3 publish in normalize path
+  {
+    const many = processCapDocuments([{ xml: read("alert-multi-events-areas.xml") }, { xml: read("alert-fire-same-orp.xml") }]);
+    const f = revisionsToFeed(many.report.revisions);
+    ok("no_hard_limit_three", f.length > 3, String(f.length));
+  }
+
   // shadow must not publish
   const pub = atomicPublishDecision({
     mode: "shadow",
@@ -239,6 +280,38 @@ function read(name) {
   );
   ok("discovery_resolve_fixture", resolved.type === "fixture", resolved.type);
   ok("discovery_not_html_api", resolved.role !== "html_api", resolved.role || "none");
+  const openDef = resolveDiscoveryAdapter({}, { kind: "opendata_active_streams" });
+  ok("discovery_active_streams", openDef.type === "opendata_active_streams", openDef.type);
+  ok("discovery_no_fixed_maxfiles_field", openDef.selection === "latest_per_product_stream", openDef.selection);
+  const legacy = resolveDiscoveryAdapter({}, { kind: "opendata_newest_file" });
+  ok("discovery_legacy_alias_to_streams", legacy.type === "opendata_active_streams", legacy.type);
+
+  const selected = selectLatestPerProductStream([
+    { url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_290800.xml", mtime: 100 },
+    { url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_290854.xml", mtime: 200 },
+    { url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml", mtime: 150 },
+    { url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_270100.xml", mtime: 50 },
+  ]);
+  ok("select_one_per_stream", selected.length === 2, String(selected.length));
+  ok(
+    "select_newest_50",
+    selected.some((x) => x.productKey === "50" && /290854/.test(x.name)),
+    JSON.stringify(selected)
+  );
+  ok(
+    "select_newest_70",
+    selected.some((x) => x.productKey === "70" && /281200/.test(x.name)),
+    JSON.stringify(selected)
+  );
+  ok("product_key_50", capProductKeyFromUrl("alert_cap_50_290854.xml") === "50", capProductKeyFromUrl("alert_cap_50_x.xml"));
+  ok("product_key_70", capProductKeyFromUrl("alert_cap_70_281200.xml") === "70", "70");
+
+  // Regression: discovery-adapter must not contain fixed slice(0, maxFiles) completeness limit
+  {
+    const src = fs.readFileSync(path.join(__dirname, "chmi-cap-v2", "discovery-adapter.mjs"), "utf8");
+    ok("no_slice_maxfiles_limit", !/\.slice\(\s*0\s*,\s*maxFiles\s*\)/.test(src), "slice(0,maxFiles) present");
+    ok("no_maxfiles_env_knob", !/IU_CHMI_CAP_V2_MAX_FILES/.test(src), "MAX_FILES still referenced");
+  }
 }
 
 // --- unread reset rules ---
@@ -262,5 +335,5 @@ if (fails.length) {
   process.exit(1);
 }
 console.log("CHMI_CAP_V2_GUARD=PASS");
-console.log("checks_ok mode_default=off fixtures_only=1");
+console.log("checks_ok mode_default=off fixtures_only=1 completeness=1");
 process.exit(0);

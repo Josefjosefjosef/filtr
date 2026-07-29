@@ -24,10 +24,10 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-badge-20260729";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-complete-20260729";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-chmi-badge-20260729";
+const CACHE_BUST = "info-system-v6-chmi-complete-20260729";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -356,7 +356,7 @@ function renderItem(ev) {
   const url = safeHttpUrl(forced || ev.url || ev.originalUrl);
   const title = displayEventTitle(ev);
   const src = String(ev.sourceLabel || ev.sourceId || "");
-  const region = ev.region && ev.region.name ? String(ev.region.name) : "";
+  const region = ev.region && (ev.region.summary || ev.region.name) ? String(ev.region.summary || ev.region.name) : "";
   const imp = importanceLabel(ev);
   const saved = isSaved(id);
   const hiddenMode = state.viewMode === "hidden";
