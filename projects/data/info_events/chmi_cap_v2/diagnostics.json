@@ -1,6 +1,6 @@
 {
-  "runId": "484d9099a2bf1786",
-  "started": "2026-07-29T20:15:05.798Z",
+  "runId": "c4b1d46b8f3ee6a6",
+  "started": "2026-07-29T20:30:30.829Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -18,38 +18,25 @@
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_290854.xml",
       "productKey": "50",
-      "status": 200,
-      "action": "process",
-      "cacheHit": false
+      "status": 304,
+      "action": "not_modified",
+      "cacheHit": true
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
       "productKey": "70",
-      "status": 200,
-      "action": "process",
-      "cacheHit": false
+      "status": 304,
+      "action": "not_modified",
+      "cacheHit": true
     }
   ],
-  "parser": {
-    "loaded": 2,
-    "valid": 2,
-    "rejected": 0,
-    "duplicates": 0,
-    "quarantine": 0,
-    "cancels": 0,
-    "updates": 0,
-    "newThreads": 2,
-    "status": "healthy",
-    "alert": 0,
-    "update": 2,
-    "cancel": 0
-  },
+  "parser": null,
   "publish": {
     "publish": true,
     "reason": "ok",
     "completeness": {
-      "capMessages": 2,
-      "infoBlocks": 41,
+      "capMessages": null,
+      "infoBlocks": null,
       "logicalAlerts": 17,
       "uniqueEvents": [
         "Vysoké teploty",
@@ -76,11 +63,11 @@
     "alarms": [],
     "productionVerified": false
   },
-  "status": "healthy",
+  "status": "not_modified",
   "error": null,
   "completeness": {
-    "capMessages": 2,
-    "infoBlocks": 41,
+    "capMessages": null,
+    "infoBlocks": null,
     "logicalAlerts": 17,
     "uniqueEvents": [
       "Vysoké teploty",
@@ -105,6 +92,6 @@
     "missingStreamCache": 0
   },
   "alarms": [],
-  "finished": "2026-07-29T20:15:10.591Z",
-  "runMs": 4793
+  "finished": "2026-07-29T20:30:34.548Z",
+  "runMs": 3719
 }
