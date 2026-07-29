@@ -33,6 +33,8 @@ const REGRESSION_CYCLES = parseInt(process.env.IU_DESKTOP_CLOSE_CYCLES || "20", 
 const SETTLE_MS = parseInt(process.env.IU_DESKTOP_CLOSE_SETTLE_MS || "15000", 10);
 const RESTORE_WAIT_MS = parseInt(process.env.IU_DESKTOP_CLOSE_RESTORE_WAIT_MS || "32000", 10);
 const FEED_READY_WAIT_MS = parseInt(process.env.IU_DESKTOP_CLOSE_FEED_READY_MS || "30000", 10);
+/** Fail-fast wall clock — prevents CI "hang forever" when waits stack / mis-serialize. */
+const HARD_TIMEOUT_MS = parseInt(process.env.IU_DESKTOP_CLOSE_HARD_MS || "480000", 10);
 
 const LEFT_RAIL_TOOLS = [
   { accent: "pocasi", label: "Počasí" },
@@ -89,9 +91,11 @@ async function readScrollY(page) {
 }
 
 async function waitScrollNear(page, targetY, timeoutMs) {
+  // IMPORTANT: Playwright serializes the predicate to the browser — Node closures
+  // (e.g. RESTORE_TOL_PX) are NOT available. Pass tol explicitly or wait always burns timeoutMs.
   try {
     await page.waitForFunction(
-      (y) => {
+      ({ y, tol }) => {
         try {
           var read =
             typeof window.iuGetMainScrollTop === "function"
@@ -102,12 +106,12 @@ async function waitScrollNear(page, targetY, timeoutMs) {
               ? document.body
               : document.scrollingElement || document.documentElement;
           var maxY = root ? Math.max(0, root.scrollHeight - (window.innerHeight || 0)) : 0;
-          return maxY >= Math.max(0, y - 8) && Math.abs(read - y) <= RESTORE_TOL_PX;
+          return maxY >= Math.max(0, y - 8) && Math.abs(read - y) <= tol;
         } catch (_) {
           return false;
         }
       },
-      targetY,
+      { y: targetY, tol: RESTORE_TOL_PX },
       { timeout: timeoutMs }
     );
     const y = await readScrollY(page);
@@ -258,6 +262,17 @@ async function testToolCloseFlow(page, tool, mode) {
 }
 
 async function main() {
+  const startedAt = Date.now();
+  const hardTimer = setTimeout(() => {
+    console.error(
+      "IU_DESKTOP_SECTION_CLOSE_GUARD_FATAL hard_timeout_ms=" +
+        HARD_TIMEOUT_MS +
+        " elapsed_ms=" +
+        (Date.now() - startedAt)
+    );
+    process.exit(1);
+  }, HARD_TIMEOUT_MS);
+
   let serverProc = null;
   if (USE_LOCAL_SERVER) {
     serverProc = spawn("npx", ["serve", REPO, "-l", String(PORT)], {
@@ -274,15 +289,21 @@ async function main() {
   await installProofGuardNetworkStubs(context, ignorable);
   await installLocalDataProtectionAccepted(context);
   const page = await context.newPage();
+  page.setDefaultTimeout(Math.min(60000, SETTLE_MS + 5000));
 
   const failures = [];
   const passes = [];
+  const logStep = (msg) => {
+    console.log("STEP t=" + (Date.now() - startedAt) + "ms " + msg);
+  };
 
   try {
+    logStep("ensureDesktopReady");
     await ensureDesktopReady(page);
 
     for (const tool of LEFT_RAIL_TOOLS) {
       for (const mode of ["top", "bottom"]) {
+        logStep("tool " + tool.accent + "/" + mode);
         await resetHub(page);
         await scrollDeep(page);
         const beforeY = await readScrollY(page);
@@ -309,6 +330,7 @@ async function main() {
     for (let i = 0; i < REGRESSION_CYCLES; i++) {
       const tool = LEFT_RAIL_TOOLS[i % LEFT_RAIL_TOOLS.length];
       const mode = i % 2 === 0 ? "top" : "bottom";
+      logStep("regression " + (i + 1) + "/" + REGRESSION_CYCLES + " " + tool.accent + "/" + mode);
       try {
         await resetHub(page);
         await scrollDeep(page);
@@ -334,8 +356,9 @@ async function main() {
       passes.push(`regression: ${REGRESSION_CYCLES}x open/close stable`);
     }
 
+    logStep("mobile viewport check");
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(buildUrl("?section=pocasi"), { waitUntil: "domcontentloaded", timeout: 120000 });
+    await page.goto(buildUrl({ section: "pocasi" }), { waitUntil: "domcontentloaded", timeout: 120000 });
     await page.waitForTimeout(800);
     const mobileCloseCount = await page.locator("[data-iu-desktop-section-close]").count();
     if (mobileCloseCount > 0) {
@@ -344,11 +367,13 @@ async function main() {
       passes.push("mobile: no close buttons");
     }
   } finally {
-    await browser.close();
+    clearTimeout(hardTimer);
+    await browser.close().catch(() => {});
     if (serverProc) serverProc.kill("SIGTERM");
   }
 
   console.log("IU_DESKTOP_SECTION_CLOSE_GUARD");
+  console.log("ELAPSED_MS=" + (Date.now() - startedAt));
   console.log("PASS_COUNT=" + passes.length);
   console.log("FAIL_COUNT=" + failures.length);
   for (const p of passes) console.log("PASS " + p);
