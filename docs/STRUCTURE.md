@@ -1,12 +1,14 @@
 # infoUzel.cz — project structure & audit
 
+> **Superseded (aggregation):** For the live aggregation architecture (source-neutral engine, info_events, ČHMÚ CAP v2, dormant commercial cutover), see root [`AGGREGATION_ARCHITECTURE.md`](../AGGREGATION_ARCHITECTURE.md). Sections below that describe an active commercial RSS/`articles.json` pipeline are **historical** as of PR #7845 / final cleanup (2026-07-29): `commercialAggregationActive=false`, production articles feeds are empty stubs.
+
 ## Single Source of Truth
 
 - **HTML entrypoint:** `projects/index.html` is the production page served to visitors; it loads `/assets/app.css` and `/assets/app.js` with explicit cache-bust `?v=` parameters. Root `index.html` exists as a simple landing page but only talks to the same `/assets/` bundle. The only HTML allowed to boot the SPA is `projects/index.html`; others (root or docs copies) are maintenance/preview helpers and **must not** embed alternate pipelines.
 - **Assets:** `/assets/app.js`, `/assets/app.css` are the canonical scripts/styles. They are the only bundles referenced anywhere in production HTML.
-- **Data:** `/projects/data/articles.json` and `/projects/data/videos.json` are the authoritative data feeds. Every fetch target in `assets/app.js` (probe URLs, `timeoutFetch`, `fetchArticlesStatus`, etc.) resolves to `/projects/data/...` endpoints, and the build ensures only this folder contains the live JSON.
+- **Data:** Live Přehled dne content is `/projects/data/info_events/feed.json` (+ ČHMÚ CAP). `/projects/data/articles.json` and pool/chunks remain **empty stubs** for local-first / cutover / SW boundaries. `/projects/data/videos.json` remains a separate video pipeline feed.
 - **Service worker:** `sw.js` lives at repo root and is referenced via the `BASE`-aware loader inside `assets/app-crash-shield.js`. The register call is currently gated (the file still exists, but bootstrapping is temporarily skipped to avoid blank-screen regressions). SW caching is still orchestrated from `assets/app.js` via `nukeCachesAndSwOnBuildChange()` and `scheduleSWReload()`; `sw.js` enumerates caches and respond to fetch; tie-ins are documented in the crash shield script.
-- **Workflows:** `.github/workflows/update-articles.yml` owns the data pipeline (build articles/videos, normalize, push to `projects/data`). `.github/workflows/repo-guard.yml` (new) enforces duplication, data, and cache-bust rules.
+- **Workflows:** `.github/workflows/update-info-events.yml` / `update-chmi-cap-v2.yml` own active public-source sync. `.github/workflows/update-articles.yml` is **dormant** under cutover (`commercialAggregationActive=false`). `.github/workflows/repo-guard.yml` enforces duplication, data, and cache-bust rules.
 
 ## Production tree (depth ≥ 5)
 

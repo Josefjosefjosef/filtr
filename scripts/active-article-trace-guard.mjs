@@ -32,6 +32,7 @@ import {
   parseRssDate,
   resolveFeedUrlForP0,
 } from "./content-freshness-guard-lib.mjs";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 
 const __guardDir = path.dirname(fileURLToPath(import.meta.url));
 const topicDedupeSuppressedPath =
@@ -390,6 +391,7 @@ export function evaluateTraceSampleItem(item, articles, def, byUrl, referenceMs,
 }
 
 export async function runActiveArticleTraceGuard() {
+  exitIfMediaArticlesGuardsSkipped("active-article-trace-guard");
   let failed = false;
   let warned = false;
   const warnings = [];

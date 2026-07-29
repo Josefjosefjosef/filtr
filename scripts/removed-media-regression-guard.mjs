@@ -101,6 +101,25 @@ if (Array.isArray(yt) && yt.length > 0) {
   fail("scripts/feeds_youtube.json must be empty");
 }
 
+const forbiddenArtifacts = [
+  "projects/data/latest_valid_articles_snapshot.json",
+  "projects/data/latest_valid_staging_snapshot.json",
+  "data/media.json",
+];
+for (const rel of forbiddenArtifacts) {
+  if (fs.existsSync(path.join(ROOT, rel))) {
+    fail("forbidden historical media artifact present:" + rel);
+  }
+}
+const articlesDir = path.join(ROOT, "projects/data/articles");
+if (fs.existsSync(articlesDir)) {
+  for (const name of fs.readdirSync(articlesDir)) {
+    if (/^\d{4}-\d{2}-\d{2}\.json$/.test(name)) {
+      fail("forbidden historical daily article shard:" + name);
+    }
+  }
+}
+
 console.log("[removed-media-regression-guard] PASS");
 console.log("denied_feedIds=" + removedFeedIds.size);
 console.log("denied_domains=" + removedDomains.size);
