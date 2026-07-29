@@ -24,10 +24,10 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-cap-v2-20260729";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-badge-20260729";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-chmi-cap-v2-20260729";
+const CACHE_BUST = "info-system-v6-chmi-badge-20260729";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -339,11 +339,22 @@ function chmiPublicDetailUrl(ev) {
   return "";
 }
 
+/** Presentational title — drop redundant "Výstraha ČHMÚ:" when badge already shows source. */
+function displayEventTitle(ev) {
+  const raw = String((ev && ev.title) || "").trim();
+  if (!raw) return "Bez názvu";
+  const stripped = raw
+    .replace(/^\s*V[ýy]straha\s+ČHM[ÚU]\s*[:\-–—]\s*/i, "")
+    .replace(/^\s*V[ýy]straha\s+CHMU\s*[:\-–—]\s*/i, "")
+    .trim();
+  return stripped || raw;
+}
+
 function renderItem(ev) {
   const id = String(ev.id || "");
   const forced = chmiPublicDetailUrl(ev);
   const url = safeHttpUrl(forced || ev.url || ev.originalUrl);
-  const title = String(ev.title || "Bez názvu");
+  const title = displayEventTitle(ev);
   const src = String(ev.sourceLabel || ev.sourceId || "");
   const region = ev.region && ev.region.name ? String(ev.region.name) : "";
   const imp = importanceLabel(ev);
@@ -366,7 +377,7 @@ function renderItem(ev) {
     `<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot${alert || capActive ? " iuPrehledDne__dot--alert" : ""}"></span></div>` +
     `<article class="iuPrehledDne__card iuPdCard__body">` +
     (capActive
-      ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge" role="status" aria-label="Aktivní výstraha">🔴 VÝSTRAHA</span>`
+      ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge" role="status" aria-label="Aktivní výstraha ČHMÚ">🔴 VÝSTRAHA ČHMÚ</span>`
       : capEnded
         ? `<span class="iuPdCard__warnBadge iuPdCard__warnBadge--ended iuPrehledDne__warnBadge" role="status">${esc(ev.status === "zruseno" ? "Zrušeno" : "Ukončeno")}</span>`
         : "") +
