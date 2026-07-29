@@ -1,9 +1,9 @@
 {
-  "freezeId": "perf-e2-wave-b-lazy-pdf-invoice-20260728",
+  "freezeId": "remove-current-media-sources-20260729",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-07-29T06:15:00Z",
-  "note": "Freeze bump: CHMI CAP badge title unify (prehled cache-bust on projects/index.html)",
+  "updatedAt": "2026-07-29T08:00:00Z",
+  "note": "Freeze bump: structural removal of current media sources + SW feed cache v2",
   "files": {
     "projects/index.html": "38e770a99aece56e0973d8679394d10cae6affcdfa98ccd1746a6729966d556b",
     "assets/app.css": "5f4442f5fec55cf6ec94b2dbcdf469247b8b7fedc0b1629df148e6d9373a6963",
@@ -11,8 +11,8 @@
     "assets/iu-silver-p0-engine.js": "a24ec35ba63d734909db8a9575df1f7a727389acbf1960db6b4c85897c5d4715",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "f62906d8468df08b7b0c048eaf820a9d9667b850abac7bb79298a3153a94bc30",
-    "projects/version.json": "ea6774e772cb964eb632825d49485179b5a4e2d00a910b31574ad1cbf67d606e",
+    "sw.js": "66e71b803232f2fab16d31d34ac45ed9239c5d11ccbb72c3bf0f784f51dd5de5",
+    "projects/version.json": "17c49bd2d2ba0c361b64b03dabe36644346dd20dc6c7852c8802677aef83cb53",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
     "assets/iu-user-data-backup-v1.js": "ab0b92b94c1d2f22897943881671c635f1a1bc79b2c130ad1b0436c80e8d3730",
@@ -23,15 +23,15 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-07-27-pwa-offline-nav-fallback-v1\"",
-      "FEED_OFFLINE_CACHE = \"iu-feed-offline-v1\"",
+      "CACHE_VERSION = \"2026-07-29-media-sources-removed-v1\"",
+      "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "OFFLINE_DOC_CACHE",
       "offlineNavigationFallback",
       "warmOfflineAssets"
     ],
     "projects/version.json": [
-      "pwa-app-root-pwa-assets-redirects-v1-20260726"
+      "media-sources-removed-v1-20260729"
     ]
   }
 }

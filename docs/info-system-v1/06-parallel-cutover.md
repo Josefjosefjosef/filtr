@@ -11,6 +11,8 @@ Provedeno **jednorázové atomické přepnutí** (`cutover_state.json`: `commerc
 - `update-articles.yml` / `update-articles-fast-pool.yml` — pipeline gate SKIP při cutover
 - Cloudflare articles-watchdog — `decideWatchdog` → `skip_cutover`
 - UI — HomeCards + komerční `#feed` skryty CSS cutoverem
+- **2026-07-29 strukturální removal:** prázdný `source_registry` / `config/sources.json`,
+  prázdné `articles.json` + chunks, guard `removed-media-regression-guard`
 
 ## Rollback
 

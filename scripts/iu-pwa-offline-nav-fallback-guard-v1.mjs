@@ -31,7 +31,8 @@ function auditStatic() {
   if (!sw.includes("offlineNavigationFallback")) fails.push("sw:missing offlineNavigationFallback");
   if (!sw.includes("OFFLINE_DOC_CACHE")) fails.push("sw:missing OFFLINE_DOC_CACHE");
   if (!sw.includes("HTML_LAST_GOOD_CACHE")) fails.push("sw:missing HTML_LAST_GOOD_CACHE");
-  if (!sw.includes("2026-07-27-pwa-offline-nav-fallback-v1")) fails.push("sw:missing CACHE_VERSION bump");
+  if (!sw.includes("2026-07-29-media-sources-removed-v1")) fails.push("sw:missing CACHE_VERSION bump");
+  if (!sw.includes("iu-feed-offline-v2")) fails.push("sw:missing FEED_OFFLINE_CACHE v2 after media removal");
   if (!sw.includes("X-IU-Offline-Fallback")) fails.push("sw:missing offline fallback header marker");
   if (!offline.includes("Jste offline")) fails.push("offline.html:missing message");
   if (/cdn\.|googleapis|unpkg|jsdelivr/i.test(offline)) fails.push("offline.html:external deps");
@@ -174,7 +175,7 @@ async function main() {
         origin: ORIGIN,
         passes,
         failures,
-        cacheVersion: "2026-07-27-pwa-offline-nav-fallback-v1",
+        cacheVersion: "2026-07-29-media-sources-removed-v1",
       },
       null,
       2
