@@ -11,6 +11,7 @@
 import fs from "fs";
 import path from "path";
 import { evaluateContentFreshnessPolicy, measureP0ContentGaps } from "./content-freshness-guard-lib.mjs";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 
 const warnMin = Number(process.env.CONTENT_FRESHNESS_WARN_MINUTES || "60");
 const failMin = Number(process.env.CONTENT_FRESHNESS_FAIL_MINUTES || "120");
@@ -26,6 +27,7 @@ function fail(msg) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("content-freshness-guard");
   const report = await measureP0ContentGaps();
 
   log(`generatedAt=${report.generatedAt} articles=${report.articleCount}`);

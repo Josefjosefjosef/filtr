@@ -10,6 +10,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { root } from "./source-rotation-guard-lib.mjs";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 
 const articlesPath =
   process.env.ARTICLES_JSON_PATH || path.join(root, "projects", "data", "articles.json");
@@ -149,6 +150,7 @@ export function evaluatePriorityFreshness(options = {}) {
 }
 
 function main() {
+  exitIfMediaArticlesGuardsSkipped("priority-source-freshness-guard");
   if (!fs.existsSync(articlesPath)) {
     fail(`missing ${articlesPath}`);
     process.exit(1);

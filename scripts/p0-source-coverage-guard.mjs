@@ -17,6 +17,7 @@ import {
   loadArticlesDoc,
 } from "./content-freshness-guard-lib.mjs";
 import { countContentNewerThanGenerated } from "./production-liveness-guard.mjs";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 
 /** When 4h window is empty but newest P0 article is within this age, warn only. */
 export const P0_COVERAGE_SOFT_NEWEST_HOURS = 8;
@@ -185,6 +186,7 @@ export function evaluateP0SourceCoveragePolicy(articles, options = {}) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("p0-source-coverage-guard");
   const maxAgeH = Number(process.env.P0_COVERAGE_MAX_AGE_HOURS || "4");
   const minArticles = Number(process.env.P0_COVERAGE_MIN_ARTICLES || "1");
   const batchMode =

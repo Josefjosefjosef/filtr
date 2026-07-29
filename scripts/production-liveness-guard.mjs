@@ -12,6 +12,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { effectivePublishedMs, loadArticlesDoc } from "./content-freshness-guard-lib.mjs";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 
 export const DEFAULT_WINDOWS_HOURS = [1, 2, 4];
 export const DEFAULT_MIN_2H = 1;
@@ -368,6 +369,7 @@ export function evaluateProductionLiveness(articles, options = {}) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("production-liveness-guard");
   const windows = (process.env.LIVENESS_WINDOWS_HOURS || "1,2,4")
     .split(",")
     .map((x) => Number(x.trim()))

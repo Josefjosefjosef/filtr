@@ -13,6 +13,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { P0_CONTENT_SOURCES } from "./content-freshness-guard-lib.mjs";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -81,6 +82,7 @@ function resolveUrlsForSlot(slotKey) {
 }
 
 function main() {
+  exitIfMediaArticlesGuardsSkipped("p0-source-starvation-guard");
   let failed = false;
   let warned = false;
   const sched = loadJsonSafe(schedPath);
