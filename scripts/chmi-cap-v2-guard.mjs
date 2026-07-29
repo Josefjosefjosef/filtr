@@ -141,6 +141,47 @@ function read(name) {
   ok("registry_brno_6203", !!reg.get("orp", "6203") && /brno/i.test(reg.get("orp", "6203").name), "brno");
   ok("registry_brno_parent_okres", !!(reg.get("orp", "6203") && reg.get("orp", "6203").parentId), (reg.get("orp", "6203") && reg.get("orp", "6203").parentId) || "");
 
+  // Completeness: multi info + multi area + no drought-only whitelist + all ORPs preserved
+  {
+    const multi = processCapDocuments([{ xml: read("alert-multi-events-areas.xml") }]);
+    ok("multi_info_parsed", multi.report.revisions[0] && (multi.report.revisions[0].hazards || []).length >= 3, String((multi.report.revisions[0] || {}).hazards && multi.report.revisions[0].hazards.length));
+    const multiFeed = revisionsToFeed(multi.report.revisions);
+    ok("multi_events_published", multiFeed.length >= 3, String(multiFeed.length));
+    ok(
+      "no_silent_zadna_filter_only",
+      multiFeed.every((i) => !/^žádn/i.test(String((i.capV2 && i.capV2.event) || i.title || ""))),
+      multiFeed.map((i) => i.title).join("|")
+    );
+    ok(
+      "heat_and_drought_both",
+      multiFeed.some((i) => /teplot/i.test(i.title || "")) && multiFeed.some((i) => /such/i.test(i.title || "")),
+      multiFeed.map((i) => i.title).join("|")
+    );
+    const heat = multiFeed.find((i) => /Vysoké teploty/i.test(i.title || ""));
+    ok("multi_area_orp_ids", heat && (heat.region.orpIds || []).length >= 3, heat && JSON.stringify(heat.region.orpIds));
+    ok("multi_area_orp_names", heat && (heat.region.orpNames || []).length >= 3, heat && JSON.stringify(heat.region.orpNames));
+    ok(
+      "title_not_single_town_only",
+      heat && /dalších|ORP|kraj/i.test(String(heat.region.summary || heat.title || "")),
+      heat && (heat.region.summary || heat.title)
+    );
+    ok("description_published", heat && String(heat.description || "").length > 0, heat && heat.description);
+    ok(
+      "city_filter_haystack_plzen",
+      heat && String(heat.capV2.searchText || "").includes("plzen"),
+      heat && heat.capV2.searchText
+    );
+    const mapped = heat && heat.capV2 && heat.capV2.geo ? heat.capV2.geo.mappedAreas : 0;
+    ok("geo_mapped_areas", mapped >= 3, String(mapped));
+  }
+
+  // No hard-coded max-3 publish in normalize path
+  {
+    const many = processCapDocuments([{ xml: read("alert-multi-events-areas.xml") }, { xml: read("alert-fire-same-orp.xml") }]);
+    const f = revisionsToFeed(many.report.revisions);
+    ok("no_hard_limit_three", f.length > 3, String(f.length));
+  }
+
   // shadow must not publish
   const pub = atomicPublishDecision({
     mode: "shadow",
@@ -239,6 +280,8 @@ function read(name) {
   );
   ok("discovery_resolve_fixture", resolved.type === "fixture", resolved.type);
   ok("discovery_not_html_api", resolved.role !== "html_api", resolved.role || "none");
+  const openDef = resolveDiscoveryAdapter({}, { kind: "opendata_newest_file", maxFiles: 15 });
+  ok("discovery_default_max_files_completeness", openDef.type === "opendata_newest_file", openDef.type);
 }
 
 // --- unread reset rules ---
@@ -262,5 +305,5 @@ if (fails.length) {
   process.exit(1);
 }
 console.log("CHMI_CAP_V2_GUARD=PASS");
-console.log("checks_ok mode_default=off fixtures_only=1");
+console.log("checks_ok mode_default=off fixtures_only=1 completeness=1");
 process.exit(0);
