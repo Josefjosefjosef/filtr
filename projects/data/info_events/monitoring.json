@@ -415,59 +415,143 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-07-29T01:56:27.154Z",
-    "lastSuccessAt": "2026-07-29T01:56:29.181Z",
-    "lastChangedAt": "2026-07-29T01:56:29.181Z",
+    "lastRunAt": "2026-07-29T20:15:05.798Z",
+    "lastSuccessAt": "2026-07-29T20:15:10.107Z",
+    "lastChangedAt": "2026-07-29T20:15:10.107Z",
     "lastError": null,
     "status": "healthy",
     "etag": "\"6a688d7b-e76a\"",
     "lastModified": "Tue, 28 Jul 2026 11:07:39 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
-    "activeCount": 3,
+    "activeCount": 17,
     "cancelledCount": 0,
     "expiredCount": 0,
-    "updateCount": 1,
+    "updateCount": 2,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 1,
+    "validCount": 2,
     "rejectedCount": 0,
-    "discoveryType": "opendata_newest_file",
+    "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
+    "discoverySelection": "latest_per_product_stream",
+    "discoveryMaxFiles": null,
+    "discoveryFixedLimit": false,
+    "productStreams": [
+      "50",
+      "70"
+    ],
+    "streamCount": 2,
+    "completeness": {
+      "capMessages": 2,
+      "infoBlocks": 41,
+      "logicalAlerts": 17,
+      "uniqueEvents": [
+        "Vysoké teploty",
+        "Velmi vysoké teploty",
+        "Silná zátěž teplem",
+        "Velmi silná zátěž teplem",
+        "Riziko požárů",
+        "Výhled jevů",
+        "Stav sucha",
+        "Hydrologické sucho"
+      ],
+      "totalAreas": 121,
+      "mappedAreas": 1190,
+      "unmappedAreas": 0,
+      "mappingCoveragePercent": 100,
+      "publishedActive": 17,
+      "productStreams": [
+        "50",
+        "70"
+      ],
+      "streamCount": 2,
+      "missingStreamCache": 0
+    },
+    "alarms": [],
+    "lastCapSent": "2026-07-29T10:54:03+02:00",
+    "bulletinCacheSize": 2,
     "publish": true,
     "publishReason": "ok",
-    "runMs": 2047,
+    "productionVerified": false,
+    "runMs": 4793,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-07-29T01:56:27.154Z",
+    "lastSnapshotAt": "2026-07-29T20:15:05.798Z",
     "audit": {
       "http": [
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_290854.xml",
+          "productKey": "50",
           "status": 200,
-          "action": "process"
+          "action": "process",
+          "cacheHit": false
+        },
+        {
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
+          "productKey": "70",
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         }
       ],
       "publish": {
         "publish": true,
-        "reason": "ok"
+        "reason": "ok",
+        "completeness": {
+          "capMessages": 2,
+          "infoBlocks": 41,
+          "logicalAlerts": 17,
+          "uniqueEvents": [
+            "Vysoké teploty",
+            "Velmi vysoké teploty",
+            "Silná zátěž teplem",
+            "Velmi silná zátěž teplem",
+            "Riziko požárů",
+            "Výhled jevů",
+            "Stav sucha",
+            "Hydrologické sucho"
+          ],
+          "totalAreas": 121,
+          "mappedAreas": 1190,
+          "unmappedAreas": 0,
+          "mappingCoveragePercent": 100,
+          "publishedActive": 17,
+          "productStreams": [
+            "50",
+            "70"
+          ],
+          "streamCount": 2,
+          "missingStreamCache": 0
+        },
+        "alarms": [],
+        "productionVerified": false
       },
       "parser": {
-        "loaded": 1,
-        "valid": 1,
+        "loaded": 2,
+        "valid": 2,
         "rejected": 0,
         "duplicates": 0,
         "quarantine": 0,
         "cancels": 0,
         "updates": 0,
-        "newThreads": 1,
+        "newThreads": 2,
         "status": "healthy",
         "alert": 0,
-        "update": 1,
+        "update": 2,
         "cancel": 0
       }
     },
     "runHistory": [
+      {
+        "at": "2026-07-29T20:15:05.798Z",
+        "status": "healthy",
+        "mode": "active",
+        "publish": true,
+        "runMs": 4793,
+        "error": null,
+        "activeCount": 17
+      },
       {
         "at": "2026-07-29T01:56:27.154Z",
         "status": "healthy",
