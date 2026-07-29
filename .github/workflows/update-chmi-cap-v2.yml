@@ -29,7 +29,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          # Full-history clone can hang on this large repo (see smoke.yml).
+          # Data sync only needs current tree + shallow push of automation branch.
+          fetch-depth: 1
 
       - uses: actions/setup-node@v4
         with:
