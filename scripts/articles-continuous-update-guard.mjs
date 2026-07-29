@@ -31,6 +31,7 @@ import {
   isIngestAggregateOkStatus,
   isPipelineFailureStatus,
 } from "./iu_pipeline_run_classifier.mjs";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -431,6 +432,7 @@ function emitReleaseBlockerDiagnostics({ prodStale, pipelineIngestOk, releaseBlo
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("articles-continuous-update-guard");
   const nowMs = Date.now();
   let failed = false;
   let yellowWarn = false;
