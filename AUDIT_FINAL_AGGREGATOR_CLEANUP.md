@@ -128,9 +128,17 @@ Staging `projects/data/staging/sources/*.json` — lokálně přítomné, typick
 
 ## Akceptace (mapa)
 
-- [ ] Audit dokument  
-- [ ] Historické shards/snapshots odstraněny z produkční cesty (git)  
-- [ ] Engine + CHMI + deny-list zachovány  
-- [ ] Architektura dokumentována  
+- [x] Audit dokument  
+- [x] Historické shards/snapshots odstraněny z produkční cesty (git)  
+- [x] Engine + CHMI + deny-list zachovány  
+- [x] Architektura dokumentována  
 - [ ] CI zelené, merge, produkční ověření  
-- [ ] Stashe nedotčené  
+- [x] Stashe nedotčené  
+
+## Doplněno ve Fázi C–F (2026-07-29)
+
+- Odstraněny mrtvé RSS-rotation one-shot skripty/proofy (žádný CI konzument).
+- `source_rotation_inventory.json` regenerován na `sources=0` (prázdný registry).
+- Z `scripts/requirements.txt` odstraněny neimportované `beautifulsoup4` + `lxml`.
+- `SYSTEM_AUDIT.md` → `docs/archive/media-aggregator/`; `docs/STRUCTURE.md` odkazuje na `AGGREGATION_ARCHITECTURE.md`.
+- **Ne** plošný rename article→item; **ne** plošný npm upgrade.
