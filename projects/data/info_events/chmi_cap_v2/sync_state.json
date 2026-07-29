@@ -1,12 +1,12 @@
 {
   "sync": {
     "endpoint": "opendata://cap",
-    "etag": "\"6a688d7b-e76a\"",
-    "lastModified": "Tue, 28 Jul 2026 11:07:39 GMT",
-    "bodyHash": "4fb2039ee82178f14b36fdb73814fe199252fab9bf161ef51ea22442bf1b4e6f",
-    "last_checked_at": "2026-07-29T01:56:29.181Z",
-    "last_success_at": "2026-07-29T01:56:29.181Z",
-    "last_changed_at": "2026-07-29T01:56:29.181Z",
+    "etag": "\"6a69bfc6-21a480\"",
+    "lastModified": "Wed, 29 Jul 2026 08:54:30 GMT",
+    "bodyHash": "536a21bd4d713ade207a048a3c316983957ca18eb9c74bca8afb51317cdab280",
+    "last_checked_at": "2026-07-29T19:18:25.018Z",
+    "last_success_at": "2026-07-29T19:18:25.018Z",
+    "last_changed_at": "2026-07-29T19:18:25.018Z",
     "consecutive_errors": 0,
     "backoff_until": null,
     "status": "healthy",
@@ -20,7 +20,7 @@
     "expiresAt": null
   },
   "knownUrls": [
-    "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml"
+    "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_290854.xml"
   ],
   "endpointMeta": {
     "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml": {
@@ -28,10 +28,16 @@
       "lastModified": "Tue, 28 Jul 2026 11:07:39 GMT",
       "bodyHash": "4fb2039ee82178f14b36fdb73814fe199252fab9bf161ef51ea22442bf1b4e6f",
       "updatedAt": "2026-07-29T01:56:29.182Z"
+    },
+    "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_290854.xml": {
+      "etag": "\"6a69bfc6-21a480\"",
+      "lastModified": "Wed, 29 Jul 2026 08:54:30 GMT",
+      "bodyHash": "536a21bd4d713ade207a048a3c316983957ca18eb9c74bca8afb51317cdab280",
+      "updatedAt": "2026-07-29T19:18:25.022Z"
     }
   },
   "lastRun": {
-    "at": "2026-07-29T01:56:27.154Z",
+    "at": "2026-07-29T19:18:20.699Z",
     "ok": true,
     "mode": "active",
     "publish": true
