@@ -236,19 +236,22 @@ function listedForStreams(streamCount, filesPerStream = 3) {
     product: "50",
     seq: "D1",
     sent: "2026-07-29T10:00:00+02:00",
-    infos: [{ event: "Vysoké teploty", severity: "Moderate", orps: ["1000"], expires: "2026-07-30T00:00:00+02:00" }],
+    infos: [{ event: "Vysoké teploty", severity: "Moderate", orps: ["1000"], expires: "2026-08-15T00:00:00+02:00" }],
   });
   const b = makeCapXml({
     product: "50",
     seq: "D2",
     sent: "2026-07-29T10:00:00+02:00",
-    infos: [{ event: "Vysoké teploty", severity: "Severe", orps: ["6203"], expires: "2026-07-31T00:00:00+02:00" }],
+    infos: [{ event: "Vysoké teploty", severity: "Severe", orps: ["6203"], expires: "2026-08-20T00:00:00+02:00" }],
   });
   // Different identifiers → different threads → two items
-  const both = assembleActiveStateFromOrderedDocuments([
-    { xml: a, sourceUrl: "d1" },
-    { xml: b, sourceUrl: "d2" },
-  ]);
+  const both = assembleActiveStateFromOrderedDocuments(
+    [
+      { xml: a, sourceUrl: "d1" },
+      { xml: b, sourceUrl: "d2" },
+    ],
+    { receivedAt: "2026-07-29T12:00:00.000Z" }
+  );
   ok("dedupe_keeps_distinct", both.activeCount === 2, String(both.activeCount));
 }
 
@@ -420,6 +423,119 @@ function listedForStreams(streamCount, filesPerStream = 3) {
   ok("sync_incomplete_fail", /INCOMPLETE_STREAM_CACHE/.test(syncSrc), "missing incomplete alarm");
   ok("sync_ok_requires_not_failed", /diagnostics\.status !== "failed"/.test(syncSrc), "ok ignores failed");
   ok("sync_no_publish_incomplete", /completenessOk/.test(syncSrc), "no completenessOk gate");
+  ok("sync_snapshot_contract_field", /snapshotContractValid/.test(syncSrc), "missing snapshotContractValid");
+}
+
+// --- 15) CHMI product-supersession A+B regression (original error class) ---
+{
+  const {
+    oracleProductSupersessionActive,
+    diagnosticStrictUnexpiredInclusion,
+    validateStreamSnapshotContract,
+  } = await import("./chmi-cap-v2/snapshot-contract.mjs");
+  const FIX = path.join(REPO, "scripts/fixtures/chmi-cap-v2");
+  const olderXml = fs.readFileSync(path.join(FIX, "stream-ab-older.xml"), "utf8");
+  const onlyAXml = fs.readFileSync(path.join(FIX, "stream-ab-newer-only-a.xml"), "utf8");
+  const keepBXml = fs.readFileSync(path.join(FIX, "stream-ab-newer-cancel-a-keep-b.xml"), "utf8");
+  const older = parseCapAlertXml(olderXml);
+  const onlyA = parseCapAlertXml(onlyAXml);
+  const keepB = parseCapAlertXml(keepBXml);
+
+  const docsOnlyA = [
+    { xml: olderXml, sourceUrl: "older", name: "older", sent: older.sent, mtime: 1, _alert: older },
+    { xml: onlyAXml, sourceUrl: "onlyA", name: "onlyA", sent: onlyA.sent, mtime: 2, _alert: onlyA },
+  ];
+  const oracleA = oracleProductSupersessionActive(docsOnlyA, Date.parse("2026-07-29T13:00:00+02:00"));
+  ok("supersession_ab_to_a_only", oracleA.active.length === 1 && oracleA.active[0].event === "jev a", JSON.stringify(oracleA.active));
+  ok("supersession_b_ended_by_omission", !oracleA.active.some((h) => h.event === "jev b"), "B still active");
+
+  const strict = diagnosticStrictUnexpiredInclusion(older, onlyA);
+  ok("strict_inclusion_flags_b_drop", strict.some((v) => /jev b/i.test(v.event)), JSON.stringify(strict));
+
+  const v = validateStreamSnapshotContract({
+    productKey: "50",
+    historyDocsAsc: docsOnlyA,
+    mtimeHeadDoc: docsOnlyA[1],
+    asOfMs: Date.parse("2026-07-29T13:00:00+02:00"),
+  });
+  ok("supersession_contract_pass_for_chmi_model", v.ok === true, JSON.stringify(v.alarms));
+
+  // Never HEALTHY with only A if we incorrectly claim lifecycle kept B
+  const lifeWrongExpectation = assembleActiveStateFromOrderedDocuments([
+    { xml: olderXml, sourceUrl: "older" },
+    { xml: onlyAXml, sourceUrl: "onlyA" },
+  ]);
+  // Lifecycle on same thread replaces → only A (same as supersession for single thread)
+  ok(
+    "lifecycle_same_thread_also_only_a",
+    lifeWrongExpectation.active.every((i) => /jev a/i.test((i.capV2 && i.capV2.event) || i.title)) &&
+      !lifeWrongExpectation.active.some((i) => /jev b/i.test((i.capV2 && i.capV2.event) || i.title)),
+    String(lifeWrongExpectation.activeCount)
+  );
+
+  const docsKeepB = [
+    { xml: olderXml, sourceUrl: "older", name: "older", sent: older.sent, mtime: 1, _alert: older },
+    { xml: keepBXml, sourceUrl: "keepB", name: "keepB", sent: keepB.sent, mtime: 3, _alert: keepB },
+  ];
+  const oracleB = oracleProductSupersessionActive(docsKeepB, Date.parse("2026-07-29T15:00:00+02:00"));
+  ok("supersession_cancel_a_keep_b", oracleB.active.length === 1 && oracleB.active[0].event === "jev b", JSON.stringify(oracleB.active));
+  ok("supersession_a_gone", !oracleB.active.some((h) => h.event === "jev a"), "A still active");
+
+  // Cross-stream: A in 50, B in 70 — both heads must survive
+  const a50 = makeCapXml({
+    product: "50",
+    seq: "X1",
+    infos: [{ event: "Jev A", severity: "Moderate", orps: ["1000"], expires: "2026-08-10T00:00:00+02:00" }],
+  });
+  const b70 = makeCapXml({
+    product: "70",
+    seq: "X1",
+    infos: [{ event: "Jev B", severity: "Severe", orps: ["6203"], expires: "2026-08-10T00:00:00+02:00" }],
+  });
+  const multi = assembleActiveStateFromOrderedDocuments([
+    { xml: a50, sourceUrl: "s50" },
+    { xml: b70, sourceUrl: "s70" },
+  ]);
+  ok("cross_stream_keeps_both", multi.activeCount === 2, String(multi.activeCount));
+}
+
+// --- 16) Stress 300 docs (beyond prior 200) ---
+{
+  const total = 300;
+  const streamCount = 20;
+  const perStream = Math.ceil(total / streamCount);
+  const docs = [];
+  let n = 0;
+  const t0 = performance.now();
+  for (let s = 0; s < streamCount; s++) {
+    const product = String(30 + s);
+    for (let f = 0; f < perStream && n < total; f++, n++) {
+      docs.push({
+        xml: makeCapXml({
+          product,
+          seq: `S${s}F${f}`,
+          sent: `2026-07-29T${String(10 + (f % 10)).padStart(2, "0")}:00:00+02:00`,
+          msgType: f === 0 ? "Alert" : "Update",
+          references:
+            f === 0 ? "" : `chmi@chmi.cz,2.49.0.0.203.0.CZ.ARCH.${product}.S${s}F0,2026-07-29T10:00:00+02:00`,
+          infos: [
+            {
+              event: `Jev ${product}`,
+              severity: "Moderate",
+              orps: ["1000", "6203"],
+              expires: "2026-08-10T00:00:00+02:00",
+            },
+          ],
+        }),
+        sourceUrl: `stress300-${product}-${f}`,
+      });
+    }
+  }
+  const assembled = assembleActiveStateFromOrderedDocuments(docs);
+  const ms = performance.now() - t0;
+  ok("stress_300_threads", assembled.threadCount >= streamCount, String(assembled.threadCount));
+  ok("stress_300_perf", ms < 45000, String(ms));
+  evidence.push(`stress_300: docs=${docs.length} active=${assembled.activeCount} threads=${assembled.threadCount} ms=${ms.toFixed(1)}`);
 }
 
 if (fails.length) {

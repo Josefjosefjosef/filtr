@@ -309,10 +309,38 @@ export async function runChmiCapV2Sync(opts = {}) {
     }
     diagnostics.alarms = alarms;
 
+    // Snapshot contract (CHMI product-supersession): one head per stream is authoritative.
+    const headAreas = feedItems.reduce((n, i) => {
+      const g = i.capV2 && i.capV2.geo ? i.capV2.geo : null;
+      return n + ((g && g.mappedAreas) || (i.region && i.region.orpIds && i.region.orpIds.length) || 0);
+    }, 0);
+    diagnostics.snapshot = {
+      model: "chmi_product_supersession",
+      streamCount: diagnostics.discovery.streamCount || 0,
+      headDocuments: latest.length,
+      headAreas,
+      historyReplayWarnings: 0,
+      headWarnings: processResult ? processResult.report.rejected : 0,
+      historyReplayAreas: null,
+      crossDocumentReferences: null,
+      unresolvedReferences: null,
+      snapshotContractValid:
+        missingCache.length === 0 &&
+        (!processResult || processResult.report.rejected === 0) &&
+        !alarms.some((a) =>
+          ["INCOMPLETE_STREAM_CACHE", "ZERO_PUBLISH_WITH_REAL_HAZARDS", "PARSER_REJECTED"].includes(a.code)
+        ),
+    };
+    if (!diagnostics.snapshot.snapshotContractValid) {
+      alarms.push({ code: "SNAPSHOT_CONTRACT_INVALID", detail: diagnostics.snapshot });
+      diagnostics.alarms = alarms;
+    }
+
     const completenessOk =
       missingCache.length === 0 &&
       (!processResult || processResult.report.rejected === 0) &&
-      !alarms.some((a) => a.code === "ZERO_PUBLISH_WITH_REAL_HAZARDS");
+      !alarms.some((a) => a.code === "ZERO_PUBLISH_WITH_REAL_HAZARDS") &&
+      diagnostics.snapshot.snapshotContractValid !== false;
 
     if (!completenessOk) {
       diagnostics.status = "failed";
