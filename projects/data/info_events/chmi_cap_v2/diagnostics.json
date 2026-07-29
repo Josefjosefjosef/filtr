@@ -1,38 +1,110 @@
 {
-  "runId": "73d8cdcb7c2e5686",
-  "started": "2026-07-29T01:56:27.154Z",
+  "runId": "484d9099a2bf1786",
+  "started": "2026-07-29T20:15:05.798Z",
   "mode": "active",
   "discovery": {
-    "type": "opendata_newest_file",
-    "role": "open_data_file_distribution_discovery_not_api"
+    "type": "opendata_active_streams",
+    "role": "open_data_file_distribution_discovery_not_api",
+    "selection": "latest_per_product_stream",
+    "maxFiles": null,
+    "fixedLimit": false,
+    "productStreams": [
+      "50",
+      "70"
+    ],
+    "streamCount": 2
   },
   "http": [
     {
-      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
+      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_290854.xml",
+      "productKey": "50",
       "status": 200,
-      "action": "process"
+      "action": "process",
+      "cacheHit": false
+    },
+    {
+      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
+      "productKey": "70",
+      "status": 200,
+      "action": "process",
+      "cacheHit": false
     }
   ],
   "parser": {
-    "loaded": 1,
-    "valid": 1,
+    "loaded": 2,
+    "valid": 2,
     "rejected": 0,
     "duplicates": 0,
     "quarantine": 0,
     "cancels": 0,
     "updates": 0,
-    "newThreads": 1,
+    "newThreads": 2,
     "status": "healthy",
     "alert": 0,
-    "update": 1,
+    "update": 2,
     "cancel": 0
   },
   "publish": {
     "publish": true,
-    "reason": "ok"
+    "reason": "ok",
+    "completeness": {
+      "capMessages": 2,
+      "infoBlocks": 41,
+      "logicalAlerts": 17,
+      "uniqueEvents": [
+        "Vysoké teploty",
+        "Velmi vysoké teploty",
+        "Silná zátěž teplem",
+        "Velmi silná zátěž teplem",
+        "Riziko požárů",
+        "Výhled jevů",
+        "Stav sucha",
+        "Hydrologické sucho"
+      ],
+      "totalAreas": 121,
+      "mappedAreas": 1190,
+      "unmappedAreas": 0,
+      "mappingCoveragePercent": 100,
+      "publishedActive": 17,
+      "productStreams": [
+        "50",
+        "70"
+      ],
+      "streamCount": 2,
+      "missingStreamCache": 0
+    },
+    "alarms": [],
+    "productionVerified": false
   },
   "status": "healthy",
   "error": null,
-  "finished": "2026-07-29T01:56:29.201Z",
-  "runMs": 2047
+  "completeness": {
+    "capMessages": 2,
+    "infoBlocks": 41,
+    "logicalAlerts": 17,
+    "uniqueEvents": [
+      "Vysoké teploty",
+      "Velmi vysoké teploty",
+      "Silná zátěž teplem",
+      "Velmi silná zátěž teplem",
+      "Riziko požárů",
+      "Výhled jevů",
+      "Stav sucha",
+      "Hydrologické sucho"
+    ],
+    "totalAreas": 121,
+    "mappedAreas": 1190,
+    "unmappedAreas": 0,
+    "mappingCoveragePercent": 100,
+    "publishedActive": 17,
+    "productStreams": [
+      "50",
+      "70"
+    ],
+    "streamCount": 2,
+    "missingStreamCache": 0
+  },
+  "alarms": [],
+  "finished": "2026-07-29T20:15:10.591Z",
+  "runMs": 4793
 }
