@@ -112,6 +112,11 @@ function read(name) {
   ok("feed_public_url", feed.every((i) => i.url === CHMI_PUBLIC_ALERTS_URL), feed[0] && feed[0].url);
   ok("feed_no_xml_url", feed.every((i) => !/\.xml/i.test(i.url)), "xml url leaked");
   ok("feed_stable_ids", feed.every((i) => String(i.id).startsWith("ie-chmi-v2-")), "bad id");
+  ok(
+    "feed_legal_provenance",
+    feed.every((i) => i.legal && i.legal.approvalStatus && i.legal.distributionId),
+    JSON.stringify(feed[0] && feed[0].legal)
+  );
   ok("feed_precise_orp", feed.some((i) => i.region && i.region.precise === true && i.region.level === "orp"), "no precise");
   ok("feed_no_false_whole_kraj", !feed.some((i) => i.region && i.region.precise && i.region.level === "kraj" && !(i.region.orpIds || []).length), "false kraj");
   ok("parallel_same_orp_two_items", feed.filter((i) => i.region && i.region.orpCode === "6203").length >= 2, "merged hazards");
