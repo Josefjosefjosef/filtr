@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>2.49.0.0.203.0.CZ.260729100000.XOCZ50_001</identifier>
+  <sender>chmi@chmi.cz</sender>
+  <sent>2026-07-29T10:00:00+02:00</sent>
+  <status>Actual</status>
+  <msgType>Alert</msgType>
+  <source>ČHMÚ</source>
+  <scope>Public</scope>
+  <info>
+    <language>cs</language>
+    <category>Met</category>
+    <event>Silné bouřky</event>
+    <responseType>Prepare</responseType>
+    <urgency>Immediate</urgency>
+    <severity>Severe</severity>
+    <certainty>Likely</certainty>
+    <eventCode><valueName>SIVS</valueName><value>STORM</value></eventCode>
+    <onset>2026-07-29T12:00:00+02:00</onset>
+    <expires>2026-07-29T22:00:00+02:00</expires>
+    <senderName>Český hydrometeorologický ústav</senderName>
+    <headline>Silné bouřky</headline>
+    <description>Očekávané silné bouřky s krupobitím.</description>
+    <instruction>Sledujte vývoj počasí.</instruction>
+    <web>https://vystrahy-cr.chmi.cz/</web>
+    <parameter><valueName>awareness_level</valueName><value>3</value></parameter>
+    <area>
+      <areaDesc>Brno (ORP)</areaDesc>
+      <geocode><valueName>CISORP</valueName><value>6203</value></geocode>
+    </area>
+  </info>
+  <info>
+    <language>en-US</language>
+    <category>Met</category>
+    <event>Severe thunderstorms</event>
+    <urgency>Immediate</urgency>
+    <severity>Severe</severity>
+    <certainty>Likely</certainty>
+    <onset>2026-07-29T12:00:00+02:00</onset>
+    <expires>2026-07-29T22:00:00+02:00</expires>
+    <headline>Severe thunderstorms</headline>
+    <area>
+      <areaDesc>Brno</areaDesc>
+      <geocode><valueName>CISORP</valueName><value>6203</value></geocode>
+    </area>
+  </info>
+</alert>

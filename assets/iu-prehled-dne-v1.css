@@ -794,6 +794,33 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   background: rgba(148, 163, 184, 0.14); border-radius: 999px; padding: 3px 8px;
 }
 .iuPdCard__pill--imp { color: #9a3412; background: rgba(251, 146, 60, 0.18); }
+.iuPdCard__warnBadge,
+.iuPrehledDne__warnBadge {
+  display: inline-block;
+  margin: 0 0 6px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #7f1d1d;
+  background: rgba(239, 68, 68, 0.16);
+  border: 1px solid rgba(185, 28, 28, 0.35);
+  max-width: 100%;
+  line-height: 1.35;
+}
+.iuPdCard__warnBadge--ended {
+  color: #374151;
+  background: rgba(148, 163, 184, 0.18);
+  border-color: rgba(100, 116, 139, 0.35);
+  font-weight: 700;
+}
+html.dark .iuPdCard__warnBadge:not(.iuPdCard__warnBadge--ended),
+html[data-theme="dark"] .iuPdCard__warnBadge:not(.iuPdCard__warnBadge--ended) {
+  color: #fecaca;
+  background: rgba(127, 29, 29, 0.45);
+  border-color: rgba(248, 113, 113, 0.45);
+}
 .iuPdCard__actions,
 .iuPrehledDne__actions {
   display: flex;

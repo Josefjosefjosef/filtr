@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>2.49.0.0.203.0.CZ.260729120000.XOCZ50_001_CCA</identifier>
+  <sender>chmi@chmi.cz</sender>
+  <sent>2026-07-29T12:00:00+02:00</sent>
+  <status>Actual</status>
+  <msgType>Update</msgType>
+  <scope>Public</scope>
+  <references>chmi@chmi.cz,2.49.0.0.203.0.CZ.260729100000.XOCZ50_001,2026-07-29T10:00:00+02:00</references>
+  <info>
+    <language>cs</language>
+    <category>Met</category>
+    <event>Silné bouřky</event>
+    <urgency>Immediate</urgency>
+    <severity>Extreme</severity>
+    <certainty>Observed</certainty>
+    <eventCode><valueName>SIVS</valueName><value>STORM</value></eventCode>
+    <onset>2026-07-29T12:00:00+02:00</onset>
+    <expires>2026-07-30T02:00:00+02:00</expires>
+    <senderName>Český hydrometeorologický ústav</senderName>
+    <headline>Silné bouřky — zvýšení stupně</headline>
+    <description>Zvýšen stupeň nebezpečí; rozšíření území.</description>
+    <instruction>Omezte pohyb venku.</instruction>
+    <area>
+      <areaDesc>Brno (ORP)</areaDesc>
+      <geocode><valueName>CISORP</valueName><value>6203</value></geocode>
+    </area>
+    <area>
+      <areaDesc>Šlapanice (ORP)</areaDesc>
+      <geocode><valueName>CISORP</valueName><value>6216</value></geocode>
+    </area>
+  </info>
+</alert>

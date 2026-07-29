@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>2.49.0.0.203.0.CZ.260729130000.XOCZ50_003</identifier>
+  <sender>chmi@chmi.cz</sender>
+  <sent>2026-07-29T13:00:00+02:00</sent>
+  <status>Actual</status>
+  <msgType>Alert</msgType>
+  <scope>Public</scope>
+  <info>
+    <language>cs</language>
+    <category>Met</category>
+    <event>Silný vítr</event>
+    <urgency>Immediate</urgency>
+    <severity>Moderate</severity>
+    <certainty>Possible</certainty>
+    <onset>2026-07-29T15:00:00+02:00</onset>
+    <expires>2026-07-30T06:00:00+02:00</expires>
+    <headline>Silný vítr</headline>
+    <description>Neznámý ORP kód v geocode.</description>
+    <area>
+      <areaDesc>Neznámá oblast</areaDesc>
+      <geocode><valueName>CISORP</valueName><value>9999</value></geocode>
+    </area>
+  </info>
+</alert>

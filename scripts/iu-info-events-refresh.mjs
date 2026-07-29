@@ -26,6 +26,7 @@ import {
   parsePublishDateToIso,
   extractTitleLeadingDate,
 } from "./iu-info-events-lib.mjs";
+import { getChmiCapV2Config, isLegacyProductionPath } from "./chmi-cap-v2/config.mjs";
 import {
   IU_INFO_EVENTS_V2,
   applyChronology,
@@ -386,7 +387,19 @@ async function main() {
     const srcStarted = Date.now();
     try {
       if (entry.capIndexUrl) {
-        keptTotal += await ingestCapIndex(entry, entry.capIndexUrl, nowIso, collected, ingestReport);
+        const chmiV2 = getChmiCapV2Config(process.env);
+        if (entry.id === "chmi" && chmiV2.mode === "active") {
+          ingestReport.push({
+            id: entry.id,
+            ok: true,
+            kept: 0,
+            reason: "delegated_to_chmi_cap_v2_active",
+            mode: "cap-v2-delegated",
+            ms: 0,
+          });
+        } else {
+          keptTotal += await ingestCapIndex(entry, entry.capIndexUrl, nowIso, collected, ingestReport);
+        }
       }
 
       const feedUrls = []
@@ -586,6 +599,24 @@ async function main() {
       neverRejuvenateByFirstSeen: true,
     },
     dataQuality,
+    chmiCapV2: (() => {
+      const cfg = getChmiCapV2Config(process.env);
+      const active = cfg.mode === "active";
+      return {
+        mode: cfg.mode,
+        enabled: cfg.enabled,
+        shadow: cfg.shadow,
+        legacyProductionPath: isLegacyProductionPath(cfg),
+        productionPublishV2: active,
+        intervalMinutes: 15,
+        note:
+          cfg.mode === "off"
+            ? "CAP v2 flag off — legacy CHMI CAP ingest unchanged"
+            : cfg.mode === "shadow"
+              ? "CAP v2 shadow only — does not replace production snapshot; run scripts/chmi-cap-v2-shadow-run.mjs for fixture audit"
+              : "CAP v2 active — production CHMI items published by update-chmi-cap-v2 (15 min, max 1 bulletin)",
+      };
+    })(),
   };
 
   const failedConnectors = ingestReport.filter((r) => !r.ok);

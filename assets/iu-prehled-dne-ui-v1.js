@@ -21,10 +21,13 @@ import {
   getScrollState,
   setScrollState,
   migrateLocalStateOnce,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-sw-network-first-20260720";
+  migrateChmiCapV2UserStates,
+  rollbackChmiCapV2UserStates,
+  iuInfoDataUrl,
+} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-cap-v2-20260729";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-sw-network-first-20260720";
+const CACHE_BUST = "info-system-v6-chmi-cap-v2-20260729";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -330,9 +333,16 @@ function sectionColor(sectionId) {
   return (sec && sec.color) || "#5B6CFF";
 }
 
+function chmiPublicDetailUrl(ev) {
+  // CAP v2 items always open the public CHMI page (never technical XML).
+  if (ev && ev.capV2) return "https://vystrahy-cr.chmi.cz/";
+  return "";
+}
+
 function renderItem(ev) {
   const id = String(ev.id || "");
-  const url = safeHttpUrl(ev.url || ev.originalUrl);
+  const forced = chmiPublicDetailUrl(ev);
+  const url = safeHttpUrl(forced || ev.url || ev.originalUrl);
   const title = String(ev.title || "Bez názvu");
   const src = String(ev.sourceLabel || ev.sourceId || "");
   const region = ev.region && ev.region.name ? String(ev.region.name) : "";
@@ -342,6 +352,8 @@ function renderItem(ev) {
   const read = isRead(id);
   const color = safeCssColor(sectionColor(ev.sectionId));
   const alert = String(ev.eventType || "") === "mimoradne" || Number(ev.importance) >= 5;
+  const capActive = !!(ev.capV2 && ev.capV2.badgeActive);
+  const capEnded = !!(ev.capV2 && (ev.status === "ukonceno" || ev.status === "zruseno"));
   const titleMarkup = url
     ? `<a class="iuPdCard__title iuPrehledDne__cardTitle" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(title)}</a>`
     : `<span class="iuPdCard__title iuPrehledDne__cardTitle" data-act="open-title">${esc(title)}</span>`;
@@ -351,8 +363,13 @@ function renderItem(ev) {
     `<div class="iuPdCard__time iuPrehledDne__time">${esc(fmtTime(publishIso(ev)))}</div>` +
     `<div class="iuPrehledDne__readMark" aria-label="Přečteno">✓</div>` +
     `</div>` +
-    `<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot${alert ? " iuPrehledDne__dot--alert" : ""}"></span></div>` +
+    `<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot${alert || capActive ? " iuPrehledDne__dot--alert" : ""}"></span></div>` +
     `<article class="iuPrehledDne__card iuPdCard__body">` +
+    (capActive
+      ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge" role="status" aria-label="Aktivní výstraha">🔴 VÝSTRAHA</span>`
+      : capEnded
+        ? `<span class="iuPdCard__warnBadge iuPdCard__warnBadge--ended iuPrehledDne__warnBadge" role="status">${esc(ev.status === "zruseno" ? "Zrušeno" : "Ukončeno")}</span>`
+        : "") +
     titleMarkup +
     `<div class="iuPdCard__meta iuPrehledDne__meta">` +
     (src ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(src)}</span>` : "") +
@@ -1201,6 +1218,50 @@ async function boot() {
   try {
     const data = await loadInfoSystemData({});
     state.data = data;
+    try {
+      migrateChmiCapV2UserStates((data.feed && data.feed.items) || []);
+    } catch (_) {}
+    // Optional ops diagnostics (no UI change unless ?iu_chmi_diag=1)
+    try {
+      if (typeof location !== "undefined" && /(?:^|[?&])iu_chmi_diag=1(?:&|$)/.test(location.search || "")) {
+        const mon = await fetch(iuInfoDataUrl("monitoring.json"), { cache: "no-store" }).then((r) =>
+          r.ok ? r.json() : null
+        );
+        const d = mon && mon.chmiCapV2;
+        if (d) {
+          const bar = document.createElement("pre");
+          bar.className = "iuPdDiag";
+          bar.setAttribute("data-iu-chmi-diag", "1");
+          bar.style.cssText = "font:12px/1.4 ui-monospace,monospace;padding:8px 12px;margin:0;background:#0b1220;color:#cde;white-space:pre-wrap";
+          bar.textContent = JSON.stringify(
+            {
+              mode: d.mode,
+              status: d.status,
+              lastRunAt: d.lastRunAt,
+              lastSuccessAt: d.lastSuccessAt,
+              lastSnapshotAt: d.lastSnapshotAt,
+              lastError: d.lastError,
+              active: d.activeCount,
+              cancelled: d.cancelledCount,
+              expired: d.expiredCount,
+              alert: d.alertCount,
+              update: d.updateCount,
+              cancelMsg: d.cancelMsgCount,
+              quarantine: d.quarantineCount,
+              discovery: d.discoveryType,
+              publish: d.publish,
+              runMs: d.runMs,
+              registry: d.registryVersion,
+              rollbackFn: typeof rollbackChmiCapV2UserStates === "function",
+            },
+            null,
+            2
+          );
+          const host = root.querySelector(".iuPrehledDne") || root;
+          host.insertBefore(bar, host.firstChild);
+        }
+      }
+    } catch (_) {}
     state.index = buildFeedIndex((data.feed && data.feed.items) || []);
     state.prefs = getPrefs();
     state.page = 1;
