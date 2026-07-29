@@ -1,6 +1,6 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
- * PC (≥901px): opened article shows green read checkmark under relative time.
+ * PC (â‰Ą901px): opened article shows green read checkmark under relative time.
  * Also covers mobile/tablet 22px gap + return scroll/section (PR #7498).
  * Run: npm run iu-desktop-article-read-mark-guard
  * Prod: IU_GUARD_BASE_URL=https://infouzel.cz/projects/ npm run iu-desktop-article-read-mark-guard
@@ -10,6 +10,7 @@ import path from "path";
 import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 import {
   installProofGuardNetworkStubs,
   createIgnorableResourceTracker,
@@ -126,7 +127,7 @@ async function readArticleState(page, articleId) {
     const clockRect = clock ? clock.getBoundingClientRect() : null;
     const markVisible =
       !!mark &&
-      mark.textContent.trim() === "✓" &&
+      mark.textContent.trim() === "âś“" &&
       !!cs &&
       cs.display !== "none" &&
       cs.visibility !== "hidden" &&
@@ -300,6 +301,7 @@ async function testReturnKeepsScrollAndSection(page) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("iu-desktop-article-read-mark-guard-v1");
   let serverProc = null;
   if (USE_LOCAL_SERVER) {
     serverProc = spawn("npx", ["serve", REPO, "-l", String(PORT)], {

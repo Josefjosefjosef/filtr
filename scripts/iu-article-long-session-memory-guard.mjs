@@ -1,6 +1,6 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
- * Task 66 — long-session memory + network guard for chunked article client layer.
+ * Task 66 â€” long-session memory + network guard for chunked article client layer.
  * Run: npm run iu-article-long-session-memory-guard
  * Prod: IU_GUARD_BASE_URL=https://www.infouzel.cz/projects/ npm run iu-article-long-session-memory-guard
  */
@@ -22,6 +22,7 @@ import {
   waitDesktopNavTarget,
 } from "./guards/desktop-nav-targets.mjs";
 import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const requireFromRepo = createRequire(path.join(REPO, "package.json"));
@@ -278,6 +279,7 @@ function analyzeNetwork(networkLog) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("iu-article-long-session-memory-guard");
   let server = null;
   if (USE_LOCAL_SERVER) {
     server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {

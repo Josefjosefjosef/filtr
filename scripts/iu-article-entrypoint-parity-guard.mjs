@@ -1,11 +1,11 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Article entrypoint parity guard (V1).
  *
  * Ensures chunked article loading behaves identically regardless of entry path:
  * INITIAL=CLIENT_INITIAL_LIMIT (100), LOAD_MORE=CLIENT_LOAD_MORE_LIMIT per active section.
  * Never: FULL_POOL, FULL_ARCHIVE, ALL_SECTIONS_PRELOAD.
- * Přehled dne: bounded feed chunk fetch only (init+buffer), not full pool.
+ * PĹ™ehled dne: bounded feed chunk fetch only (init+buffer), not full pool.
  *
  * Load-more is tested in two deterministic modes (never raced against BG preload):
  * - fetch: pause BG via window.__IU_GUARD_PAUSE_BG_PRELOAD (Playwright addInitScript only)
@@ -26,6 +26,7 @@ import {
   waitDesktopNavTarget,
 } from "./guards/desktop-nav-targets.mjs";
 import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -512,7 +513,7 @@ function evaluateLegMetrics(leg, fails, scenarioId) {
       if (lm.metaBefore === lm.metaAfter) {
         issues.push("reveal_mode_meta_unchanged=YES");
       }
-      /* network fetch is optional in reveal mode — do not require or forbid it */
+      /* network fetch is optional in reveal mode â€” do not require or forbid it */
     }
   }
 
@@ -788,6 +789,7 @@ function buildResultBlock(report) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("iu-article-entrypoint-parity-guard");
   const staticFails = staticArchitectureGuard();
   const fails = staticFails.slice();
   const scenarioResults = [];

@@ -1,6 +1,6 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
- * Task 66 — repeated „Další“ load-more stress (100 → 200 → … up to server cap).
+ * Task 66 â€” repeated â€žDalĹˇĂ­â€ś load-more stress (100 â†’ 200 â†’ â€¦ up to server cap).
  * Run: npm run iu-article-load-more-stress-guard
  */
 import { createRequire } from "module";
@@ -15,6 +15,7 @@ import {
   waitDesktopNavTarget,
 } from "./guards/desktop-nav-targets.mjs";
 import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -171,7 +172,7 @@ async function waitForStressStart(page, timeoutMs = 120000) {
     }
     await page.waitForTimeout(300);
   }
-  throw new Error("load-more stress start not ready (100 articles + Další button)");
+  throw new Error("load-more stress start not ready (100 articles + DalĹˇĂ­ button)");
 }
 
 async function waitForLoadMoreButton(page, timeoutMs = 60000) {
@@ -249,6 +250,7 @@ async function clickLoadMoreStep(page, networkLog, markIdx) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("iu-article-load-more-stress-guard");
   let server = null;
   if (USE_LOCAL_SERVER) {
     server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {
