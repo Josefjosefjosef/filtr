@@ -167,7 +167,10 @@ export function resolveDiscoveryAdapter(config = {}, opts = {}) {
     return createConfirmedCurrentFeedDiscovery(opts.feedUrl || config.confirmedFeedUrl || process.env.IU_CHMI_CAP_V2_CURRENT_FEED, opts);
   }
   if (kind === "opendata_newest_file") {
-    return createOpendataNewestFileDiscovery({ ...opts, maxFiles: opts.maxFiles || 1 });
+    return createOpendataNewestFileDiscovery({
+      ...opts,
+      maxFiles: opts.maxFiles || Number(process.env.IU_CHMI_CAP_V2_MAX_FILES || 15),
+    });
   }
   if (kind === "noop") return createNoopDiscovery();
   return createUnconfirmedProductionDiscovery();

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>2.49.0.0.203.0.CZ.260729120000.MULTI</identifier>
+  <sender>chmi@chmi.cz</sender>
+  <sent>2026-07-29T12:00:00+02:00</sent>
+  <status>Actual</status>
+  <msgType>Alert</msgType>
+  <source>ČHMÚ</source>
+  <scope>Public</scope>
+  <info>
+    <language>cs</language>
+    <category>Met</category>
+    <event>Vysoké teploty</event>
+    <urgency>Expected</urgency>
+    <severity>Moderate</severity>
+    <certainty>Likely</certainty>
+    <eventCode><valueName>SIVS</valueName><value>HEAT</value></eventCode>
+    <onset>2026-07-29T12:00:00+02:00</onset>
+    <expires>2026-07-30T20:00:00+02:00</expires>
+    <headline>Vysoké teploty</headline>
+    <description>Vysoké teploty na větší části území.</description>
+    <instruction>Dodržujte pitný režim.</instruction>
+    <area>
+      <areaDesc>Praha (ORP)</areaDesc>
+      <geocode><valueName>CISORP</valueName><value>1000</value></geocode>
+    </area>
+    <area>
+      <areaDesc>Brno (ORP)</areaDesc>
+      <geocode><valueName>CISORP</valueName><value>6203</value></geocode>
+    </area>
+    <area>
+      <areaDesc>Plzeň (ORP)</areaDesc>
+      <geocode><valueName>CISORP</valueName><value>3213</value></geocode>
+    </area>
+  </info>
+  <info>
+    <language>cs</language>
+    <category>Met</category>
+    <event>Silná zátěž teplem</event>
+    <urgency>Expected</urgency>
+    <severity>Severe</severity>
+    <certainty>Likely</certainty>
+    <eventCode><valueName>SIVS</valueName><value>HEATLOAD</value></eventCode>
+    <onset>2026-07-29T12:00:00+02:00</onset>
+    <expires>2026-07-30T20:00:00+02:00</expires>
+    <headline>Silná zátěž teplem</headline>
+    <description>Silná zátěž teplem.</description>
+    <instruction>Omezte fyzickou námahu.</instruction>
+    <area>
+      <areaDesc>Praha (ORP)</areaDesc>
+      <geocode><valueName>CISORP</valueName><value>1000</value></geocode>
+    </area>
+  </info>
+  <info>
+    <language>cs</language>
+    <category>Met</category>
+    <event>Stav sucha</event>
+    <urgency>Future</urgency>
+    <severity>Moderate</severity>
+    <certainty>Observed</certainty>
+    <eventCode><valueName>SIVS</valueName><value>DROUGHT</value></eventCode>
+    <onset>2026-07-01T00:00:00+02:00</onset>
+    <expires></expires>
+    <headline>Stav sucha</headline>
+    <description>Stav sucha.</description>
+    <area>
+      <areaDesc>Rumburk (ORP)</areaDesc>
+      <geocode><valueName>CISORP</valueName><value>4212</value></geocode>
+    </area>
+  </info>
+  <info>
+    <language>cs</language>
+    <category>Met</category>
+    <event>Žádná výstraha před větrem</event>
+    <urgency>Past</urgency>
+    <severity>Minor</severity>
+    <certainty>Observed</certainty>
+    <onset>2026-07-29T12:00:00+02:00</onset>
+    <expires>2026-07-30T12:00:00+02:00</expires>
+    <headline>Žádná výstraha před větrem</headline>
+    <area>
+      <areaDesc>Praha (ORP)</areaDesc>
+      <geocode><valueName>CISORP</valueName><value>1000</value></geocode>
+    </area>
+  </info>
+</alert>
