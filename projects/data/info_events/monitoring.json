@@ -412,5 +412,71 @@
       "status": 403,
       "reason": "down"
     }
-  ]
+  ],
+  "chmiCapV2": {
+    "mode": "active",
+    "lastRunAt": "2026-07-29T01:56:27.154Z",
+    "lastSuccessAt": "2026-07-29T01:56:29.181Z",
+    "lastChangedAt": "2026-07-29T01:56:29.181Z",
+    "lastError": null,
+    "status": "healthy",
+    "etag": "\"6a688d7b-e76a\"",
+    "lastModified": "Tue, 28 Jul 2026 11:07:39 GMT",
+    "consecutiveErrors": 0,
+    "backoffUntil": null,
+    "activeCount": 3,
+    "cancelledCount": 0,
+    "expiredCount": 0,
+    "updateCount": 1,
+    "alertCount": 0,
+    "cancelMsgCount": 0,
+    "quarantineCount": 0,
+    "validCount": 1,
+    "rejectedCount": 0,
+    "discoveryType": "opendata_newest_file",
+    "discoveryRole": "open_data_file_distribution_discovery_not_api",
+    "publish": true,
+    "publishReason": "ok",
+    "runMs": 2047,
+    "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
+    "lastSnapshotAt": "2026-07-29T01:56:27.154Z",
+    "audit": {
+      "http": [
+        {
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
+          "status": 200,
+          "action": "process"
+        }
+      ],
+      "publish": {
+        "publish": true,
+        "reason": "ok"
+      },
+      "parser": {
+        "loaded": 1,
+        "valid": 1,
+        "rejected": 0,
+        "duplicates": 0,
+        "quarantine": 0,
+        "cancels": 0,
+        "updates": 0,
+        "newThreads": 1,
+        "status": "healthy",
+        "alert": 0,
+        "update": 1,
+        "cancel": 0
+      }
+    },
+    "runHistory": [
+      {
+        "at": "2026-07-29T01:56:27.154Z",
+        "status": "healthy",
+        "mode": "active",
+        "publish": true,
+        "runMs": 2047,
+        "error": null,
+        "activeCount": 3
+      }
+    ]
+  }
 }
