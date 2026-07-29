@@ -15,6 +15,21 @@ const GUARDS = [
 ];
 
 async function main() {
+  try {
+    const cut = JSON.parse(
+      require("fs").readFileSync(
+        require("path").join(__dirname, "..", "projects", "data", "info_events", "cutover_state.json"),
+        "utf8"
+      )
+    );
+    if (cut.commercialAggregationActive === false) {
+      process.stdout.write("[run-mobile-stability-guards-v1] SKIP media CLS/load-more (commercialAggregationActive=false)\n");
+      // Keep non-media mobile guards; skip MEDIA_* only.
+      for (let i = GUARDS.length - 1; i >= 0; i--) {
+        if (GUARDS[i].key.indexOf("MEDIA_") === 0) GUARDS.splice(i, 1);
+      }
+    }
+  } catch (_) {}
   const envUrl = String(process.env.MOBILE_STABILITY_GUARDS_URL || "").trim();
   let server = null;
   if (!envUrl) server = await shared.startStaticServer(shared.DEFAULT_PORT);

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * CI/local: flicker phase sampling + 16 rail buttons nav latency + calendar/Silver surface proof.
  * No screenshots. Uses projects-static server (same family as other Playwright proofs).
@@ -10,6 +10,7 @@ import path from "path";
 import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 import {
   desktopNavSelector,
   waitDesktopNavTarget,
@@ -27,22 +28,22 @@ const SKIP_CALENDAR = process.env.IU_PERF_GUARDS_SKIP_CALENDAR === "1";
 const SKIP_UI = process.env.IU_PERF_GUARDS_SKIP_UI === "1";
 
 const BUTTONS = [
-  { name: "Počasí & Radar", accent: "pocasi", nonFeed: true, toolWindow: true, expect: { section: "pocasi", view: "pocasi", topic: null } },
+  { name: "PoÄŤasĂ­ & Radar", accent: "pocasi", nonFeed: true, toolWindow: true, expect: { section: "pocasi", view: "pocasi", topic: null } },
   { name: "Mapy & Navigace", accent: "mapy", nonFeed: true, toolWindow: true, expect: { section: "mapy", view: "mapy", topic: null } },
-  { name: "Jízdní řády", accent: "jr", nonFeed: true, toolWindow: true, expect: { section: "jr", view: "jr", topic: null } },
+  { name: "JĂ­zdnĂ­ Ĺ™Ăˇdy", accent: "jr", nonFeed: true, toolWindow: true, expect: { section: "jr", view: "jr", topic: null } },
   { name: "TV program", accent: "tvprogram", nonFeed: true, toolWindow: true, expect: { section: "tvprogram", view: "tvprogram", topic: null } },
   { name: "TV online", accent: "tvonline", nonFeed: true, toolWindow: true, expect: { section: "tvonline", view: "tvonline", topic: null } },
-  { name: "Rádia", accent: "radio", nonFeed: true, toolWindow: true, expect: { section: "radio", view: "radio", topic: null } },
-  { name: "Média", accent: "media", nonFeed: false, expect: { section: "feed", view: "media", topic: "" } },
-  { name: "Zprávy", accent: "zpravy", nonFeed: false, expect: { section: "feed", view: "media", topic: "zpravy" } },
+  { name: "RĂˇdia", accent: "radio", nonFeed: true, toolWindow: true, expect: { section: "radio", view: "radio", topic: null } },
+  { name: "MĂ©dia", accent: "media", nonFeed: false, expect: { section: "feed", view: "media", topic: "" } },
+  { name: "ZprĂˇvy", accent: "zpravy", nonFeed: false, expect: { section: "feed", view: "media", topic: "zpravy" } },
   { name: "Sport", accent: "sport", nonFeed: false, expect: { section: "feed", view: "media", topic: "sport" } },
   { name: "Finance", accent: "finance", nonFeed: false, expect: { section: "feed", view: "media", topic: "finance" } },
-  { name: "Zdraví", accent: "zdravi", nonFeed: false, expect: { section: "feed", view: "media", topic: "zdravi" } },
-  { name: "Cestování", accent: "travel", nonFeed: false, expect: { section: "travel", view: "media", topic: null } },
+  { name: "ZdravĂ­", accent: "zdravi", nonFeed: false, expect: { section: "feed", view: "media", topic: "zdravi" } },
+  { name: "CestovĂˇnĂ­", accent: "travel", nonFeed: false, expect: { section: "travel", view: "media", topic: null } },
   { name: "Hry", accent: "hry", nonFeed: false, expect: { section: "hry", view: "media", topic: null } },
   { name: "Kultura / Akce", accent: "kultura", nonFeed: false, expect: { section: "kultura", view: "media", topic: null } },
-  { name: "Věda & Historie", accent: "veda", nonFeed: false, expect: { section: "veda", view: "media", topic: null } },
-  { name: "Vzdělávání", accent: "vzdelavani", nonFeed: false, expect: { section: "vzdelavani", view: "media", topic: null } },
+  { name: "VÄ›da & Historie", accent: "veda", nonFeed: false, expect: { section: "veda", view: "media", topic: null } },
+  { name: "VzdÄ›lĂˇvĂˇnĂ­", accent: "vzdelavani", nonFeed: false, expect: { section: "vzdelavani", view: "media", topic: null } },
 ];
 
 const NF_VISIBLE_MAX = 200;
@@ -50,9 +51,9 @@ const NF_STABLE_MAX = 2800;
 /** PC left-rail tool tabs include full document load in new browser tab. */
 const TOOL_WINDOW_VISIBLE_MAX = 5000;
 const TOOL_WINDOW_STABLE_MAX = 5500;
-/** publishable_pool.json primary loader is larger than bootstrap subset; Média first paint budget reflects full pool GET. */
+/** publishable_pool.json primary loader is larger than bootstrap subset; MĂ©dia first paint budget reflects full pool GET. */
 const FEED_VISIBLE_MAX = 450;
-/** Feed nav uses trimmed median of N samples (drop min/max) — single-shot rAF timing is flaky on CI near 200ms. */
+/** Feed nav uses trimmed median of N samples (drop min/max) â€” single-shot rAF timing is flaky on CI near 200ms. */
 const FEED_VISIBLE_SAMPLES = 5;
 /** Fail if multi-flash signature churn exceeds this (baseline+fix both ~1 in practice). */
 const FLICKER_PHASES_MAX = 6;
@@ -308,13 +309,13 @@ async function runCalendarSilverSurface(page) {
   const summary = await page.evaluate(() => {
     const line = document.getElementById("iuSilverCalendarSummaryLine1");
     const t = line ? String(line.textContent || "").trim() : "";
-    return { ok: t.indexOf("Kalendář") === 0, text: t.slice(0, 80) };
+    return { ok: t.indexOf("KalendĂˇĹ™") === 0, text: t.slice(0, 80) };
   });
   if (!summary.ok) {
-    return { summary, disambig: null, error: "calendar summary line missing Kalendář prefix" };
+    return { summary, disambig: null, error: "calendar summary line missing KalendĂˇĹ™ prefix" };
   }
 
-  const phrase = "Ulož zítra v 11 schůzka zubař";
+  const phrase = "UloĹľ zĂ­tra v 11 schĹŻzka zubaĹ™";
   await page.fill("#iuSilverHomeInput", phrase);
   await page.click("#iuSilverHomeSend");
   try {
@@ -323,9 +324,9 @@ async function runCalendarSilverSurface(page) {
   } catch (_) {}
   await page.waitForSelector("#iuSilverChatOverlay:not([hidden])", { timeout: 60000 });
   /**
-   * Phrase "Ulož zítra v 11 schůzka zubař" may route either to:
+   * Phrase "UloĹľ zĂ­tra v 11 schĹŻzka zubaĹ™" may route either to:
    * - STORAGE_DISAMBIGUATION (storage chooser), or
-   * - direct calendar.create (P1 explicit calendar anchor: schůzka + zítra) with event draft card.
+   * - direct calendar.create (P1 explicit calendar anchor: schĹŻzka + zĂ­tra) with event draft card.
    * Wait for a single stable outcome; do not assume disambiguation always appears.
    */
   await page.waitForFunction(
@@ -394,6 +395,7 @@ async function runDesktopUiSanity(page) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("iu-perf-regression-guards");
   const server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {
     cwd: REPO,
     env: { ...process.env, PORT: String(PORT) },

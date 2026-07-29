@@ -1,6 +1,6 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
- * Desktop left-rail section close + scroll restore guard (PC ≥901px).
+ * Desktop left-rail section close + scroll restore guard (PC â‰Ą901px).
  * Run: npm run iu-desktop-section-close-guard
  * Prod: IU_GUARD_BASE_URL=https://infouzel.cz/projects/ npm run iu-desktop-section-close-guard
  */
@@ -9,6 +9,7 @@ import path from "path";
 import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 import {
   installProofGuardNetworkStubs,
   createIgnorableResourceTracker,
@@ -33,16 +34,16 @@ const REGRESSION_CYCLES = parseInt(process.env.IU_DESKTOP_CLOSE_CYCLES || "20", 
 const SETTLE_MS = parseInt(process.env.IU_DESKTOP_CLOSE_SETTLE_MS || "15000", 10);
 const RESTORE_WAIT_MS = parseInt(process.env.IU_DESKTOP_CLOSE_RESTORE_WAIT_MS || "32000", 10);
 const FEED_READY_WAIT_MS = parseInt(process.env.IU_DESKTOP_CLOSE_FEED_READY_MS || "30000", 10);
-/** Fail-fast wall clock — prevents CI "hang forever" when waits stack / mis-serialize. */
+/** Fail-fast wall clock â€” prevents CI "hang forever" when waits stack / mis-serialize. */
 const HARD_TIMEOUT_MS = parseInt(process.env.IU_DESKTOP_CLOSE_HARD_MS || "480000", 10);
 
 const LEFT_RAIL_TOOLS = [
-  { accent: "pocasi", label: "Počasí" },
+  { accent: "pocasi", label: "PoÄŤasĂ­" },
   { accent: "mapy", label: "Mapy" },
-  { accent: "jr", label: "Jízdní řády" },
+  { accent: "jr", label: "JĂ­zdnĂ­ Ĺ™Ăˇdy" },
   { accent: "tvprogram", label: "TV program" },
   { accent: "tvonline", label: "TV online" },
-  { accent: "radio", label: "Rádia" },
+  { accent: "radio", label: "RĂˇdia" },
 ];
 
 function isProdHost(base) {
@@ -91,7 +92,7 @@ async function readScrollY(page) {
 }
 
 async function waitScrollNear(page, targetY, timeoutMs) {
-  // IMPORTANT: Playwright serializes the predicate to the browser — Node closures
+  // IMPORTANT: Playwright serializes the predicate to the browser â€” Node closures
   // (e.g. RESTORE_TOL_PX) are NOT available. Pass tol explicitly or wait always burns timeoutMs.
   try {
     await page.waitForFunction(
@@ -262,6 +263,7 @@ async function testToolCloseFlow(page, tool, mode) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("iu-desktop-section-close-guard-v1");
   const startedAt = Date.now();
   const hardTimer = setTimeout(() => {
     console.error(

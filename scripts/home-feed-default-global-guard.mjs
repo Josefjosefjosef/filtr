@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Hard guard: default /projects/ = global feed (mediaTopicKey off); explicit ?topic= still filters.
  * Run: node scripts/home-feed-default-global-guard.mjs
  * Requires: playwright, local static server (projects-static).
@@ -6,6 +6,7 @@
 import { spawn } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 import { chromium } from "playwright";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -17,6 +18,7 @@ function sleep(ms) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("home-feed-default-global-guard");
   const server = spawn(process.execPath, [path.join(root, "server", "projects-static.mjs")], {
     cwd: root,
     env: { ...process.env, PORT },
@@ -100,7 +102,7 @@ async function main() {
     const zpravyBlocksPureSportHost = !zpravy.hrefs.slice(0, 18).some((h) => h.includes("sport.ceskatelevize.cz"));
     const sportFeedHasSport = sport.hrefs.slice(0, 10).some((h) => h.includes("sport.") || /\/fotbal\/|\/hokej\/|isport\./.test(h));
     const financeFeedHasFinance = finance.hrefs.slice(0, 12).some(
-      (h) => /ekonomik|finance|ministerstvo|peněz|penez/i.test(h),
+      (h) => /ekonomik|finance|ministerstvo|penÄ›z|penez/i.test(h),
     );
 
     const railShift = Math.max(def.railShift, zpravy.railShift, sport.railShift, finance.railShift);

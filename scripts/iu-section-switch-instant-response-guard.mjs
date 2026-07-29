@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Section switch instant response guard (Playwright, local server).
  * Run: npm run iu-section-switch-instant-response-guard
@@ -8,6 +8,7 @@ import path from "path";
 import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 import {
   installProofGuardNetworkStubs,
   createIgnorableResourceTracker,
@@ -203,6 +204,7 @@ function round1(n) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("iu-section-switch-instant-response-guard");
   let server = null;
   if (USE_LOCAL_SERVER) {
     server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {

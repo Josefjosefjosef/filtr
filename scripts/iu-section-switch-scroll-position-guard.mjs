@@ -1,6 +1,6 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
- * Section switch scroll position guard — dynamically tests all left-rail sections.
+ * Section switch scroll position guard â€” dynamically tests all left-rail sections.
  * Run: npm run iu-section-switch-scroll-position-guard
  * Prod: IU_GUARD_BASE_URL=https://infouzel.cz/projects/ npm run iu-section-switch-scroll-position-guard
  */
@@ -9,6 +9,7 @@ import path from "path";
 import { spawn } from "child_process";
 import http from "http";
 import { fileURLToPath } from "url";
+import { exitIfMediaArticlesGuardsSkipped } from "./media-articles-cutover-skip.mjs";
 import {
   installProofGuardNetworkStubs,
   createIgnorableResourceTracker,
@@ -340,6 +341,7 @@ async function runSuite(page) {
 }
 
 async function main() {
+  exitIfMediaArticlesGuardsSkipped("iu-section-switch-scroll-position-guard");
   let server = null;
   if (USE_LOCAL_SERVER) {
     server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {
