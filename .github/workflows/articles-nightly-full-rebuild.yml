@@ -27,18 +27,44 @@ jobs:
         with:
           ref: main
           fetch-depth: 1
+          sparse-checkout: |
+            projects/data/info_events/cutover_state.json
+          sparse-checkout-cone-mode: false
+
+      - name: Skip when commercial aggregation cut over
+        id: cutover
+        run: |
+          set -euo pipefail
+          if [ -f projects/data/info_events/cutover_state.json ]; then
+            COMMERCIAL=$(node -e "const fs=require('fs');const j=JSON.parse(fs.readFileSync('projects/data/info_events/cutover_state.json','utf8'));process.stdout.write(j.commercialAggregationActive===false?'0':'1')")
+            if [ "$COMMERCIAL" = "0" ]; then
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              echo "[nightly] SKIPPED_INFO_SYSTEM_CUTOVER"
+              exit 0
+            fi
+          fi
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v5
+        if: steps.cutover.outputs.skip != 'true'
+        with:
+          ref: main
+          fetch-depth: 1
 
       - uses: actions/setup-python@v5
+        if: steps.cutover.outputs.skip != 'true'
         with:
           python-version: "3.11"
 
       - name: Install dependencies
+        if: steps.cutover.outputs.skip != 'true'
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
           pip install -r scripts/requirements.txt
 
       - name: Full rebuild ingest (all registry feeds)
+        if: steps.cutover.outputs.skip != 'true'
         run: |
           set -euo pipefail
           python scripts/source_rotation_inventory.py
@@ -46,6 +72,7 @@ jobs:
           test -f projects/data/staging/ingest_manifest.json
 
       - name: Proof
+        if: steps.cutover.outputs.skip != 'true'
         run: |
           echo "FULL_REBUILD_MODE=IU_FULL_REBUILD"
           echo "EXPECTED_RUNTIME_MINUTES=30-90"

@@ -55,6 +55,7 @@ jobs:
           MAIN_AT=$(jq -r '.generatedAt // empty' projects/data/articles.json)
           MAIN_BOOT_AT=$(jq -r '.generatedAt // empty' projects/data/articles/bootstrap.json)
           MAIN_IDX_AT=$(jq -r '.generatedAt // empty' projects/data/articles/index.json)
+          MAIN_INFO_AT=$(jq -r '.generatedAt // empty' projects/data/info_events/feed.json)
           if [ -z "$MAIN_AT" ]; then
             echo "ERROR: main articles.json missing generatedAt"
             exit 1
@@ -65,16 +66,26 @@ jobs:
           PROD_BOOT_AT=$(echo "$PROD_BOOT_JSON" | jq -r '.generatedAt // empty' 2>/dev/null || true)
           PROD_IDX_JSON=$(curl -sS -m 20 -H 'Cache-Control: no-cache' "https://infouzel.cz/projects/data/articles/index.json" || true)
           PROD_IDX_AT=$(echo "$PROD_IDX_JSON" | jq -r '.generatedAt // empty' 2>/dev/null || true)
-          echo "[MAIN] generatedAt=$MAIN_AT bootstrap=$MAIN_BOOT_AT index=$MAIN_IDX_AT"
-          echo "[PROD] generatedAt=$PROD_AT bootstrap=$PROD_BOOT_AT index=$PROD_IDX_AT"
+          PROD_INFO_JSON=$(curl -sS -m 20 -H 'Cache-Control: no-cache' "https://infouzel.cz/projects/data/info_events/feed.json" || true)
+          PROD_INFO_AT=$(echo "$PROD_INFO_JSON" | jq -r '.generatedAt // empty' 2>/dev/null || true)
+          echo "[MAIN] generatedAt=$MAIN_AT bootstrap=$MAIN_BOOT_AT index=$MAIN_IDX_AT info_events=$MAIN_INFO_AT"
+          echo "[PROD] generatedAt=$PROD_AT bootstrap=$PROD_BOOT_AT index=$PROD_IDX_AT info_events=$PROD_INFO_AT"
+          ARTICLES_OK=false
           if [ -n "$PROD_AT" ] && [ "$PROD_AT" = "$MAIN_AT" ] \
             && { [ -z "$MAIN_BOOT_AT" ] || { [ -n "$PROD_BOOT_AT" ] && [ "$PROD_BOOT_AT" = "$MAIN_BOOT_AT" ]; }; } \
             && { [ -z "$MAIN_IDX_AT" ] || { [ -n "$PROD_IDX_AT" ] && [ "$PROD_IDX_AT" = "$MAIN_IDX_AT" ]; }; }; then
+            ARTICLES_OK=true
+          fi
+          INFO_OK=false
+          if [ -z "$MAIN_INFO_AT" ] || { [ -n "$PROD_INFO_AT" ] && [ "$PROD_INFO_AT" = "$MAIN_INFO_AT" ]; }; then
+            INFO_OK=true
+          fi
+          if [ "$ARTICLES_OK" = "true" ] && [ "$INFO_OK" = "true" ]; then
             NEEDS_PUBLISH=false
-            echo "[PUBLISH] Up-to-date (articles + homepage bootstrap/index), no dispatch"
+            echo "[PUBLISH] Up-to-date (articles stubs + info_events), no dispatch"
           else
             NEEDS_PUBLISH=true
-            echo "[PUBLISH] Stale prod (articles and/or homepage bootstrap/index), will dispatch pages.yml"
+            echo "[PUBLISH] Stale prod (articles stubs and/or info_events), will dispatch pages.yml"
           fi
           {
             echo "main_generatedAt=$MAIN_AT"
@@ -83,6 +94,8 @@ jobs:
             echo "prod_bootstrap_generatedAt=$PROD_BOOT_AT"
             echo "main_index_generatedAt=$MAIN_IDX_AT"
             echo "prod_index_generatedAt=$PROD_IDX_AT"
+            echo "main_info_events_generatedAt=$MAIN_INFO_AT"
+            echo "prod_info_events_generatedAt=$PROD_INFO_AT"
             echo "needs_publish=$NEEDS_PUBLISH"
           } >> "$GITHUB_OUTPUT"
 
