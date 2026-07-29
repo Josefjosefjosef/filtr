@@ -3,10 +3,11 @@
  *
  * Modes:
  * - fixture: local XML fixtures
- * - configured_urls: conditional GET only on known bulletin URLs (preferred for steady-state)
- * - opendata_newest_file: ONE GET to open-data directory solely to discover newest filename(s),
- *   then conditional GET on those XML files. This is open-data file distribution discovery,
- *   NOT treated as a REST/HTML API contract and never crawls the full archive.
+ * - configured_urls: conditional GET only on known bulletin URLs
+ * - opendata_active_streams: ONE GET to open-data directory; select the newest
+ *   file per CAP product stream (alert_cap_50_*, alert_cap_70_*, …). No fixed
+ *   maxFiles / first-N / last-N. Does NOT download the historical archive.
+ * - opendata_newest_file: alias → opendata_active_streams (legacy env value)
  * - confirmed_current_feed: reserved for a future officially confirmed current-only URL
  */
 import { CHMI_OPENDATA_CAP_INDEX, CHMI_SYNC_UA } from "./config.mjs";
@@ -29,7 +30,7 @@ export function createFixtureDiscovery(files) {
   return {
     type: "fixture",
     async listLatest() {
-      return list.map((f) => ({ url: f.url || f.name, name: f.name }));
+      return list.map((f) => ({ url: f.url || f.name, name: f.name, productKey: f.productKey || null }));
     },
     async fetchBody(url) {
       const f = list.find((x) => (x.url || x.name) === url || x.name === url);
@@ -79,17 +80,58 @@ export function createConfiguredUrlDiscovery(urls, opts = {}) {
 }
 
 /**
- * Discover newest N CAP XML files from CHMI open-data directory listing.
- * Max 1 GET to index per cycle; never walks full archive (slice to maxFiles).
+ * Extract CAP product stream key from filename (e.g. alert_cap_50_290854.xml → "50").
+ * Parallel streams (50 = meteo, 70 = drought/hydro, …) must all be processed.
  */
-export function createOpendataNewestFileDiscovery(opts = {}) {
+export function capProductKeyFromUrl(urlOrName) {
+  const name = String(urlOrName || "").split("/").pop() || "";
+  const m = name.match(/^alert_cap_(\d+)_/i);
+  if (m) return m[1];
+  const m2 = name.match(/cap[_-]?(\d{2,3})[_-]/i);
+  if (m2) return m2[1];
+  return name ? `file:${name}` : "unknown";
+}
+
+/**
+ * From a full index listing, select the newest bulletin per product stream.
+ * NO fixed maxFiles / first-N / last-N — returns one head per discovered stream.
+ *
+ * @param {{ url: string, mtime?: number }[]} listed
+ * @returns {{ url: string, name: string, mtime: number, productKey: string }[]}
+ */
+export function selectLatestPerProductStream(listed) {
+  const byProduct = new Map();
+  for (const item of listed || []) {
+    const url = item && item.url ? String(item.url) : "";
+    if (!url) continue;
+    const name = url.split("/").pop() || url;
+    const productKey = capProductKeyFromUrl(name);
+    const mtime = Number(item.mtime) || 0;
+    const prev = byProduct.get(productKey);
+    if (!prev) {
+      byProduct.set(productKey, { url, name, mtime, productKey });
+      continue;
+    }
+    if (mtime > prev.mtime || (mtime === prev.mtime && name > prev.name)) {
+      byProduct.set(productKey, { url, name, mtime, productKey });
+    }
+  }
+  return [...byProduct.values()].sort((a, b) => (b.mtime || 0) - (a.mtime || 0) || String(a.productKey).localeCompare(String(b.productKey)));
+}
+
+/**
+ * Discover current CAP product-stream heads from CHMI open-data directory listing.
+ * Max 1 GET to index per cycle; never walks/downloads the full archive.
+ * Completeness = every product stream's newest file, not a fixed N.
+ */
+export function createOpendataActiveStreamsDiscovery(opts = {}) {
   const indexUrl = opts.indexUrl || CHMI_OPENDATA_CAP_INDEX;
-  const maxFiles = Math.max(1, Number(opts.maxFiles || 1));
   const fetchImpl = opts.fetchImpl || globalThis.fetch;
   const ua = opts.userAgent || CHMI_SYNC_UA;
   return {
-    type: "opendata_newest_file",
+    type: "opendata_active_streams",
     role: "open_data_file_distribution_discovery_not_api",
+    selection: "latest_per_product_stream",
     async listLatest() {
       const res = await fetchImpl(indexUrl, {
         method: "GET",
@@ -100,8 +142,12 @@ export function createOpendataNewestFileDiscovery(opts = {}) {
       });
       if (!res.ok) throw Object.assign(new Error("opendata_index_http_" + res.status), { code: "DISCOVERY_INDEX" });
       const html = await res.text();
-      const listed = listCapXmlFromIndex(html, indexUrl).slice(0, maxFiles);
-      return listed.map((x) => ({ url: x.url, name: String(x.url || "").split("/").pop(), mtime: x.mtime || 0 }));
+      const listed = listCapXmlFromIndex(html, indexUrl);
+      const selected = selectLatestPerProductStream(listed);
+      if (!selected.length) {
+        throw Object.assign(new Error("opendata_no_product_streams"), { code: "DISCOVERY_EMPTY" });
+      }
+      return selected;
     },
     async fetchBody(url, conditional = {}) {
       const headers = {
@@ -120,6 +166,11 @@ export function createOpendataNewestFileDiscovery(opts = {}) {
       };
     },
   };
+}
+
+/** @deprecated Use createOpendataActiveStreamsDiscovery — kept as alias for callers. */
+export function createOpendataNewestFileDiscovery(opts = {}) {
+  return createOpendataActiveStreamsDiscovery(opts);
 }
 
 /**
@@ -157,20 +208,18 @@ export function createUnconfirmedProductionDiscovery() {
 
 /**
  * Resolve discovery adapter from config / env.
- * Default production path uses opendata_newest_file (1 newest bulletin) until confirmed_current_feed URL is set.
+ * Default: opendata_active_streams (all product-stream heads, no fixed file count).
  */
 export function resolveDiscoveryAdapter(config = {}, opts = {}) {
-  const kind = String(opts.kind || config.discoveryKind || process.env.IU_CHMI_CAP_V2_DISCOVERY || "opendata_newest_file");
+  const kind = String(opts.kind || config.discoveryKind || process.env.IU_CHMI_CAP_V2_DISCOVERY || "opendata_active_streams");
   if (kind === "fixture") return createFixtureDiscovery(opts.files || []);
   if (kind === "configured_urls") return createConfiguredUrlDiscovery(opts.urls || config.configuredUrls || [], opts);
   if (kind === "confirmed_current_feed") {
     return createConfirmedCurrentFeedDiscovery(opts.feedUrl || config.confirmedFeedUrl || process.env.IU_CHMI_CAP_V2_CURRENT_FEED, opts);
   }
-  if (kind === "opendata_newest_file") {
-    return createOpendataNewestFileDiscovery({
-      ...opts,
-      maxFiles: opts.maxFiles || Number(process.env.IU_CHMI_CAP_V2_MAX_FILES || 15),
-    });
+  // Legacy env value "opendata_newest_file" maps to active-streams (no maxFiles).
+  if (kind === "opendata_active_streams" || kind === "opendata_newest_file") {
+    return createOpendataActiveStreamsDiscovery({ ...opts });
   }
   if (kind === "noop") return createNoopDiscovery();
   return createUnconfirmedProductionDiscovery();

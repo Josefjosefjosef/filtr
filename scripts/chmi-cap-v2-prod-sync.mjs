@@ -7,15 +7,16 @@
  *   active  — replace sourceId=chmi items in info_events feed atomically
  *
  * Interval: separate GHA workflow every 15 minutes (not 5).
- * Discovery: pluggable adapter (default opendata_newest_file).
- * Completeness: fetch top N bulletins, keep per-URL item cache on 304,
- * publish union of active hazards across concurrent CAP product streams.
+ * Discovery: opendata_active_streams — newest bulletin per CAP product stream
+ *   (alert_cap_50_*, alert_cap_70_*, …). NO fixed maxFiles / first-N / last-N.
+ * Completeness: per-URL bulletin cache on 304; publish union of aktivni hazards;
+ *   refuse publish when completeness cannot be proven.
  */
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { getChmiCapV2Config, shouldPublishV2, shouldRunShadow } from "./chmi-cap-v2/config.mjs";
-import { resolveDiscoveryAdapter } from "./chmi-cap-v2/discovery-adapter.mjs";
+import { capProductKeyFromUrl, resolveDiscoveryAdapter } from "./chmi-cap-v2/discovery-adapter.mjs";
 import {
   applyConditionalResult,
   atomicPublishDecision,
@@ -131,17 +132,21 @@ export async function runChmiCapV2Sync(opts = {}) {
       return { ok: true, skipped: true, reason: "backoff", diagnostics, mode: config.mode };
     }
 
+    const discoveryKind =
+      process.env.IU_CHMI_CAP_V2_DISCOVERY ||
+      (config.mode === "shadow" && opts.fixtureFiles ? "fixture" : "opendata_active_streams");
     const discovery = resolveDiscoveryAdapter(config, {
-      kind: process.env.IU_CHMI_CAP_V2_DISCOVERY || (config.mode === "shadow" && opts.fixtureFiles ? "fixture" : "opendata_newest_file"),
+      kind: discoveryKind,
       files: opts.fixtureFiles,
-      maxFiles: Number(process.env.IU_CHMI_CAP_V2_MAX_FILES || "15"),
       urls: state.knownUrls,
       userAgent: config.userAgent,
     });
     diagnostics.discovery = {
       type: discovery.type,
       role: discovery.role || null,
-      maxFiles: Number(process.env.IU_CHMI_CAP_V2_MAX_FILES || "15"),
+      selection: discovery.selection || null,
+      maxFiles: null,
+      fixedLimit: false,
     };
 
     const latest = await discovery.listLatest();
@@ -151,16 +156,25 @@ export async function runChmiCapV2Sync(opts = {}) {
 
     const docs = [];
     const latestUrls = new Set();
+    const latestByProduct = new Map();
     for (const item of latest) {
       const url = item.url;
       latestUrls.add(url);
+      const productKey = item.productKey || capProductKeyFromUrl(item.name || url);
+      latestByProduct.set(productKey, url);
       const meta = state.endpointMeta[url] || {};
       const haveCache = !!(state.bulletinCache[url] && Array.isArray(state.bulletinCache[url].items));
       // Cold cache miss: force full GET so concurrent streams are not lost after deploy.
       const conditional = haveCache ? { etag: meta.etag, lastModified: meta.lastModified } : {};
       const resp = await discovery.fetchBody(url, conditional);
       const applied = applyConditionalResult(resp, state.sync, { nowIso: new Date().toISOString() });
-      diagnostics.http.push({ url, status: resp.status, action: applied.action, cacheHit: haveCache && applied.action !== "process" });
+      diagnostics.http.push({
+        url,
+        productKey,
+        status: resp.status,
+        action: applied.action,
+        cacheHit: haveCache && applied.action !== "process",
+      });
       if (applied.action === "process" && applied.body) {
         state.endpointMeta[url] = {
           etag: state.sync.etag,
@@ -168,13 +182,24 @@ export async function runChmiCapV2Sync(opts = {}) {
           bodyHash: state.sync.bodyHash,
           updatedAt: new Date().toISOString(),
         };
-        docs.push({ xml: applied.body, sourceUrl: url, name: item.name || url });
+        docs.push({ xml: applied.body, sourceUrl: url, name: item.name || url, productKey });
       }
     }
 
-    // Drop cache entries that fell out of the newest-N window
+    diagnostics.discovery.productStreams = [...latestByProduct.keys()];
+    diagnostics.discovery.streamCount = latestByProduct.size;
+
+    // Evict superseded stream heads (same productKey, older URL) — never a fixed N window.
     for (const cachedUrl of Object.keys(state.bulletinCache)) {
-      if (!latestUrls.has(cachedUrl)) delete state.bulletinCache[cachedUrl];
+      const pk = capProductKeyFromUrl(cachedUrl);
+      const currentHead = latestByProduct.get(pk);
+      if (currentHead && currentHead !== cachedUrl) {
+        delete state.bulletinCache[cachedUrl];
+        continue;
+      }
+      if (!latestUrls.has(cachedUrl) && !currentHead) {
+        delete state.bulletinCache[cachedUrl];
+      }
     }
 
     let feedItems = [];
@@ -234,41 +259,93 @@ export async function runChmiCapV2Sync(opts = {}) {
       diagnostics.status = state.sync.status || "not_modified";
     }
 
-    // Union active items across newest-N bulletin cache (304 hits keep prior cache entries)
+    // Union active items across all current product-stream heads (304 keeps prior cache).
     const union = [];
-    for (const url of latest.map((x) => x.url)) {
-      const cached = state.bulletinCache[url];
-      if (cached && Array.isArray(cached.items)) union.push(...cached.items);
+    const missingCache = [];
+    for (const item of latest) {
+      const cached = state.bulletinCache[item.url];
+      if (!cached || !Array.isArray(cached.items)) {
+        missingCache.push(item.url);
+        continue;
+      }
+      union.push(...cached.items);
     }
     feedItems = mergeFeedItemsById(union).filter((i) => i && i.status === "aktivni");
 
     const prevFeed = readJson(path.join(DIR, "feed.json"), { items: [] });
     const prevChmi = (prevFeed.items || []).filter((i) => String(i.sourceId) === "chmi");
     const completeness = completenessMetrics(feedItems, processResult);
+    completeness.productStreams = diagnostics.discovery.productStreams || [];
+    completeness.streamCount = diagnostics.discovery.streamCount || 0;
+    completeness.missingStreamCache = missingCache.length;
     diagnostics.completeness = completeness;
+
+    const alarms = [];
+    if (missingCache.length) {
+      alarms.push({ code: "INCOMPLETE_STREAM_CACHE", detail: missingCache.slice(0, 8) });
+    }
     if (completeness.unmappedAreas > 0) {
+      alarms.push({ code: "UNMAPPED_AREAS", count: completeness.unmappedAreas });
+    }
+    if (processResult && processResult.report.rejected > 0) {
+      alarms.push({ code: "PARSER_REJECTED", count: processResult.report.rejected });
+    }
+    if (processResult && processResult.report.valid > 0 && feedItems.length === 0) {
+      // All hazards filtered (žádná/None) is possible; only alarm when hazards had real events.
+      const hazardEvents = processResult.report.revisions.flatMap((r) =>
+        (r.hazards || []).map((h) => h.event || "")
+      );
+      const real = hazardEvents.filter((e) => e && !/^žádn|^no warning/i.test(e));
+      if (real.length) alarms.push({ code: "ZERO_PUBLISH_WITH_REAL_HAZARDS", events: real.slice(0, 12) });
+    }
+    if (
+      processResult &&
+      suspiciousDrop(
+        prevChmi.filter((i) => i.status === "aktivni").length,
+        feedItems.length
+      )
+    ) {
+      alarms.push({ code: "SUSPICIOUS_ACTIVE_DROP", prev: prevChmi.length, next: feedItems.length });
+    }
+    diagnostics.alarms = alarms;
+
+    const completenessOk =
+      missingCache.length === 0 &&
+      (!processResult || processResult.report.rejected === 0) &&
+      !alarms.some((a) => a.code === "ZERO_PUBLISH_WITH_REAL_HAZARDS");
+
+    if (!completenessOk) {
+      diagnostics.status = "failed";
+      diagnostics.error = alarms[0] ? alarms[0].code : "completeness_failed";
+    } else if (completeness.unmappedAreas > 0) {
       diagnostics.status = "degraded";
       diagnostics.error = diagnostics.error || "unmapped_areas";
     }
 
     const validationOk =
-      !processResult ||
-      (processResult.report.rejected === 0 && (processResult.report.valid > 0 || feedItems.length > 0));
+      completenessOk &&
+      (!processResult || processResult.report.valid > 0 || feedItems.length > 0 || !docs.length);
 
-    // Publish when we have a rebuilt active set (including cache-only 304 runs after cold fill)
-    const shouldReplaceChmi = feedItems.length > 0 || docs.length > 0;
+    // Never publish an incomplete set. Keep last known good when FAIL.
+    const shouldReplaceChmi = completenessOk && (feedItems.length > 0 || (docs.length > 0 && feedItems.length === 0));
     const candidateItems = shouldReplaceChmi
       ? (prevFeed.items || []).filter((i) => String(i.sourceId) !== "chmi").concat(feedItems)
       : null;
 
     const decision = atomicPublishDecision({
       mode: shouldPublishV2(config) ? "active" : "shadow",
-      validationOk: validationOk,
-      suspicious: processResult ? suspiciousDrop(prevChmi.filter((i) => i.status === "aktivni").length, feedItems.length) : false,
+      validationOk: validationOk && completenessOk,
+      suspicious: alarms.some((a) => a.code === "SUSPICIOUS_ACTIVE_DROP"),
       candidateSnapshot: candidateItems ? { items: candidateItems, chmiItems: feedItems } : null,
       lastKnownGood: { items: prevFeed.items || [], chmiItems: prevChmi },
     });
-    diagnostics.publish = { publish: decision.publish, reason: decision.reason, completeness };
+    diagnostics.publish = {
+      publish: decision.publish,
+      reason: decision.reason,
+      completeness,
+      alarms,
+      productionVerified: false,
+    };
 
     if (decision.publish && candidateItems) {
       const nextFeed = {
@@ -329,8 +406,13 @@ export async function runChmiCapV2Sync(opts = {}) {
       rejectedCount: diagnostics.parser?.rejected || 0,
       discoveryType: diagnostics.discovery?.type || null,
       discoveryRole: diagnostics.discovery?.role || null,
-      discoveryMaxFiles: diagnostics.discovery?.maxFiles || null,
+      discoverySelection: diagnostics.discovery?.selection || null,
+      discoveryMaxFiles: null,
+      discoveryFixedLimit: false,
+      productStreams: diagnostics.discovery?.productStreams || [],
+      streamCount: diagnostics.discovery?.streamCount || 0,
       completeness: diagnostics.completeness || null,
+      alarms: diagnostics.alarms || [],
       lastCapSent: (() => {
         let best = null;
         for (const url of Object.keys(state.bulletinCache || {})) {
@@ -342,6 +424,7 @@ export async function runChmiCapV2Sync(opts = {}) {
       bulletinCacheSize: Object.keys(state.bulletinCache || {}).length,
       publish: decision.publish,
       publishReason: decision.reason,
+      productionVerified: false,
       runMs: Date.now() - t0,
       registryVersion: createGeoRegistry().version,
       lastSnapshotAt: decision.publish ? started : prevDiag.lastSnapshotAt || null,
@@ -364,12 +447,23 @@ export async function runChmiCapV2Sync(opts = {}) {
     monitoring.chmiCapV2 = snapshot;
     writeJson(path.join(DIR, "monitoring.json"), monitoring);
 
-    state.lastRun = { at: started, ok: true, mode: config.mode, publish: decision.publish };
+    state.lastRun = {
+      at: started,
+      ok: diagnostics.status !== "failed",
+      mode: config.mode,
+      publish: decision.publish,
+    };
     diagnostics.finished = new Date().toISOString();
     diagnostics.runMs = Date.now() - t0;
     writeJson(DIAG_FILE, diagnostics);
     writeJson(STATE_FILE, state);
-    return { ok: true, mode: config.mode, publish: decision.publish, diagnostics, itemCount: feedItems.length };
+    return {
+      ok: diagnostics.status !== "failed",
+      mode: config.mode,
+      publish: decision.publish,
+      diagnostics,
+      itemCount: feedItems.length,
+    };
   } catch (e) {
     state.sync.consecutive_errors = (state.sync.consecutive_errors || 0) + 1;
     state.sync.status = "failed";
@@ -392,6 +486,13 @@ async function main() {
   if (result.skipped) console.log("skipped=" + result.reason);
   if (result.publish != null) console.log("publish=" + result.publish);
   if (result.itemCount != null) console.log("items=" + result.itemCount);
+  if (result.diagnostics && result.diagnostics.completeness) {
+    console.log("streams=" + (result.diagnostics.completeness.streamCount || 0));
+    console.log("active=" + (result.diagnostics.completeness.publishedActive || 0));
+  }
+  if (result.diagnostics && Array.isArray(result.diagnostics.alarms) && result.diagnostics.alarms.length) {
+    console.log("alarms=" + result.diagnostics.alarms.map((a) => a.code).join(","));
+  }
   if (result.error) console.log("error=" + result.error);
   if (!result.ok && !result.skipped) process.exit(1);
 }

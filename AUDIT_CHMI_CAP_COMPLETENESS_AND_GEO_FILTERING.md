@@ -334,6 +334,15 @@ Současně **zvýšit `IU_CHMI_CAP_V2_MAX_FILES`** (např. 8–20) a změnit pub
 
 ---
 
-## 16. Jednověté shrnutí příčiny
+## 17. Stav dokončení (2026-07-29 večer)
 
-**Produkce ukazuje tři položky sucha, protože 15minutový CAP sync sice stáhne a sestaví aktuální feed (14+ výstrah), ale datový PR se kvůli chybějícím required CI checks nikdy nesloučí do `main`; zároveň architektura `maxFiles=1` + full replace ČHMÚ položek i po opravě merge zahodí souběžně aktivní starší bulletiny (např. sucho) a UI/filtr prezentuje jen první ORP místo úplné hierarchie.**
+Následující opravy doplněny po PR #7857:
+
+1. **Odstraněn pevný `maxFiles` / `slice(0,N)`** — discovery `opendata_active_streams` bere **nejnovější bulletin každého produktového streamu** (`alert_cap_50_*`, `alert_cap_70_*`, …).
+2. Neúplný sync → **FAIL**, žádný silent HEALTHY, last-known-good feed zachován.
+3. CI faily #7857: cache-bust guard + freeze hash `projects/index.html`.
+4. Workflow čeká na required checks; starý data PR #7842 se uzavírá.
+5. `scripts/chmi-cap-v2-prod-verify.mjs` — end-to-end PRODUCTION_VERIFIED.
+
+Detailní závěrečný report po merge + produkčním ověření.
+

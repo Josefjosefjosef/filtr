@@ -13,7 +13,7 @@ import { processCapDocuments, tryAcquireLock, releaseLock, applyConditionalResul
 import { revisionsToFeed } from "./chmi-cap-v2/normalize-feed.mjs";
 import { migrateUserStatesDryRun } from "./chmi-cap-v2/migrate-ids.mjs";
 import { createGeoRegistry } from "./chmi-cap-v2/geo-registry.mjs";
-import { createFixtureDiscovery, resolveDiscoveryAdapter } from "./chmi-cap-v2/discovery-adapter.mjs";
+import { createFixtureDiscovery, resolveDiscoveryAdapter, selectLatestPerProductStream, capProductKeyFromUrl } from "./chmi-cap-v2/discovery-adapter.mjs";
 import { shouldResetUnreadOnRevision } from "./chmi-cap-v2/unread-rules.mjs";
 import { CHMI_PUBLIC_ALERTS_URL } from "./chmi-cap-v2/config.mjs";
 
@@ -280,8 +280,38 @@ function read(name) {
   );
   ok("discovery_resolve_fixture", resolved.type === "fixture", resolved.type);
   ok("discovery_not_html_api", resolved.role !== "html_api", resolved.role || "none");
-  const openDef = resolveDiscoveryAdapter({}, { kind: "opendata_newest_file", maxFiles: 15 });
-  ok("discovery_default_max_files_completeness", openDef.type === "opendata_newest_file", openDef.type);
+  const openDef = resolveDiscoveryAdapter({}, { kind: "opendata_active_streams" });
+  ok("discovery_active_streams", openDef.type === "opendata_active_streams", openDef.type);
+  ok("discovery_no_fixed_maxfiles_field", openDef.selection === "latest_per_product_stream", openDef.selection);
+  const legacy = resolveDiscoveryAdapter({}, { kind: "opendata_newest_file" });
+  ok("discovery_legacy_alias_to_streams", legacy.type === "opendata_active_streams", legacy.type);
+
+  const selected = selectLatestPerProductStream([
+    { url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_290800.xml", mtime: 100 },
+    { url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_290854.xml", mtime: 200 },
+    { url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml", mtime: 150 },
+    { url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_270100.xml", mtime: 50 },
+  ]);
+  ok("select_one_per_stream", selected.length === 2, String(selected.length));
+  ok(
+    "select_newest_50",
+    selected.some((x) => x.productKey === "50" && /290854/.test(x.name)),
+    JSON.stringify(selected)
+  );
+  ok(
+    "select_newest_70",
+    selected.some((x) => x.productKey === "70" && /281200/.test(x.name)),
+    JSON.stringify(selected)
+  );
+  ok("product_key_50", capProductKeyFromUrl("alert_cap_50_290854.xml") === "50", capProductKeyFromUrl("alert_cap_50_x.xml"));
+  ok("product_key_70", capProductKeyFromUrl("alert_cap_70_281200.xml") === "70", "70");
+
+  // Regression: discovery-adapter must not contain fixed slice(0, maxFiles) completeness limit
+  {
+    const src = fs.readFileSync(path.join(__dirname, "chmi-cap-v2", "discovery-adapter.mjs"), "utf8");
+    ok("no_slice_maxfiles_limit", !/\.slice\(\s*0\s*,\s*maxFiles\s*\)/.test(src), "slice(0,maxFiles) present");
+    ok("no_maxfiles_env_knob", !/IU_CHMI_CAP_V2_MAX_FILES/.test(src), "MAX_FILES still referenced");
+  }
 }
 
 // --- unread reset rules ---

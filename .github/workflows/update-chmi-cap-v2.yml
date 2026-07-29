@@ -1,8 +1,8 @@
 name: Update CHMI CAP v2
 
-# CAP v2 sync every 15 min. Completeness: top N concurrent bulletins (default 15),
-# per-URL bulletin cache, union of active hazards. Feature flag via env/vars.
-# Does NOT crawl the full CAP archive.
+# CAP v2 sync every 15 min.
+# Completeness: newest bulletin per CAP product stream (no fixed maxFiles / first-N).
+# Data PR must receive required checks and auto-merge; incomplete sync = FAIL (no silent healthy).
 
 on:
   workflow_dispatch:
@@ -22,6 +22,7 @@ permissions:
   contents: write
   pull-requests: write
   actions: write
+  statuses: write
 
 env:
   AUTOMATION_BRANCH: automation/update-chmi-cap-v2
@@ -30,12 +31,10 @@ env:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
-          # Full-history clone can hang on this large repo (see smoke.yml).
-          # Data sync only needs current tree + shallow push of automation branch.
           fetch-depth: 1
 
       - uses: actions/setup-node@v4
@@ -48,8 +47,7 @@ jobs:
       - name: Sync CHMI CAP v2
         env:
           IU_CHMI_CAP_V2_MODE: ${{ github.event.inputs.mode || vars.IU_CHMI_CAP_V2_MODE || 'active' }}
-          IU_CHMI_CAP_V2_DISCOVERY: ${{ vars.IU_CHMI_CAP_V2_DISCOVERY || 'opendata_newest_file' }}
-          IU_CHMI_CAP_V2_MAX_FILES: ${{ vars.IU_CHMI_CAP_V2_MAX_FILES || '15' }}
+          IU_CHMI_CAP_V2_DISCOVERY: ${{ vars.IU_CHMI_CAP_V2_DISCOVERY || 'opendata_active_streams' }}
         run: node scripts/chmi-cap-v2-prod-sync.mjs
 
       - name: Commit data if changed
@@ -101,12 +99,12 @@ jobs:
           fi
           gh pr create --base main --head "$BRANCH" \
             --title "${{ env.PR_TITLE }}" \
-            --body "Automated CHMI CAP v2 sync (15 min). Completeness: top-N concurrent bulletins, union of active hazards, conditional GET with per-URL bulletin cache."
+            --body "Automated CHMI CAP v2 sync (15 min). Completeness: all CAP product-stream heads (no fixed file count), union of active hazards, conditional GET + per-URL bulletin cache. Incomplete sync fails the job."
           NUM=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number')
           echo "pr_number=$NUM" >> "$GITHUB_OUTPUT"
           echo "[PR] Created PR #$NUM"
 
-      - name: Merge latest main into PR head if behind (unblock auto-merge)
+      - name: Merge latest main into PR head if behind
         if: steps.commit_push.outputs.pushed == 'true'
         continue-on-error: true
         env:
@@ -151,3 +149,46 @@ jobs:
           [ -z "$NUM" ] && exit 0
           gh pr merge "$NUM" --auto --squash
           echo "[AUTO-MERGE] Enabled for PR #$NUM"
+
+      - name: Wait for required checks (fail if missing/failing)
+        if: steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
+          echo "[WAIT] PR #$NUM sha=$SHA"
+          for i in $(seq 1 36); do
+            STATE=$(gh pr view "$NUM" --json mergeStateStatus,state,statusCheckRollup -q '{m:.mergeStateStatus,s:.state,c:[.statusCheckRollup[]? | {name:(.name // .context), conclusion:(.conclusion // .state)}]}')
+            echo "[WAIT] attempt=$i $STATE"
+            MERGED=$(gh pr view "$NUM" --json state -q .state)
+            if [ "$MERGED" = "MERGED" ]; then
+              echo "[WAIT] PR already merged"
+              exit 0
+            fi
+            FAIL=$(echo "$STATE" | jq -r '[.c[] | select((.conclusion|ascii_downcase) == "failure" or (.conclusion|ascii_downcase) == "cancelled")] | length')
+            if [ "$FAIL" != "0" ]; then
+              echo "[WAIT] required check failed"
+              exit 1
+            fi
+            PENDING=$(echo "$STATE" | jq -r '[.c[] | select((.conclusion|ascii_downcase) == "pending" or .conclusion == "" or .conclusion == null or (.conclusion|ascii_downcase) == "in_progress" or (.conclusion|ascii_downcase) == "queued")] | length')
+            MS=$(gh pr view "$NUM" --json mergeStateStatus -q .mergeStateStatus)
+            if [ "$MS" = "CLEAN" ] || [ "$MS" = "HAS_HOOKS" ] || [ "$MS" = "UNSTABLE" ]; then
+              # UNSTABLE can still auto-merge once pending finishes; keep waiting if pending
+              if [ "$PENDING" = "0" ] && [ "$MS" = "CLEAN" ]; then
+                echo "[WAIT] checks clean"
+                exit 0
+              fi
+            fi
+            if [ "$PENDING" = "0" ] && [ "$MS" = "BLOCKED" ]; then
+              echo "[WAIT] blocked with no pending checks — missing required contexts?"
+              gh pr checks "$NUM" || true
+              exit 1
+            fi
+            sleep 20
+          done
+          echo "[WAIT] timeout waiting for checks"
+          gh pr checks "$NUM" || true
+          exit 1
