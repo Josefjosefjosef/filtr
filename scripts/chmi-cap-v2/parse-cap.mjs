@@ -12,15 +12,19 @@ function clip(s, max) {
 }
 
 function parseGeocodes(areaNode, lim) {
-  const out = [];
-  for (const g of childrenNamed(areaNode, "geocode")) {
-    if (out.length >= lim.maxGeocodesPerArea) break;
-    out.push({
-      valueName: clip(childText(g, "valueName", 200), 200),
-      value: clip(childText(g, "value", 200), 200),
+  const all = childrenNamed(areaNode, "geocode");
+  if (all.length > lim.maxGeocodesPerArea) {
+    throw Object.assign(new Error("cap_too_many_geocodes:" + all.length), {
+      code: "CAP_TRUNCATED",
+      field: "geocode",
+      count: all.length,
+      limit: lim.maxGeocodesPerArea,
     });
   }
-  return out;
+  return all.map((g) => ({
+    valueName: clip(childText(g, "valueName", 200), 200),
+    value: clip(childText(g, "value", 200), 200),
+  }));
 }
 
 function parsePolygon(areaNode, lim) {
@@ -28,44 +32,81 @@ function parsePolygon(areaNode, lim) {
   if (!raw) return null;
   const pts = raw.trim().split(/\s+/).filter(Boolean);
   if (pts.length > lim.maxPolygonPoints) {
-    return { truncated: true, pointCount: pts.length, sample: pts.slice(0, 8) };
+    throw Object.assign(new Error("cap_too_many_polygon_points:" + pts.length), {
+      code: "CAP_TRUNCATED",
+      field: "polygon",
+      count: pts.length,
+      limit: lim.maxPolygonPoints,
+    });
   }
   return { truncated: false, pointCount: pts.length, raw: clip(raw, lim.maxTextFieldChars) };
 }
 
 function parseAreas(infoNode, lim) {
-  const areas = [];
-  for (const a of childrenNamed(infoNode, "area")) {
-    if (areas.length >= lim.maxAreasPerInfo) break;
-    areas.push({
-      areaDesc: clip(childText(a, "areaDesc", lim.maxTextFieldChars), lim.maxTextFieldChars),
-      polygon: parsePolygon(a, lim),
-      circle: clip(childText(a, "circle", 500), 500) || null,
-      geocodes: parseGeocodes(a, lim),
-      altitude: clip(childText(a, "altitude", 64), 64) || null,
-      ceiling: clip(childText(a, "ceiling", 64), 64) || null,
+  const all = childrenNamed(infoNode, "area");
+  if (all.length > lim.maxAreasPerInfo) {
+    throw Object.assign(new Error("cap_too_many_areas:" + all.length), {
+      code: "CAP_TRUNCATED",
+      field: "area",
+      count: all.length,
+      limit: lim.maxAreasPerInfo,
     });
   }
-  return areas;
+  return all.map((a) => ({
+    areaDesc: clip(childText(a, "areaDesc", lim.maxTextFieldChars), lim.maxTextFieldChars),
+    polygon: parsePolygon(a, lim),
+    circle: clip(childText(a, "circle", 500), 500) || null,
+    geocodes: parseGeocodes(a, lim),
+    altitude: clip(childText(a, "altitude", 64), 64) || null,
+    ceiling: clip(childText(a, "ceiling", 64), 64) || null,
+  }));
 }
 
 function parseParameters(infoNode, lim) {
-  return childrenNamed(infoNode, "parameter").slice(0, 100).map((p) => ({
+  const all = childrenNamed(infoNode, "parameter");
+  const maxParams = lim.maxParametersPerInfo == null ? 100 : lim.maxParametersPerInfo;
+  if (all.length > maxParams) {
+    throw Object.assign(new Error("cap_too_many_parameters:" + all.length), {
+      code: "CAP_TRUNCATED",
+      field: "parameter",
+      count: all.length,
+      limit: maxParams,
+    });
+  }
+  return all.map((p) => ({
     valueName: clip(childText(p, "valueName", 200), 200),
     value: clip(childText(p, "value", lim.maxTextFieldChars), lim.maxTextFieldChars),
   }));
 }
 
-function parseEventCodes(infoNode) {
-  return childrenNamed(infoNode, "eventCode").slice(0, 50).map((e) => ({
+function parseEventCodes(infoNode, lim) {
+  const all = childrenNamed(infoNode, "eventCode");
+  const maxCodes = lim.maxEventCodesPerInfo == null ? 50 : lim.maxEventCodesPerInfo;
+  if (all.length > maxCodes) {
+    throw Object.assign(new Error("cap_too_many_event_codes:" + all.length), {
+      code: "CAP_TRUNCATED",
+      field: "eventCode",
+      count: all.length,
+      limit: maxCodes,
+    });
+  }
+  return all.map((e) => ({
     valueName: clip(childText(e, "valueName", 200), 200),
     value: clip(childText(e, "value", 200), 200),
   }));
 }
 
 function pickInfoBlocks(alertNode, lim) {
-  const all = childrenNamed(alertNode, "info").slice(0, lim.maxInfoBlocks);
-  const scored = all.map((node, index) => {
+  const rawInfos = childrenNamed(alertNode, "info");
+  if (rawInfos.length > lim.maxInfoBlocks) {
+    throw Object.assign(new Error("cap_too_many_info:" + rawInfos.length), {
+      code: "CAP_TRUNCATED",
+      field: "info",
+      count: rawInfos.length,
+      limit: lim.maxInfoBlocks,
+    });
+  }
+  const scored = rawInfos.map((node, index) => {
     const language = clip(childText(node, "language", 32), 32).toLowerCase();
     const isCs = language.startsWith("cs") || language.startsWith("cz");
     return { node, index, language, isCs };
@@ -95,7 +136,7 @@ function parseInfo(infoNode, lim) {
     severity: clip(childText(infoNode, "severity", 64), 64),
     certainty: clip(childText(infoNode, "certainty", 64), 64),
     audience: clip(childText(infoNode, "audience", lim.maxTextFieldChars), lim.maxTextFieldChars),
-    eventCode: parseEventCodes(infoNode),
+    eventCode: parseEventCodes(infoNode, lim),
     effective: clip(childText(infoNode, "effective", 64), 64),
     onset: clip(childText(infoNode, "onset", 64), 64),
     expires: clip(childText(infoNode, "expires", 64), 64),
@@ -154,9 +195,6 @@ export function parseCapAlertXml(xml, opts = {}) {
 
   if (!alert.identifier || !alert.sender || !alert.sent) {
     throw Object.assign(new Error("cap_missing_identity_fields"), { code: "CAP_IDENTITY" });
-  }
-  if (infos.length > lim.maxInfoBlocks) {
-    throw Object.assign(new Error("cap_too_many_info"), { code: "CAP_INFO" });
   }
   return alert;
 }

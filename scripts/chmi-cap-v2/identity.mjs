@@ -18,7 +18,15 @@ export function parseCapReferences(referencesRaw, limits = {}) {
   // Split on whitespace between triples; each triple has exactly 2 commas → 3 parts
   // Prefer regex scan for WMO-style sender (often contains no spaces)
   const parts = raw.split(/\s+/).filter(Boolean);
-  for (const part of parts.slice(0, lim.maxReferencesParts)) {
+  if (parts.length > lim.maxReferencesParts) {
+    throw Object.assign(new Error("cap_too_many_references:" + parts.length), {
+      code: "CAP_TRUNCATED",
+      field: "references",
+      count: parts.length,
+      limit: lim.maxReferencesParts,
+    });
+  }
+  for (const part of parts) {
     const commas = part.split(",");
     if (commas.length < 3) {
       warnings.push("ref_incomplete:" + part.slice(0, 80));

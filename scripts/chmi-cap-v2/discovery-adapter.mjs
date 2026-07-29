@@ -96,6 +96,20 @@ export function capProductKeyFromUrl(urlOrName) {
  * From a full index listing, select the newest bulletin per product stream.
  * NO fixed maxFiles / first-N / last-N — returns one head per discovered stream.
  *
+ * Product streams are derived from filenames (`alert_cap_{N}_*`). Keys are
+ * data-driven: any new N is discovered automatically (no product whitelist).
+ *
+ * Algorithm:
+ * 1. For each listed XML URL, compute productKey via capProductKeyFromUrl.
+ * 2. Keep the entry with highest Apache mtime (tie-break: lexicographic name).
+ * 3. Return all heads sorted by mtime desc — count == number of distinct streams.
+ *
+ * Lifecycle within a stream: ČHMÚ open-data publishes each product head as a
+ * complete superseding CAP document (Alert/Update snapshot of current product
+ * state). Sync therefore downloads one head per stream, not the full archive.
+ * Full Alert→Update→Cancel replay is supported by lifecycle.mjs when multiple
+ * documents are supplied (tests / future confirmed_current_feed).
+ *
  * @param {{ url: string, mtime?: number }[]} listed
  * @returns {{ url: string, name: string, mtime: number, productKey: string }[]}
  */

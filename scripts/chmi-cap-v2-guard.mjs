@@ -309,8 +309,26 @@ function read(name) {
   // Regression: discovery-adapter must not contain fixed slice(0, maxFiles) completeness limit
   {
     const src = fs.readFileSync(path.join(__dirname, "chmi-cap-v2", "discovery-adapter.mjs"), "utf8");
+    const parseSrc = fs.readFileSync(path.join(__dirname, "chmi-cap-v2", "parse-cap.mjs"), "utf8");
+    const syncSrc = fs.readFileSync(path.join(__dirname, "chmi-cap-v2-prod-sync.mjs"), "utf8");
+    const cfgSrc = fs.readFileSync(path.join(__dirname, "chmi-cap-v2", "config.mjs"), "utf8");
     ok("no_slice_maxfiles_limit", !/\.slice\(\s*0\s*,\s*maxFiles\s*\)/.test(src), "slice(0,maxFiles) present");
     ok("no_maxfiles_env_knob", !/IU_CHMI_CAP_V2_MAX_FILES/.test(src), "MAX_FILES still referenced");
+    ok("no_dead_maxCapMessages", !/maxCapMessagesPerRun/.test(cfgSrc), "maxCapMessagesPerRun present");
+    ok("parse_cap_truncated_throw", /CAP_TRUNCATED/.test(parseSrc) && !/if \(areas\.length >= lim\.maxAreasPerInfo\) break/.test(parseSrc), "silent area break");
+    ok("parse_no_param_slice", !/parameter"\)\.slice\(0/.test(parseSrc), "silent param slice");
+    ok("sync_completeness_gate", /completenessOk/.test(syncSrc) && /INCOMPLETE_STREAM_CACHE/.test(syncSrc), "missing completeness");
+    ok("sync_fixedLimit_false", /fixedLimit:\s*false/.test(syncSrc), "fixedLimit");
+  }
+
+  // Auto-discover novel product stream key without whitelist
+  {
+    const novel = selectLatestPerProductStream([
+      { url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_1.xml", mtime: 1 },
+      { url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_88_9.xml", mtime: 9 },
+    ]);
+    ok("discover_novel_product_88", novel.some((x) => x.productKey === "88"), JSON.stringify(novel.map((x) => x.productKey)));
+    ok("discover_novel_count_2", novel.length === 2, String(novel.length));
   }
 }
 
