@@ -160,34 +160,49 @@ jobs:
           [ -z "$NUM" ] && exit 0
           SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
           echo "[WAIT] PR #$NUM sha=$SHA"
-          for i in $(seq 1 36); do
-            STATE=$(gh pr view "$NUM" --json mergeStateStatus,state,statusCheckRollup -q '{m:.mergeStateStatus,s:.state,c:[.statusCheckRollup[]? | {name:(.name // .context), conclusion:(.conclusion // .state)}]}')
-            echo "[WAIT] attempt=$i $STATE"
+          REQUIRED='repo-guard smoke layout-guard'
+          for i in $(seq 1 48); do
             MERGED=$(gh pr view "$NUM" --json state -q .state)
             if [ "$MERGED" = "MERGED" ]; then
               echo "[WAIT] PR already merged"
               exit 0
             fi
-            FAIL=$(echo "$STATE" | jq -r '[.c[] | select((.conclusion|ascii_downcase) == "failure" or (.conclusion|ascii_downcase) == "cancelled")] | length')
+            ROLLUP=$(gh pr view "$NUM" --json mergeStateStatus,statusCheckRollup -q '{m:.mergeStateStatus,c:[.statusCheckRollup[]? | {name:(.name // .context), conclusion:(.conclusion // .state)}]}')
+            echo "[WAIT] attempt=$i $ROLLUP"
+            FAIL=$(echo "$ROLLUP" | jq -r '[.c[] | select(((.conclusion // "")|ascii_downcase) == "failure" or ((.conclusion // "")|ascii_downcase) == "cancelled" or ((.conclusion // "")|ascii_downcase) == "error")] | length')
             if [ "$FAIL" != "0" ]; then
               echo "[WAIT] required check failed"
-              exit 1
-            fi
-            PENDING=$(echo "$STATE" | jq -r '[.c[] | select((.conclusion|ascii_downcase) == "pending" or .conclusion == "" or .conclusion == null or (.conclusion|ascii_downcase) == "in_progress" or (.conclusion|ascii_downcase) == "queued")] | length')
-            MS=$(gh pr view "$NUM" --json mergeStateStatus -q .mergeStateStatus)
-            if [ "$MS" = "CLEAN" ] || [ "$MS" = "HAS_HOOKS" ] || [ "$MS" = "UNSTABLE" ]; then
-              # UNSTABLE can still auto-merge once pending finishes; keep waiting if pending
-              if [ "$PENDING" = "0" ] && [ "$MS" = "CLEAN" ]; then
-                echo "[WAIT] checks clean"
-                exit 0
-              fi
-            fi
-            if [ "$PENDING" = "0" ] && [ "$MS" = "BLOCKED" ]; then
-              echo "[WAIT] blocked with no pending checks — missing required contexts?"
               gh pr checks "$NUM" || true
               exit 1
             fi
-            sleep 20
+            # Treat empty rollup / missing required contexts as still starting — do not fail-fast.
+            HAVE=0
+            for ctx in $REQUIRED; do
+              HIT=$(echo "$ROLLUP" | jq -r --arg n "$ctx" '[.c[] | select((.name|ascii_downcase) == ($n|ascii_downcase))] | length')
+              if [ "$HIT" != "0" ]; then HAVE=$((HAVE + 1)); fi
+            done
+            if [ "$HAVE" -lt 3 ]; then
+              echo "[WAIT] required contexts starting ($HAVE/3) — sleeping"
+              sleep 15
+              continue
+            fi
+            PENDING=$(echo "$ROLLUP" | jq -r '[.c[] | select(((.conclusion // "")|ascii_downcase) == "pending" or .conclusion == "" or .conclusion == null or ((.conclusion // "")|ascii_downcase) == "in_progress" or ((.conclusion // "")|ascii_downcase) == "queued" or ((.conclusion // "")|ascii_downcase) == "waiting")] | length')
+            MS=$(echo "$ROLLUP" | jq -r .m)
+            if [ "$PENDING" = "0" ] && { [ "$MS" = "CLEAN" ] || [ "$MS" = "HAS_HOOKS" ] || [ "$MS" = "UNSTABLE" ]; }; then
+              echo "[WAIT] checks ready (mergeState=$MS)"
+              # Give auto-merge a moment to land
+              for _try in $(seq 1 12); do
+                ST=$(gh pr view "$NUM" --json state -q .state)
+                if [ "$ST" = "MERGED" ]; then
+                  echo "[WAIT] auto-merge completed (try=$_try)"
+                  exit 0
+                fi
+                sleep 10
+              done
+              echo "[WAIT] checks green but PR not merged yet — leaving auto-merge enabled"
+              exit 0
+            fi
+            sleep 15
           done
           echo "[WAIT] timeout waiting for checks"
           gh pr checks "$NUM" || true
