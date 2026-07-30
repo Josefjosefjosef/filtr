@@ -13,7 +13,7 @@ const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "info-system-v6-chmi-active-rollover-20260730";
+const CACHE_BUST = "info-system-v6-chmi-card-pills-20260730";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -119,7 +119,9 @@ function staticGate() {
   ok("core_prague", /Europe\/Prague/.test(core), "tz");
   ok("core_no_assign_timeline", !/item\.timelineAt\s*=/.test(core), "mutate");
   ok("ui_uses_presentation", /getEffectiveTimelinePresentation\(ev/.test(ui), "ui");
-  ok("ui_active_pill", /AKTIVNÍ/.test(ui), "pill");
+  ok("ui_active_pill", /AKTIVNÍ VÝSTRAHA/.test(ui), "pill");
+  ok("ui_source_prefix", /Zdroj:\s*"/.test(ui) || /"Zdroj: "/.test(ui), "source");
+  ok("ui_region_dedupe", /regionPill/.test(ui) && /title\.indexOf\(region\)/.test(ui), "dedupe");
   ok("ui_issued", /iuPrehledDne__issued/.test(ui), "issued");
   ok("ui_midnight_timer", /scheduleTimelineBoundaryRefresh/.test(ui), "timer");
   ok("ui_visibility", /visibilitychange/.test(ui), "vis");
