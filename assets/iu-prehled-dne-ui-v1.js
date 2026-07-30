@@ -397,21 +397,35 @@ function sectionColor(sectionId) {
 }
 
 function chmiPublicDetailUrl(ev) {
-  // Prefer concrete official CAP document URL from feed (opendata .xml + hid).
-  // Never force portal listing/homepage as a fake per-alert detail.
-  const candidate = String((ev && (ev.url || ev.originalUrl || (ev.capV2 && ev.capV2.sourceDocumentUrl))) || "");
-  if (!candidate) return "";
-  try {
-    const u = new URL(candidate);
-    const host = u.hostname.replace(/^www\./, "").toLowerCase();
-    if (!/(?:^|\.)chmi\.cz$/i.test(host)) return "";
-    const path = (u.pathname || "/").replace(/\/+$/, "") || "/";
-    if (path === "/" || /vystrahy-cr\.chmi\.cz$/i.test(host)) return "";
-    if (!/\.xml$/i.test(path)) return "";
-    return candidate;
-  } catch {
-    return "";
+  // Public click target = official CAP <web> (typically https://vystrahy-cr.chmi.cz/).
+  // Never open the technical CAP XML document for end users.
+  const candidates = [
+    ev && ev.publicUrl,
+    ev && ev.capV2 && ev.capV2.publicUrl,
+    ev && ev.url,
+    ev && ev.originalUrl,
+  ];
+  for (let i = 0; i < candidates.length; i++) {
+    const candidate = String(candidates[i] || "").trim();
+    if (!candidate) continue;
+    try {
+      const u = new URL(candidate);
+      if (u.protocol !== "https:") continue;
+      const host = u.hostname.replace(/^www\./, "").toLowerCase();
+      if (!/(?:^|\.)chmi\.cz$/i.test(host)) continue;
+      // Prefer the official alerts portal from CAP <web>.
+      if (/^vystrahy-cr\.chmi\.cz$/i.test(host)) return candidate;
+      // Reject technical CAP XML and CAP index listings.
+      const path = (u.pathname || "/").replace(/\/+$/, "") || "/";
+      if (path === "/") continue;
+      if (/\.xml$/i.test(path)) continue;
+      if (/\/meteorology\/weather\/alerts\/cap$/i.test(path)) continue;
+      return candidate;
+    } catch {
+      /* try next */
+    }
   }
+  return "";
 }
 
 /**

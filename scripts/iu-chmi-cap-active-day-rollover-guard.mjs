@@ -136,7 +136,8 @@ function staticGate() {
   ok("ui_valid_from_word", /platnost od/.test(ui) || /secondaryValidFromLabel/.test(ui), "validFrom label");
   ok("ui_midnight_timer", /scheduleTimelineBoundaryRefresh/.test(ui), "timer");
   ok("ui_visibility", /visibilitychange/.test(ui), "vis");
-  ok("ui_url_unchanged", /chmiPublicDetailUrl\(ev\)/.test(ui) && /forced \|\| ev\.url/.test(ui), "url");
+  ok("ui_url_prefers_public_web", /vystrahy-cr\.chmi\.cz/.test(ui) && /chmiPublicDetailUrl\(ev\)/.test(ui), "url");
+  ok("ui_rejects_cap_xml_click", /\.xml/.test(ui) && /Never open the technical CAP XML/.test(ui), "xml");
   ok("css_issued", /\.iuPrehledDne__issued/.test(css), "css issued");
   ok("css_valid_from", /\.iuPrehledDne__validFrom/.test(css), "css validFrom");
   ok("css_active", /\.iuPdCard__pill--active/.test(css), "css active");
@@ -206,6 +207,26 @@ function unitGate(IU) {
   ok("C_second_715", sorted[1].id === "art-715", sorted[1] && sorted[1].id);
   ok("C_warn_last", sorted[2].id === yW.id, sorted[2] && sorted[2].id);
   ok("C_url", sorted[2].url === "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_roll.xml?hid=roll-1", sorted[2] && sorted[2].url);
+
+  // Open-ended until revoked stays ACTIVE without inventing validTo
+  const openEnded = warning({
+    id: "ie-chmi-v2-open-1",
+    validTo: "",
+    untilRevoked: true,
+    publicUrl: "https://vystrahy-cr.chmi.cz/",
+    url: "https://vystrahy-cr.chmi.cz/",
+    capV2: { badgeActive: true, msgType: "Update", untilRevoked: true, openEnded: true, publicUrl: "https://vystrahy-cr.chmi.cz/", geo: { links: [] } },
+  });
+  ok(
+    "open_ended_active",
+    IU.getChmiWarningLifecycleStatus(openEnded, nowMorning) === "ACTIVE",
+    "status"
+  );
+  ok(
+    "open_ended_public_kept",
+    IU.filterEvents([openEnded], {}, { skipMemo: true, nowMs: nowMorning }).length === 1,
+    "dropped"
+  );
 
   // E: third day
   const longW = warning({

@@ -120,7 +120,40 @@ for (const it of feed.items || []) {
     if (missingChrono <= 5) fails.push(`chrono_missing:${it.id}`);
   }
   const home = homeBySource.get(it.sourceId) || null;
-  if (!isConcreteItemUrl(url, home) || (original && !isConcreteItemUrl(original, home))) {
+  const isChmi = String(it.sourceId || "") === "chmi" && it.capV2;
+  if (isChmi) {
+    const srcDoc = String((it.capV2 && it.capV2.sourceDocumentUrl) || "");
+    const pub = String(it.publicUrl || (it.capV2 && it.capV2.publicUrl) || "");
+    const can = canonicalizeUrl(it.canonicalUrl || srcDoc);
+    if (!srcDoc || !isConcreteItemUrl(srcDoc, home)) {
+      homepageHits += 1;
+      fails.push(`chmi_missing_source_document:${it.id}`);
+    }
+    if (pub) {
+      try {
+        const u = new URL(pub);
+        const host = u.hostname.replace(/^www\./, "").toLowerCase();
+        if (u.protocol !== "https:" || !/(?:^|\.)chmi\.cz$/i.test(host)) {
+          fails.push(`chmi_bad_public_url:${it.id}`);
+        } else if (/^vystrahy-cr\.chmi\.cz$/i.test(host)) {
+          // Official CAP <web> portal homepage is an allowed public click target.
+          if (String(it.url || "") !== pub && String(it.url || "") !== srcDoc) {
+            fails.push(`chmi_click_url_mismatch:${it.id}`);
+          }
+        } else if (!isConcreteItemUrl(pub, home)) {
+          fails.push(`chmi_public_url_not_concrete:${it.id}`);
+        }
+      } catch {
+        fails.push(`chmi_bad_public_url:${it.id}`);
+      }
+    } else if (!isConcreteItemUrl(String(it.url || ""), home)) {
+      homepageHits += 1;
+      fails.push(`homepage_or_listing_url:${it.id}`);
+    }
+    if (can && /vystrahy-cr\.chmi\.cz\/?$/i.test(can)) {
+      fails.push(`chmi_canonical_is_portal_homepage:${it.id}`);
+    }
+  } else if (!isConcreteItemUrl(url, home) || (original && !isConcreteItemUrl(original, home))) {
     homepageHits += 1;
     fails.push(`homepage_or_listing_url:${it.id}`);
   }

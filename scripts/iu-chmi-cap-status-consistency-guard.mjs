@@ -54,6 +54,7 @@ const activeH = {
   valid_from: "2026-07-30T08:00:00+02:00",
   valid_to: "2026-07-30T20:00:00+02:00",
   headline: "Bouřky",
+  web: "https://vystrahy-cr.chmi.cz/",
   geo: {
     links: [{ orpName: "Praha", orpId: "orp:1000", orpCode: "1000", precise: true, krajName: "Hlavní město Praha" }],
     displayNames: ["Praha"],
@@ -114,11 +115,59 @@ const activeH = {
     ...activeH,
     hazard_instance_id: "haz:statusnovto000001",
     valid_to: "",
+    untilRevoked: false,
+    openEnded: false,
   });
   const it = items[0];
   ok("missing_to_invalid", it && it.status === "nezaraditelne", it && it.status);
   ok("missing_to_not_aktivni", it && it.status !== "aktivni", it && it.status);
   ok("missing_to_not_publishable", it && !isPublishableChmiItem(it), "publishable");
+}
+
+{
+  const items = feedFor({
+    ...activeH,
+    hazard_instance_id: "haz:statusopen0000001",
+    event: "Smogová situace – troposférický ozón O₃",
+    valid_to: "",
+    untilRevoked: true,
+    web: "https://vystrahy-cr.chmi.cz/",
+  });
+  const it = items[0];
+  ok("until_revoked_active_status", it && it.status === "aktivni", it && it.status);
+  ok("until_revoked_publishable", it && isPublishableChmiItem(it), "publishable");
+  ok("until_revoked_flag", it && it.untilRevoked === true, "untilRevoked");
+  ok("until_revoked_public_url", it && /vystrahy-cr\.chmi\.cz\/?$/i.test(String(it.publicUrl || it.url || "")), it && it.url);
+}
+
+{
+  const items = feedFor({
+    ...activeH,
+    hazard_instance_id: "haz:statusopenfut00001",
+    valid_from: "2026-07-31T00:00:00+02:00",
+    valid_to: "",
+    untilRevoked: true,
+    web: "https://vystrahy-cr.chmi.cz/",
+  });
+  const it = items[0];
+  ok("until_revoked_scheduled_status", it && it.status === "naplanovano", it && it.status);
+  ok("until_revoked_scheduled_publishable", it && isPublishableChmiItem(it), "publishable");
+}
+
+{
+  const items = feedFor({
+    ...activeH,
+    hazard_instance_id: "haz:statusoutlook0001",
+    event: "Výhled nebezpečných jevů",
+    valid_from: "2026-08-02T00:00:00+02:00",
+    valid_to: "",
+    untilRevoked: true,
+    productExcluded: true,
+    web: "https://vystrahy-cr.chmi.cz/",
+  });
+  const it = items[0];
+  ok("outlook_excluded_reason", it && it.capV2.temporalReason === "excluded_product_type", it && it.capV2 && it.capV2.temporalReason);
+  ok("outlook_not_publishable", it && !isPublishableChmiItem(it), "publishable");
 }
 
 {
