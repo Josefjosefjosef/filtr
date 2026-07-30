@@ -1069,23 +1069,27 @@ function chmiValidFromDisplayParts(ev) {
  * Canonical public-feed lifecycle for a CHMI CAP warning.
  * ACTIVE | FUTURE | INACTIVE | CANCELLED | null (not CHMI).
  *
- * ACTIVE:  validFrom <= now < validTo, not Cancel/ended, validTo known
- * FUTURE:  published warning with now < validFrom < validTo
- * INACTIVE: expired / ended / insufficient validity data
+ * Same rules as pipeline classifyChmiTemporalState (validFrom/validTo + Cancel).
+ * Recomputes from times so a stale published feed still rolls over between syncs.
+ *
+ * ACTIVE:  validFrom <= now < validTo, not Cancel, validTo known
+ * FUTURE:  now < validFrom < validTo
+ * INACTIVE: expired / ended / missing validTo / nezaraditelne
  * CANCELLED: Cancel msgType or status zruseno
  */
 function getChmiWarningLifecycleStatus(ev, nowMs) {
   if (!isChmiCapWarning(ev)) return null;
   const status = String(ev.status || "").toLowerCase();
   const msgType = String((ev.capV2 && ev.capV2.msgType) || "");
-  if (/^Cancel$/i.test(msgType) || status === "zruseno") return "CANCELLED";
-  if (status === "ukonceno" || status === "ukoncene" || status === "archivovano") return "INACTIVE";
+  const temporalState = String((ev.capV2 && ev.capV2.temporalState) || "").toLowerCase();
+  if (/^Cancel$/i.test(msgType) || status === "zruseno" || temporalState === "cancelled") {
+    return "CANCELLED";
+  }
 
   const now = Number(nowMs) > 0 ? Number(nowMs) : Date.now();
   const validFrom = parseTime(canonicalChmiValidFromRaw(ev));
   const validTo = parseTime(canonicalChmiValidToRaw(ev));
-  // Without a reliable end we cannot safely classify for the public feed.
-  if (!validTo) return "INACTIVE";
+  if (!validTo || status === "nezaraditelne" || temporalState === "invalid") return "INACTIVE";
   if (now >= validTo) return "INACTIVE";
   if (validFrom && now < validFrom) return "FUTURE";
   return "ACTIVE";
@@ -1462,9 +1466,10 @@ function filterEvents(events, filters, opts) {
       const validFrom = parseTime(ev.validFrom);
       const status = String(ev.status || "").toLowerCase();
       const lifecycleOk =
-        (validTo && validTo >= now && status !== "ukoncene" && status !== "archivovano") ||
+        (validTo && validTo >= now && status !== "ukoncene" && status !== "archivovano" && status !== "nezaraditelne") ||
         (status === "prave-probihajici" && validFrom && validFrom <= now && (!validTo || validTo >= now)) ||
         (status === "aktivni" && validTo && validTo >= now) ||
+        (status === "naplanovano" && validTo && validTo >= now) ||
         status === "planovane";
       const pubT = parseTime(ev.publishedAtSource || (ev.timeConfidence !== "fallback" ? ev.publishedAt : null));
       if (!lifecycleOk) {

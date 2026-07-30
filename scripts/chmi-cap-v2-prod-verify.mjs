@@ -14,7 +14,7 @@ import { listCapXmlFromIndex } from "./iu-info-events-lib.mjs";
 import { selectLatestPerProductStream, capProductKeyFromUrl } from "./chmi-cap-v2/discovery-adapter.mjs";
 import { parseCapAlertXml } from "./chmi-cap-v2/parse-cap.mjs";
 import { processCapDocuments } from "./chmi-cap-v2/sync-core.mjs";
-import { revisionsToFeed, mergeFeedItemsById } from "./chmi-cap-v2/normalize-feed.mjs";
+import { revisionsToFeed, mergeFeedItemsById, isPublishableChmiItem } from "./chmi-cap-v2/normalize-feed.mjs";
 import { createGeoRegistry } from "./chmi-cap-v2/geo-registry.mjs";
 import { latestRevisionForThread } from "./chmi-cap-v2/revisions.mjs";
 import { CHMI_OPENDATA_CAP_INDEX, CHMI_SYNC_UA, getChmiCapV2Config } from "./chmi-cap-v2/config.mjs";
@@ -121,23 +121,26 @@ async function main() {
     allItems.push(...revisionsToFeed(revs));
   }
 
-  const expected = mergeFeedItemsById(allItems).filter((i) => i.status === "aktivni");
+  const expected = mergeFeedItemsById(allItems).filter((i) => isPublishableChmiItem(i));
   out.parser = {
     streamsProcessed: streams.length,
     infoBlocks,
     totalAreas,
     uniqueEvents: [...events],
-    expectedActive: expected.length,
+    expectedActive: expected.filter((i) => i.status === "aktivni").length,
+    expectedPublishable: expected.length,
     expectedTitles: expected.map((i) => i.title),
   };
 
   const { feed, source } = await loadFeed(feedSpec);
   out.feedSource = source;
-  const chmi = (feed.items || []).filter((i) => String(i.sourceId) === "chmi" && i.status === "aktivni");
+  const chmi = (feed.items || []).filter((i) => String(i.sourceId) === "chmi" && isPublishableChmiItem(i));
   out.production = {
     generatedAt: feed.generatedAt || null,
     chmiCapV2Active: !!feed.chmiCapV2Active,
-    activeCount: chmi.length,
+    activeCount: chmi.filter((i) => i.status === "aktivni").length,
+    scheduledCount: chmi.filter((i) => i.status === "naplanovano").length,
+    publishableCount: chmi.length,
     titles: chmi.map((i) => i.title),
     events: [...new Set(chmi.map((i) => (i.capV2 && i.capV2.event) || String(i.title || "").split(" — ")[0]))],
     orpCoverage: chmi.map((i) => ({

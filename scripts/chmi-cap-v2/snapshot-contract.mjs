@@ -38,12 +38,22 @@ export function realInfoBlocks(alert) {
   });
 }
 
+/**
+ * Infos eligible for public publication as of `asOfMs`.
+ * Matches normalize-feed classifyChmiTemporalState publishable set:
+ *   requires onset + expires, expires > onset, expires > asOfMs
+ *   (covers temporally active AND scheduled / future onset).
+ * Missing expires is NOT treated as forever-active — those are nezaraditelne.
+ */
 export function activeInfosAsOf(alert, asOfMs) {
   if (/^Cancel$/i.test(String(alert.msgType || ""))) return [];
   if (!/^Actual$/i.test(String(alert.status || "Actual"))) return [];
   return realInfoBlocks(alert).filter((i) => {
+    const onset = Date.parse(i.onset || i.effective || "") || 0;
     const exp = Date.parse(i.expires || "") || 0;
-    if (exp && exp <= asOfMs) return false;
+    if (!onset || !exp) return false;
+    if (exp <= onset) return false;
+    if (exp <= asOfMs) return false;
     return true;
   });
 }

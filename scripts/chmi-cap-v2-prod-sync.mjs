@@ -9,8 +9,8 @@
  * Interval: separate GHA workflow every 15 minutes (not 5).
  * Discovery: opendata_active_streams — newest bulletin per CAP product stream
  *   (alert_cap_50_*, alert_cap_70_*, …). NO fixed maxFiles / first-N / last-N.
- * Completeness: per-URL bulletin cache on 304; publish union of aktivni hazards;
- *   refuse publish when completeness cannot be proven.
+ * Completeness: per-URL bulletin cache on 304; publish union of publishable hazards
+ *   (status aktivni|naplanovano); refuse publish when completeness cannot be proven.
  */
 import fs from "fs";
 import path from "path";
@@ -27,7 +27,7 @@ import {
   suspiciousDrop,
   tryAcquireLock,
 } from "./chmi-cap-v2/sync-core.mjs";
-import { loadChmiFirstSeenById, mergeFeedItemsById, revisionsToFeed } from "./chmi-cap-v2/normalize-feed.mjs";
+import { loadChmiFirstSeenById, mergeFeedItemsById, refreshItemTemporalFields, revisionsToFeed, isPublishableChmiItem } from "./chmi-cap-v2/normalize-feed.mjs";
 import { createGeoRegistry } from "./chmi-cap-v2/geo-registry.mjs";
 import { latestRevisionForThread } from "./chmi-cap-v2/revisions.mjs";
 
@@ -38,8 +38,8 @@ const STATE_DIR = path.join(DIR, "chmi_cap_v2");
 const STATE_FILE = path.join(STATE_DIR, "sync_state.json");
 const DIAG_FILE = path.join(STATE_DIR, "diagnostics.json");
 const REVISIONS_FILE = path.join(STATE_DIR, "revisions_index.json");
-/** Bump when normalize/parser semantics change so bulletinCache cannot keep stale aktivni items. */
-const BULLETIN_CACHE_EPOCH = 3;
+/** Bump when normalize/parser semantics change so bulletinCache cannot keep stale items. */
+const BULLETIN_CACHE_EPOCH = 4;
 
 function readJson(p, fallback) {
   try {
@@ -68,13 +68,17 @@ function loadState() {
   });
 }
 
+function countByStatus(items, status) {
+  return (items || []).filter((i) => i && i.status === status).length;
+}
+
 function completenessMetrics(items, processResult) {
-  const active = (items || []).filter((i) => i && i.status === "aktivni");
+  const publishable = (items || []).filter((i) => isPublishableChmiItem(i));
   let totalAreas = 0;
   let mappedAreas = 0;
   let unmappedAreas = 0;
   const events = new Set();
-  for (const i of active) {
+  for (const i of publishable) {
     const g = i.capV2 && i.capV2.geo ? i.capV2.geo : null;
     totalAreas += (g && g.totalAreas) || (i.region && i.region.orpIds && i.region.orpIds.length) || 0;
     mappedAreas += (g && g.mappedAreas) || (i.region && i.region.orpIds && i.region.orpIds.length) || 0;
@@ -88,13 +92,15 @@ function completenessMetrics(items, processResult) {
   return {
     capMessages: processResult ? processResult.report.loaded : null,
     infoBlocks,
-    logicalAlerts: active.length,
+    logicalAlerts: publishable.length,
     uniqueEvents: [...events],
     totalAreas,
     mappedAreas,
     unmappedAreas,
     mappingCoveragePercent: mappedAreas + unmappedAreas === 0 ? 100 : Math.round((100 * mappedAreas) / (mappedAreas + unmappedAreas)),
-    publishedActive: active.length,
+    publishedActive: countByStatus(items, "aktivni"),
+    publishedScheduled: countByStatus(items, "naplanovano"),
+    publishableCount: publishable.length,
   };
 }
 
@@ -298,11 +304,11 @@ export async function runChmiCapV2Sync(opts = {}) {
         // Re-apply chrono so firstSeen survives 304 cache hits across runs.
         if (!i) return i;
         const prev = firstSeenById.get(String(i.id));
+        let next = i;
         if (prev && !i.firstSeenByInfoUzel) {
-          return { ...i, firstSeenByInfoUzel: prev, sortAt: i.sortAt || i.publishedAtSource || prev, lastProcessedAt: i.lastProcessedAt || started };
-        }
-        if (!i.sortAt || !i.firstSeenByInfoUzel || !i.lastProcessedAt) {
-          return {
+          next = { ...i, firstSeenByInfoUzel: prev, sortAt: i.sortAt || i.publishedAtSource || prev, lastProcessedAt: i.lastProcessedAt || started };
+        } else if (!i.sortAt || !i.firstSeenByInfoUzel || !i.lastProcessedAt) {
+          next = {
             ...i,
             firstSeenByInfoUzel: i.firstSeenByInfoUzel || prev || started,
             lastProcessedAt: i.lastProcessedAt || started,
@@ -311,9 +317,10 @@ export async function runChmiCapV2Sync(opts = {}) {
             timeConfidence: i.timeConfidence || (i.publishedAtSource ? "high" : "fallback"),
           };
         }
-        return i;
+        // Recompute temporal status from validFrom/validTo on every sync (304-safe).
+        return refreshItemTemporalFields(next, Date.parse(started) || Date.now());
       })
-      .filter((i) => i && i.status === "aktivni");
+      .filter((i) => isPublishableChmiItem(i));
 
     const prevFeed = prevFeedEarly;
     const prevChmi = (prevFeed.items || []).filter((i) => String(i.sourceId) === "chmi");
@@ -344,7 +351,7 @@ export async function runChmiCapV2Sync(opts = {}) {
     if (
       processResult &&
       suspiciousDrop(
-        prevChmi.filter((i) => i.status === "aktivni").length,
+        prevChmi.filter((i) => isPublishableChmiItem(i)).length,
         feedItems.length
       )
     ) {
@@ -447,9 +454,15 @@ export async function runChmiCapV2Sync(opts = {}) {
     const monitoring = readJson(path.join(DIR, "monitoring.json"), {});
     const prevDiag = monitoring.chmiCapV2 || {};
     const history = Array.isArray(prevDiag.runHistory) ? prevDiag.runHistory.slice() : [];
-    const expiredCount = feedItems.filter((i) => i.status === "ukonceno").length;
+    const expiredCount = countByStatus(feedItems, "ukonceno");
     const cancelledCount =
-      feedItems.filter((i) => i.status === "zruseno").length || diagnostics.parser?.cancel || 0;
+      countByStatus(feedItems, "zruseno") || diagnostics.parser?.cancel || 0;
+    const scheduledCount = countByStatus(feedItems, "naplanovano");
+    const activeCount = countByStatus(feedItems, "aktivni");
+    const invalidCount = countByStatus(feedItems, "nezaraditelne");
+    const publishableCount = feedItems.filter((i) => isPublishableChmiItem(i)).length;
+    const visibleCount = publishableCount;
+    const totalItems = feedItems.length;
     const snapshot = {
       mode: config.mode,
       lastRunAt: started,
@@ -464,11 +477,22 @@ export async function runChmiCapV2Sync(opts = {}) {
       lastModified: state.sync.lastModified,
       consecutiveErrors: state.sync.consecutive_errors || 0,
       backoffUntil: state.sync.backoff_until || null,
+      /** Temporally in-force warnings only (validFrom <= now < validTo). Not the publish set. */
       activeCount:
-        feedItems.filter((i) => i.status === "aktivni").length ||
-        prevChmi.filter((i) => i.status === "aktivni").length,
-      cancelledCount,
+        activeCount ||
+        countByStatus(prevChmi, "aktivni"),
+      scheduledCount:
+        scheduledCount || countByStatus(prevChmi, "naplanovano"),
       expiredCount,
+      cancelledCount,
+      invalidCount,
+      publishableCount:
+        publishableCount || prevChmi.filter((i) => isPublishableChmiItem(i)).length,
+      visibleCount:
+        visibleCount || prevChmi.filter((i) => isPublishableChmiItem(i)).length,
+      totalItems: totalItems || prevChmi.length,
+      sourceCount: diagnostics.discovery?.streamCount || state.knownUrls?.length || 0,
+      activeSourceCount: 1,
       updateCount: diagnostics.parser?.update || 0,
       alertCount: diagnostics.parser?.alert || 0,
       cancelMsgCount: diagnostics.parser?.cancel || 0,
@@ -513,6 +537,8 @@ export async function runChmiCapV2Sync(opts = {}) {
       runMs: snapshot.runMs,
       error: snapshot.lastError,
       activeCount: snapshot.activeCount,
+      scheduledCount: snapshot.scheduledCount,
+      publishableCount: snapshot.publishableCount,
     });
     snapshot.runHistory = history.slice(0, 48);
     monitoring.chmiCapV2 = snapshot;

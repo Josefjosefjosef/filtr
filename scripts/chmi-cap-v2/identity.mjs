@@ -156,7 +156,8 @@ export function buildHazardInstances(alert, alertThreadId) {
       severity: info.severity || "",
       urgency: info.urgency || "",
       certainty: info.certainty || "",
-      valid_from: info.onset || info.effective || alert.sent || "",
+      // Temporal window from CAP only — do not invent onset from alert.sent.
+      valid_from: info.onset || info.effective || "",
       valid_to: info.expires || "",
       headline: info.headline || "",
       description: info.description || "",

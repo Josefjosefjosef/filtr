@@ -22,7 +22,7 @@ const { chromium } = require("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8967", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/?section=media`;
-const CACHE_BUST = "info-system-v6-chmi-concrete-url-20260730";
+const CACHE_BUST = "info-system-v6-chmi-temporal-status-20260730";
 const fails = [];
 
 function must(cond, id) {
@@ -65,7 +65,7 @@ function staticGate() {
 
   const sw = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8");
   must(/iu-prehled-dne-/.test(sw) && /network-first/i.test(sw), "sw:prehled_network_first");
-  must(/2026-07-30-chmi-cap-concrete-url-chrono-v1|2026-07-30-banner-homecard-fouc-v1|2026-07-29-media-sources-removed-v1|2026-07-27-pwa-offline-nav-fallback-v1|2026-07-26-app-root-pwa-assets-redirects-v1|2026-07-26-app-root-url-drop-projects-v1|2026-07-21-prehled-settings-sw-network-first-v1-cross-origin-passthrough/.test(sw), "sw:cache_version_bump");
+  must(/2026-07-30-chmi-cap-temporal-status-v1|2026-07-30-chmi-cap-concrete-url-chrono-v1|2026-07-30-banner-homecard-fouc-v1|2026-07-29-media-sources-removed-v1|2026-07-27-pwa-offline-nav-fallback-v1|2026-07-26-app-root-pwa-assets-redirects-v1|2026-07-26-app-root-url-drop-projects-v1|2026-07-21-prehled-settings-sw-network-first-v1-cross-origin-passthrough/.test(sw), "sw:cache_version_bump");
   must(/#16a34a|#15803d/.test(css), "css:green_color");
   must(/iu-pd-settings-open/.test(css), "css:body_lock");
   must(/--bottom-nav-height/.test(css), "css:bottom_nav");
