@@ -1374,6 +1374,8 @@ function filterEvents(events, filters, opts) {
       const needles = regionNeedlesFromPrefs(f);
       if (needles.length && !regionMatches(ev, needles)) continue;
     }
+    // Public feed: only currently valid CHMI CAP warnings (no ended/Cancel/future archive).
+    if (isChmiCapWarning(ev) && !isCurrentlyActiveChmiWarning(ev, now)) continue;
     if (rangeMs) {
       const t = parseTime(eventSortAt(ev));
       if (!t || now - t > rangeMs) continue;
