@@ -965,6 +965,183 @@ function eventTitleBaseWithoutLocality(ev) {
   return raw || "Bez názvu";
 }
 
+/** Europe/Prague calendar helpers for timeline rollover (display/sort only). */
+const IU_PRAGUE_TZ = "Europe/Prague";
+
+function pragueYmd(ms) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: IU_PRAGUE_TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(ms));
+}
+
+function startOfPragueDayMs(ms) {
+  const ymd = pragueYmd(ms);
+  let lo = Date.parse(ymd + "T00:00:00Z") - 14 * 3600000;
+  let hi = Date.parse(ymd + "T00:00:00Z") + 14 * 3600000;
+  while (lo < hi) {
+    const mid = Math.floor((lo + hi) / 2);
+    if (pragueYmd(mid) < ymd) lo = mid + 1;
+    else hi = mid;
+  }
+  return lo;
+}
+
+function nextPragueMidnightMs(ms) {
+  const startToday = startOfPragueDayMs(ms);
+  // Step into tomorrow afternoon then take that day's start.
+  return startOfPragueDayMs(startToday + 36 * 3600000);
+}
+
+function formatPragueDayMonth(ms) {
+  return new Date(ms).toLocaleDateString("cs-CZ", {
+    timeZone: IU_PRAGUE_TZ,
+    day: "numeric",
+    month: "numeric",
+  });
+}
+
+function formatPragueTime(ms) {
+  return new Date(ms).toLocaleTimeString("cs-CZ", {
+    timeZone: IU_PRAGUE_TZ,
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function formatPragueDayMonthTime(ms) {
+  return formatPragueDayMonth(ms) + " " + formatPragueTime(ms);
+}
+
+function isChmiCapWarning(ev) {
+  if (!ev || !ev.capV2) return false;
+  if (String(ev.sourceId || "") === "chmi") return true;
+  return String(ev.id || "").indexOf("ie-chmi-v2-") === 0;
+}
+
+/**
+ * True only while the CHMI warning is actually in force (not type badge).
+ * Rule: validFrom <= now < validTo, excluding Cancel / ended statuses.
+ */
+function isCurrentlyActiveChmiWarning(ev, nowMs) {
+  if (!isChmiCapWarning(ev)) return false;
+  const status = String(ev.status || "").toLowerCase();
+  if (
+    status === "zruseno" ||
+    status === "ukonceno" ||
+    status === "ukoncene" ||
+    status === "archivovano"
+  ) {
+    return false;
+  }
+  const msgType = String((ev.capV2 && ev.capV2.msgType) || "");
+  if (/^Cancel$/i.test(msgType)) return false;
+  const now = Number(nowMs) > 0 ? Number(nowMs) : Date.now();
+  const validFrom =
+    parseTime(ev.validFrom) ||
+    parseTime(ev.capV2 && ev.capV2.onset) ||
+    parseTime(ev.capV2 && ev.capV2.effective) ||
+    0;
+  const validTo =
+    parseTime(ev.validTo) ||
+    parseTime(ev.capV2 && ev.capV2.expires) ||
+    0;
+  if (!validTo) return false;
+  if (validFrom && now < validFrom) return false;
+  if (now >= validTo) return false;
+  return true;
+}
+
+function publishedAtIso(ev) {
+  return (
+    (ev &&
+      (ev.publishedAtSource ||
+        ev.sortAt ||
+        ev.firstSeenByInfoUzel ||
+        ev.publishedAt ||
+        ev.updatedAt ||
+        "")) ||
+    ""
+  );
+}
+
+/**
+ * Shared timeline presentation for feed cards (CHMI active-day rollover + AKTIVNÍ).
+ * Does not mutate the item. timelineAt is sort-only; never write it onto the event.
+ *
+ * @param {object} item
+ * @param {number} [nowMs]
+ */
+function getEffectiveTimelinePresentation(item, nowMs) {
+  const now = Number(nowMs) > 0 ? Number(nowMs) : Date.now();
+  const publishedIso = publishedAtIso(item);
+  const publishedMs = parseTime(publishedIso) || now;
+  const isActiveWarning = isCurrentlyActiveChmiWarning(item, now);
+  const pubDay = pragueYmd(publishedMs);
+  const today = pragueYmd(now);
+  const isRolledActiveWarning = !!(isActiveWarning && pubDay < today);
+
+  let timelineMs = publishedMs;
+  if (isRolledActiveWarning) timelineMs = startOfPragueDayMs(now);
+
+  const primaryDate = formatPragueDayMonth(isRolledActiveWarning ? now : publishedMs);
+  let primaryTime = null;
+  let secondaryIssuedLabel = null;
+  if (isRolledActiveWarning) {
+    secondaryIssuedLabel = "vydáno " + formatPragueDayMonthTime(publishedMs);
+  } else {
+    primaryTime = formatPragueTime(publishedMs);
+  }
+
+  return {
+    timelineAt: new Date(timelineMs).toISOString(),
+    timelineMs,
+    primaryDate,
+    primaryTime,
+    secondaryIssuedLabel,
+    isActiveWarning,
+    isRolledActiveWarning,
+    publishedAt: publishedIso,
+  };
+}
+
+/**
+ * Next boundary that requires a timeline/AKTIVNÍ recompute (midnight or validity edge).
+ */
+function nextTimelineBoundaryMs(items, nowMs) {
+  const now = Number(nowMs) > 0 ? Number(nowMs) : Date.now();
+  let next = nextPragueMidnightMs(now);
+  for (const ev of items || []) {
+    if (!isChmiCapWarning(ev)) continue;
+    const vf =
+      parseTime(ev.validFrom) ||
+      parseTime(ev.capV2 && ev.capV2.onset) ||
+      parseTime(ev.capV2 && ev.capV2.effective) ||
+      0;
+    const vt = parseTime(ev.validTo) || parseTime(ev.capV2 && ev.capV2.expires) || 0;
+    if (vf > now && vf < next) next = vf;
+    if (vt > now && vt < next) next = vt;
+  }
+  return next;
+}
+
+function clearInfoEventsFilterMemo() {
+  _filterMemo.key = "";
+  _filterMemo.result = null;
+}
+
+function compareTimelineItems(a, b, nowMs) {
+  const pa = getEffectiveTimelinePresentation(a, nowMs);
+  const pb = getEffectiveTimelinePresentation(b, nowMs);
+  const diff = pb.timelineMs - pa.timelineMs;
+  if (diff !== 0) return diff;
+  const pubDiff = parseTime(publishedAtIso(b)) - parseTime(publishedAtIso(a));
+  if (pubDiff !== 0) return pubDiff;
+  return String((b && b.id) || "").localeCompare(String((a && a.id) || ""));
+}
+
 function institutionOf(ev) {
   return String((ev && (ev.sourceName || ev.sourceLabel || ev.institution || "")) || "");
 }
@@ -1115,7 +1292,17 @@ function filterEvents(events, filters, opts) {
   const o = opts || {};
   const f = normalizePrefs(filters || {});
   const items = events || [];
-  const memoKey = prefsFingerprint(f) + "|" + items.length + "|" + (o.generationId || "") + "|" + String(o.hiddenMode || "exclude");
+  const now = Number(o.nowMs) > 0 ? Number(o.nowMs) : Date.now();
+  const memoKey =
+    prefsFingerprint(f) +
+    "|" +
+    items.length +
+    "|" +
+    (o.generationId || "") +
+    "|" +
+    String(o.hiddenMode || "exclude") +
+    "|" +
+    pragueYmd(now);
   if (!o.skipMemo && _filterMemo.itemsRef === items && _filterMemo.key === memoKey && _filterMemo.result) {
     return _filterMemo.result;
   }
@@ -1145,7 +1332,6 @@ function filterEvents(events, filters, opts) {
   const homeNeedles = regionNeedlesFromPrefs(f);
   const searchQ = String(f.searchQuery || "").trim().toLowerCase();
   const rangeMs = Number(f.timeRangeHours) > 0 ? Number(f.timeRangeHours) * 3600000 : 0;
-  const now = Date.now();
   const importanceMin = Number(f.importanceMin) || 0;
 
   const candidates = pickCandidates(index, f) || items;
@@ -1257,8 +1443,8 @@ function filterEvents(events, filters, opts) {
   }
 
   const clustered = dedupeCluster(list);
-  // V5: feed is always chronological by published_at (eventSortAt prefers publishedAtSource)
-  clustered.sort((a, b) => parseTime(eventSortAt(b)) - parseTime(eventSortAt(a)));
+  // Chronological by effective timelineAt (active CHMI warnings may roll to Prague day start).
+  clustered.sort((a, b) => compareTimelineItems(a, b, now));
 
   _filterMemo.key = memoKey;
   _filterMemo.result = clustered;
@@ -1373,6 +1559,12 @@ const IUInfoSystem = {
   getFilteredWarningLocationLabel,
   eventTitleBaseWithoutLocality,
   parseActiveLocationFilter,
+  getEffectiveTimelinePresentation,
+  isCurrentlyActiveChmiWarning,
+  nextTimelineBoundaryMs,
+  clearInfoEventsFilterMemo,
+  startOfPragueDayMs,
+  pragueYmd,
   getPrefs,
   setPrefs,
   markRead,
@@ -1429,6 +1621,12 @@ export {
   getFilteredWarningLocationLabel,
   eventTitleBaseWithoutLocality,
   parseActiveLocationFilter,
+  getEffectiveTimelinePresentation,
+  isCurrentlyActiveChmiWarning,
+  nextTimelineBoundaryMs,
+  clearInfoEventsFilterMemo,
+  startOfPragueDayMs,
+  pragueYmd,
   getPrefs,
   setPrefs,
   markRead,
