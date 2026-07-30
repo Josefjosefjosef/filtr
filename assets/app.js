@@ -11348,6 +11348,112 @@ function buildVideoAsArticleCard(it) {
     "prehled-dne": "iuPrehledDnePreviewCardMount",
   });
 
+  /** Production cutover: legacy HomeCards must not exist. off/parallel may inject them. */
+  function iuLegacyHomeCardsWanted() {
+    try {
+      const q = new URLSearchParams(location.search || "");
+      const mode = String(q.get("iuInfoSystem") || "").toLowerCase();
+      if (mode === "parallel" || mode === "off") return true;
+      if (mode === "cutover" || mode === "1" || mode === "on") return false;
+    } catch (_) {}
+    try {
+      if (typeof window !== "undefined" && window.__IU_INFO_SYSTEM_CUTOVER__ === false) return true;
+      if (typeof window !== "undefined" && window.__IU_INFO_SYSTEM_CUTOVER__ === true) return false;
+    } catch (_) {}
+    try {
+      if (document.documentElement.classList.contains("iu-info-system-parallel")) return true;
+      if (document.documentElement.classList.contains("iu-info-system-cutover")) return false;
+    } catch (_) {}
+    return false;
+  }
+
+  function iuLegacyHomeCardsEnsureShell() {
+    try {
+      if (!iuLegacyHomeCardsWanted()) return;
+      const viewport = document.getElementById("iuSilverTallScrollViewport");
+      if (!viewport) return;
+      const tall = document.getElementById("iuSilverTallScrollSection");
+      const welcome = document.getElementById("iuSilverWelcomeStack");
+      if (tall && welcome && !document.getElementById("iuFeedNewsSplit")) {
+        const split = document.createElement("div");
+        split.id = "iuFeedNewsSplit";
+        split.className = "iuFeedNewsSplit";
+        split.setAttribute("aria-hidden", "true");
+        split.innerHTML =
+          '<div class="iuFeedNewsSplit__row">' +
+          '<span class="iuFeedNewsSplit__line" aria-hidden="true"></span>' +
+          '<span class="iuFeedNewsSplit__capsule">AKTUÁLNÍ ČLÁNKY OVĚŘENÝCH MÉDIÍ</span>' +
+          '<span class="iuFeedNewsSplit__line" aria-hidden="true"></span>' +
+          "</div>";
+        welcome.insertBefore(split, tall);
+      }
+      const mountSpecs = [
+        ["iuNewsPreviewCardMount", "iuNewsPreviewCardMount", "data-iu-news-preview-mount"],
+        ["iuSportPreviewCardMount", "iuSportPreviewCardMount", "data-iu-sport-preview-mount"],
+        ["iuFinancePreviewCardMount", "iuFinancePreviewCardMount", "data-iu-finance-preview-mount"],
+        ["iuHealthPreviewCardMount", "iuHealthPreviewCardMount", "data-iu-health-preview-mount"],
+        ["iuTravelPreviewCardMount", "iuTravelPreviewCardMount", "data-iu-travel-preview-mount"],
+        ["iuGamesPreviewCardMount", "iuGamesPreviewCardMount", "data-iu-games-preview-mount"],
+        ["iuCulturePreviewCardMount", "iuCulturePreviewCardMount", "data-iu-culture-preview-mount"],
+        ["iuScienceHistoryPreviewCardMount", "iuScienceHistoryPreviewCardMount", "data-iu-science-history-preview-mount"],
+        ["iuEducationPreviewCardMount", "iuEducationPreviewCardMount", "data-iu-education-preview-mount"],
+        ["iuPrehledDnePreviewCardMount", "iuPrehledDnePreviewCardMount", "data-iu-prehled-dne-preview-mount"],
+      ];
+      const root = document.getElementById("iuPrehledDneRoot");
+      let insertAfter = root;
+      for (let i = 0; i < mountSpecs.length; i++) {
+        const id = mountSpecs[i][0];
+        const cls = mountSpecs[i][1];
+        const attr = mountSpecs[i][2];
+        let el = document.getElementById(id);
+        if (!el) {
+          el = document.createElement("div");
+          el.id = id;
+          el.className = cls;
+          el.setAttribute(attr, "");
+          if (insertAfter && insertAfter.parentNode === viewport) {
+            if (insertAfter.nextSibling) viewport.insertBefore(el, insertAfter.nextSibling);
+            else viewport.appendChild(el);
+          } else {
+            viewport.appendChild(el);
+          }
+        }
+        insertAfter = el;
+      }
+      if (!document.getElementById("iuFeedNewsSplitPostHomeCards")) {
+        const post = document.createElement("div");
+        post.id = "iuFeedNewsSplitPostHomeCards";
+        post.className = "iuFeedNewsSplit iuFeedNewsSplit--postHomeCards";
+        post.setAttribute("aria-hidden", "true");
+        post.innerHTML =
+          '<div class="iuFeedNewsSplit__row">' +
+          '<span class="iuFeedNewsSplit__line" aria-hidden="true"></span>' +
+          '<span class="iuFeedNewsSplit__capsule">DALŠÍ UŽITEČNÝ OBSAH</span>' +
+          '<span class="iuFeedNewsSplit__line" aria-hidden="true"></span>' +
+          "</div>";
+        if (insertAfter && insertAfter.nextSibling) viewport.insertBefore(post, insertAfter.nextSibling);
+        else viewport.appendChild(post);
+        insertAfter = post;
+      }
+      if (!document.getElementById("iuSilverFinanceHomeCard")) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.id = "iuSilverFinanceHomeCard";
+        btn.className = "iuSilverFinanceHomeCard";
+        btn.setAttribute("data-iuq", "fincalc");
+        btn.setAttribute("data-iu-silver-finance-home-card", "1");
+        btn.setAttribute("aria-label", "Osobní finance a kalkulačky");
+        btn.innerHTML =
+          '<span class="iuSilverFinanceHomeCard__hero"><span class="iuSilverFinanceHomeCard__content">' +
+          '<span class="iuSilverFinanceHomeCard__titleRow"><span class="iuSilverFinanceHomeCard__title">💰 Osobní finance a kalkulačky</span></span>' +
+          '<span class="iuSilverFinanceHomeCard__lead">Máte své finance pod kontrolou? Získejte rychlý přehled o rozpočtu domácnosti, hypotéce a možnostech refinancování, investicích i spoření.</span>' +
+          "</span></span>";
+        if (insertAfter && insertAfter.nextSibling) viewport.insertBefore(btn, insertAfter.nextSibling);
+        else viewport.appendChild(btn);
+      }
+    } catch (_) {}
+  }
+
   function iuDesktopHomeCardsOrderNormalize(raw){
     try {
       const allowed = new Set(IU_HOME_CARDS_ORDER_DEFAULT);
@@ -11413,6 +11519,7 @@ function buildVideoAsArticleCard(it) {
 
   function iuDesktopHomeCardsDragInit(){
     try {
+      if (!iuLegacyHomeCardsWanted()) return;
       if (window.__iuDesktopHomeCardsDragInit) return;
       window.__iuDesktopHomeCardsDragInit = 1;
     } catch (_) {}
@@ -11528,7 +11635,9 @@ function buildVideoAsArticleCard(it) {
   /** P0 desktop-only (≥1025px + /projects/ hub): body.iu-desktop-home-grid — 2-column section tiles; mobile/tablet unchanged. */
   function iuDesktopHomeCardsEnsureDomAll() {
     try {
+      if (!iuLegacyHomeCardsWanted()) return;
       if (!document.body || !document.body.classList.contains("iu-desktop-home-grid")) return;
+      try { iuLegacyHomeCardsEnsureShell(); } catch (_) {}
       try { iuNewsPreviewEnsureDom(); } catch (_) {}
       try { iuSportPreviewEnsureDom(); } catch (_) {}
       try { iuFinancePreviewEnsureDom(); } catch (_) {}
@@ -11611,6 +11720,9 @@ function buildVideoAsArticleCard(it) {
       const ok = !!(hub && mq && mq.matches);
       if (ok) body.classList.add("iu-desktop-home-grid");
       else body.classList.remove("iu-desktop-home-grid");
+      try {
+        if (iuLegacyHomeCardsWanted()) iuLegacyHomeCardsEnsureShell();
+      } catch (_) {}
       if (ok) {
         try { iuDesktopHomeCardsEnsureDomAll(); } catch (_) {}
         try { iuDesktopInitialScrollTopApply(); } catch (_) {}
@@ -11716,6 +11828,8 @@ function buildVideoAsArticleCard(it) {
 
   function iuNewsPreviewEnsureDom(){
     try{
+      if (!iuLegacyHomeCardsWanted()) return null;
+      try { iuLegacyHomeCardsEnsureShell(); } catch (_) {}
       const viewport = document.getElementById("iuSilverTallScrollViewport");
       if (!viewport) return null;
       const mount = document.getElementById("iuNewsPreviewCardMount");
@@ -11893,6 +12007,8 @@ function buildVideoAsArticleCard(it) {
 
   function iuSportPreviewEnsureDom(){
     try{
+      if (!iuLegacyHomeCardsWanted()) return null;
+      try { iuLegacyHomeCardsEnsureShell(); } catch (_) {}
       const viewport = document.getElementById("iuSilverTallScrollViewport");
       if (!viewport) return null;
       const mount = document.getElementById("iuSportPreviewCardMount");
@@ -14169,6 +14285,8 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuSilverTallMediaPreviewsRefresh(){
+    if (!iuLegacyHomeCardsWanted()) return;
+    try { iuLegacyHomeCardsEnsureShell(); } catch (_) {}
     try{ iuNewsPreviewRefresh(); }catch(_){}
     try{ iuSportPreviewRefresh(); }catch(_){}
     try{ iuFinancePreviewRefresh(); }catch(_){}
@@ -14184,6 +14302,8 @@ function buildVideoAsArticleCard(it) {
 
   /** P0: same work as iuSilverTallMediaPreviewsRefresh but yields between rails so one task does not stack 9× DOM+scan work. */
   async function iuSilverTallMediaPreviewsRefreshYielded() {
+    if (!iuLegacyHomeCardsWanted()) return;
+    try { iuLegacyHomeCardsEnsureShell(); } catch (_) {}
     const runners = [
       () => {
         try {

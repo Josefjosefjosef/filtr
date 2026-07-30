@@ -107,34 +107,6 @@ if (!/data-iu-silver-wx-layout/.test(html)) {
   fail("❌ Weather card must expose data-iu-silver-wx-layout (setup vs ready) for stack contract");
 }
 
-if (!/id="iuFinancePreviewCardMount"[\s\S]*?data-iu-finance-preview-mount/.test(html)) {
-  fail("❌ Silver tall viewport must include Finance preview mount (#iuFinancePreviewCardMount + data-iu-finance-preview-mount)");
-}
-
-if (!/id="iuHealthPreviewCardMount"[\s\S]*?data-iu-health-preview-mount/.test(html)) {
-  fail("❌ Silver tall viewport must include Zdraví preview mount (#iuHealthPreviewCardMount + data-iu-health-preview-mount)");
-}
-
-if (!/id="iuTravelPreviewCardMount"[\s\S]*?data-iu-travel-preview-mount/.test(html)) {
-  fail("❌ Silver tall viewport must include Cestování preview mount (#iuTravelPreviewCardMount + data-iu-travel-preview-mount)");
-}
-
-if (!/id="iuGamesPreviewCardMount"[\s\S]*?data-iu-games-preview-mount/.test(html)) {
-  fail("❌ Silver tall viewport must include Hry preview mount (#iuGamesPreviewCardMount + data-iu-games-preview-mount)");
-}
-
-if (!/id="iuCulturePreviewCardMount"[\s\S]*?data-iu-culture-preview-mount/.test(html)) {
-  fail("❌ Silver tall viewport must include Kultura / Akce preview mount (#iuCulturePreviewCardMount + data-iu-culture-preview-mount)");
-}
-
-if (!/id="iuScienceHistoryPreviewCardMount"[\s\S]*?data-iu-science-history-preview-mount/.test(html)) {
-  fail("❌ Silver tall viewport must include Věda & Historie preview mount (#iuScienceHistoryPreviewCardMount + data-iu-science-history-preview-mount)");
-}
-
-if (!/id="iuEducationPreviewCardMount"[\s\S]*?data-iu-education-preview-mount/.test(html)) {
-  fail("❌ Silver tall viewport must include Vzdělávání preview mount (#iuEducationPreviewCardMount + data-iu-education-preview-mount)");
-}
-
 if (!/id="iuSilverParcelWatch"[\s\S]*?id="iuSilverParcelWatchInput"/.test(html)) {
   fail("❌ Silver parcel watch block must include #iuSilverParcelWatch + #iuSilverParcelWatchInput");
 }
@@ -147,12 +119,27 @@ if (!/iu-silver-parcel-dashboard\.css/.test(html)) {
   fail("❌ projects/index.html must link iu-silver-parcel-dashboard.css");
 }
 
-if (!/iu-silver-finance-home-card\.css/.test(html)) {
-  fail("❌ projects/index.html must link iu-silver-finance-home-card.css");
+const appJsPath = path.join(ROOT, "assets", "app.js");
+const appJsGuard = fs.readFileSync(appJsPath, "utf8");
+
+if (!/function\s+iuLegacyHomeCardsEnsureShell/.test(appJsGuard) || !/function\s+iuLegacyHomeCardsWanted/.test(appJsGuard)) {
+  fail("❌ assets/app.js must define iuLegacyHomeCardsEnsureShell + iuLegacyHomeCardsWanted (cutover: no static HomeCards)");
 }
 
-if (!/id="iuSilverFinanceHomeCard"[\s\S]*?data-iuq="fincalc"/.test(html)) {
-  fail("❌ Silver finance home card must include #iuSilverFinanceHomeCard with data-iuq=\"fincalc\"");
+if (/id="iuNewsPreviewCardMount"/.test(html) || /data-iu-news-preview-card="1"/.test(html)) {
+  fail("❌ Legacy news HomeCard must not be in initial HTML (inject only via iuLegacyHomeCardsEnsureShell for off/parallel)");
+}
+
+if (/id="iuSilverFinanceHomeCard"/.test(html)) {
+  fail("❌ #iuSilverFinanceHomeCard must not be in initial HTML under cutover (inject on demand for off/parallel)");
+}
+
+if (/id="iuFeedNewsSplitPostHomeCards"/.test(html)) {
+  fail("❌ #iuFeedNewsSplitPostHomeCards must not be in initial HTML under cutover");
+}
+
+if (!/iu-silver-finance-home-card\.css/.test(html)) {
+  fail("❌ projects/index.html must link iu-silver-finance-home-card.css");
 }
 
 const finCssPath = path.join(ROOT, "assets", "iu-silver-finance-home-card.css");
@@ -173,8 +160,6 @@ if (!/html\.iu-time-evening[\s\S]*#iuSilverFinanceHomeCard[\s\S]*#182235/.test(f
   fail("❌ Finance home card evening mode must share parcel evening background (#182235)");
 }
 
-const appJsPath = path.join(ROOT, "assets", "app.js");
-const appJsGuard = fs.readFileSync(appJsPath, "utf8");
 if (!/function\s+iuOpenMeteoPayloadIsValid/.test(appJsGuard)) {
   fail("❌ assets/app.js must define iuOpenMeteoPayloadIsValid (weather loaded guard)");
 }

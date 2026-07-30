@@ -39,14 +39,20 @@ function staticGate() {
   must(/infouzel-prehled-dne-banner\.png/.test(index), "index:banner_path");
   must(/data-iu-pd-banner="1"/.test(index), "index:static_banner_shell");
   must(/preload[^>]+infouzel-prehled-dne-banner\.png/.test(index), "index:banner_preload");
-  must(/html\.iu-info-system-cutover #iuNewsPreviewCardMount/.test(index), "index:early_css_hides_news_mount");
-  must(/html\.iu-info-system-cutover #iuSilverFinanceHomeCard/.test(index), "index:early_css_hides_finance");
+  must(!/id="iuNewsPreviewCardMount"/.test(index), "index:no_static_news_mount");
+  must(!/data-iu-news-preview-card="1"/.test(index), "index:no_static_news_card");
+  must(!/id="iuSilverFinanceHomeCard"/.test(index), "index:no_static_finance_homecard");
+  must(!/id="iuFeedNewsSplitPostHomeCards"/.test(index), "index:no_static_post_homecards");
+  must(!/id="iuFeedNewsSplit"[^>]*>[\s\S]*AKTUÁLNÍ ČLÁNKY/.test(index), "index:no_static_media_split");
   must(/function bannerHtml\(/.test(ui), "ui:bannerHtml");
   must(/bannerHtml\(\)/.test(ui) && /homeShellHtml/.test(ui), "ui:banner_in_shell");
   must(/\.iuPd__bannerImg/.test(css) && /aspect-ratio:\s*1661\s*\/\s*616/.test(css), "css:banner_aspect");
   must(/object-fit:\s*contain/.test(css), "css:banner_contain");
-  must(/#iuFeedNewsSplitPostHomeCards/.test(css), "css:cutover_post_homecards");
   must(/2026-07-30-banner-homecard-fouc-v1/.test(sw), "sw:cache_version");
+  const appJs = fs.readFileSync(path.join(ROOT, "assets", "app.js"), "utf8");
+  must(/function iuLegacyHomeCardsWanted/.test(appJs), "app:legacy_wanted");
+  must(/function iuLegacyHomeCardsEnsureShell/.test(appJs), "app:legacy_ensure_shell");
+  must(/if \(!iuLegacyHomeCardsWanted\(\)\) return/.test(appJs), "app:ensure_dom_gated");
 }
 
 function waitForPort(host, port, timeoutMs) {
@@ -126,22 +132,22 @@ async function runPlaywright() {
       await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 60000 });
 
       const early = await page.evaluate(() => {
-        const news = document.querySelector('[data-iu-news-preview-card="1"]');
-        const mount = document.getElementById("iuNewsPreviewCardMount");
-        const finance = document.getElementById("iuSilverFinanceHomeCard");
-        const cs = (el) => (el ? getComputedStyle(el).display : "none");
         return {
           cutover: document.documentElement.classList.contains("iu-info-system-cutover"),
-          newsDisplay: cs(news),
-          mountDisplay: cs(mount),
-          financeDisplay: cs(finance),
+          newsExists: !!document.querySelector('[data-iu-news-preview-card="1"]'),
+          mountExists: !!document.getElementById("iuNewsPreviewCardMount"),
+          financeExists: !!document.getElementById("iuSilverFinanceHomeCard"),
+          postSplitExists: !!document.getElementById("iuFeedNewsSplitPostHomeCards"),
+          mediaSplitExists: !!document.getElementById("iuFeedNewsSplit"),
           bannerCount: document.querySelectorAll("[data-iu-pd-banner='1']").length,
         };
       });
       if (!early.cutover) pwFails.push(vp.name + ":early_cutover");
-      if (early.newsDisplay !== "none") pwFails.push(vp.name + ":news_card_visible_early:" + early.newsDisplay);
-      if (early.mountDisplay !== "none") pwFails.push(vp.name + ":news_mount_visible_early:" + early.mountDisplay);
-      if (early.financeDisplay !== "none") pwFails.push(vp.name + ":finance_visible_early:" + early.financeDisplay);
+      if (early.newsExists) pwFails.push(vp.name + ":news_card_in_dom_early");
+      if (early.mountExists) pwFails.push(vp.name + ":news_mount_in_dom_early");
+      if (early.financeExists) pwFails.push(vp.name + ":finance_in_dom_early");
+      if (early.postSplitExists) pwFails.push(vp.name + ":post_split_in_dom_early");
+      if (early.mediaSplitExists) pwFails.push(vp.name + ":media_split_in_dom_early");
       if (early.bannerCount !== 1) pwFails.push(vp.name + ":early_banner_count:" + early.bannerCount);
 
       await page.evaluate(() => {
@@ -184,10 +190,9 @@ async function runPlaywright() {
           objectFit: imgCs ? imgCs.objectFit : "",
           src: img ? img.getAttribute("src") || "" : "",
           alt: img ? img.getAttribute("alt") || "" : "",
-          newsDisplay: (() => {
-            const el = document.querySelector('[data-iu-news-preview-card="1"]');
-            return el ? getComputedStyle(el).display : "none";
-          })(),
+          newsExists: !!document.querySelector('[data-iu-news-preview-card="1"]'),
+          mountExists: !!document.getElementById("iuNewsPreviewCardMount"),
+          financeExists: !!document.getElementById("iuSilverFinanceHomeCard"),
         };
       });
 
@@ -200,19 +205,24 @@ async function runPlaywright() {
       if (layout.objectFit !== "contain") pwFails.push(vp.name + ":object_fit");
       if (!/infouzel-prehled-dne-banner\.png/.test(layout.src)) pwFails.push(vp.name + ":img_src");
       if (!/InfoUzel/.test(layout.alt)) pwFails.push(vp.name + ":img_alt");
-      if (layout.newsDisplay !== "none") pwFails.push(vp.name + ":news_still_visible");
+      if (layout.newsExists) pwFails.push(vp.name + ":news_still_in_dom");
+      if (layout.mountExists) pwFails.push(vp.name + ":mount_still_in_dom");
+      if (layout.financeExists) pwFails.push(vp.name + ":finance_still_in_dom");
 
       await page.reload({ waitUntil: "domcontentloaded", timeout: 60000 });
       const afterReload = await page.evaluate(() => {
-        const news = document.querySelector('[data-iu-news-preview-card="1"]');
         return {
           cutover: document.documentElement.classList.contains("iu-info-system-cutover"),
-          newsDisplay: news ? getComputedStyle(news).display : "none",
+          newsExists: !!document.querySelector('[data-iu-news-preview-card="1"]'),
+          mountExists: !!document.getElementById("iuNewsPreviewCardMount"),
+          financeExists: !!document.getElementById("iuSilverFinanceHomeCard"),
           bannerCount: document.querySelectorAll("[data-iu-pd-banner='1']").length,
         };
       });
       if (!afterReload.cutover) pwFails.push(vp.name + ":reload_cutover");
-      if (afterReload.newsDisplay !== "none") pwFails.push(vp.name + ":reload_news_flash");
+      if (afterReload.newsExists) pwFails.push(vp.name + ":reload_news_in_dom");
+      if (afterReload.mountExists) pwFails.push(vp.name + ":reload_mount_in_dom");
+      if (afterReload.financeExists) pwFails.push(vp.name + ":reload_finance_in_dom");
       if (afterReload.bannerCount !== 1) pwFails.push(vp.name + ":reload_banner_count");
 
       await context.close();
