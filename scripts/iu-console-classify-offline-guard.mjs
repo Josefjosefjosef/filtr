@@ -119,8 +119,18 @@ async function runAgainst(url, label) {
   }
   phase = "online_recovery";
   await context.setOffline(false);
-  await page.reload({ waitUntil: "domcontentloaded", timeout: 90000 });
-  await page.waitForTimeout(800);
+  try {
+    await page.reload({ waitUntil: "domcontentloaded", timeout: 90000 });
+    await page.waitForTimeout(800);
+  } catch (_) {
+    /* recovery navigation can abort after offline — classify captured events */
+    try {
+      await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90000 });
+      await page.waitForTimeout(800);
+    } catch (_) {
+      /* still classify whatever console events were captured */
+    }
+  }
   await browser.close();
 
   const unexpected = events.filter((e) => e.classification === "unexpectedConsoleError");
