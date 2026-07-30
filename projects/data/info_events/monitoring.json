@@ -415,30 +415,30 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-07-30T17:49:07.672Z",
-    "lastSuccessAt": "2026-07-30T17:49:10.737Z",
-    "lastChangedAt": "2026-07-30T16:00:08.997Z",
+    "lastRunAt": "2026-07-30T18:26:23.633Z",
+    "lastSuccessAt": "2026-07-30T18:26:27.804Z",
+    "lastChangedAt": "2026-07-30T18:26:27.804Z",
     "lastError": null,
-    "status": "not_modified",
+    "status": "healthy",
     "etag": "\"6a688d7b-e76a\"",
     "lastModified": "Tue, 28 Jul 2026 11:07:39 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
-    "activeCount": 11,
-    "scheduledCount": 8,
+    "activeCount": 12,
+    "scheduledCount": 9,
     "expiredCount": 0,
     "cancelledCount": 0,
-    "invalidCount": 8,
-    "publishableCount": 19,
-    "visibleCount": 19,
+    "invalidCount": 6,
+    "publishableCount": 21,
+    "visibleCount": 21,
     "totalItems": 27,
     "sourceCount": 2,
     "activeSourceCount": 1,
-    "updateCount": 0,
+    "updateCount": 2,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 0,
+    "validCount": 2,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -451,9 +451,9 @@
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
-      "logicalAlerts": 19,
+      "capMessages": 2,
+      "infoBlocks": 48,
+      "logicalAlerts": 21,
       "uniqueEvents": [
         "Velmi vysoké teploty",
         "Vysoké teploty",
@@ -463,20 +463,20 @@
         "Riziko požárů",
         "Vysoké riziko požárů"
       ],
-      "totalAreas": 81,
-      "mappedAreas": 608,
+      "totalAreas": 94,
+      "mappedAreas": 732,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 11,
-      "publishedScheduled": 8,
-      "publishableCount": 19,
+      "publishedActive": 12,
+      "publishedScheduled": 9,
+      "publishableCount": 21,
       "productStreams": [
         "50",
         "70"
       ],
       "streamCount": 2,
       "missingStreamCache": 0,
-      "invalidCount": 8,
+      "invalidCount": 6,
       "expiredCount": 0,
       "cancelledCount": 0
     },
@@ -486,33 +486,33 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 3080,
+    "runMs": 4540,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-07-30T17:49:07.672Z",
+    "lastSnapshotAt": "2026-07-30T18:26:23.633Z",
     "audit": {
       "http": [
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_301116.xml",
           "productKey": "50",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         },
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
           "productKey": "70",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         }
       ],
       "publish": {
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": null,
-          "infoBlocks": null,
-          "logicalAlerts": 19,
+          "capMessages": 2,
+          "infoBlocks": 48,
+          "logicalAlerts": 21,
           "uniqueEvents": [
             "Velmi vysoké teploty",
             "Vysoké teploty",
@@ -522,29 +522,53 @@
             "Riziko požárů",
             "Vysoké riziko požárů"
           ],
-          "totalAreas": 81,
-          "mappedAreas": 608,
+          "totalAreas": 94,
+          "mappedAreas": 732,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100,
-          "publishedActive": 11,
-          "publishedScheduled": 8,
-          "publishableCount": 19,
+          "publishedActive": 12,
+          "publishedScheduled": 9,
+          "publishableCount": 21,
           "productStreams": [
             "50",
             "70"
           ],
           "streamCount": 2,
           "missingStreamCache": 0,
-          "invalidCount": 8,
+          "invalidCount": 6,
           "expiredCount": 0,
           "cancelledCount": 0
         },
         "alarms": [],
         "productionVerified": false
       },
-      "parser": null
+      "parser": {
+        "loaded": 2,
+        "valid": 2,
+        "rejected": 0,
+        "duplicates": 0,
+        "quarantine": 0,
+        "cancels": 0,
+        "updates": 0,
+        "newThreads": 2,
+        "status": "healthy",
+        "alert": 0,
+        "update": 2,
+        "cancel": 0
+      }
     },
     "runHistory": [
+      {
+        "at": "2026-07-30T18:26:23.633Z",
+        "status": "healthy",
+        "mode": "active",
+        "publish": true,
+        "runMs": 4540,
+        "error": null,
+        "activeCount": 12,
+        "scheduledCount": 9,
+        "publishableCount": 21
+      },
       {
         "at": "2026-07-30T17:49:07.672Z",
         "status": "not_modified",
