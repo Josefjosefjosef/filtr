@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Guard: CHMI CAP active-day timeline rollover + AKTIVNÍ badge (display/sort only).
+ * Guard: CHMI CAP lifecycle (ACTIVE/FUTURE/INACTIVE/CANCELLED) + timeline rollover + AKTIVNÍ badge.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -13,7 +13,7 @@ const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "info-system-v6-banner-homecard-fouc-20260730";
+const CACHE_BUST = "info-system-v6-chmi-status-unify-20260730";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -115,36 +115,42 @@ function staticGate() {
   const css = fs.readFileSync(CSS, "utf8");
   const index = fs.readFileSync(INDEX, "utf8");
   ok("core_fn", /function getEffectiveTimelinePresentation/.test(core), "fn");
+  ok("core_lifecycle", /function getChmiWarningLifecycleStatus/.test(core), "lifecycle");
   ok("core_active", /function isCurrentlyActiveChmiWarning/.test(core), "active");
+  ok("core_public", /function isPublicFeedChmiWarning/.test(core), "public");
   ok("core_prague", /Europe\/Prague/.test(core), "tz");
   ok(
-    "core_public_active_only",
-    /isChmiCapWarning\(ev\) && !isCurrentlyActiveChmiWarning\(ev, now\)/.test(core),
+    "core_public_active_future",
+    /isChmiCapWarning\(ev\) && !isPublicFeedChmiWarning\(ev, now\)/.test(core),
     "filter"
   );
   ok("core_no_assign_timeline", !/item\.timelineAt\s*=/.test(core), "mutate");
   ok("ui_uses_presentation", /getEffectiveTimelinePresentation\(ev/.test(ui), "ui");
   ok("ui_active_pill", /AKTIVNÍ VÝSTRAHA/.test(ui), "pill");
+  ok("ui_active_uses_isActive", /timeline\.isActiveWarning/.test(ui), "pill cond");
   ok("ui_source_prefix", /Zdroj:\s*"/.test(ui) || /"Zdroj: "/.test(ui), "source");
   ok("ui_region_dedupe", /regionPill/.test(ui) && /title\.indexOf\(region\)/.test(ui), "dedupe");
   ok("ui_issued", /iuPrehledDne__issued/.test(ui), "issued");
   ok("ui_issued_split", /iuPrehledDne__issuedWord/.test(ui) && /iuPrehledDne__issuedDate/.test(ui), "issued split");
+  ok("ui_valid_from", /iuPrehledDne__validFrom/.test(ui), "validFrom ui");
+  ok("ui_valid_from_word", /platnost od/.test(ui) || /secondaryValidFromLabel/.test(ui), "validFrom label");
   ok("ui_midnight_timer", /scheduleTimelineBoundaryRefresh/.test(ui), "timer");
   ok("ui_visibility", /visibilitychange/.test(ui), "vis");
   ok("ui_url_unchanged", /chmiPublicDetailUrl\(ev\)/.test(ui) && /forced \|\| ev\.url/.test(ui), "url");
   ok("css_issued", /\.iuPrehledDne__issued/.test(css), "css issued");
+  ok("css_valid_from", /\.iuPrehledDne__validFrom/.test(css), "css validFrom");
   ok("css_active", /\.iuPdCard__pill--active/.test(css), "css active");
   ok("bust_ui", ui.includes(CACHE_BUST), "bust ui");
   ok("bust_index", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "bust index");
+  ok("bust_css", index.includes("iu-prehled-dne-v1.css?v=" + CACHE_BUST), "bust css");
 }
 
 function unitGate(IU) {
   const nowSameDay = Date.parse("2026-07-30T12:00:00+02:00");
   const nowMorning = Date.parse("2026-07-30T09:00:00+02:00");
   const nowDay3 = Date.parse("2026-07-31T11:00:00+02:00");
-  const nowBefore = Date.parse("2026-07-30T12:00:00+02:00");
 
-  // A: issued and active today
+  // A: issued and active today — green badge
   const todayW = warning({
     publishedAtSource: "2026-07-30T10:54:00+02:00",
     publishedAt: "2026-07-30T10:54:00+02:00",
@@ -153,17 +159,26 @@ function unitGate(IU) {
   });
   const snapA = JSON.stringify(todayW);
   const a = IU.getEffectiveTimelinePresentation(todayW, nowSameDay);
+  ok("A_lifecycle", IU.getChmiWarningLifecycleStatus(todayW, nowSameDay) === "ACTIVE", "status");
   ok("A_active", a.isActiveWarning === true, String(a.isActiveWarning));
+  ok("A_not_future", a.isFutureWarning === false, String(a.isFutureWarning));
   ok("A_not_rolled", a.isRolledActiveWarning === false, String(a.isRolledActiveWarning));
   ok("A_primary", /30\.\s*7/.test(a.primaryDate), a.primaryDate);
   ok("A_time", !!a.primaryTime, a.primaryTime);
   ok("A_no_issued", !a.secondaryIssuedLabel, a.secondaryIssuedLabel);
+  ok("A_no_valid_from_label", !a.secondaryValidFromLabel, String(a.secondaryValidFromLabel));
   ok("A_nomutate", JSON.stringify(todayW) === snapA, "mutated");
+  ok(
+    "A_filter_kept",
+    IU.filterEvents([todayW], {}, { skipMemo: true, nowMs: nowSameDay }).length === 1,
+    "dropped"
+  );
 
-  // B: issued yesterday, active today
+  // B: issued yesterday, active today — rolled + green badge
   const yW = warning();
   const snapB = JSON.stringify(yW);
   const b = IU.getEffectiveTimelinePresentation(yW, nowMorning);
+  ok("B_lifecycle", IU.getChmiWarningLifecycleStatus(yW, nowMorning) === "ACTIVE", "status");
   ok("B_active", b.isActiveWarning === true, String(b.isActiveWarning));
   ok("B_rolled", b.isRolledActiveWarning === true, String(b.isRolledActiveWarning));
   ok("B_primary_today", /30\.\s*7/.test(b.primaryDate), b.primaryDate);
@@ -208,6 +223,7 @@ function unitGate(IU) {
     validTo: "2026-07-29T22:00:00+02:00",
   });
   const f = IU.getEffectiveTimelinePresentation(ended, nowMorning);
+  ok("F_lifecycle", IU.getChmiWarningLifecycleStatus(ended, nowMorning) === "INACTIVE", "status");
   ok("F_not_active", f.isActiveWarning === false, String(f.isActiveWarning));
   ok("F_not_rolled", f.isRolledActiveWarning === false, String(f.isRolledActiveWarning));
 
@@ -217,9 +233,10 @@ function unitGate(IU) {
   const afterExp = IU.getEffectiveTimelinePresentation(mid, Date.parse("2026-07-30T15:00:00+02:00"));
   ok("G_before_active", beforeExp.isActiveWarning === true, String(beforeExp.isActiveWarning));
   ok("G_after_inactive", afterExp.isActiveWarning === false, String(afterExp.isActiveWarning));
+  ok("G_after_lifecycle", IU.getChmiWarningLifecycleStatus(mid, Date.parse("2026-07-30T15:00:00+02:00")) === "INACTIVE", "status");
   ok("G_after_not_rolled", afterExp.isRolledActiveWarning === false, String(afterExp.isRolledActiveWarning));
 
-  // H: future warning
+  // H: future warning — stays in feed, no green badge, platnost od from canonical validFrom
   const future = warning({
     publishedAtSource: "2026-07-30T08:00:00+02:00",
     publishedAt: "2026-07-30T08:00:00+02:00",
@@ -228,14 +245,62 @@ function unitGate(IU) {
   });
   const h12 = IU.getEffectiveTimelinePresentation(future, Date.parse("2026-07-30T12:00:00+02:00"));
   const h15 = IU.getEffectiveTimelinePresentation(future, Date.parse("2026-07-30T15:00:00+02:00"));
+  ok("H_lifecycle_future", IU.getChmiWarningLifecycleStatus(future, Date.parse("2026-07-30T12:00:00+02:00")) === "FUTURE", "status");
   ok("H_before_inactive", h12.isActiveWarning === false, String(h12.isActiveWarning));
+  ok("H_before_future", h12.isFutureWarning === true, String(h12.isFutureWarning));
   ok("H_before_not_rolled", h12.isRolledActiveWarning === false, String(h12.isRolledActiveWarning));
+  ok("H_valid_from_label", h12.secondaryValidFromLabel === "platnost od", String(h12.secondaryValidFromLabel));
+  ok("H_valid_from_same_day_time_only", !h12.secondaryValidFromDate && h12.secondaryValidFromTime === "14:00", String(h12.secondaryValidFromTime));
   ok("H_after_active", h15.isActiveWarning === true, String(h15.isActiveWarning));
+  ok("H_after_not_future", h15.isFutureWarning === false, String(h15.isFutureWarning));
+  ok("H_after_no_valid_from", !h15.secondaryValidFromLabel, String(h15.secondaryValidFromLabel));
   ok("H_same_id", future.id === "ie-chmi-v2-roll-1", future.id);
+
+  // H2: future next day — date + time under platnost od
+  const futureNext = warning({
+    id: "ie-chmi-v2-future-next",
+    publishedAtSource: "2026-07-30T13:16:00+02:00",
+    publishedAt: "2026-07-30T13:16:00+02:00",
+    validFrom: "2026-07-31T12:00:00+02:00",
+    validTo: "2026-08-01T00:00:00+02:00",
+  });
+  const hn = IU.getEffectiveTimelinePresentation(futureNext, Date.parse("2026-07-30T14:00:00+02:00"));
+  ok("H2_future", hn.isFutureWarning === true && hn.isActiveWarning === false, "flags");
+  ok("H2_valid_from_date", /31\.\s*7/.test(String(hn.secondaryValidFromDate || "")), String(hn.secondaryValidFromDate));
+  ok("H2_valid_from_time", hn.secondaryValidFromTime === "12:00", String(hn.secondaryValidFromTime));
+
+  // H3: future with date-only validFrom — no invented clock time
+  const futureDateOnly = warning({
+    id: "ie-chmi-v2-future-date",
+    publishedAtSource: "2026-07-30T08:00:00+02:00",
+    publishedAt: "2026-07-30T08:00:00+02:00",
+    validFrom: "2026-07-31",
+    validTo: "2026-08-02T00:00:00+02:00",
+  });
+  const hd = IU.getEffectiveTimelinePresentation(futureDateOnly, Date.parse("2026-07-30T12:00:00+02:00"));
+  ok("H3_future", hd.isFutureWarning === true, String(hd.isFutureWarning));
+  ok("H3_date", /31\.\s*7/.test(String(hd.secondaryValidFromDate || "")), String(hd.secondaryValidFromDate));
+  ok("H3_no_time", !hd.secondaryValidFromTime, String(hd.secondaryValidFromTime));
+
+  // H4: future without reliable validFrom — may stay in feed, no platnost od
+  const futureNoVf = warning({
+    id: "ie-chmi-v2-future-novf",
+    publishedAtSource: "2026-07-30T08:00:00+02:00",
+    publishedAt: "2026-07-30T08:00:00+02:00",
+    validFrom: "",
+    validTo: "2026-07-30T20:00:00+02:00",
+  });
+  // Missing validFrom + validTo in future window ⇒ ACTIVE (already started unknown onset)
+  ok(
+    "H4_missing_vf_is_active",
+    IU.getChmiWarningLifecycleStatus(futureNoVf, Date.parse("2026-07-30T12:00:00+02:00")) === "ACTIVE",
+    "status"
+  );
 
   // I: Cancel
   const cancel = warning({ status: "zruseno", capV2: { badgeActive: false, msgType: "Cancel", geo: { links: [] } } });
   const i = IU.getEffectiveTimelinePresentation(cancel, nowMorning);
+  ok("I_lifecycle", IU.getChmiWarningLifecycleStatus(cancel, nowMorning) === "CANCELLED", "status");
   ok("I_inactive", i.isActiveWarning === false, String(i.isActiveWarning));
   ok("I_not_rolled", i.isRolledActiveWarning === false, String(i.isRolledActiveWarning));
   ok(
@@ -244,7 +309,7 @@ function unitGate(IU) {
     "cancel visible"
   );
 
-  // Public feed: only currently active CHMI warnings
+  // Public feed: ACTIVE + FUTURE
   ok(
     "F_filter_hides_ended",
     IU.filterEvents([ended], {}, { skipMemo: true, nowMs: nowMorning }).length === 0,
@@ -261,14 +326,19 @@ function unitGate(IU) {
     "active hidden"
   );
   ok(
-    "H_filter_hides_future",
-    IU.filterEvents([future], {}, { skipMemo: true, nowMs: Date.parse("2026-07-30T12:00:00+02:00") }).length === 0,
-    "future visible"
+    "H_filter_keeps_future",
+    IU.filterEvents([future], {}, { skipMemo: true, nowMs: Date.parse("2026-07-30T12:00:00+02:00") }).length === 1,
+    "future hidden"
   );
   ok(
     "H_filter_keeps_after_onset",
     IU.filterEvents([future], {}, { skipMemo: true, nowMs: Date.parse("2026-07-30T15:00:00+02:00") }).length === 1,
     "onset hidden"
+  );
+  ok(
+    "H2_filter_keeps",
+    IU.filterEvents([futureNext], {}, { skipMemo: true, nowMs: Date.parse("2026-07-30T14:00:00+02:00") }).length === 1,
+    "next-day future"
   );
 
   // N: ordinary article does not roll / no AKTIVNÍ
@@ -299,15 +369,16 @@ function unitGate(IU) {
   });
   ok("loc_hk", loc.startsWith("Hradec Králové"), loc);
 
-  // boundary helper
-  const nb = IU.nextTimelineBoundaryMs([yW], Date.parse("2026-07-30T10:00:00+02:00"));
-  ok("boundary_future", nb > Date.parse("2026-07-30T10:00:00+02:00"), String(nb));
+  // boundary helper — future onset is a refresh boundary
+  const nb = IU.nextTimelineBoundaryMs([future], Date.parse("2026-07-30T12:00:00+02:00"));
+  ok("boundary_onset", nb === Date.parse("2026-07-30T14:00:00+02:00"), String(nb));
 }
 
 function main() {
   staticGate();
   const IU = loadIU();
   ok("iu_loaded", !!(IU && typeof IU.getEffectiveTimelinePresentation === "function"), "load");
+  ok("iu_lifecycle", !!(IU && typeof IU.getChmiWarningLifecycleStatus === "function"), "lifecycle export");
   if (IU && typeof IU.getEffectiveTimelinePresentation === "function") unitGate(IU);
   if (fails.length) {
     console.error("[iu-chmi-cap-active-day-rollover-guard] FAIL");

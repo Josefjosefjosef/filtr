@@ -239,6 +239,28 @@
   display: block;
 }
 
+.iuPrehledDne__validFrom {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 0.66rem;
+  font-weight: 500;
+  color: var(--iu-pd-muted);
+  line-height: 1.25;
+  margin-top: 3px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.iuPrehledDne__validFromWord,
+.iuPrehledDne__validFromDate,
+.iuPrehledDne__validFromTime {
+  display: block;
+}
+.iuPrehledDne__validFromWord {
+  opacity: 0.92;
+}
+
 .iuPrehledDne__rel {
   font-size: 0.72rem;
   color: var(--iu-pd-muted);

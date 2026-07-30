@@ -29,10 +29,10 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-banner-homecard-fouc-20260730";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-status-unify-20260730";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-banner-homecard-fouc-20260730";
+const CACHE_BUST = "info-system-v6-chmi-status-unify-20260730";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -454,6 +454,19 @@ function renderItem(ev) {
       ? `<div class="iuPrehledDne__issued"><span class="iuPrehledDne__issuedWord">vydáno</span><span class="iuPrehledDne__issuedDate">${esc(m[1])}</span></div>`
       : `<div class="iuPrehledDne__issued">${esc(issued)}</div>`;
   }
+  let timeValidFrom = "";
+  if (timeline.secondaryValidFromLabel && (timeline.secondaryValidFromDate || timeline.secondaryValidFromTime)) {
+    timeValidFrom =
+      `<div class="iuPrehledDne__validFrom">` +
+      `<span class="iuPrehledDne__validFromWord">${esc(timeline.secondaryValidFromLabel)}</span>` +
+      (timeline.secondaryValidFromDate
+        ? `<span class="iuPrehledDne__validFromDate">${esc(timeline.secondaryValidFromDate)}</span>`
+        : "") +
+      (timeline.secondaryValidFromTime
+        ? `<span class="iuPrehledDne__validFromTime">${esc(timeline.secondaryValidFromTime)}</span>`
+        : "") +
+      `</div>`;
+  }
   const activePill = timeline.isActiveWarning
     ? `<span class="iuPdCard__pill iuPdCard__pill--active iuPrehledDne__pill" role="status" aria-label="Právě platná výstraha">AKTIVNÍ VÝSTRAHA</span>`
     : "";
@@ -466,6 +479,7 @@ function renderItem(ev) {
     `<div class="iuPdCard__time iuPrehledDne__time">${timePrimary}</div>` +
     timeSub +
     timeIssued +
+    timeValidFrom +
     `<div class="iuPrehledDne__readMark" aria-label="Přečteno">✓</div>` +
     `</div>` +
     `<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot${alert || capActive ? " iuPrehledDne__dot--alert" : ""}"></span></div>` +
