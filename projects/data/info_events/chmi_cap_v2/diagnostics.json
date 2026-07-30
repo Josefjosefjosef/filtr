@@ -1,6 +1,6 @@
 {
-  "runId": "0ddaeca81b34159e",
-  "started": "2026-07-30T16:15:11.639Z",
+  "runId": "74353804917f746b",
+  "started": "2026-07-30T17:10:25.841Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -59,13 +59,26 @@
         "70"
       ],
       "streamCount": 2,
-      "missingStreamCache": 0
+      "missingStreamCache": 0,
+      "invalidCount": 8,
+      "expiredCount": 0,
+      "cancelledCount": 0
     },
     "alarms": [],
     "productionVerified": false
   },
   "status": "not_modified",
   "error": null,
+  "temporalCounts": {
+    "totalItems": 27,
+    "activeCount": 11,
+    "scheduledCount": 8,
+    "expiredCount": 0,
+    "cancelledCount": 0,
+    "invalidCount": 8,
+    "publishableCount": 19,
+    "visibleCount": 19
+  },
   "completeness": {
     "capMessages": null,
     "infoBlocks": null,
@@ -91,7 +104,10 @@
       "70"
     ],
     "streamCount": 2,
-    "missingStreamCache": 0
+    "missingStreamCache": 0,
+    "invalidCount": 8,
+    "expiredCount": 0,
+    "cancelledCount": 0
   },
   "alarms": [],
   "snapshot": {
@@ -106,6 +122,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-07-30T16:15:15.312Z",
-  "runMs": 3673
+  "finished": "2026-07-30T17:10:29.179Z",
+  "runMs": 3337
 }

@@ -415,8 +415,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-07-30T16:15:11.639Z",
-    "lastSuccessAt": "2026-07-30T16:15:15.297Z",
+    "lastRunAt": "2026-07-30T17:10:25.841Z",
+    "lastSuccessAt": "2026-07-30T17:10:29.164Z",
     "lastChangedAt": "2026-07-30T16:00:08.997Z",
     "lastError": null,
     "status": "not_modified",
@@ -428,10 +428,10 @@
     "scheduledCount": 8,
     "expiredCount": 0,
     "cancelledCount": 0,
-    "invalidCount": 0,
+    "invalidCount": 8,
     "publishableCount": 19,
     "visibleCount": 19,
-    "totalItems": 19,
+    "totalItems": 27,
     "sourceCount": 2,
     "activeSourceCount": 1,
     "updateCount": 0,
@@ -475,7 +475,10 @@
         "70"
       ],
       "streamCount": 2,
-      "missingStreamCache": 0
+      "missingStreamCache": 0,
+      "invalidCount": 8,
+      "expiredCount": 0,
+      "cancelledCount": 0
     },
     "alarms": [],
     "lastCapSent": "2026-07-30T13:16:03+02:00",
@@ -483,9 +486,9 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 3672,
+    "runMs": 3336,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-07-30T16:15:11.639Z",
+    "lastSnapshotAt": "2026-07-30T17:10:25.841Z",
     "audit": {
       "http": [
         {
@@ -531,7 +534,10 @@
             "70"
           ],
           "streamCount": 2,
-          "missingStreamCache": 0
+          "missingStreamCache": 0,
+          "invalidCount": 8,
+          "expiredCount": 0,
+          "cancelledCount": 0
         },
         "alarms": [],
         "productionVerified": false
@@ -539,6 +545,17 @@
       "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-07-30T17:10:25.841Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 3336,
+        "error": null,
+        "activeCount": 11,
+        "scheduledCount": 8,
+        "publishableCount": 19
+      },
       {
         "at": "2026-07-30T16:15:11.639Z",
         "status": "not_modified",
