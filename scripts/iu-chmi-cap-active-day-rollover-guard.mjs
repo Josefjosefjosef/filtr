@@ -137,7 +137,7 @@ function staticGate() {
   ok("ui_midnight_timer", /scheduleTimelineBoundaryRefresh/.test(ui), "timer");
   ok("ui_visibility", /visibilitychange/.test(ui), "vis");
   ok("ui_url_prefers_public_web", /vystrahy-cr\.chmi\.cz/.test(ui) && /chmiPublicDetailUrl\(ev\)/.test(ui), "url");
-  ok("ui_rejects_cap_xml_click", /\.xml/.test(ui) && /Never open the technical CAP XML/.test(ui), "xml");
+  ok("ui_rejects_cap_xml_click", /Never open CAP XML/.test(ui), "xml");
   ok("css_issued", /\.iuPrehledDne__issued/.test(css), "css issued");
   ok("css_valid_from", /\.iuPrehledDne__validFrom/.test(css), "css validFrom");
   ok("css_active", /\.iuPdCard__pill--active/.test(css), "css active");

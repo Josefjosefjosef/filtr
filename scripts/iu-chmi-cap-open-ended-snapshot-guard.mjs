@@ -95,7 +95,7 @@ ok(
 );
 ok(
   "snapshot_public_url_portal",
-  publishable.every((i) => /vystrahy-cr\.chmi\.cz\/?$/i.test(String(i.publicUrl || i.url || ""))),
+  publishable.every((i) => String(i.publicUrl || "") === "https://vystrahy-cr.chmi.cz/"),
   "publicUrl"
 );
 ok(

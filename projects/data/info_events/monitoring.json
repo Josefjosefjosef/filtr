@@ -1,425 +1,11 @@
 {
-  "version": "3.0.0",
-  "generatedAt": "2026-07-23T19:01:08.718Z",
-  "cutover": {
-    "version": "1.0.0",
-    "cutoverAt": "2026-07-17T21:00:00Z",
-    "mode": "cutover",
-    "commercialAggregationActive": false,
-    "commercialUiActive": false,
-    "infoSystemActive": true,
-    "reason": "Atomické přepnutí na Přehled dne — komerční mediální agregace deaktivována v produkčním UI a jobech.",
-    "rollback": {
-      "tag": "pre-aggregator-stable-20260717",
-      "commit": "5647bb3fe365a12feb4bb4d2830c6957de73c853",
-      "queryOff": "?iuInfoSystem=off"
-    }
-  },
-  "runMs": 1868,
-  "onlyGroup": null,
-  "feedItemCount": 5,
-  "droppedHomepageUrls": 0,
-  "removedDuplicates": 0,
-  "sourceErrors": 0,
-  "laneCounts": {
-    "doprava": 0,
-    "pocasi": 5,
-    "bezpecnost": 0,
-    "ministerstva": 0,
-    "ekonomika": 0,
-    "zdravotnictvi": 0,
-    "skoly-kultura": 0,
-    "regionalni": 0,
-    "verejnopravni-media": 0,
-    "ostatni": 0
-  },
-  "failedConnectors": [],
-  "ingest": [
-    {
-      "id": "chmi",
-      "capIndexUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/",
-      "ok": true,
-      "status": 200,
-      "kept": 5,
-      "raw": 17,
-      "files": 6,
-      "ms": 1707,
-      "mode": "cap"
-    }
-  ],
-  "sources": [
-    {
-      "id": "chmi",
-      "label": "Český hydrometeorologický ústav",
-      "url": "https://www.chmi.cz/",
-      "lane": "pocasi",
-      "connectorType": "opendata",
-      "orgType": "meteo",
-      "periodicityMin": 15,
-      "feedUrl": null,
-      "capIndexUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/",
-      "legalStatus": "approved",
-      "technicalStatus": "ok",
-      "productionActive": true,
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "monitoring": {
-        "availability": "ok",
-        "freshness": "ok",
-        "structureChange": "none",
-        "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-23T19:01:08.718Z",
-        "lastAttemptAt": "2026-07-23T19:01:08.718Z",
-        "lastSuccessAt": "2026-07-23T19:01:08.718Z",
-        "lastError": null,
-        "itemsKept": 5,
-        "itemsNew": 5,
-        "runMs": 1861,
-        "responseMs": 154,
-        "dataAgeHours": 0,
-        "lane": "pocasi",
-        "connectorType": "opendata",
-        "periodicityMin": 15,
-        "connector": "opendata-cap",
-        "stale": false
-      }
-    }
-  ],
-  "pendingSources": [
-    {
-      "id": "policie-cr",
-      "lane": "bezpecnost",
-      "connectorType": "rss",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Oficiální RSS PČR (celostátní + tiskové)."
-    },
-    {
-      "id": "hzs-cr",
-      "lane": "bezpecnost",
-      "connectorType": "rss",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Oficiální RSS HZS ČR."
-    },
-    {
-      "id": "mvcr",
-      "lane": "ministerstva",
-      "connectorType": "rss",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Oficiální RSS MV ČR."
-    },
-    {
-      "id": "mfcr",
-      "lane": "ministerstva",
-      "connectorType": "rss",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Oficiální RSS tiskových zpráv MF ČR."
-    },
-    {
-      "id": "mzcr",
-      "lane": "zdravotnictvi",
-      "connectorType": "rss",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Oficiální feed MZ ČR."
-    },
-    {
-      "id": "mdcr",
-      "lane": "doprava",
-      "connectorType": "html",
-      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
-      "blocker": "md.gov.cz / mdcr.cz tiskové zprávy vrací 404; není veřejný RSS/Atom s konkrétními item URL."
-    },
-    {
-      "id": "szdc",
-      "lane": "doprava",
-      "connectorType": "html",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "HTML listing tiskových zpráv."
-    },
-    {
-      "id": "rsd",
-      "lane": "doprava",
-      "connectorType": "html",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "HTML položky z oficiálního webu ŘSD (/-/ články)."
-    },
-    {
-      "id": "ndic",
-      "lane": "doprava",
-      "connectorType": "none",
-      "connectorStatus": "TECHNICALLY_BLOCKED",
-      "blocker": "dopravniinfo.cz je SPA bez veřejného RSS/XML item feedu s konkrétními URL událostí (HTML bez položek)."
-    },
-    {
-      "id": "sukl",
-      "lane": "zdravotnictvi",
-      "connectorType": "rss",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Oficiální RSS SÚKL."
-    },
-    {
-      "id": "szpi",
-      "lane": "zdravotnictvi",
-      "connectorType": "rss",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Oficiální RSS SZPI."
-    },
-    {
-      "id": "svs",
-      "lane": "zdravotnictvi",
-      "connectorType": "rss",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Oficiální RSS SVS."
-    },
-    {
-      "id": "coi",
-      "lane": "ekonomika",
-      "connectorType": "rss",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Oficiální RSS ČOI."
-    },
-    {
-      "id": "szu",
-      "lane": "zdravotnictvi",
-      "connectorType": "rss",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Oficiální feed SZÚ."
-    },
-    {
-      "id": "eru",
-      "lane": "ekonomika",
-      "connectorType": "rss",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Oficiální RSS ERÚ."
-    },
-    {
-      "id": "ctu",
-      "lane": "ekonomika",
-      "connectorType": "rss",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Oficiální RSS ČTÚ."
-    },
-    {
-      "id": "vlada",
-      "lane": "ministerstva",
-      "connectorType": "html",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "HTML listing aktualit Úřadu vlády."
-    },
-    {
-      "id": "portal-gov",
-      "lane": "ministerstva",
-      "connectorType": "none",
-      "connectorStatus": "TECHNICALLY_BLOCKED",
-      "blocker": "portal.gov.cz nemá stabilní veřejný listing/RSS konkrétních aktualit (404/500 na známých cestách)."
-    },
-    {
-      "id": "nukib",
-      "lane": "bezpecnost",
-      "connectorType": "html",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "HTML listing aktualit NÚKIB."
-    },
-    {
-      "id": "cnb",
-      "lane": "ekonomika",
-      "connectorType": "none",
-      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
-      "blocker": "Veřejné stránky ČNB neposkytují stabilní RSS/Atom; HTML aktuality jsou převážně navigační sekce bez konkrétních TZ URL."
-    },
-    {
-      "id": "csu",
-      "lane": "ekonomika",
-      "connectorType": "none",
-      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
-      "blocker": "ČSÚ katalog/HTML vrací filtry a navigaci, ne stabilní seznam konkrétních tiskových zpráv s item URL."
-    },
-    {
-      "id": "cssz",
-      "lane": "ekonomika",
-      "connectorType": "html",
-      "connectorStatus": "TECHNICALLY_BLOCKED",
-      "blocker": "CSSZ aktuality jsou v portálové aplikaci bez použitelného RSS; HTML selektor neextrahuje konkrétní články."
-    },
-    {
-      "id": "urad-prace",
-      "lane": "ekonomika",
-      "connectorType": "none",
-      "connectorStatus": "TECHNICALLY_BLOCKED",
-      "blocker": "uradprace.cz fetch selhává / není dostupný veřejný feed s konkrétními item URL."
-    },
-    {
-      "id": "registr-smluv",
-      "lane": "ministerstva",
-      "connectorType": "none",
-      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
-      "blocker": "Registr smluv je vyhledávací rozhraní, ne chronologický feed konkrétních dokumentů vhodný pro Přehled dne."
-    },
-    {
-      "id": "esbirka",
-      "lane": "ministerstva",
-      "connectorType": "none",
-      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
-      "blocker": "eSbírka nemá veřejný item feed nových předpisů s přímými URL vhodnými pro automatický přehled."
-    },
-    {
-      "id": "ct24",
-      "lane": "verejnopravni-media",
-      "connectorType": "rss",
-      "connectorStatus": "REQUIRES_MANUAL_LEGAL_REVIEW",
-      "blocker": "LEGAL_REVIEW_REQUIRED: veřejnoprávní RSS bez doložené open licence / oprávnění ke komerční agregaci na webu s reklamou"
-    },
-    {
-      "id": "irozhlas",
-      "lane": "verejnopravni-media",
-      "connectorType": "rss",
-      "connectorStatus": "REQUIRES_MANUAL_LEGAL_REVIEW",
-      "blocker": "LEGAL_REVIEW_REQUIRED: veřejnoprávní RSS bez doložené open licence / oprávnění ke komerční agregaci na webu s reklamou"
-    },
-    {
-      "id": "avcr",
-      "lane": "skoly-kultura",
-      "connectorType": "html",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "HTML listing aktualit AV ČR."
-    },
-    {
-      "id": "mkcr",
-      "lane": "skoly-kultura",
-      "connectorType": "none",
-      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
-      "blocker": "MK ČR /novinky-a-media/ neposkytuje stabilní seznam konkrétních aktualit (převážně navigace)."
-    },
-    {
-      "id": "msmt",
-      "lane": "skoly-kultura",
-      "connectorType": "html",
-      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
-      "blocker": "MŠMT novinářská sekce nemá RSS; HTML listing nevrací spolehlivé konkrétní články."
-    },
-    {
-      "id": "khs-praha",
-      "lane": "zdravotnictvi",
-      "connectorType": "rss",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Oficiální RSS HS HMP."
-    },
-    {
-      "id": "khs-stc",
-      "lane": "zdravotnictvi",
-      "connectorType": "rss",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Oficiální RSS KHS Středočeský kraj."
-    },
-    {
-      "id": "mpo",
-      "lane": "ministerstva",
-      "connectorType": "html",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "HTML listing tiskových zpráv MPO."
-    },
-    {
-      "id": "mze",
-      "lane": "ministerstva",
-      "connectorType": "html",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "HTML listing tiskových zpráv eAGRI s konkrétními URL."
-    },
-    {
-      "id": "khs-plzen",
-      "lane": "zdravotnictvi",
-      "connectorType": "rss",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Oficiální RSS KHS Plzeňský kraj."
-    },
-    {
-      "id": "kraj-pardubicky",
-      "lane": "regionalni",
-      "connectorType": "html",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Regionální HTML listing s konkrétními URL položek."
-    },
-    {
-      "id": "kraj-zlinsky",
-      "lane": "regionalni",
-      "connectorType": "html",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Regionální HTML listing s konkrétními URL položek."
-    },
-    {
-      "id": "kraj-liberecky",
-      "lane": "regionalni",
-      "connectorType": "html",
-      "connectorStatus": "PRODUCTION_ACTIVE",
-      "blocker": "Regionální HTML listing s konkrétními URL položek."
-    }
-  ],
-  "dedupeGroups": 5,
-  "droppedOutsideActiveWindow": 0,
-  "dataQuality": {
-    "itemCount": 5,
-    "fallbackTime": 0,
-    "lowConfidence": 0,
-    "futureTime": 0,
-    "missingUrl": 0,
-    "missingInstitution": 0,
-    "missingGroup": 0,
-    "techArtifactsInTags": 0,
-    "multiSourcePublications": 0,
-    "invalidLifecycle": 0,
-    "suspiciousSameCaptureBatch": 0,
-    "blockers": [],
-    "warnings": []
-  },
-  "commercialAggregationActive": false,
-  "datasetAges": {
-    "feedGeneratedAt": "2026-07-23T19:01:08.718Z",
-    "feedAgeHours": 0,
-    "lanes": {
-      "doprava": 0,
-      "pocasi": 5,
-      "bezpecnost": 0,
-      "ministerstva": 0,
-      "ekonomika": 0,
-      "zdravotnictvi": 0,
-      "skoly-kultura": 0,
-      "regionalni": 0,
-      "verejnopravni-media": 0,
-      "ostatni": 0
-    }
-  },
-  "alerts": [],
-  "outageHistory": [
-    {
-      "sourceId": "rsd",
-      "at": "2026-07-19T12:10:33.316Z",
-      "status": 0,
-      "reason": "no_items_kept"
-    },
-    {
-      "sourceId": "irozhlas",
-      "at": "2026-07-19T12:10:33.316Z",
-      "status": 403,
-      "reason": "down"
-    },
-    {
-      "sourceId": "rsd",
-      "at": "2026-07-19T16:05:47.109Z",
-      "status": 0,
-      "reason": "no_items_kept"
-    },
-    {
-      "sourceId": "irozhlas",
-      "at": "2026-07-19T16:05:47.109Z",
-      "status": 403,
-      "reason": "down"
-    }
-  ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-07-30T20:44:21.241Z",
-    "lastSuccessAt": "2026-07-30T20:44:25.276Z",
-    "lastChangedAt": "2026-07-30T19:35:18.740Z",
+    "lastRunAt": "2026-07-30T21:17:57.433Z",
+    "lastSuccessAt": "2026-07-30T21:17:57.928Z",
+    "lastChangedAt": "2026-07-30T21:17:57.928Z",
     "lastError": null,
-    "status": "not_modified",
+    "status": "healthy",
     "etag": "\"6a688d7b-e76a\"",
     "lastModified": "Tue, 28 Jul 2026 11:07:39 GMT",
     "consecutiveErrors": 0,
@@ -434,11 +20,11 @@
     "totalItems": 27,
     "sourceCount": 2,
     "activeSourceCount": 1,
-    "updateCount": 0,
+    "updateCount": 2,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 0,
+    "validCount": 2,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -451,8 +37,8 @@
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
+      "capMessages": 2,
+      "infoBlocks": 48,
       "logicalAlerts": 26,
       "uniqueEvents": [
         "Velmi vysoké teploty",
@@ -489,32 +75,32 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 4056,
+    "runMs": 941,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-07-30T20:44:21.241Z",
+    "lastSnapshotAt": "2026-07-30T21:17:57.433Z",
     "audit": {
       "http": [
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_301116.xml",
           "productKey": "50",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         },
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
           "productKey": "70",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         }
       ],
       "publish": {
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": null,
-          "infoBlocks": null,
+          "capMessages": 2,
+          "infoBlocks": 48,
           "logicalAlerts": 26,
           "uniqueEvents": [
             "Velmi vysoké teploty",
@@ -548,249 +134,32 @@
         "alarms": [],
         "productionVerified": false
       },
-      "parser": null
+      "parser": {
+        "loaded": 2,
+        "valid": 2,
+        "rejected": 0,
+        "duplicates": 0,
+        "quarantine": 0,
+        "cancels": 0,
+        "updates": 0,
+        "newThreads": 2,
+        "status": "healthy",
+        "alert": 0,
+        "update": 2,
+        "cancel": 0
+      }
     },
     "runHistory": [
       {
-        "at": "2026-07-30T20:44:21.241Z",
-        "status": "not_modified",
+        "at": "2026-07-30T21:17:57.433Z",
+        "status": "healthy",
         "mode": "active",
         "publish": true,
-        "runMs": 4056,
+        "runMs": 941,
         "error": null,
         "activeCount": 16,
         "scheduledCount": 10,
         "publishableCount": 26
-      },
-      {
-        "at": "2026-07-30T20:05:33.431Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 238,
-        "error": null,
-        "activeCount": 16,
-        "scheduledCount": 10,
-        "publishableCount": 26
-      },
-      {
-        "at": "2026-07-30T19:35:18.200Z",
-        "status": "healthy",
-        "mode": "active",
-        "publish": true,
-        "runMs": 1029,
-        "error": null,
-        "activeCount": 16,
-        "scheduledCount": 10,
-        "publishableCount": 26
-      },
-      {
-        "at": "2026-07-30T18:26:23.633Z",
-        "status": "healthy",
-        "mode": "active",
-        "publish": true,
-        "runMs": 4540,
-        "error": null,
-        "activeCount": 12,
-        "scheduledCount": 9,
-        "publishableCount": 21
-      },
-      {
-        "at": "2026-07-30T17:49:07.672Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 3080,
-        "error": null,
-        "activeCount": 11,
-        "scheduledCount": 8,
-        "publishableCount": 19
-      },
-      {
-        "at": "2026-07-30T17:10:25.841Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 3336,
-        "error": null,
-        "activeCount": 11,
-        "scheduledCount": 8,
-        "publishableCount": 19
-      },
-      {
-        "at": "2026-07-30T16:15:11.639Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 3672,
-        "error": null,
-        "activeCount": 11,
-        "scheduledCount": 8,
-        "publishableCount": 19
-      },
-      {
-        "at": "2026-07-30T16:00:00.277Z",
-        "status": "healthy",
-        "mode": "active",
-        "publish": true,
-        "runMs": 9161,
-        "error": null,
-        "activeCount": 11,
-        "scheduledCount": 8,
-        "publishableCount": 19
-      },
-      {
-        "at": "2026-07-30T14:52:49.312Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 2516,
-        "error": null,
-        "activeCount": 27
-      },
-      {
-        "at": "2026-07-30T14:20:29.949Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 217,
-        "error": null,
-        "activeCount": 27
-      },
-      {
-        "at": "2026-07-30T13:49:35.449Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 1113,
-        "error": null,
-        "activeCount": 27
-      },
-      {
-        "at": "2026-07-30T13:48:48.905Z",
-        "status": "failed",
-        "mode": "active",
-        "publish": false,
-        "runMs": 548,
-        "error": "INCOMPLETE_STREAM_CACHE",
-        "activeCount": 3
-      },
-      {
-        "at": "2026-07-30T11:52:48.123Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 4756,
-        "error": null,
-        "activeCount": 27
-      },
-      {
-        "at": "2026-07-30T09:45:22.150Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 3345,
-        "error": null,
-        "activeCount": 14
-      },
-      {
-        "at": "2026-07-30T07:13:34.801Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 3469,
-        "error": null,
-        "activeCount": 14
-      },
-      {
-        "at": "2026-07-30T04:21:53.653Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 2806,
-        "error": null,
-        "activeCount": 14
-      },
-      {
-        "at": "2026-07-30T01:04:13.304Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 2685,
-        "error": null,
-        "activeCount": 14
-      },
-      {
-        "at": "2026-07-30T00:43:58.632Z",
-        "status": "healthy",
-        "mode": "active",
-        "publish": true,
-        "runMs": 5793,
-        "error": null,
-        "activeCount": 14
-      },
-      {
-        "at": "2026-07-30T00:09:22.674Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 2913,
-        "error": null,
-        "activeCount": 17
-      },
-      {
-        "at": "2026-07-29T23:43:22.104Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 3240,
-        "error": null,
-        "activeCount": 17
-      },
-      {
-        "at": "2026-07-29T22:39:56.931Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 3167,
-        "error": null,
-        "activeCount": 17
-      },
-      {
-        "at": "2026-07-29T21:38:06.024Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 3317,
-        "error": null,
-        "activeCount": 17
-      },
-      {
-        "at": "2026-07-29T20:30:30.829Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 3718,
-        "error": null,
-        "activeCount": 17
-      },
-      {
-        "at": "2026-07-29T20:15:05.798Z",
-        "status": "healthy",
-        "mode": "active",
-        "publish": true,
-        "runMs": 4793,
-        "error": null,
-        "activeCount": 17
-      },
-      {
-        "at": "2026-07-29T01:56:27.154Z",
-        "status": "healthy",
-        "mode": "active",
-        "publish": true,
-        "runMs": 2047,
-        "error": null,
-        "activeCount": 3
       }
     ]
   }

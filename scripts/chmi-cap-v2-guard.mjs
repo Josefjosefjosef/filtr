@@ -123,16 +123,13 @@ function read(name) {
     feed.every((i) => {
       const src = String((i.capV2 && i.capV2.sourceDocumentUrl) || "");
       const pub = String(i.publicUrl || "");
-      if (pub) {
-        return (
-          /vystrahy-cr\.chmi\.cz\/?$/i.test(pub) &&
-          String(i.url) === pub &&
-          String(i.urlKind) === "cap_public_web" &&
-          /\.xml/i.test(src)
-        );
-      }
-      // CAP without <web>: click falls back to source document; still not a invented host.
-      return String(i.url) === src && String(i.urlKind) === "cap_document";
+      return (
+        pub === "https://vystrahy-cr.chmi.cz/" &&
+        String(i.url) === pub &&
+        String(i.urlKind) === "cap_public_web" &&
+        /\.xml/i.test(src) &&
+        !/\.xml/i.test(pub)
+      );
     }),
     feed.map((i) => `${i.urlKind}:${i.publicUrl || i.url}`).slice(0, 3).join(" | ")
   );

@@ -159,7 +159,7 @@ function staticGate() {
   ok("ui_uses_in_render", /getFilteredWarningLocationLabel\(ev/.test(ui), "render");
   ok("ui_title_uses_filter", /displayEventTitle\(ev,\s*locationFilter\)/.test(ui), "title");
   ok("ui_url_prefers_public_web", /vystrahy-cr\.chmi\.cz/.test(ui) && /chmiPublicDetailUrl\(ev\)/.test(ui), "url");
-  ok("ui_rejects_cap_xml_click", /Never open the technical CAP XML/.test(ui), "xml");
+  ok("ui_rejects_cap_xml_click", /Never open CAP XML/.test(ui), "xml");
   ok("ui_cache_bust", ui.includes(CACHE_BUST), "ui bust");
   ok("index_cache_bust", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "index bust");
   ok("open_title_mark_only", /act === "open-title"[\s\S]{0,180}markRead/.test(ui), "open");
