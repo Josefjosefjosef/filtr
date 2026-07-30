@@ -134,12 +134,57 @@ function areaKey(info) {
 }
 
 /**
+ * When an <info> block omits expires but another info in the same alert has the
+ * same event + onset + severity with a concrete expires, reuse that expires.
+ * Only when all such siblings agree (unanimous). Never invent times.
+ *
+ * @param {object[]} infos
+ * @returns {{ infos: object[], filled: number }}
+ */
+export function resolveExpiresFromSiblingInfos(infos) {
+  const list = Array.isArray(infos) ? infos.map((i) => ({ ...i })) : [];
+  const keyOf = (info) =>
+    [
+      fold(info.event || ""),
+      String(info.onset || info.effective || "").trim(),
+      fold(info.severity || ""),
+    ].join("|");
+
+  const byKey = new Map();
+  for (const info of list) {
+    const k = keyOf(info);
+    if (!byKey.has(k)) byKey.set(k, []);
+    byKey.get(k).push(info);
+  }
+
+  let filled = 0;
+  for (const group of byKey.values()) {
+    const withExp = [
+      ...new Set(
+        group
+          .map((i) => String(i.expires || "").trim())
+          .filter(Boolean)
+      ),
+    ];
+    if (withExp.length !== 1) continue;
+    const expires = withExp[0];
+    for (const info of group) {
+      if (String(info.expires || "").trim()) continue;
+      info.expires = expires;
+      info.expiresSource = "sibling_info_same_event_onset_severity";
+      filled += 1;
+    }
+  }
+  return { infos: list, filled };
+}
+
+/**
  * One hazard instance per info block (jev × území × čas).
  */
 export function buildHazardInstances(alert, alertThreadId) {
   const capMessageId = makeCapMessageIdFromAlert(alert);
   const instances = [];
-  const infos = alert.infos || [];
+  const { infos } = resolveExpiresFromSiblingInfos(alert.infos || []);
   infos.forEach((info, idx) => {
     const ek = eventCodeKey(info);
     const ak = areaKey(info);
@@ -159,6 +204,7 @@ export function buildHazardInstances(alert, alertThreadId) {
       // Temporal window from CAP only — do not invent onset from alert.sent.
       valid_from: info.onset || info.effective || "",
       valid_to: info.expires || "",
+      expiresSource: info.expiresSource || (info.expires ? "cap" : ""),
       headline: info.headline || "",
       description: info.description || "",
       instruction: info.instruction || "",
