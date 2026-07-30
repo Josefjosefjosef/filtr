@@ -185,7 +185,10 @@ async function smokePrehledDneCutover(page) {
   const probe = await page.evaluate(() => {
     const root = document.querySelector(".iuPrehledDne");
     const items = document.querySelectorAll(".iuPrehledDne__item, .iuPdCard");
-    const imgs = document.querySelectorAll(".iuPrehledDne img, .iuPrehledDne__card img, .iuPdCard img");
+    // Day-overview marketing banner is allowed; timeline cards must stay image-free.
+    const imgs = document.querySelectorAll(
+      ".iuPrehledDne img:not(.iuPd__bannerImg), .iuPrehledDne__card img, .iuPdCard img"
+    );
     const split = document.getElementById("iuFeedNewsSplit");
     const splitHidden = !split || getComputedStyle(split).display === "none";
     const news = document.querySelector('[data-iu-news-preview-card="1"]');

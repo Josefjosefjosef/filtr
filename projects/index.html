@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="cs">
+<html lang="cs" class="iu-info-system-cutover">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <meta name="iu-build" content="pwa-app-root-pwa-assets-redirects-v1-20260726" />
+    <meta name="iu-build" content="prehled-dne-banner-homecard-fouc-v1-20260730" />
     <meta name="iu-data-ver" content="iu-data-ver-placeholder" />
-    <!-- iu-build: pwa-app-root-pwa-assets-redirects-v1-20260726 -->
+    <!-- iu-build: prehled-dne-banner-homecard-fouc-v1-20260730 -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -27,6 +27,28 @@
       }catch(_){
         try{document.documentElement.setAttribute("data-iu-silver-wx-boot","firstVisit");}catch(_e){}
       }
+    })();
+    </script>
+    <script>
+    (function(){
+      /* P0: cutover class must exist before first paint so legacy HomeCards never flash. */
+      if(window.__iuInfoSystemCutoverEarlyBoot)return;
+      window.__iuInfoSystemCutoverEarlyBoot=1;
+      try{
+        var html=document.documentElement;
+        var q=new URLSearchParams(location.search||"");
+        var mode=String(q.get("iuInfoSystem")||"").toLowerCase();
+        if(mode==="parallel"){
+          html.classList.remove("iu-info-system-cutover");
+          html.classList.add("iu-info-system-parallel");
+        }else if(mode==="off"){
+          html.classList.remove("iu-info-system-cutover");
+          html.classList.remove("iu-info-system-parallel");
+        }else{
+          html.classList.add("iu-info-system-cutover");
+          html.classList.remove("iu-info-system-parallel");
+        }
+      }catch(_){}
     })();
     </script>
     <script src="/assets/iu-pwa-version-check.js?v=pwa-ver-check-v3"></script>
@@ -536,10 +558,47 @@ font-src 'self' data:;
         #iuMobileBottomNav.iu-mobileBottomNav{display:none!important;visibility:hidden!important;pointer-events:none!important}
         #iuSilverQuickPanel.iuSilverQuickPanel{display:none!important;visibility:hidden!important;pointer-events:none!important}
       }
+      /*
+        P0 FOUC: hide legacy HomeCards before iu-prehled-dne-v1.css + module JS.
+        Requires html.iu-info-system-cutover from first byte (see early boot script).
+      */
+      #iuPrehledDneRoot{display:none}
+      html.iu-info-system-cutover #iuFeedNewsSplit,
+      html.iu-info-system-cutover #iuNewsPreviewCardMount,
+      html.iu-info-system-cutover #iuSportPreviewCardMount,
+      html.iu-info-system-cutover #iuFinancePreviewCardMount,
+      html.iu-info-system-cutover #iuHealthPreviewCardMount,
+      html.iu-info-system-cutover #iuTravelPreviewCardMount,
+      html.iu-info-system-cutover #iuGamesPreviewCardMount,
+      html.iu-info-system-cutover #iuCulturePreviewCardMount,
+      html.iu-info-system-cutover #iuScienceHistoryPreviewCardMount,
+      html.iu-info-system-cutover #iuEducationPreviewCardMount,
+      html.iu-info-system-cutover #iuPrehledDnePreviewCardMount,
+      html.iu-info-system-cutover .iuNewsPreviewCard,
+      html.iu-info-system-cutover .box-prehled-dne,
+      html.iu-info-system-cutover #iuFeedNewsSplitPostHomeCards,
+      html.iu-info-system-cutover #iuSilverFinanceHomeCard,
+      html.iu-info-system-cutover #iuSilverTallScrollViewport > .iuSilverTallScrollPlaceholder,
+      html.iu-info-system-cutover #iuSilverTallScrollViewport > .iuSilverTallScrollProbeLines{
+        display:none!important
+      }
+      html.iu-info-system-cutover #iuPrehledDneRoot,
+      html.iu-info-system-parallel #iuPrehledDneRoot{
+        display:block!important;
+        width:100%;
+        min-width:0
+      }
+      html.iu-info-system-cutover #iuSilverTallScrollViewport{
+        display:block!important;
+        grid-template-columns:none!important
+      }
+      .iuPd__banner{width:100%;max-width:100%;margin:0;padding:0;line-height:0;box-sizing:border-box}
+      .iuPd__bannerImg{display:block;width:100%;max-width:100%;height:auto;object-fit:contain;aspect-ratio:1661/616}
     </style>
     <!-- P0 LCP fast path: feed section header (hub) je JS-injected v app.js (renderFeed) — preload scanner ho nevidí; preload jen ≥768px (mobile LCP = silver-hero, feed skrytý pre-gate). -->
     <link rel="preload" as="image" href="/assets/images/section-prehled-dne.webp" type="image/webp" fetchpriority="high" media="(min-width: 768px)" />
     <link rel="preload" as="image" href="/assets/images/iu-silver-hero-v4.webp" type="image/webp" fetchpriority="high" media="(max-width: 1024px)" />
+    <link rel="preload" as="image" href="/assets/images/infouzel-prehled-dne-banner.png" type="image/png" fetchpriority="high" />
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
     <link rel="stylesheet" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716" />
     <style id="iuDesktopLayoutV3PostAppCss">
@@ -1981,7 +2040,7 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=remove-partner-banners-v1-20260706" />
     <link rel="stylesheet" href="/assets/iu-desktop-parcel-watch-overlay.css?v=pr5907-desktop-parcel-premium-20260619" />
     <link rel="stylesheet" href="/assets/iu-desktop-home-premium.css?v=pc-svatek-label-pill-gap-4px-20260713" />
-    <link rel="stylesheet" href="/assets/iu-prehled-dne-v1.css?v=info-system-v6-chmi-active-only-20260730" />
+    <link rel="stylesheet" href="/assets/iu-prehled-dne-v1.css?v=info-system-v6-banner-homecard-fouc-20260730" />
     <link rel="stylesheet" href="/assets/iu-desktop-section-close-v1.css?v=desktop-left-rail-section-close-v1-20260707" />
     <link rel="stylesheet" href="/assets/iu-desktop-tool-window-shell-v1.css?v=pc-topbar-height-unify-v1-20260716" />
     <link rel="stylesheet" href="/assets/iu-desktop-info-panel.css?v=info-panel-polish-v1-20260705" />
@@ -2609,84 +2668,28 @@ font-src 'self' data:;
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHolidayWeather" aria-hidden="true"></div>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorTallBefore" aria-hidden="true"></div>
                         <div id="iuDesktopInfoPanelMount" class="iuDesktopInfoPanelMount" hidden aria-hidden="true"></div>
-                        <div id="iuFeedNewsSplit" class="iuFeedNewsSplit" aria-hidden="true">
-                          <div class="iuFeedNewsSplit__row">
-                            <span class="iuFeedNewsSplit__line" aria-hidden="true"></span>
-                            <span class="iuFeedNewsSplit__capsule">AKTUÁLNÍ ČLÁNKY OVĚŘENÝCH MÉDIÍ</span>
-                            <span class="iuFeedNewsSplit__line" aria-hidden="true"></span>
-                          </div>
-                        </div>
+                        <!-- Legacy commercial HomeCards / media splits are NOT in initial DOM under cutover.
+                             Injected on demand by iuLegacyHomeCardsEnsureShell() only for ?iuInfoSystem=off|parallel. -->
                         <section class="iuSilverTallScrollSection" id="iuSilverTallScrollSection" aria-label="Infouzel náhled" data-iu-silver-tall-scroll>
                           <div class="iuSilverStackChromaFrame iuSilverTallScrollChromaFrame" data-iu-silver-stack-chroma-frame>
                             <div class="iuSilverTallScrollViewport" id="iuSilverTallScrollViewport" tabindex="0">
-                              <div id="iuPrehledDneRoot" class="iuPrehledDneRoot" data-iu-prehled-dne-root="1"></div>
-                              <div class="iuNewsPreviewCardMount" id="iuNewsPreviewCardMount" data-iu-news-preview-mount>
-                                <button type="button" class="iuNewsPreviewCard" data-iu-news-preview-card="1" aria-label="Otevřít sekci Zprávy">
-                                  <div class="iuNewsPreviewHeader" data-iu-news-preview-header>
-                                    <div class="iuNewsPreviewTitleRow">
-                                      <span class="iuNewsPreviewBadge" data-iu-news-preview-badge>Zprávy</span>
-                                      <span class="iuNewsPreviewFreshness" data-iu-news-preview-freshness></span>
-                                    </div>
-                                    <svg class="iuNewsPreviewChevron" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-                                      <path d="M7.5 4.5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
+                              <div id="iuPrehledDneRoot" class="iuPrehledDneRoot" data-iu-prehled-dne-root="1">
+                                <section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">
+                                  <div class="iuPd__banner" data-iu-pd-banner="1">
+                                    <img class="iuPd__bannerImg" src="/assets/images/infouzel-prehled-dne-banner.png" width="1661" height="616" alt="InfoUzel – přehled dne podle vybraných témat, regionů a zdrojů" decoding="async" fetchpriority="high" loading="eager" />
                                   </div>
-                                  <div class="iuNewsPreviewBody">
-                                    <div class="iuNewsPreviewImgWrap" aria-hidden="true">
-                                      <picture>
-                                        <source type="image/webp" srcset="/assets/images/news-default-120w.webp 120w, /assets/images/news-default-240w.webp 240w" sizes="112px" />
-                                        <img class="iuNewsPreviewImg" src="/assets/images/news-default.jpg" srcset="/assets/images/news-default-120w.jpg 120w, /assets/images/news-default-240w.jpg 240w" sizes="112px" width="112" height="84" loading="lazy" decoding="async" alt="" />
-                                      </picture>
-                                    </div>
-                                    <div class="iuNewsPreviewText">
-                                      <p class="iuNewsPreviewHeadline" data-iu-news-preview-title-1>Zprávy se načítají</p>
-                                      <p class="iuNewsPreviewHeadline2 iuNewsPreviewHeadline2--empty" data-iu-news-preview-title-2></p>
+                                  <div class="iuPd__top">
+                                    <div class="iuPdBtn iuPdBtn--settings iuPdBtn--block" style="opacity:0.35;pointer-events:none" aria-hidden="true">Můj přehled / Nastavení</div>
+                                  </div>
+                                  <div class="iuPd__show">
+                                    <div class="iuPd__label">Zobrazit</div>
+                                    <div class="iuPd__toggles" aria-hidden="true">
+                                      <span class="iuPdToggle">Vše</span><span class="iuPdToggle">Uložené</span><span class="iuPdToggle">Nepřečtené</span><span class="iuPdToggle">Skryté</span>
                                     </div>
                                   </div>
-                                </button>
+                                  <div class="iuPdFeed" aria-busy="true"></div>
+                                </section>
                               </div>
-                              <div class="iuSportPreviewCardMount" id="iuSportPreviewCardMount" data-iu-sport-preview-mount></div>
-                              <div class="iuFinancePreviewCardMount" id="iuFinancePreviewCardMount" data-iu-finance-preview-mount></div>
-                              <div class="iuHealthPreviewCardMount" id="iuHealthPreviewCardMount" data-iu-health-preview-mount></div>
-                              <div class="iuTravelPreviewCardMount" id="iuTravelPreviewCardMount" data-iu-travel-preview-mount></div>
-                              <div class="iuGamesPreviewCardMount" id="iuGamesPreviewCardMount" data-iu-games-preview-mount></div>
-                              <div class="iuCulturePreviewCardMount" id="iuCulturePreviewCardMount" data-iu-culture-preview-mount></div>
-                              <div class="iuScienceHistoryPreviewCardMount" id="iuScienceHistoryPreviewCardMount" data-iu-science-history-preview-mount></div>
-                              <div class="iuEducationPreviewCardMount" id="iuEducationPreviewCardMount" data-iu-education-preview-mount></div>
-                              <div class="iuPrehledDnePreviewCardMount" id="iuPrehledDnePreviewCardMount" data-iu-prehled-dne-preview-mount></div>
-                              <div id="iuFeedNewsSplitPostHomeCards" class="iuFeedNewsSplit iuFeedNewsSplit--postHomeCards" aria-hidden="true">
-                                <div class="iuFeedNewsSplit__row">
-                                  <span class="iuFeedNewsSplit__line" aria-hidden="true"></span>
-                                  <span class="iuFeedNewsSplit__capsule">DALŠÍ UŽITEČNÝ OBSAH</span>
-                                  <span class="iuFeedNewsSplit__line" aria-hidden="true"></span>
-                                </div>
-                              </div>
-                              <button type="button" id="iuSilverFinanceHomeCard" class="iuSilverFinanceHomeCard" data-iuq="fincalc" data-iu-silver-finance-home-card="1" aria-label="Osobní finance a kalkulačky">
-                                <span class="iuSilverFinanceHomeCard__hero">
-                                  <span class="iuSilverFinanceHomeCard__content">
-                                    <span class="iuSilverFinanceHomeCard__titleRow">
-                                      <span class="iuSilverFinanceHomeCard__title">💰 Osobní finance a kalkulačky</span>
-                                    </span>
-                                    <span class="iuSilverFinanceHomeCard__lead">Máte své finance pod kontrolou? Získejte rychlý přehled o rozpočtu domácnosti, hypotéce a možnostech refinancování, investicích i spoření.</span>
-                                  </span>
-                                  <span class="iuSilverFinanceHomeCard__illus" aria-hidden="true">
-                                    <svg class="iuSilverFinanceHomeCard__illusSvg" viewBox="0 0 72 88" role="img" focusable="false">
-                                      <defs>
-                                        <linearGradient id="iuFinHomeGold" x1="0" y1="0" x2="1" y2="1">
-                                          <stop offset="0%" stop-color="currentColor" stop-opacity="0.95"/>
-                                          <stop offset="100%" stop-color="currentColor" stop-opacity="0.55"/>
-                                        </linearGradient>
-                                      </defs>
-                                      <g fill="none" stroke="url(#iuFinHomeGold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M8 72V44L36 20l28 24v28"/>
-                                        <path d="M30 72V54h12v18"/>
-                                      </g>
-                                    </svg>
-                                  </span>
-                                </span>
-                              </button>
-                              <p class="iuSilverTallScrollPlaceholder" data-iu-silver-tall-scroll-placeholder>Obsah připravíme — zde bude scrollovací plocha.</p>
-                              <p class="iuSilverTallScrollProbeLines" aria-hidden="true" data-iu-silver-tall-scroll-probe>Řádek 2 · neutrální shell<br>Řádek 3 · neutrální shell<br>Řádek 4 · neutrální shell<br>Řádek 5 · neutrální shell<br>Řádek 6 · neutrální shell<br>Řádek 7 · neutrální shell<br>Řádek 8 · neutrální shell<br>Řádek 9 · neutrální shell<br>Řádek 10 · neutrální shell</p>
                               <div class="iuSilverTallScrollLayoutSpacer" aria-hidden="true" data-iu-silver-tall-scroll-spacer></div>
                             </div>
                           </div>
@@ -5713,7 +5716,7 @@ font-src 'self' data:;
     <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-v1"></script>
     <script defer src="/assets/iu-tool-privacy-info.js?v=unified-overlay-header-v73-20260701"></script>
     <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716"></script>
-    <script type="module" src="/assets/iu-prehled-dne-ui-v1.js?v=info-system-v6-chmi-active-only-20260730"></script>
+    <script type="module" src="/assets/iu-prehled-dne-ui-v1.js?v=info-system-v6-banner-homecard-fouc-20260730"></script>
     <script defer src="/assets/iu-desktop-section-close-v1.js?v=desktop-tool-window-no-close-v1-20260712"></script>
     <script defer src="/assets/iu-desktop-left-rail-new-window-v1.js?v=pc-tool-window-left-rail-layout-v1-20260714"></script>
     <script defer src="/assets/iu-desktop-tool-window-left-rail-v1.js?v=pc-tool-window-left-rail-layout-v1-20260714"></script>

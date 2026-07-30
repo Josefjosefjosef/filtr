@@ -399,6 +399,8 @@ html.iu-info-system-cutover #iuEducationPreviewCardMount,
 html.iu-info-system-cutover #iuPrehledDnePreviewCardMount,
 html.iu-info-system-cutover .iuNewsPreviewCard,
 html.iu-info-system-cutover .box-prehled-dne,
+html.iu-info-system-cutover #iuFeedNewsSplitPostHomeCards,
+html.iu-info-system-cutover #iuSilverFinanceHomeCard,
 html.iu-info-system-cutover #iuSilverTallScrollViewport > .iuSilverTallScrollPlaceholder,
 html.iu-info-system-cutover #iuSilverTallScrollViewport > .iuSilverTallScrollProbeLines {
   display: none !important;
@@ -419,6 +421,28 @@ html.iu-info-system-parallel #iuPrehledDneRoot {
 html.iu-info-system-cutover #iuSilverTallScrollViewport {
   display: block !important;
   grid-template-columns: none !important;
+}
+
+/* InfoUzel day-overview banner (middle feed, above settings CTA) */
+.iuPd__banner {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+  box-sizing: border-box;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.iuPd__bannerImg {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  aspect-ratio: 1661 / 616;
 }
 
 /* Hide legacy commercial article timeline on cutover (P┼Öehled dne is the product). */
