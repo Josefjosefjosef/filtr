@@ -415,8 +415,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-07-30T21:51:11.280Z",
-    "lastSuccessAt": "2026-07-30T21:51:13.777Z",
+    "lastRunAt": "2026-07-30T23:21:15.515Z",
+    "lastSuccessAt": "2026-07-30T23:21:18.328Z",
     "lastChangedAt": "2026-07-30T21:17:57.928Z",
     "lastError": null,
     "status": "not_modified",
@@ -424,13 +424,13 @@
     "lastModified": "Tue, 28 Jul 2026 11:07:39 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
-    "activeCount": 16,
-    "scheduledCount": 10,
-    "expiredCount": 0,
+    "activeCount": 18,
+    "scheduledCount": 3,
+    "expiredCount": 5,
     "cancelledCount": 0,
     "invalidCount": 1,
-    "publishableCount": 26,
-    "visibleCount": 26,
+    "publishableCount": 21,
+    "visibleCount": 21,
     "totalItems": 27,
     "sourceCount": 2,
     "activeSourceCount": 1,
@@ -453,7 +453,7 @@
     "completeness": {
       "capMessages": null,
       "infoBlocks": null,
-      "logicalAlerts": 26,
+      "logicalAlerts": 21,
       "uniqueEvents": [
         "Velmi vysoké teploty",
         "Vysoké teploty",
@@ -466,13 +466,13 @@
         "Stav sucha",
         "Hydrologické sucho"
       ],
-      "totalAreas": 125,
-      "mappedAreas": 956,
+      "totalAreas": 109,
+      "mappedAreas": 843,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 16,
-      "publishedScheduled": 10,
-      "publishableCount": 26,
+      "publishedActive": 18,
+      "publishedScheduled": 3,
+      "publishableCount": 21,
       "productStreams": [
         "50",
         "70"
@@ -480,7 +480,7 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 1,
-      "expiredCount": 0,
+      "expiredCount": 5,
       "cancelledCount": 0
     },
     "alarms": [],
@@ -489,9 +489,9 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 2512,
+    "runMs": 2828,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-07-30T21:51:11.280Z",
+    "lastSnapshotAt": "2026-07-30T23:21:15.515Z",
     "audit": {
       "http": [
         {
@@ -515,7 +515,7 @@
         "completeness": {
           "capMessages": null,
           "infoBlocks": null,
-          "logicalAlerts": 26,
+          "logicalAlerts": 21,
           "uniqueEvents": [
             "Velmi vysoké teploty",
             "Vysoké teploty",
@@ -528,13 +528,13 @@
             "Stav sucha",
             "Hydrologické sucho"
           ],
-          "totalAreas": 125,
-          "mappedAreas": 956,
+          "totalAreas": 109,
+          "mappedAreas": 843,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100,
-          "publishedActive": 16,
-          "publishedScheduled": 10,
-          "publishableCount": 26,
+          "publishedActive": 18,
+          "publishedScheduled": 3,
+          "publishableCount": 21,
           "productStreams": [
             "50",
             "70"
@@ -542,7 +542,7 @@
           "streamCount": 2,
           "missingStreamCache": 0,
           "invalidCount": 1,
-          "expiredCount": 0,
+          "expiredCount": 5,
           "cancelledCount": 0
         },
         "alarms": [],
@@ -551,6 +551,17 @@
       "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-07-30T23:21:15.515Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 2828,
+        "error": null,
+        "activeCount": 18,
+        "scheduledCount": 3,
+        "publishableCount": 21
+      },
       {
         "at": "2026-07-30T21:51:11.280Z",
         "status": "not_modified",
