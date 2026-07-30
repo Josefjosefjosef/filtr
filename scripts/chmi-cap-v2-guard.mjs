@@ -8,7 +8,7 @@ import { fileURLToPath } from "url";
 import { getChmiCapV2Config, isLegacyProductionPath } from "./chmi-cap-v2/config.mjs";
 import { parseCapAlertXml } from "./chmi-cap-v2/parse-cap.mjs";
 import { parseSafeXml } from "./chmi-cap-v2/safe-xml.mjs";
-import { buildCapIdentity, parseCapReferences } from "./chmi-cap-v2/identity.mjs";
+import { buildCapIdentity, parseCapReferences, resolveExpiresFromSiblingInfos } from "./chmi-cap-v2/identity.mjs";
 import { processCapDocuments, tryAcquireLock, releaseLock, applyConditionalResult, atomicPublishDecision, suspiciousDrop, createSyncState } from "./chmi-cap-v2/sync-core.mjs";
 import { buildConcreteCapItemUrl, revisionsToFeed } from "./chmi-cap-v2/normalize-feed.mjs";
 import { migrateUserStatesDryRun } from "./chmi-cap-v2/migrate-ids.mjs";
@@ -620,6 +620,72 @@ function read(name) {
   const midItems = revisionsToFeed([midnightRev], { nowIso: "2026-07-31T00:30:00+02:00" });
   ok("midnight_still_active", midItems[0] && midItems[0].status === "aktivni", midItems[0] && midItems[0].status);
   ok("midnight_sortAt_is_sent", midItems[0] && midItems[0].sortAt === "2026-07-30T23:50:00+02:00", midItems[0] && midItems[0].sortAt);
+}
+
+// --- Sibling expires fill (same event+onset+severity) ---
+{
+  const sibXml = read("alert-sibling-expires.xml");
+  const sibAlert = parseCapAlertXml(sibXml);
+  const { infos, filled } = resolveExpiresFromSiblingInfos(sibAlert.infos || []);
+  const fire = infos.filter((i) => /Riziko požárů/i.test(i.event || ""));
+  const outlook = infos.filter((i) => /Výhled jevů/i.test(i.event || ""));
+  ok("sibling_expires_filled_count", filled === 1, String(filled));
+  ok(
+    "sibling_expires_fire_all_have_expires",
+    fire.length === 2 && fire.every((i) => i.expires === "2026-07-31T00:00:00+02:00"),
+    fire.map((i) => i.expires).join("|")
+  );
+  ok(
+    "sibling_expires_source_marked",
+    fire.some((i) => i.expiresSource === "sibling_info_same_event_onset_severity"),
+    fire.map((i) => i.expiresSource || "cap").join("|")
+  );
+  ok(
+    "sibling_expires_outlook_stays_empty",
+    outlook.length === 1 && !String(outlook[0].expires || "").trim(),
+    outlook[0] && outlook[0].expires
+  );
+
+  const id = buildCapIdentity(sibAlert);
+  const fireHaz = id.hazards.filter((h) => /Riziko požárů/i.test(h.event || ""));
+  const outlookHaz = id.hazards.filter((h) => /Výhled jevů/i.test(h.event || ""));
+  ok(
+    "sibling_expires_hazard_valid_to",
+    fireHaz.length === 2 && fireHaz.every((h) => h.valid_to === "2026-07-31T00:00:00+02:00"),
+    fireHaz.map((h) => h.valid_to).join("|")
+  );
+  ok("sibling_expires_outlook_hazard_empty", outlookHaz[0] && !String(outlookHaz[0].valid_to || "").trim(), outlookHaz[0] && outlookHaz[0].valid_to);
+
+  const feed = revisionsToFeed(
+    [
+      {
+        cap_message_id: id.cap_message_id,
+        alert_thread_id: id.alert_thread_id,
+        identifier: sibAlert.identifier,
+        sent: sibAlert.sent,
+        published_at: sibAlert.sent,
+        msgType: sibAlert.msgType,
+        status: sibAlert.status,
+        sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_sibling.xml",
+        hazards: fireHaz.concat(outlookHaz).map((h) => ({
+          ...h,
+          geo: {
+            links: [{ orpName: "Praha", orpId: "orp:1000", orpCode: "1000", precise: true, krajName: "Hlavní město Praha" }],
+            displayNames: ["Praha"],
+          },
+        })),
+      },
+    ],
+    { nowIso: "2026-07-30T15:00:00+02:00" }
+  );
+  const fireFeed = feed.filter((i) => /Riziko požárů/i.test((i.capV2 && i.capV2.event) || i.title || ""));
+  const outlookFeed = feed.filter((i) => /Výhled jevů/i.test((i.capV2 && i.capV2.event) || i.title || ""));
+  ok("sibling_expires_fire_publishable", fireFeed.length >= 1 && fireFeed.every((i) => i.publishable === true && i.status === "aktivni"), String(fireFeed.length));
+  ok(
+    "sibling_expires_outlook_nezaraditelne",
+    outlookFeed.length === 1 && outlookFeed[0].status === "nezaraditelne" && outlookFeed[0].publishable === false,
+    outlookFeed[0] && outlookFeed[0].status
+  );
 }
 
 // --- lightweight parse performance budget (fixtures) ---

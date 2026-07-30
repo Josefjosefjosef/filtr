@@ -56,7 +56,23 @@ async function probeBrowser(browserType, name) {
   try {
     const browser = await browserType.launch({ headless: true });
     const page = await browser.newPage();
+    // Local static server is HTTP-only. Some documents trigger upgrade-insecure-requests
+    // which rewrites asset URLs to https://127.0.0.1 and hangs WebKit on SSL connect.
+    await page.route(`https://127.0.0.1:${PORT}/**`, async (route) => {
+      const httpUrl = route.request().url().replace(/^https:\/\//i, "http://");
+      try {
+        const res = await route.fetch({ url: httpUrl });
+        await route.fulfill({ response: res });
+      } catch (_) {
+        await route.abort();
+      }
+    });
     await page.goto(BASE + "?iuRobust=1", { waitUntil: "domcontentloaded", timeout: 60000 });
+    await page.waitForFunction(
+      () => !!(document.body && document.body.innerText && document.body.innerText.length > 40),
+      null,
+      { timeout: 30000 }
+    );
     const feat = await page.evaluate(() => ({
       serviceWorker: "serviceWorker" in navigator,
       caches: "caches" in window,
@@ -77,7 +93,7 @@ async function probeBrowser(browserType, name) {
     return { name, ok, feat, skip: false };
   } catch (e) {
     const msg = String(e && e.message ? e.message : e);
-    if (/Executable doesn't exist|browserType\.launch|Firefox|WebKit/i.test(msg)) {
+    if (/Executable doesn't exist|browserType\.launch|Firefox|WebKit/i.test(msg) && /Executable doesn't exist/i.test(msg)) {
       console.log(`[xbrowser] ${name} SKIP=${msg.slice(0, 120)}`);
       return { name, ok: true, skip: true, reason: msg.slice(0, 200) };
     }

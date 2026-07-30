@@ -39,7 +39,7 @@ const STATE_FILE = path.join(STATE_DIR, "sync_state.json");
 const DIAG_FILE = path.join(STATE_DIR, "diagnostics.json");
 const REVISIONS_FILE = path.join(STATE_DIR, "revisions_index.json");
 /** Bump when normalize/parser semantics change so bulletinCache cannot keep stale items. */
-const BULLETIN_CACHE_EPOCH = 4;
+const BULLETIN_CACHE_EPOCH = 5;
 
 function readJson(p, fallback) {
   try {
