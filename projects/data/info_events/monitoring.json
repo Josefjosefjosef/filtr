@@ -415,23 +415,30 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-07-30T14:52:49.312Z",
-    "lastSuccessAt": "2026-07-30T14:52:51.694Z",
-    "lastChangedAt": "2026-07-30T13:49:36.087Z",
+    "lastRunAt": "2026-07-30T16:01:58.222Z",
+    "lastSuccessAt": "2026-07-30T16:02:02.388Z",
+    "lastChangedAt": "2026-07-30T16:02:02.388Z",
     "lastError": null,
-    "status": "not_modified",
-    "etag": "\"6a6b3290-1ebe36\"",
-    "lastModified": "Thu, 30 Jul 2026 11:16:32 GMT",
+    "status": "healthy",
+    "etag": "\"6a688d7b-e76a\"",
+    "lastModified": "Tue, 28 Jul 2026 11:07:39 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
-    "activeCount": 27,
-    "cancelledCount": 0,
+    "activeCount": 11,
+    "scheduledCount": 8,
     "expiredCount": 0,
-    "updateCount": 0,
+    "cancelledCount": 0,
+    "invalidCount": 0,
+    "publishableCount": 19,
+    "visibleCount": 19,
+    "totalItems": 19,
+    "sourceCount": 2,
+    "activeSourceCount": 1,
+    "updateCount": 2,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 0,
+    "validCount": 2,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -444,9 +451,9 @@
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
-      "logicalAlerts": 27,
+      "capMessages": 2,
+      "infoBlocks": 48,
+      "logicalAlerts": 19,
       "uniqueEvents": [
         "Velmi vysoké teploty",
         "Vysoké teploty",
@@ -454,17 +461,15 @@
         "Silná zátěž teplem",
         "Extrémní zátěž teplem",
         "Riziko požárů",
-        "Vysoké riziko požárů",
-        "Smogová situace - troposférický ozón O3",
-        "Výhled jevů",
-        "Stav sucha",
-        "Hydrologické sucho"
+        "Vysoké riziko požárů"
       ],
-      "totalAreas": 139,
-      "mappedAreas": 1162,
+      "totalAreas": 81,
+      "mappedAreas": 608,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 27,
+      "publishedActive": 11,
+      "publishedScheduled": 8,
+      "publishableCount": 19,
       "productStreams": [
         "50",
         "70"
@@ -478,33 +483,33 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 2516,
+    "runMs": 4633,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-07-30T14:52:49.312Z",
+    "lastSnapshotAt": "2026-07-30T16:01:58.222Z",
     "audit": {
       "http": [
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_301116.xml",
           "productKey": "50",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         },
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
           "productKey": "70",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         }
       ],
       "publish": {
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": null,
-          "infoBlocks": null,
-          "logicalAlerts": 27,
+          "capMessages": 2,
+          "infoBlocks": 48,
+          "logicalAlerts": 19,
           "uniqueEvents": [
             "Velmi vysoké teploty",
             "Vysoké teploty",
@@ -512,17 +517,15 @@
             "Silná zátěž teplem",
             "Extrémní zátěž teplem",
             "Riziko požárů",
-            "Vysoké riziko požárů",
-            "Smogová situace - troposférický ozón O3",
-            "Výhled jevů",
-            "Stav sucha",
-            "Hydrologické sucho"
+            "Vysoké riziko požárů"
           ],
-          "totalAreas": 139,
-          "mappedAreas": 1162,
+          "totalAreas": 81,
+          "mappedAreas": 608,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100,
-          "publishedActive": 27,
+          "publishedActive": 11,
+          "publishedScheduled": 8,
+          "publishableCount": 19,
           "productStreams": [
             "50",
             "70"
@@ -533,9 +536,33 @@
         "alarms": [],
         "productionVerified": false
       },
-      "parser": null
+      "parser": {
+        "loaded": 2,
+        "valid": 2,
+        "rejected": 0,
+        "duplicates": 0,
+        "quarantine": 0,
+        "cancels": 0,
+        "updates": 0,
+        "newThreads": 2,
+        "status": "healthy",
+        "alert": 0,
+        "update": 2,
+        "cancel": 0
+      }
     },
     "runHistory": [
+      {
+        "at": "2026-07-30T16:01:58.222Z",
+        "status": "healthy",
+        "mode": "active",
+        "publish": true,
+        "runMs": 4633,
+        "error": null,
+        "activeCount": 11,
+        "scheduledCount": 8,
+        "publishableCount": 19
+      },
       {
         "at": "2026-07-30T14:52:49.312Z",
         "status": "not_modified",
