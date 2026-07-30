@@ -224,12 +224,19 @@
 }
 
 .iuPrehledDne__issued {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   font-size: 0.68rem;
   font-weight: 500;
   color: var(--iu-pd-muted);
   line-height: 1.25;
   margin-top: 2px;
   overflow-wrap: anywhere;
+}
+.iuPrehledDne__issuedWord,
+.iuPrehledDne__issuedDate {
+  display: block;
 }
 
 .iuPrehledDne__rel {

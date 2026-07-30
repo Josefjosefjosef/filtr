@@ -1011,10 +1011,6 @@ function formatPragueTime(ms) {
   });
 }
 
-function formatPragueDayMonthTime(ms) {
-  return formatPragueDayMonth(ms) + " " + formatPragueTime(ms);
-}
-
 function isChmiCapWarning(ev) {
   if (!ev || !ev.capV2) return false;
   if (String(ev.sourceId || "") === "chmi") return true;
@@ -1090,7 +1086,7 @@ function getEffectiveTimelinePresentation(item, nowMs) {
   let primaryTime = null;
   let secondaryIssuedLabel = null;
   if (isRolledActiveWarning) {
-    secondaryIssuedLabel = "vydáno " + formatPragueDayMonthTime(publishedMs);
+    secondaryIssuedLabel = "vydáno " + formatPragueDayMonth(publishedMs);
   } else {
     primaryTime = formatPragueTime(publishedMs);
   }
