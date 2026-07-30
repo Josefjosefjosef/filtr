@@ -38,6 +38,8 @@ const STATE_DIR = path.join(DIR, "chmi_cap_v2");
 const STATE_FILE = path.join(STATE_DIR, "sync_state.json");
 const DIAG_FILE = path.join(STATE_DIR, "diagnostics.json");
 const REVISIONS_FILE = path.join(STATE_DIR, "revisions_index.json");
+/** Bump when normalize/parser semantics change so bulletinCache cannot keep stale aktivni items. */
+const BULLETIN_CACHE_EPOCH = 2;
 
 function readJson(p, fallback) {
   try {
@@ -153,6 +155,12 @@ export async function runChmiCapV2Sync(opts = {}) {
     if (!latest.length) throw Object.assign(new Error("discovery_empty"), { code: "DISCOVERY_EMPTY" });
 
     if (!state.bulletinCache || typeof state.bulletinCache !== "object") state.bulletinCache = {};
+    if (state.bulletinCacheEpoch !== BULLETIN_CACHE_EPOCH) {
+      state.bulletinCache = {};
+      state.bulletinCacheEpoch = BULLETIN_CACHE_EPOCH;
+      diagnostics.discovery = diagnostics.discovery || {};
+      diagnostics.cacheEpochInvalidated = BULLETIN_CACHE_EPOCH;
+    }
 
     const docs = [];
     const latestUrls = new Set();
