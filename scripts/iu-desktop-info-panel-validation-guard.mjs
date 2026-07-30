@@ -336,9 +336,21 @@ async function testSourceDialogs(page) {
 async function testMockedStates(context) {
   const results = {};
   const page = await context.newPage();
-
+  // Single route handler + mode flag: unroute/re-route races on CI Linux.
+  let mockMode = "stale";
   await page.route("**/info_panel_snapshot.json", (route) => {
-    route.fulfill({
+    if (mockMode === "error") {
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          generatedAt: new Date().toISOString(),
+          errors: [{ id: "cnb", message: "mock" }],
+          items: {},
+        }),
+      });
+    }
+    return route.fulfill({
       status: 200,
       contentType: "application/json",
       body: JSON.stringify({
@@ -373,32 +385,36 @@ async function testMockedStates(context) {
     timeout: 60000,
   });
   await waitForDesktopPanel(page);
+  await page
+    .waitForFunction(
+      () => {
+        const eur = document.querySelector('[data-iu-info-panel-id="eur_czk"]');
+        const fuel = document.querySelector('[data-iu-info-panel-id="fuel"]');
+        return (
+          eur &&
+          eur.getAttribute("data-iu-info-panel-state") === "stale" &&
+          fuel &&
+          fuel.getAttribute("data-iu-info-panel-state") === "live"
+        );
+      },
+      null,
+      { timeout: 15000 }
+    )
+    .catch(() => null);
   results.stale = await page.evaluate(() => {
     const eur = document.querySelector('[data-iu-info-panel-id="eur_czk"]');
     const fuel = document.querySelector('[data-iu-info-panel-id="fuel"]');
     return (
-      eur &&
+      !!eur &&
       eur.getAttribute("data-iu-info-panel-state") === "stale" &&
-      fuel &&
+      !!fuel &&
       fuel.getAttribute("data-iu-info-panel-state") === "live"
     );
   });
 
-  await page.unroute("**/info_panel_snapshot.json");
-  await page.route("**/info_panel_snapshot.json", (route) => {
-    route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
-        generatedAt: new Date().toISOString(),
-        errors: [{ id: "cnb", message: "mock" }],
-        items: {},
-      }),
-    });
-  });
+  mockMode = "error";
   await page.reload({ waitUntil: "domcontentloaded" });
   await waitForDesktopPanel(page);
-  // CI can paint stale→error a tick later than local; wait for the mocked error state.
   await page
     .waitForFunction(
       () => {

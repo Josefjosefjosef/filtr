@@ -93,23 +93,37 @@ async function openHub(page) {
 }
 
 async function openDocument(page, doc) {
-  await openHub(page);
-  await page.click(`[data-iu-legal-cat="${doc.category}"]`);
-  await page.waitForFunction(
-    () => {
-      const panel = document.getElementById("iuLegalDocsPanel");
-      return panel && panel.classList.contains("iu-legal-overlay-panel--category");
-    },
-    null,
-    { timeout: 30000 },
-  );
-  await page.click(`[data-iu-legal-open-doc="${doc.id}"]`);
-  await page.waitForFunction(
-    () => document.querySelector("[data-iu-legal-detail-root]") != null,
-    null,
-    { timeout: 30000 },
-  );
-  await page.waitForTimeout(250);
+  let lastErr = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      await openHub(page);
+      const cat = page.locator(`[data-iu-legal-cat="${doc.category}"]`);
+      await cat.waitFor({ state: "visible", timeout: 30000 });
+      await cat.click();
+      await page.waitForFunction(
+        () => {
+          const panel = document.getElementById("iuLegalDocsPanel");
+          return panel && panel.classList.contains("iu-legal-overlay-panel--category");
+        },
+        null,
+        { timeout: 30000 },
+      );
+      const openDoc = page.locator(`[data-iu-legal-open-doc="${doc.id}"]`);
+      await openDoc.waitFor({ state: "visible", timeout: 30000 });
+      await openDoc.click();
+      await page.waitForFunction(
+        () => document.querySelector("[data-iu-legal-detail-root]") != null,
+        null,
+        { timeout: 30000 },
+      );
+      await page.waitForTimeout(250);
+      return;
+    } catch (err) {
+      lastErr = err;
+      await gotoProjectsStable(page).catch(() => {});
+    }
+  }
+  throw lastErr || new Error(`openDocument failed: ${doc.id}`);
 }
 
 async function fillVisibleFields(page) {

@@ -1438,6 +1438,10 @@ async function boot() {
       { once: true }
     );
   } catch (err) {
+    // Navigating away mid-boot aborts in-flight feed fetch. Mount is gone — not an app error.
+    const stillMounted =
+      !!(root && root.isConnected && typeof document !== "undefined" && document.documentElement.contains(root));
+    if (!stillMounted) return;
     root.innerHTML =
       `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
       bannerHtml() +
