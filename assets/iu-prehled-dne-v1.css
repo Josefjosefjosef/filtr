@@ -199,7 +199,7 @@
 
 .iuPrehledDne__item {
   display: grid;
-  grid-template-columns: 64px 18px minmax(0, 1fr);
+  grid-template-columns: 72px 18px minmax(0, 1fr);
   gap: 10px;
   padding: 10px 0;
   position: relative;
@@ -213,6 +213,23 @@
 .iuPrehledDne__time {
   font-weight: 750;
   font-size: 0.92rem;
+}
+
+.iuPrehledDne__timeSub {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--iu-pd-muted);
+  line-height: 1.25;
+  margin-top: 1px;
+}
+
+.iuPrehledDne__issued {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--iu-pd-muted);
+  line-height: 1.25;
+  margin-top: 2px;
+  overflow-wrap: anywhere;
 }
 
 .iuPrehledDne__rel {
@@ -768,7 +785,7 @@ html.iu-info-system-cutover #feed .iuArticleCard {
 .iuPdFeed > .iuPrehledDne__item.iuPdCard,
 .iuPdCard.iuPrehledDne__item {
   display: grid;
-  grid-template-columns: 64px 18px minmax(0, 1fr);
+  grid-template-columns: 72px 18px minmax(0, 1fr);
   gap: 10px;
   padding: 10px 0;
   background: transparent;
@@ -794,6 +811,12 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   background: rgba(148, 163, 184, 0.14); border-radius: 999px; padding: 3px 8px;
 }
 .iuPdCard__pill--imp { color: #9a3412; background: rgba(251, 146, 60, 0.18); }
+.iuPdCard__pill--active {
+  color: #166534;
+  background: rgba(34, 197, 94, 0.16);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
 .iuPdCard__warnBadge,
 .iuPrehledDne__warnBadge {
   display: inline-block;

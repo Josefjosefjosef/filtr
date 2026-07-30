@@ -20,16 +20,19 @@ import {
   localitySuggest,
   getFilteredWarningLocationLabel,
   eventTitleBaseWithoutLocality,
+  getEffectiveTimelinePresentation,
+  nextTimelineBoundaryMs,
+  clearInfoEventsFilterMemo,
   getScrollState,
   setScrollState,
   migrateLocalStateOnce,
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-loc-label-20260730";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-active-rollover-20260730";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-chmi-loc-label-20260730";
+const CACHE_BUST = "info-system-v6-chmi-active-rollover-20260730";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -125,6 +128,8 @@ const state = {
   settingsOpener: null,
   saveError: "",
   persistSeq: 0,
+  timelineBoundaryTimer: null,
+  timelineListenersBound: false,
 };
 
 function esc(s) {
@@ -155,6 +160,7 @@ function fmtTime(iso) {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "—";
   return d.toLocaleString("cs-CZ", {
+    timeZone: "Europe/Prague",
     day: "numeric",
     month: "numeric",
     hour: "2-digit",
@@ -164,6 +170,61 @@ function fmtTime(iso) {
 
 function publishIso(ev) {
   return ev.publishedAtSource || ev.sortAt || ev.firstSeenByInfoUzel || ev.publishedAt || ev.updatedAt || "";
+}
+
+function scheduleTimelineBoundaryRefresh() {
+  if (state.timelineBoundaryTimer) {
+    try {
+      clearTimeout(state.timelineBoundaryTimer);
+    } catch (_) {}
+    state.timelineBoundaryTimer = null;
+  }
+  const items = (state.data && state.data.feed && state.data.feed.items) || [];
+  const now = Date.now();
+  let next = nextTimelineBoundaryMs(items, now);
+  if (!(next > now)) next = now + 60 * 60 * 1000;
+  const delay = Math.max(400, Math.min(next - now + 80, 24 * 3600 * 1000));
+  state.timelineBoundaryTimer = setTimeout(() => {
+    state.timelineBoundaryTimer = null;
+    captureFeedScroll();
+    clearInfoEventsFilterMemo();
+    paint();
+    wire();
+    scheduleTimelineBoundaryRefresh();
+  }, delay);
+}
+
+function bindTimelineLifecycleListeners() {
+  if (state.timelineListenersBound) return;
+  state.timelineListenersBound = true;
+  try {
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState !== "visible") return;
+      captureFeedScroll();
+      clearInfoEventsFilterMemo();
+      paint();
+      wire();
+      scheduleTimelineBoundaryRefresh();
+    });
+  } catch (_) {}
+  try {
+    window.addEventListener("pageshow", () => {
+      captureFeedScroll();
+      clearInfoEventsFilterMemo();
+      paint();
+      wire();
+      scheduleTimelineBoundaryRefresh();
+    });
+  } catch (_) {}
+  try {
+    window.addEventListener("online", () => {
+      captureFeedScroll();
+      clearInfoEventsFilterMemo();
+      paint();
+      wire();
+      scheduleTimelineBoundaryRefresh();
+    });
+  } catch (_) {}
 }
 
 function ensureRoot() {
@@ -375,25 +436,37 @@ function renderItem(ev) {
   const alert = String(ev.eventType || "") === "mimoradne" || Number(ev.importance) >= 5;
   const capActive = !!(ev.capV2 && ev.capV2.badgeActive);
   const capEnded = !!(ev.capV2 && (ev.status === "ukonceno" || ev.status === "zruseno"));
+  const timeline = getEffectiveTimelinePresentation(ev, Date.now());
+  const timePrimary = esc(timeline.primaryDate || fmtTime(publishIso(ev)));
+  const timeSub = timeline.primaryTime ? `<div class="iuPrehledDne__timeSub">${esc(timeline.primaryTime)}</div>` : "";
+  const timeIssued = timeline.secondaryIssuedLabel
+    ? `<div class="iuPrehledDne__issued">${esc(timeline.secondaryIssuedLabel)}</div>`
+    : "";
+  const activePill = timeline.isActiveWarning
+    ? `<span class="iuPdCard__pill iuPdCard__pill--active iuPrehledDne__pill" role="status" aria-label="Právě platná výstraha">AKTIVNÍ</span>`
+    : "";
   const titleMarkup = url
     ? `<a class="iuPdCard__title iuPrehledDne__cardTitle" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(title)}</a>`
     : `<span class="iuPdCard__title iuPrehledDne__cardTitle" data-act="open-title">${esc(title)}</span>`;
   return (
     `<li class="iuPdCard iuPrehledDne__item${read ? " is-read" : ""}" data-id="${esc(id)}" style="--iu-pd-dot:${esc(color)}">` +
     `<div class="iuPrehledDne__timeCol">` +
-    `<div class="iuPdCard__time iuPrehledDne__time">${esc(fmtTime(publishIso(ev)))}</div>` +
+    `<div class="iuPdCard__time iuPrehledDne__time">${timePrimary}</div>` +
+    timeSub +
+    timeIssued +
     `<div class="iuPrehledDne__readMark" aria-label="Přečteno">✓</div>` +
     `</div>` +
     `<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot${alert || capActive ? " iuPrehledDne__dot--alert" : ""}"></span></div>` +
     `<article class="iuPrehledDne__card iuPdCard__body">` +
     (capActive
-      ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge" role="status" aria-label="Aktivní výstraha ČHMÚ">🔴 VÝSTRAHA ČHMÚ</span>`
+      ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge" role="status" aria-label="Výstraha ČHMÚ">🔴 VÝSTRAHA ČHMÚ</span>`
       : capEnded
         ? `<span class="iuPdCard__warnBadge iuPdCard__warnBadge--ended iuPrehledDne__warnBadge" role="status">${esc(ev.status === "zruseno" ? "Zrušeno" : "Ukončeno")}</span>`
         : "") +
     titleMarkup +
     `<div class="iuPdCard__meta iuPrehledDne__meta">` +
     (src ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(src)}</span>` : "") +
+    activePill +
     (region ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(region)}</span>` : "") +
     (imp ? `<span class="iuPdCard__pill iuPdCard__pill--imp iuPrehledDne__pill">${esc(imp)}</span>` : "") +
     `</div>` +
@@ -1289,6 +1362,8 @@ async function boot() {
     const scroll = getScrollState();
     paint();
     wire();
+    bindTimelineLifecycleListeners();
+    scheduleTimelineBoundaryRefresh();
     if (scroll && Number(scroll.y) > 0) {
       try {
         const vp = feedViewport();
