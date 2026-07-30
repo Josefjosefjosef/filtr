@@ -1,0 +1,281 @@
+#!/usr/bin/env node
+/**
+ * Guard: CHMI CAP card locality label follows active location filter (display-only).
+ * Unit tests via IUInfoSystem core + static UI/wiring contract.
+ */
+import fs from "node:fs";
+import path from "node:path";
+import vm from "node:vm";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(__dirname, "..");
+const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
+const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
+const INDEX = path.join(ROOT, "projects", "index.html");
+const CACHE_BUST = "info-system-v6-chmi-loc-label-20260730";
+
+const fails = [];
+function ok(id, cond, detail) {
+  if (!cond) fails.push(id + (detail ? ":" + detail : ""));
+}
+
+function loadIU() {
+  const sandbox = {
+    console,
+    localStorage: {
+      _m: new Map(),
+      getItem(k) {
+        return this._m.has(k) ? this._m.get(k) : null;
+      },
+      setItem(k, v) {
+        this._m.set(k, String(v));
+      },
+      removeItem(k) {
+        this._m.delete(k);
+      },
+    },
+    document: {
+      documentElement: { classList: { toggle() {} } },
+    },
+    location: { pathname: "/projects/" },
+    Date,
+    JSON,
+    Array,
+    Object,
+    String,
+    Number,
+    Boolean,
+    Math,
+    Set,
+    Map,
+  };
+  sandbox.window = sandbox;
+  sandbox.globalThis = sandbox;
+  const src = fs.readFileSync(CORE, "utf8");
+  const stripped = src.replace(/export \{[\s\S]*\}\s*;?\s*$/m, "").replace(/export default[\s\S]*$/m, "");
+  vm.runInNewContext(stripped + "\nthis.__IU = IUInfoSystem;\n", sandbox, { filename: "core.js" });
+  return sandbox.__IU;
+}
+
+function sampleWarning() {
+  const links = [
+    {
+      orpName: "Praha",
+      okresName: "Hlavní město Praha",
+      krajName: "Hlavní město Praha",
+    },
+    {
+      orpName: "Benešov",
+      okresName: "Benešov",
+      krajName: "Středočeský kraj",
+    },
+    {
+      orpName: "Kladno",
+      okresName: "Kladno",
+      krajName: "Středočeský kraj",
+    },
+    {
+      orpName: "Beroun",
+      okresName: "Beroun",
+      krajName: "Středočeský kraj",
+    },
+    {
+      orpName: "Hradec Králové",
+      okresName: "Hradec Králové",
+      krajName: "Královéhradecký kraj",
+    },
+    {
+      orpName: "Brno",
+      okresName: "Brno-město",
+      krajName: "Jihomoravský kraj",
+    },
+    {
+      orpName: "Rumburk",
+      okresName: "Děčín",
+      krajName: "Ústecký kraj",
+    },
+    {
+      orpName: "Vlašim",
+      okresName: "Benešov",
+      krajName: "Středočeský kraj",
+    },
+    {
+      orpName: "Votice",
+      okresName: "Benešov",
+      krajName: "Středočeský kraj",
+    },
+  ];
+  // pad to mimic multi-area count for city-mode remainder
+  while (links.length < 192) {
+    links.push({
+      orpName: "Oblast" + links.length,
+      okresName: "OkresX",
+      krajName: "Jihočeský kraj",
+    });
+  }
+  const now = Date.now();
+  return {
+    id: "ie-chmi-v2-loc-test",
+    title: "Vysoké teploty — Praha a dalších 191 oblastí",
+    url: "https://vystrahy-cr.chmi.cz/",
+    originalUrl: "https://vystrahy-cr.chmi.cz/",
+    sourceId: "chmi",
+    sourceLabel: "ČHMÚ",
+    status: "aktivni",
+    eventType: "mimoradne",
+    publishedAtSource: new Date(now - 3600000).toISOString(),
+    publishedAt: new Date(now - 3600000).toISOString(),
+    validFrom: new Date(now - 3600000).toISOString(),
+    validTo: new Date(now + 48 * 3600000).toISOString(),
+    timeConfidence: "high",
+    sectionId: "pocasi",
+    lane: "pocasi",
+    region: {
+      level: "multi",
+      name: "Praha",
+      summary: "Praha a dalších 191 oblastí",
+      extraAreaCount: 191,
+      orpNames: links.map((l) => l.orpName),
+      krajNames: [...new Set(links.map((l) => l.krajName))],
+      okresNames: [...new Set(links.map((l) => l.okresName))],
+    },
+    capV2: {
+      badgeActive: true,
+      geo: { links: links.map((l) => Object.assign({}, l)) },
+      searchText: "vysoke teploty praha hradec",
+    },
+  };
+}
+
+function staticGate() {
+  const ui = fs.readFileSync(UI, "utf8");
+  const core = fs.readFileSync(CORE, "utf8");
+  const index = fs.readFileSync(INDEX, "utf8");
+  ok("core_fn", /function getFilteredWarningLocationLabel/.test(core), "fn");
+  ok("core_export", /getFilteredWarningLocationLabel/.test(core), "export");
+  ok("core_no_mutate_assign", !/warning\.region\s*=/.test(core.split("getFilteredWarningLocationLabel")[1] || ""), "mutate");
+  ok("ui_imports_fn", /getFilteredWarningLocationLabel/.test(ui), "import");
+  ok("ui_uses_in_render", /getFilteredWarningLocationLabel\(ev/.test(ui), "render");
+  ok("ui_title_uses_filter", /displayEventTitle\(ev,\s*locationFilter\)/.test(ui), "title");
+  ok("ui_url_unchanged", /chmiPublicDetailUrl\(ev\)/.test(ui) && /forced \|\| ev\.url/.test(ui), "url");
+  ok("ui_cache_bust", ui.includes(CACHE_BUST), "ui bust");
+  ok("index_cache_bust", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "index bust");
+  ok("open_title_mark_only", /act === "open-title"[\s\S]{0,180}markRead/.test(ui), "open");
+}
+
+function unitGate(IU) {
+  const warning = sampleWarning();
+  const snapshot = JSON.stringify(warning);
+
+  const whole = IU.getFilteredWarningLocationLabel(warning, { localities: [] });
+  ok("cr_keeps_global", whole === "Praha a dalších 191 oblastí", whole);
+
+  const hk = IU.getFilteredWarningLocationLabel(warning, {
+    localities: [{ name: "Hradec Králové", level: "mesto" }],
+    homeObec: "Hradec Králové",
+  });
+  ok("city_starts_hk", hk.startsWith("Hradec Králové"), hk);
+  ok("city_not_praha_first", !hk.startsWith("Praha"), hk);
+  ok("city_keeps_global_remainder", /a dalších 191 oblastí/.test(hk), hk);
+
+  const stc = IU.getFilteredWarningLocationLabel(warning, {
+    localities: [{ name: "Středočeský kraj", level: "kraj" }],
+    homeKraj: "Středočeský kraj",
+  });
+  ok("kraj_not_global_191", !/191/.test(stc), stc);
+  const stcExtra = (stc.match(/(\d+)/) || [])[1];
+  ok("kraj_extra_in_kraj", Number(stcExtra) === 4 || Number(stcExtra) === 5, stc);
+  // Benešov, Beroun, Kladno, Vlašim, Votice = 5 → extra 4
+  ok("kraj_primary_in_stc", /Benešov|Beroun|Kladno|Vlašim|Votice/.test(stc), stc);
+  ok("kraj_no_zero", !/dalších 0/.test(stc) && !/další 0/.test(stc), stc);
+
+  const okres = IU.getFilteredWarningLocationLabel(warning, {
+    localities: [{ name: "Benešov", level: "okres" }],
+    homeOkres: "Benešov",
+  });
+  ok("okres_starts_benesov", okres.startsWith("Benešov"), okres);
+  ok("okres_extra_2", /další 2 oblasti/.test(okres), okres);
+
+  const praha = IU.getFilteredWarningLocationLabel(warning, {
+    localities: [{ name: "Praha", level: "mesto" }],
+  });
+  ok("praha_first", praha.startsWith("Praha"), praha);
+
+  const brno = IU.getFilteredWarningLocationLabel(warning, {
+    localities: [{ name: "Brno", level: "mesto" }],
+  });
+  ok("brno_first", brno.startsWith("Brno"), brno);
+  ok("brno_not_praha", !brno.startsWith("Praha"), brno);
+
+  const rum = IU.getFilteredWarningLocationLabel(warning, {
+    localities: [{ name: "Rumburk", level: "mesto" }],
+  });
+  ok("rumburk_first", rum.startsWith("Rumburk"), rum);
+
+  const outside = IU.getFilteredWarningLocationLabel(warning, {
+    localities: [{ name: "Cheb", level: "mesto" }],
+  });
+  ok("outside_empty", outside === "", outside);
+
+  const single = {
+    id: "one",
+    title: "Sucho — Kladno",
+    region: { summary: "Kladno", name: "Kladno" },
+    capV2: {
+      geo: {
+        links: [{ orpName: "Kladno", okresName: "Kladno", krajName: "Středočeský kraj" }],
+      },
+    },
+  };
+  const one = IU.getFilteredWarningLocationLabel(single, {
+    localities: [{ name: "Středočeský kraj", level: "kraj" }],
+  });
+  ok("single_no_extra", one === "Kladno", one);
+
+  const multi = IU.getFilteredWarningLocationLabel(warning, {
+    localities: [
+      { name: "Hradec Králové", level: "mesto" },
+      { name: "Brno", level: "mesto" },
+      { name: "Rumburk", level: "mesto" },
+    ],
+  });
+  ok("multi_starts_hk", multi.startsWith("Hradec Králové"), multi);
+  ok("multi_intersection_extra", /další 2 oblasti|dalších 2 oblastí/.test(multi), multi);
+
+  ok("no_mutate", JSON.stringify(warning) === snapshot, "mutated");
+
+  const filtered = IU.filterEvents(
+    [warning],
+    { localities: [{ name: "Cheb", level: "mesto" }], localityQuery: "" },
+    { skipMemo: true }
+  );
+  ok("filter_hides_outside", filtered.length === 0, String(filtered.length));
+
+  const kept = IU.filterEvents(
+    [warning],
+    { localities: [{ name: "Hradec Králové", level: "mesto" }] },
+    { skipMemo: true }
+  );
+  ok("filter_keeps_hk", kept.length === 1, String(kept.length));
+  ok("filter_url_intact", kept[0] && kept[0].url === "https://vystrahy-cr.chmi.cz/", kept[0] && kept[0].url);
+
+  const base = IU.eventTitleBaseWithoutLocality(warning);
+  ok("title_base_event", base === "Vysoké teploty", base);
+}
+
+function main() {
+  staticGate();
+  const IU = loadIU();
+  ok("iu_loaded", !!(IU && typeof IU.getFilteredWarningLocationLabel === "function"), "load");
+  if (IU && typeof IU.getFilteredWarningLocationLabel === "function") unitGate(IU);
+
+  if (fails.length) {
+    console.error("[iu-chmi-cap-filtered-location-label-guard] FAIL");
+    for (const f of fails) console.error(" - " + f);
+    process.exit(1);
+  }
+  console.log("[iu-chmi-cap-filtered-location-label-guard] OK");
+}
+
+main();

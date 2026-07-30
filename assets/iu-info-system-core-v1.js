@@ -754,6 +754,217 @@ function localitySuggest(query, localities) {
   return out;
 }
 
+/** Diacritic-insensitive compare for locality names. */
+function foldLocName(s) {
+  return String(s || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function locNamesEqual(a, b) {
+  const aa = foldLocName(a);
+  const bb = foldLocName(b);
+  if (!aa || !bb) return false;
+  return aa === bb || aa.includes(bb) || bb.includes(aa);
+}
+
+function uniqStableNames(list) {
+  const out = [];
+  const seen = new Set();
+  for (const raw of list || []) {
+    const name = String(raw || "").trim();
+    if (!name) continue;
+    const key = foldLocName(name);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(name);
+  }
+  return out;
+}
+
+/**
+ * Parse active locality filter from prefs (cities / okres / kraj).
+ * Does not mutate prefs.
+ */
+function parseActiveLocationFilter(filter) {
+  const f = filter || {};
+  const cities = [];
+  const okresy = [];
+  const kraje = [];
+  for (const loc of f.localities || []) {
+    if (!loc) continue;
+    if (typeof loc === "string") {
+      cities.push(loc);
+      continue;
+    }
+    const name = String(loc.name || "").trim();
+    if (!name) continue;
+    const level = String(loc.level || "").toLowerCase();
+    if (level === "kraj") kraje.push(name);
+    else if (level === "okres") okresy.push(name);
+    else cities.push(name);
+  }
+  if (f.homeObec) cities.push(String(f.homeObec));
+  if (f.homeOkres) okresy.push(String(f.homeOkres));
+  if (f.homeKraj) kraje.push(String(f.homeKraj));
+  const query = String(f.localityQuery || "").trim();
+  return {
+    cities: uniqStableNames(cities),
+    okresy: uniqStableNames(okresy),
+    kraje: uniqStableNames(kraje),
+    query,
+  };
+}
+
+function isWholeCrLocationFilter(active) {
+  return !active.cities.length && !active.okresy.length && !active.kraje.length && !active.query;
+}
+
+function warningGeoLinks(ev) {
+  const links = ev && ev.capV2 && ev.capV2.geo && Array.isArray(ev.capV2.geo.links) ? ev.capV2.geo.links : [];
+  return links.filter(Boolean);
+}
+
+function sortLinksByOrpName(links) {
+  return (links || []).slice().sort((a, b) =>
+    String((a && a.orpName) || "").localeCompare(String((b && b.orpName) || ""), "cs", { sensitivity: "base" })
+  );
+}
+
+function linkMatchesNeedle(link, needle) {
+  if (!link || !needle) return false;
+  return (
+    locNamesEqual(link.orpName, needle) ||
+    locNamesEqual(link.okresName, needle) ||
+    locNamesEqual(link.krajName, needle)
+  );
+}
+
+function intersectWarningLinks(links, active) {
+  if (isWholeCrLocationFilter(active)) return links.slice();
+  return links.filter((link) => {
+    if (active.cities.some((c) => locNamesEqual(link.orpName, c) || locNamesEqual(link.okresName, c))) return true;
+    if (active.okresy.some((o) => locNamesEqual(link.okresName, o) || locNamesEqual(link.orpName, o))) return true;
+    if (active.kraje.some((k) => locNamesEqual(link.krajName, k))) return true;
+    if (active.query && linkMatchesNeedle(link, active.query)) return true;
+    return false;
+  });
+}
+
+/** Czech inflection for “N dalších oblastí”. */
+function formatExtraAreasPhrase(extra) {
+  const n = Number(extra) || 0;
+  if (n <= 0) return "";
+  if (n === 1) return "a 1 další oblast";
+  if (n >= 2 && n <= 4) return "a další " + n + " oblasti";
+  return "a dalších " + n + " oblastí";
+}
+
+function formatLocationLabel(primary, extra, style) {
+  const name = String(primary || "").trim();
+  if (!name) return "";
+  const n = Number(extra) || 0;
+  if (n <= 0) return name;
+  if (style === "legacyMulti") return name + " a dalších " + n + " oblastí";
+  return name + " " + formatExtraAreasPhrase(n);
+}
+
+function pickPrimaryLocalityName(links, active) {
+  const sorted = sortLinksByOrpName(links);
+  if (!sorted.length) return "";
+
+  for (const city of active.cities || []) {
+    const hit = sorted.find((l) => locNamesEqual(l.orpName, city));
+    if (hit) return String(city);
+  }
+  for (const okres of active.okresy || []) {
+    const center = sorted.find((l) => locNamesEqual(l.okresName, okres) && locNamesEqual(l.orpName, okres));
+    if (center) return String(center.orpName || okres);
+    const any = sorted.find((l) => locNamesEqual(l.okresName, okres));
+    if (any) return String(any.orpName || okres);
+  }
+  for (const kraj of active.kraje || []) {
+    const inKraj = sorted.filter((l) => locNamesEqual(l.krajName, kraj));
+    if (inKraj.length) return String(inKraj[0].orpName || kraj);
+  }
+  if (active.query) {
+    const qHit = sorted.find((l) => linkMatchesNeedle(l, active.query));
+    if (qHit) {
+      if (locNamesEqual(qHit.orpName, active.query)) return String(qHit.orpName);
+      return String(qHit.orpName || active.query);
+    }
+  }
+  return String(sorted[0].orpName || "");
+}
+
+/**
+ * Display-only geographic label for a CAP warning card, derived from warning + active filter.
+ * Never mutates the warning object. Empty string ⇒ no locality text (caller may hide meta pill).
+ *
+ * @param {object} warning feed event
+ * @param {object} activeLocationFilter prefs / draft filter
+ * @returns {string}
+ */
+function getFilteredWarningLocationLabel(warning, activeLocationFilter) {
+  const region = warning && warning.region ? warning.region : null;
+  const globalSummary =
+    region && (region.summary || region.name) ? String(region.summary || region.name).trim() : "";
+  const active = parseActiveLocationFilter(activeLocationFilter);
+
+  if (isWholeCrLocationFilter(active)) return globalSummary;
+
+  const links = warningGeoLinks(warning);
+  if (!links.length) {
+    // Non-CAP or incomplete geo: keep legacy summary (filter already gates visibility).
+    return globalSummary;
+  }
+
+  const onlySingleCity =
+    active.cities.length === 1 && !active.okresy.length && !active.kraje.length && !active.query;
+  const onlyCities =
+    active.cities.length > 0 && !active.okresy.length && !active.kraje.length && !active.query;
+
+  if (onlySingleCity) {
+    const city = active.cities[0];
+    const hit = links.some((l) => locNamesEqual(l.orpName, city));
+    if (!hit) return "";
+    // Approved: city-first, remaining count may still reflect the whole warning.
+    return formatLocationLabel(city, links.length - 1, "legacyMulti");
+  }
+
+  const scoped = intersectWarningLinks(links, active);
+  if (!scoped.length) return "";
+
+  const primary = pickPrimaryLocalityName(scoped, active);
+  if (!primary) return "";
+  return formatLocationLabel(primary, scoped.length - 1, onlyCities ? "legacyMulti" : "czech");
+}
+
+/**
+ * Event title without baked-in global locality summary (display helper).
+ * Does not mutate the event.
+ */
+function eventTitleBaseWithoutLocality(ev) {
+  let raw = String((ev && ev.title) || "").trim();
+  if (!raw) return "Bez názvu";
+  raw = raw
+    .replace(/^\s*V[ýy]straha\s+ČHM[ÚU]\s*[:\-–—]\s*/i, "")
+    .replace(/^\s*V[ýy]straha\s+CHMU\s*[:\-–—]\s*/i, "")
+    .trim();
+  const region = ev && ev.region ? ev.region : null;
+  const summary = region && region.summary ? String(region.summary).trim() : "";
+  const name = region && region.name ? String(region.name).trim() : "";
+  if (summary) {
+    const needle = " — " + summary;
+    if (raw.endsWith(needle)) raw = raw.slice(0, -needle.length).trim();
+    else if (raw.includes(needle)) raw = raw.split(needle).join("").replace(/\s{2,}/g, " ").trim();
+  }
+  if (name && raw.endsWith(" — " + name)) raw = raw.slice(0, -(" — " + name).length).trim();
+  return raw || "Bez názvu";
+}
+
 function institutionOf(ev) {
   return String((ev && (ev.sourceName || ev.sourceLabel || ev.institution || "")) || "");
 }
@@ -1159,6 +1370,9 @@ const IUInfoSystem = {
   buildFeedIndex,
   dedupeCluster,
   localitySuggest,
+  getFilteredWarningLocationLabel,
+  eventTitleBaseWithoutLocality,
+  parseActiveLocationFilter,
   getPrefs,
   setPrefs,
   markRead,
@@ -1212,6 +1426,9 @@ export {
   buildFeedIndex,
   dedupeCluster,
   localitySuggest,
+  getFilteredWarningLocationLabel,
+  eventTitleBaseWithoutLocality,
+  parseActiveLocationFilter,
   getPrefs,
   setPrefs,
   markRead,

@@ -18,16 +18,18 @@ import {
   isRead,
   isSaved,
   localitySuggest,
+  getFilteredWarningLocationLabel,
+  eventTitleBaseWithoutLocality,
   getScrollState,
   setScrollState,
   migrateLocalStateOnce,
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-complete-20260729";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-loc-label-20260730";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-chmi-complete-20260729";
+const CACHE_BUST = "info-system-v6-chmi-loc-label-20260730";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -339,24 +341,32 @@ function chmiPublicDetailUrl(ev) {
   return "";
 }
 
-/** Presentational title — drop redundant "Výstraha ČHMÚ:" when badge already shows source. */
-function displayEventTitle(ev) {
-  const raw = String((ev && ev.title) || "").trim();
-  if (!raw) return "Bez názvu";
-  const stripped = raw
-    .replace(/^\s*V[ýy]straha\s+ČHM[ÚU]\s*[:\-–—]\s*/i, "")
-    .replace(/^\s*V[ýy]straha\s+CHMU\s*[:\-–—]\s*/i, "")
-    .trim();
-  return stripped || raw;
+/**
+ * Presentational title — drop redundant "Výstraha ČHMÚ:" when badge already shows source.
+ * For CAP v2, locality suffix follows the active location filter (display-only).
+ */
+function displayEventTitle(ev, locationFilter) {
+  const base = eventTitleBaseWithoutLocality(ev);
+  if (!(ev && ev.capV2)) return base;
+  const loc = getFilteredWarningLocationLabel(ev, locationFilter || state.prefs || getPrefs());
+  if (!loc) return base;
+  if (base.includes(loc)) return base;
+  return base + " — " + loc;
 }
 
 function renderItem(ev) {
   const id = String(ev.id || "");
   const forced = chmiPublicDetailUrl(ev);
   const url = safeHttpUrl(forced || ev.url || ev.originalUrl);
-  const title = displayEventTitle(ev);
+  const locationFilter = state.prefs || getPrefs();
+  const title = displayEventTitle(ev, locationFilter);
   const src = String(ev.sourceLabel || ev.sourceId || "");
-  const region = ev.region && (ev.region.summary || ev.region.name) ? String(ev.region.summary || ev.region.name) : "";
+  const regionFiltered = getFilteredWarningLocationLabel(ev, locationFilter);
+  const region = ev.capV2
+    ? String(regionFiltered || "")
+    : ev.region && (ev.region.summary || ev.region.name)
+      ? String(ev.region.summary || ev.region.name)
+      : "";
   const imp = importanceLabel(ev);
   const saved = isSaved(id);
   const hiddenMode = state.viewMode === "hidden";
