@@ -1353,7 +1353,12 @@ function dedupeCluster(events) {
   const map = new Map();
   for (const ev of events || []) {
     if (!ev) continue;
-    const key = String(ev.groupKey || ev.id || "");
+    // CHMI CAP v2: each territorial/time segment is a distinct public card.
+    // Never collapse by shared event-day groupKey (that key is for multi-source news only).
+    const key =
+      ev.capV2 || String(ev.sourceId || "") === "chmi"
+        ? String(ev.id || ev.canonicalUrl || "")
+        : String(ev.groupKey || ev.id || "");
     if (!key) continue;
     const prev = map.get(key);
     if (!prev) {

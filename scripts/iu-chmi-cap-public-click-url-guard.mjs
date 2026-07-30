@@ -164,6 +164,24 @@ const snapFeed = revisionsToFeed(
 ok("snap_all_portal", snapFeed.every((i) => i.publicUrl === PORTAL), String(snapFeed.length));
 ok("snap_no_xml_click", snapFeed.every((i) => !/\.xml/i.test(i.url)), "xml");
 
+// Regression: shared groupKey must not collapse distinct CHMI CAP segments in the UI filter.
+{
+  const corePath = path.join(REPO, "assets/iu-info-system-core-v1.js");
+  const coreSrc = fs.readFileSync(corePath, "utf8");
+  ok(
+    "core_no_chmi_segment_cluster",
+    /Never collapse by shared event-day groupKey/.test(coreSrc) &&
+      /ev\.capV2 \|\| String\(ev\.sourceId \|\| ""\) === "chmi"/.test(coreSrc),
+    "dedupeCluster"
+  );
+  ok(
+    "feed_unique_ids_gt_groupkeys",
+    new Set(chmi.map((i) => i.id)).size === chmi.length &&
+      new Set(chmi.map((i) => i.groupKey)).size < chmi.length,
+    "segments_share_groupKey_but_keep_unique_ids"
+  );
+}
+
 if (fails.length) {
   console.error("IU_CHMI_CAP_PUBLIC_CLICK_URL_GUARD=FAIL");
   for (const f of fails) console.error("FAIL " + f);
