@@ -299,28 +299,37 @@ export async function runChmiCapV2Sync(opts = {}) {
       }
       union.push(...cached.items);
     }
-    feedItems = mergeFeedItemsById(union)
-      .map((i) => {
-        // Re-apply chrono so firstSeen survives 304 cache hits across runs.
-        if (!i) return i;
-        const prev = firstSeenById.get(String(i.id));
-        let next = i;
-        if (prev && !i.firstSeenByInfoUzel) {
-          next = { ...i, firstSeenByInfoUzel: prev, sortAt: i.sortAt || i.publishedAtSource || prev, lastProcessedAt: i.lastProcessedAt || started };
-        } else if (!i.sortAt || !i.firstSeenByInfoUzel || !i.lastProcessedAt) {
-          next = {
-            ...i,
-            firstSeenByInfoUzel: i.firstSeenByInfoUzel || prev || started,
-            lastProcessedAt: i.lastProcessedAt || started,
-            sortAt: i.sortAt || i.publishedAtSource || i.firstSeenByInfoUzel || prev || started,
-            timeSource: i.timeSource || (i.publishedAtSource ? "cap_sent" : "first_seen_fallback"),
-            timeConfidence: i.timeConfidence || (i.publishedAtSource ? "high" : "fallback"),
-          };
-        }
-        // Recompute temporal status from validFrom/validTo on every sync (304-safe).
-        return refreshItemTemporalFields(next, Date.parse(started) || Date.now());
-      })
-      .filter((i) => isPublishableChmiItem(i));
+    const classifiedAll = mergeFeedItemsById(union).map((i) => {
+      // Re-apply chrono so firstSeen survives 304 cache hits across runs.
+      if (!i) return i;
+      const prev = firstSeenById.get(String(i.id));
+      let next = i;
+      if (prev && !i.firstSeenByInfoUzel) {
+        next = { ...i, firstSeenByInfoUzel: prev, sortAt: i.sortAt || i.publishedAtSource || prev, lastProcessedAt: i.lastProcessedAt || started };
+      } else if (!i.sortAt || !i.firstSeenByInfoUzel || !i.lastProcessedAt) {
+        next = {
+          ...i,
+          firstSeenByInfoUzel: i.firstSeenByInfoUzel || prev || started,
+          lastProcessedAt: i.lastProcessedAt || started,
+          sortAt: i.sortAt || i.publishedAtSource || i.firstSeenByInfoUzel || prev || started,
+          timeSource: i.timeSource || (i.publishedAtSource ? "cap_sent" : "first_seen_fallback"),
+          timeConfidence: i.timeConfidence || (i.publishedAtSource ? "high" : "fallback"),
+        };
+      }
+      // Recompute temporal status from validFrom/validTo on every sync (304-safe).
+      return refreshItemTemporalFields(next, Date.parse(started) || Date.now());
+    });
+    feedItems = classifiedAll.filter((i) => isPublishableChmiItem(i));
+    diagnostics.temporalCounts = {
+      totalItems: classifiedAll.length,
+      activeCount: countByStatus(classifiedAll, "aktivni"),
+      scheduledCount: countByStatus(classifiedAll, "naplanovano"),
+      expiredCount: countByStatus(classifiedAll, "ukonceno"),
+      cancelledCount: countByStatus(classifiedAll, "zruseno"),
+      invalidCount: countByStatus(classifiedAll, "nezaraditelne"),
+      publishableCount: feedItems.length,
+      visibleCount: feedItems.length,
+    };
 
     const prevFeed = prevFeedEarly;
     const prevChmi = (prevFeed.items || []).filter((i) => String(i.sourceId) === "chmi");
@@ -328,6 +337,9 @@ export async function runChmiCapV2Sync(opts = {}) {
     completeness.productStreams = diagnostics.discovery.productStreams || [];
     completeness.streamCount = diagnostics.discovery.streamCount || 0;
     completeness.missingStreamCache = missingCache.length;
+    completeness.invalidCount = diagnostics.temporalCounts.invalidCount;
+    completeness.expiredCount = diagnostics.temporalCounts.expiredCount;
+    completeness.cancelledCount = diagnostics.temporalCounts.cancelledCount;
     diagnostics.completeness = completeness;
 
     const alarms = [];
@@ -454,15 +466,23 @@ export async function runChmiCapV2Sync(opts = {}) {
     const monitoring = readJson(path.join(DIR, "monitoring.json"), {});
     const prevDiag = monitoring.chmiCapV2 || {};
     const history = Array.isArray(prevDiag.runHistory) ? prevDiag.runHistory.slice() : [];
-    const expiredCount = countByStatus(feedItems, "ukonceno");
+    const expiredCount = (diagnostics.temporalCounts && diagnostics.temporalCounts.expiredCount) || countByStatus(feedItems, "ukonceno");
     const cancelledCount =
-      countByStatus(feedItems, "zruseno") || diagnostics.parser?.cancel || 0;
-    const scheduledCount = countByStatus(feedItems, "naplanovano");
-    const activeCount = countByStatus(feedItems, "aktivni");
-    const invalidCount = countByStatus(feedItems, "nezaraditelne");
-    const publishableCount = feedItems.filter((i) => isPublishableChmiItem(i)).length;
+      (diagnostics.temporalCounts && diagnostics.temporalCounts.cancelledCount) ||
+      countByStatus(feedItems, "zruseno") ||
+      diagnostics.parser?.cancel ||
+      0;
+    const scheduledCount =
+      (diagnostics.temporalCounts && diagnostics.temporalCounts.scheduledCount) || countByStatus(feedItems, "naplanovano");
+    const activeCount =
+      (diagnostics.temporalCounts && diagnostics.temporalCounts.activeCount) || countByStatus(feedItems, "aktivni");
+    const invalidCount = (diagnostics.temporalCounts && diagnostics.temporalCounts.invalidCount) || countByStatus(feedItems, "nezaraditelne");
+    const publishableCount =
+      (diagnostics.temporalCounts && diagnostics.temporalCounts.publishableCount) ||
+      feedItems.filter((i) => isPublishableChmiItem(i)).length;
     const visibleCount = publishableCount;
-    const totalItems = feedItems.length;
+    const totalItems =
+      (diagnostics.temporalCounts && diagnostics.temporalCounts.totalItems) || feedItems.length;
     const snapshot = {
       mode: config.mode,
       lastRunAt: started,
@@ -478,11 +498,8 @@ export async function runChmiCapV2Sync(opts = {}) {
       consecutiveErrors: state.sync.consecutive_errors || 0,
       backoffUntil: state.sync.backoff_until || null,
       /** Temporally in-force warnings only (validFrom <= now < validTo). Not the publish set. */
-      activeCount:
-        activeCount ||
-        countByStatus(prevChmi, "aktivni"),
-      scheduledCount:
-        scheduledCount || countByStatus(prevChmi, "naplanovano"),
+      activeCount: activeCount || countByStatus(prevChmi, "aktivni"),
+      scheduledCount: scheduledCount || countByStatus(prevChmi, "naplanovano"),
       expiredCount,
       cancelledCount,
       invalidCount,
