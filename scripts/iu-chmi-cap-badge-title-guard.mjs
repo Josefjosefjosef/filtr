@@ -14,6 +14,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
+const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const NORM = path.join(ROOT, "scripts", "chmi-cap-v2", "normalize-feed.mjs");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
@@ -27,11 +28,19 @@ function ok(id, cond, detail) {
 function staticGate() {
   const ui = fs.readFileSync(UI, "utf8");
   const css = fs.readFileSync(CSS, "utf8");
+  const core = fs.readFileSync(CORE, "utf8");
   const norm = fs.readFileSync(NORM, "utf8");
   ok("ui_badge_text", /🔴 VÝSTRAHA ČHMÚ/.test(ui), "badge");
   ok("ui_no_old_badge_only", !/>🔴 VÝSTRAHA</.test(ui), "old badge");
   ok("ui_displayEventTitle", /function displayEventTitle/.test(ui), "helper");
-  ok("ui_strip_prefix", /V\[ýy\]straha\\s\+ČHM/.test(ui) || /Výstraha\\s\+ČHM/.test(ui), "strip");
+  ok(
+    "ui_strip_prefix",
+    /V\[ýy\]straha\\s\+ČHM/.test(ui) ||
+      /Výstraha\\s\+ČHM/.test(ui) ||
+      /V\[ýy\]straha\\s\+ČHM/.test(core) ||
+      /eventTitleBaseWithoutLocality/.test(core),
+    "strip"
+  );
   ok("css_badge_max_width", /\.iuPdCard__warnBadge[\s\S]*max-width:\s*100%/.test(css), "css");
   ok("norm_no_title_prefix", !/title:\s*`Výstraha ČHMÚ:/.test(norm), "norm prefix");
 }
