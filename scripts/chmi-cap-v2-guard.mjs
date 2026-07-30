@@ -111,13 +111,38 @@ function read(name) {
   const feed = revisionsToFeed(result.report.revisions);
   ok(
     "feed_concrete_cap_url",
-    feed.every((i) => /opendata\.chmi\.cz\/.+\.xml/i.test(String(i.url || "")) && /[?&]hid=/i.test(String(i.url || ""))),
-    feed[0] && feed[0].url
+    feed.every(
+      (i) =>
+        /opendata\.chmi\.cz\/.+\.xml/i.test(String((i.capV2 && i.capV2.sourceDocumentUrl) || "")) &&
+        /[?&]hid=/i.test(String((i.capV2 && i.capV2.sourceDocumentUrl) || ""))
+    ),
+    feed[0] && feed[0].capV2 && feed[0].capV2.sourceDocumentUrl
   );
   ok(
-    "feed_no_homepage_url",
-    feed.every((i) => !/vystrahy-cr\.chmi\.cz\/?$/i.test(String(i.url || "")) && String(i.urlKind) === "cap_document"),
-    feed[0] && feed[0].url
+    "feed_public_web_url",
+    feed.every((i) => {
+      const src = String((i.capV2 && i.capV2.sourceDocumentUrl) || "");
+      const pub = String(i.publicUrl || "");
+      if (pub) {
+        return (
+          /vystrahy-cr\.chmi\.cz\/?$/i.test(pub) &&
+          String(i.url) === pub &&
+          String(i.urlKind) === "cap_public_web" &&
+          /\.xml/i.test(src)
+        );
+      }
+      // CAP without <web>: click falls back to source document; still not a invented host.
+      return String(i.url) === src && String(i.urlKind) === "cap_document";
+    }),
+    feed.map((i) => `${i.urlKind}:${i.publicUrl || i.url}`).slice(0, 3).join(" | ")
+  );
+  ok(
+    "feed_no_xml_as_canonical",
+    feed.every((i) => {
+      const can = String(i.canonicalUrl || "");
+      return /opendata\.chmi\.cz\/.+\.xml/i.test(can) && !/vystrahy-cr\.chmi\.cz\/?$/i.test(can);
+    }),
+    feed[0] && feed[0].canonicalUrl
   );
   ok(
     "feed_unique_canonical",
@@ -475,6 +500,7 @@ function read(name) {
         valid_from: "2026-07-31T00:00:00+02:00",
         valid_to: "2026-07-31T12:00:00+02:00",
         headline: "Bouřky",
+        web: "https://vystrahy-cr.chmi.cz/",
         geo: { links: [{ orpName: "Praha", orpId: "orp:1000", orpCode: "1000", precise: true, krajName: "Hlavní město Praha" }], displayNames: ["Praha"] },
       },
     ],
@@ -515,7 +541,7 @@ function read(name) {
   ok("ended_badge_off", endedItems[0] && endedItems[0].capV2.badgeActive === false, "badge");
   ok("ended_not_publishable", endedItems[0] && endedItems[0].publishable === false, "publishable");
 
-  // Missing validTo → invalid / not publishable (never invent expires)
+  // Missing validTo without untilRevoked → invalid / not publishable
   const missingToRev = {
     ...futureRev,
     cap_message_id: "capmsg:test|missingto|2026-07-30T10:00:00+02:00",
@@ -525,6 +551,9 @@ function read(name) {
         hazard_instance_id: "haz:missingto0000001",
         valid_from: "2026-07-30T08:00:00+02:00",
         valid_to: "",
+        untilRevoked: false,
+        openEnded: false,
+        web: "https://vystrahy-cr.chmi.cz/",
       },
     ],
   };
@@ -533,6 +562,79 @@ function read(name) {
   ok("missing_validTo_not_publishable", missingToItems[0] && missingToItems[0].publishable === false, "publishable");
   ok("missing_validTo_badge_off", missingToItems[0] && missingToItems[0].capV2.badgeActive === false, "badge");
   ok("missing_validTo_reason", missingToItems[0] && missingToItems[0].capV2.temporalReason === "missing_validTo", missingToItems[0] && missingToItems[0].capV2.temporalReason);
+
+  // Open-ended ("do odvolání") active
+  const openActiveRev = {
+    ...futureRev,
+    cap_message_id: "capmsg:test|openactive|2026-07-30T10:00:00+02:00",
+    hazards: [
+      {
+        ...futureRev.hazards[0],
+        hazard_instance_id: "haz:openactive0000001",
+        event: "Smogová situace – troposférický ozón O₃",
+        valid_from: "2026-07-30T13:12:00+02:00",
+        valid_to: "",
+        untilRevoked: true,
+        web: "https://vystrahy-cr.chmi.cz/",
+      },
+    ],
+  };
+  const openActiveItems = revisionsToFeed([openActiveRev], { nowIso: "2026-07-30T15:00:00+02:00" });
+  ok("until_revoked_active", openActiveItems[0] && openActiveItems[0].status === "aktivni", openActiveItems[0] && openActiveItems[0].status);
+  ok("until_revoked_publishable", openActiveItems[0] && openActiveItems[0].publishable === true, "publishable");
+  ok("until_revoked_no_fake_validTo", openActiveItems[0] && (openActiveItems[0].validTo == null || openActiveItems[0].validTo === ""), String(openActiveItems[0] && openActiveItems[0].validTo));
+  ok("until_revoked_public_url", openActiveItems[0] && /vystrahy-cr\.chmi\.cz\/?$/i.test(String(openActiveItems[0].publicUrl || openActiveItems[0].url || "")), openActiveItems[0] && openActiveItems[0].url);
+  ok(
+    "until_revoked_source_xml",
+    openActiveItems[0] && /\.xml/i.test(String(openActiveItems[0].capV2.sourceDocumentUrl || "")),
+    openActiveItems[0] && openActiveItems[0].capV2.sourceDocumentUrl
+  );
+
+  // Open-ended scheduled
+  const openFutureRev = {
+    ...futureRev,
+    cap_message_id: "capmsg:test|openfuture|2026-07-30T10:00:00+02:00",
+    hazards: [
+      {
+        ...futureRev.hazards[0],
+        hazard_instance_id: "haz:openfuture0000001",
+        event: "Vysoké riziko požárů",
+        valid_from: "2026-07-31T00:00:00+02:00",
+        valid_to: "",
+        untilRevoked: true,
+        web: "https://vystrahy-cr.chmi.cz/",
+      },
+    ],
+  };
+  const openFutureItems = revisionsToFeed([openFutureRev], { nowIso: "2026-07-30T15:00:00+02:00" });
+  ok("until_revoked_scheduled", openFutureItems[0] && openFutureItems[0].status === "naplanovano", openFutureItems[0] && openFutureItems[0].status);
+  ok("until_revoked_scheduled_badge_off", openFutureItems[0] && openFutureItems[0].capV2.badgeActive === false, "badge");
+
+  // Outlook product excluded by type (not by missing expires)
+  const outlookRev = {
+    ...futureRev,
+    cap_message_id: "capmsg:test|outlook|2026-07-30T10:00:00+02:00",
+    hazards: [
+      {
+        ...futureRev.hazards[0],
+        hazard_instance_id: "haz:outlook0000000001",
+        event: "Výhled nebezpečných jevů",
+        valid_from: "2026-08-02T00:00:00+02:00",
+        valid_to: "",
+        untilRevoked: true,
+        productExcluded: true,
+        web: "https://vystrahy-cr.chmi.cz/",
+      },
+    ],
+  };
+  const outlookItems = revisionsToFeed([outlookRev], { nowIso: "2026-07-30T15:00:00+02:00" });
+  ok(
+    "outlook_excluded_product_type",
+    outlookItems[0] &&
+      outlookItems[0].publishable === false &&
+      outlookItems[0].capV2.temporalReason === "excluded_product_type",
+    outlookItems[0] && outlookItems[0].capV2 && outlookItems[0].capV2.temporalReason
+  );
 
   // Missing validFrom → invalid
   const missingFromRev = {
@@ -622,23 +724,19 @@ function read(name) {
   ok("midnight_sortAt_is_sent", midItems[0] && midItems[0].sortAt === "2026-07-30T23:50:00+02:00", midItems[0] && midItems[0].sortAt);
 }
 
-// --- Sibling expires fill (same event+onset+severity) ---
+// --- Sibling expires fill (same segment identity only; not across areas) ---
 {
   const sibXml = read("alert-sibling-expires.xml");
   const sibAlert = parseCapAlertXml(sibXml);
   const { infos, filled } = resolveExpiresFromSiblingInfos(sibAlert.infos || []);
   const fire = infos.filter((i) => /Riziko požárů/i.test(i.event || ""));
   const outlook = infos.filter((i) => /Výhled jevů/i.test(i.event || ""));
-  ok("sibling_expires_filled_count", filled === 1, String(filled));
+  // Different ORP areas → must NOT copy expires (would invent end for open-ended territory).
+  ok("sibling_expires_no_cross_area_fill", filled === 0, String(filled));
   ok(
-    "sibling_expires_fire_all_have_expires",
-    fire.length === 2 && fire.every((i) => i.expires === "2026-07-31T00:00:00+02:00"),
-    fire.map((i) => i.expires).join("|")
-  );
-  ok(
-    "sibling_expires_source_marked",
-    fire.some((i) => i.expiresSource === "sibling_info_same_event_onset_severity"),
-    fire.map((i) => i.expiresSource || "cap").join("|")
+    "sibling_expires_fire_keeps_distinct",
+    fire.length === 2 && fire.filter((i) => String(i.expires || "").trim()).length === 1,
+    fire.map((i) => i.expires || "OPEN").join("|")
   );
   ok(
     "sibling_expires_outlook_stays_empty",
@@ -650,11 +748,11 @@ function read(name) {
   const fireHaz = id.hazards.filter((h) => /Riziko požárů/i.test(h.event || ""));
   const outlookHaz = id.hazards.filter((h) => /Výhled jevů/i.test(h.event || ""));
   ok(
-    "sibling_expires_hazard_valid_to",
-    fireHaz.length === 2 && fireHaz.every((h) => h.valid_to === "2026-07-31T00:00:00+02:00"),
-    fireHaz.map((h) => h.valid_to).join("|")
+    "sibling_open_ended_fire_until_revoked",
+    fireHaz.some((h) => h.untilRevoked === true && !String(h.valid_to || "").trim()),
+    fireHaz.map((h) => `${h.untilRevoked}:${h.valid_to || "OPEN"}`).join("|")
   );
-  ok("sibling_expires_outlook_hazard_empty", outlookHaz[0] && !String(outlookHaz[0].valid_to || "").trim(), outlookHaz[0] && outlookHaz[0].valid_to);
+  ok("sibling_outlook_product_excluded", outlookHaz[0] && outlookHaz[0].productExcluded === true, "product");
 
   const feed = revisionsToFeed(
     [
@@ -669,6 +767,7 @@ function read(name) {
         sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_sibling.xml",
         hazards: fireHaz.concat(outlookHaz).map((h) => ({
           ...h,
+          web: h.web || "https://vystrahy-cr.chmi.cz/",
           geo: {
             links: [{ orpName: "Praha", orpId: "orp:1000", orpCode: "1000", precise: true, krajName: "Hlavní město Praha" }],
             displayNames: ["Praha"],
@@ -680,11 +779,31 @@ function read(name) {
   );
   const fireFeed = feed.filter((i) => /Riziko požárů/i.test((i.capV2 && i.capV2.event) || i.title || ""));
   const outlookFeed = feed.filter((i) => /Výhled jevů/i.test((i.capV2 && i.capV2.event) || i.title || ""));
-  ok("sibling_expires_fire_publishable", fireFeed.length >= 1 && fireFeed.every((i) => i.publishable === true && i.status === "aktivni"), String(fireFeed.length));
   ok(
-    "sibling_expires_outlook_nezaraditelne",
-    outlookFeed.length === 1 && outlookFeed[0].status === "nezaraditelne" && outlookFeed[0].publishable === false,
-    outlookFeed[0] && outlookFeed[0].status
+    "sibling_fire_publishable_open_or_timed",
+    fireFeed.length >= 1 && fireFeed.every((i) => i.publishable === true),
+    String(fireFeed.length)
+  );
+  ok(
+    "sibling_outlook_excluded_not_missing_validTo",
+    outlookFeed.length === 1 &&
+      outlookFeed[0].publishable === false &&
+      outlookFeed[0].capV2.temporalReason === "excluded_product_type",
+    outlookFeed[0] && outlookFeed[0].capV2 && outlookFeed[0].capV2.temporalReason
+  );
+}
+
+// --- Sibling language-variant fill (same area+identity) ---
+{
+  const langXml = read("alert-sibling-language-expires.xml");
+  const langAlert = parseCapAlertXml(langXml);
+  const { filled } = resolveExpiresFromSiblingInfos(langAlert.infos || []);
+  ok("sibling_language_expires_filled", filled === 1, String(filled));
+  const id = buildCapIdentity(langAlert);
+  ok(
+    "sibling_language_both_have_valid_to",
+    id.hazards.length === 2 && id.hazards.every((h) => h.valid_to === "2026-07-31T00:00:00+02:00"),
+    id.hazards.map((h) => h.valid_to).join("|")
   );
 }
 

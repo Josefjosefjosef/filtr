@@ -415,22 +415,22 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-07-30T18:26:23.633Z",
-    "lastSuccessAt": "2026-07-30T18:26:27.804Z",
-    "lastChangedAt": "2026-07-30T18:26:27.804Z",
+    "lastRunAt": "2026-07-30T19:35:18.200Z",
+    "lastSuccessAt": "2026-07-30T19:35:18.740Z",
+    "lastChangedAt": "2026-07-30T19:35:18.740Z",
     "lastError": null,
     "status": "healthy",
     "etag": "\"6a688d7b-e76a\"",
     "lastModified": "Tue, 28 Jul 2026 11:07:39 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
-    "activeCount": 12,
-    "scheduledCount": 9,
+    "activeCount": 16,
+    "scheduledCount": 10,
     "expiredCount": 0,
     "cancelledCount": 0,
-    "invalidCount": 6,
-    "publishableCount": 21,
-    "visibleCount": 21,
+    "invalidCount": 1,
+    "publishableCount": 26,
+    "visibleCount": 26,
     "totalItems": 27,
     "sourceCount": 2,
     "activeSourceCount": 1,
@@ -453,7 +453,7 @@
     "completeness": {
       "capMessages": 2,
       "infoBlocks": 48,
-      "logicalAlerts": 21,
+      "logicalAlerts": 26,
       "uniqueEvents": [
         "Velmi vysoké teploty",
         "Vysoké teploty",
@@ -461,22 +461,25 @@
         "Silná zátěž teplem",
         "Extrémní zátěž teplem",
         "Riziko požárů",
-        "Vysoké riziko požárů"
+        "Vysoké riziko požárů",
+        "Smogová situace - troposférický ozón O3",
+        "Stav sucha",
+        "Hydrologické sucho"
       ],
-      "totalAreas": 94,
-      "mappedAreas": 732,
+      "totalAreas": 125,
+      "mappedAreas": 956,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 12,
-      "publishedScheduled": 9,
-      "publishableCount": 21,
+      "publishedActive": 16,
+      "publishedScheduled": 10,
+      "publishableCount": 26,
       "productStreams": [
         "50",
         "70"
       ],
       "streamCount": 2,
       "missingStreamCache": 0,
-      "invalidCount": 6,
+      "invalidCount": 1,
       "expiredCount": 0,
       "cancelledCount": 0
     },
@@ -486,9 +489,9 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 4540,
+    "runMs": 1029,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-07-30T18:26:23.633Z",
+    "lastSnapshotAt": "2026-07-30T19:35:18.200Z",
     "audit": {
       "http": [
         {
@@ -512,7 +515,7 @@
         "completeness": {
           "capMessages": 2,
           "infoBlocks": 48,
-          "logicalAlerts": 21,
+          "logicalAlerts": 26,
           "uniqueEvents": [
             "Velmi vysoké teploty",
             "Vysoké teploty",
@@ -520,22 +523,25 @@
             "Silná zátěž teplem",
             "Extrémní zátěž teplem",
             "Riziko požárů",
-            "Vysoké riziko požárů"
+            "Vysoké riziko požárů",
+            "Smogová situace - troposférický ozón O3",
+            "Stav sucha",
+            "Hydrologické sucho"
           ],
-          "totalAreas": 94,
-          "mappedAreas": 732,
+          "totalAreas": 125,
+          "mappedAreas": 956,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100,
-          "publishedActive": 12,
-          "publishedScheduled": 9,
-          "publishableCount": 21,
+          "publishedActive": 16,
+          "publishedScheduled": 10,
+          "publishableCount": 26,
           "productStreams": [
             "50",
             "70"
           ],
           "streamCount": 2,
           "missingStreamCache": 0,
-          "invalidCount": 6,
+          "invalidCount": 1,
           "expiredCount": 0,
           "cancelledCount": 0
         },
@@ -558,6 +564,17 @@
       }
     },
     "runHistory": [
+      {
+        "at": "2026-07-30T19:35:18.200Z",
+        "status": "healthy",
+        "mode": "active",
+        "publish": true,
+        "runMs": 1029,
+        "error": null,
+        "activeCount": 16,
+        "scheduledCount": 10,
+        "publishableCount": 26
+      },
       {
         "at": "2026-07-30T18:26:23.633Z",
         "status": "healthy",

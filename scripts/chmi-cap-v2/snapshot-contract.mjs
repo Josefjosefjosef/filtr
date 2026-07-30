@@ -41,17 +41,23 @@ export function realInfoBlocks(alert) {
 /**
  * Infos eligible for public publication as of `asOfMs`.
  * Matches normalize-feed classifyChmiTemporalState publishable set:
- *   requires onset + expires, expires > onset, expires > asOfMs
+ *   - concrete interval: onset + expires, expires > onset, expires > asOfMs
+ *   - open-ended ("do odvolání"): onset present, empty expires → until revoked
  *   (covers temporally active AND scheduled / future onset).
- * Missing expires is NOT treated as forever-active — those are nezaraditelne.
+ * Outlook product ("Výhled jevů") is excluded by product type, not by missing expires.
  */
 export function activeInfosAsOf(alert, asOfMs) {
   if (/^Cancel$/i.test(String(alert.msgType || ""))) return [];
   if (!/^Actual$/i.test(String(alert.status || "Actual"))) return [];
   return realInfoBlocks(alert).filter((i) => {
+    const ev = fold(i.event);
+    if (/^vyhled(\s+nebezpecnych)?\s+jevu/.test(ev)) return false;
     const onset = Date.parse(i.onset || i.effective || "") || 0;
-    const exp = Date.parse(i.expires || "") || 0;
-    if (!onset || !exp) return false;
+    if (!onset) return false;
+    const expRaw = String(i.expires || "").trim();
+    if (!expRaw) return true; // until revoked / open-ended
+    const exp = Date.parse(expRaw) || 0;
+    if (!exp) return false;
     if (exp <= onset) return false;
     if (exp <= asOfMs) return false;
     return true;

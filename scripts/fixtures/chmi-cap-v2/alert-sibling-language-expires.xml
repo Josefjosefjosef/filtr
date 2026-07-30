@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
-  <identifier>chmi.cz.50.sibling-expires-test</identifier>
+  <identifier>chmi.cz.50.sibling-language-expires-test</identifier>
   <sender>chmi@chmi.cz</sender>
   <sent>2026-07-30T13:12:59+02:00</sent>
   <status>Actual</status>
@@ -15,7 +15,7 @@
     <certainty>Likely</certainty>
     <onset>2026-07-30T13:12:59+02:00</onset>
     <headline>Riziko požárů</headline>
-    <description>Blok bez expires — sibling má expires.</description>
+    <description>Duplicitní info blok bez expires — stejná identita segmentu.</description>
     <web>https://vystrahy-cr.chmi.cz/</web>
     <area>
       <areaDesc>Praha</areaDesc>
@@ -32,27 +32,11 @@
     <onset>2026-07-30T13:12:59+02:00</onset>
     <expires>2026-07-31T00:00:00+02:00</expires>
     <headline>Riziko požárů</headline>
-    <description>Blok s expires — stejný jev/onset/severity.</description>
+    <description>Stejný segment s expires — vyplnění sibling identity povoleno.</description>
     <web>https://vystrahy-cr.chmi.cz/</web>
     <area>
-      <areaDesc>Benešov</areaDesc>
-      <geocode><valueName>CISORP</valueName><value>2101</value></geocode>
-    </area>
-  </info>
-  <info>
-    <language>cs</language>
-    <category>Met</category>
-    <event>Výhled jevů</event>
-    <urgency>Future</urgency>
-    <severity>Unknown</severity>
-    <certainty>Possible</certainty>
-    <onset>2026-08-02T00:00:00+02:00</onset>
-    <headline>Výhled jevů</headline>
-    <description>Skutečně chybí expires ve všech blocích tohoto jevu.</description>
-    <web>https://vystrahy-cr.chmi.cz/</web>
-    <area>
-      <areaDesc>Plzeň</areaDesc>
-      <geocode><valueName>CISORP</valueName><value>3213</value></geocode>
+      <areaDesc>Praha</areaDesc>
+      <geocode><valueName>CISORP</valueName><value>1000</value></geocode>
     </area>
   </info>
 </alert>

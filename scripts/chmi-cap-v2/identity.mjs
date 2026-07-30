@@ -134,20 +134,26 @@ function areaKey(info) {
 }
 
 /**
- * When an <info> block omits expires but another info in the same alert has the
- * same event + onset + severity with a concrete expires, reuse that expires.
- * Only when all such siblings agree (unanimous). Never invent times.
+ * Sibling expires fill is allowed ONLY for proven same-segment variants
+ * (typically language duplicates). Key must match event identity, codes,
+ * severity/urgency/certainty, onset, and area set. Never copy expires across
+ * different territories, times, severities, or into an intentional open-ended
+ * ("do odvolání") segment from a timed neighbour.
  *
  * @param {object[]} infos
- * @returns {{ infos: object[], filled: number }}
+ * @returns {{ infos: object[], filled: number, rejected: number }}
  */
 export function resolveExpiresFromSiblingInfos(infos) {
   const list = Array.isArray(infos) ? infos.map((i) => ({ ...i })) : [];
   const keyOf = (info) =>
     [
       fold(info.event || ""),
+      eventCodeKey(info),
       String(info.onset || info.effective || "").trim(),
       fold(info.severity || ""),
+      fold(info.urgency || ""),
+      fold(info.certainty || ""),
+      areaKey(info),
     ].join("|");
 
   const byKey = new Map();
@@ -158,6 +164,7 @@ export function resolveExpiresFromSiblingInfos(infos) {
   }
 
   let filled = 0;
+  let rejected = 0;
   for (const group of byKey.values()) {
     const withExp = [
       ...new Set(
@@ -166,16 +173,27 @@ export function resolveExpiresFromSiblingInfos(infos) {
           .filter(Boolean)
       ),
     ];
-    if (withExp.length !== 1) continue;
+    if (withExp.length !== 1) {
+      if (withExp.length > 1) rejected += group.filter((i) => !String(i.expires || "").trim()).length;
+      continue;
+    }
+    // Language / duplicate variants only: require at least one sibling that already
+    // has expires and another that lacks it under an identical identity key.
     const expires = withExp[0];
     for (const info of group) {
       if (String(info.expires || "").trim()) continue;
       info.expires = expires;
-      info.expiresSource = "sibling_info_same_event_onset_severity";
+      info.expiresSource = "sibling_info_same_segment_identity";
       filled += 1;
     }
   }
-  return { infos: list, filled };
+  return { infos: list, filled, rejected };
+}
+
+/** Folded event name matches ČHMÚ "Výhled (nebezpečných) jevů" product — not a concrete warning. */
+export function isChmiOutlookProductEvent(event) {
+  const e = fold(event || "");
+  return /^vyhled(?:-nebezpecnych)?-jevu/.test(e) || e === "vyhled-jevu" || e === "vyhled-nebezpecnych-jevu";
 }
 
 /**
@@ -188,7 +206,10 @@ export function buildHazardInstances(alert, alertThreadId) {
   infos.forEach((info, idx) => {
     const ek = eventCodeKey(info);
     const ak = areaKey(info);
-    const tk = `${info.onset || info.effective || alert.sent || ""}|${info.expires || ""}`;
+    const expiresRaw = String(info.expires || "").trim();
+    // Empty expires after sibling resolution = open-ended ("do odvolání"), not invalid.
+    const untilRevoked = !expiresRaw;
+    const tk = `${info.onset || info.effective || alert.sent || ""}|${expiresRaw || (untilRevoked ? "until-revoked" : "")}`;
     const raw = `${alertThreadId}|${ek}|${ak}|${tk}|${idx}`;
     instances.push({
       hazard_instance_id: `haz:${shortHash(raw)}`,
@@ -203,8 +224,11 @@ export function buildHazardInstances(alert, alertThreadId) {
       certainty: info.certainty || "",
       // Temporal window from CAP only — do not invent onset from alert.sent.
       valid_from: info.onset || info.effective || "",
-      valid_to: info.expires || "",
-      expiresSource: info.expiresSource || (info.expires ? "cap" : ""),
+      valid_to: expiresRaw,
+      untilRevoked,
+      openEnded: untilRevoked,
+      expiresSource: info.expiresSource || (expiresRaw ? "cap" : untilRevoked ? "until_revoked" : ""),
+      web: info.web || "",
       headline: info.headline || "",
       description: info.description || "",
       instruction: info.instruction || "",
@@ -212,6 +236,7 @@ export function buildHazardInstances(alert, alertThreadId) {
       areas: info.areas || [],
       eventCode: info.eventCode || [],
       parameter: info.parameter || [],
+      productExcluded: isChmiOutlookProductEvent(info.event),
     });
   });
   return instances;

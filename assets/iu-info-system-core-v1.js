@@ -1069,12 +1069,12 @@ function chmiValidFromDisplayParts(ev) {
  * Canonical public-feed lifecycle for a CHMI CAP warning.
  * ACTIVE | FUTURE | INACTIVE | CANCELLED | null (not CHMI).
  *
- * Same rules as pipeline classifyChmiTemporalState (validFrom/validTo + Cancel).
+ * Same rules as pipeline classifyChmiTemporalState (validFrom/validTo/untilRevoked + Cancel).
  * Recomputes from times so a stale published feed still rolls over between syncs.
  *
- * ACTIVE:  validFrom <= now < validTo, not Cancel, validTo known
- * FUTURE:  now < validFrom < validTo
- * INACTIVE: expired / ended / missing validTo / nezaraditelne
+ * ACTIVE:  validFrom <= now < validTo (or untilRevoked), not Cancel
+ * FUTURE:  now < validFrom (with validTo or untilRevoked)
+ * INACTIVE: expired / ended / truly missing bounds / nezaraditelne without open-ended
  * CANCELLED: Cancel msgType or status zruseno
  */
 function getChmiWarningLifecycleStatus(ev, nowMs) {
@@ -1085,13 +1085,35 @@ function getChmiWarningLifecycleStatus(ev, nowMs) {
   if (/^Cancel$/i.test(msgType) || status === "zruseno" || temporalState === "cancelled") {
     return "CANCELLED";
   }
+  if (
+    temporalState === "excluded" ||
+    (ev.capV2 && ev.capV2.productExcluded) ||
+    (ev.capV2 && String(ev.capV2.temporalReason || "") === "excluded_product_type")
+  ) {
+    return "INACTIVE";
+  }
 
   const now = Number(nowMs) > 0 ? Number(nowMs) : Date.now();
   const validFrom = parseTime(canonicalChmiValidFromRaw(ev));
-  const validTo = parseTime(canonicalChmiValidToRaw(ev));
-  if (!validTo || status === "nezaraditelne" || temporalState === "invalid") return "INACTIVE";
-  if (now >= validTo) return "INACTIVE";
-  if (validFrom && now < validFrom) return "FUTURE";
+  const validToRaw = canonicalChmiValidToRaw(ev);
+  const validTo = parseTime(validToRaw);
+  const untilRevoked =
+    ev.untilRevoked === true ||
+    (ev.capV2 && ev.capV2.untilRevoked === true) ||
+    (ev.capV2 && ev.capV2.openEnded === true) ||
+    (!validToRaw && ev.untilRevoked !== false && !(ev.capV2 && ev.capV2.untilRevoked === false));
+
+  if (!validFrom) {
+    // Rare CAP edge: missing onset but concrete end still in the future → treat as already active.
+    if (validTo && now < validTo) return "ACTIVE";
+    return "INACTIVE";
+  }
+  if (!validTo && !untilRevoked) {
+    if (status === "nezaraditelne" || temporalState === "invalid") return "INACTIVE";
+    return "INACTIVE";
+  }
+  if (validTo && now >= validTo) return "INACTIVE";
+  if (now < validFrom) return "FUTURE";
   return "ACTIVE";
 }
 

@@ -25,7 +25,7 @@ function staticChecks() {
   const checks = [
     { id: "sw_feature_detect", pass: /"serviceWorker"\s+in\s+navigator/.test(app) },
     { id: "caches_feature_detect", pass: /"caches"\s+in\s+window/.test(app) },
-    { id: "sw_v4_version", pass: /pwa-offline-menu-articles-v4|prehled-settings-sw-network-first-v1|app-root-url-drop-projects-v1|app-root-pwa-assets-redirects-v1|pwa-offline-nav-fallback-v1|media-sources-removed-v1|banner-homecard-fouc-v1|chmi-cap-concrete-url-chrono-v1|chmi-cap-temporal-status-v1/.test(sw) },
+    { id: "sw_v4_version", pass: /pwa-offline-menu-articles-v4|prehled-settings-sw-network-first-v1|app-root-url-drop-projects-v1|app-root-pwa-assets-redirects-v1|pwa-offline-nav-fallback-v1|media-sources-removed-v1|banner-homecard-fouc-v1|chmi-cap-concrete-url-chrono-v1|chmi-cap-temporal-status-v1|chmi-cap-open-ended-public-url-v1/.test(sw) },
     { id: "durable_feed_cache", pass: /iu-feed-offline-v2|iu-feed-offline-v1/.test(sw) },
     { id: "durable_img_cache", pass: /iu-img-offline-v1/.test(sw) },
     { id: "network_module_present", pass: /online|offline|connectivity/i.test(net) },

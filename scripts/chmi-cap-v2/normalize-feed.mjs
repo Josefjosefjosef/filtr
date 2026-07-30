@@ -4,6 +4,7 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { CHMI_ATTRIBUTION, CHMI_OPENDATA_CAP_INDEX, CHMI_PUBLIC_ALERTS_URL } from "./config.mjs";
+import { isChmiOutlookProductEvent } from "./identity.mjs";
 import { canonicalizeUrl, foldCs, isConcreteItemUrl, makeGroupKey, normalizeItemUrl } from "../iu-info-events-lib.mjs";
 import {
   attachLegalProvenance,
@@ -18,6 +19,7 @@ const DEFAULT_REPO = path.resolve(__dirname, "../..");
 /** Official CAP index listing — never a per-alert primary URL. */
 const CHMI_CAP_INDEX_RE = /\/meteorology\/weather\/alerts\/cap\/?$/i;
 const CHMI_OFFICIAL_HOST_RE = /(?:^|\.)chmi\.cz$/i;
+const CHMI_PUBLIC_WEB_HOST_RE = /^vystrahy-cr\.chmi\.cz$/i;
 
 function importanceFromSeverity(sev) {
   const s = String(sev || "");
@@ -130,17 +132,55 @@ export function buildConcreteCapItemUrl(revision, hazard, opts = {}) {
 }
 
 /**
+ * Resolve official CAP <web> into a public user-facing URL.
+ * Never invents hosts. Empty / non-CHMI / non-https → rejected.
+ *
+ * @param {string} rawWeb
+ * @returns {{ publicUrl: string, ok: boolean, reason?: string }}
+ */
+export function resolveCapPublicWebUrl(rawWeb) {
+  const raw = String(rawWeb || "").trim();
+  if (!raw) return { publicUrl: "", ok: false, reason: "missing_cap_web" };
+  let u;
+  try {
+    u = new URL(raw);
+  } catch {
+    return { publicUrl: "", ok: false, reason: "invalid_cap_web" };
+  }
+  if (u.protocol !== "https:") {
+    return { publicUrl: "", ok: false, reason: "cap_web_not_https" };
+  }
+  const host = u.hostname.replace(/^www\./, "").toLowerCase();
+  if (!CHMI_OFFICIAL_HOST_RE.test(host)) {
+    return { publicUrl: "", ok: false, reason: "cap_web_non_official_host" };
+  }
+  // Official CAP <web> for public navigation is the alerts portal (homepage path OK).
+  if (CHMI_PUBLIC_WEB_HOST_RE.test(host)) {
+    const pathNoSlash = (u.pathname || "/").replace(/\/+$/, "") || "/";
+    if (pathNoSlash !== "/" && pathNoSlash !== "") {
+      // Allow portal subpaths if CAP ever emits them; still official.
+    }
+    return { publicUrl: u.toString().replace(/\/+$/, "") + "/", ok: true };
+  }
+  // Other chmi.cz pages from <web> are allowed only with a non-root path.
+  const pathNoSlash = (u.pathname || "/").replace(/\/+$/, "") || "/";
+  if (pathNoSlash === "/") {
+    return { publicUrl: "", ok: false, reason: "cap_web_homepage_without_portal_host" };
+  }
+  return { publicUrl: u.toString(), ok: true };
+}
+
+/**
  * Temporal classification for a CHMI CAP hazard/item.
  * Never invents validFrom/validTo. One function drives status, badge, publishability.
  *
- * temporalState: active | scheduled | expired | cancelled | invalid
+ * temporalState: active | scheduled | expired | cancelled | invalid | excluded
  * Public Czech `status`: aktivni | naplanovano | ukonceno | zruseno | nezaraditelne
  *
- * Historical note: status=aktivni previously meant "not cancelled and not past expires
- * (or missing expires)" including future onsets — that overloaded "publish set" with
- * "currently in force". Do not use status=aktivni for scheduled/invalid items.
+ * Open-ended ("do odvolání"): validTo empty + untilRevoked=true → active/scheduled
+ * until cancelled or superseded. Missing expires alone is NOT invalid.
  *
- * @param {{ cancelled?: boolean, inactiveStatus?: boolean, validFrom?: string|null, validTo?: string|null, nowMs: number }} input
+ * @param {{ cancelled?: boolean, inactiveStatus?: boolean, productExcluded?: boolean, validFrom?: string|null, validTo?: string|null, untilRevoked?: boolean, nowMs: number }} input
  */
 export function classifyChmiTemporalState(input = {}) {
   const nowMs = Number(input.nowMs) > 0 ? Number(input.nowMs) : Date.now();
@@ -152,6 +192,18 @@ export function classifyChmiTemporalState(input = {}) {
       publishable: false,
       badgeActive: false,
       reason: "cap_cancel",
+      untilRevoked: false,
+    };
+  }
+  if (input.productExcluded) {
+    return {
+      temporalState: "excluded",
+      status: "nezaraditelne",
+      lifecycle: "nezaraditelne",
+      publishable: false,
+      badgeActive: false,
+      reason: "excluded_product_type",
+      untilRevoked: !!input.untilRevoked,
     };
   }
   if (input.inactiveStatus) {
@@ -162,12 +214,14 @@ export function classifyChmiTemporalState(input = {}) {
       publishable: false,
       badgeActive: false,
       reason: "cap_status_not_actual",
+      untilRevoked: false,
     };
   }
   const fromRaw = String(input.validFrom || "").trim();
   const toRaw = String(input.validTo || "").trim();
   const fromMs = fromRaw ? Date.parse(fromRaw) : NaN;
   const toMs = toRaw ? Date.parse(toRaw) : NaN;
+  const untilRevoked = !toRaw && input.untilRevoked === true;
   if (!fromRaw || !Number.isFinite(fromMs)) {
     return {
       temporalState: "invalid",
@@ -176,9 +230,33 @@ export function classifyChmiTemporalState(input = {}) {
       publishable: false,
       badgeActive: false,
       reason: "missing_validFrom",
+      untilRevoked: false,
     };
   }
   if (!toRaw || !Number.isFinite(toMs)) {
+    // Open-ended official validity ("do odvolání") — not a data defect.
+    if (untilRevoked) {
+      if (nowMs < fromMs) {
+        return {
+          temporalState: "scheduled",
+          status: "naplanovano",
+          lifecycle: "naplanovano",
+          publishable: true,
+          badgeActive: false,
+          reason: "before_validFrom_until_revoked",
+          untilRevoked: true,
+        };
+      }
+      return {
+        temporalState: "active",
+        status: "aktivni",
+        lifecycle: "prave-probihajici",
+        publishable: true,
+        badgeActive: true,
+        reason: "in_force_until_revoked",
+        untilRevoked: true,
+      };
+    }
     return {
       temporalState: "invalid",
       status: "nezaraditelne",
@@ -186,6 +264,7 @@ export function classifyChmiTemporalState(input = {}) {
       publishable: false,
       badgeActive: false,
       reason: "missing_validTo",
+      untilRevoked: false,
     };
   }
   if (toMs <= fromMs) {
@@ -196,6 +275,7 @@ export function classifyChmiTemporalState(input = {}) {
       publishable: false,
       badgeActive: false,
       reason: "invalid_interval",
+      untilRevoked: false,
     };
   }
   if (nowMs >= toMs) {
@@ -206,6 +286,7 @@ export function classifyChmiTemporalState(input = {}) {
       publishable: false,
       badgeActive: false,
       reason: "past_validTo",
+      untilRevoked: false,
     };
   }
   if (nowMs < fromMs) {
@@ -216,6 +297,7 @@ export function classifyChmiTemporalState(input = {}) {
       publishable: true,
       badgeActive: false,
       reason: "before_validFrom",
+      untilRevoked: false,
     };
   }
   return {
@@ -225,6 +307,7 @@ export function classifyChmiTemporalState(input = {}) {
     publishable: true,
     badgeActive: true,
     reason: "in_force",
+    untilRevoked: false,
   };
 }
 
@@ -239,29 +322,41 @@ export function isPublishableChmiItem(item) {
 
 /**
  * Recompute temporal fields from validFrom/validTo (e.g. bulletin cache on 304).
- * Does not invent times; preserves cancelled via msgType/status.
+ * Does not invent times; preserves cancelled via msgType/status; preserves untilRevoked.
  */
 export function refreshItemTemporalFields(item, nowMs) {
   if (!item) return item;
   const msgType = String((item.capV2 && item.capV2.msgType) || "");
   const cancelled =
     /^Cancel$/i.test(msgType) || String(item.status || "").toLowerCase() === "zruseno";
+  const untilRevoked =
+    item.untilRevoked === true ||
+    (item.capV2 && item.capV2.untilRevoked === true) ||
+    (!String(item.validTo || "").trim() && item.untilRevoked !== false && !(item.capV2 && item.capV2.untilRevoked === false));
+  const productExcluded =
+    !!(item.capV2 && item.capV2.productExcluded) ||
+    isChmiOutlookProductEvent((item.capV2 && item.capV2.event) || item.title || "");
   const cls = classifyChmiTemporalState({
     cancelled,
     inactiveStatus: false,
+    productExcluded,
     validFrom: item.validFrom,
     validTo: item.validTo,
+    untilRevoked,
     nowMs: Number(nowMs) > 0 ? Number(nowMs) : Date.now(),
   });
   const ended =
     cls.temporalState === "expired" ||
     cls.temporalState === "cancelled" ||
-    cls.temporalState === "invalid";
+    cls.temporalState === "invalid" ||
+    cls.temporalState === "excluded";
   return {
     ...item,
     status: cls.status,
     lifecycle: cls.lifecycle,
     publishable: cls.publishable,
+    untilRevoked: !!cls.untilRevoked,
+    validTo: cls.untilRevoked ? null : item.validTo,
     resolvedAt: ended ? item.resolvedAt || new Date(Number(nowMs) || Date.now()).toISOString() : null,
     capV2: {
       ...(item.capV2 || {}),
@@ -269,6 +364,9 @@ export function refreshItemTemporalFields(item, nowMs) {
       temporalState: cls.temporalState,
       temporalReason: cls.reason,
       publishable: cls.publishable,
+      untilRevoked: !!cls.untilRevoked,
+      openEnded: !!cls.untilRevoked,
+      productExcluded,
     },
   };
 }
@@ -345,8 +443,17 @@ function activeFromRevision(revision, nowMs = Date.now()) {
   if (/^Cancel$/i.test(revision.msgType)) return false;
   if (!/^Actual$/i.test(String(revision.status || "Actual"))) return false;
   for (const h of revision.hazards || []) {
-    const exp = Date.parse(h.valid_to || "") || 0;
-    if (!exp || exp > nowMs) return true;
+    if (h.productExcluded || isChmiOutlookProductEvent(h.event || "")) continue;
+    const fromMs = Date.parse(h.valid_from || "") || 0;
+    if (!fromMs) continue;
+    const toRaw = String(h.valid_to || "").trim();
+    const untilRevoked = h.untilRevoked === true || (!toRaw && h.untilRevoked !== false);
+    if (untilRevoked) {
+      if (nowMs >= fromMs) return true;
+      continue;
+    }
+    const exp = Date.parse(toRaw) || 0;
+    if (exp && exp > nowMs && nowMs >= fromMs) return true;
   }
   return false;
 }
@@ -441,20 +548,29 @@ export function revisionToFeedItems(revision, opts = {}) {
 
     const cancelled = /^Cancel$/i.test(revision.msgType);
     const inactiveStatus = !/^Actual$/i.test(String(revision.status || "Actual"));
-    // Never invent onset/expires from sent — missing values → nezaraditelne.
+    // Never invent onset/expires from sent. Empty expires + untilRevoked = "do odvolání".
     const validFrom = h.valid_from || null;
-    const validTo = h.valid_to || "";
+    const validToRaw = String(h.valid_to || "").trim();
+    const untilRevoked =
+      h.untilRevoked === true ||
+      (!validToRaw && h.untilRevoked !== false && h.openEnded !== false);
+    const validTo = untilRevoked ? null : validToRaw || null;
+    const productExcluded =
+      h.productExcluded === true || isChmiOutlookProductEvent(h.event || h.headline || "");
     const temporal = classifyChmiTemporalState({
       cancelled,
       inactiveStatus,
+      productExcluded,
       validFrom,
-      validTo,
+      validTo: validToRaw,
+      untilRevoked,
       nowMs,
     });
     const ended =
       temporal.temporalState === "expired" ||
       temporal.temporalState === "cancelled" ||
-      temporal.temporalState === "invalid";
+      temporal.temporalState === "invalid" ||
+      temporal.temporalState === "excluded";
     const itemId = makeStableItemId(h.hazard_instance_id);
     const geoStats = {
       totalAreas: (h.areas || []).length,
@@ -466,12 +582,16 @@ export function revisionToFeedItems(revision, opts = {}) {
           : Math.round((100 * links.length) / Math.max(links.length + (geo.quarantine || []).length, 1)),
     };
 
-    const urlInfo = buildConcreteCapItemUrl(revision, h, opts);
-    // Do not publish homepage/listing as a fake per-alert detail URL.
-    if (!urlInfo.url) {
+    const sourceDoc = buildConcreteCapItemUrl(revision, h, opts);
+    // Technical CAP XML must remain resolvable for audit; never publish without it.
+    if (!sourceDoc.url) {
       continue;
     }
-    const canonical = canonicalizeUrl(urlInfo.url) || urlInfo.url;
+    const webInfo = resolveCapPublicWebUrl(h.web || opts.defaultPublicWeb || "");
+    const publicUrl = webInfo.ok ? webInfo.publicUrl : "";
+    // Click target = official CAP <web>. Canonical identity stays unique via CAP XML + hid.
+    const clickUrl = publicUrl || sourceDoc.url;
+    const canonical = canonicalizeUrl(sourceDoc.url) || sourceDoc.url;
     const publishedAtSource = revision.published_at || revision.sent || null;
 
     let item = {
@@ -482,17 +602,19 @@ export function revisionToFeedItems(revision, opts = {}) {
       sourceId: "chmi",
       sourceLabel: "ČHMÚ",
       sourceGroup: "pocasi",
-      url: urlInfo.url,
-      originalUrl: urlInfo.url,
+      url: clickUrl,
+      originalUrl: clickUrl,
+      publicUrl: publicUrl || null,
       canonicalUrl: canonical,
-      urlKind: urlInfo.urlKind,
-      listingUrl: urlInfo.listingUrl || listingUrl,
+      urlKind: publicUrl ? "cap_public_web" : sourceDoc.urlKind,
+      listingUrl: sourceDoc.listingUrl || listingUrl,
       sectionId: "pocasi",
       subsectionId: "vystrahy",
       eventType: "mimoradne",
       status: temporal.status,
       lifecycle: temporal.lifecycle,
       publishable: temporal.publishable,
+      untilRevoked: !!temporal.untilRevoked,
       importance: importanceFromSeverity(h.severity),
       impact: importanceFromSeverity(h.severity),
       region,
@@ -527,9 +649,14 @@ export function revisionToFeedItems(revision, opts = {}) {
         temporalState: temporal.temporalState,
         temporalReason: temporal.reason,
         publishable: temporal.publishable,
-        sourceDocumentUrl: urlInfo.url,
-        listingUrl: urlInfo.listingUrl || listingUrl,
-        urlKind: urlInfo.urlKind,
+        untilRevoked: !!temporal.untilRevoked,
+        openEnded: !!temporal.untilRevoked,
+        productExcluded,
+        sourceDocumentUrl: sourceDoc.url,
+        publicUrl: publicUrl || null,
+        listingUrl: sourceDoc.listingUrl || listingUrl,
+        urlKind: publicUrl ? "cap_public_web" : sourceDoc.urlKind,
+        expiresSource: h.expiresSource || "",
         geo: {
           links,
           quarantine: geo.quarantine || [],
