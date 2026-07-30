@@ -130,6 +130,150 @@ export function buildConcreteCapItemUrl(revision, hazard, opts = {}) {
 }
 
 /**
+ * Temporal classification for a CHMI CAP hazard/item.
+ * Never invents validFrom/validTo. One function drives status, badge, publishability.
+ *
+ * temporalState: active | scheduled | expired | cancelled | invalid
+ * Public Czech `status`: aktivni | naplanovano | ukonceno | zruseno | nezaraditelne
+ *
+ * Historical note: status=aktivni previously meant "not cancelled and not past expires
+ * (or missing expires)" including future onsets — that overloaded "publish set" with
+ * "currently in force". Do not use status=aktivni for scheduled/invalid items.
+ *
+ * @param {{ cancelled?: boolean, inactiveStatus?: boolean, validFrom?: string|null, validTo?: string|null, nowMs: number }} input
+ */
+export function classifyChmiTemporalState(input = {}) {
+  const nowMs = Number(input.nowMs) > 0 ? Number(input.nowMs) : Date.now();
+  if (input.cancelled) {
+    return {
+      temporalState: "cancelled",
+      status: "zruseno",
+      lifecycle: "zruseno",
+      publishable: false,
+      badgeActive: false,
+      reason: "cap_cancel",
+    };
+  }
+  if (input.inactiveStatus) {
+    return {
+      temporalState: "invalid",
+      status: "nezaraditelne",
+      lifecycle: "nezaraditelne",
+      publishable: false,
+      badgeActive: false,
+      reason: "cap_status_not_actual",
+    };
+  }
+  const fromRaw = String(input.validFrom || "").trim();
+  const toRaw = String(input.validTo || "").trim();
+  const fromMs = fromRaw ? Date.parse(fromRaw) : NaN;
+  const toMs = toRaw ? Date.parse(toRaw) : NaN;
+  if (!fromRaw || !Number.isFinite(fromMs)) {
+    return {
+      temporalState: "invalid",
+      status: "nezaraditelne",
+      lifecycle: "nezaraditelne",
+      publishable: false,
+      badgeActive: false,
+      reason: "missing_validFrom",
+    };
+  }
+  if (!toRaw || !Number.isFinite(toMs)) {
+    return {
+      temporalState: "invalid",
+      status: "nezaraditelne",
+      lifecycle: "nezaraditelne",
+      publishable: false,
+      badgeActive: false,
+      reason: "missing_validTo",
+    };
+  }
+  if (toMs <= fromMs) {
+    return {
+      temporalState: "invalid",
+      status: "nezaraditelne",
+      lifecycle: "nezaraditelne",
+      publishable: false,
+      badgeActive: false,
+      reason: "invalid_interval",
+    };
+  }
+  if (nowMs >= toMs) {
+    return {
+      temporalState: "expired",
+      status: "ukonceno",
+      lifecycle: "ukonceno",
+      publishable: false,
+      badgeActive: false,
+      reason: "past_validTo",
+    };
+  }
+  if (nowMs < fromMs) {
+    return {
+      temporalState: "scheduled",
+      status: "naplanovano",
+      lifecycle: "naplanovano",
+      publishable: true,
+      badgeActive: false,
+      reason: "before_validFrom",
+    };
+  }
+  return {
+    temporalState: "active",
+    status: "aktivni",
+    lifecycle: "prave-probihajici",
+    publishable: true,
+    badgeActive: true,
+    reason: "in_force",
+  };
+}
+
+/** Public feed / publish set: currently active + scheduled (future) only. */
+export function isPublishableChmiItem(item) {
+  if (!item) return false;
+  if (item.publishable === true) return true;
+  if (item.publishable === false) return false;
+  const st = String(item.status || "");
+  return st === "aktivni" || st === "naplanovano";
+}
+
+/**
+ * Recompute temporal fields from validFrom/validTo (e.g. bulletin cache on 304).
+ * Does not invent times; preserves cancelled via msgType/status.
+ */
+export function refreshItemTemporalFields(item, nowMs) {
+  if (!item) return item;
+  const msgType = String((item.capV2 && item.capV2.msgType) || "");
+  const cancelled =
+    /^Cancel$/i.test(msgType) || String(item.status || "").toLowerCase() === "zruseno";
+  const cls = classifyChmiTemporalState({
+    cancelled,
+    inactiveStatus: false,
+    validFrom: item.validFrom,
+    validTo: item.validTo,
+    nowMs: Number(nowMs) > 0 ? Number(nowMs) : Date.now(),
+  });
+  const ended =
+    cls.temporalState === "expired" ||
+    cls.temporalState === "cancelled" ||
+    cls.temporalState === "invalid";
+  return {
+    ...item,
+    status: cls.status,
+    lifecycle: cls.lifecycle,
+    publishable: cls.publishable,
+    resolvedAt: ended ? item.resolvedAt || new Date(Number(nowMs) || Date.now()).toISOString() : null,
+    capV2: {
+      ...(item.capV2 || {}),
+      badgeActive: cls.badgeActive,
+      temporalState: cls.temporalState,
+      temporalReason: cls.reason,
+      publishable: cls.publishable,
+    },
+  };
+}
+
+/**
  * Chronology for CAP feed items — never invent validity times.
  * sortAt prefers CAP sent/published; firstSeen preserved across refreshes by stable item id.
  */
@@ -296,13 +440,21 @@ export function revisionToFeedItems(revision, opts = {}) {
     const title = areaBit && !titleBase.includes(areaBit) ? `${titleBase} — ${areaBit}` : titleBase;
 
     const cancelled = /^Cancel$/i.test(revision.msgType);
-    const expMs = Date.parse(h.valid_to || "") || 0;
-    const onsetMs = Date.parse(h.valid_from || "") || 0;
-    const hazardExpired = expMs > 0 && expMs <= nowMs;
     const inactiveStatus = !/^Actual$/i.test(String(revision.status || "Actual"));
-    const hazardActive = !cancelled && !inactiveStatus && !hazardExpired;
-    const notYetStarted = !!(onsetMs > 0 && onsetMs > nowMs);
-    const ended = !hazardActive;
+    // Never invent onset/expires from sent — missing values → nezaraditelne.
+    const validFrom = h.valid_from || null;
+    const validTo = h.valid_to || "";
+    const temporal = classifyChmiTemporalState({
+      cancelled,
+      inactiveStatus,
+      validFrom,
+      validTo,
+      nowMs,
+    });
+    const ended =
+      temporal.temporalState === "expired" ||
+      temporal.temporalState === "cancelled" ||
+      temporal.temporalState === "invalid";
     const itemId = makeStableItemId(h.hazard_instance_id);
     const geoStats = {
       totalAreas: (h.areas || []).length,
@@ -338,8 +490,9 @@ export function revisionToFeedItems(revision, opts = {}) {
       sectionId: "pocasi",
       subsectionId: "vystrahy",
       eventType: "mimoradne",
-      status: cancelled ? "zruseno" : ended ? "ukonceno" : "aktivni",
-      lifecycle: cancelled ? "zruseno" : ended ? "ukonceno" : notYetStarted ? "naplanovano" : "prave-probihajici",
+      status: temporal.status,
+      lifecycle: temporal.lifecycle,
+      publishable: temporal.publishable,
       importance: importanceFromSeverity(h.severity),
       impact: importanceFromSeverity(h.severity),
       region,
@@ -349,8 +502,8 @@ export function revisionToFeedItems(revision, opts = {}) {
       publishedAtSource,
       publishedAt: publishedAtSource,
       updatedAt: nowIso,
-      validFrom: h.valid_from || revision.sent || null,
-      validTo: h.valid_to || "",
+      validFrom,
+      validTo,
       resolvedAt: ended ? nowIso : null,
       groupKey: makeGroupKey(titleBase + "|" + (h.eventKey || h.event || ""), revision.sent || "unknown"),
       tags: ["cap", "vystraha", "cap-v2"],
@@ -370,7 +523,10 @@ export function revisionToFeedItems(revision, opts = {}) {
         severity: h.severity,
         urgency: h.urgency,
         certainty: h.certainty,
-        badgeActive: hazardActive && !cancelled,
+        badgeActive: temporal.badgeActive,
+        temporalState: temporal.temporalState,
+        temporalReason: temporal.reason,
+        publishable: temporal.publishable,
         sourceDocumentUrl: urlInfo.url,
         listingUrl: urlInfo.listingUrl || listingUrl,
         urlKind: urlInfo.urlKind,

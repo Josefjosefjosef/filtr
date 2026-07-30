@@ -9,7 +9,7 @@
  */
 import { getChmiCapV2Config } from "./config.mjs";
 import { createGeoRegistry } from "./geo-registry.mjs";
-import { mergeFeedItemsById, revisionsToFeed } from "./normalize-feed.mjs";
+import { isPublishableChmiItem, mergeFeedItemsById, revisionsToFeed } from "./normalize-feed.mjs";
 import { latestRevisionForThread } from "./revisions.mjs";
 import { processCapDocuments } from "./sync-core.mjs";
 
@@ -27,18 +27,30 @@ export function assembleActiveStateFromOrderedDocuments(docsAsc, opts = {}) {
   const latest = threadIds.map((tid) => latestRevisionForThread(result.store, tid)).filter(Boolean);
   const items = mergeFeedItemsById(revisionsToFeed(latest, { nowIso: receivedAt }));
   const active = items.filter((i) => i && i.status === "aktivni");
+  const scheduled = items.filter((i) => i && i.status === "naplanovano");
   const cancelled = items.filter((i) => i && i.status === "zruseno");
   const ended = items.filter((i) => i && i.status === "ukonceno");
+  const invalid = items.filter((i) => i && i.status === "nezaraditelne");
+  const publishable = items.filter((i) => isPublishableChmiItem(i));
   return {
     store: result.store,
     report: result.report,
     latestRevisions: latest,
     items,
     active,
+    scheduled,
     cancelled,
     ended,
+    invalid,
+    publishable,
     threadCount: threadIds.length,
+    /** Temporally in-force only (validFrom <= now < validTo). */
     activeCount: active.length,
+    scheduledCount: scheduled.length,
+    expiredCount: ended.length,
+    cancelledCount: cancelled.length,
+    invalidCount: invalid.length,
+    publishableCount: publishable.length,
   };
 }
 

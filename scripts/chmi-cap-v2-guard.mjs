@@ -480,10 +480,23 @@ function read(name) {
     ],
   };
   const futureItems = revisionsToFeed([futureRev], { nowIso: "2026-07-30T12:00:00+02:00" });
-  ok("future_kept_in_feed_status", futureItems[0] && futureItems[0].status === "aktivni", futureItems[0] && futureItems[0].status);
-  ok("future_warn_badge_flag", futureItems[0] && futureItems[0].capV2.badgeActive === true, "badge");
+  ok("future_kept_in_feed_status", futureItems[0] && futureItems[0].status === "naplanovano", futureItems[0] && futureItems[0].status);
+  ok("future_publishable", futureItems[0] && futureItems[0].publishable === true, "publishable");
+  ok("future_warn_badge_flag", futureItems[0] && futureItems[0].capV2.badgeActive === false, "badge");
+  ok("future_temporal_scheduled", futureItems[0] && futureItems[0].capV2.temporalState === "scheduled", futureItems[0] && futureItems[0].capV2.temporalState);
   ok("future_lifecycle_naplanovano", futureItems[0] && futureItems[0].lifecycle === "naplanovano", futureItems[0] && futureItems[0].lifecycle);
   ok("future_has_validFrom", futureItems[0] && futureItems[0].validFrom === "2026-07-31T00:00:00+02:00", futureItems[0] && futureItems[0].validFrom);
+
+  // Transition: scheduled → active at onset
+  const becameActive = revisionsToFeed([futureRev], { nowIso: "2026-07-31T00:00:00+02:00" });
+  ok("transition_future_to_active_status", becameActive[0] && becameActive[0].status === "aktivni", becameActive[0] && becameActive[0].status);
+  ok("transition_future_to_active_badge", becameActive[0] && becameActive[0].capV2.badgeActive === true, "badge");
+  ok("transition_future_to_active_temporal", becameActive[0] && becameActive[0].capV2.temporalState === "active", becameActive[0] && becameActive[0].capV2.temporalState);
+
+  // Transition: active → expired at validTo
+  const becameEnded = revisionsToFeed([futureRev], { nowIso: "2026-07-31T12:00:00+02:00" });
+  ok("transition_active_to_ended_status", becameEnded[0] && becameEnded[0].status === "ukonceno", becameEnded[0] && becameEnded[0].status);
+  ok("transition_active_to_ended_badge", becameEnded[0] && becameEnded[0].capV2.badgeActive === false, "badge");
 
   const endedRev = {
     ...futureRev,
@@ -500,6 +513,77 @@ function read(name) {
   const endedItems = revisionsToFeed([endedRev], { nowIso: "2026-07-30T12:00:00+02:00" });
   ok("ended_status_ukonceno", endedItems[0] && endedItems[0].status === "ukonceno", endedItems[0] && endedItems[0].status);
   ok("ended_badge_off", endedItems[0] && endedItems[0].capV2.badgeActive === false, "badge");
+  ok("ended_not_publishable", endedItems[0] && endedItems[0].publishable === false, "publishable");
+
+  // Missing validTo → invalid / not publishable (never invent expires)
+  const missingToRev = {
+    ...futureRev,
+    cap_message_id: "capmsg:test|missingto|2026-07-30T10:00:00+02:00",
+    hazards: [
+      {
+        ...futureRev.hazards[0],
+        hazard_instance_id: "haz:missingto0000001",
+        valid_from: "2026-07-30T08:00:00+02:00",
+        valid_to: "",
+      },
+    ],
+  };
+  const missingToItems = revisionsToFeed([missingToRev], { nowIso: "2026-07-30T12:00:00+02:00" });
+  ok("missing_validTo_nezaraditelne", missingToItems[0] && missingToItems[0].status === "nezaraditelne", missingToItems[0] && missingToItems[0].status);
+  ok("missing_validTo_not_publishable", missingToItems[0] && missingToItems[0].publishable === false, "publishable");
+  ok("missing_validTo_badge_off", missingToItems[0] && missingToItems[0].capV2.badgeActive === false, "badge");
+  ok("missing_validTo_reason", missingToItems[0] && missingToItems[0].capV2.temporalReason === "missing_validTo", missingToItems[0] && missingToItems[0].capV2.temporalReason);
+
+  // Missing validFrom → invalid
+  const missingFromRev = {
+    ...futureRev,
+    cap_message_id: "capmsg:test|missingfrom|2026-07-30T10:00:00+02:00",
+    hazards: [
+      {
+        ...futureRev.hazards[0],
+        hazard_instance_id: "haz:missingfrom00001",
+        valid_from: "",
+        valid_to: "2026-07-31T12:00:00+02:00",
+      },
+    ],
+  };
+  const missingFromItems = revisionsToFeed([missingFromRev], { nowIso: "2026-07-30T12:00:00+02:00" });
+  ok("missing_validFrom_nezaraditelne", missingFromItems[0] && missingFromItems[0].status === "nezaraditelne", missingFromItems[0] && missingFromItems[0].status);
+
+  // Invalid interval validTo <= validFrom
+  const badIntervalRev = {
+    ...futureRev,
+    cap_message_id: "capmsg:test|badinterval|2026-07-30T10:00:00+02:00",
+    hazards: [
+      {
+        ...futureRev.hazards[0],
+        hazard_instance_id: "haz:badinterval00001",
+        valid_from: "2026-07-31T12:00:00+02:00",
+        valid_to: "2026-07-31T00:00:00+02:00",
+      },
+    ],
+  };
+  const badIntervalItems = revisionsToFeed([badIntervalRev], { nowIso: "2026-07-30T12:00:00+02:00" });
+  ok("invalid_interval_nezaraditelne", badIntervalItems[0] && badIntervalItems[0].status === "nezaraditelne", badIntervalItems[0] && badIntervalItems[0].status);
+
+  // Cancel
+  const cancelRev = {
+    ...futureRev,
+    msgType: "Cancel",
+    cap_message_id: "capmsg:test|cancel|2026-07-30T11:00:00+02:00",
+    hazards: [
+      {
+        ...futureRev.hazards[0],
+        hazard_instance_id: "haz:cancel0000000001",
+        valid_from: "2026-07-30T08:00:00+02:00",
+        valid_to: "2026-07-31T12:00:00+02:00",
+      },
+    ],
+  };
+  const cancelItems = revisionsToFeed([cancelRev], { nowIso: "2026-07-30T12:00:00+02:00" });
+  ok("cancel_status_zruseno", cancelItems[0] && cancelItems[0].status === "zruseno", cancelItems[0] && cancelItems[0].status);
+  ok("cancel_not_publishable", cancelItems[0] && cancelItems[0].publishable === false, "publishable");
+  ok("cancel_badge_off", cancelItems[0] && cancelItems[0].capV2.badgeActive === false, "badge");
 
   const winterRev = {
     ...futureRev,

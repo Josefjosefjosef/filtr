@@ -29,7 +29,7 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-concrete-url-20260730";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-temporal-status-20260730";
 
 const PAGE_SIZE = 50;
 const CACHE_BUST = "info-system-v6-chmi-concrete-url-20260730";

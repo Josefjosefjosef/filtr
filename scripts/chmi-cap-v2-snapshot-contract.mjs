@@ -11,7 +11,7 @@ import { listCapXmlFromIndex } from "./iu-info-events-lib.mjs";
 import { capProductKeyFromUrl, selectLatestPerProductStream } from "./chmi-cap-v2/discovery-adapter.mjs";
 import { parseCapAlertXml } from "./chmi-cap-v2/parse-cap.mjs";
 import { processCapDocuments } from "./chmi-cap-v2/sync-core.mjs";
-import { mergeFeedItemsById, revisionsToFeed } from "./chmi-cap-v2/normalize-feed.mjs";
+import { isPublishableChmiItem, mergeFeedItemsById, revisionsToFeed } from "./chmi-cap-v2/normalize-feed.mjs";
 import { latestRevisionForThread } from "./chmi-cap-v2/revisions.mjs";
 import { groupListedByProductStream } from "./chmi-cap-v2/lifecycle.mjs";
 import { createGeoRegistry } from "./chmi-cap-v2/geo-registry.mjs";
@@ -80,7 +80,7 @@ function headViaProduction(doc, nowIso) {
   const result = processCapDocuments([{ xml: doc.xml, sourceUrl: doc.sourceUrl }], { config, registry, receivedAt: nowIso });
   const tids = [...new Set(result.report.revisions.map((r) => r.alert_thread_id))];
   const latest = tids.map((tid) => latestRevisionForThread(result.store, tid)).filter(Boolean);
-  return mergeFeedItemsById(revisionsToFeed(latest, { nowIso })).filter((i) => i.status === "aktivni");
+  return mergeFeedItemsById(revisionsToFeed(latest, { nowIso })).filter((i) => isPublishableChmiItem(i));
 }
 
 async function main() {
