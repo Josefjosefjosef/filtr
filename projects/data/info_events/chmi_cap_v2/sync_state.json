@@ -4,13 +4,13 @@
     "etag": "\"6a688d7b-e76a\"",
     "lastModified": "Tue, 28 Jul 2026 11:07:39 GMT",
     "bodyHash": "4fb2039ee82178f14b36fdb73814fe199252fab9bf161ef51ea22442bf1b4e6f",
-    "last_checked_at": "2026-07-30T00:09:25.567Z",
-    "last_success_at": "2026-07-30T00:09:25.567Z",
-    "last_changed_at": "2026-07-29T20:15:10.107Z",
+    "last_checked_at": "2026-07-30T00:44:03.933Z",
+    "last_success_at": "2026-07-30T00:44:03.933Z",
+    "last_changed_at": "2026-07-30T00:44:03.933Z",
     "consecutive_errors": 0,
     "backoff_until": null,
-    "status": "not_modified",
-    "last_http_status": 304,
+    "status": "healthy",
+    "last_http_status": 200,
     "last_error": null
   },
   "lock": {
@@ -28,17 +28,17 @@
       "etag": "\"6a688d7b-e76a\"",
       "lastModified": "Tue, 28 Jul 2026 11:07:39 GMT",
       "bodyHash": "4fb2039ee82178f14b36fdb73814fe199252fab9bf161ef51ea22442bf1b4e6f",
-      "updatedAt": "2026-07-29T20:15:10.107Z"
+      "updatedAt": "2026-07-30T00:44:03.933Z"
     },
     "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_290854.xml": {
       "etag": "\"6a69bfc6-21a480\"",
       "lastModified": "Wed, 29 Jul 2026 08:54:30 GMT",
       "bodyHash": "536a21bd4d713ade207a048a3c316983957ca18eb9c74bca8afb51317cdab280",
-      "updatedAt": "2026-07-29T20:15:08.781Z"
+      "updatedAt": "2026-07-30T00:44:02.630Z"
     }
   },
   "lastRun": {
-    "at": "2026-07-30T00:09:22.674Z",
+    "at": "2026-07-30T00:43:58.632Z",
     "ok": true,
     "mode": "active",
     "publish": true
@@ -864,7 +864,7 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-29T10:54:03+02:00",
           "publishedAt": "2026-07-29T10:54:03+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-30T00:00:00+02:00",
           "validTo": "2026-07-31T00:00:00+02:00",
           "resolvedAt": null,
@@ -883,7 +883,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.356Z",
+            "fetchedAt": "2026-07-30T00:44:04.193Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -4007,7 +4007,7 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-29T10:54:03+02:00",
           "publishedAt": "2026-07-29T10:54:03+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-31T00:00:00+02:00",
           "validTo": "2026-08-01T00:00:00+02:00",
           "resolvedAt": null,
@@ -4026,7 +4026,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.359Z",
+            "fetchedAt": "2026-07-30T00:44:04.195Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -6231,8 +6231,8 @@
           "sectionId": "pocasi",
           "subsectionId": "vystrahy",
           "eventType": "mimoradne",
-          "status": "aktivni",
-          "lifecycle": "prave-probihajici",
+          "status": "ukonceno",
+          "lifecycle": "ukonceno",
           "importance": 3,
           "impact": 3,
           "region": {
@@ -6306,10 +6306,10 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-29T10:54:03+02:00",
           "publishedAt": "2026-07-29T10:54:03+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-29T14:00:00+02:00",
           "validTo": "2026-07-30T00:00:00+02:00",
-          "resolvedAt": null,
+          "resolvedAt": "2026-07-30T00:43:58.632Z",
           "groupKey": "2026-07-29:vysoke-teploty-sivs-i-1",
           "tags": [
             "cap",
@@ -6325,7 +6325,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.363Z",
+            "fetchedAt": "2026-07-30T00:44:04.196Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -6354,7 +6354,7 @@
             "severity": "Moderate",
             "urgency": "Future",
             "certainty": "Likely",
-            "badgeActive": true,
+            "badgeActive": false,
             "geo": {
               "links": [
                 {
@@ -6575,7 +6575,7 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-29T10:54:03+02:00",
           "publishedAt": "2026-07-29T10:54:03+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-29T14:00:00+02:00",
           "validTo": "2026-07-31T00:00:00+02:00",
           "resolvedAt": null,
@@ -6594,7 +6594,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.365Z",
+            "fetchedAt": "2026-07-30T00:44:04.198Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -6973,7 +6973,7 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-29T10:54:03+02:00",
           "publishedAt": "2026-07-29T10:54:03+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-31T00:00:00+02:00",
           "validTo": "2026-08-01T00:00:00+02:00",
           "resolvedAt": null,
@@ -6992,7 +6992,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.368Z",
+            "fetchedAt": "2026-07-30T00:44:04.200Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -7373,8 +7373,8 @@
           "sectionId": "pocasi",
           "subsectionId": "vystrahy",
           "eventType": "mimoradne",
-          "status": "aktivni",
-          "lifecycle": "prave-probihajici",
+          "status": "ukonceno",
+          "lifecycle": "ukonceno",
           "importance": 3,
           "impact": 3,
           "region": {
@@ -7686,10 +7686,10 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-29T10:54:03+02:00",
           "publishedAt": "2026-07-29T10:54:03+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-29T12:00:00+02:00",
           "validTo": "2026-07-30T00:00:00+02:00",
-          "resolvedAt": null,
+          "resolvedAt": "2026-07-30T00:43:58.632Z",
           "groupKey": "2026-07-29:silna-zatez-teplem-sivs-iii-1",
           "tags": [
             "cap",
@@ -7705,7 +7705,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.370Z",
+            "fetchedAt": "2026-07-30T00:44:04.202Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -7734,7 +7734,7 @@
             "severity": "Moderate",
             "urgency": "Future",
             "certainty": "Likely",
-            "badgeActive": true,
+            "badgeActive": false,
             "geo": {
               "links": [
                 {
@@ -8984,7 +8984,7 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-29T10:54:03+02:00",
           "publishedAt": "2026-07-29T10:54:03+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-30T00:00:00+02:00",
           "validTo": "2026-08-01T00:00:00+02:00",
           "resolvedAt": null,
@@ -9003,7 +9003,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.371Z",
+            "fetchedAt": "2026-07-30T00:44:04.206Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -10642,7 +10642,7 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-29T10:54:03+02:00",
           "publishedAt": "2026-07-29T10:54:03+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-30T00:00:00+02:00",
           "validTo": "2026-08-01T00:00:00+02:00",
           "resolvedAt": null,
@@ -10661,7 +10661,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.373Z",
+            "fetchedAt": "2026-07-30T00:44:04.207Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -11716,7 +11716,7 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-29T10:54:03+02:00",
           "publishedAt": "2026-07-29T10:54:03+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-30T00:00:00+02:00",
           "validTo": "2026-07-31T00:00:00+02:00",
           "resolvedAt": null,
@@ -11735,7 +11735,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.375Z",
+            "fetchedAt": "2026-07-30T00:44:04.209Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -12382,7 +12382,7 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-29T10:54:03+02:00",
           "publishedAt": "2026-07-29T10:54:03+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-31T00:00:00+02:00",
           "validTo": "2026-08-01T00:00:00+02:00",
           "resolvedAt": null,
@@ -12401,7 +12401,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.376Z",
+            "fetchedAt": "2026-07-30T00:44:04.211Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -13105,7 +13105,7 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-29T10:54:03+02:00",
           "publishedAt": "2026-07-29T10:54:03+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-30T00:00:00+02:00",
           "validTo": "",
           "resolvedAt": null,
@@ -13124,7 +13124,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.378Z",
+            "fetchedAt": "2026-07-30T00:44:04.212Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -13874,7 +13874,7 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-29T10:54:03+02:00",
           "publishedAt": "2026-07-29T10:54:03+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-29T10:40:28+02:00",
           "validTo": "",
           "resolvedAt": null,
@@ -13893,7 +13893,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.379Z",
+            "fetchedAt": "2026-07-30T00:44:04.214Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -14130,8 +14130,8 @@
           "sectionId": "pocasi",
           "subsectionId": "vystrahy",
           "eventType": "mimoradne",
-          "status": "aktivni",
-          "lifecycle": "prave-probihajici",
+          "status": "ukonceno",
+          "lifecycle": "ukonceno",
           "importance": 3,
           "impact": 3,
           "region": {
@@ -14197,10 +14197,10 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-29T10:54:03+02:00",
           "publishedAt": "2026-07-29T10:54:03+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-29T10:40:28+02:00",
           "validTo": "2026-07-30T00:00:00+02:00",
-          "resolvedAt": null,
+          "resolvedAt": "2026-07-30T00:43:58.632Z",
           "groupKey": "2026-07-29:riziko-pozaru-sivs-xii-1",
           "tags": [
             "cap",
@@ -14216,7 +14216,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.381Z",
+            "fetchedAt": "2026-07-30T00:44:04.215Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -14245,7 +14245,7 @@
             "severity": "Moderate",
             "urgency": "Immediate",
             "certainty": "Likely",
-            "badgeActive": true,
+            "badgeActive": false,
             "geo": {
               "links": [
                 {
@@ -15199,7 +15199,7 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-29T10:54:03+02:00",
           "publishedAt": "2026-07-29T10:54:03+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-08-01T00:00:00+02:00",
           "validTo": "",
           "resolvedAt": null,
@@ -15218,7 +15218,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.383Z",
+            "fetchedAt": "2026-07-30T00:44:04.217Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -17735,7 +17735,7 @@
         }
       ],
       "sent": "2026-07-29T10:54:03+02:00",
-      "updatedAt": "2026-07-29T20:15:05.798Z",
+      "updatedAt": "2026-07-30T00:43:58.632Z",
       "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_290854.xml",
       "msgType": "Update",
       "hazardCount": 37
@@ -17812,7 +17812,7 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-28T14:00:00+02:00",
           "publishedAt": "2026-07-28T14:00:00+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-28T14:00:00+02:00",
           "validTo": "",
           "resolvedAt": null,
@@ -17831,7 +17831,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.393Z",
+            "fetchedAt": "2026-07-30T00:44:04.227Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -18451,7 +18451,7 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-28T14:00:00+02:00",
           "publishedAt": "2026-07-28T14:00:00+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-28T14:00:00+02:00",
           "validTo": "",
           "resolvedAt": null,
@@ -18470,7 +18470,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.395Z",
+            "fetchedAt": "2026-07-30T00:44:04.228Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -20296,7 +20296,7 @@
           "orgType": "meteo",
           "publishedAtSource": "2026-07-28T14:00:00+02:00",
           "publishedAt": "2026-07-28T14:00:00+02:00",
-          "updatedAt": "2026-07-29T20:15:05.798Z",
+          "updatedAt": "2026-07-30T00:43:58.632Z",
           "validFrom": "2026-07-28T14:00:00+02:00",
           "validTo": "",
           "resolvedAt": null,
@@ -20315,7 +20315,7 @@
             "approvalStatus": "APPROVED_CC_BY",
             "attributionTemplateId": "attr-open-data-by-v1",
             "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-            "fetchedAt": "2026-07-29T20:15:10.397Z",
+            "fetchedAt": "2026-07-30T00:44:04.230Z",
             "sourceUrl": "https://vystrahy-cr.chmi.cz/",
             "modifications": [
               "normalized-metadata-link-only"
@@ -21272,10 +21272,11 @@
         }
       ],
       "sent": "2026-07-28T14:00:00+02:00",
-      "updatedAt": "2026-07-29T20:15:05.798Z",
+      "updatedAt": "2026-07-30T00:43:58.632Z",
       "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
       "msgType": "Update",
       "hazardCount": 4
     }
-  }
+  },
+  "bulletinCacheEpoch": 2
 }
