@@ -89,6 +89,8 @@ export function buildRevisionRecord(alert, identity, opts = {}) {
     hazards: identity.hazards,
     applies_lifecycle: identity.appliesLifecycle,
     msg_type_known: identity.msgTypeKnown,
+    // Official CAP document URL from discovery (opendata .xml) — never portal listing.
+    sourceUrl: alert.sourceUrl || null,
     // raw XML never stored here by default
     raw_xml_retained: false,
   };

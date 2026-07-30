@@ -3,8 +3,8 @@
  */
 import path from "path";
 import { fileURLToPath } from "url";
-import { CHMI_ATTRIBUTION, CHMI_PUBLIC_ALERTS_URL } from "./config.mjs";
-import { foldCs, makeGroupKey } from "../iu-info-events-lib.mjs";
+import { CHMI_ATTRIBUTION, CHMI_OPENDATA_CAP_INDEX, CHMI_PUBLIC_ALERTS_URL } from "./config.mjs";
+import { canonicalizeUrl, foldCs, isConcreteItemUrl, makeGroupKey, normalizeItemUrl } from "../iu-info-events-lib.mjs";
 import {
   attachLegalProvenance,
   canPublishFromSource,
@@ -15,6 +15,10 @@ import {
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_REPO = path.resolve(__dirname, "../..");
 
+/** Official CAP index listing — never a per-alert primary URL. */
+const CHMI_CAP_INDEX_RE = /\/meteorology\/weather\/alerts\/cap\/?$/i;
+const CHMI_OFFICIAL_HOST_RE = /(?:^|\.)chmi\.cz$/i;
+
 function importanceFromSeverity(sev) {
   const s = String(sev || "");
   if (/^Extreme$/i.test(s)) return 5;
@@ -22,6 +26,132 @@ function importanceFromSeverity(sev) {
   if (/^Moderate$/i.test(s)) return 3;
   if (/^Minor$/i.test(s)) return 2;
   return 1;
+}
+
+/**
+ * Build a concrete official CAP document URL for one hazard.
+ * Base = discovered opendata .xml bulletin; query disambiguates hazards in the same file.
+ * Never invents hosts/paths; never uses portal homepage/listing as primary URL.
+ *
+ * @param {object} revision
+ * @param {object} hazard
+ * @param {object} [opts]
+ * @returns {{ url: string, urlKind: "cap_document", listingUrl: string, urlFallbackUsed: false } | { url: "", urlKind: "missing_concrete", listingUrl: string, urlFallbackUsed: true, urlFallbackReason: string }}
+ */
+export function buildConcreteCapItemUrl(revision, hazard, opts = {}) {
+  const listingUrl = opts.publicAlertsUrl || CHMI_PUBLIC_ALERTS_URL;
+  let rawBase =
+    (revision && revision.sourceUrl) ||
+    opts.sourceUrl ||
+    (opts.sourceUrlByMessageId && revision && opts.sourceUrlByMessageId.get(revision.cap_message_id)) ||
+    "";
+  // Fixture / relative tokens resolve against the official CAP index (prod always passes absolute URLs).
+  if (rawBase && !/^https?:\/\//i.test(String(rawBase))) {
+    const name = String(rawBase).replace(/^\/+/, "");
+    rawBase = `${CHMI_OPENDATA_CAP_INDEX}${/\.xml$/i.test(name) ? name : `${name}.xml`}`;
+  }
+  const base = normalizeItemUrl(rawBase);
+  if (!base) {
+    return {
+      url: "",
+      urlKind: "missing_concrete",
+      listingUrl,
+      urlFallbackUsed: true,
+      urlFallbackReason: "no_source_document_url",
+    };
+  }
+  let u;
+  try {
+    u = new URL(base);
+  } catch {
+    return {
+      url: "",
+      urlKind: "missing_concrete",
+      listingUrl,
+      urlFallbackUsed: true,
+      urlFallbackReason: "invalid_source_document_url",
+    };
+  }
+  const host = u.hostname.replace(/^www\./, "").toLowerCase();
+  if (!CHMI_OFFICIAL_HOST_RE.test(host)) {
+    return {
+      url: "",
+      urlKind: "missing_concrete",
+      listingUrl,
+      urlFallbackUsed: true,
+      urlFallbackReason: "non_official_host",
+    };
+  }
+  const pathNoSlash = (u.pathname || "/").replace(/\/+$/, "") || "/";
+  if (pathNoSlash === "/" || CHMI_CAP_INDEX_RE.test(pathNoSlash) || /vystrahy-cr\.chmi\.cz$/i.test(host)) {
+    return {
+      url: "",
+      urlKind: "missing_concrete",
+      listingUrl,
+      urlFallbackUsed: true,
+      urlFallbackReason: "homepage_or_listing_rejected",
+    };
+  }
+  if (!/\.xml$/i.test(pathNoSlash)) {
+    return {
+      url: "",
+      urlKind: "missing_concrete",
+      listingUrl,
+      urlFallbackUsed: true,
+      urlFallbackReason: "not_cap_xml_document",
+    };
+  }
+  // Drop prior disambiguators; set stable hid from hazard identity.
+  u.search = "";
+  u.hash = "";
+  const hid = String((hazard && hazard.hazard_instance_id) || "").replace(/^haz:/, "");
+  if (hid) u.searchParams.set("hid", hid);
+  else if (revision && revision.identifier) {
+    u.searchParams.set("id", String(revision.identifier).slice(-24));
+    const ek = foldCs((hazard && (hazard.eventKey || hazard.event)) || "").slice(0, 40);
+    if (ek) u.searchParams.set("e", ek);
+  }
+  const concrete = u.toString();
+  if (!isConcreteItemUrl(concrete, listingUrl) || !isConcreteItemUrl(concrete, null)) {
+    return {
+      url: "",
+      urlKind: "missing_concrete",
+      listingUrl,
+      urlFallbackUsed: true,
+      urlFallbackReason: "failed_concrete_url_gate",
+    };
+  }
+  return {
+    url: concrete,
+    urlKind: "cap_document",
+    listingUrl,
+    urlFallbackUsed: false,
+  };
+}
+
+/**
+ * Chronology for CAP feed items — never invent validity times.
+ * sortAt prefers CAP sent/published; firstSeen preserved across refreshes by stable item id.
+ */
+export function applyCapChronology(item, opts = {}) {
+  const nowIso = opts.nowIso || new Date().toISOString();
+  const firstSeenMap = opts.firstSeenById || new Map();
+  const itemId = String(item.id || "");
+  const sourcePub = item.publishedAtSource || item.publishedAt || null;
+  const prevFirst = itemId && firstSeenMap.has(itemId) ? firstSeenMap.get(itemId) : null;
+  const firstSeen = prevFirst || item.firstSeenByInfoUzel || nowIso;
+  const sortAt = sourcePub || firstSeen;
+  return {
+    ...item,
+    publishedAtSource: sourcePub,
+    publishedAt: sourcePub,
+    firstSeenByInfoUzel: firstSeen,
+    lastProcessedAt: nowIso,
+    sortAt,
+    timeSource: sourcePub ? "cap_sent" : "first_seen_fallback",
+    timeConfidence: sourcePub ? "high" : "fallback",
+    isNewCapture: !prevFirst,
+  };
 }
 
 /**
@@ -110,7 +240,7 @@ export function makeStableItemId(hazardInstanceId) {
 export function revisionToFeedItems(revision, opts = {}) {
   const nowIso = opts.nowIso || new Date().toISOString();
   const nowMs = Date.parse(nowIso) || Date.now();
-  const publicUrl = opts.publicAlertsUrl || CHMI_PUBLIC_ALERTS_URL;
+  const listingUrl = opts.publicAlertsUrl || CHMI_PUBLIC_ALERTS_URL;
   const items = [];
 
   for (const h of revision.hazards || []) {
@@ -167,9 +297,11 @@ export function revisionToFeedItems(revision, opts = {}) {
 
     const cancelled = /^Cancel$/i.test(revision.msgType);
     const expMs = Date.parse(h.valid_to || "") || 0;
+    const onsetMs = Date.parse(h.valid_from || "") || 0;
     const hazardExpired = expMs > 0 && expMs <= nowMs;
     const inactiveStatus = !/^Actual$/i.test(String(revision.status || "Actual"));
     const hazardActive = !cancelled && !inactiveStatus && !hazardExpired;
+    const notYetStarted = !!(onsetMs > 0 && onsetMs > nowMs);
     const ended = !hazardActive;
     const itemId = makeStableItemId(h.hazard_instance_id);
     const geoStats = {
@@ -182,7 +314,15 @@ export function revisionToFeedItems(revision, opts = {}) {
           : Math.round((100 * links.length) / Math.max(links.length + (geo.quarantine || []).length, 1)),
     };
 
-    items.push({
+    const urlInfo = buildConcreteCapItemUrl(revision, h, opts);
+    // Do not publish homepage/listing as a fake per-alert detail URL.
+    if (!urlInfo.url) {
+      continue;
+    }
+    const canonical = canonicalizeUrl(urlInfo.url) || urlInfo.url;
+    const publishedAtSource = revision.published_at || revision.sent || null;
+
+    let item = {
       id: itemId,
       title: title,
       description: h.description || "",
@@ -190,24 +330,26 @@ export function revisionToFeedItems(revision, opts = {}) {
       sourceId: "chmi",
       sourceLabel: "ČHMÚ",
       sourceGroup: "pocasi",
-      url: publicUrl,
-      originalUrl: publicUrl,
-      canonicalUrl: publicUrl,
+      url: urlInfo.url,
+      originalUrl: urlInfo.url,
+      canonicalUrl: canonical,
+      urlKind: urlInfo.urlKind,
+      listingUrl: urlInfo.listingUrl || listingUrl,
       sectionId: "pocasi",
       subsectionId: "vystrahy",
       eventType: "mimoradne",
       status: cancelled ? "zruseno" : ended ? "ukonceno" : "aktivni",
-      lifecycle: cancelled ? "zruseno" : ended ? "ukonceno" : "prave-probihajici",
+      lifecycle: cancelled ? "zruseno" : ended ? "ukonceno" : notYetStarted ? "naplanovano" : "prave-probihajici",
       importance: importanceFromSeverity(h.severity),
       impact: importanceFromSeverity(h.severity),
       region,
       lane: "pocasi",
       connectorType: "opendata",
       orgType: "meteo",
-      publishedAtSource: revision.published_at || revision.sent,
-      publishedAt: revision.published_at || revision.sent,
+      publishedAtSource,
+      publishedAt: publishedAtSource,
       updatedAt: nowIso,
-      validFrom: h.valid_from || revision.sent,
+      validFrom: h.valid_from || revision.sent || null,
       validTo: h.valid_to || "",
       resolvedAt: ended ? nowIso : null,
       groupKey: makeGroupKey(titleBase + "|" + (h.eventKey || h.event || ""), revision.sent || "unknown"),
@@ -229,6 +371,9 @@ export function revisionToFeedItems(revision, opts = {}) {
         urgency: h.urgency,
         certainty: h.certainty,
         badgeActive: hazardActive && !cancelled,
+        sourceDocumentUrl: urlInfo.url,
+        listingUrl: urlInfo.listingUrl || listingUrl,
+        urlKind: urlInfo.urlKind,
         geo: {
           links,
           quarantine: geo.quarantine || [],
@@ -258,8 +403,9 @@ export function revisionToFeedItems(revision, opts = {}) {
         ),
         significantUnreadReset: !!(revision.change && revision.change.significantUnreadReset),
       },
-    });
-    items[items.length - 1] = attachChmiLegal(items[items.length - 1], opts);
+    };
+    item = applyCapChronology(item, opts);
+    items.push(attachChmiLegal(item, opts));
   }
   return items;
 }
@@ -340,4 +486,16 @@ export function revisionsToFeed(revisions, opts = {}) {
   const out = [];
   for (const r of revisions || []) out.push(...revisionToFeedItems(r, opts));
   return mergeFeedItemsById(out);
+}
+
+/**
+ * Build firstSeen map from previous feed items (stable id → firstSeenByInfoUzel).
+ */
+export function loadChmiFirstSeenById(prevItems) {
+  const map = new Map();
+  for (const it of prevItems || []) {
+    if (!it || String(it.sourceId) !== "chmi") continue;
+    if (it.id && it.firstSeenByInfoUzel) map.set(String(it.id), String(it.firstSeenByInfoUzel));
+  }
+  return map;
 }

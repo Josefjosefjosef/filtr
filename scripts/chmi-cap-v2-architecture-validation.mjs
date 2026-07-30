@@ -299,7 +299,10 @@ function listedForStreams(streamCount, filesPerStream = 3) {
   const loc = summarizeAlertLocality(geo.links, geo.displayNames);
   ok("geo_summary_not_single_town", loc.extraAreaCount >= 1 || /ORP|kraj|dalš/i.test(loc.summary), loc.summary);
   const feed = revisionsToFeed(
-    processCapDocuments([{ xml }], { config: getChmiCapV2Config({ IU_CHMI_CAP_V2_MODE: "active" }), registry: reg }).report.revisions
+    processCapDocuments(
+      [{ xml, sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_geo.xml" }],
+      { config: getChmiCapV2Config({ IU_CHMI_CAP_V2_MODE: "active" }), registry: reg }
+    ).report.revisions
   );
   ok("geo_orpNames_published", feed[0] && (feed[0].region.orpNames || []).length >= 5, JSON.stringify(feed[0] && feed[0].region.orpNames));
 }

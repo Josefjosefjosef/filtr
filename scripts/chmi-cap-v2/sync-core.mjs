@@ -126,7 +126,8 @@ export function applyConditionalResult(response, syncState, opts = {}) {
     syncState.last_success_at = nowIso;
     if (etag) syncState.etag = etag;
     if (lm) syncState.lastModified = lm;
-    return { action: "hash_unchanged", syncState };
+    // Keep body so callers can rebuild a cold bulletin cache after epoch invalidation.
+    return { action: "hash_unchanged", syncState, body, hash };
   }
   syncState.etag = etag;
   syncState.lastModified = lm;

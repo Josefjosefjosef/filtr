@@ -29,10 +29,10 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-status-unify-20260730";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-concrete-url-20260730";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-chmi-status-unify-20260730";
+const CACHE_BUST = "info-system-v6-chmi-concrete-url-20260730";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -397,9 +397,21 @@ function sectionColor(sectionId) {
 }
 
 function chmiPublicDetailUrl(ev) {
-  // CAP v2 items always open the public CHMI page (never technical XML).
-  if (ev && ev.capV2) return "https://vystrahy-cr.chmi.cz/";
-  return "";
+  // Prefer concrete official CAP document URL from feed (opendata .xml + hid).
+  // Never force portal listing/homepage as a fake per-alert detail.
+  const candidate = String((ev && (ev.url || ev.originalUrl || (ev.capV2 && ev.capV2.sourceDocumentUrl))) || "");
+  if (!candidate) return "";
+  try {
+    const u = new URL(candidate);
+    const host = u.hostname.replace(/^www\./, "").toLowerCase();
+    if (!/(?:^|\.)chmi\.cz$/i.test(host)) return "";
+    const path = (u.pathname || "/").replace(/\/+$/, "") || "/";
+    if (path === "/" || /vystrahy-cr\.chmi\.cz$/i.test(host)) return "";
+    if (!/\.xml$/i.test(path)) return "";
+    return candidate;
+  } catch {
+    return "";
+  }
 }
 
 /**
@@ -467,6 +479,7 @@ function renderItem(ev) {
         : "") +
       `</div>`;
   }
+  // Green AKTIVNÍ pill follows live lifecycle (ACTIVE only), not badgeActive (active+future warn cards).
   const activePill = timeline.isActiveWarning
     ? `<span class="iuPdCard__pill iuPdCard__pill--active iuPrehledDne__pill" role="status" aria-label="Právě platná výstraha">AKTIVNÍ VÝSTRAHA</span>`
     : "";

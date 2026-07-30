@@ -27,7 +27,7 @@ import {
   suspiciousDrop,
   tryAcquireLock,
 } from "./chmi-cap-v2/sync-core.mjs";
-import { mergeFeedItemsById, revisionsToFeed } from "./chmi-cap-v2/normalize-feed.mjs";
+import { loadChmiFirstSeenById, mergeFeedItemsById, revisionsToFeed } from "./chmi-cap-v2/normalize-feed.mjs";
 import { createGeoRegistry } from "./chmi-cap-v2/geo-registry.mjs";
 import { latestRevisionForThread } from "./chmi-cap-v2/revisions.mjs";
 
@@ -39,7 +39,7 @@ const STATE_FILE = path.join(STATE_DIR, "sync_state.json");
 const DIAG_FILE = path.join(STATE_DIR, "diagnostics.json");
 const REVISIONS_FILE = path.join(STATE_DIR, "revisions_index.json");
 /** Bump when normalize/parser semantics change so bulletinCache cannot keep stale aktivni items. */
-const BULLETIN_CACHE_EPOCH = 2;
+const BULLETIN_CACHE_EPOCH = 3;
 
 function readJson(p, fallback) {
   try {
@@ -158,6 +158,8 @@ export async function runChmiCapV2Sync(opts = {}) {
     if (state.bulletinCacheEpoch !== BULLETIN_CACHE_EPOCH) {
       state.bulletinCache = {};
       state.bulletinCacheEpoch = BULLETIN_CACHE_EPOCH;
+      state.endpointMeta = {};
+      if (state.sync) state.sync.bodyHash = null;
       diagnostics.discovery = diagnostics.discovery || {};
       diagnostics.cacheEpochInvalidated = BULLETIN_CACHE_EPOCH;
     }
@@ -191,6 +193,16 @@ export async function runChmiCapV2Sync(opts = {}) {
           updatedAt: new Date().toISOString(),
         };
         docs.push({ xml: applied.body, sourceUrl: url, name: item.name || url, productKey });
+      } else if (!haveCache && applied.body && applied.action === "hash_unchanged") {
+        // Cold cache after epoch bump: same bytes as prior sync hash, but bulletin items missing.
+        state.endpointMeta[url] = {
+          etag: state.sync.etag,
+          lastModified: state.sync.lastModified,
+          bodyHash: state.sync.bodyHash,
+          updatedAt: new Date().toISOString(),
+        };
+        docs.push({ xml: applied.body, sourceUrl: url, name: item.name || url, productKey });
+        diagnostics.http[diagnostics.http.length - 1].action = "process_cold_cache";
       }
     }
 
@@ -212,6 +224,8 @@ export async function runChmiCapV2Sync(opts = {}) {
 
     let feedItems = [];
     let processResult = null;
+    const prevFeedEarly = readJson(path.join(DIR, "feed.json"), { items: [] });
+    const firstSeenById = loadChmiFirstSeenById(prevFeedEarly.items || []);
     if (docs.length) {
       for (const doc of docs) {
         const one = processCapDocuments([doc], {
@@ -221,7 +235,7 @@ export async function runChmiCapV2Sync(opts = {}) {
         });
         const tids = [...new Set(one.report.revisions.map((r) => r.alert_thread_id))];
         const revs = tids.map((tid) => latestRevisionForThread(one.store, tid)).filter(Boolean);
-        const items = revisionsToFeed(revs, { nowIso: started });
+        const items = revisionsToFeed(revs, { nowIso: started, firstSeenById });
         state.bulletinCache[doc.sourceUrl] = {
           items,
           sent: revs[0] ? revs[0].sent : null,
@@ -259,6 +273,7 @@ export async function runChmiCapV2Sync(opts = {}) {
           msgType: r.msgType,
           change_type: r.change_type,
           sent: r.sent,
+          sourceUrl: r.sourceUrl || null,
           hazardCount: (r.hazards || []).length,
         })),
       });
@@ -278,9 +293,29 @@ export async function runChmiCapV2Sync(opts = {}) {
       }
       union.push(...cached.items);
     }
-    feedItems = mergeFeedItemsById(union).filter((i) => i && i.status === "aktivni");
+    feedItems = mergeFeedItemsById(union)
+      .map((i) => {
+        // Re-apply chrono so firstSeen survives 304 cache hits across runs.
+        if (!i) return i;
+        const prev = firstSeenById.get(String(i.id));
+        if (prev && !i.firstSeenByInfoUzel) {
+          return { ...i, firstSeenByInfoUzel: prev, sortAt: i.sortAt || i.publishedAtSource || prev, lastProcessedAt: i.lastProcessedAt || started };
+        }
+        if (!i.sortAt || !i.firstSeenByInfoUzel || !i.lastProcessedAt) {
+          return {
+            ...i,
+            firstSeenByInfoUzel: i.firstSeenByInfoUzel || prev || started,
+            lastProcessedAt: i.lastProcessedAt || started,
+            sortAt: i.sortAt || i.publishedAtSource || i.firstSeenByInfoUzel || prev || started,
+            timeSource: i.timeSource || (i.publishedAtSource ? "cap_sent" : "first_seen_fallback"),
+            timeConfidence: i.timeConfidence || (i.publishedAtSource ? "high" : "fallback"),
+          };
+        }
+        return i;
+      })
+      .filter((i) => i && i.status === "aktivni");
 
-    const prevFeed = readJson(path.join(DIR, "feed.json"), { items: [] });
+    const prevFeed = prevFeedEarly;
     const prevChmi = (prevFeed.items || []).filter((i) => String(i.sourceId) === "chmi");
     const completeness = completenessMetrics(feedItems, processResult);
     completeness.productStreams = diagnostics.discovery.productStreams || [];

@@ -415,9 +415,9 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-07-30T11:52:48.123Z",
-    "lastSuccessAt": "2026-07-30T11:52:52.437Z",
-    "lastChangedAt": "2026-07-30T11:52:51.611Z",
+    "lastRunAt": "2026-07-30T13:49:35.449Z",
+    "lastSuccessAt": "2026-07-30T13:49:36.122Z",
+    "lastChangedAt": "2026-07-30T13:49:36.087Z",
     "lastError": null,
     "status": "not_modified",
     "etag": "\"6a6b3290-1ebe36\"",
@@ -478,9 +478,9 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 4756,
+    "runMs": 1113,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-07-30T11:52:48.123Z",
+    "lastSnapshotAt": "2026-07-30T13:49:35.449Z",
     "audit": {
       "http": [
         {
@@ -549,6 +549,24 @@
       }
     },
     "runHistory": [
+      {
+        "at": "2026-07-30T13:49:35.449Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 1113,
+        "error": null,
+        "activeCount": 27
+      },
+      {
+        "at": "2026-07-30T13:48:48.905Z",
+        "status": "failed",
+        "mode": "active",
+        "publish": false,
+        "runMs": 548,
+        "error": "INCOMPLETE_STREAM_CACHE",
+        "activeCount": 3
+      },
       {
         "at": "2026-07-30T11:52:48.123Z",
         "status": "not_modified",
