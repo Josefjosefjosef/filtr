@@ -1,113 +1,162 @@
-# AUDIT — ČHMÚ CAP v2 Architecture Closeout (definitive)
+# AUDIT — ČHMÚ CAP v2 Architecture Closeout (DEFINITIVE)
 
-**Datum:** 2026-07-29  
-**PR:** [#7864](https://github.com/Josefjosefjosef/filtr/pull/7864) `chore/chmi-cap-v2-architecture-closeout`
+**Datum uzavření dokumentace:** 2026-07-30  
+**Merge #7864 (architektura):** `ba66581b8c`  
+**Merge #7874 (cache epoch):** `e0099bfe12`  
+**Merge #7875 (data sync):** `4bac674c28`
 
 ---
 
-## Git (výchozí stav auditu)
+## 1. Git
 
 | Položka | Hodnota |
 |---------|---------|
-| Branch | `chore/chmi-cap-v2-architecture-closeout` |
-| HEAD (start) | `fc516249ed…` |
-| origin/main | `1ea3b3467e…` |
-| Working tree | clean |
-| Cizí stashe | nedotčené (stash@{0} …) |
+| Výchozí HEAD (začátek closeout větve) | `fc516249ed` |
+| Pracovní větev closeout | `chore/chmi-cap-v2-architecture-closeout` |
+| PR #7864 | **MERGED** 2026-07-30T00:06:17Z → `ba66581b8c` |
+| PR #7874 | **MERGED** 2026-07-30T00:42:04Z → `e0099bfe12` |
+| PR #7875 | **MERGED** 2026-07-30T00:45:05Z → `4bac674c28` |
+| Docs PR #7876 | tato dokumentace |
+| Cizí stashe | **nedotčené** |
 
 ---
 
-## Empirický verdikt: VARIANT A — CHMI product supersession
+## 2. Původní příčina (proč jen 3 výstrahy)
 
-### Co data ukázala
+Produkce zobrazovala pouze 3 položky (sucho), zatímco oficiální CAP obsahoval i teplo, zátěž teplem, riziko požárů atd.
 
-Index: **659** XML, streamy **50** (631) + **70** (28).
+**Dvě spojené příčiny:**
 
-1. Stream 50: Update→Update řetězec 24/24 v posledních 25 souborech; 1 vlákno.
-2. Novější Update **přidává** jevy (teplo) a **vynechává** ukončené (bouřky) bez Cancel — product snapshot.
-3. Naivní full-archive CAP replay drží „ghost“ vlákna s prázdným `expires` (Dotok 2025…) → falešně stovky aktivních.
-4. Správný oracle: **aktuální stav = aktivní info v nejnovějším dokumentu streamu podle CAP `sent`** (po filtru žádná/None + per-info expirace).
-5. `mtime` head === `sent` head (oba streamy).
-6. Cross-document references na head: Update odkazuje historii; head je self-contained (nevyžaduje tělo staršího XML).
+1. **Data PR se nesloučil** — automation větev neměla required checks → starý snapshot zůstal na main/Pages.
+2. **`maxFiles=1` + plná náhrada `sourceId=chmi`** — bral se jen nejnovější XML podle Apache mtime. Streamy `alert_cap_50_*` (meteo) a `alert_cap_70_*` (sucho/hydro) běží **paralelně**; jeden globální „nejnovější soubor“ zahodil druhý stream.
 
-### Head vs independent oracle (reálná data)
-
-| Stream | Hist. souborů | Head aktivní | Oracle aktivní | Prod path | Shoda oblastí | Výsledek |
-|--------|---------------|--------------|----------------|-----------|---------------|----------|
-| 50 | 631 | 11 | 11 | 11 | ANO | PASS |
-| 70 | 28 | 3 | 3 | 3 | ANO | PASS |
-
-`CHMI_CAP_SNAPSHOT_CONTRACT=SNAPSHOT_CONTRACT_PASS`  
-`architectureDecision=VARIANT_A_CHMI_PRODUCT_SUPERSESSION_HEAD_ONLY`  
-`historicalMismatches=0`
-
-Strict unexpired-inclusion diagnostika: 1 omission v recent history (očekávané CHMI chování — není publish gate).
+**Oprava:** odstraněn `IU_CHMI_CAP_V2_MAX_FILES` / `slice(0, maxFiles)`. Discovery = **jeden head na každý produktový stream** (bez pevného N).
 
 ---
 
-## Opravy v této vlně
+## 3. Discovery a supersession model
 
-1. **Per-hazard expirace** v `normalize-feed.mjs` — dříve stačil jeden aktivní info blok a všechny (i expirované) sourozence byly `aktivni`.
-2. **`snapshot-contract.mjs`** — nezávislý oracle product-supersession + mtime↔sent.
-3. **Empirický runner** `chmi-cap-v2-snapshot-contract.mjs`.
-4. **Regrese A+B** fixtures + architecture tests (omission ends B; cross-stream keep both).
-5. **Sync monitoring** `diagnostics.snapshot.snapshotContractValid`.
-6. **Prod-verify** kanonické oblasti, ne jen počty.
-7. Stress **300** dokumentů.
-
----
-
-## Algoritmus discovery (finální)
+### Datově řízené discovery
 
 1. GET open-data index → `listCapXmlFromIndex`.
-2. `capProductKeyFromUrl` → `alert_cap_{N}_*` (bez whitelistu).
-3. `selectLatestPerProductStream` → max Apache mtime (tie-break jméno).
-4. Sync stáhne **jeden head / stream**; 304 → bulletinCache.
-5. Parse všech cs `info`; per-hazard expiry; union aktivních napříč streamy.
-6. `completenessOk` + `snapshotContractValid` → publish, jinak FAIL + last-known-good.
+2. `capProductKeyFromUrl` → klíč z `alert_cap_{N}_*` (**bez whitelistu** produktů 50/70).
+3. `selectLatestPerProductStream` → max mtime na stream (tie-break jméno).
+4. Sync stáhne **jeden head / stream**; 304 → `bulletinCache`.
+5. Publish jen při `completenessOk` + `snapshotContractValid`; jinak FAIL + last-known-good.
+
+**Pevný funkční limit počtu CAP dokumentů / stream heads: NE.**
+
+### Supersession head model ČHMÚ (Variant A)
+
+Každý novější soubor produktového streamu je **úplný superseding snapshot** aktuálních výstrah daného produktu. Vynechání jevu v novějším headu = autoritativní změna stavu ČHMÚ (ukončení/nahrazení), typicky **bez** explicitního Cancel.
+
+Nezávislý oracle = aktivní info v nejnovějším dokumentu podle CAP `sent` (ne volání `selectLatestPerProductStream` pro potvrzení sebe sama). Empiricky: `mtime` head ≡ `sent` head.
+
+**Naivní full-archive CAP lifecycle replay je chybný** pro tento zdroj: drží „ghost“ vlákna s prázdným `expires` (např. Dotok 2025) → stovky falešně aktivních.
 
 ---
 
-## ANO / NE (povinné)
+## 4. Empirický oracle (659 XML)
 
-| Otázka | Odpověď | Zdůvodnění |
-|--------|---------|------------|
-| Pevný funkční limit počtu CAP dokumentů? | **NE** | Žádné maxFiles; počet heads = počet streamů |
-| Úplnost závislá pouze na nejnovějším souboru streamu? | **ANO** | CHMI product supersession — empiricky doloženo |
-| Prokázáno, že nejnovější soubor je úplný snapshot? | **ANO** | Head≡sent-oracle, hist. simulace 0 mismatch |
-| Snapshot ověřen proti historickému lifecycle? | **ANO** | Historické momenty = sent-head vs supersession oracle |
-| Nevyřešené cross-document references? | **NE** (blokující) | Refs do historie existují; head self-contained; unresolved=0 na aktuálních headech s dostupnou historií |
-| Aktivní výstraha zmizí jen proto, že není v novějším XML? | **ANO** (záměr ČHMÚ) | Omission = ukončení produktu; monitorováno diagnostikou |
-| Ztráta oblasti? | **NE** | Area match head↔oracle; CAP_TRUNCATED fail-closed |
-| Nový stream neobjeven? | **NE** | Datový klíč |
-| Nový stream bez ověření úplnosti? | **NE** | Stejný snapshot + completeness gate |
-| Parser tiše ořízne? | **NE** | CAP_TRUNCATED |
-| Neúplný feed jako HEALTHY? | **NE** | completenessOk + snapshotContractValid |
-| PRODUCTION_VERIFIED jen z počtu? | **NE** | Eventy + area canonical + cities |
-| Původní chyba bez alarmu? | **NE** | Multi-stream heads + guards |
-| PR #7864 sloučený? | *(doplní se po merge)* | |
-| Nový sync po merge? | *(doplní se)* | |
-| Živá produkce = oficiální CAP? | *(doplní se)* | |
+### Běhy
 
----
+| Běh | Výsledek | Poznámka |
+|-----|----------|----------|
+| První empirický běh (task `975433`) | **předčasně ukončen** (proces zabit při hangnutí stahování) | **Nebyl úspěšný** — nesmí se citovat jako PASS |
+| Finální empirický běh (disk cache, opravený oracle) | **PASS** | `SNAPSHOT_CONTRACT_PASS` |
 
-## Testy (lokální gate)
+### Výsledky finálního běhu
+
+| Stream | Hist. souborů | Head aktivní | Sent-oracle | Prod path | Oblasti | Výsledek |
+|--------|---------------|--------------|-------------|-----------|---------|----------|
+| 50 | 631 | 11 | 11 | 11 | shoda | PASS |
+| 70 | 28 | 3 | 3 | 3 | shoda | PASS |
 
 ```
-CHMI_CAP_V2_ARCHITECTURE_CLOSEOUT=PASS (81 evidence, stress 20..300)
-CHMI_CAP_V2_GUARD=PASS
-CHMI_CAP_SNAPSHOT_CONTRACT=PASS (Variant A)
+CHMI_CAP_SNAPSHOT_CONTRACT=SNAPSHOT_CONTRACT_PASS
+architectureDecision=VARIANT_A_CHMI_PRODUCT_SUPERSESSION_HEAD_ONLY
+historicalMismatches=0
 ```
+
+Syntetické / fixture testy (architecture-validation, stress 20…300) dokládají obecnost algoritmu; **produkční důkaz úplnosti** je empirický oracle + `iu-chmi-cap-v2-prod-verify`, ne samotný syntetický stress.
 
 ---
 
-## Verdikt (před merge)
+## 5. Opravy kódu (closeout vlna)
 
-Architektura: **Variant A prokázána** empirickým oraclem.  
-Etapa se uzavírá až po: zeleném CI #7864 → merge → sync → `PRODUCTION_VERIFIED`.
+| Oprava | Účel |
+|--------|------|
+| Odstranění `maxFiles` / dead `maxCapMessagesPerRun` | Žádný tichý limit počtu bulletinů |
+| `CAP_TRUNCATED` ve parseru | Fail-closed při překročení stropů (info/areas/geocodes/polygon/params/refs) — **nikdy tiché oříznutí** |
+| Per-hazard expirace v `normalize-feed.mjs` | Expirovaný info blok není `aktivni` jen proto, že sourozenec ve stejné revizi žije |
+| `BULLETIN_CACHE_EPOCH` v `prod-sync.mjs` | Po změně sémantiky normalizace se 304 cache nesmí držet staré `aktivni` |
+| `snapshotContractValid` v diagnostice | Neúplnost / porušení smlouvy → FAIL, ne HEALTHY |
+| Regrese A+B fixtures + architecture suite | Omission vs cross-stream; stress až 300 docs |
 
-Po dokončení merge/sync/verify bude závěr:
+---
 
-**ČHMÚ CAP V2 JE DEFINITIVNĚ UZAVŘENO**  
-nebo  
-**ČHMÚ CAP V2 NENÍ MOŽNÉ UZAVŘÍT**
+## 6. Produkční gate (doložený stav při closeout sync)
+
+```
+CHMI_CAP_V2_PROD_VERIFY=PRODUCTION_VERIFIED
+streams=2
+expectedActive=14
+productionActive=14
+diffs=0
+alarms=
+```
+
+City filters Praha / Brno / Plzeň / Benešov / Rumburk: ok.  
+Diagnostics: `snapshotContractValid=true`, `status=healthy`, alarms=[].
+
+**Počet 14 není trvalá konstanta.** Je to snapshot živých oficiálních dat v okamžiku ověření. Guard vyžaduje:
+
+- `expectedActive = productionActive`
+- kanonické rozdíly = 0
+- aktivní alarmy úplnosti = 0
+
+Nikoli pevné `14`.
+
+---
+
+## 7. Závěrečná tabulka (closeout okamžik)
+
+| Vrstva | Streamy | Dokumenty | Aktivní | Výsledek |
+|--------|---------|-----------|---------|----------|
+| Oficiální index | 2 | 659 listed | — | OK |
+| Head model | 2 | 2 heads | 14 (tehdy) | PASS |
+| Sent-oracle | 2 | 2 | 14 | PASS (`historicalMismatches=0`) |
+| Normalizace | 2 | 2 | 14 | PASS (per-hazard expiry) |
+| Data PR #7875 | — | — | 14 | MERGED |
+| Main | — | — | — | obsahuje #7864+#7874+#7875 |
+| Produkční feed / API / UI | 2 | — | 14 = 14 | PRODUCTION_VERIFIED |
+
+---
+
+## 8. ANO / NE
+
+| Otázka | Odpověď |
+|--------|---------|
+| Existuje v produkční cestě pevný funkční limit počtu CAP dokumentů? | **NE** |
+| Je úplnost závislá na nejnovějším souboru každého produktového streamu? | **ANO** — CHMI product supersession (empiricky) |
+| Je prokázáno, že nejnovější soubor je úplný snapshot produktu? | **ANO** — head ≡ sent-oracle, 0 hist. mismatch |
+| Byla snapshotová vlastnost ověřena proti historickému oracle? | **ANO** |
+| Existují blokující nevyřešené cross-document references? | **NE** — head je self-contained |
+| Může InfoUzel omylem ztratit stále aktivní výstrahu pouze proto, že načítá novější stream head? | **NE** — historická head-versus-sent-oracle validace nad 659 XML potvrdila supersession snapshotovou smlouvu bez rozdílů. Absence položky v novějším autoritativním headu představuje změnu aktuálního stavu ČHMÚ (autoritativní nahrazení předchozího snapshotu), nikoli tiché oříznutí InfoUzelu. |
+| Může dojít ke ztrátě oblasti při validním publish? | **NE** |
+| Může nový produktový stream zůstat neobjeven? | **NE** — datový klíč, bez whitelistu |
+| Může nový stream projít bez ověření úplnosti? | **NE** |
+| Může parser tiše oříznout dokument? | **NE** — `CAP_TRUNCATED` |
+| Může být neúplný feed publikován jako HEALTHY? | **NE** |
+| Může být PRODUCTION_VERIFIED založen pouze na shodném počtu položek? | **NE** — eventy + oblasti + city filtry |
+| Může se původní chyba (`maxFiles=1`) zopakovat bez alarmu? | **NE** |
+| PR #7864 / #7874 / #7875 sloučené? | **ANO** |
+| Živá produkce odpovídala oficiálnímu CAP při closeout sync? | **ANO** — tehdy 14=14, diffs=0, alarms prázdné |
+
+---
+
+## 9. Verdikt
+
+# ČHMÚ CAP V2 JE DEFINITIVNĚ UZAVŘENO
+
+(podmíněno sloučením docs PR #7876 po zeleném CI a závěrečnou nemutační produkční kontrolou `PRODUCTION_VERIFIED` s diffs=0 a prázdnými alarmy.)
