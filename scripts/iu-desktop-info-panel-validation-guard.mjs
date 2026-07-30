@@ -398,13 +398,30 @@ async function testMockedStates(context) {
   });
   await page.reload({ waitUntil: "domcontentloaded" });
   await waitForDesktopPanel(page);
+  // CI can paint stale→error a tick later than local; wait for the mocked error state.
+  await page
+    .waitForFunction(
+      () => {
+        const eur = document.querySelector('[data-iu-info-panel-id="eur_czk"]');
+        const fuel = document.querySelector('[data-iu-info-panel-id="fuel"]');
+        return (
+          eur &&
+          eur.getAttribute("data-iu-info-panel-state") === "error" &&
+          fuel &&
+          fuel.getAttribute("data-iu-info-panel-state") === "placeholder"
+        );
+      },
+      null,
+      { timeout: 15000 }
+    )
+    .catch(() => null);
   results.error = await page.evaluate(() => {
     const eur = document.querySelector('[data-iu-info-panel-id="eur_czk"]');
     const fuel = document.querySelector('[data-iu-info-panel-id="fuel"]');
     return (
-      eur &&
+      !!eur &&
       eur.getAttribute("data-iu-info-panel-state") === "error" &&
-      fuel &&
+      !!fuel &&
       fuel.getAttribute("data-iu-info-panel-state") === "placeholder"
     );
   });
