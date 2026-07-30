@@ -1018,36 +1018,88 @@ function isChmiCapWarning(ev) {
 }
 
 /**
- * True only while the CHMI warning is actually in force (not type badge).
- * Rule: validFrom <= now < validTo, excluding Cancel / ended statuses.
+ * Canonical CAP validFrom raw string — same priority as normalize-feed / identity:
+ * event.validFrom (onset || effective || sent) → capV2.onset → capV2.effective.
+ * Never invent a timestamp for UI or status.
  */
-function isCurrentlyActiveChmiWarning(ev, nowMs) {
-  if (!isChmiCapWarning(ev)) return false;
+function canonicalChmiValidFromRaw(ev) {
+  if (!ev) return "";
+  const top = String(ev.validFrom || "").trim();
+  if (top) return top;
+  const onset = String((ev.capV2 && ev.capV2.onset) || "").trim();
+  if (onset) return onset;
+  const effective = String((ev.capV2 && ev.capV2.effective) || "").trim();
+  if (effective) return effective;
+  return "";
+}
+
+function canonicalChmiValidToRaw(ev) {
+  if (!ev) return "";
+  const top = String(ev.validTo || "").trim();
+  if (top) return top;
+  return String((ev.capV2 && ev.capV2.expires) || "").trim();
+}
+
+/** True when the CAP timestamp string includes a reliable clock time (not date-only). */
+function chmiRawHasClockTime(raw) {
+  const s = String(raw || "").trim();
+  if (!s) return false;
+  if (/T\d{1,2}:\d{2}/.test(s)) return true;
+  if (/\d{4}-\d{2}-\d{2}[ T]\d{1,2}:\d{2}/.test(s)) return true;
+  return false;
+}
+
+/**
+ * Display parts for "platnost od" from the same canonical validFrom used for status.
+ * Returns { date, time|null } or null when the start is missing / unreliable.
+ */
+function chmiValidFromDisplayParts(ev) {
+  const raw = canonicalChmiValidFromRaw(ev);
+  const ms = parseTime(raw);
+  if (!ms || !raw) return null;
+  const date = formatPragueDayMonth(ms);
+  if (!date) return null;
+  if (chmiRawHasClockTime(raw)) return { date, time: formatPragueTime(ms) };
+  // Date-only ISO (YYYY-MM-DD) — show date, never invent a clock time.
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return { date, time: null };
+  return null;
+}
+
+/**
+ * Canonical public-feed lifecycle for a CHMI CAP warning.
+ * ACTIVE | FUTURE | INACTIVE | CANCELLED | null (not CHMI).
+ *
+ * ACTIVE:  validFrom <= now < validTo, not Cancel/ended, validTo known
+ * FUTURE:  published warning with now < validFrom < validTo
+ * INACTIVE: expired / ended / insufficient validity data
+ * CANCELLED: Cancel msgType or status zruseno
+ */
+function getChmiWarningLifecycleStatus(ev, nowMs) {
+  if (!isChmiCapWarning(ev)) return null;
   const status = String(ev.status || "").toLowerCase();
-  if (
-    status === "zruseno" ||
-    status === "ukonceno" ||
-    status === "ukoncene" ||
-    status === "archivovano"
-  ) {
-    return false;
-  }
   const msgType = String((ev.capV2 && ev.capV2.msgType) || "");
-  if (/^Cancel$/i.test(msgType)) return false;
+  if (/^Cancel$/i.test(msgType) || status === "zruseno") return "CANCELLED";
+  if (status === "ukonceno" || status === "ukoncene" || status === "archivovano") return "INACTIVE";
+
   const now = Number(nowMs) > 0 ? Number(nowMs) : Date.now();
-  const validFrom =
-    parseTime(ev.validFrom) ||
-    parseTime(ev.capV2 && ev.capV2.onset) ||
-    parseTime(ev.capV2 && ev.capV2.effective) ||
-    0;
-  const validTo =
-    parseTime(ev.validTo) ||
-    parseTime(ev.capV2 && ev.capV2.expires) ||
-    0;
-  if (!validTo) return false;
-  if (validFrom && now < validFrom) return false;
-  if (now >= validTo) return false;
-  return true;
+  const validFrom = parseTime(canonicalChmiValidFromRaw(ev));
+  const validTo = parseTime(canonicalChmiValidToRaw(ev));
+  // Without a reliable end we cannot safely classify for the public feed.
+  if (!validTo) return "INACTIVE";
+  if (now >= validTo) return "INACTIVE";
+  if (validFrom && now < validFrom) return "FUTURE";
+  return "ACTIVE";
+}
+
+/** True only while the CHMI warning is actually in force (green AKTIVNÍ badge). */
+function isCurrentlyActiveChmiWarning(ev, nowMs) {
+  return getChmiWarningLifecycleStatus(ev, nowMs) === "ACTIVE";
+}
+
+/** Public feed keeps currently active and already-published future CHMI warnings. */
+function isPublicFeedChmiWarning(ev, nowMs) {
+  const st = getChmiWarningLifecycleStatus(ev, nowMs);
+  return st === "ACTIVE" || st === "FUTURE";
 }
 
 function publishedAtIso(ev) {
@@ -1074,7 +1126,9 @@ function getEffectiveTimelinePresentation(item, nowMs) {
   const now = Number(nowMs) > 0 ? Number(nowMs) : Date.now();
   const publishedIso = publishedAtIso(item);
   const publishedMs = parseTime(publishedIso) || now;
-  const isActiveWarning = isCurrentlyActiveChmiWarning(item, now);
+  const lifecycleStatus = getChmiWarningLifecycleStatus(item, now);
+  const isActiveWarning = lifecycleStatus === "ACTIVE";
+  const isFutureWarning = lifecycleStatus === "FUTURE";
   const pubDay = pragueYmd(publishedMs);
   const today = pragueYmd(now);
   const isRolledActiveWarning = !!(isActiveWarning && pubDay < today);
@@ -1091,13 +1145,38 @@ function getEffectiveTimelinePresentation(item, nowMs) {
     primaryTime = formatPragueTime(publishedMs);
   }
 
+  let secondaryValidFromLabel = null;
+  let secondaryValidFromDate = null;
+  let secondaryValidFromTime = null;
+  if (isFutureWarning) {
+    const parts = chmiValidFromDisplayParts(item);
+    if (parts) {
+      secondaryValidFromLabel = "platnost od";
+      const vfMs = parseTime(canonicalChmiValidFromRaw(item));
+      const samePubDay = !!(vfMs && pragueYmd(vfMs) === pubDay);
+      if (samePubDay && parts.time) {
+        // Same calendar day as publish: show only the onset clock time.
+        secondaryValidFromDate = null;
+        secondaryValidFromTime = parts.time;
+      } else {
+        secondaryValidFromDate = parts.date;
+        secondaryValidFromTime = parts.time;
+      }
+    }
+  }
+
   return {
     timelineAt: new Date(timelineMs).toISOString(),
     timelineMs,
     primaryDate,
     primaryTime,
     secondaryIssuedLabel,
+    secondaryValidFromLabel,
+    secondaryValidFromDate,
+    secondaryValidFromTime,
+    lifecycleStatus,
     isActiveWarning,
+    isFutureWarning,
     isRolledActiveWarning,
     publishedAt: publishedIso,
   };
@@ -1111,12 +1190,8 @@ function nextTimelineBoundaryMs(items, nowMs) {
   let next = nextPragueMidnightMs(now);
   for (const ev of items || []) {
     if (!isChmiCapWarning(ev)) continue;
-    const vf =
-      parseTime(ev.validFrom) ||
-      parseTime(ev.capV2 && ev.capV2.onset) ||
-      parseTime(ev.capV2 && ev.capV2.effective) ||
-      0;
-    const vt = parseTime(ev.validTo) || parseTime(ev.capV2 && ev.capV2.expires) || 0;
+    const vf = parseTime(canonicalChmiValidFromRaw(ev));
+    const vt = parseTime(canonicalChmiValidToRaw(ev));
     if (vf > now && vf < next) next = vf;
     if (vt > now && vt < next) next = vt;
   }
@@ -1374,8 +1449,8 @@ function filterEvents(events, filters, opts) {
       const needles = regionNeedlesFromPrefs(f);
       if (needles.length && !regionMatches(ev, needles)) continue;
     }
-    // Public feed: only currently valid CHMI CAP warnings (no ended/Cancel/future archive).
-    if (isChmiCapWarning(ev) && !isCurrentlyActiveChmiWarning(ev, now)) continue;
+    // Public feed: active + published-future CHMI CAP warnings (no ended/Cancel/expired).
+    if (isChmiCapWarning(ev) && !isPublicFeedChmiWarning(ev, now)) continue;
     if (rangeMs) {
       const t = parseTime(eventSortAt(ev));
       if (!t || now - t > rangeMs) continue;
@@ -1558,7 +1633,9 @@ const IUInfoSystem = {
   eventTitleBaseWithoutLocality,
   parseActiveLocationFilter,
   getEffectiveTimelinePresentation,
+  getChmiWarningLifecycleStatus,
   isCurrentlyActiveChmiWarning,
+  isPublicFeedChmiWarning,
   nextTimelineBoundaryMs,
   clearInfoEventsFilterMemo,
   startOfPragueDayMs,
@@ -1620,7 +1697,9 @@ export {
   eventTitleBaseWithoutLocality,
   parseActiveLocationFilter,
   getEffectiveTimelinePresentation,
+  getChmiWarningLifecycleStatus,
   isCurrentlyActiveChmiWarning,
+  isPublicFeedChmiWarning,
   nextTimelineBoundaryMs,
   clearInfoEventsFilterMemo,
   startOfPragueDayMs,
