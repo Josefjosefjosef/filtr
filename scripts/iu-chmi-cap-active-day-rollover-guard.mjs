@@ -13,7 +13,7 @@ const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "info-system-v6-chmi-issued-date-20260730";
+const CACHE_BUST = "info-system-v6-chmi-active-only-20260730";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -117,6 +117,11 @@ function staticGate() {
   ok("core_fn", /function getEffectiveTimelinePresentation/.test(core), "fn");
   ok("core_active", /function isCurrentlyActiveChmiWarning/.test(core), "active");
   ok("core_prague", /Europe\/Prague/.test(core), "tz");
+  ok(
+    "core_public_active_only",
+    /isChmiCapWarning\(ev\) && !isCurrentlyActiveChmiWarning\(ev, now\)/.test(core),
+    "filter"
+  );
   ok("core_no_assign_timeline", !/item\.timelineAt\s*=/.test(core), "mutate");
   ok("ui_uses_presentation", /getEffectiveTimelinePresentation\(ev/.test(ui), "ui");
   ok("ui_active_pill", /AKTIVNÍ VÝSTRAHA/.test(ui), "pill");
@@ -233,9 +238,46 @@ function unitGate(IU) {
   const i = IU.getEffectiveTimelinePresentation(cancel, nowMorning);
   ok("I_inactive", i.isActiveWarning === false, String(i.isActiveWarning));
   ok("I_not_rolled", i.isRolledActiveWarning === false, String(i.isRolledActiveWarning));
+  ok(
+    "I_filter_hides_cancel",
+    IU.filterEvents([cancel], {}, { skipMemo: true, nowMs: nowMorning }).length === 0,
+    "cancel visible"
+  );
+
+  // Public feed: only currently active CHMI warnings
+  ok(
+    "F_filter_hides_ended",
+    IU.filterEvents([ended], {}, { skipMemo: true, nowMs: nowMorning }).length === 0,
+    "ended visible"
+  );
+  ok(
+    "G_filter_hides_after_expiry",
+    IU.filterEvents([mid], {}, { skipMemo: true, nowMs: Date.parse("2026-07-30T15:00:00+02:00") }).length === 0,
+    "expired visible"
+  );
+  ok(
+    "G_filter_keeps_before_expiry",
+    IU.filterEvents([mid], {}, { skipMemo: true, nowMs: Date.parse("2026-07-30T13:00:00+02:00") }).length === 1,
+    "active hidden"
+  );
+  ok(
+    "H_filter_hides_future",
+    IU.filterEvents([future], {}, { skipMemo: true, nowMs: Date.parse("2026-07-30T12:00:00+02:00") }).length === 0,
+    "future visible"
+  );
+  ok(
+    "H_filter_keeps_after_onset",
+    IU.filterEvents([future], {}, { skipMemo: true, nowMs: Date.parse("2026-07-30T15:00:00+02:00") }).length === 1,
+    "onset hidden"
+  );
 
   // N: ordinary article does not roll / no AKTIVNÍ
   const artOld = article();
+  ok(
+    "N_article_kept",
+    IU.filterEvents([artOld], {}, { skipMemo: true, nowMs: nowMorning }).length === 1,
+    "article dropped"
+  );
   const n = IU.getEffectiveTimelinePresentation(artOld, nowMorning);
   ok("N_not_active", n.isActiveWarning === false, String(n.isActiveWarning));
   ok("N_not_rolled", n.isRolledActiveWarning === false, String(n.isRolledActiveWarning));
