@@ -29,10 +29,10 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-active-rollover-20260730";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-card-pills-20260730";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-chmi-active-rollover-20260730";
+const CACHE_BUST = "info-system-v6-chmi-card-pills-20260730";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -421,13 +421,20 @@ function renderItem(ev) {
   const url = safeHttpUrl(forced || ev.url || ev.originalUrl);
   const locationFilter = state.prefs || getPrefs();
   const title = displayEventTitle(ev, locationFilter);
-  const src = String(ev.sourceLabel || ev.sourceId || "");
+  const srcRaw = String(ev.sourceLabel || ev.sourceId || "");
+  const srcPill = ev.capV2
+    ? srcRaw
+      ? "Zdroj: " + srcRaw
+      : "Zdroj: ČHMÚ"
+    : srcRaw;
   const regionFiltered = getFilteredWarningLocationLabel(ev, locationFilter);
   const region = ev.capV2
     ? String(regionFiltered || "")
     : ev.region && (ev.region.summary || ev.region.name)
       ? String(ev.region.summary || ev.region.name)
       : "";
+  // Hide locality meta pill when the same text is already in the title (CAP cards).
+  const regionPill = region && title.indexOf(region) === -1 ? region : "";
   const imp = importanceLabel(ev);
   const saved = isSaved(id);
   const hiddenMode = state.viewMode === "hidden";
@@ -443,7 +450,7 @@ function renderItem(ev) {
     ? `<div class="iuPrehledDne__issued">${esc(timeline.secondaryIssuedLabel)}</div>`
     : "";
   const activePill = timeline.isActiveWarning
-    ? `<span class="iuPdCard__pill iuPdCard__pill--active iuPrehledDne__pill" role="status" aria-label="Právě platná výstraha">AKTIVNÍ</span>`
+    ? `<span class="iuPdCard__pill iuPdCard__pill--active iuPrehledDne__pill" role="status" aria-label="Právě platná výstraha">AKTIVNÍ VÝSTRAHA</span>`
     : "";
   const titleMarkup = url
     ? `<a class="iuPdCard__title iuPrehledDne__cardTitle" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(title)}</a>`
@@ -465,9 +472,9 @@ function renderItem(ev) {
         : "") +
     titleMarkup +
     `<div class="iuPdCard__meta iuPrehledDne__meta">` +
-    (src ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(src)}</span>` : "") +
+    (srcPill ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(srcPill)}</span>` : "") +
     activePill +
-    (region ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(region)}</span>` : "") +
+    (regionPill ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(regionPill)}</span>` : "") +
     (imp ? `<span class="iuPdCard__pill iuPdCard__pill--imp iuPrehledDne__pill">${esc(imp)}</span>` : "") +
     `</div>` +
     `<div class="iuPdCard__actions iuPrehledDne__actions">` +
