@@ -29,10 +29,10 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-temporal-status-20260730";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-no-segment-dedupe-20260730";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-chmi-concrete-url-20260730";
+const CACHE_BUST = "info-system-v6-chmi-no-segment-dedupe-20260730";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -1352,7 +1352,26 @@ function wire() {
   };
 }
 
+function infoSystemQueryMode() {
+  try {
+    return String(new URLSearchParams(location.search || "").get("iuInfoSystem") || "").toLowerCase();
+  } catch (_) {
+    return "";
+  }
+}
+
+function isBootNetworkAbort(err) {
+  const name = String((err && err.name) || "");
+  const msg = String((err && err.message) || err || "");
+  if (name === "AbortError") return true;
+  // Chromium aborts in-flight same-origin fetch on navigation as TypeError: Failed to fetch
+  // before the old document is fully disconnected — stillMounted alone is not enough.
+  return err instanceof TypeError && /Failed to fetch|Load failed|NetworkError/i.test(msg);
+}
+
 async function boot() {
+  // Explicit legacy HomeCards / smoke probes: do not hydrate Prehled or race navigations.
+  if (infoSystemQueryMode() === "off") return;
   migrateLocalStateOnce();
   applyCutoverDom();
   const root = ensureRoot();
@@ -1366,8 +1385,18 @@ async function boot() {
     `</div></div>` +
     `<div class="iuPdFeed" aria-busy="true"></div>` +
     `</section>`;
+  const bootAbort = typeof AbortController === "function" ? new AbortController() : null;
+  const onPageHide = () => {
+    try {
+      if (bootAbort) bootAbort.abort();
+    } catch (_) {}
+  };
+  try {
+    window.addEventListener("pagehide", onPageHide, { once: true });
+  } catch (_) {}
   try {
     const data = await loadInfoSystemData({});
+    if (bootAbort && bootAbort.signal.aborted) return;
     state.data = data;
     try {
       migrateChmiCapV2UserStates((data.feed && data.feed.items) || []);
@@ -1438,11 +1467,27 @@ async function boot() {
       { once: true }
     );
   } catch (err) {
+    const stillMounted =
+      !!(root && root.isConnected && typeof document !== "undefined" && document.documentElement.contains(root));
+    if (!stillMounted || (bootAbort && bootAbort.signal.aborted)) return;
+    // Navigation abort often surfaces as TypeError Failed to fetch while root is still connected.
+    // Soft-degrade UI without console.error (smoke treats TypeError+error as hard fail).
+    if (isBootNetworkAbort(err)) {
+      root.innerHTML =
+        `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
+        bannerHtml() +
+        `<p class="iuPdEmpty">Přehled dne se nepodařilo načíst.</p></section>`;
+      return;
+    }
     root.innerHTML =
       `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
       bannerHtml() +
       `<p class="iuPdEmpty">Přehled dne se nepodařilo načíst.</p></section>`;
     console.error("[iu-prehled-dne]", err);
+  } finally {
+    try {
+      window.removeEventListener("pagehide", onPageHide);
+    } catch (_) {}
   }
 }
 

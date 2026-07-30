@@ -170,24 +170,36 @@ function listedForStreams(streamCount, filesPerStream = 3) {
     infos: [{ event: "Silné bouřky", severity: "Severe", orps: ["6203"], expires: "2026-07-29T14:00:00+02:00" }],
   });
 
-  const afterUpdate = assembleActiveStateFromOrderedDocuments([
-    { xml: alertXml, sourceUrl: "a1" },
-    { xml: updateXml, sourceUrl: "a2" },
-  ]);
+  // Frozen receivedAt — expires 2026-07-31T00:00+02 must still be active under this clock.
+  const frozenNow = "2026-07-30T15:00:00.000Z";
+  const afterUpdate = assembleActiveStateFromOrderedDocuments(
+    [
+      { xml: alertXml, sourceUrl: "a1" },
+      { xml: updateXml, sourceUrl: "a2" },
+    ],
+    { receivedAt: frozenNow }
+  );
   ok("lifecycle_update_active", afterUpdate.activeCount === 1, String(afterUpdate.activeCount));
-  ok("lifecycle_update_severity", afterUpdate.active[0].capV2.severity === "Severe", afterUpdate.active[0].capV2.severity);
+  ok(
+    "lifecycle_update_severity",
+    afterUpdate.active[0] && afterUpdate.active[0].capV2.severity === "Severe",
+    afterUpdate.active[0] && afterUpdate.active[0].capV2.severity
+  );
   ok(
     "lifecycle_update_areas_union",
-    (afterUpdate.active[0].region.orpIds || []).length >= 3,
-    JSON.stringify(afterUpdate.active[0].region.orpIds)
+    afterUpdate.active[0] && (afterUpdate.active[0].region.orpIds || []).length >= 3,
+    afterUpdate.active[0] && JSON.stringify(afterUpdate.active[0].region.orpIds)
   );
   ok("lifecycle_same_thread", afterUpdate.threadCount === 1, String(afterUpdate.threadCount));
 
-  const afterCancel = assembleActiveStateFromOrderedDocuments([
-    { xml: alertXml, sourceUrl: "a1" },
-    { xml: updateXml, sourceUrl: "a2" },
-    { xml: cancelXml, sourceUrl: "a3" },
-  ]);
+  const afterCancel = assembleActiveStateFromOrderedDocuments(
+    [
+      { xml: alertXml, sourceUrl: "a1" },
+      { xml: updateXml, sourceUrl: "a2" },
+      { xml: cancelXml, sourceUrl: "a3" },
+    ],
+    { receivedAt: frozenNow }
+  );
   ok("lifecycle_cancel_not_active", afterCancel.activeCount === 0, String(afterCancel.activeCount));
   ok("lifecycle_cancel_status", afterCancel.cancelled.length >= 1 || afterCancel.items.every((i) => i.status !== "aktivni"), "still active");
 }
