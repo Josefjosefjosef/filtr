@@ -167,6 +167,9 @@ if (!/buildFeedIndex|memo|homeKraj|myRegionOnly/.test(core)) {
 if (!/data-iu-ui=\"v6-clean\"|open-settings|settings-close|data-mode=\"hidden\"|unhide/.test(ui)) {
   fails.push("ui:v6_clean_shell_missing");
 }
+if (!/bannerHtml|data-iu-pd-banner|infouzel-prehled-dne-banner\.png/.test(ui)) {
+  fails.push("ui:day_banner_missing");
+}
 if (!/iuPrehledDne__axis|iuPrehledDne__dot|iu-pd-dot/.test(ui)) {
   fails.push("ui:timeline_axis_missing");
 }

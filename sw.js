@@ -20,7 +20,8 @@
 // 2026-07-21: Cross-origin passthrough (analytics Worker ingest) — SW must not re-fetch with a different UA
 // 2026-07-27: Offline nav fallback — never bare 503 for navigations; durable offline.html + last-good public HTML
 // 2026-07-29: Media sources removed — bust app/data caches + durable feed last-good so old media JSON cannot return offline
-const CACHE_VERSION = "2026-07-29-media-sources-removed-v1";
+// 2026-07-30: Prehled dne banner + HomeCard FOUC fix — bust shell so cutover-first HTML/CSS reach clients
+const CACHE_VERSION = "2026-07-30-banner-homecard-fouc-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
