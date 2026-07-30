@@ -415,11 +415,11 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-07-30T20:05:33.431Z",
-    "lastSuccessAt": "2026-07-30T20:05:33.635Z",
-    "lastChangedAt": "2026-07-30T19:35:18.740Z",
+    "lastRunAt": "2026-07-30T20:50:31.075Z",
+    "lastSuccessAt": "2026-07-30T20:50:31.599Z",
+    "lastChangedAt": "2026-07-30T20:50:31.599Z",
     "lastError": null,
-    "status": "not_modified",
+    "status": "healthy",
     "etag": "\"6a688d7b-e76a\"",
     "lastModified": "Tue, 28 Jul 2026 11:07:39 GMT",
     "consecutiveErrors": 0,
@@ -434,11 +434,11 @@
     "totalItems": 27,
     "sourceCount": 2,
     "activeSourceCount": 1,
-    "updateCount": 0,
+    "updateCount": 2,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 0,
+    "validCount": 2,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -451,8 +451,8 @@
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
+      "capMessages": 2,
+      "infoBlocks": 48,
       "logicalAlerts": 26,
       "uniqueEvents": [
         "Velmi vysoké teploty",
@@ -489,32 +489,32 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 238,
+    "runMs": 1162,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-07-30T20:05:33.431Z",
+    "lastSnapshotAt": "2026-07-30T20:50:31.075Z",
     "audit": {
       "http": [
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_301116.xml",
           "productKey": "50",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         },
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
           "productKey": "70",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         }
       ],
       "publish": {
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": null,
-          "infoBlocks": null,
+          "capMessages": 2,
+          "infoBlocks": 48,
           "logicalAlerts": 26,
           "uniqueEvents": [
             "Velmi vysoké teploty",
@@ -548,9 +548,33 @@
         "alarms": [],
         "productionVerified": false
       },
-      "parser": null
+      "parser": {
+        "loaded": 2,
+        "valid": 2,
+        "rejected": 0,
+        "duplicates": 0,
+        "quarantine": 0,
+        "cancels": 0,
+        "updates": 0,
+        "newThreads": 2,
+        "status": "healthy",
+        "alert": 0,
+        "update": 2,
+        "cancel": 0
+      }
     },
     "runHistory": [
+      {
+        "at": "2026-07-30T20:50:31.075Z",
+        "status": "healthy",
+        "mode": "active",
+        "publish": true,
+        "runMs": 1162,
+        "error": null,
+        "activeCount": 16,
+        "scheduledCount": 10,
+        "publishableCount": 26
+      },
       {
         "at": "2026-07-30T20:05:33.431Z",
         "status": "not_modified",

@@ -132,42 +132,59 @@ export function buildConcreteCapItemUrl(revision, hazard, opts = {}) {
 }
 
 /**
- * Resolve official CAP <web> into a public user-facing URL.
- * Never invents hosts. Empty / non-CHMI / non-https → rejected.
+ * Preserve official CAP <web> as informational publisherWebUrl (audit only).
+ * Does NOT drive public card click — that is always CHMI_PUBLIC_ALERTS_URL.
  *
  * @param {string} rawWeb
- * @returns {{ publicUrl: string, ok: boolean, reason?: string }}
+ * @returns {{ publisherWebUrl: string, ok: boolean, reason?: string }}
  */
-export function resolveCapPublicWebUrl(rawWeb) {
+export function resolveCapPublisherWebUrl(rawWeb) {
   const raw = String(rawWeb || "").trim();
-  if (!raw) return { publicUrl: "", ok: false, reason: "missing_cap_web" };
+  if (!raw) return { publisherWebUrl: "", ok: false, reason: "missing_cap_web" };
   let u;
   try {
     u = new URL(raw);
   } catch {
-    return { publicUrl: "", ok: false, reason: "invalid_cap_web" };
+    return { publisherWebUrl: "", ok: false, reason: "invalid_cap_web" };
   }
   if (u.protocol !== "https:") {
-    return { publicUrl: "", ok: false, reason: "cap_web_not_https" };
+    return { publisherWebUrl: "", ok: false, reason: "cap_web_not_https" };
   }
   const host = u.hostname.replace(/^www\./, "").toLowerCase();
   if (!CHMI_OFFICIAL_HOST_RE.test(host)) {
-    return { publicUrl: "", ok: false, reason: "cap_web_non_official_host" };
+    return { publisherWebUrl: "", ok: false, reason: "cap_web_non_official_host" };
   }
-  // Official CAP <web> for public navigation is the alerts portal (homepage path OK).
   if (CHMI_PUBLIC_WEB_HOST_RE.test(host)) {
-    const pathNoSlash = (u.pathname || "/").replace(/\/+$/, "") || "/";
-    if (pathNoSlash !== "/" && pathNoSlash !== "") {
-      // Allow portal subpaths if CAP ever emits them; still official.
-    }
-    return { publicUrl: u.toString().replace(/\/+$/, "") + "/", ok: true };
+    return { publisherWebUrl: u.toString().replace(/\/+$/, "") + "/", ok: true };
   }
-  // Other chmi.cz pages from <web> are allowed only with a non-root path.
   const pathNoSlash = (u.pathname || "/").replace(/\/+$/, "") || "/";
   if (pathNoSlash === "/") {
-    return { publicUrl: "", ok: false, reason: "cap_web_homepage_without_portal_host" };
+    return { publisherWebUrl: "", ok: false, reason: "cap_web_homepage_without_portal_host" };
   }
-  return { publicUrl: u.toString(), ok: true };
+  return { publisherWebUrl: u.toString(), ok: true };
+}
+
+/** @deprecated Use resolveCapPublisherWebUrl — kept for call-site compatibility during rename. */
+export function resolveCapPublicWebUrl(rawWeb) {
+  const r = resolveCapPublisherWebUrl(rawWeb);
+  return { publicUrl: r.publisherWebUrl, ok: r.ok, reason: r.reason };
+}
+
+/**
+ * Unified InfoUzel public click target for every CHMI card.
+ * Independent of CAP <web> / ovzduší / missing web / XML source document.
+ */
+export function chmiUnifiedPublicClickUrl(opts = {}) {
+  const raw = String(opts.publicAlertsUrl || CHMI_PUBLIC_ALERTS_URL || "").trim() || "https://vystrahy-cr.chmi.cz/";
+  try {
+    const u = new URL(raw);
+    if (u.protocol !== "https:") return "https://vystrahy-cr.chmi.cz/";
+    const host = u.hostname.replace(/^www\./, "").toLowerCase();
+    if (!/^vystrahy-cr\.chmi\.cz$/i.test(host)) return "https://vystrahy-cr.chmi.cz/";
+    return u.toString().replace(/\/+$/, "") + "/";
+  } catch {
+    return "https://vystrahy-cr.chmi.cz/";
+  }
 }
 
 /**
@@ -587,10 +604,11 @@ export function revisionToFeedItems(revision, opts = {}) {
     if (!sourceDoc.url) {
       continue;
     }
-    const webInfo = resolveCapPublicWebUrl(h.web || opts.defaultPublicWeb || "");
-    const publicUrl = webInfo.ok ? webInfo.publicUrl : "";
-    // Click target = official CAP <web>. Canonical identity stays unique via CAP XML + hid.
-    const clickUrl = publicUrl || sourceDoc.url;
+    const publisherInfo = resolveCapPublisherWebUrl(h.web || "");
+    const publisherWebUrl = publisherInfo.ok ? publisherInfo.publisherWebUrl : null;
+    // Unified public click for ALL CHMI cards — never CAP XML, never ovzduší, never missing.
+    const publicUrl = chmiUnifiedPublicClickUrl({ publicAlertsUrl: listingUrl });
+    const clickUrl = publicUrl;
     const canonical = canonicalizeUrl(sourceDoc.url) || sourceDoc.url;
     const publishedAtSource = revision.published_at || revision.sent || null;
 
@@ -604,9 +622,11 @@ export function revisionToFeedItems(revision, opts = {}) {
       sourceGroup: "pocasi",
       url: clickUrl,
       originalUrl: clickUrl,
-      publicUrl: publicUrl || null,
+      publicUrl,
+      publicClickUrl: publicUrl,
+      publisherWebUrl,
       canonicalUrl: canonical,
-      urlKind: publicUrl ? "cap_public_web" : sourceDoc.urlKind,
+      urlKind: "cap_public_web",
       listingUrl: sourceDoc.listingUrl || listingUrl,
       sectionId: "pocasi",
       subsectionId: "vystrahy",
@@ -653,9 +673,11 @@ export function revisionToFeedItems(revision, opts = {}) {
         openEnded: !!temporal.untilRevoked,
         productExcluded,
         sourceDocumentUrl: sourceDoc.url,
-        publicUrl: publicUrl || null,
+        publicUrl,
+        publicClickUrl: publicUrl,
+        publisherWebUrl,
         listingUrl: sourceDoc.listingUrl || listingUrl,
-        urlKind: publicUrl ? "cap_public_web" : sourceDoc.urlKind,
+        urlKind: "cap_public_web",
         expiresSource: h.expiresSource || "",
         geo: {
           links,

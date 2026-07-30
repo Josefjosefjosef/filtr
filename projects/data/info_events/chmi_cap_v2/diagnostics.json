@@ -1,6 +1,6 @@
 {
-  "runId": "44a4b3f625cc0a69",
-  "started": "2026-07-30T20:05:33.431Z",
+  "runId": "0216f1713e7fe2a7",
+  "started": "2026-07-30T20:50:31.075Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -18,25 +18,38 @@
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_301116.xml",
       "productKey": "50",
-      "status": 304,
-      "action": "not_modified",
-      "cacheHit": true
+      "status": 200,
+      "action": "process",
+      "cacheHit": false
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
       "productKey": "70",
-      "status": 304,
-      "action": "not_modified",
-      "cacheHit": true
+      "status": 200,
+      "action": "process",
+      "cacheHit": false
     }
   ],
-  "parser": null,
+  "parser": {
+    "loaded": 2,
+    "valid": 2,
+    "rejected": 0,
+    "duplicates": 0,
+    "quarantine": 0,
+    "cancels": 0,
+    "updates": 0,
+    "newThreads": 2,
+    "status": "healthy",
+    "alert": 0,
+    "update": 2,
+    "cancel": 0
+  },
   "publish": {
     "publish": true,
     "reason": "ok",
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
+      "capMessages": 2,
+      "infoBlocks": 48,
       "logicalAlerts": 26,
       "uniqueEvents": [
         "Velmi vysoké teploty",
@@ -70,8 +83,9 @@
     "alarms": [],
     "productionVerified": false
   },
-  "status": "not_modified",
+  "status": "healthy",
   "error": null,
+  "cacheEpochInvalidated": 7,
   "temporalCounts": {
     "totalItems": 27,
     "activeCount": 16,
@@ -83,8 +97,8 @@
     "visibleCount": 26
   },
   "completeness": {
-    "capMessages": null,
-    "infoBlocks": null,
+    "capMessages": 2,
+    "infoBlocks": 48,
     "logicalAlerts": 26,
     "uniqueEvents": [
       "Velmi vysoké teploty",
@@ -128,6 +142,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-07-30T20:05:33.671Z",
-  "runMs": 240
+  "finished": "2026-07-30T20:50:32.240Z",
+  "runMs": 1165
 }

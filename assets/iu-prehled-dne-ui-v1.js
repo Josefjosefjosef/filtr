@@ -397,35 +397,26 @@ function sectionColor(sectionId) {
 }
 
 function chmiPublicDetailUrl(ev) {
-  // Public click target = official CAP <web> (typically https://vystrahy-cr.chmi.cz/).
-  // Never open the technical CAP XML document for end users.
-  const candidates = [
-    ev && ev.publicUrl,
-    ev && ev.capV2 && ev.capV2.publicUrl,
-    ev && ev.url,
-    ev && ev.originalUrl,
-  ];
-  for (let i = 0; i < candidates.length; i++) {
-    const candidate = String(candidates[i] || "").trim();
-    if (!candidate) continue;
+  // Unified public click for every CHMI card: https://vystrahy-cr.chmi.cz/
+  // Never open CAP XML, ovzduší, or other specialized CAP <web> pages.
+  if (!(ev && (ev.capV2 || String(ev.sourceId || "") === "chmi"))) return "";
+  const forced = String(
+    (ev.publicClickUrl ||
+      ev.publicUrl ||
+      (ev.capV2 && (ev.capV2.publicClickUrl || ev.capV2.publicUrl)) ||
+      "")
+  ).trim();
+  if (forced) {
     try {
-      const u = new URL(candidate);
-      if (u.protocol !== "https:") continue;
-      const host = u.hostname.replace(/^www\./, "").toLowerCase();
-      if (!/(?:^|\.)chmi\.cz$/i.test(host)) continue;
-      // Prefer the official alerts portal from CAP <web>.
-      if (/^vystrahy-cr\.chmi\.cz$/i.test(host)) return candidate;
-      // Reject technical CAP XML and CAP index listings.
-      const path = (u.pathname || "/").replace(/\/+$/, "") || "/";
-      if (path === "/") continue;
-      if (/\.xml$/i.test(path)) continue;
-      if (/\/meteorology\/weather\/alerts\/cap$/i.test(path)) continue;
-      return candidate;
+      const u = new URL(forced);
+      if (u.protocol === "https:" && /^vystrahy-cr\.chmi\.cz$/i.test(u.hostname.replace(/^www\./, ""))) {
+        return u.toString().replace(/\/+$/, "") + "/";
+      }
     } catch {
-      /* try next */
+      /* fall through to unified portal */
     }
   }
-  return "";
+  return "https://vystrahy-cr.chmi.cz/";
 }
 
 /**
@@ -444,7 +435,8 @@ function displayEventTitle(ev, locationFilter) {
 function renderItem(ev) {
   const id = String(ev.id || "");
   const forced = chmiPublicDetailUrl(ev);
-  const url = safeHttpUrl(forced || ev.url || ev.originalUrl);
+  // CHMI: never fall back to XML / specialized publisher web — portal only.
+  const url = ev && ev.capV2 ? safeHttpUrl(forced) : safeHttpUrl(forced || ev.url || ev.originalUrl);
   const locationFilter = state.prefs || getPrefs();
   const title = displayEventTitle(ev, locationFilter);
   const srcRaw = String(ev.sourceLabel || ev.sourceId || "");
