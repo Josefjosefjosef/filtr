@@ -13,7 +13,7 @@ const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "info-system-v6-chmi-card-pills-20260730";
+const CACHE_BUST = "info-system-v6-chmi-issued-date-20260730";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -123,6 +123,7 @@ function staticGate() {
   ok("ui_source_prefix", /Zdroj:\s*"/.test(ui) || /"Zdroj: "/.test(ui), "source");
   ok("ui_region_dedupe", /regionPill/.test(ui) && /title\.indexOf\(region\)/.test(ui), "dedupe");
   ok("ui_issued", /iuPrehledDne__issued/.test(ui), "issued");
+  ok("ui_issued_split", /iuPrehledDne__issuedWord/.test(ui) && /iuPrehledDne__issuedDate/.test(ui), "issued split");
   ok("ui_midnight_timer", /scheduleTimelineBoundaryRefresh/.test(ui), "timer");
   ok("ui_visibility", /visibilitychange/.test(ui), "vis");
   ok("ui_url_unchanged", /chmiPublicDetailUrl\(ev\)/.test(ui) && /forced \|\| ev\.url/.test(ui), "url");
@@ -162,6 +163,7 @@ function unitGate(IU) {
   ok("B_rolled", b.isRolledActiveWarning === true, String(b.isRolledActiveWarning));
   ok("B_primary_today", /30\.\s*7/.test(b.primaryDate), b.primaryDate);
   ok("B_issued", /vydáno/.test(b.secondaryIssuedLabel) && /29\.\s*7/.test(b.secondaryIssuedLabel), b.secondaryIssuedLabel);
+  ok("B_issued_no_time", !/\d{1,2}:\d{2}/.test(b.secondaryIssuedLabel || ""), b.secondaryIssuedLabel);
   ok("B_no_fake_midnight_time", !b.primaryTime, String(b.primaryTime));
   const dayStart = IU.startOfPragueDayMs(nowMorning);
   ok("B_timeline_sod", Math.abs(b.timelineMs - dayStart) < 1000, String(b.timelineMs));
@@ -193,6 +195,7 @@ function unitGate(IU) {
   ok("E_rolled", e.isRolledActiveWarning === true, String(e.isRolledActiveWarning));
   ok("E_primary_31", /31\.\s*7/.test(e.primaryDate), e.primaryDate);
   ok("E_issued_29", /29\.\s*7/.test(e.secondaryIssuedLabel), e.secondaryIssuedLabel);
+  ok("E_issued_no_time", !/\d{1,2}:\d{2}/.test(e.secondaryIssuedLabel || ""), e.secondaryIssuedLabel);
 
   // F: ended before midnight
   const ended = warning({

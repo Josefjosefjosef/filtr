@@ -29,10 +29,10 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-card-pills-20260730";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-issued-date-20260730";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-chmi-card-pills-20260730";
+const CACHE_BUST = "info-system-v6-chmi-issued-date-20260730";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -446,9 +446,14 @@ function renderItem(ev) {
   const timeline = getEffectiveTimelinePresentation(ev, Date.now());
   const timePrimary = esc(timeline.primaryDate || fmtTime(publishIso(ev)));
   const timeSub = timeline.primaryTime ? `<div class="iuPrehledDne__timeSub">${esc(timeline.primaryTime)}</div>` : "";
-  const timeIssued = timeline.secondaryIssuedLabel
-    ? `<div class="iuPrehledDne__issued">${esc(timeline.secondaryIssuedLabel)}</div>`
-    : "";
+  let timeIssued = "";
+  if (timeline.secondaryIssuedLabel) {
+    const issued = String(timeline.secondaryIssuedLabel);
+    const m = issued.match(/^vydáno\s+(.+)$/i);
+    timeIssued = m
+      ? `<div class="iuPrehledDne__issued"><span class="iuPrehledDne__issuedWord">vydáno</span><span class="iuPrehledDne__issuedDate">${esc(m[1])}</span></div>`
+      : `<div class="iuPrehledDne__issued">${esc(issued)}</div>`;
+  }
   const activePill = timeline.isActiveWarning
     ? `<span class="iuPdCard__pill iuPdCard__pill--active iuPrehledDne__pill" role="status" aria-label="Právě platná výstraha">AKTIVNÍ VÝSTRAHA</span>`
     : "";
