@@ -13,7 +13,7 @@ const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "info-system-v6-chmi-status-unify-20260730";
+const CACHE_BUST = "info-system-v6-chmi-concrete-url-20260730";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -62,7 +62,7 @@ function warning(overrides) {
     {
       id: "ie-chmi-v2-roll-1",
       title: "Vysoké teploty — Praha a dalších 191 oblastí",
-      url: "https://vystrahy-cr.chmi.cz/",
+      url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_roll.xml?hid=roll-1",
       sourceId: "chmi",
       sourceLabel: "ČHMÚ",
       status: "aktivni",
@@ -205,7 +205,7 @@ function unitGate(IU) {
   ok("C_first_940", sorted[0].id === "art-940", sorted[0] && sorted[0].id);
   ok("C_second_715", sorted[1].id === "art-715", sorted[1] && sorted[1].id);
   ok("C_warn_last", sorted[2].id === yW.id, sorted[2] && sorted[2].id);
-  ok("C_url", sorted[2].url === "https://vystrahy-cr.chmi.cz/", sorted[2] && sorted[2].url);
+  ok("C_url", sorted[2].url === "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_roll.xml?hid=roll-1", sorted[2] && sorted[2].url);
 
   // E: third day
   const longW = warning({

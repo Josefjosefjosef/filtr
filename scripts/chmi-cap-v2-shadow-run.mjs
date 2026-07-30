@@ -37,7 +37,7 @@ const files = PREFERRED.filter((f) => present.has(f)).concat(
 );
 const docs = files.map((name) => ({
   name,
-  sourceUrl: `fixture://${name}`,
+  sourceUrl: `https://opendata.chmi.cz/meteorology/weather/alerts/cap/${name}`,
   xml: fs.readFileSync(path.join(FIX, name), "utf8"),
 }));
 

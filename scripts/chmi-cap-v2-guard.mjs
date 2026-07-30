@@ -10,12 +10,12 @@ import { parseCapAlertXml } from "./chmi-cap-v2/parse-cap.mjs";
 import { parseSafeXml } from "./chmi-cap-v2/safe-xml.mjs";
 import { buildCapIdentity, parseCapReferences } from "./chmi-cap-v2/identity.mjs";
 import { processCapDocuments, tryAcquireLock, releaseLock, applyConditionalResult, atomicPublishDecision, suspiciousDrop, createSyncState } from "./chmi-cap-v2/sync-core.mjs";
-import { revisionsToFeed } from "./chmi-cap-v2/normalize-feed.mjs";
+import { buildConcreteCapItemUrl, revisionsToFeed } from "./chmi-cap-v2/normalize-feed.mjs";
 import { migrateUserStatesDryRun } from "./chmi-cap-v2/migrate-ids.mjs";
 import { createGeoRegistry } from "./chmi-cap-v2/geo-registry.mjs";
 import { createFixtureDiscovery, resolveDiscoveryAdapter, selectLatestPerProductStream, capProductKeyFromUrl } from "./chmi-cap-v2/discovery-adapter.mjs";
 import { shouldResetUnreadOnRevision } from "./chmi-cap-v2/unread-rules.mjs";
-import { CHMI_PUBLIC_ALERTS_URL } from "./chmi-cap-v2/config.mjs";
+import { canonicalizeUrl, isConcreteItemUrl } from "./iu-info-events-lib.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const FIX = path.join(__dirname, "fixtures", "chmi-cap-v2");
@@ -95,11 +95,11 @@ function read(name) {
 // --- process + geo quarantine + revisions immutable ---
 {
   const docs = [
-    { name: "alert-new.xml", xml: read("alert-new.xml") },
-    { name: "alert-update-expand.xml", xml: read("alert-update-expand.xml") },
-    { name: "alert-fire-same-orp.xml", xml: read("alert-fire-same-orp.xml") },
-    { name: "alert-unknown-orp.xml", xml: read("alert-unknown-orp.xml") },
-    { name: "alert-new.xml", xml: read("alert-new.xml") }, // duplicate
+    { name: "alert-new.xml", xml: read("alert-new.xml"), sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-new.xml" },
+    { name: "alert-update-expand.xml", xml: read("alert-update-expand.xml"), sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-update-expand.xml" },
+    { name: "alert-fire-same-orp.xml", xml: read("alert-fire-same-orp.xml"), sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-fire-same-orp.xml" },
+    { name: "alert-unknown-orp.xml", xml: read("alert-unknown-orp.xml"), sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-unknown-orp.xml" },
+    { name: "alert-new.xml", xml: read("alert-new.xml"), sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-new.xml" }, // duplicate
   ];
   const result = processCapDocuments(docs);
   ok("process_valid", result.report.valid >= 4, JSON.stringify(result.report));
@@ -109,8 +109,26 @@ function read(name) {
   ok("revisions_unique", new Set(revIds).size === revIds.length, "dup revisions");
 
   const feed = revisionsToFeed(result.report.revisions);
-  ok("feed_public_url", feed.every((i) => i.url === CHMI_PUBLIC_ALERTS_URL), feed[0] && feed[0].url);
-  ok("feed_no_xml_url", feed.every((i) => !/\.xml/i.test(i.url)), "xml url leaked");
+  ok(
+    "feed_concrete_cap_url",
+    feed.every((i) => /opendata\.chmi\.cz\/.+\.xml/i.test(String(i.url || "")) && /[?&]hid=/i.test(String(i.url || ""))),
+    feed[0] && feed[0].url
+  );
+  ok(
+    "feed_no_homepage_url",
+    feed.every((i) => !/vystrahy-cr\.chmi\.cz\/?$/i.test(String(i.url || "")) && String(i.urlKind) === "cap_document"),
+    feed[0] && feed[0].url
+  );
+  ok(
+    "feed_unique_canonical",
+    new Set(feed.map((i) => i.canonicalUrl || i.url)).size === feed.length,
+    String(feed.length)
+  );
+  ok(
+    "feed_chrono_fields",
+    feed.every((i) => i.sortAt && i.firstSeenByInfoUzel && i.lastProcessedAt),
+    feed[0] && JSON.stringify({ sortAt: feed[0].sortAt, first: feed[0].firstSeenByInfoUzel, last: feed[0].lastProcessedAt })
+  );
   ok("feed_stable_ids", feed.every((i) => String(i.id).startsWith("ie-chmi-v2-")), "bad id");
   ok(
     "feed_title_no_chmi_prefix",
@@ -143,7 +161,12 @@ function read(name) {
 
   // Completeness: multi info + multi area + no drought-only whitelist + all ORPs preserved
   {
-    const multi = processCapDocuments([{ xml: read("alert-multi-events-areas.xml") }]);
+    const multi = processCapDocuments([
+      {
+        xml: read("alert-multi-events-areas.xml"),
+        sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-multi-events-areas.xml",
+      },
+    ]);
     ok("multi_info_parsed", multi.report.revisions[0] && (multi.report.revisions[0].hazards || []).length >= 3, String((multi.report.revisions[0] || {}).hazards && multi.report.revisions[0].hazards.length));
     const multiFeed = revisionsToFeed(multi.report.revisions);
     ok("multi_events_published", multiFeed.length >= 3, String(multiFeed.length));
@@ -177,7 +200,16 @@ function read(name) {
 
   // No hard-coded max-3 publish in normalize path
   {
-    const many = processCapDocuments([{ xml: read("alert-multi-events-areas.xml") }, { xml: read("alert-fire-same-orp.xml") }]);
+    const many = processCapDocuments([
+      {
+        xml: read("alert-multi-events-areas.xml"),
+        sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-multi-events-areas.xml",
+      },
+      {
+        xml: read("alert-fire-same-orp.xml"),
+        sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-fire-same-orp.xml",
+      },
+    ]);
     const f = revisionsToFeed(many.report.revisions);
     ok("no_hard_limit_three", f.length > 3, String(f.length));
   }
@@ -195,8 +227,8 @@ function read(name) {
 // --- cancel flow ---
 {
   const result = processCapDocuments([
-    { xml: read("alert-new.xml") },
-    { xml: read("alert-cancel.xml") },
+    { xml: read("alert-new.xml"), sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-new.xml" },
+    { xml: read("alert-cancel.xml"), sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-cancel.xml" },
   ]);
   ok("cancel_counted", result.report.cancels >= 1, String(result.report.cancels));
   const feed = revisionsToFeed(result.report.revisions.filter((r) => /^Cancel$/i.test(r.msgType)));
@@ -235,7 +267,9 @@ function read(name) {
 
 // --- migration dry-run ---
 {
-  const processed = processCapDocuments([{ xml: read("alert-new.xml") }]);
+  const processed = processCapDocuments([
+    { xml: read("alert-new.xml"), sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-new.xml" },
+  ]);
   const v2 = revisionsToFeed(processed.report.revisions);
   const legacyItems = [
     {
@@ -337,6 +371,171 @@ function read(name) {
   ok("unread_new", shouldResetUnreadOnRevision({ change_type: "new" }) === true, "new");
   ok("unread_area_expand", shouldResetUnreadOnRevision({ changeType: "area_expand" }) === true, "expand");
   ok("unread_minor_no", shouldResetUnreadOnRevision({ changeType: "area_reduce" }) === false, "reduce");
+}
+
+// --- URL / canonical / chrono quality (info-system v1 contract) ---
+{
+  const home = buildConcreteCapItemUrl(
+    { sourceUrl: "https://vystrahy-cr.chmi.cz/", identifier: "x" },
+    { hazard_instance_id: "haz:abc", event: "Teplo" }
+  );
+  ok("reject_homepage_primary", !home.url && home.urlFallbackReason === "homepage_or_listing_rejected", home.urlFallbackReason);
+  const listing = buildConcreteCapItemUrl(
+    { sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/", identifier: "x" },
+    { hazard_instance_id: "haz:abc", event: "Teplo" }
+  );
+  ok("reject_cap_index_listing", !listing.url && listing.urlFallbackReason === "homepage_or_listing_rejected", listing.urlFallbackReason);
+  const foreign = buildConcreteCapItemUrl(
+    { sourceUrl: "https://example.com/alert.xml", identifier: "x" },
+    { hazard_instance_id: "haz:abc", event: "Teplo" }
+  );
+  ok("reject_non_chmi_host", !foreign.url && foreign.urlFallbackReason === "non_official_host", foreign.urlFallbackReason);
+
+  const docUrl = "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_qa.xml";
+  const a = buildConcreteCapItemUrl(
+    { sourceUrl: docUrl, identifier: "id-a", cap_message_id: "m1" },
+    { hazard_instance_id: "haz:aaa111aaa111aaaa", event: "Vysoké teploty", eventKey: "heat" }
+  );
+  const b = buildConcreteCapItemUrl(
+    { sourceUrl: docUrl, identifier: "id-a", cap_message_id: "m1" },
+    { hazard_instance_id: "haz:bbb222bbb222bbbb", event: "Sucho", eventKey: "drought" }
+  );
+  ok("concrete_cap_document", a.urlKind === "cap_document" && /\.xml\?hid=aaa111aaa111aaaa$/i.test(a.url), a.url);
+  ok("unique_hid_per_hazard", a.url !== b.url && /hid=bbb222bbb222bbbb/i.test(b.url), `${a.url} | ${b.url}`);
+  ok("concrete_gate_pass", isConcreteItemUrl(a.url, "https://www.chmi.cz/") && isConcreteItemUrl(a.url, null), a.url);
+  ok("canonical_unique_pair", canonicalizeUrl(a.url) !== canonicalizeUrl(b.url), "canon collided");
+
+  const frozenNow = "2026-07-30T12:00:00.000Z";
+  const dupDocs = [
+    { xml: read("alert-new.xml"), sourceUrl: docUrl },
+    { xml: read("alert-new.xml"), sourceUrl: docUrl },
+  ];
+  const dupProc = processCapDocuments(dupDocs);
+  ok("technical_dup_counted", dupProc.report.duplicates >= 1, String(dupProc.report.duplicates));
+  const feed1 = revisionsToFeed(dupProc.report.revisions, { nowIso: frozenNow });
+  ok("chrono_complete", feed1.every((i) => i.sortAt && i.firstSeenByInfoUzel && i.lastProcessedAt), feed1[0] && feed1[0].id);
+  ok("chrono_sort_from_sent", feed1.every((i) => i.sortAt === i.publishedAtSource || i.sortAt === i.firstSeenByInfoUzel), "sortAt");
+  ok("chrono_no_invented_validFrom", feed1.every((i) => !i.validFrom || Date.parse(i.validFrom)), "bad validFrom");
+
+  const firstSeenById = new Map([[feed1[0].id, "2026-07-01T00:00:00.000Z"]]);
+  const feed2 = revisionsToFeed(dupProc.report.revisions, { nowIso: "2026-07-30T18:00:00.000Z", firstSeenById });
+  ok("firstSeen_preserved_on_update", feed2[0].firstSeenByInfoUzel === "2026-07-01T00:00:00.000Z", feed2[0].firstSeenByInfoUzel);
+  ok("lastProcessed_refreshed", feed2[0].lastProcessedAt === "2026-07-30T18:00:00.000Z", feed2[0].lastProcessedAt);
+
+  const updateProc = processCapDocuments([
+    { xml: read("alert-new.xml"), sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-new.xml" },
+    { xml: read("alert-update-expand.xml"), sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-update-expand.xml" },
+  ]);
+  const updateFeed = revisionsToFeed(updateProc.report.revisions, { nowIso: frozenNow });
+  const byId = new Map();
+  for (const it of updateFeed) {
+    if (byId.has(it.id)) byId.set(it.id, byId.get(it.id) + 1);
+    else byId.set(it.id, 1);
+  }
+  ok("update_no_dup_stable_id", [...byId.values()].every((n) => n === 1), JSON.stringify([...byId.entries()]));
+  ok(
+    "update_unique_canonicals",
+    new Set(updateFeed.map((i) => canonicalizeUrl(i.canonicalUrl || i.url))).size === updateFeed.length,
+    String(updateFeed.length)
+  );
+
+  const multiAreas = processCapDocuments([
+    {
+      xml: read("alert-multi-events-areas.xml"),
+      sourceUrl: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-multi-events-areas.xml",
+    },
+  ]);
+  const multiFeedQa = revisionsToFeed(multiAreas.report.revisions, { nowIso: frozenNow });
+  ok("multi_events_keep_separate_items", multiFeedQa.length >= 3, String(multiFeedQa.length));
+  ok(
+    "multi_events_unique_canonical",
+    new Set(multiFeedQa.map((i) => canonicalizeUrl(i.canonicalUrl || i.url))).size === multiFeedQa.length,
+    "canon"
+  );
+  const heatQa = multiFeedQa.find((i) => /Vysoké teploty/i.test(i.title || ""));
+  ok("localities_preserved", heatQa && (heatQa.region.orpIds || []).length >= 3, heatQa && JSON.stringify(heatQa.region.orpIds));
+
+  // Future vs active vs ended with frozen now (Europe/Prague offsets in CAP)
+  const futureRev = {
+    cap_message_id: "capmsg:test|future|2026-07-30T10:00:00+02:00",
+    alert_thread_id: "thread:future",
+    identifier: "future-id",
+    sent: "2026-07-30T10:00:00+02:00",
+    published_at: "2026-07-30T10:00:00+02:00",
+    msgType: "Alert",
+    status: "Actual",
+    sourceUrl: docUrl,
+    hazards: [
+      {
+        hazard_instance_id: "haz:future000000001",
+        event: "Bouřky",
+        severity: "Moderate",
+        urgency: "Future",
+        certainty: "Possible",
+        valid_from: "2026-07-31T00:00:00+02:00",
+        valid_to: "2026-07-31T12:00:00+02:00",
+        headline: "Bouřky",
+        geo: { links: [{ orpName: "Praha", orpId: "orp:1000", orpCode: "1000", precise: true, krajName: "Hlavní město Praha" }], displayNames: ["Praha"] },
+      },
+    ],
+  };
+  const futureItems = revisionsToFeed([futureRev], { nowIso: "2026-07-30T12:00:00+02:00" });
+  ok("future_kept_in_feed_status", futureItems[0] && futureItems[0].status === "aktivni", futureItems[0] && futureItems[0].status);
+  ok("future_warn_badge_flag", futureItems[0] && futureItems[0].capV2.badgeActive === true, "badge");
+  ok("future_lifecycle_naplanovano", futureItems[0] && futureItems[0].lifecycle === "naplanovano", futureItems[0] && futureItems[0].lifecycle);
+  ok("future_has_validFrom", futureItems[0] && futureItems[0].validFrom === "2026-07-31T00:00:00+02:00", futureItems[0] && futureItems[0].validFrom);
+
+  const endedRev = {
+    ...futureRev,
+    cap_message_id: "capmsg:test|ended|2026-07-29T10:00:00+02:00",
+    hazards: [
+      {
+        ...futureRev.hazards[0],
+        hazard_instance_id: "haz:ended0000000001",
+        valid_from: "2026-07-29T00:00:00+02:00",
+        valid_to: "2026-07-29T18:00:00+02:00",
+      },
+    ],
+  };
+  const endedItems = revisionsToFeed([endedRev], { nowIso: "2026-07-30T12:00:00+02:00" });
+  ok("ended_status_ukonceno", endedItems[0] && endedItems[0].status === "ukonceno", endedItems[0] && endedItems[0].status);
+  ok("ended_badge_off", endedItems[0] && endedItems[0].capV2.badgeActive === false, "badge");
+
+  const winterRev = {
+    ...futureRev,
+    cap_message_id: "capmsg:test|winter|2026-01-15T10:00:00+01:00",
+    sent: "2026-01-15T10:00:00+01:00",
+    published_at: "2026-01-15T10:00:00+01:00",
+    hazards: [
+      {
+        ...futureRev.hazards[0],
+        hazard_instance_id: "haz:winter000000001",
+        valid_from: "2026-01-15T10:00:00+01:00",
+        valid_to: "2026-01-16T00:00:00+01:00",
+      },
+    ],
+  };
+  const winterItems = revisionsToFeed([winterRev], { nowIso: "2026-01-15T12:00:00+01:00" });
+  ok("winter_offset_preserved", winterItems[0] && /\+01:00/.test(winterItems[0].validFrom), winterItems[0] && winterItems[0].validFrom);
+  ok("winter_active", winterItems[0] && winterItems[0].status === "aktivni", winterItems[0] && winterItems[0].status);
+
+  const midnightRev = {
+    ...futureRev,
+    cap_message_id: "capmsg:test|midnight|2026-07-30T23:50:00+02:00",
+    sent: "2026-07-30T23:50:00+02:00",
+    published_at: "2026-07-30T23:50:00+02:00",
+    hazards: [
+      {
+        ...futureRev.hazards[0],
+        hazard_instance_id: "haz:midnight0000001",
+        valid_from: "2026-07-30T23:50:00+02:00",
+        valid_to: "2026-07-31T02:00:00+02:00",
+      },
+    ],
+  };
+  const midItems = revisionsToFeed([midnightRev], { nowIso: "2026-07-31T00:30:00+02:00" });
+  ok("midnight_still_active", midItems[0] && midItems[0].status === "aktivni", midItems[0] && midItems[0].status);
+  ok("midnight_sortAt_is_sent", midItems[0] && midItems[0].sortAt === "2026-07-30T23:50:00+02:00", midItems[0] && midItems[0].sortAt);
 }
 
 // --- lightweight parse performance budget (fixtures) ---

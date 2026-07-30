@@ -83,7 +83,7 @@ async function viewportCheck(page, label, size) {
         importance: 3,
         eventType: "mimoradne",
         status: "aktivni",
-        url: "https://vystrahy-cr.chmi.cz/",
+        url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_badge.xml?hid=testbadge",
         publishedAt: "2026-07-29T10:00:00Z",
         capV2: { badgeActive: true, searchText: "vystraha chmu stav sucha praha" },
       };
