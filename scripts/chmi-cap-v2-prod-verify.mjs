@@ -176,10 +176,41 @@ async function main() {
 
   const hardFail =
     out.alarms.some((a) =>
-      ["PROD_EMPTY_SOURCE_NONEMPTY", "PROD_ACTIVE_DROP", "STREAM_FETCH_FAIL", "CITY_FILTER_MISS"].includes(a.code)
+      [
+        "PROD_EMPTY_SOURCE_NONEMPTY",
+        "PROD_ACTIVE_DROP",
+        "STREAM_FETCH_FAIL",
+        "CITY_FILTER_MISS",
+        "CANONICAL_AREA_MISMATCH",
+      ].includes(a.code)
     ) || out.diffs.some((d) => d.type === "missing_event" || d.type === "city_filter_miss");
 
-  out.productionVerified = !hardFail && expected.length > 0 && chmi.length > 0;
+  // Canonical content gate — count equality alone is insufficient.
+  const areaMismatch = [];
+  for (const exp of expected) {
+    const prod =
+      chmi.find((i) => i.id === exp.id) ||
+      chmi.find((i) => (i.capV2 && i.capV2.event) === (exp.capV2 && exp.capV2.event) && (i.capV2 && i.capV2.severity) === (exp.capV2 && exp.capV2.severity));
+    if (!prod) continue;
+    const eOrps = new Set((exp.region && exp.region.orpIds) || []);
+    const pOrps = new Set((prod.region && prod.region.orpIds) || []);
+    if (!eOrps.size) continue;
+    const missing = [...eOrps].filter((x) => !pOrps.has(x));
+    if (missing.length && missing.length === eOrps.size) {
+      areaMismatch.push({ id: exp.id, missing: missing.slice(0, 8) });
+    }
+  }
+  if (areaMismatch.length) {
+    out.alarms.push({ code: "CANONICAL_AREA_MISMATCH", count: areaMismatch.length });
+    out.diffs.push(...areaMismatch.map((m) => ({ type: "area_mismatch", ...m })));
+  }
+
+  out.productionVerified =
+    !hardFail &&
+    !out.alarms.some((a) => a.code === "CANONICAL_AREA_MISMATCH") &&
+    expected.length > 0 &&
+    chmi.length > 0 &&
+    out.diffs.filter((d) => d.type === "missing_event").length === 0;
   out.verdict = out.productionVerified ? "PRODUCTION_VERIFIED" : "FAIL";
 
   console.log("CHMI_CAP_V2_PROD_VERIFY=" + out.verdict);

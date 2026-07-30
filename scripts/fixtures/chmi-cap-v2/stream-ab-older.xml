@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>2.49.0.0.203.0.CZ.ARCH.50.AB1</identifier>
+  <sender>chmi@chmi.cz</sender>
+  <sent>2026-07-29T10:00:00+02:00</sent>
+  <status>Actual</status>
+  <msgType>Alert</msgType>
+  <scope>Public</scope>
+  <info>
+    <language>cs</language>
+    <category>Met</category>
+    <event>Jev A</event>
+    <urgency>Expected</urgency>
+    <severity>Moderate</severity>
+    <certainty>Likely</certainty>
+    <onset>2026-07-29T10:00:00+02:00</onset>
+    <expires>2026-08-10T00:00:00+02:00</expires>
+    <headline>Jev A</headline>
+    <description>A</description>
+    <area><areaDesc>Praha</areaDesc><geocode><valueName>CISORP</valueName><value>1000</value></geocode></area>
+  </info>
+  <info>
+    <language>cs</language>
+    <category>Met</category>
+    <event>Jev B</event>
+    <urgency>Expected</urgency>
+    <severity>Severe</severity>
+    <certainty>Likely</certainty>
+    <onset>2026-07-29T10:00:00+02:00</onset>
+    <expires>2026-08-10T00:00:00+02:00</expires>
+    <headline>Jev B</headline>
+    <description>B</description>
+    <area><areaDesc>Brno</areaDesc><geocode><valueName>CISORP</valueName><value>6203</value></geocode></area>
+  </info>
+</alert>

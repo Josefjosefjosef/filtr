@@ -44,6 +44,9 @@ jobs:
       - name: CAP v2 guard (fixtures)
         run: npm run iu-chmi-cap-v2-guard
 
+      - name: CAP v2 architecture validation
+        run: npm run iu-chmi-cap-v2-architecture-validation
+
       - name: Sync CHMI CAP v2
         env:
           IU_CHMI_CAP_V2_MODE: ${{ github.event.inputs.mode || vars.IU_CHMI_CAP_V2_MODE || 'active' }}

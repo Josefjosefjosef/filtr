@@ -111,7 +111,6 @@ export function revisionToFeedItems(revision, opts = {}) {
   const nowIso = opts.nowIso || new Date().toISOString();
   const nowMs = Date.parse(nowIso) || Date.now();
   const publicUrl = opts.publicAlertsUrl || CHMI_PUBLIC_ALERTS_URL;
-  const active = activeFromRevision(revision, nowMs);
   const items = [];
 
   for (const h of revision.hazards || []) {
@@ -166,8 +165,12 @@ export function revisionToFeedItems(revision, opts = {}) {
     const areaBit = loc.summary && loc.summary !== "Česká republika" ? loc.summary : "";
     const title = areaBit && !titleBase.includes(areaBit) ? `${titleBase} — ${areaBit}` : titleBase;
 
-    const ended = !active;
     const cancelled = /^Cancel$/i.test(revision.msgType);
+    const expMs = Date.parse(h.valid_to || "") || 0;
+    const hazardExpired = expMs > 0 && expMs <= nowMs;
+    const inactiveStatus = !/^Actual$/i.test(String(revision.status || "Actual"));
+    const hazardActive = !cancelled && !inactiveStatus && !hazardExpired;
+    const ended = !hazardActive;
     const itemId = makeStableItemId(h.hazard_instance_id);
     const geoStats = {
       totalAreas: (h.areas || []).length,
@@ -225,7 +228,7 @@ export function revisionToFeedItems(revision, opts = {}) {
         severity: h.severity,
         urgency: h.urgency,
         certainty: h.certainty,
-        badgeActive: active && !cancelled,
+        badgeActive: hazardActive && !cancelled,
         geo: {
           links,
           quarantine: geo.quarantine || [],

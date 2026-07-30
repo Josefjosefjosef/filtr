@@ -23,7 +23,9 @@ export const DEFAULT_LIMITS = Object.freeze({
   maxAreasPerInfo: 500,
   maxGeocodesPerArea: 800,
   maxPolygonPoints: 20000,
-  maxCapMessagesPerRun: 50,
+  // Safety ceilings — exceeding them throws CAP_TRUNCATED (never silent truncate).
+  maxParametersPerInfo: 100,
+  maxEventCodesPerInfo: 50,
   maxReferencesParts: 200,
 });
 
