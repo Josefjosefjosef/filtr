@@ -56,6 +56,21 @@ function writeJson(p, obj) {
   fs.renameSync(tmp, p);
 }
 
+/** Ops monitoring must keep info-system fields; refuse silent wipe to { chmiCapV2 }. */
+function assertMonitoringMergeSafe(monitoring) {
+  const m = monitoring && typeof monitoring === "object" ? monitoring : null;
+  if (!m) throw new Error("CHMI CAP v2 sync: monitoring.json missing or invalid");
+  if (!m.datasetAges || typeof m.datasetAges.feedAgeHours !== "number") {
+    throw new Error("CHMI CAP v2 sync: refusing to write monitoring.json without datasetAges.feedAgeHours");
+  }
+  if (!Array.isArray(m.alerts)) {
+    throw new Error("CHMI CAP v2 sync: refusing to write monitoring.json without alerts[]");
+  }
+  if (!Array.isArray(m.outageHistory)) {
+    throw new Error("CHMI CAP v2 sync: refusing to write monitoring.json without outageHistory[]");
+  }
+}
+
 function loadState() {
   return readJson(STATE_FILE, {
     sync: createSyncState("opendata://cap"),
@@ -464,6 +479,7 @@ export async function runChmiCapV2Sync(opts = {}) {
 
     // Merge diagnostics into monitoring.json (ops / admin)
     const monitoring = readJson(path.join(DIR, "monitoring.json"), {});
+    assertMonitoringMergeSafe(monitoring);
     const prevDiag = monitoring.chmiCapV2 || {};
     const history = Array.isArray(prevDiag.runHistory) ? prevDiag.runHistory.slice() : [];
     const expiredCount = (diagnostics.temporalCounts && diagnostics.temporalCounts.expiredCount) || countByStatus(feedItems, "ukonceno");
@@ -559,6 +575,7 @@ export async function runChmiCapV2Sync(opts = {}) {
     });
     snapshot.runHistory = history.slice(0, 48);
     monitoring.chmiCapV2 = snapshot;
+    assertMonitoringMergeSafe(monitoring);
     writeJson(path.join(DIR, "monitoring.json"), monitoring);
 
     state.lastRun = {

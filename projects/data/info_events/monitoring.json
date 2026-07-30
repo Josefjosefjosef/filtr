@@ -1,4 +1,418 @@
 {
+  "version": "3.0.0",
+  "generatedAt": "2026-07-30T21:44:33.682Z",
+  "cutover": {
+    "version": "1.0.0",
+    "cutoverAt": "2026-07-17T21:00:00Z",
+    "mode": "cutover",
+    "commercialAggregationActive": false,
+    "commercialUiActive": false,
+    "infoSystemActive": true,
+    "reason": "Atomické přepnutí na Přehled dne — komerční mediální agregace deaktivována v produkčním UI a jobech.",
+    "rollback": {
+      "tag": "pre-aggregator-stable-20260717",
+      "commit": "5647bb3fe365a12feb4bb4d2830c6957de73c853",
+      "queryOff": "?iuInfoSystem=off"
+    }
+  },
+  "runMs": 1868,
+  "onlyGroup": null,
+  "feedItemCount": 26,
+  "droppedHomepageUrls": 0,
+  "removedDuplicates": 0,
+  "sourceErrors": 0,
+  "laneCounts": {
+    "doprava": 0,
+    "pocasi": 5,
+    "bezpecnost": 0,
+    "ministerstva": 0,
+    "ekonomika": 0,
+    "zdravotnictvi": 0,
+    "skoly-kultura": 0,
+    "regionalni": 0,
+    "verejnopravni-media": 0,
+    "ostatni": 0
+  },
+  "failedConnectors": [],
+  "ingest": [
+    {
+      "id": "chmi",
+      "capIndexUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/",
+      "ok": true,
+      "status": 200,
+      "kept": 5,
+      "raw": 17,
+      "files": 6,
+      "ms": 1707,
+      "mode": "cap"
+    }
+  ],
+  "sources": [
+    {
+      "id": "chmi",
+      "label": "Český hydrometeorologický ústav",
+      "url": "https://www.chmi.cz/",
+      "lane": "pocasi",
+      "connectorType": "opendata",
+      "orgType": "meteo",
+      "periodicityMin": 15,
+      "feedUrl": null,
+      "capIndexUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/",
+      "legalStatus": "approved",
+      "technicalStatus": "ok",
+      "productionActive": true,
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "monitoring": {
+        "availability": "ok",
+        "freshness": "ok",
+        "structureChange": "none",
+        "lastProbeStatus": 200,
+        "lastProbeAt": "2026-07-23T19:01:08.718Z",
+        "lastAttemptAt": "2026-07-23T19:01:08.718Z",
+        "lastSuccessAt": "2026-07-23T19:01:08.718Z",
+        "lastError": null,
+        "itemsKept": 5,
+        "itemsNew": 5,
+        "runMs": 1861,
+        "responseMs": 154,
+        "dataAgeHours": 0,
+        "lane": "pocasi",
+        "connectorType": "opendata",
+        "periodicityMin": 15,
+        "connector": "opendata-cap",
+        "stale": false
+      }
+    }
+  ],
+  "pendingSources": [
+    {
+      "id": "policie-cr",
+      "lane": "bezpecnost",
+      "connectorType": "rss",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Oficiální RSS PČR (celostátní + tiskové)."
+    },
+    {
+      "id": "hzs-cr",
+      "lane": "bezpecnost",
+      "connectorType": "rss",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Oficiální RSS HZS ČR."
+    },
+    {
+      "id": "mvcr",
+      "lane": "ministerstva",
+      "connectorType": "rss",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Oficiální RSS MV ČR."
+    },
+    {
+      "id": "mfcr",
+      "lane": "ministerstva",
+      "connectorType": "rss",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Oficiální RSS tiskových zpráv MF ČR."
+    },
+    {
+      "id": "mzcr",
+      "lane": "zdravotnictvi",
+      "connectorType": "rss",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Oficiální feed MZ ČR."
+    },
+    {
+      "id": "mdcr",
+      "lane": "doprava",
+      "connectorType": "html",
+      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
+      "blocker": "md.gov.cz / mdcr.cz tiskové zprávy vrací 404; není veřejný RSS/Atom s konkrétními item URL."
+    },
+    {
+      "id": "szdc",
+      "lane": "doprava",
+      "connectorType": "html",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "HTML listing tiskových zpráv."
+    },
+    {
+      "id": "rsd",
+      "lane": "doprava",
+      "connectorType": "html",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "HTML položky z oficiálního webu ŘSD (/-/ články)."
+    },
+    {
+      "id": "ndic",
+      "lane": "doprava",
+      "connectorType": "none",
+      "connectorStatus": "TECHNICALLY_BLOCKED",
+      "blocker": "dopravniinfo.cz je SPA bez veřejného RSS/XML item feedu s konkrétními URL událostí (HTML bez položek)."
+    },
+    {
+      "id": "sukl",
+      "lane": "zdravotnictvi",
+      "connectorType": "rss",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Oficiální RSS SÚKL."
+    },
+    {
+      "id": "szpi",
+      "lane": "zdravotnictvi",
+      "connectorType": "rss",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Oficiální RSS SZPI."
+    },
+    {
+      "id": "svs",
+      "lane": "zdravotnictvi",
+      "connectorType": "rss",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Oficiální RSS SVS."
+    },
+    {
+      "id": "coi",
+      "lane": "ekonomika",
+      "connectorType": "rss",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Oficiální RSS ČOI."
+    },
+    {
+      "id": "szu",
+      "lane": "zdravotnictvi",
+      "connectorType": "rss",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Oficiální feed SZÚ."
+    },
+    {
+      "id": "eru",
+      "lane": "ekonomika",
+      "connectorType": "rss",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Oficiální RSS ERÚ."
+    },
+    {
+      "id": "ctu",
+      "lane": "ekonomika",
+      "connectorType": "rss",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Oficiální RSS ČTÚ."
+    },
+    {
+      "id": "vlada",
+      "lane": "ministerstva",
+      "connectorType": "html",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "HTML listing aktualit Úřadu vlády."
+    },
+    {
+      "id": "portal-gov",
+      "lane": "ministerstva",
+      "connectorType": "none",
+      "connectorStatus": "TECHNICALLY_BLOCKED",
+      "blocker": "portal.gov.cz nemá stabilní veřejný listing/RSS konkrétních aktualit (404/500 na známých cestách)."
+    },
+    {
+      "id": "nukib",
+      "lane": "bezpecnost",
+      "connectorType": "html",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "HTML listing aktualit NÚKIB."
+    },
+    {
+      "id": "cnb",
+      "lane": "ekonomika",
+      "connectorType": "none",
+      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
+      "blocker": "Veřejné stránky ČNB neposkytují stabilní RSS/Atom; HTML aktuality jsou převážně navigační sekce bez konkrétních TZ URL."
+    },
+    {
+      "id": "csu",
+      "lane": "ekonomika",
+      "connectorType": "none",
+      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
+      "blocker": "ČSÚ katalog/HTML vrací filtry a navigaci, ne stabilní seznam konkrétních tiskových zpráv s item URL."
+    },
+    {
+      "id": "cssz",
+      "lane": "ekonomika",
+      "connectorType": "html",
+      "connectorStatus": "TECHNICALLY_BLOCKED",
+      "blocker": "CSSZ aktuality jsou v portálové aplikaci bez použitelného RSS; HTML selektor neextrahuje konkrétní články."
+    },
+    {
+      "id": "urad-prace",
+      "lane": "ekonomika",
+      "connectorType": "none",
+      "connectorStatus": "TECHNICALLY_BLOCKED",
+      "blocker": "uradprace.cz fetch selhává / není dostupný veřejný feed s konkrétními item URL."
+    },
+    {
+      "id": "registr-smluv",
+      "lane": "ministerstva",
+      "connectorType": "none",
+      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
+      "blocker": "Registr smluv je vyhledávací rozhraní, ne chronologický feed konkrétních dokumentů vhodný pro Přehled dne."
+    },
+    {
+      "id": "esbirka",
+      "lane": "ministerstva",
+      "connectorType": "none",
+      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
+      "blocker": "eSbírka nemá veřejný item feed nových předpisů s přímými URL vhodnými pro automatický přehled."
+    },
+    {
+      "id": "ct24",
+      "lane": "verejnopravni-media",
+      "connectorType": "rss",
+      "connectorStatus": "REQUIRES_MANUAL_LEGAL_REVIEW",
+      "blocker": "LEGAL_REVIEW_REQUIRED: veřejnoprávní RSS bez doložené open licence / oprávnění ke komerční agregaci na webu s reklamou"
+    },
+    {
+      "id": "irozhlas",
+      "lane": "verejnopravni-media",
+      "connectorType": "rss",
+      "connectorStatus": "REQUIRES_MANUAL_LEGAL_REVIEW",
+      "blocker": "LEGAL_REVIEW_REQUIRED: veřejnoprávní RSS bez doložené open licence / oprávnění ke komerční agregaci na webu s reklamou"
+    },
+    {
+      "id": "avcr",
+      "lane": "skoly-kultura",
+      "connectorType": "html",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "HTML listing aktualit AV ČR."
+    },
+    {
+      "id": "mkcr",
+      "lane": "skoly-kultura",
+      "connectorType": "none",
+      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
+      "blocker": "MK ČR /novinky-a-media/ neposkytuje stabilní seznam konkrétních aktualit (převážně navigace)."
+    },
+    {
+      "id": "msmt",
+      "lane": "skoly-kultura",
+      "connectorType": "html",
+      "connectorStatus": "NO_STABLE_ITEM_SOURCE",
+      "blocker": "MŠMT novinářská sekce nemá RSS; HTML listing nevrací spolehlivé konkrétní články."
+    },
+    {
+      "id": "khs-praha",
+      "lane": "zdravotnictvi",
+      "connectorType": "rss",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Oficiální RSS HS HMP."
+    },
+    {
+      "id": "khs-stc",
+      "lane": "zdravotnictvi",
+      "connectorType": "rss",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Oficiální RSS KHS Středočeský kraj."
+    },
+    {
+      "id": "mpo",
+      "lane": "ministerstva",
+      "connectorType": "html",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "HTML listing tiskových zpráv MPO."
+    },
+    {
+      "id": "mze",
+      "lane": "ministerstva",
+      "connectorType": "html",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "HTML listing tiskových zpráv eAGRI s konkrétními URL."
+    },
+    {
+      "id": "khs-plzen",
+      "lane": "zdravotnictvi",
+      "connectorType": "rss",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Oficiální RSS KHS Plzeňský kraj."
+    },
+    {
+      "id": "kraj-pardubicky",
+      "lane": "regionalni",
+      "connectorType": "html",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Regionální HTML listing s konkrétními URL položek."
+    },
+    {
+      "id": "kraj-zlinsky",
+      "lane": "regionalni",
+      "connectorType": "html",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Regionální HTML listing s konkrétními URL položek."
+    },
+    {
+      "id": "kraj-liberecky",
+      "lane": "regionalni",
+      "connectorType": "html",
+      "connectorStatus": "PRODUCTION_ACTIVE",
+      "blocker": "Regionální HTML listing s konkrétními URL položek."
+    }
+  ],
+  "dedupeGroups": 5,
+  "droppedOutsideActiveWindow": 0,
+  "dataQuality": {
+    "itemCount": 5,
+    "fallbackTime": 0,
+    "lowConfidence": 0,
+    "futureTime": 0,
+    "missingUrl": 0,
+    "missingInstitution": 0,
+    "missingGroup": 0,
+    "techArtifactsInTags": 0,
+    "multiSourcePublications": 0,
+    "invalidLifecycle": 0,
+    "suspiciousSameCaptureBatch": 0,
+    "blockers": [],
+    "warnings": []
+  },
+  "commercialAggregationActive": false,
+  "datasetAges": {
+    "feedGeneratedAt": "2026-07-23T19:01:08.718Z",
+    "feedAgeHours": 0.13,
+    "lanes": {
+      "doprava": 0,
+      "pocasi": 5,
+      "bezpecnost": 0,
+      "ministerstva": 0,
+      "ekonomika": 0,
+      "zdravotnictvi": 0,
+      "skoly-kultura": 0,
+      "regionalni": 0,
+      "verejnopravni-media": 0,
+      "ostatni": 0
+    }
+  },
+  "alerts": [],
+  "outageHistory": [
+    {
+      "sourceId": "rsd",
+      "at": "2026-07-19T12:10:33.316Z",
+      "status": 0,
+      "reason": "no_items_kept"
+    },
+    {
+      "sourceId": "irozhlas",
+      "at": "2026-07-19T12:10:33.316Z",
+      "status": 403,
+      "reason": "down"
+    },
+    {
+      "sourceId": "rsd",
+      "at": "2026-07-19T16:05:47.109Z",
+      "status": 0,
+      "reason": "no_items_kept"
+    },
+    {
+      "sourceId": "irozhlas",
+      "at": "2026-07-19T16:05:47.109Z",
+      "status": 403,
+      "reason": "down"
+    }
+  ],
   "chmiCapV2": {
     "mode": "active",
     "lastRunAt": "2026-07-30T21:51:11.280Z",
