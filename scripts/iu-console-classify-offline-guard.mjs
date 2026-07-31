@@ -12,6 +12,7 @@ import path from "path";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
+import { classify } from "./iu-console-classify-lib.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -20,36 +21,6 @@ const { chromium } = require("playwright");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8951", 10);
 const LIVE = process.env.IU_CONSOLE_GUARD_URL || "";
 const LOCAL = `http://127.0.0.1:${PORT}/projects/?iuRobust=1`;
-
-function classify(ev) {
-  const text = String(ev.text || "");
-  if (ev.phase === "offline") {
-    if (
-      ev.kind === "requestfailed" ||
-      /failed to load resource|err_internet_disconnected|err_failed|failed to fetch|net::err_|networkerror|load failed/i.test(
-        text
-      )
-    ) {
-      return "expectedOfflineNetworkFailure";
-    }
-  }
-  if (ev.kind === "warning" || ev.type === "warning") return "warning";
-  // Aborted navigations during redirects are not app logic errors.
-  if (/net::err_aborted/i.test(text) && ev.kind === "requestfailed") return "noise";
-  if (/favicon\.ico|chrome-extension:/i.test(text)) return "noise";
-  // Narrow WebKit/Chromium browser-only ResizeObserver loop notification (exact text).
-  // App also preventDefault()s this in assets/app.js; keep classification for residual harness noise.
-  // Do NOT broaden to all ResizeObserver messages — callback throws must stay unexpected.
-  if (/^ResizeObserver loop (limit exceeded|completed with undelivered notifications)\.?$/i.test(text.trim())) {
-    return "browserOnlyResizeObserverLoop";
-  }
-  if (ev.kind === "pageerror") return "unexpectedConsoleError";
-  if (ev.kind === "console.error" || ev.type === "error") return "unexpectedConsoleError";
-  if (ev.kind === "requestfailed") return "noise";
-  return "unexpectedConsoleError";
-}
-
-export { classify };
 
 function waitForPort(host, port, timeoutMs) {
   const deadline = Date.now() + timeoutMs;
