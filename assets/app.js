@@ -432,7 +432,18 @@ try {
 
 window.addEventListener("error", (e) => {
   try {
-    if (iuIsBenignResizeObserverLoopError(e)) return;
+    // WebKit/Chromium emit this as a window error with no app stack; mark handled so
+    // Playwright pageerror / proof harnesses do not count it as unexpectedConsoleError.
+    // Real ResizeObserver failures still surface via callback throws / other messages.
+    if (iuIsBenignResizeObserverLoopError(e)) {
+      try {
+        e.preventDefault();
+      } catch (_) {}
+      try {
+        e.stopImmediatePropagation();
+      } catch (_) {}
+      return;
+    }
     console.error("[WINERROR]", e?.message, e?.filename, e?.lineno, e?.colno, e?.error);
     if (typeof window.persistLastError === "function") {
       window.persistLastError(`${e?.message || "error"} (${e?.filename || ""}:${e?.lineno || ""})`);
@@ -7602,6 +7613,7 @@ try {
 
   let iuTimelineAxisResizeBound = false;
   let iuTimelineAxisRo = null;
+  let iuTimelineAxisRoRaf = 0;
 
   function iuTimelineAxisBottomOffset(art, axisTop) {
     let bottom = 0;
@@ -7642,8 +7654,13 @@ try {
         if (!axis) continue;
         const axisTop = axis.getBoundingClientRect().top;
         const axisH = Math.ceil(iuTimelineAxisBottomOffset(art, axisTop));
-        if (axisH > 0) axis.style.setProperty("--iu-tl-axis-h", axisH + "px");
-        else axis.style.removeProperty("--iu-tl-axis-h");
+        if (axisH > 0) {
+          const next = axisH + "px";
+          if (String(axis.style.getPropertyValue("--iu-tl-axis-h") || "").trim() === next) continue;
+          axis.style.setProperty("--iu-tl-axis-h", next);
+        } else if (axis.style.getPropertyValue("--iu-tl-axis-h")) {
+          axis.style.removeProperty("--iu-tl-axis-h");
+        }
       }
     } catch (_) {}
   }
@@ -7666,7 +7683,11 @@ try {
       if (typeof ResizeObserver !== "undefined") {
         if (!iuTimelineAxisRo) {
           iuTimelineAxisRo = new ResizeObserver(function () {
-            iuTimelineSyncCompactAxisHeights(document.getElementById("feed"));
+            if (iuTimelineAxisRoRaf) cancelAnimationFrame(iuTimelineAxisRoRaf);
+            iuTimelineAxisRoRaf = requestAnimationFrame(function () {
+              iuTimelineAxisRoRaf = 0;
+              iuTimelineSyncCompactAxisHeights(document.getElementById("feed"));
+            });
           });
         }
         iuTimelineAxisRo.disconnect();

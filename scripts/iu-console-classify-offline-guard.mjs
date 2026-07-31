@@ -12,6 +12,7 @@ import path from "path";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
+import { classify } from "./iu-console-classify-lib.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -20,28 +21,6 @@ const { chromium } = require("playwright");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8951", 10);
 const LIVE = process.env.IU_CONSOLE_GUARD_URL || "";
 const LOCAL = `http://127.0.0.1:${PORT}/projects/?iuRobust=1`;
-
-function classify(ev) {
-  const text = String(ev.text || "");
-  if (ev.phase === "offline") {
-    if (
-      ev.kind === "requestfailed" ||
-      /failed to load resource|err_internet_disconnected|err_failed|failed to fetch|net::err_|networkerror|load failed/i.test(
-        text
-      )
-    ) {
-      return "expectedOfflineNetworkFailure";
-    }
-  }
-  if (ev.kind === "warning" || ev.type === "warning") return "warning";
-  // Aborted navigations during redirects are not app logic errors.
-  if (/net::err_aborted/i.test(text) && ev.kind === "requestfailed") return "noise";
-  if (/favicon\.ico|chrome-extension:/i.test(text)) return "noise";
-  if (ev.kind === "pageerror") return "unexpectedConsoleError";
-  if (ev.kind === "console.error" || ev.type === "error") return "unexpectedConsoleError";
-  if (ev.kind === "requestfailed") return "noise";
-  return "unexpectedConsoleError";
-}
 
 function waitForPort(host, port, timeoutMs) {
   const deadline = Date.now() + timeoutMs;
@@ -135,6 +114,7 @@ async function runAgainst(url, label) {
 
   const unexpected = events.filter((e) => e.classification === "unexpectedConsoleError");
   const expectedOffline = events.filter((e) => e.classification === "expectedOfflineNetworkFailure");
+  const browserOnlyRo = events.filter((e) => e.classification === "browserOnlyResizeObserverLoop");
   const warnings = events.filter((e) => e.classification === "warning");
   const rawConsoleErrors = events.filter((e) => e.kind === "console.error").length;
 
@@ -147,6 +127,7 @@ async function runAgainst(url, label) {
       rawConsoleErrorCount: rawConsoleErrors,
       unexpectedConsoleErrors: unexpected.length,
       expectedOfflineNetworkFailures: expectedOffline.length,
+      browserOnlyResizeObserverLoop: browserOnlyRo.length,
       warnings: warnings.length,
     },
     unexpected: unexpected.slice(0, 12),
@@ -156,6 +137,36 @@ async function runAgainst(url, label) {
 
 let server = null;
 try {
+  // Self-check: narrow RO classification must not swallow real app errors.
+  const selfChecks = [
+    [
+      "ro_loop_exact",
+      classify({
+        kind: "pageerror",
+        text: "ResizeObserver loop completed with undelivered notifications.",
+        phase: "load",
+      }) === "browserOnlyResizeObserverLoop",
+    ],
+    [
+      "real_typeerror_still_unexpected",
+      classify({ kind: "pageerror", text: "TypeError: x is not a function", phase: "load" }) ===
+        "unexpectedConsoleError",
+    ],
+    [
+      "invalid_state_still_unexpected",
+      classify({
+        kind: "pageerror",
+        text: "An attempt was made to use an object that is not, or is no longer, usable",
+        phase: "load",
+      }) === "unexpectedConsoleError",
+    ],
+  ];
+  const selfFail = selfChecks.filter((row) => !row[1]).map((row) => row[0]);
+  if (selfFail.length) {
+    console.error(JSON.stringify({ pass: false, selfCheckFails: selfFail }, null, 2));
+    process.exit(1);
+  }
+
   const targets = [];
   if (LIVE) targets.push({ url: LIVE, label: "live" });
   server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {

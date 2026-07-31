@@ -31,12 +31,16 @@ function auditStatic() {
   if (!sw.includes("offlineNavigationFallback")) fails.push("sw:missing offlineNavigationFallback");
   if (!sw.includes("OFFLINE_DOC_CACHE")) fails.push("sw:missing OFFLINE_DOC_CACHE");
   if (!sw.includes("HTML_LAST_GOOD_CACHE")) fails.push("sw:missing HTML_LAST_GOOD_CACHE");
-  if (!/2026-07-30-chmi-cap-no-segment-dedupe-v1|2026-07-30-chmi-cap-unified-public-click-v1|2026-07-30-chmi-cap-open-ended-public-url-v1|2026-07-30-chmi-cap-temporal-status-v1/.test(sw)) fails.push("sw:missing CACHE_VERSION bump");
+  if (!/2026-07-31-chmi-multibrowser-console-v1|2026-07-30-chmi-cap-no-segment-dedupe-v1|2026-07-30-chmi-cap-unified-public-click-v1|2026-07-30-chmi-cap-open-ended-public-url-v1|2026-07-30-chmi-cap-temporal-status-v1/.test(sw)) fails.push("sw:missing CACHE_VERSION bump");
   if (!sw.includes("iu-feed-offline-v2")) fails.push("sw:missing FEED_OFFLINE_CACHE v2 after media removal");
   if (!sw.includes("X-IU-Offline-Fallback")) fails.push("sw:missing offline fallback header marker");
   if (!offline.includes("Jste offline")) fails.push("offline.html:missing message");
   if (/cdn\.|googleapis|unpkg|jsdelivr/i.test(offline)) fails.push("offline.html:external deps");
   if (!sw.includes("isUnsafeHtmlCachePath")) fails.push("sw:missing unsafe HTML path guard");
+  const index = fs.readFileSync(path.join(REPO, "projects/index.html"), "utf8");
+  if (!/__iuSwDeployMsgBound/.test(index) || !/u\.catch\(function\(\)\{\}\)/.test(index)) {
+    fails.push("index:swUp_update_invalidstate_guard");
+  }
   return fails;
 }
 
@@ -175,7 +179,7 @@ async function main() {
         origin: ORIGIN,
         passes,
         failures,
-        cacheVersion: "2026-07-30-chmi-cap-no-segment-dedupe-v1",
+        cacheVersion: "2026-07-31-chmi-multibrowser-console-v1",
       },
       null,
       2

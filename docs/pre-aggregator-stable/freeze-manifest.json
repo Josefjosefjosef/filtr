@@ -1,18 +1,18 @@
 {
-  "freezeId": "chmi-cap-no-segment-dedupe-20260730",
+  "freezeId": "chmi-multibrowser-console-20260731",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-07-30T22:10:00Z",
-  "note": "Freeze bump: CHMI CAP segments must not collapse via groupKey dedupeCluster; restore monitoring.json ops fields",
+  "updatedAt": "2026-07-31T04:40:00Z",
+  "note": "Freeze bump: Firefox swUp InvalidStateError fix + WebKit ResizeObserver loop preventDefault; frozen 26-segment dedupe fixture",
   "files": {
-    "projects/index.html": "58f1f7f15a73c32ca6dc2e19d65b3a069ad24672786d94590b95c5d9dcebfbaa",
+    "projects/index.html": "c2576a5dbbfd501a8220b26457a4c1d4c2b801ea35d7e340c768e1db429168ac",
     "assets/app.css": "5f4442f5fec55cf6ec94b2dbcdf469247b8b7fedc0b1629df148e6d9373a6963",
-    "assets/app.js": "ab93326869629bafadf713418f50a1e42aa8875c857d2864117e816c0c1a2ea2",
+    "assets/app.js": "23b5c4b9eee014c10349fc701302d46bf1ab8b57a44e50b7feb9ee454e48db36",
     "assets/iu-silver-p0-engine.js": "a24ec35ba63d734909db8a9575df1f7a727389acbf1960db6b4c85897c5d4715",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "3951be3cc560584999936684f38578c21c66f333c9ae30998055eb7d5f8fc43a",
-    "projects/version.json": "76090e8f84e96f73111e4cc7015e310921c73a737b38c942f2fb266172b0dd6b",
+    "sw.js": "20ed3b7a261e2f8120e0200c072bb97af307cfca920871a115a78631d2fb547f",
+    "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
     "assets/iu-user-data-backup-v1.js": "ab0b92b94c1d2f22897943881671c635f1a1bc79b2c130ad1b0436c80e8d3730",
@@ -23,7 +23,7 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-07-30-chmi-cap-no-segment-dedupe-v1\"",
+      "CACHE_VERSION = \"2026-07-31-chmi-multibrowser-console-v1\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "OFFLINE_DOC_CACHE",
@@ -31,7 +31,7 @@
       "warmOfflineAssets"
     ],
     "projects/version.json": [
-      "chmi-cap-no-segment-dedupe-v1-20260730"
+      "chmi-multibrowser-console-v1-20260731"
     ]
   }
 }
